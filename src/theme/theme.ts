@@ -77,7 +77,7 @@ const darkTheme: ITheme = {
   backgroundColorSecondary: 'rgb(39, 39, 39)',
   backgroundColorLight: 'rgb(46, 46, 46)',
   backdropColor: 'rgba(21, 21, 21, 0.3)',
-  borderColor: '#313132',
+  borderColor: '#313131',
   trBorderClr: '#464646',
   colorLight: '#EFEFEF',
   fontColor: '#EFEFEF',
