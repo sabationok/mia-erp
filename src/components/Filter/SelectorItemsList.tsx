@@ -9,13 +9,13 @@ export interface SelectorListItem {
   checked?: boolean;
 }
 
-export interface SelectorItemsList {
+export interface ISelectorItemsList {
   onChange: (id: string) => void;
   isOpen: boolean;
   list: SelectorListItem[];
 }
 
-const SelectorItemsList: React.FC<SelectorItemsList & React.HTMLAttributes<HTMLDivElement>> = ({
+const SelectorItemsList: React.FC<ISelectorItemsList & React.HTMLAttributes<HTMLDivElement>> = ({
   isOpen = false,
   onChange,
   list = [],

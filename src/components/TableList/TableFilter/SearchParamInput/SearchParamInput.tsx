@@ -224,8 +224,6 @@ const StyledInput = styled.input`
   transition: all ${({ theme }) => theme.globals.timingFnMui};
   &:focus {
     border-color: transparent;
-    /* border: 1px solid ${({ theme }) => theme.accentColor.base}; */
-    /* outline: 2px solid ${({ theme }) => theme.accentColor.base}; */
   }
   &::placeholder {
     color: ${({ theme }) => theme.globals.inputPlaceholderColor};
