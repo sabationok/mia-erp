@@ -1,0 +1,206 @@
+@import './sass/utils/root';
+@import './sass/utils/breakPoints';
+// @import './sass/utils/theme';
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+html {
+  box-sizing: border-box;
+  /* відміняє синій фон при дотику по обєктах на тачскірінах */
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
+}
+:root {
+  // height: 100%;
+}
+html {
+  height: 100%;
+}
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  font-family: 'Montserrat', sans-serif;
+
+  color: #212121;
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+
+  background-color: #ffffff;
+  margin: 0;
+  height: 100%;
+  max-height: 100%;
+}
+#root {
+  height: 100%;
+  max-height: 100%;
+}
+.NotScroll {
+  overflow: hidden;
+}
+
+/* ----------------- НОРМАЛІЗАЦІЯ -------------- */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+/* ТАБЛИЦі */
+table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin: 0;
+}
+th,
+tr {
+  border: 0;
+  padding: 0;
+  margin: 0;
+
+  user-select: none;
+}
+/* СПИСКИ */
+ul {
+  list-style: none;
+  padding-inline-start: 0px;
+  margin: 0px;
+}
+/* ПОСИЛАННЯ */
+a {
+  text-decoration: none;
+  color: inherit;
+
+  outline-color: var(--darkOrange);
+}
+/* АДРЕСИ */
+address {
+  font-style: normal;
+}
+/* ЗОБРАЖЕННЯ */
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+/* КНОПКИ */
+button {
+  user-select: none;
+
+  &:focus-visible {
+    // border-color: var(--darkOrange);
+    outline-style: none;
+    outline: 2px solid var(--darkOrange);
+  }
+}
+/* ІНПУТИ */
+label,
+textarea,
+input {
+  &:focus,
+  &:focus-visible {
+    // border-color: var(--darkOrange);
+    outline-style: none;
+    outline: 2px solid var(--darkOrange);
+  }
+}
+/* ----------------- СКРИТІ ЕЛЕМЕНТИ */
+.visually-hidden {
+  position: absolute;
+  width: 0;
+  height: 0;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+/* ----------------- SCROLLBAR */
+@media screen and (min-width: 480px) {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    // background-color: var(--bckgrndDarkClr_secondary);
+    background-color: transparent;
+    // border-radius: 6px;
+  }
+  ::-webkit-scrollbar-button {
+    height: 0;
+    width: 0;
+    overflow: hidden;
+  }
+  ::-webkit-scrollbar-thumb {
+    // background-color: var(--bckgrndDarkClr_main);
+    background-color: rgba(122, 122, 122, 0.7);
+    border-radius: 2px;
+  }
+  ::-webkit-scrollbar-thumb:active {
+    background-color: var(--darkOrange);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--darkOrange);
+  }
+  ::-webkit-scrollbar-corner {
+    background-color: var(--bckgrndDarkClr_main);
+  }
+}
+
+// & .slick-prev:before,
+// & .slick-next:before {
+// }
+/* // bimp
+// --scrollbar-top-offset: 0px;
+// --scrollbar-bottom-offset: 0px;
+// --scrollbar-left-offset: 0px;
+// --scrollbar-right-offset: 0px; */
+.css-1ptx2yq-MuiInputBase-root-MuiInput-root:after {
+  border-bottom: 2px solid rgb(118, 119, 152);
+}
+@keyframes BackdropAnimation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes ModalAnimation {
+  from {
+    transform: translate(-50%, -50%) scale(0.8);
+    // transform: translate(-50%, -50%);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    // transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes animate-border {
+  0% {
+    border-image: linear-gradient(to right, red, yellow);
+  }
+  50% {
+    border-image: linear-gradient(to right, green, blue);
+  }
+  100% {
+    border-image: linear-gradient(to right, red, yellow);
+  }
+}
+
+.border-gradient {
+  animation: animate-border 5s infinite;
+}

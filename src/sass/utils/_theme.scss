@@ -1,0 +1,69 @@
+.Dark {
+  color: #fff;
+  fill: #fff;
+
+  background-color: var(--bckgrndDarkClr_main);
+
+  & .header {
+    color: #fff;
+    fill: #fff;
+    background-color: var(--bckgrndDarkClr_secondary);
+  }
+
+  & .theme {
+    color: #fff;
+    fill: #fff;
+    background-color: var(--bckgrndDarkClr_secondary);
+  }
+  & .listRow {
+    color: #fff;
+    fill: #fff;
+    background-color: var(--brand_clr__4);
+  }
+  & .input {
+    color: #fff;
+    fill: #fff;
+  }
+  & .blockAction,
+  & .listRowActions {
+    color: var(--brand_clr__2);
+    fill: var(--brand_clr__2);
+    background-color: #fff;
+  }
+}
+.Light {
+  color: var(--brand_clr__2);
+  fill: var(--brand_clr__2);
+  background-color: #fff;
+  & .theme {
+    color: var(--brand_clr__2);
+    fill: var(--brand_clr__2);
+    background-color: var(--brand_clr__2_light);
+  }
+  & .listRow {
+    color: var(--brand_clr__2);
+    fill: var(--brand_clr__2);
+    background-color: #fff;
+  }
+  & .blockAction,
+  & .listRowActions {
+    color: #fff;
+    fill: #fff;
+    background-color: var(--brand_clr__4);
+  }
+  & .input {
+    color: var(--brand_clr__2);
+    fill: var(--brand_clr__2);
+  }
+  & .slick-prev:before,
+  & .slick-next:before {
+    color: var(--brand_clr__2);
+  }
+}
+
+.theme,
+.listRow,
+.blockAcion,
+.listRowActions {
+  transition: var(--timing-function__main);
+}

@@ -1,0 +1,90 @@
+:root {
+  --brand_clr__2: rgb(47, 48, 58);
+  --brand_clr__4: rgb(43, 43, 43);
+  --brand_clr__2_light: rgb(221, 221, 221);
+  --brand_clr__2-active: rgb(76, 77, 87);
+  --brand_clr__2-hover: rgba(76, 77, 87, 0.596);
+
+  --bckgrndDarkClr_main: rgb(28, 28, 28);
+  --bckgrndDarkClr_secondary: rgb(39, 39, 39);
+  --bckgrndDarkClr_light: rgb(46, 46, 46);
+
+  --header-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+
+  --inputBorder: rgba(196, 196, 196, 0.506);
+  --inputPlaceholderClr: rgb(123, 123, 123);
+
+  --borderClr_primary: rgba(196, 196, 196, 0.506);
+  --borderClr_light: rgb(58, 58, 60);
+
+  --timing-function__main: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --timing-function__long: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  --darkClr_main: #3a3a3c;
+  --darkClr_secondry: #252527;
+  --darkOrange: rgb(220, 133, 31);
+  --darkOrange_hover: rgb(227, 156, 73);
+  --darkOrange_pressed: rgb(205, 133, 50);
+  --lightGray: rgb(92, 92, 92);
+  --mainWhite: rgb(239, 239, 239);
+  --ligthOrange: rgba(220, 133, 31, 0.05);
+
+  /* TEXT */
+  --text-clr__primary: #1a1a1a;
+  --text-clr__secondary: #6b6b6b;
+  /* ICONS */
+  --icon-clr__primary: #808080;
+  /* TABLES */
+  --tHead-backgrnd-crl: #3a3a3c;
+  --tFooter-backgrnd-clr: #3a3a3c;
+  --tr-cell-bckgrnd_clr__even: #dadada7e;
+  --tr-bckgrnd_clr__even: #dadada7e;
+  --tr-brdr-clr__primary: #464646;
+  --tr-bckrnd-clr__hover: rgba(103, 202, 255, 0.15);
+  --tr-bckrnd-clr__selected: rgba(103, 202, 255, 0.3);
+  --td-bckrnd-clr__active: rgba(137, 202, 255, 0.7);
+  --td-outline-clr: rgba(137, 202, 255, 1);
+  --th-font-size__primary: 12px;
+  --th-font-size__secondary: 14px;
+  --th-font-weight: 700;
+  --td-font-size__primary: 12px;
+  --td-font-size__secondary: 14px;
+
+  --row_shadow: 0 0 2px rgb(173, 173, 173);
+  --row_shadow__hover: 0 0 5px rgb(122, 122, 122);
+  /* BUTTONS */
+  --btn-deciscon_clr__primary: rgba(219, 219, 219, 0.4);
+  --btn-deciscon_clr__hover: rgba(219, 219, 219, 0.5);
+  --btn-deciscon_clr__active: rgb(242, 242, 242);
+
+  --btn_bckgrnd-color: transparent;
+  --btn_bckgrnd-color-hover: rgba(219, 219, 219, 0.1);
+  --btn_bckgrnd-color-active: rgba(219, 219, 219, 0.05);
+
+  --btnShadow: 0px 1px 6px rgba(86, 87, 117, 0.2);
+  --btnShadow_hover: 0px 1px 6px rgba(86, 87, 117, 0.5);
+  --btnShadow_active: 0px 1px 6px rgba(86, 87, 117, 0.1);
+  /* OTHERS */
+  --header-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+  --block-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  --block-hdr-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  --block-ftr-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  --button-shadow-hover: 0px 1px 9px rgba(0, 0, 0, 0.2);
+  --button-shadow-active: 0px 1px 5px rgba(0, 0, 0, 0.1);
+
+  --test-outline_d: 1px dashed tomato;
+  --test-outline_s: 1px solid tomato;
+
+  //? notifications =========
+
+  --clr-light: #fff;
+  --clr-dark: #121212;
+  --clr-default: rgb(154, 154, 154);
+  --clr-info: #3498db;
+  --clr-success: #07bc0c;
+  --clr-warning: #f1c40f;
+  --clr-error: #e74c3c;
+  --clr-primary: #cdcdcd;
+
+  --desktop: 1200px;
+}
