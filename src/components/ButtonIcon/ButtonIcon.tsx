@@ -1,6 +1,7 @@
 import React from 'react';
 import sprite from 'img/sprite';
 import styled, { css, DefaultTheme, FlattenInterpolation, ThemeProps } from 'styled-components';
+import { iconId } from 'data';
 export type ButtonVariant =
   | 'outlinedSmall'
   | 'outlinedLarge'
@@ -21,6 +22,8 @@ export type ButtonVariant =
   | 'defOutlinedSmall'
   | 'defOutlinedLarge'
   | 'def';
+
+export type IconIdType = keyof typeof iconId;
 
 export type TextTransform = 'uppercase' | 'lowercase' | 'capitalize' | 'none';
 // export const buttons = {
@@ -100,7 +103,7 @@ const ButtonIcon: React.FC<ButtonIconProps & React.ButtonHTMLAttributes<HTMLButt
     >
       {iconId && (
         <SvgIcon className="icon" style={iconStyle}>
-          <use href={`${sprite}#icon-${iconId}`} />
+          <use href={`${sprite}#icon-${String(iconId)}`} />
         </SvgIcon>
       )}
 

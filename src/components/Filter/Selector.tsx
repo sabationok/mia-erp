@@ -7,29 +7,29 @@ import styled from 'styled-components';
 
 export interface FilterSelectorProps {
   label: string;
-  name?: string;
-  list?: any[];
+  selectorName?: string;
+  data?: any[];
   idx: number;
-  current: number | null;
+  current: any | null;
   onCheckAll?: () => void;
   onSelectorClick: (idx?: number) => void;
 }
 const Selector: React.FC<FilterSelectorProps> = ({
   label = 'Selector label',
-  list = [],
-  name = 'selector',
+  data = [],
+  selectorName = 'selector',
   onSelectorClick,
   current,
   onCheckAll,
   idx,
 }) => {
-  const [selectedItems, setSelectedItem] = useState<any[]>(list);
-  const [isActive, setIsActive] = useState(false);
+  const [selectedItems, setSelectedItem] = useState<any[] | undefined>(data);
+  const [isActive, setIsActive] = useState<boolean>(false);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function onChange(id: string) {
     setSelectedItem(prev =>
-      prev.map(el => {
+      prev?.map(el => {
         if (el._id === id) return { ...el, checked: !el?.checked };
 
         return el;
@@ -38,14 +38,14 @@ const Selector: React.FC<FilterSelectorProps> = ({
   }
   function onResetFilter() {
     setSelectedItem(prev =>
-      prev.map(el => {
+      prev?.map(el => {
         return { ...el, checked: false };
       })
     );
   }
 
   useEffect(() => {
-    setIsActive(selectedItems.some(el => el.checked));
+    setIsActive(selectedItems?.some(el => el.checked) ? true : false);
   }, [selectedItems]);
 
   return (

@@ -31,24 +31,33 @@ const transationTypes = [
   { _id: 'ds6d5vf6sd6f1v61d', name: 'TRANSFER', label: 'ПЕРЕКАЗ' },
   { _id: 'ds6d5vf6dd6f1v68d', name: 'EXPENSE', label: 'ВИТРАТИ' },
 ];
-
-const selectorsArr = [
-  { label: 'Тип', list: transationTypes, name: 'type' },
-  { label: 'Категорії', list: categoriesArr, name: 'category' },
-  { label: 'Контрагенти', list: contractors, name: 'contractor' },
-  { label: 'Документи', list: documents, name: 'document' },
-  { label: 'Проєкти', list: projects, name: 'project' },
+export interface IFilterSelector {
+  label: string;
+  data: any[];
+  name: string;
+}
+const selectorsArr: IFilterSelector[] = [
+  { label: 'Тип', data: transationTypes, name: 'type' },
+  { label: 'Категорії', data: categoriesArr, name: 'category' },
+  { label: 'Контрагенти', data: contractors, name: 'contractor' },
+  { label: 'Документи', data: documents, name: 'document' },
+  { label: 'Проєкти', data: projects, name: 'project' },
 ];
 const Filter: React.FC = () => {
-  const [current, setCurrent] = useState<number | null>(0);
+  const [current, setCurrent] = useState<IFilterSelector | null>(null);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [filterFormData, setFilterFormData] = useState();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectors, setSelectors] = useState(selectorsArr);
 
   function onSelectorClick(idx: number) {
-    setCurrent(prev => (prev === idx ? null : idx));
+    setCurrent(prev => (prev === selectors[idx] ? null : selectors[idx]));
   }
 
-  function onChange() {}
+  function onFilterStateChange(item: any) {
+    console.log(item);
+  }
 
   return (
     <ModalDefSt title="Фільтрація транзакцій">
@@ -61,11 +70,12 @@ const Filter: React.FC = () => {
         <Bottom>
           <LeftSide>
             <SelectorsList>
-              {selectorsArr.map(({ name, label, list }, idx) => (
+              {selectorsArr.map(({ name, label, data }, idx) => (
                 <Selector
                   key={name}
                   label={label}
-                  list={list}
+                  data={data}
+                  selectorName={name}
                   idx={idx}
                   onSelectorClick={() => onSelectorClick(idx)}
                   current={current}
@@ -76,9 +86,9 @@ const Filter: React.FC = () => {
 
           <RightSide>
             <SelectorItemsList
-              list={current && selectors[current].list ? selectors[current].list : selectors[0].list}
-              onChange={onChange}
-              isOpen
+              data={current && current.data ? current.data : selectors[0].data}
+              onSelect={onFilterStateChange}
+              selectorName={current?.name}
             />
           </RightSide>
         </Bottom>

@@ -1,6 +1,6 @@
 import ButtonIcon from 'components/ButtonIcon/ButtonIcon';
 import { iconId } from 'data';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 export interface SelectorListItem {
@@ -10,56 +10,122 @@ export interface SelectorListItem {
 }
 
 export interface ISelectorItemsList {
-  onChange: (id: string) => void;
-  isOpen: boolean;
-  list: SelectorListItem[];
+  onSelect: (item: SelectorListItem) => void;
+  isOpen?: boolean;
+  data: SelectorListItem[];
+  selectorName?: string;
 }
 
 const SelectorItemsList: React.FC<ISelectorItemsList & React.HTMLAttributes<HTMLDivElement>> = ({
   isOpen = false,
-  onChange,
-  list = [],
+  onSelect,
+  data,
+  selectorName,
   ...props
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [filteredList, SetFilteredList] = useState<SelectorListItem[]>();
+  const [searchParam, setSearchParam] = useState<string>();
+  const [filteredData, setFilteredData] = useState<SelectorListItem[]>(data || []);
+
+  function onInputChange(ev: React.ChangeEvent<HTMLInputElement>) {
+    const { value } = ev.target;
+    setSearchParam(value);
+    // setInputValue(prev => {
+    //   return { ...prev, [name]: value };
+    // });
+  }
+  function onSerchParamReset() {
+    setSearchParam('');
+  }
+
+  useEffect(() => {
+    // console.log('select data', data);
+    if (data?.length === 0) {
+      return;
+    }
+
+    const filteredData = data?.filter(el => {
+      if (searchParam && el?.label)
+        return !(searchParam && !el.label.toLowerCase().includes(searchParam.toLowerCase()));
+
+      return true;
+    });
+
+    filteredData && setFilteredData(filteredData);
+  }, [data, searchParam]);
 
   return (
     <ListContainer {...props}>
-      <StInput type="text" placeholder="Пошук" />
-      <ItemsList isOpen={isOpen}>
-        {list.map((item, idx) => (
-          <SeletedItem key={idx}>
+      <StyledLabel htmlFor={selectorName}>
+        <SearchInput type="text" name={selectorName} placeholder="Пошук" value={searchParam} onChange={onInputChange} />
+
+        <StResetInputButton variant="onlyIcon" size="26px" iconId={iconId.close} onClick={onSerchParamReset} />
+      </StyledLabel>
+
+      <SelectList isOpen={isOpen}>
+        {filteredData.map((item, idx) => (
+          <SelectListItem key={idx}>
             <ButtonIcon
               size="26px"
               variant="onlyIcon"
               iconId={item?.checked ? iconId.checkBoxOn : iconId.checkBoxOff}
               aria-checked={!!item?.checked}
-              onClick={() => onChange && item?._id && onChange(item?._id)}
+              onClick={() => onSelect && onSelect(item)}
             />
 
             <span>{item?.label}</span>
-          </SeletedItem>
+          </SelectListItem>
         ))}
-      </ItemsList>
+      </SelectList>
     </ListContainer>
   );
 };
-const StInput = styled.input`
+
+const StyledLabel = styled.label`
+  position: relative;
+
+  border-style: none;
+  border-image: none;
+  border-width: 0;
+
+  &::before {
+    display: block;
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    height: 2px;
+    width: 0;
+    transition: all ${({ theme }) => theme.globals.timingFnMui};
+    transform: translate(-50%);
+    background-color: ${({ theme }) => theme.accentColor.base};
+  }
+
+  &:focus-within {
+    &::before {
+      width: 100%;
+    }
+  }
+`;
+const SearchInput = styled.input`
+  height: 100%;
   width: 100%;
-  padding: 4px 8px;
-  color: ${({ theme }) => theme.fillColorHeader};
+  padding: 4px 30px 4px 8px;
+
+  font-size: 12px;
+  font-family: inherit;
+  color: inherit;
+
+  &::placeholder {
+    color: ${({ theme }) => theme.globals.inputPlaceholderColor};
+  }
+  background-color: transparent;
 
   border-style: none;
   border-bottom: 1px solid ${({ theme }) => theme.globals.inputBorder};
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
-
-  &:focus,
-  &:hover {
-    border-bottom: 1px solid ${({ theme }) => theme.accentColor.base};
-  }
-  &::placeholder {
-    color: ${({ theme }) => theme.fontColorHeader};
+  &:hover,
+  &:focus {
+    /* border-bottom-color: ${({ theme }) => theme.accentColor.hover}; */
+    outline-style: none;
   }
 `;
 const ListContainer = styled.div`
@@ -76,8 +142,14 @@ const ListContainer = styled.div`
   border-radius: 2px;
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
 `;
+const StResetInputButton = styled(ButtonIcon)`
+  position: absolute;
 
-const ItemsList = styled.ul<{ isOpen: boolean }>`
+  right: 0;
+  top: 0;
+`;
+
+const SelectList = styled.ul<{ isOpen: boolean }>`
   display: grid;
   grid-template-columns: 1fr;
   grid-auto-rows: 22px;
@@ -91,7 +163,7 @@ const ItemsList = styled.ul<{ isOpen: boolean }>`
 
   /* background-color: #323234; */
 `;
-const SeletedItem = styled.li`
+const SelectListItem = styled.li`
   display: flex;
   align-items: center;
 
