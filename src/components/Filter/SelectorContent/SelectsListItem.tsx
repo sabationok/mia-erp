@@ -13,8 +13,10 @@ export interface SelectsListItemProps extends React.HTMLAttributes<HTMLDivElemen
 const SelectsListItem: React.FC<SelectsListItemProps> = ({ checked, label, _id, onSelect }) => {
   const [isChecked, setIsChecked] = useState<boolean | undefined>(checked || false);
   function handleSelect() {
-    setIsChecked(prev => (checked ? checked : !prev));
-    onSelect({ _id, checked, label });
+    setIsChecked(prev => {
+      onSelect({ _id, checked: checked ? !checked : !prev, label });
+      return checked ? checked : !prev;
+    });
   }
 
   return (

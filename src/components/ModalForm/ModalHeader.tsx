@@ -29,7 +29,7 @@ const Header = styled.header`
 
   color: ${({ theme }) => theme.fontColorHeader};
 
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  background-color: ${({ theme }) => theme.backgroundColorMain};
 `;
 const Title = styled.p`
   color: #efefef;

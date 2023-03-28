@@ -87,7 +87,7 @@ const Content = styled.div`
   color: ${({ theme }) => theme.fontColorHeader};
 
   border-radius: 2px;
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  background-color: ${({ theme }) => theme.backgroundColorLight};
 `;
 const StyledLabel = styled.label`
   position: relative;

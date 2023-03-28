@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import SelectorContent from './SelectorContent/SelectorContent';
 import { IContractor, IDocument, IProject } from 'data/transactions.types';
 import SelectsList from './SelectorContent/SelectsList';
+import { MinDesktop, MinTabletXl } from 'components/DeviceTypeInformer/DeviceTypeController';
 
 const contractors: IContractor[] = [
   { _id: 'ds6d5vf6sd5f1v64d', label: 'ФОП Петров' },
@@ -98,14 +99,16 @@ const Filter: React.FC = () => {
             </SelectorsList>
           </LeftSide>
 
-          <RightSide>
-            <SelectorContent
-              data={CurrentData && CurrentData.data ? CurrentData.data : selectors[0].data}
-              onSelect={onFilterStateChange}
-              selectorName={CurrentData?.name}
-              ListComp={CurrentData.ListComp}
-            />
-          </RightSide>
+          <MinTabletXl>
+            <RightSide>
+              <SelectorContent
+                data={CurrentData && CurrentData.data ? CurrentData.data : selectors[0].data}
+                onSelect={onFilterStateChange}
+                selectorName={CurrentData?.name}
+                ListComp={CurrentData.ListComp}
+              />
+            </RightSide>
+          </MinTabletXl>
         </Bottom>
       </FilterContainer>
     </ModalDefSt>
@@ -135,7 +138,7 @@ const FilterContainer = styled.div`
 
   color: inherit;
 
-  background-color: ${({ theme }) => theme.backgroundColorLight};
+  background-color: ${({ theme }) => theme.backgroundColorSecondary};
   @media screen and (min-width: 768px) {
     padding: 16px;
   }
@@ -161,7 +164,7 @@ const InputDate = styled.input`
 
   border-radius: 2px;
   border: 1px solid ${({ theme }) => theme.trBorderClr};
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  background-color: ${({ theme }) => theme.backgroundColorLight};
   color: ${({ theme }) => theme.fillColorHeader};
   &::placeholder {
     color: ${({ theme }) => theme.globals.inputPlaceholderColor};

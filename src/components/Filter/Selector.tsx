@@ -101,7 +101,6 @@ const StyledSelector = styled.div<{ isCurrent: boolean }>`
   fill: ${({ theme }) => theme.accentColor.base};
 
   border-radius: 2px;
-  /* border: 2px solid ${({ isCurrent, theme }) => (isCurrent ? theme.accentColor.base : 'transparent')}; */
 `;
 const SelectorBody = styled.div<{ isCurrent: boolean }>`
   flex-grow: 1;
@@ -112,7 +111,7 @@ const SelectorBody = styled.div<{ isCurrent: boolean }>`
 
   border-radius: 2px;
 
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  background-color: ${({ theme }) => theme.backgroundColorLight};
   border: 2px solid ${({ isCurrent, theme }) => (isCurrent ? theme.accentColor.base : 'transparent')};
 `;
 const Label = styled.div`
