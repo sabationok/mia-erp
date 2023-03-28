@@ -1,21 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Selector from './Selector';
 import ModalDefault from 'components/ModalForm/ModalForm';
 
 import styled from 'styled-components';
-import SelectorItemsList from './SelectorItemsList';
-import { IContractor, IDocument, IProject, ITrCategory } from 'data/transactions.types';
+import SelectorContent from './SelectorContent/SelectorContent';
+import { IContractor, IDocument, IProject } from 'data/transactions.types';
+import SelectsList from './SelectorContent/SelectsList';
 
 const contractors: IContractor[] = [
   { _id: 'ds6d5vf6sd5f1v64d', label: 'ФОП Петров' },
   { _id: 'ds6d5vs6sd6f1v4sd', label: 'ТОВ "Рога і копита"' },
   { _id: 'ds6d5vf6sd6f1v6sd', label: 'ТОВ "Дикі крила"' },
 ];
-const categoriesArr: ITrCategory[] = [
-  { _id: 'ds6d5vf6sd5f1v6sd', label: 'Офісні витрати', type: 'EXPENSE' },
-  { _id: 'ds6d5vf6sd6f1v7sd', label: 'Транспорт', type: 'EXPENSE' },
-  { _id: 'ds6d5vf6sd6f1v5sd', label: 'Обладнання', type: 'EXPENSE' },
-];
+// const categoriesArr: ITrCategory[] = [
+//   { _id: 'ds6d5vf6sd5f1v6sd', label: 'Офісні витрати', type: 'EXPENSE', owner: '' },
+//   { _id: 'ds6d5vf6sd6f1v7sd', label: 'Транспорт', type: 'EXPENSE' },
+//   { _id: 'ds6d5vf6sd6f1v5sd', label: 'Обладнання', type: 'EXPENSE' },
+//   { _id: 'ds6d5vf6sd6f1v5sd', label: 'Обладнання', type: 'EXPENSE' },
+// ];
 const documents: IDocument[] = [
   { _id: 'ds6d5vf6sd5f1v6sd', label: 'Чек №351351321' },
   { _id: 'ds6d5vf6sd6f1v3sd', label: 'Накладна №351351321' },
@@ -35,29 +37,33 @@ export interface IFilterSelector {
   label: string;
   data: any[];
   name: string;
+  ListComp: React.FC<any>;
 }
 const selectorsArr: IFilterSelector[] = [
-  { label: 'Тип', data: transationTypes, name: 'type' },
-  { label: 'Категорії', data: categoriesArr, name: 'category' },
-  { label: 'Контрагенти', data: contractors, name: 'contractor' },
-  { label: 'Документи', data: documents, name: 'document' },
-  { label: 'Проєкти', data: projects, name: 'project' },
+  { label: 'Тип', data: transationTypes, name: 'type', ListComp: SelectsList },
+  // { label: 'Категорії', data: categoriesArr, name: 'category' },
+  { label: 'Контрагенти', data: contractors, name: 'contractor', ListComp: SelectsList },
+  { label: 'Документи', data: documents, name: 'document', ListComp: SelectsList },
+  { label: 'Проєкти', data: projects, name: 'project', ListComp: SelectsList },
 ];
 const Filter: React.FC = () => {
-  const [current, setCurrent] = useState<IFilterSelector | null>(null);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [filterFormData, setFilterFormData] = useState();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [selectors, setSelectors] = useState(selectorsArr);
+  const [selectors] = useState<IFilterSelector[]>(selectorsArr);
+  const [CurrentData, setCurrentData] = useState<IFilterSelector>(selectors[0]);
+  const [currentIdx, setCurrentIdx] = useState<number | null>(0);
 
   function onSelectorClick(idx: number) {
-    setCurrent(prev => (prev === selectors[idx] ? null : selectors[idx]));
+    setCurrentIdx(prev => (prev === idx ? null : idx));
   }
 
   function onFilterStateChange(item: any) {
     console.log(item);
   }
+
+  useEffect(() => {
+    if (!currentIdx) return;
+
+    setCurrentData(selectors[currentIdx]);
+  }, [currentIdx, selectors]);
 
   return (
     <ModalDefSt title="Фільтрація транзакцій">
@@ -78,17 +84,26 @@ const Filter: React.FC = () => {
                   selectorName={name}
                   idx={idx}
                   onSelectorClick={() => onSelectorClick(idx)}
-                  current={current}
-                />
+                  currentIdx={currentIdx}
+                  CurrentData={CurrentData}
+                >
+                  <SelectorContent
+                    data={CurrentData.data}
+                    onSelect={onFilterStateChange}
+                    selectorName={CurrentData?.name}
+                    ListComp={CurrentData.ListComp}
+                  />
+                </Selector>
               ))}
             </SelectorsList>
           </LeftSide>
 
           <RightSide>
-            <SelectorItemsList
-              data={current && current.data ? current.data : selectors[0].data}
+            <SelectorContent
+              data={CurrentData && CurrentData.data ? CurrentData.data : selectors[0].data}
               onSelect={onFilterStateChange}
-              selectorName={current?.name}
+              selectorName={CurrentData?.name}
+              ListComp={CurrentData.ListComp}
             />
           </RightSide>
         </Bottom>

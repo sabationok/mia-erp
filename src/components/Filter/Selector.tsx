@@ -1,16 +1,19 @@
 import ButtonIcon from 'components/ButtonIcon/ButtonIcon';
+import { MaxToTablet } from 'components/DeviceTypeInformer/DeviceTypeController';
 import { iconId } from 'data';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { IFilterSelector } from './Filter';
 
 // import { MaxToTablet } from 'components/DeviceTypeInformer/DeviceTypeController';
 
-export interface FilterSelectorProps {
+export interface FilterSelectorProps extends React.HTMLAttributes<Element> {
   label: string;
   selectorName?: string;
   data?: any[];
   idx: number;
-  current: any | null;
+  currentIdx: number | null;
+  CurrentData: IFilterSelector;
   onCheckAll?: () => void;
   onSelectorClick: (idx?: number) => void;
 }
@@ -19,9 +22,10 @@ const Selector: React.FC<FilterSelectorProps> = ({
   data = [],
   selectorName = 'selector',
   onSelectorClick,
-  current,
+  currentIdx,
   onCheckAll,
   idx,
+  children,
 }) => {
   const [selectedItems, setSelectedItem] = useState<any[] | undefined>(data);
   const [isActive, setIsActive] = useState<boolean>(false);
@@ -50,7 +54,7 @@ const Selector: React.FC<FilterSelectorProps> = ({
 
   return (
     <SelectorContainer>
-      <StyledSelector isCurrent={current === idx}>
+      <StyledSelector isCurrent={currentIdx === idx}>
         <ButtonIcon
           size="26px"
           variant="def"
@@ -59,7 +63,7 @@ const Selector: React.FC<FilterSelectorProps> = ({
           onClick={() => onCheckAll && onCheckAll()}
         />
 
-        <SelectorBody isCurrent={current === idx}>
+        <SelectorBody isCurrent={currentIdx === idx}>
           <Label>{label}</Label>
 
           <ButtonIcon
@@ -73,17 +77,15 @@ const Selector: React.FC<FilterSelectorProps> = ({
           <StOpenButton
             size="26px"
             variant="def"
-            isCurrent={current === idx}
+            isCurrent={currentIdx === idx}
             iconId={iconId.SmallArrowDown}
             iconSize="22px"
             onClick={() => onSelectorClick && onSelectorClick()}
           />
         </SelectorBody>
-
-        {/* <MaxToTablet> */}
-        {/* {list.length > 0 && <SelectedItemsList isOpen={isCurrent} list={list} onChange={onChange}></SelectedItemsList>} */}
-        {/* </MaxToTablet> */}
       </StyledSelector>
+
+      <MaxToTablet>{currentIdx === idx ? <SelectorList>{children}</SelectorList> : null}</MaxToTablet>
     </SelectorContainer>
   );
 };
@@ -131,6 +133,13 @@ const StOpenButton = styled(ButtonIcon)<{ isCurrent: boolean }>`
       transform: ${({ isCurrent }) => `rotate(${isCurrent ? -90 : 90}deg)`};
     }
   }
+`;
+const SelectorList = styled.div`
+  overflow: hidden;
+
+  max-height: 250px;
+
+  padding: 4px 0 4px 28px;
 `;
 
 export default Selector;

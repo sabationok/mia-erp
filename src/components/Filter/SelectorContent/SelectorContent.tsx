@@ -9,21 +9,23 @@ export interface SelectorListItem {
   checked?: boolean;
 }
 
-export interface ISelectorItemsList {
+export interface SelectorContentProps {
   onSelect: (item: SelectorListItem) => void;
   isOpen?: boolean;
   data: SelectorListItem[];
   selectorName?: string;
+  ListComp?: React.FC<any>;
 }
 
-const SelectorItemsList: React.FC<ISelectorItemsList & React.HTMLAttributes<HTMLDivElement>> = ({
+const SelectorContent: React.FC<SelectorContentProps & React.HTMLAttributes<HTMLDivElement>> = ({
   isOpen = false,
   onSelect,
   data,
   selectorName,
+  ListComp,
   ...props
 }) => {
-  const [searchParam, setSearchParam] = useState<string>();
+  const [searchParam, setSearchParam] = useState<string>('');
   const [filteredData, setFilteredData] = useState<SelectorListItem[]>(data || []);
 
   function onInputChange(ev: React.ChangeEvent<HTMLInputElement>) {
@@ -54,32 +56,39 @@ const SelectorItemsList: React.FC<ISelectorItemsList & React.HTMLAttributes<HTML
   }, [data, searchParam]);
 
   return (
-    <ListContainer {...props}>
+    <Content {...props}>
       <StyledLabel htmlFor={selectorName}>
         <SearchInput type="text" name={selectorName} placeholder="Пошук" value={searchParam} onChange={onInputChange} />
 
         <StResetInputButton variant="onlyIcon" size="26px" iconId={iconId.close} onClick={onSerchParamReset} />
       </StyledLabel>
 
-      <SelectList isOpen={isOpen}>
-        {filteredData.map((item, idx) => (
-          <SelectListItem key={idx}>
-            <ButtonIcon
-              size="26px"
-              variant="onlyIcon"
-              iconId={item?.checked ? iconId.checkBoxOn : iconId.checkBoxOff}
-              aria-checked={!!item?.checked}
-              onClick={() => onSelect && onSelect(item)}
-            />
-
-            <span>{item?.label}</span>
-          </SelectListItem>
-        ))}
-      </SelectList>
-    </ListContainer>
+      {filteredData.length > 0 && ListComp ? (
+        <ListComp
+          isOpen={isOpen}
+          mapedData={filteredData}
+          onSelect={(data: any) => {
+            console.log(data);
+          }}
+        ></ListComp>
+      ) : null}
+    </Content>
   );
 };
+const Content = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 28px 1fr;
 
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  color: ${({ theme }) => theme.fontColorHeader};
+
+  border-radius: 2px;
+  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+`;
 const StyledLabel = styled.label`
   position: relative;
 
@@ -128,20 +137,6 @@ const SearchInput = styled.input`
     outline-style: none;
   }
 `;
-const ListContainer = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 28px 1fr;
-
-  width: 100%;
-  height: 100%;
-  max-height: 100%;
-  overflow: hidden;
-  color: ${({ theme }) => theme.fontColorHeader};
-
-  border-radius: 2px;
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
-`;
 const StResetInputButton = styled(ButtonIcon)`
   position: absolute;
 
@@ -149,29 +144,29 @@ const StResetInputButton = styled(ButtonIcon)`
   top: 0;
 `;
 
-const SelectList = styled.ul<{ isOpen: boolean }>`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-auto-rows: 22px;
+// const SelectList = styled.ul<{ isOpen: boolean }>`
+//   display: grid;
+//   grid-template-columns: 1fr;
+//   grid-auto-rows: 22px;
 
-  padding: 8px 0;
-  gap: 2px;
+//   padding: 8px 0;
+//   gap: 2px;
 
-  width: 100%;
-  max-height: 100%;
-  overflow: auto;
+//   width: 100%;
+//   max-height: 100%;
+//   overflow: auto;
 
-  /* background-color: #323234; */
-`;
-const SelectListItem = styled.li`
-  display: flex;
-  align-items: center;
+//   /* background-color: #323234; */
+// `;
+// const SelectListItem = styled.li`
+//   display: flex;
+//   align-items: center;
 
-  gap: 8px;
+//   gap: 8px;
 
-  padding: 0 8px;
+//   padding: 0 8px;
 
-  border-radius: 2px;
-`;
+//   border-radius: 2px;
+// `;
 
-export default SelectorItemsList;
+export default SelectorContent;
