@@ -23,6 +23,7 @@ const SelectsListItem: React.FC<SelectsListItemProps> = ({ checked, label, _id, 
     <StyledItem>
       <ButtonIcon
         size="26px"
+        iconSize="100%"
         variant="onlyIcon"
         iconId={isChecked ? iconId.checkBoxOn : iconId.checkBoxOff}
         aria-checked={isChecked}

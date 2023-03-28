@@ -57,7 +57,7 @@ const SelectorContent: React.FC<SelectorContentProps & React.HTMLAttributes<HTML
 
   return (
     <Content {...props}>
-      <StyledLabel htmlFor={selectorName}>
+      <StyledLabel>
         <SearchInput type="text" name={selectorName} placeholder="Пошук" value={searchParam} onChange={onInputChange} />
 
         <StResetInputButton variant="onlyIcon" size="26px" iconId={iconId.close} onClick={onSerchParamReset} />
