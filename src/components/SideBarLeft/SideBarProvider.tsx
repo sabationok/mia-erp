@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from 'react';
 
 export interface ISidebarOptionsItem {
   iconId: string;
-  options: any[];
+  options: any;
   RenderComponent: React.FC<any>;
   title: string;
   maxWidth: string;
