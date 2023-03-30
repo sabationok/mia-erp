@@ -114,10 +114,12 @@ const FilterButtons = styled.div`
 
   width: 100%;
 
+  /* max-width: 550px; */
+
   @media screen and (min-width: 768px) {
     grid-template-columns: repeat(4, 1fr);
     grid-auto-rows: 44px;
-    max-width: 768px;
+    max-width: 550px;
   }
 `;
 
@@ -141,7 +143,7 @@ const StButtonIcon = styled(ButtonIcon)`
     left: 0;
     width: 100%;
     height: 1px;
-    background-color: ${({ theme }) => theme.borderColor};
+    background-color: ${({ theme }) => theme.trBorderClr};
   }
   &::after {
     display: block;
@@ -151,7 +153,7 @@ const StButtonIcon = styled(ButtonIcon)`
     left: 50%;
     height: 1px;
     width: 100%;
-    height: 4px;
+    height: 3px;
     width: 0;
     transition: all ${({ theme }) => theme.globals.timingFnMui};
     transform: translate(-50%);

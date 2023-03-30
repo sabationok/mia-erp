@@ -6,7 +6,7 @@ import { iconId } from './iconId.data';
 import { raports } from './raports.data';
 import Notifications from '../components/SideBarContent/Notifications';
 import Directories from 'components/SideBarContent/Directories';
-import Raports from 'components/SideBarContent/Raports';
+import Raports from 'components/SideBarContent/Raports/Raports';
 
 export const sideBarButtons: ISidebarOptionsItem[] = [
   { iconId: iconId.folder, maxWidth: '', options: directories, title: 'Довідники', RenderComponent: Directories },
