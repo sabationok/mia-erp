@@ -1,22 +1,31 @@
 // import DirectoryOfCounts from 'components/Directories/DirectoryOfCounts';
 // import DirectoryOfCategories from 'components/Directories/DirectoryOfCategories';
 // import ModalDefault from 'components/ModalDefault/ModalDefault';
+import CountsList, { CountsListProps } from 'components/Directories/DirCounts/CountsDir';
 import { iconId } from './iconId.data';
 
 export interface IDirectory {
   title: string;
   iconId: string;
-  ModalChildren: React.FC;
+  ModalChildren: React.FC<any>;
   modalChildrenProps: any;
   disabled: boolean;
 }
+
+const CountsProps: CountsListProps = {
+  title: 'Рахунки',
+  filterOptions: [
+    { label: 'Активні', value: 'ACTIVE' },
+    { label: 'Пасивні', value: 'PASSIVE' },
+  ],
+};
 
 const directories: IDirectory[] = [
   {
     title: 'Рахунки',
     iconId: iconId.bank,
-    ModalChildren: () => null,
-    modalChildrenProps: { title: 'Рахунки' },
+    ModalChildren: CountsList,
+    modalChildrenProps: CountsProps,
     disabled: false,
   },
   {

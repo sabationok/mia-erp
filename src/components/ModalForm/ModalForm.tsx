@@ -3,8 +3,8 @@ import ModalFilter from './ModalFilter';
 import ModalFooter from './ModalFooter';
 
 import styled from 'styled-components';
-import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import { FormEvent } from 'react';
+import { useModal } from 'components/ModalProvider/ModalComponent';
 
 export interface ModalFormProps extends React.FormHTMLAttributes<HTMLFormElement> {
   filterOptions?: FilterOpt[];
@@ -16,9 +16,10 @@ export interface ModalFormProps extends React.FormHTMLAttributes<HTMLFormElement
   onOptSelect?: (opt: FilterOpt) => void | any;
 }
 export interface FilterOpt extends Record<string, any> {
-  _id: string;
-  label?: string;
+  _id?: string;
+  label: string;
   name?: string;
+  value: string;
 }
 
 const ModalForm: React.FC<ModalFormProps> = ({
@@ -34,12 +35,13 @@ const ModalForm: React.FC<ModalFormProps> = ({
   onOptSelect,
   ...props
 }) => {
-  const { handleCloseModal } = useModalProvider();
+  const modal = useModal();
 
   function handleSubmit(ev: FormEvent<HTMLFormElement>) {
     ev.preventDefault();
 
-    handleCloseModal();
+    modal.onClose();
+    // handleCloseModal();
 
     if (!onSubmit) return console.log('No passed "onSubmit" handler');
 
@@ -48,7 +50,8 @@ const ModalForm: React.FC<ModalFormProps> = ({
     if (typeof afterSubmit === 'function') afterSubmit();
   }
   function handleReset() {
-    handleCloseModal();
+    modal.onClose();
+    // handleCloseModal();
     if (!onReset) return console.log('No passed "onReset" handler');
     if (typeof beforeClose === 'function') beforeClose();
     if (typeof onReset === 'function') onReset();
@@ -81,7 +84,7 @@ const ModalFormContainer = styled.form`
 
   position: relative;
 
-  /* min-height: 350px; */
+  min-height: 100%;
   max-height: 100%;
   min-width: 250px;
   max-width: 100%;
@@ -118,7 +121,7 @@ const ModalMain = styled.main<{ filterOn: boolean }>`
   max-width: 100%;
   width: 100%;
 
-  background-color: ${({ theme }) => theme.backgroundColorMain};
+  background-color: ${({ theme }) => theme.backgroundColorSecondary};
 
   border-right: 1px solid ${({ theme }) => theme.borderColor};
   border-left: 1px solid ${({ theme }) => theme.borderColor};
@@ -132,7 +135,7 @@ const MainScroll = styled.div`
   height: 100%;
   max-height: 100%;
 
-  background-color: ${({ theme }) => theme.backgroundColorMain};
+  background-color: ${({ theme }) => theme.backgroundColorSecondary};
 `;
 
 export default ModalForm;

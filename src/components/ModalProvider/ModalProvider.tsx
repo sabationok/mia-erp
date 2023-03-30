@@ -8,7 +8,7 @@ interface IModalProviderProps {
   portalId?: string;
 }
 export interface IModalRenderItemParams {
-  ModalChildren?: React.FC;
+  ModalChildren?: React.FC<any>;
   modalChildrenProps?: any;
   settings?: IModalSettings;
   id?: number | string;
@@ -34,58 +34,47 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
     }
   }
   function handleCloseModal(id: string | number | undefined) {
-    setModalContent(prev => (id ? prev.filter(el => el.id !== id) : []));
+    setModalContent(prev => (id ? prev.filter(el => el.id !== id) : [...prev].splice(-1)));
   }
 
   const CTX = { handleCloseModal, handleOpenModal, isOpen: modalContent.length > 0 };
 
   useEffect(() => {
-    function handleToggleModalByEsc(evt: KeyboardEvent) {
-      if (evt?.code === 'Escape') {
-        if (modalContent.length === 0) document.querySelector('body')?.classList.remove('NotScroll');
-        setModalContent(prev => [...prev].splice(-1));
-      }
-    }
-    if (modalContent.length > 0) {
-      document.querySelector('body')?.classList.add('NotScroll');
-      document.addEventListener('keydown', handleToggleModalByEsc);
-    }
+    if (modalContent.length === 0) document.querySelector('body')?.classList.remove('NotScroll');
+
+    if (modalContent.length > 0) document.querySelector('body')?.classList.add('NotScroll');
 
     return () => {
       document.querySelector('body')?.classList.remove('NotScroll');
-      document.removeEventListener('keydown', handleToggleModalByEsc);
     };
-  }, [children, modalContent]);
-
+  }, [modalContent.length]);
   return (
-    <>
-      <ModalProviderContext.Provider {...{ value: CTX }}>
-        <>{children}</>
+    <ModalProviderContext.Provider {...{ value: CTX }}>
+      <>{children}</>
 
-        <ModalPortal portalId={portalId}>
-          {modalContent?.length > 0 &&
-            modalContent.map((Item, idx) => {
-              return (
-                <ModalComponent
-                  key={Item.id}
-                  {...{
-                    ...Item,
-                    idx,
-                    id: Item.id,
-                    totalLength: modalContent.length,
-                    isLast: idx === modalContent.length - 1,
-                    onClose: () => {
-                      handleCloseModal(Item.id);
-                    },
-                  }}
-                >
-                  {Item?.ModalChildren && <Item.ModalChildren {...Item?.modalChildrenProps} />}
-                </ModalComponent>
-              );
-            })}
-        </ModalPortal>
-      </ModalProviderContext.Provider>
-    </>
+      <ModalPortal portalId={portalId}>
+        {modalContent?.length > 0 &&
+          modalContent.map((Item, idx) => {
+            return (
+              <ModalComponent
+                key={Item.id}
+                {...{
+                  ...Item,
+                  idx,
+                  id: Item.id,
+                  totalLength: modalContent.length,
+                  isLast: idx === modalContent.length - 1,
+                  onClose: () => {
+                    handleCloseModal(Item.id);
+                  },
+                }}
+              >
+                {Item?.ModalChildren && <Item.ModalChildren {...Item?.modalChildrenProps} />}
+              </ModalComponent>
+            );
+          })}
+      </ModalPortal>
+    </ModalProviderContext.Provider>
   );
 };
 

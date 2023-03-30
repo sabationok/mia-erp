@@ -2,26 +2,6 @@ import React from 'react';
 import sprite from 'img/sprite';
 import styled, { css, DefaultTheme, FlattenInterpolation, ThemeProps } from 'styled-components';
 import { iconId } from 'data';
-export type ButtonVariant =
-  | 'outlinedSmall'
-  | 'outlinedLarge'
-  | 'filledSmall'
-  | 'filledLarge'
-  | 'textSmall'
-  | 'textLarge'
-  | 'underlinedText'
-  | 'pointerLeft'
-  | 'pointerBottom'
-  | 'ColoredBtn'
-  | 'BrandClrBtn'
-  | 'ErrorClrBtn'
-  | 'BorderBtn'
-  | 'transparent'
-  | 'onlyIconFilled'
-  | 'onlyIcon'
-  | 'defOutlinedSmall'
-  | 'defOutlinedLarge'
-  | 'def';
 
 export type IconIdType = keyof typeof iconId;
 
@@ -29,9 +9,10 @@ type TextTransform = 'uppercase' | 'lowercase' | 'capitalize' | 'none';
 
 interface ButtonProps {
   size?: string;
-  variant: ButtonVariant;
+  variant: ButtonIconVariant;
   iconId?: string;
   iconSize?: string;
+  isActive?: boolean;
   iconStyles?: {};
   endIconId?: string;
   endIconSize?: string;
@@ -43,6 +24,7 @@ export type ButtonIconProps = ButtonProps & React.ButtonHTMLAttributes<HTMLButto
 
 const ButtonIcon: React.FC<ButtonIconProps> = ({
   children,
+  isActive,
   type = 'button',
   size = '',
   variant = 'def',
@@ -388,10 +370,8 @@ const defOutlinedLarge = css`
   ${defOutlined}
   ${large}
 `;
-type VariantsType = {
-  [variant in ButtonVariant]?: any;
-};
-const variants: VariantsType = {
+
+const variants = {
   def,
   pointerLeft,
   outlinedLarge,
@@ -408,7 +388,9 @@ const variants: VariantsType = {
   pointerBottom,
 };
 
-function getVariant(variant?: ButtonVariant): FlattenInterpolation<ThemeProps<DefaultTheme>> {
+export type ButtonIconVariant = keyof typeof variants;
+
+function getVariant(variant?: ButtonIconVariant): FlattenInterpolation<ThemeProps<DefaultTheme>> {
   return variant ? variants[variant] : variants.def;
 }
 

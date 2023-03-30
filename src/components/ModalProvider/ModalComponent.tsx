@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext } from 'react';
+import React, { useState, createContext, useContext, useEffect } from 'react';
 import CloseButton from './CloseButton';
 import styled from 'styled-components';
 
@@ -61,21 +61,36 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
 
   const CTX = { onClose, modalIdx: idx, modalSettings, id, totalLength, isLast };
 
+  useEffect(() => {
+    function handleToggleModalByEsc(evt: KeyboardEvent) {
+      if (!isLast) return;
+
+      if (evt?.code === 'Escape') {
+        if (typeof onClose === 'function') onClose();
+      }
+    }
+
+    document.addEventListener('keydown', handleToggleModalByEsc);
+
+    return () => {
+      document.removeEventListener('keydown', handleToggleModalByEsc);
+    };
+  }, [isLast, onClose]);
   return (
-    <ModalContext.Provider value={CTX}>
-      <Backdrop
-        key={idx}
-        isLast={isLast}
-        onClick={onBackdropClick}
-        style={modalSettings.backdropStyle}
-        modalSettings={modalSettings}
-      >
+    <Backdrop
+      key={idx}
+      isLast={isLast}
+      onClick={onBackdropClick}
+      style={modalSettings.backdropStyle}
+      modalSettings={modalSettings}
+    >
+      <ModalContext.Provider value={CTX}>
         <Modal style={modalSettings.modalStyle} modalSettings={modalSettings}>
           {modalSettings?.closeBtn && <CloseButton onClick={onClose} />}
           {children}
         </Modal>
-      </Backdrop>
-    </ModalContext.Provider>
+      </ModalContext.Provider>
+    </Backdrop>
   );
 };
 
@@ -93,7 +108,7 @@ const Backdrop = styled.div<{ isLast: boolean | undefined; modalSettings: IModal
   height: 100%;
 
   background-color: ${({ isLast, modalSettings }) => (isLast ? modalSettings.backdropColor : '')};
-  animation: ${({ isLast, modalSettings }) => (!isLast ? modalSettings.backdropAnimation : '')};
+  /* animation: ${({ isLast, modalSettings }) => (!isLast ? modalSettings.backdropAnimation : '')}; */
 `;
 const Modal = styled.div<{ modalSettings: IModalSettings }>`
   display: flex;
@@ -107,7 +122,7 @@ const Modal = styled.div<{ modalSettings: IModalSettings }>`
 
   min-width: 200px;
 
-  min-height: 200px;
+  min-height: 50px;
   max-width: 98%;
   max-height: 98%;
 

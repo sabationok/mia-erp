@@ -1,3 +1,5 @@
+import { ICount } from './counts.types';
+
 export interface IBase {
   _id: string;
   createdAt?: Date | string;
@@ -5,18 +7,9 @@ export interface IBase {
 }
 
 export type TransactionType = 'EXPENSE' | 'TRANSFER' | 'INCOME';
-export type TrCountType = 'ACTIVE' | 'PASSIVE';
+
 export type CurrencyCode = 'UAH';
-export interface TrCount extends IBase {
-  name?: string;
-  label?: string;
-  balance?: number;
-  type?: TrCountType;
-  code?: number | string;
-  descr?: string;
-  def?: string;
-  owner?: string;
-}
+
 export interface ITrCategory extends IBase {
   name?: string;
   label?: string;
@@ -55,10 +48,10 @@ export interface ITransaction extends IBase {
   type: TransactionType;
   transactionDate?: Date | string;
   currency?: CurrencyCode;
-  countIn?: TrCount;
-  subCountIn?: TrCount;
-  countOut?: TrCount;
-  subCountOut?: TrCount;
+  countIn?: ICount;
+  subCountIn?: ICount;
+  countOut?: ICount;
+  subCountOut?: ICount;
   category?: ITrCategory;
   subCategory?: ITrCategory;
   contractor?: IContractor;
