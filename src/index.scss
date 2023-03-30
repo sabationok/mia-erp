@@ -144,9 +144,9 @@ input {
     overflow: hidden;
   }
   ::-webkit-scrollbar-thumb {
-    // background-color: var(--bckgrndDarkClr_main);
-    background-color: rgba(122, 122, 122, 0.7);
-    border-radius: 2px;
+    background-color: var(--darkOrange);
+    // background-color: rgba(122, 122, 122, 0.7);
+    border-radius: 0px;
   }
   ::-webkit-scrollbar-thumb:active {
     background-color: var(--darkOrange);

@@ -2,7 +2,7 @@ import AppLoader from 'components/AppLoader/AppLoader';
 import { Suspense } from 'react';
 import Layout from 'components/Layout/Layout';
 import AppRoutes from 'components/AppRoutes/AppRoutes';
-import SideBarProvider from 'components/Layout/SideBarLeft/SideBarProvider';
+import SideBarProvider from 'components/SideBarLeft/SideBarProvider';
 import { ToastContainer } from 'react-toastify';
 // import { getAppSettings } from 'redux/selectors.store';
 import styled from 'styled-components';

@@ -4,7 +4,7 @@ import { createContext, useContext, useState } from 'react';
 export interface ISidebarOptionsItem {
   iconId: string;
   options: any[];
-  RenderComponent: React.FC | null;
+  RenderComponent: React.FC<any>;
   title: string;
   maxWidth: string;
 }
@@ -28,8 +28,6 @@ const SideBarProvider: React.FC<{ children?: React.ReactNode }> = ({ children })
 
   function handleOptionsState(mewContent?: ISidebarOptionsItem) {
     setRightSideContent(prev => {
-      console.log('prevContetnt', prev);
-      console.log('mewContent', mewContent);
       return prev === mewContent ? null : mewContent;
     });
   }

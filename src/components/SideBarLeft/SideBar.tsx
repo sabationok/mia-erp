@@ -9,9 +9,10 @@ const SideBar: React.FC = () => {
   const { isOpen, onTogglerClick, handleOptionsState, sideBarButtons, sideBarButtonsBottom, RightSideContent } =
     useSideBar();
 
+  console.log('isOpen', isOpen);
   return (
     <StyledSideBar isOpen={!!isOpen} data-sidebar>
-      <MenuToggler isOpen={!!isOpen} onClick={onTogglerClick}></MenuToggler>
+      <MenuToggler isOpen={!!isOpen} onClick={onTogglerClick} />
 
       <SideBarContainer>
         <Content isOpen={!!isOpen}>
@@ -20,18 +21,20 @@ const SideBar: React.FC = () => {
           </Top>
 
           <Middle>
-            {sideBarButtons &&
-              sideBarButtons.map(item => (
-                <StyledButtonIcon
-                  key={item?.iconId}
-                  iconId={item?.iconId}
-                  title={item?.title}
-                  iconSize="20px"
-                  variant="pointerLeft"
-                  isActive={item?.title === RightSideContent?.title}
-                  onClick={() => handleOptionsState && handleOptionsState(item)}
-                />
-              ))}
+            <div style={{ overflow: 'auto' }}>
+              {sideBarButtons &&
+                sideBarButtons.map(item => (
+                  <StyledButtonIcon
+                    key={item?.iconId}
+                    iconId={item?.iconId}
+                    title={item?.title}
+                    iconSize="20px"
+                    variant="pointerLeft"
+                    isActive={item?.title === RightSideContent?.title}
+                    onClick={() => handleOptionsState && handleOptionsState(item)}
+                  />
+                ))}
+            </div>
           </Middle>
 
           <Bottom>
@@ -92,9 +95,12 @@ const Content = styled.div<SideBarState>`
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 32px 1fr min-content;
-  max-width: 0;
 
+  position: relative;
+
+  max-width: 0;
   height: 100%;
+  max-height: 100%;
   min-width: ${({ isOpen }) => (isOpen ? sideBarCompWidth : '0')};
   overflow: hidden;
 
@@ -107,17 +113,22 @@ const Top = styled.div`
   align-items: center;
   justify-content: center;
 
-  height: 100%;
+  /* height: 100%; */
   width: ${sideBarCompWidth};
 `;
 const Middle = styled.div`
+  height: 100%;
   max-height: 100%;
-  overflow: auto;
-
-  border-top: 1px solid ${({ theme }) => theme.trBorderClr};
-  border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
-
   width: ${sideBarCompWidth};
+  overflow: hidden;
+
+  /* border-top: 1px solid ${({ theme }) => theme.trBorderClr}; */
+  /* border-bottom: 1px solid ${({ theme }) => theme.trBorderClr}; */
+
+  /* &::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  } */
 `;
 const Bottom = styled.div`
   display: flex;

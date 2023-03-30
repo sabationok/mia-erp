@@ -49,26 +49,22 @@ const NavMenu: React.FC = () => {
 
   return (
     <StyledNavMenu data-nav-menu>
+      <MenuButton
+        variant="def"
+        endIconSize="24px"
+        endIconId={iconId.SmallArrowDown}
+        isOpen={isOpen}
+        onClick={handleOpenNavMenu}
+      >
+        {activePage?.title}
+      </MenuButton>
       <NavMenuContainer isOpen={isOpen}>
-        <MenuButton
-          variant="def"
-          endIconSize="24px"
-          endIconId={iconId.SmallArrowDown}
-          isOpen={isOpen}
-          // endIconCss={svgIconCss}
-          // endIconStyles={{ transform: `rotate(${isOpen ? '180' : '0'}deg)` }}
-          onClick={handleOpenNavMenu}
-        >
-          {activePage?.title}
-        </MenuButton>
-
         <NavList>
           {pages.map(item => {
             return (
               <StyledNavLink
                 key={item?.path}
                 to={item?.path}
-                // className={getActiveLinkClassName}
                 onClick={() => {
                   onNavLinkClick(item);
                 }}
@@ -91,8 +87,8 @@ interface MenuState {
 const StyledNavMenu = styled.div`
   position: relative;
 
-  min-width: 100px;
-  width: 150px;
+  min-width: 150px;
+  /* width: fit-content; */
   max-width: 100%;
   height: 100%;
 
@@ -101,33 +97,6 @@ const StyledNavMenu = styled.div`
   @media screen and (min-width: 768px) {
     min-width: 200px;
   }
-`;
-const NavMenuContainer = styled.div<MenuState>`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  overflow: hidden;
-  width: 100%;
-  height: max-content;
-  max-width: 100%;
-
-  background-color: ${({ isOpen, theme }) => (isOpen ? theme.backgroundColorSecondary : '')};
-  max-height: ${({ isOpen }) => (isOpen ? '100vh' : '100%')};
-  box-shadow: ${({ isOpen }) => (isOpen ? 'var(--header-shadow)' : '')};
-`;
-const NavList = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  align-content: start;
-
-  width: 100%;
-
-  padding: 8px 0;
 `;
 const MenuButton = styled(ButtonIcon)<{ isOpen: boolean }>`
   display: flex;
@@ -144,9 +113,37 @@ const MenuButton = styled(ButtonIcon)<{ isOpen: boolean }>`
   fill: ${({ theme: { accentColor } }) => accentColor.base};
   background-color: transparent;
 
-  & > .svgIcon {
+  & .svgIcon {
     transform: ${({ isOpen }) => `rotate(${isOpen ? '180' : '0'}deg)`};
   }
+`;
+const NavMenuContainer = styled.div<MenuState>`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  position: absolute;
+  top: 100%;
+  left: 0;
+
+  overflow: hidden;
+  min-width: 100%;
+  max-width: calc(100% + 30px);
+
+  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  max-height: ${({ isOpen }) => (isOpen ? '100vh' : '0')};
+  box-shadow: ${({ isOpen, theme }) => (isOpen ? theme.globals.shadowMain : '')};
+  transition: max-height ${({ theme }) => theme.globals.timingFnMain}; ;
+`;
+
+const NavList = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  align-content: start;
+
+  min-width: 100%;
+
+  padding: 8px 0;
 `;
 
 const StyledNavLink = styled(NavLink)`
@@ -154,20 +151,18 @@ const StyledNavLink = styled(NavLink)`
   align-items: center;
   gap: 8px;
 
-  width: 100%;
-  min-height: 24px;
-  height: min-content;
-  padding: 4px 16px;
-
   position: relative;
 
-  font-size: 12px;
-
   width: 100%;
+  min-height: 34px;
+  font-size: 14px;
+  height: min-content;
+  width: 100%;
+
+  padding: 4px 16px;
 
   border-radius: 0;
   border-style: none;
-
   transition: none;
 
   &::before {
@@ -199,6 +194,12 @@ const StyledNavLink = styled(NavLink)`
       height: 80%;
       background-color: ${({ theme: { accentColor } }) => accentColor.base};
     }
+  }
+
+  @media screen and (min-width: 768px) {
+    min-height: 24px;
+    font-size: 12px;
+    height: min-content;
   }
 `;
 

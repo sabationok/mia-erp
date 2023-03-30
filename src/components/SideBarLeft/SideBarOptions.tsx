@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, FC } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import { ErrorContent, DefaultContent } from 'components/atoms';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import { iconId } from 'data';
 import { useSideBar } from './SideBarProvider';
@@ -7,7 +8,6 @@ import styled, { css } from 'styled-components';
 
 const SideBarOptions: React.FC = () => {
   const { RightSideContent, onClose, isOpen } = useSideBar();
-
   const modal = useModalProvider();
 
   function handleCloseMenu() {
@@ -15,7 +15,6 @@ const SideBarOptions: React.FC = () => {
   }
   function onBackdropClick(ev: React.MouseEvent<HTMLDivElement>) {
     const { target, currentTarget } = ev;
-    console.log(target);
     if (target === currentTarget) handleCloseMenu();
   }
 
@@ -58,7 +57,13 @@ const SideBarOptions: React.FC = () => {
           <ButtonIcon iconSize="18px" size="22px" iconId={iconId.close} variant="def" onClick={handleCloseMenu} />
         </Header>
 
-        <ContentScroll>{RightSideContent?.RenderComponent ? <RightSideContent.RenderComponent /> : null}</ContentScroll>
+        <ContentScroll>
+          {typeof RightSideContent?.RenderComponent === 'function' ? (
+            <RightSideContent.RenderComponent {...{ options: RightSideContent.options }} />
+          ) : (
+            <ErrorContent />
+          )}
+        </ContentScroll>
       </Container>
     </Backdrop>
   );
@@ -144,12 +149,7 @@ const ContentScroll = styled.div`
   width: 100%;
   overflow: auto;
 
-  padding: 4px;
+  /* padding: 4px; */
 `;
 
-const Test = styled.div`
-  min-height: 1500px;
-  width: 100%;
-  border: 2px solid tomato;
-`;
 export default SideBarOptions;

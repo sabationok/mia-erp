@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useEffect } from 'react';
 import Header from './Header/Header';
-import SideBar from './SideBarLeft/SideBar';
+// import SideBar from './SideBarLeft/SideBar';
 import { baseURL } from 'api';
 // import { useDispatch } from 'react-redux';
 // import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import SideBar from 'components/SideBarLeft/SideBar';
 
 interface ILayoutCTX {}
 
