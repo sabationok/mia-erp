@@ -1,7 +1,9 @@
 // import DirectoryOfCounts from 'components/Directories/DirectoryOfCounts';
 // import DirectoryOfCategories from 'components/Directories/DirectoryOfCategories';
 // import ModalDefault from 'components/ModalDefault/ModalDefault';
-import CountsList, { CountsListProps } from 'components/Directories/DirCounts/CountsDir';
+import DirCategories, { DirCategoriesProps } from 'components/Directories/DirCategories/DirCategories';
+import DirCounts, { DirCountsProps } from 'components/Directories/DirCounts/DirCounts';
+import DirProjects from 'components/Directories/DirProjects/DirProjects';
 import { iconId } from './iconId.data';
 
 export interface IDirectory {
@@ -12,34 +14,50 @@ export interface IDirectory {
   disabled: boolean;
 }
 
-const CountsProps: CountsListProps = {
+const CountsProps: DirCountsProps = {
   title: 'Рахунки',
   filterOptions: [
     { label: 'Активні', value: 'ACTIVE' },
     { label: 'Пасивні', value: 'PASSIVE' },
   ],
 };
+const CategoriesProps: DirCategoriesProps = {
+  title: 'Категорії',
+  filterOptions: [
+    { label: 'Дохід', value: 'INCOME' },
+    { label: 'Переказ', value: 'TRANSFER' },
+    { label: 'Витрата', value: 'EXPENSE' },
+  ],
+};
+const ProjectsProps: DirCategoriesProps = {
+  title: 'Проєкти',
+  filterOptions: [
+    { label: 'Нові', value: 'PENDING' },
+    { label: 'Закриті', value: 'FULLFILED' },
+    { label: 'Майбутні', value: 'FUTURE' },
+  ],
+};
 
 const directories: IDirectory[] = [
   {
-    title: 'Рахунки',
+    title: CountsProps.title,
     iconId: iconId.bank,
-    ModalChildren: CountsList,
+    ModalChildren: DirCounts,
     modalChildrenProps: CountsProps,
     disabled: false,
   },
   {
-    title: 'Категорії',
+    title: CategoriesProps.title,
     iconId: iconId.folder,
-    ModalChildren: () => null,
-    modalChildrenProps: { title: 'Категорії' },
+    ModalChildren: DirCategories,
+    modalChildrenProps: CategoriesProps,
     disabled: true,
   },
   {
-    title: 'Котракти',
+    title: ProjectsProps.title,
     iconId: iconId.assignment,
-    ModalChildren: () => null,
-    modalChildrenProps: { title: 'Контракти' },
+    ModalChildren: DirProjects,
+    modalChildrenProps: ProjectsProps,
     disabled: true,
   },
   { title: 'Проекти', iconId: iconId.folder, ModalChildren: () => null, modalChildrenProps: null, disabled: true },

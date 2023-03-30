@@ -9,21 +9,21 @@ import styled from 'styled-components';
 //   };
 //   return submitData;
 // }
-export interface FormCreateCountProps {
+export interface FormCreateCategoryProps {
   _id?: string;
-  type: 'ACTIVE' | 'PASIIVE';
+  type: 'EXPENSE' | 'INCOME' | 'TRANSFER';
   owner?: string;
   edit?: boolean;
 }
-const FormCreateCount: React.FC<FormCreateCountProps> = ({ type, owner, _id }) => {
+const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({ type, owner, _id }) => {
   // const dispatch = useAppDispatch();
   // function handleSubmit({ formData, onSuccess, onError }) {
-  //   console.log('FormCreateCount', { formData, onSuccess, onError });
+  //   console.log('FormCreateCategory', { formData, onSuccess, onError });
 
   //   const payload = { submitData: formData, onSuccess, onError };
   // }
   return (
-    <ModalForm title={`${_id ? 'Редагувати' : 'Створити'} ${owner ? 'субрахунок' : 'рахунок'}`}>
+    <ModalForm title={`${_id ? 'Редагувати' : 'Створити'} ${owner ? 'під-категорію' : 'категорію'}`}>
       <Inputs>
         {owner}-{type}
       </Inputs>
@@ -38,4 +38,4 @@ const Inputs = styled.div`
   background-color: inherit;
 `;
 
-export default FormCreateCount;
+export default FormCreateCategory;

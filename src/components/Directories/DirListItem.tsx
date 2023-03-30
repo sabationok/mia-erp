@@ -1,7 +1,6 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import CreateCountAction from './DirCounts/CountActions';
 import DirList from './DirList';
 
 export interface DirListItemProps {
@@ -14,8 +13,9 @@ export interface DirListItemProps {
   currency?: string;
   isLast?: boolean;
   list: DirListItemProps[];
+  ActionsComponent: React.FC<any>;
 }
-const DirListItem: React.FC<DirListItemProps> = ({ label, type, owner, isLast, _id, list }) => {
+const DirListItem: React.FC<DirListItemProps> = ({ label, type, owner, isLast, _id, list, ActionsComponent }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const childrensList = list.filter(el => el?.owner === _id);
 
@@ -26,7 +26,7 @@ const DirListItem: React.FC<DirListItemProps> = ({ label, type, owner, isLast, _
   return (
     <Item>
       <CountGrid>
-        <ActionsField>{isLast && <CreateCountAction type={type} owner={owner} filled />}</ActionsField>
+        <ActionsField>{isLast && <ActionsComponent type={type} owner={owner} filled />}</ActionsField>
 
         <LabelField>
           <Label>{label}</Label>
@@ -42,14 +42,16 @@ const DirListItem: React.FC<DirListItemProps> = ({ label, type, owner, isLast, _
         </LabelField>
 
         <ActionsField>
-          <CreateCountAction type={type} _id={_id} iconId="edit" />
+          <ActionsComponent type={type} _id={_id} iconId="edit" />
 
           <ButtonIcon variant="onlyIcon" iconSize="24px" iconId="delete" />
         </ActionsField>
       </CountGrid>
 
       <Children isOpen={isOpen}>
-        {childrensList && childrensList.length > 0 && <DirList list={list} entryList={childrensList} />}
+        {childrensList && childrensList.length > 0 && (
+          <DirList list={list} entryList={childrensList} ActionsComponent={ActionsComponent} />
+        )}
       </Children>
     </Item>
   );

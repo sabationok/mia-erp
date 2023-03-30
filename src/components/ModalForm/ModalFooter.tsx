@@ -30,14 +30,14 @@ const Footer = styled.footer`
   bottom: 0;
   left: 0;
 
-  padding: 8px;
+  padding: 20px;
 
   width: 100%;
 
   border-bottom-right-radius: 2px;
   border-bottom-left-radius: 2px;
 
-  border: 1px solid ${({ theme }) => theme.borderColor};
+  border: 1px solid ${({ theme }) => theme.trBorderClr};
   color: ${({ theme }) => theme.fontColorHeader};
   fill: ${({ theme }) => theme.fillColorHeader};
   background-color: ${({ theme }) => theme.backgroundColorSecondary};

@@ -6,9 +6,10 @@ export interface DirListProps {
   list: DirListItemProps[];
   entryList?: DirListItemProps[];
   owner?: string;
+  ActionsComponent: React.FC<any>;
 }
 
-const DirList: React.FC<DirListProps> = ({ entryList, list, owner }) => {
+const DirList: React.FC<DirListProps> = ({ entryList, list, owner, ActionsComponent }) => {
   const renderList = entryList ? entryList : list;
 
   return (
@@ -19,6 +20,7 @@ const DirList: React.FC<DirListProps> = ({ entryList, list, owner }) => {
           {...item}
           isLast={entryList?.length === 1 || (entryList ? idx === entryList.length - 1 : false)}
           list={list}
+          ActionsComponent={ActionsComponent}
         />
       ))}
     </List>

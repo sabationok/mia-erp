@@ -49,6 +49,6 @@ const AppContainer = styled.div`
 
   fill: ${({ theme }) => theme.fillColor};
   color: ${({ theme }) => theme.fontColor};
-  background-color: ${({ theme }) => theme.backgroundColorMain};
+  background-color: ${({ theme }) => theme.backgroundColorLight};
 `;
 export default App;

@@ -1,6 +1,6 @@
-import React, { useEffect, useState, FC } from 'react';
+import React, { useEffect } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { ErrorContent, DefaultContent } from 'components/atoms';
+import { ErrorContent } from 'components/atoms';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import { iconId } from 'data';
 import { useSideBar } from './SideBarProvider';
@@ -108,7 +108,7 @@ const Container = styled.div<{ isOpen: boolean; maxWidth?: string }>`
   max-width: ${({ maxWidth }) => (maxWidth ? maxWidth : '250px')};
   overflow: hidden;
 
-  background-color: ${({ theme }) => theme.backgroundColorLight};
+  background-color: ${({ theme }) => theme.backgroundColorMain};
 
   transform: ${({ isOpen }) => `translate(${isOpen ? '0' : '-100%'})`};
   transition: transform ${({ theme }) => theme.globals.timingFunctionMain},

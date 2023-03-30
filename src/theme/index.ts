@@ -61,7 +61,7 @@ const darkTheme: ITheme = {
   fillColorHeader: '',
   fontColorSidebar: '',
   fillColorSidebar: '',
-  tableBackgroundColor: 'rgb(46, 46, 46)',
+  tableBackgroundColor: '#3A3A3C',
   defaultBtnBckgrndColor: {
     def: 'transparent',
     hover: 'rgba(219, 219, 219, 0.1)',
@@ -72,9 +72,9 @@ const darkTheme: ITheme = {
   },
 };
 const lightTheme: ITheme = {
-  backgroundColorMain: '#EFEFEF',
-  backgroundColorSecondary: 'rgb(86, 87, 117)',
-  backgroundColorLight: 'rgb(118, 119, 152)',
+  backgroundColorMain: 'rgb(86, 87, 117)',
+  backgroundColorSecondary: 'rgb(118, 119, 152)',
+  backgroundColorLight: '#EFEFEF',
   backdropColor: 'rgba(21, 21, 21, 0.3)',
   borderColor: 'rgba(122, 122, 122)',
   trBorderClr: 'rgb(118, 119, 152)',

@@ -33,7 +33,7 @@ const UserMenu = () => {
         iconId={iconId.personOutlined}
         size="30px"
         iconSize="80%"
-        variant="onlyIcon"
+        variant="def"
         onClick={() => handleMenuState()}
       />
 

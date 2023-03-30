@@ -83,8 +83,8 @@ const ToggleButton = styled(ButtonIcon)<{ isShown: boolean }>`
   fill: ${({ theme }) => theme.accentColor.base};
 
   box-shadow: ${({ isShown }) => (isShown ? 'var(--header-shadow)' : '')};
-  background-color: ${({ theme, isShown }) => (isShown ? theme.backgroundColorSecondary : theme.backgroundColorLight)};
-
+  background-color: ${({ theme, isShown }) => (isShown ? theme.backgroundColorMain : theme.backgroundColorSecondary)};
+  transition: ${({ theme }) => theme.globals.timingFunctionMain};
   & .icon {
     transition: all ${({ theme }) => theme.globals.timingFnMui};
   }
@@ -92,10 +92,10 @@ const ToggleButton = styled(ButtonIcon)<{ isShown: boolean }>`
     transform: ${({ isShown }) => (isShown ? 'rotate(45deg)' : '')};
   }
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundColorSecondary};
+    background-color: ${({ theme }) => theme.backgroundColorMain};
   }
   &:active {
-    background-color: ${({ theme }) => theme.backgroundColorLight};
+    background-color: ${({ theme }) => theme.backgroundColorMain};
   }
 `;
 

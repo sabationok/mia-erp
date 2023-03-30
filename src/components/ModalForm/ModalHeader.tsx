@@ -1,8 +1,11 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { iconId } from 'data';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 const ModalHeader: React.FC<{ title: string }> = ({ title = 'default header titile' }) => {
+  const theme = useTheme();
+
+  console.log(theme);
   return (
     <Header>
       <Title>{title}</Title>
@@ -28,8 +31,7 @@ const Header = styled.header`
   border-top-left-radius: 2px;
 
   color: ${({ theme }) => theme.fontColorHeader};
-
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  background-color: ${({ theme }) => theme.backgroundColorMain};
 `;
 const Title = styled.p`
   color: #efefef;

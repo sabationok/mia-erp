@@ -123,8 +123,8 @@ const ModalMain = styled.main<{ filterOn: boolean }>`
 
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
 
-  border-right: 1px solid ${({ theme }) => theme.borderColor};
-  border-left: 1px solid ${({ theme }) => theme.borderColor};
+  border-right: 1px solid ${({ theme }) => theme.trBorderClr};
+  border-left: 1px solid ${({ theme }) => theme.trBorderClr};
 `;
 
 const MainScroll = styled.div`

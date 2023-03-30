@@ -9,7 +9,6 @@ const SideBar: React.FC = () => {
   const { isOpen, onTogglerClick, handleOptionsState, sideBarButtons, sideBarButtonsBottom, RightSideContent } =
     useSideBar();
 
-  console.log('isOpen', isOpen);
   return (
     <StyledSideBar isOpen={!!isOpen} data-sidebar>
       <MenuToggler isOpen={!!isOpen} onClick={onTogglerClick} />
@@ -157,7 +156,7 @@ const MenuToggler = styled.button<SideBarState>`
 `;
 
 const isActiveCss = css`
-  background-color: ${({ theme }) => theme.backgroundColorLight};
+  background-color: ${({ theme }) => theme.backgroundColorMain};
   color: ${({ theme }) => theme.accentColor.base};
   &::before {
     height: 80%;

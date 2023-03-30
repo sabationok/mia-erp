@@ -228,7 +228,7 @@ const StyledInput = styled.input`
   border-radius: 2px;
   border-style: none;
   border: 1px solid ${({ theme }) => theme.globals.inputBorder};
-  background-color: ${({ theme }) => theme.backgroundColorMain};
+  background-color: ${({ theme }) => theme.backgroundColorLight};
   transition: border ${({ theme }) => theme.globals.timingFnMui};
 
   &:focus {
