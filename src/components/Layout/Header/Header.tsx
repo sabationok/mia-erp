@@ -4,7 +4,7 @@ import LogoSvg from './LogoSvg/LogoSvg';
 
 import UserMenu from '../UserMenu/UserMenu';
 import styled from 'styled-components';
-import ActionToggleSideBar from '../SideBarLeft/ActionToggleSideBar/ActionToggleSideBar';
+import ActionToggleSideBar from '../SideBarLeft/Actions/ActionToggleSideBar';
 
 interface IHeaderComponent {
   Component: React.FC | null;

@@ -1,7 +1,7 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import SideBarOptions from './SideBarOptions';
-import ToggleThemeMode from './ChangeTheme/ChangeTheme';
-import ActionAppExit from './ActionAppExit';
+import ToggleThemeMode from './Actions/ChangeTheme';
+import ActionAppExit from './Actions/ActionAppExit';
 import { useSideBar } from './SideBarProvider';
 import styled, { css } from 'styled-components';
 
@@ -74,7 +74,7 @@ const StyledSideBar = styled.div<SideBarState>`
   max-width: 40px;
   height: 100%;
 
-  position: static;
+  position: relative;
   z-index: 100;
 
   fill: ${({ theme }) => theme.fillColorHeader};
