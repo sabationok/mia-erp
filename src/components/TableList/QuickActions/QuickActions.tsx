@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ButtonIcon from 'components/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { iconId } from 'data';
 
 import styled, { css } from 'styled-components';

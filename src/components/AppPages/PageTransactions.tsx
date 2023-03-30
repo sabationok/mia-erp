@@ -1,8 +1,8 @@
 import TableList from 'components/TableList/TableList';
+import { takeFullGridArea } from './pagesStyles';
 import { transactionsColumns, transactionsMockData, transactionsSearchParams, trTableActions } from 'data';
 
 import styled from 'styled-components';
-import { takeFullGridArea } from './pagesStyles';
 
 const PageTransactions = () => {
   // const { transactions, isLoading, error } = useTransactionsSelector();
@@ -10,10 +10,6 @@ const PageTransactions = () => {
 
   return (
     <Page>
-      {/* <TableList {...tableSettings} /> */}
-      {/* <ModalContent> */}
-      {/* <ModalDefault filterOptions={countTypes}><CreatingList /></ModalDefault> */}
-      {/* </ModalContent> */}
       <TableList
         {...{
           tableData: transactionsMockData,

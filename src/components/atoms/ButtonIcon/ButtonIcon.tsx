@@ -25,22 +25,9 @@ export type ButtonVariant =
 
 export type IconIdType = keyof typeof iconId;
 
-export type TextTransform = 'uppercase' | 'lowercase' | 'capitalize' | 'none';
-// export const buttons = {
-//   filledLarge: 'filledLarge',
-//   filled: 'filled',
-//   outlined: 'outlined',
-//   outlinedLarge: 'outlinedLarge',
-//   onlyText: 'text',
-//   pointerLeft: 'pointerLeft',
-//   ColoredBtn: 'ColoredBtn',
-//   BrandClrBtn: 'BrandClrBtn',
-//   ErrorClrBtn: 'ErrorClrBtn',
-//   BorderBtn: 'BorderBtn',
-//   transparent: 'transparent',
-// };
+type TextTransform = 'uppercase' | 'lowercase' | 'capitalize' | 'none';
 
-export interface ButtonIconProps {
+interface ButtonProps {
   size?: string;
   variant: ButtonVariant;
   iconId?: string;
@@ -51,10 +38,10 @@ export interface ButtonIconProps {
   endIconStyles?: {};
   textTransform?: TextTransform;
   fontWeight?: 400 | 500 | 600 | 700 | 900;
-  onClick?: (ev: any) => void;
 }
+export type ButtonIconProps = ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-const ButtonIcon: React.FC<ButtonIconProps & React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
+const ButtonIcon: React.FC<ButtonIconProps> = ({
   children,
   type = 'button',
   size = '',

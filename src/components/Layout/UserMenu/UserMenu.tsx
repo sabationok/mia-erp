@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { iconId } from 'data';
-import ButtonIcon from 'components/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import UserInfo from './UserInfo';
 
 import styled from 'styled-components';

@@ -3,7 +3,7 @@ import TableFilter from './TableFilter/TableFilter';
 import styled from 'styled-components';
 import { useTable } from './TableList';
 import TableActions from './TableActions/TableActions';
-import DeviceConrol from 'components/DeviceTypeInformer/DeviceTypeController';
+import DeviceConrol from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 
 const TableOverHead: React.FC = () => {
   const { tableActions } = useTable();

@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import SelectorContent from './SelectorContent/SelectorContent';
 import { IContractor, IDocument, IProject } from 'data/transactions.types';
 import SelectsList from './SelectorContent/SelectsList';
-import { MinDesktop, MinTabletXl } from 'components/DeviceTypeInformer/DeviceTypeController';
+import { MinDesktop, MinTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 
 const contractors: IContractor[] = [
   { _id: 'ds6d5vf6sd5f1v64d', label: 'ФОП Петров' },

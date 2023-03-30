@@ -1,5 +1,5 @@
-import ButtonIcon from 'components/ButtonIcon/ButtonIcon';
-import { MaxToTablet } from 'components/DeviceTypeInformer/DeviceTypeController';
+import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import { MaxToTablet } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 import { iconId } from 'data';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';

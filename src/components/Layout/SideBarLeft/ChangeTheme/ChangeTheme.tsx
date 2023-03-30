@@ -1,4 +1,4 @@
-import ButtonIcon from 'components/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import useAppSettings from 'redux/appSettings/useAppSettings.hook';
 import { iconId } from 'data';
 

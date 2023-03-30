@@ -1,52 +1,27 @@
-export interface IThemeGlobals {
-  colorLight: string;
-  trBorderClr: string;
-  inputBorder: string;
-  defaultBtnBckgrndColor: { def: string; hover: string; pressed: string };
-  inputPlaceholderColor: string;
-  timingFunctionMain: string;
-  timingFunctionLong: string;
-  timingFnMui: string;
-  timingFnNull: string;
-}
-export const globals: IThemeGlobals = {
+import { AccentColorNamesType, accentColors, IAccentColor, IAccentColors } from './accentColors';
+
+export { accentColors };
+export type { AccentColorNamesType, IAccentColors, IAccentColor };
+
+export const globals = {
   colorLight: '#EFEFEF',
   trBorderClr: '#464646',
   inputBorder: '#5c5c5c',
   inputPlaceholderColor: '#7B7B7B',
+  shadowMain: '0px 1px 4px rgba(0, 0, 0, 0.25)',
   timingFunctionMain: '250ms cubic-bezier(0.4, 0, 0.2, 1)',
   timingFunctionLong: '500ms cubic-bezier(0.4, 0, 0.2, 1)',
   timingFnMui: '200ms cubic-bezier(0, 0, 0.2, 1) 0ms',
   timingFnNull: '0ms cubic-bezier(0, 0, 0.2, 1) 0ms',
+  timingFnMain: '250ms cubic-bezier(0.4, 0, 0.2, 1)',
+  timingFnLong: '500ms cubic-bezier(0.4, 0, 0.2, 1)',
   defaultBtnBckgrndColor: {
     def: 'transparent',
     hover: 'rgba(219, 219, 219, 0.1)',
     pressed: 'rgba(219, 219, 219, 0.05)',
   },
 };
-
-export interface IAccentColor {
-  base: string;
-  hover: string;
-  pressed: string;
-  disabled: string;
-  focus: string;
-  light: string;
-}
-export interface IAccentColors {
-  [color: string]: IAccentColor;
-}
-export const accentColors: IAccentColors = {
-  orange: {
-    base: 'rgb(220, 133, 31)',
-    pressed: 'rgb(227, 156, 65)',
-    hover: 'rgb(205, 133, 50)',
-    disabled: '',
-    focus: '',
-    light: 'rgba(220, 133, 31, 0.05)',
-  },
-};
-export type AccentColorNamesType = keyof IAccentColors;
+export type IThemeGlobals = typeof globals;
 
 export interface ITheme {
   backgroundColorMain: string;

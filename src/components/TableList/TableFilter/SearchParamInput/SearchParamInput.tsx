@@ -1,5 +1,5 @@
-import ButtonIcon from 'components/ButtonIcon/ButtonIcon';
-import SvgIcon from 'components/SvgIcon/SvgIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
 import { iconId } from 'data';
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
@@ -82,20 +82,20 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
 
   return (
     <InputBox className={isOpen ? 'isOpen' : ''} data-select>
-      <ToggleButton onClick={() => handleToggleList()}>
-        <SvgIcon iconId={iconId.SmallArrowDown} className={'svgIcon'} size="24px" />
-      </ToggleButton>
-
-      <StyledLabel>
+      <StyledLabel className={isOpen ? 'isOpen' : ''}>
         <StyledInput
           type="text"
           placeholder="Параметр"
           name="searchParam"
-          // defaultValue={defaultValue?.label || data[current].label}
+          className={isOpen ? 'isOpen' : ''}
           value={inputValue.searchParam}
           onChange={onChange}
-          onClick={() => handleToggleList(true)}
+          // onClick={() => handleToggleList()}
         />
+
+        <ToggleButton onClick={() => handleToggleList()}>
+          <SvgIcon iconId={iconId.SmallArrowDown} className={'svgIcon'} size="24px" />
+        </ToggleButton>
       </StyledLabel>
 
       <ParamsListContainer isOpen={isOpen}>
@@ -130,39 +130,6 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
     </InputBox>
   );
 };
-
-const StyledLabel = styled.label`
-  display: block;
-  position: relative;
-
-  border-style: none;
-  border-image: none;
-  border-width: 0;
-
-  height: 100%;
-
-  &::before {
-    display: block;
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    height: calc(100% + 4px);
-    width: 0;
-
-    border-radius: 4px;
-    transition: all ${({ theme }) => theme.globals.timingFnMui};
-    transform: translate(-50%, -50%);
-    background-color: ${({ theme }) => theme.accentColor.base};
-  }
-
-  &:focus-within {
-    &::before {
-      width: calc(100% + 4px);
-    }
-  }
-`;
-
 const InputBox = styled.label`
   position: relative;
   z-index: 2;
@@ -199,6 +166,45 @@ const InputBox = styled.label`
     }
   }
 `;
+const StyledLabel = styled.label`
+  display: flex;
+
+  position: relative;
+
+  border-style: none;
+  border-image: none;
+  border-width: 5px;
+
+  height: 100%;
+
+  &::before {
+    display: block;
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: calc(100% + 4px);
+    width: 0;
+
+    pointer-events: none;
+
+    border-radius: 4px;
+    transition: all ${({ theme }) => theme.globals.timingFnMui};
+    transform: translate(-50%, -50%);
+    background-color: ${({ theme }) => theme.accentColor.base};
+  }
+
+  &.isOpen {
+    &::before {
+      width: calc(100% + 4px);
+    }
+  }
+  &:focus-within {
+  }
+  &:focus {
+    outline-style: none;
+  }
+`;
 
 const StyledInput = styled.input`
   display: block;
@@ -210,7 +216,9 @@ const StyledInput = styled.input`
 
   height: 100%;
   width: 100%;
-  padding: 4px 30px 4px 8px;
+  flex-basis: 50px;
+  flex-grow: 1;
+  padding: 4px 32px 4px 8px;
 
   font-size: 12px;
   font-family: inherit;
@@ -221,10 +229,15 @@ const StyledInput = styled.input`
   border-style: none;
   border: 1px solid ${({ theme }) => theme.globals.inputBorder};
   background-color: ${({ theme }) => theme.backgroundColorMain};
-  transition: all ${({ theme }) => theme.globals.timingFnMui};
+  transition: border ${({ theme }) => theme.globals.timingFnMui};
+
   &:focus {
+    outline-style: none;
+  }
+  &.isOpen {
     border-color: transparent;
   }
+
   &::placeholder {
     color: ${({ theme }) => theme.globals.inputPlaceholderColor};
   }
@@ -236,16 +249,13 @@ const ToggleButton = styled.div`
   justify-content: center;
 
   position: absolute;
-  right: 5px;
+  right: 0px;
   top: 50%;
+  z-index: 10;
+  width: 28px;
+  height: 28px;
 
   transform: translateY(-50%);
-  &:focus-within {
-    ${StyledInput} {
-      border-color: ${({ theme }) => theme.accentColor.base};
-      outline: 2px solid ${({ theme }) => theme.accentColor.base};
-    }
-  }
 `;
 
 const ParamsListContainer = styled.ul<{ isOpen: boolean }>`
@@ -331,3 +341,8 @@ const CloseListItem = styled.div`
 `;
 
 export default SearchParamInput;
+/* background: linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(90deg, rgba(255, 175, 61, 0) 50%, rgba(255, 175, 61, 1) 50%, rgba(255, 175, 61, 0) 50%) border-box; */
+/* background: linear-gradient(90deg, rgba(255, 175, 61, 0) 50%, rgba(255, 175, 61, 1) 50%, rgba(255, 175, 61, 0) 50%); */
+/* background: linear-gradient(#fff, #fff) padding-box,
+      linear-gradient(90deg, rgba(255, 175, 61, 1) 0%, rgba(255, 175, 61, 1) 50%, rgba(255, 175, 61, 1) 100%) border-box; */

@@ -1,5 +1,5 @@
 import React from 'react';
-import SvgIcon from 'components/SvgIcon/SvgIcon';
+import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
 import { iconId } from 'data';
 
 import styled from 'styled-components';

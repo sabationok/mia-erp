@@ -7,7 +7,7 @@ interface IModalProviderProps {
   children: React.ReactNode;
   portalId?: string;
 }
-interface IModalRenderItemParams {
+export interface IModalRenderItemParams {
   ModalChildren?: React.FC;
   modalChildrenProps?: any;
   settings?: IModalSettings;

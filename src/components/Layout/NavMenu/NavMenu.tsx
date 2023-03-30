@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import ButtonIcon from 'components/ButtonIcon/ButtonIcon';
-import SvgIcon from 'components/SvgIcon/SvgIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
 import { NavLink, useLocation } from 'react-router-dom';
 import { pages } from 'data';
 import { iconId } from 'data';

@@ -16,6 +16,7 @@ import createActions from './createActions.data';
 import { appSettings } from './appSettings.data';
 import { selects, getParentOptions, getChildOptions, getOwnerOptions } from './select.data';
 import sideBarLeftData from './sideBarLeft.data';
+import { companiesTableColumns } from './companies.data';
 
 export {
   sideBarLeftData,
@@ -23,6 +24,7 @@ export {
   trCategories,
   addButtons,
   statusDataMap,
+  companiesTableColumns,
   colors,
   selects,
   iconId,

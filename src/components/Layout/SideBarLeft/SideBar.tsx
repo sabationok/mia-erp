@@ -1,4 +1,4 @@
-import ButtonIcon from 'components/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import SideBarOptions from './SideBarOptions';
 import ToggleThemeMode from './ChangeTheme/ChangeTheme';
 import ActionAppExit from './ActionAppExit';

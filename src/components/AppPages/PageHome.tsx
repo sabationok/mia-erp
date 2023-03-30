@@ -1,10 +1,12 @@
-import ButtonIcon from 'components/ButtonIcon/ButtonIcon';
-import ProfileCard from 'components/ProfileCard/ProfileCard';
+import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ProfileCard from 'components/molecules/ProfileCard/ProfileCard';
 import TableList from 'components/TableList/TableList';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import styled from 'styled-components';
 import { takeFullGridArea, takeFullPlace } from './pagesStyles';
+import { companiesTableColumns } from 'data';
+import { useAuthSelector } from 'redux/selectors.store';
 
 const companyTypes = [
   { title: 'Мої', param: 'own' },
@@ -12,17 +14,17 @@ const companyTypes = [
   { title: 'Запрошення', param: 'invites' },
   { title: 'Усі', param: 'all' },
 ];
-const companies = [
-  { _id: '', name: 'Рога і копита' },
-  { _id: '', name: 'Казінакі макі' },
-];
-const permissions = [
-  { _id: '1', status: 'accepted', company: companies[0], user: '', role: { _id: '', name: 'manager' } },
-  { _id: '2', status: 'pending', company: companies[1], user: '', role: { _id: '', name: 'counter' } },
-];
-console.log(permissions);
+// const companies = [
+//   { _id: '', name: 'Рога і копита' },
+//   { _id: '', name: 'Казінакі макі' },
+// ];
+// const permissions = [
+//   { _id: '1', status: 'accepted', company: companies[0], user: '', role: { _id: '', name: 'manager' } },
+//   { _id: '2', status: 'pending', company: companies[1], user: '', role: { _id: '', name: 'counter' } },
+// ];
 
 const PageHome: React.FC = () => {
+  const { user } = useAuthSelector();
   const [serchParams, setSearchParaps] = useSearchParams({ companyType: companyTypes[0].param });
   function onSearchParamClick(param: string) {
     setSearchParaps({ companyType: param });
@@ -40,7 +42,7 @@ const PageHome: React.FC = () => {
     <Page>
       <Top>
         <ProfileInfo>
-          <ProfileCard />
+          <ProfileCard {...user} />
         </ProfileInfo>
 
         <FilterButtons>
@@ -65,6 +67,7 @@ const PageHome: React.FC = () => {
             filter: false,
             search: true,
             checkboxes: false,
+            tableTitles: companiesTableColumns,
           }}
         />
       </Bottom>
@@ -148,7 +151,7 @@ const StButtonIcon = styled(ButtonIcon)`
     left: 50%;
     height: 1px;
     width: 100%;
-    height: 5px;
+    height: 4px;
     width: 0;
     transition: all ${({ theme }) => theme.globals.timingFnMui};
     transform: translate(-50%);

@@ -1,4 +1,4 @@
-import ButtonIcon from 'components/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { iconId } from 'data';
 import styled from 'styled-components';
 
@@ -43,8 +43,8 @@ const PageNotFound: React.FC<IErrorPageProps> = ({ errName = 'notFoundPage' }) =
         <ButtonIcon variant="outlinedLarge">outlinedLarge</ButtonIcon>
         <ButtonIcon variant="filledSmall">filledSmall</ButtonIcon>
         <ButtonIcon variant="filledLarge">filledLarge</ButtonIcon>
-        <ButtonIcon variant="onlyIcon" iconId={iconId.search}></ButtonIcon>
-        <ButtonIcon variant="onlyIconFilled" iconId={iconId.search}></ButtonIcon>
+        <ButtonIcon variant="onlyIcon" iconId="search"></ButtonIcon>
+        <ButtonIcon variant="onlyIconFilled" iconId="filterOn"></ButtonIcon>
         <ButtonIcon variant="textSmall">textSmall</ButtonIcon>
         <ButtonIcon variant="textLarge">textLarge</ButtonIcon>
         <ButtonIcon variant="underlinedText">underlinedText</ButtonIcon>

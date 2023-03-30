@@ -1,13 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import {
-  accentColors,
-  AccentColorNamesType,
-  appThemes,
-  getAccentColor,
-  getTheme,
-  IAppTheme,
-  globals,
-} from 'theme/theme';
+import { accentColors, AccentColorNamesType, appThemes, getAccentColor, getTheme, IAppTheme, globals } from 'theme';
 import { actionToggleDarkMode, actionResetAppSettings, actionSelectAccentColor } from './appSettings.actions';
 
 export interface IAppSettings {

@@ -4,7 +4,7 @@ import { logOutUserThunk } from 'redux/auth/auth.thunks';
 import { actionResetPageSettings } from 'redux/page/pageActions';
 import { useAppSettingsSelector } from 'redux/selectors.store';
 import { useAppDispatch } from 'redux/store.store';
-import { AccentColorNamesType } from 'theme/theme';
+import { AccentColorNamesType } from 'theme/accentColors';
 import { actionResetAppSettings, actionSelectAccentColor, actionToggleDarkMode } from './appSettings.actions';
 
 const useAppSettings = () => {

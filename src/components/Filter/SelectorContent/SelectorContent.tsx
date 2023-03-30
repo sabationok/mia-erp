@@ -1,4 +1,4 @@
-import ButtonIcon from 'components/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { iconId } from 'data';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';

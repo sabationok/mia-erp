@@ -9,7 +9,7 @@ import TableFooter from './TableFooter';
 import styled from 'styled-components';
 import { CellTittleProps } from './TebleCells/CellTitle';
 import { SelectItem } from './TableFilter/SearchParamInput/SearchParamInput';
-import { MaxToTabletXl } from 'components/DeviceTypeInformer/DeviceTypeController';
+import { MaxToTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 
 export type ITableListProps = {
   tableTitles?: CellTittleProps[];
