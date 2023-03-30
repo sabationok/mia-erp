@@ -198,6 +198,8 @@ const StyledLabel = styled.label`
     &::before {
       width: calc(100% + 4px);
     }
+    /* background: linear-gradient(#fff, #fff) padding-box,
+      linear-gradient(90deg, rgba(255, 175, 61, 0) 50%, rgba(255, 175, 61, 1) 50%, rgba(255, 175, 61, 0) 50%) border-box; */
   }
   &:focus-within {
   }
@@ -225,10 +227,10 @@ const StyledInput = styled.input`
   color: inherit;
   background-color: transparent;
 
+  background-color: ${({ theme }) => theme.backgroundColorLight};
   border-radius: 2px;
   border-style: none;
-  border: 1px solid ${({ theme }) => theme.globals.inputBorder};
-  background-color: ${({ theme }) => theme.backgroundColorLight};
+  border: 2px solid ${({ theme }) => theme.trBorderClr};
   transition: border ${({ theme }) => theme.globals.timingFnMui};
 
   &:focus {

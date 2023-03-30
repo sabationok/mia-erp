@@ -4,6 +4,7 @@ import DirList from '../DirList';
 import { founder } from 'utils';
 import styled from 'styled-components';
 import CountActions from './CountActions';
+import useCountsService from 'redux/counts/useCountsService.hook';
 
 export interface DirCountsProps {
   title: string;
@@ -19,13 +20,14 @@ const countsTest = [
 ];
 
 const DirCounts: React.FC<DirCountsProps> = props => {
-  const [filteredData, setFilteredData] = useState<any[]>(countsTest);
+  const { counts } = useCountsService();
+  const [filteredData, setFilteredData] = useState<any[]>(counts);
 
   return (
     <StModalForm
       {...props}
       onOptSelect={({ value }) => {
-        setFilteredData(founder({ searchParam: 'type', searchQuery: value, data: countsTest }));
+        setFilteredData(founder({ searchParam: 'type', searchQuery: value, data: counts }));
       }}
     >
       <Box>

@@ -35,6 +35,7 @@ const DirProjects: React.FC<DirProjectsProps> = props => {
 
 const StModalForm = styled(ModalForm)`
   height: 70vh;
+  resize: both;
 
   @media screen and (max-height: 480px) {
     height: 95vh;

@@ -1,4 +1,5 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import { ICount } from 'data/counts.types';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import DirList from './DirList';
@@ -8,16 +9,16 @@ export interface DirListItemProps {
   _id?: string;
   type?: any;
   name?: string;
-  owner?: string;
+  owner?: ICount;
   balance?: number;
   currency?: string;
   isLast?: boolean;
   list: DirListItemProps[];
   ActionsComponent: React.FC<any>;
 }
-const DirListItem: React.FC<DirListItemProps> = ({ label, type, owner, isLast, _id, list, ActionsComponent }) => {
+const DirListItem: React.FC<DirListItemProps> = ({ label, name, type, owner, isLast, _id, list, ActionsComponent }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const childrensList = list.filter(el => el?.owner === _id);
+  const childrensList = list.filter(el => el?.owner === _id || el?.owner?._id === _id);
 
   function onOpenClick() {
     setIsOpen(prev => !prev);
@@ -29,7 +30,7 @@ const DirListItem: React.FC<DirListItemProps> = ({ label, type, owner, isLast, _
         <ActionsField>{isLast && <ActionsComponent type={type} owner={owner} filled />}</ActionsField>
 
         <LabelField>
-          <Label>{label}</Label>
+          <Label>{label || name}</Label>
 
           {!(!childrensList || childrensList?.length === 0) && (
             <ButtonIcon

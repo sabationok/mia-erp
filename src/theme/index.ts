@@ -50,9 +50,11 @@ export interface ITheme {
 const darkTheme: ITheme = {
   backgroundColorMain: 'rgb(28, 28, 28)',
   backgroundColorSecondary: 'rgb(39, 39, 39)',
-  backgroundColorLight: 'rgb(46, 46, 46)',
+  // backgroundColorLight: 'rgb(46, 46, 46)',
+  backgroundColorLight: '#323234',
   backdropColor: 'rgba(21, 21, 21, 0.3)',
   borderColor: '#313131',
+  tableBackgroundColor: '#3A3A3C',
   trBorderClr: '#464646',
   colorLight: '#EFEFEF',
   fontColor: '#EFEFEF',
@@ -61,7 +63,6 @@ const darkTheme: ITheme = {
   fillColorHeader: '',
   fontColorSidebar: '',
   fillColorSidebar: '',
-  tableBackgroundColor: '#3A3A3C',
   defaultBtnBckgrndColor: {
     def: 'transparent',
     hover: 'rgba(219, 219, 219, 0.1)',
@@ -74,10 +75,11 @@ const darkTheme: ITheme = {
 const lightTheme: ITheme = {
   backgroundColorMain: 'rgb(86, 87, 117)',
   backgroundColorSecondary: 'rgb(118, 119, 152)',
-  backgroundColorLight: '#EFEFEF',
+  backgroundColorLight: 'rgba(231, 231, 255,1)',
   backdropColor: 'rgba(21, 21, 21, 0.3)',
   borderColor: 'rgba(122, 122, 122)',
-  trBorderClr: 'rgb(118, 119, 152)',
+  trBorderClr: 'rgba(86, 87, 117, 0.9)',
+  tableBackgroundColor: 'rgba(86, 87, 117,0.2)',
   colorLight: '#EFEFEF',
   fontColor: '#272727',
   fillColor: '#272727',
@@ -85,7 +87,6 @@ const lightTheme: ITheme = {
   fillColorHeader: '#EFEFEF',
   fontColorSidebar: '#EFEFEF',
   fillColorSidebar: '#EFEFEF',
-  tableBackgroundColor: 'rgb(214 214 214)',
   defaultBtnBckgrndColor: {
     def: 'transparent',
     hover: 'rgba(219, 219, 219, 0.1)',

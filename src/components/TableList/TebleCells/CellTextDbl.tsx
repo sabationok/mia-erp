@@ -82,10 +82,7 @@ const Top = styled(Content)`
   font-weight: 500;
   text-transform: uppercase;
 
-  justify-content: ${({ align }) => {
-    console.log(align);
-    return align === 'center' ? 'center' : `flex-${align}`;
-  }};
+  justify-content: ${({ align }) => (align === 'center' ? 'center' : `flex-${align}`)};
 `;
 const Bottom = styled(Content)`
   font-size: 11px;

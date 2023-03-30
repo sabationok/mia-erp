@@ -1,15 +1,11 @@
 import { useAuthSelector } from 'redux/selectors.store';
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { IAuthState } from './auth.slice';
-import {
-  registerUserThunk,
-  logInUserThunk,
-  logOutUserThunk,
-  getCurrentUserThunk,
-  IPayloadRegisterUser,
-  IRegistrationData,
-} from './auth.thunks';
-
+import { registerUserThunk, IRegistrationData } from './auth.thunks';
+// logInUserThunk,
+// logOutUserThunk,
+// getCurrentUserThunk,
+// IPayloadRegisterUser,
 const registration = (dispatch: AppDispatch, authState: IAuthState) => {
   function registerUser({ email, password }: IRegistrationData) {
     const payload = {
@@ -20,7 +16,7 @@ const registration = (dispatch: AppDispatch, authState: IAuthState) => {
     dispatch(registerUserThunk(payload));
     return;
   }
-  return registerUser;
+  return registerUser as typeof registerUser;
 };
 
 const useAppAuth = () => {
@@ -29,7 +25,7 @@ const useAppAuth = () => {
 
   return {
     dispatch,
-    useRegistration: registration(dispatch, authState),
+    useRegistration: () => registration(dispatch, authState),
     ...authState,
   };
 };

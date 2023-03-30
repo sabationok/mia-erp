@@ -28,11 +28,6 @@ export interface IRegistrationData {
   email: string;
   password: string;
 }
-// export interface IPayloadBase {
-//   submitData?: any;
-//   onSuccess: (args?: any) => void;
-//   onError(error?: AuthErrorType): void;
-// }
 export interface IPayloadRegisterUser {
   submitData: IRegistrationData;
   onSuccess: (regUserData?: any) => void | IRegisteredUser;

@@ -30,7 +30,7 @@ const Footer = styled.footer`
   bottom: 0;
   left: 0;
 
-  padding: 20px;
+  padding: 12px;
 
   width: 100%;
 
@@ -41,5 +41,8 @@ const Footer = styled.footer`
   color: ${({ theme }) => theme.fontColorHeader};
   fill: ${({ theme }) => theme.fillColorHeader};
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  @media screen and (min-width: 768px) {
+    padding: 20px;
+  }
 `;
 export default ModalFooter;

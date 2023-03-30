@@ -19,7 +19,7 @@ interface IModalProviderContext {
   isOpen: boolean;
 }
 
-export const ModalProviderContext = createContext<IModalProviderContext | any>({});
+export const ModalProviderContext = createContext({});
 export const useModalProvider = () => useContext(ModalProviderContext) as IModalProviderContext;
 
 const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) => {

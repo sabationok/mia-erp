@@ -13,6 +13,8 @@ export const transactionsSelector = (state: RootState) => state.transactions;
 export const getAllTransactions = (state: RootState) => state.transactions.transactions;
 export const useTransactionsSelector = () => useSelector((state: RootState) => state.transactions);
 
+export const useCountsSelector = () => useSelector((state: RootState) => state.counts);
+
 // export const categoriesSelector = (state: RootState) => state.categories;
 // export const getAllCategories = (state: RootState) => state.categories.categories;
 // export const getCategoriesByOwnerId = (ownerId: string) => (state: RootState) =>

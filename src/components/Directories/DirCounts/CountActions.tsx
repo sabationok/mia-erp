@@ -5,9 +5,6 @@ import React from 'react';
 import FormCreateCount, { FormCreateCountProps } from './FormCreateCount';
 
 export interface CountActionsProps extends FormCreateCountProps {
-  // type: 'ACTIVE' | 'PASIIVE';
-  // owner?: string;
-  // _id?: string;
   iconId?: keyof typeof iconId;
   filled?: boolean;
 }
