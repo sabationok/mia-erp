@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { AxiosResponse } from 'axios';
 import { ICount } from 'data/counts.types';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 import { axiosErrorCheck } from 'utils';
@@ -6,7 +7,7 @@ import { axiosErrorCheck } from 'utils';
 import baseApi from '../../api/baseApi';
 // import { token } from '../../services/baseApi';
 const COUNTS_API_BASENAME = '/directories/counts';
-export const authApiRoutes = {
+export const countsApiRoutes = {
   getAll: `${COUNTS_API_BASENAME}/getAll`,
   getById: `${COUNTS_API_BASENAME}/getById`,
   create: `${COUNTS_API_BASENAME}/create`,
@@ -14,15 +15,8 @@ export const authApiRoutes = {
   update: `${COUNTS_API_BASENAME}/update`,
 };
 
-export interface IAllTransactions {
+export interface IAllCounts {
   data: ICount[];
-}
-export interface IRegisteredUser {
-  email: string;
-}
-export interface IRegistrationData {
-  email: string;
-  password: string;
 }
 export interface IPayloadGetAllTr {
   submitData?: null;
@@ -44,17 +38,15 @@ export interface IPayloadGetAllTr {
 //   onError(error: AuthErrorType): void;
 // }
 
-export const getAllCountsThunk = createAsyncThunk<IAllTransactions, IPayloadGetAllTr>(
+export const getAllCountsThunk = createAsyncThunk<IAllCounts, IPayloadGetAllTr>(
   'counts/getAllCountsThunk',
   async (payload, thunkAPI) => {
     try {
-      const {
-        data: { data },
-      }: { data: IAllTransactions } = await baseApi.get(`/directories/counts/getAll`);
+      const response: AxiosResponse<IAllCounts> = await baseApi.get(countsApiRoutes.getAll);
 
-      payload?.onSuccess(data);
+      payload?.onSuccess(response.data.data);
 
-      return { data };
+      return response.data;
     } catch (error) {
       payload?.onError(error);
 

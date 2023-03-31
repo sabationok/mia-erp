@@ -11,8 +11,8 @@ export interface SelectsListProps<T = any> {
 const SelectsList: React.FC<SelectsListProps> = ({ isOpen, onSelect, mapedData }) => {
   return (
     <List isOpen={isOpen}>
-      {mapedData.map(({ _id, label }, idx) => (
-        <SelectsListItem key={_id || idx} onSelect={onSelect} _id={_id} label={label} />
+      {mapedData.map((item, idx) => (
+        <SelectsListItem key={item._id || idx} onSelect={onSelect} {...item} />
       ))}
     </List>
   );
@@ -27,9 +27,12 @@ const List = styled.ul<{ isOpen?: boolean }>`
   gap: 2px;
 
   width: 100%;
-  max-height: 100%;
-  overflow: auto;
+  /* height: 100%; */
 
+  overflow: auto;
+  @media screen and (max-width: 768px) {
+    max-height: 200px;
+  }
   /* background-color: #323234; */
 `;
 

@@ -4,23 +4,27 @@ import DirListItem, { DirListItemProps } from './DirListItem';
 
 export interface DirListProps {
   list: DirListItemProps[];
-  entryList?: DirListItemProps[];
+  entryList: DirListItemProps[];
   owner?: string;
-  ActionsComponent: React.FC<any>;
+  onDelete: (_id?: string) => void;
+  onEdit: (_id?: string) => void;
+  onCreateChild: (ownerID?: string) => void;
 }
 
-const DirList: React.FC<DirListProps> = ({ entryList, list, owner, ActionsComponent }) => {
+const DirList: React.FC<DirListProps> = ({ entryList, list, owner, onDelete, onEdit, onCreateChild }) => {
   const renderList = entryList ? entryList : list;
 
   return (
     <List>
-      {renderList.map((item, idx) => (
+      {renderList?.map((item, idx) => (
         <DirListItem
           key={item?._id || idx}
           {...item}
-          isLast={entryList?.length === 1 || (entryList ? idx === entryList.length - 1 : false)}
+          onDelete={onDelete}
+          onEdit={onEdit}
+          onCreateChild={onCreateChild}
+          canHaveChild={!item.owner}
           list={list}
-          ActionsComponent={ActionsComponent}
         />
       ))}
     </List>

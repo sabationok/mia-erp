@@ -5,7 +5,7 @@ import { usersSlice } from './users/usersSlice';
 import { appSettingsSlice } from './appSettings/appSettings.slice';
 import { appPageSlice } from './page/pageSlice';
 import { transactionsSlice } from './transactions/transactions.slice';
-// import { categoriesSlice } from './categories/categoriesSlice';
+import { categoriesSlice } from './categories/categoriesSlice';
 import { countsSlice } from './counts/counts.slice';
 // import { documentsSlice } from './documents/documents.slice';
 import { presistorConfigs } from './configs.store';
@@ -17,7 +17,7 @@ const rootReducer = combineReducers({
   [appPageSlice.name]: persistReducer(presistorConfigs.pageSettings, appPageSlice.reducer),
   [transactionsSlice.name]: persistReducer(presistorConfigs.transactions, transactionsSlice.reducer),
   [countsSlice.name]: persistReducer(presistorConfigs.counts, countsSlice.reducer),
-  // [categoriesSlice.name]: persistReducer(presistorConfigs.categories, categoriesSlice.reducer),
+  [categoriesSlice.name]: persistReducer(presistorConfigs.categories, categoriesSlice.reducer),
   // [documentsSlice.name]: documentsSlice.reducer,
 });
 

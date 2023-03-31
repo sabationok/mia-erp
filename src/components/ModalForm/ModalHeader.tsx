@@ -1,11 +1,8 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { iconId } from 'data';
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 
 const ModalHeader: React.FC<{ title: string }> = ({ title = 'default header titile' }) => {
-  const theme = useTheme();
-
-  console.log(theme);
   return (
     <Header>
       <Title>{title}</Title>

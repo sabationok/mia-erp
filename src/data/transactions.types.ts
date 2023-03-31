@@ -1,3 +1,4 @@
+import { ICategory } from './categories.types';
 import { ICount } from './counts.types';
 
 export interface IBase {
@@ -6,18 +7,8 @@ export interface IBase {
   updatedAt?: Date | string;
 }
 
-export type TransactionType = 'EXPENSE' | 'TRANSFER' | 'INCOME';
-
 export type CurrencyCode = 'UAH';
-
-export interface ITrCategory extends IBase {
-  name?: string;
-  label?: string;
-  type: TransactionType;
-  descr?: string;
-  def?: string;
-  owner?: string;
-}
+export type TransactionType = 'EXPENSE' | 'TRANSFER' | 'INCOME';
 export interface IContractor extends IBase {
   name?: string;
   label?: string;
@@ -52,13 +43,13 @@ export interface ITransaction extends IBase {
   subCountIn?: ICount;
   countOut?: ICount;
   subCountOut?: ICount;
-  category?: ITrCategory;
-  subCategory?: ITrCategory;
+  category?: ICategory;
+  subCategory?: ICategory;
   contractor?: IContractor;
   project?: IProject;
   document?: IDocument;
   companyActivity?: ICompanyActivity;
   status?: 'rejected' | 'approved' | 'pending';
   commnet?: string;
-  tags: string[];
+  tags?: string[];
 }

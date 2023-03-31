@@ -1,33 +1,35 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { MaxToTablet } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 import { iconId } from 'data';
+import { ICategory } from 'data/categories.types';
+import { ICount } from 'data/counts.types';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { IFilterSelector } from './Filter';
 
-// import { MaxToTablet } from 'components/DeviceTypeInformer/DeviceTypeController';
-
-export interface FilterSelectorProps extends React.HTMLAttributes<Element> {
+export interface IFilterSelectorAddsProps {
+  ListComp: React.FC<any>;
+}
+export type FilterSelectorDataType = ICount[] | ICategory[] | any[];
+export interface FilterSelectorProps {
   label: string;
   selectorName?: string;
-  data?: any[];
+  useData: () => FilterSelectorDataType;
   idx: number;
   currentIdx: number | null;
-  CurrentData: IFilterSelector;
+  CurrentData: any;
   onCheckAll?: () => void;
   onSelectorClick: (idx?: number) => void;
 }
-const Selector: React.FC<FilterSelectorProps> = ({
+const Selector: React.FC<FilterSelectorProps & React.HTMLAttributes<Element>> = ({
   label = 'Selector label',
-  data = [],
   selectorName = 'selector',
   onSelectorClick,
   currentIdx,
-  onCheckAll,
+  useData,
   idx,
   children,
 }) => {
-  const [selectedItems, setSelectedItem] = useState<any[] | undefined>(data);
+  const [selectedItems, setSelectedItem] = useState<any[] | undefined>(useData());
   const [isActive, setIsActive] = useState<boolean>(false);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -40,6 +42,7 @@ const Selector: React.FC<FilterSelectorProps> = ({
       })
     );
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function onResetFilter() {
     setSelectedItem(prev =>
       prev?.map(el => {
@@ -50,70 +53,31 @@ const Selector: React.FC<FilterSelectorProps> = ({
 
   useEffect(() => {
     setIsActive(selectedItems?.some(el => el.checked) ? true : false);
-  }, [selectedItems]);
+    console.log(isActive);
+  }, [isActive, selectedItems]);
 
   return (
     <SelectorContainer>
-      <StyledSelector isCurrent={currentIdx === idx}>
-        <ButtonIcon
-          size="26px"
-          variant="def"
-          iconId={iconId.checkBoxOff}
-          iconSize="22px"
-          onClick={() => onCheckAll && onCheckAll()}
-        />
-
-        <SelectorBody isCurrent={currentIdx === idx}>
-          <Label>{label}</Label>
-
-          <ButtonIcon
-            size="26px"
-            variant="def"
-            iconId={iconId.filterOff}
-            disabled={!isActive}
-            onClick={onResetFilter}
-          />
-
-          <StOpenButton
-            size="26px"
-            variant="def"
-            isCurrent={currentIdx === idx}
-            iconId={iconId.SmallArrowDown}
-            iconSize="22px"
-            onClick={() => onSelectorClick && onSelectorClick()}
-          />
-        </SelectorBody>
-      </StyledSelector>
+      <StOpenButton
+        variant="def"
+        isCurrent={currentIdx === idx}
+        endIconId={iconId.SmallArrowDown}
+        endIconSize="22px"
+        onClick={() => onSelectorClick && onSelectorClick()}
+      >
+        <Label>{label}</Label>
+      </StOpenButton>
 
       <MaxToTablet>{currentIdx === idx ? <SelectorList>{children}</SelectorList> : null}</MaxToTablet>
     </SelectorContainer>
   );
 };
-const SelectorContainer = styled.div``;
-const StyledSelector = styled.div<{ isCurrent: boolean }>`
+const SelectorContainer = styled.div`
   display: flex;
-  align-items: center;
-
-  gap: 2px;
-
-  font-size: 12px;
-  color: ${({ theme }) => theme.fontColorHeader};
-  fill: ${({ theme }) => theme.accentColor.base};
-
-  border-radius: 2px;
-`;
-const SelectorBody = styled.div<{ isCurrent: boolean }>`
-  flex-grow: 1;
-
-  display: grid;
-  grid-template-columns: 1fr min-content min-content;
+  flex-direction: column;
   gap: 4px;
-
-  border-radius: 2px;
-
-  background-color: ${({ theme }) => theme.backgroundColorLight};
-  border: 2px solid ${({ isCurrent, theme }) => (isCurrent ? theme.accentColor.base : 'transparent')};
 `;
+
 const Label = styled.div`
   flex-grow: 1;
 
@@ -123,22 +87,27 @@ const Label = styled.div`
   padding: 5px 8px;
 `;
 const StOpenButton = styled(ButtonIcon)<{ isCurrent: boolean }>`
-  & .icon {
+  width: 100%;
+  font-size: 12px;
+  fill: ${({ theme }) => theme.accentColor.base};
+
+  justify-content: space-between;
+
+  background-color: ${({ theme }) => theme.backgroundColorLight};
+
+  border-color: ${({ isCurrent, theme }) => (isCurrent ? theme.accentColor.base : '')};
+  & .endIcon {
     transform: ${({ isCurrent }) => `rotate(${isCurrent ? 180 : 0}deg)`};
   }
 
   @media screen and (min-width: 768px) {
-    & .icon {
+    & .endIcon {
       transform: ${({ isCurrent }) => `rotate(${isCurrent ? -90 : 90}deg)`};
     }
   }
 `;
 const SelectorList = styled.div`
   overflow: hidden;
-
-  max-height: 250px;
-
-  padding: 4px 0 4px 28px;
 `;
 
 export default Selector;

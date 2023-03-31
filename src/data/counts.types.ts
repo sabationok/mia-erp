@@ -9,5 +9,5 @@ export interface ICount extends IBase {
   code?: number | string;
   descr?: string;
   def?: string;
-  owner?: string;
+  owner?: ICount;
 }

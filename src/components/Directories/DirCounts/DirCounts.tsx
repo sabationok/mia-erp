@@ -5,23 +5,20 @@ import { founder } from 'utils';
 import styled from 'styled-components';
 import CountActions from './CountActions';
 import useCountsService from 'redux/counts/useCountsService.hook';
+import { ICount } from 'data/counts.types';
 
 export interface DirCountsProps {
   title: string;
   filterOptions: FilterOpt[];
 }
 
-const countsTest = [
-  { _id: 'sfbnndgb', label: 'Рахунок 1', type: 'PASSIVE' },
-  { _id: 'sffgbdgb', label: 'Рахунок 2', type: 'PASSIVE' },
-  { _id: 'sfbdgngb', label: 'Рахунок 3', type: 'ACTIVE' },
-  { _id: 'sfbfhmfdgngb', label: 'Рахунок 5', type: 'ACTIVE' },
-  { _id: 'sffhnbdgngb', label: 'Рахунок 4', type: 'ACTIVE', owner: 'sfbdgngb' },
-];
-
 const DirCounts: React.FC<DirCountsProps> = props => {
   const { counts } = useCountsService();
-  const [filteredData, setFilteredData] = useState<any[]>(counts);
+  const [filteredData, setFilteredData] = useState<ICount[]>(counts);
+
+  function onDelete() {}
+  function onEdit() {}
+  function onCreateChild() {}
 
   return (
     <StModalForm
@@ -32,9 +29,11 @@ const DirCounts: React.FC<DirCountsProps> = props => {
     >
       <Box>
         <DirList
+          onDelete={onDelete}
+          onEdit={onEdit}
+          onCreateChild={onCreateChild}
           list={filteredData}
           entryList={filteredData.filter(el => !el?.owner)}
-          ActionsComponent={CountActions}
         />
       </Box>
     </StModalForm>

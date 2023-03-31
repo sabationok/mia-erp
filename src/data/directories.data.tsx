@@ -31,11 +31,11 @@ const CategoriesProps: DirCategoriesProps = {
 };
 const ProjectsProps: DirCategoriesProps = {
   title: 'Проєкти',
-  filterOptions: [
-    { label: 'Нові', value: 'PENDING' },
-    { label: 'Закриті', value: 'FULLFILED' },
-    { label: 'Майбутні', value: 'FUTURE' },
-  ],
+  // filterOptions: [
+  //   { label: 'Нові', value: 'PENDING' },
+  //   { label: 'Закриті', value: 'FULLFILED' },
+  //   { label: 'Майбутні', value: 'FUTURE' },
+  // ],
 };
 
 const directories: IDirectory[] = [
@@ -60,7 +60,6 @@ const directories: IDirectory[] = [
     modalChildrenProps: ProjectsProps,
     disabled: true,
   },
-  { title: 'Проекти', iconId: iconId.folder, ModalChildren: () => null, modalChildrenProps: null, disabled: true },
   {
     title: 'Контрагенти',
     iconId: iconId.partners,

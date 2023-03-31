@@ -3,14 +3,21 @@ import { iconId } from 'data';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-export interface SelectsListItemProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface SelectsListItemProps {
   checked?: boolean;
   _id: string;
   label: string;
+  name?: string;
   onSelect: <T = any | undefined>(item: T) => void;
 }
 
-const SelectsListItem: React.FC<SelectsListItemProps> = ({ checked, label, _id, onSelect }) => {
+const SelectsListItem: React.FC<SelectsListItemProps & React.HTMLAttributes<HTMLDivElement>> = ({
+  checked,
+  label,
+  name,
+  _id,
+  onSelect,
+}) => {
   const [isChecked, setIsChecked] = useState<boolean | undefined>(checked || false);
   function handleSelect() {
     setIsChecked(prev => {
@@ -30,7 +37,7 @@ const SelectsListItem: React.FC<SelectsListItemProps> = ({ checked, label, _id, 
         onClick={handleSelect}
       ></ButtonIcon>
 
-      <span>{label}</span>
+      <span>{label || name}</span>
     </StyledItem>
   );
 };

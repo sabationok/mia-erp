@@ -3,38 +3,41 @@ import ModalForm, { FilterOpt } from 'components/ModalForm/ModalForm';
 import DirList from '../DirList';
 import { founder } from 'utils';
 import styled from 'styled-components';
-import CategoriesActions from './CategoriesActions';
+import useCategoriesService from 'redux/categories/useCategoriesService.hook';
+import { ICategory } from 'data/categories.types';
 
 export interface DirCategoriesProps {
   title: string;
-  filterOptions: FilterOpt[];
+  filterOptions?: FilterOpt[];
 }
 
-const countsTest = [
-  { _id: 'sfbnndgb', label: 'Категорія 1', type: 'TRANSFER' },
-  { _id: 'sffgbdgb', label: 'Категорія 2', type: 'TRANSFER' },
-  { _id: 'sfbdgngb', label: 'Категорія 3', type: 'INCOME' },
-  { _id: 'sfbfhmfdgngb', label: 'Категорія 5', type: 'EXPENSE' },
-  { _id: 'sffhnbdgngb', label: 'Під-категорія 4', type: 'INCOME', owner: 'sfbdgngb' },
-  { _id: 'sffhпnbdgngb', label: 'Під-категорія 6', type: 'INCOME', owner: 'sfbdgngb' },
-  { _id: 'sffаhnbdgngb', label: 'Під-категорія 8', type: 'INCOME', owner: 'sfbdgngb' },
-];
-
 const DirCategories: React.FC<DirCategoriesProps> = props => {
-  const [filteredData, setFilteredData] = useState<any[]>(countsTest);
+  const { categories } = useCategoriesService();
+  const [filteredData, setFilteredData] = useState<ICategory[]>(categories);
+  function onDelete(_id?: string) {
+    console.log(_id);
+  }
+  function onEdit(_id?: string) {
+    console.log(_id);
+  }
+  function onCreateChild(ownerId?: string) {
+    console.log(ownerId);
+  }
 
   return (
     <StModalForm
       {...props}
       onOptSelect={({ value }) => {
-        setFilteredData(founder({ searchParam: 'type', searchQuery: value, data: countsTest }));
+        setFilteredData(founder({ searchParam: 'type', searchQuery: value, data: categories }));
       }}
     >
       <Box>
         <DirList
           list={filteredData}
+          onDelete={onDelete}
+          onEdit={onEdit}
+          onCreateChild={onCreateChild}
           entryList={filteredData.filter(el => !el?.owner)}
-          ActionsComponent={CategoriesActions}
         />
       </Box>
     </StModalForm>

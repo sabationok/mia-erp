@@ -1,24 +1,41 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import { ICategory } from 'data/categories.types';
 import { ICount } from 'data/counts.types';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import DirList from './DirList';
 
 export interface DirListItemProps {
-  label: string;
   _id?: string;
+  label?: string;
   type?: any;
   name?: string;
-  owner?: ICount;
+  owner?: ICount | ICategory;
   balance?: number;
   currency?: string;
-  isLast?: boolean;
-  list: DirListItemProps[];
-  ActionsComponent: React.FC<any>;
 }
-const DirListItem: React.FC<DirListItemProps> = ({ label, name, type, owner, isLast, _id, list, ActionsComponent }) => {
+export interface DirListItemAddsProps {
+  list: DirListItemProps[];
+  canHaveChild: boolean;
+  onDelete: (_id?: string) => void;
+  onEdit: (_id?: string) => void;
+  onCreateChild: (ownerID?: string) => void;
+}
+
+const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
+  label,
+  name,
+  type,
+  owner,
+  canHaveChild,
+  _id,
+  list,
+  onDelete,
+  onEdit,
+  onCreateChild,
+}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const childrensList = list.filter(el => el?.owner === _id || el?.owner?._id === _id);
+  const childrensList = list?.filter(el => el?.owner === _id || el?.owner?._id === _id);
 
   function onOpenClick() {
     setIsOpen(prev => !prev);
@@ -27,7 +44,11 @@ const DirListItem: React.FC<DirListItemProps> = ({ label, name, type, owner, isL
   return (
     <Item>
       <CountGrid>
-        <ActionsField>{isLast && <ActionsComponent type={type} owner={owner} filled />}</ActionsField>
+        <ActionsField>
+          {canHaveChild && (
+            <ButtonIcon variant="onlyIcon" iconSize="24px" iconId="plus" onClick={() => onCreateChild(_id)} />
+          )}
+        </ActionsField>
 
         <LabelField>
           <Label>{label || name}</Label>
@@ -43,15 +64,21 @@ const DirListItem: React.FC<DirListItemProps> = ({ label, name, type, owner, isL
         </LabelField>
 
         <ActionsField>
-          <ActionsComponent type={type} _id={_id} iconId="edit" />
+          <ButtonIcon variant="onlyIcon" iconSize="24px" iconId="edit" onClick={() => onEdit(_id)} />
 
-          <ButtonIcon variant="onlyIcon" iconSize="24px" iconId="delete" />
+          <ButtonIcon variant="onlyIcon" iconSize="24px" iconId="delete" onClick={() => onDelete(_id)} />
         </ActionsField>
       </CountGrid>
 
       <Children isOpen={isOpen}>
         {childrensList && childrensList.length > 0 && (
-          <DirList list={list} entryList={childrensList} ActionsComponent={ActionsComponent} />
+          <DirList
+            list={list}
+            entryList={childrensList}
+            onDelete={onDelete}
+            onEdit={onEdit}
+            onCreateChild={onCreateChild}
+          />
         )}
       </Children>
     </Item>

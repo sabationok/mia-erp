@@ -2,9 +2,11 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { iconId } from 'data';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { FilterSelectorProps, IFilterSelectorAddsProps } from '../Selector';
 
 export interface SelectorListItem {
   label?: string;
+  name?: string;
   _id?: string;
   checked?: boolean;
 }
@@ -12,40 +14,34 @@ export interface SelectorListItem {
 export interface SelectorContentProps {
   onSelect: (item: SelectorListItem) => void;
   isOpen?: boolean;
-  data: SelectorListItem[];
-  selectorName?: string;
-  ListComp?: React.FC<any>;
 }
 
-const SelectorContent: React.FC<SelectorContentProps & React.HTMLAttributes<HTMLDivElement>> = ({
-  isOpen = false,
-  onSelect,
-  data,
-  selectorName,
-  ListComp,
-  ...props
-}) => {
+const SelectorContent: React.FC<
+  SelectorContentProps &
+    Pick<FilterSelectorProps, 'useData' | 'selectorName'> &
+    Pick<IFilterSelectorAddsProps, 'ListComp'> &
+    React.HTMLAttributes<HTMLDivElement>
+> = ({ isOpen = false, onSelect, useData, selectorName, ListComp, ...props }) => {
+  const initialData = useData();
   const [searchParam, setSearchParam] = useState<string>('');
-  const [filteredData, setFilteredData] = useState<SelectorListItem[]>(data || []);
+  const [filteredData, setFilteredData] = useState<SelectorListItem[]>(initialData || []);
 
   function onInputChange(ev: React.ChangeEvent<HTMLInputElement>) {
     const { value } = ev.target;
     setSearchParam(value);
-    // setInputValue(prev => {
-    //   return { ...prev, [name]: value };
-    // });
   }
   function onSerchParamReset() {
     setSearchParam('');
   }
 
   useEffect(() => {
-    // console.log('select data', data);
-    if (data?.length === 0) {
+    if (initialData?.length === 0) {
       return;
     }
 
-    const filteredData = data?.filter(el => {
+    const filteredData = initialData.filter((el: any) => {
+      if (searchParam && el?.name) return !(searchParam && !el.name.toLowerCase().includes(searchParam.toLowerCase()));
+
       if (searchParam && el?.label)
         return !(searchParam && !el.label.toLowerCase().includes(searchParam.toLowerCase()));
 
@@ -53,48 +49,66 @@ const SelectorContent: React.FC<SelectorContentProps & React.HTMLAttributes<HTML
     });
 
     filteredData && setFilteredData(filteredData);
-  }, [data, searchParam]);
+  }, [initialData, searchParam]);
 
   return (
     <Content {...props}>
       <StyledLabel>
         <SearchInput type="text" name={selectorName} placeholder="Пошук" value={searchParam} onChange={onInputChange} />
 
-        <StResetInputButton variant="onlyIcon" size="26px" iconId={iconId.close} onClick={onSerchParamReset} />
+        <ButtonIcon variant="onlyIcon" size="26px" iconId={iconId.close} onClick={onSerchParamReset} />
       </StyledLabel>
 
       {filteredData.length > 0 && ListComp ? (
         <ListComp
           isOpen={isOpen}
           mapedData={filteredData}
-          onSelect={(data: any) => {
-            console.log(data);
+          onSelect={(data: SelectorListItem) => {
+            if (selectorName) {
+              console.log({ [selectorName]: data });
+            }
           }}
-        ></ListComp>
-      ) : null}
+        />
+      ) : (
+        <NotFound>Нчіого не знайдено</NotFound>
+      )}
+
+      <AcceptButtons>
+        <ButtonIcon variant="onlyIcon" size="26px" iconId={iconId.done} />
+        <ButtonIcon variant="onlyIcon" size="26px" iconId={iconId.doneAll} />
+        <ButtonIcon variant="onlyIcon" size="26px" iconId={iconId.close} onClick={onSerchParamReset} />
+      </AcceptButtons>
     </Content>
   );
 };
 const Content = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 28px 1fr;
+  grid-template-rows: 28px 1fr 28px;
 
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
+  height: 250px;
   max-height: 100%;
   overflow: hidden;
   color: ${({ theme }) => theme.fontColorHeader};
 
   border-radius: 2px;
   background-color: ${({ theme }) => theme.backgroundColorLight};
+
+  @media screen and (min-width: 768px) {
+    height: 100%;
+  }
 `;
 const StyledLabel = styled.label`
+  display: flex;
+
   position: relative;
 
   border-style: none;
   border-image: none;
   border-width: 0;
+  border-bottom: 1px solid ${({ theme }) => theme.globals.inputBorder};
 
   &::before {
     display: block;
@@ -130,43 +144,26 @@ const SearchInput = styled.input`
   background-color: transparent;
 
   border-style: none;
-  border-bottom: 1px solid ${({ theme }) => theme.globals.inputBorder};
+
   &:hover,
   &:focus {
     /* border-bottom-color: ${({ theme }) => theme.accentColor.hover}; */
     outline-style: none;
   }
 `;
-const StResetInputButton = styled(ButtonIcon)`
-  position: absolute;
 
-  right: 0;
-  top: 0;
+const NotFound = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
-// const SelectList = styled.ul<{ isOpen: boolean }>`
-//   display: grid;
-//   grid-template-columns: 1fr;
-//   grid-auto-rows: 22px;
+const AcceptButtons = styled.div`
+  display: flex;
+  justify-content: end;
+  gap: 16px;
 
-//   padding: 8px 0;
-//   gap: 2px;
-
-//   width: 100%;
-//   max-height: 100%;
-//   overflow: auto;
-
-//   /* background-color: #323234; */
-// `;
-// const SelectListItem = styled.li`
-//   display: flex;
-//   align-items: center;
-
-//   gap: 8px;
-
-//   padding: 0 8px;
-
-//   border-radius: 2px;
-// `;
+  border-top: 1px solid ${({ theme }) => theme.globals.inputBorder};
+`;
 
 export default SelectorContent;
