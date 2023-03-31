@@ -3,13 +3,13 @@ import { getAllCountsThunk } from 'redux/counts/counts.thunks';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 import { ICount } from 'data/counts.types';
 
-export interface ICuntsState {
+export interface ICountsState {
   counts: ICount[];
   isLoading: boolean;
   error: AuthErrorType;
 }
 
-const initialState: ICuntsState = {
+const initialState: ICountsState = {
   isLoading: false,
   error: null,
   counts: [],

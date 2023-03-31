@@ -18,13 +18,13 @@ export interface SelectorContentProps {
 
 const SelectorContent: React.FC<
   SelectorContentProps &
-    Pick<FilterSelectorProps, 'useData' | 'selectorName'> &
+    Pick<FilterSelectorProps, 'selectorName' | 'data'> &
     Pick<IFilterSelectorAddsProps, 'ListComp'> &
     React.HTMLAttributes<HTMLDivElement>
-> = ({ isOpen = false, onSelect, useData, selectorName, ListComp, ...props }) => {
-  const initialData = useData();
+> = ({ isOpen = false, onSelect, data, selectorName, ListComp, ...props }) => {
+  // const data = useData();
   const [searchParam, setSearchParam] = useState<string>('');
-  const [filteredData, setFilteredData] = useState<SelectorListItem[]>(initialData || []);
+  const [filteredData, setFilteredData] = useState<SelectorListItem[]>(data || []);
 
   function onInputChange(ev: React.ChangeEvent<HTMLInputElement>) {
     const { value } = ev.target;
@@ -33,13 +33,21 @@ const SelectorContent: React.FC<
   function onSerchParamReset() {
     setSearchParam('');
   }
+  function onSelectAllClick(state?: boolean) {
+    setFilteredData(prev =>
+      data?.map(el => {
+        return { ...el, checked: state ? state : false };
+      })
+    );
+  }
 
   useEffect(() => {
-    if (initialData?.length === 0) {
+    if (data?.length === 0) {
       return;
     }
+    if (!searchParam) return;
 
-    const filteredData = initialData.filter((el: any) => {
+    const filteredData = data?.filter((el: any) => {
       if (searchParam && el?.name) return !(searchParam && !el.name.toLowerCase().includes(searchParam.toLowerCase()));
 
       if (searchParam && el?.label)
@@ -49,7 +57,7 @@ const SelectorContent: React.FC<
     });
 
     filteredData && setFilteredData(filteredData);
-  }, [initialData, searchParam]);
+  }, [data, searchParam]);
 
   return (
     <Content {...props}>
@@ -75,8 +83,10 @@ const SelectorContent: React.FC<
 
       <AcceptButtons>
         <ButtonIcon variant="onlyIcon" size="26px" iconId={iconId.done} />
-        <ButtonIcon variant="onlyIcon" size="26px" iconId={iconId.doneAll} />
-        <ButtonIcon variant="onlyIcon" size="26px" iconId={iconId.close} onClick={onSerchParamReset} />
+
+        <ButtonIcon variant="onlyIcon" size="26px" iconId={iconId.doneAll} onClick={() => onSelectAllClick(true)} />
+
+        <ButtonIcon variant="onlyIcon" size="26px" iconId={iconId.close} onClick={() => onSelectAllClick()} />
       </AcceptButtons>
     </Content>
   );

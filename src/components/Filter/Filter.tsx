@@ -9,31 +9,48 @@ import { MinTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeContr
 
 import { useCategoriesSelector } from 'redux/categories/useCategoriesService.hook';
 import { useCountsSelector } from 'redux/selectors.store';
+import { ICount } from 'data/counts.types';
+import { ICategory } from 'data/categories.types';
 
-// const transationTypes = [
-//   { _id: 'ds6d5vf6sd5f1v6sd', name: 'INCOME', label: 'ДОХІД' },
-//   { _id: 'ds6d5vf6sd6f1v61d', name: 'TRANSFER', label: 'ПЕРЕКАЗ' },
-//   { _id: 'ds6d5vf6dd6f1v68d', name: 'EXPENSE', label: 'ВИТРАТИ' },
-// ];
+const useFilterSelectors = (): SelectorType[] => {
+  const transationTypes = [
+    { _id: 'ds6d5vf6sd5f1v6sd', name: 'INCOME', label: 'ДОХІД' },
+    { _id: 'ds6d5vf6sd6f1v61d', name: 'TRANSFER', label: 'ПЕРЕКАЗ' },
+    { _id: 'ds6d5vf6dd6f1v68d', name: 'EXPENSE', label: 'ВИТРАТИ' },
+  ];
 
-const selectorsArr = [
-  {
-    label: 'Рахунки',
-    useData: () => useCountsSelector().counts,
-    selectorName: 'categories',
-    ListComp: SelectsList,
-  },
-  {
-    label: 'Категорії',
-    useData: () => useCategoriesSelector().categories,
-    selectorName: 'counts',
-    ListComp: SelectsList,
-  },
-];
-export type SelectorType = typeof selectorsArr[0];
+  const selectors: SelectorType[] = [
+    {
+      label: 'Тип',
+      data: transationTypes,
+      selectorName: 'type',
+      ListComp: SelectsList,
+    },
+    {
+      label: 'Рахунки',
+      data: useCountsSelector().counts,
+      selectorName: 'categories',
+      ListComp: SelectsList,
+    },
+    {
+      label: 'Категорії',
+      data: useCategoriesSelector().categories,
+      selectorName: 'counts',
+      ListComp: SelectsList,
+    },
+  ];
 
+  return selectors;
+};
+export type FilterSelectorDataType = ICount[] | ICategory[] | any[];
+export type SelectorType = {
+  selectorName: string;
+  label: string;
+  data: FilterSelectorDataType;
+  ListComp: React.FC<any>;
+};
 const Filter: React.FC = () => {
-  const [selectors] = useState<SelectorType[]>(selectorsArr);
+  const selectors = useFilterSelectors();
   const [CurrentData, setCurrentData] = useState<SelectorType>(selectors[0]);
   const [currentIdx, setCurrentIdx] = useState<number | null>(0);
 
@@ -56,11 +73,11 @@ const Filter: React.FC = () => {
         <Bottom>
           <LeftSide>
             <SelectorsList>
-              {selectorsArr.map(({ selectorName, label, useData, ListComp }, idx) => (
+              {selectors.map(({ selectorName, label, data, ListComp }, idx) => (
                 <Selector
                   key={selectorName}
                   label={label}
-                  useData={useData}
+                  data={data}
                   selectorName={selectorName}
                   idx={idx}
                   onSelectorClick={() => onSelectorClick(idx)}
@@ -68,7 +85,7 @@ const Filter: React.FC = () => {
                   CurrentData={CurrentData}
                 >
                   <SelectorContent
-                    useData={useData}
+                    data={data}
                     onSelect={onFilterStateChange}
                     selectorName={selectorName}
                     ListComp={ListComp}
@@ -81,7 +98,7 @@ const Filter: React.FC = () => {
           <MinTabletXl>
             <RightSide>
               <SelectorContent
-                useData={CurrentData.useData}
+                data={CurrentData.data}
                 onSelect={onFilterStateChange}
                 selectorName={CurrentData.selectorName}
                 ListComp={CurrentData.ListComp}

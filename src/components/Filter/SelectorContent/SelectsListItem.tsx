@@ -1,6 +1,6 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { iconId } from 'data';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 export interface SelectsListItemProps {
@@ -18,7 +18,7 @@ const SelectsListItem: React.FC<SelectsListItemProps & React.HTMLAttributes<HTML
   _id,
   onSelect,
 }) => {
-  const [isChecked, setIsChecked] = useState<boolean | undefined>(checked || false);
+  const [isChecked, setIsChecked] = useState<boolean | undefined>(checked);
   function handleSelect() {
     setIsChecked(prev => {
       onSelect({ _id, checked: checked ? !checked : !prev, label });
@@ -26,14 +26,18 @@ const SelectsListItem: React.FC<SelectsListItemProps & React.HTMLAttributes<HTML
     });
   }
 
+  useEffect(() => {
+    setIsChecked(checked);
+  }, [checked]);
+
   return (
     <StyledItem>
       <ButtonIcon
         size="26px"
         iconSize="100%"
         variant="onlyIcon"
-        iconId={isChecked ? iconId.checkBoxOn : iconId.checkBoxOff}
-        aria-checked={isChecked}
+        iconId={!!isChecked ? iconId.checkBoxOn : iconId.checkBoxOff}
+        aria-checked={!!isChecked}
         onClick={handleSelect}
       ></ButtonIcon>
 

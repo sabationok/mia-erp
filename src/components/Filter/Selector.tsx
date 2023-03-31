@@ -1,61 +1,32 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { MaxToTablet } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 import { iconId } from 'data';
-import { ICategory } from 'data/categories.types';
-import { ICount } from 'data/counts.types';
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { FilterSelectorDataType } from './Filter';
 
 export interface IFilterSelectorAddsProps {
   ListComp: React.FC<any>;
 }
-export type FilterSelectorDataType = ICount[] | ICategory[] | any[];
+
 export interface FilterSelectorProps {
   label: string;
   selectorName?: string;
-  useData: () => FilterSelectorDataType;
+  data: FilterSelectorDataType;
   idx: number;
   currentIdx: number | null;
   CurrentData: any;
-  onCheckAll?: () => void;
   onSelectorClick: (idx?: number) => void;
 }
+
 const Selector: React.FC<FilterSelectorProps & React.HTMLAttributes<Element>> = ({
   label = 'Selector label',
   selectorName = 'selector',
   onSelectorClick,
   currentIdx,
-  useData,
+  data,
   idx,
   children,
 }) => {
-  const [selectedItems, setSelectedItem] = useState<any[] | undefined>(useData());
-  const [isActive, setIsActive] = useState<boolean>(false);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function onChange(id: string) {
-    setSelectedItem(prev =>
-      prev?.map(el => {
-        if (el._id === id) return { ...el, checked: !el?.checked };
-
-        return el;
-      })
-    );
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function onResetFilter() {
-    setSelectedItem(prev =>
-      prev?.map(el => {
-        return { ...el, checked: false };
-      })
-    );
-  }
-
-  useEffect(() => {
-    setIsActive(selectedItems?.some(el => el.checked) ? true : false);
-    console.log(isActive);
-  }, [isActive, selectedItems]);
-
   return (
     <SelectorContainer>
       <StOpenButton
