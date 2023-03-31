@@ -3,7 +3,6 @@ import ModalForm, { FilterOpt } from 'components/ModalForm/ModalForm';
 import DirList from '../DirList';
 import { founder } from 'utils';
 import styled from 'styled-components';
-import CountActions from './CountActions';
 import useCountsService from 'redux/counts/useCountsService.hook';
 import { ICount } from 'data/counts.types';
 

@@ -1,5 +1,4 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { iconId } from 'data';
 import styled from 'styled-components';
 
 export type ErrorNameType = 'notFoundPage' | 'notFound';

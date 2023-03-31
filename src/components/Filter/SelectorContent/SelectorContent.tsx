@@ -45,7 +45,6 @@ const SelectorContent: React.FC<
     if (data?.length === 0) {
       return;
     }
-    if (!searchParam) return;
 
     const filteredData = data?.filter((el: any) => {
       if (searchParam && el?.name) return !(searchParam && !el.name.toLowerCase().includes(searchParam.toLowerCase()));
