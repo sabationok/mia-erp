@@ -33,12 +33,18 @@ const SelectorContent: React.FC<
   function onSerchParamReset() {
     setSearchParam('');
   }
-  function onSelectAllClick(state?: boolean) {
-    setFilteredData(prev =>
-      data?.map(el => {
-        return { ...el, checked: state ? state : false };
-      })
-    );
+  function onSelectAllClick(status?: boolean) {
+    setFilteredData(_prev => {
+      if (searchParam) {
+        return filteredData?.map(el => {
+          return { ...el, checked: status ? status : false };
+        });
+      }
+
+      return data?.map(el => {
+        return { ...el, checked: status ? status : false };
+      });
+    });
   }
 
   useEffect(() => {

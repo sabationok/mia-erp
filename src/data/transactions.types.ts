@@ -34,10 +34,11 @@ export interface IDocument extends IBase {
   number?: string;
   type?: string;
 }
+export type TrStatus = 'rejected' | 'approved' | 'pending';
 export interface ITransaction extends IBase {
   amount: number;
   type: TransactionType;
-  transactionDate?: Date | string;
+  transactionDate: Date | string;
   currency?: CurrencyCode;
   countIn?: ICount;
   subCountIn?: ICount;
@@ -49,7 +50,7 @@ export interface ITransaction extends IBase {
   project?: IProject;
   document?: IDocument;
   companyActivity?: ICompanyActivity;
-  status?: 'rejected' | 'approved' | 'pending';
-  commnet?: string;
+  status?: TrStatus;
+  comment?: string;
   tags?: string[];
 }

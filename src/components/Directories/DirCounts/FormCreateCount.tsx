@@ -1,6 +1,7 @@
 import ModalForm from 'components/ModalForm/ModalForm';
 import React from 'react';
 import styled from 'styled-components';
+import { CountType } from 'data/counts.types';
 
 // function createSubmitData(data) {
 //   const { owner } = data;
@@ -11,7 +12,7 @@ import styled from 'styled-components';
 // }
 export interface FormCreateCountProps {
   _id?: string;
-  type: 'ACTIVE' | 'PASIIVE';
+  type: CountType;
   owner?: string;
   edit?: boolean;
 }

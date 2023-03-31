@@ -1,57 +1,41 @@
 import { useState } from 'react';
 import Selector from './Selector';
-import ModalDefault from 'components/ModalForm/ModalForm';
+import ModalDefault, { ModalFormProps } from 'components/ModalForm/ModalForm';
 
 import styled from 'styled-components';
 import SelectorContent from './SelectorContent/SelectorContent';
-import SelectsList from './SelectorContent/SelectsList';
 import { MinTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 
-import { useCategoriesSelector } from 'redux/categories/useCategoriesService.hook';
-import { useCountsSelector } from 'redux/selectors.store';
 import { ICount } from 'data/counts.types';
 import { ICategory } from 'data/categories.types';
 
-const useFilterSelectors = (): SelectorType[] => {
-  const transationTypes = [
-    { _id: 'ds6d5vf6sd5f1v6sd', name: 'INCOME', label: 'ДОХІД' },
-    { _id: 'ds6d5vf6sd6f1v61d', name: 'TRANSFER', label: 'ПЕРЕКАЗ' },
-    { _id: 'ds6d5vf6dd6f1v68d', name: 'EXPENSE', label: 'ВИТРАТИ' },
-  ];
-
-  const selectors: SelectorType[] = [
-    {
-      label: 'Тип',
-      data: transationTypes,
-      selectorName: 'type',
-      ListComp: SelectsList,
-    },
-    {
-      label: 'Рахунки',
-      data: useCountsSelector().counts,
-      selectorName: 'categories',
-      ListComp: SelectsList,
-    },
-    {
-      label: 'Категорії',
-      data: useCategoriesSelector().categories,
-      selectorName: 'counts',
-      ListComp: SelectsList,
-    },
-  ];
-
-  return selectors;
-};
 export type FilterSelectorDataType = ICount[] | ICategory[] | any[];
-export type SelectorType = {
+export type FilterSelectorType = {
   selectorName: string;
   label: string;
   data: FilterSelectorDataType;
   ListComp: React.FC<any>;
 };
-const Filter: React.FC = () => {
+export interface FilterProps {
+  useFilterSelectors: () => FilterSelectorType[];
+}
+
+const Filter: React.FC<FilterProps & ModalFormProps> = props => {
+  const { useFilterSelectors, ...restProps } = props;
+  if (typeof useFilterSelectors !== 'function') {
+    return <SelectorErr>'useFilterSelectors' not function</SelectorErr>;
+  }
+  const selectors = props.useFilterSelectors();
+  if (!Array.isArray(selectors) || selectors.some(sel => !isSelectorType(sel))) {
+    return <SelectorErr>Invalid filter selectors</SelectorErr>;
+  }
+
+  return <AppFilter useFilterSelectors={props.useFilterSelectors} {...restProps} />;
+};
+
+const AppFilter: React.FC<FilterProps & ModalFormProps> = ({ useFilterSelectors, ...props }) => {
   const selectors = useFilterSelectors();
-  const [CurrentData, setCurrentData] = useState<SelectorType>(selectors[0]);
+  const [CurrentData, setCurrentData] = useState<FilterSelectorType>(selectors[0]);
   const [currentIdx, setCurrentIdx] = useState<number | null>(0);
 
   function onSelectorClick(idx: number) {
@@ -63,7 +47,7 @@ const Filter: React.FC = () => {
   }
 
   return (
-    <ModalDefSt title="Фільтрація транзакцій">
+    <ModalDefSt {...props}>
       <FilterContainer>
         <DatePickers>
           <InputDate type="datetime-local" placeholder="Дата і час" />
@@ -214,5 +198,31 @@ const SelectorsList = styled.div`
 
   padding: 0 12px;
 `;
+
+const SelectorErr = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  width: 250px;
+  height: 250px;
+
+  color: ${({ theme }) => theme.fontColor};
+
+  background-color: ${({ theme }) => theme.backgroundColorMain};
+`;
+
+// define a type guard to check if an object is of type SelectorType
+function isSelectorType(obj: any): obj is FilterSelectorType {
+  return (
+    typeof obj.selectorName === 'string' &&
+    typeof obj.label === 'string' &&
+    Array.isArray(obj.data) &&
+    typeof obj.ListComp === 'function'
+  );
+}
 
 export default Filter;

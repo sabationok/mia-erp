@@ -7,8 +7,10 @@ import styled, { css } from 'styled-components';
 export interface SelectItem extends Record<string, any> {
   _id?: string;
   filter?: boolean;
-  search: boolean;
-  label: string;
+  search?: boolean;
+  label?: string;
+  name?: string;
+  value?: string | number;
   dataKey: string;
 }
 export interface ISearchParamInputProps {
@@ -31,7 +33,7 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
 
     if (onSelect instanceof Function) {
       onSelect(item);
-      setInputValue({ searchParam: item.label });
+      setInputValue({ searchParam: item.label ? item.label : '' });
     }
 
     handleToggleList();
@@ -56,7 +58,10 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
     }
 
     const filteredData = data?.filter(el => {
-      if (inputValue?.searchParam)
+      if (inputValue?.searchParam && el?.name)
+        return !(inputValue?.searchParam && !el?.name.toLowerCase().includes(inputValue?.searchParam.toLowerCase()));
+
+      if (inputValue?.searchParam && el?.label)
         return !(inputValue?.searchParam && !el?.label.toLowerCase().includes(inputValue?.searchParam.toLowerCase()));
 
       return true;

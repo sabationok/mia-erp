@@ -4,12 +4,13 @@ import TableHead from './TableHead';
 import TableBody from './TableBody';
 import AppLoader from 'components/AppLoader/AppLoader';
 import QuickActions from './QuickActions/QuickActions';
-import TableOverHead from './TableOverHead';
+import TableOverHead from './TableOverHead/TableOverHead';
 import TableFooter from './TableFooter';
 import styled from 'styled-components';
 import { CellTittleProps } from './TebleCells/CellTitle';
-import { SelectItem } from './TableFilter/SearchParamInput/SearchParamInput';
 import { MaxToTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
+import { SelectItem } from './TableOverHead/TableSearch/SearchParamInput';
+import { FilterSelectorType } from 'components/Filter/Filter';
 
 export type ITableListProps = {
   tableTitles?: CellTittleProps[];
@@ -29,6 +30,7 @@ export type ITableListProps = {
   checkBoxes?: boolean;
   rowGrid?: any;
   children?: React.ReactNode;
+  useFilterSelectors?: () => FilterSelectorType[];
 };
 
 export interface TableActionsProps {
@@ -51,8 +53,8 @@ export interface ITableListContext {
   handleTableSort?: (sortParams: TableSortParamsType) => void;
 }
 
-export const TableCTX = createContext<ITableListContext & ITableListProps>({});
-export const useTable = () => useContext(TableCTX);
+export const TableCTX = createContext({});
+export const useTable = () => useContext(TableCTX) as ITableListContext & ITableListProps;
 
 const TableList: React.FC<ITableListProps> = ({
   tableData = [],

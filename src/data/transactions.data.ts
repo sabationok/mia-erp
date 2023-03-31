@@ -1,4 +1,4 @@
-import { SelectItem } from 'components/TableList/TableFilter/SearchParamInput/SearchParamInput';
+import { SelectItem } from 'components/TableList/TableOverHead/TableSearch/SearchParamInput';
 import { TableActionsProps } from 'components/TableList/TableList';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { iconId } from './iconId.data';

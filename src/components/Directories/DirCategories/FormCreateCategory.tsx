@@ -1,4 +1,5 @@
 import ModalForm from 'components/ModalForm/ModalForm';
+import { CategoryTypes } from 'data/categories.types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -11,7 +12,7 @@ import styled from 'styled-components';
 // }
 export interface FormCreateCategoryProps {
   _id?: string;
-  type: 'EXPENSE' | 'INCOME' | 'TRANSFER';
+  type: CategoryTypes;
   owner?: string;
   edit?: boolean;
 }

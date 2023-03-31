@@ -8,10 +8,11 @@ import {
 } from 'redux/transactions/transactions.thunks';
 import { transactionsMockData } from 'data';
 import { StateErrorType } from 'redux/reduxTypes.types';
+import { ITransaction } from 'data/transactions.types';
 
 export interface ITransactionsState {
-  transactions: any[];
-  fillteredTransactions?: any[];
+  transactions: ITransaction[];
+  filteredTransactions?: ITransaction[];
   isLoading: boolean;
   error: StateErrorType;
 }
@@ -20,7 +21,7 @@ const initialState: ITransactionsState = {
   isLoading: false,
   error: null,
   transactions: [...transactionsMockData],
-  fillteredTransactions: [...transactionsMockData],
+  filteredTransactions: [...transactionsMockData],
 };
 
 export const transactionsSlice = createSlice({

@@ -1,7 +1,7 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 
 import styled from 'styled-components';
-import { TableActionsProps } from '../TableList';
+import { TableActionsProps } from '../../TableList';
 
 const TableActions: React.FC<TableActionsProps> = ({ top, bottom }) => {
   return (

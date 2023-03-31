@@ -1,36 +1,21 @@
-import { useState } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import { iconId } from 'data';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useTable } from '../TableList';
+import SearchParamInput, { SelectItem } from './SearchParamInput';
 
-import SearchParamInput from './SearchParamInput/SearchParamInput';
-import Filter from 'components/Filter/Filter';
+export interface TableSearchProps {
+  tableSearchParams?: SelectItem[];
+}
 
-const TableFilter: React.FC = () => {
-  const modal = useModalProvider();
-  const [searchParam, setSearchParam] = useState<any>({});
-  const { tableSearchParams = [], filter } = useTable();
-
-  function onSelect(item: any) {
+const TabelSearch: React.FC<TableSearchProps> = ({ tableSearchParams }) => {
+  const [searchParam, setSearchParam] = useState<SelectItem>();
+  function onSelect(item: SelectItem) {
     console.log(item);
     setSearchParam(item);
   }
-
   return (
-    <FilterContainer isFilter={filter}>
-      {filter && (
-        <ButtonIcon
-          iconId={iconId.filterOff}
-          size="28px"
-          variant="onlyIcon"
-          onClick={() => {
-            modal.handleOpenModal({ ModalChildren: Filter });
-          }}
-        />
-      )}
-
+    <SearchContainer>
       <StyledLabel>
         <SearchInput type="text" placeholder="Пошук" />
       </StyledLabel>
@@ -38,24 +23,15 @@ const TableFilter: React.FC = () => {
       <SearchParamInput {...{ data: tableSearchParams, onSelect, searchParam, defaultValue: searchParam?.title }} />
 
       <ButtonIcon iconId={iconId.search} size="28px" variant="onlyIconFilled" />
-    </FilterContainer>
+    </SearchContainer>
   );
 };
-// <{ filter?: boolean }>
-// grid-template-columns: ${({ filter }) => {
-// console.log(filter);
-// return filter ? 'min-content 1.2fr 1fr min-content' : '1.2fr 1fr min-content';
-// }};
-const FilterContainer = styled.div<{ isFilter?: boolean }>`
+
+const SearchContainer = styled.div`
   display: grid;
-  grid-template-columns: ${({ isFilter }) =>
-    isFilter ? 'min-content 1.2fr 1fr min-content' : '1.2fr 1fr min-content'};
-  grid-template-rows: 28px;
+  grid-template-columns: 1fr 1fr min-content;
   gap: 8px;
-
-  color: inherit;
 `;
-
 const StyledLabel = styled.label`
   position: relative;
 
@@ -97,6 +73,7 @@ const SearchInput = styled.input`
   background-color: transparent;
 
   border-style: none;
+  border-radius: 0;
   border-bottom: 1px solid ${({ theme }) => theme.globals.inputBorder};
   &:hover,
   &:focus {
@@ -104,4 +81,4 @@ const SearchInput = styled.input`
     outline-style: none;
   }
 `;
-export default TableFilter;
+export default TabelSearch;

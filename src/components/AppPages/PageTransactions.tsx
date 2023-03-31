@@ -3,8 +3,10 @@ import { takeFullGridArea } from './pagesStyles';
 import { transactionsColumns, transactionsMockData, transactionsSearchParams, trTableActions } from 'data';
 
 import styled from 'styled-components';
+import useTransactionsServise from 'redux/transactions/useTransactionsServise.hook';
 
 const PageTransactions = () => {
+  const { transactions, useFilterSelectors } = useTransactionsServise();
   // const { transactions, isLoading, error } = useTransactionsSelector();
   // const [selectedTr, setSelectedTr] = useState<any>(null);
 
@@ -12,12 +14,13 @@ const PageTransactions = () => {
     <Page>
       <TableList
         {...{
-          tableData: transactionsMockData,
+          tableData: transactionsMockData || transactions,
           tableTitles: transactionsColumns,
           tableSearchParams: transactionsSearchParams,
           tableActions: trTableActions,
           filter: true,
           search: true,
+          useFilterSelectors,
         }}
       />
     </Page>
