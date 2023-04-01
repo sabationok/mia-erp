@@ -32,7 +32,7 @@ const ModalFilter: React.FC<Pick<ModalFormProps, 'filterOptions' | 'onOptSelect'
           >
             {opt?.label || opt?.name || null}
 
-            {opt.useGetLabel && opt.useGetLabel()}
+            {opt.getLabel && opt.getLabel()}
           </StButtonIcon>
         ))}
     </Filter>

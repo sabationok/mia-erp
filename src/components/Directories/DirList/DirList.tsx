@@ -1,3 +1,5 @@
+import { ICategory } from 'data/categories.types';
+import { ICount } from 'data/counts.types';
 import React from 'react';
 import styled from 'styled-components';
 import DirListItem, { DirListItemAddsProps, DirListItemProps } from './DirListItem';
@@ -5,7 +7,7 @@ import DirListItem, { DirListItemAddsProps, DirListItemProps } from './DirListIt
 export interface DirListProps extends Pick<DirListItemAddsProps, 'onCreateChild' | 'onDelete' | 'onEdit'> {
   list: DirListItemProps[];
   entryList: DirListItemProps[];
-  owner?: string;
+  owner?: Partial<ICount | ICategory>;
 }
 
 const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLUListElement>> = ({
@@ -25,6 +27,7 @@ const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLUListElement>> =
         <DirListItem
           key={item?._id || idx}
           {...item}
+          owner={owner}
           onDelete={onDelete}
           onEdit={onEdit}
           onCreateChild={onCreateChild}
@@ -38,9 +41,9 @@ const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLUListElement>> =
 const List = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
 
-  padding-top: 12px;
+  padding: 6px 0;
 
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
 `;

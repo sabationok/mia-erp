@@ -10,7 +10,7 @@ export interface DirListItemProps {
   label?: string;
   type?: any;
   name?: string;
-  owner?: ICount | ICategory;
+  owner?: Partial<ICount | ICategory>;
   balance?: number;
   currency?: string;
 }
@@ -40,21 +40,18 @@ const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
     setIsOpen(prev => !prev);
   }
 
-  function evHandlerWrapper(evHandler: (args: any) => void, args: any) {
+  function evHandlerWrapper(evHandler: (arg: any) => void, arg: any) {
     return () => {
       if (typeof evHandler === 'function') {
-        console.log('evHandler', evHandler.name);
-        console.log('evHandler args', args);
-
-        evHandler(args);
+        evHandler(arg);
       }
     };
   }
 
   return (
     <Item>
-      <CountGrid>
-        <ActionsField>
+      <ItemGrid>
+        <ActionsField canHaveChild={canHaveChild}>
           {canHaveChild && (
             <ButtonIcon
               variant="onlyIcon"
@@ -66,11 +63,11 @@ const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
         </ActionsField>
 
         <LabelField>
-          <Label>{label || name}</Label>
+          <Label title={label || name}>{label || name}</Label>
 
           {!(!childrensList || childrensList?.length === 0) && (
             <ButtonIcon
-              variant="onlyIcon"
+              variant="onlyIconNoEffects"
               iconId={isOpen ? 'SmallArrowUp' : 'SmallArrowDown'}
               iconSize="24px"
               onClick={onOpenClick}
@@ -83,12 +80,13 @@ const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
 
           <ButtonIcon variant="onlyIcon" iconSize="24px" iconId="delete" onClick={evHandlerWrapper(onDelete, _id)} />
         </ActionsField>
-      </CountGrid>
+      </ItemGrid>
 
       <Children isOpen={isOpen}>
         {childrensList && childrensList.length > 0 && (
           <DirList
             list={list}
+            owner={{ label, name, _id: _id || '' }}
             entryList={childrensList}
             onDelete={onDelete}
             onEdit={onEdit}
@@ -101,7 +99,7 @@ const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
 };
 const Item = styled.li``;
 
-const CountGrid = styled.div`
+const ItemGrid = styled.div`
   display: grid;
   grid-template-columns: min-content 1fr min-content;
   align-items: center;
@@ -114,11 +112,11 @@ const CountGrid = styled.div`
   color: ${({ theme }) => theme.fontColorHeader};
 `;
 
-const ActionsField = styled.div`
+const ActionsField = styled.div<{ canHaveChild?: boolean }>`
   display: flex;
   align-items: center;
 
-  min-width: 26px;
+  min-width: 12px;
   height: 100%;
 `;
 
@@ -130,12 +128,21 @@ const LabelField = styled.div`
   align-items: center;
 
   height: 100%;
+  overflow: hidden;
+
   border-radius: 2px;
   background-color: ${({ theme }) => theme.backgroundColorLight};
+  cursor: default;
 `;
 const Label = styled.div`
+  max-width: 100%;
   padding: 0 8px;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 `;
+
 const Children = styled.ul<{ isOpen: boolean }>`
   overflow: hidden;
 

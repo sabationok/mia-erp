@@ -4,11 +4,13 @@ import DirList from '../DirList/DirList';
 import { founder } from 'utils';
 import styled from 'styled-components';
 import useCategoriesService from 'redux/categories/useCategoriesService.hook';
-import { ICategory } from 'data/categories.types';
+import { CategoryTypes, ICategory } from 'data/categories.types';
+
+export type CategoryFilterOpt = FilterOpt<CategoryTypes>;
 
 export interface DirCategoriesProps extends ModalFormProps {
   title: string;
-  filterOptions?: FilterOpt[];
+  filterOptions?: CategoryFilterOpt[];
 }
 
 const DirCategories: React.FC<DirCategoriesProps> = props => {

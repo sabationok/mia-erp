@@ -6,21 +6,22 @@ import styled from 'styled-components';
 import { FormEvent } from 'react';
 import { useModal } from 'components/ModalProvider/ModalComponent';
 
-export interface ModalFormProps extends React.FormHTMLAttributes<HTMLFormElement> {
+export interface ModalFormProps extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit' | 'onReset'> {
   filterOptions?: FilterOpt[];
-  beforeSubmit?: () => void | any;
-  afterSubmit?: () => void | any;
-  beforeClose?: () => void | any;
-  onReset?: () => void | any;
-  afterClose?: () => void | any;
-  onOptSelect?: (opt: FilterOpt) => void | any;
+  beforeSubmit?: <T = any>(args?: T) => void | any;
+  onSubmit?: <T = any>(args?: T) => void | any;
+  afterSubmit?: <T = any>(args?: T) => void | any;
+  beforeClose?: <T = any>(args?: T) => void | any;
+  onReset?: <T = any>(args?: T) => void | any;
+  afterClose?: <T = any>(args?: T) => void | any;
+  onOptSelect?: <V = any>(opt: FilterOpt<V> | any) => void | any;
 }
-export interface FilterOpt extends Record<string, any> {
+export interface FilterOpt<V = any> extends Record<string, any> {
   _id?: string;
   label: string;
   name?: string;
-  value: string;
-  useGetLabel?: () => any;
+  value?: V;
+  getLabel?: () => any;
 }
 
 const ModalForm: React.FC<ModalFormProps> = ({
@@ -47,7 +48,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
     if (!onSubmit) return console.log('No passed "onSubmit" handler');
 
     if (typeof beforeSubmit === 'function') beforeSubmit();
-    if (typeof onSubmit === 'function') onSubmit(ev);
+    if (typeof onSubmit === 'function') onSubmit();
     if (typeof afterSubmit === 'function') afterSubmit();
   }
   function handleReset() {

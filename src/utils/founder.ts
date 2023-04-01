@@ -12,9 +12,5 @@ export default function founder({ searchParam, searchQuery, data = [] }: IFounde
       return !(searchQuery && !el[searchParam].toLowerCase().includes(searchQuery.toLowerCase()));
     }
     return true;
-    // return !(
-    //   searchQuery &&
-    //   !el[searchParam].toLowerCase().includes(searchQuery.toLowerCase())
-    // );
   });
 }

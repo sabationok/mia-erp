@@ -138,6 +138,9 @@ const def = css`
     background-color: ${({ theme }) => theme.globals.defaultBtnBckgrndColor.pressed};
   }
 `;
+const defNoEffects = css`
+  background-color: ${({ theme }) => theme.globals.defaultBtnBckgrndColor.def};
+`;
 // const pointer = css`
 //   background-color: ${({ theme }) => theme.defaultBtnBckgrndColor.def};
 
@@ -241,7 +244,6 @@ const pointerBottom = css`
   &:active {
   }
 `;
-
 const small = css`
   padding: 0 22px;
 
@@ -320,6 +322,17 @@ const onlyIcon = css`
     fill: ${({ theme }) => theme.accentColor.pressed};
   }
 `;
+const onlyIconNoEffects = css`
+  ${defNoEffects}
+  ${icon}
+fill: ${({ theme }) => theme.accentColor.base};
+  &:hover {
+    fill: ${({ theme }) => theme.accentColor.hover};
+  }
+  &:active {
+    fill: ${({ theme }) => theme.accentColor.pressed};
+  }
+`;
 const underlinedText = css`
   text-decoration: underline;
   cursor: pointer;
@@ -373,6 +386,7 @@ const defOutlinedLarge = css`
 
 const variants = {
   def,
+  defNoEffects,
   pointerLeft,
   outlinedLarge,
   filledLarge,
@@ -382,6 +396,7 @@ const variants = {
   textSmall,
   textLarge,
   onlyIcon,
+  onlyIconNoEffects,
   onlyIconFilled,
   defOutlinedSmall,
   defOutlinedLarge,
