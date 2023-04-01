@@ -37,6 +37,9 @@ const ProjectsProps: DirCategoriesProps = {
   //   { label: 'Майбутні', value: 'FUTURE' },
   // ],
 };
+const ContractorsProps: DirCategoriesProps = {
+  title: 'Контрагенти',
+};
 
 const directories: IDirectory[] = [
   {
@@ -54,17 +57,17 @@ const directories: IDirectory[] = [
     disabled: true,
   },
   {
+    title: ContractorsProps.title,
+    iconId: iconId.partners,
+    ModalChildren: () => null,
+    modalChildrenProps: ContractorsProps,
+    disabled: true,
+  },
+  {
     title: ProjectsProps.title,
     iconId: iconId.assignment,
     ModalChildren: DirProjects,
     modalChildrenProps: ProjectsProps,
-    disabled: true,
-  },
-  {
-    title: 'Контрагенти',
-    iconId: iconId.partners,
-    ModalChildren: () => null,
-    modalChildrenProps: null,
     disabled: true,
   },
   { title: 'Користувачі', iconId: iconId.persons, ModalChildren: () => null, modalChildrenProps: null, disabled: true },

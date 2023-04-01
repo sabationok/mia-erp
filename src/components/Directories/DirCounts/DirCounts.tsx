@@ -1,23 +1,35 @@
 import React, { useState } from 'react';
-import ModalForm, { FilterOpt } from 'components/ModalForm/ModalForm';
-import DirList from '../DirList';
+import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
+import DirList from '../DirList/DirList';
 import { founder } from 'utils';
 import styled from 'styled-components';
 import useCountsService from 'redux/counts/useCountsService.hook';
 import { ICount } from 'data/counts.types';
+import { useModalProvider } from 'components/ModalProvider/ModalProvider';
+import FormCreateCount, { FormCreateCountProps } from './FormCreateCount';
 
-export interface DirCountsProps {
+export interface DirCountsProps extends ModalFormProps {
   title: string;
-  filterOptions: FilterOpt[];
 }
 
 const DirCounts: React.FC<DirCountsProps> = props => {
+  const modal = useModalProvider();
   const { counts } = useCountsService();
   const [filteredData, setFilteredData] = useState<ICount[]>(counts);
 
   function onDelete() {}
-  function onEdit() {}
-  function onCreateChild() {}
+  function onEdit(_id: string) {
+    modal.handleOpenModal<FormCreateCountProps>({
+      ModalChildren: FormCreateCount,
+      modalChildrenProps: { title: 'Створення рахунку', _id },
+    });
+  }
+  function onCreateChild(owner?: string) {
+    modal.handleOpenModal<FormCreateCountProps>({
+      ModalChildren: FormCreateCount,
+      modalChildrenProps: { title: 'Створення рахунку', owner },
+    });
+  }
 
   return (
     <StModalForm

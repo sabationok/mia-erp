@@ -30,7 +30,9 @@ const ModalFilter: React.FC<Pick<ModalFormProps, 'filterOptions' | 'onOptSelect'
               if (typeof onOptSelect === 'function') onOptSelect(opt);
             }}
           >
-            {opt?.label || opt?.name || `option ${idx + 1}`}
+            {opt?.label || opt?.name || null}
+
+            {opt.useGetLabel && opt.useGetLabel()}
           </StButtonIcon>
         ))}
     </Filter>
@@ -49,6 +51,7 @@ const Filter = styled.div<{ gridRepeat?: number }>`
 
 const StButtonIcon = styled(ButtonIcon)`
   position: relative;
+  flex-direction: column;
 
   font-weight: 700;
   font-size: 12px;

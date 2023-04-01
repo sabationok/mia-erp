@@ -7,14 +7,17 @@ interface IModalProviderProps {
   children: React.ReactNode;
   portalId?: string;
 }
-export interface IModalRenderItemParams {
-  ModalChildren?: React.FC<any>;
-  modalChildrenProps?: any;
-  settings?: IModalSettings;
+export interface IModalChildrenProps {
+  title?: string;
+}
+export interface IModalRenderItemParams<T = any, S = any> {
+  ModalChildren?: React.FC<IModalChildrenProps & T>;
+  modalChildrenProps?: IModalChildrenProps & T;
+  settings?: IModalSettings & S;
   id?: number | string;
 }
 interface IModalProviderContext {
-  handleOpenModal: (args: IModalRenderItemParams) => void;
+  handleOpenModal: <T = any, S = any>(args: IModalRenderItemParams<T, S>) => void;
   handleCloseModal: (id?: string) => void;
   isOpen: boolean;
 }
@@ -23,9 +26,13 @@ export const ModalProviderContext = createContext({});
 export const useModalProvider = () => useContext(ModalProviderContext) as IModalProviderContext;
 
 const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) => {
-  const [modalContent, setModalContent] = useState<IModalRenderItemParams[]>([]);
+  const [modalContent, setModalContent] = useState<IModalRenderItemParams<any, any>[]>([]);
 
-  function handleOpenModal<T extends IModalRenderItemParams>({ ModalChildren, modalChildrenProps, settings }: T) {
+  function handleOpenModal<T = any, S = any>({
+    ModalChildren,
+    modalChildrenProps,
+    settings,
+  }: IModalRenderItemParams<T, S>) {
     if (!ModalChildren) return console.error('ModalChildren is undefined');
 
     if (typeof ModalChildren === 'function') {
@@ -50,11 +57,14 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
   }, [modalContent.length]);
   return (
     <ModalProviderContext.Provider {...{ value: CTX }}>
-      <>{children}</>
+      {children}
 
       <ModalPortal portalId={portalId}>
         {modalContent?.length > 0 &&
           modalContent.map((Item, idx) => {
+            function onClose() {
+              handleCloseModal(Item.id);
+            }
             return (
               <ModalComponent
                 key={Item.id}
@@ -64,12 +74,10 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
                   id: Item.id,
                   totalLength: modalContent.length,
                   isLast: idx === modalContent.length - 1,
-                  onClose: () => {
-                    handleCloseModal(Item.id);
-                  },
+                  onClose,
                 }}
               >
-                {Item?.ModalChildren && <Item.ModalChildren {...Item?.modalChildrenProps} />}
+                {Item?.ModalChildren && <Item.ModalChildren {...{ ...Item?.modalChildrenProps, onClose }} />}
               </ModalComponent>
             );
           })}

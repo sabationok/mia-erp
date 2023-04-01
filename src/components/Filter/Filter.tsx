@@ -16,15 +16,20 @@ export type FilterSelectorType = {
   data: FilterSelectorDataType;
   ListComp: React.FC<any>;
 };
-export interface FilterProps {
-  useFilterSelectors: () => FilterSelectorType[];
+export interface FilterProps extends ModalFormProps {
+  useFilterSelectors: () => FilterSelectorType[] | [];
 }
 
-const Filter: React.FC<FilterProps & ModalFormProps> = props => {
+const Filter: React.FC<FilterProps> = props => {
   const { useFilterSelectors, ...restProps } = props;
+  if (!useFilterSelectors) {
+    return <SelectorErr>'useFilterSelectors' not passed</SelectorErr>;
+  }
+
   if (typeof useFilterSelectors !== 'function') {
     return <SelectorErr>'useFilterSelectors' not function</SelectorErr>;
   }
+
   const selectors = props.useFilterSelectors();
   if (!Array.isArray(selectors) || selectors.some(sel => !isSelectorType(sel))) {
     return <SelectorErr>Invalid filter selectors</SelectorErr>;
@@ -35,7 +40,7 @@ const Filter: React.FC<FilterProps & ModalFormProps> = props => {
 
 const AppFilter: React.FC<FilterProps & ModalFormProps> = ({ useFilterSelectors, ...props }) => {
   const selectors = useFilterSelectors();
-  const [CurrentData, setCurrentData] = useState<FilterSelectorType>(selectors[0]);
+  const [CurrentData, setCurrentData] = useState<FilterSelectorType | null>(selectors[0]);
   const [currentIdx, setCurrentIdx] = useState<number | null>(0);
 
   function onSelectorClick(idx: number) {
@@ -82,10 +87,10 @@ const AppFilter: React.FC<FilterProps & ModalFormProps> = ({ useFilterSelectors,
           <MinTabletXl>
             <RightSide>
               <SelectorContent
-                data={CurrentData.data}
+                data={CurrentData?.data || []}
                 onSelect={onFilterStateChange}
-                selectorName={CurrentData.selectorName}
-                ListComp={CurrentData.ListComp}
+                selectorName={CurrentData?.selectorName}
+                ListComp={CurrentData?.ListComp}
               />
             </RightSide>
           </MinTabletXl>
@@ -114,7 +119,6 @@ const FilterContainer = styled.div`
   max-height: 100%;
 
   overflow: hidden;
-
   color: inherit;
 
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
@@ -125,6 +129,7 @@ const FilterContainer = styled.div`
 
 const DatePickers = styled.div`
   display: grid;
+
   grid-template-columns: 1fr;
   gap: 12px;
 

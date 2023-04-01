@@ -7,6 +7,8 @@ const TableActions: React.FC<TableActionsProps> = ({ top, bottom }) => {
   return (
     <Menu>
       <List>
+        <Separator />
+
         <Left top={!!top}>
           {top &&
             top.map(({ name, disableChek, ...props }, idx) => (

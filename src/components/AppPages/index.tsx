@@ -9,3 +9,5 @@ const AppGridPage = lazy(() => import('./AppGridPage'));
 const AppPages = { AppGridPage, PageTransactions, PageNotFound, PageError, PageHome };
 
 export default AppPages;
+
+

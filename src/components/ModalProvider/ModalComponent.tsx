@@ -87,6 +87,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
       <ModalContext.Provider value={CTX}>
         <Modal style={modalSettings.modalStyle} modalSettings={modalSettings}>
           {modalSettings?.closeBtn && <CloseButton onClick={onClose} />}
+
           {children}
         </Modal>
       </ModalContext.Provider>

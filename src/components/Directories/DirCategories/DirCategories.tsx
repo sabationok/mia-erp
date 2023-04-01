@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import ModalForm, { FilterOpt } from 'components/ModalForm/ModalForm';
-import DirList from '../DirList';
+import ModalForm, { FilterOpt, ModalFormProps } from 'components/ModalForm/ModalForm';
+import DirList from '../DirList/DirList';
 import { founder } from 'utils';
 import styled from 'styled-components';
 import useCategoriesService from 'redux/categories/useCategoriesService.hook';
 import { ICategory } from 'data/categories.types';
 
-export interface DirCategoriesProps {
+export interface DirCategoriesProps extends ModalFormProps {
   title: string;
   filterOptions?: FilterOpt[];
 }
@@ -46,6 +46,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
 
 const StModalForm = styled(ModalForm)`
   height: 70vh;
+
   @media screen and (max-height: 480px) {
     height: 95vh;
   }

@@ -12,7 +12,7 @@ import { CountType } from 'data/counts.types';
 // }
 export interface FormCreateCountProps {
   _id?: string;
-  type: CountType;
+  type?: CountType;
   owner?: string;
   edit?: boolean;
 }
@@ -26,7 +26,8 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({ type, owner, _id }) =
   return (
     <ModalForm title={`${_id ? 'Редагувати' : 'Створити'} ${owner ? 'субрахунок' : 'рахунок'}`}>
       <Inputs>
-        {owner}-{type}
+        {<span>owner:{owner}</span>}-{type}
+        {<span>edit:{_id}</span>}-{type}
       </Inputs>
     </ModalForm>
   );
@@ -35,6 +36,9 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({ type, owner, _id }) =
 const Inputs = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 8px;
+
+  padding: 16px;
 
   background-color: inherit;
 `;

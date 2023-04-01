@@ -2,11 +2,12 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import { iconId } from 'data';
 
-import Filter, { FilterSelectorType } from 'components/Filter/Filter';
+import Filter, { FilterProps, FilterSelectorType } from 'components/Filter/Filter';
 export interface TableFilterProps {
   title?: string;
-  useFilterSelectors?: () => FilterSelectorType[];
+  useFilterSelectors: () => FilterSelectorType[] | [];
 }
+
 const TableFilter: React.FC<TableFilterProps> = ({ title, useFilterSelectors }) => {
   const modal = useModalProvider();
 
@@ -16,9 +17,10 @@ const TableFilter: React.FC<TableFilterProps> = ({ title, useFilterSelectors }) 
       size="28px"
       variant="onlyIcon"
       onClick={() => {
-        modal.handleOpenModal({
+        modal.handleOpenModal<FilterProps>({
           ModalChildren: Filter,
           modalChildrenProps: { title, useFilterSelectors },
+          settings: {},
         });
       }}
     />

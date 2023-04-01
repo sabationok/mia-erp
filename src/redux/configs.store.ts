@@ -1,7 +1,7 @@
 import storage from 'redux-persist/lib/storage';
 import storageSession from 'redux-persist/lib/storage/session';
 
-export const presistorConfigs = {
+export const persistorConfigs = {
   auth: {
     key: 'accessToken',
     storage,

@@ -20,6 +20,7 @@ export interface FilterOpt extends Record<string, any> {
   label: string;
   name?: string;
   value: string;
+  useGetLabel?: () => any;
 }
 
 const ModalForm: React.FC<ModalFormProps> = ({

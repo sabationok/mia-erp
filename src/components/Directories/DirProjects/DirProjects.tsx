@@ -1,11 +1,10 @@
 import React from 'react';
-import ModalForm, { FilterOpt } from 'components/ModalForm/ModalForm';
+import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
 
 import styled from 'styled-components';
 
-export interface DirProjectsProps {
+export interface DirProjectsProps extends ModalFormProps {
   title: string;
-  filterOptions?: FilterOpt[];
 }
 
 const DirProjects: React.FC<DirProjectsProps> = props => {

@@ -1,21 +1,26 @@
 import React from 'react';
 import styled from 'styled-components';
-import DirListItem, { DirListItemProps } from './DirListItem';
+import DirListItem, { DirListItemAddsProps, DirListItemProps } from './DirListItem';
 
-export interface DirListProps {
+export interface DirListProps extends Pick<DirListItemAddsProps, 'onCreateChild' | 'onDelete' | 'onEdit'> {
   list: DirListItemProps[];
   entryList: DirListItemProps[];
   owner?: string;
-  onDelete: (_id?: string) => void;
-  onEdit: (_id?: string) => void;
-  onCreateChild: (ownerID?: string) => void;
 }
 
-const DirList: React.FC<DirListProps> = ({ entryList, list, owner, onDelete, onEdit, onCreateChild }) => {
+const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLUListElement>> = ({
+  entryList,
+  list,
+  owner,
+  onDelete,
+  onEdit,
+  onCreateChild,
+  ...pops
+}) => {
   const renderList = entryList ? entryList : list;
 
   return (
-    <List>
+    <List {...pops}>
       {renderList?.map((item, idx) => (
         <DirListItem
           key={item?._id || idx}

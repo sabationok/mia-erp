@@ -13,7 +13,7 @@ const TableOverHead: React.FC = () => {
   return (
     <OverHead>
       <LeftSide>
-        <TabelSearch {...{ tableSearchParams }} />{' '}
+        <TabelSearch {...{ tableSearchParams }} />
       </LeftSide>
 
       <RightSide>
@@ -21,13 +21,13 @@ const TableOverHead: React.FC = () => {
 
         <TablePagination />
 
-        <TableFilter {...{ useFilterSelectors, title: 'Фільтрація транзакцій' }} />
+        <TableFilter
+          {...{ title: 'Фільтрація транзакцій' }}
+          useFilterSelectors={useFilterSelectors ? useFilterSelectors : () => []}
+        />
 
         <DeviceConrol.MinDesktop>
-          <>
-            <Separator />
-            <TableActions {...tableActions} />
-          </>
+          <TableActions {...tableActions} />
         </DeviceConrol.MinDesktop>
       </RightSide>
     </OverHead>
@@ -61,21 +61,4 @@ const RightSide = styled.div`
   gap: 8px;
 `;
 
-const Separator = styled.div`
-  position: relative;
-
-  height: 28px;
-  min-height: 100%;
-  min-width: 0;
-  &::before {
-    display: block;
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    height: 100%;
-    min-width: 1px;
-    border-right: 1px solid ${({ theme }) => theme.trBorderClr};
-  }
-`;
 export default TableOverHead;

@@ -30,7 +30,7 @@ export type ITableListProps = {
   checkBoxes?: boolean;
   rowGrid?: any;
   children?: React.ReactNode;
-  useFilterSelectors?: () => FilterSelectorType[];
+  useFilterSelectors?: () => FilterSelectorType[] | [];
 };
 
 export interface TableActionsProps {

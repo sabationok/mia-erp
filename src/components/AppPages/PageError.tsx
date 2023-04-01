@@ -24,6 +24,7 @@ const Page = styled.div`
 
   width: 80%;
   height: 50%;
+  
 `;
 
 export default PageError;

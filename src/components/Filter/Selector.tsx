@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { FilterSelectorDataType } from './Filter';
 
 export interface IFilterSelectorAddsProps {
-  ListComp: React.FC<any>;
+  ListComp?: React.FC<any>;
 }
 
 export interface FilterSelectorProps {
