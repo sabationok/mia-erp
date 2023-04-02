@@ -1,29 +1,29 @@
 {
   "files": {
     "main.css": "/counter-app-ts/static/css/main.a72a3f3f.css",
-    "main.js": "/counter-app-ts/static/js/main.8449b63e.js",
+    "main.js": "/counter-app-ts/static/js/main.831d1c0b.js",
     "static/js/289.6718daeb.chunk.js": "/counter-app-ts/static/js/289.6718daeb.chunk.js",
     "static/js/155.4e3f97e2.chunk.js": "/counter-app-ts/static/js/155.4e3f97e2.chunk.js",
     "static/js/984.65d6af0c.chunk.js": "/counter-app-ts/static/js/984.65d6af0c.chunk.js",
     "static/js/12.0fbb9fe1.chunk.js": "/counter-app-ts/static/js/12.0fbb9fe1.chunk.js",
     "static/js/833.ffb16911.chunk.js": "/counter-app-ts/static/js/833.ffb16911.chunk.js",
     "static/js/805.1b512a9e.chunk.js": "/counter-app-ts/static/js/805.1b512a9e.chunk.js",
-    "static/js/553.5591c0ef.chunk.js": "/counter-app-ts/static/js/553.5591c0ef.chunk.js",
+    "static/js/553.0b385988.chunk.js": "/counter-app-ts/static/js/553.0b385988.chunk.js",
     "static/media/karina_avatar.png": "/counter-app-ts/static/media/karina_avatar.0ec5f295b5654e8f8bcc.png",
     "static/media/spriteSvg.svg": "/counter-app-ts/static/media/spriteSvg.4752fb7e593120eeccd57fdc506e2242.svg",
     "index.html": "/counter-app-ts/index.html",
     "main.a72a3f3f.css.map": "/counter-app-ts/static/css/main.a72a3f3f.css.map",
-    "main.8449b63e.js.map": "/counter-app-ts/static/js/main.8449b63e.js.map",
+    "main.831d1c0b.js.map": "/counter-app-ts/static/js/main.831d1c0b.js.map",
     "289.6718daeb.chunk.js.map": "/counter-app-ts/static/js/289.6718daeb.chunk.js.map",
     "155.4e3f97e2.chunk.js.map": "/counter-app-ts/static/js/155.4e3f97e2.chunk.js.map",
     "984.65d6af0c.chunk.js.map": "/counter-app-ts/static/js/984.65d6af0c.chunk.js.map",
     "12.0fbb9fe1.chunk.js.map": "/counter-app-ts/static/js/12.0fbb9fe1.chunk.js.map",
     "833.ffb16911.chunk.js.map": "/counter-app-ts/static/js/833.ffb16911.chunk.js.map",
     "805.1b512a9e.chunk.js.map": "/counter-app-ts/static/js/805.1b512a9e.chunk.js.map",
-    "553.5591c0ef.chunk.js.map": "/counter-app-ts/static/js/553.5591c0ef.chunk.js.map"
+    "553.0b385988.chunk.js.map": "/counter-app-ts/static/js/553.0b385988.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a72a3f3f.css",
-    "static/js/main.8449b63e.js"
+    "static/js/main.831d1c0b.js"
   ]
 }
