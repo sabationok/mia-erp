@@ -3,22 +3,43 @@ import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 
 export interface TablePaginationProps {}
+export interface PaginationOption {
+  label: string;
+  value: number | null;
+}
+const pagOptions: PaginationOption[] = [
+  { label: '15', value: 15 },
+  { label: '30', value: 30 },
+  { label: '60', value: 60 },
+  { label: 'Усі', value: null },
+];
 
 const TablePagination: React.FC<TablePaginationProps> = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [current, setCurrent] = useState<PaginationOption>(pagOptions[0]);
 
   function onOpen() {
     setIsOpen(prev => !prev);
+  }
+  function onSelect(idx: number) {
+    setCurrent(pagOptions[idx]);
+    onOpen();
   }
 
   return (
     <Box>
       <DropDownBox>
-        <StButton isOpen={isOpen} variant="def" endIconSize="26px" endIconId="SmallArrowDown" onClick={onOpen}>
-          15
+        <StButton isOpen={isOpen} variant="def" endIconSize="26px" endIconId="SmallArrowUp" onClick={onOpen}>
+          <span>{current?.label}</span>
         </StButton>
 
-        <SelectList isOpen={isOpen}></SelectList>
+        <SelectList isOpen={isOpen}>
+          {pagOptions.map((opt, idx) => (
+            <SelectItem key={idx} onClick={() => onSelect(idx)}>
+              {opt.label}
+            </SelectItem>
+          ))}
+        </SelectList>
       </DropDownBox>
     </Box>
   );
@@ -35,32 +56,35 @@ const DropDownBox = styled.div`
 const StButton = styled(ButtonIcon)<{ isOpen: boolean }>`
   width: fit-content;
   height: 100%;
-
-  padding-left: 8px;
+  gap: 0;
 
   fill: ${({ theme }) => theme.accentColor.base};
   color: ${({ theme }) => theme.fontColorHeader};
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  background-color: ${({ theme }) => theme.backgroundColorLight};
 
   &:active,
   &:focus,
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundColorSecondary};
+    background-color: ${({ theme }) => theme.backgroundColorLight};
   }
 
   & .endIcon {
     transform: ${({ isOpen }) => `rotate(${isOpen ? 180 : 0}deg)`};
   }
+  & span {
+    padding: 0 8px;
+  }
 `;
-const SelectList = styled.div<{ isOpen: boolean }>`
+
+const SelectList = styled.ul<{ isOpen: boolean }>`
   display: flex;
   flex-direction: column;
 
   position: absolute;
-  top: 120%;
+  bottom: 120%;
   right: 0;
 
-  min-height: 150px;
+  /* min-height: 150px; */
   min-width: 100%;
   overflow: hidden;
 
@@ -71,16 +95,19 @@ const SelectList = styled.div<{ isOpen: boolean }>`
   box-shadow: ${({ theme }) => theme.globals.shadowMain};
   transition: all ${({ theme }) => theme.globals.timingFunctionMain},
     transform ${({ theme }) => theme.globals.timingFnMui};
-  transform-origin: top;
+  transform-origin: bottom;
 
   ${({ isOpen }) =>
     isOpen
       ? css``
       : css`
-          transform: scale(0.7, 0.8);
+          transform: scale(0.7, 0.5);
           opacity: 0;
           visibility: hidden;
           pointer-events: none;
         `}
+`;
+const SelectItem = styled.li`
+  padding: 4px 8px;
 `;
 export default TablePagination;

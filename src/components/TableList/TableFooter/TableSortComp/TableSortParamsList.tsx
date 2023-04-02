@@ -7,10 +7,10 @@ import { SelectItem } from 'components/TableList/TableList';
 
 export interface TableSortParamsListProps extends ModalFormProps {
   tableSortParams?: SelectItem[];
-  current: SelectItem & { descedantOrder: boolean };
+  current: SelectItem & { descending: boolean };
   isOpen?: boolean;
   onOpenClick: (isOpen?: boolean) => void;
-  handleSetCurrent: (param: SelectItem, descedantOrder: boolean) => <T = any>(args?: T | undefined) => any;
+  handleSetCurrent: (param: SelectItem, descending: boolean) => <T = any>(args?: T | undefined) => any;
 }
 
 const TableSortParamsList: React.FC<TableSortParamsListProps> = ({
@@ -20,16 +20,16 @@ const TableSortParamsList: React.FC<TableSortParamsListProps> = ({
   onOpenClick,
   isOpen,
 }) => {
-  const [currentEl, setCurrentEl] = useState<SelectItem & { descedantOrder: boolean }>(current);
+  const [currentEl, setCurrentEl] = useState<SelectItem & { descending: boolean }>(current);
 
-  function handleSetCurrentState(param: SelectItem, descedantOrder: boolean) {
+  function handleSetCurrentState(param: SelectItem, descending: boolean) {
     return () => {
-      handleSetCurrent(param, descedantOrder) && handleSetCurrent(param, descedantOrder)();
-      setCurrentEl({ ...param, descedantOrder });
+      handleSetCurrent(param, descending) && handleSetCurrent(param, descending)();
+      setCurrentEl({ ...param, descending });
     };
   }
-  function isActive(param: SelectItem, descedantOrder: boolean) {
-    return param.dataKey === currentEl?.dataKey && currentEl.descedantOrder === descedantOrder;
+  function isActive(param: SelectItem, descending: boolean) {
+    return param.dataKey === currentEl?.dataKey && currentEl.descending === descending;
   }
 
   useEffect(() => {
@@ -91,7 +91,7 @@ const SelectList = styled.ul<{ isOpen?: boolean }>`
   max-height: 50vh;
   min-width: 150px;
   min-width: max-content;
-  padding: 8px;
+
   overflow: auto;
   border-radius: 2px;
   border: 1px solid ${({ theme }) => theme.borderColor};
@@ -116,7 +116,20 @@ const SelectList = styled.ul<{ isOpen?: boolean }>`
           pointer-events: none;
         `}
 
-  @media screen  and (min-height:480px) {
+  /* @media screen  and (max-width:480px) {
+    position: fixed;
+
+    top: 50%;
+    left: 0;
+    z-index: 1000;
+
+    width: 100%;
+    height: max-content;
+
+    transform: translate(0, -50%);
+  } */
+
+  @media screen and (min-height: 480px) {
     max-height: max-content;
   }
 `;
@@ -125,6 +138,13 @@ const Title = styled.div`
   align-items: center;
   justify-content: space-between;
 
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 100;
+
+  width: 100%;
+
   font-size: 14px;
   font-weight: 600;
   & span {
@@ -132,11 +152,14 @@ const Title = styled.div`
   }
 
   border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
+  background-color: inherit;
 `;
 const ListParam = styled.li`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  padding: 0 8px;
 
   /* gap: 8px; */
 `;

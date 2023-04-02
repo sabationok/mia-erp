@@ -1,35 +1,24 @@
 import React from 'react';
-import TableFilter from './TableFilter';
+
 import styled from 'styled-components';
 import { useTable } from '../TableList';
 import TableActions from './TableActions/TableActions';
 import DeviceConrol from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 import TabelSearch from './TableSearch/TabelSearch';
-import TableSort from './TableSortComp/TableSort';
-import TablePagination from './TablePagination';
 
 const TableOverHead: React.FC = () => {
-  const { tableActions, useFilterSelectors, tableSearchParams, tableSortParams } = useTable();
+  const { tableActions, tableSearchParams } = useTable();
   return (
     <OverHead>
       <LeftSide>
         <TabelSearch {...{ tableSearchParams }} />
       </LeftSide>
 
-      <RightSide>
-        <TableSort {...{ tableSortParams }} />
-
-        <TablePagination />
-
-        <TableFilter
-          {...{ title: 'Фільтрація транзакцій' }}
-          useFilterSelectors={useFilterSelectors ? useFilterSelectors : () => []}
-        />
-
-        <DeviceConrol.MinDesktop>
+      <DeviceConrol.MinDesktop>
+        <RightSide>
           <TableActions {...tableActions} />
-        </DeviceConrol.MinDesktop>
-      </RightSide>
+        </RightSide>
+      </DeviceConrol.MinDesktop>
     </OverHead>
   );
 };
@@ -42,15 +31,15 @@ const OverHead = styled.div`
   gap: 8px;
 
   position: relative;
-  z-index: 10;
+  z-index: 50;
 
   width: 100%;
   padding: 8px;
   @media screen and (max-height: 480px) {
     padding: 8px;
   }
-  @media screen and (min-height: 280px) {
-    grid-template-columns: 1fr max-content;
+  @media screen and (min-height: 280px) and (min-width: 480px) {
+    grid-template-columns: 1fr 1fr;
   }
   @media screen and (min-width: 480px) and (min-height: 480px) {
     padding: 20px 8px 16px;
@@ -64,7 +53,7 @@ const LeftSide = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  overflow: hidden;
+  /* overflow: hidden; */
 `;
 const RightSide = styled.div`
   align-self: flex-end;

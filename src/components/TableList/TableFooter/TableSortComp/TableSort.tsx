@@ -1,37 +1,36 @@
 import React, { useState } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { useModalProvider } from 'components/ModalProvider/ModalProvider';
+// import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import TableSortParamsList from './TableSortParamsList';
 import styled from 'styled-components';
 import { SelectItem } from 'components/TableList/TableList';
 
 export interface TableSortProps {
-  tableSortParams?: SelectItem[];
+  tableSortParams: SelectItem[];
 }
 
 const TableSort: React.FC<TableSortProps> = ({ tableSortParams }) => {
-  const modal = useModalProvider();
+  // const modal = useModalProvider();
   const [isOpen, setIsOpen] = useState<boolean | undefined>(false);
-  const [current, setCurrent] = useState<SelectItem & { descedantOrder: boolean }>({
-    descedantOrder: false,
-    dataKey: 'contractor',
-    label: 'Контрагент',
+  const [current, setCurrent] = useState<SelectItem & { descending: boolean }>({
+    descending: false,
+    ...tableSortParams[0],
   });
 
   function onOpenClick(newState?: boolean) {
     setIsOpen(newState);
   }
-  function handleSetCurrent(param: SelectItem, descedantOrder: boolean) {
+  function handleSetCurrent(param: SelectItem, descending: boolean) {
     return () => {
-      setCurrent({ ...param, descedantOrder });
+      setCurrent({ ...param, descending });
     };
   }
-  function onOpenList() {
-    modal.handleOpenModal({
-      ModalChildren: TableSortParamsList,
-      modalChildrenProps: { tableSortParams, handleSetCurrent, current, onOpenClick },
-    });
-  }
+  // function onOpenList() {
+  //   modal.handleOpenModal({
+  //     ModalChildren: TableSortParamsList,
+  //     modalChildrenProps: { tableSortParams, handleSetCurrent, current, onOpenClick },
+  //   });
+  // }
 
   return (
     <Box>
@@ -39,10 +38,10 @@ const TableSort: React.FC<TableSortProps> = ({ tableSortParams }) => {
 
       <DropDownBox>
         <StButton
-          descedantOrder={current?.descedantOrder}
+          descending={current?.descending}
           variant="def"
           iconId="sort"
-          iconSize="22px"
+          iconSize="26px"
           endIconSize="26px"
           endIconId="SmallArrowDown"
           onClick={() => onOpenClick(true)}
@@ -66,15 +65,18 @@ const Box = styled.div`
 const DropDownBox = styled.div`
   /* position: relative; */
 `;
-const StButton = styled(ButtonIcon)<{ descedantOrder?: boolean }>`
+const StButton = styled(ButtonIcon)<{ descending?: boolean }>`
   display: grid;
   grid-template-columns: 26px 1fr 26px;
   height: 100%;
+  max-width: 100%;
   /* max-width: 160px; */
+
+  padding-left: 4px;
 
   fill: ${({ theme }) => theme.accentColor.base};
   color: ${({ theme }) => theme.fontColorHeader};
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  background-color: ${({ theme }) => theme.backgroundColorLight};
 
   & span {
     text-overflow: ellipsis;
@@ -85,10 +87,10 @@ const StButton = styled(ButtonIcon)<{ descedantOrder?: boolean }>`
   &:active,
   &:focus,
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundColorSecondary};
+    background-color: ${({ theme }) => theme.backgroundColorLight};
   }
   & .endIcon {
-    transform: ${({ descedantOrder }) => `rotate(${!descedantOrder ? 180 : 0}deg)`};
+    transform: ${({ descending }) => `rotate(${!descending ? 180 : 0}deg)`};
   }
 `;
 
