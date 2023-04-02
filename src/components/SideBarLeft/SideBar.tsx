@@ -4,16 +4,16 @@ import ToggleThemeMode from './Actions/ChangeTheme';
 import ActionAppExit from './Actions/ActionAppExit';
 import { useSideBar } from './SideBarProvider';
 import styled, { css } from 'styled-components';
-import { useState } from 'react';
+// import { useState } from 'react';
 
-const SideBar: React.FC = () => {
+const SideBar: React.FC<any> = () => {
   const { isOpen, onTogglerClick, handleOptionsState, sideBarButtons, sideBarButtonsBottom, RightSideContent } =
     useSideBar();
-  const [isMiddleOpen, setIsMiddleOpen] = useState(false);
+  // const [isMiddleOpen, setIsMiddleOpen] = useState(false);
 
-  function handleMiddleOpen() {
-    setIsMiddleOpen(prev => !prev);
-  }
+  // function handleMiddleOpen() {
+  //   setIsMiddleOpen(prev => !prev);
+  // }
   return (
     <StyledSideBar isOpen={!!isOpen} data-sidebar>
       <MenuToggler isOpen={!!isOpen} onClick={onTogglerClick} />
@@ -25,9 +25,9 @@ const SideBar: React.FC = () => {
           </Top>
 
           <Middle>
-            <MiddleToggler variant="def" iconId="actionsH" iconSize="24px" onClick={() => handleMiddleOpen()} />
+            {/* <MiddleToggler variant="def" iconId="actionsH" iconSize="24px" onClick={() => handleMiddleOpen()} /> */}
 
-            <MiddleButtons isMiddleOpen={isMiddleOpen}>
+            <MiddleButtons>
               {sideBarButtons &&
                 sideBarButtons.map(item => (
                   <StyledButtonIcon
@@ -71,6 +71,7 @@ interface SideBarState {
   options?: any[] | null;
 }
 const sideBarCompWidth = '36px';
+const sideBarCompWidthMobile = '50px';
 
 const StyledSideBar = styled.div<SideBarState>`
   grid-column: 1/2;
@@ -80,19 +81,24 @@ const StyledSideBar = styled.div<SideBarState>`
   grid-template-columns: ${({ isOpen }) => (isOpen ? 'min-content' : '4px')} 1fr;
 
   width: fit-content;
-  max-width: 40px;
+  /* max-width: 40px; */
   height: 100%;
 
   position: relative;
-  z-index: 1000;
+  z-index: 500;
 
   fill: ${({ theme }) => theme.fillColorHeader};
   color: ${({ theme }) => theme.fontColorHeader};
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
+
+  /* max-width: 54px; */
+  /* @media screen and (min-width: 480px) { */
+  max-width: 40px;
+  /* } */
 `;
 const SideBarContainer = styled.div`
   display: grid;
-  grid-template-columns: min-content min-content;
+  grid-template-columns: max-content min-content;
 
   height: 100%;
   width: 100%;
@@ -121,36 +127,43 @@ const Top = styled.div`
   justify-content: center;
 
   /* height: 100%; */
+  /* width: ${sideBarCompWidthMobile};
+  @media screen and (min-width: 480px) { */
   width: ${sideBarCompWidth};
+  /* } */
 `;
-const MiddleToggler = styled(ButtonIcon)`
-  position: sticky;
-  top: 0;
-  left: 0;
+// const MiddleToggler = styled(ButtonIcon)`
+//   position: sticky;
+//   top: 0;
+//   left: 0;
 
-  width: ${sideBarCompWidth};
-  height: 32px;
-`;
+//   width: ${sideBarCompWidth};
+//   height: 32px;
+// `;
 const Middle = styled.div`
   height: 100%;
   max-height: 100%;
-  width: ${sideBarCompWidth};
   overflow: hidden;
+
+  /* width: ${sideBarCompWidthMobile};
+  @media screen and (min-width: 480px) { */
+  width: ${sideBarCompWidth};
+  /* } */
 `;
-const MiddleButtons = styled.div<{ isMiddleOpen: boolean }>`
+const MiddleButtons = styled.div<{ isMiddleOpen?: boolean }>`
   /* max-height: 0; */
   overflow: hidden;
 
   position: relative;
 
-  @media screen and (min-height: 480px) {
+  /* @media screen and (max-height: 480px) {
     position: absolute;
     top: 0;
     left: 50%;
 
     overflow: auto;
     max-height: 100%;
-  }
+  } */
 `;
 
 const Bottom = styled.div`
@@ -159,7 +172,10 @@ const Bottom = styled.div`
 
   padding-bottom: 12px;
 
+  /* width: ${sideBarCompWidthMobile};
+  @media screen and (min-width: 480px) { */
   width: ${sideBarCompWidth};
+  /* } */
 `;
 
 const MenuToggler = styled.button<SideBarState>`

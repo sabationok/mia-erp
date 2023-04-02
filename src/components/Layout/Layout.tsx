@@ -54,13 +54,18 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 const StyledLayout = styled.div`
   display: grid;
   grid-template-columns: min-content 1fr;
-  grid-template-rows: 29px calc(100% - 29px);
+  grid-template-rows: 50px calc(100% - 50px);
 
   width: 100%;
   height: 100%;
-  // max-height: 100vh;
+  max-height: 100%;
+  overflow: hidden;
 
   position: relative;
+
+  @media screen and (min-width: 480px) {
+    grid-template-rows: 29px calc(100% - 29px);
+  }
 `;
 
 const LayoutChildren = styled.div`

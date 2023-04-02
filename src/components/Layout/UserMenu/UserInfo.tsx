@@ -45,7 +45,7 @@ const Backdrop = styled.div<{ isOpen: boolean; transitionDelay?: string }>`
   position: fixed;
   top: 0;
   right: 0;
-  z-index: 1001;
+  z-index: 1051;
   transform-origin: right;
 
   overflow: hidden;

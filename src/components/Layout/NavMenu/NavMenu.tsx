@@ -100,9 +100,11 @@ const StyledNavMenu = styled.div`
 `;
 const MenuButton = styled(ButtonIcon)<{ isOpen: boolean }>`
   display: flex;
+  align-items: center;
   justify-content: space-between;
   width: 100%;
   min-height: 28px;
+  height: 100%;
 
   padding: 0 8px 0 16px;
   border-radius: 0;
