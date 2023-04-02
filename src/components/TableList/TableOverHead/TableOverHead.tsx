@@ -5,7 +5,7 @@ import { useTable } from '../TableList';
 import TableActions from './TableActions/TableActions';
 import DeviceConrol from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 import TabelSearch from './TableSearch/TabelSearch';
-import TableSort from './TableSort';
+import TableSort from './TableSortComp/TableSort';
 import TablePagination from './TablePagination';
 
 const TableOverHead: React.FC = () => {
@@ -17,7 +17,7 @@ const TableOverHead: React.FC = () => {
       </LeftSide>
 
       <RightSide>
-        <TableSort />
+        <TableSort tableSortParams={tableSearchParams} />
 
         <TablePagination />
 

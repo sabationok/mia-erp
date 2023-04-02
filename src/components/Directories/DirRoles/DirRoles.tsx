@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import useCountsService from 'redux/counts/useCountsService.hook';
 import { CountType, ICount } from 'data/counts.types';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
-import FormCreateCount, { FormCreateCountProps } from './FormCreateCount';
 
 export type CountFilterOpt = FilterOpt<CountType>;
 export interface DirCountsProps extends ModalFormProps {
@@ -17,16 +16,13 @@ export interface DirCountsProps extends ModalFormProps {
 const DirCounts: React.FC<DirCountsProps> = props => {
   const modal = useModalProvider();
   const { counts, createNewCount, editCount, deleteCount } = useCountsService();
-  const [filteredData, setFilteredData] = useState<ICount[]>([]);
-  const [dirType, setDirType] = useState<CountType>('ACTIVE');
 
   function onEdit(_id: string) {
-    modal.handleOpenModal<FormCreateCountProps>({
-      ModalChildren: FormCreateCount,
+    modal.handleOpenModal({
+      ModalChildren: () => null,
       modalChildrenProps: {
-        title: 'Редагування рахунку',
+        title: 'Редагування ролі',
         _id,
-        type: dirType,
         onSubmit: editCount,
         count: counts.find(el => el._id === _id),
       },
@@ -34,32 +30,21 @@ const DirCounts: React.FC<DirCountsProps> = props => {
   }
 
   function onCreateChild(owner?: string) {
-    modal.handleOpenModal<FormCreateCountProps>({
-      ModalChildren: FormCreateCount,
+    modal.handleOpenModal({
+      ModalChildren: () => null,
       modalChildrenProps: {
-        title: 'Створення субрахунку',
-        type: dirType,
+        title: 'Створення ролі',
+
         onSubmit: createNewCount,
         create: true,
       },
     });
   }
 
-  function handleFilterData({ value }: FilterOpt<CountType>) {
-    value && setDirType(value);
-    value && setFilteredData(founder({ searchParam: 'type', searchQuery: value, data: counts }));
-  }
-
   return (
-    <StModalForm {...props} onOptSelect={handleFilterData}>
+    <StModalForm {...props}>
       <Box>
-        <DirList
-          onDelete={deleteCount}
-          onEdit={onEdit}
-          onCreateChild={onCreateChild}
-          list={filteredData}
-          entryList={filteredData.filter(el => !el?.owner)}
-        />
+        <DirList onDelete={deleteCount} onEdit={onEdit} onCreateChild={onCreateChild} list={[]} entryList={[]} />
       </Box>
     </StModalForm>
   );

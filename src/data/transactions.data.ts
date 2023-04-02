@@ -230,18 +230,18 @@ export const transactionsColumns_old = [
 ];
 
 export const transactionsSearchParams: SelectItem[] = [
-  { label: selects.countIn.label, dataKey: selects.countIn.name, filter: false, search: true },
-  { label: selects.subCountIn.label, dataKey: selects.subCountIn.name, filter: false, search: true },
-  { label: selects.countOut.label, dataKey: selects.countOut.name, filter: false, search: true },
-  { label: selects.subCountOut.label, dataKey: selects.subCountOut.name, filter: false, search: true },
-  { label: selects.category.label, dataKey: selects.category.name, filter: false, search: true },
-  { label: selects.subCategory.label, dataKey: selects.subCategory.name, filter: false, search: true },
-  { label: 'Сума', dataKey: 'amount', filter: false, search: true },
-  { label: 'Контрагент', dataKey: 'contractor', filter: false, search: true },
-  { label: 'Документ', dataKey: 'document', filter: false, search: true },
-  { label: 'Проєкт', dataKey: 'project', filter: false, search: true },
-  { label: 'Мітка', dataKey: 'mark', filter: false, search: true },
-  { label: 'Статус', dataKey: 'status', filter: false, search: true },
+  { label: selects.countIn.label, dataKey: selects.countIn.name, filter: false, search: true, sort: true },
+  { label: selects.subCountIn.label, dataKey: selects.subCountIn.name, filter: false, search: true, sort: true },
+  { label: selects.countOut.label, dataKey: selects.countOut.name, filter: false, search: true, sort: true },
+  { label: selects.subCountOut.label, dataKey: selects.subCountOut.name, filter: false, search: true, sort: true },
+  { label: selects.category.label, dataKey: selects.category.name, filter: false, search: true, sort: true },
+  { label: selects.subCategory.label, dataKey: selects.subCategory.name, filter: false, search: true, sort: true },
+  { label: 'Сума', dataKey: 'amount', filter: false, search: true, sort: true },
+  { label: 'Контрагент', dataKey: 'contractor', filter: false, search: true, sort: true },
+  { label: 'Документ', dataKey: 'document', filter: false, search: true, sort: true },
+  { label: 'Проєкт', dataKey: 'project', filter: false, search: true, sort: true },
+  { label: 'Мітка', dataKey: 'mark', filter: false, search: true, sort: true },
+  { label: 'Статус', dataKey: 'status', filter: false, search: true, sort: true },
 ];
 
 export const transactionsMockData: ITransaction[] = [

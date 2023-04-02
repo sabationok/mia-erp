@@ -37,4 +37,9 @@ export const persistorConfigs = {
     storage,
     whitelist: ['transactions'],
   },
+  roles: {
+    key: 'roles',
+    storage,
+    whitelist: ['roles'],
+  },
 };

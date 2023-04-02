@@ -4,7 +4,7 @@ import { useAppDispatch } from 'redux/store.store';
 
 const useCountsService = () => {
   const dispatch = useAppDispatch();
-  const countsState = useCountsSelector();
+  const state = useCountsSelector();
   function createNewCount(formData: CountFormData) {
     console.log('createNewCount', formData);
   }
@@ -12,12 +12,17 @@ const useCountsService = () => {
     console.log('editCount', formData);
   }
   function deleteCount(_id: string) {
-    console.log('deleteCount', _id);
+    const { counts } = state;
+    const countForDelete = counts.find(c => c._id === _id);
+    const result = window.confirm(`Видалити "${countForDelete?.name}"?`);
+    if (result) {
+      console.log('deleteCount', _id);
+    }
   }
 
   return {
     dispatch,
-    ...countsState,
+    ...state,
     createNewCount,
     editCount,
     deleteCount,

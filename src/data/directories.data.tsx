@@ -40,8 +40,18 @@ const ProjectsProps: DirCategoriesProps = {
 const ContractorsProps: DirCategoriesProps = {
   title: 'Контрагенти',
 };
+const RolesProps: { title: string } = {
+  title: 'Ролі',
+};
 
 const directories: IDirectory[] = [
+  {
+    title: RolesProps.title,
+    iconId: iconId.lockPerson,
+    ModalChildren: () => null,
+    modalChildrenProps: null,
+    disabled: true,
+  },
   {
     title: CountsProps.title,
     iconId: iconId.bank,
@@ -71,7 +81,7 @@ const directories: IDirectory[] = [
     disabled: true,
   },
   { title: 'Користувачі', iconId: iconId.persons, ModalChildren: () => null, modalChildrenProps: null, disabled: true },
-  { title: 'Ролі', iconId: iconId.lockPerson, ModalChildren: () => null, modalChildrenProps: null, disabled: true },
+
   { title: 'Мітки', iconId: iconId.boockMarAdd, ModalChildren: () => null, modalChildrenProps: null, disabled: true },
 ];
 

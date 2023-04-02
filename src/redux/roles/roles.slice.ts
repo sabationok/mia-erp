@@ -1,0 +1,92 @@
+import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { getAllRolesThunk } from './roles.thunks';
+import { StateErrorType } from 'redux/reduxTypes.types';
+
+export interface ICountsState {
+  roles: any[];
+  isLoading: boolean;
+  error: StateErrorType;
+}
+
+const initialState: ICountsState = {
+  isLoading: false,
+  error: null,
+  roles: [],
+};
+
+export const rolesSlice = createSlice({
+  name: 'roles',
+  initialState,
+  reducers: {},
+  extraReducers: builder =>
+    builder
+      .addCase(getAllRolesThunk.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.roles = action.payload.data;
+      })
+      .addMatcher(inPending, state => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addMatcher(inError, (state, action: PayloadAction<StateErrorType>) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      }),
+});
+
+function inPending(action: AnyAction) {
+  return action.type.endsWith('pending');
+}
+function inError(action: AnyAction) {
+  return action.type.endsWith('rejected');
+}
+
+export const rolesReducer = rolesSlice.reducer;
+// .addCase(addCountThunk.fulfilled, (state, action) => {})
+// .addCase(deleteCountThunk.fulfilled, (state, action) => {})
+// .addCase(editCountThunk.fulfilled, (state, action) => {})
+// extraReducers: {
+//   [getAllCountsThunk.fulfilled]: (state, action) => {
+//     state.isLoading = false;
+
+//     state.counts = action.payload.data;
+//   },
+//   [getAllCountsThunk.pending]: (state, action) => {
+//     state.isLoading = true;
+//   },
+//   [getAllCountsThunk.rejected]: (state, action) => {
+//     state.isLoading = false;
+//     state.error = action.payload;
+//   },
+
+//   [getCountsByParentIdThunk.fulfilled]: (state, action) => {},
+//   [getCountsByParentIdThunk.pending]: (state, action) => {},
+//   [getCountsByParentIdThunk.rejected]: (state, action) => {},
+
+//   [addCountThunk.fulfilled]: (state, action) => {
+//     state.isloading = false;
+//     state.counts.push(action.payload.data);
+//   },
+//   [addCountThunk.pending]: (state, action) => {
+//     state.isloading = true;
+//   },
+//   [addCountThunk.rejected]: (state, action) => {
+//     state.isloading = false;
+//     state.error = action.payload;
+//   },
+
+//   [deleteCountThunk.fulfilled]: (state, action) => {},
+//   [deleteCountThunk.pending]: (state, action) => {},
+//   [deleteCountThunk.rejected]: (state, action) => {},
+
+//   [editCountThunk.fulfilled]: (state, { payload }) => {
+//     state.isLoading = false;
+//     const index = state.counts.findIndex(el => el._id === payload.data._id);
+
+//     state.counts[index] = { ...payload.data };
+
+//     console.log(index, state.counts[index].isArchived);
+//   },
+//   [editCountThunk.pending]: (state, action) => {},
+//   [editCountThunk.rejected]: (state, action) => {},
+// },

@@ -43,7 +43,8 @@ const StButton = styled(ButtonIcon)<{ isOpen: boolean }>`
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
 
   &:active,
-  &:focus {
+  &:focus,
+  &:hover {
     background-color: ${({ theme }) => theme.backgroundColorSecondary};
   }
 
