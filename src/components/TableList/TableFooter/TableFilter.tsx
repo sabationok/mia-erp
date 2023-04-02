@@ -15,6 +15,7 @@ const TableFilter: React.FC<TableFilterProps> = ({ title, useFilterSelectors }) 
     <ButtonIcon
       iconId={iconId.filterOff}
       size="28px"
+      iconSize="26px"
       variant="onlyIcon"
       onClick={() => {
         modal.handleOpenModal<FilterProps>({

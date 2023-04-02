@@ -4,11 +4,16 @@ import ToggleThemeMode from './Actions/ChangeTheme';
 import ActionAppExit from './Actions/ActionAppExit';
 import { useSideBar } from './SideBarProvider';
 import styled, { css } from 'styled-components';
+import { useState } from 'react';
 
 const SideBar: React.FC = () => {
   const { isOpen, onTogglerClick, handleOptionsState, sideBarButtons, sideBarButtonsBottom, RightSideContent } =
     useSideBar();
+  const [isMiddleOpen, setIsMiddleOpen] = useState(false);
 
+  function handleMiddleOpen() {
+    setIsMiddleOpen(prev => !prev);
+  }
   return (
     <StyledSideBar isOpen={!!isOpen} data-sidebar>
       <MenuToggler isOpen={!!isOpen} onClick={onTogglerClick} />
@@ -20,7 +25,9 @@ const SideBar: React.FC = () => {
           </Top>
 
           <Middle>
-            <div style={{ overflow: 'auto' }}>
+            <MiddleToggler variant="def" iconId="actionsH" iconSize="24px" onClick={() => handleMiddleOpen()} />
+
+            <MiddleButtons isMiddleOpen={isMiddleOpen}>
               {sideBarButtons &&
                 sideBarButtons.map(item => (
                   <StyledButtonIcon
@@ -33,7 +40,7 @@ const SideBar: React.FC = () => {
                     onClick={() => handleOptionsState && handleOptionsState(item)}
                   />
                 ))}
-            </div>
+            </MiddleButtons>
           </Middle>
 
           <Bottom>
@@ -77,7 +84,7 @@ const StyledSideBar = styled.div<SideBarState>`
   height: 100%;
 
   position: relative;
-  z-index: 100;
+  z-index: 1000;
 
   fill: ${({ theme }) => theme.fillColorHeader};
   color: ${({ theme }) => theme.fontColorHeader};
@@ -101,6 +108,7 @@ const Content = styled.div<SideBarState>`
   height: 100%;
   max-height: 100%;
   min-width: ${({ isOpen }) => (isOpen ? sideBarCompWidth : '0')};
+
   overflow: hidden;
 
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
@@ -115,20 +123,36 @@ const Top = styled.div`
   /* height: 100%; */
   width: ${sideBarCompWidth};
 `;
+const MiddleToggler = styled(ButtonIcon)`
+  position: sticky;
+  top: 0;
+  left: 0;
+
+  width: ${sideBarCompWidth};
+  height: 32px;
+`;
 const Middle = styled.div`
   height: 100%;
   max-height: 100%;
   width: ${sideBarCompWidth};
   overflow: hidden;
-
-  /* border-top: 1px solid ${({ theme }) => theme.trBorderClr}; */
-  /* border-bottom: 1px solid ${({ theme }) => theme.trBorderClr}; */
-
-  /* &::-webkit-scrollbar {
-    width: 2px;
-    height: 2px;
-  } */
 `;
+const MiddleButtons = styled.div<{ isMiddleOpen: boolean }>`
+  /* max-height: 0; */
+  overflow: hidden;
+
+  position: relative;
+
+  @media screen and (min-height: 480px) {
+    position: absolute;
+    top: 0;
+    left: 50%;
+
+    overflow: auto;
+    max-height: 100%;
+  }
+`;
+
 const Bottom = styled.div`
   display: flex;
   flex-direction: column;

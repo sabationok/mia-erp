@@ -2,7 +2,9 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 
-export interface TablePaginationProps {}
+export interface TablePaginationProps {
+  onSelect?: (opt: PaginationOption) => void;
+}
 export interface PaginationOption {
   label: string;
   value: number | null;
@@ -14,15 +16,16 @@ const pagOptions: PaginationOption[] = [
   { label: 'Усі', value: null },
 ];
 
-const TablePagination: React.FC<TablePaginationProps> = () => {
+const TablePagination: React.FC<TablePaginationProps> = ({ onSelect }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [current, setCurrent] = useState<PaginationOption>(pagOptions[0]);
 
   function onOpen() {
     setIsOpen(prev => !prev);
   }
-  function onSelect(idx: number) {
+  function onSelectOpt(idx: number) {
     setCurrent(pagOptions[idx]);
+    onSelect && onSelect(pagOptions[idx]);
     onOpen();
   }
 
@@ -35,7 +38,7 @@ const TablePagination: React.FC<TablePaginationProps> = () => {
 
         <SelectList isOpen={isOpen}>
           {pagOptions.map((opt, idx) => (
-            <SelectItem key={idx} onClick={() => onSelect(idx)}>
+            <SelectItem key={idx} onClick={() => onSelectOpt(idx)}>
               {opt.label}
             </SelectItem>
           ))}
@@ -57,6 +60,8 @@ const StButton = styled(ButtonIcon)<{ isOpen: boolean }>`
   width: fit-content;
   height: 100%;
   gap: 0;
+
+  min-width: 65px;
 
   fill: ${({ theme }) => theme.accentColor.base};
   color: ${({ theme }) => theme.fontColorHeader};
@@ -84,14 +89,15 @@ const SelectList = styled.ul<{ isOpen: boolean }>`
   bottom: 120%;
   right: 0;
 
-  /* min-height: 150px; */
   min-width: 100%;
   overflow: hidden;
 
   border-radius: 2px;
-  border: 1px solid ${({ theme }) => theme.borderColor};
 
+  color: ${({ theme }) => theme.fontColorHeader};
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
+
+  border: 1px solid ${({ theme }) => theme.trBorderClr};
   box-shadow: ${({ theme }) => theme.globals.shadowMain};
   transition: all ${({ theme }) => theme.globals.timingFunctionMain},
     transform ${({ theme }) => theme.globals.timingFnMui};
@@ -108,6 +114,12 @@ const SelectList = styled.ul<{ isOpen: boolean }>`
         `}
 `;
 const SelectItem = styled.li`
-  padding: 4px 8px;
+  font-size: 16px;
+  padding: 8px;
+
+  cursor: default;
+  &:hover {
+    background-color: ${({ theme }) => theme.backgroundColorLight};
+  }
 `;
 export default TablePagination;

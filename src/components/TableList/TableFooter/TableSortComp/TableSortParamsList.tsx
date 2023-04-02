@@ -49,60 +49,66 @@ const TableSortParamsList: React.FC<TableSortParamsListProps> = ({
     };
   }, [isOpen, onOpenClick]);
   return (
-    <SelectList isOpen={isOpen} data-table-sort-close>
+    <Box isOpen={isOpen} data-table-sort-close>
       <Title>
         <span>Сортування</span>
 
         <ButtonIcon variant="def" iconId="close" iconSize="26px" onClick={() => onOpenClick(false)} />
       </Title>
 
-      {tableSortParams?.map(param => (
-        <ListParam key={param.dataKey}>
-          <ParamLabel>{param.name || param.label}</ParamLabel>
+      <SelectList>
+        {tableSortParams?.map(param => (
+          <ListParam key={param.dataKey}>
+            <ParamLabel>{param.name || param.label}</ParamLabel>
 
-          <SetOrderButton
-            isActive={isActive(param, true)}
-            variant="onlyIcon"
-            iconId={iconId.SmallArrowDown}
-            onClick={handleSetCurrentState(param, true)}
-          />
+            <SetOrderButton
+              isActive={isActive(param, true)}
+              variant="onlyIcon"
+              iconSize="24px"
+              iconId={iconId.SmallArrowDown}
+              onClick={handleSetCurrentState(param, true)}
+            />
 
-          <SetOrderButton
-            isActive={isActive(param, false)}
-            variant="onlyIcon"
-            iconId={iconId.SmallArrowUp}
-            onClick={handleSetCurrentState(param, false)}
-          />
-        </ListParam>
-      ))}
-    </SelectList>
+            <SetOrderButton
+              isActive={isActive(param, false)}
+              variant="onlyIcon"
+              iconSize="24px"
+              iconId={iconId.SmallArrowUp}
+              onClick={handleSetCurrentState(param, false)}
+            />
+          </ListParam>
+        ))}
+      </SelectList>
+    </Box>
   );
 };
 
-const SelectList = styled.ul<{ isOpen?: boolean }>`
+const Box = styled.div<{ isOpen?: boolean }>`
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 0;
-  right: 0;
+  bottom: 10px;
+  left: 0;
   z-index: 2000;
 
   min-height: 150px;
-  max-height: 50vh;
+  max-height: 70vh;
   min-width: 150px;
   min-width: max-content;
 
-  overflow: auto;
+  overflow: hidden;
   border-radius: 2px;
   border: 1px solid ${({ theme }) => theme.borderColor};
 
   color: ${({ theme }) => theme.fontColorHeader};
   fill: ${({ theme }) => theme.fontColorHeader};
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  /* background-color: ${({ theme }) => theme.backgroundColorSecondary}; */
+
+  backdrop-filter: blur(3px);
+  background-color: ${({ theme }) => theme.backdropColor};
   box-shadow: ${({ theme }) => theme.globals.shadowMain};
   transition: all ${({ theme }) => theme.globals.timingFunctionMain},
     transform ${({ theme }) => theme.globals.timingFnMui};
-  /* transform-origin: top right; */
 
   ${({ isOpen }) =>
     isOpen
@@ -110,24 +116,11 @@ const SelectList = styled.ul<{ isOpen?: boolean }>`
           transform: translate(0%, 0);
         `
       : css`
-          transform: translate(100%, 0);
+          transform: translate(-100%, 0);
           /* opacity: 0; */
           visibility: hidden;
           pointer-events: none;
         `}
-
-  /* @media screen  and (max-width:480px) {
-    position: fixed;
-
-    top: 50%;
-    left: 0;
-    z-index: 1000;
-
-    width: 100%;
-    height: max-content;
-
-    transform: translate(0, -50%);
-  } */
 
   @media screen and (min-height: 480px) {
     max-height: max-content;
@@ -153,11 +146,21 @@ const Title = styled.div`
 
   border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
   background-color: inherit;
+  backdrop-filter: blur(3px);
+`;
+const SelectList = styled.ul`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 36px;
+
+  overflow: auto;
 `;
 const ListParam = styled.li`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  font-size: 14px;
 
   padding: 0 8px;
 
