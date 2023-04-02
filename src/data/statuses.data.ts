@@ -1,4 +1,4 @@
-import { iconId } from './iconId.data';
+import { iconId } from '../img/sprite/iconId.data';
 export const statusName = {
   approved: 'Узгоджено',
   success: 'Успішно',

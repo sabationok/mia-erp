@@ -1,23 +1,26 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useTable } from './TableList';
 
-const TableFooter: React.FC = () => {
-  const { selectedRows = [] } = useTable();
+export interface FooterCounterProps {
+  includes?: string[];
+  selectedRows?: any[];
+}
+
+const FooterCounter: React.FC<FooterCounterProps> = ({ includes = [''], selectedRows = [] }) => {
   const [rowsAmountSum, setRowsAmountSum] = useState<number>(0);
 
   useEffect(() => {
     const countedSum = selectedRows.reduce(
       (acc: number, { amount, type }: { amount: number; type: string }) =>
-        type !== 'TRANSFER' ? acc + amount : acc + 0,
+        includes.includes(type) ? acc + amount : acc + 0,
       0
     );
 
     setRowsAmountSum(countedSum);
-  }, [selectedRows.length, selectedRows, rowsAmountSum]);
+  }, [includes, selectedRows]);
 
   return (
-    <Footer>
+    <Box>
       <Wrapper>
         <span>Обрано:</span>
         <span>{selectedRows?.length}</span>
@@ -27,24 +30,16 @@ const TableFooter: React.FC = () => {
         <span>Сума:</span>
         <span>{rowsAmountSum}</span>
       </Wrapper>
-    </Footer>
+    </Box>
   );
 };
-
-const Footer = styled.div`
+const Box = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 8px;
-  width: 100%;
-  height: 100%;
-
-  background-color: ${({ theme }) => theme.tableBackgroundColor};
+  gap: 12px;
 `;
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 4px;
 `;
-
-export default TableFooter;
+export default FooterCounter;

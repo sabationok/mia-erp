@@ -1,8 +1,9 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import { SelectItem } from 'components/TableList/TableList';
 import { iconId } from 'data';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import SearchParamInput, { SelectItem } from './SearchParamInput';
+import SearchParamInput from './SearchParamInput';
 
 export interface TableSearchProps {
   tableSearchParams?: SelectItem[];

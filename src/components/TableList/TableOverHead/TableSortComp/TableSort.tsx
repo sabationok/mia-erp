@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
-import styled from 'styled-components';
-import { SelectItem } from '../TableSearch/SearchParamInput';
 import TableSortParamsList from './TableSortParamsList';
+import styled from 'styled-components';
+import { SelectItem } from 'components/TableList/TableList';
 
 export interface TableSortProps {
   tableSortParams?: SelectItem[];
@@ -11,12 +11,16 @@ export interface TableSortProps {
 
 const TableSort: React.FC<TableSortProps> = ({ tableSortParams }) => {
   const modal = useModalProvider();
+  const [isOpen, setIsOpen] = useState<boolean | undefined>(false);
   const [current, setCurrent] = useState<SelectItem & { descedantOrder: boolean }>({
     descedantOrder: false,
     dataKey: 'contractor',
     label: 'Контрагент',
   });
 
+  function onOpenClick(newState?: boolean) {
+    setIsOpen(newState);
+  }
   function handleSetCurrent(param: SelectItem, descedantOrder: boolean) {
     return () => {
       setCurrent({ ...param, descedantOrder });
@@ -25,24 +29,30 @@ const TableSort: React.FC<TableSortProps> = ({ tableSortParams }) => {
   function onOpenList() {
     modal.handleOpenModal({
       ModalChildren: TableSortParamsList,
-      modalChildrenProps: { tableSortParams, handleSetCurrent, current },
+      modalChildrenProps: { tableSortParams, handleSetCurrent, current, onOpenClick },
     });
   }
 
   return (
     <Box>
-      <div>Сортувати за:</div>
+      {/* <div>Сортувати за:</div> */}
 
       <DropDownBox>
         <StButton
           descedantOrder={current?.descedantOrder}
           variant="def"
+          iconId="sort"
+          iconSize="22px"
           endIconSize="26px"
           endIconId="SmallArrowDown"
-          onClick={onOpenList}
+          onClick={() => onOpenClick(true)}
+          data-table-sort-open
         >
-          {current.name || current.label}
+          <span title={current.name || current.label}>{current.name || current.label}</span>
         </StButton>
+        <ListBox isOpen={!!isOpen}>
+          <TableSortParamsList {...{ tableSortParams, handleSetCurrent, current, isOpen, onOpenClick }} />
+        </ListBox>
       </DropDownBox>
     </Box>
   );
@@ -57,14 +67,20 @@ const DropDownBox = styled.div`
   /* position: relative; */
 `;
 const StButton = styled(ButtonIcon)<{ descedantOrder?: boolean }>`
-  width: fit-content;
+  display: grid;
+  grid-template-columns: 26px 1fr 26px;
   height: 100%;
-
-  padding-left: 8px;
+  /* max-width: 160px; */
 
   fill: ${({ theme }) => theme.accentColor.base};
   color: ${({ theme }) => theme.fontColorHeader};
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
+
+  & span {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
 
   &:active,
   &:focus,
@@ -73,6 +89,22 @@ const StButton = styled(ButtonIcon)<{ descedantOrder?: boolean }>`
   }
   & .endIcon {
     transform: ${({ descedantOrder }) => `rotate(${!descedantOrder ? 180 : 0}deg)`};
+  }
+`;
+
+const ListBox = styled.div<{ isOpen: boolean }>`
+  position: absolute;
+
+  top: 0;
+  right: 0;
+  z-index: 2000;
+
+  height: 100%;
+
+  pointer-events: ${({ isOpen }) => (isOpen ? 'all' : 'none')};
+
+  @media screen and (min-height: 480px) {
+    top: 100%;
   }
 `;
 

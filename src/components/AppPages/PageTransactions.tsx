@@ -17,8 +17,10 @@ const PageTransactions = () => {
           tableData: transactionsMockData || transactions,
           tableTitles: transactionsColumns,
           tableSearchParams: transactionsSearchParams,
+          tableSortParams: transactionsSearchParams,
           tableActions: trTableActions,
           filter: true,
+          footer: true,
           search: true,
           useFilterSelectors,
         }}

@@ -1,18 +1,10 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
+import { SelectItem } from 'components/TableList/TableList';
 import { iconId } from 'data';
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 
-export interface SelectItem extends Record<string, any> {
-  _id?: string;
-  filter?: boolean;
-  search?: boolean;
-  label?: string;
-  name?: string;
-  value?: string | number;
-  dataKey: string;
-}
 export interface ISearchParamInputProps {
   data?: SelectItem[];
   defaultValue?: SelectItem;

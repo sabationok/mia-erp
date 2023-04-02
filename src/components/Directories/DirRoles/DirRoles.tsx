@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ModalForm, { FilterOpt, ModalFormProps } from 'components/ModalForm/ModalForm';
 import DirList from '../DirList/DirList';
-import { founder } from 'utils';
+// import { founder } from 'utils';
 import styled from 'styled-components';
 import useCountsService from 'redux/counts/useCountsService.hook';
-import { CountType, ICount } from 'data/counts.types';
+import { CountType } from 'data/counts.types';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 
-export type CountFilterOpt = FilterOpt<CountType>;
-export interface DirCountsProps extends ModalFormProps {
+export type RoleFilterOpt = FilterOpt<CountType>;
+export interface DirRolesProps extends ModalFormProps {
   title: string;
-  filterOptions: CountFilterOpt[];
+  filterOptions: RoleFilterOpt[];
 }
 
-const DirCounts: React.FC<DirCountsProps> = props => {
+const DirRoles: React.FC<DirRolesProps> = props => {
   const modal = useModalProvider();
   const { counts, createNewCount, editCount, deleteCount } = useCountsService();
+
+  console.log(props);
 
   function onEdit(_id: string) {
     modal.handleOpenModal({
@@ -60,4 +62,4 @@ const Box = styled.div`
   padding: 16px 16px;
 `;
 
-export default DirCounts;
+export default DirRoles;

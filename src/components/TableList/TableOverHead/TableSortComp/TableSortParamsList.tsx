@@ -1,14 +1,15 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { ModalFormProps } from 'components/ModalForm/ModalForm';
 import { iconId } from 'data';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import { SelectItem } from '../TableSearch/SearchParamInput';
+import { SelectItem } from 'components/TableList/TableList';
 
 export interface TableSortParamsListProps extends ModalFormProps {
   tableSortParams?: SelectItem[];
   current: SelectItem & { descedantOrder: boolean };
-  onClose?: () => void;
+  isOpen?: boolean;
+  onOpenClick: (isOpen?: boolean) => void;
   handleSetCurrent: (param: SelectItem, descedantOrder: boolean) => <T = any>(args?: T | undefined) => any;
 }
 
@@ -16,7 +17,8 @@ const TableSortParamsList: React.FC<TableSortParamsListProps> = ({
   tableSortParams,
   handleSetCurrent,
   current,
-  onClose,
+  onOpenClick,
+  isOpen,
 }) => {
   const [currentEl, setCurrentEl] = useState<SelectItem & { descedantOrder: boolean }>(current);
 
@@ -24,14 +26,36 @@ const TableSortParamsList: React.FC<TableSortParamsListProps> = ({
     return () => {
       handleSetCurrent(param, descedantOrder) && handleSetCurrent(param, descedantOrder)();
       setCurrentEl({ ...param, descedantOrder });
-      onClose && onClose();
     };
   }
   function isActive(param: SelectItem, descedantOrder: boolean) {
     return param.dataKey === currentEl?.dataKey && currentEl.descedantOrder === descedantOrder;
   }
+
+  useEffect(() => {
+    function onMenuClose(ev: MouseEvent | KeyboardEvent) {
+      const { target } = ev;
+
+      if (target instanceof HTMLElement && target?.closest('[data-table-sort-open]')) return onOpenClick(true);
+      if (target instanceof HTMLElement && !target?.closest('[data-table-sort-close]')) onOpenClick(false);
+      if (ev instanceof KeyboardEvent && ev?.code === 'Escape') onOpenClick(false);
+    }
+    document.addEventListener('click', onMenuClose);
+    document.addEventListener('keydown', onMenuClose);
+
+    return () => {
+      document.removeEventListener('click', onMenuClose);
+      document.removeEventListener('keydown', onMenuClose);
+    };
+  }, [isOpen, onOpenClick]);
   return (
-    <SelectList>
+    <SelectList isOpen={isOpen} data-table-sort-close>
+      <Title>
+        <span>Сортування</span>
+
+        <ButtonIcon variant="def" iconId="close" iconSize="26px" onClick={() => onOpenClick(false)} />
+      </Title>
+
       {tableSortParams?.map(param => (
         <ListParam key={param.dataKey}>
           <ParamLabel>{param.name || param.label}</ParamLabel>
@@ -58,9 +82,13 @@ const TableSortParamsList: React.FC<TableSortParamsListProps> = ({
 const SelectList = styled.ul<{ isOpen?: boolean }>`
   display: flex;
   flex-direction: column;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2000;
 
   min-height: 150px;
-  max-height: 70vh;
+  max-height: 50vh;
   min-width: 150px;
   min-width: max-content;
   padding: 8px;
@@ -69,30 +97,47 @@ const SelectList = styled.ul<{ isOpen?: boolean }>`
   border: 1px solid ${({ theme }) => theme.borderColor};
 
   color: ${({ theme }) => theme.fontColorHeader};
+  fill: ${({ theme }) => theme.fontColorHeader};
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
   box-shadow: ${({ theme }) => theme.globals.shadowMain};
   transition: all ${({ theme }) => theme.globals.timingFunctionMain},
     transform ${({ theme }) => theme.globals.timingFnMui};
   /* transform-origin: top right; */
 
-  /* ${({ isOpen }) =>
+  ${({ isOpen }) =>
     isOpen
       ? css`
-          transform: translate(100%, 0);
+          transform: translate(0%, 0);
         `
       : css`
-          transform: scale(0.7, 0.8);
-          opacity: 0;
+          transform: translate(100%, 0);
+          /* opacity: 0; */
           visibility: hidden;
           pointer-events: none;
-        `} */
+        `}
+
+  @media screen  and (min-height:480px) {
+    max-height: max-content;
+  }
+`;
+const Title = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  font-size: 14px;
+  font-weight: 600;
+  & span {
+    padding: 0 8px;
+  }
+
+  border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
 `;
 const ListParam = styled.li`
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  color: ${({ theme }) => theme.fontColorHeader};
   /* gap: 8px; */
 `;
 const ParamLabel = styled.div`
@@ -101,11 +146,9 @@ const ParamLabel = styled.div`
 
   padding: 0 8px;
   min-width: max-content;
-
-  color: ${({ theme }) => theme.fillColorHeader};
 `;
 const SetOrderButton = styled(ButtonIcon)<{ isActive: boolean }>`
-  fill: ${({ isActive, theme }) => (isActive ? theme.accentColor.base : theme.fillColor)};
+  fill: ${({ isActive, theme }) => (isActive ? theme.accentColor.base : theme.fontColorHeader)};
 `;
 
 export default TableSortParamsList;

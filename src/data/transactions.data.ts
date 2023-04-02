@@ -1,7 +1,7 @@
-import { SelectItem } from 'components/TableList/TableOverHead/TableSearch/SearchParamInput';
+import { SelectItem } from 'components/TableList/TableList';
 import { TableActionsProps } from 'components/TableList/TableList';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
-import { iconId } from './iconId.data';
+import { iconId } from '../img/sprite/iconId.data';
 import { selects } from './select.data';
 import { ITransaction } from './transactions.types';
 

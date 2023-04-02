@@ -1,6 +1,6 @@
 import { IAccordeonOptionProps } from 'components/SideBarContent/AccordeonList';
 import OptionsList from 'components/SideBarContent/OptionsList';
-import { iconId } from './iconId.data';
+import { iconId } from '../img/sprite/iconId.data';
 
 export const raports: IAccordeonOptionProps[] = [
   {

@@ -2,7 +2,7 @@ import { ISidebarOptionsItem } from 'components/SideBarLeft/SideBarProvider';
 import { appSettings } from './appSettings.data';
 import createActions from './createActions.data';
 import directories from './directories.data';
-import { iconId } from './iconId.data';
+import { iconId } from '../img/sprite/iconId.data';
 import { raports } from './raports.data';
 import Notifications from '../components/SideBarContent/Notifications';
 import Directories from 'components/SideBarContent/Directories';

@@ -9,7 +9,7 @@ import TableSort from './TableSortComp/TableSort';
 import TablePagination from './TablePagination';
 
 const TableOverHead: React.FC = () => {
-  const { tableActions, useFilterSelectors, tableSearchParams } = useTable();
+  const { tableActions, useFilterSelectors, tableSearchParams, tableSortParams } = useTable();
   return (
     <OverHead>
       <LeftSide>
@@ -17,7 +17,7 @@ const TableOverHead: React.FC = () => {
       </LeftSide>
 
       <RightSide>
-        <TableSort tableSortParams={tableSearchParams} />
+        <TableSort {...{ tableSortParams }} />
 
         <TablePagination />
 
@@ -35,9 +35,10 @@ const TableOverHead: React.FC = () => {
 };
 
 const OverHead = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr;
   justify-content: space-between;
-  flex-direction: column;
+
   gap: 8px;
 
   position: relative;
@@ -45,20 +46,35 @@ const OverHead = styled.div`
 
   width: 100%;
   padding: 8px;
-  @media screen and (min-width: 480px) {
+  @media screen and (max-height: 480px) {
+    padding: 8px;
+  }
+  @media screen and (min-height: 280px) {
+    grid-template-columns: 1fr max-content;
+  }
+  @media screen and (min-width: 480px) and (min-height: 480px) {
     padding: 20px 8px 16px;
   }
   @media screen and (min-width: 768px) {
     flex-direction: row;
   }
 `;
-const LeftSide = styled.div``;
+const LeftSide = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  overflow: hidden;
+`;
 const RightSide = styled.div`
   align-self: flex-end;
 
   display: flex;
+  align-items: center;
   justify-content: flex-end;
   gap: 8px;
+
+  /* overflow: hidden; */
 `;
 
 export default TableOverHead;

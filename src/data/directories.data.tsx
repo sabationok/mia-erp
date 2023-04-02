@@ -4,7 +4,8 @@
 import DirCategories, { DirCategoriesProps } from 'components/Directories/DirCategories/DirCategories';
 import DirCounts, { DirCountsProps } from 'components/Directories/DirCounts/DirCounts';
 import DirProjects from 'components/Directories/DirProjects/DirProjects';
-import { iconId } from './iconId.data';
+import DirRoles from 'components/Directories/DirRoles/DirRoles';
+import { iconId } from '../img/sprite/iconId.data';
 
 export interface IDirectory {
   title: string;
@@ -43,15 +44,15 @@ const ContractorsProps: DirCategoriesProps = {
 const RolesProps: { title: string } = {
   title: 'Ролі',
 };
+const UsersProps: { title: string } = {
+  title: 'Користувачі',
+};
+
+const MarksProps: { title: string } = {
+  title: 'Мітки',
+};
 
 const directories: IDirectory[] = [
-  {
-    title: RolesProps.title,
-    iconId: iconId.lockPerson,
-    ModalChildren: () => null,
-    modalChildrenProps: null,
-    disabled: true,
-  },
   {
     title: CountsProps.title,
     iconId: iconId.bank,
@@ -69,7 +70,7 @@ const directories: IDirectory[] = [
   {
     title: ContractorsProps.title,
     iconId: iconId.partners,
-    ModalChildren: () => null,
+    ModalChildren: DirRoles, // !!!!
     modalChildrenProps: ContractorsProps,
     disabled: true,
   },
@@ -80,9 +81,27 @@ const directories: IDirectory[] = [
     modalChildrenProps: ProjectsProps,
     disabled: true,
   },
-  { title: 'Користувачі', iconId: iconId.persons, ModalChildren: () => null, modalChildrenProps: null, disabled: true },
-
-  { title: 'Мітки', iconId: iconId.boockMarAdd, ModalChildren: () => null, modalChildrenProps: null, disabled: true },
+  {
+    title: MarksProps.title,
+    iconId: iconId.boockMarAdd,
+    ModalChildren: DirRoles, // !!!!
+    modalChildrenProps: MarksProps,
+    disabled: true,
+  },
+  {
+    title: UsersProps.title,
+    iconId: iconId.persons,
+    ModalChildren: DirRoles, // !!!!
+    modalChildrenProps: UsersProps,
+    disabled: true,
+  },
+  {
+    title: RolesProps.title,
+    iconId: iconId.lockPerson,
+    ModalChildren: DirRoles,
+    modalChildrenProps: RolesProps,
+    disabled: true,
+  },
 ];
 
 export default directories;

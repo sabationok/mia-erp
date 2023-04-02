@@ -5,16 +5,24 @@ import TableBody from './TableBody';
 import AppLoader from 'components/AppLoader/AppLoader';
 import QuickActions from './QuickActions/QuickActions';
 import TableOverHead from './TableOverHead/TableOverHead';
-import TableFooter from './TableFooter';
+import TableFooter from './TableFooter/TableFooter';
 import styled from 'styled-components';
 import { CellTittleProps } from './TebleCells/CellTitle';
 import { MaxToTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
-import { SelectItem } from './TableOverHead/TableSearch/SearchParamInput';
 import { FilterSelectorType } from 'components/Filter/Filter';
-
+export interface SelectItem extends Record<string, any> {
+  _id?: string;
+  filter?: boolean;
+  search?: boolean;
+  label?: string;
+  name?: string;
+  value?: string | number;
+  dataKey: string;
+}
 export type ITableListProps = {
   tableTitles?: CellTittleProps[];
   tableSearchParams?: SelectItem[];
+  tableSortParams?: SelectItem[];
   tableData?: any[];
   isLoading?: boolean;
   RowActionsComp?: React.ReactNode;
@@ -40,7 +48,15 @@ export interface TableActionsProps {
 }
 
 export type TableSortParamsType = { descending: boolean; dataKey: string };
-export type OnRowClickType = ({ ev, _id, data }: { ev: MouseEvent; _id: string; data: any }) => typeof ev;
+export type OnRowClickType = <D = any>({
+  ev,
+  _id,
+  data,
+}: {
+  ev: MouseEvent | React.MouseEvent<HTMLDivElement>;
+  _id: string;
+  data: D;
+}) => any;
 
 export interface ITableListContext {
   onSelectRow?: ({ ev, rowData }: { ev: Event; rowData: any }) => void;
@@ -64,10 +80,9 @@ const TableList: React.FC<ITableListProps> = ({
   tableTitles,
   tableSearchParams,
   tableActions,
-  footer,
+  footer = true,
   ...props
 }) => {
-  const [sortParams, setSortParams] = useState<TableSortParamsType>();
   const [selectedRows, setSelectedRows] = useState<{ _id: string; amount?: number; type?: string }[] | any[]>([]);
   const rowRef = useRef<HTMLElement>();
 
@@ -82,11 +97,12 @@ const TableList: React.FC<ITableListProps> = ({
   function onUnselectRow({ rowData }: { ev?: Event; rowData: { _id: string } }) {
     setSelectedRows(prev => prev.filter(row => row._id !== rowData._id));
   }
-  function handleTableSort(sortParams: TableSortParamsType) {
-    setSortParams(sortParams);
-  }
 
   const CTX = {
+    RowActionsComp,
+    TableActionsComp,
+    tableActions,
+    footer,
     tableSearchParams,
     tableTitles,
     rowGrid,
@@ -96,10 +112,6 @@ const TableList: React.FC<ITableListProps> = ({
     onUnselectRow,
     tableData,
     isLoading,
-    RowActionsComp,
-    sortParams,
-    handleTableSort,
-    tableActions,
     ...props,
   };
 
@@ -110,7 +122,7 @@ const TableList: React.FC<ITableListProps> = ({
 
         <TableOverHead />
 
-        <TableScroll>
+        <TableScroll className="TableScroll">
           <TableHead />
 
           {tableData.length !== 0 ? <TableBody /> : <NoData>Дані відсутні</NoData>}
@@ -118,7 +130,8 @@ const TableList: React.FC<ITableListProps> = ({
           <MaxToTabletXl>{tableActions ? <QuickActions {...tableActions} footer={footer} /> : null}</MaxToTabletXl>
         </TableScroll>
 
-        {footer && <TableFooter />}
+        {/* {footer && } */}
+        <TableFooter />
       </TableCTX.Provider>
     </Table>
   );
@@ -142,6 +155,7 @@ const Table = styled.div`
 
   height: 100%;
   width: 100%;
+  overflow: hidden;
 `;
 const TableScroll = styled.div`
   display: grid;

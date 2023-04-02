@@ -8,7 +8,7 @@ import {
 import { trCategories } from './categories.data';
 import addButtons from './createActions.data';
 import directories from './directories.data';
-import { iconId } from './iconId.data';
+import { iconId } from '../img/sprite/iconId.data';
 import { pages, appPages } from './pages.data';
 import { raports } from './raports.data';
 import { companies } from './companies.data';
