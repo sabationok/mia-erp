@@ -39,7 +39,7 @@ const OverHead = styled.div`
     padding: 8px;
   }
   @media screen and (min-height: 280px) and (min-width: 480px) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr min-content;
   }
   @media screen and (min-width: 480px) and (min-height: 480px) {
     padding: 20px 8px 16px;

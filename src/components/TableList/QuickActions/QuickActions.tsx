@@ -105,8 +105,8 @@ const Menu = styled.div<{ isShown: boolean; footer?: boolean }>`
   right: 10px;
   z-index: 65;
 
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
 
   border-radius: 24px;
 `;
@@ -153,7 +153,7 @@ const List = styled.div<{ isShown: boolean }>`
     ${({ isShown }) =>
       isShown
         ? css`
-            max-width: 90vh;
+            max-width: 90vw;
             padding: 8px 64px 8px 16px;
             visibility: visible;
             pointer-events: all;

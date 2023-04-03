@@ -88,6 +88,7 @@ const SelectList = styled.ul<{ isOpen: boolean }>`
   position: absolute;
   bottom: 120%;
   right: 0;
+  z-index: 30;
 
   min-width: 100%;
   overflow: hidden;

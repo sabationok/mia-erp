@@ -11,6 +11,11 @@ const TableHead: React.FC<TableHeadProps> = () => {
   );
 };
 const THead = styled.div`
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 20;
+
   background-color: ${({ theme }) => theme.tableBackgroundColor};
 `;
 

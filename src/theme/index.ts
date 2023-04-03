@@ -78,7 +78,7 @@ const lightTheme: ITheme = {
   backgroundColorLight: 'rgba(231, 231, 255,1)',
   backdropColor: 'rgba(21, 21, 21, 0.3)',
   borderColor: 'rgba(122, 122, 122)',
-  trBorderClr: 'rgba(86, 87, 117, 0.9)',
+  trBorderClr: 'rgba(183, 183, 216, 1)',
   tableBackgroundColor: 'rgba(86, 87, 117,0.2)',
   colorLight: '#EFEFEF',
   fontColor: '#272727',

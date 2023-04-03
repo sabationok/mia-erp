@@ -17,7 +17,8 @@ const HeaderLeftSideItems: IHeaderComponent[] = [
   { Component: NavMenu },
 ];
 const HeaderRightSideItems: IHeaderComponent[] = [{ Component: UserMenu }];
-const Header: React.FC = () => {
+
+const Header: React.FC<any> = () => {
   return (
     <StyledHeader>
       <LeftSide>
@@ -53,8 +54,9 @@ const StyledHeader = styled.header`
 
   fill: ${({ theme }) => theme.fillColorHeader};
   color: ${({ theme }) => theme.fontColorHeader};
+
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
-  border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
+  /* border-bottom: 1px solid ${({ theme }) => theme.trBorderClr}; */
 `;
 const LeftSide = styled.div`
   display: grid;

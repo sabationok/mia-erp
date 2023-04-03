@@ -35,6 +35,7 @@ export type ITableListProps = {
   filter?: boolean;
   search?: boolean;
   footer?: boolean;
+  counter?: boolean;
   checkBoxes?: boolean;
   rowGrid?: any;
   children?: React.ReactNode;
@@ -46,7 +47,11 @@ export interface TableActionsProps {
   bottom?: any[];
   footer?: boolean;
 }
-
+export interface TabeleSelectedRow extends Record<string, any> {
+  _id: string;
+  amount?: number;
+  type?: string;
+}
 export type TableSortParamsType = { descending: boolean; dataKey: string };
 export type OnRowClickType = <D = any>({
   ev,
@@ -61,7 +66,7 @@ export type OnRowClickType = <D = any>({
 export interface ITableListContext {
   onSelectRow?: ({ ev, rowData }: { ev: Event; rowData: any }) => void;
   onUnselectRow?: ({ ev, rowData }: { ev: Event; rowData: any }) => void;
-  selectedRows?: any[];
+  selectedRows?: TabeleSelectedRow[] | any[];
   onRowClick?: OnRowClickType;
   rowRef?: React.MutableRefObject<HTMLElement | undefined>;
   sortParams?: TableSortParamsType;
@@ -83,7 +88,7 @@ const TableList: React.FC<ITableListProps> = ({
   footer = true,
   ...props
 }) => {
-  const [selectedRows, setSelectedRows] = useState<{ _id: string; amount?: number; type?: string }[] | any[]>([]);
+  const [selectedRows, setSelectedRows] = useState<TabeleSelectedRow[] | any[]>([]);
   const rowRef = useRef<HTMLElement>();
 
   const rowGrid = {
@@ -130,7 +135,6 @@ const TableList: React.FC<ITableListProps> = ({
           <MaxToTabletXl>{tableActions ? <QuickActions {...tableActions} footer={footer} /> : null}</MaxToTabletXl>
         </TableScroll>
 
-        {/* {footer && } */}
         <TableFooter />
       </TableCTX.Provider>
     </Table>

@@ -54,7 +54,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 const StyledLayout = styled.div`
   display: grid;
   grid-template-columns: min-content 1fr;
-  grid-template-rows: 50px calc(100% - 50px);
+  grid-template-rows: 40px calc(100% - 40px);
 
   width: 100%;
   height: 100%;
@@ -64,7 +64,7 @@ const StyledLayout = styled.div`
   position: relative;
 
   @media screen and (min-width: 480px) {
-    grid-template-rows: 29px calc(100% - 29px);
+    grid-template-rows: 30px calc(100% - 30px);
   }
 `;
 

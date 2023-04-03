@@ -1,12 +1,12 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import ProfileCard from 'components/molecules/ProfileCard/ProfileCard';
+// import ProfileCard from 'components/molecules/ProfileCard/ProfileCard';
 import TableList from 'components/TableList/TableList';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import styled from 'styled-components';
 import { takeFullGridArea, takeFullPlace } from './pagesStyles';
 import { companiesTableColumns } from 'data';
-import { useAuthSelector } from 'redux/selectors.store';
+// import { useAuthSelector } from 'redux/selectors.store';
 
 const companyTypes = [
   { title: 'Мої', param: 'own' },
@@ -24,7 +24,7 @@ const companyTypes = [
 // ];
 
 const PageHome: React.FC = () => {
-  const { user } = useAuthSelector();
+  // const { user } = useAuthSelector();
   const [serchParams, setSearchParaps] = useSearchParams({ companyType: companyTypes[0].param });
   function onSearchParamClick(param: string) {
     setSearchParaps({ companyType: param });
@@ -41,9 +41,7 @@ const PageHome: React.FC = () => {
   return (
     <Page>
       <Top>
-        <ProfileInfo>
-          <ProfileCard {...user} />
-        </ProfileInfo>
+        {/* <ProfileInfo><ProfileCard {...user} /></ProfileInfo> */}
 
         <FilterButtons>
           {companyTypes.map(item => (
@@ -102,11 +100,11 @@ const Bottom = styled.div`
   ${takeFullPlace}
 `;
 
-const ProfileInfo = styled.div`
-  padding: 16px 12px;
-  width: 100%;
-  max-width: 250px;
-`;
+// const ProfileInfo = styled.div`
+//   padding: 16px 12px;
+//   width: 100%;
+//   max-width: 250px;
+// `;
 const FilterButtons = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -115,7 +113,11 @@ const FilterButtons = styled.div`
   width: 100%;
 
   /* max-width: 550px; */
-
+  @media screen and (max-height: 480px) and (min-width: 480px) {
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 32px;
+    max-width: 100%;
+  }
   @media screen and (min-width: 768px) {
     grid-template-columns: repeat(4, 1fr);
     grid-auto-rows: 44px;

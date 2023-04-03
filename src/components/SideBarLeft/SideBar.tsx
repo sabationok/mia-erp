@@ -15,19 +15,19 @@ const SideBar: React.FC<any> = () => {
   //   setIsMiddleOpen(prev => !prev);
   // }
   return (
-    <StyledSideBar isOpen={!!isOpen} data-sidebar>
+    <StyledSideBar isOpen={!!isOpen} className="StyledSideBar" data-sidebar>
       <MenuToggler isOpen={!!isOpen} onClick={onTogglerClick} />
 
-      <SideBarContainer>
-        <Content isOpen={!!isOpen}>
+      <SideBarContainer className="SideBarContainer">
+        <Content isOpen={!!isOpen} className="Content">
           <Top>
             <ToggleThemeMode />
           </Top>
 
-          <Middle>
+          <Middle className="Middle">
             {/* <MiddleToggler variant="def" iconId="actionsH" iconSize="24px" onClick={() => handleMiddleOpen()} /> */}
 
-            <MiddleButtons>
+            <MiddleButtons className="MiddleButtons">
               {sideBarButtons &&
                 sideBarButtons.map(item => (
                   <StyledButtonIcon
@@ -98,10 +98,13 @@ const StyledSideBar = styled.div<SideBarState>`
 `;
 const SideBarContainer = styled.div`
   display: grid;
-  grid-template-columns: max-content min-content;
+  grid-template-columns: min-content max-content;
 
   height: 100%;
   width: 100%;
+
+  max-height: 100%;
+  /* overflow: hidden; */
 `;
 const Content = styled.div<SideBarState>`
   display: grid;
@@ -143,8 +146,12 @@ const Top = styled.div`
 const Middle = styled.div`
   height: 100%;
   max-height: 100%;
-  overflow: hidden;
+  overflow: auto;
 
+  ::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
   /* width: ${sideBarCompWidthMobile};
   @media screen and (min-width: 480px) { */
   width: ${sideBarCompWidth};
