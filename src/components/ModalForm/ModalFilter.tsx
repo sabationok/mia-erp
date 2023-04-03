@@ -3,9 +3,11 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ModalFormProps } from './ModalForm';
 
-const ModalFilter: React.FC<Pick<ModalFormProps, 'filterOptions' | 'onOptSelect'>> = ({
+export interface ModalFormFilterProps extends Pick<ModalFormProps, 'filterOptions' | 'onOptSelect'> {}
+const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivElement>> = ({
   filterOptions,
   onOptSelect,
+  ...props
 }) => {
   const [current, setCurrent] = useState<number>(0);
 
@@ -17,14 +19,14 @@ const ModalFilter: React.FC<Pick<ModalFormProps, 'filterOptions' | 'onOptSelect'
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <Filter gridRepeat={filterOptions?.length}>
+    <Filter className="filter" gridRepeat={filterOptions?.length} {...props}>
       {filterOptions &&
         filterOptions?.length > 0 &&
         filterOptions?.map((opt, idx) => (
           <StButtonIcon
             key={idx}
             variant="def"
-            className={current === idx ? 'active' : ''}
+            className={current === idx ? 'filterBtn active' : 'filterBtn'}
             onClick={() => {
               setCurrent(idx);
               if (typeof onOptSelect === 'function') onOptSelect(opt);

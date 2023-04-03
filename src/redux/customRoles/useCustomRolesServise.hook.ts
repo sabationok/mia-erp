@@ -1,5 +1,6 @@
 import { useAppDispatch } from 'redux/store.store';
 import { useCustomRolesSelector } from 'redux/selectors.store';
+import { ICustomRole } from 'data/roles.types';
 
 const useCustomRolesService = () => {
   const dispatch = useAppDispatch;
@@ -11,10 +12,12 @@ const useCustomRolesService = () => {
   function deleteById(_id: string) {
     console.log({ _id });
   }
-  function editById(_id: string, submitData: any) {
+  function editById(_id: string, submitData: Partial<ICustomRole>) {
     console.log({ _id, submitData });
   }
-  function getById(_id: string) {}
+  function getById(_id: string) {
+    return state.customRoles.find(role => role._id === _id);
+  }
 
   return { dispatch, ...state, create, deleteById, editById, getById };
 };

@@ -65,13 +65,13 @@ const ModalForm: React.FC<ModalFormProps> = ({
   }
 
   return (
-    <ModalFormContainer onSubmit={handleSubmit} onReset={handleReset} {...props}>
+    <ModalFormContainer className="modalForm" onSubmit={handleSubmit} onReset={handleReset} {...props}>
       <ModalHeader title={title} />
 
-      <ModalMain filterOn={filterOptions ? true : false}>
+      <ModalMain className="main" filterOn={filterOptions ? true : false}>
         {filterOptions && <ModalFilter onOptSelect={handleSelect} filterOptions={filterOptions} />}
 
-        <MainScroll>{children}</MainScroll>
+        <MainScroll className="scroll">{children}</MainScroll>
       </ModalMain>
 
       <ModalFooter onSubmit={onSubmit} />
@@ -86,7 +86,7 @@ const ModalFormContainer = styled.form`
 
   position: relative;
 
-  min-height: 100%;
+  min-height: 250px;
   max-height: 100%;
   min-width: 250px;
   max-width: 100%;

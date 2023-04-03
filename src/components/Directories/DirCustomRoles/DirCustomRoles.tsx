@@ -16,7 +16,7 @@ export interface DirCustomRolesProps extends ModalFormProps {
 
 const DirCustomRoles: React.FC<DirCustomRolesProps> = props => {
   const modal = useModalProvider();
-  const { customRoles } = useCustomRolesService();
+  const { customRoles, create, editById, deleteById, getById } = useCustomRolesService();
 
   function onEdit(_id: string) {
     modal.handleOpenModal({
@@ -24,8 +24,8 @@ const DirCustomRoles: React.FC<DirCustomRolesProps> = props => {
       modalChildrenProps: {
         title: 'Редагувати роль',
         _id,
-        customRole: customRoles.find(role => role._id === _id),
-        onSubmit: () => {},
+        customRole: getById(_id),
+        onSubmit: editById,
       },
     });
   }
@@ -34,7 +34,9 @@ const DirCustomRoles: React.FC<DirCustomRolesProps> = props => {
       ModalChildren: FormCreateCustomRole,
       modalChildrenProps: {
         title: 'Створити роль',
-        onSubmit: () => {},
+        onSubmit: (data: any) => {
+          create(data);
+        },
       },
     });
   }
@@ -43,7 +45,7 @@ const DirCustomRoles: React.FC<DirCustomRolesProps> = props => {
     <StModalForm {...props}>
       <Box>
         <DirList
-          onDelete={() => {}}
+          onDelete={deleteById}
           onEdit={onEdit}
           createParentTitle="Свторити роль"
           onCreateParent={onCreateParent}

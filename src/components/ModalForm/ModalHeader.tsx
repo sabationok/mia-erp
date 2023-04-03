@@ -2,10 +2,16 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { iconId } from 'data';
 import styled from 'styled-components';
 
-const ModalHeader: React.FC<{ title: string }> = ({ title = 'default header titile' }) => {
+export interface ModalFormHeaderProps {
+  title: string;
+}
+const ModalHeader: React.FC<ModalFormHeaderProps & React.ImgHTMLAttributes<HTMLDivElement>> = ({
+  title = 'default header titile',
+  ...props
+}) => {
   return (
-    <Header>
-      <Title>{title}</Title>
+    <Header {...props} className="header">
+      <Title className="title">{title}</Title>
 
       <ButtonIcon type="reset" size="28px" iconId={iconId.close} variant="onlyIcon" />
     </Header>

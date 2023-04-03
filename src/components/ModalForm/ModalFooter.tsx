@@ -3,9 +3,12 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import { ModalFormProps } from './ModalForm';
 
-const ModalFooter: React.FC<Pick<ModalFormProps, 'onSubmit'>> = ({ onSubmit }) => {
+const ModalFooter: React.FC<Pick<ModalFormProps, 'onSubmit'> & React.ImgHTMLAttributes<HTMLDivElement>> = ({
+  onSubmit,
+  ...props
+}) => {
   return (
-    <Footer>
+    <Footer {...props} className="footer">
       {onSubmit && (
         <ButtonIcon type="reset" variant="outlinedSmall">
           Закрити

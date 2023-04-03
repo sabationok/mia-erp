@@ -67,6 +67,7 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
         variant,
         type,
         onClick,
+        className: 'buttonIcon',
         ...props,
       }}
     >
