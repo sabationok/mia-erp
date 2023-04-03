@@ -230,6 +230,10 @@ export const transactionsColumns_old = [
 ];
 
 export const transactionsSearchParams: SelectItem[] = [
+  { label: 'Дата', dataKey: 'transactionDate', filter: false, search: false, sort: true },
+  { label: 'Оновлено', dataKey: 'createdAt', filter: false, search: false, sort: true },
+  { label: 'Створено', dataKey: 'updateAt', filter: false, search: false, sort: true },
+
   { label: selects.countIn.label, dataKey: selects.countIn.name, filter: false, search: true, sort: true },
   { label: selects.subCountIn.label, dataKey: selects.subCountIn.name, filter: false, search: true, sort: true },
   { label: selects.countOut.label, dataKey: selects.countOut.name, filter: false, search: true, sort: true },

@@ -89,11 +89,13 @@ const StButton = styled(ButtonIcon)<{ descending?: boolean }>`
 const ListBox = styled.div<{ isOpen: boolean }>`
   position: absolute;
 
-  bottom: 100%;
+  bottom: 0;
   left: 0;
   z-index: 200;
 
   min-height: 100%;
+  width: 100%;
+  max-width: 480px;
 
   pointer-events: ${({ isOpen }) => (isOpen ? 'all' : 'none')};
 
