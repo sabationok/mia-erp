@@ -120,7 +120,7 @@ const ActionsField = styled.div<{ canHaveChild?: boolean }>`
   display: flex;
   align-items: center;
 
-  min-width: 12px;
+  min-width: 0;
   height: 100%;
 `;
 

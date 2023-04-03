@@ -69,7 +69,7 @@ const Box = styled.div`
 
   height: 100%;
   max-height: 100%;
-  /* padding: 16px 16px; */
+  padding: 0 12px;
 `;
 
 export default DirCustomRoles;

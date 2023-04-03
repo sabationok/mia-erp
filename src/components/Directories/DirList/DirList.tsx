@@ -67,7 +67,7 @@ const Box = styled.div`
   max-height: 100%;
 `;
 const ListBox = styled.div`
-  padding: 0 16px;
+  /* padding: 0 16px; */
   max-height: 100%;
 
   overflow: auto;
@@ -79,7 +79,7 @@ const List = styled.ul`
   flex-direction: column;
   gap: 12px;
 
-  padding: 6px 0;
+  padding-top: 12px;
 
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
 `;

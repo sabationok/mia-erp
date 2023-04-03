@@ -6,7 +6,8 @@ import { useEffect } from 'react';
 import styled from 'styled-components';
 import { takeFullGridArea, takeFullPlace } from './pagesStyles';
 import { companiesTableColumns } from 'data';
-// import { useAuthSelector } from 'redux/selectors.store';
+import { useAuthSelector } from 'redux/selectors.store';
+import ProfileCard from 'components/molecules/ProfileCard/ProfileCard';
 
 const companyTypes = [
   { title: 'Мої', param: 'own' },
@@ -24,7 +25,7 @@ const companyTypes = [
 // ];
 
 const PageHome: React.FC = () => {
-  // const { user } = useAuthSelector();
+  const { user } = useAuthSelector();
   const [serchParams, setSearchParaps] = useSearchParams({ companyType: companyTypes[0].param });
   function onSearchParamClick(param: string) {
     setSearchParaps({ companyType: param });
@@ -41,19 +42,23 @@ const PageHome: React.FC = () => {
   return (
     <Page>
       <Top>
-        {/* <ProfileInfo><ProfileCard {...user} /></ProfileInfo> */}
+        <ProfileInfo>
+          <ProfileCard {...user} />
+        </ProfileInfo>
 
         <FilterButtons>
-          {companyTypes.map(item => (
-            <StButtonIcon
-              key={item.param}
-              variant="def"
-              onClick={() => onSearchParamClick(item.param)}
-              className={isActive(item.param)}
-            >
-              {item.title}
-            </StButtonIcon>
-          ))}
+          <ButtonsList>
+            {companyTypes.map(item => (
+              <StButtonIcon
+                key={item.param}
+                variant="def"
+                onClick={() => onSearchParamClick(item.param)}
+                className={isActive(item.param)}
+              >
+                {item.title}
+              </StButtonIcon>
+            ))}
+          </ButtonsList>
         </FilterButtons>
       </Top>
 
@@ -82,8 +87,12 @@ const Page = styled.div`
 `;
 const Top = styled.div`
   display: flex;
-  align-items: flex-start;
   flex-direction: column;
+  align-items: flex-start;
+
+  position: relative;
+
+  overflow: hidden;
 
   background-color: ${({ theme }) => theme.tableBackgroundColor};
 
@@ -100,20 +109,35 @@ const Bottom = styled.div`
   ${takeFullPlace}
 `;
 
-// const ProfileInfo = styled.div`
-//   padding: 16px 12px;
-//   width: 100%;
-//   max-width: 250px;
-// `;
+const ProfileInfo = styled.div`
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 1;
+
+  padding: 16px 12px;
+  width: 100%;
+  max-width: 250px;
+`;
 const FilterButtons = styled.div`
+  max-width: 100%;
+  overflow: auto;
+  &::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+  }
+`;
+const ButtonsList = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 150px);
   grid-auto-rows: 32px;
 
-  width: 100%;
+  max-width: 600px;
+
+  /* max-width: 300px; */
 
   /* max-width: 550px; */
-  @media screen and (max-height: 480px) and (min-width: 480px) {
+  /* @media screen and (max-height: 480px) and (min-width: 480px) {
     grid-template-columns: repeat(4, 1fr);
     grid-auto-rows: 32px;
     max-width: 100%;
@@ -122,7 +146,7 @@ const FilterButtons = styled.div`
     grid-template-columns: repeat(4, 1fr);
     grid-auto-rows: 44px;
     max-width: 550px;
-  }
+  } */
 `;
 
 const StButtonIcon = styled(ButtonIcon)`
@@ -147,6 +171,7 @@ const StButtonIcon = styled(ButtonIcon)`
     height: 1px;
     background-color: ${({ theme }) => theme.trBorderClr};
   }
+
   &::after {
     display: block;
     content: '';
@@ -163,6 +188,13 @@ const StButtonIcon = styled(ButtonIcon)`
   }
 
   &.active {
+    &::after {
+      width: 80%;
+    }
+  }
+  &:hover,
+  &:focus {
+    outline-style: none;
     &::after {
       width: 100%;
     }
