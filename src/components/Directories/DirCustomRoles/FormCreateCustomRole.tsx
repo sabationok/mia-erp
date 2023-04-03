@@ -21,9 +21,8 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({
   ...props
 }) => {
   const [formData, setFormData] = useState<Partial<ICustomRole>>(customRole ? customRole : {});
-  // ! setFormData
 
-  function handleFormSubmit() {
+  function onSubmitWrapper() {
     onSubmit && _id && onSubmit(_id, formData);
   }
 
@@ -34,19 +33,30 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({
     setFormData(prev => ({ ...prev, [name]: value }));
   }
   return (
-    <StModalForm {...props} onSubmit={handleFormSubmit}>
-      <InputTextPrimary
-        value={formData.label ? formData.label : ''}
-        name="label"
-        placeholder="Введіть назву ролі"
-        onChange={onChange}
-      />
+    <StModalForm {...props} onSubmit={onSubmitWrapper}>
+      <Inputs>
+        <InputTextPrimary
+          value={formData.label ? formData.label : ''}
+          label="Назва"
+          name="label"
+          placeholder="Введіть назву ролі"
+          onChange={onChange}
+        />
 
-      <ActionsList>
-        <span>{formData?._id}</span>
-        <span>{formData?.label || formData?.name}</span>
-        <span>{formData?.descr}</span>
-      </ActionsList>
+        <InputTextPrimary
+          value={formData.descr ? formData.descr : ''}
+          label="Коментар"
+          name="descr"
+          placeholder="Введіть короткий коментар до ролі"
+          onChange={onChange}
+        />
+
+        <ActionsList>
+          {formData.actions?.map((act, idx) => (
+            <li key={idx}>{act}</li>
+          ))}
+        </ActionsList>
+      </Inputs>
     </StModalForm>
   );
 };
@@ -54,7 +64,14 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({
 const StModalForm = styled(ModalForm)`
   min-height: 250px;
 `;
-const ActionsList = styled.div`
+const Inputs = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  padding: 12px;
+`;
+const ActionsList = styled.ul`
   display: flex;
   flex-direction: column;
   align-items: center;
