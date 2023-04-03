@@ -17,9 +17,9 @@ export interface DirListItemProps {
 export interface DirListItemAddsProps {
   list: DirListItemProps[];
   canHaveChild: boolean;
-  onDelete: (_id: string) => void;
-  onEdit: (_id: string) => void;
-  onCreateChild: (owner: string) => void;
+  onDelete?: (_id: string) => void;
+  onEdit?: (_id: string) => void;
+  onCreateChild?: (owner: string) => void;
 }
 
 const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
@@ -52,7 +52,7 @@ const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
     <Item>
       <ItemGrid>
         <ActionsField canHaveChild={canHaveChild}>
-          {canHaveChild && (
+          {canHaveChild && onCreateChild && (
             <ButtonIcon
               variant="onlyIcon"
               iconSize="24px"
@@ -76,9 +76,13 @@ const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
         </LabelField>
 
         <ActionsField>
-          <ButtonIcon variant="onlyIcon" iconSize="24px" iconId="edit" onClick={evHandlerWrapper(onEdit, _id)} />
+          {onEdit && (
+            <ButtonIcon variant="onlyIcon" iconSize="24px" iconId="edit" onClick={evHandlerWrapper(onEdit, _id)} />
+          )}
 
-          <ButtonIcon variant="onlyIcon" iconSize="24px" iconId="delete" onClick={evHandlerWrapper(onDelete, _id)} />
+          {onDelete && (
+            <ButtonIcon variant="onlyIcon" iconSize="24px" iconId="delete" onClick={evHandlerWrapper(onDelete, _id)} />
+          )}
         </ActionsField>
       </ItemGrid>
 

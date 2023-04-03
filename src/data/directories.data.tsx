@@ -4,7 +4,7 @@
 import DirCategories, { DirCategoriesProps } from 'components/Directories/DirCategories/DirCategories';
 import DirCounts, { DirCountsProps } from 'components/Directories/DirCounts/DirCounts';
 import DirProjects from 'components/Directories/DirProjects/DirProjects';
-import DirRoles from 'components/Directories/DirRoles/DirRoles';
+import DirCustomRoles from 'components/Directories/DirCustomRoles/DirCustomRoles';
 import { iconId } from '../img/sprite/iconId.data';
 
 export interface IDirectory {
@@ -70,7 +70,7 @@ const directories: IDirectory[] = [
   {
     title: ContractorsProps.title,
     iconId: iconId.partners,
-    ModalChildren: DirRoles, // !!!!
+    ModalChildren: DirCustomRoles, // !!!!
     modalChildrenProps: ContractorsProps,
     disabled: true,
   },
@@ -84,21 +84,21 @@ const directories: IDirectory[] = [
   {
     title: MarksProps.title,
     iconId: iconId.boockMarAdd,
-    ModalChildren: DirRoles, // !!!!
+    ModalChildren: DirCustomRoles, // !!!!
     modalChildrenProps: MarksProps,
     disabled: true,
   },
   {
     title: UsersProps.title,
     iconId: iconId.persons,
-    ModalChildren: DirRoles, // !!!!
+    ModalChildren: DirCustomRoles, // !!!!
     modalChildrenProps: UsersProps,
     disabled: true,
   },
   {
     title: RolesProps.title,
     iconId: iconId.lockPerson,
-    ModalChildren: DirRoles,
+    ModalChildren: DirCustomRoles,
     modalChildrenProps: RolesProps,
     disabled: true,
   },

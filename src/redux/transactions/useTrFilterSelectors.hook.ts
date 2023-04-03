@@ -1,6 +1,6 @@
 import { FilterSelectorType } from 'components/Filter/Filter';
 import SelectsList from 'components/Filter/SelectorContent/SelectsList';
-import { useCategoriesSelector } from 'redux/categories/useCategoriesService.hook';
+import { useCategoriesSelector } from 'redux//selectors.store';
 import { useCountsSelector } from 'redux/selectors.store';
 
 const useTrFilterSelectors = (): FilterSelectorType[] => {
