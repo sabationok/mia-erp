@@ -1,33 +1,34 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosResponse } from 'axios';
+import { ICustomRole } from 'data/roles.types';
 // import { any } from 'data/counts.types';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { axiosErrorCheck } from 'utils';
 
 import baseApi from '../../api/baseApi';
 // import { token } from '../../services/baseApi';
-const ROLES_API_BASENAME = '/directories/roles';
+const CUSTOM_ROLES_API_BASENAME = '/directories/customRoles';
 export const rolesApiRoutes = {
-  getAll: `${ROLES_API_BASENAME}/getAll`,
-  getById: `${ROLES_API_BASENAME}/getById`,
-  create: `${ROLES_API_BASENAME}/create`,
-  delete: `${ROLES_API_BASENAME}/delete`,
-  update: `${ROLES_API_BASENAME}/update`,
+  getAll: `${CUSTOM_ROLES_API_BASENAME}/getAll`,
+  getById: `${CUSTOM_ROLES_API_BASENAME}/getById`,
+  create: `${CUSTOM_ROLES_API_BASENAME}/create`,
+  delete: `${CUSTOM_ROLES_API_BASENAME}/delete`,
+  update: `${CUSTOM_ROLES_API_BASENAME}/update`,
 };
 
-export interface IAllRoles {
-  data: any[];
+export interface IAllCustomRoles {
+  data: ICustomRole[];
 }
 export interface IPayloadGetAllRoles {
   submitData?: null;
-  onSuccess: (data?: any[]) => void;
+  onSuccess: (data?: ICustomRole[]) => void;
   onError(error?: StateErrorType): void;
 }
-export const getAllRolesThunk = createAsyncThunk<IAllRoles, IPayloadGetAllRoles>(
-  'roles/getAllRolesThunk',
+export const getAllRolesThunk = createAsyncThunk<IAllCustomRoles, IPayloadGetAllRoles>(
+  'customRoles/getAllCustomRolesThunk',
   async (payload, thunkAPI) => {
     try {
-      const response: AxiosResponse<IAllRoles> = await baseApi.get(rolesApiRoutes.getAll);
+      const response: AxiosResponse<IAllCustomRoles> = await baseApi.get(rolesApiRoutes.getAll);
 
       payload?.onSuccess(response.data.data);
 

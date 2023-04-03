@@ -1,6 +1,5 @@
-import { useSelector } from 'react-redux';
-import { RootState, useAppDispatch } from 'redux/store.store';
-export const useCategoriesSelector = () => useSelector((state: RootState) => state.categories);
+import { useCategoriesSelector } from 'redux/selectors.store';
+import { useAppDispatch } from 'redux/store.store';
 
 const useCategoriesService = () => {
   const dispatch = useAppDispatch();

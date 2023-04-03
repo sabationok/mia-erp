@@ -1,4 +1,4 @@
-import { IBase } from './transactions.types';
+import { IBase } from './global.types';
 
 export type CategoryTypes = 'EXPENSE' | 'TRANSFER' | 'INCOME';
 export interface ICategory extends IBase {

@@ -1,28 +1,29 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getAllRolesThunk } from './roles.thunks';
+import { getAllRolesThunk } from './customRoles.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
+import { rolesMockData } from 'data/roles.data';
 
-export interface ICountsState {
-  roles: any[];
+export interface ICustomRolesState {
+  customRoles: any[];
   isLoading: boolean;
   error: StateErrorType;
 }
 
-const initialState: ICountsState = {
+const initialState: ICustomRolesState = {
   isLoading: false,
   error: null,
-  roles: [],
+  customRoles: [...rolesMockData],
 };
 
-export const rolesSlice = createSlice({
-  name: 'roles',
+export const customRolesSlice = createSlice({
+  name: 'customRoles',
   initialState,
   reducers: {},
   extraReducers: builder =>
     builder
       .addCase(getAllRolesThunk.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.roles = action.payload.data;
+        state.customRoles = action.payload.data;
       })
       .addMatcher(inPending, state => {
         state.isLoading = true;
@@ -41,7 +42,7 @@ function inError(action: AnyAction) {
   return action.type.endsWith('rejected');
 }
 
-export const rolesReducer = rolesSlice.reducer;
+export const customRolesReducer = customRolesSlice.reducer;
 // .addCase(addCountThunk.fulfilled, (state, action) => {})
 // .addCase(deleteCountThunk.fulfilled, (state, action) => {})
 // .addCase(editCountThunk.fulfilled, (state, action) => {})

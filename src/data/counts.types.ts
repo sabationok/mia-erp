@@ -1,4 +1,4 @@
-import { IBase } from './transactions.types';
+import { IBase } from './global.types';
 
 export type CountType = 'ACTIVE' | 'PASSIVE';
 export interface ICount extends IBase {

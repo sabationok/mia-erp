@@ -9,6 +9,7 @@ import { categoriesSlice } from './categories/categoriesSlice';
 import { countsSlice } from './counts/counts.slice';
 // import { documentsSlice } from './documents/documents.slice';
 import { persistorConfigs } from './configs.store';
+import { customRolesSlice } from './customRoles/customRoles.slice';
 
 const rootReducer = combineReducers({
   [authSlice.name]: persistReducer(persistorConfigs.auth, authSlice.reducer),
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   [transactionsSlice.name]: persistReducer(persistorConfigs.transactions, transactionsSlice.reducer),
   [countsSlice.name]: persistReducer(persistorConfigs.counts, countsSlice.reducer),
   [categoriesSlice.name]: persistReducer(persistorConfigs.categories, categoriesSlice.reducer),
+  [customRolesSlice.name]: customRolesSlice.reducer,
   // [documentsSlice.name]: documentsSlice.reducer,
 });
 

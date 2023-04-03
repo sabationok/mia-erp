@@ -1,11 +1,6 @@
 import { ICategory } from './categories.types';
 import { ICount } from './counts.types';
-
-export interface IBase {
-  _id: string;
-  createdAt?: Date | string;
-  updatedAt?: Date | string;
-}
+import { IBase } from './global.types';
 
 export type CurrencyCode = 'UAH';
 export type TransactionType = 'EXPENSE' | 'TRANSFER' | 'INCOME';

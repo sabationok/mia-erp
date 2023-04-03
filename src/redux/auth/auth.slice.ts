@@ -1,18 +1,19 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IBase } from 'data/global.types';
 import { karina_avatar } from 'img';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 // import { actionLogInUser, actionLogOutUser, actionSetCurrentUser } from './authActions';
 import { registerUserThunk, logInUserThunk, logOutUserThunk } from './auth.thunks';
-export interface IRole {
-  _id: string;
-  name: string;
+export interface ISystemRole extends IBase {
+  name?: string;
+  label?: string;
   actions: string[];
 }
-export interface IUser {
-  _id: string;
+export interface IUser extends IBase {
   name: string;
   email: string;
   avatarURL?: string;
+  sysRole: ISystemRole;
 }
 export interface IAuthState {
   user: IUser;
@@ -21,16 +22,18 @@ export interface IAuthState {
   isLoggedIn: boolean;
   error: AuthErrorType;
 }
-// const initialUserRole: IRole = {
-//   _id: '',
-//   name: '',
-//   actions: [],
-// };
+const initialUserRole: ISystemRole = {
+  _id: '5',
+  label: 'ADMIN',
+  name: 'ADMIN',
+  actions: [],
+};
 const initialUser: IUser = {
   _id: 'sdth651g6db5fg16d',
   name: 'Каріна Дизайнівна Дизайнер',
   email: 'karina.des@mail.com',
   avatarURL: karina_avatar,
+  sysRole: initialUserRole,
 };
 
 const initialState: IAuthState = {
@@ -50,7 +53,7 @@ export const authSlice = createSlice({
       .addCase(logInUserThunk.fulfilled, (state, { payload }) => {
         state.isLoading = false;
         state.accessToken = payload.accessToken;
-        state.user.email = payload.email;
+        state.user = { ...state.user, email: payload.email };
       })
       .addCase(registerUserThunk.fulfilled, state => {
         state.isLoading = false;
