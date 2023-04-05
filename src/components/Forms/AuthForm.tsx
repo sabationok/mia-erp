@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import LogoSvg from 'components/Layout/Header/LogoSvg/LogoSvg';
 import AuthFormInput from './AuthFormInput';
+import LinkIcon from 'components/atoms/LinkIcon/LinkIcon';
 
 export interface AuthFormProps {
   helloTitle?: string;
@@ -119,11 +120,17 @@ const AuthForm: React.FC<AuthFormProps & React.HTMLAttributes<HTMLFormElement>> 
       </Inputs>
 
       <Buttons>
-        <StButtonIcon variant="filledSmall">{register ? 'Зареєструватись' : 'Увійти'}</StButtonIcon>
+        <StButtonIcon textTransform="uppercase" variant="filledSmall">
+          {register ? 'Зареєструватись' : 'Увійти'}
+        </StButtonIcon>
 
-        <StLink to={register ? '/auth/login' : '/auth/register'}>{!register ? 'Зареєструватись' : 'Увійти'}</StLink>
+        <StLinkIcon textTransform="uppercase" variant="outlinedSmall" to={register ? '/auth/login' : '/auth/register'}>
+          {!register ? 'Реєстрація' : 'Увійти'}
+        </StLinkIcon>
 
-        {!register && <StLink to={'/auth/sendRecoveryPasswordMail'}>Відновити пароль</StLink>}
+        {/* <StLink to={register ? '/auth/login' : '/auth/register'}>{!register ? 'Зареєструватись' : 'Увійти'}</StLink> */}
+
+        {!register && <StLink to={'/auth/sendRecoveryPasswordMail'}>{'Забули пароль?'}</StLink>}
       </Buttons>
     </Form>
   );
@@ -140,9 +147,9 @@ const Form = styled.form`
   height: max-content;
   /* min-height: max-content; */
   max-width: 480px;
-  /* max-height: 98px; */
+  max-height: 98vh;
 
-  /* overflow: auto; */
+  overflow: auto;
 
   padding: 20px 16px;
 
@@ -150,7 +157,12 @@ const Form = styled.form`
 
   box-shadow: ${({ theme }) => theme.globals.shadowMain};
   border: 1px solid ${({ theme }) => theme.trBorderClr};
-  background-color: #1c1c1e;
+  /* background-color: #1c1c1e; */
+  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+
+  @media screen and (max-width: 480px) {
+    max-width: 95vw;
+  }
 `;
 const StLogo = styled(LogoSvg)`
   min-width: 150px;
@@ -191,9 +203,21 @@ const Buttons = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 12px;
+
+  width: 100%;
+  max-width: 230px;
 `;
 const StButtonIcon = styled(ButtonIcon)`
+  font-weight: 600;
+
   min-width: 165px;
+  width: 100%;
+`;
+const StLinkIcon = styled(LinkIcon)`
+  font-weight: 600;
+
+  min-width: 165px;
+  width: 100%;
 `;
 const StLink = styled(Link)`
   font-size: 11px;

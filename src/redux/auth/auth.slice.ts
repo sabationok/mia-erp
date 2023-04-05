@@ -73,7 +73,7 @@ const initialState: IAuthState = {
   permission: initialPermission,
   accessToken: '',
   isLoading: false,
-  isLoggedIn: true,
+  isLoggedIn: false,
   error: null,
 };
 

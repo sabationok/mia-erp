@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import LogoSvg from 'components/Layout/Header/LogoSvg/LogoSvg';
 import AuthFormInput from './AuthFormInput';
+import LinkIcon from 'components/atoms/LinkIcon/LinkIcon';
 
 export interface RecoveryPasswordFormProps {
   helloTitle?: string;
@@ -71,9 +72,15 @@ const RecoveryPasswordForm: React.FC<RecoveryPasswordFormProps & React.HTMLAttri
       </Inputs>
 
       <Buttons>
-        <StButtonIcon variant="filledSmall">{recovery ? 'Прийняти' : 'Відновити'}</StButtonIcon>
+        <StButtonIcon textTransform="uppercase" variant="filledSmall">
+          {recovery ? 'Прийняти' : 'Відновити'}
+        </StButtonIcon>
 
-        <StLink to={'/auth/login'}>{'Увійти'}</StLink>
+        {/* <StLink to={'/auth/login'}>{'Увійти'}</StLink> */}
+
+        <StLinkIcon textTransform="uppercase" variant="outlinedSmall" to={'/auth/login'}>
+          {'Увійти'}
+        </StLinkIcon>
       </Buttons>
     </Form>
   );
@@ -87,11 +94,10 @@ const Form = styled.form`
   min-width: 250px;
   width: 100%;
   height: max-content;
-  /* min-height: max-content; */
   max-width: 480px;
-  /* max-height: 98px; */
+  max-height: 98vh;
 
-  /* overflow: auto; */
+  overflow: auto;
 
   padding: 20px 16px;
 
@@ -99,7 +105,11 @@ const Form = styled.form`
 
   box-shadow: ${({ theme }) => theme.globals.shadowMain};
   border: 1px solid ${({ theme }) => theme.trBorderClr};
-  background-color: #1c1c1e;
+  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+
+  @media screen and (max-width: 480px) {
+    max-width: 95vw;
+  }
 `;
 const StLogo = styled(LogoSvg)`
   min-width: 150px;
@@ -143,21 +153,11 @@ const Buttons = styled.div`
 `;
 const StButtonIcon = styled(ButtonIcon)`
   min-width: 165px;
+  font-weight: 600;
 `;
-const StLink = styled(Link)`
-  font-size: 11px;
-  line-height: 1.45;
-
-  text-decoration: underline;
-
-  color: ${({ theme }) => theme.accentColor.base};
-
-  &:hover {
-    color: ${({ theme }) => theme.accentColor.hover};
-  }
-  &:active {
-    color: ${({ theme }) => theme.accentColor.pressed};
-  }
+const StLinkIcon = styled(LinkIcon)`
+  min-width: 165px;
+  font-weight: 600;
 `;
 
 export default RecoveryPasswordForm;

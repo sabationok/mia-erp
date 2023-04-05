@@ -104,8 +104,6 @@ const StyledLinkIcon = styled(Link)<LinkIconProps>`
 
   font-size: 12px;
 
-  cursor: default;
-
   overflow: hidden;
   border-style: none;
   border-radius: 2px;

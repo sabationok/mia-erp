@@ -4,9 +4,10 @@ import Header from './Header/Header';
 import { baseURL } from 'api';
 // import { useDispatch } from 'react-redux';
 // import { toast } from 'react-toastify';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import SideBar from 'components/SideBarLeft/SideBar';
 import PrivateComponent from 'components/atoms/PrivateComponent';
+import { useAuthSelector } from 'redux/selectors.store';
 
 interface ILayoutCTX {}
 
@@ -14,6 +15,8 @@ export const LayoutCTX = createContext({});
 export const useLayout = () => useContext(LayoutCTX) as ILayoutCTX;
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isLoggedIn } = useAuthSelector();
+
   const CTX = {};
 
   useEffect(() => {
@@ -41,7 +44,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }, []);
   return (
     <LayoutCTX.Provider value={CTX}>
-      <StyledLayout className="Layout">
+      <StyledLayout isLoggedIn={isLoggedIn} className="Layout">
         <PrivateComponent>
           <Header />
 
@@ -54,10 +57,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   );
 };
 
-const StyledLayout = styled.div`
+const StyledLayout = styled.div<{ isLoggedIn: boolean }>`
   display: grid;
   grid-template-columns: min-content 1fr;
-  grid-template-rows: 40px calc(100% - 40px);
 
   width: 100%;
   height: 100%;
@@ -67,9 +69,20 @@ const StyledLayout = styled.div`
 
   position: relative;
 
+  ${({ isLoggedIn }) =>
+    isLoggedIn
+      ? css`
+          grid-template-rows: 40px calc(100% - 40px);
+          @media screen and (min-width: 480px) {
+            grid-template-rows: 30px calc(100% - 30px);
+          }
+        `
+      : css`
+          grid-template-rows: 0px calc(100% - 0px); ;
+        `}/* grid-template-rows: 40px calc(100% - 40px);
   @media screen and (min-width: 480px) {
     grid-template-rows: 30px calc(100% - 30px);
-  }
+  } */
 `;
 
 const LayoutChildren = styled.div`

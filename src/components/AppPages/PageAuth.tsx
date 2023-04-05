@@ -43,7 +43,7 @@ const Page = styled.div`
   width: 100%;
   height: 100%;
 
-  /* background-color: ${({ theme }) => theme.backgroundColorMain}; */
+  background-color: ${({ theme }) => theme.backgroundColorMain};
 `;
 
 export default PageAuth;
