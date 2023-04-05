@@ -1,15 +1,14 @@
 import React from 'react';
 import sprite from 'img/sprite';
 import styled, { css, DefaultTheme, FlattenInterpolation, ThemeProps } from 'styled-components';
-import { iconId } from 'data';
-
-export type IconIdType = keyof typeof iconId;
+import { LinkProps } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 type TextTransform = 'uppercase' | 'lowercase' | 'capitalize' | 'none';
 
-interface ButtonProps {
+interface Props {
   size?: string;
-  variant: ButtonIconVariant;
+  variant: LinkIconVariant;
   iconId?: string;
   iconSize?: string;
   isActive?: boolean;
@@ -20,12 +19,11 @@ interface ButtonProps {
   textTransform?: TextTransform;
   fontWeight?: 400 | 500 | 600 | 700 | 900;
 }
-export type ButtonIconProps = ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
+export type LinkIconProps = Props & LinkProps;
 
-const ButtonIcon: React.FC<ButtonIconProps> = ({
+const LinkIcon: React.FC<LinkIconProps> = ({
   children,
   isActive,
-  type = 'button',
   size = '',
   variant = 'def',
   iconId,
@@ -35,7 +33,7 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
   endIconSize = '18px',
   endIconStyles = {},
   onClick = () => {
-    console.log('ButtonIcon click');
+    console.log('LinkIcon click');
   },
   ...props
 }) => {
@@ -61,13 +59,12 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
   };
 
   return (
-    <StyledButtonIcon
+    <StyledLinkIcon
       {...{
         style: styles,
         variant,
-        type,
         onClick,
-        className: 'buttonIcon',
+        className: 'linkIcon',
         ...props,
       }}
     >
@@ -84,11 +81,11 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
           <use href={`${sprite}#icon-${endIconId}`}></use>
         </SvgIcon>
       )}
-    </StyledButtonIcon>
+    </StyledLinkIcon>
   );
 };
 
-const StyledButtonIcon = styled.button<ButtonIconProps>`
+const StyledLinkIcon = styled(Link)<LinkIconProps>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -404,10 +401,10 @@ const variants = {
   pointerBottom,
 };
 
-export type ButtonIconVariant = keyof typeof variants;
+export type LinkIconVariant = keyof typeof variants;
 
-function getVariant(variant?: ButtonIconVariant): FlattenInterpolation<ThemeProps<DefaultTheme>> {
+function getVariant(variant?: LinkIconVariant): FlattenInterpolation<ThemeProps<DefaultTheme>> {
   return variant ? variants[variant] : variants.def;
 }
 
-export default ButtonIcon;
+export default LinkIcon;

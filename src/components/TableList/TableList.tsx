@@ -18,6 +18,7 @@ export interface SelectItem extends Record<string, any> {
   name?: string;
   value?: string | number;
   dataKey: string;
+  sort?: boolean;
 }
 export type ITableListProps = {
   tableTitles?: CellTittleProps[];

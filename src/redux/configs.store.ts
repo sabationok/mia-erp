@@ -7,15 +7,15 @@ export const persistorConfigs = {
     storage,
     whitelist: ['accessToken'],
   },
-  appSettings: {
-    key: 'appSettings',
-    storage,
-    whitelist: ['isDarkMode', 'appTheme'],
-  },
   company: {
     key: 'company',
     storage: storageSession,
     whitelist: ['company'],
+  },
+  appSettings: {
+    key: 'appSettings',
+    storage,
+    whitelist: ['isDarkMode', 'appTheme'],
   },
   pageSettings: {
     key: 'appPage',

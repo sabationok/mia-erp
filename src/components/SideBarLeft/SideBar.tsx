@@ -4,9 +4,10 @@ import ToggleThemeMode from './Actions/ChangeTheme';
 import ActionAppExit from './Actions/ActionAppExit';
 import { useSideBar } from './SideBarProvider';
 import styled, { css } from 'styled-components';
+
 // import { useState } from 'react';
 
-const SideBar: React.FC<any> = () => {
+const SideBar: React.FC<any & React.HTMLAttributes<HTMLDivElement>> = ({ ...props }) => {
   const { isOpen, onTogglerClick, handleOptionsState, sideBarButtons, sideBarButtonsBottom, RightSideContent } =
     useSideBar();
   // const [isMiddleOpen, setIsMiddleOpen] = useState(false);
@@ -15,7 +16,7 @@ const SideBar: React.FC<any> = () => {
   //   setIsMiddleOpen(prev => !prev);
   // }
   return (
-    <StyledSideBar isOpen={!!isOpen} className="StyledSideBar" data-sidebar>
+    <StyledSideBar isOpen={!!isOpen} className="SideBar" {...props} data-sidebar>
       <MenuToggler isOpen={!!isOpen} onClick={onTogglerClick} />
 
       <SideBarContainer className="SideBarContainer">
@@ -74,9 +75,6 @@ const sideBarCompWidth = '36px';
 const sideBarCompWidthMobile = '50px';
 
 const StyledSideBar = styled.div<SideBarState>`
-  grid-column: 1/2;
-  grid-row: 2/3;
-
   display: grid;
   grid-template-columns: ${({ isOpen }) => (isOpen ? 'min-content' : '4px')} 1fr;
 

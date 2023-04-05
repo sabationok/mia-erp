@@ -109,7 +109,11 @@ export const iconId = {
   unArchive: 'unArchive',
   dblArrowRight: 'dblArrowRight',
   openInNew: 'openInNew',
+  lock_O: 'lock_O',
+  email: 'email',
   INCOME: 'plus',
   EXPENSE: 'minus',
   TRANSFER: 'transfer',
 };
+
+export type IconIdType = keyof typeof iconId;

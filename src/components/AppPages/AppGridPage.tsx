@@ -23,8 +23,8 @@ const AppGridPage: React.FC<{ path: string }> = ({ path }) => {
 
 const GridPage = styled.div`
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(10, 1fr);
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(12, 1fr);
 
   height: 100%;
   max-height: 100%;
@@ -35,7 +35,7 @@ const GridPage = styled.div`
   }
   @media screen and (min-width: 768px) {
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
+    grid-template-columns: repeat(12, 1fr);
   }
 `;
 

@@ -16,13 +16,13 @@ const PageTransactions = () => {
         {...{
           tableData: transactionsMockData || transactions,
           tableTitles: transactionsColumns,
-          tableSearchParams: transactionsSearchParams,
-          tableSortParams: transactionsSearchParams,
           tableActions: trTableActions,
+          tableSearchParams: transactionsSearchParams.filter(el => el.search),
+          tableSortParams: transactionsSearchParams.filter(el => el.sort),
+          useFilterSelectors,
           filter: true,
           footer: true,
           search: true,
-          useFilterSelectors,
         }}
       />
     </Page>

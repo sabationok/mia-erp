@@ -3,8 +3,8 @@ import { token } from 'api/baseApi';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 import { axiosErrorCheck } from 'utils';
-import { IAuthState, IUser } from './auth.slice';
-import { RootState } from 'redux/store.store';
+import { IAuthState, ICompany, IPermission, IUser } from './auth.slice';
+import { AxiosResponse } from 'axios';
 
 const AUTH_API_BASENAME = '/auth';
 export const authApiRoutes = {
@@ -15,6 +15,7 @@ export const authApiRoutes = {
   signOut: `${AUTH_API_BASENAME}/signOut`,
   getCurrentUser: `${AUTH_API_BASENAME}/getCurrentUser`,
   getCurrentUserInfo: `${AUTH_API_BASENAME}/getCurrentUserInfo`,
+  getCurrentPermission: () => `${AUTH_API_BASENAME}/getCurrentPermission`,
 };
 
 export interface ILoggedUserInfo {
@@ -24,10 +25,17 @@ export interface ILoggedUserInfo {
 export interface IRegisteredUser {
   email: string;
 }
-export interface IRegistrationData {
+export interface ILoginUserData {
   email: string;
   password: string;
 }
+export interface IRegistrationData extends ILoginUserData {
+  name: string;
+  secondName?: string;
+}
+export type ICurrentUser = Partial<IUser> & Pick<IAuthState, 'accessToken'>;
+export type ICurrentCompany = ICompany;
+
 export interface IPayloadRegisterUser {
   submitData: IRegistrationData;
   onSuccess: (regUserData?: any) => void | IRegisteredUser;
@@ -44,7 +52,12 @@ export interface IPayloadLogOutUser {
 }
 export interface IPayloadGetCurrentUser {
   submitData?: { email: string; password: string };
-  onSuccess(data?: ILoggedUserInfo): any;
+  onSuccess(data?: ICurrentUser): any;
+  onError(error: AuthErrorType): void;
+}
+export interface IPayloadGetCurrentPermission {
+  submitData?: { permissionId: string };
+  onSuccess(data?: IPermission): any;
   onError(error: AuthErrorType): void;
 }
 
@@ -52,12 +65,11 @@ export const registerUserThunk = createAsyncThunk<IRegisteredUser, IPayloadRegis
   'auth/registerUserThunk',
   async (obj, thunkAPI) => {
     try {
-      const { data } = await baseApi.post(authApiRoutes.signUp, obj.submitData);
-      console.log(obj.submitData);
+      const response: AxiosResponse<IRegisteredUser> = await baseApi.post(authApiRoutes.signUp, obj.submitData);
 
-      obj.onSuccess(data.data);
+      obj.onSuccess(response.data);
 
-      return data.data;
+      return response.data;
     } catch (error) {
       obj.onError(error);
 
@@ -70,14 +82,12 @@ export const logInUserThunk = createAsyncThunk<ILoggedUserInfo, IPayloadLogInUse
   'auth/logInUserThunk',
   async (obj, thunkAPI) => {
     try {
-      const {
-        data: { data },
-      }: { data: { data: ILoggedUserInfo } } = await baseApi.post(authApiRoutes.signIn, obj.submitData);
+      const response: AxiosResponse<ILoggedUserInfo> = await baseApi.post(authApiRoutes.signIn, obj.submitData);
 
-      obj.onSuccess(data);
+      obj.onSuccess(response.data);
 
-      token.unset();
-      return data;
+      token.set(response.data.accessToken);
+      return response.data;
     } catch (error) {
       obj.onError(error);
 
@@ -90,9 +100,11 @@ export const logOutUserThunk = createAsyncThunk<any, IPayloadLogOutUser>(
   'auth/logOutUserThunk',
   async (payload, thunkAPI) => {
     try {
-      const { data }: { data: any } = await baseApi.post(authApiRoutes.signOut);
+      const response: AxiosResponse<any> = await baseApi.post(authApiRoutes.signOut);
 
-      payload?.onSuccess(data);
+      payload?.onSuccess(response);
+
+      token.unset();
     } catch (error) {
       payload?.onError(error);
 
@@ -101,19 +113,32 @@ export const logOutUserThunk = createAsyncThunk<any, IPayloadLogOutUser>(
   }
 );
 
-export const getCurrentUserThunk = createAsyncThunk<IUser | any, IPayloadGetCurrentUser, { state: RootState }>(
+export const getCurrentUserThunk = createAsyncThunk<ICurrentUser, IPayloadGetCurrentUser>(
   'auth/getCurrentUserThunk',
   async (obj, thunkAPI) => {
-    const state = thunkAPI.getState();
-
-    token.set(state.auth.accessToken);
-
     try {
-      const { data } = await baseApi.get(authApiRoutes.getCurrentUser);
+      const response: AxiosResponse<ICurrentUser> = await baseApi.get(authApiRoutes.getCurrentUser);
 
-      obj?.onSuccess(data.data);
+      obj?.onSuccess(response.data);
 
-      return data.data;
+      return response.data;
+    } catch (error) {
+      obj?.onError(error);
+
+      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+    }
+  }
+);
+
+export const getCurrentPermissionThunk = createAsyncThunk<IPermission, IPayloadGetCurrentPermission>(
+  'auth/getCurrentPermissionThunk',
+  async (obj, thunkAPI) => {
+    try {
+      const response: AxiosResponse<IPermission> = await baseApi.get(authApiRoutes.getCurrentPermission());
+
+      obj?.onSuccess(response.data);
+
+      return response.data;
     } catch (error) {
       obj?.onError(error);
 

@@ -1,8 +1,8 @@
 import { css } from 'styled-components';
 
 export const takeFullGridArea = css`
-  grid-column: 1/11;
-  grid-row: 1/11;
+  grid-column: 1/13;
+  grid-row: 1/13;
 `;
 export const takeFullPlace = css`
   width: 100%;

@@ -1,9 +1,10 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IBase } from 'data/global.types';
+import { ICustomRole } from 'data/roles.types';
 import { karina_avatar } from 'img';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 // import { actionLogInUser, actionLogOutUser, actionSetCurrentUser } from './authActions';
-import { registerUserThunk, logInUserThunk, logOutUserThunk } from './auth.thunks';
+import { registerUserThunk, logInUserThunk, logOutUserThunk, getCurrentUserThunk } from './auth.thunks';
 export interface ISystemRole extends IBase {
   name?: string;
   label?: string;
@@ -15,13 +16,7 @@ export interface IUser extends IBase {
   avatarURL?: string;
   sysRole: ISystemRole;
 }
-export interface IAuthState {
-  user: IUser;
-  accessToken: string;
-  isLoading: boolean;
-  isLoggedIn: boolean;
-  error: AuthErrorType;
-}
+
 const initialUserRole: ISystemRole = {
   _id: '5',
   label: 'ADMIN',
@@ -35,10 +30,48 @@ const initialUser: IUser = {
   avatarURL: karina_avatar,
   sysRole: initialUserRole,
 };
-
+export interface ICompany extends IBase {
+  name: string;
+  email: string;
+  avatarURL?: string;
+  customRole: any;
+}
+const initialCompany: ICompany = {
+  _id: 'gndfgnfghnsrymgh',
+  name: 'ФОП Каріна Дизайнівна Дизайнер',
+  email: 'karina.FOP@mail.com',
+  avatarURL: karina_avatar,
+  customRole: initialUserRole,
+};
+export interface IPermission extends IBase {
+  company: ICompany;
+  user: Partial<IUser>;
+  role: Partial<ICustomRole>;
+  status?: boolean;
+  permissionToken?: string;
+}
+const initialPermission: IPermission = {
+  _id: 'sdfbsdfbdfg',
+  company: initialCompany,
+  user: initialUser,
+  role: {
+    label: 'Фінансист',
+    descr: 'Такоє собі посада',
+    actions: [],
+  },
+};
+export interface IAuthState {
+  user: IUser;
+  permission: IPermission;
+  accessToken: string;
+  isLoading: boolean;
+  isLoggedIn: boolean;
+  error: AuthErrorType;
+}
 const initialState: IAuthState = {
   user: initialUser,
-  accessToken: 'accessToken',
+  permission: initialPermission,
+  accessToken: '',
   isLoading: false,
   isLoggedIn: true,
   error: null,
@@ -59,6 +92,10 @@ export const authSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(logOutUserThunk.fulfilled, state => {
+        state.isLoading = false;
+        state = initialState;
+      })
+      .addCase(getCurrentUserThunk.fulfilled, state => {
         state.isLoading = false;
         state = initialState;
       })

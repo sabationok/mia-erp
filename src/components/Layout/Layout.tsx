@@ -6,6 +6,7 @@ import { baseURL } from 'api';
 // import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import SideBar from 'components/SideBarLeft/SideBar';
+import PrivateComponent from 'components/atoms/PrivateComponent';
 
 interface ILayoutCTX {}
 
@@ -40,12 +41,14 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }, []);
   return (
     <LayoutCTX.Provider value={CTX}>
-      <StyledLayout>
-        <Header />
+      <StyledLayout className="Layout">
+        <PrivateComponent>
+          <Header />
 
-        <SideBar />
+          <StSideBar />
+        </PrivateComponent>
 
-        <LayoutChildren>{children}</LayoutChildren>
+        <LayoutChildren className="LayoutChildren">{children}</LayoutChildren>
       </StyledLayout>
     </LayoutCTX.Provider>
   );
@@ -59,6 +62,7 @@ const StyledLayout = styled.div`
   width: 100%;
   height: 100%;
   max-height: 100%;
+
   overflow: hidden;
 
   position: relative;
@@ -77,6 +81,11 @@ const LayoutChildren = styled.div`
   grid-row: 2/3;
 
   position: relative;
+`;
+
+const StSideBar = styled(SideBar)`
+  grid-column: 1/2;
+  grid-row: 2/3;
 `;
 
 export default Layout;

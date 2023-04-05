@@ -1,32 +1,47 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export interface InputPrimaryProps {
+export interface InputPrimaryProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   direction?: 'column' | 'row';
+  labelUppercase?: boolean;
+  error?: boolean;
+  success?: boolean;
+  helperText?: string;
 }
-const InputTextPrimary: React.FC<InputPrimaryProps & React.InputHTMLAttributes<HTMLInputElement>> = ({
+
+const InputTextPrimary: React.FC<InputPrimaryProps> = ({
   label,
   className,
   disabled,
   direction = 'row',
+  labelUppercase,
+  helperText,
+  error,
+  success,
   ...props
 }) => {
   return (
     <Label className={className} disabled={disabled}>
       <Wrapper isLabel={label ? true : false} direction={direction}>
-        {label && <LabelText className="label">{label}</LabelText>}
+        {label && (
+          <LabelText uppercase={labelUppercase} className="label">
+            {label}
+          </LabelText>
+        )}
 
         <InputText className="input" disabled={disabled} {...props} />
       </Wrapper>
+      <HelperText error={error} success={success}>
+        {helperText}
+      </HelperText>
     </Label>
   );
 };
 
-const Label = styled.label<{ disabled?: boolean }>`
+const Label = styled.label<{ disabled?: boolean; error?: boolean; success?: boolean }>`
   display: flex;
   flex-direction: column;
-  gap: 4px;
 
   font-weight: 500;
   font-size: 12px;
@@ -37,8 +52,8 @@ const Label = styled.label<{ disabled?: boolean }>`
   opacity: ${({ disabled }) => (disabled ? 0.5 : '')};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'all')};
 `;
-const LabelText = styled.div`
-  text-transform: uppercase;
+const LabelText = styled.div<{ uppercase?: boolean }>`
+  text-transform: ${({ uppercase }) => (uppercase ? 'uppercase' : '')};
 `;
 const Wrapper = styled.div<{ isLabel: boolean; direction?: 'column' | 'row' }>`
   display: grid;
@@ -49,14 +64,13 @@ const Wrapper = styled.div<{ isLabel: boolean; direction?: 'column' | 'row' }>`
 
   width: 100%;
 `;
-
-const InputText = styled.input`
+const InputText = styled.input<{ error?: boolean }>`
   padding: 5px 8px;
 
   width: 100%;
   height: 26px;
 
-  color: inherit;
+  color: ${({ error, theme }) => (error ? 'tomato' : 'inherit')};
 
   background-color: transparent;
   border-radius: 2px;
@@ -65,6 +79,20 @@ const InputText = styled.input`
   &::placeholder {
     font-family: inherit;
   }
+`;
+
+const HelperText = styled.div<{ error?: boolean; success?: boolean }>`
+  min-height: 12px;
+
+  font-size: 8px;
+  line-height: 1.5;
+
+  color: inherit;
+
+  color: ${({ error, theme }) => (error ? 'tomato' : '')};
+  color: ${({ success, theme }) => (success ? 'lightgreen' : '')};
+
+  cursor: default;
 `;
 
 export default InputTextPrimary;

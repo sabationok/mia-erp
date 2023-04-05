@@ -7,9 +7,9 @@ import { registerUserThunk, IRegistrationData } from './auth.thunks';
 // getCurrentUserThunk,
 // IPayloadRegisterUser,
 const registration = (dispatch: AppDispatch, authState: IAuthState) => {
-  function registerUser({ email, password }: IRegistrationData) {
+  function registerUser({ name, secondName, email, password }: IRegistrationData) {
     const payload = {
-      submitData: { email, password },
+      submitData: { name, secondName, email, password },
       onSuccess: () => {},
       onError: () => {},
     };
