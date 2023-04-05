@@ -1,9 +1,7 @@
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { iconId } from 'data';
 import React from 'react';
+import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import { CellActionsName } from '../TebleCells';
-import { useTable } from '../TableList';
 
 export type CellTitleContent = {
   name: string;
@@ -32,49 +30,16 @@ const CellTitle: React.FC<CellTittleProps & React.HTMLAttributes<HTMLDivElement>
   bottom,
   ...props
 }) => {
-  const { handleTableSort, sortParams } = useTable();
   return (
     <StCellHead width={width} onClick={onClick} {...props}>
       <Wrapper>
         <Top align={top.align}>
           <span className="inner"> {top.name || top.dataKey || 'Title'}</span>
-          {top?.sort && (
-            <StButtonIcon
-              variant="def"
-              iconId={iconId.SmallArrowDown}
-              iconSize="100%"
-              size="18px"
-              className={top.dataKey === sortParams?.dataKey ? 'isActive' : ''}
-              descending={sortParams?.descending}
-              onClick={() => {
-                handleTableSort && handleTableSort({ descending: !sortParams?.descending, dataKey: top.dataKey || '' });
-              }}
-            />
-          )}
         </Top>
 
-        {bottom && (
-          <Bottom align={bottom?.align}>
-            <>
-              <span className="inner"> {bottom?.name || bottom?.dataKey || 'SubTitle'}</span>
-
-              {bottom?.sort && (
-                <StButtonIcon
-                  variant="def"
-                  iconId={iconId.SmallArrowDown}
-                  iconSize="100%"
-                  size="18px"
-                  className={bottom?.dataKey === sortParams?.dataKey ? 'isActive' : ''}
-                  descending={sortParams?.descending}
-                  onClick={() => {
-                    handleTableSort &&
-                      handleTableSort({ descending: !sortParams?.descending, dataKey: bottom?.dataKey || '' });
-                  }}
-                />
-              )}
-            </>
-          </Bottom>
-        )}
+        <Bottom align={bottom?.align}>
+          <span className="inner"> {bottom?.name || bottom?.dataKey || 'SubTitle'}</span>
+        </Bottom>
       </Wrapper>
 
       <WidthChanger type="button"></WidthChanger>
@@ -138,28 +103,6 @@ const Bottom = styled(Content)<Omit<CellTitleContent, 'name'>>`
   }
 `;
 
-const StButtonIcon = styled(ButtonIcon)<{ descending?: boolean }>`
-  border-width: 0;
-  border-radius: 0;
-
-  fill: rgba(122, 122, 122, 1);
-
-  &:hover {
-    background-color: transparent;
-    fill: ${({ theme }) => theme.fillColor};
-  }
-  &:active {
-    fill: ${({ theme }) => theme.fillColor};
-    background-color: transparent;
-  }
-  &.isActive {
-    fill: ${({ theme }) => theme.accentColor.base};
-    & .icon {
-      transform: ${({ descending }) => `rotate(${descending ? '0' : '180'}deg)`};
-    }
-  }
-`;
-
 const WidthChanger = styled.button`
   position: relative;
 
@@ -178,8 +121,8 @@ const WidthChanger = styled.button`
     content: '';
     height: 100%;
     width: 1px;
-    border-right: 1px solid #59595a;
-    /* border-right: 1px solid ${({ theme }) => theme.trBorderClr}; */
+    /* border-right: 1px solid #59595a; */
+    border-right: 1px solid ${({ theme }) => theme.trBorderClr};
   }
 `;
 

@@ -3,12 +3,12 @@ import styled, { css } from 'styled-components';
 import { reactLogo } from 'img';
 import ProfileCard from 'components/molecules/ProfileCard/ProfileCard';
 
-export interface IUserInfo {
+export interface IUserInfoProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const UserInfo: React.FC<IUserInfo> = ({ isOpen, onClose }) => {
+const UserInfo: React.FC<IUserInfoProps> = ({ isOpen, onClose }) => {
   const { user } = useAuthSelector();
 
   function onBackdropClick(ev: React.MouseEvent) {

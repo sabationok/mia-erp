@@ -4,8 +4,12 @@
 import DirCategories, { DirCategoriesProps } from 'components/Directories/DirCategories/DirCategories';
 import DirCounts, { DirCountsProps } from 'components/Directories/DirCounts/DirCounts';
 import DirProjects from 'components/Directories/DirProjects/DirProjects';
-import DirCustomRoles from 'components/Directories/DirCustomRoles/DirCustomRoles';
+import DirCustomRoles, { DirCustomRolesProps } from 'components/Directories/DirCustomRoles/DirCustomRoles';
 import { iconId } from '../img/sprite/iconId.data';
+import DirUsers, { DirUsersProps } from 'components/Directories/DirUsers';
+import DirMarks, { DirMarksProps } from 'components/Directories/DirMarks';
+import DirContractors from 'components/Directories/DirContractors';
+import { usersDirColumns, usersMockData } from './usersDir.data';
 
 export interface IDirectory {
   title: string;
@@ -41,14 +45,18 @@ const ProjectsProps: DirCategoriesProps = {
 const ContractorsProps: DirCategoriesProps = {
   title: 'Контрагенти',
 };
-const RolesProps: { title: string } = {
+const CustomRolesProps: DirCustomRolesProps = {
   title: 'Ролі',
 };
-const UsersProps: { title: string } = {
+const UsersProps: DirUsersProps = {
   title: 'Користувачі',
+  tableSettings: {
+    tableTitles: usersDirColumns,
+    tableData: usersMockData,
+  },
 };
 
-const MarksProps: { title: string } = {
+const MarksProps: DirMarksProps = {
   title: 'Мітки',
 };
 
@@ -70,7 +78,7 @@ const directories: IDirectory[] = [
   {
     title: ContractorsProps.title,
     iconId: iconId.partners,
-    ModalChildren: DirCustomRoles, // !!!!
+    ModalChildren: DirContractors,
     modalChildrenProps: ContractorsProps,
     disabled: true,
   },
@@ -84,22 +92,22 @@ const directories: IDirectory[] = [
   {
     title: MarksProps.title,
     iconId: iconId.boockMarAdd,
-    ModalChildren: DirCustomRoles, // !!!!
+    ModalChildren: DirMarks, // !!!!
     modalChildrenProps: MarksProps,
     disabled: true,
   },
   {
     title: UsersProps.title,
     iconId: iconId.persons,
-    ModalChildren: DirCustomRoles, // !!!!
+    ModalChildren: DirUsers, // !!!!
     modalChildrenProps: UsersProps,
     disabled: true,
   },
   {
-    title: RolesProps.title,
+    title: CustomRolesProps.title,
     iconId: iconId.lockPerson,
     ModalChildren: DirCustomRoles,
-    modalChildrenProps: RolesProps,
+    modalChildrenProps: CustomRolesProps,
     disabled: true,
   },
 ];

@@ -2,6 +2,7 @@ import React from 'react';
 import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
 
 import styled from 'styled-components';
+import TableList from 'components/TableList/TableList';
 
 export interface DirProjectsProps extends ModalFormProps {
   title: string;
@@ -10,21 +11,34 @@ export interface DirProjectsProps extends ModalFormProps {
 const DirProjects: React.FC<DirProjectsProps> = props => {
   return (
     <StModalForm {...props}>
-      <Box></Box>
+      <Box>
+        <TableList
+          {...{
+            tableData: [],
+            tableTitles: [],
+            tableSearchParams: [],
+            tableSortParams: [],
+          }}
+        />
+      </Box>
     </StModalForm>
   );
 };
 
 const StModalForm = styled(ModalForm)`
-  height: 70vh;
-  resize: both;
+  height: 95vh;
+  width: 95vw;
 
-  @media screen and (max-height: 480px) {
-    height: 95vh;
+  & .modalFooter {
+    padding: 8px;
   }
 `;
 const Box = styled.div`
-  padding: 16px 16px;
+  height: 100%;
+
+  & .tOverHead {
+    padding: 8px;
+  }
 `;
 
 export default DirProjects;

@@ -8,7 +8,7 @@ const ModalFooter: React.FC<Pick<ModalFormProps, 'onSubmit'> & React.ImgHTMLAttr
   ...props
 }) => {
   return (
-    <Footer {...props} className="footer">
+    <Footer {...props} className="modalFooter">
       {onSubmit && (
         <ButtonIcon type="reset" variant="outlinedSmall">
           Закрити

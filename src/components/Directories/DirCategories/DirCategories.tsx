@@ -54,7 +54,7 @@ const StModalForm = styled(ModalForm)`
   }
 `;
 const Box = styled.div`
-  padding: 16px 0;
+  padding: 12px;
 `;
 
 export default DirCategories;

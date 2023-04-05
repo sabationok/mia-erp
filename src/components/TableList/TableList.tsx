@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import { CellTittleProps } from './TebleCells/CellTitle';
 import { MaxToTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 import { FilterSelectorType } from 'components/Filter/Filter';
+
 export interface SelectItem extends Record<string, any> {
   _id?: string;
   filter?: boolean;
@@ -20,7 +21,31 @@ export interface SelectItem extends Record<string, any> {
   dataKey: string;
   sort?: boolean;
 }
-export type ITableListProps = {
+
+export interface TableActionsProps {
+  top?: any[];
+  bottom?: any[];
+  footer?: boolean;
+}
+export interface TabeleSelectedRow extends Record<string, any> {
+  _id: string;
+  amount?: number;
+  type?: string;
+}
+export interface ITableSortParam {
+  descending: boolean;
+  dataKey: string;
+}
+export type OnRowClickType = <D = any>({
+  ev,
+  _id,
+  data,
+}: {
+  ev: MouseEvent | React.MouseEvent<HTMLDivElement>;
+  _id: string;
+  data: D;
+}) => any;
+export interface ITableListProps extends React.HTMLAttributes<HTMLDivElement> {
   tableTitles?: CellTittleProps[];
   tableSearchParams?: SelectItem[];
   tableSortParams?: SelectItem[];
@@ -41,38 +66,14 @@ export type ITableListProps = {
   rowGrid?: any;
   children?: React.ReactNode;
   useFilterSelectors?: () => FilterSelectorType[] | [];
-};
-
-export interface TableActionsProps {
-  top?: any[];
-  bottom?: any[];
-  footer?: boolean;
 }
-export interface TabeleSelectedRow extends Record<string, any> {
-  _id: string;
-  amount?: number;
-  type?: string;
-}
-export type TableSortParamsType = { descending: boolean; dataKey: string };
-export type OnRowClickType = <D = any>({
-  ev,
-  _id,
-  data,
-}: {
-  ev: MouseEvent | React.MouseEvent<HTMLDivElement>;
-  _id: string;
-  data: D;
-}) => any;
-
 export interface ITableListContext {
   onSelectRow?: ({ ev, rowData }: { ev: Event; rowData: any }) => void;
   onUnselectRow?: ({ ev, rowData }: { ev: Event; rowData: any }) => void;
   selectedRows?: TabeleSelectedRow[] | any[];
   onRowClick?: OnRowClickType;
   rowRef?: React.MutableRefObject<HTMLElement | undefined>;
-  sortParams?: TableSortParamsType;
-
-  handleTableSort?: (sortParams: TableSortParamsType) => void;
+  handleTableSort?: (sortParam: ITableSortParam) => void;
 }
 
 export const TableCTX = createContext({});
@@ -86,7 +87,7 @@ const TableList: React.FC<ITableListProps> = ({
   tableTitles,
   tableSearchParams,
   tableActions,
-  footer = true,
+  footer = false,
   ...props
 }) => {
   const [selectedRows, setSelectedRows] = useState<TabeleSelectedRow[] | any[]>([]);
@@ -122,7 +123,7 @@ const TableList: React.FC<ITableListProps> = ({
   };
 
   return (
-    <Table>
+    <Table {...props}>
       <TableCTX.Provider value={CTX}>
         <AppLoader isLoading={isLoading} />
 

@@ -1,7 +1,13 @@
 const ORANGE: IAccentColor = {
-  base: 'rgb(220, 133, 31)',
-  pressed: 'rgb(227, 156, 65)',
-  hover: 'rgb(205, 133, 50)',
+  // base: 'rgb(220, 133, 31)',
+  // pressed: 'rgb(227, 156, 65)',
+  // hover: 'rgb(205, 133, 50)',
+  // hover: '#FFA033',
+  // pressed: '#CC6D00',
+
+  base: '#FF8800',
+  pressed: 'rgb(220, 133, 31)',
+  hover: '#CC6D00',
   disabled: '',
   focus: '',
   light: 'rgba(220, 133, 31, 0.05)',

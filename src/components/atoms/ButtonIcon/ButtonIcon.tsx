@@ -107,7 +107,8 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
 
   font-size: 12px;
 
-  cursor: default;
+  /* cursor: default; */
+  cursor: pointer;
 
   overflow: hidden;
   border-style: none;
@@ -120,6 +121,7 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
   &:disabled {
     pointer-events: none;
     opacity: 0.7;
+    cursor: not-allowed;
   }
 `;
 

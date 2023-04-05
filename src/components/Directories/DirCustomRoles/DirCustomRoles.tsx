@@ -11,7 +11,6 @@ import FormCreateCustomRole from './FormCreateCustomRole';
 export type CustomRoleFilterOpt = FilterOpt<CountType>;
 export interface DirCustomRolesProps extends ModalFormProps {
   title: string;
-  filterOptions: CustomRoleFilterOpt[];
 }
 
 const DirCustomRoles: React.FC<DirCustomRolesProps> = props => {

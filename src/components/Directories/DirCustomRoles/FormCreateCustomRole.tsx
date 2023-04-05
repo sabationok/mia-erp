@@ -1,4 +1,5 @@
 import InputTextPrimary from 'components/atoms/Inputs/InputTextPrimary';
+import TitleBase from 'components/atoms/TitleBase';
 import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
 import { ICustomRole } from 'data/roles.types';
 import { useState } from 'react';
@@ -52,9 +53,13 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({
         />
 
         <ActionsList>
-          {formData.actions?.map((act, idx) => (
-            <li key={idx}>{act}</li>
-          ))}
+          <TitleBase>Доступні дії</TitleBase>
+
+          <List>
+            {formData.actions?.map((act, idx) => (
+              <ListItem key={idx}>{act}</ListItem>
+            ))}
+          </List>
         </ActionsList>
       </Inputs>
     </StModalForm>
@@ -67,18 +72,26 @@ const StModalForm = styled(ModalForm)`
 const Inputs = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
 
   padding: 12px;
 `;
-const ActionsList = styled.ul`
+
+const ActionsList = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
   justify-content: center;
+  gap: 8px;
 
   height: 100%;
+`;
+const List = styled.ul`
+  display: flex;
+  flex-direction: column;
+`;
+
+const ListItem = styled.li`
+  display: grid;
+  grid-template-columns: 26px 1fr;
 `;
 
 export default FormCreateCustomRole;

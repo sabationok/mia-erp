@@ -72,7 +72,7 @@ const StModalForm = styled(ModalForm)`
   }
 `;
 const Box = styled.div`
-  padding: 16px 16px;
+  padding: 12px;
 `;
 
 export default DirCounts;

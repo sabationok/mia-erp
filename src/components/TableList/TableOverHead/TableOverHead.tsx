@@ -6,16 +6,16 @@ import TableActions from './TableActions/TableActions';
 import DeviceConrol from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 import TabelSearch from './TableSearch/TabelSearch';
 
-const TableOverHead: React.FC = () => {
+const TableOverHead: React.FC<React.HTMLAttributes<HTMLDivElement>> = props => {
   const { tableActions, tableSearchParams } = useTable();
   return (
-    <OverHead>
-      <LeftSide>
+    <OverHead className="tOverHead" {...props}>
+      <LeftSide className="leftSide">
         <TabelSearch {...{ tableSearchParams }} />
       </LeftSide>
 
       <DeviceConrol.MinDesktop>
-        <RightSide>
+        <RightSide className="rightSide">
           <TableActions {...tableActions} />
         </RightSide>
       </DeviceConrol.MinDesktop>

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { ILoginUserData } from 'redux/auth/auth.thunks';
 import LogoSvg from 'components/Layout/Header/LogoSvg/LogoSvg';
 import AuthFormInput from './AuthFormInput';
 
@@ -133,6 +132,7 @@ const AuthForm: React.FC<AuthFormProps & React.HTMLAttributes<HTMLFormElement>> 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
 
   min-width: 250px;

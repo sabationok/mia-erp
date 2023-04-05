@@ -6,21 +6,23 @@ import TablePagination from './TablePagination';
 import TableSort from './TableSortComp/TableSort';
 import { useState } from 'react';
 
-const TableFooter: React.FC<any> = () => {
-  const { useFilterSelectors, tableSortParams, selectedRows, counter } = useTable();
-  const [isCounterOn] = useState<boolean | undefined>(!counter && selectedRows && selectedRows?.length === 0);
+const TableFooter: React.FC<any> = props => {
+  const { useFilterSelectors, tableSortParams, selectedRows, counter, filter } = useTable();
+  const [isCounterOn] = useState<boolean | undefined>(!counter && selectedRows && selectedRows?.length > 0);
 
   return (
-    <Footer>
-      <Top>
-        {tableSortParams && <TableSort {...{ tableSortParams }} />}
+    <Footer className="tFooter" {...props}>
+      <Top className="footerTop">
+        {tableSortParams && tableSortParams.length > 0 && <TableSort {...{ tableSortParams }} />}
 
         <TablePagination />
 
-        <TableFilter
-          {...{ title: 'Фільтрація транзакцій' }}
-          useFilterSelectors={useFilterSelectors ? useFilterSelectors : () => []}
-        />
+        {filter && (
+          <TableFilter
+            {...{ title: 'Фільтрація транзакцій' }}
+            useFilterSelectors={useFilterSelectors ? useFilterSelectors : () => []}
+          />
+        )}
       </Top>
 
       {isCounterOn && <FooterCounter selectedRows={selectedRows} includes={['INCOME', 'EXPENSE']} />}
