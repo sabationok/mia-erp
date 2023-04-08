@@ -1,5 +1,4 @@
-import baseApi from 'api/baseApi';
-import { token } from 'api/baseApi';
+import baseApi, { token } from 'api/baseApi';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 import { axiosErrorCheck } from 'utils';
@@ -19,45 +18,61 @@ export const authApiRoutes = {
 };
 
 export interface ILoggedUserInfo {
-  accessToken: string;
-  email: string;
+  accessToken?: string;
+  email?: string;
 }
+
 export interface IRegisteredUser {
-  email: string;
+  email?: string;
 }
+
 export interface ILoginUserData {
-  email: string;
-  password: string;
+  email?: string;
+  password?: string;
 }
+
 export interface IRegistrationData extends ILoginUserData {
-  name: string;
+  name?: string;
   secondName?: string;
 }
+
 export type ICurrentUser = Partial<IUser> & Pick<IAuthState, 'accessToken'>;
 export type ICurrentCompany = ICompany;
 
 export interface IPayloadRegisterUser {
   submitData: IRegistrationData;
   onSuccess: (regUserData?: any) => void | IRegisteredUser;
+
   onError(error?: AuthErrorType): void;
 }
+
 export interface IPayloadLogInUser {
-  submitData: { email: string; password: string };
+  submitData: { email?: string; password?: string };
+
   onSuccess(data?: ILoggedUserInfo): void | ILoggedUserInfo;
+
   onError(error: AuthErrorType): void;
 }
+
 export interface IPayloadLogOutUser {
   onSuccess(data?: any): void;
+
   onError(error: AuthErrorType): void;
 }
+
 export interface IPayloadGetCurrentUser {
   submitData?: { email: string; password: string };
+
   onSuccess(data?: ICurrentUser): any;
+
   onError(error: AuthErrorType): void;
 }
+
 export interface IPayloadGetCurrentPermission {
   submitData?: { permissionId: string };
+
   onSuccess(data?: IPermission): any;
+
   onError(error: AuthErrorType): void;
 }
 
@@ -75,42 +90,45 @@ export const registerUserThunk = createAsyncThunk<IRegisteredUser, IPayloadRegis
 
       return thunkAPI.rejectWithValue(axiosErrorCheck(error));
     }
-  }
+  },
 );
 
 export const logInUserThunk = createAsyncThunk<ILoggedUserInfo, IPayloadLogInUser, { state: { auth: IAuthState } }>(
   'auth/logInUserThunk',
-  async (obj, thunkAPI) => {
+  async (payload, thunkAPI) => {
     try {
-      const response: AxiosResponse<ILoggedUserInfo> = await baseApi.post(authApiRoutes.signIn, obj.submitData);
+      // const response: AxiosResponse<ILoggedUserInfo> = await baseApi.post(authApiRoutes.signIn, payload.submitData);
 
-      obj.onSuccess(response.data);
-
-      token.set(response.data.accessToken);
-      return response.data;
+      // payload.onSuccess(response.data);
+      payload.onSuccess(payload.submitData);
+      // token.set(response.data.accessToken);
+      // return response.data;
+      return { accessToken: 'accessToken_', email: payload.submitData.email };
     } catch (error) {
-      obj.onError(error);
+      payload.onError(error);
 
       return thunkAPI.rejectWithValue(axiosErrorCheck(error));
     }
-  }
+  },
 );
 
 export const logOutUserThunk = createAsyncThunk<any, IPayloadLogOutUser>(
   'auth/logOutUserThunk',
   async (payload, thunkAPI) => {
     try {
-      const response: AxiosResponse<any> = await baseApi.post(authApiRoutes.signOut);
+      // const response: AxiosResponse<any> = await baseApi.post(authApiRoutes.signOut);
 
-      payload?.onSuccess(response);
+      // payload?.onSuccess(response);
 
       token.unset();
+
+      
     } catch (error) {
       payload?.onError(error);
 
       return thunkAPI.rejectWithValue(axiosErrorCheck(error));
     }
-  }
+  },
 );
 
 export const getCurrentUserThunk = createAsyncThunk<ICurrentUser, IPayloadGetCurrentUser>(
@@ -127,7 +145,7 @@ export const getCurrentUserThunk = createAsyncThunk<ICurrentUser, IPayloadGetCur
 
       return thunkAPI.rejectWithValue(axiosErrorCheck(error));
     }
-  }
+  },
 );
 
 export const getCurrentPermissionThunk = createAsyncThunk<IPermission, IPayloadGetCurrentPermission>(
@@ -144,5 +162,5 @@ export const getCurrentPermissionThunk = createAsyncThunk<IPermission, IPayloadG
 
       return thunkAPI.rejectWithValue(axiosErrorCheck(error));
     }
-  }
+  },
 );

@@ -3,17 +3,21 @@ import styled from 'styled-components';
 import getNestedData from 'utils/getNestedData';
 import { useRow } from '../TableRows/RowContext';
 import { CellTitleContent, CellTittleProps } from './CellTitle';
+import SvgIcon from '../../atoms/SvgIcon/SvgIcon';
+import { iconId } from '../../../img/sprite';
 
-export interface CellTextDblProps {
+// import { formatPhoneNumber } from '../../../utils';
+
+export interface CellContactsDblProps {
   titleInfo: CellTittleProps;
   idx?: number;
 }
 
-const CellTextDbl: React.FC<CellTextDblProps & React.HTMLAttributes<HTMLDivElement>> = ({
-                                                                                          titleInfo,
-                                                                                          idx,
-                                                                                          ...props
-                                                                                        }) => {
+const CellContactsDbl: React.FC<CellContactsDblProps & React.HTMLAttributes<HTMLDivElement>> = ({
+                                                                                                  titleInfo,
+                                                                                                  idx,
+                                                                                                  ...props
+                                                                                                }) => {
   const { rowData } = useRow();
   const { top, bottom, width = '100px' } = titleInfo;
 
@@ -29,6 +33,8 @@ const CellTextDbl: React.FC<CellTextDblProps & React.HTMLAttributes<HTMLDivEleme
   return (
     <CellBase style={{ width }} {...props}>
       <Top align={top.align} uppercase={top.uppercase}>
+        <StIcon iconId={iconId.mailOutlined} size='12px' />
+
         <div title={contentTop} className='inner'>
           {contentTop}
         </div>
@@ -36,9 +42,13 @@ const CellTextDbl: React.FC<CellTextDblProps & React.HTMLAttributes<HTMLDivEleme
 
       <Bottom align={bottom?.align} uppercase={bottom?.uppercase}>
         {contentBottom ? (
-          <div title={contentBottom} className='inner'>
-            {contentBottom}
-          </div>
+          <>
+            <StIcon iconId={iconId.phoneOulined} size='12px' />
+
+            <div title={contentBottom} className='inner'>
+              {contentBottom}
+            </div>
+          </>
         ) : null}
       </Bottom>
     </CellBase>
@@ -93,4 +103,7 @@ const Bottom = styled(Content)`
   justify-content: ${({ align }) => (align === 'center' ? 'center' : `flex-${align}`)};
 `;
 
-export default CellTextDbl;
+const StIcon = styled(SvgIcon)`
+  fill: ${({ theme }) => theme.trBorderClr}
+`;
+export default CellContactsDbl;

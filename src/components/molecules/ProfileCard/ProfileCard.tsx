@@ -1,9 +1,10 @@
 import styled from 'styled-components';
+import { IUser } from '../../../redux/auth/auth.slice';
 
-export interface ProfileCardProps {
-  avatarURL?: string;
-  name: string;
-  email: string;
+export interface ProfileCardProps extends Omit<IUser, '_id'> {
+  // avatarURL?: string;
+  // name?: string;
+  // email?: string;
   nameFontSize?: string;
   emailFontSize?: string;
   avatarPrpps?: React.HTMLAttributes<HTMLDivElement>;
@@ -12,20 +13,20 @@ export interface ProfileCardProps {
 }
 
 const ProfileCard: React.FC<ProfileCardProps & React.HTMLAttributes<HTMLDivElement>> = ({
-  avatarURL = '',
-  name = 'name',
-  email = 'email',
-  emailFontSize,
-  nameFontSize,
-  nameProps,
-  emailProps,
-  children,
-  ...props
-}) => {
+                                                                                          avatarURL = '',
+                                                                                          name = 'name',
+                                                                                          email = 'email',
+                                                                                          emailFontSize,
+                                                                                          nameFontSize,
+                                                                                          nameProps,
+                                                                                          emailProps,
+                                                                                          children,
+                                                                                          ...props
+                                                                                        }) => {
   return (
     <Card {...props}>
       <Avatar>
-        <img src={avatarURL} alt="userImage" width={100} height={100} />
+        <img src={avatarURL} alt='userImage' width={100} height={100} />
       </Avatar>
 
       <Wrapper>

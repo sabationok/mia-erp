@@ -2,19 +2,25 @@ import CellTextDbl from './CellTextDbl';
 import Cell from './Cell';
 import CellDateSimple from './CellDateSimple';
 import CellStatus from './CellStatus';
+import CellContactsDbl from './CellContacts';
+import CellTags from './CellTags';
 
-export type CellActionsName = 'string' | 'cell' | 'cellDbl' | 'dateSimple' | 'dateDbl' | 'status';
-type CellVarianType = {
-  [key in CellActionsName]?: React.FC<any>;
+// export type CellActionsName = 'string' | 'cell' | 'cellDbl' | 'dateSimple' | 'dateDbl' | 'status';
+type CellVariantType = {
+  [key: string]: React.FC<any>;
 };
 
-export const CellsMap: CellVarianType = {
+export const CellsMap: CellVariantType = {
   cell: Cell,
   cellDbl: CellTextDbl,
   dateSimple: CellDateSimple,
   status: CellStatus,
   dateDbl: CellDateSimple,
+  contacts: CellContactsDbl,
+  tags: CellTags,
 };
+
+export type CellActionsName = keyof typeof CellsMap
 
 // import CellCategory from './CellCategory';
 // import CellStatusApprove from './CellStatusApprove';

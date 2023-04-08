@@ -7,17 +7,17 @@ import TableSort from './TableSortComp/TableSort';
 import { useState } from 'react';
 
 const TableFooter: React.FC<any> = props => {
-  const { useFilterSelectors, tableSortParams, selectedRows, counter, filter } = useTable();
+  const { useFilterSelectors, tableSortParams, selectedRows, counter, isFilter } = useTable();
   const [isCounterOn] = useState<boolean | undefined>(!counter && selectedRows && selectedRows?.length > 0);
 
   return (
-    <Footer className="tFooter" {...props}>
-      <Top className="footerTop">
+    <Footer className='tFooter' {...props}>
+      <Top className='footerTop'>
         {tableSortParams && tableSortParams.length > 0 && <TableSort {...{ tableSortParams }} />}
 
         <TablePagination />
 
-        {filter && (
+        {isFilter && (
           <TableFilter
             {...{ title: 'Фільтрація транзакцій' }}
             useFilterSelectors={useFilterSelectors ? useFilterSelectors : () => []}

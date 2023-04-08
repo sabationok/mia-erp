@@ -1,35 +1,34 @@
 import { ICategory } from './categories.types';
 import { ICount } from './counts.types';
 import { IBase } from './global.types';
+import { IContractor } from './contractors.types';
 
 export type CurrencyCode = 'UAH';
 export type TransactionType = 'EXPENSE' | 'TRANSFER' | 'INCOME';
-export interface IContractor extends IBase {
-  name?: string;
-  label?: string;
-  type?: string;
-  descr?: string;
-  def?: string;
-}
+
 export interface ICompanyActivity extends IBase {
   name?: string;
   label?: string;
   type?: string;
   def?: string;
 }
+
 export interface IProject extends IBase {
   name?: string;
   label?: string;
   type?: string;
   def?: string;
 }
+
 export interface IDocument extends IBase {
   name?: string;
   label?: string;
   number?: string;
   type?: string;
 }
+
 export type TrStatus = 'rejected' | 'approved' | 'pending';
+
 export interface ITransaction extends IBase {
   amount: number;
   type: TransactionType;

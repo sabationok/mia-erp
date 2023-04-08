@@ -10,7 +10,12 @@ const getNestedData = <D extends Record<string, any>, N extends Record<string, a
   if (!args?.data || !args?.dataKey) return null as null;
   const { data, dataKey, nestedDataKey, def } = args;
 
+
   if (data && dataKey && data[dataKey]) {
+    if (Array.isArray(data[dataKey])) {
+      return data[dataKey];
+    }
+
     if (typeof data[dataKey] === 'string' || typeof data[dataKey] === 'number') {
       return data[dataKey];
     }

@@ -3,16 +3,16 @@ import { IUser } from 'redux/auth/auth.slice';
 
 export const usersDirColumns: CellTittleProps[] = [
   {
-    top: { name: 'ПІП', dataKey: 'fullName' },
+    top: { name: 'ПІП', dataKey: 'fullName', uppercase: false },
     bottom: { name: 'Роль', dataKey: 'permission', nestedDataKey: 'label' },
     width: '200px',
     action: 'cellDbl',
   },
   {
-    top: { name: 'Електронна пошта', dataKey: 'email' },
+    top: { name: 'Електронна пошта', dataKey: 'email', uppercase: false },
     bottom: { name: 'Номер телефону', dataKey: 'phone' },
     width: '190px',
-    action: 'cellDbl',
+    action: 'contacts',
   },
   {
     top: { name: 'Локація', dataKey: 'fullLocation' },
@@ -25,11 +25,18 @@ export const usersDirColumns: CellTittleProps[] = [
     action: 'cellDbl',
   },
   {
-    top: { name: 'Створено', dataKey: 'email' },
-    bottom: { name: 'Оновлено', dataKey: 'phone' },
+    top: { name: 'Створено', align: 'center', dataKey: 'createdAt' },
+    bottom: { name: 'Оновлено', align: 'center', dataKey: 'updatedAt' },
     width: '150px',
-    action: 'cellDbl',
+    action: 'dateSimple',
   },
 ];
 
-export const usersMockData: Partial<IUser>[] = [{ _id: 'sfbvssdgbdfg', name: 'Андрій' }];
+export const usersMockData: Partial<IUser> & any[] = [{
+  _id: 'sfbvssdgbdfg',
+  name: 'Петро',
+  fullName: 'Петро Васильович Галайко',
+  email: 'petro@mail.com',
+  phone: '+3806768923156',
+  permission: { label: 'Адмін' },
+}];

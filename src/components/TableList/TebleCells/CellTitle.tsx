@@ -1,7 +1,7 @@
 import React from 'react';
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import { CellActionsName } from '../TebleCells';
+import { IconIdType } from '../../../img/sprite/iconId.data';
 
 export type CellTitleContent = {
   name: string;
@@ -11,6 +11,8 @@ export type CellTitleContent = {
   def?: string;
   sort?: boolean;
   align?: 'center' | 'start' | 'end';
+  uppercase?: boolean;
+  icon?: IconIdType;
 };
 export type CellTittleProps = {
   top: CellTitleContent;
@@ -23,26 +25,26 @@ export type CellTittleProps = {
 };
 
 const CellTitle: React.FC<CellTittleProps & React.HTMLAttributes<HTMLDivElement>> = ({
-  width,
-  idx,
-  onClick,
-  top,
-  bottom,
-  ...props
-}) => {
+                                                                                       width,
+                                                                                       idx,
+                                                                                       onClick,
+                                                                                       top,
+                                                                                       bottom,
+                                                                                       ...props
+                                                                                     }) => {
   return (
     <StCellHead width={width} onClick={onClick} {...props}>
       <Wrapper>
         <Top align={top.align}>
-          <span className="inner"> {top.name || top.dataKey || 'Title'}</span>
+          <span className='inner'> {top.name || top.dataKey || 'Title'}</span>
         </Top>
 
         <Bottom align={bottom?.align}>
-          <span className="inner"> {bottom?.name || bottom?.dataKey || 'SubTitle'}</span>
+          <span className='inner'> {bottom?.name || bottom?.dataKey || ''}</span>
         </Bottom>
       </Wrapper>
 
-      <WidthChanger type="button"></WidthChanger>
+      <WidthChanger type='button'></WidthChanger>
     </StCellHead>
   );
 };
@@ -113,6 +115,7 @@ const WidthChanger = styled.button`
   padding: 0;
 
   cursor: col-resize;
+
   &::before {
     position: absolute;
     top: 0;

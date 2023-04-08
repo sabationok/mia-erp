@@ -1,8 +1,7 @@
 import RowContext from './RowContext';
-import React from 'react';
+import React, { useState } from 'react';
 import CellTextDbl from '../TebleCells/CellTextDbl';
 import { CellsMap } from '../TebleCells';
-import { useState } from 'react';
 import { useTable } from '../TableList';
 
 import styled from 'styled-components';
@@ -21,6 +20,7 @@ const TableRow: React.FC<TableRowProps> = props => {
   function handleToggleActions() {
     setIsActionsOpen(!isActionsOpen);
   }
+
   function handleCloseActions() {
     setIsActionsOpen(false);
   }
@@ -57,7 +57,7 @@ const TableRow: React.FC<TableRowProps> = props => {
 const Row = styled(ThRow)`
   display: grid;
   grid-template-columns: min-content 1fr;
-  grid-template-rows: 1fr;
+  grid-template-rows: 44px;
 
   height: 44px;
   min-width: 100%;
@@ -80,9 +80,10 @@ const RowStickyEl = styled(ThRowStickyEl)``;
 const StRowData = styled(ThRowData)<{ gridRepeat: number }>`
   display: grid;
   grid-template-columns: ${({ gridRepeat }) => `repeat(${gridRepeat} min-content)`};
-  grid-template-rows: 1fr;
+
 
   max-height: 100%;
+
 
   /* overflow: hidden; */
 `;

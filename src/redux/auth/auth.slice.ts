@@ -4,22 +4,24 @@ import { ICustomRole } from 'data/roles.types';
 import { karina_avatar } from 'img';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 // import { actionLogInUser, actionLogOutUser, actionSetCurrentUser } from './authActions';
-import { registerUserThunk, logInUserThunk, logOutUserThunk, getCurrentUserThunk } from './auth.thunks';
+import { getCurrentUserThunk, logInUserThunk, logOutUserThunk, registerUserThunk } from './auth.thunks';
+
 export interface ISystemRole extends IBase {
   name?: string;
   label?: string;
   actions: string[];
 }
+
 export interface IUser extends IBase {
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
   avatarURL?: string;
-  sysRole: ISystemRole;
+  sysRole?: ISystemRole;
 }
 
 const initialUserRole: ISystemRole = {
   _id: '5',
-  label: 'ADMIN',
+  label: 'Адміністратор',
   name: 'ADMIN',
   actions: [],
 };
@@ -30,12 +32,14 @@ const initialUser: IUser = {
   avatarURL: karina_avatar,
   sysRole: initialUserRole,
 };
+
 export interface ICompany extends IBase {
   name: string;
   email: string;
   avatarURL?: string;
   customRole: any;
 }
+
 const initialCompany: ICompany = {
   _id: 'gndfgnfghnsrymgh',
   name: 'ФОП Каріна Дизайнівна Дизайнер',
@@ -43,6 +47,7 @@ const initialCompany: ICompany = {
   avatarURL: karina_avatar,
   customRole: initialUserRole,
 };
+
 export interface IPermission extends IBase {
   company: ICompany;
   user: Partial<IUser>;
@@ -50,6 +55,7 @@ export interface IPermission extends IBase {
   status?: boolean;
   permissionToken?: string;
 }
+
 const initialPermission: IPermission = {
   _id: 'sdfbsdfbdfg',
   company: initialCompany,
@@ -60,14 +66,16 @@ const initialPermission: IPermission = {
     actions: [],
   },
 };
+
 export interface IAuthState {
   user: IUser;
   permission: IPermission;
-  accessToken: string;
+  accessToken?: string;
   isLoading: boolean;
   isLoggedIn: boolean;
   error: AuthErrorType;
 }
+
 const initialState: IAuthState = {
   user: initialUser,
   permission: initialPermission,
@@ -86,6 +94,7 @@ export const authSlice = createSlice({
       .addCase(logInUserThunk.fulfilled, (state, { payload }) => {
         state.isLoading = false;
         state.accessToken = payload.accessToken;
+        state.isLoggedIn = true;
         state.user = { ...state.user, email: payload.email };
       })
       .addCase(registerUserThunk.fulfilled, state => {
@@ -93,7 +102,10 @@ export const authSlice = createSlice({
       })
       .addCase(logOutUserThunk.fulfilled, state => {
         state.isLoading = false;
-        state = initialState;
+        state.isLoggedIn = false;
+        state.user = initialState.user;
+        state.permission = initialState.permission;
+        state.accessToken = '';
       })
       .addCase(getCurrentUserThunk.fulfilled, state => {
         state.isLoading = false;
@@ -108,9 +120,11 @@ export const authSlice = createSlice({
         state.error = action.payload;
       }),
 });
+
 function inPending(action: AnyAction) {
   return action.type.endsWith('pending');
 }
+
 function inError(action: AnyAction) {
   return action.type.endsWith('rejected');
 }

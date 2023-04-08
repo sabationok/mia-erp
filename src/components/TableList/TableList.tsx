@@ -1,5 +1,4 @@
-import React from 'react';
-import { useContext, createContext, useRef, useState } from 'react';
+import React, { createContext, useContext, useRef, useState } from 'react';
 import TableHead from './TableHead';
 import TableBody from './TableBody';
 import AppLoader from 'components/AppLoader/AppLoader';
@@ -27,24 +26,28 @@ export interface TableActionsProps {
   bottom?: any[];
   footer?: boolean;
 }
+
 export interface TabeleSelectedRow extends Record<string, any> {
   _id: string;
   amount?: number;
   type?: string;
 }
+
 export interface ITableSortParam {
   descending: boolean;
   dataKey: string;
 }
+
 export type OnRowClickType = <D = any>({
-  ev,
-  _id,
-  data,
-}: {
+                                         ev,
+                                         _id,
+                                         data,
+                                       }: {
   ev: MouseEvent | React.MouseEvent<HTMLDivElement>;
   _id: string;
   data: D;
 }) => any;
+
 export interface ITableListProps extends React.HTMLAttributes<HTMLDivElement> {
   tableTitles?: CellTittleProps[];
   tableSearchParams?: SelectItem[];
@@ -58,8 +61,8 @@ export interface ITableListProps extends React.HTMLAttributes<HTMLDivElement> {
   };
   tableActions?: TableActionsProps;
   TableActionsComp?: React.ReactNode;
-  filter?: boolean;
-  search?: boolean;
+  isFilter?: boolean;
+  isSearch?: boolean;
   footer?: boolean;
   counter?: boolean;
   checkBoxes?: boolean;
@@ -67,6 +70,7 @@ export interface ITableListProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
   useFilterSelectors?: () => FilterSelectorType[] | [];
 }
+
 export interface ITableListContext {
   onSelectRow?: ({ ev, rowData }: { ev: Event; rowData: any }) => void;
   onUnselectRow?: ({ ev, rowData }: { ev: Event; rowData: any }) => void;
@@ -80,16 +84,16 @@ export const TableCTX = createContext({});
 export const useTable = () => useContext(TableCTX) as ITableListContext & ITableListProps;
 
 const TableList: React.FC<ITableListProps> = ({
-  tableData = [],
-  isLoading = false,
-  RowActionsComp,
-  TableActionsComp,
-  tableTitles,
-  tableSearchParams,
-  tableActions,
-  footer = false,
-  ...props
-}) => {
+                                                tableData = [],
+                                                isLoading = false,
+                                                RowActionsComp,
+                                                TableActionsComp,
+                                                tableTitles,
+                                                tableSearchParams,
+                                                tableActions,
+                                                footer = false,
+                                                ...props
+                                              }) => {
   const [selectedRows, setSelectedRows] = useState<TabeleSelectedRow[] | any[]>([]);
   const rowRef = useRef<HTMLElement>();
 
@@ -101,6 +105,7 @@ const TableList: React.FC<ITableListProps> = ({
   function onSelectRow({ rowData }: { ev?: Event; rowData: any }) {
     setSelectedRows(prev => [rowData, ...prev]);
   }
+
   function onUnselectRow({ rowData }: { ev?: Event; rowData: { _id: string } }) {
     setSelectedRows(prev => prev.filter(row => row._id !== rowData._id));
   }
@@ -129,7 +134,7 @@ const TableList: React.FC<ITableListProps> = ({
 
         <TableOverHead />
 
-        <TableScroll className="TableScroll">
+        <TableScroll className='TableScroll'>
           <TableHead />
 
           {tableData.length !== 0 ? <TableBody /> : <NoData>Дані відсутні</NoData>}

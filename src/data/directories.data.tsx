@@ -3,19 +3,20 @@
 // import ModalDefault from 'components/ModalDefault/ModalDefault';
 import DirCategories, { DirCategoriesProps } from 'components/Directories/DirCategories/DirCategories';
 import DirCounts, { DirCountsProps } from 'components/Directories/DirCounts/DirCounts';
-import DirProjects from 'components/Directories/DirProjects/DirProjects';
+import DirProjects, { DirProjectsProps } from 'components/Directories/DirProjects/DirProjects';
 import DirCustomRoles, { DirCustomRolesProps } from 'components/Directories/DirCustomRoles/DirCustomRoles';
 import { iconId } from '../img/sprite/iconId.data';
 import DirUsers, { DirUsersProps } from 'components/Directories/DirUsers';
 import DirMarks, { DirMarksProps } from 'components/Directories/DirMarks';
-import DirContractors from 'components/Directories/DirContractors';
+import DirContractors, { DirContractorsProps } from 'components/Directories/DirContractors';
 import { usersDirColumns, usersMockData } from './usersDir.data';
+import { contractorsColumns, contractorsMockData } from './contractors.data';
 
 export interface IDirectory {
   title: string;
   iconId: string;
   ModalChildren: React.FC<any>;
-  modalChildrenProps: any;
+  modalChildrenProps: DirCountsProps | DirCategoriesProps | DirProjectsProps | DirContractorsProps | DirCustomRolesProps;
   disabled: boolean;
 }
 
@@ -34,7 +35,7 @@ const CategoriesProps: DirCategoriesProps = {
     { label: 'Витрата', value: 'EXPENSE' },
   ],
 };
-const ProjectsProps: DirCategoriesProps = {
+const ProjectsProps: DirProjectsProps = {
   title: 'Проєкти',
   // filterOptions: [
   //   { label: 'Нові', value: 'PENDING' },
@@ -42,8 +43,10 @@ const ProjectsProps: DirCategoriesProps = {
   //   { label: 'Майбутні', value: 'FUTURE' },
   // ],
 };
-const ContractorsProps: DirCategoriesProps = {
+const ContractorsProps: DirContractorsProps = {
   title: 'Контрагенти',
+  tableSettings: { tableData: contractorsMockData, tableTitles: contractorsColumns },
+  footer: false,
 };
 const CustomRolesProps: DirCustomRolesProps = {
   title: 'Ролі',

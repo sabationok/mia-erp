@@ -20,9 +20,9 @@ const PageTransactions = () => {
           tableSearchParams: transactionsSearchParams.filter(el => el.search),
           tableSortParams: transactionsSearchParams.filter(el => el.sort),
           useFilterSelectors,
-          filter: true,
+          isFilter: true,
+          isSearch: true,
           footer: true,
-          search: true,
         }}
       />
     </Page>

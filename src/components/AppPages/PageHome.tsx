@@ -27,9 +27,11 @@ const companyTypes = [
 const PageHome: React.FC = () => {
   const { user } = useAuthSelector();
   const [serchParams, setSearchParaps] = useSearchParams({ companyType: companyTypes[0].param });
+
   function onSearchParamClick(param: string) {
     setSearchParaps({ companyType: param });
   }
+
   function isActive(param: string) {
     return serchParams.get('companyType') === param ? 'active' : '';
   }
@@ -51,7 +53,7 @@ const PageHome: React.FC = () => {
             {companyTypes.map(item => (
               <StButtonIcon
                 key={item.param}
-                variant="def"
+                variant='def'
                 onClick={() => onSearchParamClick(item.param)}
                 className={isActive(item.param)}
               >
@@ -67,8 +69,8 @@ const PageHome: React.FC = () => {
 
         <TableList
           {...{
-            filter: false,
-            search: true,
+            isFilter: false,
+            isSearch: true,
             checkboxes: false,
             tableTitles: companiesTableColumns,
           }}
@@ -122,9 +124,10 @@ const ProfileInfo = styled.div`
 const FilterButtons = styled.div`
   max-width: 100%;
   overflow: auto;
+
   &::-webkit-scrollbar {
-    width: 0px;
-    height: 0px;
+    width: 0;
+    height: 0;
   }
 `;
 const ButtonsList = styled.div`
@@ -192,9 +195,11 @@ const StButtonIcon = styled(ButtonIcon)`
       width: 80%;
     }
   }
+
   &:hover,
   &:focus {
     outline-style: none;
+
     &::after {
       width: 100%;
     }

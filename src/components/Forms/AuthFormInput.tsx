@@ -11,23 +11,24 @@ export interface AuthFormInputProps {
   helperText?: string;
   success?: boolean;
 }
+
 const AuthFormInput: React.FC<AuthFormInputProps & InputPrimaryProps> = ({ icon, error, success, ...props }) => {
-  console.log('AuthFormInput', { error, success });
+
 
   return (
     <InputBox>
-      <SvgIcon size="26px" iconId={icon} />
+      <SvgIcon size='26px' iconId={icon} />
 
       <InputTextPrimary
         placeholder="Ім'я"
-        name="name"
+        name='name'
         helperText={(error && 'error') || (success && 'success') || ''}
         error={error}
         success={success}
         {...props}
       />
 
-      <StSvgIcon size="26px" iconId={error ? iconId.error : iconId.success} error={error} success={success} />
+      <StSvgIcon size='26px' iconId={error ? iconId.error : iconId.success} error={error} success={success} />
     </InputBox>
   );
 };

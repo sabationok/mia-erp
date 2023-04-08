@@ -1,4 +1,3 @@
-// import { useState } from 'react';
 import AuthForm from 'components/Forms/AuthForm';
 import RecoveryPasswordForm from 'components/Forms/RecoveryPasswordForm';
 import styled from 'styled-components';
@@ -11,13 +10,10 @@ export interface PageAuthProps {
 }
 
 const PageAuth: React.FC<PageAuthProps> = ({ register, recovery, login, sendRecoveryMail }) => {
-  // const [isLoginFrom, setIsLoginFrom] = useState();
 
-  console.log('register', register);
-  console.log('recovery', recovery);
 
   return (
-    <Page className="PageAuth">
+    <Page className='PageAuth'>
       {(register || login) && (
         <AuthForm
           title={register ? 'Реєстрація нового користувача' : 'Для початку роботи, будь ласка, авторизуйтесь.'}
