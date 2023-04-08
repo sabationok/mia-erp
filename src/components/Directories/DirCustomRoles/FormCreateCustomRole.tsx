@@ -1,7 +1,7 @@
 import InputTextPrimary from 'components/atoms/Inputs/InputTextPrimary';
 import TitleBase from 'components/atoms/TitleBase';
 import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
-import { ICustomRole } from 'data/roles.types';
+import { ICustomRole } from 'data/customRoles.types';
 import { useState } from 'react';
 import styled from 'styled-components';
 
@@ -14,13 +14,13 @@ export interface FormCreateCustomRoleProps extends Omit<ModalFormProps, 'onSubmi
 }
 
 const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({
-  onSubmit,
-  getCustomeRoleByName,
-  customRole,
-  edit,
-  _id,
-  ...props
-}) => {
+                                                                     onSubmit,
+                                                                     getCustomeRoleByName,
+                                                                     customRole,
+                                                                     edit,
+                                                                     _id,
+                                                                     ...props
+                                                                   }) => {
   const [formData, setFormData] = useState<Partial<ICustomRole>>(customRole ? customRole : {});
 
   function onSubmitWrapper() {
@@ -33,22 +33,23 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({
 
     setFormData(prev => ({ ...prev, [name]: value }));
   }
+
   return (
     <StModalForm {...props} onSubmit={onSubmitWrapper}>
       <Inputs>
         <InputTextPrimary
           value={formData.label ? formData.label : ''}
-          label="Назва"
-          name="label"
-          placeholder="Введіть назву ролі"
+          label='Назва'
+          name='label'
+          placeholder='Введіть назву ролі'
           onChange={onChange}
         />
 
         <InputTextPrimary
           value={formData.descr ? formData.descr : ''}
-          label="Коментар"
-          name="descr"
-          placeholder="Введіть короткий коментар до ролі"
+          label='Коментар'
+          name='descr'
+          placeholder='Введіть короткий коментар до ролі'
           onChange={onChange}
         />
 

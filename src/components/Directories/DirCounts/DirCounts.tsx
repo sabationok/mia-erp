@@ -9,6 +9,7 @@ import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FormCreateCount, { FormCreateCountProps } from './FormCreateCount';
 
 export type CountFilterOpt = FilterOpt<CountType>;
+
 export interface DirCountsProps extends ModalFormProps {
   title: string;
   filterOptions: CountFilterOpt[];
@@ -16,7 +17,7 @@ export interface DirCountsProps extends ModalFormProps {
 
 const DirCounts: React.FC<DirCountsProps> = props => {
   const modal = useModalProvider();
-  const { counts, createNewCount, editCount, deleteCount } = useCountsService();
+  const { counts, create, deleteById } = useCountsService();
   const [filteredData, setFilteredData] = useState<ICount[]>([]);
   const [dirType, setDirType] = useState<CountType>('ACTIVE');
 
@@ -27,7 +28,9 @@ const DirCounts: React.FC<DirCountsProps> = props => {
         title: 'Редагування рахунку',
         _id,
         type: dirType,
-        onSubmit: editCount,
+        onSubmit: (data) => {
+          console.log(data);
+        },
         count: counts.find(el => el._id === _id),
       },
     });
@@ -39,8 +42,23 @@ const DirCounts: React.FC<DirCountsProps> = props => {
       modalChildrenProps: {
         title: 'Створення субрахунку',
         type: dirType,
-        onSubmit: createNewCount,
+        onSubmit: (data) => {
+          console.log('owner', owner);
+        },
         create: true,
+      },
+    });
+  }
+
+  function onCreateParent() {
+    modal.handleOpenModal({
+      ModalChildren: FormCreateCount,
+      modalChildrenProps: {
+        title: 'Створити рахунок',
+        type: dirType,
+        onSubmit: (data: any) => {
+          create(data);
+        },
       },
     });
   }
@@ -52,13 +70,15 @@ const DirCounts: React.FC<DirCountsProps> = props => {
 
   return (
     <StModalForm {...props} onOptSelect={handleFilterData}>
-      <Box>
+      <Box className='box'>
         <DirList
-          onDelete={deleteCount}
+          onDelete={deleteById}
           onEdit={onEdit}
           onCreateChild={onCreateChild}
           list={filteredData}
           entryList={filteredData.filter(el => !el?.owner)}
+          createParentTitle='Свторити рахунок'
+          onCreateParent={onCreateParent}
         />
       </Box>
     </StModalForm>
@@ -72,7 +92,12 @@ const StModalForm = styled(ModalForm)`
   }
 `;
 const Box = styled.div`
-  padding: 12px;
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+  max-height: 100%;
+  padding: 0 12px;
 `;
 
 export default DirCounts;

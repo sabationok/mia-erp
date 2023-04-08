@@ -4,18 +4,18 @@ import styled from 'styled-components';
 import { ModalFormProps } from './ModalForm';
 
 const ModalFooter: React.FC<Pick<ModalFormProps, 'onSubmit'> & React.ImgHTMLAttributes<HTMLDivElement>> = ({
-  onSubmit,
-  ...props
-}) => {
+                                                                                                             onSubmit,
+                                                                                                             ...props
+                                                                                                           }) => {
   return (
-    <Footer {...props} className="modalFooter">
+    <Footer {...props} className='modalFooter'>
       {onSubmit && (
-        <ButtonIcon type="reset" variant="outlinedSmall">
+        <ButtonIcon type='reset' variant='outlinedSmall'>
           Закрити
         </ButtonIcon>
       )}
 
-      <ButtonIcon type={onSubmit ? 'submit' : 'reset'} variant="filledSmall">
+      <ButtonIcon type={onSubmit ? 'submit' : 'reset'} variant='filledSmall'>
         {onSubmit ? 'Прийняти' : 'Закрити'}
       </ButtonIcon>
     </Footer>
@@ -33,19 +33,21 @@ const Footer = styled.footer`
   bottom: 0;
   left: 0;
 
-  padding: 12px;
+  padding: 8px;
 
   width: 100%;
 
   border-bottom-right-radius: 2px;
   border-bottom-left-radius: 2px;
 
-  border: 1px solid ${({ theme }) => theme.trBorderClr};
+  border-top: 1px solid ${({ theme }) => theme.trBorderClr};
+  border-left: 1px solid ${({ theme }) => theme.trBorderClr};
+  border-right: 1px solid ${({ theme }) => theme.trBorderClr};
   color: ${({ theme }) => theme.fontColorHeader};
   fill: ${({ theme }) => theme.fillColorHeader};
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
   @media screen and (min-width: 768px) {
-    padding: 20px;
+    padding: 8px;
   }
 `;
 export default ModalFooter;

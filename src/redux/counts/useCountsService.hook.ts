@@ -1,17 +1,24 @@
-import { CountFormData } from 'components/Directories/DirCounts/FormCreateCount';
 import { useCountsSelector } from 'redux/selectors.store';
 import { useAppDispatch } from 'redux/store.store';
+import { ICount } from '../../data/counts.types';
 
 const useCountsService = () => {
   const dispatch = useAppDispatch();
   const state = useCountsSelector();
-  function createNewCount(formData: CountFormData) {
-    console.log('createNewCount', formData);
+
+  function create(submitData: Partial<ICount>) {
+    console.log({ submitData });
   }
-  function editCount(formData: CountFormData) {
-    console.log('editCount', formData);
+
+  function editById(_id: string, submitData: Partial<ICount>) {
+    console.log({ _id, submitData });
   }
-  function deleteCount(_id: string) {
+
+  function getById(_id: string) {
+    return state.counts.find(el => el._id === _id);
+  }
+
+  function deleteById(_id: string) {
     const { counts } = state;
     const countForDelete = counts.find(c => c._id === _id);
     const result = window.confirm(`Видалити "${countForDelete?.name}"?`);
@@ -23,9 +30,10 @@ const useCountsService = () => {
   return {
     dispatch,
     ...state,
-    createNewCount,
-    editCount,
-    deleteCount,
+    create,
+    editById,
+    getById,
+    deleteById,
   };
 };
 

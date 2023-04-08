@@ -1,6 +1,6 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IBase } from 'data/global.types';
-import { ICustomRole } from 'data/roles.types';
+import { ICustomRole } from 'data/customRoles.types';
 import { karina_avatar } from 'img';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 // import { actionLogInUser, actionLogOutUser, actionSetCurrentUser } from './authActions';

@@ -50,32 +50,32 @@ export const selects = {
   parentCategory: { label: 'Батьківська категорія', name: 'owner' },
 };
 
-export function getParentOptions(parentName, options) {
+export function getParentOptions(parentName: any, options: any) {
   if (!options) return [];
-  const filteredOptions = options.filter(option => !option?.owner);
+  const filteredOptions = options.filter((option: any) => !option?.owner);
 
-  const parentOptions = filteredOptions.map(option => {
+  const parentOptions = filteredOptions.map((option: any) => {
     return { ...option, label: option?.name, value: option?._id, dataKey: parentName };
   });
   return parentOptions || [];
 }
 
-export function getChildOptions({ childName, parentId, options }) {
+export function getChildOptions({ childName, parentId, options }: { childName: any, parentId: any, options: any }) {
   if (!childName || !parentId || !options) return [];
   // console.log('getChildOptions', { childName, parentId, options });
-  const filteredOptions = options.filter(option => option?.owner === parentId || option?.owner?._id === parentId);
+  const filteredOptions = options.filter((option: any) => option?.owner === parentId || option?.owner?._id === parentId);
 
-  const childOptions = filteredOptions.map(option => {
+  const childOptions = filteredOptions.map((option: any) => {
     return { ...option, label: option?.name, value: option?._id, dataKey: childName };
   });
 
   return childOptions || [];
 }
 
-export function getOwnerOptions(options) {
-  let ownerOptions = options.filter(opt => !opt?.owner);
+export function getOwnerOptions(options: any) {
+  let ownerOptions = options.filter((opt: any) => !opt?.owner);
   // console.log({ ownerOptions });
-  let prepearedOptions = ownerOptions.map(opt => {
+  let prepearedOptions = ownerOptions.map((opt: any) => {
     const { type, _id, code, descr, name } = opt;
 
     const label = `${name ? name : ''} ${code ? `(${code})` : ''} ${type ? `(${type})` : ''}`

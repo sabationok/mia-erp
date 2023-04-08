@@ -26,19 +26,11 @@ const DirProjects: React.FC<DirProjectsProps> = props => {
 };
 
 const StModalForm = styled(ModalForm)`
-  height: 95vh;
-  width: 95vw;
-
-  & .modalFooter {
-    padding: 8px;
-  }
+  width: max-content;
 `;
 const Box = styled.div`
   height: 100%;
 
-  & .tOverHead {
-    padding: 8px;
-  }
 `;
 
 export default DirProjects;

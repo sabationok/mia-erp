@@ -1,8 +1,8 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getAllRolesThunk } from './customRoles.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
-import { rolesMockData } from 'data/roles.data';
-import { ICustomRole } from 'data/roles.types';
+import { rolesMockData } from 'data/customRoles.data';
+import { ICustomRole } from 'data/customRoles.types';
 
 export interface ICustomRolesState {
   customRoles: ICustomRole[];
@@ -39,6 +39,7 @@ export const customRolesSlice = createSlice({
 function inPending(action: AnyAction) {
   return action.type.endsWith('pending');
 }
+
 function inError(action: AnyAction) {
   return action.type.endsWith('rejected');
 }

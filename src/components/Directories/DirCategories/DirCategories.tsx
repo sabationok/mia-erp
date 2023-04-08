@@ -5,6 +5,8 @@ import { founder } from 'utils';
 import styled from 'styled-components';
 import useCategoriesService from 'redux/categories/useCategoriesService.hook';
 import { CategoryTypes, ICategory } from 'data/categories.types';
+import { useModalProvider } from '../../ModalProvider/ModalProvider';
+import FormCreateCategory from './FormCreateCategory';
 
 export type CategoryFilterOpt = FilterOpt<CategoryTypes>;
 
@@ -14,16 +16,49 @@ export interface DirCategoriesProps extends ModalFormProps {
 }
 
 const DirCategories: React.FC<DirCategoriesProps> = props => {
-  const { categories } = useCategoriesService();
+  const modal = useModalProvider();
+  const { categories, create, deleteById, editById } = useCategoriesService();
   const [filteredData, setFilteredData] = useState<ICategory[]>(categories);
-  function onDelete(_id?: string) {
-    console.log(_id);
-  }
+  const [dirType, setDirType] = useState<CategoryTypes>('INCOME');
+
   function onEdit(_id?: string) {
-    console.log(_id);
+    const elForEdit = {};
+    modal.handleOpenModal({
+      ModalChildren: FormCreateCategory,
+      modalChildrenProps: {
+        title: 'Редагувати категорію',
+        edit: true,
+        type: dirType,
+        onSubmit: (data: any) => {
+          // editById(data);
+        },
+      },
+    });
   }
+
   function onCreateChild(ownerId?: string) {
-    console.log(ownerId);
+    modal.handleOpenModal({
+      ModalChildren: FormCreateCategory,
+      modalChildrenProps: {
+        title: 'Створити під-категорію',
+        type: dirType,
+        onSubmit: (data: any) => {
+          // createNewCount(data);
+        },
+      },
+    });
+  }
+
+  function onCreateParent() {
+    modal.handleOpenModal({
+      ModalChildren: FormCreateCategory,
+      modalChildrenProps: {
+        title: 'Створити категорію',
+        type: dirType,
+        onSubmit: (data) => {
+        },
+      },
+    });
   }
 
   return (
@@ -36,10 +71,12 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
       <Box>
         <DirList
           list={filteredData}
-          onDelete={onDelete}
+          onDelete={deleteById}
           onEdit={onEdit}
           onCreateChild={onCreateChild}
           entryList={filteredData.filter(el => !el?.owner)}
+          createParentTitle='Свторити категорію'
+          onCreateParent={onCreateParent}
         />
       </Box>
     </StModalForm>
@@ -54,7 +91,12 @@ const StModalForm = styled(ModalForm)`
   }
 `;
 const Box = styled.div`
-  padding: 12px;
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+  max-height: 100%;
+  padding: 0 12px;
 `;
 
 export default DirCategories;

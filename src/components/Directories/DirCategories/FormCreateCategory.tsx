@@ -1,32 +1,25 @@
-import ModalForm from 'components/ModalForm/ModalForm';
-import { CategoryTypes } from 'data/categories.types';
+import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
+import { CategoryTypes, ICategory } from 'data/categories.types';
 import React from 'react';
 import styled from 'styled-components';
 
-// function createSubmitData(data) {
-//   const { owner } = data;
-//   const submitData = {
-//     owner,
-//   };
-//   return submitData;
-// }
-export interface FormCreateCategoryProps {
+export interface FormCreateCategoryProps extends Omit<ModalFormProps, 'onSubmit'> {
   _id?: string;
   type: CategoryTypes;
-  owner?: string;
+  owner?: Partial<ICategory>;
   edit?: boolean;
+  onSubmit?: (data: CategoryFormData) => void;
 }
-const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({ type, owner, _id }) => {
-  // const dispatch = useAppDispatch();
-  // function handleSubmit({ formData, onSuccess, onError }) {
-  //   console.log('FormCreateCategory', { formData, onSuccess, onError });
 
-  //   const payload = { submitData: formData, onSuccess, onError };
-  // }
+export interface CategoryFormData extends Omit<ICategory, '_id' | 'createdAt' | 'updatedAt' | 'owner'> {
+  owner?: string | null;
+}
+
+const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({ type, owner, _id }) => {
   return (
     <ModalForm title={`${_id ? 'Редагувати' : 'Створити'} ${owner ? 'під-категорію' : 'категорію'}`}>
       <Inputs>
-        {owner}-{type}
+        {'category form'}
       </Inputs>
     </ModalForm>
   );

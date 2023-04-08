@@ -3,7 +3,7 @@ import { IUser } from 'redux/auth/auth.slice';
 
 export const usersDirColumns: CellTittleProps[] = [
   {
-    top: { name: 'ПІП', dataKey: 'fullName', uppercase: false },
+    top: { name: 'ПІП', dataKey: 'fullName' },
     bottom: { name: 'Роль', dataKey: 'permission', nestedDataKey: 'label' },
     width: '200px',
     action: 'cellDbl',

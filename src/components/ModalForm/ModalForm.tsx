@@ -17,6 +17,7 @@ export interface ModalFormProps extends Omit<React.FormHTMLAttributes<HTMLFormEl
   afterClose?: <T = any>(args?: T) => void | any;
   onOptSelect?: <V = any>(opt: FilterOpt<V> | any) => void | any;
 }
+
 export interface FilterOpt<V = any> extends Record<string, any> {
   _id?: string;
   label: string;
@@ -26,19 +27,19 @@ export interface FilterOpt<V = any> extends Record<string, any> {
 }
 
 const ModalForm: React.FC<ModalFormProps> = ({
-  title = 'default modal title',
-  footer = true,
-  children,
-  beforeSubmit,
-  filterOptions,
-  onSubmit,
-  afterSubmit,
-  beforeClose,
-  onReset,
-  afterClose,
-  onOptSelect,
-  ...props
-}) => {
+                                               title = 'default modal title',
+                                               footer = true,
+                                               children,
+                                               beforeSubmit,
+                                               filterOptions,
+                                               onSubmit,
+                                               afterSubmit,
+                                               beforeClose,
+                                               onReset,
+                                               afterClose,
+                                               onOptSelect,
+                                               ...props
+                                             }) => {
   const modal = useModal();
 
   function handleSubmit(ev: FormEvent<HTMLFormElement>) {
@@ -53,6 +54,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
     if (typeof onSubmit === 'function') onSubmit();
     if (typeof afterSubmit === 'function') afterSubmit();
   }
+
   function handleReset() {
     modal.onClose();
     // handleCloseModal();
@@ -61,19 +63,20 @@ const ModalForm: React.FC<ModalFormProps> = ({
     if (typeof onReset === 'function') onReset();
     if (typeof afterClose === 'function') afterClose();
   }
+
   function handleSelect(option: FilterOpt) {
     if (!onOptSelect) console.log('No passed "onSelect" handler', option);
     if (typeof onOptSelect === 'function') onOptSelect(option);
   }
 
   return (
-    <ModalFormContainer className="modalForm" onSubmit={handleSubmit} onReset={handleReset} {...props}>
+    <ModalFormContainer className='modalForm' onSubmit={handleSubmit} onReset={handleReset} {...props}>
       <ModalHeader title={title} />
 
-      <ModalMain className="main" filterOn={filterOptions ? true : false}>
+      <ModalMain className='main' filterOn={filterOptions ? true : false}>
         {filterOptions && <ModalFilter onOptSelect={handleSelect} filterOptions={filterOptions} />}
 
-        <MainScroll className="scroll">{children}</MainScroll>
+        <MainScroll className='scroll'>{children}</MainScroll>
       </ModalMain>
 
       {footer && <ModalFooter onSubmit={onSubmit} />}
@@ -93,15 +96,15 @@ const ModalFormContainer = styled.form`
   min-width: 250px;
   max-width: 100%;
 
-  border-radius: 2px;
   overflow: hidden;
 
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: ${({ theme }) => theme.globals.shadowMain};
   fill: ${({ theme }) => theme.fillColor};
   color: ${({ theme }) => theme.fontColor};
-
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
 
+  border-radius: 2px;
+  border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
   /* resize: both; */
 
   @media screen and (max-width: 480px) {
@@ -116,7 +119,7 @@ const ModalFormContainer = styled.form`
 const ModalMain = styled.main<{ filterOn: boolean }>`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: ${({ filterOn }) => (filterOn ? 'min-content 1fr' : '1fr')};
+  grid-template-rows: ${({ filterOn }) => (filterOn ? '32px 1fr' : '1fr')};
 
   overflow: hidden;
   /* position: relative; */

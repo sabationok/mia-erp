@@ -14,16 +14,16 @@ export interface DirListProps extends Partial<DirListItemAddsProps> {
 }
 
 const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLUListElement>> = ({
-  entryList,
-  list,
-  owner,
-  onDelete,
-  onEdit,
-  onCreateChild,
-  onCreateParent,
-  createParentTitle,
-  ...pops
-}) => {
+                                                                                    entryList,
+                                                                                    list,
+                                                                                    owner,
+                                                                                    onDelete,
+                                                                                    onEdit,
+                                                                                    onCreateChild,
+                                                                                    onCreateParent,
+                                                                                    createParentTitle,
+                                                                                    ...pops
+                                                                                  }) => {
   const renderList = entryList ? entryList : list;
 
   return (
@@ -47,7 +47,7 @@ const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLUListElement>> =
 
       {onCreateParent && (
         <CreateParent>
-          <ButtonIcon variant="outlinedSmall" onClick={() => onCreateParent()}>
+          <ButtonIcon variant='outlinedSmall' onClick={() => onCreateParent()}>
             {createParentTitle || 'createParentTitle'}
           </ButtonIcon>
         </CreateParent>
@@ -93,7 +93,7 @@ const CreateParent = styled.div`
   left: 0;
   z-index: 5;
 
-  padding: 20px;
+  padding: 8px;
 
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
 

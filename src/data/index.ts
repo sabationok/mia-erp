@@ -1,22 +1,20 @@
-import { statusDataMap, colors, statusData } from './statuses.data';
+import { colors, statusData, statusDataMap } from './statuses.data';
 import {
+  transactionsColumns,
   transactionsMockData,
   transactionsSearchParams,
   trTableActions,
-  transactionsColumns,
 } from './transactions.data';
 import { trCategories } from './categories.data';
-import addButtons from './createActions.data';
+import addButtons from './future/createActions.data';
 import directories from './directories.data';
 import { iconId } from '../img/sprite/iconId.data';
-import { pages, appPages } from './pages.data';
+import { appPages, pages } from './pages.data';
 import { raports } from './raports.data';
-import { companies } from './companies.data';
-import createActions from './createActions.data';
+import { companies, companiesTableColumns } from './companies.data';
 import { appSettings } from './appSettings.data';
-import { selects, getParentOptions, getChildOptions, getOwnerOptions } from './select.data';
+import { getChildOptions, getOwnerOptions, getParentOptions, selects } from './select.data';
 import sideBarLeftData from './sideBarLeft.data';
-import { companiesTableColumns } from './companies.data';
 
 export {
   sideBarLeftData,
@@ -37,7 +35,6 @@ export {
   raports,
   companies,
   appSettings,
-  createActions,
   transactionsMockData,
   transactionsColumns,
   transactionsSearchParams,

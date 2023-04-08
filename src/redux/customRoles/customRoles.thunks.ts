@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosResponse } from 'axios';
-import { ICustomRole } from 'data/roles.types';
+import { ICustomRole } from 'data/customRoles.types';
 // import { any } from 'data/counts.types';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { axiosErrorCheck } from 'utils';
@@ -19,11 +19,14 @@ export const rolesApiRoutes = {
 export interface IAllCustomRoles {
   data: ICustomRole[];
 }
+
 export interface IPayloadGetAllRoles {
   submitData?: null;
   onSuccess: (data?: ICustomRole[]) => void;
+
   onError(error?: StateErrorType): void;
 }
+
 export const getAllRolesThunk = createAsyncThunk<IAllCustomRoles, IPayloadGetAllRoles>(
   'customRoles/getAllCustomRolesThunk',
   async (payload, thunkAPI) => {
@@ -38,5 +41,5 @@ export const getAllRolesThunk = createAsyncThunk<IAllCustomRoles, IPayloadGetAll
 
       return thunkAPI.rejectWithValue(axiosErrorCheck(error));
     }
-  }
+  },
 );

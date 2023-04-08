@@ -1,30 +1,21 @@
 import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
-import TableList, { ITableListProps } from 'components/TableList/TableList';
 import React from 'react';
 import styled from 'styled-components';
+import DirList from './DirList/DirList';
 
 export interface DirMarksProps extends ModalFormProps {
   title: string;
-  tableSettings?: ITableListProps;
+
 }
 
-const DirMarks: React.FC<DirMarksProps> = ({ tableSettings, ...props }) => {
+const DirMarks: React.FC<DirMarksProps> = ({ ...props }) => {
   return (
     <StModalForm {...props}>
-      <TableList {...tableSettings} />
+      <DirList list={[]} />
     </StModalForm>
   );
 };
 const StModalForm = styled(ModalForm)`
-  height: 95vh;
-  width: 95vw;
 
-  & .modalFooter {
-    padding: 8px;
-  }
-
-  & .tOverHead {
-    padding: 8px;
-  }
 `;
 export default DirMarks;

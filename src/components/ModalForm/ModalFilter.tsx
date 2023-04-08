@@ -1,14 +1,16 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ModalFormProps } from './ModalForm';
 
-export interface ModalFormFilterProps extends Pick<ModalFormProps, 'filterOptions' | 'onOptSelect'> {}
+export interface ModalFormFilterProps extends Pick<ModalFormProps, 'filterOptions' | 'onOptSelect'> {
+}
+
 const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivElement>> = ({
-  filterOptions,
-  onOptSelect,
-  ...props
-}) => {
+                                                                                              filterOptions,
+                                                                                              onOptSelect,
+                                                                                              ...props
+                                                                                            }) => {
   const [current, setCurrent] = useState<number>(0);
 
   useEffect(() => {
@@ -19,13 +21,13 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <Filter className="filter" gridRepeat={filterOptions?.length} {...props}>
+    <Filter className='filter' gridRepeat={filterOptions?.length} {...props}>
       {filterOptions &&
         filterOptions?.length > 0 &&
         filterOptions?.map((opt, idx) => (
           <StButtonIcon
             key={idx}
-            variant="def"
+            variant='def'
             className={current === idx ? 'filterBtn active' : 'filterBtn'}
             onClick={() => {
               setCurrent(idx);
@@ -46,7 +48,7 @@ const Filter = styled.div<{ gridRepeat?: number }>`
   align-items: center;
   grid-template-columns: ${({ gridRepeat }) => `repeat(${gridRepeat || 1}, 1fr)`};
 
-  height: 44px;
+  height: 100%;
 
   background-color: transparent;
 `;
@@ -79,6 +81,7 @@ const StButtonIcon = styled(ButtonIcon)`
     height: 1px;
     background-color: ${({ theme }) => theme.trBorderClr};
   }
+
   &::after {
     display: block;
     content: '';
