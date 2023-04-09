@@ -6,11 +6,13 @@ import { raports } from './raports.data';
 // import Notifications from '../components/SideBarContent/Notifications';
 import Directories from 'components/SideBarContent/Directories';
 import Raports from 'components/SideBarContent/Raports/Raports';
+import CompanySettings from '../components/SideBarContent/CompanySettings';
+import { comapnySettings } from './companySettings.data';
 
 export const sideBarButtons: ISidebarOptionsItem[] = [
   { iconId: iconId.folder, maxWidth: '', options: directories, title: 'Довідники', RenderComponent: Directories },
   { iconId: iconId.assignmentOutlined, maxWidth: '', options: raports, title: 'Звіти', RenderComponent: Raports },
-  // { iconId: iconId.statistics, maxWidth: '', options: [], title: 'Статистика', RenderComponent: () => <></> },
+  { iconId: iconId.bank, maxWidth: '', options: comapnySettings, title: 'Компанія', RenderComponent: CompanySettings },
 ];
 export const sideBarButtonsBottom: ISidebarOptionsItem[] = [
   // { iconId: iconId.notifications, maxWidth: '480px', options: [], title: 'Сповіщення', RenderComponent: Notifications },

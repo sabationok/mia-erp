@@ -15,11 +15,14 @@ export interface CategoryFormData extends Omit<ICategory, '_id' | 'createdAt' | 
   owner?: string | null;
 }
 
-const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({ type, owner, _id }) => {
+const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({ type, owner, _id, edit }) => {
   return (
     <ModalForm title={`${_id ? 'Редагувати' : 'Створити'} ${owner ? 'під-категорію' : 'категорію'}`}>
       <Inputs>
-        {'category form'}
+        {`_id - ${_id}`}
+        {`type - ${type}`}
+        {`owner - ${owner?.label || owner?.name}`}
+
       </Inputs>
     </ModalForm>
   );

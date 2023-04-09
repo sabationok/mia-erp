@@ -19,8 +19,8 @@ export interface ISideBarCTX {
   sideBarButtonsBottom?: ISidebarOptionsItem[];
 }
 
-export const SideBarCTX = createContext<ISideBarCTX>({});
-export const useSideBar = () => useContext(SideBarCTX);
+export const SideBarCTX = createContext({});
+export const useSideBar = () => useContext(SideBarCTX) as ISideBarCTX;
 
 const SideBarProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const [RightSideContent, setRightSideContent] = useState<ISidebarOptionsItem | null | undefined>(null);
@@ -31,6 +31,7 @@ const SideBarProvider: React.FC<{ children?: React.ReactNode }> = ({ children })
       return prev === mewContent ? null : mewContent;
     });
   }
+
   function onTogglerClick() {
     setIsOpen(!isOpen);
     handleOptionsState();

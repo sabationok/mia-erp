@@ -49,6 +49,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
     });
   }
 
+
   function onCreateParent() {
     modal.handleOpenModal({
       ModalChildren: FormCreateCategory,
@@ -56,6 +57,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
         title: 'Створити категорію',
         type: dirType,
         onSubmit: (data) => {
+
         },
       },
     });

@@ -6,7 +6,7 @@ export interface IRaportsProps {
 }
 
 const Raports: React.FC<IRaportsProps> = props => {
-  console.log('Raports', props);
+
   return (
     <Container>
       <AccordeonList options={props.options}></AccordeonList>

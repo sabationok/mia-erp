@@ -1,6 +1,6 @@
 import React from 'react';
 import ModalForm, { FilterOpt, ModalFormProps } from 'components/ModalForm/ModalForm';
-import DirList from '../DirList/DirList';
+import DirList from '../../Directories/DirList/DirList';
 // import { founder } from 'utils';
 import styled from 'styled-components';
 import { CountType } from 'data/counts.types';
@@ -9,6 +9,7 @@ import useCustomRolesService from 'redux/customRoles/useCustomRolesServise.hook'
 import FormCreateCustomRole from './FormCreateCustomRole';
 
 export type CustomRoleFilterOpt = FilterOpt<CountType>;
+
 export interface DirCustomRolesProps extends ModalFormProps {
   title: string;
 }
@@ -28,6 +29,7 @@ const DirCustomRoles: React.FC<DirCustomRolesProps> = props => {
       },
     });
   }
+
   function onCreateParent() {
     modal.handleOpenModal({
       ModalChildren: FormCreateCustomRole,
@@ -46,7 +48,7 @@ const DirCustomRoles: React.FC<DirCustomRolesProps> = props => {
         <DirList
           onDelete={deleteById}
           onEdit={onEdit}
-          createParentTitle="Свторити роль"
+          createParentTitle='Свторити роль'
           onCreateParent={onCreateParent}
           // list={[...customRoles, ...customRoles, ...customRoles, ...customRoles]}
           list={customRoles}

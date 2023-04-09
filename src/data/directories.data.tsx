@@ -4,12 +4,10 @@
 import DirCategories, { DirCategoriesProps } from 'components/Directories/DirCategories/DirCategories';
 import DirCounts, { DirCountsProps } from 'components/Directories/DirCounts/DirCounts';
 import DirProjects, { DirProjectsProps } from 'components/Directories/DirProjects/DirProjects';
-import DirCustomRoles, { DirCustomRolesProps } from 'components/Directories/DirCustomRoles/DirCustomRoles';
+import { DirCustomRolesProps } from 'components/CompanySettings/DirCustomRoles/DirCustomRoles';
 import { iconId } from '../img/sprite/iconId.data';
-import DirUsers, { DirUsersProps } from 'components/Directories/DirUsers';
 import DirMarks, { DirMarksProps } from 'components/Directories/DirMarks';
 import DirContractors, { DirContractorsProps } from 'components/Directories/DirContractors';
-import { usersDirColumns, usersMockData } from './usersDir.data';
 import { contractorsColumns, contractorsMockData } from './contractors.data';
 
 export interface IDirectory {
@@ -48,19 +46,10 @@ const ContractorsProps: DirContractorsProps = {
   tableSettings: { tableData: contractorsMockData, tableTitles: contractorsColumns },
   footer: false,
 };
-const CustomRolesProps: DirCustomRolesProps = {
-  title: 'Ролі',
-};
-const UsersProps: DirUsersProps = {
-  title: 'Користувачі',
-  tableSettings: {
-    tableTitles: usersDirColumns,
-    tableData: usersMockData,
-  },
-};
+
 
 const MarksProps: DirMarksProps = {
-  title: 'Мітки',
+  title: 'Мітки', footer: false,
 };
 
 const directories: IDirectory[] = [
@@ -99,20 +88,7 @@ const directories: IDirectory[] = [
     modalChildrenProps: MarksProps,
     disabled: true,
   },
-  {
-    title: UsersProps.title,
-    iconId: iconId.persons,
-    ModalChildren: DirUsers, // !!!!
-    modalChildrenProps: UsersProps,
-    disabled: true,
-  },
-  {
-    title: CustomRolesProps.title,
-    iconId: iconId.lockPerson,
-    ModalChildren: DirCustomRoles,
-    modalChildrenProps: CustomRolesProps,
-    disabled: true,
-  },
+
 ];
 
 export default directories;
