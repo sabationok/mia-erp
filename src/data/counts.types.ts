@@ -1,6 +1,6 @@
 import { IBase } from './global.types';
 
-export type CountType = 'ACTIVE' | 'PASSIVE';
+
 export interface ICount extends IBase {
   name?: string;
   label?: string;
@@ -11,3 +11,10 @@ export interface ICount extends IBase {
   def?: string;
   owner?: ICount;
 }
+
+export const countsTypesMap = {
+  PASSIVE: 'ПАСИВНИЙ',
+  ACTIVE: 'АКТИВНИЙ',
+};
+
+export type CountType = keyof typeof countsTypesMap;

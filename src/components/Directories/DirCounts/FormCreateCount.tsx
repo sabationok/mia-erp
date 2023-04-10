@@ -1,6 +1,6 @@
 import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
 import styled from 'styled-components';
-import { CountType, ICount } from 'data/counts.types';
+import { countsTypesMap, CountType, ICount } from 'data/counts.types';
 import React, { useState } from 'react';
 import InputTextPrimary from 'components/atoms/Inputs/InputTextPrimary';
 
@@ -49,7 +49,7 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
   return (
     <ModalForm onSubmit={formEventWrapper(onSubmit, formData)} {...props} >
       <Inputs>
-        <InputTextPrimary label='Тип' name='type' defaultValue={type} disabled />
+        <InputTextPrimary label='Тип' name='type' placeholder={countsTypesMap[type]} disabled />
 
         <InputTextPrimary
           label='Назва'
