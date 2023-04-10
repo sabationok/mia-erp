@@ -5,15 +5,16 @@ import styled from 'styled-components';
 export interface ModalFormHeaderProps {
   title: string;
 }
-const ModalHeader: React.FC<ModalFormHeaderProps & React.ImgHTMLAttributes<HTMLDivElement>> = ({
-  title = 'default header titile',
-  ...props
-}) => {
-  return (
-    <Header {...props} className="header">
-      <Title className="title">{title}</Title>
 
-      <ButtonIcon type="reset" size="28px" iconId={iconId.close} variant="onlyIcon" />
+const ModalHeader: React.FC<ModalFormHeaderProps & React.ImgHTMLAttributes<HTMLDivElement>> = ({
+                                                                                                 title = 'default header titile',
+                                                                                                 ...props
+                                                                                               }) => {
+  return (
+    <Header {...props} className='header'>
+      <Title className='title' title={title || ''}>{title}</Title>
+
+      <ButtonIcon type='reset' size='28px' iconId={iconId.close} variant='onlyIcon' />
     </Header>
   );
 };
@@ -26,6 +27,10 @@ const Header = styled.header`
   /* position: sticky;
   top: 0;
   left: 0; */
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 
   width: 100%;
   min-height: 28px;

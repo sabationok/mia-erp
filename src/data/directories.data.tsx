@@ -53,7 +53,7 @@ const MarksProps: DirMarksProps = {
 const directories: IDirectory[] = [
   {
     title: CountsProps.title,
-    iconId: iconId.bank,
+    iconId: iconId.wallet,
     ModalChildren: DirCounts,
     modalChildrenProps: CountsProps,
     disabled: false,

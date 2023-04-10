@@ -17,15 +17,16 @@ export interface DirCountsProps extends ModalFormProps {
 
 const DirCounts: React.FC<DirCountsProps> = props => {
   const modal = useModalProvider();
-  const { counts, create, deleteById } = useCountsService();
+  const { counts, create, deleteById, getById } = useCountsService();
   const [filteredData, setFilteredData] = useState<ICount[]>([]);
   const [dirType, setDirType] = useState<CountType>('ACTIVE');
 
   function onEdit(_id: string) {
+    const count = getById(_id);
     modal.handleOpenModal<FormCreateCountProps>({
       ModalChildren: FormCreateCount,
       modalChildrenProps: {
-        title: 'Редагування рахунку',
+        title: `Редагування ${count?.owner ? 'суб-рахунку' : 'рахунку'}: "${count?.label || count?.name}"`,
         _id,
         type: dirType,
         onSubmit: (data) => {

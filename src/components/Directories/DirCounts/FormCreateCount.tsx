@@ -77,7 +77,6 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
           value={formData?.descr ? formData?.descr : ''}
         />
 
-        {/* <TextareaPrimary label="Опис" name="descr" onChange={onFormDataChange} placeholder="Введіть опис" /> */}
       </Inputs>
     </ModalForm>
   );
