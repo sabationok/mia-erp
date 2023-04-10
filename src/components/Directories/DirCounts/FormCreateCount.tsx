@@ -47,11 +47,7 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
   }
 
   return (
-    <ModalForm
-      // title={`${_id ? 'Редагувати' : 'Створити'} ${owner ? 'субрахунок' : 'рахунок'}`}
-      onSubmit={formEventWrapper(onSubmit, formData)}
-      {...props}
-    >
+    <ModalForm onSubmit={formEventWrapper(onSubmit, formData)} {...props} >
       <Inputs>
         <InputTextPrimary label='Тип' name='type' defaultValue={type} disabled />
 

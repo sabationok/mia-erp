@@ -69,6 +69,9 @@ export interface ITableListProps extends React.HTMLAttributes<HTMLDivElement> {
   rowGrid?: any;
   children?: React.ReactNode;
   useFilterSelectors?: () => FilterSelectorType[] | [];
+  onRowClick?: <T = any>(rowData: T) => void;
+  onUnSelectRow?: <T = any>(rowData: T) => void;
+  onSelectRow?: <T = any[]>(rowsData: T) => void;
 }
 
 export interface ITableListContext {
@@ -92,6 +95,9 @@ const TableList: React.FC<ITableListProps> = ({
                                                 tableSearchParams,
                                                 tableActions,
                                                 footer = false,
+                                                onRowClick,
+                                                onSelectRow,
+                                                onUnSelectRow,
                                                 ...props
                                               }) => {
   const [selectedRows, setSelectedRows] = useState<TabeleSelectedRow[] | any[]>([]);
@@ -102,12 +108,22 @@ const TableList: React.FC<ITableListProps> = ({
     gridTemplateColumns: `repeat(${tableTitles?.length}, min-content)`,
   };
 
-  function onSelectRow({ rowData }: { ev?: Event; rowData: any }) {
-    setSelectedRows(prev => [rowData, ...prev]);
+  function onSelectRowWrapper({ rowData }: { ev?: Event; rowData: any }) {
+    setSelectedRows(prev => {
+      typeof onSelectRow === 'function' && onSelectRow([rowData, ...prev]);
+      return [rowData, ...prev];
+    });
   }
 
-  function onUnselectRow({ rowData }: { ev?: Event; rowData: { _id: string } }) {
-    setSelectedRows(prev => prev.filter(row => row._id !== rowData._id));
+  function onUnSelectRowWrapper({ rowData }: { ev?: Event; rowData?: { _id: string } }) {
+    setSelectedRows(prev => {
+      typeof onUnSelectRow === 'function' && onUnSelectRow(rowData);
+      return prev.filter(row => row._id !== rowData?._id);
+    });
+  }
+
+  function onRowClickWrapper(rowData: any) {
+    typeof onRowClick === 'function' && onRowClick(rowData);
   }
 
   const CTX = {
@@ -120,10 +136,11 @@ const TableList: React.FC<ITableListProps> = ({
     rowGrid,
     rowRef,
     selectedRows,
-    onSelectRow,
-    onUnselectRow,
+    onSelectRow: onSelectRowWrapper,
+    onUnselectRow: onUnSelectRowWrapper,
     tableData,
     isLoading,
+    onRowClick: onRowClickWrapper,
     ...props,
   };
 

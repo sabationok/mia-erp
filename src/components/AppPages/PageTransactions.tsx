@@ -1,22 +1,25 @@
 import TableList from 'components/TableList/TableList';
 import { takeFullGridArea } from './pagesStyles';
-import { transactionsColumns, transactionsMockData, transactionsSearchParams, trTableActions } from 'data';
+import { transactionsColumns, transactionsSearchParams } from 'data';
 
 import styled from 'styled-components';
-import useTransactionsServise from 'redux/transactions/useTransactionsServise.hook';
+import useTransactionsServise from 'redux/transactions/useTransactionsService.hook';
+import { useTransactionsActions } from '../../data/transactions.data';
 
 const PageTransactions = () => {
   const { transactions, useFilterSelectors } = useTransactionsServise();
   // const { transactions, isLoading, error } = useTransactionsSelector();
   // const [selectedTr, setSelectedTr] = useState<any>(null);
+  const trActions = useTransactionsActions();
 
   return (
     <Page>
       <TableList
         {...{
-          tableData: transactionsMockData || transactions,
+
+          tableData: transactions,
           tableTitles: transactionsColumns,
-          tableActions: trTableActions,
+          tableActions: trActions,
           tableSearchParams: transactionsSearchParams.filter(el => el.search),
           tableSortParams: transactionsSearchParams.filter(el => el.sort),
           useFilterSelectors,

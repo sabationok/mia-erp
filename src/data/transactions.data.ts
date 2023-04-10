@@ -1,9 +1,9 @@
-import { SelectItem } from 'components/TableList/TableList';
-import { TableActionsProps } from 'components/TableList/TableList';
+import { SelectItem, TableActionsProps, useTable } from 'components/TableList/TableList';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { iconId } from '../img/sprite/iconId.data';
 import { selects } from './select.data';
 import { ITransaction } from './transactions.types';
+import useTransactionsService from '../redux/transactions/useTransactionsService.hook';
 
 export const transactionsColumns: CellTittleProps[] = [
   {
@@ -248,6 +248,133 @@ export const transactionsSearchParams: SelectItem[] = [
   { label: 'Статус', dataKey: 'status', filter: false, search: true, sort: true },
 ];
 
+
+export const useTransactionsActions = () => {
+  const { editById, create, deleteById } = useTransactionsService();
+  const table = useTable();
+
+
+  return {
+    top: [
+      {
+        name: 'editTr',
+        title: 'Редагування транзакції',
+        iconId: iconId.edit,
+        onClick: () => {
+          console.log(table);
+        },
+        disableChek: () => false,
+      },
+      {
+        name: 'copyTr',
+        title: 'Копіювання транзакції',
+        iconId: iconId.copy,
+        onClick: () => {
+        },
+        disableChek: () => false,
+      },
+      {
+        name: 'deleteTr',
+        title: 'Видалення транзакції',
+        iconId: iconId.delete,
+        iconSize: '90%',
+        onClick: () => {
+        },
+        disableChek: () => false,
+      },
+    ],
+    bottom: [
+      {
+        name: 'deleteTr',
+        title: 'Дохід',
+        iconId: iconId.INCOME,
+        iconSize: '90%',
+        onClick: () => {
+        },
+        disableChek: () => false,
+      },
+      {
+        name: 'deleteTr',
+        title: 'Переказ між рахунками',
+        iconId: iconId.TRANSFER,
+        iconSize: '90%',
+        onClick: () => {
+        },
+        disableChek: () => false,
+      },
+      {
+        name: 'deleteTr',
+        title: 'Витрата',
+        iconId: iconId.EXPENSE,
+        iconSize: '90%',
+        onClick: () => {
+        },
+        disableChek: () => false,
+      },
+    ],
+  };
+};
+
+
+export const trTableActions: TableActionsProps = {
+  top: [
+    {
+      name: 'editTr',
+      title: 'Редагування транзакції',
+      iconId: iconId.edit,
+      onClick: () => {
+      },
+      disableChek: () => false,
+    },
+    {
+      name: 'copyTr',
+      title: 'Копіювання транзакції',
+      iconId: iconId.copy,
+      onClick: () => {
+      },
+      disableChek: () => false,
+    },
+    {
+      name: 'deleteTr',
+      title: 'Видалення транзакції',
+      iconId: iconId.delete,
+      iconSize: '90%',
+      onClick: () => {
+      },
+      disableChek: () => false,
+    },
+  ],
+  bottom: [
+    {
+      name: 'deleteTr',
+      title: 'Дохід',
+      iconId: iconId.INCOME,
+      iconSize: '90%',
+      onClick: () => {
+      },
+      disableChek: () => false,
+    },
+    {
+      name: 'deleteTr',
+      title: 'Переказ між рахунками',
+      iconId: iconId.TRANSFER,
+      iconSize: '90%',
+      onClick: () => {
+      },
+      disableChek: () => false,
+    },
+    {
+      name: 'deleteTr',
+      title: 'Витрата',
+      iconId: iconId.EXPENSE,
+      iconSize: '90%',
+      onClick: () => {
+      },
+      disableChek: () => false,
+    },
+  ],
+};
+
 export const transactionsMockData: ITransaction[] = [
   {
     _id: '63d892d156c42da6f5f95a5e',
@@ -300,55 +427,3 @@ export const transactionsMockData: ITransaction[] = [
     updatedAt: '2023-01-31T04:02:25.788Z',
   },
 ];
-export const trTableActions: TableActionsProps = {
-  top: [
-    {
-      name: 'editTr',
-      title: 'Редагування транзакції',
-      iconId: iconId.edit,
-      onClick: () => {},
-      disableChek: () => false,
-    },
-    {
-      name: 'copyTr',
-      title: 'Копіювання транзакції',
-      iconId: iconId.copy,
-      onClick: () => {},
-      disableChek: () => false,
-    },
-    {
-      name: 'deleteTr',
-      title: 'Видалення транзакції',
-      iconId: iconId.delete,
-      iconSize: '90%',
-      onClick: () => {},
-      disableChek: () => false,
-    },
-  ],
-  bottom: [
-    {
-      name: 'deleteTr',
-      title: 'Дохід',
-      iconId: iconId.INCOME,
-      iconSize: '90%',
-      onClick: () => {},
-      disableChek: () => false,
-    },
-    {
-      name: 'deleteTr',
-      title: 'Переказ між рахунками',
-      iconId: iconId.TRANSFER,
-      iconSize: '90%',
-      onClick: () => {},
-      disableChek: () => false,
-    },
-    {
-      name: 'deleteTr',
-      title: 'Витрата',
-      iconId: iconId.EXPENSE,
-      iconSize: '90%',
-      onClick: () => {},
-      disableChek: () => false,
-    },
-  ],
-};

@@ -78,8 +78,7 @@ const StButtonIcon = styled(ButtonIcon)`
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 1px;
-    background-color: ${({ theme }) => theme.trBorderClr};
+    border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
   }
 
   &::after {
@@ -88,8 +87,6 @@ const StButtonIcon = styled(ButtonIcon)`
     position: absolute;
     bottom: 0;
     left: 50%;
-    height: 1px;
-    width: 100%;
     height: 2px;
     width: 0;
     transition: all ${({ theme }) => theme.globals.timingFnMui};

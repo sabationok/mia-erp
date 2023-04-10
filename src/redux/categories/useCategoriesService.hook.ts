@@ -1,20 +1,22 @@
 import { useCategoriesSelector } from 'redux/selectors.store';
 import { useAppDispatch } from 'redux/store.store';
-import { ICategory } from '../../data/categories.types';
+import { ICategoryFormData } from '../../data/categories.types';
 
 const useCategoriesService = () => {
   const dispatch = useAppDispatch();
   const state = useCategoriesSelector();
 
-  function create(submitData: Partial<ICategory>) {
+  function create(submitData: ICategoryFormData) {
     console.log({ submitData });
   }
 
   function deleteById(_id: string) {
-    console.log({ _id });
+    const categoryForDel = getById(_id);
+    if (window.confirm(`Бажаєте видалити ${categoryForDel?.owner ? 'під-категорію' : 'категорію'}: ${categoryForDel?.label || categoryForDel?.name}`))
+      console.log({ _id });
   }
 
-  function editById(_id: string, submitData: Partial<ICategory>) {
+  function editById(_id: string, submitData: ICategoryFormData) {
     console.log({ _id, submitData });
   }
 

@@ -14,6 +14,7 @@ export interface DirListItemProps {
   balance?: number;
   currency?: string;
 }
+
 export interface DirListItemAddsProps {
   list: DirListItemProps[];
   canHaveChild: boolean;
@@ -23,18 +24,19 @@ export interface DirListItemAddsProps {
 }
 
 const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
-  label,
-  name,
-  owner,
-  canHaveChild,
-  _id,
-  list,
-  onDelete,
-  onEdit,
-  onCreateChild,
-}) => {
+                                                                          label,
+                                                                          name,
+                                                                          owner,
+                                                                          canHaveChild,
+                                                                          _id,
+                                                                          list,
+                                                                          onDelete,
+                                                                          onEdit,
+                                                                          onCreateChild,
+                                                                        }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const childrensList = list?.filter(el => el?.owner === _id || el?.owner?._id === _id);
+
 
   function onOpenClick() {
     setIsOpen(prev => !prev);
@@ -54,9 +56,9 @@ const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
         <ActionsField canHaveChild={canHaveChild}>
           {canHaveChild && onCreateChild && (
             <ButtonIcon
-              variant="onlyIcon"
-              iconSize="24px"
-              iconId="plus"
+              variant='onlyIcon'
+              iconSize='24px'
+              iconId='plus'
               onClick={evHandlerWrapper(onCreateChild, _id)}
             />
           )}
@@ -67,9 +69,9 @@ const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
 
           {!(!childrensList || childrensList?.length === 0) && (
             <ButtonIcon
-              variant="onlyIconNoEffects"
+              variant='onlyIconNoEffects'
               iconId={isOpen ? 'SmallArrowUp' : 'SmallArrowDown'}
-              iconSize="24px"
+              iconSize='24px'
               onClick={onOpenClick}
             />
           )}
@@ -77,11 +79,11 @@ const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
 
         <ActionsField>
           {onEdit && (
-            <ButtonIcon variant="onlyIcon" iconSize="24px" iconId="edit" onClick={evHandlerWrapper(onEdit, _id)} />
+            <ButtonIcon variant='onlyIcon' iconSize='24px' iconId='edit' onClick={evHandlerWrapper(onEdit, _id)} />
           )}
 
           {onDelete && (
-            <ButtonIcon variant="onlyIcon" iconSize="24px" iconId="delete" onClick={evHandlerWrapper(onDelete, _id)} />
+            <ButtonIcon variant='onlyIcon' iconSize='24px' iconId='delete' onClick={evHandlerWrapper(onDelete, _id)} />
           )}
         </ActionsField>
       </ItemGrid>

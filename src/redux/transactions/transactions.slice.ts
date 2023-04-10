@@ -1,12 +1,5 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {
-  getAllTransactionsThunk,
-  // addManyTransactionsThunk,
-  // addTransactionThunk,
-  // deleteTransactionThunk,
-  // editTransactionThunk,
-} from 'redux/transactions/transactions.thunks';
-import { transactionsMockData } from 'data';
+import { getAllTransactionsThunk } from 'redux/transactions/transactions.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { ITransaction } from 'data/transactions.types';
 
@@ -20,8 +13,8 @@ export interface ITransactionsState {
 const initialState: ITransactionsState = {
   isLoading: false,
   error: null,
-  transactions: [...transactionsMockData],
-  filteredTransactions: [...transactionsMockData],
+  transactions: [...[]],
+  filteredTransactions: [...[]],
 };
 
 export const transactionsSlice = createSlice({
@@ -48,6 +41,7 @@ export const transactionsSlice = createSlice({
 function inPending(action: AnyAction) {
   return action.type.endsWith('pending');
 }
+
 function inError(action: AnyAction) {
   return action.type.endsWith('rejected');
 }

@@ -6,6 +6,7 @@ import styled, { css } from 'styled-components';
 
 const QuickActions: React.FC<{ top?: any[]; bottom?: any[]; footer?: boolean }> = ({ top, bottom, footer }) => {
   const [isShown, setIsShown] = useState(false);
+
   function onMenuBtnClick() {
     setIsShown(!isShown);
   }
@@ -15,6 +16,7 @@ const QuickActions: React.FC<{ top?: any[]; bottom?: any[]; footer?: boolean }> 
       if (ev.target instanceof HTMLElement && !ev.target.closest('[data-burger]')) setIsShown(false);
       if (ev instanceof KeyboardEvent && ev?.code === 'Escape') setIsShown(false);
     }
+
     document.addEventListener('click', onMenuClose);
     document.addEventListener('keydown', onMenuClose);
 
@@ -32,10 +34,10 @@ const QuickActions: React.FC<{ top?: any[]; bottom?: any[]; footer?: boolean }> 
             top.map(({ name, disableChek, ...props }, idx) => (
               <ButtonIcon
                 key={idx}
-                variant="onlyIcon"
-                disabled={disableChek instanceof Function && disableChek()}
-                size="28px"
-                iconSize="80%"
+                variant='onlyIcon'
+                disabled={typeof disableChek === 'function' && disableChek()}
+                size='28px'
+                iconSize='80%'
                 tabIndex={isShown ? -1 : 0}
                 {...props}
               />
@@ -49,9 +51,9 @@ const QuickActions: React.FC<{ top?: any[]; bottom?: any[]; footer?: boolean }> 
             bottom.map(({ name, disableChek, ...props }, idx) => (
               <ButtonIcon
                 key={idx}
-                variant="onlyIconFilled"
-                disabled={disableChek instanceof Function && disableChek()}
-                size="28px"
+                variant='onlyIconFilled'
+                disabled={typeof disableChek === 'function' && disableChek()}
+                size='28px'
                 // iconSize="80%"
                 tabIndex={isShown ? -1 : 0}
                 {...props}
@@ -64,9 +66,9 @@ const QuickActions: React.FC<{ top?: any[]; bottom?: any[]; footer?: boolean }> 
         isShown={isShown}
         // iconId={isShown ? iconId.close : iconId.actionsV}
         iconId={iconId.plus}
-        variant="def"
-        iconSize="70%"
-        size="48px"
+        variant='def'
+        iconSize='70%'
+        size='48px'
         onClick={onMenuBtnClick}
       />
     </Menu>
@@ -85,15 +87,19 @@ const ToggleButton = styled(ButtonIcon)<{ isShown: boolean }>`
   box-shadow: ${({ isShown }) => (isShown ? 'var(--header-shadow)' : '')};
   background-color: ${({ theme, isShown }) => (isShown ? theme.backgroundColorMain : theme.backgroundColorSecondary)};
   transition: ${({ theme }) => theme.globals.timingFunctionMain};
+
   & .icon {
     transition: all ${({ theme }) => theme.globals.timingFnMui};
   }
+
   & .icon {
     transform: ${({ isShown }) => (isShown ? 'rotate(45deg)' : '')};
   }
+
   &:hover {
     background-color: ${({ theme }) => theme.backgroundColorMain};
   }
+
   &:active {
     background-color: ${({ theme }) => theme.backgroundColorMain};
   }
@@ -133,37 +139,37 @@ const List = styled.div<{ isShown: boolean }>`
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
 
   ${({ isShown }) =>
-    isShown
-      ? css`
-          max-height: 90vh;
-          padding: 16px 8px 64px;
-          visibility: visible;
-          pointer-events: all;
-        `
-      : css`
-          max-height: 48px;
-          padding: 8px;
-          visibility: hidden;
-          pointer-events: none;
-        `}
-  @media screen and (max-height: 480px) {
+          isShown
+                  ? css`
+                    max-height: 90vh;
+                    padding: 16px 8px 64px;
+                    visibility: visible;
+                    pointer-events: all;
+                  `
+                  : css`
+                    max-height: 48px;
+                    padding: 8px;
+                    visibility: hidden;
+                    pointer-events: none;
+                  `};
+  @media screen and(max-height: 480px) {
     flex-direction: row;
     width: max-content;
     height: 48px;
     ${({ isShown }) =>
-      isShown
-        ? css`
-            max-width: 90vw;
-            padding: 8px 64px 8px 16px;
-            visibility: visible;
-            pointer-events: all;
-          `
-        : css`
-            max-width: 48px;
-            padding: 8px;
-            /* visibility: hidden; */
-            pointer-events: none;
-          `};
+            isShown
+                    ? css`
+                      max-width: 90vw;
+                      padding: 8px 64px 8px 16px;
+                      visibility: visible;
+                      pointer-events: all;
+                    `
+                    : css`
+                      max-width: 48px;
+                      padding: 8px;
+                      /* visibility: hidden; */
+                      pointer-events: none;
+                    `};
   }
 `;
 const Content = styled.div`
@@ -196,6 +202,7 @@ const Separator = styled.div`
 
     border-top: 1px solid ${({ theme }) => theme.borderColor};
   }
+
   @media screen and (max-height: 480px) {
     height: 100%;
     &::before {

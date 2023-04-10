@@ -1,20 +1,22 @@
-// import DirectoryOfCounts from 'components/Directories/DirectoryOfCounts';
-// import DirectoryOfCategories from 'components/Directories/DirectoryOfCategories';
-// import ModalDefault from 'components/ModalDefault/ModalDefault';
 import DirCategories, { DirCategoriesProps } from 'components/Directories/DirCategories/DirCategories';
 import DirCounts, { DirCountsProps } from 'components/Directories/DirCounts/DirCounts';
 import DirProjects, { DirProjectsProps } from 'components/Directories/DirProjects/DirProjects';
 import { DirCustomRolesProps } from 'components/CompanySettings/DirCustomRoles/DirCustomRoles';
-import { iconId } from '../img/sprite/iconId.data';
+import { iconId } from '../img/sprite';
 import DirMarks, { DirMarksProps } from 'components/Directories/DirMarks';
 import DirContractors, { DirContractorsProps } from 'components/Directories/DirContractors';
 import { contractorsColumns, contractorsMockData } from './contractors.data';
+
+import { CategoriesTypesMap } from './categories.types';
+import DirCompanyActivities, {
+  DirCompanyActivitiesProps,
+} from 'components/Directories/DirActivities/DirCompanyActivities';
 
 export interface IDirectory {
   title: string;
   iconId: string;
   ModalChildren: React.FC<any>;
-  modalChildrenProps: DirCountsProps | DirCategoriesProps | DirProjectsProps | DirContractorsProps | DirCustomRolesProps;
+  modalChildrenProps: DirCountsProps | DirCategoriesProps | DirProjectsProps | DirContractorsProps | DirCustomRolesProps | DirCompanyActivitiesProps;
   disabled: boolean;
 }
 
@@ -28,26 +30,22 @@ const CountsProps: DirCountsProps = {
 const CategoriesProps: DirCategoriesProps = {
   title: 'Категорії',
   filterOptions: [
-    { label: 'Дохід', value: 'INCOME' },
-    { label: 'Переказ', value: 'TRANSFER' },
-    { label: 'Витрата', value: 'EXPENSE' },
+    { label: CategoriesTypesMap.INCOME, value: 'INCOME' },
+    { label: CategoriesTypesMap.TRANSFER, value: 'TRANSFER' },
+    { label: CategoriesTypesMap.EXPENSE, value: 'EXPENSE' },
   ],
 };
 const ProjectsProps: DirProjectsProps = {
   title: 'Проєкти',
-  // filterOptions: [
-  //   { label: 'Нові', value: 'PENDING' },
-  //   { label: 'Закриті', value: 'FULLFILED' },
-  //   { label: 'Майбутні', value: 'FUTURE' },
-  // ],
 };
 const ContractorsProps: DirContractorsProps = {
   title: 'Контрагенти',
   tableSettings: { tableData: contractorsMockData, tableTitles: contractorsColumns },
   footer: false,
 };
-
-
+const CompanyActivitiesProps: DirCompanyActivitiesProps = {
+  title: 'Види діяльності',
+};
 const MarksProps: DirMarksProps = {
   title: 'Мітки', footer: false,
 };
@@ -88,7 +86,12 @@ const directories: IDirectory[] = [
     modalChildrenProps: MarksProps,
     disabled: true,
   },
-
+  {
+    title: CompanyActivitiesProps.title, iconId: iconId.boockMarAdd,
+    ModalChildren: DirCompanyActivities,
+    modalChildrenProps: CompanyActivitiesProps,
+    disabled: true,
+  },
 ];
 
 export default directories;

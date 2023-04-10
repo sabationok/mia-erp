@@ -22,7 +22,7 @@ export interface FilterOpt<V = any> extends Record<string, any> {
   _id?: string;
   label: string;
   name?: string;
-  value?: V;
+  value: V;
   getLabel?: () => any;
 }
 

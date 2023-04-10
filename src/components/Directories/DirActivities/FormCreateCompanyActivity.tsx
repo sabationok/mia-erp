@@ -1,38 +1,32 @@
 import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
-import { CategoriesTypesMap, CategoryTypes, ICategory, ICategoryFormData } from 'data/categories.types';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import InputTextPrimary from '../../atoms/Inputs/InputTextPrimary';
+import { ICompanyActivity, ICompanyActivityFormData } from '../../../data/companyActivities.types';
 
-export interface FormCreateCategoryProps extends Omit<ModalFormProps, 'onSubmit'> {
+export interface FormCreateCompanyActivityProps extends Omit<ModalFormProps, 'onSubmit'> {
   _id?: string;
-  type: CategoryTypes;
-  category?: ICategory;
-  owner?: Partial<ICategory>;
+  activity?: ICompanyActivity;
+  owner?: Partial<ICompanyActivity>;
   edit?: boolean;
-  onSubmit?: (data: ICategoryFormData) => void;
+  onSubmit?: (data: ICompanyActivityFormData) => void;
 }
 
 
-const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
-                                                                 type,
-                                                                 owner,
-                                                                 _id,
-                                                                 edit,
-                                                                 category,
-                                                                 onSubmit, ...props
-                                                               }) => {
-  const [formData, setFormData] = useState<ICategoryFormData | undefined>({
-    ...category,
-    type,
-    owner: owner?._id || null,
-  });
+const FormCreateCompanyActivity: React.FC<FormCreateCompanyActivityProps> = ({
+                                                                               owner,
+                                                                               _id,
+                                                                               edit,
+                                                                               activity,
+                                                                               onSubmit, ...props
+                                                                             }) => {
+  const [formData, setFormData] = useState<ICompanyActivityFormData | undefined>({ ...activity });
 
   function onFormDataChange(ev: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = ev.target;
 
     setFormData(prev => {
-      console.log({ ...prev, [name]: value });
+      // console.log({ ...prev, [name]: value });
       return { ...prev, [name]: value };
     });
   }
@@ -48,7 +42,7 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
     <ModalForm onSubmit={formEventWrapper(onSubmit, formData)} {...props}>
 
       <Inputs>
-        <InputTextPrimary label='Тип' name='type' placeholder={CategoriesTypesMap[type]} disabled />
+
 
         <InputTextPrimary
           label='Назва'
@@ -66,7 +60,7 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
           value={formData?.descr ? formData?.descr : ''}
         />
 
-        {/* <TextareaPrimary label="Опис" name="descr" onChange={onFormDataChange} placeholder="Введіть опис" /> */}
+
       </Inputs>
     </ModalForm>
   );
@@ -82,4 +76,4 @@ const Inputs = styled.div`
   background-color: inherit;
 `;
 
-export default FormCreateCategory;
+export default FormCreateCompanyActivity;
