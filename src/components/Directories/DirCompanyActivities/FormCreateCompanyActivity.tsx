@@ -6,7 +6,7 @@ import { ICompanyActivity, ICompanyActivityFormData } from '../../../data/compan
 
 export interface FormCreateCompanyActivityProps extends Omit<ModalFormProps, 'onSubmit'> {
   _id?: string;
-  activity?: ICompanyActivity;
+  companyActivity?: ICompanyActivity;
   owner?: Partial<ICompanyActivity>;
   edit?: boolean;
   onSubmit?: (data: ICompanyActivityFormData) => void;
@@ -17,10 +17,10 @@ const FormCreateCompanyActivity: React.FC<FormCreateCompanyActivityProps> = ({
                                                                                owner,
                                                                                _id,
                                                                                edit,
-                                                                               activity,
+                                                                               companyActivity,
                                                                                onSubmit, ...props
                                                                              }) => {
-  const [formData, setFormData] = useState<ICompanyActivityFormData | undefined>({ ...activity });
+  const [formData, setFormData] = useState<ICompanyActivityFormData | undefined>({ ...companyActivity });
 
   function onFormDataChange(ev: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = ev.target;

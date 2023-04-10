@@ -7,15 +7,18 @@ interface IModalProviderProps {
   children: React.ReactNode;
   portalId?: string;
 }
+
 export interface IModalChildrenProps {
   title?: string;
 }
+
 export interface IModalRenderItemParams<T = any, S = any> {
   ModalChildren?: React.FC<IModalChildrenProps & T>;
   modalChildrenProps?: IModalChildrenProps & T;
   settings?: IModalSettings & S;
   id?: number | string;
 }
+
 interface IModalProviderContext {
   handleOpenModal: <T = any, S = any>(args: IModalRenderItemParams<T, S>) => void;
   handleCloseModal: (id?: string) => void;
@@ -29,10 +32,10 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
   const [modalContent, setModalContent] = useState<IModalRenderItemParams<any, any>[]>([]);
 
   function handleOpenModal<T = any, S = any>({
-    ModalChildren,
-    modalChildrenProps,
-    settings,
-  }: IModalRenderItemParams<T, S>) {
+                                               ModalChildren,
+                                               modalChildrenProps,
+                                               settings,
+                                             }: IModalRenderItemParams<T, S>) {
     if (!ModalChildren) return console.error('ModalChildren is undefined');
 
     if (typeof ModalChildren === 'function') {
@@ -40,6 +43,7 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
       return;
     }
   }
+
   function handleCloseModal(id: string | number | undefined) {
     setModalContent(prev => (id ? prev.filter(el => el.id !== id) : [...prev].splice(-1)));
   }
@@ -65,6 +69,7 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
             function onClose() {
               handleCloseModal(Item.id);
             }
+
             return (
               <ModalComponent
                 key={Item.id}

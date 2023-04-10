@@ -5,9 +5,14 @@ const useCompanyActivitiesService = () => {
   const dispatch = useAppDispatch();
   const companyActivities = activitiesMockData;
 
+  function getById(id: string) {
+    return companyActivities.find(el => el._id === id);
+  }
+
   return {
     dispatch,
     companyActivities,
+    getById,
   };
 
 };

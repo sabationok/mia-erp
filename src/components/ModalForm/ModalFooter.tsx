@@ -10,7 +10,7 @@ const ModalFooter: React.FC<Pick<ModalFormProps, 'onSubmit'> & React.ImgHTMLAttr
   return (
     <Footer {...props} className='modalFooter'>
       {onSubmit && (
-        <ButtonIcon type='reset' variant='outlinedSmall'>
+        <ButtonIcon type='reset' variant='defOutlinedSmall'>
           Закрити
         </ButtonIcon>
       )}

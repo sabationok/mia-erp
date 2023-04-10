@@ -1,9 +1,9 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import React, { useMemo } from 'react';
+import DirListItem, { DirListItemAddsProps, DirListItemProps } from './DirListItem';
 import { ICategory } from 'data/categories.types';
 import { ICount } from 'data/counts.types';
-import React from 'react';
 import styled from 'styled-components';
-import DirListItem, { DirListItemAddsProps, DirListItemProps } from './DirListItem';
 
 export interface DirListProps extends Partial<DirListItemAddsProps> {
   list: DirListItemProps[];
@@ -24,18 +24,18 @@ const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLUListElement>> =
                                                                                     createParentTitle,
                                                                                     ...pops
                                                                                   }) => {
-  const renderList = entryList ? entryList : list;
-
-
+  const renderList = useMemo(() => entryList ? entryList : list, [entryList, list]);
+  // const renderList = entryList ? entryList : list;
+  
   return (
     <Box>
       <ListBox>
-        <List {...pops}>
+        {renderList.length > 0 ? (<List {...pops}>
           {renderList?.map((item, idx) => (
             <DirListItem
               key={item?._id || idx}
               {...item}
-              owner={owner}
+              owner={owner && owner}
               onDelete={onDelete}
               onEdit={onEdit}
               onCreateChild={onCreateChild}
@@ -43,13 +43,15 @@ const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLUListElement>> =
               list={list}
             />
           ))}
-        </List>
+        </List>) : <EmptyList>Список порожній</EmptyList>}
+
+
       </ListBox>
 
       {onCreateParent && (
         <CreateParent>
           <ButtonIcon variant='outlinedSmall' onClick={() => onCreateParent()}>
-            {createParentTitle || 'createParentTitle'}
+            {createParentTitle || 'Create parent'}
           </ButtonIcon>
         </CreateParent>
       )}
@@ -99,5 +101,15 @@ const CreateParent = styled.div`
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
 
   border-top: 1px solid ${({ theme }) => theme.borderColor};
+`;
+const EmptyList = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  width: 100%;
+  height: 100%;
 `;
 export default DirList;

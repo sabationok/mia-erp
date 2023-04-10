@@ -53,7 +53,7 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
 
         <InputTextPrimary
           label='Назва'
-          name='name'
+          name='label'
           placeholder='Введіть назву'
           onChange={onFormDataChange}
           value={formData?.label ? formData?.label : formData?.name ? formData?.name : ''}

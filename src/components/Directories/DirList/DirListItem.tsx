@@ -54,14 +54,15 @@ const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
     <Item>
       <ItemGrid>
         <ActionsField canHaveChild={canHaveChild}>
-          {canHaveChild && onCreateChild && (
-            <ButtonIcon
-              variant='onlyIcon'
-              iconSize='24px'
-              iconId='plus'
-              onClick={evHandlerWrapper(onCreateChild, _id)}
-            />
-          )}
+
+          {canHaveChild && onCreateChild && <ButtonIcon
+            variant='onlyIcon'
+            iconSize='24px'
+            iconId='plus'
+            disabled={!onCreateChild}
+            onClick={onCreateChild && evHandlerWrapper(onCreateChild, _id)}
+          />}
+
         </ActionsField>
 
         <LabelField>
@@ -78,13 +79,22 @@ const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
         </LabelField>
 
         <ActionsField>
-          {onEdit && (
-            <ButtonIcon variant='onlyIcon' iconSize='24px' iconId='edit' onClick={evHandlerWrapper(onEdit, _id)} />
-          )}
 
-          {onDelete && (
-            <ButtonIcon variant='onlyIcon' iconSize='24px' iconId='delete' onClick={evHandlerWrapper(onDelete, _id)} />
-          )}
+          <ButtonIcon
+            variant='onlyIcon'
+            iconSize='24px'
+            iconId='edit'
+            disabled={!onEdit}
+            onClick={onEdit && evHandlerWrapper(onEdit, _id)} />
+
+
+          <ButtonIcon
+            variant='onlyIcon'
+            iconSize='24px'
+            iconId='delete'
+            disabled={!onDelete}
+            onClick={onDelete && evHandlerWrapper(onDelete, _id)} />
+
         </ActionsField>
       </ItemGrid>
 

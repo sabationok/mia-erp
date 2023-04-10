@@ -4,7 +4,7 @@ import DirList from '../DirList/DirList';
 import { founder } from 'utils';
 import useCategoriesService from 'redux/categories/useCategoriesService.hook';
 import { CategoryTypes, ICategory } from 'data/categories.types';
-import { useModalProvider } from '../../ModalProvider/ModalProvider';
+import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FormCreateCategory from './FormCreateCategory';
 import styled from 'styled-components';
 
@@ -30,14 +30,12 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
         category: categories.find(el => el._id === _id),
         edit: true,
         type: dirType,
-        onSubmit: (submitData) => {
-          _id ? editById(_id, {
-            label: submitData.name || submitData.label,
-            owner: submitData.owner,
-            descr: submitData.descr,
-
-          }) : console.log('_id not passed');
-        },
+        onSubmit: (submitData) => _id && editById(_id, {
+          label: submitData.name || submitData.label,
+          owner: submitData.owner,
+          descr: submitData.descr,
+        })
+        ,
       },
     });
   }
@@ -48,10 +46,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
       modalChildrenProps: {
         title: 'Створити під-категорію',
         type: dirType,
-        onSubmit: (submitData) => {
-          console.log({ ...submitData, owner: ownerId });
-          create({ ...submitData, owner: ownerId });
-        },
+        onSubmit: (submitData) => create({ ...submitData, owner: ownerId }),
       },
     });
   }
@@ -62,22 +57,18 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
       modalChildrenProps: {
         title: 'Створити категорію',
         type: dirType,
-        onSubmit: (submitData) => {
-          console.log('onCreateParent', submitData);
-          create(submitData);
-        },
+        onSubmit: create,
       },
     });
   }
 
-
-  function onOptSelect({ value }: { value: CategoryTypes }) {
-    setDirType(value);
-    setFilteredData(founder({ searchParam: 'type', searchQuery: value, data: categories }));
+  function handleFilterData({ value }: FilterOpt<CategoryTypes>) {
+    value && setDirType(value);
+    value && setFilteredData(founder({ searchParam: 'type', searchQuery: value, data: categories }));
   }
 
   return (
-    <StModalForm {...props} onOptSelect={onOptSelect}>
+    <StModalForm {...props} onOptSelect={handleFilterData}>
       <Box>
         <DirList
           list={filteredData}

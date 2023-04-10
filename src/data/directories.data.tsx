@@ -10,7 +10,7 @@ import { contractorsColumns, contractorsMockData } from './contractors.data';
 import { CategoriesTypesMap } from './categories.types';
 import DirCompanyActivities, {
   DirCompanyActivitiesProps,
-} from 'components/Directories/DirActivities/DirCompanyActivities';
+} from 'components/Directories/DirCompanyActivities/DirCompanyActivities';
 
 export interface IDirectory {
   title: string;

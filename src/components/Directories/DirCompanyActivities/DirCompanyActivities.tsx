@@ -1,8 +1,7 @@
 import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import DirList from '../DirList/DirList';
-import { ICompanyActivity } from '../../../data/companyActivities.types';
 import { useModalProvider } from '../../ModalProvider/ModalProvider';
 import FormCreateCompanyActivity from './FormCreateCompanyActivity';
 import useCompanyActivitiesService from 'redux/companyActivities/useCompanyActivitiesService.hook';
@@ -14,8 +13,9 @@ export interface DirCompanyActivitiesProps extends ModalFormProps {
 
 const DirCompanyActivities: React.FC<DirCompanyActivitiesProps> = ({ ...props }) => {
   const modal = useModalProvider();
-  const { companyActivities } = useCompanyActivitiesService();
-  const [filteredData, setFilteredData] = useState<ICompanyActivity[]>(companyActivities);
+  const { companyActivities, getById } = useCompanyActivitiesService();
+
+  // const [filteredData, setFilteredData] = useState<ICompanyActivity[]>(companyActivities);
 
 
   function onCreateParent() {
@@ -30,10 +30,24 @@ const DirCompanyActivities: React.FC<DirCompanyActivitiesProps> = ({ ...props })
     });
   }
 
-  function onDelete() {
+
+  function onDelete(id: string) {
+    const activity = getById(id);
+    if (window.confirm(`Бажаєте видалити вид діяльності: "${activity?.label || activity?.name}"`)) {
+      console.log(`deleted activity ${activity?.label || activity?.name}`);
+    }
   }
 
-  function onEdit() {
+  function onEdit(id: string) {
+    modal.handleOpenModal({
+      ModalChildren: FormCreateCompanyActivity,
+      modalChildrenProps: {
+        companyActivity: getById(id),
+        onSubmit: (submitData) => {
+          console.log('onCreateParent', submitData);
+        },
+      },
+    });
   }
 
 
@@ -41,7 +55,7 @@ const DirCompanyActivities: React.FC<DirCompanyActivitiesProps> = ({ ...props })
     <StModalForm {...props}>
       <Box>
         <DirList
-          list={filteredData}
+          list={companyActivities}
           onDelete={onDelete}
           onEdit={onEdit}
           onCreateParent={onCreateParent}
