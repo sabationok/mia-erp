@@ -17,7 +17,6 @@ const DirCompanyActivities: React.FC<DirCompanyActivitiesProps> = ({ ...props })
 
   // const [filteredData, setFilteredData] = useState<ICompanyActivity[]>(companyActivities);
 
-
   function onCreateParent() {
     modal.handleOpenModal({
       ModalChildren: FormCreateCompanyActivity,
@@ -30,7 +29,6 @@ const DirCompanyActivities: React.FC<DirCompanyActivitiesProps> = ({ ...props })
     });
   }
 
-
   function onDelete(id: string) {
     const activity = getById(id);
     if (window.confirm(`Бажаєте видалити вид діяльності: "${activity?.label || activity?.name}"`)) {
@@ -39,12 +37,14 @@ const DirCompanyActivities: React.FC<DirCompanyActivitiesProps> = ({ ...props })
   }
 
   function onEdit(id: string) {
+    const activity = getById(id);
     modal.handleOpenModal({
       ModalChildren: FormCreateCompanyActivity,
       modalChildrenProps: {
-        companyActivity: getById(id),
+        title: `Редагувати: "${activity?.label || activity?.name}"`,
+        companyActivity: activity,
         onSubmit: (submitData) => {
-          console.log('onCreateParent', submitData);
+          console.log('onEdit', submitData);
         },
       },
     });

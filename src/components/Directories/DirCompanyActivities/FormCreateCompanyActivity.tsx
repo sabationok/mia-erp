@@ -18,7 +18,8 @@ const FormCreateCompanyActivity: React.FC<FormCreateCompanyActivityProps> = ({
                                                                                _id,
                                                                                edit,
                                                                                companyActivity,
-                                                                               onSubmit, ...props
+                                                                               onSubmit,
+                                                                               ...props
                                                                              }) => {
   const [formData, setFormData] = useState<ICompanyActivityFormData | undefined>({ ...companyActivity });
 
@@ -40,10 +41,7 @@ const FormCreateCompanyActivity: React.FC<FormCreateCompanyActivityProps> = ({
 
   return (
     <ModalForm onSubmit={formEventWrapper(onSubmit, formData)} {...props}>
-
       <Inputs>
-
-
         <InputTextPrimary
           label='Назва'
           name='label'
