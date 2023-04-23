@@ -1,5 +1,4 @@
 import { createAction } from '@reduxjs/toolkit';
-
 import { AccentColorNamesType } from 'theme';
 
 export const actionToggleDarkMode = createAction('appSettings/actionToggleDarkMode');

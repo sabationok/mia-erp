@@ -1,38 +1,12 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { karina_avatar } from 'img';
 import { AuthErrorType } from 'redux/reduxTypes.types';
-// import { actionLogInUser, actionLogOutUser, actionSetCurrentUser } from './authActions';
 import { getCurrentUserThunk, logInUserThunk, logOutUserThunk, registerUserThunk } from './auth.thunks';
-import { ISystemRole, IUser } from './auth.types';
-import { IPermission } from '../permissions/permissions.types';
+import { IAuthState } from './auth.types';
 import { initialPermission } from '../permissions/permissions.slice';
-
-
-const initialUserSystemRole: ISystemRole = {
-  _id: '5',
-  label: 'Адміністратор',
-  name: 'ADMIN',
-  actions: [],
-};
-export const initialUser: IUser = {
-  _id: 'sdth651g6db5fg16d',
-  name: 'Каріна Дизайнівна Дизайнер',
-  email: 'karina.des@mail.com',
-  avatarURL: karina_avatar,
-  sysRole: initialUserSystemRole,
-};
-
-export interface IAuthState {
-  user: IUser;
-  permission: IPermission;
-  accessToken?: string;
-  isLoading: boolean;
-  isLoggedIn: boolean;
-  error: AuthErrorType;
-}
+import { testUserKarina } from '../../data/usersDir.data';
 
 const initialState: IAuthState = {
-  user: initialUser,
+  user: testUserKarina,
   permission: initialPermission,
   accessToken: '',
   isLoading: false,

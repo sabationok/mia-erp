@@ -1,13 +1,14 @@
 import { ICompaniesState, ICompany } from './companies.types';
-import { initialUser } from '../auth/auth.slice';
 import { createSlice } from '@reduxjs/toolkit';
+import { testUserKarina } from '../../data/usersDir.data';
 
 export const initialCompany: ICompany = {
   _id: 'svdf3vsd5f3sdf1',
   name: 'Initial Comp',
   fullName: 'Initial Comp LTD',
   email: 'company@mail.com',
-  owner: initialUser,
+
+  owner: testUserKarina,
   companyToken: 'companyToken',
 };
 

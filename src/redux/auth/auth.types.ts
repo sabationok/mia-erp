@@ -13,6 +13,7 @@ export interface IUser extends IBase {
   email?: string;
   avatarURL?: string;
   sysRole?: ISystemRole;
+  permissions?: Partial<IPermission>[];
 }
 
 export interface IAuthState {

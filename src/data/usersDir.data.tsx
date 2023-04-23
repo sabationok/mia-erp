@@ -1,6 +1,20 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
-import { IUser } from 'redux/auth/auth.types';
+import { ISystemRole, IUser } from 'redux/auth/auth.types';
+import { karina_avatar } from '../img';
 
+export const testUserKarinaSystemRole: ISystemRole = {
+  _id: 'sd6f51b6sd5f1b6sd5fgb16sd5',
+  label: 'Адміністратор',
+  name: 'ADMIN',
+  actions: [],
+};
+export const testUserKarina: IUser = {
+  _id: 'sdth651g6sdfbdb5fg16d',
+  name: 'Каріна Дизайнівна Дизайнер',
+  email: 'karina.des@mail.com',
+  avatarURL: karina_avatar,
+  sysRole: testUserKarinaSystemRole,
+};
 export const usersDirColumns: CellTittleProps[] = [
   {
     top: { name: 'ПІП', dataKey: 'fullName' },

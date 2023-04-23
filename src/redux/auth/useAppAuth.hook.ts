@@ -1,6 +1,6 @@
 import { useAuthSelector } from 'redux/selectors.store';
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
-import { IAuthState } from './auth.slice';
+import { IAuthState } from './auth.types';
 import { ILoginUserData, IRegistrationData, logInUserThunk, registerUserThunk } from './auth.thunks';
 import { toast } from 'react-toastify';
 

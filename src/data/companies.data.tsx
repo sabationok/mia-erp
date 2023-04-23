@@ -2,17 +2,18 @@ import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 
 export const companiesTableColumns: CellTittleProps[] = [
   {
-    top: { name: 'Назва', align: 'start', dataKey: 'name', sort: false },
+    top: { name: 'Назва', align: 'start', dataKey: 'company', nestedDataKey: 'name', sort: false },
+    bottom: { name: 'ІПН/ЄДРПОУ', align: 'start', dataKey: 'taxCode', sort: false },
     width: '200px',
     action: 'cellDbl',
   },
   {
-    top: { name: 'Роль', align: 'start', dataKey: 'role', nestedDataKey: 'name', sort: false },
+    top: { name: 'Роль', align: 'start', dataKey: 'role', nestedDataKey: 'label', sort: false },
     width: '160px',
     action: 'cellDbl',
   },
   {
-    top: { name: 'Власник', align: 'start', dataKey: 'owner', nestedDataKey: 'owner', sort: false },
+    top: { name: 'Власник', align: 'start', dataKey: 'owner', nestedDataKey: 'name', sort: false },
     width: '180px',
     action: 'cellDbl',
   },
@@ -22,8 +23,8 @@ export const companiesTableColumns: CellTittleProps[] = [
     action: 'cellDbl',
   },
   {
-    top: { name: 'Телефон', align: 'start', dataKey: 'phone', sort: false },
-    bottom: { name: 'Емейл', align: 'start', dataKey: 'email', sort: false },
+    top: { name: 'Емейл', align: 'start', dataKey: 'owner', nestedDataKey: 'name', sort: false },
+    bottom: { name: 'Телефон', align: 'start', dataKey: 'phone', sort: false },
     width: '150px',
     action: 'cellDbl',
   },

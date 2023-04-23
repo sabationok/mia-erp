@@ -8,6 +8,7 @@ export interface ICompany extends IBase {
   email: string;
   phone?: string;
   fullName: string;
+  taxCode?: string;
   owner: Partial<IUser>;
   logo?: string;
   permissions?: IPermission[];

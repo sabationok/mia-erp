@@ -14,6 +14,25 @@ export interface IPermission extends IBase {
   permissionToken: string;
 }
 
+export interface IPermissionResData {
+  meta: {},
+  data: IPermission | Partial<IPermission>
+}
+
+export interface IPermissionsResData {
+  meta: {},
+  data: Partial<IPermission>[] | IPermission[]
+}
+
+export interface IPermissionReqData {
+  id: string;
+  data: {
+    company: string;
+    user: string;
+    role: string;
+  };
+}
+
 export interface IPermissionsState {
   permission: IPermission;
   permissions?: IPermission[];
