@@ -25,19 +25,11 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
-    if (defaultFilterValue && filterOptions) {
+    if (defaultFilterValue && Array.isArray(filterOptions)) {
       const defIndex = filterOptions.findIndex(el => el.value === defaultFilterValue);
       defIndex > 0 && setCurrent(defIndex);
     }
-
   }, [defaultFilterValue, filterOptions]);
-
-  useEffect(() => {
-    if (Array.isArray(filterOptions)) {
-      // if (typeof onOptSelect === 'function') onOptSelect(filterOptions[current]);
-    }
-  }, [current, filterOptions, onOptSelect]);
-
 
   return (
     <Filter className='filter' gridRepeat={filterOptions?.length} {...props}>

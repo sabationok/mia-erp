@@ -1,7 +1,7 @@
 import { useTransactionsSelector } from 'redux/selectors.store';
 import { useAppDispatch } from 'redux/store.store';
 import useTrFilterSelectors from './useTrFilterSelectors.hook';
-import { ITransaction } from './transactions.types';
+import { ITransactionReqData } from './transactions.types';
 
 const useTransactionsService = () => {
   const dispatch = useAppDispatch();
@@ -11,7 +11,7 @@ const useTransactionsService = () => {
     return state.transactions.find(el => el._id === id);
   }
 
-  function create(data: ITransaction) {
+  function create(data: ITransactionReqData) {
     console.log('create tr', data);
   }
 
@@ -19,8 +19,8 @@ const useTransactionsService = () => {
     console.log('deleteTrById', id);
   }
 
-  function editById(id: string, newData: ITransaction) {
-    console.log('editTrById', id, newData);
+  function editById({ _id, data }: ITransactionReqData) {
+    console.log('editTrById', { _id, data });
   }
 
 

@@ -111,7 +111,7 @@ export const useTransactionsActions = () => {
         onClick: () => {
           modal.handleOpenModal({
             ModalChildren: TransactionForm,
-            modalChildrenProps: { title: 'Редагування транзакції', filterOptions },
+            modalChildrenProps: { title: 'Редагування транзакції', filterOptions, onSubmit: editById },
           });
         },
         disableChek: () => false,
@@ -123,7 +123,7 @@ export const useTransactionsActions = () => {
         onClick: () => {
           modal.handleOpenModal({
             ModalChildren: TransactionForm,
-            modalChildrenProps: { title: 'Копіювання транзакції', filterOptions },
+            modalChildrenProps: { title: 'Копіювання транзакції', filterOptions, onSubmit: create },
           });
         },
         disableChek: () => false,
@@ -136,7 +136,7 @@ export const useTransactionsActions = () => {
         onClick: () => {
 
         },
-        disableChek: () => false,
+        disableChek: () => true,
       },
     ],
     bottom: [
@@ -148,7 +148,12 @@ export const useTransactionsActions = () => {
         onClick: () => {
           modal.handleOpenModal({
             ModalChildren: TransactionForm,
-            modalChildrenProps: { title: 'Дохід', filterOptions, defaultState: { type: 'INCOME' } },
+            modalChildrenProps: {
+              title: 'Дохід',
+              filterOptions,
+              defaultState: { type: 'INCOME' },
+              onSubmit: create,
+            },
           });
         },
         disableChek: () => false,
@@ -161,7 +166,12 @@ export const useTransactionsActions = () => {
         onClick: () => {
           modal.handleOpenModal({
             ModalChildren: TransactionForm,
-            modalChildrenProps: { title: 'Переказ між рахунками', filterOptions, defaultState: { type: 'TRANSFER' } },
+            modalChildrenProps: {
+              title: 'Переказ між рахунками',
+              filterOptions,
+              defaultState: { type: 'TRANSFER' },
+              onSubmit: create,
+            },
           });
         },
         disableChek: () => false,
@@ -174,7 +184,12 @@ export const useTransactionsActions = () => {
         onClick: () => {
           modal.handleOpenModal({
             ModalChildren: TransactionForm,
-            modalChildrenProps: { title: 'Витрата', filterOptions, defaultState: { type: 'EXPENSE' } },
+            modalChildrenProps: {
+              title: 'Витрата',
+              filterOptions,
+              defaultState: { type: 'EXPENSE' },
+              onSubmit: create,
+            },
           });
         },
         disableChek: () => false,

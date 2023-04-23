@@ -4,7 +4,7 @@ import { useState } from 'react';
 import ModalForm, { FilterOpt, ModalFormProps } from '../ModalForm/ModalForm';
 import InputTextPrimary from '../atoms/Inputs/InputTextPrimary';
 import styled from 'styled-components';
-import { ITransactionForReq } from '../../redux/transactions/transactions.types';
+import { ITransactionForReq, ITransactionReqData } from '../../redux/transactions/transactions.types';
 import { CategoryTypes } from '../../redux/categories/categories.types';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
@@ -13,7 +13,7 @@ export interface Props extends Omit<ModalFormProps, 'onSubmit'> {
   edit?: boolean;
   copy?: boolean;
   id?: string;
-  onSubmit?: (args: any) => any;
+  onSubmit?: (args: ITransactionReqData) => any;
   filterOptions?: TransactionsFilterOpt[];
   defaultState?: Partial<ITransactionForReq>;
 };
@@ -29,11 +29,12 @@ const TransactionForm: React.FC<Props> = ({ edit, onSubmit, copy, defaultState, 
   }
 
   function onInputChange(ev: React.ChangeEvent<HTMLInputElement>) {
-    onFormDataChange({ ...ev.target });
+    const { name, value } = ev.target;
+    onFormDataChange({ name, value });
   }
 
   function onSubmitWrapper() {
-    onSubmit && onSubmit(formData);
+    onSubmit && onSubmit({ data: formData });
   }
 
 //  title={`${edit ? 'Редагувати' : 'Створити'} транзакцію`}
@@ -44,16 +45,35 @@ const TransactionForm: React.FC<Props> = ({ edit, onSubmit, copy, defaultState, 
       onOptSelect={(value) => onFormDataChange({ name: 'type', value })}
       {...props}>
       <Inputs>
-        <InputTextPrimary label='Сума' name='amount' placeholder='Сума' onChange={onInputChange} />
+        <GridWrapper gridTemplateColumns={'1fr'}>
+          <InputTextPrimary
+            label='Дата і час'
+            type={'datetime-local'}
+            name='transactionDate'
+            placeholder='Дата і час'
+            onChange={onInputChange}
+          />
+        </GridWrapper>
+
+        <GridWrapper>
+          <InputTextPrimary label='Сума' name='amount' placeholder='Сума' onChange={onInputChange} />
+          <InputTextPrimary label='Валюта' name='currency' placeholder='Валюта' onChange={onInputChange} />
+        </GridWrapper>
 
         <InputTextPrimary label='Рахунок IN' name='countIn' placeholder='Рахунок IN' onChange={onInputChange} />
         <InputTextPrimary label='Суб-Рахунок IN' name='subCountIn' placeholder='Суб-Рахунок IN'
                           onChange={onInputChange} />
 
-        <InputTextPrimary label='Рахунок' name='countOut' placeholder='Рахунок' onChange={onInputChange} />
-        <InputTextPrimary label='Рахунок' name='subCountOut' placeholder='Рахунок' onChange={onInputChange} />
-        <InputTextPrimary label='Рахунок' name='' placeholder='Рахунок' onChange={onInputChange} />
-        <InputTextPrimary label='Рахунок' name='' placeholder='Рахунок' onChange={onInputChange} />
+        <InputTextPrimary label='Рахунок OUT' name='countOut' placeholder='Рахунок' onChange={onInputChange} />
+        <InputTextPrimary label='Суб-Рахунок OUT' name='subCountOut' placeholder='Рахунок' onChange={onInputChange} />
+
+        <InputTextPrimary label='Категорія' name='category' placeholder='Категорія' onChange={onInputChange} />
+        <InputTextPrimary label='Під-категорія' name='subCategory' placeholder='Під-категорія'
+                          onChange={onInputChange} />
+
+        <InputTextPrimary label='Контрагент' name='contractor' placeholder='Контрагент' onChange={onInputChange} />
+        <InputTextPrimary label='Проєкт' name='project' placeholder='Проєкт' onChange={onInputChange} />
+        <InputTextPrimary label='Документ' name='document' placeholder='Документ' onChange={onInputChange} />
 
         <InputTextPrimary label='Коментар' name='comment' placeholder='Коментар' onChange={onInputChange} />
       </Inputs>
@@ -66,5 +86,10 @@ const Inputs = styled.div`
   gap: 12px;
 
   padding: 12px;
+`;
+const GridWrapper = styled.div<{ gridTemplateColumns?: string }>`
+  display: grid;
+  grid-template-columns:${({ gridTemplateColumns }) => gridTemplateColumns || '1fr 80px'};
+  gap: 12px;
 `;
 export default TransactionForm;
