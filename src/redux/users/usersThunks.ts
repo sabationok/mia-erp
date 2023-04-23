@@ -1,5 +1,5 @@
 import baseApi from 'api/baseApi';
-import { IUser } from 'redux/auth/auth.slice';
+import { IUser } from 'redux/auth/auth.types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import { IPayloadRegisterUser } from 'redux/auth/auth.thunks';
@@ -11,14 +11,20 @@ export const usersApiRoutes = {
   getById: `${USERS_API_BASENAME}/getById`,
   createByAdmin: `${USERS_API_BASENAME}/createByAdmin`,
 };
+
 export interface IPayloadGetAllUsers {
   submitData?: any;
+
   onSuccess(data?: IUser[]): any;
+
   onError: (error: AuthErrorType) => void;
 }
+
 export interface IPayloadGetuserById {
   submitData?: string | any;
+
   onSuccess(data?: IUser): any;
+
   onError: (error: AuthErrorType) => void;
 }
 
@@ -36,7 +42,7 @@ export const getAllUsersThunk = createAsyncThunk<IUser[], IPayloadGetAllUsers, A
       payload.onError(error);
       return thunkAPI.rejectWithValue(axiosErrorCheck(error));
     }
-  }
+  },
 );
 
 export const getUserById = createAsyncThunk<IUser, IPayloadGetuserById, AsyncThunkConfig>(
@@ -53,7 +59,7 @@ export const getUserById = createAsyncThunk<IUser, IPayloadGetuserById, AsyncThu
 
       return thunkAPI.rejectWithValue(axiosErrorCheck(error));
     }
-  }
+  },
 );
 
 export const createUserByAdminThunk = createAsyncThunk<IUser, IPayloadRegisterUser, AsyncThunkConfig>(
@@ -70,5 +76,5 @@ export const createUserByAdminThunk = createAsyncThunk<IUser, IPayloadRegisterUs
 
       return thunkAPI.rejectWithValue(axiosErrorCheck(error));
     }
-  }
+  },
 );

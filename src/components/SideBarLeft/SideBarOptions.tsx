@@ -13,6 +13,7 @@ const SideBarOptions: React.FC = () => {
   function handleCloseMenu() {
     onClose && onClose();
   }
+
   function onBackdropClick(ev: React.MouseEvent<HTMLDivElement>) {
     const { target, currentTarget } = ev;
     if (target === currentTarget) handleCloseMenu();
@@ -29,6 +30,7 @@ const SideBarOptions: React.FC = () => {
       if (target instanceof HTMLElement && !target?.closest('[data-sidebar]')) onClose && onClose();
       if (ev instanceof KeyboardEvent && ev?.code === 'Escape') onClose && onClose();
     }
+
     const rootEl = document.getElementById('root');
 
     rootEl?.addEventListener('click', onMenuClose);
@@ -42,7 +44,7 @@ const SideBarOptions: React.FC = () => {
 
   return (
     <Backdrop
-      className="backdrop"
+      className='backdrop'
       isOpen={isOpen && RightSideContent?.RenderComponent ? true : false}
       maxWidth={RightSideContent?.maxWidth}
       onClick={onBackdropClick}
@@ -54,7 +56,7 @@ const SideBarOptions: React.FC = () => {
         <Header>
           <Title>{RightSideContent?.title}</Title>
 
-          <ButtonIcon iconSize="18px" size="22px" iconId={iconId.close} variant="def" onClick={handleCloseMenu} />
+          <ButtonIcon iconSize='18px' size='22px' iconId={iconId.close} variant='def' onClick={handleCloseMenu} />
         </Header>
 
         <ContentScroll>
@@ -81,23 +83,23 @@ const Backdrop = styled.div<{ isOpen: boolean; maxWidth?: string }>`
   background-color: ${({ theme }) => theme.backdropColor};
 
   transition: visibility ${({ theme }) => theme.globals.timingFunctionMain},
-    opacity ${({ theme }) => theme.globals.timingFunctionMain}, width ${({ theme }) => theme.globals.timingFnNull};
+  opacity ${({ theme }) => theme.globals.timingFunctionMain}, width ${({ theme }) => theme.globals.timingFnNull};
   transition-delay: ${({ isOpen }) => (isOpen ? '' : '250ms')};
 
   ${({ isOpen }) =>
-    isOpen
-      ? css`
-          width: calc(100vw - 40px);
-          opacity: 1;
-          visibility: visible;
-          pointer-events: all;
-        `
-      : css`
-          width: 0;
-          opacity: 0;
-          visibility: hidden;
-          pointer-events: none;
-        `}
+          isOpen
+                  ? css`
+                    width: calc(100vw - 40px);
+                    opacity: 1;
+                    visibility: visible;
+                    pointer-events: all;
+                  `
+                  : css`
+                    width: 0;
+                    opacity: 0;
+                    visibility: hidden;
+                    pointer-events: none;
+                  `}
 `;
 const Container = styled.div<{ isOpen: boolean; maxWidth?: string }>`
   display: grid;
@@ -108,11 +110,11 @@ const Container = styled.div<{ isOpen: boolean; maxWidth?: string }>`
   max-width: ${({ maxWidth }) => (maxWidth ? maxWidth : '250px')};
   overflow: hidden;
 
-  background-color: ${({ theme }) => theme.backgroundColorMain};
+  background-color: ${({ theme }) => theme.backgroundColorLight};
 
   transform: ${({ isOpen }) => `translate(${isOpen ? '0' : '-100%'})`};
   transition: transform ${({ theme }) => theme.globals.timingFunctionMain},
-    max-width ${({ theme }) => theme.globals.timingFunctionMain};
+  max-width ${({ theme }) => theme.globals.timingFunctionMain};
 `;
 const Header = styled.header`
   display: flex;

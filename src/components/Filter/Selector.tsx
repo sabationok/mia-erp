@@ -19,21 +19,21 @@ export interface FilterSelectorProps {
 }
 
 const Selector: React.FC<FilterSelectorProps & React.HTMLAttributes<Element>> = ({
-  label = 'Selector label',
-  selectorName = 'selector',
-  onSelectorClick,
-  currentIdx,
-  data,
-  idx,
-  children,
-}) => {
+                                                                                   label = 'Selector label',
+                                                                                   selectorName = 'selector',
+                                                                                   onSelectorClick,
+                                                                                   currentIdx,
+                                                                                   data,
+                                                                                   idx,
+                                                                                   children,
+                                                                                 }) => {
   return (
     <SelectorContainer>
       <StOpenButton
-        variant="def"
+        variant='defNoEffects'
         isCurrent={currentIdx === idx}
         endIconId={iconId.SmallArrowDown}
-        endIconSize="22px"
+        endIconSize='22px'
         onClick={() => onSelectorClick && onSelectorClick()}
       >
         <Label>{label}</Label>
@@ -67,6 +67,7 @@ const StOpenButton = styled(ButtonIcon)<{ isCurrent: boolean }>`
   background-color: ${({ theme }) => theme.backgroundColorLight};
 
   border-color: ${({ isCurrent, theme }) => (isCurrent ? theme.accentColor.base : '')};
+
   & .endIcon {
     transform: ${({ isCurrent }) => `rotate(${isCurrent ? 180 : 0}deg)`};
   }

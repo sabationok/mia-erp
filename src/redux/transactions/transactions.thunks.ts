@@ -1,6 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import baseApi from '../../api/baseApi';
+import { ThunkPayload } from '../store.store';
+import { AxiosResponse } from 'axios';
 
 export const TRANSACTIONS_API_BASENAME = '/transactions';
 export const transactionsApiEndpoints = {
@@ -10,27 +12,23 @@ export const transactionsApiEndpoints = {
   updateById: (id: string): string => `${TRANSACTIONS_API_BASENAME}/update/${id}`,
 };
 
-export interface IGetAllTransacions {
-  onSuccess: (...args: any) => void;
-  onError: (...args: any) => void;
-}
-export const getAllTransactionsThunk = createAsyncThunk<any[], IGetAllTransacions>(
+export const getAllTransactionsThunk = createAsyncThunk<any[], ThunkPayload>(
   'transactions/getAllTransactionsThunk',
-  async (payload, thunkAPI) => {
+  async ({ onSuccess, onError }, thunkAPI) => {
     try {
-      const response = await baseApi.get(transactionsApiEndpoints.getAll());
+      const response: AxiosResponse<any> = await baseApi.get(transactionsApiEndpoints.getAll());
 
-      payload?.onSuccess(response);
+      onSuccess && onSuccess(response);
 
       return response.data;
     } catch (error) {
       console.log(error);
 
-      payload?.onError(error);
+      onError && onError(error);
 
       return thunkAPI.rejectWithValue(axiosErrorCheck(error));
     }
-  }
+  },
 );
 
 // export const addTransactionThunk = createAsyncThunk('transactions/addTransactionThunk', async (payload, thunkAPI) => {

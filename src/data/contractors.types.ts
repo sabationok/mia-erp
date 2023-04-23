@@ -1,4 +1,4 @@
-import { IBase } from './global.types';
+import { IBase } from '../redux/global.types';
 
 export interface IContractor extends IBase {
   name?: string;

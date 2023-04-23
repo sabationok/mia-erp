@@ -46,6 +46,7 @@ const Footer = styled.footer`
   color: ${({ theme }) => theme.fontColorHeader};
   fill: ${({ theme }) => theme.fillColorHeader};
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
+
   @media screen and (min-width: 768px) {
     padding: 8px;
   }

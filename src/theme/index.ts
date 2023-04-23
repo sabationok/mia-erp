@@ -23,13 +23,15 @@ export const globals = {
 };
 export type IThemeGlobals = typeof globals;
 
-export interface ITheme {
+export interface ITheme extends Record<string, any> {
   backgroundColorMain: string;
   backgroundColorSecondary: string;
   backgroundColorLight?: string;
   backdropColor?: string;
   borderColor: string;
   trBorderClr: string;
+  trBorderClrLight?: string;
+  trBorderClrDark?: string;
   colorLight: string;
   fontColor: string;
   fillColor: string;
@@ -47,20 +49,24 @@ export interface ITheme {
     light: string;
   };
 }
+
 const darkTheme: ITheme = {
   backgroundColorMain: 'rgb(28, 28, 28)',
   backgroundColorSecondary: 'rgb(39, 39, 39)',
   // backgroundColorLight: 'rgb(46, 46, 46)',
   backgroundColorLight: '#323234',
   backdropColor: 'rgba(21, 21, 21, 0.3)',
-  borderColor: '#59595a',
   tableBackgroundColor: '#3A3A3C',
+  borderColor: '#59595a',
   trBorderClr: 'rgba(122, 122, 122)',
+  trBorderClrLight: '#2C2C2E',
+  trBorderClrDark: '#464649',
   colorLight: '#EFEFEF',
   fontColor: '#EFEFEF',
   fillColor: '#EFEFEF',
   fontColorHeader: '#EFEFEF',
   fillColorHeader: '#EFEFEF',
+
   fontColorSidebar: '#EFEFEF',
   fillColorSidebar: '#EFEFEF',
   defaultBtnBckgrndColor: {
@@ -73,20 +79,21 @@ const darkTheme: ITheme = {
   },
 };
 const lightTheme: ITheme = {
-  backgroundColorMain: 'rgb(86, 87, 117)',
-  backgroundColorSecondary: 'rgb(118, 119, 152)',
-  backgroundColorLight: 'rgba(231, 231, 255,1)',
+  backgroundColorMain: '#5C5C5D',
+  backgroundColorSecondary: '#DADADA',
+  backgroundColorLight: '#FAFAFA',
   backdropColor: 'rgba(21, 21, 21, 0.3)',
   borderColor: '#3A3A3C',
-  trBorderClr: 'rgba(183, 183, 216, 1)',
+  trBorderClr: '#5C5C5D',
   tableBackgroundColor: 'rgba(86, 87, 117,0.2)',
   colorLight: '#EFEFEF',
   fontColor: '#272727',
   fillColor: '#272727',
-  fontColorHeader: '#EFEFEF',
-  fillColorHeader: '#EFEFEF',
-  fontColorSidebar: '#EFEFEF',
-  fillColorSidebar: '#EFEFEF',
+  fontColorHeader: '#272727',
+  fillColorHeader: '#272727',
+
+  fontColorSidebar: '#272727',
+  fillColorSidebar: '#272727',
   defaultBtnBckgrndColor: {
     def: 'transparent',
     hover: 'rgba(219, 219, 219, 0.1)',
@@ -105,6 +112,7 @@ export interface IAppTheme extends ITheme {
 export interface IAppThemes {
   [theme: string]: ITheme;
 }
+
 export const appThemes: IAppThemes = {
   dark: darkTheme,
   light: lightTheme,
@@ -112,12 +120,14 @@ export const appThemes: IAppThemes = {
 export type ThemeType = keyof IAppThemes;
 
 declare module 'styled-components' {
-  export interface DefaultTheme extends IAppTheme {}
+  export interface DefaultTheme extends IAppTheme {
+  }
 }
 
 export function getTheme(themeName?: ThemeType) {
   return themeName && appThemes[themeName] ? appThemes[themeName] : appThemes.light;
 }
+
 export function getAccentColor(colorName?: AccentColorNamesType) {
   return colorName && accentColors[colorName] ? accentColors[colorName] : accentColors.orange;
 }

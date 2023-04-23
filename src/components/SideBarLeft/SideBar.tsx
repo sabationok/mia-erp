@@ -16,27 +16,27 @@ const SideBar: React.FC<any & React.HTMLAttributes<HTMLDivElement>> = ({ ...prop
   //   setIsMiddleOpen(prev => !prev);
   // }
   return (
-    <StyledSideBar isOpen={!!isOpen} className="SideBar" {...props} data-sidebar>
+    <StyledSideBar isOpen={!!isOpen} className='SideBar' {...props} data-sidebar>
       <MenuToggler isOpen={!!isOpen} onClick={onTogglerClick} />
 
-      <SideBarContainer className="SideBarContainer">
-        <Content isOpen={!!isOpen} className="Content">
+      <SideBarContainer className='SideBarContainer'>
+        <Content isOpen={!!isOpen} className='Content'>
           <Top>
             <ToggleThemeMode />
           </Top>
 
-          <Middle className="Middle">
+          <Middle className='Middle'>
             {/* <MiddleToggler variant="def" iconId="actionsH" iconSize="24px" onClick={() => handleMiddleOpen()} /> */}
 
-            <MiddleButtons className="MiddleButtons">
+            <MiddleButtons className='MiddleButtons'>
               {sideBarButtons &&
                 sideBarButtons.map(item => (
                   <StyledButtonIcon
                     key={item?.iconId}
                     iconId={item?.iconId}
                     title={item?.title}
-                    iconSize="20px"
-                    variant="pointerLeft"
+                    iconSize='20px'
+                    variant='pointerLeft'
                     isActive={item?.title === RightSideContent?.title}
                     onClick={() => handleOptionsState && handleOptionsState(item)}
                   />
@@ -51,8 +51,8 @@ const SideBar: React.FC<any & React.HTMLAttributes<HTMLDivElement>> = ({ ...prop
                   key={item?.iconId}
                   iconId={item?.iconId}
                   title={item?.title}
-                  iconSize="20px"
-                  variant="pointerLeft"
+                  iconSize='20px'
+                  variant='pointerLeft'
                   isActive={item?.title === RightSideContent?.title}
                   onClick={() => handleOptionsState && handleOptionsState(item)}
                 />
@@ -71,6 +71,7 @@ interface SideBarState {
   isOpen: boolean;
   options?: any[] | null;
 }
+
 const sideBarCompWidth = '36px';
 const sideBarCompWidthMobile = '50px';
 
@@ -128,7 +129,7 @@ const Top = styled.div`
   justify-content: center;
 
   /* height: 100%; */
-  /* width: ${sideBarCompWidthMobile};
+    /* width: ${sideBarCompWidthMobile};
   @media screen and (min-width: 480px) { */
   width: ${sideBarCompWidth};
   /* } */
@@ -150,7 +151,8 @@ const Middle = styled.div`
     width: 2px;
     height: 2px;
   }
-  /* width: ${sideBarCompWidthMobile};
+
+    /* width: ${sideBarCompWidthMobile};
   @media screen and (min-width: 480px) { */
   width: ${sideBarCompWidth};
   /* } */
@@ -177,7 +179,7 @@ const Bottom = styled.div`
 
   padding-bottom: 12px;
 
-  /* width: ${sideBarCompWidthMobile};
+    /* width: ${sideBarCompWidthMobile};
   @media screen and (min-width: 480px) { */
   width: ${sideBarCompWidth};
   /* } */
@@ -201,8 +203,9 @@ const MenuToggler = styled.button<SideBarState>`
 `;
 
 const isActiveCss = css`
-  background-color: ${({ theme }) => theme.backgroundColorMain};
   color: ${({ theme }) => theme.accentColor.base};
+  background-color: ${({ theme }) => theme.backgroundColorLight};
+
   &::before {
     height: 80%;
     background-color: ${({ theme }) => theme.accentColor.base};

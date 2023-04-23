@@ -18,9 +18,9 @@ export interface SelectorContentProps {
 
 const SelectorContent: React.FC<
   SelectorContentProps &
-    Pick<FilterSelectorProps, 'selectorName' | 'data'> &
-    Pick<IFilterSelectorAddsProps, 'ListComp'> &
-    React.HTMLAttributes<HTMLDivElement>
+  Pick<FilterSelectorProps, 'selectorName' | 'data'> &
+  Pick<IFilterSelectorAddsProps, 'ListComp'> &
+  React.HTMLAttributes<HTMLDivElement>
 > = ({ isOpen = false, onSelect, data, selectorName, ListComp, ...props }) => {
   // const data = useData();
   const [searchParam, setSearchParam] = useState<string>('');
@@ -30,9 +30,11 @@ const SelectorContent: React.FC<
     const { value } = ev.target;
     setSearchParam(value);
   }
-  function onSerchParamReset() {
+
+  function onSearchParamReset() {
     setSearchParam('');
   }
+
   function onSelectAllClick(status?: boolean) {
     setFilteredData(_prev => {
       if (searchParam) {
@@ -67,9 +69,9 @@ const SelectorContent: React.FC<
   return (
     <Content {...props}>
       <StyledLabel>
-        <SearchInput type="text" name={selectorName} placeholder="Пошук" value={searchParam} onChange={onInputChange} />
+        <SearchInput type='text' name={selectorName} placeholder='Пошук' value={searchParam} onChange={onInputChange} />
 
-        <ButtonIcon variant="onlyIcon" size="26px" iconId={iconId.close} onClick={onSerchParamReset} />
+        <ButtonIcon variant='onlyIcon' size='26px' iconId={iconId.close} onClick={onSearchParamReset} />
       </StyledLabel>
 
       {filteredData.length > 0 && ListComp ? (
@@ -87,11 +89,11 @@ const SelectorContent: React.FC<
       )}
 
       <AcceptButtons>
-        <ButtonIcon variant="onlyIcon" size="26px" iconId={iconId.done} />
+        <ButtonIcon variant='onlyIcon' size='26px' iconId={iconId.done} />
 
-        <ButtonIcon variant="onlyIcon" size="26px" iconId={iconId.doneAll} onClick={() => onSelectAllClick(true)} />
+        <ButtonIcon variant='onlyIcon' size='26px' iconId={iconId.doneAll} onClick={() => onSelectAllClick(true)} />
 
-        <ButtonIcon variant="onlyIcon" size="26px" iconId={iconId.close} onClick={() => onSelectAllClick()} />
+        <ButtonIcon variant='onlyIcon' size='26px' iconId={iconId.close} onClick={() => onSelectAllClick()} />
       </AcceptButtons>
     </Content>
   );
@@ -156,13 +158,14 @@ const SearchInput = styled.input`
   &::placeholder {
     color: ${({ theme }) => theme.globals.inputPlaceholderColor};
   }
+
   background-color: transparent;
 
   border-style: none;
 
   &:hover,
   &:focus {
-    /* border-bottom-color: ${({ theme }) => theme.accentColor.hover}; */
+      /* border-bottom-color: ${({ theme }) => theme.accentColor.hover}; */
     outline-style: none;
   }
 `;
@@ -176,7 +179,7 @@ const NotFound = styled.div`
 const AcceptButtons = styled.div`
   display: flex;
   justify-content: end;
-  gap: 16px;
+  gap: 8px;
 
   border-top: 1px solid ${({ theme }) => theme.globals.inputBorder};
 `;

@@ -14,12 +14,12 @@ export interface TableSortParamsListProps extends ModalFormProps {
 }
 
 const TableSortParamsList: React.FC<TableSortParamsListProps> = ({
-  tableSortParams,
-  handleSetCurrent,
-  current,
-  onOpenClick,
-  isOpen,
-}) => {
+                                                                   tableSortParams,
+                                                                   handleSetCurrent,
+                                                                   current,
+                                                                   onOpenClick,
+                                                                   isOpen,
+                                                                 }) => {
   const [currentEl, setCurrentEl] = useState<SelectItem & { descending: boolean }>(current);
 
   function handleSetCurrentState(param: SelectItem, descending: boolean) {
@@ -28,6 +28,7 @@ const TableSortParamsList: React.FC<TableSortParamsListProps> = ({
       setCurrentEl({ ...param, descending });
     };
   }
+
   function isActive(param: SelectItem, descending: boolean) {
     return param.dataKey === currentEl?.dataKey && currentEl.descending === descending;
   }
@@ -40,6 +41,7 @@ const TableSortParamsList: React.FC<TableSortParamsListProps> = ({
       if (target instanceof HTMLElement && !target?.closest('[data-table-sort-close]')) onOpenClick(false);
       if (ev instanceof KeyboardEvent && ev?.code === 'Escape') onOpenClick(false);
     }
+
     document.addEventListener('click', onMenuClose);
     document.addEventListener('keydown', onMenuClose);
 
@@ -54,7 +56,7 @@ const TableSortParamsList: React.FC<TableSortParamsListProps> = ({
       <Title>
         <span>Сортування</span>
 
-        <ButtonIcon variant="onlyIconNoEffects" iconId="close" iconSize="26px" onClick={() => onOpenClick(false)} />
+        <ButtonIcon variant='onlyIconNoEffects' iconId='close' iconSize='26px' onClick={() => onOpenClick(false)} />
       </Title>
 
       <SelectList>
@@ -63,21 +65,21 @@ const TableSortParamsList: React.FC<TableSortParamsListProps> = ({
             <ParamLabel>{param.name || param.label}</ParamLabel>
 
             <SetOrderButton
-              className="button"
+              className='button'
               isActive={isActive(param, true)}
-              variant="onlyIconNoEffects"
-              size="100%"
-              iconSize="80%"
+              variant='onlyIconNoEffects'
+              size='100%'
+              iconSize='80%'
               iconId={iconId.SmallArrowDown}
               onClick={handleSetCurrentState(param, true)}
             />
 
             <SetOrderButton
-              className="button"
+              className='button'
               isActive={isActive(param, false)}
-              variant="onlyIconNoEffects"
-              size="100%"
-              iconSize="80%"
+              variant='onlyIconNoEffects'
+              size='100%'
+              iconSize='80%'
               iconId={iconId.SmallArrowUp}
               onClick={handleSetCurrentState(param, false)}
             />
@@ -98,12 +100,11 @@ const Box = styled.div<{ isOpen?: boolean }>`
 
   min-height: 150px;
   max-height: 70vh;
-  min-width: 150px;
   min-width: max-content;
 
   overflow: hidden;
   border-radius: 2px;
-  /* border: 1px solid ${({ theme }) => theme.borderColor}; */
+    /* border: 1px solid ${({ theme }) => theme.borderColor}; */
 
   color: ${({ theme }) => theme.fontColorHeader};
   fill: ${({ theme }) => theme.fontColorHeader};
@@ -113,21 +114,20 @@ const Box = styled.div<{ isOpen?: boolean }>`
   background-color: ${({ theme }) => theme.backdropColor};
   box-shadow: ${({ theme }) => theme.globals.shadowMain};
   transition: all ${({ theme }) => theme.globals.timingFunctionMain},
-    transform ${({ theme }) => theme.globals.timingFnMui};
+  transform ${({ theme }) => theme.globals.timingFnMui};
 
   ${({ isOpen }) =>
-    isOpen
-      ? css`
-          transform: translate(0, 0);
-        `
-      : css`
-          transform: translate(0, 100%);
-          /* opacity: 0; */
-          visibility: hidden;
-          pointer-events: none;
-        `}
-
-  @media screen and (min-height: 480px) {
+          isOpen
+                  ? css`
+                    transform: translate(0, 0);
+                  `
+                  : css`
+                    transform: translate(0, 100%);
+                    /* opacity: 0; */
+                    visibility: hidden;
+                    pointer-events: none;
+                  `};
+  @media screen and(min-height: 480px) {
     max-height: 90vh;
   }
   @media screen and (max-width: 480px) {
@@ -149,10 +149,13 @@ const Title = styled.div`
 
   font-size: 14px;
 
+  color: ${({ theme }) => theme.fontColorHeader};
   background-color: ${({ theme }) => theme.backgroundColorMain};
+
   & span {
     padding: 0 8px;
   }
+
   @media screen and (min-width: 480px) {
     height: 26px;
   }
@@ -169,28 +172,31 @@ const SetOrderButton = styled(ButtonIcon)<{ isActive: boolean }>`
   visibility: hidden;
   fill: ${({ isActive, theme }) => (isActive ? theme.accentColor.base : theme.fontColorHeader)};
 `;
-
 const ListParam = styled.li<{ isActive: boolean }>`
   display: grid;
   grid-template-columns: 1fr 36px 36px;
   grid-template-rows: 36px;
   align-items: center;
+  position: relative;
 
   font-size: 14px;
 
   padding: 0 8px;
 
-  position: relative;
-
   cursor: default;
 
   button {
     visibility: ${({ isActive }) => (isActive ? 'visible' : 'hidden')};
+
     &::before {
     }
   }
+
+
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundColorMain};
+    color: ${({ theme }) => theme.fontColorHeader};
+    background-color: ${({ theme }) => theme.backgroundColorSecondary};
+
     button {
       visibility: visible;
     }
@@ -217,6 +223,7 @@ const ListParam = styled.li<{ isActive: boolean }>`
       background-color: ${({ theme }) => theme.accentColor.base};
     }
   }
+
   &:active {
   }
 

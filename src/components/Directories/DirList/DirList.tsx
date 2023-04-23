@@ -25,8 +25,7 @@ const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLUListElement>> =
                                                                                     ...pops
                                                                                   }) => {
   const renderList = useMemo(() => entryList ? entryList : list, [entryList, list]);
-  // const renderList = entryList ? entryList : list;
-  
+
   return (
     <Box>
       <ListBox>
@@ -100,7 +99,7 @@ const CreateParent = styled.div`
 
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
 
-  border-top: 1px solid ${({ theme }) => theme.borderColor};
+  border-top: 1px solid ${({ theme }) => theme.trBorderClr};
 `;
 const EmptyList = styled.div`
   display: flex;

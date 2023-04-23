@@ -7,6 +7,10 @@ const useTransactionsService = () => {
   const dispatch = useAppDispatch();
   const state = useTransactionsSelector();
 
+  function getById(id: string) {
+    return state.transactions.find(el => el._id === id);
+  }
+
   function create(data: ITransaction) {
     console.log('create tr', data);
   }
@@ -20,7 +24,15 @@ const useTransactionsService = () => {
   }
 
 
-  return { dispatch, ...state, create, deleteById, editById, useFilterSelectors: useTrFilterSelectors };
+  return {
+    dispatch,
+    ...state,
+    create,
+    deleteById,
+    editById,
+    getById,
+    useFilterSelectors: useTrFilterSelectors,
+  };
 };
 export type TransactionsService = typeof useTransactionsService;
 export default useTransactionsService as TransactionsService;

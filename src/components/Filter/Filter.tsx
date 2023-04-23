@@ -16,6 +16,7 @@ export type FilterSelectorType = {
   data: FilterSelectorDataType;
   ListComp: React.FC<any>;
 };
+
 export interface FilterProps extends ModalFormProps {
   useFilterSelectors: () => FilterSelectorType[] | [];
 }
@@ -45,8 +46,9 @@ const AppFilter: React.FC<FilterProps & ModalFormProps> = ({ useFilterSelectors,
 
   function onSelectorClick(idx: number) {
     setCurrentIdx(idx);
-    if (typeof idx === 'number') setCurrentData(selectors[idx]);
+    setCurrentData(selectors[idx]);
   }
+
   function onFilterStateChange(item: any) {
     console.log('onFilterStateChange', item);
   }
@@ -55,8 +57,8 @@ const AppFilter: React.FC<FilterProps & ModalFormProps> = ({ useFilterSelectors,
     <ModalDefSt {...props}>
       <FilterContainer>
         <DatePickers>
-          <InputDate type="datetime-local" placeholder="Дата і час" />
-          <InputDate type="datetime-local" placeholder="Дата і час" />
+          <InputDate type='datetime-local' placeholder='Дата і час' />
+          <InputDate type='datetime-local' placeholder='Дата і час' />
         </DatePickers>
 
         <Bottom>
@@ -156,6 +158,7 @@ const InputDate = styled.input`
   border: 1px solid ${({ theme }) => theme.trBorderClr};
   background-color: ${({ theme }) => theme.backgroundColorLight};
   color: ${({ theme }) => theme.fillColorHeader};
+
   &::placeholder {
     color: ${({ theme }) => theme.globals.inputPlaceholderColor};
   }

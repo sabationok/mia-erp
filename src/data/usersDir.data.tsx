@@ -1,5 +1,5 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
-import { IUser } from 'redux/auth/auth.slice';
+import { IUser } from 'redux/auth/auth.types';
 
 export const usersDirColumns: CellTittleProps[] = [
   {

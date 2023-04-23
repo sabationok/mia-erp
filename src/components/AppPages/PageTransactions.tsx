@@ -1,7 +1,6 @@
 import TableList from 'components/TableList/TableList';
 import { takeFullGridArea } from './pagesStyles';
-import { transactionsColumns, transactionsSearchParams } from 'data';
-
+import { transactionsColumns, transactionsMockData, transactionsSearchParams } from 'data';
 import styled from 'styled-components';
 import useTransactionsServise from 'redux/transactions/useTransactionsService.hook';
 import { useTransactionsActions } from '../../data/transactions.data';
@@ -17,7 +16,7 @@ const PageTransactions = () => {
       <TableList
         {...{
 
-          tableData: transactions,
+          tableData: transactionsMockData || transactions,
           tableTitles: transactionsColumns,
           tableActions: trActions,
           tableSearchParams: transactionsSearchParams.filter(el => el.search),

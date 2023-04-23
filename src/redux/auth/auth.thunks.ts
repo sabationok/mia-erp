@@ -2,8 +2,10 @@ import baseApi, { token } from 'api/baseApi';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 import { axiosErrorCheck } from 'utils';
-import { IAuthState, ICompany, IPermission, IUser } from './auth.slice';
+import { IAuthState, IUser } from './auth.types';
 import { AxiosResponse } from 'axios';
+import { IPermission } from '../permissions/permissions.types';
+import { ICompany } from '../companies/companies.types';
 
 const AUTH_API_BASENAME = '/auth';
 export const authApiRoutes = {
@@ -122,7 +124,7 @@ export const logOutUserThunk = createAsyncThunk<any, IPayloadLogOutUser>(
 
       token.unset();
 
-      
+
     } catch (error) {
       payload?.onError(error);
 

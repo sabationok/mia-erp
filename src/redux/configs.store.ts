@@ -7,10 +7,10 @@ export const persistorConfigs = {
     storage,
     whitelist: ['accessToken', 'isLoggedIn'],
   },
-  company: {
-    key: 'company',
+  permissions: {
+    key: 'permissions',
     storage: storageSession,
-    whitelist: ['company'],
+    whitelist: ['permission'],
   },
   appSettings: {
     key: 'appSettings',

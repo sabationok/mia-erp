@@ -1,5 +1,5 @@
 import { AnyAction, createSlice, Draft, PayloadAction } from '@reduxjs/toolkit';
-import { IUser } from 'redux/auth/auth.slice';
+import { IUser } from 'redux/auth/auth.types';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 // import { actionLogInUser, actionLogOutUser, actionSetCurrentUser } from './authActions';
 import { getAllUsersThunk } from './usersThunks';
@@ -9,6 +9,7 @@ export interface IUsersState {
   isLoading: boolean;
   error: any;
 }
+
 const initialState: IUsersState = {
   users: [],
   isLoading: false,
@@ -47,9 +48,11 @@ export const usersSlice = createSlice({
 function inPending(action: AnyAction) {
   return action.type.endsWith('pending');
 }
+
 function inError(action: AnyAction) {
   return action.type.endsWith('rejected');
 }
+
 export const usersReducer = usersSlice.reducer;
 
 // [getAllUsersThunk.pending]: (state, action) => {

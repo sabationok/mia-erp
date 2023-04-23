@@ -1,6 +1,6 @@
 import { ICategory } from './categories.types';
 import { ICount } from './counts.types';
-import { IBase } from './global.types';
+import { IBase } from '../redux/global.types';
 import { IContractor } from './contractors.types';
 import { ICompanyActivity } from './companyActivities.types';
 

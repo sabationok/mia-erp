@@ -20,12 +20,12 @@ export const token = {
 };
 
 export const baseURL = {
-  setLocalhost() {
-    baseApi.defaults.baseURL = `http://localhost:${PORT}/api/`;
+  setLocalhost(companyId?: string) {
+    baseApi.defaults.baseURL = companyId ? `http://localhost:${PORT}/api/${companyId}/` : `http://localhost:${PORT}/api/`;
     return baseApi;
   },
-  setRailWay() {
-    baseApi.defaults.baseURL = ``;
+  setRailWay(companyId?: string) {
+    baseApi.defaults.baseURL = companyId ? `${companyId}/` : ``;
     return baseApi;
   },
 };

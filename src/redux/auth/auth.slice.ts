@@ -1,70 +1,25 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IBase } from 'data/global.types';
-import { ICustomRole } from 'data/customRoles.types';
 import { karina_avatar } from 'img';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 // import { actionLogInUser, actionLogOutUser, actionSetCurrentUser } from './authActions';
 import { getCurrentUserThunk, logInUserThunk, logOutUserThunk, registerUserThunk } from './auth.thunks';
+import { ISystemRole, IUser } from './auth.types';
+import { IPermission } from '../permissions/permissions.types';
+import { initialPermission } from '../permissions/permissions.slice';
 
-export interface ISystemRole extends IBase {
-  name?: string;
-  label?: string;
-  actions: string[];
-}
 
-export interface IUser extends IBase {
-  name?: string;
-  email?: string;
-  avatarURL?: string;
-  sysRole?: ISystemRole;
-}
-
-const initialUserRole: ISystemRole = {
+const initialUserSystemRole: ISystemRole = {
   _id: '5',
   label: 'Адміністратор',
   name: 'ADMIN',
   actions: [],
 };
-const initialUser: IUser = {
+export const initialUser: IUser = {
   _id: 'sdth651g6db5fg16d',
   name: 'Каріна Дизайнівна Дизайнер',
   email: 'karina.des@mail.com',
   avatarURL: karina_avatar,
-  sysRole: initialUserRole,
-};
-
-export interface ICompany extends IBase {
-  name: string;
-  email: string;
-  avatarURL?: string;
-  customRole: any;
-}
-
-const initialCompany: ICompany = {
-  _id: 'gndfgnfghnsrymgh',
-  name: 'ФОП Каріна Дизайнівна Дизайнер',
-  email: 'karina.FOP@mail.com',
-  avatarURL: karina_avatar,
-  customRole: initialUserRole,
-};
-
-export interface IPermission extends IBase {
-  company: ICompany;
-  user: Partial<IUser>;
-  role: Partial<ICustomRole>;
-  status?: boolean;
-  permissionToken?: string;
-}
-
-const initialPermission: IPermission = {
-  _id: 'sdfbsdfbdfg',
-  company: initialCompany,
-  user: initialUser,
-  role: {
-    label: 'Фінансист',
-    descr: 'Такоє собі посада',
-    actions: [],
-  },
+  sysRole: initialUserSystemRole,
 };
 
 export interface IAuthState {

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { IUser } from '../../../redux/auth/auth.slice';
+import { IUser } from 'redux/auth/auth.types';
 
 export interface ProfileCardProps extends Omit<IUser, '_id'> {
   // avatarURL?: string;

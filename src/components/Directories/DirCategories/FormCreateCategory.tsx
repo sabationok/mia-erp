@@ -15,9 +15,9 @@ export interface FormCreateCategoryProps extends Omit<ModalFormProps, 'onSubmit'
 
 
 const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
+                                                                 _id,
                                                                  type,
                                                                  owner,
-                                                                 _id,
                                                                  edit,
                                                                  category,
                                                                  onSubmit, ...props
