@@ -61,7 +61,7 @@ const TableSortParamsList: React.FC<TableSortParamsListProps> = ({
 
       <SelectList>
         {tableSortParams?.map(param => (
-          <ListParam key={param.dataKey} isActive={param.dataKey === currentEl?.dataKey}>
+          <ListParam key={param.dataKey || param.dataPath} isActive={param.dataPath === currentEl?.dataPath}>
             <ParamLabel>{param.name || param.label}</ParamLabel>
 
             <SetOrderButton

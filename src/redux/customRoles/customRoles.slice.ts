@@ -2,7 +2,7 @@ import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getAllRolesThunk } from './customRoles.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { rolesMockData } from 'data/customRoles.data';
-import { ICustomRole } from 'data/customRoles.types';
+import { ICustomRole } from 'redux/customRoles/customRoles.types';
 
 export interface ICustomRolesState {
   customRoles: ICustomRole[];

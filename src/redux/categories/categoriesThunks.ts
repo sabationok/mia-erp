@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosResponse } from 'axios';
-import { ICategory } from 'data/categories.types';
+import { ICategory } from 'redux/categories/categories.types';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 import { axiosErrorCheck } from 'utils';
 
@@ -23,6 +23,7 @@ export interface IAllCategories {
 export interface IPayloadGetAllTr {
   submitData?: null;
   onSuccess: (data?: ICategory[]) => void;
+
   onError(error?: AuthErrorType): void;
 }
 
@@ -40,7 +41,7 @@ export const getAllCategoriesThunk = createAsyncThunk<IAllCategories, IPayloadGe
 
       return thunkAPI.rejectWithValue(axiosErrorCheck(error));
     }
-  }
+  },
 );
 
 // export const addCategoryThunk = createAsyncThunk('categories/addCategoryThunk', async (payload, thunkAPI) => {

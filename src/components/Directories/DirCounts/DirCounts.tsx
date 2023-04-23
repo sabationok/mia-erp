@@ -4,7 +4,7 @@ import DirList from '../DirList/DirList';
 import { founder } from 'utils';
 import styled from 'styled-components';
 import useCountsService from 'redux/counts/useCountsService.hook';
-import { CountType, ICount } from 'data/counts.types';
+import { CountType, ICount } from 'redux/counts/counts.types';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FormCreateCount, { FormCreateCountProps } from './FormCreateCount';
 

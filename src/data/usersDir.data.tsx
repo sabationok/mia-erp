@@ -17,26 +17,26 @@ export const testUserKarina: IUser = {
 };
 export const usersDirColumns: CellTittleProps[] = [
   {
-    top: { name: 'ПІП', dataKey: 'fullName' },
-    bottom: { name: 'Роль', dataKey: 'permission', nestedDataKey: 'label' },
-    width: '200px',
-    action: 'cellDbl',
+    top: { name: 'ПІП', path: 'fullName' },
+    bottom: { name: 'Роль', path: 'permission.label' },
+    width: '250px',
+    action: 'valueByPath',
   },
   {
     top: { name: 'Електронна пошта', dataKey: 'email', uppercase: false },
     bottom: { name: 'Номер телефону', dataKey: 'phone' },
-    width: '190px',
+    width: '210px',
     action: 'contacts',
   },
   {
-    top: { name: 'Локація', dataKey: 'fullLocation' },
+    top: { name: 'Локація', path: 'fullLocation' },
     width: '170px',
-    action: 'cellDbl',
+    action: 'valueByPath',
   },
   {
-    top: { name: 'Коментар', dataKey: 'descr' },
+    top: { name: 'Коментар', path: 'descr' },
     width: '170px',
-    action: 'cellDbl',
+    action: 'valueByPath',
   },
   {
     top: { name: 'Створено', align: 'center', dataKey: 'createdAt' },

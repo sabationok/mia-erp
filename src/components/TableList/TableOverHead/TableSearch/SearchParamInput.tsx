@@ -17,9 +17,11 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
   const [filteredData, setFilteredData] = useState<SelectItem[]>(data || []);
   const [current, setCurrent] = useState<SelectItem | null>(defaultValue || selectedItem || null);
   const [isOpen, setIsOpen] = useState(false);
+
   function handleToggleList(state?: boolean) {
     setIsOpen(state || !isOpen);
   }
+
   function onSelectItemClick(item: SelectItem) {
     setCurrent(item);
 
@@ -39,6 +41,7 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
       return { ...prev, [name]: value };
     });
   }
+
   function onSerchParamReset() {
     setInputValue({ searchParam: '' });
   }
@@ -68,6 +71,7 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
       if (target instanceof HTMLElement && !target.closest('[data-select]')) setIsOpen(false);
       if (ev instanceof KeyboardEvent && ev?.code === 'Escape') setIsOpen(false);
     }
+
     document.addEventListener('click', onMenuClose);
     document.addEventListener('keydown', onMenuClose);
 
@@ -81,9 +85,9 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
     <InputBox className={isOpen ? 'isOpen' : ''} data-select>
       <StyledLabel className={isOpen ? 'isOpen' : ''}>
         <StyledInput
-          type="text"
-          placeholder="Параметр"
-          name="searchParam"
+          type='text'
+          placeholder='Параметр'
+          name='searchParam'
           className={isOpen ? 'isOpen' : ''}
           value={inputValue.searchParam}
           onChange={onChange}
@@ -91,7 +95,7 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
         />
 
         <ToggleButton onClick={() => handleToggleList()}>
-          <SvgIcon iconId={iconId.SmallArrowDown} className={'svgIcon'} size="24px" />
+          <SvgIcon iconId={iconId.SmallArrowDown} className={'svgIcon'} size='24px' />
         </ToggleButton>
       </StyledLabel>
 
@@ -100,7 +104,7 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
           {filteredData.length > 0 &&
             filteredData.map((item, idx) => (
               <ListItem
-                key={item.dataKey}
+                key={item.dataKey || item.dataPath}
                 title={item.label}
                 onClick={() => {
                   onSelectItemClick(item);
@@ -118,7 +122,7 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
         </ParamsList>
         {false && (
           <CloseListItem>
-            <ButtonIcon variant="outlinedSmall" onClick={onSerchParamReset}>
+            <ButtonIcon variant='outlinedSmall' onClick={onSerchParamReset}>
               Очистити
             </ButtonIcon>
           </CloseListItem>
@@ -136,7 +140,7 @@ const InputBox = styled.label`
 
   fill: ${({ theme }) => theme.accentColor.base};
 
-  /* &::before {
+    /* &::before {
     display: block;
     content: '';
     position: absolute;
@@ -157,6 +161,7 @@ const InputBox = styled.label`
       width: calc(100% + 4px);
     }
   } */
+
   &.isOpen {
     & .svgIcon {
       transform: rotate(-180deg);
@@ -195,11 +200,14 @@ const StyledLabel = styled.label`
     &::before {
       width: calc(100% + 4px);
     }
+
     /* background: linear-gradient(#fff, #fff) padding-box,
       linear-gradient(90deg, rgba(255, 175, 61, 0) 50%, rgba(255, 175, 61, 1) 50%, rgba(255, 175, 61, 0) 50%) border-box; */
   }
+
   &:focus-within {
   }
+
   &:focus {
     outline-style: none;
   }
@@ -233,6 +241,7 @@ const StyledInput = styled.input`
   &:focus {
     outline-style: none;
   }
+
   &.isOpen {
     border-color: transparent;
   }
@@ -284,7 +293,7 @@ const ParamsListContainer = styled.ul<{ isOpen: boolean }>`
   box-shadow: var(--header-shadow);
 
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
-  /* border: 1px solid ${({ theme }) => theme.trBorderClr}; */
+    /* border: 1px solid ${({ theme }) => theme.trBorderClr}; */
   border: ${({ isOpen }) => (isOpen ? '1px' : '0')} solid ${({ theme }) => theme.trBorderClr};
 
   @media screen and (max-width: 480px) {
@@ -333,6 +342,7 @@ const CloseListItem = styled.div`
 
   border-top: 1px solid ${({ theme }) => theme.trBorderClr};
   background-color: inherit;
+
   &:hover,
   &:active {
     background-color: inherit;

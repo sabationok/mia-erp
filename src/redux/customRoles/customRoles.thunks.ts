@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosResponse } from 'axios';
-import { ICustomRole } from 'data/customRoles.types';
+import { ICustomRole } from 'redux/customRoles/customRoles.types';
 // import { any } from 'data/counts.types';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { axiosErrorCheck } from 'utils';

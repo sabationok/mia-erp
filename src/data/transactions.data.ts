@@ -2,8 +2,11 @@ import { SelectItem, TableActionsProps, useTable } from 'components/TableList/Ta
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { iconId } from '../img/sprite';
 import { selects } from './select.data';
-import { ITransaction } from './transactions.types';
+import { ITransaction } from '../redux/transactions/transactions.types';
 import useTransactionsService from '../redux/transactions/useTransactionsService.hook';
+import { useModalProvider } from '../components/ModalProvider/ModalProvider';
+import TransactionForm, { TransactionsFilterOpt } from '../components/Forms/TransactionForm';
+import { CategoriesTypesMap } from '../redux/categories/categories.types';
 
 export const transactionsColumns: CellTittleProps[] = [
   {
@@ -88,11 +91,16 @@ export const transactionsSearchParams: SelectItem[] = [
   { label: 'Статус', dataPath: 'status', filter: false, search: true, sort: true },
 ];
 
+const filterOptions: TransactionsFilterOpt[] = [
+  { label: CategoriesTypesMap.INCOME, value: 'INCOME' },
+  { label: CategoriesTypesMap.TRANSFER, value: 'TRANSFER' },
+  { label: CategoriesTypesMap.EXPENSE, value: 'EXPENSE' },
+];
 
 export const useTransactionsActions = () => {
+  const modal = useModalProvider();
   const { editById, create, deleteById } = useTransactionsService();
   const table = useTable();
-
 
   return {
     top: [
@@ -101,7 +109,10 @@ export const useTransactionsActions = () => {
         title: 'Редагування транзакції',
         iconId: iconId.edit,
         onClick: () => {
-          console.log(table);
+          modal.handleOpenModal({
+            ModalChildren: TransactionForm,
+            modalChildrenProps: { title: 'Редагування транзакції', filterOptions },
+          });
         },
         disableChek: () => false,
       },
@@ -110,6 +121,10 @@ export const useTransactionsActions = () => {
         title: 'Копіювання транзакції',
         iconId: iconId.copy,
         onClick: () => {
+          modal.handleOpenModal({
+            ModalChildren: TransactionForm,
+            modalChildrenProps: { title: 'Копіювання транзакції', filterOptions },
+          });
         },
         disableChek: () => false,
       },
@@ -119,35 +134,48 @@ export const useTransactionsActions = () => {
         iconId: iconId.delete,
         iconSize: '90%',
         onClick: () => {
+
         },
         disableChek: () => false,
       },
     ],
     bottom: [
       {
-        name: 'deleteTr',
+        name: 'createIncomeTr',
         title: 'Дохід',
         iconId: iconId.INCOME,
         iconSize: '90%',
         onClick: () => {
+          modal.handleOpenModal({
+            ModalChildren: TransactionForm,
+            modalChildrenProps: { title: 'Дохід', filterOptions, defaultState: { type: 'INCOME' } },
+          });
         },
         disableChek: () => false,
       },
       {
-        name: 'deleteTr',
+        name: 'createTransferTr',
         title: 'Переказ між рахунками',
         iconId: iconId.TRANSFER,
         iconSize: '90%',
         onClick: () => {
+          modal.handleOpenModal({
+            ModalChildren: TransactionForm,
+            modalChildrenProps: { title: 'Переказ між рахунками', filterOptions, defaultState: { type: 'TRANSFER' } },
+          });
         },
         disableChek: () => false,
       },
       {
-        name: 'deleteTr',
+        name: 'createExpenseTr',
         title: 'Витрата',
         iconId: iconId.EXPENSE,
         iconSize: '90%',
         onClick: () => {
+          modal.handleOpenModal({
+            ModalChildren: TransactionForm,
+            modalChildrenProps: { title: 'Витрата', filterOptions, defaultState: { type: 'EXPENSE' } },
+          });
         },
         disableChek: () => false,
       },

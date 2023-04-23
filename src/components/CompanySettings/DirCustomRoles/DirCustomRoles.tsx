@@ -3,7 +3,7 @@ import ModalForm, { FilterOpt, ModalFormProps } from 'components/ModalForm/Modal
 import DirList from '../../Directories/DirList/DirList';
 // import { founder } from 'utils';
 import styled from 'styled-components';
-import { CountType } from 'data/counts.types';
+import { CountType } from 'redux/counts/counts.types';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import useCustomRolesService from 'redux/customRoles/useCustomRolesServise.hook';
 import FormCreateCustomRole from './FormCreateCustomRole';

@@ -1,7 +1,7 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getAllTransactionsThunk } from 'redux/transactions/transactions.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
-import { ITransaction } from 'data/transactions.types';
+import { ITransaction } from 'redux/transactions/transactions.types';
 
 export interface ITransactionsState {
   transactions: ITransaction[];

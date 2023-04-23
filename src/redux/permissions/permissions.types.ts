@@ -1,4 +1,4 @@
-import { ICustomRole } from '../../data/customRoles.types';
+import { ICustomRole } from '../customRoles/customRoles.types';
 import { IBase } from '../global.types';
 import { ICompany } from '../companies/companies.types';
 import { IUser } from '../auth/auth.types';

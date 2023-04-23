@@ -2,7 +2,7 @@ import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import InputTextPrimary from '../../atoms/Inputs/InputTextPrimary';
-import { ICompanyActivity, ICompanyActivityFormData } from '../../../data/companyActivities.types';
+import { ICompanyActivity, ICompanyActivityFormData } from '../../../redux/companyActivities/companyActivities.types';
 
 export interface FormCreateCompanyActivityProps extends Omit<ModalFormProps, 'onSubmit'> {
   _id?: string;

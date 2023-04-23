@@ -1,5 +1,5 @@
 import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
-import { CategoriesTypesMap, CategoryTypes, ICategory, ICategoryFormData } from 'data/categories.types';
+import { CategoriesTypesMap, CategoryTypes, ICategory, ICategoryFormData } from 'redux/categories/categories.types';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import InputTextPrimary from '../../atoms/Inputs/InputTextPrimary';

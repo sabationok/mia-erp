@@ -1,7 +1,7 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getAllCountsThunk } from 'redux/counts/counts.thunks';
 import { AuthErrorType } from 'redux/reduxTypes.types';
-import { ICount } from 'data/counts.types';
+import { ICount } from 'redux/counts/counts.types';
 
 export interface ICountsState {
   counts: ICount[];
@@ -38,6 +38,7 @@ export const countsSlice = createSlice({
 function inPending(action: AnyAction) {
   return action.type.endsWith('pending');
 }
+
 function inError(action: AnyAction) {
   return action.type.endsWith('rejected');
 }

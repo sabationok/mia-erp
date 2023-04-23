@@ -3,23 +3,42 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ModalFormProps } from './ModalForm';
 
-export interface ModalFormFilterProps extends Pick<ModalFormProps, 'filterOptions' | 'onOptSelect'> {
+export interface ModalFormFilterProps extends Pick<ModalFormProps, 'filterOptions' | 'onOptSelect' | 'preventFilter' | 'defaultFilterValue'> {
 }
 
 const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivElement>> = ({
                                                                                               filterOptions,
                                                                                               onOptSelect,
+                                                                                              preventFilter,
+                                                                                              defaultFilterValue,
                                                                                               ...props
                                                                                             }) => {
   const [current, setCurrent] = useState<number>(0);
 
   useEffect(() => {
+    if (preventFilter || defaultFilterValue) return;
+
     if (filterOptions) {
-      const opt = filterOptions && filterOptions[0];
-      if (typeof onOptSelect === 'function') onOptSelect(opt);
+      const opt = Array.isArray(filterOptions) && filterOptions[current];
+      (typeof onOptSelect === 'function') && onOptSelect(opt);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    if (defaultFilterValue && filterOptions) {
+      const defIndex = filterOptions.findIndex(el => el.value === defaultFilterValue);
+      defIndex > 0 && setCurrent(defIndex);
+    }
+
+  }, [defaultFilterValue, filterOptions]);
+
+  useEffect(() => {
+    if (Array.isArray(filterOptions)) {
+      // if (typeof onOptSelect === 'function') onOptSelect(filterOptions[current]);
+    }
+  }, [current, filterOptions, onOptSelect]);
+
+
   return (
     <Filter className='filter' gridRepeat={filterOptions?.length} {...props}>
       {filterOptions &&
@@ -31,7 +50,7 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
             className={current === idx ? 'filterBtn active' : 'filterBtn'}
             onClick={() => {
               setCurrent(idx);
-              if (typeof onOptSelect === 'function') onOptSelect(opt);
+              if (typeof onOptSelect === 'function') onOptSelect(filterOptions[idx]);
             }}
           >
             {opt?.label || opt?.name || null}

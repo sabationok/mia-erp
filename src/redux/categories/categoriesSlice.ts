@@ -1,5 +1,5 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ICategory } from 'data/categories.types';
+import { ICategory } from 'redux/categories/categories.types';
 
 import { getAllCategoriesThunk } from 'redux/categories/categoriesThunks';
 import { AuthErrorType } from 'redux/reduxTypes.types';
@@ -39,6 +39,7 @@ export const categoriesSlice = createSlice({
 function inPending(action: AnyAction) {
   return action.type.endsWith('pending');
 }
+
 function inError(action: AnyAction) {
   return action.type.endsWith('rejected');
 }

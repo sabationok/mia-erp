@@ -9,6 +9,8 @@ import { useModal } from 'components/ModalProvider/ModalComponent';
 export interface ModalFormProps extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit' | 'onReset'> {
   filterOptions?: FilterOpt[];
   footer?: boolean;
+  preventFilter?: boolean;
+  defaultFilterValue?: string | number;
   beforeSubmit?: <T = any>(args?: T) => void | any;
   onSubmit?: <T = any>(args?: T) => void | any;
   afterSubmit?: <T = any>(args?: T) => void | any;
@@ -32,6 +34,8 @@ const ModalForm: React.FC<ModalFormProps> = ({
                                                children,
                                                beforeSubmit,
                                                filterOptions,
+                                               defaultFilterValue,
+                                               preventFilter,
                                                onSubmit,
                                                afterSubmit,
                                                beforeClose,
@@ -73,8 +77,14 @@ const ModalForm: React.FC<ModalFormProps> = ({
     <ModalFormContainer className='modalForm' onSubmit={handleSubmit} onReset={handleReset} {...props}>
       <ModalHeader title={title} />
 
-      <ModalMain className='main' filterOn={filterOptions ? true : false}>
-        {filterOptions && <ModalFilter onOptSelect={handleSelect} filterOptions={filterOptions} />}
+      <ModalMain className='main' filterOn={!!filterOptions}>
+        {filterOptions &&
+          <ModalFilter
+            onOptSelect={handleSelect}
+            filterOptions={filterOptions}
+            preventFilter={preventFilter}
+            defaultFilterValue={defaultFilterValue}
+          />}
 
         <MainScroll className='scroll'>{children}</MainScroll>
       </ModalMain>

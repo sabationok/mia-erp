@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosResponse } from 'axios';
-import { ICount } from 'data/counts.types';
+import { ICount } from 'redux/counts/counts.types';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 import { axiosErrorCheck } from 'utils';
 
@@ -18,11 +18,14 @@ export const countsApiRoutes = {
 export interface IAllCounts {
   data: ICount[];
 }
+
 export interface IPayloadGetAllTr {
   submitData?: null;
   onSuccess: (data?: ICount[]) => void;
+
   onError(error?: AuthErrorType): void;
 }
+
 // export interface IPayloadLogInUser {
 //   submitData: { email: string; password: string };
 //   onSuccess(data?: any): void ;
@@ -52,7 +55,7 @@ export const getAllCountsThunk = createAsyncThunk<IAllCounts, IPayloadGetAllTr>(
 
       return thunkAPI.rejectWithValue(axiosErrorCheck(error));
     }
-  }
+  },
 );
 
 // export const addCountThunk = createAsyncThunk<>('counts/addCountThunk', async (payload, thunkAPI) => {

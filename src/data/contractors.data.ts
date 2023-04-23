@@ -1,4 +1,4 @@
-import { IContractor } from './contractors.types';
+import { IContractor } from '../redux/contractors/contractors.types';
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 
 

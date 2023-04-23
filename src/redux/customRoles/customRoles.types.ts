@@ -1,4 +1,4 @@
-import { IBase } from '../redux/global.types';
+import { IBase } from '../global.types';
 
 export interface ICustomRole extends IBase {
   label?: string;

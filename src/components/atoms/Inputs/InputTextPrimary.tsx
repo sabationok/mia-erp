@@ -11,30 +11,31 @@ export interface InputPrimaryProps extends React.InputHTMLAttributes<HTMLInputEl
 }
 
 const InputTextPrimary: React.FC<InputPrimaryProps> = ({
-  label,
-  className,
-  disabled,
-  direction = 'row',
-  labelUppercase,
-  helperText,
-  error,
-  success,
-  ...props
-}) => {
+                                                         label,
+                                                         className,
+                                                         disabled,
+                                                         direction = 'row',
+                                                         labelUppercase,
+                                                         helperText,
+                                                         error,
+                                                         success,
+                                                         ...props
+                                                       }) => {
   return (
     <Label className={className} disabled={disabled}>
       <Wrapper isLabel={label ? true : false} direction={direction}>
         {label && (
-          <LabelText uppercase={labelUppercase} className="label">
+          <LabelText uppercase={labelUppercase} className='label'>
             {label}
           </LabelText>
         )}
 
-        <InputText className="input" disabled={disabled} {...props} />
+        <InputText className='input' disabled={disabled} {...props} />
       </Wrapper>
-      <HelperText error={error} success={success}>
+
+      {helperText && <HelperText error={error} success={success}>
         {helperText}
-      </HelperText>
+      </HelperText>}
     </Label>
   );
 };
@@ -58,7 +59,7 @@ const LabelText = styled.div<{ uppercase?: boolean }>`
 const Wrapper = styled.div<{ isLabel: boolean; direction?: 'column' | 'row' }>`
   display: grid;
   grid-template-columns: ${({ isLabel, direction }) =>
-    direction === 'row' ? `${isLabel ? '100px' : ''}, 1fr` : '1fr'};
+          direction === 'row' ? `${isLabel ? '100px' : ''}, 1fr` : '1fr'};
   align-items: center;
   gap: 4px;
 

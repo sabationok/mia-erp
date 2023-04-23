@@ -26,11 +26,6 @@ const CellValueByPath: React.FC<CellValueByPathProps & React.HTMLAttributes<HTML
     path: bottom?.path,
   });
 
-  console.log({
-    contentTop,
-    contentBottom,
-  });
-
 
   return (
     <CellBase style={{ width }} {...props}>

@@ -3,7 +3,7 @@ import ModalForm, { FilterOpt, ModalFormProps } from 'components/ModalForm/Modal
 import DirList from '../DirList/DirList';
 import { founder } from 'utils';
 import useCategoriesService from 'redux/categories/useCategoriesService.hook';
-import { CategoryTypes, ICategory } from 'data/categories.types';
+import { CategoryTypes, ICategory } from 'redux/categories/categories.types';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FormCreateCategory from './FormCreateCategory';
 import styled from 'styled-components';

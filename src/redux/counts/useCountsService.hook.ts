@@ -1,6 +1,6 @@
 import { useCountsSelector } from 'redux/selectors.store';
 import { useAppDispatch } from 'redux/store.store';
-import { ICount } from '../../data/counts.types';
+import { ICount } from './counts.types';
 
 const useCountsService = () => {
   const dispatch = useAppDispatch();

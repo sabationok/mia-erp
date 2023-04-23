@@ -7,7 +7,7 @@ import DirMarks, { DirMarksProps } from 'components/Directories/DirMarks';
 import DirContractors, { DirContractorsProps } from 'components/Directories/DirContractors';
 import { contractorsColumns, contractorsMockData } from './contractors.data';
 
-import { CategoriesTypesMap } from './categories.types';
+import { CategoriesTypesMap } from '../redux/categories/categories.types';
 import DirCompanyActivities, {
   DirCompanyActivitiesProps,
 } from 'components/Directories/DirCompanyActivities/DirCompanyActivities';
@@ -27,7 +27,7 @@ const CountsProps: DirCountsProps = {
     { label: 'Пасивні', value: 'PASSIVE' },
   ],
 };
-const CategoriesProps: DirCategoriesProps = {
+export const CategoriesProps: DirCategoriesProps = {
   title: 'Категорії',
   filterOptions: [
     { label: CategoriesTypesMap.INCOME, value: 'INCOME' },

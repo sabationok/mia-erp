@@ -1,6 +1,6 @@
 import { useCategoriesSelector } from 'redux/selectors.store';
 import { useAppDispatch } from 'redux/store.store';
-import { ICategoryFormData } from '../../data/categories.types';
+import { ICategoryFormData } from './categories.types';
 
 const useCategoriesService = () => {
   const dispatch = useAppDispatch();

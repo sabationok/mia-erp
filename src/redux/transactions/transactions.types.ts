@@ -1,8 +1,8 @@
-import { ICategory } from './categories.types';
-import { ICount } from './counts.types';
-import { IBase } from '../redux/global.types';
-import { IContractor } from './contractors.types';
-import { ICompanyActivity } from './companyActivities.types';
+import { ICategory } from '../categories/categories.types';
+import { ICount } from '../counts/counts.types';
+import { IBase } from '../global.types';
+import { IContractor } from '../contractors/contractors.types';
+import { ICompanyActivity } from '../companyActivities/companyActivities.types';
 
 export type CurrencyCode = 'UAH';
 export type TransactionType = 'EXPENSE' | 'TRANSFER' | 'INCOME';
@@ -42,4 +42,29 @@ export interface ITransaction extends IBase {
   status?: TrStatus;
   comment?: string;
   tags?: string[];
+}
+
+export interface ITransactionForReq {
+  transactionDate?: Date | string;
+  amount?: number;
+  type?: TransactionType;
+  currency?: CurrencyCode;
+  countIn?: string;
+  subCountIn?: string;
+  countOut?: string;
+  subCountOut?: string;
+  category?: string;
+  subCategory?: string;
+  contractor?: string;
+  project?: string;
+  document?: string;
+  companyActivity?: string;
+  status?: TrStatus;
+  comment?: string;
+  tags?: string[];
+}
+
+export interface ITransactionReqData {
+  _id?: string;
+  data: Partial<ITransactionForReq>;
 }

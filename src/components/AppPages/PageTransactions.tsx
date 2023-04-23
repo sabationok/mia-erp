@@ -15,7 +15,6 @@ const PageTransactions = () => {
     <Page>
       <TableList
         {...{
-
           tableData: transactionsMockData || transactions,
           tableTitles: transactionsColumns,
           tableActions: trActions,

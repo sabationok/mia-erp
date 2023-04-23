@@ -6,7 +6,7 @@ import { useTable } from '../TableList';
 
 import styled from 'styled-components';
 import { ThRow, ThRowData, ThRowStickyEl } from './TableHeadRow';
-import { ITransaction } from '../../../data/transactions.types';
+import { ITransaction } from '../../../redux/transactions/transactions.types';
 
 export interface TableRowProps {
   rowData: ITransaction;

@@ -1,8 +1,8 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import React, { useMemo } from 'react';
 import DirListItem, { DirListItemAddsProps, DirListItemProps } from './DirListItem';
-import { ICategory } from 'data/categories.types';
-import { ICount } from 'data/counts.types';
+import { ICategory } from 'redux/categories/categories.types';
+import { ICount } from 'redux/counts/counts.types';
 import styled from 'styled-components';
 
 export interface DirListProps extends Partial<DirListItemAddsProps> {

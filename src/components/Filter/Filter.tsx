@@ -6,8 +6,8 @@ import styled from 'styled-components';
 import SelectorContent from './SelectorContent/SelectorContent';
 import { MinTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 
-import { ICount } from 'data/counts.types';
-import { ICategory } from 'data/categories.types';
+import { ICount } from 'redux/counts/counts.types';
+import { ICategory } from 'redux/categories/categories.types';
 
 export type FilterSelectorDataType = ICount[] | ICategory[] | any[];
 export type FilterSelectorType = {

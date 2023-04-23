@@ -9,7 +9,7 @@ import {
   getCurrentPermissionThunk,
 } from './permissions.thunk';
 import { initialCompany } from '../companies/companies.slice';
-import { ICustomRole } from '../../data/customRoles.types';
+import { ICustomRole } from '../customRoles/customRoles.types';
 import { testUserKarina } from '../../data/usersDir.data';
 
 export const iniialCustomRole: ICustomRole = {

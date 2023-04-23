@@ -1,6 +1,6 @@
 import { useAppDispatch } from 'redux/store.store';
 import { useCustomRolesSelector } from 'redux/selectors.store';
-import { ICustomRole } from 'data/customRoles.types';
+import { ICustomRole } from 'redux/customRoles/customRoles.types';
 
 const useCustomRolesService = () => {
   const dispatch = useAppDispatch;

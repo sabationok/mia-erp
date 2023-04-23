@@ -4,11 +4,12 @@ import {
   transactionsMockData,
   transactionsSearchParams,
   trTableActions,
+  useTransactionsActions,
 } from './transactions.data';
 import { trCategories } from './categories.data';
 import addButtons from './future/createActions.data';
 import directories from './directories.data';
-import { iconId } from '../img/sprite/iconId.data';
+import { iconId } from '../img/sprite';
 import { appPages, pages } from './pages.data';
 import { raports } from './raports.data';
 import { companiesTableColumns } from './companies.data';
@@ -20,7 +21,9 @@ import { permissionsSearchParams, permissionsTableColumns } from './permissions.
 
 export {
   sideBarLeftData,
-  statusData, transactionsMockData,
+  statusData,
+  transactionsMockData,
+  useTransactionsActions,
   trCategories,
   addButtons,
   statusDataMap,

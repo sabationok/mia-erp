@@ -1,4 +1,4 @@
-import { ICompanyActivity } from './companyActivities.types';
+import { ICompanyActivity } from '../redux/companyActivities/companyActivities.types';
 
 export const activitiesMockData: ICompanyActivity[] = [
   {

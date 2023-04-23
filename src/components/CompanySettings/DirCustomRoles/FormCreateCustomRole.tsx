@@ -1,7 +1,7 @@
 import InputTextPrimary from 'components/atoms/Inputs/InputTextPrimary';
 import TitleBase from 'components/atoms/TitleBase';
 import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
-import { ICustomRole } from 'data/customRoles.types';
+import { ICustomRole } from 'redux/customRoles/customRoles.types';
 import { useState } from 'react';
 import styled from 'styled-components';
 
