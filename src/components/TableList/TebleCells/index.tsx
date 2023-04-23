@@ -4,13 +4,14 @@ import CellDateSimple from './CellDateSimple';
 import CellStatus from './CellStatus';
 import CellContactsDbl from './CellContacts';
 import CellTags from './CellTags';
+import CellValueByPath from './CellValueByPath';
 
 // export type CellActionsName = 'string' | 'cell' | 'cellDbl' | 'dateSimple' | 'dateDbl' | 'status';
 type CellVariantType = {
   [key: string]: React.FC<any>;
 };
 
-export const CellsMap: CellVariantType = {
+export const CellsMap = {
   cell: Cell,
   cellDbl: CellTextDbl,
   dateSimple: CellDateSimple,
@@ -18,6 +19,7 @@ export const CellsMap: CellVariantType = {
   dateDbl: CellDateSimple,
   contacts: CellContactsDbl,
   tags: CellTags,
+  valueByPath: CellValueByPath,
 };
 
 export type CellActionsName = keyof typeof CellsMap

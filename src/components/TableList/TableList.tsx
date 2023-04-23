@@ -17,8 +17,9 @@ export interface SelectItem extends Record<string, any> {
   label?: string;
   name?: string;
   value?: string | number;
-  dataKey: string;
+  dataKey?: string;
   sort?: boolean;
+  dataPath?: string;
 }
 
 export interface TableActionsProps {

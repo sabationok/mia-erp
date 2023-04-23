@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import styled from 'styled-components';
 import { takeFullGridArea, takeFullPlace } from './pagesStyles';
-import { companiesTableColumns } from 'data';
+import { permissionsSearchParams, permissionsTableColumns } from 'data';
 import { useAuthSelector } from 'redux/selectors.store';
 import ProfileCard from 'components/molecules/ProfileCard/ProfileCard';
 import usePermissionsService from 'redux/permissions/usePermissionsService.hook';
@@ -43,8 +43,6 @@ const PageHome: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log('permissions', permissions);
-  console.log('companiesTableColumns', companiesTableColumns);
 
   return (
     <Page>
@@ -73,7 +71,8 @@ const PageHome: React.FC = () => {
         <TableList
           {...{
             tableData: permissions,
-            tableTitles: companiesTableColumns,
+            tableTitles: permissionsTableColumns,
+            tableSearchParams: permissionsSearchParams,
             isFilter: false,
             isSearch: true,
             checkboxes: false,

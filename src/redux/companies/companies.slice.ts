@@ -7,13 +7,13 @@ export const initialCompany: ICompany = {
   name: 'Initial Comp',
   fullName: 'Initial Comp LTD',
   email: 'company@mail.com',
-
+  taxCode: '51651348435',
   owner: testUserKarina,
   companyToken: 'companyToken',
 };
 
 const initialCompState: ICompaniesState = {
-  companies: [initialCompany],
+  companies: [initialCompany, { ...initialCompany, _id: 'dfbsdfgbd13f5g13bdg1', name: 'Roga & Copyta' }],
   isLoading: false,
   error: null,
 };

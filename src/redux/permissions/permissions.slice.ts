@@ -26,9 +26,27 @@ export const initialPermission: IPermission = {
   user: testUserKarina,
   role: iniialCustomRole,
 };
+const testPermissions = [
+  initialPermission,
+  {
+    ...initialPermission,
+    company: { ...initialCompany, _id: 'dfbscxvfgnbd13f5g13bdg1', name: 'Roga & Copyta' },
+    role: { ...initialPermission.role, label: 'Менеджер' },
+  },
+  {
+    ...initialPermission,
+    company: { ...initialCompany, _id: 'dfbsdfsdf13f5g13bdg1', name: 'Roga & Copyta 3' },
+    role: { ...initialPermission.role, label: 'Помічник' },
+  },
+  {
+    ...initialPermission,
+    company: { ...initialCompany, _id: 'dfbsxcvgbd13f5g13bdg1', name: 'Roga & Copyta 4' },
+    role: { ...initialPermission.role, label: 'Аудитор' },
+  },
+];
 const initialPermState: IPermissionsState = {
   permission: initialPermission,
-  permissions: [initialPermission],
+  permissions: testPermissions,
   isLoading: false,
   error: null,
 };

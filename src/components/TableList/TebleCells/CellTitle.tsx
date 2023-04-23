@@ -13,6 +13,7 @@ export type CellTitleContent = {
   align?: 'center' | 'start' | 'end';
   uppercase?: boolean;
   icon?: IconIdType;
+  path?: string
 };
 export type CellTittleProps = {
   top: CellTitleContent;

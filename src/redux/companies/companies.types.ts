@@ -3,6 +3,9 @@ import { IPermission } from '../permissions/permissions.types';
 import { IUser } from '../auth/auth.types';
 import { StateErrorType } from '../reduxTypes.types';
 
+export interface ICompanyConfigs {
+}
+
 export interface ICompany extends IBase {
   name: string;
   email: string;
@@ -11,8 +14,9 @@ export interface ICompany extends IBase {
   taxCode?: string;
   owner: Partial<IUser>;
   logo?: string;
-  permissions?: IPermission[];
+  permissions?: Partial<IPermission>[];
   companyToken?: string;
+  configs?: ICompanyConfigs;
 }
 
 export interface ICompaniesState {
