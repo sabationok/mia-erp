@@ -8,6 +8,7 @@ import { takeFullGridArea, takeFullPlace } from './pagesStyles';
 import { companiesTableColumns } from 'data';
 import { useAuthSelector } from 'redux/selectors.store';
 import ProfileCard from 'components/molecules/ProfileCard/ProfileCard';
+import usePermissionsService from 'redux/permissions/usePermissionsService.hook';
 
 const companyTypes = [
   { title: 'Мої', param: 'own' },
@@ -26,14 +27,15 @@ const companyTypes = [
 
 const PageHome: React.FC = () => {
   const { user } = useAuthSelector();
-  const [serchParams, setSearchParaps] = useSearchParams({ companyType: companyTypes[0].param });
+  const { permissions } = usePermissionsService();
+  const [searchParams, setSearchParaps] = useSearchParams({ companyType: companyTypes[0].param });
 
   function onSearchParamClick(param: string) {
     setSearchParaps({ companyType: param });
   }
 
   function isActive(param: string) {
-    return serchParams.get('companyType') === param ? 'active' : '';
+    return searchParams.get('companyType') === param ? 'active' : '';
   }
 
   useEffect(() => {
@@ -69,6 +71,8 @@ const PageHome: React.FC = () => {
 
         <TableList
           {...{
+            
+            tableData: permissions,
             isFilter: false,
             isSearch: true,
             checkboxes: false,

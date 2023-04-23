@@ -18,6 +18,7 @@ export const initialPermission: IPermission = {
 };
 const initialPermState: IPermissionsState = {
   permission: initialPermission,
+  permissions: [initialPermission],
   isLoading: false,
   error: null,
 };

@@ -16,6 +16,7 @@ export interface IPermission extends IBase {
 
 export interface IPermissionsState {
   permission: IPermission;
+  permissions?: IPermission[];
   isLoading: boolean;
   error: StateErrorType;
 }
