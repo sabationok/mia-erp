@@ -83,7 +83,7 @@ const List = styled.ul`
 
   padding-top: 12px;
 
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+    // background-color: ${({ theme }) => theme.backgroundColorSecondary};
 `;
 const CreateParent = styled.div`
   display: flex;
@@ -97,7 +97,7 @@ const CreateParent = styled.div`
 
   padding: 8px;
 
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+    //background-color: ${({ theme }) => theme.backgroundColorSecondary};
 
   border-top: 1px solid ${({ theme }) => theme.trBorderClr};
 `;

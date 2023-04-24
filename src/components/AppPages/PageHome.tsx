@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { takeFullGridArea, takeFullPlace } from './pagesStyles';
 import { permissionsSearchParams, permissionsTableColumns } from 'data';
 import { useAuthSelector } from 'redux/selectors.store';
-import ProfileCard from 'components/molecules/ProfileCard/ProfileCard';
+import ProfileCard from 'components/atoms/ProfileCard/ProfileCard';
 import usePermissionsService from 'redux/permissions/usePermissionsService.hook';
 
 const companyTypes = [
@@ -16,22 +16,14 @@ const companyTypes = [
   { title: 'Запрошення', param: 'invites' },
   { title: 'Усі', param: 'all' },
 ];
-// const companies = [
-//   { _id: '', name: 'Рога і копита' },
-//   { _id: '', name: 'Казінакі макі' },
-// ];
-// const permissions = [
-//   { _id: '1', status: 'accepted', company: companies[0], user: '', role: { _id: '', name: 'manager' } },
-//   { _id: '2', status: 'pending', company: companies[1], user: '', role: { _id: '', name: 'counter' } },
-// ];
 
 const PageHome: React.FC = () => {
   const { user } = useAuthSelector();
   const { permissions } = usePermissionsService();
-  const [searchParams, setSearchParaps] = useSearchParams({ companyType: companyTypes[0].param });
+  const [searchParams, setSearchParams] = useSearchParams({ companyType: companyTypes[0].param });
 
   function onSearchParamClick(param: string) {
-    setSearchParaps({ companyType: param });
+    setSearchParams({ companyType: param });
   }
 
   function isActive(param: string) {
@@ -39,7 +31,7 @@ const PageHome: React.FC = () => {
   }
 
   useEffect(() => {
-    setSearchParaps({ companyType: companyTypes[0].param });
+    setSearchParams({ companyType: companyTypes[0].param });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -99,7 +91,7 @@ const Top = styled.div`
 
   overflow: hidden;
 
-  background-color: ${({ theme }) => theme.tableBackgroundColor};
+    //background-color: ${({ theme }) => theme.tableBackgroundColor};
 
   ${takeFullPlace}
 `;
@@ -112,6 +104,8 @@ const Bottom = styled.div`
   overflow: hidden;
 
   ${takeFullPlace}
+
+  background-color: ${({ theme }) => theme.tableBackgroundColor};
 `;
 
 const ProfileInfo = styled.div`

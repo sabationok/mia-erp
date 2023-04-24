@@ -81,13 +81,13 @@ const directories: IDirectory[] = [
   },
   {
     title: MarksProps.title,
-    iconId: iconId.boockMarAdd,
+    iconId: iconId.bookMarkAdd,
     ModalChildren: DirMarks, // !!!!
     modalChildrenProps: MarksProps,
     disabled: true,
   },
   {
-    title: CompanyActivitiesProps.title, iconId: iconId.boockMarAdd,
+    title: CompanyActivitiesProps.title, iconId: iconId.folder,
     ModalChildren: DirCompanyActivities,
     modalChildrenProps: CompanyActivitiesProps,
     disabled: true,

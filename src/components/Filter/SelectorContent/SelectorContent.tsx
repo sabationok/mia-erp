@@ -89,11 +89,13 @@ const SelectorContent: React.FC<
       )}
 
       <AcceptButtons>
-        <ButtonIcon variant='onlyIcon' size='26px' iconId={iconId.done} />
+        <ButtonIcon variant='onlyIcon' size='32px' iconSize='90%' iconId={iconId.done} />
 
-        <ButtonIcon variant='onlyIcon' size='26px' iconId={iconId.doneAll} onClick={() => onSelectAllClick(true)} />
+        <ButtonIcon variant='onlyIcon' size='32px' iconSize='90%' iconId={iconId.doneAll}
+                    onClick={() => onSelectAllClick(true)} />
 
-        <ButtonIcon variant='onlyIcon' size='26px' iconId={iconId.close} onClick={() => onSelectAllClick()} />
+        <ButtonIcon variant='onlyIcon' size='32px' iconSize='90%' iconId={iconId.close}
+                    onClick={() => onSelectAllClick()} />
       </AcceptButtons>
     </Content>
   );
@@ -101,7 +103,7 @@ const SelectorContent: React.FC<
 const Content = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 28px 1fr 28px;
+  grid-template-rows: 28px 1fr min-content;
 
   width: 100%;
   /* height: 100%; */
@@ -111,7 +113,8 @@ const Content = styled.div`
   color: ${({ theme }) => theme.fontColorHeader};
 
   border-radius: 2px;
-  background-color: ${({ theme }) => theme.backgroundColorLight};
+  background-color: ${({ theme }) => theme.fieldColor};
+    //border: 1px solid ${({ theme }) => theme.trBorderClr};
 
   @media screen and (min-width: 768px) {
     height: 100%;
@@ -181,7 +184,7 @@ const AcceptButtons = styled.div`
   justify-content: end;
   gap: 8px;
 
-  border-top: 1px solid ${({ theme }) => theme.globals.inputBorder};
+  border-top: 1px solid ${({ theme }) => theme.trBorderClrLight};
 `;
 
 export default SelectorContent;

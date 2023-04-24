@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
 import { NavLink, useLocation } from 'react-router-dom';
-import { pages } from 'data';
-import { iconId } from 'data';
+import { iconId, pages } from 'data';
 import { IPage } from 'redux/page/pageSlice';
 import styled from 'styled-components';
 
@@ -15,9 +14,11 @@ const NavMenu: React.FC = () => {
   function handleOpenNavMenu() {
     setIsOpen(!isOpen);
   }
+
   function handleSetActivePage(page: IPage) {
     setActivePage(page);
   }
+
   function onNavLinkClick(page: IPage) {
     handleSetActivePage(page);
 
@@ -38,6 +39,7 @@ const NavMenu: React.FC = () => {
       if (target instanceof HTMLElement && !target?.closest('[data-nav-menu]')) setIsOpen(false);
       if (ev instanceof KeyboardEvent && ev?.code === 'Escape') setIsOpen(false);
     }
+
     document.addEventListener('click', onMenuClose);
     document.addEventListener('keydown', onMenuClose);
 
@@ -50,14 +52,15 @@ const NavMenu: React.FC = () => {
   return (
     <StyledNavMenu data-nav-menu>
       <MenuButton
-        variant="def"
-        endIconSize="24px"
+        variant='def'
+        endIconSize='24px'
         endIconId={iconId.SmallArrowDown}
         isOpen={isOpen}
         onClick={handleOpenNavMenu}
       >
         {activePage?.title}
       </MenuButton>
+
       <NavMenuContainer isOpen={isOpen}>
         <NavList>
           {pages.map(item => {
@@ -69,7 +72,7 @@ const NavMenu: React.FC = () => {
                   onNavLinkClick(item);
                 }}
               >
-                <SvgIcon iconId={item.iconId} size="18px" />
+                <SvgIcon iconId={item.iconId} size='18px' />
 
                 {item?.title || '---'}
               </StyledNavLink>
@@ -80,6 +83,7 @@ const NavMenu: React.FC = () => {
     </StyledNavMenu>
   );
 };
+
 interface MenuState {
   isOpen: boolean;
 }
@@ -114,8 +118,9 @@ const MenuButton = styled(ButtonIcon)<{ isOpen: boolean }>`
 
   fill: ${({ theme: { accentColor } }) => accentColor.base};
   background-color: transparent;
+  border: 0;
 
-  & .svgIcon {
+  & .endIcon {
     transform: ${({ isOpen }) => `rotate(${isOpen ? '180' : '0'}deg)`};
   }
 `;
@@ -135,7 +140,8 @@ const NavMenuContainer = styled.div<MenuState>`
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
   max-height: ${({ isOpen }) => (isOpen ? '100vh' : '0')};
   box-shadow: ${({ isOpen, theme }) => (isOpen ? theme.globals.shadowMain : '')};
-  transition: max-height ${({ theme }) => theme.globals.timingFnMain}; ;
+  transition: max-height ${({ theme }) => theme.globals.timingFnMain}, box-shadow ${({ theme }) => theme.globals.timingFnMain};
+
 `;
 
 const NavList = styled.div`
@@ -181,17 +187,21 @@ const StyledNavLink = styled(NavLink)`
     transform: translateY(-50%);
     transition: all ${({ theme }) => theme.globals.timingFunctionLong};
   }
+
   &:hover {
     background-color: rgba(254, 254, 254, 0.05);
+
     &::before {
       height: 100%;
       background-color: var(--darkOrange);
     }
   }
+
   &.active {
     background-color: rgba(254, 254, 254, 0.05);
     /* color: var(--darkOrange); */
     /* fill: var(--darkOrange); */
+
     &::before {
       height: 80%;
       background-color: ${({ theme: { accentColor } }) => accentColor.base};

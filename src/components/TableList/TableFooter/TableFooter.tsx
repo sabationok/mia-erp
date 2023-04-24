@@ -43,7 +43,8 @@ const Footer = styled.div`
 
   padding: 2px 4px;
 
-  background-color: ${({ theme }) => theme.tableBackgroundColor};
+  background-color: ${({ theme }) => theme.tableFooterBackground};
+  border-top: 1px solid ${({ theme }) => theme.backgroundColorSecondary};
   @media screen and (min-width: 480px) {
     flex-direction: row;
   }

@@ -8,6 +8,7 @@ import { MinTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeContr
 
 import { ICount } from 'redux/counts/counts.types';
 import { ICategory } from 'redux/categories/categories.types';
+import InputTextPrimary from '../atoms/Inputs/InputTextPrimary';
 
 export type FilterSelectorDataType = ICount[] | ICategory[] | any[];
 export type FilterSelectorType = {
@@ -57,8 +58,8 @@ const AppFilter: React.FC<FilterProps & ModalFormProps> = ({ useFilterSelectors,
     <ModalDefSt {...props}>
       <FilterContainer>
         <DatePickers>
-          <InputDate type='datetime-local' placeholder='Дата і час' />
-          <InputDate type='datetime-local' placeholder='Дата і час' />
+          <InputTextPrimary label='Від (дата і час)' type='datetime-local' placeholder='Від (дата і час)' />
+          <InputTextPrimary label='До (дата і час)' type='datetime-local' placeholder='До (дата і час)' />
         </DatePickers>
 
         <Bottom>
@@ -123,7 +124,7 @@ const FilterContainer = styled.div`
   overflow: hidden;
   color: inherit;
 
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+    // background-color: ${({ theme }) => theme.backgroundColorSecondary};
   @media screen and (min-width: 768px) {
     /* padding: 16px; */
   }
@@ -146,18 +147,17 @@ const DatePickers = styled.div`
   }
 `;
 const InputDate = styled.input`
-  color: inherit;
   font-family: inherit;
-  fill: inherit;
+  fill: currentColor;
 
   height: 26px;
   padding: 5px 8px;
   width: 100%;
+  color: ${({ theme }) => theme.fillColorHeader};
 
   border-radius: 2px;
   border: 1px solid ${({ theme }) => theme.trBorderClr};
   background-color: ${({ theme }) => theme.backgroundColorLight};
-  color: ${({ theme }) => theme.fillColorHeader};
 
   &::placeholder {
     color: ${({ theme }) => theme.globals.inputPlaceholderColor};

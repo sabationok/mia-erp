@@ -14,7 +14,7 @@ const ModalHeader: React.FC<ModalFormHeaderProps & React.ImgHTMLAttributes<HTMLD
     <Header {...props} className='header'>
       <Title className='title' title={title || ''}>{title}</Title>
 
-      <ButtonIcon type='reset' size='28px' iconId={iconId.close} variant='onlyIcon' />
+      <ButtonIcon type='reset' size='28px' iconSize={'90%'} iconId={iconId.close} variant='onlyIconNoEffects' />
     </Header>
   );
 };

@@ -5,10 +5,12 @@ import styled, { css } from 'styled-components';
 export interface TablePaginationProps {
   onSelect?: (opt: PaginationOption) => void;
 }
+
 export interface PaginationOption {
   label: string;
   value: number | null;
 }
+
 const pagOptions: PaginationOption[] = [
   { label: '15', value: 15 },
   { label: '30', value: 30 },
@@ -23,6 +25,7 @@ const TablePagination: React.FC<TablePaginationProps> = ({ onSelect }) => {
   function onOpen() {
     setIsOpen(prev => !prev);
   }
+
   function onSelectOpt(idx: number) {
     setCurrent(pagOptions[idx]);
     onSelect && onSelect(pagOptions[idx]);
@@ -32,7 +35,7 @@ const TablePagination: React.FC<TablePaginationProps> = ({ onSelect }) => {
   return (
     <Box>
       <DropDownBox>
-        <StButton isOpen={isOpen} variant="def" endIconSize="26px" endIconId="SmallArrowUp" onClick={onOpen}>
+        <StButton isOpen={isOpen} variant='def' endIconSize='26px' endIconId='SmallArrowUp' onClick={onOpen}>
           <span>{current?.label}</span>
         </StButton>
 
@@ -65,17 +68,18 @@ const StButton = styled(ButtonIcon)<{ isOpen: boolean }>`
 
   fill: ${({ theme }) => theme.accentColor.base};
   color: ${({ theme }) => theme.fontColorHeader};
-  background-color: ${({ theme }) => theme.backgroundColorLight};
+  background-color: ${({ theme }) => theme.fieldColor};
 
   &:active,
   &:focus,
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundColorLight};
+    background-color: ${({ theme }) => theme.fieldColor};
   }
 
   & .endIcon {
     transform: ${({ isOpen }) => `rotate(${isOpen ? 180 : 0}deg)`};
   }
+
   & span {
     padding: 0 8px;
   }
@@ -101,24 +105,25 @@ const SelectList = styled.ul<{ isOpen: boolean }>`
   border: 1px solid ${({ theme }) => theme.trBorderClr};
   box-shadow: ${({ theme }) => theme.globals.shadowMain};
   transition: all ${({ theme }) => theme.globals.timingFunctionMain},
-    transform ${({ theme }) => theme.globals.timingFnMui};
+  transform ${({ theme }) => theme.globals.timingFnMui};
   transform-origin: bottom;
 
   ${({ isOpen }) =>
-    isOpen
-      ? css``
-      : css`
-          transform: scale(0.7, 0.5);
-          opacity: 0;
-          visibility: hidden;
-          pointer-events: none;
-        `}
+          isOpen
+                  ? css``
+                  : css`
+                    transform: scale(0.7, 0.5);
+                    opacity: 0;
+                    visibility: hidden;
+                    pointer-events: none;
+                  `}
 `;
 const SelectItem = styled.li`
   font-size: 16px;
   padding: 8px;
 
   cursor: default;
+
   &:hover {
     background-color: ${({ theme }) => theme.backgroundColorLight};
   }

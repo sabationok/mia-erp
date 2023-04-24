@@ -147,7 +147,7 @@ const LabelField = styled.div`
   overflow: hidden;
 
   border-radius: 2px;
-  background-color: ${({ theme }) => theme.backgroundColorLight};
+  background-color: ${({ theme }) => theme.fieldColor};
   cursor: default;
 `;
 const Label = styled.div`

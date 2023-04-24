@@ -20,6 +20,7 @@ const TableSort: React.FC<TableSortProps> = ({ tableSortParams }) => {
   function onOpenClick(newState?: boolean) {
     setIsOpen(newState);
   }
+
   function handleSetCurrent(param: SelectItem, descending: boolean) {
     return () => {
       setCurrent({ ...param, descending });
@@ -30,11 +31,11 @@ const TableSort: React.FC<TableSortProps> = ({ tableSortParams }) => {
     <Box>
       <StButton
         descending={current?.descending}
-        variant="def"
-        iconId="sort"
-        iconSize="18px"
-        endIconSize="26px"
-        endIconId="SmallArrowDown"
+        variant='def'
+        iconId='sort'
+        iconSize='18px'
+        endIconSize='26px'
+        endIconId='SmallArrowDown'
         onClick={() => onOpenClick(true)}
         data-table-sort-open
       >
@@ -68,7 +69,7 @@ const StButton = styled(ButtonIcon)<{ descending?: boolean }>`
 
   fill: ${({ theme }) => theme.accentColor.base};
   color: ${({ theme }) => theme.fontColorHeader};
-  background-color: ${({ theme }) => theme.backgroundColorLight};
+  background-color: ${({ theme }) => theme.fieldColor};
 
   & span {
     text-overflow: ellipsis;
@@ -79,8 +80,9 @@ const StButton = styled(ButtonIcon)<{ descending?: boolean }>`
   &:active,
   &:focus,
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundColorLight};
+    background-color: ${({ theme }) => theme.fieldColor};
   }
+
   & .endIcon {
     transform: ${({ descending }) => `rotate(${!descending ? 180 : 0}deg)`};
   }

@@ -5,22 +5,27 @@
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
 html {
   box-sizing: border-box;
   /* відміняє синій фон при дотику по обєктах на тачскірінах */
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+
 *,
 *::after,
 *::before {
   box-sizing: inherit;
 }
+
 :root {
   // height: 100%;
 }
+
 html {
   height: 100%;
 }
+
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -37,10 +42,12 @@ body {
   height: 100%;
   max-height: 100%;
 }
+
 #root {
   height: 100%;
   max-height: 100%;
 }
+
 .NotScroll {
   overflow: hidden;
 }
@@ -56,12 +63,14 @@ h6,
 p {
   margin: 0;
 }
+
 /* ТАБЛИЦі */
 table {
   border-collapse: collapse;
   table-layout: fixed;
   margin: 0;
 }
+
 th,
 tr {
   border: 0;
@@ -70,12 +79,14 @@ tr {
 
   user-select: none;
 }
+
 /* СПИСКИ */
 ul {
   list-style: none;
   padding-inline-start: 0px;
   margin: 0px;
 }
+
 /* ПОСИЛАННЯ */
 a {
   text-decoration: none;
@@ -83,16 +94,19 @@ a {
 
   outline-color: var(--darkOrange);
 }
+
 /* АДРЕСИ */
 address {
   font-style: normal;
 }
+
 /* ЗОБРАЖЕННЯ */
 img {
   display: block;
   max-width: 100%;
   height: auto;
 }
+
 /* КНОПКИ */
 button {
   user-select: none;
@@ -103,6 +117,7 @@ button {
     outline: 2px solid var(--darkOrange);
   }
 }
+
 /* ІНПУТИ */
 label,
 textarea,
@@ -114,6 +129,7 @@ input {
     outline: 2px solid var(--darkOrange);
   }
 }
+
 /* ----------------- СКРИТІ ЕЛЕМЕНТИ */
 .visually-hidden {
   position: absolute;
@@ -127,6 +143,7 @@ input {
   clip: rect(0 0 0 0);
   overflow: hidden;
 }
+
 /* ----------------- SCROLLBAR */
 @media screen and (min-width: 480px) {
   ::-webkit-scrollbar {
@@ -145,8 +162,7 @@ input {
   }
   ::-webkit-scrollbar-thumb {
     background-color: var(--darkOrange);
-    // background-color: rgba(122, 122, 122, 0.7);
-    border-radius: 0px;
+    border-radius: 0;
   }
   ::-webkit-scrollbar-thumb:active {
     background-color: var(--darkOrange);
@@ -170,6 +186,7 @@ input {
 .css-1ptx2yq-MuiInputBase-root-MuiInput-root:after {
   border-bottom: 2px solid rgb(118, 119, 152);
 }
+
 @keyframes BackdropAnimation {
   from {
     opacity: 0;
@@ -178,6 +195,7 @@ input {
     opacity: 1;
   }
 }
+
 @keyframes ModalAnimation {
   from {
     transform: translate(-50%, -50%) scale(0.8);

@@ -21,7 +21,6 @@ const CompanySettings: React.FC<Props> = ({ options }) => {
         <ListItem key={title}>
           <StButtonIcon
             variant='def'
-            iconId={iconId}
             onClick={() => {
               modal.handleOpenModal({ ModalChildren, modalChildrenProps });
             }}

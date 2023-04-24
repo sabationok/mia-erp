@@ -43,7 +43,7 @@ const CellContactsDbl: React.FC<CellContactsDblProps & React.HTMLAttributes<HTML
       <Bottom align={bottom?.align} uppercase={bottom?.uppercase}>
         {contentBottom ? (
           <>
-            <StIcon iconId={iconId.phoneOulined} size='12px' />
+            <StIcon iconId={iconId.phoneOutlined} size='12px' />
 
             <div title={contentBottom} className='inner'>
               {contentBottom}

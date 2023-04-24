@@ -23,7 +23,6 @@ const OptionsList: React.FC<IIOptionsListProps & React.HTMLAttributes<HTMLUListE
         <ListItem key={title}>
           <StButtonIcon
             variant='def'
-            iconId={iconId}
             onClick={() => {
               modal.handleOpenModal({ ModalChildren, modalChildrenProps });
             }}

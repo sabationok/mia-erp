@@ -2,8 +2,8 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
 import { SelectItem } from 'components/TableList/TableList';
 import { iconId } from 'data';
-import React, { useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
+import React, { useEffect, useMemo, useState } from 'react';
+import styled from 'styled-components';
 
 export interface ISearchParamInputProps {
   data?: SelectItem[];
@@ -18,19 +18,11 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
   const [current, setCurrent] = useState<SelectItem | null>(defaultValue || selectedItem || null);
   const [isOpen, setIsOpen] = useState(false);
 
-  function handleToggleList(state?: boolean) {
-    setIsOpen(state || !isOpen);
-  }
-
-  function onSelectItemClick(item: SelectItem) {
-    setCurrent(item);
-
-    if (onSelect instanceof Function) {
-      onSelect(item);
-      setInputValue({ searchParam: item.label ? item.label : '' });
-    }
-
-    handleToggleList();
+  function handleToggleList() {
+    setIsOpen(prev => {
+      prev && setInputValue({ searchParam: '' });
+      return !prev;
+    });
   }
 
   function onChange(ev: React.ChangeEvent<HTMLInputElement>) {
@@ -42,12 +34,42 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
     });
   }
 
-  function onSerchParamReset() {
+  function onSearchParamReset() {
     setInputValue({ searchParam: '' });
   }
 
+  const renderFilteredList = useMemo(() => {
+    function onSelectItemClick(item: SelectItem) {
+      setCurrent(item);
+
+      if (onSelect instanceof Function) {
+        onSelect(item);
+        setInputValue({ searchParam: item.label ? item.label : '' });
+      }
+
+      handleToggleList();
+    }
+
+
+    return filteredData.length > 0 ?
+      filteredData.map((item, idx) => (
+        <ListItem
+          key={item.dataKey || item.dataPath}
+          title={item.label}
+          onClick={() => {
+            onSelectItemClick(item);
+          }}
+        >
+          <span>{item.label}</span>
+        </ListItem>
+      )) : (
+        <ListItem listEmpty>
+          <span>Нічого не знайдено</span>
+        </ListItem>
+      );
+  }, [filteredData, onSelect]);
+
   useEffect(() => {
-    // console.log('select data', data);
     if (data?.length === 0) {
       return;
     }
@@ -68,8 +90,9 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
   useEffect(() => {
     function onMenuClose(ev: MouseEvent | KeyboardEvent) {
       const { target } = ev;
-      if (target instanceof HTMLElement && !target.closest('[data-select]')) setIsOpen(false);
-      if (ev instanceof KeyboardEvent && ev?.code === 'Escape') setIsOpen(false);
+      const allowClose = (target instanceof HTMLElement && !target.closest('[data-select]')) || (ev instanceof KeyboardEvent && ev?.code === 'Escape');
+      allowClose && setIsOpen(false);
+      allowClose && setInputValue({ searchParam: '' });
     }
 
     document.addEventListener('click', onMenuClose);
@@ -82,91 +105,65 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
   }, []);
 
   return (
-    <InputBox className={isOpen ? 'isOpen' : ''} data-select>
-      <StyledLabel className={isOpen ? 'isOpen' : ''}>
-        <StyledInput
-          type='text'
-          placeholder='Параметр'
-          name='searchParam'
-          className={isOpen ? 'isOpen' : ''}
-          value={inputValue.searchParam}
-          onChange={onChange}
-          // onClick={() => handleToggleList()}
-        />
+    <>
+      <ButtonIcon
+        iconId={iconId.tune}
+        size='28px'
+        iconSize={'90%'}
+        variant='onlyIconNoEffects'
+        onClick={() => handleToggleList()}
+        data-select
 
-        <ToggleButton onClick={() => handleToggleList()}>
-          <SvgIcon iconId={iconId.SmallArrowDown} className={'svgIcon'} size='24px' />
-        </ToggleButton>
-      </StyledLabel>
+      />
 
-      <ParamsListContainer isOpen={isOpen}>
-        <ParamsList>
-          {filteredData.length > 0 &&
-            filteredData.map((item, idx) => (
-              <ListItem
-                key={item.dataKey || item.dataPath}
-                title={item.label}
-                onClick={() => {
-                  onSelectItemClick(item);
-                }}
-              >
-                <span>{item.label}</span>
-              </ListItem>
-            ))}
+      <InputBox className={isOpen ? 'isOpen' : ''} isOpen={isOpen} data-select>
+        <StyledLabel className={isOpen ? 'isOpen' : ''}>
+          <StyledInput
+            type='text'
+            placeholder='Параметр'
+            name='searchParam'
+            className={isOpen ? 'isOpen' : ''}
+            value={inputValue.searchParam}
+            onChange={onChange}
+          />
 
-          {filteredData.length === 0 && (
-            <ListItem listEmpty>
-              <span>Нічого не знайдено</span>
-            </ListItem>
-          )}
+          <ClearButton onClick={onSearchParamReset} variant='onlyIconNoEffects' disabled={!inputValue?.searchParam}>
+            <SvgIcon iconId={iconId.close} className={'svgIcon'} size='24px' />
+          </ClearButton>
+        </StyledLabel>
+
+        <ParamsList isOpen={isOpen}>
+          {renderFilteredList}
         </ParamsList>
-        {false && (
-          <CloseListItem>
-            <ButtonIcon variant='outlinedSmall' onClick={onSerchParamReset}>
-              Очистити
-            </ButtonIcon>
-          </CloseListItem>
-        )}
-      </ParamsListContainer>
-    </InputBox>
+
+      </InputBox>
+    </>
   );
 };
-const InputBox = styled.label`
-  position: relative;
+
+
+const InputBox = styled.label<{ isOpen?: boolean }>`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: min-content 1fr;
+
+  position: absolute;
+  top: 110%;
+  right: 0;
   z-index: 2;
 
-  height: 100%;
   width: 100%;
 
   fill: ${({ theme }) => theme.accentColor.base};
 
-    /* &::before {
-    display: block;
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 0;
+  max-height: ${({ isOpen }) => (isOpen ? '40vh' : '0')};
+  overflow: hidden;
 
-    height: calc(10% + 4px);
-    width: 0;
+  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  border-radius: 2px;
+  border: ${({ isOpen }) => (isOpen ? '1px' : '0')} solid ${({ theme }) => theme.trBorderClr};
 
-    transition: all ${({ theme }) => theme.globals.timingFnMui};
-     transform: translate(50, 50);
-  background-color: ${({ theme }) => theme.accentColor.base};
-  }
 
-  &:focus-within {
-    &::before {
-      width: calc(100% + 4px);
-    }
-  } */
-
-  &.isOpen {
-    & .svgIcon {
-      transform: rotate(-180deg);
-    }
-  }
 `;
 const StyledLabel = styled.label`
   display: flex;
@@ -178,6 +175,11 @@ const StyledLabel = styled.label`
   border-width: 5px;
 
   height: 100%;
+  //background-color: inherit;
+
+  background-color: ${({ theme }) => theme.backgroundColorLight};
+
+  border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
 
   &::before {
     display: block;
@@ -198,7 +200,7 @@ const StyledLabel = styled.label`
 
   &.isOpen {
     &::before {
-      width: calc(100% + 4px);
+      //width: calc(100% + 4px);
     }
 
     /* background: linear-gradient(#fff, #fff) padding-box,
@@ -216,26 +218,19 @@ const StyledLabel = styled.label`
 const StyledInput = styled.input`
   display: block;
 
-  position: sticky;
-  top: 0;
-  left: 0;
-  z-index: 10;
-
   height: 100%;
   width: 100%;
-  flex-basis: 50px;
-  flex-grow: 1;
+
   padding: 4px 32px 4px 8px;
 
-  font-size: 12px;
+  font-size: 14px;
   font-family: inherit;
   color: inherit;
-  background-color: transparent;
+  background-color: inherit;
 
-  background-color: ${({ theme }) => theme.backgroundColorLight};
+    //background-color: ${({ theme }) => theme.backgroundColorLight};
   border-radius: 2px;
   border-style: none;
-  border: 2px solid ${({ theme }) => theme.trBorderClr};
   transition: border ${({ theme }) => theme.globals.timingFnMui};
 
   &:focus {
@@ -251,65 +246,32 @@ const StyledInput = styled.input`
   }
 `;
 
-const ToggleButton = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
+const ClearButton = styled(ButtonIcon)`
   position: absolute;
-  right: 0px;
+  right: 0;
   top: 50%;
   z-index: 10;
   width: 28px;
   height: 28px;
 
+  fill: ${({ theme }) => theme.accentColor.base};
   transform: translateY(-50%);
 `;
 
-const ParamsListContainer = styled.ul<{ isOpen: boolean }>`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr min-content;
-
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  z-index: 50;
-
-  min-width: 100%;
-  width: max-content;
-  max-width: calc(100% + 40px);
-  height: max-content;
-
-  /* height: 50vh; */
-
-  max-height: ${({ isOpen }) => (isOpen ? '60vh' : '0')};
-  overflow: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
-  ${({ isOpen }) => (isOpen ? css`` : null)}
-
-  font-size: 12px;
-
-  border-radius: 2px;
-  box-shadow: var(--header-shadow);
-
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
-    /* border: 1px solid ${({ theme }) => theme.trBorderClr}; */
-  border: ${({ isOpen }) => (isOpen ? '1px' : '0')} solid ${({ theme }) => theme.trBorderClr};
-
-  @media screen and (max-width: 480px) {
-    font-size: 10px;
-  }
-`;
-const ParamsList = styled.ul`
+const ParamsList = styled.ul<{ isOpen: boolean }>`
   display: grid;
   grid-template-columns: 1fr;
   grid-auto-rows: 32px;
 
-  max-width: 100%;
+  color: ${({ theme }) => theme.fillColorHeader};
+
+  width: 100%;
+  height: 100%;
+  max-width: calc(100% + 40px);
+  max-height: 100%;
 
   overflow: auto;
 
-  color: ${({ theme }) => theme.fillColorHeader};
 `;
 
 const ListItem = styled.li<{ listEmpty?: boolean }>`
@@ -317,6 +279,8 @@ const ListItem = styled.li<{ listEmpty?: boolean }>`
   align-items: center;
 
   padding: 8px;
+
+  font-size: 12px;
 
   text-overflow: ellipsis;
   overflow: hidden;
@@ -326,26 +290,9 @@ const ListItem = styled.li<{ listEmpty?: boolean }>`
     cursor: default;
     background-color: ${({ listEmpty }) => (listEmpty ? '' : 'rgba(254, 254, 254, 0.1)')};
   }
-`;
 
-const CloseListItem = styled.div`
-  display: flex;
-  justify-content: center;
-
-  /* position: sticky;
-  bottom: 0;
-  left: 0; */
-
-  width: 100%;
-  height: max-content;
-  padding: 6px;
-
-  border-top: 1px solid ${({ theme }) => theme.trBorderClr};
-  background-color: inherit;
-
-  &:hover,
-  &:active {
-    background-color: inherit;
+  @media screen and (max-width: 480px) {
+    font-size: 14px;
   }
 `;
 

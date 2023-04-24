@@ -45,7 +45,7 @@ const Footer = styled.footer`
   border-right: 1px solid ${({ theme }) => theme.trBorderClr};
   color: ${({ theme }) => theme.fontColorHeader};
   fill: ${({ theme }) => theme.fillColorHeader};
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  background-color: ${({ theme }) => theme.modalBackground};
 
   @media screen and (min-width: 768px) {
     padding: 8px;

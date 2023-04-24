@@ -9,6 +9,7 @@ export interface IDirectory {
   modalChildrenProps: any;
   disabled: boolean;
 }
+
 export interface IDirectoriesProps {
   options: IDirectory[];
 }
@@ -21,8 +22,7 @@ const Directories: React.FC<IDirectoriesProps> = ({ options = [] }) => {
       {[...options].map(({ title, iconId, ModalChildren, modalChildrenProps, disabled }, idx) => (
         <ListItem key={title}>
           <StButtonIcon
-            variant="def"
-            iconId={iconId}
+            variant='def'
             onClick={() => {
               modal.handleOpenModal({ ModalChildren, modalChildrenProps });
             }}
@@ -43,7 +43,7 @@ const Container = styled.ul`
   max-width: 100%;
   /* padding: 8px; */
 
-  /* background-color: ${({ theme }) => theme.backgroundColorSecondary}; */
+    /* background-color: ${({ theme }) => theme.backgroundColorSecondary}; */
 `;
 
 const ListItem = styled.li``;

@@ -111,7 +111,7 @@ const ModalFormContainer = styled.form`
   box-shadow: ${({ theme }) => theme.globals.shadowMain};
   fill: ${({ theme }) => theme.fillColor};
   color: ${({ theme }) => theme.fontColor};
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  background-color: ${({ theme }) => theme.modalBackground};
 
   border-radius: 2px;
   border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
@@ -138,7 +138,7 @@ const ModalMain = styled.main<{ filterOn: boolean }>`
   max-width: 100%;
   width: 100%;
 
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  background-color: ${({ theme }) => theme.modalBackground};
 
   border-right: 1px solid ${({ theme }) => theme.trBorderClr};
   border-left: 1px solid ${({ theme }) => theme.trBorderClr};
@@ -152,7 +152,7 @@ const MainScroll = styled.div`
   height: 100%;
   max-height: 100%;
 
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  background-color: ${({ theme }) => theme.modalBackground};
 `;
 
 export default ModalForm;

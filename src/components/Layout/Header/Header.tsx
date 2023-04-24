@@ -23,13 +23,13 @@ const Header: React.FC<any> = () => {
     <StyledHeader>
       <LeftSide>
         {HeaderLeftSideItems.map(({ Component, props }, idx) => (
-          <StyledBox key={idx}>{Component && <Component {...props} />}</StyledBox>
+          <StyledBox key={idx} borderRight>{Component && <Component {...props} />}</StyledBox>
         ))}
       </LeftSide>
 
       <RightSide>
         {HeaderRightSideItems.map(({ Component, props }, idx) => (
-          <StyledBox key={idx}>{Component && <Component {...props} />}</StyledBox>
+          <StyledBox key={idx} borderLeft>{Component && <Component {...props} />}</StyledBox>
         ))}
       </RightSide>
     </StyledHeader>
@@ -56,7 +56,7 @@ const StyledHeader = styled.header`
   color: ${({ theme }) => theme.fontColorHeader};
 
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
-  /* border-bottom: 1px solid ${({ theme }) => theme.trBorderClr}; */
+  border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
 `;
 const LeftSide = styled.div`
   display: grid;
@@ -66,12 +66,15 @@ const LeftSide = styled.div`
   height: 100%;
 `;
 
-const StyledBox = styled.div`
+const StyledBox = styled.div<{ borderRight?: boolean, borderLeft?: boolean }>`
   display: flex;
   align-items: center;
-  border-right: 1px solid ${({ theme }) => theme.trBorderClr};
 
   height: 100%;
+
+  border-right: 1px solid ${({ theme, borderRight = false }) => borderRight ? theme.trBorderClr : 'transparent'};
+
+  border-left: 1px solid ${({ theme, borderLeft = false }) => borderLeft ? theme.trBorderClr : 'transparent'};
 `;
 
 const RightSide = styled.div`

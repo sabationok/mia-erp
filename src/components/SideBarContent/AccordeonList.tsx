@@ -25,7 +25,7 @@ const AccordeonList: React.FC<IAccordeonListProps> = ({ options, children }) => 
       {options?.length > 0 &&
         options.map(({ title, options, ChildrenComponent }, idx) => (
           <AccordeonItem key={title || idx}>
-            <OpenButton variant="def" endIconId="SmallArrowDown" onClick={() => onCurrentClick(idx)}>
+            <OpenButton variant='def' endIconId='SmallArrowDown' onClick={() => onCurrentClick(idx)}>
               {title}
             </OpenButton>
 
@@ -56,8 +56,13 @@ const OpenButton = styled(ButtonIcon)`
   justify-content: space-between;
 
   padding: 4px 8px;
+  font-weight: 500;
 
   height: 32px;
+
+  border: 0;
+  border-radius: 0;
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundColorSecondary};
 
   & .endIcon {
   }

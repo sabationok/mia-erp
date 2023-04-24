@@ -64,7 +64,7 @@ const StOpenButton = styled(ButtonIcon)<{ isCurrent: boolean }>`
 
   justify-content: space-between;
 
-  background-color: ${({ theme }) => theme.backgroundColorLight};
+  background-color: ${({ theme }) => theme.fieldColor};
 
   border-color: ${({ isCurrent, theme }) => (isCurrent ? theme.accentColor.base : '')};
 

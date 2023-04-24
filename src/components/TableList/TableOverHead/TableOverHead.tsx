@@ -4,14 +4,14 @@ import styled from 'styled-components';
 import { useTable } from '../TableList';
 import TableActions from './TableActions/TableActions';
 import DeviceConrol from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
-import TabelSearch from './TableSearch/TabelSearch';
+import TableSearchForm from './TableSearchForm/TableSearchForm';
 
 const TableOverHead: React.FC<React.HTMLAttributes<HTMLDivElement>> = props => {
   const { tableActions, tableSearchParams, isSearch = true } = useTable();
   return (
     <OverHead className='tOverHead' {...props}>
       <LeftSide className='leftSide'>
-        {isSearch && <TabelSearch {...{ tableSearchParams }} />}
+        {isSearch && <TableSearchForm {...{ tableSearchParams }} />}
       </LeftSide>
 
       <DeviceConrol.MinDesktop>

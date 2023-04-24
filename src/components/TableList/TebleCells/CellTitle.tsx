@@ -126,7 +126,7 @@ const WidthChanger = styled.button`
     height: 100%;
     width: 1px;
     /* border-right: 1px solid #59595a; */
-    border-right: 1px solid ${({ theme }) => theme.trBorderClr};
+    border-right: 2px solid ${({ theme }) => theme.tableHeaderStroke};
   }
 `;
 

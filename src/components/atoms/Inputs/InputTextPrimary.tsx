@@ -78,7 +78,7 @@ const InputText = styled.input<{ error?: boolean }>`
   border: 1px solid ${({ theme }) => theme.globals.inputBorder};
 
   &::placeholder {
-    font-family: inherit;
+    font-family: inherit, sans-serif;
   }
 `;
 
@@ -88,10 +88,8 @@ const HelperText = styled.div<{ error?: boolean; success?: boolean }>`
   font-size: 8px;
   line-height: 1.5;
 
-  color: inherit;
+  color: ${({ error, success, theme }) => (error && 'tomato') || (success && 'lightgreen') || 'inherit'};
 
-  color: ${({ error, theme }) => (error ? 'tomato' : '')};
-  color: ${({ success, theme }) => (success ? 'lightgreen' : '')};
 
   cursor: default;
 `;
