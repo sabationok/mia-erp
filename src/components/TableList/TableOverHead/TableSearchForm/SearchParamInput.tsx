@@ -38,6 +38,21 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
     setInputValue({ searchParam: '' });
   }
 
+  const renderinput = (<StyledLabel className={isOpen ? 'isOpen' : ''}>
+    <StyledInput
+      type='text'
+      placeholder='Параметр'
+      name='searchParam'
+      className={isOpen ? 'isOpen' : ''}
+      value={inputValue.searchParam}
+      onChange={onChange}
+    />
+
+    <ClearButton onClick={onSearchParamReset} variant='onlyIconNoEffects' disabled={!inputValue?.searchParam}>
+      <SvgIcon iconId={iconId.close} className={'svgIcon'} size='24px' />
+    </ClearButton>
+  </StyledLabel>);
+
   const renderFilteredList = useMemo(() => {
     function onSelectItemClick(item: SelectItem) {
       setCurrent(item);
@@ -117,20 +132,7 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
       />
 
       <InputBox className={isOpen ? 'isOpen' : ''} isOpen={isOpen} data-select>
-        <StyledLabel className={isOpen ? 'isOpen' : ''}>
-          <StyledInput
-            type='text'
-            placeholder='Параметр'
-            name='searchParam'
-            className={isOpen ? 'isOpen' : ''}
-            value={inputValue.searchParam}
-            onChange={onChange}
-          />
 
-          <ClearButton onClick={onSearchParamReset} variant='onlyIconNoEffects' disabled={!inputValue?.searchParam}>
-            <SvgIcon iconId={iconId.close} className={'svgIcon'} size='24px' />
-          </ClearButton>
-        </StyledLabel>
 
         <ParamsList isOpen={isOpen}>
           {renderFilteredList}
@@ -145,7 +147,7 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
 const InputBox = styled.label<{ isOpen?: boolean }>`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: min-content 1fr;
+  grid-template-rows:  1fr;
 
   position: absolute;
   top: 110%;
