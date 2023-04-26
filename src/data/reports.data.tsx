@@ -15,45 +15,45 @@ export interface IReport<P = IReportBaseProps> {
 }
 
 const categoriesReport: IReport<IReportCategoriesProps> = {
-  title: 'По категоріях',
+  title: 'Категоріях',
   iconId: iconId.info,
   ModalChildren: ReportCategories,
   modalChildrenProps: { title: 'Звіт по категоріях' },
   disabled: false,
 };
 const countsReport: IReport<IReportCountsProps> = {
-  title: 'По рахунках',
+  title: 'Кахунках',
   iconId: iconId.info,
   ModalChildren: ReportCounts,
   modalChildrenProps: { title: 'Звіт по рахунках' },
   disabled: false,
 };
 const activitiesReport: IReport = {
-  title: 'По видах діяльності',
+  title: 'Види діяльності',
   iconId: iconId.info,
   ModalChildren: ModalForm,
   modalChildrenProps: { title: 'Звіт по видах діяльності' },
   disabled: false,
 };
 const projectsReport: IReport = {
-  title: 'По проектах',
+  title: 'Проектах',
   iconId: iconId.info,
   ModalChildren: ModalForm,
   modalChildrenProps: { title: 'Звіт по проектах' },
   disabled: false,
 };
 const contractorsReport: IReport = {
-  title: 'По контрагентах',
+  title: 'Контрагентах',
   iconId: iconId.info,
   ModalChildren: ModalForm,
   modalChildrenProps: { title: 'Звіт по контрагентах' },
   disabled: false,
 };
 const contractsReport: IReport = {
-  title: 'По договорах',
+  title: 'Контракти',
   iconId: iconId.info,
   ModalChildren: ModalForm,
-  modalChildrenProps: { title: 'Звіт по договорах' },
+  modalChildrenProps: { title: 'Звіт по контрактах' },
   disabled: true,
 };
 const marksReport: IReport = {

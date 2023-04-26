@@ -146,23 +146,23 @@ const DatePickers = styled.div`
     grid-template-columns: 1fr 1fr;
   }
 `;
-const InputDate = styled.input`
-  font-family: inherit;
-  fill: currentColor;
-
-  height: 26px;
-  padding: 5px 8px;
-  width: 100%;
-  color: ${({ theme }) => theme.fillColorHeader};
-
-  border-radius: 2px;
-  border: 1px solid ${({ theme }) => theme.trBorderClr};
-  background-color: ${({ theme }) => theme.backgroundColorLight};
-
-  &::placeholder {
-    color: ${({ theme }) => theme.globals.inputPlaceholderColor};
-  }
-`;
+//? const InputDate = styled.input`
+//?   font-family: inherit;
+//?   fill: currentColor;
+//?
+//?   height: 26px;
+//?   padding: 5px 8px;
+//?   width: 100%;
+//?   color: ${({ theme }) => theme.fillColorHeader};
+//?
+//?   border-radius: 2px;
+//?   border: 1px solid ${({ theme }) => theme.trBorderClr};
+//?   background-color: ${({ theme }) => theme.backgroundColorLight};
+//?
+//?   &::placeholder {
+//?     color: ${({ theme }) => theme.globals.inputPlaceholderColor};
+//?   }
+//? `;
 
 const Bottom = styled.div`
   display: grid;
