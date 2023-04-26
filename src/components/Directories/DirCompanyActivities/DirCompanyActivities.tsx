@@ -1,14 +1,15 @@
-import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
+import ModalForm from 'components/ModalForm/ModalForm';
 import React from 'react';
 import styled from 'styled-components';
 import DirList from '../DirList/DirList';
 import { useModalProvider } from '../../ModalProvider/ModalProvider';
 import FormCreateCompanyActivity from './FormCreateCompanyActivity';
 import useCompanyActivitiesService from 'redux/companyActivities/useCompanyActivitiesService.hook';
+import { DirBaseProps } from '../dir.types';
 
 
-export interface DirCompanyActivitiesProps extends ModalFormProps {
-  title: string;
+export interface DirCompanyActivitiesProps extends DirBaseProps {
+
 }
 
 const DirCompanyActivities: React.FC<DirCompanyActivitiesProps> = ({ ...props }) => {

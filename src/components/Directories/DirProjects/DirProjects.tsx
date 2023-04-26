@@ -1,11 +1,12 @@
 import React from 'react';
-import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
+import ModalForm from 'components/ModalForm/ModalForm';
 
 import styled from 'styled-components';
 import TableList from 'components/TableList/TableList';
+import { DirBaseProps } from '../dir.types';
 
-export interface DirProjectsProps extends ModalFormProps {
-  title: string;
+export interface DirProjectsProps extends DirBaseProps {
+
 }
 
 const DirProjects: React.FC<DirProjectsProps> = props => {

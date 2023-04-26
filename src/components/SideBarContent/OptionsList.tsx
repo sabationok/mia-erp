@@ -1,11 +1,12 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
+import { useMemo } from 'react';
 
 export interface IOptionsListItemProps {
   title: string;
   iconId: string;
-  ModalChildren: React.FC;
+  ModalChildren: React.FC<any>;
   modalChildrenProps: any;
   disabled: boolean;
 }
@@ -17,20 +18,28 @@ export interface IIOptionsListProps {
 const OptionsList: React.FC<IIOptionsListProps & React.HTMLAttributes<HTMLUListElement>> = ({ options = [] }) => {
   const modal = useModalProvider();
 
+  const renderList = useMemo(() =>
+    options.map(({
+                   title,
+                   iconId,
+                   ModalChildren,
+                   modalChildrenProps,
+                   disabled = true,
+                 }, idx) => (
+      <ListItem key={title || iconId || idx}>
+        <StButtonIcon
+          variant='def'
+          onClick={() => modal.handleOpenModal({ ModalChildren, modalChildrenProps })}
+          disabled={disabled}
+        >
+          {title}
+        </StButtonIcon>
+      </ListItem>
+    )), [modal, options]);
+
   return (
     <List>
-      {[...options].map(({ title, iconId, ModalChildren, modalChildrenProps, disabled }, idx) => (
-        <ListItem key={title}>
-          <StButtonIcon
-            variant='def'
-            onClick={() => {
-              modal.handleOpenModal({ ModalChildren, modalChildrenProps });
-            }}
-          >
-            {title}
-          </StButtonIcon>
-        </ListItem>
-      ))}
+      {renderList}
     </List>
   );
 };
@@ -51,6 +60,8 @@ const StButtonIcon = styled(ButtonIcon)`
   height: 100%;
 
   padding: 4px 12px;
+
+  transition: none;
 `;
 
 export default OptionsList;

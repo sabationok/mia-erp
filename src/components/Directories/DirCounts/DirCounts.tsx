@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ModalForm, { FilterOpt, ModalFormProps } from 'components/ModalForm/ModalForm';
+import ModalForm, { FilterOpt } from 'components/ModalForm/ModalForm';
 import DirList from '../DirList/DirList';
 import { founder } from 'utils';
 import styled from 'styled-components';
@@ -7,11 +7,11 @@ import useCountsService from 'redux/counts/useCountsService.hook';
 import { CountType, ICount } from 'redux/counts/counts.types';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FormCreateCount, { FormCreateCountProps } from './FormCreateCount';
+import { DirBaseProps } from '../dir.types';
 
 export type CountFilterOpt = FilterOpt<CountType>;
 
-export interface DirCountsProps extends ModalFormProps {
-  title: string;
+export interface DirCountsProps extends DirBaseProps {
   filterOptions: CountFilterOpt[];
 }
 

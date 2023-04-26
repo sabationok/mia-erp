@@ -1,12 +1,12 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 
-export interface IAccordeonOptionProps extends React.HTMLAttributes<HTMLLIElement> {
+export interface IAccordeonOptionProps<T = any, C = any[]> extends React.HTMLAttributes<HTMLLIElement> {
   title: string;
-  options: any[];
-  ChildrenComponent?: React.FC<any>;
-  childrenComponentProps?: any;
+  options: C;
+  ChildrenComponent?: React.FC<T>;
+  childrenComponentProps?: T;
 }
 
 export interface IAccordeonListProps extends React.HTMLAttributes<HTMLUListElement> {
@@ -17,54 +17,71 @@ const AccordeonList: React.FC<IAccordeonListProps> = ({ options, children }) => 
   const [current, setCurrent] = useState<number | null>(0);
 
   function onCurrentClick(idx: number) {
-    setCurrent(prev => (prev === idx ? null : idx));
+    return () => setCurrent(prev => (prev === idx ? null : idx));
   }
 
+  const renderOptions = useMemo(() =>
+    options?.length > 0 && options.map(({
+                                          title,
+                                          options,
+                                          ChildrenComponent,
+                                        }, idx) => (
+      <AccordeonItem key={title || idx} isOpen={current === idx}>
+        <OpenButton variant='def' endIconId='SmallArrowDown' isOpen={current === idx} onClick={onCurrentClick(idx)}>
+          {title}
+        </OpenButton>
+
+        <ChildrenBox isOpen={current === idx}>
+          {children || (ChildrenComponent ? <ChildrenComponent options={options} /> : null)}
+        </ChildrenBox>
+      </AccordeonItem>
+    )), [children, current, options]);
   return (
     <AccoredeonListBox>
-      {options?.length > 0 &&
-        options.map(({ title, options, ChildrenComponent }, idx) => (
-          <AccordeonItem key={title || idx}>
-            <OpenButton variant='def' endIconId='SmallArrowDown' onClick={() => onCurrentClick(idx)}>
-              {title}
-            </OpenButton>
-
-            <ChildrenBox isOpen={current === idx}>
-              {children || (ChildrenComponent ? <ChildrenComponent options={options} /> : null)}
-            </ChildrenBox>
-          </AccordeonItem>
-        ))}
+      {renderOptions}
     </AccoredeonListBox>
   );
 };
 const AccoredeonListBox = styled.ul`
   display: flex;
   flex-direction: column;
+
+
 `;
-const AccordeonItem = styled.li`
+const AccordeonItem = styled.li<{ isOpen?: boolean }>`
   display: flex;
   flex-direction: column;
+  border-bottom: ${({ isOpen }) => isOpen ? '1px' : 0} solid ${({ theme }) => theme.backgroundColorSecondary};
+
 `;
 
 const ChildrenBox = styled.div<{ isOpen?: boolean }>`
+  padding-left: 8px;
+
   overflow: hidden;
   max-height: ${({ isOpen }) => (isOpen ? '' : '0')};
 
-  transition: ${({ theme }) => theme.globals.timingFnLong};
+  transition: all ${({ theme }) => theme.globals.timingFnLong};
 `;
-const OpenButton = styled(ButtonIcon)`
+const OpenButton = styled(ButtonIcon)<{ isOpen?: boolean }>`
   justify-content: space-between;
 
   padding: 4px 8px;
-  font-weight: 500;
 
   height: 32px;
+
+  font-size: 12px;
+  font-weight: 600;
 
   border: 0;
   border-radius: 0;
   border-bottom: 1px solid ${({ theme }) => theme.backgroundColorSecondary};
 
+  color: ${({ isOpen, theme }) => isOpen ? theme.accentColor.base : ''};
+  fill: ${({ isOpen, theme }) => isOpen ? theme.accentColor.base : ''};
+
   & .endIcon {
+    transform: ${({ isOpen }) => `rotate(${isOpen ? 180 : 0}deg)`};
   }
 `;
 

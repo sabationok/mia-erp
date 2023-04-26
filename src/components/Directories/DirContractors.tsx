@@ -1,10 +1,10 @@
-import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
+import ModalForm from 'components/ModalForm/ModalForm';
 import TableList, { ITableListProps } from 'components/TableList/TableList';
 import React from 'react';
 import styled from 'styled-components';
+import { DirBaseProps } from './dir.types';
 
-export interface DirContractorsProps extends ModalFormProps {
-  title: string;
+export interface DirContractorsProps extends DirBaseProps {
   tableSettings?: ITableListProps;
 }
 

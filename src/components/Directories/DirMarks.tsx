@@ -1,10 +1,10 @@
-import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
+import ModalForm from 'components/ModalForm/ModalForm';
 import React from 'react';
 import styled from 'styled-components';
 import DirList from './DirList/DirList';
+import { DirBaseProps } from './dir.types';
 
-export interface DirMarksProps extends ModalFormProps {
-  title: string;
+export interface DirMarksProps extends DirBaseProps {
 
 }
 

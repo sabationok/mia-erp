@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ModalForm, { FilterOpt, ModalFormProps } from 'components/ModalForm/ModalForm';
+import ModalForm, { FilterOpt } from 'components/ModalForm/ModalForm';
 import DirList from '../DirList/DirList';
 import { founder } from 'utils';
 import useCategoriesService from 'redux/categories/useCategoriesService.hook';
@@ -7,11 +7,11 @@ import { CategoryTypes, ICategory } from 'redux/categories/categories.types';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FormCreateCategory from './FormCreateCategory';
 import styled from 'styled-components';
+import { DirBaseProps } from '../dir.types';
 
 export type CategoryFilterOpt = FilterOpt<CategoryTypes>;
 
-export interface DirCategoriesProps extends ModalFormProps {
-  title: string;
+export interface DirCategoriesProps extends DirBaseProps {
   filterOptions?: CategoryFilterOpt[];
 }
 

@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import AccordeonList, { IAccordeonOptionProps } from '../AccordeonList';
+import AccordeonList, { IAccordeonOptionProps } from './AccordeonList';
 
-export interface IRaportsProps {
+export interface IReportsProps {
   options: IAccordeonOptionProps[];
 }
 
-const Raports: React.FC<IRaportsProps> = props => {
+const Reports: React.FC<IReportsProps> = props => {
 
   return (
     <Container>
@@ -23,4 +23,4 @@ const Container = styled.div`
   max-width: 100%;
 `;
 
-export default Raports;
+export default Reports;

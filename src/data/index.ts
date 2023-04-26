@@ -11,7 +11,7 @@ import addButtons from './future/createActions.data';
 import directories from './directories.data';
 import { iconId } from '../img/sprite';
 import { appPages, pages } from './pages.data';
-import { raports } from './raports.data';
+import { reports } from './reports.data';
 import { companiesTableColumns } from './companies.data';
 import { appSettings } from './appSettings.data';
 import { getChildOptions, getOwnerOptions, getParentOptions, selects } from './select.data';
@@ -37,7 +37,7 @@ export {
   directories,
   pages,
   appPages,
-  raports,
+  reports,
   appSettings,
   transactionsColumns,
   transactionsSearchParams,

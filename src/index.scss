@@ -83,17 +83,10 @@ tr {
 /* СПИСКИ */
 ul {
   list-style: none;
-  padding-inline-start: 0px;
-  margin: 0px;
+  padding-inline-start: 0;
+  margin: 0;
 }
 
-/* ПОСИЛАННЯ */
-a {
-  text-decoration: none;
-  color: inherit;
-
-  outline-color: var(--darkOrange);
-}
 
 /* АДРЕСИ */
 address {
@@ -105,29 +98,6 @@ img {
   display: block;
   max-width: 100%;
   height: auto;
-}
-
-/* КНОПКИ */
-button {
-  user-select: none;
-
-  &:focus-visible {
-    // border-color: var(--darkOrange);
-    outline-style: none;
-    outline: 2px solid var(--darkOrange);
-  }
-}
-
-/* ІНПУТИ */
-label,
-textarea,
-input {
-  &:focus,
-  &:focus-visible {
-    // border-color: var(--darkOrange);
-    outline-style: none;
-    outline: 2px solid var(--darkOrange);
-  }
 }
 
 /* ----------------- СКРИТІ ЕЛЕМЕНТИ */
@@ -145,35 +115,35 @@ input {
 }
 
 /* ----------------- SCROLLBAR */
-@media screen and (min-width: 480px) {
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    // background-color: var(--bckgrndDarkClr_secondary);
-    background-color: transparent;
-    // border-radius: 6px;
-  }
-  ::-webkit-scrollbar-button {
-    height: 0;
-    width: 0;
-    overflow: hidden;
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: var(--darkOrange);
-    border-radius: 0;
-  }
-  ::-webkit-scrollbar-thumb:active {
-    background-color: var(--darkOrange);
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: var(--darkOrange);
-  }
-  ::-webkit-scrollbar-corner {
-    background-color: var(--bckgrndDarkClr_main);
-  }
-}
+//@media screen and (min-width: 480px) {
+//  ::-webkit-scrollbar {
+//    width: 8px;
+//    height: 8px;
+//  }
+//  ::-webkit-scrollbar-track {
+//    // background-color: var(--bckgrndDarkClr_secondary);
+//    background-color: transparent;
+//    // border-radius: 6px;
+//  }
+//  ::-webkit-scrollbar-button {
+//    height: 0;
+//    width: 0;
+//    overflow: hidden;
+//  }
+//  ::-webkit-scrollbar-thumb {
+//    background-color: var(--darkOrange);
+//    border-radius: 0;
+//  }
+//  ::-webkit-scrollbar-thumb:active {
+//    background-color: var(--darkOrange);
+//  }
+//  ::-webkit-scrollbar-thumb:hover {
+//    background-color: var(--darkOrange);
+//  }
+//  ::-webkit-scrollbar-corner {
+//    background-color: var(--bckgrndDarkClr_main);
+//  }
+//}
 
 // & .slick-prev:before,
 // & .slick-next:before {
