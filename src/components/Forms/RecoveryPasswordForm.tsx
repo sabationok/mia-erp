@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import LogoSvg from 'components/Layout/Header/LogoSvg/LogoSvg';
 import AuthFormInput from './AuthFormInput';
@@ -11,6 +10,7 @@ export interface RecoveryPasswordFormProps {
   title: string;
   recovery?: boolean;
 }
+
 export interface IRecoveryPasswordFormData {
   email?: string;
   password?: string;
@@ -20,10 +20,10 @@ export interface IRecoveryPasswordFormData {
 const initialFormDataRecoveryPassword: IRecoveryPasswordFormData = { email: '', password: '', approvePassword: '' };
 
 const RecoveryPasswordForm: React.FC<RecoveryPasswordFormProps & React.HTMLAttributes<HTMLFormElement>> = ({
-  title,
-  recovery,
-  ...props
-}) => {
+                                                                                                             title,
+                                                                                                             recovery,
+                                                                                                             ...props
+                                                                                                           }) => {
   const [formData, setFormData] = useState<Partial<IRecoveryPasswordFormData>>(initialFormDataRecoveryPassword);
 
   function onFormDataChange(ev: React.ChangeEvent<HTMLInputElement>) {
@@ -42,18 +42,18 @@ const RecoveryPasswordForm: React.FC<RecoveryPasswordFormProps & React.HTMLAttri
         {recovery ? (
           <>
             <AuthFormInput
-              icon="lock_O"
-              placeholder="Новий пароль"
-              name="password"
-              type="password"
+              icon='lock_O'
+              placeholder='Новий пароль'
+              name='password'
+              type='password'
               value={formData.password}
               onChange={onFormDataChange}
             />
             <AuthFormInput
-              icon="lock_O"
-              placeholder="Повторіть пароль"
-              name="approvePassword"
-              type="password"
+              icon='lock_O'
+              placeholder='Повторіть пароль'
+              name='approvePassword'
+              type='password'
               success={formData.approvePassword ? formData.approvePassword === formData.password : false}
               error={formData.approvePassword ? formData.approvePassword !== formData.password : false}
               value={formData.approvePassword}
@@ -62,9 +62,9 @@ const RecoveryPasswordForm: React.FC<RecoveryPasswordFormProps & React.HTMLAttri
           </>
         ) : (
           <AuthFormInput
-            icon="email"
-            placeholder="Електронна адреса"
-            name="email"
+            icon='email'
+            placeholder='Електронна адреса'
+            name='email'
             value={formData.email}
             onChange={onFormDataChange}
           />
@@ -72,13 +72,13 @@ const RecoveryPasswordForm: React.FC<RecoveryPasswordFormProps & React.HTMLAttri
       </Inputs>
 
       <Buttons>
-        <StButtonIcon textTransform="uppercase" variant="filledSmall">
+        <StButtonIcon textTransform='uppercase' variant='filledSmall'>
           {recovery ? 'Прийняти' : 'Відновити'}
         </StButtonIcon>
 
         {/* <StLink to={'/auth/login'}>{'Увійти'}</StLink> */}
 
-        <StLinkIcon textTransform="uppercase" variant="outlinedSmall" to={'/auth/login'}>
+        <StLinkIcon textTransform='uppercase' variant='outlinedSmall' to={'/auth/login'}>
           {'Увійти'}
         </StLinkIcon>
       </Buttons>

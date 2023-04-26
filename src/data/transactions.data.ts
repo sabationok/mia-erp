@@ -101,6 +101,7 @@ export const useTransactionsActions = () => {
   const modal = useModalProvider();
   const { editById, create, deleteById } = useTransactionsService();
   const table = useTable();
+  console.log('useTransactionsActions', table);
 
   return {
     top: [
@@ -133,8 +134,8 @@ export const useTransactionsActions = () => {
         title: 'Видалення транзакції',
         iconId: iconId.delete,
         iconSize: '90%',
-        onClick: () => {
-
+        onClick: (id: string) => {
+          deleteById(id);
         },
         disableChek: () => true,
       },

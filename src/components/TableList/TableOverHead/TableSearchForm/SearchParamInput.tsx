@@ -52,6 +52,7 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
       <SvgIcon iconId={iconId.close} className={'svgIcon'} size='24px' />
     </ClearButton>
   </StyledLabel>);
+  console.log('renderinput', renderinput);
 
   const renderFilteredList = useMemo(() => {
     function onSelectItemClick(item: SelectItem) {

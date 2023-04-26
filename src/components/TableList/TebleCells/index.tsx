@@ -7,9 +7,9 @@ import CellTags from './CellTags';
 import CellValueByPath from './CellValueByPath';
 
 // export type CellActionsName = 'string' | 'cell' | 'cellDbl' | 'dateSimple' | 'dateDbl' | 'status';
-type CellVariantType = {
-  [key: string]: React.FC<any>;
-};
+// type CellVariantType = {
+//   [key: string]: React.FC<any>;
+// };
 
 export const CellsMap = {
   cell: Cell,
