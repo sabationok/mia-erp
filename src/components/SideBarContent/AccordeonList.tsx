@@ -51,12 +51,12 @@ const AccoredeonListBox = styled.ul`
 const AccordeonItem = styled.li<{ isOpen?: boolean }>`
   display: flex;
   flex-direction: column;
-  border-bottom: ${({ isOpen }) => isOpen ? '1px' : 0} solid ${({ theme }) => theme.backgroundColorSecondary};
+  border-bottom: ${({ isOpen }) => isOpen ? '1px' : 0} solid ${({ theme }) => theme.sideBarBorderColor};
 
 `;
 
 const ChildrenBox = styled.div<{ isOpen?: boolean }>`
-  padding-left: 8px;
+  padding: 0 8px;
 
   overflow: hidden;
   max-height: ${({ isOpen }) => (isOpen ? '' : '0')};
@@ -75,7 +75,7 @@ const OpenButton = styled(ButtonIcon)<{ isOpen?: boolean }>`
 
   border: 0;
   border-radius: 0;
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundColorSecondary};
+  border-bottom: 1px solid ${({ theme }) => theme.sideBarBorderColor};
 
   color: ${({ isOpen, theme }) => isOpen ? theme.accentColor.base : ''};
   fill: ${({ isOpen, theme }) => isOpen ? theme.accentColor.base : ''};

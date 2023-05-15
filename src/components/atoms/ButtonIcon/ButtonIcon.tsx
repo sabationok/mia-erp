@@ -118,6 +118,7 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
     pointer-events: none;
     opacity: 0.7;
     cursor: not-allowed;
+    fill: ${({ theme }) => theme.trBorderClr};
   }
 `;
 

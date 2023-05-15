@@ -1,6 +1,7 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
+import { useMemo } from 'react';
 
 export interface IDirectory {
   title: string;
@@ -17,20 +18,27 @@ export interface IDirectoriesProps {
 const Directories: React.FC<IDirectoriesProps> = ({ options = [] }) => {
   const modal = useModalProvider();
 
+  const renderList = useMemo(() => options.map(({
+                                                  title,
+                                                  iconId,
+                                                  ModalChildren,
+                                                  modalChildrenProps,
+                                                  disabled,
+                                                }, idx) => (
+    <ListItem key={title}>
+      <StButtonIcon
+        variant='def'
+        onClick={() => {
+          modal.handleOpenModal({ ModalChildren, modalChildrenProps });
+        }}
+      >
+        {title}
+      </StButtonIcon>
+    </ListItem>
+  )), [modal, options]);
   return (
     <Container>
-      {[...options].map(({ title, iconId, ModalChildren, modalChildrenProps, disabled }, idx) => (
-        <ListItem key={title}>
-          <StButtonIcon
-            variant='def'
-            onClick={() => {
-              modal.handleOpenModal({ ModalChildren, modalChildrenProps });
-            }}
-          >
-            {title}
-          </StButtonIcon>
-        </ListItem>
-      ))}
+      {renderList}
     </Container>
   );
 };

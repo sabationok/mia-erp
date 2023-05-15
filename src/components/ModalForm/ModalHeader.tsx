@@ -8,20 +8,28 @@ export interface ModalFormHeaderProps {
 
 const ModalHeader: React.FC<ModalFormHeaderProps & React.ImgHTMLAttributes<HTMLDivElement>> = ({
                                                                                                  title = 'default header titile',
+                                                                                                 children,
                                                                                                  ...props
                                                                                                }) => {
   return (
-    <Header {...props} className='header'>
-      <Title className='title' title={title || ''}>{title}</Title>
+    <HeaderContainer {...props} className='header'>
+      <Header>
+        <Title className='title' title={title || ''}>{title}</Title>
 
-      <ButtonIcon type='reset' size='28px' iconSize={'90%'} iconId={iconId.close} variant='onlyIconNoEffects' />
-    </Header>
+        <ButtonIcon type='reset' size='28px' iconSize={'90%'} iconId={iconId.close} variant='onlyIconNoEffects' />
+      </Header>
+
+      {children && <ExtraHeader>
+        {children}
+      </ExtraHeader>}
+    </HeaderContainer>
   );
 };
 
-const Header = styled.header`
+const HeaderContainer = styled.header`
   display: flex;
   align-items: center;
+  flex-direction: column;
   justify-content: space-between;
 
   /* position: sticky;
@@ -57,6 +65,26 @@ const Title = styled.p`
 
   flex-basis: 100px;
   flex-grow: 1;
+`;
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  /* position: sticky;
+  top: 0;
+  left: 0; */
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+
+  width: 100%;
+  min-height: 28px;
+`;
+const ExtraHeader = styled.div`
+  width: 100%;
+  overflow: hidden;
 `;
 
 export default ModalHeader;

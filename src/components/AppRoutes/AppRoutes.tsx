@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import AppPages from 'components/AppPages';
 import { appPages } from 'data';
 import { memo } from 'react';
@@ -12,27 +12,28 @@ const AppRoutes: React.FC = () => {
   return (
     <Routes>
       <Route index element={<Navigate to={appPages.home.path} />} errorElement={<PageNotFound />} />
-      <Route path="auth/*" element={<PublicRoute redirectTo={`/${appPages.transactions.path}`} />}>
-        <Route index element={<Navigate to="login" />} errorElement={<PageNotFound />} />
+      <Route path='auth/*' element={<PublicRoute redirectTo={`/${appPages.transactions.path}`} />}>
+        <Route index element={<Navigate to='login' />} errorElement={<PageNotFound />} />
 
-        <Route path="register" element={<AppPages.PageAuth register />}></Route>
+        <Route path='register' element={<AppPages.PageAuth register />}></Route>
 
-        <Route path="login" element={<AppPages.PageAuth login />}></Route>
+        <Route path='login' element={<AppPages.PageAuth login />}></Route>
 
-        <Route path="sendRecoveryPasswordMail" element={<AppPages.PageAuth sendRecoveryMail />}></Route>
+        <Route path='sendRecoveryPasswordMail' element={<AppPages.PageAuth sendRecoveryMail />}></Route>
 
-        <Route path="recoveryPassword" element={<AppPages.PageAuth recovery />}></Route>
+        <Route path='recoveryPassword' element={<AppPages.PageAuth recovery />}></Route>
 
-        <Route path="*" element={<PageNotFound />} errorElement={<PageNotFound />} />
+        <Route path='*' element={<PageNotFound />} errorElement={<PageNotFound />} />
       </Route>
 
-      <Route path="/" element={<PrivateRoute redirectTo="/auth" />}>
+      <Route path='/' element={<PrivateRoute redirectTo='/auth' />}>
         <Route
-          path="/"
+          path='/'
           element={<AppPages.AppGridPage path={appPages.transactions.path} />}
           errorElement={<PageNotFound />}
         >
-          <Route index element={<AppPages.PageTransactions />} errorElement={<PageNotFound />} />
+          <Route index element={<Navigate to={appPages.transactions.path} />} errorElement={<PageNotFound />} />
+
 
           <Route
             path={appPages.transactions.path}
@@ -64,7 +65,7 @@ const AppRoutes: React.FC = () => {
         </Route>
       </Route>
 
-      <Route path="*" element={<PageNotFound />} errorElement={<PageNotFound />} />
+      <Route path='*' element={<PageNotFound />} errorElement={<PageNotFound />} />
     </Routes>
   );
 };

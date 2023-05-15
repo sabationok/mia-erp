@@ -88,7 +88,7 @@ const StyledSideBar = styled.div<SideBarState>`
 
   fill: ${({ theme }) => theme.fillColorHeader};
   color: ${({ theme }) => theme.fontColorHeader};
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  background-color: ${({ theme }) => theme.sideBarBackgroundColor};
 
   /* max-width: 54px; */
   /* @media screen and (min-width: 480px) { */
@@ -119,7 +119,8 @@ const Content = styled.div<SideBarState>`
 
   overflow: hidden;
 
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  border-right: ${({ theme, isOpen }) => isOpen ? `1px solid ${theme.sideBarBorderColor}` : '0 solid transparent'};
+  background-color: ${({ theme }) => theme.sideBarBackgroundColor};
   transition: min-width ${({ theme }) => theme.globals.timingFunctionLong};
 `;
 
@@ -134,18 +135,14 @@ const Top = styled.div`
   width: ${sideBarCompWidth};
   /* } */
 `;
-// const MiddleToggler = styled(ButtonIcon)`
-//   position: sticky;
-//   top: 0;
-//   left: 0;
 
-//   width: ${sideBarCompWidth};
-//   height: 32px;
-// `;
 const Middle = styled.div`
   height: 100%;
   max-height: 100%;
   overflow: auto;
+
+  border-top: 1px solid ${({ theme }) => theme.sideBarBorderColor};
+  border-bottom: 1px solid ${({ theme }) => theme.sideBarBorderColor};
 
   ::-webkit-scrollbar {
     width: 2px;
@@ -172,7 +169,6 @@ const MiddleButtons = styled.div<{ isMiddleOpen?: boolean }>`
     max-height: 100%;
   } */
 `;
-
 const Bottom = styled.div`
   display: flex;
   flex-direction: column;
@@ -197,9 +193,9 @@ const MenuToggler = styled.button<SideBarState>`
 
   border-style: none;
 
-  background-color: ${({ isOpen, theme }) => (isOpen ? theme.trBorderClr : theme.backgroundColorSecondary)};
-  border-right: ${({ theme, isOpen }) => (!isOpen ? `1px solid ${theme.trBorderClr}` : '')};
-  transition: all ${({ theme }) => theme.globals.timingFunctionMain};
+  background-color: ${({ isOpen, theme }) => (isOpen ? theme.sideBarBorderColor : theme.sideBarTogglerBackgroundColor)};
+  border-right: ${({ theme, isOpen }) => (!isOpen ? `1px solid ${theme.sideBarBorderColor}` : `1px solid transparent`)};
+    //transition: all ${({ theme }) => theme.globals.timingFunctionMain};
 `;
 
 const isActiveCss = css`

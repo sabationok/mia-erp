@@ -2,14 +2,14 @@
 import * as React from 'react';
 import ReportList from './ReportList';
 import styled from 'styled-components';
-import ModalForm from '../ModalForm/ModalForm';
+import ModalForm from '../ModalForm';
 import { IReportBaseProps } from './report.types';
 
 export interface IReportCategoriesProps extends IReportBaseProps {
 };
-const ReportCategories: React.FC<IReportCategoriesProps> = (props) => {
+const ReportCategories: React.FC<IReportCategoriesProps> = ({ ...props }) => {
   return (
-    <ModalForm>
+    <ModalForm {...props}>
       <Box>
         <ReportList />
       </Box>

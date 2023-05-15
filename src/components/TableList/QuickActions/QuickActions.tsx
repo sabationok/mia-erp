@@ -64,7 +64,6 @@ const QuickActions: React.FC<{ top?: any[]; bottom?: any[]; footer?: boolean }> 
 
       <ToggleButton
         isShown={isShown}
-        // iconId={isShown ? iconId.close : iconId.actionsV}
         iconId={iconId.plus}
         variant='def'
         iconSize='70%'

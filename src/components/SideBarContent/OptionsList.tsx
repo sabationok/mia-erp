@@ -28,7 +28,7 @@ const OptionsList: React.FC<IIOptionsListProps & React.HTMLAttributes<HTMLUListE
                  }, idx) => (
       <ListItem key={title || iconId || idx}>
         <StButtonIcon
-          variant='def'
+          variant='defNoEffects'
           onClick={() => modal.handleOpenModal({ ModalChildren, modalChildrenProps })}
           disabled={disabled}
         >
@@ -62,6 +62,7 @@ const StButtonIcon = styled(ButtonIcon)`
   padding: 4px 12px;
 
   transition: none;
+
 `;
 
 export default OptionsList;

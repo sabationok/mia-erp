@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import RowActionItem from './RowActionItem';
-import { useRow } from '../RowContext';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useRow } from '../TableRow';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import s from './RowActions.module.scss';
@@ -22,11 +22,13 @@ const RowActions = () => {
   function navigateById() {
     navigate(pathRef.current);
   }
+
   async function copyLink() {
     await navigator.clipboard.writeText(linkRef.current);
 
     toast.info(`Посилання скопійоване до буферу обміну`);
   }
+
   async function handleShareBtnClick() {
     const shareData = {
       title: `Поділитись`,

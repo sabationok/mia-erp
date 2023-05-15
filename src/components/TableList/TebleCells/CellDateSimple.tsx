@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useRow } from '../TableRows/RowContext';
+import { useRow } from '../TableRows/TableRow';
 import DateComp from './CellComponents/DateComp';
 import { CellTitleContent, CellTittleProps } from './CellTitle';
 
@@ -10,10 +10,10 @@ export interface CellDateSimpleProps {
 }
 
 const CellDateSimple: React.FC<CellDateSimpleProps & React.HTMLAttributes<HTMLDivElement>> = ({
-  titleInfo,
-  idx,
-  ...props
-}) => {
+                                                                                                titleInfo,
+                                                                                                idx,
+                                                                                                ...props
+                                                                                              }) => {
   const { rowData } = useRow();
   const { top, bottom, width = '100px' } = titleInfo;
 

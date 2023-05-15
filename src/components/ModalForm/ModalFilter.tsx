@@ -1,7 +1,7 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { ModalFormProps } from './ModalForm';
+import { ModalFormProps } from './index';
 
 export interface ModalFormFilterProps extends Pick<ModalFormProps, 'filterOptions' | 'onOptSelect' | 'preventFilter' | 'defaultFilterValue'> {
 }
@@ -18,9 +18,8 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
   useEffect(() => {
     if (preventFilter || defaultFilterValue) return;
 
-    if (filterOptions) {
-      const opt = Array.isArray(filterOptions) && filterOptions[current];
-      (typeof onOptSelect === 'function') && onOptSelect(opt);
+    if (filterOptions && Array.isArray(filterOptions)) {
+      (typeof onOptSelect === 'function') && onOptSelect(filterOptions[current], filterOptions[current].value);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -42,12 +41,10 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
             className={current === idx ? 'filterBtn active' : 'filterBtn'}
             onClick={() => {
               setCurrent(idx);
-              if (typeof onOptSelect === 'function') onOptSelect(filterOptions[idx]);
+              if (typeof onOptSelect === 'function') onOptSelect(filterOptions[idx], filterOptions[idx].value);
             }}
           >
-            {opt?.label || opt?.name || null}
-
-            {opt.getLabel && opt.getLabel()}
+            {opt.getLabel ? opt.getLabel() : (opt?.label || opt?.name || null)}
           </StButtonIcon>
         ))}
     </Filter>

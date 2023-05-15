@@ -1,5 +1,5 @@
 import { FilterSelectorType } from 'components/Filter/Filter';
-import SelectsList from 'components/Filter/SelectorContent/SelectsList';
+import SelectsTreeList from 'components/Filter/SelectorContent/SelectsTreeList';
 import { useCategoriesSelector } from 'redux//selectors.store';
 import { useCountsSelector } from 'redux/selectors.store';
 
@@ -10,27 +10,25 @@ const useTrFilterSelectors = (): FilterSelectorType[] => {
     { _id: 'ds6d5vf6dd6f1v68d', name: 'EXPENSE', label: 'ВИТРАТИ' },
   ];
 
-  const selectors: FilterSelectorType[] = [
+  return [
     {
       label: 'Тип',
       data: transationTypes,
       selectorName: 'type',
-      ListComp: SelectsList,
+      ListComp: SelectsTreeList,
     },
     {
       label: 'Рахунки',
       data: useCountsSelector().counts,
-      selectorName: 'categories',
-      ListComp: SelectsList,
+      selectorName: 'counts',
+      ListComp: SelectsTreeList,
     },
     {
       label: 'Категорії',
       data: useCategoriesSelector().categories,
-      selectorName: 'counts',
-      ListComp: SelectsList,
+      selectorName: 'categories',
+      ListComp: SelectsTreeList,
     },
   ];
-
-  return selectors;
 };
 export default useTrFilterSelectors;

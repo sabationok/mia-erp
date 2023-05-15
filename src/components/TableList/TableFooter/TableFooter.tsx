@@ -7,7 +7,7 @@ import TableSort from './TableSortComp/TableSort';
 import { useState } from 'react';
 
 const TableFooter: React.FC<any> = props => {
-  const { useFilterSelectors, tableSortParams, selectedRows, counter, isFilter } = useTable();
+  const { filterSelectors, tableSortParams, selectedRows, counter, isFilter } = useTable();
   const [isCounterOn] = useState<boolean | undefined>(!counter && selectedRows && selectedRows?.length > 0);
 
   return (
@@ -19,8 +19,10 @@ const TableFooter: React.FC<any> = props => {
 
         {isFilter && (
           <TableFilter
-            {...{ title: 'Фільтрація транзакцій' }}
-            useFilterSelectors={useFilterSelectors ? useFilterSelectors : () => []}
+            {...{
+              title: 'Фільтрація транзакцій',
+              filterSelectors,
+            }}
           />
         )}
       </Top>

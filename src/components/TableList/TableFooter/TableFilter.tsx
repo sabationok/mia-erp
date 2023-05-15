@@ -6,12 +6,12 @@ import Filter, { FilterProps, FilterSelectorType } from 'components/Filter/Filte
 
 export interface TableFilterProps {
   title?: string;
-  useFilterSelectors: () => FilterSelectorType[] | [];
+  filterSelectors?: FilterSelectorType[];
 }
 
-const TableFilter: React.FC<TableFilterProps> = ({ title, useFilterSelectors }) => {
+const TableFilter: React.FC<TableFilterProps> = ({ title, filterSelectors }) => {
   const modal = useModalProvider();
-
+  
   return (
     <ButtonIcon
       iconId={iconId.filterOff}
@@ -21,7 +21,7 @@ const TableFilter: React.FC<TableFilterProps> = ({ title, useFilterSelectors }) 
       onClick={() => {
         modal.handleOpenModal<FilterProps>({
           ModalChildren: Filter,
-          modalChildrenProps: { title, useFilterSelectors },
+          modalChildrenProps: { title, filterSelectors },
         });
       }}
     />

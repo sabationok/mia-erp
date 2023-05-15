@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import getNestedData from 'utils/getNestedData';
-import { useRow } from '../TableRows/RowContext';
+import { useRow } from '../TableRows/TableRow';
 import { CellTitleContent, CellTittleProps } from './CellTitle';
 
 export interface CellTextDblProps {

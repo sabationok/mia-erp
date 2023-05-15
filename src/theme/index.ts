@@ -56,13 +56,30 @@ const darkTheme = {
   backgroundColorLight: '#323234',
   backdropColor: 'rgba(21, 21, 21, 0.3)',
   borderColor: '#59595a',
-  trBorderClr: 'rgba(122, 122, 122)',
+
+  trBorderClr: 'rgba(70, 70, 73, 1)',// 'rgba(122, 122, 122, 1)',
   trBorderClrLight: '#2C2C2E',
   trBorderClrDark: '#464649',
+
   tableFooterBackground: 'rgb(39, 39, 39)',
   tableHeaderBackground: '#3A3A3C',
   tableBackgroundColor: 'rgb(28, 28, 28)',
   tableHeaderStroke: 'rgba(122, 122, 122)',
+
+  sideBarBackgroundColor: 'rgba(39, 39, 41, 1)',
+  sideBarBorderColor: 'rgba(70, 70, 73, 1)',
+  sideBarButtonBackgroundColorActive: 'rgba(50, 50, 52, 1)',
+  sideBarTogglerBackgroundColor: 'rgba(70, 70, 73, 1)',
+
+  headerBackgroundColor: 'rgba(39, 39, 41, 1)',
+  headerBorderColor: 'rgba(70, 70, 73, 1)',
+  headerButtonBackgroundColorActive: 'rgba(50, 50, 52, 1)',
+  headerTogglerBackgroundColor: 'rgba(70, 70, 73, 1)',
+
+  modalBackgroundColor: '#272727',
+  modalBorderColor: 'rgba(83, 83, 87, 1)',
+  modalButtonBackgroundColorActive: 'rgba(50, 50, 52, 1)',
+  modalTogglerBackgroundColor: 'rgba(70, 70, 73, 1)',
 
   colorLight: '#EFEFEF',
   fontColor: '#EFEFEF',
@@ -75,7 +92,6 @@ const darkTheme = {
   fontColorSidebar: '#EFEFEF',
   fillColorSidebar: '#EFEFEF',
 
-  modalBackground: '#272727',
   defaultBtnBckgrndColor: {
     def: 'transparent',
     hover: 'rgba(219, 219, 219, 0.1)',
@@ -92,23 +108,40 @@ const lightTheme: Partial<ITheme> = {
   backgroundColorSecondary: '#DADADA',
   backgroundColorLight: '#FAFAFA',
   backdropColor: 'rgba(21, 21, 21, 0.3)',
-  borderColor: '#5C5C5D',
-  trBorderClr: '#5C5C5D',
-  tableFooterBackground: '#FAFAFA',
-  tableHeaderBackground: '#E4E4E4',
-  tableHeaderStroke: '#FFF',
-  tableBackgroundColor: '#EFEFEF',
   colorLight: '#EFEFEF',
   fontColor: '#272727',
   fillColor: '#272727',
   fontColorHeader: '#272727',
   fillColorHeader: '#272727',
 
+  borderColor: '#E9E9E9',
+  trBorderClr: 'rgba(218, 218, 218, 1)',// '#E9E9E9',
+  trBorderClrLight: '#E9E9E9',
+  tableFooterBackground: '#FAFAFA',
+  tableHeaderBackground: '#E4E4E4',
+  tableHeaderStroke: '#FFF',
+  tableBackgroundColor: '#EFEFEF',
+
+  sideBarBackgroundColor: 'rgba(250, 250, 250, 1)',
+  sideBarBorderColor: 'rgba(218, 218, 218, 1)',
+  sideBarButtonBackgroundColorActive: 'rgba(233, 233, 233, 1)',
+  sideBarTogglerBackgroundColor: 'rgba(235, 235, 235, 1)',
+
+  headerBackgroundColor: 'rgba(235, 235, 235, 1)',
+  headerBorderColor: 'rgba(218, 218, 218, 1)',
+  headerButtonBackgroundColorActive: 'rgba(233, 233, 233, 1)',
+  headerTogglerBackgroundColor: 'rgba(218, 218, 218, 1)',
+
+  modalBackgroundColor: '#FAFAFA',
+  modalBorderColor: 'rgba(218, 218, 218, 1)',
+  modalButtonBackgroundColorActive: 'rgba(233, 233, 233, 1)',
+  modalTogglerBackgroundColor: 'rgba(218, 218, 218, 1)',
+
   fontColorSidebar: '#272727',
   fillColorSidebar: '#272727',
 
   fieldColor: '#E4E4E4',
-  modalBackground: '#FAFAFA',
+
   defaultBtnBckgrndColor: {
     def: 'transparent',
     hover: 'rgba(219, 219, 219, 0.1)',

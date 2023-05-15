@@ -39,7 +39,12 @@ const Selector: React.FC<FilterSelectorProps & React.HTMLAttributes<Element>> = 
         <Label>{label}</Label>
       </StOpenButton>
 
-      <MaxToTablet>{currentIdx === idx ? <SelectorList>{children}</SelectorList> : null}</MaxToTablet>
+
+      {currentIdx === idx ?
+        <SelectorList>
+          {children}
+        </SelectorList> : null}
+
     </SelectorContainer>
   );
 };
@@ -72,14 +77,15 @@ const StOpenButton = styled(ButtonIcon)<{ isCurrent: boolean }>`
     transform: ${({ isCurrent }) => `rotate(${isCurrent ? 180 : 0}deg)`};
   }
 
-  @media screen and (min-width: 768px) {
-    & .endIcon {
-      transform: ${({ isCurrent }) => `rotate(${isCurrent ? -90 : 90}deg)`};
-    }
-  }
+  // @media screen and (min-width: 768px) {
+  //   & .endIcon {
+    //     transform: ${({ isCurrent }) => `rotate(${isCurrent ? -90 : 90}deg)`};
+  //   }
+  // }
 `;
 const SelectorList = styled.div`
   overflow: hidden;
+
 `;
 
 export default Selector;

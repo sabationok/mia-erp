@@ -45,18 +45,19 @@ const SideBarOptions: React.FC = () => {
   return (
     <Backdrop
       className='backdrop'
-      isOpen={isOpen && RightSideContent?.RenderComponent ? true : false}
+      isOpen={!!(isOpen && RightSideContent?.RenderComponent)}
       maxWidth={RightSideContent?.maxWidth}
       onClick={onBackdropClick}
     >
       <Container
-        isOpen={isOpen && RightSideContent?.RenderComponent ? true : false}
+        isOpen={!!(isOpen && RightSideContent?.RenderComponent)}
         maxWidth={RightSideContent?.maxWidth}
       >
         <Header>
           <Title>{RightSideContent?.title}</Title>
 
-          <ButtonIcon iconSize='18px' size='22px' iconId={iconId.close} variant='def' onClick={handleCloseMenu} />
+          <ButtonIcon iconSize='18px' size='22px' iconId={iconId.close} variant='defNoEffects'
+                      onClick={handleCloseMenu} />
         </Header>
 
         <ContentScroll>
@@ -127,18 +128,19 @@ const Header = styled.header`
 
   padding: 0 8px;
 
-  font-size: 14px;
-  font-weight: 600;
 
   height: 32px;
   width: 100%;
 
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  background-color: ${({ theme }) => theme.sideBarBackgroundColor};
   cursor: default;
 `;
 const Title = styled.div`
   display: flex;
   align-items: center;
+
+  font-size: 16px;
+  font-weight: 700;
 `;
 
 const ContentScroll = styled.div`
@@ -152,6 +154,8 @@ const ContentScroll = styled.div`
   overflow: auto;
 
   /* padding: 4px; */
+  background-color: ${({ theme }) => theme.sideBarButtonBackgroundColorActive};
+  border-top: 1px solid ${({ theme }) => theme.sideBarBorderColor};
 `;
 
 export default SideBarOptions;

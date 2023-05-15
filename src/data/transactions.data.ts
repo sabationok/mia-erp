@@ -1,4 +1,4 @@
-import { SelectItem, TableActionsProps, useTable } from 'components/TableList/TableList';
+import { SelectItem, TableActionsProps } from 'components/TableList/TableList';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { iconId } from '../img/sprite';
 import { selects } from './select.data';
@@ -7,6 +7,7 @@ import useTransactionsService from '../redux/transactions/useTransactionsService
 import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import TransactionForm, { TransactionsFilterOpt } from '../components/Forms/TransactionForm';
 import { CategoriesTypesMap } from '../redux/categories/categories.types';
+import { useMemo } from 'react';
 
 export const transactionsColumns: CellTittleProps[] = [
   {
@@ -91,7 +92,7 @@ export const transactionsSearchParams: SelectItem[] = [
   { label: 'Статус', dataPath: 'status', filter: false, search: true, sort: true },
 ];
 
-const filterOptions: TransactionsFilterOpt[] = [
+export const filterOptions: TransactionsFilterOpt[] = [
   { label: CategoriesTypesMap.INCOME, value: 'INCOME' },
   { label: CategoriesTypesMap.TRANSFER, value: 'TRANSFER' },
   { label: CategoriesTypesMap.EXPENSE, value: 'EXPENSE' },
@@ -100,10 +101,9 @@ const filterOptions: TransactionsFilterOpt[] = [
 export const useTransactionsActions = () => {
   const modal = useModalProvider();
   const { editById, create, deleteById } = useTransactionsService();
-  const table = useTable();
-  console.log('useTransactionsActions', table);
+  // const table = useTable();
 
-  return {
+  return useMemo(() => ({
     top: [
       {
         name: 'editTr',
@@ -196,7 +196,7 @@ export const useTransactionsActions = () => {
         disableChek: () => false,
       },
     ],
-  };
+  }), [create, deleteById, editById, modal]);
 };
 
 

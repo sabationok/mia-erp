@@ -1,30 +1,35 @@
-import TableList from 'components/TableList/TableList';
+import TableList, { ITableListProps } from 'components/TableList/TableList';
 import { takeFullGridArea } from './pagesStyles';
 import { transactionsColumns, transactionsMockData, transactionsSearchParams } from 'data';
 import styled from 'styled-components';
-import useTransactionsServise from 'redux/transactions/useTransactionsService.hook';
-import { useTransactionsActions } from '../../data/transactions.data';
+import useTransactionsService from 'redux/transactions/useTransactionsService.hook';
+import { useMemo } from 'react';
+import useTrFilterSelectors from 'redux/transactions/useTrFilterSelectors.hook';
+import { useTrActions } from 'redux/transactions/useTrTableActions.hook';
 
 const PageTransactions = () => {
-  const { transactions, useFilterSelectors } = useTransactionsServise();
-  // const { transactions, isLoading, error } = useTransactionsSelector();
+  const transactionsService = useTransactionsService();
+  const filterSelectors = useTrFilterSelectors();
+  const tableActions = useTrActions(transactionsService);
   // const [selectedTr, setSelectedTr] = useState<any>(null);
-  const trActions = useTransactionsActions();
+
+
+  const tableConfig = useMemo((): ITableListProps => ({
+    tableData: transactionsMockData || transactionsService.state.transactions,
+    tableTitles: transactionsColumns,
+    tableActions,
+    tableSearchParams: transactionsSearchParams.filter(el => el.search),
+    tableSortParams: transactionsSearchParams.filter(el => el.sort),
+    filterSelectors,
+    isFilter: true,
+    isSearch: true,
+    footer: true,
+  }), [filterSelectors, tableActions, transactionsService.state.transactions]);
 
   return (
     <Page>
       <TableList
-        {...{
-          tableData: transactionsMockData || transactions,
-          tableTitles: transactionsColumns,
-          tableActions: trActions,
-          tableSearchParams: transactionsSearchParams.filter(el => el.search),
-          tableSortParams: transactionsSearchParams.filter(el => el.sort),
-          useFilterSelectors,
-          isFilter: true,
-          isSearch: true,
-          footer: true,
-        }}
+        {...tableConfig}
       />
     </Page>
   );

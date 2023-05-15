@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRow } from '../../TableRows/RowContext';
+import { useRow } from '../../TableRows/TableRow';
 import DateInfo from '../CellComponents/DateComp';
 
 import s from './TableCells.module.scss';

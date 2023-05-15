@@ -1,5 +1,4 @@
-import RowContext from './RowContext';
-import React, { useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import CellTextDbl from '../TebleCells/CellTextDbl';
 import { CellsMap } from '../TebleCells';
 import { useTable } from '../TableList';
@@ -12,6 +11,13 @@ export interface TableRowProps {
   rowData: ITransaction;
   idx: number;
 }
+
+export interface RowCTXProps {
+  rowData?: any;
+}
+
+export const RowCTX = createContext<RowCTXProps>({});
+export const useRow = () => useContext(RowCTX) as RowCTXProps;
 
 const TableRow: React.FC<TableRowProps> = props => {
   const { tableTitles, tableData, rowGrid } = useTable();
@@ -34,14 +40,14 @@ const TableRow: React.FC<TableRowProps> = props => {
 
   return (
     <Row id={props?.rowData?._id} data-row>
-      <RowContext value={ctxValue}>
+      <RowCTX.Provider value={{ ...ctxValue }}>
         <RowStickyEl>{/* {checkBoxes && <CellCheckBox />} */}</RowStickyEl>
 
         <StRowData gridRepeat={tableData?.length || 0} style={{ ...rowGrid }}>
           {tableTitles &&
             tableTitles?.map((item, idx) => {
               let CellComp = item.action ? CellsMap[item.action] : CellTextDbl;
-              if (CellComp instanceof Function) {
+              if (typeof CellComp === 'function') {
                 return <CellComp key={idx} titleInfo={item} idx={idx} />;
               }
               console.log(item.action);
@@ -49,7 +55,7 @@ const TableRow: React.FC<TableRowProps> = props => {
               return <CellTextDbl key={idx} titleInfo={item} idx={idx} />;
             })}
         </StRowData>
-      </RowContext>
+      </RowCTX.Provider>
     </Row>
   );
 };
@@ -64,7 +70,7 @@ const Row = styled(ThRow)`
 
   border-top: 1px solid transparent;
   border-bottom: 1px solid transparent;
-  border-bottom-color: ${({ theme }) => theme.borderColor};
+  border-bottom-color: ${({ theme }) => theme.trBorderClr};
 
   &:hover {
     border-color: ${({ theme }) => theme.accentColor.base};

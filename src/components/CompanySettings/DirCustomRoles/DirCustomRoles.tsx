@@ -1,5 +1,5 @@
 import React from 'react';
-import ModalForm, { FilterOpt, ModalFormProps } from 'components/ModalForm/ModalForm';
+import ModalForm, { FilterOpt, ModalFormProps } from 'components/ModalForm';
 import DirList from '../../Directories/DirList/DirList';
 // import { founder } from 'utils';
 import styled from 'styled-components';

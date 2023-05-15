@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Selector from './Selector';
-import ModalDefault, { ModalFormProps } from 'components/ModalForm/ModalForm';
+import ModalDefault, { ModalFormProps } from 'components/ModalForm';
 
 import styled from 'styled-components';
 import SelectorContent from './SelectorContent/SelectorContent';
@@ -18,96 +18,116 @@ export type FilterSelectorType = {
   ListComp: React.FC<any>;
 };
 
-export interface FilterProps extends ModalFormProps {
-  useFilterSelectors: () => FilterSelectorType[] | [];
+export interface FilterProps extends Omit<ModalFormProps, 'defaultFilterValue'> {
+  filterSelectors?: FilterSelectorType[];
+  defaultFilterValue?: Record<string, any>;
 }
 
 const Filter: React.FC<FilterProps> = props => {
-  const { useFilterSelectors, ...restProps } = props;
-  if (!useFilterSelectors) {
-    return <SelectorErr>'useFilterSelectors' not passed</SelectorErr>;
+  if (!props.filterSelectors) {
+    return <SelectorErr>'Filter selectors' not passed</SelectorErr>;
   }
 
-  if (typeof useFilterSelectors !== 'function') {
-    return <SelectorErr>'useFilterSelectors' not function</SelectorErr>;
-  }
-
-  const selectors = props.useFilterSelectors();
-  if (!Array.isArray(selectors) || selectors.some(sel => !isSelectorType(sel))) {
+  if (!Array.isArray(props.filterSelectors) || props.filterSelectors.some(sel => !isSelectorType(sel))) {
     return <SelectorErr>Invalid filter selectors</SelectorErr>;
   }
 
-  return <AppFilter useFilterSelectors={props.useFilterSelectors} {...restProps} />;
+  return <AppFilter {...props} />;
 };
 
-const AppFilter: React.FC<FilterProps & ModalFormProps> = ({ useFilterSelectors, ...props }) => {
-  const selectors = useFilterSelectors();
-  const [CurrentData, setCurrentData] = useState<FilterSelectorType | null>(selectors[0]);
-  const [currentIdx, setCurrentIdx] = useState<number | null>(0);
+const AppFilter: React.FC<FilterProps> =
+  ({
+     filterSelectors,
+     defaultFilterValue,
+     onSubmit,
+     ...props
+   }) => {
 
-  function onSelectorClick(idx: number) {
-    setCurrentIdx(idx);
-    setCurrentData(selectors[idx]);
-  }
+    const [CurrentData, setCurrentData] = useState<FilterSelectorType | null>(filterSelectors ? filterSelectors[0] : null);
+    const [currentIdx, setCurrentIdx] = useState<number | null>(0);
+    const [filterData, setFilterData] = useState<Record<string, any>>({ ...defaultFilterValue });
+    //
+    // const onFilterDataChange = useCallback((name: string, value: string[]) => {
+    //   setFilterData(prev => {
+    //     if (value.length === 0) {
+    //       const newState = { ...prev };
+    //       delete newState[name];
+    //       return newState;
+    //     }
+    //     return ({ ...prev, [name]: value });
+    //   });
+    // }, []);
+    const onFilterDataChange = useCallback((name: string, value: string[]) => {
+    }, []);
 
-  function onFilterStateChange(item: any) {
-    console.log('onFilterStateChange', item);
-  }
 
-  return (
-    <ModalDefSt {...props}>
-      <FilterContainer>
-        <DatePickers>
-          <InputTextPrimary label='Від (дата і час)' type='datetime-local' placeholder='Від (дата і час)' />
-          <InputTextPrimary label='До (дата і час)' type='datetime-local' placeholder='До (дата і час)' />
-        </DatePickers>
+    const onSelectorClick = useCallback((idx: number) => {
+      setCurrentIdx(idx);
+      filterSelectors && setCurrentData(filterSelectors[idx]);
+    }, [filterSelectors]);
 
-        <Bottom>
-          <LeftSide>
-            <SelectorsList>
-              {selectors.map(({ selectorName, label, data, ListComp }, idx) => (
-                <Selector
-                  key={selectorName}
-                  label={label}
-                  data={data}
-                  selectorName={selectorName}
-                  idx={idx}
-                  onSelectorClick={() => onSelectorClick(idx)}
-                  currentIdx={currentIdx}
-                  CurrentData={CurrentData}
-                >
-                  <SelectorContent
-                    data={data}
-                    onSelect={onFilterStateChange}
-                    selectorName={selectorName}
-                    ListComp={ListComp}
-                  />
-                </Selector>
-              ))}
-            </SelectorsList>
-          </LeftSide>
 
-          <MinTabletXl>
-            <RightSide>
-              <SelectorContent
-                data={CurrentData?.data || []}
-                onSelect={onFilterStateChange}
-                selectorName={CurrentData?.selectorName}
-                ListComp={CurrentData?.ListComp}
-              />
-            </RightSide>
-          </MinTabletXl>
-        </Bottom>
-      </FilterContainer>
-    </ModalDefSt>
-  );
-};
+    const renderSelectors = useMemo(() => filterSelectors?.map(({ selectorName, label, data, ListComp }, idx) => (
+      <Selector
+        key={selectorName}
+        label={label}
+        data={data}
+        selectorName={selectorName}
+        idx={idx}
+        onSelectorClick={() => onSelectorClick(idx)}
+        currentIdx={currentIdx}
+        CurrentData={CurrentData}
+      >
+        <SelectorContent
+          defaultValue={filterData[selectorName]}
+          onSelectorSubmit={onFilterDataChange}
+          data={data}
+          selectorName={selectorName}
+          ListComp={ListComp}
+        />
+      </Selector>
+    )), [CurrentData, currentIdx, filterData, filterSelectors, onFilterDataChange, onSelectorClick]);
 
-const ModalDefSt = styled(ModalDefault)`
+    // const renderSelectorContent = useMemo(() =>
+    //     (<SelectorContent
+    //       defaultValue={CurrentData?.selectorName ? filterData[CurrentData?.selectorName] : []}
+    //       onSelectorSubmit={onFilterDataChange}
+    //       data={CurrentData?.data || []}
+    //       selectorName={CurrentData?.selectorName}
+    //       ListComp={CurrentData?.ListComp}
+    //     />),
+    //   [CurrentData?.ListComp, CurrentData?.data, CurrentData?.selectorName, filterData, onFilterDataChange]);
+
+    return (
+      <StModalDefault {...props} onSubmit={onSubmit && onSubmit(filterData)}>
+        <FilterContainer>
+          <DatePickers>
+            <InputTextPrimary label='Від (дата і час)' type='datetime-local' name={'timeFrom'}
+                              placeholder='Від (дата і час)' />
+            <InputTextPrimary label='До (дата і час)' type='datetime-local' name={'timeTo'}
+                              placeholder='До (дата і час)' />
+          </DatePickers>
+
+          <Bottom>
+            <LeftSide>
+              <SelectorsList>
+                {renderSelectors}
+              </SelectorsList>
+            </LeftSide>
+
+
+          </Bottom>
+        </FilterContainer>
+      </StModalDefault>
+    );
+  };
+
+const StModalDefault = styled(ModalDefault)`
   height: 98vh;
-  @media screen and (min-width: 768px) {
-    width: 680px;
-  }
+  max-width: 480px;
+  //@media screen and (min-width: 768px) {
+  //  width: 680px;
+  //}
 `;
 
 const FilterContainer = styled.div`
@@ -123,8 +143,6 @@ const FilterContainer = styled.div`
 
   overflow: hidden;
   color: inherit;
-
-    // background-color: ${({ theme }) => theme.backgroundColorSecondary};
   @media screen and (min-width: 768px) {
     /* padding: 16px; */
   }
@@ -141,28 +159,11 @@ const DatePickers = styled.div`
 
   width: 100%;
 
-  @media screen and (min-width: 480px) {
-    gap: 24px;
-    grid-template-columns: 1fr 1fr;
-  }
+  //@media screen and (min-width: 480px) {
+  //  gap: 24px;
+  //  grid-template-columns: 1fr 1fr;
+  //}
 `;
-//? const InputDate = styled.input`
-//?   font-family: inherit;
-//?   fill: currentColor;
-//?
-//?   height: 26px;
-//?   padding: 5px 8px;
-//?   width: 100%;
-//?   color: ${({ theme }) => theme.fillColorHeader};
-//?
-//?   border-radius: 2px;
-//?   border: 1px solid ${({ theme }) => theme.trBorderClr};
-//?   background-color: ${({ theme }) => theme.backgroundColorLight};
-//?
-//?   &::placeholder {
-//?     color: ${({ theme }) => theme.globals.inputPlaceholderColor};
-//?   }
-//? `;
 
 const Bottom = styled.div`
   display: grid;
@@ -177,9 +178,9 @@ const Bottom = styled.div`
 
   overflow: hidden;
 
-  @media screen and (min-width: 768px) {
-    grid-template-columns: 1fr 1fr;
-  }
+  //@media screen and (min-width: 768px) {
+  //  grid-template-columns: 1fr 1fr;
+  //}
 `;
 const Side = styled.div`
   position: relative;
@@ -188,12 +189,12 @@ const Side = styled.div`
   overflow: hidden;
 `;
 const LeftSide = styled(Side)``;
-const RightSide = styled(Side)`
-  padding: 0 12px;
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
-`;
+// const RightSide = styled(Side)`
+//   padding: 0 12px;
+//   @media screen and (max-width: 768px) {
+//     display: none;
+//   }
+// `;
 const SelectorsList = styled.div`
   display: flex;
   flex-direction: column;
@@ -225,6 +226,22 @@ const SelectorErr = styled.div`
 
 // define a type guard to check if an object is of type SelectorType
 function isSelectorType(obj: any): obj is FilterSelectorType {
+  // if (typeof obj.selectorName !== 'string') {
+  //   console.log(`obj.selectorName !== 'string', selectorName:${obj.selectorName}`);
+  //   return false;
+  // }
+  // if (typeof obj.label !== 'string') {
+  //   console.log(`obj.label !== 'string', label:${obj.label}`);
+  //   return false;
+  // }
+  // if (!Array.isArray(obj.data)) {
+  //   console.log(`!Array.isArray(obj.data)'`);
+  //   return false;
+  // }
+  // if (typeof obj.ListComp !== 'function') {
+  //   console.log(`obj.ListComp !== 'function'`, obj.ListComp);
+  //   return false;
+  // }
   return (
     typeof obj.selectorName === 'string' &&
     typeof obj.label === 'string' &&

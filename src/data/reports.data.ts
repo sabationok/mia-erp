@@ -4,9 +4,9 @@ import { iconId } from 'img/sprite/iconId.data';
 import { IReportBaseProps } from '../components/Raports/report.types';
 import ReportCategories, { IReportCategoriesProps } from '../components/Raports/ReportCategories';
 import ReportCounts, { IReportCountsProps } from '../components/Raports/ReportCounts';
-import ModalForm from '../components/ModalForm/ModalForm';
+import ModalForm, { ModalFormProps } from '../components/ModalForm';
 
-export interface IReport<P = IReportBaseProps> {
+export interface IReport<P = IReportBaseProps> extends ModalFormProps {
   title: string;
   iconId: string;
   ModalChildren: React.FC<P> | React.ReactNode;
@@ -15,14 +15,14 @@ export interface IReport<P = IReportBaseProps> {
 }
 
 const categoriesReport: IReport<IReportCategoriesProps> = {
-  title: 'Категоріях',
+  title: 'Категорії',
   iconId: iconId.info,
   ModalChildren: ReportCategories,
   modalChildrenProps: { title: 'Звіт по категоріях' },
   disabled: false,
 };
 const countsReport: IReport<IReportCountsProps> = {
-  title: 'Кахунках',
+  title: 'Кахунки',
   iconId: iconId.info,
   ModalChildren: ReportCounts,
   modalChildrenProps: { title: 'Звіт по рахунках' },
@@ -36,14 +36,14 @@ const activitiesReport: IReport = {
   disabled: false,
 };
 const projectsReport: IReport = {
-  title: 'Проектах',
+  title: 'Проекти',
   iconId: iconId.info,
   ModalChildren: ModalForm,
   modalChildrenProps: { title: 'Звіт по проектах' },
   disabled: false,
 };
 const contractorsReport: IReport = {
-  title: 'Контрагентах',
+  title: 'Контрагенти',
   iconId: iconId.info,
   ModalChildren: ModalForm,
   modalChildrenProps: { title: 'Звіт по контрагентах' },

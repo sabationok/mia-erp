@@ -52,7 +52,7 @@ const categoriesDir = {
 const ContractorsProps: DirContractorsProps = {
   title: 'Контрагенти',
   tableSettings: { tableData: contractorsMockData, tableTitles: contractorsColumns },
-  footer: false,
+
 };
 const contractorsDir = {
   title: ContractorsProps.title,

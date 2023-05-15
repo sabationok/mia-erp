@@ -22,8 +22,8 @@ const TableSearchForm: React.FC<TableSearchProps> = ({ tableSearchParams }) => {
 
     console.log({
       searchFormData: {
-        searchParam,
-        searchValue,
+        searchParam: searchParam?.dataPath,
+        searchValue: searchValue.search,
       },
     });
   }
@@ -33,9 +33,6 @@ const TableSearchForm: React.FC<TableSearchProps> = ({ tableSearchParams }) => {
     setSearchValue(prev => ({ ...prev, [name]: value }));
   }
 
-  useEffect(() => {
-    console.log(searchParam);
-  }, [searchParam]);
   return (
     <SearchForm onSubmit={onSubmit}>
       <StyledLabel>

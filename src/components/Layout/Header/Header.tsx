@@ -55,8 +55,8 @@ const StyledHeader = styled.header`
   fill: ${({ theme }) => theme.fillColorHeader};
   color: ${({ theme }) => theme.fontColorHeader};
 
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
-  border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
+  background-color: ${({ theme }) => theme.headerBackgroundColor};
+  border-bottom: 1px solid ${({ theme }) => theme.headerBorderColor};
 `;
 const LeftSide = styled.div`
   display: grid;
@@ -72,9 +72,9 @@ const StyledBox = styled.div<{ borderRight?: boolean, borderLeft?: boolean }>`
 
   height: 100%;
 
-  border-right: 1px solid ${({ theme, borderRight = false }) => borderRight ? theme.trBorderClr : 'transparent'};
+  border-right: 1px solid ${({ theme, borderRight = false }) => borderRight ? theme.headerBorderColor : 'transparent'};
 
-  border-left: 1px solid ${({ theme, borderLeft = false }) => borderLeft ? theme.trBorderClr : 'transparent'};
+  border-left: 1px solid ${({ theme, borderLeft = false }) => borderLeft ? theme.headerBorderColor : 'transparent'};
 `;
 
 const RightSide = styled.div`

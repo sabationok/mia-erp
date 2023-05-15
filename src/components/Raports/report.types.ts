@@ -1,4 +1,4 @@
-import { ModalFormProps } from '../ModalForm/ModalForm';
+import { ModalFormProps } from '../ModalForm';
 
 export interface IReportBaseProps extends ModalFormProps {
 }

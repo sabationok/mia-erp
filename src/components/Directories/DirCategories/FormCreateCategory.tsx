@@ -1,4 +1,4 @@
-import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
+import ModalForm, { ModalFormProps } from 'components/ModalForm';
 import { CategoriesTypesMap, CategoryTypes, ICategory, ICategoryFormData } from 'redux/categories/categories.types';
 import React, { useState } from 'react';
 import styled from 'styled-components';

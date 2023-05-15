@@ -52,7 +52,7 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
       <SvgIcon iconId={iconId.close} className={'svgIcon'} size='24px' />
     </ClearButton>
   </StyledLabel>);
-  console.log('renderinput', renderinput);
+
 
   const renderFilteredList = useMemo(() => {
     function onSelectItemClick(item: SelectItem) {
@@ -104,6 +104,8 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
   }, [data, inputValue, inputValue?.searchParam]);
 
   useEffect(() => {
+    if (!isOpen) return;
+
     function onMenuClose(ev: MouseEvent | KeyboardEvent) {
       const { target } = ev;
       const allowClose = (target instanceof HTMLElement && !target.closest('[data-select]')) || (ev instanceof KeyboardEvent && ev?.code === 'Escape');
@@ -118,7 +120,7 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
       document.removeEventListener('click', onMenuClose);
       document.removeEventListener('keydown', onMenuClose);
     };
-  }, []);
+  }, [isOpen]);
 
   return (
     <>

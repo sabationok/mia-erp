@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import getNestedData from 'utils/getNestedData';
-import { useRow } from '../TableRows/RowContext';
+import { useRow } from '../TableRows/TableRow';
 import { CellTitleContent, CellTittleProps } from './CellTitle';
 
 export interface CellTextDblAndAvatarProps {
@@ -10,10 +10,10 @@ export interface CellTextDblAndAvatarProps {
 }
 
 const CellTextDblAndAvatar: React.FC<CellTextDblAndAvatarProps & React.HTMLAttributes<HTMLDivElement>> = ({
-  titleInfo,
-  idx,
-  ...props
-}) => {
+                                                                                                            titleInfo,
+                                                                                                            idx,
+                                                                                                            ...props
+                                                                                                          }) => {
   const { rowData } = useRow();
   const { top, bottom, width = '100px' } = titleInfo;
 
@@ -29,14 +29,14 @@ const CellTextDblAndAvatar: React.FC<CellTextDblAndAvatarProps & React.HTMLAttri
   return (
     <CellBase style={{ width }} {...props}>
       <Top align={top.align}>
-        <div title={contentTop} className="inner">
+        <div title={contentTop} className='inner'>
           {contentTop}
         </div>
       </Top>
 
       <Bottom align={bottom?.align}>
         {contentBottom ? (
-          <div title={contentBottom} className="inner">
+          <div title={contentBottom} className='inner'>
             {contentBottom}
           </div>
         ) : null}

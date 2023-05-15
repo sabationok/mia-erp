@@ -1,4 +1,4 @@
-import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
+import ModalForm, { ModalFormProps } from 'components/ModalForm';
 import styled from 'styled-components';
 import { countsTypesMap, CountType, ICount } from 'redux/counts/counts.types';
 import React, { useState } from 'react';

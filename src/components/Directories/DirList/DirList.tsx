@@ -13,50 +13,51 @@ export interface DirListProps extends Partial<DirListItemAddsProps> {
   createParentTitle?: string;
 }
 
-const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLUListElement>> = ({
-                                                                                    entryList,
-                                                                                    list,
-                                                                                    owner,
-                                                                                    onDelete,
-                                                                                    onEdit,
-                                                                                    onCreateChild,
-                                                                                    onCreateParent,
-                                                                                    createParentTitle,
-                                                                                    ...pops
-                                                                                  }) => {
-  const renderList = useMemo(() => entryList ? entryList : list, [entryList, list]);
+const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLUListElement>> =
+  ({
+     entryList,
+     list,
+     owner,
+     onDelete,
+     onEdit,
+     onCreateChild,
+     onCreateParent,
+     createParentTitle,
+     ...pops
+   }) => {
+    const renderList = useMemo(() => entryList ? entryList : list, [entryList, list]);
 
-  return (
-    <Box>
-      <ListBox>
-        {renderList.length > 0 ? (<List {...pops}>
-          {renderList?.map((item, idx) => (
-            <DirListItem
-              key={item?._id || idx}
-              {...item}
-              owner={owner && owner}
-              onDelete={onDelete}
-              onEdit={onEdit}
-              onCreateChild={onCreateChild}
-              canHaveChild={!item.owner}
-              list={list}
-            />
-          ))}
-        </List>) : <EmptyList>Список порожній</EmptyList>}
+    return (
+      <Box>
+        <ListBox>
+          {renderList.length > 0 ? (<List {...pops}>
+            {renderList?.map((item, idx) => (
+              <DirListItem
+                key={item?._id || idx}
+                {...item}
+                owner={owner && owner}
+                onDelete={onDelete}
+                onEdit={onEdit}
+                onCreateChild={onCreateChild}
+                canHaveChild={!item.owner}
+                list={list}
+              />
+            ))}
+          </List>) : <EmptyList>Список порожній</EmptyList>}
 
 
-      </ListBox>
+        </ListBox>
 
-      {onCreateParent && (
-        <CreateParent>
-          <ButtonIcon variant='outlinedSmall' onClick={() => onCreateParent()}>
-            {createParentTitle || 'Create parent'}
-          </ButtonIcon>
-        </CreateParent>
-      )}
-    </Box>
-  );
-};
+        {onCreateParent && (
+          <CreateParent>
+            <ButtonIcon variant='outlinedSmall' onClick={() => onCreateParent()}>
+              {createParentTitle || 'Create parent'}
+            </ButtonIcon>
+          </CreateParent>
+        )}
+      </Box>
+    );
+  };
 const Box = styled.div`
   flex-grow: 1;
 
@@ -82,8 +83,6 @@ const List = styled.ul`
   gap: 12px;
 
   padding-top: 12px;
-
-    // background-color: ${({ theme }) => theme.backgroundColorSecondary};
 `;
 const CreateParent = styled.div`
   display: flex;
@@ -97,9 +96,7 @@ const CreateParent = styled.div`
 
   padding: 8px;
 
-    //background-color: ${({ theme }) => theme.backgroundColorSecondary};
-
-  border-top: 1px solid ${({ theme }) => theme.trBorderClr};
+  border-top: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;
 const EmptyList = styled.div`
   display: flex;

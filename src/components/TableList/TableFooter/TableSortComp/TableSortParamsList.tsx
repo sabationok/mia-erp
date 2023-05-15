@@ -1,5 +1,5 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { ModalFormProps } from 'components/ModalForm/ModalForm';
+import { ModalFormProps } from 'components/ModalForm';
 import { iconId } from 'data';
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';

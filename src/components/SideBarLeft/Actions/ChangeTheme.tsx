@@ -7,13 +7,15 @@ const ToggleThemeMode = () => {
 
   return (
     <ButtonIcon
-      variant="def"
-      iconSize="20px"
-      size="100%"
+
+      variant='defNoEffects'
+      iconSize='20px'
+      size='100%'
       iconId={isDarkMode ? iconId.darkMode : iconId.lightMode}
       onClick={toggleAppMode}
     />
   );
 };
+
 
 export default ToggleThemeMode;

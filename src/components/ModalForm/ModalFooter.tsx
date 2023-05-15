@@ -1,7 +1,7 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 
 import styled from 'styled-components';
-import { ModalFormProps } from './ModalForm';
+import { ModalFormProps } from './index';
 
 const ModalFooter: React.FC<Pick<ModalFormProps, 'onSubmit'> & React.ImgHTMLAttributes<HTMLDivElement>> = ({
                                                                                                              onSubmit,
@@ -40,12 +40,12 @@ const Footer = styled.footer`
   border-bottom-right-radius: 2px;
   border-bottom-left-radius: 2px;
 
-  border-top: 1px solid ${({ theme }) => theme.trBorderClr};
-  border-left: 1px solid ${({ theme }) => theme.trBorderClr};
-  border-right: 1px solid ${({ theme }) => theme.trBorderClr};
+  border-top: 1px solid ${({ theme }) => theme.modalBorderColor};
+  border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
+  border-right: 1px solid ${({ theme }) => theme.modalBorderColor};
   color: ${({ theme }) => theme.fontColorHeader};
   fill: ${({ theme }) => theme.fillColorHeader};
-  background-color: ${({ theme }) => theme.modalBackground};
+  background-color: ${({ theme }) => theme.modalBackgroundColor};
 
   @media screen and (min-width: 768px) {
     padding: 8px;

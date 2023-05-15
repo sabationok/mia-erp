@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import getNestedData from 'utils/getNestedData';
-import { useRow } from '../TableRows/RowContext';
+import { useRow } from '../TableRows/TableRow';
 import StatusComp from './CellComponents/StatusComp';
 import { CellTitleContent, CellTittleProps } from './CellTitle';
 
@@ -11,10 +11,10 @@ export interface CellTextDblProps {
 }
 
 const CellStatus: React.FC<CellTextDblProps & React.HTMLAttributes<HTMLDivElement>> = ({
-  titleInfo,
-  idx,
-  ...props
-}) => {
+                                                                                         titleInfo,
+                                                                                         idx,
+                                                                                         ...props
+                                                                                       }) => {
   const { rowData } = useRow();
   const { top, width = '100px' } = titleInfo;
 

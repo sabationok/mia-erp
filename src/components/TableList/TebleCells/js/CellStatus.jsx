@@ -1,8 +1,9 @@
 import React from 'react';
-import { useRow } from '../../TableRows/RowContext';
+import { useRow } from '../../TableRows/TableRow';
 import Status from '../CellComponents/StatusComp';
 
 import s from './TableCells.module.scss';
+
 const CellStatus = ({ title, idx, className, onClick }) => {
   const { rowData } = useRow();
   const content = rowData[title?.action] || '---';

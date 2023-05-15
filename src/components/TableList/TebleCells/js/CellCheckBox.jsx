@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTable } from '../../TableList';
 
-import { useRow } from '../../TableRows/RowContext';
+import { useRow } from '../TableRows/TableRow';
 import CheckBox from '../CellComponents/CheckBox';
 import s from './TableCells.module.scss';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import ModalForm from 'components/ModalForm/ModalForm';
+import ModalForm from 'components/ModalForm';
 
 import styled from 'styled-components';
 import TableList from 'components/TableList/TableList';

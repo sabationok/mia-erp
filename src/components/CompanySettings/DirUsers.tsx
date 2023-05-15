@@ -1,4 +1,4 @@
-import ModalForm, { ModalFormProps } from 'components/ModalForm/ModalForm';
+import ModalForm, { ModalFormProps } from 'components/ModalForm';
 import TableList, { ITableListProps } from 'components/TableList/TableList';
 import React from 'react';
 import styled from 'styled-components';

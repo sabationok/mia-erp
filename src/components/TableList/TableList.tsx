@@ -69,7 +69,7 @@ export interface ITableListProps extends React.HTMLAttributes<HTMLDivElement> {
   checkBoxes?: boolean;
   rowGrid?: any;
   children?: React.ReactNode;
-  useFilterSelectors?: () => FilterSelectorType[] | [];
+  filterSelectors?: FilterSelectorType[];
   onRowClick?: <T = any>(rowData: T) => void;
   onUnSelectRow?: <T = any>(rowData: T) => void;
   onSelectRow?: <T = any[]>(rowsData: T) => void;

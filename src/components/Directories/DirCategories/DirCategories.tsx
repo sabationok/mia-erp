@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ModalForm, { FilterOpt } from 'components/ModalForm/ModalForm';
+import ModalForm, { FilterOpt } from 'components/ModalForm';
 import DirList from '../DirList/DirList';
 import { founder } from 'utils';
 import useCategoriesService from 'redux/categories/useCategoriesService.hook';

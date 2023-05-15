@@ -1,10 +1,11 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { iconId } from 'data';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { FilterSelectorProps, IFilterSelectorAddsProps } from '../Selector';
+import createTreeData from 'utils/createTreeData';
 
-export interface SelectorListItem {
+export interface SelectorListItem extends Record<string, any> {
   label?: string;
   name?: string;
   _id?: string;
@@ -12,90 +13,70 @@ export interface SelectorListItem {
 }
 
 export interface SelectorContentProps {
-  onSelect: (item: SelectorListItem) => void;
+  defaultValue?: string[],
+  onSelectorSubmit?: (name: string, value: string[]) => void;
   isOpen?: boolean;
 }
+
 
 const SelectorContent: React.FC<
   SelectorContentProps &
   Pick<FilterSelectorProps, 'selectorName' | 'data'> &
   Pick<IFilterSelectorAddsProps, 'ListComp'> &
   React.HTMLAttributes<HTMLDivElement>
-> = ({ isOpen = false, onSelect, data, selectorName, ListComp, ...props }) => {
-  // const data = useData();
-  const [searchParam, setSearchParam] = useState<string>('');
-  const [filteredData, setFilteredData] = useState<SelectorListItem[]>(data || []);
+> = ({
+       isOpen = false,
+       onSelect,
+       data,
+       selectorName,
+       defaultValue,
+       ListComp,
+       onSelectorSubmit,
+       ...props
+     }) => {
+  const [renderData, setRenderData] = useState<SelectorListItem[]>([]);
+  const [selectorData, setSelectorData] = useState<string[]>(defaultValue ? defaultValue : []);
 
-  function onInputChange(ev: React.ChangeEvent<HTMLInputElement>) {
-    const { value } = ev.target;
-    setSearchParam(value);
+  function onSelectorSubmitWrapper() {
+    onSelectorSubmit && onSelectorSubmit(selectorName || '', selectorData);
   }
 
-  function onSearchParamReset() {
-    setSearchParam('');
+  function onSelectItems(ids: string[], checked: boolean) {
+    if (checked) setSelectorData(prev => [...prev, ...ids]);
+    if (!checked) setSelectorData(prev => prev.filter(el => !ids.includes(el)));
   }
 
-  function onSelectAllClick(status?: boolean) {
-    setFilteredData(_prev => {
-      if (searchParam) {
-        return filteredData?.map(el => {
-          return { ...el, checked: status ? status : false };
-        });
-      }
+  useMemo(async () => {
+    const tree = await createTreeData(data);
+    setRenderData(tree);
+    return tree;
+  }, [data]);
 
-      return data?.map(el => {
-        return { ...el, checked: status ? status : false };
-      });
-    });
+  function onCheckSelectStatus(id: string) {
+    return selectorData.includes(id);
   }
-
-  useEffect(() => {
-    if (data?.length === 0) {
-      return;
-    }
-
-    const filteredData = data?.filter((el: any) => {
-      if (searchParam && el?.name) return !(searchParam && !el.name.toLowerCase().includes(searchParam.toLowerCase()));
-
-      if (searchParam && el?.label)
-        return !(searchParam && !el.label.toLowerCase().includes(searchParam.toLowerCase()));
-
-      return true;
-    });
-
-    filteredData && setFilteredData(filteredData);
-  }, [data, searchParam]);
 
   return (
-    <Content {...props}>
-      <StyledLabel>
-        <SearchInput type='text' name={selectorName} placeholder='Пошук' value={searchParam} onChange={onInputChange} />
-
-        <ButtonIcon variant='onlyIcon' size='26px' iconId={iconId.close} onClick={onSearchParamReset} />
-      </StyledLabel>
-
-      {filteredData.length > 0 && ListComp ? (
+    <Content {...props} className={'Selector_Content'}>
+      {renderData.length > 0 && ListComp && (
         <ListComp
           isOpen={isOpen}
-          mapedData={filteredData}
-          onSelect={(data: SelectorListItem) => {
-            if (selectorName) {
-              console.log({ [selectorName]: data });
-            }
-          }}
+          entryList={renderData}
+          onSelectItems={onSelectItems}
+          onCheckSelectStatus={onCheckSelectStatus}
         />
-      ) : (
-        <NotFound>Нчіого не знайдено</NotFound>
       )}
 
       <AcceptButtons>
-        <ButtonIcon variant='onlyIcon' size='32px' iconSize='90%' iconId={iconId.done} />
-
-        <ButtonIcon variant='onlyIcon' size='32px' iconSize='90%' iconId={iconId.doneAll}
-                    onClick={() => onSelectAllClick(true)} />
+        <ButtonIcon variant='onlyIcon' size='32px' iconSize='90%' iconId={iconId.done}
+                    onClick={onSelectorSubmitWrapper} />
 
         <ButtonIcon variant='onlyIcon' size='32px' iconSize='90%' iconId={iconId.close}
-                    onClick={() => onSelectAllClick()} />
+                    onClick={() => {
+                      setSelectorData([]);
+                      onSelectorSubmit && onSelectorSubmit(selectorName || '', []);
+                    }}
+        />
       </AcceptButtons>
     </Content>
   );
@@ -103,88 +84,29 @@ const SelectorContent: React.FC<
 const Content = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 28px 1fr min-content;
+  grid-template-rows:  1fr min-content;
 
   width: 100%;
-  /* height: 100%; */
-  height: 250px;
-  max-height: 100%;
+
+  max-height: 250px;
   overflow: hidden;
   color: ${({ theme }) => theme.fontColorHeader};
 
   border-radius: 2px;
   background-color: ${({ theme }) => theme.fieldColor};
-    //border: 1px solid ${({ theme }) => theme.trBorderClr};
 
   @media screen and (min-width: 768px) {
     height: 100%;
   }
 `;
-const StyledLabel = styled.label`
-  display: flex;
 
-  position: relative;
-
-  border-style: none;
-  border-image: none;
-  border-width: 0;
-  border-bottom: 1px solid ${({ theme }) => theme.globals.inputBorder};
-
-  &::before {
-    display: block;
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    height: 2px;
-    width: 0;
-    transition: all ${({ theme }) => theme.globals.timingFnMui};
-    transform: translate(-50%);
-    background-color: ${({ theme }) => theme.accentColor.base};
-  }
-
-  &:focus-within {
-    &::before {
-      width: 100%;
-    }
-  }
-`;
-const SearchInput = styled.input`
-  height: 100%;
-  width: 100%;
-  padding: 4px 30px 4px 8px;
-
-  font-size: 12px;
-  font-family: inherit;
-  color: inherit;
-
-  &::placeholder {
-    color: ${({ theme }) => theme.globals.inputPlaceholderColor};
-  }
-
-  background-color: transparent;
-
-  border-style: none;
-
-  &:hover,
-  &:focus {
-      /* border-bottom-color: ${({ theme }) => theme.accentColor.hover}; */
-    outline-style: none;
-  }
-`;
-
-const NotFound = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 
 const AcceptButtons = styled.div`
   display: flex;
   justify-content: end;
   gap: 8px;
 
-  border-top: 1px solid ${({ theme }) => theme.trBorderClrLight};
+  border-top: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;
 
 export default SelectorContent;
