@@ -24,6 +24,10 @@ const PageTransactions = () => {
     isFilter: true,
     isSearch: true,
     footer: true,
+    filterDefaultValues: { categories: [''] },
+    onFilterSubmit: (data) => {
+      console.log(data);
+    },
   }), [filterSelectors, tableActions, transactionsService.state.transactions]);
 
   return (

@@ -112,6 +112,7 @@ const Container = styled.div<{ isOpen: boolean; maxWidth?: string }>`
   overflow: hidden;
 
   background-color: ${({ theme }) => theme.backgroundColorLight};
+  border-right: 1px solid ${({ theme }) => theme.sideBarBorderColor};
 
   transform: ${({ isOpen }) => `translate(${isOpen ? '0' : '-100%'})`};
   transition: transform ${({ theme }) => theme.globals.timingFunctionMain},

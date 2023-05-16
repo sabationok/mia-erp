@@ -1,4 +1,4 @@
-import { FilterSelectorType } from 'components/Filter/Filter';
+import { FilterSelectorType } from 'components/Filter/AppFilter';
 import SelectsTreeList from 'components/Filter/SelectorContent/SelectsTreeList';
 import { useCategoriesSelector } from 'redux//selectors.store';
 import { useCountsSelector } from 'redux/selectors.store';

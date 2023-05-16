@@ -18,8 +18,6 @@ const TableSearchForm: React.FC<TableSearchProps> = ({ tableSearchParams }) => {
   }
 
   function onSubmit(ev: React.FormEvent) {
-    ev.preventDefault();
-
     console.log({
       searchFormData: {
         searchParam: searchParam?.dataPath,
@@ -34,7 +32,7 @@ const TableSearchForm: React.FC<TableSearchProps> = ({ tableSearchParams }) => {
   }
 
   return (
-    <SearchForm onSubmit={onSubmit}>
+    <SearchForm>
       <StyledLabel>
         <SearchInput
           type='text'
@@ -52,7 +50,7 @@ const TableSearchForm: React.FC<TableSearchProps> = ({ tableSearchParams }) => {
         iconSize={'90%'}
         variant='onlyIconNoEffects'
         disabled={!searchParam?.label || !searchValue.search}
-        type='submit'
+        onClick={onSubmit}
       />
 
 
@@ -63,7 +61,7 @@ const TableSearchForm: React.FC<TableSearchProps> = ({ tableSearchParams }) => {
   );
 };
 
-const SearchForm = styled.form`
+const SearchForm = styled.div`
 
   flex: 1 0 150px;
 

@@ -12,11 +12,12 @@ import { initialCompany } from '../companies/companies.slice';
 import { ICustomRole } from '../customRoles/customRoles.types';
 import { testUserKarina } from '../../data/usersDir.data';
 
-export const iniialCustomRole: ICustomRole = {
+export const initialCustomRole: ICustomRole = {
   _id: 'dfbsdgbd',
   label: 'Фінансист',
   descr: 'Такоє собі посада',
   actions: [],
+  accessKeys: ['home', 'transactions', 'orders', 'refunds', 'supplement', 'storage', 'manager', 'admin'],
 };
 export const initialPermission: IPermission = {
   _id: 'sdfbsdfbdfg',
@@ -24,7 +25,8 @@ export const initialPermission: IPermission = {
   permissionToken: 'permissionToken',
   company: initialCompany,
   user: testUserKarina,
-  role: iniialCustomRole,
+  role: initialCustomRole,
+
 };
 const testPermissions = [
   initialPermission,

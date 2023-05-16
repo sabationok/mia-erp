@@ -1,5 +1,5 @@
 import React from 'react';
-import NavMenu from '../NavMenu/NavMenu';
+import NavMenu from '../NavMenu';
 import LogoSvg from './LogoSvg/LogoSvg';
 
 import UserMenu from '../UserMenu/UserMenu';

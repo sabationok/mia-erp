@@ -3,8 +3,10 @@ import { IBase } from '../global.types';
 import { ICompany } from '../companies/companies.types';
 import { IUser } from '../auth/auth.types';
 import { StateErrorType } from '../reduxTypes.types';
+import { PagePathType } from '../../data/pages.data';
 
 export type PermissionStatusType = 'active' | 'rejected' | 'pending' | 'baned'
+
 
 export interface IPermission extends IBase {
   status: PermissionStatusType;

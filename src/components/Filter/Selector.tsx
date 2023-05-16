@@ -2,7 +2,8 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { MaxToTablet } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 import { iconId } from 'data';
 import styled from 'styled-components';
-import { FilterSelectorDataType } from './Filter';
+import { FilterDataType, FilterSelectorDataType } from './AppFilter';
+import React from 'react';
 
 export interface IFilterSelectorAddsProps {
   ListComp?: React.FC<any>;
@@ -10,10 +11,12 @@ export interface IFilterSelectorAddsProps {
 
 export interface FilterSelectorProps {
   label: string;
-  selectorName?: string;
+  selectorName?: keyof FilterDataType;
   data: FilterSelectorDataType;
   idx: number;
   currentIdx: number | null;
+  childrenListCount?: number;
+  selectedChildrenCount?: number;
   CurrentData: any;
   onSelectorClick: (idx?: number) => void;
 }
@@ -22,6 +25,8 @@ const Selector: React.FC<FilterSelectorProps & React.HTMLAttributes<Element>> = 
                                                                                    label = 'Selector label',
                                                                                    selectorName = 'selector',
                                                                                    onSelectorClick,
+                                                                                   childrenListCount,
+                                                                                   selectedChildrenCount,
                                                                                    currentIdx,
                                                                                    data,
                                                                                    idx,
@@ -37,6 +42,10 @@ const Selector: React.FC<FilterSelectorProps & React.HTMLAttributes<Element>> = 
         onClick={() => onSelectorClick && onSelectorClick()}
       >
         <Label>{label}</Label>
+
+        <div>
+          {`Обрано: ${selectedChildrenCount || 0}/${childrenListCount || 0}`}
+        </div>
       </StOpenButton>
 
 

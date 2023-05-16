@@ -84,6 +84,7 @@ const Header = styled.div`
 `;
 const ExtraHeader = styled.div`
   width: 100%;
+  height: min-content;
   overflow: hidden;
 `;
 

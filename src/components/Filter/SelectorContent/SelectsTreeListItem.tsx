@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import SelectsTreeList from './SelectsTreeList';
 
-export interface SelectsListItemProps {
+export interface SelectsTreeListItemProps {
   checked?: boolean;
   _id: string;
   label: string;
@@ -13,13 +13,13 @@ export interface SelectsListItemProps {
   ownerId?: string;
   onSelectItems: (ids: string[], checked: boolean) => void;
   onCheckSelectStatus: (id: string) => boolean;
-  childrenList?: SelectsListItemProps[];
+  childrenList?: SelectsTreeListItemProps[];
   childrenCount?: number;
   onSelect: <T = any | undefined>(checked: boolean, item: T) => void;
-  list?: Omit<SelectsListItemProps[], 'list'>;
+  list?: Omit<SelectsTreeListItemProps[], 'list'>;
 }
 
-const SelectsTreeListItem: React.FC<SelectsListItemProps & Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'>> =
+const SelectsTreeListItem: React.FC<SelectsTreeListItemProps & Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'>> =
   ({
      _id,
      owner,
@@ -103,7 +103,6 @@ const SelectsTreeListItem: React.FC<SelectsListItemProps & Omit<React.HTMLAttrib
           <ChildrenBox>
             <SelectsTreeList
               isOpen={true}
-              onSelect={handleChildrenSelect}
               entryList={childrenList}
               onCheckSelectStatus={onCheckSelectStatus}
               onSelectItems={onSelectItems} />
@@ -130,5 +129,6 @@ const Parent = styled.li`
 
   border-radius: 2px;
 `;
+
 
 export default SelectsTreeListItem;

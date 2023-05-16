@@ -1,29 +1,51 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import Selector from './Selector';
 import ModalDefault, { ModalFormProps } from 'components/ModalForm';
-
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import styled from 'styled-components';
 import SelectorContent from './SelectorContent/SelectorContent';
 import { MinTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
-
+import * as yup from 'yup';
 import { ICount } from 'redux/counts/counts.types';
 import { ICategory } from 'redux/categories/categories.types';
 import InputTextPrimary from '../atoms/Inputs/InputTextPrimary';
 
 export type FilterSelectorDataType = ICount[] | ICategory[] | any[];
 export type FilterSelectorType = {
-  selectorName: string;
+  selectorName: keyof FilterDataType;
   label: string;
   data: FilterSelectorDataType;
   ListComp: React.FC<any>;
 };
 
-export interface FilterProps extends Omit<ModalFormProps, 'defaultFilterValue'> {
-  filterSelectors?: FilterSelectorType[];
-  defaultFilterValue?: Record<string, any>;
+export interface FilterDataType {
+  type?: string[];
+  categories?: string[];
+  counts?: string[];
+  contractors?: string[];
+  managers?: string[];
+  tags?: string[];
+  marks?: string[];
+  projects?: string[];
+  activities?: string[];
 }
 
-const Filter: React.FC<FilterProps> = props => {
+const validation = yup.object().shape({
+  type: yup.array().optional(),
+  categories: yup.array().optional(),
+  counts: yup.array().optional(),
+  contractors: yup.array().optional(),
+  managers: yup.array().optional(),
+});
+
+export interface FilterProps extends Omit<ModalFormProps, 'defaultFilterValue' | 'onSubmit'> {
+  filterSelectors?: FilterSelectorType[];
+  filterDefaultValues?: Partial<Record<keyof FilterDataType, string[] | any[]>>;
+  onFilterSubmit?: SubmitHandler<FilterDataType>;
+}
+
+const AppFilter: React.FC<FilterProps> = props => {
   if (!props.filterSelectors) {
     return <SelectorErr>'Filter selectors' not passed</SelectorErr>;
   }
@@ -32,33 +54,39 @@ const Filter: React.FC<FilterProps> = props => {
     return <SelectorErr>Invalid filter selectors</SelectorErr>;
   }
 
-  return <AppFilter {...props} />;
+  return <Filter {...props} />;
 };
 
-const AppFilter: React.FC<FilterProps> =
+const Filter: React.FC<FilterProps> =
   ({
      filterSelectors,
-     defaultFilterValue,
-     onSubmit,
+     filterDefaultValues,
+     onFilterSubmit,
      ...props
    }) => {
 
     const [CurrentData, setCurrentData] = useState<FilterSelectorType | null>(filterSelectors ? filterSelectors[0] : null);
     const [currentIdx, setCurrentIdx] = useState<number | null>(0);
-    const [filterData, setFilterData] = useState<Record<string, any>>({ ...defaultFilterValue });
-    //
-    // const onFilterDataChange = useCallback((name: string, value: string[]) => {
-    //   setFilterData(prev => {
-    //     if (value.length === 0) {
-    //       const newState = { ...prev };
-    //       delete newState[name];
-    //       return newState;
-    //     }
-    //     return ({ ...prev, [name]: value });
-    //   });
-    // }, []);
-    const onFilterDataChange = useCallback((name: string, value: string[]) => {
-    }, []);
+
+    const {
+      formState: { errors },
+      register,
+      unregister,
+      handleSubmit,
+      setValue,
+      getValues,
+
+    } = useForm<FilterDataType>({
+      defaultValues: filterDefaultValues,
+      resolver: yupResolver(validation),
+      reValidateMode: 'onSubmit',
+    });
+
+    const onFilterDataChange = useCallback((name: keyof FilterDataType, value?: string[]) => {
+      if (name && value) setValue(name, value);
+      if (!value) unregister(name);
+      console.log(getValues());
+    }, [getValues, setValue, unregister]);
 
 
     const onSelectorClick = useCallback((idx: number) => {
@@ -67,26 +95,27 @@ const AppFilter: React.FC<FilterProps> =
     }, [filterSelectors]);
 
 
-    const renderSelectors = useMemo(() => filterSelectors?.map(({ selectorName, label, data, ListComp }, idx) => (
+    const renderSelectors = useMemo(() => filterSelectors?.map(({ selectorName, label, data }, idx) => (
       <Selector
         key={selectorName}
         label={label}
         data={data}
         selectorName={selectorName}
+        childrenListCount={1}
+        selectedChildrenCount={1}
         idx={idx}
         onSelectorClick={() => onSelectorClick(idx)}
         currentIdx={currentIdx}
         CurrentData={CurrentData}
       >
         <SelectorContent
-          defaultValue={filterData[selectorName]}
+          getDefaultValue={(selectorName: keyof FilterDataType) => getValues()[selectorName] || []}
           onSelectorSubmit={onFilterDataChange}
           data={data}
           selectorName={selectorName}
-          ListComp={ListComp}
         />
       </Selector>
-    )), [CurrentData, currentIdx, filterData, filterSelectors, onFilterDataChange, onSelectorClick]);
+    )), [CurrentData, currentIdx, filterSelectors, getValues, onFilterDataChange, onSelectorClick]);
 
     // const renderSelectorContent = useMemo(() =>
     //     (<SelectorContent
@@ -99,7 +128,7 @@ const AppFilter: React.FC<FilterProps> =
     //   [CurrentData?.ListComp, CurrentData?.data, CurrentData?.selectorName, filterData, onFilterDataChange]);
 
     return (
-      <StModalDefault {...props} onSubmit={onSubmit && onSubmit(filterData)}>
+      <StModalDefault {...props} onSubmit={onFilterSubmit && (() => handleSubmit(onFilterSubmit))}>
         <FilterContainer>
           <DatePickers>
             <InputTextPrimary label='Від (дата і час)' type='datetime-local' name={'timeFrom'}
@@ -250,4 +279,4 @@ function isSelectorType(obj: any): obj is FilterSelectorType {
   );
 }
 
-export default Filter;
+export default AppFilter;

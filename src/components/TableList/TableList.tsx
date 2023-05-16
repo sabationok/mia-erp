@@ -8,7 +8,7 @@ import TableFooter from './TableFooter/TableFooter';
 import styled from 'styled-components';
 import { CellTittleProps } from './TebleCells/CellTitle';
 import { MaxToTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
-import { FilterSelectorType } from 'components/Filter/Filter';
+import { FilterDataType, FilterSelectorType } from 'components/Filter/AppFilter';
 
 export interface SelectItem extends Record<string, any> {
   _id?: string;
@@ -69,7 +69,10 @@ export interface ITableListProps extends React.HTMLAttributes<HTMLDivElement> {
   checkBoxes?: boolean;
   rowGrid?: any;
   children?: React.ReactNode;
+  filterTitle?: string;
   filterSelectors?: FilterSelectorType[];
+  filterDefaultValues?: Partial<Record<keyof FilterDataType, any[] | string[]>>;
+  onFilterSubmit?: (filterData: FilterDataType) => void;
   onRowClick?: <T = any>(rowData: T) => void;
   onUnSelectRow?: <T = any>(rowData: T) => void;
   onSelectRow?: <T = any[]>(rowsData: T) => void;
@@ -87,84 +90,93 @@ export interface ITableListContext {
 export const TableCTX = createContext({});
 export const useTable = () => useContext(TableCTX) as ITableListContext & ITableListProps;
 
-const TableList: React.FC<ITableListProps> = ({
-                                                tableData = [],
-                                                isLoading = false,
-                                                RowActionsComp,
-                                                TableActionsComp,
-                                                tableTitles,
-                                                tableSearchParams,
-                                                tableActions,
-                                                footer = false,
-                                                onRowClick,
-                                                onSelectRow,
-                                                onUnSelectRow,
-                                                ...props
-                                              }) => {
-  const [selectedRows, setSelectedRows] = useState<TabeleSelectedRow[] | any[]>([]);
-  const rowRef = useRef<HTMLElement>();
+const TableList: React.FC<ITableListProps> =
+  ({
+     tableData = [],
+     isLoading = false,
+     RowActionsComp,
+     TableActionsComp,
+     tableTitles,
+     tableSearchParams,
+     tableActions,
+     footer = false,
+     onRowClick,
+     onSelectRow,
+     onUnSelectRow,
+     onFilterSubmit,
+     filterTitle,
+     filterDefaultValues,
+     ...props
+   }) => {
+    const [selectedRows, setSelectedRows] = useState<TabeleSelectedRow[] | any[]>([]);
+    const rowRef = useRef<HTMLElement>();
 
-  const rowGrid = {
-    display: 'grid',
-    gridTemplateColumns: `repeat(${tableTitles?.length}, min-content)`,
+
+    const rowGrid = {
+      display: 'grid',
+      gridTemplateColumns: `repeat(${tableTitles?.length}, min-content)`,
+    };
+
+    function onSelectRowWrapper({ rowData }: { ev?: Event; rowData: any }) {
+      setSelectedRows(prev => {
+        typeof onSelectRow === 'function' && onSelectRow([rowData, ...prev]);
+        return [rowData, ...prev];
+      });
+    }
+
+    function onUnSelectRowWrapper({ rowData }: { ev?: Event; rowData?: { _id: string } }) {
+      setSelectedRows(prev => {
+        typeof onUnSelectRow === 'function' && onUnSelectRow(rowData);
+        return prev.filter(row => row._id !== rowData?._id);
+      });
+    }
+
+    function onRowClickWrapper(rowData: any) {
+      typeof onRowClick === 'function' && onRowClick(rowData);
+    }
+
+
+    const CTX = {
+      RowActionsComp,
+      TableActionsComp,
+      tableActions,
+      footer,
+      tableSearchParams,
+      tableTitles,
+      filterTitle,
+      filterDefaultValues,
+      rowGrid,
+      rowRef,
+      selectedRows,
+      onSelectRow: onSelectRowWrapper,
+      onUnselectRow: onUnSelectRowWrapper,
+      tableData,
+      isLoading,
+      onRowClick: onRowClickWrapper,
+      onFilterSubmit,
+      ...props,
+    };
+
+    return (
+      <Table {...props}>
+        <TableCTX.Provider value={CTX}>
+          <AppLoader isLoading={isLoading} />
+
+          <TableOverHead />
+
+          <TableScroll className='TableScroll'>
+            <TableHead />
+
+            {tableData.length !== 0 ? <TableBody /> : <NoData>Дані відсутні</NoData>}
+
+            <MaxToTabletXl>{tableActions ? <QuickActions {...tableActions} footer={footer} /> : null}</MaxToTabletXl>
+          </TableScroll>
+
+          <TableFooter />
+        </TableCTX.Provider>
+      </Table>
+    );
   };
-
-  function onSelectRowWrapper({ rowData }: { ev?: Event; rowData: any }) {
-    setSelectedRows(prev => {
-      typeof onSelectRow === 'function' && onSelectRow([rowData, ...prev]);
-      return [rowData, ...prev];
-    });
-  }
-
-  function onUnSelectRowWrapper({ rowData }: { ev?: Event; rowData?: { _id: string } }) {
-    setSelectedRows(prev => {
-      typeof onUnSelectRow === 'function' && onUnSelectRow(rowData);
-      return prev.filter(row => row._id !== rowData?._id);
-    });
-  }
-
-  function onRowClickWrapper(rowData: any) {
-    typeof onRowClick === 'function' && onRowClick(rowData);
-  }
-
-  const CTX = {
-    RowActionsComp,
-    TableActionsComp,
-    tableActions,
-    footer,
-    tableSearchParams,
-    tableTitles,
-    rowGrid,
-    rowRef,
-    selectedRows,
-    onSelectRow: onSelectRowWrapper,
-    onUnselectRow: onUnSelectRowWrapper,
-    tableData,
-    isLoading,
-    onRowClick: onRowClickWrapper,
-    ...props,
-  };
-
-  return (
-    <Table {...props}>
-      <TableCTX.Provider value={CTX}>
-        <AppLoader isLoading={isLoading} />
-
-        <TableOverHead />
-
-        <TableScroll className='TableScroll'>
-          <TableHead />
-
-          {tableData.length !== 0 ? <TableBody /> : <NoData>Дані відсутні</NoData>}
-
-          <MaxToTabletXl>{tableActions ? <QuickActions {...tableActions} footer={footer} /> : null}</MaxToTabletXl>
-        </TableScroll>
-
-        <TableFooter />
-      </TableCTX.Provider>
-    </Table>
-  );
-};
 
 // import cloneDeep from 'lodash.clonedeep';
 // import { applyFounder } from 'components/BlockWithList/BlockUtils/founder';

@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
 import { NavLink, useLocation } from 'react-router-dom';
-import { iconId, pages } from 'data';
+import { iconId } from 'data';
 import { IPage } from 'redux/page/pageSlice';
 import styled from 'styled-components';
+import { useAppPages } from '../../../data/pages.data';
 
 const NavMenu: React.FC = () => {
+  const pages = useAppPages();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [activePage, setActivePage] = useState<IPage>(pages[0]);
   const location = useLocation();
@@ -31,7 +33,7 @@ const NavMenu: React.FC = () => {
     const currentPageData = pages.find(page => page.path === currentPathName);
 
     setActivePage(currentPageData || pages[0]);
-  }, [location.pathname]);
+  }, [location.pathname, pages]);
 
   useEffect(() => {
     function onMenuClose(ev: MouseEvent | KeyboardEvent) {

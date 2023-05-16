@@ -118,6 +118,7 @@ export const iconId = {
   zoomMinus: 'zoomMinus',
   zoomPlus: 'zoomPlus',
   phoneOutlined: 'phoneOutlined',
+  storageOutlined: 'storageOutlined',
   tune: 'tune',
 };
 

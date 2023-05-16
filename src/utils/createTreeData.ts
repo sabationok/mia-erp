@@ -1,7 +1,5 @@
 import * as _ from 'lodash';
 
-console.log('lodash', _);
-
 interface IBase<T = any> {
   _id?: string;
   label?: string;

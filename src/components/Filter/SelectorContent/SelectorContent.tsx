@@ -4,18 +4,16 @@ import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { FilterSelectorProps, IFilterSelectorAddsProps } from '../Selector';
 import createTreeData from 'utils/createTreeData';
-
-export interface SelectorListItem extends Record<string, any> {
-  label?: string;
-  name?: string;
-  _id?: string;
-  checked?: boolean;
-}
+import { FilterDataType } from '../AppFilter';
+import SelectsTreeList from './SelectsTreeList';
+import { SelectsTreeListItemProps } from './SelectsTreeListItem';
 
 export interface SelectorContentProps {
   defaultValue?: string[],
-  onSelectorSubmit?: (name: string, value: string[]) => void;
+  getDefaultValue?: (selectorName: keyof FilterDataType) => string[]
+  onSelectorSubmit?: (name: keyof FilterDataType, value: string[]) => void;
   isOpen?: boolean;
+  selectorName: keyof FilterDataType
 }
 
 
@@ -30,15 +28,17 @@ const SelectorContent: React.FC<
        data,
        selectorName,
        defaultValue,
+       getDefaultValue,
        ListComp,
        onSelectorSubmit,
        ...props
      }) => {
-  const [renderData, setRenderData] = useState<SelectorListItem[]>([]);
-  const [selectorData, setSelectorData] = useState<string[]>(defaultValue ? defaultValue : []);
+  const [renderData, setRenderData] = useState<SelectsTreeListItemProps[]>([]);
+  const [selectorData, setSelectorData] = useState<string[]>(defaultValue ? defaultValue : getDefaultValue ? getDefaultValue(selectorName) : []);
 
   function onSelectorSubmitWrapper() {
-    onSelectorSubmit && onSelectorSubmit(selectorName || '', selectorData);
+    console.log('selectorData', selectorData);
+    onSelectorSubmit && selectorName && onSelectorSubmit(selectorName, selectorData);
   }
 
   function onSelectItems(ids: string[], checked: boolean) {
@@ -58,8 +58,8 @@ const SelectorContent: React.FC<
 
   return (
     <Content {...props} className={'Selector_Content'}>
-      {renderData.length > 0 && ListComp && (
-        <ListComp
+      {renderData.length > 0 && (
+        <SelectsTreeList
           isOpen={isOpen}
           entryList={renderData}
           onSelectItems={onSelectItems}
@@ -74,7 +74,7 @@ const SelectorContent: React.FC<
         <ButtonIcon variant='onlyIcon' size='32px' iconSize='90%' iconId={iconId.close}
                     onClick={() => {
                       setSelectorData([]);
-                      onSelectorSubmit && onSelectorSubmit(selectorName || '', []);
+                      onSelectorSubmit && selectorName && onSelectorSubmit(selectorName, []);
                     }}
         />
       </AcceptButtons>

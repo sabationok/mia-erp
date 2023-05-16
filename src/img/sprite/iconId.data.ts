@@ -103,6 +103,7 @@ export const iconId = {
   sort: 'sort',
   statistics: 'statistics',
   storage: 'storage',
+  storageOutlined: 'storageOutlined',
   success: 'success',
   time: 'time',
   transactions: 'transactions',
@@ -115,7 +116,7 @@ export const iconId = {
   warning: 'warning',
   zoomMinus: 'zoomMinus',
   zoomPlus: 'zoomPlus',
-  phoneOulined: 'phoneOulined',
+  phoneOutlined: 'phoneOutlined',
 };
 
 export type IconIdType = keyof typeof iconId;

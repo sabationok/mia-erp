@@ -6,13 +6,14 @@ import styled from 'styled-components';
 import { FormEvent } from 'react';
 import { useModal } from 'components/ModalProvider/ModalComponent';
 
+
 export interface ModalFormProps extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit' | 'onReset'> {
   filterOptions?: FilterOpt[];
   footer?: boolean;
   preventFilter?: boolean;
   defaultFilterValue?: string | number;
   beforeSubmit?: <T = any>(args?: T) => void | any;
-  onSubmit?: <T = any>(args?: T) => void | any;
+  onSubmit?: (ev: FormEvent<HTMLFormElement>) => void;
   afterSubmit?: <T = any>(args?: T) => void | any;
   beforeClose?: <T = any>(args?: T) => void | any;
   onReset?: <T = any>(args?: T) => void | any;
@@ -56,7 +57,7 @@ const ModalForm: React.FC<ModalFormProps> =
       if (!onSubmit) return console.log('No passed "onSubmit" handler');
 
       if (typeof beforeSubmit === 'function') beforeSubmit();
-      if (typeof onSubmit === 'function') onSubmit();
+      if (typeof onSubmit === 'function') onSubmit(ev);
       if (typeof afterSubmit === 'function') afterSubmit();
     }
 
@@ -90,7 +91,7 @@ const ModalForm: React.FC<ModalFormProps> =
           <>{children}</>
         </ModalMain>
 
-        {footer && <ModalFooter onSubmit={onSubmit} />}
+        {footer && <ModalFooter onSubmitPassed={!!onSubmit} />}
       </ModalFormContainer>
     );
   };
@@ -98,7 +99,7 @@ const ModalForm: React.FC<ModalFormProps> =
 const ModalFormContainer = styled.form`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 28px 1fr max-content;
+  grid-template-rows: min-content 1fr max-content;
 
   position: relative;
 

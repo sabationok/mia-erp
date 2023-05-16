@@ -2,16 +2,15 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import { iconId } from 'data';
 
-import Filter, { FilterProps, FilterSelectorType } from 'components/Filter/Filter';
+import AppFilter, { FilterDataType, FilterProps, FilterSelectorType } from 'components/Filter/AppFilter';
+import { SubmitHandler } from 'react-hook-form';
+import { useTable } from '../TableList';
 
-export interface TableFilterProps {
-  title?: string;
-  filterSelectors?: FilterSelectorType[];
-}
 
-const TableFilter: React.FC<TableFilterProps> = ({ title, filterSelectors }) => {
+const TableFilter = () => {
   const modal = useModalProvider();
-  
+  const { filterSelectors, onFilterSubmit, filterDefaultValues, filterTitle = 'Фільтрація даних таблиці' } = useTable();
+
   return (
     <ButtonIcon
       iconId={iconId.filterOff}
@@ -20,8 +19,13 @@ const TableFilter: React.FC<TableFilterProps> = ({ title, filterSelectors }) => 
       variant='onlyIcon'
       onClick={() => {
         modal.handleOpenModal<FilterProps>({
-          ModalChildren: Filter,
-          modalChildrenProps: { title, filterSelectors },
+          ModalChildren: AppFilter,
+          modalChildrenProps: {
+            title: filterTitle,
+            filterSelectors,
+            onFilterSubmit,
+            filterDefaultValues,
+          },
         });
       }}
     />

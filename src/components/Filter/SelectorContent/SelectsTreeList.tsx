@@ -1,18 +1,17 @@
 import React, { memo, useMemo } from 'react';
 import styled from 'styled-components';
-import SelectsTreeListItem, { SelectsListItemProps } from './SelectsTreeListItem';
+import SelectsTreeListItem, { SelectsTreeListItemProps } from './SelectsTreeListItem';
 
 export interface SelectsListProps<T = any> {
   isOpen: boolean;
   onSelectItems: (ids: string[], checked: boolean) => void;
   onCheckSelectStatus: (id: string) => boolean;
-  onSelect: <T = any | undefined>(checked: boolean, item: T) => void;
   entryList?: T[];
   list?: T[];
   ownerId?: string;
 }
 
-const SelectsTreeList: React.FC<SelectsListProps<SelectsListItemProps>> =
+const SelectsTreeList: React.FC<SelectsListProps<SelectsTreeListItemProps>> =
   ({
      isOpen,
      ownerId,
