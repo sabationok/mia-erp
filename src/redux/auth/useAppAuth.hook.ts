@@ -3,6 +3,7 @@ import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { IAuthState } from './auth.types';
 import { ILoginUserData, IRegistrationData, logInUserThunk, registerUserThunk } from './auth.thunks';
 import { toast } from 'react-toastify';
+import useCategoriesService from '../categories/useCategoriesService.hook';
 
 const registration = (dispatch: AppDispatch, authState: IAuthState) => {
   function registerUser({ name, secondName, email, password }: IRegistrationData) {
@@ -47,8 +48,7 @@ const useAuthService = () => {
     dispatch, ...state,
     registerUser: registration(dispatch, state),
     loginUser: loginUser(dispatch, state),
-
   };
 };
-
+export type AuthService = ReturnType<typeof useAuthService>
 export default useAuthService;

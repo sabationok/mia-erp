@@ -52,4 +52,5 @@ const usePermissionsService = () => {
   };
 };
 
+export type PermissionService = ReturnType<typeof usePermissionsService>
 export default usePermissionsService as typeof usePermissionsService;

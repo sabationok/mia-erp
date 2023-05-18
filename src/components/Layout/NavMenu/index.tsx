@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
 import { NavLink, useLocation } from 'react-router-dom';
@@ -13,19 +13,35 @@ const NavMenu: React.FC = () => {
   const [activePage, setActivePage] = useState<IPage>(pages[0]);
   const location = useLocation();
 
-  function handleOpenNavMenu() {
+  const handleOpenNavMenu = useCallback(() => {
     setIsOpen(!isOpen);
-  }
+  }, [isOpen]);
 
   function handleSetActivePage(page: IPage) {
     setActivePage(page);
   }
 
-  function onNavLinkClick(page: IPage) {
+  const onNavLinkClick = useCallback((page: IPage) => {
     handleSetActivePage(page);
 
     handleOpenNavMenu();
-  }
+  }, [handleOpenNavMenu]);
+
+  const renderLinks = useMemo(() => pages.map(item => {
+    return (
+      <StyledNavLink
+        key={item?.path}
+        to={item?.path}
+        onClick={() => {
+          onNavLinkClick(item);
+        }}
+      >
+        <SvgIcon iconId={item.iconId} size='18px' />
+
+        {item?.title || '---'}
+      </StyledNavLink>
+    );
+  }), [onNavLinkClick, pages]);
 
   useEffect(() => {
     const currentPathName = location.pathname.replace('/', '');
@@ -65,21 +81,7 @@ const NavMenu: React.FC = () => {
 
       <NavMenuContainer isOpen={isOpen}>
         <NavList>
-          {pages.map(item => {
-            return (
-              <StyledNavLink
-                key={item?.path}
-                to={item?.path}
-                onClick={() => {
-                  onNavLinkClick(item);
-                }}
-              >
-                <SvgIcon iconId={item.iconId} size='18px' />
-
-                {item?.title || '---'}
-              </StyledNavLink>
-            );
-          })}
+          {renderLinks}
         </NavList>
       </NavMenuContainer>
     </StyledNavMenu>

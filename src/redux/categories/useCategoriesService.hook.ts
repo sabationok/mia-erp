@@ -34,5 +34,5 @@ const useCategoriesService = () => {
     getById,
   };
 };
-
+export type CategoriesService = ReturnType<typeof useCategoriesService>
 export default useCategoriesService;

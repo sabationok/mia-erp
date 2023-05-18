@@ -14,10 +14,18 @@ import { appPages, pages } from './pages.data';
 import { reports } from './reports.data';
 import { companiesTableColumns } from './companies.data';
 import { appSettings } from './appSettings.data';
-import { getChildOptions, getOwnerOptions, getParentOptions, selects } from './select.data';
+import {
+  getChildOptions,
+  getOwnerOptions,
+  getParentOptions,
+  selects,
+} from './select.data';
 import sideBarLeftData from './sideBarLeft.data';
-import { activitiesMockData } from './companyActivities.data';
-import { permissionsSearchParams, permissionsTableColumns } from './permissions.data';
+import { activitiesMockData } from './activities.data';
+import {
+  permissionsSearchParams,
+  permissionsTableColumns,
+} from './permissions.data';
 
 export {
   sideBarLeftData,

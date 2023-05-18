@@ -5,7 +5,9 @@ import { selects } from './select.data';
 import { ITransaction } from '../redux/transactions/transactions.types';
 import useTransactionsService from '../redux/transactions/useTransactionsService.hook';
 import { useModalProvider } from '../components/ModalProvider/ModalProvider';
-import TransactionForm, { TransactionsFilterOpt } from '../components/Forms/TransactionForm';
+import TransactionForm, {
+  TransactionsFilterOpt,
+} from '../components/Forms/TransactionForm';
 import { CategoriesTypesMap } from '../redux/categories/categories.types';
 import { useMemo } from 'react';
 
@@ -29,19 +31,39 @@ export const transactionsColumns: CellTittleProps[] = [
   },
   {
     top: { name: selects.countIn.label, align: 'start', path: 'countIn.name' },
-    bottom: { name: selects.subCountIn.label, align: 'start', path: 'subCountIn.name' },
+    bottom: {
+      name: selects.subCountIn.label,
+      align: 'start',
+      path: 'subCountIn.name',
+    },
     width: '150px',
     action: 'valueByPath',
   },
   {
-    top: { name: selects.countOut.label, align: 'start', path: 'countOut.name' },
-    bottom: { name: selects.subCountOut.label, align: 'start', path: 'subCountOut.name' },
+    top: {
+      name: selects.countOut.label,
+      align: 'start',
+      path: 'countOut.name',
+    },
+    bottom: {
+      name: selects.subCountOut.label,
+      align: 'start',
+      path: 'subCountOut.name',
+    },
     width: '150px',
     action: 'valueByPath',
   },
   {
-    top: { name: selects.category.label, align: 'start', path: 'category.name' },
-    bottom: { name: selects.subCategory.label, align: 'start', path: 'subCategory.name' },
+    top: {
+      name: selects.category.label,
+      align: 'start',
+      path: 'category.name',
+    },
+    bottom: {
+      name: selects.subCategory.label,
+      align: 'start',
+      path: 'subCategory.name',
+    },
     width: '150px',
     action: 'valueByPath',
   },
@@ -52,7 +74,7 @@ export const transactionsColumns: CellTittleProps[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Діяльність', align: 'start', path: 'companyActivity.label' },
+    top: { name: 'Діяльність', align: 'start', path: 'activity.label' },
     width: '150px',
     action: 'valueByPath',
   },
@@ -75,21 +97,105 @@ export const transactionsColumns: CellTittleProps[] = [
 ];
 
 export const transactionsSearchParams: SelectItem[] = [
-  { label: 'Дата', dataPath: 'transactionDate', filter: false, search: false, sort: true },
-  { label: 'Оновлено', dataPath: 'createdAt', filter: false, search: false, sort: true },
-  { label: 'Створено', dataPath: 'updateAt', filter: false, search: false, sort: true },
-  { label: selects.countIn.label, dataPath: 'countIn.label', filter: false, search: true, sort: true },
-  { label: selects.subCountIn.label, dataPath: 'subCountIn.label', filter: false, search: true, sort: true },
-  { label: selects.countOut.label, dataPath: 'countOut.label', filter: false, search: true, sort: true },
-  { label: selects.subCountOut.label, dataPath: 'subCountOut.label', filter: false, search: true, sort: true },
-  { label: selects.category.label, dataPath: 'category.label', filter: false, search: true, sort: true },
-  { label: selects.subCategory.label, dataPath: 'subCategory.label', filter: false, search: true, sort: true },
-  { label: 'Сума', dataPath: 'amount', filter: false, search: true, sort: true },
-  { label: 'Контрагент', dataPath: 'contractor', filter: false, search: true, sort: true },
-  { label: 'Документ', dataPath: 'document', filter: false, search: true, sort: true },
-  { label: 'Проєкт', dataPath: 'project', filter: false, search: true, sort: true },
+  {
+    label: 'Дата',
+    dataPath: 'transactionDate',
+    filter: false,
+    search: false,
+    sort: true,
+  },
+  {
+    label: 'Оновлено',
+    dataPath: 'createdAt',
+    filter: false,
+    search: false,
+    sort: true,
+  },
+  {
+    label: 'Створено',
+    dataPath: 'updateAt',
+    filter: false,
+    search: false,
+    sort: true,
+  },
+  {
+    label: selects.countIn.label,
+    dataPath: 'countIn.label',
+    filter: false,
+    search: true,
+    sort: true,
+  },
+  {
+    label: selects.subCountIn.label,
+    dataPath: 'subCountIn.label',
+    filter: false,
+    search: true,
+    sort: true,
+  },
+  {
+    label: selects.countOut.label,
+    dataPath: 'countOut.label',
+    filter: false,
+    search: true,
+    sort: true,
+  },
+  {
+    label: selects.subCountOut.label,
+    dataPath: 'subCountOut.label',
+    filter: false,
+    search: true,
+    sort: true,
+  },
+  {
+    label: selects.category.label,
+    dataPath: 'category.label',
+    filter: false,
+    search: true,
+    sort: true,
+  },
+  {
+    label: selects.subCategory.label,
+    dataPath: 'subCategory.label',
+    filter: false,
+    search: true,
+    sort: true,
+  },
+  {
+    label: 'Сума',
+    dataPath: 'amount',
+    filter: false,
+    search: true,
+    sort: true,
+  },
+  {
+    label: 'Контрагент',
+    dataPath: 'contractor',
+    filter: false,
+    search: true,
+    sort: true,
+  },
+  {
+    label: 'Документ',
+    dataPath: 'document',
+    filter: false,
+    search: true,
+    sort: true,
+  },
+  {
+    label: 'Проєкт',
+    dataPath: 'project',
+    filter: false,
+    search: true,
+    sort: true,
+  },
   { label: 'Мітка', dataPath: 'mark', filter: false, search: true, sort: true },
-  { label: 'Статус', dataPath: 'status', filter: false, search: true, sort: true },
+  {
+    label: 'Статус',
+    dataPath: 'status',
+    filter: false,
+    search: true,
+    sort: true,
+  },
 ];
 
 export const filterOptions: TransactionsFilterOpt[] = [
@@ -103,102 +209,112 @@ export const useTransactionsActions = () => {
   const { editById, create, deleteById } = useTransactionsService();
   // const table = useTable();
 
-  return useMemo(() => ({
-    top: [
-      {
-        name: 'editTr',
-        title: 'Редагування транзакції',
-        iconId: iconId.edit,
-        onClick: () => {
-          modal.handleOpenModal({
-            ModalChildren: TransactionForm,
-            modalChildrenProps: { title: 'Редагування транзакції', filterOptions, onSubmit: editById },
-          });
+  return useMemo(
+    () => ({
+      top: [
+        {
+          name: 'editTr',
+          title: 'Редагування транзакції',
+          iconId: iconId.edit,
+          onClick: () => {
+            modal.handleOpenModal({
+              ModalChildren: TransactionForm,
+              modalChildrenProps: {
+                title: 'Редагування транзакції',
+                filterOptions,
+                onSubmit: editById,
+              },
+            });
+          },
+          disableChek: () => false,
         },
-        disableChek: () => false,
-      },
-      {
-        name: 'copyTr',
-        title: 'Копіювання транзакції',
-        iconId: iconId.copy,
-        onClick: () => {
-          modal.handleOpenModal({
-            ModalChildren: TransactionForm,
-            modalChildrenProps: { title: 'Копіювання транзакції', filterOptions, onSubmit: create },
-          });
+        {
+          name: 'copyTr',
+          title: 'Копіювання транзакції',
+          iconId: iconId.copy,
+          onClick: () => {
+            modal.handleOpenModal({
+              ModalChildren: TransactionForm,
+              modalChildrenProps: {
+                title: 'Копіювання транзакції',
+                filterOptions,
+                onSubmit: create,
+              },
+            });
+          },
+          disableChek: () => false,
         },
-        disableChek: () => false,
-      },
-      {
-        name: 'deleteTr',
-        title: 'Видалення транзакції',
-        iconId: iconId.delete,
-        iconSize: '90%',
-        onClick: (id: string) => {
-          deleteById(id);
+        {
+          name: 'deleteTr',
+          title: 'Видалення транзакції',
+          iconId: iconId.delete,
+          iconSize: '90%',
+          onClick: (id: string) => {
+            deleteById(id);
+          },
+          disableChek: () => true,
         },
-        disableChek: () => true,
-      },
-    ],
-    bottom: [
-      {
-        name: 'createIncomeTr',
-        title: 'Дохід',
-        iconId: iconId.INCOME,
-        iconSize: '90%',
-        onClick: () => {
-          modal.handleOpenModal({
-            ModalChildren: TransactionForm,
-            modalChildrenProps: {
-              title: 'Дохід',
-              filterOptions,
-              defaultState: { type: 'INCOME' },
-              onSubmit: create,
-            },
-          });
+      ],
+      bottom: [
+        {
+          name: 'createIncomeTr',
+          title: 'Дохід',
+          iconId: iconId.INCOME,
+          iconSize: '90%',
+          onClick: () => {
+            modal.handleOpenModal({
+              ModalChildren: TransactionForm,
+              modalChildrenProps: {
+                title: 'Дохід',
+                filterOptions,
+                defaultState: { type: 'INCOME' },
+                onSubmit: create,
+              },
+            });
+          },
+          disableChek: () => false,
         },
-        disableChek: () => false,
-      },
-      {
-        name: 'createTransferTr',
-        title: 'Переказ між рахунками',
-        iconId: iconId.TRANSFER,
-        iconSize: '90%',
-        onClick: () => {
-          modal.handleOpenModal({
-            ModalChildren: TransactionForm,
-            modalChildrenProps: {
-              title: 'Переказ між рахунками',
-              filterOptions,
-              defaultState: { type: 'TRANSFER' },
-              onSubmit: create,
-            },
-          });
+        {
+          name: 'createTransferTr',
+          title: 'Переказ між рахунками',
+          iconId: iconId.TRANSFER,
+          iconSize: '90%',
+          onClick: () => {
+            modal.handleOpenModal({
+              ModalChildren: TransactionForm,
+              modalChildrenProps: {
+                title: 'Переказ між рахунками',
+                filterOptions,
+                defaultState: { type: 'TRANSFER' },
+                onSubmit: create,
+              },
+            });
+          },
+          disableChek: () => false,
         },
-        disableChek: () => false,
-      },
-      {
-        name: 'createExpenseTr',
-        title: 'Витрата',
-        iconId: iconId.EXPENSE,
-        iconSize: '90%',
-        onClick: () => {
-          modal.handleOpenModal({
-            ModalChildren: TransactionForm,
-            modalChildrenProps: {
-              title: 'Витрата',
-              filterOptions,
-              defaultState: { type: 'EXPENSE' },
-              onSubmit: create,
-            },
-          });
+        {
+          name: 'createExpenseTr',
+          title: 'Витрата',
+          iconId: iconId.EXPENSE,
+          iconSize: '90%',
+          onClick: () => {
+            modal.handleOpenModal({
+              ModalChildren: TransactionForm,
+              modalChildrenProps: {
+                title: 'Витрата',
+                filterOptions,
+                defaultState: { type: 'EXPENSE' },
+                onSubmit: create,
+              },
+            });
+          },
+          disableChek: () => false,
         },
-        disableChek: () => false,
-      },
-    ],
-  }), [create, deleteById, editById, modal]);
+      ],
+    }),
+    [create, deleteById, editById, modal]
+  );
 };
-
 
 export const trTableActions: TableActionsProps = {
   top: [
@@ -206,16 +322,14 @@ export const trTableActions: TableActionsProps = {
       name: 'editTr',
       title: 'Редагування транзакції',
       iconId: iconId.edit,
-      onClick: () => {
-      },
+      onClick: () => {},
       disableChek: () => false,
     },
     {
       name: 'copyTr',
       title: 'Копіювання транзакції',
       iconId: iconId.copy,
-      onClick: () => {
-      },
+      onClick: () => {},
       disableChek: () => false,
     },
     {
@@ -223,8 +337,7 @@ export const trTableActions: TableActionsProps = {
       title: 'Видалення транзакції',
       iconId: iconId.delete,
       iconSize: '90%',
-      onClick: () => {
-      },
+      onClick: () => {},
       disableChek: () => false,
     },
   ],
@@ -234,8 +347,7 @@ export const trTableActions: TableActionsProps = {
       title: 'Дохід',
       iconId: iconId.INCOME,
       iconSize: '90%',
-      onClick: () => {
-      },
+      onClick: () => {},
       disableChek: () => false,
     },
     {
@@ -243,8 +355,7 @@ export const trTableActions: TableActionsProps = {
       title: 'Переказ між рахунками',
       iconId: iconId.TRANSFER,
       iconSize: '90%',
-      onClick: () => {
-      },
+      onClick: () => {},
       disableChek: () => false,
     },
     {
@@ -252,8 +363,7 @@ export const trTableActions: TableActionsProps = {
       title: 'Витрата',
       iconId: iconId.EXPENSE,
       iconSize: '90%',
-      onClick: () => {
-      },
+      onClick: () => {},
       disableChek: () => false,
     },
   ],
@@ -265,14 +375,30 @@ export const transactionsMockData: ITransaction[] = [
     type: 'INCOME',
     amount: 562,
     currency: 'UAH',
-    countIn: { _id: '63d5f51bdee30d0c1e11757f', name: 'ЗАМОВНИКИ', code: '100' },
-    subCountIn: { _id: '63d79be938b6a211dc6634c8', name: 'Замовники за котрактом', code: '101' },
+    countIn: {
+      _id: '63d5f51bdee30d0c1e11757f',
+      name: 'ЗАМОВНИКИ',
+      code: '100',
+    },
+    subCountIn: {
+      _id: '63d79be938b6a211dc6634c8',
+      name: 'Замовники за котрактом',
+      code: '101',
+    },
     contractor: { _id: '63d79be938b6a211dc6634c8', name: 'Петренко І.В.' },
     project: { _id: '63d79be938b6a211dc6634c8', name: 'ЖК "Авалон"' },
     transactionDate: '2023-01-31T04:02:09.592Z',
-    companyActivity: { _id: '63d79be938b6a211dc6634c8', label: 'Буд. діяльність' },
-    category: { _id: '63d79be938b6a211dc6634c8', name: 'Послуги', type: 'EXPENSE' },
-    subCategory: { _id: '63d79be938b6a211dc6634c8', name: 'Покрівля даху', type: 'EXPENSE' },
+    activity: { _id: '63d79be938b6a211dc6634c8', label: 'Буд. діяльність' },
+    category: {
+      _id: '63d79be938b6a211dc6634c8',
+      name: 'Послуги',
+      type: 'EXPENSE',
+    },
+    subCategory: {
+      _id: '63d79be938b6a211dc6634c8',
+      name: 'Покрівля даху',
+      type: 'EXPENSE',
+    },
     createdAt: '2023-01-31T04:02:25.788Z',
     updatedAt: '2023-01-31T04:02:25.788Z',
     tags: [],
@@ -282,16 +408,32 @@ export const transactionsMockData: ITransaction[] = [
     type: 'EXPENSE',
     amount: 325,
     currency: 'UAH',
-    countOut: { _id: '63d5f51bdee30d0c1e11757f', name: 'ЗАМОВНИКИ', code: '100' },
-    subCountOut: { _id: '63d79be938b6a211dc6634c8', name: 'Замовники за котрактом', code: '101' },
+    countOut: {
+      _id: '63d5f51bdee30d0c1e11757f',
+      name: 'ЗАМОВНИКИ',
+      code: '100',
+    },
+    subCountOut: {
+      _id: '63d79be938b6a211dc6634c8',
+      name: 'Замовники за котрактом',
+      code: '101',
+    },
     contractor: { _id: '63d79be938b6a211dc6634c8', name: 'Петренко І.В.' },
     transactionDate: '2023-01-31T04:02:09.592Z',
-    category: { _id: '63d79be938b6a211dc6634c8', name: 'Матеріали', type: 'INCOME' },
-    subCategory: { _id: '63d79be938b6a211dc6634c8', name: 'Основні матеріали', type: 'INCOME' },
+    category: {
+      _id: '63d79be938b6a211dc6634c8',
+      name: 'Матеріали',
+      type: 'INCOME',
+    },
+    subCategory: {
+      _id: '63d79be938b6a211dc6634c8',
+      name: 'Основні матеріали',
+      type: 'INCOME',
+    },
     createdAt: '2023-01-31T04:02:25.788Z',
     updatedAt: '2023-01-31T04:02:25.788Z',
     project: { _id: '63d79be938b6a211dc6634c8', name: 'ЖК "Авалон' },
-    companyActivity: { _id: '63d79be938b6a211dc6634c8', label: 'Буд. діяльність' },
+    activity: { _id: '63d79be938b6a211dc6634c8', label: 'Буд. діяльність' },
     tags: [],
   },
   {
@@ -299,11 +441,27 @@ export const transactionsMockData: ITransaction[] = [
     type: 'INCOME',
     amount: 6162,
     currency: 'UAH',
-    countOut: { _id: '63d5f51bdee30d0c1e11757f', name: 'ЗАМОВНИКИ', code: '100' },
-    subCountOut: { _id: '63d79be938b6a211dc6634c8', name: 'Замовники за котрактом', code: '101' },
-    category: { _id: '63d79be938b6a211dc6634c8', name: 'Послуги', type: 'EXPENSE' },
-    subCategory: { _id: '63d79be938b6a211dc6634c8', name: 'Покрівля даху', type: 'EXPENSE' },
-    companyActivity: { _id: '63d79be938b6a211dc6634c8', label: 'Буд. діяльність' },
+    countOut: {
+      _id: '63d5f51bdee30d0c1e11757f',
+      name: 'ЗАМОВНИКИ',
+      code: '100',
+    },
+    subCountOut: {
+      _id: '63d79be938b6a211dc6634c8',
+      name: 'Замовники за котрактом',
+      code: '101',
+    },
+    category: {
+      _id: '63d79be938b6a211dc6634c8',
+      name: 'Послуги',
+      type: 'EXPENSE',
+    },
+    subCategory: {
+      _id: '63d79be938b6a211dc6634c8',
+      name: 'Покрівля даху',
+      type: 'EXPENSE',
+    },
+    activity: { _id: '63d79be938b6a211dc6634c8', label: 'Буд. діяльність' },
     transactionDate: '2023-01-31T04:02:09.592Z',
     tags: [],
     project: { _id: '63d79be938b6a211dc6634c8', name: 'ЖК "Авалон' },

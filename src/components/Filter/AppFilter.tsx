@@ -10,8 +10,15 @@ import * as yup from 'yup';
 import { ICount } from 'redux/counts/counts.types';
 import { ICategory } from 'redux/categories/categories.types';
 import InputTextPrimary from '../atoms/Inputs/InputTextPrimary';
+import { IContractor } from '../../redux/contractors/contractors.types';
+import { IProject } from '../../redux/transactions/transactions.types';
 
-export type FilterSelectorDataType = ICount[] | ICategory[] | any[];
+export type FilterSelectorDataType =
+  | ICount[]
+  | ICategory[]
+  | IContractor[]
+  | IProject[]
+  | any[];
 export type FilterSelectorType = {
   selectorName: keyof FilterDataType;
   label: string;
@@ -32,14 +39,16 @@ export interface FilterDataType {
 }
 
 const validation = yup.object().shape({
-  type: yup.array().optional(),
-  categories: yup.array().optional(),
-  counts: yup.array().optional(),
-  contractors: yup.array().optional(),
-  managers: yup.array().optional(),
+  type: yup.array().of(yup.string()).optional(),
+  categories: yup.array().of(yup.string()).optional(),
+  counts: yup.array().of(yup.string()).optional(),
+  contractors: yup.array().of(yup.string()).optional(),
+  managers: yup.array().of(yup.string()).optional(),
+  marks: yup.array().of(yup.string()).optional(),
 });
 
-export interface FilterProps extends Omit<ModalFormProps, 'defaultFilterValue' | 'onSubmit'> {
+export interface FilterProps
+  extends Omit<ModalFormProps, 'defaultFilterValue' | 'onSubmit'> {
   filterSelectors?: FilterSelectorType[];
   filterDefaultValues?: Partial<Record<keyof FilterDataType, string[] | any[]>>;
   onFilterSubmit?: SubmitHandler<FilterDataType>;
@@ -50,106 +59,132 @@ const AppFilter: React.FC<FilterProps> = props => {
     return <SelectorErr>'Filter selectors' not passed</SelectorErr>;
   }
 
-  if (!Array.isArray(props.filterSelectors) || props.filterSelectors.some(sel => !isSelectorType(sel))) {
+  if (
+    !Array.isArray(props.filterSelectors) ||
+    props.filterSelectors.some(sel => !isSelectorType(sel))
+  ) {
     return <SelectorErr>Invalid filter selectors</SelectorErr>;
   }
 
   return <Filter {...props} />;
 };
 
-const Filter: React.FC<FilterProps> =
-  ({
-     filterSelectors,
-     filterDefaultValues,
-     onFilterSubmit,
-     ...props
-   }) => {
+const Filter: React.FC<FilterProps> = ({
+  filterSelectors,
+  filterDefaultValues,
+  onFilterSubmit,
+  ...props
+}) => {
+  const [CurrentData, setCurrentData] = useState<FilterSelectorType | null>(
+    filterSelectors ? filterSelectors[0] : null
+  );
+  const [currentIdx, setCurrentIdx] = useState<number | null>(0);
 
-    const [CurrentData, setCurrentData] = useState<FilterSelectorType | null>(filterSelectors ? filterSelectors[0] : null);
-    const [currentIdx, setCurrentIdx] = useState<number | null>(0);
+  const {
+    formState: { errors },
+    register,
+    unregister,
+    handleSubmit,
+    setValue,
+    getValues,
+  } = useForm<FilterDataType>({
+    defaultValues: filterDefaultValues,
+    resolver: yupResolver(validation),
+    reValidateMode: 'onSubmit',
+  });
 
-    const {
-      formState: { errors },
-      register,
-      unregister,
-      handleSubmit,
-      setValue,
-      getValues,
-
-    } = useForm<FilterDataType>({
-      defaultValues: filterDefaultValues,
-      resolver: yupResolver(validation),
-      reValidateMode: 'onSubmit',
-    });
-
-    const onFilterDataChange = useCallback((name: keyof FilterDataType, value?: string[]) => {
+  const onFilterDataChange = useCallback(
+    (name: keyof FilterDataType, value?: string[]) => {
       if (name && value) setValue(name, value);
       if (!value) unregister(name);
       console.log(getValues());
-    }, [getValues, setValue, unregister]);
+    },
+    [getValues, setValue, unregister]
+  );
 
-
-    const onSelectorClick = useCallback((idx: number) => {
+  const onSelectorClick = useCallback(
+    (idx: number) => {
       setCurrentIdx(idx);
       filterSelectors && setCurrentData(filterSelectors[idx]);
-    }, [filterSelectors]);
+    },
+    [filterSelectors]
+  );
 
-
-    const renderSelectors = useMemo(() => filterSelectors?.map(({ selectorName, label, data }, idx) => (
-      <Selector
-        key={selectorName}
-        label={label}
-        data={data}
-        selectorName={selectorName}
-        childrenListCount={1}
-        selectedChildrenCount={1}
-        idx={idx}
-        onSelectorClick={() => onSelectorClick(idx)}
-        currentIdx={currentIdx}
-        CurrentData={CurrentData}
-      >
-        <SelectorContent
-          getDefaultValue={(selectorName: keyof FilterDataType) => getValues()[selectorName] || []}
-          onSelectorSubmit={onFilterDataChange}
+  const renderSelectors = useMemo(
+    () =>
+      filterSelectors?.map(({ selectorName, label, data }, idx) => (
+        <Selector
+          key={selectorName}
+          label={label}
           data={data}
           selectorName={selectorName}
-        />
-      </Selector>
-    )), [CurrentData, currentIdx, filterSelectors, getValues, onFilterDataChange, onSelectorClick]);
+          childrenListCount={1}
+          selectedChildrenCount={1}
+          idx={idx}
+          onSelectorClick={() => onSelectorClick(idx)}
+          currentIdx={currentIdx}
+          CurrentData={CurrentData}
+        >
+          <SelectorContent
+            getDefaultValue={(selectorName: keyof FilterDataType) =>
+              getValues()[selectorName] || []
+            }
+            onSelectorSubmit={onFilterDataChange}
+            data={data}
+            selectorName={selectorName}
+          />
+        </Selector>
+      )),
+    [
+      CurrentData,
+      currentIdx,
+      filterSelectors,
+      getValues,
+      onFilterDataChange,
+      onSelectorClick,
+    ]
+  );
 
-    // const renderSelectorContent = useMemo(() =>
-    //     (<SelectorContent
-    //       defaultValue={CurrentData?.selectorName ? filterData[CurrentData?.selectorName] : []}
-    //       onSelectorSubmit={onFilterDataChange}
-    //       data={CurrentData?.data || []}
-    //       selectorName={CurrentData?.selectorName}
-    //       ListComp={CurrentData?.ListComp}
-    //     />),
-    //   [CurrentData?.ListComp, CurrentData?.data, CurrentData?.selectorName, filterData, onFilterDataChange]);
+  // const renderSelectorContent = useMemo(() =>
+  //     (<SelectorContent
+  //       defaultValue={CurrentData?.selectorName ? filterData[CurrentData?.selectorName] : []}
+  //       onSelectorSubmit={onFilterDataChange}
+  //       data={CurrentData?.data || []}
+  //       selectorName={CurrentData?.selectorName}
+  //       ListComp={CurrentData?.ListComp}
+  //     />),
+  //   [CurrentData?.ListComp, CurrentData?.data, CurrentData?.selectorName, filterData, onFilterDataChange]);
 
-    return (
-      <StModalDefault {...props} onSubmit={onFilterSubmit && (() => handleSubmit(onFilterSubmit))}>
-        <FilterContainer>
-          <DatePickers>
-            <InputTextPrimary label='Від (дата і час)' type='datetime-local' name={'timeFrom'}
-                              placeholder='Від (дата і час)' />
-            <InputTextPrimary label='До (дата і час)' type='datetime-local' name={'timeTo'}
-                              placeholder='До (дата і час)' />
-          </DatePickers>
+  return (
+    <StModalDefault
+      {...props}
+      onSubmit={onFilterSubmit && (() => handleSubmit(onFilterSubmit))}
+    >
+      <FilterContainer>
+        <DatePickers>
+          <InputTextPrimary
+            label="Від (дата і час)"
+            type="datetime-local"
+            name={'timeFrom'}
+            placeholder="Від (дата і час)"
+          />
+          <InputTextPrimary
+            label="До (дата і час)"
+            type="datetime-local"
+            name={'timeTo'}
+            placeholder="До (дата і час)"
+          />
+        </DatePickers>
 
-          <Bottom>
-            <LeftSide>
-              <SelectorsList>
-                {renderSelectors}
-              </SelectorsList>
-            </LeftSide>
-
-
-          </Bottom>
-        </FilterContainer>
-      </StModalDefault>
-    );
-  };
+        <Bottom>
+          <LeftSide>
+            <SelectorsList>{renderSelectors}</SelectorsList>
+          </LeftSide>
+        </Bottom>
+      </FilterContainer>
+    </StModalDefault>
+  );
+};
 
 const StModalDefault = styled(ModalDefault)`
   height: 98vh;

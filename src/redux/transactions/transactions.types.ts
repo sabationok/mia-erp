@@ -2,7 +2,8 @@ import { ICategory } from '../categories/categories.types';
 import { ICount } from '../counts/counts.types';
 import { IBase } from '../global.types';
 import { IContractor } from '../contractors/contractors.types';
-import { ICompanyActivity } from '../companyActivities/companyActivities.types';
+import { IActivity } from '../companyActivities/activities.types';
+
 
 export type CurrencyCode = 'UAH';
 export type TransactionType = 'EXPENSE' | 'TRANSFER' | 'INCOME';
@@ -38,7 +39,7 @@ export interface ITransaction extends IBase {
   contractor?: IContractor;
   project?: IProject;
   document?: IDocument;
-  companyActivity?: ICompanyActivity;
+  activity?: IActivity;
   status?: TrStatus;
   comment?: string;
   tags?: string[];

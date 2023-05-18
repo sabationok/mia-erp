@@ -3,27 +3,24 @@ import React from 'react';
 import styled from 'styled-components';
 import DirList from '../DirList/DirList';
 import { useModalProvider } from '../../ModalProvider/ModalProvider';
-import FormCreateCompanyActivity from './FormCreateCompanyActivity';
-import useCompanyActivitiesService from 'redux/companyActivities/useCompanyActivitiesService.hook';
+import FormCreateActivity from './FormCreateActivity';
+import useCompanyActivitiesService from 'redux/companyActivities/useActivitiesService.hook';
 import { DirBaseProps } from '../dir.types';
 
+export interface DirCompanyActivitiesProps extends DirBaseProps {}
 
-export interface DirCompanyActivitiesProps extends DirBaseProps {
-
-}
-
-const DirCompanyActivities: React.FC<DirCompanyActivitiesProps> = ({ ...props }) => {
+const DirActivities: React.FC<DirCompanyActivitiesProps> = ({ ...props }) => {
   const modal = useModalProvider();
-  const { companyActivities, getById } = useCompanyActivitiesService();
+  const { activities, getById } = useCompanyActivitiesService();
 
   // const [filteredData, setFilteredData] = useState<ICompanyActivity[]>(companyActivities);
 
   function onCreateParent() {
     modal.handleOpenModal({
-      ModalChildren: FormCreateCompanyActivity,
+      ModalChildren: FormCreateActivity,
       modalChildrenProps: {
         title: 'Створити вид діяльності',
-        onSubmit: (submitData) => {
+        onSubmit: submitData => {
           console.log('onCreateParent', submitData);
         },
       },
@@ -32,7 +29,13 @@ const DirCompanyActivities: React.FC<DirCompanyActivitiesProps> = ({ ...props })
 
   function onDelete(id: string) {
     const activity = getById(id);
-    if (window.confirm(`Бажаєте видалити вид діяльності: "${activity?.label || activity?.name}"`)) {
+    if (
+      window.confirm(
+        `Бажаєте видалити вид діяльності: "${
+          activity?.label || activity?.name
+        }"`
+      )
+    ) {
       console.log(`deleted activity ${activity?.label || activity?.name}`);
     }
   }
@@ -40,27 +43,27 @@ const DirCompanyActivities: React.FC<DirCompanyActivitiesProps> = ({ ...props })
   function onEdit(id: string) {
     const activity = getById(id);
     modal.handleOpenModal({
-      ModalChildren: FormCreateCompanyActivity,
+      ModalChildren: FormCreateActivity,
       modalChildrenProps: {
         title: `Редагувати: "${activity?.label || activity?.name}"`,
-        companyActivity: activity,
-        onSubmit: (submitData) => {
+        activity,
+        onSubmit: submitData => {
           console.log('onEdit', submitData);
         },
       },
     });
   }
 
-
   return (
     <StModalForm {...props}>
       <Box>
         <DirList
-          list={companyActivities}
+          list={activities}
           onDelete={onDelete}
           onEdit={onEdit}
           onCreateParent={onCreateParent}
-          createParentTitle='Створити вид діяльності' />
+          createParentTitle="Створити вид діяльності"
+        />
       </Box>
     </StModalForm>
   );
@@ -81,4 +84,4 @@ const Box = styled.div`
   padding: 0 12px;
 `;
 
-export default DirCompanyActivities;
+export default DirActivities;

@@ -22,6 +22,14 @@ const useCustomRolesService = () => {
     return state.customRoles.find(role => role._id === _id);
   }
 
-  return { dispatch, ...state, create, deleteById, editById, getById };
+  return {
+    dispatch,
+    ...state,
+    create,
+    deleteById,
+    editById,
+    getById,
+  };
 };
+export type CustomRolesService = ReturnType<typeof useCustomRolesService>
 export default useCustomRolesService as typeof useCustomRolesService;

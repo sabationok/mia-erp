@@ -1,40 +1,34 @@
 import ModalForm, { ModalFormProps } from 'components/ModalForm';
-import {
-  CategoriesTypesMap,
-  CategoryTypes,
-  ICategory,
-  ICategoryFormData,
-} from 'redux/categories/categories.types';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import InputTextPrimary from '../../atoms/Inputs/InputTextPrimary';
-import { useForm } from 'react-hook-form';
+import {
+  IActivity,
+  IActivityFormData,
+} from 'redux/companyActivities/activities.types';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FilterDataType } from '../../Filter/AppFilter';
-import { ObjectShape } from 'yup';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
 
-export interface FormCreateCategoryProps
-  extends Omit<ModalFormProps, 'onSubmit'> {
-  _id?: string;
-  type: CategoryTypes;
-  category?: ICategory;
-  owner?: Partial<ICategory>;
-  edit?: boolean;
-  onSubmit?: (data: ICategoryFormData) => void;
-}
-
 const validation = yup.object().shape({});
 
-const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
-  _id,
-  type,
+export interface FormCreateCompanyActivityProps
+  extends Omit<ModalFormProps, 'onSubmit'> {
+  _id?: string;
+  activity?: IActivity;
+  owner?: Partial<IActivity>;
+  edit?: boolean;
+  onSubmit?: SubmitHandler<IActivityFormData>;
+}
+
+const FormCreateActivity: React.FC<FormCreateCompanyActivityProps> = ({
   owner,
+  _id,
   edit,
-  category,
+  activity,
   onSubmit,
   ...props
 }) => {
@@ -45,33 +39,22 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
     handleSubmit,
     setValue,
     getValues,
-  } = useForm<ICategoryFormData>({
+  } = useForm<IActivityFormData>({
     defaultValues: {
-      ...category,
-      type,
-      owner: owner?._id || null,
+      ...activity,
     },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
-
-  function formEventWrapper(evHandler?: (args: any) => void, args?: any) {
-    if (evHandler) {
-      return handleSubmit(evHandler);
-    }
-  }
-
+  console.log(getValues());
   return (
-    <ModalForm onSubmit={formEventWrapper(onSubmit, getValues())} {...props}>
+    <ModalForm
+      onSubmit={() => {
+        console.log(getValues());
+      }}
+      {...props}
+    >
       <Inputs>
-        <InputLabel label="Тип" disabled>
-          <InputText
-            {...register('type')}
-            value={CategoriesTypesMap[type]}
-            disabled
-          />
-        </InputLabel>
-
         <InputLabel label="Назва">
           <InputText placeholder="Введіть назву" {...register('label')} />
         </InputLabel>
@@ -79,11 +62,9 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
         <InputLabel label="Коментар">
           <TextareaPrimary
             placeholder="Введіть коментар"
-            {...register('description')}
+            {...register('descr')}
           />
         </InputLabel>
-
-        {/* <TextareaPrimary label="Опис" name="descr" onChange={onFormDataChange} placeholder="Введіть опис" /> */}
       </Inputs>
     </ModalForm>
   );
@@ -99,4 +80,4 @@ const Inputs = styled.div`
   background-color: inherit;
 `;
 
-export default FormCreateCategory;
+export default FormCreateActivity;

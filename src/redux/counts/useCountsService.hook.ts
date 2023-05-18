@@ -36,5 +36,6 @@ const useCountsService = () => {
     deleteById,
   };
 };
+export type CountsService = ReturnType<typeof useCountsService>
 
 export default useCountsService;

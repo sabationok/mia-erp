@@ -17,7 +17,8 @@ export interface DirCategoriesProps extends DirBaseProps {
 
 const DirCategories: React.FC<DirCategoriesProps> = props => {
   const modal = useModalProvider();
-  const { categories, create, deleteById, editById, getById } = useCategoriesService();
+  const { categories, create, deleteById, editById, getById } =
+    useCategoriesService();
   const [filteredData, setFilteredData] = useState<ICategory[]>(categories);
   const [dirType, setDirType] = useState<CategoryTypes>('INCOME');
 
@@ -26,16 +27,19 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
     modal.handleOpenModal({
       ModalChildren: FormCreateCategory,
       modalChildrenProps: {
-        title: `Редагувати ${category?.owner ? 'під-категорію' : 'категорію'} "${category?.label || category?.name}"`,
+        title: `Редагувати ${
+          category?.owner ? 'під-категорію' : 'категорію'
+        } "${category?.label || category?.name}"`,
         category: categories.find(el => el._id === _id),
         edit: true,
         type: dirType,
-        onSubmit: (submitData) => _id && editById(_id, {
-          label: submitData.name || submitData.label,
-          owner: submitData.owner,
-          descr: submitData.descr,
-        })
-        ,
+        onSubmit: submitData =>
+          _id &&
+          editById(_id, {
+            label: submitData.name || submitData.label,
+            owner: submitData.owner,
+            description: submitData.description,
+          }),
       },
     });
   }
@@ -46,7 +50,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
       modalChildrenProps: {
         title: 'Створити під-категорію',
         type: dirType,
-        onSubmit: (submitData) => create({ ...submitData, owner: ownerId }),
+        onSubmit: submitData => create({ ...submitData, owner: ownerId }),
       },
     });
   }
@@ -64,7 +68,10 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
 
   function handleFilterData({ value }: FilterOpt<CategoryTypes>) {
     value && setDirType(value);
-    value && setFilteredData(founder({ searchParam: 'type', searchQuery: value, data: categories }));
+    value &&
+      setFilteredData(
+        founder({ searchParam: 'type', searchQuery: value, data: categories })
+      );
   }
 
   return (
@@ -76,7 +83,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
           onEdit={onEdit}
           onCreateChild={onCreateChild}
           entryList={filteredData.filter(el => !el?.owner)}
-          createParentTitle='Свторити категорію'
+          createParentTitle="Свторити категорію"
           onCreateParent={onCreateParent}
         />
       </Box>

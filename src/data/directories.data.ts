@@ -1,16 +1,23 @@
-import DirCategories, { DirCategoriesProps } from 'components/Directories/DirCategories/DirCategories';
-import DirCounts, { DirCountsProps } from 'components/Directories/DirCounts/DirCounts';
-import DirProjects, { DirProjectsProps } from 'components/Directories/DirProjects/DirProjects';
+import DirCategories, {
+  DirCategoriesProps,
+} from 'components/Directories/DirCategories/DirCategories';
+import DirCounts, {
+  DirCountsProps,
+} from 'components/Directories/DirCounts/DirCounts';
+import DirProjects, {
+  DirProjectsProps,
+} from 'components/Directories/DirProjects/DirProjects';
 import { iconId } from '../img/sprite';
 import DirMarks, { DirMarksProps } from 'components/Directories/DirMarks';
-import DirContractors, { DirContractorsProps } from 'components/Directories/DirContractors';
+import DirContractors, {
+  DirContractorsProps,
+} from 'components/Directories/DirContractors';
 
 import { CategoriesTypesMap } from 'redux/categories/categories.types';
-import DirCompanyActivities, {
+import DirActivities, {
   DirCompanyActivitiesProps,
-} from 'components/Directories/DirCompanyActivities/DirCompanyActivities';
+} from 'components/Directories/DirCompanyActivities/DirActivities';
 import { contractorsColumns, contractorsMockData } from './contractors.data';
-
 
 export interface IDirectory<P = any> {
   title: string;
@@ -51,8 +58,10 @@ const categoriesDir = {
 };
 const ContractorsProps: DirContractorsProps = {
   title: 'Контрагенти',
-  tableSettings: { tableData: contractorsMockData, tableTitles: contractorsColumns },
-
+  tableSettings: {
+    tableData: contractorsMockData,
+    tableTitles: contractorsColumns,
+  },
 };
 const contractorsDir = {
   title: ContractorsProps.title,
@@ -88,7 +97,7 @@ const CompanyActivitiesProps: DirCompanyActivitiesProps = {
 const activitiesDir = {
   title: CompanyActivitiesProps.title,
   iconId: iconId.folder,
-  ModalChildren: DirCompanyActivities,
+  ModalChildren: DirActivities,
   modalChildrenProps: CompanyActivitiesProps,
   disabled: false,
 };

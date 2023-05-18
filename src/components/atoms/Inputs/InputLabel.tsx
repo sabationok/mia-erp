@@ -1,8 +1,8 @@
 import React, { forwardRef } from 'react';
 import styled from 'styled-components';
 
-export interface InputPrimaryProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputLabelProps
+  extends React.InputHTMLAttributes<HTMLLabelElement> {
   label?: string;
   direction?: 'column' | 'row';
   labelUppercase?: boolean;
@@ -11,7 +11,7 @@ export interface InputPrimaryProps
   helperText?: string;
 }
 
-const InputTextPrimary: React.FC<InputPrimaryProps> = ({
+const InputLabel: React.FC<InputLabelProps> = ({
   label,
   className,
   disabled,
@@ -20,18 +20,19 @@ const InputTextPrimary: React.FC<InputPrimaryProps> = ({
   helperText,
   error,
   success,
+  children,
   ...props
 }) => {
   return (
-    <Label className={className} disabled={disabled}>
-      <Wrapper isLabel={label ? true : false} direction={direction}>
+    <Label className={className} disabled={disabled} {...props}>
+      <Wrapper isLabel={!!label} direction={direction}>
         {label && (
           <LabelText uppercase={labelUppercase} className="label">
             {label}
           </LabelText>
         )}
 
-        <InputText className="input" disabled={disabled} {...props} />
+        {children}
       </Wrapper>
 
       {helperText && (
@@ -101,4 +102,4 @@ const HelperText = styled.div<{ error?: boolean; success?: boolean }>`
   cursor: default;
 `;
 
-export default InputTextPrimary;
+export default InputLabel;

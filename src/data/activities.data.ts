@@ -1,6 +1,6 @@
-import { ICompanyActivity } from '../redux/companyActivities/companyActivities.types';
+import { IActivity } from '../redux/companyActivities/activities.types';
 
-export const activitiesMockData: ICompanyActivity[] = [
+export const activitiesMockData: IActivity[] = [
   {
     _id: 'd5g165fg1bd2f51g3n2dfg',
     label: 'Будова',
