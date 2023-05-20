@@ -1,6 +1,11 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AuthErrorType } from 'redux/reduxTypes.types';
-import { getCurrentUserThunk, logInUserThunk, logOutUserThunk, registerUserThunk } from './auth.thunks';
+import {
+  getCurrentUserThunk,
+  logInUserThunk,
+  logOutUserThunk,
+  registerUserThunk,
+} from './auth.thunks';
 import { IAuthState } from './auth.types';
 import { initialPermission } from '../permissions/permissions.slice';
 import { testUserKarina } from '../../data/usersDir.data';

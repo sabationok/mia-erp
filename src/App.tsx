@@ -4,7 +4,6 @@ import Layout from 'components/Layout/Layout';
 import AppRoutes from 'components/AppRoutes/AppRoutes';
 import SideBarProvider from 'components/SideBarLeft/SideBarProvider';
 import { ToastContainer } from 'react-toastify';
-// import { getAppSettings } from 'redux/selectors.store';
 import styled from 'styled-components';
 import useAppSettings from 'redux/appSettings/useAppSettings.hook';
 import GlobalStyles from './theme/globalStyles';

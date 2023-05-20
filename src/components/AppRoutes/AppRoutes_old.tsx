@@ -1,0 +1,97 @@
+import { Navigate, Route, Routes } from 'react-router-dom';
+import AppPages from 'components/AppPages';
+import { appPages } from 'data';
+import { memo, useMemo } from 'react';
+import EmptyPageTitle from 'components/AppPages/EmptyPageTitle';
+import { useAuthSelector } from '../../redux/selectors.store';
+
+const { PageNotFound } = AppPages;
+
+const AppRoutes: React.FC = () => {
+  const { accessToken, isLoggedIn } = useAuthSelector();
+  const publicRoutes = useMemo(
+    () => (
+      <Route path="auth/*">
+        <Route
+          index
+          element={<Navigate to="login" />}
+          errorElement={<PageNotFound />}
+        />
+
+        <Route path="register" element={<AppPages.PageAuth register />}></Route>
+
+        <Route path="login" element={<AppPages.PageAuth login />}></Route>
+
+        <Route
+          path="sendRecoveryPasswordMail"
+          element={<AppPages.PageAuth sendRecoveryMail />}
+        ></Route>
+
+        <Route
+          path="recoveryPassword"
+          element={<AppPages.PageAuth recovery />}
+        ></Route>
+
+        <Route
+          path="*"
+          element={<PageNotFound />}
+          errorElement={<PageNotFound />}
+        />
+      </Route>
+    ),
+    []
+  );
+
+  const privateRoutes = useMemo(
+    () => (
+      <Route
+        path="/"
+        element={<AppPages.AppGridPage path={appPages.transactions.path} />}
+        errorElement={<PageNotFound />}
+      >
+        <Route
+          index
+          element={<Navigate to={appPages.transactions.path} />}
+          errorElement={<PageNotFound />}
+        />
+
+        <Route
+          path={appPages.transactions.path}
+          element={<AppPages.PageTransactions />}
+          errorElement={<PageNotFound />}
+        />
+        <Route
+          path={appPages.home.path}
+          element={<AppPages.PageHome />}
+          errorElement={<PageNotFound />}
+        >
+          <Route
+            index
+            element={<EmptyPageTitle>Особиста інформація</EmptyPageTitle>}
+            errorElement={<PageNotFound />}
+          />
+          <Route
+            path={'personalInfo'}
+            element={<EmptyPageTitle>Особиста інформація</EmptyPageTitle>}
+            errorElement={<PageNotFound />}
+          />
+          <Route
+            path={'companies'}
+            element={<EmptyPageTitle>Компанії</EmptyPageTitle>}
+            errorElement={<PageNotFound />}
+          />
+          <Route
+            path={'directories'}
+            element={<EmptyPageTitle>Довідники</EmptyPageTitle>}
+            errorElement={<PageNotFound />}
+          />
+        </Route>
+      </Route>
+    ),
+    []
+  );
+
+  return <Routes>{!isLoggedIn ? privateRoutes : publicRoutes}</Routes>;
+};
+
+export default memo(AppRoutes);

@@ -6,6 +6,7 @@ import AuthFormInput from './AuthFormInput';
 import NavLinkIcon from 'components/atoms/LinkIcon/NavLinkIcon';
 import { Link } from 'react-router-dom';
 import useAuthService from '../../redux/auth/useAppAuth.hook';
+import { useForm } from 'react-hook-form';
 
 export interface Props {
   helloTitle?: string;
@@ -36,14 +37,16 @@ const initialFormDataRegister: IRegistrationFormData = {
 export type AuthFormProps = Props & React.HTMLAttributes<HTMLFormElement>;
 const AuthForm: React.FC<AuthFormProps> = ({
   title,
-  register,
+  register: registration,
   recovery,
   ...props
 }) => {
   const authService = useAuthService();
   const [formData, setFormData] = useState<Partial<IRegistrationFormData>>(
-    register ? initialFormDataRegister : initialFormDataLogin
+    registration ? initialFormDataRegister : initialFormDataLogin
   );
+
+  const { formState, register } = useForm<Partial<IRegistrationFormData>>({});
 
   function onFormDataChange(ev: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = ev.target;
@@ -55,7 +58,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
     ev.preventDefault();
 
     console.log('formDAta', formData);
-    !register && authService.loginUser(formData);
+    !registration && authService.loginUser(formData);
   }
 
   return (
@@ -79,7 +82,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
       </Links>
 
       <Inputs>
-        {register && (
+        {registration && (
           <>
             <AuthFormInput
               icon="personOutlined"
@@ -133,7 +136,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
           </>
         )}
 
-        {!register && (
+        {!registration && (
           <>
             <AuthFormInput
               icon="email"
@@ -160,10 +163,10 @@ const AuthForm: React.FC<AuthFormProps> = ({
           textTransform="uppercase"
           variant="filledSmall"
         >
-          {register ? 'Зареєструватись' : 'Увійти'}
+          {registration ? 'Зареєструватись' : 'Увійти'}
         </StButtonIcon>
 
-        {!register && (
+        {!registration && (
           <StLink to={'/auth/sendRecoveryPasswordMail'}>
             {'Забули пароль?'}
           </StLink>
@@ -330,6 +333,5 @@ const StNavLink = styled(NavLinkIcon)`
     }
   }
 `;
-
 
 export default AuthForm;
