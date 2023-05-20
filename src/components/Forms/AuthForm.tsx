@@ -1,12 +1,13 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import LogoSvg from 'components/Layout/Header/LogoSvg/LogoSvg';
-import AuthFormInput from './AuthFormInput';
+import AuthInputLabel from '../atoms/Inputs/AuthInputLabel';
 import NavLinkIcon from 'components/atoms/LinkIcon/NavLinkIcon';
 import { Link } from 'react-router-dom';
 import useAuthService from '../../redux/auth/useAppAuth.hook';
 import { useForm } from 'react-hook-form';
+import InputText from '../atoms/Inputs/InputText';
 
 export interface Props {
   helloTitle?: string;
@@ -42,23 +43,17 @@ const AuthForm: React.FC<AuthFormProps> = ({
   ...props
 }) => {
   const authService = useAuthService();
-  const [formData, setFormData] = useState<Partial<IRegistrationFormData>>(
-    registration ? initialFormDataRegister : initialFormDataLogin
-  );
 
-  const { formState, register } = useForm<Partial<IRegistrationFormData>>({});
-
-  function onFormDataChange(ev: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = ev.target;
-
-    setFormData(prev => ({ ...prev, [name]: value }));
-  }
+  const { register, getValues, watch } = useForm<
+    Partial<IRegistrationFormData>
+  >({});
+  const formValues = watch();
 
   function onFormSubmit(ev: FormEvent) {
     ev.preventDefault();
 
-    console.log('formDAta', formData);
-    !registration && authService.loginUser(formData);
+    console.log('formDAta', getValues());
+    !registration && authService.loginUser(getValues());
   }
 
   return (
@@ -84,75 +79,77 @@ const AuthForm: React.FC<AuthFormProps> = ({
       <Inputs>
         {registration && (
           <>
-            <AuthFormInput
-              icon="personOutlined"
-              placeholder="І'мя"
-              name="name"
-              value={formData.name}
-              onChange={onFormDataChange}
-            />
-            <AuthFormInput
-              icon="personOutlined"
-              placeholder="Прізвище"
-              name="secondName"
-              value={formData.secondName}
-              onChange={onFormDataChange}
-            />
+            <AuthInputLabel icon="personOutlined">
+              <InputText
+                placeholder="І'мя"
+                value={formValues.name}
+                {...register('name')}
+              />
+            </AuthInputLabel>
 
-            <AuthFormInput
-              icon="email"
-              placeholder="Електронна адреса"
-              name="email"
-              value={formData.email}
-              onChange={onFormDataChange}
-            />
+            <AuthInputLabel icon="personOutlined">
+              <InputText
+                placeholder="Прізвище"
+                value={formValues.secondName}
+                {...register('secondName')}
+              />
+            </AuthInputLabel>
 
-            <AuthFormInput
+            <AuthInputLabel icon="email">
+              <InputText
+                placeholder="Електронна адреса"
+                value={formValues.email}
+                {...register('email')}
+              />
+            </AuthInputLabel>
+            <AuthInputLabel icon="lock_O">
+              <InputText
+                placeholder="Пароль"
+                type="password"
+                value={formValues.password}
+                {...register('password')}
+              />
+            </AuthInputLabel>
+            <AuthInputLabel
               icon="lock_O"
-              placeholder="Пароль"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={onFormDataChange}
-            />
-            <AuthFormInput
-              icon="lock_O"
-              placeholder="Повторіть пароль"
-              name="approvePassword"
-              type="password"
-              success={
-                formData.approvePassword
-                  ? formData.approvePassword === formData.password
-                  : false
-              }
-              error={
-                formData.approvePassword
-                  ? formData.approvePassword !== formData.password
-                  : false
-              }
-              value={formData.approvePassword}
-              onChange={onFormDataChange}
-            />
+              // success={
+              //   formValues.approvePassword
+              //     ? formValues.approvePassword === formValues.password
+              //     : false
+              // }
+              // error={
+              //   formValues.approvePassword
+              //     ? formValues.approvePassword !== formValues.password
+              //     : false
+              // }
+            >
+              <InputText
+                placeholder="Повторіть пароль"
+                type="password"
+                value={formValues.approvePassword}
+                {...register('approvePassword')}
+              />
+            </AuthInputLabel>
           </>
         )}
 
         {!registration && (
           <>
-            <AuthFormInput
-              icon="email"
-              placeholder="Електронна адреса"
-              name="email"
-              value={formData.email}
-              onChange={onFormDataChange}
-            />
-
-            <AuthFormInput
-              icon="lock_O"
-              placeholder="Пароль"
-              name="password"
-              value={formData.password}
-              onChange={onFormDataChange}
-            />
+            <AuthInputLabel icon="email">
+              <InputText
+                placeholder="Електронна адреса"
+                value={formValues.email}
+                {...register('email')}
+              />
+            </AuthInputLabel>
+            <AuthInputLabel icon="lock_O">
+              <InputText
+                placeholder="Пароль"
+                type="password"
+                value={formValues.password}
+                {...register('password')}
+              />
+            </AuthInputLabel>
           </>
         )}
       </Inputs>

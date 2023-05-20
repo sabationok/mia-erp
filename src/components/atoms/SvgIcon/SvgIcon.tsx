@@ -6,7 +6,11 @@ export interface SvgIconProps extends React.SVGAttributes<SVGElement> {
   size?: string;
 }
 
-const SvgIcon: React.FC<SvgIconProps> = ({ iconId = 'info', size, ...props }) => {
+const SvgIcon: React.FC<SvgIconProps> = ({
+  iconId = 'info',
+  size,
+  ...props
+}) => {
   return (
     <Svg {...{ size, ...props }}>
       <use href={`${sprite}#icon-${iconId}`}></use>
@@ -17,7 +21,7 @@ const SvgIcon: React.FC<SvgIconProps> = ({ iconId = 'info', size, ...props }) =>
 const Svg = styled.svg<{ size?: string }>`
   width: ${({ size }) => size || '24px'};
   height: ${({ size }) => size || '24px'};
-  fill: inherit;
+  fill: currentColor;
   pointer-events: none;
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
 `;

@@ -14,7 +14,7 @@ interface Props {
   endIconId?: string;
   endIconSize?: string;
   endIconStyles?: {};
-  textTransform?: 'uppercase' | 'lowercase' | 'capitalize' | 'none';
+  texttransform?: 'uppercase' | 'lowercase' | 'capitalize' | 'none';
   fontWeight?: 400 | 500 | 600 | 700 | 900;
 }
 
@@ -102,7 +102,7 @@ const StButton = styled(Button)<ButtonIconProps>`
   fill: currentColor;
   font-weight: ${({ fontWeight = 600 }) => fontWeight};
 
-  text-transform: ${({ textTransform = 'none' }) => textTransform};
+  text-transform: ${({ texttransform = 'none' }) => texttransform};
 `;
 // const StyledButtonIcon = styled(Button)<any>`
 //   // display: flex;

@@ -8,52 +8,76 @@ import {
   registerUserThunk,
 } from './auth.thunks';
 import { toast } from 'react-toastify';
+import { SubmitHandler } from 'react-hook-form';
 
-const registration = (dispatch: AppDispatch, authState: IAuthState) => {
-  function registerUser({
-    name,
-    secondName,
-    email,
-    password,
-  }: IRegistrationData) {
-    const payload = {
-      submitData: { name, secondName, email, password },
-      onSuccess: () => {},
-      onError: () => {},
-    };
-    dispatch(registerUserThunk(payload));
-    return;
-  }
+export interface IRecoveryPasswordReqData {
+  email?: string;
+  password?: string;
+  approvePassword?: string;
+}
 
-  return registerUser as typeof registerUser;
-};
+interface CreateAuthServiceReturnType {
+  sendRecoveryEmail: SubmitHandler<Pick<IRecoveryPasswordReqData, 'email'>>;
+  loginUser: SubmitHandler<Pick<ILoginUserData, 'email' | 'password'>>;
+  registerUser: SubmitHandler<IRegistrationData>;
+}
 
-const loginUser = (dispatch: AppDispatch, authState: IAuthState) => {
-  function login({ email, password }: Partial<ILoginUserData>) {
-    const payload = {
-      submitData: { email, password },
-      onSuccess: () => {
-        console.log(email, password);
-        toast.success(`Wellcome: ${email}`);
-      },
-      onError: () => {},
-    };
-    dispatch(logInUserThunk(payload));
-    return;
-  }
+function createAuthService(
+  dispatch: AppDispatch,
+  authState: IAuthState
+): CreateAuthServiceReturnType {
+  return {
+    sendRecoveryEmail: ({ email }: Pick<IRecoveryPasswordReqData, 'email'>) => {
+      console.log('Recovery email', email);
+    },
+    loginUser: ({ email, password }: Partial<ILoginUserData>) => {
+      const payload = {
+        submitData: { email, password },
+        onSuccess: () => {
+          console.log(email, password);
+          toast.success(`Wellcome: ${email}`);
+        },
+        onError: () => {},
+      };
+      dispatch(logInUserThunk(payload));
+      return;
+    },
+    registerUser: ({
+      name,
+      secondName,
+      email,
+      password,
+    }: IRegistrationData) => {
+      const payload = {
+        submitData: { name, secondName, email, password },
+        onSuccess: () => {},
+        onError: () => {},
+      };
+      dispatch(registerUserThunk(payload));
+      return;
+    },
+  };
+}
 
-  return login as typeof login;
-};
-const useAuthService = () => {
+interface AuthService extends CreateAuthServiceReturnType {
+  dispatch: AppDispatch;
+  state: IAuthState;
+}
+
+const useAuthService = (): AuthService & IAuthState => {
   const dispatch = useAppDispatch();
   const state = useAuthSelector();
+  const service: CreateAuthServiceReturnType = createAuthService(
+    dispatch,
+    state
+  );
 
   return {
     dispatch,
+    state,
     ...state,
-    registerUser: registration(dispatch, state),
-    loginUser: loginUser(dispatch, state),
+    ...service,
   };
 };
-export type AuthService = ReturnType<typeof useAuthService>;
-export default useAuthService;
+
+export default useAuthService as typeof useAuthService;

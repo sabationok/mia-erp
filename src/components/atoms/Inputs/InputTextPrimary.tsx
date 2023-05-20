@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import styled from 'styled-components';
 
 export interface InputPrimaryProps
@@ -11,27 +11,33 @@ export interface InputPrimaryProps
   helperText?: string;
 }
 
-const InputTextPrimary: React.FC<InputPrimaryProps> = ({
-  label,
-  className,
-  disabled,
-  direction = 'row',
-  labelUppercase,
-  helperText,
-  error,
-  success,
-  ...props
-}) => {
+const InputTextPrimary: React.ForwardRefRenderFunction<
+  any,
+  InputPrimaryProps
+> = (
+  {
+    label,
+    className,
+    disabled,
+    direction = 'row',
+    labelUppercase,
+    helperText,
+    error,
+    success,
+    ...props
+  },
+  ref: React.ForwardedRef<any>
+) => {
   return (
     <Label className={className} disabled={disabled}>
-      <Wrapper isLabel={label ? true : false} direction={direction}>
+      <Wrapper isLabel={!!label} direction={direction}>
         {label && (
           <LabelText uppercase={labelUppercase} className="label">
             {label}
           </LabelText>
         )}
 
-        <InputText className="input" disabled={disabled} {...props} />
+        <InputText ref={ref} className="input" disabled={disabled} {...props} />
       </Wrapper>
 
       {helperText && (
@@ -72,13 +78,13 @@ const Wrapper = styled.div<{ isLabel: boolean; direction?: 'column' | 'row' }>`
 
   width: 100%;
 `;
-const InputText = styled.input<{ error?: boolean }>`
+const InputText = styled.input<{ error?: boolean; success?: boolean }>`
   padding: 5px 8px;
 
   width: 100%;
   height: 26px;
 
-  color: ${({ error, theme }) => (error ? 'tomato' : 'inherit')};
+  color: ${({ error, success, theme }) => (error ? 'tomato' : 'inherit')};
 
   background-color: transparent;
   border-radius: 2px;
@@ -101,4 +107,4 @@ const HelperText = styled.div<{ error?: boolean; success?: boolean }>`
   cursor: default;
 `;
 
-export default InputTextPrimary;
+export default forwardRef(InputTextPrimary);

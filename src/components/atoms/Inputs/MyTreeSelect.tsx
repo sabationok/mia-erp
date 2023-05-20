@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TreeSelect } from 'antd';
 
 const { SHOW_PARENT } = TreeSelect;
-const treeData = [
+const treeDataMock = [
   {
     value: 'parent 1',
     title: 'parent 1',
@@ -34,16 +34,42 @@ const treeData = [
     ],
   },
 ];
-const MyTreeSelect: React.FC = () => {
+
+interface MyTreeDataSelectItem {
+  value: string;
+  title: string | Element | JSX.Element;
+  children?: MyTreeDataSelectItem[];
+}
+
+interface MyTreeSelect {
+  onSelect?: (
+    newValue: string,
+    node?: React.ReactNode,
+    changeEventExtra?: any
+  ) => void;
+  treeData: MyTreeDataSelectItem[];
+}
+
+const MyTreeSelect: React.FC<MyTreeSelect> = ({ onSelect, treeData }) => {
   const [value, setValue] = useState<string>();
 
-  const onChange = (newValue: string) => {
-    console.log(newValue);
+  const onChange = (
+    newValue: string,
+    node: React.ReactNode,
+    changeEventExtra: any
+  ) => {
     setValue(newValue);
+    onSelect && onSelect(newValue, node, changeEventExtra);
+
+    console.log('node', node);
+    console.log('changeEventExtra', changeEventExtra);
   };
 
   const tProps = {
-    treeData,
+    treeData:
+      treeData.length === 0
+        ? (treeDataMock as MyTreeDataSelectItem[])
+        : treeData,
     value,
     onChange: onChange,
     treeCheckable: true,
@@ -57,7 +83,7 @@ const MyTreeSelect: React.FC = () => {
   return (
     <TreeSelect
       showSearch
-      dropdownStyle={{ maxHeight: 100, overflow: 'auto', zIndex: 2000 }}
+      dropdownStyle={{ maxHeight: 300, overflow: 'auto', zIndex: 2000 }}
       allowClear
       multiple
       treeDefaultExpandAll

@@ -1,9 +1,17 @@
-import React, { useState } from 'react';
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import React, { useEffect } from 'react';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 import styled from 'styled-components';
 import LogoSvg from 'components/Layout/Header/LogoSvg/LogoSvg';
-import AuthFormInput from './AuthFormInput';
+import AuthInputLabel from '../atoms/Inputs/AuthInputLabel';
 import LinkIcon from 'components/atoms/LinkIcon/LinkIcon';
+
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import useAuthService, {
+  IRecoveryPasswordReqData,
+} from '../../redux/auth/useAppAuth.hook';
+import InputText from '../atoms/Inputs/InputText';
 
 export interface RecoveryPasswordFormProps {
   helloTitle?: string;
@@ -11,29 +19,52 @@ export interface RecoveryPasswordFormProps {
   recovery?: boolean;
 }
 
-export interface IRecoveryPasswordFormData {
-  email?: string;
-  password?: string;
-  approvePassword?: string;
-}
+const validationEmail = yup.object().shape({
+  email: yup.string().email().required(),
+});
+const validationNewPasswords = yup.object().shape({
+  password: yup.string().required(),
+  approvePassword: yup.string().required(),
+});
+const recoveryPasswordInitialFormData: Pick<
+  IRecoveryPasswordReqData,
+  'password' | 'approvePassword'
+> = {
+  password: '',
+  approvePassword: '',
+};
+const sendRecoveryPasswordEmailFromData: Pick<
+  IRecoveryPasswordReqData,
+  'email'
+> = {
+  email: '',
+};
 
-const initialFormDataRecoveryPassword: IRecoveryPasswordFormData = { email: '', password: '', approvePassword: '' };
+const RecoveryPasswordForm: React.FC<
+  RecoveryPasswordFormProps & React.HTMLAttributes<HTMLFormElement>
+> = ({ title, recovery, ...props }) => {
+  const authService = useAuthService();
 
-const RecoveryPasswordForm: React.FC<RecoveryPasswordFormProps & React.HTMLAttributes<HTMLFormElement>> = ({
-                                                                                                             title,
-                                                                                                             recovery,
-                                                                                                             ...props
-                                                                                                           }) => {
-  const [formData, setFormData] = useState<Partial<IRecoveryPasswordFormData>>(initialFormDataRecoveryPassword);
+  const { register, control, watch, handleSubmit, formState } = useForm<
+    Partial<IRecoveryPasswordReqData>
+  >({
+    defaultValues: recovery
+      ? recoveryPasswordInitialFormData
+      : sendRecoveryPasswordEmailFromData,
+    resolver: yupResolver(recovery ? validationNewPasswords : validationEmail),
+    reValidateMode: 'onSubmit',
+  });
+  const formValues = watch();
 
-  function onFormDataChange(ev: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = ev.target;
-
-    setFormData(prev => ({ ...prev, [name]: value }));
-  }
-
+  useEffect(() => {
+    console.log(formValues);
+  }, [formValues, register]);
   return (
-    <Form {...props}>
+    <StForm
+      onSubmit={handleSubmit(authService.sendRecoveryEmail, err => {
+        console.log('invalid data', err);
+      })}
+    >
       <StLogo />
 
       <Title>{title}</Title>
@@ -41,52 +72,62 @@ const RecoveryPasswordForm: React.FC<RecoveryPasswordFormProps & React.HTMLAttri
       <Inputs>
         {recovery ? (
           <>
-            <AuthFormInput
-              icon='lock_O'
-              placeholder='Новий пароль'
-              name='password'
-              type='password'
-              value={formData.password}
-              onChange={onFormDataChange}
-            />
-            <AuthFormInput
-              icon='lock_O'
-              placeholder='Повторіть пароль'
-              name='approvePassword'
-              type='password'
-              success={formData.approvePassword ? formData.approvePassword === formData.password : false}
-              error={formData.approvePassword ? formData.approvePassword !== formData.password : false}
-              value={formData.approvePassword}
-              onChange={onFormDataChange}
-            />
+            <AuthInputLabel icon="lock_O" error={formState?.errors.password}>
+              <InputText
+                placeholder="Новий пароль"
+                type="password"
+                {...register('password')}
+              />
+            </AuthInputLabel>
+            <AuthInputLabel
+              icon="lock_O"
+              error={formState?.errors.approvePassword}
+            >
+              <InputText
+                placeholder="Повторіть пароль"
+                type="password"
+                {...register('approvePassword')}
+              />
+            </AuthInputLabel>
           </>
         ) : (
-          <AuthFormInput
-            icon='email'
-            placeholder='Електронна адреса'
-            name='email'
-            value={formData.email}
-            onChange={onFormDataChange}
-          />
+          <>
+            <AuthInputLabel
+              icon="email"
+              error={formState?.errors?.email || undefined}
+            >
+              <InputText
+                placeholder="Електронна пошта"
+                {...register('email')}
+              />
+            </AuthInputLabel>
+          </>
         )}
       </Inputs>
 
       <Buttons>
-        <StButtonIcon textTransform='uppercase' variant='filledSmall'>
+        <StButtonIcon
+          texttransform={'uppercase'}
+          htmlType={'submit'}
+          variant={'filledSmall'}
+          type={'primary'}
+        >
           {recovery ? 'Прийняти' : 'Відновити'}
         </StButtonIcon>
 
-        {/* <StLink to={'/auth/login'}>{'Увійти'}</StLink> */}
-
-        <StLinkIcon textTransform='uppercase' variant='outlinedSmall' to={'/auth/login'}>
+        <StLinkIcon
+          texttransform="uppercase"
+          variant="outlinedSmall"
+          to={'/auth/login'}
+        >
           {'Увійти'}
         </StLinkIcon>
       </Buttons>
-    </Form>
+    </StForm>
   );
 };
 
-const Form = styled.form`
+const StForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -154,6 +195,8 @@ const Buttons = styled.div`
 const StButtonIcon = styled(ButtonIcon)`
   min-width: 165px;
   font-weight: 600;
+
+  text-transform: uppercase;
 `;
 const StLinkIcon = styled(LinkIcon)`
   min-width: 165px;

@@ -1,8 +1,12 @@
 import React from 'react';
 import sprite from 'img/sprite';
-import styled, { css, DefaultTheme, FlattenInterpolation, ThemeProps } from 'styled-components';
-import { LinkProps } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import styled, {
+  css,
+  DefaultTheme,
+  FlattenInterpolation,
+  ThemeProps,
+} from 'styled-components';
+import { Link, LinkProps } from 'react-router-dom';
 
 type TextTransform = 'uppercase' | 'lowercase' | 'capitalize' | 'none';
 
@@ -16,9 +20,10 @@ interface Props {
   endIconId?: string;
   endIconSize?: string;
   endIconStyles?: {};
-  textTransform?: TextTransform;
+  texttransform?: TextTransform;
   fontWeight?: 400 | 500 | 600 | 700 | 900;
 }
+
 export type LinkIconProps = Props & LinkProps;
 
 const LinkIcon: React.FC<LinkIconProps> = ({
@@ -92,26 +97,23 @@ const StyledLinkIcon = styled(Link)<LinkIconProps>`
   gap: 8px;
 
   text-align: center;
-  font-size: inherit;
+
   font-family: inherit;
   letter-spacing: 0.05em;
   color: inherit;
-  fill: inherit;
+  fill: currentColor;
 
-  text-transform: ${({ textTransform }) => textTransform || 'none'};
+  text-transform: ${({ texttransform = 'none' }) => texttransform};
   font-size: ${({ fontWeight }) => fontWeight || 400};
   padding: 0;
 
-  font-size: 12px;
-
   overflow: hidden;
-  border-style: none;
+
   border-radius: 2px;
   border: 1px solid transparent;
   background-color: transparent;
 
   ${({ variant }) => (variant ? getVariant(variant) : getVariant())}
-
   &:disabled {
     pointer-events: none;
     opacity: 0.7;
@@ -127,11 +129,15 @@ const SvgIcon = styled.svg`
 const def = css`
   background-color: ${({ theme }) => theme.globals.defaultBtnBckgrndColor.def};
   /* transition: all var(--timing-function__main); */
+
   &:hover {
-    background-color: ${({ theme }) => theme.globals.defaultBtnBckgrndColor.hover};
+    background-color: ${({ theme }) =>
+      theme.globals.defaultBtnBckgrndColor.hover};
   }
+
   &:active {
-    background-color: ${({ theme }) => theme.globals.defaultBtnBckgrndColor.pressed};
+    background-color: ${({ theme }) =>
+      theme.globals.defaultBtnBckgrndColor.pressed};
   }
 `;
 const defNoEffects = css`
@@ -181,6 +187,7 @@ const pointerLeft = css`
 
   border-width: 0;
   transition: none;
+
   &::before {
     content: '';
     position: absolute;
@@ -195,6 +202,7 @@ const pointerLeft = css`
     background-color: transparent;
     transition: height ${({ theme }) => theme.globals.timingFunctionLong};
   }
+
   ${def}
   &:hover {
     &::before {
@@ -202,6 +210,7 @@ const pointerLeft = css`
       background-color: ${({ theme }) => theme.accentColor.base};
     }
   }
+
   &:active {
   }
 `;
@@ -216,6 +225,7 @@ const pointerBottom = css`
 
   border-width: 0;
   transition: none;
+
   &::before {
     content: '';
     position: absolute;
@@ -230,6 +240,7 @@ const pointerBottom = css`
     background-color: transparent;
     transition: height ${({ theme }) => theme.globals.timingFunctionLong};
   }
+
   ${def}
   &:hover {
     &::before {
@@ -237,6 +248,7 @@ const pointerBottom = css`
       background-color: ${({ theme }) => theme.accentColor.base};
     }
   }
+
   &:active {
   }
 `;
@@ -261,11 +273,13 @@ const outlined = css`
   fill: ${({ theme }) => theme.accentColor.base};
   border: 1px solid ${({ theme }) => theme.accentColor.base};
   /* background-color: transparent; */
+
   &:hover {
     border: 1px solid ${({ theme }) => theme.accentColor.hover};
     color: ${({ theme }) => theme.accentColor.hover};
     fill: ${({ theme }) => theme.accentColor.hover};
   }
+
   &:active {
     color: ${({ theme }) => theme.accentColor.pressed};
     fill: ${({ theme }) => theme.accentColor.pressed};
@@ -286,11 +300,13 @@ const filled = css`
   color: ${({ theme }) => theme.colorLight};
   fill: ${({ theme }) => theme.colorLight};
   background-color: ${({ theme }) => theme.accentColor.base};
+
   &:hover {
     color: ${({ theme }) => theme.colorLight};
     fill: ${({ theme }) => theme.colorLight};
     background-color: ${({ theme }) => theme.accentColor.hover};
   }
+
   &:active {
     background-color: ${({ theme }) => theme.accentColor.pressed};
   }
@@ -311,9 +327,11 @@ const onlyIcon = css`
   ${def}
   ${icon}
   fill: ${({ theme }) => theme.accentColor.base};
+
   &:hover {
     fill: ${({ theme }) => theme.accentColor.hover};
   }
+
   &:active {
     fill: ${({ theme }) => theme.accentColor.pressed};
   }
@@ -321,10 +339,12 @@ const onlyIcon = css`
 const onlyIconNoEffects = css`
   ${defNoEffects}
   ${icon}
-fill: ${({ theme }) => theme.accentColor.base};
+  fill: ${({ theme }) => theme.accentColor.base};
+
   &:hover {
     fill: ${({ theme }) => theme.accentColor.hover};
   }
+
   &:active {
     fill: ${({ theme }) => theme.accentColor.pressed};
   }
@@ -333,39 +353,45 @@ const underlinedText = css`
   text-decoration: underline;
   cursor: pointer;
   color: ${({ theme }) => theme.accentColor.base};
+
   &:hover {
     color: ${({ theme }) => theme.accentColor.hover};
   }
+
   &:active {
     color: ${({ theme }) => theme.accentColor.pressed};
   }
 `;
 const text = css`
-  ${def}
+  ${def};
   color: ${({ theme }) => theme.accentColor.base};
+
   &:hover {
     color: ${({ theme }) => theme.accentColor.hover};
   }
+
   &:active {
     color: ${({ theme }) => theme.accentColor.pressed};
   }
 `;
 const textSmall = css`
-  ${text}
-  ${small}
+  ${text};
+  ${small};
 `;
 const textLarge = css`
-  ${text}
-  ${large}
+  ${text};
+  ${large};
 `;
 const defOutlined = css`
-  ${def}
+  ${def};
   color: ${({ theme }) => theme.fontColor};
   fill: ${({ theme }) => theme.fillColor};
   border: 1px solid ${({ theme }) => theme.borderColor};
+
   &:hover {
     border: 1px solid ${({ theme }) => theme.trBorderClr};
   }
+
   &:active {
     background-color: var(--ligthOrange);
     box-shadow: var(--btnShadow_active);
@@ -401,7 +427,9 @@ const variants = {
 
 export type LinkIconVariant = keyof typeof variants;
 
-function getVariant(variant?: LinkIconVariant): FlattenInterpolation<ThemeProps<DefaultTheme>> {
+function getVariant(
+  variant?: LinkIconVariant
+): FlattenInterpolation<ThemeProps<DefaultTheme>> {
   return variant ? variants[variant] : variants.def;
 }
 

@@ -45,7 +45,7 @@ const PageNotFound: React.FC<IErrorPageProps> = ({
 
         <Text>{errors[errName]?.error}</Text>
 
-        <MyTreeSelect />
+        <MyTreeSelect treeData={[]} />
 
         <ButtonIcon variant="outlinedSmall">outlinedSmall</ButtonIcon>
         <ButtonIcon variant="outlinedLarge">outlinedLarge</ButtonIcon>

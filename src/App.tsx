@@ -1,7 +1,7 @@
 import AppLoader from 'components/atoms/AppLoader';
 import { Suspense } from 'react';
 import Layout from 'components/Layout/Layout';
-import AppRoutes from 'components/AppRoutes/AppRoutes';
+import AppRoutes from 'components/AppRoutes/AppRoutes_old';
 import SideBarProvider from 'components/SideBarLeft/SideBarProvider';
 import { ToastContainer } from 'react-toastify';
 import styled from 'styled-components';

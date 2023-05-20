@@ -16,7 +16,6 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { IBase } from '../../redux/global.types';
 import * as _ from 'lodash';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
-import MyTreeSelect from '../atoms/Inputs/MyTreeSelect';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
 
@@ -129,10 +128,6 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
             <InputText name="currency" placeholder="Валюта" />
           </InputLabel>
         </GridWrapper>
-
-        <InputLabel label="Тест" direction={'vertical'}>
-          <MyTreeSelect />
-        </InputLabel>
 
         {renderInputsCountIn}
         {renderInputsCountOut}
