@@ -9,99 +9,109 @@ export const useTrActions = (transactionService: TransactionsService) => {
   const modal = useModalProvider();
   const { editById, create, deleteById } = transactionService;
 
-
-  return useMemo(() => ({
-    top: [
-      {
-        name: 'editTr',
-        title: 'Редагування транзакції',
-        iconId: iconId.edit,
-        onClick: () => {
-          modal.handleOpenModal({
-            ModalChildren: TransactionForm,
-            modalChildrenProps: { title: 'Редагування транзакції', filterOptions, onSubmit: editById },
-          });
+  return useMemo(
+    () => ({
+      top: [
+        {
+          name: 'editTr',
+          title: 'Редагування транзакції',
+          iconId: iconId.edit,
+          onClick: () => {
+            modal.handleOpenModal({
+              ModalChildren: TransactionForm,
+              modalChildrenProps: {
+                title: 'Редагування транзакції',
+                filterOptions,
+                onSubmitEdit: editById,
+              },
+            });
+          },
+          disableCheck: () => false,
         },
-        disableCheck: () => false,
-      },
-      {
-        name: 'copyTr',
-        title: 'Копіювання транзакції',
-        iconId: iconId.copy,
-        onClick: () => {
-          modal.handleOpenModal({
-            ModalChildren: TransactionForm,
-            modalChildrenProps: { title: 'Копіювання транзакції', filterOptions, onSubmit: create },
-          });
+        {
+          name: 'copyTr',
+          title: 'Копіювання транзакції',
+          iconId: iconId.copy,
+          onClick: () => {
+            modal.handleOpenModal({
+              ModalChildren: TransactionForm,
+              modalChildrenProps: {
+                title: 'Копіювання транзакції',
+                filterOptions,
+                onSubmit: create,
+              },
+            });
+          },
+          disableCheck: () => false,
         },
-        disableCheck: () => false,
-      },
-      {
-        name: 'deleteTr',
-        title: 'Видалення транзакції',
-        iconId: iconId.delete,
-        iconSize: '90%',
-        onClick: (id: string) => {
-          deleteById(id);
+        {
+          name: 'deleteTr',
+          title: 'Видалення транзакції',
+          iconId: iconId.delete,
+          iconSize: '90%',
+          onClick: (id: string) => {
+            deleteById(id);
+          },
+          disableCheck: () => true,
         },
-        disableCheck: () => true,
-      },
-    ],
-    bottom: [
-      {
-        name: 'createIncomeTr',
-        title: 'Дохід',
-        iconId: iconId.INCOME,
-        iconSize: '90%',
-        onClick: () => {
-          modal.handleOpenModal({
-            ModalChildren: TransactionForm,
-            modalChildrenProps: {
-              title: 'Дохід',
-              filterOptions,
-              defaultState: { type: 'INCOME' },
-              onSubmit: create,
-            },
-          });
+      ],
+      bottom: [
+        {
+          name: 'createIncomeTr',
+          title: 'Дохід',
+          iconId: iconId.INCOME,
+          iconSize: '90%',
+          onClick: () => {
+            modal.handleOpenModal({
+              ModalChildren: TransactionForm,
+              modalChildrenProps: {
+                title: 'Дохід',
+                filterOptions,
+                defaultState: { type: 'INCOME' },
+                onSubmit: create,
+              },
+            });
+          },
+          disableCheck: () => false,
         },
-        disableCheck: () => false,
-      },
-      {
-        name: 'createTransferTr',
-        title: 'Переказ між рахунками',
-        iconId: iconId.TRANSFER,
-        iconSize: '90%',
-        onClick: () => {
-          modal.handleOpenModal({
-            ModalChildren: TransactionForm,
-            modalChildrenProps: {
-              title: 'Переказ між рахунками',
-              filterOptions,
-              defaultState: { type: 'TRANSFER' },
-              onSubmit: create,
-            },
-          });
+        {
+          name: 'createTransferTr',
+          title: 'Переказ між рахунками',
+          iconId: iconId.TRANSFER,
+          iconSize: '90%',
+          onClick: () => {
+            modal.handleOpenModal({
+              ModalChildren: TransactionForm,
+              modalChildrenProps: {
+                title: 'Переказ між рахунками',
+                filterOptions,
+                defaultState: { type: 'TRANSFER' },
+                onSubmit: create,
+              },
+            });
+          },
+          disableCheck: () => false,
         },
-        disableCheck: () => false,
-      },
-      {
-        name: 'createExpenseTr',
-        title: 'Витрата',
-        iconId: iconId.EXPENSE,
-        iconSize: '90%',
-        onClick: () => {
-          modal.handleOpenModal({
-            ModalChildren: TransactionForm,
-            modalChildrenProps: {
-              title: 'Витрата',
-              filterOptions,
-              defaultState: { type: 'EXPENSE' },
-              onSubmit: create,
-            },
-          });
+        {
+          name: 'createExpenseTr',
+          title: 'Витрата',
+          iconId: iconId.EXPENSE,
+          iconSize: '90%',
+          onClick: () => {
+            modal.handleOpenModal({
+              ModalChildren: TransactionForm,
+              modalChildrenProps: {
+                title: 'Витрата',
+                filterOptions,
+                defaultState: { type: 'EXPENSE' },
+                onSubmit: create,
+              },
+            });
+          },
+          disableCheck: () => false,
         },
-        disableCheck: () => false,
-      },
-    ],
-  }), [create, deleteById, editById, modal]);
+      ],
+    }),
+    [create, deleteById, editById, modal]
+  );
 };

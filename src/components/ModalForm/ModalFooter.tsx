@@ -1,29 +1,31 @@
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 import styled from 'styled-components';
 
 export interface IModalFooterProps {
   onSubmitPassed?: boolean;
 }
 
-const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElement>> =
-  ({
-     onSubmitPassed,
-     ...props
-   }) => {
-    return (
-      <Footer {...props} className='modalFooter'>
-        {onSubmitPassed && (
-          <ButtonIcon type='reset' variant='defOutlinedSmall'>
-            Закрити
-          </ButtonIcon>
-        )}
-
-        <ButtonIcon type={onSubmitPassed ? 'submit' : 'reset'} variant='filledSmall'>
-          {onSubmitPassed ? 'Прийняти' : 'Закрити'}
+const ModalFooter: React.FC<
+  IModalFooterProps & React.HTMLAttributes<HTMLDivElement>
+> = ({ onSubmitPassed, ...props }) => {
+  return (
+    <Footer {...props} className="modalFooter">
+      {onSubmitPassed && (
+        <ButtonIcon htmlType="reset" type={'text'} variant="defOutlinedSmall">
+          {'Закрити'}
         </ButtonIcon>
-      </Footer>
-    );
-  };
+      )}
+
+      <ButtonIcon
+        htmlType={onSubmitPassed ? 'submit' : 'reset'}
+        variant="filledSmall"
+        type={'primary'}
+      >
+        {onSubmitPassed ? 'Зберегти' : 'Закрити'}
+      </ButtonIcon>
+    </Footer>
+  );
+};
 
 const Footer = styled.footer`
   display: flex;
@@ -35,6 +37,7 @@ const Footer = styled.footer`
   position: sticky;
   bottom: 0;
   left: 0;
+  z-index: 10;
 
   padding: 8px;
 

@@ -5,6 +5,7 @@ import { useRow } from '../TableRows/TableRow';
 import { CellTitleContent, CellTittleProps } from './CellTitle';
 import SvgIcon from '../../atoms/SvgIcon/SvgIcon';
 import { iconId } from '../../../img/sprite';
+import getValueByPath from '../../../utils/getValueByPath';
 
 // import { formatPhoneNumber } from '../../../utils';
 
@@ -13,19 +14,17 @@ export interface CellContactsDblProps {
   idx?: number;
 }
 
-const CellContactsDbl: React.FC<CellContactsDblProps & React.HTMLAttributes<HTMLDivElement>> = ({
-                                                                                                  titleInfo,
-                                                                                                  idx,
-                                                                                                  ...props
-                                                                                                }) => {
+const CellContactsDbl: React.FC<
+  CellContactsDblProps & React.HTMLAttributes<HTMLDivElement>
+> = ({ titleInfo, idx, ...props }) => {
   const { rowData } = useRow();
   const { top, bottom, width = '100px' } = titleInfo;
 
-  const contentTop = getNestedData({
+  const contentTop = getValueByPath({
     data: rowData,
     ...top,
   });
-  const contentBottom = getNestedData({
+  const contentBottom = getValueByPath({
     data: rowData,
     ...bottom,
   });
@@ -33,9 +32,9 @@ const CellContactsDbl: React.FC<CellContactsDblProps & React.HTMLAttributes<HTML
   return (
     <CellBase style={{ width }} {...props}>
       <Top align={top.align} uppercase={top.uppercase}>
-        <StIcon iconId={iconId.mailOutlined} size='12px' />
+        <StIcon iconId={iconId.mailOutlined} size="12px" />
 
-        <div title={contentTop} className='inner'>
+        <div title={contentTop} className="inner">
           {contentTop}
         </div>
       </Top>
@@ -43,9 +42,9 @@ const CellContactsDbl: React.FC<CellContactsDblProps & React.HTMLAttributes<HTML
       <Bottom align={bottom?.align} uppercase={bottom?.uppercase}>
         {contentBottom ? (
           <>
-            <StIcon iconId={iconId.phoneOutlined} size='12px' />
+            <StIcon iconId={iconId.phoneOutlined} size="12px" />
 
-            <div title={contentBottom} className='inner'>
+            <div title={contentBottom} className="inner">
               {contentBottom}
             </div>
           </>
@@ -63,7 +62,7 @@ const CellBase = styled.div`
   height: 100%;
 
   max-height: 100%;
-  padding: 4px 10px;
+  padding: 4px 10px 4px 4px;
 
   overflow: hidden;
 `;
@@ -75,6 +74,11 @@ const Content = styled.div<Omit<CellTitleContent, 'name'>>`
 
   width: 100%;
   overflow: hidden;
+
+  text-transform: ${({ uppercase = true }) => (uppercase ? 'uppercase' : '')};
+
+  justify-content: ${({ align }) =>
+    align === 'center' ? 'center' : `flex-${align}`};
 
   & .inner {
     width: fit-content;
@@ -91,19 +95,14 @@ const Content = styled.div<Omit<CellTitleContent, 'name'>>`
 const Top = styled(Content)`
   font-size: 12px;
   font-weight: 500;
-  text-transform: ${({ uppercase = true }) => uppercase ? 'uppercase' : ''};
-
-  justify-content: ${({ align }) => (align === 'center' ? 'center' : `flex-${align}`)};
 `;
 
 const Bottom = styled(Content)`
   font-size: 11px;
   font-weight: 400;
-
-  justify-content: ${({ align }) => (align === 'center' ? 'center' : `flex-${align}`)};
 `;
 
 const StIcon = styled(SvgIcon)`
-  fill: ${({ theme }) => theme.trBorderClr}
+  fill: ${({ theme }) => theme.accentColor.base};
 `;
 export default CellContactsDbl;

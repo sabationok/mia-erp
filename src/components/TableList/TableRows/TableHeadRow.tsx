@@ -23,10 +23,6 @@ const TableHeadRow: React.FC<TableHeadRowProps> = () => {
 };
 
 export const ThRow = styled.div`
-  display: flex;
-  align-items: center;
-
-  min-width: 100%;
   display: grid;
   grid-template-columns: min-content max-content;
   grid-template-rows: 100%;
@@ -34,14 +30,13 @@ export const ThRow = styled.div`
   position: relative;
 
   width: fit-content;
+  min-width: 100%;
   height: 100%;
 
   cursor: default;
 
   background-color: inherit;
   font-size: 12px;
-
-  height: 100%;
 `;
 export const ThRowStickyEl = styled.div`
   display: flex;

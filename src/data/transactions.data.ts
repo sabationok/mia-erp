@@ -13,13 +13,14 @@ import { useMemo } from 'react';
 
 export const transactionsColumns: CellTittleProps[] = [
   {
-    top: { name: 'Дата', align: 'center', dataKey: 'transactionDate' },
+    top: { name: 'Дата', align: 'center', path: 'transactionDate' },
     bottom: { name: 'Час', align: 'center' },
     width: '90px',
     action: 'dateSimple',
   },
   {
-    top: { name: 'Тип', align: 'start', dataKey: 'type' },
+    top: { name: 'Тип', align: 'start', path: 'type' },
+    bottom: { name: 'Статус', align: 'start', path: 'status' },
     width: '100px',
     action: 'status',
   },
@@ -222,11 +223,11 @@ export const useTransactionsActions = () => {
               modalChildrenProps: {
                 title: 'Редагування транзакції',
                 filterOptions,
-                onSubmit: editById,
+                onSubmitEdit: editById,
               },
             });
           },
-          disableChek: () => false,
+          disableCheck: () => false,
         },
         {
           name: 'copyTr',
@@ -242,7 +243,7 @@ export const useTransactionsActions = () => {
               },
             });
           },
-          disableChek: () => false,
+          disableCheck: () => false,
         },
         {
           name: 'deleteTr',
@@ -252,7 +253,7 @@ export const useTransactionsActions = () => {
           onClick: (id: string) => {
             deleteById(id);
           },
-          disableChek: () => true,
+          disableCheck: () => true,
         },
       ],
       bottom: [
@@ -272,7 +273,7 @@ export const useTransactionsActions = () => {
               },
             });
           },
-          disableChek: () => false,
+          disableCheck: () => false,
         },
         {
           name: 'createTransferTr',
@@ -290,7 +291,7 @@ export const useTransactionsActions = () => {
               },
             });
           },
-          disableChek: () => false,
+          disableCheck: () => false,
         },
         {
           name: 'createExpenseTr',
@@ -308,7 +309,7 @@ export const useTransactionsActions = () => {
               },
             });
           },
-          disableChek: () => false,
+          disableCheck: () => false,
         },
       ],
     }),
@@ -323,14 +324,14 @@ export const trTableActions: TableActionsProps = {
       title: 'Редагування транзакції',
       iconId: iconId.edit,
       onClick: () => {},
-      disableChek: () => false,
+      disableCheck: () => false,
     },
     {
       name: 'copyTr',
       title: 'Копіювання транзакції',
       iconId: iconId.copy,
       onClick: () => {},
-      disableChek: () => false,
+      disableCheck: () => false,
     },
     {
       name: 'deleteTr',
@@ -338,7 +339,7 @@ export const trTableActions: TableActionsProps = {
       iconId: iconId.delete,
       iconSize: '90%',
       onClick: () => {},
-      disableChek: () => false,
+      disableCheck: () => false,
     },
   ],
   bottom: [
@@ -348,7 +349,7 @@ export const trTableActions: TableActionsProps = {
       iconId: iconId.INCOME,
       iconSize: '90%',
       onClick: () => {},
-      disableChek: () => false,
+      disableCheck: () => false,
     },
     {
       name: 'deleteTr',
@@ -356,7 +357,7 @@ export const trTableActions: TableActionsProps = {
       iconId: iconId.TRANSFER,
       iconSize: '90%',
       onClick: () => {},
-      disableChek: () => false,
+      disableCheck: () => false,
     },
     {
       name: 'deleteTr',
@@ -364,7 +365,7 @@ export const trTableActions: TableActionsProps = {
       iconId: iconId.EXPENSE,
       iconSize: '90%',
       onClick: () => {},
-      disableChek: () => false,
+      disableCheck: () => false,
     },
   ],
 };

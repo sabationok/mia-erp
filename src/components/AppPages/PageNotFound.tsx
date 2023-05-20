@@ -1,16 +1,21 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
+import MyTreeSelect from '../atoms/Inputs/MyTreeSelect';
+import * as React from 'react';
 
 export type ErrorNameType = 'notFoundPage' | 'notFound';
+
 export interface IErrorPageProps {
   errName?: ErrorNameType;
 }
+
 export interface IErrorPage {
   status?: number;
   title?: string;
   error?: string;
   path?: string;
 }
+
 export type IErrors = {
   [errName in ErrorNameType]?: IErrorPage;
 };
@@ -28,7 +33,9 @@ export const errors: IErrors = {
     path: '#',
   },
 };
-const PageNotFound: React.FC<IErrorPageProps> = ({ errName = 'notFoundPage' }) => {
+const PageNotFound: React.FC<IErrorPageProps> = ({
+  errName = 'notFoundPage',
+}) => {
   return (
     <Page>
       <ErrorNotification>
@@ -37,6 +44,8 @@ const PageNotFound: React.FC<IErrorPageProps> = ({ errName = 'notFoundPage' }) =
         <Title>{errors[errName]?.title}</Title>
 
         <Text>{errors[errName]?.error}</Text>
+
+        <MyTreeSelect />
 
         <ButtonIcon variant="outlinedSmall">outlinedSmall</ButtonIcon>
         <ButtonIcon variant="outlinedLarge">outlinedLarge</ButtonIcon>

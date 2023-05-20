@@ -5,18 +5,29 @@ import { useTable } from '../TableList';
 
 import styled from 'styled-components';
 import { ThRow, ThRowData, ThRowStickyEl } from './TableHeadRow';
-import { ITransaction } from '../../../redux/transactions/transactions.types';
+import {
+  IDocument,
+  ITransaction,
+} from '../../../redux/transactions/transactions.types';
+import { ICount } from '../../../redux/counts/counts.types';
+import { IContractor } from '../../../redux/contractors/contractors.types';
+import { ICategory } from '../../../redux/categories/categories.types';
+
+export type TRowDataType =
+  | ITransaction
+  | ICount
+  | IContractor
+  | ICategory
+  | IDocument;
 
 export interface TableRowProps {
-  rowData: ITransaction;
+  rowData: TRowDataType;
   idx: number;
 }
 
-export interface RowCTXProps {
-  rowData?: any;
-}
+export interface RowCTXProps extends TableRowProps {}
 
-export const RowCTX = createContext<RowCTXProps>({});
+export const RowCTX = createContext<any>({});
 export const useRow = () => useContext(RowCTX) as RowCTXProps;
 
 const TableRow: React.FC<TableRowProps> = props => {
@@ -50,7 +61,7 @@ const TableRow: React.FC<TableRowProps> = props => {
               if (typeof CellComp === 'function') {
                 return <CellComp key={idx} titleInfo={item} idx={idx} />;
               }
-              console.log(item.action);
+              console.log('CellComp error', '====>>>>', item);
 
               return <CellTextDbl key={idx} titleInfo={item} idx={idx} />;
             })}
@@ -63,7 +74,7 @@ const TableRow: React.FC<TableRowProps> = props => {
 const Row = styled(ThRow)`
   display: grid;
   grid-template-columns: min-content 1fr;
-  grid-template-rows: 44px;
+  grid-template-rows: 1fr;
 
   height: 44px;
   min-width: 100%;
@@ -85,11 +96,10 @@ const RowStickyEl = styled(ThRowStickyEl)``;
 
 const StRowData = styled(ThRowData)<{ gridRepeat: number }>`
   display: grid;
-  grid-template-columns: ${({ gridRepeat }) => `repeat(${gridRepeat} min-content)`};
-
+  grid-template-columns: ${({ gridRepeat }) =>
+    `repeat(${gridRepeat} min-content)`};
 
   max-height: 100%;
-
 
   /* overflow: hidden; */
 `;

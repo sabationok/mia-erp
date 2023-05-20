@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 
-const TextareaPrimary = styled.textarea<{ error?: boolean }>`
+import { Input } from 'antd';
+
+const { TextArea } = Input;
+
+const TextareaPrimary = styled(TextArea)<{ error?: boolean }>`
   padding: 5px 8px;
 
   font-family: inherit, sans-serif;

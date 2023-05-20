@@ -1,9 +1,13 @@
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 import React, { useMemo } from 'react';
-import DirListItem, { DirListItemAddsProps, DirListItemProps } from './DirListItem';
+import DirListItem, {
+  DirListItemAddsProps,
+  DirListItemProps,
+} from './DirListItem';
 import { ICategory } from 'redux/categories/categories.types';
 import { ICount } from 'redux/counts/counts.types';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
+import { ConfigProvider } from 'antd';
 
 export interface DirListProps extends Partial<DirListItemAddsProps> {
   list: DirListItemProps[];
@@ -13,53 +17,80 @@ export interface DirListProps extends Partial<DirListItemAddsProps> {
   createParentTitle?: string;
 }
 
-const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLUListElement>> =
-  ({
-     entryList,
-     list,
-     owner,
-     onDelete,
-     onEdit,
-     onCreateChild,
-     onCreateParent,
-     createParentTitle,
-     ...pops
-   }) => {
-    const renderList = useMemo(() => entryList ? entryList : list, [entryList, list]);
+const DirList: React.FC<
+  DirListProps & React.HTMLAttributes<HTMLUListElement>
+> = ({
+  entryList,
+  list,
+  owner,
+  onDelete,
+  onEdit,
+  onCreateChild,
+  onCreateParent,
+  createParentTitle,
+  ...pops
+}) => {
+  const appTheme = useTheme();
+  const listForRender = useMemo(
+    () => (entryList ? entryList : list),
+    [entryList, list]
+  );
 
-    return (
-      <Box>
-        <ListBox>
-          {renderList.length > 0 ? (<List {...pops}>
-            {renderList?.map((item, idx) => (
-              <DirListItem
-                key={item?._id || idx}
-                {...item}
-                owner={owner && owner}
-                onDelete={onDelete}
-                onEdit={onEdit}
-                onCreateChild={onCreateChild}
-                canHaveChild={!item.owner}
-                list={list}
-              />
-            ))}
-          </List>) : <EmptyList>Список порожній</EmptyList>}
+  const renderList = useMemo(
+    () =>
+      listForRender?.map((item, idx) => (
+        <DirListItem
+          key={item?._id || idx}
+          {...item}
+          owner={owner && owner}
+          onDelete={onDelete}
+          onEdit={onEdit}
+          onCreateChild={onCreateChild}
+          canHaveChild={!item.owner}
+          list={list}
+        />
+      )),
+    [list, listForRender, onCreateChild, onDelete, onEdit, owner]
+  );
 
+  return (
+    <Box>
+      <ListBox>
+        {listForRender.length > 0 ? (
+          <List {...pops}>{renderList}</List>
+        ) : (
+          <EmptyList>Список порожній</EmptyList>
+        )}
+      </ListBox>
 
-        </ListBox>
-
-        {onCreateParent && (
-          <CreateParent>
-            <ButtonIcon variant='outlinedSmall' onClick={() => onCreateParent()}>
+      {onCreateParent && (
+        <CreateParent>
+          <ConfigProvider
+            theme={{
+              token: {
+                // colorText: appTheme.accentColor.base,
+                colorBgContainer: 'transparent',
+                colorBorder: appTheme.accentColor.base,
+                // colorPrimary: appTheme.accentColor.base,
+              },
+            }}
+          >
+            <ButtonIcon
+              variant="outlinedSmall"
+              type={'default'}
+              onClick={onCreateParent}
+            >
               {createParentTitle || 'Create parent'}
             </ButtonIcon>
-          </CreateParent>
-        )}
-      </Box>
-    );
-  };
+          </ConfigProvider>
+        </CreateParent>
+      )}
+    </Box>
+  );
+};
 const Box = styled.div`
-  flex-grow: 1;
+  //display: flex;
+  //flex-direction: column;
 
   display: grid;
   grid-template-columns: 1fr;
@@ -67,11 +98,16 @@ const Box = styled.div`
 
   position: relative;
 
+  height: 100%;
   max-height: 100%;
+
+  overflow: hidden;
 `;
 const ListBox = styled.div`
-  /* padding: 0 16px; */
+  flex: 1;
   max-height: 100%;
+
+  padding: 0 12px;
 
   overflow: auto;
 `;

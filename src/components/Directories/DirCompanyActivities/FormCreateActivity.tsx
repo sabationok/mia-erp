@@ -55,11 +55,11 @@ const FormCreateActivity: React.FC<FormCreateCompanyActivityProps> = ({
       {...props}
     >
       <Inputs>
-        <InputLabel label="Назва">
+        <InputLabel label="Назва" error={errors.label}>
           <InputText placeholder="Введіть назву" {...register('label')} />
         </InputLabel>
 
-        <InputLabel label="Коментар">
+        <InputLabel label="Коментар" error={errors.descr}>
           <TextareaPrimary
             placeholder="Введіть коментар"
             {...register('descr')}

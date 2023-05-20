@@ -2,21 +2,24 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import { iconId } from 'data';
 
-import AppFilter, { FilterDataType, FilterProps, FilterSelectorType } from 'components/Filter/AppFilter';
-import { SubmitHandler } from 'react-hook-form';
+import AppFilter, { FilterProps } from 'components/Filter/AppFilter';
 import { useTable } from '../TableList';
-
 
 const TableFilter = () => {
   const modal = useModalProvider();
-  const { filterSelectors, onFilterSubmit, filterDefaultValues, filterTitle = 'Фільтрація даних таблиці' } = useTable();
+  const {
+    filterSelectors,
+    onFilterSubmit,
+    filterDefaultValues,
+    filterTitle = 'Фільтрація даних таблиці',
+  } = useTable();
 
   return (
     <ButtonIcon
       iconId={iconId.filterOff}
-      size='28px'
-      iconSize='26px'
-      variant='onlyIcon'
+      size="28px"
+      iconSize="26px"
+      variant="onlyIcon"
       onClick={() => {
         modal.handleOpenModal<FilterProps>({
           ModalChildren: AppFilter,

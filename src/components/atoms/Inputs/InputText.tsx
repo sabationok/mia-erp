@@ -1,6 +1,7 @@
 import styled from 'styled-components';
+import { Input } from 'antd';
 
-const InputText = styled.input<{ error?: boolean }>`
+const InputText = styled(Input)<{ error?: boolean }>`
   padding: 5px 8px;
 
   width: 100%;

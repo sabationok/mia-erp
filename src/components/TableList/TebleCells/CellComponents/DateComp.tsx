@@ -2,9 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 
 export interface DateCompProps {
-  dateInfo: Date | string;
+  dateInfo: Date | string | number;
   wraped?: boolean;
 }
+
 const DateComp: React.FC<DateCompProps> = ({ dateInfo, wraped }) => {
   let date, year, month, day, hours, minutes, seconds;
 
@@ -21,7 +22,9 @@ const DateComp: React.FC<DateCompProps> = ({ dateInfo, wraped }) => {
   return (
     <Wrapper wraped={wraped}>
       <StDate>{dateInfo ? `${day}.${month}.${year}` : `00.00.0000 `}</StDate>
-      <StTime>{dateInfo ? `(${hours}:${minutes}:${seconds})` : `(00:00:00)`}</StTime>
+      <StTime>
+        {dateInfo ? `(${hours}:${minutes}:${seconds})` : `(00:00:00)`}
+      </StTime>
     </Wrapper>
   );
 };
@@ -37,7 +40,7 @@ const Wrapper = styled.div<{ wraped?: boolean }>`
 `;
 const StDate = styled.span``;
 const StTime = styled.span<{ wrap?: boolean }>`
-  font-size: ${({ wrap }) => (wrap ? '10px' : '12px')}; ;
+  font-size: ${({ wrap }) => (wrap ? '10px' : '12px')};
 `;
 
 export default DateComp;

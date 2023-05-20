@@ -4,28 +4,39 @@ import getNestedData from 'utils/getNestedData';
 import { useRow } from '../TableRows/TableRow';
 import StatusComp from './CellComponents/StatusComp';
 import { CellTitleContent, CellTittleProps } from './CellTitle';
+import getValueByPath from '../../../utils/getValueByPath';
 
 export interface CellTextDblProps {
   titleInfo: CellTittleProps;
   idx?: number;
 }
 
-const CellStatus: React.FC<CellTextDblProps & React.HTMLAttributes<HTMLDivElement>> = ({
-                                                                                         titleInfo,
-                                                                                         idx,
-                                                                                         ...props
-                                                                                       }) => {
-  const { rowData } = useRow();
-  const { top, width = '100px' } = titleInfo;
+const CellStatus: React.FC<
+  CellTextDblProps & React.HTMLAttributes<HTMLDivElement>
+> = ({ titleInfo: { top, bottom, width = '100px' }, idx, ...props }) => {
+  const rowData = useRow().rowData;
 
-  const contentTop = getNestedData({
+  const contentTop = getValueByPath({
     data: rowData,
     ...top,
   });
+  const contentBottom = getValueByPath({
+    data: rowData,
+    ...bottom,
+  });
+
   return (
     <CellBase style={{ width }} {...props}>
       <Content align={top.align}>
-        <StatusComp status={contentTop} />
+        <StatusComp status={contentTop} variant={'text'} />
+      </Content>
+
+      <Content align={bottom?.align}>
+        <StatusComp
+          status={contentBottom}
+          fontSize={'10px'}
+          variant={'filled'}
+        />
       </Content>
     </CellBase>
   );
@@ -34,23 +45,27 @@ const CellStatus: React.FC<CellTextDblProps & React.HTMLAttributes<HTMLDivElemen
 const CellBase = styled.div`
   display: grid;
   grid-template-columns: 1fr;
+  gap: 2px;
 
   height: 100%;
-  padding: 4px 10px 4px 10px;
-
-  /* outline: 1px solid #8b8b8b; */
+  padding: 4px 4px;
+  max-width: 100%;
 `;
 const Content = styled.div<Omit<CellTitleContent, 'name'>>`
   display: flex;
   align-items: center;
-  justify-content: ${({ align }) => (align ? (align === 'center' ? 'center' : `flex-${align}`) : 'center')};
+  justify-content: ${({ align }) =>
+    align ? (align === 'center' ? 'center' : `flex-${align}`) : 'center'};
   gap: 4px;
 
   width: 100%;
   height: 100%;
+  max-width: 100%;
+
+  overflow: hidden;
 
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
 `;
 

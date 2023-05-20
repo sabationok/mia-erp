@@ -4,35 +4,35 @@ import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 
 export const contractorsColumns: CellTittleProps[] = [
   {
-    top: { name: 'Назва', dataKey: 'label' },
-    bottom: { name: 'Тип', dataKey: 'type' },
+    top: { name: 'Назва', path: 'label' },
+    bottom: { name: 'Тип', path: 'type' },
     width: '170px',
     action: 'cellDbl',
   },
   {
-    top: { name: 'Електронна пошта', dataKey: 'email', uppercase: false },
-    bottom: { name: 'Номер телефону', dataKey: 'phone' },
+    top: { name: 'Електронна пошта', path: 'email', uppercase: false },
+    bottom: { name: 'Номер телефону', path: 'phone' },
     width: '170px',
     action: 'contacts',
   },
   {
-    top: { name: 'Локація', dataKey: 'location' },
+    top: { name: 'Локація', path: 'location' },
     width: '170px',
     action: 'cellDbl',
   },
   {
-    top: { name: 'Теги', dataKey: 'tags' },
+    top: { name: 'Теги', path: 'tags' },
     width: '200px',
     action: 'tags',
   },
   {
-    top: { name: 'Коментар', dataKey: 'descr' },
+    top: { name: 'Коментар', path: 'descr' },
     width: '170px',
     action: 'cellDbl',
   },
   {
-    top: { name: 'Створено', align: 'center', dataKey: 'createdAt', sort: false },
-    bottom: { name: 'Оновлено', align: 'center', dataKey: 'updatedAt', sort: false },
+    top: { name: 'Створено', align: 'center', path: 'createdAt', sort: false },
+    bottom: { name: 'Оновлено', align: 'center', path: 'updatedAt', sort: false },
     width: '150px',
     action: 'dateSimple',
   },

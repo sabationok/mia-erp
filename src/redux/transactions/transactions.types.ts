@@ -4,10 +4,8 @@ import { IBase } from '../global.types';
 import { IContractor } from '../contractors/contractors.types';
 import { IActivity } from '../companyActivities/activities.types';
 
-
 export type CurrencyCode = 'UAH';
 export type TransactionType = 'EXPENSE' | 'TRANSFER' | 'INCOME';
-
 
 export interface IProject extends IBase {
   name?: string;
@@ -67,5 +65,5 @@ export interface ITransactionForReq {
 
 export interface ITransactionReqData {
   _id?: string;
-  data: Partial<ITransactionForReq>;
+  data: Partial<ITransactionForReq> & Partial<IBase>;
 }

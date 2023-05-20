@@ -1,33 +1,44 @@
-import React, { forwardRef } from 'react';
-import styled from 'styled-components';
+import React, { CSSProperties, forwardRef } from 'react';
+import styled, { css } from 'styled-components';
+import { bool } from 'yup';
+import { FieldError } from 'react-hook-form';
 
 export interface InputLabelProps
   extends React.InputHTMLAttributes<HTMLLabelElement> {
   label?: string;
-  direction?: 'column' | 'row';
-  labelUppercase?: boolean;
-  error?: boolean;
-  success?: boolean;
+  direction?: 'horizontal' | 'vertical';
+  uppercase?: boolean;
+  error?: FieldError;
+  success?: string;
+  loading?: boolean;
   helperText?: string;
+  align?: CSSProperties['alignItems'];
 }
 
 const InputLabel: React.FC<InputLabelProps> = ({
   label,
   className,
   disabled,
-  direction = 'row',
-  labelUppercase,
+  direction,
+  uppercase,
   helperText,
   error,
   success,
   children,
+  loading,
+  align,
   ...props
 }) => {
   return (
     <Label className={className} disabled={disabled} {...props}>
       <Wrapper isLabel={!!label} direction={direction}>
         {label && (
-          <LabelText uppercase={labelUppercase} className="label">
+          <LabelText
+            uppercase={uppercase}
+            align={align}
+            direction={direction}
+            className="label"
+          >
             {label}
           </LabelText>
         )}
@@ -36,8 +47,8 @@ const InputLabel: React.FC<InputLabelProps> = ({
       </Wrapper>
 
       {helperText && (
-        <HelperText error={error} success={success}>
-          {helperText}
+        <HelperText error={!!error} success={!!success} loading={loading}>
+          {error?.message || success || (loading && 'Loading...') || helperText}
         </HelperText>
       )}
     </Label>
@@ -61,36 +72,45 @@ const Label = styled.label<{
   opacity: ${({ disabled }) => (disabled ? 0.5 : '')};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'all')};
 `;
-const LabelText = styled.div<{ uppercase?: boolean }>`
-  text-transform: ${({ uppercase }) => (uppercase ? 'uppercase' : '')};
+const LabelText = styled.div<{
+  uppercase?: boolean;
+  align?: CSSProperties['alignItems'];
+  direction?: 'horizontal' | 'vertical';
+}>`
+  display: flex;
+  align-items: ${({ align = 'center' }) => align};
+
+  padding: 5px;
+
+  font-weight: 500;
+  text-transform: ${({ uppercase }) => (uppercase ? 'uppercase' : 'none')};
+
+  width: 100%;
+  max-width: ${({ direction = 'horizontal' }) =>
+    direction === 'horizontal' ? '100px' : '100%'};
 `;
-const Wrapper = styled.div<{ isLabel: boolean; direction?: 'column' | 'row' }>`
-  display: grid;
-  grid-template-columns: ${({ isLabel, direction }) =>
-    direction === 'row' ? `${isLabel ? '100px' : ''}, 1fr` : '1fr'};
-  align-items: center;
-  gap: 4px;
+
+const Wrapper = styled.div<{
+  isLabel: boolean;
+  direction?: 'horizontal' | 'vertical';
+}>`
+  display: flex;
+
+  ${({ direction }) =>
+    direction === 'vertical' &&
+    css`
+      flex-direction: column;
+      align-items: flex-start;
+    `};
 
   width: 100%;
 `;
-const InputText = styled.input<{ error?: boolean }>`
-  padding: 5px 8px;
 
-  width: 100%;
-  height: 26px;
-
-  color: ${({ error, theme }) => (error ? 'tomato' : 'inherit')};
-
-  background-color: transparent;
-  border-radius: 2px;
-  border: 1px solid ${({ theme }) => theme.globals.inputBorder};
-
-  &::placeholder {
-    font-family: inherit, sans-serif;
-  }
-`;
-
-const HelperText = styled.div<{ error?: boolean; success?: boolean }>`
+const HelperText = styled.div<{
+  error?: boolean;
+  success?: boolean;
+  loading?: boolean;
+}>`
   min-height: 12px;
 
   font-size: 8px;

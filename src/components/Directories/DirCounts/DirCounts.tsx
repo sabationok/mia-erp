@@ -26,10 +26,12 @@ const DirCounts: React.FC<DirCountsProps> = props => {
     modal.handleOpenModal<FormCreateCountProps>({
       ModalChildren: FormCreateCount,
       modalChildrenProps: {
-        title: `Редагування ${count?.owner ? 'суб-рахунку' : 'рахунку'}: "${count?.label || count?.name}"`,
+        title: `Редагування ${count?.owner ? 'суб-рахунку' : 'рахунку'}: "${
+          count?.label || count?.name
+        }"`,
         _id,
         type: dirType,
-        onSubmit: (data) => {
+        onSubmit: data => {
           console.log(data);
         },
         count: counts.find(el => el._id === _id),
@@ -43,7 +45,7 @@ const DirCounts: React.FC<DirCountsProps> = props => {
       modalChildrenProps: {
         title: 'Створення субрахунку',
         type: dirType,
-        onSubmit: (data) => {
+        onSubmit: data => {
           console.log('owner', owner);
         },
         create: true,
@@ -66,22 +68,23 @@ const DirCounts: React.FC<DirCountsProps> = props => {
 
   function handleFilterData({ value }: FilterOpt<CountType>) {
     value && setDirType(value);
-    value && setFilteredData(founder({ searchParam: 'type', searchQuery: value, data: counts }));
+    value &&
+      setFilteredData(
+        founder({ searchParam: 'type', searchQuery: value, data: counts })
+      );
   }
 
   return (
     <StModalForm {...props} onOptSelect={handleFilterData}>
-      <Box className='box'>
-        <DirList
-          onDelete={deleteById}
-          onEdit={onEdit}
-          onCreateChild={onCreateChild}
-          list={filteredData}
-          entryList={filteredData.filter(el => !el?.owner)}
-          createParentTitle='Свторити рахунок'
-          onCreateParent={onCreateParent}
-        />
-      </Box>
+      <DirList
+        onDelete={deleteById}
+        onEdit={onEdit}
+        onCreateChild={onCreateChild}
+        list={filteredData}
+        entryList={filteredData.filter(el => !el?.owner)}
+        createParentTitle="Створити рахунок"
+        onCreateParent={onCreateParent}
+      />
     </StModalForm>
   );
 };
@@ -91,14 +94,6 @@ const StModalForm = styled(ModalForm)`
   @media screen and (max-height: 480px) {
     height: 95vh;
   }
-`;
-const Box = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  height: 100%;
-  max-height: 100%;
-  padding: 0 12px;
 `;
 
 export default DirCounts;

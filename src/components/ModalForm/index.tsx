@@ -6,8 +6,11 @@ import styled from 'styled-components';
 import { FormEvent } from 'react';
 import { useModal } from 'components/ModalProvider/ModalComponent';
 
-
-export interface ModalFormProps extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit' | 'onReset'> {
+export interface ModalFormProps
+  extends Omit<
+    React.FormHTMLAttributes<HTMLFormElement>,
+    'onSubmit' | 'onReset'
+  > {
   filterOptions?: FilterOpt[];
   footer?: boolean;
   preventFilter?: boolean;
@@ -19,6 +22,7 @@ export interface ModalFormProps extends Omit<React.FormHTMLAttributes<HTMLFormEl
   onReset?: <T = any>(args?: T) => void | any;
   afterClose?: <T = any>(args?: T) => void | any;
   onOptSelect?: (opt: FilterOpt, value: FilterOpt['value']) => void | any;
+  closeAfterSubmit?: boolean;
 }
 
 export interface FilterOpt<V = any> extends Record<string, any> {
@@ -29,72 +33,77 @@ export interface FilterOpt<V = any> extends Record<string, any> {
   getLabel?: () => any;
 }
 
-const ModalForm: React.FC<ModalFormProps> =
-  ({
-     title = 'default modal title',
-     footer = true,
-     children,
-     beforeSubmit,
-     filterOptions,
-     defaultFilterValue,
-     preventFilter,
-     onSubmit,
-     afterSubmit,
-     beforeClose,
-     onReset,
-     afterClose,
-     onOptSelect,
-     ...props
-   }) => {
-    const modal = useModal();
+const ModalForm: React.FC<ModalFormProps> = ({
+  title = 'default modal title',
+  footer = true,
+  children,
+  beforeSubmit,
+  filterOptions,
+  defaultFilterValue,
+  preventFilter,
+  onSubmit,
+  afterSubmit,
+  beforeClose,
+  onReset,
+  afterClose,
+  onOptSelect,
+  closeAfterSubmit,
+  ...props
+}) => {
+  const modal = useModal();
 
-    function handleSubmit(ev: FormEvent<HTMLFormElement>) {
-      ev.preventDefault();
+  function handleSubmit(ev: FormEvent<HTMLFormElement>) {
+    ev.preventDefault();
 
-      modal.onClose();
-      // handleCloseModal();
+    closeAfterSubmit && modal.onClose();
 
-      if (!onSubmit) return console.log('No passed "onSubmit" handler');
+    if (!onSubmit) return console.log('No passed "onSubmit" handler');
 
-      if (typeof beforeSubmit === 'function') beforeSubmit();
-      if (typeof onSubmit === 'function') onSubmit(ev);
-      if (typeof afterSubmit === 'function') afterSubmit();
-    }
+    if (typeof beforeSubmit === 'function') beforeSubmit();
+    if (typeof onSubmit === 'function') onSubmit(ev);
+    if (typeof afterSubmit === 'function') afterSubmit();
+  }
 
-    function handleReset() {
-      modal.onClose();
-      // handleCloseModal();
-      if (!onReset) return console.log('No passed "onReset" handler');
-      if (typeof beforeClose === 'function') beforeClose();
-      if (typeof onReset === 'function') onReset();
-      if (typeof afterClose === 'function') afterClose();
-    }
+  function handleReset() {
+    modal.onClose();
+    // handleCloseModal();
+    if (!onReset) return console.log('No passed "onReset" handler');
+    if (typeof beforeClose === 'function') beforeClose();
+    if (typeof onReset === 'function') onReset();
+    if (typeof afterClose === 'function') afterClose();
+  }
 
-    function handleSelect(option: FilterOpt) {
-      if (!onOptSelect) console.log('No passed "onSelect" handler', option);
-      if (typeof onOptSelect === 'function') onOptSelect(option, option.value);
-    }
+  function handleSelect(option: FilterOpt) {
+    if (!onOptSelect) console.log('No passed "onSelect" handler', option);
+    if (typeof onOptSelect === 'function') onOptSelect(option, option.value);
+  }
 
-    return (
-      <ModalFormContainer className='modalForm' onSubmit={handleSubmit} onReset={handleReset} {...props}>
-        <ModalHeader title={title}>
-          {filterOptions &&
-            <ModalFilter
-              onOptSelect={handleSelect}
-              filterOptions={filterOptions}
-              preventFilter={preventFilter}
-              defaultFilterValue={defaultFilterValue}
-            />}
-        </ModalHeader>
+  return (
+    <ModalFormContainer
+      className="modalForm"
+      onSubmit={handleSubmit}
+      onReset={handleReset}
+      {...props}
+    >
+      <ModalHeader title={title}>
+        {filterOptions && handleSelect && (
+          <ModalFilter
+            onOptSelect={handleSelect}
+            filterOptions={filterOptions}
+            preventFilter={preventFilter}
+            defaultFilterValue={defaultFilterValue}
+          />
+        )}
+      </ModalHeader>
 
-        <ModalMain className='main' filterOn={!!filterOptions}>
-          <>{children}</>
-        </ModalMain>
+      <ModalMain className="main" filterOn={!!filterOptions}>
+        <>{children}</>
+      </ModalMain>
 
-        {footer && <ModalFooter onSubmitPassed={!!onSubmit} />}
-      </ModalFormContainer>
-    );
-  };
+      {footer && <ModalFooter onSubmitPassed={!!onSubmit} />}
+    </ModalFormContainer>
+  );
+};
 
 const ModalFormContainer = styled.form`
   display: grid;
@@ -131,11 +140,10 @@ const ModalFormContainer = styled.form`
 const ModalMain = styled.main<{ filterOn: boolean }>`
   // display: grid;
   // grid-template-columns: 1fr;
-    // grid-template-rows: ${({ filterOn }) => (filterOn ? '32px 1fr' : '1fr')};
+  // grid-template-rows: ${({ filterOn }) => (filterOn ? '32px 1fr' : '1fr')};
 
-  overflow: auto;
-  /* position: relative; */
-
+  overflow: hidden;
+  position: relative;
   height: 100%;
   max-width: 100%;
   max-height: 100%;
@@ -146,6 +154,5 @@ const ModalMain = styled.main<{ filterOn: boolean }>`
   border-right: 1px solid ${({ theme }) => theme.modalBorderColor};
   border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;
-
 
 export default ModalForm;

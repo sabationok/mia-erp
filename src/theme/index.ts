@@ -1,4 +1,9 @@
-import { AccentColorNamesType, accentColors, IAccentColor, IAccentColors } from './accentColors';
+import {
+  AccentColorNamesType,
+  accentColors,
+  IAccentColor,
+  IAccentColors,
+} from './accentColors';
 
 export { accentColors };
 export type { AccentColorNamesType, IAccentColors, IAccentColor };
@@ -19,6 +24,16 @@ export const globals = {
     def: 'transparent',
     hover: 'rgba(219, 219, 219, 0.1)',
     pressed: 'rgba(219, 219, 219, 0.05)',
+  },
+  colors: {
+    light: '#fff',
+    dark: '#121212',
+    default: 'rgb(154, 154, 154)',
+    info: '#3498db',
+    success: '#07bc0c',
+    warning: '#f1c40f',
+    error: '#e74c3c',
+    primary: '#cdcdcd',
   },
 };
 export type IThemeGlobals = typeof globals;
@@ -57,7 +72,7 @@ const darkTheme = {
   backdropColor: 'rgba(21, 21, 21, 0.3)',
   borderColor: '#59595a',
 
-  trBorderClr: 'rgba(70, 70, 73, 1)',// 'rgba(122, 122, 122, 1)',
+  trBorderClr: 'rgba(70, 70, 73, 1)', // 'rgba(122, 122, 122, 1)',
   trBorderClrLight: '#2C2C2E',
   trBorderClrDark: '#464649',
 
@@ -101,7 +116,7 @@ const darkTheme = {
     light: '',
   },
 };
-type ITheme = typeof darkTheme
+type ITheme = typeof darkTheme;
 
 const lightTheme: Partial<ITheme> = {
   backgroundColorMain: '#5C5C5D',
@@ -115,7 +130,7 @@ const lightTheme: Partial<ITheme> = {
   fillColorHeader: '#272727',
 
   borderColor: '#E9E9E9',
-  trBorderClr: 'rgba(218, 218, 218, 1)',// '#E9E9E9',
+  trBorderClr: 'rgba(218, 218, 218, 1)', // '#E9E9E9',
   trBorderClrLight: '#E9E9E9',
   tableFooterBackground: '#FAFAFA',
   tableHeaderBackground: '#E4E4E4',
@@ -168,14 +183,17 @@ export const appThemes: IAppThemes = {
 export type ThemeType = keyof IAppThemes;
 
 declare module 'styled-components' {
-  export interface DefaultTheme extends IAppTheme {
-  }
+  export interface DefaultTheme extends IAppTheme {}
 }
 
 export function getTheme(themeName?: ThemeType) {
-  return themeName && appThemes[themeName] ? appThemes[themeName] : appThemes.light;
+  return themeName && appThemes[themeName]
+    ? appThemes[themeName]
+    : appThemes.light;
 }
 
 export function getAccentColor(colorName?: AccentColorNamesType) {
-  return colorName && accentColors[colorName] ? accentColors[colorName] : accentColors.orange;
+  return colorName && accentColors[colorName]
+    ? accentColors[colorName]
+    : accentColors.orange;
 }

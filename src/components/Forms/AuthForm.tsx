@@ -22,7 +22,9 @@ export interface IRegistrationFormData {
   approvePassword: string;
 }
 
-const initialFormDataLogin: Partial<Pick<IRegistrationFormData, 'email' | 'password'>> = { email: '', password: '' };
+const initialFormDataLogin: Partial<
+  Pick<IRegistrationFormData, 'email' | 'password'>
+> = { email: '', password: '' };
 
 const initialFormDataRegister: IRegistrationFormData = {
   name: '',
@@ -31,16 +33,16 @@ const initialFormDataRegister: IRegistrationFormData = {
   password: '',
   approvePassword: '',
 };
-export type AuthFormProps = Props & React.HTMLAttributes<HTMLFormElement>
+export type AuthFormProps = Props & React.HTMLAttributes<HTMLFormElement>;
 const AuthForm: React.FC<AuthFormProps> = ({
-                                             title,
-                                             register,
-                                             recovery,
-                                             ...props
-                                           }) => {
+  title,
+  register,
+  recovery,
+  ...props
+}) => {
   const authService = useAuthService();
   const [formData, setFormData] = useState<Partial<IRegistrationFormData>>(
-    register ? initialFormDataRegister : initialFormDataLogin,
+    register ? initialFormDataRegister : initialFormDataLogin
   );
 
   function onFormDataChange(ev: React.ChangeEvent<HTMLInputElement>) {
@@ -63,11 +65,15 @@ const AuthForm: React.FC<AuthFormProps> = ({
       <Title>{title}</Title>
 
       <Links>
-        <StNavLink textTransform='uppercase' variant='def' to={'/auth/login'}>
+        <StNavLink textTransform="uppercase" variant="def" to={'/auth/login'}>
           {'Вхід'}
         </StNavLink>
 
-        <StNavLink textTransform='uppercase' variant='def' to={'/auth/register'}>
+        <StNavLink
+          textTransform="uppercase"
+          variant="def"
+          to={'/auth/register'}
+        >
           {'Реєстрація'}
         </StNavLink>
       </Links>
@@ -76,43 +82,51 @@ const AuthForm: React.FC<AuthFormProps> = ({
         {register && (
           <>
             <AuthFormInput
-              icon='personOutlined'
+              icon="personOutlined"
               placeholder="І'мя"
-              name='name'
+              name="name"
               value={formData.name}
               onChange={onFormDataChange}
             />
             <AuthFormInput
-              icon='personOutlined'
-              placeholder='Прізвище'
-              name='secondName'
+              icon="personOutlined"
+              placeholder="Прізвище"
+              name="secondName"
               value={formData.secondName}
               onChange={onFormDataChange}
             />
 
             <AuthFormInput
-              icon='email'
-              placeholder='Електронна адреса'
-              name='email'
+              icon="email"
+              placeholder="Електронна адреса"
+              name="email"
               value={formData.email}
               onChange={onFormDataChange}
             />
 
             <AuthFormInput
-              icon='lock_O'
-              placeholder='Пароль'
-              name='password'
-              type='password'
+              icon="lock_O"
+              placeholder="Пароль"
+              name="password"
+              type="password"
               value={formData.password}
               onChange={onFormDataChange}
             />
             <AuthFormInput
-              icon='lock_O'
-              placeholder='Повторіть пароль'
-              name='approvePassword'
-              type='password'
-              success={formData.approvePassword ? formData.approvePassword === formData.password : false}
-              error={formData.approvePassword ? formData.approvePassword !== formData.password : false}
+              icon="lock_O"
+              placeholder="Повторіть пароль"
+              name="approvePassword"
+              type="password"
+              success={
+                formData.approvePassword
+                  ? formData.approvePassword === formData.password
+                  : false
+              }
+              error={
+                formData.approvePassword
+                  ? formData.approvePassword !== formData.password
+                  : false
+              }
               value={formData.approvePassword}
               onChange={onFormDataChange}
             />
@@ -122,17 +136,17 @@ const AuthForm: React.FC<AuthFormProps> = ({
         {!register && (
           <>
             <AuthFormInput
-              icon='email'
-              placeholder='Електронна адреса'
-              name='email'
+              icon="email"
+              placeholder="Електронна адреса"
+              name="email"
               value={formData.email}
               onChange={onFormDataChange}
             />
 
             <AuthFormInput
-              icon='lock_O'
-              placeholder='Пароль'
-              name='password'
+              icon="lock_O"
+              placeholder="Пароль"
+              name="password"
               value={formData.password}
               onChange={onFormDataChange}
             />
@@ -141,11 +155,19 @@ const AuthForm: React.FC<AuthFormProps> = ({
       </Inputs>
 
       <Buttons>
-        <StButtonIcon type='submit' textTransform='uppercase' variant='filledSmall'>
+        <StButtonIcon
+          type="submit"
+          textTransform="uppercase"
+          variant="filledSmall"
+        >
           {register ? 'Зареєструватись' : 'Увійти'}
         </StButtonIcon>
 
-        {!register && <StLink to={'/auth/sendRecoveryPasswordMail'}>{'Забули пароль?'}</StLink>}
+        {!register && (
+          <StLink to={'/auth/sendRecoveryPasswordMail'}>
+            {'Забули пароль?'}
+          </StLink>
+        )}
       </Buttons>
     </Form>
   );

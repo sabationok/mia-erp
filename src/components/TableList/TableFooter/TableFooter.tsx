@@ -8,19 +8,28 @@ import { useState } from 'react';
 
 const TableFooter: React.FC<any> = props => {
   const { tableSortParams, selectedRows, counter, isFilter } = useTable();
-  const [isCounterOn] = useState<boolean | undefined>(!counter && selectedRows && selectedRows?.length > 0);
+  const [isCounterOn] = useState<boolean | undefined>(
+    !counter && selectedRows && selectedRows?.length > 0
+  );
 
   return (
-    <Footer className='tFooter' {...props}>
-      <Top className='footerTop'>
-        {tableSortParams && tableSortParams.length > 0 && <TableSort {...{ tableSortParams }} />}
+    <Footer className="tFooter" {...props}>
+      <Top className="footerTop">
+        {tableSortParams && tableSortParams.length > 0 && (
+          <TableSort {...{ tableSortParams }} />
+        )}
 
         <TablePagination />
 
         {isFilter && <TableFilter />}
       </Top>
 
-      {isCounterOn && <FooterCounter selectedRows={selectedRows} includes={['INCOME', 'EXPENSE']} />}
+      {isCounterOn && (
+        <FooterCounter
+          selectedRows={selectedRows}
+          includes={['INCOME', 'EXPENSE']}
+        />
+      )}
     </Footer>
   );
 };
@@ -39,7 +48,7 @@ const Footer = styled.div`
   padding: 2px 4px;
 
   background-color: ${({ theme }) => theme.tableFooterBackground};
-  border-top: 1px solid ${({ theme }) => theme.backgroundColorSecondary};
+  border-top: 1px solid ${({ theme }) => theme.borderColor};
   @media screen and (min-width: 480px) {
     flex-direction: row;
   }

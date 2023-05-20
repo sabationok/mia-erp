@@ -1,42 +1,46 @@
 import React from 'react';
 import styled from 'styled-components';
-import getNestedData from 'utils/getNestedData';
 import { useRow } from '../TableRows/TableRow';
 import { CellTitleContent, CellTittleProps } from './CellTitle';
+import getValueByPath from '../../../utils/getValueByPath';
+import Cell from './Cells';
 
 export interface CellTextDblAndAvatarProps {
   titleInfo: CellTittleProps;
   idx?: number;
+  imgUrl?: string;
 }
 
-const CellTextDblAndAvatar: React.FC<CellTextDblAndAvatarProps & React.HTMLAttributes<HTMLDivElement>> = ({
-                                                                                                            titleInfo,
-                                                                                                            idx,
-                                                                                                            ...props
-                                                                                                          }) => {
+const CellTextDblAndAvatar: React.FC<
+  CellTextDblAndAvatarProps & React.HTMLAttributes<HTMLDivElement>
+> = ({ titleInfo, idx, imgUrl = 'imgUrl', ...props }) => {
   const { rowData } = useRow();
   const { top, bottom, width = '100px' } = titleInfo;
 
-  const contentTop = getNestedData({
+  const contentTop = getValueByPath({
     data: rowData,
     ...top,
   });
-  const contentBottom = getNestedData({
+  const contentBottom = getValueByPath({
     data: rowData,
     ...bottom,
   });
 
+  if (imgUrl) {
+    return <Cell.DoubleWithAvatar imgUrl={imgUrl} />;
+  }
+
   return (
     <CellBase style={{ width }} {...props}>
       <Top align={top.align}>
-        <div title={contentTop} className='inner'>
+        <div title={contentTop} className="inner">
           {contentTop}
         </div>
       </Top>
 
       <Bottom align={bottom?.align}>
         {contentBottom ? (
-          <div title={contentBottom} className='inner'>
+          <div title={contentBottom} className="inner">
             {contentBottom}
           </div>
         ) : null}
@@ -82,13 +86,15 @@ const Top = styled(Content)`
   font-weight: 500;
   text-transform: uppercase;
 
-  justify-content: ${({ align }) => (align === 'center' ? 'center' : `flex-${align}`)};
+  justify-content: ${({ align }) =>
+    align === 'center' ? 'center' : `flex-${align}`};
 `;
 const Bottom = styled(Content)`
   font-size: 11px;
   font-weight: 400;
 
-  justify-content: ${({ align }) => (align === 'center' ? 'center' : `flex-${align}`)};
+  justify-content: ${({ align }) =>
+    align === 'center' ? 'center' : `flex-${align}`};
 `;
 
 export default CellTextDblAndAvatar;

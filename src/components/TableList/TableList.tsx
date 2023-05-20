@@ -1,16 +1,20 @@
 import React, { createContext, useContext, useRef, useState } from 'react';
 import TableHead from './TableHead';
 import TableBody from './TableBody';
-import AppLoader from 'components/AppLoader/AppLoader';
+import AppLoader from 'components/atoms/AppLoader';
 import QuickActions from './QuickActions/QuickActions';
 import TableOverHead from './TableOverHead/TableOverHead';
 import TableFooter from './TableFooter/TableFooter';
 import styled from 'styled-components';
 import { CellTittleProps } from './TebleCells/CellTitle';
 import { MaxToTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
-import { FilterDataType, FilterSelectorType } from 'components/Filter/AppFilter';
+import {
+  FilterReturnDataType,
+  FilterSelectorType,
+} from 'components/Filter/AppFilter';
+import { IBase } from 'redux/global.types';
 
-export interface SelectItem extends Record<string, any> {
+export interface SelectItemBase extends Record<string, any> {
   _id?: string;
   filter?: boolean;
   search?: boolean;
@@ -20,47 +24,60 @@ export interface SelectItem extends Record<string, any> {
   dataKey?: string;
   sort?: boolean;
   dataPath?: string;
+  descending?: boolean;
+  path?: string;
 }
 
-export interface TableActionsProps {
+export interface SelectItem extends SelectItemBase {}
+
+export interface TableActionProps<TDataType = any> {
+  separator?: boolean;
+  iconId?: string;
+  onClick?: () => void;
+  type?: 'primary' | 'filled';
+  disabled?: string;
+  disabledCheck?: (selectedRows: TDataType[]) => boolean;
+}
+
+export interface TableActionsProps<TDataType = any> {
   top?: any[];
   bottom?: any[];
   footer?: boolean;
+  actions?: TableActionProps<TDataType>[];
 }
 
-export interface TabeleSelectedRow extends Record<string, any> {
+export interface TableSelectedRow extends Record<string, any> {
   _id: string;
   amount?: number;
   type?: string;
+  selected?: boolean;
 }
 
-export interface ITableSortParam {
-  descending: boolean;
-  dataKey: string;
-}
+export interface ITableSortParam
+  extends Pick<SelectItem, 'descending' | 'path' | 'dataPath' | 'dataKey'> {}
 
-export type OnRowClickType = <D = any>({
-                                         ev,
-                                         _id,
-                                         data,
-                                       }: {
+export type OnRowClickHandlerData<RData = any> = {
   ev: MouseEvent | React.MouseEvent<HTMLDivElement>;
-  _id: string;
-  data: D;
-}) => any;
+  _id?: string;
+  rowData?: RData;
+};
+export type OnRowClickHandler<RData = any> = (
+  data: OnRowClickHandlerData<RData>
+) => any;
 
-export interface ITableListProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ITableListProps<TDataType = any>
+  extends React.HTMLAttributes<HTMLDivElement> {
   tableTitles?: CellTittleProps[];
   tableSearchParams?: SelectItem[];
-  tableSortParams?: SelectItem[];
-  tableData?: any[];
+  tableSortParams?: ITableSortParam[];
+  tableData?: TDataType[];
   isLoading?: boolean;
   RowActionsComp?: React.ReactNode;
   quickActions?: {
     ActionsStart?: React.ReactNode;
     ActionsEnd?: React.ReactNode;
   };
-  tableActions?: TableActionsProps;
+  tableActions?: TableActionsProps<TDataType>;
   TableActionsComp?: React.ReactNode;
   isFilter?: boolean;
   isSearch?: boolean;
@@ -71,112 +88,118 @@ export interface ITableListProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
   filterTitle?: string;
   filterSelectors?: FilterSelectorType[];
-  filterDefaultValues?: Partial<Record<keyof FilterDataType, any[] | string[]>>;
-  onFilterSubmit?: (filterData: FilterDataType) => void;
-  onRowClick?: <T = any>(rowData: T) => void;
-  onUnSelectRow?: <T = any>(rowData: T) => void;
-  onSelectRow?: <T = any[]>(rowsData: T) => void;
-}
-
-export interface ITableListContext {
-  onSelectRow?: ({ ev, rowData }: { ev: Event; rowData: any }) => void;
-  onUnselectRow?: ({ ev, rowData }: { ev: Event; rowData: any }) => void;
-  selectedRows?: TabeleSelectedRow[] | any[];
-  onRowClick?: OnRowClickType;
-  rowRef?: React.MutableRefObject<HTMLElement | undefined>;
+  filterDefaultValues?: FilterReturnDataType;
+  onFilterSubmit?: (filterData: FilterReturnDataType) => void;
+  onRowClick?: OnRowClickHandler<TDataType>;
+  onUnSelectRow?: OnRowClickHandler<TDataType>;
+  onSelectRow?: OnRowClickHandler<TDataType>;
+  onTableSortParamChange?: (params: ITableSortParam) => void;
   handleTableSort?: (sortParam: ITableSortParam) => void;
 }
 
+export interface ITableListContext<TDataType = any>
+  extends ITableListProps<TDataType> {
+  selectedRows?: ITableListProps['tableData'];
+  rowRef?: React.MutableRefObject<HTMLElement | undefined>;
+}
+
 export const TableCTX = createContext({});
-export const useTable = () => useContext(TableCTX) as ITableListContext & ITableListProps;
+export const useTable = () => useContext(TableCTX) as ITableListContext;
 
-const TableList: React.FC<ITableListProps> =
-  ({
-     tableData = [],
-     isLoading = false,
-     RowActionsComp,
-     TableActionsComp,
-     tableTitles,
-     tableSearchParams,
-     tableActions,
-     footer = false,
-     onRowClick,
-     onSelectRow,
-     onUnSelectRow,
-     onFilterSubmit,
-     filterTitle,
-     filterDefaultValues,
-     ...props
-   }) => {
-    const [selectedRows, setSelectedRows] = useState<TabeleSelectedRow[] | any[]>([]);
-    const rowRef = useRef<HTMLElement>();
+const TableList: React.FC<ITableListProps> = ({
+  tableData,
+  isLoading = false,
+  RowActionsComp,
+  TableActionsComp,
+  tableTitles,
+  tableSearchParams,
+  tableActions,
+  footer = false,
+  onRowClick,
+  onSelectRow,
+  onUnSelectRow,
+  onFilterSubmit,
+  filterTitle,
+  filterDefaultValues,
+  ...props
+}) => {
+  const [selectedRows, setSelectedRows] = useState<TableSelectedRow[]>([]);
+  const rowRef = useRef<HTMLElement>();
 
-
-    const rowGrid = {
-      display: 'grid',
-      gridTemplateColumns: `repeat(${tableTitles?.length}, min-content)`,
-    };
-
-    function onSelectRowWrapper({ rowData }: { ev?: Event; rowData: any }) {
-      setSelectedRows(prev => {
-        typeof onSelectRow === 'function' && onSelectRow([rowData, ...prev]);
-        return [rowData, ...prev];
-      });
-    }
-
-    function onUnSelectRowWrapper({ rowData }: { ev?: Event; rowData?: { _id: string } }) {
-      setSelectedRows(prev => {
-        typeof onUnSelectRow === 'function' && onUnSelectRow(rowData);
-        return prev.filter(row => row._id !== rowData?._id);
-      });
-    }
-
-    function onRowClickWrapper(rowData: any) {
-      typeof onRowClick === 'function' && onRowClick(rowData);
-    }
-
-
-    const CTX = {
-      RowActionsComp,
-      TableActionsComp,
-      tableActions,
-      footer,
-      tableSearchParams,
-      tableTitles,
-      filterTitle,
-      filterDefaultValues,
-      rowGrid,
-      rowRef,
-      selectedRows,
-      onSelectRow: onSelectRowWrapper,
-      onUnselectRow: onUnSelectRowWrapper,
-      tableData,
-      isLoading,
-      onRowClick: onRowClickWrapper,
-      onFilterSubmit,
-      ...props,
-    };
-
-    return (
-      <Table {...props}>
-        <TableCTX.Provider value={CTX}>
-          <AppLoader isLoading={isLoading} />
-
-          <TableOverHead />
-
-          <TableScroll className='TableScroll'>
-            <TableHead />
-
-            {tableData.length !== 0 ? <TableBody /> : <NoData>Дані відсутні</NoData>}
-
-            <MaxToTabletXl>{tableActions ? <QuickActions {...tableActions} footer={footer} /> : null}</MaxToTabletXl>
-          </TableScroll>
-
-          <TableFooter />
-        </TableCTX.Provider>
-      </Table>
-    );
+  const rowGrid = {
+    display: 'grid',
+    gridTemplateColumns: `repeat(${tableTitles?.length}, min-content)`,
   };
+
+  function onSelectRowWrapper({ rowData, ...props }: OnRowClickHandlerData) {
+    if (typeof onSelectRow === 'function') onSelectRow({ rowData, ...props });
+
+    setSelectedRows(prev => {
+      return [rowData, ...prev];
+    });
+  }
+
+  function onUnSelectRowWrapper({ rowData, ...props }: OnRowClickHandlerData) {
+    typeof onUnSelectRow === 'function' && onUnSelectRow({ rowData, ...props });
+    setSelectedRows(prev => {
+      return prev?.filter(row => row._id !== rowData?._id);
+    });
+  }
+
+  function onRowClickWrapper(rowData: any) {
+    console.log(rowRef.current);
+    typeof onRowClick === 'function' && onRowClick(rowData);
+  }
+
+  const CTX: ITableListContext<IBase> = {
+    RowActionsComp,
+    TableActionsComp,
+    tableActions,
+    footer,
+    tableSearchParams,
+    tableTitles,
+    filterTitle,
+    filterDefaultValues,
+    rowGrid,
+    rowRef,
+    selectedRows,
+    tableData,
+    isLoading,
+    onFilterSubmit,
+    onSelectRow: onSelectRowWrapper,
+    onUnSelectRow: onUnSelectRowWrapper,
+    onRowClick: onRowClickWrapper,
+    ...props,
+  };
+
+  return (
+    <Table {...props}>
+      <TableCTX.Provider value={CTX}>
+        <AppLoader isLoading={isLoading} />
+
+        <TableOverHead />
+
+        <TableScroll className="TableScroll">
+          <TableHead />
+
+          {tableData?.length !== 0 ? (
+            <TableBody ref={rowRef} />
+          ) : (
+            <NoData>Дані відсутні</NoData>
+          )}
+
+          <MaxToTabletXl>
+            {tableActions ? (
+              <QuickActions {...tableActions} footer={footer} />
+            ) : null}
+          </MaxToTabletXl>
+        </TableScroll>
+
+        <TableFooter />
+      </TableCTX.Provider>
+    </Table>
+  );
+};
 
 // import cloneDeep from 'lodash.clonedeep';
 // import { applyFounder } from 'components/BlockWithList/BlockUtils/founder';

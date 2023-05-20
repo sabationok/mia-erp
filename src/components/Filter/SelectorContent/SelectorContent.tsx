@@ -4,41 +4,51 @@ import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { FilterSelectorProps, IFilterSelectorAddsProps } from '../Selector';
 import createTreeData from 'utils/createTreeData';
-import { FilterDataType } from '../AppFilter';
+import { FilterReturnDataType } from '../AppFilter';
 import SelectsTreeList from './SelectsTreeList';
 import { SelectsTreeListItemProps } from './SelectsTreeListItem';
 
 export interface SelectorContentProps {
-  defaultValue?: string[],
-  getDefaultValue?: (selectorName: keyof FilterDataType) => string[]
-  onSelectorSubmit?: (name: keyof FilterDataType, value: string[]) => void;
+  defaultValue?: string[];
+  getDefaultValue?: (selectorName: keyof FilterReturnDataType) => string[];
+  onSelectorSubmit?: (
+    name: keyof FilterReturnDataType,
+    value: string[]
+  ) => void;
   isOpen?: boolean;
-  selectorName: keyof FilterDataType
+  selectorName: keyof FilterReturnDataType;
 }
-
 
 const SelectorContent: React.FC<
   SelectorContentProps &
-  Pick<FilterSelectorProps, 'selectorName' | 'data'> &
-  Pick<IFilterSelectorAddsProps, 'ListComp'> &
-  React.HTMLAttributes<HTMLDivElement>
+    Pick<FilterSelectorProps, 'selectorName' | 'data'> &
+    Pick<IFilterSelectorAddsProps, 'ListComp'> &
+    React.HTMLAttributes<HTMLDivElement>
 > = ({
-       isOpen = false,
-       onSelect,
-       data,
-       selectorName,
-       defaultValue,
-       getDefaultValue,
-       ListComp,
-       onSelectorSubmit,
-       ...props
-     }) => {
+  isOpen = false,
+  onSelect,
+  data,
+  selectorName,
+  defaultValue,
+  getDefaultValue,
+  ListComp,
+  onSelectorSubmit,
+  ...props
+}) => {
   const [renderData, setRenderData] = useState<SelectsTreeListItemProps[]>([]);
-  const [selectorData, setSelectorData] = useState<string[]>(defaultValue ? defaultValue : getDefaultValue ? getDefaultValue(selectorName) : []);
+  const [selectorData, setSelectorData] = useState<string[]>(
+    defaultValue
+      ? defaultValue
+      : getDefaultValue
+      ? getDefaultValue(selectorName)
+      : []
+  );
 
   function onSelectorSubmitWrapper() {
     console.log('selectorData', selectorData);
-    onSelectorSubmit && selectorName && onSelectorSubmit(selectorName, selectorData);
+    onSelectorSubmit &&
+      selectorName &&
+      onSelectorSubmit(selectorName, selectorData);
   }
 
   function onSelectItems(ids: string[], checked: boolean) {
@@ -68,14 +78,25 @@ const SelectorContent: React.FC<
       )}
 
       <AcceptButtons>
-        <ButtonIcon variant='onlyIcon' size='32px' iconSize='90%' iconId={iconId.done}
-                    onClick={onSelectorSubmitWrapper} />
+        <ButtonIcon
+          variant="onlyIcon"
+          size="32px"
+          iconSize="90%"
+          iconId={iconId.done}
+          onClick={onSelectorSubmitWrapper}
+        />
 
-        <ButtonIcon variant='onlyIcon' size='32px' iconSize='90%' iconId={iconId.close}
-                    onClick={() => {
-                      setSelectorData([]);
-                      onSelectorSubmit && selectorName && onSelectorSubmit(selectorName, []);
-                    }}
+        <ButtonIcon
+          variant="onlyIcon"
+          size="32px"
+          iconSize="90%"
+          iconId={iconId.close}
+          onClick={() => {
+            setSelectorData([]);
+            onSelectorSubmit &&
+              selectorName &&
+              onSelectorSubmit(selectorName, []);
+          }}
         />
       </AcceptButtons>
     </Content>
@@ -84,7 +105,7 @@ const SelectorContent: React.FC<
 const Content = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows:  1fr min-content;
+  grid-template-rows: 1fr min-content;
 
   width: 100%;
 
@@ -99,7 +120,6 @@ const Content = styled.div`
     height: 100%;
   }
 `;
-
 
 const AcceptButtons = styled.div`
   display: flex;

@@ -1,116 +1,221 @@
 // @flow
 import * as React from 'react';
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import ModalForm, { FilterOpt, ModalFormProps } from '../ModalForm';
 import InputTextPrimary from '../atoms/Inputs/InputTextPrimary';
 import styled from 'styled-components';
-import { ITransactionForReq, ITransactionReqData } from 'redux/transactions/transactions.types';
+import {
+  ITransactionForReq,
+  ITransactionReqData,
+  TransactionType,
+} from 'redux/transactions/transactions.types';
 import { CategoryTypes } from 'redux/categories/categories.types';
+import InputLabel from '../atoms/Inputs/InputLabel';
+import InputText from '../atoms/Inputs/InputText';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { IBase } from '../../redux/global.types';
+import * as _ from 'lodash';
+import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
+import Select from '../atoms/Inputs/Select';
+import { Input } from 'antd';
+import MyTreeSelect from '../atoms/Inputs/MyTreeSelect';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
 
-export interface Props extends Omit<ModalFormProps, 'onSubmit'> {
+export interface TransactionFormProps extends Omit<ModalFormProps, 'onSubmit'> {
   edit?: boolean;
   copy?: boolean;
   id?: string;
-  onSubmit?: (args: ITransactionReqData) => any;
+  onSubmit?: SubmitHandler<ITransactionForReq>;
+  onSubmitEdit?: (data: ITransactionReqData) => void;
   filterOptions?: TransactionsFilterOpt[];
-  defaultState?: Partial<ITransactionForReq>;
-};
+  defaultState?: Partial<ITransactionForReq> & Partial<IBase>;
+}
 
-const TransactionForm: React.FC<Props> = ({ edit, onSubmit, copy, defaultState, ...props }) => {
-  const [formData, setFormData] = useState<ITransactionForReq>({ ...defaultState });
+const validation = yup.object().shape({});
 
+const TransactionForm: React.FC<TransactionFormProps> = ({
+  edit,
+  onSubmit,
+  onSubmitEdit,
+  copy,
+  defaultState,
+  ...props
+}) => {
+  const {
+    formState: { errors },
+    register,
+    setValue,
+    getValues,
+    watch,
+  } = useForm<ITransactionForReq>({
+    defaultValues: _.omit(defaultState, '_id', 'createdAt', 'updatedAt') || {},
+    resolver: yupResolver(validation),
+    reValidateMode: 'onSubmit',
+  });
+  const formValues = watch();
 
-  function onFormDataChange({ name, value }: { name: string, value: string | number | Date }) {
-    setFormData(prev => {
-      // console.log('onFormDataChange', { ...prev, [name]: value });
-      return ({ ...prev, [name]: value });
-    });
-  }
-
-  const onInputChangeMemo = useCallback((ev: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = ev.target;
-    onFormDataChange({ name, value });
-  }, []);
-
-  function onInputChange(ev: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = ev.target;
-    onFormDataChange({ name, value });
-  }
-
-  const renderInputsCountIn = useMemo(() =>
-    (formData.type && ['INCOME', 'TRANSFER'].includes(formData.type)) ? (
+  const renderInputsCountIn = useMemo(() => {
+    const canRender =
+      formValues.type && ['INCOME', 'TRANSFER'].includes(formValues.type);
+    return canRender ? (
       <>
-        <InputTextPrimary label='Рахунок IN' name='countIn' placeholder='Рахунок IN' onChange={onInputChangeMemo} />
-        <InputTextPrimary label='Суб-Рахунок IN' name='subCountIn' placeholder='Суб-Рахунок IN'
-                          onChange={onInputChangeMemo} />
-      </>) : null, [formData.type, onInputChangeMemo]);
-  ;
-  const renderInputsCountOut = useMemo(() =>
-    (formData.type && ['EXPENSE', 'TRANSFER'].includes(formData.type)) ? (
-      <>
-        <InputTextPrimary label='Рахунок OUT' name='countOut' placeholder='Рахунок' onChange={onInputChangeMemo} />
-        <InputTextPrimary label='Суб-Рахунок OUT' name='subCountOut' placeholder='Рахунок'
-                          onChange={onInputChangeMemo} />
+        <InputLabel label="Рахунок IN" direction={'vertical'}>
+          <InputText placeholder="Рахунок IN" {...register('countIn')} />
+        </InputLabel>
+        <InputLabel label="Суб-Рахунок IN" direction={'vertical'}>
+          <InputText placeholder="Суб-Рахунок IN" {...register('subCountIn')} />
+        </InputLabel>
       </>
-    ) : null, [formData.type, onInputChangeMemo]);
+    ) : null;
+  }, [formValues.type, register]);
+
+  const renderInputsCountOut = useMemo(() => {
+    const canRender =
+      formValues.type && ['EXPENSE', 'TRANSFER'].includes(formValues.type);
+    return canRender ? (
+      <>
+        <InputLabel label="Рахунок OUT" direction={'vertical'}>
+          <InputText placeholder="Рахунок OUT" {...register('countOut')} />
+        </InputLabel>
+
+        <InputLabel label="Суб-Рахунок OUT" direction={'vertical'}>
+          <InputText
+            placeholder="Суб-Рахунок OUT"
+            {...register('subCountOut')}
+          />
+        </InputLabel>
+      </>
+    ) : null;
+  }, [formValues.type, register]);
 
   function onSubmitWrapper() {
-    onSubmit && onSubmit({ data: formData });
+    let submitData = formValues;
+
+    if (formValues.type === 'INCOME')
+      submitData = _.omit(formValues, 'countOut', 'subCountOut');
+    if (formValues.type === 'EXPENSE')
+      submitData = _.omit(formValues, 'countIn', 'subCountIn');
+
+    console.log(submitData);
+
+    onSubmit && onSubmit(submitData);
+
+    onSubmitEdit &&
+      defaultState?._id &&
+      onSubmitEdit({
+        _id: defaultState?._id,
+        data: submitData,
+      });
   }
 
   return (
     <ModalForm
       onSubmit={onSubmitWrapper}
-      defaultFilterValue={formData?.type}
-      onOptSelect={({ value }) => {
-        value && onFormDataChange({ name: 'type', value });
-      }}
-      {...props}>
-      <Inputs>
-        <GridWrapper gridTemplateColumns={'1fr'}>
-          <InputTextPrimary
-            label='Дата і час'
-            type='datetime-local'
-            name='transactionDate'
-            placeholder='Дата і час'
-            onChange={onInputChange}
+      defaultFilterValue={getValues('type')}
+      onOptSelect={({ value }) => value && setValue('type', value)}
+      {...props}
+    >
+      <Inputs className={'inputs'}>
+        <InputLabel label="Дата і час" direction={'vertical'}>
+          <InputText
+            placeholder="Дата і час"
+            type="datetime-local"
+            {...register('transactionDate')}
           />
+        </InputLabel>
+        <GridWrapper>
+          <InputLabel label="Сума" direction={'vertical'}>
+            <InputText placeholder="Сума" {...register('amount')} />
+          </InputLabel>
+
+          <InputLabel label="Валюта" direction={'vertical'}>
+            <InputText name="currency" placeholder="Валюта" />
+          </InputLabel>
         </GridWrapper>
 
-        <GridWrapper>
-          <InputTextPrimary label='Сума' name='amount' placeholder='Сума' onChange={onInputChange} />
-          <InputTextPrimary label='Валюта' name='currency' placeholder='Валюта' onChange={onInputChange} />
-        </GridWrapper>
+        <InputLabel label="Тест" direction={'vertical'}>
+          <MyTreeSelect />
+        </InputLabel>
 
         {renderInputsCountIn}
-
         {renderInputsCountOut}
 
-        <InputTextPrimary label='Категорія' name='category' placeholder='Категорія' onChange={onInputChange} />
-        <InputTextPrimary label='Під-категорія' name='subCategory' placeholder='Під-категорія'
-                          onChange={onInputChange} />
+        {/*<Select*/}
+        {/*  labelProps={{ label: 'Рахунок OUT', direction: 'vertical' }}*/}
+        {/*  options={[*/}
+        {/*    { label: 'Opt 1', value: 'val 1' },*/}
+        {/*    { label: 'Opt 2', value: 'val 2' },*/}
+        {/*  ]}*/}
+        {/*  onSelect={(value, option) => {}}*/}
+        {/*  RenderInput={() => (*/}
+        {/*    <InputText placeholder="Рахунок OUT" {...register('countIn')} />*/}
+        {/*  )}*/}
+        {/*/>*/}
 
-        <InputTextPrimary label='Контрагент' name='contractor' placeholder='Контрагент' onChange={onInputChange} />
-        <InputTextPrimary label='Проєкт' name='project' placeholder='Проєкт' onChange={onInputChange} />
-        <InputTextPrimary label='Документ' name='document' placeholder='Документ' onChange={onInputChange} />
+        {/*<Select*/}
+        {/*  labelProps={{*/}
+        {/*    label: 'Рахунок OUT',*/}
+        {/*    direction: 'horizontal',*/}
+        {/*    style: { padding: '10px 0' },*/}
+        {/*  }}*/}
+        {/*  RenderInput={() => (*/}
+        {/*    <InputText placeholder="Рахунок OUT" {...register('countIn')} />*/}
+        {/*  )}*/}
+        {/*/>*/}
 
-        <InputTextPrimary label='Коментар' name='comment' placeholder='Коментар' onChange={onInputChange} />
+        {formValues.type === 'TRANSFER' && (
+          <>
+            <InputLabel label="Категорія" direction={'vertical'}>
+              <InputText placeholder="Категорія" {...register('category')} />
+            </InputLabel>
+
+            <InputLabel label="Під-категорія" direction={'vertical'}>
+              <InputText
+                placeholder="Під-категорія"
+                {...register('subCategory')}
+              />
+            </InputLabel>
+
+            <InputLabel label="Контрагент" direction={'vertical'}>
+              <InputText placeholder="Контрагент" {...register('contractor')} />
+            </InputLabel>
+
+            <InputLabel label="Проєкт" direction={'vertical'}>
+              <InputText placeholder="Проєкт" {...register('project')} />
+            </InputLabel>
+
+            <InputLabel label="Документ" direction={'vertical'}>
+              <InputText placeholder="Документ" {...register('document')} />
+            </InputLabel>
+
+            <InputLabel label="Коментар" direction={'vertical'}>
+              <TextareaPrimary
+                placeholder="Коментар"
+                {...register('comment')}
+              />
+            </InputLabel>
+          </>
+        )}
       </Inputs>
     </ModalForm>
   );
 };
 const Inputs = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-
+  //gap: 12px;
+  overflow: auto;
   padding: 12px;
+  max-height: 100%;
 `;
 const GridWrapper = styled.div<{ gridTemplateColumns?: string }>`
   display: grid;
-  grid-template-columns:${({ gridTemplateColumns }) => gridTemplateColumns || '1fr 80px'};
+  grid-template-columns: ${({ gridTemplateColumns }) =>
+    gridTemplateColumns || '1fr 120px'};
   gap: 12px;
 `;
 export default TransactionForm;

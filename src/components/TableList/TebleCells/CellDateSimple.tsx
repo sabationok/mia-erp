@@ -3,32 +3,39 @@ import styled from 'styled-components';
 import { useRow } from '../TableRows/TableRow';
 import DateComp from './CellComponents/DateComp';
 import { CellTitleContent, CellTittleProps } from './CellTitle';
+import getValueByPath from '../../../utils/getValueByPath';
 
 export interface CellDateSimpleProps {
   titleInfo: CellTittleProps;
   idx?: number;
 }
 
-const CellDateSimple: React.FC<CellDateSimpleProps & React.HTMLAttributes<HTMLDivElement>> = ({
-                                                                                                titleInfo,
-                                                                                                idx,
-                                                                                                ...props
-                                                                                              }) => {
+const CellDateSimple: React.FC<
+  CellDateSimpleProps & React.HTMLAttributes<HTMLDivElement>
+> = ({ titleInfo, idx, ...props }) => {
   const { rowData } = useRow();
   const { top, bottom, width = '100px' } = titleInfo;
 
-  const contentTop = top?.dataKey && rowData[top?.dataKey] ? rowData[top?.dataKey] : null;
-  const contentBottom = bottom?.dataKey && rowData[bottom?.dataKey] ? rowData[bottom?.dataKey] : null;
+  // const contentTop = top?.dataKey && rowData[top?.dataKey] ? rowData[top?.dataKey] : null;
+  // const contentBottom = bottom?.dataKey && rowData[bottom?.dataKey] ? rowData[bottom?.dataKey] : null;
+  const contentTop = getValueByPath({
+    data: rowData,
+    ...top,
+  });
+  const contentBottom = getValueByPath({
+    data: rowData,
+    ...bottom,
+  });
 
   return (
     <CellBase style={{ width }} {...props}>
       <Top align={top.align}>
-        <DateComp dateInfo={contentTop} wraped={!contentBottom ? true : false} />
+        <DateComp dateInfo={contentTop} wraped={true} />
       </Top>
 
       {contentBottom && (
         <Bottom align={bottom?.align}>
-          <DateComp dateInfo={contentBottom} wraped={!contentBottom ? true : false} />
+          <DateComp dateInfo={contentBottom} wraped={!contentBottom} />
         </Bottom>
       )}
     </CellBase>
@@ -60,7 +67,8 @@ const Top = styled(Content)`
   text-transform: uppercase;
 
   & .inner {
-    justify-content: ${({ align }) => (align === 'center' ? 'center' : `flex-${align}`)};
+    justify-content: ${({ align }) =>
+      align === 'center' ? 'center' : `flex-${align}`};
   }
 `;
 const Bottom = styled(Content)`
@@ -68,7 +76,8 @@ const Bottom = styled(Content)`
   font-weight: 400;
 
   & .inner {
-    justify-content: ${({ align }) => (align === 'center' ? 'center' : `flex-${align}`)};
+    justify-content: ${({ align }) =>
+      align === 'center' ? 'center' : `flex-${align}`};
   }
 `;
 

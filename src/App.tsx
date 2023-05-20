@@ -1,4 +1,4 @@
-import AppLoader from 'components/AppLoader/AppLoader';
+import AppLoader from 'components/atoms/AppLoader';
 import { Suspense } from 'react';
 import Layout from 'components/Layout/Layout';
 import AppRoutes from 'components/AppRoutes/AppRoutes';
@@ -26,7 +26,7 @@ const App: React.FC = () => {
       </AppContainer>
 
       <ToastContainer
-        position='bottom-left'
+        position="bottom-left"
         autoClose={5000}
         limit={7}
         hideProgressBar={false}

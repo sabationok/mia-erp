@@ -20,13 +20,13 @@ export type FilterSelectorDataType =
   | IProject[]
   | any[];
 export type FilterSelectorType = {
-  selectorName: keyof FilterDataType;
+  selectorName: keyof FilterReturnDataType;
   label: string;
   data: FilterSelectorDataType;
   ListComp: React.FC<any>;
 };
 
-export interface FilterDataType {
+export interface FilterReturnDataType {
   type?: string[];
   categories?: string[];
   counts?: string[];
@@ -50,8 +50,10 @@ const validation = yup.object().shape({
 export interface FilterProps
   extends Omit<ModalFormProps, 'defaultFilterValue' | 'onSubmit'> {
   filterSelectors?: FilterSelectorType[];
-  filterDefaultValues?: Partial<Record<keyof FilterDataType, string[] | any[]>>;
-  onFilterSubmit?: SubmitHandler<FilterDataType>;
+  filterDefaultValues?: Partial<
+    Record<keyof FilterReturnDataType, string[] | any[]>
+  >;
+  onFilterSubmit?: SubmitHandler<FilterReturnDataType>;
 }
 
 const AppFilter: React.FC<FilterProps> = props => {
@@ -87,14 +89,14 @@ const Filter: React.FC<FilterProps> = ({
     handleSubmit,
     setValue,
     getValues,
-  } = useForm<FilterDataType>({
+  } = useForm<FilterReturnDataType>({
     defaultValues: filterDefaultValues,
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
 
   const onFilterDataChange = useCallback(
-    (name: keyof FilterDataType, value?: string[]) => {
+    (name: keyof FilterReturnDataType, value?: string[]) => {
       if (name && value) setValue(name, value);
       if (!value) unregister(name);
       console.log(getValues());
@@ -126,7 +128,7 @@ const Filter: React.FC<FilterProps> = ({
           CurrentData={CurrentData}
         >
           <SelectorContent
-            getDefaultValue={(selectorName: keyof FilterDataType) =>
+            getDefaultValue={(selectorName: keyof FilterReturnDataType) =>
               getValues()[selectorName] || []
             }
             onSelectorSubmit={onFilterDataChange}

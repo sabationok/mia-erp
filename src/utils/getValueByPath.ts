@@ -42,7 +42,7 @@
 //
 //   return value;
 // }
-function getValueByPath({ data, path }: { data?: object, path?: string }): any {
+function getValueByPath({ data, path }: { data?: object; path?: string }): any {
   if (!data || !path) {
     return null;
   }
@@ -53,7 +53,10 @@ function getValueByPath({ data, path }: { data?: object, path?: string }): any {
     return data[key as keyof typeof data];
   }
 
-  return getValueByPath({ data: data[key as keyof typeof data], path: rest.join('.') });
+  return getValueByPath({
+    data: data[key as keyof typeof data],
+    path: rest.join('.'),
+  });
 }
 
 export default getValueByPath;

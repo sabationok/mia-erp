@@ -76,17 +76,15 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
 
   return (
     <StModalForm {...props} onOptSelect={handleFilterData}>
-      <Box>
-        <DirList
-          list={filteredData}
-          onDelete={deleteById}
-          onEdit={onEdit}
-          onCreateChild={onCreateChild}
-          entryList={filteredData.filter(el => !el?.owner)}
-          createParentTitle="Свторити категорію"
-          onCreateParent={onCreateParent}
-        />
-      </Box>
+      <DirList
+        list={filteredData}
+        onDelete={deleteById}
+        onEdit={onEdit}
+        onCreateChild={onCreateChild}
+        entryList={filteredData.filter(el => !el?.owner)}
+        createParentTitle="Створити категорію"
+        onCreateParent={onCreateParent}
+      />
     </StModalForm>
   );
 };
@@ -97,14 +95,6 @@ const StModalForm = styled(ModalForm)`
   @media screen and (max-height: 480px) {
     height: 95vh;
   }
-`;
-const Box = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  height: 100%;
-  max-height: 100%;
-  padding: 0 12px;
 `;
 
 export default DirCategories;

@@ -5,14 +5,11 @@ import {
   ICategory,
   ICategoryFormData,
 } from 'redux/categories/categories.types';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import InputTextPrimary from '../../atoms/Inputs/InputTextPrimary';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FilterDataType } from '../../Filter/AppFilter';
-import { ObjectShape } from 'yup';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
@@ -41,9 +38,7 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
   const {
     formState: { errors },
     register,
-    unregister,
     handleSubmit,
-    setValue,
     getValues,
   } = useForm<ICategoryFormData>({
     defaultValues: {
@@ -64,7 +59,7 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
   return (
     <ModalForm onSubmit={formEventWrapper(onSubmit, getValues())} {...props}>
       <Inputs>
-        <InputLabel label="Тип" disabled>
+        <InputLabel label="Тип" error={errors.type} disabled>
           <InputText
             {...register('type')}
             value={CategoriesTypesMap[type]}
@@ -72,11 +67,11 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
           />
         </InputLabel>
 
-        <InputLabel label="Назва">
+        <InputLabel label="Назва" error={errors.label}>
           <InputText placeholder="Введіть назву" {...register('label')} />
         </InputLabel>
 
-        <InputLabel label="Коментар">
+        <InputLabel label="Коментар" error={errors.description}>
           <TextareaPrimary
             placeholder="Введіть коментар"
             {...register('description')}

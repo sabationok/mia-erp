@@ -13,7 +13,7 @@ export type CellTitleContent = {
   align?: 'center' | 'start' | 'end';
   uppercase?: boolean;
   icon?: IconIdType;
-  path?: string
+  path?: string;
 };
 export type CellTittleProps = {
   top: CellTitleContent;
@@ -25,27 +25,24 @@ export type CellTittleProps = {
   onClick?: (ev: React.MouseEvent<HTMLDivElement>) => void;
 };
 
-const CellTitle: React.FC<CellTittleProps & React.HTMLAttributes<HTMLDivElement>> = ({
-                                                                                       width,
-                                                                                       idx,
-                                                                                       onClick,
-                                                                                       top,
-                                                                                       bottom,
-                                                                                       ...props
-                                                                                     }) => {
+const CellTitle: React.FC<
+  CellTittleProps & React.HTMLAttributes<HTMLDivElement>
+> = ({ width, idx, onClick, top, bottom, ...props }) => {
   return (
     <StCellHead width={width} onClick={onClick} {...props}>
       <Wrapper>
         <Top align={top.align}>
-          <span className='inner'> {top.name || top.dataKey || 'Title'}</span>
+          <span className="inner">{top.name || top.dataKey || 'Title'}</span>
         </Top>
 
         <Bottom align={bottom?.align}>
-          <span className='inner'> {bottom?.name || bottom?.dataKey || ''}</span>
+          {(bottom?.name || bottom?.dataKey) && (
+            <span className="inner">{bottom?.name || bottom?.dataKey}</span>
+          )}
         </Bottom>
       </Wrapper>
 
-      <WidthChanger type='button'></WidthChanger>
+      <WidthChanger type="button" />
     </StCellHead>
   );
 };
@@ -55,9 +52,8 @@ const StCellHead = styled.div<{ width: string }>`
 
   width: ${({ width }) => width};
   height: 100%;
-  padding-left: 10px;
-
-  /* outline: 1px solid tomato; */
+  padding: 4px 0 4px 10px;
+  gap: 6px;
 `;
 const Wrapper = styled.div`
   flex-grow: 1;
@@ -69,22 +65,31 @@ const Wrapper = styled.div`
 
   height: 100%;
 `;
-const Content = styled.div`
+const Content = styled.div<Omit<CellTitleContent, 'name'>>`
   flex-grow: 1;
 
   display: flex;
   align-items: center;
   gap: 4px;
 
+  overflow: hidden;
+
+  line-height: 1;
+
   width: 100%;
 
+  justify-content: ${({ align }) =>
+    align === 'center' ? 'center' : `flex-${align}`};
+
   & .inner {
-    flex-grow: 1;
-
-    display: flex;
-    align-items: center;
-
-    width: 100%;
+    max-width: 100%;
+    /* display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1; */
+    //word-break: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `;
 
@@ -92,24 +97,16 @@ const Top = styled(Content)<Omit<CellTitleContent, 'name'>>`
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-
-  & .inner {
-    justify-content: ${({ align }) => (align === 'center' ? 'center' : `flex-${align}`)};
-  }
 `;
 const Bottom = styled(Content)<Omit<CellTitleContent, 'name'>>`
   font-size: 11px;
   font-weight: 400;
-
-  & .inner {
-    justify-content: ${({ align }) => (align === 'center' ? 'center' : `flex-${align}`)};
-  }
 `;
 
 const WidthChanger = styled.button`
   position: relative;
 
-  height: 80%;
+  height: 100%;
   width: 4px;
   border-style: none;
   background-color: transparent;
@@ -124,9 +121,26 @@ const WidthChanger = styled.button`
     display: block;
     content: '';
     height: 100%;
-    width: 1px;
+    width: 2px;
     /* border-right: 1px solid #59595a; */
-    border-right: 2px solid ${({ theme }) => theme.tableHeaderStroke};
+    background-color: ${({ theme }) => theme.tableHeaderStroke};
+    transition: ${({ theme }) => theme.globals.timingFnMui};
+  }
+
+  &:hover {
+    &::before {
+      background-color: ${({ theme }) => theme.accentColor.base};
+    }
+  }
+
+  &[disabled] {
+    &:hover {
+      cursor: default;
+
+      &::before {
+        background-color: ${({ theme }) => theme.tableHeaderStroke};
+      }
+    }
   }
 `;
 

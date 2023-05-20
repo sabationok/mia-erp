@@ -2,7 +2,7 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { MaxToTablet } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 import { iconId } from 'data';
 import styled from 'styled-components';
-import { FilterDataType, FilterSelectorDataType } from './AppFilter';
+import { FilterReturnDataType, FilterSelectorDataType } from './AppFilter';
 import React from 'react';
 
 export interface IFilterSelectorAddsProps {
@@ -11,7 +11,7 @@ export interface IFilterSelectorAddsProps {
 
 export interface FilterSelectorProps {
   label: string;
-  selectorName?: keyof FilterDataType;
+  selectorName?: keyof FilterReturnDataType;
   data: FilterSelectorDataType;
   idx: number;
   currentIdx: number | null;
@@ -21,24 +21,26 @@ export interface FilterSelectorProps {
   onSelectorClick: (idx?: number) => void;
 }
 
-const Selector: React.FC<FilterSelectorProps & React.HTMLAttributes<Element>> = ({
-                                                                                   label = 'Selector label',
-                                                                                   selectorName = 'selector',
-                                                                                   onSelectorClick,
-                                                                                   childrenListCount,
-                                                                                   selectedChildrenCount,
-                                                                                   currentIdx,
-                                                                                   data,
-                                                                                   idx,
-                                                                                   children,
-                                                                                 }) => {
+const Selector: React.FC<
+  FilterSelectorProps & React.HTMLAttributes<Element>
+> = ({
+  label = 'Selector label',
+  selectorName = 'selector',
+  onSelectorClick,
+  childrenListCount,
+  selectedChildrenCount,
+  currentIdx,
+  data,
+  idx,
+  children,
+}) => {
   return (
     <SelectorContainer>
       <StOpenButton
-        variant='defNoEffects'
+        variant="defNoEffects"
         isCurrent={currentIdx === idx}
         endIconId={iconId.SmallArrowDown}
-        endIconSize='22px'
+        endIconSize="22px"
         onClick={() => onSelectorClick && onSelectorClick()}
       >
         <Label>{label}</Label>
@@ -48,12 +50,7 @@ const Selector: React.FC<FilterSelectorProps & React.HTMLAttributes<Element>> = 
         </div>
       </StOpenButton>
 
-
-      {currentIdx === idx ?
-        <SelectorList>
-          {children}
-        </SelectorList> : null}
-
+      {currentIdx === idx ? <SelectorList>{children}</SelectorList> : null}
     </SelectorContainer>
   );
 };
@@ -80,7 +77,8 @@ const StOpenButton = styled(ButtonIcon)<{ isCurrent: boolean }>`
 
   background-color: ${({ theme }) => theme.fieldColor};
 
-  border-color: ${({ isCurrent, theme }) => (isCurrent ? theme.accentColor.base : '')};
+  border-color: ${({ isCurrent, theme }) =>
+    isCurrent ? theme.accentColor.base : ''};
 
   & .endIcon {
     transform: ${({ isCurrent }) => `rotate(${isCurrent ? 180 : 0}deg)`};
@@ -88,7 +86,7 @@ const StOpenButton = styled(ButtonIcon)<{ isCurrent: boolean }>`
 
   // @media screen and (min-width: 768px) {
   //   & .endIcon {
-    //     transform: ${({ isCurrent }) => `rotate(${isCurrent ? -90 : 90}deg)`};
+  //     transform: ${({ isCurrent }) => `rotate(${isCurrent ? -90 : 90}deg)`};
   //   }
   // }
 `;

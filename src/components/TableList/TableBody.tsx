@@ -2,12 +2,15 @@ import TableRow from './TableRows/TableRow';
 import { useTable } from './TableList';
 
 import styled from 'styled-components';
+import { forwardRef } from 'react';
 
-const TableBody: React.FC = () => {
+const TableBody: React.ForwardRefRenderFunction<any> = (
+  props,
+  ref: React.Ref<any>
+) => {
   const { tableData, rowRef, onRowClick } = useTable();
 
   function handleOnRowClick(ev: React.MouseEvent<HTMLDivElement>) {
-    if (!(ev instanceof MouseEvent)) return;
     const { target } = ev;
     let rowEl: any;
 
@@ -19,8 +22,7 @@ const TableBody: React.FC = () => {
 
     if (onRowClick instanceof Function) {
       let rowData = tableData?.find(el => el?._id === rowEl?.id);
-
-      onRowClick({ ev, _id: rowEl?.id, data: rowData });
+      onRowClick({ ev, _id: rowEl?.id, rowData });
     }
 
     if (!rowRef?.current) {
@@ -55,6 +57,7 @@ const TBody = styled.div`
   min-width: 100%;
 
   position: relative;
+
   & .selected {
     background-color: var(--ligthOrange);
 
@@ -64,7 +67,7 @@ const TBody = styled.div`
   }
 `;
 
-export default TableBody;
+export default forwardRef(TableBody);
 
 // {/* <TableRow {...{ rowData: tableData[0] }} /> */}
 

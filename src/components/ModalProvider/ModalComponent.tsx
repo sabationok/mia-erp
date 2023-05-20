@@ -1,20 +1,23 @@
-import React, { useState, createContext, useContext, useEffect } from 'react';
+import React, {
+  useState,
+  createContext,
+  useContext,
+  useEffect,
+  memo,
+} from 'react';
 import CloseButton from './CloseButton';
 import styled from 'styled-components';
-
-//* ""handleToggle"" функція яка тоглить стейт модалки
-//* ""defaultBtn"" BOOLEAN чи потрібна дефолтна кнопка закриття
-//* ""children"" вміст модалки
 
 interface ModalComponentProps {
   children: React.ReactNode;
   idx?: number | string;
   settings?: IModalSettings;
-  onClose: (args?: any) => void;
+  onClose: () => void;
   id?: number | string;
   totalLength?: number;
   isLast?: boolean;
 }
+
 export interface IModalSettings {
   backdropColor?: string;
   backdropAnimation?: string;
@@ -24,6 +27,7 @@ export interface IModalSettings {
   closeBtnStyle?: React.CSSProperties;
   closeBtn?: boolean;
 }
+
 const initialSettings: IModalSettings = {
   backdropColor: 'rgba(0, 0, 0, 0.5)',
   backdropAnimation: 'BackdropAnimation 100ms linear',
@@ -32,12 +36,13 @@ const initialSettings: IModalSettings = {
 };
 
 interface ModalCTX {
-  onClose: (args?: any) => void;
-  modalIdx: number;
-  modalSettings: IModalSettings;
-  id: number | string;
-  totalLength: number;
-  isLast: boolean;
+  onClose: () => void;
+  modalIdx?: string | number;
+  modalSettings?: IModalSettings;
+  id?: string | number;
+  totalLength?: number;
+  isLast?: boolean;
+  handleSetModalSettings: (settings: IModalSettings) => void;
 }
 
 export const ModalContext = createContext({});
@@ -52,14 +57,28 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   totalLength,
   isLast,
 }) => {
-  const [modalSettings] = useState<IModalSettings>(settings || initialSettings);
+  const [modalSettings, setModalSettings] = useState<IModalSettings>(
+    settings || initialSettings
+  );
+
+  function handleSetModalSettings(settings: IModalSettings) {
+    setModalSettings(settings);
+  }
 
   function onBackdropClick(ev: React.MouseEvent) {
     if (ev.target !== ev.currentTarget) return;
     if (typeof onClose === 'function') onClose();
   }
 
-  const CTX = { onClose, modalIdx: idx, modalSettings, id, totalLength, isLast };
+  const CTX: ModalCTX = {
+    onClose,
+    modalIdx: idx,
+    modalSettings,
+    id,
+    totalLength,
+    isLast,
+    handleSetModalSettings,
+  };
 
   useEffect(() => {
     function handleToggleModalByEsc(evt: KeyboardEvent) {
@@ -76,6 +95,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
       document.removeEventListener('keydown', handleToggleModalByEsc);
     };
   }, [isLast, onClose]);
+
   return (
     <Backdrop
       key={idx}
@@ -95,7 +115,10 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   );
 };
 
-const Backdrop = styled.div<{ isLast: boolean | undefined; modalSettings: IModalSettings }>`
+const Backdrop = styled.div<{
+  isLast: boolean | undefined;
+  modalSettings: IModalSettings;
+}>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -108,8 +131,10 @@ const Backdrop = styled.div<{ isLast: boolean | undefined; modalSettings: IModal
   width: 100%;
   height: 100%;
 
-  background-color: ${({ isLast, modalSettings }) => (isLast ? modalSettings.backdropColor : '')};
-  /* animation: ${({ isLast, modalSettings }) => (!isLast ? modalSettings.backdropAnimation : '')}; */
+  background-color: ${({ isLast, modalSettings }) =>
+    isLast ? modalSettings.backdropColor : ''};
+  /* animation: ${({ isLast, modalSettings }) =>
+    !isLast ? modalSettings.backdropAnimation : ''}; */
 `;
 const Modal = styled.div<{ modalSettings: IModalSettings }>`
   display: flex;
@@ -135,4 +160,4 @@ const Modal = styled.div<{ modalSettings: IModalSettings }>`
   animation: ${({ modalSettings }) => modalSettings.modalAnimation};
 `;
 
-export default ModalComponent;
+export default memo(ModalComponent);

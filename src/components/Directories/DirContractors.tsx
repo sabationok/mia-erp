@@ -3,12 +3,16 @@ import TableList, { ITableListProps } from 'components/TableList/TableList';
 import React from 'react';
 import styled from 'styled-components';
 import { DirBaseProps } from './dir.types';
+import { IContractor } from '../../redux/contractors/contractors.types';
 
 export interface DirContractorsProps extends DirBaseProps {
-  tableSettings?: ITableListProps;
+  tableSettings?: ITableListProps<IContractor>;
 }
 
-const DirContractors: React.FC<DirContractorsProps> = ({ tableSettings, ...props }) => {
+const DirContractors: React.FC<DirContractorsProps> = ({
+  tableSettings,
+  ...props
+}) => {
   return (
     <StModalForm {...props}>
       <TableList {...tableSettings} />
