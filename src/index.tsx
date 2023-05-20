@@ -3,32 +3,32 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 
 import { Provider } from 'react-redux';
-import { persistor } from 'redux/store.store';
+import { persistor, store } from 'redux/store.store';
 import { PersistGate } from 'redux-persist/integration/react';
 import { BrowserRouter } from 'react-router-dom';
-import { store } from 'redux/store.store';
 import AppThemeProvider from 'components/AppThemeProvider/AppThemeProvider';
 import ModalProvider from 'components/ModalProvider/ModalProvider';
 // import reportWebVitals from './reportWebVitals';
-
 import './index.scss';
 import 'react-toastify/dist/ReactToastify.css';
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
 root.render(
-  // <React.StrictMode>
-  <Provider store={store}>
-    <PersistGate persistor={persistor}>
-      <BrowserRouter basename="/counter-app-ts" window={window}>
-        <AppThemeProvider>
-          <ModalProvider>
-            <App />
-          </ModalProvider>
-        </AppThemeProvider>
-      </BrowserRouter>
-    </PersistGate>
-  </Provider>
-  // </React.StrictMode>
+  <React.StrictMode>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <BrowserRouter basename="counter-app-ts">
+          <AppThemeProvider>
+            <ModalProvider>
+              <App />
+            </ModalProvider>
+          </AppThemeProvider>
+        </BrowserRouter>
+      </PersistGate>
+    </Provider>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
