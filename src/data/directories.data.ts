@@ -15,11 +15,12 @@ import DirContractors, {
 
 import { CategoriesTypesMap } from 'redux/categories/categories.types';
 import DirActivities, {
-  DirCompanyActivitiesProps,
+  DirActivitiesProps,
 } from 'components/Directories/DirCompanyActivities/DirActivities';
 import { contractorsColumns, contractorsMockData } from './contractors.data';
+import { DirBaseProps } from '../components/Directories/dir.types';
 
-export interface IDirectory<P = any> {
+export interface IDirectory<P extends DirBaseProps = any> {
   title: string;
   iconId: string;
   ModalChildren: React.FC<P>;
@@ -41,7 +42,7 @@ const countsDir: IDirectory<DirCountsProps> = {
   modalChildrenProps: CountsProps,
   disabled: true,
 };
-export const CategoriesProps: DirCategoriesProps = {
+const CategoriesProps: DirCategoriesProps = {
   title: 'Категорії',
   filterOptions: [
     { label: CategoriesTypesMap.INCOME, value: 'INCOME' },
@@ -49,7 +50,7 @@ export const CategoriesProps: DirCategoriesProps = {
     { label: CategoriesTypesMap.EXPENSE, value: 'EXPENSE' },
   ],
 };
-const categoriesDir = {
+const categoriesDir: IDirectory<DirCategoriesProps> = {
   title: CategoriesProps.title,
   iconId: iconId.folder,
   ModalChildren: DirCategories,
@@ -63,7 +64,7 @@ const ContractorsProps: DirContractorsProps = {
     tableTitles: contractorsColumns,
   },
 };
-const contractorsDir = {
+const contractorsDir: IDirectory<DirContractorsProps> = {
   title: ContractorsProps.title,
   iconId: iconId.partners,
   ModalChildren: DirContractors,
@@ -73,7 +74,7 @@ const contractorsDir = {
 const ProjectsProps: DirProjectsProps = {
   title: 'Проєкти',
 };
-const projectsDir = {
+const projectsDir: IDirectory<DirProjectsProps> = {
   title: ProjectsProps.title,
   iconId: iconId.assignment,
   ModalChildren: DirProjects,
@@ -82,27 +83,26 @@ const projectsDir = {
 };
 const MarksProps: DirMarksProps = {
   title: 'Мітки',
-  footer: false,
 };
-const marksDir = {
+const marksDir: IDirectory<DirMarksProps> = {
   title: MarksProps.title,
   iconId: iconId.bookMarkAdd,
   ModalChildren: DirMarks,
   modalChildrenProps: MarksProps,
   disabled: false,
 };
-const CompanyActivitiesProps: DirCompanyActivitiesProps = {
+const activitiesProps: DirActivitiesProps = {
   title: 'Види діяльності',
 };
-const activitiesDir = {
-  title: CompanyActivitiesProps.title,
+const activitiesDir: IDirectory<DirActivitiesProps> = {
+  title: activitiesProps.title,
   iconId: iconId.folder,
   ModalChildren: DirActivities,
-  modalChildrenProps: CompanyActivitiesProps,
+  modalChildrenProps: activitiesProps,
   disabled: false,
 };
 
-const directories: IDirectory[] = [
+const directories = [
   countsDir,
   categoriesDir,
   activitiesDir,

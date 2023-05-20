@@ -84,6 +84,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
         entryList={filteredData.filter(el => !el?.owner)}
         createParentTitle="Створити категорію"
         onCreateParent={onCreateParent}
+        currentLevel={0}
       />
     </StModalForm>
   );

@@ -15,10 +15,11 @@ export interface DirListProps extends Partial<DirListItemAddsProps> {
   owner?: Partial<ICount | ICategory>;
   onCreateParent?: (...args: any[]) => void;
   createParentTitle?: string;
+  currentLevel?: number;
 }
 
 const DirList: React.FC<
-  DirListProps & React.HTMLAttributes<HTMLUListElement>
+  DirListProps & React.HTMLAttributes<HTMLDivElement>
 > = ({
   entryList,
   list,
@@ -28,7 +29,7 @@ const DirList: React.FC<
   onCreateChild,
   onCreateParent,
   createParentTitle,
-  ...pops
+  currentLevel,
 }) => {
   const appTheme = useTheme();
   const listForRender = useMemo(
@@ -55,9 +56,9 @@ const DirList: React.FC<
 
   return (
     <Box>
-      <ListBox>
+      <ListBox style={{ padding: currentLevel === 0 ? '0 12px' : '' }}>
         {listForRender.length > 0 ? (
-          <List {...pops}>{renderList}</List>
+          <List>{renderList}</List>
         ) : (
           <EmptyList>Список порожній</EmptyList>
         )}
@@ -107,7 +108,7 @@ const ListBox = styled.div`
   flex: 1;
   max-height: 100%;
 
-  padding: 0 12px;
+  padding: 0 0 0 12px;
 
   overflow: auto;
 `;

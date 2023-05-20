@@ -7,9 +7,9 @@ import FormCreateActivity from './FormCreateActivity';
 import useCompanyActivitiesService from 'redux/companyActivities/useActivitiesService.hook';
 import { DirBaseProps } from '../dir.types';
 
-export interface DirCompanyActivitiesProps extends DirBaseProps {}
+export interface DirActivitiesProps extends DirBaseProps {}
 
-const DirActivities: React.FC<DirCompanyActivitiesProps> = ({ ...props }) => {
+const DirActivities: React.FC<DirActivitiesProps> = ({ ...props }) => {
   const modal = useModalProvider();
   const { activities, getById } = useCompanyActivitiesService();
 
@@ -62,6 +62,7 @@ const DirActivities: React.FC<DirCompanyActivitiesProps> = ({ ...props }) => {
         onEdit={onEdit}
         onCreateParent={onCreateParent}
         createParentTitle="Створити вид діяльності"
+        currentLevel={0}
       />
     </StModalForm>
   );

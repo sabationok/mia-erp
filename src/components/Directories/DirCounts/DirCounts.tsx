@@ -84,6 +84,7 @@ const DirCounts: React.FC<DirCountsProps> = props => {
         entryList={filteredData.filter(el => !el?.owner)}
         createParentTitle="Створити рахунок"
         onCreateParent={onCreateParent}
+        currentLevel={0}
       />
     </StModalForm>
   );
