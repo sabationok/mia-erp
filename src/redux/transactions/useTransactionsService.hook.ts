@@ -1,13 +1,6 @@
 import { useTransactionsSelector } from 'redux/selectors.store';
 import { useAppDispatch } from 'redux/store.store';
-import useTrFilterSelectors from './useTrFilterSelectors.hook';
-import {
-  ITransaction,
-  ITransactionForReq,
-  ITransactionReqData,
-} from './transactions.types';
-import { useTransactionsActions } from '../../data';
-import { ITransactionsState } from './transactions.slice';
+import { ITransactionForReq, ITransactionReqData } from './transactions.types';
 
 const useTransactionsService = () => {
   const dispatch = useAppDispatch();

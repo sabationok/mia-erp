@@ -1,7 +1,6 @@
 import ModalForm, { ModalFormProps } from 'components/ModalForm';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import InputTextPrimary from '../../atoms/Inputs/InputTextPrimary';
 import {
   IActivity,
   IActivityFormData,
@@ -35,9 +34,9 @@ const FormCreateActivity: React.FC<FormCreateCompanyActivityProps> = ({
   const {
     formState: { errors },
     register,
-    unregister,
-    handleSubmit,
-    setValue,
+    // unregister,
+    // handleSubmit,
+    // setValue,
     getValues,
   } = useForm<IActivityFormData>({
     defaultValues: {

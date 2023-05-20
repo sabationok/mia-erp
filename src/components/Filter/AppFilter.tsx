@@ -5,7 +5,6 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import styled from 'styled-components';
 import SelectorContent from './SelectorContent/SelectorContent';
-import { MinTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 import * as yup from 'yup';
 import { ICount } from 'redux/counts/counts.types';
 import { ICategory } from 'redux/categories/categories.types';
@@ -83,8 +82,8 @@ const Filter: React.FC<FilterProps> = ({
   const [currentIdx, setCurrentIdx] = useState<number | null>(0);
 
   const {
-    formState: { errors },
-    register,
+    // formState: { errors },
+    // register,
     unregister,
     handleSubmit,
     setValue,

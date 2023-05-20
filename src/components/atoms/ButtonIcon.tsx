@@ -1,11 +1,6 @@
-import React, { CSSProperties, memo } from 'react';
+import React, { memo } from 'react';
 import sprite from 'img/sprite';
-import styled, {
-  css,
-  DefaultTheme,
-  FlattenInterpolation,
-  ThemeProps,
-} from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { Button, ButtonProps } from 'antd';
 
@@ -446,10 +441,10 @@ const variants = {
 
 export type ButtonIconVariant = keyof typeof variants;
 
-function getVariant(
-  variant?: ButtonIconVariant
-): FlattenInterpolation<ThemeProps<DefaultTheme>> {
-  return variant ? variants[variant] : variants.def;
-}
+// function getVariant(
+//   variant?: ButtonIconVariant
+// ): FlattenInterpolation<ThemeProps<DefaultTheme>> {
+//   return variant ? variants[variant] : variants.def;
+// }
 
 export default memo(ButtonIcon);

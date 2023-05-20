@@ -1,13 +1,11 @@
 // @flow
 import * as React from 'react';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import ModalForm, { FilterOpt, ModalFormProps } from '../ModalForm';
-import InputTextPrimary from '../atoms/Inputs/InputTextPrimary';
 import styled from 'styled-components';
 import {
   ITransactionForReq,
   ITransactionReqData,
-  TransactionType,
 } from 'redux/transactions/transactions.types';
 import { CategoryTypes } from 'redux/categories/categories.types';
 import InputLabel from '../atoms/Inputs/InputLabel';
@@ -18,8 +16,6 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { IBase } from '../../redux/global.types';
 import * as _ from 'lodash';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
-import Select from '../atoms/Inputs/Select';
-import { Input } from 'antd';
 import MyTreeSelect from '../atoms/Inputs/MyTreeSelect';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
@@ -45,7 +41,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   ...props
 }) => {
   const {
-    formState: { errors },
+    // formState: { errors },
     register,
     setValue,
     getValues,
@@ -58,9 +54,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   const formValues = watch();
 
   const renderInputsCountIn = useMemo(() => {
-    const canRender =
-      formValues.type && ['INCOME', 'TRANSFER'].includes(formValues.type);
-    return canRender ? (
+    return formValues.type &&
+      ['INCOME', 'TRANSFER'].includes(formValues.type) ? (
       <>
         <InputLabel label="Рахунок IN" direction={'vertical'}>
           <InputText placeholder="Рахунок IN" {...register('countIn')} />
@@ -73,9 +68,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   }, [formValues.type, register]);
 
   const renderInputsCountOut = useMemo(() => {
-    const canRender =
-      formValues.type && ['EXPENSE', 'TRANSFER'].includes(formValues.type);
-    return canRender ? (
+    return formValues.type &&
+      ['EXPENSE', 'TRANSFER'].includes(formValues.type) ? (
       <>
         <InputLabel label="Рахунок OUT" direction={'vertical'}>
           <InputText placeholder="Рахунок OUT" {...register('countOut')} />

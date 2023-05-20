@@ -1,5 +1,5 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
+// import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
 import { SelectItem } from 'components/TableList/TableList';
 import { iconId } from 'data';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -12,10 +12,17 @@ export interface ISearchParamInputProps {
   onSelect?: (item: SelectItem) => void;
 }
 
-const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue, selectedItem, onSelect }) => {
+const SearchParamInput: React.FC<ISearchParamInputProps> = ({
+  data,
+  defaultValue,
+  selectedItem,
+  onSelect,
+}) => {
   const [inputValue, setInputValue] = useState({ searchParam: '' });
   const [filteredData, setFilteredData] = useState<SelectItem[]>(data || []);
-  const [current, setCurrent] = useState<SelectItem | null>(defaultValue || selectedItem || null);
+  // const [current, setCurrent] = useState<SelectItem | null>(
+  //   defaultValue || selectedItem || null
+  // );
   const [isOpen, setIsOpen] = useState(false);
 
   function handleToggleList() {
@@ -25,38 +32,43 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
     });
   }
 
-  function onChange(ev: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = ev.target;
+  // function onChange(ev: React.ChangeEvent<HTMLInputElement>) {
+  //   const { name, value } = ev.target;
+  //
+  //   current && setCurrent(null);
+  //   setInputValue(prev => {
+  //     return { ...prev, [name]: value };
+  //   });
+  // }
 
-    current && setCurrent(null);
-    setInputValue(prev => {
-      return { ...prev, [name]: value };
-    });
-  }
+  // function onSearchParamReset() {
+  //   setInputValue({ searchParam: '' });
+  // }
 
-  function onSearchParamReset() {
-    setInputValue({ searchParam: '' });
-  }
-
-  const renderinput = (<StyledLabel className={isOpen ? 'isOpen' : ''}>
-    <StyledInput
-      type='text'
-      placeholder='Параметр'
-      name='searchParam'
-      className={isOpen ? 'isOpen' : ''}
-      value={inputValue.searchParam}
-      onChange={onChange}
-    />
-
-    <ClearButton onClick={onSearchParamReset} variant='onlyIconNoEffects' disabled={!inputValue?.searchParam}>
-      <SvgIcon iconId={iconId.close} className={'svgIcon'} size='24px' />
-    </ClearButton>
-  </StyledLabel>);
-
+  // const renderinput = (
+  //   <StyledLabel className={isOpen ? 'isOpen' : ''}>
+  //     <StyledInput
+  //       type="text"
+  //       placeholder="Параметр"
+  //       name="searchParam"
+  //       className={isOpen ? 'isOpen' : ''}
+  //       value={inputValue.searchParam}
+  //       onChange={onChange}
+  //     />
+  //
+  //     <ClearButton
+  //       onClick={onSearchParamReset}
+  //       variant="onlyIconNoEffects"
+  //       disabled={!inputValue?.searchParam}
+  //     >
+  //       <SvgIcon iconId={iconId.close} className={'svgIcon'} size="24px" />
+  //     </ClearButton>
+  //   </StyledLabel>
+  // );
 
   const renderFilteredList = useMemo(() => {
     function onSelectItemClick(item: SelectItem) {
-      setCurrent(item);
+      // setCurrent(item);
 
       if (onSelect instanceof Function) {
         onSelect(item);
@@ -66,8 +78,7 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
       handleToggleList();
     }
 
-
-    return filteredData.length > 0 ?
+    return filteredData.length > 0 ? (
       filteredData.map((item, idx) => (
         <ListItem
           key={item.dataKey || item.dataPath}
@@ -78,11 +89,12 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
         >
           <span>{item.label}</span>
         </ListItem>
-      )) : (
-        <ListItem listEmpty>
-          <span>Нічого не знайдено</span>
-        </ListItem>
-      );
+      ))
+    ) : (
+      <ListItem listEmpty>
+        <span>Нічого не знайдено</span>
+      </ListItem>
+    );
   }, [filteredData, onSelect]);
 
   useEffect(() => {
@@ -92,10 +104,20 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
 
     const filteredData = data?.filter(el => {
       if (inputValue?.searchParam && el?.name)
-        return !(inputValue?.searchParam && !el?.name.toLowerCase().includes(inputValue?.searchParam.toLowerCase()));
+        return !(
+          inputValue?.searchParam &&
+          !el?.name
+            .toLowerCase()
+            .includes(inputValue?.searchParam.toLowerCase())
+        );
 
       if (inputValue?.searchParam && el?.label)
-        return !(inputValue?.searchParam && !el?.label.toLowerCase().includes(inputValue?.searchParam.toLowerCase()));
+        return !(
+          inputValue?.searchParam &&
+          !el?.label
+            .toLowerCase()
+            .includes(inputValue?.searchParam.toLowerCase())
+        );
 
       return true;
     });
@@ -108,7 +130,9 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
 
     function onMenuClose(ev: MouseEvent | KeyboardEvent) {
       const { target } = ev;
-      const allowClose = (target instanceof HTMLElement && !target.closest('[data-select]')) || (ev instanceof KeyboardEvent && ev?.code === 'Escape');
+      const allowClose =
+        (target instanceof HTMLElement && !target.closest('[data-select]')) ||
+        (ev instanceof KeyboardEvent && ev?.code === 'Escape');
       allowClose && setIsOpen(false);
       allowClose && setInputValue({ searchParam: '' });
     }
@@ -126,31 +150,24 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
     <>
       <ButtonIcon
         iconId={iconId.tune}
-        size='28px'
+        size="28px"
         iconSize={'90%'}
-        variant='onlyIconNoEffects'
+        variant="onlyIconNoEffects"
         onClick={() => handleToggleList()}
         data-select
-
       />
 
       <InputBox className={isOpen ? 'isOpen' : ''} isOpen={isOpen} data-select>
-
-
-        <ParamsList isOpen={isOpen}>
-          {renderFilteredList}
-        </ParamsList>
-
+        <ParamsList isOpen={isOpen}>{renderFilteredList}</ParamsList>
       </InputBox>
     </>
   );
 };
 
-
 const InputBox = styled.label<{ isOpen?: boolean }>`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows:  1fr;
+  grid-template-rows: 1fr;
 
   position: absolute;
   top: 110%;
@@ -166,102 +183,101 @@ const InputBox = styled.label<{ isOpen?: boolean }>`
 
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
   border-radius: 2px;
-  border: ${({ isOpen }) => (isOpen ? '1px' : '0')} solid ${({ theme }) => theme.trBorderClr};
-
-
+  border: ${({ isOpen }) => (isOpen ? '1px' : '0')} solid
+    ${({ theme }) => theme.trBorderClr};
 `;
-const StyledLabel = styled.label`
-  display: flex;
+// const StyledLabel = styled.label`
+//   display: flex;
+//
+//   position: relative;
+//
+//   border-style: none;
+//   border-image: none;
+//   border-width: 5px;
+//
+//   height: 100%;
+//   //background-color: inherit;
+//
+//   background-color: ${({ theme }) => theme.backgroundColorLight};
+//
+//   border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
+//
+//   &::before {
+//     display: block;
+//     content: '';
+//     position: absolute;
+//     top: 50%;
+//     left: 50%;
+//     height: calc(100% + 4px);
+//     width: 0;
+//
+//     pointer-events: none;
+//
+//     border-radius: 4px;
+//     transition: all ${({ theme }) => theme.globals.timingFnMui};
+//     transform: translate(-50%, -50%);
+//     background-color: ${({ theme }) => theme.accentColor.base};
+//   }
+//
+//   &.isOpen {
+//     &::before {
+//       //width: calc(100% + 4px);
+//     }
+//
+//     /* background: linear-gradient(#fff, #fff) padding-box,
+//       linear-gradient(90deg, rgba(255, 175, 61, 0) 50%, rgba(255, 175, 61, 1) 50%, rgba(255, 175, 61, 0) 50%) border-box; */
+//   }
+//
+//   &:focus-within {
+//   }
+//
+//   &:focus {
+//     outline-style: none;
+//   }
+// `;
 
-  position: relative;
-
-  border-style: none;
-  border-image: none;
-  border-width: 5px;
-
-  height: 100%;
-  //background-color: inherit;
-
-  background-color: ${({ theme }) => theme.backgroundColorLight};
-
-  border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
-
-  &::before {
-    display: block;
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    height: calc(100% + 4px);
-    width: 0;
-
-    pointer-events: none;
-
-    border-radius: 4px;
-    transition: all ${({ theme }) => theme.globals.timingFnMui};
-    transform: translate(-50%, -50%);
-    background-color: ${({ theme }) => theme.accentColor.base};
-  }
-
-  &.isOpen {
-    &::before {
-      //width: calc(100% + 4px);
-    }
-
-    /* background: linear-gradient(#fff, #fff) padding-box,
-      linear-gradient(90deg, rgba(255, 175, 61, 0) 50%, rgba(255, 175, 61, 1) 50%, rgba(255, 175, 61, 0) 50%) border-box; */
-  }
-
-  &:focus-within {
-  }
-
-  &:focus {
-    outline-style: none;
-  }
-`;
-
-const StyledInput = styled.input`
-  display: block;
-
-  height: 100%;
-  width: 100%;
-
-  padding: 4px 32px 4px 8px;
-
-  font-size: 14px;
-  font-family: inherit;
-  color: inherit;
-  background-color: inherit;
-
-    //background-color: ${({ theme }) => theme.backgroundColorLight};
-  border-radius: 2px;
-  border-style: none;
-  transition: border ${({ theme }) => theme.globals.timingFnMui};
-
-  &:focus {
-    outline-style: none;
-  }
-
-  &.isOpen {
-    border-color: transparent;
-  }
-
-  &::placeholder {
-    color: ${({ theme }) => theme.globals.inputPlaceholderColor};
-  }
-`;
-
-const ClearButton = styled(ButtonIcon)`
-  position: absolute;
-  right: 0;
-  top: 50%;
-  z-index: 10;
-  width: 28px;
-  height: 28px;
-
-  fill: ${({ theme }) => theme.accentColor.base};
-  transform: translateY(-50%);
-`;
+// const StyledInput = styled.input`
+//   display: block;
+//
+//   height: 100%;
+//   width: 100%;
+//
+//   padding: 4px 32px 4px 8px;
+//
+//   font-size: 14px;
+//   font-family: inherit;
+//   color: inherit;
+//   background-color: inherit;
+//
+//   //background-color: ${({ theme }) => theme.backgroundColorLight};
+//   border-radius: 2px;
+//   border-style: none;
+//   transition: border ${({ theme }) => theme.globals.timingFnMui};
+//
+//   &:focus {
+//     outline-style: none;
+//   }
+//
+//   &.isOpen {
+//     border-color: transparent;
+//   }
+//
+//   &::placeholder {
+//     color: ${({ theme }) => theme.globals.inputPlaceholderColor};
+//   }
+// `;
+//
+// const ClearButton = styled(ButtonIcon)`
+//   position: absolute;
+//   right: 0;
+//   top: 50%;
+//   z-index: 10;
+//   width: 28px;
+//   height: 28px;
+//
+//   fill: ${({ theme }) => theme.accentColor.base};
+//   transform: translateY(-50%);
+// `;
 
 const ParamsList = styled.ul<{ isOpen: boolean }>`
   display: grid;
@@ -276,7 +292,6 @@ const ParamsList = styled.ul<{ isOpen: boolean }>`
   max-height: 100%;
 
   overflow: auto;
-
 `;
 
 const ListItem = styled.li<{ listEmpty?: boolean }>`
@@ -293,7 +308,8 @@ const ListItem = styled.li<{ listEmpty?: boolean }>`
 
   &:hover {
     cursor: default;
-    background-color: ${({ listEmpty }) => (listEmpty ? '' : 'rgba(254, 254, 254, 0.1)')};
+    background-color: ${({ listEmpty }) =>
+      listEmpty ? '' : 'rgba(254, 254, 254, 0.1)'};
   }
 
   @media screen and (max-width: 480px) {

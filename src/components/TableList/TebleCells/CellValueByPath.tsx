@@ -1,7 +1,6 @@
 import React from 'react';
-import styled from 'styled-components';
 import { useRow } from '../TableRows/TableRow';
-import { CellTitleContent, CellTittleProps } from './CellTitle';
+import { CellTittleProps } from './CellTitle';
 import getValueByPath from '../../../utils/getValueByPath';
 import Cell from './Cells';
 

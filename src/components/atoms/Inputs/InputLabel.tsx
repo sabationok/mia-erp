@@ -1,6 +1,5 @@
-import React, { CSSProperties, forwardRef } from 'react';
+import React, { CSSProperties } from 'react';
 import styled, { css } from 'styled-components';
-import { bool } from 'yup';
 import { FieldError } from 'react-hook-form';
 
 export interface InputLabelProps

@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import getNestedData from 'utils/getNestedData';
 import { useRow } from '../TableRows/TableRow';
 import { CellTitleContent, CellTittleProps } from './CellTitle';
-import getValueByPath from '../../../utils/getValueByPath';
+import getValueByPath from 'utils/getValueByPath';
 
 export interface CellTagsProps {
   titleInfo: CellTittleProps;

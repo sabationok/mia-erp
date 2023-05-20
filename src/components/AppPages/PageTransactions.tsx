@@ -11,7 +11,6 @@ import { useMemo } from 'react';
 import useTrFilterSelectors from 'redux/transactions/useTrFilterSelectors.hook';
 import { useTrActions } from 'redux/transactions/useTrTableActions.hook';
 import { ITransaction } from '../../redux/transactions/transactions.types';
-import { IBase } from '../../redux/global.types';
 
 const PageTransactions = () => {
   const transactionsService = useTransactionsService();

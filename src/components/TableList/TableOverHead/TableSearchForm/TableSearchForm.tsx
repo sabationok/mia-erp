@@ -1,7 +1,7 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { SelectItem } from 'components/TableList/TableList';
 import { iconId } from 'data';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import SearchParamInput from './SearchParamInput';
 
@@ -11,7 +11,9 @@ export interface TableSearchProps {
 
 const TableSearchForm: React.FC<TableSearchProps> = ({ tableSearchParams }) => {
   const [searchParam, setSearchParam] = useState<SelectItem | undefined>();
-  const [searchValue, setSearchValue] = useState<{ search: string }>({ search: '' });
+  const [searchValue, setSearchValue] = useState<{ search: string }>({
+    search: '',
+  });
 
   function onSelect(item: SelectItem) {
     setSearchParam(item);
@@ -35,36 +37,41 @@ const TableSearchForm: React.FC<TableSearchProps> = ({ tableSearchParams }) => {
     <SearchForm>
       <StyledLabel>
         <SearchInput
-          type='text'
-          name='search'
+          type="text"
+          name="search"
           value={searchValue.search}
-          placeholder={searchParam?.label ? `Пошук за: "${searchParam?.label}"` : 'Оберіть параметр пошуку'}
+          placeholder={
+            searchParam?.label
+              ? `Пошук за: "${searchParam?.label}"`
+              : 'Оберіть параметр пошуку'
+          }
           onChange={onChange}
         />
       </StyledLabel>
 
-
       <ButtonIcon
         iconId={iconId.search}
-        size='28px'
+        size="28px"
         iconSize={'90%'}
-        variant='onlyIconNoEffects'
+        variant="onlyIconNoEffects"
         disabled={!searchParam?.label || !searchValue.search}
         onClick={onSubmit}
       />
 
-
-      <SearchParamInput {...{ data: tableSearchParams, onSelect, searchParam, defaultValue: searchParam?.title }} />
-
-
+      <SearchParamInput
+        {...{
+          data: tableSearchParams,
+          onSelect,
+          searchParam,
+          defaultValue: searchParam?.title,
+        }}
+      />
     </SearchForm>
   );
 };
 
 const SearchForm = styled.div`
-
   flex: 1 0 150px;
-
 
   display: grid;
   grid-template-columns: 1fr min-content min-content;
@@ -80,7 +87,6 @@ const StyledLabel = styled.label`
   border-style: none;
   border-image: none;
   border-width: 0;
-
 
   &::before {
     display: block;
@@ -122,7 +128,7 @@ const SearchInput = styled.input`
 
   &:hover,
   &:focus {
-      /* border-bottom-color: ${({ theme }) => theme.accentColor.hover}; */
+    /* border-bottom-color: ${({ theme }) => theme.accentColor.hover}; */
     outline-style: none;
   }
 `;

@@ -1,6 +1,8 @@
 import React, { memo, useMemo } from 'react';
 import styled from 'styled-components';
-import SelectsTreeListItem, { SelectsTreeListItemProps } from './SelectsTreeListItem';
+import SelectsTreeListItem, {
+  SelectsTreeListItemProps,
+} from './SelectsTreeListItem';
 
 export interface SelectsListProps<T = any> {
   isOpen: boolean;
@@ -11,36 +13,32 @@ export interface SelectsListProps<T = any> {
   ownerId?: string;
 }
 
-const SelectsTreeList: React.FC<SelectsListProps<SelectsTreeListItemProps>> =
-  ({
-     isOpen,
-     ownerId,
-     entryList,
-     onSelectItems,
-     onCheckSelectStatus,
-   }) => {
+const SelectsTreeList: React.FC<SelectsListProps<SelectsTreeListItemProps>> = ({
+  isOpen,
+  ownerId,
+  entryList,
+  onSelectItems,
+  onCheckSelectStatus,
+}) => {
+  const renderList = useMemo(() => {
+    return entryList?.map((item, idx) => (
+      <SelectsTreeListItem
+        key={item._id || idx}
+        {...item}
+        onSelectItems={onSelectItems}
+        onCheckSelectStatus={onCheckSelectStatus}
+      />
+    ));
+  }, [entryList, onCheckSelectStatus, onSelectItems]);
 
-    const renderList = useMemo(() => {
-      return entryList?.map((item, idx) => (
-        <SelectsTreeListItem
-          key={item._id || idx}
-          {...item}
-          onSelectItems={onSelectItems}
-          onCheckSelectStatus={onCheckSelectStatus}
-        />
-      ));
+  return (
+    <List isOpen={isOpen} ownerId={ownerId}>
+      {renderList}
+    </List>
+  );
+};
 
-    }, [entryList, onCheckSelectStatus, onSelectItems]);
-
-
-    return (
-      <List isOpen={isOpen} ownerId={ownerId}>
-        {renderList}
-      </List>
-    );
-  };
-
-const List = styled.ul<{ isOpen?: boolean, ownerId?: string }>`
+const List = styled.ul<{ isOpen?: boolean; ownerId?: string }>`
   display: grid;
   grid-template-columns: 1fr;
   grid-auto-rows: min-content;
@@ -52,11 +50,10 @@ const List = styled.ul<{ isOpen?: boolean, ownerId?: string }>`
 
   overflow: auto;
 
-
   @media screen and (max-width: 768px) {
     //max-height: 200px;
   }
   /* background-color: #323234; */
 `;
 
-export default SelectsTreeList;
+export default memo(SelectsTreeList);

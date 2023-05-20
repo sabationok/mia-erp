@@ -1,13 +1,7 @@
-import { forwardRef, useState } from 'react';
-import { ICount } from '../../../redux/counts/counts.types';
-import { ICategory } from '../../../redux/categories/categories.types';
+import { forwardRef } from 'react';
 import InputLabel, { InputLabelProps } from './InputLabel';
 import InputText from './InputText';
-import {
-  FieldValues,
-  UseFormRegister,
-  UseFormRegisterReturn,
-} from 'react-hook-form';
+
 import { IBase } from '../../../redux/global.types';
 import styled from 'styled-components';
 
@@ -29,8 +23,8 @@ const Select: React.ForwardRefRenderFunction<any, SelectProps> = (
   { name, RenderInput, labelProps },
   ref: React.Ref<any>
 ) => {
-  const [isOpen, setIsOpen] = useState(false);
-  
+  // const [isOpen, setIsOpen] = useState(false);
+
   return (
     <InputLabel {...labelProps}>
       <OptionsBox>

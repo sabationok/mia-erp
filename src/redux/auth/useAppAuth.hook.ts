@@ -1,18 +1,25 @@
 import { useAuthSelector } from 'redux/selectors.store';
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { IAuthState } from './auth.types';
-import { ILoginUserData, IRegistrationData, logInUserThunk, registerUserThunk } from './auth.thunks';
+import {
+  ILoginUserData,
+  IRegistrationData,
+  logInUserThunk,
+  registerUserThunk,
+} from './auth.thunks';
 import { toast } from 'react-toastify';
-import useCategoriesService from '../categories/useCategoriesService.hook';
 
 const registration = (dispatch: AppDispatch, authState: IAuthState) => {
-  function registerUser({ name, secondName, email, password }: IRegistrationData) {
+  function registerUser({
+    name,
+    secondName,
+    email,
+    password,
+  }: IRegistrationData) {
     const payload = {
       submitData: { name, secondName, email, password },
-      onSuccess: () => {
-      },
-      onError: () => {
-      },
+      onSuccess: () => {},
+      onError: () => {},
     };
     dispatch(registerUserThunk(payload));
     return;
@@ -21,7 +28,6 @@ const registration = (dispatch: AppDispatch, authState: IAuthState) => {
   return registerUser as typeof registerUser;
 };
 
-
 const loginUser = (dispatch: AppDispatch, authState: IAuthState) => {
   function login({ email, password }: Partial<ILoginUserData>) {
     const payload = {
@@ -29,10 +35,8 @@ const loginUser = (dispatch: AppDispatch, authState: IAuthState) => {
       onSuccess: () => {
         console.log(email, password);
         toast.success(`Wellcome: ${email}`);
-      }
-      ,
-      onError: () => {
       },
+      onError: () => {},
     };
     dispatch(logInUserThunk(payload));
     return;
@@ -45,10 +49,11 @@ const useAuthService = () => {
   const state = useAuthSelector();
 
   return {
-    dispatch, ...state,
+    dispatch,
+    ...state,
     registerUser: registration(dispatch, state),
     loginUser: loginUser(dispatch, state),
   };
 };
-export type AuthService = ReturnType<typeof useAuthService>
+export type AuthService = ReturnType<typeof useAuthService>;
 export default useAuthService;

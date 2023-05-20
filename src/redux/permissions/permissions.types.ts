@@ -3,10 +3,8 @@ import { IBase } from '../global.types';
 import { ICompany } from '../companies/companies.types';
 import { IUser } from '../auth/auth.types';
 import { StateErrorType } from '../reduxTypes.types';
-import { PagePathType } from '../../data/pages.data';
 
-export type PermissionStatusType = 'active' | 'rejected' | 'pending' | 'baned'
-
+export type PermissionStatusType = 'active' | 'rejected' | 'pending' | 'baned';
 
 export interface IPermission extends IBase {
   status: PermissionStatusType;
@@ -17,13 +15,13 @@ export interface IPermission extends IBase {
 }
 
 export interface IPermissionResData {
-  meta: {},
-  data: IPermission | Partial<IPermission>
+  meta: {};
+  data: IPermission | Partial<IPermission>;
 }
 
 export interface IPermissionsResData {
-  meta: {},
-  data: Partial<IPermission>[] | IPermission[]
+  meta: {};
+  data: Partial<IPermission>[] | IPermission[];
 }
 
 export interface IPermissionReqData {

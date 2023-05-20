@@ -1,5 +1,4 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { MaxToTablet } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 import { iconId } from 'data';
 import styled from 'styled-components';
 import { FilterReturnDataType, FilterSelectorDataType } from './AppFilter';
@@ -92,7 +91,6 @@ const StOpenButton = styled(ButtonIcon)<{ isCurrent: boolean }>`
 `;
 const SelectorList = styled.div`
   overflow: hidden;
-
 `;
 
 export default Selector;
