@@ -18,6 +18,12 @@ const AppRoutes: React.FC = () => {
       />
 
       <Route
+        path={'/'}
+        element={<Navigate to="/auth" />}
+        errorElement={<PageNotFound />}
+      />
+
+      <Route
         path="auth/*"
         element={<PublicRoute redirectTo={`/${appPages.transactions.path}`} />}
       >

@@ -12,7 +12,7 @@ import useTrFilterSelectors from 'redux/transactions/useTrFilterSelectors.hook';
 import { useTrActions } from 'redux/transactions/useTrTableActions.hook';
 import { ITransaction } from '../../redux/transactions/transactions.types';
 
-const PageTransactions = () => {
+const PageTransactions: React.FC<any> = () => {
   const transactionsService = useTransactionsService();
   const filterSelectors = useTrFilterSelectors();
   const tableActions = useTrActions(transactionsService);
