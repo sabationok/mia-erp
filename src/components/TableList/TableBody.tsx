@@ -39,14 +39,22 @@ const TableBody: React.ForwardRefRenderFunction<any> = (
   const renderRows = useMemo(
     () =>
       tableData?.map((rowData, idx) => {
+        const checked = selectedRows?.length
+          ? selectedRows?.includes(rowData._id)
+          : false;
+
         return (
           <TableRow
             key={idx}
-            {...{ rowData, idx, checked: selectedRows?.includes(rowData._id) }}
+            {...{
+              rowData,
+              idx,
+              checked,
+            }}
           />
         );
       }),
-    [selectedRows, tableData]
+    [selectedRows?.length, tableData]
   );
 
   return <TBody onClick={handleOnRowClick}>{renderRows}</TBody>;

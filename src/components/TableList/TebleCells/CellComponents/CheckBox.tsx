@@ -6,7 +6,7 @@ import styled from 'styled-components';
 
 export interface CustomCheckBoxProps {
   size?: string;
-  icon?: string;
+  icon?: string | null;
   idx?: string | number;
   onChange?: CustomCheckboxEventHandler;
 }

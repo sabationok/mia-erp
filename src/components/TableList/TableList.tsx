@@ -13,6 +13,7 @@ import {
   FilterSelectorType,
 } from 'components/Filter/AppFilter';
 import { IBase } from 'redux/global.types';
+import { CustomCheckboxEvent } from './TebleCells/CellComponents/CheckBox';
 
 export interface SelectItemBase extends Record<string, any> {
   _id?: string;
@@ -150,7 +151,11 @@ const TableList: React.FC<ITableListProps> = ({
     });
   }
 
-  function onHeadCheckboxChange() {}
+  function onHeadCheckboxChange(e: CustomCheckboxEvent) {
+    const { checked } = e;
+    if (checked) setSelectedRows(prev => tableData?.map(el => el._id) || prev);
+    if (!checked) setSelectedRows([]);
+  }
 
   const CTX: ITableListContext<IBase> = {
     RowActionsComp,

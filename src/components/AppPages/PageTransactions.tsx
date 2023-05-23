@@ -17,7 +17,7 @@ const PageTransactions: React.FC<any> = () => {
   const filterSelectors = useTrFilterSelectors();
   const tableActions = useTrActions(transactionsService);
   // const [selectedTr, setSelectedTr] = useState<any>(null);
-
+  console.log(filterSelectors);
   const tableConfig = useMemo(
     (): ITableListProps<ITransaction> => ({
       tableData: transactionsMockData || transactionsService.state.transactions,

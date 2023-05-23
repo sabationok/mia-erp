@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useTable } from '../TableList';
 import CheckBox, { CustomCheckboxEvent } from './CellComponents/CheckBox';
+import { iconId } from '../../../img/sprite';
 
 // import s from './TableCells.module.scss';
 export type CellCheckBoxHeadProps = {
@@ -14,36 +15,44 @@ const CellCheckBoxHead: React.FC<CellCheckBoxHeadProps> = ({
   className,
   ...props
 }) => {
-  const { selectedRows, tableData } = useTable();
+  const { selectedRows, tableData, onHeadCheckboxChange } = useTable();
   const [some, setSome] = useState(false);
   const [everyOn, setEveryOn] = useState(false);
-  const { onHeadCheckboxChange } = useTable();
 
-  function onChange({ checked }: CustomCheckboxEvent) {
+  function onChange(event: CustomCheckboxEvent) {
     setSome(prev => prev);
     setEveryOn(prev => prev);
+    onHeadCheckboxChange && onHeadCheckboxChange(event);
   }
 
   useEffect(() => {
-    onHeadCheckboxChange && onHeadCheckboxChange({ some, everyOn });
-  }, [everyOn, onHeadCheckboxChange, some]);
+    if (!selectedRows || !tableData) return;
+    if (selectedRows?.length === tableData?.length)
+      console.log(
+        'selectedRows?.length === tableData?.length',
+        selectedRows?.length === tableData?.length
+      );
 
-  useEffect(() => {
-    console.log('head checkbox', selectedRows?.length === tableData?.length);
-    if (selectedRows?.length === tableData?.length) {
-      setEveryOn(selectedRows?.length === tableData?.length);
-      console.log('head checkbox', selectedRows?.length === tableData?.length);
-    }
-  }, [selectedRows?.length, tableData?.length]);
+    setEveryOn(selectedRows?.length === tableData?.length);
+
+    setSome(
+      selectedRows?.length > 0 && selectedRows?.length < tableData?.length
+    );
+  }, [selectedRows, selectedRows?.length, tableData, tableData?.length]);
 
   return (
     <StCell {...props} className={className}>
       <CheckBox
         {...props}
         onChange={onChange}
-        // checked={some ? true : everyOn}
-        checked={selectedRows?.length === tableData?.length}
-        // icon={some ? iconId.checkBoxMinus : undefined}
+        checked={everyOn}
+        // checked={selectedRows?.length === tableData?.length}
+        icon={
+          (some && iconId.checkBoxMinus) ||
+          (everyOn && iconId.checkBoxOn) ||
+          (!everyOn && iconId.checkBoxOff) ||
+          null
+        }
       />
     </StCell>
   );
@@ -72,7 +81,7 @@ const StCell = styled.div`
     height: 36px;
     width: 2px;
 
-    background-color: ${({ theme }) => theme.tableHeaderStroke};
+    //background-color: ${({ theme }) => theme.tableHeaderStroke};
   }
 `;
 export default CellCheckBoxHead;

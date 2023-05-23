@@ -87,20 +87,21 @@ const Filter: React.FC<FilterProps> = ({
     unregister,
     handleSubmit,
     setValue,
-    getValues,
+
+    watch,
   } = useForm<FilterReturnDataType>({
     defaultValues: filterDefaultValues,
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
+  const formValues = watch();
 
   const onFilterDataChange = useCallback(
     (name: keyof FilterReturnDataType, value?: string[]) => {
       if (name && value) setValue(name, value);
       if (!value) unregister(name);
-      console.log(getValues());
     },
-    [getValues, setValue, unregister]
+    [setValue, unregister]
   );
 
   const onSelectorClick = useCallback(
@@ -128,7 +129,7 @@ const Filter: React.FC<FilterProps> = ({
         >
           <SelectorContent
             getDefaultValue={(selectorName: keyof FilterReturnDataType) =>
-              getValues()[selectorName] || []
+              formValues[selectorName] || []
             }
             onSelectorSubmit={onFilterDataChange}
             data={data}
@@ -140,7 +141,7 @@ const Filter: React.FC<FilterProps> = ({
       CurrentData,
       currentIdx,
       filterSelectors,
-      getValues,
+      formValues,
       onFilterDataChange,
       onSelectorClick,
     ]
@@ -307,11 +308,11 @@ function isSelectorType(obj: any): obj is FilterSelectorType {
   //   console.log(`obj.ListComp !== 'function'`, obj.ListComp);
   //   return false;
   // }
+
   return (
     typeof obj.selectorName === 'string' &&
     typeof obj.label === 'string' &&
-    Array.isArray(obj.data) &&
-    typeof obj.ListComp === 'function'
+    Array.isArray(obj.data)
   );
 }
 
