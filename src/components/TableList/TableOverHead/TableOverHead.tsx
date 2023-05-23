@@ -8,16 +8,15 @@ import TableSearchForm from './TableSearchForm/TableSearchForm';
 
 const TableOverHead: React.FC<React.HTMLAttributes<HTMLDivElement>> = props => {
   const { tableActions, tableSearchParams, isSearch = true } = useTable();
-  
 
   return (
-    <OverHead className='tOverHead' {...props}>
-      <LeftSide className='leftSide'>
+    <OverHead className="tOverHead" {...props}>
+      <LeftSide className="leftSide">
         {isSearch && <TableSearchForm {...{ tableSearchParams }} />}
       </LeftSide>
 
       <DeviceConrol.MinDesktop>
-        <RightSide className='rightSide'>
+        <RightSide className="rightSide">
           {tableActions && <TableActions {...tableActions} />}
         </RightSide>
       </DeviceConrol.MinDesktop>
@@ -37,6 +36,8 @@ const OverHead = styled.div`
 
   width: 100%;
   padding: 8px;
+
+  background-color: ${({ theme }) => theme.tableBackgroundColor};
   @media screen and (max-height: 480px) {
     padding: 8px;
   }

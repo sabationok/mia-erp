@@ -21,7 +21,14 @@ export interface IDocument extends IBase {
   type?: string;
 }
 
-export type TrStatus = 'rejected' | 'approved' | 'pending';
+export type TrStatus =
+  | 'rejected'
+  | 'approved'
+  | 'pending'
+  | 'error'
+  | 'success'
+  | 'warning'
+  | 'info';
 
 export interface ITransaction extends IBase {
   amount: number;

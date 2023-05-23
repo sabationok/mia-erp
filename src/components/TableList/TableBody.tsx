@@ -2,50 +2,54 @@ import TableRow from './TableRows/TableRow';
 import { useTable } from './TableList';
 
 import styled from 'styled-components';
-import { forwardRef } from 'react';
+import { forwardRef, useMemo } from 'react';
 
 const TableBody: React.ForwardRefRenderFunction<any> = (
   props,
   ref: React.Ref<any>
 ) => {
-  const { tableData, rowRef, onRowClick } = useTable();
+  const { tableData, rowRef, onRowClick, selectedRows } = useTable();
 
   function handleOnRowClick(ev: React.MouseEvent<HTMLDivElement>) {
-    const { target } = ev;
+    if (!rowRef) return;
     let rowEl: any;
+    const { target } = ev;
 
     if (target instanceof HTMLElement && !target.closest('[data-row]')) {
       rowRef?.current && rowRef.current.classList.remove('selected');
       return;
     }
-    rowEl = target instanceof HTMLElement && target.closest('[data-row]');
+    rowEl = target instanceof HTMLElement ? target.closest('[data-row]') : null;
 
-    if (onRowClick instanceof Function) {
-      let rowData = tableData?.find(el => el?._id === rowEl?.id);
-      onRowClick({ ev, _id: rowEl?.id, rowData });
+    if (rowEl && onRowClick instanceof Function) {
+      onRowClick({ _id: rowEl?.id, ev });
     }
-
-    if (!rowRef?.current) {
-      if (rowRef?.current) rowRef.current = rowEl;
+    if (rowEl !== rowRef.current) {
+      rowRef.current?.classList.remove('selected');
+      rowRef.current = rowEl;
       rowRef?.current?.classList.add('selected');
       return;
     }
-
-    if (rowEl !== rowRef.current) {
-      rowRef.current.classList.remove('selected');
-      rowRef.current = rowEl;
+    if (rowEl === rowRef.current) {
+      rowRef.current?.classList.remove('selected');
+      rowRef.current = undefined;
     }
-
-    rowRef?.current?.classList.toggle('selected');
   }
 
-  return (
-    <TBody onClick={handleOnRowClick}>
-      {tableData?.map((rowData, idx) => {
-        return <TableRow key={idx} {...{ rowData, idx }} />;
-      })}
-    </TBody>
+  const renderRows = useMemo(
+    () =>
+      tableData?.map((rowData, idx) => {
+        return (
+          <TableRow
+            key={idx}
+            {...{ rowData, idx, checked: selectedRows?.includes(rowData._id) }}
+          />
+        );
+      }),
+    [selectedRows, tableData]
   );
+
+  return <TBody onClick={handleOnRowClick}>{renderRows}</TBody>;
 };
 
 const TBody = styled.div`
@@ -58,11 +62,13 @@ const TBody = styled.div`
 
   position: relative;
 
+  background-color: ${({ theme }) => theme.tableBackgroundColor};
+
   & .selected {
-    background-color: var(--ligthOrange);
+    background-color: ${({ theme }) => theme.tableRowBackgroundActive};
 
     &:hover {
-      background-color: var(--ligthOrange);
+      background-color: ${({ theme }) => theme.tableRowBackgroundHover};
     }
   }
 `;

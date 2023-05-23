@@ -1,7 +1,11 @@
 import React, { createContext, useContext, useState } from 'react';
 import CellTextDbl from '../TebleCells/CellTextDbl';
 import { CellsMap } from '../TebleCells';
-import { useTable } from '../TableList';
+import {
+  OnCheckBoxChangeHandler,
+  OnCheckBoxChangeHandlerEvent,
+  useTable,
+} from '../TableList';
 
 import styled from 'styled-components';
 import { ThRow, ThRowData, ThRowStickyEl } from './TableHeadRow';
@@ -12,6 +16,7 @@ import {
 import { ICount } from '../../../redux/counts/counts.types';
 import { IContractor } from '../../../redux/contractors/contractors.types';
 import { ICategory } from '../../../redux/categories/categories.types';
+import CellCheckBox from '../TebleCells/CellCheckBox';
 
 export type TRowDataType =
   | ITransaction
@@ -23,16 +28,30 @@ export type TRowDataType =
 export interface TableRowProps {
   rowData: TRowDataType;
   idx: number;
+  checked?: boolean;
 }
 
-export interface RowCTXProps extends TableRowProps {}
+export interface RowCTXValue extends TableRowProps {
+  isActionsOpen?: boolean;
+  handleToggleActions?: () => void;
+  handleCloseActions?: () => void;
+  onRowCheckboxChange?: OnCheckBoxChangeHandler;
+}
 
 export const RowCTX = createContext<any>({});
-export const useRow = () => useContext(RowCTX) as RowCTXProps;
+export const useRow = () => useContext(RowCTX) as RowCTXValue;
 
-const TableRow: React.FC<TableRowProps> = props => {
-  const { tableTitles, tableData, rowGrid } = useTable();
+const TableRow: React.FC<TableRowProps> = ({ checked, ...props }) => {
+  const {
+    tableTitles,
+    tableData,
+    selectedRows,
+    rowGrid,
+    checkBoxes,
+    onCheckboxChange,
+  } = useTable();
   const [isActionsOpen, setIsActionsOpen] = useState(false);
+  const [isChecked, setIsChecked] = useState<boolean>(checked ?? false);
 
   function handleToggleActions() {
     setIsActionsOpen(!isActionsOpen);
@@ -42,19 +61,25 @@ const TableRow: React.FC<TableRowProps> = props => {
     setIsActionsOpen(false);
   }
 
-  const ctxValue = {
+  function onRowCheckboxChange(event: OnCheckBoxChangeHandlerEvent) {
+    setIsChecked(event.checked);
+    onCheckboxChange && onCheckboxChange(event);
+  }
+
+  const ctxValue: RowCTXValue = {
     ...props,
     isActionsOpen,
     handleToggleActions,
     handleCloseActions,
+    onRowCheckboxChange,
   };
 
   return (
-    <Row id={props?.rowData?._id} data-row>
+    <Row id={props?.rowData?._id} checked={isChecked} data-row>
       <RowCTX.Provider value={{ ...ctxValue }}>
-        <RowStickyEl>{/* {checkBoxes && <CellCheckBox />} */}</RowStickyEl>
+        <RowStickyEl>{!checkBoxes && <CellCheckBox />}</RowStickyEl>
 
-        <StRowData gridRepeat={tableData?.length || 0} style={{ ...rowGrid }}>
+        <RowData gridRepeat={tableData?.length || 0} style={{ ...rowGrid }}>
           {tableTitles &&
             tableTitles?.map((item, idx) => {
               let CellComp = item.action ? CellsMap[item.action] : CellTextDbl;
@@ -65,13 +90,13 @@ const TableRow: React.FC<TableRowProps> = props => {
 
               return <CellTextDbl key={idx} titleInfo={item} idx={idx} />;
             })}
-        </StRowData>
+        </RowData>
       </RowCTX.Provider>
     </Row>
   );
 };
 
-const Row = styled(ThRow)`
+const Row = styled(ThRow)<{ checked?: boolean }>`
   display: grid;
   grid-template-columns: min-content 1fr;
   grid-template-rows: 1fr;
@@ -79,22 +104,34 @@ const Row = styled(ThRow)`
   height: 44px;
   min-width: 100%;
 
+  position: relative;
+
   border-top: 1px solid transparent;
   border-bottom: 1px solid transparent;
   border-bottom-color: ${({ theme }) => theme.trBorderClr};
 
+  background-color: ${({ theme, checked }) =>
+    checked ? theme.tableRowBackgroundActive : theme.tableBackgroundColor};
+
   &:hover {
-    border-color: ${({ theme }) => theme.accentColor.base};
+    //border-color: ${({ theme }) => theme.accentColor.base};
+    z-index: 5;
+    background-color: ${({ theme }) => theme.tableRowBackgroundHover};
+    box-shadow: ${({ theme }) => theme.tableRowShadow};
+  }
+
+  &:active {
+    background-color: ${({ theme }) => theme.tableRowBackgroundActive};
   }
 
   &.selected {
-    background-color: ${({ theme }) => theme.accentColor.light};
+    background-color: ${({ theme }) => theme.tableRowBackgroundActive};
   }
 `;
 
 const RowStickyEl = styled(ThRowStickyEl)``;
 
-const StRowData = styled(ThRowData)<{ gridRepeat: number }>`
+const RowData = styled(ThRowData)<{ gridRepeat: number }>`
   display: grid;
   grid-template-columns: ${({ gridRepeat }) =>
     `repeat(${gridRepeat} min-content)`};

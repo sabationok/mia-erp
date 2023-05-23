@@ -31,10 +31,10 @@ const PageTransactions: React.FC<any> = () => {
       footer: true,
       filterDefaultValues: { categories: [''] },
       onFilterSubmit: data => {
-        console.log(data);
+        // console.log(data);
       },
       onRowClick: data => {
-        console.log(data);
+        // console.log(data);
       },
     }),
     [filterSelectors, tableActions, transactionsService.state.transactions]

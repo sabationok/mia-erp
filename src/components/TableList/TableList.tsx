@@ -46,24 +46,28 @@ export interface TableActionsProps<TDataType = any> {
   actions?: TableActionProps<TDataType>[];
 }
 
-export interface TableSelectedRow extends Record<string, any> {
-  _id: string;
-  amount?: number;
-  type?: string;
-  selected?: boolean;
-}
-
 export interface ITableSortParam
   extends Pick<SelectItem, 'descending' | 'path' | 'dataPath' | 'dataKey'> {}
 
 export type OnRowClickHandlerData<RData = any> = {
-  ev: MouseEvent | React.MouseEvent<HTMLDivElement>;
+  ev?: MouseEvent | React.MouseEvent<HTMLDivElement>;
   _id?: string;
   rowData?: RData;
 };
 export type OnRowClickHandler<RData = any> = (
   data: OnRowClickHandlerData<RData>
 ) => any;
+
+export type OnCheckBoxChangeHandlerEvent<V = any> = {
+  ev?: MouseEvent | React.MouseEvent<HTMLDivElement>;
+  checked: boolean;
+  _id?: string;
+  value?: V;
+};
+export type OnCheckBoxChangeHandler<V = any> = (
+  data: OnCheckBoxChangeHandlerEvent<V>
+) => any;
+export type OnHeadCheckBoxChangeHandler<V = any> = (data: V) => any;
 
 export interface ITableListProps<TDataType = any>
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -91,8 +95,8 @@ export interface ITableListProps<TDataType = any>
   filterDefaultValues?: FilterReturnDataType;
   onFilterSubmit?: (filterData: FilterReturnDataType) => void;
   onRowClick?: OnRowClickHandler<TDataType>;
-  onUnSelectRow?: OnRowClickHandler<TDataType>;
-  onSelectRow?: OnRowClickHandler<TDataType>;
+  onCheckboxChange?: OnCheckBoxChangeHandler;
+  onHeadCheckboxChange?: OnHeadCheckBoxChangeHandler;
   onTableSortParamChange?: (params: ITableSortParam) => void;
   handleTableSort?: (sortParam: ITableSortParam) => void;
 }
@@ -116,14 +120,13 @@ const TableList: React.FC<ITableListProps> = ({
   tableActions,
   footer = false,
   onRowClick,
-  onSelectRow,
-  onUnSelectRow,
+  onCheckboxChange,
   onFilterSubmit,
   filterTitle,
   filterDefaultValues,
   ...props
 }) => {
-  const [selectedRows, setSelectedRows] = useState<TableSelectedRow[]>([]);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const rowRef = useRef<HTMLElement>();
 
   const rowGrid = {
@@ -131,25 +134,23 @@ const TableList: React.FC<ITableListProps> = ({
     gridTemplateColumns: `repeat(${tableTitles?.length}, min-content)`,
   };
 
-  function onSelectRowWrapper({ rowData, ...props }: OnRowClickHandlerData) {
-    if (typeof onSelectRow === 'function') onSelectRow({ rowData, ...props });
-
-    setSelectedRows(prev => {
-      return [rowData, ...prev];
-    });
-  }
-
-  function onUnSelectRowWrapper({ rowData, ...props }: OnRowClickHandlerData) {
-    typeof onUnSelectRow === 'function' && onUnSelectRow({ rowData, ...props });
-    setSelectedRows(prev => {
-      return prev?.filter(row => row._id !== rowData?._id);
-    });
-  }
-
   function onRowClickWrapper(rowData: any) {
-    console.log(rowRef.current);
+    // console.log(rowRef.current);
     typeof onRowClick === 'function' && onRowClick(rowData);
   }
+
+  function onCheckboxChangeWrapper({
+    checked,
+    _id,
+  }: OnCheckBoxChangeHandlerEvent) {
+    setSelectedRows(prev => {
+      if (checked && _id) return [...prev, _id];
+      if (!checked && _id) return prev.filter(el => el !== _id);
+      return prev;
+    });
+  }
+
+  function onHeadCheckboxChange() {}
 
   const CTX: ITableListContext<IBase> = {
     RowActionsComp,
@@ -166,9 +167,9 @@ const TableList: React.FC<ITableListProps> = ({
     tableData,
     isLoading,
     onFilterSubmit,
-    onSelectRow: onSelectRowWrapper,
-    onUnSelectRow: onUnSelectRowWrapper,
     onRowClick: onRowClickWrapper,
+    onCheckboxChange: onCheckboxChangeWrapper,
+    onHeadCheckboxChange: onHeadCheckboxChange,
     ...props,
   };
 

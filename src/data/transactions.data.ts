@@ -374,6 +374,7 @@ export const transactionsMockData: ITransaction[] = [
   {
     _id: '63d892d156c42da6f5f95a5e',
     type: 'INCOME',
+    status: 'error',
     amount: 562,
     currency: 'UAH',
     countIn: {
@@ -431,6 +432,7 @@ export const transactionsMockData: ITransaction[] = [
       name: 'Основні матеріали',
       type: 'INCOME',
     },
+    status: 'success',
     createdAt: '2023-01-31T04:02:25.788Z',
     updatedAt: '2023-01-31T04:02:25.788Z',
     project: { _id: '63d79be938b6a211dc6634c8', name: 'ЖК "Авалон' },
@@ -442,6 +444,7 @@ export const transactionsMockData: ITransaction[] = [
     type: 'INCOME',
     amount: 6162,
     currency: 'UAH',
+    status: 'warning',
     countOut: {
       _id: '63d5f51bdee30d0c1e11757f',
       name: 'ЗАМОВНИКИ',
@@ -465,6 +468,49 @@ export const transactionsMockData: ITransaction[] = [
     activity: { _id: '63d79be938b6a211dc6634c8', label: 'Буд. діяльність' },
     transactionDate: '2023-01-31T04:02:09.592Z',
     tags: [],
+    project: { _id: '63d79be938b6a211dc6634c8', name: 'ЖК "Авалон' },
+    createdAt: '2023-01-31T04:02:25.788Z',
+    updatedAt: '2023-01-31T04:02:25.788Z',
+  },
+  {
+    _id: '63d892d156c42da6f5s95a54',
+    type: 'TRANSFER',
+    amount: 216,
+    currency: 'UAH',
+    countOut: {
+      _id: '63d5f51bdee30d0c1e11757f',
+      name: 'ЗАМОВНИКИ',
+      code: '100',
+    },
+    subCountOut: {
+      _id: '63d79be938b6a211dc6634c8',
+      name: 'Замовники за котрактом',
+      code: '101',
+    },
+    countIn: {
+      _id: '63d5f51bdee30d0c1e11757f',
+      name: 'ЗАМОВНИКИ',
+      code: '100',
+    },
+    subCountIn: {
+      _id: '63d79be938b6a211dc6634c8',
+      name: 'Замовники за котрактом',
+      code: '101',
+    },
+    category: {
+      _id: '63d79be938b6a211dc6634c8',
+      name: 'Послуги',
+      type: 'EXPENSE',
+    },
+    subCategory: {
+      _id: '63d79be938b6a211dc6634c8',
+      name: 'Покрівля даху',
+      type: 'EXPENSE',
+    },
+    activity: { _id: '63d79be938b6a211dc6634c8', label: 'Буд. діяльність' },
+    transactionDate: '2023-01-31T04:02:09.592Z',
+    tags: [],
+    status: 'info',
     project: { _id: '63d79be938b6a211dc6634c8', name: 'ЖК "Авалон' },
     createdAt: '2023-01-31T04:02:25.788Z',
     updatedAt: '2023-01-31T04:02:25.788Z',

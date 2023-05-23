@@ -11,7 +11,7 @@ const TableHeadRow: React.FC<TableHeadRowProps> = () => {
 
   return (
     <ThRow>
-      <ThRowStickyEl>{checkBoxes && <CellCheckBoxHead />}</ThRowStickyEl>
+      <ThRowStickyEl>{!checkBoxes && <CellCheckBoxHead />}</ThRowStickyEl>
 
       <ThRowData style={{ ...rowGrid }}>
         {tableTitles.map((item, idx) => (
@@ -46,6 +46,7 @@ export const ThRowStickyEl = styled.div`
   position: sticky;
   top: 0;
   left: 0;
+  z-index: 20;
 
   height: 100%;
   width: max-content;

@@ -21,7 +21,7 @@ const SvgIcon: React.FC<SvgIconProps> = ({
 const Svg = styled.svg<{ size?: string }>`
   width: ${({ size }) => size || '24px'};
   height: ${({ size }) => size || '24px'};
-  fill: currentColor;
+
   pointer-events: none;
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
 `;

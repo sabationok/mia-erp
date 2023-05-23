@@ -1,61 +1,36 @@
-import { useTable } from 'components/TableList/TableList';
-import { iconId } from 'data';
-import { useState, useEffect } from 'react';
-import CheckBox from './CheckBox';
+import { useState } from 'react';
+import CheckBox, {
+  CustomCheckboxEvent,
+  CustomCheckboxEventHandler,
+} from './CheckBox';
+import { iconId } from '../../../../img/sprite';
 
 export interface CheckBoxHeadProps {
-  onChange: React.ChangeEventHandler;
+  onChange?: CustomCheckboxEventHandler;
 }
 
 const CheckBoxHead: React.FC<CheckBoxHeadProps> = ({ onChange }) => {
-  const { tableData } = useTable();
-  const [status, setStatus] = useState<'avery' | 'some' | 'none'>();
+  // const [status, setStatus] = useState<'avery' | 'some' | 'none'>();
   const [some, setSome] = useState(false);
   const [everyOn, setEveryOn] = useState(false);
-  const [everyOff, setEveryOff] = useState(true);
-  // const [currentIconId, setCurrentIconId] = useState('');
 
-  // const statusMap = {
-  //   checkBoxOn: 'checkBoxOn',
-  //   checkBoxOff: 'checkBoxOff',
-  //   checkBoxMinus: 'checkBoxMinus',
-  // };
+  // const [everyOff, setEveryOff] = useState(true);
 
-  function handleChange(ev: React.ChangeEvent) {
-    onChange(ev);
+  function handleChange({ checked, event }: CustomCheckboxEvent) {
+    onChange && onChange({ checked, event });
 
     setSome(false);
 
-    setEveryOn(!everyOn);
+    setEveryOn(prev => !prev);
 
-    setEveryOff(!everyOff);
+    // setEveryOff(prev => !prev);
   }
-
-  useEffect(() => {
-    setStatus(status);
-
-    // let some, everyOn;
-
-    // some = tableData?.some(item => item?.selected);
-
-    // if (some) {
-    //   setCurrentIconId(iconId.checkBoxMinus);
-    //   return;
-    // }
-    // everyOn = tableData?.every(item => item?.selected);
-
-    // if (everyOn) {
-    //   setCurrentIconId(iconId.checkBoxOn);
-    //   return;
-    // }
-
-    // setCurrentIconId(some ? iconId.checkBoxMinus : everyOn ? iconId.checkBoxOn : iconId.checkBoxOff);
-  }, [everyOff, everyOn, some, status, tableData]);
 
   return (
     <CheckBox
       onChange={handleChange}
-      icon={some ? iconId.checkBoxMinus : everyOn ? iconId.checkBoxOn : everyOff ? iconId.checkBoxOff : ''}
+      checked={some ? false : everyOn}
+      icon={some ? iconId.checkBoxMinus : undefined}
     />
   );
 };

@@ -27,7 +27,7 @@ const CellStatus: React.FC<
   return (
     <CellBase style={{ width }} {...props}>
       <Content align={top.align}>
-        <StatusComp status={contentTop} variant={'text'} />
+        <StatusComp status={contentTop} variant={'text'} fillWidth />
       </Content>
 
       <Content align={bottom?.align}>
@@ -35,6 +35,7 @@ const CellStatus: React.FC<
           status={contentBottom}
           fontSize={'10px'}
           variant={'filled'}
+          fontWeight={500}
         />
       </Content>
     </CellBase>
