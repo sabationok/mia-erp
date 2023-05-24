@@ -1,76 +1,119 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { ModalFormProps } from './index';
 
-export interface ModalFormFilterProps extends Pick<ModalFormProps, 'filterOptions' | 'onOptSelect' | 'preventFilter' | 'defaultFilterValue'> {
+export interface ModalFormFilterProps<V = any, D = any> {
+  defaultOption?: number | FilterOpt<V, D>;
+  preventFilter?: boolean;
+  onOptSelect?: FilterOptionSelectHandler;
+  filterOptions?: FilterOpt<V, D>[];
+  defaultFilterValue?: string;
 }
 
-const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivElement>> =
-  ({
-     filterOptions,
-     onOptSelect,
-     preventFilter,
-     defaultFilterValue,
-     ...props
-   }) => {
-    const [current, setCurrent] = useState<number>(0);
+export interface FilterOpt<V = any, D = any> extends Record<string, any> {
+  _id?: string;
+  label: string;
+  name?: string;
+  value: V;
+  data?: D;
+  extraLabel?: string | React.ReactNode;
+  getLabel?: (data?: D) => string | React.ReactNode;
+}
 
-    useEffect(() => {
-      if (preventFilter || defaultFilterValue) return;
+export type FilterOptionSelectHandler<V = any, D = any> = (
+  option: FilterOpt<V, D>,
+  value: FilterOpt['value']
+) => void;
 
-      if (filterOptions && Array.isArray(filterOptions)) {
-        (typeof onOptSelect === 'function') && onOptSelect(filterOptions[current], filterOptions[current].value);
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+const ModalFilter: React.FC<
+  ModalFormFilterProps & React.HTMLAttributes<HTMLDivElement>
+> = ({
+  filterOptions,
+  onOptSelect,
+  preventFilter,
+  defaultFilterValue,
+  ...props
+}) => {
+  const [current, setCurrent] = useState<number>(0);
 
-    useEffect(() => {
-      if (defaultFilterValue && Array.isArray(filterOptions)) {
-        const defIndex = filterOptions.findIndex(el => el.value === defaultFilterValue);
-        defIndex > 0 && setCurrent(defIndex);
-      }
-    }, [defaultFilterValue, filterOptions]);
+  const handleSelectOpt = useCallback(
+    (idx: number, option: FilterOpt) => {
+      return () => {
+        setCurrent(idx);
+        if (!onOptSelect)
+          return console.log('No passed "onSelect" handler', option);
+        if (typeof onOptSelect === 'function')
+          onOptSelect(option, option.value);
+      };
+    },
+    [onOptSelect]
+  );
 
-    return (
-      <Filter className='filter' gridRepeat={filterOptions?.length} {...props}>
-        {filterOptions &&
-          filterOptions?.length > 0 &&
-          filterOptions?.map((opt, idx) => (
-            <StButtonIcon
-              key={idx}
-              variant='def'
-              className={current === idx ? 'filterBtn active' : 'filterBtn'}
-              onClick={() => {
-                setCurrent(idx);
-                if (typeof onOptSelect === 'function') onOptSelect(filterOptions[idx], filterOptions[idx].value);
-              }}
-            >
-              {opt.getLabel ? opt.getLabel() : (opt?.label || opt?.name || null)}
-            </StButtonIcon>
-          ))}
-      </Filter>
-    );
-  };
+  useEffect(() => {
+    if (preventFilter || defaultFilterValue) return;
+
+    if (filterOptions && Array.isArray(filterOptions)) {
+      typeof onOptSelect === 'function' &&
+        onOptSelect(filterOptions[current], filterOptions[current].value);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (defaultFilterValue && Array.isArray(filterOptions)) {
+      const defIndex = filterOptions.findIndex(
+        el => el.value === defaultFilterValue
+      );
+      defIndex > 0 && setCurrent(defIndex);
+    }
+  }, [defaultFilterValue, filterOptions]);
+
+  const renderOptions = useMemo(
+    () =>
+      filterOptions &&
+      filterOptions?.length > 0 &&
+      filterOptions?.map((opt, idx) => (
+        <StButtonIcon
+          key={idx}
+          variant="def"
+          className={current === idx ? 'filterBtn active' : 'filterBtn'}
+          onClick={handleSelectOpt(idx, opt)}
+        >
+          <>
+            <span>{opt?.label}</span>
+            {opt.extraLabel}
+          </>
+        </StButtonIcon>
+      )),
+    [current, filterOptions, handleSelectOpt]
+  );
+
+  return (
+    <Filter className="filter" gridRepeat={filterOptions?.length} {...props}>
+      {renderOptions}
+    </Filter>
+  );
+};
 
 const Filter = styled.div<{ gridRepeat?: number }>`
   display: grid;
   align-items: center;
-  grid-template-columns: ${({ gridRepeat }) => `repeat(${gridRepeat || 1}, 1fr)`};
+  grid-template-columns: ${({ gridRepeat }) =>
+    `repeat(${gridRepeat || 1}, 1fr)`};
 
   height: 44px;
-
 
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
 
   border-right: 1px solid ${({ theme }) => theme.modalBorderColor};
   border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
-
 `;
 
 const StButtonIcon = styled(ButtonIcon)`
   position: relative;
   flex-direction: column;
+  justify-content: space-between;
+  gap: 0;
 
   font-weight: 700;
   font-size: 12px;
@@ -83,6 +126,8 @@ const StButtonIcon = styled(ButtonIcon)`
 
   height: 100%;
   min-height: 28px;
+
+  padding: 6px 12px;
 
   color: ${({ theme }) => theme.fontColorHeader};
 

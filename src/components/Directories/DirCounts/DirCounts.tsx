@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ModalForm, { FilterOpt } from 'components/ModalForm';
+import ModalForm from 'components/ModalForm';
 import DirList from '../DirList/DirList';
 import { founder } from 'utils';
 import styled from 'styled-components';
@@ -7,9 +7,7 @@ import useCountsService from 'redux/counts/useCountsService.hook';
 import { CountType, ICount } from 'redux/counts/counts.types';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FormCreateCount, { FormCreateCountProps } from './FormCreateCount';
-import { DirBaseProps } from '../dir.types';
-
-export type CountFilterOpt = FilterOpt<CountType>;
+import { CountFilterOpt, DirBaseProps } from '../dir.types';
 
 export interface DirCountsProps extends DirBaseProps {
   filterOptions: CountFilterOpt[];
@@ -66,7 +64,7 @@ const DirCounts: React.FC<DirCountsProps> = props => {
     });
   }
 
-  function handleFilterData({ value }: FilterOpt<CountType>) {
+  function handleFilterData({ value }: CountFilterOpt) {
     value && setDirType(value);
     value &&
       setFilteredData(

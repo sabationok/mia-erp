@@ -18,7 +18,21 @@ import DirActivities, {
   DirActivitiesProps,
 } from 'components/Directories/DirCompanyActivities/DirActivities';
 import { contractorsColumns, contractorsMockData } from './contractors.data';
-import { DirBaseProps } from '../components/Directories/dir.types';
+import {
+  CategoryFilterOpt,
+  CountFilterOpt,
+  DirBaseProps,
+} from '../components/Directories/dir.types';
+
+export const categoriesFilterOptions: CategoryFilterOpt[] = [
+  { label: CategoriesTypesMap.INCOME, value: 'INCOME' },
+  { label: CategoriesTypesMap.TRANSFER, value: 'TRANSFER' },
+  { label: CategoriesTypesMap.EXPENSE, value: 'EXPENSE' },
+];
+export const countsFilterOptions: CountFilterOpt[] = [
+  { label: 'Активні', value: 'ACTIVE' },
+  { label: 'Пасивні', value: 'PASSIVE' },
+];
 
 export interface IDirectory<P extends DirBaseProps = any> {
   title: string;
@@ -30,10 +44,7 @@ export interface IDirectory<P extends DirBaseProps = any> {
 
 const CountsProps: DirCountsProps = {
   title: 'Рахунки',
-  filterOptions: [
-    { label: 'Активні', value: 'ACTIVE' },
-    { label: 'Пасивні', value: 'PASSIVE' },
-  ],
+  filterOptions: countsFilterOptions,
 };
 const countsDir: IDirectory<DirCountsProps> = {
   title: CountsProps.title,
@@ -42,13 +53,10 @@ const countsDir: IDirectory<DirCountsProps> = {
   modalChildrenProps: CountsProps,
   disabled: true,
 };
+
 const CategoriesProps: DirCategoriesProps = {
   title: 'Категорії',
-  filterOptions: [
-    { label: CategoriesTypesMap.INCOME, value: 'INCOME' },
-    { label: CategoriesTypesMap.TRANSFER, value: 'TRANSFER' },
-    { label: CategoriesTypesMap.EXPENSE, value: 'EXPENSE' },
-  ],
+  filterOptions: categoriesFilterOptions,
 };
 const categoriesDir: IDirectory<DirCategoriesProps> = {
   title: CategoriesProps.title,

@@ -1,45 +1,44 @@
 import ModalHeader from './ModalHeader';
-import ModalFilter from './ModalFilter';
+import ModalFilter, { ModalFormFilterProps } from './ModalFilter';
 import ModalFooter from './ModalFooter';
 
 import styled from 'styled-components';
 import { FormEvent } from 'react';
 import { useModal } from 'components/ModalProvider/ModalComponent';
 
-export interface ModalFormProps
+export interface ModalFormBaseProps
   extends Omit<
     React.FormHTMLAttributes<HTMLFormElement>,
     'onSubmit' | 'onReset'
   > {
-  filterOptions?: FilterOpt[];
-  footer?: boolean;
-  preventFilter?: boolean;
-  defaultFilterValue?: string | number;
-  beforeSubmit?: <T = any>(args?: T) => void | any;
   onSubmit?: (ev: FormEvent<HTMLFormElement>) => void;
-  afterSubmit?: <T = any>(args?: T) => void | any;
-  beforeClose?: <T = any>(args?: T) => void | any;
-  onReset?: <T = any>(args?: T) => void | any;
-  afterClose?: <T = any>(args?: T) => void | any;
-  onOptSelect?: (opt: FilterOpt, value: FilterOpt['value']) => void | any;
+  onReset?: (args?: any) => void;
+  footer?: boolean;
+  beforeSubmit?: <T = any>(args?: T) => void | any;
+  afterSubmit?: (args?: any) => void;
+  beforeClose?: (args?: any) => void;
+  afterClose?: (args?: any) => void;
   closeAfterSubmit?: boolean;
 }
 
-export interface FilterOpt<V = any> extends Record<string, any> {
-  _id?: string;
-  label: string;
-  name?: string;
-  value: V | string | number | Date | any;
-  getLabel?: () => any;
+export interface ModalFormAddsProps {
+  footer?: boolean;
+  beforeSubmit?: <T = any>(args?: T) => void | any;
+  afterSubmit?: (args?: any) => void;
+  beforeClose?: (args?: any) => void;
+  afterClose?: (args?: any) => void;
+  closeAfterSubmit?: boolean;
 }
 
+export type ModalFormProps = ModalFormBaseProps &
+  ModalFormAddsProps &
+  ModalFormFilterProps;
 const ModalForm: React.FC<ModalFormProps> = ({
   title = 'default modal title',
   footer = true,
   children,
   beforeSubmit,
   filterOptions,
-  defaultFilterValue,
   preventFilter,
   onSubmit,
   afterSubmit,
@@ -48,6 +47,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
   afterClose,
   onOptSelect,
   closeAfterSubmit,
+  defaultOption,
   ...props
 }) => {
   const modal = useModal();
@@ -73,11 +73,6 @@ const ModalForm: React.FC<ModalFormProps> = ({
     if (typeof afterClose === 'function') afterClose();
   }
 
-  function handleSelect(option: FilterOpt) {
-    if (!onOptSelect) console.log('No passed "onSelect" handler', option);
-    if (typeof onOptSelect === 'function') onOptSelect(option, option.value);
-  }
-
   return (
     <ModalFormContainer
       className="modalForm"
@@ -86,12 +81,12 @@ const ModalForm: React.FC<ModalFormProps> = ({
       {...props}
     >
       <ModalHeader title={title}>
-        {filterOptions && handleSelect && (
+        {filterOptions && (
           <ModalFilter
-            onOptSelect={handleSelect}
+            onOptSelect={onOptSelect}
             filterOptions={filterOptions}
             preventFilter={preventFilter}
-            defaultFilterValue={defaultFilterValue}
+            defaultOption={defaultOption}
           />
         )}
       </ModalHeader>
@@ -141,6 +136,8 @@ const ModalMain = styled.main<{ filterOn: boolean }>`
   // display: grid;
   // grid-template-columns: 1fr;
   // grid-template-rows: ${({ filterOn }) => (filterOn ? '32px 1fr' : '1fr')};
+  display: flex;
+  flex-direction: column;
 
   overflow: hidden;
   position: relative;

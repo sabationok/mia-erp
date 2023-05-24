@@ -2,8 +2,12 @@ import { IAccordeonOptionProps } from 'components/SideBarContent/AccordeonList';
 import OptionsList from 'components/SideBarContent/OptionsList';
 import { iconId } from 'img/sprite/iconId.data';
 import { IReportBaseProps } from '../components/Raports/report.types';
-import ReportCategories, { IReportCategoriesProps } from '../components/Raports/ReportCategories';
-import ReportCounts, { IReportCountsProps } from '../components/Raports/ReportCounts';
+import ReportCategories, {
+  IReportCategoriesProps,
+} from '../components/Raports/ReportCategories';
+import ReportCounts, {
+  IReportCountsProps,
+} from '../components/Raports/ReportCounts';
 import ModalForm, { ModalFormProps } from '../components/ModalForm';
 
 export interface IReport<P = IReportBaseProps> extends ModalFormProps {
@@ -70,7 +74,6 @@ const tagsReport: IReport = {
   modalChildrenProps: { title: 'Звіт по тегах' },
   disabled: true,
 };
-
 
 const financeReports: IReport[] = [
   categoriesReport,

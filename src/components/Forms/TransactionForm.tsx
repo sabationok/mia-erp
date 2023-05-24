@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { useMemo } from 'react';
-import ModalForm, { FilterOpt, ModalFormProps } from '../ModalForm';
+import ModalForm, { ModalFormProps } from '../ModalForm';
 import styled from 'styled-components';
 import {
   ITransactionForReq,
@@ -16,6 +16,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { IBase } from '../../redux/global.types';
 import * as _ from 'lodash';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
+import { FilterOpt } from '../ModalForm/ModalFilter';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
 

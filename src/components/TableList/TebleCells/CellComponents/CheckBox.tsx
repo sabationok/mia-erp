@@ -63,10 +63,13 @@ const Box = styled.button<{ checked?: boolean; disabled?: boolean }>`
   border-style: none;
   background-color: inherit;
   padding: 0;
+  position: relative;
 
   //width: 100%;
   //height: 100%;
   fill: ${({ theme }) => theme.accentColor.base};
+  border-radius: 3px;
+  overflow: hidden;
 
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'all')};
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
@@ -77,6 +80,12 @@ const Box = styled.button<{ checked?: boolean; disabled?: boolean }>`
 
   &:active {
     fill: ${({ theme }) => theme.accentColor.pressed};
+  }
+
+  &:focus,
+  &:focus-visible {
+    fill: ${({ theme }) => theme.accentColor.hover};
+    outline: none;
   }
 `;
 

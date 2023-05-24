@@ -46,14 +46,13 @@ export const ThRowStickyEl = styled.div`
   position: sticky;
   top: 0;
   left: 0;
-  z-index: 20;
+  z-index: 5;
 
   height: 100%;
   width: max-content;
 
   background-color: inherit;
   // background-color: #1c1c1e;
-
   @media print {
     width: 0;
     overflow: hidden;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ModalForm, { FilterOpt } from 'components/ModalForm';
+import ModalForm from 'components/ModalForm';
 import DirList from '../DirList/DirList';
 import { founder } from 'utils';
 import useCategoriesService from 'redux/categories/useCategoriesService.hook';
@@ -7,9 +7,7 @@ import { CategoryTypes, ICategory } from 'redux/categories/categories.types';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FormCreateCategory from './FormCreateCategory';
 import styled from 'styled-components';
-import { DirBaseProps } from '../dir.types';
-
-export type CategoryFilterOpt = FilterOpt<CategoryTypes>;
+import { CategoryFilterOpt, DirBaseProps } from '../dir.types';
 
 export interface DirCategoriesProps extends DirBaseProps {
   filterOptions?: CategoryFilterOpt[];
@@ -66,7 +64,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
     });
   }
 
-  function handleFilterData({ value }: FilterOpt<CategoryTypes>) {
+  function handleFilterData({ value }: CategoryFilterOpt) {
     value && setDirType(value);
     value &&
       setFilteredData(
