@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import styled from 'styled-components';
 import { CellActionsName } from '../TebleCells';
 import { IconIdType } from '../../../img/sprite/iconId.data';
@@ -144,4 +144,4 @@ const WidthChanger = styled.button`
   }
 `;
 
-export default CellTitle;
+export default memo(CellTitle);

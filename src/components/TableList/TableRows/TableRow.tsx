@@ -1,6 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
-import CellTextDbl from '../TebleCells/CellTextDbl';
-import { CellsMap } from '../TebleCells';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 import {
   OnCheckBoxChangeHandler,
   OnCheckBoxChangeHandlerEvent,
@@ -17,6 +15,8 @@ import { ICount } from '../../../redux/counts/counts.types';
 import { IContractor } from '../../../redux/contractors/contractors.types';
 import { ICategory } from '../../../redux/categories/categories.types';
 import CellCheckBox from '../TebleCells/CellCheckBox';
+import { CellsMap } from '../TebleCells';
+import CellTextDbl from '../TebleCells/CellTextDbl';
 
 export type TRowDataType =
   | ITransaction
@@ -42,14 +42,8 @@ export const RowCTX = createContext<any>({});
 export const useRow = () => useContext(RowCTX) as RowCTXValue;
 
 const TableRow: React.FC<TableRowProps> = ({ checked, ...props }) => {
-  const {
-    tableTitles,
-    tableData,
-    selectedRows,
-    rowGrid,
-    checkBoxes,
-    onCheckboxChange,
-  } = useTable();
+  const { tableTitles, tableData, rowGrid, checkBoxes, onCheckboxChange } =
+    useTable<TRowDataType>();
   const [isActionsOpen, setIsActionsOpen] = useState(false);
   const [isChecked, setIsChecked] = useState<boolean>(checked ?? false);
 
@@ -73,6 +67,20 @@ const TableRow: React.FC<TableRowProps> = ({ checked, ...props }) => {
     handleCloseActions,
     onRowCheckboxChange,
   };
+  const renderRow = useMemo(
+    () =>
+      tableTitles &&
+      tableTitles?.map((item, idx) => {
+        let CellComp = item.action ? CellsMap[item.action] : CellTextDbl;
+        if (typeof CellComp === 'function' || typeof CellComp === 'object') {
+          return <CellComp key={idx} titleInfo={item} idx={idx} />;
+        }
+        console.log('CellComp error', '====>>>>', item);
+
+        return <CellTextDbl key={idx} titleInfo={item} idx={idx} />;
+      }),
+    [tableTitles]
+  );
 
   return (
     <Row id={props?.rowData?._id} checked={isChecked} data-row>
@@ -80,16 +88,7 @@ const TableRow: React.FC<TableRowProps> = ({ checked, ...props }) => {
         <RowStickyEl>{!checkBoxes && <CellCheckBox />}</RowStickyEl>
 
         <RowData gridRepeat={tableData?.length || 0} style={{ ...rowGrid }}>
-          {tableTitles &&
-            tableTitles?.map((item, idx) => {
-              let CellComp = item.action ? CellsMap[item.action] : CellTextDbl;
-              if (typeof CellComp === 'function') {
-                return <CellComp key={idx} titleInfo={item} idx={idx} />;
-              }
-              console.log('CellComp error', '====>>>>', item);
-
-              return <CellTextDbl key={idx} titleInfo={item} idx={idx} />;
-            })}
+          {renderRow}
         </RowData>
       </RowCTX.Provider>
     </Row>

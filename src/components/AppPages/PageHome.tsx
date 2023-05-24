@@ -1,14 +1,15 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 // import ProfileCard from 'components/molecules/ProfileCard/ProfileCard';
-import TableList from 'components/TableList/TableList';
+import TableList, { ITableListProps } from 'components/TableList/TableList';
 import { useSearchParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { memo, useCallback, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { takeFullGridArea, takeFullPlace } from './pagesStyles';
-import { permissionsSearchParams, permissionsTableColumns } from 'data';
 import { useAuthSelector } from 'redux/selectors.store';
 import ProfileCard from 'components/atoms/ProfileCard/ProfileCard';
 import usePermissionsService from 'redux/permissions/usePermissionsService.hook';
+import { IPermission } from '../../redux/permissions/permissions.types';
+import { permissionsSearchParams, permissionsTableColumns } from '../../data';
 
 const companyTypes = [
   { title: 'Мої', param: 'own' },
@@ -17,24 +18,53 @@ const companyTypes = [
   { title: 'Усі', param: 'all' },
 ];
 
-const PageHome: React.FC = () => {
+const PageHome: React.FC<any> = () => {
   const { user } = useAuthSelector();
   const { permissions } = usePermissionsService();
-  const [searchParams, setSearchParams] = useSearchParams({ companyType: companyTypes[0].param });
-
-  function onSearchParamClick(param: string) {
-    setSearchParams({ companyType: param });
-  }
-
-  function isActive(param: string) {
-    return searchParams.get('companyType') === param ? 'active' : '';
-  }
+  const [searchParams, setSearchParams] = useSearchParams({
+    companyType: companyTypes[0].param,
+  });
 
   useEffect(() => {
     setSearchParams({ companyType: companyTypes[0].param });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const tableConfig = useMemo(
+    (): ITableListProps<IPermission> => ({
+      tableData: permissions,
+      tableTitles: permissionsTableColumns,
+      tableSearchParams: permissionsSearchParams,
+      isFilter: false,
+      isSearch: true,
+      checkBoxes: false,
+    }),
+    [permissions]
+  );
+  const onSearchParamClick = useCallback(
+    (param: string) => {
+      setSearchParams({ companyType: param });
+    },
+    [setSearchParams]
+  );
+  const isActiveClassName = useCallback(
+    (param: string) =>
+      searchParams.get('companyType') === param ? 'active' : '',
+    [searchParams]
+  );
+
+  const renderFilterButtons = useMemo(() => {
+    return companyTypes.map(item => (
+      <StButtonIcon
+        key={item.param}
+        variant="def"
+        onClick={() => onSearchParamClick(item.param)}
+        className={isActiveClassName(item.param)}
+      >
+        {item.title}
+      </StButtonIcon>
+    ));
+  }, [isActiveClassName, onSearchParamClick]);
 
   return (
     <Page>
@@ -44,32 +74,12 @@ const PageHome: React.FC = () => {
         </ProfileInfo>
 
         <FilterButtons>
-          <ButtonsList>
-            {companyTypes.map(item => (
-              <StButtonIcon
-                key={item.param}
-                variant='def'
-                onClick={() => onSearchParamClick(item.param)}
-                className={isActive(item.param)}
-              >
-                {item.title}
-              </StButtonIcon>
-            ))}
-          </ButtonsList>
+          <ButtonsList>{renderFilterButtons}</ButtonsList>
         </FilterButtons>
       </Top>
 
       <Bottom>
-        <TableList
-          {...{
-            tableData: permissions,
-            tableTitles: permissionsTableColumns,
-            tableSearchParams: permissionsSearchParams,
-            isFilter: false,
-            isSearch: true,
-            checkboxes: false,
-          }}
-        />
+        <TableList {...tableConfig} />
       </Bottom>
     </Page>
   );
@@ -91,7 +101,7 @@ const Top = styled.div`
 
   overflow: hidden;
 
-    //background-color: ${({ theme }) => theme.tableBackgroundColor};
+  //background-color: ${({ theme }) => theme.tableBackgroundColor};
 
   ${takeFullPlace}
 `;
@@ -103,7 +113,7 @@ const Bottom = styled.div`
 
   overflow: hidden;
 
-  ${takeFullPlace}
+  ${takeFullPlace};
 
   background-color: ${({ theme }) => theme.tableBackgroundColor};
 `;
@@ -133,20 +143,6 @@ const ButtonsList = styled.div`
   grid-auto-rows: 32px;
 
   max-width: 600px;
-
-  /* max-width: 300px; */
-
-  /* max-width: 550px; */
-  /* @media screen and (max-height: 480px) and (min-width: 480px) {
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 32px;
-    max-width: 100%;
-  }
-  @media screen and (min-width: 768px) {
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 44px;
-    max-width: 550px;
-  } */
 `;
 
 const StButtonIcon = styled(ButtonIcon)`
@@ -178,8 +174,8 @@ const StButtonIcon = styled(ButtonIcon)`
     position: absolute;
     bottom: 0;
     left: 50%;
-    height: 1px;
-    width: 100%;
+    //height: 1px;
+    //width: 100%;
     height: 3px;
     width: 0;
     transition: all ${({ theme }) => theme.globals.timingFnMui};
@@ -203,4 +199,4 @@ const StButtonIcon = styled(ButtonIcon)`
   }
 `;
 
-export default PageHome;
+export default memo(PageHome);

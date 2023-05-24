@@ -6,7 +6,7 @@ export const permissionsTableColumns: CellTittleProps[] = [
     top: { name: 'Назва', align: 'start', path: 'company.name' },
     bottom: { name: 'ІПН/ЄДРПОУ', align: 'start', path: 'company.taxCode' },
     width: '200px',
-    action: 'valueByPath',
+    action: 'doubleDataWithAvatar',
   },
   {
     top: { name: 'Роль', align: 'start', path: 'role.label' },
@@ -39,10 +39,46 @@ export const permissionsTableColumns: CellTittleProps[] = [
   },
 ];
 export const permissionsSearchParams: SelectItem[] = [
-  { label: 'Назва', dataPath: 'company.name', filter: false, search: false, sort: true },
-  { label: 'ІПН/ЄДРПОУ', dataPath: 'company.taxCode', filter: false, search: false, sort: true },
-  { label: 'Роль', dataPath: 'role.label', filter: false, search: false, sort: true },
-  { label: 'Власник', dataPath: 'company.owner.name', filter: false, search: true, sort: true },
-  { label: 'Емейл', dataPath: 'company.email', filter: false, search: true, sort: true },
-  { label: 'Телефон', dataPath: 'company.phone', filter: false, search: true, sort: true },
+  {
+    label: 'Назва',
+    dataPath: 'company.name',
+    filter: false,
+    search: false,
+    sort: true,
+  },
+  {
+    label: 'ІПН/ЄДРПОУ',
+    dataPath: 'company.taxCode',
+    filter: false,
+    search: false,
+    sort: true,
+  },
+  {
+    label: 'Роль',
+    dataPath: 'role.label',
+    filter: false,
+    search: false,
+    sort: true,
+  },
+  {
+    label: 'Власник',
+    dataPath: 'company.owner.name',
+    filter: false,
+    search: true,
+    sort: true,
+  },
+  {
+    label: 'Емейл',
+    dataPath: 'company.email',
+    filter: false,
+    search: true,
+    sort: true,
+  },
+  {
+    label: 'Телефон',
+    dataPath: 'company.phone',
+    filter: false,
+    search: true,
+    sort: true,
+  },
 ];

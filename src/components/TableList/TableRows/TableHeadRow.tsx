@@ -3,21 +3,25 @@ import CellTitle from '../TebleCells/CellTitle';
 import CellCheckBoxHead from '../TebleCells/CellCheckBoxHead';
 
 import styled from 'styled-components';
+import { useMemo } from 'react';
 
 export interface TableHeadRowProps {}
 
 const TableHeadRow: React.FC<TableHeadRowProps> = () => {
   const { tableTitles = [], checkBoxes, rowGrid } = useTable();
 
+  const renderTitles = useMemo(
+    () =>
+      tableTitles.map((item, idx) => (
+        <CellTitle key={idx} {...item} idx={idx} />
+      )),
+    [tableTitles]
+  );
   return (
     <ThRow>
       <ThRowStickyEl>{!checkBoxes && <CellCheckBoxHead />}</ThRowStickyEl>
 
-      <ThRowData style={{ ...rowGrid }}>
-        {tableTitles.map((item, idx) => (
-          <CellTitle key={idx} {...item} idx={idx} />
-        ))}
-      </ThRowData>
+      <ThRowData style={{ ...rowGrid }}>{renderTitles}</ThRowData>
     </ThRow>
   );
 };

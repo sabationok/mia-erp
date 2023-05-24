@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
 import { NavLink, useLocation } from 'react-router-dom';
 import { iconId } from 'data';
 import { IPage } from 'redux/page/pageSlice';
 import styled from 'styled-components';
 import { useAppPages } from '../../../data/pages.data';
+import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
+import Text from '../../atoms/Text';
 
 const NavMenu: React.FC = () => {
   const pages = useAppPages();
@@ -21,27 +22,38 @@ const NavMenu: React.FC = () => {
     setActivePage(page);
   }
 
-  const onNavLinkClick = useCallback((page: IPage) => {
-    handleSetActivePage(page);
+  const onNavLinkClick = useCallback(
+    (page: IPage) => {
+      handleSetActivePage(page);
 
-    handleOpenNavMenu();
-  }, [handleOpenNavMenu]);
+      handleOpenNavMenu();
+    },
+    [handleOpenNavMenu]
+  );
 
-  const renderLinks = useMemo(() => pages.map(item => {
-    return (
-      <StyledNavLink
-        key={item?.path}
-        to={item?.path}
-        onClick={() => {
-          onNavLinkClick(item);
-        }}
-      >
-        <SvgIcon iconId={item.iconId} size='18px' />
+  const renderLinks = useMemo(
+    () =>
+      pages.map(item => {
+        return (
+          <StyledNavLink
+            key={item?.path}
+            to={item?.path}
+            onClick={() => {
+              onNavLinkClick(item);
+            }}
+          >
+            <SvgIcon
+              iconId={item.iconId}
+              size="18px"
+              style={{ display: 'none' }}
+            />
 
-        {item?.title || '---'}
-      </StyledNavLink>
-    );
-  }), [onNavLinkClick, pages]);
+            <Text>{item?.title || '---'}</Text>
+          </StyledNavLink>
+        );
+      }),
+    [onNavLinkClick, pages]
+  );
 
   useEffect(() => {
     const currentPathName = location.pathname.replace('/', '');
@@ -54,8 +66,10 @@ const NavMenu: React.FC = () => {
   useEffect(() => {
     function onMenuClose(ev: MouseEvent | KeyboardEvent) {
       const { target } = ev;
-      if (target instanceof HTMLElement && !target?.closest('[data-nav-menu]')) setIsOpen(false);
-      if (ev instanceof KeyboardEvent && ev?.code === 'Escape') setIsOpen(false);
+      if (target instanceof HTMLElement && !target?.closest('[data-nav-menu]'))
+        setIsOpen(false);
+      if (ev instanceof KeyboardEvent && ev?.code === 'Escape')
+        setIsOpen(false);
     }
 
     document.addEventListener('click', onMenuClose);
@@ -70,8 +84,8 @@ const NavMenu: React.FC = () => {
   return (
     <StyledNavMenu data-nav-menu>
       <MenuButton
-        variant='def'
-        endIconSize='24px'
+        variant="def"
+        endIconSize="24px"
         endIconId={iconId.SmallArrowDown}
         isOpen={isOpen}
         onClick={handleOpenNavMenu}
@@ -80,9 +94,7 @@ const NavMenu: React.FC = () => {
       </MenuButton>
 
       <NavMenuContainer isOpen={isOpen}>
-        <NavList>
-          {renderLinks}
-        </NavList>
+        <NavList>{renderLinks}</NavList>
       </NavMenuContainer>
     </StyledNavMenu>
   );
@@ -96,7 +108,6 @@ const StyledNavMenu = styled.div`
   position: relative;
 
   min-width: 150px;
-  /* width: fit-content; */
   max-width: 100%;
   height: 100%;
 
@@ -142,10 +153,11 @@ const NavMenuContainer = styled.div<MenuState>`
   max-width: calc(100% + 30px);
 
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
-  max-height: ${({ isOpen }) => (isOpen ? '100vh' : '0')};
-  box-shadow: ${({ isOpen, theme }) => (isOpen ? theme.globals.shadowMain : '')};
-  transition: max-height ${({ theme }) => theme.globals.timingFnMain}, box-shadow ${({ theme }) => theme.globals.timingFnMain};
-
+  max-height: ${({ isOpen }) => (isOpen ? '80vh' : '0')};
+  box-shadow: ${({ isOpen, theme }) =>
+    isOpen ? theme.globals.shadowMain : ''};
+  transition: max-height ${({ theme }) => theme.globals.timingFnMain},
+    box-shadow ${({ theme }) => theme.globals.timingFnMain};
 `;
 
 const NavList = styled.div`
@@ -154,6 +166,7 @@ const NavList = styled.div`
   align-content: start;
 
   min-width: 100%;
+  max-height: 100%;
 
   padding: 8px 0;
 `;
@@ -169,7 +182,6 @@ const StyledNavLink = styled(NavLink)`
   min-height: 34px;
   font-size: 14px;
   height: min-content;
-  width: 100%;
 
   padding: 4px 16px;
 
@@ -193,7 +205,7 @@ const StyledNavLink = styled(NavLink)`
   }
 
   &:hover {
-    background-color: rgba(254, 254, 254, 0.05);
+    background-color: rgba(254, 254, 254, 0.25);
 
     &::before {
       height: 100%;

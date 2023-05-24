@@ -22,7 +22,6 @@ export type FilterSelectorType = {
   selectorName: keyof FilterReturnDataType;
   label: string;
   data: FilterSelectorDataType;
-  ListComp: React.FC<any>;
 };
 
 export interface FilterReturnDataType {

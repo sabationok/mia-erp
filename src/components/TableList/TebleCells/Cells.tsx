@@ -75,11 +75,12 @@ const DoubleDataWithAvatarCell: React.FC<IDataCellProps> = ({
   subContent,
 }) => {
   return (
-    <CellDoubleDataWithAvatar>
+    <CellDoubleDataWithAvatar style={{ width }}>
       <AvatarBox>
-        <Avatar />
+        <Avatar shape={'square'} style={{ borderRadius: '2px' }} />
       </AvatarBox>
-      <CellDoubleData style={{ width }}>
+
+      <CellDoubleData>
         <Content
           align={content?.align}
           uppercase={content?.uppercase}
@@ -116,14 +117,13 @@ const CellBase = styled.div`
   padding: 4px 10px;
 
   overflow: hidden;
-  /* outline: 1px solid #8b8b8b; */
 `;
 const CellDoubleData = styled(CellBase)`
   grid-template-rows: 1fr 1fr;
 `;
 const CellDoubleDataWithAvatar = styled(CellBase)`
-  grid-template-columns: 60px 1fr;
-  gap: 8px;
+  grid-template-columns: min-content 1fr;
+  //gap: 8px;
 
   padding: 0;
 `;
@@ -169,6 +169,7 @@ const AvatarBox = styled.div`
 
   padding: 4px;
 `;
+
 const Cell = {
   Simple: SimpleDataCell,
   Double: DoubleDataCell,

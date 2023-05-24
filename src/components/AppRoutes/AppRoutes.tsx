@@ -2,13 +2,18 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import AppPages from 'components/AppPages';
 import { appPages } from 'data';
 import { memo } from 'react';
-import EmptyPageTitle from 'components/AppPages/EmptyPageTitle';
 import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
 
 const { PageNotFound } = AppPages;
 
-const AppRoutes_old: React.FC = () => {
+const AppRoutes: React.FC = () => {
+  const notFoundRouteProps = {
+    path: '*',
+    element: <PageNotFound />,
+    errorElement: <PageNotFound />,
+  };
+
   return (
     <Routes>
       <Route
@@ -39,28 +44,7 @@ const AppRoutes_old: React.FC = () => {
               path={appPages.home.path}
               element={<AppPages.PageHome />}
               errorElement={<PageNotFound />}
-            >
-              <Route
-                index
-                element={<EmptyPageTitle>Особиста інформація</EmptyPageTitle>}
-                errorElement={<PageNotFound />}
-              />
-              <Route
-                path={'personalInfo'}
-                element={<EmptyPageTitle>Особиста інформація</EmptyPageTitle>}
-                errorElement={<PageNotFound />}
-              />
-              <Route
-                path={'companies'}
-                element={<EmptyPageTitle>Компанії</EmptyPageTitle>}
-                errorElement={<PageNotFound />}
-              />
-              <Route
-                path={'directories'}
-                element={<EmptyPageTitle>Довідники</EmptyPageTitle>}
-                errorElement={<PageNotFound />}
-              />
-            </Route>
+            />
           </Route>
         </Route>
 
@@ -70,43 +54,26 @@ const AppRoutes_old: React.FC = () => {
             <PublicRoute redirectTo={`/${appPages.transactions.path}`} />
           }
         >
-          <Route
-            index
-            element={<Navigate to="login" />}
-            errorElement={<PageNotFound />}
-          />
-
-          <Route
-            path="register"
-            element={<AppPages.PageAuth register />}
-          ></Route>
-
-          <Route path="login" element={<AppPages.PageAuth login />}></Route>
+          <Route index element={<Navigate to="login" />} />
+          <Route path="register" element={<AppPages.PageAuth register />} />
+          <Route path="login" element={<AppPages.PageAuth login />} />
 
           <Route
             path="sendRecoveryPasswordMail"
             element={<AppPages.PageAuth sendRecoveryMail />}
-          ></Route>
+          />
 
           <Route
             path="recoveryPassword"
             element={<AppPages.PageAuth recovery />}
-          ></Route>
-
-          <Route
-            path="*"
-            element={<PageNotFound />}
-            errorElement={<PageNotFound />}
           />
+
+          <Route {...notFoundRouteProps} />
         </Route>
-        <Route
-          path="*"
-          element={<PageNotFound />}
-          errorElement={<PageNotFound />}
-        />
+        <Route {...notFoundRouteProps} />
       </Route>
     </Routes>
   );
 };
 
-export default memo(AppRoutes_old);
+export default memo(AppRoutes);

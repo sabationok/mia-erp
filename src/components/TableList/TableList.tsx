@@ -104,12 +104,15 @@ export interface ITableListProps<TDataType = any>
 
 export interface ITableListContext<TDataType = any>
   extends ITableListProps<TDataType> {
-  selectedRows?: ITableListProps['tableData'];
+  selectedRows?: string[];
   rowRef?: React.MutableRefObject<HTMLElement | undefined>;
 }
 
 export const TableCTX = createContext({});
-export const useTable = () => useContext(TableCTX) as ITableListContext;
+export type UseTableHookType = <
+  TDataType = any
+>() => ITableListContext<TDataType>;
+export const useTable: UseTableHookType = () => useContext(TableCTX);
 
 const TableList: React.FC<ITableListProps> = ({
   tableData,
