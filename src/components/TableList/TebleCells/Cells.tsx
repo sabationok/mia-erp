@@ -4,16 +4,18 @@ import { CellTitleContent } from './CellTitle';
 import { Avatar } from 'antd';
 import SvgIcon from '../../atoms/SvgIcon/SvgIcon';
 import FlexBox from '../../atoms/FlexBox';
+import StatusComp from './CellComponents/StatusComp';
+import { StatusNames } from '../../../data/statuses.data';
 
-interface IDataCellSectionProps {
-  data?: string | null;
+interface IDataCellSectionProps<T = string | null> {
+  data?: T;
   uppercase?: boolean;
   align?: 'center' | 'start' | 'end';
 }
 
-export interface IDataCellProps {
-  content?: IDataCellSectionProps;
-  subContent?: IDataCellSectionProps;
+export interface IDataCellProps<T = string | null> {
+  content?: IDataCellSectionProps<T>;
+  subContent?: IDataCellSectionProps<T>;
   width?: string;
   imgUrl?: string;
 }
@@ -83,6 +85,22 @@ const DoubleDataWithAvatarCell: React.FC<IDataCellProps> = ({ width, content, su
   );
 };
 
+const DoubleStatusCell: React.FC<IDataCellProps<StatusNames>> = ({ width, content, subContent }) => {
+  return (
+    <CellDoubleData style={{ width }}>
+      <Content align={content?.align} uppercase={content?.uppercase} fontWeight={600} fontSize={'12px'}>
+        <StatusComp status={content?.data} variant={'text'} fillWidth />
+      </Content>
+
+      <Content align={subContent?.align} uppercase={subContent?.uppercase} fontWeight={500} fontSize={'11px'}>
+        {subContent ? (
+          <StatusComp status={subContent?.data} fontSize={'10px'} variant={'filled'} fontWeight={500} />
+        ) : null}
+      </Content>
+    </CellDoubleData>
+  );
+};
+
 const CellBase = styled.div`
   display: grid;
   grid-template-columns: 1fr;
@@ -147,8 +165,9 @@ const Cell = {
   Simple: SimpleDataCell,
   Double: DoubleDataCell,
   DoubleWithAvatar: DoubleDataWithAvatarCell,
+  DoubleStatus: DoubleStatusCell,
 };
 
-export { DoubleDataCell, SimpleDataCell };
+export { DoubleDataCell, SimpleDataCell, DoubleStatusCell };
 
 export default Cell;

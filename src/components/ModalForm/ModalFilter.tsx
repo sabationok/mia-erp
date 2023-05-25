@@ -20,14 +20,9 @@ export interface FilterOpt<V = any, D = any> extends Record<string, any> {
   getLabel?: (data?: D) => string | React.ReactNode;
 }
 
-export type FilterOptionSelectHandler<V = any, D = any> = (
-  option: FilterOpt<V, D>,
-  value: FilterOpt['value']
-) => void;
+export type FilterOptionSelectHandler<V = any, D = any> = (option: FilterOpt<V, D>, value: FilterOpt['value']) => void;
 
-const ModalFilter: React.FC<
-  ModalFormFilterProps & React.HTMLAttributes<HTMLDivElement>
-> = ({
+const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivElement>> = ({
   filterOptions,
   onOptSelect,
   preventFilter,
@@ -40,10 +35,8 @@ const ModalFilter: React.FC<
     (idx: number, option: FilterOpt) => {
       return () => {
         setCurrent(idx);
-        if (!onOptSelect)
-          return console.log('No passed "onSelect" handler', option);
-        if (typeof onOptSelect === 'function')
-          onOptSelect(option, option.value);
+        if (!onOptSelect) return console.log('No passed "onSelect" handler', option);
+        if (typeof onOptSelect === 'function') onOptSelect(option, option.value);
       };
     },
     [onOptSelect]
@@ -53,17 +46,14 @@ const ModalFilter: React.FC<
     if (preventFilter || defaultFilterValue) return;
 
     if (filterOptions && Array.isArray(filterOptions)) {
-      typeof onOptSelect === 'function' &&
-        onOptSelect(filterOptions[current], filterOptions[current].value);
+      typeof onOptSelect === 'function' && onOptSelect(filterOptions[current], filterOptions[current].value);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (defaultFilterValue && Array.isArray(filterOptions)) {
-      const defIndex = filterOptions.findIndex(
-        el => el.value === defaultFilterValue
-      );
+      const defIndex = filterOptions.findIndex(el => el.value === defaultFilterValue);
       defIndex > 0 && setCurrent(defIndex);
     }
   }, [defaultFilterValue, filterOptions]);
@@ -79,10 +69,8 @@ const ModalFilter: React.FC<
           className={current === idx ? 'filterBtn active' : 'filterBtn'}
           onClick={handleSelectOpt(idx, opt)}
         >
-          <>
-            <span>{opt?.label}</span>
-            {opt.extraLabel}
-          </>
+          <span>{opt?.label}</span>
+          {opt.extraLabel || null}
         </StButtonIcon>
       )),
     [current, filterOptions, handleSelectOpt]
@@ -98,8 +86,7 @@ const ModalFilter: React.FC<
 const Filter = styled.div<{ gridRepeat?: number }>`
   display: grid;
   align-items: center;
-  grid-template-columns: ${({ gridRepeat }) =>
-    `repeat(${gridRepeat || 1}, 1fr)`};
+  grid-template-columns: ${({ gridRepeat }) => `repeat(${gridRepeat || 1}, 1fr)`};
 
   height: 44px;
 
@@ -112,7 +99,7 @@ const Filter = styled.div<{ gridRepeat?: number }>`
 const StButtonIcon = styled(ButtonIcon)`
   position: relative;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   gap: 0;
 
   font-weight: 700;

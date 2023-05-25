@@ -11,31 +11,53 @@ interface IBase<T = any> {
   childrenList?: (T & IBase<T>)[] | null;
 }
 
+interface StateControl<D = any> {
+  onSuccess?: (data: D) => void;
+  onError?: (error: string) => void;
+  onLoading?: (loading: boolean) => void;
+}
+
 async function findChildrenById<T = any>(id?: string, data?: (T & IBase<T>)[]): Promise<(T & IBase<T>)[] | null> {
   const hasChildren = data?.some(item => item.owner?._id === id);
 
   if (hasChildren) {
     const children = data?.filter(ch => ch.owner?._id === id);
-    await Promise.all(children?.map(async ch => {
-      ch.childrenList = await findChildrenById(ch._id, data);
-      if (ch.childrenList) ch.childrenCount = ch.childrenList.length;
-      return ch;
-    }) || []);
+    await Promise.all(
+      children?.map(async ch => {
+        ch.childrenList = await findChildrenById(ch._id, data);
+        if (ch.childrenList) ch.childrenCount = ch.childrenList.length;
+        return ch;
+      }) || []
+    );
     return children !== undefined ? children : null;
   }
 
   return null;
 }
 
-export default async function createTreeData<T = any>(data: (T & IBase<T>)[]): Promise<(T & IBase<T>)[]> {
-  const clonedData = _.cloneDeep(data);
-  const root = clonedData.filter(item => !item.owner);
+export default async function createTreeData<T = any>(
+  data: (T & IBase<T>)[],
+  { onSuccess, onError, onLoading }: StateControl<(T & IBase<T>)[]>
+): Promise<(T & IBase<T>)[] | []> {
+  onLoading && onLoading(true);
+  try {
+    const clonedData = _.cloneDeep(data);
+    const root = clonedData.filter(item => !item.owner);
 
-  await Promise.all(root.map(async item => {
-    item.childrenList = await findChildrenById(item._id, data);
-    if (item.childrenList) item.childrenCount = item.childrenList.length;
-    return item;
-  }));
-
-  return root;
+    await Promise.all(
+      root.map(async item => {
+        item.childrenList = await findChildrenById(item._id, data);
+        if (item.childrenList) item.childrenCount = item.childrenList.length;
+        return item;
+      })
+    );
+    onSuccess && onSuccess(root);
+    return root;
+  } catch (e) {
+    console.error(e);
+    onError && onError('Unknown error occurred');
+    return [];
+  } finally {
+    onLoading && onLoading(false);
+  }
 }

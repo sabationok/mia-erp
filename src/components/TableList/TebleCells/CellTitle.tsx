@@ -14,6 +14,7 @@ export type CellTitleContent = {
   uppercase?: boolean;
   icon?: IconIdType;
   path?: string;
+  description?: string;
 };
 export type CellTittleProps = {
   top: CellTitleContent;
@@ -25,20 +26,23 @@ export type CellTittleProps = {
   onClick?: (ev: React.MouseEvent<HTMLDivElement>) => void;
 };
 
-const CellTitle: React.FC<
-  CellTittleProps & React.HTMLAttributes<HTMLDivElement>
-> = ({ width, idx, onClick, top, bottom, ...props }) => {
+const CellTitle: React.FC<CellTittleProps & React.HTMLAttributes<HTMLDivElement>> = ({
+  width,
+  idx,
+  onClick,
+  top,
+  bottom,
+  ...props
+}) => {
   return (
     <StCellHead width={width} onClick={onClick} {...props}>
       <Wrapper>
-        <Top align={top.align}>
-          <span className="inner">{top.name || top.dataKey || 'Title'}</span>
+        <Top align={top.align} title={top?.description || top.name}>
+          <span className="inner">{top.name || top.dataKey}</span>
         </Top>
 
-        <Bottom align={bottom?.align}>
-          {(bottom?.name || bottom?.dataKey) && (
-            <span className="inner">{bottom?.name || bottom?.dataKey}</span>
-          )}
+        <Bottom align={bottom?.align} title={bottom?.description || bottom?.name}>
+          {(bottom?.name || bottom?.dataKey) && <span className="inner">{bottom?.name || bottom?.dataKey}</span>}
         </Bottom>
       </Wrapper>
 
@@ -78,8 +82,7 @@ const Content = styled.div<Omit<CellTitleContent, 'name'>>`
 
   width: 100%;
 
-  justify-content: ${({ align }) =>
-    align === 'center' ? 'center' : `flex-${align}`};
+  justify-content: ${({ align }) => (align === 'center' ? 'center' : `flex-${align}`)};
 
   & .inner {
     max-width: 100%;

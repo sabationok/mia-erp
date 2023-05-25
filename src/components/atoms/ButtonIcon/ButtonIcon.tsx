@@ -10,10 +10,12 @@ type TextTransform = 'uppercase' | 'lowercase' | 'capitalize' | 'none';
 interface ButtonProps {
   size?: string;
   variant: ButtonIconVariant;
+  icon?: IconIdType;
   iconId?: string;
   iconSize?: string;
   isActive?: boolean;
   iconStyles?: {};
+  endIcon?: IconIdType;
   endIconId?: string;
   endIconSize?: string;
   endIconStyles?: {};
@@ -24,22 +26,24 @@ interface ButtonProps {
 export type ButtonIconProps = ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 const ButtonIcon: React.FC<ButtonIconProps> = ({
-                                                 children,
-                                                 isActive,
-                                                 type = 'button',
-                                                 size = '',
-                                                 variant = 'def',
-                                                 iconId,
-                                                 iconSize = '18px',
-                                                 iconStyles = {},
-                                                 endIconId = '',
-                                                 endIconSize = '18px',
-                                                 endIconStyles = {},
-                                                 onClick = () => {
-                                                   console.log('ButtonIcon click');
-                                                 },
-                                                 ...props
-                                               }) => {
+  children,
+  isActive,
+  type = 'button',
+  size = '',
+  variant = 'def',
+  iconId,
+  icon,
+  iconSize = '18px',
+  iconStyles = {},
+  endIcon,
+  endIconId = '',
+  endIconSize = '18px',
+  endIconStyles = {},
+  onClick = () => {
+    console.log('ButtonIcon click');
+  },
+  ...props
+}) => {
   let styles = {
     width: size,
     height: size,
@@ -73,16 +77,16 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
       }}
     >
       {iconId && (
-        <SvgIcon className='icon' style={iconStyle}>
-          <use href={`${sprite}#icon-${String(iconId)}`} />
+        <SvgIcon className="icon" style={iconStyle}>
+          <use href={`${sprite}#icon-${icon || iconId}`} />
         </SvgIcon>
       )}
 
       {children}
 
       {endIconId && (
-        <SvgIcon className='endIcon' style={endIconStyle}>
-          <use href={`${sprite}#icon-${endIconId}`}></use>
+        <SvgIcon className="endIcon" style={endIconStyle}>
+          <use href={`${sprite}#icon-${endIcon || endIconId}`}></use>
         </SvgIcon>
       )}
     </StyledButtonIcon>
@@ -321,8 +325,8 @@ const onlyIconFilled = css`
   ${icon}
 `;
 const onlyIcon = css`
-  ${def}
-  ${icon}
+  ${def};
+  ${icon};
   fill: ${({ theme }) => theme.accentColor.base};
 
   &:hover {
@@ -334,8 +338,8 @@ const onlyIcon = css`
   }
 `;
 const onlyIconNoEffects = css`
-  ${defNoEffects}
-  ${icon}
+  ${defNoEffects};
+  ${icon};
   fill: ${({ theme }) => theme.accentColor.base};
 
   &:hover {
@@ -360,7 +364,7 @@ const underlinedText = css`
   }
 `;
 const text = css`
-  ${def}
+  ${def};
   color: ${({ theme }) => theme.accentColor.base};
 
   &:hover {
@@ -372,15 +376,15 @@ const text = css`
   }
 `;
 const textSmall = css`
-  ${text}
-  ${small}
+  ${text};
+  ${small};
 `;
 const textLarge = css`
-  ${text}
-  ${large}
+  ${text};
+  ${large};
 `;
 const defOutlined = css`
-  ${def}
+  ${def};
   color: ${({ theme }) => theme.fontColor};
   fill: ${({ theme }) => theme.fillColor};
   border: 1px solid ${({ theme }) => theme.borderColor};
@@ -395,12 +399,12 @@ const defOutlined = css`
   }
 `;
 const defOutlinedSmall = css`
-  ${defOutlined}
-  ${small}
+  ${defOutlined};
+  ${small};
 `;
 const defOutlinedLarge = css`
-  ${defOutlined}
-  ${large}
+  ${defOutlined};
+  ${large};
 `;
 
 const variants = {

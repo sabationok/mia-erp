@@ -11,14 +11,10 @@ const TableOverHead: React.FC<React.HTMLAttributes<HTMLDivElement>> = props => {
 
   return (
     <OverHead className="tOverHead" {...props}>
-      <LeftSide className="leftSide">
-        {isSearch && <TableSearchForm {...{ tableSearchParams }} />}
-      </LeftSide>
+      <LeftSide className="leftSide">{isSearch && <TableSearchForm {...{ tableSearchParams }} />}</LeftSide>
 
       <DeviceConrol.MinDesktop>
-        <RightSide className="rightSide">
-          {tableActions && <TableActions {...tableActions} />}
-        </RightSide>
+        <RightSide className="rightSide">{tableActions && <TableActions {...tableActions} />}</RightSide>
       </DeviceConrol.MinDesktop>
     </OverHead>
   );

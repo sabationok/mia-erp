@@ -17,7 +17,7 @@ export interface SelectsTreeListItemProps<TFields = IBase> {
   childrenList?: SelectsTreeListItemProps[];
   childrenCount?: number;
   onSelect: <T = any | undefined>(checked: boolean, item: T) => void;
-  list?: Omit<SelectsTreeListItemProps[], 'list'>;
+  list?: Omit<SelectsTreeListItemProps, 'list'>[];
 }
 
 const SelectsTreeListItem: React.FC<

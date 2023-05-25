@@ -21,20 +21,10 @@ export interface IDocument extends IBase {
   type?: string;
 }
 
-export type TrStatus =
-  | 'rejected'
-  | 'approved'
-  | 'pending'
-  | 'error'
-  | 'success'
-  | 'warning'
-  | 'info';
+export type TrStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
-export interface ITransaction extends IBase {
-  amount: number;
-  type: TransactionType;
+export interface ITransaction extends ITransactionBase {
   transactionDate: Date | string;
-  currency?: CurrencyCode;
   countIn?: ICount;
   subCountIn?: ICount;
   countOut?: ICount;
@@ -45,16 +35,26 @@ export interface ITransaction extends IBase {
   project?: IProject;
   document?: IDocument;
   activity?: IActivity;
-  status?: TrStatus;
+  // status?: TrStatus;
   comment?: string;
-  tags?: string[];
+  // tags?: string[];
 }
 
-export interface ITransactionForReq {
-  transactionDate?: Date | string;
+export interface ITransactionBase extends IBase {
   amount?: number;
   type?: TransactionType;
   currency?: CurrencyCode;
+  status?: TrStatus;
+  tags?: string[];
+}
+
+export interface ITransactionForReq extends Partial<Record<keyof ITransaction, any>> {
+  transactionDate?: number;
+  amount?: number;
+  type?: TransactionType;
+  currency?: CurrencyCode;
+  status?: TrStatus;
+  tags?: string[];
   countIn?: string;
   subCountIn?: string;
   countOut?: string;
@@ -65,9 +65,7 @@ export interface ITransactionForReq {
   project?: string;
   document?: string;
   companyActivity?: string;
-  status?: TrStatus;
   comment?: string;
-  tags?: string[];
 }
 
 export interface ITransactionReqData {

@@ -1,3 +1,5 @@
+import { ITransaction, ITransactionForReq } from '../redux/transactions/transactions.types';
+
 function getValueByPath({ data, path }: { data?: object; path?: string }): any {
   if (!data || !path) {
     return null;
@@ -31,4 +33,33 @@ function formatPhoneNumber(phoneNumberString: string): string | null {
   return null;
 }
 
-export { getValueByPath, formatPhoneNumber };
+function createTransactionForReq(
+  transaction: ITransaction,
+  omitPathArr?: (keyof ITransaction)[],
+  dateToNumberPath?: string | null
+): ITransactionForReq {
+  let transformedData: ITransactionForReq = {};
+
+  const keys = Object.keys(transaction) as (keyof ITransaction)[];
+  keys.map(key => {
+    if (omitPathArr?.includes(key)) return '';
+
+    const value = transaction[key];
+    if (dateToNumberPath && key === dateToNumberPath && typeof value === 'string') {
+      transformedData[key] = new Date(value).valueOf();
+      return '';
+    }
+    if (value && typeof value === 'object' && '_id' in value) {
+      transformedData[key] = value?._id;
+      return '';
+    }
+    transformedData[key] = value;
+    return '';
+  });
+
+  // if (omitPathArr && omitPathArr?.length > 0) return _.omit(transformedData, ...omitPathArr);
+
+  return transformedData;
+}
+
+export { getValueByPath, formatPhoneNumber, createTransactionForReq };

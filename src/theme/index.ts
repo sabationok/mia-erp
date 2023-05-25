@@ -1,9 +1,4 @@
-import {
-  AccentColorNamesType,
-  accentColors,
-  IAccentColor,
-  IAccentColors,
-} from './accentColors';
+import { AccentColorNamesType, accentColors, IAccentColor, IAccentColors } from './accentColors';
 
 export { accentColors };
 export type { AccentColorNamesType, IAccentColors, IAccentColor };
@@ -108,6 +103,8 @@ const darkTheme = {
   fillColorHeader: '#EFEFEF',
 
   fieldColor: '#323234',
+  fieldBackgroundColor: '#323234',
+  fieldInnerBackgroundColor: '#464649',
 
   fontColorSidebar: '#EFEFEF',
   fillColorSidebar: '#EFEFEF',
@@ -165,6 +162,8 @@ const lightTheme: Partial<ITheme> = {
   fillColorSidebar: '#272727',
 
   fieldColor: '#E4E4E4',
+  fieldBackgroundColor: '#E4E4E4',
+  fieldInnerBackgroundColor: '#fafafa',
 
   defaultBtnBckgrndColor: {
     def: 'transparent',
@@ -196,13 +195,9 @@ declare module 'styled-components' {
 }
 
 export function getTheme(themeName?: ThemeType) {
-  return themeName && appThemes[themeName]
-    ? appThemes[themeName]
-    : appThemes.light;
+  return themeName && appThemes[themeName] ? appThemes[themeName] : appThemes.light;
 }
 
 export function getAccentColor(colorName?: AccentColorNamesType) {
-  return colorName && accentColors[colorName]
-    ? accentColors[colorName]
-    : accentColors.orange;
+  return colorName && accentColors[colorName] ? accentColors[colorName] : accentColors.orange;
 }

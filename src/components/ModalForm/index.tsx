@@ -6,33 +6,27 @@ import styled from 'styled-components';
 import { FormEvent } from 'react';
 import { useModal } from 'components/ModalProvider/ModalComponent';
 
-export interface ModalFormBaseProps
-  extends Omit<
-    React.FormHTMLAttributes<HTMLFormElement>,
-    'onSubmit' | 'onReset'
-  > {
+export interface ModalFormBaseProps extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit' | 'onReset'> {
   onSubmit?: (ev: FormEvent<HTMLFormElement>) => void;
   onReset?: (args?: any) => void;
   footer?: boolean;
-  beforeSubmit?: <T = any>(args?: T) => void | any;
-  afterSubmit?: (args?: any) => void;
-  beforeClose?: (args?: any) => void;
-  afterClose?: (args?: any) => void;
+  beforeSubmit?: () => void;
+  afterSubmit?: () => void;
+  beforeClose?: () => void;
+  afterClose?: () => void;
   closeAfterSubmit?: boolean;
 }
 
 export interface ModalFormAddsProps {
   footer?: boolean;
-  beforeSubmit?: <T = any>(args?: T) => void | any;
-  afterSubmit?: (args?: any) => void;
-  beforeClose?: (args?: any) => void;
-  afterClose?: (args?: any) => void;
-  closeAfterSubmit?: boolean;
+
+  fillWidth?: boolean;
+  fillHeight?: boolean;
+  fitContentV?: boolean;
+  fitContentH?: boolean;
 }
 
-export type ModalFormProps = ModalFormBaseProps &
-  ModalFormAddsProps &
-  ModalFormFilterProps;
+export type ModalFormProps = ModalFormBaseProps & ModalFormAddsProps & ModalFormFilterProps;
 const ModalForm: React.FC<ModalFormProps> = ({
   title = 'default modal title',
   footer = true,
@@ -74,12 +68,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
   }
 
   return (
-    <ModalFormContainer
-      className="modalForm"
-      onSubmit={handleSubmit}
-      onReset={handleReset}
-      {...props}
-    >
+    <ModalFormContainer className="modalForm" onSubmit={handleSubmit} onReset={handleReset} {...props}>
       <ModalHeader title={title}>
         {filterOptions && (
           <ModalFilter
@@ -100,17 +89,22 @@ const ModalForm: React.FC<ModalFormProps> = ({
   );
 };
 
-const ModalFormContainer = styled.form`
+const ModalFormContainer = styled.form<
+  Pick<ModalFormAddsProps, 'fillHeight' | 'fillWidth' | 'fitContentH' | 'fitContentV'>
+>`
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: min-content 1fr max-content;
 
   position: relative;
 
-  min-height: 250px;
+  min-height: 200px;
   max-height: 100%;
   min-width: 250px;
   max-width: 100%;
+
+  width: ${({ fillWidth, fitContentV }) => (fillWidth && '100vw') || (fitContentV && 'max-content') || ''};
+  height: ${({ fillHeight, fitContentH }) => (fillHeight && '100vh') || (fitContentH && 'max-content') || ''};
 
   overflow: hidden;
 

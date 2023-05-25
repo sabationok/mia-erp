@@ -100,75 +100,64 @@ export interface StatusData {
   backgroundColor: string;
   label: string;
   iconId?: string;
-  descr?: string;
   description?: string;
 }
 
-export type StatusNames =
-  | 'noStatus'
-  | 'error'
-  | 'warning'
-  | 'success'
-  | 'info'
-  | 'INCOME'
-  | 'EXPENSE'
-  | 'TRANSFER';
-export type StatusDataMapType = {
-  [status in StatusNames]?: StatusData;
-};
+export type StatusNames = keyof typeof statusDataMap;
 
-export const statusDataMap: StatusDataMapType = {
+export const statusDataMap = {
   noStatus: {
     name: 'NO_STATUS',
     color: 'inherit',
     iconId: iconId.info,
     label: 'Без статусу',
     backgroundColor: colors.defaultLight,
-  },
+  } as StatusData,
   error: {
     name: 'error',
     color: 'inherit',
     iconId: iconId.error,
     label: 'error',
     backgroundColor: colors.clrErrorLight,
-  },
+    description: 'error',
+  } as StatusData,
   success: {
     name: 'success',
     color: 'inherit',
     iconId: iconId.success,
     label: 'success',
     backgroundColor: colors.clrSuccessLight,
-  },
+  } as StatusData,
   info: {
     name: 'info',
     color: 'inherit',
     iconId: iconId.info,
     label: 'info',
     backgroundColor: colors.clrInfoLight,
-  },
+  } as StatusData,
   warning: {
     name: 'warning',
     color: 'inherit',
     iconId: iconId.warning,
     label: 'warning',
     backgroundColor: colors.clrWarningLight,
-  },
+  } as StatusData,
   INCOME: {
     name: 'INCOME',
     color: colors.clrSuccess,
     label: 'Дохід',
     backgroundColor: colors.clrSuccess,
-  },
+  } as StatusData,
   EXPENSE: {
     name: 'EXPENSE',
     color: colors.clrError,
     label: 'Витрата',
     backgroundColor: colors.clrError,
-  },
+  } as StatusData,
   TRANSFER: {
     name: 'TRANSFER',
     color: colors.clrInfo,
     label: 'Переказ',
     backgroundColor: colors.clrInfo,
-  },
+  } as StatusData,
 };

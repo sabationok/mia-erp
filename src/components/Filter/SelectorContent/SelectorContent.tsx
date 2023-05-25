@@ -11,10 +11,7 @@ import { SelectsTreeListItemProps } from './SelectsTreeListItem';
 export interface SelectorContentProps {
   defaultValue?: string[];
   getDefaultValue?: (selectorName: keyof FilterReturnDataType) => string[];
-  onSelectorSubmit?: (
-    name: keyof FilterReturnDataType,
-    value: string[]
-  ) => void;
+  onSelectorSubmit?: (name: keyof FilterReturnDataType, value: string[]) => void;
   isOpen?: boolean;
   selectorName: keyof FilterReturnDataType;
 }
@@ -37,18 +34,12 @@ const SelectorContent: React.FC<
 }) => {
   const [renderData, setRenderData] = useState<SelectsTreeListItemProps[]>([]);
   const [selectorData, setSelectorData] = useState<string[]>(
-    defaultValue
-      ? defaultValue
-      : getDefaultValue
-      ? getDefaultValue(selectorName)
-      : []
+    defaultValue ? defaultValue : getDefaultValue ? getDefaultValue(selectorName) : []
   );
 
   function onSelectorSubmitWrapper() {
     console.log('selectorData', selectorData);
-    onSelectorSubmit &&
-      selectorName &&
-      onSelectorSubmit(selectorName, selectorData);
+    onSelectorSubmit && selectorName && onSelectorSubmit(selectorName, selectorData);
   }
 
   function onSelectItems(ids: string[], checked: boolean) {
@@ -57,9 +48,12 @@ const SelectorContent: React.FC<
   }
 
   useMemo(async () => {
-    const tree = await createTreeData(data);
-    setRenderData(tree);
-    return tree;
+    await createTreeData<SelectsTreeListItemProps>(data, {
+      onSuccess: tree => setRenderData(tree),
+      onError: error => {
+        console.log('createTreeData in SelectorContent', error);
+      },
+    });
   }, [data]);
 
   function onCheckSelectStatus(id: string) {
@@ -93,9 +87,7 @@ const SelectorContent: React.FC<
           iconId={iconId.close}
           onClick={() => {
             setSelectorData([]);
-            onSelectorSubmit &&
-              selectorName &&
-              onSelectorSubmit(selectorName, []);
+            onSelectorSubmit && selectorName && onSelectorSubmit(selectorName, []);
           }}
         />
       </AcceptButtons>

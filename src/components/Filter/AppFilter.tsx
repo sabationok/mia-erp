@@ -12,11 +12,11 @@ import InputTextPrimary from '../atoms/Inputs/InputTextPrimary';
 import { IContractor } from '../../redux/contractors/contractors.types';
 import { IProject } from '../../redux/transactions/transactions.types';
 
-export type FilterSelectorDataType = ICount[] | ICategory[] | IContractor[] | IProject[] | any[];
-export type FilterSelectorType = {
+export type FilterSelectorDataType = ICount | ICategory | IContractor | IProject | any;
+export type FilterSelectorType<DataType = FilterSelectorDataType> = {
   selectorName: keyof FilterReturnDataType;
   label: string;
-  data: FilterSelectorDataType;
+  data: DataType[];
 };
 
 export interface FilterReturnDataType {

@@ -8,8 +8,7 @@ import styled from 'styled-components';
 import Text from '../../atoms/Text';
 import { countPercentage, numberWithSpaces } from '../../../utils';
 
-export interface ReportListItemBaseProps<T = any>
-  extends React.HTMLAttributes<HTMLDivElement> {
+export interface ReportListItemBaseProps<T = any> extends React.HTMLAttributes<HTMLDivElement> {
   label?: string | number;
   value?: string;
   type?: T;
@@ -18,18 +17,11 @@ export interface ReportListItemBaseProps<T = any>
   currency?: string;
 }
 
-export interface ReportListItemProps<T = any>
-  extends ReportListItemBaseProps<T> {
+export interface ReportListItemProps<T = any> extends ReportListItemBaseProps<T> {
   childrenList?: ReportListItemProps<T>[];
 }
 
-const ReportListItem: React.FC<ReportListItemProps> = ({
-  label,
-  amount,
-  currency,
-  percentage,
-  childrenList,
-}) => {
+const ReportListItem: React.FC<ReportListItemProps> = ({ label, amount, currency, percentage, childrenList }) => {
   const renderChildren = useMemo(
     () =>
       childrenList?.map(ch => (
@@ -37,9 +29,7 @@ const ReportListItem: React.FC<ReportListItemProps> = ({
           key={ch.label}
           {...ch}
           currency={currency}
-          percentage={
-            ch.amount && amount ? countPercentage(ch.amount, amount) : 0
-          }
+          percentage={ch.amount && amount ? countPercentage(ch.amount, amount) : 0}
         />
       )),
     [amount, childrenList, currency]
@@ -50,23 +40,15 @@ const ReportListItem: React.FC<ReportListItemProps> = ({
       <FlexBox fxDirection={'row'} fillWidth gap={4} alignItems={'center'}>
         <CheckBox />
         <FieldBox fxDirection={'row'} flex={'1'}>
-          <FlexBox
-            fxDirection={'row'}
-            flex={'1'}
-            padding={'5px 8px'}
-            alignItems={'center'}
-            fillHeight
-          >
+          <FlexBox fxDirection={'row'} flex={'1'} padding={'5px 8px'} alignItems={'center'} fillHeight>
             <Text>{label}</Text>
             {percentage && (
               <>
                 <Separator />
-                <Percentage>{percentage}%</Percentage>
+                <Percentage className={'innerBox'}>{percentage}%</Percentage>
               </>
             )}
-            <Text style={{ marginLeft: 'auto' }}>{`${numberWithSpaces(
-              amount
-            )} ${currency || ''}`}</Text>
+            <Text style={{ marginLeft: 'auto' }}>{`${numberWithSpaces(amount)} ${currency || ''}`}</Text>
           </FlexBox>
           <ButtonIcon
             iconId={iconId.SmallArrowDown}
@@ -93,11 +75,7 @@ export interface ReportListProps {
   currency?: string;
 }
 
-export const ReportList: React.FC<ReportListProps> = ({
-  entryList = [],
-  totalAmount,
-  currency,
-}) => {
+export const ReportList: React.FC<ReportListProps> = ({ entryList = [], totalAmount, currency }) => {
   const renderList = useMemo(
     () =>
       entryList.map(el => (
@@ -105,23 +83,13 @@ export const ReportList: React.FC<ReportListProps> = ({
           key={el.label}
           {...el}
           currency={currency}
-          percentage={
-            el.amount && totalAmount
-              ? countPercentage(el.amount, totalAmount)
-              : undefined
-          }
+          percentage={el.amount && totalAmount ? countPercentage(el.amount, totalAmount) : undefined}
         />
       )),
     [entryList, currency, totalAmount]
   );
   return (
-    <FlexBox
-      fillWidth
-      fillHeight
-      overflow={'auto'}
-      gap={12}
-      padding={'8px 12px'}
-    >
+    <FlexBox fillWidth fillHeight overflow={'auto'} gap={12} padding={'8px 12px'}>
       {renderList}
     </FlexBox>
   );
@@ -135,13 +103,13 @@ const Separator = styled.div`
   background-color: ${({ theme }) => theme.tableHeaderStroke};
 `;
 
-const Percentage = styled(Text)`
-  background-color: ${({ theme }) =>
-    '#464649' || theme.backgroundColorSecondary};
-  color: ${({ theme }) => theme.accentColor.base};
-
-  padding: 2px 4px;
-
-  border-radius: 2px;
+const Percentage = styled.div`
+  // background-color: ${({ theme }) => theme.fieldInnerBackgroundColor};
+  // color: ${({ theme }) => theme.accentColor.base};
+  //
+  // padding: 2px 4px;
+  //
+  // border-radius: 2px;
+  //margin: 0 8px;
 `;
 export default ReportList;

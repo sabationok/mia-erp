@@ -4,6 +4,7 @@ import { useRow } from '../TableRows/TableRow';
 import StatusComp from './CellComponents/StatusComp';
 import { CellTitleContent, CellTittleProps } from './CellTitle';
 import getValueByPath from '../../../utils/getValueByPath';
+import { IDataCellProps } from './Cells';
 
 export interface CellTextDblProps {
   titleInfo: CellTittleProps;
@@ -25,7 +26,13 @@ const CellStatus: React.FC<CellTextDblProps & React.HTMLAttributes<HTMLDivElemen
     data: rowData,
     ...bottom,
   });
-  const content = useMemo(() => ({}), []);
+  const cellConfig = useMemo(
+    (): IDataCellProps => ({
+      content: {},
+      subContent: {},
+    }),
+    []
+  );
 
   return (
     <CellBase style={{ width }} {...props}>

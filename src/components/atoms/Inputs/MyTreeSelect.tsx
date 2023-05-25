@@ -41,23 +41,15 @@ interface MyTreeDataSelectItem {
   children?: MyTreeDataSelectItem[];
 }
 
-interface MyTreeSelect {
-  onSelect?: (
-    newValue: string,
-    node?: React.ReactNode,
-    changeEventExtra?: any
-  ) => void;
+interface MyTreeSelectProps {
+  onSelect?: (newValue: string, node?: React.ReactNode, changeEventExtra?: any) => void;
   treeData: MyTreeDataSelectItem[];
 }
 
-const MyTreeSelect: React.FC<MyTreeSelect> = ({ onSelect, treeData }) => {
+const MyTreeSelect: React.FC<MyTreeSelectProps> = ({ onSelect, treeData }) => {
   const [value, setValue] = useState<string>();
 
-  const onChange = (
-    newValue: string,
-    node: React.ReactNode,
-    changeEventExtra: any
-  ) => {
+  const onChange = (newValue: string, node: React.ReactNode, changeEventExtra: any) => {
     setValue(newValue);
     onSelect && onSelect(newValue, node, changeEventExtra);
 
@@ -66,10 +58,7 @@ const MyTreeSelect: React.FC<MyTreeSelect> = ({ onSelect, treeData }) => {
   };
 
   const tProps = {
-    treeData:
-      treeData.length === 0
-        ? (treeDataMock as MyTreeDataSelectItem[])
-        : treeData,
+    treeData: treeData.length === 0 ? (treeDataMock as MyTreeDataSelectItem[]) : treeData,
     value,
     onChange: onChange,
     treeCheckable: true,

@@ -2,6 +2,7 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import MyTreeSelect from '../atoms/Inputs/MyTreeSelect';
 import * as React from 'react';
+import CustomSelect from '../atoms/Inputs/CustomSelect';
 
 export type ErrorNameType = 'notFoundPage' | 'notFound';
 
@@ -33,9 +34,7 @@ export const errors: IErrors = {
     path: '#',
   },
 };
-const PageNotFound: React.FC<IErrorPageProps> = ({
-  errName = 'notFoundPage',
-}) => {
+const PageNotFound: React.FC<IErrorPageProps> = ({ errName = 'notFoundPage' }) => {
   return (
     <Page>
       <ErrorNotification>
@@ -46,6 +45,8 @@ const PageNotFound: React.FC<IErrorPageProps> = ({
         <Text>{errors[errName]?.error}</Text>
 
         <MyTreeSelect treeData={[]} />
+
+        <CustomSelect />
 
         <ButtonIcon variant="outlinedSmall">outlinedSmall</ButtonIcon>
         <ButtonIcon variant="outlinedLarge">outlinedLarge</ButtonIcon>

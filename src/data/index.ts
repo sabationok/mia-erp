@@ -11,23 +11,19 @@ import addButtons from './future/createActions.data';
 import directories from './directories.data';
 import { iconId } from '../img/sprite';
 import { appPages, pages } from './pages.data';
-import { reports } from './reports.data';
+import { reportByContractorsColumns, reports } from './reports.data';
 import { companiesTableColumns } from './companies.data';
 import { appSettings } from './appSettings.data';
-import {
-  getChildOptions,
-  getOwnerOptions,
-  getParentOptions,
-  selects,
-} from './select.data';
+import { getChildOptions, getOwnerOptions, getParentOptions, selects } from './select.data';
 import sideBarLeftData from './sideBarLeft.data';
 import { activitiesMockData } from './activities.data';
-import {
-  permissionsSearchParams,
-  permissionsTableColumns,
-} from './permissions.data';
+import { permissionsSearchParams, permissionsTableColumns } from './permissions.data';
 
+const reportsTableColumns = {
+  reportByContractorsColumns,
+};
 export {
+  reportsTableColumns,
   sideBarLeftData,
   statusData,
   transactionsMockData,

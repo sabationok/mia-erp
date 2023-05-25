@@ -11,7 +11,7 @@ export interface IFilterSelectorAddsProps {
 export interface FilterSelectorProps {
   label: string;
   selectorName?: keyof FilterReturnDataType;
-  data: FilterSelectorDataType;
+  data: FilterSelectorDataType[];
   idx: number;
   currentIdx: number | null;
   childrenListCount?: number;
@@ -20,9 +20,7 @@ export interface FilterSelectorProps {
   onSelectorClick: (idx?: number) => void;
 }
 
-const Selector: React.FC<
-  FilterSelectorProps & React.HTMLAttributes<Element>
-> = ({
+const Selector: React.FC<FilterSelectorProps & React.HTMLAttributes<Element>> = ({
   label = 'Selector label',
   selectorName = 'selector',
   onSelectorClick,
@@ -44,9 +42,7 @@ const Selector: React.FC<
       >
         <Label>{label}</Label>
 
-        <div>
-          {`Обрано: ${selectedChildrenCount || 0}/${childrenListCount || 0}`}
-        </div>
+        <div>{`Обрано: ${selectedChildrenCount || 0}/${childrenListCount || 0}`}</div>
       </StOpenButton>
 
       {currentIdx === idx ? <SelectorList>{children}</SelectorList> : null}
@@ -76,8 +72,7 @@ const StOpenButton = styled(ButtonIcon)<{ isCurrent: boolean }>`
 
   background-color: ${({ theme }) => theme.fieldColor};
 
-  border-color: ${({ isCurrent, theme }) =>
-    isCurrent ? theme.accentColor.base : ''};
+  border-color: ${({ isCurrent, theme }) => (isCurrent ? theme.accentColor.base : '')};
 
   & .endIcon {
     transform: ${({ isCurrent }) => `rotate(${isCurrent ? 180 : 0}deg)`};

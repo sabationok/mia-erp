@@ -2,8 +2,7 @@ import React, { CSSProperties } from 'react';
 import styled, { css } from 'styled-components';
 import { FieldError } from 'react-hook-form';
 
-export interface InputLabelProps
-  extends React.InputHTMLAttributes<HTMLLabelElement> {
+export interface InputLabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   label?: string;
   direction?: 'horizontal' | 'vertical';
   uppercase?: boolean;
@@ -12,6 +11,7 @@ export interface InputLabelProps
   loading?: boolean;
   helperText?: string;
   align?: CSSProperties['alignItems'];
+  disabled?: boolean;
 }
 
 const InputLabel: React.FC<InputLabelProps> = ({
@@ -26,23 +26,18 @@ const InputLabel: React.FC<InputLabelProps> = ({
   children,
   loading,
   align,
+  htmlFor,
   ...props
 }) => {
   return (
-    <Label className={className} disabled={disabled} {...props}>
+    <Label className={className} disabled={disabled} {...props} htmlFor={htmlFor}>
       <Wrapper isLabel={!!label} direction={direction}>
         {label && (
-          <LabelText
-            uppercase={uppercase}
-            align={align}
-            direction={direction}
-            className="label"
-          >
+          <LabelText uppercase={uppercase} align={align} direction={direction} className="label">
             {label}
           </LabelText>
         )}
-
-        {children}
+        <InputBox>{children}</InputBox>
       </Wrapper>
 
       {helperText && (
@@ -61,6 +56,8 @@ const Label = styled.label<{
 }>`
   display: flex;
   flex-direction: column;
+
+  position: relative;
 
   font-weight: 500;
   font-size: 12px;
@@ -85,8 +82,7 @@ const LabelText = styled.div<{
   text-transform: ${({ uppercase }) => (uppercase ? 'uppercase' : 'none')};
 
   width: 100%;
-  max-width: ${({ direction = 'horizontal' }) =>
-    direction === 'horizontal' ? '100px' : '100%'};
+  max-width: ${({ direction = 'horizontal' }) => (direction === 'horizontal' ? '100px' : '100%')};
 `;
 
 const Wrapper = styled.div<{
@@ -105,6 +101,13 @@ const Wrapper = styled.div<{
   width: 100%;
 `;
 
+const InputBox = styled.div`
+  display: flex;
+  width: 100%;
+
+  position: relative;
+`;
+
 const HelperText = styled.div<{
   error?: boolean;
   success?: boolean;
@@ -115,8 +118,7 @@ const HelperText = styled.div<{
   font-size: 8px;
   line-height: 1.5;
 
-  color: ${({ error, success, theme }) =>
-    (error && 'tomato') || (success && 'lightgreen') || 'inherit'};
+  color: ${({ error, success, theme }) => (error && 'tomato') || (success && 'lightgreen') || 'inherit'};
 
   cursor: default;
 `;

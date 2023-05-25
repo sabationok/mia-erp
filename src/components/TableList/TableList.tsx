@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef, useState } from 'react';
+import React, { createContext, memo, useContext, useRef, useState } from 'react';
 import TableHead from './TableHead';
 import TableBody from './TableBody';
 import AppLoader from 'components/atoms/AppLoader';
@@ -8,10 +8,7 @@ import TableFooter from './TableFooter/TableFooter';
 import styled from 'styled-components';
 import { CellTittleProps } from './TebleCells/CellTitle';
 import { MaxToTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
-import {
-  FilterReturnDataType,
-  FilterSelectorType,
-} from 'components/Filter/AppFilter';
+import { FilterReturnDataType, FilterSelectorType } from 'components/Filter/AppFilter';
 import { IBase } from 'redux/global.types';
 import { CustomCheckboxEvent } from './TebleCells/CellComponents/CheckBox';
 
@@ -47,17 +44,14 @@ export interface TableActionsProps<TDataType = any> {
   actions?: TableActionProps<TDataType>[];
 }
 
-export interface ITableSortParam
-  extends Pick<SelectItem, 'descending' | 'path' | 'dataPath' | 'dataKey'> {}
+export interface ITableSortParam extends Pick<SelectItem, 'descending' | 'path' | 'dataPath' | 'dataKey'> {}
 
 export type OnRowClickHandlerData<RData = any> = {
   ev?: MouseEvent | React.MouseEvent<HTMLDivElement>;
   _id?: string;
   rowData?: RData;
 };
-export type OnRowClickHandler<RData = any> = (
-  data: OnRowClickHandlerData<RData>
-) => any;
+export type OnRowClickHandler<RData = any> = (data: OnRowClickHandlerData<RData>) => any;
 
 export type OnCheckBoxChangeHandlerEvent<V = any> = {
   ev?: MouseEvent | React.MouseEvent<HTMLDivElement>;
@@ -65,13 +59,10 @@ export type OnCheckBoxChangeHandlerEvent<V = any> = {
   _id?: string;
   value?: V;
 };
-export type OnCheckBoxChangeHandler<V = any> = (
-  data: OnCheckBoxChangeHandlerEvent<V>
-) => any;
+export type OnCheckBoxChangeHandler<V = any> = (data: OnCheckBoxChangeHandlerEvent<V>) => any;
 export type OnHeadCheckBoxChangeHandler<V = any> = (data: V) => any;
 
-export interface ITableListProps<TDataType = any>
-  extends React.HTMLAttributes<HTMLDivElement> {
+export interface ITableListProps<TDataType = any> extends React.HTMLAttributes<HTMLDivElement> {
   tableTitles?: CellTittleProps[];
   tableSearchParams?: SelectItem[];
   tableSortParams?: ITableSortParam[];
@@ -87,12 +78,13 @@ export interface ITableListProps<TDataType = any>
   isFilter?: boolean;
   isSearch?: boolean;
   footer?: boolean;
+  pagination?: boolean;
   counter?: boolean;
   checkBoxes?: boolean;
   rowGrid?: any;
   children?: React.ReactNode;
   filterTitle?: string;
-  filterSelectors?: FilterSelectorType[];
+  filterSelectors?: FilterSelectorType<TDataType>[];
   filterDefaultValues?: FilterReturnDataType;
   onFilterSubmit?: (filterData: FilterReturnDataType) => void;
   onRowClick?: OnRowClickHandler<TDataType>;
@@ -102,16 +94,13 @@ export interface ITableListProps<TDataType = any>
   handleTableSort?: (sortParam: ITableSortParam) => void;
 }
 
-export interface ITableListContext<TDataType = any>
-  extends ITableListProps<TDataType> {
+export interface ITableListContext<TDataType = any> extends ITableListProps<TDataType> {
   selectedRows?: string[];
   rowRef?: React.MutableRefObject<HTMLElement | undefined>;
 }
 
 export const TableCTX = createContext({});
-export type UseTableHookType = <
-  TDataType = any
->() => ITableListContext<TDataType>;
+export type UseTableHookType = <TDataType = any>() => ITableListContext<TDataType>;
 export const useTable: UseTableHookType = () => useContext(TableCTX);
 
 const TableList: React.FC<ITableListProps> = ({
@@ -143,10 +132,7 @@ const TableList: React.FC<ITableListProps> = ({
     typeof onRowClick === 'function' && onRowClick(rowData);
   }
 
-  function onCheckboxChangeWrapper({
-    checked,
-    _id,
-  }: OnCheckBoxChangeHandlerEvent) {
+  function onCheckboxChangeWrapper({ checked, _id }: OnCheckBoxChangeHandlerEvent) {
     setSelectedRows(prev => {
       if (checked && _id) return [...prev, _id];
       if (!checked && _id) return prev.filter(el => el !== _id);
@@ -191,20 +177,12 @@ const TableList: React.FC<ITableListProps> = ({
         <TableScroll className="TableScroll">
           <TableHead />
 
-          {tableData?.length !== 0 ? (
-            <TableBody ref={rowRef} />
-          ) : (
-            <NoData>Дані відсутні</NoData>
-          )}
+          {tableData?.length !== 0 ? <TableBody ref={rowRef} /> : <NoData>Дані відсутні</NoData>}
 
-          <MaxToTabletXl>
-            {tableActions ? (
-              <QuickActions {...tableActions} footer={footer} />
-            ) : null}
-          </MaxToTabletXl>
+          <MaxToTabletXl>{tableActions ? <QuickActions {...tableActions} footer={footer} /> : null}</MaxToTabletXl>
         </TableScroll>
 
-        <TableFooter />
+        {footer && <TableFooter />}
       </TableCTX.Provider>
     </Table>
   );
@@ -235,11 +213,9 @@ const TableScroll = styled.div`
   grid-template-columns: 1fr;
   grid-template-rows: 40px 1fr min-content;
 
-  /* position: relative; */
-
   height: 100%;
   width: 100%;
   overflow: auto;
 `;
 
-export default TableList;
+export default memo(TableList);

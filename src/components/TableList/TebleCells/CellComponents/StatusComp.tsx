@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { CSSProperties, memo } from 'react';
 import { statusDataMap } from 'data';
 
 import styled, { css } from 'styled-components';
@@ -7,9 +7,9 @@ import { StatusNames } from 'data/statuses.data';
 export type StatusCompVariants = 'outlined' | 'filled' | 'text';
 
 export interface StatusCompProps {
-  status: StatusNames;
+  status?: StatusNames;
   variant?: StatusCompVariants;
-  fontSize?: string;
+  fontSize?: CSSProperties['fontSize'];
   fontWeight?: 300 | 400 | 500 | 600 | 700 | 800 | 900;
   fillWidth?: boolean;
 }
@@ -24,7 +24,7 @@ const StatusComp: React.FC<StatusCompProps> = ({
   return (
     <StStatusComp
       variant={variant}
-      title={statusDataMap[status]?.descr}
+      title={statusDataMap[status]?.description}
       fontSize={fontSize}
       fontWeight={fontWeight}
       color={statusDataMap[status]?.color}
