@@ -12,12 +12,7 @@ import InputTextPrimary from '../atoms/Inputs/InputTextPrimary';
 import { IContractor } from '../../redux/contractors/contractors.types';
 import { IProject } from '../../redux/transactions/transactions.types';
 
-export type FilterSelectorDataType =
-  | ICount[]
-  | ICategory[]
-  | IContractor[]
-  | IProject[]
-  | any[];
+export type FilterSelectorDataType = ICount[] | ICategory[] | IContractor[] | IProject[] | any[];
 export type FilterSelectorType = {
   selectorName: keyof FilterReturnDataType;
   label: string;
@@ -45,12 +40,9 @@ const validation = yup.object().shape({
   marks: yup.array().of(yup.string()).optional(),
 });
 
-export interface FilterProps
-  extends Omit<ModalFormProps, 'defaultFilterValue' | 'onSubmit'> {
+export interface FilterProps extends Omit<ModalFormProps, 'defaultFilterValue' | 'onSubmit'> {
   filterSelectors?: FilterSelectorType[];
-  filterDefaultValues?: Partial<
-    Record<keyof FilterReturnDataType, string[] | any[]>
-  >;
+  filterDefaultValues?: Partial<Record<keyof FilterReturnDataType, string[] | any[]>>;
   onFilterSubmit?: SubmitHandler<FilterReturnDataType>;
 }
 
@@ -59,22 +51,14 @@ const AppFilter: React.FC<FilterProps> = props => {
     return <SelectorErr>'Filter selectors' not passed</SelectorErr>;
   }
 
-  if (
-    !Array.isArray(props.filterSelectors) ||
-    props.filterSelectors.some(sel => !isSelectorType(sel))
-  ) {
+  if (!Array.isArray(props.filterSelectors) || props.filterSelectors.some(sel => !isSelectorType(sel))) {
     return <SelectorErr>Invalid filter selectors</SelectorErr>;
   }
 
   return <Filter {...props} />;
 };
 
-const Filter: React.FC<FilterProps> = ({
-  filterSelectors,
-  filterDefaultValues,
-  onFilterSubmit,
-  ...props
-}) => {
+const Filter: React.FC<FilterProps> = ({ filterSelectors, filterDefaultValues, onFilterSubmit, ...props }) => {
   const [CurrentData, setCurrentData] = useState<FilterSelectorType | null>(
     filterSelectors ? filterSelectors[0] : null
   );
@@ -127,23 +111,14 @@ const Filter: React.FC<FilterProps> = ({
           CurrentData={CurrentData}
         >
           <SelectorContent
-            getDefaultValue={(selectorName: keyof FilterReturnDataType) =>
-              formValues[selectorName] || []
-            }
+            getDefaultValue={(selectorName: keyof FilterReturnDataType) => formValues[selectorName] || []}
             onSelectorSubmit={onFilterDataChange}
             data={data}
             selectorName={selectorName}
           />
         </Selector>
       )),
-    [
-      CurrentData,
-      currentIdx,
-      filterSelectors,
-      formValues,
-      onFilterDataChange,
-      onSelectorClick,
-    ]
+    [CurrentData, currentIdx, filterSelectors, formValues, onFilterDataChange, onSelectorClick]
   );
 
   // const renderSelectorContent = useMemo(() =>
@@ -157,10 +132,7 @@ const Filter: React.FC<FilterProps> = ({
   //   [CurrentData?.ListComp, CurrentData?.data, CurrentData?.selectorName, filterData, onFilterDataChange]);
 
   return (
-    <StModalDefault
-      {...props}
-      onSubmit={onFilterSubmit && (() => handleSubmit(onFilterSubmit))}
-    >
+    <StModalDefault {...props} onSubmit={onFilterSubmit && (() => handleSubmit(onFilterSubmit))}>
       <FilterContainer>
         <DatePickers>
           <InputTextPrimary
@@ -289,30 +261,8 @@ const SelectorErr = styled.div`
   background-color: ${({ theme }) => theme.backgroundColorMain};
 `;
 
-// define a type guard to check if an object is of type SelectorType
 function isSelectorType(obj: any): obj is FilterSelectorType {
-  // if (typeof obj.selectorName !== 'string') {
-  //   console.log(`obj.selectorName !== 'string', selectorName:${obj.selectorName}`);
-  //   return false;
-  // }
-  // if (typeof obj.label !== 'string') {
-  //   console.log(`obj.label !== 'string', label:${obj.label}`);
-  //   return false;
-  // }
-  // if (!Array.isArray(obj.data)) {
-  //   console.log(`!Array.isArray(obj.data)'`);
-  //   return false;
-  // }
-  // if (typeof obj.ListComp !== 'function') {
-  //   console.log(`obj.ListComp !== 'function'`, obj.ListComp);
-  //   return false;
-  // }
-
-  return (
-    typeof obj.selectorName === 'string' &&
-    typeof obj.label === 'string' &&
-    Array.isArray(obj.data)
-  );
+  return typeof obj.selectorName === 'string' && typeof obj.label === 'string' && Array.isArray(obj.data);
 }
 
 export default AppFilter;

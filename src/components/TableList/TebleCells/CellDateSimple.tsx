@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import styled from 'styled-components';
 import { useRow } from '../TableRows/TableRow';
 import DateComp from './CellComponents/DateComp';
@@ -81,4 +81,4 @@ const Bottom = styled(Content)`
   }
 `;
 
-export default CellDateSimple;
+export default memo(CellDateSimple);

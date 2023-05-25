@@ -42,11 +42,7 @@ const NavMenu: React.FC = () => {
               onNavLinkClick(item);
             }}
           >
-            <SvgIcon
-              iconId={item.iconId}
-              size="18px"
-              style={{ display: 'none' }}
-            />
+            <SvgIcon iconId={item.iconId} size="18px" style={{ display: 'none' }} />
 
             <Text>{item?.title || '---'}</Text>
           </StyledNavLink>
@@ -66,10 +62,8 @@ const NavMenu: React.FC = () => {
   useEffect(() => {
     function onMenuClose(ev: MouseEvent | KeyboardEvent) {
       const { target } = ev;
-      if (target instanceof HTMLElement && !target?.closest('[data-nav-menu]'))
-        setIsOpen(false);
-      if (ev instanceof KeyboardEvent && ev?.code === 'Escape')
-        setIsOpen(false);
+      if (target instanceof HTMLElement && !target?.closest('[data-nav-menu]')) setIsOpen(false);
+      if (ev instanceof KeyboardEvent && ev?.code === 'Escape') setIsOpen(false);
     }
 
     document.addEventListener('click', onMenuClose);
@@ -131,7 +125,6 @@ const MenuButton = styled(ButtonIcon)<{ isOpen: boolean }>`
   font-size: 12px;
   font-weight: 600;
 
-  fill: ${({ theme: { accentColor } }) => accentColor.base};
   background-color: transparent;
   border: 0;
 
@@ -154,8 +147,7 @@ const NavMenuContainer = styled.div<MenuState>`
 
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
   max-height: ${({ isOpen }) => (isOpen ? '80vh' : '0')};
-  box-shadow: ${({ isOpen, theme }) =>
-    isOpen ? theme.globals.shadowMain : ''};
+  box-shadow: ${({ isOpen, theme }) => (isOpen ? theme.globals.shadowMain : '')};
   transition: max-height ${({ theme }) => theme.globals.timingFnMain},
     box-shadow ${({ theme }) => theme.globals.timingFnMain};
 `;

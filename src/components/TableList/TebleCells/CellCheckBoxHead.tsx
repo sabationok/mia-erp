@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useTable } from '../TableList';
 import CheckBox, { CustomCheckboxEvent } from './CellComponents/CheckBox';
-import { iconId } from '../../../img/sprite';
 
 // import s from './TableCells.module.scss';
 export type CellCheckBoxHeadProps = {
@@ -48,9 +47,9 @@ const CellCheckBoxHead: React.FC<CellCheckBoxHeadProps> = ({
         checked={everyOn}
         // checked={selectedRows?.length === tableData?.length}
         icon={
-          (some && iconId.checkBoxMinus) ||
-          (everyOn && iconId.checkBoxOn) ||
-          (!everyOn && iconId.checkBoxOff) ||
+          (some && 'checkBoxMinus') ||
+          (everyOn && 'checkBoxOn') ||
+          (!everyOn && 'checkBoxOff') ||
           null
         }
       />

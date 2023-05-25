@@ -1,19 +1,24 @@
-import sprite from 'img/sprite';
+import sprite, { IconIdType } from 'img/sprite';
 import styled from 'styled-components';
 
 export interface SvgIconProps extends React.SVGAttributes<SVGElement> {
   iconId?: string;
   size?: string;
+  icon?: IconIdType;
 }
 
 const SvgIcon: React.FC<SvgIconProps> = ({
   iconId = 'info',
   size,
+  icon,
   ...props
 }) => {
   return (
     <Svg {...{ size, ...props }}>
-      <use href={`${sprite}#icon-${iconId}`}></use>
+      <use
+        style={{ width: '100%', height: '100%' }}
+        href={`${sprite}#icon-${icon || iconId}`}
+      ></use>
     </Svg>
   );
 };

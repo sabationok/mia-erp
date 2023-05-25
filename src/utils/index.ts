@@ -1,9 +1,10 @@
 import founder from './founder';
-import numberWithSpaces from './numberWithSpaces';
 import axiosErrorCheck from './axiosErrorCheck';
-import formatPhoneNumber from './formatPhoneNumber';
+import * as dataTransform from './dataTransform';
+import { formatPhoneNumber, getValueByPath } from './dataTransform';
 import createTreeData from './createTreeData';
-import { countPercentage } from './numbers';
+import * as numbers from './numbers';
+import { countPercentage, numberWithSpaces } from './numbers';
 
 export {
   founder,
@@ -12,4 +13,7 @@ export {
   formatPhoneNumber,
   createTreeData,
   countPercentage,
+  numbers,
+  getValueByPath,
+  dataTransform,
 };

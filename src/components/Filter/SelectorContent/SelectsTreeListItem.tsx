@@ -1,6 +1,6 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { iconId } from 'data';
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import SelectsTreeList from './SelectsTreeList';
 import { IBase } from '../../../redux/global.types';
@@ -21,8 +21,7 @@ export interface SelectsTreeListItemProps<TFields = IBase> {
 }
 
 const SelectsTreeListItem: React.FC<
-  SelectsTreeListItemProps &
-    Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'>
+  SelectsTreeListItemProps & Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'>
 > = ({
   _id,
   owner,
@@ -37,9 +36,7 @@ const SelectsTreeListItem: React.FC<
   onCheckSelectStatus,
   ...props
 }) => {
-  const [isChecked, setIsChecked] = useState<boolean>(
-    checked !== undefined ? checked : false
-  );
+  const [isChecked, setIsChecked] = useState<boolean>(checked !== undefined ? checked : false);
 
   // function childrenStatusCheck() {
   //   const isEveryChildrenChecked = childrenList?.every(el => el.checked);
@@ -103,10 +100,7 @@ const SelectsTreeListItem: React.FC<
   }
 
   useEffect(
-    () =>
-      onCheckSelectStatus && onCheckSelectStatus(_id)
-        ? setIsChecked(true)
-        : setIsChecked(false),
+    () => (onCheckSelectStatus && onCheckSelectStatus(_id) ? setIsChecked(true) : setIsChecked(false)),
     [_id, onCheckSelectStatus]
   );
 
@@ -114,7 +108,7 @@ const SelectsTreeListItem: React.FC<
     <MainBox noOwner={!owner}>
       <Parent>
         <ButtonIcon
-          size="26px"
+          size="20px"
           iconSize="100%"
           variant="onlyIcon"
           iconId={isChecked ? iconId.checkBoxOn : iconId.checkBoxOff}
@@ -142,8 +136,7 @@ const MainBox = styled.div<{ noOwner?: boolean }>`
   display: flex;
   flex-direction: column;
 
-  border-bottom: ${({ noOwner, theme }) =>
-    noOwner ? `1px solid ${theme.backgroundColorSecondary}` : ''};
+  border-bottom: ${({ noOwner, theme }) => (noOwner ? `1px solid ${theme.backgroundColorSecondary}` : '')};
 `;
 const ChildrenBox = styled.div`
   margin-left: 26px;
@@ -151,6 +144,7 @@ const ChildrenBox = styled.div`
 const Parent = styled.li`
   display: flex;
   align-items: center;
+  height: 26px;
 
   gap: 8px;
 
@@ -159,4 +153,4 @@ const Parent = styled.li`
   border-radius: 2px;
 `;
 
-export default SelectsTreeListItem;
+export default memo(SelectsTreeListItem);

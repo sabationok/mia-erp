@@ -1,16 +1,9 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
-import {
-  OnCheckBoxChangeHandler,
-  OnCheckBoxChangeHandlerEvent,
-  useTable,
-} from '../TableList';
+import React, { createContext, memo, useContext, useMemo, useState } from 'react';
+import { OnCheckBoxChangeHandler, OnCheckBoxChangeHandlerEvent, useTable } from '../TableList';
 
 import styled from 'styled-components';
 import { ThRow, ThRowData, ThRowStickyEl } from './TableHeadRow';
-import {
-  IDocument,
-  ITransaction,
-} from '../../../redux/transactions/transactions.types';
+import { IDocument, ITransaction } from '../../../redux/transactions/transactions.types';
 import { ICount } from '../../../redux/counts/counts.types';
 import { IContractor } from '../../../redux/contractors/contractors.types';
 import { ICategory } from '../../../redux/categories/categories.types';
@@ -18,12 +11,7 @@ import CellCheckBox from '../TebleCells/CellCheckBox';
 import { CellsMap } from '../TebleCells';
 import CellTextDbl from '../TebleCells/CellTextDbl';
 
-export type TRowDataType =
-  | ITransaction
-  | ICount
-  | IContractor
-  | ICategory
-  | IDocument;
+export type TRowDataType = ITransaction | ICount | IContractor | ICategory | IDocument;
 
 export interface TableRowProps {
   rowData: TRowDataType;
@@ -42,8 +30,7 @@ export const RowCTX = createContext<any>({});
 export const useRow = () => useContext(RowCTX) as RowCTXValue;
 
 const TableRow: React.FC<TableRowProps> = ({ checked, ...props }) => {
-  const { tableTitles, tableData, rowGrid, checkBoxes, onCheckboxChange } =
-    useTable<TRowDataType>();
+  const { tableTitles, tableData, rowGrid, checkBoxes, onCheckboxChange } = useTable<TRowDataType>();
   const [isActionsOpen, setIsActionsOpen] = useState(false);
   const [isChecked, setIsChecked] = useState<boolean>(checked ?? false);
 
@@ -85,7 +72,7 @@ const TableRow: React.FC<TableRowProps> = ({ checked, ...props }) => {
   return (
     <Row id={props?.rowData?._id} checked={isChecked} data-row>
       <RowCTX.Provider value={{ ...ctxValue }}>
-        <RowStickyEl>{!checkBoxes && <CellCheckBox />}</RowStickyEl>
+        <RowStickyEl>{checkBoxes && <CellCheckBox />}</RowStickyEl>
 
         <RowData gridRepeat={tableData?.length || 0} style={{ ...rowGrid }}>
           {renderRow}
@@ -109,8 +96,7 @@ const Row = styled(ThRow)<{ checked?: boolean }>`
   border-bottom: 1px solid transparent;
   border-bottom-color: ${({ theme }) => theme.trBorderClr};
 
-  background-color: ${({ theme, checked }) =>
-    checked ? theme.tableRowBackgroundActive : theme.tableBackgroundColor};
+  background-color: ${({ theme, checked }) => (checked ? theme.tableRowBackgroundActive : theme.tableBackgroundColor)};
 
   &:hover {
     //border-color: ${({ theme }) => theme.accentColor.base};
@@ -132,12 +118,11 @@ const RowStickyEl = styled(ThRowStickyEl)``;
 
 const RowData = styled(ThRowData)<{ gridRepeat: number }>`
   display: grid;
-  grid-template-columns: ${({ gridRepeat }) =>
-    `repeat(${gridRepeat} min-content)`};
+  grid-template-columns: ${({ gridRepeat }) => `repeat(${gridRepeat} min-content)`};
 
   max-height: 100%;
 
   /* overflow: hidden; */
 `;
 
-export default TableRow;
+export default memo(TableRow);

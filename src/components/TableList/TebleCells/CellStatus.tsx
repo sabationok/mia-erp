@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import styled from 'styled-components';
 import { useRow } from '../TableRows/TableRow';
 import StatusComp from './CellComponents/StatusComp';
@@ -10,9 +10,11 @@ export interface CellTextDblProps {
   idx?: number;
 }
 
-const CellStatus: React.FC<
-  CellTextDblProps & React.HTMLAttributes<HTMLDivElement>
-> = ({ titleInfo: { top, bottom, width = '100px' }, idx, ...props }) => {
+const CellStatus: React.FC<CellTextDblProps & React.HTMLAttributes<HTMLDivElement>> = ({
+  titleInfo: { top, bottom, width = '100px' },
+  idx,
+  ...props
+}) => {
   const rowData = useRow().rowData;
 
   const contentTop = getValueByPath({
@@ -23,6 +25,7 @@ const CellStatus: React.FC<
     data: rowData,
     ...bottom,
   });
+  const content = useMemo(() => ({}), []);
 
   return (
     <CellBase style={{ width }} {...props}>
@@ -31,12 +34,7 @@ const CellStatus: React.FC<
       </Content>
 
       <Content align={bottom?.align}>
-        <StatusComp
-          status={contentBottom}
-          fontSize={'10px'}
-          variant={'filled'}
-          fontWeight={500}
-        />
+        <StatusComp status={contentBottom} fontSize={'10px'} variant={'filled'} fontWeight={500} />
       </Content>
     </CellBase>
   );
@@ -54,8 +52,7 @@ const CellBase = styled.div`
 const Content = styled.div<Omit<CellTitleContent, 'name'>>`
   display: flex;
   align-items: center;
-  justify-content: ${({ align }) =>
-    align ? (align === 'center' ? 'center' : `flex-${align}`) : 'center'};
+  justify-content: ${({ align }) => (align ? (align === 'center' ? 'center' : `flex-${align}`) : 'center')};
   gap: 4px;
 
   width: 100%;
@@ -69,4 +66,4 @@ const Content = styled.div<Omit<CellTitleContent, 'name'>>`
   text-transform: uppercase;
 `;
 
-export default CellStatus;
+export default memo(CellStatus);

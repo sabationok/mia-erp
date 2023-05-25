@@ -1,12 +1,12 @@
 import React, { memo, useState } from 'react';
 import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
-import { iconId } from 'data';
 
 import styled from 'styled-components';
+import { IconIdType } from 'img/sprite';
 
 export interface CustomCheckBoxProps {
   size?: string;
-  icon?: string | null;
+  icon?: IconIdType | null;
   idx?: string | number;
   onChange?: CustomCheckboxEventHandler;
 }
@@ -28,7 +28,7 @@ const CheckBox: React.FC<
   disabled,
   id = '1',
   checked = false,
-  size = '24px',
+  size = '20px',
   icon,
 }) => {
   const [isChecked, setIsChecked] = useState(checked);
@@ -49,7 +49,7 @@ const CheckBox: React.FC<
     >
       <SvgIcon
         size={size}
-        iconId={icon || (isChecked ? iconId.checkBoxOn : iconId.checkBoxOff)}
+        icon={icon || (isChecked ? 'checkBoxOn' : 'checkBoxOff')}
         style={{ fill: 'inherit' }}
       />
     </Box>

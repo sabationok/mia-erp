@@ -3,13 +3,14 @@ import { useRow } from '../TableRows/TableRow';
 import { CellTittleProps } from './CellTitle';
 import getValueByPath from '../../../utils/getValueByPath';
 import Cell, { IDataCellProps } from './Cells';
+import numberWithSpaces from '../../../utils/numbers';
 
-export interface CellValueByPathProps {
+export interface CellNumberWithSpacesProps {
   titleInfo: CellTittleProps;
   idx?: number;
 }
 
-const CellValueByPath: React.FC<CellValueByPathProps & React.HTMLAttributes<HTMLDivElement>> = ({
+const CellNumberWithSpaces: React.FC<CellNumberWithSpacesProps & React.HTMLAttributes<HTMLDivElement>> = ({
   titleInfo: { top, bottom, width = '100px' },
   idx,
   ...props
@@ -19,18 +20,22 @@ const CellValueByPath: React.FC<CellValueByPathProps & React.HTMLAttributes<HTML
   const cellConfig = useMemo(
     (): IDataCellProps => ({
       content: {
-        data: getValueByPath({
-          data: rowData,
-          ...top,
-        }),
+        data: numberWithSpaces(
+          getValueByPath({
+            data: rowData,
+            ...top,
+          })
+        ),
         align: top.align,
         uppercase: top.uppercase,
       },
       subContent: {
-        data: getValueByPath({
-          data: rowData,
-          ...bottom,
-        }),
+        data: numberWithSpaces(
+          getValueByPath({
+            data: rowData,
+            ...bottom,
+          })
+        ),
         align: bottom?.align,
         uppercase: bottom?.uppercase,
       },
@@ -42,4 +47,4 @@ const CellValueByPath: React.FC<CellValueByPathProps & React.HTMLAttributes<HTML
   return <Cell.Double {...cellConfig} {...props} />;
 };
 
-export default memo(CellValueByPath);
+export default memo(CellNumberWithSpaces);

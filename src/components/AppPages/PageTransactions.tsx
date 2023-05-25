@@ -1,10 +1,6 @@
 import TableList, { ITableListProps } from 'components/TableList/TableList';
 import { takeFullGridArea } from './pagesStyles';
-import {
-  transactionsColumns,
-  transactionsMockData,
-  transactionsSearchParams,
-} from 'data';
+import { transactionsColumns, transactionsMockData, transactionsSearchParams } from 'data';
 import styled from 'styled-components';
 import useTransactionsService from 'redux/transactions/useTransactionsService.hook';
 import { useMemo } from 'react';
@@ -29,7 +25,7 @@ const PageTransactions: React.FC<any> = () => {
       isFilter: true,
       isSearch: true,
       footer: true,
-      filterDefaultValues: { categories: [''] },
+      checkBoxes: true,
       onFilterSubmit: data => {
         // console.log(data);
       },

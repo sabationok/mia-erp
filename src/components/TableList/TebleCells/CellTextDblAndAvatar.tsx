@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { useRow } from '../TableRows/TableRow';
 import { CellTittleProps } from './CellTitle';
 import getValueByPath from '../../../utils/getValueByPath';
@@ -10,29 +10,35 @@ export interface CellTextDblAndAvatarProps {
   imgUrl?: string;
 }
 
-const CellTextDblAndAvatar: React.FC<
-  CellTextDblAndAvatarProps & React.HTMLAttributes<HTMLDivElement>
-> = ({ titleInfo: { top, bottom, width }, idx, imgUrl, ...props }) => {
+const CellTextDblAndAvatar: React.FC<CellTextDblAndAvatarProps & React.HTMLAttributes<HTMLDivElement>> = ({
+  titleInfo: { top, bottom, width },
+  idx,
+  imgUrl,
+  ...props
+}) => {
   const { rowData } = useRow();
 
-  const celProps: IDataCellProps = {
-    content: {
-      data: getValueByPath({
-        data: rowData,
-        ...top,
-      }),
-    },
-    subContent: {
-      data: getValueByPath({
-        data: rowData,
-        ...bottom,
-      }),
-    },
-    width,
-    imgUrl,
-  };
+  const cellConfig = useMemo(
+    (): IDataCellProps => ({
+      content: {
+        data: getValueByPath({
+          data: rowData,
+          ...top,
+        }),
+      },
+      subContent: {
+        data: getValueByPath({
+          data: rowData,
+          ...bottom,
+        }),
+      },
+      width,
+      imgUrl,
+    }),
+    [bottom, imgUrl, rowData, top, width]
+  );
 
-  return <Cell.DoubleWithAvatar {...celProps} />;
+  return <Cell.DoubleWithAvatar {...cellConfig} />;
 };
 
 export default memo(CellTextDblAndAvatar);

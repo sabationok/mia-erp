@@ -1,6 +1,7 @@
 @import './sass/utils/root';
 @import './sass/utils/breakPoints';
 // @import './sass/utils/theme';
+@import "./sass/fonts";
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
@@ -30,7 +31,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Montserrat', 'Gilroy', sans-serif;
 
   color: #212121;
   font-size: 12px;

@@ -5,9 +5,7 @@ import { selects } from './select.data';
 import { ITransaction } from '../redux/transactions/transactions.types';
 import useTransactionsService from '../redux/transactions/useTransactionsService.hook';
 import { useModalProvider } from '../components/ModalProvider/ModalProvider';
-import TransactionForm, {
-  TransactionsFilterOpt,
-} from '../components/Forms/TransactionForm';
+import TransactionForm, { TransactionsFilterOpt } from '../components/Forms/TransactionForm';
 import { CategoriesTypesMap } from '../redux/categories/categories.types';
 import { useMemo } from 'react';
 
@@ -28,7 +26,7 @@ export const transactionsColumns: CellTittleProps[] = [
     top: { name: 'Сума', align: 'end', path: 'amount', def: ' 0.00' },
     bottom: { name: 'Валюта', align: 'end', path: 'currency' },
     width: '120px',
-    action: 'valueByPath',
+    action: 'numberWithSpaces',
   },
   {
     top: { name: selects.countIn.label, align: 'start', path: 'countIn.name' },
@@ -384,7 +382,7 @@ export const transactionsMockData: ITransaction[] = [
     },
     subCountIn: {
       _id: '63d79be938b6a211dc6634c8',
-      name: 'Замовники за котрактом',
+      name: 'Замовники за контрактом',
       code: '101',
     },
     contractor: { _id: '63d79be938b6a211dc6634c8', name: 'Петренко І.В.' },
@@ -417,7 +415,7 @@ export const transactionsMockData: ITransaction[] = [
     },
     subCountOut: {
       _id: '63d79be938b6a211dc6634c8',
-      name: 'Замовники за котрактом',
+      name: 'Замовники за контрактом',
       code: '101',
     },
     contractor: { _id: '63d79be938b6a211dc6634c8', name: 'Петренко І.В.' },
@@ -442,7 +440,7 @@ export const transactionsMockData: ITransaction[] = [
   {
     _id: '63d892d156c42da6f5f95a54',
     type: 'INCOME',
-    amount: 6162,
+    amount: 6162.56,
     currency: 'UAH',
     status: 'warning',
     countOut: {
@@ -452,7 +450,7 @@ export const transactionsMockData: ITransaction[] = [
     },
     subCountOut: {
       _id: '63d79be938b6a211dc6634c8',
-      name: 'Замовники за котрактом',
+      name: 'Замовники за контрактом',
       code: '101',
     },
     category: {
@@ -475,7 +473,7 @@ export const transactionsMockData: ITransaction[] = [
   {
     _id: '63d892d156c42da6f5s95a54',
     type: 'TRANSFER',
-    amount: 216,
+    amount: 216.23,
     currency: 'UAH',
     countOut: {
       _id: '63d5f51bdee30d0c1e11757f',
@@ -484,7 +482,7 @@ export const transactionsMockData: ITransaction[] = [
     },
     subCountOut: {
       _id: '63d79be938b6a211dc6634c8',
-      name: 'Замовники за котрактом',
+      name: 'Замовники за контрактом',
       code: '101',
     },
     countIn: {
@@ -494,7 +492,7 @@ export const transactionsMockData: ITransaction[] = [
     },
     subCountIn: {
       _id: '63d79be938b6a211dc6634c8',
-      name: 'Замовники за котрактом',
+      name: 'Замовники за контрактом',
       code: '101',
     },
     category: {

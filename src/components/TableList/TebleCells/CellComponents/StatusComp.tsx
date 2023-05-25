@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { statusDataMap } from 'data';
 
 import styled, { css } from 'styled-components';
@@ -52,15 +52,13 @@ const variantsMap: VariansMapType = {
     padding: 0 4px;
     color: ${({ color }) => (color ? color : '')};
     fill: ${({ color }) => (color ? color : '')};
-    border: 2px solid
-      ${({ color, theme }) => (color ? color : theme.borderColor)};
+    border: 2px solid ${({ color, theme }) => (color ? color : theme.borderColor)};
   `,
   filled: css<VariantProps>`
     padding: 0 4px;
     color: ${({ color }) => (color ? color : '')};
     fill: #fff;
-    background-color: ${({ backgroundColor }) =>
-      backgroundColor ? backgroundColor : ''};
+    background-color: ${({ backgroundColor }) => (backgroundColor ? backgroundColor : '')};
   `,
   text: css<VariantProps>`
     color: ${({ color }) => (color ? color : '')};
@@ -100,4 +98,4 @@ const Label = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
 `;
-export default StatusComp;
+export default memo(StatusComp);

@@ -6,6 +6,7 @@ import CellContactsDbl from './CellContacts';
 import CellTags from './CellTags';
 import CellValueByPath from './CellValueByPath';
 import CellTextDblAndAvatar from './CellTextDblAndAvatar';
+import CellNumberWithSpaces from './CellNumberWithSpaces';
 
 export const CellsMap = {
   cell: Cell,
@@ -17,6 +18,7 @@ export const CellsMap = {
   tags: CellTags,
   valueByPath: CellValueByPath,
   doubleDataWithAvatar: CellTextDblAndAvatar,
+  numberWithSpaces: CellNumberWithSpaces,
 };
 
 export type CellActionsName = keyof typeof CellsMap;

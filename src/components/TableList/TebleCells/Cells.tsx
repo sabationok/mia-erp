@@ -2,9 +2,11 @@ import styled from 'styled-components';
 import React from 'react';
 import { CellTitleContent } from './CellTitle';
 import { Avatar } from 'antd';
+import SvgIcon from '../../atoms/SvgIcon/SvgIcon';
+import FlexBox from '../../atoms/FlexBox';
 
 interface IDataCellSectionProps {
-  data?: string;
+  data?: string | null;
   uppercase?: boolean;
   align?: 'center' | 'start' | 'end';
 }
@@ -16,30 +18,16 @@ export interface IDataCellProps {
   imgUrl?: string;
 }
 
-const DoubleDataCell: React.FC<IDataCellProps> = ({
-  width,
-  content,
-  subContent,
-}) => {
+const DoubleDataCell: React.FC<IDataCellProps> = ({ width, content, subContent }) => {
   return (
     <CellDoubleData style={{ width }}>
-      <Content
-        align={content?.align}
-        uppercase={content?.uppercase}
-        fontWeight={500}
-        fontSize={'12px'}
-      >
+      <Content align={content?.align} uppercase={content?.uppercase} fontWeight={600} fontSize={'12px'}>
         <div title={content?.data || ''} className="inner">
           {content?.data}
         </div>
       </Content>
 
-      <Content
-        align={subContent?.align}
-        uppercase={subContent?.uppercase}
-        fontWeight={400}
-        fontSize={'11px'}
-      >
+      <Content align={subContent?.align} uppercase={subContent?.uppercase} fontWeight={500} fontSize={'11px'}>
         {subContent ? (
           <div title={subContent?.data || ''} className="inner">
             {subContent.data}
@@ -49,18 +37,10 @@ const DoubleDataCell: React.FC<IDataCellProps> = ({
     </CellDoubleData>
   );
 };
-const SimpleDataCell: React.FC<Omit<IDataCellProps, 'subContent'>> = ({
-  width,
-  content,
-}) => {
+const SimpleDataCell: React.FC<Omit<IDataCellProps, 'subContent'>> = ({ width, content }) => {
   return (
     <CellBase style={{ width }}>
-      <Content
-        align={content?.align}
-        uppercase={content?.uppercase}
-        fontWeight={500}
-        fontSize={'12px'}
-      >
+      <Content align={content?.align} uppercase={content?.uppercase} fontWeight={500} fontSize={'12px'}>
         <div title={content?.data || ''} className="inner">
           {content?.data}
         </div>
@@ -69,35 +49,29 @@ const SimpleDataCell: React.FC<Omit<IDataCellProps, 'subContent'>> = ({
   );
 };
 
-const DoubleDataWithAvatarCell: React.FC<IDataCellProps> = ({
-  width,
-  content,
-  subContent,
-}) => {
+const DoubleDataWithAvatarCell: React.FC<IDataCellProps> = ({ width, content, subContent }) => {
   return (
     <CellDoubleDataWithAvatar style={{ width }}>
       <AvatarBox>
-        <Avatar shape={'square'} style={{ borderRadius: '2px' }} />
+        <Avatar
+          shape={'square'}
+          style={{ borderRadius: '2px' }}
+          icon={
+            <FlexBox fillWidth fillHeight alignItems={'center'} justifyContent={'center'}>
+              <SvgIcon icon={'bankOutlined'} size={'80%'} fill={'#fff'} />
+            </FlexBox>
+          }
+        />
       </AvatarBox>
 
       <CellDoubleData>
-        <Content
-          align={content?.align}
-          uppercase={content?.uppercase}
-          fontWeight={500}
-          fontSize={'12px'}
-        >
+        <Content align={content?.align} uppercase={content?.uppercase} fontWeight={500} fontSize={'12px'}>
           <div title={content?.data || ''} className="inner">
             {content?.data}
           </div>
         </Content>
 
-        <Content
-          align={subContent?.align}
-          uppercase={subContent?.uppercase}
-          fontWeight={400}
-          fontSize={'11px'}
-        >
+        <Content align={subContent?.align} uppercase={subContent?.uppercase} fontWeight={400} fontSize={'11px'}>
           {subContent ? (
             <div title={subContent?.data || ''} className="inner">
               {subContent.data}
@@ -147,8 +121,7 @@ const Content = styled.div<
 
   text-transform: ${({ uppercase }) => (uppercase ? 'uppercase' : '')};
 
-  justify-content: ${({ align }) =>
-    align === 'center' ? 'center' : `flex-${align}`};
+  justify-content: ${({ align }) => (align === 'center' ? 'center' : `flex-${align}`)};
 
   & .inner {
     max-width: 100%;

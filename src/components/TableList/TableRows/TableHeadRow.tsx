@@ -11,15 +11,12 @@ const TableHeadRow: React.FC<TableHeadRowProps> = () => {
   const { tableTitles = [], checkBoxes, rowGrid } = useTable();
 
   const renderTitles = useMemo(
-    () =>
-      tableTitles.map((item, idx) => (
-        <CellTitle key={idx} {...item} idx={idx} />
-      )),
+    () => tableTitles.map((item, idx) => <CellTitle key={idx} {...item} idx={idx} />),
     [tableTitles]
   );
   return (
     <ThRow>
-      <ThRowStickyEl>{!checkBoxes && <CellCheckBoxHead />}</ThRowStickyEl>
+      <ThRowStickyEl>{checkBoxes && <CellCheckBoxHead />}</ThRowStickyEl>
 
       <ThRowData style={{ ...rowGrid }}>{renderTitles}</ThRowData>
     </ThRow>

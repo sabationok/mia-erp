@@ -3,7 +3,6 @@ import CheckBox, {
   CustomCheckboxEvent,
   CustomCheckboxEventHandler,
 } from './CheckBox';
-import { iconId } from '../../../../img/sprite';
 
 export interface CheckBoxHeadProps {
   onChange?: CustomCheckboxEventHandler;
@@ -30,7 +29,7 @@ const CheckBoxHead: React.FC<CheckBoxHeadProps> = ({ onChange }) => {
     <CheckBox
       onChange={handleChange}
       checked={some ? false : everyOn}
-      icon={some ? iconId.checkBoxMinus : undefined}
+      icon={some ? 'checkBoxMinus' : undefined}
     />
   );
 };
