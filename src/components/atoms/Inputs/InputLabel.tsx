@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, forwardRef } from 'react';
 import styled, { css } from 'styled-components';
 import { FieldError } from 'react-hook-form';
 
@@ -14,26 +14,28 @@ export interface InputLabelProps extends React.LabelHTMLAttributes<HTMLLabelElem
   disabled?: boolean;
 }
 
-const InputLabel: React.FC<InputLabelProps> = ({
-  label,
-  className,
-  disabled,
-  direction,
-  uppercase,
-  helperText,
-  error,
-  success,
-  children,
-  loading,
-  align,
-  htmlFor,
-  ...props
-}) => {
+const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = ({
+                                                                            label,
+                                                                            className,
+                                                                            disabled,
+                                                                            direction,
+                                                                            uppercase,
+                                                                            helperText,
+                                                                            error,
+                                                                            success,
+                                                                            children,
+                                                                            loading,
+                                                                            align,
+                                                                            htmlFor,
+                                                                            ...props
+                                                                          },
+                                                                          ref: React.ForwardedRef<any>,
+) => {
   return (
     <Label className={className} disabled={disabled} {...props} htmlFor={htmlFor}>
       <Wrapper isLabel={!!label} direction={direction}>
         {label && (
-          <LabelText uppercase={uppercase} align={align} direction={direction} className="label">
+          <LabelText uppercase={uppercase} align={align} direction={direction} className='label'>
             {label}
           </LabelText>
         )}
@@ -92,11 +94,11 @@ const Wrapper = styled.div<{
   display: flex;
 
   ${({ direction }) =>
-    direction === 'vertical' &&
-    css`
-      flex-direction: column;
-      align-items: flex-start;
-    `};
+          direction === 'vertical' &&
+          css`
+            flex-direction: column;
+            align-items: flex-start;
+          `};
 
   width: 100%;
 `;
@@ -123,4 +125,4 @@ const HelperText = styled.div<{
   cursor: default;
 `;
 
-export default InputLabel;
+export default forwardRef(InputLabel);

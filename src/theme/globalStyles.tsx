@@ -23,10 +23,29 @@ const GlobalStyles = createGlobalStyle`
   label,
   textarea,
   input {
+    font-family: inherit;
+  }
+
+  textarea,
+  input {
+
+    &:hover {
+      border-color: ${({ theme }) => theme.accentColor.base};
+      box-shadow: 0 0 5px ${({ theme }) => theme.accentColor.base};
+    }
+
     &:focus,
     &:focus-visible {
       border-color: ${({ theme }) => theme.accentColor.base};
-      outline: 2px solid ${({ theme }) => theme.accentColor.base};
+        //box-shadow: 0 0 8px ${({ theme }) => theme.accentColor.base};
+      outline: 1px solid ${({ theme }) => theme.accentColor.base};
+
+    }
+
+
+    &::placeholder {
+      font-family: inherit;
+      letter-spacing: 0.05em;
     }
   }
 

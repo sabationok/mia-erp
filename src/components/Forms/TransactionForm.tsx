@@ -3,10 +3,7 @@ import * as React from 'react';
 import { useMemo } from 'react';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import styled from 'styled-components';
-import {
-  ITransactionForReq,
-  ITransactionReqData,
-} from 'redux/transactions/transactions.types';
+import { ITransactionForReq, ITransactionReqData } from 'redux/transactions/transactions.types';
 import { CategoryTypes } from 'redux/categories/categories.types';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
@@ -17,6 +14,7 @@ import { IBase } from '../../redux/global.types';
 import * as _ from 'lodash';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import { FilterOpt } from '../ModalForm/ModalFilter';
+import CustomSelect from '../atoms/Inputs/CustomSelect';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
 
@@ -44,7 +42,6 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     // formState: { errors },
     register,
     setValue,
-    getValues,
     watch,
   } = useForm<ITransactionForReq>({
     defaultValues: _.omit(defaultState, '_id', 'createdAt', 'updatedAt') || {},
@@ -54,12 +51,12 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   const formValues = watch();
 
   const renderInputsCountIn = useMemo(() => {
-    return formValues.type &&
-      ['INCOME', 'TRANSFER'].includes(formValues.type) ? (
+    return formValues.type && ['INCOME', 'TRANSFER'].includes(formValues.type) ? (
       <>
         <InputLabel label="Рахунок IN" direction={'vertical'}>
           <InputText placeholder="Рахунок IN" {...register('countIn')} />
         </InputLabel>
+        <CustomSelect label="Рахунок IN" placeholder="Рахунок IN" />
         <InputLabel label="Суб-Рахунок IN" direction={'vertical'}>
           <InputText placeholder="Суб-Рахунок IN" {...register('subCountIn')} />
         </InputLabel>
@@ -68,18 +65,14 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   }, [formValues.type, register]);
 
   const renderInputsCountOut = useMemo(() => {
-    return formValues.type &&
-      ['EXPENSE', 'TRANSFER'].includes(formValues.type) ? (
+    return formValues.type && ['EXPENSE', 'TRANSFER'].includes(formValues.type) ? (
       <>
         <InputLabel label="Рахунок OUT" direction={'vertical'}>
           <InputText placeholder="Рахунок OUT" {...register('countOut')} />
         </InputLabel>
 
         <InputLabel label="Суб-Рахунок OUT" direction={'vertical'}>
-          <InputText
-            placeholder="Суб-Рахунок OUT"
-            {...register('subCountOut')}
-          />
+          <InputText placeholder="Суб-Рахунок OUT" {...register('subCountOut')} />
         </InputLabel>
       </>
     ) : null;
@@ -88,10 +81,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   function onSubmitWrapper() {
     let submitData = formValues;
 
-    if (formValues.type === 'INCOME')
-      submitData = _.omit(formValues, 'countOut', 'subCountOut');
-    if (formValues.type === 'EXPENSE')
-      submitData = _.omit(formValues, 'countIn', 'subCountIn');
+    if (formValues.type === 'INCOME') submitData = _.omit(formValues, 'countOut', 'subCountOut');
+    if (formValues.type === 'EXPENSE') submitData = _.omit(formValues, 'countIn', 'subCountIn');
 
     console.log(submitData);
 
@@ -105,20 +96,13 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
       });
   }
 
+  console.log(props);
+
   return (
-    <ModalForm
-      onSubmit={onSubmitWrapper}
-      defaultFilterValue={getValues('type')}
-      onOptSelect={({ value }) => value && setValue('type', value)}
-      {...props}
-    >
+    <ModalForm onSubmit={onSubmitWrapper} onOptSelect={({ value }) => value && setValue('type', value)} {...props}>
       <Inputs className={'inputs'}>
         <InputLabel label="Дата і час" direction={'vertical'}>
-          <InputText
-            placeholder="Дата і час"
-            type="datetime-local"
-            {...register('transactionDate')}
-          />
+          <InputText placeholder="Дата і час" type="datetime-local" {...register('transactionDate')} />
         </InputLabel>
         <GridWrapper>
           <InputLabel label="Сума" direction={'vertical'}>
@@ -133,29 +117,6 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
         {renderInputsCountIn}
         {renderInputsCountOut}
 
-        {/*<Select*/}
-        {/*  labelProps={{ label: 'Рахунок OUT', direction: 'vertical' }}*/}
-        {/*  options={[*/}
-        {/*    { label: 'Opt 1', value: 'val 1' },*/}
-        {/*    { label: 'Opt 2', value: 'val 2' },*/}
-        {/*  ]}*/}
-        {/*  onSelect={(value, option) => {}}*/}
-        {/*  RenderInput={() => (*/}
-        {/*    <InputText placeholder="Рахунок OUT" {...register('countIn')} />*/}
-        {/*  )}*/}
-        {/*/>*/}
-
-        {/*<Select*/}
-        {/*  labelProps={{*/}
-        {/*    label: 'Рахунок OUT',*/}
-        {/*    direction: 'horizontal',*/}
-        {/*    style: { padding: '10px 0' },*/}
-        {/*  }}*/}
-        {/*  RenderInput={() => (*/}
-        {/*    <InputText placeholder="Рахунок OUT" {...register('countIn')} />*/}
-        {/*  )}*/}
-        {/*/>*/}
-
         {formValues.type === 'TRANSFER' && (
           <>
             <InputLabel label="Категорія" direction={'vertical'}>
@@ -163,10 +124,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
             </InputLabel>
 
             <InputLabel label="Під-категорія" direction={'vertical'}>
-              <InputText
-                placeholder="Під-категорія"
-                {...register('subCategory')}
-              />
+              <InputText placeholder="Під-категорія" {...register('subCategory')} />
             </InputLabel>
 
             <InputLabel label="Контрагент" direction={'vertical'}>
@@ -182,10 +140,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
             </InputLabel>
 
             <InputLabel label="Коментар" direction={'vertical'}>
-              <TextareaPrimary
-                placeholder="Коментар"
-                {...register('comment')}
-              />
+              <TextareaPrimary placeholder="Коментар" {...register('comment')} />
             </InputLabel>
           </>
         )}
@@ -204,8 +159,7 @@ const Inputs = styled.div`
 `;
 const GridWrapper = styled.div<{ gridTemplateColumns?: string }>`
   display: grid;
-  grid-template-columns: ${({ gridTemplateColumns }) =>
-    gridTemplateColumns || '1fr 120px'};
+  grid-template-columns: ${({ gridTemplateColumns }) => gridTemplateColumns || '1fr 120px'};
   gap: 12px;
 `;
 export default TransactionForm;

@@ -121,15 +121,23 @@ export const FieldBox = styled(FlexBox)`
   min-width: 50px;
   overflow: hidden;
 
-  background: ${({ theme }) => theme.fieldBackgroundColor};
+  background: ${({ theme }) => theme.field.backgroundColor};
   border-radius: 2px;
+
+  &:hover {
+    background: ${({ theme }) => theme.field.backgroundColorHover};
+  }
+
+  &:active {
+    background: ${({ theme }) => theme.field.backgroundColorPressed};
+  }
 
   & .innerBox {
     color: ${({ theme }) => theme.accentColor.base};
 
     padding: 2px 4px;
 
-    background: ${({ theme }) => theme.fieldInnerBackgroundColor};
+    background: ${({ theme }) => theme.field.innerBackgroundColor};
     border-radius: 2px;
   }
 `;

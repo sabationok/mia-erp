@@ -1,6 +1,5 @@
 import { FilterSelectorType } from 'components/Filter/AppFilter';
-import { useCategoriesSelector } from 'redux//selectors.store';
-import { useCountsSelector } from 'redux/selectors.store';
+import { useCategoriesSelector, useCountsSelector } from 'redux/selectors.store';
 
 const useTrFilterSelectors = (): FilterSelectorType[] => {
   const transactionTypes = [

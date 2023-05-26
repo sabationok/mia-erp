@@ -1,18 +1,29 @@
 import InputLabel, { InputLabelProps } from './InputLabel';
-import { InputHTMLAttributes, useCallback, useMemo, useState } from 'react';
-import { isUndefined } from 'lodash';
+import { forwardRef, InputHTMLAttributes, useCallback, useMemo, useRef, useState } from 'react';
+import { isUndefined, omit, pick } from 'lodash';
 import styled from 'styled-components';
-import FlexBox from '../FlexBox';
-import ButtonIcon from '../ButtonIcon/ButtonIcon';
+import FlexBox, { FieldBox } from '../FlexBox';
 import InputText from './InputText';
+import SvgIcon from '../SvgIcon/SvgIcon';
+import { RefCallBack } from 'react-hook-form';
 
-const options: CustomSelectOption[] = [{ value: 'test', _id: '113535131532', label: 'Тест' }];
+const options: CustomSelectOption[] = [
+  { value: 'test', _id: '113535131532', label: 'Тест' },
+  {
+    value: 'test',
+    _id: 'sdfbsgbdfgdbfgbd',
+    label: 'Тест 2',
+  },
+];
 
 export interface CustomSelectBaseProps<OptType = any> {
   InputComponent?: React.FC<InputHTMLAttributes<HTMLInputElement>>;
   valueKey?: string;
   options?: CustomSelectOption<OptType>[];
   onSelect?: CustomSelectEventHandler<CustomSelectOption<OptType>>;
+  handleOpenState?: (prevState: boolean) => boolean;
+  open?: boolean;
+  ref?: RefCallBack;
 }
 
 export type CustomSelectEventHandler<OptType = any> = <Option extends OptType = any>(
@@ -31,40 +42,43 @@ export type CustomSelectOption<OptType = Record<string, any>> = CustomSelectOpti
 export type CustomSelectProps = CustomSelectBaseProps &
   Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'> &
   Omit<InputLabelProps, 'onSelect'>;
-const CustomSelect: React.FC<CustomSelectProps> = ({
-  InputComponent,
-  direction = 'vertical',
-  valueKey,
-  name,
-  onSelect,
-  onChange,
-}) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [currentOption, setCurrentOption] = useState();
+
+const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
+  { InputComponent, valueKey, options = [], name, onSelect, open = false, ...props },
+  ref
+) => {
+  const [isOpen, setIsOpen] = useState<boolean>(open);
+  const [currentOption, setCurrentOption] = useState<any>();
+  const labelRef = useRef<HTMLLabelElement>(null);
 
   const onHandleOpenState = useCallback((state?: boolean) => {
-    if (!isUndefined(state)) return setIsOpen(state);
-    setIsOpen(prev => !prev);
+    setIsOpen(prev => {
+      if (prev) labelRef.current?.focus();
+      if (!isUndefined(state)) return state;
+      return !prev;
+    });
   }, []);
 
   const onSelectHandler = useCallback(
-    (value?: string | number, option?: any) => {
+    (option?: any) => {
+      if (options.length === 0) return;
       return () => {
+        setCurrentOption(option);
         if (onSelect && valueKey && valueKey && option[valueKey]) {
           onSelect(option[valueKey], option);
         }
         onHandleOpenState();
       };
     },
-    [onHandleOpenState, onSelect, valueKey]
+    [onHandleOpenState, onSelect, options.length, valueKey]
   );
 
   const renderOptions = useMemo(
     () =>
       options.map(opt => (
         <Option
-          key={opt.label}
-          onClick={onSelectHandler('', opt)}
+          key={opt._id}
+          onClick={onSelectHandler(opt)}
           justifyContent={'flex-start'}
           fillWidth
           fxDirection={'row'}
@@ -73,40 +87,74 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
           {opt.label}
         </Option>
       )),
-    [onSelectHandler]
+    [onSelectHandler, options]
   );
+
   return (
-    <InputLabel label={'CustomSelectProps'} direction={direction}>
-      {InputComponent ? <InputComponent name={name} /> : <InputText name={'CustomSelectProps'} onChange={onChange} />}
+    <FlexBox fillWidth gap={4} style={{ position: 'relative' }}>
+      <InputLabel
+        direction={'vertical'}
+        ref={labelRef}
+        {...pick(props, [
+          'error',
+          'success',
+          'helperText',
+          'label',
+          'loading',
+          'htmlFor',
+          'uppercase',
+          'align',
+          'direction',
+        ])}
+        onClick={() => onHandleOpenState()}
+      >
+        {InputComponent ? (
+          <InputComponent />
+        ) : (
+          <InputText
+            disabled
+            value={currentOption?.label || ''}
+            ref={ref}
+            {...omit({ ...pick(props, ['onChange', 'onBlur', 'name', 'id', 'ref']) }, ['error', 'success', 'loading'])}
+          />
+        )}
 
-      <ArrowButton variant={'onlyIconNoEffects'} icon={'SmallArrowDown'} size={'24px'} />
+        <ArrowIcon icon={!isOpen ? 'SmallArrowDown' : 'SmallArrowUp'} size={'20px'} />
+      </InputLabel>
 
-      <Options>{renderOptions}</Options>
-    </InputLabel>
+      {options.length > 0 && <Options isOpen={isOpen}>{renderOptions}</Options>}
+    </FlexBox>
   );
 };
 
-const Options = styled(FlexBox)`
+const Options = styled(FlexBox)<{ isOpen?: boolean; inView?: boolean; intersectionRatio?: number }>`
   position: absolute;
-  top: 100%;
+  top: calc(100% + 4px);
   left: 0;
   z-index: 100;
+  font-size: 14px;
 
-  max-height: 300px;
+  max-height: ${({ isOpen }) => (isOpen ? '100px' : 0)};
   width: 100%;
   overflow: auto;
 
-  background-color: ${({ theme }) => theme.backgroundColorLight};
+  background-color: ${({ theme }) => theme.fieldBackgroundColor};
   box-shadow: ${({ theme }) => theme.globals.shadowMain};
+  transition: all ${({ theme }) => theme.globals.timingFunctionMain};
 `;
 
-const Option = styled(FlexBox)``;
-const ArrowButton = styled(ButtonIcon)`
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 5;
+const Option = styled(FieldBox)`
+  min-height: 26px;
+`;
 
+const ArrowIcon = styled(SvgIcon)`
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  z-index: 5;
+  margin-top: -10px;
+
+  color: ${({ theme }) => theme.accentColor.base};
   fill: ${({ theme }) => theme.accentColor.base};
 `;
-export default CustomSelect;
+export default forwardRef(CustomSelect);

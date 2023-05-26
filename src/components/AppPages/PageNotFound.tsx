@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import MyTreeSelect from '../atoms/Inputs/MyTreeSelect';
 import * as React from 'react';
 import CustomSelect from '../atoms/Inputs/CustomSelect';
+import FlexBox from '../atoms/FlexBox';
 
 export type ErrorNameType = 'notFoundPage' | 'notFound';
 
@@ -36,7 +37,7 @@ export const errors: IErrors = {
 };
 const PageNotFound: React.FC<IErrorPageProps> = ({ errName = 'notFoundPage' }) => {
   return (
-    <Page>
+    <Page className={'PageNotFound'}>
       <ErrorNotification>
         <ErrorCode>{errors[errName]?.status}</ErrorCode>
 
@@ -44,14 +45,20 @@ const PageNotFound: React.FC<IErrorPageProps> = ({ errName = 'notFoundPage' }) =
 
         <Text>{errors[errName]?.error}</Text>
 
-        <MyTreeSelect treeData={[]} />
-
-        <CustomSelect />
-
         <ButtonIcon variant="outlinedSmall">outlinedSmall</ButtonIcon>
         <ButtonIcon variant="outlinedLarge">outlinedLarge</ButtonIcon>
         <ButtonIcon variant="filledSmall">filledSmall</ButtonIcon>
         <ButtonIcon variant="filledLarge">filledLarge</ButtonIcon>
+
+        <MyTreeSelect treeData={[]} />
+        <FlexBox fillWidth gap={8}>
+          <CustomSelect label={'Рахунок'} placeholder={'Оберіть рахунок'} />
+
+          <CustomSelect label={'Суб-рахунок'} placeholder={'Оберіть суб-рахунок'} />
+
+          <CustomSelect label={'Категорія'} placeholder={'Оберіть категорію'} />
+        </FlexBox>
+
         <ButtonIcon variant="onlyIcon" iconId="search"></ButtonIcon>
         <ButtonIcon variant="onlyIconFilled" iconId="filterOn"></ButtonIcon>
         <ButtonIcon variant="textSmall">textSmall</ButtonIcon>
@@ -79,6 +86,8 @@ const Page = styled.div`
   height: 100%;
   max-height: 100%;
   max-width: 100%;
+
+  overflow: auto;
 `;
 
 const ErrorNotification = styled.div`

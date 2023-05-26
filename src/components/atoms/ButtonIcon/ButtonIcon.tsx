@@ -76,7 +76,7 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
         ...props,
       }}
     >
-      {iconId && (
+      {(iconId || icon) && (
         <SvgIcon className="icon" style={iconStyle}>
           <use href={`${sprite}#icon-${icon || iconId}`} />
         </SvgIcon>
@@ -84,7 +84,7 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
 
       {children}
 
-      {endIconId && (
+      {(endIconId || endIcon) && (
         <SvgIcon className="endIcon" style={endIconStyle}>
           <use href={`${sprite}#icon-${endIcon || endIconId}`}></use>
         </SvgIcon>

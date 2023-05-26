@@ -27,9 +27,10 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
   onOptSelect,
   preventFilter,
   defaultFilterValue,
+  defaultOption,
   ...props
 }) => {
-  const [current, setCurrent] = useState<number>(0);
+  const [current, setCurrent] = useState<number>(typeof defaultOption === 'number' ? defaultOption : 0);
 
   const handleSelectOpt = useCallback(
     (idx: number, option: FilterOpt) => {

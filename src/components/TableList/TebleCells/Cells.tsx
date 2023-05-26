@@ -13,7 +13,7 @@ interface IDataCellSectionProps<T = string | null> {
   align?: 'center' | 'start' | 'end';
 }
 
-export interface IDataCellProps<T = string | null> {
+export interface IDataCellProps<T = any> {
   content?: IDataCellSectionProps<T>;
   subContent?: IDataCellSectionProps<T>;
   width?: string;

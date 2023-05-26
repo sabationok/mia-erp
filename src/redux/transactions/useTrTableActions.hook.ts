@@ -23,9 +23,11 @@ export const useTrActions = (transactionService: TransactionsService) => {
                 title: 'Редагування транзакції',
                 filterOptions,
                 onSubmitEdit: editById,
+                fillHeight: true,
               },
             });
           },
+
           disableCheck: () => false,
         },
         {
@@ -39,6 +41,7 @@ export const useTrActions = (transactionService: TransactionsService) => {
                 title: 'Копіювання транзакції',
                 filterOptions,
                 onSubmit: create,
+                fillHeight: true,
               },
             });
           },
@@ -65,10 +68,12 @@ export const useTrActions = (transactionService: TransactionsService) => {
             modal.handleOpenModal({
               ModalChildren: TransactionForm,
               modalChildrenProps: {
-                title: 'Дохід',
+                title: 'Створити нову',
                 filterOptions,
+                defaultOption: 0,
                 defaultState: { type: 'INCOME' },
                 onSubmit: create,
+                fillHeight: true,
               },
             });
           },
@@ -83,10 +88,12 @@ export const useTrActions = (transactionService: TransactionsService) => {
             modal.handleOpenModal({
               ModalChildren: TransactionForm,
               modalChildrenProps: {
-                title: 'Переказ між рахунками',
+                title: 'Створити нову',
                 filterOptions,
+                defaultOption: 1,
                 defaultState: { type: 'TRANSFER' },
                 onSubmit: create,
+                fillHeight: true,
               },
             });
           },
@@ -101,10 +108,12 @@ export const useTrActions = (transactionService: TransactionsService) => {
             modal.handleOpenModal({
               ModalChildren: TransactionForm,
               modalChildrenProps: {
-                title: 'Витрата',
+                title: 'Створити нову',
                 filterOptions,
+                defaultOption: 2,
                 defaultState: { type: 'EXPENSE' },
                 onSubmit: create,
+                fillHeight: true,
               },
             });
           },

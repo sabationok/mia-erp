@@ -16,14 +16,15 @@ const InputText = styled.input<{ error?: boolean; success?: boolean }>`
       (error && theme.globals.colors.error) || (success && theme.globals.colors.success) || theme.globals.inputBorder};
 
   &::placeholder {
-    font-family: inherit, sans-serif;
     color: ${({ theme }) => theme.globals.inputPlaceholderColor};
   }
 
-  &:hover {
-    border-color: ${({ theme }) => theme.accentColor.base};
-    box-shadow: 0 0 5px ${({ theme }) => theme.accentColor.light};
-  }
+  transition: all ${({ theme }) => theme.globals.timingFunctionMain};
+
+  // &:hover {
+  //   border-color: ${({ theme }) => theme.accentColor.base};
+  //   box-shadow: 0 0 5px ${({ theme }) => theme.accentColor.light};
+  // }
 `;
 
 export default InputText;

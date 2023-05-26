@@ -3,6 +3,7 @@ import { axiosErrorCheck } from 'utils';
 import baseApi from '../../api/baseApi';
 import { ThunkPayload } from '../store.store';
 import { AxiosResponse } from 'axios';
+import { ITransaction } from './transactions.types';
 
 export const TRANSACTIONS_API_BASENAME = '/transactions';
 export const transactionsApiEndpoints = {
@@ -14,21 +15,24 @@ export const transactionsApiEndpoints = {
 
 export const getAllTransactionsThunk = createAsyncThunk<any[], ThunkPayload>(
   'transactions/getAllTransactionsThunk',
-  async ({ onSuccess, onError }, thunkAPI) => {
+  async ({ onSuccess, onError, onLoading }, thunkAPI) => {
+    onLoading && onLoading(true);
     try {
-      const response: AxiosResponse<any> = await baseApi.get(transactionsApiEndpoints.getAll());
+      const response: AxiosResponse<{ data: ITransaction[] }> = await baseApi.get(transactionsApiEndpoints.getAll());
 
-      onSuccess && onSuccess(response);
+      onSuccess && onSuccess(response.data.data);
 
-      return response.data;
+      return response.data.data;
     } catch (error) {
       console.log(error);
 
       onError && onError(error);
 
       return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+    } finally {
+      onLoading && onLoading(false);
     }
-  },
+  }
 );
 
 // export const addTransactionThunk = createAsyncThunk('transactions/addTransactionThunk', async (payload, thunkAPI) => {

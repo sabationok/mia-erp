@@ -106,6 +106,19 @@ const darkTheme = {
   fieldBackgroundColor: '#323234',
   fieldInnerBackgroundColor: '#464649',
 
+  input: {
+    backgroundColor: '#EFEFEF',
+    borderColor: '#d9d9d9',
+  },
+
+  field: {
+    color: '#EFEFEF',
+    backgroundColor: '#323234',
+    backgroundColorHover: 'rgba(219, 219, 219, 0.15)',
+    backgroundColorPressed: 'rgba(219, 219, 219, 0.25)',
+    innerBackgroundColor: '#464649',
+  },
+
   fontColorSidebar: '#EFEFEF',
   fillColorSidebar: '#EFEFEF',
 
@@ -164,6 +177,19 @@ const lightTheme: Partial<ITheme> = {
   fieldColor: '#E4E4E4',
   fieldBackgroundColor: '#E4E4E4',
   fieldInnerBackgroundColor: '#fafafa',
+
+  input: {
+    backgroundColor: '',
+    borderColor: '',
+  },
+
+  field: {
+    color: '#393939',
+    backgroundColor: '#E4E4E4',
+    backgroundColorHover: 'rgba(39, 39, 39, 0.15)',
+    backgroundColorPressed: 'rgba(39, 39, 39, 0.25)',
+    innerBackgroundColor: '#EFEFEF',
+  },
 
   defaultBtnBckgrndColor: {
     def: 'transparent',
