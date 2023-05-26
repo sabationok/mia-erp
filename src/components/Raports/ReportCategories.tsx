@@ -7,7 +7,7 @@ import { IReportBaseProps } from './report.types';
 import FlexBox from 'components/atoms/FlexBox';
 import { FilterOpt } from '../ModalForm/ModalFilter';
 import { categoriesFilterOptions } from '../../data/directories.data';
-import { CategoryTypes } from '../../redux/categories/categories.types';
+import { CategoriesTypesMap, CategoryTypes } from '../../redux/categories/categories.types';
 import styled from 'styled-components';
 import { founder, numberWithSpaces } from '../../utils';
 
@@ -73,77 +73,67 @@ export interface IReportCategoriesProps extends IReportBaseProps {
   currency?: string;
 }
 
-const ReportCategories: React.FC<IReportCategoriesProps> = ({
-  currency = 'UAH',
-  entryList,
-  ...props
-}) => {
-  const [filterOpt, setFilterOpt] = useState<Partial<FilterOpt<CategoryTypes>>>(
-    {}
-  );
-  const [filteredData, setFilteredData] = useState<
-    ReportListItemProps<CategoryTypes>[] | undefined
-  >();
-
+const ReportCategories: React.FC<IReportCategoriesProps> = ({ currency = 'UAH', entryList, ...props }) => {
+  const [filterOpt, setFilterOpt] = useState<Partial<FilterOpt<CategoryTypes>>>({});
   const countedTotals = useMemo(() => {
     let totals: Record<CategoryTypes, number> = {
       INCOME: 0,
       EXPENSE: 0,
       TRANSFER: 0,
     };
-    arr.map(el => {
+    if (!entryList) return totals;
+
+    entryList.map(el => {
       if (el.amount && el.type) {
         totals[el.type] = totals[el.type] += el.amount;
       }
       return null;
     });
     return totals;
-  }, []);
+  }, [entryList]);
   const reportCategoriesFilterOptions = useMemo(
     () =>
       categoriesFilterOptions.map(el => ({
         ...el,
         extraLabel: (
-          <ExtraLabel colorType={el.value}>{`${numberWithSpaces(
-            countedTotals[el.value]
-          )} ${currency || ''}`}</ExtraLabel>
+          <ExtraLabel colorType={el.value}>{`${numberWithSpaces(countedTotals[el.value])} ${
+            currency || ''
+          }`}</ExtraLabel>
         ),
       })),
     [countedTotals, currency]
   );
 
-  function onSelectOpt(option: FilterOpt<CategoryTypes>, value: CategoryTypes) {
-    setFilterOpt(option);
+  const entryLists = useMemo((): Partial<Record<CategoryTypes, any>> => {
+    let data: Partial<Record<CategoryTypes, ReportListItemProps<CategoryTypes>[]>> = {};
 
-    value &&
-      setFilteredData(
-        founder({ searchParam: 'type', searchQuery: value, data: arr })
-      );
+    if (!entryList) return data;
+
+    Object.keys(CategoriesTypesMap).map(key => {
+      data[key as CategoryTypes] = founder({ searchParam: 'type', searchQuery: key, data: entryList });
+      return '';
+    });
+
+    return data;
+  }, [entryList]);
+
+  function handleSelect(option: FilterOpt<CategoryTypes>, value: CategoryTypes) {
+    setFilterOpt(option);
   }
 
   return (
-    <ModalForm
-      {...props}
-      filterOptions={reportCategoriesFilterOptions}
-      preventFilter
-      onOptSelect={onSelectOpt}
-    >
+    <ModalForm {...props} filterOptions={reportCategoriesFilterOptions} preventFilter onOptSelect={handleSelect}>
       <FlexBox fillWidth flex={'1'}>
-        {filteredData && (
+        {filterOpt.value && (
           <ReportList
-            entryList={filteredData}
-            totalAmount={filterOpt.value ? countedTotals[filterOpt.value] : 0}
+            entryList={entryLists[filterOpt.value] || []}
+            totalAmount={countedTotals[filterOpt.value] || 0}
             currency={currency}
           />
         )}
 
-        {!filteredData && (
-          <FlexBox
-            flex={'1'}
-            fillWidth
-            justifyContent={'center'}
-            alignItems={'center'}
-          >
+        {!filterOpt.value && (
+          <FlexBox flex={'1'} fillWidth justifyContent={'center'} alignItems={'center'}>
             {'Оберіть тип звіту'}
           </FlexBox>
         )}

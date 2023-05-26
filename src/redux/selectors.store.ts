@@ -1,62 +1,22 @@
 import { RootState } from './store.store';
 import { useSelector } from 'react-redux';
+import { ICountsState } from './counts/counts.slice';
+import { IAuthState } from './auth/auth.types';
+import { ITransactionsState } from './transactions/transactions.slice';
+import { ICustomRolesState } from './customRoles/customRoles.slice';
+import { ICategoriesState } from './categories/categoriesSlice';
+import { IUsersState } from './users/users.types';
+import { IAppSettings } from './appSettings/appSettings.slice';
 
-export const useAuthSelector = () => useSelector((state: RootState) => state.auth);
-export const useUsersSelector = () => useSelector((state: RootState) => state.users);
-export const useAppSettingsSelector = () => useSelector((state: RootState) => state.appSettings);
+export const useAuthSelector = () => useSelector<RootState, IAuthState>((state: RootState) => state.auth);
+export const useUsersSelector = () => useSelector<RootState, IUsersState>((state: RootState) => state.users);
+export const useAppSettingsSelector = () =>
+  useSelector<RootState, IAppSettings>((state: RootState) => state.appSettings);
 export const useAppPageSettingsSelector = () => useSelector((state: RootState) => state.appPage);
-
-export const useTransactionsSelector = () => useSelector((state: RootState) => state.transactions);
-export const useCountsSelector = () => useSelector((state: RootState) => state.counts);
-export const useCustomRolesSelector = () => useSelector((state: RootState) => state.customRoles);
-export const useCategoriesSelector = () => useSelector((state: RootState) => state.categories);
-
-//
-//
-//
-//
-
-export const getIndexPage = (state: RootState) => state.appPage.indexPage;
-export const getDevice = (state: RootState) => (state.appPage.isMobile ? 'mobile' : 'desktop');
-
-export const transactionsSelector = (state: RootState) => state.transactions;
-export const getAllTransactions = (state: RootState) => state.transactions.transactions;
-
-// export const categoriesSelector = (state: RootState) => state.categories;
-// export const getAllCategories = (state: RootState) => state.categories.categories;
-// export const getCategoriesByOwnerId = (ownerId: string) => (state: RootState) =>
-//   state.categories.categories.filter(
-//     (category: any) => category?.owner === ownerId || category?.owner?._id === ownerId
-//   );
-// export const getFilteredCategories = (state: RootState) => {
-//   const { categories = [], isLoading, error } = state.categories;
-
-//   const mainCategories = categories.filter((category: any) => !category.owner);
-//   const subCategories = categories.filter((category: any) => category.owner);
-//   return { mainCategories, subCategories, isLoading, error };
-// };
-
-// export const countsSelector = (state: RootState) => state.counts;
-// export const getAllCounts = (state: RootState) => state.counts.counts;
-// export const getCountsByOwnerId = (ownerId: string) => (state: RootState) =>
-//   state.counts.counts.filter((count: any) => count?.owner === ownerId || count?.owner?._id === ownerId);
-// export const getFilteredCounts = (state: RootState) => {
-//   const { counts = [], isLoading, error } = state.counts;
-
-//   const mainCounts = counts.filter((count: any) => !count.owner);
-//   const subCounts = counts.filter((count: any) => count.owner);
-//   return { mainCounts, subCounts, isLoading, error };
-// };
-
-// export const contractorsSelector = (state: RootState) => state.contractors;
-// export const getAllContractors = (state: RootState) => state.contractors.contractors;
-
-// export const documentsSelector = (state: RootState) => state.documents;
-// export const getAllDocuments = (state: RootState) => state.documents.documents;
-
-// export const postsSelector = state => state.posts;
-// export const getAllPosts = state => state.posts.posts;
-// export const getPostById =
-//   id =>
-//   ({ posts }) =>
-//     posts.posts.find(post => post._id === id);
+export const useTransactionsSelector = () =>
+  useSelector<RootState, ITransactionsState>((state: RootState) => state.transactions);
+export const useCountsSelector = () => useSelector<RootState, ICountsState>((state: RootState) => state.counts);
+export const useCustomRolesSelector = () =>
+  useSelector<RootState, ICustomRolesState>((state: RootState) => state.customRoles);
+export const useCategoriesSelector = () =>
+  useSelector<RootState, ICategoriesState>((state: RootState) => state.categories);

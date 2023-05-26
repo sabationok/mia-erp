@@ -129,7 +129,7 @@ export const FieldBox = styled(FlexBox)`
   }
 
   &:active {
-    background: ${({ theme }) => theme.field.backgroundColorPressed};
+    background: ${({ theme, onClick }) => (onClick ? theme.field.backgroundColorPressed : '')};
   }
 
   & .innerBox {
@@ -140,6 +140,8 @@ export const FieldBox = styled(FlexBox)`
     background: ${({ theme }) => theme.field.innerBackgroundColor};
     border-radius: 2px;
   }
+
+  transition: all ${({ theme }) => theme.globals.timingFunctionMain};
 `;
 
 export default FlexBox;

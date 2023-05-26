@@ -30,13 +30,13 @@ const GlobalStyles = createGlobalStyle`
   input {
 
     &:hover {
-      border-color: ${({ theme }) => theme.accentColor.base};
-      box-shadow: 0 0 5px ${({ theme }) => theme.accentColor.base};
+        //border-color: ${({ theme }) => theme.accentColor.base};
+        //box-shadow: 0 0 5px ${({ theme }) => theme.accentColor.base};
     }
 
     &:focus,
     &:focus-visible {
-      border-color: ${({ theme }) => theme.accentColor.base};
+        //border-color: ${({ theme }) => theme.accentColor.base};
         //box-shadow: 0 0 8px ${({ theme }) => theme.accentColor.base};
       outline: 1px solid ${({ theme }) => theme.accentColor.base};
 

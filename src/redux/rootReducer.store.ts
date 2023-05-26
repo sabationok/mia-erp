@@ -25,4 +25,6 @@ const rootReducer = combineReducers({
   // [documentsSlice.name]: documentsSlice.reducer,
 });
 
+export type RootReducerType = typeof rootReducer;
+
 export default rootReducer;

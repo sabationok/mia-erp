@@ -1,7 +1,9 @@
 import { FilterSelectorType } from 'components/Filter/AppFilter';
-import { useCategoriesSelector, useCountsSelector } from 'redux/selectors.store';
+import { RootState, useAppSelector } from '../store.store';
 
 const useTrFilterSelectors = (): FilterSelectorType[] => {
+  const { counts, categories }: RootState = useAppSelector();
+
   const transactionTypes = [
     { _id: 'ds6d5vf6sd5f1v6sd', name: 'INCOME', label: 'ДОХІД' },
     { _id: 'ds6d5vf6sd6f1v61d', name: 'TRANSFER', label: 'ПЕРЕКАЗ' },
@@ -16,12 +18,12 @@ const useTrFilterSelectors = (): FilterSelectorType[] => {
     },
     {
       label: 'Рахунки',
-      data: useCountsSelector().counts,
+      data: counts.counts,
       selectorName: 'counts',
     },
     {
       label: 'Категорії',
-      data: useCategoriesSelector().categories,
+      data: categories.categories,
       selectorName: 'categories',
     },
   ];
