@@ -48,7 +48,7 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
     width: size,
     height: size,
     minWidth: size,
-    miHeight: size,
+    minHeight: size,
   };
   let iconStyle = {
     width: iconSize,
@@ -121,8 +121,8 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
   &:disabled {
     pointer-events: none;
     opacity: 0.7;
-    cursor: not-allowed;
-    fill: ${({ theme }) => theme.trBorderClr};
+    cursor: default;
+    fill: ${({ theme }) => theme.field.innerBackgroundColor};
   }
 `;
 

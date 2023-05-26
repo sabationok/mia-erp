@@ -1,13 +1,12 @@
 import styled from 'styled-components';
 import { useTable } from '../TableList';
 import FooterCounter from './FooterCounter';
-import TableFilter from './TableFilter';
 import TablePagination from './TablePagination';
-import TableSort from './TableSortComp/TableSort';
+import TableSort from '../TableSortComp/TableSort';
 import { useState } from 'react';
 
 const TableFooter: React.FC<any> = props => {
-  const { tableSortParams, selectedRows, counter, isFilter, pagination } = useTable();
+  const { tableSortParams, selectedRows, counter, pagination } = useTable();
   const [isCounterOn] = useState<boolean | undefined>(!counter && selectedRows && selectedRows?.length > 0);
 
   return (
@@ -16,8 +15,6 @@ const TableFooter: React.FC<any> = props => {
         {tableSortParams && tableSortParams.length > 0 && <TableSort {...{ tableSortParams }} />}
 
         {pagination && <TablePagination />}
-
-        {isFilter && <TableFilter />}
       </Top>
 
       {isCounterOn && <FooterCounter selectedRows={selectedRows} includes={['INCOME', 'EXPENSE']} />}

@@ -3,8 +3,11 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { iconId } from 'data';
 
 import styled, { css } from 'styled-components';
+import { useTable } from './TableList';
+import TActions from './TActions';
 
-const QuickActions: React.FC<{ top?: any[]; bottom?: any[]; footer?: boolean }> = ({ top, bottom, footer }) => {
+const QuickActions: React.FC<any> = () => {
+  const { actionsCreator, footer } = useTable();
   const [isShown, setIsShown] = useState(false);
 
   function onMenuBtnClick() {
@@ -28,46 +31,14 @@ const QuickActions: React.FC<{ top?: any[]; bottom?: any[]; footer?: boolean }> 
 
   return (
     <Menu isShown={isShown} footer={footer} data-burger>
-      <List isShown={isShown}>
-        <Top top={!!top}>
-          {top &&
-            top.map(({ name, disableChek, ...props }, idx) => (
-              <ButtonIcon
-                key={idx}
-                variant='onlyIcon'
-                disabled={typeof disableChek === 'function' && disableChek()}
-                size='28px'
-                iconSize='80%'
-                tabIndex={isShown ? -1 : 0}
-                {...props}
-              />
-            ))}
-        </Top>
-
-        <Separator />
-
-        <Bottom bottom={!!bottom}>
-          {bottom &&
-            bottom.map(({ name, disableChek, ...props }, idx) => (
-              <ButtonIcon
-                key={idx}
-                variant='onlyIconFilled'
-                disabled={typeof disableChek === 'function' && disableChek()}
-                size='28px'
-                // iconSize="80%"
-                tabIndex={isShown ? -1 : 0}
-                {...props}
-              />
-            ))}
-        </Bottom>
-      </List>
+      <List isShown={isShown}>{actionsCreator && <TActions renderSeparator={<Separator />} />}</List>
 
       <ToggleButton
         isShown={isShown}
         iconId={iconId.plus}
-        variant='def'
-        iconSize='70%'
-        size='48px'
+        variant="def"
+        iconSize="70%"
+        size="48px"
         onClick={onMenuBtnClick}
       />
     </Menu>
@@ -106,7 +77,7 @@ const ToggleButton = styled(ButtonIcon)<{ isShown: boolean }>`
 
 const Menu = styled.div<{ isShown: boolean; footer?: boolean }>`
   position: absolute;
-  bottom: ${({ footer }) => (footer ? '40px' : '10px')};
+  bottom: ${({ footer }) => (footer ? '44px' : '10px')};
   right: 10px;
   z-index: 65;
 
@@ -137,38 +108,54 @@ const List = styled.div<{ isShown: boolean }>`
 
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
 
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  ::-webkit-scrollbar-button {
+    height: 0;
+    width: 0;
+    overflow: hidden;
+  }
+
   ${({ isShown }) =>
-          isShown
-                  ? css`
-                    max-height: 90vh;
-                    padding: 16px 8px 64px;
-                    visibility: visible;
-                    pointer-events: all;
-                  `
-                  : css`
-                    max-height: 48px;
-                    padding: 8px;
-                    visibility: hidden;
-                    pointer-events: none;
-                  `};
+    isShown
+      ? css`
+          max-height: calc(100vh - 88px);
+          padding: 16px 8px 64px;
+          visibility: visible;
+          pointer-events: all;
+
+          &:hover {
+            overflow: auto;
+          }
+        `
+      : css`
+          max-height: 48px;
+          padding: 8px;
+          visibility: hidden;
+          pointer-events: none;
+        `};
+
   @media screen and(max-height: 480px) {
     flex-direction: row;
     width: max-content;
     height: 48px;
     ${({ isShown }) =>
-            isShown
-                    ? css`
-                      max-width: 90vw;
-                      padding: 8px 64px 8px 16px;
-                      visibility: visible;
-                      pointer-events: all;
-                    `
-                    : css`
-                      max-width: 48px;
-                      padding: 8px;
-                      /* visibility: hidden; */
-                      pointer-events: none;
-                    `};
+      isShown
+        ? css`
+            max-width: 90vw;
+            padding: 8px 64px 8px 16px;
+            visibility: visible;
+            pointer-events: all;
+          `
+        : css`
+            max-width: 48px;
+            padding: 8px;
+            /* visibility: hidden; */
+            pointer-events: none;
+          `};
   }
 `;
 const Content = styled.div`
@@ -183,11 +170,9 @@ const Content = styled.div`
     flex-direction: row;
   }
 `;
-const Top = styled(Content)<{ top: boolean }>``;
-
-const Bottom = styled(Content)<{ bottom: boolean }>``;
 
 const Separator = styled.div`
+  align-self: stretch;
   position: relative;
 
   width: 100%;
@@ -199,7 +184,7 @@ const Separator = styled.div`
     width: 100%;
     height: 1px;
 
-    border-top: 1px solid ${({ theme }) => theme.borderColor};
+    border-top: 2px solid ${({ theme }) => theme.tableHeaderStroke};
   }
 
   @media screen and (max-height: 480px) {

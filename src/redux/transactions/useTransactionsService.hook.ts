@@ -1,8 +1,18 @@
 import { useTransactionsSelector } from 'redux/selectors.store';
 import { useAppDispatch } from 'redux/store.store';
-import { ITransactionForReq, ITransactionReqData } from './transactions.types';
+import { ITransaction, ITransactionForReq, ITransactionReqData } from './transactions.types';
+import { ITransactionsState } from './transactions.slice';
 
-const useTransactionsService = () => {
+export interface TransactionsService {
+  dispatch: ReturnType<typeof useAppDispatch>;
+  state: ITransactionsState;
+  create: (data: ITransactionForReq) => void;
+  deleteById: (id: string) => void;
+  editById: (reqData: ITransactionReqData) => void;
+  getById: (id: string) => ITransaction | undefined;
+}
+
+const useTransactionsService = (): TransactionsService => {
   const dispatch = useAppDispatch();
   const state = useTransactionsSelector();
 
@@ -31,8 +41,6 @@ const useTransactionsService = () => {
     getById,
   };
 };
-
-export type TransactionsService = ReturnType<useTrServiceHookType>;
 
 export type useTrServiceHookType = typeof useTransactionsService;
 export default useTransactionsService as useTrServiceHookType;

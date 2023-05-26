@@ -8,19 +8,20 @@ import ReportCategories, { IReportCategoriesProps } from 'components/Raports/Rep
 import ReportCounts, { IReportCountsProps } from 'components/Raports/ReportCounts';
 import ReportContractors, { IReportContractorsProps } from 'components/Raports/ReportContractors';
 import ReportProjects, { IReportProjectsProps } from '../components/Raports/ReportProjects';
+import { categoriesFilterOptions, countsFilterOptions } from './directories.data';
 
 const categoriesReport: IReportConfigs<IReportCategoriesProps> = {
   title: 'Категорії',
   iconId: iconId.info,
   ModalChildren: ReportCategories,
-  modalChildrenProps: { title: 'Звіт по категоріях' },
+  modalChildrenProps: { title: 'Звіт по категоріях', fillHeight: true, filterOptions: categoriesFilterOptions },
   disabled: false,
 };
 const countsReport: IReportConfigs<IReportCountsProps> = {
   title: 'Рахунки',
   iconId: iconId.info,
   ModalChildren: ReportCounts,
-  modalChildrenProps: { title: 'Звіт по рахунках' },
+  modalChildrenProps: { title: 'Звіт по рахунках', fillHeight: true, filterOptions: countsFilterOptions },
   disabled: false,
 };
 export const reportByContractorsColumns: CellTittleProps[] = [
@@ -77,6 +78,8 @@ const contractorsReport: IReportConfigs<IReportContractorsProps> = {
       tableData: [],
       tableTitles: reportByContractorsColumns,
     },
+    fitContentH: true,
+    fillHeight: true,
   },
   disabled: false,
 };
@@ -88,10 +91,11 @@ const projectsReport: IReportConfigs<IReportProjectsProps> = {
     title: 'Звіт по проектах',
     tableConfigs: {
       tableTitles: reportByContractorsColumns,
+      tableData: [],
       checkBoxes: false,
     },
     fitContentH: true,
-    fitContentV: true,
+    fillHeight: true,
   },
   disabled: false,
 };
@@ -101,6 +105,8 @@ const activitiesReport: IReportConfigs = {
   ModalChildren: ModalForm,
   modalChildrenProps: {
     title: 'Звіт по видах діяльності',
+    fitContentH: true,
+    fillHeight: true,
   },
   disabled: true,
 };
@@ -109,21 +115,33 @@ const contractsReport: IReportConfigs = {
   title: 'Контракти',
   iconId: iconId.info,
   ModalChildren: ModalForm,
-  modalChildrenProps: { title: 'Звіт по контрактах' },
+  modalChildrenProps: {
+    title: 'Звіт по контрактах',
+    fitContentH: true,
+    fillHeight: true,
+  },
   disabled: true,
 };
 const marksReport: IReportConfigs = {
   title: 'Мітки',
   iconId: iconId.info,
   ModalChildren: ModalForm,
-  modalChildrenProps: { title: 'Звіт по мітках' },
+  modalChildrenProps: {
+    title: 'Звіт по мітках',
+    fitContentH: true,
+    fillHeight: true,
+  },
   disabled: true,
 };
 const tagsReport: IReportConfigs = {
   title: 'Теги',
   iconId: iconId.info,
   ModalChildren: ModalForm,
-  modalChildrenProps: { title: 'Звіт по тегах' },
+  modalChildrenProps: {
+    title: 'Звіт по тегах',
+    fitContentH: true,
+    fillHeight: true,
+  },
   disabled: true,
 };
 

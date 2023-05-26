@@ -2,105 +2,23 @@ import React, { createContext, memo, useContext, useRef, useState } from 'react'
 import TableHead from './TableHead';
 import TableBody from './TableBody';
 import AppLoader from 'components/atoms/AppLoader';
-import QuickActions from './QuickActions/QuickActions';
+import QuickActions from './QuickActions';
 import TableOverHead from './TableOverHead/TableOverHead';
 import TableFooter from './TableFooter/TableFooter';
 import styled from 'styled-components';
-import { CellTittleProps } from './TebleCells/CellTitle';
 import { MaxToTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
-import { FilterReturnDataType, FilterSelectorType } from 'components/Filter/AppFilter';
 import { IBase } from 'redux/global.types';
 import { CustomCheckboxEvent } from './TebleCells/CellComponents/CheckBox';
+import {
+  ITableListContext,
+  ITableListProps,
+  OnCheckBoxChangeHandlerEvent,
+  SelectItem,
+  UseTableHookType,
+} from './tableTypes.types';
 
-export interface SelectItemBase extends Record<string, any> {
-  _id?: string;
-  filter?: boolean;
-  search?: boolean;
-  label?: string;
-  name?: string;
-  value?: string | number;
-  dataKey?: string;
-  sort?: boolean;
-  dataPath?: string;
-  descending?: boolean;
-  path?: string;
-}
-
-export interface SelectItem extends SelectItemBase {}
-
-export interface TableActionProps<TDataType = any> {
-  separator?: boolean;
-  iconId?: string;
-  onClick?: () => void;
-  type?: 'primary' | 'filled';
-  disabled?: string;
-  disabledCheck?: (selectedRows: TDataType[]) => boolean;
-}
-
-export interface TableActionsProps<TDataType = any> {
-  top?: any[];
-  bottom?: any[];
-  footer?: boolean;
-  actions?: TableActionProps<TDataType>[];
-}
-
-export interface ITableSortParam extends Pick<SelectItem, 'descending' | 'path' | 'dataPath' | 'dataKey'> {}
-
-export type OnRowClickHandlerData<RData = any> = {
-  ev?: MouseEvent | React.MouseEvent<HTMLDivElement>;
-  _id?: string;
-  rowData?: RData;
-};
-export type OnRowClickHandler<RData = any> = (data: OnRowClickHandlerData<RData>) => any;
-
-export type OnCheckBoxChangeHandlerEvent<V = any> = {
-  ev?: MouseEvent | React.MouseEvent<HTMLDivElement>;
-  checked: boolean;
-  _id?: string;
-  value?: V;
-};
-export type OnCheckBoxChangeHandler<V = any> = (data: OnCheckBoxChangeHandlerEvent<V>) => any;
-export type OnHeadCheckBoxChangeHandler<V = any> = (data: V) => any;
-
-export interface ITableListProps<TDataType = any> extends React.HTMLAttributes<HTMLDivElement> {
-  tableTitles?: CellTittleProps[];
-  tableSearchParams?: SelectItem[];
-  tableSortParams?: ITableSortParam[];
-  tableData?: TDataType[];
-  isLoading?: boolean;
-  RowActionsComp?: React.ReactNode;
-  quickActions?: {
-    ActionsStart?: React.ReactNode;
-    ActionsEnd?: React.ReactNode;
-  };
-  tableActions?: TableActionsProps<TDataType>;
-  TableActionsComp?: React.ReactNode;
-  isFilter?: boolean;
-  isSearch?: boolean;
-  footer?: boolean;
-  pagination?: boolean;
-  counter?: boolean;
-  checkBoxes?: boolean;
-  rowGrid?: any;
-  children?: React.ReactNode;
-  filterTitle?: string;
-  filterSelectors?: FilterSelectorType<TDataType>[];
-  filterDefaultValues?: FilterReturnDataType;
-  onFilterSubmit?: (filterData: FilterReturnDataType) => void;
-  onRowClick?: OnRowClickHandler<TDataType>;
-  onCheckboxChange?: OnCheckBoxChangeHandler;
-  onHeadCheckboxChange?: OnHeadCheckBoxChangeHandler;
-  onTableSortParamChange?: (params: ITableSortParam) => void;
-  handleTableSort?: (sortParam: ITableSortParam) => void;
-}
-
-export interface ITableListContext<TDataType = any> extends ITableListProps<TDataType> {
-  selectedRows?: string[];
-  rowRef?: React.MutableRefObject<HTMLElement | undefined>;
-}
-
+export type { ITableListContext, ITableListProps, OnCheckBoxChangeHandlerEvent, UseTableHookType, SelectItem };
 export const TableCTX = createContext({});
-export type UseTableHookType = <TDataType = any>() => ITableListContext<TDataType>;
 export const useTable: UseTableHookType = () => useContext(TableCTX);
 
 const TableList: React.FC<ITableListProps> = ({
@@ -206,7 +124,7 @@ const Table = styled.div`
 
   height: 100%;
   width: 100%;
-  overflow: hidden;
+  //overflow: hidden;
 `;
 const TableScroll = styled.div`
   display: grid;

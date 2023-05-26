@@ -1,7 +1,7 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 
 import styled from 'styled-components';
-import { TableActionsProps } from '../../TableList';
+import { TableActionsProps } from '../tableTypes.types';
 
 const TableActions: React.FC<TableActionsProps> = ({ top, bottom }) => {
   return (
@@ -72,6 +72,7 @@ const Separator = styled.div`
   position: relative;
 
   height: 100%;
+
   &::before {
     display: block;
     content: '';

@@ -3,16 +3,11 @@ import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import { iconId } from 'data';
 
 import AppFilter, { FilterProps } from 'components/Filter/AppFilter';
-import { useTable } from '../TableList';
+import { useTable } from './TableList';
 
 const TableFilter = () => {
   const modal = useModalProvider();
-  const {
-    filterSelectors,
-    onFilterSubmit,
-    filterDefaultValues,
-    filterTitle = 'Фільтрація даних таблиці',
-  } = useTable();
+  const { filterSelectors, onFilterSubmit, filterDefaultValues, filterTitle = 'Фільтрація даних таблиці' } = useTable();
 
   return (
     <ButtonIcon

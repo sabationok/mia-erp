@@ -1,5 +1,5 @@
 import React, { createContext, memo, useContext, useMemo, useState } from 'react';
-import { OnCheckBoxChangeHandler, OnCheckBoxChangeHandlerEvent, useTable } from '../TableList';
+import { OnCheckBoxChangeHandlerEvent, useTable } from '../TableList';
 
 import styled from 'styled-components';
 import { ThRow, ThRowData, ThRowStickyEl } from './TableHeadRow';
@@ -10,6 +10,7 @@ import { ICategory } from '../../../redux/categories/categories.types';
 import CellCheckBox from '../TebleCells/CellCheckBox';
 import { CellsMap } from '../TebleCells';
 import CellTextDbl from '../TebleCells/CellTextDbl';
+import { OnCheckBoxChangeHandler } from '../tableTypes.types';
 
 export type TRowDataType = ITransaction | ICount | IContractor | ICategory | IDocument;
 

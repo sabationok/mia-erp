@@ -1,6 +1,6 @@
 import ModalForm, { ModalFormProps } from 'components/ModalForm';
 import styled from 'styled-components';
-import { countsTypesMap, CountType, ICount } from 'redux/counts/counts.types';
+import { CountsTypesMap, CountType, ICount } from 'redux/counts/counts.types';
 import React, { useState } from 'react';
 import InputTextPrimary from 'components/atoms/Inputs/InputTextPrimary';
 
@@ -16,19 +16,18 @@ export interface FormCreateCountProps extends Omit<ModalFormProps, 'onSubmit'> {
 
 export interface CountFormData extends Omit<ICount, '_id' | 'createdAt' | 'updatedAt' | 'owner'> {
   owner?: string | null;
-
 }
 
 const FormCreateCount: React.FC<FormCreateCountProps> = ({
-                                                           owner,
-                                                           create,
-                                                           type,
-                                                           count,
-                                                           edit,
-                                                           _id,
-                                                           onSubmit,
-                                                           ...props
-                                                         }) => {
+  owner,
+  create,
+  type,
+  count,
+  edit,
+  _id,
+  onSubmit,
+  ...props
+}) => {
   const [formData, setFormData] = useState<CountFormData | undefined>({ ...count, type, owner: owner?._id || null });
 
   function onFormDataChange(ev: React.ChangeEvent<HTMLInputElement>) {
@@ -47,36 +46,35 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
   }
 
   return (
-    <ModalForm onSubmit={formEventWrapper(onSubmit, formData)} {...props} >
+    <ModalForm onSubmit={formEventWrapper(onSubmit, formData)} {...props}>
       <Inputs>
-        <InputTextPrimary label='Тип' name='type' placeholder={countsTypesMap[type]} disabled />
+        <InputTextPrimary label="Тип" name="type" placeholder={CountsTypesMap[type]} disabled />
 
         <InputTextPrimary
-          label='Назва'
-          name='label'
-          placeholder='Введіть назву'
+          label="Назва"
+          name="label"
+          placeholder="Введіть назву"
           onChange={onFormDataChange}
           value={formData?.label ? formData?.label : formData?.name ? formData?.name : ''}
         />
 
         <InputTextPrimary
-          label='Баланс'
-          name='amount'
-          type='number'
-          placeholder='Введіть початковий баланс'
+          label="Баланс"
+          name="amount"
+          type="number"
+          placeholder="Введіть початковий баланс"
           onChange={onFormDataChange}
           disabled={!create}
           value={formData?.balance ? formData?.balance : ''}
         />
 
         <InputTextPrimary
-          label='Коментар'
-          name='descr'
-          placeholder='Введіть коментар'
+          label="Коментар"
+          name="descr"
+          placeholder="Введіть коментар"
           onChange={onFormDataChange}
           value={formData?.descr ? formData?.descr : ''}
         />
-
       </Inputs>
     </ModalForm>
   );

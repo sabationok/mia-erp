@@ -1,28 +1,14 @@
-import DirCategories, {
-  DirCategoriesProps,
-} from 'components/Directories/DirCategories/DirCategories';
-import DirCounts, {
-  DirCountsProps,
-} from 'components/Directories/DirCounts/DirCounts';
-import DirProjects, {
-  DirProjectsProps,
-} from 'components/Directories/DirProjects/DirProjects';
+import DirCategories, { DirCategoriesProps } from 'components/Directories/DirCategories/DirCategories';
+import DirCounts, { DirCountsProps } from 'components/Directories/DirCounts/DirCounts';
+import DirProjects, { DirProjectsProps } from 'components/Directories/DirProjects/DirProjects';
 import { iconId } from '../img/sprite';
 import DirMarks, { DirMarksProps } from 'components/Directories/DirMarks';
-import DirContractors, {
-  DirContractorsProps,
-} from 'components/Directories/DirContractors';
+import DirContractors, { DirContractorsProps } from 'components/Directories/DirContractors';
 
 import { CategoriesTypesMap } from 'redux/categories/categories.types';
-import DirActivities, {
-  DirActivitiesProps,
-} from 'components/Directories/DirCompanyActivities/DirActivities';
+import DirActivities, { DirActivitiesProps } from 'components/Directories/DirCompanyActivities/DirActivities';
 import { contractorsColumns, contractorsMockData } from './contractors.data';
-import {
-  CategoryFilterOpt,
-  CountFilterOpt,
-  DirBaseProps,
-} from '../components/Directories/dir.types';
+import { CategoryFilterOpt, CountFilterOpt, DirBaseProps } from '../components/Directories/dir.types';
 
 export const categoriesFilterOptions: CategoryFilterOpt[] = [
   { label: CategoriesTypesMap.INCOME, value: 'INCOME' },
@@ -30,8 +16,8 @@ export const categoriesFilterOptions: CategoryFilterOpt[] = [
   { label: CategoriesTypesMap.EXPENSE, value: 'EXPENSE' },
 ];
 export const countsFilterOptions: CountFilterOpt[] = [
-  { label: 'Активні', value: 'ACTIVE' },
-  { label: 'Пасивні', value: 'PASSIVE' },
+  { label: 'Активи', value: 'ACTIVE' },
+  { label: 'Пасиви', value: 'PASSIVE' },
 ];
 
 export interface IDirectory<P extends DirBaseProps = any> {
@@ -110,13 +96,6 @@ const activitiesDir: IDirectory<DirActivitiesProps> = {
   disabled: false,
 };
 
-const directories = [
-  countsDir,
-  categoriesDir,
-  activitiesDir,
-  contractorsDir,
-  projectsDir,
-  marksDir,
-];
+const directories = [countsDir, categoriesDir, activitiesDir, contractorsDir, projectsDir, marksDir];
 
 export default directories;

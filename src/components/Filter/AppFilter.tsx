@@ -13,10 +13,10 @@ import { IContractor } from '../../redux/contractors/contractors.types';
 import { IProject } from '../../redux/transactions/transactions.types';
 
 export type FilterSelectorDataType = ICount | ICategory | IContractor | IProject | any;
-export type FilterSelectorType<DataType = FilterSelectorDataType> = {
+export type FilterSelectorType = {
   selectorName: keyof FilterReturnDataType;
   label: string;
-  data: DataType[];
+  data: FilterSelectorDataType[];
 };
 
 export interface FilterReturnDataType {

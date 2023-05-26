@@ -4,10 +4,7 @@ import { useTable } from './TableList';
 import styled from 'styled-components';
 import { forwardRef, useMemo } from 'react';
 
-const TableBody: React.ForwardRefRenderFunction<any> = (
-  props,
-  ref: React.Ref<any>
-) => {
+const TableBody: React.ForwardRefRenderFunction<any> = (props, ref: React.Ref<any>) => {
   const { tableData, rowRef, onRowClick, selectedRows } = useTable();
 
   function handleOnRowClick(ev: React.MouseEvent<HTMLDivElement>) {
@@ -39,9 +36,7 @@ const TableBody: React.ForwardRefRenderFunction<any> = (
   const renderRows = useMemo(
     () =>
       tableData?.map((rowData, idx) => {
-        const checked = selectedRows?.length
-          ? selectedRows?.includes(rowData._id)
-          : false;
+        const checked = selectedRows?.length ? selectedRows?.includes(rowData._id) : false;
 
         return (
           <TableRow
@@ -54,7 +49,7 @@ const TableBody: React.ForwardRefRenderFunction<any> = (
           />
         );
       }),
-    [selectedRows?.length, tableData]
+    [selectedRows, tableData]
   );
 
   return <TBody onClick={handleOnRowClick}>{renderRows}</TBody>;

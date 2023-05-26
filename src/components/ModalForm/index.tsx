@@ -26,7 +26,7 @@ export interface ModalFormAddsProps {
   fitContentH?: boolean;
 }
 
-export type ModalFormProps = ModalFormBaseProps & ModalFormAddsProps & ModalFormFilterProps;
+export type ModalFormProps<V = any, D = any> = ModalFormBaseProps & ModalFormAddsProps & ModalFormFilterProps<V, D>;
 const ModalForm: React.FC<ModalFormProps> = ({
   title = 'default modal title',
   footer = true,
@@ -103,10 +103,10 @@ const ModalFormContainer = styled.form<
   min-width: 250px;
   max-width: 100%;
 
-  width: ${({ fillWidth, fitContentV }) => (fillWidth && '100vw') || (fitContentV && 'max-content') || ''};
-  height: ${({ fillHeight, fitContentH }) => (fillHeight && '100vh') || (fitContentH && 'max-content') || ''};
+  width: ${({ fillWidth, fitContentH }) => (fillWidth && '100vw') || (fitContentH && 'max-content') || ''};
+  height: ${({ fillHeight, fitContentV }) => (fillHeight && '100vh') || (fitContentV && 'max-content') || ''};
 
-  overflow: hidden;
+  //overflow: hidden;
 
   box-shadow: ${({ theme }) => theme.globals.shadowMain};
   fill: ${({ theme }) => theme.fillColor};

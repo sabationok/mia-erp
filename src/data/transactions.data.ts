@@ -1,4 +1,4 @@
-import { SelectItem, TableActionsProps } from 'components/TableList/TableList';
+import { SelectItem } from 'components/TableList/TableList';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { iconId } from '../img/sprite';
 import { selects } from './select.data';
@@ -313,59 +313,6 @@ export const useTransactionsActions = () => {
     }),
     [create, deleteById, editById, modal]
   );
-};
-
-export const trTableActions: TableActionsProps = {
-  top: [
-    {
-      name: 'editTr',
-      title: 'Редагування транзакції',
-      iconId: iconId.edit,
-      onClick: () => {},
-      disableCheck: () => false,
-    },
-    {
-      name: 'copyTr',
-      title: 'Копіювання транзакції',
-      iconId: iconId.copy,
-      onClick: () => {},
-      disableCheck: () => false,
-    },
-    {
-      name: 'deleteTr',
-      title: 'Видалення транзакції',
-      iconId: iconId.delete,
-      iconSize: '90%',
-      onClick: () => {},
-      disableCheck: () => false,
-    },
-  ],
-  bottom: [
-    {
-      name: 'deleteTr',
-      title: 'Дохід',
-      iconId: iconId.INCOME,
-      iconSize: '90%',
-      onClick: () => {},
-      disableCheck: () => false,
-    },
-    {
-      name: 'deleteTr',
-      title: 'Переказ між рахунками',
-      iconId: iconId.TRANSFER,
-      iconSize: '90%',
-      onClick: () => {},
-      disableCheck: () => false,
-    },
-    {
-      name: 'deleteTr',
-      title: 'Витрата',
-      iconId: iconId.EXPENSE,
-      iconSize: '90%',
-      onClick: () => {},
-      disableCheck: () => false,
-    },
-  ],
 };
 
 export const transactionsMockData: ITransaction[] = [

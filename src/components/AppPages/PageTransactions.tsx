@@ -1,4 +1,4 @@
-import TableList, { ITableListProps } from 'components/TableList/TableList';
+import TableList from 'components/TableList/TableList';
 import { takeFullGridArea } from './pagesStyles';
 import { transactionsColumns, transactionsMockData, transactionsSearchParams } from 'data';
 import styled from 'styled-components';
@@ -7,11 +7,14 @@ import { useMemo } from 'react';
 import useTrFilterSelectors from 'redux/transactions/useTrFilterSelectors.hook';
 import { useTrActions } from 'redux/transactions/useTrTableActions.hook';
 import { ITransaction } from '../../redux/transactions/transactions.types';
+import { useTrActionsCreator } from '../../redux/transactions/useTrActionsCreator.hook';
+import { ITableListProps } from '../TableList/tableTypes.types';
 
 const PageTransactions: React.FC<any> = () => {
   const transactionsService = useTransactionsService();
   const filterSelectors = useTrFilterSelectors();
   const tableActions = useTrActions(transactionsService);
+  const actionsCreator = useTrActionsCreator(transactionsService);
   // const [selectedTr, setSelectedTr] = useState<any>(null);
 
   const tableConfig = useMemo(
@@ -26,6 +29,7 @@ const PageTransactions: React.FC<any> = () => {
       isSearch: true,
       footer: true,
       checkBoxes: true,
+      actionsCreator,
       onFilterSubmit: data => {
         // console.log(data);
       },
@@ -33,7 +37,7 @@ const PageTransactions: React.FC<any> = () => {
         // console.log(data);
       },
     }),
-    [filterSelectors, tableActions, transactionsService.state.transactions]
+    [actionsCreator, filterSelectors, tableActions, transactionsService.state.transactions]
   );
 
   return (

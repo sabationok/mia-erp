@@ -2,20 +2,27 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { useTable } from '../TableList';
-import TableActions from './TableActions/TableActions';
-import DeviceConrol from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
+import DeviceControl from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 import TableSearchForm from './TableSearchForm/TableSearchForm';
+import TActions from '../TActions';
+import TableFilter from '../TableFilter';
 
 const TableOverHead: React.FC<React.HTMLAttributes<HTMLDivElement>> = props => {
-  const { tableActions, tableSearchParams, isSearch = true } = useTable();
+  const { actionsCreator, isFilter, tableSearchParams, isSearch = true } = useTable();
 
   return (
     <OverHead className="tOverHead" {...props}>
       <LeftSide className="leftSide">{isSearch && <TableSearchForm {...{ tableSearchParams }} />}</LeftSide>
 
-      <DeviceConrol.MinDesktop>
-        <RightSide className="rightSide">{tableActions && <TableActions {...tableActions} />}</RightSide>
-      </DeviceConrol.MinDesktop>
+      <DeviceControl.MinDesktop>
+        <RightSide className="rightSide">
+          {isFilter && <TableFilter />}
+
+          {isFilter && actionsCreator && <Separator />}
+
+          {actionsCreator && <TActions renderSeparator={<Separator />} />}
+        </RightSide>
+      </DeviceControl.MinDesktop>
     </OverHead>
   );
 };
@@ -58,11 +65,31 @@ const RightSide = styled.div`
   align-self: flex-end;
 
   display: flex;
-  align-items: center;
   justify-content: flex-end;
+  align-items: center;
   gap: 8px;
 
   /* overflow: hidden; */
+`;
+const Separator = styled.div`
+  position: relative;
+
+  align-self: stretch;
+
+  min-height: 100%;
+
+  margin: 0 5px;
+
+  &::before {
+    display: block;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    height: 100%;
+    width: 1px;
+    border-right: 2px solid ${({ theme }) => theme.tableHeaderStroke};
+  }
 `;
 
 export default TableOverHead;

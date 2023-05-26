@@ -3,7 +3,6 @@ import {
   transactionsColumns,
   transactionsMockData,
   transactionsSearchParams,
-  trTableActions,
   useTransactionsActions,
 } from './transactions.data';
 import { trCategories } from './categories.data';
@@ -45,7 +44,6 @@ export {
   appSettings,
   transactionsColumns,
   transactionsSearchParams,
-  trTableActions,
   activitiesMockData,
   permissionsTableColumns,
   permissionsSearchParams,

@@ -1,6 +1,6 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 // import ProfileCard from 'components/molecules/ProfileCard/ProfileCard';
-import TableList, { ITableListProps } from 'components/TableList/TableList';
+import TableList from 'components/TableList/TableList';
 import { useSearchParams } from 'react-router-dom';
 import { memo, useCallback, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
@@ -10,6 +10,7 @@ import ProfileCard from 'components/atoms/ProfileCard/ProfileCard';
 import usePermissionsService from 'redux/permissions/usePermissionsService.hook';
 import { IPermission } from '../../redux/permissions/permissions.types';
 import { permissionsSearchParams, permissionsTableColumns } from '../../data';
+import { ITableListProps } from '../TableList/tableTypes.types';
 
 const companyTypes = [
   { title: 'Мої', param: 'own' },
@@ -48,8 +49,7 @@ const PageHome: React.FC<any> = () => {
     [setSearchParams]
   );
   const isActiveClassName = useCallback(
-    (param: string) =>
-      searchParams.get('companyType') === param ? 'active' : '',
+    (param: string) => (searchParams.get('companyType') === param ? 'active' : ''),
     [searchParams]
   );
 

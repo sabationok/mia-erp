@@ -68,12 +68,16 @@ const arr: ReportListItemProps<CategoryTypes>[] = [
   },
 ];
 
-export interface IReportCategoriesProps extends IReportBaseProps {
+export interface IReportCategoriesProps<V = any, D = any> extends IReportBaseProps<unknown, V, D> {
   entryList?: ReportListItemProps<CategoryTypes>[];
   currency?: string;
 }
 
-const ReportCategories: React.FC<IReportCategoriesProps> = ({ currency = 'UAH', entryList, ...props }) => {
+const ReportCategories: React.FC<IReportCategoriesProps<CategoryTypes>> = ({
+  currency = 'UAH',
+  entryList,
+  ...props
+}) => {
   const [filterOpt, setFilterOpt] = useState<Partial<FilterOpt<CategoryTypes>>>({});
   const countedTotals = useMemo(() => {
     let totals: Record<CategoryTypes, number> = {
@@ -104,7 +108,7 @@ const ReportCategories: React.FC<IReportCategoriesProps> = ({ currency = 'UAH', 
     [countedTotals, currency]
   );
 
-  const entryLists = useMemo((): Partial<Record<CategoryTypes, any>> => {
+  const entryLists = useMemo((): Partial<Record<CategoryTypes, ReportListItemProps<CategoryTypes>[]>> => {
     let data: Partial<Record<CategoryTypes, ReportListItemProps<CategoryTypes>[]>> = {};
 
     if (!entryList) return data;

@@ -7,9 +7,8 @@ import { IReportDataByContractor } from 'redux/reports/reports.types';
 export interface IReportContractorsProps extends IReportBaseProps<IReportDataByContractor> {}
 
 const ReportContractors: React.FC<IReportContractorsProps> = ({ tableConfigs, ...props }) => {
-  const tableConfig = useMemo((): ITableListProps<IReportDataByContractor> => ({ ...tableConfigs }), []);
+  const tableConfig = useMemo((): ITableListProps<IReportDataByContractor> => ({ ...tableConfigs }), [tableConfigs]);
 
-  console.log(tableConfigs);
   return (
     <ModalForm {...props}>
       <TableList {...tableConfig} />
