@@ -5,9 +5,10 @@ import { iconId } from 'data';
 import styled, { css } from 'styled-components';
 import { useTable } from './TableList';
 import TActions from './TActions';
+import TableFilter from './TableFilter';
 
 const QuickActions: React.FC<any> = () => {
-  const { actionsCreator, footer } = useTable();
+  const { actionsCreator, isFilter, footer } = useTable();
   const [isShown, setIsShown] = useState(false);
 
   function onMenuBtnClick() {
@@ -31,7 +32,12 @@ const QuickActions: React.FC<any> = () => {
 
   return (
     <Menu isShown={isShown} footer={footer} data-burger>
-      <List isShown={isShown}>{actionsCreator && <TActions renderSeparator={<Separator />} />}</List>
+      <List isShown={isShown}>
+        {isFilter && <TableFilter />}
+        {isFilter && actionsCreator && <Separator />}
+
+        {actionsCreator && <TActions renderSeparator={<Separator />} />}
+      </List>
 
       <ToggleButton
         isShown={isShown}
@@ -176,19 +182,12 @@ const Separator = styled.div`
   position: relative;
 
   width: 100%;
+  min-height: 2px;
 
-  &::before {
-    display: block;
-    content: '';
-    /* position: absolute; */
-    width: 100%;
-    height: 1px;
-
-    border-top: 2px solid ${({ theme }) => theme.tableHeaderStroke};
-  }
-
-  @media screen and (max-height: 480px) {
+  border-top: 2px solid ${({ theme }) => theme.tableHeaderStroke};
+  @media screen and(max-height: 480px) {
     height: 100%;
+
     &::before {
       height: 100%;
       width: 1px;
