@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import ModalForm from 'components/ModalForm';
 import DirList from '../DirList/DirList';
 import { founder } from 'utils';
@@ -15,9 +15,7 @@ export interface DirCategoriesProps extends DirBaseProps {
 
 const DirCategories: React.FC<DirCategoriesProps> = props => {
   const modal = useModalProvider();
-  const { categories, create, deleteById, editById, getById } =
-    useCategoriesService();
-  const [filteredData, setFilteredData] = useState<ICategory[]>(categories);
+  const { categories, create, deleteById, editById, getById } = useCategoriesService();
   const [dirType, setDirType] = useState<CategoryTypes>('INCOME');
 
   function onEdit(_id?: string) {
@@ -25,9 +23,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
     modal.handleOpenModal({
       ModalChildren: FormCreateCategory,
       modalChildrenProps: {
-        title: `Редагувати ${
-          category?.owner ? 'під-категорію' : 'категорію'
-        } "${category?.label || category?.name}"`,
+        title: `Редагувати ${category?.owner ? 'під-категорію' : 'категорію'} "${category?.label || category?.name}"`,
         category: categories.find(el => el._id === _id),
         edit: true,
         type: dirType,
@@ -66,20 +62,27 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
 
   function handleFilterData({ value }: CategoryFilterOpt) {
     value && setDirType(value);
-    value &&
-      setFilteredData(
-        founder({ searchParam: 'type', searchQuery: value, data: categories })
-      );
   }
+
+  const data = useMemo(
+    () =>
+      founder<ICategory>({
+        searchParam: 'type',
+        searchQuery: dirType,
+        data: categories,
+      }) || [],
+    [categories, dirType]
+  );
+  const entryList = useMemo(() => data.filter(el => !el?.owner), [data]);
 
   return (
     <StModalForm {...props} onOptSelect={handleFilterData}>
       <DirList
-        list={filteredData}
+        entryList={entryList}
+        list={data}
         onDelete={deleteById}
         onEdit={onEdit}
         onCreateChild={onCreateChild}
-        entryList={filteredData.filter(el => !el?.owner)}
         createParentTitle="Створити категорію"
         onCreateParent={onCreateParent}
         currentLevel={0}

@@ -118,6 +118,13 @@ const darkTheme = {
     backgroundColorPressed: 'rgba(219, 219, 219, 0.25)',
     innerBackgroundColor: '#464649',
   },
+  // 252527
+  table: {
+    qActionsBackground: '#3A3A3C',
+    qActionsButtonBackground: '#252527',
+    qActionsButtonBackgroundActive: '#464649',
+    headerBackground: '#3A3A3C',
+  },
 
   fontColorSidebar: '#EFEFEF',
   fillColorSidebar: '#EFEFEF',
@@ -133,7 +140,7 @@ const darkTheme = {
 };
 type ITheme = typeof darkTheme;
 
-const lightTheme: Partial<ITheme> = {
+const lightTheme: Partial<ITheme & Record<string, any>> = {
   backgroundColorMain: '#5C5C5D',
   backgroundColorSecondary: '#DADADA',
   backgroundColorLight: '#FAFAFA',
@@ -189,6 +196,17 @@ const lightTheme: Partial<ITheme> = {
     backgroundColorHover: 'rgba(39, 39, 39, 0.15)',
     backgroundColorPressed: 'rgba(39, 39, 39, 0.25)',
     innerBackgroundColor: '#EFEFEF',
+  },
+
+  table: {
+    qActionsBackground: '#F0F0F0',
+    qActionsButtonBackground: '#E2E2E2',
+    qActionsButtonBackgroundActive: '',
+    headerBackground: '#E9E9E9',
+  },
+
+  sideBar: {
+    background: '#F0F0F0',
   },
 
   defaultBtnBckgrndColor: {

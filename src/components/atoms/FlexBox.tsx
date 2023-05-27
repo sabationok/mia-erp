@@ -80,8 +80,8 @@ const XlStyles = css<FlexBoxProps>`
 const FlexBox = styled.div<FlexBoxProps>`
   display: flex;
   flex-direction: ${({ fxDirection = 'column' }) => fxDirection};
-  align-items: ${({ alignItems = 'center' }) => alignItems};
-  justify-content: ${({ justifyContent = 'center' }) => justifyContent};
+  align-items: ${({ alignItems = '' }) => alignItems};
+  justify-content: ${({ justifyContent = '' }) => justifyContent};
   flex: ${({ flex = '' }) => flex};
   flex-wrap: ${({ flexWrap = '' }) => flexWrap};
   border-bottom: ${({ borderBottom = 'none' }) => borderBottom};

@@ -164,18 +164,6 @@ const List = styled.div<{ isShown: boolean }>`
           `};
   }
 `;
-const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-
-  width: 100%;
-
-  @media screen and (max-height: 480px) {
-    flex-direction: row;
-  }
-`;
 
 const Separator = styled.div`
   align-self: stretch;

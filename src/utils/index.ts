@@ -5,9 +5,11 @@ import { createTransactionForReq, formatPhoneNumber, getValueByPath } from './da
 import createTreeData from './createTreeData';
 import * as numbers from './numbers';
 import { countPercentage, numberWithSpaces } from './numbers';
+import founderByDataPath from './founderByDataPath';
 
 export {
   founder,
+  founderByDataPath,
   numberWithSpaces,
   axiosErrorCheck,
   formatPhoneNumber,

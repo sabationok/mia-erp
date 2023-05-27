@@ -12,18 +12,19 @@ export interface TableActionsProps {
 
 const TActions: React.FC<TableActionsProps> = ({ renderSeparator = <></> }) => {
   const tableContext = useTable();
+  const Separator = () => <>{renderSeparator}</>;
 
   const renderActions = useMemo(() => {
     if (!tableContext.actionsCreator) return null;
     const actions = tableContext.actionsCreator(tableContext);
     if (!actions || actions.length === 0) return null;
 
-    actions.map(el => console.log(el.icon));
     return actions.map(({ separator, description, iconSize, onClick, disabledCheck, type, icon, ...props }, idx) =>
       separator ? (
-        renderSeparator
+        <Separator key={icon || idx} />
       ) : (
         <ButtonIcon
+          key={icon || idx}
           variant={type || 'onlyIcon'}
           size={'26px'}
           iconSize={iconSize}

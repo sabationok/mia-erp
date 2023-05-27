@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import ModalForm from 'components/ModalForm';
 import DirList from '../DirList/DirList';
 import { founder } from 'utils';
@@ -16,7 +16,7 @@ export interface DirCountsProps extends DirBaseProps {
 const DirCounts: React.FC<DirCountsProps> = props => {
   const modal = useModalProvider();
   const { counts, create, deleteById, getById } = useCountsService();
-  const [filteredData, setFilteredData] = useState<ICount[]>([]);
+  // const [filteredData, setFilteredData] = useState<ICount[]>([]);
   const [dirType, setDirType] = useState<CountType>('ACTIVE');
 
   function onEdit(_id: string) {
@@ -24,9 +24,7 @@ const DirCounts: React.FC<DirCountsProps> = props => {
     modal.handleOpenModal<FormCreateCountProps>({
       ModalChildren: FormCreateCount,
       modalChildrenProps: {
-        title: `Редагування ${count?.owner ? 'суб-рахунку' : 'рахунку'}: "${
-          count?.label || count?.name
-        }"`,
+        title: `Редагування ${count?.owner ? 'суб-рахунку' : 'рахунку'}: "${count?.label || count?.name}"`,
         _id,
         type: dirType,
         onSubmit: data => {
@@ -66,20 +64,28 @@ const DirCounts: React.FC<DirCountsProps> = props => {
 
   function handleFilterData({ value }: CountFilterOpt) {
     value && setDirType(value);
-    value &&
-      setFilteredData(
-        founder({ searchParam: 'type', searchQuery: value, data: counts })
-      );
+    // value && setFilteredData(founder({ searchParam: 'type', searchQuery: value, data: counts }));
   }
+
+  const data = useMemo(
+    () =>
+      founder<ICount>({
+        searchParam: 'type',
+        searchQuery: dirType,
+        data: counts,
+      }),
+    [counts, dirType]
+  );
+  const entryList = useMemo(() => data.filter(el => !el?.owner), [data]);
 
   return (
     <StModalForm {...props} onOptSelect={handleFilterData}>
       <DirList
+        list={data}
+        entryList={entryList}
         onDelete={deleteById}
         onEdit={onEdit}
         onCreateChild={onCreateChild}
-        list={filteredData}
-        entryList={filteredData.filter(el => !el?.owner)}
         createParentTitle="Створити рахунок"
         onCreateParent={onCreateParent}
         currentLevel={0}

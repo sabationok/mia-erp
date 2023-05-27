@@ -1,4 +1,4 @@
-function getValueByPath<T = any>({ data, path }: { data?: object; path?: string }): T | null {
+function getValueByPath<T = any, Data = any>({ data, path }: { data?: object | Data; path?: string }): T | null {
   if (!data || !path) {
     return null;
   }
@@ -12,7 +12,7 @@ function getValueByPath<T = any>({ data, path }: { data?: object; path?: string 
     if (['string', 'number'].includes(typeof data[key as keyof typeof data])) return data[key as keyof typeof data];
   }
 
-  return getValueByPath({
+  return getValueByPath<T>({
     data: data[key as keyof typeof data],
     path: rest.join('.'),
   });

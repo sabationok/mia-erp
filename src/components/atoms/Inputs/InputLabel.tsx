@@ -1,12 +1,12 @@
 import React, { CSSProperties, forwardRef } from 'react';
 import styled, { css } from 'styled-components';
-import { FieldError } from 'react-hook-form';
+import { FieldError, FieldErrorsImpl, Merge } from 'react-hook-form';
 
 export interface InputLabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   label?: string;
   direction?: 'horizontal' | 'vertical';
   uppercase?: boolean;
-  error?: FieldError;
+  error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
   success?: string;
   loading?: boolean;
   helperText?: string;
@@ -14,28 +14,29 @@ export interface InputLabelProps extends React.LabelHTMLAttributes<HTMLLabelElem
   disabled?: boolean;
 }
 
-const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = ({
-                                                                            label,
-                                                                            className,
-                                                                            disabled,
-                                                                            direction,
-                                                                            uppercase,
-                                                                            helperText,
-                                                                            error,
-                                                                            success,
-                                                                            children,
-                                                                            loading,
-                                                                            align,
-                                                                            htmlFor,
-                                                                            ...props
-                                                                          },
-                                                                          ref: React.ForwardedRef<any>,
+const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = (
+  {
+    label,
+    className,
+    disabled,
+    direction,
+    uppercase,
+    helperText,
+    error,
+    success,
+    children,
+    loading,
+    align,
+    htmlFor,
+    ...props
+  },
+  ref: React.ForwardedRef<any>
 ) => {
   return (
     <Label className={className} disabled={disabled} {...props} htmlFor={htmlFor}>
       <Wrapper isLabel={!!label} direction={direction}>
         {label && (
-          <LabelText uppercase={uppercase} align={align} direction={direction} className='label'>
+          <LabelText uppercase={uppercase} align={align} direction={direction} className="label">
             {label}
           </LabelText>
         )}
@@ -44,7 +45,7 @@ const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = ({
 
       {helperText && (
         <HelperText error={!!error} success={!!success} loading={loading}>
-          {error?.message || success || (loading && 'Loading...') || helperText}
+          {(typeof error?.message === 'string' && error?.message) || success || (loading && 'Loading...') || helperText}
         </HelperText>
       )}
     </Label>
@@ -94,11 +95,11 @@ const Wrapper = styled.div<{
   display: flex;
 
   ${({ direction }) =>
-          direction === 'vertical' &&
-          css`
-            flex-direction: column;
-            align-items: flex-start;
-          `};
+    direction === 'vertical' &&
+    css`
+      flex-direction: column;
+      align-items: flex-start;
+    `};
 
   width: 100%;
 `;

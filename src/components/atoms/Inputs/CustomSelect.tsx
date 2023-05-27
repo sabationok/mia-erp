@@ -1,20 +1,12 @@
 import InputLabel, { InputLabelProps } from './InputLabel';
-import { forwardRef, InputHTMLAttributes, useCallback, useMemo, useRef, useState } from 'react';
+import { forwardRef, InputHTMLAttributes, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { isUndefined, omit, pick } from 'lodash';
 import styled from 'styled-components';
 import FlexBox, { FieldBox } from '../FlexBox';
 import InputText from './InputText';
 import SvgIcon from '../SvgIcon/SvgIcon';
 import { RefCallBack } from 'react-hook-form';
-
-const options: CustomSelectOption[] = [
-  { value: 'test', _id: '113535131532', label: 'Тест' },
-  {
-    value: 'test',
-    _id: 'sdfbsgbdfgdbfgbd',
-    label: 'Тест 2',
-  },
-];
+import { SelectItem } from '../../TableList/tableTypes.types';
 
 export interface CustomSelectBaseProps<OptType = any> {
   InputComponent?: React.FC<InputHTMLAttributes<HTMLInputElement>>;
@@ -24,31 +16,34 @@ export interface CustomSelectBaseProps<OptType = any> {
   handleOpenState?: (prevState: boolean) => boolean;
   open?: boolean;
   ref?: RefCallBack;
+  selectValue?: OptType;
 }
 
 export type CustomSelectEventHandler<OptType = any> = <Option extends OptType = any>(
-  value: keyof Option,
-  option: Option
+  option?: Option,
+  value?: keyof Option
 ) => void;
 
-interface CustomSelectOptionBaseProps {
-  value?: string | number;
-  label: string;
+interface CustomSelectOptionBaseProps extends SelectItem {
+  // _id?: string;
+  // value?: string | number;
+  // label: string;
+  // name?: string;
   onClick?: CustomSelectEventHandler;
 }
 
 export type CustomSelectOption<OptType = Record<string, any>> = CustomSelectOptionBaseProps & OptType;
 
-export type CustomSelectProps = CustomSelectBaseProps &
+export type CustomSelectProps<OptType = any> = CustomSelectBaseProps<OptType> &
   Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'> &
   Omit<InputLabelProps, 'onSelect'>;
 
 const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
-  { InputComponent, valueKey, options = [], name, onSelect, open = false, ...props },
+  { InputComponent, selectValue, valueKey, options = [], name, onSelect, open = false, ...props },
   ref
 ) => {
   const [isOpen, setIsOpen] = useState<boolean>(open);
-  const [currentOption, setCurrentOption] = useState<any>();
+  const [currentOption, setCurrentOption] = useState<SelectItem | undefined>(selectValue);
   const labelRef = useRef<HTMLLabelElement>(null);
 
   const onHandleOpenState = useCallback((state?: boolean) => {
@@ -65,7 +60,10 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
       return () => {
         setCurrentOption(option);
         if (onSelect && valueKey && valueKey && option[valueKey]) {
-          onSelect(option[valueKey], option);
+          onSelect(option, option[valueKey]);
+        }
+        if (onSelect) {
+          onSelect(option, option?.value);
         }
         onHandleOpenState();
       };
@@ -84,11 +82,24 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
           fxDirection={'row'}
           padding={'5px 8px'}
         >
-          {opt.label}
+          {opt.label || opt.name}
         </Option>
       )),
     [onSelectHandler, options]
   );
+
+  useEffect(() => {
+    if (options.length === 0) {
+      setCurrentOption(undefined);
+    }
+  }, [onSelect, options.length]);
+
+  useEffect(() => {
+    if (!selectValue) {
+      onSelect && onSelect(null);
+    }
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <FlexBox fillWidth gap={4} style={{ position: 'relative' }}>
@@ -105,6 +116,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
           'uppercase',
           'align',
           'direction',
+          'disabled',
         ])}
         onClick={() => onHandleOpenState()}
       >
@@ -113,9 +125,13 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
         ) : (
           <InputText
             disabled
-            value={currentOption?.label || ''}
+            value={currentOption?.label || currentOption?.name || ''}
             ref={ref}
-            {...omit({ ...pick(props, ['onChange', 'onBlur', 'name', 'id', 'ref']) }, ['error', 'success', 'loading'])}
+            {...omit({ ...pick(props, ['onChange', 'onBlur', 'name', 'id', 'ref', 'placeholder']) }, [
+              'error',
+              'success',
+              'loading',
+            ])}
           />
         )}
 

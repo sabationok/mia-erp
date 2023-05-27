@@ -6,9 +6,9 @@ import styled from 'styled-components';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
+import FlexBox from '../../atoms/FlexBox';
 
-export interface FormCreateCustomRoleProps
-  extends Omit<ModalFormProps, 'onSubmit'> {
+export interface FormCreateCustomRoleProps extends Omit<ModalFormProps, 'onSubmit'> {
   _id?: string;
   edit?: boolean;
   customRole?: ICustomRole;
@@ -24,17 +24,13 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({
   _id,
   ...props
 }) => {
-  const [formData, setFormData] = useState<Partial<ICustomRole>>(
-    customRole ? customRole : {}
-  );
+  const [formData, setFormData] = useState<Partial<ICustomRole>>(customRole ? customRole : {});
 
   function onSubmitWrapper() {
     onSubmit && _id && onSubmit(_id, formData);
   }
 
-  function onChange(
-    ev: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
+  function onChange(ev: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { value, name } = ev.target;
     getCustomeRoleByName && getCustomeRoleByName(value);
 
@@ -43,7 +39,7 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({
 
   return (
     <StModalForm {...props} onSubmit={onSubmitWrapper}>
-      <Box>
+      <FlexBox alignItems={'unset'}>
         <Inputs>
           <InputLabel label="Назва" direction={'vertical'}>
             <InputText
@@ -73,7 +69,7 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({
             ))}
           </List>
         </ActionsList>
-      </Box>
+      </FlexBox>
     </StModalForm>
   );
 };

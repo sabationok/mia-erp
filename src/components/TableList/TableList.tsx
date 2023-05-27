@@ -28,7 +28,8 @@ const TableList: React.FC<ITableListProps> = ({
   TableActionsComp,
   tableTitles,
   tableSearchParams,
-  tableActions,
+
+  actionsCreator,
   footer = false,
   onRowClick,
   onCheckboxChange,
@@ -67,7 +68,7 @@ const TableList: React.FC<ITableListProps> = ({
   const CTX: ITableListContext<IBase> = {
     RowActionsComp,
     TableActionsComp,
-    tableActions,
+    actionsCreator,
     footer,
     tableSearchParams,
     tableTitles,
@@ -97,7 +98,7 @@ const TableList: React.FC<ITableListProps> = ({
 
           {tableData?.length !== 0 ? <TableBody ref={rowRef} /> : <NoData>Дані відсутні</NoData>}
 
-          <MaxToTabletXl>{tableActions ? <QuickActions {...tableActions} footer={footer} /> : null}</MaxToTabletXl>
+          <MaxToTabletXl>{actionsCreator ? <QuickActions /> : null}</MaxToTabletXl>
         </TableScroll>
 
         {footer && <TableFooter />}

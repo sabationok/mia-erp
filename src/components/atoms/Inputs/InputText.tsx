@@ -1,6 +1,6 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-const InputText = styled.input<{ error?: boolean; success?: boolean }>`
+export const InputStyles = css<{ error?: boolean; success?: boolean }>`
   padding: 5px 8px;
 
   width: 100%;
@@ -32,11 +32,13 @@ const InputText = styled.input<{ error?: boolean; success?: boolean }>`
   }
 
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
+`;
 
-  // &:hover {
-  //   border-color: ${({ theme }) => theme.accentColor.base};
-  //   box-shadow: 0 0 5px ${({ theme }) => theme.accentColor.light};
-  // }
+const InputText = styled.input<{ error?: boolean; success?: boolean }>`
+  ${InputStyles}// &:hover {
+                  //   border-color: ${({ theme }) => theme.accentColor.base};
+                  //   box-shadow: 0 0 5px ${({ theme }) => theme.accentColor.light};
+          // }
 `;
 
 export default InputText;

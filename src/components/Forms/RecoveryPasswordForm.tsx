@@ -8,9 +8,7 @@ import LinkIcon from 'components/atoms/LinkIcon/LinkIcon';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import useAuthService, {
-  IRecoveryPasswordReqData,
-} from '../../redux/auth/useAppAuth.hook';
+import useAuthService, { IRecoveryPasswordReqData } from '../../redux/auth/useAppAuth.hook';
 import InputText from '../atoms/Inputs/InputText';
 
 export interface RecoveryPasswordFormProps {
@@ -26,31 +24,23 @@ const validationNewPasswords = yup.object().shape({
   password: yup.string().required(),
   approvePassword: yup.string().required(),
 });
-const recoveryPasswordInitialFormData: Pick<
-  IRecoveryPasswordReqData,
-  'password' | 'approvePassword'
-> = {
+const recoveryPasswordInitialFormData: Pick<IRecoveryPasswordReqData, 'password' | 'approvePassword'> = {
   password: '',
   approvePassword: '',
 };
-const sendRecoveryPasswordEmailFromData: Pick<
-  IRecoveryPasswordReqData,
-  'email'
-> = {
+const sendRecoveryPasswordEmailFromData: Pick<IRecoveryPasswordReqData, 'email'> = {
   email: '',
 };
 
-const RecoveryPasswordForm: React.FC<
-  RecoveryPasswordFormProps & React.HTMLAttributes<HTMLFormElement>
-> = ({ title, recovery, ...props }) => {
+const RecoveryPasswordForm: React.FC<RecoveryPasswordFormProps & React.HTMLAttributes<HTMLFormElement>> = ({
+  title,
+  recovery,
+  ...props
+}) => {
   const authService = useAuthService();
 
-  const { register, control, watch, handleSubmit, formState } = useForm<
-    Partial<IRecoveryPasswordReqData>
-  >({
-    defaultValues: recovery
-      ? recoveryPasswordInitialFormData
-      : sendRecoveryPasswordEmailFromData,
+  const { register, watch, handleSubmit, formState } = useForm<Partial<IRecoveryPasswordReqData>>({
+    defaultValues: recovery ? recoveryPasswordInitialFormData : sendRecoveryPasswordEmailFromData,
     resolver: yupResolver(recovery ? validationNewPasswords : validationEmail),
     reValidateMode: 'onSubmit',
   });
@@ -73,53 +63,27 @@ const RecoveryPasswordForm: React.FC<
         {recovery ? (
           <>
             <AuthInputLabel icon="lock_O" error={formState?.errors.password}>
-              <InputText
-                placeholder="Новий пароль"
-                type="password"
-                {...register('password')}
-              />
+              <InputText placeholder="Новий пароль" type="password" {...register('password')} />
             </AuthInputLabel>
-            <AuthInputLabel
-              icon="lock_O"
-              error={formState?.errors.approvePassword}
-            >
-              <InputText
-                placeholder="Повторіть пароль"
-                type="password"
-                {...register('approvePassword')}
-              />
+            <AuthInputLabel icon="lock_O" error={formState?.errors.approvePassword}>
+              <InputText placeholder="Повторіть пароль" type="password" {...register('approvePassword')} />
             </AuthInputLabel>
           </>
         ) : (
           <>
-            <AuthInputLabel
-              icon="email"
-              error={formState?.errors?.email || undefined}
-            >
-              <InputText
-                placeholder="Електронна пошта"
-                {...register('email')}
-              />
+            <AuthInputLabel icon="email" error={formState?.errors?.email || undefined}>
+              <InputText placeholder="Електронна пошта" {...register('email')} />
             </AuthInputLabel>
           </>
         )}
       </Inputs>
 
       <Buttons>
-        <StButtonIcon
-          texttransform={'uppercase'}
-          htmlType={'submit'}
-          variant={'filledSmall'}
-          type={'primary'}
-        >
+        <StButtonIcon texttransform={'uppercase'} htmlType={'submit'} variant={'filledSmall'} type={'primary'}>
           {recovery ? 'Прийняти' : 'Відновити'}
         </StButtonIcon>
 
-        <StLinkIcon
-          texttransform="uppercase"
-          variant="outlinedSmall"
-          to={'/auth/login'}
-        >
+        <StLinkIcon texttransform="uppercase" variant="outlinedSmall" to={'/auth/login'}>
           {'Увійти'}
         </StLinkIcon>
       </Buttons>

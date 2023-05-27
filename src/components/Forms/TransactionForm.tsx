@@ -3,18 +3,20 @@ import * as React from 'react';
 import { useMemo } from 'react';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import styled from 'styled-components';
-import { ITransactionForReq, ITransactionReqData } from 'redux/transactions/transactions.types';
+import { ITransaction, ITransactionForReq } from 'redux/transactions/transactions.types';
 import { CategoryTypes } from 'redux/categories/categories.types';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { IBase } from '../../redux/global.types';
 import * as _ from 'lodash';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import { FilterOpt } from '../ModalForm/ModalFilter';
-import CustomSelect from '../atoms/Inputs/CustomSelect';
+import CustomSelect, { CustomSelectProps } from '../atoms/Inputs/CustomSelect';
+import { createTransactionForReq, founderByDataPath } from '../../utils';
+import { useAppSelector } from '../../redux/store.store';
+import { TransactionsService } from '../../redux/transactions/useTransactionsService.hook';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
 
@@ -23,12 +25,30 @@ export interface TransactionFormProps extends Omit<ModalFormProps, 'onSubmit'> {
   copy?: boolean;
   id?: string;
   onSubmit?: SubmitHandler<ITransactionForReq>;
-  onSubmitEdit?: (data: ITransactionReqData) => void;
+  onSubmitEdit?: TransactionsService['editById'];
   filterOptions?: TransactionsFilterOpt[];
-  defaultState?: Partial<ITransactionForReq> & Partial<IBase>;
+  defaultState?: Partial<ITransaction>;
 }
 
-const validation = yup.object().shape({});
+const validationItem = yup
+  .object()
+  .shape({
+    _id: yup.string(),
+    label: yup.string(),
+    owner: yup
+      .object()
+      .shape({
+        _id: yup.string(),
+        label: yup.string(),
+      })
+      .optional()
+      .nullable(),
+  })
+  .nullable();
+const validation = yup.object().shape({
+  countIn: validationItem,
+  subCountIn: validationItem,
+});
 
 const TransactionForm: React.FC<TransactionFormProps> = ({
   edit,
@@ -38,45 +58,92 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   defaultState,
   ...props
 }) => {
+  const { counts, categories } = useAppSelector();
   const {
-    // formState: { errors },
+    formState: { errors },
     register,
     setValue,
     watch,
-  } = useForm<ITransactionForReq>({
-    defaultValues: _.omit(defaultState, '_id', 'createdAt', 'updatedAt') || {},
+    unregister,
+  } = useForm<ITransaction>({
+    defaultValues: defaultState,
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
   const formValues = watch();
 
   const renderInputsCountIn = useMemo(() => {
+    const parentOptions = counts.counts.filter(el => !el.owner);
+    const childOptions = founderByDataPath({
+      path: 'owner._id',
+      searchQuery: formValues.countIn?._id,
+      data: counts.counts,
+    });
     return formValues.type && ['INCOME', 'TRANSFER'].includes(formValues.type) ? (
       <>
-        <InputLabel label="Рахунок IN" direction={'vertical'}>
-          <InputText placeholder="Рахунок IN" {...register('countIn')} />
-        </InputLabel>
-        <CustomSelect label="Рахунок IN" placeholder="Рахунок IN" />
-        <InputLabel label="Суб-Рахунок IN" direction={'vertical'}>
-          <InputText placeholder="Суб-Рахунок IN" {...register('subCountIn')} />
-        </InputLabel>
+        <CustomSelect
+          label="Рахунок IN"
+          placeholder="Рахунок IN"
+          {...registerSelect('countIn', { options: parentOptions })}
+        />
+        <CustomSelect
+          label="Суб-рахунок IN"
+          placeholder="Суб-рахунок IN"
+          {...registerSelect('subCountIn', { options: parentOptions })}
+          disabled={childOptions.length === 0}
+        />
       </>
     ) : null;
-  }, [formValues.type, register]);
+  }, [counts.counts, formValues.countIn?._id, formValues.type, registerSelect]);
 
   const renderInputsCountOut = useMemo(() => {
+    const parentOptions = counts.counts.filter(el => !el.owner);
+    const childOptions = founderByDataPath({
+      path: 'owner._id',
+      searchQuery: formValues.countOut?._id,
+      data: counts.counts,
+    });
     return formValues.type && ['EXPENSE', 'TRANSFER'].includes(formValues.type) ? (
       <>
-        <InputLabel label="Рахунок OUT" direction={'vertical'}>
-          <InputText placeholder="Рахунок OUT" {...register('countOut')} />
-        </InputLabel>
-
-        <InputLabel label="Суб-Рахунок OUT" direction={'vertical'}>
-          <InputText placeholder="Суб-Рахунок OUT" {...register('subCountOut')} />
-        </InputLabel>
+        <CustomSelect
+          label="Рахунок OUT"
+          placeholder="Рахунок OUT"
+          {...registerSelect('countOut', { options: parentOptions, error: errors.countOut })}
+        />
+        <CustomSelect
+          label="Суб-рахунок OUT"
+          placeholder="Суб-рахунок OUT"
+          {...registerSelect('subCountOut', { options: childOptions, error: errors.subCountOut })}
+          disabled={childOptions.length === 0}
+        />
       </>
     ) : null;
-  }, [formValues.type, register]);
+  }, [counts.counts, errors, formValues.countOut?._id, formValues.type, registerSelect]);
+
+  const renderInputsCategories = useMemo(() => {
+    const parentOptions = categories.categories.filter(el => !el.owner);
+    const childOptions = founderByDataPath({
+      path: 'owner._id',
+      searchQuery: formValues.category?._id,
+      data: categories.categories,
+    });
+
+    return (
+      <>
+        <CustomSelect
+          label="Категорія"
+          placeholder="Категорія"
+          {...registerSelect('category', { options: parentOptions })}
+        />
+        <CustomSelect
+          label="Підкатегорія"
+          placeholder="Підкатегорія"
+          {...registerSelect('subCategory', { options: childOptions })}
+          disabled={childOptions.length === 0}
+        />
+      </>
+    );
+  }, [categories.categories, formValues.category?._id, registerSelect]);
 
   function onSubmitWrapper() {
     let submitData = formValues;
@@ -84,19 +151,39 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     if (formValues.type === 'INCOME') submitData = _.omit(formValues, 'countOut', 'subCountOut');
     if (formValues.type === 'EXPENSE') submitData = _.omit(formValues, 'countIn', 'subCountIn');
 
-    console.log(submitData);
+    console.log('formValues', formValues);
+    console.log('onSubmitWrapper', submitData);
+    console.log('createTransactionForReq', createTransactionForReq(submitData));
 
-    onSubmit && onSubmit(submitData);
-
+    onSubmit && onSubmit(createTransactionForReq(submitData));
+    //
     onSubmitEdit &&
       defaultState?._id &&
       onSubmitEdit({
         _id: defaultState?._id,
-        data: submitData,
+        data: createTransactionForReq(submitData),
       });
   }
 
-  console.log(props);
+  function registerSelect<K extends keyof ITransaction = keyof ITransaction>(
+    name: K,
+    props?: Omit<CustomSelectProps<ITransaction[K]>, 'name'>
+  ): CustomSelectProps<ITransaction[K]> {
+    return {
+      onSelect: (option, value) => {
+        if (!option) {
+          console.log('option null', option);
+          setValue<K>(name, option as any);
+          return;
+        }
+
+        setValue<K>(name, option as any);
+      },
+      name,
+      selectValue: props?.options?.length !== 0 ? formValues[name] : undefined,
+      ...props,
+    };
+  }
 
   return (
     <ModalForm onSubmit={onSubmitWrapper} onOptSelect={({ value }) => value && setValue('type', value)} {...props}>
@@ -116,17 +203,10 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
 
         {renderInputsCountIn}
         {renderInputsCountOut}
+        {renderInputsCategories}
 
         {formValues.type === 'TRANSFER' && (
           <>
-            <InputLabel label="Категорія" direction={'vertical'}>
-              <InputText placeholder="Категорія" {...register('category')} />
-            </InputLabel>
-
-            <InputLabel label="Під-категорія" direction={'vertical'}>
-              <InputText placeholder="Під-категорія" {...register('subCategory')} />
-            </InputLabel>
-
             <InputLabel label="Контрагент" direction={'vertical'}>
               <InputText placeholder="Контрагент" {...register('contractor')} />
             </InputLabel>

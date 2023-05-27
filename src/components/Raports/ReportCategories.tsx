@@ -11,63 +11,6 @@ import { CategoriesTypesMap, CategoryTypes } from '../../redux/categories/catego
 import styled from 'styled-components';
 import { founder, numberWithSpaces } from '../../utils';
 
-const arr: ReportListItemProps<CategoryTypes>[] = [
-  {
-    label: 'Категорія',
-    type: 'INCOME',
-
-    amount: 15206,
-    childrenList: [
-      {
-        label: 'Під-категорія 1',
-        type: 'INCOME',
-        amount: 2563,
-      },
-      {
-        label: 'Під-категорія 2',
-        type: 'INCOME',
-        amount: 2135,
-      },
-    ],
-  },
-  {
-    label: 'Категорія 3',
-    type: 'INCOME',
-
-    amount: 16562,
-    childrenList: [
-      {
-        label: 'Під-категорія 1',
-        type: 'INCOME',
-        amount: 2563,
-      },
-      {
-        label: 'Під-категорія 2',
-        type: 'INCOME',
-        amount: 2135,
-      },
-    ],
-  },
-  {
-    label: 'Категорія 2',
-    type: 'EXPENSE',
-
-    amount: 56345,
-    childrenList: [
-      {
-        label: 'Під-категорія 1',
-        type: 'EXPENSE',
-        amount: 3513,
-      },
-      {
-        label: 'Під-категорія 2',
-        type: 'EXPENSE',
-        amount: 2135,
-      },
-    ],
-  },
-];
-
 export interface IReportCategoriesProps<V = any, D = any> extends IReportBaseProps<unknown, V, D> {
   entryList?: ReportListItemProps<CategoryTypes>[];
   currency?: string;

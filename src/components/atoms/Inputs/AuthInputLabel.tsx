@@ -12,26 +12,26 @@ export interface AuthInputLabelProps {
   };
 }
 
-const AuthInputLabel: React.FC<
-  AuthInputLabelProps & Omit<InputLabelProps, 'success'>
-> = ({ icon, error, success, helperText, children, ...props }) => {
+const AuthInputLabel: React.FC<AuthInputLabelProps & Omit<InputLabelProps, 'success'>> = ({
+  icon,
+  error,
+  success,
+  helperText,
+  children,
+  ...props
+}) => {
   return (
     <InputBox>
       <Wrapper>
         <SvgIcon size="26px" iconId={icon} />
         {children}
 
-        <StIcon
-          size="26px"
-          iconId={!!error ? iconId.error : iconId.success}
-          isError={!!error}
-          isSuccess={!!success}
-        />
+        <StIcon size="26px" iconId={!!error ? iconId.error : iconId.success} isError={!!error} isSuccess={!!success} />
       </Wrapper>
 
       {(error?.message || success?.message || helperText) && (
         <HelperText isError={!!error} isSuccess={!!success}>
-          {error?.message || success?.message || helperText}
+          {(typeof error?.message === 'string' && error?.message) || success?.message || helperText}
         </HelperText>
       )}
     </InputBox>
@@ -62,15 +62,11 @@ const HelperText = styled.span<{ isError?: boolean; isSuccess?: boolean }>`
   overflow: hidden;
 
   color: ${({ isError, isSuccess, theme }) =>
-    (isError && theme.globals.colors.error) ||
-    (isSuccess && theme.globals.colors.success) ||
-    ''};
+    (isError && theme.globals.colors.error) || (isSuccess && theme.globals.colors.success) || ''};
   cursor: default;
 `;
 const StIcon = styled(SvgIcon)<{ isError?: boolean; isSuccess?: boolean }>`
   fill: ${({ isError, isSuccess, theme }) =>
-    (isError && theme.globals.colors.error) ||
-    (isSuccess && theme.globals.colors.success) ||
-    'transparent'};
+    (isError && theme.globals.colors.error) || (isSuccess && theme.globals.colors.success) || 'transparent'};
 `;
 export default AuthInputLabel;
