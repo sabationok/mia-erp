@@ -90,7 +90,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
       }
     ): CustomSelectProps<ITransaction[K]> => {
       return {
-        onSelect: (option, value) => {
+        onSelect: (option, _value) => {
           console.log({
             option,
             formValues,
@@ -257,15 +257,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     </ModalForm>
   );
 };
-const Inputs = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
 
-  overflow: auto;
-  padding: 12px;
-  max-height: 100%;
-`;
 const GridWrapper = styled.div<{ gridTemplateColumns?: string }>`
   display: grid;
   grid-template-columns: ${({ gridTemplateColumns }) => gridTemplateColumns || '1fr 120px'};
