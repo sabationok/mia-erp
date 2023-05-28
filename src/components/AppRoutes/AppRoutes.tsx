@@ -1,7 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import AppPages from 'components/AppPages';
-import { appPages } from 'data';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
 import FlexBox from '../atoms/FlexBox';
@@ -9,11 +8,14 @@ import FlexBox from '../atoms/FlexBox';
 const { PageNotFound } = AppPages;
 
 const AppRoutes: React.FC = () => {
-  const notFoundRouteProps = {
-    path: '*',
-    element: <PageNotFound />,
-    errorElement: <PageNotFound />,
-  };
+  const notFoundRouteProps = useMemo(
+    () => ({
+      path: '*',
+      element: <PageNotFound />,
+      errorElement: <PageNotFound />,
+    }),
+    []
+  );
 
   return (
     <Routes>
@@ -35,25 +37,15 @@ const AppRoutes: React.FC = () => {
         }
       />
 
-      <Route path="/">
-        <Route path="/" element={<PrivateRoute redirectTo="/auth" />}>
-          <Route
-            path="/"
-            element={<AppPages.AppGridPage path={`/${appPages.transactions.path}`} />}
-            errorElement={<PageNotFound />}
-          >
-            <Route index element={<Navigate to={`/${appPages.transactions.path}`} />} errorElement={<PageNotFound />} />
+      <Route path="/*" element={<PrivateRoute redirectTo="/auth" />}>
+        <Route path="/*" element={<AppPages.AppGridPage path={'/transactions'} />} errorElement={<PageNotFound />}>
+          <Route index element={<Navigate to={'/transactions'} />} errorElement={<PageNotFound />} />
 
-            <Route
-              path={`/${appPages.transactions.path}`}
-              element={<AppPages.PageTransactions />}
-              errorElement={<PageNotFound />}
-            />
-            <Route path={`/${appPages.home.path}`} element={<AppPages.PageHome />} errorElement={<PageNotFound />} />
-          </Route>
+          <Route path={'/transactions'} element={<AppPages.PageTransactions />} errorElement={<PageNotFound />} />
+          <Route path={'/home'} element={<AppPages.PageHome />} errorElement={<PageNotFound />} />
         </Route>
 
-        <Route path="auth/*" element={<PublicRoute redirectTo={`/${appPages.transactions.path}`} />}>
+        <Route path="auth/*" element={<PublicRoute redirectTo={'/transactions'} />}>
           <Route index element={<Navigate to="login" />} />
           <Route path="register" element={<AppPages.PageAuth register />} />
           <Route path="login" element={<AppPages.PageAuth login />} />
@@ -66,6 +58,7 @@ const AppRoutes: React.FC = () => {
         </Route>
         <Route {...notFoundRouteProps} />
       </Route>
+      <Route {...notFoundRouteProps} />
     </Routes>
   );
 };
