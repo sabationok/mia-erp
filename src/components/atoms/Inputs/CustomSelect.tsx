@@ -3,7 +3,6 @@ import { forwardRef, InputHTMLAttributes, memo, useCallback, useEffect, useMemo,
 import { omit, pick } from 'lodash';
 import styled from 'styled-components';
 import FlexBox, { FieldBox } from '../FlexBox';
-import InputText from './InputText';
 import SvgIcon from '../SvgIcon/SvgIcon';
 import { RefCallBack } from 'react-hook-form';
 import { SelectItem } from '../../TableList/tableTypes.types';
@@ -23,6 +22,7 @@ export interface CustomSelectBaseProps<OptType = any> {
   keepOpen?: boolean;
   inputProps?: Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'>;
   labelProps?: Omit<InputLabelProps, 'onSelect'>;
+  fieldMode?: boolean;
 }
 
 export type CustomSelectOnClickHandler<OptType = any> = <Option extends OptType = any>(
@@ -54,6 +54,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
     open = false,
     onSelect,
     onClear,
+    fieldMode,
     ...props
   },
   ref
@@ -131,7 +132,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
   }, [selectValue]);
 
   return (
-    <FlexBox fillWidth gap={4} style={{ position: 'relative' }} data-select={id || uid}>
+    <FlexBox fillWidth style={{ position: 'relative' }} data-select={id || uid}>
       <FlexBox fillWidth style={{ position: 'relative' }}>
         <InputLabel
           direction={'vertical'}
@@ -151,35 +152,32 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
           {...labelProps}
           onClick={handleOpenState}
         >
-          {InputComponent ? (
-            <InputComponent />
-          ) : (
-            <InputText
-              disabled
+          <LabelInner fieldMode={fieldMode} error={!!props.error} success={!!props.success}>
+            <StyledInput
+              disabled={!fieldMode}
               value={currentOption?.label || currentOption?.name || ''}
               ref={ref}
-              {...omit({ ...pick(props, ['onChange', 'onBlur', 'name', 'id', 'ref', 'placeholder']) }, [
-                'error',
-                'success',
-                'loading',
-              ])}
+              {...omit(
+                { ...pick(props, [`${fieldMode ? 'onChange' : ''}`, 'onBlur', 'name', 'id', 'ref', 'placeholder']) },
+                ['error', 'success', 'loading']
+              )}
               {...inputProps}
-              style={{ paddingRight: '60px' }}
             />
-          )}
-          <IconsBox fxDirection={'row'} gap={6}>
-            {onClear && currentOption && (
-              <ButtonIcon
-                variant={'onlyIconNoEffects'}
-                className={'clearIcon'}
-                icon={'close'}
-                size={'20px'}
-                onClick={handleOnClear}
-              />
-            )}
 
-            <SvgIcon className={'openIcon'} icon={!isOpen ? 'SmallArrowDown' : 'SmallArrowUp'} size={'20px'} />
-          </IconsBox>
+            <IconsBox fxDirection={'row'} gap={6} fillHeight alignItems={'center'} padding={'0 8px 0 0'}>
+              {onClear && currentOption && (
+                <ButtonIcon
+                  variant={'onlyIconNoEffects'}
+                  className={'clearIcon'}
+                  icon={'close'}
+                  size={'20px'}
+                  onClick={handleOnClear}
+                />
+              )}
+
+              <SvgIcon className={'openIcon'} icon={!isOpen ? 'SmallArrowDown' : 'SmallArrowUp'} size={'20px'} />
+            </IconsBox>
+          </LabelInner>
         </InputLabel>
       </FlexBox>
 
@@ -188,7 +186,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
           {options && options?.length > 0 ? (
             renderOptions
           ) : (
-            <NoOptions fillWidth fxDirection={'row'} justifyContent={'center'}>
+            <NoOptions fillWidth fxDirection={'row'} alignItems={'center'} justifyContent={'center'}>
               Опції відсутні
             </NoOptions>
           )}
@@ -210,30 +208,109 @@ const Options = styled(FlexBox)<{ isOpen?: boolean; inView?: boolean; intersecti
   width: 100%;
   overflow: hidden;
 
+  margin-top: 4px;
+
+  border-radius: 2px;
   background-color: ${({ theme }) => theme.fieldBackgroundColor};
-  box-shadow: ${({ theme }) => theme.globals.shadowMain};
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
 `;
 
 const Option = styled(FieldBox)<{ isActive?: boolean }>`
-  min-height: 26px;
+  min-height: 28px;
 
   font-weight: ${({ isActive }) => (isActive ? 700 : '')};
 `;
+
+const LabelInner = styled.fieldset<{
+  error?: boolean;
+  success?: boolean;
+  fieldMode?: boolean;
+}>`
+  flex: 1;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0;
+  margin: 0;
+
+  width: 100%;
+  min-height: 28px;
+
+  color: ${({ error, success, theme }) =>
+    (error && theme.globals.colors.error) || (success && theme.globals.colors.success) || 'inherit'};
+
+  background-color: ${({ theme, fieldMode = 'true' }) => (fieldMode ? theme.field.backgroundColor : 'transparent')};
+  border-radius: 2px;
+
+  border: 1px solid
+    ${({ error, success, fieldMode = 'true', theme }) =>
+      (error && theme.globals.colors.error) ||
+      (success && theme.globals.colors.success) ||
+      (fieldMode && theme.field.backgroundColor) ||
+      theme.input.borderColor};
+
+  &:hover {
+    border-color: ${({ theme }) => theme.accentColor.base};
+    //box-shadow: 0 0 3px ${({ theme }) => theme.accentColor.base};
+  }
+
+  &:focus,
+  &:focus-visible {
+    border-color: ${({ theme }) => theme.accentColor.base};
+    //box-shadow: 0 0 5px ${({ theme }) => theme.accentColor.base};
+    outline: 1px solid ${({ theme }) => theme.accentColor.base};
+  }
+
+  &::placeholder {
+    font-size: inherit;
+    color: ${({ theme }) => theme.globals.inputPlaceholderColor};
+  }
+
+  //transition: border-color ${({ theme }) => theme.globals.timingFunctionMain};
+
+  &[disabled] {
+    pointer-events: none;
+    opacity: 70%;
+  }
+
+  @media screen and (max-width: 480px) {
+    height: 34px;
+    font-size: 16px;
+  }
+`;
+
+const StyledInput = styled.input`
+  flex: 1;
+  height: 100%;
+
+  padding: 4px 8px;
+
+  background-color: transparent;
+  border-radius: 0;
+  border: 0;
+  outline: none;
+
+  &:hover,
+  &:focus,
+  &:focus-visible {
+    outline: none;
+  }
+`;
 const NoOptions = styled(FlexBox)`
+  min-height: 28px;
+
   font-weight: 700;
   line-height: 1.3;
 `;
-
 const IconsBox = styled(FlexBox)`
-  position: absolute;
-  top: 50%;
-  right: 4px;
-  z-index: 5;
+  //position: absolute;
+  //top: 50%;
+  //right: 4px;
+  //z-index: 5;
+  //transform: translateY(-50%);
 
   max-height: 100%;
-
-  transform: translateY(-50%);
 
   color: ${({ theme }) => theme.accentColor.base};
   fill: ${({ theme }) => theme.accentColor.base};

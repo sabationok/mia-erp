@@ -27,20 +27,14 @@ const AppRoutes: React.FC = () => {
 
   return (
     <Routes>
-      <Route index element={<Navigate to={'/auth'} />} />
+      {/*<Route index element={<Navigate to={'/auth'} />} />*/}
 
       {/*<Route path={'/'} element={<Navigate to={'/auth'} />} />*/}
 
       {isAuthorized && (
-        <Route path="/*">
-          <Route path="/*" element={<AppPages.AppGridPage path={'transactions'} />}>
-            <Route index element={<Navigate to={'/transactions'} />} />
-
-            <Route path={'transactions'} element={<AppPages.PageTransactions />} />
-            <Route path={'home'} element={<AppPages.PageHome />} />
-          </Route>
-
-          <Route {...notFoundRouteProps} />
+        <Route path={'/*'} element={<AppPages.AppGridPage path={'transactions'} />}>
+          <Route path={'transactions'} element={<AppPages.PageTransactions />} />
+          <Route path={'home'} element={<AppPages.PageHome />} />
         </Route>
       )}
 
