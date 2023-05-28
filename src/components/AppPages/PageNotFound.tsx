@@ -51,6 +51,7 @@ const PageNotFound: React.FC<IErrorPageProps> = ({ errName = 'notFoundPage' }) =
         <ButtonIcon variant="filledLarge">filledLarge</ButtonIcon>
 
         <MyTreeSelect treeData={[]} />
+        <MyTreeSelect treeData={[]} />
         <FlexBox fillWidth gap={8}>
           <CustomSelect label={'Рахунок'} placeholder={'Оберіть рахунок'} />
 

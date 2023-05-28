@@ -12,7 +12,6 @@ export default function founderByDataPath<D = any>({ path, searchQuery, data = [
     const query = searchQuery.toLowerCase();
     const value = getValueByPath<string | number, D>({ path, data: el });
     if (!value) return false;
-    console.log('founderByDataPathValue', value);
 
     if (typeof value === 'number') return !(searchQuery && !value.toString().toLowerCase().includes(query));
 

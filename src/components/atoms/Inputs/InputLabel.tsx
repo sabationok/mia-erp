@@ -2,7 +2,7 @@ import React, { CSSProperties, forwardRef } from 'react';
 import styled, { css } from 'styled-components';
 import { FieldError, FieldErrorsImpl, Merge } from 'react-hook-form';
 
-export interface InputLabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
+export interface InputLabelProps extends React.HTMLAttributes<HTMLDivElement> {
   label?: string;
   direction?: 'horizontal' | 'vertical';
   uppercase?: boolean;
@@ -27,16 +27,16 @@ const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = (
     children,
     loading,
     align,
-    htmlFor,
+    id,
     ...props
   },
   ref: React.ForwardedRef<any>
 ) => {
   return (
-    <Label className={className} disabled={disabled} {...props} htmlFor={htmlFor}>
+    <Label className={className} disabled={disabled} {...props}>
       <Wrapper isLabel={!!label} direction={direction}>
         {label && (
-          <LabelText uppercase={uppercase} align={align} direction={direction} className="label">
+          <LabelText htmlFor={id} uppercase={uppercase} align={align} direction={direction} className="label">
             {label}
           </LabelText>
         )}
@@ -52,7 +52,7 @@ const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = (
   );
 };
 
-const Label = styled.label<{
+const Label = styled.div<{
   disabled?: boolean;
   error?: boolean;
   success?: boolean;
@@ -71,7 +71,7 @@ const Label = styled.label<{
   opacity: ${({ disabled }) => (disabled ? 0.5 : '')};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'all')};
 `;
-const LabelText = styled.div<{
+const LabelText = styled.label<{
   uppercase?: boolean;
   align?: CSSProperties['alignItems'];
   direction?: 'horizontal' | 'vertical';

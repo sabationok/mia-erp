@@ -34,11 +34,24 @@ export const InputStyles = css<{ error?: boolean; success?: boolean }>`
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
 `;
 
+const InputField = styled.fieldset`
+  ${InputStyles}
+`;
+
 const InputText = styled.input<{ error?: boolean; success?: boolean }>`
-  ${InputStyles}// &:hover {
-                  //   border-color: ${({ theme }) => theme.accentColor.base};
-                  //   box-shadow: 0 0 5px ${({ theme }) => theme.accentColor.light};
-          // }
+  ${InputStyles};
+`;
+const StyledInput = styled.input`
+  ${InputStyles};
+
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+
+  &:hover {
+    border: 0;
+    box-shadow: none;
+  }
 `;
 
 export default InputText;

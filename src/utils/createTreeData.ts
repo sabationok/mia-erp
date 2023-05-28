@@ -1,23 +1,28 @@
 import * as _ from 'lodash';
 
-interface IBase<T = any> {
+export interface IBaseFields<T = any> {
   _id?: string;
   label?: string;
   name?: string;
   amount?: number;
-  owner?: IBase<T> | null;
+  owner?: IBaseFields<T> | null;
   percentage?: number;
   childrenCount?: number;
-  childrenList?: (T & IBase<T>)[] | null;
+  childrenList?: (T & IBaseFields<T>)[] | null;
 }
 
-interface StateControl<D = any> {
+export type TreeOptions<T = any> = Record<string, (T & IBaseFields<T>)[] | undefined>;
+
+export interface StateControl<D = any> {
   onSuccess?: (data: D) => void;
   onError?: (error: string) => void;
   onLoading?: (loading: boolean) => void;
 }
 
-async function findChildrenById<T = any>(id?: string, data?: (T & IBase<T>)[]): Promise<(T & IBase<T>)[] | null> {
+async function findChildrenById<T = any>(
+  id?: string,
+  data?: (T & IBaseFields<T>)[]
+): Promise<(T & IBaseFields<T>)[] | undefined> {
   const hasChildren = data?.some(item => item.owner?._id === id);
 
   if (hasChildren) {
@@ -29,16 +34,16 @@ async function findChildrenById<T = any>(id?: string, data?: (T & IBase<T>)[]): 
         return ch;
       }) || []
     );
-    return children !== undefined ? children : null;
+    return children !== undefined ? children : undefined;
   }
 
-  return null;
+  return undefined;
 }
 
 export default async function createTreeData<T = any>(
-  data: (T & IBase<T>)[],
-  { onSuccess, onError, onLoading }: StateControl<(T & IBase<T>)[]>
-): Promise<(T & IBase<T>)[] | []> {
+  data: (T & IBaseFields<T>)[],
+  { onSuccess, onError, onLoading }: StateControl<(T & IBaseFields<T>)[]>
+): Promise<(T & IBaseFields<T>)[] | []> {
   onLoading && onLoading(true);
   try {
     const clonedData = _.cloneDeep(data);
@@ -57,6 +62,34 @@ export default async function createTreeData<T = any>(
     console.error(e);
     onError && onError('Unknown error occurred');
     return [];
+  } finally {
+    onLoading && onLoading(false);
+  }
+}
+
+export async function createTreeDataMapById<T = any>(
+  data: (T & IBaseFields<T>)[],
+  { onSuccess, onError, onLoading }: StateControl<Record<string, (T & IBaseFields<T>)[] | undefined>>
+): Promise<TreeOptions<T>> {
+  onLoading && onLoading(true);
+  try {
+    const root = _.cloneDeep(data).filter(item => !item.owner);
+    let rootMap: Record<string, (T & IBaseFields<T>)[] | undefined> = {};
+
+    await Promise.all(
+      root.map(async item => {
+        const childrenList = await findChildrenById(item._id, data);
+        if ('_id' in item && item._id && childrenList) rootMap[item._id] = childrenList;
+        return '';
+      })
+    );
+
+    onSuccess && onSuccess(rootMap);
+    return rootMap;
+  } catch (e) {
+    console.error(e);
+    onError && onError('Unknown error occurred');
+    return {};
   } finally {
     onLoading && onLoading(false);
   }

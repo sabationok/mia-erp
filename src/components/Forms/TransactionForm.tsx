@@ -1,10 +1,10 @@
 // @flow
 import * as React from 'react';
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import styled from 'styled-components';
 import { ITransaction, ITransactionForReq } from 'redux/transactions/transactions.types';
-import { CategoryTypes } from 'redux/categories/categories.types';
+import { CategoryTypes, ICategory } from 'redux/categories/categories.types';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import * as yup from 'yup';
@@ -14,9 +14,11 @@ import * as _ from 'lodash';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import { FilterOpt } from '../ModalForm/ModalFilter';
 import CustomSelect, { CustomSelectProps } from '../atoms/Inputs/CustomSelect';
-import { createTransactionForReq, founderByDataPath } from '../../utils';
+import { createTransactionForReq } from '../../utils';
 import { useAppSelector } from '../../redux/store.store';
 import { TransactionsService } from '../../redux/transactions/useTransactionsService.hook';
+import { createTreeDataMapById, IBaseFields, TreeOptions } from '../../utils/createTreeData';
+import { ICount } from '../../redux/counts/counts.types';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
 
@@ -50,6 +52,23 @@ const validation = yup.object().shape({
   subCountIn: validationItem,
 });
 
+const useSelectorsTreeData = () => {
+  const {
+    counts: { counts },
+    categories: { categories },
+  } = useAppSelector();
+  const [state, setState] = useState<Record<string, TreeOptions<ICategory | ICount>>>({});
+  useMemo(() => {
+    createTreeDataMapById(counts, {
+      onSuccess: data => setState(prev => ({ ...prev, counts: data })),
+    });
+    createTreeDataMapById(categories, {
+      onSuccess: data => setState(prev => ({ ...prev, categories: data as TreeOptions<ICategory> })),
+    });
+  }, [categories, counts]);
+
+  return state;
+};
 const TransactionForm: React.FC<TransactionFormProps> = ({
   edit,
   onSubmit,
@@ -58,7 +77,11 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   defaultState,
   ...props
 }) => {
-  const { counts, categories } = useAppSelector();
+  const {
+    counts: { counts },
+    categories: { categories },
+  } = useAppSelector();
+
   const {
     formState: { errors },
     register,
@@ -71,79 +94,143 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     reValidateMode: 'onSubmit',
   });
   const formValues = watch();
+  const registerSelect = useCallback(
+    <K extends keyof ITransaction = keyof ITransaction>(
+      name: K,
+      props?: Omit<CustomSelectProps<ITransaction[K]>, 'name'>,
+      childControl?: {
+        childName?: keyof ITransaction;
+      }
+    ): CustomSelectProps<ITransaction[K]> => {
+      return {
+        onSelect: (option, value) => {
+          setValue<K>(name, option as any);
+        },
+        name,
+        selectValue: formValues[name],
+        onClear: () => {
+          if (!formValues[name]) return;
+
+          setValue(name, null as any);
+          unregister(name);
+          console.log('cleared input', name, formValues[name]);
+
+          if (childControl?.childName) {
+            console.log('cleared child', childControl.childName);
+            setValue(childControl.childName, null as any);
+            unregister(childControl.childName);
+            console.log('cleared child', childControl.childName, formValues[childControl.childName]);
+          }
+          if (!props?.options || props.options.length === 0) {
+          }
+        },
+        disabled: !props?.options || props?.options?.length === 0,
+        ...props,
+      };
+    },
+    [formValues, setValue, unregister]
+  );
+
+  const [countTreeOptions, setCountTreeOptions] = useState<
+    Record<string, (ICount & IBaseFields<ICount>)[] | undefined>
+  >({});
+  const [categoriesTreeOptions, setCategoriesTreeOptions] = useState<
+    Record<string, (ICategory & IBaseFields<ICategory>)[] | undefined>
+  >({});
+
+  useMemo(() => {
+    createTreeDataMapById(counts, {
+      onSuccess: setCountTreeOptions,
+    });
+    createTreeDataMapById(categories, {
+      onSuccess: setCategoriesTreeOptions,
+    });
+  }, [categories, counts]);
 
   const renderInputsCountIn = useMemo(() => {
-    const parentOptions = counts.counts.filter(el => !el.owner);
-    const childOptions = founderByDataPath({
-      path: 'owner._id',
-      searchQuery: formValues.countIn?._id,
-      data: counts.counts,
-    });
+    const parentOptions = counts.filter(el => !el.owner);
+    const childOptions = formValues.countIn?._id ? countTreeOptions[formValues.countIn?._id] : undefined;
+
     return formValues.type && ['INCOME', 'TRANSFER'].includes(formValues.type) ? (
       <>
         <CustomSelect
+          keepOpen
           label="Рахунок IN"
           placeholder="Рахунок IN"
-          {...registerSelect('countIn', { options: parentOptions })}
+          {...registerSelect('countIn', { options: parentOptions }, { childName: 'subCountIn' })}
         />
         <CustomSelect
+          keepOpen
           label="Суб-рахунок IN"
           placeholder="Суб-рахунок IN"
-          {...registerSelect('subCountIn', { options: parentOptions })}
-          disabled={childOptions.length === 0}
+          {...registerSelect('subCountIn', {
+            options: childOptions,
+          })}
         />
       </>
     ) : null;
-  }, [counts.counts, formValues.countIn?._id, formValues.type, registerSelect]);
+  }, [countTreeOptions, counts, formValues.countIn?._id, formValues.type, registerSelect]);
 
   const renderInputsCountOut = useMemo(() => {
-    const parentOptions = counts.counts.filter(el => !el.owner);
-    const childOptions = founderByDataPath({
-      path: 'owner._id',
-      searchQuery: formValues.countOut?._id,
-      data: counts.counts,
-    });
+    const parentOptions = counts.filter(el => !el.owner);
+
+    const childOptions = formValues.countOut?._id ? countTreeOptions[formValues.countOut?._id] : undefined;
+
     return formValues.type && ['EXPENSE', 'TRANSFER'].includes(formValues.type) ? (
       <>
         <CustomSelect
+          keepOpen
           label="Рахунок OUT"
           placeholder="Рахунок OUT"
-          {...registerSelect('countOut', { options: parentOptions, error: errors.countOut })}
+          {...registerSelect(
+            'countOut',
+            {
+              options: parentOptions,
+              error: errors.countOut,
+            },
+            { childName: 'subCountOut' }
+          )}
         />
         <CustomSelect
+          keepOpen
           label="Суб-рахунок OUT"
           placeholder="Суб-рахунок OUT"
           {...registerSelect('subCountOut', { options: childOptions, error: errors.subCountOut })}
-          disabled={childOptions.length === 0}
         />
       </>
     ) : null;
-  }, [counts.counts, errors, formValues.countOut?._id, formValues.type, registerSelect]);
+  }, [
+    countTreeOptions,
+    counts,
+    errors.countOut,
+    errors.subCountOut,
+    formValues.countOut?._id,
+    formValues.type,
+    registerSelect,
+  ]);
 
   const renderInputsCategories = useMemo(() => {
-    const parentOptions = categories.categories.filter(el => !el.owner);
-    const childOptions = founderByDataPath({
-      path: 'owner._id',
-      searchQuery: formValues.category?._id,
-      data: categories.categories,
-    });
+    const parentOptions = categories.filter(el => !el.owner);
+
+    const childOptions = formValues.category?._id ? categoriesTreeOptions[formValues.category?._id] : undefined;
 
     return (
       <>
         <CustomSelect
+          keepOpen
           label="Категорія"
           placeholder="Категорія"
           {...registerSelect('category', { options: parentOptions })}
         />
         <CustomSelect
+          keepOpen
           label="Підкатегорія"
           placeholder="Підкатегорія"
           {...registerSelect('subCategory', { options: childOptions })}
-          disabled={childOptions.length === 0}
         />
       </>
     );
-  }, [categories.categories, formValues.category?._id, registerSelect]);
+  }, [categories, categoriesTreeOptions, formValues.category?._id, registerSelect]);
 
   function onSubmitWrapper() {
     let submitData = formValues;
@@ -152,39 +239,20 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     if (formValues.type === 'EXPENSE') submitData = _.omit(formValues, 'countIn', 'subCountIn');
 
     console.log('formValues', formValues);
-    console.log('onSubmitWrapper', submitData);
-    console.log('createTransactionForReq', createTransactionForReq(submitData));
+    // console.log('onSubmitWrapper', submitData);
+    // console.log('createTransactionForReq', createTransactionForReq(submitData));
 
-    onSubmit && onSubmit(createTransactionForReq(submitData));
-    //
+    onSubmit && onSubmit(createTransactionForReq(submitData, [], 'transactionDate'));
+
     onSubmitEdit &&
       defaultState?._id &&
       onSubmitEdit({
         _id: defaultState?._id,
-        data: createTransactionForReq(submitData),
+        data: createTransactionForReq(submitData, [], 'transactionDate'),
       });
   }
 
-  function registerSelect<K extends keyof ITransaction = keyof ITransaction>(
-    name: K,
-    props?: Omit<CustomSelectProps<ITransaction[K]>, 'name'>
-  ): CustomSelectProps<ITransaction[K]> {
-    return {
-      onSelect: (option, value) => {
-        if (!option) {
-          console.log('option null', option);
-          setValue<K>(name, option as any);
-          return;
-        }
-
-        setValue<K>(name, option as any);
-      },
-      name,
-      selectValue: props?.options?.length !== 0 ? formValues[name] : undefined,
-      ...props,
-    };
-  }
-
+  useEffect(() => console.log('Render Transaction form ==============>>>>>>>>'), []);
   return (
     <ModalForm onSubmit={onSubmitWrapper} onOptSelect={({ value }) => value && setValue('type', value)} {...props}>
       <Inputs className={'inputs'}>
@@ -203,10 +271,10 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
 
         {renderInputsCountIn}
         {renderInputsCountOut}
-        {renderInputsCategories}
 
         {formValues.type === 'TRANSFER' && (
           <>
+            {renderInputsCategories}
             <InputLabel label="Контрагент" direction={'vertical'}>
               <InputText placeholder="Контрагент" {...register('contractor')} />
             </InputLabel>
