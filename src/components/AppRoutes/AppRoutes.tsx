@@ -1,9 +1,10 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import AppPages from 'components/AppPages';
-import { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo } from 'react';
 import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
 import { useAuthSelector } from '../../redux/selectors.store';
+import { toast } from 'react-toastify';
 
 const { PageNotFound } = AppPages;
 
@@ -11,6 +12,12 @@ const AppRoutes: React.FC = () => {
   const { accessToken } = useAuthSelector();
 
   const isAuthorized = useMemo(() => !!accessToken, [accessToken]);
+
+  useEffect(() => {
+    if (!isAuthorized) {
+      toast.error('Not authorized');
+    }
+  }, [isAuthorized]);
 
   const notFoundRouteProps = useMemo(
     () => ({
