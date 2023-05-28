@@ -8,8 +8,12 @@ import useTrFilterSelectors from 'redux/transactions/useTrFilterSelectors.hook';
 import { ITransaction } from '../../redux/transactions/transactions.types';
 import { useTrActionsCreator } from '../../redux/transactions/useTrActionsCreator.hook';
 import { ITableListProps } from '../TableList/tableTypes.types';
+import AppGridPage from './AppGridPage';
 
-const PageTransactions: React.FC<any> = () => {
+type Props = {
+  path: string;
+};
+const PageTransactions: React.FC<any> = ({ path }: Props) => {
   const transactionsService = useTransactionsService();
   const filterSelectors = useTrFilterSelectors();
   const actionsCreator = useTrActionsCreator(transactionsService);
@@ -38,9 +42,11 @@ const PageTransactions: React.FC<any> = () => {
   );
 
   return (
-    <Page>
-      <TableList {...tableConfig} />
-    </Page>
+    <AppGridPage path={path}>
+      <Page>
+        <TableList {...tableConfig} />
+      </Page>
+    </AppGridPage>
   );
 };
 

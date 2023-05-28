@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { actionSetIndexPage } from 'redux/page/pageActions';
 
 import styled from 'styled-components';
 
-const AppGridPage: React.FC<{ path: string }> = ({ path }) => {
+const AppGridPage: React.FC<{ path: string; children?: React.ReactNode }> = ({ path, children }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -14,11 +13,7 @@ const AppGridPage: React.FC<{ path: string }> = ({ path }) => {
     }
   }, [dispatch, path]);
 
-  return (
-    <GridPage>
-      <Outlet />
-    </GridPage>
-  );
+  return <GridPage>{children}</GridPage>;
 };
 
 const GridPage = styled.div`
