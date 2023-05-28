@@ -12,14 +12,12 @@ import ModalProvider from 'components/ModalProvider/ModalProvider';
 import './index.scss';
 import 'react-toastify/dist/ReactToastify.css';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   //<React.StrictMode>
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-      <BrowserRouter basename="/counter-app-ts">
+      <BrowserRouter basename="/counter-app-ts/">
         <AppThemeProvider>
           <ModalProvider>
             <App />

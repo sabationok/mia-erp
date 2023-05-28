@@ -4,6 +4,7 @@ import { appPages } from 'data';
 import { memo } from 'react';
 import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
+import FlexBox from '../atoms/FlexBox';
 
 const { PageNotFound } = AppPages;
 
@@ -16,10 +17,22 @@ const AppRoutes: React.FC = () => {
 
   return (
     <Routes>
+      <Route index element={<Navigate to="/auth" />} errorElement={<PageNotFound />} />
+
       <Route
-        index
-        element={<Navigate to="/auth" />}
-        errorElement={<PageNotFound />}
+        path={'/'}
+        element={
+          <FlexBox
+            fillWidth
+            fillHeight
+            style={{ fontSize: '24px', fontWeight: 900 }}
+            padding={'50px'}
+            alignItems={'center'}
+            justifyContent={'center'}
+          >
+            Index test page for github
+          </FlexBox>
+        }
       />
 
       <Route path="/">
@@ -29,44 +42,25 @@ const AppRoutes: React.FC = () => {
             element={<AppPages.AppGridPage path={appPages.transactions.path} />}
             errorElement={<PageNotFound />}
           >
-            <Route
-              index
-              element={<Navigate to={appPages.transactions.path} />}
-              errorElement={<PageNotFound />}
-            />
+            <Route index element={<Navigate to={appPages.transactions.path} />} errorElement={<PageNotFound />} />
 
             <Route
               path={appPages.transactions.path}
               element={<AppPages.PageTransactions />}
               errorElement={<PageNotFound />}
             />
-            <Route
-              path={appPages.home.path}
-              element={<AppPages.PageHome />}
-              errorElement={<PageNotFound />}
-            />
+            <Route path={appPages.home.path} element={<AppPages.PageHome />} errorElement={<PageNotFound />} />
           </Route>
         </Route>
 
-        <Route
-          path="auth/*"
-          element={
-            <PublicRoute redirectTo={`/${appPages.transactions.path}`} />
-          }
-        >
+        <Route path="auth/*" element={<PublicRoute redirectTo={`/${appPages.transactions.path}`} />}>
           <Route index element={<Navigate to="login" />} />
           <Route path="register" element={<AppPages.PageAuth register />} />
           <Route path="login" element={<AppPages.PageAuth login />} />
 
-          <Route
-            path="sendRecoveryPasswordMail"
-            element={<AppPages.PageAuth sendRecoveryMail />}
-          />
+          <Route path="sendRecoveryPasswordMail" element={<AppPages.PageAuth sendRecoveryMail />} />
 
-          <Route
-            path="recoveryPassword"
-            element={<AppPages.PageAuth recovery />}
-          />
+          <Route path="recoveryPassword" element={<AppPages.PageAuth recovery />} />
 
           <Route {...notFoundRouteProps} />
         </Route>
