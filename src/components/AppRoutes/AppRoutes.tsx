@@ -38,11 +38,11 @@ const AppRoutes: React.FC = () => {
       />
 
       <Route path="/*" element={<PrivateRoute redirectTo="/auth" />}>
-        <Route path="/*" element={<AppPages.AppGridPage path={'/transactions'} />} errorElement={<PageNotFound />}>
-          <Route index element={<Navigate to={'/transactions'} />} errorElement={<PageNotFound />} />
+        <Route path="/*" element={<AppPages.AppGridPage path={'transactions'} />} errorElement={<PageNotFound />}>
+          <Route index element={<Navigate to={'transactions'} />} errorElement={<PageNotFound />} />
 
-          <Route path={'/transactions'} element={<AppPages.PageTransactions />} errorElement={<PageNotFound />} />
-          <Route path={'/home'} element={<AppPages.PageHome />} errorElement={<PageNotFound />} />
+          <Route path={'transactions'} element={<AppPages.PageTransactions />} errorElement={<PageNotFound />} />
+          <Route path={'home'} element={<AppPages.PageHome />} errorElement={<PageNotFound />} />
         </Route>
 
         <Route path="auth/*" element={<PublicRoute redirectTo={'/transactions'} />}>
