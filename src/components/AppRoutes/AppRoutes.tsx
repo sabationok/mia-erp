@@ -20,7 +20,7 @@ const AppRoutes: React.FC = () => {
       <Route index element={<Navigate to="/auth" />} errorElement={<PageNotFound />} />
 
       <Route
-        path={'/'}
+        path={'/testError'}
         element={
           <FlexBox
             fillWidth
@@ -39,17 +39,17 @@ const AppRoutes: React.FC = () => {
         <Route path="/" element={<PrivateRoute redirectTo="/auth" />}>
           <Route
             path="/"
-            element={<AppPages.AppGridPage path={appPages.transactions.path} />}
+            element={<AppPages.AppGridPage path={`/${appPages.transactions.path}`} />}
             errorElement={<PageNotFound />}
           >
-            <Route index element={<Navigate to={appPages.transactions.path} />} errorElement={<PageNotFound />} />
+            <Route index element={<Navigate to={`/${appPages.transactions.path}`} />} errorElement={<PageNotFound />} />
 
             <Route
-              path={appPages.transactions.path}
+              path={`/${appPages.transactions.path}`}
               element={<AppPages.PageTransactions />}
               errorElement={<PageNotFound />}
             />
-            <Route path={appPages.home.path} element={<AppPages.PageHome />} errorElement={<PageNotFound />} />
+            <Route path={`/${appPages.home.path}`} element={<AppPages.PageHome />} errorElement={<PageNotFound />} />
           </Route>
         </Route>
 
