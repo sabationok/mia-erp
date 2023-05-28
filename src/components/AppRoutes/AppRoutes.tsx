@@ -1,8 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import AppPages from 'components/AppPages';
 import { memo, useEffect, useMemo } from 'react';
-import PublicRoute from './PublicRoute';
-import PrivateRoute from './PrivateRoute';
 import { useAuthSelector } from '../../redux/selectors.store';
 import { toast } from 'react-toastify';
 
@@ -33,15 +31,21 @@ const AppRoutes: React.FC = () => {
 
       {/*<Route path={'/'} element={<Navigate to={'/auth'} />} />*/}
 
-      <Route path={'*'} element={<PrivateRoute redirectTo="/auth" />}>
-        <Route path="/*" element={<AppPages.AppGridPage path={'transactions'} />} errorElement={<PageNotFound />}>
-          <Route index element={<Navigate to={'/transactions'} />} errorElement={<PageNotFound />} />
+      {isAuthorized && (
+        <Route path="/*">
+          <Route path="/*" element={<AppPages.AppGridPage path={'transactions'} />}>
+            <Route index element={<Navigate to={'/transactions'} />} />
 
-          <Route path={'transactions'} element={<AppPages.PageTransactions />} errorElement={<PageNotFound />} />
-          <Route path={'home'} element={<AppPages.PageHome />} errorElement={<PageNotFound />} />
+            <Route path={'transactions'} element={<AppPages.PageTransactions />} />
+            <Route path={'home'} element={<AppPages.PageHome />} />
+          </Route>
+
+          <Route {...notFoundRouteProps} />
         </Route>
+      )}
 
-        <Route path="auth/*" element={<PublicRoute redirectTo={'/transactions'} />}>
+      {!isAuthorized && (
+        <Route path="/auth/*">
           <Route index element={<Navigate to="login" />} />
           <Route path="register" element={<AppPages.PageAuth register />} />
           <Route path="login" element={<AppPages.PageAuth login />} />
@@ -52,7 +56,7 @@ const AppRoutes: React.FC = () => {
 
           <Route {...notFoundRouteProps} />
         </Route>
-      </Route>
+      )}
 
       <Route {...notFoundRouteProps} />
     </Routes>
@@ -60,3 +64,26 @@ const AppRoutes: React.FC = () => {
 };
 
 export default memo(AppRoutes);
+
+// <Route path={'/test/*'} element={<PrivateRoute redirectTo="/auth" />}>
+//   <Route path="/*" element={<AppPages.AppGridPage path={'transactions'} />}>
+//     <Route index element={<Navigate to={'/transactions'} />} errorElement={<PageNotFound />} />
+//
+//     <Route path={'transactions'} element={<AppPages.PageTransactions />} errorElement={<PageNotFound />} />
+//     <Route path={'home'} element={<AppPages.PageHome />} errorElement={<PageNotFound />} />
+//
+//     <Route {...notFoundRouteProps} />
+//   </Route>
+//
+//   <Route path="auth/*" element={<PublicRoute redirectTo={'/transactions'} />}>
+//     <Route index element={<Navigate to="login" />} />
+//     <Route path="register" element={<AppPages.PageAuth register />} />
+//     <Route path="login" element={<AppPages.PageAuth login />} />
+//
+//     <Route path="sendRecoveryPasswordMail" element={<AppPages.PageAuth sendRecoveryMail />} />
+//
+//     <Route path="recoveryPassword" element={<AppPages.PageAuth recovery />} />
+//
+//     <Route {...notFoundRouteProps} />
+//   </Route>
+// </Route>
