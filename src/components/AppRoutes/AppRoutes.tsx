@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import AppPages from 'components/AppPages';
 import { memo, useMemo } from 'react';
 import PublicRoute from './PublicRoute';
@@ -8,6 +8,8 @@ import FlexBox from '../atoms/FlexBox';
 const { PageNotFound } = AppPages;
 
 const AppRoutes: React.FC = () => {
+  const location = useLocation();
+  
   const notFoundRouteProps = useMemo(
     () => ({
       path: '*',
@@ -19,10 +21,12 @@ const AppRoutes: React.FC = () => {
 
   return (
     <Routes>
-      <Route index element={<Navigate to="/auth" />} errorElement={<PageNotFound />} />
+      <Route path={`/*`} element={<Navigate to={`/auth`} />} errorElement={<PageNotFound />} />
+
+      <Route path={`/*`} element={<Navigate to={`${location.pathname}`} />} />
 
       <Route
-        path={'/testError'}
+        path={'/'}
         element={
           <FlexBox
             fillWidth
@@ -37,7 +41,7 @@ const AppRoutes: React.FC = () => {
         }
       />
 
-      <Route path="/*" element={<PrivateRoute redirectTo="/auth" />}>
+      <Route path={`/*`} element={<PrivateRoute redirectTo="/auth" />}>
         <Route path="/*" element={<AppPages.AppGridPage path={'transactions'} />} errorElement={<PageNotFound />}>
           <Route index element={<Navigate to={'transactions'} />} errorElement={<PageNotFound />} />
 

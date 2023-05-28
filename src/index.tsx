@@ -17,7 +17,7 @@ root.render(
   //<React.StrictMode>
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-      <BrowserRouter basename="/counter-app-ts/">
+      <BrowserRouter basename="/counter-app-ts">
         <AppThemeProvider>
           <ModalProvider>
             <App />
