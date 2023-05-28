@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react';
 import { useMemo, useState } from 'react';
 import ReportList, { ReportListItemProps } from './ReportList';

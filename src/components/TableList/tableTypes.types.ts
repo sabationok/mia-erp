@@ -94,7 +94,7 @@ export interface ITableListContext<TDataType = any> extends ITableListProps<TDat
 
 export type UseTableHookType = <TDataType = any>() => ITableListContext<TDataType>;
 
-export interface ITableAction<TDataType = any> {
+export interface ITableAction {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   title?: string;
   disabled?: boolean;
@@ -107,4 +107,4 @@ export interface ITableAction<TDataType = any> {
   iconSize?: string;
 }
 
-export type TableActionCreator<TData = any> = (ctx: ITableListContext<TData>) => ITableAction<TData>[];
+export type TableActionCreator<TData = any> = (ctx: ITableListContext<TData>) => ITableAction[];

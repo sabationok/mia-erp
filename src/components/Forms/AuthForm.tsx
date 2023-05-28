@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react';
+import React from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import LogoSvg from 'components/Layout/Header/LogoSvg/LogoSvg';
@@ -12,8 +12,8 @@ import InputText from '../atoms/Inputs/InputText';
 export interface Props {
   helloTitle?: string;
   title: string;
-  register?: boolean;
-  recovery?: boolean;
+  registration?: boolean;
+  login?: boolean;
 }
 
 export interface IRegistrationFormData {
@@ -24,9 +24,7 @@ export interface IRegistrationFormData {
   approvePassword: string;
 }
 
-const initialFormDataLogin: Partial<
-  Pick<IRegistrationFormData, 'email' | 'password'>
-> = { email: '', password: '' };
+const initialFormDataLogin: Partial<Pick<IRegistrationFormData, 'email' | 'password'>> = { email: '', password: '' };
 
 const initialFormDataRegister: IRegistrationFormData = {
   name: '',
@@ -35,29 +33,32 @@ const initialFormDataRegister: IRegistrationFormData = {
   password: '',
   approvePassword: '',
 };
+
 export type AuthFormProps = Props & React.HTMLAttributes<HTMLFormElement>;
-const AuthForm: React.FC<AuthFormProps> = ({
-  title,
-  register: registration,
-  recovery,
-  ...props
-}) => {
+const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...props }) => {
   const authService = useAuthService();
 
-  const { register, getValues, watch } = useForm<
-    Partial<IRegistrationFormData>
-  >({});
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    watch,
+  } = useForm<Partial<IRegistrationFormData>>({
+    defaultValues: (login && initialFormDataLogin) || (registration && initialFormDataRegister) || {},
+  });
   const formValues = watch();
 
-  function onFormSubmit(ev: FormEvent) {
-    ev.preventDefault();
-
-    console.log('formDAta', getValues());
-    !registration && authService.loginUser(getValues());
+  function onFormSubmit(data: Partial<IRegistrationFormData>) {
+    console.log('AuthFormSubmit ===>>>', data, {
+      login: login,
+      registration: registration,
+    });
+    login && authService.loginUser(data);
+    registration && authService.registerUser(data);
   }
 
   return (
-    <Form {...props} onSubmit={onFormSubmit}>
+    <Form {...props} onSubmit={handleSubmit(onFormSubmit)}>
       <StLogo />
 
       <Title>{title}</Title>
@@ -67,11 +68,7 @@ const AuthForm: React.FC<AuthFormProps> = ({
           {'Вхід'}
         </StNavLink>
 
-        <StNavLink
-          textTransform="uppercase"
-          variant="def"
-          to={'/auth/register'}
-        >
+        <StNavLink textTransform="uppercase" variant="def" to={'/auth/register'}>
           {'Реєстрація'}
         </StNavLink>
       </Links>
@@ -79,56 +76,22 @@ const AuthForm: React.FC<AuthFormProps> = ({
       <Inputs>
         {registration && (
           <>
-            <AuthInputLabel icon="personOutlined">
-              <InputText
-                placeholder="І'мя"
-                value={formValues.name}
-                {...register('name')}
-              />
+            <AuthInputLabel icon="personOutlined" error={errors.name}>
+              <InputText placeholder="І'мя" value={formValues.name} {...register('name')} />
             </AuthInputLabel>
 
-            <AuthInputLabel icon="personOutlined">
-              <InputText
-                placeholder="Прізвище"
-                value={formValues.secondName}
-                {...register('secondName')}
-              />
+            <AuthInputLabel icon="personOutlined" error={errors.secondName}>
+              <InputText placeholder="Прізвище" value={formValues.secondName} {...register('secondName')} />
             </AuthInputLabel>
 
-            <AuthInputLabel icon="email">
-              <InputText
-                placeholder="Електронна адреса"
-                value={formValues.email}
-                {...register('email')}
-              />
+            <AuthInputLabel icon="email" error={errors.email}>
+              <InputText placeholder="Електронна адреса" value={formValues.email} {...register('email')} />
             </AuthInputLabel>
-            <AuthInputLabel icon="lock_O">
-              <InputText
-                placeholder="Пароль"
-                type="password"
-                value={formValues.password}
-                {...register('password')}
-              />
+            <AuthInputLabel icon="lock_O" error={errors.password}>
+              <InputText placeholder="Пароль" type="password" value={formValues.password} {...register('password')} />
             </AuthInputLabel>
-            <AuthInputLabel
-              icon="lock_O"
-              // success={
-              //   formValues.approvePassword
-              //     ? formValues.approvePassword === formValues.password
-              //     : false
-              // }
-              // error={
-              //   formValues.approvePassword
-              //     ? formValues.approvePassword !== formValues.password
-              //     : false
-              // }
-            >
-              <InputText
-                placeholder="Повторіть пароль"
-                type="password"
-                value={formValues.approvePassword}
-                {...register('approvePassword')}
-              />
+            <AuthInputLabel icon="lock_O" error={errors.approvePassword}>
+              <InputText placeholder="Повторіть пароль" type="password" {...register('approvePassword')} />
             </AuthInputLabel>
           </>
         )}
@@ -136,38 +99,21 @@ const AuthForm: React.FC<AuthFormProps> = ({
         {!registration && (
           <>
             <AuthInputLabel icon="email">
-              <InputText
-                placeholder="Електронна адреса"
-                value={formValues.email}
-                {...register('email')}
-              />
+              <InputText placeholder="Електронна адреса" value={formValues.email} {...register('email')} />
             </AuthInputLabel>
             <AuthInputLabel icon="lock_O">
-              <InputText
-                placeholder="Пароль"
-                type="password"
-                value={formValues.password}
-                {...register('password')}
-              />
+              <InputText placeholder="Пароль" type="password" value={formValues.password} {...register('password')} />
             </AuthInputLabel>
           </>
         )}
       </Inputs>
 
       <Buttons>
-        <StButtonIcon
-          type="submit"
-          textTransform="uppercase"
-          variant="filledSmall"
-        >
+        <StButtonIcon type="submit" textTransform="uppercase" variant="filledSmall">
           {registration ? 'Зареєструватись' : 'Увійти'}
         </StButtonIcon>
 
-        {!registration && (
-          <StLink to={'/auth/sendRecoveryPasswordMail'}>
-            {'Забули пароль?'}
-          </StLink>
-        )}
+        {!registration && <StLink to={'/auth/sendRecoveryPasswordMail'}>{'Забули пароль?'}</StLink>}
       </Buttons>
     </Form>
   );
@@ -306,8 +252,8 @@ const StNavLink = styled(NavLinkIcon)`
     position: absolute;
     bottom: 0;
     left: 50%;
-    height: 1px;
-    width: 100%;
+    //height: 1px;
+    //width: 100%;
     height: 3px;
     width: 0;
     transition: all ${({ theme }) => theme.globals.timingFnMui};

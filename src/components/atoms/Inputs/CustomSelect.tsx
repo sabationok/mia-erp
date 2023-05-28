@@ -21,6 +21,8 @@ export interface CustomSelectBaseProps<OptType = any> {
   ref?: RefCallBack;
   selectValue?: OptType;
   keepOpen?: boolean;
+  inputProps?: Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'>;
+  labelProps?: Omit<InputLabelProps, 'onSelect'>;
 }
 
 export type CustomSelectOnClickHandler<OptType = any> = <Option extends OptType = any>(
@@ -39,11 +41,25 @@ export type CustomSelectProps<OptType = any> = CustomSelectBaseProps<OptType> &
   Omit<InputLabelProps, 'onSelect'>;
 
 const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
-  { InputComponent, selectValue, keepOpen, valueKey, id, onClear, options, name, onSelect, open = false, ...props },
+  {
+    InputComponent,
+    inputProps = {},
+    labelProps = {},
+    selectValue,
+    keepOpen,
+    valueKey,
+    id,
+    options,
+    name,
+    open = false,
+    onSelect,
+    onClear,
+    ...props
+  },
   ref
 ) => {
-  const [isOpen, setIsOpen] = useState<boolean>(keepOpen || open);
   const [currentOption, setCurrentOption] = useState<SelectItem | undefined>(selectValue);
+  const [isOpen, setIsOpen] = useState<boolean>(keepOpen || open);
   const labelRef = useRef<HTMLLabelElement>(null);
 
   const uid = useMemo(() => Math.random().toFixed(5), []);
@@ -59,6 +75,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
         setCurrentOption(option);
         if (onSelect && valueKey && valueKey && option[valueKey]) {
           onSelect(option, option[valueKey]);
+          return;
         }
         if (onSelect) {
           onSelect(option, option?.value);
@@ -92,11 +109,6 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
     [currentOption?._id, handleOnSelect, options]
   );
 
-  // useEffect(() => {
-  //   if (!selectValue || options.length === 0) {
-  //     return handleOnClear();
-  //   }
-  // }, [handleOnClear, options.length, selectValue]);
   useEffect(() => {
     if (uid) return;
     console.log('Render CustomSelect', id || uid);
@@ -128,14 +140,15 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
             'error',
             'success',
             'helperText',
-            'label',
             'loading',
+            'label',
             'id',
             'uppercase',
             'align',
             'direction',
             'disabled',
           ])}
+          {...labelProps}
           onClick={handleOpenState}
         >
           {InputComponent ? (
@@ -150,6 +163,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
                 'success',
                 'loading',
               ])}
+              {...inputProps}
               style={{ paddingRight: '60px' }}
             />
           )}
@@ -191,7 +205,8 @@ const Options = styled(FlexBox)<{ isOpen?: boolean; inView?: boolean; intersecti
   // z-index: ${({ isOpen }) => (isOpen ? 100 : 10)};
   font-size: 14px;
 
-  max-height: ${({ isOpen }) => (isOpen ? '100px' : 0)};
+  max-height: ${({ isOpen }) => (isOpen ? '120px' : 0)};
+  opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
   width: 100%;
   overflow: hidden;
 

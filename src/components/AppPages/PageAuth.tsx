@@ -10,14 +10,13 @@ export interface PageAuthProps {
 }
 
 const PageAuth: React.FC<PageAuthProps> = ({ register, recovery, login, sendRecoveryMail }) => {
-
-
   return (
-    <Page className='PageAuth'>
+    <Page className="PageAuth">
       {(register || login) && (
         <AuthForm
           title={register ? 'Реєстрація нового користувача' : 'Для початку роботи, будь ласка, авторизуйтесь.'}
-          register={register}
+          registration={register}
+          login={!register}
         />
       )}
 

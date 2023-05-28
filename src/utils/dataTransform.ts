@@ -46,7 +46,7 @@ function createTransactionForReq(
 
     const value = transaction[key];
     if (dateToNumberPath && key === dateToNumberPath && typeof value === 'string') {
-      transformedData[key] = new Date(value).valueOf();
+      transformedData[key] = transformedData[key] ? new Date(value).valueOf() : '';
       return '';
     }
     if (value && typeof value === 'object' && '_id' in value) {

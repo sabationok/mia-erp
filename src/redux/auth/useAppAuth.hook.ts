@@ -1,12 +1,7 @@
 import { useAuthSelector } from 'redux/selectors.store';
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { IAuthState } from './auth.types';
-import {
-  ILoginUserData,
-  IRegistrationData,
-  logInUserThunk,
-  registerUserThunk,
-} from './auth.thunks';
+import { ILoginUserData, IRegistrationData, logInUserThunk, registerUserThunk } from './auth.thunks';
 import { toast } from 'react-toastify';
 import { SubmitHandler } from 'react-hook-form';
 
@@ -22,10 +17,7 @@ interface CreateAuthServiceReturnType {
   registerUser: SubmitHandler<IRegistrationData>;
 }
 
-function createAuthService(
-  dispatch: AppDispatch,
-  authState: IAuthState
-): CreateAuthServiceReturnType {
+function createAuthService(dispatch: AppDispatch, authState: IAuthState): CreateAuthServiceReturnType {
   return {
     sendRecoveryEmail: ({ email }: Pick<IRecoveryPasswordReqData, 'email'>) => {
       console.log('Recovery email', email);
@@ -42,12 +34,7 @@ function createAuthService(
       dispatch(logInUserThunk(payload));
       return;
     },
-    registerUser: ({
-      name,
-      secondName,
-      email,
-      password,
-    }: IRegistrationData) => {
+    registerUser: ({ name, secondName, email, password }: IRegistrationData) => {
       const payload = {
         submitData: { name, secondName, email, password },
         onSuccess: () => {},
@@ -64,13 +51,10 @@ interface AuthService extends CreateAuthServiceReturnType {
   state: IAuthState;
 }
 
-const useAuthService = (): AuthService & IAuthState => {
-  const dispatch = useAppDispatch();
+const useAuthService = (): AuthService => {
+  const dispatch: AppDispatch = useAppDispatch();
   const state = useAuthSelector();
-  const service: CreateAuthServiceReturnType = createAuthService(
-    dispatch,
-    state
-  );
+  const service = createAuthService(dispatch, state);
 
   return {
     dispatch,

@@ -4,7 +4,7 @@ export const InputStyles = css<{ error?: boolean; success?: boolean }>`
   padding: 5px 8px;
 
   width: 100%;
-  height: 26px;
+  height: 28px;
 
   color: ${({ error, success, theme }) =>
     (error && theme.globals.colors.error) || (success && theme.globals.colors.success) || 'inherit'};
@@ -28,10 +28,21 @@ export const InputStyles = css<{ error?: boolean; success?: boolean }>`
   }
 
   &::placeholder {
+    font-size: inherit;
     color: ${({ theme }) => theme.globals.inputPlaceholderColor};
   }
 
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
+
+  &[disabled] {
+    pointer-events: none;
+    opacity: 70%;
+  }
+
+  @media screen and (max-width: 480px) {
+    height: 34px;
+    font-size: 14px;
+  }
 `;
 
 const InputField = styled.fieldset`
@@ -53,5 +64,5 @@ const StyledInput = styled.input`
     box-shadow: none;
   }
 `;
-
+export { InputField, StyledInput };
 export default InputText;

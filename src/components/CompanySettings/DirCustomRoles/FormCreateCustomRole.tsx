@@ -40,7 +40,7 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({
   return (
     <StModalForm {...props} onSubmit={onSubmitWrapper}>
       <FlexBox alignItems={'unset'}>
-        <Inputs>
+        <FlexBox padding={'12px'}>
           <InputLabel label="Назва" direction={'vertical'}>
             <InputText
               value={formData.label ? formData.label : ''}
@@ -58,9 +58,9 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({
               onChange={onChange}
             />
           </InputLabel>
-        </Inputs>
+        </FlexBox>
 
-        <ActionsList>
+        <FlexBox padding={'12px'} gap={8} fillHeight justifyContent={'center'}>
           <TitleBase>Доступні дії</TitleBase>
 
           <List>
@@ -68,7 +68,7 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({
               <ListItem key={idx}>{act}</ListItem>
             ))}
           </List>
-        </ActionsList>
+        </FlexBox>
       </FlexBox>
     </StModalForm>
   );
@@ -77,27 +77,7 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({
 const StModalForm = styled(ModalForm)`
   min-height: 250px;
 `;
-const Box = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-const Inputs = styled.div`
-  display: flex;
-  flex-direction: column;
 
-  padding: 12px;
-`;
-
-const ActionsList = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
-
-  height: 100%;
-
-  padding: 12px;
-`;
 const List = styled.ul`
   display: flex;
   flex-direction: column;

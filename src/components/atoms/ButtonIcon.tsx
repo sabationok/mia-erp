@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { CSSProperties, memo } from 'react';
 import sprite from 'img/sprite';
 import styled, { css } from 'styled-components';
 
@@ -19,6 +19,13 @@ interface Props {
 }
 
 export type ButtonIconProps = Props & ButtonProps;
+
+export interface IButtonIconBaseProps {
+  size?: string;
+  style?: CSSProperties;
+  minWidth?: string;
+  minHeight?: string;
+}
 
 const ButtonIcon: React.FC<ButtonIconProps> = ({
   children,
@@ -91,8 +98,6 @@ const StButton = styled(Button)<ButtonIconProps>`
 
   border-radius: 2px;
 
-  //padding: 0 22px;
-
   min-width: 115px;
   height: 28px;
 
@@ -103,6 +108,12 @@ const StButton = styled(Button)<ButtonIconProps>`
   font-weight: ${({ fontWeight = 600 }) => fontWeight};
 
   text-transform: ${({ texttransform = 'none' }) => texttransform};
+
+  @media screen and (max-width: 480px) {
+    text-transform: uppercase;
+    font-size: 16px;
+    height: max-content;
+  }
 `;
 // const StyledButtonIcon = styled(Button)<any>`
 //   // display: flex;
@@ -145,16 +156,15 @@ const SvgIcon = styled.svg`
 
 const def = css`
   background-color: ${({ theme }) => theme.globals.defaultBtnBckgrndColor.def};
+
   /* transition: all var(--timing-function__main); */
 
   &:hover {
-    background-color: ${({ theme }) =>
-      theme.globals.defaultBtnBckgrndColor.hover};
+    background-color: ${({ theme }) => theme.globals.defaultBtnBckgrndColor.hover};
   }
 
   &:active {
-    background-color: ${({ theme }) =>
-      theme.globals.defaultBtnBckgrndColor.pressed};
+    background-color: ${({ theme }) => theme.globals.defaultBtnBckgrndColor.pressed};
   }
 `;
 const defNoEffects = css`
@@ -217,7 +227,9 @@ const pointerLeft = css`
     transition: height ${({ theme }) => theme.globals.timingFunctionLong};
   }
 
-  ${defNoEffects}
+  ${defNoEffects};
+  padding: 0;
+
   &:hover {
     &::before {
       height: 100%;
@@ -256,6 +268,8 @@ const pointerBottom = css`
   }
 
   ${def}
+  padding: 0;
+
   &:hover {
     &::before {
       height: 100%;
@@ -298,17 +312,17 @@ const outlined = css`
     color: ${({ theme }) => theme.accentColor.pressed};
     fill: ${({ theme }) => theme.accentColor.pressed};
     border: 1px solid ${({ theme }) => theme.accentColor.pressed};
-    background-color: var(--ligthOrange);
-    box-shadow: var(--btnShadow_active);
+    background-color: ${({ theme }) => theme.accentColor.light};
+    box-shadow: ${({ theme }) => theme.globals.shadowMain};
   }
 `;
 const outlinedSmall = css`
-  ${small}
-  ${outlined}
+  ${small};
+  ${outlined};
 `;
 const outlinedLarge = css`
-  ${outlined}
-  ${large}
+  ${outlined};
+  ${large};
 `;
 const filled = css`
   color: ${({ theme }) => theme.colorLight};
@@ -338,8 +352,9 @@ const onlyIconFilled = css`
   ${icon}
 `;
 const onlyIcon = css`
-  ${def}
-  ${icon}
+  ${def};
+  ${icon};
+  padding: 0;
   fill: ${({ theme }) => theme.accentColor.base};
 
   &:hover {
@@ -351,8 +366,9 @@ const onlyIcon = css`
   }
 `;
 const onlyIconNoEffects = css`
-  ${defNoEffects}
-  ${icon}
+  ${defNoEffects};
+  ${icon};
+  padding: 0;
   fill: ${({ theme }) => theme.accentColor.base};
 
   &:hover {
@@ -389,12 +405,12 @@ const text = css`
   }
 `;
 const textSmall = css`
-  ${text}
-  ${small}
+  ${text};
+  ${small};
 `;
 const textLarge = css`
-  ${text}
-  ${large}
+  ${text};
+  ${large};
 `;
 const defOutlined = css`
   ${def};

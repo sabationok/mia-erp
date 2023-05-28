@@ -8,10 +8,11 @@ export interface IBaseFields<T = any> {
   owner?: IBaseFields<T> | null;
   percentage?: number;
   childrenCount?: number;
-  childrenList?: (T & IBaseFields<T>)[] | null;
+  childrenList?: TreeOption<T>[] | null;
 }
 
-export type TreeOptions<T = any> = Record<string, (T & IBaseFields<T>)[] | undefined>;
+export type TreeOption<T = any> = T & IBaseFields<T>;
+export type TreeOptions<T = any> = Record<string, TreeOption<T>[] | undefined>;
 
 export interface StateControl<D = any> {
   onSuccess?: (data: D) => void;
@@ -19,10 +20,7 @@ export interface StateControl<D = any> {
   onLoading?: (loading: boolean) => void;
 }
 
-async function findChildrenById<T = any>(
-  id?: string,
-  data?: (T & IBaseFields<T>)[]
-): Promise<(T & IBaseFields<T>)[] | undefined> {
+async function findChildrenById<T = any>(id?: string, data?: TreeOption<T>[]): Promise<TreeOption<T>[] | undefined> {
   const hasChildren = data?.some(item => item.owner?._id === id);
 
   if (hasChildren) {
@@ -41,17 +39,17 @@ async function findChildrenById<T = any>(
 }
 
 export default async function createTreeData<T = any>(
-  data: (T & IBaseFields<T>)[],
-  { onSuccess, onError, onLoading }: StateControl<(T & IBaseFields<T>)[]>
-): Promise<(T & IBaseFields<T>)[] | []> {
+  data: TreeOption<T>[],
+  { onSuccess, onError, onLoading }: StateControl<TreeOption<T>[]>
+): Promise<TreeOption<T>[] | []> {
   onLoading && onLoading(true);
   try {
-    const clonedData = _.cloneDeep(data);
-    const root = clonedData.filter(item => !item.owner);
+    const root = _.cloneDeep(data).filter(item => !item.owner);
 
     await Promise.all(
       root.map(async item => {
         item.childrenList = await findChildrenById(item._id, data);
+
         if (item.childrenList) item.childrenCount = item.childrenList.length;
         return item;
       })
@@ -68,17 +66,18 @@ export default async function createTreeData<T = any>(
 }
 
 export async function createTreeDataMapById<T = any>(
-  data: (T & IBaseFields<T>)[],
-  { onSuccess, onError, onLoading }: StateControl<Record<string, (T & IBaseFields<T>)[] | undefined>>
+  data: TreeOption<T>[],
+  { onSuccess, onError, onLoading }: StateControl<TreeOptions<T>>
 ): Promise<TreeOptions<T>> {
   onLoading && onLoading(true);
   try {
     const root = _.cloneDeep(data).filter(item => !item.owner);
-    let rootMap: Record<string, (T & IBaseFields<T>)[] | undefined> = {};
+    let rootMap: Record<string, TreeOption<T>[] | undefined> = {};
 
     await Promise.all(
       root.map(async item => {
         const childrenList = await findChildrenById(item._id, data);
+
         if ('_id' in item && item._id && childrenList) rootMap[item._id] = childrenList;
         return '';
       })

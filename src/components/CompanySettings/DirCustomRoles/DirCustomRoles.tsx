@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import useCustomRolesService from 'redux/customRoles/useCustomRolesServise.hook';
 import FormCreateCustomRole from './FormCreateCustomRole';
+import FlexBox from '../../atoms/FlexBox';
 
 export interface DirCustomRolesProps extends ModalFormProps {
   title: string;
@@ -13,8 +14,7 @@ export interface DirCustomRolesProps extends ModalFormProps {
 
 const DirCustomRoles: React.FC<DirCustomRolesProps> = props => {
   const modal = useModalProvider();
-  const { customRoles, create, editById, deleteById, getById } =
-    useCustomRolesService();
+  const { customRoles, create, editById, deleteById, getById } = useCustomRolesService();
 
   function onEdit(_id: string) {
     modal.handleOpenModal({
@@ -42,7 +42,7 @@ const DirCustomRoles: React.FC<DirCustomRolesProps> = props => {
 
   return (
     <StModalForm {...props}>
-      <Box>
+      <FlexBox fillWidth flex={'1'} padding={'0 12px'} maxHeight={'100%'}>
         <DirList
           onDelete={deleteById}
           onEdit={onEdit}
@@ -51,7 +51,7 @@ const DirCustomRoles: React.FC<DirCustomRolesProps> = props => {
           // list={[...customRoles, ...customRoles, ...customRoles, ...customRoles]}
           list={customRoles}
         />
-      </Box>
+      </FlexBox>
     </StModalForm>
   );
 };
@@ -61,14 +61,6 @@ const StModalForm = styled(ModalForm)`
   @media screen and (max-height: 480px) {
     height: 95vh;
   }
-`;
-const Box = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  height: 100%;
-  max-height: 100%;
-  padding: 0 12px;
 `;
 
 export default DirCustomRoles;

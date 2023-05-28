@@ -10,14 +10,14 @@ export interface DirUsersProps extends ModalFormProps {
 
 const DirUsers: React.FC<DirUsersProps> = ({ tableSettings, ...props }) => {
   return (
-    <StModalForm footer={false} {...props}>
+    <StModalForm fitContentH footer={false} {...props}>
       <TableList {...tableSettings} />
     </StModalForm>
   );
 };
 const StModalForm = styled(ModalForm)`
-  width: max-content;
   height: 98vh;
+
   & .modalFooter {
     padding: 8px;
   }

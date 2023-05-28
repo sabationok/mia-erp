@@ -1,10 +1,9 @@
-// @flow
 import * as React from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import styled from 'styled-components';
 import { ITransaction, ITransactionForReq } from 'redux/transactions/transactions.types';
-import { CategoryTypes, ICategory } from 'redux/categories/categories.types';
+import { CategoryTypes } from 'redux/categories/categories.types';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import * as yup from 'yup';
@@ -17,8 +16,8 @@ import CustomSelect, { CustomSelectProps } from '../atoms/Inputs/CustomSelect';
 import { createTransactionForReq } from '../../utils';
 import { useAppSelector } from '../../redux/store.store';
 import { TransactionsService } from '../../redux/transactions/useTransactionsService.hook';
-import { createTreeDataMapById, IBaseFields, TreeOptions } from '../../utils/createTreeData';
-import { ICount } from '../../redux/counts/counts.types';
+import useCreateSelectorTreeData from '../../hooks/useCreateSelectorTreeData';
+import FlexBox from '../atoms/FlexBox';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
 
@@ -52,23 +51,6 @@ const validation = yup.object().shape({
   subCountIn: validationItem,
 });
 
-const useSelectorsTreeData = () => {
-  const {
-    counts: { counts },
-    categories: { categories },
-  } = useAppSelector();
-  const [state, setState] = useState<Record<string, TreeOptions<ICategory | ICount>>>({});
-  useMemo(() => {
-    createTreeDataMapById(counts, {
-      onSuccess: data => setState(prev => ({ ...prev, counts: data })),
-    });
-    createTreeDataMapById(categories, {
-      onSuccess: data => setState(prev => ({ ...prev, categories: data as TreeOptions<ICategory> })),
-    });
-  }, [categories, counts]);
-
-  return state;
-};
 const TransactionForm: React.FC<TransactionFormProps> = ({
   edit,
   onSubmit,
@@ -82,6 +64,9 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     categories: { categories },
   } = useAppSelector();
 
+  const countsTreeData = useCreateSelectorTreeData(counts);
+  const categoriesTreeData = useCreateSelectorTreeData(categories);
+
   const {
     formState: { errors },
     register,
@@ -89,11 +74,13 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     watch,
     unregister,
   } = useForm<ITransaction>({
-    defaultValues: defaultState,
+    defaultValues: { currency: 'UAH', ...defaultState },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
   const formValues = watch();
+  // const registerSelect = useRegisterSelect(setValue, formValues, unregister);
+
   const registerSelect = useCallback(
     <K extends keyof ITransaction = keyof ITransaction>(
       name: K,
@@ -104,6 +91,16 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     ): CustomSelectProps<ITransaction[K]> => {
       return {
         onSelect: (option, value) => {
+          console.log({
+            option,
+            formValues,
+            name,
+            props,
+            childControl,
+            setValue,
+            unregister,
+          });
+
           setValue<K>(name, option as any);
         },
         name,
@@ -131,36 +128,18 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     [formValues, setValue, unregister]
   );
 
-  const [countTreeOptions, setCountTreeOptions] = useState<
-    Record<string, (ICount & IBaseFields<ICount>)[] | undefined>
-  >({});
-  const [categoriesTreeOptions, setCategoriesTreeOptions] = useState<
-    Record<string, (ICategory & IBaseFields<ICategory>)[] | undefined>
-  >({});
-
-  useMemo(() => {
-    createTreeDataMapById(counts, {
-      onSuccess: setCountTreeOptions,
-    });
-    createTreeDataMapById(categories, {
-      onSuccess: setCategoriesTreeOptions,
-    });
-  }, [categories, counts]);
-
   const renderInputsCountIn = useMemo(() => {
-    const parentOptions = counts.filter(el => !el.owner);
-    const childOptions = formValues.countIn?._id ? countTreeOptions[formValues.countIn?._id] : undefined;
+    const { parentList: parentOptions, treeData } = countsTreeData;
+    const childOptions = formValues.countIn?._id ? treeData[formValues.countIn?._id] : undefined;
 
     return formValues.type && ['INCOME', 'TRANSFER'].includes(formValues.type) ? (
       <>
         <CustomSelect
-          keepOpen
           label="Рахунок IN"
           placeholder="Рахунок IN"
           {...registerSelect('countIn', { options: parentOptions }, { childName: 'subCountIn' })}
         />
         <CustomSelect
-          keepOpen
           label="Суб-рахунок IN"
           placeholder="Суб-рахунок IN"
           {...registerSelect('subCountIn', {
@@ -169,17 +148,15 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
         />
       </>
     ) : null;
-  }, [countTreeOptions, counts, formValues.countIn?._id, formValues.type, registerSelect]);
+  }, [countsTreeData, formValues.countIn?._id, formValues.type, registerSelect]);
 
   const renderInputsCountOut = useMemo(() => {
-    const parentOptions = counts.filter(el => !el.owner);
-
-    const childOptions = formValues.countOut?._id ? countTreeOptions[formValues.countOut?._id] : undefined;
+    const { parentList: parentOptions, treeData } = countsTreeData;
+    const childOptions = formValues.countOut?._id ? treeData[formValues.countOut?._id] : undefined;
 
     return formValues.type && ['EXPENSE', 'TRANSFER'].includes(formValues.type) ? (
       <>
         <CustomSelect
-          keepOpen
           label="Рахунок OUT"
           placeholder="Рахунок OUT"
           {...registerSelect(
@@ -192,45 +169,33 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
           )}
         />
         <CustomSelect
-          keepOpen
           label="Суб-рахунок OUT"
           placeholder="Суб-рахунок OUT"
           {...registerSelect('subCountOut', { options: childOptions, error: errors.subCountOut })}
         />
       </>
     ) : null;
-  }, [
-    countTreeOptions,
-    counts,
-    errors.countOut,
-    errors.subCountOut,
-    formValues.countOut?._id,
-    formValues.type,
-    registerSelect,
-  ]);
+  }, [countsTreeData, errors.countOut, errors.subCountOut, formValues.countOut?._id, formValues.type, registerSelect]);
 
   const renderInputsCategories = useMemo(() => {
-    const parentOptions = categories.filter(el => !el.owner);
-
-    const childOptions = formValues.category?._id ? categoriesTreeOptions[formValues.category?._id] : undefined;
+    const { parentList: parentOptions, treeData } = categoriesTreeData;
+    const childOptions = formValues.category?._id ? treeData[formValues.category?._id] : undefined;
 
     return (
       <>
         <CustomSelect
-          keepOpen
           label="Категорія"
           placeholder="Категорія"
           {...registerSelect('category', { options: parentOptions })}
         />
         <CustomSelect
-          keepOpen
           label="Підкатегорія"
           placeholder="Підкатегорія"
           {...registerSelect('subCategory', { options: childOptions })}
         />
       </>
     );
-  }, [categories, categoriesTreeOptions, formValues.category?._id, registerSelect]);
+  }, [categoriesTreeData, formValues.category?._id, registerSelect]);
 
   function onSubmitWrapper() {
     let submitData = formValues;
@@ -255,7 +220,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   useEffect(() => console.log('Render Transaction form ==============>>>>>>>>'), []);
   return (
     <ModalForm onSubmit={onSubmitWrapper} onOptSelect={({ value }) => value && setValue('type', value)} {...props}>
-      <Inputs className={'inputs'}>
+      <FlexBox className={'inputs'} flex={'1'} fillWidth maxHeight={'100%'} padding={'12px'} overflow={'auto'}>
         <InputLabel label="Дата і час" direction={'vertical'}>
           <InputText placeholder="Дата і час" type="datetime-local" {...register('transactionDate')} />
         </InputLabel>
@@ -265,34 +230,30 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
           </InputLabel>
 
           <InputLabel label="Валюта" direction={'vertical'}>
-            <InputText name="currency" placeholder="Валюта" />
+            <InputText placeholder="Валюта" {...register('currency')} disabled />
           </InputLabel>
         </GridWrapper>
 
         {renderInputsCountIn}
         {renderInputsCountOut}
+        {renderInputsCategories}
 
-        {formValues.type === 'TRANSFER' && (
-          <>
-            {renderInputsCategories}
-            <InputLabel label="Контрагент" direction={'vertical'}>
-              <InputText placeholder="Контрагент" {...register('contractor')} />
-            </InputLabel>
+        <InputLabel label="Контрагент" direction={'vertical'} disabled>
+          <InputText placeholder="Контрагент" disabled />
+        </InputLabel>
 
-            <InputLabel label="Проєкт" direction={'vertical'}>
-              <InputText placeholder="Проєкт" {...register('project')} />
-            </InputLabel>
+        <InputLabel label="Проєкт" direction={'vertical'} disabled>
+          <InputText placeholder="Проєкт" disabled />
+        </InputLabel>
 
-            <InputLabel label="Документ" direction={'vertical'}>
-              <InputText placeholder="Документ" {...register('document')} />
-            </InputLabel>
+        <InputLabel label="Документ" direction={'vertical'} disabled>
+          <InputText placeholder="Документ" disabled />
+        </InputLabel>
 
-            <InputLabel label="Коментар" direction={'vertical'}>
-              <TextareaPrimary placeholder="Коментар" {...register('comment')} />
-            </InputLabel>
-          </>
-        )}
-      </Inputs>
+        <InputLabel label="Коментар" direction={'vertical'}>
+          <TextareaPrimary placeholder="Коментар" {...register('comment')} />
+        </InputLabel>
+      </FlexBox>
     </ModalForm>
   );
 };
@@ -300,7 +261,7 @@ const Inputs = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  //gap: 12px;
+
   overflow: auto;
   padding: 12px;
   max-height: 100%;

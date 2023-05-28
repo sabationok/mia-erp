@@ -1,4 +1,3 @@
-// @flow
 import * as React from 'react';
 import styled from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
@@ -11,7 +10,7 @@ export interface IDirectoriesProps {
 
 export interface Props {
   options: IDirectory[];
-};
+}
 const CompanySettings: React.FC<Props> = ({ options }) => {
   const modal = useModalProvider();
 
@@ -20,7 +19,7 @@ const CompanySettings: React.FC<Props> = ({ options }) => {
       {[...options].map(({ title, iconId, ModalChildren, modalChildrenProps, disabled }, idx) => (
         <ListItem key={title}>
           <StButtonIcon
-            variant='def'
+            variant="def"
             onClick={() => {
               modal.handleOpenModal({ ModalChildren, modalChildrenProps });
             }}
@@ -41,7 +40,7 @@ const Container = styled.ul`
   max-width: 100%;
   /* padding: 8px; */
 
-    /* background-color: ${({ theme }) => theme.backgroundColorSecondary}; */
+  /* background-color: ${({ theme }) => theme.backgroundColorSecondary}; */
 `;
 const ListItem = styled.li``;
 const StButtonIcon = styled(ButtonIcon)`
