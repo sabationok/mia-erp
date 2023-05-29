@@ -12,6 +12,7 @@ export interface IPermission extends IBase {
   user: Partial<IUser>;
   role: Partial<ICustomRole>;
   permissionToken: string;
+  expireAt?: number | Date;
 }
 
 export interface IPermissionResData {
@@ -39,4 +40,3 @@ export interface IPermissionsState {
   isLoading: boolean;
   error: StateErrorType;
 }
-

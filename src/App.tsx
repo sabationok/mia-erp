@@ -1,6 +1,5 @@
 import AppLoader from 'components/atoms/AppLoader';
 import { Suspense } from 'react';
-import Layout from 'components/Layout/Layout';
 import AppRoutes from 'components/AppRoutes/AppRoutes';
 import SideBarProvider from 'components/SideBarLeft/SideBarProvider';
 import { ToastContainer } from 'react-toastify';
@@ -17,9 +16,7 @@ const App: React.FC = () => {
         <GlobalStyles />
         <Suspense fallback={<AppLoader isLoading />}>
           <SideBarProvider>
-            <Layout>
-              <AppRoutes />
-            </Layout>
+            <AppRoutes />
           </SideBarProvider>
         </Suspense>
       </AppContainer>

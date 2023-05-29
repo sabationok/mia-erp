@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { actionSetIndexPage } from 'redux/page/pageActions';
 
 import styled from 'styled-components';
+import Layout from '../Layout/Layout';
 
 const AppGridPage: React.FC<{ path: string; children?: React.ReactNode }> = ({ path, children }) => {
   const dispatch = useDispatch();
@@ -13,7 +14,11 @@ const AppGridPage: React.FC<{ path: string; children?: React.ReactNode }> = ({ p
     }
   }, [dispatch, path]);
 
-  return <GridPage>{children}</GridPage>;
+  return (
+    <Layout>
+      <GridPage>{children}</GridPage>;
+    </Layout>
+  );
 };
 
 const GridPage = styled.div`

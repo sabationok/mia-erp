@@ -5,38 +5,32 @@ import ActionAppExit from './Actions/ActionAppExit';
 import { useSideBar } from './SideBarProvider';
 import styled, { css } from 'styled-components';
 
-// import { useState } from 'react';
-
-const SideBar: React.FC<any & React.HTMLAttributes<HTMLDivElement>> = ({ ...props }) => {
+const SideBar: React.FC<any & React.HTMLAttributes<HTMLDivElement>> = props => {
   const { isOpen, onTogglerClick, handleOptionsState, sideBarButtons, sideBarButtonsBottom, RightSideContent } =
     useSideBar();
-  // const [isMiddleOpen, setIsMiddleOpen] = useState(false);
 
-  // function handleMiddleOpen() {
-  //   setIsMiddleOpen(prev => !prev);
-  // }
   return (
-    <StyledSideBar isOpen={!!isOpen} className='SideBar' {...props} data-sidebar>
+    <StyledSideBar isOpen={!!isOpen} className="SideBar" {...props} data-sidebar>
       <MenuToggler isOpen={!!isOpen} onClick={onTogglerClick} />
 
-      <SideBarContainer className='SideBarContainer'>
-        <Content isOpen={!!isOpen} className='Content'>
+      <SideBarContainer className="SideBarContainer">
+        <Content isOpen={!!isOpen} className="Content">
           <Top>
             <ToggleThemeMode />
           </Top>
 
-          <Middle className='Middle'>
+          <Middle className="Middle">
             {/* <MiddleToggler variant="def" iconId="actionsH" iconSize="24px" onClick={() => handleMiddleOpen()} /> */}
 
-            <MiddleButtons className='MiddleButtons'>
+            <MiddleButtons className="MiddleButtons">
               {sideBarButtons &&
                 sideBarButtons.map(item => (
                   <StyledButtonIcon
                     key={item?.iconId}
                     iconId={item?.iconId}
                     title={item?.title}
-                    iconSize='20px'
-                    variant='pointerLeft'
+                    iconSize="20px"
+                    variant="pointerLeft"
                     isActive={item?.title === RightSideContent?.title}
                     onClick={() => handleOptionsState && handleOptionsState(item)}
                   />
@@ -51,8 +45,8 @@ const SideBar: React.FC<any & React.HTMLAttributes<HTMLDivElement>> = ({ ...prop
                   key={item?.iconId}
                   iconId={item?.iconId}
                   title={item?.title}
-                  iconSize='20px'
-                  variant='pointerLeft'
+                  iconSize="20px"
+                  variant="pointerLeft"
                   isActive={item?.title === RightSideContent?.title}
                   onClick={() => handleOptionsState && handleOptionsState(item)}
                 />
@@ -119,7 +113,7 @@ const Content = styled.div<SideBarState>`
 
   overflow: hidden;
 
-  border-right: ${({ theme, isOpen }) => isOpen ? `1px solid ${theme.sideBarBorderColor}` : '0 solid transparent'};
+  border-right: ${({ theme, isOpen }) => (isOpen ? `1px solid ${theme.sideBarBorderColor}` : '0 solid transparent')};
   background-color: ${({ theme }) => theme.sideBarBackgroundColor};
   transition: min-width ${({ theme }) => theme.globals.timingFunctionLong};
 `;
@@ -130,7 +124,7 @@ const Top = styled.div`
   justify-content: center;
 
   /* height: 100%; */
-    /* width: ${sideBarCompWidthMobile};
+  /* width: ${sideBarCompWidthMobile};
   @media screen and (min-width: 480px) { */
   width: ${sideBarCompWidth};
   /* } */
@@ -149,7 +143,7 @@ const Middle = styled.div`
     height: 2px;
   }
 
-    /* width: ${sideBarCompWidthMobile};
+  /* width: ${sideBarCompWidthMobile};
   @media screen and (min-width: 480px) { */
   width: ${sideBarCompWidth};
   /* } */
@@ -175,7 +169,7 @@ const Bottom = styled.div`
 
   padding-bottom: 12px;
 
-    /* width: ${sideBarCompWidthMobile};
+  /* width: ${sideBarCompWidthMobile};
   @media screen and (min-width: 480px) { */
   width: ${sideBarCompWidth};
   /* } */
@@ -195,7 +189,7 @@ const MenuToggler = styled.button<SideBarState>`
 
   background-color: ${({ isOpen, theme }) => (isOpen ? theme.sideBarBorderColor : theme.sideBarTogglerBackgroundColor)};
   border-right: ${({ theme, isOpen }) => (!isOpen ? `1px solid ${theme.sideBarBorderColor}` : `1px solid transparent`)};
-    //transition: all ${({ theme }) => theme.globals.timingFunctionMain};
+  //transition: all ${({ theme }) => theme.globals.timingFunctionMain};
 `;
 
 const isActiveCss = css`

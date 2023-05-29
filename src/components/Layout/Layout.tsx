@@ -4,10 +4,8 @@ import Header from './Header/Header';
 import { baseURL } from 'api';
 // import { useDispatch } from 'react-redux';
 // import { toast } from 'react-toastify';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import SideBar from 'components/SideBarLeft/SideBar';
-import PrivateComponent from 'components/atoms/PrivateComponent';
-import { useAuthSelector } from 'redux/selectors.store';
 
 interface ILayoutCTX {}
 
@@ -15,41 +13,21 @@ export const LayoutCTX = createContext({});
 export const useLayout = () => useContext(LayoutCTX) as ILayoutCTX;
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isLoggedIn } = useAuthSelector();
-
   const CTX = {};
 
   useEffect(() => {
     if (window.location.hostname !== 'localhost') return;
 
-    if (window.location.hostname === 'localhost') return;
-
-    // const payload = thunkName => {
-    //   return {
-    //     onSuccess: response => {
-    //       console.log(response.data);
-    //     },
-    //     onError: (error: StateErrorType) => {
-    //       toast.error(`${thunkName} - ${error.message}`);
-    //     },
-    //   };
-    // };
-
     if (window.location.hostname === 'localhost') {
       baseURL.setLocalhost();
     }
-    // dispatch(getAllCategoriesThunk(payload('Categories')));
-    // dispatch(getAllCountsThunk(payload('Counts')));
-    // dispatch(getAllTransactionsThunk(payload('Transactions')));
   }, []);
   return (
     <LayoutCTX.Provider value={CTX}>
-      <StyledLayout isLoggedIn={isLoggedIn} className="Layout">
-        <PrivateComponent>
-          <Header />
+      <StyledLayout className="Layout">
+        <Header />
 
-          <StSideBar />
-        </PrivateComponent>
+        <StSideBar />
 
         <LayoutChildren className="LayoutChildren">{children}</LayoutChildren>
       </StyledLayout>
@@ -57,7 +35,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   );
 };
 
-const StyledLayout = styled.div<{ isLoggedIn: boolean }>`
+const StyledLayout = styled.div`
   display: grid;
   grid-template-columns: min-content 1fr;
 
@@ -69,20 +47,10 @@ const StyledLayout = styled.div<{ isLoggedIn: boolean }>`
 
   position: relative;
 
-  ${({ isLoggedIn }) =>
-    isLoggedIn
-      ? css`
-          grid-template-rows: 40px calc(100% - 40px);
-          @media screen and (min-width: 480px) {
-            grid-template-rows: 30px calc(100% - 30px);
-          }
-        `
-      : css`
-          grid-template-rows: 0px calc(100% - 0px); ;
-        `}/* grid-template-rows: 40px calc(100% - 40px);
+  grid-template-rows: 40px calc(100% - 40px);
   @media screen and (min-width: 480px) {
     grid-template-rows: 30px calc(100% - 30px);
-  } */
+  }
 `;
 
 const LayoutChildren = styled.div`

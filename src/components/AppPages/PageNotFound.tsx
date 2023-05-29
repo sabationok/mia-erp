@@ -4,6 +4,7 @@ import MyTreeSelect from '../atoms/Inputs/MyTreeSelect';
 import * as React from 'react';
 import CustomSelect from '../atoms/Inputs/CustomSelect';
 import FlexBox from '../atoms/FlexBox';
+import { takeFullGridArea } from './pagesStyles';
 
 export type ErrorNameType = 'notFoundPage' | 'notFound';
 
@@ -89,6 +90,8 @@ const Page = styled.div`
   max-width: 100%;
 
   overflow: auto;
+
+  ${takeFullGridArea};
 `;
 
 const ErrorNotification = styled.div`

@@ -20,13 +20,12 @@ export const initialCustomRole: ICustomRole = {
   accessKeys: ['home', 'transactions', 'orders', 'refunds', 'supplement', 'storage', 'manager', 'admin'],
 };
 export const initialPermission: IPermission = {
-  _id: 'sdfbsdfbdfg',
+  _id: 'id',
   status: 'active',
   permissionToken: 'permissionToken',
   company: initialCompany,
   user: testUserKarina,
   role: initialCustomRole,
-
 };
 const testPermissions = [
   initialPermission,
@@ -58,16 +57,10 @@ export const permissionsSlice = createSlice({
   reducers: {},
   extraReducers: builder =>
     builder
-      .addCase(getAllPermissionsByUserIdThunk.fulfilled, (state, action) => {
-      })
-      .addCase(getAllPermissionsByCompanyIdThunk.fulfilled, (state, action) => {
-      })
-      .addCase(createPermissionThunk.fulfilled, (state, action) => {
-      })
-      .addCase(editPermissionThunk.fulfilled, (state, action) => {
-      })
-      .addCase(deletePermissionByIdThunk.fulfilled, (state, action) => {
-      })
-      .addCase(getCurrentPermissionThunk.fulfilled, (state, action) => {
-      }),
+      .addCase(getAllPermissionsByUserIdThunk.fulfilled, (state, action) => {})
+      .addCase(getAllPermissionsByCompanyIdThunk.fulfilled, (state, action) => {})
+      .addCase(createPermissionThunk.fulfilled, (state, action) => {})
+      .addCase(editPermissionThunk.fulfilled, (state, action) => {})
+      .addCase(deletePermissionByIdThunk.fulfilled, (state, action) => {})
+      .addCase(getCurrentPermissionThunk.fulfilled, (state, action) => {}),
 });

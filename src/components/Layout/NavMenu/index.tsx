@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useParams } from 'react-router-dom';
 import { iconId } from 'data';
 import { IPage } from 'redux/page/pageSlice';
 import styled from 'styled-components';
@@ -10,6 +10,7 @@ import Text from '../../atoms/Text';
 
 const NavMenu: React.FC = () => {
   const pages = useAppPages();
+  const { companyId } = useParams();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [activePage, setActivePage] = useState<IPage>(pages[0]);
   const location = useLocation();
@@ -37,7 +38,7 @@ const NavMenu: React.FC = () => {
         return (
           <StyledNavLink
             key={item?.path}
-            to={item?.path}
+            to={companyId ? `/${companyId}/${item?.path}` : `/${item.path}`}
             onClick={() => {
               onNavLinkClick(item);
             }}

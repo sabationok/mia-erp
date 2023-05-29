@@ -3,6 +3,7 @@ import AppPages from 'components/AppPages';
 import { memo, useEffect, useMemo } from 'react';
 import { useAuthSelector } from '../../redux/selectors.store';
 import { toast } from 'react-toastify';
+import CompanyControl from '../AppPages/CompanyControl';
 
 const { PageNotFound } = AppPages;
 
@@ -20,7 +21,11 @@ const AppRoutes: React.FC = () => {
   const notFoundRouteProps = useMemo(
     () => ({
       path: '*',
-      element: <PageNotFound />,
+      element: (
+        <AppPages.AppGridPage path={'notFound'}>
+          <PageNotFound />
+        </AppPages.AppGridPage>
+      ),
     }),
     []
   );
@@ -32,10 +37,14 @@ const AppRoutes: React.FC = () => {
       {/*<Route path={'/'} element={<Navigate to={'/auth'} />} />*/}
 
       {isAuthorized && (
-        <Route path={'/*'}>
-          <Route index element={<Navigate to={'/transactions'} />} />
-          <Route path={'transactions'} element={<AppPages.PageTransactions path={'transactions'} />} />
-          <Route path={'home'} element={<AppPages.PageHome path={'home'} />} />
+        <Route>
+          <Route path={'/home'} element={<AppPages.PageHome path={'home'} />} />
+          <Route path={'/:companyId'} element={<CompanyControl redirectTo={'/home'} />}>
+            <Route index element={<Navigate to={'transactions'} />} />
+            <Route path={'home'} element={<AppPages.PageHome path={'home'} />} />
+            <Route path={'transactions'} element={<AppPages.PageTransactions path={'transactions'} />} />
+            <Route {...notFoundRouteProps} />
+          </Route>
           <Route {...notFoundRouteProps} />
         </Route>
       )}
@@ -45,11 +54,8 @@ const AppRoutes: React.FC = () => {
           <Route index element={<Navigate to="login" />} />
           <Route path="register" element={<AppPages.PageAuth register />} />
           <Route path="login" element={<AppPages.PageAuth login />} />
-
           <Route path="sendRecoveryPasswordMail" element={<AppPages.PageAuth sendRecoveryMail />} />
-
           <Route path="recoveryPassword" element={<AppPages.PageAuth recovery />} />
-
           <Route {...notFoundRouteProps} />
         </Route>
       )}
