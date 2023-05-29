@@ -29,7 +29,7 @@ const AppRoutes: React.FC = () => {
     <Routes>
       <Route index element={<Navigate to={isAuthorized ? '/app' : '/auth'} />} />
 
-      <Route path={'auth/*'} element={<PublicRoute redirectTo={'/app/home'} />}>
+      <Route path={'/auth/*'} element={<PublicRoute redirectTo={'/app/home'} />}>
         <Route index element={<Navigate to="/auth/login" />} />
         <Route path="register" element={<AppPages.PageAuth register />} />
         <Route path="login" element={<AppPages.PageAuth login />} />
@@ -38,7 +38,7 @@ const AppRoutes: React.FC = () => {
         <Route path={'*'} element={<Navigate to="/auth/login" />} />
       </Route>
 
-      <Route path={'app/*'} element={<PrivateRoute redirectTo={'/auth'} />}>
+      <Route path={'/app/*'} element={<PrivateRoute redirectTo={'/auth'} />}>
         <Route index element={<Navigate to={'app/home'} />} />
         <Route path={'home'} element={<AppPages.PageSelectCompany path={'home'} />} />
 
