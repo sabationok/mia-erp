@@ -1,7 +1,6 @@
 import AppLoader from 'components/atoms/AppLoader';
 import { Suspense } from 'react';
 import AppRoutes from 'components/AppRoutes/AppRoutes';
-import SideBarProvider from 'components/SideBarLeft/SideBarProvider';
 import { ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
 import useAppSettings from 'redux/appSettings/useAppSettings.hook';
@@ -19,9 +18,7 @@ const App: React.FC = () => {
       <AppContainer>
         <GlobalStyles />
         <Suspense fallback={<AppLoader isLoading />}>
-          <SideBarProvider>
-            <AppRoutes />
-          </SideBarProvider>
+          <AppRoutes />
         </Suspense>
       </AppContainer>
 
