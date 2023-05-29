@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import AppPages from 'components/AppPages';
 import { memo, useMemo } from 'react';
 import { useAuthSelector } from '../../redux/selectors.store';
@@ -10,8 +10,11 @@ const { PageNotFound } = AppPages;
 
 const AppRoutes: React.FC = () => {
   const { accessToken } = useAuthSelector();
+  const location = useLocation();
 
   const isAuthorized = useMemo(() => !!accessToken, [accessToken]);
+
+  console.log('AppRoutes', location);
 
   const notFoundRouteProps = useMemo(
     () => ({
@@ -26,7 +29,7 @@ const AppRoutes: React.FC = () => {
   );
 
   return (
-    <Routes>
+    <Routes location={location}>
       <Route index element={<Navigate to={isAuthorized ? '/app' : '/auth'} />} />
 
       <Route path={'/'} element={<PublicRoute redirectTo={'/app/home'} />}>
