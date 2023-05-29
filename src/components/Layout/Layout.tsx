@@ -14,7 +14,7 @@ interface ILayoutCTX {}
 export const LayoutCTX = createContext({});
 export const useLayout = () => useContext(LayoutCTX) as ILayoutCTX;
 
-const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const { companyId } = useAppParams();
   const { company } = usePermissionsSelector().permission;
   const isValidCompany = useMemo(() => companyId === company._id, [company._id, companyId]);
