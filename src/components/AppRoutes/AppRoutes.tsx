@@ -30,32 +30,20 @@ const AppRoutes: React.FC = () => {
 
   return (
     <Routes location={location}>
-      {/*<Route index element={<Navigate to={isAuthorized ? '/app' : '/auth'} />} />*/}
-
-      <Route index element={<Navigate to={'/app/home'} />} />
-      <Route path={'/app/home'} element={<AppPages.PageSelectCompany path={'home'} />} />
-
-      <Route path={'/app/:companyId'} element={<CompanyControl redirectTo={'/app/home'} />}>
-        <Route index element={<Navigate to={'transactions'} />} />
-        <Route path={'companies'} element={<AppPages.PageSelectCompany path={'companies'} />} />
-        <Route path={'transactions'} element={<AppPages.PageTransactions path={'transactions'} />} />
-        <Route {...notFoundRouteProps} />
-      </Route>
-
-      <Route path={'/'} element={<PublicRoute redirectTo={'/app/home'} />}>
+      <Route path={'auth/*'} element={<PublicRoute redirectTo={'/app/home'} />}>
         <Route index element={<Navigate to="/auth/login" />} />
-        <Route path="auth/register" element={<AppPages.PageAuth register />} />
-        <Route path="auth/login" element={<AppPages.PageAuth login />} />
-        <Route path="auth/sendRecoveryPasswordMail" element={<AppPages.PageAuth sendRecoveryMail />} />
-        <Route path="auth/recoveryPassword" element={<AppPages.PageAuth recovery />} />
+        <Route path="register" element={<AppPages.PageAuth register />} />
+        <Route path="login" element={<AppPages.PageAuth login />} />
+        <Route path="sendRecoveryPasswordMail" element={<AppPages.PageAuth sendRecoveryMail />} />
+        <Route path="recoveryPassword" element={<AppPages.PageAuth recovery />} />
         <Route path={'*'} element={<Navigate to="/auth/login" />} />
       </Route>
 
-      <Route path={'/'} element={<PrivateRoute redirectTo={'/auth'} />}>
+      <Route path={'app/*'} element={<PrivateRoute redirectTo={'/auth'} />}>
         <Route index element={<Navigate to={'app/home'} />} />
-        <Route path={'app/home'} element={<AppPages.PageSelectCompany path={'home'} />} />
+        <Route path={'home'} element={<AppPages.PageSelectCompany path={'home'} />} />
 
-        <Route path={'app/:companyId'} element={<CompanyControl redirectTo={'/app/home'} />}>
+        <Route path={':companyId'} element={<CompanyControl redirectTo={'/app/home'} />}>
           <Route index element={<Navigate to={'transactions'} />} />
           <Route path={'companies'} element={<AppPages.PageSelectCompany path={'companies'} />} />
           <Route path={'transactions'} element={<AppPages.PageTransactions path={'transactions'} />} />
