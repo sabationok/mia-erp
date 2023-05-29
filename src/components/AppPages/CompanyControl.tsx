@@ -11,11 +11,9 @@ const CompanyControl: React.FC<Props> = ({ children, redirectTo }) => {
   const state = usePermissionsSelector();
 
   const isValidCompany = useMemo(() => {
-    console.log('isValidCompany useMemo');
     return companyId === state.permission.company._id;
   }, [companyId, state.permission.company._id]);
 
-  console.log('isValidCompany', isValidCompany);
   return isValidCompany ? (
     <>
       {children}

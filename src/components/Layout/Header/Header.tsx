@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import NavMenu from '../NavMenu';
 import LogoSvg from './LogoSvg/LogoSvg';
 
@@ -9,33 +9,45 @@ import ActionToggleSideBar from 'components/SideBarLeft/Actions/ActionToggleSide
 interface IHeaderComponent {
   Component: React.FC | null;
   props?: any;
+  corp?: boolean;
 }
 
 const HeaderLeftSideItems: IHeaderComponent[] = [
-  { Component: ActionToggleSideBar },
-  { Component: LogoSvg },
-  { Component: NavMenu },
+  { Component: ActionToggleSideBar, corp: false },
+  { Component: LogoSvg, corp: false },
+  { Component: NavMenu, corp: true },
 ];
-const HeaderRightSideItems: IHeaderComponent[] = [{ Component: UserMenu }];
+const HeaderRightSideItems: IHeaderComponent[] = [{ Component: UserMenu, corp: false }];
 
-const Header: React.FC<any> = () => {
+type HeaderProps = {
+  isValidCompany?: boolean;
+};
+const Header: React.FC<HeaderProps> = ({ isValidCompany }) => {
+  const renderLeftSide = useMemo(
+    () =>
+      HeaderLeftSideItems.filter(el => (isValidCompany ? el : !el.corp)).map(({ Component, corp, props }, idx) => (
+        <StyledBox key={idx} borderRight>
+          {Component && <Component {...props} />}
+        </StyledBox>
+      )),
+    [isValidCompany]
+  );
+
+  const renderRightSide = useMemo(
+    () =>
+      HeaderRightSideItems.filter(el => (isValidCompany ? el : !el.corp)).map(({ Component, corp, props }, idx) => (
+        <StyledBox key={idx} borderRight>
+          {Component && <Component {...props} />}
+        </StyledBox>
+      )),
+    [isValidCompany]
+  );
+
   return (
     <StyledHeader>
-      <LeftSide>
-        {HeaderLeftSideItems.map(({ Component, props }, idx) => (
-          <StyledBox key={idx} borderRight>
-            {Component && <Component {...props} />}
-          </StyledBox>
-        ))}
-      </LeftSide>
+      <LeftSide>{renderLeftSide}</LeftSide>
 
-      <RightSide>
-        {HeaderRightSideItems.map(({ Component, props }, idx) => (
-          <StyledBox key={idx} borderLeft>
-            {Component && <Component {...props} />}
-          </StyledBox>
-        ))}
-      </RightSide>
+      <RightSide>{renderRightSide}</RightSide>
     </StyledHeader>
   );
 };

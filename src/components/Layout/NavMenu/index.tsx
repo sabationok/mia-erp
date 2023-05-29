@@ -50,7 +50,7 @@ const NavMenu: React.FC = () => {
           </StyledNavLink>
         );
       }),
-    [companyId, onNavLinkClick, pages]
+    [onNavLinkClick, pages]
   );
 
   useEffect(() => {

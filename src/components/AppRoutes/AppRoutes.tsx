@@ -33,7 +33,7 @@ const AppRoutes: React.FC = () => {
 
       <Route path={'/app'} element={<PrivateRoute redirectTo={'/auth'} />}>
         <Route index element={<Navigate to={'home'} />} />
-        <Route path={'home'} element={<AppPages.PageHome path={'home'} />} />
+        <Route path={'home'} element={<AppPages.PageSelectCompany path={'home'} />} />
 
         <Route path={':companyId'} element={<CompanyControl redirectTo={'/app'} />}>
           <Route index element={<Navigate to={'transactions'} />} />

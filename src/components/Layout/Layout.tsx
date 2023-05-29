@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useMemo } from 'react';
 import Header from './Header/Header';
 // import SideBar from './SideBarLeft/SideBar';
 import { baseURL } from 'api';
@@ -6,6 +6,8 @@ import { baseURL } from 'api';
 // import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import SideBar from 'components/SideBarLeft/SideBar';
+import useAppParams from '../../hooks/useAppParams';
+import { usePermissionsSelector } from '../../redux/permissions/usePermissionsService.hook';
 
 interface ILayoutCTX {}
 
@@ -13,6 +15,10 @@ export const LayoutCTX = createContext({});
 export const useLayout = () => useContext(LayoutCTX) as ILayoutCTX;
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { companyId } = useAppParams();
+  const { company } = usePermissionsSelector().permission;
+  const isValidCompany = useMemo(() => companyId === company._id, [company._id, companyId]);
+
   const CTX = {};
 
   useEffect(() => {
@@ -25,9 +31,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <LayoutCTX.Provider value={CTX}>
       <StyledLayout className="Layout">
-        <Header />
+        <Header isValidCompany={isValidCompany} />
 
-        <StSideBar />
+        <StSideBar isValidCompany={isValidCompany} />
 
         <LayoutChildren className="LayoutChildren">{children}</LayoutChildren>
       </StyledLayout>

@@ -4,11 +4,52 @@ import ToggleThemeMode from './Actions/ChangeTheme';
 import ActionAppExit from './Actions/ActionAppExit';
 import { useSideBar } from './SideBarProvider';
 import styled, { css } from 'styled-components';
+import { useMemo } from 'react';
 
-const SideBar: React.FC<any & React.HTMLAttributes<HTMLDivElement>> = props => {
+type SideBarProps = {
+  isValidCompany?: boolean;
+};
+const SideBar: React.FC<SideBarProps & React.HTMLAttributes<HTMLDivElement>> = ({ isValidCompany, ...props }) => {
   const { isOpen, onTogglerClick, handleOptionsState, sideBarButtons, sideBarButtonsBottom, RightSideContent } =
     useSideBar();
 
+  const renderMain = useMemo(() => {
+    return (
+      sideBarButtons &&
+      sideBarButtons
+        .filter(el => (isValidCompany ? el : !el.corp))
+        .map(item => (
+          <StyledButtonIcon
+            key={item?.iconId}
+            iconId={item?.iconId}
+            title={item?.title}
+            iconSize="20px"
+            variant="pointerLeft"
+            isActive={item?.title === RightSideContent?.title}
+            onClick={() => handleOptionsState && handleOptionsState(item)}
+          />
+        ))
+    );
+  }, [RightSideContent?.title, handleOptionsState, isValidCompany, sideBarButtons]);
+
+  const renderBottom = useMemo(() => {
+    return (
+      sideBarButtonsBottom &&
+      sideBarButtonsBottom
+        .filter(el => (isValidCompany ? el : !el.corp))
+        .map(item => (
+          <StyledButtonIcon
+            key={item?.iconId}
+            iconId={item?.iconId}
+            title={item?.title}
+            iconSize="20px"
+            variant="pointerLeft"
+            isActive={item?.title === RightSideContent?.title}
+            onClick={() => handleOptionsState && handleOptionsState(item)}
+          />
+        ))
+    );
+  }, [RightSideContent?.title, handleOptionsState, isValidCompany, sideBarButtonsBottom]);
   return (
     <StyledSideBar isOpen={!!isOpen} className="SideBar" {...props} data-sidebar>
       <MenuToggler isOpen={!!isOpen} onClick={onTogglerClick} />
@@ -22,35 +63,11 @@ const SideBar: React.FC<any & React.HTMLAttributes<HTMLDivElement>> = props => {
           <Middle className="Middle">
             {/* <MiddleToggler variant="def" iconId="actionsH" iconSize="24px" onClick={() => handleMiddleOpen()} /> */}
 
-            <MiddleButtons className="MiddleButtons">
-              {sideBarButtons &&
-                sideBarButtons.map(item => (
-                  <StyledButtonIcon
-                    key={item?.iconId}
-                    iconId={item?.iconId}
-                    title={item?.title}
-                    iconSize="20px"
-                    variant="pointerLeft"
-                    isActive={item?.title === RightSideContent?.title}
-                    onClick={() => handleOptionsState && handleOptionsState(item)}
-                  />
-                ))}
-            </MiddleButtons>
+            <MiddleButtons className="MiddleButtons">{renderMain}</MiddleButtons>
           </Middle>
 
           <Bottom>
-            {sideBarButtonsBottom &&
-              sideBarButtonsBottom.map(item => (
-                <StyledButtonIcon
-                  key={item?.iconId}
-                  iconId={item?.iconId}
-                  title={item?.title}
-                  iconSize="20px"
-                  variant="pointerLeft"
-                  isActive={item?.title === RightSideContent?.title}
-                  onClick={() => handleOptionsState && handleOptionsState(item)}
-                />
-              ))}
+            {renderBottom}
             <ActionAppExit />
           </Bottom>
         </Content>

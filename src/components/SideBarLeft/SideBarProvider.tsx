@@ -7,6 +7,7 @@ export interface ISidebarOptionsItem {
   RenderComponent: React.FC<any>;
   title: string;
   maxWidth: string;
+  corp: boolean;
 }
 
 export interface ISideBarCTX {
