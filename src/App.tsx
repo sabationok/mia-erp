@@ -1,5 +1,5 @@
 import AppLoader from 'components/atoms/AppLoader';
-import { Suspense, useEffect } from 'react';
+import { Suspense } from 'react';
 import AppRoutes from 'components/AppRoutes/AppRoutes';
 import { ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
@@ -12,16 +12,6 @@ const App: React.FC = () => {
   const auth = useAppAuthHook();
 
   console.log('App', auth);
-
-  useEffect(() => {
-    const onConfirmRefresh = function (event: BeforeUnloadEvent) {
-      event.preventDefault();
-      return (event.returnValue = 'Are you sure you want to leave the page?');
-    };
-
-    window.addEventListener('beforeunload', onConfirmRefresh, { capture: true });
-    // return () => window.removeEventListener('beforeunload', onConfirmRefresh);
-  }, []);
 
   return (
     <>
