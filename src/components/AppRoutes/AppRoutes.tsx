@@ -31,20 +31,6 @@ const AppRoutes: React.FC = () => {
 
       {/*<Route path={'/'} element={<Navigate to={'/auth'} />} />*/}
 
-      <Route path={'/app'} element={<PrivateRoute redirectTo={'/auth'} />}>
-        <Route index element={<Navigate to={'home'} />} />
-        <Route path={'home'} element={<AppPages.PageSelectCompany path={'home'} />} />
-
-        <Route path={':companyId'} element={<CompanyControl redirectTo={'/app'} />}>
-          <Route index element={<Navigate to={'transactions'} />} />
-          <Route path={'companies'} element={<AppPages.PageSelectCompany path={'companies'} />} />
-          <Route path={'transactions'} element={<AppPages.PageTransactions path={'transactions'} />} />
-          <Route {...notFoundRouteProps} />
-        </Route>
-
-        <Route {...notFoundRouteProps} />
-      </Route>
-
       <Route path={'/'} element={<PublicRoute redirectTo={'/app'} />}>
         <Route path="auth/*">
           <Route index element={<Navigate to="login" />} />
@@ -53,6 +39,21 @@ const AppRoutes: React.FC = () => {
           <Route path="sendRecoveryPasswordMail" element={<AppPages.PageAuth sendRecoveryMail />} />
           <Route path="recoveryPassword" element={<AppPages.PageAuth recovery />} />
           <Route path={'*'} element={<Navigate to="login" />} />
+        </Route>
+      </Route>
+
+      <Route path={'/'} element={<PrivateRoute redirectTo={'/auth'} />}>
+        <Route path={'app/*'}>
+          <Route index element={<Navigate to={'home'} />} />
+          <Route path={'home'} element={<AppPages.PageSelectCompany path={'home'} />} />
+          
+          <Route path={':companyId'} element={<CompanyControl redirectTo={'/app'} />}>
+            <Route index element={<Navigate to={'transactions'} />} />
+            <Route path={'companies'} element={<AppPages.PageSelectCompany path={'companies'} />} />
+            <Route path={'transactions'} element={<AppPages.PageTransactions path={'transactions'} />} />
+            <Route {...notFoundRouteProps} />
+          </Route>
+          <Route {...notFoundRouteProps} />
         </Route>
       </Route>
 
