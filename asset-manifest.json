@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/counter-app-ts/static/css/main.3574cfb7.css",
-    "main.js": "/counter-app-ts/static/js/main.60199426.js",
+    "main.js": "/counter-app-ts/static/js/main.b2f4ce94.js",
     "static/js/915.85b0d176.chunk.js": "/counter-app-ts/static/js/915.85b0d176.chunk.js",
     "static/js/155.fcb3abc4.chunk.js": "/counter-app-ts/static/js/155.fcb3abc4.chunk.js",
     "static/js/101.ab95d920.chunk.js": "/counter-app-ts/static/js/101.ab95d920.chunk.js",
@@ -19,7 +19,7 @@
     "static/media/Gilroy-Regular.woff2": "/counter-app-ts/static/media/Gilroy-Regular.f6c9931fabe5a6eb3307.woff2",
     "index.html": "/counter-app-ts/index.html",
     "main.3574cfb7.css.map": "/counter-app-ts/static/css/main.3574cfb7.css.map",
-    "main.60199426.js.map": "/counter-app-ts/static/js/main.60199426.js.map",
+    "main.b2f4ce94.js.map": "/counter-app-ts/static/js/main.b2f4ce94.js.map",
     "915.85b0d176.chunk.js.map": "/counter-app-ts/static/js/915.85b0d176.chunk.js.map",
     "155.fcb3abc4.chunk.js.map": "/counter-app-ts/static/js/155.fcb3abc4.chunk.js.map",
     "101.ab95d920.chunk.js.map": "/counter-app-ts/static/js/101.ab95d920.chunk.js.map",
@@ -32,6 +32,6 @@
   },
   "entrypoints": [
     "static/css/main.3574cfb7.css",
-    "static/js/main.60199426.js"
+    "static/js/main.b2f4ce94.js"
   ]
 }
