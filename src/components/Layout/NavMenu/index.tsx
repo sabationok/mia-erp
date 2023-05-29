@@ -9,8 +9,8 @@ import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
 import Text from '../../atoms/Text';
 
 const NavMenu: React.FC = () => {
-  const pages = useAppPages();
   const { companyId } = useParams();
+  const pages = useAppPages({ companyId });
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [activePage, setActivePage] = useState<IPage>(pages[0]);
   const location = useLocation();
@@ -38,7 +38,8 @@ const NavMenu: React.FC = () => {
         return (
           <StyledNavLink
             key={item?.path}
-            to={companyId ? `/${companyId}/${item?.path}` : `/${item.path}`}
+            // to={companyId ? `/${companyId}/${item?.path}` : `/${item.path}`}
+            to={item.path}
             onClick={() => {
               onNavLinkClick(item);
             }}

@@ -17,7 +17,7 @@ export const initialCustomRole: ICustomRole = {
   label: 'Фінансист',
   descr: 'Такоє собі посада',
   actions: [],
-  accessKeys: ['home', 'transactions', 'orders', 'refunds', 'supplement', 'storage', 'manager', 'admin'],
+  accessKeys: ['companies', 'transactions', 'orders', 'refunds', 'supplement', 'storage', 'manager', 'admin'],
 };
 export const initialPermission: IPermission = {
   _id: 'id',

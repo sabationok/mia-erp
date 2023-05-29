@@ -11,6 +11,7 @@ import usePermissionsService from 'redux/permissions/usePermissionsService.hook'
 import { IPermission } from '../../redux/permissions/permissions.types';
 import { permissionsSearchParams, permissionsTableColumns } from '../../data';
 import { ITableListProps } from '../TableList/tableTypes.types';
+import AppGridPage from './AppGridPage';
 
 const companyTypes = [
   { title: 'Мої', param: 'own' },
@@ -22,7 +23,7 @@ const companyTypes = [
 type Props = {
   path: string;
 };
-const PageHome: React.FC<any> = ({ path }: Props) => {
+const PageCompanies: React.FC<any> = ({ path }: Props) => {
   const { user } = useAuthSelector();
   const { permissions } = usePermissionsService();
   const [searchParams, setSearchParams] = useSearchParams({
@@ -70,21 +71,23 @@ const PageHome: React.FC<any> = ({ path }: Props) => {
   }, [isActiveClassName, onSearchParamClick]);
 
   return (
-    <Page>
-      <Top>
-        <ProfileInfo>
-          <ProfileCard {...user} />
-        </ProfileInfo>
+    <AppGridPage path={path}>
+      <Page>
+        <Top>
+          <ProfileInfo>
+            <ProfileCard {...user} />
+          </ProfileInfo>
 
-        <FilterButtons>
-          <ButtonsList>{renderFilterButtons}</ButtonsList>
-        </FilterButtons>
-      </Top>
+          <FilterButtons>
+            <ButtonsList>{renderFilterButtons}</ButtonsList>
+          </FilterButtons>
+        </Top>
 
-      <Bottom>
-        <TableList {...tableConfig} />
-      </Bottom>
-    </Page>
+        <Bottom>
+          <TableList {...tableConfig} />
+        </Bottom>
+      </Page>
+    </AppGridPage>
   );
 };
 
@@ -202,4 +205,4 @@ const StButtonIcon = styled(ButtonIcon)`
   }
 `;
 
-export default memo(PageHome);
+export default memo(PageCompanies);

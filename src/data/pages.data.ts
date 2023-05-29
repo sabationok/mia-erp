@@ -3,26 +3,25 @@ import { IconIdType } from '../img/sprite';
 import { useMemo } from 'react';
 
 export type PagePathType =
-  'home'
+  | 'companies'
   | 'transactions'
   | 'orders'
   | 'refunds'
   | 'supplement'
   | 'storage'
   | 'manager'
-  | 'admin'
+  | 'admin';
 
-export interface IAppPage {
+export interface IAppPage<P = any> {
   title: string;
-  path: PagePathType;
+  path: P;
   iconId: IconIdType;
   actions?: string;
   permissionName?: string;
 }
 
-
-export const appPages: Record<string, IAppPage> = {
-  home: { title: 'Головна', path: 'home', iconId: 'bank' },
+export const appPages: Record<string, IAppPage<PagePathType>> = {
+  home: { title: 'Компанії', path: 'companies', iconId: 'bank' },
   transactions: { title: 'Рух коштів', path: 'transactions', iconId: 'cashFlow', permissionName: 'cashFlow' },
   orders: { title: 'Замовлення', path: 'orders', iconId: 'assignmentOkOutlined', permissionName: 'orders' },
   refunds: { title: 'Повернення', path: 'refunds', iconId: 'assignmentBackOutlined', permissionName: 'refunds' },
@@ -43,12 +42,37 @@ export const pages: IAppPage[] = [
   appPages.admin,
 ];
 
-export const useAppPages = () => {
+export const useAppPages = ({ companyId }: { companyId?: string }) => {
   const { permission } = useAuthSelector();
 
-  return useMemo(() => pages.filter(page => {
-    if (page.path === 'home') return true;
-    if (permission.role.accessKeys?.includes(page.path)) return true;
-    return (permission.user._id === permission.company.owner?._id) && (page.path === 'admin');
-  }), [permission.company.owner?._id, permission.role.accessKeys, permission.user._id]);
+  // const pagesCorp = useMemo(() => {
+  //   let res = pages.map(page => ({ ...page, path: `/app/${companyId}/${page?.path}` }));
+  //   console.log(res);
+  //   return res;
+  // }, [companyId]);
+
+  return useMemo(() => {
+    const isCompanyValid = permission.company._id === companyId;
+    let res: IAppPage[] = [];
+    if (isCompanyValid) {
+      res = pages
+        .filter(page => {
+          if (permission.role.accessKeys?.includes(page.path)) return true;
+          return permission.user._id === permission.company.owner?._id && page.path === 'admin';
+        })
+        .map(page => ({ ...page, path: `/app/${companyId}/${page?.path}` }));
+    }
+
+    if (!isCompanyValid) {
+      res = [{ title: 'Головна', path: 'home', iconId: 'bank' }];
+    }
+
+    return res;
+  }, [
+    companyId,
+    permission.company._id,
+    permission.company.owner?._id,
+    permission.role.accessKeys,
+    permission.user._id,
+  ]);
 };
