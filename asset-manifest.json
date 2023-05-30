@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/counter-app-ts/static/css/main.3574cfb7.css",
-    "main.js": "/counter-app-ts/static/js/main.99799b94.js",
+    "main.js": "/counter-app-ts/static/js/main.bdf8c987.js",
     "static/js/915.5e506390.chunk.js": "/counter-app-ts/static/js/915.5e506390.chunk.js",
     "static/js/155.fcb3abc4.chunk.js": "/counter-app-ts/static/js/155.fcb3abc4.chunk.js",
     "static/js/481.190f317e.chunk.js": "/counter-app-ts/static/js/481.190f317e.chunk.js",
     "static/js/616.5092b1da.chunk.js": "/counter-app-ts/static/js/616.5092b1da.chunk.js",
     "static/js/350.bd9e4969.chunk.js": "/counter-app-ts/static/js/350.bd9e4969.chunk.js",
     "static/js/125.328f4321.chunk.js": "/counter-app-ts/static/js/125.328f4321.chunk.js",
-    "static/js/431.c022e06e.chunk.js": "/counter-app-ts/static/js/431.c022e06e.chunk.js",
+    "static/js/431.5740e760.chunk.js": "/counter-app-ts/static/js/431.5740e760.chunk.js",
     "static/js/780.a10724a6.chunk.js": "/counter-app-ts/static/js/780.a10724a6.chunk.js",
     "static/media/karina_avatar.png": "/counter-app-ts/static/media/karina_avatar.0ec5f295b5654e8f8bcc.png",
     "static/media/spriteSvg.svg": "/counter-app-ts/static/media/spriteSvg.fd89d7b8813ec09fa49d396ea14cc83f.svg",
@@ -18,18 +18,18 @@
     "static/media/Gilroy-Regular.woff2": "/counter-app-ts/static/media/Gilroy-Regular.f6c9931fabe5a6eb3307.woff2",
     "index.html": "/counter-app-ts/index.html",
     "main.3574cfb7.css.map": "/counter-app-ts/static/css/main.3574cfb7.css.map",
-    "main.99799b94.js.map": "/counter-app-ts/static/js/main.99799b94.js.map",
+    "main.bdf8c987.js.map": "/counter-app-ts/static/js/main.bdf8c987.js.map",
     "915.5e506390.chunk.js.map": "/counter-app-ts/static/js/915.5e506390.chunk.js.map",
     "155.fcb3abc4.chunk.js.map": "/counter-app-ts/static/js/155.fcb3abc4.chunk.js.map",
     "481.190f317e.chunk.js.map": "/counter-app-ts/static/js/481.190f317e.chunk.js.map",
     "616.5092b1da.chunk.js.map": "/counter-app-ts/static/js/616.5092b1da.chunk.js.map",
     "350.bd9e4969.chunk.js.map": "/counter-app-ts/static/js/350.bd9e4969.chunk.js.map",
     "125.328f4321.chunk.js.map": "/counter-app-ts/static/js/125.328f4321.chunk.js.map",
-    "431.c022e06e.chunk.js.map": "/counter-app-ts/static/js/431.c022e06e.chunk.js.map",
+    "431.5740e760.chunk.js.map": "/counter-app-ts/static/js/431.5740e760.chunk.js.map",
     "780.a10724a6.chunk.js.map": "/counter-app-ts/static/js/780.a10724a6.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.3574cfb7.css",
-    "static/js/main.99799b94.js"
+    "static/js/main.bdf8c987.js"
   ]
 }
