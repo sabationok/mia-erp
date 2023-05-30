@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-// import { useModalProvider } from 'components/ModalProvider/ModalProvider';
+
 import TableSortParamsList from './TableSortParamsList';
 import styled from 'styled-components';
 import { SelectItem } from 'components/TableList/TableList';
@@ -31,11 +31,11 @@ const TableSort: React.FC<TableSortProps> = ({ tableSortParams }) => {
     <Box>
       <StButton
         descending={current?.descending}
-        variant='def'
-        iconId='sort'
-        iconSize='18px'
-        endIconSize='26px'
-        endIconId='SmallArrowDown'
+        variant="def"
+        iconId="sort"
+        iconSize="18px"
+        endIconSize="26px"
+        endIconId="SmallArrowDown"
         onClick={() => onOpenClick(true)}
         data-table-sort-open
       >

@@ -20,7 +20,7 @@ export const initialCustomRole: ICustomRole = {
   accessKeys: ['companies', 'transactions', 'orders', 'refunds', 'supplement', 'storage', 'manager', 'admin'],
 };
 export const initialPermission: IPermission = {
-  _id: 'id',
+  _id: 'companyId',
   status: 'active',
   permissionToken: 'permissionToken',
   company: initialCompany,
@@ -31,16 +31,19 @@ const testPermissions = [
   initialPermission,
   {
     ...initialPermission,
+    _id: 'dfbscfbvfgnbd13f5g13bdg1',
     company: { ...initialCompany, _id: 'dfbscxvfgnbd13f5g13bdg1', name: 'Roga & Copyta' },
     role: { ...initialPermission.role, label: 'Менеджер' },
   },
   {
     ...initialPermission,
+    _id: 'dfbscxvcxgnbd13f5g13bdg1',
     company: { ...initialCompany, _id: 'dfbsdfsdf13f5g13bdg1', name: 'Roga & Copyta 3' },
     role: { ...initialPermission.role, label: 'Помічник' },
   },
   {
     ...initialPermission,
+    _id: 'dfbscxvsdfbvsd13f5g13bdg1',
     company: { ...initialCompany, _id: 'dfbsxcvgbd13f5g13bdg1', name: 'Roga & Copyta 4' },
     role: { ...initialPermission.role, label: 'Аудитор' },
   },

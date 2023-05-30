@@ -1,4 +1,4 @@
-import { RootState, useAppDispatch } from '../store.store';
+import { AppDispatch, RootState, useAppDispatch } from '../store.store';
 import { useSelector } from 'react-redux';
 import {
   createPermissionThunk,
@@ -6,51 +6,56 @@ import {
   editPermissionThunk,
   getAllPermissionsByCompanyIdThunk,
   getAllPermissionsByUserIdThunk,
-  getCurrentPermissionThunk,
 } from './permissions.thunk';
-import { IPermission } from './permissions.types';
+import { IPermissionForReq, IPermissionsState } from './permissions.types';
+import { ServiceDispatcher } from '../transactions/useTransactionsService.hook';
+import { useMemo } from 'react';
+
+export interface PermissionService {
+  dispatch: AppDispatch;
+  state: IPermissionsState;
+  getAllByCompanyId: ServiceDispatcher<{ companyId: string }>;
+  getAllByUserId: ServiceDispatcher<{ userId: string }>;
+  deleteById: ServiceDispatcher<{ id: string }>;
+  edit: ServiceDispatcher<{ id: string; data: Partial<IPermissionForReq> }>;
+  create: ServiceDispatcher<IPermissionForReq>;
+  isCurrentValid: boolean;
+  validatePermission?: (validateBy: ValidatePermissionOptions) => boolean;
+}
+
+export interface ValidatePermissionOptions {
+  companyId?: string;
+  permissionId?: string;
+  userId?: string;
+}
 
 export const usePermissionsSelector = () => useSelector((state: RootState) => state.permissions);
-const usePermissionsService = () => {
-  const dispatch = useAppDispatch();
+const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOptions = {}): PermissionService => {
+  const dispatch: AppDispatch = useAppDispatch();
   const state = usePermissionsSelector();
 
-  function getAllByCompanyId(companyId: string) {
-    dispatch(getAllPermissionsByCompanyIdThunk({ submitData: { companyId } }));
-  }
+  // function getCurrentPermissionByCompanyId(companyId: string) {
+  //   dispatch(getCurrentPermissionThunk({ submitData: { companyId } }));
+  // }
 
-  function getAllByUserId(userId: string) {
-    dispatch(getAllPermissionsByUserIdThunk({ submitData: { userId } }));
-  }
-
-  function deleteById(permissionId: string, permission: Partial<IPermission>) {
-    dispatch(deletePermissionByIdThunk({ submitData: { id: permissionId } }));
-  }
-
-  function edit(permissionId: string, permission: { company: string; user: string; role: string; }) {
-    dispatch(editPermissionThunk({ submitData: { id: permissionId, data: permission } }));
-  }
-
-  function create(permissionId: string, permission: { company: string; user: string; role: string; }) {
-    dispatch(createPermissionThunk({ submitData: { id: permissionId, data: permission } }));
-  }
-
-  function getCurrentPermission(permissionId: string) {
-    dispatch(getCurrentPermissionThunk({ submitData: { permissionId } }));
-  }
-
+  const isCurrentValid = useMemo(
+    () =>
+      (companyId && state.permission.company._id === companyId) ||
+      (permissionId && state.permission._id === permissionId) ||
+      false,
+    [companyId, permissionId, state.permission._id, state.permission.company._id]
+  );
 
   return {
     dispatch,
-    ...state,
-    getAllByCompanyId,
-    getAllByUserId,
-    getCurrentPermission,
-    deleteById,
-    edit,
-    create,
+    state,
+    getAllByCompanyId: payload => dispatch(getAllPermissionsByCompanyIdThunk(payload)),
+    getAllByUserId: payload => dispatch(getAllPermissionsByUserIdThunk(payload)),
+    deleteById: payload => dispatch(deletePermissionByIdThunk(payload)),
+    edit: payload => dispatch(editPermissionThunk(payload)),
+    create: payload => dispatch(createPermissionThunk(payload)),
+    isCurrentValid,
   };
 };
-
-export type PermissionService = ReturnType<typeof usePermissionsService>
+// export type PermissionService = ReturnType<typeof usePermissionsService>
 export default usePermissionsService as typeof usePermissionsService;

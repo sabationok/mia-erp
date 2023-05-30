@@ -3,8 +3,6 @@
 import styled, { useTheme } from 'styled-components';
 import { Oval } from 'react-loader-spinner';
 
-// import styled from 'styled-components';
-
 interface AppLoaderProps {
   isLoading: boolean;
 }

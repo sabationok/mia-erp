@@ -1,5 +1,5 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-// import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
+
 import { SelectItem } from 'components/TableList/TableList';
 import { iconId } from 'data';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -12,12 +12,7 @@ export interface ISearchParamInputProps {
   onSelect?: (item: SelectItem) => void;
 }
 
-const SearchParamInput: React.FC<ISearchParamInputProps> = ({
-  data,
-  defaultValue,
-  selectedItem,
-  onSelect,
-}) => {
+const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue, selectedItem, onSelect }) => {
   const [inputValue, setInputValue] = useState({ searchParam: '' });
   const [filteredData, setFilteredData] = useState<SelectItem[]>(data || []);
   // const [current, setCurrent] = useState<SelectItem | null>(
@@ -104,20 +99,10 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({
 
     const filteredData = data?.filter(el => {
       if (inputValue?.searchParam && el?.name)
-        return !(
-          inputValue?.searchParam &&
-          !el?.name
-            .toLowerCase()
-            .includes(inputValue?.searchParam.toLowerCase())
-        );
+        return !(inputValue?.searchParam && !el?.name.toLowerCase().includes(inputValue?.searchParam.toLowerCase()));
 
       if (inputValue?.searchParam && el?.label)
-        return !(
-          inputValue?.searchParam &&
-          !el?.label
-            .toLowerCase()
-            .includes(inputValue?.searchParam.toLowerCase())
-        );
+        return !(inputValue?.searchParam && !el?.label.toLowerCase().includes(inputValue?.searchParam.toLowerCase()));
 
       return true;
     });
@@ -183,8 +168,7 @@ const InputBox = styled.label<{ isOpen?: boolean }>`
 
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
   border-radius: 2px;
-  border: ${({ isOpen }) => (isOpen ? '1px' : '0')} solid
-    ${({ theme }) => theme.trBorderClr};
+  border: ${({ isOpen }) => (isOpen ? '1px' : '0')} solid ${({ theme }) => theme.trBorderClr};
 `;
 // const StyledLabel = styled.label`
 //   display: flex;
@@ -308,8 +292,7 @@ const ListItem = styled.li<{ listEmpty?: boolean }>`
 
   &:hover {
     cursor: default;
-    background-color: ${({ listEmpty }) =>
-      listEmpty ? '' : 'rgba(254, 254, 254, 0.1)'};
+    background-color: ${({ listEmpty }) => (listEmpty ? '' : 'rgba(254, 254, 254, 0.1)')};
   }
 
   @media screen and (max-width: 480px) {

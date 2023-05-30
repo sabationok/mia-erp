@@ -1,8 +1,7 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-// import ProfileCard from 'components/molecules/ProfileCard/ProfileCard';
 import TableList from 'components/TableList/TableList';
 import { useSearchParams } from 'react-router-dom';
-import { memo, useCallback, useEffect, useMemo } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { takeFullGridArea, takeFullPlace } from './pagesStyles';
 import { useAuthSelector } from 'redux/selectors.store';
@@ -11,8 +10,11 @@ import usePermissionsService from 'redux/permissions/usePermissionsService.hook'
 import { IPermission } from '../../redux/permissions/permissions.types';
 import { permissionsSearchParams, permissionsTableColumns } from '../../data';
 import { ITableListProps } from '../TableList/tableTypes.types';
+import usePermissionsActionsCreator from '../../redux/permissions/usePermissonsActionsCreator';
+import { CompanyQueryType } from '../../redux/global.types';
 
-const companyTypes = [
+export type CompanyTypeItem = { title: string; param: CompanyQueryType };
+const companyTypes: CompanyTypeItem[] = [
   { title: 'Мої', param: 'own' },
   { title: 'Працюю', param: 'invited' },
   { title: 'Запрошення', param: 'invites' },
@@ -24,30 +26,35 @@ type Props = {
 };
 const PageHome: React.FC<any> = ({ path }: Props) => {
   const { user } = useAuthSelector();
-  const { permissions } = usePermissionsService();
+  const [companyType, setCompanyType] = useState<{ title: string; param: CompanyQueryType }>();
   const [searchParams, setSearchParams] = useSearchParams({
     companyType: companyTypes[0].param,
   });
+  const permissionService = usePermissionsService();
+  const actionsCreator = usePermissionsActionsCreator(permissionService, companyType?.param);
 
   useEffect(() => {
     setSearchParams({ companyType: companyTypes[0].param });
+    setCompanyType(companyTypes[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const tableConfig = useMemo(
     (): ITableListProps<IPermission> => ({
-      tableData: permissions,
+      tableData: permissionService.state.permissions,
       tableTitles: permissionsTableColumns,
       tableSearchParams: permissionsSearchParams,
       isFilter: false,
       isSearch: true,
       checkBoxes: false,
+      actionsCreator,
     }),
-    [permissions]
+    [actionsCreator, permissionService.state.permissions]
   );
   const onSearchParamClick = useCallback(
-    (param: string) => {
-      setSearchParams({ companyType: param });
+    (item: CompanyTypeItem) => {
+      setSearchParams({ companyType: item.param });
+      setCompanyType(item);
     },
     [setSearchParams]
   );
@@ -61,7 +68,7 @@ const PageHome: React.FC<any> = ({ path }: Props) => {
       <StButtonIcon
         key={item.param}
         variant="def"
-        onClick={() => onSearchParamClick(item.param)}
+        onClick={() => onSearchParamClick(item)}
         className={isActiveClassName(item.param)}
       >
         {item.title}

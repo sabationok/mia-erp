@@ -1,15 +1,14 @@
 import * as React from 'react';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import styled from 'styled-components';
-import { ITransaction, ITransactionForReq } from 'redux/transactions/transactions.types';
+import { ITransaction } from 'redux/transactions/transactions.types';
 import { CategoryTypes } from 'redux/categories/categories.types';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import * as _ from 'lodash';
+import { useForm } from 'react-hook-form';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import { FilterOpt } from '../ModalForm/ModalFilter';
 import CustomSelect, { CustomSelectProps } from '../atoms/Inputs/CustomSelect';
@@ -18,6 +17,7 @@ import { useAppSelector } from '../../redux/store.store';
 import { TransactionsService } from '../../redux/transactions/useTransactionsService.hook';
 import useCreateSelectorTreeData from '../../hooks/useCreateSelectorTreeData';
 import FlexBox from '../atoms/FlexBox';
+import { createThunkPayload } from '../../utils/fabrics';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
 
@@ -25,7 +25,7 @@ export interface TransactionFormProps extends Omit<ModalFormProps, 'onSubmit'> {
   edit?: boolean;
   copy?: boolean;
   id?: string;
-  onSubmit?: SubmitHandler<ITransactionForReq>;
+  onSubmit?: TransactionsService['create'];
   onSubmitEdit?: TransactionsService['editById'];
   filterOptions?: TransactionsFilterOpt[];
   defaultState?: Partial<ITransaction>;
@@ -73,6 +73,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     setValue,
     watch,
     unregister,
+    handleSubmit,
   } = useForm<ITransaction>({
     defaultValues: { currency: 'UAH', ...defaultState },
     resolver: yupResolver(validation),
@@ -197,29 +198,37 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     );
   }, [categoriesTreeData, formValues.category?._id, registerSelect]);
 
-  function onSubmitWrapper() {
-    let submitData = formValues;
+  function onValidSubmit(submitData: ITransaction) {
+    const omitPathArr: (keyof ITransaction)[] =
+      (formValues.type === 'INCOME' && ['countOut', 'subCountOut']) ||
+      (formValues.type === 'EXPENSE' && ['countIn', 'subCountIn']) ||
+      [];
 
-    if (formValues.type === 'INCOME') submitData = _.omit(formValues, 'countOut', 'subCountOut');
-    if (formValues.type === 'EXPENSE') submitData = _.omit(formValues, 'countIn', 'subCountIn');
-
-    console.log('formValues', formValues);
     // console.log('onSubmitWrapper', submitData);
     // console.log('createTransactionForReq', createTransactionForReq(submitData));
+    const trReqData = createTransactionForReq(submitData, omitPathArr, 'transactionDate');
 
-    onSubmit && onSubmit(createTransactionForReq(submitData, [], 'transactionDate'));
+    console.log('trReqData', trReqData);
 
-    onSubmitEdit &&
-      defaultState?._id &&
-      onSubmitEdit({
-        _id: defaultState?._id,
-        data: createTransactionForReq(submitData, [], 'transactionDate'),
-      });
+    onSubmit && onSubmit(createThunkPayload({ data: trReqData }));
+
+    if (onSubmitEdit && defaultState?._id) {
+      onSubmitEdit(
+        createThunkPayload({
+          _id: defaultState?._id,
+          data: trReqData,
+        })
+      );
+      return;
+    }
   }
 
-  useEffect(() => console.log('Render Transaction form ==============>>>>>>>>'), []);
   return (
-    <ModalForm onSubmit={onSubmitWrapper} onOptSelect={({ value }) => value && setValue('type', value)} {...props}>
+    <ModalForm
+      onSubmit={handleSubmit(onValidSubmit)}
+      onOptSelect={({ value }) => value && setValue('type', value)}
+      {...props}
+    >
       <FlexBox className={'inputs'} flex={'1'} fillWidth maxHeight={'100%'} padding={'12px'} overflow={'auto'}>
         <InputLabel label="Дата і час" direction={'vertical'}>
           <InputText placeholder="Дата і час" type="datetime-local" {...register('transactionDate')} />

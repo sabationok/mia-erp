@@ -18,7 +18,8 @@ export interface SelectItemBase extends Record<string, any> {
   path?: string;
 }
 
-export interface SelectItem extends SelectItemBase {}
+export interface SelectItem extends SelectItemBase {
+}
 
 export interface TableActionProps<TDataType = any> {
   separator?: boolean;
@@ -36,7 +37,8 @@ export interface TableActionsProps<TDataType = any> {
   actions?: TableActionProps<TDataType>[];
 }
 
-export interface ITableSortParam extends Pick<SelectItem, 'descending' | 'path' | 'dataPath' | 'dataKey'> {}
+export interface ITableSortParam extends Pick<SelectItem, 'descending' | 'path' | 'dataPath' | 'dataKey'> {
+}
 
 export type OnRowClickHandlerData<RData = any> = {
   ev?: MouseEvent | React.MouseEvent<HTMLDivElement>;
@@ -54,7 +56,7 @@ export type OnCheckBoxChangeHandlerEvent<V = any> = {
 export type OnCheckBoxChangeHandler<V = any> = (data: OnCheckBoxChangeHandlerEvent<V>) => any;
 export type OnHeadCheckBoxChangeHandler<V = any> = (data: V) => any;
 
-export interface ITableListProps<TDataType = any> extends React.HTMLAttributes<HTMLDivElement> {
+export interface ITableListProps<TDataType = any> {
   tableTitles?: CellTittleProps[];
   tableSearchParams?: SelectItem[];
   tableSortParams?: ITableSortParam[];
@@ -85,6 +87,7 @@ export interface ITableListProps<TDataType = any> extends React.HTMLAttributes<H
   onTableSortParamChange?: (params: ITableSortParam) => void;
   handleTableSort?: (sortParam: ITableSortParam) => void;
   actionsCreator?: TableActionCreator<TDataType>;
+  selectedRow?: Partial<TDataType>;
 }
 
 export interface ITableListContext<TDataType = any> extends ITableListProps<TDataType> {

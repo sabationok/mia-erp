@@ -17,10 +17,10 @@ export const store = configureStore({
 
 export type AppDispatch = typeof store.dispatch;
 
-export interface ThunkPayload<T = any, D = any, E = any> {
-  data?: T;
-  submitData?: T;
-  onSuccess?: (data: D) => void;
+export interface ThunkPayload<SD = any, RD = any, E = any> {
+  data?: SD;
+  submitData?: SD;
+  onSuccess?: (data: RD) => void;
   onError?: (error: E | unknown) => void;
   onLoading?: (loading: boolean) => void;
 }

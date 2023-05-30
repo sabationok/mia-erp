@@ -224,7 +224,6 @@ const pointerBottom = css`
   fill: ${({ theme }) => theme.colorLight};
   border-radius: 0;
 
-  border-width: 0;
   transition: none;
 
   &::before {

@@ -1,7 +1,7 @@
 import { ISidebarOptionsItem } from 'components/SideBarLeft/SideBarProvider';
 import { appSettings, directories, reports } from 'data';
 import { iconId } from '../img/sprite';
-// import Notifications from '../components/SideBarContent/Notifications';
+
 import Directories from 'components/SideBarContent/Directories';
 import Reports from 'components/SideBarContent/Reports';
 import CompanySettings from '../components/SideBarContent/CompanySettings';

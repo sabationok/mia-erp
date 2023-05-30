@@ -7,15 +7,17 @@ import { useTable } from './TableList';
 import TActions from './TActions';
 import TableFilter from './TableFilter';
 
-const QuickActions: React.FC<any> = () => {
+const QuickActions: React.FC<{ closeOnClickOut?: boolean }> = ({ closeOnClickOut = false }) => {
   const { actionsCreator, isFilter, footer } = useTable();
   const [isShown, setIsShown] = useState(false);
 
   function onMenuBtnClick() {
-    setIsShown(!isShown);
+    setIsShown(prev => !prev);
   }
 
   useEffect(() => {
+    if (!closeOnClickOut) return;
+
     function onMenuClose(ev: MouseEvent | KeyboardEvent) {
       if (ev.target instanceof HTMLElement && !ev.target.closest('[data-burger]')) setIsShown(false);
       if (ev instanceof KeyboardEvent && ev?.code === 'Escape') setIsShown(false);
@@ -28,12 +30,13 @@ const QuickActions: React.FC<any> = () => {
       document.removeEventListener('click', onMenuClose);
       document.removeEventListener('keydown', onMenuClose);
     };
-  }, []);
+  }, [closeOnClickOut]);
 
   return (
     <Menu isShown={isShown} footer={footer} data-burger>
       <List isShown={isShown}>
         {isFilter && <TableFilter />}
+
         {isFilter && actionsCreator && <Separator />}
 
         {actionsCreator && <TActions renderSeparator={<Separator />} />}

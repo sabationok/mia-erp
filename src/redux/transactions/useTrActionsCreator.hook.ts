@@ -5,6 +5,7 @@ import TransactionForm from '../../components/Forms/TransactionForm';
 import { filterOptions } from '../../data/transactions.data';
 import { TableActionCreator } from '../../components/TableList/tableTypes.types';
 import { ITransaction } from './transactions.types';
+import { createThunkPayload } from '../../utils/fabrics';
 
 export type TrActionsCreator = TableActionCreator<ITransaction>;
 const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => {
@@ -59,7 +60,16 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         disabled: true,
         disabledCheck: () => true,
         onClick: () => {
-          service.deleteById('id');
+          service.deleteById(
+            createThunkPayload<{ id: string }, { id: string }>(
+              { id: 'id' },
+              {
+                onSuccess(d) {
+                  console.log(d);
+                },
+              }
+            )
+          );
         },
       },
       { separator: true },

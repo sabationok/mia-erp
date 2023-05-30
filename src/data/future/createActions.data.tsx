@@ -1,8 +1,3 @@
-// import FormCreateCount from 'components/FormCreateCount/FormCreateCount';
-// import FormTransactions from 'components/FormTransactions/FormTransactions';
-// import FormCategory from 'components/FormCategory/FormCategory';
-// import CreateTransactionComp from 'components/CreateTransactionComp/CreateTransactionComp';
-
 const createActions = [
   { title: 'Документ', ModalChildren: () => null, modalChildrenProps: null, disabled: true },
   { title: 'Проект', ModalChildren: () => null, modalChildrenProps: null, disabled: true },

@@ -19,7 +19,7 @@ const TableBody: React.ForwardRefRenderFunction<any> = (props, ref: React.Ref<an
     rowEl = target instanceof HTMLElement ? target.closest('[data-row]') : null;
 
     if (rowEl && onRowClick instanceof Function) {
-      onRowClick({ _id: rowEl?.id, ev });
+      onRowClick({ _id: rowEl?.id });
     }
     if (rowEl !== rowRef.current) {
       rowRef.current?.classList.remove('selected');
@@ -30,6 +30,7 @@ const TableBody: React.ForwardRefRenderFunction<any> = (props, ref: React.Ref<an
     if (rowEl === rowRef.current) {
       rowRef.current?.classList.remove('selected');
       rowRef.current = undefined;
+      onRowClick instanceof Function && onRowClick({});
     }
   }
 

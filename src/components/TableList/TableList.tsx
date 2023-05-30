@@ -21,14 +21,13 @@ export type { ITableListContext, ITableListProps, OnCheckBoxChangeHandlerEvent, 
 export const TableCTX = createContext({});
 export const useTable: UseTableHookType = () => useContext(TableCTX);
 
-const TableList: React.FC<ITableListProps> = ({
+const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>> = ({
   tableData,
   isLoading = false,
   RowActionsComp,
   TableActionsComp,
   tableTitles,
   tableSearchParams,
-
   actionsCreator,
   footer = false,
   onRowClick,
@@ -40,6 +39,7 @@ const TableList: React.FC<ITableListProps> = ({
 }) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const rowRef = useRef<HTMLElement>();
+  const [selectedRow, setSelectedRow] = useState<any>();
 
   const rowGrid = {
     display: 'grid',
@@ -48,6 +48,7 @@ const TableList: React.FC<ITableListProps> = ({
 
   function onRowClickWrapper(rowData: any) {
     // console.log(rowRef.current);
+    setSelectedRow(rowData);
     typeof onRowClick === 'function' && onRowClick(rowData);
   }
 
@@ -77,6 +78,7 @@ const TableList: React.FC<ITableListProps> = ({
     rowGrid,
     rowRef,
     selectedRows,
+    selectedRow,
     tableData,
     isLoading,
     onFilterSubmit,
@@ -106,9 +108,6 @@ const TableList: React.FC<ITableListProps> = ({
     </Table>
   );
 };
-
-// import cloneDeep from 'lodash.clonedeep';
-// import { applyFounder } from 'components/BlockWithList/BlockUtils/founder';
 
 const NoData = styled.div`
   display: flex;

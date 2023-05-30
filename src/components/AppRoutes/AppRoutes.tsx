@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import AppPages from 'components/AppPages';
 import { memo, useMemo } from 'react';
 import { useAuthSelector } from '../../redux/selectors.store';
-import CompanyControl from '../AppPages/CompanyControl';
+import PermissionCheck from '../AppPages/PermissionCheck';
 import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
 
@@ -42,7 +42,7 @@ const AppRoutes: React.FC = () => {
         <Route index element={<Navigate to={'app/home'} />} />
         <Route path={'home'} element={<AppPages.PageSelectCompany path={'home'} />} />
 
-        <Route path={':companyId'} element={<CompanyControl redirectTo={'/app/home'} />}>
+        <Route path={':permissionId'} element={<PermissionCheck redirectTo={'/app/home'} />}>
           <Route index element={<Navigate to={'transactions'} />} />
           <Route path={'companies'} element={<AppPages.PageSelectCompany path={'companies'} />} />
           <Route path={'transactions'} element={<AppPages.PageTransactions path={'transactions'} />} />

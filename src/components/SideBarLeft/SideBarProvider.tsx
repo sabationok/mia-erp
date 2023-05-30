@@ -27,8 +27,6 @@ const SideBarProvider: React.FC<{ children?: React.ReactNode }> = ({ children })
   const [RightSideContent, setRightSideContent] = useState<ISidebarOptionsItem | null | undefined>(null);
   const [isOpen, setIsOpen] = useState<boolean>(true);
 
-  console.log('SideBarProvider');
-
   function handleOptionsState(mewContent?: ISidebarOptionsItem) {
     setRightSideContent(prev => {
       return prev === mewContent ? null : mewContent;

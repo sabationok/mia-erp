@@ -10,9 +10,17 @@ export interface IPermission extends IBase {
   status: PermissionStatusType;
   company: Partial<ICompany>;
   user: Partial<IUser>;
+  owner?: Partial<IUser>;
   role: Partial<ICustomRole>;
   permissionToken: string;
   expireAt?: number | Date;
+}
+
+export interface IPermissionForReq {
+  company: string;
+  user: string;
+  role: string;
+  actions: string[];
 }
 
 export interface IPermissionResData {
@@ -25,13 +33,9 @@ export interface IPermissionsResData {
   data: Partial<IPermission>[] | IPermission[];
 }
 
-export interface IPermissionReqData {
+export interface IPermissionReqData<D = IPermissionForReq | Partial<IPermissionForReq>> {
   id: string;
-  data: {
-    company: string;
-    user: string;
-    role: string;
-  };
+  data: D;
 }
 
 export interface IPermissionsState {

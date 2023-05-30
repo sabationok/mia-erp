@@ -5,13 +5,9 @@ import { ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
 import useAppSettings from 'redux/appSettings/useAppSettings.hook';
 import GlobalStyles from './theme/globalStyles';
-import useAppAuthHook from './redux/auth/useAppAuth.hook';
 
 const App: React.FC = () => {
   const { isDarkMode } = useAppSettings();
-  const auth = useAppAuthHook();
-
-  console.log('App', auth);
 
   return (
     <>
@@ -25,7 +21,7 @@ const App: React.FC = () => {
       <ToastContainer
         position="bottom-left"
         autoClose={5000}
-        limit={7}
+        limit={4}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
