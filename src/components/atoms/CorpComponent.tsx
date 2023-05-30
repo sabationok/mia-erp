@@ -1,16 +1,12 @@
-import React, { useMemo } from 'react';
-import { usePermissionsSelector } from '../../redux/permissions/usePermissionsService.hook';
-import useAppParams from '../../hooks/useAppParams';
+import React from 'react';
+import usePermissionsServiceHook from '../../redux/permissions/usePermissionsService.hook';
 
 const CorpComponent: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  const { permission } = usePermissionsSelector();
-  const { companyId } = useAppParams();
+  const { isCurrentValid } = usePermissionsServiceHook();
 
-  const isValid = useMemo(() => {
-    return permission.company._id === companyId;
-  }, [companyId, permission.company._id]);
+  console.log('CorpComponent', { isCurrentValid });
 
-  return <>{isValid ? children : null}</>;
+  return <>{isCurrentValid ? children : null}</>;
 };
 
 export default CorpComponent;

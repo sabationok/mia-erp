@@ -7,7 +7,7 @@ import { baseURL } from 'api';
 import styled from 'styled-components';
 import SideBar from 'components/SideBarLeft/SideBar';
 import useAppParams from '../../hooks/useAppParams';
-import { usePermissionsSelector } from '../../redux/permissions/usePermissionsService.hook';
+import usePermissionsServiceHook, { usePermissionsSelector } from '../../redux/permissions/usePermissionsService.hook';
 
 interface ILayoutCTX {}
 
@@ -15,10 +15,12 @@ export const LayoutCTX = createContext({});
 export const useLayout = () => useContext(LayoutCTX) as ILayoutCTX;
 
 const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  const { companyId } = useAppParams();
+  const { companyId, permissionId } = useAppParams();
+  const { isCurrentValid } = usePermissionsServiceHook({ permissionId });
   const { company } = usePermissionsSelector().permission;
   const isValidCompany = useMemo(() => companyId === company._id, [company._id, companyId]);
 
+  console.log({ companyId, permissionId, company, isValidCompany, isCurrentValid });
   const CTX = {};
 
   useEffect(() => {
@@ -31,9 +33,9 @@ const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   return (
     <LayoutCTX.Provider value={CTX}>
       <StyledLayout className="Layout">
-        <Header isValidCompany={isValidCompany} />
+        <Header isValidCompany={isCurrentValid} />
 
-        <StSideBar isValidCompany={isValidCompany} />
+        <StSideBar isValidCompany={isCurrentValid} />
 
         <LayoutChildren className="LayoutChildren">{children}</LayoutChildren>
       </StyledLayout>

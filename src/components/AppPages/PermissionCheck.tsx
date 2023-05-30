@@ -8,8 +8,8 @@ type Props = {
   redirectTo?: string;
 };
 const PermissionCheck: React.FC<Props> = ({ children, redirectTo }) => {
-  const { permissionId } = useAppParams();
-  console.log('PermissionCheck', { permissionId });
+  const { permissionId, ...others } = useAppParams();
+  console.log('PermissionCheck', { permissionId, ...others });
   const { isCurrentValid } = usePermissionsServiceHook({ permissionId });
 
   return isCurrentValid ? <Outlet /> : <Navigate to={redirectTo || '/app'} />;
