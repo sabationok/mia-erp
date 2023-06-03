@@ -1,6 +1,6 @@
 import { ICategory } from '../categories/categories.types';
 import { ICount } from '../counts/counts.types';
-import { IBase } from '../global.types';
+import { AppResponse, IBase } from '../global.types';
 import { IContractor } from '../contractors/contractors.types';
 import { IActivity } from '../companyActivities/activities.types';
 
@@ -72,3 +72,7 @@ export interface ITransactionReqData {
   _id?: string;
   data: Partial<ITransactionForReq> & Partial<IBase>;
 }
+
+export interface IAllTransactionsRes extends AppResponse<ITransaction[]> {}
+
+export interface ICreateTransactionRes extends AppResponse<ITransaction> {}

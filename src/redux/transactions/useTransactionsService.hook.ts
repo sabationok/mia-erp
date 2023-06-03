@@ -1,16 +1,18 @@
 import { useTransactionsSelector } from 'redux/selectors.store';
-import { useAppDispatch } from 'redux/store.store';
+import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { ITransactionReqData } from './transactions.types';
 import { ITransactionsState } from './transactions.slice';
-import { ServiceDispatcher } from '../global.types';
+import { ServiceDispatcher } from 'redux/global.types';
+import { createTransactionThunk, getAllTransactionsThunk } from './transactions.thunks';
 
 export interface TransactionsService {
-  dispatch: ReturnType<typeof useAppDispatch>;
+  dispatch: AppDispatch;
   state: ITransactionsState;
   create: ServiceDispatcher<ITransactionReqData>;
   deleteById: ServiceDispatcher<{ id: string }>;
   editById: ServiceDispatcher<ITransactionReqData>;
   getById: ServiceDispatcher<{ id: string }>;
+  getAll: ServiceDispatcher;
 }
 
 const useTransactionsService = (): TransactionsService => {
@@ -18,18 +20,11 @@ const useTransactionsService = (): TransactionsService => {
   const state = useTransactionsSelector();
 
   return {
-    create: payload => {
-      console.log('trService create', payload);
-    },
-    deleteById: payload => {
-      console.log('trService deleteById', payload);
-    },
-    editById: payload => {
-      console.log('trService editById', payload);
-    },
-    getById: payload => {
-      console.log('trService getById', payload);
-    },
+    create: payload => dispatch(createTransactionThunk(payload)),
+    deleteById: payload => dispatch(() => {}),
+    editById: payload => dispatch(() => {}),
+    getById: payload => dispatch(() => {}),
+    getAll: () => dispatch(getAllTransactionsThunk({})),
     dispatch,
     state,
   };

@@ -4,7 +4,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import { AsyncThunkConfig } from 'redux/reduxTypes.types';
 import { ThunkPayload } from '../store.store';
-import { AxiosResponse } from 'axios';
 import { AppResponse } from '../global.types';
 
 const USERS_API_BASENAME = '/users';
@@ -24,7 +23,7 @@ export const getAllUsersThunk = createAsyncThunk<IUser[], ThunkPayload, AsyncThu
     try {
       const {
         data: { data },
-      }: AxiosResponse<IGetAllUsersRes> = await baseApi.get(usersApiRoutes.getAll);
+      }: IGetAllUsersRes = await baseApi.get(usersApiRoutes.getAll);
 
       onSuccess && onSuccess(data);
       return data;
@@ -39,7 +38,7 @@ export const getUserById = createAsyncThunk<IUser, ThunkPayload<{ userId: string
   'auth/getUserById',
   async ({ onSuccess, onError, submitData }, thunkAPI) => {
     try {
-      const res: AxiosResponse<IGetUserByIdRes> = await baseApi.get(usersApiRoutes.getById(submitData?.userId));
+      const res: IGetUserByIdRes = await baseApi.get(usersApiRoutes.getById(submitData?.userId));
 
       onSuccess && onSuccess(res.data.data);
 
@@ -60,7 +59,7 @@ export const createUserByAdminThunk = createAsyncThunk<
   try {
     const {
       data: { data },
-    }: AxiosResponse<IRegisteredUserInfoRes> = await baseApi.post(usersApiRoutes.createByAdmin, {});
+    }: IRegisteredUserInfoRes = await baseApi.post(usersApiRoutes.createByAdmin, {});
 
     onSuccess && onSuccess(data);
 

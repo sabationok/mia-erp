@@ -1,4 +1,5 @@
 import { ThunkPayload } from './store.store';
+import { AxiosResponse } from 'axios';
 
 export interface IBase {
   _id: string;
@@ -13,10 +14,11 @@ export enum CompanyQueryTypeEnum {
   invited = 'invited',
 }
 
-export interface AppResponse<D = any, M = any> {
-  meta: M & {};
-  data: D & {};
-}
+export interface AppResponse<D = any, M = any>
+  extends AxiosResponse<{
+    meta: M & {};
+    data: D & {};
+  }> {}
 
 export type CompanyQueryType = 'own' | 'all' | 'invites' | 'invited';
 export type ServiceDispatcher<SD = any, RD = any, E = any> = (payload: ThunkPayload<SD, RD, E>) => void;

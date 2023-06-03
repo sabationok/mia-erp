@@ -17,19 +17,19 @@ import { ThunkPayload } from '../store.store';
 const AUTH_API_BASENAME = '/auth';
 export const authApiRoutes = {
   getAll: `${AUTH_API_BASENAME}/getAll`,
-  getById: `${AUTH_API_BASENAME}/getById`,
+  getById: (id: string) => `${AUTH_API_BASENAME}/getById/${id}`,
   signUp: `${AUTH_API_BASENAME}/signUp`,
   signIn: `${AUTH_API_BASENAME}/signIn`,
   signOut: `${AUTH_API_BASENAME}/signOut`,
-  getCurrentUser: `${AUTH_API_BASENAME}/getCurrentUser`,
-  getCurrentUserInfo: `${AUTH_API_BASENAME}/getCurrentUserInfo`,
+  getCurrentUser: (id: string) => `${AUTH_API_BASENAME}/getCurrentUser/${id}`,
+  getCurrentUserInfo: (id: string) => `${AUTH_API_BASENAME}/getCurrentUserInfo/${id}`,
 };
 
 export const registerUserThunk = createAsyncThunk<IRegisteredUser, ThunkPayload<IRegistrationData>>(
   'auth/registerUserThunk',
   async ({ data, onSuccess, onError }, thunkAPI) => {
     try {
-      const response: AxiosResponse<IRegisteredUserInfoRes> = await baseApi.post(authApiRoutes.signUp, data);
+      const response: IRegisteredUserInfoRes = await baseApi.post(authApiRoutes.signUp, data);
 
       onSuccess && onSuccess(response.data.data);
 
@@ -77,19 +77,26 @@ export const logOutUserThunk = createAsyncThunk<any, ThunkPayload>(
   }
 );
 
-export const getCurrentUserThunk = createAsyncThunk<ICurrentUser, ThunkPayload<{ permissionId: string }>>(
-  'auth/getCurrentUserThunk',
-  async ({ onSuccess, onError }, thunkAPI) => {
-    try {
-      const response: AxiosResponse<ICurrentUserInfoRes> = await baseApi.get(authApiRoutes.getCurrentUser);
+export const getCurrentUserThunk = createAsyncThunk<
+  ICurrentUser,
+  ThunkPayload<
+    {
+      permissionId: string;
+    },
+    ICurrentUserInfoRes
+  >
+>('auth/getCurrentUserThunk', async ({ onSuccess, onError, onLoading, submitData }, thunkAPI) => {
+  try {
+    const response: ICurrentUserInfoRes = await baseApi.get(
+      authApiRoutes.getCurrentUser(submitData?.permissionId || '')
+    );
 
-      onSuccess && onSuccess(response.data.data);
+    onSuccess && onSuccess(response);
 
-      return response.data.data;
-    } catch (error) {
-      onError && onError(error);
+    return response.data.data;
+  } catch (error) {
+    onError && onError(error);
 
-      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-    }
+    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
   }
-);
+});
