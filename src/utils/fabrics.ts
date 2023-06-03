@@ -9,7 +9,7 @@ export interface CreateThunkPayloadOptions<SD extends FieldValues = any, RD = an
   logAll?: boolean;
 }
 
-function createThunkPayload<SD extends FieldValues = any, RD = any, E = any | unknown>(
+function createThunkPayload<SD extends FieldValues = any, RD = any, E = any>(
   payloadData: SD,
   options?: CreateThunkPayloadOptions<SD, RD, E>
 ): ThunkPayload<SD, RD, E> {
@@ -19,7 +19,7 @@ function createThunkPayload<SD extends FieldValues = any, RD = any, E = any | un
       (logAll || logData) && console.log('createSubmitHandlerWithPayload onSuccess', d);
       onSuccess && onSuccess(d);
     },
-    onError: (e: E | unknown) => {
+    onError: (e: E) => {
       (logAll || logError) && console.log('createSubmitHandlerWithPayload onError', e);
       onError && onError(e);
     },

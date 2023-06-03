@@ -5,36 +5,36 @@ import axios from 'axios';
 // });
 const PORT = 5000;
 
+const BASE_URL_LOCALHOST = `http://localhost:${PORT}/api/`;
+// const BASE_URL_RAILWAY = `https://web-production-c6e8.up.railway.app/api/`;
 const baseApi = axios.create({
-  baseURL: `http://localhost:${PORT}/api/`,
-  // baseURL: `https://web-production-c6e8.up.railway.app/api/`,
+  baseURL: BASE_URL_LOCALHOST,
 });
-const companyApi = axios.create({
-  baseURL: `http://localhost:${PORT}/api/`,
-  // baseURL: `https://web-production-c6e8.up.railway.app/api/`,
-});
-
 
 export const token = {
   set(token: string) {
     baseApi.defaults.headers.Authorization = `Bearer ${token}`;
-    companyApi.defaults.headers.Authorization = `Bearer ${token}`;
   },
   unset() {
     baseApi.defaults.headers.Authorization = ``;
-    companyApi.defaults.headers.Authorization = ``;
   },
 };
 
+export const apiPermissionId = {
+  set(permissionId?: string) {
+    baseApi.defaults.baseURL = permissionId ? `${BASE_URL_LOCALHOST}/${permissionId}/` : BASE_URL_LOCALHOST;
+  },
+
+  unset() {},
+};
+
 export const baseURL = {
-  setLocalhost(companyId?: string) {
-    baseApi.defaults.baseURL = `http://localhost:${PORT}/api/`;
-    companyApi.defaults.baseURL = companyId ? `http://localhost:${PORT}/api/${companyId}/` : `http://localhost:${PORT}/api/`;
+  setLocalhost(permissionId?: string) {
+    baseApi.defaults.baseURL = permissionId ? `${BASE_URL_LOCALHOST}/${permissionId}/` : BASE_URL_LOCALHOST;
     return baseApi;
   },
-  setRailWay(companyId?: string) {
+  setRailWay(permissionId?: string) {
     baseApi.defaults.baseURL = ``;
-    companyApi.defaults.baseURL = companyId ? `${companyId}/` : ``;
     return baseApi;
   },
 };

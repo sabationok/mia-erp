@@ -47,8 +47,6 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
   };
 
   function onRowClickWrapper(rowData: any) {
-    // console.log(rowRef.current);
-    console.log('onRowClickWrapperTable', rowData);
     setSelectedRow(rowData);
     typeof onRowClick === 'function' && onRowClick(rowData);
   }

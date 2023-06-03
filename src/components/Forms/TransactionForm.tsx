@@ -90,35 +90,26 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
         childName?: keyof ITransaction;
       }
     ): CustomSelectProps<ITransaction[K]> => {
+      const clearChild = (childName: keyof ITransaction) => {
+        // setValue(childName, null as any);
+        unregister(childName);
+      };
+
       return {
         onSelect: (option, _value) => {
-          console.log({
-            option,
-            formValues,
-            name,
-            props,
-            childControl,
-            setValue,
-            unregister,
-          });
-
           setValue<K>(name, option as any);
+          // if (childControl?.childName) clearChild(childControl?.childName);
         },
         name,
         selectValue: formValues[name],
         onClear: () => {
           if (!formValues[name]) return;
 
-          setValue(name, null as any);
+          // setValue(name, null as any);
           unregister(name);
-          console.log('cleared input', name, formValues[name]);
 
-          if (childControl?.childName) {
-            console.log('cleared child', childControl.childName);
-            setValue(childControl.childName, null as any);
-            unregister(childControl.childName);
-            console.log('cleared child', childControl.childName, formValues[childControl.childName]);
-          }
+          if (childControl?.childName) clearChild(childControl?.childName);
+
           if (!props?.options || props.options.length === 0) {
           }
         },

@@ -10,9 +10,9 @@ import {
   logOutPermissionThunk,
 } from './permissions.thunk';
 import { IPermissionForReq, IPermissionsState } from './permissions.types';
-
 import { useMemo } from 'react';
 import { ServiceDispatcher } from 'redux/global.types';
+import { clearCurrentPermission } from './permissions.action';
 
 export interface PermissionService {
   dispatch: AppDispatch;
@@ -25,6 +25,7 @@ export interface PermissionService {
   getCurrent: ServiceDispatcher<{ id: string }>;
   permissionLogOut: ServiceDispatcher<{ id: string }>;
   isCurrentValid: boolean;
+  clearCurrent: () => void;
   validatePermission?: (validateBy: ValidatePermissionOptions) => boolean;
 }
 
@@ -57,6 +58,7 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
     create: payload => dispatch(createPermissionThunk(payload)),
     getCurrent: payload => dispatch(getCurrentPermissionThunk(payload)),
     permissionLogOut: payload => dispatch(logOutPermissionThunk(payload)),
+    clearCurrent: () => dispatch(clearCurrentPermission()),
     isCurrentValid,
   };
 };

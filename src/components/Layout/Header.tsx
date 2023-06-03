@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
-import NavMenu from '../NavMenu';
-import LogoSvg from './LogoSvg/LogoSvg';
+import NavMenu from './NavMenu';
+import LogoSvg from './LogoSvg';
 
-import UserMenu from '../UserMenu/UserMenu';
+import UserMenu from './UserMenu';
 import styled from 'styled-components';
 import ActionToggleSideBar from 'components/SideBarLeft/Actions/ActionToggleSideBar';
 

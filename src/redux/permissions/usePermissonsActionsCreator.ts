@@ -7,6 +7,8 @@ import ModalForm from '../../components/ModalForm';
 import { useNavigate } from 'react-router-dom';
 import { CompanyQueryType } from '../global.types';
 import { createThunkPayload } from '../../utils/fabrics';
+import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
 
 export type PermissionsActionsCreator = TableActionCreator<IPermission>;
 
@@ -33,17 +35,18 @@ const usePermissionsActionsCreator = (
           iconSize: '100%',
           type: 'onlyIcon',
           onClick: () => {
-            console.log('selPermission', selPerm);
-            console.log('companyType', { companyType });
-
-            if (ctx.selectedRow?._id) {
+            if (selPerm?._id) {
               service.getCurrent(
-                createThunkPayload<{ id: string }, IPermission>(
-                  { id: ctx.selectedRow?._id },
+                createThunkPayload<{ id: string }, IPermission, AxiosError>(
+                  { id: selPerm?._id },
                   {
                     onSuccess: data => {
+                      console.log('getCurrentPermission Success', data);
+                      toast.success(`Current company: ${data.company?.name}`);
                       navigate(`/app/${data._id}`);
-                      console.log();
+                    },
+                    onError: error => {
+                      console.log(error);
                     },
                   }
                 )

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { iconId } from 'data';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import UserInfo from './UserInfo';
 
 import styled from 'styled-components';
+import UserInfo from './UserInfo';
 
 const UserMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +18,7 @@ const UserMenu = () => {
       if (target instanceof HTMLElement && !target?.closest('[data-user-menu]')) setIsOpen(false);
       if (ev instanceof KeyboardEvent && ev?.code === 'Escape') setIsOpen(false);
     }
+
     document.addEventListener('click', onMenuClose);
     document.addEventListener('keydown', onMenuClose);
 

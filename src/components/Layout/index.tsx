@@ -1,6 +1,5 @@
-import React, { createContext, useContext, useEffect, useMemo } from 'react';
-import Header from './Header/Header';
-import { baseURL } from 'api';
+import React, { createContext, useContext, useMemo } from 'react';
+import Header from './Header';
 import styled from 'styled-components';
 import SideBar from 'components/SideBarLeft/SideBar';
 import useAppParams from '../../hooks/useAppParams';
@@ -15,24 +14,18 @@ const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const { permissionId } = useAppParams();
   const {
     state: { permissionToken },
+    isCurrentValid,
   } = usePermissionsServiceHook({ permissionId });
-  const havePermission = useMemo(() => !!permissionToken, [permissionToken]);
+  const havePermission = useMemo(() => !!permissionToken && isCurrentValid, [isCurrentValid, permissionToken]);
 
   const CTX = {};
 
-  useEffect(() => {
-    if (window.location.hostname !== 'localhost') return;
-
-    if (window.location.hostname === 'localhost') {
-      baseURL.setLocalhost();
-    }
-  }, []);
   return (
     <LayoutCTX.Provider value={CTX}>
       <StyledLayout className="Layout">
         <Header havePermission={havePermission} />
 
-        <StSideBar />
+        <StSideBar havePermission={havePermission} />
 
         <LayoutChildren className="LayoutChildren">{children}</LayoutChildren>
       </StyledLayout>

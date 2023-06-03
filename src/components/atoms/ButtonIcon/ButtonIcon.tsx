@@ -101,12 +101,12 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
 
   text-align: center;
   font-size: 12px;
-  font-weight: ${({ fontWeight }) => fontWeight || 400};
+  font-weight: ${({ fontWeight = 500 }) => fontWeight};
   font-family: inherit;
   letter-spacing: 0.05em;
   color: inherit;
   fill: currentColor;
-  text-transform: ${({ textTransform }) => textTransform || 'none'};
+  text-transform: ${({ textTransform = 'none' }) => textTransform};
 
   padding: 0;
 
@@ -117,12 +117,20 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
   border: 1px solid transparent;
   background-color: transparent;
 
-  ${({ variant }) => (variant ? getVariant(variant) : getVariant())}
+  transition: ${({ theme }) => theme.globals.timingFunctionMain};
+
+  ${({ variant = 'def' }) => getVariant(variant)}
   &:disabled {
     pointer-events: none;
     opacity: 0.7;
     cursor: default;
     fill: ${({ theme }) => theme.field.innerBackgroundColor};
+  }
+
+  @media screen and (max-width: 480px) {
+    text-transform: uppercase;
+    font-size: 16px;
+    height: max-content;
   }
 `;
 

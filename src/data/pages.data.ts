@@ -1,6 +1,6 @@
-import { useAuthSelector } from '../redux/selectors.store';
 import { IconIdType } from '../img/sprite';
 import { useMemo } from 'react';
+import { usePermissionsSelector } from '../redux/permissions/usePermissionsService.hook';
 
 export type PagePathType =
   | 'companies'
@@ -53,25 +53,19 @@ export const pages: IAppPage[] = [
   appPages.admin,
 ];
 
-export const useAppPages = ({ companyId }: { companyId?: string }) => {
-  const { permission } = useAuthSelector();
-
-  // const pagesCorp = useMemo(() => {
-  //   let res = pages.map(page => ({ ...page, path: `/app/${companyId}/${page?.path}` }));
-  //   console.log(res);
-  //   return res;
-  // }, [companyId]);
+export const useAppPages = ({ permissionId }: { permissionId?: string }) => {
+  const { permission } = usePermissionsSelector();
 
   return useMemo(() => {
-    const isCompanyValid = permission.company?._id === companyId;
+    const isCompanyValid = permission?._id === permissionId;
     let res: IAppPage[] = [];
     if (isCompanyValid) {
       res = pages
         .filter(page => {
-          if (permission.role?.accessKeys?.includes(page.path)) return true;
-          return permission.user?._id === permission.company?.owner?._id && page.path === 'admin';
+          if (permission?.role?.accessKeys?.includes(page.path)) return true;
+          return permission?.user?._id === permission?.company?.owner?._id && page.path === 'admin';
         })
-        .map(page => ({ ...page, path: `/app/${companyId}/${page?.path}` }));
+        .map(page => ({ ...page, path: `/app/${permissionId}/${page?.path}` }));
     }
 
     if (!isCompanyValid) {
@@ -80,10 +74,10 @@ export const useAppPages = ({ companyId }: { companyId?: string }) => {
 
     return res;
   }, [
-    companyId,
-    permission.company?._id,
-    permission.company?.owner?._id,
-    permission.role?.accessKeys,
-    permission.user?._id,
+    permission?._id,
+    permission?.company?.owner?._id,
+    permission?.role?.accessKeys,
+    permission?.user?._id,
+    permissionId,
   ]);
 };

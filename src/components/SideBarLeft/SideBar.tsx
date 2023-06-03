@@ -7,9 +7,9 @@ import styled, { css } from 'styled-components';
 import { useMemo } from 'react';
 
 type SideBarProps = {
-  isValidCompany?: boolean;
+  havePermission?: boolean;
 };
-const SideBar: React.FC<SideBarProps & React.HTMLAttributes<HTMLDivElement>> = ({ isValidCompany, ...props }) => {
+const SideBar: React.FC<SideBarProps & React.HTMLAttributes<HTMLDivElement>> = ({ havePermission, ...props }) => {
   const { isOpen, onTogglerClick, handleOptionsState, sideBarButtons, sideBarButtonsBottom, RightSideContent } =
     useSideBar();
 
@@ -17,7 +17,7 @@ const SideBar: React.FC<SideBarProps & React.HTMLAttributes<HTMLDivElement>> = (
     return (
       sideBarButtons &&
       sideBarButtons
-        .filter(el => (isValidCompany ? el : !el.corp))
+        .filter(el => (havePermission ? el : !el.corp))
         .map(item => (
           <StyledButtonIcon
             key={item?.iconId}
@@ -30,13 +30,13 @@ const SideBar: React.FC<SideBarProps & React.HTMLAttributes<HTMLDivElement>> = (
           />
         ))
     );
-  }, [RightSideContent?.title, handleOptionsState, isValidCompany, sideBarButtons]);
+  }, [RightSideContent?.title, handleOptionsState, havePermission, sideBarButtons]);
 
   const renderBottom = useMemo(() => {
     return (
       sideBarButtonsBottom &&
       sideBarButtonsBottom
-        .filter(el => (isValidCompany ? el : !el.corp))
+        .filter(el => (havePermission ? el : !el.corp))
         .map(item => (
           <StyledButtonIcon
             key={item?.iconId}
@@ -49,7 +49,7 @@ const SideBar: React.FC<SideBarProps & React.HTMLAttributes<HTMLDivElement>> = (
           />
         ))
     );
-  }, [RightSideContent?.title, handleOptionsState, isValidCompany, sideBarButtonsBottom]);
+  }, [RightSideContent?.title, handleOptionsState, havePermission, sideBarButtonsBottom]);
   return (
     <StyledSideBar isOpen={!!isOpen} className="SideBar" {...props} data-sidebar>
       <MenuToggler isOpen={!!isOpen} onClick={onTogglerClick} />

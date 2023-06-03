@@ -3,10 +3,10 @@ import { forwardRef, InputHTMLAttributes, memo, useCallback, useEffect, useMemo,
 import { omit, pick } from 'lodash';
 import styled from 'styled-components';
 import FlexBox, { FieldBox } from '../FlexBox';
-import SvgIcon from '../SvgIcon/SvgIcon';
 import { RefCallBack } from 'react-hook-form';
 import { SelectItem } from '../../TableList/tableTypes.types';
 import ButtonIcon from '../ButtonIcon/ButtonIcon';
+import { nanoid } from '@reduxjs/toolkit';
 
 export interface CustomSelectBaseProps<OptType = any> {
   InputComponent?: React.FC<InputHTMLAttributes<HTMLInputElement>>;
@@ -23,6 +23,7 @@ export interface CustomSelectBaseProps<OptType = any> {
   inputProps?: Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'>;
   labelProps?: Omit<InputLabelProps, 'onSelect'>;
   fieldMode?: boolean;
+  validateOption?: (option: OptType) => boolean;
 }
 
 export type CustomSelectOnClickHandler<OptType = any> = <Option extends OptType = any>(
@@ -63,11 +64,18 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
   const [isOpen, setIsOpen] = useState<boolean>(keepOpen || open);
   const labelRef = useRef<HTMLLabelElement>(null);
 
-  const uid = useMemo(() => Math.random().toFixed(5), []);
+  const uid = useMemo(() => nanoid(5), []);
 
   const handleOpenState = useCallback(() => {
     !keepOpen && setIsOpen(prev => !prev);
   }, [keepOpen]);
+
+  const isValidOption = useCallback(
+    (option: CustomSelectOption<{ _id?: string }>) => {
+      return options?.some((opt: { _id?: string }) => opt?._id === option?._id);
+    },
+    [options]
+  );
 
   const handleOnSelect = useCallback(
     (option?: any) => {
@@ -89,6 +97,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
 
   const handleOnClear = useCallback(() => {
     setCurrentOption(undefined);
+    setIsOpen(false);
     onClear && onClear();
   }, [onClear]);
 
@@ -111,25 +120,11 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
   );
 
   useEffect(() => {
-    if (uid) return;
-    console.log('Render CustomSelect', id || uid);
+    const isValid = isValidOption(selectValue);
 
-    // function onMenuClose(ev: MouseEvent | KeyboardEvent) {
-    //   const { target } = ev;
-    //   if (target instanceof HTMLElement && !target?.closest(`[data-select="${id || uid}"]`)) setIsOpen(false);
-    //   if (ev instanceof KeyboardEvent && ev?.code === 'Escape') setIsOpen(false);
-    // }
-    //
-    // document.addEventListener('click', onMenuClose);
-    // return () => {
-    //   document.removeEventListener('click', onMenuClose);
-    // };
-  }, [id, uid]);
-
-  useEffect(() => {
-    if (selectValue) return setCurrentOption(selectValue);
-    if (!selectValue) return setCurrentOption(undefined);
-  }, [selectValue]);
+    if (selectValue && isValid) return setCurrentOption(selectValue);
+    if (!selectValue || !isValid) return setCurrentOption(undefined);
+  }, [isValidOption, selectValue]);
 
   return (
     <FlexBox fillWidth style={{ position: 'relative' }} data-select={id || uid}>
@@ -150,7 +145,6 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
             'disabled',
           ])}
           {...labelProps}
-          onClick={handleOpenState}
         >
           <LabelInner fieldMode={fieldMode} error={!!props.error} success={!!props.success}>
             <StyledInput
@@ -168,14 +162,21 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
               {onClear && currentOption && (
                 <ButtonIcon
                   variant={'onlyIconNoEffects'}
-                  className={'clearIcon'}
+                  className={'clearBtn'}
                   icon={'close'}
                   size={'20px'}
                   onClick={handleOnClear}
                 />
               )}
 
-              <SvgIcon className={'openIcon'} icon={!isOpen ? 'SmallArrowDown' : 'SmallArrowUp'} size={'20px'} />
+              <ButtonIcon
+                variant={'onlyIconNoEffects'}
+                className={'clearBtn'}
+                icon={!isOpen ? 'SmallArrowDown' : 'SmallArrowUp'}
+                size={'24px'}
+                iconSize={'100%'}
+                onClick={handleOpenState}
+              />
             </IconsBox>
           </LabelInner>
         </InputLabel>
@@ -285,6 +286,8 @@ const StyledInput = styled.input`
   height: 100%;
 
   padding: 4px 8px;
+  color: inherit;
+  font-weight: 500;
 
   background-color: transparent;
   border-radius: 0;

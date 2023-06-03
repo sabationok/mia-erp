@@ -1,16 +1,17 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { NavLink, useLocation, useParams } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { iconId } from 'data';
 import { IPage } from 'redux/page/pageSlice';
 import styled from 'styled-components';
-import { useAppPages } from '../../../data/pages.data';
+import { useAppPages } from '../../data/pages.data';
 import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
-import Text from '../../atoms/Text';
+import Text from '../atoms/Text';
+import useAppParams from '../../hooks/useAppParams';
 
 const NavMenu: React.FC = () => {
-  const { companyId } = useParams();
-  const pages = useAppPages({ companyId });
+  const { permissionId } = useAppParams();
+  const pages = useAppPages({ permissionId });
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [activePage, setActivePage] = useState<IPage>(pages[0]);
   const location = useLocation();
@@ -54,12 +55,10 @@ const NavMenu: React.FC = () => {
   );
 
   useEffect(() => {
-    const currentPathName = location.pathname.replace('/', '');
-
-    const currentPageData = pages.find(page => page.path === currentPathName);
+    const currentPageData = pages.find(page => page.path === location.pathname);
 
     setActivePage(currentPageData || pages[0]);
-  }, [location.pathname, pages]);
+  }, [location.pathname, pages, permissionId]);
 
   useEffect(() => {
     function onMenuClose(ev: MouseEvent | KeyboardEvent) {

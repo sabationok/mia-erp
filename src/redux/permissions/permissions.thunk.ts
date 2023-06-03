@@ -60,14 +60,18 @@ export const getCurrentPermissionThunk = createAsyncThunk<
   }>
 >('permissions/getCurrentPermissionThunk', async ({ submitData, onSuccess, onError }, thunkAPI) => {
   try {
-    // const response: AxiosResponse<IPermissionResData> = await baseApi.get(
+    //    const response: AxiosResponse<IPermissionResData> = await
+    // baseApi.get(
     //   APP_CONFIGS.endpoints.permissions.getCurrentPermission(submitData?.id || '')
     // );
     // return response.data.data;
 
     const res = testPermissions.find(pr => pr._id === submitData?.id);
-    onSuccess && onSuccess({ ...res, permissionToken: nanoid(8) });
-    return { ...res, permissionToken: nanoid(8) } || {};
+
+    const mockRes = { ...res, permissionToken: nanoid(8) };
+    onSuccess && onSuccess(mockRes);
+
+    return mockRes;
   } catch (error) {
     onError && onError(error);
 

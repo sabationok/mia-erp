@@ -12,6 +12,8 @@ import {
 } from './permissions.thunk';
 
 import { testPermissions } from '../../data/permissions.data';
+import { clearCurrentPermission } from './permissions.action';
+import { toast } from 'react-toastify';
 
 const initialPermissionStateState: IPermissionsState = {
   permission: {},
@@ -37,5 +39,11 @@ export const permissionsSlice = createSlice({
       .addCase(deletePermissionByIdThunk.fulfilled, (state, action) => {})
       .addCase(logOutPermissionThunk.fulfilled, (state, action) => {
         state = initialPermissionStateState;
+      })
+      .addCase(clearCurrentPermission, (state, action) => {
+        console.log('clearCurrentPermission', action);
+        toast.success('Permission cleared');
+        state.permission = {};
+        state.permissionToken = '';
       }),
 });

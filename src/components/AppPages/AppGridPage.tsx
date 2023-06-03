@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { actionSetIndexPage } from 'redux/page/pageActions';
 
 import styled from 'styled-components';
-import Layout from '../Layout/Layout';
+import Layout from '../Layout';
 
 const AppGridPage: React.FC<{ path?: string; children?: React.ReactNode }> = ({ path, children }) => {
   const dispatch = useDispatch();

@@ -1,26 +1,23 @@
-import ButtonIcon from 'components/atoms/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 
 export interface IModalFooterProps {
   onSubmitPassed?: boolean;
 }
 
-const ModalFooter: React.FC<
-  IModalFooterProps & React.HTMLAttributes<HTMLDivElement>
-> = ({ onSubmitPassed, ...props }) => {
+const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElement>> = ({
+  onSubmitPassed,
+  ...props
+}) => {
   return (
     <Footer {...props} className="modalFooter">
       {onSubmitPassed && (
-        <ButtonIcon htmlType="reset" type={'text'} variant="defOutlinedSmall">
+        <ButtonIcon type="reset" variant="defOutlinedSmall">
           {'Закрити'}
         </ButtonIcon>
       )}
 
-      <ButtonIcon
-        htmlType={onSubmitPassed ? 'submit' : 'reset'}
-        variant="filledSmall"
-        type={'primary'}
-      >
+      <ButtonIcon type={onSubmitPassed ? 'submit' : 'reset'} variant="filledSmall">
         {onSubmitPassed ? 'Зберегти' : 'Закрити'}
       </ButtonIcon>
     </Footer>

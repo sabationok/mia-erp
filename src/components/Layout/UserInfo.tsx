@@ -1,11 +1,11 @@
 import styled, { css } from 'styled-components';
 import ProfileCard from 'components/atoms/ProfileCard/ProfileCard';
-import usePermissionsServiceHook from '../../../redux/permissions/usePermissionsService.hook';
-import FlexBox from '../../atoms/FlexBox';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import Text from '../../atoms/Text';
-import { createThunkPayload } from '../../../utils/fabrics';
-import useAppAuthHook from '../../../redux/auth/useAppAuth.hook';
+import usePermissionsServiceHook from '../../redux/permissions/usePermissionsService.hook';
+import FlexBox from '../atoms/FlexBox';
+import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import Text from '../atoms/Text';
+import { createThunkPayload } from '../../utils/fabrics';
+import useAppAuthHook from '../../redux/auth/useAppAuth.hook';
 import { useMemo } from 'react';
 
 export interface IUserInfoProps {
