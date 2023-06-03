@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, nanoid } from '@reduxjs/toolkit';
 import {
   IPermission,
   IPermissionForReq,
@@ -11,6 +11,7 @@ import { AxiosResponse } from 'axios';
 import baseApi from 'api/baseApi';
 import { axiosErrorCheck } from 'utils';
 import APP_CONFIGS from '../APP_CONFIGS';
+import { testPermissions } from '../../data/permissions.data';
 
 export const getAllPermissionsByUserIdThunk = createAsyncThunk<
   Partial<IPermission>[],
@@ -52,17 +53,37 @@ export const getAllPermissionsByCompanyIdThunk = createAsyncThunk<
     return thunkAPI.rejectWithValue(axiosErrorCheck(error));
   }
 });
-export const getCurrentPermissionThunk = createAsyncThunk<Partial<IPermission>, ThunkPayload<{ permissionId: string }>>(
-  'permissions/getCurrentPermissionThunk',
+export const getCurrentPermissionThunk = createAsyncThunk<
+  Partial<{ permissionToken: string } & IPermission>,
+  ThunkPayload<{
+    id: string;
+  }>
+>('permissions/getCurrentPermissionThunk', async ({ submitData, onSuccess, onError }, thunkAPI) => {
+  try {
+    // const response: AxiosResponse<IPermissionResData> = await baseApi.get(
+    //   APP_CONFIGS.endpoints.permissions.getCurrentPermission(submitData?.id || '')
+    // );
+    // return response.data.data;
+
+    const res = testPermissions.find(pr => pr._id === submitData?.id);
+    onSuccess && onSuccess({ ...res, permissionToken: nanoid(8) });
+    return { ...res, permissionToken: nanoid(8) } || {};
+  } catch (error) {
+    onError && onError(error);
+
+    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+  }
+});
+export const logOutPermissionThunk = createAsyncThunk<{ result: true }, ThunkPayload<{ id: string }>>(
+  'permissions/logOutPermissionThunk',
   async ({ submitData, onSuccess, onError }, thunkAPI) => {
     try {
-      const response: AxiosResponse<IPermissionResData> = await baseApi.get(
-        APP_CONFIGS.endpoints.permissions.getCurrentPermission(submitData?.permissionId as string)
-      );
+      // const response: AxiosResponse<IPermissionResData> =
+      baseApi.get(APP_CONFIGS.endpoints.permissions.getCurrentPermission(submitData?.id || ''));
+      // onSuccess && onSuccess(response.data.data);
+      // return response.data.data;
 
-      onSuccess && onSuccess(response.data.data);
-
-      return response.data.data;
+      return { result: true };
     } catch (error) {
       onError && onError(error);
 
@@ -107,6 +128,29 @@ export const editPermissionThunk = createAsyncThunk<Partial<IPermission>, ThunkP
     }
   }
 );
+
+// type PayloadCreatorOptions<Res extends { data: any } = any, ThunkAPI = any> = {
+//   resCreator: () => AxiosResponse<Res>;
+//   controls: {
+//     onSuccess?: (data: Res) => void;
+//     onError: (error: AxiosError | unknown) => void;
+//   };
+//   thunkAPI: ThunkAPI;
+// };
+// const PayloadCreator = <Res extends { data: any } = any>({ resCreator, controls, thunkAPI }: PayloadCreatorOptions) => {
+//   const { onSuccess, onError } = controls || {};
+//   try {
+//     const response: AxiosResponse<Res> = resCreator();
+//
+//     onSuccess && onSuccess(response.data.data);
+//
+//     return response.data.data;
+//   } catch (error) {
+//     onError && onError(error);
+//
+//     return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+//   }
+// };
 export const deletePermissionByIdThunk = createAsyncThunk<
   Partial<IPermission>,
   ThunkPayload<Partial<IPermissionReqData>>

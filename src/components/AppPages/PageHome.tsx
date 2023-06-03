@@ -22,26 +22,29 @@ const companyTypes: CompanyTypeItem[] = [
 ];
 
 type Props = {
-  path: string;
+  path?: string;
 };
 const PageHome: React.FC<any> = ({ path }: Props) => {
   const { user } = useAuthSelector();
-  const [companyType, setCompanyType] = useState<{ title: string; param: CompanyQueryType }>();
-  const [searchParams, setSearchParams] = useSearchParams({
+  const [companyType, setCompanyType] = useState<CompanyTypeItem>();
+  const setSearchParams = useSearchParams({
     companyType: companyTypes[0].param,
-  });
+  })[1];
   const permissionService = usePermissionsService();
   const actionsCreator = usePermissionsActionsCreator(permissionService, companyType?.param);
 
-  useEffect(() => {
-    setSearchParams({ companyType: companyTypes[0].param });
-    setCompanyType(companyTypes[0]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const permissionsData = useMemo(() => {
+    return permissionService.state.permissions?.filter(pr => {
+      if (companyType?.param === 'invited') return pr.status === 'active' && pr.user?._id === user._id;
+      if (companyType?.param === 'invites') return pr.status === 'pending' && pr.user?._id === user._id;
+      if (companyType?.param === 'all') return pr;
+      return pr.owner?._id === user._id;
+    });
+  }, [companyType?.param, permissionService.state.permissions, user._id]);
 
   const tableConfig = useMemo(
     (): ITableListProps<IPermission> => ({
-      tableData: permissionService.state.permissions,
+      tableData: permissionsData,
       tableTitles: permissionsTableColumns,
       tableSearchParams: permissionsSearchParams,
       isFilter: false,
@@ -49,7 +52,7 @@ const PageHome: React.FC<any> = ({ path }: Props) => {
       checkBoxes: false,
       actionsCreator,
     }),
-    [actionsCreator, permissionService.state.permissions]
+    [actionsCreator, permissionsData]
   );
   const onSearchParamClick = useCallback(
     (item: CompanyTypeItem) => {
@@ -59,8 +62,8 @@ const PageHome: React.FC<any> = ({ path }: Props) => {
     [setSearchParams]
   );
   const isActiveClassName = useCallback(
-    (param: string) => (searchParams.get('companyType') === param ? 'active' : ''),
-    [searchParams]
+    (param: string) => (companyType?.param === param ? 'active' : ''),
+    [companyType?.param]
   );
 
   const renderFilterButtons = useMemo(() => {
@@ -76,6 +79,11 @@ const PageHome: React.FC<any> = ({ path }: Props) => {
     ));
   }, [isActiveClassName, onSearchParamClick]);
 
+  useEffect(() => {
+    setSearchParams({ companyType: companyTypes[0].param });
+    setCompanyType(companyTypes[0]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <Page>
       <Top>

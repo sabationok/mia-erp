@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import usePermissionsServiceHook from '../../redux/permissions/usePermissionsService.hook';
-import { memo } from 'react';
+import { memo, useEffect, useMemo } from 'react';
 import useAppParams from '../../hooks/useAppParams';
 
 type Props = {
@@ -8,10 +8,15 @@ type Props = {
   redirectTo?: string;
 };
 const PermissionCheck: React.FC<Props> = ({ children, redirectTo }) => {
-  const { permissionId, ...others } = useAppParams();
-  console.log('PermissionCheck', { permissionId, ...others });
-  const { isCurrentValid } = usePermissionsServiceHook({ permissionId });
+  const { permissionId } = useAppParams();
+  const { state } = usePermissionsServiceHook({ permissionId });
 
-  return isCurrentValid ? <Outlet /> : <Navigate to={redirectTo || '/app'} />;
+  const isActive = useMemo(() => !!state.permissionToken, [state.permissionToken]);
+
+  useEffect(() => {
+    console.log('PermissionCheck', state);
+  }, [state]);
+
+  return isActive ? <Outlet /> : <Navigate to={redirectTo || '/app'} />;
 };
 export default memo(PermissionCheck);

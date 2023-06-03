@@ -12,6 +12,17 @@ export type PagePathType =
   | 'manager'
   | 'admin';
 
+export enum PageNames {
+  companies = 'companies',
+  transactions = 'transactions',
+  orders = 'orders',
+  refunds = 'refunds',
+  supplement = 'supplement',
+  storage = 'storage',
+  manager = 'manager',
+  admin = 'admin',
+}
+
 export interface IAppPage<P = any> {
   title: string;
   path: P;
@@ -52,13 +63,13 @@ export const useAppPages = ({ companyId }: { companyId?: string }) => {
   // }, [companyId]);
 
   return useMemo(() => {
-    const isCompanyValid = permission.company._id === companyId;
+    const isCompanyValid = permission.company?._id === companyId;
     let res: IAppPage[] = [];
     if (isCompanyValid) {
       res = pages
         .filter(page => {
-          if (permission.role.accessKeys?.includes(page.path)) return true;
-          return permission.user._id === permission.company.owner?._id && page.path === 'admin';
+          if (permission.role?.accessKeys?.includes(page.path)) return true;
+          return permission.user?._id === permission.company?.owner?._id && page.path === 'admin';
         })
         .map(page => ({ ...page, path: `/app/${companyId}/${page?.path}` }));
     }
@@ -70,9 +81,9 @@ export const useAppPages = ({ companyId }: { companyId?: string }) => {
     return res;
   }, [
     companyId,
-    permission.company._id,
-    permission.company.owner?._id,
-    permission.role.accessKeys,
-    permission.user._id,
+    permission.company?._id,
+    permission.company?.owner?._id,
+    permission.role?.accessKeys,
+    permission.user?._id,
   ]);
 };

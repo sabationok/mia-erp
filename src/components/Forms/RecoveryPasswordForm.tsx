@@ -1,20 +1,27 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon';
 import styled from 'styled-components';
 import LogoSvg from 'components/Layout/Header/LogoSvg/LogoSvg';
 import AuthInputLabel from '../atoms/Inputs/AuthInputLabel';
 import LinkIcon from 'components/atoms/LinkIcon/LinkIcon';
 
-import { useForm } from 'react-hook-form';
+import { FieldErrors, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import useAuthService, { IRecoveryPasswordReqData } from '../../redux/auth/useAppAuth.hook';
+import useAuthService from '../../redux/auth/useAppAuth.hook';
 import InputText from '../atoms/Inputs/InputText';
+import { createThunkPayload } from '../../utils/fabrics';
 
 export interface RecoveryPasswordFormProps {
   helloTitle?: string;
   title: string;
   recovery?: boolean;
+}
+
+export interface IRecoveryPasswordFormData {
+  email: string;
+  password: string;
+  approvePassword: string;
 }
 
 const validationEmail = yup.object().shape({
@@ -24,11 +31,11 @@ const validationNewPasswords = yup.object().shape({
   password: yup.string().required(),
   approvePassword: yup.string().required(),
 });
-const recoveryPasswordInitialFormData: Pick<IRecoveryPasswordReqData, 'password' | 'approvePassword'> = {
+const recoveryPasswordInitialFormData: Pick<IRecoveryPasswordFormData, 'password' | 'approvePassword'> = {
   password: '',
   approvePassword: '',
 };
-const sendRecoveryPasswordEmailFromData: Pick<IRecoveryPasswordReqData, 'email'> = {
+const sendRecoveryPasswordEmailFromData: Pick<IRecoveryPasswordFormData, 'email'> = {
   email: '',
 };
 
@@ -39,22 +46,27 @@ const RecoveryPasswordForm: React.FC<RecoveryPasswordFormProps & React.HTMLAttri
 }) => {
   const authService = useAuthService();
 
-  const { register, watch, handleSubmit, formState } = useForm<Partial<IRecoveryPasswordReqData>>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Partial<IRecoveryPasswordFormData>>({
     defaultValues: recovery ? recoveryPasswordInitialFormData : sendRecoveryPasswordEmailFromData,
     resolver: yupResolver(recovery ? validationNewPasswords : validationEmail),
     reValidateMode: 'onSubmit',
   });
-  const formValues = watch();
 
-  useEffect(() => {
-    console.log(formValues);
-  }, [formValues, register]);
+  function onSubmitValid(data: Partial<IRecoveryPasswordFormData>) {
+    authService.sendRecoveryEmail(createThunkPayload(data));
+  }
+
+  function onSubmitErrors(err: FieldErrors, e: any) {
+    console.log('invalid data', err);
+    return e;
+  }
+
   return (
-    <StForm
-      onSubmit={handleSubmit(authService.sendRecoveryEmail, err => {
-        console.log('invalid data', err);
-      })}
-    >
+    <StForm onSubmit={handleSubmit(onSubmitValid, onSubmitErrors)}>
       <StLogo />
 
       <Title>{title}</Title>
@@ -62,16 +74,16 @@ const RecoveryPasswordForm: React.FC<RecoveryPasswordFormProps & React.HTMLAttri
       <Inputs>
         {recovery ? (
           <>
-            <AuthInputLabel icon="lock_O" error={formState?.errors.password}>
+            <AuthInputLabel icon="lock_O" error={errors.password}>
               <InputText placeholder="Новий пароль" type="password" {...register('password')} />
             </AuthInputLabel>
-            <AuthInputLabel icon="lock_O" error={formState?.errors.approvePassword}>
+            <AuthInputLabel icon="lock_O" error={errors.approvePassword}>
               <InputText placeholder="Повторіть пароль" type="password" {...register('approvePassword')} />
             </AuthInputLabel>
           </>
         ) : (
           <>
-            <AuthInputLabel icon="email" error={formState?.errors?.email || undefined}>
+            <AuthInputLabel icon="email" error={errors.email}>
               <InputText placeholder="Електронна пошта" {...register('email')} />
             </AuthInputLabel>
           </>

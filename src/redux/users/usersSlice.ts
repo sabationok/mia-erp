@@ -1,5 +1,4 @@
 import { AnyAction, createSlice, Draft, PayloadAction } from '@reduxjs/toolkit';
-import { IUser } from 'redux/auth/auth.types';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 // import { actionLogInUser, actionLogOutUser, actionSetCurrentUser } from './authActions';
 import { getAllUsersThunk } from './usersThunks';
@@ -30,7 +29,7 @@ export const usersSlice = createSlice({
   // },
   extraReducers: builder => {
     builder
-      .addCase(getAllUsersThunk.fulfilled, (state: Draft<IUsersState>, { payload }: PayloadAction<IUser[]>) => {
+      .addCase(getAllUsersThunk.fulfilled, (state: Draft<IUsersState>, { payload }) => {
         state.isLoading = false;
         state.users = [...payload];
       })

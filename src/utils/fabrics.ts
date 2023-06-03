@@ -29,7 +29,7 @@ function createThunkPayload<SD extends FieldValues = any, RD = any, E = any | un
     },
     submitData: payloadData,
     data: payloadData,
-  } as ThunkPayload<SD, RD, E>;
+  };
 }
 
 // function createSubmitHandlerWithPayload<SD extends FieldValues = any, RD = any, E = any>(

@@ -1,9 +1,8 @@
 import { useTransactionsSelector } from 'redux/selectors.store';
-import { ThunkPayload, useAppDispatch } from 'redux/store.store';
+import { useAppDispatch } from 'redux/store.store';
 import { ITransactionReqData } from './transactions.types';
 import { ITransactionsState } from './transactions.slice';
-
-export type ServiceDispatcher<SD = any, RD = any, E = any> = (payload: ThunkPayload<SD, RD, E>) => void;
+import { ServiceDispatcher } from '../global.types';
 
 export interface TransactionsService {
   dispatch: ReturnType<typeof useAppDispatch>;

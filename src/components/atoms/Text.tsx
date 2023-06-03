@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-const Text = styled.span`
-  cursor: default;
-`;
+const Text = styled.span``;
 
 export default Text;

@@ -1,7 +1,12 @@
-import { useAuthSelector } from 'redux/selectors.store';
 import styled, { css } from 'styled-components';
-import { reactLogo } from 'img';
 import ProfileCard from 'components/atoms/ProfileCard/ProfileCard';
+import usePermissionsServiceHook from '../../../redux/permissions/usePermissionsService.hook';
+import FlexBox from '../../atoms/FlexBox';
+import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import Text from '../../atoms/Text';
+import { createThunkPayload } from '../../../utils/fabrics';
+import useAppAuthHook from '../../../redux/auth/useAppAuth.hook';
+import { useMemo } from 'react';
 
 export interface IUserInfoProps {
   isOpen: boolean;
@@ -9,31 +14,52 @@ export interface IUserInfoProps {
 }
 
 const UserInfo: React.FC<IUserInfoProps> = ({ isOpen, onClose }) => {
-  const { user } = useAuthSelector();
+  const {
+    state: { user },
+  } = useAppAuthHook();
+  const {
+    state: { permission, permissionToken },
+    permissionLogOut,
+  } = usePermissionsServiceHook();
 
   function onBackdropClick(ev: React.MouseEvent) {
     const { target, currentTarget } = ev;
     target === currentTarget && onClose();
   }
 
+  const isPermission = useMemo(() => !!permissionToken, [permissionToken]);
+
   return (
     <Backdrop isOpen={isOpen} transitionDelay={isOpen ? '' : '250ms'} onClick={onBackdropClick}>
       <MainList>
         <MainListItem isOpen={isOpen} transitionDelay={isOpen ? '' : '150ms'}>
-          <ProfileCard {...user} nameFontSize='16px' emailFontSize='16px' />
-        </MainListItem>{' '}
-        <MainListItem isOpen={isOpen} transitionDelay={isOpen ? '150ms' : ''}>
-          <ProfileCard
-            {...{ avatarURL: reactLogo, name: '"Roga & Copyta" Ltd', email: 'roga&copyta@mail.com' }}
-            nameFontSize='16px'
-            emailFontSize='16px'
-          />
-        </MainListItem>
-      </MainList>
+          <ProfileCard {...user} nameFontSize="16px" emailFontSize="16px" />
 
-      {/* <MainList isOpen={isOpen} transitionDelay={isOpen ? '150ms' : ''}>
-        <MainListItem></MainListItem>
-      </MainList> */}
+          <FlexBox fxDirection={'row'} gap={12} fillWidth justifyContent={'flex-end'} alignItems={'center'}>
+            <ButtonIcon variant={'textSmall'} endIcon={'logOut'} onClick={undefined}>
+              <Text style={{ fontSize: '14px' }}>Вийти з профілю</Text>
+            </ButtonIcon>
+          </FlexBox>
+        </MainListItem>
+
+        {isPermission && (
+          <MainListItem isOpen={isOpen} transitionDelay={isOpen ? '150ms' : ''}>
+            <ProfileCard {...permission?.company} nameFontSize="16px" emailFontSize="16px" />
+
+            <FlexBox fxDirection={'row'} gap={12} fillWidth justifyContent={'flex-end'} alignItems={'center'}>
+              <ButtonIcon
+                variant={'textSmall'}
+                endIcon={'logOut'}
+                onClick={() => {
+                  permission?._id && permissionLogOut(createThunkPayload({ id: permission?._id }));
+                }}
+              >
+                <Text style={{ fontSize: '14px' }}>Вийти з компанії</Text>
+              </ButtonIcon>
+            </FlexBox>
+          </MainListItem>
+        )}
+      </MainList>
     </Backdrop>
   );
 };
@@ -57,13 +83,13 @@ const Backdrop = styled.div<{ isOpen: boolean; transitionDelay?: string }>`
   background-color: ${({ theme }) => theme.backdropColor};
 
   ${({ isOpen }) =>
-  isOpen
-    ? css`
+    isOpen
+      ? css`
           opacity: 1;
           visibility: visible;
           pointer-events: all;
         `
-    : css`
+      : css`
           opacity: 0;
           visibility: hidden;
           pointer-events: none;
@@ -92,13 +118,13 @@ const MainList = styled.ul<{ isOpen?: boolean; transitionDelay?: string }>`
   }
 
   /* ${({ isOpen }) =>
-  isOpen
-    ? css`
+    isOpen
+      ? css`
           overflow: auto;
           transform: translateX(0);
           pointer-events: all;
         `
-    : css`
+      : css`
           transform: translateX(100%);
           pointer-events: none;
         `} */
@@ -122,13 +148,13 @@ const MainListItem = styled.li<{ isOpen: boolean; transitionDelay?: string }>`
   transition-delay: ${({ transitionDelay }) => (transitionDelay ? transitionDelay : '')};
 
   ${({ isOpen }) =>
-  isOpen
-    ? css`
+    isOpen
+      ? css`
           overflow: auto;
           transform: translateX(0);
           pointer-events: all;
         `
-    : css`
+      : css`
           transform: translateX(100%);
           pointer-events: none;
         `}

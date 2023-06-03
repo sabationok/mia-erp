@@ -1,80 +1,73 @@
 import baseApi from 'api/baseApi';
-import { IUser } from 'redux/auth/auth.types';
+import { IRegisteredUser, IRegisteredUserInfoRes, IRegistrationData, IUser } from 'redux/auth/auth.types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
-import { IPayloadRegisterUser } from 'redux/auth/auth.thunks';
-import { AsyncThunkConfig, AuthErrorType } from 'redux/reduxTypes.types';
+import { AsyncThunkConfig } from 'redux/reduxTypes.types';
+import { ThunkPayload } from '../store.store';
+import { AxiosResponse } from 'axios';
+import { AppResponse } from '../global.types';
 
 const USERS_API_BASENAME = '/users';
 export const usersApiRoutes = {
   getAll: `${USERS_API_BASENAME}/getAll`,
-  getById: `${USERS_API_BASENAME}/getById`,
+  getById: (userId?: string) => `${USERS_API_BASENAME}/getById/${userId}`,
   createByAdmin: `${USERS_API_BASENAME}/createByAdmin`,
 };
 
-export interface IPayloadGetAllUsers {
-  submitData?: any;
+export interface IGetAllUsersRes extends AppResponse<IUser[]> {}
 
-  onSuccess(data?: IUser[]): any;
+export interface IGetUserByIdRes extends AppResponse<IUser> {}
 
-  onError: (error: AuthErrorType) => void;
-}
-
-export interface IPayloadGetuserById {
-  submitData?: string | any;
-
-  onSuccess(data?: IUser): any;
-
-  onError: (error: AuthErrorType) => void;
-}
-
-export const getAllUsersThunk = createAsyncThunk<IUser[], IPayloadGetAllUsers, AsyncThunkConfig>(
+export const getAllUsersThunk = createAsyncThunk<IUser[], ThunkPayload, AsyncThunkConfig>(
   'auth/getAllUsersThunk',
-  async (payload, thunkAPI) => {
+  async ({ onError, onSuccess }, thunkAPI) => {
     try {
       const {
         data: { data },
-      }: { data: { data: IUser[] } } = await baseApi.get(usersApiRoutes.getAll);
+      }: AxiosResponse<IGetAllUsersRes> = await baseApi.get(usersApiRoutes.getAll);
 
-      payload.onSuccess(data);
+      onSuccess && onSuccess(data);
       return data;
     } catch (error) {
-      payload.onError(error);
+      onError && onError(error);
       return thunkAPI.rejectWithValue(axiosErrorCheck(error));
     }
-  },
+  }
 );
 
-export const getUserById = createAsyncThunk<IUser, IPayloadGetuserById, AsyncThunkConfig>(
+export const getUserById = createAsyncThunk<IUser, ThunkPayload<{ userId: string }>, AsyncThunkConfig>(
   'auth/getUserById',
-  async (payload, thunkAPI) => {
+  async ({ onSuccess, onError, submitData }, thunkAPI) => {
     try {
-      const { data }: { data: { data: IUser } } = await baseApi.get(usersApiRoutes.getById, payload?.submitData);
+      const res: AxiosResponse<IGetUserByIdRes> = await baseApi.get(usersApiRoutes.getById(submitData?.userId));
 
-      payload.onSuccess(data.data);
+      onSuccess && onSuccess(res.data.data);
 
-      return data.data;
+      return res.data.data;
     } catch (error) {
-      payload.onError(error);
+      onError && onError(error);
 
       return thunkAPI.rejectWithValue(axiosErrorCheck(error));
     }
-  },
+  }
 );
 
-export const createUserByAdminThunk = createAsyncThunk<IUser, IPayloadRegisterUser, AsyncThunkConfig>(
-  'auth/createUserByAdminThunk',
-  async (payload, thunkAPI) => {
-    try {
-      const { data } = await baseApi.post(usersApiRoutes.createByAdmin, payload.submitData);
+export const createUserByAdminThunk = createAsyncThunk<
+  IRegisteredUser,
+  ThunkPayload<IRegistrationData>,
+  AsyncThunkConfig
+>('auth/createUserByAdminThunk', async ({ onSuccess, onError, submitData }, thunkAPI) => {
+  try {
+    const {
+      data: { data },
+    }: AxiosResponse<IRegisteredUserInfoRes> = await baseApi.post(usersApiRoutes.createByAdmin, {});
 
-      payload.onSuccess(data.data);
+    onSuccess && onSuccess(data);
 
-      return data.data;
-    } catch (error) {
-      payload.onError(error);
+    return data;
+  } catch (error) {
+    onError && onError(error);
 
-      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-    }
-  },
-);
+    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+  }
+});

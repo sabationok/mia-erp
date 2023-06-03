@@ -7,12 +7,11 @@ import { StateErrorType } from '../reduxTypes.types';
 export type PermissionStatusType = 'active' | 'rejected' | 'pending' | 'baned';
 
 export interface IPermission extends IBase {
-  status: PermissionStatusType;
-  company: Partial<ICompany>;
-  user: Partial<IUser>;
+  status?: PermissionStatusType;
+  company?: Partial<ICompany>;
+  user?: Partial<IUser>;
   owner?: Partial<IUser>;
-  role: Partial<ICustomRole>;
-  permissionToken: string;
+  role?: Partial<ICustomRole>;
   expireAt?: number | Date;
 }
 
@@ -39,8 +38,9 @@ export interface IPermissionReqData<D = IPermissionForReq | Partial<IPermissionF
 }
 
 export interface IPermissionsState {
-  permission: IPermission;
+  permission?: Partial<IPermission>;
   permissions?: IPermission[];
+  permissionToken?: string;
   isLoading: boolean;
   error: StateErrorType;
 }

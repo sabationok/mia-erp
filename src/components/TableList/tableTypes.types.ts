@@ -18,8 +18,7 @@ export interface SelectItemBase extends Record<string, any> {
   path?: string;
 }
 
-export interface SelectItem extends SelectItemBase {
-}
+export interface SelectItem extends SelectItemBase {}
 
 export interface TableActionProps<TDataType = any> {
   separator?: boolean;
@@ -37,15 +36,14 @@ export interface TableActionsProps<TDataType = any> {
   actions?: TableActionProps<TDataType>[];
 }
 
-export interface ITableSortParam extends Pick<SelectItem, 'descending' | 'path' | 'dataPath' | 'dataKey'> {
-}
+export interface ITableSortParam extends Pick<SelectItem, 'descending' | 'path' | 'dataPath' | 'dataKey'> {}
 
 export type OnRowClickHandlerData<RData = any> = {
   ev?: MouseEvent | React.MouseEvent<HTMLDivElement>;
   _id?: string;
   rowData?: RData;
 };
-export type OnRowClickHandler<RData = any> = (data: OnRowClickHandlerData<RData>) => any;
+export type OnRowClickHandler<RData = any> = (data?: OnRowClickHandlerData<RData>) => any;
 
 export type OnCheckBoxChangeHandlerEvent<V = any> = {
   ev?: MouseEvent | React.MouseEvent<HTMLDivElement>;
@@ -81,7 +79,7 @@ export interface ITableListProps<TDataType = any> {
   filterSelectors?: FilterSelectorType[];
   filterDefaultValues?: FilterReturnDataType;
   onFilterSubmit?: (filterData: FilterReturnDataType) => void;
-  onRowClick?: OnRowClickHandler<TDataType>;
+  onRowClick?: OnRowClickHandler<TDataType | undefined>;
   onCheckboxChange?: OnCheckBoxChangeHandler;
   onHeadCheckboxChange?: OnHeadCheckBoxChangeHandler;
   onTableSortParamChange?: (params: ITableSortParam) => void;

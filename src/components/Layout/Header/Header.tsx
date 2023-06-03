@@ -20,27 +20,27 @@ const HeaderLeftSideItems: IHeaderComponent[] = [
 const HeaderRightSideItems: IHeaderComponent[] = [{ Component: UserMenu, corp: false }];
 
 type HeaderProps = {
-  isValidCompany?: boolean;
+  havePermission?: boolean;
 };
-const Header: React.FC<HeaderProps> = ({ isValidCompany }) => {
+const Header: React.FC<HeaderProps> = ({ havePermission }) => {
   const renderLeftSide = useMemo(
     () =>
-      HeaderLeftSideItems.filter(el => (isValidCompany ? el : !el.corp)).map(({ Component, corp, props }, idx) => (
+      HeaderLeftSideItems.filter(el => (havePermission ? el : !el.corp)).map(({ Component, corp, props }, idx) => (
         <StyledBox key={idx} borderRight>
           {Component && <Component {...props} />}
         </StyledBox>
       )),
-    [isValidCompany]
+    [havePermission]
   );
 
   const renderRightSide = useMemo(
     () =>
-      HeaderRightSideItems.filter(el => (isValidCompany ? el : !el.corp)).map(({ Component, corp, props }, idx) => (
+      HeaderRightSideItems.filter(el => (havePermission ? el : !el.corp)).map(({ Component, corp, props }, idx) => (
         <StyledBox key={idx} borderRight>
           {Component && <Component {...props} />}
         </StyledBox>
       )),
-    [isValidCompany]
+    [havePermission]
   );
 
   return (

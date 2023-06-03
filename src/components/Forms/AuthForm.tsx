@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import useAuthService from '../../redux/auth/useAppAuth.hook';
 import { useForm } from 'react-hook-form';
 import InputText from '../atoms/Inputs/InputText';
+import { createThunkPayload } from '../../utils/fabrics';
 
 export interface Props {
   helloTitle?: string;
@@ -42,19 +43,13 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
     register,
     formState: { errors },
     handleSubmit,
-    watch,
   } = useForm<Partial<IRegistrationFormData>>({
     defaultValues: (login && initialFormDataLogin) || (registration && initialFormDataRegister) || {},
   });
-  const formValues = watch();
 
   function onFormSubmit(data: Partial<IRegistrationFormData>) {
-    console.log('AuthFormSubmit ===>>>', data, {
-      login: login,
-      registration: registration,
-    });
-    login && authService.loginUser(data);
-    registration && authService.registerUser(data);
+    login && authService.loginUser(createThunkPayload(data));
+    registration && authService.registerUser(createThunkPayload(data));
   }
 
   return (
@@ -77,18 +72,18 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
         {registration && (
           <>
             <AuthInputLabel icon="personOutlined" error={errors.name}>
-              <InputText placeholder="І'мя" value={formValues.name} {...register('name')} />
+              <InputText placeholder="І'мя" {...register('name')} />
             </AuthInputLabel>
 
             <AuthInputLabel icon="personOutlined" error={errors.secondName}>
-              <InputText placeholder="Прізвище" value={formValues.secondName} {...register('secondName')} />
+              <InputText placeholder="Прізвище" {...register('secondName')} />
             </AuthInputLabel>
 
             <AuthInputLabel icon="email" error={errors.email}>
-              <InputText placeholder="Електронна адреса" value={formValues.email} {...register('email')} />
+              <InputText placeholder="Електронна адреса" {...register('email')} />
             </AuthInputLabel>
             <AuthInputLabel icon="lock_O" error={errors.password}>
-              <InputText placeholder="Пароль" type="password" value={formValues.password} {...register('password')} />
+              <InputText placeholder="Пароль" type="password" {...register('password')} />
             </AuthInputLabel>
             <AuthInputLabel icon="lock_O" error={errors.approvePassword}>
               <InputText placeholder="Повторіть пароль" type="password" {...register('approvePassword')} />
@@ -99,10 +94,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
         {!registration && (
           <>
             <AuthInputLabel icon="email">
-              <InputText placeholder="Електронна адреса" value={formValues.email} {...register('email')} />
+              <InputText placeholder="Електронна адреса" {...register('email')} />
             </AuthInputLabel>
             <AuthInputLabel icon="lock_O">
-              <InputText placeholder="Пароль" type="password" value={formValues.password} {...register('password')} />
+              <InputText placeholder="Пароль" type="password" {...register('password')} />
             </AuthInputLabel>
           </>
         )}

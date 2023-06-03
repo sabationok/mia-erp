@@ -39,7 +39,7 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
 }) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const rowRef = useRef<HTMLElement>();
-  const [selectedRow, setSelectedRow] = useState<any>();
+  const [selectedRow, setSelectedRow] = useState<any | undefined>();
 
   const rowGrid = {
     display: 'grid',
@@ -48,6 +48,7 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
 
   function onRowClickWrapper(rowData: any) {
     // console.log(rowRef.current);
+    console.log('onRowClickWrapperTable', rowData);
     setSelectedRow(rowData);
     typeof onRowClick === 'function' && onRowClick(rowData);
   }

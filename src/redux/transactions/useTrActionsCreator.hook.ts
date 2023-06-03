@@ -17,8 +17,7 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         name: 'editTr',
         title: 'Редагування транзакції',
         icon: 'edit',
-        disabled: false,
-        disabledCheck: () => false,
+        disabled: !ctx.selectedRow?._id,
         type: 'onlyIcon',
         onClick: () => {
           modal.handleOpenModal({
@@ -37,8 +36,7 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         title: 'Копіювання транзакції',
         icon: 'copy',
         type: 'onlyIcon',
-        disabled: false,
-        disabledCheck: () => false,
+        disabled: !ctx.selectedRow?._id,
         onClick: () => {
           modal.handleOpenModal({
             ModalChildren: TransactionForm,
@@ -57,8 +55,7 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         icon: 'delete',
         iconSize: '90%',
         type: 'onlyIcon',
-        disabled: true,
-        disabledCheck: () => true,
+        disabled: !ctx.selectedRow?._id,
         onClick: () => {
           service.deleteById(
             createThunkPayload<{ id: string }, { id: string }>(
@@ -80,7 +77,6 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         iconSize: '90%',
         type: 'onlyIconFilled',
         disabled: false,
-        disabledCheck: () => true,
         onClick: () => {
           modal.handleOpenModal({
             ModalChildren: TransactionForm,
@@ -102,7 +98,6 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         iconSize: '90%',
         type: 'onlyIconFilled',
         disabled: false,
-        disabledCheck: () => true,
         onClick: () => {
           modal.handleOpenModal({
             ModalChildren: TransactionForm,
@@ -124,7 +119,6 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         iconSize: '90%',
         type: 'onlyIconFilled',
         disabled: false,
-        disabledCheck: () => true,
         onClick: () => {
           modal.handleOpenModal({
             ModalChildren: TransactionForm,

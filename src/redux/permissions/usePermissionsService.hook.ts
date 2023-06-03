@@ -6,10 +6,13 @@ import {
   editPermissionThunk,
   getAllPermissionsByCompanyIdThunk,
   getAllPermissionsByUserIdThunk,
+  getCurrentPermissionThunk,
+  logOutPermissionThunk,
 } from './permissions.thunk';
 import { IPermissionForReq, IPermissionsState } from './permissions.types';
-import { ServiceDispatcher } from '../transactions/useTransactionsService.hook';
+
 import { useMemo } from 'react';
+import { ServiceDispatcher } from 'redux/global.types';
 
 export interface PermissionService {
   dispatch: AppDispatch;
@@ -19,6 +22,8 @@ export interface PermissionService {
   deleteById: ServiceDispatcher<{ id: string }>;
   edit: ServiceDispatcher<{ id: string; data: Partial<IPermissionForReq> }>;
   create: ServiceDispatcher<IPermissionForReq>;
+  getCurrent: ServiceDispatcher<{ id: string }>;
+  permissionLogOut: ServiceDispatcher<{ id: string }>;
   isCurrentValid: boolean;
   validatePermission?: (validateBy: ValidatePermissionOptions) => boolean;
 }
@@ -34,16 +39,12 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
   const dispatch: AppDispatch = useAppDispatch();
   const state = usePermissionsSelector();
 
-  // function getCurrentPermissionByCompanyId(companyId: string) {
-  //   dispatch(getCurrentPermissionThunk({ submitData: { companyId } }));
-  // }
-
   const isCurrentValid = useMemo(
     () =>
-      (companyId && state.permission.company._id === companyId) ||
-      (permissionId && state.permission._id === permissionId) ||
+      (companyId && state.permission?.company?._id === companyId) ||
+      (permissionId && state.permission?._id === permissionId) ||
       false,
-    [companyId, permissionId, state.permission._id, state.permission.company._id]
+    [companyId, permissionId, state.permission?._id, state.permission?.company?._id]
   );
 
   return {
@@ -54,8 +55,10 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
     deleteById: payload => dispatch(deletePermissionByIdThunk(payload)),
     edit: payload => dispatch(editPermissionThunk(payload)),
     create: payload => dispatch(createPermissionThunk(payload)),
+    getCurrent: payload => dispatch(getCurrentPermissionThunk(payload)),
+    permissionLogOut: payload => dispatch(logOutPermissionThunk(payload)),
     isCurrentValid,
   };
 };
-// export type PermissionService = ReturnType<typeof usePermissionsService>
+
 export default usePermissionsService as typeof usePermissionsService;

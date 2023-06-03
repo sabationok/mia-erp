@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { IPermission, IPermissionsState } from './permissions.types';
+import { IPermissionsState } from './permissions.types';
+import * as _ from 'lodash';
 import {
   createPermissionThunk,
   deletePermissionByIdThunk,
@@ -7,63 +8,34 @@ import {
   getAllPermissionsByCompanyIdThunk,
   getAllPermissionsByUserIdThunk,
   getCurrentPermissionThunk,
+  logOutPermissionThunk,
 } from './permissions.thunk';
-import { initialCompany } from '../companies/companies.slice';
-import { ICustomRole } from '../customRoles/customRoles.types';
-import { testUserKarina } from '../../data/usersDir.data';
 
-export const initialCustomRole: ICustomRole = {
-  _id: 'dfbsdgbd',
-  label: 'Фінансист',
-  descr: 'Такоє собі посада',
-  actions: [],
-  accessKeys: ['companies', 'transactions', 'orders', 'refunds', 'supplement', 'storage', 'manager', 'admin'],
-};
-export const initialPermission: IPermission = {
-  _id: 'companyId',
-  status: 'active',
-  permissionToken: 'permissionToken',
-  company: initialCompany,
-  user: testUserKarina,
-  role: initialCustomRole,
-};
-const testPermissions = [
-  initialPermission,
-  {
-    ...initialPermission,
-    _id: 'dfbscfbvfgnbd13f5g13bdg1',
-    company: { ...initialCompany, _id: 'dfbscxvfgnbd13f5g13bdg1', name: 'Roga & Copyta' },
-    role: { ...initialPermission.role, label: 'Менеджер' },
-  },
-  {
-    ...initialPermission,
-    _id: 'dfbscxvcxgnbd13f5g13bdg1',
-    company: { ...initialCompany, _id: 'dfbsdfsdf13f5g13bdg1', name: 'Roga & Copyta 3' },
-    role: { ...initialPermission.role, label: 'Помічник' },
-  },
-  {
-    ...initialPermission,
-    _id: 'dfbscxvsdfbvsd13f5g13bdg1',
-    company: { ...initialCompany, _id: 'dfbsxcvgbd13f5g13bdg1', name: 'Roga & Copyta 4' },
-    role: { ...initialPermission.role, label: 'Аудитор' },
-  },
-];
-const initialPermState: IPermissionsState = {
-  permission: initialPermission,
+import { testPermissions } from '../../data/permissions.data';
+
+const initialPermissionStateState: IPermissionsState = {
+  permission: {},
+  permissionToken: '',
   permissions: testPermissions,
   isLoading: false,
   error: null,
 };
 export const permissionsSlice = createSlice({
   name: 'permissions',
-  initialState: initialPermState,
+  initialState: initialPermissionStateState,
   reducers: {},
   extraReducers: builder =>
     builder
+      .addCase(getCurrentPermissionThunk.fulfilled, (state: IPermissionsState, action) => {
+        state.permission = _.omit(action.payload, 'permissionToken');
+        state.permissionToken = action.payload.permissionToken;
+      })
       .addCase(getAllPermissionsByUserIdThunk.fulfilled, (state, action) => {})
       .addCase(getAllPermissionsByCompanyIdThunk.fulfilled, (state, action) => {})
       .addCase(createPermissionThunk.fulfilled, (state, action) => {})
       .addCase(editPermissionThunk.fulfilled, (state, action) => {})
       .addCase(deletePermissionByIdThunk.fulfilled, (state, action) => {})
-      .addCase(getCurrentPermissionThunk.fulfilled, (state, action) => {}),
+      .addCase(logOutPermissionThunk.fulfilled, (state, action) => {
+        state = initialPermissionStateState;
+      }),
 });
