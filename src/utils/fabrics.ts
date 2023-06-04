@@ -10,7 +10,7 @@ export interface CreateThunkPayloadOptions<SD extends FieldValues = any, RD = an
 }
 
 function createThunkPayload<SD extends FieldValues = any, RD = any, E = any>(
-  payloadData: SD,
+  payloadData?: SD,
   options?: CreateThunkPayloadOptions<SD, RD, E>
 ): ThunkPayload<SD, RD, E> {
   const { logData, logError, logLoading, logAll, onError, onSuccess, onLoading } = options || {};

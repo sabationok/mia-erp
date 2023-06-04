@@ -24,6 +24,7 @@ export type CellTittleProps = {
   titleInfo?: CellTittleProps;
   action: CellActionsName;
   onClick?: (ev: React.MouseEvent<HTMLDivElement>) => void;
+  visibility?: boolean;
 };
 
 const CellTitle: React.FC<CellTittleProps & React.HTMLAttributes<HTMLDivElement>> = ({

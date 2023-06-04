@@ -41,6 +41,7 @@ const usePermissionsActionsCreator = (
                   { id: selPerm?._id },
                   {
                     onSuccess: data => {
+                      if (!data._id) return console.log('data', data);
                       console.log('getCurrentPermission Success', data);
                       toast.success(`Current company: ${data.company?.name}`);
                       navigate(`/app/${data._id}`);
@@ -137,7 +138,7 @@ const usePermissionsActionsCreator = (
         },
       ];
     },
-    [companyType, modal, service]
+    [companyType, modal, navigate, service]
   );
 };
 

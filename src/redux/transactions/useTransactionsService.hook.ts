@@ -4,6 +4,8 @@ import { ITransactionReqData } from './transactions.types';
 import { ITransactionsState } from './transactions.slice';
 import { ServiceDispatcher } from 'redux/global.types';
 import { createTransactionThunk, getAllTransactionsThunk } from './transactions.thunks';
+import { FilterReturnDataType } from '../../components/Filter/AppFilter';
+import { useMemo } from 'react';
 
 export interface TransactionsService {
   dispatch: AppDispatch;
@@ -12,21 +14,30 @@ export interface TransactionsService {
   deleteById: ServiceDispatcher<{ id: string }>;
   editById: ServiceDispatcher<ITransactionReqData>;
   getById: ServiceDispatcher<{ id: string }>;
-  getAll: ServiceDispatcher;
+  getAll: ServiceDispatcher<FilterReturnDataType>;
 }
 
 const useTransactionsService = (): TransactionsService => {
-  const dispatch = useAppDispatch();
+  const dispatch: AppDispatch = useAppDispatch();
   const state = useTransactionsSelector();
 
+  console.log('useTransactionsService call');
+
+  const trService = useMemo((): Omit<TransactionsService, 'state' | 'dispatch'> => {
+    console.log('trService memo call');
+    return {
+      create: payload => dispatch(createTransactionThunk(payload)),
+      deleteById: payload => dispatch(() => {}),
+      editById: payload => dispatch(() => {}),
+      getById: payload => dispatch(() => {}),
+      getAll: payload => dispatch(getAllTransactionsThunk(payload)),
+    };
+  }, [dispatch]);
+
   return {
-    create: payload => dispatch(createTransactionThunk(payload)),
-    deleteById: payload => dispatch(() => {}),
-    editById: payload => dispatch(() => {}),
-    getById: payload => dispatch(() => {}),
-    getAll: () => dispatch(getAllTransactionsThunk({})),
     dispatch,
     state,
+    ...trService,
   };
 };
 

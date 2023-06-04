@@ -10,7 +10,7 @@ export default function numberWithSpaces(n?: number | any, fractionDigits: numbe
   if (typeof n === 'string') {
     return n as typeof n;
   } else if (typeof n !== 'number') {
-    return '0.00';
+    return n as typeof n;
   }
   return n
     .toFixed(fractionDigits)

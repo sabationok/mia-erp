@@ -34,7 +34,7 @@ export const usersDirColumns: CellTittleProps[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Коментар', path: 'descr' },
+    top: { name: 'Коментар', path: 'description' },
     width: '170px',
     action: 'valueByPath',
   },
@@ -46,11 +46,13 @@ export const usersDirColumns: CellTittleProps[] = [
   },
 ];
 
-export const usersMockData: Partial<IUser> & any[] = [{
-  _id: 'sfbvssdgbdfg',
-  name: 'Петро',
-  fullName: 'Петро Васильович Галайко',
-  email: 'petro@mail.com',
-  phone: '+3806768923156',
-  permission: { label: 'Адмін' },
-}];
+export const usersMockData: Partial<IUser> & any[] = [
+  {
+    _id: 'sfbvssdgbdfg',
+    name: 'Петро',
+    fullName: 'Петро Васильович Галайко',
+    email: 'petro@mail.com',
+    phone: '+3806768923156',
+    permission: { label: 'Адмін' },
+  },
+];

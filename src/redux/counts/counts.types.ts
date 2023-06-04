@@ -1,4 +1,4 @@
-import { IBase } from '../global.types';
+import { AppResponse, IBase } from '../global.types';
 
 export interface ICount extends IBase {
   name?: string;
@@ -17,3 +17,9 @@ export const CountsTypesMap = {
 };
 
 export type CountType = keyof typeof CountsTypesMap;
+
+export interface IGetAllCountsRes extends AppResponse<ICount[]> {}
+
+export interface ICreateCountThunkRes extends AppResponse<ICount> {}
+
+export interface IDeleteCountThunkRes extends AppResponse<{ _id: string }> {}

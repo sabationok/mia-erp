@@ -1,109 +1,86 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { AxiosResponse } from 'axios';
-import { ICount } from 'redux/counts/counts.types';
-import { AuthErrorType } from 'redux/reduxTypes.types';
 import { axiosErrorCheck } from 'utils';
 
 import baseApi from '../../api/baseApi';
+import { ICount, ICreateCountThunkRes, IDeleteCountThunkRes, IGetAllCountsRes } from './counts.types';
+import { ThunkPayload } from '../store.store';
+import { isAxiosError } from 'axios';
 // import { token } from '../../services/baseApi';
 const COUNTS_API_BASENAME = '/directories/counts';
 export const countsApiRoutes = {
-  getAll: `${COUNTS_API_BASENAME}/getAll`,
-  getById: `${COUNTS_API_BASENAME}/getById`,
-  create: `${COUNTS_API_BASENAME}/create`,
-  delete: `${COUNTS_API_BASENAME}/delete`,
-  update: `${COUNTS_API_BASENAME}/update`,
+  getAll: () => `${COUNTS_API_BASENAME}/getAll`,
+  getById: (id?: string) => `${COUNTS_API_BASENAME}/getById/${id || ''}`,
+  create: () => `${COUNTS_API_BASENAME}/create`,
+  delete: (id?: string) => `${COUNTS_API_BASENAME}/delete/${id || ''}`,
+  updateById: (id?: string) => `${COUNTS_API_BASENAME}/update/${id || ''}`,
 };
 
-export interface IAllCounts {
-  data: ICount[];
-}
-
-export interface IPayloadGetAllTr {
-  submitData?: null;
-  onSuccess: (data?: ICount[]) => void;
-
-  onError(error?: AuthErrorType): void;
-}
-
-// export interface IPayloadLogInUser {
-//   submitData: { email: string; password: string };
-//   onSuccess(data?: any): void ;
-//   onError(error: AuthErrorType): void;
-// }
-// export interface IPayloadLogOutUser {
-//   onSuccess(data?: any): void;
-//   onError(error: AuthErrorType): void;
-// }
-// export interface IPayloadGetCurrentUser {
-//   submitData?: { email: string; password: string };
-//   onSuccess(data?: ILoggedUserInfo): any;
-//   onError(error: AuthErrorType): void;
-// }
-
-export const getAllCountsThunk = createAsyncThunk<IAllCounts, IPayloadGetAllTr>(
+export const getAllCountsThunk = createAsyncThunk<ICount[], ThunkPayload<any, IGetAllCountsRes>>(
   'counts/getAllCountsThunk',
-  async (payload, thunkAPI) => {
+  async ({ onSuccess, onError }, thunkAPI) => {
     try {
-      const response: AxiosResponse<IAllCounts> = await baseApi.get(countsApiRoutes.getAll);
+      const response: IGetAllCountsRes = await baseApi.get(countsApiRoutes.getAll());
 
-      payload?.onSuccess(response.data.data);
+      response && onSuccess && onSuccess(response);
 
-      return response.data;
+      return response.data.data;
     } catch (error) {
-      payload?.onError(error);
+      onError && onError(error);
 
       return thunkAPI.rejectWithValue(axiosErrorCheck(error));
     }
-  },
+  }
 );
 
-// export const addCountThunk = createAsyncThunk<>('counts/addCountThunk', async (payload, thunkAPI) => {
-//   try {
-//     const response = await baseApi.post(`/directories/counts/create`, payload.submitData);
-//     console.log(response.data);
+export const createCountThunk = createAsyncThunk<ICount, ThunkPayload<Partial<ICount>, ICreateCountThunkRes>>(
+  'counts/createCountThunk',
+  async ({ onSuccess, onError, data }, thunkAPI) => {
+    try {
+      const response: ICreateCountThunkRes = await baseApi.post(countsApiRoutes.create(), data);
+      console.log(response.data);
 
-//     payload?.onSuccess(response);
+      response && onSuccess && onSuccess(response);
 
-//     return response.data;
-//   } catch (error) {
-//     // console.log(error);
+      return response.data.data;
+    } catch (error) {
+      onError && onError(error);
 
-//     payload?.onError(error);
+      return thunkAPI.rejectWithValue(isAxiosError(error));
+    }
+  }
+);
 
-//     return thunkAPI.rejectWithValue(error.message);
-//   }
-// });
+export const deleteCountThunk = createAsyncThunk<
+  {
+    _id: string;
+  },
+  ThunkPayload<{ _id: string }, IDeleteCountThunkRes>
+>('counts/deleteCountThunk', async ({ onSuccess, onError, data }, thunkAPI) => {
+  try {
+    const response: IDeleteCountThunkRes = await baseApi.delete(countsApiRoutes.delete());
 
-// export const deleteCountThunk = createAsyncThunk('counts/deleteCountThunk', async (payload, thunkAPI) => {
-//   try {
-//     const response = await baseApi.delete(`/directories/counts/${payload.submitData.id}`);
-//     console.log(response.data);
+    response && onSuccess && onSuccess(response);
 
-//     payload?.onSuccess(response);
+    return response.data.data;
+  } catch (error) {
+    onError && onError(error);
 
-//     return response.data;
-//   } catch (error) {
-//     console.log(error);
-
-//     payload?.onError(error);
-
-//     return thunkAPI.rejectWithValue(error.message);
-//   }
-// });
+    return thunkAPI.rejectWithValue(isAxiosError(error));
+  }
+});
 
 // export const editCountThunk = createAsyncThunk('counts/editCountThunk', async (payload, thunkAPI) => {
 //   try {
 //     const response = await baseApi.patch(`/directories/counts/${payload.submitData.id}`, payload.submitData.updateData);
-
+//
 //     payload?.onSuccess(response);
-
+//
 //     return response.data;
 //   } catch (error) {
 //     console.log(error);
-
+//
 //     payload?.onError(error);
-
+//
 //     return thunkAPI.rejectWithValue(error.message);
 //   }
 // });

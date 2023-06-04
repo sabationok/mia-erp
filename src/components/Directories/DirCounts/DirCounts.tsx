@@ -8,6 +8,7 @@ import { CountType, ICount } from 'redux/counts/counts.types';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FormCreateCount, { FormCreateCountProps } from './FormCreateCount';
 import { CountFilterOpt, DirBaseProps } from '../dir.types';
+import { createThunkPayload } from '../../../utils/fabrics';
 
 export interface DirCountsProps extends DirBaseProps {
   filterOptions: CountFilterOpt[];
@@ -15,7 +16,12 @@ export interface DirCountsProps extends DirBaseProps {
 
 const DirCounts: React.FC<DirCountsProps> = props => {
   const modal = useModalProvider();
-  const { counts, create, deleteById, getById } = useCountsService();
+  const {
+    state: { counts },
+    create,
+    deleteById,
+    getById,
+  } = useCountsService();
   // const [filteredData, setFilteredData] = useState<ICount[]>([]);
   const [dirType, setDirType] = useState<CountType>('ACTIVE');
 
@@ -30,7 +36,7 @@ const DirCounts: React.FC<DirCountsProps> = props => {
         onSubmit: data => {
           console.log(data);
         },
-        count: counts.find(el => el._id === _id),
+        count: count,
       },
     });
   }
@@ -62,6 +68,16 @@ const DirCounts: React.FC<DirCountsProps> = props => {
     });
   }
 
+  function onDelete(_id: string) {
+    const count = getById(_id);
+    if (
+      count &&
+      window.confirm(`Видалити ${count?.owner ? 'суб-рахунок' : 'рахунок'}: "${count?.label || count?.name}"`)
+    ) {
+      deleteById(createThunkPayload({ _id }));
+    }
+  }
+
   function handleFilterData({ value }: CountFilterOpt) {
     value && setDirType(value);
     // value && setFilteredData(founder({ searchParam: 'type', searchQuery: value, data: counts }));
@@ -83,7 +99,7 @@ const DirCounts: React.FC<DirCountsProps> = props => {
       <DirList
         list={data}
         entryList={entryList}
-        onDelete={deleteById}
+        onDelete={onDelete}
         onEdit={onEdit}
         onCreateChild={onCreateChild}
         createParentTitle="Створити рахунок"

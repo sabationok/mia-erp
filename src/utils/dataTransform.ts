@@ -61,8 +61,6 @@ function createTransactionForReq(
     return '';
   });
 
-  // if (omitPathArr && omitPathArr?.length > 0) return _.omit(transformedData, ...omitPathArr);
-
   return transformedData;
 }
 

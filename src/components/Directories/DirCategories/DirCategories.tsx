@@ -8,6 +8,7 @@ import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FormCreateCategory from './FormCreateCategory';
 import styled from 'styled-components';
 import { CategoryFilterOpt, DirBaseProps } from '../dir.types';
+import { createThunkPayload } from '../../../utils/fabrics';
 
 export interface DirCategoriesProps extends DirBaseProps {
   filterOptions?: CategoryFilterOpt[];
@@ -15,11 +16,17 @@ export interface DirCategoriesProps extends DirBaseProps {
 
 const DirCategories: React.FC<DirCategoriesProps> = props => {
   const modal = useModalProvider();
-  const { categories, create, deleteById, editById, getById } = useCategoriesService();
+  const {
+    state: { categories },
+    create,
+    deleteById,
+    editById,
+    getById,
+  } = useCategoriesService();
   const [dirType, setDirType] = useState<CategoryTypes>('INCOME');
 
   function onEdit(_id?: string) {
-    const category = getById(_id || '');
+    const category = categories.find(el => el._id === _id);
     modal.handleOpenModal({
       ModalChildren: FormCreateCategory,
       modalChildrenProps: {
@@ -27,13 +34,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
         category: categories.find(el => el._id === _id),
         edit: true,
         type: dirType,
-        onSubmit: submitData =>
-          _id &&
-          editById(_id, {
-            label: submitData.name || submitData.label,
-            owner: submitData.owner,
-            description: submitData.description,
-          }),
+        onSubmit: submitData => _id && editById(createThunkPayload({ submitData })),
       },
     });
   }
@@ -44,7 +45,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
       modalChildrenProps: {
         title: 'Створити під-категорію',
         type: dirType,
-        onSubmit: submitData => create({ ...submitData, owner: ownerId }),
+        onSubmit: submitData => create(createThunkPayload({ data: submitData })),
       },
     });
   }
@@ -55,7 +56,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
       modalChildrenProps: {
         title: 'Створити категорію',
         type: dirType,
-        onSubmit: create,
+        onSubmit: d => create(createThunkPayload(d)),
       },
     });
   }
@@ -80,7 +81,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
       <DirList
         entryList={entryList}
         list={data}
-        onDelete={deleteById}
+        onDelete={_id => deleteById(createThunkPayload({ _id }))}
         onEdit={onEdit}
         onCreateChild={onCreateChild}
         createParentTitle="Створити категорію"

@@ -5,7 +5,7 @@ import { ITransaction } from '../redux/transactions/transactions.types';
 import { TransactionsFilterOpt } from '../components/Forms/TransactionForm';
 import { CategoriesTypesMap } from '../redux/categories/categories.types';
 
-export const transactionsColumns: CellTittleProps[] = [
+export const transactionsColumnsNew: CellTittleProps[] = [
   {
     top: { name: 'Дата', align: 'center', path: 'transactionDate' },
     bottom: { name: 'Час', align: 'center' },
@@ -84,10 +84,79 @@ export const transactionsColumns: CellTittleProps[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Створено', align: 'center', dataKey: 'createdAt' },
-    bottom: { name: 'Оновлено', align: 'center', dataKey: 'updatedAt' },
+    top: { name: 'Створено', align: 'center', path: 'createdAt' },
+    bottom: { name: 'Оновлено', align: 'center', path: 'updatedAt' },
     width: '150px',
+    action: 'dateDbl',
+  },
+];
+export const transactionsColumns: CellTittleProps[] = [
+  {
+    top: { name: 'Дата', align: 'center', path: 'transactionDate' },
+    bottom: { name: 'Час', align: 'center' },
+    width: '90px',
     action: 'dateSimple',
+  },
+  {
+    top: { name: 'Тип', align: 'start', path: 'type' },
+    bottom: { name: 'Статус', align: 'start', path: 'status' },
+    width: '100px',
+    action: 'status',
+  },
+  {
+    top: { name: 'Сума', align: 'end', path: 'amount', def: ' 0.00' },
+    bottom: { name: 'Валюта', align: 'end', path: 'currency' },
+    width: '120px',
+    action: 'numberWithSpaces',
+  },
+  {
+    top: { name: selects.countIn.label, align: 'start', path: 'countIdIn.name' },
+    bottom: {
+      name: selects.subCountIn.label,
+      align: 'start',
+      path: 'subCountIdIn.name',
+    },
+    width: '190px',
+    action: 'valueByPath',
+  },
+  {
+    top: {
+      name: selects.countOut.label,
+      align: 'start',
+      path: 'countIdOut.name',
+    },
+    bottom: {
+      name: selects.subCountOut.label,
+      align: 'start',
+      path: 'subCountIdOut.name',
+    },
+    width: '190px',
+    action: 'valueByPath',
+  },
+  {
+    top: {
+      name: selects.category.label,
+      align: 'start',
+      path: 'categoryId.name',
+    },
+    bottom: {
+      name: selects.subCategory.label,
+      align: 'start',
+      path: 'subCategoryId.name',
+    },
+    width: '190px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Коментар', align: 'start', path: 'comment' },
+    width: '150px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Створено', align: 'center', path: 'createdAt' },
+    bottom: { name: 'Оновлено', align: 'center', path: 'updatedAt' },
+    width: '150px',
+    action: 'dateDbl',
   },
 ];
 

@@ -1,38 +1,42 @@
 import { useCategoriesSelector } from 'redux/selectors.store';
-import { useAppDispatch } from 'redux/store.store';
-import { ICategoryFormData } from './categories.types';
+import { AppDispatch, useAppDispatch } from 'redux/store.store';
+import { ICategoriesState } from './categoriesSlice';
+import { ServiceDispatcher } from '../global.types';
+import { useMemo } from 'react';
+import { getAllCategoriesThunk } from './categoriesThunks';
 
-const useCategoriesService = () => {
+interface CategoriesServiceDispatchers {
+  create: ServiceDispatcher;
+  deleteById: ServiceDispatcher;
+  editById: ServiceDispatcher;
+  getById: ServiceDispatcher;
+  getAll: () => void;
+}
+
+interface CategoriesService extends CategoriesServiceDispatchers {
+  dispatch: AppDispatch;
+  state: ICategoriesState;
+}
+
+const useCategoriesService = (): CategoriesService => {
   const dispatch = useAppDispatch();
   const state = useCategoriesSelector();
 
-  function create(submitData: ICategoryFormData) {
-    console.log({ submitData });
-  }
-
-  function deleteById(_id: string) {
-    const categoryForDel = getById(_id);
-    if (window.confirm(`Бажаєте видалити ${categoryForDel?.owner ? 'під-категорію' : 'категорію'}: ${categoryForDel?.label || categoryForDel?.name}`))
-      console.log({ _id });
-  }
-
-  function editById(_id: string, submitData: ICategoryFormData) {
-    console.log({ _id, submitData });
-  }
-
-  function getById(_id: string) {
-    return state.categories.find(el => el._id === _id);
-  }
-
+  const dispatchers = useMemo((): CategoriesServiceDispatchers => {
+    return {
+      create: payload => dispatch(() => {}),
+      deleteById: payload => dispatch(() => {}),
+      editById: payload => dispatch(() => {}),
+      getById: payload => dispatch(() => {}),
+      getAll: () => dispatch(getAllCategoriesThunk({})),
+    };
+  }, [dispatch]);
 
   return {
     dispatch,
-    ...state,
-    create,
-    deleteById,
-    editById,
-    getById,
+    state,
+    ...dispatchers,
   };
 };
-export type CategoriesService = ReturnType<typeof useCategoriesService>
-export default useCategoriesService;
+
+export default useCategoriesService as typeof useCategoriesService;

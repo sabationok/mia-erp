@@ -1,10 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { AxiosResponse } from 'axios';
 import { ICategory } from 'redux/categories/categories.types';
-import { AuthErrorType } from 'redux/reduxTypes.types';
 import { axiosErrorCheck } from 'utils';
 
 import baseApi from '../../api/baseApi';
+import { ThunkPayload } from '../store.store';
+import { AppResponse } from '../global.types';
 // import { token } from '../../services/baseApi';
 
 const CATEGORIES_API_BASENAME = '/directories/categories';
@@ -16,32 +16,23 @@ export const categoriesApiRoutes = {
   update: `${CATEGORIES_API_BASENAME}/update`,
 };
 
-export interface IAllCategories {
-  data: ICategory[];
-}
+export interface IAllCategoriesRes extends AppResponse<ICategory[]> {}
 
-export interface IPayloadGetAllTr {
-  submitData?: null;
-  onSuccess: (data?: ICategory[]) => void;
-
-  onError(error?: AuthErrorType): void;
-}
-
-export const getAllCategoriesThunk = createAsyncThunk<IAllCategories, IPayloadGetAllTr>(
+export const getAllCategoriesThunk = createAsyncThunk<ICategory[], ThunkPayload>(
   'categories/getAllCategoriesThunk',
-  async (payload, thunkAPI) => {
+  async ({ onSuccess, onError }, thunkAPI) => {
     try {
-      const response: AxiosResponse<IAllCategories> = await baseApi.get(categoriesApiRoutes.getAll);
+      const response: IAllCategoriesRes = await baseApi.get(categoriesApiRoutes.getAll);
 
-      payload?.onSuccess(response.data.data);
+      response && onSuccess && onSuccess(response.data.data);
 
-      return response.data;
+      return response.data.data;
     } catch (error) {
-      payload?.onError(error);
+      onError && onError(error);
 
       return thunkAPI.rejectWithValue(axiosErrorCheck(error));
     }
-  },
+  }
 );
 
 // export const addCategoryThunk = createAsyncThunk('categories/addCategoryThunk', async (payload, thunkAPI) => {

@@ -48,18 +48,27 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
     [companyId, permissionId, state.permission?._id, state.permission?.company?._id]
   );
 
+  const dispatchers = useMemo((): Omit<
+    PermissionService,
+    'state' | 'dispatch' | 'isCurrentValid' | 'validatePermission'
+  > => {
+    return {
+      getAllByCompanyId: payload => dispatch(getAllPermissionsByCompanyIdThunk(payload)),
+      getAllByUserId: payload => dispatch(getAllPermissionsByUserIdThunk(payload)),
+      deleteById: payload => dispatch(deletePermissionByIdThunk(payload)),
+      edit: payload => dispatch(editPermissionThunk(payload)),
+      create: payload => dispatch(createPermissionThunk(payload)),
+      getCurrent: payload => dispatch(getCurrentPermissionThunk(payload)),
+      permissionLogOut: payload => dispatch(logOutPermissionThunk(payload)),
+      clearCurrent: () => dispatch(clearCurrentPermission()),
+    };
+  }, [dispatch]);
+
   return {
     dispatch,
     state,
-    getAllByCompanyId: payload => dispatch(getAllPermissionsByCompanyIdThunk(payload)),
-    getAllByUserId: payload => dispatch(getAllPermissionsByUserIdThunk(payload)),
-    deleteById: payload => dispatch(deletePermissionByIdThunk(payload)),
-    edit: payload => dispatch(editPermissionThunk(payload)),
-    create: payload => dispatch(createPermissionThunk(payload)),
-    getCurrent: payload => dispatch(getCurrentPermissionThunk(payload)),
-    permissionLogOut: payload => dispatch(logOutPermissionThunk(payload)),
-    clearCurrent: () => dispatch(clearCurrentPermission()),
     isCurrentValid,
+    ...dispatchers,
   };
 };
 

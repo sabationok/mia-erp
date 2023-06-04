@@ -24,7 +24,7 @@ export const categoriesSlice = createSlice({
     builder
       .addCase(getAllCategoriesThunk.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.categories = action.payload.data;
+        state.categories = action.payload;
       })
       .addMatcher(inPending, state => {
         state.isLoading = true;

@@ -1,17 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
-import baseApi from '../../api/baseApi';
 import { ThunkPayload } from '../store.store';
 import { isAxiosError } from 'axios';
-import { IAllTransactionsRes, ICreateTransactionRes, ITransaction, ITransactionReqData } from './transactions.types';
-
-export const TRANSACTIONS_API_BASENAME = '/transactions';
-export const transactionsApiEndpoints = {
-  getAll: (): string => `${TRANSACTIONS_API_BASENAME}/getAll`,
-  create: (): string => `${TRANSACTIONS_API_BASENAME}/create`,
-  deleteById: (id: string): string => `${TRANSACTIONS_API_BASENAME}/delete/${id}`,
-  updateById: (id: string): string => `${TRANSACTIONS_API_BASENAME}/update/${id}`,
-};
+import { ICreateTransactionRes, ITransaction, ITransactionReqData } from './transactions.types';
+import TransactionsApi from '../../api/transactions.api';
 
 // export async function payloadCreator<R = any>(
 //   getResponse: () => R,
@@ -38,7 +30,7 @@ export const getAllTransactionsThunk = createAsyncThunk<ITransaction[], ThunkPay
   async ({ onSuccess, onError, onLoading }, thunkAPI) => {
     onLoading && onLoading(true);
     try {
-      const response: IAllTransactionsRes = await baseApi.get(transactionsApiEndpoints.getAll());
+      const response = await TransactionsApi.getAll();
 
       onSuccess && onSuccess(response.data.data);
 
@@ -56,10 +48,10 @@ export const getAllTransactionsThunk = createAsyncThunk<ITransaction[], ThunkPay
 export const createTransactionThunk = createAsyncThunk<
   ITransaction | undefined,
   ThunkPayload<ITransactionReqData, any>
->('transactions/createTransactionThunk', async ({ onSuccess, onError, onLoading, submitData }, thunkApi) => {
+>('transactions/createTransactionThunk', async ({ onSuccess, onError, onLoading, data }, thunkApi) => {
   onLoading && onLoading(true);
   try {
-    const response: ICreateTransactionRes = await baseApi.post(`/transactions/create`, submitData);
+    const response: ICreateTransactionRes = await TransactionsApi.create(data || {});
 
     response && onSuccess && onSuccess(response);
 

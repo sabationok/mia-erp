@@ -23,7 +23,7 @@ export const countsSlice = createSlice({
     builder
       .addCase(getAllCountsThunk.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.counts = action.payload.data;
+        state.counts = action.payload;
       })
       .addMatcher(inPending, state => {
         state.isLoading = true;

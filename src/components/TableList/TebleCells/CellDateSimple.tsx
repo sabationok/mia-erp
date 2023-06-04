@@ -10,9 +10,11 @@ export interface CellDateSimpleProps {
   idx?: number;
 }
 
-const CellDateSimple: React.FC<
-  CellDateSimpleProps & React.HTMLAttributes<HTMLDivElement>
-> = ({ titleInfo, idx, ...props }) => {
+const CellDateSimple: React.FC<CellDateSimpleProps & React.HTMLAttributes<HTMLDivElement>> = ({
+  titleInfo,
+  idx,
+  ...props
+}) => {
   const { rowData } = useRow();
   const { top, bottom, width = '100px' } = titleInfo;
 
@@ -30,7 +32,7 @@ const CellDateSimple: React.FC<
   return (
     <CellBase style={{ width }} {...props}>
       <Top align={top.align}>
-        <DateComp dateInfo={contentTop} wraped={true} />
+        <DateComp dateInfo={contentTop} wraped={!contentBottom} />
       </Top>
 
       {contentBottom && (
@@ -67,8 +69,7 @@ const Top = styled(Content)`
   text-transform: uppercase;
 
   & .inner {
-    justify-content: ${({ align }) =>
-      align === 'center' ? 'center' : `flex-${align}`};
+    justify-content: ${({ align }) => (align === 'center' ? 'center' : `flex-${align}`)};
   }
 `;
 const Bottom = styled(Content)`
@@ -76,8 +77,7 @@ const Bottom = styled(Content)`
   font-weight: 400;
 
   & .inner {
-    justify-content: ${({ align }) =>
-      align === 'center' ? 'center' : `flex-${align}`};
+    justify-content: ${({ align }) => (align === 'center' ? 'center' : `flex-${align}`)};
   }
 `;
 
