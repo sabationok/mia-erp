@@ -8,7 +8,6 @@ import { CountType, ICount } from 'redux/counts/counts.types';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FormCreateCount, { FormCreateCountProps } from './FormCreateCount';
 import { CountFilterOpt, DirBaseProps } from '../dir.types';
-import { createThunkPayload } from '../../../utils/fabrics';
 
 export interface DirCountsProps extends DirBaseProps {
   filterOptions: CountFilterOpt[];
@@ -22,7 +21,6 @@ const DirCounts: React.FC<DirCountsProps> = props => {
     deleteById,
     getById,
   } = useCountsService();
-  // const [filteredData, setFilteredData] = useState<ICount[]>([]);
   const [dirType, setDirType] = useState<CountType>('ACTIVE');
 
   function onEdit(_id: string) {
@@ -48,7 +46,7 @@ const DirCounts: React.FC<DirCountsProps> = props => {
         title: 'Створення субрахунку',
         type: dirType,
         onSubmit: data => {
-          console.log('owner', owner);
+          create({ data: { ...data, owner } });
         },
         create: true,
       },
@@ -61,8 +59,8 @@ const DirCounts: React.FC<DirCountsProps> = props => {
       modalChildrenProps: {
         title: 'Створити рахунок',
         type: dirType,
-        onSubmit: (data: any) => {
-          create(data);
+        onSubmit: data => {
+          create({ data });
         },
       },
     });
@@ -74,7 +72,7 @@ const DirCounts: React.FC<DirCountsProps> = props => {
       count &&
       window.confirm(`Видалити ${count?.owner ? 'суб-рахунок' : 'рахунок'}: "${count?.label || count?.name}"`)
     ) {
-      deleteById(createThunkPayload({ _id }));
+      deleteById({ data: { _id } });
     }
   }
 

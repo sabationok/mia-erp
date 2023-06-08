@@ -4,14 +4,15 @@ import { ServiceDispatcher } from '../global.types';
 import { ICountsState } from './counts.slice';
 import { useMemo } from 'react';
 import { getAllCountsThunk } from './counts.thunks';
-import { ICategoryFormData } from '../categories/categories.types';
 import { ICount } from './counts.types';
+import { defaultThunkPayload } from '../../utils/fabrics';
+import { CountFormData } from '../../components/Directories/DirCounts/FormCreateCount';
 
 interface CountsServiceDispatchers {
   deleteById: ServiceDispatcher<{ _id: string }>;
-  editById: ServiceDispatcher<{ _id: string; newData: ICategoryFormData }>;
+  editById: ServiceDispatcher<{ _id: string; newData: CountFormData }>;
   getAll: ServiceDispatcher;
-  create: ServiceDispatcher<ICategoryFormData>;
+  create: ServiceDispatcher<CountFormData>;
 }
 
 export interface CountsService extends CountsServiceDispatchers {
@@ -26,10 +27,10 @@ export const useCountsService = (): CountsService => {
 
   const dispatchers = useMemo((): CountsServiceDispatchers => {
     return {
-      getAll: payload => dispatch(getAllCountsThunk(payload)),
-      deleteById: payload => dispatch(getAllCountsThunk(payload)),
-      create: payload => dispatch(getAllCountsThunk(payload)),
-      editById: payload => dispatch(getAllCountsThunk(payload)),
+      getAll: payload => dispatch(getAllCountsThunk(defaultThunkPayload(payload))),
+      deleteById: payload => dispatch(getAllCountsThunk(defaultThunkPayload(payload))),
+      create: payload => dispatch(getAllCountsThunk(defaultThunkPayload(payload))),
+      editById: payload => dispatch(getAllCountsThunk(defaultThunkPayload(payload))),
     };
   }, [dispatch]);
 

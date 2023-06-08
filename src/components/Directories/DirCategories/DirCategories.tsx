@@ -21,12 +21,14 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
     create,
     deleteById,
     editById,
-    getById,
+    findById,
   } = useCategoriesService();
   const [dirType, setDirType] = useState<CategoryTypes>('INCOME');
 
+  // const [selectedList, setSelectedList] = useState<string[]>();
+
   function onEdit(_id?: string) {
-    const category = categories.find(el => el._id === _id);
+    const category = findById(_id);
     modal.handleOpenModal({
       ModalChildren: FormCreateCategory,
       modalChildrenProps: {
@@ -34,7 +36,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
         category: categories.find(el => el._id === _id),
         edit: true,
         type: dirType,
-        onSubmit: submitData => _id && editById(createThunkPayload({ submitData })),
+        onSubmit: submitData => _id && submitData && editById(createThunkPayload({ _id, newData: {} })),
       },
     });
   }
@@ -45,7 +47,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
       modalChildrenProps: {
         title: 'Створити під-категорію',
         type: dirType,
-        onSubmit: submitData => create(createThunkPayload({ data: submitData })),
+        onSubmit: submitData => create(createThunkPayload()),
       },
     });
   }
@@ -56,7 +58,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
       modalChildrenProps: {
         title: 'Створити категорію',
         type: dirType,
-        onSubmit: d => create(createThunkPayload(d)),
+        onSubmit: d => create(createThunkPayload()),
       },
     });
   }

@@ -45,25 +45,25 @@ export const getAllTransactionsThunk = createAsyncThunk<ITransaction[], ThunkPay
   }
 );
 
-export const createTransactionThunk = createAsyncThunk<
-  ITransaction | undefined,
-  ThunkPayload<ITransactionReqData, any>
->('transactions/createTransactionThunk', async ({ onSuccess, onError, onLoading, data }, thunkApi) => {
-  onLoading && onLoading(true);
-  try {
-    const response: ICreateTransactionRes = await TransactionsApi.create(data || {});
+export const createTransactionThunk = createAsyncThunk<ITransaction | undefined, ThunkPayload<ITransactionReqData>>(
+  'transactions/createTransactionThunk',
+  async ({ onSuccess, onError, onLoading, data }, thunkApi) => {
+    onLoading && onLoading(true);
+    try {
+      const response: ICreateTransactionRes = await TransactionsApi.create(data || {});
 
-    response && onSuccess && onSuccess(response);
+      response && onSuccess && onSuccess(response);
 
-    return response.data.data;
-  } catch (error) {
-    onError && onError(error);
+      return response.data.data;
+    } catch (error) {
+      onError && onError(error);
 
-    return thunkApi.rejectWithValue(isAxiosError(error));
-  } finally {
-    onLoading && onLoading(false);
+      return thunkApi.rejectWithValue(isAxiosError(error));
+    } finally {
+      onLoading && onLoading(false);
+    }
   }
-});
+);
 
 // export const deleteTransactionThunk = createAsyncThunk(
 //   'transactions/deleteTransactionThunk',

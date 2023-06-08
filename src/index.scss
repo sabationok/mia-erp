@@ -168,13 +168,35 @@ img {
   }
 }
 
-@keyframes ModalAnimation {
+@keyframes ModalAnimationScaleCenter {
   from {
     transform: translate(-50%, -50%) scale(0.8);
     // transform: translate(-50%, -50%);
   }
   to {
     transform: translate(-50%, -50%) scale(1);
+    // transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes ModalAnimationFromBottom {
+  from {
+    transform: translateY(100%);
+    // transform: translate(-50%, -50%);
+  }
+  to {
+    transform: translateY(0);
+    // transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes ModalAnimationFromRight {
+  from {
+    right: -100%;
+    //transform: translate(-50%, -50%);
+  }
+  to {
+    right: 0;
     // transform: translate(-50%, -50%);
   }
 }

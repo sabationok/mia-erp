@@ -16,10 +16,14 @@ export enum CompanyQueryTypeEnum {
 
 export interface AppResponse<D = any, M = any>
   extends AxiosResponse<{
-    meta: M & {};
-    data: D & {};
-  }> {
-}
+    meta: M;
+    data: D;
+  }> {}
 
 export type CompanyQueryType = 'own' | 'all' | 'invites' | 'invited';
-export type ServiceDispatcher<SD = any, RD = any, E = any> = (payload: Partial<ThunkPayload<SD, RD, E>>) => void;
+
+export type ServiceDispatcher<SD = any, RD = any, E = any> = (payload: Partial<ThunkPayload<SD, RD, E>>) => void | any;
+
+export type ServiceDispatcherAsync<SD = any, RD = any, E = any, MD = any> = (
+  payload: Partial<ThunkPayload<SD, RD, E>>
+) => void | Promise<AppResponse<RD, MD>>;

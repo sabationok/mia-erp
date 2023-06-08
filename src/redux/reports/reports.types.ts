@@ -6,7 +6,7 @@ import { FilterReturnDataType } from '../../components/Filter/AppFilter';
 export interface IReportConfigs<P = IReportBaseProps> extends ModalFormProps {
   title: string;
   iconId: string;
-  ModalChildren: React.FC<P> | React.ReactNode;
+  ModalChildren: React.FC<P>;
   modalChildrenProps: P;
   disabled: boolean;
 }

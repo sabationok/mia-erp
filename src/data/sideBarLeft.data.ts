@@ -2,10 +2,10 @@ import { ISidebarOptionsItem } from 'components/SideBarLeft/SideBarProvider';
 import { appSettings, directories, reports } from 'data';
 import { iconId } from '../img/sprite';
 
-import Directories from 'components/SideBarContent/Directories';
-import Reports from 'components/SideBarContent/Reports';
-import CompanySettings from '../components/SideBarContent/CompanySettings';
 import { comapnySettings } from './companySettings.data';
+import Directories from '../components/SideBarContent/Directories';
+import Reports from '../components/SideBarContent/Reports';
+import CompanySettings from '../components/SideBarContent/CompanySettings';
 import Notifications from '../components/SideBarContent/Notifications';
 
 export const sideBarButtons: ISidebarOptionsItem[] = [

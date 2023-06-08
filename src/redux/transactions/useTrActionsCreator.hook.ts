@@ -1,11 +1,11 @@
 import { useModalProvider } from '../../components/ModalProvider/ModalProvider';
 import { TransactionsService } from './useTransactionsService.hook';
 import { useCallback } from 'react';
-import TransactionForm from '../../components/Forms/TransactionForm';
+
 import { filterOptions } from '../../data/transactions.data';
 import { TableActionCreator } from '../../components/TableList/tableTypes.types';
 import { ITransaction } from './transactions.types';
-import { createThunkPayload } from '../../utils/fabrics';
+import TransactionForm from '../../components/Forms/TransactionForm';
 
 export type TrActionsCreator = TableActionCreator<ITransaction>;
 const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => {
@@ -57,16 +57,12 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         type: 'onlyIcon',
         disabled: !ctx.selectedRow?._id,
         onClick: () => {
-          service.deleteById(
-            createThunkPayload<{ id: string }, { id: string }>(
-              { id: 'id' },
-              {
-                onSuccess(d) {
-                  console.log(d);
-                },
-              }
-            )
-          );
+          service.deleteById({
+            data: { id: 'id' },
+            onSuccess: d => {
+              console.log(d);
+            },
+          });
         },
       },
       { separator: true },

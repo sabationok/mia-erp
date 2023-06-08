@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { CountsTypesMap, CountType, ICount } from 'redux/counts/counts.types';
 import React, { useState } from 'react';
 import InputTextPrimary from 'components/atoms/Inputs/InputTextPrimary';
+import { SubmitHandler } from 'react-hook-form';
 
 export interface FormCreateCountProps extends Omit<ModalFormProps, 'onSubmit'> {
   _id?: string;
@@ -11,7 +12,7 @@ export interface FormCreateCountProps extends Omit<ModalFormProps, 'onSubmit'> {
   edit?: boolean;
   create?: boolean;
   count?: Partial<ICount>;
-  onSubmit?: (data: CountFormData) => void;
+  onSubmit?: SubmitHandler<CountFormData>;
 }
 
 export interface CountFormData extends Omit<ICount, '_id' | 'createdAt' | 'updatedAt' | 'owner'> {

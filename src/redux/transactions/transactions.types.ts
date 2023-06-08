@@ -70,9 +70,11 @@ export interface ITransactionForReq extends Partial<Record<keyof ITransaction, a
 
 export interface ITransactionReqData {
   _id?: string;
-  data: Partial<ITransactionForReq> & Partial<IBase>;
+  data: ITransactionForReq;
 }
 
 export interface IAllTransactionsRes extends AppResponse<ITransaction[]> {}
+
+export interface ITransactionRes extends AppResponse<ITransaction> {}
 
 export interface ICreateTransactionRes extends AppResponse<ITransaction> {}

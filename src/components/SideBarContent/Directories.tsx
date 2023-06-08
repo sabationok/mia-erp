@@ -18,29 +18,23 @@ export interface IDirectoriesProps {
 const Directories: React.FC<IDirectoriesProps> = ({ options = [] }) => {
   const modal = useModalProvider();
 
-  const renderList = useMemo(() => options.map(({
-                                                  title,
-                                                  iconId,
-                                                  ModalChildren,
-                                                  modalChildrenProps,
-                                                  disabled,
-                                                }, idx) => (
-    <ListItem key={title}>
-      <StButtonIcon
-        variant='def'
-        onClick={() => {
-          modal.handleOpenModal({ ModalChildren, modalChildrenProps });
-        }}
-      >
-        {title}
-      </StButtonIcon>
-    </ListItem>
-  )), [modal, options]);
-  return (
-    <Container>
-      {renderList}
-    </Container>
+  const renderList = useMemo(
+    () =>
+      options.map(({ title, iconId, ModalChildren, modalChildrenProps, disabled }, idx) => (
+        <ListItem key={title}>
+          <StButtonIcon
+            variant="def"
+            onClick={() => {
+              modal.handleOpenModal({ ModalChildren, modalChildrenProps });
+            }}
+          >
+            {title}
+          </StButtonIcon>
+        </ListItem>
+      )),
+    [modal, options]
   );
+  return <Container>{renderList}</Container>;
 };
 
 const Container = styled.ul`
@@ -51,7 +45,7 @@ const Container = styled.ul`
   max-width: 100%;
   /* padding: 8px; */
 
-    /* background-color: ${({ theme }) => theme.backgroundColorSecondary}; */
+  /* background-color: ${({ theme }) => theme.backgroundColorSecondary}; */
 `;
 
 const ListItem = styled.li``;

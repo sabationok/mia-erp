@@ -126,6 +126,6 @@ export const iconId = {
   zoomPlus: 'zoomPlus',
 };
 
-export type IconIdType = keyof typeof iconId;
+export type IconIdType = keyof typeof iconId & string;
 
 export default sprite;

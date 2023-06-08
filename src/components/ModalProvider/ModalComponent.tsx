@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  createContext,
-  useContext,
-  useEffect,
-  memo,
-} from 'react';
+import React, { createContext, memo, useContext, useEffect, useState } from 'react';
 import CloseButton from './CloseButton';
 import styled from 'styled-components';
 
@@ -17,6 +11,34 @@ interface ModalComponentProps {
   totalLength?: number;
   isLast?: boolean;
 }
+
+export enum ModalAnimationType {
+  ScaleCenter = 'ScaleCenter',
+  FromBottom = 'FromBottom',
+  FromRight = 'FromRight',
+}
+
+const modalAnimation = {
+  [ModalAnimationType.ScaleCenter]: `ModalAnimationScaleCenter 100ms linear`,
+  [ModalAnimationType.FromBottom]: `ModalAnimationFromBottom 150ms linear`,
+  [ModalAnimationType.FromRight]: `ModalAnimationFromRight 500ms linear`,
+};
+
+const modalStyle = {
+  [ModalAnimationType.FromRight]: {
+    bottom: 0,
+    right: 0,
+  },
+  [ModalAnimationType.ScaleCenter]: {
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+  },
+  [ModalAnimationType.FromBottom]: {
+    bottom: 0,
+    margin: 'auto',
+  },
+};
 
 export interface IModalSettings {
   backdropColor?: string;
@@ -31,8 +53,9 @@ export interface IModalSettings {
 const initialSettings: IModalSettings = {
   backdropColor: 'rgba(0, 0, 0, 0.5)',
   backdropAnimation: 'BackdropAnimation 100ms linear',
-  modalAnimation: `ModalAnimation 100ms linear`,
+  modalAnimation: modalAnimation[ModalAnimationType.FromBottom],
   closeBtn: false,
+  modalStyle: modalStyle[ModalAnimationType.FromBottom],
 };
 
 interface ModalCTX {
@@ -57,9 +80,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   totalLength,
   isLast,
 }) => {
-  const [modalSettings, setModalSettings] = useState<IModalSettings>(
-    settings || initialSettings
-  );
+  const [modalSettings, setModalSettings] = useState<IModalSettings>(settings || initialSettings);
 
   function handleSetModalSettings(settings: IModalSettings) {
     setModalSettings(settings);
@@ -131,10 +152,8 @@ const Backdrop = styled.div<{
   width: 100%;
   height: 100%;
 
-  background-color: ${({ isLast, modalSettings }) =>
-    isLast ? modalSettings.backdropColor : ''};
-  /* animation: ${({ isLast, modalSettings }) =>
-    !isLast ? modalSettings.backdropAnimation : ''}; */
+  background-color: ${({ isLast, modalSettings }) => (isLast ? modalSettings.backdropColor : '')};
+  /* animation: ${({ isLast, modalSettings }) => (!isLast ? modalSettings.backdropAnimation : '')}; */
 `;
 const Modal = styled.div<{ modalSettings: IModalSettings }>`
   display: flex;
@@ -143,8 +162,7 @@ const Modal = styled.div<{ modalSettings: IModalSettings }>`
   justify-content: center;
 
   position: absolute;
-  top: 50%;
-  left: 50%;
+  bottom: 0;
 
   min-width: 200px;
 
@@ -152,7 +170,7 @@ const Modal = styled.div<{ modalSettings: IModalSettings }>`
   max-width: 98%;
   max-height: 98%;
 
-  transform: translate(-50%, -50%);
+  //transform: translate(-50%, 0);
   border-radius: 2px;
   overflow: hidden;
   /* background-color: rgba(255, 255, 255, 0.5); */
