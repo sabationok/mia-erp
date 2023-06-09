@@ -9,7 +9,7 @@ import { ITransaction } from '../../redux/transactions/transactions.types';
 import { useTrActionsCreator } from '../../redux/transactions/useTrActionsCreator.hook';
 import { ITableListProps } from '../TableList/tableTypes.types';
 import AppGridPage from './AppGridPage';
-import { createThunkPayload } from '../../utils/fabrics';
+import { defaultThunkPayload } from '../../utils/fabrics';
 
 type Props = {
   path: string;
@@ -22,7 +22,7 @@ const PageTransactions: React.FC<any> = ({ path }: Props) => {
   // const [selectedTr, setSelectedTr] = useState<any>(null);
 
   useEffect(() => {
-    getAll(createThunkPayload());
+    getAll(defaultThunkPayload());
   }, [getAll]);
 
   const tableConfig = useMemo(

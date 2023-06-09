@@ -25,6 +25,10 @@ export default class TransactionsApi {
   }
 
   public static async getById(id: string): Promise<ITransactionRes> {
-    return this.api.post(this.endpoints.getById(id));
+    return this.api.get(this.endpoints.getById(id));
+  }
+
+  public static async deleteById(id: string): Promise<ITransactionRes> {
+    return this.api.delete(this.endpoints.deleteById(id));
   }
 }

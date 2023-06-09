@@ -5,6 +5,7 @@ import { ServiceDispatcher } from '../global.types';
 import { useMemo } from 'react';
 import { getAllCategoriesThunk } from './categoriesThunks';
 import { ICategory } from './categories.types';
+import { defaultThunkPayload } from '../../utils/fabrics';
 
 interface CategoriesServiceDispatchers {
   create: ServiceDispatcher<Partial<ICategory>>;
@@ -26,10 +27,22 @@ const useCategoriesService = (): CategoriesService => {
 
   const dispatchers = useMemo((): CategoriesServiceDispatchers => {
     return {
-      create: payload => dispatch(() => {}),
-      deleteById: payload => dispatch(() => {}),
-      editById: payload => dispatch(() => {}),
-      getById: payload => dispatch(() => {}),
+      create: payload =>
+        dispatch(() => {
+          defaultThunkPayload(payload);
+        }),
+      deleteById: payload =>
+        dispatch(() => {
+          defaultThunkPayload(payload);
+        }),
+      editById: payload =>
+        dispatch(() => {
+          defaultThunkPayload(payload);
+        }),
+      getById: payload =>
+        dispatch(() => {
+          defaultThunkPayload(payload);
+        }),
       getAll: () => dispatch(getAllCategoriesThunk({})),
     };
   }, [dispatch]);

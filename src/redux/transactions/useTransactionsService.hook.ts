@@ -1,21 +1,23 @@
 import { useTransactionsSelector } from 'redux/selectors.store';
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
-import { ITransactionReqData } from './transactions.types';
+import { ITransaction, ITransactionReqData } from './transactions.types';
 import { ITransactionsState } from './transactions.slice';
-import { ServiceDispatcher } from 'redux/global.types';
+import { ServiceApiCaller, ServiceDispatcher } from 'redux/global.types';
 import { createTransactionThunk, getAllTransactionsThunk } from './transactions.thunks';
-import { FilterReturnDataType } from '../../components/Filter/AppFilter';
+import { FilterReturnDataType as FilterData } from 'components/Filter/AppFilter';
 import { useMemo } from 'react';
-import { defaultThunkPayload } from '../../utils/fabrics';
+import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
+import TransactionsApi from 'api/transactions.api';
+import { createApiCall } from 'api';
 
 export interface TransactionsService {
   dispatch: AppDispatch;
   state: ITransactionsState;
   create: ServiceDispatcher<ITransactionReqData>;
-  deleteById: ServiceDispatcher<{ id: string }, { id: string }>;
-  editById: ServiceDispatcher<ITransactionReqData>;
-  getById: ServiceDispatcher<{ id: string }>;
-  getAll: ServiceDispatcher<FilterReturnDataType>;
+  deleteById: ServiceApiCaller<string, ITransaction>; // !!!!! ===>>> ServiceDispatcher
+  editById: ServiceApiCaller<Required<ITransactionReqData>, ITransaction>; // !!!!! ===>>> ServiceDispatcher
+  getById: ServiceApiCaller<string, ITransaction>;
+  getAll: ServiceDispatcher<FilterData, ITransaction[]>;
 }
 
 const useTransactionsService = (): TransactionsService => {
@@ -24,11 +26,11 @@ const useTransactionsService = (): TransactionsService => {
 
   const trService = useMemo((): Omit<TransactionsService, 'state' | 'dispatch'> => {
     return {
-      create: payload => dispatch(createTransactionThunk(defaultThunkPayload(payload))),
-      deleteById: payload => dispatch(() => {}),
-      editById: payload => dispatch(() => {}),
-      getById: payload => dispatch(() => {}),
-      getAll: payload => dispatch(getAllTransactionsThunk(defaultThunkPayload(payload))),
+      create: async payload => dispatch(createTransactionThunk(defaultThunkPayload(payload))),
+      deleteById: async payload => createApiCall(defaultApiCallPayload(payload), TransactionsApi.deleteById),
+      editById: async payload => createApiCall(defaultApiCallPayload(payload), TransactionsApi.editById),
+      getById: async payload => createApiCall(defaultApiCallPayload(payload), TransactionsApi.getById),
+      getAll: async payload => dispatch(getAllTransactionsThunk(defaultThunkPayload(payload))),
     };
   }, [dispatch]);
 

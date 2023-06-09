@@ -58,7 +58,7 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         disabled: !ctx.selectedRow?._id,
         onClick: () => {
           service.deleteById({
-            data: { id: 'id' },
+            data: 'id',
             onSuccess: d => {
               console.log(d);
             },

@@ -29,6 +29,7 @@ export const getAllTransactionsThunk = createAsyncThunk<ITransaction[], ThunkPay
   'transactions/getAllTransactionsThunk',
   async ({ onSuccess, onError, onLoading }, thunkAPI) => {
     onLoading && onLoading(true);
+
     try {
       const response = await TransactionsApi.getAll();
 

@@ -8,7 +8,7 @@ import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FormCreateCategory from './FormCreateCategory';
 import styled from 'styled-components';
 import { CategoryFilterOpt, DirBaseProps } from '../dir.types';
-import { createThunkPayload } from '../../../utils/fabrics';
+import { defaultThunkPayload } from '../../../utils/fabrics';
 
 export interface DirCategoriesProps extends DirBaseProps {
   filterOptions?: CategoryFilterOpt[];
@@ -36,7 +36,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
         category: categories.find(el => el._id === _id),
         edit: true,
         type: dirType,
-        onSubmit: submitData => _id && submitData && editById(createThunkPayload({ _id, newData: {} })),
+        onSubmit: submitData => _id && submitData && editById({ data: { _id, newData: {} } }),
       },
     });
   }
@@ -47,7 +47,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
       modalChildrenProps: {
         title: 'Створити під-категорію',
         type: dirType,
-        onSubmit: submitData => create(createThunkPayload()),
+        onSubmit: submitData => create(defaultThunkPayload()),
       },
     });
   }
@@ -58,7 +58,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
       modalChildrenProps: {
         title: 'Створити категорію',
         type: dirType,
-        onSubmit: d => create(createThunkPayload()),
+        onSubmit: data => create({}),
       },
     });
   }
@@ -67,7 +67,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
     value && setDirType(value);
   }
 
-  const data = useMemo(
+  const filteredData = useMemo(
     () =>
       founder<ICategory>({
         searchParam: 'type',
@@ -76,14 +76,14 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
       }) || [],
     [categories, dirType]
   );
-  const entryList = useMemo(() => data.filter(el => !el?.owner), [data]);
+  const entryList = useMemo(() => filteredData.filter(el => !el?.owner), [filteredData]);
 
   return (
     <StModalForm {...props} onOptSelect={handleFilterData}>
       <DirList
         entryList={entryList}
-        list={data}
-        onDelete={_id => deleteById(createThunkPayload({ _id }))}
+        list={filteredData}
+        onDelete={_id => deleteById(defaultThunkPayload({ data: { _id: '' } }))}
         onEdit={onEdit}
         onCreateChild={onCreateChild}
         createParentTitle="Створити категорію"
