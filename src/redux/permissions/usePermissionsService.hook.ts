@@ -27,13 +27,14 @@ export interface PermissionService {
   edit: ServiceDispatcherAsync<IPermissionReqData>;
   create: ServiceDispatcherAsync<IPermissionForReq>;
   getCurrent: ServiceDispatcherAsync<{ id: string }>;
-  permissionLogOut: ServiceDispatcherAsync<{ id: string }>;
-  isCurrentValid: boolean;
-  clearCurrent: () => void;
-  validatePermission?: (validateBy: ValidatePermissionOptions) => boolean;
+  permissionLogOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean }>;
   createCompany?: ServiceDispatcherAsync<Required<ICompanyForReq>>;
   updateCompany?: ServiceDispatcherAsync<Required<ICompanyReqData>>;
   deleteCompany?: ServiceDispatcherAsync<{ _id: string }>;
+  logOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean }>;
+  isCurrentValid: boolean;
+  clearCurrent: () => void;
+  validatePermission?: (validateBy: ValidatePermissionOptions) => boolean;
 }
 
 export interface ValidatePermissionOptions {
@@ -52,7 +53,7 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
       (companyId && state.permission?.company?._id === companyId) ||
       (permissionId && state.permission?._id === permissionId) ||
       false,
-    [companyId, permissionId, state.permission?._id, state.permission?.company?._id],
+    [companyId, permissionId, state.permission?._id, state.permission?.company?._id]
   );
 
   const dispatchers = useMemo((): Omit<
@@ -67,6 +68,7 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
       create: async payload => dispatch(createPermissionThunk(defaultThunkPayload(payload))),
       getCurrent: async payload => dispatch(getCurrentPermissionThunk(defaultThunkPayload(payload))),
       permissionLogOut: async payload => dispatch(logOutPermissionThunk(defaultThunkPayload(payload))),
+      logOut: async payload => dispatch(logOutPermissionThunk(defaultThunkPayload(payload))),
       clearCurrent: () => dispatch(clearCurrentPermission()),
       createCompany: async payload => dispatch(createCompanyWithPermissionThunk(defaultThunkPayload(payload))),
       deleteCompany: async payload => dispatch(deleteCompanyWithPermissionThunk(defaultThunkPayload(payload))),

@@ -20,6 +20,7 @@ export interface IPermission extends IBase {
   owner?: Partial<IUser>;
   role?: Partial<ICustomRole>;
   expireAt?: number | Date;
+  permissionToken?: string;
 }
 
 export interface IPermissionForReq {

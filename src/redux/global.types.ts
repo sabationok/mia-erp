@@ -30,7 +30,7 @@ export type ServiceDispatcher<SD = any, RD = any, E = any> = (payload: ThunkPayl
 
 export type ServiceDispatcherAsync<SD = any, RD = any, E = any> = (payload: ThunkPayload<SD, RD, E>) => Promise<
   | {
-      payload: RD;
+      payload: unknown | RD;
       type: string;
     }
   | undefined

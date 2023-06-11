@@ -12,7 +12,6 @@ import { permissionsSearchParams, permissionsTableColumns } from '../../data';
 import { ITableListProps } from '../TableList/tableTypes.types';
 import usePermissionsActionsCreator from '../../redux/permissions/usePermissonsActionsCreator';
 import { CompanyQueryType } from '../../redux/global.types';
-import useCompaniesService from '../../redux/companies/useCompaniesService';
 
 export type CompanyTypeItem = { title: string; param: CompanyQueryType };
 const companyTypes: CompanyTypeItem[] = [
@@ -32,14 +31,7 @@ const PageHome: React.FC<any> = ({ path }: Props) => {
     companyType: companyTypes[0].param,
   })[1];
   const permissionsService = usePermissionsService();
-  const companiesService = useCompaniesService();
-  const actionsCreator = usePermissionsActionsCreator(
-    {
-      permissionsService,
-      companiesService,
-    },
-    companyType?.param || 'own'
-  );
+  const actionsCreator = usePermissionsActionsCreator(permissionsService, companyType?.param || 'own');
 
   const permissionsData = useMemo(() => {
     return permissionsService.state.permissions?.filter(pr => {

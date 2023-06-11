@@ -7,7 +7,6 @@ import ModalForm from '../../components/ModalForm';
 import { useNavigate } from 'react-router-dom';
 import { CompanyQueryType } from '../global.types';
 import { toast } from 'react-toastify';
-import { CompaniesService } from '../companies/useCompaniesService';
 
 export type PermissionsActionsCreator = TableActionCreator<IPermission>;
 
@@ -16,16 +15,11 @@ export const isMyCompany = ({ owner, user }: IPermission) => {
 };
 
 const usePermissionsActionsCreator = (
-  services: {
-    permissionsService: PermissionService;
-    companiesService?: CompaniesService;
-  },
+  service: PermissionService,
   companyType: CompanyQueryType
 ): PermissionsActionsCreator => {
   const modal = useModalProvider();
   const navigate = useNavigate();
-  const service = services.permissionsService;
-  const companiesService = services.companiesService;
 
   return useCallback(
     ctx => {
@@ -34,7 +28,7 @@ const usePermissionsActionsCreator = (
         {
           name: 'selectPermission',
           title: 'Перейти',
-          icon: 'openInNew',
+          icon: 'logIn',
           disabled: !ctx.selectedRow?._id,
           iconSize: '100%',
           type: 'onlyIcon',

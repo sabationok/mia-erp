@@ -124,6 +124,7 @@ export const iconId = {
   warning: 'warning',
   zoomMinus: 'zoomMinus',
   zoomPlus: 'zoomPlus',
+  logIn: 'logIn',
 };
 
 export type IconIdType = keyof typeof iconId & string;

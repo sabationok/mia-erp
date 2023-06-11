@@ -21,7 +21,7 @@ export default class PermissionsApi {
     return this.api.post(this.endpoints.deleteById(id));
   }
 
-  public static getCurrent(id: string): Promise<AppResponse<IPermission>> {
+  public static getCurrent(id: string): Promise<AppResponse<{ permissionToken: string } & IPermission>> {
     return this.api.post(this.endpoints.getCurrent(id));
   }
 

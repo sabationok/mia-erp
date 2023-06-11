@@ -45,16 +45,19 @@ export const getAllPermissionsByUserIdThunk = createAsyncThunk<
 // });
 export const getCurrentPermissionThunk = createAsyncThunk<
   Partial<{ permissionToken: string } & IPermission>,
-  ThunkPayload<{
-    id: string;
-  }>
+  ThunkPayload<
+    {
+      id: string;
+    },
+    { permissionToken: string } & IPermission
+  >
 >('permissions/getCurrentPermissionThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
   try {
-    const response = await PermissionsApi.getCurrent(data?.id as string);
-    if (response) {
-      onSuccess && onSuccess(response);
-      return response.data.data;
-    }
+    // const response = await PermissionsApi.getCurrent(data?.id as string);
+    // if (response) {
+    //   onSuccess && onSuccess(response.data.data);
+    //   return response.data.data;
+    // }
     //    const response: AxiosResponse<IPermissionResData> = await
     // baseApi.get(
     //   APP_CONFIGS.endpoints.permissions.getCurrentPermission(data?.id || '')
@@ -64,7 +67,10 @@ export const getCurrentPermissionThunk = createAsyncThunk<
     const res = testPermissions.find(pr => pr._id === data?.id);
 
     const mockRes = { ...res, permissionToken: nanoid(8) };
-    onSuccess && onSuccess(mockRes);
+
+    if (mockRes) {
+      onSuccess && onSuccess({ ...mockRes, permissionToken: 'permissionToken', _id: mockRes._id as string });
+    }
 
     return mockRes;
   } catch (error) {
@@ -73,24 +79,30 @@ export const getCurrentPermissionThunk = createAsyncThunk<
     return thunkAPI.rejectWithValue(axiosErrorCheck(error));
   }
 });
-export const logOutPermissionThunk = createAsyncThunk<{ _id?: string; result: boolean }, ThunkPayload<{ id: string }>>(
-  'permissions/logOutPermissionThunk',
-  async ({ data, onSuccess, onError }, thunkAPI) => {
-    try {
-      const response = await PermissionsApi.logOut(data?.id as string);
-      if (response) {
-        onSuccess && onSuccess(response);
-        return response.data.data;
-      }
-
-      return { _id: data?.id, result: true };
-    } catch (error) {
-      onError && onError(error);
-
-      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+export const logOutPermissionThunk = createAsyncThunk<
+  { _id?: string; result: boolean },
+  ThunkPayload<
+    { _id: string },
+    {
+      _id?: string;
+      result: boolean;
     }
+  >
+>('permissions/logOutPermissionThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
+  try {
+    const response = await PermissionsApi.logOut(data?._id as string);
+    if (response) {
+      onSuccess && onSuccess(response.data.data);
+      return response.data.data;
+    }
+
+    return { _id: data?._id, result: true };
+  } catch (error) {
+    onError && onError(error);
+
+    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
   }
-);
+});
 export const createPermissionThunk = createAsyncThunk<IPermission, ThunkPayload<IPermissionForReq>>(
   'permissions/createPermissionThunk',
   async ({ data, onSuccess, onError }, thunkAPI) => {
