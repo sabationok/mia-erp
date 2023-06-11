@@ -21,7 +21,7 @@ export default class TransactionsApi {
   }
 
   public static async editById({ data, _id }: Required<ITransactionReqData>): Promise<ITransactionRes> {
-    return this.api.post(this.endpoints.editById(_id), data);
+    return this.api.post(this.endpoints.updateById(_id), data);
   }
 
   public static async getById(id: string): Promise<ITransactionRes> {

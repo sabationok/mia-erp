@@ -7,8 +7,7 @@ import { createTransactionThunk, getAllTransactionsThunk } from './transactions.
 import { FilterReturnDataType as FilterData } from 'components/Filter/AppFilter';
 import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
-import TransactionsApi from 'api/transactions.api';
-import { createApiCall } from 'api';
+import { createApiCall, TransactionsApi } from 'api';
 
 export interface TransactionsService {
   dispatch: AppDispatch;

@@ -3,16 +3,17 @@ import { useSelector } from 'react-redux';
 import {
   createPermissionThunk,
   deletePermissionByIdThunk,
-  editPermissionThunk,
   getAllPermissionsByCompanyIdThunk,
   getAllPermissionsByUserIdThunk,
   getCurrentPermissionThunk,
   logOutPermissionThunk,
+  updatePermissionThunk,
 } from './permissions.thunk';
 import { IPermissionForReq, IPermissionsState } from './permissions.types';
 import { useMemo } from 'react';
 import { ServiceDispatcher } from 'redux/global.types';
 import { clearCurrentPermission } from './permissions.action';
+import { defaultThunkPayload } from '../../utils/fabrics';
 
 export interface PermissionService {
   dispatch: AppDispatch;
@@ -53,13 +54,13 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
     'state' | 'dispatch' | 'isCurrentValid' | 'validatePermission'
   > => {
     return {
-      getAllByCompanyId: payload => dispatch(getAllPermissionsByCompanyIdThunk(payload)),
-      getAllByUserId: payload => dispatch(getAllPermissionsByUserIdThunk(payload)),
-      deleteById: payload => dispatch(deletePermissionByIdThunk(payload)),
-      edit: payload => dispatch(editPermissionThunk(payload)),
-      create: payload => dispatch(createPermissionThunk(payload)),
-      getCurrent: payload => dispatch(getCurrentPermissionThunk(payload)),
-      permissionLogOut: payload => dispatch(logOutPermissionThunk(payload)),
+      getAllByCompanyId: async payload => dispatch(getAllPermissionsByCompanyIdThunk(defaultThunkPayload(payload))),
+      getAllByUserId: async payload => dispatch(getAllPermissionsByUserIdThunk(defaultThunkPayload(payload))),
+      deleteById: async payload => dispatch(deletePermissionByIdThunk(defaultThunkPayload(payload))),
+      edit: async payload => dispatch(updatePermissionThunk(defaultThunkPayload(payload))),
+      create: async payload => dispatch(createPermissionThunk(defaultThunkPayload(payload))),
+      getCurrent: async payload => dispatch(getCurrentPermissionThunk(defaultThunkPayload(payload))),
+      permissionLogOut: async payload => dispatch(logOutPermissionThunk(defaultThunkPayload(payload))),
       clearCurrent: () => dispatch(clearCurrentPermission()),
     };
   }, [dispatch]);

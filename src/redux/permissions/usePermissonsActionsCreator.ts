@@ -6,9 +6,8 @@ import { useModalProvider } from '../../components/ModalProvider/ModalProvider';
 import ModalForm from '../../components/ModalForm';
 import { useNavigate } from 'react-router-dom';
 import { CompanyQueryType } from '../global.types';
-import { createThunkPayload } from '../../utils/fabrics';
 import { toast } from 'react-toastify';
-import { AxiosError } from 'axios';
+import { CompaniesService } from '../companies/useCompaniesService';
 
 export type PermissionsActionsCreator = TableActionCreator<IPermission>;
 
@@ -17,11 +16,16 @@ export const isMyCompany = ({ owner, user }: IPermission) => {
 };
 
 const usePermissionsActionsCreator = (
-  service: PermissionService,
-  companyType?: CompanyQueryType
+  services: {
+    permissionsService: PermissionService;
+    companiesService?: CompaniesService;
+  },
+  companyType: CompanyQueryType
 ): PermissionsActionsCreator => {
   const modal = useModalProvider();
   const navigate = useNavigate();
+  const service = services.permissionsService;
+  const companiesService = services.companiesService;
 
   return useCallback(
     ctx => {
@@ -36,23 +40,18 @@ const usePermissionsActionsCreator = (
           type: 'onlyIcon',
           onClick: () => {
             if (selPerm?._id) {
-              service.getCurrent(
-                createThunkPayload<{ id: string }, IPermission, AxiosError>(
-                  { id: selPerm?._id },
-                  {
-                    onSuccess: data => {
-                      if (!data._id) return console.log('data', data);
-                      console.log('getCurrentPermission Success', data);
-                      toast.success(`Current company: ${data.company?.name}`);
-                      navigate(`/app/${data._id}`);
-                    },
-                    onError: error => {
-                      console.log(error);
-                    },
-                  }
-                )
-              );
-              // navigate(`/app/${ctx.selectedRow?._id}`);
+              service.getCurrent({
+                data: { id: selPerm?._id },
+                onSuccess: data => {
+                  if (!data._id) return console.log('data', data);
+                  console.log('getCurrentPermission Success', data);
+                  toast.success(`Current company: ${data.company?.name}`);
+                  navigate(`/app/${data._id}`);
+                },
+                onError: error => {
+                  console.log(error);
+                },
+              });
             }
           },
         },
@@ -64,8 +63,6 @@ const usePermissionsActionsCreator = (
           iconSize: '100%',
           type: 'onlyIcon',
           onClick: () => {
-            console.log('selPermission', selPerm);
-
             modal.handleOpenModal({
               ModalChildren: ModalForm,
               modalChildrenProps: {

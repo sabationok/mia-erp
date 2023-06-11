@@ -6,8 +6,15 @@ import { StateErrorType } from '../reduxTypes.types';
 
 export type PermissionStatusType = 'active' | 'rejected' | 'pending' | 'baned';
 
+export enum PermissionStatus {
+  accepted = 'accepted',
+  rejected = 'rejected',
+  pending = 'pending',
+  baned = 'baned',
+}
+
 export interface IPermission extends IBase {
-  status?: PermissionStatusType;
+  status?: PermissionStatus;
   company?: Partial<ICompany>;
   user?: Partial<IUser>;
   owner?: Partial<IUser>;
@@ -34,6 +41,7 @@ export interface IPermissionsResData {
 
 export interface IPermissionReqData<D = IPermissionForReq | Partial<IPermissionForReq>> {
   id: string;
+  _id?: string;
   data: D;
 }
 

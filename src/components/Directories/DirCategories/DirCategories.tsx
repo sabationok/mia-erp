@@ -6,9 +6,9 @@ import useCategoriesService from 'redux/categories/useCategoriesService.hook';
 import { CategoryTypes, ICategory } from 'redux/categories/categories.types';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FormCreateCategory from './FormCreateCategory';
-import styled from 'styled-components';
 import { CategoryFilterOpt, DirBaseProps } from '../dir.types';
 import { defaultThunkPayload } from '../../../utils/fabrics';
+import translate from '../../../lang';
 
 export interface DirCategoriesProps extends DirBaseProps {
   filterOptions?: CategoryFilterOpt[];
@@ -79,27 +79,19 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
   const entryList = useMemo(() => filteredData.filter(el => !el?.owner), [filteredData]);
 
   return (
-    <StModalForm {...props} onOptSelect={handleFilterData}>
+    <ModalForm {...props} onOptSelect={handleFilterData}>
       <DirList
         entryList={entryList}
         list={filteredData}
         onDelete={_id => deleteById(defaultThunkPayload({ data: { _id: '' } }))}
         onEdit={onEdit}
         onCreateChild={onCreateChild}
-        createParentTitle="Створити категорію"
+        createParentTitle={translate('createParentCategory')}
         onCreateParent={onCreateParent}
         currentLevel={0}
       />
-    </StModalForm>
+    </ModalForm>
   );
 };
-
-const StModalForm = styled(ModalForm)`
-  height: 70vh;
-
-  @media screen and (max-height: 480px) {
-    height: 95vh;
-  }
-`;
 
 export default DirCategories;

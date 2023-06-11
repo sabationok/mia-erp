@@ -1,28 +1,68 @@
+type EndpointCreator = (...args: any[]) => string;
+
+export enum EndpointNames {
+  getAll = 'getAll',
+  create = 'create',
+  delete = 'delete',
+  deleteById = 'deleteById',
+  updateById = 'updateById',
+  getById = 'getById',
+  getCurrent = 'getCurrent',
+  register = 'register',
+  logOut = 'logOut',
+  logIn = 'logIn',
+  getAllByUserId = 'getAllByUserId',
+  getAllByCompanyId = 'getAllByCompanyId',
+  getAllByOwnerId = 'getAllByOwnerId',
+  rejectById = 'rejectById',
+  acceptById = 'acceptById',
+}
+
+interface Endpoints<T = EndpointCreator | string> extends Record<keyof typeof EndpointNames, T> {}
+
 export const TRANSACTIONS_API_BASENAME = '/transactions';
 export const transactionsApiEndpoints = {
-  getAll: (): string => `${TRANSACTIONS_API_BASENAME}/getAll`,
-  create: (): string => `${TRANSACTIONS_API_BASENAME}/create`,
-  deleteById: (id: string): string => `${TRANSACTIONS_API_BASENAME}/delete/${id}`,
-  editById: (id: string): string => `${TRANSACTIONS_API_BASENAME}/update/${id}`,
-  getById: (id: string): string => `${TRANSACTIONS_API_BASENAME}/getById/${id}`,
+  [EndpointNames.getAll]: (): string => `${TRANSACTIONS_API_BASENAME}/${EndpointNames.getAll}`,
+  [EndpointNames.create]: (): string => `${TRANSACTIONS_API_BASENAME}/${EndpointNames.create}`,
+  [EndpointNames.deleteById]: (id: string): string => `${TRANSACTIONS_API_BASENAME}/${EndpointNames.deleteById}/${id}`,
+  [EndpointNames.updateById]: (id: string): string => `${TRANSACTIONS_API_BASENAME}/${EndpointNames.updateById}/${id}`,
+  [EndpointNames.getById]: (id: string): string => `${TRANSACTIONS_API_BASENAME}/${EndpointNames.getById}/${id}`,
 };
 export const PERMISSIONS_API_BASENAME = '/permissions';
 export const permissionsApiEndpoints = {
-  delete: (permissionId: string) => `${PERMISSIONS_API_BASENAME}/delete/${permissionId}`,
-  edit: (permissionId: string) => `${PERMISSIONS_API_BASENAME}/edit/${permissionId}`,
-  create: () => `${PERMISSIONS_API_BASENAME}/create`,
-  getAllByUserId: (userId: string) => `${PERMISSIONS_API_BASENAME}/getAllByUserId/${userId}`,
-  getAllByCompanyId: (companyId: string) => `${PERMISSIONS_API_BASENAME}/getAllByCompanyId/${companyId}`,
-  getCurrentPermission: (permissionId: string) => `${PERMISSIONS_API_BASENAME}/getCurrentPermission/${permissionId}`,
+  [EndpointNames.updateById]: (permissionId: string) =>
+    `${PERMISSIONS_API_BASENAME}/${EndpointNames.delete}/${permissionId}`,
+  [EndpointNames.deleteById]: (permissionId: string) =>
+    `${PERMISSIONS_API_BASENAME}/${EndpointNames.deleteById}/${permissionId}`,
+  [EndpointNames.create]: () => `${PERMISSIONS_API_BASENAME}/${EndpointNames.create}`,
+  [EndpointNames.getAllByUserId]: (userId: string) =>
+    `${PERMISSIONS_API_BASENAME}/${EndpointNames.getAllByUserId}/${userId}`,
+  [EndpointNames.getAllByCompanyId]: (companyId: string) =>
+    `${PERMISSIONS_API_BASENAME}/${EndpointNames.getAllByCompanyId}/${companyId}`,
+  [EndpointNames.getCurrent]: (permissionId: string) =>
+    `${PERMISSIONS_API_BASENAME}/${EndpointNames.getCurrent}/${permissionId}`,
 };
+
 export const COMPANIES_API_BASENAME = '/companies';
 export const companiesApiEndpoints = {
-  delete: (permissionId: string) => `${COMPANIES_API_BASENAME}/delete/${permissionId}`,
-  edit: (permissionId: string) => `${COMPANIES_API_BASENAME}/edit/${permissionId}`,
-  create: () => `${COMPANIES_API_BASENAME}/create`,
-  getById: (id: string) => `${COMPANIES_API_BASENAME}/getById/${id}`,
-  editById: (id: string): string => `${COMPANIES_API_BASENAME}/update/${id}`,
-  getAllByOwnerId: (ownerId: string) => `${COMPANIES_API_BASENAME}/getAllByOwnerId/${ownerId}`,
+  [EndpointNames.deleteById]: (permissionId: string) =>
+    `${COMPANIES_API_BASENAME}/${EndpointNames.deleteById}/${permissionId}`,
+  [EndpointNames.updateById]: (permissionId: string) =>
+    `${COMPANIES_API_BASENAME}/${EndpointNames.updateById}/${permissionId}`,
+  [EndpointNames.create]: () => `${COMPANIES_API_BASENAME}/${EndpointNames.create}`,
+  [EndpointNames.getById]: (id: string) => `${COMPANIES_API_BASENAME}/${EndpointNames.getById}/${id}`,
+  [EndpointNames.getAllByOwnerId]: (ownerId: string) =>
+    `${COMPANIES_API_BASENAME}/${EndpointNames.getAllByOwnerId}/${ownerId}`,
+};
+
+export const AUTH_API_BASENAME = '/auth';
+
+export const authApiEndpoints = {
+  [EndpointNames.register]: () => `${AUTH_API_BASENAME}/${EndpointNames.register}`,
+  [EndpointNames.logIn]: () => `${AUTH_API_BASENAME}/${EndpointNames.logIn}`,
+  [EndpointNames.logOut]: () => `${AUTH_API_BASENAME}/${EndpointNames.logOut}`,
+  [EndpointNames.deleteById]: () => `${AUTH_API_BASENAME}/${EndpointNames.deleteById}`,
+  [EndpointNames.getCurrent]: () => `${AUTH_API_BASENAME}/${EndpointNames.getCurrent}`,
 };
 
 const APP_CONFIGS = {
@@ -30,6 +70,7 @@ const APP_CONFIGS = {
     transactions: transactionsApiEndpoints,
     permissions: permissionsApiEndpoints,
     companies: companiesApiEndpoints,
+    auth: authApiEndpoints,
   },
 };
 

@@ -12,6 +12,7 @@ import { permissionsSearchParams, permissionsTableColumns } from '../../data';
 import { ITableListProps } from '../TableList/tableTypes.types';
 import usePermissionsActionsCreator from '../../redux/permissions/usePermissonsActionsCreator';
 import { CompanyQueryType } from '../../redux/global.types';
+import useCompaniesService from '../../redux/companies/useCompaniesService';
 
 export type CompanyTypeItem = { title: string; param: CompanyQueryType };
 const companyTypes: CompanyTypeItem[] = [
@@ -30,17 +31,24 @@ const PageHome: React.FC<any> = ({ path }: Props) => {
   const setSearchParams = useSearchParams({
     companyType: companyTypes[0].param,
   })[1];
-  const permissionService = usePermissionsService();
-  const actionsCreator = usePermissionsActionsCreator(permissionService, companyType?.param);
+  const permissionsService = usePermissionsService();
+  const companiesService = useCompaniesService();
+  const actionsCreator = usePermissionsActionsCreator(
+    {
+      permissionsService,
+      companiesService,
+    },
+    companyType?.param || 'own'
+  );
 
   const permissionsData = useMemo(() => {
-    return permissionService.state.permissions?.filter(pr => {
-      if (companyType?.param === 'invited') return pr.status === 'active' && pr.user?._id === user._id;
+    return permissionsService.state.permissions?.filter(pr => {
+      if (companyType?.param === 'invited') return pr.status === 'accepted' && pr.user?._id === user._id;
       if (companyType?.param === 'invites') return pr.status === 'pending' && pr.user?._id === user._id;
       if (companyType?.param === 'all') return pr;
       return pr.owner?._id === user._id;
     });
-  }, [companyType?.param, permissionService.state.permissions, user._id]);
+  }, [companyType?.param, permissionsService.state.permissions, user._id]);
 
   const tableConfig = useMemo(
     (): ITableListProps<IPermission> => ({

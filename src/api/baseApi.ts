@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useEffect } from 'react';
+import { usePermissionsSelector } from '../redux/permissions/usePermissionsService.hook';
 
 // const mockApi = axios.create({
 //   baseURL: 'https://635ec7b303d2d4d47af5fbcd.mockapi.io/',
@@ -32,37 +33,39 @@ export const baseURL = {
   },
 };
 
-export function useBaseURLWithPermission(permissionId?: string) {
+export function useBaseURLWithPermission(id?: string) {
   const isLocalhost = window.location.hostname === 'localhost';
+  const { permissionToken, permission } = usePermissionsSelector();
+  const permissionId = permission?._id;
 
   useEffect(() => {
     if (!isLocalhost) return;
-    if (permissionId) {
-      baseURL.setLocalhost(permissionId);
-      console.log('BaseURLWithPermission', baseApi.defaults.baseURL);
+    if (permissionId || id) {
+      baseURL.setLocalhost(permissionId || id);
+      console.log('BaseURL WITH Permission', baseApi.defaults.baseURL);
       return;
     }
-    if (!permissionId) {
+    if (!permissionId || id) {
       baseURL.setLocalhost();
-      console.log('BaseURLWithoutPermission', baseApi.defaults.baseURL);
+      console.log('BaseURL WITHOUT Permission', baseApi.defaults.baseURL);
       return;
     }
-  }, [isLocalhost, permissionId]);
+  }, [isLocalhost, permissionId, id]);
 
   useEffect(() => {
     if (isLocalhost) return;
 
-    if (permissionId) {
-      baseURL.setRailWay(permissionId);
+    if (permissionId || id) {
+      baseURL.setRailWay(permissionId || id);
       console.log('BaseURLWithPermission', baseApi.defaults.baseURL);
       return;
     }
-    if (!permissionId) {
+    if (!permissionId || id) {
       baseURL.setRailWay();
       console.log('BaseURLWithoutPermission', baseApi.defaults.baseURL);
       return;
     }
-  }, [isLocalhost, permissionId]);
+  }, [isLocalhost, permissionId, id]);
 }
 
 export default baseApi;

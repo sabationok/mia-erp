@@ -9,25 +9,23 @@ export interface CellTagsProps {
   idx?: number;
 }
 
-const CellTags: React.FC<
-  CellTagsProps & React.HTMLAttributes<HTMLDivElement>
-> = ({ titleInfo, idx, ...props }) => {
+const CellTags: React.FC<CellTagsProps & React.HTMLAttributes<HTMLDivElement>> = ({ titleInfo, idx, ...props }) => {
   const { rowData } = useRow();
   const { top, width = '100px' } = titleInfo;
 
-  const contentTop: string[] | null = getValueByPath({
+  const contentTop = getValueByPath<string[]>({
     data: rowData,
+    path: top.path,
     ...top,
   });
 
+  console.log('CellTags', contentTop, top, rowData);
+
   return (
     <CellBase style={{ width }} {...props}>
-      <Content
-        title={`Tags: ${contentTop?.join(', ')}`}
-        className="cellTagsContent"
-      >
-        {contentTop?.map(teg => (
-          <Tag key={teg}>{teg}</Tag>
+      <Content title={`Tags: ${contentTop?.join(', ')}`} className="cellTagsContent">
+        {contentTop?.map(tag => (
+          <Tag key={tag}>{tag}</Tag>
         ))}
       </Content>
     </CellBase>

@@ -4,20 +4,19 @@ import DirProjects, { DirProjectsProps } from 'components/Directories/DirProject
 import { iconId } from '../img/sprite';
 import DirMarks, { DirMarksProps } from 'components/Directories/DirMarks';
 import DirContractors, { DirContractorsProps } from 'components/Directories/DirContractors';
-
-import { CategoriesTypesMap } from 'redux/categories/categories.types';
 import DirActivities, { DirActivitiesProps } from 'components/Directories/DirCompanyActivities/DirActivities';
 import { contractorsColumns, contractorsMockData } from './contractors.data';
 import { CategoryFilterOpt, CountFilterOpt, DirBaseProps } from '../components/Directories/dir.types';
+import translate from '../lang';
 
 export const categoriesFilterOptions: CategoryFilterOpt[] = [
-  { label: CategoriesTypesMap.INCOME, value: 'INCOME' },
-  { label: CategoriesTypesMap.TRANSFER, value: 'TRANSFER' },
-  { label: CategoriesTypesMap.EXPENSE, value: 'EXPENSE' },
+  { label: translate('INCOMES'), value: 'INCOME' },
+  { label: translate('TRANSFERS'), value: 'TRANSFER' },
+  { label: translate('EXPENSES'), value: 'EXPENSE' },
 ];
 export const countsFilterOptions: CountFilterOpt[] = [
-  { label: 'Активи', value: 'ACTIVE' },
-  { label: 'Пасиви', value: 'PASSIVE' },
+  { label: translate('ACTIVES'), value: 'ACTIVE' },
+  { label: translate('PASSIVES'), value: 'PASSIVE' },
 ];
 
 export interface IDirectory<P extends DirBaseProps = any> {
@@ -31,6 +30,7 @@ export interface IDirectory<P extends DirBaseProps = any> {
 const CountsProps: DirCountsProps = {
   title: 'Рахунки',
   filterOptions: countsFilterOptions,
+  fillHeight: true,
 };
 const countsDir: IDirectory<DirCountsProps> = {
   title: CountsProps.title,
@@ -43,6 +43,7 @@ const countsDir: IDirectory<DirCountsProps> = {
 const CategoriesProps: DirCategoriesProps = {
   title: 'Категорії',
   filterOptions: categoriesFilterOptions,
+  fillHeight: true,
 };
 const categoriesDir: IDirectory<DirCategoriesProps> = {
   title: CategoriesProps.title,
@@ -53,9 +54,21 @@ const categoriesDir: IDirectory<DirCategoriesProps> = {
 };
 const ContractorsProps: DirContractorsProps = {
   title: 'Контрагенти',
+  fillHeight: true,
   tableSettings: {
     tableData: contractorsMockData,
     tableTitles: contractorsColumns,
+    actionsCreator: () => [
+      { icon: 'edit' },
+      { icon: 'copy' },
+      { icon: 'archive', iconSize: '100%' },
+      { separator: true },
+      {
+        type: 'onlyIconFilled',
+        icon: 'plus',
+      },
+    ],
+    isFilter: true,
   },
 };
 const contractorsDir: IDirectory<DirContractorsProps> = {

@@ -1,14 +1,18 @@
-import { ServiceDispatcher } from '../global.types';
+import { ApiCaller } from '../global.types';
 import { ICompany } from './companies.types';
-import { AppDispatch, RootState } from '../store.store';
+import { AppDispatch, RootState, useAppDispatch } from '../store.store';
 
-interface CompaniesService {
+export interface CompaniesService {
   dispatch: AppDispatch;
-  state: RootState;
-  create: ServiceDispatcher<Partial<ICompany>>;
-  update: ServiceDispatcher<Partial<ICompany>>;
+  state?: RootState;
+  create?: ApiCaller<Partial<ICompany>>;
+  update?: ApiCaller<Partial<ICompany>>;
 }
 
-const useCompaniesService = () => {};
+const useCompaniesService = (): CompaniesService => {
+  const dispatch: AppDispatch = useAppDispatch();
+
+  return { dispatch };
+};
 
 export default useCompaniesService as typeof useCompaniesService;

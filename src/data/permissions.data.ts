@@ -1,6 +1,6 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { SelectItem } from '../components/TableList/TableList';
-import { IPermission } from '../redux/permissions/permissions.types';
+import { IPermission, PermissionStatus } from '../redux/permissions/permissions.types';
 import { initialCompany } from '../redux/companies/companies.slice';
 import { testUserKarina } from './usersDir.data';
 import { initialCustomRole } from './customRoles.data';
@@ -89,7 +89,7 @@ export const permissionsSearchParams: SelectItem[] = [
 
 export const initialPermission: IPermission = {
   _id: 'companyId',
-  status: 'active',
+  status: PermissionStatus.accepted,
   company: initialCompany,
   user: testUserKarina,
   role: initialCustomRole,
@@ -111,14 +111,14 @@ export const testPermissions: IPermission[] = [
   {
     ...initialPermission,
     _id: 'dfbscxvcxgnbd13f5g13bdg1',
-    status: 'pending',
+    status: PermissionStatus.pending,
     company: { ...initialCompany, _id: 'dfbsdfsdf13f5g13bdg1', name: 'Roga & Copyta 3' },
     role: { ...initialPermission.role, label: 'Помічник' },
   },
   {
     ...initialPermission,
     _id: 'dfbscxvsdfbvsd13f5g13bdg1',
-    status: 'active',
+    status: PermissionStatus.accepted,
     company: { ...initialCompany, _id: 'dfbsxcvgbd13f5g13bdg1', name: 'Roga & Copyta 4' },
     role: { ...initialPermission.role, label: 'Аудитор' },
     owner: testUserKarina,

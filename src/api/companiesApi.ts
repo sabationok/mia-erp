@@ -20,7 +20,7 @@ export default class CompaniesApi {
   }
 
   public static async editById({ data, id, _id }: Required<ICompanyReqData>): Promise<ICompanyRes> {
-    return this.api.post(this.endpoints.editById(_id || id), data);
+    return this.api.post(this.endpoints.updateById(_id || id), data);
   }
 
   public static async getById(id: string): Promise<ICompanyRes> {

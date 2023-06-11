@@ -4,11 +4,11 @@ import * as _ from 'lodash';
 import {
   createPermissionThunk,
   deletePermissionByIdThunk,
-  editPermissionThunk,
   getAllPermissionsByCompanyIdThunk,
   getAllPermissionsByUserIdThunk,
   getCurrentPermissionThunk,
   logOutPermissionThunk,
+  updatePermissionThunk,
 } from './permissions.thunk';
 
 import { testPermissions } from '../../data/permissions.data';
@@ -35,7 +35,7 @@ export const permissionsSlice = createSlice({
       .addCase(getAllPermissionsByUserIdThunk.fulfilled, (state, action) => {})
       .addCase(getAllPermissionsByCompanyIdThunk.fulfilled, (state, action) => {})
       .addCase(createPermissionThunk.fulfilled, (state, action) => {})
-      .addCase(editPermissionThunk.fulfilled, (state, action) => {})
+      .addCase(updatePermissionThunk.fulfilled, (state, action) => {})
       .addCase(deletePermissionByIdThunk.fulfilled, (state, action) => {})
       .addCase(logOutPermissionThunk.fulfilled, (state, action) => {
         state = initialPermissionStateState;
