@@ -16,6 +16,10 @@ export enum CompanyQueryTypeEnum {
 
 export interface AppResponse<D = any, M = any>
   extends AxiosResponse<{
+    statusCode?: number;
+    message?: string;
+    innerCode?: number;
+    description?: string;
     meta: M;
     data: D;
   }> {}
@@ -27,17 +31,19 @@ export type ServiceDispatcher<SD = any, RD = any, E = any> = (payload: ThunkPayl
 export type ServiceDispatcherAsync<SD = any, RD = any, E = any> = (payload: ThunkPayload<SD, RD, E>) => Promise<
   | {
       payload: RD;
-      type: string | any;
+      type: string;
     }
-  | any
+  | undefined
 >;
 export type GetResponseCallback<SD = any, RD = any, MD = any> = (args?: SD) => Promise<AppResponse<RD, MD>>;
 
-export type ServiceApiCaller<SD = any, RD = any, E = any, MD = any> = (
-  payload: ThunkPayload<SD, RD, E>
+export interface ApiCallerPayload<SD = any, RD = any, E = any | unknown> extends ThunkPayload<SD, RD, E> {}
+
+export type ServiceApiCaller<SD = any, RD = any, E = any | unknown, MD = any> = (
+  payload: ApiCallerPayload<SD, RD, E>
 ) => Promise<AppResponse<RD, MD> | undefined>;
 
 export type ApiCaller<SD = any, RD = any, E = any, MD = any> = (
-  payload: ThunkPayload<SD, RD, E>,
-  getResponseCallback: GetResponseCallback<SD, RD>
+  payload: ApiCallerPayload<SD, RD, E>,
+  getResponseCallback: GetResponseCallback<SD, RD, MD>
 ) => Promise<AppResponse<RD, MD>>;

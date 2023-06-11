@@ -1,25 +1,22 @@
 import { createAsyncThunk, nanoid } from '@reduxjs/toolkit';
-import { IPermission, IPermissionForReq, IPermissionReqData, IPermissionsResData } from './permissions.types';
+import { IPermission, IPermissionForReq, IPermissionReqData } from './permissions.types';
 import { ThunkPayload } from '../store.store';
-import { AxiosResponse } from 'axios';
-import baseApi from 'api/baseApi';
 import { axiosErrorCheck } from 'utils';
-import APP_CONFIGS from '../APP_CONFIGS';
 import { testPermissions } from '../../data/permissions.data';
-import { PermissionsApi } from '../../api';
+import { CompaniesApi, PermissionsApi } from '../../api';
+import { ICompanyForReq, ICompanyReqData } from '../companies/companies.types';
 
 export const getAllPermissionsByUserIdThunk = createAsyncThunk<
-  Partial<IPermission>[],
+  IPermission[],
   ThunkPayload<{
     userId: string;
   }>
 >('permissions/getAllPermissionsByUserIdThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
   try {
-    const response: AxiosResponse<IPermissionsResData> = await baseApi.get(
-      APP_CONFIGS.endpoints.permissions.getAllByUserId(data?.userId as string)
-    );
-
-    onSuccess && onSuccess(response.data.data);
+    const response = await PermissionsApi.getAllByUserId(data?.userId as string);
+    if (response) {
+      onSuccess && onSuccess(response.data.data);
+    }
 
     return response.data.data;
   } catch (error) {
@@ -53,6 +50,11 @@ export const getCurrentPermissionThunk = createAsyncThunk<
   }>
 >('permissions/getCurrentPermissionThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
   try {
+    const response = await PermissionsApi.getCurrent(data?.id as string);
+    if (response) {
+      onSuccess && onSuccess(response);
+      return response.data.data;
+    }
     //    const response: AxiosResponse<IPermissionResData> = await
     // baseApi.get(
     //   APP_CONFIGS.endpoints.permissions.getCurrentPermission(data?.id || '')
@@ -71,16 +73,17 @@ export const getCurrentPermissionThunk = createAsyncThunk<
     return thunkAPI.rejectWithValue(axiosErrorCheck(error));
   }
 });
-export const logOutPermissionThunk = createAsyncThunk<{ result: true }, ThunkPayload<{ id: string }>>(
+export const logOutPermissionThunk = createAsyncThunk<{ _id?: string; result: boolean }, ThunkPayload<{ id: string }>>(
   'permissions/logOutPermissionThunk',
   async ({ data, onSuccess, onError }, thunkAPI) => {
     try {
-      // const response: AxiosResponse<IPermissionResData> =
+      const response = await PermissionsApi.logOut(data?.id as string);
+      if (response) {
+        onSuccess && onSuccess(response);
+        return response.data.data;
+      }
 
-      // onSuccess && onSuccess(response.data.data);
-      // return response.data.data;
-
-      return { result: true };
+      return { _id: data?.id, result: true };
     } catch (error) {
       onError && onError(error);
 
@@ -88,7 +91,7 @@ export const logOutPermissionThunk = createAsyncThunk<{ result: true }, ThunkPay
     }
   }
 );
-export const createPermissionThunk = createAsyncThunk<Partial<IPermission>, ThunkPayload<IPermissionForReq>>(
+export const createPermissionThunk = createAsyncThunk<IPermission, ThunkPayload<IPermissionForReq>>(
   'permissions/createPermissionThunk',
   async ({ data, onSuccess, onError }, thunkAPI) => {
     try {
@@ -103,6 +106,54 @@ export const createPermissionThunk = createAsyncThunk<Partial<IPermission>, Thun
     }
   }
 );
+export const createCompanyWithPermissionThunk = createAsyncThunk<IPermission, ThunkPayload<ICompanyForReq>>(
+  'permissions/createCompanyWithPermissionThunk',
+  async ({ data, onSuccess, onError }, thunkAPI) => {
+    try {
+      const response = await CompaniesApi.create(data as ICompanyForReq);
+
+      if (response) {
+        onSuccess && onSuccess(response.data.data);
+      }
+      return response.data.data;
+    } catch (error) {
+      onError && onError(error);
+      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+    }
+  }
+);
+export const updateCompanyWithPermissionThunk = createAsyncThunk<IPermission, ThunkPayload<Required<ICompanyReqData>>>(
+  'permissions/updateCompanyWithPermissionThunk',
+  async ({ data, onSuccess, onError }, thunkAPI) => {
+    try {
+      const response = await CompaniesApi.updateById(data as Required<ICompanyReqData>);
+
+      if (response) {
+        onSuccess && onSuccess(response.data.data);
+      }
+      return response.data.data;
+    } catch (error) {
+      onError && onError(error);
+      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+    }
+  }
+);
+export const deleteCompanyWithPermissionThunk = createAsyncThunk<
+  Partial<{ _id?: string; result: boolean }>,
+  ThunkPayload<{ _id: string }>
+>('permissions/deleteCompanyWithPermissionThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
+  try {
+    const response = await CompaniesApi.deleteById(data?._id as string);
+
+    if (response) {
+      onSuccess && onSuccess(response.data.data);
+    }
+    return response.data.data;
+  } catch (error) {
+    onError && onError(error);
+    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+  }
+});
 export const updatePermissionThunk = createAsyncThunk<Partial<IPermission>, ThunkPayload<IPermissionReqData>>(
   'permissions/updatePermissionThunk',
   async ({ data, onSuccess, onError }, thunkAPI) => {
@@ -121,11 +172,11 @@ export const updatePermissionThunk = createAsyncThunk<Partial<IPermission>, Thun
 );
 
 export const deletePermissionByIdThunk = createAsyncThunk<
-  Partial<IPermission>,
+  { _id?: string; result: boolean },
   ThunkPayload<Partial<IPermissionReqData>>
 >('permissions/deletePermissionByIdThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
   try {
-    const response = await PermissionsApi.deleteById(data?.id || '');
+    const response = await PermissionsApi.deleteById(data?.id as string);
 
     if (response) {
       onSuccess && onSuccess(response.data.data);

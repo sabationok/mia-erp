@@ -6,6 +6,7 @@ import { IconIdType } from '../../img/sprite';
 
 export interface SelectItemBase extends Record<string, any> {
   _id?: string;
+  id?: string;
   filter?: boolean;
   search?: boolean;
   label?: string;
@@ -16,6 +17,7 @@ export interface SelectItemBase extends Record<string, any> {
   dataPath?: string;
   descending?: boolean;
   path?: string;
+  sortOrder?: 'DESC' | 'ASC' | 'desc' | 'asc';
 }
 
 export interface SelectItem extends SelectItemBase {}

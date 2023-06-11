@@ -35,3 +35,9 @@ export interface ICompanyReqData {
 export interface IGetAllCompaniesRes extends AppResponse<ICompany[]> {}
 
 export interface ICompanyRes extends AppResponse<ICompany> {}
+
+export interface ICompanyUpdatingRes extends AppResponse<IPermission> {}
+
+export interface ICompanyCreatingRes extends AppResponse<IPermission> {}
+
+export interface ICompanyDeletingRes extends AppResponse<{ _id: string; result: true }> {}

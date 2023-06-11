@@ -7,30 +7,26 @@ import { SelectItem } from 'components/TableList/TableList';
 
 export interface TableSortProps {
   tableSortParams: SelectItem[];
+  onSelect?: (param: SelectItem, sortOrder: SelectItem['sortOrder']) => void;
 }
 
-const TableSort: React.FC<TableSortProps> = ({ tableSortParams }) => {
+const TableSort: React.FC<TableSortProps> = ({ tableSortParams, onSelect }) => {
   // const modal = useModalProvider();
   const [isOpen, setIsOpen] = useState<boolean | undefined>(false);
-  const [current, setCurrent] = useState<SelectItem & { descending: boolean }>({
-    descending: false,
-    ...tableSortParams[0],
-  });
+  const [current, setCurrent] = useState<SelectItem>();
 
   function onOpenClick(newState?: boolean) {
     setIsOpen(newState);
   }
 
-  function handleSetCurrent(param: SelectItem, descending: boolean) {
-    return () => {
-      setCurrent({ ...param, descending });
-    };
+  function handleSelect(param: SelectItem, sortOrder: SelectItem['sortOrder']) {
+    setCurrent({ ...param, sortOrder });
   }
 
   return (
     <Box>
       <StButton
-        descending={current?.descending}
+        sortOrder={current?.sortOrder}
         variant="def"
         iconId="sort"
         iconSize="18px"
@@ -39,11 +35,13 @@ const TableSort: React.FC<TableSortProps> = ({ tableSortParams }) => {
         onClick={() => onOpenClick(true)}
         data-table-sort-open
       >
-        <span title={current.name || current.label}>{current.name || current.label}</span>
+        <span title={current?.name || current?.label || ''}>
+          {current?.name || current?.label || 'Оберіть параметр'}
+        </span>
       </StButton>
 
       <ListBox isOpen={!!isOpen}>
-        <TableSortParamsList {...{ tableSortParams, handleSetCurrent, current, isOpen, onOpenClick }} />
+        <TableSortParamsList {...{ tableSortParams, onSelect: handleSelect, current, isOpen, onOpenClick }} />
       </ListBox>
     </Box>
   );
@@ -58,7 +56,7 @@ const Box = styled.div`
   min-width: 150px;
 `;
 
-const StButton = styled(ButtonIcon)<{ descending?: boolean }>`
+const StButton = styled(ButtonIcon)<{ sortOrder?: SelectItem['sortOrder'] }>`
   display: grid;
   grid-template-columns: 26px 1fr 26px;
   height: 100%;
@@ -84,7 +82,7 @@ const StButton = styled(ButtonIcon)<{ descending?: boolean }>`
   }
 
   & .endIcon {
-    transform: ${({ descending }) => `rotate(${!descending ? 180 : 0}deg)`};
+    transform: ${({ sortOrder }) => `rotate(${sortOrder && !['DESC', 'desc'].includes(sortOrder) ? 180 : 0}deg)`};
   }
 `;
 

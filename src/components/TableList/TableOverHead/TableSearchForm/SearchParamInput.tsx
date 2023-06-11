@@ -2,7 +2,7 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 
 import { SelectItem } from 'components/TableList/TableList';
 import { iconId } from 'data';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 export interface ISearchParamInputProps {
@@ -15,9 +15,7 @@ export interface ISearchParamInputProps {
 const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue, selectedItem, onSelect }) => {
   const [inputValue, setInputValue] = useState({ searchParam: '' });
   const [filteredData, setFilteredData] = useState<SelectItem[]>(data || []);
-  // const [current, setCurrent] = useState<SelectItem | null>(
-  //   defaultValue || selectedItem || null
-  // );
+  const [current, setCurrent] = useState<SelectItem | null>(defaultValue || selectedItem || null);
   const [isOpen, setIsOpen] = useState(false);
 
   function handleToggleList() {
@@ -60,28 +58,24 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
   //     </ClearButton>
   //   </StyledLabel>
   // );
-
-  const renderFilteredList = useMemo(() => {
-    function onSelectItemClick(item: SelectItem) {
+  const handleSelect = useCallback(
+    (item: SelectItem) => {
       // setCurrent(item);
 
       if (onSelect instanceof Function) {
         onSelect(item);
+        setCurrent(item);
         setInputValue({ searchParam: item.label ? item.label : '' });
       }
 
       handleToggleList();
-    }
-
+    },
+    [onSelect]
+  );
+  const renderFilteredList = useMemo(() => {
     return filteredData.length > 0 ? (
       filteredData.map((item, idx) => (
-        <ListItem
-          key={item.dataKey || item.dataPath}
-          title={item.label}
-          onClick={() => {
-            onSelectItemClick(item);
-          }}
-        >
+        <ListItem key={item.dataKey || item.dataPath} title={item.label} onClick={() => handleSelect(item)}>
           <span>{item.label}</span>
         </ListItem>
       ))
@@ -90,7 +84,7 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
         <span>Нічого не знайдено</span>
       </ListItem>
     );
-  }, [filteredData, onSelect]);
+  }, [filteredData, handleSelect]);
 
   useEffect(() => {
     if (data?.length === 0) {

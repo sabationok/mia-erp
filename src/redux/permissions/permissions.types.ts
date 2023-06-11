@@ -1,5 +1,5 @@
 import { ICustomRole } from '../customRoles/customRoles.types';
-import { IBase } from '../global.types';
+import { AppResponse, IBase } from '../global.types';
 import { ICompany } from '../companies/companies.types';
 import { IUser } from '../auth/auth.types';
 import { StateErrorType } from '../reduxTypes.types';
@@ -29,15 +29,9 @@ export interface IPermissionForReq {
   actions: string[];
 }
 
-export interface IPermissionResData {
-  meta: {};
-  data: IPermission | Partial<IPermission>;
-}
+export interface IPermissionResData extends AppResponse<IPermission> {}
 
-export interface IPermissionsResData {
-  meta: {};
-  data: Partial<IPermission>[] | IPermission[];
-}
+export interface IPermissionsResData extends AppResponse<IPermission[]> {}
 
 export interface IPermissionReqData<D = IPermissionForReq | Partial<IPermissionForReq>> {
   id: string;
@@ -46,8 +40,8 @@ export interface IPermissionReqData<D = IPermissionForReq | Partial<IPermissionF
 }
 
 export interface IPermissionsState {
-  permission?: Partial<IPermission>;
-  permissions?: IPermission[];
+  permission: Partial<IPermission>;
+  permissions: IPermission[];
   permissionToken?: string;
   isLoading: boolean;
   error: StateErrorType;

@@ -1,6 +1,12 @@
 import baseApi from './baseApi';
 import { FilterReturnDataType } from '../components/Filter/AppFilter';
-import { ICompanyReqData, ICompanyRes, IGetAllCompaniesRes } from '../redux/companies/companies.types';
+import {
+  ICompanyCreatingRes,
+  ICompanyDeletingRes,
+  ICompanyReqData,
+  ICompanyUpdatingRes,
+  IGetAllCompaniesRes,
+} from '../redux/companies/companies.types';
 import APP_CONFIGS from 'redux/APP_CONFIGS';
 
 export default class CompaniesApi {
@@ -15,15 +21,15 @@ export default class CompaniesApi {
     return this.api.get(this.endpoints.getAllByOwnerId(id));
   }
 
-  public static async create(data: ICompanyReqData['data']): Promise<ICompanyRes> {
+  public static async create(data: ICompanyReqData['data']): Promise<ICompanyCreatingRes> {
     return this.api.post(this.endpoints.create(), data);
   }
 
-  public static async editById({ data, id, _id }: Required<ICompanyReqData>): Promise<ICompanyRes> {
+  public static async updateById({ data, id, _id }: Required<ICompanyReqData>): Promise<ICompanyUpdatingRes> {
     return this.api.post(this.endpoints.updateById(_id || id), data);
   }
 
-  public static async getById(id: string): Promise<ICompanyRes> {
-    return this.api.post(this.endpoints.getById(id));
+  public static async deleteById(id: string): Promise<ICompanyDeletingRes> {
+    return this.api.post(this.endpoints.deleteById(id));
   }
 }

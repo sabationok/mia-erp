@@ -1,51 +1,57 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { SelectItem } from 'components/TableList/TableList';
 import { iconId } from 'data';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import SearchParamInput from './SearchParamInput';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
 export interface TableSearchProps {
   tableSearchParams?: SelectItem[];
 }
 
+interface FormState {
+  search: string;
+  searchParam: SelectItem | undefined;
+}
+
+const validation = yup.object<FormState>().shape({
+  search: yup.string().required(),
+  searchParam: yup.object<SelectItem>().shape<SelectItem>({}),
+});
+
 const TableSearchForm: React.FC<TableSearchProps> = ({ tableSearchParams }) => {
-  const [searchParam, setSearchParam] = useState<SelectItem | undefined>();
-  const [searchValue, setSearchValue] = useState<{ search: string }>({
-    search: '',
+  const {
+    formState: { errors },
+    register,
+    watch,
+    handleSubmit,
+    setValue,
+  } = useForm<FormState>({
+    defaultValues: { search: '' },
+    reValidateMode: 'onChange',
+    resolver: yupResolver(validation),
   });
+  const { search, searchParam } = watch();
 
   function onSelect(item: SelectItem) {
-    setSearchParam(item);
+    setValue('searchParam', item);
   }
 
-  function onSubmit(ev: React.FormEvent) {
-    console.log({
-      searchFormData: {
-        searchParam: searchParam?.dataPath,
-        searchValue: searchValue.search,
-      },
+  function onSubmit(ev: any) {
+    handleSubmit(data => {
+      console.log(data);
     });
-  }
-
-  function onChange(ev: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = ev.target;
-    setSearchValue(prev => ({ ...prev, [name]: value }));
   }
 
   return (
     <SearchForm>
       <StyledLabel>
         <SearchInput
-          type="text"
-          name="search"
-          value={searchValue.search}
-          placeholder={
-            searchParam?.label
-              ? `Пошук за: "${searchParam?.label}"`
-              : 'Оберіть параметр пошуку'
-          }
-          onChange={onChange}
+          placeholder={searchParam?.label ? `Пошук за: "${searchParam?.label}"` : 'Оберіть параметр пошуку'}
+          {...register('search')}
         />
       </StyledLabel>
 
@@ -54,7 +60,7 @@ const TableSearchForm: React.FC<TableSearchProps> = ({ tableSearchParams }) => {
         size="28px"
         iconSize={'90%'}
         variant="onlyIconNoEffects"
-        disabled={!searchParam?.label || !searchValue.search}
+        disabled={!searchParam || !search}
         onClick={onSubmit}
       />
 

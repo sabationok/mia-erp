@@ -5,32 +5,32 @@ import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { SelectItem } from 'components/TableList/TableList';
 
-export interface TableSortParamsListProps extends ModalFormProps {
+export interface TableSortParamsListProps extends Omit<ModalFormProps, 'onSelect'> {
   tableSortParams?: SelectItem[];
-  current: SelectItem & { descending: boolean };
+  current?: SelectItem;
   isOpen?: boolean;
   onOpenClick: (isOpen?: boolean) => void;
-  handleSetCurrent: (param: SelectItem, descending: boolean) => <T = any>(args?: T | undefined) => any;
+  onSelect: (param: SelectItem, sortOrder: SelectItem['sortOrder']) => void;
 }
 
 const TableSortParamsList: React.FC<TableSortParamsListProps> = ({
-                                                                   tableSortParams,
-                                                                   handleSetCurrent,
-                                                                   current,
-                                                                   onOpenClick,
-                                                                   isOpen,
-                                                                 }) => {
-  const [currentEl, setCurrentEl] = useState<SelectItem & { descending: boolean }>(current);
+  tableSortParams,
+  onSelect,
+  current,
+  onOpenClick,
+  isOpen,
+}) => {
+  const [currentEl, setCurrentEl] = useState<SelectItem | undefined>(current);
 
-  function handleSetCurrentState(param: SelectItem, descending: boolean) {
+  function handleSetCurrentState(param: SelectItem, sortOrder: SelectItem['sortOrder']) {
     return () => {
-      handleSetCurrent(param, descending) && handleSetCurrent(param, descending)();
-      setCurrentEl({ ...param, descending });
+      onSelect && onSelect(param, sortOrder);
+      setCurrentEl({ ...param, sortOrder });
     };
   }
 
-  function isActive(param: SelectItem, descending: boolean) {
-    return param.dataKey === currentEl?.dataKey && currentEl.descending === descending;
+  function isActive(param: SelectItem, sortOrder: SelectItem['sortOrder']) {
+    return param.dataPath === currentEl?.dataPath && currentEl?.sortOrder === sortOrder;
   }
 
   useEffect(() => {
@@ -53,35 +53,38 @@ const TableSortParamsList: React.FC<TableSortParamsListProps> = ({
 
   return (
     <Box isOpen={isOpen} data-table-sort-close>
-      <Title>
+      <Header>
         <span>Сортування</span>
 
-        <ButtonIcon variant='onlyIconNoEffects' iconId='close' iconSize='26px' onClick={() => onOpenClick(false)} />
-      </Title>
+        <ButtonIcon variant="onlyIconNoEffects" iconId="close" iconSize="26px" onClick={() => onOpenClick(false)} />
+      </Header>
 
       <SelectList>
         {tableSortParams?.map(param => (
-          <ListParam key={param.dataKey || param.dataPath} isActive={param.dataPath === currentEl?.dataPath}>
+          <ListParam
+            key={`sortItem-${param.dataKey || param.dataPath}`}
+            isActive={param.dataPath === currentEl?.dataPath}
+          >
             <ParamLabel>{param.name || param.label}</ParamLabel>
 
             <SetOrderButton
-              className='button'
-              isActive={isActive(param, true)}
-              variant='onlyIconNoEffects'
-              size='100%'
-              iconSize='80%'
+              className="button"
+              isActive={isActive(param, 'DESC')}
+              variant="onlyIconNoEffects"
+              size="100%"
+              iconSize="80%"
               iconId={iconId.SmallArrowDown}
-              onClick={handleSetCurrentState(param, true)}
+              onClick={handleSetCurrentState(param, 'DESC')}
             />
 
             <SetOrderButton
-              className='button'
-              isActive={isActive(param, false)}
-              variant='onlyIconNoEffects'
-              size='100%'
-              iconSize='80%'
+              className="button"
+              isActive={isActive(param, 'ASC')}
+              variant="onlyIconNoEffects"
+              size="100%"
+              iconSize="80%"
               iconId={iconId.SmallArrowUp}
-              onClick={handleSetCurrentState(param, false)}
+              onClick={handleSetCurrentState(param, 'ASC')}
             />
           </ListParam>
         ))}
@@ -104,7 +107,7 @@ const Box = styled.div<{ isOpen?: boolean }>`
 
   overflow: hidden;
   border-radius: 2px;
-    /* border: 1px solid ${({ theme }) => theme.borderColor}; */
+  /* border: 1px solid ${({ theme }) => theme.borderColor}; */
 
   color: ${({ theme }) => theme.fontColorHeader};
   fill: ${({ theme }) => theme.fontColorHeader};
@@ -114,19 +117,19 @@ const Box = styled.div<{ isOpen?: boolean }>`
   background-color: ${({ theme }) => theme.backdropColor};
   box-shadow: ${({ theme }) => theme.globals.shadowMain};
   transition: all ${({ theme }) => theme.globals.timingFunctionMain},
-  transform ${({ theme }) => theme.globals.timingFnMui};
+    transform ${({ theme }) => theme.globals.timingFnMui};
 
   ${({ isOpen }) =>
-          isOpen
-                  ? css`
-                    transform: translate(0, 0);
-                  `
-                  : css`
-                    transform: translate(0, 100%);
-                    /* opacity: 0; */
-                    visibility: hidden;
-                    pointer-events: none;
-                  `};
+    isOpen
+      ? css`
+          transform: translate(0, 0);
+        `
+      : css`
+          transform: translate(0, 100%);
+          /* opacity: 0; */
+          visibility: hidden;
+          pointer-events: none;
+        `};
   @media screen and(min-height: 480px) {
     max-height: 90vh;
   }
@@ -134,7 +137,7 @@ const Box = styled.div<{ isOpen?: boolean }>`
     width: 100%;
   }
 `;
-const Title = styled.div`
+const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -147,10 +150,11 @@ const Title = styled.div`
   width: 100%;
   height: 36px;
 
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
 
   color: ${({ theme }) => theme.fontColorHeader};
-  background-color: ${({ theme }) => theme.backgroundColorMain};
+  background-color: ${({ theme }) => theme.headerBackgroundColor};
 
   & span {
     padding: 0 8px;
@@ -170,6 +174,7 @@ const SelectList = styled.ul`
 `;
 const SetOrderButton = styled(ButtonIcon)<{ isActive: boolean }>`
   visibility: hidden;
+  transition: none;
   fill: ${({ isActive, theme }) => (isActive ? theme.accentColor.base : theme.fontColorHeader)};
 `;
 const ListParam = styled.li<{ isActive: boolean }>`
@@ -185,13 +190,12 @@ const ListParam = styled.li<{ isActive: boolean }>`
 
   cursor: default;
 
+  color: ${({ isActive, theme }) => (isActive ? theme.fontColorHeader : '')};
+  background-color: ${({ isActive, theme }) => (isActive ? theme.backgroundColorSecondary : '')};
+
   button {
     visibility: ${({ isActive }) => (isActive ? 'visible' : 'hidden')};
-
-    &::before {
-    }
   }
-
 
   &:hover {
     color: ${({ theme }) => theme.fontColorHeader};

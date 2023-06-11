@@ -2,11 +2,14 @@ import { createSlice } from '@reduxjs/toolkit';
 import { IPermissionsState } from './permissions.types';
 import * as _ from 'lodash';
 import {
+  createCompanyWithPermissionThunk,
   createPermissionThunk,
+  deleteCompanyWithPermissionThunk,
   deletePermissionByIdThunk,
   getAllPermissionsByUserIdThunk,
   getCurrentPermissionThunk,
   logOutPermissionThunk,
+  updateCompanyWithPermissionThunk,
   updatePermissionThunk,
 } from './permissions.thunk';
 
@@ -27,22 +30,27 @@ export const permissionsSlice = createSlice({
   reducers: {},
   extraReducers: builder =>
     builder
-      .addCase(getCurrentPermissionThunk.fulfilled, (state: IPermissionsState, action) => {
-        state.permission = _.omit(action.payload, 'permissionToken');
-        state.permissionToken = action.payload.permissionToken;
+      .addCase(getCurrentPermissionThunk.fulfilled, (state: IPermissionsState, a) => {
+        state.permission = _.omit(a.payload, 'permissionToken');
+        state.permissionToken = a.payload.permissionToken;
       })
-      .addCase(getAllPermissionsByUserIdThunk.fulfilled, (state, action) => {})
-      // .addCase(getAllPermissionsByCompanyIdThunk.fulfilled, (state, action) => {})
-      .addCase(createPermissionThunk.fulfilled, (state, action) => {})
-      .addCase(updatePermissionThunk.fulfilled, (state, action) => {})
-      .addCase(deletePermissionByIdThunk.fulfilled, (state, action) => {})
-      .addCase(logOutPermissionThunk.fulfilled, (state, action) => {
-        state = initialPermissionStateState;
+      .addCase(getAllPermissionsByUserIdThunk.fulfilled, (s, a) => {})
+      // .addCase(getAllPermissionsByCompanyIdThunk.fulfilled, (s, a) => {})
+      .addCase(createPermissionThunk.fulfilled, (s, a) => {})
+      .addCase(updatePermissionThunk.fulfilled, (s, a) => {})
+      .addCase(deletePermissionByIdThunk.fulfilled, (s, a) => {})
+      .addCase(logOutPermissionThunk.fulfilled, (s, a) => {
+        s = initialPermissionStateState;
       })
-      .addCase(clearCurrentPermission, (state, action) => {
-        console.log('clearCurrentPermission', action);
+      .addCase(clearCurrentPermission, (s, a) => {
+        console.log('clearCurrentPermission', a);
         toast.success('Permission cleared');
-        state.permission = {};
-        state.permissionToken = '';
-      }),
+        s.permission = {};
+        s.permissionToken = '';
+      })
+      .addCase(createCompanyWithPermissionThunk.fulfilled, (s, a) => {
+        s.permissions = [a.payload, ...s.permissions];
+      })
+      .addCase(updateCompanyWithPermissionThunk.fulfilled, (s, a) => {})
+      .addCase(deleteCompanyWithPermissionThunk.fulfilled, (s, a) => {}),
 });
