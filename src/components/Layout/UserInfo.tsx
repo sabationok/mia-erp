@@ -4,7 +4,6 @@ import usePermissionsServiceHook from '../../redux/permissions/usePermissionsSer
 import FlexBox from '../atoms/FlexBox';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import Text from '../atoms/Text';
-import { createThunkPayload } from '../../utils/fabrics';
 import useAppAuthHook from '../../redux/auth/useAppAuth.hook';
 import { useMemo } from 'react';
 
@@ -20,6 +19,7 @@ const UserInfo: React.FC<IUserInfoProps> = ({ isOpen, onClose }) => {
   const {
     state: { permission, permissionToken },
     permissionLogOut,
+    clearCurrent,
   } = usePermissionsServiceHook();
 
   function onBackdropClick(ev: React.MouseEvent) {
@@ -47,13 +47,7 @@ const UserInfo: React.FC<IUserInfoProps> = ({ isOpen, onClose }) => {
             <ProfileCard {...permission?.company} nameFontSize="16px" emailFontSize="16px" />
 
             <FlexBox fxDirection={'row'} gap={12} fillWidth justifyContent={'flex-end'} alignItems={'center'}>
-              <ButtonIcon
-                variant={'textSmall'}
-                endIcon={'logOut'}
-                onClick={() => {
-                  permission?._id && permissionLogOut(createThunkPayload({ id: permission?._id }));
-                }}
-              >
+              <ButtonIcon variant={'textSmall'} endIcon={'logOut'} onClick={() => clearCurrent()}>
                 <Text style={{ fontSize: '14px' }}>Вийти з компанії</Text>
               </ButtonIcon>
             </FlexBox>

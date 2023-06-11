@@ -3,13 +3,12 @@ import { useSelector } from 'react-redux';
 import {
   createPermissionThunk,
   deletePermissionByIdThunk,
-  getAllPermissionsByCompanyIdThunk,
   getAllPermissionsByUserIdThunk,
   getCurrentPermissionThunk,
   logOutPermissionThunk,
   updatePermissionThunk,
 } from './permissions.thunk';
-import { IPermissionForReq, IPermissionsState } from './permissions.types';
+import { IPermissionForReq, IPermissionReqData, IPermissionsState } from './permissions.types';
 import { useMemo } from 'react';
 import { ServiceDispatcher } from 'redux/global.types';
 import { clearCurrentPermission } from './permissions.action';
@@ -18,10 +17,10 @@ import { defaultThunkPayload } from '../../utils/fabrics';
 export interface PermissionService {
   dispatch: AppDispatch;
   state: IPermissionsState;
-  getAllByCompanyId: ServiceDispatcher<{ companyId: string }>;
+  getAllByCompanyId?: ServiceDispatcher<{ companyId: string }>;
   getAllByUserId: ServiceDispatcher<{ userId: string }>;
   deleteById: ServiceDispatcher<{ id: string }>;
-  edit: ServiceDispatcher<{ id: string; data: Partial<IPermissionForReq> }>;
+  edit: ServiceDispatcher<IPermissionReqData>;
   create: ServiceDispatcher<IPermissionForReq>;
   getCurrent: ServiceDispatcher<{ id: string }>;
   permissionLogOut: ServiceDispatcher<{ id: string }>;
@@ -54,7 +53,7 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
     'state' | 'dispatch' | 'isCurrentValid' | 'validatePermission'
   > => {
     return {
-      getAllByCompanyId: async payload => dispatch(getAllPermissionsByCompanyIdThunk(defaultThunkPayload(payload))),
+      // getAllByCompanyId: async payload => dispatch(getAllPermissionsByCompanyIdThunk(defaultThunkPayload(payload))),
       getAllByUserId: async payload => dispatch(getAllPermissionsByUserIdThunk(defaultThunkPayload(payload))),
       deleteById: async payload => dispatch(deletePermissionByIdThunk(defaultThunkPayload(payload))),
       edit: async payload => dispatch(updatePermissionThunk(defaultThunkPayload(payload))),

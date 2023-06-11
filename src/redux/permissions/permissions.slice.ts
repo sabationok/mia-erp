@@ -4,7 +4,6 @@ import * as _ from 'lodash';
 import {
   createPermissionThunk,
   deletePermissionByIdThunk,
-  getAllPermissionsByCompanyIdThunk,
   getAllPermissionsByUserIdThunk,
   getCurrentPermissionThunk,
   logOutPermissionThunk,
@@ -33,7 +32,7 @@ export const permissionsSlice = createSlice({
         state.permissionToken = action.payload.permissionToken;
       })
       .addCase(getAllPermissionsByUserIdThunk.fulfilled, (state, action) => {})
-      .addCase(getAllPermissionsByCompanyIdThunk.fulfilled, (state, action) => {})
+      // .addCase(getAllPermissionsByCompanyIdThunk.fulfilled, (state, action) => {})
       .addCase(createPermissionThunk.fulfilled, (state, action) => {})
       .addCase(updatePermissionThunk.fulfilled, (state, action) => {})
       .addCase(deletePermissionByIdThunk.fulfilled, (state, action) => {})
