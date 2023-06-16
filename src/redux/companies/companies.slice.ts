@@ -9,11 +9,12 @@ export const initialCompany: ICompany = {
   email: 'company@mail.com',
   taxCode: '51651348435',
   owner: testUserKarina,
-  companyToken: 'companyToken',
+  company_token: 'company_token',
 };
 
 const initialCompState: ICompaniesState = {
-  companies: [initialCompany, { ...initialCompany, _id: 'dfbsdfgbd13f5g13bdg1', name: 'Roga & Copyta' }],
+  // companies: [initialCompany, { ...initialCompany, _id: 'dfbsdfgbd13f5g13bdg1', name: 'Roga & Copyta' }],
+  companies: [],
   isLoading: false,
   error: null,
 };

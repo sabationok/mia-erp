@@ -28,9 +28,9 @@ export interface PermissionService {
   create: ServiceDispatcherAsync<IPermissionForReq>;
   getCurrent: ServiceDispatcherAsync<{ id: string }>;
   permissionLogOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean }>;
-  createCompany?: ServiceDispatcherAsync<Required<ICompanyForReq>>;
-  updateCompany?: ServiceDispatcherAsync<Required<ICompanyReqData>>;
-  deleteCompany?: ServiceDispatcherAsync<{ _id: string }>;
+  createCompany: ServiceDispatcherAsync<ICompanyForReq>;
+  updateCompany: ServiceDispatcherAsync<Required<ICompanyReqData>>;
+  deleteCompany: ServiceDispatcherAsync<{ _id: string }>;
   logOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean }>;
   isCurrentValid: boolean;
   clearCurrent: () => void;
@@ -53,7 +53,7 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
       (companyId && state.permission?.company?._id === companyId) ||
       (permissionId && state.permission?._id === permissionId) ||
       false,
-    [companyId, permissionId, state.permission?._id, state.permission?.company?._id]
+    [companyId, permissionId, state.permission?._id, state.permission?.company?._id],
   );
 
   const dispatchers = useMemo((): Omit<

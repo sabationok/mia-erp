@@ -20,7 +20,7 @@ import { toast } from 'react-toastify';
 const initialPermissionStateState: IPermissionsState = {
   permission: {},
   permissionToken: '',
-  permissions: testPermissions,
+  permissions: [] || testPermissions,
   isLoading: false,
   error: null,
 };
@@ -36,14 +36,22 @@ export const permissionsSlice = createSlice({
       })
       .addCase(getAllPermissionsByUserIdThunk.fulfilled, (s, a) => {})
       // .addCase(getAllPermissionsByCompanyIdThunk.fulfilled, (s, a) => {})
-      .addCase(createPermissionThunk.fulfilled, (s, a) => {})
+      .addCase(createPermissionThunk.fulfilled, (s, a) => {
+        s.permissions = [a.payload, ...s.permissions];
+      })
       .addCase(updatePermissionThunk.fulfilled, (s, a) => {})
-      .addCase(deletePermissionByIdThunk.fulfilled, (s, a) => {})
+      .addCase(deletePermissionByIdThunk.fulfilled, (s, a) => {
+        if (a.payload.result) {
+          s.permissions = s.permissions.filter(p => p._id !== a.payload?._id);
+        }
+      })
       .addCase(logOutPermissionThunk.fulfilled, (s, a) => {
-        s = initialPermissionStateState;
+        toast.success('Permission log out');
+        s.permission = {};
+        s.permissionToken = '';
+        s.error = null;
       })
       .addCase(clearCurrentPermission, (s, a) => {
-        console.log('clearCurrentPermission', a);
         toast.success('Permission cleared');
         s.permission = {};
         s.permissionToken = '';

@@ -7,6 +7,7 @@ import ModalForm from '../../components/ModalForm';
 import { useNavigate } from 'react-router-dom';
 import { CompanyQueryType } from '../global.types';
 import { toast } from 'react-toastify';
+import CompanyForm from '../../components/Forms/CompanyForm';
 
 export type PermissionsActionsCreator = TableActionCreator<IPermission>;
 
@@ -119,7 +120,7 @@ const usePermissionsActionsCreator = (
           type: 'onlyIconFilled',
           onClick: () => {
             modal.handleOpenModal({
-              ModalChildren: ModalForm,
+              ModalChildren: CompanyForm,
               modalChildrenProps: {
                 fillHeight: true,
                 title: 'Створити нову компанію',

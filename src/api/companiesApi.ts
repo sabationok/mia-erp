@@ -16,9 +16,11 @@ export default class CompaniesApi {
   public static async getAllByOwnerId(
     id: string,
     filterData?: FilterReturnDataType,
-    sortData?: any
+    sortOrder?: 'DESC' | 'ASC'
   ): Promise<IGetAllCompaniesRes> {
-    return this.api.get(this.endpoints.getAllByOwnerId(id));
+    return this.api.get(this.endpoints.getAllByOwnerId(id), {
+      params: filterData,
+    });
   }
 
   public static async create(data: ICompanyReqData['data']): Promise<ICompanyCreatingRes> {

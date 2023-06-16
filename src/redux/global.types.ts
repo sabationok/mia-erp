@@ -14,6 +14,20 @@ export enum CompanyQueryTypeEnum {
   invited = 'invited',
 }
 
+export interface ContactsDto {
+  email?: string;
+  phone?: string;
+}
+
+export interface LocationDto {
+  country?: string;
+  region?: string;
+  city?: string;
+  street?: string;
+  house?: number;
+  office?: string;
+}
+
 export interface AppResponse<D = any, M = any>
   extends AxiosResponse<{
     statusCode?: number;

@@ -1,4 +1,4 @@
-import { AppResponse, IBase } from '../global.types';
+import { AppResponse, ContactsDto, IBase, LocationDto } from '../global.types';
 import { IPermission } from '../permissions/permissions.types';
 import { IUser } from '../auth/auth.types';
 import { StateErrorType } from '../reduxTypes.types';
@@ -8,14 +8,19 @@ export interface ICompanyConfigs {}
 export interface ICompany extends IBase {
   name: string;
   email: string;
-  phone?: string;
   fullName: string;
+  phone?: string;
   taxCode?: string;
-  owner: Partial<IUser>;
-  logo?: string;
+  owner: Pick<IUser, '_id' | 'name' | 'email'>;
   permissions?: Partial<IPermission>[];
-  companyToken?: string;
+  company_token?: string;
   configs?: ICompanyConfigs;
+  type?: string;
+  holders?: string[];
+  avatarUrl?: string;
+  avatarPreviewUrl?: string;
+  contacts?: ContactsDto[];
+  locations?: LocationDto[];
 }
 
 export interface ICompaniesState {
@@ -24,7 +29,10 @@ export interface ICompaniesState {
   error: StateErrorType;
 }
 
-export interface ICompanyForReq extends Partial<Omit<ICompany, '_id' | 'createdAt' | 'updatedAt'>> {}
+export interface ICompanyForReq
+  extends Partial<
+    Omit<ICompany, '_id' | 'createdAt' | 'updatedAt' | 'owner' | 'company_token' | 'configs' | 'permissions'>
+  > {}
 
 export interface ICompanyReqData {
   _id?: string;

@@ -26,7 +26,7 @@ export interface IAuthState {
   error: AuthErrorType;
 }
 
-export type ILoggedUserInfo = Pick<IAuthState, 'access_token' | 'refresh_token'> & Pick<IUser, 'email'>;
+export type ILoggedUserInfo = Pick<IAuthState, 'access_token'> & Pick<IUser, 'email' | '_id'>;
 
 export interface ILoggedUserInfoRes extends AppResponse<ILoggedUserInfo> {}
 
