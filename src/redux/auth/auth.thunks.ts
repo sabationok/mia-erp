@@ -1,4 +1,4 @@
-import baseApi from 'api/baseApi';
+import baseApi, { token } from 'api/baseApi';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import {
@@ -13,6 +13,7 @@ import {
 } from './auth.types';
 import { AxiosResponse } from 'axios';
 import { ThunkPayload } from '../store.store';
+import AuthApi from '../../api/auth.api';
 
 const AUTH_API_BASENAME = '/auth';
 export const authApiRoutes = {
@@ -50,13 +51,12 @@ export const logInUserThunk = createAsyncThunk<
   }
 >('auth/logInUserThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
   try {
-    // const response: AxiosResponse<ILoggedUserInfoRes> = await baseApi.post(authApiRoutes.signIn, payload.data);
+    const response = await AuthApi.logInUser(data as ILoginUserData);
 
-    // payload.onSuccess(response.data);
     onSuccess && onSuccess(data);
-    // token.set(response.data.accessToken);
-    // return response.data;
-    return { accessToken: 'accessToken_', email: data?.email };
+    token.set(response.data.data.access_token || '');
+    return response.data.data;
+    // return { accessToken: 'accessToken_', email: data?.email };
   } catch (error) {
     onError && onError(error);
 

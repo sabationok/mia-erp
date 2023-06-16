@@ -9,8 +9,9 @@ import { useBaseURLWithPermission } from './api/baseApi';
 
 const App: React.FC = () => {
   const { isDarkMode } = useAppSettings();
+
   useBaseURLWithPermission();
-  
+
   return (
     <>
       <AppContainer>

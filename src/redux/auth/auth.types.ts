@@ -19,16 +19,14 @@ export interface IUser extends IBase {
 export interface IAuthState {
   user: IUser;
   permission: IPermission;
-  accessToken?: string;
+  access_token?: string;
+  refresh_token?: string;
   isLoading: boolean;
   isLoggedIn: boolean;
   error: AuthErrorType;
 }
 
-export interface ILoggedUserInfo {
-  accessToken?: string;
-  email?: string;
-}
+export type ILoggedUserInfo = Pick<IAuthState, 'access_token' | 'refresh_token'> & Pick<IUser, 'email'>;
 
 export interface ILoggedUserInfoRes extends AppResponse<ILoggedUserInfo> {}
 
@@ -52,4 +50,4 @@ export interface IRegistrationData extends ILoginUserData {
   secondName?: string;
 }
 
-export type ICurrentUser = Partial<IUser> & Pick<IAuthState, 'accessToken'>;
+export type ICurrentUser = Pick<IUser, 'email'> & Pick<IAuthState, 'access_token' | 'refresh_token'>;

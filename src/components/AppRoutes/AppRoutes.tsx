@@ -9,9 +9,9 @@ import PrivateRoute from './PrivateRoute';
 const { PageNotFound } = AppPages;
 
 const AppRoutes: React.FC = () => {
-  const { accessToken } = useAuthSelector();
+  const { access_token } = useAuthSelector();
 
-  const isAuthorized = useMemo(() => !!accessToken, [accessToken]);
+  const isAuthorized = useMemo(() => !!access_token, [access_token]);
 
   const notFoundRouteProps = useMemo(
     () => ({

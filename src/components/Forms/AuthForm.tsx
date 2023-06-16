@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import LogoSvg from 'components/Layout/LogoSvg';
 import AuthInputLabel from '../atoms/Inputs/AuthInputLabel';
 import NavLinkIcon from 'components/atoms/LinkIcon/NavLinkIcon';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useAuthService from '../../redux/auth/useAppAuth.hook';
 import { useForm } from 'react-hook-form';
 import InputText from '../atoms/Inputs/InputText';
-import { createThunkPayload } from '../../utils/fabrics';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { toast } from 'react-toastify';
 
 export interface Props {
   helloTitle?: string;
@@ -34,22 +36,58 @@ const initialFormDataRegister: IRegistrationFormData = {
   password: '',
   approvePassword: '',
 };
+const validLogInData = yup.object().shape({
+  email: yup.string().required(),
+  password: yup.string().required(),
+  approvePassword: yup.string(),
+});
 
 export type AuthFormProps = Props & React.HTMLAttributes<HTMLFormElement>;
 const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...props }) => {
   const authService = useAuthService();
+  const navigate = useNavigate();
 
   const {
     register,
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
+    watch,
   } = useForm<Partial<IRegistrationFormData>>({
     defaultValues: (login && initialFormDataLogin) || (registration && initialFormDataRegister) || {},
+    reValidateMode: 'onSubmit',
+    resolver: yupResolver(validLogInData),
   });
+  const formValues = watch();
+
+  const disableSubmit = useMemo(
+    () => !isValid || formValues.password !== formValues.approvePassword,
+    [formValues.approvePassword, formValues.password, isValid]
+  );
 
   function onFormSubmit(data: Partial<IRegistrationFormData>) {
-    login && authService.loginUser(createThunkPayload(data));
-    registration && authService.registerUser(createThunkPayload(data));
+    login &&
+      authService.loginUser({
+        data,
+        onSuccess() {
+          toast.success('Login success');
+        },
+        onError() {
+          toast.error('Login error');
+        },
+        onLoading() {},
+      });
+    registration &&
+      authService.registerUser({
+        data,
+        onSuccess() {
+          navigate('/auth/logIn');
+          toast.success('Registration success');
+        },
+        onError() {
+          toast.error('Registration error');
+        },
+        onLoading() {},
+      });
   }
 
   return (
@@ -82,9 +120,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
             <AuthInputLabel icon="email" error={errors.email}>
               <InputText placeholder="Електронна адреса" {...register('email')} />
             </AuthInputLabel>
+
             <AuthInputLabel icon="lock_O" error={errors.password}>
               <InputText placeholder="Пароль" type="password" {...register('password')} />
             </AuthInputLabel>
+
             <AuthInputLabel icon="lock_O" error={errors.approvePassword}>
               <InputText placeholder="Повторіть пароль" type="password" {...register('approvePassword')} />
             </AuthInputLabel>
@@ -104,7 +144,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
       </Inputs>
 
       <Buttons>
-        <StButtonIcon type="submit" textTransform="uppercase" variant="filledSmall">
+        <StButtonIcon type="submit" textTransform="uppercase" variant="filledSmall" disabled={disableSubmit}>
           {registration ? 'Зареєструватись' : 'Увійти'}
         </StButtonIcon>
 

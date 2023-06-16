@@ -3,12 +3,12 @@ import storageSession from 'redux-persist/lib/storage/session';
 
 export const persistorConfigs = {
   auth: {
-    key: 'accessToken',
+    key: 'auth',
     storage,
-    whitelist: ['accessToken', 'isLoggedIn'],
+    whitelist: ['access_token', 'isLoggedIn'],
   },
   permissions: {
-    key: 'permissions',
+    key: 'permission',
     storage: storageSession,
     whitelist: ['permission', 'permissionToken'],
   },

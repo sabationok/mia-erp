@@ -9,8 +9,9 @@ import { initialPermission } from '../../data/permissions.data';
 const initialState: IAuthState = {
   user: testUserKarina,
   permission: initialPermission,
-  accessToken: '',
-  isLoading: false,
+  access_token:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDg5MDBmNWQ5YjJkY2U3ODgyYjNlODEiLCJzdGF0dXMiOiJQRU5ESU5HIiwicm9sZSI6IkdVRVNUIiwiaWF0IjoxNjg2NzY5NDg5LCJleHAiOjE2ODc2MzM0ODl9.u0Q7LQrtKo7DXzsLbANM7vdn2kYJCVkC4uP-pv_tBfI',
+  isLoading: true,
   isLoggedIn: false,
   error: null,
 };
@@ -23,7 +24,7 @@ export const authSlice = createSlice({
     builder
       .addCase(logInUserThunk.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.accessToken = payload.accessToken;
+        state.access_token = payload.access_token;
         state.isLoggedIn = true;
         state.user = { ...state.user, email: payload.email };
       })
@@ -35,7 +36,7 @@ export const authSlice = createSlice({
         state.isLoggedIn = false;
         state.user = initialState.user;
         state.permission = initialState.permission;
-        state.accessToken = '';
+        state.access_token = '';
       })
       .addCase(getCurrentUserThunk.fulfilled, state => {
         state.isLoading = false;
