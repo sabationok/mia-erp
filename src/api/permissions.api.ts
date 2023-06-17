@@ -1,5 +1,5 @@
 import { baseApi } from './index';
-import APP_CONFIGS, { EndpointNames } from '../redux/APP_CONFIGS';
+import APP_CONFIGS, { Endpoints } from '../redux/APP_CONFIGS';
 import {
   IPermission,
   IPermissionForReq,
@@ -56,10 +56,10 @@ export default class PermissionsApi {
   }
 
   public static getAllByUserId(id: string): Promise<IPermissionsResData> {
-    return this.api.get(this.endpoints[EndpointNames.getAllByUserId](id));
+    return this.api.get(this.endpoints[Endpoints.getAllByUserId](id));
   }
 
   public static getAllByCompanyId(id: string): Promise<IPermissionsResData> {
-    return this.api.get(this.endpoints[EndpointNames.getAllByCompanyId](id));
+    return this.api.get(this.endpoints[Endpoints.getAllByCompanyId](id));
   }
 }
