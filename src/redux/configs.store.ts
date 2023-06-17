@@ -10,7 +10,7 @@ export const persistorConfigs = {
   permissions: {
     key: 'permission',
     storage: storageSession,
-    whitelist: ['permission', 'permissionToken'],
+    whitelist: ['permission', 'permission_token'],
   },
   appSettings: {
     key: 'appSettings',

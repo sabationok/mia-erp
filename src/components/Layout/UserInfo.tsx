@@ -17,7 +17,7 @@ const UserInfo: React.FC<IUserInfoProps> = ({ isOpen, onClose }) => {
     state: { user },
   } = useAppAuthHook();
   const {
-    state: { permission, permissionToken },
+    state: { permission, permission_token },
     permissionLogOut,
     clearCurrent,
   } = usePermissionsServiceHook();
@@ -27,7 +27,7 @@ const UserInfo: React.FC<IUserInfoProps> = ({ isOpen, onClose }) => {
     target === currentTarget && onClose();
   }
 
-  const isPermission = useMemo(() => !!permissionToken, [permissionToken]);
+  const isPermission = useMemo(() => !!permission_token, [permission_token]);
 
   return (
     <Backdrop isOpen={isOpen} transitionDelay={isOpen ? '' : '250ms'} onClick={onBackdropClick}>

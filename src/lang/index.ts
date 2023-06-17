@@ -12,7 +12,7 @@ const langPacks: Record<'ua' | 'en' | 'de' | 'pl', langPack> = {
 };
 
 function translate(key: LangTextKey): string {
-  return langPacks.ua[key] || key;
+  return langPacks.ua[key] || langPacks.en[key] || key;
 }
 
 export default translate;

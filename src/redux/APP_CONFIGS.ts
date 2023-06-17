@@ -39,9 +39,9 @@ export const permissionsApiEndpoints = {
     `${PERMISSIONS_API_BASENAME}/${EndpointNames.getAllByUserId}/${userId}`,
   [EndpointNames.getAllByCompanyId]: (companyId: string) =>
     `${PERMISSIONS_API_BASENAME}/${EndpointNames.getAllByCompanyId}/${companyId}`,
-  [EndpointNames.getCurrent]: (permissionId: string) =>
-    `${PERMISSIONS_API_BASENAME}/${EndpointNames.getCurrent}/${permissionId}`,
-  [EndpointNames.logOut]: (id: string) => `${PERMISSIONS_API_BASENAME}/${EndpointNames.logOut}/${id}`,
+  [EndpointNames.getCurrent]: () => `${PERMISSIONS_API_BASENAME}/${EndpointNames.getCurrent}`,
+  [EndpointNames.logIn]: (id: string) => `${PERMISSIONS_API_BASENAME}/${EndpointNames.logIn}/${id}`,
+  [EndpointNames.logOut]: () => `${PERMISSIONS_API_BASENAME}/${EndpointNames.logOut}`,
 };
 
 export const COMPANIES_API_BASENAME = '/companies';

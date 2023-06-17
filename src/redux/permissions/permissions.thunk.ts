@@ -1,8 +1,7 @@
-import { createAsyncThunk, nanoid } from '@reduxjs/toolkit';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import { IPermission, IPermissionForReq, IPermissionReqData } from './permissions.types';
 import { ThunkPayload } from '../store.store';
 import { axiosErrorCheck } from 'utils';
-import { testPermissions } from '../../data/permissions.data';
 import { CompaniesApi, PermissionsApi } from '../../api';
 import { ICompanyForReq, ICompanyReqData } from '../companies/companies.types';
 
@@ -44,45 +43,58 @@ export const getAllPermissionsByUserIdThunk = createAsyncThunk<
 //   }
 // });
 export const getCurrentPermissionThunk = createAsyncThunk<
-  Partial<{ permissionToken: string } & IPermission>,
+  Partial<{ permission_token: string } & IPermission>,
   ThunkPayload<
     {
       id: string;
     },
-    { permissionToken: string } & IPermission
+    { permission_token: string } & IPermission
   >
 >('permissions/getCurrentPermissionThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
   try {
-    // const response = await PermissionsApi.getCurrent(data?.id as string);
-    // if (response) {
-    //   onSuccess && onSuccess(response.data.data);
-    //   return response.data.data;
-    // }
-    //    const response: AxiosResponse<IPermissionResData> = await
-    // baseApi.get(
-    //   APP_CONFIGS.endpoints.permissions.getCurrentPermission(data?.id || '')
-    // );
-    // return response.data.data;
-    // const response = await PermissionsApi.getCurrent(data?.id || '');
-    const res = testPermissions.find(pr => pr._id === data?.id);
-
-    const mockRes = { ...res, permissionToken: nanoid(8) };
-
-    if (mockRes) {
-      onSuccess && onSuccess({ ...mockRes, permissionToken: 'permissionToken', _id: mockRes._id as string });
+    const response = await PermissionsApi.getCurrent();
+    if (response) {
+      onSuccess && onSuccess(response.data.data);
     }
 
-    return mockRes;
+    return response.data.data;
+
+    // const response = await PermissionsApi.getCurrent(data?.id || '');
+    // const res = testPermissions.find(pr => pr._id === data?.id);
+    //
+    // const mockRes = { ...res, permissionToken: nanoid(8) };
+    //
+    // if (mockRes) {
+    //   onSuccess && onSuccess({ ...mockRes, permissionToken: 'permissionToken', _id: mockRes._id as string });
+    // }
+    //
+    // return mockRes;
   } catch (error) {
     onError && onError(error);
 
     return thunkAPI.rejectWithValue(axiosErrorCheck(error));
   }
 });
+export const logInPermissionThunk = createAsyncThunk<IPermission, ThunkPayload<{ _id: string }, IPermission>>(
+  'permissions/logInPermissionThunk',
+  async ({ data, onSuccess, onError }, thunkAPI) => {
+    try {
+      const response = await PermissionsApi.logIn(data?._id as string);
+      if (response) {
+        onSuccess && onSuccess(response.data.data);
+      }
+      return response.data.data;
+    } catch (error) {
+      onError && onError(error);
+
+      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+    }
+  }
+);
 export const logOutPermissionThunk = createAsyncThunk<
   { _id?: string; result: boolean },
   ThunkPayload<
-    { _id: string },
+    any,
     {
       _id?: string;
       result: boolean;
@@ -90,13 +102,12 @@ export const logOutPermissionThunk = createAsyncThunk<
   >
 >('permissions/logOutPermissionThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
   try {
-    const response = await PermissionsApi.logOut(data?._id as string);
+    const response = await PermissionsApi.logOut();
     if (response) {
       onSuccess && onSuccess(response.data.data);
-      return response.data.data;
     }
 
-    return { _id: data?._id, result: true };
+    return response.data.data;
   } catch (error) {
     onError && onError(error);
 

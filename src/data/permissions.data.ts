@@ -14,7 +14,7 @@ export const permissionsTableColumns: CellTittleProps[] = [
   },
   {
     top: { name: 'Роль', align: 'start', path: 'role.label' },
-    bottom: { name: 'Опис', align: 'start', path: 'role.descr' },
+    bottom: { name: 'Опис', align: 'start', path: 'role.description' },
     width: '160px',
     action: 'valueByPath',
   },
@@ -25,7 +25,7 @@ export const permissionsTableColumns: CellTittleProps[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Локація', align: 'start', path: 'location' },
+    top: { name: 'Локація', align: 'start', path: 'company.location' },
     width: '250px',
     action: 'valueByPath',
   },
@@ -36,8 +36,8 @@ export const permissionsTableColumns: CellTittleProps[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Створено', align: 'center', dataKey: 'createdAt' },
-    bottom: { name: 'Оновлено', align: 'center', dataKey: 'updatedAt' },
+    top: { name: 'Створено', align: 'center', path: 'createdAt' },
+    bottom: { name: 'Оновлено', align: 'center', path: 'updatedAt' },
     width: '150px',
     action: 'dateSimple',
   },
@@ -89,7 +89,7 @@ export const permissionsSearchParams: SelectItem[] = [
 
 export const initialPermission: IPermission = {
   _id: 'companyId',
-  status: PermissionStatus.accepted,
+  status: PermissionStatus.ACCEPTED,
   company: initialCompany,
   user: testUserKarina,
   role: initialCustomRole,
@@ -111,14 +111,14 @@ export const testPermissions: IPermission[] = [
   {
     ...initialPermission,
     _id: 'dfbscxvcxgnbd13f5g13bdg1',
-    status: PermissionStatus.pending,
+    status: PermissionStatus.PENDING,
     company: { ...initialCompany, _id: 'dfbsdfsdf13f5g13bdg1', name: 'Roga & Copyta 3' },
     role: { ...initialPermission.role, label: 'Помічник' },
   },
   {
     ...initialPermission,
     _id: 'dfbscxvsdfbvsd13f5g13bdg1',
-    status: PermissionStatus.accepted,
+    status: PermissionStatus.ACCEPTED,
     company: { ...initialCompany, _id: 'dfbsxcvgbd13f5g13bdg1', name: 'Roga & Copyta 4' },
     role: { ...initialPermission.role, label: 'Аудитор' },
     owner: testUserKarina,

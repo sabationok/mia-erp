@@ -7,16 +7,16 @@ import DirContractors, { DirContractorsProps } from 'components/Directories/DirC
 import DirActivities, { DirActivitiesProps } from 'components/Directories/DirCompanyActivities/DirActivities';
 import { contractorsColumns, contractorsMockData } from './contractors.data';
 import { CategoryFilterOpt, CountFilterOpt, DirBaseProps } from '../components/Directories/dir.types';
-import translate from '../lang';
+import t from '../lang';
 
 export const categoriesFilterOptions: CategoryFilterOpt[] = [
-  { label: translate('INCOMES'), value: 'INCOME' },
-  { label: translate('TRANSFERS'), value: 'TRANSFER' },
-  { label: translate('EXPENSES'), value: 'EXPENSE' },
+  { label: t('INCOMES'), value: 'INCOME' },
+  { label: t('TRANSFERS'), value: 'TRANSFER' },
+  { label: t('EXPENSES'), value: 'EXPENSE' },
 ];
 export const countsFilterOptions: CountFilterOpt[] = [
-  { label: translate('ACTIVES'), value: 'ACTIVE' },
-  { label: translate('PASSIVES'), value: 'PASSIVE' },
+  { label: t('ACTIVES'), value: 'ACTIVE' },
+  { label: t('PASSIVES'), value: 'PASSIVE' },
 ];
 
 export interface IDirectory<P extends DirBaseProps = any> {
@@ -28,7 +28,7 @@ export interface IDirectory<P extends DirBaseProps = any> {
 }
 
 const CountsProps: DirCountsProps = {
-  title: 'Рахунки',
+  title: t('counts'),
   filterOptions: countsFilterOptions,
   fillHeight: true,
 };
@@ -41,7 +41,7 @@ const countsDir: IDirectory<DirCountsProps> = {
 };
 
 const CategoriesProps: DirCategoriesProps = {
-  title: 'Категорії',
+  title: t('categories'),
   filterOptions: categoriesFilterOptions,
   fillHeight: true,
 };
@@ -53,7 +53,7 @@ const categoriesDir: IDirectory<DirCategoriesProps> = {
   disabled: false,
 };
 const ContractorsProps: DirContractorsProps = {
-  title: 'Контрагенти',
+  title: t('contractors'),
   fillHeight: true,
   tableSettings: {
     tableData: contractorsMockData,
@@ -79,7 +79,7 @@ const contractorsDir: IDirectory<DirContractorsProps> = {
   disabled: false,
 };
 const ProjectsProps: DirProjectsProps = {
-  title: 'Проєкти',
+  title: t('projects'),
 };
 const projectsDir: IDirectory<DirProjectsProps> = {
   title: ProjectsProps.title,
@@ -89,7 +89,7 @@ const projectsDir: IDirectory<DirProjectsProps> = {
   disabled: false,
 };
 const MarksProps: DirMarksProps = {
-  title: 'Мітки',
+  title: t('marks'),
 };
 const marksDir: IDirectory<DirMarksProps> = {
   title: MarksProps.title,
@@ -99,7 +99,7 @@ const marksDir: IDirectory<DirMarksProps> = {
   disabled: false,
 };
 const activitiesProps: DirActivitiesProps = {
-  title: 'Види діяльності',
+  title: t('activityTypes'),
 };
 const activitiesDir: IDirectory<DirActivitiesProps> = {
   title: activitiesProps.title,

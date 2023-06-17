@@ -21,23 +21,27 @@ export default class PermissionsApi {
     return this.api.post(this.endpoints.deleteById(id));
   }
 
-  public static getCurrent(id: string): Promise<AppResponse<{ permissionToken: string } & IPermission>> {
-    return this.api.post(this.endpoints.getCurrent(id));
+  public static getCurrent(): Promise<AppResponse<{ permission_token: string } & IPermission>> {
+    return this.api.get(this.endpoints.getCurrent());
   }
 
   public static updateById({ id, data }: IPermissionReqData): Promise<AppResponse<IPermission>> {
     return this.api.post(this.endpoints.updateById(id), data);
   }
 
-  public static logOut(id: string): Promise<AppResponse<{ _id: string; result: boolean }>> {
-    return this.api.post(this.endpoints.logOut(id));
+  public static logIn(id: string): Promise<AppResponse<IPermission>> {
+    return this.api.post(this.endpoints.logIn(id));
+  }
+
+  public static logOut(): Promise<AppResponse<{ _id: string; result: boolean }>> {
+    return this.api.post(this.endpoints.logOut());
   }
 
   public static rejectById({
     id,
     data,
   }: IPermissionReqData<{
-    status: [PermissionStatus.rejected];
+    status: [PermissionStatus.REJECTED];
   }>): Promise<AppResponse<IPermission>> {
     return this.api.post(this.endpoints.updateById(id), data);
   }
@@ -46,7 +50,7 @@ export default class PermissionsApi {
     id,
     data,
   }: IPermissionReqData<{
-    status: [PermissionStatus.accepted];
+    status: [PermissionStatus.ACCEPTED];
   }>): Promise<AppResponse<IPermission>> {
     return this.api.post(this.endpoints.updateById(id), data);
   }

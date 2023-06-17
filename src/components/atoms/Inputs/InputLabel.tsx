@@ -43,7 +43,7 @@ const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = (
         <InputBox>{children}</InputBox>
       </Wrapper>
 
-      {helperText && (
+      {(helperText || error?.message || success || loading) && (
         <HelperText error={!!error} success={!!success} loading={loading}>
           {(typeof error?.message === 'string' && error?.message) || success || (loading && 'Loading...') || helperText}
         </HelperText>
@@ -71,11 +71,7 @@ const Label = styled.div<{
   opacity: ${({ disabled }) => (disabled ? 0.5 : '')};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'all')};
 `;
-const LabelText = styled.label<{
-  uppercase?: boolean;
-  align?: CSSProperties['alignItems'];
-  direction?: 'horizontal' | 'vertical';
-}>`
+const LabelText = styled.label<Pick<InputLabelProps, 'align' | 'direction' | 'uppercase'>>`
   display: flex;
   align-items: ${({ align = 'center' }) => align};
 

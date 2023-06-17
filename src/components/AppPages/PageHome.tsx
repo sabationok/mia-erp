@@ -12,6 +12,7 @@ import { permissionsSearchParams, permissionsTableColumns } from '../../data';
 import { ITableListProps } from '../TableList/tableTypes.types';
 import usePermissionsActionsCreator from '../../redux/permissions/usePermissonsActionsCreator';
 import { CompanyQueryType } from '../../redux/global.types';
+import { PermissionStatus } from 'redux/permissions/permissions.types';
 
 export type CompanyTypeItem = { title: string; param: CompanyQueryType };
 const companyTypes: CompanyTypeItem[] = [
@@ -35,10 +36,10 @@ const PageHome: React.FC<any> = ({ path }: Props) => {
 
   const permissionsData = useMemo(() => {
     return permissionsService.state.permissions?.filter(pr => {
-      if (companyType?.param === 'invited') return pr.status === 'accepted' && pr.user?._id === user._id;
-      if (companyType?.param === 'invites') return pr.status === 'pending' && pr.user?._id === user._id;
+      if (companyType?.param === 'invited') return pr.status === PermissionStatus.ACCEPTED;
+      if (companyType?.param === 'invites') return pr.status === PermissionStatus.PENDING;
       if (companyType?.param === 'all') return pr;
-      return pr.owner?._id === user._id;
+      if (companyType?.param === 'own') return pr.user?._id === pr.owner?._id;
     });
   }, [companyType?.param, permissionsService.state.permissions, user._id]);
 
@@ -84,6 +85,12 @@ const PageHome: React.FC<any> = ({ path }: Props) => {
     setCompanyType(companyTypes[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useMemo(() => {
+    user._id && permissionsService.getAllByUserId({ data: { userId: user._id } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user._id]);
+
   return (
     <Page>
       <Top>

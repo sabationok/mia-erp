@@ -7,11 +7,12 @@ import {
   deletePermissionByIdThunk,
   getAllPermissionsByUserIdThunk,
   getCurrentPermissionThunk,
+  logInPermissionThunk,
   logOutPermissionThunk,
   updateCompanyWithPermissionThunk,
   updatePermissionThunk,
 } from './permissions.thunk';
-import { IPermissionForReq, IPermissionReqData, IPermissionsState } from './permissions.types';
+import { IPermission, IPermissionForReq, IPermissionReqData, IPermissionsState } from './permissions.types';
 import { useMemo } from 'react';
 import { ServiceDispatcherAsync } from 'redux/global.types';
 import { clearCurrentPermission } from './permissions.action';
@@ -32,6 +33,7 @@ export interface PermissionService {
   updateCompany: ServiceDispatcherAsync<Required<ICompanyReqData>>;
   deleteCompany: ServiceDispatcherAsync<{ _id: string }>;
   logOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean }>;
+  logIn: ServiceDispatcherAsync<{ _id: string }, IPermission>;
   isCurrentValid: boolean;
   clearCurrent: () => void;
   validatePermission?: (validateBy: ValidatePermissionOptions) => boolean;
@@ -53,7 +55,7 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
       (companyId && state.permission?.company?._id === companyId) ||
       (permissionId && state.permission?._id === permissionId) ||
       false,
-    [companyId, permissionId, state.permission?._id, state.permission?.company?._id],
+    [companyId, permissionId, state.permission?._id, state.permission?.company?._id]
   );
 
   const dispatchers = useMemo((): Omit<
@@ -69,6 +71,7 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
       getCurrent: async payload => dispatch(getCurrentPermissionThunk(defaultThunkPayload(payload))),
       permissionLogOut: async payload => dispatch(logOutPermissionThunk(defaultThunkPayload(payload))),
       logOut: async payload => dispatch(logOutPermissionThunk(defaultThunkPayload(payload))),
+      logIn: async payload => dispatch(logInPermissionThunk(defaultThunkPayload(payload))),
       clearCurrent: () => dispatch(clearCurrentPermission()),
       createCompany: async payload => dispatch(createCompanyWithPermissionThunk(defaultThunkPayload(payload))),
       deleteCompany: async payload => dispatch(deleteCompanyWithPermissionThunk(defaultThunkPayload(payload))),

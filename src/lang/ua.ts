@@ -1,4 +1,20 @@
 export const langUa = {
+  // DIRECTORIES
+  counts: 'Рахунки',
+  count: 'Рахунок',
+  categories: 'Катугорія',
+  category: 'Категорії',
+  contractor: 'Контрагент',
+  contractors: 'Контрагенти',
+  mark: 'МІтка',
+  marks: 'Мітки',
+  activityType: 'Вид діяльності',
+  activityTypes: 'Види діяльності',
+  user: 'Користувач',
+  users: 'Користувачі',
+  project: 'Проєкт',
+  projects: 'Проєкти',
+
   createDirParentItem: 'Створити батьківський елемент',
   createParentCount: 'Створити рахунок',
   createChildCount: 'Створити суб-рахунок',
@@ -22,4 +38,25 @@ export const langUa = {
   ACTIVES: 'Активи',
   PASSIVE: 'Пасив',
   PASSIVES: 'Пасиви',
+
+  success: 'Успіх',
+  successfully: 'Успішно',
+  error: 'Помилка',
+  pending: 'У процесі',
+
+  select: '',
+  selected: '',
+
+  create: '',
+  creating: '',
+  created: '',
+  update: '',
+  updating: '',
+  updated: '',
+  delete: '',
+  deleted: '',
+  deleting: '',
+  load: '',
+  loaded: '',
+  loading: '',
 };

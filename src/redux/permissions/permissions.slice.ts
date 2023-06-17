@@ -8,6 +8,7 @@ import {
   deletePermissionByIdThunk,
   getAllPermissionsByUserIdThunk,
   getCurrentPermissionThunk,
+  logInPermissionThunk,
   logOutPermissionThunk,
   updateCompanyWithPermissionThunk,
   updatePermissionThunk,
@@ -19,7 +20,7 @@ import { toast } from 'react-toastify';
 
 const initialPermissionStateState: IPermissionsState = {
   permission: {},
-  permissionToken: '',
+  permission_token: '',
   permissions: [] || testPermissions,
   isLoading: false,
   error: null,
@@ -31,10 +32,12 @@ export const permissionsSlice = createSlice({
   extraReducers: builder =>
     builder
       .addCase(getCurrentPermissionThunk.fulfilled, (state: IPermissionsState, a) => {
-        state.permission = _.omit(a.payload, 'permissionToken');
-        state.permissionToken = a.payload.permissionToken;
+        state.permission = _.omit(a.payload, 'permission_token');
+        state.permission_token = a.payload.permission_token;
       })
-      .addCase(getAllPermissionsByUserIdThunk.fulfilled, (s, a) => {})
+      .addCase(getAllPermissionsByUserIdThunk.fulfilled, (s, a) => {
+        s.permissions = a.payload;
+      })
       // .addCase(getAllPermissionsByCompanyIdThunk.fulfilled, (s, a) => {})
       .addCase(createPermissionThunk.fulfilled, (s, a) => {
         s.permissions = [a.payload, ...s.permissions];
@@ -45,16 +48,21 @@ export const permissionsSlice = createSlice({
           s.permissions = s.permissions.filter(p => p._id !== a.payload?._id);
         }
       })
+      .addCase(logInPermissionThunk.fulfilled, (s, a) => {
+        toast.success('Permission logged in');
+        s.permission = a.payload;
+        s.permission_token = a.payload.permission_token;
+      })
       .addCase(logOutPermissionThunk.fulfilled, (s, a) => {
         toast.success('Permission log out');
         s.permission = {};
-        s.permissionToken = '';
+        s.permission_token = '';
         s.error = null;
       })
       .addCase(clearCurrentPermission, (s, a) => {
         toast.success('Permission cleared');
         s.permission = {};
-        s.permissionToken = '';
+        s.permission_token = '';
       })
       .addCase(createCompanyWithPermissionThunk.fulfilled, (s, a) => {
         s.permissions = [a.payload, ...s.permissions];

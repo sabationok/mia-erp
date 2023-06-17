@@ -35,11 +35,11 @@ const usePermissionsActionsCreator = (
           type: 'onlyIcon',
           onClick: () => {
             if (selPerm?._id) {
-              service.getCurrent({
-                data: { id: selPerm?._id },
+              console.log('selPerm', selPerm);
+              service.logIn({
+                data: { _id: selPerm._id },
                 onSuccess: data => {
                   if (!data._id) return console.log('data', data);
-                  console.log('getCurrentPermission Success', data);
                   toast.success(`Current company: ${data.company?.name}`);
                   navigate(`/app/${data._id}`);
                 },

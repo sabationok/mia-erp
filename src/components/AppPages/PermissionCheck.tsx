@@ -1,8 +1,8 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import usePermissionsServiceHook from '../../redux/permissions/usePermissionsService.hook';
+import usePermissionsServiceHook, { usePermissionsSelector } from '../../redux/permissions/usePermissionsService.hook';
 import { memo, useEffect, useMemo } from 'react';
 import useAppParams from '../../hooks/useAppParams';
-import baseApi, { useBaseURLWithPermission } from '../../api/baseApi';
+import baseApi from '../../api/baseApi';
 import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 
@@ -11,13 +11,12 @@ type Props = {
 };
 const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
   const { permissionId } = useAppParams();
-  const { state, isCurrentValid, clearCurrent } = usePermissionsServiceHook({ permissionId });
-
-  useBaseURLWithPermission(state.permission?._id);
+  const state = usePermissionsSelector();
+  const { isCurrentValid, clearCurrent } = usePermissionsServiceHook({ permissionId });
 
   const havePermission = useMemo(
-    () => !!state.permissionToken && isCurrentValid,
-    [isCurrentValid, state.permissionToken]
+    () => !!state.permission._id || (!!state.permission_token && isCurrentValid),
+    [isCurrentValid, state.permission._id, state.permission_token]
   );
 
   useEffect(() => {

@@ -5,12 +5,13 @@ import { ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
 import useAppSettings from 'redux/appSettings/useAppSettings.hook';
 import GlobalStyles from './theme/globalStyles';
-import { useBaseURLWithPermission } from './api/baseApi';
+import { useBaseApiWithAccessToken, useBaseApiWithPermissionToken } from './api/baseApi';
 
 const App: React.FC = () => {
   const { isDarkMode } = useAppSettings();
 
-  useBaseURLWithPermission();
+  useBaseApiWithAccessToken();
+  useBaseApiWithPermissionToken();
 
   return (
     <>

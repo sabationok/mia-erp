@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { usePermissionsSelector } from '../redux/permissions/usePermissionsService.hook';
+import { useAuthSelector } from '../redux/selectors.store';
 
 // const mockApi = axios.create({
 //   baseURL: 'https://635ec7b303d2d4d47af5fbcd.mockapi.io/',
@@ -21,36 +22,82 @@ export const token = {
     baseApi.defaults.headers.Authorization = ``;
   },
 };
+export const permissionToken = {
+  set(token: string) {
+    baseApi.defaults.headers.Permission = `${token}`;
+  },
+  unset() {
+    baseApi.defaults.headers.Permission = ``;
+  },
+};
 
 export const baseURL = {
   setLocalhost(permissionId?: string) {
     baseApi.defaults.baseURL = permissionId ? `${BASE_URL_LOCALHOST}${permissionId}/` : BASE_URL_LOCALHOST;
+    baseApi.defaults.headers.Permission = permissionId || '';
     return baseApi;
   },
   setRailWay(permissionId?: string) {
     baseApi.defaults.baseURL = permissionId ? `${BASE_URL_RAILWAY}${permissionId}/` : BASE_URL_RAILWAY;
+    baseApi.defaults.headers.Permission = permissionId || '';
     return baseApi;
   },
 };
+export const useBaseApiWithAccessToken = () => {
+  const auth = useAuthSelector();
+
+  useEffect(() => {
+    if (auth.access_token) {
+      token.set(auth.access_token);
+      console.log('baseApi with auth token', '==//==', baseApi.defaults.headers.Authorization);
+    }
+  }, [auth.access_token]);
+  useEffect(() => {
+    if (!auth.access_token) {
+      token.unset();
+      console.log('baseApi without auth token', '==//==', baseApi.defaults.headers.Authorization);
+    }
+  }, [auth.access_token]);
+};
+export const useBaseApiWithPermissionToken = () => {
+  const { permission_token, permission } = usePermissionsSelector();
+
+  useEffect(() => {
+    if (permission._id) {
+      permissionToken.set(permission._id);
+      console.log('baseApi with permission_token token', '==//==', baseApi.defaults.headers);
+    }
+  }, [permission._id]);
+  useEffect(() => {
+    if (!permission._id) {
+      permissionToken.unset();
+      console.log('baseApi without permission_token token', '==//==', baseApi.defaults.headers);
+    }
+  }, [permission._id]);
+};
 
 export function useBaseURLWithPermission(id?: string) {
-  const isLocalhost = window.location.hostname === 'localhost';
-  const { permissionToken, permission } = usePermissionsSelector();
-  const permissionId = permission?._id;
+  const { permission_token, permission } = usePermissionsSelector();
+
+  const permissionId = permission_token || permission?._id;
+
+  const isLocalhost = useMemo(() => {
+    return window.location.hostname === 'localhost';
+  }, [window.location.hostname]);
 
   useEffect(() => {
     if (!isLocalhost) return;
-    if (permissionId || id) {
+    if (permissionId) {
       baseURL.setLocalhost(permissionId || id);
-      console.log('BaseURL WITH Permission', baseApi.defaults.baseURL);
+      console.log('BaseURL WITH Permission', baseApi.defaults.headers);
       return;
     }
-    if (!permissionId || id) {
+    if (!permissionId) {
       baseURL.setLocalhost();
-      console.log('BaseURL WITHOUT Permission', baseApi.defaults.baseURL);
+      console.log('BaseURL WITHOUT Permission', baseApi.defaults.headers);
       return;
     }
-  }, [isLocalhost, permissionId, id]);
+  }, [isLocalhost, permissionId, id, permission_token]);
 
   useEffect(() => {
     if (isLocalhost) return;
@@ -65,7 +112,7 @@ export function useBaseURLWithPermission(id?: string) {
       console.log('BaseURLWithoutPermission', baseApi.defaults.baseURL);
       return;
     }
-  }, [isLocalhost, permissionId, id]);
+  }, [isLocalhost, permissionId, id, permission_token]);
 }
 
 export default baseApi;

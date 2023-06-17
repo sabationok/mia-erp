@@ -3,7 +3,7 @@ import Header from './Header';
 import styled from 'styled-components';
 import SideBar from 'components/SideBarLeft/SideBar';
 import useAppParams from '../../hooks/useAppParams';
-import usePermissionsServiceHook from '../../redux/permissions/usePermissionsService.hook';
+import usePermissionsServiceHook, { usePermissionsSelector } from '../../redux/permissions/usePermissionsService.hook';
 
 interface ILayoutCTX {}
 
@@ -12,11 +12,13 @@ export const useLayout = () => useContext(LayoutCTX) as ILayoutCTX;
 
 const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const { permissionId } = useAppParams();
-  const {
-    state: { permissionToken },
-    isCurrentValid,
-  } = usePermissionsServiceHook({ permissionId });
-  const havePermission = useMemo(() => !!permissionToken && isCurrentValid, [isCurrentValid, permissionToken]);
+  const { permission_token, permission } = usePermissionsSelector();
+  const { isCurrentValid } = usePermissionsServiceHook({ permissionId });
+
+  const havePermission = useMemo(
+    () => !!permission._id || (!!permission_token && isCurrentValid),
+    [isCurrentValid, permission._id, permission_token]
+  );
 
   const CTX = {};
 
