@@ -10,7 +10,7 @@ export interface DirListItemProps {
   label?: string;
   type?: any;
   name?: string;
-  owner?: Partial<ICount | ICategory>;
+  parent?: Partial<ICount | ICategory>;
   balance?: number;
   currency?: string;
 }
@@ -20,13 +20,13 @@ export interface DirListItemAddsProps {
   canHaveChild: boolean;
   onDelete?: (_id: string) => void;
   onEdit?: (_id: string) => void;
-  onCreateChild?: (owner: string) => void;
+  onCreateChild?: (parent: string) => void;
 }
 
 const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
   label,
   name,
-  owner,
+  parent,
   canHaveChild,
   _id,
   list,
@@ -35,9 +35,7 @@ const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
   onCreateChild,
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const childrensList = list?.filter(
-    el => el?.owner === _id || el?.owner?._id === _id
-  );
+  const childrensList = list?.filter(el => el?.parent === _id || el?.parent?._id === _id);
 
   function onOpenClick() {
     setIsOpen(prev => !prev);
@@ -102,7 +100,7 @@ const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
         {childrensList && childrensList.length > 0 && (
           <DirList
             list={list}
-            owner={{ label, name, _id: _id || '' }}
+            parent={{ label, name, _id: _id || '' }}
             entryList={childrensList}
             onDelete={onDelete}
             onEdit={onEdit}

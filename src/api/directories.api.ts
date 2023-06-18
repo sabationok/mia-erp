@@ -1,11 +1,19 @@
 import baseApi from './baseApi';
 import { ITransactionRes } from 'redux/transactions/transactions.types';
-import APP_CONFIGS, { ApiDirType } from '../redux/APP_CONFIGS';
+import APP_CONFIGS, { ApiDirType, Endpoints } from '../redux/APP_CONFIGS';
 import { IAllCategoriesRes } from '../redux/categories/categoriesThunks';
 import { ICategory } from '../redux/categories/categories.types';
 import { AppResponse } from '../redux/global.types';
+import { IBaseDirItem } from '../components/Directories/dir.types';
+import { AppQueryParams } from './index';
+
+type GetAllByDirTypeOptions = Required<Pick<AppQueryParams, 'dirType'>> & {
+  params?: Pick<AppQueryParams, 'isArchived' | 'createTreeData'>;
+};
 
 export interface ICategoryRes extends AppResponse<ICategory> {}
+
+export interface IDirRes<RD = any> extends AppResponse<RD> {}
 
 export default class DirectoriesApi {
   private static api = baseApi;
@@ -27,11 +35,26 @@ export default class DirectoriesApi {
     return this.api.delete(this.endpoints.deleteById(ApiDirType.categories, id));
   }
 
-  // public static async getById(id: string): Promise<ITransactionRes> {
-  //   return this.api.get(this.endpoints.getById(id));
-  // }
-  //
-  // public static async deleteById(id: string): Promise<ITransactionRes> {
-  //   return this.api.delete(this.endpoints.deleteById(id));
-  // }
+  public static async create<DTO = any, RD = IBaseDirItem>({
+    dirType,
+    dto,
+  }: {
+    dirType: ApiDirType;
+    dto: DTO;
+  }): Promise<IDirRes<RD>> {
+    return this.api.post(this.endpoints[Endpoints.create](dirType), dto);
+  }
+
+  public static async getAllByDirType<RD = IBaseDirItem>({
+    dirType,
+    params,
+  }: GetAllByDirTypeOptions): Promise<IDirRes<RD[]>> {
+    return this.api.get(this.endpoints[Endpoints.getAll](dirType), {
+      params: {
+        ...params,
+        isArchived: false,
+        createTreeData: false,
+      },
+    });
+  }
 }

@@ -1,35 +1,33 @@
 import ModalForm, { ModalFormProps } from 'components/ModalForm';
-import {
-  CategoriesTypesMap,
-  CategoryTypes,
-  ICategory,
-  ICategoryFormData,
-} from 'redux/categories/categories.types';
+import { CategoryTypes, ICategory, ICategoryFormData } from 'redux/categories/categories.types';
 import React from 'react';
 import styled from 'styled-components';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
+import t from '../../../lang';
 
-export interface FormCreateCategoryProps
-  extends Omit<ModalFormProps, 'onSubmit'> {
+export interface FormCreateCategoryProps extends Omit<ModalFormProps, 'onSubmit'> {
   _id?: string;
   type: CategoryTypes;
   category?: ICategory;
-  owner?: Partial<ICategory>;
+  parent?: Partial<ICategory>;
   edit?: boolean;
   onSubmit?: (data: ICategoryFormData) => void;
 }
 
-const validation = yup.object().shape({});
+const validation = yup.object().shape({
+  label: yup.string().required(),
+  description: yup.string().max(250).optional(),
+});
 
 const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
   _id,
   type,
-  owner,
+  parent,
   edit,
   category,
   onSubmit,
@@ -39,46 +37,36 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
     formState: { errors },
     register,
     handleSubmit,
-    getValues,
   } = useForm<ICategoryFormData>({
     defaultValues: {
       ...category,
       type,
-      owner: owner?._id || null,
+      parent: parent?._id || null,
     },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
 
-  function formEventWrapper(evHandler?: (args: any) => void, args?: any) {
+  function formEventWrapper(evHandler?: SubmitHandler<ICategoryFormData>) {
     if (evHandler) {
       return handleSubmit(evHandler);
     }
   }
 
   return (
-    <ModalForm onSubmit={formEventWrapper(onSubmit, getValues())} {...props}>
+    <ModalForm onSubmit={formEventWrapper(onSubmit)} draggable {...props}>
       <Inputs>
-        <InputLabel label="Тип" error={errors.type} disabled>
-          <InputText
-            {...register('type')}
-            value={CategoriesTypesMap[type]}
-            disabled
-          />
+        <InputLabel label={t('type')} direction={'vertical'} error={errors.type} disabled>
+          <InputText defaultValue={t(`${type}S`).toUpperCase()} disabled />
         </InputLabel>
 
-        <InputLabel label="Назва" error={errors.label}>
-          <InputText placeholder="Введіть назву" {...register('label')} />
+        <InputLabel label={t('label')} direction={'vertical'} error={errors.label}>
+          <InputText placeholder={t('insertLabel')} {...register('label')} />
         </InputLabel>
 
-        <InputLabel label="Коментар" error={errors.description}>
-          <TextareaPrimary
-            placeholder="Введіть коментар"
-            {...register('description')}
-          />
+        <InputLabel label={t('comment')} direction={'vertical'} error={errors.description}>
+          <TextareaPrimary placeholder={t('insertComment')} {...register('description')} maxLength={250} />
         </InputLabel>
-
-        {/* <TextareaPrimary label="Опис" name="descr" onChange={onFormDataChange} placeholder="Введіть опис" /> */}
       </Inputs>
     </ModalForm>
   );

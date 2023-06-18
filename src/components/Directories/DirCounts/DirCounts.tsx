@@ -28,7 +28,7 @@ const DirCounts: React.FC<DirCountsProps> = props => {
     modal.handleOpenModal<FormCreateCountProps>({
       ModalChildren: FormCreateCount,
       modalChildrenProps: {
-        title: `Редагування ${count?.owner ? 'суб-рахунку' : 'рахунку'}: "${count?.label || count?.name}"`,
+        title: `Редагування ${count?.parent ? 'суб-рахунку' : 'рахунку'}: "${count?.label || count?.name}"`,
         _id,
         type: dirType,
         onSubmit: data => {
@@ -39,14 +39,14 @@ const DirCounts: React.FC<DirCountsProps> = props => {
     });
   }
 
-  function onCreateChild(owner?: string) {
+  function onCreateChild(parent?: string) {
     modal.handleOpenModal<FormCreateCountProps>({
       ModalChildren: FormCreateCount,
       modalChildrenProps: {
         title: 'Створення субрахунку',
         type: dirType,
         onSubmit: data => {
-          create({ data: { ...data, owner } });
+          create({ data: { ...data, parent } });
         },
         create: true,
       },
@@ -70,7 +70,7 @@ const DirCounts: React.FC<DirCountsProps> = props => {
     const count = getById(_id);
     if (
       count &&
-      window.confirm(`Видалити ${count?.owner ? 'суб-рахунок' : 'рахунок'}: "${count?.label || count?.name}"`)
+      window.confirm(`Видалити ${count?.parent ? 'суб-рахунок' : 'рахунок'}: "${count?.label || count?.name}"`)
     ) {
       deleteById({ data: { _id } });
     }
@@ -90,7 +90,7 @@ const DirCounts: React.FC<DirCountsProps> = props => {
       }),
     [counts, dirType]
   );
-  const entryList = useMemo(() => data.filter(el => !el?.owner), [data]);
+  const entryList = useMemo(() => data.filter(el => !el?.parent), [data]);
 
   return (
     <StModalForm {...props} onOptSelect={handleFilterData}>

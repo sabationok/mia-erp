@@ -3,16 +3,17 @@ import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { ICategoriesState } from './categoriesSlice';
 import { ServiceDispatcher } from '../global.types';
 import { useMemo } from 'react';
-import { getAllCategoriesThunk } from './categoriesThunks';
-import { ICategory } from './categories.types';
+import { createCategoryThunk, getAllCategoriesThunk } from './categoriesThunks';
+import { ICategory, ICategoryFormData } from './categories.types';
 import { defaultThunkPayload } from '../../utils/fabrics';
+import { AppQueryParams } from '../../api';
 
 interface CategoriesServiceDispatchers {
-  create: ServiceDispatcher<Partial<ICategory>>;
+  create: ServiceDispatcher<ICategoryFormData>;
   deleteById: ServiceDispatcher<{ _id: string }>;
-  editById: ServiceDispatcher<{ _id: string; newData: Partial<ICategory> }>;
+  editById: ServiceDispatcher<{ _id: string; data: ICategoryFormData }>;
   getById: ServiceDispatcher<{ _id: string }>;
-  getAll: () => void;
+  getAll: ServiceDispatcher<Pick<AppQueryParams, 'isArchived' | 'createTreeData'> | undefined>;
 }
 
 interface CategoriesService extends CategoriesServiceDispatchers {
@@ -27,10 +28,7 @@ const useCategoriesService = (): CategoriesService => {
 
   const dispatchers = useMemo((): CategoriesServiceDispatchers => {
     return {
-      create: payload =>
-        dispatch(() => {
-          defaultThunkPayload(payload);
-        }),
+      create: payload => dispatch(createCategoryThunk(defaultThunkPayload({ ...payload, logAll: true }))),
       deleteById: payload =>
         dispatch(() => {
           defaultThunkPayload(payload);
@@ -43,7 +41,7 @@ const useCategoriesService = (): CategoriesService => {
         dispatch(() => {
           defaultThunkPayload(payload);
         }),
-      getAll: () => dispatch(getAllCategoriesThunk({})),
+      getAll: payload => dispatch(getAllCategoriesThunk(defaultThunkPayload(payload))),
     };
   }, [dispatch]);
 

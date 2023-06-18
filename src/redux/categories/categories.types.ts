@@ -1,17 +1,10 @@
-import { IBase } from '../global.types';
+import { IBaseDirItem } from '../../components/Directories/dir.types';
+import { ApiDirType } from '../APP_CONFIGS';
 
-export interface ICategory extends IBase {
-  name?: string;
-  label?: string;
-  type?: CategoryTypes;
-  description?: string;
-  def?: string;
-  owner?: ICategory;
-}
+export interface ICategory extends IBaseDirItem<CategoryTypes, ApiDirType.categories> {}
 
-export interface ICategoryFormData
-  extends Omit<ICategory, '_id' | 'createdAt' | 'updatedAt' | 'owner'> {
-  owner?: string | null;
+export interface ICategoryFormData extends Omit<ICategory, '_id' | 'createdAt' | 'updatedAt' | 'parent'> {
+  parent?: string | null;
 }
 
 export const CategoriesTypesMap = {

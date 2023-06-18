@@ -45,15 +45,15 @@ function defaultThunkPayload<SD extends FieldValues = any, RD = any, E = any>({
 }: CreateThunkPayloadOptions<SD, RD, E> = {}): ThunkPayload<SD, RD, E> {
   return {
     onSuccess: (d: RD) => {
-      (logAll || logData) && console.log('createSubmitHandlerWithPayload onSuccess', d);
+      (logAll || logData) && console.log('defaultThunkPayload onSuccess', d);
       onSuccess && onSuccess(d);
     },
     onError: (e: E) => {
-      (logAll || logError) && console.log('createSubmitHandlerWithPayload onError', e);
+      (logAll || logError) && console.log('defaultThunkPayload onError', e);
       onError && onError(e);
     },
     onLoading(l) {
-      (logAll || logLoading) && console.log('createSubmitHandlerWithPayload onLoading', l);
+      (logAll || logLoading) && console.log('defaultThunkPayload onLoading', l);
       onLoading && onLoading(l);
     },
     submitData: data,

@@ -2,11 +2,11 @@ export const langUa = {
   // DIRECTORIES
   counts: 'Рахунки',
   count: 'Рахунок',
-  categories: 'Катугорія',
+  categories: 'Категорія',
   category: 'Категорії',
   contractor: 'Контрагент',
   contractors: 'Контрагенти',
-  mark: 'МІтка',
+  mark: 'Мітка',
   marks: 'Мітки',
   activityType: 'Вид діяльності',
   activityTypes: 'Види діяльності',
@@ -14,6 +14,13 @@ export const langUa = {
   users: 'Користувачі',
   project: 'Проєкт',
   projects: 'Проєкти',
+
+  name: "Ім'я",
+  type: 'Тип',
+  label: 'Назва',
+  insertLabel: 'Введіть назву',
+  comment: 'Коментар',
+  insertComment: 'Введіть коментар',
 
   createDirParentItem: 'Створити батьківський елемент',
   createParentCount: 'Створити рахунок',

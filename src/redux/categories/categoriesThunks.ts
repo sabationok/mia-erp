@@ -1,38 +1,45 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ICategory } from 'redux/categories/categories.types';
+import { ICategory, ICategoryFormData } from 'redux/categories/categories.types';
 import { axiosErrorCheck } from 'utils';
 import { ThunkPayload } from '../store.store';
 import { AppResponse } from '../global.types';
-import { DirectoriesApi } from '../../api';
+import { AppQueryParams, DirectoriesApi } from '../../api';
+import { ApiDirType } from '../APP_CONFIGS';
 
 // import { token } from '../../services/baseApi';
 
 export interface IAllCategoriesRes extends AppResponse<ICategory[]> {}
 
-export const getAllCategoriesThunk = createAsyncThunk<ICategory[], ThunkPayload>(
-  'categories/getAllCategoriesThunk',
-  async ({ onSuccess, onError }, thunkAPI) => {
-    try {
-      const response = await DirectoriesApi.getAllCategories();
+export const getAllCategoriesThunk = createAsyncThunk<
+  ICategory[],
+  ThunkPayload<Pick<AppQueryParams, 'isArchived' | 'createTreeData'> | undefined>
+>('categories/getAllCategoriesThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
+  try {
+    const response = await DirectoriesApi.getAllByDirType<ICategory>({
+      dirType: ApiDirType.CATEGORIES_TR,
+      params: data,
+    });
 
-      if (response && onSuccess) {
-        onSuccess(response.data.data);
-      }
-
-      return response.data.data;
-    } catch (error) {
-      onError && onError(error);
-
-      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+    if (response && onSuccess) {
+      onSuccess(response.data.data);
     }
-  }
-);
 
-export const createCategoryThunk = createAsyncThunk<ICategory, ThunkPayload>(
+    return response.data.data;
+  } catch (error) {
+    onError && onError(error);
+
+    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+  }
+});
+
+export const createCategoryThunk = createAsyncThunk<ICategory, ThunkPayload<ICategoryFormData>>(
   'categories/createCategoryThunk',
   async ({ onSuccess, onError, data }, thunkAPI) => {
     try {
-      const response = await DirectoriesApi.createCategory(data);
+      const response = await DirectoriesApi.create<ICategoryFormData, ICategory>({
+        dirType: ApiDirType.CATEGORIES_TR,
+        dto: data || {},
+      });
 
       if (response && onSuccess) {
         onSuccess(response.data.data);

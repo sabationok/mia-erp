@@ -1,13 +1,14 @@
 import ModalForm, { ModalFormProps } from 'components/ModalForm';
 import styled from 'styled-components';
-import { CountsTypesMap, CountType, ICount } from 'redux/counts/counts.types';
+import { CountType, ICount } from 'redux/counts/counts.types';
 import React, { useState } from 'react';
 import InputTextPrimary from 'components/atoms/Inputs/InputTextPrimary';
 import { SubmitHandler } from 'react-hook-form';
+import translate from '../../../lang';
 
 export interface FormCreateCountProps extends Omit<ModalFormProps, 'onSubmit'> {
   _id?: string;
-  owner?: Partial<ICount>;
+  parent?: Partial<ICount>;
   type: CountType;
   edit?: boolean;
   create?: boolean;
@@ -15,12 +16,12 @@ export interface FormCreateCountProps extends Omit<ModalFormProps, 'onSubmit'> {
   onSubmit?: SubmitHandler<CountFormData>;
 }
 
-export interface CountFormData extends Omit<ICount, '_id' | 'createdAt' | 'updatedAt' | 'owner'> {
-  owner?: string | null;
+export interface CountFormData extends Omit<ICount, '_id' | 'createdAt' | 'updatedAt' | 'parent'> {
+  parent?: string | null;
 }
 
 const FormCreateCount: React.FC<FormCreateCountProps> = ({
-  owner,
+  parent,
   create,
   type,
   count,
@@ -29,7 +30,7 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
   onSubmit,
   ...props
 }) => {
-  const [formData, setFormData] = useState<CountFormData | undefined>({ ...count, type, owner: owner?._id || null });
+  const [formData, setFormData] = useState<CountFormData | undefined>({ ...count, type, parent: parent?._id || null });
 
   function onFormDataChange(ev: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = ev.target;
@@ -49,7 +50,7 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
   return (
     <ModalForm onSubmit={formEventWrapper(onSubmit, formData)} {...props}>
       <Inputs>
-        <InputTextPrimary label="Тип" name="type" placeholder={CountsTypesMap[type]} disabled />
+        <InputTextPrimary label="Тип" name="type" placeholder={translate(type)} disabled />
 
         <InputTextPrimary
           label="Назва"
@@ -74,7 +75,7 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
           name="descr"
           placeholder="Введіть коментар"
           onChange={onFormDataChange}
-          value={formData?.descr ? formData?.descr : ''}
+          value={formData?.description ? formData?.description : ''}
         />
       </Inputs>
     </ModalForm>

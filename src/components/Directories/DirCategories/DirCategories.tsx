@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import ModalForm from 'components/ModalForm';
 import DirList from '../DirList/DirList';
 import { founder } from 'utils';
@@ -8,7 +8,8 @@ import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FormCreateCategory from './FormCreateCategory';
 import { CategoryFilterOpt, DirBaseProps } from '../dir.types';
 import { defaultThunkPayload } from '../../../utils/fabrics';
-import translate from '../../../lang';
+import t from '../../../lang';
+import { toast } from 'react-toastify';
 
 export interface DirCategoriesProps extends DirBaseProps {
   filterOptions?: CategoryFilterOpt[];
@@ -16,6 +17,7 @@ export interface DirCategoriesProps extends DirBaseProps {
 
 const DirCategories: React.FC<DirCategoriesProps> = props => {
   const modal = useModalProvider();
+
   const {
     state: { categories },
     create,
@@ -23,60 +25,83 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
     editById,
     findById,
   } = useCategoriesService();
-  const [dirType, setDirType] = useState<CategoryTypes>('INCOME');
-
-  // const [selectedList, setSelectedList] = useState<string[]>();
+  const [current, setCurrent] = useState<CategoryTypes>('INCOME');
 
   function onEdit(_id?: string) {
     const category = findById(_id);
-    modal.handleOpenModal({
+    const { id } = modal.handleOpenModal({
       ModalChildren: FormCreateCategory,
       modalChildrenProps: {
-        title: `Редагувати ${category?.owner ? 'під-категорію' : 'категорію'} "${category?.label || category?.name}"`,
+        title: `${t(category?.owner ? 'editChildCategory' : 'editParentCategory')} "${
+          category?.label || category?.name
+        }"`,
         category: categories.find(el => el._id === _id),
         edit: true,
-        type: dirType,
-        onSubmit: submitData => _id && submitData && editById({ data: { _id, newData: {} } }),
+        type: current,
+        onSubmit: data =>
+          _id &&
+          editById({
+            data: { _id, data },
+            onSuccess: () => {
+              toast.success('Edited successfully');
+              console.log('modalId', id);
+              modal.handleCloseModal(id);
+            },
+          }),
       },
     });
   }
 
-  function onCreateChild(ownerId?: string) {
+  function onCreateChild(parent?: string) {
     modal.handleOpenModal({
       ModalChildren: FormCreateCategory,
       modalChildrenProps: {
-        title: 'Створити під-категорію',
-        type: dirType,
-        onSubmit: submitData => create(defaultThunkPayload()),
+        title: t('createChildCategory'),
+        type: current,
+        onSubmit: data => create({ data: { ...data, parent } }),
       },
     });
   }
 
   function onCreateParent() {
-    modal.handleOpenModal({
+    const { id } = modal.handleOpenModal({
       ModalChildren: FormCreateCategory,
       modalChildrenProps: {
-        title: 'Створити категорію',
-        type: dirType,
-        onSubmit: data => create({}),
+        title: t('createParentCategory'),
+        type: current,
+        onSubmit: data => {
+          create({
+            data,
+            onSuccess: data => {
+              console.log(data);
+              console.log('modalId', id);
+              modal.handleCloseModal(id);
+              toast.success('Created successfully');
+            },
+          });
+        },
       },
     });
   }
 
   function handleFilterData({ value }: CategoryFilterOpt) {
-    value && setDirType(value);
+    value && setCurrent(value);
   }
 
   const filteredData = useMemo(
     () =>
       founder<ICategory>({
         searchParam: 'type',
-        searchQuery: dirType,
+        searchQuery: current,
         data: categories,
-      }) || [],
-    [categories, dirType]
+      }),
+    [categories, current]
   );
   const entryList = useMemo(() => filteredData.filter(el => !el?.owner), [filteredData]);
+
+  useEffect(() => {
+    console.log(modal.modalContent);
+  }, [modal.modalContent]);
 
   return (
     <ModalForm {...props} onOptSelect={handleFilterData}>
@@ -86,7 +111,7 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
         onDelete={_id => deleteById(defaultThunkPayload({ data: { _id: '' } }))}
         onEdit={onEdit}
         onCreateChild={onCreateChild}
-        createParentTitle={translate('createParentCategory')}
+        createParentTitle={t('createParentCategory')}
         onCreateParent={onCreateParent}
         currentLevel={0}
       />

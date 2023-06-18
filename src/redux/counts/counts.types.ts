@@ -1,22 +1,17 @@
-import { AppResponse, IBase } from '../global.types';
+import { AppResponse } from '../global.types';
+import { IBaseDirItem } from '../../components/Directories/dir.types';
+import { ApiDirType } from '../APP_CONFIGS';
 
-export interface ICount extends IBase {
-  name?: string;
-  label?: string;
+export interface ICount extends IBaseDirItem<CountType, ApiDirType.counts> {
   balance?: number;
-  type?: CountType;
   code?: number | string;
-  descr?: string;
-  def?: string;
-  owner?: ICount;
 }
 
+export type CountType = 'PASSIVE' | 'ACTIVE';
 export const CountsTypesMap = {
   PASSIVE: 'ПАСИВНИЙ',
   ACTIVE: 'АКТИВНИЙ',
 };
-
-export type CountType = keyof typeof CountsTypesMap;
 
 export interface IGetAllCountsRes extends AppResponse<ICount[]> {}
 

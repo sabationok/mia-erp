@@ -1,9 +1,6 @@
 import ButtonIcon from 'components/atoms/ButtonIcon';
 import React, { useMemo } from 'react';
-import DirListItem, {
-  DirListItemAddsProps,
-  DirListItemProps,
-} from './DirListItem';
+import DirListItem, { DirListItemAddsProps, DirListItemProps } from './DirListItem';
 import { ICategory } from 'redux/categories/categories.types';
 import { ICount } from 'redux/counts/counts.types';
 import styled, { useTheme } from 'styled-components';
@@ -12,18 +9,16 @@ import { ConfigProvider } from 'antd';
 export interface DirListProps extends Partial<DirListItemAddsProps> {
   list: DirListItemProps[];
   entryList?: DirListItemProps[];
-  owner?: Partial<ICount | ICategory>;
+  parent?: Partial<ICount | ICategory>;
   onCreateParent?: (...args: any[]) => void;
   createParentTitle?: string;
   currentLevel?: number;
 }
 
-const DirList: React.FC<
-  DirListProps & React.HTMLAttributes<HTMLDivElement>
-> = ({
+const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLDivElement>> = ({
   entryList,
   list,
-  owner,
+  parent,
   onDelete,
   onEdit,
   onCreateChild,
@@ -32,10 +27,7 @@ const DirList: React.FC<
   currentLevel,
 }) => {
   const appTheme = useTheme();
-  const listForRender = useMemo(
-    () => (entryList ? entryList : list),
-    [entryList, list]
-  );
+  const listForRender = useMemo(() => (entryList ? entryList : list), [entryList, list]);
 
   const renderList = useMemo(
     () =>
@@ -43,25 +35,21 @@ const DirList: React.FC<
         <DirListItem
           key={item?._id || idx}
           {...item}
-          owner={owner && owner}
+          parent={parent && parent}
           onDelete={onDelete}
           onEdit={onEdit}
           onCreateChild={onCreateChild}
-          canHaveChild={!item.owner}
+          canHaveChild={!item.parent}
           list={list}
         />
       )),
-    [list, listForRender, onCreateChild, onDelete, onEdit, owner]
+    [list, listForRender, onCreateChild, onDelete, onEdit, parent]
   );
 
   return (
     <Box>
       <ListBox style={{ padding: currentLevel === 0 ? '0 12px' : '' }}>
-        {listForRender.length > 0 ? (
-          <List>{renderList}</List>
-        ) : (
-          <EmptyList>Список порожній</EmptyList>
-        )}
+        {listForRender.length > 0 ? <List>{renderList}</List> : <EmptyList>Список порожній</EmptyList>}
       </ListBox>
 
       {onCreateParent && (
@@ -76,11 +64,7 @@ const DirList: React.FC<
               },
             }}
           >
-            <ButtonIcon
-              variant="outlinedSmall"
-              type={'default'}
-              onClick={onCreateParent}
-            >
+            <ButtonIcon variant="outlinedSmall" type={'default'} onClick={onCreateParent}>
               {createParentTitle || 'Create parent'}
             </ButtonIcon>
           </ConfigProvider>

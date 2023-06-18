@@ -31,6 +31,14 @@ export enum ApiDirType {
   contractors = 'contractors',
   categories = 'categories',
   projects = 'projects',
+  CATEGORIES_TR = 'categories_tr',
+  CATEGORIES_PROD = 'categories_prod',
+  CONTRACTORS = 'contractors',
+  DOCUMENTS = 'documents',
+  PROJECTS = 'projects',
+  ACTIVITIES = 'activities',
+  COUNTS = 'counts',
+  MARKS = 'marks',
 }
 
 const TRANSACTIONS_API_BASENAME = '/transactions';
@@ -84,6 +92,7 @@ const directoriesApiEndpoints = {
     `${API_BASE_ROUTES.DIRECTORIES}/${dirType}/${Endpoints.updateById}/${id}`,
   [Endpoints.getById]: (dirType: ApiDirType, id: string) =>
     `${API_BASE_ROUTES.DIRECTORIES}/${dirType}/${Endpoints.getById}/${id}`,
+  [Endpoints.getAll]: (dirType: ApiDirType) => `${API_BASE_ROUTES.DIRECTORIES}/${dirType}/${Endpoints.create}`,
 };
 
 const APP_CONFIGS = {
