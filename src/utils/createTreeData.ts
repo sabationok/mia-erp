@@ -86,9 +86,7 @@ export async function createTreeDataMapById<T = any>(
         })
       );
     }
-    console.log('createTreeDataMapById root', root);
 
-    console.log('createTreeDataMapById rootMap', rootMap);
     onSuccess && onSuccess(rootMap);
     return rootMap;
   } catch (e) {

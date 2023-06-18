@@ -20,12 +20,19 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         disabled: !ctx.selectedRow?._id,
         type: 'onlyIcon',
         onClick: () => {
-          modal.handleOpenModal({
+          const m = modal.handleOpenModal({
             ModalChildren: TransactionForm,
             modalChildrenProps: {
               title: 'Редагування транзакції',
               filterOptions,
-              onSubmitEdit: service.editById,
+              onSubmitEdit: () => {
+                m?.onClose();
+                service.editById({
+                  onSuccess(d) {
+                    m?.onClose();
+                  },
+                });
+              },
               fillHeight: true,
             },
           });
@@ -38,12 +45,19 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         type: 'onlyIcon',
         disabled: !ctx.selectedRow?._id,
         onClick: () => {
-          modal.handleOpenModal({
+          const m = modal.handleOpenModal({
             ModalChildren: TransactionForm,
             modalChildrenProps: {
               title: 'Копіювання транзакції',
               filterOptions,
-              onSubmit: service.create,
+              onSubmit: () => {
+                m?.onClose();
+                service.create({
+                  onSuccess(d) {
+                    m?.onClose();
+                  },
+                });
+              },
               fillHeight: true,
             },
           });
@@ -74,14 +88,21 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         type: 'onlyIconFilled',
         disabled: false,
         onClick: () => {
-          modal.handleOpenModal({
+          const m = modal.handleOpenModal({
             ModalChildren: TransactionForm,
             modalChildrenProps: {
               title: 'Створити нову',
               filterOptions,
               defaultOption: 0,
               defaultState: { type: 'INCOME' },
-              onSubmit: service.create,
+              onSubmit: data => {
+                m?.onClose();
+                service.create({
+                  onSuccess(d) {
+                    m?.onClose();
+                  },
+                });
+              },
               fillHeight: true,
             },
           });
@@ -95,14 +116,23 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         type: 'onlyIconFilled',
         disabled: false,
         onClick: () => {
-          modal.handleOpenModal({
+          const m = modal.handleOpenModal({
             ModalChildren: TransactionForm,
             modalChildrenProps: {
               title: 'Створити нову',
               filterOptions,
               defaultOption: 1,
               defaultState: { type: 'TRANSFER' },
-              onSubmit: service.create,
+              onSubmit: d => {
+                m?.onClose();
+
+                service.create({
+                  data: { data: d },
+                  onSuccess(d) {
+                    m?.onClose();
+                  },
+                });
+              },
               fillHeight: true,
             },
           });
@@ -116,14 +146,21 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         type: 'onlyIconFilled',
         disabled: false,
         onClick: () => {
-          modal.handleOpenModal({
+          const m = modal.handleOpenModal({
             ModalChildren: TransactionForm,
             modalChildrenProps: {
-              title: 'Створити нову',
+              title: 'Створити',
               filterOptions,
               defaultOption: 2,
               defaultState: { type: 'EXPENSE' },
-              onSubmit: service.create,
+              onSubmit: d => {
+                m?.onClose();
+                service.create({
+                  onSuccess(d) {
+                    m?.onClose();
+                  },
+                });
+              },
               fillHeight: true,
             },
           });
@@ -136,6 +173,5 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
 };
 
 export type useTrActionsCreatorHookType = typeof useTrActionsCreator;
-// export type UseTrActionsCreatorHookType=type
 
 export { useTrActionsCreator };

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useCallback, useMemo } from 'react';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import styled from 'styled-components';
-import { ITransaction } from 'redux/transactions/transactions.types';
+import { ITransaction, ITransactionForReq } from 'redux/transactions/transactions.types';
 import { CategoryTypes } from 'redux/categories/categories.types';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
@@ -14,10 +14,8 @@ import { FilterOpt } from '../ModalForm/ModalFilter';
 import CustomSelect, { CustomSelectProps } from '../atoms/Inputs/CustomSelect';
 import { createTransactionForReq } from '../../utils';
 import { useAppSelector } from '../../redux/store.store';
-import { TransactionsService } from '../../redux/transactions/useTransactionsService.hook';
 import useTreeDataCreatorHook from '../../hooks/useTreeDataCreator.hook';
 import FlexBox from '../atoms/FlexBox';
-import { createThunkPayload } from '../../utils/fabrics';
 import { IBaseDirItem } from '../Directories/dir.types';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
@@ -26,8 +24,8 @@ export interface TransactionFormProps extends Omit<ModalFormProps, 'onSubmit'> {
   edit?: boolean;
   copy?: boolean;
   id?: string;
-  onSubmit?: TransactionsService['create'];
-  onSubmitEdit?: TransactionsService['editById'];
+  onSubmit?: (data: ITransactionForReq) => void;
+  onSubmitEdit?: (_id: string, data: ITransactionForReq) => void;
   filterOptions?: TransactionsFilterOpt[];
   defaultState?: Partial<ITransaction>;
 }
@@ -208,22 +206,19 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
 
     console.log('trReqData', trReqData);
 
-    onSubmit && onSubmit(createThunkPayload({ data: trReqData }));
+    onSubmit && onSubmit(trReqData);
 
     if (onSubmitEdit && defaultState?._id) {
-      onSubmitEdit(
-        createThunkPayload({
-          _id: defaultState?._id,
-          data: trReqData,
-        })
-      );
+      onSubmitEdit(defaultState?._id, trReqData);
       return;
     }
   }
 
   return (
     <ModalForm
-      onSubmit={handleSubmit(onValidSubmit)}
+      onSubmit={handleSubmit(onValidSubmit, data => {
+        console.log(data);
+      })}
       onOptSelect={({ value }) => value && setValue('type', value)}
       {...props}
     >

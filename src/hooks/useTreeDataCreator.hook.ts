@@ -43,7 +43,6 @@ const useTreeDataCreatorHook = <T = ICategory | ICount>({
   useMemo(() => {
     createTreeDataMapById<T>(dataList, {
       onSuccess: data => {
-        console.log('treeData:', data);
         setState(prev => ({ ...prev, treeData: data }));
       },
       onError: error => setState(prev => ({ ...prev, error })),
