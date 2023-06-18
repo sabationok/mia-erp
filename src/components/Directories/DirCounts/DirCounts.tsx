@@ -7,25 +7,28 @@ import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FormCreateCount, { FormCreateCountProps } from './FormCreateCount';
 import { CountFilterOpt, DirBaseProps } from '../dir.types';
 import translate from '../../../lang';
+import t from '../../../lang';
 import { useEntryListData, useFilteredLisData } from '../../../hooks';
+import { toast } from 'react-toastify';
 
 export interface DirCountsProps extends DirBaseProps {
   filterOptions: CountFilterOpt[];
 }
 
 const DirCounts: React.FC<DirCountsProps> = props => {
-  const modal = useModalProvider();
+  const modals = useModalProvider();
   const {
     state: { counts },
     create,
     deleteById,
-    getById,
+    getAll,
+    findById,
   } = useCountsService();
   const [current, setDirType] = useState<CountType>('ACTIVE');
 
   function onEdit(_id: string) {
-    const count = getById(_id);
-    modal.handleOpenModal<FormCreateCountProps>({
+    const count = findById(_id);
+    modals.handleOpenModal<FormCreateCountProps>({
       ModalChildren: FormCreateCount,
       modalChildrenProps: {
         title: `Редагування ${count?.parent ? 'суб-рахунку' : 'рахунку'}: "${count?.label || count?.name}"`,
@@ -39,42 +42,84 @@ const DirCounts: React.FC<DirCountsProps> = props => {
     });
   }
 
-  function onCreateChild(parent?: string) {
-    modal.handleOpenModal<FormCreateCountProps>({
+  // function onCreateChild(parent?: string) {
+  //   modal.handleOpenModal<FormCreateCountProps>({
+  //     ModalChildren: FormCreateCount,
+  //     modalChildrenProps: {
+  //       title: translate('createChildCount'),
+  //       type: current,
+  //       onSubmit: data => {
+  //         create({ data: { ...data, parent } });
+  //       },
+  //       create: true,
+  //     },
+  //   });
+  // }
+  //
+  // function onCreateParent() {
+  //   modal.handleOpenModal({
+  //     ModalChildren: FormCreateCount,
+  //     modalChildrenProps: {
+  //       title: translate('createParentCount'),
+  //       type: current,
+  //       onSubmit: data => {
+  //         create({ data });
+  //       },
+  //     },
+  //   });
+  // }
+
+  function onCreateChild(parent: string) {
+    const modal = modals.handleOpenModal({
       ModalChildren: FormCreateCount,
       modalChildrenProps: {
-        title: translate('createChildCount'),
+        title: t('createChildCount'),
         type: current,
+        parent: findById(parent),
         onSubmit: data => {
-          create({ data: { ...data, parent } });
+          create({
+            data: { ...data, parent },
+            onSuccess(rd) {
+              toast.success(`New count: ${rd.label}`);
+              modal?.onClose();
+            },
+          });
         },
-        create: true,
       },
     });
   }
 
   function onCreateParent() {
-    modal.handleOpenModal({
+    const modal = modals.handleOpenModal({
       ModalChildren: FormCreateCount,
       modalChildrenProps: {
-        title: translate('createParentCount'),
+        title: t('createParentCount'),
         type: current,
         onSubmit: data => {
-          create({ data });
+          create({
+            data,
+            onSuccess: rd => {
+              modal?.onClose();
+
+              toast.success(`New count: ${rd.label}`);
+            },
+          });
         },
       },
     });
   }
 
   function onDelete(_id: string) {
-    const count = getById(_id);
-
-    if (
-      count &&
-      window.confirm(`Видалити ${count?.parent ? 'суб-рахунок' : 'рахунок'}: "${count?.label || count?.name}"`)
-    ) {
-      deleteById({ data: { _id } });
-    }
+    if (window.confirm(`Delete item`))
+      deleteById({
+        data: { _id },
+        onSuccess(data) {
+          toast.success(`Deleted count: ${data?.label}`);
+          if (data?.deletedChildrens) {
+            toast.info(`Deleted children for ${data?.label}: ${data.deletedChildrens}`);
+          }
+        },
+      });
   }
 
   const fd = useFilteredLisData({

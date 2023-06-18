@@ -3,7 +3,7 @@ import { ITransaction } from '../redux/transactions/transactions.types';
 import { useCallback } from 'react';
 import { CustomSelectProps } from '../components/atoms/Inputs/CustomSelect';
 
-export const useRegisterTrSelect = (
+export const useRegisterTrSelectHook = (
   setValue: UseFormSetValue<ITransaction>,
   formValues: ITransaction,
   unregister: UseFormUnregister<ITransaction>

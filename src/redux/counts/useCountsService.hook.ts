@@ -1,24 +1,30 @@
 import { useCountsSelector } from 'redux/selectors.store';
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
-import { ServiceDispatcher } from '../global.types';
+import { ServiceDispatcherAsync } from '../global.types';
 import { ICountsState } from './counts.slice';
 import { useMemo } from 'react';
-import { getAllCountsThunk } from './counts.thunks';
-import { ICount } from './counts.types';
+import { ICount, ICountFormData } from './counts.types';
 import { defaultThunkPayload } from '../../utils/fabrics';
-import { CountFormData } from '../../components/Directories/DirCounts/FormCreateCount';
+import { createCountThunk, deleteCountThunk, getAllCountsThunk } from './counts.thunks';
+import { AppQueryParams } from '../../api';
 
 interface CountsServiceDispatchers {
-  deleteById: ServiceDispatcher<{ _id: string }>;
-  editById: ServiceDispatcher<{ _id: string; newData: CountFormData }>;
-  getAll: ServiceDispatcher;
-  create: ServiceDispatcher<CountFormData>;
+  deleteById: ServiceDispatcherAsync<
+    { _id: string },
+    | Pick<ICount, '_id' | 'label'> & {
+        deletedChildrens?: number;
+      }
+  >;
+  getAll: ServiceDispatcherAsync<Pick<AppQueryParams, 'isArchived' | 'createTreeData'>, ICount[]>;
+  create: ServiceDispatcherAsync<ICountFormData, ICount>;
+  editById?: ServiceDispatcherAsync<{ _id: string; data: ICountFormData }, ICount>;
+  getById?: ServiceDispatcherAsync<{ _id: string }, ICount>;
 }
 
 export interface CountsService extends CountsServiceDispatchers {
   dispatch: AppDispatch;
   state: ICountsState;
-  getById: (_id: string) => ICount | undefined;
+  findById: (_id: string) => ICount | undefined;
 }
 
 export const useCountsService = (): CountsService => {
@@ -27,17 +33,17 @@ export const useCountsService = (): CountsService => {
 
   const dispatchers = useMemo((): CountsServiceDispatchers => {
     return {
-      getAll: payload => dispatch(getAllCountsThunk(defaultThunkPayload(payload))),
-      deleteById: payload => dispatch(getAllCountsThunk(defaultThunkPayload(payload))),
-      create: payload => dispatch(getAllCountsThunk(defaultThunkPayload(payload))),
-      editById: payload => dispatch(getAllCountsThunk(defaultThunkPayload(payload))),
+      getAll: async payload => dispatch(getAllCountsThunk(defaultThunkPayload(payload))),
+      deleteById: async payload => dispatch(deleteCountThunk(defaultThunkPayload(payload))),
+      create: async payload => dispatch(createCountThunk(defaultThunkPayload(payload))),
+      // editById: async payload => dispatch(updateC(defaultThunkPayload(payload))),
     };
   }, [dispatch]);
 
   return {
     dispatch,
     state,
-    getById: id => state.counts.find(el => el._id === id),
+    findById: id => state.counts.find(el => el._id === id),
     ...dispatchers,
   };
 };

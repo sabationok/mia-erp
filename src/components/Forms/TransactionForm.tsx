@@ -15,9 +15,10 @@ import CustomSelect, { CustomSelectProps } from '../atoms/Inputs/CustomSelect';
 import { createTransactionForReq } from '../../utils';
 import { useAppSelector } from '../../redux/store.store';
 import { TransactionsService } from '../../redux/transactions/useTransactionsService.hook';
-import useCreateSelectorTreeData from '../../hooks/useCreateSelectorTreeData';
+import useTreeDataCreatorHook from '../../hooks/useTreeDataCreator.hook';
 import FlexBox from '../atoms/FlexBox';
 import { createThunkPayload } from '../../utils/fabrics';
+import { IBaseDirItem } from '../Directories/dir.types';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
 
@@ -64,9 +65,6 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     categories: { categories },
   } = useAppSelector();
 
-  const countsTreeData = useCreateSelectorTreeData(counts);
-  const categoriesTreeData = useCreateSelectorTreeData(categories);
-
   const {
     formState: { errors },
     register,
@@ -80,6 +78,15 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     reValidateMode: 'onSubmit',
   });
   const formValues = watch();
+
+  const rootValidator = useCallback(
+    <T = any,>(el: IBaseDirItem<T>) => !el.parent && el.type === formValues.type,
+    [formValues.type]
+  );
+
+  const countsTreeData = useTreeDataCreatorHook({ dataList: counts });
+  const categoriesTreeData = useTreeDataCreatorHook({ dataList: categories, rootDataValidator: rootValidator });
+
   // const registerSelect = useRegisterSelect(setValue, formValues, unregister);
 
   const registerSelect = useCallback(

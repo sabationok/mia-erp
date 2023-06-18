@@ -9,6 +9,7 @@ import { CategoryFilterOpt, DirBaseProps } from '../dir.types';
 import t from '../../../lang';
 import { toast } from 'react-toastify';
 import { useEntryListData, useFilteredLisData } from '../../../hooks';
+import AppLoader from '../../atoms/AppLoader';
 
 export interface DirCategoriesProps extends DirBaseProps {
   filterOptions?: CategoryFilterOpt[];
@@ -95,13 +96,26 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
   }
 
   function onDelete(_id: string) {
-    if (window.confirm(`Delete item ?`))
+    // TODO  const modal = modals.handleOpenModal({
+    // TODO    ModalChildren: ConfirmModal,
+    // TODO    modalChildrenProps: {
+    // TODO      onClose: () => {},
+    // TODO      onConfirm: () => {},
+    // TODO      onReject: () => {},
+    // TODO    },
+    // TODO    settings: {
+    // TODO      onEscapePressClose: false,
+    // TODO      onBackdropClose: false,
+    // TODO    },
+    // TODO  });
+
+    if (window.confirm(`Delete item`))
       deleteById({
         data: { _id },
         onSuccess(data) {
           toast.success(`Deleted category: ${data?.label}`);
           if (data?.deletedChildrens) {
-            toast.isActive(`Deleted childrens count for ${data?.label}: ${data.deletedChildrens}`);
+            toast.info(`Deleted children for ${data?.label}: ${data.deletedChildrens}`);
           }
         },
       });
@@ -123,20 +137,22 @@ const DirCategories: React.FC<DirCategoriesProps> = props => {
   }, [getAll]);
 
   return (
-    <ModalForm {...props} onOptSelect={handleFilterData}>
-      <DirList
-        entryList={el}
-        list={fd}
-        onDelete={onDelete}
-        onEdit={onEdit}
-        onCreateChild={onCreateChild}
-        createParentTitle={t('createParentCategory')}
-        onCreateParent={onCreateParent}
-        currentLevel={0}
-        style={{ paddingBottom: '16px' }}
-        className={'dir categories'}
-      />
-    </ModalForm>
+    <>
+      <ModalForm {...props} onOptSelect={handleFilterData}>
+        <DirList
+          entryList={el}
+          list={fd}
+          onDelete={onDelete}
+          onEdit={onEdit}
+          onCreateChild={onCreateChild}
+          createParentTitle={t('createParentCategory')}
+          onCreateParent={onCreateParent}
+          currentLevel={0}
+        />
+      </ModalForm>
+
+      <AppLoader isLoading={isLoading} />
+    </>
   );
 };
 

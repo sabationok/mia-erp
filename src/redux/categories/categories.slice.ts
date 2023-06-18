@@ -1,7 +1,7 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ICategory } from 'redux/categories/categories.types';
 
-import { createCategoryThunk, deleteCategoryThunk, getAllCategoriesThunk } from 'redux/categories/categoriesThunks';
+import { createCategoryThunk, deleteCategoryThunk, getAllCategoriesThunk } from 'redux/categories/categories.thunk';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 
 export interface ICategoriesState {
@@ -28,7 +28,7 @@ export const categoriesSlice = createSlice({
       })
       .addCase(deleteCategoryThunk.fulfilled, (s, a) => {
         s.isLoading = false;
-        s.categories = s.categories.filter(el => el._id !== a.payload._id || el.owner?._id === a.payload._id);
+        s.categories = s.categories.filter(el => el._id !== a.payload._id || el.parent?._id === a.payload._id);
       })
       .addCase(createCategoryThunk.fulfilled, (s, a) => {
         s.isLoading = false;

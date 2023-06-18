@@ -48,6 +48,8 @@ export interface IModalSettings {
   modalStyle?: React.CSSProperties;
   closeBtnStyle?: React.CSSProperties;
   closeBtn?: boolean;
+  onBackdropClose?: boolean;
+  onEscapePressClose?: boolean;
 }
 
 const initialSettings: IModalSettings = {
@@ -56,6 +58,8 @@ const initialSettings: IModalSettings = {
   modalAnimation: modalAnimation[ModalAnimationType.FromBottom],
   closeBtn: false,
   modalStyle: modalStyle[ModalAnimationType.FromBottom],
+  onBackdropClose: true,
+  onEscapePressClose: true,
 };
 
 interface ModalCTX {
@@ -102,8 +106,10 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   };
 
   useEffect(() => {
+    if (!modalSettings.onEscapePressClose) return;
+
     function handleToggleModalByEsc(evt: KeyboardEvent) {
-      if (!isLast) return;
+      if (!isLast || !modalSettings.onEscapePressClose) return;
 
       if (evt?.code === 'Escape') {
         if (typeof onClose === 'function') onClose();
@@ -115,7 +121,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
     return () => {
       document.removeEventListener('keydown', handleToggleModalByEsc);
     };
-  }, [isLast, onClose]);
+  }, [isLast, modalSettings.onEscapePressClose, onClose]);
 
   return (
     <Backdrop

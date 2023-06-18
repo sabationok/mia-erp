@@ -1,7 +1,8 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getAllCountsThunk } from 'redux/counts/counts.thunks';
+
 import { AuthErrorType } from 'redux/reduxTypes.types';
 import { ICount } from 'redux/counts/counts.types';
+import { createCountThunk, deleteCountThunk, getAllCountsThunk } from './counts.thunks';
 
 export interface ICountsState {
   counts: ICount[];
@@ -21,10 +22,20 @@ export const countsSlice = createSlice({
   reducers: {},
   extraReducers: builder =>
     builder
-      .addCase(getAllCountsThunk.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.counts = action.payload;
+
+      .addCase(getAllCountsThunk.fulfilled, (s, a) => {
+        s.isLoading = false;
+        s.counts = a.payload;
       })
+      .addCase(deleteCountThunk.fulfilled, (s, a) => {
+        s.isLoading = false;
+        s.counts = s.counts.filter(el => el._id !== a.payload._id || el.parent?._id === a.payload._id);
+      })
+      .addCase(createCountThunk.fulfilled, (s, a) => {
+        s.isLoading = false;
+        s.counts = [a.payload, ...s.counts];
+      })
+
       .addMatcher(inPending, state => {
         state.isLoading = true;
         state.error = null;

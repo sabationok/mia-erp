@@ -49,13 +49,11 @@ export const useBaseApiWithAccessToken = () => {
   useEffect(() => {
     if (auth.access_token) {
       token.set(auth.access_token);
-      console.log('baseApi with auth token', '==//==', baseApi.defaults.headers.Authorization);
     }
   }, [auth.access_token]);
   useEffect(() => {
     if (!auth.access_token) {
       token.unset();
-      console.log('baseApi without auth token', '==//==', baseApi.defaults.headers.Authorization);
     }
   }, [auth.access_token]);
 };

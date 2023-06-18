@@ -47,8 +47,6 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
     reValidateMode: 'onSubmit',
   });
 
-  console.log(category);
-
   function formEventWrapper(evHandler?: SubmitHandler<ICategoryFormData>) {
     if (evHandler) {
       return handleSubmit(evHandler);
@@ -56,7 +54,7 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
   }
 
   return (
-    <ModalForm onSubmit={formEventWrapper(onSubmit)} draggable {...props}>
+    <ModalForm onSubmit={formEventWrapper(onSubmit)} {...props}>
       <Inputs>
         <InputLabel label={t('type')} direction={'vertical'} error={errors.type} disabled>
           <InputText defaultValue={t(`${type}S`).toUpperCase()} disabled />

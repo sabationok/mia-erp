@@ -1,27 +1,47 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
-
-import baseApi from '../../api/baseApi';
-import { ICount, ICreateCountThunkRes, IDeleteCountThunkRes, IGetAllCountsRes } from './counts.types';
 import { ThunkPayload } from '../store.store';
-import { isAxiosError } from 'axios';
-// import { token } from '../../services/baseApi';
-const COUNTS_API_BASENAME = '/directories/counts';
-export const countsApiRoutes = {
-  getAll: () => `${COUNTS_API_BASENAME}/getAll`,
-  getById: (id?: string) => `${COUNTS_API_BASENAME}/getById/${id || ''}`,
-  create: () => `${COUNTS_API_BASENAME}/create`,
-  delete: (id?: string) => `${COUNTS_API_BASENAME}/delete/${id || ''}`,
-  updateById: (id?: string) => `${COUNTS_API_BASENAME}/update/${id || ''}`,
-};
+import { AppResponse } from '../global.types';
+import { AppQueryParams, DirectoriesApi } from '../../api';
+import { ApiDirType } from '../APP_CONFIGS';
+import { ICount, ICountFormData } from './counts.types';
 
-export const getAllCountsThunk = createAsyncThunk<ICount[], ThunkPayload<any, IGetAllCountsRes>>(
-  'counts/getAllCountsThunk',
-  async ({ onSuccess, onError }, thunkAPI) => {
+export interface IAllCountsRes extends AppResponse<ICount[]> {}
+
+export const getAllCountsThunk = createAsyncThunk<
+  ICount[],
+  ThunkPayload<Pick<AppQueryParams, 'isArchived' | 'createTreeData'> | undefined, ICount[]>
+>('counts/getAllCountsThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
+  try {
+    const response = await DirectoriesApi.getAllByDirType<ICount>({
+      dirType: ApiDirType.COUNTS,
+      params: data,
+    });
+
+    if (response && onSuccess) {
+      onSuccess(response.data.data);
+    }
+
+    return response.data.data;
+  } catch (error) {
+    onError && onError(error);
+
+    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+  }
+});
+
+export const createCountThunk = createAsyncThunk<ICount, ThunkPayload<ICountFormData, ICount>>(
+  'counts/createCountThunk',
+  async ({ onSuccess, onError, data }, thunkAPI) => {
     try {
-      const response: IGetAllCountsRes = await baseApi.get(countsApiRoutes.getAll());
+      const response = await DirectoriesApi.create<ICountFormData, ICount>({
+        dirType: ApiDirType.COUNTS,
+        dto: data || {},
+      });
 
-      response && onSuccess && onSuccess(response);
+      if (response && onSuccess) {
+        onSuccess(response.data.data);
+      }
 
       return response.data.data;
     } catch (error) {
@@ -31,76 +51,82 @@ export const getAllCountsThunk = createAsyncThunk<ICount[], ThunkPayload<any, IG
     }
   }
 );
-
-export const createCountThunk = createAsyncThunk<ICount, ThunkPayload<Partial<ICount>, ICreateCountThunkRes>>(
-  'counts/createCountThunk',
-  async ({ onSuccess, onError, data }, thunkAPI) => {
-    try {
-      const response: ICreateCountThunkRes = await baseApi.post(countsApiRoutes.create(), data);
-      console.log(response.data);
-
-      response && onSuccess && onSuccess(response);
-
-      return response.data.data;
-    } catch (error) {
-      onError && onError(error);
-
-      return thunkAPI.rejectWithValue(isAxiosError(error));
-    }
-  }
-);
-
 export const deleteCountThunk = createAsyncThunk<
-  {
-    _id: string;
-  },
-  ThunkPayload<{ _id: string }, IDeleteCountThunkRes>
+  ICount,
+  ThunkPayload<
+    {
+      _id: string;
+    },
+    Pick<ICount, '_id' | 'label'> & { deletedChildrens?: number }
+  >
 >('counts/deleteCountThunk', async ({ onSuccess, onError, data }, thunkAPI) => {
   try {
-    const response: IDeleteCountThunkRes = await baseApi.delete(countsApiRoutes.delete());
+    const response = await DirectoriesApi.delete<Pick<ICount, '_id' | 'label'> & { deletedChildrens?: number }>({
+      dirType: ApiDirType.COUNTS,
+      _id: data?._id as string,
+    });
 
-    response && onSuccess && onSuccess(response);
+    if (response && onSuccess) {
+      onSuccess(response.data.data);
+    }
 
     return response.data.data;
   } catch (error) {
     onError && onError(error);
 
-    return thunkAPI.rejectWithValue(isAxiosError(error));
+    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
   }
 });
 
-// export const editCountThunk = createAsyncThunk('counts/editCountThunk', async (payload, thunkAPI) => {
+// export const addCountThunk = createAsyncThunk('counts/addCountThunk', async (payload, thunkAPI) => {
 //   try {
-//     const response = await baseApi.patch(`/directories/counts/${payload.submitData.id}`, payload.submitData.updateData);
-//
+//     const response = await baseApi.post(`/directories/counts/create`, payload?.submitData);
+//     console.log(response.data);
+
 //     payload?.onSuccess(response);
-//
+
 //     return response.data;
 //   } catch (error) {
 //     console.log(error);
-//
+
 //     payload?.onError(error);
-//
+
 //     return thunkAPI.rejectWithValue(error.message);
 //   }
 // });
 
-// export const getCountsByParentIdThunk = createAsyncThunk(
-//   'counts/getCountsByParentIdThunk',
-//   async (payload, thunkAPI) => {
-//     try {
-//       const response = await baseApi.get(`/directories/counts/getByOwnerId/${payload.submitData.id}`);
-//       console.log(response.data);
+// export const deleteCountThunk = createAsyncThunk('counts/deleteCountThunk', async (payload, thunkAPI) => {
+//   try {
+//     const response = await baseApi.delete(`/directories/counts/delete/${payload?.submitData.id}`);
+//     console.log(response.data);
 
-//       payload?.onSuccess(response);
+//     payload?.onSuccess(response);
 
-//       return response.data;
-//     } catch (error) {
-//       console.log(error);
+//     return response.data;
+//   } catch (error) {
+//     console.log(error);
 
-//       payload?.onError(error);
+//     payload?.onError(error);
 
-//       return thunkAPI.rejectWithValue(error.message);
-//     }
+//     return thunkAPI.rejectWithValue(error.message);
 //   }
-// );
+// });
+
+// export const editCountThunk = createAsyncThunk('counts/editCountThunk', async (payload, thunkAPI) => {
+//   try {
+//     const response = await baseApi.patch(
+//       `/directories/counts/${payload?.submitData.id}`,
+//       payload?.submitData.updateData
+//     );
+
+//     payload?.onSuccess(response);
+
+//     return response.data;
+//   } catch (error) {
+//     console.log(error);
+
+//     payload?.onError(error);
+
+//     return thunkAPI.rejectWithValue(error.message);
+//   }
+// });

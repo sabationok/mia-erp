@@ -1,6 +1,5 @@
 import baseApi from './baseApi';
 import APP_CONFIGS, { ApiDirType, Endpoints } from '../redux/APP_CONFIGS';
-import { ICategory } from '../redux/categories/categories.types';
 import { AppResponse } from '../redux/global.types';
 import { IBaseDirItem } from '../components/Directories/dir.types';
 import { AppQueryParams } from './index';
@@ -8,8 +7,6 @@ import { AppQueryParams } from './index';
 type GetAllByDirTypeOptions = Required<Pick<AppQueryParams, 'dirType'>> & {
   params?: Pick<AppQueryParams, 'isArchived' | 'createTreeData'>;
 };
-
-export interface ICategoryRes extends AppResponse<ICategory> {}
 
 export interface IDirRes<RD = any> extends AppResponse<RD> {}
 
@@ -51,12 +48,6 @@ export default class DirectoriesApi {
     dirType,
     params,
   }: GetAllByDirTypeOptions): Promise<IDirRes<RD[]>> {
-    console.log('getAllByDirType', {
-      isArchived: false,
-      createTreeData: false,
-      ...params,
-    });
-
     return this.api.get(this.endpoints[Endpoints.getAll](dirType), {
       params: {
         isArchived: false,

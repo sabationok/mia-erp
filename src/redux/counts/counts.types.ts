@@ -13,6 +13,12 @@ export const CountsTypesMap = {
   ACTIVE: 'АКТИВНИЙ',
 };
 
+export interface ICountFormData extends Omit<ICount, '_id' | 'createdAt' | 'updatedAt' | 'parent'> {
+  parent?: string | null;
+  startBalance?: number;
+  currency?: string;
+}
+
 export interface IGetAllCountsRes extends AppResponse<ICount[]> {}
 
 export interface ICreateCountThunkRes extends AppResponse<ICount> {}

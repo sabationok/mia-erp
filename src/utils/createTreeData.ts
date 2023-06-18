@@ -1,11 +1,13 @@
 import * as _ from 'lodash';
+import { ICompany } from '../redux/companies/companies.types';
 
 export interface IBaseFields<T = any> {
   _id?: string;
   label?: string;
   name?: string;
   amount?: number;
-  owner?: IBaseFields<T> | null;
+  owner?: Pick<ICompany, '_id' | 'name' | 'email'>;
+  parent?: IBaseFields<T> | null;
   percentage?: number;
   childrenCount?: number;
   childrenList?: TreeOption<T>[] | null;
@@ -20,11 +22,11 @@ export interface StateControl<D = any> {
   onLoading?: (loading: boolean) => void;
 }
 
-async function findChildrenById<T = any>(id?: string, data?: TreeOption<T>[]): Promise<TreeOption<T>[] | undefined> {
-  const hasChildren = data?.some(item => item.owner?._id === id);
+async function findChildrenById<T = any>(id?: string, data?: TreeOption<T>[]): Promise<TreeOption<T>[] | []> {
+  const hasChildren = data?.some(item => item.parent?._id === id);
 
   if (hasChildren) {
-    const children = data?.filter(ch => ch.owner?._id === id);
+    const children = data?.filter(ch => ch.parent?._id === id);
     await Promise.all(
       children?.map(async ch => {
         ch.childrenList = await findChildrenById(ch._id, data);
@@ -32,10 +34,10 @@ async function findChildrenById<T = any>(id?: string, data?: TreeOption<T>[]): P
         return ch;
       }) || []
     );
-    return children !== undefined ? children : undefined;
+    return children !== undefined ? children : [];
   }
 
-  return undefined;
+  return [];
 }
 
 export default async function createTreeData<T = any>(
@@ -44,11 +46,11 @@ export default async function createTreeData<T = any>(
 ): Promise<TreeOption<T>[] | []> {
   onLoading && onLoading(true);
   try {
-    const root = _.cloneDeep(data).filter(item => !item.owner);
+    const root = _.cloneDeep(data).filter(item => !item.parent);
 
     await Promise.all(
       root.map(async item => {
-        item.childrenList = await findChildrenById(item._id, data);
+        item.childrenList = await findChildrenById<T>(item._id, data);
 
         if (item.childrenList) item.childrenCount = item.childrenList.length;
         return item;
@@ -71,18 +73,55 @@ export async function createTreeDataMapById<T = any>(
 ): Promise<TreeOptions<T>> {
   onLoading && onLoading(true);
   try {
-    const root = _.cloneDeep(data).filter(item => !item.owner);
-    let rootMap: Record<string, TreeOption<T>[] | undefined> = {};
+    const root = _.cloneDeep(data).filter(item => !item.parent);
+    let rootMap: TreeOptions<T> = {};
 
-    await Promise.all(
-      root.map(async item => {
-        const childrenList = await findChildrenById(item._id, data);
+    if (root.length > 0) {
+      await Promise.all(
+        root.map(async item => {
+          const childrenList = data.filter(ch => item._id === ch.parent?._id);
 
-        if ('_id' in item && item._id && childrenList) rootMap[item._id] = childrenList;
-        return '';
-      })
-    );
+          if ('_id' in item && item._id && childrenList) rootMap[item._id] = childrenList;
+          return '';
+        })
+      );
+    }
+    console.log('createTreeDataMapById root', root);
 
+    console.log('createTreeDataMapById rootMap', rootMap);
+    onSuccess && onSuccess(rootMap);
+    return rootMap;
+  } catch (e) {
+    console.error(e);
+    onError && onError('Unknown error occurred');
+    return {};
+  } finally {
+    onLoading && onLoading(false);
+  }
+}
+
+export async function createTreeDataMapByIdForRoot<T = any>(
+  data: TreeOption<T>[],
+  { onSuccess, onError, onLoading }: StateControl<Record<string, TreeOption<T>[]>>
+): Promise<Record<string, TreeOption<T>[]>> {
+  onLoading && onLoading(true);
+  try {
+    const root = _.cloneDeep(data);
+    let rootMap: Record<string, TreeOption<T>[]> = {};
+
+    if (root.length > 0) {
+      await Promise.all(
+        root.map(async item => {
+          const childrenList = data.filter(ch => item._id === ch.parent?._id);
+
+          if ('_id' in item && item._id && childrenList) rootMap[item._id] = childrenList;
+          return '';
+        })
+      );
+    }
+    console.log('createTreeDataMapById root', root);
+
+    console.log('createTreeDataMapById rootMap', rootMap);
     onSuccess && onSuccess(rootMap);
     return rootMap;
   } catch (e) {

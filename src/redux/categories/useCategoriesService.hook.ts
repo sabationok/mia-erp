@@ -1,9 +1,9 @@
 import { useCategoriesSelector } from 'redux/selectors.store';
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
-import { ICategoriesState } from './categoriesSlice';
+import { ICategoriesState } from './categories.slice';
 import { ServiceDispatcher, ServiceDispatcherAsync } from '../global.types';
 import { useMemo } from 'react';
-import { createCategoryThunk, deleteCategoryThunk, getAllCategoriesThunk } from './categoriesThunks';
+import { createCategoryThunk, deleteCategoryThunk, getAllCategoriesThunk } from './categories.thunk';
 import { ICategory, ICategoryFormData } from './categories.types';
 import { defaultThunkPayload } from '../../utils/fabrics';
 import { AppQueryParams } from '../../api';

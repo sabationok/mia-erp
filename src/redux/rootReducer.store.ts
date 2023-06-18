@@ -5,7 +5,7 @@ import { usersSlice } from './users/usersSlice';
 import { appSettingsSlice } from './appSettings/appSettings.slice';
 import { appPageSlice } from './page/pageSlice';
 import { transactionsSlice } from './transactions/transactions.slice';
-import { categoriesSlice } from './categories/categoriesSlice';
+import { categoriesSlice } from './categories/categories.slice';
 import { countsSlice } from './counts/counts.slice';
 // import { documentsSlice } from './documents/documents.slice';
 import { persistorConfigs } from './configs.store';

@@ -4,7 +4,7 @@ import { ICountsState } from './counts/counts.slice';
 import { IAuthState } from './auth/auth.types';
 import { ITransactionsState } from './transactions/transactions.slice';
 import { ICustomRolesState } from './customRoles/customRoles.slice';
-import { ICategoriesState } from './categories/categoriesSlice';
+import { ICategoriesState } from './categories/categories.slice';
 import { IUsersState } from './users/users.types';
 import { IAppSettings } from './appSettings/appSettings.slice';
 

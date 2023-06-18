@@ -1,13 +1,15 @@
 import ModalForm, { ModalFormProps } from 'components/ModalForm';
 import styled from 'styled-components';
-import { CountType, ICount } from 'redux/counts/counts.types';
-import React, { useState } from 'react';
-import { SubmitHandler } from 'react-hook-form';
+import { CountType, ICount, ICountFormData } from 'redux/counts/counts.types';
+import React from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import translate from '../../../lang';
 import t from '../../../lang';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 export interface FormCreateCountProps extends Omit<ModalFormProps, 'onSubmit'> {
   _id?: string;
@@ -16,13 +18,13 @@ export interface FormCreateCountProps extends Omit<ModalFormProps, 'onSubmit'> {
   edit?: boolean;
   create?: boolean;
   count?: Partial<ICount>;
-  onSubmit?: SubmitHandler<CountFormData>;
+  onSubmit?: SubmitHandler<ICountFormData>;
 }
 
-export interface CountFormData extends Omit<ICount, '_id' | 'createdAt' | 'updatedAt' | 'parent'> {
-  parent?: string | null;
-}
-
+const validation = yup.object().shape({
+  label: yup.string().required(),
+  description: yup.string().max(250).optional(),
+});
 const FormCreateCount: React.FC<FormCreateCountProps> = ({
   parent,
   create,
@@ -33,82 +35,53 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
   onSubmit,
   ...props
 }) => {
-  const [formData, setFormData] = useState<CountFormData | undefined>({ ...count, type, parent: parent?._id || null });
+  const {
+    formState: { errors },
+    register,
+    handleSubmit,
+  } = useForm<ICountFormData>({
+    defaultValues: {
+      ...count,
+      type,
+      parent: parent?._id || null,
+    },
+    resolver: yupResolver(validation),
+    reValidateMode: 'onSubmit',
+  });
 
-  function onFormDataChange(ev: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = ev.target;
-
-    setFormData(prev => {
-      console.log({ ...prev, [name]: value });
-      return { ...prev, [name]: value };
-    });
-  }
-
-  function formEventWrapper(evHandler?: (args: any) => void, args?: any) {
+  function formEventWrapper(evHandler?: (args: ICountFormData) => void) {
     if (evHandler) {
-      return () => evHandler(args);
+      return handleSubmit(evHandler);
     }
   }
 
   return (
-    <ModalForm onSubmit={formEventWrapper(onSubmit, formData)} {...props}>
+    <ModalForm onSubmit={formEventWrapper(onSubmit)} {...props}>
       <Inputs>
-        <InputLabel
-          label={t('type')}
-          direction={'vertical'}
-          // error={errors.type}
-          disabled
-        >
+        <InputLabel label={t('type')} direction={'vertical'} error={errors.type} disabled>
           <InputText placeholder={translate(type)} disabled />
         </InputLabel>
 
         {parent && (
-          <InputLabel
-            label={t('parentItem')}
-            direction={'vertical'}
-            // error={errors.parentItem}
-            disabled
-          >
+          <InputLabel label={t('parentItem')} direction={'vertical'} disabled>
             <InputText placeholder={parent?.label} disabled />
           </InputLabel>
         )}
 
-        <InputLabel
-          label={t('label')}
-          direction={'vertical'}
-          // error={errors.label}
-        >
-          <InputText placeholder={translate('insertLabel')} name={'label'} />
+        <InputLabel label={t('label')} direction={'vertical'} error={errors.label}>
+          <InputText placeholder={translate('insertLabel')} {...register('label')} autoFocus />
         </InputLabel>
 
-        <InputLabel
-          label={t('startBalance')}
-          direction={'vertical'}
-          // error={errors.startBalance}
-          disabled
-        >
-          <InputText placeholder={translate('insertStartBalance')} name="amount" type="number" disabled />
+        <InputLabel label={t('startBalance')} direction={'vertical'} error={errors.startBalance}>
+          <InputText placeholder={translate('insertStartBalance')} {...register('startBalance')} type="number" />
         </InputLabel>
 
-        <InputLabel
-          label={t('currency')}
-          direction={'vertical'}
-          // error={errors.currency}
-          disabled
-        >
-          <InputText placeholder={translate('selectCurrency')} name={'currency'} disabled />
+        <InputLabel label={t('currency')} direction={'vertical'} error={errors.currency} disabled>
+          <InputText placeholder={translate('selectCurrency')} {...register('currency')} disabled />
         </InputLabel>
 
-        <InputLabel
-          label={t('comment')}
-          direction={'vertical'}
-          // !! error={errors.description}
-        >
-          <TextareaPrimary
-            placeholder={t('insertComment')}
-            // !! {...register('description')}
-            maxLength={250}
-          />
+        <InputLabel label={t('comment')} direction={'vertical'} error={errors.description}>
+          <TextareaPrimary placeholder={t('insertComment')} {...register('description')} maxLength={250} />
         </InputLabel>
       </Inputs>
     </ModalForm>
