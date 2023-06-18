@@ -92,7 +92,6 @@ const directoriesApiEndpoints = {
     `${API_BASE_ROUTES.DIRECTORIES}/${dirType}/${Endpoints.updateById}/${id}`,
   [Endpoints.getById]: (dirType: ApiDirType, id: string) =>
     `${API_BASE_ROUTES.DIRECTORIES}/${dirType}/${Endpoints.getById}/${id}`,
-  [Endpoints.getAll]: (dirType: ApiDirType) => `${API_BASE_ROUTES.DIRECTORIES}/${dirType}/${Endpoints.create}`,
 };
 
 const APP_CONFIGS = {

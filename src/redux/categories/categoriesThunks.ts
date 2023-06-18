@@ -12,7 +12,7 @@ export interface IAllCategoriesRes extends AppResponse<ICategory[]> {}
 
 export const getAllCategoriesThunk = createAsyncThunk<
   ICategory[],
-  ThunkPayload<Pick<AppQueryParams, 'isArchived' | 'createTreeData'> | undefined>
+  ThunkPayload<Pick<AppQueryParams, 'isArchived' | 'createTreeData'> | undefined, ICategory[]>
 >('categories/getAllCategoriesThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
   try {
     const response = await DirectoriesApi.getAllByDirType<ICategory>({
@@ -32,7 +32,7 @@ export const getAllCategoriesThunk = createAsyncThunk<
   }
 });
 
-export const createCategoryThunk = createAsyncThunk<ICategory, ThunkPayload<ICategoryFormData>>(
+export const createCategoryThunk = createAsyncThunk<ICategory, ThunkPayload<ICategoryFormData, ICategory>>(
   'categories/createCategoryThunk',
   async ({ onSuccess, onError, data }, thunkAPI) => {
     try {
@@ -53,6 +53,32 @@ export const createCategoryThunk = createAsyncThunk<ICategory, ThunkPayload<ICat
     }
   }
 );
+export const deleteCategoryThunk = createAsyncThunk<
+  ICategory,
+  ThunkPayload<
+    {
+      _id: string;
+    },
+    Pick<ICategory, '_id' | 'label'> & { deletedChildrens?: number }
+  >
+>('categories/deleteCategoryThunk', async ({ onSuccess, onError, data }, thunkAPI) => {
+  try {
+    const response = await DirectoriesApi.delete<Pick<ICategory, '_id' | 'label'> & { deletedChildrens?: number }>({
+      dirType: ApiDirType.CATEGORIES_TR,
+      _id: data?._id as string,
+    });
+
+    if (response && onSuccess) {
+      onSuccess(response.data.data);
+    }
+
+    return response.data.data;
+  } catch (error) {
+    onError && onError(error);
+
+    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+  }
+});
 
 // export const addCategoryThunk = createAsyncThunk('categories/addCategoryThunk', async (payload, thunkAPI) => {
 //   try {

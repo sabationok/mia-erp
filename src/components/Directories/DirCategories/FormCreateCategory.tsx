@@ -47,6 +47,8 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
     reValidateMode: 'onSubmit',
   });
 
+  console.log(category);
+
   function formEventWrapper(evHandler?: SubmitHandler<ICategoryFormData>) {
     if (evHandler) {
       return handleSubmit(evHandler);
@@ -60,8 +62,14 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
           <InputText defaultValue={t(`${type}S`).toUpperCase()} disabled />
         </InputLabel>
 
+        {parent && (
+          <InputLabel label={t('parentItem')} direction={'vertical'} error={errors.type} disabled>
+            <InputText defaultValue={parent?.label} disabled />
+          </InputLabel>
+        )}
+
         <InputLabel label={t('label')} direction={'vertical'} error={errors.label}>
-          <InputText placeholder={t('insertLabel')} {...register('label')} />
+          <InputText placeholder={t('insertLabel')} {...register('label')} autoFocus />
         </InputLabel>
 
         <InputLabel label={t('comment')} direction={'vertical'} error={errors.description}>

@@ -110,9 +110,9 @@ const StButton = styled(Button)<ButtonIconProps>`
   text-transform: ${({ texttransform = 'none' }) => texttransform};
 
   @media screen and (max-width: 480px) {
-    text-transform: uppercase;
+    //text-transform: uppercase;
     font-size: 16px;
-    height: max-content;
+    //height: max-content;
   }
 `;
 // const StyledButtonIcon = styled(Button)<any>`

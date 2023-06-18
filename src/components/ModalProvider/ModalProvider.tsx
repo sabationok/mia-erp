@@ -19,17 +19,18 @@ export interface IModalRenderItemParams<P = any, S = any> {
   id?: number | string;
 }
 
+type OpenModalReturnType =
+  | {
+      onClose: () => void;
+      id?: string;
+    }
+  | undefined;
+
 interface IModalProviderContext {
-  handleOpenModal: <P = any, S = any>(
-    args: IModalRenderItemParams<P, S>
-  ) => {
-    onClose: (id?: string | number) => void;
-    id: string;
-    modalContent: IModalRenderItemParams<any, any>[];
-  };
+  handleOpenModal: <P = any, S = any>(args: IModalRenderItemParams<P, S>) => OpenModalReturnType;
   handleCloseModal: (id?: string) => void;
   isOpen: boolean;
-  modalContent: IModalRenderItemParams<any, any>[];
+  modalContent: IModalRenderItemParams[];
 }
 
 export const ModalProviderContext = createContext({});
@@ -42,24 +43,26 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
     ModalChildren,
     modalChildrenProps,
     settings,
-  }: IModalRenderItemParams<P, S>) {
-    if (!ModalChildren) return console.error('ModalChildren is undefined');
+  }: IModalRenderItemParams<P, S>): OpenModalReturnType {
+    if (!ModalChildren) {
+      console.error('ModalChildren is not passed');
+      return;
+    }
 
     if (typeof ModalChildren === 'function') {
       const id = nanoid(8);
       setModalContent(prev => [...prev, { ModalChildren, modalChildrenProps, settings, id }]);
-      return { onClose: (id?: string | number) => onClose(id), id, modalContent };
+      return { onClose: createOnClose(id), id };
     }
   }
 
-  const onClose = useCallback(
-    (id?: string | number) => () => {
-      console.log('onClose modal', id);
-      setModalContent(prev => (id ? prev.filter(el => el.id !== id) : [...prev].splice(-1)));
-    },
-    []
-  );
-  const CTX = {
+  const onClose = useCallback((id?: string | number) => {
+    setModalContent(prev => (id ? prev.filter(el => el.id !== id) : [...prev].splice(-1)));
+  }, []);
+
+  const createOnClose = useCallback((id?: string | number) => () => onClose(id), [onClose]);
+
+  const CTX: IModalProviderContext = {
     handleCloseModal: onClose,
     handleOpenModal,
     isOpen: modalContent.length > 0,
@@ -78,15 +81,15 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
             id: Item.id,
             totalLength: modalContent.length,
             isLast: idx === modalContent.length - 1,
-            onClose: onClose(Item.id),
+            onClose: createOnClose(Item.id),
           }}
         >
           {Item?.ModalChildren && (
-            <Item.ModalChildren {...{ ...Item?.modalChildrenProps, onClose: () => onClose(Item.id) }} />
+            <Item.ModalChildren {...{ ...Item?.modalChildrenProps, onClose: createOnClose(Item.id) }} />
           )}
         </ModalComponent>
       )),
-    [modalContent, onClose]
+    [modalContent, createOnClose]
   );
 
   useEffect(() => {

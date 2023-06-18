@@ -128,9 +128,9 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
   }
 
   @media screen and (max-width: 480px) {
-    text-transform: uppercase;
+    //text-transform: uppercase;
     font-size: 16px;
-    height: max-content;
+    //height: max-content;
   }
 `;
 
@@ -261,13 +261,13 @@ const pointerBottom = css`
   }
 `;
 const small = css`
-  padding: 0 22px;
+  padding: 6px 22px;
 
   min-width: 115px;
   min-height: 28px;
 `;
 const large = css`
-  padding: 0 22px;
+  padding: 6px 22px;
 
   min-width: 150px;
   min-height: 36px;

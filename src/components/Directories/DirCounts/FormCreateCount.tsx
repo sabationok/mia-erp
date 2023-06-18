@@ -2,9 +2,12 @@ import ModalForm, { ModalFormProps } from 'components/ModalForm';
 import styled from 'styled-components';
 import { CountType, ICount } from 'redux/counts/counts.types';
 import React, { useState } from 'react';
-import InputTextPrimary from 'components/atoms/Inputs/InputTextPrimary';
 import { SubmitHandler } from 'react-hook-form';
 import translate from '../../../lang';
+import t from '../../../lang';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import InputText from '../../atoms/Inputs/InputText';
+import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
 
 export interface FormCreateCountProps extends Omit<ModalFormProps, 'onSubmit'> {
   _id?: string;
@@ -50,33 +53,63 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
   return (
     <ModalForm onSubmit={formEventWrapper(onSubmit, formData)} {...props}>
       <Inputs>
-        <InputTextPrimary label="Тип" name="type" placeholder={translate(type)} disabled />
+        <InputLabel
+          label={t('type')}
+          direction={'vertical'}
+          // error={errors.type}
+          disabled
+        >
+          <InputText placeholder={translate(type)} disabled />
+        </InputLabel>
 
-        <InputTextPrimary
-          label="Назва"
-          name="label"
-          placeholder="Введіть назву"
-          onChange={onFormDataChange}
-          value={formData?.label ? formData?.label : formData?.name ? formData?.name : ''}
-        />
+        {parent && (
+          <InputLabel
+            label={t('parentItem')}
+            direction={'vertical'}
+            // error={errors.parentItem}
+            disabled
+          >
+            <InputText placeholder={parent?.label} disabled />
+          </InputLabel>
+        )}
 
-        <InputTextPrimary
-          label="Баланс"
-          name="amount"
-          type="number"
-          placeholder="Введіть початковий баланс"
-          onChange={onFormDataChange}
-          disabled={!create}
-          value={formData?.balance ? formData?.balance : ''}
-        />
+        <InputLabel
+          label={t('label')}
+          direction={'vertical'}
+          // error={errors.label}
+        >
+          <InputText placeholder={translate('insertLabel')} name={'label'} />
+        </InputLabel>
 
-        <InputTextPrimary
-          label="Коментар"
-          name="descr"
-          placeholder="Введіть коментар"
-          onChange={onFormDataChange}
-          value={formData?.description ? formData?.description : ''}
-        />
+        <InputLabel
+          label={t('startBalance')}
+          direction={'vertical'}
+          // error={errors.startBalance}
+          disabled
+        >
+          <InputText placeholder={translate('insertStartBalance')} name="amount" type="number" disabled />
+        </InputLabel>
+
+        <InputLabel
+          label={t('currency')}
+          direction={'vertical'}
+          // error={errors.currency}
+          disabled
+        >
+          <InputText placeholder={translate('selectCurrency')} name={'currency'} disabled />
+        </InputLabel>
+
+        <InputLabel
+          label={t('comment')}
+          direction={'vertical'}
+          // !! error={errors.description}
+        >
+          <TextareaPrimary
+            placeholder={t('insertComment')}
+            // !! {...register('description')}
+            maxLength={250}
+          />
+        </InputLabel>
       </Inputs>
     </ModalForm>
   );

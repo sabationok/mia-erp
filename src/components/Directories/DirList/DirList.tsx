@@ -1,4 +1,4 @@
-import ButtonIcon from 'components/atoms/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import React, { useMemo } from 'react';
 import DirListItem, { DirListItemAddsProps, DirListItemProps } from './DirListItem';
 import { ICategory } from 'redux/categories/categories.types';
@@ -13,6 +13,9 @@ export interface DirListProps extends Partial<DirListItemAddsProps> {
   onCreateParent?: (...args: any[]) => void;
   createParentTitle?: string;
   currentLevel?: number;
+  containerProps?: React.HTMLAttributes<HTMLDivElement>;
+  listBoxProps?: React.HTMLAttributes<HTMLDivElement>;
+  listProps?: React.HTMLAttributes<HTMLUListElement>;
 }
 
 const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLDivElement>> = ({
@@ -25,6 +28,10 @@ const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLDivElement>> = (
   onCreateParent,
   createParentTitle,
   currentLevel,
+  containerProps,
+  listBoxProps,
+  listProps,
+  ...props
 }) => {
   const appTheme = useTheme();
   const listForRender = useMemo(() => (entryList ? entryList : list), [entryList, list]);
@@ -47,9 +54,21 @@ const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLDivElement>> = (
   );
 
   return (
-    <Box>
-      <ListBox style={{ padding: currentLevel === 0 ? '0 12px' : '' }}>
-        {listForRender.length > 0 ? <List>{renderList}</List> : <EmptyList>Список порожній</EmptyList>}
+    <Box {...containerProps}>
+      <ListBox {...listBoxProps} style={{ ...listBoxProps?.style, padding: currentLevel === 0 ? '0 12px' : '' }}>
+        {listForRender.length > 0 ? (
+          <List
+            {...listProps}
+            style={{
+              ...listProps?.style,
+              padding: currentLevel === 0 ? '12px 0' : '',
+            }}
+          >
+            {renderList}
+          </List>
+        ) : (
+          <EmptyList>Список порожній</EmptyList>
+        )}
       </ListBox>
 
       {onCreateParent && (
@@ -64,7 +83,7 @@ const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLDivElement>> = (
               },
             }}
           >
-            <ButtonIcon variant="outlinedSmall" type={'default'} onClick={onCreateParent}>
+            <ButtonIcon variant="outlinedSmall" onClick={onCreateParent}>
               {createParentTitle || 'Create parent'}
             </ButtonIcon>
           </ConfigProvider>

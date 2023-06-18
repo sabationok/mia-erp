@@ -1,13 +1,13 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import ModalForm from 'components/ModalForm';
 import DirList from '../DirList/DirList';
-import { founder } from 'utils';
-import styled from 'styled-components';
 import useCountsService from 'redux/counts/useCountsService.hook';
-import { CountType, ICount } from 'redux/counts/counts.types';
+import { CountType } from 'redux/counts/counts.types';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FormCreateCount, { FormCreateCountProps } from './FormCreateCount';
 import { CountFilterOpt, DirBaseProps } from '../dir.types';
+import translate from '../../../lang';
+import { useEntryListData, useFilteredLisData } from '../../../hooks';
 
 export interface DirCountsProps extends DirBaseProps {
   filterOptions: CountFilterOpt[];
@@ -21,7 +21,7 @@ const DirCounts: React.FC<DirCountsProps> = props => {
     deleteById,
     getById,
   } = useCountsService();
-  const [dirType, setDirType] = useState<CountType>('ACTIVE');
+  const [current, setDirType] = useState<CountType>('ACTIVE');
 
   function onEdit(_id: string) {
     const count = getById(_id);
@@ -30,7 +30,7 @@ const DirCounts: React.FC<DirCountsProps> = props => {
       modalChildrenProps: {
         title: `Редагування ${count?.parent ? 'суб-рахунку' : 'рахунку'}: "${count?.label || count?.name}"`,
         _id,
-        type: dirType,
+        type: current,
         onSubmit: data => {
           console.log(data);
         },
@@ -43,8 +43,8 @@ const DirCounts: React.FC<DirCountsProps> = props => {
     modal.handleOpenModal<FormCreateCountProps>({
       ModalChildren: FormCreateCount,
       modalChildrenProps: {
-        title: 'Створення субрахунку',
-        type: dirType,
+        title: translate('createChildCount'),
+        type: current,
         onSubmit: data => {
           create({ data: { ...data, parent } });
         },
@@ -57,8 +57,8 @@ const DirCounts: React.FC<DirCountsProps> = props => {
     modal.handleOpenModal({
       ModalChildren: FormCreateCount,
       modalChildrenProps: {
-        title: 'Створити рахунок',
-        type: dirType,
+        title: translate('createParentCount'),
+        type: current,
         onSubmit: data => {
           create({ data });
         },
@@ -68,6 +68,7 @@ const DirCounts: React.FC<DirCountsProps> = props => {
 
   function onDelete(_id: string) {
     const count = getById(_id);
+
     if (
       count &&
       window.confirm(`Видалити ${count?.parent ? 'суб-рахунок' : 'рахунок'}: "${count?.label || count?.name}"`)
@@ -76,43 +77,32 @@ const DirCounts: React.FC<DirCountsProps> = props => {
     }
   }
 
-  function handleFilterData({ value }: CountFilterOpt) {
-    value && setDirType(value);
-    // value && setFilteredData(founder({ searchParam: 'type', searchQuery: value, data: counts }));
-  }
-
-  const data = useMemo(
-    () =>
-      founder<ICount>({
-        searchParam: 'type',
-        searchQuery: dirType,
-        data: counts,
-      }),
-    [counts, dirType]
-  );
-  const entryList = useMemo(() => data.filter(el => !el?.parent), [data]);
+  const fd = useFilteredLisData({
+    searchParam: 'type',
+    searchQuery: current,
+    data: counts,
+  });
+  const el = useEntryListData(fd, 'parent');
 
   return (
-    <StModalForm {...props} onOptSelect={handleFilterData}>
+    <ModalForm
+      {...props}
+      onOptSelect={({ value }: CountFilterOpt) => {
+        value && setDirType(value);
+      }}
+    >
       <DirList
-        list={data}
-        entryList={entryList}
+        list={fd}
+        entryList={el}
         onDelete={onDelete}
         onEdit={onEdit}
         onCreateChild={onCreateChild}
-        createParentTitle="Створити рахунок"
+        createParentTitle={translate('createParentCount')}
         onCreateParent={onCreateParent}
         currentLevel={0}
       />
-    </StModalForm>
+    </ModalForm>
   );
 };
-
-const StModalForm = styled(ModalForm)`
-  height: 70vh;
-  @media screen and (max-height: 480px) {
-    height: 95vh;
-  }
-`;
 
 export default DirCounts;

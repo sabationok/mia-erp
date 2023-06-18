@@ -1,7 +1,5 @@
 import baseApi from './baseApi';
-import { ITransactionRes } from 'redux/transactions/transactions.types';
 import APP_CONFIGS, { ApiDirType, Endpoints } from '../redux/APP_CONFIGS';
-import { IAllCategoriesRes } from '../redux/categories/categoriesThunks';
 import { ICategory } from '../redux/categories/categories.types';
 import { AppResponse } from '../redux/global.types';
 import { IBaseDirItem } from '../components/Directories/dir.types';
@@ -19,22 +17,6 @@ export default class DirectoriesApi {
   private static api = baseApi;
   private static endpoints = APP_CONFIGS.endpoints.directories;
 
-  public static async getAllCategories(): Promise<IAllCategoriesRes> {
-    return this.api.get(this.endpoints.getAll(ApiDirType.categories));
-  }
-
-  public static async createCategory(data: ICategory): Promise<ICategoryRes> {
-    return this.api.post(this.endpoints.create(ApiDirType.categories), data);
-  }
-
-  public static async editCategory({ data, _id }: { data: ICategory; _id: string }): Promise<ICategoryRes> {
-    return this.api.patch(this.endpoints.updateById(ApiDirType.categories, _id), data);
-  }
-
-  public static async deleteCategory(id: string): Promise<ITransactionRes> {
-    return this.api.delete(this.endpoints.deleteById(ApiDirType.categories, id));
-  }
-
   public static async create<DTO = any, RD = IBaseDirItem>({
     dirType,
     dto,
@@ -45,15 +27,41 @@ export default class DirectoriesApi {
     return this.api.post(this.endpoints[Endpoints.create](dirType), dto);
   }
 
+  public static async delete<RD = IBaseDirItem>({
+    dirType,
+    _id,
+  }: {
+    _id: string;
+  } & Required<Pick<AppQueryParams, 'dirType'>>): Promise<IDirRes<RD & { deletedChildrens?: number }>> {
+    return this.api.delete(this.endpoints[Endpoints.deleteById](dirType, _id));
+  }
+
+  public static async update<DTO = any, RD = IBaseDirItem>({
+    dirType,
+    _id,
+    data,
+  }: {
+    data: DTO;
+    _id: string;
+  } & Required<Pick<AppQueryParams, 'dirType'>>): Promise<IDirRes<RD>> {
+    return this.api.patch(this.endpoints[Endpoints.updateById](dirType, _id), data);
+  }
+
   public static async getAllByDirType<RD = IBaseDirItem>({
     dirType,
     params,
   }: GetAllByDirTypeOptions): Promise<IDirRes<RD[]>> {
+    console.log('getAllByDirType', {
+      isArchived: false,
+      createTreeData: false,
+      ...params,
+    });
+
     return this.api.get(this.endpoints[Endpoints.getAll](dirType), {
       params: {
-        ...params,
         isArchived: false,
         createTreeData: false,
+        ...params,
       },
     });
   }

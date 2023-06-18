@@ -1,7 +1,7 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ICategory } from 'redux/categories/categories.types';
 
-import { getAllCategoriesThunk } from 'redux/categories/categoriesThunks';
+import { createCategoryThunk, deleteCategoryThunk, getAllCategoriesThunk } from 'redux/categories/categoriesThunks';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 
 export interface ICategoriesState {
@@ -22,72 +22,80 @@ export const categoriesSlice = createSlice({
   reducers: {},
   extraReducers: builder =>
     builder
-      .addCase(getAllCategoriesThunk.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.categories = action.payload;
+      .addCase(getAllCategoriesThunk.fulfilled, (s, a) => {
+        s.isLoading = false;
+        s.categories = a.payload;
       })
-      .addMatcher(inPending, state => {
-        state.isLoading = true;
-        state.error = null;
+      .addCase(deleteCategoryThunk.fulfilled, (s, a) => {
+        s.isLoading = false;
+        s.categories = s.categories.filter(el => el._id !== a.payload._id || el.owner?._id === a.payload._id);
       })
-      .addMatcher(inError, (state, action: PayloadAction<AuthErrorType>) => {
-        state.isLoading = false;
-        state.error = action.payload;
+      .addCase(createCategoryThunk.fulfilled, (s, a) => {
+        s.isLoading = false;
+        s.categories = [a.payload, ...s.categories];
+      })
+      .addMatcher(inPending, s => {
+        s.isLoading = true;
+        s.error = null;
+      })
+      .addMatcher(inError, (s, a: PayloadAction<AuthErrorType>) => {
+        s.isLoading = false;
+        s.error = a.payload;
       }),
 });
 
-function inPending(action: AnyAction) {
-  return action.type.endsWith('pending');
+function inPending(a: AnyAction) {
+  return a.type.endsWith('pending');
 }
 
-function inError(action: AnyAction) {
-  return action.type.endsWith('rejected');
+function inError(a: AnyAction) {
+  return a.type.endsWith('rejected');
 }
 
 export const categoriesReducer = categoriesSlice.reducer;
 
 // const extraReducers = {
-//   [getAllCategoriesThunk.fulfilled]: (state, action) => {
-//     state.isLoading = false;
+//   [getAllCategoriesThunk.fulfilled]: (s, a) => {
+//     s.isLoading = false;
 
-//     state.categories = action.payload.data;
+//     s.categories = a.payload.data;
 //   },
-//   [getAllCategoriesThunk.pending]: (state, action) => {
-//     state.isLoading = true;
+//   [getAllCategoriesThunk.pending]: (s, a) => {
+//     s.isLoading = true;
 //   },
-//   [getAllCategoriesThunk.rejected]: (state, action) => {
-//     state.isLoading = false;
-//     state.error = action.payload;
-//   },
-
-//   [getCategoriesByParentIdThunk.fulfilled]: (state, action) => {},
-//   [getCategoriesByParentIdThunk.pending]: (state, action) => {},
-//   [getCategoriesByParentIdThunk.rejected]: (state, action) => {},
-
-//   [addCategoryThunk.fulfilled]: (state, action) => {
-//     state.isloading = false;
-//     state.categories.push(action.payload.data);
-//   },
-//   [addCategoryThunk.pending]: (state, action) => {
-//     state.isloading = true;
-//   },
-//   [addCategoryThunk.rejected]: (state, action) => {
-//     state.isloading = false;
-//     state.error = action.payload;
+//   [getAllCategoriesThunk.rejected]: (s, a) => {
+//     s.isLoading = false;
+//     s.error = a.payload;
 //   },
 
-//   [deleteCategoryThunk.fulfilled]: (state, action) => {},
-//   [deleteCategoryThunk.pending]: (state, action) => {},
-//   [deleteCategoryThunk.rejected]: (state, action) => {},
+//   [getCategoriesByParentIdThunk.fulfilled]: (s, a) => {},
+//   [getCategoriesByParentIdThunk.pending]: (s, a) => {},
+//   [getCategoriesByParentIdThunk.rejected]: (s, a) => {},
 
-//   [editCategoryThunk.fulfilled]: (state, { payload }) => {
-//     state.isLoading = false;
-//     const index = state.categories.findIndex(el => el._id === payload.data._id);
-
-//     state.categories[index] = { ...payload.data };
-
-//     console.log(index, state.categories[index].isArchived);
+//   [addCategoryThunk.fulfilled]: (s, a) => {
+//     s.isloading = false;
+//     s.categories.push(a.payload.data);
 //   },
-//   [editCategoryThunk.pending]: (state, action) => {},
-//   [editCategoryThunk.rejected]: (state, action) => {},
+//   [addCategoryThunk.pending]: (s, a) => {
+//     s.isloading = true;
+//   },
+//   [addCategoryThunk.rejected]: (s, a) => {
+//     s.isloading = false;
+//     s.error = a.payload;
+//   },
+
+//   [deleteCategoryThunk.fulfilled]: (s, a) => {},
+//   [deleteCategoryThunk.pending]: (s, a) => {},
+//   [deleteCategoryThunk.rejected]: (s, a) => {},
+
+//   [editCategoryThunk.fulfilled]: (s, { payload }) => {
+//     s.isLoading = false;
+//     const index = s.categories.findIndex(el => el._id === payload.data._id);
+
+//     s.categories[index] = { ...payload.data };
+
+//     console.log(index, s.categories[index].isArchived);
+//   },
+//   [editCategoryThunk.pending]: (s, a) => {},
+//   [editCategoryThunk.rejected]: (s, a) => {},
 // };

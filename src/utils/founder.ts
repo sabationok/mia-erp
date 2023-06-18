@@ -1,5 +1,5 @@
 export interface IFounderEntries<D = any> {
-  searchParam?: string;
+  searchParam?: keyof D;
   searchQuery?: string;
   data?: D[];
 }

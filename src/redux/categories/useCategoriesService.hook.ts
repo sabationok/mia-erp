@@ -1,19 +1,28 @@
 import { useCategoriesSelector } from 'redux/selectors.store';
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { ICategoriesState } from './categoriesSlice';
-import { ServiceDispatcher } from '../global.types';
+import { ServiceDispatcher, ServiceDispatcherAsync } from '../global.types';
 import { useMemo } from 'react';
-import { createCategoryThunk, getAllCategoriesThunk } from './categoriesThunks';
+import { createCategoryThunk, deleteCategoryThunk, getAllCategoriesThunk } from './categoriesThunks';
 import { ICategory, ICategoryFormData } from './categories.types';
 import { defaultThunkPayload } from '../../utils/fabrics';
 import { AppQueryParams } from '../../api';
 
 interface CategoriesServiceDispatchers {
-  create: ServiceDispatcher<ICategoryFormData>;
-  deleteById: ServiceDispatcher<{ _id: string }>;
-  editById: ServiceDispatcher<{ _id: string; data: ICategoryFormData }>;
-  getById: ServiceDispatcher<{ _id: string }>;
-  getAll: ServiceDispatcher<Pick<AppQueryParams, 'isArchived' | 'createTreeData'> | undefined>;
+  create: ServiceDispatcherAsync<ICategoryFormData, ICategory>;
+  deleteById: ServiceDispatcherAsync<
+    { _id: string },
+    | (Pick<ICategory, '_id' | 'label'> & {
+        deletedChildrens?: number;
+      })
+    | undefined
+  >;
+  editById: ServiceDispatcher<{ _id: string; data: ICategoryFormData }, ICategory | undefined>;
+  getById: ServiceDispatcher<{ _id: string }, ICategory | undefined>;
+  getAll: ServiceDispatcherAsync<
+    Pick<AppQueryParams, 'isArchived' | 'createTreeData'> | undefined,
+    ICategory[] | undefined
+  >;
 }
 
 interface CategoriesService extends CategoriesServiceDispatchers {
@@ -28,20 +37,17 @@ const useCategoriesService = (): CategoriesService => {
 
   const dispatchers = useMemo((): CategoriesServiceDispatchers => {
     return {
-      create: payload => dispatch(createCategoryThunk(defaultThunkPayload({ ...payload, logAll: true }))),
-      deleteById: payload =>
+      create: async payload => dispatch(createCategoryThunk(defaultThunkPayload({ ...payload, logAll: true }))),
+      deleteById: async payload => dispatch(deleteCategoryThunk(defaultThunkPayload(payload))),
+      editById: async payload =>
         dispatch(() => {
           defaultThunkPayload(payload);
         }),
-      editById: payload =>
+      getById: async payload =>
         dispatch(() => {
           defaultThunkPayload(payload);
         }),
-      getById: payload =>
-        dispatch(() => {
-          defaultThunkPayload(payload);
-        }),
-      getAll: payload => dispatch(getAllCategoriesThunk(defaultThunkPayload(payload))),
+      getAll: async payload => dispatch(getAllCategoriesThunk(defaultThunkPayload(payload))),
     };
   }, [dispatch]);
 
