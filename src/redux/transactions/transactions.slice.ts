@@ -1,5 +1,5 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getAllTransactionsThunk } from 'redux/transactions/transactions.thunks';
+import { createTransactionThunk, getAllTransactionsThunk } from 'redux/transactions/transactions.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { ITransaction } from 'redux/transactions/transactions.types';
 
@@ -13,8 +13,8 @@ export interface ITransactionsState {
 const initialState: ITransactionsState = {
   isLoading: false,
   error: null,
-  transactions: [...[]],
-  filteredTransactions: [...[]],
+  transactions: [],
+  filteredTransactions: [],
 };
 
 export const transactionsSlice = createSlice({
@@ -26,7 +26,12 @@ export const transactionsSlice = createSlice({
       .addCase(getAllTransactionsThunk.fulfilled, (s, a) => {
         s.isLoading = false;
 
-        s.transactions = [...s.transactions, ...a.payload];
+        s.transactions = Array.isArray(a.payload) ? [...a.payload, ...s.transactions] : s.transactions;
+      })
+      .addCase(createTransactionThunk.fulfilled, (s, a) => {
+        s.isLoading = false;
+
+        s.transactions = a.payload ? [a.payload, ...s.transactions] : s.transactions;
       })
       .addMatcher(inPending, s => {
         s.isLoading = true;

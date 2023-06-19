@@ -24,7 +24,7 @@ export interface IDocument extends IBase {
 export type TrStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
 export interface ITransaction extends ITransactionBase {
-  transactionDate: Date | string;
+  eventDate?: number | Date;
   countIn?: ICount;
   subCountIn?: ICount;
   countOut?: ICount;
@@ -49,7 +49,7 @@ export interface ITransactionBase extends IBase {
 }
 
 export interface ITransactionForReq extends Partial<Record<keyof ITransaction, any>> {
-  transactionDate?: number;
+  eventDate?: number | Date;
   amount?: number;
   type?: TransactionType;
   currency?: CurrencyCode;

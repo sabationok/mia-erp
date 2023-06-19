@@ -1,6 +1,6 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { SelectItem } from '../components/TableList/TableList';
-import { selects } from './select.data';
+import t from '../lang';
 
 export const companiesTableColumns: CellTittleProps[] = [
   {
@@ -40,19 +40,19 @@ export const companiesTableColumns: CellTittleProps[] = [
   },
 ];
 export const permissionsSearchParams: SelectItem[] = [
-  { label: 'Дата', dataPath: 'transactionDate', filter: false, search: false, sort: true },
-  { label: 'Оновлено', dataPath: 'createdAt', filter: false, search: false, sort: true },
-  { label: 'Створено', dataPath: 'updateAt', filter: false, search: false, sort: true },
-  { label: selects.countIn.label, dataPath: '', filter: false, search: true, sort: true },
-  { label: selects.subCountIn.label, dataPath: '', filter: false, search: true, sort: true },
-  { label: selects.countOut.label, dataPath: '', filter: false, search: true, sort: true },
-  { label: selects.subCountOut.label, dataPath: '', filter: false, search: true, sort: true },
-  { label: selects.category.label, dataPath: '', filter: false, search: true, sort: true },
-  { label: selects.subCategory.label, dataPath: '', filter: false, search: true, sort: true },
-  { label: 'Сума', dataPath: 'amount', filter: false, search: true, sort: true },
-  { label: 'Контрагент', dataPath: 'contractor', filter: false, search: true, sort: true },
-  { label: 'Документ', dataPath: 'document', filter: false, search: true, sort: true },
-  { label: 'Проєкт', dataPath: 'project', filter: false, search: true, sort: true },
-  { label: 'Мітка', dataPath: 'mark', filter: false, search: true, sort: true },
-  { label: 'Статус', dataPath: 'status', filter: false, search: true, sort: true },
+  { label: t('date'), dataPath: 'eventDate', filter: false, search: false, sort: true },
+  { label: t('createdAt'), dataPath: 'createdAt', filter: false, search: false, sort: true },
+  { label: t('updateAt'), dataPath: 'updateAt', filter: false, search: false, sort: true },
+  { label: t('countIn'), dataPath: 'countIn', filter: false, search: true, sort: true },
+  { label: t('subCountIn'), dataPath: 'subCountIn', filter: false, search: true, sort: true },
+  { label: t('countOut'), dataPath: 'countOut', filter: false, search: true, sort: true },
+  { label: t('subCountOut'), dataPath: 'subCountOut', filter: false, search: true, sort: true },
+  { label: t('category'), dataPath: 'category', filter: false, search: true, sort: true },
+  { label: t('subCategory'), dataPath: 'subCategory', filter: false, search: true, sort: true },
+  { label: t('amount'), dataPath: 'amount', filter: false, search: true, sort: true },
+  { label: t('contractor'), dataPath: 'contractor', filter: false, search: true, sort: true },
+  { label: t('document'), dataPath: 'document', filter: false, search: true, sort: true },
+  { label: t('project'), dataPath: 'project', filter: false, search: true, sort: true },
+  { label: t('mark'), dataPath: 'mark', filter: false, search: true, sort: true },
+  { label: t('status'), dataPath: 'status', filter: false, search: true, sort: true },
 ];

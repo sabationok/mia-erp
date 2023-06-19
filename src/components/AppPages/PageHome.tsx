@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { takeFullGridArea, takeFullPlace } from './pagesStyles';
 import { useAuthSelector } from 'redux/selectors.store';
 import ProfileCard from 'components/atoms/ProfileCard/ProfileCard';
-import usePermissionsService from 'redux/permissions/usePermissionsService.hook';
+import usePermissionsService, { usePermissionsSelector } from 'redux/permissions/usePermissionsService.hook';
 import { IPermission } from '../../redux/permissions/permissions.types';
 import { permissionsSearchParams, permissionsTableColumns } from '../../data';
 import { ITableListProps } from '../TableList/tableTypes.types';
@@ -31,17 +31,19 @@ const PageHome: React.FC<any> = ({ path }: Props) => {
   const setSearchParams = useSearchParams({
     companyType: companyTypes[0].param,
   })[1];
+  const state = usePermissionsSelector();
   const permissionsService = usePermissionsService();
   const actionsCreator = usePermissionsActionsCreator(permissionsService, companyType?.param || 'own');
 
   const permissionsData = useMemo(() => {
-    return permissionsService.state.permissions?.filter(pr => {
+    return state.permissions?.filter(pr => {
       if (companyType?.param === 'invited') return pr.status === PermissionStatus.ACCEPTED;
       if (companyType?.param === 'invites') return pr.status === PermissionStatus.PENDING;
       if (companyType?.param === 'all') return pr;
       if (companyType?.param === 'own') return pr.user?._id === pr.owner?._id;
+      return pr;
     });
-  }, [companyType?.param, permissionsService.state.permissions, user._id]);
+  }, [companyType?.param, state.permissions]);
 
   const tableConfig = useMemo(
     (): ITableListProps<IPermission> => ({

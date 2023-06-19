@@ -17,6 +17,7 @@ import { useAppSelector } from '../../redux/store.store';
 import useTreeDataCreatorHook from '../../hooks/useTreeDataCreator.hook';
 import FlexBox from '../atoms/FlexBox';
 import { IBaseDirItem } from '../Directories/dir.types';
+import translate from '../../lang';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
 
@@ -28,7 +29,24 @@ export interface TransactionFormProps extends Omit<ModalFormProps, 'onSubmit'> {
   onSubmitEdit?: (_id: string, data: ITransactionForReq) => void;
   filterOptions?: TransactionsFilterOpt[];
   defaultState?: Partial<ITransaction>;
+  addInputs?: boolean;
 }
+
+const additionalInputs = (
+  <>
+    <InputLabel label={translate('contractor')} direction={'vertical'} disabled>
+      <InputText placeholder={translate('contractor')} disabled />
+    </InputLabel>
+
+    <InputLabel label={translate('project')} direction={'vertical'} disabled>
+      <InputText placeholder={translate('project')} disabled />
+    </InputLabel>
+
+    <InputLabel label={translate('activityType')} direction={'vertical'} disabled>
+      <InputText placeholder={translate('activityType')} disabled />
+    </InputLabel>
+  </>
+);
 
 const validationItem = yup
   .object()
@@ -56,6 +74,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   onSubmitEdit,
   copy,
   defaultState,
+  addInputs,
   ...props
 }) => {
   const {
@@ -121,19 +140,17 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   const renderInputsCountIn = useMemo(() => {
     const { parentList: parentOptions, treeData } = countsTreeData;
     const childOptions = formValues.countIn?._id ? treeData[formValues.countIn?._id] : undefined;
-    console.log('renderInputsCountIn', parentOptions);
-    console.log('counts', counts);
 
     return formValues.type && ['INCOME', 'TRANSFER'].includes(formValues.type) ? (
       <>
         <CustomSelect
-          label="Рахунок IN"
-          placeholder="Рахунок IN"
+          label={translate('countIn')}
+          placeholder={translate('countIn')}
           {...registerSelect('countIn', { options: parentOptions }, { childName: 'subCountIn' })}
         />
         <CustomSelect
-          label="Суб-рахунок IN"
-          placeholder="Суб-рахунок IN"
+          label={translate('subCountIn')}
+          placeholder={translate('subCountIn')}
           {...registerSelect('subCountIn', {
             options: childOptions,
           })}
@@ -149,8 +166,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     return formValues.type && ['EXPENSE', 'TRANSFER'].includes(formValues.type) ? (
       <>
         <CustomSelect
-          label="Рахунок OUT"
-          placeholder="Рахунок OUT"
+          label={translate('countOut')}
+          placeholder={translate('countOut')}
           {...registerSelect(
             'countOut',
             {
@@ -161,8 +178,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
           )}
         />
         <CustomSelect
-          label="Суб-рахунок OUT"
-          placeholder="Суб-рахунок OUT"
+          label={translate('subCountOut')}
+          placeholder={translate('subCountOut')}
           {...registerSelect('subCountOut', { options: childOptions, error: errors.subCountOut })}
         />
       </>
@@ -176,13 +193,13 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     return (
       <>
         <CustomSelect
-          label="Категорія"
-          placeholder="Категорія"
-          {...registerSelect('category', { options: parentOptions })}
+          label={translate('category')}
+          placeholder={translate('category')}
+          {...registerSelect('category', { options: parentOptions }, { childName: 'subCategory' })}
         />
         <CustomSelect
-          label="Підкатегорія"
-          placeholder="Підкатегорія"
+          label={translate('subCategory')}
+          placeholder={translate('subCategory')}
           {...registerSelect('subCategory', { options: childOptions })}
         />
       </>
@@ -218,16 +235,16 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
       {...props}
     >
       <FlexBox className={'inputs'} flex={'1'} fillWidth maxHeight={'100%'} padding={'12px'} overflow={'auto'}>
-        <InputLabel label="Дата і час" direction={'vertical'}>
-          <InputText placeholder="Дата і час" type="datetime-local" {...register('transactionDate')} />
+        <InputLabel label={translate('dateAndTime')} direction={'vertical'}>
+          <InputText placeholder={translate('dateAndTime')} type="datetime-local" {...register('eventDate')} />
         </InputLabel>
         <GridWrapper>
-          <InputLabel label="Сума" direction={'vertical'}>
-            <InputText placeholder="Сума" {...register('amount')} />
+          <InputLabel label={translate('amount')} direction={'vertical'}>
+            <InputText placeholder={translate('amount')} {...register('amount')} />
           </InputLabel>
 
-          <InputLabel label="Валюта" direction={'vertical'}>
-            <InputText placeholder="Валюта" {...register('currency')} disabled />
+          <InputLabel label={translate('currency')} direction={'vertical'}>
+            <InputText placeholder={translate('currency')} {...register('currency')} disabled />
           </InputLabel>
         </GridWrapper>
 
@@ -235,20 +252,10 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
         {renderInputsCountOut}
         {renderInputsCategories}
 
-        <InputLabel label="Контрагент" direction={'vertical'} disabled>
-          <InputText placeholder="Контрагент" disabled />
-        </InputLabel>
+        {addInputs ? additionalInputs : null}
 
-        <InputLabel label="Проєкт" direction={'vertical'} disabled>
-          <InputText placeholder="Проєкт" disabled />
-        </InputLabel>
-
-        <InputLabel label="Документ" direction={'vertical'} disabled>
-          <InputText placeholder="Документ" disabled />
-        </InputLabel>
-
-        <InputLabel label="Коментар" direction={'vertical'}>
-          <TextareaPrimary placeholder="Коментар" {...register('comment')} />
+        <InputLabel label={translate('comment')} direction={'vertical'}>
+          <TextareaPrimary placeholder={translate('comment')} {...register('comment')} />
         </InputLabel>
       </FlexBox>
     </ModalForm>

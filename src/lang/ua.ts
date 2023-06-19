@@ -4,6 +4,8 @@ export const langUa = {
   count: 'Рахунок',
   categories: 'Категорії',
   category: 'Категорія',
+  subCategory: 'Підкатегорія',
+  subCategories: 'Підкатегорії',
   contractor: 'Контрагент',
   contractors: 'Контрагенти',
   mark: 'Мітка',
@@ -14,6 +16,17 @@ export const langUa = {
   users: 'Користувачі',
   project: 'Проєкт',
   projects: 'Проєкти',
+  createdAt: 'Створено',
+  updateAt: 'Оновлено',
+  document: 'Документ',
+  documents: 'Документи',
+  status: 'Статус',
+
+  // Transaction form
+  countIn: 'Рахунок IN',
+  subCountIn: 'Суб-рахунок IN',
+  countOut: 'Рахунок OUT',
+  subCountOut: 'Суб-рахунок OUT',
 
   name: "Ім'я",
   type: 'Тип',
@@ -22,6 +35,10 @@ export const langUa = {
   insertLabel: 'Введіть назву',
   comment: 'Коментар',
   insertComment: 'Введіть коментар',
+  amount: 'Сума',
+  date: 'Дата',
+  time: 'Час',
+  dateAndTime: 'Дата і час',
 
   balance: 'Баланс',
   startBalance: 'Початковий баланс',

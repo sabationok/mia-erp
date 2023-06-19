@@ -36,7 +36,7 @@ function formatPhoneNumber(phoneNumberString: string): string | null {
 function createTransactionForReq(
   transaction: ITransaction,
   omitPathArr: (keyof ITransaction)[] = [],
-  dateToNumberPath?: keyof Pick<ITransaction, 'transactionDate'>
+  dateToNumberPath?: keyof Pick<ITransaction, 'eventDate'> | string
 ): Omit<ITransactionForReq, keyof ITransaction> {
   let transformedData: ITransactionForReq = {};
 
