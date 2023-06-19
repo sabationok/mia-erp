@@ -18,6 +18,10 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
   const [current, setCurrent] = useState<SelectItem | null>(defaultValue || selectedItem || null);
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    console.log(current);
+  }, [current]);
+
   function handleToggleList() {
     setIsOpen(prev => {
       prev && setInputValue({ searchParam: '' });

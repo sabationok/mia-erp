@@ -5,15 +5,15 @@ import { iconId } from 'data';
 import AppFilter, { FilterProps } from 'components/Filter/AppFilter';
 import { useTable } from './TableList';
 
-const TableFilter = () => {
+const TableFilter = ({ btnSize = 26 }: { btnSize?: number }) => {
   const modal = useModalProvider();
   const { filterSelectors, onFilterSubmit, filterDefaultValues, filterTitle = 'Фільтрація даних таблиці' } = useTable();
 
   return (
     <ButtonIcon
       iconId={iconId.filterOff}
-      size="28px"
-      iconSize="26px"
+      size={btnSize ? `${btnSize}px` : '26px'}
+      iconSize="80%"
       variant="onlyIcon"
       onClick={() => {
         modal.handleOpenModal<FilterProps>({

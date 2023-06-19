@@ -59,7 +59,7 @@ export const useBaseApiWithAccessToken = () => {
 };
 export const useBaseApiWithPermissionToken = () => {
   const { permission_token, permission } = usePermissionsSelector();
-
+  if (permission_token) console.log('permission_token', permission_token);
   useEffect(() => {
     if (permission._id) {
       permissionToken.set(permission._id);
@@ -81,6 +81,7 @@ export function useBaseURLWithPermission(id?: string) {
 
   const isLocalhost = useMemo(() => {
     return window.location.hostname === 'localhost';
+    // eslint-disable-next-line
   }, [window.location.hostname]);
 
   useEffect(() => {

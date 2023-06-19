@@ -24,7 +24,7 @@ const validation = yup.object<FormState>().shape({
 
 const TableSearchForm: React.FC<TableSearchProps> = ({ tableSearchParams }) => {
   const {
-    formState: { errors },
+    // formState: { errors },
     register,
     watch,
     handleSubmit,

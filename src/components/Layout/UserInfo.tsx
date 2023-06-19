@@ -47,7 +47,17 @@ const UserInfo: React.FC<IUserInfoProps> = ({ isOpen, onClose }) => {
             <ProfileCard {...permission?.company} nameFontSize="16px" emailFontSize="16px" />
 
             <FlexBox fxDirection={'row'} gap={12} fillWidth justifyContent={'flex-end'} alignItems={'center'}>
-              <ButtonIcon variant={'textSmall'} endIcon={'logOut'} onClick={() => clearCurrent()}>
+              <ButtonIcon
+                variant={'textSmall'}
+                endIcon={'logOut'}
+                onClick={() =>
+                  permissionLogOut({
+                    onError() {
+                      clearCurrent();
+                    },
+                  })
+                }
+              >
                 <Text style={{ fontSize: '14px' }}>Вийти з компанії</Text>
               </ButtonIcon>
             </FlexBox>

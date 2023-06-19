@@ -35,11 +35,11 @@ const QuickActions: React.FC<{ closeOnClickOut?: boolean }> = ({ closeOnClickOut
   return (
     <Menu isShown={isShown} footer={footer} data-burger>
       <List isShown={isShown}>
-        {isFilter && <TableFilter />}
+        {isFilter && <TableFilter btnSize={36} />}
 
         {isFilter && actionsCreator && <Separator />}
 
-        {actionsCreator && <TActions renderSeparator={<Separator />} />}
+        {actionsCreator && <TActions btnSize={36} renderSeparator={<Separator />} />}
       </List>
 
       <ToggleButton
@@ -132,7 +132,7 @@ const List = styled.div<{ isShown: boolean }>`
     isShown
       ? css`
           max-height: calc(100vh - 88px);
-          padding: 16px 8px 64px;
+          padding: 24px 4px 64px;
           visibility: visible;
           pointer-events: all;
 

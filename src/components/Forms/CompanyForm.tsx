@@ -34,9 +34,8 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ ...props }) => {
 
   const {
     register,
-    formState: { errors, isValid },
+    formState: { errors },
     handleSubmit,
-    watch,
   } = useForm<ICreateCompanyFormData>({
     defaultValues,
     reValidateMode: 'onSubmit',

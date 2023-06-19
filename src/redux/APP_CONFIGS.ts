@@ -1,4 +1,4 @@
-type EndpointCreator = (...args: any[]) => string;
+// type EndpointCreator = (...args: any[]) => string;
 
 export enum API_BASE_ROUTES {
   PERMISSIONS = '/permissions',

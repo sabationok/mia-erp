@@ -25,7 +25,7 @@ const useCompaniesService = (): CompaniesService => {
     }),
     []
   );
-  return { dispatch };
+  return { dispatch, ...service };
 };
 
 export default useCompaniesService as typeof useCompaniesService;

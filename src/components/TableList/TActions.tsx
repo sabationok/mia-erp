@@ -1,5 +1,5 @@
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 // import { ITableAction } from './tableTypes.types';
 import { useTable } from './TableList';
 import { iconId } from '../../img/sprite';
@@ -8,9 +8,10 @@ import { iconId } from '../../img/sprite';
 
 export interface TableActionsProps {
   renderSeparator?: React.ReactNode;
+  btnSize?: number;
 }
 
-const TActions: React.FC<TableActionsProps> = ({ renderSeparator = <></> }) => {
+const TActions: React.FC<TableActionsProps> = ({ renderSeparator = <></>, btnSize = 26 }) => {
   const tableContext = useTable();
 
   const renderActions = useMemo(() => {
@@ -21,25 +22,26 @@ const TActions: React.FC<TableActionsProps> = ({ renderSeparator = <></> }) => {
 
     // @ts-ignore
     // @ts-ignore
-    return actions.map(({ separator, description, iconSize, onClick, disabledCheck, type, icon, ...props }, idx) =>
-      separator ? (
-        <Separator key={icon || idx} />
-      ) : (
-        <ButtonIcon
-          key={icon || idx}
-          variant={type || 'onlyIcon'}
-          size={'26px'}
-          iconSize={iconSize}
-          // @ts-ignore
-          iconId={icon ? iconId[icon] : 'info'}
-          onClick={onClick}
-          {...props}
-        />
-      )
+    return actions.map(
+      ({ separator, description, iconSize = '90%', onClick, disabledCheck, type, icon, ...props }, idx) =>
+        separator ? (
+          <Separator key={icon || idx} />
+        ) : (
+          <ButtonIcon
+            key={icon || idx}
+            variant={type || 'onlyIcon'}
+            size={btnSize ? `${btnSize}px` : '26px'}
+            iconSize={'90%'}
+            // @ts-ignore
+            iconId={icon ? iconId[icon] : 'info'}
+            onClick={onClick}
+            {...props}
+          />
+        )
     );
-  }, [renderSeparator, tableContext]);
+  }, [btnSize, renderSeparator, tableContext]);
 
   return <>{renderActions}</>;
 };
 
-export default TActions;
+export default memo(TActions);
