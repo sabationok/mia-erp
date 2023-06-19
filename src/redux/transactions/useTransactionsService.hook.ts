@@ -23,7 +23,7 @@ const useTransactionsService = (): TransactionsService => {
   const dispatch: AppDispatch = useAppDispatch();
   const state = useTransactionsSelector();
 
-  const trService = useMemo((): Omit<TransactionsService, 'state' | 'dispatch'> => {
+  const dispatchers = useMemo((): Omit<TransactionsService, 'state' | 'dispatch'> => {
     return {
       create: async payload => dispatch(createTransactionThunk(defaultThunkPayload(payload))),
       deleteById: async payload => createApiCall(defaultApiCallPayload(payload), TransactionsApi.deleteById),
@@ -36,7 +36,7 @@ const useTransactionsService = (): TransactionsService => {
   return {
     dispatch,
     state,
-    ...trService,
+    ...dispatchers,
   };
 };
 

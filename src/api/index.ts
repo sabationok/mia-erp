@@ -15,4 +15,11 @@ export interface AppQueryParams {
   owner?: string;
 }
 
+export type SortOrder = 'DESC' | 'ASC';
+
+export interface ISortParams<SP = any> {
+  sortOrder?: SortOrder;
+  sortBy?: SP | string;
+}
+
 export { baseApi, token, baseURL, createApiCall };

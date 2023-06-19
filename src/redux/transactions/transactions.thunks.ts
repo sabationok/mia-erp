@@ -25,7 +25,7 @@ import TransactionsApi from '../../api/transactions.api';
 //   }
 // }
 
-export const getAllTransactionsThunk = createAsyncThunk<ITransaction[], ThunkPayload>(
+export const getAllTransactionsThunk = createAsyncThunk<ITransaction[], ThunkPayload<any, ITransaction[]>>(
   'transactions/getAllTransactionsThunk',
   async ({ onSuccess, onError, onLoading }, thunkAPI) => {
     onLoading && onLoading(true);
@@ -46,25 +46,25 @@ export const getAllTransactionsThunk = createAsyncThunk<ITransaction[], ThunkPay
   }
 );
 
-export const createTransactionThunk = createAsyncThunk<ITransaction | undefined, ThunkPayload<ITransactionReqData>>(
-  'transactions/createTransactionThunk',
-  async ({ onSuccess, onError, onLoading, data }, thunkApi) => {
-    onLoading && onLoading(true);
-    try {
-      const response: ICreateTransactionRes = await TransactionsApi.create(data || {});
+export const createTransactionThunk = createAsyncThunk<
+  ITransaction | undefined,
+  ThunkPayload<ITransactionReqData, ITransaction>
+>('transactions/createTransactionThunk', async ({ onSuccess, onError, onLoading, data }, thunkApi) => {
+  onLoading && onLoading(true);
+  try {
+    const response: ICreateTransactionRes = await TransactionsApi.create(data || {});
 
-      response && onSuccess && onSuccess(response);
+    response && onSuccess && onSuccess(response.data.data);
 
-      return response.data.data;
-    } catch (error) {
-      onError && onError(error);
+    return response.data.data;
+  } catch (error) {
+    onError && onError(error);
 
-      return thunkApi.rejectWithValue(isAxiosError(error));
-    } finally {
-      onLoading && onLoading(false);
-    }
+    return thunkApi.rejectWithValue(isAxiosError(error));
+  } finally {
+    onLoading && onLoading(false);
   }
-);
+});
 
 // export const deleteTransactionThunk = createAsyncThunk(
 //   'transactions/deleteTransactionThunk',

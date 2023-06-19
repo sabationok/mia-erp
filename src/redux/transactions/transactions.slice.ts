@@ -23,60 +23,60 @@ export const transactionsSlice = createSlice({
   reducers: {},
   extraReducers: builder =>
     builder
-      .addCase(getAllTransactionsThunk.fulfilled, (state, action) => {
-        state.isLoading = false;
+      .addCase(getAllTransactionsThunk.fulfilled, (s, a) => {
+        s.isLoading = false;
 
-        state.transactions = action.payload;
+        s.transactions = [...s.transactions, ...a.payload];
       })
-      .addMatcher(inPending, state => {
-        state.isLoading = true;
-        state.error = null;
+      .addMatcher(inPending, s => {
+        s.isLoading = true;
+        s.error = null;
       })
-      .addMatcher(inError, (state, action: PayloadAction<StateErrorType>) => {
-        state.isLoading = false;
-        state.error = action.payload;
+      .addMatcher(inError, (s, a: PayloadAction<StateErrorType>) => {
+        s.isLoading = false;
+        s.error = a.payload;
       }),
 });
 
-function inPending(action: AnyAction) {
-  return action.type.endsWith('pending');
+function inPending(a: AnyAction) {
+  return a.type.endsWith('pending');
 }
 
-function inError(action: AnyAction) {
-  return action.type.endsWith('rejected');
+function inError(a: AnyAction) {
+  return a.type.endsWith('rejected');
 }
 
 export const transactionsReducer = transactionsSlice.reducer;
 
-// [addTransactionThunk.fulfilled]: (state, action) => {
-//   state.isloading = false;
-//   state.transactions.unshift(action.payload.data);
+// [addTransactionThunk.fulfilled]: (s,a) => {
+//   s.isloading = false;
+//   s.transactions.unshift(action.payload.data);
 // },
-// [addTransactionThunk.pending]: (state, action) => {
-//   state.isloading = true;
+// [addTransactionThunk.pending]: (s,a) => {
+//   s.isloading = true;
 // },
-// [addTransactionThunk.rejected]: (state, action) => {
-//   state.isloading = false;
-//   state.error = action.payload;
-// },
-
-// [deleteTransactionThunk.fulfilled]: (state, action) => {
-//   state.isLoading = false;
-// },
-// [deleteTransactionThunk.pending]: (state, action) => {
-//   state.isLoading = true;
-// },
-// [deleteTransactionThunk.rejected]: (state, action) => {
-//   state.isLoading = false;
+// [addTransactionThunk.rejected]: (s,a) => {
+//   s.isloading = false;
+//   s.error =a.payload;
 // },
 
-// [editTransactionThunk.fulfilled]: (state, { payload }) => {
-//   state.isLoading = false;
-//   const index = state.transactions.findIndex(el => el._id === payload.data._id);
-
-//   state.transactions[index] = { ...payload.data };
-
-//   console.log(index, state.transactions[index].isArchived);
+// [deleteTransactionThunk.fulfilled]: (s,a) => {
+//   s.isLoading = false;
 // },
-// [editTransactionThunk.pending]: (state, action) => {},
-// [editTransactionThunk.rejected]: (state, action) => {},
+// [deleteTransactionThunk.pending]: (s,a) => {
+//   s.isLoading = true;
+// },
+// [deleteTransactionThunk.rejected]: (s,a) => {
+//   s.isLoading = false;
+// },
+
+// [editTransactionThunk.fulfilled]: (s, { payload }) => {
+//   s.isLoading = false;
+//   const index = s.transactions.findIndex(el => el._id === payload.data._id);
+
+//   s.transactions[index] = { ...payload.data };
+
+//   console.log(index, s.transactions[index].isArchived);
+// },
+// [editTransactionThunk.pending]: (s,a) => {},
+// [editTransactionThunk.rejected]: (s,a) => {},

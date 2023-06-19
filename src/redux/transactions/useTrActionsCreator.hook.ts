@@ -9,7 +9,7 @@ import TransactionForm from '../../components/Forms/TransactionForm';
 
 export type TrActionsCreator = TableActionCreator<ITransaction>;
 const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => {
-  const modal = useModalProvider();
+  const modals = useModalProvider();
 
   return useCallback(
     ctx => [
@@ -20,16 +20,16 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         disabled: !ctx.selectedRow?._id,
         type: 'onlyIcon',
         onClick: () => {
-          const m = modal.handleOpenModal({
+          const modal = modals.handleOpenModal({
             ModalChildren: TransactionForm,
             modalChildrenProps: {
               title: 'Редагування транзакції',
               filterOptions,
               onSubmitEdit: () => {
-                m?.onClose();
+                modal?.onClose();
                 service.editById({
                   onSuccess(d) {
-                    m?.onClose();
+                    modal?.onClose();
                   },
                 });
               },
@@ -45,16 +45,16 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         type: 'onlyIcon',
         disabled: !ctx.selectedRow?._id,
         onClick: () => {
-          const m = modal.handleOpenModal({
+          const modal = modals.handleOpenModal({
             ModalChildren: TransactionForm,
             modalChildrenProps: {
               title: 'Копіювання транзакції',
               filterOptions,
               onSubmit: () => {
-                m?.onClose();
+                modal?.onClose();
                 service.create({
                   onSuccess(d) {
-                    m?.onClose();
+                    modal?.onClose();
                   },
                 });
               },
@@ -88,7 +88,7 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         type: 'onlyIconFilled',
         disabled: false,
         onClick: () => {
-          const m = modal.handleOpenModal({
+          const modal = modals.handleOpenModal({
             ModalChildren: TransactionForm,
             modalChildrenProps: {
               title: 'Створити нову',
@@ -96,10 +96,10 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
               defaultOption: 0,
               defaultState: { type: 'INCOME' },
               onSubmit: data => {
-                m?.onClose();
+                modal?.onClose();
                 service.create({
                   onSuccess(d) {
-                    m?.onClose();
+                    modal?.onClose();
                   },
                 });
               },
@@ -116,7 +116,7 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         type: 'onlyIconFilled',
         disabled: false,
         onClick: () => {
-          const m = modal.handleOpenModal({
+          const modal = modals.handleOpenModal({
             ModalChildren: TransactionForm,
             modalChildrenProps: {
               title: 'Створити нову',
@@ -124,12 +124,12 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
               defaultOption: 1,
               defaultState: { type: 'TRANSFER' },
               onSubmit: d => {
-                m?.onClose();
+                modal?.onClose();
 
                 service.create({
                   data: { data: d },
                   onSuccess(d) {
-                    m?.onClose();
+                    modal?.onClose();
                   },
                 });
               },
@@ -146,7 +146,7 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         type: 'onlyIconFilled',
         disabled: false,
         onClick: () => {
-          const m = modal.handleOpenModal({
+          const modal = modals.handleOpenModal({
             ModalChildren: TransactionForm,
             modalChildrenProps: {
               title: 'Створити',
@@ -154,10 +154,10 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
               defaultOption: 2,
               defaultState: { type: 'EXPENSE' },
               onSubmit: d => {
-                m?.onClose();
+                modal?.onClose();
                 service.create({
                   onSuccess(d) {
-                    m?.onClose();
+                    modal?.onClose();
                   },
                 });
               },
@@ -168,7 +168,7 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
       },
     ],
 
-    [modal, service]
+    [modals, service]
   );
 };
 

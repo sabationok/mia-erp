@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ModalForm from 'components/ModalForm';
 import DirList from '../DirList/DirList';
 import useCountsService from 'redux/counts/useCountsService.hook';
@@ -10,6 +10,7 @@ import translate from '../../../lang';
 import t from '../../../lang';
 import { useEntryListData, useFilteredLisData } from '../../../hooks';
 import { toast } from 'react-toastify';
+import AppLoader from '../../atoms/AppLoader';
 
 export interface DirCountsProps extends DirBaseProps {
   filterOptions: CountFilterOpt[];
@@ -17,6 +18,8 @@ export interface DirCountsProps extends DirBaseProps {
 
 const DirCounts: React.FC<DirCountsProps> = props => {
   const modals = useModalProvider();
+  const [isLoading, setIsLoading] = useState(false);
+
   const {
     state: { counts },
     create,
@@ -129,24 +132,31 @@ const DirCounts: React.FC<DirCountsProps> = props => {
   });
   const el = useEntryListData(fd, 'parent');
 
+  useEffect(() => {
+    getAll({ onLoading: setIsLoading });
+  }, [getAll]);
   return (
-    <ModalForm
-      {...props}
-      onOptSelect={({ value }: CountFilterOpt) => {
-        value && setDirType(value);
-      }}
-    >
-      <DirList
-        list={fd}
-        entryList={el}
-        onDelete={onDelete}
-        onEdit={onEdit}
-        onCreateChild={onCreateChild}
-        createParentTitle={translate('createParentCount')}
-        onCreateParent={onCreateParent}
-        currentLevel={0}
-      />
-    </ModalForm>
+    <>
+      <ModalForm
+        {...props}
+        onOptSelect={({ value }: CountFilterOpt) => {
+          value && setDirType(value);
+        }}
+      >
+        <DirList
+          list={fd}
+          entryList={el}
+          onDelete={onDelete}
+          onEdit={onEdit}
+          onCreateChild={onCreateChild}
+          createParentTitle={translate('createParentCount')}
+          onCreateParent={onCreateParent}
+          currentLevel={0}
+        />
+      </ModalForm>
+
+      <AppLoader isLoading={isLoading} />
+    </>
   );
 };
 

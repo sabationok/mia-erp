@@ -85,8 +85,6 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   const countsTreeData = useTreeDataCreatorHook({ dataList: counts });
   const categoriesTreeData = useTreeDataCreatorHook({ dataList: categories, rootDataValidator: rootValidator });
 
-  // const registerSelect = useRegisterSelect(setValue, formValues, unregister);
-
   const registerSelect = useCallback(
     <K extends keyof ITransaction = keyof ITransaction>(
       name: K,
@@ -95,11 +93,6 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
         childName?: keyof ITransaction;
       }
     ): CustomSelectProps<ITransaction[K]> => {
-      const clearChild = (childName: keyof ITransaction) => {
-        // setValue(childName, null as any);
-        unregister(childName);
-      };
-
       return {
         onSelect: (option, _value) => {
           setValue<K>(name, option as any);
@@ -113,7 +106,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
           // setValue(name, null as any);
           unregister(name);
 
-          if (childControl?.childName) clearChild(childControl?.childName);
+          if (childControl?.childName) unregister(childControl?.childName);
 
           if (!props?.options || props.options.length === 0) {
           }
@@ -128,6 +121,8 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   const renderInputsCountIn = useMemo(() => {
     const { parentList: parentOptions, treeData } = countsTreeData;
     const childOptions = formValues.countIn?._id ? treeData[formValues.countIn?._id] : undefined;
+    console.log('renderInputsCountIn', parentOptions);
+    console.log('counts', counts);
 
     return formValues.type && ['INCOME', 'TRANSFER'].includes(formValues.type) ? (
       <>
