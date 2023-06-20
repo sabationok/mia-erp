@@ -15,7 +15,7 @@ export const persistorConfigs = {
   appSettings: {
     key: 'appSettings',
     storage,
-    whitelist: ['isDarkMode', 'appTheme'],
+    whitelist: ['isDarkMode'],
   },
   pageSettings: {
     key: 'appPage',
@@ -36,6 +36,11 @@ export const persistorConfigs = {
     key: 'transactions',
     storage,
     whitelist: ['transactions'],
+  },
+  customRoles: {
+    key: 'customRoles',
+    storage,
+    whitelist: ['customRoles'],
   },
   roles: {
     key: 'roles',

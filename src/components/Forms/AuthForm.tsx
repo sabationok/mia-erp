@@ -60,8 +60,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
   const formValues = watch();
 
   const disableSubmit = useMemo(
-    () => !isValid || formValues.password !== formValues.approvePassword,
-    [formValues.approvePassword, formValues.password, isValid]
+    () => !isValid || (registration && formValues.password !== formValues.approvePassword),
+    [formValues.approvePassword, formValues.password, isValid, registration]
   );
 
   function onFormSubmit(data: Partial<IRegistrationFormData>) {

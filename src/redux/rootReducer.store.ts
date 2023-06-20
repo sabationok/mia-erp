@@ -20,9 +20,8 @@ const rootReducer = combineReducers({
   [transactionsSlice.name]: persistReducer(persistorConfigs.transactions, transactionsSlice.reducer),
   [countsSlice.name]: persistReducer(persistorConfigs.counts, countsSlice.reducer),
   [categoriesSlice.name]: persistReducer(persistorConfigs.categories, categoriesSlice.reducer),
-  [customRolesSlice.name]: customRolesSlice.reducer,
+  [customRolesSlice.name]: persistReducer(persistorConfigs.customRoles, customRolesSlice.reducer),
   [permissionsSlice.name]: persistReducer(persistorConfigs.permissions, permissionsSlice.reducer),
-  // [documentsSlice.name]: documentsSlice.reducer,
 });
 
 export type RootReducerType = typeof rootReducer;
