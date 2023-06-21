@@ -9,11 +9,7 @@ export type CellCheckBoxHeadProps = {
   idx?: number;
   className?: string;
 };
-const CellCheckBoxHead: React.FC<CellCheckBoxHeadProps> = ({
-  title,
-  className,
-  ...props
-}) => {
+const CellCheckBoxHead: React.FC<CellCheckBoxHeadProps> = ({ title, className, ...props }) => {
   const { selectedRows, tableData, onHeadCheckboxChange } = useTable();
   const [some, setSome] = useState(false);
   const [everyOn, setEveryOn] = useState(false);
@@ -26,17 +22,15 @@ const CellCheckBoxHead: React.FC<CellCheckBoxHeadProps> = ({
 
   useEffect(() => {
     if (!selectedRows || !tableData) return;
-    if (selectedRows?.length === tableData?.length)
-      console.log(
-        'selectedRows?.length === tableData?.length',
-        selectedRows?.length === tableData?.length
-      );
+    // if (selectedRows?.length === tableData?.length)
+    //   console.log(
+    //     'selectedRows?.length === tableData?.length',
+    //     selectedRows?.length === tableData?.length
+    //   );
 
     setEveryOn(selectedRows?.length === tableData?.length);
 
-    setSome(
-      selectedRows?.length > 0 && selectedRows?.length < tableData?.length
-    );
+    setSome(selectedRows?.length > 0 && selectedRows?.length < tableData?.length);
   }, [selectedRows, selectedRows?.length, tableData, tableData?.length]);
 
   return (
@@ -46,12 +40,7 @@ const CellCheckBoxHead: React.FC<CellCheckBoxHeadProps> = ({
         onChange={onChange}
         checked={everyOn}
         // checked={selectedRows?.length === tableData?.length}
-        icon={
-          (some && 'checkBoxMinus') ||
-          (everyOn && 'checkBoxOn') ||
-          (!everyOn && 'checkBoxOff') ||
-          null
-        }
+        icon={(some && 'checkBoxMinus') || (everyOn && 'checkBoxOn') || (!everyOn && 'checkBoxOff') || null}
       />
     </StCell>
   );

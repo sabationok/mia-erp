@@ -4,7 +4,7 @@ import { ApiDirType } from '../APP_CONFIGS';
 import { getAllDirectoryItemsThunk } from './directories.thunk';
 import { IBaseDirItem } from '../../components/Directories/dir.types';
 
-export interface IDirectoriesState {
+export interface IDirectoriesState extends Record<string, any> {
   isLoading: boolean;
   error: AuthErrorType;
   directories: Record<ApiDirType | string, IBaseDirItem[]>;
@@ -16,6 +16,10 @@ const initialState: IDirectoriesState = {
   directories: {
     [ApiDirType.CATEGORIES_TR]: [],
     [ApiDirType.COUNTS]: [],
+    [ApiDirType.ACTIVITIES]: [],
+    [ApiDirType.CONTRACTORS]: [],
+    [ApiDirType.PROJECTS]: [],
+    [ApiDirType.DOCUMENTS]: [],
   },
 };
 
@@ -28,7 +32,9 @@ export const directoriesSlice = createSlice({
       .addCase(getAllDirectoryItemsThunk.fulfilled, (s, a) => {
         s.isLoading = false;
 
-        if (a.payload?.ditType) s.directories[a.payload?.ditType] = a.payload.data;
+        if (a.payload?.dirType) {
+          s.directories[a.payload?.dirType] = a.payload.data;
+        }
       })
       // .addCase(deleteDirectoryItemThunk.fulfilled, (s, a) => {
       //   s.isLoading = false;

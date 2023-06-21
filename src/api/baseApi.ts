@@ -88,12 +88,12 @@ export function useBaseURLWithPermission(id?: string) {
     if (!isLocalhost) return;
     if (permissionId) {
       baseURL.setLocalhost(permissionId || id);
-      console.log('BaseURL WITH Permission', baseApi.defaults.headers);
+      // console.log('BaseURL WITH Permission', baseApi.defaults.headers);
       return;
     }
     if (!permissionId) {
       baseURL.setLocalhost();
-      console.log('BaseURL WITHOUT Permission', baseApi.defaults.headers);
+      // console.log('BaseURL WITHOUT Permission', baseApi.defaults.headers);
       return;
     }
   }, [isLocalhost, permissionId, id, permission_token]);
@@ -103,12 +103,12 @@ export function useBaseURLWithPermission(id?: string) {
 
     if (permissionId || id) {
       baseURL.setRailWay(permissionId || id);
-      console.log('BaseURLWithPermission', baseApi.defaults.baseURL);
+      // console.log('BaseURLWithPermission', baseApi.defaults.baseURL);
       return;
     }
     if (!permissionId || id) {
       baseURL.setRailWay();
-      console.log('BaseURLWithoutPermission', baseApi.defaults.baseURL);
+      // console.log('BaseURLWithoutPermission', baseApi.defaults.baseURL);
       return;
     }
   }, [isLocalhost, permissionId, id, permission_token]);

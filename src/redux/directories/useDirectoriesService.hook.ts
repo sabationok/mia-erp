@@ -4,10 +4,12 @@ import { useMemo } from 'react';
 
 import { defaultThunkPayload } from '../../utils/fabrics';
 import { AppQueryParams } from '../../api';
-import { IBaseDirItem } from '../../components/Directories/dir.types';
+
 import { getAllDirectoryItemsThunk } from './directories.thunk';
 import { ApiDirType } from '../APP_CONFIGS';
 import { useSelector } from 'react-redux';
+import { IBaseDirItem } from '../../components/Directories/dir.types';
+import { IDirectoriesState } from './directories.slice';
 
 interface DirectoriesServiceDispatchers {
   create?: ServiceDispatcherAsync<any, IBaseDirItem>;
@@ -33,7 +35,15 @@ interface DirectoriesService extends DirectoriesServiceDispatchers {
   dispatch: AppDispatch;
 }
 
-export const useDirectoriesSelector = () => useSelector((state: RootState) => state.directories);
+export const useDirectoriesSelector = <T = any, DT extends ApiDirType = any>(dirType: DT) => {
+  const state = useSelector((state: RootState) => state.directories);
+
+  return { directory: state.directories[dirType] } as {
+    directory: IBaseDirItem<T, typeof dirType>[];
+    error: IDirectoriesState['error'];
+    isLoading: IDirectoriesState['isLoading'];
+  };
+};
 
 const useDirectoriesService = (): DirectoriesService => {
   const dispatch = useAppDispatch();

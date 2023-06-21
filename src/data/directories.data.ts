@@ -1,13 +1,19 @@
-import DirCategories, { DirCategoriesProps } from 'components/Directories/DirCategories/DirCategories';
-import DirCounts, { DirCountsProps } from 'components/Directories/DirCounts/DirCounts';
-import DirProjects, { DirProjectsProps } from 'components/Directories/DirProjects/DirProjects';
+import DirProjects, { DirProjectsProps } from 'components/Directories/DirProjects';
 import { iconId } from '../img/sprite';
-import DirMarks, { DirMarksProps } from 'components/Directories/DirMarks';
 import DirContractors, { DirContractorsProps } from 'components/Directories/DirContractors';
-import DirActivities, { DirActivitiesProps } from 'components/Directories/DirCompanyActivities/DirActivities';
 import { contractorsColumns, contractorsMockData } from './contractors.data';
-import { CategoryFilterOpt, CountFilterOpt, DirBaseProps } from '../components/Directories/dir.types';
+import {
+  CategoryFilterOpt,
+  CountFilterOpt,
+  DirActivitiesProps,
+  DirBaseProps,
+  DirCategoriesProps,
+  DirCountsProps,
+  DirMarksProps,
+} from '../components/Directories/dir.types';
 import t from '../lang';
+import DirTreeComp from '../components/Directories/DirTreeComp/DirTreeComp';
+import { ApiDirType } from '../redux/APP_CONFIGS';
 
 export const categoriesFilterOptions: CategoryFilterOpt[] = [
   { label: t('INCOMES'), value: 'INCOME' },
@@ -31,11 +37,15 @@ const CountsProps: DirCountsProps = {
   title: t('counts'),
   filterOptions: countsFilterOptions,
   fillHeight: true,
+  createParentTitle: t('createChildCount'),
+  dirType: ApiDirType.COUNTS,
+  filterSearchPath: 'type',
+  filterDefaultValue: 'ACTIVE',
 };
 const countsDir: IDirectory<DirCountsProps> = {
   title: CountsProps.title,
   iconId: iconId.wallet,
-  ModalChildren: DirCounts,
+  ModalChildren: DirTreeComp,
   modalChildrenProps: CountsProps,
   disabled: true,
 };
@@ -44,11 +54,15 @@ const CategoriesProps: DirCategoriesProps = {
   title: t('categories'),
   filterOptions: categoriesFilterOptions,
   fillHeight: true,
+  createParentTitle: t('createParentCategory'),
+  dirType: ApiDirType.CATEGORIES_TR,
+  filterSearchPath: 'type',
+  filterDefaultValue: 'INCOME',
 };
 const categoriesDir: IDirectory<DirCategoriesProps> = {
   title: CategoriesProps.title,
   iconId: iconId.folder,
-  ModalChildren: DirCategories,
+  ModalChildren: DirTreeComp,
   modalChildrenProps: CategoriesProps,
   disabled: false,
 };
@@ -90,25 +104,29 @@ const projectsDir: IDirectory<DirProjectsProps> = {
 };
 const MarksProps: DirMarksProps = {
   title: t('marks'),
+  dirType: ApiDirType.MARKS,
 };
 const marksDir: IDirectory<DirMarksProps> = {
   title: MarksProps.title,
   iconId: iconId.bookMarkAdd,
-  ModalChildren: DirMarks,
+  ModalChildren: DirTreeComp,
   modalChildrenProps: MarksProps,
   disabled: false,
 };
 const activitiesProps: DirActivitiesProps = {
   title: t('activityTypes'),
+  createParentTitle: t('createDirParentItem'),
+  dirType: ApiDirType.ACTIVITIES,
+  fillHeight: true,
 };
 const activitiesDir: IDirectory<DirActivitiesProps> = {
   title: activitiesProps.title,
   iconId: iconId.folder,
-  ModalChildren: DirActivities,
+  ModalChildren: DirTreeComp,
   modalChildrenProps: activitiesProps,
   disabled: false,
 };
 
-const directories = [countsDir, categoriesDir, activitiesDir, contractorsDir, projectsDir, marksDir];
+const directories = [countsDir, categoriesDir, contractorsDir, projectsDir, marksDir, activitiesDir];
 
 export default directories;

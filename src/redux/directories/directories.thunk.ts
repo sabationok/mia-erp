@@ -6,28 +6,26 @@ import { AppResponse } from '../global.types';
 import { AppQueryParams, DirectoriesApi } from '../../api';
 import { ApiDirType } from '../APP_CONFIGS';
 import { IBaseDirItem } from '../../components/Directories/dir.types';
+import { GetAllByDirTypeOptions } from '../../api/directories.api';
 
 export interface IAllDirectoryItemsRes extends AppResponse<IBaseDirItem[]> {}
 
 export type GetAllDirectoryItemsThunkPayload<T = any> = ThunkPayload<
   { dirType?: ApiDirType; params?: Pick<AppQueryParams, 'isArchived' | 'createTreeData'> | undefined },
-  { ditType?: ApiDirType; data: IBaseDirItem<T>[] }
+  { dirType?: ApiDirType; data: IBaseDirItem<T>[] }
 >;
 export const getAllDirectoryItemsThunk = createAsyncThunk<
-  { ditType?: ApiDirType; data: IBaseDirItem[] },
+  { dirType?: ApiDirType; data: IBaseDirItem[] },
   GetAllDirectoryItemsThunkPayload
->('categories/getAllDirectoryItemsThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
+>('directories/getAllDirectoryItemsThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
   try {
-    const response = await DirectoriesApi.getAllByDirType<IBaseDirItem>({
-      dirType: data?.dirType as ApiDirType,
-      params: data?.params,
-    });
+    const response = await DirectoriesApi.getAllByDirType<IBaseDirItem>(data as GetAllByDirTypeOptions);
 
     if (response && onSuccess) {
-      onSuccess({ ditType: data?.dirType, data: response.data.data });
+      onSuccess({ dirType: data?.dirType, data: response.data.data });
     }
 
-    return { ditType: data?.dirType, data: response.data.data };
+    return { dirType: data?.dirType, data: response.data.data };
   } catch (error) {
     onError && onError(error);
 

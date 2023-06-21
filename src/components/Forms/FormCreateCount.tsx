@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import { CountType, ICount, ICountFormData } from 'redux/counts/counts.types';
 import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import translate from '../../../lang';
-import t from '../../../lang';
-import InputLabel from '../../atoms/Inputs/InputLabel';
-import InputText from '../../atoms/Inputs/InputText';
-import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
+import translate from '../../lang';
+import t from '../../lang';
+import InputLabel from '../atoms/Inputs/InputLabel';
+import InputText from '../atoms/Inputs/InputText';
+import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 

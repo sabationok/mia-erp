@@ -1,15 +1,14 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import React, { useMemo } from 'react';
-import DirListItem, { DirListItemAddsProps, DirListItemProps } from './DirListItem';
-import { ICategory } from 'redux/categories/categories.types';
-import { ICount } from 'redux/counts/counts.types';
+import DirListItem, { DirListItemAddsProps } from './DirListItem';
 import styled, { useTheme } from 'styled-components';
 import { ConfigProvider } from 'antd';
+import { IBaseDirItem } from '../dir.types';
 
-export interface DirListProps extends Partial<DirListItemAddsProps> {
-  list: DirListItemProps[];
-  entryList?: DirListItemProps[];
-  parent?: Partial<ICount | ICategory>;
+export interface DirListProps<T = any> extends Partial<DirListItemAddsProps> {
+  list: IBaseDirItem<T>[];
+  entryList?: IBaseDirItem<T>[];
+  parent?: T;
   onCreateParent?: (...args: any[]) => void;
   createParentTitle?: string;
   currentLevel?: number;

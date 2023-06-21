@@ -1,29 +1,35 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { ICategory } from 'redux/categories/categories.types';
-import { ICount } from 'redux/counts/counts.types';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import DirList from './DirList';
+import { IBaseDirItem } from '../dir.types';
+import { ICount } from '../../../redux/counts/counts.types';
 
-export interface DirListItemProps {
-  _id?: string;
-  label?: string;
-  type?: any;
-  name?: string;
-  parent?: Partial<ICount | ICategory>;
-  balance?: number;
-  currency?: string;
-}
+// export interface DirListItemProps {
+//   _id?: string;
+//   label?: string;
+//   type?: any;
+//   name?: string;
+//   parent?: Partial<ICount | ICategory>;
+//   balance?: number;
+//   currency?: string;
+// }
 
-export interface DirListItemAddsProps {
-  list: DirListItemProps[];
+export interface ICategoriesDirItem extends IBaseDirItem<ICategory> {}
+
+export interface ICountsDirItem extends IBaseDirItem<ICount> {}
+
+export interface DirListItemAddsProps<T = any> {
+  list: IBaseDirItem<T>[];
   canHaveChild: boolean;
   onDelete?: (_id: string) => void;
   onEdit?: (_id: string) => void;
   onCreateChild?: (parent: string) => void;
+  onChangeArchiveStatus?: (_id: string) => void;
 }
 
-const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
+const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
   label,
   name,
   parent,
@@ -33,9 +39,9 @@ const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
   onDelete,
   onEdit,
   onCreateChild,
+  childrenList,
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const childrensList = list?.filter(el => el?.parent === _id || el?.parent?._id === _id);
 
   function onOpenClick() {
     setIsOpen(prev => !prev);
@@ -67,7 +73,7 @@ const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
         <LabelField>
           <Label title={label || name}>{label || name}</Label>
 
-          {!(!childrensList || childrensList?.length === 0) && (
+          {!(!childrenList || childrenList?.length === 0) && (
             <ButtonIcon
               variant="onlyIconNoEffects"
               iconId={isOpen ? 'SmallArrowUp' : 'SmallArrowDown'}
@@ -97,11 +103,11 @@ const DirListItem: React.FC<DirListItemProps & DirListItemAddsProps> = ({
       </ItemGrid>
 
       <Children isOpen={isOpen}>
-        {childrensList && childrensList.length > 0 && (
+        {childrenList && childrenList.length > 0 && (
           <DirList
             list={list}
             parent={{ label, name, _id: _id || '' }}
-            entryList={childrensList}
+            entryList={childrenList}
             onDelete={onDelete}
             onEdit={onEdit}
             onCreateChild={onCreateChild}

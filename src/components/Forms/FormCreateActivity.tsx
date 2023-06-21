@@ -1,21 +1,17 @@
 import ModalForm, { ModalFormProps } from 'components/ModalForm';
 import React from 'react';
 import styled from 'styled-components';
-import {
-  IActivity,
-  IActivityFormData,
-} from 'redux/companyActivities/activities.types';
+import { IActivity, IActivityFormData } from 'redux/companyActivities/activities.types';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import InputLabel from '../../atoms/Inputs/InputLabel';
-import InputText from '../../atoms/Inputs/InputText';
-import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
+import InputLabel from '../atoms/Inputs/InputLabel';
+import InputText from '../atoms/Inputs/InputText';
+import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 
 const validation = yup.object().shape({});
 
-export interface FormCreateCompanyActivityProps
-  extends Omit<ModalFormProps, 'onSubmit'> {
+export interface FormCreateCompanyActivityProps extends Omit<ModalFormProps, 'onSubmit'> {
   _id?: string;
   activity?: IActivity;
   owner?: Partial<IActivity>;
@@ -59,10 +55,7 @@ const FormCreateActivity: React.FC<FormCreateCompanyActivityProps> = ({
         </InputLabel>
 
         <InputLabel label="Коментар" error={errors.descr}>
-          <TextareaPrimary
-            placeholder="Введіть коментар"
-            {...register('descr')}
-          />
+          <TextareaPrimary placeholder="Введіть коментар" {...register('descr')} />
         </InputLabel>
       </Inputs>
     </ModalForm>
