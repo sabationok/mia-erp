@@ -4,7 +4,7 @@ import { AppResponse } from '../redux/global.types';
 import { IBaseDirItem } from '../components/Directories/dir.types';
 import { AppQueryParams } from './index';
 
-type GetAllByDirTypeOptions = Required<Pick<AppQueryParams, 'dirType'>> & {
+export type GetAllByDirTypeOptions = Required<Pick<AppQueryParams, 'dirType'>> & {
   params?: Pick<AppQueryParams, 'isArchived' | 'createTreeData'>;
 };
 

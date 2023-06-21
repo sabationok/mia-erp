@@ -46,7 +46,7 @@ export default async function createTreeData<T = any>(
 ): Promise<TreeOption<T>[] | []> {
   onLoading && onLoading(true);
   try {
-    const root = _.cloneDeep(data).filter(item => !item.parent);
+    const root = data.filter(item => !item.parent);
 
     await Promise.all(
       root.map(async item => {

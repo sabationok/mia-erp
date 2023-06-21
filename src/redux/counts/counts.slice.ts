@@ -24,7 +24,6 @@ export const countsSlice = createSlice({
     builder
 
       .addCase(getAllCountsThunk.fulfilled, (s, a) => {
-        console.log(a.payload);
         s.isLoading = false;
         s.counts = a.payload;
       })

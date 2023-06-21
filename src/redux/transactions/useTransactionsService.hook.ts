@@ -2,7 +2,7 @@ import { useTransactionsSelector } from 'redux/selectors.store';
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { ITransaction, ITransactionReqData } from './transactions.types';
 import { ITransactionsState } from './transactions.slice';
-import { ServiceApiCaller, ServiceDispatcher } from 'redux/global.types';
+import { ServiceApiCaller, ServiceDispatcherAsync } from 'redux/global.types';
 import { createTransactionThunk, getAllTransactionsThunk } from './transactions.thunks';
 import { FilterReturnDataType as FilterData } from 'components/Filter/AppFilter';
 import { useMemo } from 'react';
@@ -12,11 +12,11 @@ import { createApiCall, TransactionsApi } from 'api';
 export interface TransactionsService {
   dispatch: AppDispatch;
   state: ITransactionsState;
-  create: ServiceDispatcher<ITransactionReqData>;
+  create: ServiceDispatcherAsync<ITransactionReqData>;
   deleteById: ServiceApiCaller<string, ITransaction>; // !!!!! ===>>> ServiceDispatcher
   editById: ServiceApiCaller<Required<ITransactionReqData>, ITransaction>; // !!!!! ===>>> ServiceDispatcher
   getById: ServiceApiCaller<string, ITransaction>;
-  getAll: ServiceDispatcher<FilterData, ITransaction[]>;
+  getAll: ServiceDispatcherAsync<FilterData, ITransaction[]>;
 }
 
 const useTransactionsService = (): TransactionsService => {

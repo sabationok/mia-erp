@@ -1,4 +1,4 @@
-import React, { createContext, memo, useContext, useRef, useState } from 'react';
+import React, { createContext, memo, useCallback, useContext, useMemo, useRef, useState } from 'react';
 import TableHead from './TableHead';
 import TableBody from './TableBody';
 import AppLoader from 'components/atoms/AppLoader';
@@ -7,7 +7,6 @@ import TableOverHead from './TableOverHead/TableOverHead';
 import TableFooter from './TableFooter/TableFooter';
 import styled from 'styled-components';
 import { MaxToTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
-import { IBase } from 'redux/global.types';
 import { CustomCheckboxEvent } from './TebleCells/CellComponents/CheckBox';
 import {
   ITableListContext,
@@ -16,6 +15,8 @@ import {
   SelectItem,
   UseTableHookType,
 } from './tableTypes.types';
+import { FilterReturnDataType } from '../Filter/AppFilter';
+import { IBase } from '../../redux/global.types';
 
 export type { ITableListContext, ITableListProps, OnCheckBoxChangeHandlerEvent, UseTableHookType, SelectItem };
 export const TableCTX = createContext({});
@@ -40,52 +41,91 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const rowRef = useRef<HTMLElement>();
   const [selectedRow, setSelectedRow] = useState<any | undefined>();
+  const setFilterData = useState<FilterReturnDataType>()[1];
 
-  const rowGrid = {
-    display: 'grid',
-    gridTemplateColumns: `repeat(${tableTitles?.length}, min-content)`,
-  };
+  const rowGrid = useMemo(
+    () => ({
+      display: 'grid',
+      gridTemplateColumns: `repeat(${tableTitles?.length}, min-content)`,
+    }),
+    [tableTitles?.length]
+  );
 
-  function onRowClickWrapper(rowData: any) {
-    setSelectedRow(rowData);
-    typeof onRowClick === 'function' && onRowClick(rowData);
-  }
+  const onFilterSubmitWrapper = useCallback(
+    (data: FilterReturnDataType) => {
+      setFilterData(data);
+      typeof onFilterSubmit === 'function' && onFilterSubmit(data);
+    },
+    [onFilterSubmit, setFilterData]
+  );
 
-  function onCheckboxChangeWrapper({ checked, _id }: OnCheckBoxChangeHandlerEvent) {
+  const onRowClickWrapper = useCallback(
+    (rowData: any) => {
+      setSelectedRow(rowData);
+      typeof onRowClick === 'function' && onRowClick(rowData);
+    },
+    [onRowClick]
+  );
+
+  const onCheckboxChangeWrapper = useCallback(({ checked, _id }: OnCheckBoxChangeHandlerEvent) => {
     setSelectedRows(prev => {
       if (checked && _id) return [...prev, _id];
       if (!checked && _id) return prev.filter(el => el !== _id);
       return prev;
     });
-  }
+  }, []);
+  const onHeadCheckboxChange = useCallback(
+    (e: CustomCheckboxEvent) => {
+      const { checked } = e;
+      if (checked) setSelectedRows(prev => tableData?.map(el => el._id) || prev);
+      if (!checked) setSelectedRows([]);
+    },
+    [tableData]
+  );
 
-  function onHeadCheckboxChange(e: CustomCheckboxEvent) {
-    const { checked } = e;
-    if (checked) setSelectedRows(prev => tableData?.map(el => el._id) || prev);
-    if (!checked) setSelectedRows([]);
-  }
-
-  const CTX: ITableListContext<IBase> = {
-    RowActionsComp,
-    TableActionsComp,
-    actionsCreator,
-    footer,
-    tableSearchParams,
-    tableTitles,
-    filterTitle,
-    filterDefaultValues,
-    rowGrid,
-    rowRef,
-    selectedRows,
-    selectedRow,
-    tableData,
-    isLoading,
-    onFilterSubmit,
-    onRowClick: onRowClickWrapper,
-    onCheckboxChange: onCheckboxChangeWrapper,
-    onHeadCheckboxChange: onHeadCheckboxChange,
-    ...props,
-  };
+  const CTX = useMemo(
+    (): ITableListContext<IBase> => ({
+      RowActionsComp,
+      TableActionsComp,
+      actionsCreator,
+      footer,
+      tableSearchParams,
+      tableTitles,
+      filterTitle,
+      filterDefaultValues,
+      rowGrid,
+      rowRef,
+      selectedRows,
+      selectedRow,
+      tableData,
+      isLoading,
+      onFilterSubmit: onFilterSubmitWrapper,
+      onRowClick: onRowClickWrapper,
+      onCheckboxChange: onCheckboxChangeWrapper,
+      onHeadCheckboxChange: onHeadCheckboxChange,
+      ...props,
+    }),
+    [
+      RowActionsComp,
+      TableActionsComp,
+      actionsCreator,
+      filterDefaultValues,
+      filterTitle,
+      footer,
+      isLoading,
+      onCheckboxChangeWrapper,
+      onFilterSubmitWrapper,
+      onHeadCheckboxChange,
+      onRowClickWrapper,
+      props,
+      rowGrid,
+      selectedRow,
+      selectedRows,
+      tableData,
+      tableSearchParams,
+      tableTitles,
+    ]
+  );
 
   return (
     <Table {...props}>

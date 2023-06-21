@@ -1,8 +1,9 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { iconId } from 'data';
 import styled from 'styled-components';
-import { FilterReturnDataType, FilterSelectorDataType } from './AppFilter';
+import { FilterSelectorDataType } from './AppFilter';
 import React from 'react';
+import { ApiDirType } from '../../redux/APP_CONFIGS';
 
 export interface IFilterSelectorAddsProps {
   ListComp?: React.FC<any>;
@@ -10,7 +11,7 @@ export interface IFilterSelectorAddsProps {
 
 export interface FilterSelectorProps {
   label: string;
-  selectorName?: keyof FilterReturnDataType;
+  selectorName?: ApiDirType;
   data: FilterSelectorDataType[];
   idx: number;
   currentIdx: number | null;
@@ -22,7 +23,7 @@ export interface FilterSelectorProps {
 
 const Selector: React.FC<FilterSelectorProps & React.HTMLAttributes<Element>> = ({
   label = 'Selector label',
-  selectorName = 'selector',
+  selectorName,
   onSelectorClick,
   childrenListCount,
   selectedChildrenCount,
@@ -42,7 +43,7 @@ const Selector: React.FC<FilterSelectorProps & React.HTMLAttributes<Element>> = 
       >
         <Label>{label}</Label>
 
-        <div>{`Обрано: ${selectedChildrenCount || 0}/${childrenListCount || 0}`}</div>
+        {/*<div>{`Обрано: ${selectedChildrenCount || 0}/${childrenListCount || 0}`}</div>*/}
       </StOpenButton>
 
       {currentIdx === idx ? <SelectorList>{children}</SelectorList> : null}

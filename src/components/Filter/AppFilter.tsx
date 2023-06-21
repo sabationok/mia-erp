@@ -2,47 +2,46 @@ import React, { useCallback, useMemo, useState } from 'react';
 import Selector from './Selector';
 import ModalDefault, { ModalFormProps } from 'components/ModalForm';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import styled from 'styled-components';
 import SelectorContent from './SelectorContent/SelectorContent';
-import * as yup from 'yup';
 import { ICount } from 'redux/counts/counts.types';
 import { ICategory } from 'redux/categories/categories.types';
 import InputTextPrimary from '../atoms/Inputs/InputTextPrimary';
 import { IContractor } from '../../redux/contractors/contractors.types';
 import { IProject } from '../../redux/transactions/transactions.types';
+import { ApiDirType } from '../../redux/APP_CONFIGS';
 
 export type FilterSelectorDataType = ICount | ICategory | IContractor | IProject | any;
 export type FilterSelectorType = {
-  selectorName: keyof FilterReturnDataType;
+  selectorName?: ApiDirType;
+  queryName?: string;
   label: string;
   data: FilterSelectorDataType[];
 };
 
-export interface FilterReturnDataType {
-  type?: string[];
-  categories?: string[];
-  counts?: string[];
-  contractors?: string[];
-  managers?: string[];
-  tags?: string[];
-  marks?: string[];
-  projects?: string[];
-  activities?: string[];
+export interface FilterReturnDataType extends Record<ApiDirType | string, string[] | undefined> {
+  [ApiDirType.CATEGORIES_PROD]?: string[];
+  [ApiDirType.CATEGORIES_TR]?: string[];
+  [ApiDirType.COUNTS]?: string[];
+  [ApiDirType.CONTRACTORS]?: string[];
+  [ApiDirType.DOCUMENTS]?: string[];
+  [ApiDirType.PROJECTS]?: string[];
+  [ApiDirType.ACTIVITIES]?: string[];
+  [ApiDirType.MARKS]?: string[];
 }
 
-const validation = yup.object().shape({
-  type: yup.array().of(yup.string()).optional(),
-  categories: yup.array().of(yup.string()).optional(),
-  counts: yup.array().of(yup.string()).optional(),
-  contractors: yup.array().of(yup.string()).optional(),
-  managers: yup.array().of(yup.string()).optional(),
-  marks: yup.array().of(yup.string()).optional(),
-});
+// const validation = yup.object().shape({
+//   type: yup.array().of(yup.string()).optional(),
+//   categories: yup.array().of(yup.string()).optional(),
+//   counts: yup.array().of(yup.string()).optional(),
+//   contractors: yup.array().of(yup.string()).optional(),
+//   managers: yup.array().of(yup.string()).optional(),
+//   marks: yup.array().of(yup.string()).optional(),
+// });
 
 export interface FilterProps extends Omit<ModalFormProps, 'defaultFilterValue' | 'onSubmit'> {
   filterSelectors?: FilterSelectorType[];
-  filterDefaultValues?: Partial<Record<keyof FilterReturnDataType, string[] | any[]>>;
+  filterDefaultValues?: Partial<Record<ApiDirType, string[] | any[]>>;
   onFilterSubmit?: SubmitHandler<FilterReturnDataType>;
 }
 
@@ -74,13 +73,12 @@ const Filter: React.FC<FilterProps> = ({ filterSelectors, filterDefaultValues, o
     watch,
   } = useForm<FilterReturnDataType>({
     defaultValues: filterDefaultValues,
-    resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
   const formValues = watch();
 
   const onFilterDataChange = useCallback(
-    (name: keyof FilterReturnDataType, value?: string[]) => {
+    (name: ApiDirType, value?: string[]) => {
       if (name && value) setValue(name, value);
       if (!value) unregister(name);
     },
@@ -111,7 +109,7 @@ const Filter: React.FC<FilterProps> = ({ filterSelectors, filterDefaultValues, o
           CurrentData={CurrentData}
         >
           <SelectorContent
-            getDefaultValue={(selectorName: keyof FilterReturnDataType) => formValues[selectorName] || []}
+            getDefaultValue={(selectorName?: ApiDirType) => (selectorName && formValues[selectorName]) || []}
             onSelectorSubmit={onFilterDataChange}
             data={data}
             selectorName={selectorName}
@@ -132,7 +130,7 @@ const Filter: React.FC<FilterProps> = ({ filterSelectors, filterDefaultValues, o
   //   [CurrentData?.ListComp, CurrentData?.data, CurrentData?.selectorName, filterData, onFilterDataChange]);
 
   return (
-    <StModalDefault {...props} onSubmit={onFilterSubmit && (() => handleSubmit(onFilterSubmit))}>
+    <StModalDefault {...props} onSubmit={onFilterSubmit ? handleSubmit(onFilterSubmit) : undefined}>
       <FilterContainer>
         <DatePickers>
           <InputTextPrimary
@@ -188,7 +186,7 @@ const FilterContainer = styled.div`
 const DatePickers = styled.div`
   display: grid;
 
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
 
   color: inherit;
@@ -258,11 +256,15 @@ const SelectorErr = styled.div`
 
   color: ${({ theme }) => theme.fontColor};
 
-  background-color: ${({ theme }) => theme.backgroundColorMain};
+  background-color: ${({ theme }) => theme.modalBackgroundColor};
 `;
 
 function isSelectorType(obj: any): obj is FilterSelectorType {
-  return typeof obj.selectorName === 'string' && typeof obj.label === 'string' && Array.isArray(obj.data);
+  return (
+    typeof (obj.selectorName === 'string' || typeof obj.queryName === 'string') &&
+    typeof obj.label === 'string' &&
+    Array.isArray(obj.data)
+  );
 }
 
 export default AppFilter;

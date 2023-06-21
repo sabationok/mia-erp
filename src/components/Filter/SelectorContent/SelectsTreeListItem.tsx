@@ -10,8 +10,8 @@ export interface SelectsTreeListItemProps<TFields = IBase> {
   _id: string;
   label: string;
   name?: string;
-  owner?: TFields;
-  ownerId?: string;
+  parent?: TFields;
+  parentId?: string;
   onSelectItems: (ids: string[], checked: boolean) => void;
   onCheckSelectStatus: (id: string) => boolean;
   childrenList?: SelectsTreeListItemProps[];
@@ -24,10 +24,10 @@ const SelectsTreeListItem: React.FC<
   SelectsTreeListItemProps & Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'>
 > = ({
   _id,
-  owner,
+  parent,
   checked,
   label,
-  ownerId,
+  parentId,
   name,
   childrenList,
   childrenCount,
@@ -43,9 +43,9 @@ const SelectsTreeListItem: React.FC<
   //   // setIsChecked(_prev => {
   //   //   onSelect(!!isEveryChildrenChecked, {
   //   //     _id,
-  //   //     owner,
+  //   //     parent,
   //   //     label,
-  //   //     ownerId,
+  //   //     parentId,
   //   //     name,
   //   //     ...props,
   //   //     checked: !!isEveryChildrenChecked,
@@ -56,9 +56,9 @@ const SelectsTreeListItem: React.FC<
   //     setIsChecked(_prev => {
   //       onSelect(true, {
   //         _id,
-  //         owner,
+  //         parent,
   //         label,
-  //         ownerId,
+  //         parentId,
   //         name,
   //         ...props,
   //         checked: true,
@@ -70,9 +70,9 @@ const SelectsTreeListItem: React.FC<
   //     setIsChecked(_prev => {
   //       onSelect(false, {
   //         _id,
-  //         owner,
+  //         parent,
   //         label,
-  //         ownerId,
+  //         parentId,
   //         name,
   //         ...props,
   //         checked: false,
@@ -105,7 +105,7 @@ const SelectsTreeListItem: React.FC<
   );
 
   return (
-    <MainBox noOwner={!owner}>
+    <MainBox noParent={!parent}>
       <Parent>
         <ButtonIcon
           size="20px"
@@ -132,11 +132,11 @@ const SelectsTreeListItem: React.FC<
     </MainBox>
   );
 };
-const MainBox = styled.div<{ noOwner?: boolean }>`
+const MainBox = styled.div<{ noParent?: boolean }>`
   display: flex;
   flex-direction: column;
 
-  border-bottom: ${({ noOwner, theme }) => (noOwner ? `1px solid ${theme.backgroundColorSecondary}` : '')};
+  border-bottom: ${({ noParent, theme }) => (noParent ? `1px solid ${theme.backgroundColorSecondary}` : '')};
 `;
 const ChildrenBox = styled.div`
   margin-left: 26px;

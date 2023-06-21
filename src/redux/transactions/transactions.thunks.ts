@@ -4,6 +4,7 @@ import { ThunkPayload } from '../store.store';
 import { isAxiosError } from 'axios';
 import { ICreateTransactionRes, ITransaction, ITransactionReqData } from './transactions.types';
 import TransactionsApi from '../../api/transactions.api';
+import { FilterReturnDataType } from '../../components/Filter/AppFilter';
 
 // export async function payloadCreator<R = any>(
 //   getResponse: () => R,
@@ -25,26 +26,26 @@ import TransactionsApi from '../../api/transactions.api';
 //   }
 // }
 
-export const getAllTransactionsThunk = createAsyncThunk<ITransaction[], ThunkPayload<any, ITransaction[]>>(
-  'transactions/getAllTransactionsThunk',
-  async ({ onSuccess, onError, onLoading }, thunkAPI) => {
-    onLoading && onLoading(true);
+export const getAllTransactionsThunk = createAsyncThunk<
+  ITransaction[],
+  ThunkPayload<FilterReturnDataType, ITransaction[]>
+>('transactions/getAllTransactionsThunk', async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
+  onLoading && onLoading(true);
 
-    try {
-      const response = await TransactionsApi.getAll();
+  try {
+    const response = await TransactionsApi.getAll({ filter: data });
 
-      onSuccess && onSuccess(response.data.data);
+    onSuccess && onSuccess(response.data.data);
 
-      return response.data.data;
-    } catch (error) {
-      onError && onError(error);
+    return response.data.data;
+  } catch (error) {
+    onError && onError(error);
 
-      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-    } finally {
-      onLoading && onLoading(false);
-    }
+    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+  } finally {
+    onLoading && onLoading(false);
   }
-);
+});
 
 export const createTransactionThunk = createAsyncThunk<
   ITransaction | undefined,

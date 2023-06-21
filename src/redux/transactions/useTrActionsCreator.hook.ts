@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 import { filterOptions } from '../../data/transactions.data';
 import { TableActionCreator } from '../../components/TableList/tableTypes.types';
 import { ITransaction } from './transactions.types';
-import TransactionForm from '../../components/Forms/TransactionForm';
+import TransactionForm from '../../components/Forms/TransactionFormNew';
 
 export type TrActionsCreator = TableActionCreator<ITransaction>;
 const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => {
@@ -26,11 +26,8 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
               title: 'Редагування транзакції',
               filterOptions,
               onSubmitEdit: () => {
-                modal?.onClose();
                 service.editById({
-                  onSuccess(d) {
-                    modal?.onClose();
-                  },
+                  onSuccess(d) {},
                 });
               },
               fillHeight: true,
@@ -51,11 +48,8 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
               title: 'Копіювання транзакції',
               filterOptions,
               onSubmit: () => {
-                modal?.onClose();
                 service.create({
-                  onSuccess(d) {
-                    modal?.onClose();
-                  },
+                  onSuccess(d) {},
                 });
               },
               fillHeight: true,
@@ -96,11 +90,8 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
               defaultOption: 0,
               defaultState: { type: 'INCOME' },
               onSubmit: data => {
-                modal?.onClose();
                 service.create({
-                  onSuccess(d) {
-                    modal?.onClose();
-                  },
+                  onSuccess(d) {},
                 });
               },
               fillHeight: true,
@@ -124,13 +115,9 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
               defaultOption: 1,
               defaultState: { type: 'TRANSFER' },
               onSubmit: d => {
-                modal?.onClose();
-
                 service.create({
                   data: { data: d },
-                  onSuccess(d) {
-                    modal?.onClose();
-                  },
+                  onSuccess(d) {},
                 });
               },
               fillHeight: true,
@@ -154,11 +141,9 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
               defaultOption: 2,
               defaultState: { type: 'EXPENSE' },
               onSubmit: d => {
-                modal?.onClose();
                 service.create({
-                  onSuccess(d) {
-                    modal?.onClose();
-                  },
+                  data: { data: d },
+                  onSuccess(d) {},
                 });
               },
               fillHeight: true,

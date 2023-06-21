@@ -14,14 +14,13 @@ import { FilterOpt } from '../ModalForm/ModalFilter';
 import CustomSelect, { CustomSelectProps } from '../atoms/Inputs/CustomSelect';
 import { createTransactionForReq } from '../../utils';
 import { useAppSelector } from '../../redux/store.store';
-import useTreeDataCreatorHook from '../../hooks/useTreeDataCreator.hook';
 import FlexBox from '../atoms/FlexBox';
-import { IBaseDirItem } from '../Directories/dir.types';
 import translate from '../../lang';
+import { ApiDirType } from '../../redux/APP_CONFIGS';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
 
-export interface TransactionFormProps extends Omit<ModalFormProps, 'onSubmit'> {
+export interface TransactionFormNewProps extends Omit<ModalFormProps, 'onSubmit'> {
   edit?: boolean;
   copy?: boolean;
   id?: string;
@@ -31,22 +30,6 @@ export interface TransactionFormProps extends Omit<ModalFormProps, 'onSubmit'> {
   defaultState?: Partial<ITransaction>;
   addInputs?: boolean;
 }
-
-const additionalInputs = (
-  <>
-    <InputLabel label={translate('contractor')} direction={'vertical'} disabled>
-      <InputText placeholder={translate('contractor')} disabled />
-    </InputLabel>
-
-    <InputLabel label={translate('project')} direction={'vertical'} disabled>
-      <InputText placeholder={translate('project')} disabled />
-    </InputLabel>
-
-    <InputLabel label={translate('activityType')} direction={'vertical'} disabled>
-      <InputText placeholder={translate('activityType')} disabled />
-    </InputLabel>
-  </>
-);
 
 const validationItem = yup
   .object()
@@ -68,7 +51,7 @@ const validation = yup.object().shape({
   subCountIn: validationItem,
 });
 
-const TransactionForm: React.FC<TransactionFormProps> = ({
+const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
   edit,
   onSubmit,
   onSubmitEdit,
@@ -80,6 +63,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   const {
     counts: { counts },
     categories: { categories },
+    directories: { directories },
   } = useAppSelector();
 
   const {
@@ -95,14 +79,6 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     reValidateMode: 'onSubmit',
   });
   const formValues = watch();
-
-  const rootValidator = useCallback(
-    <T = any,>(el: IBaseDirItem<T>) => !el.parent && el.type === formValues.type,
-    [formValues.type]
-  );
-
-  const countsTreeData = useTreeDataCreatorHook({ dataList: counts });
-  const categoriesTreeData = useTreeDataCreatorHook({ dataList: categories, rootDataValidator: rootValidator });
 
   const registerSelect = useCallback(
     <K extends keyof ITransaction = keyof ITransaction>(
@@ -138,8 +114,9 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
   );
 
   const renderInputsCountIn = useMemo(() => {
-    const { parentList: parentOptions, treeData } = countsTreeData;
-    const childOptions = formValues.countIn?._id ? treeData[formValues.countIn?._id] : undefined;
+    const parentOptions = directories[ApiDirType.COUNTS];
+
+    const parent = parentOptions.find(el => el._id === formValues.countIn?._id);
 
     return formValues.type && ['INCOME', 'TRANSFER'].includes(formValues.type) ? (
       <>
@@ -148,20 +125,23 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
           placeholder={translate('countIn')}
           {...registerSelect('countIn', { options: parentOptions }, { childName: 'subCountIn' })}
         />
-        <CustomSelect
-          label={translate('subCountIn')}
-          placeholder={translate('subCountIn')}
-          {...registerSelect('subCountIn', {
-            options: childOptions,
-          })}
-        />
+        {parent?.childrenList && parent?.childrenList?.length > 0 && (
+          <CustomSelect
+            label={translate('subCountIn')}
+            placeholder={translate('subCountIn')}
+            {...registerSelect('subCountIn', {
+              options: parent?.childrenList,
+            })}
+          />
+        )}
       </>
     ) : null;
-  }, [countsTreeData, formValues.countIn?._id, formValues.type, registerSelect]);
+  }, [directories, formValues.countIn?._id, formValues.type, registerSelect]);
 
   const renderInputsCountOut = useMemo(() => {
-    const { parentList: parentOptions, treeData } = countsTreeData;
-    const childOptions = formValues.countOut?._id ? treeData[formValues.countOut?._id] : undefined;
+    const parentOptions = directories[ApiDirType.COUNTS];
+
+    const childOptions = parentOptions.find(el => el._id === formValues.countOut?._id)?.childrenList;
 
     return formValues.type && ['EXPENSE', 'TRANSFER'].includes(formValues.type) ? (
       <>
@@ -177,20 +157,21 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
             { childName: 'subCountOut' }
           )}
         />
-        <CustomSelect
-          label={translate('subCountOut')}
-          placeholder={translate('subCountOut')}
-          {...registerSelect('subCountOut', { options: childOptions, error: errors.subCountOut })}
-        />
+        {childOptions && childOptions.length > 0 && (
+          <CustomSelect
+            label={translate('subCountOut')}
+            placeholder={translate('subCountOut')}
+            {...registerSelect('subCountOut', { options: childOptions, error: errors.subCountOut })}
+          />
+        )}
       </>
     ) : null;
-  }, [countsTreeData, errors.countOut, errors.subCountOut, formValues.countOut?._id, formValues.type, registerSelect]);
+  }, [directories, errors.countOut, errors.subCountOut, formValues.countOut?._id, formValues.type, registerSelect]);
 
   const renderInputsCategories = useMemo(() => {
-    const { parentList: parentOptions, treeData } = categoriesTreeData;
-    const childOptions = formValues.category?._id ? treeData[formValues.category?._id] : undefined;
+    const parentOptions = directories[ApiDirType.CATEGORIES_TR];
 
-    console.log('renderInputsCategories', { childOptions, treeData });
+    const childOptions = parentOptions.find(el => el._id === formValues.category?._id)?.childrenList;
 
     return (
       <>
@@ -199,14 +180,16 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
           placeholder={translate('category')}
           {...registerSelect('category', { options: parentOptions }, { childName: 'subCategory' })}
         />
-        <CustomSelect
-          label={translate('subCategory')}
-          placeholder={translate('subCategory')}
-          {...registerSelect('subCategory', { options: childOptions })}
-        />
+        {childOptions && childOptions.length > 0 && (
+          <CustomSelect
+            label={translate('subCategory')}
+            placeholder={translate('subCategory')}
+            {...registerSelect('subCategory', { options: childOptions })}
+          />
+        )}
       </>
     );
-  }, [categoriesTreeData, formValues.category?._id, registerSelect]);
+  }, [directories, formValues.category?._id, registerSelect]);
 
   function onValidSubmit(submitData: ITransaction) {
     const omitPathArr: (keyof ITransaction)[] =
@@ -214,11 +197,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
       (formValues.type === 'EXPENSE' && ['countIn', 'subCountIn']) ||
       [];
 
-    // console.log('onSubmitWrapper', submitData);
-    // console.log('createTransactionForReq', createTransactionForReq(submitData));
-    const trReqData = createTransactionForReq(submitData, omitPathArr, 'transactionDate');
-
-    console.log('trReqData', trReqData);
+    const trReqData = createTransactionForReq(submitData, omitPathArr, 'eventDate', 'amount');
 
     onSubmit && onSubmit(trReqData);
 
@@ -242,7 +221,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
         </InputLabel>
         <GridWrapper>
           <InputLabel label={translate('amount')} direction={'vertical'}>
-            <InputText placeholder={translate('amount')} {...register('amount')} />
+            <InputText placeholder={translate('amount')} type={'number'} {...register('amount')} />
           </InputLabel>
 
           <InputLabel label={translate('currency')} direction={'vertical'}>
@@ -253,8 +232,6 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
         {renderInputsCountIn}
         {renderInputsCountOut}
         {renderInputsCategories}
-
-        {addInputs ? additionalInputs : null}
 
         <InputLabel label={translate('comment')} direction={'vertical'}>
           <TextareaPrimary placeholder={translate('comment')} {...register('comment')} />
@@ -269,4 +246,4 @@ const GridWrapper = styled.div<{ gridTemplateColumns?: string }>`
   grid-template-columns: ${({ gridTemplateColumns }) => gridTemplateColumns || '1fr 120px'};
   gap: 12px;
 `;
-export default TransactionForm;
+export default TransactionFormNew;

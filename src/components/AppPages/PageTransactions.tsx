@@ -10,6 +10,8 @@ import { useTrActionsCreator } from '../../redux/transactions/useTrActionsCreato
 import { ITableListProps } from '../TableList/tableTypes.types';
 import AppGridPage from './AppGridPage';
 import { defaultThunkPayload } from '../../utils/fabrics';
+import useDirectoriesServiceHook from '../../redux/directories/useDirectoriesService.hook';
+import { ApiDirType } from '../../redux/APP_CONFIGS';
 
 type Props = {
   path: string;
@@ -21,9 +23,7 @@ const PageTransactions: React.FC<any> = ({ path }: Props) => {
   const actionsCreator = useTrActionsCreator(service);
   // const [selectedTr, setSelectedTr] = useState<any>(null);
 
-  useEffect(() => {
-    getAll(defaultThunkPayload());
-  }, [getAll]);
+  const { getAllByDirType } = useDirectoriesServiceHook();
 
   const tableConfig = useMemo(
     (): ITableListProps<ITransaction> => ({
@@ -35,19 +35,33 @@ const PageTransactions: React.FC<any> = ({ path }: Props) => {
       isFilter: true,
       isSearch: true,
       footer: true,
-
       checkBoxes: true,
       actionsCreator,
       onFilterSubmit: data => {
-        // console.log(data);
+        console.log(data);
+        getAll({ data });
       },
       onRowClick: data => {
-        // console.log(data);
+        console.log(data);
       },
     }),
-    [actionsCreator, filterSelectors, state.transactions]
+    [actionsCreator, filterSelectors, getAll, state.transactions]
   );
+  useEffect(() => {
+    getAllByDirType({ data: { dirType: ApiDirType.COUNTS, params: { isArchived: false, createTreeData: true } } });
+  }, [getAllByDirType]);
+  useEffect(() => {
+    getAllByDirType({
+      data: {
+        dirType: ApiDirType.CATEGORIES_TR,
+        params: { isArchived: false, createTreeData: true },
+      },
+    });
+  }, [getAllByDirType]);
 
+  useEffect(() => {
+    getAll(defaultThunkPayload());
+  }, [getAll]);
   return (
     <AppGridPage path={path}>
       <Page>

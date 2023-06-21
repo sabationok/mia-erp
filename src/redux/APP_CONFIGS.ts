@@ -39,6 +39,7 @@ export enum ApiDirType {
   ACTIVITIES = 'activities',
   COUNTS = 'counts',
   MARKS = 'marks',
+  TYPE = 'type',
 }
 
 const TRANSACTIONS_API_BASENAME = '/transactions';

@@ -1,5 +1,6 @@
 import { FilterSelectorType } from 'components/Filter/AppFilter';
 import { RootState, useAppSelector } from '../store.store';
+import { ApiDirType } from '../APP_CONFIGS';
 
 const useTrFilterSelectors = (): FilterSelectorType[] => {
   const { counts, categories }: RootState = useAppSelector();
@@ -14,17 +15,17 @@ const useTrFilterSelectors = (): FilterSelectorType[] => {
     {
       label: 'Тип',
       data: transactionTypes,
-      selectorName: 'type',
+      queryName: 'type',
     },
     {
       label: 'Рахунки',
       data: counts.counts,
-      selectorName: 'counts',
+      selectorName: ApiDirType.COUNTS,
     },
     {
       label: 'Категорії',
       data: categories.categories,
-      selectorName: 'categories',
+      selectorName: ApiDirType.CATEGORIES_TR,
     },
   ];
 };

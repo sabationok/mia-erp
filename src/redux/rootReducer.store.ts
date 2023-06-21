@@ -11,6 +11,7 @@ import { countsSlice } from './counts/counts.slice';
 import { persistorConfigs } from './configs.store';
 import { customRolesSlice } from './customRoles/customRoles.slice';
 import { permissionsSlice } from './permissions/permissions.slice';
+import { directoriesSlice } from './directories/directories.slice';
 
 const rootReducer = combineReducers({
   [authSlice.name]: persistReducer(persistorConfigs.auth, authSlice.reducer),
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   [categoriesSlice.name]: persistReducer(persistorConfigs.categories, categoriesSlice.reducer),
   [customRolesSlice.name]: persistReducer(persistorConfigs.customRoles, customRolesSlice.reducer),
   [permissionsSlice.name]: persistReducer(persistorConfigs.permissions, permissionsSlice.reducer),
+  [directoriesSlice.name]: persistReducer(persistorConfigs.directories, directoriesSlice.reducer),
 });
 
 export type RootReducerType = typeof rootReducer;

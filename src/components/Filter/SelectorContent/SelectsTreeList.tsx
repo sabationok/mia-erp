@@ -1,8 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import styled from 'styled-components';
-import SelectsTreeListItem, {
-  SelectsTreeListItemProps,
-} from './SelectsTreeListItem';
+import SelectsTreeListItem, { SelectsTreeListItemProps } from './SelectsTreeListItem';
 
 export interface SelectsListProps<T = any> {
   isOpen: boolean;
@@ -10,12 +8,12 @@ export interface SelectsListProps<T = any> {
   onCheckSelectStatus: (id: string) => boolean;
   entryList?: T[];
   list?: T[];
-  ownerId?: string;
+  parentId?: string;
 }
 
 const SelectsTreeList: React.FC<SelectsListProps<SelectsTreeListItemProps>> = ({
   isOpen,
-  ownerId,
+  parentId,
   entryList,
   onSelectItems,
   onCheckSelectStatus,
@@ -32,13 +30,13 @@ const SelectsTreeList: React.FC<SelectsListProps<SelectsTreeListItemProps>> = ({
   }, [entryList, onCheckSelectStatus, onSelectItems]);
 
   return (
-    <List isOpen={isOpen} ownerId={ownerId}>
+    <List isOpen={isOpen} parentId={parentId}>
       {renderList}
     </List>
   );
 };
 
-const List = styled.ul<{ isOpen?: boolean; ownerId?: string }>`
+const List = styled.ul<{ isOpen?: boolean; parentId?: string }>`
   display: grid;
   grid-template-columns: 1fr;
   grid-auto-rows: min-content;

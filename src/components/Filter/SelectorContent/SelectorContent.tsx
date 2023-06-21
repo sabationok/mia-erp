@@ -3,17 +3,19 @@ import { iconId } from 'data';
 import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { FilterSelectorProps, IFilterSelectorAddsProps } from '../Selector';
-import createTreeData from 'utils/createTreeData';
-import { FilterReturnDataType } from '../AppFilter';
 import SelectsTreeList from './SelectsTreeList';
 import { SelectsTreeListItemProps } from './SelectsTreeListItem';
+import { createApiCall, DirectoriesApi } from '../../../api';
+import { ApiDirType } from '../../../redux/APP_CONFIGS';
+import { defaultApiCallPayload } from '../../../utils/fabrics';
+import { GetAllByDirTypeOptions } from '../../../api/directories.api';
 
 export interface SelectorContentProps {
   defaultValue?: string[];
-  getDefaultValue?: (selectorName: keyof FilterReturnDataType) => string[];
-  onSelectorSubmit?: (name: keyof FilterReturnDataType, value: string[]) => void;
+  getDefaultValue?: (selectorName?: ApiDirType) => string[];
+  onSelectorSubmit?: (name: ApiDirType, value: string[]) => void;
   isOpen?: boolean;
-  selectorName: keyof FilterReturnDataType;
+  selectorName?: ApiDirType;
 }
 
 const SelectorContent: React.FC<
@@ -48,13 +50,29 @@ const SelectorContent: React.FC<
   }
 
   useMemo(async () => {
-    await createTreeData<SelectsTreeListItemProps>(data, {
-      onSuccess: tree => setRenderData(tree),
-      onError: error => {
-        console.log('createTreeData in SelectorContent', error);
-      },
-    });
-  }, [data]);
+    if (!selectorName) return;
+
+    createApiCall(
+      defaultApiCallPayload<GetAllByDirTypeOptions, SelectsTreeListItemProps[]>({
+        data: {
+          dirType: selectorName,
+          params: {
+            isArchived: false,
+            createTreeData: true,
+          },
+        },
+        onSuccess(data) {
+          setRenderData(data);
+        },
+        onError(e) {
+          console.error('callRes error', e);
+        },
+      }),
+      async data => {
+        return DirectoriesApi.getAllByDirType(data);
+      }
+    );
+  }, [selectorName]);
 
   function onCheckSelectStatus(id: string) {
     return selectorData.includes(id);

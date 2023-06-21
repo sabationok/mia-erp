@@ -36,7 +36,8 @@ function formatPhoneNumber(phoneNumberString: string): string | null {
 function createTransactionForReq(
   transaction: ITransaction,
   omitPathArr: (keyof ITransaction)[] = [],
-  dateToNumberPath?: keyof Pick<ITransaction, 'eventDate'> | string
+  dateToNumberPath?: keyof Pick<ITransaction, 'eventDate'> | string,
+  amountToNumberPath?: keyof Pick<ITransaction, 'amount'> | string
 ): Omit<ITransactionForReq, keyof ITransaction> {
   let transformedData: ITransactionForReq = {};
 
@@ -46,7 +47,12 @@ function createTransactionForReq(
 
     const value = transaction[key];
     if (dateToNumberPath && key === dateToNumberPath && typeof value === 'string') {
-      transformedData[key] = transformedData[key] ? new Date(value).valueOf() : undefined;
+      transformedData[key] = transformedData[key] ? new Date(value).valueOf() : value;
+      return '';
+    }
+    if (amountToNumberPath && key === amountToNumberPath && typeof value === 'string') {
+      console.log(amountToNumberPath, transformedData[key], Number(value));
+      transformedData[key] = Number(value) || 0;
       return '';
     }
     if (value && typeof value === 'object') {

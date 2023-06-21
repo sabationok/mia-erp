@@ -32,6 +32,11 @@ export const persistorConfigs = {
     storage,
     whitelist: ['counts'],
   },
+  directories: {
+    key: 'directories',
+    storage,
+    whitelist: ['directories'],
+  },
   transactions: {
     key: 'transactions',
     storage,
