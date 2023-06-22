@@ -16,6 +16,7 @@ import DirTreeComp from '../components/Directories/DirTreeComp';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import FormCreateCount from '../components/Forms/FormCreateCount';
 import { toast } from 'react-toastify';
+import FormCreateCategory from '../components/Forms/FormCreateCategory';
 
 export const categoriesFilterOptions: CategoryFilterOpt[] = [
   { label: t('INCOMES'), value: 'INCOME' },
@@ -39,11 +40,11 @@ const CountsProps: DirCountsProps = {
   title: t('counts'),
   filterOptions: countsFilterOptions,
   fillHeight: true,
-  createParentTitle: t('createChildCount'),
+  createParentTitle: t('createParentCount'),
   dirType: ApiDirType.COUNTS,
   filterSearchPath: 'type',
   filterDefaultValue: 'ACTIVE',
-  actionsCreator: ({ modalService, dirService, type }) => {
+  actionsCreator: ({ modalService, dirService, type, findById }) => {
     return {
       onCreateParent: () => {
         const modal = modalService.handleOpenModal({
@@ -56,7 +57,26 @@ const CountsProps: DirCountsProps = {
                 data: { dirType: ApiDirType.COUNTS, data },
                 onSuccess: rd => {
                   modal?.onClose();
-                  toast.success(`Created item: ${rd.data.label}`);
+                  toast.success(`Created item: ${data.label}`);
+                },
+              });
+            },
+          },
+        });
+      },
+      onCreateChild: parentId => {
+        const modal = modalService.handleOpenModal({
+          ModalChildren: FormCreateCount,
+          modalChildrenProps: {
+            title: t('createParentCount'),
+            type,
+            parent: findById(parentId),
+            onSubmit: data => {
+              dirService.create({
+                data: { dirType: ApiDirType.COUNTS, data },
+                onSuccess: rd => {
+                  modal?.onClose();
+                  toast.success(`Created item: ${data.label}`);
                 },
               });
             },
@@ -82,8 +102,46 @@ const CategoriesProps: DirCategoriesProps = {
   dirType: ApiDirType.CATEGORIES_TR,
   filterSearchPath: 'type',
   filterDefaultValue: 'INCOME',
-  actionsCreator: ({ modalService, dirService, type }) => {
-    return {};
+  actionsCreator: ({ modalService, dirService, type, findById }) => {
+    return {
+      onCreateParent: () => {
+        const modal = modalService.handleOpenModal({
+          ModalChildren: FormCreateCategory,
+          modalChildrenProps: {
+            title: t('createParentCategory'),
+            type,
+            onSubmit: data => {
+              dirService.create({
+                data: { dirType: ApiDirType.CATEGORIES_TR, data },
+                onSuccess: rd => {
+                  modal?.onClose();
+                  toast.success(`Created item: ${data.label}`);
+                },
+              });
+            },
+          },
+        });
+      },
+      onCreateChild: parentId => {
+        const modal = modalService.handleOpenModal({
+          ModalChildren: FormCreateCategory,
+          modalChildrenProps: {
+            title: t('createParentCount'),
+            type,
+            parent: findById(parentId),
+            onSubmit: data => {
+              dirService.create({
+                data: { dirType: ApiDirType.CATEGORIES_TR, data },
+                onSuccess: rd => {
+                  modal?.onClose();
+                  toast.success(`Created item: ${data.label}`);
+                },
+              });
+            },
+          },
+        });
+      },
+    };
   },
 };
 const categoriesDir: IDirectory<DirCategoriesProps> = {

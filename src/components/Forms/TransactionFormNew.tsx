@@ -167,7 +167,7 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
   }, [directories, errors.countOut, errors.subCountOut, formValues.countOut?._id, formValues.type, registerSelect]);
 
   const renderInputsCategories = useMemo(() => {
-    const parentOptions = directories[ApiDirType.CATEGORIES_TR];
+    const parentOptions = directories[ApiDirType.CATEGORIES_TR].filter(el => el.type === formValues.type);
 
     const childOptions = parentOptions.find(el => el._id === formValues.category?._id)?.childrenList;
 
@@ -187,7 +187,7 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
         )}
       </>
     );
-  }, [directories, formValues.category?._id, registerSelect]);
+  }, [directories, formValues.category?._id, formValues.type, registerSelect]);
 
   function onValidSubmit(submitData: ITransaction) {
     const omitPathArr: (keyof ITransaction)[] =
