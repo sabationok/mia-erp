@@ -19,8 +19,6 @@ const CellTags: React.FC<CellTagsProps & React.HTMLAttributes<HTMLDivElement>> =
     ...top,
   });
 
-  console.log('CellTags', contentTop, top, rowData);
-
   return (
     <CellBase style={{ width }} {...props}>
       <Content title={`Tags: ${contentTop?.join(', ')}`} className="cellTagsContent">

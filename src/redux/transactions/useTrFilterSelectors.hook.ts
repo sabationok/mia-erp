@@ -1,9 +1,10 @@
 import { FilterSelectorType } from 'components/Filter/AppFilter';
-import { RootState, useAppSelector } from '../store.store';
 import { ApiDirType } from '../APP_CONFIGS';
+import { useDirectoriesSelector } from '../directories/useDirectoriesService.hook';
 
 const useTrFilterSelectors = (): FilterSelectorType[] => {
-  const { counts, categories }: RootState = useAppSelector();
+  const dirCategories = useDirectoriesSelector(ApiDirType.CATEGORIES_TR);
+  const dirCounts = useDirectoriesSelector(ApiDirType.CATEGORIES_TR);
 
   const transactionTypes = [
     { _id: 'ds6d5vf6sd5f1v6sd', name: 'INCOME', label: 'ДОХІД' },
@@ -19,12 +20,12 @@ const useTrFilterSelectors = (): FilterSelectorType[] => {
     },
     {
       label: 'Рахунки',
-      data: counts.counts,
+      data: dirCounts.directory,
       selectorName: ApiDirType.COUNTS,
     },
     {
       label: 'Категорії',
-      data: categories.categories,
+      data: dirCategories.directory,
       selectorName: ApiDirType.CATEGORIES_TR,
     },
   ];

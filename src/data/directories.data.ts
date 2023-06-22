@@ -12,8 +12,10 @@ import {
   DirMarksProps,
 } from '../components/Directories/dir.types';
 import t from '../lang';
-import DirTreeComp from '../components/Directories/DirTreeComp/DirTreeComp';
+import DirTreeComp from '../components/Directories/DirTreeComp';
 import { ApiDirType } from '../redux/APP_CONFIGS';
+import FormCreateCount from '../components/Forms/FormCreateCount';
+import { toast } from 'react-toastify';
 
 export const categoriesFilterOptions: CategoryFilterOpt[] = [
   { label: t('INCOMES'), value: 'INCOME' },
@@ -41,6 +43,28 @@ const CountsProps: DirCountsProps = {
   dirType: ApiDirType.COUNTS,
   filterSearchPath: 'type',
   filterDefaultValue: 'ACTIVE',
+  actionsCreator: ({ modalService, dirService, type }) => {
+    return {
+      onCreateParent: () => {
+        const modal = modalService.handleOpenModal({
+          ModalChildren: FormCreateCount,
+          modalChildrenProps: {
+            title: t('createParentCount'),
+            type,
+            onSubmit: data => {
+              dirService.create({
+                data: { dirType: ApiDirType.COUNTS, data },
+                onSuccess: rd => {
+                  modal?.onClose();
+                  toast.success(`Created item: ${rd.data.label}`);
+                },
+              });
+            },
+          },
+        });
+      },
+    };
+  },
 };
 const countsDir: IDirectory<DirCountsProps> = {
   title: CountsProps.title,
@@ -58,6 +82,9 @@ const CategoriesProps: DirCategoriesProps = {
   dirType: ApiDirType.CATEGORIES_TR,
   filterSearchPath: 'type',
   filterDefaultValue: 'INCOME',
+  actionsCreator: ({ modalService, dirService, type }) => {
+    return {};
+  },
 };
 const categoriesDir: IDirectory<DirCategoriesProps> = {
   title: CategoriesProps.title,
@@ -105,6 +132,9 @@ const projectsDir: IDirectory<DirProjectsProps> = {
 const MarksProps: DirMarksProps = {
   title: t('marks'),
   dirType: ApiDirType.MARKS,
+  actionsCreator: ({ modalService, dirService, type }) => {
+    return {};
+  },
 };
 const marksDir: IDirectory<DirMarksProps> = {
   title: MarksProps.title,
@@ -118,6 +148,9 @@ const activitiesProps: DirActivitiesProps = {
   createParentTitle: t('createDirParentItem'),
   dirType: ApiDirType.ACTIVITIES,
   fillHeight: true,
+  actionsCreator: ({ modalService, dirService, type }) => {
+    return {};
+  },
 };
 const activitiesDir: IDirectory<DirActivitiesProps> = {
   title: activitiesProps.title,

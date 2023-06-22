@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import styled from 'styled-components';
 import { ITransaction, ITransactionForReq } from 'redux/transactions/transactions.types';
-import { CategoryTypes } from 'redux/categories/categories.types';
+import { CategoryTypes } from 'redux/directories/categories.types';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import * as yup from 'yup';
@@ -61,8 +61,6 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
   ...props
 }) => {
   const {
-    counts: { counts },
-    categories: { categories },
     directories: { directories },
   } = useAppSelector();
 

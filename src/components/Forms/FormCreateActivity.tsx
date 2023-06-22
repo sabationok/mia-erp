@@ -1,52 +1,37 @@
-import ModalForm, { ModalFormProps } from 'components/ModalForm';
+import ModalForm from 'components/ModalForm';
 import React from 'react';
 import styled from 'styled-components';
 import { IActivity, IActivityFormData } from 'redux/companyActivities/activities.types';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
+import { DirectoriesFormProps } from '../Directories/dir.types';
 
 const validation = yup.object().shape({});
 
-export interface FormCreateCompanyActivityProps extends Omit<ModalFormProps, 'onSubmit'> {
-  _id?: string;
-  activity?: IActivity;
-  owner?: Partial<IActivity>;
-  edit?: boolean;
-  onSubmit?: SubmitHandler<IActivityFormData>;
-}
+export interface FormCreateCompanyActivityProps extends DirectoriesFormProps<any, IActivity, IActivityFormData> {}
 
-const FormCreateActivity: React.FC<FormCreateCompanyActivityProps> = ({
-  owner,
-  _id,
-  edit,
-  activity,
-  onSubmit,
-  ...props
-}) => {
+const FormCreateActivity: React.FC<FormCreateCompanyActivityProps> = ({ _id, edit, data, onSubmit, ...props }) => {
   const {
     formState: { errors },
     register,
-    // unregister,
-    // handleSubmit,
-    // setValue,
-    getValues,
+    handleSubmit,
   } = useForm<IActivityFormData>({
     defaultValues: {
-      ...activity,
+      ...data,
     },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
-  console.log(getValues());
+
   return (
     <ModalForm
-      onSubmit={() => {
-        console.log(getValues());
-      }}
+      onSubmit={handleSubmit(d => {
+        console.log(d);
+      })}
       {...props}
     >
       <Inputs>

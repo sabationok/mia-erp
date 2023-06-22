@@ -1,6 +1,6 @@
 import { createTreeDataMapById, IBaseFields, TreeOptions } from '../utils/createTreeData';
-import { ICategory } from '../redux/categories/categories.types';
-import { ICount } from '../redux/counts/counts.types';
+import { ICategory } from '../redux/directories/categories.types';
+import { ICount } from '../redux/directories/counts.types';
 import { useMemo, useState } from 'react';
 
 export interface TreeDataCreatorState<T = any> {

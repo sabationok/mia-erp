@@ -1,10 +1,10 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { ICategory } from 'redux/categories/categories.types';
+import { ICategory } from 'redux/directories/categories.types';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import DirList from './DirList';
 import { IBaseDirItem } from '../dir.types';
-import { ICount } from '../../../redux/counts/counts.types';
+import { ICount } from '../../../redux/directories/counts.types';
 
 // export interface DirListItemProps {
 //   _id?: string;
@@ -23,10 +23,10 @@ export interface ICountsDirItem extends IBaseDirItem<ICount> {}
 export interface DirListItemAddsProps<T = any> {
   list: IBaseDirItem<T>[];
   canHaveChild: boolean;
-  onDelete?: (_id: string) => void;
-  onEdit?: (_id: string) => void;
-  onCreateChild?: (parent: string) => void;
-  onChangeArchiveStatus?: (_id: string) => void;
+  onDelete?: (id: string) => void;
+  onChangeArchiveStatus?: (id: string) => void;
+  onEdit?: (id: string) => void;
+  onCreateChild?: (parentId: string) => void;
 }
 
 const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
@@ -37,6 +37,7 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
   _id,
   list,
   onDelete,
+  onChangeArchiveStatus,
   onEdit,
   onCreateChild,
   childrenList,
@@ -59,15 +60,13 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
     <Item>
       <ItemGrid>
         <ActionsField canHaveChild={canHaveChild}>
-          {canHaveChild && onCreateChild && (
-            <ButtonIcon
-              variant="onlyIcon"
-              iconSize="24px"
-              iconId="plus"
-              disabled={!onCreateChild}
-              onClick={onCreateChild && evHandlerWrapper(onCreateChild, _id)}
-            />
-          )}
+          <ButtonIcon
+            variant="onlyIcon"
+            iconSize="24px"
+            icon="plus"
+            disabled={!canHaveChild || !onCreateChild}
+            onClick={onCreateChild && evHandlerWrapper(onCreateChild, _id)}
+          />
         </ActionsField>
 
         <LabelField>
@@ -76,7 +75,7 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
           {!(!childrenList || childrenList?.length === 0) && (
             <ButtonIcon
               variant="onlyIconNoEffects"
-              iconId={isOpen ? 'SmallArrowUp' : 'SmallArrowDown'}
+              icon={isOpen ? 'SmallArrowUp' : 'SmallArrowDown'}
               iconSize="24px"
               onClick={onOpenClick}
             />
@@ -87,7 +86,7 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
           <ButtonIcon
             variant="onlyIcon"
             iconSize="24px"
-            iconId="edit"
+            icon="edit"
             disabled={!onEdit}
             onClick={onEdit && evHandlerWrapper(onEdit, _id)}
           />
@@ -95,9 +94,16 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
           <ButtonIcon
             variant="onlyIcon"
             iconSize="24px"
-            iconId="delete"
+            icon="delete"
             disabled={!onDelete}
             onClick={onDelete && evHandlerWrapper(onDelete, _id)}
+          />
+          <ButtonIcon
+            variant="onlyIcon"
+            iconSize="24px"
+            icon={'archive'}
+            disabled={!onChangeArchiveStatus}
+            onClick={onChangeArchiveStatus && evHandlerWrapper(onChangeArchiveStatus, _id)}
           />
         </ActionsField>
       </ItemGrid>

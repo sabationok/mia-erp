@@ -5,6 +5,7 @@ export enum API_BASE_ROUTES {
   COMPANIES = '/companies',
   AUTH = '/auth',
   DIRECTORIES = '/directories',
+  TRANSACTIONS = '/transactions',
 }
 
 export enum Endpoints {
@@ -23,6 +24,7 @@ export enum Endpoints {
   getAllByOwnerId = 'getAllByOwnerId',
   rejectById = 'rejectById',
   acceptById = 'acceptById',
+  changeArchiveStatus = 'changeArchiveStatusById',
 }
 
 export enum ApiDirType {
@@ -42,13 +44,12 @@ export enum ApiDirType {
   TYPE = 'type',
 }
 
-const TRANSACTIONS_API_BASENAME = '/transactions';
 const transactionsApiEndpoints = {
-  [Endpoints.getAll]: (): string => `${TRANSACTIONS_API_BASENAME}/${Endpoints.getAll}`,
-  [Endpoints.create]: (): string => `${TRANSACTIONS_API_BASENAME}/${Endpoints.create}`,
-  [Endpoints.deleteById]: (id: string): string => `${TRANSACTIONS_API_BASENAME}/${Endpoints.deleteById}/${id}`,
-  [Endpoints.updateById]: (id: string): string => `${TRANSACTIONS_API_BASENAME}/${Endpoints.updateById}/${id}`,
-  [Endpoints.getById]: (id: string): string => `${TRANSACTIONS_API_BASENAME}/${Endpoints.getById}/${id}`,
+  [Endpoints.getAll]: (): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.getAll}`,
+  [Endpoints.create]: (): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.create}`,
+  [Endpoints.deleteById]: (id: string): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.deleteById}/${id}`,
+  [Endpoints.updateById]: (id: string): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.updateById}/${id}`,
+  [Endpoints.getById]: (id: string): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.getById}/${id}`,
 };
 const permissionsApiEndpoints = {
   [Endpoints.updateById]: (permissionId: string) =>
@@ -93,6 +94,8 @@ const directoriesApiEndpoints = {
     `${API_BASE_ROUTES.DIRECTORIES}/${dirType}/${Endpoints.updateById}/${id}`,
   [Endpoints.getById]: (dirType: ApiDirType, id: string) =>
     `${API_BASE_ROUTES.DIRECTORIES}/${dirType}/${Endpoints.getById}/${id}`,
+  [Endpoints.changeArchiveStatus]: (dirType: ApiDirType, id: string) =>
+    `${API_BASE_ROUTES.DIRECTORIES}/${dirType}/${Endpoints.changeArchiveStatus}/${id}`,
 };
 
 const APP_CONFIGS = {

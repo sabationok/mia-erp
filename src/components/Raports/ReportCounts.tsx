@@ -5,9 +5,9 @@ import ModalForm from '../ModalForm';
 import { IReportBaseProps } from './report.types';
 import FlexBox from '../atoms/FlexBox';
 import { FilterOpt } from '../ModalForm/ModalFilter';
-import { CategoriesTypesMap } from 'redux/categories/categories.types';
+import { CategoriesTypesMap } from 'redux/directories/categories.types';
 import { founder, numberWithSpaces } from 'utils';
-import { CountType } from 'redux/counts/counts.types';
+import { CountType } from 'redux/directories/counts.types';
 import { CurrencyCode } from '../../redux/transactions/transactions.types';
 import styled from 'styled-components';
 

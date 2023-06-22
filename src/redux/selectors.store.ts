@@ -1,10 +1,8 @@
 import { RootState } from './store.store';
 import { useSelector } from 'react-redux';
-import { ICountsState } from './counts/counts.slice';
 import { IAuthState } from './auth/auth.types';
 import { ITransactionsState } from './transactions/transactions.slice';
 import { ICustomRolesState } from './customRoles/customRoles.slice';
-import { ICategoriesState } from './categories/categories.slice';
 import { IUsersState } from './users/users.types';
 import { IAppSettings } from './appSettings/appSettings.slice';
 
@@ -15,8 +13,5 @@ export const useAppSettingsSelector = () =>
 export const useAppPageSettingsSelector = () => useSelector((state: RootState) => state.appPage);
 export const useTransactionsSelector = () =>
   useSelector<RootState, ITransactionsState>((state: RootState) => state.transactions);
-export const useCountsSelector = () => useSelector<RootState, ICountsState>((state: RootState) => state.counts);
 export const useCustomRolesSelector = () =>
   useSelector<RootState, ICustomRolesState>((state: RootState) => state.customRoles);
-export const useCategoriesSelector = () =>
-  useSelector<RootState, ICategoriesState>((state: RootState) => state.categories);

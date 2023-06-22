@@ -5,8 +5,6 @@ import { usersSlice } from './users/usersSlice';
 import { appSettingsSlice } from './appSettings/appSettings.slice';
 import { appPageSlice } from './page/pageSlice';
 import { transactionsSlice } from './transactions/transactions.slice';
-import { categoriesSlice } from './categories/categories.slice';
-import { countsSlice } from './counts/counts.slice';
 // import { documentsSlice } from './documents/documents.slice';
 import { persistorConfigs } from './configs.store';
 import { customRolesSlice } from './customRoles/customRoles.slice';
@@ -19,8 +17,6 @@ const rootReducer = combineReducers({
   [appSettingsSlice.name]: persistReducer(persistorConfigs.appSettings, appSettingsSlice.reducer),
   [appPageSlice.name]: persistReducer(persistorConfigs.pageSettings, appPageSlice.reducer),
   [transactionsSlice.name]: persistReducer(persistorConfigs.transactions, transactionsSlice.reducer),
-  [countsSlice.name]: persistReducer(persistorConfigs.counts, countsSlice.reducer),
-  [categoriesSlice.name]: persistReducer(persistorConfigs.categories, categoriesSlice.reducer),
   [customRolesSlice.name]: persistReducer(persistorConfigs.customRoles, customRolesSlice.reducer),
   [permissionsSlice.name]: persistReducer(persistorConfigs.permissions, permissionsSlice.reducer),
   [directoriesSlice.name]: persistReducer(persistorConfigs.directories, directoriesSlice.reducer),

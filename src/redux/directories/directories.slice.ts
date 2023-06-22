@@ -1,7 +1,7 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 import { ApiDirType } from '../APP_CONFIGS';
-import { getAllDirectoryItemsThunk } from './directories.thunk';
+import { createDirectoryItemThunk, getAllDirectoryItemsThunk } from './directories.thunk';
 import { IBaseDirItem } from '../../components/Directories/dir.types';
 
 export interface IDirectoriesState extends Record<string, any> {
@@ -42,10 +42,13 @@ export const directoriesSlice = createSlice({
       //     el => el._id !== a.payload._id || el.parent?._id === a.payload._id
       //   );
       // })
-      // .addCase(createDirectoryItemThunk.fulfilled, (s, a) => {
-      //   s.isLoading = false;
-      //   s[a.payload.dirType] = [a.payload.data, ...s[a.payload.dirType]];
-      // })
+      .addCase(createDirectoryItemThunk.fulfilled, (s, a) => {
+        s.isLoading = false;
+
+        if (a.payload?.dirType) {
+          s.directories[a.payload?.dirType] = a.payload.data;
+        }
+      })
       .addMatcher(inPending, s => {
         s.isLoading = true;
         s.error = null;

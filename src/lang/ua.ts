@@ -1,5 +1,11 @@
+import { ApiDirType } from '../redux/APP_CONFIGS';
+
 export const langUa = {
   // DIRECTORIES
+
+  [ApiDirType.CATEGORIES_TR]: 'Категорії',
+  [ApiDirType.CATEGORIES_PROD]: 'Категорії',
+
   counts: 'Рахунки',
   count: 'Рахунок',
   categories: 'Категорії',

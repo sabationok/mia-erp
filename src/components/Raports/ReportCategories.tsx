@@ -6,7 +6,7 @@ import { IReportBaseProps } from './report.types';
 import FlexBox from 'components/atoms/FlexBox';
 import { FilterOpt } from '../ModalForm/ModalFilter';
 import { categoriesFilterOptions } from '../../data/directories.data';
-import { CategoriesTypesMap, CategoryTypes } from '../../redux/categories/categories.types';
+import { CategoriesTypesMap, CategoryTypes } from '../../redux/directories/categories.types';
 import styled from 'styled-components';
 import { founder, numberWithSpaces } from '../../utils';
 

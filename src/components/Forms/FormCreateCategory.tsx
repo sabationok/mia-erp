@@ -1,5 +1,5 @@
-import ModalForm, { ModalFormProps } from 'components/ModalForm';
-import { CategoryTypes, ICategory, ICategoryFormData } from 'redux/categories/categories.types';
+import ModalForm from 'components/ModalForm';
+import { CategoryTypes, ICategory, ICategoryFormData } from 'redux/directories/categories.types';
 import React from 'react';
 import styled from 'styled-components';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -9,15 +9,9 @@ import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import t from '../../lang';
+import { DirectoriesFormProps } from '../Directories/dir.types';
 
-export interface FormCreateCategoryProps extends Omit<ModalFormProps, 'onSubmit'> {
-  _id?: string;
-  type: CategoryTypes;
-  category?: ICategory;
-  parent?: Partial<ICategory>;
-  edit?: boolean;
-  onSubmit?: (data: ICategoryFormData) => void;
-}
+export interface FormCreateCategoryProps extends DirectoriesFormProps<CategoryTypes, ICategory, ICategoryFormData> {}
 
 const validation = yup.object().shape({
   label: yup.string().required(),
@@ -29,7 +23,7 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
   type,
   parent,
   edit,
-  category,
+  data,
   onSubmit,
   ...props
 }) => {
@@ -39,7 +33,7 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
     handleSubmit,
   } = useForm<ICategoryFormData>({
     defaultValues: {
-      ...category,
+      ...data,
       type,
       parent: parent?._id || null,
     },
@@ -57,7 +51,7 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
     <ModalForm onSubmit={formEventWrapper(onSubmit)} {...props}>
       <Inputs>
         <InputLabel label={t('type')} direction={'vertical'} error={errors.type} disabled>
-          <InputText defaultValue={t(`${type}S`).toUpperCase()} disabled />
+          <InputText defaultValue={type ? t(`${type}S`).toUpperCase() : type} disabled />
         </InputLabel>
 
         {parent && (

@@ -1,53 +1,47 @@
 import { AppDispatch, useAppDispatch } from '../redux/store.store';
 import { useMemo } from 'react';
 import { ServiceDispatcherAsync } from '../redux/global.types';
-import { getAllDirectoryItemsThunk } from '../redux/directories/directories.thunk';
+import {
+  createDirectoryItemThunk,
+  DirThunkBaseReturnData,
+  DirThunkBaseSubmitData,
+  DirThunkCreateItemSubmitData,
+  DirThunkUpdateItemSubmitData,
+  getAllDirectoryItemsThunk,
+  updateDirectoryItemThunk,
+} from '../redux/directories/directories.thunk';
 import { defaultThunkPayload } from '../utils/fabrics';
-import { ApiDirType } from '../redux/APP_CONFIGS';
 import { IBaseDirItem } from '../components/Directories/dir.types';
-import { AppQueryParams } from '../api';
+import { ApiDirType } from '../redux/APP_CONFIGS';
 
-export interface DirectoriesService {
+export interface DirectoriesService<
+  DirType extends ApiDirType = any,
+  ItemType = any,
+  CreateDTO = any,
+  UpdateDTO = any,
+  ItemDataType = IBaseDirItem<ItemType, DirType>
+> {
   dispatch: AppDispatch;
 
-  deleteCount?: any;
-  createCount?: any;
-  getAllCounts?: any;
-  getCountById?: any;
-
-  createCategory?: any;
-  deleteCategory?: any;
-  getAllCategories?: any;
-  getCategoryById?: any;
-
-  getAllByDirType: ServiceDispatcherAsync<
-    {
-      dirType?: ApiDirType;
-      params?: Pick<AppQueryParams, 'isArchived' | 'createTreeData'> | undefined;
-    },
-    { ditType?: ApiDirType; data: IBaseDirItem[] }
-  >;
+  changeArchiveStatus?: any;
+  getAllByDirType: ServiceDispatcherAsync<DirThunkBaseSubmitData, DirThunkBaseReturnData<ItemDataType[]>>;
+  create: ServiceDispatcherAsync<DirThunkCreateItemSubmitData<CreateDTO>, DirThunkBaseReturnData<ItemDataType[]>>;
+  update: ServiceDispatcherAsync<DirThunkUpdateItemSubmitData<UpdateDTO>, DirThunkBaseReturnData<ItemDataType[]>>;
 }
 
 const useDirService = (): DirectoriesService => {
   const dispatch: AppDispatch = useAppDispatch();
 
-  const service = useMemo(
+  const dispatchers = useMemo(
     (): Omit<DirectoriesService, 'dispatch'> => ({
       getAllByDirType: async payload => dispatch(getAllDirectoryItemsThunk(defaultThunkPayload(payload))),
-      // createCount: async payload => dispatch(() => ({})),
-      // getAllCounts: async payload => dispatch(() => ({})),
-      // deleteCount: async payload => dispatch(() => {}),
-      // getCountById: async payload => dispatch(() => ({})),
-      // createCategory: async payload => dispatch(() => ({})),
-      // getAllCategories: async payload => dispatch(() => ({})),
-      // deleteCategory: async payload => dispatch(() => ({})),
-      // getCategoryById: async payload => dispatch(() => ({})),
+      create: async payload => dispatch(createDirectoryItemThunk(defaultThunkPayload(payload))),
+      update: async payload => dispatch(updateDirectoryItemThunk(defaultThunkPayload(payload))),
     }),
     [dispatch]
   );
 
-  return { dispatch, ...service };
+  return { dispatch, ...dispatchers };
 };
 
 export default useDirService as typeof useDirService;

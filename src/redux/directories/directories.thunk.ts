@@ -2,51 +2,102 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { axiosErrorCheck } from 'utils';
 import { ThunkPayload } from '../store.store';
-import { AppResponse } from '../global.types';
 import { AppQueryParams, DirectoriesApi } from '../../api';
 import { ApiDirType } from '../APP_CONFIGS';
 import { IBaseDirItem } from '../../components/Directories/dir.types';
 import { GetAllByDirTypeOptions } from '../../api/directories.api';
 
-export interface IAllDirectoryItemsRes extends AppResponse<IBaseDirItem[]> {}
+export interface DirThunkBaseSubmitData {
+  dirType?: ApiDirType;
+  params?: Partial<AppQueryParams>;
+}
 
-export type GetAllDirectoryItemsThunkPayload<T = any> = ThunkPayload<
-  { dirType?: ApiDirType; params?: Pick<AppQueryParams, 'isArchived' | 'createTreeData'> | undefined },
-  { dirType?: ApiDirType; data: IBaseDirItem<T>[] }
->;
+export interface DirThunkCreateItemSubmitData<DTO = any> extends GetAllByDirTypeOptions {
+  data: DTO;
+}
+
+export interface DirThunkUpdateItemSubmitData<DTO = any> extends GetAllByDirTypeOptions {
+  _id: string;
+  data: DTO;
+}
+
+export interface DirThunkBaseReturnData<T = any> {
+  dirType?: ApiDirType;
+  data: T;
+}
+
 export const getAllDirectoryItemsThunk = createAsyncThunk<
-  { dirType?: ApiDirType; data: IBaseDirItem[] },
-  GetAllDirectoryItemsThunkPayload
+  DirThunkBaseReturnData<IBaseDirItem[]>,
+  ThunkPayload<DirThunkBaseSubmitData, DirThunkBaseReturnData<IBaseDirItem[]>>
 >('directories/getAllDirectoryItemsThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
   try {
-    const response = await DirectoriesApi.getAllByDirType<IBaseDirItem>(data as GetAllByDirTypeOptions);
+    const res = await DirectoriesApi.getAllByDirType<IBaseDirItem>(data as GetAllByDirTypeOptions);
 
-    if (response && onSuccess) {
-      onSuccess({ dirType: data?.dirType, data: response.data.data });
+    if (res && onSuccess) {
+      onSuccess({ dirType: data?.dirType, data: res.data.data });
     }
 
-    return { dirType: data?.dirType, data: response.data.data };
+    return { dirType: data?.dirType, data: res.data.data };
   } catch (error) {
     onError && onError(error);
 
     return thunkAPI.rejectWithValue(axiosErrorCheck(error));
   }
 });
+
+export const createDirectoryItemThunk = createAsyncThunk<
+  DirThunkBaseReturnData<IBaseDirItem[]>,
+  ThunkPayload<DirThunkCreateItemSubmitData, DirThunkBaseReturnData<IBaseDirItem[]>>
+>('directories/createDirectoryItemThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
+  try {
+    const res = await DirectoriesApi.create(data as DirThunkCreateItemSubmitData);
+
+    if (res && onSuccess) {
+      onSuccess({ dirType: data?.dirType, data: res.data.data });
+    }
+
+    return { dirType: data?.dirType, data: res.data.data };
+  } catch (error) {
+    onError && onError(error);
+
+    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+  }
+});
+
+export const updateDirectoryItemThunk = createAsyncThunk<
+  DirThunkBaseReturnData<IBaseDirItem[]>,
+  ThunkPayload<DirThunkUpdateItemSubmitData, DirThunkBaseReturnData<IBaseDirItem[]>>
+>('directories/updateDirectoryItemThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
+  try {
+    const res = await DirectoriesApi.update<IBaseDirItem>(data as DirThunkUpdateItemSubmitData);
+
+    if (res && onSuccess) {
+      onSuccess({ dirType: data?.dirType, data: res.data.data });
+    }
+
+    return { dirType: data?.dirType, data: res.data.data };
+  } catch (error) {
+    onError && onError(error);
+
+    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+  }
+});
+
 //
 // export const createCategoryThunk = createAsyncThunk<IBaseDirItem, ThunkPayload<any, IBaseDirItem>>(
 //   'categories/createCategoryThunk',
 //   async ({ onSuccess, onError, data }, thunkAPI) => {
 //     try {
-//       const response = await DirectoriesApi.create<any, IBaseDirItem>({
+//       const res = await DirectoriesApi.create<any, IBaseDirItem>({
 //         dirType: ApiDirType.CATEGORIES_TR,
 //         dto: data || {},
 //       });
 //
-//       if (response && onSuccess) {
-//         onSuccess(response.data.data);
+//       if (res && onSuccess) {
+//         onSuccess(res.data.data);
 //       }
 //
-//       return response.data.data;
+//       return res.data.data;
 //     } catch (error) {
 //       onError && onError(error);
 //
@@ -64,16 +115,16 @@ export const getAllDirectoryItemsThunk = createAsyncThunk<
 //   >
 // >('categories/deleteCategoryThunk', async ({ onSuccess, onError, data }, thunkAPI) => {
 //   try {
-//     const response = await DirectoriesApi.delete<Pick<IBaseDirItem, '_id' | 'label'> & { deletedChildrens?: number }>({
+//     const res = await DirectoriesApi.delete<Pick<IBaseDirItem, '_id' | 'label'> & { deletedChildrens?: number }>({
 //       dirType: ApiDirType.CATEGORIES_TR,
 //       _id: data?._id as string,
 //     });
 //
-//     if (response && onSuccess) {
-//       onSuccess(response.data.data);
+//     if (res && onSuccess) {
+//       onSuccess(res.data.data);
 //     }
 //
-//     return response.data.data;
+//     return res.data.data;
 //   } catch (error) {
 //     onError && onError(error);
 //
@@ -83,12 +134,12 @@ export const getAllDirectoryItemsThunk = createAsyncThunk<
 //
 // // export const addCategoryThunk = createAsyncThunk('categories/addCategoryThunk', async (payload, thunkAPI) => {
 // //   try {
-// //     const response = await baseApi.post(`/directories/categories/create`, payload?.submitData);
-// //     console.log(response.data);
+// //     const res = await baseApi.post(`/directories/categories/create`, payload?.submitData);
+// //     console.log(res.data);
 //
-// //     payload?.onSuccess(response);
+// //     payload?.onSuccess(res);
 //
-// //     return response.data;
+// //     return res.data;
 // //   } catch (error) {
 // //     console.log(error);
 //
@@ -100,12 +151,12 @@ export const getAllDirectoryItemsThunk = createAsyncThunk<
 //
 // // export const deleteCategoryThunk = createAsyncThunk('categories/deleteCategoryThunk', async (payload, thunkAPI) => {
 // //   try {
-// //     const response = await baseApi.delete(`/directories/categories/delete/${payload?.submitData.id}`);
-// //     console.log(response.data);
+// //     const res = await baseApi.delete(`/directories/categories/delete/${payload?.submitData.id}`);
+// //     console.log(res.data);
 //
-// //     payload?.onSuccess(response);
+// //     payload?.onSuccess(res);
 //
-// //     return response.data;
+// //     return res.data;
 // //   } catch (error) {
 // //     console.log(error);
 //
@@ -117,14 +168,14 @@ export const getAllDirectoryItemsThunk = createAsyncThunk<
 //
 // // export const editCategoryThunk = createAsyncThunk('categories/editCategoryThunk', async (payload, thunkAPI) => {
 //   try {
-//     const response = await baseApi.patch(
+//     const res = await baseApi.patch(
 //       `/directories/categories/${payload?.submitData.id}`,
 //       payload?.submitData.updateData
 //     );
 
-//     payload?.onSuccess(response);
+//     payload?.onSuccess(res);
 
-//     return response.data;
+//     return res.data;
 //   } catch (error) {
 //     console.log(error);
 

@@ -1,8 +1,8 @@
-import ModalForm, { ModalFormProps } from 'components/ModalForm';
+import ModalForm from 'components/ModalForm';
 import styled from 'styled-components';
-import { CountType, ICount, ICountFormData } from 'redux/counts/counts.types';
+import { CountType, ICount, ICountFormData } from 'redux/directories/counts.types';
 import React from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import translate from '../../lang';
 import t from '../../lang';
 import InputLabel from '../atoms/Inputs/InputLabel';
@@ -10,16 +10,9 @@ import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { DirectoriesFormProps } from '../Directories/dir.types';
 
-export interface FormCreateCountProps extends Omit<ModalFormProps, 'onSubmit'> {
-  _id?: string;
-  parent?: Partial<ICount>;
-  type: CountType;
-  edit?: boolean;
-  create?: boolean;
-  count?: Partial<ICount>;
-  onSubmit?: SubmitHandler<ICountFormData>;
-}
+export interface FormCreateCountProps extends DirectoriesFormProps<CountType, ICount, ICountFormData> {}
 
 const validation = yup.object().shape({
   label: yup.string().required(),
@@ -29,7 +22,7 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
   parent,
   create,
   type,
-  count,
+  data,
   edit,
   _id,
   onSubmit,
@@ -41,7 +34,7 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
     handleSubmit,
   } = useForm<ICountFormData>({
     defaultValues: {
-      ...count,
+      ...data,
       type,
       parent: parent?._id || null,
     },
@@ -59,7 +52,7 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
     <ModalForm onSubmit={formEventWrapper(onSubmit)} {...props}>
       <Inputs>
         <InputLabel label={t('type')} direction={'vertical'} error={errors.type} disabled>
-          <InputText placeholder={translate(type)} disabled />
+          <InputText placeholder={type ? translate(type) : type} disabled />
         </InputLabel>
 
         {parent && (

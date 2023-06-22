@@ -1,8 +1,11 @@
 import { SelectItem } from 'components/TableList/TableList';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { ITransaction } from '../redux/transactions/transactions.types';
-import { TransactionsFilterOpt } from '../components/Forms/TransactionForm';
 import t from '../lang';
+import { FilterOpt } from '../components/ModalForm/ModalFilter';
+import { CategoryTypes } from '../redux/directories/categories.types';
+
+export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
 
 export const transactionsColumnsNew: CellTittleProps[] = [
   {

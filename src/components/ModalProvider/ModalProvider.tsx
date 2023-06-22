@@ -20,16 +20,21 @@ export interface IModalRenderItemParams<P = any, S = any> {
   id?: number | string;
 }
 
-type OpenModalReturnType =
+export type OpenModalReturnType =
   | {
       onClose: () => void;
       id?: string;
     }
   | undefined;
+type HandleOpenModalAsyncType = <P = any, S = any>(
+  args: IModalRenderItemParams<P, S>,
+  getPropsAsync?: () => Promise<P>
+) => Promise<OpenModalReturnType | undefined>;
 
-interface IModalProviderContext {
+export interface IModalProviderContext {
   handleOpenModal: <P = any, S = any>(args: IModalRenderItemParams<P, S>) => OpenModalReturnType;
   handleCloseModal: (id?: string) => void;
+  handleOpenModalAsync: HandleOpenModalAsyncType;
   isOpen: boolean;
   modalContent: IModalRenderItemParams[];
 }
@@ -64,15 +69,24 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
     [createOnClose]
   );
 
-  // const CTX: IModalProviderContext = useMemo(
-  //   () => ({
-  //     handleCloseModal: onClose,
-  //     handleOpenModal,
-  //     isOpen: modalContent.length > 0,
-  //     modalContent,
-  //   }),
-  //   [handleOpenModal, modalContent, onClose]
-  // );
+  const CTX: IModalProviderContext = useMemo(
+    () => ({
+      handleCloseModal: onClose,
+      handleOpenModal,
+      handleOpenModalAsync: async <P = any, S = any>(
+        options: IModalRenderItemParams<P, S>,
+        getPropsAsync?: () => Promise<P>
+      ) => {
+        if (getPropsAsync) {
+          const props = await getPropsAsync();
+          if (props) return handleOpenModal({ ...options, modalChildrenProps: props });
+        }
+      },
+      isOpen: modalContent.length > 0,
+      modalContent,
+    }),
+    [handleOpenModal, modalContent, onClose]
+  );
 
   const renderModalContent = useMemo(
     () =>
@@ -110,12 +124,7 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
   return (
     <ModalProviderContext.Provider
       {...{
-        value: {
-          handleCloseModal: onClose,
-          handleOpenModal,
-          isOpen: modalContent.length > 0,
-          modalContent,
-        } as IModalProviderContext,
+        value: CTX,
       }}
     >
       {children}
