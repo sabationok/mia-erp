@@ -1,8 +1,7 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import React, { useMemo } from 'react';
 import DirListItem, { DirListItemAddsProps } from './DirListItem';
-import styled, { useTheme } from 'styled-components';
-import { ConfigProvider } from 'antd';
+import styled from 'styled-components';
 import { IBaseDirItem } from '../dir.types';
 
 export interface DirListProps<T = any> extends Partial<DirListItemAddsProps> {
@@ -32,7 +31,6 @@ const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLDivElement>> = (
   listProps,
   ...props
 }) => {
-  const appTheme = useTheme();
   const listForRender = useMemo(() => (entryList ? entryList : list), [entryList, list]);
 
   const renderList = useMemo(
@@ -47,14 +45,15 @@ const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLDivElement>> = (
           onCreateChild={onCreateChild}
           canHaveChild={!item.parent}
           list={list}
+          currentLevel={currentLevel}
         />
       )),
-    [list, listForRender, onCreateChild, onDelete, onEdit, parent]
+    [currentLevel, list, listForRender, onCreateChild, onDelete, onEdit, parent]
   );
 
   return (
     <Box {...containerProps}>
-      <ListBox {...listBoxProps} style={{ ...listBoxProps?.style, padding: currentLevel === 0 ? '0 12px' : '' }}>
+      <ListBox {...listBoxProps} style={{ ...listBoxProps?.style, padding: currentLevel === 0 ? '0 12px' : '0' }}>
         {listForRender.length > 0 ? (
           <List
             {...listProps}
@@ -72,20 +71,9 @@ const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLDivElement>> = (
 
       {onCreateParent && (
         <CreateParent>
-          <ConfigProvider
-            theme={{
-              token: {
-                // colorText: appTheme.accentColor.base,
-                colorBgContainer: 'transparent',
-                colorBorder: appTheme.accentColor.base,
-                // colorPrimary: appTheme.accentColor.base,
-              },
-            }}
-          >
-            <ButtonIcon variant="outlinedSmall" onClick={onCreateParent}>
-              {createParentTitle || 'Create parent'}
-            </ButtonIcon>
-          </ConfigProvider>
+          <ButtonIcon variant="outlinedSmall" onClick={onCreateParent}>
+            {createParentTitle || 'Create parent'}
+          </ButtonIcon>
         </CreateParent>
       )}
     </Box>
@@ -109,9 +97,6 @@ const Box = styled.div`
 const ListBox = styled.div`
   flex: 1;
   max-height: 100%;
-
-  padding: 0 0 0 12px;
-
   overflow: auto;
 `;
 const List = styled.ul`

@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import DirList from './DirList';
 import { IBaseDirItem } from '../dir.types';
 import { ICount } from '../../../redux/directories/counts.types';
+import { isUndefined } from 'lodash';
 
 // export interface DirListItemProps {
 //   _id?: string;
@@ -27,6 +28,7 @@ export interface DirListItemAddsProps<T = any> {
   onChangeArchiveStatus?: (id: string) => void;
   onEdit?: (id: string) => void;
   onCreateChild?: (parentId: string) => void;
+  currentLevel?: number;
 }
 
 const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
@@ -41,6 +43,7 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
   onEdit,
   onCreateChild,
   childrenList,
+  currentLevel,
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -60,13 +63,15 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
     <Item>
       <ItemGrid>
         <ActionsField canHaveChild={canHaveChild}>
-          <ButtonIcon
-            variant="onlyIcon"
-            iconSize="24px"
-            icon="plus"
-            disabled={!canHaveChild || !onCreateChild}
-            onClick={onCreateChild && evHandlerWrapper(onCreateChild, _id)}
-          />
+          {canHaveChild && (
+            <ButtonIcon
+              variant="onlyIcon"
+              iconSize="24px"
+              icon="plus"
+              disabled={!canHaveChild || !onCreateChild}
+              onClick={onCreateChild && evHandlerWrapper(onCreateChild, _id)}
+            />
+          )}
         </ActionsField>
 
         <LabelField>
@@ -117,6 +122,7 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
             onDelete={onDelete}
             onEdit={onEdit}
             onCreateChild={onCreateChild}
+            currentLevel={!isUndefined(currentLevel) ? currentLevel + 1 : currentLevel}
           />
         )}
       </Children>
@@ -129,7 +135,7 @@ const ItemGrid = styled.div`
   display: grid;
   grid-template-columns: min-content 1fr min-content;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
 
   height: 26px;
   width: 100%;
@@ -142,7 +148,7 @@ const ActionsField = styled.div<{ canHaveChild?: boolean }>`
   display: flex;
   align-items: center;
 
-  min-width: 0;
+  min-width: 12px;
   height: 100%;
 `;
 
