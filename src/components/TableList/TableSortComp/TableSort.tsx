@@ -4,6 +4,8 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import TableSortParamsList from './TableSortParamsList';
 import styled from 'styled-components';
 import { SelectItem } from 'components/TableList/TableList';
+import { useModalProvider } from '../../ModalProvider/ModalProvider';
+import ModalForm from '../../ModalForm';
 
 export interface TableSortProps {
   tableSortParams: SelectItem[];
@@ -11,16 +13,26 @@ export interface TableSortProps {
 }
 
 const TableSort: React.FC<TableSortProps> = ({ tableSortParams, onSelect }) => {
-  // const modal = useModalProvider();
-  const [isOpen, setIsOpen] = useState<boolean | undefined>(false);
+  const modals = useModalProvider();
   const [current, setCurrent] = useState<SelectItem>();
 
-  function onOpenClick(newState?: boolean) {
-    setIsOpen(newState);
+  const ModalSort = () => {
+    return (
+      <ModalForm fitContentH fitContentV footer={false} title={'Сортування'}>
+        <TableSortParamsList {...{ tableSortParams, onSelect: handleSelect, current, isOpen: true }} />
+      </ModalForm>
+    );
+  };
+
+  function onOpenClick() {
+    modals.handleOpenModal({
+      ModalChildren: ModalSort,
+    });
   }
 
   function handleSelect(param: SelectItem, sortOrder: SelectItem['sortOrder']) {
     setCurrent({ ...param, sortOrder });
+    onSelect && onSelect(param, sortOrder);
   }
 
   return (
@@ -32,17 +44,13 @@ const TableSort: React.FC<TableSortProps> = ({ tableSortParams, onSelect }) => {
         iconSize="18px"
         endIconSize="26px"
         endIconId="SmallArrowDown"
-        onClick={() => onOpenClick(true)}
+        onClick={onOpenClick}
         data-table-sort-open
       >
         <span title={current?.name || current?.label || ''}>
           {current?.name || current?.label || 'Оберіть параметр'}
         </span>
       </StButton>
-
-      <ListBox isOpen={!!isOpen}>
-        <TableSortParamsList {...{ tableSortParams, onSelect: handleSelect, current, isOpen, onOpenClick }} />
-      </ListBox>
     </Box>
   );
 };
@@ -52,8 +60,9 @@ const Box = styled.div`
   align-items: center;
   gap: 8px;
 
-  max-width: 150px;
-  min-width: 150px;
+  //max-width: 150px;
+  //min-width: 250px;
+  width: 200px;
 `;
 
 const StButton = styled(ButtonIcon)<{ sortOrder?: SelectItem['sortOrder'] }>`
@@ -84,22 +93,6 @@ const StButton = styled(ButtonIcon)<{ sortOrder?: SelectItem['sortOrder'] }>`
   & .endIcon {
     transform: ${({ sortOrder }) => `rotate(${sortOrder && !['DESC', 'desc'].includes(sortOrder) ? 180 : 0}deg)`};
   }
-`;
-
-const ListBox = styled.div<{ isOpen: boolean }>`
-  position: absolute;
-
-  bottom: 0;
-  left: 0;
-  z-index: 200;
-
-  min-height: 100%;
-  width: 100%;
-  max-width: 480px;
-
-  pointer-events: ${({ isOpen }) => (isOpen ? 'all' : 'none')};
-
-  /* outline: 3px solid tomato; */
 `;
 
 export default TableSort;

@@ -15,7 +15,7 @@ export const persistorConfigs = {
   appSettings: {
     key: 'appSettings',
     storage,
-    whitelist: ['isDarkMode'],
+    whitelist: ['isDarkMode', 'appTheme'],
   },
   pageSettings: {
     key: 'appPage',
