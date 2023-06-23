@@ -19,7 +19,6 @@ export type AppDispatch = typeof store.dispatch;
 
 export interface ThunkPayload<SD = any, RD = any, E = any | unknown> {
   data?: SD;
-  submitData?: SD;
   onSuccess?: (data: RD) => void;
   onError?: (error: E) => void;
   onLoading?: (loading: boolean) => void;

@@ -49,6 +49,7 @@ const validationItem = yup
 const validation = yup.object().shape({
   countIn: validationItem,
   subCountIn: validationItem,
+  amount: yup.number(),
 });
 
 const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
@@ -110,6 +111,26 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
     },
     [formValues, setValue, unregister]
   );
+
+  function onValidSubmit(submitData: ITransaction) {
+    const omitPathArr: (keyof ITransaction)[] =
+      (formValues.type === 'INCOME' && ['countOut', 'subCountOut']) ||
+      (formValues.type === 'EXPENSE' && ['countIn', 'subCountIn']) ||
+      [];
+
+    const trReqData = createTransactionForReq(submitData, omitPathArr, 'eventDate', 'amount');
+
+    if (onSubmit) {
+      console.log('form submit', trReqData);
+      onSubmit(trReqData);
+    }
+
+    if (onSubmitEdit && defaultState?._id) {
+      console.log('form submit edit', trReqData);
+      onSubmitEdit(defaultState?._id, trReqData);
+      return;
+    }
+  }
 
   const renderInputsCountIn = useMemo(() => {
     const parentOptions = directories[ApiDirType.COUNTS];
@@ -188,22 +209,6 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
       </>
     );
   }, [directories, formValues.category?._id, formValues.type, registerSelect]);
-
-  function onValidSubmit(submitData: ITransaction) {
-    const omitPathArr: (keyof ITransaction)[] =
-      (formValues.type === 'INCOME' && ['countOut', 'subCountOut']) ||
-      (formValues.type === 'EXPENSE' && ['countIn', 'subCountIn']) ||
-      [];
-
-    const trReqData = createTransactionForReq(submitData, omitPathArr, 'eventDate', 'amount');
-
-    onSubmit && onSubmit(trReqData);
-
-    if (onSubmitEdit && defaultState?._id) {
-      onSubmitEdit(defaultState?._id, trReqData);
-      return;
-    }
-  }
 
   return (
     <ModalForm

@@ -24,11 +24,12 @@ const useTransactionsService = (): TransactionsService => {
   const state = useTransactionsSelector();
 
   const dispatchers = useMemo((): Omit<TransactionsService, 'state' | 'dispatch'> => {
+    const { deleteById, editById, getById } = TransactionsApi;
     return {
       create: async payload => dispatch(createTransactionThunk(defaultThunkPayload(payload))),
-      deleteById: async payload => createApiCall(defaultApiCallPayload(payload), TransactionsApi.deleteById),
-      editById: async payload => createApiCall(defaultApiCallPayload(payload), TransactionsApi.editById),
-      getById: async payload => createApiCall(defaultApiCallPayload(payload), TransactionsApi.getById),
+      deleteById: async payload => createApiCall(defaultApiCallPayload(payload), deleteById, TransactionsApi),
+      editById: async payload => createApiCall(defaultApiCallPayload(payload), editById, TransactionsApi),
+      getById: async payload => createApiCall(defaultApiCallPayload(payload), getById, TransactionsApi),
       getAll: async payload => dispatch(getAllTransactionsThunk(defaultThunkPayload(payload))),
     };
   }, [dispatch]);

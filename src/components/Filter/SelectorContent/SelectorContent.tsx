@@ -7,7 +7,6 @@ import SelectsTreeList from './SelectsTreeList';
 import { SelectsTreeListItemProps } from './SelectsTreeListItem';
 import { createApiCall, DirectoriesApi } from '../../../api';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
-import { defaultApiCallPayload } from '../../../utils/fabrics';
 import { GetAllByDirTypeOptions } from '../../../api/directories.api';
 
 export interface SelectorContentProps {
@@ -49,11 +48,11 @@ const SelectorContent: React.FC<
     if (!checked) setSelectorData(prev => prev.filter(el => !ids.includes(el)));
   }
 
-  useMemo(async () => {
+  useMemo(() => {
     if (!selectorName) return;
 
-    createApiCall(
-      defaultApiCallPayload<GetAllByDirTypeOptions, SelectsTreeListItemProps[]>({
+    createApiCall<GetAllByDirTypeOptions, SelectsTreeListItemProps[]>(
+      {
         data: {
           dirType: selectorName,
           params: {
@@ -67,10 +66,9 @@ const SelectorContent: React.FC<
         onError(e) {
           console.error('callRes error', e);
         },
-      }),
-      async data => {
-        return DirectoriesApi.getAllByDirType(data);
-      }
+      },
+      DirectoriesApi.getAllByDirType,
+      DirectoriesApi
     );
   }, [selectorName]);
 

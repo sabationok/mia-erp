@@ -81,6 +81,12 @@ export const transactionsColumnsNew: CellTittleProps[] = [
     action: 'valueByPath',
   },
   {
+    top: { name: 'Автор', align: 'start', path: 'meta.author.name' },
+    bottom: { name: 'Емейл', align: 'start', path: 'meta.author.email' },
+    width: '150px',
+    action: 'valueByPath',
+  },
+  {
     top: { name: 'Коментар', align: 'start', path: 'comment' },
     width: '150px',
     action: 'valueByPath',
@@ -147,6 +153,12 @@ export const transactionsColumns: CellTittleProps[] = [
       path: 'subCategoryId.label',
     },
     width: '190px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Автор', align: 'start', path: 'meta.author.name' },
+    bottom: { name: 'Емейл', align: 'start', path: 'meta.author.email' },
+    width: '150px',
     action: 'valueByPath',
   },
   {

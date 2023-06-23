@@ -47,33 +47,35 @@ export enum ApiDirType {
 const transactionsApiEndpoints = {
   [Endpoints.getAll]: (): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.getAll}`,
   [Endpoints.create]: (): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.create}`,
-  [Endpoints.deleteById]: (id: string): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.deleteById}/${id}`,
-  [Endpoints.updateById]: (id: string): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.updateById}/${id}`,
-  [Endpoints.getById]: (id: string): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.getById}/${id}`,
+  [Endpoints.deleteById]: (id?: string): string =>
+    `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.deleteById}/${id || ''}`,
+  [Endpoints.updateById]: (id?: string): string =>
+    `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.updateById}/${id || ''}`,
+  [Endpoints.getById]: (id?: string): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.getById}/${id || ''}`,
 };
 const permissionsApiEndpoints = {
-  [Endpoints.updateById]: (permissionId: string) =>
+  [Endpoints.updateById]: (permissionId?: string) =>
     `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.delete}/${permissionId}`,
-  [Endpoints.deleteById]: (permissionId: string) =>
+  [Endpoints.deleteById]: (permissionId?: string) =>
     `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.deleteById}/${permissionId}`,
   [Endpoints.create]: () => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.create}`,
-  [Endpoints.getAllByUserId]: (userId: string) =>
+  [Endpoints.getAllByUserId]: (userId?: string) =>
     `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.getAllByUserId}/${userId}`,
-  [Endpoints.getAllByCompanyId]: (companyId: string) =>
+  [Endpoints.getAllByCompanyId]: (companyId?: string) =>
     `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.getAllByCompanyId}/${companyId}`,
   [Endpoints.getCurrent]: () => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.getCurrent}`,
-  [Endpoints.logIn]: (id: string) => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.logIn}/${id}`,
+  [Endpoints.logIn]: (id?: string) => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.logIn}/${id || ''}`,
   [Endpoints.logOut]: () => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.logOut}`,
 };
 
 const companiesApiEndpoints = {
-  [Endpoints.deleteById]: (permissionId: string) =>
+  [Endpoints.deleteById]: (permissionId?: string) =>
     `${API_BASE_ROUTES.COMPANIES}/${Endpoints.deleteById}/${permissionId}`,
-  [Endpoints.updateById]: (permissionId: string) =>
+  [Endpoints.updateById]: (permissionId?: string) =>
     `${API_BASE_ROUTES.COMPANIES}/${Endpoints.updateById}/${permissionId}`,
   [Endpoints.create]: () => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.create}`,
-  [Endpoints.getById]: (id: string) => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.getById}/${id}`,
-  [Endpoints.getAllByOwnerId]: (ownerId: string) =>
+  [Endpoints.getById]: (id?: string) => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.getById}/${id || ''}`,
+  [Endpoints.getAllByOwnerId]: (ownerId?: string) =>
     `${API_BASE_ROUTES.COMPANIES}/${Endpoints.getAllByOwnerId}/${ownerId}`,
 };
 
@@ -86,16 +88,16 @@ const authApiEndpoints = {
 };
 
 const directoriesApiEndpoints = {
-  [Endpoints.getAll]: (dirType: ApiDirType) => `${API_BASE_ROUTES.DIRECTORIES}/${dirType}/${Endpoints.getAll}`,
-  [Endpoints.create]: (dirType: ApiDirType) => `${API_BASE_ROUTES.DIRECTORIES}/${dirType}/${Endpoints.create}`,
-  [Endpoints.deleteById]: (dirType: ApiDirType, id: string) =>
-    `${API_BASE_ROUTES.DIRECTORIES}/${dirType}/${Endpoints.deleteById}/${id}`,
-  [Endpoints.updateById]: (dirType: ApiDirType, id: string) =>
-    `${API_BASE_ROUTES.DIRECTORIES}/${dirType}/${Endpoints.updateById}/${id}`,
-  [Endpoints.getById]: (dirType: ApiDirType, id: string) =>
-    `${API_BASE_ROUTES.DIRECTORIES}/${dirType}/${Endpoints.getById}/${id}`,
-  [Endpoints.changeArchiveStatus]: (dirType: ApiDirType, id: string) =>
-    `${API_BASE_ROUTES.DIRECTORIES}/${dirType}/${Endpoints.changeArchiveStatus}/${id}`,
+  [Endpoints.getAll]: (dirType?: ApiDirType) => `${API_BASE_ROUTES.DIRECTORIES}/${dirType || '_'}/${Endpoints.getAll}`,
+  [Endpoints.create]: (dirType?: ApiDirType) => `${API_BASE_ROUTES.DIRECTORIES}/${dirType || '_'}/${Endpoints.create}`,
+  [Endpoints.deleteById]: (dirType?: ApiDirType, id?: string) =>
+    `${API_BASE_ROUTES.DIRECTORIES}/${dirType || '_'}/${Endpoints.deleteById}/${id || ''}`,
+  [Endpoints.updateById]: (dirType?: ApiDirType, id?: string) =>
+    `${API_BASE_ROUTES.DIRECTORIES}/${dirType || '_'}/${Endpoints.updateById}/${id || ''}`,
+  [Endpoints.getById]: (dirType?: ApiDirType, id?: string) =>
+    `${API_BASE_ROUTES.DIRECTORIES}/${dirType || '_'}/${Endpoints.getById}/${id || ''}`,
+  [Endpoints.changeArchiveStatus]: (dirType?: ApiDirType, id?: string) =>
+    `${API_BASE_ROUTES.DIRECTORIES}/${dirType || '_'}/${Endpoints.changeArchiveStatus}/${id || ''}`,
 };
 
 const APP_CONFIGS = {

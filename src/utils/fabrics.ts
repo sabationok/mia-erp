@@ -28,7 +28,6 @@ function createThunkPayload<SD extends FieldValues = any, RD = any, E = any>(
       (logAll || logLoading) && console.log('createSubmitHandlerWithPayload onLoading', l);
       onLoading && onLoading(l);
     },
-    submitData: payloadData,
     data: payloadData,
   };
 }
@@ -56,7 +55,6 @@ function defaultThunkPayload<SD extends FieldValues = any, RD = any, E = any>({
       (logAll || logLoading) && console.log('defaultThunkPayload onLoading', l);
       onLoading && onLoading(l);
     },
-    submitData: data,
     data: data,
   };
 }
@@ -84,7 +82,6 @@ function defaultApiCallPayload<SD = any, RD = any, E = any>({
       (logAll || logLoading) && console.log('createSubmitHandlerWithPayload onLoading', l);
       onLoading && onLoading(l);
     },
-    submitData: data,
     data: data,
   };
 }

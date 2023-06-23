@@ -36,9 +36,9 @@ export const getAllUsersThunk = createAsyncThunk<IUser[], ThunkPayload, AsyncThu
 
 export const getUserById = createAsyncThunk<IUser, ThunkPayload<{ userId: string }>, AsyncThunkConfig>(
   'auth/getUserById',
-  async ({ onSuccess, onError, submitData }, thunkAPI) => {
+  async ({ onSuccess, onError, data }, thunkAPI) => {
     try {
-      const res: IGetUserByIdRes = await baseApi.get(usersApiRoutes.getById(submitData?.userId));
+      const res: IGetUserByIdRes = await baseApi.get(usersApiRoutes.getById(data?.userId));
 
       onSuccess && onSuccess(res.data.data);
 
@@ -55,7 +55,7 @@ export const createUserByAdminThunk = createAsyncThunk<
   IRegisteredUser,
   ThunkPayload<IRegistrationData>,
   AsyncThunkConfig
->('auth/createUserByAdminThunk', async ({ onSuccess, onError, submitData }, thunkAPI) => {
+>('auth/createUserByAdminThunk', async ({ onSuccess, onError, data }, thunkAPI) => {
   try {
     const {
       data: { data },

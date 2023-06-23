@@ -1,30 +1,29 @@
-import { ServiceApiCaller } from '../global.types';
-import { ICompany } from './companies.types';
-import { AppDispatch, RootState, useAppDispatch } from '../store.store';
+import { ICompany, ICompanyReqData } from './companies.types';
+import { AppDispatch, useAppDispatch } from '../store.store';
 import { IPermission } from '../permissions/permissions.types';
 import { useMemo } from 'react';
 import { CompaniesApi, createApiCall } from '../../api';
 import { defaultApiCallPayload } from '../../utils/fabrics';
+import { ApiCaller } from '../../api/createApiCall.api';
 
 export interface CompaniesService {
   dispatch: AppDispatch;
-  state?: RootState;
-  delete?: ServiceApiCaller<{ id: string }>;
-  create?: ServiceApiCaller<Partial<ICompany>, IPermission>;
-  update?: ServiceApiCaller<Partial<ICompany>, IPermission>;
+  delete?: ApiCaller<string, Partial<IPermission>>;
+  create?: ApiCaller<Partial<ICompany>, IPermission>;
+  update?: ApiCaller<Required<ICompanyReqData>, IPermission>;
 }
 
 const useCompaniesService = (): CompaniesService => {
   const dispatch: AppDispatch = useAppDispatch();
 
-  const service = useMemo(
-    (): Omit<CompaniesService, 'dispatch' | 'state'> => ({
-      create: async payload => createApiCall(defaultApiCallPayload(payload), CompaniesApi.create),
-      update: async payload => createApiCall(defaultApiCallPayload(payload), CompaniesApi.updateById),
-      delete: async payload => createApiCall(defaultApiCallPayload(payload), CompaniesApi.deleteById),
-    }),
-    []
-  );
+  const service = useMemo((): Omit<CompaniesService, 'dispatch'> => {
+    const { create, updateById, deleteById } = CompaniesApi;
+    return {
+      create: async payload => createApiCall(defaultApiCallPayload(payload), create, CompaniesApi),
+      update: async payload => createApiCall(defaultApiCallPayload(payload), updateById, CompaniesApi),
+      delete: async payload => createApiCall(defaultApiCallPayload(payload), deleteById, CompaniesApi),
+    };
+  }, []);
   return { dispatch, ...service };
 };
 

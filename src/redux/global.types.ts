@@ -1,5 +1,6 @@
 import { ThunkPayload } from './store.store';
 import { AxiosResponse } from 'axios';
+import { ApiCallerPayload } from '../api/createApiCall.api';
 
 export interface IBase {
   _id: string;
@@ -49,15 +50,7 @@ export type ServiceDispatcherAsync<SD = any, RD = any, E = any> = (payload?: Thu
     }
   | undefined
 >;
-export type GetResponseCallback<SD = any, RD = any, MD = any> = (args?: SD) => Promise<AppResponse<RD, MD>>;
-
-export interface ApiCallerPayload<SD = any, RD = any, E = any | unknown> extends ThunkPayload<SD, RD, E> {}
 
 export type ServiceApiCaller<SD = any, RD = any, E = any | unknown, MD = any> = (
   payload: ApiCallerPayload<SD, RD, E>
 ) => Promise<AppResponse<RD, MD> | undefined>;
-
-export type ApiCaller<SD = any, RD = any, E = any, MD = any> = (
-  payload: ApiCallerPayload<SD, RD, E>,
-  getResponseCallback: GetResponseCallback<SD, RD, MD>
-) => Promise<AppResponse<RD, MD>>;

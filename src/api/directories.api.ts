@@ -79,15 +79,12 @@ export default class DirectoriesApi {
     });
   }
 
-  public static async getAllByDirType<RD = IBaseDirItem>({
-    dirType,
-    params,
-  }: GetAllByDirTypeOptions): Promise<IDirRes<RD[]>> {
-    return this.api.get(this.endpoints[Endpoints.getAll](dirType), {
+  public static async getAllByDirType<RD = IBaseDirItem>(args?: GetAllByDirTypeOptions): Promise<IDirRes<RD[]>> {
+    return this.api.get(this.endpoints[Endpoints.getAll](args?.dirType), {
       params: {
         isArchived: false,
         createTreeData: true,
-        ...params,
+        ...args?.params,
       },
     });
   }

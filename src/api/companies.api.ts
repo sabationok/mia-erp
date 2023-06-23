@@ -23,15 +23,15 @@ export default class CompaniesApi {
     });
   }
 
-  public static async create(data: ICompanyReqData['data']): Promise<ICompanyCreatingRes> {
+  public static async create(data?: ICompanyReqData['data']): Promise<ICompanyCreatingRes> {
     return this.api.post(this.endpoints.create(), data);
   }
 
-  public static async updateById({ data, id, _id }: Required<ICompanyReqData>): Promise<ICompanyUpdatingRes> {
-    return this.api.post(this.endpoints.updateById(_id || id), data);
+  public static async updateById(data?: Required<ICompanyReqData>): Promise<ICompanyUpdatingRes> {
+    return this.api.post(this.endpoints.updateById(data?._id), data?.data);
   }
 
-  public static async deleteById(id: string): Promise<ICompanyDeletingRes> {
+  public static async deleteById(id?: string): Promise<ICompanyDeletingRes> {
     return this.api.post(this.endpoints.deleteById(id));
   }
 }

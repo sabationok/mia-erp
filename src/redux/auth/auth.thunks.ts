@@ -85,11 +85,9 @@ export const getCurrentUserThunk = createAsyncThunk<
     },
     ICurrentUserInfoRes
   >
->('auth/getCurrentUserThunk', async ({ onSuccess, onError, onLoading, submitData }, thunkAPI) => {
+>('auth/getCurrentUserThunk', async ({ onSuccess, onError, onLoading, data }, thunkAPI) => {
   try {
-    const response: ICurrentUserInfoRes = await baseApi.get(
-      authApiRoutes.getCurrentUser(submitData?.permissionId || '')
-    );
+    const response: ICurrentUserInfoRes = await baseApi.get(authApiRoutes.getCurrentUser(data?.permissionId || ''));
 
     onSuccess && onSuccess(response);
 

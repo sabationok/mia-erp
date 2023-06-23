@@ -6,9 +6,12 @@ import { filterOptions } from '../../data/transactions.data';
 import { TableActionCreator } from '../../components/TableList/tableTypes.types';
 import { ITransaction } from './transactions.types';
 import TransactionForm from '../../components/Forms/TransactionFormNew';
+import { useTransactionsSelector } from '../selectors.store';
+import { createApiCall, TransactionsApi } from '../../api';
 
 export type TrActionsCreator = TableActionCreator<ITransaction>;
 const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => {
+  const state = useTransactionsSelector();
   const modals = useModalProvider();
 
   return useCallback(
@@ -25,8 +28,9 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
             modalChildrenProps: {
               title: 'Редагування транзакції',
               filterOptions,
-              onSubmitEdit: () => {
+              onSubmit: data => {
                 service.editById({
+                  data: { data, _id: ctx.selectedRow?._id as string },
                   onSuccess(d) {},
                 });
               },
@@ -40,13 +44,24 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         title: 'Копіювання транзакції',
         icon: 'copy',
         type: 'onlyIcon',
-        disabled: !ctx.selectedRow?._id,
-        onClick: () => {
+        disabled: !!ctx.selectedRow?._id,
+        onClick: async () => {
+          // const res = service.getById({ data: ctx.selectedRow?._id || '6s1df5b1s6d5f1b6sd5g1b6sd51f6' });
+          const apiRes = createApiCall(
+            {
+              data: 'f1vs6df16sdf1b',
+              logError: true,
+            },
+            TransactionsApi.getById,
+            TransactionsApi
+          );
+
           const modal = modals.handleOpenModal({
             ModalChildren: TransactionForm,
             modalChildrenProps: {
               title: 'Копіювання транзакції',
               filterOptions,
+              defaultState: state.transactions.find(el => el._id === ctx.selectedRow?._id),
               onSubmit: () => {
                 service.create({
                   onSuccess(d) {},
@@ -66,10 +81,7 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         disabled: !ctx.selectedRow?._id,
         onClick: () => {
           service.deleteById({
-            data: 'id',
-            onSuccess: d => {
-              console.log(d);
-            },
+            data: ctx.selectedRow?._id,
           });
         },
       },
@@ -91,6 +103,7 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
               defaultState: { type: 'INCOME' },
               onSubmit: data => {
                 service.create({
+                  data: { data },
                   onSuccess(d) {},
                 });
               },
@@ -114,9 +127,9 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
               filterOptions,
               defaultOption: 1,
               defaultState: { type: 'TRANSFER' },
-              onSubmit: d => {
+              onSubmit: data => {
                 service.create({
-                  data: { data: d },
+                  data: { data },
                   onSuccess(d) {},
                 });
               },
@@ -140,9 +153,9 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
               filterOptions,
               defaultOption: 2,
               defaultState: { type: 'EXPENSE' },
-              onSubmit: d => {
+              onSubmit: data => {
                 service.create({
-                  data: { data: d },
+                  data: { data },
                   onSuccess(d) {},
                 });
               },
@@ -153,10 +166,8 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
       },
     ],
 
-    [modals, service]
+    [modals, service, state.transactions]
   );
 };
-
-export type useTrActionsCreatorHookType = typeof useTrActionsCreator;
 
 export { useTrActionsCreator };
