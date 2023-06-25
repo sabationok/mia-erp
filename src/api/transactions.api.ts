@@ -5,29 +5,25 @@ import {
   ITransactionReqData,
   ITransactionRes,
 } from 'redux/transactions/transactions.types';
-import { FilterReturnDataType } from '../components/Filter/AppFilter';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
-import { ISortParams } from './index';
+import { AppQueryParams } from './index';
 
 export default class TransactionsApi {
   private static api = baseApi;
   private static endpoints = APP_CONFIGS.endpoints.transactions;
 
-  public static async getAll(
-    params?: {
-      filter?: FilterReturnDataType;
-    } & ISortParams
-  ): Promise<IAllTransactionsRes> {
+  public static async getAll(params?: AppQueryParams): Promise<IAllTransactionsRes> {
     return this.api.get(this.endpoints.getAll(), {
       params,
     });
   }
 
-  public static async create(data?: ITransactionReqData['data']): Promise<ICreateTransactionRes> {
-    return this.api.post(this.endpoints.create(), data);
+  public static async create(data?: ITransactionReqData): Promise<ICreateTransactionRes> {
+    console.log('api tr create', data);
+    return this.api.post(this.endpoints.create(), data?.data);
   }
 
-  public static async editById(data?: Required<ITransactionReqData>): Promise<ITransactionRes> {
+  public static async updateById(data?: Required<ITransactionReqData>): Promise<ITransactionRes> {
     return this.api.patch(this.endpoints.updateById(data?._id), data?.data);
   }
 

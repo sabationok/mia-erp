@@ -6,15 +6,23 @@ import TableSort from '../TableSortComp/TableSort';
 import { useState } from 'react';
 
 const TableFooter: React.FC<any> = props => {
-  const { tableSortParams, selectedRows, counter, pagination } = useTable();
+  const { tableSortParams, selectedRows, counter, pagination, handleTableSort } = useTable();
   const [isCounterOn] = useState<boolean | undefined>(!counter && selectedRows && selectedRows?.length > 0);
 
   return (
     <Footer className="tFooter" {...props}>
       <Top className="footerTop">
-        {tableSortParams && tableSortParams.length > 0 && <TableSort {...{ tableSortParams }} />}
+        {tableSortParams && tableSortParams.length > 0 && (
+          <TableSort {...{ tableSortParams, onSelect: handleTableSort }} />
+        )}
 
-        {pagination && <TablePagination />}
+        {pagination && (
+          <TablePagination
+            onSelect={opt => {
+              console.log('pagination', opt);
+            }}
+          />
+        )}
       </Top>
 
       {isCounterOn && <FooterCounter selectedRows={selectedRows} includes={['INCOME', 'EXPENSE']} />}

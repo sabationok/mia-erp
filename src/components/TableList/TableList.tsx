@@ -98,7 +98,6 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
       selectedRows,
       selectedRow,
       tableData,
-      isLoading,
       onFilterSubmit: onFilterSubmitWrapper,
       onRowClick: onRowClickWrapper,
       onCheckboxChange: onCheckboxChangeWrapper,
@@ -112,7 +111,6 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
       filterDefaultValues,
       filterTitle,
       footer,
-      isLoading,
       onCheckboxChangeWrapper,
       onFilterSubmitWrapper,
       onHeadCheckboxChange,
@@ -130,7 +128,7 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
   return (
     <Table {...props}>
       <TableCTX.Provider value={CTX}>
-        <AppLoader isLoading={isLoading} />
+        <AppLoader isLoading={isLoading} comment={'Waiting for new transactions...'} />
 
         <TableOverHead />
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
 export interface DateCompProps {
@@ -6,25 +6,42 @@ export interface DateCompProps {
   wraped?: boolean;
 }
 
-const DateComp: React.FC<DateCompProps> = ({ dateInfo, wraped }) => {
-  let date, year, month, day, hours, minutes, seconds;
+const useAppDate = (date: string | number | Date) =>
+  useMemo(() => {
+    let current,
+      year = '00',
+      month = '00',
+      day = '00',
+      hours = '00',
+      minutes = '00',
+      seconds = '00';
+    if (date) {
+      current = new Date(date);
+      year = current.getFullYear().toString().padStart(2, '0');
+      month = (current.getMonth() + 1).toString().padStart(2, '0');
+      day = current.getDate().toString().padStart(2, '0');
+      hours = current.getHours().toString().padStart(2, '0');
+      minutes = current.getMinutes().toString().padStart(2, '0');
+      seconds = current.getSeconds().toString().padStart(2, '0');
+    }
+    return { current, year, month, day, hours, minutes, seconds, date: current } as {
+      year: string;
+      month: string;
+      day: string;
+      hours: string;
+      minutes: string;
+      seconds: string;
+      date: Date;
+    };
+  }, [date]);
 
-  if (dateInfo) {
-    date = new Date(dateInfo);
-    year = date.getFullYear().toString().padStart(2, '0');
-    month = (date.getMonth() + 1).toString().padStart(2, '0');
-    day = date.getDate().toString().padStart(2, '0');
-    hours = date.getHours().toString().padStart(2, '0');
-    minutes = date.getMinutes().toString().padStart(2, '0');
-    seconds = date.getSeconds().toString().padStart(2, '0');
-  }
+const DateComp: React.FC<DateCompProps> = ({ dateInfo, wraped }) => {
+  const { year, month, day, hours, minutes, seconds } = useAppDate(dateInfo);
 
   return (
     <Wrapper wraped={wraped}>
-      <StDate>{dateInfo ? `${day}.${month}.${year}` : `00.00.0000 `}</StDate>
-      <StTime>
-        {dateInfo ? `(${hours}:${minutes}:${seconds})` : `(00:00:00)`}
-      </StTime>
+      <StDate>{`${day}.${month}.${year}`}</StDate>
+      <StTime>{`(${hours}:${minutes}:${seconds})`}</StTime>
     </Wrapper>
   );
 };

@@ -3,26 +3,18 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 
 import TableSortParamsList from './TableSortParamsList';
 import styled from 'styled-components';
-import { SelectItem } from 'components/TableList/TableList';
+import { ITableListProps, SelectItem } from 'components/TableList/TableList';
 import { useModalProvider } from '../../ModalProvider/ModalProvider';
 import ModalForm from '../../ModalForm';
 
 export interface TableSortProps {
   tableSortParams: SelectItem[];
-  onSelect?: (param: SelectItem, sortOrder: SelectItem['sortOrder']) => void;
+  onSelect?: ITableListProps['handleTableSort'];
 }
 
 const TableSort: React.FC<TableSortProps> = ({ tableSortParams, onSelect }) => {
   const modals = useModalProvider();
   const [current, setCurrent] = useState<SelectItem>();
-
-  const ModalSort = () => {
-    return (
-      <ModalForm fitContentH fitContentV footer={false} title={'Сортування'}>
-        <TableSortParamsList {...{ tableSortParams, onSelect: handleSelect, current, isOpen: true }} />
-      </ModalForm>
-    );
-  };
 
   function onOpenClick() {
     modals.handleOpenModal({
@@ -32,9 +24,16 @@ const TableSort: React.FC<TableSortProps> = ({ tableSortParams, onSelect }) => {
 
   function handleSelect(param: SelectItem, sortOrder: SelectItem['sortOrder']) {
     setCurrent({ ...param, sortOrder });
-    onSelect && onSelect(param, sortOrder);
+    sortOrder && onSelect && onSelect(param, sortOrder);
   }
 
+  const ModalSort = () => {
+    return (
+      <ModalForm fitContentH fitContentV footer={false} title={'Сортування'}>
+        <TableSortParamsList {...{ tableSortParams, onSelect: handleSelect, current, isOpen: true }} />
+      </ModalForm>
+    );
+  };
   return (
     <Box>
       <StButton

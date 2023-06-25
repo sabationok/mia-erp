@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import styled from 'styled-components';
-import { ITransaction, ITransactionForReq } from 'redux/transactions/transactions.types';
+import { ITransaction, ITransactionReqData } from 'redux/transactions/transactions.types';
 import { CategoryTypes } from 'redux/directories/categories.types';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
@@ -17,15 +17,21 @@ import { useAppSelector } from '../../redux/store.store';
 import FlexBox from '../atoms/FlexBox';
 import translate from '../../lang';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
+import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
+
+export interface AfterFormSubmitOptions {
+  close?: boolean;
+  clear?: boolean;
+}
 
 export interface TransactionFormNewProps extends Omit<ModalFormProps, 'onSubmit'> {
   edit?: boolean;
   copy?: boolean;
   id?: string;
-  onSubmit?: (data: ITransactionForReq) => void;
-  onSubmitEdit?: (_id: string, data: ITransactionForReq) => void;
+  onSubmit?: (data: ITransactionReqData, options?: AfterFormSubmitOptions) => void;
+
   filterOptions?: TransactionsFilterOpt[];
   defaultState?: Partial<ITransaction>;
   addInputs?: boolean;
@@ -47,15 +53,20 @@ const validationItem = yup
   })
   .nullable();
 const validation = yup.object().shape({
+  amount: yup.number(),
+  type: yup.string().required(),
+  comment: yup.string().optional(),
   countIn: validationItem,
   subCountIn: validationItem,
-  amount: yup.number(),
+  countOut: validationItem,
+  subCountOut: validationItem,
+  category: validationItem,
+  subCategory: validationItem,
 });
 
 const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
   edit,
   onSubmit,
-  onSubmitEdit,
   copy,
   defaultState,
   addInputs,
@@ -65,6 +76,7 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
     directories: { directories },
   } = useAppSelector();
 
+  const [afterSubmitOptions, setAfterSubmitOptions] = useState<AfterFormSubmitOptions>({});
   const {
     formState: { errors },
     register,
@@ -120,16 +132,7 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
 
     const trReqData = createTransactionForReq(submitData, omitPathArr, 'eventDate', 'amount');
 
-    if (onSubmit) {
-      console.log('form submit', trReqData);
-      onSubmit(trReqData);
-    }
-
-    if (onSubmitEdit && defaultState?._id) {
-      console.log('form submit edit', trReqData);
-      onSubmitEdit(defaultState?._id, trReqData);
-      return;
-    }
+    onSubmit && onSubmit({ _id: '', data: trReqData }, afterSubmitOptions);
   }
 
   const renderInputsCountIn = useMemo(() => {
@@ -148,9 +151,7 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
           <CustomSelect
             label={translate('subCountIn')}
             placeholder={translate('subCountIn')}
-            {...registerSelect('subCountIn', {
-              options: parent?.childrenList,
-            })}
+            {...registerSelect('subCountIn', { options: parent?.childrenList })}
           />
         )}
       </>
@@ -210,6 +211,45 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
     );
   }, [directories, formValues.category?._id, formValues.type, registerSelect]);
 
+  const renderExtraFooter = useMemo(() => {
+    const isClearActive = afterSubmitOptions.clear;
+    const isCloseActive = afterSubmitOptions.close;
+    return (
+      <ExtraFooter fillWidth gap={4} padding={'4px 8px'} alignItems={'flex-start'}>
+        <Label
+          gap={8}
+          fxDirection={'row'}
+          onClick={() => {
+            setAfterSubmitOptions(prev => ({ ...prev, clear: !prev.clear }));
+          }}
+        >
+          <ButtonIcon
+            variant={'onlyIconNoEffects'}
+            size={'14px'}
+            iconSize={'90%'}
+            icon={isClearActive ? 'checkBoxOn' : 'checkBoxOff'}
+          />
+          <div>{'Очистити після підтверджеання'}</div>
+        </Label>
+        <Label
+          gap={8}
+          fxDirection={'row'}
+          onClick={() => {
+            setAfterSubmitOptions(prev => ({ ...prev, close: !prev.close }));
+          }}
+        >
+          <ButtonIcon
+            variant={'onlyIconNoEffects'}
+            size={'14px'}
+            iconSize={'90%'}
+            icon={isCloseActive ? 'checkBoxOn' : 'checkBoxOff'}
+          />
+          <div>{'Закрити після підтверджеання'}</div>
+        </Label>
+      </ExtraFooter>
+    );
+  }, [afterSubmitOptions.clear, afterSubmitOptions.close]);
+
   return (
     <ModalForm
       onSubmit={handleSubmit(onValidSubmit, data => {
@@ -217,6 +257,7 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
       })}
       onOptSelect={({ value }) => value && setValue('type', value)}
       {...props}
+      extraFooter={renderExtraFooter}
     >
       <FlexBox className={'inputs'} flex={'1'} fillWidth maxHeight={'100%'} padding={'12px'} overflow={'auto'}>
         <InputLabel label={translate('dateAndTime')} direction={'vertical'}>
@@ -232,8 +273,8 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
           </InputLabel>
         </GridWrapper>
 
-        {renderInputsCountIn}
         {renderInputsCountOut}
+        {renderInputsCountIn}
         {renderInputsCategories}
 
         <InputLabel label={translate('comment')} direction={'vertical'}>
@@ -248,5 +289,14 @@ const GridWrapper = styled.div<{ gridTemplateColumns?: string }>`
   display: grid;
   grid-template-columns: ${({ gridTemplateColumns }) => gridTemplateColumns || '1fr 120px'};
   gap: 12px;
+`;
+
+const ExtraFooter = styled(FlexBox)`
+  min-height: 40px;
+`;
+
+const Label = styled(FlexBox)`
+  cursor: pointer;
+  user-select: none;
 `;
 export default TransactionFormNew;

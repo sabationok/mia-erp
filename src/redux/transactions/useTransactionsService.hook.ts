@@ -4,19 +4,18 @@ import { ITransaction, ITransactionReqData } from './transactions.types';
 import { ITransactionsState } from './transactions.slice';
 import { ServiceApiCaller, ServiceDispatcherAsync } from 'redux/global.types';
 import { createTransactionThunk, getAllTransactionsThunk } from './transactions.thunks';
-import { FilterReturnDataType as FilterData } from 'components/Filter/AppFilter';
 import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
-import { createApiCall, TransactionsApi } from 'api';
+import { AppQueryParams, createApiCall, TransactionsApi } from 'api';
 
 export interface TransactionsService {
   dispatch: AppDispatch;
   state: ITransactionsState;
-  create: ServiceDispatcherAsync<ITransactionReqData>;
+  create: ServiceDispatcherAsync<ITransactionReqData, ITransaction>;
   deleteById: ServiceApiCaller<string, ITransaction>; // !!!!! ===>>> ServiceDispatcher
-  editById: ServiceApiCaller<Required<ITransactionReqData>, ITransaction>; // !!!!! ===>>> ServiceDispatcher
+  updateById: ServiceApiCaller<Required<ITransactionReqData>, ITransaction>; // !!!!! ===>>> ServiceDispatcher
   getById: ServiceApiCaller<string, ITransaction>;
-  getAll: ServiceDispatcherAsync<FilterData, ITransaction[]>;
+  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, ITransaction[]>;
 }
 
 const useTransactionsService = (): TransactionsService => {
@@ -24,11 +23,11 @@ const useTransactionsService = (): TransactionsService => {
   const state = useTransactionsSelector();
 
   const dispatchers = useMemo((): Omit<TransactionsService, 'state' | 'dispatch'> => {
-    const { deleteById, editById, getById } = TransactionsApi;
+    const { deleteById, updateById, getById } = TransactionsApi;
     return {
       create: async payload => dispatch(createTransactionThunk(defaultThunkPayload(payload))),
       deleteById: async payload => createApiCall(defaultApiCallPayload(payload), deleteById, TransactionsApi),
-      editById: async payload => createApiCall(defaultApiCallPayload(payload), editById, TransactionsApi),
+      updateById: async payload => createApiCall(defaultApiCallPayload(payload), updateById, TransactionsApi),
       getById: async payload => createApiCall(defaultApiCallPayload(payload), getById, TransactionsApi),
       getAll: async payload => dispatch(getAllTransactionsThunk(defaultThunkPayload(payload))),
     };

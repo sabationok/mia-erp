@@ -7,12 +7,26 @@ import { TableActionCreator } from '../../components/TableList/tableTypes.types'
 import { ITransaction } from './transactions.types';
 import TransactionForm from '../../components/Forms/TransactionFormNew';
 import { useTransactionsSelector } from '../selectors.store';
-import { createApiCall, TransactionsApi } from '../../api';
 
 export type TrActionsCreator = TableActionCreator<ITransaction>;
 const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => {
   const state = useTransactionsSelector();
   const modals = useModalProvider();
+
+  // const onSubmitCreateWrapper = useCallback(
+  //   (onCloseModal: () => void) => {
+  //     return (data: ITransactionReqData, options: AfterFormSubmitOptions,) => {
+  //       service.create({
+  //         data,
+  //         onSuccess(d) {
+  //           toast.success(`Сторено транзакцію на суму: ${d.amount}`);
+  //           options?.close && onCloseModal();
+  //         },
+  //       });
+  //     };
+  //   },
+  //   [service]
+  // );
 
   return useCallback(
     ctx => [
@@ -29,7 +43,7 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
               title: 'Редагування транзакції',
               filterOptions,
               onSubmit: data => {
-                service.editById({
+                service.updateById({
                   data: { data, _id: ctx.selectedRow?._id as string },
                   onSuccess(d) {},
                 });
@@ -44,18 +58,8 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         title: 'Копіювання транзакції',
         icon: 'copy',
         type: 'onlyIcon',
-        disabled: !!ctx.selectedRow?._id,
+        disabled: !ctx.selectedRow?._id,
         onClick: async () => {
-          // const res = service.getById({ data: ctx.selectedRow?._id || '6s1df5b1s6d5f1b6sd5g1b6sd51f6' });
-          const apiRes = createApiCall(
-            {
-              data: 'f1vs6df16sdf1b',
-              logError: true,
-            },
-            TransactionsApi.getById,
-            TransactionsApi
-          );
-
           const modal = modals.handleOpenModal({
             ModalChildren: TransactionForm,
             modalChildrenProps: {
@@ -97,17 +101,19 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
           const modal = modals.handleOpenModal({
             ModalChildren: TransactionForm,
             modalChildrenProps: {
-              title: 'Створити нову',
+              title: 'Створити',
               filterOptions,
               defaultOption: 0,
+              fillHeight: true,
               defaultState: { type: 'INCOME' },
-              onSubmit: data => {
+              onSubmit: (data, options) => {
                 service.create({
-                  data: { data },
-                  onSuccess(d) {},
+                  data,
+                  onSuccess(d) {
+                    options?.close && modal?.onClose();
+                  },
                 });
               },
-              fillHeight: true,
             },
           });
         },
@@ -126,14 +132,16 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
               title: 'Створити нову',
               filterOptions,
               defaultOption: 1,
+              fillHeight: true,
               defaultState: { type: 'TRANSFER' },
-              onSubmit: data => {
+              onSubmit: (data, options) => {
                 service.create({
-                  data: { data },
-                  onSuccess(d) {},
+                  data,
+                  onSuccess(d) {
+                    options?.close && modal?.onClose();
+                  },
                 });
               },
-              fillHeight: true,
             },
           });
         },
@@ -153,10 +161,12 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
               filterOptions,
               defaultOption: 2,
               defaultState: { type: 'EXPENSE' },
-              onSubmit: data => {
+              onSubmit: (data, options) => {
                 service.create({
-                  data: { data },
-                  onSuccess(d) {},
+                  data,
+                  onSuccess(d) {
+                    options?.close && modal?.onClose();
+                  },
                 });
               },
               fillHeight: true,

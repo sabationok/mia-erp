@@ -3,24 +3,29 @@ import { takeFullGridArea } from './pagesStyles';
 import { transactionsColumns, transactionsSearchParams } from 'data';
 import styled from 'styled-components';
 import useTransactionsService from 'redux/transactions/useTransactionsService.hook';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import useTrFilterSelectors from 'redux/transactions/useTrFilterSelectors.hook';
 import { ITransaction } from '../../redux/transactions/transactions.types';
 import { useTrActionsCreator } from '../../redux/transactions/useTrActionsCreator.hook';
 import { ITableListProps } from '../TableList/tableTypes.types';
 import AppGridPage from './AppGridPage';
-import { defaultThunkPayload } from '../../utils/fabrics';
 import useDirectoriesServiceHook from '../../redux/directories/useDirectoriesService.hook';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
+import { useTransactionsSelector } from '../../redux/selectors.store';
+import { ISortParams } from '../../api';
 
 type Props = {
   path: string;
 };
 const PageTransactions: React.FC<any> = ({ path }: Props) => {
   const service = useTransactionsService();
-  const { state, getAll } = service;
+  const state = useTransactionsSelector();
+  const { getAll } = service;
   const filterSelectors = useTrFilterSelectors();
   const actionsCreator = useTrActionsCreator(service);
+  const [isLoading, setIsLoading] = useState(false);
+  const [sortParams, setSortParams] = useState<ISortParams>();
+
   // const [selectedTr, setSelectedTr] = useState<any>(null);
 
   const { getAllByDirType } = useDirectoriesServiceHook();
@@ -37,19 +42,27 @@ const PageTransactions: React.FC<any> = ({ path }: Props) => {
       footer: true,
       checkBoxes: true,
       actionsCreator,
-      onFilterSubmit: data => {
-        console.log(data);
-        getAll({ data });
+      onFilterSubmit: filterParams => {
+        console.log(filterParams);
+        getAll({ data: { query: { filterParams, sortParams } } });
+      },
+      handleTableSort: (param, sortOrder) => {
+        setSortParams({ dataPath: param.dataPath, sortOrder });
+        getAll({
+          data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder } } },
+          onLoading: setIsLoading,
+        });
       },
       onRowClick: data => {
         console.log(data);
       },
     }),
-    [actionsCreator, filterSelectors, getAll, state.transactions]
+    [actionsCreator, filterSelectors, getAll, sortParams, state.transactions]
   );
   useEffect(() => {
     getAllByDirType({ data: { dirType: ApiDirType.COUNTS, params: { isArchived: false, createTreeData: true } } });
   }, [getAllByDirType]);
+
   useEffect(() => {
     getAllByDirType({
       data: {
@@ -60,12 +73,18 @@ const PageTransactions: React.FC<any> = ({ path }: Props) => {
   }, [getAllByDirType]);
 
   useEffect(() => {
-    getAll(defaultThunkPayload());
-  }, [getAll]);
+    console.log('onTableSortParamChange', sortParams);
+
+    if (state.transactions.length === 0)
+      getAll({
+        data: { query: { sortParams }, refresh: true },
+        onLoading: setIsLoading,
+      });
+  }, [getAll, sortParams, state.transactions.length]);
   return (
     <AppGridPage path={path}>
       <Page>
-        <TableList {...tableConfig} />
+        <TableList {...tableConfig} isLoading={isLoading} />
       </Page>
     </AppGridPage>
   );

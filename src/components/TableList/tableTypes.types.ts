@@ -17,7 +17,7 @@ export interface SelectItemBase extends Record<string, any> {
   dataPath?: string;
   descending?: boolean;
   path?: string;
-  sortOrder?: 'DESC' | 'ASC' | 'desc' | 'asc';
+  sortOrder?: 'desc' | 'asc';
 }
 
 export interface SelectItem extends SelectItemBase {}
@@ -85,7 +85,7 @@ export interface ITableListProps<TDataType = any> {
   onCheckboxChange?: OnCheckBoxChangeHandler;
   onHeadCheckboxChange?: OnHeadCheckBoxChangeHandler;
   onTableSortParamChange?: (params: ITableSortParam) => void;
-  handleTableSort?: (sortParam: ITableSortParam) => void;
+  handleTableSort?: (param: SelectItem, sortOrder: 'desc' | 'asc') => void;
   actionsCreator?: TableActionCreator<TDataType>;
   selectedRow?: Partial<TDataType>;
 }

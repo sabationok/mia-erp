@@ -64,7 +64,7 @@ const darkTheme = {
   backgroundColorMain: 'rgb(28, 28, 28)',
   backgroundColorSecondary: 'rgb(39, 39, 39)',
   backgroundColorLight: '#323234',
-  backdropColor: 'rgba(21, 21, 21, 0.3)',
+  backdropColor: 'rgba(21, 21, 21, 0.5)',
   borderColor: '#59595a',
 
   trBorderClr: 'rgba(70, 70, 73, 1)', // 'rgba(122, 122, 122, 1)',

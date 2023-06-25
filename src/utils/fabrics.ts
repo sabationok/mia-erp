@@ -1,15 +1,6 @@
 import { ThunkPayload } from '../redux/store.store';
 import { FieldValues } from 'react-hook-form';
 
-export interface CreateThunkPayloadOptions<SD = any, RD = any, E = any | unknown>
-  extends Omit<ThunkPayload<SD, RD, E>, 'data' | 'submitData'> {
-  logData?: boolean;
-  logError?: boolean;
-  logLoading?: boolean;
-  logAll?: boolean;
-  data?: SD;
-}
-
 function createThunkPayload<SD extends FieldValues = any, RD = any, E = any>(
   payloadData?: SD,
   options?: CreateThunkPayloadOptions<SD, RD, E>
@@ -32,7 +23,23 @@ function createThunkPayload<SD extends FieldValues = any, RD = any, E = any>(
   };
 }
 
-function defaultThunkPayload<SD extends FieldValues = any, RD = any, E = any>({
+export type DefaultThunkPayload<SD = any, RD = any, MD = any, E = any> = {
+  data?: SD;
+  onSuccess: (data: RD, meta?: MD) => void;
+  onError: (error: E) => void;
+  onLoading: (loading: boolean) => void;
+};
+
+export interface CreateThunkPayloadOptions<SD = any, RD = any, MD = any, E = any | unknown>
+  extends Partial<Omit<DefaultThunkPayload<SD, RD, MD, E>, 'data'>> {
+  logData?: boolean;
+  logError?: boolean;
+  logLoading?: boolean;
+  logAll?: boolean;
+  data?: SD;
+}
+
+function defaultThunkPayload<SD extends FieldValues = any, RD = any, MD = any, E = any>({
   logData,
   logError,
   logLoading,
@@ -41,11 +48,11 @@ function defaultThunkPayload<SD extends FieldValues = any, RD = any, E = any>({
   onSuccess,
   onLoading,
   data,
-}: CreateThunkPayloadOptions<SD, RD, E> = {}): ThunkPayload<SD, RD, E> {
+}: CreateThunkPayloadOptions<SD, RD, MD, E> = {}): DefaultThunkPayload<SD, RD, MD, E> {
   return {
-    onSuccess: (d: RD) => {
-      (logAll || logData) && console.log('defaultThunkPayload onSuccess', d);
-      onSuccess && onSuccess(d);
+    onSuccess: (d: RD, m?: MD) => {
+      (logAll || logData) && console.log('defaultThunkPayload onSuccess', { d, m });
+      onSuccess && onSuccess(d, m);
     },
     onError: (e: E) => {
       (logAll || logError) && console.log('defaultThunkPayload onError', e);
@@ -55,7 +62,7 @@ function defaultThunkPayload<SD extends FieldValues = any, RD = any, E = any>({
       (logAll || logLoading) && console.log('defaultThunkPayload onLoading', l);
       onLoading && onLoading(l);
     },
-    data: data,
+    data,
   };
 }
 

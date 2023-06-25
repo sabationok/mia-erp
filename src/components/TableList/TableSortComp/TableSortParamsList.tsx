@@ -19,6 +19,7 @@ const TableSortParamsList: React.FC<TableSortParamsListProps> = ({ tableSortPara
   function handleSetCurrentState(param: SelectItem, sortOrder: SelectItem['sortOrder']) {
     return () => {
       onSelect && onSelect(param, sortOrder);
+
       setCurrentEl({ ...param, sortOrder });
     };
   }
@@ -57,22 +58,22 @@ const TableSortParamsList: React.FC<TableSortParamsListProps> = ({ tableSortPara
 
             <SetOrderButton
               className="button"
-              isActive={isActive(param, 'DESC')}
+              isActive={isActive(param, 'desc')}
               variant="onlyIconNoEffects"
               size="100%"
               iconSize="80%"
               iconId={iconId.SmallArrowDown}
-              onClick={handleSetCurrentState(param, 'DESC')}
+              onClick={handleSetCurrentState(param, 'desc')}
             />
 
             <SetOrderButton
               className="button"
-              isActive={isActive(param, 'ASC')}
+              isActive={isActive(param, 'asc')}
               variant="onlyIconNoEffects"
               size="100%"
               iconSize="80%"
               iconId={iconId.SmallArrowUp}
-              onClick={handleSetCurrentState(param, 'ASC')}
+              onClick={handleSetCurrentState(param, 'asc')}
             />
           </ListParam>
         ))}

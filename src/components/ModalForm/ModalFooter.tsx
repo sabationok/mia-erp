@@ -1,42 +1,52 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
+import FlexBox from '../atoms/FlexBox';
 
 export interface IModalFooterProps {
   onSubmitPassed?: boolean;
+  extraFooter?: JSX.Element;
 }
 
 const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElement>> = ({
   onSubmitPassed,
+  extraFooter,
   ...props
 }) => {
   return (
     <Footer {...props} className="modalFooter">
-      {onSubmitPassed && (
-        <ButtonIcon type="reset" variant="defOutlinedSmall">
-          {'Закрити'}
-        </ButtonIcon>
+      {extraFooter && (
+        <ExtraFooter fillWidth fxDirection={'row'}>
+          {extraFooter}
+        </ExtraFooter>
       )}
 
-      <ButtonIcon type={onSubmitPassed ? 'submit' : 'reset'} variant="filledSmall">
-        {onSubmitPassed ? 'Зберегти' : 'Закрити'}
-      </ButtonIcon>
+      <FlexBox fillWidth gap={8} fxDirection={'row'} justifyContent={'flex-end'} padding={'8px'}>
+        {onSubmitPassed && (
+          <ButtonIcon type="reset" variant="defOutlinedSmall">
+            {'Закрити'}
+          </ButtonIcon>
+        )}
+
+        <ButtonIcon type={onSubmitPassed ? 'submit' : 'reset'} variant="filledSmall">
+          {onSubmitPassed ? 'Зберегти' : 'Закрити'}
+        </ButtonIcon>
+      </FlexBox>
     </Footer>
   );
 };
 
 const Footer = styled.footer`
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  flex-direction: column;
+  align-items: stretch;
   flex-wrap: wrap;
-  gap: 8px;
 
   position: sticky;
   bottom: 0;
   left: 0;
   z-index: 10;
 
-  padding: 8px;
+  overflow: hidden;
 
   width: 100%;
 
@@ -49,9 +59,12 @@ const Footer = styled.footer`
   color: ${({ theme }) => theme.fontColorHeader};
   fill: ${({ theme }) => theme.fillColorHeader};
   background-color: ${({ theme }) => theme.modalBackgroundColor};
+`;
 
-  @media screen and (min-width: 768px) {
-    padding: 8px;
-  }
+const ExtraFooter = styled(FlexBox)`
+  color: ${({ theme }) => theme.fontColorHeader};
+  fill: ${({ theme }) => theme.fillColorHeader};
+  background-color: ${({ theme }) => theme.modalBackgroundColor};
+  border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;
 export default ModalFooter;

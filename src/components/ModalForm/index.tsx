@@ -19,7 +19,7 @@ export interface ModalFormBaseProps extends Omit<React.FormHTMLAttributes<HTMLFo
 
 export interface ModalFormAddsProps {
   footer?: boolean;
-
+  extraFooter?: JSX.Element;
   fillWidth?: boolean;
   fillHeight?: boolean;
   fitContentV?: boolean;
@@ -42,6 +42,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
   onOptSelect,
   closeAfterSubmit,
   defaultOption,
+  extraFooter,
   ...props
 }) => {
   const modal = useModal();
@@ -81,10 +82,10 @@ const ModalForm: React.FC<ModalFormProps> = ({
       </ModalHeader>
 
       <ModalMain className="main" filterOn={!!filterOptions}>
-        <>{children}</>
+        {children}
       </ModalMain>
 
-      {footer && <ModalFooter onSubmitPassed={!!onSubmit} />}
+      {footer && <ModalFooter onSubmitPassed={!!onSubmit} extraFooter={extraFooter} />}
     </ModalFormContainer>
   );
 };

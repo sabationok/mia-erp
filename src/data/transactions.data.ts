@@ -118,25 +118,25 @@ export const transactionsColumns: CellTittleProps[] = [
     action: 'numberWithSpaces',
   },
   {
-    top: { name: t('countIn'), align: 'start', path: 'countIdIn.label' },
-    bottom: {
-      name: t('subCountIn'),
+    top: {
+      name: t('countOut'),
       align: 'start',
-      path: 'subCountIdIn.label',
+      path: 'countOut.label',
+    },
+    bottom: {
+      name: t('subCountOut'),
+      align: 'start',
+      path: 'subCountOut.label',
     },
     width: '190px',
     action: 'valueByPath',
   },
   {
-    top: {
-      name: t('countOut'),
-      align: 'start',
-      path: 'countIdOut.label',
-    },
+    top: { name: t('countIn'), align: 'start', path: 'countIn.label' },
     bottom: {
-      name: t('subCountOut'),
+      name: t('subCountIn'),
       align: 'start',
-      path: 'subCountIdOut.label',
+      path: 'subCountIn.label',
     },
     width: '190px',
     action: 'valueByPath',
@@ -145,12 +145,12 @@ export const transactionsColumns: CellTittleProps[] = [
     top: {
       name: t('category'),
       align: 'start',
-      path: 'categoryId.label',
+      path: 'category.label',
     },
     bottom: {
       name: t('subCategory'),
       align: 'start',
-      path: 'subCategoryId.label',
+      path: 'subCategory.label',
     },
     width: '190px',
     action: 'valueByPath',

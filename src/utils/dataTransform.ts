@@ -46,8 +46,9 @@ function createTransactionForReq(
     if (omitPathArr?.includes(key)) return '';
 
     const value = transaction[key];
+
     if (dateToNumberPath && key === dateToNumberPath && typeof value === 'string') {
-      transformedData[key] = transformedData[key] ? new Date(value).valueOf() : value;
+      transformedData[key] = new Date(value).valueOf();
       return '';
     }
     if (amountToNumberPath && key === amountToNumberPath && typeof value === 'string') {
@@ -60,7 +61,6 @@ function createTransactionForReq(
         transformedData[key] = value?._id;
         return '';
       }
-      transformedData[key] = '';
       return '';
     }
     transformedData[key] = value;

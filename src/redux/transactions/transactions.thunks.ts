@@ -2,9 +2,10 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import { ThunkPayload } from '../store.store';
 import { isAxiosError } from 'axios';
-import { ICreateTransactionRes, ITransaction, ITransactionReqData } from './transactions.types';
+import { ITransaction, ITransactionReqData } from './transactions.types';
 import TransactionsApi from '../../api/transactions.api';
-import { FilterReturnDataType } from '../../components/Filter/AppFilter';
+import { AppQueryParams, createApiCall } from '../../api';
+import { createThunkPayloadCreator } from '../../api/createApiCall.api';
 
 // export async function payloadCreator<R = any>(
 //   getResponse: () => R,
@@ -27,17 +28,23 @@ import { FilterReturnDataType } from '../../components/Filter/AppFilter';
 // }
 
 export const getAllTransactionsThunk = createAsyncThunk<
-  ITransaction[],
-  ThunkPayload<FilterReturnDataType, ITransaction[]>
+  { refresh?: boolean; data?: ITransaction[] },
+  ThunkPayload<
+    {
+      refresh?: boolean;
+      query?: AppQueryParams;
+    },
+    ITransaction[]
+  >
 >('transactions/getAllTransactionsThunk', async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
   onLoading && onLoading(true);
 
   try {
-    const response = await TransactionsApi.getAll({ filter: data });
+    const response = await TransactionsApi.getAll(data?.query);
 
     onSuccess && onSuccess(response.data.data);
 
-    return response.data.data;
+    return { data: response.data.data, refresh: data?.refresh };
   } catch (error) {
     onError && onError(error);
 
@@ -50,38 +57,34 @@ export const getAllTransactionsThunk = createAsyncThunk<
 export const createTransactionThunk = createAsyncThunk<
   ITransaction | undefined,
   ThunkPayload<ITransactionReqData, ITransaction>
->('transactions/createTransactionThunk', async ({ onSuccess, onError, onLoading, data }, thunkApi) => {
-  onLoading && onLoading(true);
+>('transactions/createTransactionThunk', async (payload, thunkApi) => {
   try {
-    const response: ICreateTransactionRes = await TransactionsApi.create(data || {});
-
-    response && onSuccess && onSuccess(response.data.data);
-
-    return response.data.data;
+    const res = await createApiCall(payload, TransactionsApi.create, TransactionsApi);
+    console.log(res);
+    return res?.data.data;
   } catch (error) {
-    onError && onError(error);
-
     return thunkApi.rejectWithValue(isAxiosError(error));
-  } finally {
-    onLoading && onLoading(false);
   }
 });
-
+export const deleteTransactionThunk = createAsyncThunk(
+  'transactions/deleteTransactionThunk',
+  createThunkPayloadCreator(TransactionsApi.deleteById, TransactionsApi)
+);
 // export const deleteTransactionThunk = createAsyncThunk(
 //   'transactions/deleteTransactionThunk',
 //   async (payload, thunkAPI) => {
 //     try {
 //       const response = await baseApi.delete(`/transactions/${payload.submitData.id}`);
 //       console.log(response.data);
-
+//
 //       payload?.onSuccess();
-
+//
 //       return response.data;
 //     } catch (error) {
 //       console.log(error);
-
+//
 //       payload?.onError();
-
+//
 //       return thunkAPI.rejectWithValue(error.message);
 //     }
 //   }

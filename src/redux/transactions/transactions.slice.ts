@@ -25,8 +25,13 @@ export const transactionsSlice = createSlice({
     builder
       .addCase(getAllTransactionsThunk.fulfilled, (s, a) => {
         s.isLoading = false;
-
-        s.transactions = Array.isArray(a.payload) ? [...a.payload, ...s.transactions] : s.transactions;
+        if (Array.isArray(a.payload.data)) {
+          if (a.payload.refresh) {
+            s.transactions = a.payload.data;
+            return;
+          }
+          s.transactions = [...a.payload.data, ...s.transactions];
+        }
       })
       .addCase(createTransactionThunk.fulfilled, (s, a) => {
         s.isLoading = false;
