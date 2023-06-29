@@ -9,15 +9,14 @@ import { ITransaction } from '../../redux/transactions/transactions.types';
 import { useTrActionsCreator } from '../../redux/transactions/useTrActionsCreator.hook';
 import { ITableListProps } from '../TableList/tableTypes.types';
 import AppGridPage from './AppGridPage';
-import useDirectoriesServiceHook from '../../redux/directories/useDirectoriesService.hook';
-import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useTransactionsSelector } from '../../redux/selectors.store';
 import { ISortParams } from '../../api';
+import { FilterReturnDataType } from '../Filter/AppFilter';
 
 type Props = {
   path: string;
 };
-const PageTransactions: React.FC<any> = ({ path }: Props) => {
+const PageTransactions: React.FC<any> = (props: Props) => {
   const service = useTransactionsService();
   const state = useTransactionsSelector();
   const { getAll } = service;
@@ -25,10 +24,11 @@ const PageTransactions: React.FC<any> = ({ path }: Props) => {
   const actionsCreator = useTrActionsCreator(service);
   const [isLoading, setIsLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
+  const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   // const [selectedTr, setSelectedTr] = useState<any>(null);
 
-  const { getAllByDirType } = useDirectoriesServiceHook();
+  // const { getAllByDirType } = useDirectoriesServiceHook();
 
   const tableConfig = useMemo(
     (): ITableListProps<ITransaction> => ({
@@ -43,46 +43,48 @@ const PageTransactions: React.FC<any> = ({ path }: Props) => {
       checkBoxes: true,
       actionsCreator,
       onFilterSubmit: filterParams => {
-        console.log(filterParams);
-        getAll({ data: { query: { filterParams, sortParams } } });
+        setFilterParams(filterParams);
+        getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading });
       },
       handleTableSort: (param, sortOrder) => {
         setSortParams({ dataPath: param.dataPath, sortOrder });
         getAll({
-          data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder } } },
+          data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },
           onLoading: setIsLoading,
         });
       },
-      onRowClick: data => {
-        console.log(data);
-      },
     }),
-    [actionsCreator, filterSelectors, getAll, sortParams, state.transactions]
+    [actionsCreator, filterParams, filterSelectors, getAll, sortParams, state.transactions]
   );
-  useEffect(() => {
-    getAllByDirType({ data: { dirType: ApiDirType.COUNTS, params: { isArchived: false, createTreeData: true } } });
-  }, [getAllByDirType]);
+  // useEffect(() => {
+  //   getAllByDirType({ data: { dirType: ApiDirType.COUNTS, params: { isArchived: false, createTreeData: true } } });
+  // }, [getAllByDirType]);
+
+  // useEffect(() => {
+  //   getAllByDirType({
+  //     data: {
+  //       dirType: ApiDirType.CATEGORIES_TR,
+  //       params: { isArchived: false, createTreeData: true },
+  //     },
+  //   });
+  // }, [getAllByDirType]);
 
   useEffect(() => {
-    getAllByDirType({
-      data: {
-        dirType: ApiDirType.CATEGORIES_TR,
-        params: { isArchived: false, createTreeData: true },
-      },
-    });
-  }, [getAllByDirType]);
+    if (sortParams || filterParams) {
+      return;
+    }
 
-  useEffect(() => {
-    console.log('onTableSortParamChange', sortParams);
-
-    if (state.transactions.length === 0)
-      getAll({
-        data: { query: { sortParams }, refresh: true },
-        onLoading: setIsLoading,
-      });
-  }, [getAll, sortParams, state.transactions.length]);
+    if (!sortParams && !filterParams) {
+      if (state.transactions.length === 0) {
+        getAll({
+          data: { refresh: true },
+          onLoading: setIsLoading,
+        });
+      }
+    }
+  }, [filterParams, getAll, sortParams, state.transactions.length]);
   return (
-    <AppGridPage path={path}>
+    <AppGridPage path={props.path}>
       <Page>
         <TableList {...tableConfig} isLoading={isLoading} />
       </Page>

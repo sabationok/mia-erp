@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useTable } from '../TableList';
 import DeviceControl from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 import TableSearchForm from './TableSearchForm/TableSearchForm';
-import TActions from '../TActions';
+import TActions from '../TableActions';
 import TableFilter from '../TableFilter';
 
 const TableOverHead: React.FC<React.HTMLAttributes<HTMLDivElement>> = props => {

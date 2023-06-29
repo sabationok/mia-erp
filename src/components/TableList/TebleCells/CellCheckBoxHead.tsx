@@ -21,16 +21,17 @@ const CellCheckBoxHead: React.FC<CellCheckBoxHeadProps> = ({ title, className, .
   }
 
   useEffect(() => {
-    if (!selectedRows || !tableData) return;
-    // if (selectedRows?.length === tableData?.length)
-    //   console.log(
-    //     'selectedRows?.length === tableData?.length',
-    //     selectedRows?.length === tableData?.length
-    //   );
+    if (!selectedRows || !tableData) {
+      setEveryOn(false);
+      setSome(false);
+      return;
+    }
 
-    setEveryOn(selectedRows?.length === tableData?.length);
+    if (tableData.length > 0) {
+      setEveryOn(selectedRows?.length === tableData?.length);
 
-    setSome(selectedRows?.length > 0 && selectedRows?.length < tableData?.length);
+      setSome(selectedRows?.length > 0 && selectedRows?.length < tableData?.length);
+    }
   }, [selectedRows, selectedRows?.length, tableData, tableData?.length]);
 
   return (

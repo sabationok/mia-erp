@@ -11,7 +11,7 @@ export interface TableActionsProps {
   btnSize?: number;
 }
 
-const TActions: React.FC<TableActionsProps> = ({ renderSeparator = <></>, btnSize = 26 }) => {
+const TableActions: React.FC<TableActionsProps> = ({ renderSeparator = <></>, btnSize = 26 }) => {
   const tableContext = useTable();
 
   const renderActions = useMemo(() => {
@@ -44,4 +44,4 @@ const TActions: React.FC<TableActionsProps> = ({ renderSeparator = <></>, btnSiz
   return <>{renderActions}</>;
 };
 
-export default memo(TActions);
+export default memo(TableActions);

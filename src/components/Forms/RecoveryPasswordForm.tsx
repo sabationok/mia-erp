@@ -1,5 +1,5 @@
 import React from 'react';
-import ButtonIcon from 'components/atoms/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import LogoSvg from 'components/Layout/LogoSvg';
 import AuthInputLabel from '../atoms/Inputs/AuthInputLabel';
@@ -91,7 +91,7 @@ const RecoveryPasswordForm: React.FC<RecoveryPasswordFormProps & React.HTMLAttri
       </Inputs>
 
       <Buttons>
-        <StButtonIcon texttransform={'uppercase'} htmlType={'submit'} variant={'filledSmall'} type={'primary'}>
+        <StButtonIcon type={'submit'} variant={'filledSmall'}>
           {recovery ? 'Прийняти' : 'Відновити'}
         </StButtonIcon>
 

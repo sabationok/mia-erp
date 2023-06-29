@@ -7,6 +7,7 @@ import { TableActionCreator } from '../../components/TableList/tableTypes.types'
 import { ITransaction } from './transactions.types';
 import TransactionForm from '../../components/Forms/TransactionFormNew';
 import { useTransactionsSelector } from '../selectors.store';
+import { toast } from 'react-toastify';
 
 export type TrActionsCreator = TableActionCreator<ITransaction>;
 const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => {
@@ -36,19 +37,23 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         icon: 'edit',
         disabled: !ctx.selectedRow?._id,
         type: 'onlyIcon',
-        onClick: () => {
+        onClick: async () => {
+          const tr = state.transactions.find(el => el._id === ctx.selectedRow?._id);
+
           const modal = modals.handleOpenModal({
             ModalChildren: TransactionForm,
             modalChildrenProps: {
               title: 'Редагування транзакції',
               filterOptions,
+              defaultOption: filterOptions.findIndex(el => el.value === tr?.type),
+              defaultState: tr,
+              fillHeight: true,
               onSubmit: data => {
                 service.updateById({
-                  data: { data, _id: ctx.selectedRow?._id as string },
+                  data,
                   onSuccess(d) {},
                 });
               },
-              fillHeight: true,
             },
           });
         },
@@ -60,18 +65,25 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
         type: 'onlyIcon',
         disabled: !ctx.selectedRow?._id,
         onClick: async () => {
+          const tr = state.transactions.find(el => el._id === ctx.selectedRow?._id);
+
           const modal = modals.handleOpenModal({
             ModalChildren: TransactionForm,
             modalChildrenProps: {
               title: 'Копіювання транзакції',
               filterOptions,
-              defaultState: state.transactions.find(el => el._id === ctx.selectedRow?._id),
-              onSubmit: () => {
+              defaultOption: filterOptions.findIndex(el => el.value === tr?.type),
+              defaultState: tr,
+              fillHeight: true,
+              onSubmit: (data, o) => {
                 service.create({
-                  onSuccess(d) {},
+                  data,
+                  onSuccess(d) {
+                    toast.success(`Транзакцію створено`);
+                    o?.close && modal?.onClose();
+                  },
                 });
               },
-              fillHeight: true,
             },
           });
         },
@@ -106,11 +118,11 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
               defaultOption: 0,
               fillHeight: true,
               defaultState: { type: 'INCOME' },
-              onSubmit: (data, options) => {
+              onSubmit: (data, o) => {
                 service.create({
                   data,
                   onSuccess(d) {
-                    options?.close && modal?.onClose();
+                    o?.close && modal?.onClose();
                   },
                 });
               },
@@ -134,11 +146,11 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
               defaultOption: 1,
               fillHeight: true,
               defaultState: { type: 'TRANSFER' },
-              onSubmit: (data, options) => {
+              onSubmit: (data, o) => {
                 service.create({
                   data,
                   onSuccess(d) {
-                    options?.close && modal?.onClose();
+                    o?.close && modal?.onClose();
                   },
                 });
               },
@@ -161,11 +173,11 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
               filterOptions,
               defaultOption: 2,
               defaultState: { type: 'EXPENSE' },
-              onSubmit: (data, options) => {
+              onSubmit: (data, o) => {
                 service.create({
                   data,
                   onSuccess(d) {
-                    options?.close && modal?.onClose();
+                    o?.close && modal?.onClose();
                   },
                 });
               },

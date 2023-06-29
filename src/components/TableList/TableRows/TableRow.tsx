@@ -1,4 +1,4 @@
-import React, { createContext, memo, useContext, useMemo, useState } from 'react';
+import React, { createContext, memo, useCallback, useContext, useMemo, useState } from 'react';
 import { OnCheckBoxChangeHandlerEvent, useTable } from '../TableList';
 
 import styled from 'styled-components';
@@ -22,8 +22,8 @@ export interface TableRowProps {
 
 export interface RowCTXValue extends TableRowProps {
   isActionsOpen?: boolean;
-  handleToggleActions?: () => void;
-  handleCloseActions?: () => void;
+  onToggleActions?: () => void;
+  onCloseActions?: () => void;
   onRowCheckboxChange?: OnCheckBoxChangeHandler;
 }
 
@@ -31,48 +31,53 @@ export const RowCTX = createContext<any>({});
 export const useRow = () => useContext(RowCTX) as RowCTXValue;
 
 const TableRow: React.FC<TableRowProps> = ({ checked, ...props }) => {
-  const { tableTitles, tableData, rowGrid, checkBoxes, onCheckboxChange } = useTable<TRowDataType>();
+  const { tableTitles, selectedRows, tableData, rowGrid, checkBoxes, onCheckboxChange } = useTable<TRowDataType>();
   const [isActionsOpen, setIsActionsOpen] = useState(false);
   const [isChecked, setIsChecked] = useState<boolean>(checked ?? false);
 
-  function handleToggleActions() {
-    setIsActionsOpen(!isActionsOpen);
-  }
+  const onToggleActions = useCallback(() => {
+    setIsActionsOpen(prev => !prev);
+  }, []);
+  const onRowCheckboxChange = useCallback(
+    (event: OnCheckBoxChangeHandlerEvent) => {
+      setIsChecked(event.checked);
+      onCheckboxChange && onCheckboxChange(event);
+    },
+    [onCheckboxChange]
+  );
 
-  function handleCloseActions() {
+  const onCloseActions = useCallback(() => {
     setIsActionsOpen(false);
-  }
+  }, []);
 
-  function onRowCheckboxChange(event: OnCheckBoxChangeHandlerEvent) {
-    setIsChecked(event.checked);
-    onCheckboxChange && onCheckboxChange(event);
-  }
-
-  const ctxValue: RowCTXValue = {
-    ...props,
-    isActionsOpen,
-    handleToggleActions,
-    handleCloseActions,
-    onRowCheckboxChange,
-  };
-  const renderRow = useMemo(
-    () =>
+  const renderRow = useMemo(() => {
+    console.log('renderRow rerender');
+    return (
       tableTitles &&
       tableTitles?.map((item, idx) => {
         let CellComp = item.action ? CellsMap[item.action] : CellTextDbl;
         if (typeof CellComp === 'function' || typeof CellComp === 'object') {
           return <CellComp key={idx} titleInfo={item} idx={idx} />;
         }
-        console.log('CellComp error', '====>>>>', item);
+        console.warn('CellComp error', '====>>>>', item.action);
 
         return <CellTextDbl key={idx} titleInfo={item} idx={idx} />;
-      }),
-    [tableTitles]
-  );
-
+      })
+    );
+  }, [tableTitles]);
+  const CTX = useMemo((): RowCTXValue => {
+    return {
+      ...props,
+      checked: selectedRows?.includes(props.rowData._id),
+      isActionsOpen,
+      onToggleActions,
+      onCloseActions,
+      onRowCheckboxChange,
+    };
+  }, [props, selectedRows, isActionsOpen, onToggleActions, onCloseActions, onRowCheckboxChange]);
   return (
     <Row id={props?.rowData?._id} checked={isChecked} data-row>
-      <RowCTX.Provider value={{ ...ctxValue }}>
+      <RowCTX.Provider value={CTX}>
         <RowStickyEl>{checkBoxes && <CellCheckBox />}</RowStickyEl>
 
         <RowData gridRepeat={tableData?.length || 0} style={{ ...rowGrid }}>

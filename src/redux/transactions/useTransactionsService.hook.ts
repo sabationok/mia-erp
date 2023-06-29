@@ -1,7 +1,6 @@
 import { useTransactionsSelector } from 'redux/selectors.store';
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { ITransaction, ITransactionReqData } from './transactions.types';
-import { ITransactionsState } from './transactions.slice';
 import { ServiceApiCaller, ServiceDispatcherAsync } from 'redux/global.types';
 import { createTransactionThunk, getAllTransactionsThunk } from './transactions.thunks';
 import { useMemo } from 'react';
@@ -10,10 +9,9 @@ import { AppQueryParams, createApiCall, TransactionsApi } from 'api';
 
 export interface TransactionsService {
   dispatch: AppDispatch;
-  state: ITransactionsState;
   create: ServiceDispatcherAsync<ITransactionReqData, ITransaction>;
   deleteById: ServiceApiCaller<string, ITransaction>; // !!!!! ===>>> ServiceDispatcher
-  updateById: ServiceApiCaller<Required<ITransactionReqData>, ITransaction>; // !!!!! ===>>> ServiceDispatcher
+  updateById: ServiceApiCaller<ITransactionReqData, ITransaction>; // !!!!! ===>>> ServiceDispatcher
   getById: ServiceApiCaller<string, ITransaction>;
   getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, ITransaction[]>;
 }
@@ -35,7 +33,6 @@ const useTransactionsService = (): TransactionsService => {
 
   return {
     dispatch,
-    state,
     ...dispatchers,
   };
 };

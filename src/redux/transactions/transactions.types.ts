@@ -24,7 +24,7 @@ export interface IDocument extends IBase {
 export type TrStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
 export interface ITransaction extends ITransactionBase {
-  eventDate?: number | Date;
+  eventDate?: number | string | Date;
   countIn?: ICount;
   subCountIn?: ICount;
   countOut?: ICount;

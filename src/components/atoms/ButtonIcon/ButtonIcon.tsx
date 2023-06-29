@@ -122,9 +122,9 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
   ${({ variant = 'def' }) => getVariant(variant)}
   &:disabled {
     pointer-events: none;
-    opacity: 0.7;
+    opacity: 0.9;
     cursor: default;
-    fill: ${({ theme }) => theme.field.innerBackgroundColor};
+    fill: ${({ theme }) => theme.field.backgroundColor};
   }
 
   @media screen and (max-width: 480px) {

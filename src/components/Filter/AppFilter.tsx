@@ -12,14 +12,15 @@ import { IProject } from '../../redux/transactions/transactions.types';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 
 export type FilterSelectorDataType = ICount | ICategory | IContractor | IProject | any;
-export type FilterSelectorType = {
-  selectorName?: ApiDirType;
+export type FilterSelectorType<Key = any> = {
+  selectorName?: Key;
+  dirType?: ApiDirType;
   queryName?: string;
   label: string;
   data: FilterSelectorDataType[];
 };
 
-export interface FilterReturnDataType extends Record<ApiDirType | string, string[] | undefined> {
+export interface FilterQueryType extends Record<ApiDirType | string, string[] | undefined> {
   [ApiDirType.CATEGORIES_PROD]?: string[];
   [ApiDirType.CATEGORIES_TR]?: string[];
   [ApiDirType.COUNTS]?: string[];
@@ -29,6 +30,11 @@ export interface FilterReturnDataType extends Record<ApiDirType | string, string
   [ApiDirType.ACTIVITIES]?: string[];
   [ApiDirType.MARKS]?: string[];
 }
+
+export type FilterReturnDataType = FilterQueryType & {
+  from?: number | string;
+  to?: number | string;
+};
 
 // const validation = yup.object().shape({
 //   type: yup.array().of(yup.string()).optional(),
@@ -41,7 +47,7 @@ export interface FilterReturnDataType extends Record<ApiDirType | string, string
 
 export interface FilterProps extends Omit<ModalFormProps, 'defaultFilterValue' | 'onSubmit'> {
   filterSelectors?: FilterSelectorType[];
-  filterDefaultValues?: Partial<Record<ApiDirType, string[] | any[]>>;
+  filterDefaultValues?: Partial<FilterReturnDataType>;
   onFilterSubmit?: SubmitHandler<FilterReturnDataType>;
 }
 
@@ -65,11 +71,10 @@ const Filter: React.FC<FilterProps> = ({ filterSelectors, filterDefaultValues, o
 
   const {
     // formState: { errors },
-    // register,
+    register,
     unregister,
     handleSubmit,
     setValue,
-
     watch,
   } = useForm<FilterReturnDataType>({
     defaultValues: filterDefaultValues,
@@ -95,27 +100,29 @@ const Filter: React.FC<FilterProps> = ({ filterSelectors, filterDefaultValues, o
 
   const renderSelectors = useMemo(
     () =>
-      filterSelectors?.map(({ selectorName, label, data }, idx) => (
-        <Selector
-          key={selectorName}
-          label={label}
-          data={data}
-          selectorName={selectorName}
-          childrenListCount={1}
-          selectedChildrenCount={1}
-          idx={idx}
-          onSelectorClick={() => onSelectorClick(idx)}
-          currentIdx={currentIdx}
-          CurrentData={CurrentData}
-        >
-          <SelectorContent
-            getDefaultValue={(selectorName?: ApiDirType) => (selectorName && formValues[selectorName]) || []}
-            onSelectorSubmit={onFilterDataChange}
-            data={data}
-            selectorName={selectorName}
-          />
-        </Selector>
-      )),
+      filterSelectors?.map((selector, idx) => {
+        if (selector.data.length === 0) {
+          return <></>;
+        }
+        return (
+          <Selector
+            key={selector.selectorName}
+            {...selector}
+            childrenListCount={1}
+            selectedChildrenCount={1}
+            idx={idx}
+            onSelectorClick={() => onSelectorClick(idx)}
+            currentIdx={currentIdx}
+            CurrentData={CurrentData}
+          >
+            <SelectorContent
+              getDefaultValue={(selectorName?: ApiDirType) => (selectorName && formValues[selectorName]) || []}
+              onSelectorSubmit={onFilterDataChange}
+              {...selector}
+            />
+          </Selector>
+        );
+      }),
     [CurrentData, currentIdx, filterSelectors, formValues, onFilterDataChange, onSelectorClick]
   );
 
@@ -136,14 +143,14 @@ const Filter: React.FC<FilterProps> = ({ filterSelectors, filterDefaultValues, o
           <InputTextPrimary
             label="Від (дата і час)"
             type="datetime-local"
-            name={'timeFrom'}
             placeholder="Від (дата і час)"
+            {...register('from')}
           />
           <InputTextPrimary
             label="До (дата і час)"
             type="datetime-local"
-            name={'timeTo'}
             placeholder="До (дата і час)"
+            {...register('to')}
           />
         </DatePickers>
 

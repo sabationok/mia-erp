@@ -4,7 +4,7 @@ import { FilterReturnDataType, FilterSelectorType } from '../Filter/AppFilter';
 import { ButtonIconVariant } from '../atoms/ButtonIcon/ButtonIcon';
 import { IconIdType } from '../../img/sprite';
 
-export interface SelectItemBase extends Record<string, any> {
+export interface SelectItemBase<DPath extends string = any> extends Record<string, any> {
   _id?: string;
   id?: string;
   filter?: boolean;
@@ -14,13 +14,12 @@ export interface SelectItemBase extends Record<string, any> {
   value?: string | number;
   dataKey?: string;
   sort?: boolean;
-  dataPath?: string;
-  descending?: boolean;
+  dataPath?: DPath;
   path?: string;
   sortOrder?: 'desc' | 'asc';
 }
 
-export interface SelectItem extends SelectItemBase {}
+export interface SelectItem<DPath extends string = any> extends SelectItemBase<DPath> {}
 
 export interface TableActionProps<TDataType = any> {
   separator?: boolean;
@@ -37,8 +36,6 @@ export interface TableActionsProps<TDataType = any> {
   footer?: boolean;
   actions?: TableActionProps<TDataType>[];
 }
-
-export interface ITableSortParam extends Pick<SelectItem, 'descending' | 'path' | 'dataPath' | 'dataKey'> {}
 
 export type OnRowClickHandlerData<RData = any> = {
   ev?: MouseEvent | React.MouseEvent<HTMLDivElement>;
@@ -59,7 +56,7 @@ export type OnHeadCheckBoxChangeHandler<V = any> = (data: V) => any;
 export interface ITableListProps<TDataType = any> {
   tableTitles?: CellTittleProps[];
   tableSearchParams?: SelectItem[];
-  tableSortParams?: ITableSortParam[];
+  tableSortParams?: SelectItem[];
   tableData?: TDataType[];
   isLoading?: boolean;
   RowActionsComp?: React.ReactNode;
@@ -84,8 +81,8 @@ export interface ITableListProps<TDataType = any> {
   onRowClick?: OnRowClickHandler<TDataType | undefined>;
   onCheckboxChange?: OnCheckBoxChangeHandler;
   onHeadCheckboxChange?: OnHeadCheckBoxChangeHandler;
-  onTableSortParamChange?: (params: ITableSortParam) => void;
-  handleTableSort?: (param: SelectItem, sortOrder: 'desc' | 'asc') => void;
+  onTableSortParamChange?: (params: SelectItem) => void;
+  handleTableSort?: (param: SelectItem, sortOrder: SelectItem['sortOrder']) => void;
   actionsCreator?: TableActionCreator<TDataType>;
   selectedRow?: Partial<TDataType>;
 }

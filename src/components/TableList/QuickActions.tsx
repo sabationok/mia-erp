@@ -4,7 +4,7 @@ import { iconId } from 'data';
 
 import styled, { css } from 'styled-components';
 import { useTable } from './TableList';
-import TActions from './TActions';
+import TActions from './TableActions';
 import TableFilter from './TableFilter';
 
 const QuickActions: React.FC<{ closeOnClickOut?: boolean }> = ({ closeOnClickOut = false }) => {

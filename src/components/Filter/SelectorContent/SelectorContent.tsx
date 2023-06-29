@@ -14,7 +14,8 @@ export interface SelectorContentProps {
   getDefaultValue?: (selectorName?: ApiDirType) => string[];
   onSelectorSubmit?: (name: ApiDirType, value: string[]) => void;
   isOpen?: boolean;
-  selectorName?: ApiDirType;
+  selectorName?: any;
+  dirType?: ApiDirType;
 }
 
 const SelectorContent: React.FC<
@@ -31,6 +32,7 @@ const SelectorContent: React.FC<
   getDefaultValue,
   ListComp,
   onSelectorSubmit,
+  dirType,
   ...props
 }) => {
   const [renderData, setRenderData] = useState<SelectsTreeListItemProps[]>([]);
@@ -39,7 +41,6 @@ const SelectorContent: React.FC<
   );
 
   function onSelectorSubmitWrapper() {
-    console.log('selectorData', selectorData);
     onSelectorSubmit && selectorName && onSelectorSubmit(selectorName, selectorData);
   }
 
@@ -49,12 +50,12 @@ const SelectorContent: React.FC<
   }
 
   useMemo(() => {
-    if (!selectorName) return;
+    if (!dirType) return;
 
     createApiCall<GetAllByDirTypeOptions, SelectsTreeListItemProps[]>(
       {
         data: {
-          dirType: selectorName,
+          dirType: dirType,
           params: {
             isArchived: false,
             createTreeData: true,
@@ -70,7 +71,7 @@ const SelectorContent: React.FC<
       DirectoriesApi.getAllByDirType,
       DirectoriesApi
     );
-  }, [selectorName]);
+  }, [dirType]);
 
   function onCheckSelectStatus(id: string) {
     return selectorData.includes(id);

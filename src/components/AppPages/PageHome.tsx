@@ -15,6 +15,7 @@ import { CompanyQueryType } from '../../redux/global.types';
 import { PermissionStatus } from 'redux/permissions/permissions.types';
 
 export type CompanyTypeItem = { title: string; param: CompanyQueryType };
+
 const companyTypes: CompanyTypeItem[] = [
   { title: 'Мої', param: 'own' },
   { title: 'Працюю', param: 'invited' },

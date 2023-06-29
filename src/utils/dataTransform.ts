@@ -43,7 +43,7 @@ function createTransactionForReq(
 
   const keys = Object.keys(transaction) as (keyof ITransaction)[];
   keys.map(key => {
-    if (omitPathArr?.includes(key)) return '';
+    if (['_id', 'createdAt', 'updatedAt', ...omitPathArr]?.includes(key)) return '';
 
     const value = transaction[key];
 

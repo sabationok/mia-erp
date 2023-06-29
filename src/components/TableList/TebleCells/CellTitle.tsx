@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { CellActionsName } from '../TebleCells';
 import { IconIdType } from '../../../img/sprite/iconId.data';
 
-export type CellTitleContent = {
+export type CellTitleContent<DataPath extends string = any> = {
   name: string;
   action?: string;
   dataKey?: string;
@@ -13,12 +13,12 @@ export type CellTitleContent = {
   align?: 'center' | 'start' | 'end';
   uppercase?: boolean;
   icon?: IconIdType;
-  path?: string;
+  path?: DataPath;
   description?: string;
 };
-export type CellTittleProps = {
-  top: CellTitleContent;
-  bottom?: CellTitleContent;
+export type CellTittleProps<DPath extends string = any> = {
+  top: CellTitleContent<DPath>;
+  bottom?: CellTitleContent<DPath>;
   width: string;
   idx?: number;
   titleInfo?: CellTittleProps;

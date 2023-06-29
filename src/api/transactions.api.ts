@@ -23,7 +23,7 @@ export default class TransactionsApi {
     return this.api.post(this.endpoints.create(), data?.data);
   }
 
-  public static async updateById(data?: Required<ITransactionReqData>): Promise<ITransactionRes> {
+  public static async updateById(data?: ITransactionReqData): Promise<ITransactionRes> {
     return this.api.patch(this.endpoints.updateById(data?._id), data?.data);
   }
 

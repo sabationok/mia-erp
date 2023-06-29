@@ -3,7 +3,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 export interface ModalFormFilterProps<V = any, D = any> {
-  defaultOption?: number | FilterOpt<V, D>;
+  defaultOption?: number | FilterOpt<V, D> | V;
+  getDefaultValue?: (opt: FilterOpt<V, D>) => number;
   preventFilter?: boolean;
   onOptSelect?: FilterOptionSelectHandler;
   filterOptions?: FilterOpt<V, D>[];
@@ -28,6 +29,7 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
   preventFilter,
   defaultFilterValue,
   defaultOption,
+  getDefaultValue,
   ...props
 }) => {
   const [current, setCurrent] = useState<number>(typeof defaultOption === 'number' ? defaultOption : 0);

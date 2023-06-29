@@ -1,8 +1,5 @@
 import { useRow } from '../TableRows/TableRow';
-import CheckBox, {
-  CustomCheckboxEvent,
-  CustomCheckboxEventHandler,
-} from './CellComponents/CheckBox';
+import CheckBox, { CustomCheckboxEvent, CustomCheckboxEventHandler } from './CellComponents/CheckBox';
 import styled from 'styled-components';
 import { memo } from 'react';
 
@@ -10,6 +7,7 @@ interface Props {
   title?: string;
   idx?: string | number;
   className?: string;
+  checked?: boolean;
   onCheckboxChange?: CustomCheckboxEventHandler;
 }
 

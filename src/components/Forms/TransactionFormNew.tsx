@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import styled from 'styled-components';
 import { ITransaction, ITransactionReqData } from 'redux/transactions/transactions.types';
@@ -7,17 +7,17 @@ import { CategoryTypes } from 'redux/directories/categories.types';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import { FilterOpt } from '../ModalForm/ModalFilter';
-import CustomSelect, { CustomSelectProps } from '../atoms/Inputs/CustomSelect';
-import { createTransactionForReq } from '../../utils';
+import CustomSelect from '../atoms/Inputs/CustomSelect';
+import { createTransactionForReq, formatDateForInputValue } from '../../utils';
 import { useAppSelector } from '../../redux/store.store';
 import FlexBox from '../atoms/FlexBox';
 import translate from '../../lang';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import useAppForm from '../../hooks/useAppForm.hook';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
 
@@ -31,7 +31,6 @@ export interface TransactionFormNewProps extends Omit<ModalFormProps, 'onSubmit'
   copy?: boolean;
   id?: string;
   onSubmit?: (data: ITransactionReqData, options?: AfterFormSubmitOptions) => void;
-
   filterOptions?: TransactionsFilterOpt[];
   defaultState?: Partial<ITransaction>;
   addInputs?: boolean;
@@ -55,6 +54,7 @@ const validationItem = yup
 const validation = yup.object().shape({
   amount: yup.number(),
   type: yup.string().required(),
+  eventDate: yup.string().required(),
   comment: yup.string().optional(),
   countIn: validationItem,
   subCountIn: validationItem,
@@ -75,54 +75,19 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
   const {
     directories: { directories },
   } = useAppSelector();
-
-  const [afterSubmitOptions, setAfterSubmitOptions] = useState<AfterFormSubmitOptions>({});
   const {
     formState: { errors },
+    formValues,
     register,
     setValue,
-    watch,
-    unregister,
+    registerSelect,
     handleSubmit,
-  } = useForm<ITransaction>({
-    defaultValues: { currency: 'UAH', ...defaultState },
+  } = useAppForm<ITransaction>({
+    defaultValues: { currency: 'UAH', ...defaultState, eventDate: formatDateForInputValue(defaultState?.eventDate) },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
-  const formValues = watch();
-
-  const registerSelect = useCallback(
-    <K extends keyof ITransaction = keyof ITransaction>(
-      name: K,
-      props?: Omit<CustomSelectProps<ITransaction[K]>, 'name'>,
-      childControl?: {
-        childName?: keyof ITransaction;
-      }
-    ): CustomSelectProps<ITransaction[K]> => {
-      return {
-        onSelect: (option, _value) => {
-          setValue<K>(name, option as any);
-          // if (childControl?.childName) clearChild(childControl?.childName);
-        },
-        name,
-        selectValue: formValues[name],
-        onClear: () => {
-          if (!formValues[name]) return;
-
-          // setValue(name, null as any);
-          unregister(name);
-
-          if (childControl?.childName) unregister(childControl?.childName);
-
-          if (!props?.options || props.options.length === 0) {
-          }
-        },
-        disabled: !props?.options || props?.options?.length === 0,
-        ...props,
-      };
-    },
-    [formValues, setValue, unregister]
-  );
+  const [afterSubmitOptions, setAfterSubmitOptions] = useState<AfterFormSubmitOptions>({});
 
   function onValidSubmit(submitData: ITransaction) {
     const omitPathArr: (keyof ITransaction)[] =
@@ -252,9 +217,7 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
 
   return (
     <ModalForm
-      onSubmit={handleSubmit(onValidSubmit, data => {
-        console.log(data);
-      })}
+      onSubmit={handleSubmit(onValidSubmit, data => console.log(data))}
       onOptSelect={({ value }) => value && setValue('type', value)}
       {...props}
       extraFooter={renderExtraFooter}

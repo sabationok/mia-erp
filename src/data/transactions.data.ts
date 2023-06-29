@@ -6,8 +6,33 @@ import { FilterOpt } from '../components/ModalForm/ModalFilter';
 import { CategoryTypes } from '../redux/directories/categories.types';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
-
-export const transactionsColumnsNew: CellTittleProps[] = [
+export type DataPath =
+  | 'countIn.label'
+  | 'subCountIn.label'
+  | 'countOut.label'
+  | 'subCountOut.label'
+  | 'category.label'
+  | 'subCategory.label'
+  | 'owner.name'
+  | 'project.name'
+  | 'project.label'
+  | 'contractor.name'
+  | 'contractor.type'
+  | 'meta.author.name'
+  | 'meta.editor.name'
+  | 'meta.auditor.name'
+  | 'eventDate'
+  | 'type'
+  | 'status'
+  | 'amount'
+  | 'currency'
+  | 'activity.label'
+  | 'meta.author.email'
+  | 'comment'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'mark.label';
+export const transactionsColumnsNew: CellTittleProps<DataPath>[] = [
   {
     top: { name: t('date'), align: 'center', path: 'eventDate' },
     bottom: { name: t('time'), align: 'center' },
@@ -65,7 +90,7 @@ export const transactionsColumnsNew: CellTittleProps[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Контрагент', align: 'start', path: 'contractor.label' },
+    top: { name: 'Контрагент', align: 'start', path: 'contractor.name' },
     bottom: { name: 'Тип', align: 'start', path: 'contractor.type' },
     width: '150px',
     action: 'valueByPath',
@@ -174,12 +199,26 @@ export const transactionsColumns: CellTittleProps[] = [
   },
 ];
 
-export const transactionsSearchParams: SelectItem[] = [
+export const transactionsSearchParams: SelectItem<DataPath>[] = [
   {
     label: 'Дата',
     dataPath: 'eventDate',
     filter: false,
     search: false,
+    sort: true,
+  },
+  {
+    label: t('type'),
+    dataPath: 'type',
+    filter: false,
+    search: true,
+    sort: true,
+  },
+  {
+    label: t('amount'),
+    dataPath: 'amount',
+    filter: false,
+    search: true,
     sort: true,
   },
   {
@@ -191,7 +230,7 @@ export const transactionsSearchParams: SelectItem[] = [
   },
   {
     label: 'Створено',
-    dataPath: 'updateAt',
+    dataPath: 'updatedAt',
     filter: false,
     search: false,
     sort: true,
@@ -238,35 +277,29 @@ export const transactionsSearchParams: SelectItem[] = [
     search: true,
     sort: true,
   },
-  {
-    label: t('amount'),
-    dataPath: 'amount',
-    filter: false,
-    search: true,
-    sort: true,
-  },
+
   {
     label: 'Контрагент',
-    dataPath: 'contractor',
+    dataPath: 'contractor.name',
     filter: false,
     search: true,
     sort: true,
   },
-  {
-    label: 'Документ',
-    dataPath: 'document',
-    filter: false,
-    search: true,
-    sort: true,
-  },
+  // {
+  //   label: 'Документ',
+  //   dataPath: 'document',
+  //   filter: false,
+  //   search: true,
+  //   sort: true,
+  // },
   {
     label: t('project'),
-    dataPath: 'project',
+    dataPath: 'project.label',
     filter: false,
     search: true,
     sort: true,
   },
-  { label: 'Мітка', dataPath: 'mark', filter: false, search: true, sort: true },
+  { label: 'Мітка', dataPath: 'mark.label', filter: false, search: true, sort: true },
   {
     label: 'Статус',
     dataPath: 'status',
