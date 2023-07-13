@@ -15,6 +15,7 @@ export interface ModalFormBaseProps extends Omit<React.FormHTMLAttributes<HTMLFo
   beforeClose?: () => void;
   afterClose?: () => void;
   closeAfterSubmit?: boolean;
+  isValid?: boolean;
 }
 
 export interface ModalFormAddsProps {
@@ -43,6 +44,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
   closeAfterSubmit,
   defaultOption,
   extraFooter,
+  isValid = true,
   ...props
 }) => {
   const modal = useModal();
@@ -85,7 +87,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
         {children}
       </ModalMain>
 
-      {footer && <ModalFooter onSubmitPassed={!!onSubmit} extraFooter={extraFooter} />}
+      {footer && <ModalFooter onSubmitPassed={!!onSubmit} extraFooter={extraFooter} isValid={isValid} />}
     </ModalFormContainer>
   );
 };

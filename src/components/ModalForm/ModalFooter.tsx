@@ -5,11 +5,13 @@ import FlexBox from '../atoms/FlexBox';
 export interface IModalFooterProps {
   onSubmitPassed?: boolean;
   extraFooter?: JSX.Element;
+  isValid?: boolean;
 }
 
 const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElement>> = ({
   onSubmitPassed,
   extraFooter,
+  isValid = true,
   ...props
 }) => {
   return (
@@ -27,7 +29,7 @@ const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElem
           </ButtonIcon>
         )}
 
-        <ButtonIcon type={onSubmitPassed ? 'submit' : 'reset'} variant="filledSmall">
+        <ButtonIcon type={onSubmitPassed ? 'submit' : 'reset'} variant="filledSmall" disabled={!isValid}>
           {onSubmitPassed ? 'Зберегти' : 'Закрити'}
         </ButtonIcon>
       </FlexBox>

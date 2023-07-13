@@ -12,6 +12,7 @@ export interface InputLabelProps extends React.HTMLAttributes<HTMLDivElement> {
   helperText?: string;
   align?: CSSProperties['alignItems'];
   disabled?: boolean;
+  required?: boolean;
 }
 
 const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = (
@@ -28,6 +29,7 @@ const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = (
     loading,
     align,
     id,
+    required,
     ...props
   },
   ref: React.ForwardedRef<any>
@@ -37,7 +39,7 @@ const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = (
       <Wrapper isLabel={!!label} direction={direction}>
         {label && (
           <LabelText htmlFor={id} uppercase={uppercase} align={align} direction={direction} className="label">
-            {label}
+            {`${label}${required ? ' *' : ''}`}
           </LabelText>
         )}
         <InputBox>{children}</InputBox>

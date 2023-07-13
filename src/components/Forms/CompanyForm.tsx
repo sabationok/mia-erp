@@ -20,12 +20,14 @@ const defaultValues: ICreateCompanyFormData = {
   fullName: '',
   email: '',
   phone: '',
+  taxCode: '',
 };
 const validFormData = yup.object().shape({
   name: yup.string().required(),
   email: yup.string().required(),
   fullName: yup.string().required(),
-  phone: yup.string().required(),
+  phone: yup.string(),
+  taxCode: yup.string().required(),
 });
 
 export type CompanyFormProps = Props & Omit<ModalFormProps, 'onSubmit'>;
@@ -34,7 +36,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ ...props }) => {
 
   const {
     register,
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
   } = useForm<ICreateCompanyFormData>({
     defaultValues,
@@ -59,16 +61,16 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ ...props }) => {
   }
 
   return (
-    <Form fillHeight {...props} onSubmit={handleSubmit(onFormSubmit)}>
+    <Form fillHeight {...props} onSubmit={handleSubmit(onFormSubmit)} isValid={isValid}>
       <Inputs>
-        <InputLabel label={'Назва'} direction={'vertical'} error={errors.name}>
-          <InputText {...register('name')} />
+        <InputLabel label={'Назва'} direction={'vertical'} error={errors.name} required>
+          <InputText {...register('name')} required />
         </InputLabel>
-        <InputLabel label={'Повна назва'} direction={'vertical'} error={errors.fullName}>
-          <InputText {...register('fullName')} />
+        <InputLabel label={'Повна назва'} direction={'vertical'} error={errors.fullName} required>
+          <InputText {...register('fullName')} required />
         </InputLabel>
-        <InputLabel label={'Електронна адреса'} direction={'vertical'} error={errors.email}>
-          <InputText {...register('email')} type={'email'} />
+        <InputLabel label={'Електронна адреса'} direction={'vertical'} error={errors.email} required>
+          <InputText {...register('email')} type={'email'} required />
         </InputLabel>
         <InputLabel label={'Телефон'} direction={'vertical'} error={errors.phone}>
           <InputText {...register('phone')} />
@@ -77,8 +79,8 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ ...props }) => {
         <InputLabel label={'Тип'} direction={'vertical'} error={errors.type}>
           <InputText {...register('type')} />
         </InputLabel>
-        <InputLabel label={'Податковий номер'} direction={'vertical'} error={errors.taxCode}>
-          <InputText {...register('taxCode')} type={'number'} />
+        <InputLabel label={'Податковий номер'} direction={'vertical'} error={errors.taxCode} required>
+          <InputText {...register('taxCode')} required />
         </InputLabel>
       </Inputs>
     </Form>
