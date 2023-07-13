@@ -111,7 +111,7 @@ const StForm = styled.form`
   min-width: 250px;
   width: 100%;
   height: max-content;
-  max-width: 480px;
+  max-width: 400px;
   max-height: 98vh;
 
   overflow: auto;
@@ -122,7 +122,7 @@ const StForm = styled.form`
 
   box-shadow: ${({ theme }) => theme.globals.shadowMain};
   border: 1px solid ${({ theme }) => theme.trBorderClr};
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  background-color: ${({ theme }) => theme.modalBackgroundColor};
 
   @media screen and (max-width: 480px) {
     max-width: 95vw;
@@ -157,7 +157,6 @@ const Inputs = styled.div`
 
   margin-bottom: 12px;
   width: 100%;
-  max-width: 280px;
 
   fill: ${({ theme }) => theme.accentColor.base};
 `;
@@ -167,6 +166,7 @@ const Buttons = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 12px;
+  width: 100%;
 `;
 const StButtonIcon = styled(ButtonIcon)`
   min-width: 165px;

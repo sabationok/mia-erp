@@ -164,7 +164,7 @@ const Form = styled.form`
   width: 100%;
   height: max-content;
   /* min-height: max-content; */
-  max-width: 480px;
+  max-width: 400px;
   max-height: 98vh;
 
   overflow: auto;
@@ -176,7 +176,7 @@ const Form = styled.form`
   box-shadow: ${({ theme }) => theme.globals.shadowMain};
   border: 1px solid ${({ theme }) => theme.trBorderClr};
   /* background-color: #1c1c1e; */
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  background-color: ${({ theme }) => theme.modalBackgroundColor};
 
   @media screen and (max-width: 480px) {
     max-width: 95vw;
@@ -200,8 +200,6 @@ const Title = styled.p`
   text-align: center;
 
   margin-bottom: 20px;
-
-  max-width: 280px;
 `;
 
 const Links = styled.div`
@@ -217,11 +215,10 @@ const Links = styled.div`
 const Inputs = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
 
   margin-bottom: 12px;
   width: 100%;
-  max-width: 280px;
 
   fill: ${({ theme }) => theme.accentColor.base};
 `;
@@ -267,8 +264,7 @@ const StNavLink = styled(NavLinkIcon)`
   text-align: center;
 
   border-radius: 0;
-  border-style: none;
-  border-width: 0;
+  border: 0;
 
   &::before {
     display: block;
@@ -277,8 +273,7 @@ const StNavLink = styled(NavLinkIcon)`
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 1px;
-    background-color: ${({ theme }) => theme.trBorderClr};
+    border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
   }
 
   &::after {
@@ -298,7 +293,7 @@ const StNavLink = styled(NavLinkIcon)`
 
   &.active {
     &::after {
-      width: 80%;
+      width: 100%;
     }
   }
 

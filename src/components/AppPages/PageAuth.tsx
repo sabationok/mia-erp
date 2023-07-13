@@ -14,7 +14,7 @@ const PageAuth: React.FC<PageAuthProps> = ({ register, recovery, login, sendReco
     <Page className="PageAuth">
       {(register || login) && (
         <AuthForm
-          title={register ? 'Реєстрація нового користувача' : 'Для початку роботи, будь ласка, авторизуйтесь.'}
+          title={register ? 'Реєстрація нового користувача' : 'Для початку роботи, будь ласка, авторизуйтесь'}
           registration={register}
           login={!register}
         />

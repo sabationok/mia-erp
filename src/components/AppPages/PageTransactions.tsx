@@ -26,10 +26,6 @@ const PageTransactions: React.FC<any> = (props: Props) => {
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
-  // const [selectedTr, setSelectedTr] = useState<any>(null);
-
-  // const { getAllByDirType } = useDirectoriesServiceHook();
-
   const tableConfig = useMemo(
     (): ITableListProps<ITransaction> => ({
       tableData: state.transactions,
@@ -56,18 +52,6 @@ const PageTransactions: React.FC<any> = (props: Props) => {
     }),
     [actionsCreator, filterParams, filterSelectors, getAll, sortParams, state.transactions]
   );
-  // useEffect(() => {
-  //   getAllByDirType({ data: { dirType: ApiDirType.COUNTS, params: { isArchived: false, createTreeData: true } } });
-  // }, [getAllByDirType]);
-
-  // useEffect(() => {
-  //   getAllByDirType({
-  //     data: {
-  //       dirType: ApiDirType.CATEGORIES_TR,
-  //       params: { isArchived: false, createTreeData: true },
-  //     },
-  //   });
-  // }, [getAllByDirType]);
 
   useEffect(() => {
     if (sortParams || filterParams) {
