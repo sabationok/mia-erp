@@ -58,7 +58,7 @@ function createTransactionForReq(
     }
     if (value && typeof value === 'object') {
       if ('_id' in value) {
-        transformedData[key] = value?._id;
+        transformedData[key] = { _id: value?._id };
         return '';
       }
       return '';

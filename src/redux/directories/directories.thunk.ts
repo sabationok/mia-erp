@@ -12,11 +12,11 @@ export interface DirThunkBaseSubmitData {
   params?: Partial<AppQueryParams>;
 }
 
-export interface DirThunkCreateItemSubmitData<DTO = any> extends GetAllByDirTypeOptions {
+export interface CreateDirItemThunkSubmitData<DTO = any> extends GetAllByDirTypeOptions {
   data: DTO;
 }
 
-export interface DirThunkUpdateItemSubmitData<DTO = any> extends GetAllByDirTypeOptions {
+export interface UpdateDirItemThunkSubmitData<DTO = any> extends GetAllByDirTypeOptions {
   _id: string;
   data: DTO;
 }
@@ -47,10 +47,10 @@ export const getAllDirectoryItemsThunk = createAsyncThunk<
 
 export const createDirectoryItemThunk = createAsyncThunk<
   DirThunkBaseReturnData<IBaseDirItem[]>,
-  ThunkPayload<DirThunkCreateItemSubmitData, DirThunkBaseReturnData<IBaseDirItem[]>>
+  ThunkPayload<CreateDirItemThunkSubmitData<IBaseDirItem>, DirThunkBaseReturnData<IBaseDirItem[]>>
 >('directories/createDirectoryItemThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
   try {
-    const res = await DirectoriesApi.create(data as DirThunkCreateItemSubmitData);
+    const res = await DirectoriesApi.create(data as CreateDirItemThunkSubmitData);
 
     if (res && onSuccess) {
       onSuccess({ dirType: data?.dirType, data: res.data.data });
@@ -66,10 +66,10 @@ export const createDirectoryItemThunk = createAsyncThunk<
 
 export const updateDirectoryItemThunk = createAsyncThunk<
   DirThunkBaseReturnData<IBaseDirItem[]>,
-  ThunkPayload<DirThunkUpdateItemSubmitData, DirThunkBaseReturnData<IBaseDirItem[]>>
+  ThunkPayload<UpdateDirItemThunkSubmitData, DirThunkBaseReturnData<IBaseDirItem[]>>
 >('directories/updateDirectoryItemThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
   try {
-    const res = await DirectoriesApi.update<IBaseDirItem>(data as DirThunkUpdateItemSubmitData);
+    const res = await DirectoriesApi.update<IBaseDirItem>(data as UpdateDirItemThunkSubmitData);
 
     if (res && onSuccess) {
       onSuccess({ dirType: data?.dirType, data: res.data.data });

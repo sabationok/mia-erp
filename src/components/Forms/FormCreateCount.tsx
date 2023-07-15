@@ -36,7 +36,7 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
     defaultValues: {
       ...data,
       type,
-      parent: parent?._id || null,
+      parent: { _id: parent?._id || null },
     },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
@@ -65,8 +65,8 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
           <InputText placeholder={translate('insertLabel')} {...register('label')} autoFocus />
         </InputLabel>
 
-        <InputLabel label={t('startBalance')} direction={'vertical'} error={errors.startBalance}>
-          <InputText placeholder={translate('insertStartBalance')} {...register('startBalance')} type="number" />
+        <InputLabel label={t('startBalance')} direction={'vertical'} error={errors.balance}>
+          <InputText placeholder={translate('insertStartBalance')} {...register('balance')} type="number" />
         </InputLabel>
 
         <InputLabel label={t('currency')} direction={'vertical'} error={errors.currency} disabled>

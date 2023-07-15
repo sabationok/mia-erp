@@ -58,11 +58,10 @@ export const useAppPages = ({ permissionId }: { permissionId?: string }) => {
 
   return useMemo((): IAppPage[] => {
     const isCompanyValid = permission?._id === permissionId;
-
+    
     if (isCompanyValid) {
       return pages
         .filter(page => {
-          console.log(permission?.role?.accessKeys);
           if (permission?.role?.accessKeys?.includes(page.path)) return true;
           return permission?.user?._id === permission?.company?.owner?._id && page.path === 'admin';
         })

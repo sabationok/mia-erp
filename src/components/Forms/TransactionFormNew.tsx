@@ -95,7 +95,7 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
       (formValues.type === 'EXPENSE' && ['countIn', 'subCountIn']) ||
       [];
 
-    const trReqData = createTransactionForReq(submitData, omitPathArr, 'eventDate', 'amount');
+    const trReqData = createTransactionForReq(submitData, omitPathArr, '', 'amount');
 
     onSubmit && onSubmit({ _id: '', data: trReqData }, afterSubmitOptions);
   }

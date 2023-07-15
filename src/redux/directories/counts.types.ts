@@ -14,8 +14,8 @@ export const CountsTypesMap = {
 };
 
 export interface ICountFormData extends Omit<ICount, '_id' | 'createdAt' | 'updatedAt' | 'parent'> {
-  parent?: string | null;
-  startBalance?: number;
+  parent?: { _id: string | null };
+  balance?: number;
   currency?: string;
 }
 

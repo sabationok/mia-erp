@@ -1,4 +1,4 @@
-import { AppDispatch, RootState, useAppDispatch } from 'redux/store.store';
+import { RootState, useAppDispatch } from 'redux/store.store';
 import { ServiceDispatcher, ServiceDispatcherAsync } from '../global.types';
 import { useMemo } from 'react';
 
@@ -31,9 +31,7 @@ interface DirectoriesServiceDispatchers {
   >;
 }
 
-interface DirectoriesService extends DirectoriesServiceDispatchers {
-  dispatch: AppDispatch;
-}
+interface DirectoriesService extends DirectoriesServiceDispatchers {}
 
 export const useDirectoriesSelector = <T = any, DT extends ApiDirType = any>(dirType: DT) => {
   const state = useSelector((state: RootState) => state.directories);
@@ -48,17 +46,11 @@ export const useDirectoriesSelector = <T = any, DT extends ApiDirType = any>(dir
 const useDirectoriesService = (): DirectoriesService => {
   const dispatch = useAppDispatch();
 
-  const dispatchers = useMemo((): DirectoriesServiceDispatchers => {
+  return useMemo((): DirectoriesServiceDispatchers => {
     return {
       getAllByDirType: async payload => dispatch(getAllDirectoryItemsThunk(defaultThunkPayload(payload))),
     };
   }, [dispatch]);
-
-  return {
-    dispatch,
-
-    ...dispatchers,
-  };
 };
 
 export default useDirectoriesService as typeof useDirectoriesService;
