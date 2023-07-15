@@ -38,6 +38,13 @@ export const authSlice = createSlice({
         state.permission = initialState.permission;
         state.access_token = '';
       })
+      .addCase(logOutUserThunk.rejected, state => {
+        state.isLoading = false;
+        state.isLoggedIn = false;
+        state.user = initialState.user;
+        state.permission = initialState.permission;
+        state.access_token = '';
+      })
       .addCase(getCurrentUserThunk.fulfilled, state => {
         state.isLoading = false;
         state = initialState;

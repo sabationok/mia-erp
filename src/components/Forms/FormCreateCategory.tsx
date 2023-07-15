@@ -32,11 +32,16 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
     register,
     handleSubmit,
   } = useForm<ICategoryFormData>({
-    defaultValues: {
-      ...data,
-      type,
-      parent: parent?._id || null,
-    },
+    defaultValues: parent?._id
+      ? {
+          ...data,
+          type,
+          parent: { _id: parent?._id },
+        }
+      : {
+          ...data,
+          type,
+        },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });

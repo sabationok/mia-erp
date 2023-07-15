@@ -33,11 +33,16 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
     register,
     handleSubmit,
   } = useForm<ICountFormData>({
-    defaultValues: {
-      ...data,
-      type,
-      parent: { _id: parent?._id || null },
-    },
+    defaultValues: parent?._id
+      ? {
+          ...data,
+          type,
+          parent: { _id: parent?._id },
+        }
+      : {
+          ...data,
+          type,
+        },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
