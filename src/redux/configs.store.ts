@@ -19,37 +19,37 @@ export const persistorConfigs = {
   },
   pageSettings: {
     key: 'appPage',
-    storage,
+    storage: storageSession,
     whitelist: ['pageGrid'],
   },
   categories: {
     key: 'categories',
-    storage,
+    storage: storageSession,
     whitelist: ['categories'],
   },
   counts: {
     key: 'counts',
-    storage,
+    storage: storageSession,
     whitelist: ['counts'],
   },
   directories: {
     key: 'directories',
-    storage,
+    storage: storageSession,
     whitelist: ['directories'],
   },
   transactions: {
     key: 'transactions',
-    storage,
+    storage: storageSession,
     whitelist: [],
   },
   customRoles: {
     key: 'customRoles',
-    storage,
+    storage: storageSession,
     whitelist: ['customRoles'],
   },
   roles: {
     key: 'roles',
-    storage,
+    storage: storageSession,
     whitelist: ['roles'],
   },
 };
