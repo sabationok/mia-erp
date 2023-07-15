@@ -1,4 +1,4 @@
-import baseApi, { token } from 'api/baseApi';
+import baseApi from 'api/baseApi';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import {
@@ -54,7 +54,6 @@ export const logInUserThunk = createAsyncThunk<
     const response = await AuthApi.logInUser(data as ILoginUserData);
 
     onSuccess && onSuccess(data);
-    token.set(response.data.data.access_token || '');
     return response.data.data;
     // return { accessToken: 'accessToken_', email: data?.email };
   } catch (error) {

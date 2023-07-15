@@ -89,7 +89,7 @@ const PageHome: React.FC<any> = ({ path }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useMemo(() => {
+  useEffect(() => {
     user._id && permissionsService.getAllByUserId({ data: { userId: user._id } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user._id]);

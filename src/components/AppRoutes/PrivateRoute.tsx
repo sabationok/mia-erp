@@ -3,13 +3,13 @@ import { useAuthSelector } from 'redux/selectors.store';
 import { toast } from 'react-toastify';
 
 const PrivateRoute: React.FC<{ redirectTo: string }> = ({ redirectTo }) => {
-  const { isLoggedIn } = useAuthSelector();
+  const { access_token } = useAuthSelector();
 
-  if (!isLoggedIn) {
+  if (!access_token) {
     toast.error('Unauthorized');
   }
 
-  return isLoggedIn ? <Outlet /> : <Navigate to={redirectTo} replace={true} />;
+  return access_token ? <Outlet /> : <Navigate to={redirectTo} replace={true} />;
 };
 
 export default PrivateRoute;

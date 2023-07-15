@@ -39,14 +39,12 @@ const TableSort: React.FC<TableSortProps> = ({ tableSortParams, onSelect }) => {
       <StButton
         sortOrder={current?.sortOrder}
         variant="def"
-        iconId="sort"
-        iconSize="18px"
         endIconSize="26px"
         endIconId="SmallArrowDown"
         onClick={onOpenClick}
         data-table-sort-open
       >
-        <span title={current?.name || current?.label || ''}>
+        <span title={current?.name || current?.label || ''} style={{ textAlign: 'start' }}>
           {current?.name || current?.label || 'Оберіть параметр'}
         </span>
       </StButton>
@@ -66,12 +64,12 @@ const Box = styled.div`
 
 const StButton = styled(ButtonIcon)<{ sortOrder?: SelectItem['sortOrder'] }>`
   display: grid;
-  grid-template-columns: 26px 1fr 26px;
+  grid-template-columns: 1fr 26px;
   height: 100%;
   max-width: 100%;
   width: 100%;
 
-  padding-left: 4px;
+  padding: 0 8px;
 
   fill: ${({ theme }) => theme.accentColor.base};
   color: ${({ theme }) => theme.fontColorHeader};

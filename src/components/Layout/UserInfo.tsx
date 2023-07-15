@@ -1,11 +1,12 @@
 import styled, { css } from 'styled-components';
 import ProfileCard from 'components/atoms/ProfileCard/ProfileCard';
-import usePermissionsServiceHook from '../../redux/permissions/usePermissionsService.hook';
+import usePermissionsServiceHook, { usePermissionsSelector } from '../../redux/permissions/usePermissionsService.hook';
 import FlexBox from '../atoms/FlexBox';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import Text from '../atoms/Text';
 import useAppAuthHook from '../../redux/auth/useAppAuth.hook';
 import { useMemo } from 'react';
+import { useAuthSelector } from '../../redux/selectors.store';
 
 export interface IUserInfoProps {
   isOpen: boolean;
@@ -13,14 +14,10 @@ export interface IUserInfoProps {
 }
 
 const UserInfo: React.FC<IUserInfoProps> = ({ isOpen, onClose }) => {
-  const {
-    state: { user },
-  } = useAppAuthHook();
-  const {
-    state: { permission, permission_token },
-    permissionLogOut,
-    clearCurrent,
-  } = usePermissionsServiceHook();
+  const { logOutUser } = useAppAuthHook();
+  const { user } = useAuthSelector();
+  const { permissionLogOut, clearCurrent } = usePermissionsServiceHook();
+  const { permission, permission_token } = usePermissionsSelector();
 
   function onBackdropClick(ev: React.MouseEvent) {
     const { target, currentTarget } = ev;
@@ -36,7 +33,7 @@ const UserInfo: React.FC<IUserInfoProps> = ({ isOpen, onClose }) => {
           <ProfileCard {...user} nameFontSize="16px" emailFontSize="16px" />
 
           <FlexBox fxDirection={'row'} gap={12} fillWidth justifyContent={'flex-end'} alignItems={'center'}>
-            <ButtonIcon variant={'textSmall'} endIcon={'logOut'} onClick={undefined}>
+            <ButtonIcon variant={'textSmall'} endIcon={'logOut'} onClick={() => logOutUser()}>
               <Text style={{ fontSize: '14px' }}>Вийти з профілю</Text>
             </ButtonIcon>
           </FlexBox>

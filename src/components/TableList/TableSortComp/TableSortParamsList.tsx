@@ -28,24 +28,6 @@ const TableSortParamsList: React.FC<TableSortParamsListProps> = ({ tableSortPara
     return param.dataPath === currentEl?.dataPath && currentEl?.sortOrder === sortOrder;
   }
 
-  // useEffect(() => {
-  //   function onMenuClose(ev: MouseEvent | KeyboardEvent) {
-  //     const { target } = ev;
-  //
-  //     if (target instanceof HTMLElement && target?.closest('[data-table-sort-open]')) return onOpenClick(true);
-  //     if (target instanceof HTMLElement && !target?.closest('[data-table-sort-close]')) onOpenClick(false);
-  //     if (ev instanceof KeyboardEvent && ev?.code === 'Escape') onOpenClick(false);
-  //   }
-  //
-  //   document.addEventListener('click', onMenuClose);
-  //   document.addEventListener('keydown', onMenuClose);
-  //
-  //   return () => {
-  //     document.removeEventListener('click', onMenuClose);
-  //     document.removeEventListener('keydown', onMenuClose);
-  //   };
-  // }, [isOpen, onOpenClick]);
-
   return (
     <Box data-table-sort-close>
       <SelectList>
@@ -95,9 +77,8 @@ const Box = styled.div<{ isOpen?: boolean }>`
 
   color: ${({ theme }) => theme.fontColorHeader};
   fill: ${({ theme }) => theme.fontColorHeader};
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
 
-  background-color: ${({ theme }) => theme.backdropColor};
+  background-color: ${({ theme }) => theme.modalBackgroundColor};
   box-shadow: ${({ theme }) => theme.globals.shadowMain};
   transition: all ${({ theme }) => theme.globals.timingFunctionMain},
     transform ${({ theme }) => theme.globals.timingFnMui};

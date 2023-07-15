@@ -12,7 +12,7 @@ import {
   updateCompanyWithPermissionThunk,
   updatePermissionThunk,
 } from './permissions.thunk';
-import { IPermission, IPermissionForReq, IPermissionReqData, IPermissionsState } from './permissions.types';
+import { IPermission, IPermissionForReq, IPermissionReqData } from './permissions.types';
 import { useMemo } from 'react';
 import { ServiceDispatcherAsync } from 'redux/global.types';
 import { clearCurrentPermission } from './permissions.action';
@@ -21,7 +21,6 @@ import { ICompanyForReq, ICompanyReqData } from '../companies/companies.types';
 
 export interface PermissionService {
   dispatch: AppDispatch;
-  state: IPermissionsState;
   getAllByCompanyId?: ServiceDispatcherAsync<{ companyId: string }>;
   getAllByUserId: ServiceDispatcherAsync<{ userId: string }>;
   deleteById: ServiceDispatcherAsync<{ id: string }>;
@@ -81,7 +80,6 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
 
   return {
     dispatch,
-    state,
     isCurrentValid,
     ...dispatchers,
   };

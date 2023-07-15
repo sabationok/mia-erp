@@ -2,15 +2,15 @@ import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 import { getCurrentUserThunk, logInUserThunk, logOutUserThunk, registerUserThunk } from './auth.thunks';
 import { IAuthState } from './auth.types';
-
-import { testUserKarina } from '../../data/usersDir.data';
-import { initialPermission } from '../../data/permissions.data';
+import { karina_avatar } from '../../img';
 
 const initialState: IAuthState = {
-  user: testUserKarina,
-  permission: initialPermission,
-  access_token:
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDg5MDBmNWQ5YjJkY2U3ODgyYjNlODEiLCJzdGF0dXMiOiJQRU5ESU5HIiwicm9sZSI6IkdVRVNUIiwiaWF0IjoxNjg2NzY5NDg5LCJleHAiOjE2ODc2MzM0ODl9.u0Q7LQrtKo7DXzsLbANM7vdn2kYJCVkC4uP-pv_tBfI',
+  user: {
+    _id: '',
+    avatarURL: karina_avatar,
+  },
+  permission: { _id: '' },
+  access_token: '',
   isLoading: true,
   isLoggedIn: false,
   error: null,
@@ -26,7 +26,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.access_token = payload.access_token;
         state.isLoggedIn = true;
-        state.user = { ...state.user, email: payload.email };
+        state.user = { ...payload, avatarURL: karina_avatar };
       })
       .addCase(registerUserThunk.fulfilled, state => {
         state.isLoading = false;

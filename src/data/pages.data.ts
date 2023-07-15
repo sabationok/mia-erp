@@ -56,23 +56,20 @@ export const pages: IAppPage[] = [
 export const useAppPages = ({ permissionId }: { permissionId?: string }) => {
   const { permission } = usePermissionsSelector();
 
-  return useMemo(() => {
+  return useMemo((): IAppPage[] => {
     const isCompanyValid = permission?._id === permissionId;
-    let res: IAppPage[] = [];
+
     if (isCompanyValid) {
-      res = pages
+      return pages
         .filter(page => {
+          console.log(permission?.role?.accessKeys);
           if (permission?.role?.accessKeys?.includes(page.path)) return true;
           return permission?.user?._id === permission?.company?.owner?._id && page.path === 'admin';
         })
         .map(page => ({ ...page, path: `/app/${permissionId}/${page?.path}` }));
     }
 
-    if (!isCompanyValid) {
-      res = [{ title: 'Головна', path: 'home', iconId: 'bank' }];
-    }
-
-    return res;
+    return [{ title: 'Головна', path: 'home', iconId: 'bank' }];
   }, [
     permission?._id,
     permission?.company?.owner?._id,

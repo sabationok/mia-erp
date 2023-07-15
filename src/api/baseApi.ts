@@ -44,18 +44,18 @@ export const baseURL = {
   },
 };
 export const useBaseApiWithAccessToken = () => {
-  const auth = useAuthSelector();
+  const { access_token } = useAuthSelector();
 
   useEffect(() => {
-    if (auth.access_token) {
-      token.set(auth.access_token);
+    if (access_token) {
+      token.set(access_token);
     }
-  }, [auth.access_token]);
+  }, [access_token]);
   useEffect(() => {
-    if (!auth.access_token) {
+    if (!access_token) {
       token.unset();
     }
-  }, [auth.access_token]);
+  }, [access_token]);
 };
 export const useBaseApiWithPermissionToken = () => {
   const { permission_token, permission } = usePermissionsSelector();

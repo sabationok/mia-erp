@@ -30,7 +30,6 @@ const PageTransactions: React.FC<any> = (props: Props) => {
     (): ITableListProps<ITransaction> => ({
       tableData: state.transactions,
       tableTitles: transactionsColumns,
-      tableSearchParams: transactionsSearchParams.filter(el => el.search),
       tableSortParams: transactionsSearchParams.filter(el => el.sort),
       filterSelectors,
       isFilter: true,

@@ -5,7 +5,7 @@ export const persistorConfigs = {
   auth: {
     key: 'auth',
     storage,
-    whitelist: ['access_token', 'isLoggedIn'],
+    whitelist: ['access_token', 'user', 'isLogged'],
   },
   permissions: {
     key: 'permission',

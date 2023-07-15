@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { IPermissionsState } from './permissions.types';
-import * as _ from 'lodash';
 import {
   createCompanyWithPermissionThunk,
   createPermissionThunk,
@@ -14,7 +13,7 @@ import {
   updatePermissionThunk,
 } from './permissions.thunk';
 
-import { testPermissions } from '../../data/permissions.data';
+import { initialPermission, testPermissions } from '../../data/permissions.data';
 import { clearCurrentPermission } from './permissions.action';
 
 const initialPermissionStateState: IPermissionsState = {
@@ -30,9 +29,12 @@ export const permissionsSlice = createSlice({
   reducers: {},
   extraReducers: builder =>
     builder
-      .addCase(getCurrentPermissionThunk.fulfilled, (state: IPermissionsState, a) => {
-        state.permission = _.omit(a.payload, 'permission_token');
-        state.permission_token = a.payload.permission_token;
+      .addCase(getCurrentPermissionThunk.fulfilled, (s: IPermissionsState, a) => {
+        s.permission = {
+          ...a.payload,
+          role: { ...a.payload.role, accessKeys: initialPermission.role?.accessKeys },
+        };
+        s.permission_token = a.payload.permission_token;
       })
       .addCase(getAllPermissionsByUserIdThunk.fulfilled, (s, a) => {
         s.permissions = a.payload;
@@ -48,7 +50,10 @@ export const permissionsSlice = createSlice({
         }
       })
       .addCase(logInPermissionThunk.fulfilled, (s, a) => {
-        s.permission = a.payload;
+        s.permission = {
+          ...a.payload,
+          role: { ...a.payload.role, accessKeys: initialPermission.role?.accessKeys },
+        };
         s.permission_token = a.payload.permission_token;
       })
       .addCase(logOutPermissionThunk.fulfilled, (s, a) => {
