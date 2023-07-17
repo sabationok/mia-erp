@@ -15,7 +15,7 @@ const NavMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [activePage, setActivePage] = useState<IPage>(pages[0]);
   const location = useLocation();
-  console.log(pages);
+
   const handleOpenNavMenu = useCallback(() => {
     setIsOpen(!isOpen);
   }, [isOpen]);

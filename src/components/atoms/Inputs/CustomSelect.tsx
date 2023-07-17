@@ -56,6 +56,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
     onSelect,
     onClear,
     fieldMode,
+    required,
     ...props
   },
   ref
@@ -103,20 +104,22 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
 
   const renderOptions = useMemo(
     () =>
-      options?.map(opt => (
+      options?.map((opt, idx) => (
         <Option
-          key={opt._id}
+          key={`select-opt-${opt._id || opt?.value || idx}`}
           onClick={handleOnSelect(opt)}
           justifyContent={'flex-start'}
           fillWidth
           fxDirection={'row'}
           padding={'5px 8px'}
-          isActive={opt?._id === currentOption?._id}
+          isActive={
+            (opt?._id && opt?._id === currentOption?._id) || (opt?.value && opt?.value === currentOption?.value)
+          }
         >
           {opt.label || opt.name}
         </Option>
       )),
-    [currentOption?._id, handleOnSelect, options]
+    [currentOption?._id, currentOption?.value, handleOnSelect, options]
   );
 
   useEffect(() => {
@@ -131,6 +134,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
       <FlexBox fillWidth style={{ position: 'relative' }}>
         <InputLabel
           direction={'vertical'}
+          required={required}
           ref={labelRef}
           {...pick(props, [
             'error',
@@ -149,6 +153,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
           <LabelInner fieldMode={fieldMode} error={!!props.error} success={!!props.success}>
             <StyledInput
               disabled={!fieldMode}
+              required={required}
               value={currentOption?.label || currentOption?.name || ''}
               ref={ref}
               {...omit(

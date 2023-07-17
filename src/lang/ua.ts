@@ -1,10 +1,16 @@
 import { ApiDirType } from '../redux/APP_CONFIGS';
+import { ContractorsTypesEnum } from '../redux/contractors/contractors.types';
 
 export const langUa = {
   // DIRECTORIES
 
   [ApiDirType.CATEGORIES_TR]: 'Категорії',
   [ApiDirType.CATEGORIES_PROD]: 'Категорії',
+
+  [ContractorsTypesEnum.AUDITOR]: 'Уадитор',
+  [ContractorsTypesEnum.COUNTER]: '',
+  [ContractorsTypesEnum.CUSTOMER]: 'Клієнт',
+  [ContractorsTypesEnum.SUPPLIER]: 'Постачальник',
 
   counts: 'Рахунки',
   count: 'Рахунок',
@@ -50,6 +56,10 @@ export const langUa = {
   startBalance: 'Початковий баланс',
   insertStartBalance: 'Введіть початковий баланс',
   currency: 'Валюта',
+  phone: 'Телефон',
+  insertPhone: 'Телефон',
+  email: 'Емейл',
+  insertEmail: 'Емейл',
   selectCurrency: 'Оберіть валюту',
   selectTags: 'Оберть теги',
 
@@ -66,6 +76,16 @@ export const langUa = {
   deleteChildCount: 'Видалити суб-рахунок',
   deleteParentCategory: 'Видалити категорію',
   deleteChildCategory: 'Видалити під-категорію',
+
+  createContractor: 'Створити',
+  copyContractor: 'Клпіювати',
+  deleteContractor: 'Видалити',
+  editContractor: 'Редагувати',
+  archive: 'Архівувати',
+  unArchive: 'Відновити',
+
+  taxCode: 'ІПН/ЄДРПОУ',
+
   INCOME: 'Дохід',
   INCOMES: 'Доходи',
   EXPENSE: 'Витрата',

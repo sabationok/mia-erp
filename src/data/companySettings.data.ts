@@ -1,7 +1,7 @@
 import DirUsers, { DirUsersProps } from '../components/CompanySettings/DirUsers';
 import { usersDirColumns, usersMockData } from './usersDir.data';
 import { iconId } from '../img/sprite';
-import DirCustomRoles, { DirCustomRolesProps } from '../components/CompanySettings/DirCustomRoles/DirCustomRoles';
+import DirCustomRoles, { DirCustomRolesProps } from '../components/CompanySettings/DirCustomRoles';
 import { IDirectory } from './directories.data';
 
 const UsersProps: DirUsersProps = {
@@ -10,6 +10,9 @@ const UsersProps: DirUsersProps = {
     tableTitles: usersDirColumns,
     tableData: usersMockData,
   },
+  getTableSettings: () => ({
+    tableTitles: usersDirColumns,
+  }),
 };
 const CustomRolesProps: DirCustomRolesProps = {
   title: 'Ролі',

@@ -96,8 +96,8 @@ export const colors = {
 
 export interface StatusData {
   name: string;
-  color: string;
-  backgroundColor: string;
+  color?: string;
+  backgroundColor?: string;
   label: string;
   iconId?: string;
   description?: string;

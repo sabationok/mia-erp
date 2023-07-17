@@ -59,7 +59,7 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
           <InputText defaultValue={type ? t(`${type}S`).toUpperCase() : type} disabled />
         </InputLabel>
 
-        {parent && (
+        {parent?._id && (
           <InputLabel label={t('parentItem')} direction={'vertical'} error={errors.type} disabled>
             <InputText defaultValue={parent?.label} disabled />
           </InputLabel>

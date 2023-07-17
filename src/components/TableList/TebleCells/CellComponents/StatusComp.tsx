@@ -1,8 +1,9 @@
-import React, { CSSProperties, memo } from 'react';
+import React, { CSSProperties, memo, useMemo } from 'react';
 import { statusDataMap } from 'data';
 
 import styled, { css } from 'styled-components';
 import { StatusNames } from 'data/statuses.data';
+import SvgIcon from '../../../atoms/SvgIcon/SvgIcon';
 
 export type StatusCompVariants = 'outlined' | 'filled' | 'text';
 
@@ -21,19 +22,22 @@ const StatusComp: React.FC<StatusCompProps> = ({
   fontWeight,
   fillWidth = false,
 }) => {
+  const { label, color, iconId, backgroundColor, description } = useMemo(() => statusDataMap[status] || {}, [status]);
+
+  console.log(label);
   return (
     <StStatusComp
       variant={variant}
-      title={statusDataMap[status]?.description}
-      fontSize={fontSize}
-      fontWeight={fontWeight}
-      color={statusDataMap[status]?.color}
-      backgroundColor={statusDataMap[status]?.backgroundColor}
+      title={description}
+      color={color}
+      backgroundColor={backgroundColor}
       fillWidth={fillWidth}
     >
-      {/* {statusData?.iconId && <SvgIcon iconId={statusData?.iconId} size="20px" />} */}
+      {iconId && <SvgIcon iconId={iconId} size="20px" />}
 
-      <Label className="inner">{statusDataMap[status]?.label}</Label>
+      <Label className={'inner'} fontSize={fontSize} fontWeight={label || fontWeight ? fontWeight : 400}>
+        {label || status}
+      </Label>
     </StStatusComp>
   );
 };
@@ -77,7 +81,6 @@ const StStatusComp = styled.div<
   align-items: center;
 
   gap: 8px;
-  font-size: ${({ fontSize = '14px' }) => fontSize};
 
   width: ${({ fillWidth = false }) => (fillWidth ? '100%' : '')};
   max-width: 100%;
@@ -85,7 +88,6 @@ const StStatusComp = styled.div<
 
   overflow: hidden;
 
-  font-weight: ${({ fontWeight = 600 }) => fontWeight};
   cursor: default;
   color: ${({ color, theme }) => (color ? color : '')};
   fill: ${({ fill, theme }) => (fill ? fill : '')};
@@ -93,9 +95,12 @@ const StStatusComp = styled.div<
 
   ${({ variant }) => (variant ? variantsMap[variant] : variantsMap['text'])};
 `;
-const Label = styled.span`
+const Label = styled.span<StatusCompProps>`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  font-size: ${({ fontSize = '14px' }) => fontSize};
+  font-weight: ${({ fontWeight = 600 }) => fontWeight};
 `;
 export default memo(StatusComp);

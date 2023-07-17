@@ -19,15 +19,20 @@ export type DataPath =
   | 'contractor.name'
   | 'contractor.type'
   | 'meta.author.name'
+  | 'author.name'
+  | 'author.email'
   | 'meta.editor.name'
+  | 'editor.name'
+  | 'editor.email'
   | 'meta.auditor.name'
+  | 'auditor.name'
+  | 'auditor.email'
   | 'eventDate'
   | 'type'
   | 'status'
   | 'amount'
   | 'currency'
   | 'activity.label'
-  | 'meta.author.email'
   | 'comment'
   | 'createdAt'
   | 'updatedAt'
@@ -106,8 +111,8 @@ export const transactionsColumnsNew: CellTittleProps<DataPath>[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Автор', align: 'start', path: 'meta.author.name' },
-    bottom: { name: 'Емейл', align: 'start', path: 'meta.author.email' },
+    top: { name: 'Автор', align: 'start', path: 'author.name' },
+    bottom: { name: 'Емейл', align: 'start', path: 'author.email' },
     width: '150px',
     action: 'valueByPath',
   },
@@ -181,8 +186,8 @@ export const transactionsColumns: CellTittleProps[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Автор', align: 'start', path: 'meta.author.name' },
-    bottom: { name: 'Емейл', align: 'start', path: 'meta.author.email' },
+    top: { name: 'Автор', align: 'start', path: 'author.name' },
+    bottom: { name: 'Емейл', align: 'start', path: 'author.email' },
     width: '150px',
     action: 'valueByPath',
   },

@@ -2,13 +2,14 @@ import ModalForm from 'components/ModalForm';
 import React from 'react';
 import styled from 'styled-components';
 import { IActivity, IActivityFormData } from 'redux/companyActivities/activities.types';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import { DirectoriesFormProps } from '../Directories/dir.types';
+import { ICategoryFormData } from '../../redux/directories/categories.types';
 
 const validation = yup.object().shape({});
 
@@ -27,20 +28,21 @@ const FormCreateActivity: React.FC<FormCreateCompanyActivityProps> = ({ _id, edi
     reValidateMode: 'onSubmit',
   });
 
+  function formEventWrapper(evHandler?: SubmitHandler<ICategoryFormData>) {
+    if (evHandler) {
+      return handleSubmit(evHandler);
+    }
+  }
+
   return (
-    <ModalForm
-      onSubmit={handleSubmit(d => {
-        console.log(d);
-      })}
-      {...props}
-    >
+    <ModalForm onSubmit={formEventWrapper(onSubmit)} {...props}>
       <Inputs>
         <InputLabel label="Назва" error={errors.label}>
           <InputText placeholder="Введіть назву" {...register('label')} />
         </InputLabel>
 
-        <InputLabel label="Коментар" error={errors.descr}>
-          <TextareaPrimary placeholder="Введіть коментар" {...register('descr')} />
+        <InputLabel label="Коментар" error={errors.description}>
+          <TextareaPrimary placeholder="Введіть коментар" {...register('description')} />
         </InputLabel>
       </Inputs>
     </ModalForm>

@@ -3,10 +3,10 @@ import ModalForm, { ModalFormProps } from 'components/ModalForm';
 import { ICustomRole } from 'redux/customRoles/customRoles.types';
 import { useState } from 'react';
 import styled from 'styled-components';
-import InputLabel from '../../atoms/Inputs/InputLabel';
-import InputText from '../../atoms/Inputs/InputText';
-import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
-import FlexBox from '../../atoms/FlexBox';
+import InputLabel from '../atoms/Inputs/InputLabel';
+import InputText from '../atoms/Inputs/InputText';
+import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
+import FlexBox from '../atoms/FlexBox';
 
 export interface FormCreateCustomRoleProps extends Omit<ModalFormProps, 'onSubmit'> {
   _id?: string;

@@ -1,23 +1,29 @@
-import ModalForm, { ModalFormProps } from 'components/ModalForm';
+import ModalForm from 'components/ModalForm';
 import TableList, { ITableListProps } from 'components/TableList/TableList';
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
+import { DirBaseProps } from '../Directories/dir.types';
+import usePermissionsServiceHook, { usePermissionsSelector } from '../../redux/permissions/usePermissionsService.hook';
+import { IPermission } from '../../redux/permissions/permissions.types';
 
-export interface DirUsersProps extends ModalFormProps {
-  title: string;
+export interface DirUsersProps extends DirBaseProps {
   tableSettings?: ITableListProps;
+  getTableSettings?: () => ITableListProps<IPermission>;
 }
 
-const DirUsers: React.FC<DirUsersProps> = ({ tableSettings, ...props }) => {
+const DirUsers: React.FC<DirUsersProps> = ({ getTableSettings, ...props }) => {
+  const permissionService = usePermissionsServiceHook();
+  const { getAllByCompanyId } = permissionService;
+  const tableData = usePermissionsSelector().permissions;
+
+  const tableSettingsMemo = useMemo(() => (getTableSettings ? getTableSettings() : {}), [getTableSettings]);
   return (
-    <StModalForm fitContentH footer={false} {...props}>
-      <TableList {...tableSettings} />
+    <StModalForm fitContentH fillHeight footer={false} {...props}>
+      <TableList {...tableSettingsMemo} tableData={tableData} />
     </StModalForm>
   );
 };
 const StModalForm = styled(ModalForm)`
-  height: 98vh;
-
   & .modalFooter {
     padding: 8px;
   }

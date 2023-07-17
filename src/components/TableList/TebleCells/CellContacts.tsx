@@ -13,9 +13,11 @@ export interface CellContactsDblProps {
   idx?: number;
 }
 
-const CellContactsDbl: React.FC<
-  CellContactsDblProps & React.HTMLAttributes<HTMLDivElement>
-> = ({ titleInfo, idx, ...props }) => {
+const CellContactsDbl: React.FC<CellContactsDblProps & React.HTMLAttributes<HTMLDivElement>> = ({
+  titleInfo,
+  idx,
+  ...props
+}) => {
   const { rowData } = useRow();
   const { top, bottom, width = '100px' } = titleInfo;
 
@@ -34,20 +36,16 @@ const CellContactsDbl: React.FC<
         <StIcon iconId={iconId.mailOutlined} size="12px" />
 
         <div title={contentTop} className="inner">
-          {contentTop}
+          {contentTop ? <a href={`mailto:${contentTop}`}>{contentTop}</a> : '---'}
         </div>
       </Top>
 
       <Bottom align={bottom?.align} uppercase={bottom?.uppercase}>
-        {contentBottom ? (
-          <>
-            <StIcon iconId={iconId.phoneOutlined} size="12px" />
+        <StIcon iconId={iconId.phoneOutlined} size="12px" />
 
-            <div title={contentBottom} className="inner">
-              {contentBottom}
-            </div>
-          </>
-        ) : null}
+        <div title={contentBottom} className="inner">
+          {contentBottom ? <a href={`tel:${contentBottom}`}>{contentBottom}</a> : '---'}
+        </div>
       </Bottom>
     </CellBase>
   );
@@ -76,8 +74,7 @@ const Content = styled.div<Omit<CellTitleContent, 'name'>>`
 
   text-transform: ${({ uppercase = true }) => (uppercase ? 'uppercase' : '')};
 
-  justify-content: ${({ align }) =>
-    align === 'center' ? 'center' : `flex-${align}`};
+  justify-content: ${({ align }) => (align === 'center' ? 'center' : `flex-${align}`)};
 
   & .inner {
     width: fit-content;

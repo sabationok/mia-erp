@@ -10,6 +10,7 @@ import { GetAllByDirTypeOptions } from '../../api/directories.api';
 export interface DirThunkBaseSubmitData {
   dirType?: ApiDirType;
   params?: Partial<AppQueryParams>;
+  refresh?: boolean;
 }
 
 export interface CreateDirItemThunkSubmitData<DTO = any> extends GetAllByDirTypeOptions {

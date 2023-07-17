@@ -1,7 +1,6 @@
 import DirProjects, { DirProjectsProps } from 'components/Directories/DirProjects';
 import { iconId } from '../img/sprite';
-import DirContractors, { DirContractorsProps } from 'components/Directories/DirContractors';
-import { contractorsColumns, contractorsMockData } from './contractors.data';
+import { contractorsColumns, contractorsSearchParams } from './contractors.data';
 import {
   CategoryFilterOpt,
   CountFilterOpt,
@@ -17,6 +16,9 @@ import { ApiDirType } from '../redux/APP_CONFIGS';
 import FormCreateCount from '../components/Forms/FormCreateCount';
 import { toast } from 'react-toastify';
 import FormCreateCategory from '../components/Forms/FormCreateCategory';
+import DirTableComp, { DirTableCompProps } from '../components/Directories/DirTableComp';
+import FormCreateContractor from '../components/Forms/FormCreateContractor';
+import { createDataForReq } from '../utils/dataTransform';
 
 export const categoriesFilterOptions: CategoryFilterOpt[] = [
   { label: t('INCOMES'), value: 'INCOME' },
@@ -70,7 +72,7 @@ const CountsProps: DirCountsProps = {
           modalChildrenProps: {
             title: t('createParentCount'),
             type,
-            parent: findById(parentId),
+            parent: { _id: parentId },
             onSubmit: data => {
               dirService.create({
                 data: { dirType: ApiDirType.COUNTS, data },
@@ -86,6 +88,7 @@ const CountsProps: DirCountsProps = {
     };
   },
 };
+
 const countsDir: IDirectory<DirCountsProps> = {
   title: CountsProps.title,
   iconId: iconId.wallet,
@@ -128,7 +131,7 @@ const CategoriesProps: DirCategoriesProps = {
           modalChildrenProps: {
             title: t('createParentCount'),
             type,
-            parent: findById(parentId),
+            parent: { _id: parentId },
             onSubmit: data => {
               dirService.create({
                 data: { dirType: ApiDirType.CATEGORIES_TR, data },
@@ -151,29 +154,50 @@ const categoriesDir: IDirectory<DirCategoriesProps> = {
   modalChildrenProps: CategoriesProps,
   disabled: false,
 };
-const ContractorsProps: DirContractorsProps = {
+
+const ContractorsProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
   title: t('contractors'),
   fillHeight: true,
-  tableSettings: {
-    tableData: contractorsMockData,
+  dirType: ApiDirType.CONTRACTORS,
+  getTableSettings: ({ dirService, modalService, type }) => ({
     tableTitles: contractorsColumns,
-    actionsCreator: () => [
-      { icon: 'edit' },
+    tableSearchParams: contractorsSearchParams,
+    actionsCreator: p => [
+      {
+        icon: 'edit',
+      },
       { icon: 'copy' },
       { icon: 'archive', iconSize: '100%' },
       { separator: true },
       {
         type: 'onlyIconFilled',
         icon: 'plus',
+        onClick: () => {
+          modalService.handleOpenModal({
+            modalChildrenProps: {
+              title: t('createContractor'),
+              fillHeight: true,
+              onSubmit: data => {
+                dirService.create({
+                  data: { dirType: ApiDirType.CONTRACTORS, data: createDataForReq(data) },
+                  onSuccess: data => {
+                    console.log(t('createContractor'), data);
+                  },
+                  onError: e => {},
+                });
+              },
+            },
+            ModalChildren: FormCreateContractor,
+          });
+        },
       },
     ],
-    isFilter: true,
-  },
+  }),
 };
-const contractorsDir: IDirectory<DirContractorsProps> = {
+const contractorsDir: IDirectory<DirTableCompProps> = {
   title: ContractorsProps.title,
   iconId: iconId.partners,
-  ModalChildren: DirContractors,
+  ModalChildren: DirTableComp,
   modalChildrenProps: ContractorsProps,
   disabled: false,
 };

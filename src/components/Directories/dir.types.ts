@@ -42,7 +42,7 @@ export type ActionsCreatorOptions<
   modalService: IModalProviderContext;
   dirService: DirectoriesService<DirType, ItemType, CreateDTO, UpdateDTO, ItemDataType>;
   type?: ItemType;
-  findById: (id: string) => ItemDataType | undefined;
+  findById?: (id: string) => ItemDataType | undefined;
 };
 export type RegisterCreateChildReturn = (parentId: string) => void;
 export type RegisterUpdateItem<ItemDataType = any, ItemType = any> = {
@@ -64,6 +64,7 @@ export interface DirActivitiesProps
 export interface DirMarksProps extends IDirInTreeProps {}
 
 export type CategoryFilterOpt<D = any> = FilterOpt<CategoryTypes, D>;
+
 export type CountFilterOpt<D = any> = FilterOpt<CountType, D>;
 
 export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> extends IBase {
@@ -71,6 +72,8 @@ export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> exte
   label?: string;
   dirType?: DirType;
   type?: Type;
+  status?: 'ARCHIVED' | 'DELETED' | 'ACTIVE';
+  taxCode?: string | number;
   description?: string;
   def?: string;
   owner?: Pick<ICompany, '_id' | 'name' | 'email'>;

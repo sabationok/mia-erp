@@ -3,9 +3,7 @@ import { ApiDirType } from '../APP_CONFIGS';
 
 export interface ICategory extends IBaseDirItem<CategoryTypes, ApiDirType.CATEGORIES_TR> {}
 
-export interface ICategoryFormData extends Omit<ICategory, '_id' | 'createdAt' | 'updatedAt' | 'parent'> {
-  parent?: { _id: string };
-}
+export interface ICategoryFormData extends Omit<ICategory, '_id' | 'createdAt' | 'updatedAt'> {}
 
 export const CategoriesTypesMap = {
   INCOME: 'ДОХІД',

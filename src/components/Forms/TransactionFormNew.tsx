@@ -108,9 +108,16 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
     return formValues.type && ['INCOME', 'TRANSFER'].includes(formValues.type) ? (
       <>
         <CustomSelect
-          label={translate('countIn')}
-          placeholder={translate('countIn')}
-          {...registerSelect('countIn', { options: parentOptions }, { childName: 'subCountIn' })}
+          {...registerSelect(
+            'countIn',
+            {
+              label: translate('countIn'),
+              placeholder: translate('countIn'),
+              required: true,
+              options: parentOptions,
+            },
+            { childName: 'subCountIn' }
+          )}
         />
         {parent?.childrenList && parent?.childrenList?.length > 0 && (
           <CustomSelect
@@ -131,11 +138,12 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
     return formValues.type && ['EXPENSE', 'TRANSFER'].includes(formValues.type) ? (
       <>
         <CustomSelect
-          label={translate('countOut')}
-          placeholder={translate('countOut')}
           {...registerSelect(
             'countOut',
             {
+              label: translate('countOut'),
+              placeholder: translate('countOut'),
+              required: true,
               options: parentOptions,
               error: errors.countOut,
             },
@@ -161,9 +169,16 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
     return (
       <>
         <CustomSelect
-          label={translate('category')}
-          placeholder={translate('category')}
-          {...registerSelect('category', { options: parentOptions }, { childName: 'subCategory' })}
+          {...registerSelect(
+            'category',
+            {
+              label: translate('category'),
+              placeholder: translate('category'),
+              required: true,
+              options: parentOptions,
+            },
+            { childName: 'subCategory' }
+          )}
         />
         {childOptions && childOptions.length > 0 && (
           <CustomSelect
@@ -239,6 +254,14 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
         {renderInputsCountOut}
         {renderInputsCountIn}
         {renderInputsCategories}
+
+        <CustomSelect
+          label={translate('contractor')}
+          placeholder={translate('contractor')}
+          {...registerSelect('contractor', {
+            options: directories[ApiDirType.CONTRACTORS],
+          })}
+        />
 
         <InputLabel label={translate('comment')} direction={'vertical'}>
           <TextareaPrimary placeholder={translate('comment')} {...register('comment')} />

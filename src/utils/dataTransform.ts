@@ -70,4 +70,48 @@ function createTransactionForReq(
   return transformedData;
 }
 
-export { getValueByPath, formatPhoneNumber, createTransactionForReq };
+function createDataForReq<
+  IncomeDataType extends Record<string, any> = any,
+  OutDataType extends Record<keyof IncomeDataType, any> = any
+>(
+  incomeData: IncomeDataType,
+  omitPathArr: (keyof IncomeDataType)[] = [],
+  options?: {
+    dateToNumberPath?: keyof IncomeDataType | string;
+    amountToNumberPath?: keyof IncomeDataType | string;
+  }
+): Partial<Omit<OutDataType, keyof IncomeDataType>> {
+  let outData: Partial<OutDataType> = {};
+
+  const keys = Object.keys(incomeData) as (keyof IncomeDataType)[];
+  keys.map(key => {
+    if (['_id', 'createdAt', 'updatedAt', ...omitPathArr]?.includes(key)) return '';
+
+    const value = incomeData[key];
+    if (!value) return '';
+
+    if (options?.dateToNumberPath && key === options?.dateToNumberPath && typeof value === 'string') {
+      outData[key] = new Date(value).valueOf() as any;
+      return '';
+    }
+    if (options?.amountToNumberPath && key === options?.amountToNumberPath && typeof value === 'string') {
+      outData[key] = (Number(value) || 0) as any;
+      return '';
+    }
+    if (value && typeof value === 'object') {
+      if ('_id' in value) outData[key] = { _id: value?._id } as any;
+      if ('value' in value) outData[key] = value?.value;
+      return '';
+    }
+
+    outData[key] = value as any;
+    return '';
+  });
+
+  console.log('incomeData', incomeData);
+
+  console.log('outData', outData);
+  return outData;
+}
+
+export { getValueByPath, formatPhoneNumber, createTransactionForReq, createDataForReq };

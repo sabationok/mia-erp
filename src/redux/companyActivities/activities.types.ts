@@ -1,14 +1,5 @@
-import { IBase } from '../global.types';
+import { IBaseDirItem } from '../../components/Directories/dir.types';
 
+export interface IActivity extends IBaseDirItem {}
 
-export interface IActivity extends IBase {
-  name?: string;
-  label?: string;
-  type?: string;
-  def?: string;
-  descr?: string;
-}
-
-export interface IActivityFormData extends Omit<IActivity, '_id' | 'createdAt' | 'updatedAt'> {
-  label: string;
-}
+export interface IActivityFormData extends Omit<IActivity, '_id' | 'createdAt' | 'updatedAt'> {}

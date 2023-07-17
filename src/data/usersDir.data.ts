@@ -23,8 +23,14 @@ export const usersDirColumns: CellTittleProps[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Електронна пошта', dataKey: 'email', uppercase: false },
-    bottom: { name: 'Номер телефону', dataKey: 'phone' },
+    top: { name: 'Електронна пошта', path: 'email', uppercase: false },
+    bottom: { name: 'Номер телефону', path: 'phone' },
+    width: '210px',
+    action: 'contacts',
+  },
+  {
+    top: { name: 'Роль', path: 'role.label', uppercase: false },
+    bottom: { name: 'Коментар', path: 'role.description' },
     width: '210px',
     action: 'contacts',
   },
@@ -39,8 +45,8 @@ export const usersDirColumns: CellTittleProps[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Створено', align: 'center', dataKey: 'createdAt' },
-    bottom: { name: 'Оновлено', align: 'center', dataKey: 'updatedAt' },
+    top: { name: 'Створено', align: 'center', path: 'createdAt' },
+    bottom: { name: 'Оновлено', align: 'center', path: 'updatedAt' },
     width: '150px',
     action: 'dateSimple',
   },
