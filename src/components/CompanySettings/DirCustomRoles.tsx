@@ -1,5 +1,5 @@
 import React from 'react';
-import ModalForm, { ModalFormProps } from 'components/ModalForm';
+import ModalForm from 'components/ModalForm';
 import DirList from '../Directories/DirList/DirList';
 
 import styled from 'styled-components';
@@ -8,10 +8,10 @@ import useCustomRolesService from 'redux/customRoles/useCustomRolesServise.hook'
 import FormCreateCustomRole from '../Forms/FormCreateCustomRole';
 import FlexBox from '../atoms/FlexBox';
 import { useCustomRolesSelector } from '../../redux/selectors.store';
+import { IDirInTreeProps } from '../Directories/DirTreeComp';
+import { IPermission } from '../../redux/permissions/permissions.types';
 
-export interface DirCustomRolesProps extends ModalFormProps {
-  title: string;
-}
+export interface DirCustomRolesProps extends IDirInTreeProps<any, any, IPermission, IPermission, IPermission> {}
 
 const DirCustomRoles: React.FC<DirCustomRolesProps> = props => {
   const modal = useModalProvider();

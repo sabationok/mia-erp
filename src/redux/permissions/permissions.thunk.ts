@@ -24,6 +24,27 @@ export const getAllPermissionsByUserIdThunk = createAsyncThunk<
     return thunkAPI.rejectWithValue(axiosErrorCheck(error));
   }
 });
+
+export const getAllPermissionsByCompanyIdThunk = createAsyncThunk<
+  IPermission[],
+  ThunkPayload<{
+    companyId: string;
+  }>
+>('permissions/getAllPermissionsByCompanyIdThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
+  try {
+    const response = await PermissionsApi.getAllByCompanyId(data?.companyId as string);
+    if (response) {
+      onSuccess && onSuccess(response.data.data);
+    }
+
+    return response.data.data;
+  } catch (error) {
+    onError && onError(error);
+
+    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+  }
+});
+
 // export const getAllPermissionsByCompanyIdThunk = createAsyncThunk<
 //   Partial<IPermission>[],
 //   ThunkPayload<{

@@ -5,6 +5,7 @@ import {
   createPermissionThunk,
   deleteCompanyWithPermissionThunk,
   deletePermissionByIdThunk,
+  getAllPermissionsByCompanyIdThunk,
   getAllPermissionsByUserIdThunk,
   getCurrentPermissionThunk,
   logInPermissionThunk,
@@ -21,16 +22,24 @@ import { ICompanyForReq, ICompanyReqData } from '../companies/companies.types';
 
 export interface PermissionService {
   dispatch: AppDispatch;
-  getAllByCompanyId?: ServiceDispatcherAsync<{ companyId: string }>;
-  getAllByUserId: ServiceDispatcherAsync<{ userId: string }>;
+  getAllByCompanyId: ServiceDispatcherAsync<{ companyId: string }, IPermission[]>;
+  getAllByUserId: ServiceDispatcherAsync<{ userId: string }, IPermission[]>;
   deleteById: ServiceDispatcherAsync<{ id: string }>;
   edit: ServiceDispatcherAsync<IPermissionReqData>;
   create: ServiceDispatcherAsync<IPermissionForReq>;
   getCurrent: ServiceDispatcherAsync<{ id: string }>;
   permissionLogOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean }>;
+
+  createInvitation?: ServiceDispatcherAsync<IPermissionForReq>;
+  updateInvitation?: ServiceDispatcherAsync<IPermissionForReq>;
+  rejectInvitation?: ServiceDispatcherAsync<IPermissionForReq>;
+  acceptInvitation?: ServiceDispatcherAsync<IPermissionForReq>;
+  deleteInvitation?: ServiceDispatcherAsync<IPermissionForReq>;
+
   createCompany: ServiceDispatcherAsync<ICompanyForReq>;
   updateCompany: ServiceDispatcherAsync<Required<ICompanyReqData>>;
   deleteCompany: ServiceDispatcherAsync<{ _id: string }>;
+
   logOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean }>;
   logIn: ServiceDispatcherAsync<{ _id: string }, IPermission>;
   isCurrentValid: boolean;
@@ -64,6 +73,8 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
     return {
       // getAllByCompanyId: async payload => dispatch(getAllPermissionsByCompanyIdThunk(defaultThunkPayload(payload))),
       getAllByUserId: async payload => dispatch(getAllPermissionsByUserIdThunk(defaultThunkPayload(payload))),
+      getAllByCompanyId: async payload => dispatch(getAllPermissionsByCompanyIdThunk(defaultThunkPayload(payload))),
+
       deleteById: async payload => dispatch(deletePermissionByIdThunk(defaultThunkPayload(payload))),
       edit: async payload => dispatch(updatePermissionThunk(defaultThunkPayload(payload))),
       create: async payload => dispatch(createPermissionThunk(defaultThunkPayload(payload))),
@@ -72,6 +83,7 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
       logOut: async payload => dispatch(logOutPermissionThunk(defaultThunkPayload(payload))),
       logIn: async payload => dispatch(logInPermissionThunk(defaultThunkPayload(payload))),
       clearCurrent: () => dispatch(clearCurrentPermission()),
+
       createCompany: async payload => dispatch(createCompanyWithPermissionThunk(defaultThunkPayload(payload))),
       deleteCompany: async payload => dispatch(deleteCompanyWithPermissionThunk(defaultThunkPayload(payload))),
       updateCompany: async payload => dispatch(updateCompanyWithPermissionThunk(defaultThunkPayload(payload))),

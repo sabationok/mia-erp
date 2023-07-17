@@ -1,9 +1,10 @@
 import { useAppDispatch } from 'redux/store.store';
 import { ServiceDispatcherAsync } from '../global.types';
 import { useMemo } from 'react';
+import { ICustomRole } from './customRoles.types';
 
 export interface CustomRolesService {
-  create?: ServiceDispatcherAsync;
+  create?: ServiceDispatcherAsync<ICustomRole>;
   edit?: ServiceDispatcherAsync;
   delete?: ServiceDispatcherAsync;
   getAll?: ServiceDispatcherAsync;
