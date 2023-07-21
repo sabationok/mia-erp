@@ -37,7 +37,7 @@ export type DataPath =
   | 'createdAt'
   | 'updatedAt'
   | 'mark.label';
-export const transactionsColumnsNew: CellTittleProps<DataPath>[] = [
+export const transactionsColumnsNew: CellTittleProps<ITransaction, DataPath>[] = [
   {
     top: { name: t('date'), align: 'center', path: 'eventDate' },
     bottom: { name: t('time'), align: 'center' },
@@ -128,7 +128,7 @@ export const transactionsColumnsNew: CellTittleProps<DataPath>[] = [
     action: 'dateDbl',
   },
 ];
-export const transactionsColumns: CellTittleProps[] = [
+export const transactionsColumns: CellTittleProps<ITransaction, DataPath>[] = [
   {
     top: { name: 'Дата', align: 'center', path: 'eventDate' },
     bottom: { name: 'Час', align: 'center' },
@@ -188,6 +188,22 @@ export const transactionsColumns: CellTittleProps[] = [
   {
     top: { name: 'Автор', align: 'start', path: 'author.name' },
     bottom: { name: 'Емейл', align: 'start', path: 'author.email' },
+    width: '150px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Контрагент', align: 'start', path: 'contractor.name' },
+    bottom: { name: 'Тип', align: 'start', path: 'contractor.type' },
+    width: '150px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Діяльність', align: 'start', path: 'activity.label' },
+    width: '150px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Проект', align: 'start', path: 'project.label' },
     width: '150px',
     action: 'valueByPath',
   },

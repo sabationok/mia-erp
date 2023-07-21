@@ -24,10 +24,10 @@ export interface IPermission extends IBase {
 }
 
 export interface IPermissionForReq {
-  company: string;
-  user: string;
-  role: string;
-  actions: string[];
+  company?: { _id: string };
+  user: { _id: string };
+  role?: { _id: string };
+  actions: any[];
 }
 
 export interface IPermissionResData extends AppResponse<IPermission> {}

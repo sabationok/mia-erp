@@ -24,7 +24,6 @@ const StatusComp: React.FC<StatusCompProps> = ({
 }) => {
   const { label, color, iconId, backgroundColor, description } = useMemo(() => statusDataMap[status] || {}, [status]);
 
-  console.log(label);
   return (
     <StStatusComp
       variant={variant}

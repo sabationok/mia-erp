@@ -14,17 +14,17 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
   const state = usePermissionsSelector();
   const { isCurrentValid, clearCurrent } = usePermissionsServiceHook({ permissionId });
 
-  const havePermission = useMemo(
+  const hasPermission = useMemo(
     () => !!state.permission._id || (!!state.permission_token && isCurrentValid),
     [isCurrentValid, state.permission._id, state.permission_token]
   );
 
   useEffect(() => {
-    if (!havePermission) {
+    if (!hasPermission) {
       baseApi.interceptors.response.clear();
       return;
     }
-    if (havePermission) {
+    if (hasPermission) {
       return;
     }
     baseApi.interceptors.response.use(
@@ -44,8 +44,14 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
       baseApi.interceptors.response.clear();
       !isCurrentValid && clearCurrent();
     };
-  }, [clearCurrent, havePermission, isCurrentValid, state.permission?._id]);
+  }, [clearCurrent, hasPermission, isCurrentValid, state.permission?._id]);
 
-  return havePermission ? <Outlet /> : <Navigate to={redirectTo || '/app'} />;
+  useEffect(() => {
+    if (hasPermission) {
+      console.log('hasPermission useEffect', hasPermission);
+    }
+  }, [hasPermission]);
+
+  return hasPermission ? <Outlet /> : <Navigate to={redirectTo || '/app'} />;
 };
 export default memo(PermissionCheck);

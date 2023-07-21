@@ -17,14 +17,14 @@ export const testUserKarina: IUser = {
 };
 export const usersDirColumns: CellTittleProps[] = [
   {
-    top: { name: 'ПІП', path: 'fullName' },
-    bottom: { name: 'Роль', path: 'permission.label' },
+    top: { name: 'ПІП', path: 'user.name' },
+    bottom: { name: 'Роль', path: 'role.label' },
     width: '250px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Електронна пошта', path: 'email', uppercase: false },
-    bottom: { name: 'Номер телефону', path: 'phone' },
+    top: { name: 'Електронна пошта', path: 'user.email', uppercase: false },
+    bottom: { name: 'Номер телефону', path: 'user.phone' },
     width: '210px',
     action: 'contacts',
   },
@@ -32,10 +32,10 @@ export const usersDirColumns: CellTittleProps[] = [
     top: { name: 'Роль', path: 'role.label', uppercase: false },
     bottom: { name: 'Коментар', path: 'role.description' },
     width: '210px',
-    action: 'contacts',
+    action: 'valueByPath',
   },
   {
-    top: { name: 'Локація', path: 'fullLocation' },
+    top: { name: 'Локація', path: 'user.fullLocation' },
     width: '170px',
     action: 'valueByPath',
   },

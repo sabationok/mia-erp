@@ -1,17 +1,47 @@
 import AppLoader from 'components/atoms/AppLoader';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import AppRoutes from 'components/AppRoutes/AppRoutes';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
-import useAppSettings from 'redux/appSettings/useAppSettings.hook';
 import GlobalStyles from './theme/globalStyles';
 import { useBaseApiWithAccessToken, useBaseApiWithPermissionToken } from './api/baseApi';
+import useDirServiceHook from './hooks/useDirService.hook';
+import { ApiDirType } from './redux/APP_CONFIGS';
+import { useAppSettingsSelector } from './redux/selectors.store';
+import { usePermissionsSelector } from './redux/permissions/usePermissionsService.hook';
+import useAppSettings from './redux/appSettings/useAppSettings.hook';
 
+const useLoadInitialAppData = () => {
+  const { _id, permission_token } = usePermissionsSelector().permission;
+  const { getAllByDirType } = useDirServiceHook();
+  const { getAppActions } = useAppSettings();
+  const onSuccessToast = (dirType: ApiDirType) => () => toast.success(`Updated data for directory: ${dirType}`);
+
+  return useEffect(() => {
+    (async () => {
+      if (permission_token || _id) {
+        console.log('useLoadInitialAppData', permission_token, _id);
+        await getAppActions();
+        await getAllByDirType({
+          data: { dirType: ApiDirType.CATEGORIES_TR },
+          onSuccess: onSuccessToast(ApiDirType.CATEGORIES_TR),
+        });
+        await getAllByDirType({ data: { dirType: ApiDirType.COUNTS }, onSuccess: onSuccessToast(ApiDirType.COUNTS) });
+        await getAllByDirType({
+          data: { dirType: ApiDirType.CONTRACTORS },
+          onSuccess: onSuccessToast(ApiDirType.CONTRACTORS),
+        });
+      }
+    })();
+  }, [permission_token]);
+};
 const App: React.FC = () => {
-  const { isDarkMode } = useAppSettings();
+  const { isDarkMode } = useAppSettingsSelector();
 
   useBaseApiWithAccessToken();
   useBaseApiWithPermissionToken();
+
+  useLoadInitialAppData();
 
   return (
     <>
@@ -24,16 +54,16 @@ const App: React.FC = () => {
 
       <ToastContainer
         position="bottom-left"
-        autoClose={5000}
+        autoClose={3000}
         limit={4}
         hideProgressBar={false}
-        newestOnTop={false}
+        newestOnTop={true}
         closeOnClick
         rtl={false}
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme={!isDarkMode ? 'dark' : 'light'}
+        theme={isDarkMode ? 'dark' : 'light'}
       />
     </>
   );

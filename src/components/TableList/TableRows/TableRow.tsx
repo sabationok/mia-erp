@@ -51,7 +51,6 @@ const TableRow: React.FC<TableRowProps> = ({ checked, ...props }) => {
   }, []);
 
   const renderRow = useMemo(() => {
-    console.log('renderRow rerender');
     return (
       tableTitles &&
       tableTitles?.map((item, idx) => {

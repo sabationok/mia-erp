@@ -6,9 +6,9 @@ import { IBase } from '../../redux/global.types';
 import { ICompany } from '../../redux/companies/companies.types';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { IActivity, IActivityFormData } from '../../redux/companyActivities/activities.types';
-import { IDirInTreeProps } from './DirTreeComp';
 import { IModalProviderContext } from '../ModalProvider/ModalProvider';
 import { DirectoriesService } from '../../hooks/useDirService.hook';
+import { DirTableCompProps } from './DirTableComp';
 
 export interface DirBaseProps extends ModalFormProps {
   title: string;
@@ -32,6 +32,29 @@ export type RegisterChangeArchiveStatus<ItemDataType = any, ItemType = any> = {
   findById: (id: string) => ItemDataType | undefined;
 };
 
+export interface IDirInTreeProps<
+  DirType extends ApiDirType = any,
+  ItemType = any,
+  CreateDTO = any,
+  UpdateDTO = any,
+  ItemDataType = any
+> extends DirBaseProps {
+  filterOptions?: FilterOpt<ItemType>[];
+  type?: ItemType;
+  createParentTitle?: string;
+  dirType: ApiDirType;
+  filterSearchPath?: keyof IBaseDirItem<ItemType>;
+  filterDefaultValue?: ItemType;
+
+  actionsCreator: (options: ActionsCreatorOptions<DirType, ItemType, CreateDTO, UpdateDTO, ItemDataType>) => {
+    onCreateChild?: (parentId: string) => void;
+    onCreateParent?: () => void;
+    onUpdateItem?: (id: string) => void;
+    onDeleteItem?: (id: string) => void;
+    onChangeArchiveStatus?: (id: string, status?: boolean) => void;
+  };
+}
+
 export type ActionsCreatorOptions<
   DirType extends ApiDirType = any,
   ItemType = any,
@@ -41,6 +64,20 @@ export type ActionsCreatorOptions<
 > = {
   modalService: IModalProviderContext;
   dirService: DirectoriesService<DirType, ItemType, CreateDTO, UpdateDTO, ItemDataType>;
+  type?: ItemType;
+  findById?: (id: string) => ItemDataType | undefined;
+};
+export type DirInTreeActionsCreatorOptions<
+  DirType extends ApiDirType = any,
+  ItemType = any,
+  CreateDTO = any,
+  UpdateDTO = any,
+  ItemDataType = any,
+  Service = any
+> = {
+  modalService: IModalProviderContext;
+  dirType?: DirType;
+  service: Service;
   type?: ItemType;
   findById?: (id: string) => ItemDataType | undefined;
 };
@@ -60,6 +97,8 @@ export interface DirCountsProps
 
 export interface DirActivitiesProps
   extends IDirInTreeProps<ApiDirType.ACTIVITIES, any, IActivityFormData, IActivityFormData, IActivity> {}
+
+export interface DirProjectsProps extends DirTableCompProps {}
 
 export interface DirMarksProps extends IDirInTreeProps {}
 

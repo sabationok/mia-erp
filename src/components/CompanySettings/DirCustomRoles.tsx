@@ -1,69 +1,58 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import ModalForm from 'components/ModalForm';
 import DirList from '../Directories/DirList/DirList';
-
 import styled from 'styled-components';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
-import useCustomRolesService from 'redux/customRoles/useCustomRolesServise.hook';
-import FormCreateCustomRole from '../Forms/FormCreateCustomRole';
+import useCustomRolesService, { CustomRolesService } from 'redux/customRoles/useCustomRolesServise.hook';
 import FlexBox from '../atoms/FlexBox';
 import { useCustomRolesSelector } from '../../redux/selectors.store';
-import { IDirInTreeProps } from '../Directories/DirTreeComp';
-import { IPermission } from '../../redux/permissions/permissions.types';
 
-export interface DirCustomRolesProps extends IDirInTreeProps<any, any, IPermission, IPermission, IPermission> {}
+import { DirInTreeActionsCreatorOptions, IDirInTreeProps } from '../Directories/dir.types';
+import { ICustomRole } from '../../redux/customRoles/customRoles.types';
 
-const DirCustomRoles: React.FC<DirCustomRolesProps> = props => {
-  const modal = useModalProvider();
+export interface DirCustomRolesProps
+  extends Omit<IDirInTreeProps<any, any, ICustomRole, ICustomRole, ICustomRole>, 'actionsCreator'> {
+  actionsCreator: (
+    options: DirInTreeActionsCreatorOptions<any, any, ICustomRole, ICustomRole, ICustomRole, CustomRolesService>
+  ) => {
+    onCreateChild?: (parentId: string) => void;
+    onCreateParent?: () => void;
+    onUpdateItem?: (id: string) => void;
+    onDeleteItem?: (id: string) => void;
+    onChangeArchiveStatus?: (id: string, status?: boolean) => void;
+  };
+}
+
+const DirCustomRoles: React.FC<DirCustomRolesProps> = ({ createParentTitle, actionsCreator, ...props }) => {
   const { customRoles } = useCustomRolesSelector();
-  const { create, edit } = useCustomRolesService();
+  const service = useCustomRolesService();
+  const modalService = useModalProvider();
 
-  function onEdit(_id: string) {
-    modal.handleOpenModal({
-      ModalChildren: FormCreateCustomRole,
-      modalChildrenProps: {
-        title: 'Редагувати роль',
-        _id,
-        customRole: customRoles.find(el => el._id === _id),
-        onSubmit: d => {
-          edit && edit();
-        },
-      },
+  const actions = useMemo(() => {
+    const findById = (id: string) => customRoles.find(el => el._id === id);
+    return actionsCreator({
+      findById,
+      modalService,
+      service,
     });
-  }
-
-  function onCreateParent() {
-    modal.handleOpenModal({
-      ModalChildren: FormCreateCustomRole,
-      modalChildrenProps: {
-        title: 'Створити роль',
-        onSubmit: (data: any) => {
-          create && create();
-        },
-      },
-    });
-  }
+  }, [actionsCreator, modalService, service, customRoles]);
 
   return (
     <StModalForm {...props}>
       <FlexBox fillWidth flex={'1'} padding={'0 12px'} maxHeight={'100%'}>
         <DirList
-          onEdit={onEdit}
-          createParentTitle="Свторити роль"
-          onCreateParent={onCreateParent}
-          // list={[...customRoles, ...customRoles, ...customRoles, ...customRoles]}
           list={customRoles}
+          createParentTitle={createParentTitle}
+          onEdit={actions?.onUpdateItem}
+          onDelete={actions?.onDeleteItem}
+          onChangeArchiveStatus={actions?.onChangeArchiveStatus}
+          onCreateParent={actions?.onCreateParent}
         />
       </FlexBox>
     </StModalForm>
   );
 };
 
-const StModalForm = styled(ModalForm)`
-  height: 70vh;
-  @media screen and (max-height: 480px) {
-    height: 95vh;
-  }
-`;
+const StModalForm = styled(ModalForm)``;
 
 export default DirCustomRoles;

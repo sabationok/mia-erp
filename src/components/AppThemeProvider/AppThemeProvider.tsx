@@ -1,13 +1,13 @@
 import { ThemeProvider } from 'styled-components';
-import useAppSettings from 'redux/appSettings/useAppSettings.hook';
 import { ConfigProvider } from 'antd';
+import { useAppSettingsSelector } from '../../redux/selectors.store';
 
 interface ThemeProviderProps {
   children?: React.ReactNode;
 }
 
 const AppThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const { appTheme } = useAppSettings();
+  const { appTheme } = useAppSettingsSelector();
 
   return (
     <ThemeProvider theme={appTheme}>

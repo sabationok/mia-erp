@@ -8,6 +8,32 @@ export interface IBase {
   updatedAt?: Date | string;
 }
 
+export interface RoleActionType {
+  _id?: string;
+
+  label?: string;
+
+  value?: string;
+
+  type?: string;
+}
+
+export enum ModuleNames {
+  COMPANIES = 'COMPANIES',
+  TRANSACTIONS = 'TRANSACTIONS',
+  ORDERS = 'ORDERS',
+  REFUNDS = 'REFUNDS',
+  SUPPLEMENT = 'SUPPLEMENT',
+  STORAGE = 'STORAGE',
+  MANAGER = 'MANAGER',
+  ADMIN = 'ADMIN',
+  DIR_CATEGORIES_TR = 'DIR_CATEGORIES_TR',
+  DIR_CATEGORIES_PROD = 'DIR_CATEGORIES_PROD',
+  DIR_COUNTS = 'DIR_COUNTS',
+  DIR_CONTRACTORS = 'DIR_CONTRACTORS',
+  DIR_ACTIVITIES = 'DIR_ACTIVITIES',
+}
+
 export enum CompanyQueryTypeEnum {
   own = 'own',
   all = 'all',

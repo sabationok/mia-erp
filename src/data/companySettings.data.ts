@@ -1,9 +1,11 @@
 import DirUsers, { DirUsersProps } from '../components/CompanySettings/DirUsers';
 import { usersDirColumns } from './usersDir.data';
-import { iconId } from '../img/sprite';
+
 import DirCustomRoles, { DirCustomRolesProps } from '../components/CompanySettings/DirCustomRoles';
 import { IDirectory } from './directories.data';
 import { ApiDirType } from '../redux/APP_CONFIGS';
+import { iconId } from '../img/sprite';
+import FormCreateCustomRole from '../components/Forms/FormCreateCustomRole';
 
 const UsersProps: DirUsersProps = {
   title: 'Користувачі',
@@ -14,10 +16,44 @@ const UsersProps: DirUsersProps = {
 const CustomRolesProps: DirCustomRolesProps = {
   title: 'Ролі',
   dirType: ApiDirType.TYPE,
-  createParentTitle: 'createRole',
-  actionsCreator: () => ({
-    onCreateParent: () => {},
-    onUpdateItem: () => {},
+  createParentTitle: 'Створити роль',
+  fillHeight: true,
+  actionsCreator: ({ service, modalService, findById }) => ({
+    onUpdateItem: id => {
+      console.log(findById ? findById(id) : undefined);
+      const modal = modalService.handleOpenModal({
+        ModalChildren: FormCreateCustomRole,
+        modalChildrenProps: {
+          title: 'Редагувати роль',
+          customRole: findById ? findById(id) : undefined,
+          onSubmit: data => {
+            service.edit &&
+              service.edit({
+                data,
+                onSuccess: () => {
+                  modal?.onClose();
+                },
+              });
+          },
+        },
+      });
+    },
+    onCreateParent: () => {
+      const modal = modalService.handleOpenModal({
+        ModalChildren: FormCreateCustomRole,
+        modalChildrenProps: {
+          title: 'Створити роль',
+          onSubmit: data => {
+            service.create({
+              data,
+              onSuccess: () => {
+                modal?.onClose();
+              },
+            });
+          },
+        },
+      });
+    },
     onChangeArchiveStatus: () => {},
   }),
 };

@@ -1,4 +1,4 @@
-import DirProjects, { DirProjectsProps } from 'components/Directories/DirProjects';
+import { DirProjectsProps } from 'components/Directories/DirProjects';
 import { iconId } from '../img/sprite';
 import { contractorsColumns, contractorsSearchParams } from './contractors.data';
 import {
@@ -203,11 +203,15 @@ const contractorsDir: IDirectory<DirTableCompProps> = {
 };
 const ProjectsProps: DirProjectsProps = {
   title: t('projects'),
+  dirType: ApiDirType.PROJECTS,
+  getTableSettings: options => {
+    return {};
+  },
 };
 const projectsDir: IDirectory<DirProjectsProps> = {
   title: ProjectsProps.title,
   iconId: iconId.assignment,
-  ModalChildren: DirProjects,
+  ModalChildren: DirTableComp,
   modalChildrenProps: ProjectsProps,
   disabled: false,
 };

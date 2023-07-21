@@ -10,7 +10,7 @@ const ActionAppExit: React.FC = () => {
     const result = window.confirm('Бажаєте вийти?');
 
     if (result) {
-      appSettings.reset();
+      appSettings.resetApp();
     }
   }
 

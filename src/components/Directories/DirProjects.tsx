@@ -3,9 +3,9 @@ import ModalForm from 'components/ModalForm';
 
 import styled from 'styled-components';
 import TableList from 'components/TableList/TableList';
-import { DirBaseProps } from './dir.types';
+import { DirTableCompProps } from './DirTableComp';
 
-export interface DirProjectsProps extends DirBaseProps {}
+export interface DirProjectsProps extends DirTableCompProps {}
 
 const DirProjects: React.FC<DirProjectsProps> = props => {
   return (

@@ -24,6 +24,7 @@ const CellDateSimple: React.FC<CellDateSimpleProps & React.HTMLAttributes<HTMLDi
     data: rowData,
     ...top,
   });
+
   const contentBottom = getValueByPath({
     data: rowData,
     ...bottom,

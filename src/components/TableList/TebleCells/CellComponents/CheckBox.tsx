@@ -42,7 +42,7 @@ const CheckBox: React.FC<CustomCheckBoxProps & Omit<React.InputHTMLAttributes<HT
   }, [checked]);
 
   return (
-    <Box id={id} checked={isChecked} disabled={disabled} onClick={onChangeHandler}>
+    <Box id={id} checked={isChecked} type={'button'} disabled={disabled} onClick={onChangeHandler}>
       <SvgIcon size={size} icon={icon || (isChecked ? 'checkBoxOn' : 'checkBoxOff')} style={{ fill: 'inherit' }} />
     </Box>
   );

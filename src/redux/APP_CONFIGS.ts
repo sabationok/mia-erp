@@ -6,6 +6,8 @@ export enum API_BASE_ROUTES {
   AUTH = '/auth',
   DIRECTORIES = '/directories',
   TRANSACTIONS = '/transactions',
+  CUSTOM_ROLES = '/roles',
+  APP = 'APP',
 }
 
 export enum Endpoints {
@@ -62,7 +64,7 @@ const permissionsApiEndpoints = {
   [Endpoints.getAllByUserId]: (userId?: string) =>
     `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.getAllByUserId}/${userId}`,
   [Endpoints.getAllByCompanyId]: (companyId?: string) =>
-    `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.getAllByCompanyId}/${companyId}`,
+    `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.getAllByCompanyId}/${companyId || ''}`,
   [Endpoints.getCurrent]: () => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.getCurrent}`,
   [Endpoints.logIn]: (id?: string) => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.logIn}/${id || ''}`,
   [Endpoints.logOut]: () => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.logOut}`,
@@ -100,6 +102,12 @@ const directoriesApiEndpoints = {
     `${API_BASE_ROUTES.DIRECTORIES}/${dirType || '_'}/${Endpoints.changeArchiveStatus}/${id || ''}`,
 };
 
+const customRoles = {};
+
+const appSettings = {
+  getAllActions: () => `${API_BASE_ROUTES.APP}/getAllActions`,
+};
+
 const APP_CONFIGS = {
   endpoints: {
     transactions: transactionsApiEndpoints,
@@ -107,6 +115,8 @@ const APP_CONFIGS = {
     companies: companiesApiEndpoints,
     auth: authApiEndpoints,
     directories: directoriesApiEndpoints,
+    customRoles: customRoles,
+    appSettings,
   },
 };
 

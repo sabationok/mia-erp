@@ -1,4 +1,3 @@
-import { useTransactionsSelector } from 'redux/selectors.store';
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { ITransaction, ITransactionReqData } from './transactions.types';
 import { ServiceApiCaller, ServiceDispatcherAsync } from 'redux/global.types';
@@ -8,7 +7,6 @@ import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
 import { AppQueryParams, createApiCall, TransactionsApi } from 'api';
 
 export interface TransactionsService {
-  dispatch: AppDispatch;
   create: ServiceDispatcherAsync<ITransactionReqData, ITransaction>;
   deleteById: ServiceApiCaller<string, ITransaction>; // !!!!! ===>>> ServiceDispatcher
   updateById: ServiceApiCaller<ITransactionReqData, ITransaction>; // !!!!! ===>>> ServiceDispatcher
@@ -18,9 +16,8 @@ export interface TransactionsService {
 
 const useTransactionsService = (): TransactionsService => {
   const dispatch: AppDispatch = useAppDispatch();
-  const state = useTransactionsSelector();
 
-  const dispatchers = useMemo((): Omit<TransactionsService, 'state' | 'dispatch'> => {
+  return useMemo((): Omit<TransactionsService, 'state' | 'dispatch'> => {
     const { deleteById, updateById, getById } = TransactionsApi;
     return {
       create: async payload => dispatch(createTransactionThunk(defaultThunkPayload(payload))),
@@ -30,11 +27,6 @@ const useTransactionsService = (): TransactionsService => {
       getAll: async payload => dispatch(getAllTransactionsThunk(defaultThunkPayload(payload))),
     };
   }, [dispatch]);
-
-  return {
-    dispatch,
-    ...dispatchers,
-  };
 };
 
 export type useTrServiceHookType = typeof useTransactionsService;

@@ -2,8 +2,9 @@ import React, { memo } from 'react';
 import styled from 'styled-components';
 import { CellActionsName } from '../TebleCells';
 import { IconIdType } from '../../../img/sprite/iconId.data';
+import { IBase } from '../../../redux/global.types';
 
-export type CellTitleContent<DataPath extends string = any> = {
+export type CellTitleContent<DataType extends IBase = any, DataPath extends string = any> = {
   name: string;
   action?: string;
   dataKey?: string;
@@ -15,10 +16,15 @@ export type CellTitleContent<DataPath extends string = any> = {
   icon?: IconIdType;
   path?: DataPath;
   description?: string;
+  getData?: (
+    rowData: DataType,
+    titleProps: CellTittleProps<DataType, DataPath>
+  ) => string | string[] | number | number[] | Date | undefined;
 };
-export type CellTittleProps<DPath extends string = any> = {
-  top: CellTitleContent<DPath>;
-  bottom?: CellTitleContent<DPath>;
+
+export type CellTittleProps<DataType extends IBase = any, DataPath extends string = any> = {
+  top: CellTitleContent<DataType, DataPath>;
+  bottom?: CellTitleContent<DataType, DataPath>;
   width: string;
   idx?: number;
   titleInfo?: CellTittleProps;
@@ -26,6 +32,9 @@ export type CellTittleProps<DPath extends string = any> = {
   onClick?: (ev: React.MouseEvent<HTMLDivElement>) => void;
   visibility?: boolean;
 };
+
+export interface CellDataType<DataType extends IBase = any, DataPath extends string = any>
+  extends CellTittleProps<DataType, DataPath> {}
 
 const CellTitle: React.FC<CellTittleProps & React.HTMLAttributes<HTMLDivElement>> = ({
   width,
