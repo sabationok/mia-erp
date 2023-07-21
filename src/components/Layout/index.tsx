@@ -2,7 +2,7 @@ import React, { createContext, useContext, useMemo } from 'react';
 import Header from './Header';
 import styled from 'styled-components';
 import SideBar from 'components/SideBarLeft/SideBar';
-import useAppParams from '../../hooks/useAppParams';
+import useAppParams from '../../hooks/useAppParams.hook';
 import usePermissionsServiceHook, { usePermissionsSelector } from '../../redux/permissions/usePermissionsService.hook';
 
 interface ILayoutCTX {}

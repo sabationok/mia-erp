@@ -2,19 +2,19 @@ import { ThunkPayload } from './store.store';
 import { AxiosResponse } from 'axios';
 import { ApiCallerPayload } from '../api/createApiCall.api';
 
-export interface IBase {
+export interface OnlyUUID {
   _id: string;
-  createdAt?: Date | string;
-  updatedAt?: Date | string;
 }
 
-export interface RoleActionType {
-  _id?: string;
+export interface IBase extends OnlyUUID {
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  deletedAt?: Date | string;
+}
 
+export interface RoleActionType extends OnlyUUID {
   label?: string;
-
   value?: string;
-
   type?: string;
 }
 
@@ -27,6 +27,7 @@ export enum ModuleNames {
   STORAGE = 'STORAGE',
   MANAGER = 'MANAGER',
   ADMIN = 'ADMIN',
+  PRODUCTS = 'PRODUCTS',
   DIR_CATEGORIES_TR = 'DIR_CATEGORIES_TR',
   DIR_CATEGORIES_PROD = 'DIR_CATEGORIES_PROD',
   DIR_COUNTS = 'DIR_COUNTS',

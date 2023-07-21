@@ -16,7 +16,7 @@ import FlexBox from '../atoms/FlexBox';
 import translate from '../../lang';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import useAppForm from '../../hooks/useAppForm.hook';
+import { useAppForm } from '../../hooks';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;

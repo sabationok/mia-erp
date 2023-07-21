@@ -5,7 +5,7 @@ import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import FlexBox from '../atoms/FlexBox';
-import useAppForm from '../../hooks/useAppForm.hook';
+import { useAppForm } from '../../hooks';
 import { SubmitHandler } from 'react-hook-form';
 import { useAppSettingsSelector } from '../../redux/selectors.store';
 import { useMemo } from 'react';
@@ -78,7 +78,7 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({ onSubmit, c
         </List>
       );
     });
-  }, [appActions]);
+  }, [appActions, formValues.actions, setValue]);
 
   return (
     <StModalForm fillHeight {...props} onSubmit={onSubmitWrapper(onSubmit)} isValid={isValid}>

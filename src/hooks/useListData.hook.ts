@@ -8,4 +8,9 @@ const useFilteredLisData = <T = any>({ searchParam, searchQuery, data }: IFounde
 const useEntryListData = <T = any>(list: T[], path: keyof T) =>
   useMemo((): T[] => list.filter(el => !el[path]), [list, path]);
 
+const useListDataHooks = () => ({
+  useFilteredLisData,
+  useEntryListData,
+});
 export { useFilteredLisData, useEntryListData };
+export default useListDataHooks;

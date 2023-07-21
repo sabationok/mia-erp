@@ -78,6 +78,7 @@ const contractorsReport: IReportConfigs<IReportContractorsProps> = {
       tableData: [],
       tableTitles: reportByContractorsColumns,
     },
+    
     fitContentH: true,
     fillHeight: true,
   },

@@ -15,7 +15,7 @@ export interface TreeDataCreatorOptions<T = ICategory | ICount> {
   rootDataValidator?: (item: T) => boolean;
 }
 
-const useTreeDataCreatorHook = <T = ICategory | ICount>({
+const useTreeDataCreator = <T = ICategory | ICount>({
   dataList,
   rootDataValidator,
 }: TreeDataCreatorOptions<T>): TreeDataCreatorState<T> => {
@@ -53,4 +53,4 @@ const useTreeDataCreatorHook = <T = ICategory | ICount>({
   return state;
 };
 
-export default useTreeDataCreatorHook;
+export default useTreeDataCreator;

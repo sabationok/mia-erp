@@ -97,10 +97,19 @@ export const langUa = {
   PASSIVE: 'Пасив',
   PASSIVES: 'Пасиви',
 
+  DEFAULT: 'DEFAULT',
+  CUSTOM: 'CUSTOM',
+
+  BASE: 'BASE',
+  ADDITIONAL: 'ADDITIONAL',
+
   success: 'Успіх',
   successfully: 'Успішно',
   error: 'Помилка',
   pending: 'У процесі',
+
+  logOutUser: 'Вийти з профілю',
+  logOutPermission: 'Вийти з компанії',
 
   select: '',
   selected: '',

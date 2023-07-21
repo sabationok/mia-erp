@@ -7,6 +7,7 @@ import Text from '../atoms/Text';
 import useAppAuthHook from '../../redux/auth/useAppAuth.hook';
 import { useMemo } from 'react';
 import { useAuthSelector } from '../../redux/selectors.store';
+import translate from '../../lang';
 
 export interface IUserInfoProps {
   isOpen: boolean;
@@ -33,8 +34,21 @@ const UserInfo: React.FC<IUserInfoProps> = ({ isOpen, onClose }) => {
           <ProfileCard {...user} nameFontSize="16px" emailFontSize="16px" />
 
           <FlexBox fxDirection={'row'} gap={12} fillWidth justifyContent={'flex-end'} alignItems={'center'}>
-            <ButtonIcon variant={'textSmall'} endIcon={'logOut'} onClick={() => logOutUser()}>
-              <Text style={{ fontSize: '14px' }}>Вийти з профілю</Text>
+            <ButtonIcon
+              variant={'textSmall'}
+              endIcon={'logOut'}
+              onClick={() => {
+                logOutUser({
+                  onSuccess: () => {
+                    clearCurrent();
+                  },
+                  onError() {
+                    clearCurrent();
+                  },
+                });
+              }}
+            >
+              <Text style={{ fontSize: '14px' }}>{translate('logOutUser')}</Text>
             </ButtonIcon>
           </FlexBox>
         </MainListItem>
@@ -49,13 +63,16 @@ const UserInfo: React.FC<IUserInfoProps> = ({ isOpen, onClose }) => {
                 endIcon={'logOut'}
                 onClick={() =>
                   permissionLogOut({
+                    onSuccess: () => {
+                      clearCurrent();
+                    },
                     onError() {
                       clearCurrent();
                     },
                   })
                 }
               >
-                <Text style={{ fontSize: '14px' }}>Вийти з компанії</Text>
+                <Text style={{ fontSize: '14px' }}>{translate('logOutPermission')}</Text>
               </ButtonIcon>
             </FlexBox>
           </MainListItem>

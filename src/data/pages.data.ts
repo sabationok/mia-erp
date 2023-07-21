@@ -1,79 +1,46 @@
 import { IconIdType } from '../img/sprite';
-import { useMemo } from 'react';
-import { usePermissionsSelector } from '../redux/permissions/usePermissionsService.hook';
 
-export type PagePathType =
-  | 'companies'
-  | 'transactions'
-  | 'orders'
-  | 'refunds'
-  | 'supplement'
-  | 'storage'
-  | 'manager'
-  | 'admin';
-
-export enum PageNames {
+export enum AppPagesEnum {
   companies = 'companies',
   transactions = 'transactions',
   orders = 'orders',
   refunds = 'refunds',
   supplement = 'supplement',
+  products = 'products',
+  dashboard = 'dashboard',
   storage = 'storage',
   manager = 'manager',
   admin = 'admin',
+  notFound = 'notFound',
 }
+
+export type PagePathType = keyof typeof AppPagesEnum | AppPagesEnum;
+
+export enum AppRoleName {}
 
 export interface IAppPage<P = any> {
   title: string;
   path: P;
   iconId: IconIdType;
   actions?: string;
-  permissionName?: string;
+  moduleName?: P;
+  appRole?: AppRoleName;
 }
 
 export const appPages: Record<string, IAppPage<PagePathType>> = {
-  home: { title: 'Компанії', path: 'companies', iconId: 'bank' },
-  transactions: { title: 'Рух коштів', path: 'transactions', iconId: 'cashFlow', permissionName: 'cashFlow' },
-  orders: { title: 'Замовлення', path: 'orders', iconId: 'assignmentOkOutlined', permissionName: 'orders' },
-  refunds: { title: 'Повернення', path: 'refunds', iconId: 'assignmentBackOutlined', permissionName: 'refunds' },
-  supplement: { title: 'Постачання', path: 'supplement', iconId: 'assignmentInOutlined', permissionName: 'supplement' },
-  storage: { title: 'Склад', path: 'storage', iconId: 'storageOutlined', permissionName: 'storage' },
-  manager: { title: 'Менеджер', path: 'manager', iconId: 'assignmentPersonOutlined', permissionName: 'manager' },
-  admin: { title: 'Адмін', path: 'admin', iconId: 'admin', permissionName: 'owner' },
+  companies: { title: 'Компанії', path: 'companies', iconId: 'bank' },
+  dashboard: { title: 'Дашборд', path: 'dashboard', iconId: 'bank' },
+  transactions: { title: 'Рух коштів', path: 'transactions', iconId: 'cashFlow' },
+  orders: { title: 'Замовлення', path: 'orders', iconId: 'assignmentOkOutlined' },
+  refunds: { title: 'Повернення', path: 'refunds', iconId: 'assignmentBackOutlined' },
+  supplement: { title: 'Постачання', path: 'supplement', iconId: 'assignmentInOutlined' },
+  storage: { title: 'Склад', path: 'storage', iconId: 'storageOutlined' },
+  products: { title: 'Продукти', path: 'products', iconId: 'storageOutlined' },
+  manager: { title: 'Менеджер', path: 'manager', iconId: 'assignmentPersonOutlined' },
 };
 
-export const pages: IAppPage[] = [
-  appPages.home,
-  appPages.transactions,
-  appPages.orders,
-  appPages.refunds,
-  appPages.supplement,
-  appPages.storage,
-  appPages.manager,
-  appPages.admin,
-];
-
-export const useAppPages = ({ permissionId }: { permissionId?: string }) => {
-  const { permission } = usePermissionsSelector();
-
-  return useMemo((): IAppPage[] => {
-    const isCompanyValid = permission?._id === permissionId;
-    
-    if (isCompanyValid) {
-      return pages
-        .filter(page => {
-          if (permission?.role?.accessKeys?.includes(page.path)) return true;
-          return permission?.user?._id === permission?.company?.owner?._id && page.path === 'admin';
-        })
-        .map(page => ({ ...page, path: `/app/${permissionId}/${page?.path}` }));
-    }
-
-    return [{ title: 'Головна', path: 'home', iconId: 'bank' }];
-  }, [
-    permission?._id,
-    permission?.company?.owner?._id,
-    permission?.role?.accessKeys,
-    permission?.user?._id,
-    permissionId,
-  ]);
-};
+export const pages: IAppPage[] = Object.entries(appPages).map(([path, page]) => ({
+  ...page,
+  moduleName: path,
+  path,
+}));

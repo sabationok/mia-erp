@@ -4,8 +4,9 @@ import { actionSetIndexPage } from 'redux/page/pageActions';
 
 import styled from 'styled-components';
 import Layout from '../Layout';
+import { PagePathType } from '../../data/pages.data';
 
-const AppGridPage: React.FC<{ path?: string; children?: React.ReactNode }> = ({ path, children }) => {
+const AppGridPage: React.FC<{ path?: PagePathType; children?: React.ReactNode }> = ({ path, children }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {

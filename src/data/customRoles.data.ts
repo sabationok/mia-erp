@@ -1,11 +1,24 @@
 import { ICustomRole } from '../redux/customRoles/customRoles.types';
+import { pages } from './pages.data';
 
 export const initialCustomRole: ICustomRole = {
   _id: 'dfbsdgbd',
   label: 'Фінансист',
   description: 'Такоє собі посада',
   actions: [],
-  accessKeys: ['companies', 'transactions', 'orders', 'refunds', 'supplement', 'storage', 'manager', 'admin'],
+  // accessKeys: [
+  //   'companies',
+  //   'transactions',
+  //   'orders',
+  //   'refunds',
+  //   'supplement',
+  //   'storage',
+  //   'manager',
+  //   'admin',
+  //   'products',
+  //   'dashboard',
+  // ],
+  accessKeys: Object.entries(pages).map(([path, page]) => page.path),
 };
 
 export const rolesMockData: ICustomRole[] = [

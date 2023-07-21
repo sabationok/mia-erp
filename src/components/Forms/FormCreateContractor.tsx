@@ -11,7 +11,7 @@ import t from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import React from 'react';
-import useAppForm from '../../hooks/useAppForm.hook';
+import { useAppForm } from '../../hooks';
 import CustomSelect from '../atoms/Inputs/CustomSelect';
 
 export interface FormCreateContractorProps

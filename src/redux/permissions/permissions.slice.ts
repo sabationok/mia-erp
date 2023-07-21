@@ -15,6 +15,7 @@ import {
 
 import { initialPermission, testPermissions } from '../../data/permissions.data';
 import { clearCurrentPermission } from './permissions.action';
+import { pages } from '../../data';
 
 const initialPermissionStateState: IPermissionsState = {
   permission: {},
@@ -32,7 +33,7 @@ export const permissionsSlice = createSlice({
       .addCase(getCurrentPermissionThunk.fulfilled, (s: IPermissionsState, a) => {
         s.permission = {
           ...a.payload,
-          role: { ...a.payload.role, accessKeys: initialPermission.role?.accessKeys },
+          role: { ...a.payload.role, accessKeys: Object.entries(pages).map(([path, page]) => page.path) },
         };
         s.permission_token = a.payload.permission_token;
       })

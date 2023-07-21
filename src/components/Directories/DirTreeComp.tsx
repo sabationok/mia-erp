@@ -3,8 +3,8 @@ import ModalForm from 'components/ModalForm';
 import DirList from './DirList/DirList';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import { IBaseDirItem, IDirInTreeProps } from './dir.types';
-import { useFilteredLisData } from 'hooks';
-import useDirServiceHook from 'hooks/useDirService.hook';
+import { useDirService, useFilteredLisData } from 'hooks';
+
 import { useDirectoriesSelector } from 'redux/directories/useDirectoriesService.hook';
 import { FilterOpt } from '../ModalForm/ModalFilter';
 
@@ -17,7 +17,7 @@ const DirTreeComp: React.FC<IDirInTreeProps> = ({
   ...props
 }) => {
   const { directory } = useDirectoriesSelector(dirType);
-  const dirService = useDirServiceHook();
+  const dirService = useDirService();
   const findById = useCallback((id: string) => directory.find(el => el._id === id), [directory]);
   const modalService = useModalProvider();
   const [current, setCurrent] = useState(filterDefaultValue);

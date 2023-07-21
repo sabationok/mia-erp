@@ -4,10 +4,10 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { iconId } from 'data';
 import { IPage } from 'redux/page/pageSlice';
 import styled from 'styled-components';
-import { useAppPages } from '../../data/pages.data';
+
 import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
 import Text from '../atoms/Text';
-import useAppParams from '../../hooks/useAppParams';
+import { useAppPages, useAppParams } from '../../hooks';
 
 const NavMenu: React.FC = () => {
   const { permissionId } = useAppParams();

@@ -5,6 +5,7 @@ import { useAuthSelector } from '../../redux/selectors.store';
 import PermissionCheck from '../AppPages/PermissionCheck';
 import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
+import { AppPagesEnum } from '../../data/pages.data';
 
 const { PageNotFound } = AppPages;
 
@@ -40,12 +41,20 @@ const AppRoutes: React.FC = () => {
 
       <Route path={'/app/*'} element={<PrivateRoute redirectTo={'/auth'} />}>
         <Route index element={<Navigate to={'/app/home'} />} />
-        <Route path={'home'} element={<AppPages.PageSelectCompany path={'home'} />} />
+        <Route path={'companies'} element={<AppPages.PageSelectCompany path={'companies'} />} />
 
-        <Route path={':permissionId'} element={<PermissionCheck redirectTo={'/app/home'} />}>
+        <Route path={':permissionId'} element={<PermissionCheck redirectTo={'/app/companies'} />}>
           <Route index element={<Navigate to={'transactions'} />} />
           <Route path={'companies'} element={<AppPages.PageSelectCompany path={'companies'} />} />
           <Route path={'transactions'} element={<AppPages.PageTransactions path={'transactions'} />} />
+          <Route path={'products'} element={<AppPages.PageProducts path={'products'} />} />
+
+          <Route path={AppPagesEnum.storage} element={<AppPages.AppGridPage path={'storage'} />} />
+          <Route path={AppPagesEnum.orders} element={<AppPages.AppGridPage path={'orders'} />} />
+          <Route path={AppPagesEnum.refunds} element={<AppPages.AppGridPage path={'refunds'} />} />
+          <Route path={AppPagesEnum.dashboard} element={<AppPages.AppGridPage path={'dashboard'} />} />
+          <Route path={AppPagesEnum.supplement} element={<AppPages.AppGridPage path={'supplement'} />} />
+
           <Route {...notFoundRouteProps} />
         </Route>
         <Route {...notFoundRouteProps} />
@@ -63,7 +72,7 @@ export default memo(AppRoutes);
 //     <Route index element={<Navigate to={'/transactions'} />} errorElement={<PageNotFound />} />
 //
 //     <Route path={'transactions'} element={<AppPages.PageTransactions />} errorElement={<PageNotFound />} />
-//     <Route path={'home'} element={<AppPages.PageCompanies />} errorElement={<PageNotFound />} />
+//     <Route path={'companies'} element={<AppPages.PageCompanies />} errorElement={<PageNotFound />} />
 //
 //     <Route {...notFoundRouteProps} />
 //   </Route>

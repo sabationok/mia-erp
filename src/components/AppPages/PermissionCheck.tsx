@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import usePermissionsServiceHook, { usePermissionsSelector } from '../../redux/permissions/usePermissionsService.hook';
 import { memo, useEffect, useMemo } from 'react';
-import useAppParams from '../../hooks/useAppParams';
+import useAppParams from '../../hooks/useAppParams.hook';
 import baseApi from '../../api/baseApi';
 import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';

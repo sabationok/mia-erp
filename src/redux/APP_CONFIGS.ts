@@ -7,6 +7,7 @@ export enum API_BASE_ROUTES {
   DIRECTORIES = '/directories',
   TRANSACTIONS = '/transactions',
   CUSTOM_ROLES = '/roles',
+  PRODUCTS = '/products',
   APP = 'APP',
 }
 
@@ -54,6 +55,14 @@ const transactionsApiEndpoints = {
   [Endpoints.updateById]: (id?: string): string =>
     `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.updateById}/${id || ''}`,
   [Endpoints.getById]: (id?: string): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.getById}/${id || ''}`,
+};
+
+const productsApiEndpoints = {
+  [Endpoints.getAll]: (): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.getAll}`,
+  [Endpoints.create]: (): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.create}`,
+  [Endpoints.deleteById]: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.deleteById}/${id || ''}`,
+  [Endpoints.updateById]: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.updateById}/${id || ''}`,
+  [Endpoints.getById]: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.getById}/${id || ''}`,
 };
 const permissionsApiEndpoints = {
   [Endpoints.updateById]: (permissionId?: string) =>
@@ -110,12 +119,13 @@ const appSettings = {
 
 const APP_CONFIGS = {
   endpoints: {
-    transactions: transactionsApiEndpoints,
     permissions: permissionsApiEndpoints,
     companies: companiesApiEndpoints,
     auth: authApiEndpoints,
     directories: directoriesApiEndpoints,
     customRoles: customRoles,
+    transactions: transactionsApiEndpoints,
+    products: productsApiEndpoints,
     appSettings,
   },
 };

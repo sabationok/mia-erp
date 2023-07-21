@@ -246,6 +246,6 @@ const activitiesDir: IDirectory<DirActivitiesProps> = {
   disabled: false,
 };
 
-const directories = [countsDir, categoriesDir, contractorsDir, projectsDir, marksDir, activitiesDir];
+const directories = [countsDir, categoriesDir, activitiesDir, contractorsDir, projectsDir, marksDir];
 
 export default directories;

@@ -1,12 +1,13 @@
 import AppGridPage from './AppGridPage';
 import PageHome from './PageHome';
 import { memo } from 'react';
+import { PagePathType } from '../../data/pages.data';
 
 type Props = {
-  path: string;
+  path: PagePathType;
 };
 
-const PageSelectCompany: React.FC<Props> = ({ path = '' }) => {
+const PageSelectCompany: React.FC<Props> = ({ path }) => {
   return (
     <AppGridPage path={path}>
       <PageHome />

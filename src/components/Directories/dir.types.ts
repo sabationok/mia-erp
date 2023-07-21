@@ -100,11 +100,14 @@ export interface DirActivitiesProps
 
 export interface DirProjectsProps extends DirTableCompProps {}
 
+export type ActivityType = 'BASE' | 'ADDS';
+
 export interface DirMarksProps extends IDirInTreeProps {}
 
 export type CategoryFilterOpt<D = any> = FilterOpt<CategoryTypes, D>;
 
 export type CountFilterOpt<D = any> = FilterOpt<CountType, D>;
+export type ActivityFilterOpt<D = any> = FilterOpt<ActivityType, D>;
 
 export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> extends IBase {
   name?: string;

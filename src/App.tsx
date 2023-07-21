@@ -5,22 +5,22 @@ import { toast, ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
 import GlobalStyles from './theme/globalStyles';
 import { useBaseApiWithAccessToken, useBaseApiWithPermissionToken } from './api/baseApi';
-import useDirServiceHook from './hooks/useDirService.hook';
+
 import { ApiDirType } from './redux/APP_CONFIGS';
 import { useAppSettingsSelector } from './redux/selectors.store';
 import { usePermissionsSelector } from './redux/permissions/usePermissionsService.hook';
 import useAppSettings from './redux/appSettings/useAppSettings.hook';
+import { useDirService } from './hooks';
 
 const useLoadInitialAppData = () => {
   const { _id, permission_token } = usePermissionsSelector().permission;
-  const { getAllByDirType } = useDirServiceHook();
+  const { getAllByDirType } = useDirService();
   const { getAppActions } = useAppSettings();
   const onSuccessToast = (dirType: ApiDirType) => () => toast.success(`Updated data for directory: ${dirType}`);
 
   return useEffect(() => {
     (async () => {
       if (permission_token || _id) {
-        console.log('useLoadInitialAppData', permission_token, _id);
         await getAppActions();
         await getAllByDirType({
           data: { dirType: ApiDirType.CATEGORIES_TR },
