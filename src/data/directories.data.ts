@@ -95,7 +95,7 @@ const countsDir: IDirectory<DirCountsProps> = {
   iconId: iconId.wallet,
   ModalChildren: DirTreeComp,
   modalChildrenProps: CountsProps,
-  disabled: true,
+  disabled: false,
 };
 
 const CategoriesProps: DirCategoriesProps = {
@@ -112,7 +112,7 @@ const CategoriesProps: DirCategoriesProps = {
         const modal = modalService.handleOpenModal({
           ModalChildren: FormCreateCategory,
           modalChildrenProps: {
-            title: t('createParentCategory'),
+            title: t('createDirParentItem'),
             type,
             onSubmit: data => {
               dirService.create({
@@ -130,7 +130,7 @@ const CategoriesProps: DirCategoriesProps = {
         const modal = modalService.handleOpenModal({
           ModalChildren: FormCreateCategory,
           modalChildrenProps: {
-            title: t('createChildCategory'),
+            title: t('createDirParentItem'),
             type,
             parent,
             onSubmit: data => {
@@ -292,7 +292,7 @@ const activitiesDir: IDirectory<DirActivitiesProps> = {
   disabled: false,
 };
 
-const directories = [
+const directories: Partial<IDirectory>[] = [
   countsDir,
   trCategoriesDir,
   prodCategoriesDir,
@@ -300,6 +300,34 @@ const directories = [
   contractorsDir,
   projectsDir,
   marksDir,
+  {
+    title: 'Статуси для замовлень',
+    disabled: true,
+    modalChildrenProps: {
+      dirType: ApiDirType.STATUS_ORDER,
+    },
+  },
+  {
+    title: 'Статуси для пвернень',
+    disabled: true,
+    modalChildrenProps: {
+      dirType: ApiDirType.STATUS_REFUND,
+    },
+  },
+  {
+    title: 'Статуси для відправлень',
+    disabled: true,
+    modalChildrenProps: {
+      dirType: ApiDirType.STATUS_DELIVERY,
+    },
+  },
+  {
+    title: 'Бренди',
+    disabled: true,
+    modalChildrenProps: {
+      dirType: ApiDirType.BRANDS,
+    },
+  },
 ];
 
 export default directories;

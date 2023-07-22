@@ -4,8 +4,13 @@ import { useCallback } from 'react';
 import { TableActionCreator } from '../../components/TableList/tableTypes.types';
 import { IProduct } from './products.types';
 import { useProductsSelector } from '../selectors.store';
+import ProductForm, { ProductFilterOpt } from '../../components/Forms/ProductForm';
 
 export type ProductsActionsCreator = TableActionCreator<IProduct>;
+export const ProductPriceTypeFilterOptions: ProductFilterOpt[] = [
+  { label: 'DEFAULT', value: 'DEFAULT' },
+  { label: 'COMMISSION', value: 'COMMISSION' },
+];
 const useProductsActionsCreator = (service: ProductsService): ProductsActionsCreator => {
   const state = useProductsSelector();
   const modals = useModalProvider();
@@ -154,37 +159,36 @@ const useProductsActionsCreator = (service: ProductsService): ProductsActionsCre
       //     });
       //   },
       // },
-      // {
-      //   name: 'createExpenseTr',
-      //   title: 'Витрата',
-      //   icon: 'EXPENSE',
-      //   iconSize: '90%',
-      //   type: 'onlyIconFilled',
-      //   disabled: false,
-      //   onClick: () => {
-      //     const modal = modals.handleOpenModal({
-      //       ModalChildren: TransactionForm,
-      //       modalChildrenProps: {
-      //         title: 'Створити',
-      //         filterOptions,
-      //         defaultOption: 2,
-      //         defaultState: { type: 'EXPENSE' },
-      //         onSubmit: (data, o) => {
-      //           service.create({
-      //             data,
-      //             onSuccess(d) {
-      //               o?.close && modal?.onClose();
-      //             },
-      //           });
-      //         },
-      //         fillHeight: true,
-      //       },
-      //     });
-      //   },
-      // },
+      {
+        name: 'createExpenseTr',
+        title: 'Новий',
+        icon: 'plus',
+        iconSize: '90%',
+        type: 'onlyIconFilled',
+        disabled: false,
+        onClick: async () => {
+          const modal = modals.handleOpenModal({
+            ModalChildren: ProductForm,
+            modalChildrenProps: {
+              title: 'Створити',
+              filterOptions: ProductPriceTypeFilterOptions,
+              defaultState: { type: 'DEFAULT' },
+              onSubmit: (data, o) => {
+                service.create({
+                  data,
+                  onSuccess(d) {
+                    o?.close && modal?.onClose();
+                  },
+                });
+              },
+              fillHeight: true,
+            },
+          });
+        },
+      },
     ],
 
-    [modals, service, state]
+    [modals, service]
   );
 };
 

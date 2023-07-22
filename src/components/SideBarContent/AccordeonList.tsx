@@ -5,6 +5,7 @@ import styled from 'styled-components';
 export interface IAccordeonOptionProps<T = any, C = any[]> extends React.HTMLAttributes<HTMLLIElement> {
   title: string;
   options: C;
+  disabled?: boolean;
   ChildrenComponent?: React.FC<T>;
   childrenComponentProps?: T;
 }
@@ -20,39 +21,38 @@ const AccordeonList: React.FC<IAccordeonListProps> = ({ options, children }) => 
     return () => setCurrent(prev => (prev === idx ? null : idx));
   }
 
-  const renderOptions = useMemo(() =>
-    options?.length > 0 && options.map(({
-                                          title,
-                                          options,
-                                          ChildrenComponent,
-                                        }, idx) => (
-      <AccordeonItem key={title || idx} isOpen={current === idx}>
-        <OpenButton variant='def' endIconId='SmallArrowDown' isOpen={current === idx} onClick={onCurrentClick(idx)}>
-          {title}
-        </OpenButton>
+  const renderOptions = useMemo(
+    () =>
+      options?.length > 0 &&
+      options.map(({ title, options, ChildrenComponent, disabled }, idx) => (
+        <AccordeonItem key={`AccordeonListItem-${title || idx}`} isOpen={current === idx}>
+          <OpenButton
+            variant="def"
+            endIconId="SmallArrowDown"
+            isOpen={current === idx}
+            disabled={disabled}
+            onClick={onCurrentClick(idx)}
+          >
+            {title}
+          </OpenButton>
 
-        <ChildrenBox isOpen={current === idx}>
-          {children || (ChildrenComponent ? <ChildrenComponent options={options} /> : null)}
-        </ChildrenBox>
-      </AccordeonItem>
-    )), [children, current, options]);
-  return (
-    <AccoredeonListBox>
-      {renderOptions}
-    </AccoredeonListBox>
+          <ChildrenBox isOpen={current === idx}>
+            {children || (ChildrenComponent ? <ChildrenComponent options={options} /> : null)}
+          </ChildrenBox>
+        </AccordeonItem>
+      )),
+    [children, current, options]
   );
+  return <AccoredeonListBox>{renderOptions}</AccoredeonListBox>;
 };
 const AccoredeonListBox = styled.ul`
   display: flex;
   flex-direction: column;
-
-
 `;
 const AccordeonItem = styled.li<{ isOpen?: boolean }>`
   display: flex;
   flex-direction: column;
-  border-bottom: ${({ isOpen }) => isOpen ? '1px' : 0} solid ${({ theme }) => theme.sideBarBorderColor};
-
+  border-bottom: ${({ isOpen }) => (isOpen ? '1px' : 0)} solid ${({ theme }) => theme.sideBarBorderColor};
 `;
 
 const ChildrenBox = styled.div<{ isOpen?: boolean }>`
@@ -77,11 +77,15 @@ const OpenButton = styled(ButtonIcon)<{ isOpen?: boolean }>`
   border-radius: 0;
   border-bottom: 1px solid ${({ theme }) => theme.sideBarBorderColor};
 
-  color: ${({ isOpen, theme }) => isOpen ? theme.accentColor.base : ''};
-  fill: ${({ isOpen, theme }) => isOpen ? theme.accentColor.base : ''};
+  color: ${({ isOpen, theme }) => (isOpen ? theme.accentColor.base : '')};
+  fill: ${({ isOpen, theme }) => (isOpen ? theme.accentColor.base : '')};
 
   & .endIcon {
     transform: ${({ isOpen }) => `rotate(${isOpen ? 180 : 0}deg)`};
+  }
+
+  &[disabled] {
+    opacity: 60%;
   }
 `;
 

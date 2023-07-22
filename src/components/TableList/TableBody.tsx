@@ -67,8 +67,6 @@ const TBody = styled.div`
 
   position: relative;
 
-  background-color: ${({ theme }) => theme.tableBackgroundColor};
-
   & .selected {
     background-color: ${({ theme }) => theme.tableRowBackgroundActive};
 

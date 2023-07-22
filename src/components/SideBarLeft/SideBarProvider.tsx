@@ -8,6 +8,7 @@ export interface ISidebarOptionsItem {
   title: string;
   maxWidth: string;
   corp: boolean;
+  disabled?: boolean;
 }
 
 export interface ISideBarCTX {
@@ -48,11 +49,7 @@ const SideBarProvider: React.FC<{ children?: React.ReactNode }> = ({ children })
     sideBarButtonsBottom: sideBarLeftData.sideBarButtonsBottom,
   };
 
-  return (
-    <SideBarCTX.Provider value={CTX}>
-      <>{children}</>
-    </SideBarCTX.Provider>
-  );
+  return <SideBarCTX.Provider value={CTX}>{children}</SideBarCTX.Provider>;
 };
 
 export default SideBarProvider;

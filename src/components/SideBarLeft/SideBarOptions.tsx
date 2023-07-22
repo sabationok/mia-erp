@@ -44,20 +44,22 @@ const SideBarOptions: React.FC = () => {
 
   return (
     <Backdrop
-      className='backdrop'
+      className="backdrop"
       isOpen={!!(isOpen && RightSideContent?.RenderComponent)}
       maxWidth={RightSideContent?.maxWidth}
       onClick={onBackdropClick}
     >
-      <Container
-        isOpen={!!(isOpen && RightSideContent?.RenderComponent)}
-        maxWidth={RightSideContent?.maxWidth}
-      >
+      <Container isOpen={!!(isOpen && RightSideContent?.RenderComponent)} maxWidth={RightSideContent?.maxWidth}>
         <Header>
           <Title>{RightSideContent?.title}</Title>
 
-          <ButtonIcon iconSize='18px' size='22px' iconId={iconId.close} variant='defNoEffects'
-                      onClick={handleCloseMenu} />
+          <ButtonIcon
+            iconSize="18px"
+            size="22px"
+            iconId={iconId.close}
+            variant="defNoEffects"
+            onClick={handleCloseMenu}
+          />
         </Header>
 
         <ContentScroll>
@@ -84,23 +86,23 @@ const Backdrop = styled.div<{ isOpen: boolean; maxWidth?: string }>`
   background-color: ${({ theme }) => theme.backdropColor};
 
   transition: visibility ${({ theme }) => theme.globals.timingFunctionMain},
-  opacity ${({ theme }) => theme.globals.timingFunctionMain}, width ${({ theme }) => theme.globals.timingFnNull};
+    opacity ${({ theme }) => theme.globals.timingFunctionMain}, width ${({ theme }) => theme.globals.timingFnNull};
   transition-delay: ${({ isOpen }) => (isOpen ? '' : '250ms')};
 
   ${({ isOpen }) =>
-          isOpen
-                  ? css`
-                    width: calc(100vw - 40px);
-                    opacity: 1;
-                    visibility: visible;
-                    pointer-events: all;
-                  `
-                  : css`
-                    width: 0;
-                    opacity: 0;
-                    visibility: hidden;
-                    pointer-events: none;
-                  `}
+    isOpen
+      ? css`
+          width: calc(100vw - 40px);
+          opacity: 1;
+          visibility: visible;
+          pointer-events: all;
+        `
+      : css`
+          width: 0;
+          opacity: 0;
+          visibility: hidden;
+          pointer-events: none;
+        `}
 `;
 const Container = styled.div<{ isOpen: boolean; maxWidth?: string }>`
   display: grid;
@@ -116,7 +118,7 @@ const Container = styled.div<{ isOpen: boolean; maxWidth?: string }>`
 
   transform: ${({ isOpen }) => `translate(${isOpen ? '0' : '-100%'})`};
   transition: transform ${({ theme }) => theme.globals.timingFunctionMain},
-  max-width ${({ theme }) => theme.globals.timingFunctionMain};
+    max-width ${({ theme }) => theme.globals.timingFunctionMain};
 `;
 const Header = styled.header`
   display: flex;
@@ -128,7 +130,6 @@ const Header = styled.header`
   left: 0; */
 
   padding: 0 8px;
-
 
   height: 32px;
   width: 100%;

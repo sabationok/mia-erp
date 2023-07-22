@@ -21,7 +21,7 @@ const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = a
   formProps?: UseFormProps<TFieldValues, TContext>
 ): UseAppFromReturn<TFieldValues, TContext> => {
   const form = useForm<TFieldValues>(formProps);
-  const { setValue, unregister, watch } = form;
+  const { setValue, unregister, register, watch } = form;
   const formValues = watch();
 
   const registerSelect = useCallback(
@@ -33,6 +33,7 @@ const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = a
       }
     ): CustomSelectProps<TFieldValues[Path<TFieldValues>]> => {
       return {
+        ...register(name),
         onSelect: (option, _value) => {
           setValue<Path<TFieldValues>>(name, option as any);
           // if (childControl?.childName) clearChild(childControl?.childName);
@@ -54,7 +55,7 @@ const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = a
         ...props,
       };
     },
-    [formValues, setValue, unregister]
+    [formValues, register, setValue, unregister]
   );
 
   return { ...form, formValues, registerSelect };

@@ -24,6 +24,7 @@ const Directories: React.FC<IDirectoriesProps> = ({ options = [] }) => {
         <ListItem key={title}>
           <StButtonIcon
             variant="def"
+            disabled={disabled}
             onClick={() => {
               modal.handleOpenModal({ ModalChildren, modalChildrenProps });
             }}
@@ -56,6 +57,10 @@ const StButtonIcon = styled(ButtonIcon)`
   height: 100%;
 
   padding: 4px 12px;
+
+  &[disabled] {
+    opacity: 60%;
+  }
 `;
 
 export default Directories;

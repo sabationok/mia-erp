@@ -19,8 +19,11 @@ export interface IDocument extends IBase {
 
 export type ProductStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
+export type ProductPriceType = 'COMMISSION' | 'DEFAULT';
+
 export interface IProductBase extends IBase {
-  amount?: number;
+  price?: number;
+  priceType?: ProductPriceType;
   type?: ProductType;
   currency?: CurrencyCode;
   status?: ProductStatus;

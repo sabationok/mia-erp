@@ -73,15 +73,6 @@ const DirTableComp: React.FC<DirTableCompProps> = ({ type, dirType, getTableSett
   );
 };
 const StModalForm = styled(ModalForm)`
-  width: max-content;
-  min-height: 50vh;
-
-  & .modalFooter {
-    padding: 8px;
-  }
-
-  & .tOverHead {
-    padding: 8px;
-  }
+  background-color: ${({ theme }) => theme.modalBackgroundColor};
 `;
 export default DirTableComp;

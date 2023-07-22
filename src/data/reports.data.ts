@@ -11,7 +11,7 @@ import ReportProjects, { IReportProjectsProps } from '../components/Raports/Repo
 import { categoriesFilterOptions, countsFilterOptions } from './directories.data';
 
 const categoriesReport: IReportConfigs<IReportCategoriesProps> = {
-  title: 'Категорії',
+  title: 'Доходи/Витрати',
   iconId: iconId.info,
   ModalChildren: ReportCategories,
   modalChildrenProps: { title: 'Звіт по категоріях', fillHeight: true, filterOptions: categoriesFilterOptions },
@@ -78,7 +78,7 @@ const contractorsReport: IReportConfigs<IReportContractorsProps> = {
       tableData: [],
       tableTitles: reportByContractorsColumns,
     },
-    
+
     fitContentH: true,
     fillHeight: true,
   },
@@ -146,18 +146,21 @@ const tagsReport: IReportConfigs = {
   disabled: true,
 };
 
-const financeReports: IReportConfigs[] = [
+const financeReports: Partial<IReportConfigs>[] = [
   categoriesReport,
   countsReport,
+  activitiesReport,
   contractorsReport,
   projectsReport,
   contractsReport,
-  activitiesReport,
   marksReport,
   tagsReport,
+  // { title: '', disabled: true },
+  // { title: '', disabled: true },
+  // { title: '', disabled: true },
 ];
 
-export const reports: IAccordeonOptionProps<any, IReportConfigs[]>[] = [
+export const reports: IAccordeonOptionProps<any, Partial<IReportConfigs>[]>[] = [
   {
     title: 'Фінанси',
     ChildrenComponent: OptionsList,
