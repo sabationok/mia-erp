@@ -17,9 +17,9 @@ export const store = configureStore({
 
 export type AppDispatch = typeof store.dispatch;
 
-export interface ThunkPayload<SD = any, RD = any, E = any | unknown> {
+export interface ThunkPayload<SD = any, RD = any, E = any | unknown, MD = any> {
   data?: SD;
-  onSuccess?: (data: RD) => void;
+  onSuccess?: (data: RD, meta?: MD) => void;
   onError?: (error: E) => void;
   onLoading?: (loading: boolean) => void;
 }

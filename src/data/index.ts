@@ -12,13 +12,12 @@ import { getChildOptions, getOwnerOptions, getParentOptions, selects } from './s
 import sideBarLeftData from './sideBarLeft.data';
 import { activitiesMockData } from './activities.data';
 import { permissionsSearchParams, permissionsTableColumns } from './permissions.data';
-import { productsColumns, productsColumnsNew, productsSearchParams } from './products.data';
+import { productsColumns, productsSearchParams } from './products.data';
 
 const reportsTableColumns = {
   reportByContractorsColumns,
 };
 export {
-  productsColumnsNew,
   productsColumns,
   productsSearchParams,
   reportsTableColumns,

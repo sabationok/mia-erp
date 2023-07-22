@@ -6,42 +6,74 @@ import { IProduct, ProductType } from '../redux/products/products.types';
 
 export type ProductFilterOpt = FilterOpt<ProductType>;
 export type DataPath =
-  | 'countIn.label'
-  | 'subCountIn.label'
-  | 'countOut.label'
-  | 'subCountOut.label'
   | 'category.label'
   | 'subCategory.label'
+  | 'brand.name'
+  | 'brand.label'
   | 'owner.name'
-  | 'project.name'
-  | 'project.label'
-  | 'contractor.name'
-  | 'contractor.type'
-  | 'meta.author.name'
+  | 'owner.email'
   | 'author.name'
   | 'author.email'
-  | 'meta.editor.name'
   | 'editor.name'
   | 'editor.email'
-  | 'meta.auditor.name'
   | 'auditor.name'
   | 'auditor.email'
-  | 'eventDate'
+  | 'manufacturer.name'
+  | 'manufacturer.email'
+  | 'mark.label'
+  | 'tags'
   | 'type'
   | 'status'
-  | 'amount'
+  | 'sale'
+  | 'cashback.sale'
+  | 'cashback.level'
+  | 'cashback.bonuses'
   | 'currency'
-  | 'activity.label'
-  | 'comment'
+  | 'description'
   | 'createdAt'
   | 'updatedAt'
-  | 'mark.label';
-export const productsColumnsNew: CellTittleProps<IProduct, DataPath>[] = [
+  | 'label'
+  | 'sku'
+  | 'price'
+  | 'visibility'
+  | 'availabilityInfo.status'
+  | 'availabilityInfo.primaryOrder'
+  | 'availabilityInfo.primaryOrderTime'
+  | 'availabilityInfo.customOrder'
+  | 'availabilityInfo.customOrderTime';
+
+export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
   {
-    top: { name: t('date'), align: 'center', path: 'eventDate' },
-    bottom: { name: t('time'), align: 'center' },
-    width: '90px',
-    action: 'dateSimple',
+    top: { name: t('label'), align: 'start', path: 'label' },
+    bottom: { name: t('sku'), align: 'start', path: 'sku' },
+    width: '150px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: t('price'), align: 'end', path: 'price' },
+    bottom: { name: 'Валюта', align: 'end', path: 'currency' },
+    width: '120px',
+    action: 'numberWithSpaces',
+  },
+  {
+    top: { name: t('sale'), align: 'end', path: 'cashback.sale' },
+    bottom: { name: 'Рівень кешбеку', align: 'end', path: 'cashback.level' },
+    width: '120px',
+    action: 'numberWithSpaces',
+  },
+  {
+    top: {
+      name: t('category'),
+      align: 'start',
+      path: 'category.label',
+    },
+    bottom: {
+      name: t('subCategory'),
+      align: 'start',
+      path: 'subCategory.label',
+    },
+    width: '150px',
+    action: 'valueByPath',
   },
   {
     top: { name: t('type'), align: 'start', path: 'type' },
@@ -50,138 +82,15 @@ export const productsColumnsNew: CellTittleProps<IProduct, DataPath>[] = [
     action: 'status',
   },
   {
-    top: { name: t('amount'), align: 'end', path: 'amount' },
-    bottom: { name: 'Валюта', align: 'end', path: 'currency' },
-    width: '120px',
-    action: 'numberWithSpaces',
-  },
-  {
-    top: { name: t('countIn'), align: 'start', path: 'countIn.label' },
-    bottom: {
-      name: t('subCountIn'),
-      align: 'start',
-      path: 'subCountIn.label',
-    },
+    top: { name: 'Наявність', align: 'start', path: 'availabilityInfo.status' },
+    bottom: { name: 'Видимість', align: 'start', path: 'visibility' },
     width: '150px',
-    action: 'valueByPath',
-  },
-  {
-    top: {
-      name: t('countOut'),
-      align: 'start',
-      path: 'countOut.label',
-    },
-    bottom: {
-      name: t('subCountOut'),
-      align: 'start',
-      path: 'subCountOut.label',
-    },
-    width: '150px',
-    action: 'valueByPath',
-  },
-  {
-    top: {
-      name: t('category'),
-      align: 'start',
-      path: 'category.label',
-    },
-    bottom: {
-      name: t('subCategory'),
-      align: 'start',
-      path: 'subCategory.label',
-    },
-    width: '150px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: 'Контрагент', align: 'start', path: 'contractor.name' },
-    bottom: { name: 'Тип', align: 'start', path: 'contractor.type' },
-    width: '150px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: 'Діяльність', align: 'start', path: 'activity.label' },
-    width: '150px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: 'Проект', align: 'start', path: 'project.label' },
-    width: '150px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: 'Автор', align: 'start', path: 'author.name' },
-    bottom: { name: 'Емейл', align: 'start', path: 'author.email' },
-    width: '150px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: 'Коментар', align: 'start', path: 'comment' },
-    width: '150px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: 'Створено', align: 'center', path: 'createdAt' },
-    bottom: { name: 'Оновлено', align: 'center', path: 'updatedAt' },
-    width: '150px',
-    action: 'dateDbl',
-  },
-];
-export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
-  {
-    top: { name: 'Дата', align: 'center', path: 'eventDate' },
-    bottom: { name: 'Час', align: 'center' },
-    width: '90px',
-    action: 'dateSimple',
-  },
-  {
-    top: { name: 'Тип', align: 'start', path: 'type' },
-    bottom: { name: 'Статус', align: 'start', path: 'status' },
-    width: '100px',
     action: 'status',
   },
   {
-    top: { name: t('amount'), align: 'end', path: 'amount' },
-    bottom: { name: 'Валюта', align: 'end', path: 'currency' },
-    width: '120px',
-    action: 'numberWithSpaces',
-  },
-  {
-    top: {
-      name: t('countOut'),
-      align: 'start',
-      path: 'countOut.label',
-    },
-    bottom: {
-      name: t('subCountOut'),
-      align: 'start',
-      path: 'subCountOut.label',
-    },
-    width: '190px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: t('countIn'), align: 'start', path: 'countIn.label' },
-    bottom: {
-      name: t('subCountIn'),
-      align: 'start',
-      path: 'subCountIn.label',
-    },
-    width: '190px',
-    action: 'valueByPath',
-  },
-  {
-    top: {
-      name: t('category'),
-      align: 'start',
-      path: 'category.label',
-    },
-    bottom: {
-      name: t('subCategory'),
-      align: 'start',
-      path: 'subCategory.label',
-    },
-    width: '190px',
+    top: { name: 'Бренд', align: 'start', path: 'brand.name' },
+    bottom: { name: 'Виробник', align: 'start', path: 'manufacturer.name' },
+    width: '150px',
     action: 'valueByPath',
   },
   {
@@ -191,23 +100,7 @@ export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Контрагент', align: 'start', path: 'contractor.name' },
-    bottom: { name: 'Тип', align: 'start', path: 'contractor.type' },
-    width: '150px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: 'Діяльність', align: 'start', path: 'activity.label' },
-    width: '150px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: 'Проект', align: 'start', path: 'project.label' },
-    width: '150px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: 'Коментар', align: 'start', path: 'comment' },
+    top: { name: 'Опис', align: 'start', path: 'description' },
     width: '150px',
     action: 'valueByPath',
   },
@@ -220,91 +113,84 @@ export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
 ];
 
 export const productsSearchParams: SelectItem<DataPath>[] = [
-  {
-    label: 'Дата',
-    dataPath: 'eventDate',
-    filter: false,
-    search: false,
-    sort: true,
-  },
-  {
-    label: t('type'),
-    dataPath: 'type',
-    filter: false,
-    search: true,
-    sort: true,
-  },
-  {
-    label: t('amount'),
-    dataPath: 'amount',
-    filter: false,
-    search: true,
-    sort: true,
-  },
-  {
-    label: 'Оновлено',
-    dataPath: 'createdAt',
-    filter: false,
-    search: false,
-    sort: true,
-  },
-  {
-    label: 'Створено',
-    dataPath: 'updatedAt',
-    filter: false,
-    search: false,
-    sort: true,
-  },
-  {
-    label: t('countIn'),
-    dataPath: 'countIn.label',
-    filter: false,
-    search: true,
-    sort: true,
-  },
-  {
-    label: t('subCountIn'),
-    dataPath: 'subCountIn.label',
-    filter: false,
-    search: true,
-    sort: true,
-  },
-  {
-    label: t('countOut'),
-    dataPath: 'countOut.label',
-    filter: false,
-    search: true,
-    sort: true,
-  },
-  {
-    label: t('subCountOut'),
-    dataPath: 'subCountOut.label',
-    filter: false,
-    search: true,
-    sort: true,
-  },
-  {
-    label: t('category'),
-    dataPath: 'category.label',
-    filter: false,
-    search: true,
-    sort: true,
-  },
-  {
-    label: t('subCategory'),
-    dataPath: 'subCategory.label',
-    filter: false,
-    search: true,
-    sort: true,
-  },
-
-  {
-    label: 'Контрагент',
-    dataPath: 'contractor.name',
-    filter: false,
-    search: true,
-    sort: true,
-  },
+  // {
+  //   label: t('type'),
+  //   dataPath: 'type',
+  //   filter: false,
+  //   search: true,
+  //   sort: true,
+  // },
+  // {
+  //   label: t('price'),
+  //   dataPath: 'price',
+  //   filter: false,
+  //   search: true,
+  //   sort: true,
+  // },
+  // {
+  //   label: 'Оновлено',
+  //   dataPath: 'createdAt',
+  //   filter: false,
+  //   search: false,
+  //   sort: true,
+  // },
+  // {
+  //   label: 'Створено',
+  //   dataPath: 'updatedAt',
+  //   filter: false,
+  //   search: false,
+  //   sort: true,
+  // },
+  // {
+  //   label: t('countIn'),
+  //   dataPath: 'countIn.label',
+  //   filter: false,
+  //   search: true,
+  //   sort: true,
+  // },
+  // {
+  //   label: t('subCountIn'),
+  //   dataPath: 'subCountIn.label',
+  //   filter: false,
+  //   search: true,
+  //   sort: true,
+  // },
+  // {
+  //   label: t('countOut'),
+  //   dataPath: 'countOut.label',
+  //   filter: false,
+  //   search: true,
+  //   sort: true,
+  // },
+  // {
+  //   label: t('subCountOut'),
+  //   dataPath: 'subCountOut.label',
+  //   filter: false,
+  //   search: true,
+  //   sort: true,
+  // },
+  // {
+  //   label: t('category'),
+  //   dataPath: 'category.label',
+  //   filter: false,
+  //   search: true,
+  //   sort: true,
+  // },
+  // {
+  //   label: t('subCategory'),
+  //   dataPath: 'subCategory.label',
+  //   filter: false,
+  //   search: true,
+  //   sort: true,
+  // },
+  //
+  // {
+  //   label: 'Контрагент',
+  //   dataPath: 'contractor.name',
+  //   filter: false,
+  //   search: true,
+  //   sort: true,
+  // },
   // {
   //   label: 'Документ',
   //   dataPath: 'document',
@@ -312,21 +198,21 @@ export const productsSearchParams: SelectItem<DataPath>[] = [
   //   search: true,
   //   sort: true,
   // },
-  {
-    label: t('project'),
-    dataPath: 'project.label',
-    filter: false,
-    search: true,
-    sort: true,
-  },
-  { label: 'Мітка', dataPath: 'mark.label', filter: false, search: true, sort: true },
-  {
-    label: 'Статус',
-    dataPath: 'status',
-    filter: false,
-    search: true,
-    sort: true,
-  },
+  // {
+  //   label: t('project'),
+  //   dataPath: 'project.label',
+  //   filter: false,
+  //   search: true,
+  //   sort: true,
+  // },
+  // { label: 'Мітка', dataPath: 'mark.label', filter: false, search: true, sort: true },
+  // {
+  //   label: 'Статус',
+  //   dataPath: 'status',
+  //   filter: false,
+  //   search: true,
+  //   sort: true,
+  // },
 ];
 
 export const filterOptions: ProductFilterOpt[] = [

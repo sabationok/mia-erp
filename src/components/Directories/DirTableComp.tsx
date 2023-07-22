@@ -48,10 +48,11 @@ const DirTableComp: React.FC<DirTableCompProps> = ({ type, dirType, getTableSett
         setSortParams,
         filterParams,
         setFilterParams,
+        dirType,
       }),
     }),
 
-    [dirService, filterParams, getTableSettings, modalService, sortParams, type]
+    [dirService, dirType, filterParams, getTableSettings, modalService, sortParams, type]
   );
   // useEffect(() => {
   //   getAllByDirType({

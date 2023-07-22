@@ -64,6 +64,7 @@ export type ActionsCreatorOptions<
 > = {
   modalService: IModalProviderContext;
   dirService: DirectoriesService<DirType, ItemType, CreateDTO, UpdateDTO, ItemDataType>;
+  dirType: DirType;
   type?: ItemType;
   findById?: (id: string) => ItemDataType | undefined;
 };
@@ -92,17 +93,29 @@ export type RegisterUpdateItem<ItemDataType = any, ItemType = any> = {
 export interface DirCategoriesProps
   extends IDirInTreeProps<ApiDirType.CATEGORIES_TR, CategoryTypes, ICategoryFormData, ICategoryFormData, ICategory> {}
 
+export interface DirProductCategoriesProps
+  extends IDirInTreeProps<ApiDirType.CATEGORIES_PROD, any, ICategoryFormData, ICategoryFormData, ICategory> {}
+
+export interface DirBrandsProps
+  extends IDirInTreeProps<ApiDirType.BRANDS, any, ICategoryFormData, ICategoryFormData, ICategory> {}
+
 export interface DirCountsProps
   extends IDirInTreeProps<ApiDirType.COUNTS, CountType, ICountFormData, ICountFormData, ICount> {}
 
 export interface DirActivitiesProps
   extends IDirInTreeProps<ApiDirType.ACTIVITIES, any, IActivityFormData, IActivityFormData, IActivity> {}
 
-export interface DirProjectsProps extends DirTableCompProps {}
+export interface DirMarksProps extends IDirInTreeProps<ApiDirType.MARKS> {}
+
+export interface DirStatusOrderProps extends IDirInTreeProps<ApiDirType.STATUS_ORDER> {}
+
+export interface DirStatusRefundProps extends IDirInTreeProps<ApiDirType.STATUS_REFUND> {}
+
+export interface DirStatusDeliveryProps extends IDirInTreeProps<ApiDirType.STATUS_DELIVERY> {}
+
+export interface DirProjectsProps extends DirTableCompProps<ApiDirType.PROJECTS> {}
 
 export type ActivityType = 'BASE' | 'ADDS';
-
-export interface DirMarksProps extends IDirInTreeProps {}
 
 export type CategoryFilterOpt<D = any> = FilterOpt<CategoryTypes, D>;
 

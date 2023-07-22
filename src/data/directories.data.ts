@@ -9,6 +9,7 @@ import {
   DirCategoriesProps,
   DirCountsProps,
   DirMarksProps,
+  DirProductCategoriesProps,
 } from '../components/Directories/dir.types';
 import t from '../lang';
 import DirTreeComp from '../components/Directories/DirTreeComp';
@@ -46,7 +47,7 @@ const CountsProps: DirCountsProps = {
   dirType: ApiDirType.COUNTS,
   filterSearchPath: 'type',
   filterDefaultValue: 'ACTIVE',
-  actionsCreator: ({ modalService, dirService, type, findById }) => {
+  actionsCreator: ({ modalService, dirService, type, dirType, findById }) => {
     return {
       onCreateParent: () => {
         const modal = modalService.handleOpenModal({
@@ -56,7 +57,7 @@ const CountsProps: DirCountsProps = {
             type,
             onSubmit: data => {
               dirService.create({
-                data: { dirType: ApiDirType.COUNTS, data },
+                data: { dirType, data },
                 onSuccess: rd => {
                   modal?.onClose();
                   toast.success(`Created item: ${data.label}`);
@@ -75,7 +76,7 @@ const CountsProps: DirCountsProps = {
             parent: { _id: parentId },
             onSubmit: data => {
               dirService.create({
-                data: { dirType: ApiDirType.COUNTS, data },
+                data: { dirType, data },
                 onSuccess: rd => {
                   modal?.onClose();
                   toast.success(`Created item: ${data.label}`);
@@ -98,14 +99,14 @@ const countsDir: IDirectory<DirCountsProps> = {
 };
 
 const CategoriesProps: DirCategoriesProps = {
-  title: t('categories'),
+  title: t('trCategories'),
   filterOptions: categoriesFilterOptions,
   fillHeight: true,
   createParentTitle: t('createParentCategory'),
   dirType: ApiDirType.CATEGORIES_TR,
   filterSearchPath: 'type',
   filterDefaultValue: 'INCOME',
-  actionsCreator: ({ modalService, dirService, type, findById }) => {
+  actionsCreator: ({ modalService, dirService, type, dirType, findById }) => {
     return {
       onCreateParent: () => {
         const modal = modalService.handleOpenModal({
@@ -115,7 +116,7 @@ const CategoriesProps: DirCategoriesProps = {
             type,
             onSubmit: data => {
               dirService.create({
-                data: { dirType: ApiDirType.CATEGORIES_TR, data },
+                data: { dirType, data },
                 onSuccess: rd => {
                   modal?.onClose();
                   toast.success(`Created item: ${data.label}`);
@@ -129,12 +130,12 @@ const CategoriesProps: DirCategoriesProps = {
         const modal = modalService.handleOpenModal({
           ModalChildren: FormCreateCategory,
           modalChildrenProps: {
-            title: t('createParentCount'),
+            title: t('createChildCategory'),
             type,
             parent: { _id: parentId },
             onSubmit: data => {
               dirService.create({
-                data: { dirType: ApiDirType.CATEGORIES_TR, data },
+                data: { dirType, data },
                 onSuccess: rd => {
                   modal?.onClose();
                   toast.success(`Created item: ${data.label}`);
@@ -147,11 +148,25 @@ const CategoriesProps: DirCategoriesProps = {
     };
   },
 };
-const categoriesDir: IDirectory<DirCategoriesProps> = {
+const trCategoriesDir: IDirectory<DirCategoriesProps> = {
   title: CategoriesProps.title,
   iconId: iconId.folder,
   ModalChildren: DirTreeComp,
   modalChildrenProps: CategoriesProps,
+  disabled: false,
+};
+const ProductCategoriesProps: DirProductCategoriesProps = {
+  title: t('productCategories'),
+  fillHeight: true,
+  createParentTitle: t('createParentCategory'),
+  dirType: ApiDirType.CATEGORIES_PROD,
+  actionsCreator: CategoriesProps.actionsCreator as any,
+};
+const prodCategoriesDir: IDirectory<DirProductCategoriesProps> = {
+  title: ProductCategoriesProps.title,
+  iconId: iconId.folder,
+  ModalChildren: DirTreeComp,
+  modalChildrenProps: ProductCategoriesProps,
   disabled: false,
 };
 
@@ -159,7 +174,7 @@ const ContractorsProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
   title: t('contractors'),
   fillHeight: true,
   dirType: ApiDirType.CONTRACTORS,
-  getTableSettings: ({ dirService, modalService, type }) => ({
+  getTableSettings: ({ dirService, modalService, type, dirType }) => ({
     tableTitles: contractorsColumns,
     tableSearchParams: contractorsSearchParams,
     actionsCreator: p => [
@@ -174,12 +189,13 @@ const ContractorsProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
         icon: 'plus',
         onClick: () => {
           modalService.handleOpenModal({
+            ModalChildren: FormCreateContractor,
             modalChildrenProps: {
               title: t('createContractor'),
               fillHeight: true,
-              onSubmit: data => {
+              onSubmit: async data => {
                 dirService.create({
-                  data: { dirType: ApiDirType.CONTRACTORS, data: createDataForReq(data) },
+                  data: { dirType, data: createDataForReq(data) },
                   onSuccess: data => {
                     console.log(t('createContractor'), data);
                   },
@@ -187,7 +203,6 @@ const ContractorsProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
                 });
               },
             },
-            ModalChildren: FormCreateContractor,
           });
         },
       },
@@ -204,9 +219,8 @@ const contractorsDir: IDirectory<DirTableCompProps> = {
 const ProjectsProps: DirProjectsProps = {
   title: t('projects'),
   dirType: ApiDirType.PROJECTS,
-  getTableSettings: options => {
-    return {};
-  },
+  fillWidth: true,
+  getTableSettings: ContractorsProps.getTableSettings,
 };
 const projectsDir: IDirectory<DirProjectsProps> = {
   title: ProjectsProps.title,
@@ -218,9 +232,8 @@ const projectsDir: IDirectory<DirProjectsProps> = {
 const MarksProps: DirMarksProps = {
   title: t('marks'),
   dirType: ApiDirType.MARKS,
-  actionsCreator: ({ modalService, dirService, type }) => {
-    return {};
-  },
+  createParentTitle: t('createDirParentItem'),
+  actionsCreator: CategoriesProps.actionsCreator as any,
 };
 const marksDir: IDirectory<DirMarksProps> = {
   title: MarksProps.title,
@@ -234,9 +247,7 @@ const activitiesProps: DirActivitiesProps = {
   createParentTitle: t('createDirParentItem'),
   dirType: ApiDirType.ACTIVITIES,
   fillHeight: true,
-  actionsCreator: ({ modalService, dirService, type }) => {
-    return {};
-  },
+  actionsCreator: CategoriesProps.actionsCreator as any,
 };
 const activitiesDir: IDirectory<DirActivitiesProps> = {
   title: activitiesProps.title,
@@ -246,6 +257,14 @@ const activitiesDir: IDirectory<DirActivitiesProps> = {
   disabled: false,
 };
 
-const directories = [countsDir, categoriesDir, activitiesDir, contractorsDir, projectsDir, marksDir];
+const directories = [
+  countsDir,
+  trCategoriesDir,
+  prodCategoriesDir,
+  activitiesDir,
+  contractorsDir,
+  projectsDir,
+  marksDir,
+];
 
 export default directories;

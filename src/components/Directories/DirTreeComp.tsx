@@ -28,8 +28,9 @@ const DirTreeComp: React.FC<IDirInTreeProps> = ({
         modalService,
         type: current,
         dirService,
+        dirType,
       }),
-    [actionsCreator, current, dirService, findById, modalService]
+    [actionsCreator, current, dirService, dirType, findById, modalService]
   );
 
   function handleFilterData({ value }: FilterOpt) {

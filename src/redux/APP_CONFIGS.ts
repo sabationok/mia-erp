@@ -45,6 +45,10 @@ export enum ApiDirType {
   COUNTS = 'counts',
   MARKS = 'marks',
   TYPE = 'type',
+  BRANDS = 'brands',
+  STATUS_ORDER = 'status_order',
+  STATUS_REFUND = 'status_refund',
+  STATUS_DELIVERY = 'status_delivery',
 }
 
 const transactionsApiEndpoints = {

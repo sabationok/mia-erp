@@ -1,5 +1,5 @@
 import AppLoader from 'components/atoms/AppLoader';
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import AppRoutes from 'components/AppRoutes/AppRoutes';
 import { toast, ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
@@ -12,25 +12,69 @@ import { usePermissionsSelector } from './redux/permissions/usePermissionsServic
 import useAppSettings from './redux/appSettings/useAppSettings.hook';
 import { useDirService } from './hooks';
 
-const useLoadInitialAppData = () => {
+const useLoadInitialAppData = ({
+  onLoading,
+  onSuccess,
+  onError,
+}: {
+  onLoading?: (l: boolean) => void;
+  onSuccess?: () => void;
+  onError?: (e: any) => void;
+} = {}) => {
   const { _id, permission_token } = usePermissionsSelector().permission;
   const { getAllByDirType } = useDirService();
   const { getAppActions } = useAppSettings();
-  const onSuccessToast = (dirType: ApiDirType) => () => toast.success(`Updated data for directory: ${dirType}`);
+  const [_isLoading, setIsLoading] = useState(false);
+  const [_statuses, setStatuses] = useState<Partial<Record<ApiDirType, boolean>>>();
+  const onSuccessToast = (dirType: ApiDirType) => () => {
+    setStatuses(prev => ({ ...prev, [dirType]: true }));
+
+    // toast.success(`Updated data for directory: ${dirType}`
+  };
 
   return useEffect(() => {
     (async () => {
       if (permission_token || _id) {
-        await getAppActions();
-        await getAllByDirType({
-          data: { dirType: ApiDirType.CATEGORIES_TR },
-          onSuccess: onSuccessToast(ApiDirType.CATEGORIES_TR),
+        setIsLoading(true);
+        const id = toast.loading('Loading app data', {
+          isLoading: true,
         });
-        await getAllByDirType({ data: { dirType: ApiDirType.COUNTS }, onSuccess: onSuccessToast(ApiDirType.COUNTS) });
-        await getAllByDirType({
-          data: { dirType: ApiDirType.CONTRACTORS },
-          onSuccess: onSuccessToast(ApiDirType.CONTRACTORS),
-        });
+        try {
+          await getAppActions();
+          await getAllByDirType({
+            data: { dirType: ApiDirType.CATEGORIES_TR },
+            onSuccess: onSuccessToast(ApiDirType.CATEGORIES_TR),
+          });
+          await getAllByDirType({ data: { dirType: ApiDirType.COUNTS }, onSuccess: onSuccessToast(ApiDirType.COUNTS) });
+          // await getAllByDirType({
+          //   data: { dirType: ApiDirType.CONTRACTORS },
+          //   onSuccess: onSuccessToast(ApiDirType.CONTRACTORS),
+          // });
+          // await getAllByDirType({
+          //   data: { dirType: ApiDirType.MARKS },
+          //   onSuccess: onSuccessToast(ApiDirType.MARKS),
+          // });
+          // await getAllByDirType({
+          //   data: { dirType: ApiDirType.CATEGORIES_PROD },
+          //   onSuccess: onSuccessToast(ApiDirType.CATEGORIES_PROD),
+          // });
+          // await getAllByDirType({
+          //   data: { dirType: ApiDirType.PROJECTS },
+          //   onSuccess: onSuccessToast(ApiDirType.PROJECTS),
+          // });
+          setTimeout(() => {
+            toast.dismiss(id);
+            toast.success('App data loaded', { autoClose: 2000 });
+          }, 2000);
+          onSuccess && onSuccess();
+          setIsLoading(false);
+        } catch (e) {
+          setTimeout(() => {
+            toast.dismiss(id);
+            toast.error('Unknown server error while loading app data', { autoClose: 2000 });
+          }, 2000);
+          setIsLoading(false);
+        }
       }
     })();
   }, [permission_token]);

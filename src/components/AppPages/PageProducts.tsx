@@ -1,9 +1,8 @@
 import TableList from 'components/TableList/TableList';
 import { takeFullGridArea } from './pagesStyles';
-import { transactionsColumns, transactionsSearchParams } from 'data';
+import { productsColumns, transactionsSearchParams } from 'data';
 import styled from 'styled-components';
 import { useEffect, useMemo, useState } from 'react';
-import useTrFilterSelectors from 'redux/transactions/useTrFilterSelectors.hook';
 import { ITableListProps } from '../TableList/tableTypes.types';
 import AppGridPage from './AppGridPage';
 import { useProductsSelector } from '../../redux/selectors.store';
@@ -13,6 +12,7 @@ import { IProduct } from '../../redux/products/products.types';
 import useProductsServiceHook from '../../redux/products/useProductsService.hook';
 import { useProductsActionsCreator } from '../../redux/products/useProductsActionsCreator.hook';
 import { PagePathType } from '../../data/pages.data';
+import useProductsFilterSelectorsHook from '../../redux/products/useProductsFilterSelectors.hook';
 
 type Props = {
   path: PagePathType;
@@ -21,7 +21,7 @@ const PageProducts: React.FC<any> = (props: Props) => {
   const service = useProductsServiceHook();
   const state = useProductsSelector();
   const { getAll } = service;
-  const filterSelectors = useTrFilterSelectors();
+  const filterSelectors = useProductsFilterSelectorsHook();
   const actionsCreator = useProductsActionsCreator(service);
   const [isLoading, setIsLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
@@ -30,10 +30,10 @@ const PageProducts: React.FC<any> = (props: Props) => {
   const tableConfig = useMemo(
     (): ITableListProps<IProduct> => ({
       tableData: state.products,
-      tableTitles: transactionsColumns,
+      tableTitles: productsColumns,
       tableSortParams: transactionsSearchParams.filter(el => el.sort),
       filterSelectors,
-      isFilter: false,
+      isFilter: true,
       isSearch: true,
       footer: false,
       checkBoxes: true,

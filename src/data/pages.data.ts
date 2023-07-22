@@ -1,4 +1,5 @@
 import { IconIdType } from '../img/sprite';
+import t, { LangTextKey } from '../lang';
 
 export enum AppPagesEnum {
   companies = 'companies',
@@ -19,8 +20,8 @@ export type PagePathType = keyof typeof AppPagesEnum | AppPagesEnum;
 export enum AppRoleName {}
 
 export interface IAppPage<P = any> {
-  title: string;
   path: P;
+  title?: string;
   iconId: IconIdType;
   actions?: string;
   moduleName?: P;
@@ -28,19 +29,20 @@ export interface IAppPage<P = any> {
 }
 
 export const appPages: Record<string, IAppPage<PagePathType>> = {
-  companies: { title: 'Компанії', path: 'companies', iconId: 'bank' },
-  dashboard: { title: 'Дашборд', path: 'dashboard', iconId: 'bank' },
-  transactions: { title: 'Рух коштів', path: 'transactions', iconId: 'cashFlow' },
-  orders: { title: 'Замовлення', path: 'orders', iconId: 'assignmentOkOutlined' },
-  refunds: { title: 'Повернення', path: 'refunds', iconId: 'assignmentBackOutlined' },
-  supplement: { title: 'Постачання', path: 'supplement', iconId: 'assignmentInOutlined' },
-  storage: { title: 'Склад', path: 'storage', iconId: 'storageOutlined' },
-  products: { title: 'Продукти', path: 'products', iconId: 'storageOutlined' },
-  manager: { title: 'Менеджер', path: 'manager', iconId: 'assignmentPersonOutlined' },
+  companies: { path: 'companies', iconId: 'bank' },
+  dashboard: { path: 'dashboard', iconId: 'bank' },
+  transactions: { path: 'transactions', iconId: 'cashFlow' },
+  orders: { path: 'orders', iconId: 'assignmentOkOutlined' },
+  refunds: { path: 'refunds', iconId: 'assignmentBackOutlined' },
+  supplement: { path: 'supplement', iconId: 'assignmentInOutlined' },
+  storage: { path: 'storage', iconId: 'storageOutlined' },
+  products: { path: 'products', iconId: 'storageOutlined' },
+  manager: { path: 'manager', iconId: 'assignmentPersonOutlined' },
 };
 
 export const pages: IAppPage[] = Object.entries(appPages).map(([path, page]) => ({
   ...page,
+  title: t(page.path as LangTextKey),
   moduleName: path,
   path,
 }));
