@@ -108,7 +108,7 @@ const CategoriesProps: DirCategoriesProps = {
   filterDefaultValue: 'INCOME',
   actionsCreator: ({ modalService, dirService, type, dirType, findById }) => {
     return {
-      onCreateParent: () => {
+      onCreateParent: async options => {
         const modal = modalService.handleOpenModal({
           ModalChildren: FormCreateCategory,
           modalChildrenProps: {
@@ -118,33 +118,67 @@ const CategoriesProps: DirCategoriesProps = {
               dirService.create({
                 data: { dirType, data },
                 onSuccess: rd => {
-                  modal?.onClose();
-                  toast.success(`Created item: ${data.label}`);
+                  options?.clearAfter && modal?.onClose();
+                  toast.success(`Created: ${data.label}`);
                 },
               });
             },
           },
         });
       },
-      onCreateChild: parentId => {
+      onCreateChild: async (parentId, parent, options) => {
         const modal = modalService.handleOpenModal({
           ModalChildren: FormCreateCategory,
           modalChildrenProps: {
             title: t('createChildCategory'),
             type,
-            parent: { _id: parentId },
+            parent,
             onSubmit: data => {
               dirService.create({
                 data: { dirType, data },
                 onSuccess: rd => {
-                  modal?.onClose();
-                  toast.success(`Created item: ${data.label}`);
+                  options?.clearAfter && modal?.onClose();
+                  toast.success(`Created: ${data.label}`);
                 },
               });
             },
           },
         });
       },
+      onUpdateItem: async (_id, options) => {
+        const dataForUpdate = findById ? findById(_id) : undefined;
+        if (!dataForUpdate) return;
+        const modal = modalService.handleOpenModal({
+          ModalChildren: FormCreateCategory,
+          modalChildrenProps: {
+            title: t('createChildCategory'),
+            type,
+            data: dataForUpdate,
+            onSubmit: data => {
+              dirService?.update({
+                data: { dirType, _id, data },
+                onSuccess: rd => {
+                  options?.clearAfter && modal?.onClose();
+                  toast.success(`Created: ${data.label}`);
+                },
+              });
+            },
+          },
+        });
+      },
+
+      onChangeArchiveStatus: dirService?.changeArchiveStatus
+        ? async (id, status, options) => {
+            const dataForUpdate = findById ? findById(id) : undefined;
+            if (!dataForUpdate) return;
+            dirService?.changeArchiveStatus({
+              data: { dirType, data: { isArchived: status } },
+              onSuccess: (rd: any) => {
+                toast.success(`${dataForUpdate.label} => ${status ? 'archived' : 'unarchived'}`);
+              },
+            });
+          }
+        : undefined,
     };
   },
 };
@@ -161,6 +195,7 @@ const ProductCategoriesProps: DirProductCategoriesProps = {
   createParentTitle: t('createParentCategory'),
   dirType: ApiDirType.CATEGORIES_PROD,
   actionsCreator: CategoriesProps.actionsCreator as any,
+  availableLevels: 5,
 };
 const prodCategoriesDir: IDirectory<DirProductCategoriesProps> = {
   title: ProductCategoriesProps.title,

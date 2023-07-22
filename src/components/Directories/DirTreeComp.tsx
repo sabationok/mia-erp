@@ -14,9 +14,11 @@ const DirTreeComp: React.FC<IDirInTreeProps> = ({
   filterSearchPath,
   filterDefaultValue,
   actionsCreator,
+  availableLevels,
   ...props
 }) => {
   const { directory } = useDirectoriesSelector(dirType);
+  console.log(dirType, directory);
   const dirService = useDirService();
   const findById = useCallback((id: string) => directory.find(el => el._id === id), [directory]);
   const modalService = useModalProvider();
@@ -44,19 +46,19 @@ const DirTreeComp: React.FC<IDirInTreeProps> = ({
   });
 
   return (
-    <>
-      <ModalForm {...props} onOptSelect={handleFilterData}>
-        <DirList
-          list={fList}
-          currentLevel={0}
-          onEdit={actions?.onUpdateItem}
-          onDelete={actions?.onDeleteItem}
-          onCreateChild={actions?.onCreateChild}
-          onCreateParent={actions?.onCreateParent}
-          createParentTitle={createParentTitle}
-        />
-      </ModalForm>
-    </>
+    <ModalForm {...props} onOptSelect={handleFilterData}>
+      <DirList
+        list={fList}
+        currentLevel={0}
+        availableLevels={availableLevels}
+        onEdit={actions?.onUpdateItem}
+        onDelete={actions?.onDeleteItem}
+        onCreateChild={actions?.onCreateChild}
+        onCreateParent={actions?.onCreateParent}
+        onChangeArchiveStatus={actions?.onChangeArchiveStatus}
+        createParentTitle={createParentTitle}
+      />
+    </ModalForm>
   );
 };
 

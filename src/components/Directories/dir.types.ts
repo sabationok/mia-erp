@@ -31,6 +31,10 @@ export type RegisterChangeArchiveStatus<ItemDataType = any, ItemType = any> = {
   type?: ItemType;
   findById: (id: string) => ItemDataType | undefined;
 };
+export type SubmitFormOptions = {
+  closeAfter?: boolean;
+  clearAfter?: boolean;
+};
 
 export interface IDirInTreeProps<
   DirType extends ApiDirType = any,
@@ -45,13 +49,14 @@ export interface IDirInTreeProps<
   dirType: ApiDirType;
   filterSearchPath?: keyof IBaseDirItem<ItemType>;
   filterDefaultValue?: ItemType;
+  availableLevels?: number;
 
   actionsCreator: (options: ActionsCreatorOptions<DirType, ItemType, CreateDTO, UpdateDTO, ItemDataType>) => {
-    onCreateChild?: (parentId: string) => void;
-    onCreateParent?: () => void;
-    onUpdateItem?: (id: string) => void;
-    onDeleteItem?: (id: string) => void;
-    onChangeArchiveStatus?: (id: string, status?: boolean) => void;
+    onCreateChild?: (parentId: string, parent: IBaseDirItem<ItemType>, options?: SubmitFormOptions) => void;
+    onCreateParent?: (options?: SubmitFormOptions) => void;
+    onUpdateItem?: (id: string, options?: SubmitFormOptions) => void;
+    onDeleteItem?: (id: string, options?: SubmitFormOptions) => void;
+    onChangeArchiveStatus?: (id: string, status: boolean, options?: SubmitFormOptions) => void;
   };
 }
 

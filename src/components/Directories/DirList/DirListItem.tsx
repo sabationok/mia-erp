@@ -1,41 +1,26 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { ICategory } from 'redux/directories/categories.types';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import DirList from './DirList';
-import { IBaseDirItem } from '../dir.types';
-import { ICount } from '../../../redux/directories/counts.types';
+import { IBaseDirItem, SubmitFormOptions } from '../dir.types';
 import { isUndefined } from 'lodash';
-
-// export interface DirListItemProps {
-//   _id?: string;
-//   label?: string;
-//   type?: any;
-//   name?: string;
-//   parent?: Partial<ICount | ICategory>;
-//   balance?: number;
-//   currency?: string;
-// }
-
-export interface ICategoriesDirItem extends IBaseDirItem<ICategory> {}
-
-export interface ICountsDirItem extends IBaseDirItem<ICount> {}
 
 export interface DirListItemAddsProps<T = any> {
   list: IBaseDirItem<T>[];
-  canHaveChild: boolean;
-  onDelete?: (id: string) => void;
-  onChangeArchiveStatus?: (id: string) => void;
-  onEdit?: (id: string) => void;
-  onCreateChild?: (parentId: string) => void;
+  item?: IBaseDirItem<T>;
+  onDelete?: (id: string, options?: SubmitFormOptions) => void;
+  onEdit?: (id: string, options?: SubmitFormOptions) => void;
+  onChangeArchiveStatus?: (id: string, status: boolean, options?: SubmitFormOptions) => void;
+  onCreateChild?: (parentId: string, parent: IBaseDirItem<T>, options?: SubmitFormOptions) => void;
   currentLevel?: number;
+  availableLevels?: number;
 }
 
 const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
   label,
   name,
   parent,
-  canHaveChild,
+  item,
   _id,
   list,
   onDelete,
@@ -44,17 +29,23 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
   onCreateChild,
   childrenList,
   currentLevel,
+  availableLevels,
+  ...props
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const canHasChildren = useMemo(() => {
+    return !isUndefined(availableLevels) && !isUndefined(currentLevel) ? availableLevels > currentLevel + 1 : !parent;
+  }, [availableLevels, currentLevel, parent]);
 
   function onOpenClick() {
     setIsOpen(prev => !prev);
   }
 
-  function evHandlerWrapper(evHandler: (arg: any) => void, arg: any) {
+  function evHandlerWrapper(evHandler: (...arg: any[]) => void, ...arg: any[]) {
     return () => {
       if (typeof evHandler === 'function') {
-        evHandler(arg);
+        evHandler(...arg);
       }
     };
   }
@@ -62,14 +53,24 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
   return (
     <Item>
       <ItemGrid>
-        <ActionsField canHaveChild={canHaveChild}>
-          {canHaveChild && (
+        <ActionsField canHasChildren={canHasChildren}>
+          {canHasChildren && (
             <ButtonIcon
               variant="onlyIcon"
               iconSize="24px"
               icon="plus"
-              disabled={!canHaveChild || !onCreateChild}
-              onClick={onCreateChild && evHandlerWrapper(onCreateChild, _id)}
+              disabled={!canHasChildren || !onCreateChild}
+              onClick={
+                onCreateChild &&
+                evHandlerWrapper(
+                  onCreateChild,
+                  _id,
+                  item || {
+                    label,
+                    name,
+                  }
+                )
+              }
             />
           )}
         </ActionsField>
@@ -96,13 +97,16 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
             onClick={onEdit && evHandlerWrapper(onEdit, _id)}
           />
 
-          <ButtonIcon
-            variant="onlyIcon"
-            iconSize="24px"
-            icon="delete"
-            disabled={!onDelete}
-            onClick={onDelete && evHandlerWrapper(onDelete, _id)}
-          />
+          {onDelete && (
+            <ButtonIcon
+              variant="onlyIcon"
+              iconSize="24px"
+              icon="delete"
+              disabled={!onDelete}
+              onClick={onDelete && evHandlerWrapper(onDelete, _id)}
+            />
+          )}
+
           <ButtonIcon
             variant="onlyIcon"
             iconSize="24px"
@@ -123,6 +127,7 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
             onEdit={onEdit}
             onCreateChild={onCreateChild}
             currentLevel={!isUndefined(currentLevel) ? currentLevel + 1 : currentLevel}
+            availableLevels={availableLevels}
           />
         )}
       </Children>
@@ -144,7 +149,7 @@ const ItemGrid = styled.div`
   color: ${({ theme }) => theme.fontColorHeader};
 `;
 
-const ActionsField = styled.div<{ canHaveChild?: boolean }>`
+const ActionsField = styled.div<{ canHasChildren?: boolean }>`
   display: flex;
   align-items: center;
 

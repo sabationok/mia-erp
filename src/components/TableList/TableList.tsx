@@ -128,7 +128,7 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
   return (
     <Table {...props}>
       <TableCTX.Provider value={CTX}>
-        <AppLoader isLoading={isLoading} comment={'Waiting for new transactions...'} />
+        <AppLoader isLoading={isLoading} comment={'Waiting for new data...'} />
 
         <TableOverHead />
 
