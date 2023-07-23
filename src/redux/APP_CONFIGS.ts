@@ -31,11 +31,6 @@ export enum Endpoints {
 }
 
 export enum ApiDirType {
-  counts = 'counts',
-  documents = 'documents',
-  contractors = 'contractors',
-  categories = 'categories',
-  projects = 'projects',
   CATEGORIES_TR = 'categories_tr',
   CATEGORIES_PROD = 'categories_prod',
   CONTRACTORS = 'contractors',
@@ -49,6 +44,7 @@ export enum ApiDirType {
   STATUS_ORDER = 'status_order',
   STATUS_REFUND = 'status_refund',
   STATUS_DELIVERY = 'status_delivery',
+  CUSTOM_FIELDS = 'custom_fields',
 }
 
 const transactionsApiEndpoints = {

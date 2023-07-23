@@ -4,12 +4,13 @@ import { useCallback } from 'react';
 import { TableActionCreator } from '../../components/TableList/tableTypes.types';
 import { IProduct } from './products.types';
 import { useProductsSelector } from '../selectors.store';
-import ProductForm, { ProductFilterOpt } from '../../components/Forms/ProductForm';
+import ProductForm, { ProductFilterOpt } from '../../components/Forms/FormCreateProduct';
 
 export type ProductsActionsCreator = TableActionCreator<IProduct>;
 export const ProductPriceTypeFilterOptions: ProductFilterOpt[] = [
   { label: 'DEFAULT', value: 'DEFAULT' },
-  { label: 'COMMISSION', value: 'COMMISSION' },
+  { label: 'COMMISSION', value: 'COMMISSION', disabled: true },
+  { label: 'COMMISSION\n FIX', value: 'COMMISSION_FIX', disabled: true },
 ];
 const useProductsActionsCreator = (service: ProductsService): ProductsActionsCreator => {
   const state = useProductsSelector();
@@ -160,7 +161,32 @@ const useProductsActionsCreator = (service: ProductsService): ProductsActionsCre
       //   },
       // },
       {
-        name: 'createExpenseTr',
+        name: 'editProduct',
+        title: 'Редагувати',
+        icon: 'edit',
+        iconSize: '90%',
+        type: 'onlyIcon',
+        disabled: false,
+      },
+      {
+        name: 'copyProduct',
+        title: 'Копіювати',
+        icon: 'copy',
+        iconSize: '90%',
+        type: 'onlyIcon',
+        disabled: false,
+      },
+      {
+        name: 'archiveProduct',
+        title: 'Архів',
+        icon: 'archive',
+        iconSize: '90%',
+        type: 'onlyIcon',
+        disabled: false,
+      },
+      { separator: true },
+      {
+        name: 'createProduct',
         title: 'Новий',
         icon: 'plus',
         iconSize: '90%',
@@ -177,7 +203,7 @@ const useProductsActionsCreator = (service: ProductsService): ProductsActionsCre
                 service.create({
                   data,
                   onSuccess(d) {
-                    o?.close && modal?.onClose();
+                    o?.closeAfterSave && modal?.onClose();
                   },
                 });
               },

@@ -16,8 +16,8 @@ export const contractorsColumns: CellTittleProps[] = [
     action: 'status',
   },
   {
-    top: { name: 'Електронна пошта', path: 'email', uppercase: false },
-    bottom: { name: 'Номер телефону', path: 'phone' },
+    top: { name: 'Емейл', path: 'email', uppercase: false },
+    bottom: { name: 'Телефон', path: 'phone' },
     width: '170px',
     action: 'contacts',
   },

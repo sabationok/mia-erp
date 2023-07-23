@@ -1,5 +1,8 @@
 import { AppResponse, IBase, OnlyUUID } from '../global.types';
 import { CurrencyCode } from '../transactions/transactions.types';
+import { IBaseDirItem } from '../../components/Directories/dir.types';
+import { ContractorsTypesEnum } from '../contractors/contractors.types';
+import { ApiDirType } from '../APP_CONFIGS';
 
 export type ProductType = 'DEFAULT' | 'CUSTOM';
 
@@ -19,7 +22,13 @@ export interface IDocument extends IBase {
 
 export type ProductStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
-export type ProductPriceType = 'COMMISSION' | 'DEFAULT';
+export enum ProductTypeEnum {
+  DEFAULT = 'DEFAULT',
+  COMMISSION = 'COMMISSION',
+  COMMISSION_FIX = 'COMMISSION_FIX',
+}
+
+export type ProductPriceType = 'COMMISSION' | 'DEFAULT' | 'COMMISSION_FIX' | ProductTypeEnum;
 
 export interface IProductBase extends IBase {
   price?: number;
@@ -27,25 +36,25 @@ export interface IProductBase extends IBase {
   type?: ProductType;
   currency?: CurrencyCode;
   status?: ProductStatus;
+  archived?: boolean;
+  visible?: boolean;
+  description?: string;
   tags?: string[];
 }
 
 export interface IProduct extends IProductBase {
   eventDate?: number | string | Date;
-  countIn?: any;
-  subCountIn?: any;
-  countOut?: any;
-  subCountOut?: any;
-  category?: any;
-  subCategory?: any;
-  contractor?: any;
-  project?: any;
+
+  label: string;
+  sku?: string;
+
+  category?: IBaseDirItem<any, ApiDirType.CATEGORIES_PROD>;
+  subCategory?: IBaseDirItem<any, ApiDirType.CATEGORIES_PROD>;
+
+  brand?: IBaseDirItem<any, ApiDirType.BRANDS>;
+  supplier?: IBaseDirItem<ContractorsTypesEnum, ApiDirType.CONTRACTORS>;
+  contractor?: IBaseDirItem<ContractorsTypesEnum, ApiDirType.CONTRACTORS>;
   document?: any;
-  archived?: boolean;
-  visible?: boolean;
-  status?: ProductStatus;
-  description?: string;
-  tags?: string[];
 }
 
 export interface IProductForReq extends Partial<Record<keyof IProduct, any>> {

@@ -128,15 +128,15 @@ export type CountFilterOpt<D = any> = FilterOpt<CountType, D>;
 export type ActivityFilterOpt<D = any> = FilterOpt<ActivityType, D>;
 
 export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> extends IBase {
-  name?: string;
-  label?: string;
   dirType?: DirType;
   type?: Type;
+  name?: string;
+  label?: string;
   status?: 'ARCHIVED' | 'DELETED' | 'ACTIVE';
   taxCode?: string | number;
   description?: string;
   def?: string;
   owner?: Pick<ICompany, '_id' | 'name' | 'email'>;
-  parent?: IBaseDirItem<Type>;
-  childrenList?: IBaseDirItem<Type>[];
+  parent?: IBaseDirItem<Type, DirType>;
+  childrenList?: IBaseDirItem<Type, DirType>[];
 }

@@ -1,5 +1,5 @@
 import ModalForm from 'components/ModalForm';
-import { CategoryTypes, ICategory, ICategoryFormData } from 'redux/directories/categories.types';
+import { ICategoryFormData } from 'redux/directories/categories.types';
 import React from 'react';
 import styled from 'styled-components';
 import * as yup from 'yup';
@@ -8,19 +8,21 @@ import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import t from '../../lang';
-import { DirectoriesFormProps } from '../Directories/dir.types';
+import { DirectoriesFormProps, IBaseDirItem } from '../Directories/dir.types';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import FormAfterSubmitOptions from './FormAfterSubmitOptions';
 import { useAppForm } from '../../hooks';
+import { ApiDirType } from '../../redux/APP_CONFIGS';
 
-export interface FormCreateCategoryProps extends DirectoriesFormProps<CategoryTypes, ICategory, ICategoryFormData> {}
+export interface FormCreateDirTreeCompProps<T = any, D extends ApiDirType = any, FD = any>
+  extends DirectoriesFormProps<T, IBaseDirItem<T, D>, FD> {}
 
 const validation = yup.object().shape({
   label: yup.string().required(),
   description: yup.string().max(250).optional(),
 });
 
-const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
+const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
   _id,
   type,
   parent,
@@ -72,7 +74,7 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
     >
       <Inputs>
         <InputLabel label={t('type')} direction={'vertical'} error={errors.type} disabled>
-          <InputText defaultValue={type ? t(`${type}S`).toUpperCase() : type} disabled />
+          <InputText defaultValue={type ? t(`${type}s` as any).toUpperCase() : type} disabled />
         </InputLabel>
 
         {parent?._id && (
@@ -84,6 +86,10 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
         <InputLabel label={t('label')} direction={'vertical'} error={errors.label}>
           <InputText placeholder={t('insertLabel')} {...register('label')} autoFocus />
         </InputLabel>
+
+        {/*<InputLabel label={t('')} direction={'vertical'} error={errors.label}>*/}
+        {/*  <InputText placeholder={t('insertLabel')} {...register('label')} autoFocus />*/}
+        {/*</InputLabel>*/}
 
         <InputLabel label={t('comment')} direction={'vertical'} error={errors.description}>
           <TextareaPrimary placeholder={t('insertComment')} {...register('description')} maxLength={250} />
@@ -103,4 +109,4 @@ const Inputs = styled.div`
   background-color: inherit;
 `;
 
-export default FormCreateCategory;
+export default FormCreateDirTreeComp;

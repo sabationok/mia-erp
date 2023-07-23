@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 import { filterOptions } from '../../data/transactions.data';
 import { TableActionCreator } from '../../components/TableList/tableTypes.types';
 import { ITransaction } from './transactions.types';
-import TransactionForm from '../../components/Forms/TransactionFormNew';
+import TransactionForm from '../../components/Forms/FormCreateTransaction';
 import { useTransactionsSelector } from '../selectors.store';
 import { toast } from 'react-toastify';
 
@@ -80,7 +80,7 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
                   data,
                   onSuccess(d) {
                     toast.success(`Транзакцію створено`);
-                    o?.close && modal?.onClose();
+                    o?.closeAfterSave && modal?.onClose();
                   },
                 });
               },
@@ -122,7 +122,7 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
                 service.create({
                   data,
                   onSuccess(d) {
-                    o?.close && modal?.onClose();
+                    o?.closeAfterSave && modal?.onClose();
                   },
                 });
               },
@@ -150,7 +150,7 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
                 service.create({
                   data,
                   onSuccess(d) {
-                    o?.close && modal?.onClose();
+                    o?.closeAfterSave && modal?.onClose();
                   },
                 });
               },
@@ -177,7 +177,7 @@ const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => 
                 service.create({
                   data,
                   onSuccess(d) {
-                    o?.close && modal?.onClose();
+                    o?.closeAfterSave && modal?.onClose();
                   },
                 });
               },

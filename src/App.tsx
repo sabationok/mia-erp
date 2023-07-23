@@ -50,10 +50,10 @@ const useLoadInitialAppData = ({
             data: { dirType: ApiDirType.CATEGORIES_PROD },
             onSuccess: onSuccessToast(ApiDirType.CATEGORIES_PROD),
           });
-          // await getAllByDirType({
-          //   data: { dirType: ApiDirType.CONTRACTORS },
-          //   onSuccess: onSuccessToast(ApiDirType.CONTRACTORS),
-          // });
+          await getAllByDirType({
+            data: { dirType: ApiDirType.CONTRACTORS, params: { createTreeData: false } },
+            onSuccess: onSuccessToast(ApiDirType.CONTRACTORS),
+          });
           // await getAllByDirType({
           //   data: { dirType: ApiDirType.MARKS },
           //   onSuccess: onSuccessToast(ApiDirType.MARKS),

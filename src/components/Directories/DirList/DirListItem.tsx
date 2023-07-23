@@ -1,5 +1,5 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import React, { useMemo, useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import DirList from './DirList';
 import { IBaseDirItem, SubmitFormOptions } from '../dir.types';
@@ -187,4 +187,4 @@ const Children = styled.ul<{ isOpen: boolean }>`
 
   padding-left: 34px;
 `;
-export default DirListItem;
+export default memo(DirListItem);

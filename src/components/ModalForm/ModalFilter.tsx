@@ -19,6 +19,7 @@ export interface FilterOpt<V = any, D = any> extends Record<string, any> {
   data?: D;
   extraLabel?: string | React.ReactNode;
   getLabel?: (data?: D) => string | React.ReactNode;
+  disabled?: boolean;
 }
 
 export type FilterOptionSelectHandler<V = any, D = any> = (option: FilterOpt<V, D>, value: FilterOpt['value']) => void;
@@ -69,6 +70,7 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
         <StButtonIcon
           key={idx}
           variant="def"
+          disabled={opt?.disabled}
           className={current === idx ? 'filterBtn active' : 'filterBtn'}
           onClick={handleSelectOpt(idx, opt)}
         >
@@ -148,6 +150,10 @@ const StButtonIcon = styled(ButtonIcon)`
     &::after {
       width: 100%;
     }
+  }
+
+  &[disabled] {
+    opacity: 60%;
   }
 `;
 

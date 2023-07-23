@@ -1,5 +1,5 @@
 import { colors, statusData, statusDataMap } from './statuses.data';
-import { transactionsColumns, transactionsMockData, transactionsSearchParams } from './transactions.data';
+import { transactionsColumns, transactionsSearchParams } from './transactions.data';
 import { trCategories } from './categories.data';
 import addButtons from './future/createActions.data';
 import directories from './directories.data';
@@ -23,7 +23,6 @@ export {
   reportsTableColumns,
   sideBarLeftData,
   statusData,
-  transactionsMockData,
   trCategories,
   addButtons,
   statusDataMap,

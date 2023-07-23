@@ -1,7 +1,8 @@
-import { Path, useForm } from 'react-hook-form';
+import { Path, SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import { FieldValues, UseFormProps, UseFormReturn } from 'react-hook-form/dist/types';
-import { useCallback } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { CustomSelectProps } from '../components/atoms/Inputs/CustomSelect';
+import { UseFormHandleSubmit } from 'react-hook-form/dist/types/form';
 
 export type RegisterSelect<TFieldValues extends FieldValues = FieldValues> = (
   name: Path<TFieldValues>,
@@ -11,18 +12,43 @@ export type RegisterSelect<TFieldValues extends FieldValues = FieldValues> = (
   }
 ) => CustomSelectProps<TFieldValues[Path<TFieldValues>]>;
 
-export interface UseAppFromReturn<TFieldValues extends FieldValues = FieldValues, TContext = any>
+export interface UseAppFormReturn<TFieldValues extends FieldValues = FieldValues, TContext = any>
   extends UseFormReturn<TFieldValues, TContext> {
   registerSelect: RegisterSelect<TFieldValues>;
   formValues: TFieldValues;
+  onSubmitHandler?: (
+    onValid: SubmitHandler<TFieldValues>,
+    onInvalid: SubmitErrorHandler<TFieldValues>
+  ) => UseFormHandleSubmit<TFieldValues>;
+  toggleAfterSubmitOption: (option: keyof UseAppFormAfterSubmitOptions) => void;
 }
 
+export interface UseAppFormAfterSubmitOptions {
+  closeAfterSave?: boolean;
+  clearAfterSave?: boolean;
+  // onOptionsChange?: (options: UseAppFormAfterSubmitOptions) => void;
+}
+
+export type AppSubmitHandler<D = any> = (data: D, options?: UseAppFormAfterSubmitOptions) => void;
+export type AppErrorSubmitHandler<E = any> = (errors: E, options?: UseAppFormAfterSubmitOptions) => void;
 const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = any>(
   formProps?: UseFormProps<TFieldValues, TContext>
-): UseAppFromReturn<TFieldValues, TContext> => {
+): UseAppFormReturn<TFieldValues, TContext> & UseAppFormAfterSubmitOptions => {
   const form = useForm<TFieldValues>(formProps);
   const { setValue, unregister, register, watch } = form;
   const formValues = watch();
+  const [afterSubmitOptions, setAfterSubmitOptions] = useState<UseAppFormAfterSubmitOptions>({
+    closeAfterSave: true,
+    clearAfterSave: true,
+  });
+
+  // function onSubmitHandler(onValid: AppSubmitHandler<TFieldValues>, onInvalid: AppErrorSubmitHandler<TFieldValues>) {
+  //   if (!onValid) return;
+  //   const onValidSubmit: SubmitHandler<TFieldValues> = data => onValid(data, afterSubmitOptions);
+  //
+  //   const onInvalidSubmit: SubmitErrorHandler<TFieldValues> = errors => onInvalid(errors as any);
+  //   return handleSubmit(onValidSubmit, onInvalidSubmit);
+  // }
 
   const registerSelect = useCallback(
     (
@@ -58,7 +84,20 @@ const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = a
     [formValues, register, setValue, unregister]
   );
 
-  return { ...form, formValues, registerSelect };
+  return useMemo(
+    () => ({
+      ...form,
+      formValues,
+      registerSelect,
+      ...afterSubmitOptions,
+      toggleAfterSubmitOption: (option: keyof UseAppFormAfterSubmitOptions) =>
+        setAfterSubmitOptions(prev => ({
+          ...prev,
+          [option]: !prev[option],
+        })),
+    }),
+    [afterSubmitOptions, form, formValues, registerSelect]
+  );
 };
 
 export default useAppForm;

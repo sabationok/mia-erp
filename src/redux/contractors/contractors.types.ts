@@ -2,15 +2,21 @@ import { ApiDirType } from '../APP_CONFIGS';
 import { IBaseDirItem } from '../../components/Directories/dir.types';
 
 export interface IContractor extends IBaseDirItem<ContractorsTypesEnum, ApiDirType.CONTRACTORS> {
+  type: ContractorsTypesEnum;
   name?: string;
+  fullName?: string;
+  secondName?: string;
   label?: string;
   email?: string;
   phone?: string;
-  descr?: string;
+  ownershipType?: string;
+  description?: string;
   tags?: string[];
 }
 
-export interface IContractorFormData extends Omit<IContractor, '_id' | 'createdAt' | 'updatedAt'> {}
+export interface IContractorFormData extends Omit<IContractor, '_id' | 'createdAt' | 'updatedAt' | 'type'> {
+  type: { label?: string; value: ContractorsTypesEnum };
+}
 
 export enum ContractorsTypesEnum {
   COUNTER = 'COUNTER',
@@ -19,7 +25,7 @@ export enum ContractorsTypesEnum {
   CUSTOMER = 'CUSTOMER',
   MANAGER = 'MANAGER',
   FIN_MANAGER = 'FIN_MANAGER',
-  COUNT_MANAGER = 'COUNT_MANAGER',
+  BRAND_MANAGER = 'BRAND_MANAGER',
   SUPPLY_MANAGER = 'SUPPLY_MANAGER',
   SALES_MANAGER = 'SALES_MANAGER',
   WORKER = 'WORKER',

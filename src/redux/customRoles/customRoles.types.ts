@@ -11,6 +11,7 @@ export type RoleAccessKeyType = PagePathType;
 
 export interface ICustomRole extends IBase {
   label?: string;
+  expireAt?: Date | string | number;
   description?: string;
   actions?: RoleActionType[];
   accessKeys?: RoleAccessKeyType[];

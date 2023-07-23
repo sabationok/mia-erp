@@ -15,22 +15,18 @@ import { useAppSelector } from '../../redux/store.store';
 import FlexBox from '../atoms/FlexBox';
 import translate from '../../lang';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { useAppForm } from '../../hooks';
 import { yupResolver } from '@hookform/resolvers/yup';
+import FormAfterSubmitOptions from './FormAfterSubmitOptions';
+import { UseAppFormAfterSubmitOptions } from '../../hooks/useAppForm.hook';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
-
-export interface AfterFormSubmitOptions {
-  close?: boolean;
-  clear?: boolean;
-}
 
 export interface TransactionFormNewProps extends Omit<ModalFormProps, 'onSubmit'> {
   edit?: boolean;
   copy?: boolean;
   id?: string;
-  onSubmit?: (data: ITransactionReqData, options?: AfterFormSubmitOptions) => void;
+  onSubmit?: (data: ITransactionReqData, options?: UseAppFormAfterSubmitOptions) => void;
   filterOptions?: TransactionsFilterOpt[];
   defaultState?: Partial<ITransaction>;
   addInputs?: boolean;
@@ -66,7 +62,7 @@ const getValidation = (type?: TransactionType) =>
     subCategory: optionalSelectItem,
   });
 
-const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
+const FormCreateTransaction: React.FC<TransactionFormNewProps> = ({
   edit,
   onSubmit,
   copy,
@@ -85,12 +81,14 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
     setValue,
     registerSelect,
     handleSubmit,
+    toggleAfterSubmitOption,
+    closeAfterSave,
+    clearAfterSave,
   } = useAppForm<ITransaction>({
     defaultValues: { currency: 'UAH', ...defaultState, eventDate: formatDateForInputValue(defaultState?.eventDate) },
     resolver: yupResolver(getValidation(currentType)),
     reValidateMode: 'onSubmit',
   });
-  const [afterSubmitOptions, setAfterSubmitOptions] = useState<AfterFormSubmitOptions>({});
 
   function onValidSubmit(submitData: ITransaction) {
     const omitPathArr: (keyof ITransaction)[] =
@@ -100,7 +98,7 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
 
     const trReqData = createTransactionForReq(submitData, omitPathArr, '', 'amount');
 
-    onSubmit && onSubmit({ _id: '', data: trReqData }, afterSubmitOptions);
+    onSubmit && onSubmit({ _id: '', data: trReqData }, { closeAfterSave, clearAfterSave });
   }
 
   const renderInputsCountIn = useMemo(() => {
@@ -194,45 +192,6 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
     );
   }, [directories, formValues.category?._id, formValues.type, registerSelect]);
 
-  const renderExtraFooter = useMemo(() => {
-    const isClearActive = afterSubmitOptions.clear;
-    const isCloseActive = afterSubmitOptions.close;
-    return (
-      <ExtraFooter fillWidth gap={4} padding={'4px 8px'} alignItems={'flex-start'}>
-        <Label
-          gap={8}
-          fxDirection={'row'}
-          onClick={() => {
-            setAfterSubmitOptions(prev => ({ ...prev, clear: !prev.clear }));
-          }}
-        >
-          <ButtonIcon
-            variant={'onlyIconNoEffects'}
-            size={'14px'}
-            iconSize={'90%'}
-            icon={isClearActive ? 'checkBoxOn' : 'checkBoxOff'}
-          />
-          <div>{'Очистити після підтверджеання'}</div>
-        </Label>
-        <Label
-          gap={8}
-          fxDirection={'row'}
-          onClick={() => {
-            setAfterSubmitOptions(prev => ({ ...prev, close: !prev.close }));
-          }}
-        >
-          <ButtonIcon
-            variant={'onlyIconNoEffects'}
-            size={'14px'}
-            iconSize={'90%'}
-            icon={isCloseActive ? 'checkBoxOn' : 'checkBoxOff'}
-          />
-          <div>{'Закрити після підтверджеання'}</div>
-        </Label>
-      </ExtraFooter>
-    );
-  }, [afterSubmitOptions.clear, afterSubmitOptions.close]);
-
   return (
     <ModalForm
       isValid={isValid}
@@ -244,7 +203,13 @@ const TransactionFormNew: React.FC<TransactionFormNewProps> = ({
         }
       }}
       {...props}
-      extraFooter={renderExtraFooter}
+      extraFooter={
+        <FormAfterSubmitOptions
+          toggleOption={toggleAfterSubmitOption}
+          closeAfterSave={closeAfterSave}
+          clearAfterSave={clearAfterSave}
+        />
+      }
     >
       <FlexBox className={'inputs'} flex={'1'} fillWidth maxHeight={'100%'} padding={'12px'} overflow={'auto'}>
         <InputLabel label={translate('dateAndTime')} direction={'vertical'}>
@@ -286,12 +251,4 @@ const GridWrapper = styled.div<{ gridTemplateColumns?: string }>`
   gap: 12px;
 `;
 
-const ExtraFooter = styled(FlexBox)`
-  min-height: 40px;
-`;
-
-const Label = styled(FlexBox)`
-  cursor: pointer;
-  user-select: none;
-`;
-export default TransactionFormNew;
+export default FormCreateTransaction;

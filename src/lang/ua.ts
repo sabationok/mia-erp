@@ -6,19 +6,23 @@ export const langUa = {
 
   [ApiDirType.CATEGORIES_TR]: 'Категорії',
   [ApiDirType.CATEGORIES_PROD]: 'Категорії',
+  [ApiDirType.BRANDS]: 'Бренди',
 
   [ContractorsTypesEnum.COUNTER]: 'Бухгалтер',
-  [ContractorsTypesEnum.AUDITOR]: 'Уадитор',
+  [ContractorsTypesEnum.AUDITOR]: 'Аудитор',
   [ContractorsTypesEnum.SUPPLIER]: 'Постачальник',
   [ContractorsTypesEnum.CUSTOMER]: 'Клієнт',
   [ContractorsTypesEnum.MANAGER]: 'Менеджер',
   [ContractorsTypesEnum.FIN_MANAGER]: 'Фінансит',
-  [ContractorsTypesEnum.COUNT_MANAGER]: 'COUNT_MANAGER',
+  [ContractorsTypesEnum.BRAND_MANAGER]: 'Бренд менеджер',
   [ContractorsTypesEnum.SUPPLY_MANAGER]: 'Менеджер з постачання',
   [ContractorsTypesEnum.SALES_MANAGER]: 'Менеджер з продажу',
   [ContractorsTypesEnum.WORKER]: 'Робітник',
   [ContractorsTypesEnum.COMMISSION_AGENT]: 'Комісіонер',
   [ContractorsTypesEnum.CONSIGNOR]: 'Комітент',
+
+  brand: 'Бренд',
+  selectBrand: 'Оберіть бренд',
 
   counts: 'Рахунки',
   count: 'Рахунок',
@@ -56,11 +60,14 @@ export const langUa = {
   subCountOut: 'Суб-рахунок OUT',
 
   name: "Ім'я",
+  insertName: "Введіть ім'я",
   type: 'Тип',
   label: 'Назва',
-  parentItem: 'Батьківський елемент',
   insertLabel: 'Введіть назву',
+  secondName: 'Прізвище',
+  insertSecondName: 'Введіть прізвище',
   comment: 'Коментар',
+  description: 'Опис',
   insertComment: 'Введіть коментар',
   amount: 'Сума',
   price: 'Ціна',
@@ -68,6 +75,8 @@ export const langUa = {
   date: 'Дата',
   time: 'Час',
   dateAndTime: 'Дата і час',
+  parentItem: 'Батьківський елемент',
+  expireAt: 'Дійсне до',
 
   balance: 'Баланс',
   startBalance: 'Початковий баланс',
@@ -145,6 +154,8 @@ export const langUa = {
   loading: '',
 
   sku: 'Артикул | SKU',
+  sizesTable: 'Розмірна сітка',
+  visibility: 'Видимість',
 
   companies: 'Компанії',
   dashboard: 'Дашборд',

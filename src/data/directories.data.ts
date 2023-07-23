@@ -222,8 +222,8 @@ const ContractorsProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
       {
         type: 'onlyIconFilled',
         icon: 'plus',
-        onClick: () => {
-          modalService.handleOpenModal({
+        onClick: async () => {
+          const modal = modalService.handleOpenModal({
             ModalChildren: FormCreateContractor,
             modalChildrenProps: {
               title: t('createContractor'),
@@ -231,8 +231,10 @@ const ContractorsProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
               onSubmit: async data => {
                 dirService.create({
                   data: { dirType, data: createDataForReq(data) },
-                  onSuccess: data => {
-                    console.log(t('createContractor'), data);
+                  onSuccess: rd => {
+                    console.log(t('createContractor'), rd);
+                    toast.success(`Created: ${data.label || data.name}`);
+                    modal?.onClose();
                   },
                   onError: e => {},
                 });
@@ -291,6 +293,20 @@ const activitiesDir: IDirectory<DirActivitiesProps> = {
   modalChildrenProps: activitiesProps,
   disabled: false,
 };
+const brandsProps: DirActivitiesProps = {
+  title: t(ApiDirType.BRANDS),
+  createParentTitle: t('createDirParentItem'),
+  dirType: ApiDirType.BRANDS,
+  fillHeight: true,
+  actionsCreator: CategoriesProps.actionsCreator as any,
+};
+const brandsDir: IDirectory<DirActivitiesProps> = {
+  title: brandsProps.title,
+  iconId: iconId.folder,
+  ModalChildren: DirTreeComp,
+  modalChildrenProps: brandsProps,
+  disabled: false,
+};
 
 const directories: Partial<IDirectory>[] = [
   countsDir,
@@ -300,6 +316,7 @@ const directories: Partial<IDirectory>[] = [
   contractorsDir,
   projectsDir,
   marksDir,
+  brandsDir,
   {
     title: 'Статуси для замовлень',
     disabled: true,
@@ -308,7 +325,7 @@ const directories: Partial<IDirectory>[] = [
     },
   },
   {
-    title: 'Статуси для пвернень',
+    title: 'Статуси для повернень',
     disabled: true,
     modalChildrenProps: {
       dirType: ApiDirType.STATUS_REFUND,
@@ -322,10 +339,10 @@ const directories: Partial<IDirectory>[] = [
     },
   },
   {
-    title: 'Бренди',
+    title: 'Кастомні поля',
     disabled: true,
     modalChildrenProps: {
-      dirType: ApiDirType.BRANDS,
+      dirType: ApiDirType.CUSTOM_FIELDS,
     },
   },
 ];

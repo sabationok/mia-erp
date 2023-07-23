@@ -6,19 +6,24 @@ import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import FlexBox from '../atoms/FlexBox';
 import { useAppForm } from '../../hooks';
-import { SubmitHandler } from 'react-hook-form';
+import { SubmitErrorHandler, SubmitHandler } from 'react-hook-form';
 import { useAppSettingsSelector } from '../../redux/selectors.store';
 import { useMemo } from 'react';
 import TitleBase from '../atoms/TitleBase';
 import CheckBox from '../TableList/TebleCells/CellComponents/CheckBox';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import translate from '../../lang';
+import { FieldValues } from 'react-hook-form/dist/types';
+import { AppErrorSubmitHandler, AppSubmitHandler } from '../../hooks/useAppForm.hook';
+import FormAfterSubmitOptions from './FormAfterSubmitOptions';
 
 export interface FormCreateCustomRoleProps extends Omit<ModalFormProps, 'onSubmit'> {
   _id?: string;
   edit?: boolean;
   customRole?: Partial<ICustomRole>;
-  onSubmit: SubmitHandler<Partial<ICustomRole>>;
+  onSubmit: AppSubmitHandler<Partial<ICustomRole>>;
+  onErrorSubmit?: AppErrorSubmitHandler<Partial<ICustomRole>>;
 }
 
 const validation = yup.object().shape({
@@ -28,24 +33,37 @@ const validation = yup.object().shape({
 });
 const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({ onSubmit, customRole, edit, _id, ...props }) => {
   const { appActions } = useAppSettingsSelector();
+
   const {
     formState: { errors, isValid },
     register,
     handleSubmit,
     setValue,
     formValues,
+    clearAfterSave,
+    closeAfterSave,
+    toggleAfterSubmitOption,
   } = useAppForm<Partial<ICustomRole>>({
     defaultValues: customRole,
     reValidateMode: 'onChange',
     resolver: yupResolver(validation),
   });
 
-  function onSubmitWrapper(submitHandler?: SubmitHandler<Partial<ICustomRole>>) {
-    return submitHandler ? handleSubmit(submitHandler) : undefined;
+  function onSubmitWrapper<D extends FieldValues = any>(submitHandler: AppSubmitHandler<D>) {
+    if (!submitHandler) return;
+    const onValidSubmit: SubmitHandler<Partial<ICustomRole>> = data =>
+      onSubmit(data, {
+        clearAfterSave,
+        closeAfterSave,
+      });
+
+    const onInvalidSubmit: SubmitErrorHandler<Partial<ICustomRole>> = errors => console.log(errors);
+    return handleSubmit(onValidSubmit, onInvalidSubmit);
   }
 
   const renderList = useMemo(() => {
     return Object.entries(appActions).map(([name, value]) => {
+      // const arr=enumToArray()
       return (
         <List key={name}>
           <TitleBase>{name}</TitleBase>
@@ -81,11 +99,27 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({ onSubmit, c
   }, [appActions, formValues.actions, setValue]);
 
   return (
-    <StModalForm fillHeight {...props} onSubmit={onSubmitWrapper(onSubmit)} isValid={isValid}>
+    <StModalForm
+      fillHeight
+      {...props}
+      onSubmit={onSubmitWrapper(onSubmit)}
+      isValid={isValid}
+      extraFooter={
+        <FormAfterSubmitOptions
+          toggleOption={toggleAfterSubmitOption}
+          clearAfterSave={clearAfterSave}
+          closeAfterSave={closeAfterSave}
+        />
+      }
+    >
       <FlexBox alignItems={'unset'} flex={'1'} overflow={'hidden'}>
         <FlexBox padding={'12px'}>
-          <InputLabel label="Назва" direction={'vertical'} required error={errors.label}>
-            <InputText placeholder="Введіть назву ролі" {...register('label')} required />
+          <InputLabel label={translate('label')} direction={'vertical'} required error={errors.label}>
+            <InputText placeholder={translate('insertLabel')} {...register('label')} required />
+          </InputLabel>
+
+          <InputLabel label={translate('dateAndTime')} direction={'vertical'}>
+            <InputText placeholder={translate('dateAndTime')} type="datetime-local" {...register('expireAt')} />
           </InputLabel>
 
           <InputLabel label={'Коментар'} direction={'vertical'}>
