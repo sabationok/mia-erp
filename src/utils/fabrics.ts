@@ -105,5 +105,9 @@ function defaultApiCallPayload<SD = any, RD = any, E = any>({
 //   // eslint-disable-next-line react-hooks/exhaustive-deps
 //   return useCallback(createSubmitHandlerWithPayload<SD, RD, E>(options), []);
 // }
+// Функція, яка перетворює Enum на масив
+function enumToArray<T extends object = any>(enumObj: T): Array<T[keyof T]> {
+  return Object.values(enumObj);
+}
 
-export { defaultThunkPayload, defaultApiCallPayload, createThunkPayload };
+export { defaultThunkPayload, defaultApiCallPayload, createThunkPayload, enumToArray };

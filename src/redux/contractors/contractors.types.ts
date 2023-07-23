@@ -18,11 +18,13 @@ export enum ContractorsTypesEnum {
   SUPPLIER = 'SUPPLIER',
   CUSTOMER = 'CUSTOMER',
   MANAGER = 'MANAGER',
-  WORKER = 'WORKER',
   FIN_MANAGER = 'FIN_MANAGER',
   COUNT_MANAGER = 'COUNT_MANAGER',
   SUPPLY_MANAGER = 'SUPPLY_MANAGER',
   SALES_MANAGER = 'SALES_MANAGER',
+  WORKER = 'WORKER',
+  COMMISSION_AGENT = 'COMMISSION_AGENT',
+  CONSIGNOR = 'CONSIGNOR',
 }
 
 export type ContractorsTypes = keyof typeof ContractorsTypesEnum;

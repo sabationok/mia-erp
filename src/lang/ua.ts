@@ -7,10 +7,18 @@ export const langUa = {
   [ApiDirType.CATEGORIES_TR]: 'Категорії',
   [ApiDirType.CATEGORIES_PROD]: 'Категорії',
 
+  [ContractorsTypesEnum.COUNTER]: 'Бухгалтер',
   [ContractorsTypesEnum.AUDITOR]: 'Уадитор',
-  [ContractorsTypesEnum.COUNTER]: '',
-  [ContractorsTypesEnum.CUSTOMER]: 'Клієнт',
   [ContractorsTypesEnum.SUPPLIER]: 'Постачальник',
+  [ContractorsTypesEnum.CUSTOMER]: 'Клієнт',
+  [ContractorsTypesEnum.MANAGER]: 'Менеджер',
+  [ContractorsTypesEnum.FIN_MANAGER]: 'Фінансит',
+  [ContractorsTypesEnum.COUNT_MANAGER]: 'COUNT_MANAGER',
+  [ContractorsTypesEnum.SUPPLY_MANAGER]: 'Менеджер з постачання',
+  [ContractorsTypesEnum.SALES_MANAGER]: 'Менеджер з продажу',
+  [ContractorsTypesEnum.WORKER]: 'Робітник',
+  [ContractorsTypesEnum.COMMISSION_AGENT]: 'Комісіонер',
+  [ContractorsTypesEnum.CONSIGNOR]: 'Комітент',
 
   counts: 'Рахунки',
   count: 'Рахунок',
@@ -37,6 +45,9 @@ export const langUa = {
   document: 'Документ',
   documents: 'Документи',
   status: 'Статус',
+
+  closeAfterSave: 'Закрити після збереження',
+  clearAfterSave: 'Очистити після збереження',
 
   // Transaction form
   countIn: 'Рахунок IN',

@@ -8,11 +8,13 @@ import { SubmitHandler } from 'react-hook-form';
 import styled from 'styled-components';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import t from '../../lang';
+import translate from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useAppForm } from '../../hooks';
 import CustomSelect from '../atoms/Inputs/CustomSelect';
+import { enumToArray } from '../../utils';
 
 export interface FormCreateContractorProps
   extends DirectoriesFormProps<ContractorsTypesEnum, IContractor, IContractorFormData> {}
@@ -40,6 +42,9 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
+  const typeOptions = useMemo(() => {
+    return enumToArray(ContractorsTypesEnum).map(el => ({ label: translate(el), value: el }));
+  }, []);
 
   function formEventWrapper(evHandler?: SubmitHandler<IContractorFormData>) {
     if (evHandler) {
@@ -64,20 +69,7 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
             placeholder: t('type'),
             required: true,
             error: errors.type,
-            options: [
-              {
-                label: ContractorsTypesEnum.CUSTOMER,
-                value: ContractorsTypesEnum.CUSTOMER,
-              },
-              {
-                label: ContractorsTypesEnum.SUPPLIER,
-                value: ContractorsTypesEnum.SUPPLIER,
-              },
-              {
-                label: ContractorsTypesEnum.MANAGER,
-                value: ContractorsTypesEnum.MANAGER,
-              },
-            ],
+            options: typeOptions,
           })}
         />
 

@@ -7,6 +7,7 @@ import * as numbers from './numbers';
 import { countPercentage, numberWithSpaces } from './numbers';
 import founderByDataPath from './founderByDataPath';
 import { formatDateForInputValue } from './dateTime.utils';
+import { enumToArray } from './fabrics';
 
 export {
   founder,
@@ -21,4 +22,5 @@ export {
   dataTransform,
   createTransactionForReq,
   formatDateForInputValue,
+  enumToArray,
 };
