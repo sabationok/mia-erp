@@ -16,10 +16,11 @@ import DirTreeComp from '../components/Directories/DirTreeComp';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import FormCreateCount from '../components/Forms/FormCreateCount';
 import { toast } from 'react-toastify';
-import FormCreateCategory from '../components/Forms/FormCreateCategory';
 import DirTableComp, { DirTableCompProps } from '../components/Directories/DirTableComp';
 import FormCreateContractor from '../components/Forms/FormCreateContractor';
 import { createDataForReq } from '../utils/dataTransform';
+import { StorageItemFilterOption } from '../redux/products/products.types';
+import FormCreateDirTreeComp from '../components/Forms/FormCreateDirTreeComp';
 
 export const categoriesFilterOptions: CategoryFilterOpt[] = [
   { label: t('INCOMES'), value: 'INCOME' },
@@ -29,6 +30,10 @@ export const categoriesFilterOptions: CategoryFilterOpt[] = [
 export const countsFilterOptions: CountFilterOpt[] = [
   { label: t('ACTIVES'), value: 'ACTIVE' },
   { label: t('PASSIVES'), value: 'PASSIVE' },
+];
+export const StorageItemTypeFilterOptions: StorageItemFilterOption[] = [
+  { label: 'GOODS', value: 'GOODS' },
+  { label: 'SERVICE', value: 'SERVICE' },
 ];
 
 export interface IDirectory<P extends DirBaseProps = any> {
@@ -55,11 +60,12 @@ const CountsProps: DirCountsProps = {
           modalChildrenProps: {
             title: t('createParentCount'),
             type,
-            onSubmit: data => {
+            onSubmit: (data, o) => {
+              console.log('afterSubmit options', o);
               dirService.create({
                 data: { dirType, data },
                 onSuccess: rd => {
-                  modal?.onClose();
+                  o?.closeAfterSave && modal?.onClose();
                   toast.success(`Created item: ${data.label}`);
                 },
               });
@@ -99,7 +105,7 @@ const countsDir: IDirectory<DirCountsProps> = {
 };
 
 const CategoriesProps: DirCategoriesProps = {
-  title: t('trCategories'),
+  title: 'Статті доходів/витрат',
   filterOptions: categoriesFilterOptions,
   fillHeight: true,
   createParentTitle: t('createParentCategory'),
@@ -108,17 +114,19 @@ const CategoriesProps: DirCategoriesProps = {
   filterDefaultValue: 'INCOME',
   actionsCreator: ({ modalService, dirService, type, dirType, findById }) => {
     return {
-      onCreateParent: async options => {
+      onCreateParent: async () => {
         const modal = modalService.handleOpenModal({
-          ModalChildren: FormCreateCategory,
+          ModalChildren: FormCreateDirTreeComp,
           modalChildrenProps: {
             title: t('createDirParentItem'),
             type,
-            onSubmit: data => {
+            dirType,
+            onSubmit: (data, o) => {
+              console.log('createDirParentItem options', o);
               dirService.create({
                 data: { dirType, data },
                 onSuccess: rd => {
-                  options?.clearAfter && modal?.onClose();
+                  o?.closeAfterSave && modal?.onClose();
                   toast.success(`Created: ${data.label}`);
                 },
               });
@@ -126,18 +134,19 @@ const CategoriesProps: DirCategoriesProps = {
           },
         });
       },
-      onCreateChild: async (parentId, parent, options) => {
+      onCreateChild: async (parentId, parent) => {
         const modal = modalService.handleOpenModal({
-          ModalChildren: FormCreateCategory,
+          ModalChildren: FormCreateDirTreeComp,
           modalChildrenProps: {
             title: t('createDirParentItem'),
             type,
             parent,
-            onSubmit: data => {
+            dirType,
+            onSubmit: (data, o) => {
               dirService.create({
                 data: { dirType, data },
                 onSuccess: rd => {
-                  options?.clearAfter && modal?.onClose();
+                  o?.closeAfterSave && modal?.onClose();
                   toast.success(`Created: ${data.label}`);
                 },
               });
@@ -145,20 +154,21 @@ const CategoriesProps: DirCategoriesProps = {
           },
         });
       },
-      onUpdateItem: async (_id, options) => {
+      onUpdateItem: async (_id, o) => {
         const dataForUpdate = findById ? findById(_id) : undefined;
         if (!dataForUpdate) return;
         const modal = modalService.handleOpenModal({
-          ModalChildren: FormCreateCategory,
+          ModalChildren: FormCreateDirTreeComp,
           modalChildrenProps: {
             title: t('createChildCategory'),
             type,
+            dirType,
             data: dataForUpdate,
-            onSubmit: data => {
+            onSubmit: (data, o) => {
               dirService?.update({
                 data: { dirType, _id, data },
                 onSuccess: rd => {
-                  options?.clearAfter && modal?.onClose();
+                  o?.closeAfterSave && modal?.onClose();
                   toast.success(`Created: ${data.label}`);
                 },
               });
@@ -168,7 +178,7 @@ const CategoriesProps: DirCategoriesProps = {
       },
 
       onChangeArchiveStatus: dirService?.changeArchiveStatus
-        ? async (id, status, options) => {
+        ? async (id, status, o) => {
             const dataForUpdate = findById ? findById(id) : undefined;
             if (!dataForUpdate) return;
             dirService?.changeArchiveStatus({
@@ -195,7 +205,10 @@ const ProductCategoriesProps: DirProductCategoriesProps = {
   createParentTitle: t('createParentCategory'),
   dirType: ApiDirType.CATEGORIES_PROD,
   actionsCreator: CategoriesProps.actionsCreator as any,
-  availableLevels: 5,
+  filterOptions: StorageItemTypeFilterOptions,
+  filterSearchPath: 'type',
+  filterDefaultValue: 'GOODS',
+  availableLevels: 2,
 };
 const prodCategoriesDir: IDirectory<DirProductCategoriesProps> = {
   title: ProductCategoriesProps.title,
@@ -269,6 +282,7 @@ const projectsDir: IDirectory<DirProjectsProps> = {
 const MarksProps: DirMarksProps = {
   title: t('marks'),
   dirType: ApiDirType.MARKS,
+  availableLevels: 1,
   createParentTitle: t('createDirParentItem'),
   actionsCreator: CategoriesProps.actionsCreator as any,
 };
@@ -284,6 +298,7 @@ const activitiesProps: DirActivitiesProps = {
   createParentTitle: t('createDirParentItem'),
   dirType: ApiDirType.ACTIVITIES,
   fillHeight: true,
+  availableLevels: 2,
   actionsCreator: CategoriesProps.actionsCreator as any,
 };
 const activitiesDir: IDirectory<DirActivitiesProps> = {
@@ -298,6 +313,7 @@ const brandsProps: DirActivitiesProps = {
   createParentTitle: t('createDirParentItem'),
   dirType: ApiDirType.BRANDS,
   fillHeight: true,
+  availableLevels: 1,
   actionsCreator: CategoriesProps.actionsCreator as any,
 };
 const brandsDir: IDirectory<DirActivitiesProps> = {
@@ -309,6 +325,13 @@ const brandsDir: IDirectory<DirActivitiesProps> = {
 };
 
 const directories: Partial<IDirectory>[] = [
+  {
+    title: 'Банківські рахунки',
+    disabled: true,
+    modalChildrenProps: {
+      dirType: ApiDirType.BANK_ACCOUNTS,
+    },
+  },
   countsDir,
   trCategoriesDir,
   prodCategoriesDir,
@@ -339,11 +362,59 @@ const directories: Partial<IDirectory>[] = [
     },
   },
   {
+    title: 'Статуси для оплат',
+    disabled: true,
+  },
+  {
+    title: 'Статуси для клієнтів',
+    disabled: true,
+  },
+  {
+    title: 'Статуси для контрагентів',
+    disabled: true,
+  },
+  {
+    title: 'Контракти',
+    disabled: true,
+  },
+  {
+    title: 'Теги',
+    disabled: true,
+  },
+  {
     title: 'Кастомні поля',
     disabled: true,
     modalChildrenProps: {
       dirType: ApiDirType.CUSTOM_FIELDS,
     },
+  },
+  {
+    title: 'Джерело залучення',
+    disabled: true,
+  },
+  {
+    title: 'Договора',
+    disabled: true,
+  },
+  {
+    title: 'Каси',
+    disabled: true,
+  },
+  {
+    title: 'Склади',
+    disabled: true,
+  },
+  {
+    title: 'Працівники',
+    disabled: true,
+  },
+  {
+    title: 'Специфікації',
+    disabled: true,
+  },
+  {
+    title: 'Розмірні сітки',
+    disabled: true,
   },
 ];
 

@@ -10,7 +10,7 @@ import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import t from '../../lang';
 import { DirectoriesFormProps } from '../Directories/dir.types';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import FormAfterSubmitOptions from './FormAfterSubmitOptions';
+import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { useAppForm } from '../../hooks';
 
 export interface FormCreateCategoryProps extends DirectoriesFormProps<CategoryTypes, ICategory, ICategoryFormData> {}
@@ -53,7 +53,12 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
 
   function formEventWrapper(evHandler?: AppSubmitHandler<ICategoryFormData>) {
     if (evHandler) {
-      return handleSubmit(data => evHandler(data, {}));
+      return handleSubmit(data =>
+        evHandler(data, {
+          closeAfterSave,
+          clearAfterSave,
+        })
+      );
     }
   }
 
@@ -81,8 +86,8 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
           </InputLabel>
         )}
 
-        <InputLabel label={t('label')} direction={'vertical'} error={errors.label}>
-          <InputText placeholder={t('insertLabel')} {...register('label')} autoFocus />
+        <InputLabel label={t('label')} direction={'vertical'} error={errors.label} required>
+          <InputText placeholder={t('insertLabel')} {...register('label')} required autoFocus />
         </InputLabel>
 
         <InputLabel label={t('comment')} direction={'vertical'} error={errors.description}>

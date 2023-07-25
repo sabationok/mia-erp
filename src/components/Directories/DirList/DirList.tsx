@@ -76,7 +76,7 @@ const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLDivElement>> = (
 
       {onCreateParent && (
         <CreateParent>
-          <ButtonIcon variant="outlinedSmall" onClick={onCreateParent}>
+          <ButtonIcon variant="outlinedSmall" onClick={() => onCreateParent()}>
             {createParentTitle || 'Create parent'}
           </ButtonIcon>
         </CreateParent>

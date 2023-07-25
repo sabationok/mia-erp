@@ -6,6 +6,7 @@ import { IDirectory } from './directories.data';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { iconId } from '../img/sprite';
 import FormCreateCustomRole from '../components/Forms/FormCreateCustomRole';
+import ModalForm from '../components/ModalForm';
 
 const UsersProps: DirUsersProps = {
   title: 'Користувачі',
@@ -57,8 +58,19 @@ const CustomRolesProps: DirCustomRolesProps = {
     onChangeArchiveStatus: () => {},
   }),
 };
-
+const subCompanies = {
+  title: 'Дочірні компанії',
+  disabled: true,
+  ModalChildren: ModalForm,
+  iconId: iconId.bank,
+  modalChildrenProps: {
+    title: 'Дочірні компанії',
+    fillHeight: true,
+    fillWidth: true,
+  },
+};
 export const comapnySettings: IDirectory[] = [
+  subCompanies,
   {
     title: UsersProps.title,
     iconId: iconId.persons,

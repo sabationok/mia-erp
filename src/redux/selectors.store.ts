@@ -6,6 +6,7 @@ import { ICustomRolesState } from './customRoles/customRoles.slice';
 import { IUsersState } from './users/users.types';
 import { IAppSettings } from './appSettings/appSettings.slice';
 import { IProductsState } from './products/products.slice';
+import { IPriceListsState } from './priceManagement/priceManagement.slice';
 
 export const useAuthSelector = () => useSelector<RootState, IAuthState>((state: RootState) => state.auth);
 export const useUsersSelector = () => useSelector<RootState, IUsersState>((state: RootState) => state.users);
@@ -17,5 +18,7 @@ export const useTransactionsSelector = (): ITransactionsState =>
 
 export const useProductsSelector = () =>
   useSelector<RootState, IProductsState>((state: RootState): IProductsState => state.products);
+export const usePriceListsSelector = () =>
+  useSelector<RootState, IPriceListsState>((state: RootState): IPriceListsState => state.priceLists);
 export const useCustomRolesSelector = () =>
   useSelector<RootState, ICustomRolesState>((state: RootState) => state.customRoles);

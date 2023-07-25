@@ -30,11 +30,13 @@ const DirCustomRoles: React.FC<DirCustomRolesProps> = ({ createParentTitle, acti
 
   const actions = useMemo(() => {
     const findById = (id: string) => customRoles.find(el => el._id === id);
-    return actionsCreator({
-      findById,
-      modalService,
-      service,
-    });
+    return actionsCreator
+      ? actionsCreator({
+          findById,
+          modalService,
+          service,
+        })
+      : {};
   }, [actionsCreator, modalService, service, customRoles]);
 
   return (

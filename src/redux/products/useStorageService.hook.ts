@@ -1,5 +1,5 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
-import { IProduct, IProductReqData } from './products.types';
+import { IProductReqData, IStorageItem } from './products.types';
 import { ServiceApiCaller, ServiceDispatcherAsync } from 'redux/global.types';
 import { createProductThunk, getAllProductsThunk } from './products.thunks';
 import { useMemo } from 'react';
@@ -7,18 +7,18 @@ import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
 import { AppQueryParams, createApiCall } from 'api';
 import ProductsApi from '../../api/products.api';
 
-export interface ProductsService {
-  create: ServiceDispatcherAsync<IProductReqData, IProduct>;
-  deleteById: ServiceApiCaller<string, IProduct>; // !!!!! ===>>> ServiceDispatcher
-  updateById: ServiceApiCaller<IProductReqData, IProduct>; // !!!!! ===>>> ServiceDispatcher
-  getById: ServiceApiCaller<string, IProduct>;
-  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IProduct[]>;
+export interface StorageService {
+  create: ServiceDispatcherAsync<IProductReqData, IStorageItem>;
+  deleteById: ServiceApiCaller<string, IStorageItem>; // !!!!! ===>>> ServiceDispatcher
+  updateById: ServiceApiCaller<IProductReqData, IStorageItem>; // !!!!! ===>>> ServiceDispatcher
+  getById: ServiceApiCaller<string, IStorageItem>;
+  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IStorageItem[]>;
 }
 
-const useProductsService = (): ProductsService => {
+const useStorageService = (): StorageService => {
   const dispatch: AppDispatch = useAppDispatch();
 
-  return useMemo((): Omit<ProductsService, 'state' | 'dispatch'> => {
+  return useMemo((): Omit<StorageService, 'state' | 'dispatch'> => {
     const { deleteById, updateById, getById } = ProductsApi;
     return {
       create: async payload => dispatch(createProductThunk(defaultThunkPayload(payload))),
@@ -30,5 +30,5 @@ const useProductsService = (): ProductsService => {
   }, [dispatch]);
 };
 
-export type useProductsServiceHookType = typeof useProductsService;
-export default useProductsService as useProductsServiceHookType;
+export type useStorageServiceHookType = typeof useStorageService;
+export default useStorageService as useStorageServiceHookType;

@@ -55,6 +55,11 @@ const AppRoutes: React.FC = () => {
           <Route path={AppPagesEnum.dashboard} element={<AppPages.AppGridPage path={'dashboard'} />} />
           <Route path={AppPagesEnum.supplement} element={<AppPages.AppGridPage path={'supplement'} />} />
 
+          <Route
+            path={AppPagesEnum.priceManagement}
+            element={<AppPages.PagePriceManagement path={'priceManagement'} />}
+          />
+
           <Route {...notFoundRouteProps} />
         </Route>
         <Route {...notFoundRouteProps} />

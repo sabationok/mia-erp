@@ -18,13 +18,14 @@ const DirTreeComp: React.FC<IDirInTreeProps> = ({
   ...props
 }) => {
   const { directory } = useDirectoriesSelector(dirType);
-  console.log(dirType, directory);
+  console.log(directory);
   const dirService = useDirService();
   const findById = useCallback((id: string) => directory.find(el => el._id === id), [directory]);
   const modalService = useModalProvider();
   const [current, setCurrent] = useState(filterDefaultValue);
   const actions = useMemo(
     () =>
+      actionsCreator &&
       actionsCreator({
         findById,
         modalService,

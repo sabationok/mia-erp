@@ -10,6 +10,7 @@ import { customRolesSlice } from './customRoles/customRoles.slice';
 import { permissionsSlice } from './permissions/permissions.slice';
 import { directoriesSlice } from './directories/directories.slice';
 import { productsSlice } from './products/products.slice';
+import { priceManagementSlice } from './priceManagement/priceManagement.slice';
 
 const rootReducer = combineReducers({
   [authSlice.name]: persistReducer(persistorConfigs.auth, authSlice.reducer),
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   [customRolesSlice.name]: persistReducer(persistorConfigs.customRoles, customRolesSlice.reducer),
   [permissionsSlice.name]: persistReducer(persistorConfigs.permissions, permissionsSlice.reducer),
   [directoriesSlice.name]: persistReducer(persistorConfigs.directories, directoriesSlice.reducer),
+  [priceManagementSlice.name]: persistReducer(persistorConfigs.priceLists, priceManagementSlice.reducer),
 });
 
 export type RootReducerType = typeof rootReducer;

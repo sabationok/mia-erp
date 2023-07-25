@@ -3,48 +3,42 @@ import { CurrencyCode } from '../transactions/transactions.types';
 import { IBaseDirItem } from '../../components/Directories/dir.types';
 import { ContractorsTypesEnum } from '../contractors/contractors.types';
 import { ApiDirType } from '../APP_CONFIGS';
+import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 
-export type ProductType = 'DEFAULT' | 'CUSTOM';
+export type StorageItemStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
-export interface IProject extends IBase {
-  name?: string;
-  label?: string;
-  type?: string;
-  def?: string;
+export enum StorageItemTypeEnum {
+  SERVICE = 'SERVICE',
+  GOODS = 'GOODS',
 }
 
-export interface IDocument extends IBase {
-  name?: string;
-  label?: string;
-  number?: string;
-  type?: string;
-}
+export type StorageItemType = keyof typeof StorageItemTypeEnum;
 
-export type ProductStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
+export type StorageItemFilterOption = FilterOpt<StorageItemType>;
+export type ProductFilterOpt = StorageItemFilterOption;
 
-export enum ProductTypeEnum {
+export enum StorageItemPriceTypeEnum {
   DEFAULT = 'DEFAULT',
   COMMISSION = 'COMMISSION',
   COMMISSION_FIX = 'COMMISSION_FIX',
 }
 
-export type ProductPriceType = 'COMMISSION' | 'DEFAULT' | 'COMMISSION_FIX' | ProductTypeEnum;
+export type StorageItemPriceType = 'COMMISSION' | 'DEFAULT' | 'COMMISSION_FIX';
 
-export interface IProductBase extends IBase {
+export interface IStorageItemBase extends IBase {
   price?: number;
-  priceType?: ProductPriceType;
-  type?: ProductType;
+  priceType?: StorageItemPriceType;
+  type?: StorageItemType;
   currency?: CurrencyCode;
-  status?: ProductStatus;
+  status?: StorageItemStatus;
   archived?: boolean;
   visible?: boolean;
   description?: string;
   tags?: string[];
+  isService?: boolean;
 }
 
-export interface IProduct extends IProductBase {
-  eventDate?: number | string | Date;
-
+export interface IStorageItem extends IStorageItemBase {
   label: string;
   sku?: string;
 
@@ -54,32 +48,29 @@ export interface IProduct extends IProductBase {
   brand?: IBaseDirItem<any, ApiDirType.BRANDS>;
   supplier?: IBaseDirItem<ContractorsTypesEnum, ApiDirType.CONTRACTORS>;
   contractor?: IBaseDirItem<ContractorsTypesEnum, ApiDirType.CONTRACTORS>;
-  document?: any;
+  storages?: IBaseDirItem<any, ApiDirType.STORAGES>;
 }
 
-export interface IProductForReq extends Partial<Record<keyof IProduct, any>> {
-  eventDate?: number | Date;
-  amount?: number;
-  type?: ProductType;
+export interface IStorageItemFroReq extends Partial<Record<keyof IStorageItem, any>> {
+  type?: StorageItemType;
   currency?: CurrencyCode;
-  status?: ProductStatus;
+  status?: StorageItemStatus;
   tags?: string[];
-  countIn?: OnlyUUID;
-  subCountIn?: OnlyUUID;
-  countOut?: OnlyUUID;
-  subCountOut?: OnlyUUID;
-  category?: OnlyUUID;
-  subCategory?: OnlyUUID;
-  contractor?: OnlyUUID;
-  project?: OnlyUUID;
+  supplier?: OnlyUUID;
+  brand?: OnlyUUID;
   document?: OnlyUUID;
-  companyActivity?: OnlyUUID;
-  comment?: OnlyUUID;
 }
+
+export interface IProductForReq extends IStorageItemFroReq {}
 
 export interface IProductReqData {
   _id?: string;
   data: IProductForReq;
+}
+
+export interface IStorageItemReqData {
+  _id?: string;
+  data: IStorageItemFroReq;
 }
 
 export interface IAllProductsRes extends AppResponse<IProduct[]> {}
@@ -87,3 +78,5 @@ export interface IAllProductsRes extends AppResponse<IProduct[]> {}
 export interface IProductRes extends AppResponse<IProduct> {}
 
 export interface ICreateProductRes extends AppResponse<IProduct> {}
+
+export type IProduct = IStorageItem;

@@ -10,6 +10,7 @@ export interface CellValueByPathProps {
 }
 
 const CellValueByPath: React.FC<CellValueByPathProps & React.HTMLAttributes<HTMLDivElement>> = ({
+  titleInfo,
   titleInfo: { top, bottom, width = '100px' },
   idx,
   ...props
@@ -19,24 +20,29 @@ const CellValueByPath: React.FC<CellValueByPathProps & React.HTMLAttributes<HTML
   const cellConfig = useMemo(
     (): IDataCellProps => ({
       content: {
-        data: getValueByPath({
-          data: rowData,
-          ...top,
-        }),
+        data: top.getData
+          ? top.getData(rowData, titleInfo)
+          : getValueByPath({
+              data: rowData,
+              ...top,
+            }),
         align: top.align,
         uppercase: top.uppercase,
       },
       subContent: {
-        data: getValueByPath({
-          data: rowData,
-          ...bottom,
-        }),
+        data:
+          bottom && bottom.getData
+            ? bottom.getData(rowData, titleInfo)
+            : getValueByPath({
+                data: rowData,
+                ...bottom,
+              }),
         align: bottom?.align,
         uppercase: bottom?.uppercase,
       },
       width,
     }),
-    [bottom, rowData, top, width]
+    [bottom, rowData, titleInfo, top, width]
   );
 
   return <Cell.Double {...cellConfig} {...props} />;

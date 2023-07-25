@@ -17,7 +17,7 @@ import translate from '../../lang';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useAppForm } from '../../hooks';
 import { yupResolver } from '@hookform/resolvers/yup';
-import FormAfterSubmitOptions from './FormAfterSubmitOptions';
+import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { UseAppFormAfterSubmitOptions } from '../../hooks/useAppForm.hook';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;

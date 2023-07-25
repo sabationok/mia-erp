@@ -1,10 +1,8 @@
 import { SelectItem } from 'components/TableList/TableList';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import t from '../lang';
-import { FilterOpt } from '../components/ModalForm/ModalFilter';
-import { IProduct, ProductType } from '../redux/products/products.types';
+import { IProduct } from '../redux/products/products.types';
 
-export type ProductFilterOpt = FilterOpt<ProductType>;
 export type DataPath =
   | 'category.label'
   | 'subCategory.label'
@@ -49,18 +47,18 @@ export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
     width: '150px',
     action: 'valueByPath',
   },
-  {
-    top: { name: t('price'), align: 'end', path: 'price' },
-    bottom: { name: 'Валюта', align: 'end', path: 'currency' },
-    width: '120px',
-    action: 'numberWithSpaces',
-  },
-  {
-    top: { name: t('sale'), align: 'end', path: 'cashback.sale' },
-    bottom: { name: 'Рівень кешбеку', align: 'end', path: 'cashback.level' },
-    width: '120px',
-    action: 'numberWithSpaces',
-  },
+  // {
+  //   top: { name: t('price'), align: 'end', path: 'price' },
+  //   bottom: { name: 'Валюта', align: 'end', path: 'currency' },
+  //   width: '120px',
+  //   action: 'numberWithSpaces',
+  // },
+  // {
+  //   top: { name: t('sale'), align: 'end', path: 'cashback.sale' },
+  //   bottom: { name: 'Рівень кешбеку', align: 'end', path: 'cashback.level' },
+  //   width: '120px',
+  //   action: 'numberWithSpaces',
+  // },
   {
     top: {
       name: t('category'),
@@ -88,7 +86,7 @@ export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
     action: 'status',
   },
   {
-    top: { name: 'Бренд', align: 'start', path: 'brand.name' },
+    top: { name: 'Бренд', align: 'start', path: 'brand.label' },
     bottom: { name: 'Виробник', align: 'start', path: 'manufacturer.name' },
     width: '150px',
     action: 'valueByPath',
@@ -213,9 +211,4 @@ export const productsSearchParams: SelectItem<DataPath>[] = [
   //   search: true,
   //   sort: true,
   // },
-];
-
-export const filterOptions: ProductFilterOpt[] = [
-  { label: t('DEFAULT'), value: 'DEFAULT' },
-  { label: t('CUSTOM'), value: 'CUSTOM' },
 ];

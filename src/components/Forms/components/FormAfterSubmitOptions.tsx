@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { memo, useCallback, useMemo, useState } from 'react';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import translate from '../../lang';
+import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import translate from '../../../lang';
 import styled from 'styled-components';
-import FlexBox from '../atoms/FlexBox';
-import { UseAppFormAfterSubmitOptions } from '../../hooks/useAppForm.hook';
+import FlexBox from '../../atoms/FlexBox';
+import { UseAppFormAfterSubmitOptions } from '../../../hooks/useAppForm.hook';
 
 export interface FormAfterSubmitOptionsProps extends UseAppFormAfterSubmitOptions {
   close?: boolean;

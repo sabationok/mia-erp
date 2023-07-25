@@ -2,16 +2,16 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import React, { memo, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import DirList from './DirList';
-import { IBaseDirItem, SubmitFormOptions } from '../dir.types';
+import { IBaseDirItem } from '../dir.types';
 import { isUndefined } from 'lodash';
 
 export interface DirListItemAddsProps<T = any> {
   list: IBaseDirItem<T>[];
   item?: IBaseDirItem<T>;
-  onDelete?: (id: string, options?: SubmitFormOptions) => void;
-  onEdit?: (id: string, options?: SubmitFormOptions) => void;
-  onChangeArchiveStatus?: (id: string, status: boolean, options?: SubmitFormOptions) => void;
-  onCreateChild?: (parentId: string, parent: IBaseDirItem<T>, options?: SubmitFormOptions) => void;
+  onDelete?: (id: string) => void;
+  onEdit?: (id: string) => void;
+  onChangeArchiveStatus?: (id: string, status: boolean) => void;
+  onCreateChild?: (parentId: string, parent: IBaseDirItem<T>) => void;
   currentLevel?: number;
   availableLevels?: number;
 }

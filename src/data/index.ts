@@ -14,10 +14,14 @@ import { activitiesMockData } from './activities.data';
 import { permissionsSearchParams, permissionsTableColumns } from './permissions.data';
 import { productsColumns, productsSearchParams } from './products.data';
 
+import { priceListColumns, priceListContentColumns } from './priceManagement.data';
+
 const reportsTableColumns = {
   reportByContractorsColumns,
 };
 export {
+  priceListColumns,
+  priceListContentColumns,
   productsColumns,
   productsSearchParams,
   reportsTableColumns,

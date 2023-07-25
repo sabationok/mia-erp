@@ -1,5 +1,4 @@
 import ModalForm from 'components/ModalForm';
-import { ICategoryFormData } from 'redux/directories/categories.types';
 import React from 'react';
 import styled from 'styled-components';
 import * as yup from 'yup';
@@ -10,12 +9,14 @@ import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import t from '../../lang';
 import { DirectoriesFormProps, IBaseDirItem } from '../Directories/dir.types';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import FormAfterSubmitOptions from './FormAfterSubmitOptions';
+import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { useAppForm } from '../../hooks';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 
 export interface FormCreateDirTreeCompProps<T = any, D extends ApiDirType = any, FD = any>
-  extends DirectoriesFormProps<T, IBaseDirItem<T, D>, FD> {}
+  extends DirectoriesFormProps<T, IBaseDirItem<T, D>, FD> {
+  dirType?: ApiDirType;
+}
 
 const validation = yup.object().shape({
   label: yup.string().required(),
@@ -29,6 +30,7 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
   edit,
   data,
   onSubmit,
+  dirType,
   ...props
 }) => {
   const {
@@ -38,7 +40,7 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
     closeAfterSave,
     clearAfterSave,
     toggleAfterSubmitOption,
-  } = useAppForm<ICategoryFormData>({
+  } = useAppForm<IBaseDirItem>({
     defaultValues: parent?._id
       ? {
           ...data,
@@ -53,9 +55,14 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
     reValidateMode: 'onSubmit',
   });
 
-  function formEventWrapper(evHandler?: AppSubmitHandler<ICategoryFormData>) {
+  function formEventWrapper(evHandler?: AppSubmitHandler<IBaseDirItem>) {
     if (evHandler) {
-      return handleSubmit(data => evHandler(data, {}));
+      return handleSubmit(data =>
+        evHandler(data, {
+          closeAfterSave,
+          clearAfterSave,
+        })
+      );
     }
   }
 
@@ -83,9 +90,15 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
           </InputLabel>
         )}
 
-        <InputLabel label={t('label')} direction={'vertical'} error={errors.label}>
-          <InputText placeholder={t('insertLabel')} {...register('label')} autoFocus />
+        <InputLabel label={t('label')} direction={'vertical'} error={errors.label} required>
+          <InputText placeholder={t('insertLabel')} {...register('label')} required autoFocus />
         </InputLabel>
+
+        {dirType === 'brands' && (
+          <InputLabel label={t('manufacturer')} direction={'vertical'} error={errors.manufacturer}>
+            <InputText placeholder={t('manufacturer')} {...register('manufacturer')} />
+          </InputLabel>
+        )}
 
         {/*<InputLabel label={t('')} direction={'vertical'} error={errors.label}>*/}
         {/*  <InputText placeholder={t('insertLabel')} {...register('label')} autoFocus />*/}

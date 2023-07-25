@@ -36,7 +36,14 @@ export type DataPath =
   | 'comment'
   | 'createdAt'
   | 'updatedAt'
-  | 'mark.label';
+  | 'mark.label'
+  | 'invoice.label'
+  | 'invoice.code'
+  | 'invoice.number'
+  | 'payment.label'
+  | 'payment.code'
+  | 'payment.number'
+  | 'order.code';
 export const transactionsColumnsNew: CellTittleProps<ITransaction, DataPath>[] = [
   {
     top: { name: t('date'), align: 'center', path: 'eventDate' },
@@ -111,16 +118,11 @@ export const transactionsColumnsNew: CellTittleProps<ITransaction, DataPath>[] =
     action: 'valueByPath',
   },
   {
-    top: { name: 'Автор', align: 'start', path: 'author.name' },
-    bottom: { name: 'Емейл', align: 'start', path: 'author.email' },
-    width: '150px',
-    action: 'valueByPath',
-  },
-  {
     top: { name: 'Коментар', align: 'start', path: 'comment' },
     width: '150px',
     action: 'valueByPath',
   },
+
   {
     top: { name: 'Створено', align: 'center', path: 'createdAt' },
     bottom: { name: 'Оновлено', align: 'center', path: 'updatedAt' },
@@ -186,11 +188,18 @@ export const transactionsColumns: CellTittleProps<ITransaction, DataPath>[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Автор', align: 'start', path: 'author.name' },
-    bottom: { name: 'Емейл', align: 'start', path: 'author.email' },
+    top: { name: 'Інвойс', align: 'start', path: 'invoice.label' },
+    bottom: { name: 'Номер', align: 'start', path: 'invoice.number' },
     width: '150px',
     action: 'valueByPath',
   },
+  {
+    top: { name: 'Оплата', align: 'start', path: 'payment.label' },
+    bottom: { name: 'Номер', align: 'start', path: 'payment.number' },
+    width: '150px',
+    action: 'valueByPath',
+  },
+
   {
     top: { name: 'Контрагент', align: 'start', path: 'contractor.name' },
     bottom: { name: 'Тип', align: 'start', path: 'contractor.type' },
@@ -209,6 +218,12 @@ export const transactionsColumns: CellTittleProps<ITransaction, DataPath>[] = [
   },
   {
     top: { name: 'Коментар', align: 'start', path: 'comment' },
+    width: '150px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Створив', align: 'start', path: 'author.email' },
+    bottom: { name: 'Оновив', align: 'start', path: 'editor.email' },
     width: '150px',
     action: 'valueByPath',
   },
@@ -306,13 +321,7 @@ export const transactionsSearchParams: SelectItem<DataPath>[] = [
     search: true,
     sort: true,
   },
-  // {
-  //   label: 'Документ',
-  //   dataPath: 'document',
-  //   filter: false,
-  //   search: true,
-  //   sort: true,
-  // },
+
   {
     label: t('project'),
     dataPath: 'project.label',

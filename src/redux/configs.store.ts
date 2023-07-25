@@ -47,6 +47,11 @@ export const persistorConfigs = {
     storage: storageSession,
     whitelist: [],
   },
+  priceLists: {
+    key: 'priceLists',
+    storage: storageSession,
+    whitelist: [],
+  },
   customRoles: {
     key: 'customRoles',
     storage: storageSession,

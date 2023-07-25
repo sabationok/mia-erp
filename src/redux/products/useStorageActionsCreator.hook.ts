@@ -1,18 +1,18 @@
 import { useModalProvider } from '../../components/ModalProvider/ModalProvider';
-import { ProductsService } from './useProductsService.hook';
+import { StorageService } from './useStorageService.hook';
 import { useCallback } from 'react';
 import { TableActionCreator } from '../../components/TableList/tableTypes.types';
-import { IProduct } from './products.types';
+import { IStorageItem, StorageItemFilterOption } from './products.types';
 import { useProductsSelector } from '../selectors.store';
-import ProductForm, { ProductFilterOpt } from '../../components/Forms/FormCreateProduct';
+import ProductForm from '../../components/Forms/FormCreateProduct';
 
-export type ProductsActionsCreator = TableActionCreator<IProduct>;
-export const ProductPriceTypeFilterOptions: ProductFilterOpt[] = [
-  { label: 'DEFAULT', value: 'DEFAULT' },
-  { label: 'COMMISSION', value: 'COMMISSION', disabled: true },
-  { label: 'COMMISSION\n FIX', value: 'COMMISSION_FIX', disabled: true },
+export type StorageActionsCreator = TableActionCreator<IStorageItem>;
+
+export const StorageItemTypeFilterOptions: StorageItemFilterOption[] = [
+  { label: 'GOODS', value: 'GOODS' },
+  { label: 'SERVICE', value: 'SERVICE' },
 ];
-const useProductsActionsCreator = (service: ProductsService): ProductsActionsCreator => {
+const useStorageActionsCreator = (service: StorageService): StorageActionsCreator => {
   const state = useProductsSelector();
   const modals = useModalProvider();
 
@@ -197,8 +197,8 @@ const useProductsActionsCreator = (service: ProductsService): ProductsActionsCre
             ModalChildren: ProductForm,
             modalChildrenProps: {
               title: 'Створити',
-              filterOptions: ProductPriceTypeFilterOptions,
-              defaultState: { type: 'DEFAULT' },
+              filterOptions: StorageItemTypeFilterOptions,
+              defaultState: { type: 'GOODS' },
               onSubmit: (data, o) => {
                 service.create({
                   data,
@@ -218,4 +218,4 @@ const useProductsActionsCreator = (service: ProductsService): ProductsActionsCre
   );
 };
 
-export { useProductsActionsCreator };
+export default useStorageActionsCreator;

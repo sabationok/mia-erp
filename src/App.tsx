@@ -42,26 +42,30 @@ const useLoadInitialAppData = ({
         try {
           await getAppActions();
           await getAllByDirType({
-            data: { dirType: ApiDirType.CATEGORIES_TR },
+            data: { dirType: ApiDirType.CATEGORIES_TR, params: { createTreeData: true } },
             onSuccess: onSuccessToast(ApiDirType.CATEGORIES_TR),
           });
-          await getAllByDirType({ data: { dirType: ApiDirType.COUNTS }, onSuccess: onSuccessToast(ApiDirType.COUNTS) });
           await getAllByDirType({
-            data: { dirType: ApiDirType.CATEGORIES_PROD },
+            data: { dirType: ApiDirType.COUNTS, params: { createTreeData: true } },
+            onSuccess: onSuccessToast(ApiDirType.COUNTS),
+          });
+          await getAllByDirType({
+            data: { dirType: ApiDirType.CATEGORIES_PROD, params: { createTreeData: true } },
             onSuccess: onSuccessToast(ApiDirType.CATEGORIES_PROD),
           });
           await getAllByDirType({
-            data: { dirType: ApiDirType.CONTRACTORS, params: { createTreeData: false } },
+            data: { dirType: ApiDirType.CONTRACTORS },
             onSuccess: onSuccessToast(ApiDirType.CONTRACTORS),
           });
-          // await getAllByDirType({
-          //   data: { dirType: ApiDirType.MARKS },
-          //   onSuccess: onSuccessToast(ApiDirType.MARKS),
-          // });
+          await getAllByDirType({
+            data: { dirType: ApiDirType.BRANDS, params: { createTreeData: false } },
+            onSuccess: onSuccessToast(ApiDirType.BRANDS),
+          });
           // await getAllByDirType({
           //   data: { dirType: ApiDirType.PROJECTS },
           //   onSuccess: onSuccessToast(ApiDirType.PROJECTS),
           // });
+
           setTimeout(() => {
             toast.dismiss(id);
             toast.success('App data loaded', { autoClose: 2000 });
@@ -91,7 +95,7 @@ const App: React.FC = () => {
     <>
       <AppContainer>
         <GlobalStyles />
-        <Suspense fallback={<AppLoader isLoading />}>
+        <Suspense fallback={<AppLoader isLoading comment={'Please wait while minions do their work...'} />}>
           <AppRoutes />
         </Suspense>
       </AppContainer>

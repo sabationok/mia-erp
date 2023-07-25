@@ -4,18 +4,18 @@ import ModalForm from '../ModalForm';
 
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { SubmitHandler } from 'react-hook-form';
 import styled from 'styled-components';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import t from '../../lang';
 import translate from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useAppForm } from '../../hooks';
 import CustomSelect from '../atoms/Inputs/CustomSelect';
 import { enumToArray } from '../../utils';
-import FormAfterSubmitOptions, { FormAfterSubmitOptionsProps } from './FormAfterSubmitOptions';
+import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
+import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 
 export interface FormCreateContractorProps
   extends DirectoriesFormProps<ContractorsTypesEnum, IContractor, IContractorFormData> {}
@@ -38,13 +38,15 @@ const validation = yup.object().shape({
 });
 
 const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, type, parent, data, ...props }) => {
-  const [afterSaveOptions, setAfterSaveOptions] = useState<FormAfterSubmitOptionsProps>({});
   const {
     formState: { errors, isValid },
+    formValues: { type: currentType },
     register,
     handleSubmit,
     registerSelect,
-    formValues: { type: currentType },
+    clearAfterSave,
+    closeAfterSave,
+    toggleAfterSubmitOption,
   } = useAppForm<IContractorFormData>({
     defaultValues: {
       ...data,
@@ -57,9 +59,9 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
     return enumToArray(ContractorsTypesEnum).map(el => ({ label: translate(el), value: el }));
   }, []);
 
-  function formEventWrapper(evHandler?: SubmitHandler<IContractorFormData>) {
+  function formEventWrapper(evHandler?: AppSubmitHandler<IContractorFormData>) {
     if (evHandler) {
-      return handleSubmit(evHandler);
+      return handleSubmit(data => evHandler(data, { clearAfterSave, closeAfterSave }));
     }
   }
 
@@ -98,7 +100,13 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
       {...props}
       onSubmit={formEventWrapper(onSubmit)}
       isValid={isValid}
-      extraFooter={<FormAfterSubmitOptions onOptionsChange={setAfterSaveOptions} />}
+      extraFooter={
+        <FormAfterSubmitOptions
+          clearAfterSave={clearAfterSave}
+          closeAfterSave={closeAfterSave}
+          toggleOption={toggleAfterSubmitOption}
+        />
+      }
     >
       <Inputs>
         <CustomSelect

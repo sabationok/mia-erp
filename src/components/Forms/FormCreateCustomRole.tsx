@@ -16,7 +16,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import translate from '../../lang';
 import { FieldValues } from 'react-hook-form/dist/types';
 import { AppErrorSubmitHandler, AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import FormAfterSubmitOptions from './FormAfterSubmitOptions';
+import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 
 export interface FormCreateCustomRoleProps extends Omit<ModalFormProps, 'onSubmit'> {
   _id?: string;

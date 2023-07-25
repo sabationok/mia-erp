@@ -9,20 +9,26 @@ import { IActivity, IActivityFormData } from '../../redux/companyActivities/acti
 import { IModalProviderContext } from '../ModalProvider/ModalProvider';
 import { DirectoriesService } from '../../hooks/useDirService.hook';
 import { DirTableCompProps } from './DirTableComp';
+import { AppSubmitHandler, UseAppFormAfterSubmitOptions } from '../../hooks/useAppForm.hook';
 
 export interface DirBaseProps extends ModalFormProps {
   title: string;
 }
 
-export interface DirectoriesFormProps<ItemType = any, ItemDataType = any, FormData = any>
-  extends Omit<ModalFormProps, 'onSubmit'> {
+export interface DirectoriesFormProps<
+  ItemType = any,
+  ItemDataType = any,
+  FormData = any,
+  DirType extends ApiDirType = any
+> extends Omit<ModalFormProps, 'onSubmit'> {
   _id?: string;
   type?: ItemType;
   data?: ItemDataType;
   parent?: Partial<ItemDataType>;
   create?: boolean;
   edit?: boolean;
-  onSubmit?: (data: FormData) => void;
+  dirType?: DirType;
+  onSubmit?: AppSubmitHandler<FormData>;
 }
 
 export type RegisterChangeArchiveStatus<ItemDataType = any, ItemType = any> = {
@@ -30,10 +36,6 @@ export type RegisterChangeArchiveStatus<ItemDataType = any, ItemType = any> = {
   serviceDispatcher: DirectoriesService['changeArchiveStatus'];
   type?: ItemType;
   findById: (id: string) => ItemDataType | undefined;
-};
-export type SubmitFormOptions = {
-  closeAfter?: boolean;
-  clearAfter?: boolean;
 };
 
 export interface IDirInTreeProps<
@@ -52,11 +54,11 @@ export interface IDirInTreeProps<
   availableLevels?: number;
 
   actionsCreator: (options: ActionsCreatorOptions<DirType, ItemType, CreateDTO, UpdateDTO, ItemDataType>) => {
-    onCreateChild?: (parentId: string, parent: IBaseDirItem<ItemType>, options?: SubmitFormOptions) => void;
-    onCreateParent?: (options?: SubmitFormOptions) => void;
-    onUpdateItem?: (id: string, options?: SubmitFormOptions) => void;
-    onDeleteItem?: (id: string, options?: SubmitFormOptions) => void;
-    onChangeArchiveStatus?: (id: string, status: boolean, options?: SubmitFormOptions) => void;
+    onCreateChild?: (parentId: string, parent: IBaseDirItem<ItemType>, options?: UseAppFormAfterSubmitOptions) => void;
+    onCreateParent?: (options?: UseAppFormAfterSubmitOptions) => void;
+    onUpdateItem?: (id: string, options?: UseAppFormAfterSubmitOptions) => void;
+    onDeleteItem?: (id: string, options?: UseAppFormAfterSubmitOptions) => void;
+    onChangeArchiveStatus?: (id: string, status: boolean, options?: UseAppFormAfterSubmitOptions) => void;
   };
 }
 
@@ -135,6 +137,7 @@ export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> exte
   status?: 'ARCHIVED' | 'DELETED' | 'ACTIVE';
   taxCode?: string | number;
   description?: string;
+  manufacturer?: string;
   def?: string;
   owner?: Pick<ICompany, '_id' | 'name' | 'email'>;
   parent?: IBaseDirItem<Type, DirType>;

@@ -20,7 +20,7 @@ export interface DirTableCompProps<
   dirType: ApiDirType;
   type?: ItemType;
 
-  getTableSettings: (
+  getTableSettings?: (
     options: ActionsCreatorOptions<DirType, ItemType, CreateDTO, UpdateDTO, ItemDataType> & {
       sortParams?: ISortParams;
       setSortParams?: (params?: ISortParams) => void;
@@ -38,22 +38,23 @@ const DirTableComp: React.FC<DirTableCompProps> = ({ type, dirType, getTableSett
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
-  const tableSettingsMemo = useMemo(
-    (): ITableListProps => ({
-      ...getTableSettings({
-        dirService,
-        modalService,
-        type,
-        sortParams,
-        setSortParams,
-        filterParams,
-        setFilterParams,
-        dirType,
-      }),
-    }),
-
-    [dirService, dirType, filterParams, getTableSettings, modalService, sortParams, type]
-  );
+  const tableSettingsMemo = useMemo((): ITableListProps => {
+    if (getTableSettings) {
+      return {
+        ...getTableSettings({
+          dirService,
+          modalService,
+          type,
+          sortParams,
+          setSortParams,
+          filterParams,
+          setFilterParams,
+          dirType,
+        }),
+      };
+    }
+    return {};
+  }, [dirService, dirType, filterParams, getTableSettings, modalService, sortParams, type]);
   // useEffect(() => {
   //   getAllByDirType({
   //     data: { dirType, refresh: true, params: { isArchived: false, createTreeData: false, sortParams, filterParams } },

@@ -1,4 +1,9 @@
 import { ITransaction, ITransactionForReq } from '../redux/transactions/transactions.types';
+import { pick } from 'lodash';
+import { OnlyUUID } from '../redux/global.types';
+
+const ExtractId = <T extends OnlyUUID>(data: T) => (pick(data, '_id')._id ? pick(data, '_id') : { _id: '' });
+const ExtractIdString = <T extends OnlyUUID>(data: Partial<T>) => ('_id' in data ? pick(data, '_id')._id : undefined);
 
 function getValueByPath({ data, path }: { data?: object; path?: string }): any {
   if (!data || !path) {
@@ -107,11 +112,7 @@ function createDataForReq<
     outData[key] = value as any;
     return '';
   });
-
-  console.log('incomeData', incomeData);
-
-  console.log('outData', outData);
   return outData;
 }
 
-export { getValueByPath, formatPhoneNumber, createTransactionForReq, createDataForReq };
+export { getValueByPath, formatPhoneNumber, createTransactionForReq, createDataForReq, ExtractId, ExtractIdString };

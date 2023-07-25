@@ -38,17 +38,17 @@ const OverHead = styled.div`
   z-index: 50;
 
   width: 100%;
-  padding: 8px;
+  padding: 4px 8px;
 
   background-color: ${({ theme }) => theme.tableBackgroundColor};
   @media screen and (max-height: 480px) {
-    padding: 8px;
+    //padding: 8px;
   }
   @media screen and (min-height: 280px) and (min-width: 480px) {
     grid-template-columns: 1fr min-content;
   }
   @media screen and (min-width: 480px) and (min-height: 480px) {
-    padding: 20px 8px 16px;
+    //padding: 20px 8px 16px;
   }
   @media screen and (min-width: 768px) {
     flex-direction: row;

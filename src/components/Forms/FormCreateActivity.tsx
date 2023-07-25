@@ -2,14 +2,15 @@ import ModalForm from 'components/ModalForm';
 import React from 'react';
 import styled from 'styled-components';
 import { IActivity, IActivityFormData } from 'redux/companyActivities/activities.types';
-import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import { DirectoriesFormProps } from '../Directories/dir.types';
-import { ICategoryFormData } from '../../redux/directories/categories.types';
+import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
+import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
+import { useAppForm } from '../../hooks';
 
 const validation = yup.object().shape({});
 
@@ -20,7 +21,10 @@ const FormCreateActivity: React.FC<FormCreateCompanyActivityProps> = ({ _id, edi
     formState: { errors },
     register,
     handleSubmit,
-  } = useForm<IActivityFormData>({
+    closeAfterSave,
+    clearAfterSave,
+    toggleAfterSubmitOption,
+  } = useAppForm<IActivityFormData>({
     defaultValues: {
       ...data,
     },
@@ -28,22 +32,32 @@ const FormCreateActivity: React.FC<FormCreateCompanyActivityProps> = ({ _id, edi
     reValidateMode: 'onSubmit',
   });
 
-  function formEventWrapper(evHandler?: SubmitHandler<ICategoryFormData>) {
+  function formEventWrapper(evHandler?: AppSubmitHandler<IActivityFormData>) {
     if (evHandler) {
-      return handleSubmit(evHandler);
+      return handleSubmit(data => evHandler(data, { clearAfterSave, closeAfterSave }));
     }
   }
 
   return (
-    <ModalForm onSubmit={formEventWrapper(onSubmit)} {...props}>
+    <ModalForm
+      onSubmit={formEventWrapper(onSubmit)}
+      {...props}
+      extraFooter={
+        <FormAfterSubmitOptions
+          closeAfterSave={closeAfterSave}
+          clearAfterSave={clearAfterSave}
+          toggleOption={toggleAfterSubmitOption}
+        />
+      }
+    >
       <Inputs>
         <InputLabel label="Назва" error={errors.label}>
           <InputText placeholder="Введіть назву" {...register('label')} />
         </InputLabel>
-
         <InputLabel label="Коментар" error={errors.description}>
           <TextareaPrimary placeholder="Введіть коментар" {...register('description')} />
         </InputLabel>
+        ;
       </Inputs>
     </ModalForm>
   );

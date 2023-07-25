@@ -1,39 +1,35 @@
 import TableList from 'components/TableList/TableList';
 import { takeFullGridArea } from './pagesStyles';
-import { productsColumns, transactionsSearchParams } from 'data';
+import { priceListColumns } from 'data';
 import styled from 'styled-components';
 import { useEffect, useMemo, useState } from 'react';
 import { ITableListProps } from '../TableList/tableTypes.types';
 import AppGridPage from './AppGridPage';
-import { useProductsSelector } from '../../redux/selectors.store';
+import { usePriceListsSelector } from '../../redux/selectors.store';
 import { ISortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
-import { IStorageItem } from '../../redux/products/products.types';
-import useStorageServiceHook from '../../redux/products/useStorageService.hook';
 import { PagePathType } from '../../data/pages.data';
-import useProductsFilterSelectorsHook from '../../redux/products/useStorageFilterSelectors.hook';
-import useStorageActionsCreator from '../../redux/products/useStorageActionsCreator.hook';
+import usePriceManagementServiceHook from '../../redux/priceManagement/usePriceManagementService.hook';
+import usePriceManagementActionsCreatorHook from '../../redux/priceManagement/usePriceManagementActionsCreator.hook';
+import { IPriceList } from '../../redux/priceManagement/priceManagement.types';
 
 type Props = {
   path: PagePathType;
 };
-const PageProducts: React.FC<any> = (props: Props) => {
-  const service = useStorageServiceHook();
-  const state = useProductsSelector();
+const PagePriceManagement: React.FC<any> = (props: Props) => {
+  const service = usePriceManagementServiceHook();
+  const state = usePriceListsSelector();
   const { getAll } = service;
-  const filterSelectors = useProductsFilterSelectorsHook();
-  const actionsCreator = useStorageActionsCreator(service);
+  const actionsCreator = usePriceManagementActionsCreatorHook(service);
   const [isLoading, setIsLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   const tableConfig = useMemo(
-    (): ITableListProps<IStorageItem> => ({
-      tableData: state.products,
-      tableTitles: productsColumns,
-      tableSortParams: transactionsSearchParams.filter(el => el.sort),
-      filterSelectors,
-      isFilter: true,
+    (): ITableListProps<IPriceList> => ({
+      tableData: state.lists,
+      tableTitles: priceListColumns,
+      isFilter: false,
       isSearch: true,
       footer: false,
       checkBoxes: true,
@@ -50,7 +46,7 @@ const PageProducts: React.FC<any> = (props: Props) => {
         }).then();
       },
     }),
-    [actionsCreator, filterParams, filterSelectors, getAll, sortParams, state.products]
+    [actionsCreator, filterParams, getAll, sortParams, state.lists]
   );
 
   useEffect(() => {
@@ -59,14 +55,17 @@ const PageProducts: React.FC<any> = (props: Props) => {
     }
 
     if (!sortParams && !filterParams) {
-      if (state.products.length === 0) {
+      if (state.lists.length === 0) {
         getAll({
           data: { refresh: true },
           onLoading: setIsLoading,
+          onSuccess(d) {
+            console.log('PagePriceManagement onSuccess getAll');
+          },
         });
       }
     }
-  }, [filterParams, getAll, sortParams, state.products.length]);
+  }, [filterParams, getAll, sortParams, state.lists.length]);
   return (
     <AppGridPage path={props.path}>
       <Page>
@@ -80,4 +79,4 @@ const Page = styled.div`
   ${takeFullGridArea}
 `;
 
-export default PageProducts;
+export default PagePriceManagement;
