@@ -1,19 +1,137 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { IProduct } from '../../../redux/products/products.types';
-import TableList from '../../TableList/TableList';
-import { useProductsTableSettings } from '../../AppPages/PageProducts';
+import styled from 'styled-components';
+import FlexBox from '../../atoms/FlexBox';
+import { useProductsSelector } from '../../../redux/selectors.store';
+import { useCallback, useMemo, useState } from 'react';
+import { useModalProvider } from '../../ModalProvider/ModalProvider';
+import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import InputText from '../../atoms/Inputs/InputText';
+import InputLabel from '../../atoms/Inputs/InputLabel';
 
-export interface FormProductSelectorProps extends Omit<ModalFormProps, 'onSubmit'> {
+export interface FormProductSelectorProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   onSubmit?: (product?: IProduct) => void;
+  onSelect?: (product?: IProduct) => void;
+  selectedProduct?: IProduct;
 }
 
-const FormProductSelector: React.FC<FormProductSelectorProps> = ({ onSubmit }) => {
-  const { tableConfig } = useProductsTableSettings();
+export interface ProductCardForSelectorProps {
+  product: IProduct;
+  isSelected?: boolean;
+  onSelect?: () => void;
+}
 
+const ProductCardForSelector: React.FC<ProductCardForSelectorProps> = ({ product, isSelected, onSelect }) => {
   return (
-    <ModalForm fillHeight fitContentH>
-      <TableList {...tableConfig} />
+    <Card fxDirection={'row'} fillWidth gap={16} isSelected={isSelected} onClick={onSelect}>
+      <ImageBox>
+        <img
+          src={
+            (product?.images && product?.images[0]?.img_1x) ||
+            'https://cdn.create.vista.com/api/media/medium/186787692/stock-photo-profile-young-stylish-man-eyeglasses?token='
+          }
+          alt={''}
+          width={'100%'}
+          height={'100%'}
+        />
+      </ImageBox>
+      <FlexBox gap={8}>
+        <FlexBox style={{ fontSize: 16, fontWeight: 600 }}>{product.label}</FlexBox>
+        <FlexBox style={{ fontSize: 16, color: 'rgba(0,0,0,0.5)' }}>{product.sku}</FlexBox>
+      </FlexBox>
+    </Card>
+  );
+};
+const ModalChildren = ({
+  selected,
+  onSelect,
+  products,
+}: {
+  selected?: IProduct;
+  products?: IProduct[];
+  onSelect?: (product?: IProduct) => void;
+}) => {
+  const [pr, setPr] = useState<IProduct | null>(null);
+  const onItemSelect = useCallback(
+    (p: IProduct) => {
+      setPr && setPr(p);
+      onSelect && onSelect(p);
+    },
+    [onSelect]
+  );
+  const renderProducts = useMemo(() => {
+    return products?.map(p => (
+      <ProductCardForSelector
+        key={`product-${p._id}`}
+        product={p}
+        onSelect={() => onItemSelect(p)}
+        isSelected={p._id === selected?._id}
+      />
+    ));
+  }, [onItemSelect, products, selected?._id]);
+  return (
+    <ModalForm fillHeight fitContentH title={'Select product'} isValid={!!pr}>
+      <FlexBox fillWidth padding={'8px 16px'}>
+        <InputLabel label={'Пошук по назві'} direction={'vertical'}>
+          <InputText placeholder={'Введіть назву продуту'} autoFocus />
+        </InputLabel>
+      </FlexBox>
+      <FlexBox overflow={'auto'} fillWidth flex={'1'} gap={12} padding={'16px'}>
+        {renderProducts}
+      </FlexBox>
     </ModalForm>
   );
 };
+const FormProductSelector: React.FC<FormProductSelectorProps> = ({ onSelect, onSubmit, ...props }) => {
+  // const { tableConfig } = useProductsTableSettings();
+  const { products } = useProductsSelector();
+  const modals = useModalProvider();
+  const [current, setCurrent] = useState<IProduct | undefined>();
+
+  const onOpenSelectorClick = () => {
+    const modal = modals.handleOpenModal({
+      ModalChildren,
+      modalChildrenProps: {
+        onSelect: p => {
+          setCurrent(p);
+          onSelect && onSelect(p);
+          modal?.onClose();
+        },
+        selected: current,
+        products: [...products],
+      },
+    });
+  };
+
+  return (
+    <FlexBox gap={8} fxDirection={'column'} fillWidth alignItems={'stretch'} padding={'8px 0 8px'}>
+      {current && (
+        <FlexBox fillWidth>
+          <ProductCardForSelector product={current} />
+        </FlexBox>
+      )}
+      <ButtonIcon variant={'outlinedSmall'} onClick={onOpenSelectorClick}>
+        <FlexBox>{`${current ? 'Change' : 'Select'} product for pricing`}</FlexBox>
+      </ButtonIcon>
+    </FlexBox>
+  );
+};
+
+const Card = styled(FlexBox)<{ isSelected?: boolean }>`
+  min-height: 100px;
+  border-radius: 4px;
+  padding: 8px;
+  border: 1px solid ${({ theme, isSelected }) => (isSelected ? theme.accentColor.base : theme.fieldBackgroundColor)};
+  box-shadow: 0 0 10px ${({ theme }) => theme.fieldBackgroundColor};
+`;
+const ImageBox = styled(FlexBox)`
+  height: 100%;
+  width: 60px;
+  overflow: hidden;
+
+  border-radius: 4px;
+
+  border: 1px solid ${({ theme }) => theme.fieldBackgroundColor};
+`;
+
 export default FormProductSelector;

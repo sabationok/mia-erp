@@ -159,18 +159,8 @@ const Form: React.FC<FormProps> = ({ edit, onSubmit, copy, defaultState, addInpu
       }
     >
       <FlexBox className={'inputs'} flex={'1'} fillWidth maxHeight={'100%'} padding={'12px'} overflow={'auto'}>
-        {/*<GridWrapper>*/}
-        {/*  <InputLabel label={translate('price')} direction={'vertical'} error={errors.price}>*/}
-        {/*    <InputText placeholder={translate('price')} type={'number'} {...register('price')} />*/}
-        {/*  </InputLabel>*/}
-
-        {/*  <InputLabel label={translate('currency')} direction={'vertical'}>*/}
-        {/*    <InputText placeholder={translate('currency')} {...register('currency')} disabled />*/}
-        {/*  </InputLabel>*/}
-        {/*</GridWrapper>*/}
-
         <InputLabel label={translate('label')} direction={'vertical'} error={errors.label} required>
-          <InputText placeholder={translate('label')} {...register('label')} required />
+          <InputText placeholder={translate('label')} {...register('label')} required autoFocus />
         </InputLabel>
 
         <InputLabel label={translate('sku')} direction={'vertical'} error={errors.sku} disabled>

@@ -184,7 +184,7 @@ const usePriceManagementActionsCreator = (service: PriceManagementService): Pric
         icon: 'openInNew',
         iconSize: '90%',
         type: 'onlyIcon',
-        disabled: false,
+        disabled: !ctx.selectedRow?._id,
         onClick: async () => {
           const list = ctx.tableData?.find(l => l._id === ctx.selectedRow?._id);
           const modal = modals.handleOpenModal({

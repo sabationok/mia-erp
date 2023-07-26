@@ -49,6 +49,8 @@ export interface IStorageItem extends IStorageItemBase {
   supplier?: IBaseDirItem<ContractorsTypesEnum, ApiDirType.CONTRACTORS>;
   contractor?: IBaseDirItem<ContractorsTypesEnum, ApiDirType.CONTRACTORS>;
   storages?: IBaseDirItem<any, ApiDirType.STORAGES>;
+
+  images?: { img_1x: string }[];
 }
 
 export interface IStorageItemFroReq extends Partial<Record<keyof IStorageItem, any>> {
