@@ -9,6 +9,13 @@ import { createApiCall } from '../../../api';
 import { PriceManagementApi } from '../../../api/priceManagement.api';
 import { OnlyUUID } from '../../../redux/global.types';
 import { CellTittleProps } from '../../TableList/TebleCells/CellTitle';
+import { TableActionCreator } from '../../TableList/tableTypes.types';
+import usePriceManagementServiceHook, {
+  PriceManagementService,
+} from '../../../redux/priceManagement/usePriceManagementService.hook';
+import { useModalProvider } from '../../ModalProvider/ModalProvider';
+import FormCreatePrices from '../../Forms/FormCreatePrices';
+import { toast } from 'react-toastify';
 
 // const moc: IPriceListItem = {
 //   _id: '',
@@ -46,6 +53,43 @@ export const priceListTableColumns: CellTittleProps<IPriceListItem>[] = [
     action: 'dateDbl',
   },
 ];
+export type PriceListOverviewActionsCreatorType = TableActionCreator<IPriceListItem>;
+
+export const usePriceListOverviewActionsCreator = (
+  serv?: PriceManagementService
+): PriceListOverviewActionsCreatorType => {
+  const modalS = useModalProvider();
+  const service = usePriceManagementServiceHook();
+  return useCallback(
+    ctx => [
+      {
+        name: 'createPrice',
+        title: 'Створити',
+        icon: 'plus',
+        onClick: async () => {
+          const modal = modalS.handleOpenModal({
+            ModalChildren: FormCreatePrices,
+            modalChildrenProps: {
+              title: 'Create new price',
+              onSubmit: (data, o) => {
+                service.addItemToList({
+                  onSuccess: data => {
+                    o?.closeAfterSave && modal?.onClose();
+                    toast.success('Price created');
+                  },
+                  onError: () => {
+                    toast.error('Price creating error');
+                  },
+                });
+              },
+            },
+          });
+        },
+      },
+    ],
+    [modalS, service]
+  );
+};
 
 export interface PriceListOverviewProps extends Omit<ModalFormProps, 'onSubmit' | 'afterSubmit'> {
   createFormProps?: FormCreatePriceProps;
@@ -69,6 +113,7 @@ const PriceListOverview: React.FC<PriceListOverviewProps> = ({
   onSubmit,
   ...props
 }) => {
+  const actionsCreator = usePriceListOverviewActionsCreator();
   const [state, setState] = useState<IPriceList>();
   const [isLoading, setIsLoading] = useState(false);
   const { clearAfterSave, closeAfterSave } = useAppForm({
@@ -112,8 +157,14 @@ const PriceListOverview: React.FC<PriceListOverviewProps> = ({
   }, [loadData]);
   // TODO onSubmit={handleSubmit(onValidSubmit)}
   return (
-    <ModalForm {...props} title={`Price list: ${state?.label}`}>
-      <TableList {...tableSettings} isSearch={false} tableData={state?.prices} tableTitles={priceListTableColumns} />
+    <ModalForm {...props} fillHeight title={isLoading ? 'Loading...' : `Price list: ${state?.label}`}>
+      <TableList
+        {...tableSettings}
+        actionsCreator={actionsCreator}
+        isSearch={false}
+        tableData={state?.prices}
+        tableTitles={priceListTableColumns}
+      />
     </ModalForm>
   );
 };

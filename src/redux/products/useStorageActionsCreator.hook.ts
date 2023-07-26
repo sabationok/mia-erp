@@ -1,5 +1,5 @@
 import { useModalProvider } from '../../components/ModalProvider/ModalProvider';
-import { StorageService } from './useStorageService.hook';
+import useStorageServiceHook from './useStorageService.hook';
 import { useCallback } from 'react';
 import { TableActionCreator } from '../../components/TableList/tableTypes.types';
 import { IStorageItem, StorageItemFilterOption } from './products.types';
@@ -12,10 +12,10 @@ export const StorageItemTypeFilterOptions: StorageItemFilterOption[] = [
   { label: 'GOODS', value: 'GOODS' },
   { label: 'SERVICE', value: 'SERVICE' },
 ];
-const useStorageActionsCreator = (service: StorageService): StorageActionsCreator => {
+const useStorageActionsCreator = (): StorageActionsCreator => {
+  const service = useStorageServiceHook();
   const state = useProductsSelector();
   const modals = useModalProvider();
-
   // const onSubmitCreateWrapper = useCallback(
   //   (onCloseModal: () => void) => {
   //     return (data: ITransactionReqData, options: AfterFormSubmitOptions,) => {
