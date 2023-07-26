@@ -115,7 +115,7 @@ const directoriesApiEndpoints: ApiEndpointsMap = {
   [Endpoints.getAllByType]: (dirType?: ApiDirType) =>
     `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.getAllByType}/${dirType || '_'}`,
   [Endpoints.getAllGrouped]: (dirType?: string) => `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.getAllGrouped}`,
-  [Endpoints.create]: (dirType?: ApiDirType) => `${API_BASE_ROUTES.DIRECTORIES}/${dirType || '_'}/${Endpoints.create}`,
+  [Endpoints.create]: (dirType?: ApiDirType) => `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.create}/${dirType}`,
   [Endpoints.deleteById]: (dirType?: ApiDirType, id?: string) =>
     `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.deleteById}/${dirType || '_'}/${id}`,
   [Endpoints.updateById]: (dirType?: ApiDirType, id?: string) =>

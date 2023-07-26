@@ -2,7 +2,6 @@ import ModalForm from 'components/ModalForm';
 import styled from 'styled-components';
 import { CountType, ICount, ICountFormData } from 'redux/directories/counts.types';
 import React from 'react';
-import { useForm } from 'react-hook-form';
 import translate from '../../lang';
 import t from '../../lang';
 import InputLabel from '../atoms/Inputs/InputLabel';
@@ -11,6 +10,9 @@ import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { DirectoriesFormProps } from '../Directories/dir.types';
+import { useAppForm } from '../../hooks';
+import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
+import { pick } from 'lodash';
 
 export interface FormCreateCountProps extends DirectoriesFormProps<CountType, ICount, ICountFormData> {}
 
@@ -32,12 +34,15 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
     formState: { errors },
     register,
     handleSubmit,
-  } = useForm<ICountFormData>({
+    closeAfterSave,
+    clearAfterSave,
+    toggleAfterSubmitOption,
+  } = useAppForm<ICountFormData>({
     defaultValues: parent?._id
       ? {
           ...data,
           type,
-          parent: { _id: parent?._id },
+          parent: pick(parent, '_id'),
         }
       : {
           ...data,
@@ -47,9 +52,14 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
     reValidateMode: 'onSubmit',
   });
 
-  function formEventWrapper(evHandler?: (args: ICountFormData) => void) {
+  function formEventWrapper(evHandler?: AppSubmitHandler<ICountFormData>) {
     if (evHandler) {
-      return handleSubmit(evHandler);
+      return handleSubmit(data =>
+        evHandler(data, {
+          closeAfterSave,
+          clearAfterSave,
+        })
+      );
     }
   }
 

@@ -80,11 +80,11 @@ const CountsProps: DirCountsProps = {
             title: t('createParentCount'),
             type,
             parent: { _id: parentId },
-            onSubmit: data => {
+            onSubmit: (data, o) => {
               dirService.create({
                 data: { dirType, data },
                 onSuccess: rd => {
-                  modal?.onClose();
+                  o?.closeAfterSave && modal?.onClose();
                   toast.success(`Created item: ${data.label}`);
                 },
               });

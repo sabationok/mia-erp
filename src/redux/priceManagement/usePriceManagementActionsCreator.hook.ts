@@ -11,9 +11,9 @@ import {
 } from './priceManagement.types';
 import FormCreatePriceList from '../../components/Forms/FormCreatePriceList';
 import { toast } from 'react-toastify';
-import FormCreatePrices from '../../components/Forms/FormCreatePrices';
-import { isArray, omit } from 'lodash';
+import { omit } from 'lodash';
 import { ExtractId } from '../../utils/dataTransform';
+import PriceListOverview from '../../components/AppPages/components/PriceListOverview';
 
 export type PriceManagementActionsCreator = TableActionCreator<IPriceList>;
 
@@ -188,24 +188,24 @@ const usePriceManagementActionsCreator = (service: PriceManagementService): Pric
         onClick: async () => {
           const list = ctx.tableData?.find(l => l._id === ctx.selectedRow?._id);
           const modal = modals.handleOpenModal({
-            ModalChildren: FormCreatePrices,
+            ModalChildren: PriceListOverview,
             modalChildrenProps: {
-              title: `Створення цін`,
-              list,
-              onSubmit: ({ data: itemOrArr, list }, o) => {
-                if (isArray(itemOrArr)) {
-                  toast.warning('Array of prices passed. Dispatcher warn');
-                  return;
-                }
-                service.addItemToList({
-                  data: { data: createPriceDataForReq(itemOrArr).data, list },
-                  onSuccess: data => {
-                    console.log('IPriceListRes');
-                    o?.closeAfterSave && modal?.onClose();
-                    toast.success(`Price created`);
-                  },
-                });
-              },
+              listId: ctx.selectedRow?._id,
+              getTableSetting: () => ({}),
+              // onSubmit: ({ data: itemOrArr, list }, o) => {
+              //   if (isArray(itemOrArr)) {
+              //     toast.warning('Array of prices passed. Dispatcher warn');
+              //     return;
+              //   }
+              //   service.addItemToList({
+              //     data: { data: createPriceDataForReq(itemOrArr).data, list },
+              //     onSuccess: data => {
+              //       console.log('IPriceListRes');
+              //       o?.closeAfterSave && modal?.onClose();
+              //       toast.success(`Price created`);
+              //     },
+              //   });
+              // },
             },
           });
         },
