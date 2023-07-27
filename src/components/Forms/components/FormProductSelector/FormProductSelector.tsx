@@ -10,6 +10,7 @@ import { createApiCall } from '../../../../api';
 import ProductsApi from '../../../../api/products.api';
 import { useForm } from 'react-hook-form';
 import SelectorProductCard from './SelectorProductCard';
+import styled from 'styled-components';
 
 export interface FormProductSelectorProps<D = any> {
   title?: string;
@@ -58,7 +59,13 @@ const SelectProductModal = ({ selected, onSelect }: SelectItemModalProps<IProduc
     !search && getData();
   }, [getData, search]);
   return (
-    <ModalForm fillHeight title={'Select product'} isValid={!!current} footer={false} onSubmit={handleSubmit(onValid)}>
+    <StModalForm
+      fillHeight
+      title={'Select product'}
+      isValid={!!current}
+      footer={false}
+      onSubmit={handleSubmit(onValid)}
+    >
       <FlexBox fillWidth padding={'8px 8px'} fxDirection={'row'} gap={12} alignItems={'flex-end'}>
         <InputLabel label={'Пошук по назві'} direction={'vertical'}>
           <InputText placeholder={'Введіть назву продукту'} {...register('search')} autoFocus />
@@ -69,9 +76,14 @@ const SelectProductModal = ({ selected, onSelect }: SelectItemModalProps<IProduc
       <FlexBox overflow={'auto'} fillWidth flex={'1'} gap={4} padding={'16px 8px'}>
         {renderProducts}
       </FlexBox>
-    </ModalForm>
+    </StModalForm>
   );
 };
+const StModalForm = styled(ModalForm)`
+  @media screen and (min-width: 768px) {
+    width: 600px;
+  }
+`;
 const FormProductSelector: React.FC<FormProductSelectorProps> = ({ onSelect, onSubmit, ...props }) => {
   const modals = useModalProvider();
   const [current, setCurrent] = useState<IProduct | undefined>();

@@ -106,7 +106,7 @@ const ModalFormContainer = styled.form<
   min-width: 250px;
   max-width: 100%;
 
-  width: ${({ fillWidth, fitContentH }) => (fillWidth && '100vw') || (fitContentH && 'max-content') || '480px'};
+  width: ${({ fillWidth, fitContentH }) => (fillWidth && '100vw') || (fitContentH && 'max-content') || ''};
   height: ${({ fillHeight, fitContentV }) => (fillHeight && '100vh') || (fitContentV && 'max-content') || ''};
 
   //overflow: hidden;

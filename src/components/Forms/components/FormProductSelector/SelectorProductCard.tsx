@@ -122,7 +122,7 @@ const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
 
   padding: 8px;
   border-bottom: 2px solid ${({ theme, isSelected }) => theme.fieldBackgroundColor};
-  box-shadow: ${({ theme, isSelected }) => (isSelected ? '0px 2px 6px 0px rgba(0, 0, 0, 0.16)' : '')};
+  //box-shadow: ${({ theme, isSelected }) => '0px 2px 6px 0px rgba(0, 0, 0, 0.16)'};
 
   transition: all ${({ theme, isSelected }) => theme.globals.timingFunctionMain};
   pointer-events: ${({ disabled }) => disabled && 'none'};

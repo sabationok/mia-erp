@@ -10,9 +10,7 @@ import { PriceManagementApi } from '../../../api/priceManagement.api';
 import { OnlyUUID } from '../../../redux/global.types';
 import { CellTittleProps } from '../../TableList/TebleCells/CellTitle';
 import { TableActionCreator } from '../../TableList/tableTypes.types';
-import usePriceManagementServiceHook, {
-  PriceManagementService,
-} from '../../../redux/priceManagement/usePriceManagementService.hook';
+import usePriceManagementServiceHook from '../../../redux/priceManagement/usePriceManagementService.hook';
 import { useModalProvider } from '../../ModalProvider/ModalProvider';
 import FormCreatePrices from '../../Forms/FormCreatePrices';
 import { toast } from 'react-toastify';
@@ -55,9 +53,7 @@ export const priceListTableColumns: CellTittleProps<IPriceListItem>[] = [
 ];
 export type PriceListOverviewActionsCreatorType = TableActionCreator<IPriceListItem>;
 
-export const usePriceListOverviewActionsCreator = (
-  serv?: PriceManagementService
-): PriceListOverviewActionsCreatorType => {
+export const usePriceListOverviewActionsCreator = (listId?: string): PriceListOverviewActionsCreatorType => {
   const modalS = useModalProvider();
   const service = usePriceManagementServiceHook();
   return useCallback(
@@ -66,28 +62,34 @@ export const usePriceListOverviewActionsCreator = (
         name: 'createPrice',
         title: 'Створити',
         icon: 'plus',
-        onClick: async () => {
-          const modal = modalS.handleOpenModal({
-            ModalChildren: FormCreatePrices,
-            modalChildrenProps: {
-              title: 'Create new price',
-              onSubmit: (data, o) => {
-                service.addItemToList({
-                  onSuccess: data => {
-                    o?.closeAfterSave && modal?.onClose();
-                    toast.success('Price created');
+        onClick: listId
+          ? async () => {
+              const modal = modalS.handleOpenModal({
+                ModalChildren: FormCreatePrices,
+                modalChildrenProps: {
+                  title: 'Create new price',
+                  list: { _id: listId },
+                  onSubmit: (data, o) => {
+                    console.log('usePriceListOverviewActionsCreator', data);
+
+                    service.addItemToList({
+                      // data: createPriceDataForReq(data),
+                      onSuccess: data => {
+                        modal?.onClose();
+                        toast.success('Price created', data);
+                      },
+                      onError: () => {
+                        toast.error('Price creating error');
+                      },
+                    });
                   },
-                  onError: () => {
-                    toast.error('Price creating error');
-                  },
-                });
-              },
-            },
-          });
-        },
+                },
+              });
+            }
+          : undefined,
       },
     ],
-    [modalS, service]
+    [listId, modalS, service]
   );
 };
 
@@ -113,7 +115,7 @@ const PriceListOverview: React.FC<PriceListOverviewProps> = ({
   onSubmit,
   ...props
 }) => {
-  const actionsCreator = usePriceListOverviewActionsCreator();
+  const actionsCreator = usePriceListOverviewActionsCreator(listId);
   const [state, setState] = useState<IPriceList>();
   const [isLoading, setIsLoading] = useState(false);
   const { clearAfterSave, closeAfterSave } = useAppForm({
