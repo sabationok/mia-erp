@@ -82,7 +82,7 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
         </SvgIcon>
       )}
 
-      {children}
+      {variant && !variant.includes('Icon') && children}
 
       {(endIconId || endIcon) && (
         <SvgIcon className="endIcon" style={endIconStyle}>

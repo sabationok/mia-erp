@@ -6,9 +6,10 @@ import styled, { css } from 'styled-components';
 import { useTable } from './TableList';
 import TActions from './TableActions';
 import TableFilter from './TableFilter';
+import { useCloseByEscapeOrClickOnBackdrop } from '../../hooks';
 
 const QuickActions: React.FC<{ closeOnClickOut?: boolean }> = ({ closeOnClickOut = false }) => {
-  const { actionsCreator, isFilter, footer } = useTable();
+  const { actionsCreator, isFilter, footer, selectedRow, selectedRows } = useTable();
   const [isShown, setIsShown] = useState(false);
 
   function onMenuBtnClick() {
@@ -16,21 +17,13 @@ const QuickActions: React.FC<{ closeOnClickOut?: boolean }> = ({ closeOnClickOut
   }
 
   useEffect(() => {
-    if (!closeOnClickOut) return;
-
-    function onMenuClose(ev: MouseEvent | KeyboardEvent) {
-      if (ev.target instanceof HTMLElement && !ev.target.closest('[data-burger]')) setIsShown(false);
-      if (ev instanceof KeyboardEvent && ev?.code === 'Escape') setIsShown(false);
+    if (selectedRow) setIsShown(true);
+    if (!selectedRow && selectedRows && selectedRows?.length === 0) {
+      setIsShown(false);
     }
+  }, [selectedRow, selectedRows]);
 
-    document.addEventListener('click', onMenuClose);
-    document.addEventListener('keydown', onMenuClose);
-
-    return () => {
-      document.removeEventListener('click', onMenuClose);
-      document.removeEventListener('keydown', onMenuClose);
-    };
-  }, [closeOnClickOut]);
+  useCloseByEscapeOrClickOnBackdrop(setIsShown, 'data-burger', closeOnClickOut);
 
   return (
     <Menu isShown={isShown} footer={footer} data-burger>

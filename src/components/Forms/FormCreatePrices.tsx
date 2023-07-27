@@ -5,7 +5,7 @@ import { OnlyUUID } from '../../redux/global.types';
 import { UseAppFormAfterSubmitOptions } from '../../hooks/useAppForm.hook';
 import { useAppForm } from '../../hooks';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
-import FormProductSelector from './components/FormProductSelector';
+import FormProductSelector from './components/FormProductSelector/FormProductSelector';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import { toast } from 'react-toastify';
