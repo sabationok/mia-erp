@@ -2,7 +2,12 @@ import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { createTransactionThunk, getAllTransactionsThunk } from 'redux/transactions/transactions.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { IPriceList } from './priceManagement.types';
-import { createPriceListThunk, getAllPriceListsThunk } from './priceManagement.thunks';
+import {
+  createPriceListThunk,
+  getAllPriceListsThunk,
+  refreshPriceListByIdThunk,
+  updatePriceListByIdThunk,
+} from './priceManagement.thunks';
 
 export interface IPriceListsState {
   lists: IPriceList[];
@@ -36,9 +41,23 @@ export const priceManagementSlice = createSlice({
       })
       .addCase(createPriceListThunk.fulfilled, (s, a) => {
         s.isLoading = false;
-        console.log(a);
-
-        s.lists = a.payload ? [a.payload, ...s.lists] : s.lists;
+        if (a.payload) {
+          s.lists = [a.payload, ...s.lists];
+        }
+      })
+      .addCase(refreshPriceListByIdThunk.fulfilled, (s, { payload: p }) => {
+        const idx = s.lists.findIndex(l => l._id === p?._id);
+        if (idx >= 0 && p) {
+          s.lists.splice(idx, 0, p);
+          console.log('refreshPriceListById action', `idx-${idx}`, s.lists);
+        }
+      })
+      .addCase(updatePriceListByIdThunk.fulfilled, (s, p) => {
+        const idx = s.lists.findIndex(l => l._id === 'p?._id');
+        if (idx >= 0 && p) {
+          // s.lists.splice(idx, 0, p);
+          console.log('updateList action', `idx-${idx}`, s.lists);
+        }
       })
       .addMatcher(inPending, s => {
         s.isLoading = true;

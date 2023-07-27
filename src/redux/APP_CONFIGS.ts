@@ -32,9 +32,11 @@ export enum Endpoints {
   acceptById = 'acceptById',
   changeArchiveStatus = 'changeArchiveStatusById',
   createList = 'createList',
-  addItemToList = 'addItemToList',
   softDeleteItemFromList = 'softDeleteItemFromList',
+  addItemToList = 'addItemToList',
   updateListItem = 'updateListItem',
+  updateList = 'updateList',
+  insert = 'insert',
 }
 
 export type GetEndpoint = (...args: any[]) => string;
@@ -136,11 +138,12 @@ const priceManagamentEndpoins: ApiEndpointsMap = {
   [Endpoints.getById]: (listId: string) => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.getById}/${listId}`,
   [Endpoints.createList]: () => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.createList}`,
   [Endpoints.addItemToList]: (listId: string) =>
-    `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.changeArchiveStatus}/${listId}`,
+    `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.updateList}/${listId}/addPrice`,
   [Endpoints.softDeleteItemFromList]: (listId: string, priceId: string) =>
     `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.softDeleteItemFromList}/${listId}/${priceId}`,
   [Endpoints.updateListItem]: (listId: string, priceId: string) =>
     `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.updateListItem}/${listId}/${priceId}`,
+  [Endpoints.updateList]: (listId: string) => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.updateList}/${listId}`,
 };
 
 const APP_CONFIGS = {

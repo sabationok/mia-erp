@@ -9,6 +9,9 @@ export { default as CompaniesApi } from './companies.api';
 export { default as PermissionsApi } from './permissions.api';
 export { default as DirectoriesApi } from './directories.api';
 
+export { default as PriceManagementApi } from './priceManagement.api';
+export { default as ProductsApi } from './products.api';
+
 export interface AppQueryParams {
   dirType?: ApiDirType;
   isArchived?: boolean;
@@ -16,10 +19,12 @@ export interface AppQueryParams {
   owner?: string;
   sortParams?: ISortParams;
   search?: string;
+  timeFrom?: string | number | Date;
+  timeTo?: string | number | Date;
   filterParams?: Partial<FilterReturnDataType>;
 }
 
-export type SortOrder = 'desc' | 'asc' | 'descending' | 'ascending';
+export type SortOrder = 'desc' | 'asc' | 'descending' | 'ascending' | 'DESC' | 'ASC';
 
 export interface ISortParams<DataPath = any> {
   sortOrder?: SortOrder;

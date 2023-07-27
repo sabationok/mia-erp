@@ -72,6 +72,11 @@ export interface IPriceListItemReqData {
   data: PriceListItemDto;
 }
 
+export interface ICreatePriceListItemReqData {
+  list: OnlyUUID;
+  data: PriceListItemDto;
+}
+
 export interface IAllPriceListsRes extends AppResponse<IPriceList[]> {}
 
 export interface IPriceListRes extends AppResponse<IPriceList> {}

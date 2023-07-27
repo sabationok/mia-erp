@@ -88,15 +88,21 @@ export const priceListColumns: CellTittleProps<IPriceList, DataPath>[] = [
 ];
 export const priceListContentColumns: CellTittleProps<IPriceListItem, DataPath>[] = [
   {
-    top: { name: 'Продукт', align: 'start', path: 'product.label' },
-    bottom: { name: t('sku'), align: 'start', path: 'product.sku' },
-    width: '150px',
+    top: { name: 'Продукт', getData: d => d?.product?.label },
+    bottom: { name: t('sku'), getData: d => d?.product?.sku },
+    width: '170px',
+    action: 'doubleDataWithAvatar',
+  },
+  {
+    top: { name: 'Вхідна ціна', getData: d => d?.price },
+    bottom: { name: 'Вихідна ціна', getData: d => d?.cost },
+    width: '170px',
     action: 'valueByPath',
   },
   {
-    top: { name: t('price'), align: 'start', path: 'price' },
-    bottom: { name: t('currency'), align: 'start', path: 'currency' },
-    width: '150px',
+    top: { name: 'Комісія, сума', getData: d => d?.commissionAmount },
+    bottom: { name: 'Комісія, %', getData: d => d?.commissionPercentage },
+    width: '170px',
     action: 'valueByPath',
   },
   {
@@ -105,15 +111,21 @@ export const priceListContentColumns: CellTittleProps<IPriceListItem, DataPath>[
     width: '150px',
     action: 'valueByPath',
   },
+  // {
+  //   top: { name: 'Націнка, сума', getData: d => d?.markupAmount },
+  //   bottom: { name: 'Націнка, %', getData: d => d?.markupPercentage },
+  //   width: '170px',
+  //   action: 'valueByPath',
+  // },
   {
     top: { name: 'Коментар', align: 'start', path: 'description' },
     width: '150px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Створено', align: 'center', path: 'createdAt' },
-    bottom: { name: 'Оновлено', align: 'center', path: 'updatedAt' },
-    width: '150px',
+    top: { name: 'Створено', getData: d => d?.createdAt },
+    bottom: { name: 'Оновлено', getData: d => d?.updatedAt },
+    width: '170px',
     action: 'dateDbl',
   },
 ];
