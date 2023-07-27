@@ -22,16 +22,17 @@ export interface ProductCardForSelectorProps {
   product: IProduct;
   isSelected?: boolean;
   onSelect?: () => void;
+  disabled?: boolean;
 }
 
-const ProductCardForSelector: React.FC<ProductCardForSelectorProps> = ({ product, isSelected, onSelect }) => {
+const ProductCardForSelector: React.FC<ProductCardForSelectorProps> = ({ product, disabled, isSelected, onSelect }) => {
   const logProduct = () => {
     console.log(product);
   };
 
   useEffect(logProduct, [product]);
   return (
-    <Card fxDirection={'row'} fillWidth gap={16} isSelected={isSelected} onClick={onSelect}>
+    <Card fxDirection={'row'} fillWidth gap={16} isSelected={isSelected} onClick={onSelect} disabled={disabled}>
       <ImageBox>
         <img
           src={
@@ -60,12 +61,8 @@ const SelectProductModal = ({ selected, onSelect }: SelectItemModalProps<IProduc
   const [loadedData, setLoadedData] = useState<IProduct[] | null>(null);
   const [current, setCurrent] = useState<IProduct | null>(null);
 
-  const { register, watch } = useForm<{ search: '' }>();
+  const { register, watch, handleSubmit } = useForm<{ search: string }>();
   const { search } = watch();
-
-  useEffect(() => {
-    createApiCall({ data: { search }, onSuccess: setLoadedData }, ProductsApi.getAll, ProductsApi);
-  }, [search]);
 
   const onItemSelect = useCallback(
     (p: IProduct) => {
@@ -84,14 +81,33 @@ const SelectProductModal = ({ selected, onSelect }: SelectItemModalProps<IProduc
       />
     ));
   }, [onItemSelect, loadedData, selected?._id]);
+
+  const getData = useCallback(
+    (search?: string) => createApiCall({ data: { search }, onSuccess: setLoadedData }, ProductsApi.getAll, ProductsApi),
+    []
+  );
+  const onValid = ({ search }: { search: string }) => getData(search);
+
+  useEffect(() => {
+    !search && getData();
+  }, [getData, search]);
   return (
-    <ModalForm fillHeight fitContentH title={'Select product'} isValid={!!current} footer={false}>
-      <FlexBox fillWidth padding={'8px 16px'}>
+    <ModalForm
+      fillHeight
+      fitContentH
+      title={'Select product'}
+      isValid={!!current}
+      footer={false}
+      onSubmit={handleSubmit(onValid)}
+    >
+      <FlexBox fillWidth padding={'8px 16px'} fxDirection={'row'} gap={12} alignItems={'flex-end'}>
         <InputLabel label={'Пошук по назві'} direction={'vertical'}>
           <InputText placeholder={'Введіть назву продукту'} {...register('search')} autoFocus />
         </InputLabel>
+
+        <ButtonIcon variant={'onlyIcon'} type={'submit'} icon={'search'} iconSize={'24px'} />
       </FlexBox>
-      <FlexBox overflow={'auto'} fillWidth flex={'1'} gap={12} padding={'16px'}>
+      <FlexBox overflow={'auto'} fillWidth flex={'1'} gap={4} padding={'16px'}>
         {renderProducts}
       </FlexBox>
     </ModalForm>
@@ -119,7 +135,7 @@ const FormProductSelector: React.FC<FormProductSelectorProps> = ({ onSelect, onS
     <FlexBox gap={8} fxDirection={'column'} fillWidth alignItems={'stretch'} padding={'8px 0 8px'}>
       {current && (
         <FlexBox fillWidth>
-          <ProductCardForSelector product={current} />
+          <ProductCardForSelector product={current} disabled />
         </FlexBox>
       )}
       <ButtonIcon variant={'outlinedSmall'} onClick={onOpenSelectorClick}>
@@ -129,21 +145,41 @@ const FormProductSelector: React.FC<FormProductSelectorProps> = ({ onSelect, onS
   );
 };
 
-const Card = styled(FlexBox)<{ isSelected?: boolean }>`
+const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
+  position: relative;
+
   min-height: 100px;
-  border-radius: 4px;
+
   padding: 8px;
-  border: 1px solid ${({ theme, isSelected }) => (isSelected ? theme.accentColor.base : theme.fieldBackgroundColor)};
-  box-shadow: 0 0 10px ${({ theme }) => theme.fieldBackgroundColor};
+  border-bottom: 2px solid ${({ theme, isSelected }) => theme.fieldBackgroundColor};
+  box-shadow: ${({ theme, isSelected }) => (isSelected ? '0px 2px 6px 0px rgba(0, 0, 0, 0.16)' : '')};
+
+  transition: all ${({ theme, isSelected }) => theme.globals.timingFunctionMain};
+  pointer-events: ${({ disabled }) => disabled && 'none'};
+
+  &:hover {
+    box-shadow: ${({ theme }) => '0px 2px 6px 0px rgba(0, 0, 0, 0.16)'};
+  }
+
+  &::after {
+    display: block;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    z-index: 5;
+
+    background-color: ${({ theme, isSelected }) => (isSelected ? theme.accentColor.base : 'transparent')};
+  }
 `;
 const ImageBox = styled(FlexBox)`
   height: 100%;
   width: 60px;
   overflow: hidden;
 
-  border-radius: 4px;
-
-  border: 1px solid ${({ theme }) => theme.fieldBackgroundColor};
+  background-color: ${({ theme }) => theme.fieldBackgroundColor};
 `;
 
 export default FormProductSelector;
