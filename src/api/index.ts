@@ -15,6 +15,7 @@ export interface AppQueryParams {
   createTreeData?: boolean;
   owner?: string;
   sortParams?: ISortParams;
+  search?: string;
   filterParams?: Partial<FilterReturnDataType>;
 }
 

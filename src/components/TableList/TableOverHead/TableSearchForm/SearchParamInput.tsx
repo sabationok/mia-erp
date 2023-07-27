@@ -163,6 +163,8 @@ const InputBox = styled.label<{ isOpen?: boolean }>`
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
   border-radius: 2px;
   border: ${({ isOpen }) => (isOpen ? '1px' : '0')} solid ${({ theme }) => theme.trBorderClr};
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 `;
 // const StyledLabel = styled.label`
 //   display: flex;

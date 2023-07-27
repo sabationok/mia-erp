@@ -8,7 +8,7 @@ export const globals = {
   trBorderClr: '#464646',
   inputBorder: '#5c5c5c',
   inputPlaceholderColor: '#7B7B7B',
-  shadowMain: '0px 1px 4px rgba(0, 0, 0, 0.25)',
+  shadowMain: '0px 1px 8px rgba(0, 0, 0, 0.25)',
   timingFunctionMain: '250ms cubic-bezier(0.4, 0, 0.2, 1)',
   timingFunctionLong: '500ms cubic-bezier(0.4, 0, 0.2, 1)',
   timingFnMui: '200ms cubic-bezier(0, 0, 0.2, 1) 0ms',

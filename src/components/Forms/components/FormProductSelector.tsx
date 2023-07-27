@@ -2,17 +2,20 @@ import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { IProduct } from '../../../redux/products/products.types';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
-import { useProductsSelector } from '../../../redux/selectors.store';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useModalProvider } from '../../ModalProvider/ModalProvider';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import InputText from '../../atoms/Inputs/InputText';
 import InputLabel from '../../atoms/Inputs/InputLabel';
+import { createApiCall } from '../../../api';
+import ProductsApi from '../../../api/products.api';
+import { useForm } from 'react-hook-form';
 
-export interface FormProductSelectorProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
-  onSubmit?: (product?: IProduct) => void;
-  onSelect?: (product?: IProduct) => void;
-  selectedProduct?: IProduct;
+export interface FormProductSelectorProps<D = any> {
+  title?: string;
+  onSubmit?: (data?: D) => void;
+  onSelect?: (data?: D) => void;
+  selected?: D;
 }
 
 export interface ProductCardForSelectorProps {
@@ -22,6 +25,11 @@ export interface ProductCardForSelectorProps {
 }
 
 const ProductCardForSelector: React.FC<ProductCardForSelectorProps> = ({ product, isSelected, onSelect }) => {
+  const logProduct = () => {
+    console.log(product);
+  };
+
+  useEffect(logProduct, [product]);
   return (
     <Card fxDirection={'row'} fillWidth gap={16} isSelected={isSelected} onClick={onSelect}>
       <ImageBox>
@@ -42,25 +50,32 @@ const ProductCardForSelector: React.FC<ProductCardForSelectorProps> = ({ product
     </Card>
   );
 };
-const ModalChildren = ({
-  selected,
-  onSelect,
-  products,
-}: {
-  selected?: IProduct;
-  products?: IProduct[];
-  onSelect?: (product?: IProduct) => void;
-}) => {
-  const [pr, setPr] = useState<IProduct | null>(null);
+
+interface SelectItemModalProps<D = any> extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
+  selected?: D;
+  onSelect?: (item?: D) => void;
+}
+
+const SelectProductModal = ({ selected, onSelect }: SelectItemModalProps<IProduct>) => {
+  const [loadedData, setLoadedData] = useState<IProduct[] | null>(null);
+  const [current, setCurrent] = useState<IProduct | null>(null);
+
+  const { register, watch } = useForm<{ search: '' }>();
+  const { search } = watch();
+
+  useEffect(() => {
+    createApiCall({ data: { search }, onSuccess: setLoadedData }, ProductsApi.getAll, ProductsApi);
+  }, [search]);
+
   const onItemSelect = useCallback(
     (p: IProduct) => {
-      setPr && setPr(p);
+      setCurrent(p);
       onSelect && onSelect(p);
     },
     [onSelect]
   );
   const renderProducts = useMemo(() => {
-    return products?.map(p => (
+    return loadedData?.map(p => (
       <ProductCardForSelector
         key={`product-${p._id}`}
         product={p}
@@ -68,12 +83,12 @@ const ModalChildren = ({
         isSelected={p._id === selected?._id}
       />
     ));
-  }, [onItemSelect, products, selected?._id]);
+  }, [onItemSelect, loadedData, selected?._id]);
   return (
-    <ModalForm fillHeight fitContentH title={'Select product'} isValid={!!pr}>
+    <ModalForm fillHeight fitContentH title={'Select product'} isValid={!!current} footer={false}>
       <FlexBox fillWidth padding={'8px 16px'}>
         <InputLabel label={'Пошук по назві'} direction={'vertical'}>
-          <InputText placeholder={'Введіть назву продуту'} autoFocus />
+          <InputText placeholder={'Введіть назву продукту'} {...register('search')} autoFocus />
         </InputLabel>
       </FlexBox>
       <FlexBox overflow={'auto'} fillWidth flex={'1'} gap={12} padding={'16px'}>
@@ -83,14 +98,12 @@ const ModalChildren = ({
   );
 };
 const FormProductSelector: React.FC<FormProductSelectorProps> = ({ onSelect, onSubmit, ...props }) => {
-  // const { tableConfig } = useProductsTableSettings();
-  const { products } = useProductsSelector();
   const modals = useModalProvider();
   const [current, setCurrent] = useState<IProduct | undefined>();
 
   const onOpenSelectorClick = () => {
     const modal = modals.handleOpenModal({
-      ModalChildren,
+      ModalChildren: SelectProductModal,
       modalChildrenProps: {
         onSelect: p => {
           setCurrent(p);
@@ -98,7 +111,6 @@ const FormProductSelector: React.FC<FormProductSelectorProps> = ({ onSelect, onS
           modal?.onClose();
         },
         selected: current,
-        products: [...products],
       },
     });
   };

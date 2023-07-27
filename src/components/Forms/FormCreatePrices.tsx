@@ -9,6 +9,7 @@ import FormProductSelector from './components/FormProductSelector';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import { toast } from 'react-toastify';
+import * as _ from 'lodash';
 import { useEffect } from 'react';
 
 export interface FormCreatePricesProps extends Omit<ModalFormProps, 'onSubmit' | 'afterSubmit'> {
@@ -26,54 +27,45 @@ export interface FormCreatePricesProps extends Omit<ModalFormProps, 'onSubmit' |
 const FormCreatePrices: React.FC<FormCreatePricesProps> = ({ defaultData, list, onSubmit, ...props }) => {
   const modals = useModalProvider();
   const {
-    formState: { errors },
+    formState: { errors, touchedFields },
     formValues,
     register,
     setValue,
   } = useAppForm({ defaultValues: defaultData });
-
-  const onGoSelectProductClick = async () => {
-    const modal = modals.handleOpenModal({
-      ModalChildren: FormProductSelector,
-      modalChildrenProps: {
-        title: 'Select product for pricing',
-        onSelect: p => {
-          console.log(p);
-        },
-      },
-    });
-  };
-  const { commissionAmount, cost, commissionPercentage, price, markupAmount, markupPercentage } = formValues;
-  const calculatePrice = async () => {
-    const canCount = !(commissionAmount || commissionPercentage || markupAmount || markupPercentage);
-    if (cost && price) {
-      const dif = Number(price) - Number(cost);
-
-      canCount &&
-        setTimeout(() => {
-          setValue('markupAmount', dif);
-          setValue('commissionAmount', dif);
-          setValue('markupPercentage', Math.floor(dif / price));
-          setValue('commissionPercentage', Math.floor(dif / price));
-        }, 5000);
-      !canCount &&
-        setTimeout(() => {
-          setValue('markupAmount', 0);
-          setValue('commissionAmount', 0);
-          setValue('markupPercentage', 0);
-          setValue('commissionPercentage', 0);
-        }, 5000);
-      toast(`cost && price`);
-    }
-  };
   useEffect(() => {
-    calculatePrice();
-  }, [formValues]);
+    console.log('touchedFields', touchedFields);
+  });
+  const { commissionAmount, cost, commissionPercentage, price, markupAmount, markupPercentage } = formValues;
+  useEffect(() => {
+    const recalculateValues = _.debounce(async () => {
+      toast.info(`canCount: ${'canCount'}`);
+
+      const parseFloatFromValue = (v?: number) => parseFloat(v?.toString() ?? '0');
+      const costNum = parseFloatFromValue(cost);
+      const priceNum = parseFloatFromValue(price);
+
+      const commissionPercentageNum = parseFloatFromValue(commissionPercentage);
+      const commissionAmountNum = parseFloatFromValue(commissionAmount);
+
+      const commissionFromPrice = (priceNum * commissionPercentageNum) / 100;
+
+      const calculatedCommissionAmount = commissionFromPrice || commissionAmountNum;
+      const calculatedCommissionPercentage = commissionFromPrice
+        ? (commissionFromPrice / priceNum) * 100
+        : commissionPercentageNum;
+
+      // Оновлення полів форми
+      // setValue('commissionAmount', calculatedCommissionAmount.toFixed(2));
+      // setValue('commissionPercentage', calculatedCommissionPercentage.toFixed(2));
+
+      // Виклик функції для ініціалізації значень
+      recalculateValues();
+    }, 1000);
+  });
 
   return (
     <ModalForm
       onSubmit={() => {
-        calculatePrice();
         console.log(formValues);
       }}
       title={`${defaultData ? 'Edit' : 'Create'} price for: ${formValues?.product?.label}`}
@@ -94,22 +86,22 @@ const FormCreatePrices: React.FC<FormCreatePricesProps> = ({ defaultData, list, 
         </FlexBox>
 
         <FlexBox fxDirection={'row'} gap={12}>
-          <InputLabel label={'Націнка, у %'} direction={'vertical'}>
-            <InputText placeholder={'Введіть % націнки'} type={'number'} {...register('markupPercentage')} />
+          <InputLabel label={'Комісія, у %'} direction={'vertical'} disabled>
+            <InputText
+              placeholder={'Введіть % комісії'}
+              type={'number'}
+              {...register('commissionPercentage')}
+              disabled
+            />
           </InputLabel>
 
-          <InputLabel label={'Націнка, фіксована'} direction={'vertical'}>
-            <InputText placeholder={'Введіть суму націнки'} type={'number'} {...register('markupAmount')} />
-          </InputLabel>
-        </FlexBox>
-
-        <FlexBox fxDirection={'row'} gap={12}>
-          <InputLabel label={'Комісія, у %'} direction={'vertical'}>
-            <InputText placeholder={'Введіть % комісії'} type={'number'} {...register('commissionPercentage')} />
-          </InputLabel>
-
-          <InputLabel label={'Комісія, фіксована'} direction={'vertical'}>
-            <InputText placeholder={'Введіть суму комісії'} type={'number'} {...register('commissionAmount')} />
+          <InputLabel label={'Комісія, фіксована'} direction={'vertical'} disabled>
+            <InputText
+              placeholder={'Введіть суму комісії'}
+              type={'number'}
+              {...register('commissionAmount')}
+              disabled
+            />
           </InputLabel>
         </FlexBox>
       </FlexBox>
@@ -117,3 +109,19 @@ const FormCreatePrices: React.FC<FormCreatePricesProps> = ({ defaultData, list, 
   );
 };
 export default FormCreatePrices;
+// if (!canCount) {
+//   setValue('markupAmount', 0);
+//   setValue('commissionAmount', 0);
+//   setValue('markupPercentage', 0);
+//   setValue('commissionPercentage', 0);
+//   toast.info(`canCount: ${!canCount}`);
+// }
+// {/*<FlexBox fxDirection={'row'} gap={12}>*/}
+// {/*  <InputLabel label={'Націнка, у %'} direction={'vertical'}>*/}
+// {/*    <InputText placeholder={'Введіть % націнки'} type={'number'} {...register('markupPercentage')} />*/}
+// {/*  </InputLabel>*/}
+
+// {/*  <InputLabel label={'Націнка, фіксована'} direction={'vertical'}>*/}
+// {/*    <InputText placeholder={'Введіть суму націнки'} type={'number'} {...register('markupAmount')} />*/}
+// {/*  </InputLabel>*/}
+// {/*</FlexBox>*/}
