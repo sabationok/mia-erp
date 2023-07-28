@@ -1,6 +1,7 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import t from '../lang';
 import { IPriceList, IPriceListItem } from '../redux/priceManagement/priceManagement.types';
+import { initialCompany } from '../redux/companies/companies.slice';
 
 export type DataPath =
   | 'category.label'
@@ -51,7 +52,7 @@ export const priceListColumns: CellTittleProps<IPriceList, DataPath>[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Теги клієнтів', align: 'start', path: 'tags' },
+    top: { name: 'Теги клієнтів', align: 'start', path: 'tags', getData: () => initialCompany.customerTags },
     // bottom: { name: 'Емейл', align: 'start', path: 'author.email' },
     width: '230px',
     action: 'tags',
@@ -91,6 +92,7 @@ export const priceListContentColumns: CellTittleProps<IPriceListItem, DataPath>[
     top: { name: 'Продукт', getData: d => d?.product?.label },
     bottom: { name: t('sku'), getData: d => d?.product?.sku },
     width: '170px',
+    getImgPreview: ({ product }, titleProps) => (product?.images ? product?.images[0]?.img_preview : ''),
     action: 'doubleDataWithAvatar',
   },
   {

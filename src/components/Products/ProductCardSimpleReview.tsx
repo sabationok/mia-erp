@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import FlexBox from '../../../atoms/FlexBox';
-import { useEffect, useMemo } from 'react';
-import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
-import { IProduct } from '../../../../redux/products/products.types';
+import FlexBox from '../atoms/FlexBox';
+import { useMemo } from 'react';
+import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import { IProduct } from '../../redux/products/products.types';
 
 export interface ProductCardForSelectorProps {
   product: IProduct;
@@ -11,13 +11,12 @@ export interface ProductCardForSelectorProps {
   disabled?: boolean;
 }
 
-const SelectorProductCard: React.FC<ProductCardForSelectorProps> = ({ product, disabled, isSelected, onSelect }) => {
-  const logProduct = () => {
-    console.log(product);
-  };
-
-  useEffect(logProduct, [product]);
-
+const ProductCardSimpleReview: React.FC<ProductCardForSelectorProps> = ({
+  product,
+  disabled,
+  isSelected,
+  onSelect,
+}) => {
   const cells = useMemo(
     (): { value?: string; title?: string; gridArea: string; isLastInRow?: boolean }[] => [
       {
@@ -66,6 +65,7 @@ const SelectorProductCard: React.FC<ProductCardForSelectorProps> = ({ product, d
             (product?.images && product?.images[0]?.img_1x) ||
             'https://cdn.create.vista.com/api/media/medium/186787692/stock-photo-profile-young-stylish-man-eyeglasses?token='
           }
+          style={{ objectFit: 'contain' }}
           alt={''}
           width={'100%'}
           height={'100%'}
@@ -77,11 +77,10 @@ const SelectorProductCard: React.FC<ProductCardForSelectorProps> = ({ product, d
           {cells.map(({ title, value, gridArea, isLastInRow }) => (
             <CardGridBoxInner key={`cardCell-${title}`} gridArea={gridArea || '1/1/1/9'} isLastInRow={isLastInRow}>
               <div
-                className={'text'}
+                className={'text title'}
                 style={{
                   textAlign: 'start',
                   fontSize: 10,
-                  color: 'rgba(0,0,0,0.5)',
                 }}
               >
                 {title || 'Title'}
@@ -94,7 +93,7 @@ const SelectorProductCard: React.FC<ProductCardForSelectorProps> = ({ product, d
                   fontWeight: 500,
                 }}
               >
-                {value || '---'}
+                {value || '-'}
               </div>
             </CardGridBoxInner>
           ))}
@@ -102,12 +101,12 @@ const SelectorProductCard: React.FC<ProductCardForSelectorProps> = ({ product, d
       </FlexBox>
 
       {!disabled && (
-        <FlexBox justifyContent={'space-between'}>
+        <Buttons justifyContent={'space-between'} gap={4}>
           <ButtonIcon variant={'onlyIcon'} iconSize={'100%'} size={'24px'} />
           <ButtonIcon variant={'onlyIcon'} iconSize={'100%'} size={'24px'} icon={'info'} />
 
-          <ButtonIcon variant={'onlyIconFilled'} iconSize={'100%'} size={'24px'} icon={'done'} onClick={onSelect} />
-        </FlexBox>
+          <ButtonIcon variant={'onlyIcon'} iconSize={'100%'} size={'24px'} icon={'doneAll'} onClick={onSelect} />
+        </Buttons>
       )}
     </Card>
   );
@@ -144,6 +143,12 @@ const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
 
     background-color: ${({ theme, isSelected }) => (isSelected ? theme.accentColor.base : 'transparent')};
   }
+
+  @media screen and (max-width: 480px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr max-content min-content;
+    max-height: 100%;
+  }
 `;
 const CardGridBox = styled(FlexBox)`
   display: grid;
@@ -152,6 +157,7 @@ const CardGridBox = styled(FlexBox)`
 
   //max-width: 270px;
   height: 100%;
+  border-top: 1px solid ${({ theme }) => theme.trBorderClr};
 `;
 const CardGridBoxInner = styled(FlexBox)<{ gridArea: string; isLastInRow?: boolean }>`
   justify-content: space-between;
@@ -160,24 +166,40 @@ const CardGridBoxInner = styled(FlexBox)<{ gridArea: string; isLastInRow?: boole
 
   padding: 4px 6px;
 
-  border-right: 1px solid ${({ theme, isLastInRow }) => (!isLastInRow ? theme.tableRowStroke : 'transparent')};
-  border-bottom: 1px solid ${({ theme }) => theme.tableRowStroke};
+  border-right: 1px solid ${({ theme, isLastInRow }) => (!isLastInRow ? theme.trBorderClr : 'transparent')};
+  border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
 
   & .text {
+    color: ${({ theme }) => theme.fontColor};
+
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
   }
 
+  & .title {
+    //color: rgba(0,0,0,0.5);
+    color: ${({ theme }) => theme.globals.inputPlaceholderColor};
+  }
+
   //outline: 1px solid tomato;
+`;
+const Buttons = styled(FlexBox)`
+  @media screen and (max-width: 480px) {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
 `;
 
 const ImageBox = styled(FlexBox)`
   height: 100%;
   width: 100%;
+
+  object-position: center;
+  object-fit: fill;
   overflow: hidden;
 
   background-color: ${({ theme }) => theme.fieldBackgroundColor};
 `;
-export default SelectorProductCard;
+export default ProductCardSimpleReview;

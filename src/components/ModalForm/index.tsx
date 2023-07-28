@@ -6,10 +6,12 @@ import styled from 'styled-components';
 import { FormEvent } from 'react';
 import { useModal } from 'components/ModalProvider/ModalComponent';
 
-export interface ModalFormBaseProps extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit' | 'onReset'> {
+export interface ModalFormBaseProps<T = any>
+  extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit' | 'onReset'> {
   onSubmit?: (ev: FormEvent<HTMLFormElement>) => void;
   onReset?: (args?: any) => void;
   footer?: boolean;
+  defaultState?: T;
   beforeSubmit?: () => void;
   afterSubmit?: () => void;
   beforeClose?: () => void;

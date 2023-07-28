@@ -25,6 +25,11 @@ export type CellTitleContent<DataType extends IBase = any, DataPath extends stri
 export type CellTittleProps<DataType extends IBase = any, DataPath extends string = any> = {
   top: CellTitleContent<DataType, DataPath>;
   bottom?: CellTitleContent<DataType, DataPath>;
+  imgPreviewPath?: DataType;
+  getImgPreview?: (
+    rowData: DataType,
+    titleProps: CellTittleProps<DataType, DataPath>
+  ) => string | string[] | number | number[] | Date | undefined;
   width: string;
   idx?: number;
   titleInfo?: CellTittleProps;

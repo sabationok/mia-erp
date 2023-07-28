@@ -9,7 +9,7 @@ import InputLabel from '../../../atoms/Inputs/InputLabel';
 import { createApiCall } from '../../../../api';
 import ProductsApi from '../../../../api/products.api';
 import { useForm } from 'react-hook-form';
-import SelectorProductCard from './SelectorProductCard';
+import ProductCardSimpleReview from '../../../Products/ProductCardSimpleReview';
 import styled from 'styled-components';
 
 export interface FormProductSelectorProps<D = any> {
@@ -40,7 +40,7 @@ const SelectProductModal = ({ selected, onSelect }: SelectItemModalProps<IProduc
   );
   const renderProducts = useMemo(() => {
     return loadedData?.map(p => (
-      <SelectorProductCard
+      <ProductCardSimpleReview
         key={`product-${p._id}`}
         product={p}
         onSelect={() => onItemSelect(p)}
@@ -103,14 +103,22 @@ const FormProductSelector: React.FC<FormProductSelectorProps> = ({ onSelect, onS
   };
 
   return (
-    <FlexBox gap={8} fxDirection={'column'} fillWidth alignItems={'stretch'} padding={'8px 0 8px'}>
+    <FlexBox
+      gap={8}
+      maxHeight={'100%'}
+      fxDirection={'column'}
+      fillWidth
+      // alignItems={'stretch'}
+      overflow={'hidden'}
+      padding={'8px 0 8px'}
+    >
       {current && (
         <FlexBox fillWidth>
-          <SelectorProductCard product={current} disabled />
+          <ProductCardSimpleReview product={current} disabled />
         </FlexBox>
       )}
       <ButtonIcon variant={'outlinedSmall'} onClick={onOpenSelectorClick}>
-        <FlexBox>{`${current ? 'Change' : 'Select'} product for pricing`}</FlexBox>
+        {`${current ? 'Change' : 'Select'} product for pricing`}
       </ButtonIcon>
     </FlexBox>
   );

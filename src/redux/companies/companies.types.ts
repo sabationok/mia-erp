@@ -21,6 +21,13 @@ export interface ICompany extends IBase {
   avatarPreviewUrl?: string;
   contacts?: ContactsDto[];
   locations?: LocationDto[];
+  customerTags?: string[];
+  supplierTags?: string[];
+  contractorTags?: string[];
+  productTags?: string[];
+  orderTags?: string[];
+  paymentTags?: string[];
+  shipmentTags?: string[];
 }
 
 export interface ICompaniesState {

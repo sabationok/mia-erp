@@ -163,16 +163,25 @@ const Form: React.FC<FormProps> = ({ edit, onSubmit, copy, defaultState, addInpu
           <InputText placeholder={translate('label')} {...register('label')} required autoFocus />
         </InputLabel>
 
-        <InputLabel label={translate('sku')} direction={'vertical'} error={errors.sku} disabled>
-          <InputText placeholder={translate('sku')} {...register('sku')} disabled />
-        </InputLabel>
-        <InputLabel label={translate('status')} direction={'vertical'} error={errors.status} disabled>
-          <InputText placeholder={translate('status')} {...register('status')} disabled />
+        <InputLabel label={translate('sku')} direction={'vertical'} error={errors.sku}>
+          <InputText placeholder={translate('sku')} {...register('sku', { max: 120 })} />
         </InputLabel>
 
         {renderSupplierSelect}
         {renderBrandsSelect}
         {renderInputsCategories}
+
+        <InputLabel label={translate('status')} direction={'vertical'} error={errors.status} disabled>
+          <InputText placeholder={translate('status')} {...register('status')} disabled />
+        </InputLabel>
+
+        <InputLabel label={'Штрих-код'} direction={'vertical'} error={errors.barCode} disabled>
+          <InputText placeholder={'Штрих-код'} {...register('barCode')} disabled />
+        </InputLabel>
+
+        <InputLabel label={'Одиниці виміру'} direction={'vertical'} error={errors.unitsOfMeasurement} disabled>
+          <InputText placeholder={'Одиниці виміру'} {...register('unitsOfMeasurement')} disabled />
+        </InputLabel>
 
         <InputLabel label={translate('description')} direction={'vertical'} error={errors.description}>
           <TextareaPrimary placeholder={translate('description')} {...register('description')} />

@@ -11,31 +11,68 @@ export interface CellTextDblAndAvatarProps {
 }
 
 const CellTextDblAndAvatar: React.FC<CellTextDblAndAvatarProps & React.HTMLAttributes<HTMLDivElement>> = ({
-  titleInfo: { top, bottom, width },
+  titleInfo: { top, bottom, width, imgPreviewPath, getImgPreview },
+  titleInfo,
   idx,
-  imgUrl,
-  ...props
 }) => {
   const { rowData } = useRow();
+
+  // const cellConfig = useMemo(
+  //   (): IDataCellProps => ({
+  //     content: {
+  //       data: getValueByPath({
+  //         data: rowData,
+  //         ...top,
+  //       }),
+  //     },
+  //     subContent: {
+  //       data: getValueByPath({
+  //         data: rowData,
+  //         ...bottom,
+  //       }),
+  //     },
+  //     width,
+  //     imgUrl,
+  //   }),
+  //   [bottom, imgUrl, rowData, top, width]
+  // );
+
+  const imgPreview = useMemo(() => {
+    return getImgPreview
+      ? getImgPreview(rowData, titleInfo)
+      : getValueByPath({
+          data: rowData,
+          path: imgPreviewPath,
+        });
+  }, [getImgPreview, imgPreviewPath, rowData, titleInfo]);
 
   const cellConfig = useMemo(
     (): IDataCellProps => ({
       content: {
-        data: getValueByPath({
-          data: rowData,
-          ...top,
-        }),
+        data: top.getData
+          ? top.getData(rowData, titleInfo)
+          : getValueByPath({
+              data: rowData,
+              ...top,
+            }),
+        align: top.align,
+        uppercase: top.uppercase,
       },
       subContent: {
-        data: getValueByPath({
-          data: rowData,
-          ...bottom,
-        }),
+        data:
+          bottom && bottom.getData
+            ? bottom.getData(rowData, titleInfo)
+            : getValueByPath({
+                data: rowData,
+                ...bottom,
+              }),
+        align: bottom?.align,
+        uppercase: bottom?.uppercase,
       },
       width,
-      imgUrl,
+      imgUrl: imgPreview,
     }),
-    [bottom, imgUrl, rowData, top, width]
+    [bottom, imgPreview, rowData, titleInfo, top, width]
   );
 
   return <Cell.DoubleWithAvatar {...cellConfig} />;

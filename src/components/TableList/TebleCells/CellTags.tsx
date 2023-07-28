@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { useRow } from '../TableRows/TableRow';
 import { CellTitleContent, CellTittleProps } from './CellTitle';
@@ -13,11 +13,15 @@ const CellTags: React.FC<CellTagsProps & React.HTMLAttributes<HTMLDivElement>> =
   const { rowData } = useRow();
   const { top, width = '100px' } = titleInfo;
 
-  const contentTop = getValueByPath<string[]>({
-    data: rowData,
-    path: top.path,
-    ...top,
-  });
+  const contentTop = useMemo(() => {
+    const data = top?.getData
+      ? top?.getData(rowData, titleInfo)
+      : getValueByPath<string[]>({
+          data: rowData,
+          ...top,
+        });
+    return Array.isArray(data) ? data : null;
+  }, [rowData, titleInfo, top]);
 
   return (
     <CellBase style={{ width }} {...props}>
@@ -51,14 +55,14 @@ const Content = styled.div<Omit<CellTitleContent, 'name'>>`
   width: 100%;
   max-height: 100%;
   overflow: hidden;
-
-  font-size: 10px;
-  font-weight: 500;
 `;
 const Tag = styled.div`
   padding: 0 4px;
 
-  line-height: 1.6;
+  font-size: 11px;
+  font-weight: 500;
+  height: max-content;
+  line-height: 1.4;
 
   border-radius: 2px;
   border: 1px solid ${({ theme }) => theme.accentColor.base};

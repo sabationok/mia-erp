@@ -7,7 +7,7 @@ import { UseAppFormAfterSubmitOptions } from '../../../hooks/useAppForm.hook';
 import { createApiCall } from '../../../api';
 import { PriceManagementApi } from '../../../api/priceManagement.api';
 import { OnlyUUID } from '../../../redux/global.types';
-import { priceListColumns } from '../../../data';
+import { priceListContentColumns } from '../../../data';
 import { usePriceListOverviewActionsCreator } from '../../../hooks/usePriceListOverviewActionsCreator.hook';
 
 export interface PriceListOverviewProps extends Omit<ModalFormProps, 'onSubmit' | 'afterSubmit'> {
@@ -82,7 +82,7 @@ const PriceListOverview: React.FC<PriceListOverviewProps> = ({
         actionsCreator={actionsCreator}
         isSearch={false}
         tableData={state?.prices}
-        tableTitles={priceListColumns}
+        tableTitles={priceListContentColumns}
       />
     </ModalForm>
   );

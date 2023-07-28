@@ -14,6 +14,7 @@ import { toast } from 'react-toastify';
 import { omit } from 'lodash';
 import { ExtractId } from '../../utils/dataTransform';
 import PriceListOverview from '../../components/AppPages/components/PriceListOverview';
+import { priceListContentColumns } from '../../data';
 
 export type PriceManagementActionsCreator = TableActionCreator<IPriceList>;
 
@@ -191,7 +192,9 @@ const usePriceManagementActionsCreator = (service: PriceManagementService): Pric
             ModalChildren: PriceListOverview,
             modalChildrenProps: {
               listId: ctx.selectedRow?._id,
-              getTableSetting: () => ({}),
+              getTableSetting: () => ({
+                tableTitles: priceListContentColumns,
+              }),
               // onSubmit: ({ data: itemOrArr, list }, o) => {
               //   if (isArray(itemOrArr)) {
               //     toast.warning('Array of prices passed. Dispatcher warn');

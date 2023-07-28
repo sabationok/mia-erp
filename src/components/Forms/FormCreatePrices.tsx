@@ -10,9 +10,13 @@ import InputText from '../atoms/Inputs/InputText';
 import * as _ from 'lodash';
 import { useCallback, useEffect } from 'react';
 import { IProduct } from '../../redux/products/products.types';
-// import * as yup from 'yup';
-// import { yupResolver } from '@hookform/resolvers/yup';
-// reValidateMode: 'onChange', resolver: yupResolver(validation)
+import * as yup from 'yup';
+
+const validation = yup.object().shape({
+  cost: yup.number(),
+  price: yup.number(),
+});
+
 export interface FormCreatePricesProps extends Omit<ModalFormProps, 'onSubmit' | 'afterSubmit'> {
   list: OnlyUUID;
   defaultData?: IPriceListItem;
@@ -60,7 +64,7 @@ const FormCreatePrices: React.FC<FormCreatePricesProps> = ({ defaultData, list, 
       onSubmit &&
       onSubmit(
         {
-          data,
+          data: d,
           list,
         },
         {}
@@ -84,11 +88,22 @@ const FormCreatePrices: React.FC<FormCreatePricesProps> = ({ defaultData, list, 
 
         <FlexBox fxDirection={'row'} gap={12}>
           <InputLabel label={'Вхідна ціна'} direction={'vertical'} required>
-            <InputText placeholder={'Вхідна ціна'} type={'number'} {...register('cost')} required autoFocus />
+            <InputText
+              placeholder={'Вхідна ціна'}
+              type={'number'}
+              {...register('cost', { valueAsNumber: true })}
+              required
+              autoFocus
+            />
           </InputLabel>
 
           <InputLabel label={'Вихідна ціна'} direction={'vertical'} required>
-            <InputText placeholder={'Вихідна ціна'} type={'number'} {...register('price')} required />
+            <InputText
+              placeholder={'Вихідна ціна'}
+              type={'number'}
+              {...register('price', { valueAsNumber: true })}
+              required
+            />
           </InputLabel>
         </FlexBox>
 

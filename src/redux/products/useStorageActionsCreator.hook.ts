@@ -5,6 +5,7 @@ import { TableActionCreator } from '../../components/TableList/tableTypes.types'
 import { IStorageItem, StorageItemFilterOption } from './products.types';
 import { useProductsSelector } from '../selectors.store';
 import ProductForm from '../../components/Forms/FormCreateProduct';
+import ProductReviewModal from '../../components/Modals/ProductReviewModal';
 
 export type StorageActionsCreator = TableActionCreator<IStorageItem>;
 
@@ -12,6 +13,7 @@ export const StorageItemTypeFilterOptions: StorageItemFilterOption[] = [
   { label: 'GOODS', value: 'GOODS' },
   { label: 'SERVICE', value: 'SERVICE' },
 ];
+
 const useStorageActionsCreator = (): StorageActionsCreator => {
   const service = useStorageServiceHook();
   const state = useProductsSelector();
@@ -33,33 +35,30 @@ const useStorageActionsCreator = (): StorageActionsCreator => {
 
   return useCallback(
     ctx => [
-      // {
-      //   name: 'editTr',
-      //   title: 'Редагування транзакції',
-      //   icon: 'edit',
-      //   disabled: !ctx.selectedRow?._id,
-      //   type: 'onlyIcon',
-      //   onClick: async () => {
-      //     const tr = state.transactions.find(el => el._id === ctx.selectedRow?._id);
-      //
-      //     const modal = modals.handleOpenModal({
-      //       ModalChildren: TransactionForm,
-      //       modalChildrenProps: {
-      //         title: 'Редагування транзакції',
-      //         filterOptions,
-      //         defaultOption: filterOptions.findIndex(el => el.value === tr?.type),
-      //         defaultState: tr,
-      //         fillHeight: true,
-      //         onSubmit: data => {
-      //           service.updateById({
-      //             data,
-      //             onSuccess(d) {},
-      //           });
-      //         },
-      //       },
-      //     });
-      //   },
-      // },
+      {
+        name: 'reviewProduct',
+        title: 'Перегляд продукту',
+        icon: 'openInNew',
+        disabled: !ctx.selectedRow?._id,
+        type: 'onlyIcon',
+        onClick: () => {
+          const modal = modals.handleOpenModal({
+            ModalChildren: ProductReviewModal,
+            modalChildrenProps: {
+              title: 'Перегляд продукту',
+              product: state.products.find(el => el._id === ctx.selectedRow?._id),
+              // filterOptions: StorageItemTypeFilterOptions,
+              // defaultOption: StorageItemTypeFilterOptions.findIndex(el => el.value === product?.type),
+              // onSubmit: data => {
+              //   service.updateById({
+              //     data,
+              //     onSuccess(d) {},
+              //   });
+              // },
+            },
+          });
+        },
+      },
       // {
       //   name: 'copyTr',
       //   title: 'Копіювання транзакції',
@@ -160,21 +159,21 @@ const useStorageActionsCreator = (): StorageActionsCreator => {
       //     });
       //   },
       // },
-      {
-        name: 'editProduct',
-        title: 'Редагувати',
-        icon: 'edit',
-        iconSize: '90%',
-        type: 'onlyIcon',
-        disabled: false,
-      },
+      // {
+      //   name: 'editProduct',
+      //   title: 'Редагувати',
+      //   icon: 'edit',
+      //   iconSize: '90%',
+      //   type: 'onlyIcon',
+      //   disabled: false,
+      // },
       {
         name: 'copyProduct',
         title: 'Копіювати',
         icon: 'copy',
         iconSize: '90%',
         type: 'onlyIcon',
-        disabled: false,
+        disabled: true,
       },
       {
         name: 'archiveProduct',
@@ -182,7 +181,7 @@ const useStorageActionsCreator = (): StorageActionsCreator => {
         icon: 'archive',
         iconSize: '90%',
         type: 'onlyIcon',
-        disabled: false,
+        disabled: true,
       },
       { separator: true },
       {
@@ -214,7 +213,7 @@ const useStorageActionsCreator = (): StorageActionsCreator => {
       },
     ],
 
-    [modals, service]
+    [modals, service, state.products]
   );
 };
 
