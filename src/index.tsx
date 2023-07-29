@@ -12,6 +12,7 @@ import ModalProvider from 'components/ModalProvider/ModalProvider';
 import './index.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import SideBarProvider from 'components/SideBarLeft/SideBarProvider';
+import { AppServiceProvider } from './hooks/useAppServices';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
@@ -19,13 +20,15 @@ root.render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>
       <BrowserRouter basename="/counter-app-ts">
-        <AppThemeProvider>
-          <ModalProvider>
-            <SideBarProvider>
-              <App />
-            </SideBarProvider>
-          </ModalProvider>
-        </AppThemeProvider>
+        <AppServiceProvider>
+          <AppThemeProvider>
+            <ModalProvider>
+              <SideBarProvider>
+                <App />
+              </SideBarProvider>
+            </ModalProvider>
+          </AppThemeProvider>
+        </AppServiceProvider>
       </BrowserRouter>
     </PersistGate>
   </Provider>

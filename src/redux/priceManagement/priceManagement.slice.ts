@@ -48,14 +48,14 @@ export const priceManagementSlice = createSlice({
       .addCase(refreshPriceListByIdThunk.fulfilled, (s, { payload: p }) => {
         const idx = s.lists.findIndex(l => l._id === p?._id);
         if (idx >= 0 && p) {
-          s.lists.splice(idx, 0, p);
+          s.lists.splice(idx, 1, p);
           console.log('refreshPriceListById action', `idx-${idx}`, s.lists);
         }
       })
       .addCase(updatePriceListByIdThunk.fulfilled, (s, p) => {
         const idx = s.lists.findIndex(l => l._id === 'p?._id');
-        if (idx >= 0 && p) {
-          // s.lists.splice(idx, 0, p);
+        if (idx >= 0 && p.payload) {
+          s.lists.splice(idx, 1, p.payload);
           console.log('updateList action', `idx-${idx}`, s.lists);
         }
       })

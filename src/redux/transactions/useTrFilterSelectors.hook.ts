@@ -1,7 +1,7 @@
 import { FilterSelectorType } from 'components/Filter/AppFilter';
 import { ApiDirType } from '../APP_CONFIGS';
-import { useDirectoriesSelector } from '../directories/useDirectoriesService.hook';
 import { ITransaction } from './transactions.types';
+import { useDirectoriesSelector } from '../selectors.store';
 
 const useTrFilterSelectors = (): FilterSelectorType<keyof ITransaction>[] => {
   const dirCategories = useDirectoriesSelector(ApiDirType.CATEGORIES_TR);

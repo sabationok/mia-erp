@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import styled from 'styled-components';
 import { useRow } from '../TableRows/TableRow';
 import DateComp from './CellComponents/DateComp';
@@ -11,24 +11,29 @@ export interface CellDateSimpleProps {
 }
 
 const CellDateSimple: React.FC<CellDateSimpleProps & React.HTMLAttributes<HTMLDivElement>> = ({
+  titleInfo: { top, bottom, width = '100px' },
   titleInfo,
   idx,
   ...props
 }) => {
   const { rowData } = useRow();
-  const { top, bottom, width = '100px' } = titleInfo;
-
-  // const contentTop = top?.dataKey && rowData[top?.dataKey] ? rowData[top?.dataKey] : null;
-  // const contentBottom = bottom?.dataKey && rowData[bottom?.dataKey] ? rowData[bottom?.dataKey] : null;
-  const contentTop = getValueByPath({
-    data: rowData,
-    ...top,
-  });
-
-  const contentBottom = getValueByPath({
-    data: rowData,
-    ...bottom,
-  });
+  // const { top, bottom, width = '100px' } = titleInfo;
+  const contentTop = useMemo(() => {
+    return top.getData
+      ? top.getData(rowData, titleInfo)
+      : getValueByPath({
+          data: rowData,
+          ...top,
+        });
+  }, [rowData, titleInfo, top]);
+  const contentBottom = useMemo(() => {
+    return bottom && bottom.getData
+      ? bottom.getData(rowData, titleInfo)
+      : getValueByPath({
+          data: rowData,
+          ...bottom,
+        });
+  }, [bottom, rowData, titleInfo]);
 
   return (
     <CellBase style={{ width }} {...props}>

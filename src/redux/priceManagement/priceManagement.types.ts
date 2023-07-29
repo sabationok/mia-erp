@@ -60,6 +60,8 @@ export interface IPriceListItem extends IBase {
   markupAmount?: number;
   commissionPercentage?: number;
   commissionAmount?: number;
+  timeFrom?: string | number | Date;
+  timeTo?: string | number | Date;
 }
 
 export interface IPriceListReqData {

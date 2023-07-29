@@ -6,9 +6,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
 import { ICompany } from '../../redux/companies/companies.types';
 import ModalForm, { ModalFormProps } from '../ModalForm';
-import usePermissionsServiceHook from '../../redux/permissions/usePermissionsService.hook';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
+import { useAppServiceProvider } from '../../hooks/useAppServices';
 
 export interface Props {}
 
@@ -32,7 +32,7 @@ const validFormData = yup.object().shape({
 
 export type CompanyFormProps = Props & Omit<ModalFormProps, 'onSubmit'>;
 const CompanyForm: React.FC<CompanyFormProps> = ({ ...props }) => {
-  const permissionsService = usePermissionsServiceHook();
+  const { permissions } = useAppServiceProvider();
 
   const {
     register,
@@ -47,7 +47,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ ...props }) => {
   function onFormSubmit(data: ICreateCompanyFormData) {
     if (data) console.log(data);
 
-    permissionsService.createCompany({
+    permissions.createCompany({
       data,
       onSuccess(data) {
         console.log('Registered company', data);

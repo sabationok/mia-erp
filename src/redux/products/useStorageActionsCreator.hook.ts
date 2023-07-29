@@ -5,7 +5,8 @@ import { TableActionCreator } from '../../components/TableList/tableTypes.types'
 import { IStorageItem, StorageItemFilterOption } from './products.types';
 import { useProductsSelector } from '../selectors.store';
 import ProductForm from '../../components/Forms/FormCreateProduct';
-import ProductReviewModal from '../../components/Modals/ProductReviewModal';
+import ProductOverviewModal from '../../components/Modals/ProductOverviewModal';
+import { omit } from 'lodash';
 
 export type StorageActionsCreator = TableActionCreator<IStorageItem>;
 
@@ -43,7 +44,7 @@ const useStorageActionsCreator = (): StorageActionsCreator => {
         type: 'onlyIcon',
         onClick: () => {
           const modal = modals.handleOpenModal({
-            ModalChildren: ProductReviewModal,
+            ModalChildren: ProductOverviewModal,
             modalChildrenProps: {
               title: 'Перегляд продукту',
               product: state.products.find(el => el._id === ctx.selectedRow?._id),
@@ -59,121 +60,65 @@ const useStorageActionsCreator = (): StorageActionsCreator => {
           });
         },
       },
-      // {
-      //   name: 'copyTr',
-      //   title: 'Копіювання транзакції',
-      //   icon: 'copy',
-      //   type: 'onlyIcon',
-      //   disabled: !ctx.selectedRow?._id,
-      //   onClick: async () => {
-      //     const tr = state.transactions.find(el => el._id === ctx.selectedRow?._id);
-      //
-      //     const modal = modals.handleOpenModal({
-      //       ModalChildren: TransactionForm,
-      //       modalChildrenProps: {
-      //         title: 'Копіювання транзакції',
-      //         filterOptions,
-      //         defaultOption: filterOptions.findIndex(el => el.value === tr?.type),
-      //         defaultState: tr,
-      //         fillHeight: true,
-      //         onSubmit: (data, o) => {
-      //           service.create({
-      //             data,
-      //             onSuccess(d) {
-      //               toast.success(`Транзакцію створено`);
-      //               o?.close && modal?.onClose();
-      //             },
-      //           });
-      //         },
-      //       },
-      //     });
-      //   },
-      // },
-      // {
-      //   name: 'deleteTr',
-      //   title: 'Видалення транзакції',
-      //   icon: 'delete',
-      //   iconSize: '90%',
-      //   type: 'onlyIcon',
-      //   disabled: !ctx.selectedRow?._id,
-      //   onClick: () => {
-      //     service.deleteById({
-      //       data: ctx.selectedRow?._id,
-      //     });
-      //   },
-      // },
-      // { separator: true },
-      // {
-      //   name: 'createIncomeTr',
-      //   title: 'Дохід',
-      //   icon: 'INCOME',
-      //   iconSize: '90%',
-      //   type: 'onlyIconFilled',
-      //   disabled: false,
-      //   onClick: () => {
-      //     const modal = modals.handleOpenModal({
-      //       ModalChildren: TransactionForm,
-      //       modalChildrenProps: {
-      //         title: 'Створити',
-      //         filterOptions,
-      //         defaultOption: 0,
-      //         fillHeight: true,
-      //         defaultState: { type: 'INCOME' },
-      //         onSubmit: (data, o) => {
-      //           service.create({
-      //             data,
-      //             onSuccess(d) {
-      //               o?.close && modal?.onClose();
-      //             },
-      //           });
-      //         },
-      //       },
-      //     });
-      //   },
-      // },
-      // {
-      //   name: 'createTransferTr',
-      //   title: 'Переказ між рахунками',
-      //   icon: 'TRANSFER',
-      //   iconSize: '90%',
-      //   type: 'onlyIconFilled',
-      //   disabled: false,
-      //   onClick: () => {
-      //     const modal = modals.handleOpenModal({
-      //       ModalChildren: TransactionForm,
-      //       modalChildrenProps: {
-      //         title: 'Створити нову',
-      //         filterOptions,
-      //         defaultOption: 1,
-      //         fillHeight: true,
-      //         defaultState: { type: 'TRANSFER' },
-      //         onSubmit: (data, o) => {
-      //           service.create({
-      //             data,
-      //             onSuccess(d) {
-      //               o?.close && modal?.onClose();
-      //             },
-      //           });
-      //         },
-      //       },
-      //     });
-      //   },
-      // },
-      // {
-      //   name: 'editProduct',
-      //   title: 'Редагувати',
-      //   icon: 'edit',
-      //   iconSize: '90%',
-      //   type: 'onlyIcon',
-      //   disabled: false,
-      // },
+      {
+        name: 'editProduct',
+        title: 'Змінити',
+        icon: 'edit',
+        iconSize: '90%',
+        type: 'onlyIcon',
+        disabled: !ctx?.selectedRow?._id,
+        onClick: async () => {
+          const modal = modals.handleOpenModal({
+            ModalChildren: ProductForm,
+            modalChildrenProps: {
+              title: 'Копіювати',
+              filterOptions: StorageItemTypeFilterOptions,
+              defaultState: omit(
+                state.products.find(p => p._id === ctx?.selectedRow?._id),
+                ['_id', 'createdAt', 'updatedAt']
+              ),
+              onSubmit: (data, o) => {
+                service.create({
+                  data,
+                  onSuccess(d) {
+                    o?.closeAfterSave && modal?.onClose();
+                  },
+                });
+              },
+              fillHeight: true,
+            },
+          });
+        },
+      },
       {
         name: 'copyProduct',
         title: 'Копіювати',
         icon: 'copy',
         iconSize: '90%',
         type: 'onlyIcon',
-        disabled: true,
+        disabled: !ctx?.selectedRow?._id,
+        onClick: async () => {
+          const modal = modals.handleOpenModal({
+            ModalChildren: ProductForm,
+            modalChildrenProps: {
+              title: 'Змінити',
+              filterOptions: StorageItemTypeFilterOptions,
+              defaultState: omit(
+                state.products.find(p => p._id === ctx?.selectedRow?._id),
+                ['createdAt', 'updatedAt']
+              ),
+              onSubmit: (data, o) => {
+                service.create({
+                  data,
+                  onSuccess(d) {
+                    o?.closeAfterSave && modal?.onClose();
+                  },
+                });
+              },
+              fillHeight: true,
+            },
+          });
+        },
       },
       {
         name: 'archiveProduct',

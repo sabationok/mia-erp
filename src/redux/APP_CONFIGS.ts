@@ -37,6 +37,7 @@ export enum Endpoints {
   updateListItem = 'updateListItem',
   updateList = 'updateList',
   insert = 'insert',
+  getAllPrices = 'getAllPrices',
 }
 
 export type GetEndpoint = (...args: any[]) => string;
@@ -144,6 +145,7 @@ const priceManagamentEndpoins: ApiEndpointsMap = {
   [Endpoints.updateListItem]: (listId: string, priceId: string) =>
     `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.updateListItem}/${listId}/${priceId}`,
   [Endpoints.updateList]: (listId: string) => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.updateList}/${listId}`,
+  [Endpoints.getAllPrices]: () => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.getAllPrices}`,
 };
 
 const APP_CONFIGS = {

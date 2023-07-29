@@ -9,8 +9,8 @@ import { usePriceListsSelector } from '../../redux/selectors.store';
 import { ISortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
 import { PagePathType } from '../../data/pages.data';
-import usePriceManagementServiceHook from '../../redux/priceManagement/usePriceManagementService.hook';
-import usePriceManagementActionsCreatorHook from '../../redux/priceManagement/usePriceManagementActionsCreator.hook';
+import usePriceManagementServiceHook from '../../hooks/usePriceManagementService.hook';
+import usePriceManagementActionsCreatorHook from '../../hooks/usePriceManagementActionsCreator.hook';
 import { IPriceList } from '../../redux/priceManagement/priceManagement.types';
 
 type Props = {

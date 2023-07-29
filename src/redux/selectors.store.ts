@@ -7,6 +7,9 @@ import { IUsersState } from './users/users.types';
 import { IAppSettings } from './appSettings/appSettings.slice';
 import { IProductsState } from './products/products.slice';
 import { IPriceListsState } from './priceManagement/priceManagement.slice';
+import { ApiDirType } from './APP_CONFIGS';
+import { IBaseDirItem } from '../components/Directories/dir.types';
+import { IDirectoriesState } from './directories/directories.slice';
 
 export const useAuthSelector = () => useSelector<RootState, IAuthState>((state: RootState) => state.auth);
 export const useUsersSelector = () => useSelector<RootState, IUsersState>((state: RootState) => state.users);
@@ -22,3 +25,12 @@ export const usePriceListsSelector = () =>
   useSelector<RootState, IPriceListsState>((state: RootState): IPriceListsState => state.priceLists);
 export const useCustomRolesSelector = () =>
   useSelector<RootState, ICustomRolesState>((state: RootState) => state.customRoles);
+export const useDirectoriesSelector = <T = any, DT extends ApiDirType = any>(dirType: DT) => {
+  const state = useSelector((state: RootState) => state.directories);
+
+  return { directory: state.directories[dirType] } as {
+    directory: IBaseDirItem<T, typeof dirType>[];
+    error: IDirectoriesState['error'];
+    isLoading: IDirectoriesState['isLoading'];
+  };
+};

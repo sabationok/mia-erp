@@ -5,10 +5,10 @@ import styled from 'styled-components';
 import { ActionsCreatorOptions, DirBaseProps } from './dir.types';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
-import { useDirectoriesSelector } from '../../redux/directories/useDirectoriesService.hook';
 import { ISortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
 import { useDirService } from '../../hooks';
+import { useDirectoriesSelector } from '../../redux/selectors.store';
 
 export interface DirTableCompProps<
   DirType extends ApiDirType = any,

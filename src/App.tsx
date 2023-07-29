@@ -9,7 +9,7 @@ import { useBaseApiWithAccessToken, useBaseApiWithPermissionToken } from './api/
 import { ApiDirType } from './redux/APP_CONFIGS';
 import { useAppSettingsSelector } from './redux/selectors.store';
 import { usePermissionsSelector } from './redux/permissions/usePermissionsService.hook';
-import useAppSettings from './redux/appSettings/useAppSettings.hook';
+import useAppSettings from './hooks/useAppSettings.hook';
 import { useDirService } from './hooks';
 
 const useLoadInitialAppData = ({
@@ -83,6 +83,7 @@ const useLoadInitialAppData = ({
     })();
   }, [permission_token]);
 };
+
 const App: React.FC = () => {
   const { isDarkMode } = useAppSettingsSelector();
 

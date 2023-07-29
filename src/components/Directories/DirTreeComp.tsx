@@ -5,8 +5,8 @@ import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import { IBaseDirItem, IDirInTreeProps } from './dir.types';
 import { useDirService, useFilteredLisData } from 'hooks';
 
-import { useDirectoriesSelector } from 'redux/directories/useDirectoriesService.hook';
 import { FilterOpt } from '../ModalForm/ModalFilter';
+import { useDirectoriesSelector } from '../../redux/selectors.store';
 
 const DirTreeComp: React.FC<IDirInTreeProps> = ({
   createParentTitle,

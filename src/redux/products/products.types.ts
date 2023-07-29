@@ -4,6 +4,7 @@ import { IBaseDirItem } from '../../components/Directories/dir.types';
 import { ContractorsTypesEnum } from '../contractors/contractors.types';
 import { ApiDirType } from '../APP_CONFIGS';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
+import { IPriceListItem } from '../priceManagement/priceManagement.types';
 
 export type StorageItemStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
@@ -53,6 +54,8 @@ export interface IStorageItem extends IStorageItemBase {
   barCode?: string;
   qrCode?: string;
   unitsOfMeasurement?: string;
+
+  prices?: IPriceListItem[];
 
   images?: ProductImage[];
 }

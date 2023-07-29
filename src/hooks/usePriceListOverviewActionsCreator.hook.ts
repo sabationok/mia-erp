@@ -1,7 +1,7 @@
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
 import { IPriceListItem } from '../redux/priceManagement/priceManagement.types';
 import { useModalProvider } from '../components/ModalProvider/ModalProvider';
-import usePriceManagementServiceHook from '../redux/priceManagement/usePriceManagementService.hook';
+import usePriceManagementServiceHook from './usePriceManagementService.hook';
 import { useCallback } from 'react';
 import { OnlyUUID } from '../redux/global.types';
 import FormCreatePrices from '../components/Forms/FormCreatePrices';

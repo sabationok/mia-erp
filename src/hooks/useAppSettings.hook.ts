@@ -3,11 +3,15 @@ import { logOutUserThunk } from 'redux/auth/auth.thunks';
 import { actionResetPageSettings } from 'redux/page/pageActions';
 import { useAppDispatch } from 'redux/store.store';
 import { AccentColorNamesType } from 'theme/accentColors';
-import { actionResetAppSettings, actionSelectAccentColor, actionToggleDarkMode } from './appSettings.actions';
+import {
+  actionResetAppSettings,
+  actionSelectAccentColor,
+  actionToggleDarkMode,
+} from '../redux/appSettings/appSettings.actions';
 import { useMemo } from 'react';
-import { defaultThunkPayload } from '../../utils/fabrics';
-import { getAppActionsThunk } from './appSettings.thunks';
-import { RoleActionType, ServiceDispatcherAsync } from '../global.types';
+import { defaultThunkPayload } from '../utils/fabrics';
+import { getAppActionsThunk } from '../redux/appSettings/appSettings.thunks';
+import { RoleActionType, ServiceDispatcherAsync } from '../redux/global.types';
 
 export interface AppSettingsService {
   toggleAppMode: () => void;

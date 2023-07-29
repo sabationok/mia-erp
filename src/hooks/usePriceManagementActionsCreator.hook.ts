@@ -1,20 +1,20 @@
-import { useModalProvider } from '../../components/ModalProvider/ModalProvider';
+import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { PriceManagementService } from './usePriceManagementService.hook';
 import { useCallback } from 'react';
-import { TableActionCreator } from '../../components/TableList/tableTypes.types';
+import { TableActionCreator } from '../components/TableList/tableTypes.types';
 import {
   IPriceList,
   IPriceListItem,
   IPriceListItemReqData,
   PriceListFilterOption,
   PriceListTypeEnum,
-} from './priceManagement.types';
-import FormCreatePriceList from '../../components/Forms/FormCreatePriceList';
+} from '../redux/priceManagement/priceManagement.types';
+import FormCreatePriceList from '../components/Forms/FormCreatePriceList';
 import { toast } from 'react-toastify';
 import { omit } from 'lodash';
-import { ExtractId } from '../../utils/dataTransform';
-import PriceListOverview from '../../components/AppPages/components/PriceListOverview';
-import { priceListContentColumns } from '../../data';
+import { ExtractId } from '../utils/dataTransform';
+import PriceListOverview from '../components/Modals/PriceListOverview';
+import { priceListContentColumns } from '../data';
 
 export type PriceManagementActionsCreator = TableActionCreator<IPriceList>;
 

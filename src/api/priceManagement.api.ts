@@ -2,6 +2,7 @@ import baseApi from './baseApi';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { OnlyUUID } from '../redux/global.types';
 import {
+  IAllPriceListItemsRes,
   IAllPriceListsRes,
   ICreatePriceListItemReqData,
   IPriceListReqData,
@@ -31,6 +32,13 @@ export class PriceManagementApi {
 
   public static async addItemToList(input?: ICreatePriceListItemReqData): Promise<IPriceListRes> {
     return this.api.post(this.endpoints.addItemToList(input?.list._id), input?.data);
+  }
+
+  public static async getAllItems(params?: {
+    listId?: OnlyUUID;
+    productId?: OnlyUUID;
+  }): Promise<IAllPriceListItemsRes> {
+    return this.api.get(this.endpoints.getAllPrices(), { params });
   }
 }
 

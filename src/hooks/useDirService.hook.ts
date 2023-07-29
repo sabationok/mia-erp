@@ -31,7 +31,7 @@ const useDirService = (): DirectoriesService => {
   const dispatch: AppDispatch = useAppDispatch();
 
   return useMemo(
-    (): Omit<DirectoriesService, 'dispatch'> => ({
+    (): DirectoriesService => ({
       getAllByDirType: async payload => dispatch(getAllDirectoryItemsThunk(defaultThunkPayload(payload))),
       create: async payload => dispatch(createDirectoryItemThunk(defaultThunkPayload(payload))),
       update: async payload => dispatch(updateDirectoryItemThunk(defaultThunkPayload(payload))),
