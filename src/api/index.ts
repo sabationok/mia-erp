@@ -19,6 +19,7 @@ export interface AppQueryParams {
   owner?: string;
   sortParams?: ISortParams;
   search?: string;
+  searchBy?: string;
   timeFrom?: string | number | Date;
   timeTo?: string | number | Date;
   filterParams?: Partial<FilterReturnDataType>;

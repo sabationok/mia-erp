@@ -155,6 +155,49 @@ export const priceListContentColumns: CellTittleProps<IPriceListItem, DataPath>[
     action: 'dateDbl',
   },
 ];
-const arr = [...priceListContentColumns];
-arr.splice(0, 1);
-export const pricesColumnsForProductReview = arr;
+
+export const pricesColumnsForProductReview: CellTittleProps<IPriceListItem, DataPath>[] = [
+  {
+    bottom: { name: 'Вхідна ціна', getData: d => d?.cost },
+    top: { name: 'Вихідна ціна', getData: d => d?.price },
+    width: '170px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Комісія, сума', getData: d => d?.commissionAmount },
+    bottom: { name: 'Комісія, %', getData: d => d?.commissionPercentage },
+    width: '170px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Націнка, сума', getData: d => d?.markupAmount },
+    bottom: { name: 'Націнка, %', getData: d => d?.markupPercentage },
+    width: '170px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Коментар', align: 'start', path: 'description' },
+    width: '150px',
+    action: 'valueByPath',
+  },
+  {
+    top: {
+      name: t('timeTo'),
+      align: 'center',
+      getData: d => d?.timeTo,
+    },
+    bottom: {
+      name: t('timeFrom'),
+      align: 'center',
+      getData: d => d?.timeFrom,
+    },
+    width: '150px',
+    action: 'dateDbl',
+  },
+  {
+    top: { name: 'Прайс лист', getData: d => d?.list?.label },
+    bottom: { name: 'Тип', getData: d => d?.list?.type },
+    width: '170px',
+    action: 'valueByPath',
+  },
+];

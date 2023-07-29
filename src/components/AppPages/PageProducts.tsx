@@ -9,10 +9,10 @@ import { useProductsSelector } from '../../redux/selectors.store';
 import { ISortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
 import { IStorageItem } from '../../redux/products/products.types';
-import useStorageServiceHook from '../../redux/products/useStorageService.hook';
+import useStorageServiceHook from '../../hooks/useStorageService.hook';
 import { PagePathType } from '../../data/pages.data';
 import useProductsFilterSelectorsHook from '../../redux/products/useStorageFilterSelectors.hook';
-import useStorageActionsCreator from '../../redux/products/useStorageActionsCreator.hook';
+import useStorageActionsCreator from '../../hooks/useStorageActionsCreator.hook';
 
 type Props = {
   path: PagePathType;

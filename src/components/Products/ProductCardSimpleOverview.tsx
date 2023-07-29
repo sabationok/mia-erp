@@ -11,7 +11,7 @@ export interface ProductCardForSelectorProps {
   disabled?: boolean;
 }
 
-const ProductCardSimpleReview: React.FC<ProductCardForSelectorProps> = ({
+const ProductCardSimpleOverview: React.FC<ProductCardForSelectorProps> = ({
   product,
   disabled,
   isSelected,
@@ -128,7 +128,8 @@ const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
   cursor: default;
 
   &:hover {
-    box-shadow: ${({ theme }) => '0px 2px 6px 0px rgba(0, 0, 0, 0.16)'};
+    //box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.16);
+    box-shadow: 0 4px 6px 4px rgba(0, 0, 0, 0.16), 0 4px 6px 4px rgba(210, 210, 210, 0.25);
   }
 
   &::after {
@@ -179,7 +180,6 @@ const CardGridBoxInner = styled(FlexBox)<{ gridArea: string; isLastInRow?: boole
   }
 
   & .title {
-    //color: rgba(0,0,0,0.5);
     color: ${({ theme }) => theme.globals.inputPlaceholderColor};
   }
 
@@ -202,4 +202,4 @@ const ImageBox = styled(FlexBox)`
 
   background-color: ${({ theme }) => theme.fieldBackgroundColor};
 `;
-export default ProductCardSimpleReview;
+export default ProductCardSimpleOverview;

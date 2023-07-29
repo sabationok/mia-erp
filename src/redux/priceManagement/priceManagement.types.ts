@@ -51,7 +51,7 @@ export interface PriceListItemDto {
 
 export interface IPriceListItem extends IBase {
   label: string;
-  product: IProduct;
+  product?: IProduct;
   list?: IPriceList;
   price?: number;
   cost?: number;

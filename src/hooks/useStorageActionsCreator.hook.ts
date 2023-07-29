@@ -1,11 +1,11 @@
-import { useModalProvider } from '../../components/ModalProvider/ModalProvider';
+import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import useStorageServiceHook from './useStorageService.hook';
 import { useCallback } from 'react';
-import { TableActionCreator } from '../../components/TableList/tableTypes.types';
-import { IStorageItem, StorageItemFilterOption } from './products.types';
-import { useProductsSelector } from '../selectors.store';
-import ProductForm from '../../components/Forms/FormCreateProduct';
-import ProductOverviewModal from '../../components/Modals/ProductOverviewModal';
+import { TableActionCreator } from '../components/TableList/tableTypes.types';
+import { IStorageItem, StorageItemFilterOption } from '../redux/products/products.types';
+import { useProductsSelector } from '../redux/selectors.store';
+import ProductForm from '../components/Forms/FormCreateProduct';
+import ProductOverview from '../components/Modals/ProductOverview';
 import { omit } from 'lodash';
 
 export type StorageActionsCreator = TableActionCreator<IStorageItem>;
@@ -44,7 +44,7 @@ const useStorageActionsCreator = (): StorageActionsCreator => {
         type: 'onlyIcon',
         onClick: () => {
           const modal = modals.handleOpenModal({
-            ModalChildren: ProductOverviewModal,
+            ModalChildren: ProductOverview,
             modalChildrenProps: {
               title: 'Перегляд продукту',
               product: state.products.find(el => el._id === ctx.selectedRow?._id),

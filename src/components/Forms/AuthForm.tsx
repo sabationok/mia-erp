@@ -5,7 +5,7 @@ import LogoSvg from 'components/Layout/LogoSvg';
 import AuthInputLabel from '../atoms/Inputs/AuthInputLabel';
 import NavLinkIcon from 'components/atoms/LinkIcon/NavLinkIcon';
 import { Link, useNavigate } from 'react-router-dom';
-import useAuthService from '../../redux/auth/useAppAuth.hook';
+import useAuthService from '../../hooks/useAppAuth.hook';
 import { useForm } from 'react-hook-form';
 import InputText from '../atoms/Inputs/InputText';
 import * as yup from 'yup';

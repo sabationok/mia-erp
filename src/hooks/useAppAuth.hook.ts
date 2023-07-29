@@ -1,9 +1,9 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
-import { ILoginUserData, IRegistrationData } from './auth.types';
-import { logInUserThunk, logOutUserThunk, registerUserThunk } from './auth.thunks';
-import { ServiceDispatcher, ServiceDispatcherAsync } from '../global.types';
+import { ILoginUserData, IRegistrationData } from '../redux/auth/auth.types';
+import { logInUserThunk, logOutUserThunk, registerUserThunk } from '../redux/auth/auth.thunks';
+import { ServiceDispatcher, ServiceDispatcherAsync } from '../redux/global.types';
 import { useMemo } from 'react';
-import { defaultThunkPayload } from '../../utils/fabrics';
+import { defaultThunkPayload } from '../utils/fabrics';
 
 interface AuthServiceDispatchers {
   sendRecoveryEmail: ServiceDispatcherAsync<Pick<ILoginUserData, 'email'>>;

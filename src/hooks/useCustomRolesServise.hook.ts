@@ -1,9 +1,9 @@
 import { useAppDispatch } from 'redux/store.store';
-import { ServiceDispatcherAsync } from '../global.types';
+import { ServiceDispatcherAsync } from '../redux/global.types';
 import { useMemo } from 'react';
-import { ICustomRole } from './customRoles.types';
-import { createCustomRoleThunk } from './customRoles.thunks';
-import { defaultThunkPayload } from '../../utils/fabrics';
+import { ICustomRole } from '../redux/customRoles/customRoles.types';
+import { createCustomRoleThunk } from '../redux/customRoles/customRoles.thunks';
+import { defaultThunkPayload } from '../utils/fabrics';
 
 export interface CustomRolesService {
   create: ServiceDispatcherAsync<Partial<ICustomRole>, ICustomRole>;

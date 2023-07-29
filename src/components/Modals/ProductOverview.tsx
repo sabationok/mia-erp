@@ -1,7 +1,7 @@
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import FlexBox from '../atoms/FlexBox';
 import { IProduct } from '../../redux/products/products.types';
-import ProductCardSimpleReview from '../Products/ProductCardSimpleReview';
+import ProductCardSimpleOverview from '../Products/ProductCardSimpleOverview';
 import TableList from '../TableList/TableList';
 import styled from 'styled-components';
 import { pricesColumnsForProductReview } from '../../data/priceManagement.data';
@@ -9,15 +9,19 @@ import { useAppServiceProvider } from '../../hooks/useAppServices';
 import { useEffect, useState } from 'react';
 import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
 import { ExtractId } from '../../utils/dataTransform';
+import { useModalProvider } from '../ModalProvider/ModalProvider';
+import FormCreatePrice from '../Forms/FormCreatePrice';
 
 export interface ProductReviewModalProps extends Omit<ModalFormProps, 'onSelect' | 'onSubmit'> {
   product?: IProduct;
 }
 
-const ProductOverviewModal: React.FC<ProductReviewModalProps> = ({ product, ...props }) => {
+const ProductOverview: React.FC<ProductReviewModalProps> = ({ product, ...props }) => {
   const { priceManagement } = useAppServiceProvider();
   const [priceList, setPriceList] = useState<IPriceListItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const modals = useModalProvider();
+
   useEffect(() => {
     if (product?._id) {
       priceManagement
@@ -34,13 +38,31 @@ const ProductOverviewModal: React.FC<ProductReviewModalProps> = ({ product, ...p
     <StModal {...props}>
       <FlexBox gap={0}>
         <FlexBox padding={'16px 8px'} fillWidth overflow={'hidden'}>
-          {product && <ProductCardSimpleReview product={product} disabled />}
+          {product && <ProductCardSimpleOverview product={product} disabled />}
         </FlexBox>
 
         <PricesBox>
           <TableList
             tableTitles={pricesColumnsForProductReview}
-            tableData={priceList}
+            tableData={[...priceList, ...priceList, ...priceList]}
+            actionsCreator={ctx => {
+              return [
+                {
+                  icon: 'plus',
+                  onClick: async () => {
+                    const modal = modals.handleOpenModal({
+                      ModalChildren: FormCreatePrice,
+                      modalChildrenProps: {
+                        defaultState: { _id: '', label: '', product },
+                        onSubmit: d => {
+                          modal?.onClose && modal?.onClose();
+                        },
+                      },
+                    });
+                  },
+                },
+              ];
+            }}
             isSearch={false}
             isFilter={false}
             isLoading={loading}
@@ -57,5 +79,7 @@ const StModal = styled(ModalForm)`
 const PricesBox = styled(FlexBox)`
   max-width: 100%;
   min-height: 150px;
+
+  max-height: 250px;
 `;
-export default ProductOverviewModal;
+export default ProductOverview;

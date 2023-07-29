@@ -29,7 +29,9 @@ export interface ModalFormAddsProps {
   fitContentH?: boolean;
 }
 
-export type ModalFormProps<V = any, D = any> = ModalFormBaseProps & ModalFormAddsProps & ModalFormFilterProps<V, D>;
+export type ModalFormProps<V = any, D = any, DataType = any> = ModalFormBaseProps<DataType> &
+  ModalFormAddsProps &
+  ModalFormFilterProps<V, D>;
 const ModalForm: React.FC<ModalFormProps> = ({
   title = 'default modal title',
   footer = true,

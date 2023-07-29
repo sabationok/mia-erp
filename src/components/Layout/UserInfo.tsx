@@ -4,7 +4,7 @@ import usePermissionsServiceHook, { usePermissionsSelector } from '../../redux/p
 import FlexBox from '../atoms/FlexBox';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import Text from '../atoms/Text';
-import useAppAuthHook from '../../redux/auth/useAppAuth.hook';
+import useAppAuthHook from '../../hooks/useAppAuth.hook';
 import { useMemo } from 'react';
 import { useAuthSelector } from '../../redux/selectors.store';
 import translate from '../../lang';

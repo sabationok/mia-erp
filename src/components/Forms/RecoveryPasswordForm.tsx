@@ -8,7 +8,7 @@ import LinkIcon from 'components/atoms/LinkIcon/LinkIcon';
 import { FieldErrors, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import useAuthService from '../../redux/auth/useAppAuth.hook';
+import useAuthService from '../../hooks/useAppAuth.hook';
 import InputText from '../atoms/Inputs/InputText';
 import { createThunkPayload } from '../../utils/fabrics';
 

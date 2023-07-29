@@ -4,7 +4,7 @@ import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import usePriceManagementServiceHook from './usePriceManagementService.hook';
 import { useCallback } from 'react';
 import { OnlyUUID } from '../redux/global.types';
-import FormCreatePrices from '../components/Forms/FormCreatePrices';
+import FormCreatePrice from '../components/Forms/FormCreatePrice';
 import { toast } from 'react-toastify';
 
 export type PriceListOverviewActionsCreatorType = TableActionCreator<IPriceListItem>;
@@ -15,7 +15,7 @@ export const usePricesModal = () => {
   const openAddPriceToListModal = useCallback(
     (list: OnlyUUID) => {
       const modal = modalS.handleOpenModal({
-        ModalChildren: FormCreatePrices,
+        ModalChildren: FormCreatePrice,
         modalChildrenProps: {
           title: 'Create new price',
           list,

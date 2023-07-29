@@ -1,12 +1,12 @@
-import { useModalProvider } from '../../components/ModalProvider/ModalProvider';
+import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { TransactionsService } from './useTransactionsService.hook';
 import { useCallback } from 'react';
 
-import { filterOptions } from '../../data/transactions.data';
-import { TableActionCreator } from '../../components/TableList/tableTypes.types';
-import { ITransaction } from './transactions.types';
-import TransactionForm from '../../components/Forms/FormCreateTransaction';
-import { useTransactionsSelector } from '../selectors.store';
+import { filterOptions } from '../data/transactions.data';
+import { TableActionCreator } from '../components/TableList/tableTypes.types';
+import { ITransaction } from '../redux/transactions/transactions.types';
+import TransactionForm from '../components/Forms/FormCreateTransaction';
+import { useTransactionsSelector } from '../redux/selectors.store';
 import { toast } from 'react-toastify';
 
 export type TrActionsCreator = TableActionCreator<ITransaction>;

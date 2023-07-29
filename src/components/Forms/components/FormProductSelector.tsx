@@ -1,34 +1,50 @@
-import ModalForm, { ModalFormProps } from '../../../ModalForm';
-import { IProduct } from '../../../../redux/products/products.types';
-import FlexBox from '../../../atoms/FlexBox';
+import ModalForm, { ModalFormProps } from '../../ModalForm';
+import { IProduct } from '../../../redux/products/products.types';
+import FlexBox from '../../atoms/FlexBox';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useModalProvider } from '../../../ModalProvider/ModalProvider';
-import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
-import InputText from '../../../atoms/Inputs/InputText';
-import InputLabel from '../../../atoms/Inputs/InputLabel';
-import { createApiCall } from '../../../../api';
-import ProductsApi from '../../../../api/products.api';
+import { useModalProvider } from '../../ModalProvider/ModalProvider';
+import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import InputText from '../../atoms/Inputs/InputText';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import { AppQueryParams, createApiCall } from '../../../api';
+import ProductsApi from '../../../api/products.api';
 import { useForm } from 'react-hook-form';
-import ProductCardSimpleReview from '../../../Products/ProductCardSimpleReview';
+import ProductCardSimpleOverview from '../../Products/ProductCardSimpleOverview';
 import styled from 'styled-components';
+import { FilterOpt } from '../../ModalForm/ModalFilter';
 
 export interface FormProductSelectorProps<D = any> {
   title?: string;
   onSubmit?: (data?: D) => void;
   onSelect?: (data?: D) => void;
   selected?: D;
+  disabled?: boolean;
 }
 
-interface SelectItemModalProps<D = any> extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
-  selected?: D;
-  onSelect?: (item?: D) => void;
+interface SelectProductModalProps extends Omit<ModalFormProps<any, any, IProduct>, 'onSubmit' | 'onSelect'> {
+  selected?: IProduct;
+  onSelect?: (product?: IProduct) => void;
+  search?: AppQueryParams['search'];
+  searchBy?: AppQueryParams['searchBy'];
 }
 
-const SelectProductModal = ({ selected, onSelect }: SelectItemModalProps<IProduct>) => {
+const productSelectorFilterOptions: FilterOpt[] = [
+  { label: 'By label', value: 'label' },
+  {
+    label: 'By sku',
+    value: 'sku',
+  },
+];
+const SelectProductModal: React.FC<SelectProductModalProps> = ({ selected, onSelect }) => {
+  const { register, setValue, watch, handleSubmit } = useForm<Pick<SelectProductModalProps, 'search' | 'searchBy'>>({
+    defaultValues: {
+      searchBy: 'label',
+      search: '',
+    },
+  });
   const [loadedData, setLoadedData] = useState<IProduct[] | null>(null);
-  const [current, setCurrent] = useState<IProduct | null>(null);
+  const [current, setCurrent] = useState<IProduct | undefined>(selected);
 
-  const { register, watch, handleSubmit } = useForm<{ search: string }>();
   const { search } = watch();
 
   const onItemSelect = useCallback(
@@ -40,7 +56,7 @@ const SelectProductModal = ({ selected, onSelect }: SelectItemModalProps<IProduc
   );
   const renderProducts = useMemo(() => {
     return loadedData?.map(p => (
-      <ProductCardSimpleReview
+      <ProductCardSimpleOverview
         key={`product-${p._id}`}
         product={p}
         onSelect={() => onItemSelect(p)}
@@ -50,10 +66,19 @@ const SelectProductModal = ({ selected, onSelect }: SelectItemModalProps<IProduc
   }, [onItemSelect, loadedData, selected?._id]);
 
   const getData = useCallback(
-    (search?: string) => createApiCall({ data: { search }, onSuccess: setLoadedData }, ProductsApi.getAll, ProductsApi),
+    (search?: string, searchBy?: string) =>
+      createApiCall(
+        {
+          data: { search, searchBy },
+          onSuccess: setLoadedData,
+        },
+        ProductsApi.getAll,
+        ProductsApi
+      ),
     []
   );
-  const onValid = ({ search }: { search: string }) => getData(search);
+  const onValid = ({ search, searchBy }: Pick<SelectProductModalProps, 'search' | 'searchBy'>) =>
+    getData(search, searchBy);
 
   useEffect(() => {
     !search && getData();
@@ -64,6 +89,10 @@ const SelectProductModal = ({ selected, onSelect }: SelectItemModalProps<IProduc
       title={'Select product'}
       isValid={!!current}
       footer={false}
+      filterOptions={productSelectorFilterOptions}
+      onOptSelect={(o, v) => {
+        setValue('searchBy', v);
+      }}
       onSubmit={handleSubmit(onValid)}
     >
       <FlexBox fillWidth padding={'8px 8px'} fxDirection={'row'} gap={12} alignItems={'flex-end'}>
@@ -84,9 +113,15 @@ const StModalForm = styled(ModalForm)`
     width: 600px;
   }
 `;
-const FormProductSelector: React.FC<FormProductSelectorProps> = ({ onSelect, onSubmit, ...props }) => {
+const FormProductSelector: React.FC<FormProductSelectorProps> = ({
+  onSelect,
+  disabled,
+  onSubmit,
+  selected,
+  ...props
+}) => {
   const modals = useModalProvider();
-  const [current, setCurrent] = useState<IProduct | undefined>();
+  const [current, setCurrent] = useState<IProduct | undefined>(selected);
 
   const onOpenSelectorClick = () => {
     const modal = modals.handleOpenModal({
@@ -114,10 +149,10 @@ const FormProductSelector: React.FC<FormProductSelectorProps> = ({ onSelect, onS
     >
       {current && (
         <FlexBox fillWidth>
-          <ProductCardSimpleReview product={current} disabled />
+          <ProductCardSimpleOverview product={current} disabled />
         </FlexBox>
       )}
-      <ButtonIcon variant={'outlinedSmall'} onClick={onOpenSelectorClick}>
+      <ButtonIcon variant={'outlinedSmall'} disabled={disabled} onClick={onOpenSelectorClick}>
         {`${current ? 'Change' : 'Select'} product for pricing`}
       </ButtonIcon>
     </FlexBox>

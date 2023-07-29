@@ -89,7 +89,7 @@ const Form: React.FC<FormProps> = ({ edit, onSubmit, copy, defaultState, addInpu
       );
   }
 
-  const renderInputsCategories = useMemo(() => {
+  const renderCategoriesSelects = useMemo(() => {
     const parentOptions = directories[ApiDirType.CATEGORIES_PROD];
 
     const childOptions = parentOptions.find(el => el._id === formValues.category?._id)?.childrenList;
@@ -131,6 +131,7 @@ const Form: React.FC<FormProps> = ({ edit, onSubmit, copy, defaultState, addInpu
     ),
     [directories, registerSelect]
   );
+
   const renderBrandsSelect = useMemo(
     () => (
       <CustomSelect
@@ -167,16 +168,16 @@ const Form: React.FC<FormProps> = ({ edit, onSubmit, copy, defaultState, addInpu
           <InputText placeholder={translate('sku')} {...register('sku', { max: 120 })} />
         </InputLabel>
 
+        {renderCategoriesSelects}
         {renderSupplierSelect}
         {renderBrandsSelect}
-        {renderInputsCategories}
 
         <InputLabel label={translate('status')} direction={'vertical'} error={errors.status} disabled>
           <InputText placeholder={translate('status')} {...register('status')} disabled />
         </InputLabel>
 
-        <InputLabel label={'Штрих-код'} direction={'vertical'} error={errors.barCode} disabled>
-          <InputText placeholder={'Штрих-код'} {...register('barCode')} disabled />
+        <InputLabel label={'Штрих-код'} direction={'vertical'} error={errors.barCode}>
+          <InputText placeholder={'Штрих-код'} {...register('barCode')} />
         </InputLabel>
 
         <InputLabel label={'Одиниці виміру'} direction={'vertical'} error={errors.unitsOfMeasurement} disabled>

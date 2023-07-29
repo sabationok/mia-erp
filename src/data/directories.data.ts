@@ -270,6 +270,7 @@ const ProjectsProps: DirProjectsProps = {
   title: t('projects'),
   dirType: ApiDirType.PROJECTS,
   fillWidth: true,
+  fillHeight: true,
   getTableSettings: ContractorsProps.getTableSettings,
 };
 const projectsDir: IDirectory<DirProjectsProps> = {

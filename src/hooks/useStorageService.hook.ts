@@ -1,11 +1,11 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
-import { IProductReqData, IStorageItem } from './products.types';
+import { IProductReqData, IStorageItem } from '../redux/products/products.types';
 import { ServiceApiCaller, ServiceDispatcherAsync } from 'redux/global.types';
-import { createProductThunk, getAllProductsThunk } from './products.thunks';
+import { createProductThunk, getAllProductsThunk } from '../redux/products/products.thunks';
 import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
 import { AppQueryParams, createApiCall } from 'api';
-import ProductsApi from '../../api/products.api';
+import ProductsApi from '../api/products.api';
 
 export interface StorageService {
   create: ServiceDispatcherAsync<IProductReqData, IStorageItem>;

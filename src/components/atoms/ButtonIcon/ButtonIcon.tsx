@@ -120,11 +120,12 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
   transition: ${({ theme }) => theme.globals.timingFunctionMain};
 
   ${({ variant = 'def' }) => getVariant(variant)}
-  &:disabled {
+  &[disabled] {
     pointer-events: none;
-    opacity: 0.9;
+    opacity: 0.6;
     cursor: default;
-    fill: ${({ theme }) => theme.field.backgroundColor};
+    //fill: ${({ theme }) => theme.field.backgroundColor};
+    //color: ${({ theme }) => theme.modalBorderColor};
   }
 
   @media screen and (max-width: 480px) {
@@ -295,6 +296,10 @@ const outlined = css`
     background-color: var(--ligthOrange);
     box-shadow: var(--btnShadow_active);
   }
+
+  &[disabled] {
+    border-color: ${({ theme }) => theme.field.backgroundColor};
+  }
 `;
 const outlinedSmall = css`
   ${small}
@@ -317,6 +322,10 @@ const filled = css`
 
   &:active {
     background-color: ${({ theme }) => theme.accentColor.pressed};
+  }
+
+  &[disabled] {
+    background-color: ${({ theme }) => theme.field.backgroundColor};
   }
 `;
 const filledSmall = css`

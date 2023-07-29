@@ -1,6 +1,6 @@
 import usePermissionsServiceHook, { PermissionService } from '../redux/permissions/usePermissionsService.hook';
-import useStorageServiceHook, { StorageService } from '../redux/products/useStorageService.hook';
-import useTransactionsServiceHook, { TransactionsService } from '../redux/transactions/useTransactionsService.hook';
+import useStorageServiceHook, { StorageService } from './useStorageService.hook';
+import useTransactionsServiceHook, { TransactionsService } from './useTransactionsService.hook';
 import { DirectoriesService } from './useDirService.hook';
 import { useDirService } from './index';
 import usePriceManagementServiceHook, { PriceManagementService } from './usePriceManagementService.hook';

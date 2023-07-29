@@ -71,8 +71,9 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, type, o
         closeAfterSave,
       }
     );
+
   return (
-    <ModalForm fitContentV isValid {...props}>
+    <ModalForm fitContentV isValid {...props} onSubmit={handleSubmit(onValidSubmit)}>
       <FlexBox gap={4} padding={'0 16px 16px'}>
         <InputLabel label={translate('label')} direction={'vertical'} error={errors.label} required>
           <InputText placeholder={translate('label')} {...register('label')} required autoFocus />

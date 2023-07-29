@@ -1,7 +1,7 @@
 import { FilterSelectorType } from 'components/Filter/AppFilter';
-import { ApiDirType } from '../APP_CONFIGS';
-import { ITransaction } from './transactions.types';
-import { useDirectoriesSelector } from '../selectors.store';
+import { ApiDirType } from '../redux/APP_CONFIGS';
+import { ITransaction } from '../redux/transactions/transactions.types';
+import { useDirectoriesSelector } from '../redux/selectors.store';
 
 const useTrFilterSelectors = (): FilterSelectorType<keyof ITransaction>[] => {
   const dirCategories = useDirectoriesSelector(ApiDirType.CATEGORIES_TR);
