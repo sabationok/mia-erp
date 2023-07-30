@@ -5,9 +5,8 @@ import ModalForm from '../ModalForm';
 import { IReportBaseProps } from './report.types';
 import FlexBox from '../atoms/FlexBox';
 import { FilterOpt } from '../ModalForm/ModalFilter';
-import { CategoriesTypesMap } from 'redux/directories/categories.types';
-import { founder, numberWithSpaces } from 'utils';
-import { CountType } from 'redux/directories/counts.types';
+import { enumToArray, founder, numberWithSpaces } from 'utils';
+import { CountsTypesEnum, CountType } from 'redux/directories/counts.types';
 import { CurrencyCode } from '../../redux/transactions/transactions.types';
 import styled from 'styled-components';
 
@@ -49,8 +48,8 @@ const ReportCounts: React.FC<IReportCountsProps<CountType>> = ({ entryList, filt
 
     if (!entryList) return data;
 
-    Object.keys(CategoriesTypesMap).map(key => {
-      data[key as CountType] = founder({ searchParam: 'type', searchQuery: key, data: entryList });
+    enumToArray(CountsTypesEnum).map(key => {
+      data[key] = founder({ searchParam: 'type', searchQuery: key, data: entryList });
       return '';
     });
 

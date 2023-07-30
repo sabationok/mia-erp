@@ -1,5 +1,5 @@
 import { ModalFormProps } from '../ModalForm';
-import { CategoryTypes, ICategory, ICategoryFormData } from '../../redux/directories/categories.types';
+import { CategoryTypes, ICategory, ICategoryFormData } from '../../redux/directories/directories.types';
 import { CountType, ICount, ICountFormData } from '../../redux/directories/counts.types';
 import { FilterOpt } from '../ModalForm/ModalFilter';
 import { IBase } from '../../redux/global.types';
@@ -116,11 +116,11 @@ export interface DirActivitiesProps
 
 export interface DirMarksProps extends IDirInTreeProps<ApiDirType.MARKS> {}
 
-export interface DirStatusOrderProps extends IDirInTreeProps<ApiDirType.STATUS_ORDER> {}
+export interface DirStatusOrderProps extends IDirInTreeProps<ApiDirType.STATUSES_ORDER> {}
 
-export interface DirStatusRefundProps extends IDirInTreeProps<ApiDirType.STATUS_REFUND> {}
+export interface DirStatusRefundProps extends IDirInTreeProps<ApiDirType.STATUSES_REFUND> {}
 
-export interface DirStatusDeliveryProps extends IDirInTreeProps<ApiDirType.STATUS_DELIVERY> {}
+export interface DirStatusDeliveryProps extends IDirInTreeProps<ApiDirType.STATUSES_SHIPMENT> {}
 
 export interface DirProjectsProps extends DirTableCompProps<ApiDirType.PROJECTS> {}
 

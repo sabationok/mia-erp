@@ -38,6 +38,7 @@ export enum Endpoints {
   updateList = 'updateList',
   insert = 'insert',
   getAllPrices = 'getAllPrices',
+  getDefaultDirectories = 'getDefaultDirectories',
 }
 
 export type GetEndpoint = (...args: any[]) => string;
@@ -48,20 +49,36 @@ export enum ApiDirType {
   CATEGORIES_TR = 'categories_tr',
   CATEGORIES_PROD = 'categories_prod',
   CONTRACTORS = 'contractors',
+  WORKERS = 'workers',
   DOCUMENTS = 'documents',
   PROJECTS = 'projects',
   ACTIVITIES = 'activities',
   COUNTS = 'counts',
   BANK_ACCOUNTS = 'bank_accounts',
   MARKS = 'marks',
-  TYPE = 'type',
+  TAGS = 'tags',
   STORAGES = 'storages',
+  WAREHOUSES = 'warehouses',
   BRANDS = 'brands',
-  STATUS_ORDER = 'status_order',
-  STATUS_REFUND = 'status_refund',
-  STATUS_DELIVERY = 'status_delivery',
-  CUSTOM_FIELDS = 'custom_fields',
   TRANSPORTERS = 'transporters',
+  CUSTOM_FIELDS = 'custom_fields',
+  STATUSES_ORDER = 'statuses_order',
+  STATUSES_REFUND = 'statuses_refund',
+  STATUSES_SHIPMENT = 'statuses_shipment',
+  STATUSES_PAYMENT = 'statuses_payment',
+  METHODS_PAYMENT = 'methods_payment',
+  METHODS_SHIPMENT = 'methods_shipment',
+  METHODS_COMMUNICATION = 'methods_communication',
+  COLLECTION = 'collection',
+  COLLECTIONS = 'collections',
+
+  DEFAULT = 'DEFAULT',
+}
+
+export enum ApiDefaultDirType {
+  SHIPMENT_TYPES = 'shipments',
+  PAYMENT_TYPES = 'payments',
+  COMMUNICATION_TYPES = 'communications',
 }
 
 const transactionsApiEndpoints: ApiEndpointsMap = {
@@ -128,6 +145,7 @@ const directoriesApiEndpoints: ApiEndpointsMap = {
     `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.getById}/${dirType || '_'}/${id}`,
   [Endpoints.changeArchiveStatus]: (dirType?: ApiDirType, id?: string) =>
     `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.changeArchiveStatus}/${dirType || '_'}/${id}`,
+  [Endpoints.getDefaultDirectories]: () => `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.getDefaultDirectories}`,
 };
 
 const customRoles: ApiEndpointsMap = {};

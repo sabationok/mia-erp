@@ -342,29 +342,46 @@ const directories: Partial<IDirectory>[] = [
   marksDir,
   brandsDir,
   {
+    title: 'Способи оплати',
+    disabled: true,
+    modalChildrenProps: {
+      dirType: ApiDirType.METHODS_PAYMENT,
+    },
+  },
+  {
+    title: 'Способи відвантажень',
+    disabled: true,
+    modalChildrenProps: {
+      dirType: ApiDirType.METHODS_SHIPMENT,
+    },
+  },
+  {
     title: 'Статуси для замовлень',
     disabled: true,
     modalChildrenProps: {
-      dirType: ApiDirType.STATUS_ORDER,
+      dirType: ApiDirType.STATUSES_ORDER,
     },
   },
   {
     title: 'Статуси для повернень',
     disabled: true,
     modalChildrenProps: {
-      dirType: ApiDirType.STATUS_REFUND,
+      dirType: ApiDirType.STATUSES_REFUND,
     },
   },
   {
     title: 'Статуси для відправлень',
     disabled: true,
     modalChildrenProps: {
-      dirType: ApiDirType.STATUS_DELIVERY,
+      dirType: ApiDirType.STATUSES_SHIPMENT,
     },
   },
   {
     title: 'Статуси для оплат',
     disabled: true,
+    modalChildrenProps: {
+      dirType: ApiDirType.STATUSES_PAYMENT,
+    },
   },
   {
     title: 'Статуси для клієнтів',
@@ -380,7 +397,11 @@ const directories: Partial<IDirectory>[] = [
   },
   {
     title: 'Теги',
-    disabled: true,
+    disabled: false,
+    ModalChildren: DirTreeComp,
+    modalChildrenProps: {
+      dirType: ApiDirType.TAGS,
+    },
   },
   {
     title: 'Кастомні поля',
@@ -394,20 +415,22 @@ const directories: Partial<IDirectory>[] = [
     disabled: true,
   },
   {
-    title: 'Договора',
-    disabled: true,
-  },
-  {
     title: 'Каси',
     disabled: true,
   },
   {
     title: 'Склади',
     disabled: true,
+    modalChildrenProps: {
+      dirType: ApiDirType.WAREHOUSES,
+    },
   },
   {
     title: 'Працівники',
     disabled: true,
+    modalChildrenProps: {
+      dirType: ApiDirType.WORKERS,
+    },
   },
   {
     title: 'Специфікації',
@@ -419,14 +442,6 @@ const directories: Partial<IDirectory>[] = [
   },
   {
     title: "Способи зв'язку",
-    disabled: true,
-  },
-  {
-    title: 'Способи оплати',
-    disabled: true,
-  },
-  {
-    title: 'Способи відвантажень',
     disabled: true,
   },
 ];

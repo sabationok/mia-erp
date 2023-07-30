@@ -1,5 +1,5 @@
 import ModalForm from 'components/ModalForm';
-import { CategoryTypes, ICategory, ICategoryFormData } from 'redux/directories/categories.types';
+import { CategoryTypes, ICategory, ICategoryFormData } from 'redux/directories/directories.types';
 import React from 'react';
 import styled from 'styled-components';
 import * as yup from 'yup';

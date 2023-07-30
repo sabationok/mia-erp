@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import styled from 'styled-components';
 import { ITransaction, ITransactionReqData, TransactionType } from 'redux/transactions/transactions.types';
-import { CategoryTypes } from 'redux/directories/categories.types';
+import { CategoryTypes } from 'redux/directories/directories.types';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import * as yup from 'yup';

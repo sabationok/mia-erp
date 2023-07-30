@@ -6,9 +6,9 @@ import { IReportBaseProps } from './report.types';
 import FlexBox from 'components/atoms/FlexBox';
 import { FilterOpt } from '../ModalForm/ModalFilter';
 import { categoriesFilterOptions } from '../../data/directories.data';
-import { CategoriesTypesMap, CategoryTypes } from '../../redux/directories/categories.types';
+import { CategoryTrTypeEnum, CategoryTypes } from '../../redux/directories/directories.types';
 import styled from 'styled-components';
-import { founder, numberWithSpaces } from '../../utils';
+import { enumToArray, founder, numberWithSpaces } from '../../utils';
 
 export interface IReportCategoriesProps<V = any, D = any> extends IReportBaseProps<unknown, V, D> {
   entryList?: ReportListItemProps<CategoryTypes>[];
@@ -55,8 +55,8 @@ const ReportCategories: React.FC<IReportCategoriesProps<CategoryTypes>> = ({
 
     if (!entryList) return data;
 
-    Object.keys(CategoriesTypesMap).map(key => {
-      data[key as CategoryTypes] = founder({ searchParam: 'type', searchQuery: key, data: entryList });
+    enumToArray(CategoryTrTypeEnum).map(key => {
+      data[key] = founder({ searchParam: 'type', searchQuery: key, data: entryList });
       return '';
     });
 

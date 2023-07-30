@@ -6,7 +6,7 @@ import { ThRow, ThRowData, ThRowStickyEl } from './TableHeadRow';
 import { IDocument, ITransaction } from '../../../redux/transactions/transactions.types';
 import { ICount } from '../../../redux/directories/counts.types';
 import { IContractor } from '../../../redux/contractors/contractors.types';
-import { ICategory } from '../../../redux/directories/categories.types';
+import { ICategory } from '../../../redux/directories/directories.types';
 import CellCheckBox from '../TebleCells/CellCheckBox';
 import { CellsMap } from '../TebleCells';
 import CellTextDbl from '../TebleCells/CellTextDbl';

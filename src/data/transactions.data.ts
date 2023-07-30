@@ -3,7 +3,7 @@ import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { ITransaction } from '../redux/transactions/transactions.types';
 import t from '../lang';
 import { FilterOpt } from '../components/ModalForm/ModalFilter';
-import { CategoryTypes } from '../redux/directories/categories.types';
+import { CategoryTypes } from '../redux/directories/directories.types';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
 export type DataPath =

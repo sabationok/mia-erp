@@ -92,4 +92,8 @@ export default class DirectoriesApi {
   public static async getAllDirectoriesGroupedData() {
     return this.api.get(this.endpoints[Endpoints.getAllGrouped](''));
   }
+
+  public static async getDefaultDirectories() {
+    return this.api.get(this.endpoints[Endpoints.getDefaultDirectories](''));
+  }
 }

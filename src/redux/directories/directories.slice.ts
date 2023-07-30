@@ -3,11 +3,13 @@ import { AuthErrorType } from 'redux/reduxTypes.types';
 import { ApiDirType } from '../APP_CONFIGS';
 import { createDirectoryItemThunk, getAllDirectoryItemsThunk } from './directories.thunk';
 import { IBaseDirItem } from '../../components/Directories/dir.types';
+import { DefaultDirectoryType } from './directories.types';
 
 export interface IDirectoriesState extends Record<string, any> {
-  isLoading: boolean;
-  error: AuthErrorType;
+  defaultDirectories?: Record<string, DefaultDirectoryType[]>;
   directories: Record<ApiDirType | string, IBaseDirItem[]>;
+  error: AuthErrorType;
+  isLoading: boolean;
 }
 
 const initialState: IDirectoriesState = {

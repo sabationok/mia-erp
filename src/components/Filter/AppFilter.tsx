@@ -5,7 +5,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import SelectorContent from './SelectorContent/SelectorContent';
 import { ICount } from 'redux/directories/counts.types';
-import { ICategory } from 'redux/directories/categories.types';
+import { ICategory } from 'redux/directories/directories.types';
 import InputTextPrimary from '../atoms/Inputs/InputTextPrimary';
 import { IContractor } from '../../redux/contractors/contractors.types';
 import { IProject } from '../../redux/transactions/transactions.types';

@@ -1,5 +1,5 @@
 import { createTreeDataMapById, IBaseFields, TreeOptions } from '../utils/createTreeData';
-import { ICategory } from '../redux/directories/categories.types';
+import { ICategory } from '../redux/directories/directories.types';
 import { ICount } from '../redux/directories/counts.types';
 import { useMemo, useState } from 'react';
 
