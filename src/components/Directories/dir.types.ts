@@ -10,6 +10,8 @@ import { IModalProviderContext } from '../ModalProvider/ModalProvider';
 import { DirectoriesService } from '../../hooks/useDirService.hook';
 import { DirTableCompProps } from './DirTableComp';
 import { AppSubmitHandler, UseAppFormAfterSubmitOptions } from '../../hooks/useAppForm.hook';
+import { IProduct } from '../../redux/products/products.types';
+import { IOrder } from '../../redux/orders/orders.types';
 
 export interface DirBaseProps extends ModalFormProps {
   title: string;
@@ -131,6 +133,11 @@ export type ActivityFilterOpt<D = any> = FilterOpt<ActivityType, D>;
 
 export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> extends IBase {
   dirType?: DirType;
+  owner?: Pick<ICompany, '_id' | 'name' | 'email'>;
+  products?: IProduct[];
+  orders?: IOrder[];
+  parent?: IBaseDirItem<Type, DirType>;
+  childrenList?: IBaseDirItem<Type, DirType>[];
   type?: Type;
   name?: string;
   label?: string;
@@ -138,8 +145,7 @@ export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> exte
   taxCode?: string | number;
   description?: string;
   manufacturer?: string;
+  email?: string;
+  phone?: string;
   def?: string;
-  owner?: Pick<ICompany, '_id' | 'name' | 'email'>;
-  parent?: IBaseDirItem<Type, DirType>;
-  childrenList?: IBaseDirItem<Type, DirType>[];
 }

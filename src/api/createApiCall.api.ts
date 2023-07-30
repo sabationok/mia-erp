@@ -12,6 +12,7 @@ export interface ApiCallerPayload<SD = any, RD = any, E = any | unknown> {
   logError?: boolean;
   logRes?: boolean;
   logResData?: boolean;
+  throwError?: boolean;
 }
 
 export type ApiCaller<SD = any, RD = any, E = any, MD = any, CTX = any> = (
@@ -21,7 +22,7 @@ export type ApiCaller<SD = any, RD = any, E = any, MD = any, CTX = any> = (
 ) => Promise<AppResponse<RD, MD> | undefined>;
 
 const createApiCall = async <SD = any, RD = any, E = any, MD = any, CTX = any>(
-  { onLoading, onError, onSuccess, data, logError, logRes }: ApiCallerPayload<SD, RD, E>,
+  { onLoading, onError, onSuccess, data, logError, logRes, throwError }: ApiCallerPayload<SD, RD, E>,
   getResponseCallback: GetResponseCallback<SD, RD, MD>,
   context?: CTX
 ): Promise<AppResponse<RD, MD> | undefined> => {
@@ -39,8 +40,10 @@ const createApiCall = async <SD = any, RD = any, E = any, MD = any, CTX = any>(
   } catch (e) {
     onError && onError(e as unknown as E);
     logError && console.error(e);
-  } finally {
     onLoading && onLoading(false);
+    if (throwError) {
+      throw e;
+    }
   }
 };
 

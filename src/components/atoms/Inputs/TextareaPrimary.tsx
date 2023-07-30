@@ -9,7 +9,7 @@ const TextareaPrimary = styled.textarea<{ error?: boolean }>`
   resize: none;
 
   @media screen and (max-width: 480px) {
-    height: 96px;
+    height: 70px;
     font-size: 14px;
   }
 `;

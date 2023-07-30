@@ -7,5 +7,6 @@ export { default as useAppForm } from './useAppForm.hook';
 export { default as useTreeDataCreator } from './useTreeDataCreator.hook';
 export { default as useListDataHooks } from './useListData.hook';
 export { default as useCloseByEscapeOrClickOnBackdrop } from './useCloseByEscapeOrClickOnBackdrop.hook';
+export { default as useAppServices } from './useAppServices.hook';
 
 export { useFilteredLisData, useEntryListData };

@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import GlobalStyles from './theme/globalStyles';
 import { useBaseApiWithAccessToken, useBaseApiWithPermissionToken } from './api/baseApi';
 import { useAppSettingsSelector } from './redux/selectors.store';
-import useLoadInitialAppData from './hooks/useLoadInitialAppData';
+import useLoadInitialAppDataHook from './hooks/useLoadInitialAppData.hook';
 
 const App: React.FC = () => {
   const { isDarkMode } = useAppSettingsSelector();
@@ -15,7 +15,7 @@ const App: React.FC = () => {
 
   useBaseApiWithPermissionToken();
 
-  useLoadInitialAppData();
+  useLoadInitialAppDataHook();
 
   return (
     <>

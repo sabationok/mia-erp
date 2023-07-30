@@ -68,9 +68,9 @@ export interface AppResponse<D = any, M = any>
 
 export type CompanyQueryType = 'own' | 'all' | 'invites' | 'invited';
 
-export type ServiceDispatcher<SD = any, RD = any, E = any> = (payload: ThunkPayload<SD, RD, E>) => void | any;
+export type ServiceDispatcher<SD = any, RD = any, E = any> = (args: ThunkPayload<SD, RD, E>) => void | any;
 
-export type ServiceDispatcherAsync<SD = any, RD = any, E = any> = (payload?: ThunkPayload<SD, RD, E>) => Promise<
+export type ServiceDispatcherAsync<SD = any, RD = any, E = any> = (args?: ThunkPayload<SD, RD, E>) => Promise<
   | {
       payload: unknown | RD;
       type: string;

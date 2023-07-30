@@ -417,6 +417,18 @@ const directories: Partial<IDirectory>[] = [
     title: 'Розмірні сітки',
     disabled: true,
   },
+  {
+    title: "Способи зв'язку",
+    disabled: true,
+  },
+  {
+    title: 'Способи оплати',
+    disabled: true,
+  },
+  {
+    title: 'Способи відвантажень',
+    disabled: true,
+  },
 ];
 
 export default directories;

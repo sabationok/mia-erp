@@ -16,6 +16,11 @@ export interface IUser extends IBase {
   permissions?: Partial<IPermission>[];
 }
 
+export interface IManager extends Omit<IUser, 'permissions'> {
+  code?: string;
+  permission?: IPermission;
+}
+
 export interface IAuthState {
   user: IUser;
   permission: IPermission;

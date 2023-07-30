@@ -7,6 +7,7 @@ import usePriceManagementServiceHook, { PriceManagementService } from './usePric
 import useAppSettingsHook, { AppSettingsService } from './useAppSettings.hook';
 import useCompaniesService, { CompaniesService } from './useCompaniesService.hook';
 import { createContext, useContext, useEffect } from 'react';
+import useOrdersServiceHook, { OrdersService } from './useOrdersService.hook';
 
 export enum ServiceName {
   permissions = 'permissions',
@@ -16,6 +17,7 @@ export enum ServiceName {
   storage = 'storage',
   directories = 'directories',
   auth = 'auth',
+  orders = 'orders',
   priceManagement = 'priceManagement',
   appSettings = 'appSettings',
   companies = 'companies',
@@ -29,6 +31,7 @@ export interface AppService {
   [ServiceName.priceManagement]: PriceManagementService;
   [ServiceName.appSettings]: AppSettingsService;
   [ServiceName.companies]: CompaniesService;
+  [ServiceName.orders]: OrdersService;
 }
 
 const useAppService = (): AppService => {
@@ -39,6 +42,7 @@ const useAppService = (): AppService => {
   const priceManagement = usePriceManagementServiceHook();
   const appSettings = useAppSettingsHook();
   const companies = useCompaniesService();
+  const orders = useOrdersServiceHook();
 
   useEffect(() => {
     console.log('Apply useAppService');
@@ -52,6 +56,7 @@ const useAppService = (): AppService => {
     [ServiceName.directories]: directories,
     [ServiceName.appSettings]: appSettings,
     [ServiceName.companies]: companies,
+    [ServiceName.orders]: orders,
   };
 };
 export const AppServiceCTX = createContext<AppService>({} as AppService);

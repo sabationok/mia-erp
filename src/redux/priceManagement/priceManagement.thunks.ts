@@ -1,8 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ICreatePriceListItemReqData, IPriceList, IPriceListReqData } from './priceManagement.types';
 import { ThunkPayload } from '../store.store';
-import { AppQueryParams, createApiCall } from '../../api';
-import { PriceManagementApi } from '../../api/priceManagement.api';
+import { AppQueryParams, createApiCall, PriceManagementApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
 import { OnlyUUID } from '../global.types';
 

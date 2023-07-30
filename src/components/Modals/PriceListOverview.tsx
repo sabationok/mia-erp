@@ -6,7 +6,7 @@ import { IPriceList, IPriceListItem } from '../../redux/priceManagement/priceMan
 import { UseAppFormAfterSubmitOptions } from '../../hooks/useAppForm.hook';
 import { priceListContentColumns } from '../../data';
 import { usePriceListOverviewActionsCreator } from '../../hooks/usePriceListOverviewActionsCreator.hook';
-import { useAppServiceProvider } from '../../hooks/useAppServices';
+import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { usePriceListsSelector } from '../../redux/selectors.store';
 
 export interface PriceListOverviewProps extends Omit<ModalFormProps, 'onSubmit' | 'afterSubmit'> {

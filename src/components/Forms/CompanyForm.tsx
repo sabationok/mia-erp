@@ -8,7 +8,7 @@ import { ICompany } from '../../redux/companies/companies.types';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
-import { useAppServiceProvider } from '../../hooks/useAppServices';
+import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 
 export interface Props {}
 

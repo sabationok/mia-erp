@@ -18,8 +18,8 @@ import PriceListOverview from '../components/Modals/PriceListOverview';
 export type PriceManagementActionsCreator = TableActionCreator<IPriceList>;
 
 export const PriceManagementItemTypeFilterOptions: PriceListFilterOption[] = [
-  { label: 'SALES', value: PriceListTypeEnum.SALES },
-  { label: 'PURCHASES', value: PriceListTypeEnum.PURCHASES },
+  { label: PriceListTypeEnum.SALES, value: PriceListTypeEnum.SALES },
+  { label: PriceListTypeEnum.PURCHASES, value: PriceListTypeEnum.PURCHASES },
 ];
 
 export const createPriceDataForReq = (input: Required<IPriceListItem>): IPriceListItemReqData => {
@@ -186,8 +186,7 @@ const usePriceManagementActionsCreator = (service: PriceManagementService): Pric
         type: 'onlyIcon',
         disabled: !ctx.selectedRow?._id,
         onClick: async () => {
-          const list = ctx.tableData?.find(l => l._id === ctx.selectedRow?._id);
-          const modal = modals.handleOpenModal({
+          modals.handleOpenModal({
             ModalChildren: PriceListOverview,
             modalChildrenProps: {
               listId: ctx.selectedRow?._id,

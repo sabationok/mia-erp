@@ -11,6 +11,7 @@ export { default as DirectoriesApi } from './directories.api';
 
 export { default as PriceManagementApi } from './priceManagement.api';
 export { default as ProductsApi } from './products.api';
+export { default as OrdersApi } from './ordersApi.api';
 
 export interface AppQueryParams {
   dirType?: ApiDirType;

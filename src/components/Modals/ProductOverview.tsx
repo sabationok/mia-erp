@@ -5,7 +5,7 @@ import ProductCardSimpleOverview from '../Products/ProductCardSimpleOverview';
 import TableList from '../TableList/TableList';
 import styled from 'styled-components';
 import { pricesColumnsForProductReview } from '../../data/priceManagement.data';
-import { useAppServiceProvider } from '../../hooks/useAppServices';
+import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { useEffect, useState } from 'react';
 import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
 import { ExtractId } from '../../utils/dataTransform';
@@ -81,5 +81,7 @@ const PricesBox = styled(FlexBox)`
   min-height: 150px;
 
   max-height: 250px;
+
+  padding: 0 8px;
 `;
 export default ProductOverview;

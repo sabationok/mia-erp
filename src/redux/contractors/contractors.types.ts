@@ -31,6 +31,8 @@ export enum ContractorsTypesEnum {
   WORKER = 'WORKER',
   COMMISSION_AGENT = 'COMMISSION_AGENT',
   CONSIGNOR = 'CONSIGNOR',
+  TRANSPORTERS = 'TRANSPORTERS',
+  SHIPMENT_TYPES = 'shipment_type',
 }
 
 export type ContractorsTypes = keyof typeof ContractorsTypesEnum;

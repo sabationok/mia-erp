@@ -3,7 +3,7 @@ import useAppSettings from './useAppSettings.hook';
 import { useEffect, useState } from 'react';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { toast } from 'react-toastify';
-import { useAppServiceProvider } from './useAppServices';
+import { useAppServiceProvider } from './useAppServices.hook';
 
 const directoriesForLoading: { dirType: ApiDirType; createTreeData?: boolean }[] = [
   {
@@ -28,7 +28,7 @@ const directoriesForLoading: { dirType: ApiDirType; createTreeData?: boolean }[]
   },
   { dirType: ApiDirType.CONTRACTORS },
 ];
-const useLoadInitialAppData = ({
+const useLoadInitialAppDataHook = ({
   onLoading,
   onSuccess,
   onError,
@@ -61,11 +61,11 @@ const useLoadInitialAppData = ({
       try {
         await getAppActions();
 
-        await products.getAll();
+        await products.getAll({ data: { refresh: true } });
 
-        await priceManagement.getAll();
+        await priceManagement.getAll({ data: { refresh: true } });
 
-        await transactions.getAll();
+        await transactions.getAll({ data: { refresh: true } });
 
         Promise.all(
           directoriesForLoading.map(async ({ dirType, createTreeData }) => {
@@ -75,11 +75,10 @@ const useLoadInitialAppData = ({
             });
           })
         );
-
         setTimeout(() => {
           toast.dismiss(id);
           toast.success('App data loaded', { autoClose: 2000 });
-        }, 2000);
+        });
         onSuccess && onSuccess();
         setIsLoading(false);
       } catch (e) {
@@ -99,4 +98,4 @@ const useLoadInitialAppData = ({
 
   return load;
 };
-export default useLoadInitialAppData;
+export default useLoadInitialAppDataHook;

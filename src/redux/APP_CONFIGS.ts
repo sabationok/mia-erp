@@ -61,6 +61,7 @@ export enum ApiDirType {
   STATUS_REFUND = 'status_refund',
   STATUS_DELIVERY = 'status_delivery',
   CUSTOM_FIELDS = 'custom_fields',
+  TRANSPORTERS = 'transporters',
 }
 
 const transactionsApiEndpoints: ApiEndpointsMap = {

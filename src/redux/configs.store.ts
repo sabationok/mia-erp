@@ -40,17 +40,22 @@ export const persistorConfigs = {
   transactions: {
     key: 'transactions',
     storage: storageSession,
-    whitelist: [],
+    whitelist: ['transactions'],
   },
   products: {
     key: 'products',
     storage: storageSession,
-    whitelist: [],
+    whitelist: ['products'],
+  },
+  orders: {
+    key: 'orders',
+    storage: storageSession,
+    whitelist: ['orders'],
   },
   priceLists: {
     key: 'priceLists',
     storage: storageSession,
-    whitelist: [],
+    whitelist: ['priceLists'],
   },
   customRoles: {
     key: 'customRoles',
