@@ -2,6 +2,15 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import ModalPortal from './ModalPortal';
 import ModalComponent, { IModalSettings } from './ModalComponent';
 import { nanoid } from '@reduxjs/toolkit';
+import FormCreateTag from '../Forms/FormCreateTag';
+import FormCreateDirTreeComp from '../Forms/FormCreateDirTreeComp';
+import FormCreateActivity from '../Forms/FormCreateActivity';
+import FormCreateContractor from '../Forms/FormCreateContractor';
+import FormCreateTransaction from '../Forms/FormCreateTransaction';
+import FormCreateCategory from '../Forms/FormCreateCategory';
+import FormCreatePriceList from '../Forms/FormCreatePriceList';
+import FormCreateCustomRole from '../Forms/FormCreateCustomRole';
+import FormCreateCount from '../Forms/FormCreateCount';
 
 interface IModalProviderProps {
   children: React.ReactNode;
@@ -12,6 +21,38 @@ export interface IModalChildrenProps {
   title?: string;
   onClose: () => void;
 }
+
+export enum Modal {
+  FormCreateTag = 'FormCreateTag',
+  FormCreateActivity = 'FormCreateActivity',
+  FormCreateDirTreeComponent = 'FormCreateDirTreeComponent',
+  FormCreateContractor = 'FormCreateContractor',
+  FormCreateTransaction = 'FormCreateTransaction',
+  FormCreatePrice = 'FormCreatePrice',
+  FormCreateOrder = 'FormCreateOrder',
+  FormCreatePriceList = 'FormCreatePriceList',
+  FormCreateCustomRole = 'FormCreateCustomRole',
+  FormCreateCount = 'FormCreateCount',
+  FormCreateCategory = 'FormCreateCategory',
+  FormCreateCompany = 'FormCreateCompany',
+}
+
+export const ModalChildrenComponent = {
+  [Modal.FormCreateTag]: FormCreateTag,
+  [Modal.FormCreateDirTreeComponent]: FormCreateDirTreeComp,
+  [Modal.FormCreateActivity]: FormCreateActivity,
+  [Modal.FormCreateContractor]: FormCreateContractor,
+  [Modal.FormCreateTransaction]: FormCreateTransaction,
+  [Modal.FormCreatePrice]: FormCreateTag,
+  [Modal.FormCreateCategory]: FormCreateCategory,
+  [Modal.FormCreatePriceList]: FormCreatePriceList,
+  [Modal.FormCreateCustomRole]: FormCreateCustomRole,
+  [Modal.FormCreateCount]: FormCreateCount,
+
+  // [Modal.FormCreateTag]: FormCreateTag,
+};
+
+// export const ModalComponentProps: Record<keyof typeof ModalChildrenComponent, any> = {};
 
 export interface IModalRenderItemParams<P = any, S = any> {
   ModalChildren?: React.FC<P>;

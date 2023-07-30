@@ -1,14 +1,4 @@
-import TableList from 'components/TableList/TableList';
-import { takeFullGridArea } from './pagesStyles';
-import styled from 'styled-components';
-import AppGridPage from './AppGridPage';
-import { PagePathType } from '../../data/pages.data';
-
-type Props = {
-  path: PagePathType;
-};
-
-const PageOrders: React.FC<any> = (props: Props) => {
+export const useOrderTableConfigs = () => {
   // const service = useOrdersServiceHook();
   // const state = useOrdersSelector();
   // const { getAll } = service;
@@ -42,9 +32,7 @@ const PageOrders: React.FC<any> = (props: Props) => {
   //   }),
   //   [actionsCreator, filterParams, getAll, sortParams, state.orders]
   // );
-  // useEffect(() => {
-  //   console.log('render page orders');
-  // });
+  //
   // useEffect(() => {
   //   if (sortParams || filterParams) {
   //     return;
@@ -59,17 +47,10 @@ const PageOrders: React.FC<any> = (props: Props) => {
   //     }
   //   }
   // }, [filterParams, getAll, isLoading, sortParams, state.orders.length, tableConfig]);
-  return (
-    <AppGridPage path={props.path}>
-      <Page>
-        <TableList />
-      </Page>
-    </AppGridPage>
-  );
+  //
+  // return {
+  //   tableConfig,
+  //   sortParams,
+  //   filterParams,
+  // };
 };
-
-const Page = styled.div`
-  ${takeFullGridArea}
-`;
-
-export default PageOrders;

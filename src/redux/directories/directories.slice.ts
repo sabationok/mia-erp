@@ -21,7 +21,16 @@ const initialState: IDirectoriesState = {
     [ApiDirType.ACTIVITIES]: [],
     [ApiDirType.CONTRACTORS]: [],
     [ApiDirType.PROJECTS]: [],
-    [ApiDirType.DOCUMENTS]: [],
+    [ApiDirType.WORKERS]: [],
+    [ApiDirType.WAREHOUSES]: [],
+    [ApiDirType.TAGS]: [],
+    [ApiDirType.METHODS_SHIPMENT]: [],
+    [ApiDirType.METHODS_PAYMENT]: [],
+    [ApiDirType.METHODS_COMMUNICATION]: [],
+    [ApiDirType.STATUSES_SHIPMENT]: [],
+    [ApiDirType.STATUSES_ORDER]: [],
+    [ApiDirType.STATUSES_REFUND]: [],
+    [ApiDirType.STATUSES_PAYMENT]: [],
   },
 };
 

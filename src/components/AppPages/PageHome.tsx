@@ -187,7 +187,7 @@ const StButtonIcon = styled(ButtonIcon)`
 
   &::before {
     display: block;
-    content: '';
+    content: ' ';
     position: absolute;
     bottom: 0;
     left: 0;

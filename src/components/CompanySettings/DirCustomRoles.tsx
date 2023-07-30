@@ -23,7 +23,7 @@ export interface DirCustomRolesProps
   };
 }
 
-const DirCustomRoles: React.FC<DirCustomRolesProps> = ({ createParentTitle, actionsCreator, ...props }) => {
+const DirCustomRoles: React.FC<DirCustomRolesProps> = ({ createParentTitle, actionsCreator, dirType, ...props }) => {
   const { customRoles } = useCustomRolesSelector();
   const service = useCustomRolesService();
   const modalService = useModalProvider();
@@ -35,6 +35,7 @@ const DirCustomRoles: React.FC<DirCustomRolesProps> = ({ createParentTitle, acti
           findById,
           modalService,
           service,
+          dirType,
         })
       : {};
   }, [actionsCreator, modalService, service, customRoles]);

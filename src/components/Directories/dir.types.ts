@@ -50,7 +50,7 @@ export interface IDirInTreeProps<
   filterOptions?: FilterOpt<ItemType>[];
   type?: ItemType;
   createParentTitle?: string;
-  dirType: ApiDirType;
+  dirType: DirType;
   filterSearchPath?: keyof IBaseDirItem<ItemType>;
   filterDefaultValue?: ItemType;
   availableLevels?: number;
@@ -86,7 +86,7 @@ export type DirInTreeActionsCreatorOptions<
   Service = any
 > = {
   modalService: IModalProviderContext;
-  dirType?: DirType;
+  dirType: DirType;
   service: Service;
   type?: ItemType;
   findById?: (id: string) => ItemDataType | undefined;

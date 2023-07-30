@@ -50,12 +50,13 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
   } = useAppForm<IContractorFormData>({
     defaultValues: {
       ...data,
-      type: { value: type, label: type ? t(type) : type },
+      type: { value: type, label: type },
     },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
-  const typeOptions = useMemo(() => {
+
+  const filterOptions = useMemo(() => {
     return enumToArray(ContractorsTypesEnum).map(el => ({ label: translate(el), value: el }));
   }, []);
 
@@ -115,7 +116,7 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
             placeholder: t('type'),
             required: true,
             error: errors.type,
-            options: typeOptions,
+            options: filterOptions,
           })}
         />
 

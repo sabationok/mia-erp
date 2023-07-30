@@ -20,6 +20,7 @@ export const langUa = {
   [ContractorsTypesEnum.WORKER]: 'Робітник',
   [ContractorsTypesEnum.COMMISSION_AGENT]: 'Комісіонер',
   [ContractorsTypesEnum.CONSIGNOR]: 'Комітент',
+  [ContractorsTypesEnum.TRANSPORTER]: 'Перевізник',
 
   brand: 'Бренд',
   selectBrand: 'Оберіть бренд',

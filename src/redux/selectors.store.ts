@@ -9,7 +9,6 @@ import { IProductsState } from './products/products.slice';
 import { IPriceListsState } from './priceManagement/priceManagement.slice';
 import { ApiDirType } from './APP_CONFIGS';
 import { IBaseDirItem } from '../components/Directories/dir.types';
-import { IDirectoriesState } from './directories/directories.slice';
 import { IOrdersState } from './orders/orders.slice';
 
 export const useAuthSelector = () => useSelector<RootState, IAuthState>((state: RootState) => state.auth);
@@ -32,8 +31,6 @@ export const useDirectoriesSelector = <T = any, DT extends ApiDirType = any>(dir
   const state = useSelector((state: RootState) => state.directories);
 
   return { directory: state.directories[dirType] } as {
-    directory: IBaseDirItem<T, typeof dirType>[];
-    error: IDirectoriesState['error'];
-    isLoading: IDirectoriesState['isLoading'];
+    directory: IBaseDirItem<T, DT>[];
   };
 };

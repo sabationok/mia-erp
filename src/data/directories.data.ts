@@ -19,22 +19,31 @@ import { toast } from 'react-toastify';
 import DirTableComp, { DirTableCompProps } from '../components/Directories/DirTableComp';
 import FormCreateContractor from '../components/Forms/FormCreateContractor';
 import { createDataForReq } from '../utils/dataTransform';
-import { StorageItemFilterOption } from '../redux/products/products.types';
+import { StorageItemFilterOption, StorageItemTypeEnum } from '../redux/products/products.types';
 import FormCreateDirTreeComp from '../components/Forms/FormCreateDirTreeComp';
+import { enumToArray } from '../utils';
+import { ContractorsTypesEnum } from '../redux/contractors/contractors.types';
+import { FilterOpt } from '../components/ModalForm/ModalFilter';
+import { CategoryTrTypeEnum } from '../redux/directories/directories.types';
+import { CountsTypesEnum } from '../redux/directories/counts.types';
 
-export const categoriesFilterOptions: CategoryFilterOpt[] = [
-  { label: t('INCOMES'), value: 'INCOME' },
-  { label: t('TRANSFERS'), value: 'TRANSFER' },
-  { label: t('EXPENSES'), value: 'EXPENSE' },
-];
-export const countsFilterOptions: CountFilterOpt[] = [
-  { label: t('ACTIVES'), value: 'ACTIVE' },
-  { label: t('PASSIVES'), value: 'PASSIVE' },
-];
-export const StorageItemTypeFilterOptions: StorageItemFilterOption[] = [
-  { label: 'GOODS', value: 'GOODS' },
-  { label: 'SERVICE', value: 'SERVICE' },
-];
+export const tagsFilterOptions: FilterOpt<ContractorsTypesEnum>[] = enumToArray(ContractorsTypesEnum).map(type => ({
+  label: type,
+  value: type,
+}));
+export const categoriesFilterOptions: CategoryFilterOpt[] = enumToArray(CategoryTrTypeEnum).map(type => ({
+  label: t(type),
+  value: type,
+}));
+
+export const countsFilterOptions: CountFilterOpt[] = enumToArray(CountsTypesEnum).map(type => ({
+  label: t(type),
+  value: type,
+}));
+export const ProductTypeFilterOptions: StorageItemFilterOption[] = enumToArray(StorageItemTypeEnum).map(type => ({
+  label: type,
+  value: type,
+}));
 
 export interface IDirectory<P extends DirBaseProps = any> {
   title: string;
@@ -205,7 +214,7 @@ const ProductCategoriesProps: DirProductCategoriesProps = {
   createParentTitle: t('createParentCategory'),
   dirType: ApiDirType.CATEGORIES_PROD,
   actionsCreator: CategoriesProps.actionsCreator as any,
-  filterOptions: StorageItemTypeFilterOptions,
+  filterOptions: ProductTypeFilterOptions,
   filterSearchPath: 'type',
   filterDefaultValue: 'GOODS',
   availableLevels: 2,
@@ -312,7 +321,7 @@ const activitiesDir: IDirectory<DirActivitiesProps> = {
 const brandsProps: DirActivitiesProps = {
   title: t(ApiDirType.BRANDS),
   createParentTitle: t('createDirParentItem'),
-  dirType: ApiDirType.BRANDS,
+  dirType: ApiDirType.BRANDS as any,
   fillHeight: true,
   availableLevels: 1,
   actionsCreator: CategoriesProps.actionsCreator as any,
@@ -401,6 +410,11 @@ const directories: Partial<IDirectory>[] = [
     ModalChildren: DirTreeComp,
     modalChildrenProps: {
       dirType: ApiDirType.TAGS,
+      createParentTitle: t('createDirParentItem'),
+      filterOptions: tagsFilterOptions,
+      fillHeight: true,
+      availableLevels: 1,
+      actionsCreator: CategoriesProps.actionsCreator as any,
     },
   },
   {

@@ -16,12 +16,11 @@ const UsersProps: DirUsersProps = {
 };
 const CustomRolesProps: DirCustomRolesProps = {
   title: 'Ролі',
-  dirType: ApiDirType.TYPE,
+  dirType: ApiDirType.DEFAULT,
   createParentTitle: 'Створити роль',
   fillHeight: true,
   actionsCreator: ({ service, modalService, findById }) => ({
     onUpdateItem: id => {
-      console.log(findById ? findById(id) : undefined);
       const modal = modalService.handleOpenModal({
         ModalChildren: FormCreateCustomRole,
         modalChildrenProps: {
@@ -58,11 +57,58 @@ const CustomRolesProps: DirCustomRolesProps = {
     onChangeArchiveStatus: () => {},
   }),
 };
+// const paymentMethodsProps: DirPaymentMethodsProps = {
+//   title: 'Способи оплати',
+//   dirType: ApiDirType.METHODS_PAYMENT,
+//   createParentTitle: 'Створити спосіб оплати',
+//   fillHeight: true,
+//   actionsCreator: ({ service, modalService, dirType }) => ({
+//     onCreateParent: () => {
+//       modalService.handleOpenModal({
+//         ModalChildren: FormCreatePaymentMethod,
+//         modalChildrenProps: {
+//           title: 'Створити спосіб оплати',
+//           onSubmit: data => {
+//             console.log('paymentMethodsProps submit data', data);
+//
+//             service.create({
+//               data: { data, dirType },
+//               onSuccess: rd => {
+//                 console.log('New payment method created');
+//               },
+//             });
+//           },
+//         },
+//       });
+//     },
+//   }),
+// };
+// const paymentMethods = {
+//   title: paymentMethodsProps.title,
+//   disabled: true,
+//   iconId: iconId.bank,
+//   ModalChildren: DirPaymentMethods,
+//   modalChildrenProps: paymentMethodsProps,
+// };
+// const shipmentMethodsProps: DirPaymentMethodsProps = {
+//   title: 'Способи відвантажень',
+//   dirType: ApiDirType.METHODS_SHIPMENT as any,
+//   createParentTitle: 'Створити спосіб відвантаження',
+//   fillHeight: true,
+//   actionsCreator: () => ({}),
+// };
+// const shipmentMethods: any = {
+//   title: shipmentMethodsProps.title,
+//   dirType: ApiDirType.METHODS_SHIPMENT,
+//   createParentTitle: shipmentMethodsProps.createParentTitle,
+//   ModalChildren: DirTreeComp,
+//   modalChildrenProps: shipmentMethodsProps,
+// };
 const subCompanies = {
   title: 'Дочірні компанії',
   disabled: true,
-  ModalChildren: ModalForm,
   iconId: iconId.bank,
+  ModalChildren: ModalForm,
   modalChildrenProps: {
     title: 'Дочірні компанії',
     fillHeight: true,

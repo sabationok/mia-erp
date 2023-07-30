@@ -74,7 +74,7 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
           className={current === idx ? 'filterBtn active' : 'filterBtn'}
           onClick={handleSelectOpt(idx, opt)}
         >
-          <span>{opt?.label}</span>
+          <span className={'inner'}>{opt?.label}</span>
           {opt.extraLabel || null}
         </StButtonIcon>
       )),
@@ -91,14 +91,23 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
 const Filter = styled.div<{ gridRepeat?: number }>`
   display: grid;
   align-items: center;
-  grid-template-columns: ${({ gridRepeat }) => `repeat(${gridRepeat || 1}, 1fr)`};
+  grid-template-columns: ${({ gridRepeat = 1 }) => `repeat(${gridRepeat}, minmax(150px, 1fr))`};
 
   height: 44px;
 
+  overflow: auto;
+
+  width: 480px;
+  max-width: 100%;
   background-color: ${({ theme }) => theme.backgroundColorSecondary};
 
   border-right: 1px solid ${({ theme }) => theme.modalBorderColor};
   border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
+
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
 `;
 
 const StButtonIcon = styled(ButtonIcon)`
@@ -122,6 +131,14 @@ const StButtonIcon = styled(ButtonIcon)`
   padding: 6px 12px;
 
   color: ${({ theme }) => theme.fontColorHeader};
+
+  & .inner {
+    text-overflow: ellipsis;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
+  }
 
   &::before {
     display: block;

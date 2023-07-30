@@ -45,7 +45,7 @@ export interface IOrderSlot extends IPriceListItem {
 
 export interface IOrderInvoice extends IBase {
   order?: IOrder;
-  payments?: IOrderPayment;
+  payments?: IOrderPayment[];
   payer?: IBaseDirItem<any, ApiDirType.CONTRACTORS>;
   bankInfo?: any;
 }
@@ -76,15 +76,17 @@ export interface IOrder extends IOrderBase {
   editor?: IManager;
   manager?: IManager;
 
-  customer?: IBaseDirItem<any, ApiDirType.CONTRACTORS>;
-  receiver?: IBaseDirItem<any, ApiDirType.CONTRACTORS>;
+  // customer?: IBaseDirItem<any, ApiDirType.CONTRACTORS>;
+  // receiver?: IBaseDirItem<any, ApiDirType.CONTRACTORS>;
+
+  customer?: string;
+  receiver?: string;
 
   destination?: IDestination;
   transporter?: ITransporter;
 
   slots?: IOrderSlot[];
   invoices?: IOrderInvoice[];
-  payments?: IOrderPayment[];
   shipments?: IOrderShipment[];
 
   comment?: string;
@@ -93,7 +95,7 @@ export interface IOrder extends IOrderBase {
 
 export type OrderImage = { img_preview?: string; img_1x: string; img_2x: string; webp: string };
 
-export interface IOrderFroReq extends Partial<Record<keyof IOrder, any>> {
+export interface IOrderForReq extends Partial<Record<keyof IOrder, any>> {
   type?: OrderType;
   customer?: OnlyUUID;
   receiver?: OnlyUUID;
@@ -114,7 +116,7 @@ export interface IOrderReqData {
 
 export interface IOrderReqData {
   _id?: string;
-  data: IOrderFroReq;
+  data: IOrderForReq;
 }
 
 export interface IAllOrdersRes extends AppResponse<IOrder[]> {}
