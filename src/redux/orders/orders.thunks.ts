@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { IOrder, IOrderReqData } from '../orders/orders.types';
+import { IOrder, IOrderReqData } from './orders.types';
 import { ThunkPayload } from '../store.store';
 import { AppQueryParams, createApiCall, OrdersApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
@@ -23,6 +23,7 @@ export const getAllOrdersThunk = createAsyncThunk<
 
     onSuccess && onSuccess(response.data.data);
 
+    onLoading && onLoading(false);
     return { data: response.data.data, refresh: data?.refresh };
   } catch (error) {
     onError && onError(error);

@@ -1,14 +1,16 @@
 // type EndpointCreator = (...args: any[]) => string;
 
 export enum API_BASE_ROUTES {
+  APP = 'APP',
+  AUTH = '/auth',
   PERMISSIONS = '/permissions',
   COMPANIES = '/companies',
-  AUTH = '/auth',
   DIRECTORIES = '/directories',
   TRANSACTIONS = '/transactions',
   CUSTOM_ROLES = '/roles',
   PRODUCTS = '/products',
-  APP = 'APP',
+  ORDERS = '/orders',
+  REFUNDS = '/refunds',
   PRICE_MANAGEMENT = '/priceManagement',
 }
 
@@ -35,10 +37,18 @@ export enum Endpoints {
   softDeleteItemFromList = 'softDeleteItemFromList',
   addItemToList = 'addItemToList',
   updateListItem = 'updateListItem',
-  updateList = 'updateList',
   insert = 'insert',
   getAllPrices = 'getAllPrices',
   getDefaultDirectories = 'getDefaultDirectories',
+  updateList = 'updateList',
+
+  getAllOrderSlots = 'getAllOrderSlots',
+  addSlotToOrder = 'addSlotToOrder',
+  removeSlotFromOrder = 'removeSlotFromOrder',
+  softDeleteOrderSlot = 'softDeleteOrderSlot',
+  addItemToOrderSlot = 'addItemToOrderSlot',
+  removeItemFromOrderSlot = 'removeItemFromOrderSlot',
+  softDeleteOrderSlotItem = 'softDeleteOrderSlotItem',
 }
 
 export type GetEndpoint = (...args: any[]) => string;
@@ -153,7 +163,7 @@ const customRoles: ApiEndpointsMap = {};
 const appSettings: ApiEndpointsMap = {
   getAllActions: () => `${API_BASE_ROUTES.APP}/getAllActions`,
 };
-const priceManagamentEndpoins: ApiEndpointsMap = {
+const priceManagementEndpoints: ApiEndpointsMap = {
   [Endpoints.getAll]: () => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.getAll}`,
   [Endpoints.getById]: (listId: string) => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.getById}/${listId}`,
   [Endpoints.createList]: () => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.createList}`,
@@ -167,6 +177,22 @@ const priceManagamentEndpoins: ApiEndpointsMap = {
   [Endpoints.getAllPrices]: () => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.getAllPrices}`,
 };
 
+const ordersEndpoints: ApiEndpointsMap = {
+  [Endpoints.getAll]: () => `${API_BASE_ROUTES.ORDERS}/${Endpoints.getAll}`,
+  [Endpoints.getById]: (orderId: string) => `${API_BASE_ROUTES.ORDERS}/${Endpoints.getById}/${orderId}`,
+  [Endpoints.create]: () => `${API_BASE_ROUTES.ORDERS}/${Endpoints.create}`,
+  [Endpoints.addItemToOrderSlot]: (orderId: string) =>
+    `${API_BASE_ROUTES.ORDERS}/${Endpoints.addItemToOrderSlot}/${orderId}`,
+  [Endpoints.softDeleteOrderSlot]: (orderId: string, orderSlotId: string) =>
+    `${API_BASE_ROUTES.ORDERS}/${Endpoints.softDeleteOrderSlot}/${orderId}/${orderSlotId}`,
+  [Endpoints.softDeleteOrderSlotItem]: (orderId: string, orderSlotId: string, slotItemId: string) =>
+    `${API_BASE_ROUTES.ORDERS}/${Endpoints.softDeleteOrderSlotItem}/${orderId}/${orderSlotId}/${slotItemId}`,
+  [Endpoints.updateListItem]: (listId: string, priceId: string) =>
+    `${API_BASE_ROUTES.ORDERS}/${Endpoints.updateListItem}/${listId}/${priceId}`,
+  [Endpoints.updateById]: (orderId: string) => `${API_BASE_ROUTES.ORDERS}/${Endpoints.updateById}/${orderId}`,
+  [Endpoints.getAllOrderSlots]: () => `${API_BASE_ROUTES.ORDERS}/${Endpoints.getAllOrderSlots}`,
+};
+
 const APP_CONFIGS = {
   endpoints: {
     permissions: permissionsApiEndpoints,
@@ -176,7 +202,8 @@ const APP_CONFIGS = {
     customRoles: customRoles,
     transactions: transactionsApiEndpoints,
     products: productsApiEndpoints,
-    priceManagamentEndpoins,
+    priceManagementEndpoints,
+    ordersEndpoints,
     appSettings,
   },
 };

@@ -12,6 +12,7 @@ import { ordersSearchParams, ordersTableColumns } from '../../data/orders.data';
 import useOrdersServiceHook from '../../hooks/useOrdersService.hook';
 import { IOrder } from '../../redux/orders/orders.types';
 import useOrdersActionsCreatorHook from '../../hooks/useOrdersActionsCreator.hook';
+// import useOrdersActionsCreatorHook from '../../hooks/useOrdersActionsCreator.hook';
 
 type Props = {
   path: PagePathType;
@@ -75,7 +76,7 @@ export const useOrderTableConfigs = () => {
   };
 };
 const PageOrders: React.FC<any> = (props: Props) => {
-  const { tableConfig, isLoading, sortParams, filterParams } = useOrderTableConfigs();
+  const { tableConfig, isLoading } = useOrderTableConfigs();
 
   return (
     <AppGridPage path={props.path}>

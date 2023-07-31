@@ -1,19 +1,20 @@
-import { ContractorsTypesEnum, IContractor } from '../redux/contractors/contractors.types';
+import { IContractor } from '../redux/contractors/contractors.types';
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { SelectItem } from '../components/TableList/tableTypes.types';
+import t from '../lang';
 
-export const contractorsColumns: CellTittleProps[] = [
+export const contractorsColumns: CellTittleProps<IContractor>[] = [
   {
     top: { name: 'Назва', path: 'label' },
     bottom: { name: 'ІПН/ЄДРПОУ', path: 'taxCode' },
-    width: '170px',
-    action: 'cellDbl',
+    width: '240px',
+    action: 'doubleDataWithAvatar',
   },
   {
-    top: { name: 'Тип', path: 'type' },
+    top: { name: 'Тип', path: 'type', getData: d => t(d.type) },
     bottom: { name: 'Статус', path: 'status' },
     width: '120px',
-    action: 'status',
+    action: 'valueByPath',
   },
   {
     top: { name: 'Емейл', path: 'email', uppercase: false },
@@ -24,7 +25,7 @@ export const contractorsColumns: CellTittleProps[] = [
   {
     top: { name: 'Локація', path: 'location' },
     width: '170px',
-    action: 'cellDbl',
+    action: 'valueByPath',
   },
   {
     top: { name: 'Теги', path: 'tags' },
@@ -34,39 +35,13 @@ export const contractorsColumns: CellTittleProps[] = [
   {
     top: { name: 'Коментар', path: 'description' },
     width: '170px',
-    action: 'cellDbl',
+    action: 'valueByPath',
   },
   {
-    top: { name: 'Створено', align: 'center', path: 'createdAt', sort: false },
-    bottom: { name: 'Оновлено', align: 'center', path: 'updatedAt', sort: false },
+    top: { name: 'Створено', align: 'center', path: 'createdAt' },
+    bottom: { name: 'Оновлено', align: 'center', path: 'updatedAt' },
     width: '150px',
     action: 'dateSimple',
-  },
-];
-export const contractorsMockData: IContractor[] = [
-  {
-    _id: 'sdvs4f6sf5vsf',
-    label: 'ТОВ "Мітла"',
-    type: ContractorsTypesEnum.FIN_MANAGER,
-    email: 'mitla@mail.com',
-    phone: '+380670676795',
-    tags: ['тай таке', 'Ті що треба', 'VIP', 'Оптові', 'Основні', 'Надійні'],
-  },
-  {
-    _id: 'аdvs4f6sf5vsf',
-    label: 'ТОВ "Будмат"',
-    type: ContractorsTypesEnum.COUNTER,
-    email: 'budmat@mail.com',
-    phone: '+380670676795',
-    tags: ['VIP', 'Оптові', 'Основні', 'Надійні'],
-  },
-  {
-    _id: 'іdvs4f6sf5vsf',
-    label: 'ФОП Тарасенко',
-    type: ContractorsTypesEnum.SUPPLIER,
-    email: 'tarasenko@mail.com',
-    phone: '+380670676795',
-    tags: ['tag1', 'tag2'],
   },
 ];
 

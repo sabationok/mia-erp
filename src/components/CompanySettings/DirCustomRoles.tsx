@@ -9,12 +9,11 @@ import { useCustomRolesSelector } from '../../redux/selectors.store';
 
 import { DirInTreeActionsCreatorOptions, IDirInTreeProps } from '../Directories/dir.types';
 import { ICustomRole } from '../../redux/customRoles/customRoles.types';
+import { ApiDirType } from '../../redux/APP_CONFIGS';
 
 export interface DirCustomRolesProps
   extends Omit<IDirInTreeProps<any, any, ICustomRole, ICustomRole, ICustomRole>, 'actionsCreator'> {
-  actionsCreator: (
-    options: DirInTreeActionsCreatorOptions<any, any, ICustomRole, ICustomRole, ICustomRole, CustomRolesService>
-  ) => {
+  actionsCreator: (options: DirInTreeActionsCreatorOptions<any, any, ICustomRole, CustomRolesService>) => {
     onCreateChild?: (parentId: string) => void;
     onCreateParent?: () => void;
     onUpdateItem?: (id: string) => void;
@@ -35,6 +34,7 @@ const DirCustomRoles: React.FC<DirCustomRolesProps> = ({ createParentTitle, acti
           findById,
           modalService,
           service,
+          dirType: ApiDirType.DEFAULT,
         })
       : {};
   }, [actionsCreator, modalService, service, customRoles]);

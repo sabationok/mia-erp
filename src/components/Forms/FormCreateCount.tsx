@@ -13,6 +13,7 @@ import { DirectoriesFormProps } from '../Directories/dir.types';
 import { useAppForm } from '../../hooks';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { pick } from 'lodash';
+import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 
 export interface FormCreateCountProps extends DirectoriesFormProps<CountType, ICount, ICountFormData> {}
 
@@ -64,7 +65,17 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
   }
 
   return (
-    <ModalForm onSubmit={formEventWrapper(onSubmit)} {...props}>
+    <ModalForm
+      onSubmit={formEventWrapper(onSubmit)}
+      {...props}
+      extraFooter={
+        <FormAfterSubmitOptions
+          toggleOption={toggleAfterSubmitOption}
+          closeAfterSave={closeAfterSave}
+          clearAfterSave={clearAfterSave}
+        />
+      }
+    >
       <Inputs>
         <InputLabel label={t('type')} direction={'vertical'} error={errors.type} disabled>
           <InputText placeholder={type ? translate(type) : type} disabled />

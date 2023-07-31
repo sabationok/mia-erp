@@ -10,16 +10,16 @@ import InputText from '../atoms/Inputs/InputText';
 import * as _ from 'lodash';
 import { useCallback, useEffect } from 'react';
 import { IProduct, IStorageItem } from '../../redux/products/products.types';
-import * as yup from 'yup';
+// import * as yup from 'yup';
 import { usePriceListsSelector } from '../../redux/selectors.store';
 import CustomSelect from '../atoms/Inputs/CustomSelect';
 
-const validation = yup.object().shape({
-  cost: yup.number(),
-  price: yup.number(),
-});
+// const validation = yup.object().shape({
+//   cost: yup.number(),
+//   price: yup.number(),
+// });
 
-export interface FormCreatePricesProps
+export interface FormCreatePriceProps
   extends Omit<ModalFormProps<any, any, IPriceListItem>, 'onSubmit' | 'afterSubmit'> {
   list?: OnlyUUID;
   product?: IProduct | IStorageItem;
@@ -32,7 +32,7 @@ export interface FormCreatePricesProps
   ) => void;
 }
 
-const FormCreatePrice: React.FC<FormCreatePricesProps> = ({ defaultState, product, list, onSubmit, ...props }) => {
+const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, product, list, onSubmit, ...props }) => {
   const { formValues, register, setValue, handleSubmit, registerSelect } = useAppForm<IPriceListItem>({
     defaultValues: { ...defaultState, product },
   });

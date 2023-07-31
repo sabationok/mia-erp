@@ -3,7 +3,7 @@ import Header from './Header';
 import styled from 'styled-components';
 import SideBar from 'components/SideBarLeft/SideBar';
 import useAppParams from '../../hooks/useAppParams.hook';
-import usePermissionsServiceHook, { usePermissionsSelector } from '../../redux/permissions/usePermissionsService.hook';
+import usePermissionsServiceHook, { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
 
 interface ILayoutCTX {}
 

@@ -1,4 +1,4 @@
-import { usePermissionsSelector } from '../redux/permissions/usePermissionsService.hook';
+import { usePermissionsSelector } from './usePermissionsService.hook';
 import { useMemo } from 'react';
 import { pages } from '../data';
 import { IAppPage } from '../data/pages.data';

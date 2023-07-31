@@ -16,15 +16,15 @@ import { ordersSlice } from './orders/orders.slice';
 const rootReducer = combineReducers({
   [authSlice.name]: persistReducer(persistorConfigs.auth, authSlice.reducer),
   [usersSlice.name]: usersSlice.reducer,
+  [directoriesSlice.name]: persistReducer(persistorConfigs.directories, directoriesSlice.reducer),
   [appSettingsSlice.name]: persistReducer(persistorConfigs.appSettings, appSettingsSlice.reducer),
+  [permissionsSlice.name]: persistReducer(persistorConfigs.permissions, permissionsSlice.reducer),
   [appPageSlice.name]: persistReducer(persistorConfigs.pageSettings, appPageSlice.reducer),
   [transactionsSlice.name]: persistReducer(persistorConfigs.transactions, transactionsSlice.reducer),
   [productsSlice.name]: persistReducer(persistorConfigs.products, productsSlice.reducer),
-  [customRolesSlice.name]: persistReducer(persistorConfigs.customRoles, customRolesSlice.reducer),
-  [permissionsSlice.name]: persistReducer(persistorConfigs.permissions, permissionsSlice.reducer),
-  [directoriesSlice.name]: persistReducer(persistorConfigs.directories, directoriesSlice.reducer),
-  [priceManagementSlice.name]: persistReducer(persistorConfigs.priceLists, priceManagementSlice.reducer),
   [ordersSlice.name]: persistReducer(persistorConfigs.orders, ordersSlice.reducer),
+  [customRolesSlice.name]: persistReducer(persistorConfigs.customRoles, customRolesSlice.reducer),
+  [priceManagementSlice.name]: persistReducer(persistorConfigs.priceLists, priceManagementSlice.reducer),
 });
 
 export type RootReducerType = typeof rootReducer;

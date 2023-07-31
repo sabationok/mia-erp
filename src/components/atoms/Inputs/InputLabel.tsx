@@ -20,7 +20,7 @@ const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = (
     label,
     className,
     disabled,
-    direction,
+    direction = 'vertical',
     uppercase,
     helperText,
     error,

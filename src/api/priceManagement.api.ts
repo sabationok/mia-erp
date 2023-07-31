@@ -12,7 +12,7 @@ import { AppQueryParams } from './index';
 
 export class PriceManagementApi {
   private static api = baseApi;
-  private static endpoints = APP_CONFIGS.endpoints.priceManagamentEndpoins;
+  private static endpoints = APP_CONFIGS.endpoints.priceManagementEndpoints;
 
   public static async createPriceList(data?: IPriceListReqData): Promise<IPriceListRes> {
     return this.api.post(this.endpoints.createList(), data?.data);

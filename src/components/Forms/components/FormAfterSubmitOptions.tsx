@@ -67,7 +67,7 @@ const FormAfterSubmitOptions: React.FC<FormAfterSubmitOptionsProps> = ({ toggleO
         </Label>
       </Container>
     );
-  }, [clearAfterSave, closeAfterSave, toggleOption, toggleStateOption]);
+  }, [clearAfterSave, closeAfterSave, toggleStateOption]);
 };
 
 const Container = styled(FlexBox)`

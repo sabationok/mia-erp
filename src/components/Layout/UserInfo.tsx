@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import ProfileCard from 'components/atoms/ProfileCard/ProfileCard';
-import usePermissionsServiceHook, { usePermissionsSelector } from '../../redux/permissions/usePermissionsService.hook';
+import usePermissionsServiceHook, { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
 import FlexBox from '../atoms/FlexBox';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import Text from '../atoms/Text';

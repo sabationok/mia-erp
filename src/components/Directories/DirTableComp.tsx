@@ -32,9 +32,9 @@ export interface DirTableCompProps<
 
 const DirTableComp: React.FC<DirTableCompProps> = ({ type, dirType, getTableSettings, ...props }) => {
   const modalService = useModalProvider();
-  const dirService = useDirService();
+  const service = useDirService();
   const tableData = useDirectoriesSelector(dirType).directory;
-  const [isLoading, _setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
@@ -42,7 +42,7 @@ const DirTableComp: React.FC<DirTableCompProps> = ({ type, dirType, getTableSett
     if (getTableSettings) {
       return {
         ...getTableSettings({
-          dirService,
+          service,
           modalService,
           type,
           sortParams,
@@ -54,7 +54,7 @@ const DirTableComp: React.FC<DirTableCompProps> = ({ type, dirType, getTableSett
       };
     }
     return {};
-  }, [dirService, dirType, filterParams, getTableSettings, modalService, sortParams, type]);
+  }, [service, dirType, filterParams, getTableSettings, modalService, sortParams, type]);
   // useEffect(() => {
   //   getAllByDirType({
   //     data: { dirType, refresh: true, params: { isArchived: false, createTreeData: false, sortParams, filterParams } },

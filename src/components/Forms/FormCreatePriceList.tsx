@@ -1,10 +1,7 @@
 import {
   IPriceList,
-  IPriceListItem,
-  IPriceListItemReqData,
   IPriceListReqData,
   PriceListDto,
-  PriceListItemDto,
   PriceListType,
 } from '../../redux/priceManagement/priceManagement.types';
 import ModalForm, { ModalFormProps } from '../ModalForm';
@@ -17,12 +14,11 @@ import InputText from '../atoms/Inputs/InputText';
 import translate from '../../lang';
 import FormCreateInner from './components/FormCreateInner';
 import * as React from 'react';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
-import { usePriceListsSelector } from '../../redux/selectors.store';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 
-export interface PriceListFormProps extends Omit<ModalFormProps<PriceListType>, 'onSubmit' | 'afterSubmit'> {
+export interface FormCreatePriceListProps extends Omit<ModalFormProps<PriceListType>, 'onSubmit' | 'afterSubmit'> {
   defaultData?: Partial<IPriceList>;
   edit?: boolean;
   onSubmit?: AppSubmitHandler<
@@ -34,65 +30,7 @@ export interface PriceListFormProps extends Omit<ModalFormProps<PriceListType>, 
   >;
 }
 
-export interface FormCreatePriceProps extends Omit<ModalFormProps<PriceListType>, 'onSubmit' | 'afterSubmit'> {
-  defaultState?: Partial<IPriceListItem>;
-  onSubmit?: AppSubmitHandler<IPriceListItemReqData>;
-  type?: PriceListType;
-}
-
-const usePriceListById = (_id?: string) => {
-  const { lists } = usePriceListsSelector();
-  return useMemo(() => {
-    return lists.find(list => list._id === _id);
-  }, [_id, lists]);
-};
-
-const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, type, onSubmit, ...props }) => {
-  const {
-    formState: { errors, isValid },
-    formValues,
-    register,
-    registerSelect,
-    clearAfterSave,
-    closeAfterSave,
-    toggleAfterSubmitOption,
-    setValue,
-    handleSubmit,
-  } = useAppForm<PriceListItemDto>();
-  const onValidSubmit = (data: PriceListItemDto) =>
-    onSubmit &&
-    onSubmit(
-      {
-        _id: defaultState?._id,
-        data,
-      },
-      {
-        clearAfterSave,
-        closeAfterSave,
-      }
-    );
-
-  return (
-    <ModalForm fitContentV isValid {...props} onSubmit={handleSubmit(onValidSubmit)}>
-      <FlexBox gap={4} padding={'0 16px 16px'}>
-        <InputLabel label={translate('label')} direction={'vertical'} error={errors.label} required>
-          <InputText placeholder={translate('label')} {...register('label')} required autoFocus />
-        </InputLabel>
-        {type === 'sales' && (
-          <InputLabel label={translate('price')} direction={'vertical'} error={errors.price} required>
-            <InputText placeholder={translate('price')} {...register('price')} required autoFocus />
-          </InputLabel>
-        )}
-        {type === 'purchases' && (
-          <InputLabel label={translate('cost')} direction={'vertical'} error={errors.cost} required>
-            <InputText placeholder={translate('cost')} {...register('cost')} required autoFocus />
-          </InputLabel>
-        )}
-      </FlexBox>
-    </ModalForm>
-  );
-};
-const FormCreatePriceList: React.FC<PriceListFormProps> = ({
+const FormCreatePriceList: React.FC<FormCreatePriceListProps> = ({
   filterOptions,
   onSubmit,
   defaultData,
@@ -100,12 +38,11 @@ const FormCreatePriceList: React.FC<PriceListFormProps> = ({
   ...props
 }) => {
   // const modalService = useModalProvider();
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [isSuccess] = useState(false);
   // const [currentList, setCurrentList] = useState<IPriceList | undefined>();
   // const currentList = usePriceListById();
   const {
     formState: { errors, isValid },
-    formValues,
     register,
     // registerSelect,
     clearAfterSave,
@@ -193,3 +130,54 @@ const FormCreatePriceList: React.FC<PriceListFormProps> = ({
 };
 
 export default FormCreatePriceList;
+//
+// const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, type, onSubmit, ...props }) => {
+//   const {
+//     formState: { errors, isValid },
+//     formValues,
+//     register,
+//     registerSelect,
+//     clearAfterSave,
+//     closeAfterSave,
+//     toggleAfterSubmitOption,
+//     setValue,
+//     handleSubmit,
+//   } = useAppForm<PriceListItemDto>();
+//   const onValidSubmit = (data: PriceListItemDto) =>
+//     onSubmit &&
+//     onSubmit(
+//       {
+//         _id: defaultState?._id,
+//         data,
+//       },
+//       {
+//         clearAfterSave,
+//         closeAfterSave,
+//       }
+//     );
+//
+//   return (
+//     <ModalForm fitContentV isValid {...props} onSubmit={handleSubmit(onValidSubmit)}>
+//       <FlexBox gap={4} padding={'0 16px 16px'}>
+//         <InputLabel label={translate('label')} direction={'vertical'} error={errors.label} required>
+//           <InputText placeholder={translate('label')} {...register('label')} required autoFocus />
+//         </InputLabel>
+//         {type === 'sales' && (
+//           <InputLabel label={translate('price')} direction={'vertical'} error={errors.price} required>
+//             <InputText placeholder={translate('price')} {...register('price')} required autoFocus />
+//           </InputLabel>
+//         )}
+//         {type === 'purchases' && (
+//           <InputLabel label={translate('cost')} direction={'vertical'} error={errors.cost} required>
+//             <InputText placeholder={translate('cost')} {...register('cost')} required autoFocus />
+//           </InputLabel>
+//         )}
+//       </FlexBox>
+//     </ModalForm>
+//   );
+// };
+// export interface FormCreatePriceProps extends Omit<ModalFormProps<PriceListType>, 'onSubmit' | 'afterSubmit'> {
+//   defaultState?: Partial<IPriceListItem>;
+//   onSubmit?: AppSubmitHandler<IPriceListItemReqData>;
+//   type?: PriceListType;
+// }

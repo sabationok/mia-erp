@@ -43,7 +43,7 @@ const useStorageActionsCreator = (): StorageActionsCreator => {
         disabled: !ctx.selectedRow?._id,
         type: 'onlyIcon',
         onClick: () => {
-          const modal = modals.handleOpenModal({
+          modals.handleOpenModal({
             ModalChildren: ProductOverview,
             modalChildrenProps: {
               title: 'Перегляд продукту',

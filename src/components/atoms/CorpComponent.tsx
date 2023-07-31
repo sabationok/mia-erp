@@ -1,5 +1,5 @@
 import React from 'react';
-import usePermissionsServiceHook from '../../redux/permissions/usePermissionsService.hook';
+import usePermissionsServiceHook from '../../hooks/usePermissionsService.hook';
 
 const CorpComponent: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const { isCurrentValid } = usePermissionsServiceHook();

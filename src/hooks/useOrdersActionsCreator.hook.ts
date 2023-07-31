@@ -2,8 +2,7 @@ import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { ITableListContext, TableActionCreator } from '../components/TableList/tableTypes.types';
 import { IOrder, OrderFilterOption, OrderTypeEnum } from '../redux/orders/orders.types';
-import FormCreateOrder from '../components/Forms/FormCreateOrder';
-import { useAppServiceProvider } from './useAppServices.hook';
+import { Modals } from '../components/ModalProvider/Modals';
 
 const orderFilterOptions: OrderFilterOption[] = [
   {
@@ -15,10 +14,10 @@ const orderFilterOptions: OrderFilterOption[] = [
     value: OrderTypeEnum.SET,
   },
 ];
-export type PriceManagementActionsCreator = TableActionCreator<IOrder>;
-const useOrdersActionsCreatorHook = (): PriceManagementActionsCreator => {
+export type OrdersActionsCreator = TableActionCreator<IOrder>;
+const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
   const modals = useModalProvider();
-  const { orders } = useAppServiceProvider();
+  // const { orders } = useAppServiceProvider();
 
   return useCallback(
     (ctx: ITableListContext<IOrder>) => [
@@ -36,8 +35,8 @@ const useOrdersActionsCreatorHook = (): PriceManagementActionsCreator => {
         disabled: !ctx?.selectedRow?._id,
         onClick: () => {
           modals.handleOpenModal({
-            ModalChildren: FormCreateOrder,
-            modalChildrenProps: {
+            Modal: Modals.FormCreateOrder,
+            props: {
               title: 'Edit order',
               filterOptions: orderFilterOptions,
             },
@@ -50,8 +49,8 @@ const useOrdersActionsCreatorHook = (): PriceManagementActionsCreator => {
         disabled: !ctx?.selectedRow?._id,
         onClick: () => {
           modals.handleOpenModal({
-            ModalChildren: FormCreateOrder,
-            modalChildrenProps: {
+            Modal: Modals.FormCreateOrder,
+            props: {
               title: `Copy order: ${ctx?.selectedRow?._id}`,
               filterOptions: orderFilterOptions,
             },
@@ -65,8 +64,8 @@ const useOrdersActionsCreatorHook = (): PriceManagementActionsCreator => {
         type: 'onlyIconFilled',
         onClick: () => {
           modals.handleOpenModal({
-            ModalChildren: FormCreateOrder,
-            modalChildrenProps: {
+            Modal: Modals.FormCreateOrder,
+            props: {
               title: `Create order`,
               filterOptions: orderFilterOptions,
             },

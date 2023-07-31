@@ -2,6 +2,8 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import ModalPortal from './ModalPortal';
 import ModalComponent, { IModalSettings } from './ModalComponent';
 import { nanoid } from '@reduxjs/toolkit';
+import { ModalChildrenMap, ModalChildrenProps, Modals } from './Modals';
+import { toast } from 'react-toastify';
 
 interface IModalProviderProps {
   children: React.ReactNode;
@@ -13,8 +15,10 @@ export interface IModalChildrenProps {
   onClose: () => void;
 }
 
-export interface IModalRenderItemParams<P = any, S = any> {
+export interface IModalRenderItemParams<P = any, S = any, M extends Modals = any> {
   ModalChildren?: React.FC<P>;
+  Modal?: M;
+  props?: ModalChildrenProps[M];
   modalChildrenProps?: P;
   settings?: IModalSettings & S;
   id?: number | string;
@@ -26,13 +30,15 @@ export type OpenModalReturnType =
       id?: string;
     }
   | undefined;
-type HandleOpenModalAsyncType = <P = any, S = any>(
-  args: IModalRenderItemParams<P, S>,
+type HandleOpenModalAsyncType = <P = any, S = any, M extends Modals = any>(
+  args: IModalRenderItemParams<P, S, M>,
   getPropsAsync?: () => Promise<P>
 ) => Promise<OpenModalReturnType | undefined>;
 
 export interface IModalProviderContext {
-  handleOpenModal: <P = any, S = any>(args: IModalRenderItemParams<P, S>) => OpenModalReturnType;
+  handleOpenModal: <P = any, S = any, M extends Modals = any>(
+    args: IModalRenderItemParams<P, S, M>
+  ) => OpenModalReturnType;
   handleCloseModal: (id?: string) => void;
   handleOpenModalAsync: HandleOpenModalAsyncType;
   isOpen: boolean;
@@ -49,21 +55,32 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
   }, []);
 
   const createOnClose = useCallback((id?: string | number) => () => onClose(id), [onClose]);
+
   const handleOpenModal = useCallback(
-    <P = any, S = any>({
+    <P = any, S = any, M extends Modals = any>({
       ModalChildren,
       modalChildrenProps,
       settings,
-    }: IModalRenderItemParams<P, S>): OpenModalReturnType => {
-      if (!ModalChildren) {
-        console.error('ModalChildren is not passed');
-        return;
-      }
-
-      if (typeof ModalChildren === 'function') {
-        const id = nanoid(8);
-        setModalContent(prev => [...prev, { ModalChildren, modalChildrenProps, settings, id }]);
-        return { onClose: createOnClose(id), id };
+      Modal,
+      props,
+    }: IModalRenderItemParams<P, S, M>): OpenModalReturnType => {
+      const id = nanoid(8);
+      try {
+        if (ModalChildren && typeof ModalChildren === 'function') {
+          setModalContent(prev => [...prev, { ModalChildren, modalChildrenProps, settings, id }]);
+          return { onClose: createOnClose(id), id };
+        }
+        if (Modal && ModalChildrenMap[Modal]) {
+          setModalContent(prev => [
+            ...prev,
+            { ModalChildren: ModalChildrenMap[Modal], modalChildrenProps: props, settings, id },
+          ]);
+          return { onClose: createOnClose(id), id };
+        }
+        console.error('Add modal to stack error');
+        toast.error(`Add modal to stack error:\n >>> ${Modal} <<<`);
+      } catch (e) {
+        console.log(e);
       }
     },
     [createOnClose]
@@ -88,28 +105,31 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
     [handleOpenModal, modalContent, onClose]
   );
 
-  const renderModalContent = useMemo(
-    () =>
+  const renderModalContent = useMemo(() => {
+    return (
       modalContent?.length > 0 &&
-      modalContent.map((Item, idx) => (
-        <ModalComponent
-          key={Item.id}
-          {...{
-            ...Item,
-            idx,
-            id: Item.id,
-            totalLength: modalContent.length,
-            isLast: idx === modalContent.length - 1,
-            onClose: createOnClose(Item.id),
-          }}
-        >
-          {Item?.ModalChildren && (
-            <Item.ModalChildren {...{ ...Item?.modalChildrenProps, onClose: createOnClose(Item.id) }} />
-          )}
-        </ModalComponent>
-      )),
-    [modalContent, createOnClose]
-  );
+      modalContent.map((Item, idx) => {
+        return (
+          <ModalComponent
+            key={Item.id}
+            {...{
+              ...Item,
+              idx,
+              id: Item.id,
+              totalLength: modalContent.length,
+              isLast: idx === modalContent.length - 1,
+              onClose: createOnClose(Item.id),
+            }}
+          >
+            {Item?.ModalChildren && (
+              <Item.ModalChildren {...{ ...Item?.modalChildrenProps, onClose: createOnClose(Item.id) }} />
+            )}
+            {/*{Item?.Modal && <ModalChildren {...{ ...Item?.props, onClose: createOnClose(Item.id) }} />}*/}
+          </ModalComponent>
+        );
+      })
+    );
+  }, [modalContent, createOnClose]);
 
   useEffect(() => {
     if (modalContent.length === 0) document.querySelector('body')?.classList.remove('NotScroll');

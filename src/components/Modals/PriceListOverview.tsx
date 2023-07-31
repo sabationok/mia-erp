@@ -1,4 +1,3 @@
-import { FormCreatePriceProps } from '../Forms/FormCreatePriceList';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import TableList, { ITableListProps } from '../TableList/TableList';
 import { useEffect, useMemo, useState } from 'react';
@@ -8,6 +7,7 @@ import { priceListContentColumns } from '../../data';
 import { usePriceListOverviewActionsCreator } from '../../hooks/usePriceListOverviewActionsCreator.hook';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { usePriceListsSelector } from '../../redux/selectors.store';
+import { FormCreatePriceProps } from '../Forms/FormCreatePrice';
 
 export interface PriceListOverviewProps extends Omit<ModalFormProps, 'onSubmit' | 'afterSubmit'> {
   createFormProps?: FormCreatePriceProps;
@@ -43,16 +43,16 @@ const PriceListOverview: React.FC<PriceListOverviewProps> = ({
     (): ITableListProps<IPriceListItem> => getTableSetting(tableData),
     [tableData, getTableSetting]
   );
-  const onValidSubmit = (data: IPriceList) => {
-    onSubmit &&
-      data.prices &&
-      onSubmit(data.prices, {
-        clearAfterSave: true,
-        closeAfterSave: true,
-        onLoading: l => {},
-        onSuccess: d => {},
-      });
-  };
+  // const onValidSubmit = (data: IPriceList) => {
+  //   onSubmit &&
+  //     data.prices &&
+  //     onSubmit(data.prices, {
+  //       clearAfterSave: true,
+  //       closeAfterSave: true,
+  //       onLoading: l => {},
+  //       onSuccess: d => {},
+  //     });
+  // };
 
   useEffect(() => {
     if (listId) {

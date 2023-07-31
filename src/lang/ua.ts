@@ -7,6 +7,7 @@ export const langUa = {
   [ApiDirType.CATEGORIES_TR]: 'Категорії',
   [ApiDirType.CATEGORIES_PROD]: 'Категорії',
   [ApiDirType.BRANDS]: 'Бренди',
+  [ApiDirType.TAGS]: 'Теги',
 
   [ContractorsTypesEnum.COUNTER]: 'Бухгалтер',
   [ContractorsTypesEnum.AUDITOR]: 'Аудитор',
@@ -20,9 +21,11 @@ export const langUa = {
   [ContractorsTypesEnum.WORKER]: 'Робітник',
   [ContractorsTypesEnum.COMMISSION_AGENT]: 'Комісіонер',
   [ContractorsTypesEnum.CONSIGNOR]: 'Комітент',
+  [ContractorsTypesEnum.TRANSPORTER]: 'Перевізник',
 
   brand: 'Бренд',
   selectBrand: 'Оберіть бренд',
+  createTag: 'Створити тег',
 
   counts: 'Облікові рахунки',
   count: 'Обліковий рахунок',
@@ -94,6 +97,7 @@ export const langUa = {
   selectTags: 'Оберть теги',
 
   createDirParentItem: 'Створити батьківський елемент',
+  createDirChildItem: 'Створити дочірній елемент',
   createParentCount: 'Створити рахунок',
   createChildCount: 'Створити суб-рахунок',
   createParentCategory: 'Створити категорію',

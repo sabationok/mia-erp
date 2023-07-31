@@ -3,7 +3,7 @@ import TableList, { ITableListProps } from 'components/TableList/TableList';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { DirBaseProps } from '../Directories/dir.types';
-import usePermissionsServiceHook, { usePermissionsSelector } from '../../redux/permissions/usePermissionsService.hook';
+import usePermissionsServiceHook, { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
 import { IPermission } from '../../redux/permissions/permissions.types';
 import AppLoader from '../atoms/AppLoader';
 

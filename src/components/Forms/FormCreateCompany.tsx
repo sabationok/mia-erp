@@ -30,8 +30,8 @@ const validFormData = yup.object().shape({
   taxCode: yup.string().required(),
 });
 
-export type CompanyFormProps = Props & Omit<ModalFormProps, 'onSubmit'>;
-const CompanyForm: React.FC<CompanyFormProps> = ({ ...props }) => {
+export type FormCreateCompanyProps = Props & Omit<ModalFormProps, 'onSubmit'>;
+const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ ...props }) => {
   const { permissions } = useAppServiceProvider();
 
   const {
@@ -101,4 +101,4 @@ const Inputs = styled.div`
   fill: ${({ theme }) => theme.accentColor.base};
 `;
 
-export default CompanyForm;
+export default FormCreateCompany;

@@ -12,11 +12,11 @@ import { ExtractId } from '../../utils/dataTransform';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
 import FormCreatePrice from '../Forms/FormCreatePrice';
 
-export interface ProductReviewModalProps extends Omit<ModalFormProps, 'onSelect' | 'onSubmit'> {
+export interface ProductOverviewProps extends Omit<ModalFormProps, 'onSelect' | 'onSubmit'> {
   product?: IProduct;
 }
 
-const ProductOverview: React.FC<ProductReviewModalProps> = ({ product, ...props }) => {
+const ProductOverview: React.FC<ProductOverviewProps> = ({ product, ...props }) => {
   const { priceManagement } = useAppServiceProvider();
   const [priceList, setPriceList] = useState<IPriceListItem[]>([]);
   const [loading, setLoading] = useState(false);
