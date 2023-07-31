@@ -1,6 +1,6 @@
 import { usePermissionsSelector } from './usePermissionsService.hook';
 import useAppSettings from './useAppSettings.hook';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { toast } from 'react-toastify';
 import { useAppServiceProvider } from './useAppServices.hook';
@@ -45,19 +45,16 @@ const useLoadInitialAppDataHook = ({
     transactions,
   } = useAppServiceProvider();
   const { getAppActions } = useAppSettings();
-  const [_isLoading, setIsLoading] = useState(false);
-  const [_statuses, setStatuses] = useState<Partial<Record<ApiDirType, boolean>>>();
+  // const [_isLoading, setIsLoading] = useState(false);
+  // const [_statuses, setStatuses] = useState<Partial<Record<ApiDirType, boolean>>>();
   const onSuccessToast = (dirType: ApiDirType) => () => {
-    setStatuses(prev => ({ ...prev, [dirType]: true }));
-
+    // setStatuses(prev => ({ ...prev, [dirType]: true }));
     // toast.success(`Updated data for directory: ${dirType}`);
   };
   const load = async () => {
     if (permission_token || _id) {
-      setIsLoading(true);
-      const id = toast.loading('Loading app data', {
-        isLoading: true,
-      });
+      // setIsLoading(true);
+
       try {
         await getAppActions();
 
@@ -75,18 +72,12 @@ const useLoadInitialAppDataHook = ({
             });
           })
         );
-        setTimeout(() => {
-          toast.dismiss(id);
-          toast.success('App data loaded', { autoClose: 2000 });
-        });
+        toast.success('App data loaded', { autoClose: 2000 });
+
         onSuccess && onSuccess();
-        setIsLoading(false);
+        // setIsLoading(false);
       } catch (e) {
-        setTimeout(() => {
-          toast.dismiss(id);
-          toast.error('Unknown server error while loading app data', { autoClose: 2000 });
-        }, 2000);
-        setIsLoading(false);
+        // setIsLoading(false);
       }
     }
   };

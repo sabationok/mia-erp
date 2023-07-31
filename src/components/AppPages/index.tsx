@@ -8,7 +8,7 @@ const PageSelectCompany = lazy(() => import('./PageSelectCompany'));
 const PageHome = lazy(() => import('./PageHome'));
 const PageAuth = lazy(() => import('./PageAuth'));
 const PagePriceManagement = lazy(() => import('./PagePriceManagement'));
-const PageOrders = lazy(() => import('./PageOrders'));
+// const PageOrders = lazy(() => import('./PageOrders'));
 const AppGridPage = lazy(() => import('./AppGridPage'));
 
 const AppPages = {
@@ -21,7 +21,7 @@ const AppPages = {
   PageError,
   PageAuth,
   PagePriceManagement,
-  PageOrders,
+  // PageOrders,
 };
 
 export {
@@ -33,7 +33,7 @@ export {
   PageSelectCompany,
   PageHome,
   PageAuth,
-  PageOrders,
+  // PageOrders,
 };
 
 export default AppPages;

@@ -65,33 +65,23 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
       childrenProps,
     }: IModalRenderItemParams<P, S, M>): OpenModalReturnType => {
       const id = nanoid(8);
-      console.log({
-        ModalChildren,
-        modalChildrenProps,
-        settings,
-        Modal,
-        childrenProps,
-      });
-      console.log(
-        'Modal && ModalChildrenMap[Modal]',
-        Modal,
-        Modal && ModalChildrenMap[Modal] ? ModalChildrenMap[Modal] : 'not found in map'
-      );
-      if (ModalChildren && typeof ModalChildren === 'function') {
-        console.error('ModalChildren is  passed');
-        setModalContent(prev => [...prev, { ModalChildren, modalChildrenProps, settings, id }]);
-        return { onClose: createOnClose(id), id };
+      try {
+        if (ModalChildren && typeof ModalChildren === 'function') {
+          setModalContent(prev => [...prev, { ModalChildren, modalChildrenProps, settings, id }]);
+          return { onClose: createOnClose(id), id };
+        }
+        if (Modal && ModalChildrenMap[Modal]) {
+          setModalContent(prev => [
+            ...prev,
+            { ModalChildren: ModalChildrenMap[Modal], modalChildrenProps: childrenProps, settings, id },
+          ]);
+          return { onClose: createOnClose(id), id };
+        }
+        console.error('Add modal to stack error');
+        toast.error(`Add modal to stack error:\n >>> ${Modal} <<<`);
+      } catch (e) {
+        console.log(e);
       }
-      if (Modal && ModalChildrenMap[Modal]) {
-        setModalContent(prev => [
-          ...prev,
-          { ModalChildren: ModalChildrenMap[Modal], modalChildrenProps: childrenProps, settings, id },
-        ]);
-        console.log('Modal && ModalChildrenMap[Modal]');
-        return { onClose: createOnClose(id), id };
-      }
-      console.error('Add modal to stack error');
-      toast.error(`Add modal to stack error:\n >>> ${Modal} <<<`);
     },
     [createOnClose]
   );
@@ -119,7 +109,6 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
     return (
       modalContent?.length > 0 &&
       modalContent.map((Item, idx) => {
-        console.log(Item);
         return (
           <ModalComponent
             key={Item.id}

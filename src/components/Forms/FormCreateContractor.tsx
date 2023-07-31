@@ -7,7 +7,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import styled from 'styled-components';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import t from '../../lang';
-import translate from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import React, { useMemo } from 'react';
@@ -50,13 +49,13 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
   } = useAppForm<IContractorFormData>({
     defaultValues: {
       ...data,
-      type: { value: type, label: type ? t(type) : type },
+      type: { value: type, label: type },
     },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
   const typeOptions = useMemo(() => {
-    return enumToArray(ContractorsTypesEnum).map(el => ({ label: translate(el), value: el }));
+    return enumToArray(ContractorsTypesEnum).map(el => ({ label: el, value: el }));
   }, []);
 
   function formEventWrapper(evHandler?: AppSubmitHandler<IContractorFormData>) {

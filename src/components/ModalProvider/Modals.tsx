@@ -11,7 +11,6 @@ import FormCreateCount, { FormCreateCountProps } from '../Forms/FormCreateCount'
 import PriceListOverview, { PriceListOverviewProps } from '../Modals/PriceListOverview';
 import ProductOverview, { ProductOverviewProps } from '../Modals/ProductOverview';
 import FormCreateCompany, { FormCreateCompanyProps } from '../Forms/FormCreateCompany';
-import FormCreateOrder, { FormCreateOrderProps } from '../Forms/FormCreateOrder';
 
 export enum Modals {
   FormCreateTag = 'FormCreateTag',
@@ -20,7 +19,6 @@ export enum Modals {
   FormCreateContractor = 'FormCreateContractor',
   FormCreateTransaction = 'FormCreateTransaction',
   FormCreatePrice = 'FormCreatePrice',
-  FormCreateOrder = 'FormCreateOrder',
   FormCreatePriceList = 'FormCreatePriceList',
   FormCreateCustomRole = 'FormCreateCustomRole',
   FormCreateCount = 'FormCreateCount',
@@ -45,7 +43,7 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   [Modals.FormCreateCustomRole]: FormCreateCustomRole, //
   [Modals.FormCreateCount]: FormCreateCount, //
   [Modals.FormCreateCompany]: FormCreateCompany, //
-  [Modals.FormCreateOrder]: FormCreateOrder, //
+  // [Moda/
   [Modals.FormCreateTag]: ModalForm, //
 
   [Modals.PriceListOverview]: PriceListOverview,
@@ -64,7 +62,7 @@ export interface ModalChildrenProps {
   [Modals.FormCreateCategory]: FormCreateCategoryProps;
   [Modals.FormCreateCount]: FormCreateCountProps;
   [Modals.FormCreateCompany]: FormCreateCompanyProps;
-  [Modals.FormCreateOrder]: FormCreateOrderProps;
+  // [Modaps;
   [Modals.FormCreateCustomRole]: FormCreateCustomRoleProps;
   [Modals.FormCreateTag]: ModalFormProps;
 
