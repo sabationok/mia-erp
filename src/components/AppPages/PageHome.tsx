@@ -6,11 +6,11 @@ import styled from 'styled-components';
 import { takeFullGridArea, takeFullPlace } from './pagesStyles';
 import { useAuthSelector } from 'redux/selectors.store';
 import ProfileCard from 'components/atoms/ProfileCard/ProfileCard';
-import usePermissionsService, { usePermissionsSelector } from 'redux/permissions/usePermissionsService.hook';
+import usePermissionsService, { usePermissionsSelector } from 'hooks/usePermissionsService.hook';
 import { IPermission } from '../../redux/permissions/permissions.types';
 import { permissionsSearchParams, permissionsTableColumns } from '../../data';
 import { ITableListProps } from '../TableList/tableTypes.types';
-import usePermissionsActionsCreator from '../../redux/permissions/usePermissonsActionsCreator';
+import usePermissionsActionsCreator from '../../hooks/usePermissonsActionsCreator';
 import { CompanyQueryType } from '../../redux/global.types';
 import { PermissionStatus } from 'redux/permissions/permissions.types';
 

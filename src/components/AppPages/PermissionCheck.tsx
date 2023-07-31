@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import usePermissionsServiceHook, { usePermissionsSelector } from '../../redux/permissions/usePermissionsService.hook';
+import usePermissionsServiceHook, { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
 import { memo, useEffect, useMemo } from 'react';
 import useAppParams from '../../hooks/useAppParams.hook';
 import baseApi from '../../api/baseApi';

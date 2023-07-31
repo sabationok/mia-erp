@@ -1,4 +1,4 @@
-import { AppDispatch, RootState, useAppDispatch } from '../store.store';
+import { AppDispatch, RootState, useAppDispatch } from '../redux/store.store';
 import { useSelector } from 'react-redux';
 import {
   createCompanyWithPermissionThunk,
@@ -12,13 +12,13 @@ import {
   logOutPermissionThunk,
   updateCompanyWithPermissionThunk,
   updatePermissionThunk,
-} from './permissions.thunk';
-import { IPermission, IPermissionForReq, IPermissionReqData } from './permissions.types';
+} from '../redux/permissions/permissions.thunk';
+import { IPermission, IPermissionForReq, IPermissionReqData } from '../redux/permissions/permissions.types';
 import { useMemo } from 'react';
 import { ServiceDispatcherAsync } from 'redux/global.types';
-import { clearCurrentPermission } from './permissions.action';
-import { defaultThunkPayload } from '../../utils/fabrics';
-import { ICompanyForReq, ICompanyReqData } from '../companies/companies.types';
+import { clearCurrentPermission } from '../redux/permissions/permissions.action';
+import { defaultThunkPayload } from '../utils/fabrics';
+import { ICompanyForReq, ICompanyReqData } from '../redux/companies/companies.types';
 
 export interface PermissionService {
   dispatch: AppDispatch;

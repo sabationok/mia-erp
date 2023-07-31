@@ -1,4 +1,4 @@
-import { usePermissionsSelector } from '../redux/permissions/usePermissionsService.hook';
+import { usePermissionsSelector } from './usePermissionsService.hook';
 import useAppSettings from './useAppSettings.hook';
 import { useEffect, useState } from 'react';
 import { ApiDirType } from '../redux/APP_CONFIGS';

@@ -1,4 +1,4 @@
-import usePermissionsServiceHook, { PermissionService } from '../redux/permissions/usePermissionsService.hook';
+import usePermissionsServiceHook, { PermissionService } from './usePermissionsService.hook';
 import useStorageServiceHook, { StorageService } from './useStorageService.hook';
 import useTransactionsServiceHook, { TransactionsService } from './useTransactionsService.hook';
 import { DirectoriesService } from './useDirService.hook';

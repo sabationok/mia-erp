@@ -19,7 +19,7 @@ const validation = yup.object().shape({
   price: yup.number(),
 });
 
-export interface FormCreatePricesProps
+export interface FormCreatePriceProps
   extends Omit<ModalFormProps<any, any, IPriceListItem>, 'onSubmit' | 'afterSubmit'> {
   list?: OnlyUUID;
   product?: IProduct | IStorageItem;
@@ -32,7 +32,7 @@ export interface FormCreatePricesProps
   ) => void;
 }
 
-const FormCreatePrice: React.FC<FormCreatePricesProps> = ({ defaultState, product, list, onSubmit, ...props }) => {
+const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, product, list, onSubmit, ...props }) => {
   const { formValues, register, setValue, handleSubmit, registerSelect } = useAppForm<IPriceListItem>({
     defaultValues: { ...defaultState, product },
   });

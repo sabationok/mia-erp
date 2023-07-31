@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useMemo } from 'react';
-import { usePermissionsSelector } from '../redux/permissions/usePermissionsService.hook';
+import { usePermissionsSelector } from '../hooks/usePermissionsService.hook';
 import { useAuthSelector } from '../redux/selectors.store';
 
 // const mockApi = axios.create({

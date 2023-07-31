@@ -16,7 +16,7 @@ const UsersProps: DirUsersProps = {
 };
 const CustomRolesProps: DirCustomRolesProps = {
   title: 'Ролі',
-  dirType: ApiDirType.TYPE,
+  dirType: ApiDirType.DEFAULT,
   createParentTitle: 'Створити роль',
   fillHeight: true,
   actionsCreator: ({ service, modalService, findById }) => ({

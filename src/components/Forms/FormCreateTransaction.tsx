@@ -22,7 +22,7 @@ import { UseAppFormAfterSubmitOptions } from '../../hooks/useAppForm.hook';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
 
-export interface TransactionFormNewProps extends Omit<ModalFormProps, 'onSubmit'> {
+export interface FormCreateTransactionProps extends Omit<ModalFormProps, 'onSubmit'> {
   edit?: boolean;
   copy?: boolean;
   id?: string;
@@ -62,7 +62,7 @@ const getValidation = (type?: TransactionType) =>
     subCategory: optionalSelectItem,
   });
 
-const FormCreateTransaction: React.FC<TransactionFormNewProps> = ({
+const FormCreateTransaction: React.FC<FormCreateTransactionProps> = ({
   edit,
   onSubmit,
   copy,

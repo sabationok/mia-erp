@@ -80,7 +80,7 @@ const PageOrders: React.FC<any> = (props: Props) => {
   return (
     <AppGridPage path={props.path}>
       <Page>
-        <TableList {...tableConfig} isLoading={isLoading} />
+        <TableList />
       </Page>
     </AppGridPage>
   );

@@ -93,7 +93,7 @@ export interface IOrder extends IOrderBase {
 
 export type OrderImage = { img_preview?: string; img_1x: string; img_2x: string; webp: string };
 
-export interface IOrderFroReq extends Partial<Record<keyof IOrder, any>> {
+export interface IOrderForReq extends Partial<Record<keyof IOrder, any>> {
   type?: OrderType;
   customer?: OnlyUUID;
   receiver?: OnlyUUID;
@@ -114,7 +114,7 @@ export interface IOrderReqData {
 
 export interface IOrderReqData {
   _id?: string;
-  data: IOrderFroReq;
+  data: IOrderForReq;
 }
 
 export interface IAllOrdersRes extends AppResponse<IOrder[]> {}
