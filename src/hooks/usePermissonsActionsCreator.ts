@@ -136,7 +136,7 @@ const createAddNewCompanyAction = ({ modalService }: PermissionsTablesActionProp
   onClick: () => {
     modalService.handleOpenModal({
       Modal: Modals.FormCreateCompany,
-      childrenProps: {
+      props: {
         fillHeight: true,
         title: 'Створити компанію',
       },

@@ -1,10 +1,8 @@
 import * as React from 'react';
 import { useMemo } from 'react';
 import ModalForm, { ModalFormProps } from '../ModalForm';
-import { TransactionType } from 'redux/transactions/transactions.types';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
-import * as yup from 'yup';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import CustomSelect from '../atoms/Inputs/CustomSelect';
 import { useAppSelector } from '../../redux/store.store';
@@ -33,26 +31,26 @@ export interface FormProps extends Omit<ModalFormProps, 'onSubmit'> {
   addInputs?: boolean;
 }
 
-const optionalSelectItem = yup
-  .object()
-  .shape({
-    _id: yup.string(),
-    label: yup.string(),
-  })
-  .nullable()
-  .optional();
-const requiredSelectItem = yup
-  .object()
-  .shape({
-    _id: yup.string(),
-    label: yup.string(),
-  })
-  .required();
-
-const getValidation = (type: TransactionType) =>
-  yup.object().shape({
-    category: requiredSelectItem,
-  });
+// const optionalSelectItem = yup
+//   .object()
+//   .shape({
+//     _id: yup.string(),
+//     label: yup.string(),
+//   })
+//   .nullable()
+//   .optional();
+// const requiredSelectItem = yup
+//   .object()
+//   .shape({
+//     _id: yup.string(),
+//     label: yup.string(),
+//   })
+//   .required();
+//
+// const getValidation = (type: TransactionType) =>
+//   yup.object().shape({
+//     category: requiredSelectItem,
+//   });
 const Form: React.FC<FormProps> = ({ edit, onSubmit, copy, defaultState, addInputs, ...props }) => {
   const {
     directories: { directories },

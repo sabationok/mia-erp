@@ -71,6 +71,7 @@ const subCompanies = {
 };
 export const comapnySettings: IDirectory[] = [
   subCompanies,
+
   {
     title: UsersProps.title,
     iconId: iconId.persons,
@@ -86,3 +87,17 @@ export const comapnySettings: IDirectory[] = [
     disabled: true,
   },
 ];
+// {
+//   title: 'Способи оплати',
+//     disabled: true,
+//   modalChildrenProps: {
+//   dirType: ApiDirType.METHODS_PAYMENT,
+// },
+// },
+// {
+//   title: 'Способи відвантажень',
+//     disabled: true,
+//   modalChildrenProps: {
+//   dirType: ApiDirType.METHODS_SHIPMENT,
+// },
+// },

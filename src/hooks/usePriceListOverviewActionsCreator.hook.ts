@@ -10,11 +10,11 @@ import { toast } from 'react-toastify';
 export type PriceListOverviewActionsCreatorType = TableActionCreator<IPriceListItem>;
 
 export const usePricesModal = () => {
-  const modalS = useModalProvider();
+  const modalService = useModalProvider();
   const service = usePriceManagementServiceHook();
   const openAddPriceToListModal = useCallback(
     (list: OnlyUUID) => {
-      const modal = modalS.handleOpenModal({
+      const modal = modalService.handleOpenModal({
         ModalChildren: FormCreatePrice,
         modalChildrenProps: {
           title: 'Create new price',
@@ -41,7 +41,7 @@ export const usePricesModal = () => {
         },
       });
     },
-    [modalS, service]
+    [modalService, service]
   );
 
   return {
@@ -49,11 +49,11 @@ export const usePricesModal = () => {
   };
 };
 export const usePriceListOverviewActionsCreator = (listId?: string): PriceListOverviewActionsCreatorType => {
-  const modalS = useModalProvider();
+  // const modalService = useModalProvider();
   const service = usePriceManagementServiceHook();
   const { openAddPriceToListModal } = usePricesModal();
   return useCallback(
-    ctx => [
+    _ctx => [
       {
         name: 'createPrice',
         title: 'Створити',

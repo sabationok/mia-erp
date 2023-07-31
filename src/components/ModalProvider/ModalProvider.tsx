@@ -18,7 +18,7 @@ export interface IModalChildrenProps {
 export interface IModalRenderItemParams<P = any, S = any, M extends Modals = any> {
   ModalChildren?: React.FC<P>;
   Modal?: M;
-  childrenProps?: ModalChildrenProps[M];
+  props?: ModalChildrenProps[M];
   modalChildrenProps?: P;
   settings?: IModalSettings & S;
   id?: number | string;
@@ -62,7 +62,7 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
       modalChildrenProps,
       settings,
       Modal,
-      childrenProps,
+      props,
     }: IModalRenderItemParams<P, S, M>): OpenModalReturnType => {
       const id = nanoid(8);
       try {
@@ -73,7 +73,7 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
         if (Modal && ModalChildrenMap[Modal]) {
           setModalContent(prev => [
             ...prev,
-            { ModalChildren: ModalChildrenMap[Modal], modalChildrenProps: childrenProps, settings, id },
+            { ModalChildren: ModalChildrenMap[Modal], modalChildrenProps: props, settings, id },
           ]);
           return { onClose: createOnClose(id), id };
         }
@@ -124,7 +124,7 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
             {Item?.ModalChildren && (
               <Item.ModalChildren {...{ ...Item?.modalChildrenProps, onClose: createOnClose(Item.id) }} />
             )}
-            {/*{Item?.Modal && <ModalChildren {...{ ...Item?.childrenProps, onClose: createOnClose(Item.id) }} />}*/}
+            {/*{Item?.Modal && <ModalChildren {...{ ...Item?.props, onClose: createOnClose(Item.id) }} />}*/}
           </ModalComponent>
         );
       })

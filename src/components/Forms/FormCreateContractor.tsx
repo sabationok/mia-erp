@@ -11,22 +11,15 @@ import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import React, { useMemo } from 'react';
 import { useAppForm } from '../../hooks';
-import CustomSelect from '../atoms/Inputs/CustomSelect';
-import { enumToArray } from '../../utils';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
+import { ContractorFilterOptions } from '../../data/directories.data';
 
 export interface FormCreateContractorProps
   extends DirectoriesFormProps<ContractorsTypesEnum, IContractor, IContractorFormData> {}
 
 const validation = yup.object().shape({
-  type: yup
-    .object()
-    .shape({
-      value: yup.string(),
-      label: yup.string(),
-    })
-    .required(),
+  type: yup.string().required(),
   label: yup.string().max(100),
   name: yup.string().max(100),
   secondName: yup.string().max(100),
@@ -42,21 +35,15 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
     formValues: { type: currentType },
     register,
     handleSubmit,
-    registerSelect,
+    setValue,
     clearAfterSave,
     closeAfterSave,
     toggleAfterSubmitOption,
   } = useAppForm<IContractorFormData>({
-    defaultValues: {
-      ...data,
-      type: { value: type, label: type },
-    },
+    defaultValues: data,
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
-  const typeOptions = useMemo(() => {
-    return enumToArray(ContractorsTypesEnum).map(el => ({ label: el, value: el }));
-  }, []);
 
   function formEventWrapper(evHandler?: AppSubmitHandler<IContractorFormData>) {
     if (evHandler) {
@@ -72,7 +59,7 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
         ContractorsTypesEnum.COMMISSION_AGENT,
         ContractorsTypesEnum.CONSIGNOR,
         ContractorsTypesEnum.AUDITOR,
-      ].includes(currentType.value)
+      ].includes(currentType)
     );
   }, [currentType]);
 
@@ -90,15 +77,19 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
         ContractorsTypesEnum.BRAND_MANAGER,
         ContractorsTypesEnum.SALES_MANAGER,
         ContractorsTypesEnum.SUPPLY_MANAGER,
-      ].includes(currentType.value)
+      ].includes(currentType)
     );
   }, [currentType]);
 
   return (
     <ModalForm
+      style={{ maxWidth: 480 }}
       {...props}
       onSubmit={formEventWrapper(onSubmit)}
+      onOptSelect={(_o, v) => setValue('type', v)}
+      filterOptions={ContractorFilterOptions}
       isValid={isValid}
+      title={`Створити контрагента: ${t(currentType)}`}
       extraFooter={
         <FormAfterSubmitOptions
           clearAfterSave={clearAfterSave}
@@ -108,16 +99,6 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
       }
     >
       <Inputs>
-        <CustomSelect
-          {...registerSelect('type', {
-            label: t('type'),
-            placeholder: t('type'),
-            required: true,
-            error: errors.type,
-            options: typeOptions,
-          })}
-        />
-
         {!renderNamesInputs && renderLabelInput && (
           <InputLabel label={t('label')} direction={'vertical'} error={errors.label} required={!renderNamesInputs}>
             <InputText placeholder={t('insertLabel')} {...register('label')} required={!renderNamesInputs} autoFocus />
@@ -134,12 +115,7 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
               error={errors.secondName}
               required={renderLabelInput}
             >
-              <InputText
-                placeholder={t('insertSecondName')}
-                {...register('secondName')}
-                required={renderLabelInput}
-                autoFocus
-              />
+              <InputText placeholder={t('insertSecondName')} {...register('secondName')} required={renderLabelInput} />
             </InputLabel>
           </>
         )}

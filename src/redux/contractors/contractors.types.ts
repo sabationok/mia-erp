@@ -14,9 +14,7 @@ export interface IContractor extends IBaseDirItem<ContractorsTypesEnum, ApiDirTy
   tags?: string[];
 }
 
-export interface IContractorFormData extends Omit<IContractor, '_id' | 'createdAt' | 'updatedAt' | 'type'> {
-  type: { label?: string; value: ContractorsTypesEnum };
-}
+export interface IContractorFormData extends Omit<IContractor, '_id' | 'createdAt' | 'updatedAt'> {}
 
 export enum ContractorsTypesEnum {
   COUNTER = 'COUNTER',
@@ -31,8 +29,7 @@ export enum ContractorsTypesEnum {
   WORKER = 'WORKER',
   COMMISSION_AGENT = 'COMMISSION_AGENT',
   CONSIGNOR = 'CONSIGNOR',
-  TRANSPORTERS = 'TRANSPORTERS',
-  SHIPMENT_TYPES = 'shipment_type',
+  TRANSPORTER = 'TRANSPORTER',
 }
 
 export type ContractorsTypes = keyof typeof ContractorsTypesEnum;

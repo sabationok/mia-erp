@@ -14,9 +14,8 @@ import InputText from '../atoms/Inputs/InputText';
 import translate from '../../lang';
 import FormCreateInner from './components/FormCreateInner';
 import * as React from 'react';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
-import { usePriceListsSelector } from '../../redux/selectors.store';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 
 export interface FormCreatePriceListProps extends Omit<ModalFormProps<PriceListType>, 'onSubmit' | 'afterSubmit'> {
@@ -31,13 +30,6 @@ export interface FormCreatePriceListProps extends Omit<ModalFormProps<PriceListT
   >;
 }
 
-const usePriceListById = (_id?: string) => {
-  const { lists } = usePriceListsSelector();
-  return useMemo(() => {
-    return lists.find(list => list._id === _id);
-  }, [_id, lists]);
-};
-
 const FormCreatePriceList: React.FC<FormCreatePriceListProps> = ({
   filterOptions,
   onSubmit,
@@ -46,12 +38,11 @@ const FormCreatePriceList: React.FC<FormCreatePriceListProps> = ({
   ...props
 }) => {
   // const modalService = useModalProvider();
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [isSuccess] = useState(false);
   // const [currentList, setCurrentList] = useState<IPriceList | undefined>();
   // const currentList = usePriceListById();
   const {
     formState: { errors, isValid },
-    formValues,
     register,
     // registerSelect,
     clearAfterSave,

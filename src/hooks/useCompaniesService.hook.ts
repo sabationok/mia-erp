@@ -1,5 +1,4 @@
 import { ICompany, ICompanyReqData } from '../redux/companies/companies.types';
-import { AppDispatch, useAppDispatch } from '../redux/store.store';
 import { IPermission } from '../redux/permissions/permissions.types';
 import { useMemo } from 'react';
 import { CompaniesApi, createApiCall } from '../api';
@@ -13,7 +12,7 @@ export interface CompaniesService {
 }
 
 const useCompaniesServiceHook = (): CompaniesService => {
-  const dispatch: AppDispatch = useAppDispatch();
+  // const dispatch: AppDispatch = useAppDispatch();
 
   return useMemo((): CompaniesService => {
     const { create, updateById, deleteById } = CompaniesApi;

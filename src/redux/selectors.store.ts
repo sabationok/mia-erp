@@ -10,6 +10,8 @@ import { IPriceListsState } from './priceManagement/priceManagement.slice';
 import { ApiDirType } from './APP_CONFIGS';
 import { IBaseDirItem } from '../components/Directories/dir.types';
 import { IDirectoriesState } from './directories/directories.slice';
+import { IOrdersState } from './orders/orders.slice';
+import { useMemo } from 'react';
 
 export const useAuthSelector = () => useSelector<RootState, IAuthState>((state: RootState) => state.auth);
 export const useUsersSelector = () => useSelector<RootState, IUsersState>((state: RootState) => state.users);
@@ -21,8 +23,8 @@ export const useTransactionsSelector = (): ITransactionsState =>
 
 export const useProductsSelector = () =>
   useSelector<RootState, IProductsState>((state: RootState): IProductsState => state.products);
-// export const useOrdersSelector = () =>
-//   useSelector<RootState, IOrdersState>((state: RootState): IOrdersState => state.orders);
+export const useOrdersSelector = () =>
+  useSelector<RootState, IOrdersState>((state: RootState): IOrdersState => state.orders);
 export const usePriceListsSelector = () =>
   useSelector<RootState, IPriceListsState>((state: RootState): IPriceListsState => state.priceLists);
 export const useCustomRolesSelector = () =>
@@ -35,4 +37,10 @@ export const useDirectoriesSelector = <T = any, DT extends ApiDirType = any>(dir
     error: IDirectoriesState['error'];
     isLoading: IDirectoriesState['isLoading'];
   };
+};
+export const useFindPriceListById = (_id?: string) => {
+  const { lists } = usePriceListsSelector();
+  return useMemo(() => {
+    return lists.find(list => list._id === _id);
+  }, [_id, lists]);
 };

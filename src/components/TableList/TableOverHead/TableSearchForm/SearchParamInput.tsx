@@ -15,7 +15,7 @@ export interface ISearchParamInputProps {
 const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue, selectedItem, onSelect }) => {
   const [inputValue, setInputValue] = useState({ searchParam: '' });
   const [filteredData, setFilteredData] = useState<SelectItem[]>(data || []);
-  const [current, setCurrent] = useState<SelectItem | null>(defaultValue || selectedItem || null);
+  const setCurrent = useState<SelectItem | null>(defaultValue || selectedItem || null)[1];
   const [isOpen, setIsOpen] = useState(false);
 
   function handleToggleList() {
@@ -70,11 +70,11 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
 
       handleToggleList();
     },
-    [onSelect]
+    [onSelect, setCurrent]
   );
   const renderFilteredList = useMemo(() => {
     return filteredData.length > 0 ? (
-      filteredData.map((item, idx) => (
+      filteredData.map((item, _idx) => (
         <ListItem key={item.dataKey || item.dataPath} title={item.label} onClick={() => handleSelect(item)}>
           <span>{item.label}</span>
         </ListItem>

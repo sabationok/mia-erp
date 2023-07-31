@@ -43,16 +43,16 @@ const PriceListOverview: React.FC<PriceListOverviewProps> = ({
     (): ITableListProps<IPriceListItem> => getTableSetting(tableData),
     [tableData, getTableSetting]
   );
-  const onValidSubmit = (data: IPriceList) => {
-    onSubmit &&
-      data.prices &&
-      onSubmit(data.prices, {
-        clearAfterSave: true,
-        closeAfterSave: true,
-        onLoading: l => {},
-        onSuccess: d => {},
-      });
-  };
+  // const onValidSubmit = (data: IPriceList) => {
+  //   onSubmit &&
+  //     data.prices &&
+  //     onSubmit(data.prices, {
+  //       clearAfterSave: true,
+  //       closeAfterSave: true,
+  //       onLoading: l => {},
+  //       onSuccess: d => {},
+  //     });
+  // };
 
   useEffect(() => {
     if (listId) {

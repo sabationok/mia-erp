@@ -36,7 +36,7 @@ const createEditTransactionAction = ({
 
     const modal = modalService.handleOpenModal({
       Modal: Modals.FormCreateTransaction,
-      childrenProps: {
+      props: {
         title: 'Редагування транзакції',
         filterOptions,
         defaultOption: filterOptions.findIndex(el => el.value === tr?.type),
@@ -70,7 +70,7 @@ const createCopyTransactionAction = ({
 
     const modal = modalService.handleOpenModal({
       Modal: Modals.FormCreateTransaction,
-      childrenProps: {
+      props: {
         title: 'Копіювання транзакції',
         filterOptions,
         defaultOption: filterOptions.findIndex(el => el.value === tr?.type),
@@ -122,7 +122,7 @@ const createAddIncomeTransactionAction = ({
   onClick: () => {
     const modal = modalService.handleOpenModal({
       Modal: Modals.FormCreateTransaction,
-      childrenProps: {
+      props: {
         title: 'Створити',
         filterOptions,
         defaultOption: 0,
@@ -155,7 +155,7 @@ const createAddTransferTransactionAction = ({
   onClick: () => {
     const modal = modalService.handleOpenModal({
       Modal: Modals.FormCreateTransaction,
-      childrenProps: {
+      props: {
         title: 'Створити нову',
         filterOptions,
         defaultOption: 1,
@@ -188,7 +188,7 @@ const createAddExpenseTransactionAction = ({
   onClick: () => {
     const modal = modalService.handleOpenModal({
       Modal: Modals.FormCreateTransaction,
-      childrenProps: {
+      props: {
         title: 'Створити',
         filterOptions,
         defaultOption: 2,
