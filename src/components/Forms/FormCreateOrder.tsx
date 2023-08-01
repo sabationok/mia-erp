@@ -11,7 +11,6 @@ import { useDirectoriesSelector } from '../../redux/selectors.store';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
 import FormAccordeonItem from './components/FormAccordeonItem';
-import { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
 import styled from 'styled-components';
 
 export interface FormCreateOrderProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
@@ -25,7 +24,6 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
   const { directory: paymentsMethods } = useDirectoriesSelector(ApiDirType.METHODS_PAYMENT);
   const { directory: shipmentMethods } = useDirectoriesSelector(ApiDirType.METHODS_SHIPMENT);
   const { directory: communicationMethods } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
-  const { permissions } = usePermissionsSelector();
 
   const managersList = useMemo(
     () => (workers ? workers?.filter(el => el?.type === ContractorsTypesEnum.MANAGER) : undefined),
