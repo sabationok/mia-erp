@@ -50,16 +50,11 @@ export const logInUserThunk = createAsyncThunk<
     state: { auth: IAuthState };
   }
 >('auth/logInUserThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
-  // if (data?.email === 'dliaKariny@mail.com' && data?.password === '54321') {
-  //   return { _id: 'dliaKariny@mail.com', access_token: 'dliaKariny@mail.com', email: 'dliaKariny@mail.com' };
-  // }
-
   try {
     const response = await AuthApi.logInUser(data as ILoginUserData);
 
     onSuccess && onSuccess(data);
     return response.data.data;
-    // return { accessToken: 'accessToken_', email: data?.email };
   } catch (error) {
     onError && onError(error);
 

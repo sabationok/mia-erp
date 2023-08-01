@@ -118,8 +118,8 @@ export type DirInTreeActionsCreatorType = (
   onToggleArchiveStatus?: (id: string, status?: boolean) => void;
 };
 
-export type DirPaymentMethodsActionsCreator = (
-  options: DirInTreeActionsCreatorOptions<ApiDirType.METHODS_PAYMENT, any, IBaseDirItem, DirectoriesService>
+export type DirMethodsActionsCreator = (
+  options: DirInTreeActionsCreatorOptions<MethodDirType, any, IMethodDirItem, DirectoriesService>
 ) => {
   onCreateChild?: (parentId: string) => void;
   onCreateParent?: () => void;
@@ -166,11 +166,14 @@ export interface DirTagsProps extends IDirInTreeProps<ApiDirType.TAGS> {}
 
 export interface ISupplierDirItem extends IBaseDirItem<ContractorsTypesEnum.SUPPLIER, ApiDirType.CONTRACTORS> {}
 export interface ICustomerDirItem extends IBaseDirItem<ContractorsTypesEnum.CUSTOMER, ApiDirType.CONTRACTORS> {}
-export interface IShipmentDirItem extends IBaseDirItem<unknown, ApiDirType.METHODS_SHIPMENT> {}
-export interface ICommunicationDirItem extends IBaseDirItem<unknown, ApiDirType.METHODS_COMMUNICATION> {}
-export interface IPaymentDirItem extends IBaseDirItem<unknown, ApiDirType.METHODS_PAYMENT> {}
+export interface IShipmentDirItem extends IBaseDirItem<any, ApiDirType.METHODS_SHIPMENT> {}
+export interface ICommunicationDirItem extends IBaseDirItem<any, ApiDirType.METHODS_COMMUNICATION> {}
+export interface IPaymentDirItem extends IBaseDirItem<any, ApiDirType.METHODS_PAYMENT> {}
 export interface IManagerDirItem extends IBaseDirItem<ContractorsTypesEnum.MANAGER, ApiDirType.CONTRACTORS> {}
 export interface IWarehouseDirItem extends IBaseDirItem<any, ApiDirType.WAREHOUSES> {}
+
+export type MethodDirType = ApiDirType.METHODS_SHIPMENT | ApiDirType.METHODS_COMMUNICATION | ApiDirType.METHODS_PAYMENT;
+export type IMethodDirItem = IShipmentDirItem | ICommunicationDirItem | IPaymentDirItem;
 
 // export interface DirStatusOrderProps extends IDirInTreeProps<ApiDirType.STATUSES_ORDER> {}
 

@@ -15,6 +15,7 @@ import FormCreateOrder, { FormCreateOrderProps } from '../Forms/FormCreateOrder'
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { IBaseDirItem } from '../Directories/dir.types';
 import FormCreateTag, { FormCreateTagProps } from '../Forms/FormCreateTag';
+import FormCreateMethod, { FormCreateMethodProps } from '../Forms/FormCreateMetod';
 
 export enum Modals {
   FormCreateTag = 'FormCreateTag',
@@ -33,6 +34,7 @@ export enum Modals {
   PriceListOverview = 'PriceListOverview',
   ProductOverview = 'ProductOverview',
   ModalForm = 'ModalForm',
+  FormCreateMethod = 'FormCreateMethod',
 }
 
 export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
@@ -49,6 +51,7 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   [Modals.FormCreateCompany]: FormCreateCompany,
   [Modals.FormCreateOrder]: FormCreateOrder,
   [Modals.FormCreateTag]: FormCreateTag,
+  [Modals.FormCreateMethod]: FormCreateMethod,
 
   [Modals.PriceListOverview]: PriceListOverview,
   [Modals.ProductOverview]: ProductOverview,
@@ -68,6 +71,7 @@ export interface ModalChildrenProps {
   [Modals.FormCreateCompany]: FormCreateCompanyProps;
   [Modals.FormCreateOrder]: FormCreateOrderProps;
   [Modals.FormCreateCustomRole]: FormCreateCustomRoleProps;
+  [Modals.FormCreateMethod]: FormCreateMethodProps;
 
   [Modals.FormCreateTag]: FormCreateTagProps;
 
