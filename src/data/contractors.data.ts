@@ -5,7 +5,7 @@ import t from '../lang';
 
 export const contractorsColumns: CellTittleProps<IContractor>[] = [
   {
-    top: { name: 'Назва', path: 'label' },
+    top: { name: 'Назва', path: 'label', getData: d => d?.label || `${d?.name || ''} ${d?.secondName || ''}` },
     bottom: { name: 'ІПН/ЄДРПОУ', path: 'taxCode' },
     width: '240px',
     action: 'doubleDataWithAvatar',

@@ -7,15 +7,30 @@ import GlobalStyles from './theme/globalStyles';
 import { useBaseApiWithAccessToken, useBaseApiWithPermissionToken } from './api/baseApi';
 import { useAppSettingsSelector } from './redux/selectors.store';
 import useLoadInitialAppDataHook from './hooks/useLoadInitialAppData.hook';
+// import { useAppDispatch } from './redux/store.store';
+// import { setMockPermissionData } from './redux/permissions/permissions.action';
 
 const App: React.FC = () => {
   const { isDarkMode } = useAppSettingsSelector();
+  // const { user } = useAuthSelector();
+  // const dispatch = useAppDispatch();
 
   useBaseApiWithAccessToken();
 
   useBaseApiWithPermissionToken();
 
   useLoadInitialAppDataHook();
+
+  // useEffect(() => {
+  //   if (user.email === 'dliaKariny@mail.com') {
+  //     dispatch(
+  //       setMockPermissionData({
+  //         _id: 'dliaKariny@mail.com',
+  //         user: { _id: 'dliaKariny@mail.com', email: 'dliaKariny@mail.com' },
+  //       })
+  //     );
+  //   }
+  // }, [dispatch, user]);
 
   return (
     <>

@@ -14,7 +14,7 @@ import {
 } from './permissions.thunk';
 
 import { initialPermission, testPermissions } from '../../data/permissions.data';
-import { clearCurrentPermission } from './permissions.action';
+import { clearCurrentPermission, setMockPermissionData } from './permissions.action';
 import { pages } from '../../data';
 
 const initialPermissionStateState: IPermissionsState = {
@@ -68,6 +68,13 @@ export const permissionsSlice = createSlice({
       })
       .addCase(createCompanyWithPermissionThunk.fulfilled, (s, a) => {
         s.permissions = [a.payload, ...s.permissions];
+      })
+      .addCase(setMockPermissionData, (s, a) => {
+        s.permission = {
+          ...a.payload,
+          role: { ...a.payload.role, accessKeys: initialPermission.role?.accessKeys },
+        };
+        s.permission_token = a.payload.permission_token;
       })
       .addCase(updateCompanyWithPermissionThunk.fulfilled, (s, a) => {})
       .addCase(deleteCompanyWithPermissionThunk.fulfilled, (s, a) => {}),

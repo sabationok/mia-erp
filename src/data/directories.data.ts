@@ -201,13 +201,13 @@ const ContractorsProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
   title: t('contractors'),
   fillHeight: true,
   dirType: ApiDirType.CONTRACTORS,
+  filterOptions: ContractorFilterOptions,
   getTableSettings: ({ service, modalService, type, dirType }) => ({
     tableTitles: contractorsColumns,
     tableSearchParams: contractorsSearchParams,
     actionsCreator: p => [
-      {
-        icon: 'edit',
-      },
+      { icon: 'openInNew' },
+      { icon: 'edit' },
       { icon: 'copy' },
       { icon: 'archive', iconSize: '100%' },
       { separator: true },

@@ -164,6 +164,14 @@ export interface DirMarksProps extends IDirInTreeProps<ApiDirType.MARKS> {}
 export interface ITagDirItem extends IBaseDirItem<ContractorsTypesEnum, ApiDirType.TAGS> {}
 export interface DirTagsProps extends IDirInTreeProps<ApiDirType.TAGS> {}
 
+export interface ISupplierDirItem extends IBaseDirItem<ContractorsTypesEnum.SUPPLIER, ApiDirType.CONTRACTORS> {}
+export interface ICustomerDirItem extends IBaseDirItem<ContractorsTypesEnum.CUSTOMER, ApiDirType.CONTRACTORS> {}
+export interface IShipmentDirItem extends IBaseDirItem<unknown, ApiDirType.METHODS_SHIPMENT> {}
+export interface ICommunicationDirItem extends IBaseDirItem<unknown, ApiDirType.METHODS_COMMUNICATION> {}
+export interface IPaymentDirItem extends IBaseDirItem<unknown, ApiDirType.METHODS_PAYMENT> {}
+export interface IManagerDirItem extends IBaseDirItem<ContractorsTypesEnum.MANAGER, ApiDirType.CONTRACTORS> {}
+export interface IWarehouseDirItem extends IBaseDirItem<any, ApiDirType.WAREHOUSES> {}
+
 // export interface DirStatusOrderProps extends IDirInTreeProps<ApiDirType.STATUSES_ORDER> {}
 
 // export interface DirStatusRefundProps extends IDirInTreeProps<ApiDirType.STATUSES_REFUND> {}
