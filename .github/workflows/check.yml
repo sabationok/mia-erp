@@ -14,4 +14,4 @@ jobs:
       - name: Lint 🔧
         run: |
           npm install
-          npm run lint:js
+          npm run lint:ts
