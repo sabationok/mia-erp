@@ -13,6 +13,7 @@ import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types'
 import FormAccordeonItem from './components/FormAccordeonItem';
 import { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
 import styled from 'styled-components';
+import usePermissionsAsDirItemOptions from '../../hooks/usePermisionsAsWorkersOptions';
 
 export interface FormCreateOrderProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<IOrder>;
@@ -26,6 +27,7 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
   const { directory: shipmentMethods } = useDirectoriesSelector(ApiDirType.METHODS_SHIPMENT);
   const { directory: communicationMethods } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
   const { permissions } = usePermissionsSelector();
+  const managers = usePermissionsAsDirItemOptions();
 
   const managersList = useMemo(
     () => (workers ? workers?.filter(el => el?.type === ContractorsTypesEnum.MANAGER) : undefined),
@@ -46,57 +48,85 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
 
   return (
     <ModalForm fillHeight {...props} isValid={isValid} onSubmit={handleSubmit(onValid)}>
-      <FlexBox flex={1} padding={'8px 16px'} overflow={'hidden'}>
-        <CustomSelect
-          {...registerSelect('manager', {
-            options: managersList,
-            label: 'Менеджер',
-            placeholder: 'Оберіть відповідального менеджера',
-            required: true,
-          })}
-        />
-        <CustomSelect
-          {...registerSelect('paymentMethod', {
-            options: paymentsMethods,
-            label: 'Тип оплати',
-            placeholder: 'Оберіть тип оплати',
-            required: true,
-          })}
-        />{' '}
-        <CustomSelect
-          {...registerSelect('shipmentMethod', {
-            options: shipmentMethods,
-            label: 'Спосіб відвантаження',
-            placeholder: 'Оберіть спосіб відвантаження',
-            required: true,
-          })}
-        />
-        <CustomSelect
-          {...registerSelect('communicationMethod', {
-            options: communicationMethods,
-            label: 'Спосіб звязку',
-            placeholder: "Оберіть спосіб зв'язку",
-            required: true,
-          })}
-        />
-        {false && (
-          <GridBox style={{ minHeight: 'max-content' }} overflow={'scroll'}>
-            <FormAccordeonItem open renderHeader={'Замовник'}>
+      <Container flex={1} padding={'8px 0'}>
+        <FlexBox padding={'0 16px 8px'}>
+          <CustomSelect
+            {...registerSelect('manager', {
+              options: managers,
+              label: 'Менеджер',
+              placeholder: 'Оберіть відповідального менеджера',
+              required: true,
+            })}
+          />
+        </FlexBox>
+
+        <FlexBox>
+          <FormAccordeonItem open renderHeader={'Замовник'}>
+            <FlexBox padding={'6px 16px'}>
               <InputLabel label={'Замовник'}>
                 <TextareaPrimary placeholder={'Введіть інформацію про замовника'} {...register('customer')} />
               </InputLabel>
-            </FormAccordeonItem>
-            <FormAccordeonItem open renderHeader={'Отримувач'}>
+
+              <CustomSelect
+                {...registerSelect('communicationMethod', {
+                  options: communicationMethods,
+                  label: 'Спосіб звязку',
+                  placeholder: "Оберіть спосіб зв'язку",
+                  required: true,
+                })}
+              />
+            </FlexBox>
+          </FormAccordeonItem>
+
+          <FormAccordeonItem open renderHeader={'Отримувач'}>
+            <FlexBox padding={'6px 16px'}>
               <InputLabel label={'Отримувач'}>
                 <TextareaPrimary placeholder={'Введіть інформацію про отримувача'} {...register('receiver')} />
               </InputLabel>
-            </FormAccordeonItem>
-            <FormAccordeonItem open renderHeader={'Місце призначення'}>
+
+              <CustomSelect
+                {...registerSelect('communicationMethod', {
+                  options: communicationMethods,
+                  label: 'Спосіб звязку',
+                  placeholder: "Оберіть спосіб зв'язку",
+                  required: true,
+                })}
+              />
+            </FlexBox>
+          </FormAccordeonItem>
+
+          <FormAccordeonItem open renderHeader={'Інформація про відвантаження'}>
+            <FlexBox padding={'6px 16px'}>
+              <CustomSelect
+                {...registerSelect('shipmentMethod', {
+                  options: shipmentMethods,
+                  label: 'Спосіб відвантаження',
+                  placeholder: 'Оберіть спосіб відвантаження',
+                  required: true,
+                })}
+              />
+
               <InputLabel label={'Місце призначення'}>
                 <TextareaPrimary placeholder={'Введіть інформацію про призначення'} {...register('destination')} />
               </InputLabel>
-            </FormAccordeonItem>
-            <FormAccordeonItem open renderHeader={'Додаткова інформація'}>
+            </FlexBox>
+          </FormAccordeonItem>
+
+          <FormAccordeonItem open renderHeader={'Інформація про оплату'}>
+            <FlexBox padding={'6px 16px'}>
+              <CustomSelect
+                {...registerSelect('paymentMethod', {
+                  options: paymentsMethods,
+                  label: 'Тип оплати',
+                  placeholder: 'Оберіть тип оплати',
+                  required: true,
+                })}
+              />
+            </FlexBox>
+          </FormAccordeonItem>
+
+          <FormAccordeonItem open renderHeader={'Додаткова інформація'}>
+            <FlexBox padding={'6px 16px'}>
               <InputLabel label={'Коментар'}>
                 <TextareaPrimary placeholder={'Введіть коментар до замовлення'} {...register('comment')} />
               </InputLabel>
@@ -106,19 +136,22 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
                   {...register('innerComment')}
                 />
               </InputLabel>
-            </FormAccordeonItem>
-          </GridBox>
-        )}
-      </FlexBox>
+            </FlexBox>
+          </FormAccordeonItem>
+        </FlexBox>
+      </Container>
     </ModalForm>
   );
 };
 
-const GridBox = styled(FlexBox)`
-  //display: grid;
-  //grid-template-columns: 1fr;
+const Container = styled(FlexBox)`
+  position: relative;
   overflow: auto;
+`;
+const GridBox = styled(FlexBox)`
+  position: relative;
 
   min-height: max-content;
 `;
+
 export default FormCreateOrder;

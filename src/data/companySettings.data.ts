@@ -12,8 +12,45 @@ import { Modals } from '../components/ModalProvider/Modals';
 
 const UsersProps: DirUsersProps = {
   title: 'Користувачі',
-  getTableSettings: () => ({
+  getTableSettings: ({ modalService, service }) => ({
     tableTitles: usersDirColumns,
+    actionsCreator: ctx => {
+      return [
+        { name: 'rejectUser', icon: 'refund' },
+        {
+          name: 'editUser',
+          icon: 'edit',
+          disabled: !ctx?.selectedRow?._id,
+          onClick: () => {
+            modalService.handleOpenModal({
+              Modal: Modals.FormInviteUser,
+              props: {
+                title: 'Змінити дані користувача',
+                onSubmit: formData => {
+                  console.log('edit user formData', formData);
+                },
+              },
+            });
+          },
+        },
+        {
+          name: 'inviteUser',
+          icon: 'plus',
+          type: 'onlyIconFilled',
+          onClick: () => {
+            modalService.handleOpenModal({
+              Modal: Modals.FormInviteUser,
+              props: {
+                title: 'Запросити користувача',
+                onSubmit: formData => {
+                  console.log('invite user formData', formData);
+                },
+              },
+            });
+          },
+        },
+      ];
+    },
   }),
 };
 const CustomRolesProps: DirCustomRolesProps = {

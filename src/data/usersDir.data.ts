@@ -23,16 +23,16 @@ export const usersDirColumns: CellTittleProps[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Електронна пошта', path: 'user.email', uppercase: false },
-    bottom: { name: 'Номер телефону', path: 'user.phone' },
-    width: '210px',
-    action: 'contacts',
-  },
-  {
     top: { name: 'Роль', path: 'role.label', uppercase: false },
     bottom: { name: 'Коментар', path: 'role.description' },
     width: '210px',
     action: 'valueByPath',
+  },
+  {
+    top: { name: 'Електронна пошта', path: 'user.email', uppercase: false },
+    bottom: { name: 'Номер телефону', path: 'user.phone' },
+    width: '210px',
+    action: 'contacts',
   },
   {
     top: { name: 'Локація', path: 'user.fullLocation' },

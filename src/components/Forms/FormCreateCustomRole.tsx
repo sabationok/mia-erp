@@ -8,7 +8,7 @@ import FlexBox from '../atoms/FlexBox';
 import { useAppForm } from '../../hooks';
 import { SubmitErrorHandler, SubmitHandler } from 'react-hook-form';
 import { useAppSettingsSelector } from '../../redux/selectors.store';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import TitleBase from '../atoms/TitleBase';
 import CheckBox from '../TableList/TebleCells/CellComponents/CheckBox';
 import * as yup from 'yup';
@@ -29,6 +29,7 @@ export interface FormCreateCustomRoleProps extends Omit<ModalFormProps, 'onSubmi
 const validation = yup.object().shape({
   label: yup.string().required(),
   actions: yup.array(yup.string()).required(),
+  expireAt: yup.string().optional(),
   description: yup.string(),
 });
 const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({ onSubmit, customRole, edit, _id, ...props }) => {
@@ -60,6 +61,9 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({ onSubmit, c
     const onInvalidSubmit: SubmitErrorHandler<Partial<ICustomRole>> = errors => console.log(errors);
     return handleSubmit(onValidSubmit, onInvalidSubmit);
   }
+  useEffect(() => {
+    console.log(formValues);
+  }, [formValues]);
 
   const renderList = useMemo(() => {
     return Object.entries(appActions).map(([name, value]) => {
@@ -75,16 +79,14 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({ onSubmit, c
                   onChange={customEvent => {
                     if (Array.isArray(formValues.actions)) {
                       customEvent.checked
-                        ? setValue('actions', [...formValues.actions, el])
+                        ? setValue('actions', el.value ? [...formValues.actions, el.value] : formValues.actions)
                         : setValue(
                             'actions',
-                            formValues.actions.filter(r => r.type !== el.type)
+                            formValues.actions.filter(r => r !== el.type)
                           );
-                    } else {
-                      setValue('actions', [el]);
                     }
                   }}
-                  checked={formValues.actions?.some(r => r.type === el.type)}
+                  checked={formValues.actions?.some(r => r === el.type)}
                 />
 
                 <Field flex={'1'} justifyContent={'center'} padding={'0 12px'}>

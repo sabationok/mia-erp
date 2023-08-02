@@ -119,15 +119,16 @@ const Row = styled(ThRow)<{ checked?: boolean }>`
   }
 `;
 
-const RowStickyEl = styled(ThRowStickyEl)``;
+const RowStickyEl = styled(ThRowStickyEl)`
+  height: 42px;
+`;
 
 const RowData = styled(ThRowData)<{ gridRepeat: number }>`
   display: grid;
   grid-template-columns: ${({ gridRepeat }) => `repeat(${gridRepeat} min-content)`};
+  grid-template-rows: 42px;
 
-  max-height: 100%;
-
-  /* overflow: hidden; */
+  height: 44px;
 `;
 
 export default memo(TableRow);

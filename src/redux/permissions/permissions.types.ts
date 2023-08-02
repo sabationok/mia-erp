@@ -15,6 +15,7 @@ export enum PermissionStatus {
 
 export interface IPermission extends IBase {
   status?: PermissionStatus;
+  code?: string | number;
   company?: Partial<ICompany>;
   user?: Partial<IUser>;
   owner?: Partial<IUser>;

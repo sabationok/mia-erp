@@ -10,6 +10,7 @@ export interface ISystemRole extends IBase {
 
 export interface IUser extends IBase {
   name?: string;
+  secondName?: string;
   email?: string;
   avatarURL?: string;
   sysRole?: ISystemRole;

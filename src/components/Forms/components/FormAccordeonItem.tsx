@@ -48,13 +48,13 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
 const Container = styled(FlexBox)`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: repeat(10, 200px);
+  //grid-template-rows: repeat(10, 200px);
 
+  position: relative;
   min-height: 32px;
   //height: max-content;
   max-height: 32px;
   overflow: hidden;
-  // overflow: auto;
 
   border-top: 1px solid ${({ theme }) => theme.trBorderClr};
   transition: all ${({ theme }) => theme.globals.timingFnMain};
@@ -78,8 +78,6 @@ const Container = styled(FlexBox)`
       // max-height: 100%;
     }
   }
-
-  border: 1px solid aqua;
 `;
 const ContentBox = styled(FlexBox)`
   position: relative;
@@ -88,16 +86,12 @@ const ContentBox = styled(FlexBox)`
   height: max-content;
 
   transition: all ${({ theme }) => theme.globals.timingFnMain};
-
-  border: 1px solid tomato;
 `;
 const Content = styled(FlexBox)`
   //max-height: 100%;
   height: max-content;
   max-width: 100%;
   //overflow: hidden;
-
-  border: 1px solid blue;
 `;
 
 const StButton = styled(ButtonIcon)`

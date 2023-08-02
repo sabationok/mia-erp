@@ -49,10 +49,13 @@ export interface IOrder extends IBase {
   owner: ICompany;
   manager?: IManager;
 
+  barCode?: string;
+  code?: string;
+
   customer?: ICustomerDirItem;
-  customerInString?: string;
+  customerInfo?: string;
   receiver?: ICustomerDirItem;
-  receiverInString?: string;
+  receiverInfo?: string;
 
   slots?: IOrderSlot[];
   status?: OrderStatus;

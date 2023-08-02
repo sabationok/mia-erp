@@ -26,14 +26,14 @@ export const rolesMockData: ICustomRole[] = [
     _id: '5252457444245',
     label: 'Адмін',
     description: 'Може все',
-    actions: [{ label: 'label' }, { label: 'label' }, { label: 'label' }],
+    actions: ['create_orders', 'get_all_orders', 'get_personal_orders'],
     accessKeys: ['companies'],
   },
   {
     _id: '5252753745245',
     label: 'Недо-адмін',
     description: 'Може майже все',
-    actions: [{ label: 'label' }, { label: 'label' }, { label: 'label' }],
+    actions: ['create_orders', 'get_all_orders', 'get_personal_orders'],
     accessKeys: ['companies'],
   },
 ];
