@@ -22,7 +22,7 @@ const DirUsers: React.FC<DirUsersProps> = ({ getTableSettings, ...props }) => {
   const service = usePermissionsServiceHook();
   const modalService = useModalProvider();
   const { getAllByCompanyId } = service;
-  const tableData = usePermissionsSelector().permissions;
+  const tableData = usePermissionsSelector().users;
   const [isLoading, setIsLoading] = useState(false);
 
   const tableSettingsMemo = useMemo(
@@ -33,9 +33,9 @@ const DirUsers: React.FC<DirUsersProps> = ({ getTableSettings, ...props }) => {
   useEffect(() => {
     (async () => {
       await getAllByCompanyId({
+        onLoading: setIsLoading,
         onSuccess: data => {},
         onError: () => {},
-        onLoading: setIsLoading,
       });
     })();
   }, [getAllByCompanyId]);

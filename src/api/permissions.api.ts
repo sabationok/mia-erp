@@ -17,6 +17,10 @@ export default class PermissionsApi {
     return this.api.post(this.endpoints.create(), data);
   }
 
+  public static inviteUser(data: IPermissionForReq): Promise<AppResponse<IPermission>> {
+    return this.api.post(this.endpoints.inviteUser(), data);
+  }
+
   public static deleteById<RD = any>(id: string): Promise<AppResponse<{ _id?: string; result: boolean } | RD>> {
     return this.api.post(this.endpoints.deleteById(id));
   }

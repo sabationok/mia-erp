@@ -67,7 +67,6 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({ onSubmit, c
 
   const renderList = useMemo(() => {
     return Object.entries(appActions).map(([name, value]) => {
-      // const arr=enumToArray()
       return (
         <List key={name}>
           <TitleBase>{name}</TitleBase>

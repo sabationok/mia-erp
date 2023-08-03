@@ -73,7 +73,7 @@ const LabelText = styled.label<Pick<InputLabelProps, 'align' | 'direction' | 'up
   display: flex;
   align-items: ${({ align = 'center' }) => align};
 
-  padding: 6px 6px 2px;
+  padding: 8px 8px 4px;
 
   font-size: 12px;
   line-height: 1.3;

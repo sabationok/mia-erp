@@ -10,7 +10,7 @@ import InputText from '../atoms/Inputs/InputText';
 import { IPermission } from '../../redux/permissions/permissions.types';
 
 export interface FormInviteUserProps extends Omit<ModalFormProps<any, any, IPermission>, 'onSubmit'> {
-  onSubmit?: AppSubmitHandler<FormInviteUserData>;
+  onSubmit?: AppSubmitHandler<FormInviteUserData, { onSuccess?: (d: IPermission) => void }>;
 }
 
 export interface FormInviteUserData {
@@ -23,10 +23,13 @@ const FormInviteUser: React.FC<FormInviteUserProps> = ({ defaultState, onSubmit,
     registerSelect,
     register,
     handleSubmit,
+    closeAfterSave,
     formState: { errors, isValid },
   } = useAppForm<FormInviteUserData>({ defaultValues: defaultState });
 
-  const onValidSubmit = () => {};
+  const onValidSubmit = (d: FormInviteUserData) => {
+    onSubmit && onSubmit(d, { closeAfterSave });
+  };
   return (
     <ModalForm isValid={isValid} {...props} onSubmit={handleSubmit(onValidSubmit)}>
       <FlexBox fillWidth padding={'16px'}>

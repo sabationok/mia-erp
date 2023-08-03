@@ -5,8 +5,10 @@ import {
   createPermissionThunk,
   deleteCompanyWithPermissionThunk,
   deletePermissionByIdThunk,
+  getAllPermissionsByCompanyIdThunk,
   getAllPermissionsByUserIdThunk,
   getCurrentPermissionThunk,
+  inviteUserThunk,
   logInPermissionThunk,
   logOutPermissionThunk,
   updateCompanyWithPermissionThunk,
@@ -21,6 +23,7 @@ const initialPermissionStateState: IPermissionsState = {
   permission: {},
   permission_token: '',
   permissions: [] || testPermissions,
+  users: [],
   isLoading: false,
   error: null,
 };
@@ -37,10 +40,19 @@ export const permissionsSlice = createSlice({
         };
         s.permission_token = a.payload.permission_token;
       })
+      .addCase(setMockPermissionData, (s, a) => {
+        s.permission = {
+          ...a.payload,
+          role: { ...a.payload.role, accessKeys: Object.entries(pages).map(([path, page]) => page.path) },
+        };
+        s.permission_token = a.payload.permission_token;
+      })
       .addCase(getAllPermissionsByUserIdThunk.fulfilled, (s, a) => {
         s.permissions = a.payload;
       })
-      // .addCase(getAllPermissionsByCompanyIdThunk.fulfilled, (s, a) => {})
+      .addCase(getAllPermissionsByCompanyIdThunk.fulfilled, (s, a) => {
+        s.users = a.payload;
+      })
       .addCase(createPermissionThunk.fulfilled, (s, a) => {
         s.permissions = [a.payload, ...s.permissions];
       })
@@ -69,12 +81,9 @@ export const permissionsSlice = createSlice({
       .addCase(createCompanyWithPermissionThunk.fulfilled, (s, a) => {
         s.permissions = [a.payload, ...s.permissions];
       })
-      .addCase(setMockPermissionData, (s, a) => {
-        s.permission = {
-          ...a.payload,
-          role: { ...a.payload.role, accessKeys: initialPermission.role?.accessKeys },
-        };
-        s.permission_token = a.payload.permission_token;
+
+      .addCase(inviteUserThunk.fulfilled, (s, a) => {
+        s.users = [a.payload, ...s.permissions];
       })
       .addCase(updateCompanyWithPermissionThunk.fulfilled, (s, a) => {})
       .addCase(deleteCompanyWithPermissionThunk.fulfilled, (s, a) => {}),

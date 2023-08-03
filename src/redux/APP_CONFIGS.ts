@@ -41,6 +41,7 @@ export enum Endpoints {
   getAllPrices = 'getAllPrices',
   getDefaultDirectories = 'getDefaultDirectories',
   updateList = 'updateList',
+  inviteUser = 'inviteUser',
 
   getAllOrderSlots = 'getAllOrderSlots',
   addSlotToOrder = 'addSlotToOrder',
@@ -121,6 +122,7 @@ const permissionsApiEndpoints: ApiEndpointsMap = {
   [Endpoints.getCurrent]: () => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.getCurrent}`,
   [Endpoints.logIn]: (id?: string) => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.logIn}/${id || ''}`,
   [Endpoints.logOut]: () => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.logOut}`,
+  [Endpoints.inviteUser]: () => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.inviteUser}`,
 };
 
 const companiesApiEndpoints: ApiEndpointsMap = {

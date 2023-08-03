@@ -42,7 +42,8 @@ const UsersProps: DirUsersProps = {
               Modal: Modals.FormInviteUser,
               props: {
                 title: 'Запросити користувача',
-                onSubmit: formData => {
+                onSubmit: (formData, o) => {
+                  service.createInvitation({ data: { email: formData.email }, onSuccess: d => {} });
                   console.log('invite user formData', formData);
                 },
               },
@@ -131,6 +132,7 @@ export const comapnySettings: IDirectory[] = [
     iconId: iconId.persons,
     ModalChildren: DirMethods,
     modalChildrenProps: {
+      title: 'Способи оплати',
       dirType: ApiDirType.METHODS_PAYMENT,
       createParentTitle: 'Додати спосіб оплати',
       availableLevels: 1,
@@ -143,6 +145,7 @@ export const comapnySettings: IDirectory[] = [
     iconId: iconId.persons,
     ModalChildren: DirMethods,
     modalChildrenProps: {
+      title: 'Способи відвантаження',
       dirType: ApiDirType.METHODS_SHIPMENT,
       createParentTitle: 'Додати спосіб відвантаження',
       availableLevels: 1,
@@ -155,6 +158,7 @@ export const comapnySettings: IDirectory[] = [
     iconId: iconId.persons,
     ModalChildren: DirMethods,
     modalChildrenProps: {
+      title: "Способи зв'язку",
       dirType: ApiDirType.METHODS_COMMUNICATION,
       createParentTitle: 'Додати спосіб комунікації',
       availableLevels: 1,
@@ -163,17 +167,3 @@ export const comapnySettings: IDirectory[] = [
     disabled: true,
   },
 ];
-// {
-//   title: 'Способи оплати',
-//     disabled: true,
-//   modalChildrenProps: {
-//   dirType: ApiDirType.METHODS_PAYMENT,
-// },
-// },
-// {
-//   title: 'Способи відвантажень',
-//     disabled: true,
-//   modalChildrenProps: {
-//   dirType: ApiDirType.METHODS_SHIPMENT,
-// },
-// },

@@ -42,8 +42,26 @@ const useAppService = (): AppService => {
   const companies = useCompaniesService();
 
   useEffect(() => {
-    console.log('Apply useAppService');
-  }, [permissions, products, transactions, directories, priceManagement, appSettings, companies]);
+    console.log('Apply useAppService | permissions');
+  }, [permissions]);
+  useEffect(() => {
+    console.log('Apply useAppService | products');
+  }, [products]);
+  useEffect(() => {
+    console.log('Apply useAppService | transactions');
+  }, [transactions]);
+  useEffect(() => {
+    console.log('Apply useAppService | directories');
+  }, [directories]);
+  useEffect(() => {
+    console.log('Apply useAppService | priceManagement');
+  }, [priceManagement]);
+  useEffect(() => {
+    console.log('Apply useAppService | appSettings');
+  }, [appSettings]);
+  useEffect(() => {
+    console.log('Apply useAppService | companies');
+  }, [companies]);
 
   return {
     [ServiceName.permissions]: permissions,

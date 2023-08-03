@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { useRow } from '../TableRows/TableRow';
 import { CellTitleContent, CellTittleProps } from './CellTitle';
@@ -21,14 +21,23 @@ const CellContactsDbl: React.FC<CellContactsDblProps & React.HTMLAttributes<HTML
   const { rowData } = useRow();
   const { top, bottom, width = '100px' } = titleInfo;
 
-  const contentTop = getValueByPath({
-    data: rowData,
-    ...top,
-  });
-  const contentBottom = getValueByPath({
-    data: rowData,
-    ...bottom,
-  });
+  const contentTop = useMemo(() => {
+    return top.getData
+      ? top.getData(rowData, titleInfo)
+      : getValueByPath({
+          data: rowData,
+          ...top,
+        });
+  }, [rowData, titleInfo, top]);
+
+  const contentBottom = useMemo(() => {
+    return bottom && bottom?.getData
+      ? bottom?.getData(rowData, titleInfo)
+      : getValueByPath({
+          data: rowData,
+          ...bottom,
+        });
+  }, [rowData, titleInfo, bottom]);
 
   return (
     <CellBase style={{ width }} {...props}>

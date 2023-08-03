@@ -1,4 +1,4 @@
-import { usePermissionsSelector } from './usePermissionsService.hook';
+import usePermissionsServiceHook, { usePermissionsSelector } from './usePermissionsService.hook';
 import useAppSettings from './useAppSettings.hook';
 import { useEffect } from 'react';
 import { ApiDirType } from '../redux/APP_CONFIGS';
@@ -41,7 +41,8 @@ const useLoadInitialAppDataHook = ({
   onSuccess?: () => void;
   onError?: (e: any) => void;
 } = {}) => {
-  const { _id, permission_token } = usePermissionsSelector().permission;
+  const { _id, permission_token, company } = usePermissionsSelector().permission;
+  const prService = usePermissionsServiceHook();
   const {
     directories: { getAllByDirType },
     products,
@@ -67,6 +68,10 @@ const useLoadInitialAppDataHook = ({
         await priceManagement.getAll({ data: { refresh: true } });
 
         await transactions.getAll({ data: { refresh: true } });
+
+        if (company?._id) {
+          await prService.getAllByCompanyId({ data: { refresh: true, companyId: company._id } });
+        }
 
         Promise.all(
           directoriesForLoading.map(async ({ dirType, createTreeData }) => {

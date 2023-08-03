@@ -1,11 +1,14 @@
 import { useMemo } from 'react';
 import { usePermissionsSelector } from './usePermissionsService.hook';
 import { IBaseDirItem } from '../components/Directories/dir.types';
+import { PermissionStatus } from '../redux/permissions/permissions.types';
 
 const usePermissionsAsDirItemOptions = () => {
-  const permissions = usePermissionsSelector().permissions;
+  const users = usePermissionsSelector().users;
   return useMemo((): Partial<IBaseDirItem>[] => {
-    return permissions.map(({ user }) => ({ _id: user?._id, label: `${user?.name}` }));
-  }, [permissions]);
+    return users
+      .filter(el => el.status === PermissionStatus.ACCEPTED)
+      .map(({ user, email, _id }) => ({ _id, label: `${user?.name || email}` }));
+  }, [users]);
 };
 export default usePermissionsAsDirItemOptions;

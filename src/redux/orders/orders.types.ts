@@ -54,8 +54,11 @@ export interface IOrder extends IBase {
 
   customer?: ICustomerDirItem;
   customerInfo?: string;
+  customerCommunicationMethod?: ICommunicationDirItem;
+
   receiver?: ICustomerDirItem;
   receiverInfo?: string;
+  receiverCommunicationMethod?: ICommunicationDirItem;
 
   slots?: IOrderSlot[];
   status?: OrderStatus;
@@ -64,7 +67,6 @@ export interface IOrder extends IBase {
   destination?: string;
   shipmentMethod?: IShipmentDirItem;
   paymentMethod?: IPaymentDirItem;
-  communicationMethod?: ICommunicationDirItem;
 
   comment?: string;
   innerComment?: string;

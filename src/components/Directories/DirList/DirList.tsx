@@ -27,11 +27,11 @@ const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLDivElement>> = (
   onCreateParent,
   onChangeArchiveStatus,
   createParentTitle,
-  currentLevel,
+  currentLevel = 0,
   containerProps,
   listBoxProps,
   listProps,
-  availableLevels,
+  availableLevels = 1,
   ...props
 }) => {
   const listForRender = useMemo(() => (entryList ? entryList : list), [entryList, list]);

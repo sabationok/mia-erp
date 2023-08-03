@@ -8,6 +8,7 @@ import {
   getAllPermissionsByCompanyIdThunk,
   getAllPermissionsByUserIdThunk,
   getCurrentPermissionThunk,
+  inviteUserThunk,
   logInPermissionThunk,
   logOutPermissionThunk,
   updateCompanyWithPermissionThunk,
@@ -22,7 +23,7 @@ import { ICompanyForReq, ICompanyReqData } from '../redux/companies/companies.ty
 
 export interface PermissionService {
   dispatch: AppDispatch;
-  getAllByCompanyId: ServiceDispatcherAsync<{ companyId: string }, IPermission[]>;
+  getAllByCompanyId: ServiceDispatcherAsync<{ companyId: string; refresh?: boolean }, IPermission[]>;
   getAllByUserId: ServiceDispatcherAsync<{ userId: string }, IPermission[]>;
   deleteById: ServiceDispatcherAsync<{ id: string }>;
   edit: ServiceDispatcherAsync<IPermissionReqData>;
@@ -30,11 +31,11 @@ export interface PermissionService {
   getCurrent: ServiceDispatcherAsync<{ id: string }>;
   permissionLogOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean }>;
 
-  createInvitation?: ServiceDispatcherAsync<IPermissionForReq>;
-  updateInvitation?: ServiceDispatcherAsync<IPermissionForReq>;
-  rejectInvitation?: ServiceDispatcherAsync<IPermissionForReq>;
-  acceptInvitation?: ServiceDispatcherAsync<IPermissionForReq>;
-  deleteInvitation?: ServiceDispatcherAsync<IPermissionForReq>;
+  createInvitation: ServiceDispatcherAsync<IPermissionForReq, IPermission>;
+  updateInvitation?: ServiceDispatcherAsync<IPermissionForReq, IPermission>;
+  rejectInvitation?: ServiceDispatcherAsync<IPermissionForReq, IPermission>;
+  acceptInvitation?: ServiceDispatcherAsync<IPermissionForReq, IPermission>;
+  deleteInvitation?: ServiceDispatcherAsync<IPermissionForReq, IPermission>;
 
   createCompany: ServiceDispatcherAsync<ICompanyForReq>;
   updateCompany: ServiceDispatcherAsync<Required<ICompanyReqData>>;
@@ -87,6 +88,8 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
       createCompany: async payload => dispatch(createCompanyWithPermissionThunk(defaultThunkPayload(payload))),
       deleteCompany: async payload => dispatch(deleteCompanyWithPermissionThunk(defaultThunkPayload(payload))),
       updateCompany: async payload => dispatch(updateCompanyWithPermissionThunk(defaultThunkPayload(payload))),
+
+      createInvitation: async payload => dispatch(inviteUserThunk(defaultThunkPayload(payload))),
     };
   }, [dispatch]);
 

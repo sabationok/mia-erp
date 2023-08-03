@@ -5,13 +5,10 @@ import { IOrder } from '../../redux/orders/orders.types';
 import { useAppForm } from '../../hooks';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
-import { useMemo } from 'react';
 import CustomSelect from '../atoms/Inputs/CustomSelect';
 import { useDirectoriesSelector } from '../../redux/selectors.store';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
 import FormAccordeonItem from './components/FormAccordeonItem';
-import { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
 import styled from 'styled-components';
 import usePermissionsAsDirItemOptions from '../../hooks/usePermisionsAsWorkersOptions';
 
@@ -22,17 +19,10 @@ export interface FormCreateOrderProps extends Omit<ModalFormProps, 'onSubmit' | 
 export interface FormCreateOrderState extends Omit<IOrder, '_id' | 'createdAt' | 'updatedAt' | 'deletedAt'> {}
 
 const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props }) => {
-  const { directory: workers } = useDirectoriesSelector(ApiDirType.WORKERS);
   const { directory: paymentsMethods } = useDirectoriesSelector(ApiDirType.METHODS_PAYMENT);
   const { directory: shipmentMethods } = useDirectoriesSelector(ApiDirType.METHODS_SHIPMENT);
   const { directory: communicationMethods } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
-  const { permissions } = usePermissionsSelector();
   const managers = usePermissionsAsDirItemOptions();
-
-  const managersList = useMemo(
-    () => (workers ? workers?.filter(el => el?.type === ContractorsTypesEnum.MANAGER) : undefined),
-    [workers]
-  );
 
   const {
     formState: { isValid },
@@ -64,11 +54,16 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
           <FormAccordeonItem open renderHeader={'Замовник'}>
             <FlexBox padding={'6px 16px'}>
               <InputLabel label={'Замовник'}>
-                <TextareaPrimary placeholder={'Введіть інформацію про замовника'} {...register('customer')} />
+                <TextareaPrimary
+                  maxLength={250}
+                  style={{ maxHeight: 100 }}
+                  placeholder={'Введіть інформацію про замовника'}
+                  {...register('customer')}
+                />
               </InputLabel>
 
               <CustomSelect
-                {...registerSelect('communicationMethod', {
+                {...registerSelect('customerCommunicationMethod', {
                   options: communicationMethods,
                   label: 'Спосіб звязку',
                   placeholder: "Оберіть спосіб зв'язку",
@@ -81,11 +76,16 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
           <FormAccordeonItem open renderHeader={'Отримувач'}>
             <FlexBox padding={'6px 16px'}>
               <InputLabel label={'Отримувач'}>
-                <TextareaPrimary placeholder={'Введіть інформацію про отримувача'} {...register('receiver')} />
+                <TextareaPrimary
+                  maxLength={250}
+                  style={{ maxHeight: 100 }}
+                  placeholder={'Введіть інформацію про отримувача'}
+                  {...register('receiver')}
+                />
               </InputLabel>
 
               <CustomSelect
-                {...registerSelect('communicationMethod', {
+                {...registerSelect('receiverCommunicationMethod', {
                   options: communicationMethods,
                   label: 'Спосіб звязку',
                   placeholder: "Оберіть спосіб зв'язку",
@@ -107,7 +107,12 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
               />
 
               <InputLabel label={'Місце призначення'}>
-                <TextareaPrimary placeholder={'Введіть інформацію про призначення'} {...register('destination')} />
+                <TextareaPrimary
+                  maxLength={250}
+                  style={{ maxHeight: 100 }}
+                  placeholder={'Введіть інформацію про призначення'}
+                  {...register('destination')}
+                />
               </InputLabel>
             </FlexBox>
           </FormAccordeonItem>
@@ -128,10 +133,17 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
           <FormAccordeonItem open renderHeader={'Додаткова інформація'}>
             <FlexBox padding={'6px 16px'}>
               <InputLabel label={'Коментар'}>
-                <TextareaPrimary placeholder={'Введіть коментар до замовлення'} {...register('comment')} />
+                <TextareaPrimary
+                  maxLength={250}
+                  style={{ maxHeight: 100 }}
+                  placeholder={'Введіть коментар до замовлення'}
+                  {...register('comment')}
+                />
               </InputLabel>
               <InputLabel label={'Службовий коментар'}>
                 <TextareaPrimary
+                  maxLength={250}
+                  style={{ maxHeight: 100 }}
                   placeholder={'Цей коментар будть бачити лише працівники компанії'}
                   {...register('innerComment')}
                 />

@@ -1,6 +1,7 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { ISystemRole, IUser } from 'redux/auth/auth.types';
 import { karina_avatar } from '../img';
+import { IPermission } from '../redux/permissions/permissions.types';
 
 export const testUserKarinaSystemRole: ISystemRole = {
   _id: 'sd6f51b6sd5f1b6sd5fgb16sd5',
@@ -15,10 +16,10 @@ export const testUserKarina: IUser = {
   avatarURL: karina_avatar,
   sysRole: testUserKarinaSystemRole,
 };
-export const usersDirColumns: CellTittleProps[] = [
+export const usersDirColumns: CellTittleProps<IPermission>[] = [
   {
     top: { name: 'ПІП', path: 'user.name' },
-    bottom: { name: 'Роль', path: 'role.label' },
+    bottom: { name: 'Статус', path: 'status' },
     width: '250px',
     action: 'valueByPath',
   },
@@ -29,7 +30,12 @@ export const usersDirColumns: CellTittleProps[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Електронна пошта', path: 'user.email', uppercase: false },
+    top: {
+      name: 'Електронна пошта',
+      path: 'user.email',
+      uppercase: false,
+      getData: rd => rd?.user?.email || rd?.email,
+    },
     bottom: { name: 'Номер телефону', path: 'user.phone' },
     width: '210px',
     action: 'contacts',

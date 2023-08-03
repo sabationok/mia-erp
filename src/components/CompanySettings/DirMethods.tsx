@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import ModalForm from 'components/ModalForm';
 import DirList from '../Directories/DirList/DirList';
 import styled from 'styled-components';
@@ -14,7 +14,7 @@ export interface DirMethodsProps
   actionsCreator: DirMethodsActionsCreator;
 }
 
-const DirMethods: React.FC<DirMethodsProps> = ({ createParentTitle, actionsCreator, ...props }) => {
+const DirMethods: React.FC<DirMethodsProps> = ({ createParentTitle, availableLevels, actionsCreator, ...props }) => {
   const { directory } = useDirectoriesSelector(props?.dirType);
 
   const service = useDirServiceHook();
@@ -33,11 +33,16 @@ const DirMethods: React.FC<DirMethodsProps> = ({ createParentTitle, actionsCreat
       : {};
   }, [actionsCreator, modalService, service, props?.dirType, directory]);
 
+  useEffect(() => {
+    console.log({ createParentTitle, availableLevels });
+  });
   return (
-    <StModalForm {...props}>
+    <StModalForm style={{ maxWidth: 480 }} {...props}>
       <FlexBox fillWidth flex={'1'} padding={'0 12px'} maxHeight={'100%'}>
         <DirList
           list={directory}
+          currentLevel={0}
+          availableLevels={availableLevels}
           createParentTitle={createParentTitle}
           onEdit={actions?.onUpdateItem}
           onDelete={actions?.onDeleteItem}
