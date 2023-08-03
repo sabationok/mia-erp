@@ -11,7 +11,7 @@ import { ApiDirType } from '../../redux/APP_CONFIGS';
 import FormAccordeonItem from './components/FormAccordeonItem';
 import styled from 'styled-components';
 import usePermissionsAsDirItemOptions from '../../hooks/usePermisionsAsWorkersOptions';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import InputText from '../atoms/Inputs/InputText';
 import ProductCardSimpleOverview from '../Products/ProductCardSimpleOverview';
@@ -27,7 +27,6 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
   const { directory: shipmentMethods } = useDirectoriesSelector(ApiDirType.METHODS_SHIPMENT);
   const { directory: communicationMethods } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
   const managers = usePermissionsAsDirItemOptions();
-  const [isCustomerAsReceiver, setIsCustomerAsReceiver] = useState(true);
   const [isReceiverInfo, setIsReceiverInfo] = useState(false);
 
   const {
@@ -35,13 +34,23 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
     register,
     registerSelect,
     handleSubmit,
-  } = useAppForm<FormCreateOrderState>();
+  } = useAppForm<FormCreateOrderState>({
+    defaultValues: { receiver: { name: 'Петро' }, customer: { name: 'Іванка' } },
+  });
 
   const onValid = (data?: FormCreateOrderState) => {
     console.log('FormCreateOrder');
     console.log(data);
   };
-
+  const renderProducts = useMemo(() => {
+    const list = [
+      { _id: 'sdfbsdfb', label: 'Товар 1' },
+      { _id: 'sdfbsdfb', label: 'Товар 2' },
+      { _id: 'sdfbsdfb', label: 'Товар 3' },
+      { _id: 'sdfbsdfb', label: 'Товар 4' },
+    ];
+    return list.map((p, idx) => <ProductCardSimpleOverview key={idx.toString()} product={p} />);
+  }, []);
   return (
     <ModalForm fillHeight {...props} isValid={isValid} onSubmit={handleSubmit(onValid)}>
       <Container flex={1} padding={'8px 0'}>
@@ -58,14 +67,7 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
 
         <FlexBox>
           <FormAccordeonItem open renderHeader={'Вміст'}>
-            <ProductCardSimpleOverview product={{ _id: 'sdvf', label: 'Товар' }} />
-
-            <ProductCardSimpleOverview product={{ _id: 'sdvf', label: 'Товар' }} />
-            <ProductCardSimpleOverview product={{ _id: 'sdvf', label: 'Товар' }} />
-            <ProductCardSimpleOverview product={{ _id: 'sdvf', label: 'Товар' }} />
-            <ProductCardSimpleOverview product={{ _id: 'sdvf', label: 'Товар' }} />
-
-            <ProductCardSimpleOverview product={{ _id: 'sdvf', label: 'Товар' }} />
+            {renderProducts}
           </FormAccordeonItem>
           <FormAccordeonItem open renderHeader={'Замовник'}>
             <InputLabel label={"Ім'я"} required>
@@ -86,10 +88,11 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
               />
             </InputLabel>
 
-            <InputLabel label={'Телефон'}>
+            <InputLabel label={'Телефон'} required>
               <InputText
                 maxLength={250}
                 placeholder={'Введіть телефон'}
+                required
                 {...register('customer.phone', { required: true })}
               />
             </InputLabel>
@@ -122,29 +125,30 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
 
           {isReceiverInfo && (
             <FormAccordeonItem renderHeader={'Отримувач'} open={isReceiverInfo}>
-              <InputLabel label={"Ім'я"} required>
+              <InputLabel label={"Ім'я"} required={isReceiverInfo}>
                 <InputText
                   maxLength={250}
                   placeholder={"Ім'я"}
-                  {...register('receiver.name', { required: true })}
-                  required
+                  {...register('receiver.name', { required: isReceiverInfo })}
+                  required={isReceiverInfo}
                 />
               </InputLabel>
 
-              <InputLabel label={'Прізвище'} required>
+              <InputLabel label={'Прізвище'} required={isReceiverInfo}>
                 <InputText
                   maxLength={250}
                   placeholder={'Введіть прізвище'}
-                  required
-                  {...register('receiver.secondName', { required: true })}
+                  required={isReceiverInfo}
+                  {...register('receiver.secondName', { required: isReceiverInfo })}
                 />
               </InputLabel>
 
-              <InputLabel label={'Телефон'}>
+              <InputLabel label={'Телефон'} required={isReceiverInfo}>
                 <InputText
+                  required={isReceiverInfo}
                   maxLength={250}
                   placeholder={'Введіть телефон'}
-                  {...register('receiver.phone', { required: true })}
+                  {...register('receiver.phone', { required: isReceiverInfo })}
                 />
               </InputLabel>
 
