@@ -53,11 +53,9 @@ export interface IOrder extends IBase {
   code?: string;
 
   customer?: ICustomerDirItem;
-  customerInfo?: string;
   customerCommunicationMethod?: ICommunicationDirItem;
 
   receiver?: ICustomerDirItem;
-  receiverInfo?: string;
   receiverCommunicationMethod?: ICommunicationDirItem;
 
   slots?: IOrderSlot[];

@@ -165,7 +165,9 @@ export interface ITagDirItem extends IBaseDirItem<ContractorsTypesEnum, ApiDirTy
 export interface DirTagsProps extends IDirInTreeProps<ApiDirType.TAGS> {}
 
 export interface ISupplierDirItem extends IBaseDirItem<ContractorsTypesEnum.SUPPLIER, ApiDirType.CONTRACTORS> {}
-export interface ICustomerDirItem extends IBaseDirItem<ContractorsTypesEnum.CUSTOMER, ApiDirType.CONTRACTORS> {}
+export interface ICustomerDirItem extends IBaseDirItem<ContractorsTypesEnum.CUSTOMER, ApiDirType.CONTRACTORS> {
+  secondName?: string;
+}
 export interface IShipmentDirItem extends IBaseDirItem<any, ApiDirType.METHODS_SHIPMENT> {}
 export interface ICommunicationDirItem extends IBaseDirItem<any, ApiDirType.METHODS_COMMUNICATION> {}
 export interface IPaymentDirItem extends IBaseDirItem<any, ApiDirType.METHODS_PAYMENT> {}

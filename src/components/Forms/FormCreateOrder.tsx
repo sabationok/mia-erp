@@ -11,8 +11,10 @@ import { ApiDirType } from '../../redux/APP_CONFIGS';
 import FormAccordeonItem from './components/FormAccordeonItem';
 import styled from 'styled-components';
 import usePermissionsAsDirItemOptions from '../../hooks/usePermisionsAsWorkersOptions';
-import CheckBox from '../TableList/TebleCells/CellComponents/CheckBox';
 import { useState } from 'react';
+import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import InputText from '../atoms/Inputs/InputText';
+import ProductCardSimpleOverview from '../Products/ProductCardSimpleOverview';
 
 export interface FormCreateOrderProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<IOrder>;
@@ -26,10 +28,8 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
   const { directory: communicationMethods } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
   const managers = usePermissionsAsDirItemOptions();
   const [isCustomerAsReceiver, setIsCustomerAsReceiver] = useState(true);
+  const [isReceiverInfo, setIsReceiverInfo] = useState(false);
 
-  const toggleCustomerAsReceiver = () => {
-    setIsCustomerAsReceiver(prev => !prev);
-  };
   const {
     formState: { isValid },
     register,
@@ -57,47 +57,103 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
         </FlexBox>
 
         <FlexBox>
+          <FormAccordeonItem open renderHeader={'Вміст'}>
+            <ProductCardSimpleOverview product={{ _id: 'sdvf', label: 'Товар' }} />
+
+            <ProductCardSimpleOverview product={{ _id: 'sdvf', label: 'Товар' }} />
+            <ProductCardSimpleOverview product={{ _id: 'sdvf', label: 'Товар' }} />
+            <ProductCardSimpleOverview product={{ _id: 'sdvf', label: 'Товар' }} />
+            <ProductCardSimpleOverview product={{ _id: 'sdvf', label: 'Товар' }} />
+
+            <ProductCardSimpleOverview product={{ _id: 'sdvf', label: 'Товар' }} />
+          </FormAccordeonItem>
           <FormAccordeonItem open renderHeader={'Замовник'}>
-            <FlexBox padding={'6px 16px'}>
-              <InputLabel label={'Замовник'}>
-                <TextareaPrimary
+            <InputLabel label={"Ім'я"} required>
+              <InputText
+                maxLength={250}
+                placeholder={"Ім'я"}
+                {...register('customer.name', { required: true })}
+                required
+              />
+            </InputLabel>
+
+            <InputLabel label={'Прізвище'} required>
+              <InputText
+                maxLength={250}
+                placeholder={'Введіть прізвище'}
+                required
+                {...register('customer.secondName', { required: true })}
+              />
+            </InputLabel>
+
+            <InputLabel label={'Телефон'}>
+              <InputText
+                maxLength={250}
+                placeholder={'Введіть телефон'}
+                {...register('customer.phone', { required: true })}
+              />
+            </InputLabel>
+
+            <InputLabel label={'Емейл'}>
+              <InputText maxLength={250} placeholder={'Введіть емейл'} type={'email'} {...register('customer.email')} />
+            </InputLabel>
+
+            <CustomSelect
+              {...registerSelect('customerCommunicationMethod', {
+                options: communicationMethods,
+                label: 'Спосіб звязку',
+                placeholder: "Оберіть спосіб зв'язку",
+                required: true,
+              })}
+            />
+
+            {!isReceiverInfo && (
+              <ButtonIcon
+                variant={'outlinedSmall'}
+                style={{ marginTop: 8 }}
+                onClick={() => {
+                  setIsReceiverInfo(true);
+                }}
+              >
+                {'Додати інформацію про отримувача'}
+              </ButtonIcon>
+            )}
+          </FormAccordeonItem>
+
+          {isReceiverInfo && (
+            <FormAccordeonItem renderHeader={'Отримувач'} open={isReceiverInfo}>
+              <InputLabel label={"Ім'я"} required>
+                <InputText
                   maxLength={250}
+                  placeholder={"Ім'я"}
+                  {...register('receiver.name', { required: true })}
                   required
-                  placeholder={'Введіть інформацію про замовника'}
-                  {...register('customer')}
                 />
               </InputLabel>
 
-              <CustomSelect
-                {...registerSelect('customerCommunicationMethod', {
-                  options: communicationMethods,
-                  label: 'Спосіб звязку',
-                  placeholder: "Оберіть спосіб зв'язку",
-                  required: true,
-                })}
-              />
-
-              <FlexBox gap={8} fxDirection={'row'} padding={'6px 0'} alignItems={'center'}>
-                <CheckBox
-                  checked={isCustomerAsReceiver}
-                  onChange={e => {
-                    const { checked } = e;
-                    setIsCustomerAsReceiver(checked);
-                  }}
-                />
-                {'Це отримувач'}
-              </FlexBox>
-            </FlexBox>
-          </FormAccordeonItem>
-
-          <FormAccordeonItem renderHeader={'Отримувач'} disabled={isCustomerAsReceiver}>
-            <FlexBox padding={'6px 16px'}>
-              <InputLabel label={'Отримувач'}>
-                <TextareaPrimary
+              <InputLabel label={'Прізвище'} required>
+                <InputText
                   maxLength={250}
+                  placeholder={'Введіть прізвище'}
                   required
-                  placeholder={'Введіть інформацію про отримувача'}
-                  {...register('receiver')}
+                  {...register('receiver.secondName', { required: true })}
+                />
+              </InputLabel>
+
+              <InputLabel label={'Телефон'}>
+                <InputText
+                  maxLength={250}
+                  placeholder={'Введіть телефон'}
+                  {...register('receiver.phone', { required: true })}
+                />
+              </InputLabel>
+
+              <InputLabel label={'Емейл'}>
+                <InputText
+                  maxLength={250}
+                  placeholder={'Введіть емейл'}
+                  type={'email'}
+                  {...register('receiver.email')}
                 />
               </InputLabel>
 
@@ -109,62 +165,66 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
                   required: true,
                 })}
               />
-            </FlexBox>
-          </FormAccordeonItem>
+
+              <ButtonIcon
+                variant={'outlinedSmall'}
+                style={{ marginTop: 8 }}
+                onClick={() => {
+                  setIsReceiverInfo(false);
+                }}
+              >
+                {'Видалити інформацію про отримувача'}
+              </ButtonIcon>
+            </FormAccordeonItem>
+          )}
 
           <FormAccordeonItem open renderHeader={'Інформація про відвантаження'}>
-            <FlexBox padding={'6px 16px'}>
-              <CustomSelect
-                {...registerSelect('shipmentMethod', {
-                  options: shipmentMethods,
-                  label: 'Спосіб відвантаження',
-                  placeholder: 'Оберіть спосіб відвантаження',
-                  required: true,
-                })}
-              />
+            <CustomSelect
+              {...registerSelect('shipmentMethod', {
+                options: shipmentMethods,
+                label: 'Спосіб відвантаження',
+                placeholder: 'Оберіть спосіб відвантаження',
+                required: true,
+              })}
+            />
 
-              <InputLabel label={'Місце призначення'}>
-                <TextareaPrimary
-                  maxLength={250}
-                  required
-                  placeholder={'Введіть інформацію про призначення'}
-                  {...register('destination')}
-                />
-              </InputLabel>
-            </FlexBox>
+            <InputLabel label={'Місце призначення'}>
+              <TextareaPrimary
+                maxLength={250}
+                required
+                placeholder={'Введіть інформацію про призначення'}
+                {...register('destination')}
+              />
+            </InputLabel>
           </FormAccordeonItem>
 
           <FormAccordeonItem open renderHeader={'Інформація про оплату'}>
-            <FlexBox padding={'6px 16px'}>
-              <CustomSelect
-                {...registerSelect('paymentMethod', {
-                  options: paymentsMethods,
-                  label: 'Тип оплати',
-                  placeholder: 'Оберіть тип оплати',
-                  required: true,
-                })}
-              />
-            </FlexBox>
+            <CustomSelect
+              {...registerSelect('paymentMethod', {
+                options: paymentsMethods,
+                label: 'Тип оплати',
+                placeholder: 'Оберіть тип оплати',
+                required: true,
+              })}
+            />
           </FormAccordeonItem>
 
           <FormAccordeonItem open renderHeader={'Додаткова інформація'}>
-            <FlexBox padding={'6px 16px'}>
-              <InputLabel label={'Коментар'}>
-                <TextareaPrimary
-                  maxLength={250}
-                  placeholder={'Введіть коментар до замовлення'}
-                  {...register('comment')}
-                />
-              </InputLabel>
+            <InputLabel label={'Коментар'}>
+              <TextareaPrimary
+                maxLength={250}
+                placeholder={'Введіть коментар до замовлення'}
+                {...register('comment')}
+              />
+            </InputLabel>
 
-              <InputLabel label={'Службовий коментар'}>
-                <TextareaPrimary
-                  maxLength={250}
-                  placeholder={'Цей коментар будть бачити лише працівники компанії'}
-                  {...register('innerComment')}
-                />
-              </InputLabel>
-            </FlexBox>
+            <InputLabel label={'Службовий коментар'}>
+              <TextareaPrimary
+                maxLength={250}
+                placeholder={'Цей коментар будть бачити лише працівники компанії'}
+                {...register('innerComment')}
+              />
+            </InputLabel>
           </FormAccordeonItem>
         </FlexBox>
       </Container>

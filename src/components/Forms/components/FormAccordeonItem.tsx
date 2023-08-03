@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import FlexBox from '../../atoms/FlexBox';
+import FlexBox, { FlexBoxProps } from '../../atoms/FlexBox';
 import styled from 'styled-components';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 
@@ -11,6 +11,7 @@ export interface FormAccordeonItemProps {
   toggled?: boolean;
   open?: boolean;
   disabled?: boolean;
+  contentContainerStyle?: FlexBoxProps;
 }
 
 const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
@@ -20,6 +21,7 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
   toggled = true,
   open = false,
   disabled,
+  contentContainerStyle,
 }) => {
   const [isOpen, setIsOpen] = useState(!disabled || open);
 
@@ -45,7 +47,7 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
         {renderHeader}
       </StButton>
 
-      <ContentBox>{children}</ContentBox>
+      <ContentBox {...contentContainerStyle}>{children}</ContentBox>
     </Container>
   );
 };
@@ -72,7 +74,7 @@ const Container = styled(FlexBox)`
     max-height: 100%;
 
     & .btn {
-      background-color: rgba(254, 254, 254, 0.5);
+      background-color: ${({ theme }) => theme.fieldColor};
     }
 
     & .icon {
@@ -89,14 +91,9 @@ const ContentBox = styled(FlexBox)`
   // max-height: 0px;
   //overflow: hidden;
   height: max-content;
+  padding: 8px 16px;
 
   transition: all ${({ theme }) => theme.globals.timingFnMain};
-`;
-const Content = styled(FlexBox)`
-  //max-height: 100%;
-  height: max-content;
-  max-width: 100%;
-  //overflow: hidden;
 `;
 
 const StButton = styled(ButtonIcon)`
