@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { Property } from 'csstype';
 
-interface FlexBoxBaseProps {
+export interface FlexBoxBaseProps {
   fxDirection?: Property.FlexDirection;
   alignItems?: Property.AlignItems;
   justifyContent?: Property.JustifyContent;
@@ -24,7 +24,7 @@ interface FlexBoxBaseProps {
   overflow?: Property.Overflow;
 }
 
-interface FlexBoxProps extends FlexBoxBaseProps {
+export interface FlexBoxProps extends FlexBoxBaseProps {
   xsStyles?: FlexBoxBaseProps;
   xlStyles?: FlexBoxBaseProps;
 }
