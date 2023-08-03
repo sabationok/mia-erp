@@ -3,11 +3,12 @@ import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 export interface IAccordeonOptionProps<T = any, C = any[]> extends React.HTMLAttributes<HTMLLIElement> {
-  title: string;
-  options: C;
+  title?: string;
+  options?: C;
   disabled?: boolean;
   ChildrenComponent?: React.FC<T>;
   childrenComponentProps?: T;
+  renderChildren?: React.ReactNode;
 }
 
 export interface IAccordeonListProps extends React.HTMLAttributes<HTMLUListElement> {
@@ -24,7 +25,7 @@ const AccordeonList: React.FC<IAccordeonListProps> = ({ options, children }) => 
   const renderOptions = useMemo(
     () =>
       options?.length > 0 &&
-      options.map(({ title, options, ChildrenComponent, disabled }, idx) => (
+      options.map(({ title, options, renderChildren, ChildrenComponent, childrenComponentProps, disabled }, idx) => (
         <AccordeonItem key={`AccordeonListItem-${title || idx}`} isOpen={current === idx}>
           <OpenButton
             variant="def"
@@ -37,11 +38,11 @@ const AccordeonList: React.FC<IAccordeonListProps> = ({ options, children }) => 
           </OpenButton>
 
           <ChildrenBox isOpen={current === idx}>
-            {children || (ChildrenComponent ? <ChildrenComponent options={options} /> : null)}
+            {renderChildren || (ChildrenComponent ? <ChildrenComponent options={options} /> : null)}
           </ChildrenBox>
         </AccordeonItem>
       )),
-    [children, current, options]
+    [current, options]
   );
   return <AccoredeonListBox>{renderOptions}</AccoredeonListBox>;
 };

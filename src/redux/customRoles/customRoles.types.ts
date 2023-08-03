@@ -13,6 +13,6 @@ export interface ICustomRole extends IBase {
   label?: string;
   expireAt?: Date | string | number;
   description?: string;
-  actions?: RoleActionType[];
+  actions?: string[];
   accessKeys?: RoleAccessKeyType[];
 }

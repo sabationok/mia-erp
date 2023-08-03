@@ -135,7 +135,7 @@ export const logOutPermissionThunk = createAsyncThunk<
     return thunkAPI.rejectWithValue(axiosErrorCheck(error));
   }
 });
-export const createPermissionThunk = createAsyncThunk<IPermission, ThunkPayload<IPermissionForReq>>(
+export const createPermissionThunk = createAsyncThunk<IPermission, ThunkPayload<IPermissionForReq, IPermission>>(
   'permissions/createPermissionThunk',
   async ({ data, onSuccess, onError }, thunkAPI) => {
     try {
@@ -146,6 +146,25 @@ export const createPermissionThunk = createAsyncThunk<IPermission, ThunkPayload<
       return response.data.data;
     } catch (error) {
       onError && onError(error);
+      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+    }
+  }
+);
+export const inviteUserThunk = createAsyncThunk<IPermission, ThunkPayload<IPermissionForReq, IPermission>>(
+  'permissions/inviteUserThunk',
+  async ({ data, onSuccess, onLoading, onError }, thunkAPI) => {
+    if (!data) return thunkAPI.rejectWithValue('invite data not passed');
+    onLoading && onLoading(true);
+    try {
+      const response = await PermissionsApi.inviteUser(data as IPermissionForReq);
+      if (response) {
+        onSuccess && onSuccess(response.data.data);
+      }
+      onLoading && onLoading(false);
+      return response.data.data;
+    } catch (error) {
+      onError && onError(error);
+      onLoading && onLoading(false);
       return thunkAPI.rejectWithValue(axiosErrorCheck(error));
     }
   }

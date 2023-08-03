@@ -25,7 +25,7 @@ const CellTags: React.FC<CellTagsProps & React.HTMLAttributes<HTMLDivElement>> =
 
   return (
     <CellBase style={{ width }} {...props}>
-      <Content title={`Tags: ${contentTop?.join(', ')}`} className="cellTagsContent">
+      <Content title={`${contentTop?.join(', ')}`} className="cellTagsContent">
         {contentTop?.map(tag => (
           <Tag key={tag}>{tag}</Tag>
         ))}
@@ -40,16 +40,14 @@ const CellBase = styled.div`
 
   height: 100%;
   max-height: 100%;
-
   padding: 2px;
-
-  overflow: hidden;
 `;
 
 const Content = styled.div<Omit<CellTitleContent, 'name'>>`
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
+
   gap: 2px;
 
   width: 100%;
@@ -65,7 +63,9 @@ const Tag = styled.div`
   line-height: 1.4;
 
   border-radius: 2px;
-  border: 1px solid ${({ theme }) => theme.accentColor.base};
+  //border: 1px solid ${({ theme }) => theme.accentColor.base};
+  color: #000;
+  background-color: rgba(255, 136, 0, 0.4);
 `;
 
 export default CellTags;

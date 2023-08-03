@@ -12,9 +12,14 @@ import { AppResponse, IBase, OnlyUUID } from '../global.types';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
 import { ICompany } from '../companies/companies.types';
 import { IManager } from '../auth/auth.types';
-import { IBaseDirItem } from '../../components/Directories/dir.types';
-import { ApiDirType } from '../APP_CONFIGS';
-import { ContractorsTypesEnum } from '../contractors/contractors.types';
+import {
+  ICommunicationDirItem,
+  ICustomerDirItem,
+  IPaymentDirItem,
+  IShipmentDirItem,
+  ISupplierDirItem,
+  IWarehouseDirItem,
+} from '../../components/Directories/dir.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 
 export type OrderFilterOption = FilterOpt;
@@ -24,6 +29,8 @@ export enum OrderTypeEnum {
 }
 export type OrderStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 export interface IOrderSlotItem extends IPriceListItem {
+  slot?: OnlyUUID;
+  order?: OnlyUUID;
   owner: ICompany;
   manager?: IManager;
 
@@ -32,23 +39,35 @@ export interface IOrderSlotItem extends IPriceListItem {
 
 export interface IOrderSlot extends IBase {
   owner: ICompany;
+  order?: OnlyUUID;
   items?: IOrderSlotItem[];
   status?: OrderStatus;
-  warehouse?: IBaseDirItem<any, ApiDirType.WAREHOUSES>;
-  supplier?: IBaseDirItem<ContractorsTypesEnum.SUPPLIER, ApiDirType.CONTRACTORS>;
+  warehouse?: IWarehouseDirItem;
+  supplier?: ISupplierDirItem;
 }
 export interface IOrder extends IBase {
   owner: ICompany;
   manager?: IManager;
 
-  customer?: any;
-  receiver?: any;
+  barCode?: string;
+  code?: string;
+
+  customer?: ICustomerDirItem;
+  customerInfo?: string;
+  customerCommunicationMethod?: ICommunicationDirItem;
+
+  receiver?: ICustomerDirItem;
+  receiverInfo?: string;
+  receiverCommunicationMethod?: ICommunicationDirItem;
 
   slots?: IOrderSlot[];
   status?: OrderStatus;
-
   payments?: OnlyUUID[];
+
   destination?: string;
+  shipmentMethod?: IShipmentDirItem;
+  paymentMethod?: IPaymentDirItem;
+
   comment?: string;
   innerComment?: string;
 }

@@ -15,19 +15,21 @@ export enum PermissionStatus {
 
 export interface IPermission extends IBase {
   status?: PermissionStatus;
+  code?: string | number;
   company?: Partial<ICompany>;
   user?: Partial<IUser>;
   owner?: Partial<IUser>;
   role?: Partial<ICustomRole>;
+  email?: string;
   expireAt?: number | Date;
   permission_token?: string;
 }
 
 export interface IPermissionForReq {
-  company?: { _id: string };
-  user: { _id: string };
   role?: { _id: string };
-  actions: any[];
+  email?: string;
+  expireAt?: number | Date;
+  actions?: any[];
 }
 
 export interface IPermissionResData extends AppResponse<IPermission> {}
@@ -43,6 +45,7 @@ export interface IPermissionReqData<D = IPermissionForReq | Partial<IPermissionF
 export interface IPermissionsState {
   permission: Partial<IPermission>;
   permissions: IPermission[];
+  users: IPermission[];
   permission_token?: string;
   isLoading: boolean;
   error: StateErrorType;

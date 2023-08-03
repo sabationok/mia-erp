@@ -15,8 +15,12 @@ import FormCreateOrder, { FormCreateOrderProps } from '../Forms/FormCreateOrder'
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { IBaseDirItem } from '../Directories/dir.types';
 import FormCreateTag, { FormCreateTagProps } from '../Forms/FormCreateTag';
+import FormCreateMethod, { FormCreateMethodProps } from '../Forms/FormCreateMetod';
+import OrderOverview, { OrderOverviewProps } from '../Modals/OrderOverview';
+import FormInviteUser, { FormInviteUserProps } from '../Forms/FromInviteUser';
 
 export enum Modals {
+  ModalForm = 'ModalForm',
   FormCreateTag = 'FormCreateTag',
   FormCreateActivity = 'FormCreateActivity',
   FormCreateDirTreeComp = 'FormCreateDirTreeComp',
@@ -29,10 +33,12 @@ export enum Modals {
   FormCreateCategory = 'FormCreateCategory',
   FormCreateCompany = 'FormCreateCompany',
   FormCreateOrder = 'FormCreateOrder',
+  FormCreateMethod = 'FormCreateMethod',
+  FormInviteUser = 'FormInviteUser',
 
   PriceListOverview = 'PriceListOverview',
   ProductOverview = 'ProductOverview',
-  ModalForm = 'ModalForm',
+  OrderOverview = 'OrderOverview',
 }
 
 export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
@@ -49,7 +55,10 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   [Modals.FormCreateCompany]: FormCreateCompany,
   [Modals.FormCreateOrder]: FormCreateOrder,
   [Modals.FormCreateTag]: FormCreateTag,
+  [Modals.FormCreateMethod]: FormCreateMethod,
+  [Modals.FormInviteUser]: FormInviteUser,
 
+  [Modals.OrderOverview]: OrderOverview,
   [Modals.PriceListOverview]: PriceListOverview,
   [Modals.ProductOverview]: ProductOverview,
 };
@@ -68,8 +77,10 @@ export interface ModalChildrenProps {
   [Modals.FormCreateCompany]: FormCreateCompanyProps;
   [Modals.FormCreateOrder]: FormCreateOrderProps;
   [Modals.FormCreateCustomRole]: FormCreateCustomRoleProps;
-
+  [Modals.FormCreateMethod]: FormCreateMethodProps;
   [Modals.FormCreateTag]: FormCreateTagProps;
+  [Modals.OrderOverview]: OrderOverviewProps;
+  [Modals.FormInviteUser]: FormInviteUserProps;
 
   [Modals.PriceListOverview]: PriceListOverviewProps;
   [Modals.ProductOverview]: ProductOverviewProps;

@@ -48,12 +48,13 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
 const Container = styled(FlexBox)`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: max-content 1fr;
+  //grid-template-rows: repeat(10, 200px);
 
+  position: relative;
   min-height: 32px;
+  //height: max-content;
   max-height: 32px;
   overflow: hidden;
-  // overflow: auto;
 
   border-top: 1px solid ${({ theme }) => theme.trBorderClr};
   transition: all ${({ theme }) => theme.globals.timingFnMain};
@@ -66,9 +67,6 @@ const Container = styled(FlexBox)`
     max-height: 100%;
 
     & .btn {
-      color: var(--brand_clr__2);
-      fill: var(--brand_clr__2);
-
       background-color: rgba(254, 254, 254, 0.5);
     }
 
@@ -84,14 +82,16 @@ const Container = styled(FlexBox)`
 const ContentBox = styled(FlexBox)`
   position: relative;
   // max-height: 0px;
-  overflow: hidden;
+  //overflow: hidden;
+  height: max-content;
 
   transition: all ${({ theme }) => theme.globals.timingFnMain};
 `;
 const Content = styled(FlexBox)`
-  max-height: 100%;
+  //max-height: 100%;
+  height: max-content;
   max-width: 100%;
-  overflow: hidden;
+  //overflow: hidden;
 `;
 
 const StButton = styled(ButtonIcon)`
@@ -111,6 +111,7 @@ const StButton = styled(ButtonIcon)`
   font-weight: 700;
 
   fill: ${({ theme }) => theme.accentColor.base};
+  border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
 `;
 
 export default FormAccordeonItem;

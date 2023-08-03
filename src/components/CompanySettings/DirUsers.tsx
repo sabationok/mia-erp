@@ -3,28 +3,39 @@ import TableList, { ITableListProps } from 'components/TableList/TableList';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { DirBaseProps } from '../Directories/dir.types';
-import usePermissionsServiceHook, { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
+import usePermissionsServiceHook, {
+  PermissionService,
+  usePermissionsSelector,
+} from '../../hooks/usePermissionsService.hook';
 import { IPermission } from '../../redux/permissions/permissions.types';
 import AppLoader from '../atoms/AppLoader';
+import { IModalProviderContext, useModalProvider } from '../ModalProvider/ModalProvider';
 
 export interface DirUsersProps extends DirBaseProps {
-  getTableSettings: () => ITableListProps<IPermission>;
+  getTableSettings: (options: {
+    modalService: IModalProviderContext;
+    service: PermissionService;
+  }) => ITableListProps<IPermission>;
 }
 
 const DirUsers: React.FC<DirUsersProps> = ({ getTableSettings, ...props }) => {
-  const permissionService = usePermissionsServiceHook();
-  const { getAllByCompanyId } = permissionService;
-  const tableData = usePermissionsSelector().permissions;
+  const service = usePermissionsServiceHook();
+  const modalService = useModalProvider();
+  const { getAllByCompanyId } = service;
+  const tableData = usePermissionsSelector().users;
   const [isLoading, setIsLoading] = useState(false);
 
-  const tableSettingsMemo = useMemo((): ITableListProps => ({ ...getTableSettings() }), [getTableSettings]);
+  const tableSettingsMemo = useMemo(
+    (): ITableListProps => ({ ...getTableSettings({ service, modalService }) }),
+    [getTableSettings, modalService, service]
+  );
 
   useEffect(() => {
     (async () => {
       await getAllByCompanyId({
+        onLoading: setIsLoading,
         onSuccess: data => {},
         onError: () => {},
-        onLoading: setIsLoading,
       });
     })();
   }, [getAllByCompanyId]);

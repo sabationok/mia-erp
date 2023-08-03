@@ -30,7 +30,7 @@ export interface UseAppFormAfterSubmitOptions {
 }
 
 export type AppSubmitHandler<D = any, O = any> = (data: D, options?: UseAppFormAfterSubmitOptions & O) => void;
-export type AppErrorSubmitHandler<E = any> = (errors: E, options?: UseAppFormAfterSubmitOptions) => void;
+export type AppErrorSubmitHandler<E = any, O = any> = (errors: E, options?: UseAppFormAfterSubmitOptions & O) => void;
 const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = any>(
   formProps?: UseFormProps<TFieldValues, TContext>
 ): UseAppFormReturn<TFieldValues, TContext> & UseAppFormAfterSubmitOptions => {

@@ -64,10 +64,6 @@ const Label = styled.div<{
 
   position: relative;
 
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 1.3;
-
   width: 100%;
 
   opacity: ${({ disabled }) => (disabled ? 0.5 : '')};
@@ -77,8 +73,10 @@ const LabelText = styled.label<Pick<InputLabelProps, 'align' | 'direction' | 'up
   display: flex;
   align-items: ${({ align = 'center' }) => align};
 
-  padding: 5px;
+  padding: 8px 8px 4px;
 
+  font-size: 12px;
+  line-height: 1.3;
   font-weight: 500;
   text-transform: ${({ uppercase }) => (uppercase ? 'uppercase' : 'none')};
 

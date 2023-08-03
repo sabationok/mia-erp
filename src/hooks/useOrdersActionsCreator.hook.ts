@@ -22,6 +22,19 @@ const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
   return useCallback(
     (ctx: ITableListContext<IOrder>) => [
       {
+        name: 'openOrderOverview',
+        icon: 'openInNew',
+        onClick: () => {
+          if (!ctx.selectedRow?._id) return;
+          modals.handleOpenModal({
+            Modal: Modals.OrderOverview,
+            props: {
+              order: { _id: ctx.selectedRow?._id, owner: {} as any },
+            },
+          });
+        },
+      },
+      {
         name: 'archiveOrder',
         icon: 'archive',
         disabled: !ctx?.selectedRow?._id,

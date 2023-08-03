@@ -8,7 +8,7 @@ import { useOrdersSelector } from '../../redux/selectors.store';
 import { ISortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
 import { PagePathType } from '../../data/pages.data';
-import { ordersSearchParams, ordersTableColumns } from '../../data/orders.data';
+import { mockOrdersData, ordersSearchParams, ordersTableColumns } from '../../data/orders.data';
 import useOrdersServiceHook from '../../hooks/useOrdersService.hook';
 import { IOrder } from '../../redux/orders/orders.types';
 import useOrdersActionsCreatorHook from '../../hooks/useOrdersActionsCreator.hook';
@@ -81,7 +81,7 @@ const PageOrders: React.FC<any> = (props: Props) => {
   return (
     <AppGridPage path={props.path}>
       <Page>
-        <TableList {...tableConfig} isLoading={isLoading} />
+        <TableList {...tableConfig} tableData={mockOrdersData} isLoading={isLoading} />
       </Page>
     </AppGridPage>
   );

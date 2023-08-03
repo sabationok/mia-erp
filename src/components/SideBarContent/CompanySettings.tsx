@@ -21,6 +21,7 @@ const CompanySettings: React.FC<Props> = ({ options }) => {
           <StButtonIcon
             variant="def"
             onClick={() => {
+              console.log({ ModalChildren, modalChildrenProps });
               modal.handleOpenModal({ ModalChildren, modalChildrenProps });
             }}
           >

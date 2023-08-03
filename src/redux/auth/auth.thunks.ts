@@ -55,7 +55,6 @@ export const logInUserThunk = createAsyncThunk<
 
     onSuccess && onSuccess(data);
     return response.data.data;
-    // return { accessToken: 'accessToken_', email: data?.email };
   } catch (error) {
     onError && onError(error);
 

@@ -79,9 +79,14 @@ export const ordersTableColumns: CellTittleProps<IOrder, DataPath>[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Інвойси', align: 'start', path: 'invoices' },
+    top: {
+      name: 'Інвойси',
+      align: 'start',
+      path: 'invoices',
+      getData: () => ['5651651323213', '6546565165651', '546565165651', '565165132321', '54656516565'],
+    },
     width: '200px',
-    action: 'valueByPath',
+    action: 'tags',
   },
   {
     top: { name: 'Оплати', align: 'start', path: 'payments' },
@@ -151,3 +156,5 @@ export const ordersSearchParams: SelectItem<DataPath>[] = [
     sort: true,
   },
 ];
+
+export const mockOrdersData: IOrder[] = [{ _id: '51651651', owner: { _id: '4515135135131' } as any }];
