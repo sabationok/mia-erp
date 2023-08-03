@@ -11,6 +11,8 @@ import { ApiDirType } from '../../redux/APP_CONFIGS';
 import FormAccordeonItem from './components/FormAccordeonItem';
 import styled from 'styled-components';
 import usePermissionsAsDirItemOptions from '../../hooks/usePermisionsAsWorkersOptions';
+import CheckBox from '../TableList/TebleCells/CellComponents/CheckBox';
+import { useState } from 'react';
 
 export interface FormCreateOrderProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<IOrder>;
@@ -23,7 +25,11 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
   const { directory: shipmentMethods } = useDirectoriesSelector(ApiDirType.METHODS_SHIPMENT);
   const { directory: communicationMethods } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
   const managers = usePermissionsAsDirItemOptions();
+  const [isCustomerAsReceiver, setIsCustomerAsReceiver] = useState(true);
 
+  const toggleCustomerAsReceiver = () => {
+    setIsCustomerAsReceiver(prev => !prev);
+  };
   const {
     formState: { isValid },
     register,
@@ -56,7 +62,7 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
               <InputLabel label={'Замовник'}>
                 <TextareaPrimary
                   maxLength={250}
-                  style={{ maxHeight: 100 }}
+                  required
                   placeholder={'Введіть інформацію про замовника'}
                   {...register('customer')}
                 />
@@ -70,15 +76,26 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
                   required: true,
                 })}
               />
+
+              <FlexBox gap={8} fxDirection={'row'} padding={'6px 0'} alignItems={'center'}>
+                <CheckBox
+                  checked={isCustomerAsReceiver}
+                  onChange={e => {
+                    const { checked } = e;
+                    setIsCustomerAsReceiver(checked);
+                  }}
+                />
+                {'Це отримувач'}
+              </FlexBox>
             </FlexBox>
           </FormAccordeonItem>
 
-          <FormAccordeonItem open renderHeader={'Отримувач'}>
+          <FormAccordeonItem renderHeader={'Отримувач'} disabled={isCustomerAsReceiver}>
             <FlexBox padding={'6px 16px'}>
               <InputLabel label={'Отримувач'}>
                 <TextareaPrimary
                   maxLength={250}
-                  style={{ maxHeight: 100 }}
+                  required
                   placeholder={'Введіть інформацію про отримувача'}
                   {...register('receiver')}
                 />
@@ -109,7 +126,7 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
               <InputLabel label={'Місце призначення'}>
                 <TextareaPrimary
                   maxLength={250}
-                  style={{ maxHeight: 100 }}
+                  required
                   placeholder={'Введіть інформацію про призначення'}
                   {...register('destination')}
                 />
@@ -135,15 +152,14 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
               <InputLabel label={'Коментар'}>
                 <TextareaPrimary
                   maxLength={250}
-                  style={{ maxHeight: 100 }}
                   placeholder={'Введіть коментар до замовлення'}
                   {...register('comment')}
                 />
               </InputLabel>
+
               <InputLabel label={'Службовий коментар'}>
                 <TextareaPrimary
                   maxLength={250}
-                  style={{ maxHeight: 100 }}
                   placeholder={'Цей коментар будть бачити лише працівники компанії'}
                   {...register('innerComment')}
                 />

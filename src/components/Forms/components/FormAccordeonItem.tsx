@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import FlexBox from '../../atoms/FlexBox';
 import styled from 'styled-components';
@@ -10,6 +10,7 @@ export interface FormAccordeonItemProps {
   renderHeader?: React.ReactNode;
   toggled?: boolean;
   open?: boolean;
+  disabled?: boolean;
 }
 
 const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
@@ -18,14 +19,20 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
   renderHeader = 'Інформація',
   toggled = true,
   open = false,
+  disabled,
 }) => {
-  const [isOpen, setIsOpen] = useState(open);
+  const [isOpen, setIsOpen] = useState(!disabled || open);
 
   function handleToggleOpen() {
     if (!toggled) return;
-    setIsOpen(!isOpen);
+    setIsOpen(prev => !prev);
   }
 
+  useEffect(() => {
+    if (typeof disabled !== undefined && disabled) {
+      setIsOpen(false);
+    }
+  }, [disabled]);
   return (
     <Container style={{ maxHeight: isOpen ? '100%' : maxHeight }}>
       <StButton
@@ -33,14 +40,12 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
         iconSize={'24px'}
         variant={'def'}
         onClick={handleToggleOpen}
-        disabled={!children && true}
+        disabled={disabled || !children}
       >
         {renderHeader}
       </StButton>
 
-      <ContentBox>
-        <Content>{children}</Content>
-      </ContentBox>
+      <ContentBox>{children}</ContentBox>
     </Container>
   );
 };
