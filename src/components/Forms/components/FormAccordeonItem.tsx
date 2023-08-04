@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import FlexBox, { FlexBoxProps } from '../../atoms/FlexBox';
 import styled from 'styled-components';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import { isUndefined } from 'lodash';
 
 export interface FormAccordeonItemProps {
   children?: React.ReactNode;
@@ -23,7 +24,7 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
   disabled,
   contentContainerStyle,
 }) => {
-  const [isOpen, setIsOpen] = useState(!disabled || open);
+  const [isOpen, setIsOpen] = useState(!!disabled || open);
 
   function handleToggleOpen() {
     if (!toggled) return;
@@ -31,7 +32,7 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
   }
 
   useEffect(() => {
-    if (typeof disabled !== undefined && disabled) {
+    if (!isUndefined(disabled) && disabled) {
       setIsOpen(false);
     }
   }, [disabled]);

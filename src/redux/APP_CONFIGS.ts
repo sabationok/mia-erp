@@ -80,6 +80,7 @@ export enum ApiDirType {
   METHODS_PAYMENT = 'methods_payment',
   METHODS_SHIPMENT = 'methods_shipment',
   METHODS_COMMUNICATION = 'methods_communication',
+  SOURCE_ATTRACTION = 'attractionSource',
   COLLECTION = 'collection',
   COLLECTIONS = 'collections',
 

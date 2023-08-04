@@ -1,14 +1,17 @@
 import { ApiDirType } from '../APP_CONFIGS';
-import { IBaseDirItem } from '../../components/Directories/dir.types';
+import { IDirItemBase } from '../../components/Directories/dir.types';
 
-export interface IContractor extends IBaseDirItem<ContractorsTypesEnum, ApiDirType.CONTRACTORS> {
-  type: ContractorsTypesEnum;
+export interface IContractor<T extends ContractorsTypesEnum = any>
+  extends IDirItemBase<ApiDirType.CONTRACTORS, ContractorsTypesEnum> {
+  type: T;
   name?: string;
   fullName?: string;
   secondName?: string;
   label?: string;
   email?: string;
   phone?: string;
+  personalTaxCode?: string;
+  attractionSource?: IDirItemBase<ApiDirType.SOURCE_ATTRACTION>;
   ownershipType?: string;
   description?: string;
   tags?: string[];
@@ -21,11 +24,8 @@ export enum ContractorsTypesEnum {
   AUDITOR = 'AUDITOR',
   SUPPLIER = 'SUPPLIER',
   CUSTOMER = 'CUSTOMER',
-  MANAGER = 'MANAGER',
-  FIN_MANAGER = 'FIN_MANAGER',
-  BRAND_MANAGER = 'BRAND_MANAGER',
-  SUPPLY_MANAGER = 'SUPPLY_MANAGER',
-  SALES_MANAGER = 'SALES_MANAGER',
+  CONTRACTOR = 'CONTRACTOR',
+  SUB_CONTRACTOR = 'SUB_CONTRACTOR',
   WORKER = 'WORKER',
   COMMISSION_AGENT = 'COMMISSION_AGENT',
   CONSIGNOR = 'CONSIGNOR',

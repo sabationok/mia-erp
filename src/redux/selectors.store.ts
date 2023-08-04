@@ -29,14 +29,16 @@ export const usePriceListsSelector = () =>
   useSelector<RootState, IPriceListsState>((state: RootState): IPriceListsState => state.priceLists);
 export const useCustomRolesSelector = () =>
   useSelector<RootState, ICustomRolesState>((state: RootState) => state.customRoles);
-export const useDirectoriesSelector = <T = any, DT extends ApiDirType = any>(dirType: DT) => {
+export const useDirectoriesSelector = <DT extends ApiDirType = any, T = any>(
+  dirType: DT
+): {
+  directory: IBaseDirItem<T, DT>[];
+  error?: IDirectoriesState['error'];
+  isLoading?: IDirectoriesState['isLoading'];
+} => {
   const state = useSelector((state: RootState) => state.directories);
 
-  return { directory: state.directories[dirType] } as {
-    directory: IBaseDirItem<T, typeof dirType>[];
-    error: IDirectoriesState['error'];
-    isLoading: IDirectoriesState['isLoading'];
-  };
+  return { directory: state.directories[dirType] };
 };
 export const useFindPriceListById = (_id?: string) => {
   const { lists } = usePriceListsSelector();

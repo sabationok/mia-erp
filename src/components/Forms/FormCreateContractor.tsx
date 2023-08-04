@@ -14,6 +14,7 @@ import { useAppForm } from '../../hooks';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { ContractorFilterOptions } from '../../data/directories.data';
+import CustomSelect from '../atoms/Inputs/CustomSelect';
 
 export interface FormCreateContractorProps
   extends DirectoriesFormProps<ContractorsTypesEnum, IContractor, IContractorFormData> {}
@@ -34,6 +35,7 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
     formState: { errors, isValid },
     formValues: { type: currentType },
     register,
+    registerSelect,
     handleSubmit,
     setValue,
     clearAfterSave,
@@ -72,11 +74,6 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
         ContractorsTypesEnum.CONSIGNOR,
         ContractorsTypesEnum.COUNTER,
         ContractorsTypesEnum.WORKER,
-        ContractorsTypesEnum.MANAGER,
-        ContractorsTypesEnum.FIN_MANAGER,
-        ContractorsTypesEnum.BRAND_MANAGER,
-        ContractorsTypesEnum.SALES_MANAGER,
-        ContractorsTypesEnum.SUPPLY_MANAGER,
       ].includes(currentType)
     );
   }, [currentType]);
@@ -131,6 +128,13 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
         <InputLabel label={t('phone')} direction={'vertical'} error={errors.phone}>
           <InputText placeholder={t('phone')} {...register('phone')} />
         </InputLabel>
+
+        <CustomSelect
+          {...registerSelect('attractionSource', {
+            label: 'Джерело залучення',
+            placeholder: 'Оберіть джерело залучення',
+          })}
+        />
 
         <InputLabel label={t('comment')} direction={'vertical'} error={errors.description}>
           <TextareaPrimary placeholder={t('insertComment')} {...register('description')} maxLength={250} />

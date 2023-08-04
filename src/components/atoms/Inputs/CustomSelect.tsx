@@ -18,12 +18,15 @@ export interface CustomSelectBaseProps<OptType = any> {
   handleOpenState?: (prevState: boolean) => boolean;
   open?: boolean;
   ref?: RefCallBack;
-  selectValue?: OptType;
+  selectValue?: CustomSelectOption<OptType>;
   keepOpen?: boolean;
   inputProps?: Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'>;
   labelProps?: Omit<InputLabelProps, 'onSelect'>;
   fieldMode?: boolean;
-  validateOption?: (option: OptType) => boolean;
+  validateOption?: (option: CustomSelectOption<OptType>) => boolean;
+  getLabel?: (option: CustomSelectOption<OptType>) => string;
+
+  onCreatePress?: () => void;
 }
 
 export type CustomSelectOnClickHandler<OptType = any> = <Option extends OptType = any>(
@@ -57,6 +60,8 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
     onClear,
     fieldMode,
     required,
+    getLabel,
+    onCreatePress,
     ...props
   },
   ref
@@ -77,6 +82,14 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
     },
     [options]
   );
+
+  const inputCurrentValue = useMemo(() => {
+    return getLabel && currentOption
+      ? getLabel(currentOption)
+      : currentOption
+      ? currentOption?.label || currentOption?.name
+      : '';
+  }, [currentOption, getLabel]);
 
   const handleOnSelect = useCallback(
     (option?: any) => {
@@ -116,10 +129,10 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
             (opt?._id && opt?._id === currentOption?._id) || (opt?.value && opt?.value === currentOption?.value)
           }
         >
-          {opt.label || opt.name}
+          {getLabel ? getLabel(opt) : opt.label || opt.name}
         </Option>
       )),
-    [currentOption?._id, currentOption?.value, handleOnSelect, options]
+    [currentOption?._id, currentOption?.value, getLabel, handleOnSelect, options]
   );
 
   useEffect(() => {
@@ -154,13 +167,12 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
             <StyledInput
               disabled={!fieldMode}
               required={required}
-              value={currentOption?.label || currentOption?.name || ''}
-              ref={ref}
               {...omit(
                 { ...pick(props, [`${fieldMode ? 'onChange' : ''}`, 'onBlur', 'name', 'id', 'ref', 'placeholder']) },
                 ['error', 'success', 'loading']
               )}
               {...inputProps}
+              value={inputCurrentValue}
             />
 
             <IconsBox fxDirection={'row'} gap={6} fillHeight alignItems={'center'} padding={'0 8px 0 0'}>
@@ -193,8 +205,13 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
             renderOptions
           ) : (
             <NoOptions fillWidth fxDirection={'row'} alignItems={'center'} justifyContent={'center'}>
-              Опції відсутні
+              <span>{'Опції відсутні'}</span>
             </NoOptions>
+          )}
+          {onCreatePress && (
+            <CreateButton variant={'defOutlinedSmall'} endIcon={'plus'} endIconSize={'24px'} onClick={onCreatePress}>
+              <span>{'Створити'}</span>
+            </CreateButton>
           )}
         </FlexBox>
       </Options>
@@ -203,10 +220,6 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
 };
 
 const Options = styled(FlexBox)<{ isOpen?: boolean; inView?: boolean; intersectionRatio?: number }>`
-  // position: absolute;
-  // top: calc(100% + 4px);
-  // left: 0;
-  // z-index: ${({ isOpen }) => (isOpen ? 100 : 10)};
   font-size: 14px;
 
   max-height: ${({ isOpen }) => (isOpen ? '120px' : 0)};
@@ -320,6 +333,11 @@ const IconsBox = styled(FlexBox)`
 
   max-height: 100%;
 
+  color: ${({ theme }) => theme.accentColor.base};
+  fill: ${({ theme }) => theme.accentColor.base};
+`;
+
+const CreateButton = styled(ButtonIcon)`
   color: ${({ theme }) => theme.accentColor.base};
   fill: ${({ theme }) => theme.accentColor.base};
 `;

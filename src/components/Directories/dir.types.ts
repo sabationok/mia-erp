@@ -1,6 +1,11 @@
 import { ModalFormProps } from '../ModalForm';
-import { CategoryTypes, ICategory, ICategoryFormData } from '../../redux/directories/directories.types';
-import { CountType, ICount, ICountFormData } from '../../redux/directories/counts.types';
+import {
+  CategoryTrTypeEnum,
+  CategoryTypes,
+  ICategory,
+  ICategoryFormData,
+} from '../../redux/directories/directories.types';
+import { CountsTypesEnum, CountType, ICount, ICountFormData } from '../../redux/directories/counts.types';
 import { FilterOpt } from '../ModalForm/ModalFilter';
 import { IBase } from '../../redux/global.types';
 import { ICompany } from '../../redux/companies/companies.types';
@@ -20,6 +25,7 @@ export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> exte
   childrenList?: IBaseDirItem<Type, DirType>[];
   type?: Type;
   name?: string;
+  secondName?: string;
   label?: string;
   status?: 'ARCHIVED' | 'DELETED' | 'ACTIVE';
   taxCode?: string | number;
@@ -28,10 +34,11 @@ export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> exte
   email?: string;
   phone?: string;
 }
+export interface IDirItemBase<DT extends ApiDirType = any, T = any> extends IBaseDirItem<T, DT> {}
 export interface DirBaseProps extends ModalFormProps {
   title: string;
 }
-
+export type DirectoryItemType = ContractorsTypesEnum & CountsTypesEnum & CategoryTrTypeEnum;
 export interface DirectoriesFormProps<
   ItemType = any,
   ItemDataType = any,
@@ -171,7 +178,6 @@ export interface ICustomerDirItem extends IBaseDirItem<ContractorsTypesEnum.CUST
 export interface IShipmentDirItem extends IBaseDirItem<any, ApiDirType.METHODS_SHIPMENT> {}
 export interface ICommunicationDirItem extends IBaseDirItem<any, ApiDirType.METHODS_COMMUNICATION> {}
 export interface IPaymentDirItem extends IBaseDirItem<any, ApiDirType.METHODS_PAYMENT> {}
-export interface IManagerDirItem extends IBaseDirItem<ContractorsTypesEnum.MANAGER, ApiDirType.CONTRACTORS> {}
 export interface IWarehouseDirItem extends IBaseDirItem<any, ApiDirType.WAREHOUSES> {}
 
 export type MethodDirType = ApiDirType.METHODS_SHIPMENT | ApiDirType.METHODS_COMMUNICATION | ApiDirType.METHODS_PAYMENT;

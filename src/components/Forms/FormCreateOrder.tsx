@@ -13,19 +13,55 @@ import styled from 'styled-components';
 import usePermissionsAsDirItemOptions from '../../hooks/usePermisionsAsWorkersOptions';
 import { useMemo, useState } from 'react';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import InputText from '../atoms/Inputs/InputText';
 import ProductCardSimpleOverview from '../Products/ProductCardSimpleOverview';
+import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
+import { useModalProvider } from '../ModalProvider/ModalProvider';
+import { Modals } from '../ModalProvider/Modals';
+import useDirServiceHook from '../../hooks/useDirService.hook';
+import { FormCreateContractorProps } from './FormCreateContractor';
 
 export interface FormCreateOrderProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<IOrder>;
 }
+const useContractorsDirectorySelectorByType = <T extends ContractorsTypesEnum = any>(type: T) => {
+  const { directory: customers } = useDirectoriesSelector<ApiDirType.CONTRACTORS, ContractorsTypesEnum.CUSTOMER>(
+    ApiDirType.CONTRACTORS
+  );
 
+  return useMemo(() => customers.filter(el => el.type === type), [type, customers]);
+};
+
+export const useModalFormCreateContractor = () => {
+  const modalS = useModalProvider();
+  const service = useDirServiceHook();
+  const open = (props?: FormCreateContractorProps) => {
+    const modal = modalS.handleOpenModal({
+      Modal: Modals.FormCreateContractor,
+      props: {
+        title: 'Create:',
+        ...props,
+        onSubmit: (data, o) => {
+          service.create({
+            data: { data, dirType: ApiDirType.CONTRACTORS },
+            onSuccess: () => {
+              modal?.onClose && modal?.onClose();
+            },
+          });
+        },
+      },
+    });
+  };
+
+  return open;
+};
 export interface FormCreateOrderState extends Omit<IOrder, '_id' | 'createdAt' | 'updatedAt' | 'deletedAt'> {}
 
-const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props }) => {
+const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmit, ...props }) => {
   const { directory: paymentsMethods } = useDirectoriesSelector(ApiDirType.METHODS_PAYMENT);
   const { directory: shipmentMethods } = useDirectoriesSelector(ApiDirType.METHODS_SHIPMENT);
   const { directory: communicationMethods } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
+  const customers = useContractorsDirectorySelectorByType(ContractorsTypesEnum.CUSTOMER);
+  const onCreateContractor = useModalFormCreateContractor();
   const managers = usePermissionsAsDirItemOptions();
   const [isReceiverInfo, setIsReceiverInfo] = useState(false);
 
@@ -34,14 +70,13 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
     register,
     registerSelect,
     handleSubmit,
-  } = useAppForm<FormCreateOrderState>({
-    defaultValues: { receiver: { name: 'Петро' }, customer: { name: 'Іванка' } },
-  });
+  } = useAppForm<FormCreateOrderState>({ defaultValues: defaultState });
 
   const onValid = (data?: FormCreateOrderState) => {
     console.log('FormCreateOrder');
     console.log(data);
   };
+
   const renderProducts = useMemo(() => {
     const list = [
       { _id: 'sdfbsdfb', label: 'Товар 1' },
@@ -51,6 +86,7 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
     ];
     return list.map((p, idx) => <ProductCardSimpleOverview key={idx.toString()} product={p} />);
   }, []);
+
   return (
     <ModalForm fillHeight {...props} isValid={isValid} onSubmit={handleSubmit(onValid)}>
       <Container flex={1} padding={'8px 0'}>
@@ -66,40 +102,19 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
         </FlexBox>
 
         <FlexBox>
-          <FormAccordeonItem open renderHeader={'Вміст'}>
-            {renderProducts}
-          </FormAccordeonItem>
+          <FormAccordeonItem renderHeader={'Вміст'}>{renderProducts}</FormAccordeonItem>
+
           <FormAccordeonItem open renderHeader={'Замовник'}>
-            <InputLabel label={"Ім'я"} required>
-              <InputText
-                maxLength={250}
-                placeholder={"Ім'я"}
-                {...register('customer.name', { required: true })}
-                required
-              />
-            </InputLabel>
-
-            <InputLabel label={'Прізвище'} required>
-              <InputText
-                maxLength={250}
-                placeholder={'Введіть прізвище'}
-                required
-                {...register('customer.secondName', { required: true })}
-              />
-            </InputLabel>
-
-            <InputLabel label={'Телефон'} required>
-              <InputText
-                maxLength={250}
-                placeholder={'Введіть телефон'}
-                required
-                {...register('customer.phone', { required: true })}
-              />
-            </InputLabel>
-
-            <InputLabel label={'Емейл'}>
-              <InputText maxLength={250} placeholder={'Введіть емейл'} type={'email'} {...register('customer.email')} />
-            </InputLabel>
+            <CustomSelect
+              {...registerSelect('customer', {
+                options: customers,
+                label: 'Замовник',
+                placeholder: 'Оберіть замовника',
+                required: true,
+                getLabel: o => `${o?.name} ${o?.secondName}`,
+                onCreatePress: () => onCreateContractor({ defaultState: { type: ContractorsTypesEnum.CUSTOMER } }),
+              })}
+            />
 
             <CustomSelect
               {...registerSelect('customerCommunicationMethod', {
@@ -118,48 +133,22 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
                   setIsReceiverInfo(true);
                 }}
               >
-                {'Додати інформацію про отримувача'}
+                {'Встановити отримувача'}
               </ButtonIcon>
             )}
           </FormAccordeonItem>
 
           {isReceiverInfo && (
             <FormAccordeonItem renderHeader={'Отримувач'} open={isReceiverInfo}>
-              <InputLabel label={"Ім'я"} required={isReceiverInfo}>
-                <InputText
-                  maxLength={250}
-                  placeholder={"Ім'я"}
-                  {...register('receiver.name', { required: isReceiverInfo })}
-                  required={isReceiverInfo}
-                />
-              </InputLabel>
-
-              <InputLabel label={'Прізвище'} required={isReceiverInfo}>
-                <InputText
-                  maxLength={250}
-                  placeholder={'Введіть прізвище'}
-                  required={isReceiverInfo}
-                  {...register('receiver.secondName', { required: isReceiverInfo })}
-                />
-              </InputLabel>
-
-              <InputLabel label={'Телефон'} required={isReceiverInfo}>
-                <InputText
-                  required={isReceiverInfo}
-                  maxLength={250}
-                  placeholder={'Введіть телефон'}
-                  {...register('receiver.phone', { required: isReceiverInfo })}
-                />
-              </InputLabel>
-
-              <InputLabel label={'Емейл'}>
-                <InputText
-                  maxLength={250}
-                  placeholder={'Введіть емейл'}
-                  type={'email'}
-                  {...register('receiver.email')}
-                />
-              </InputLabel>
+              <CustomSelect
+                {...registerSelect('receiver', {
+                  options: customers,
+                  label: 'Отримувач',
+                  placeholder: 'Оберіть отримувача',
+                  required: true,
+                  getLabel: o => `${o?.name} ${o?.secondName}`,
+                })}
+              />
 
               <CustomSelect
                 {...registerSelect('receiverCommunicationMethod', {
@@ -177,7 +166,7 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
                   setIsReceiverInfo(false);
                 }}
               >
-                {'Видалити інформацію про отримувача'}
+                {'Видалити отримувача'}
               </ButtonIcon>
             </FormAccordeonItem>
           )}
@@ -239,11 +228,6 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onSubmit, ...props })
 const Container = styled(FlexBox)`
   position: relative;
   overflow: auto;
-`;
-const GridBox = styled(FlexBox)`
-  position: relative;
-
-  min-height: max-content;
 `;
 
 export default FormCreateOrder;

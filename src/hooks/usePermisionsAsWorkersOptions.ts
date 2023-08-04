@@ -8,7 +8,7 @@ const usePermissionsAsDirItemOptions = () => {
   return useMemo((): Partial<IBaseDirItem>[] => {
     return users
       .filter(el => el.status === PermissionStatus.ACCEPTED)
-      .map(({ user, email, _id }) => ({ _id, label: `${user?.name || email}` }));
+      .map(({ user, email, _id }) => ({ _id, label: `${user?.name || ''} ${email || ''}` }));
   }, [users]);
 };
 export default usePermissionsAsDirItemOptions;
