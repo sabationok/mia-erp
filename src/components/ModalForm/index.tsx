@@ -11,7 +11,7 @@ export interface ModalFormBaseProps<T = any>
   onSubmit?: (ev: FormEvent<HTMLFormElement>) => void;
   onReset?: (args?: any) => void;
   footer?: boolean;
-  defaultState?: T;
+  defaultState?: Partial<T>;
   beforeSubmit?: () => void;
   afterSubmit?: () => void;
   beforeClose?: () => void;
@@ -22,7 +22,8 @@ export interface ModalFormBaseProps<T = any>
 
 export interface ModalFormAddsProps {
   footer?: boolean;
-  extraFooter?: JSX.Element;
+  extraFooter?: React.ReactNode;
+  extraHeader?: React.ReactNode;
   fillWidth?: boolean;
   fillHeight?: boolean;
   fitContentV?: boolean;
@@ -48,6 +49,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
   closeAfterSubmit,
   defaultOption,
   extraFooter,
+  extraHeader,
   isValid = true,
   ...props
 }) => {
@@ -85,6 +87,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
             defaultOption={defaultOption}
           />
         )}
+        {extraHeader}
       </ModalHeader>
 
       <ModalMain className="main" filterOn={!!filterOptions}>

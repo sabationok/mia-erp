@@ -1,5 +1,6 @@
 import { ApiDirType } from '../APP_CONFIGS';
 import { IDirItemBase } from '../../components/Directories/dir.types';
+import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 
 export interface IContractor<T extends ContractorsTypesEnum = any>
   extends IDirItemBase<ApiDirType.CONTRACTORS, ContractorsTypesEnum> {
@@ -20,8 +21,8 @@ export interface IContractor<T extends ContractorsTypesEnum = any>
 export interface IContractorFormData extends Omit<IContractor, '_id' | 'createdAt' | 'updatedAt'> {}
 
 export enum ContractorsTypesEnum {
-  COUNTER = 'COUNTER',
-  AUDITOR = 'AUDITOR',
+  // COUNTER = 'COUNTER',
+  // AUDITOR = 'AUDITOR',
   SUPPLIER = 'SUPPLIER',
   CUSTOMER = 'CUSTOMER',
   CONTRACTOR = 'CONTRACTOR',
@@ -31,5 +32,11 @@ export enum ContractorsTypesEnum {
   CONSIGNOR = 'CONSIGNOR',
   TRANSPORTER = 'TRANSPORTER',
 }
+export enum CounterpartyOwnershipEnum {
+  company = 'company',
+  entrepreneur = 'entrepreneur',
+  person = 'person',
+}
+export type CounterpartyOwnershipFilterOption = FilterOpt<CounterpartyOwnershipEnum>;
 
 export type ContractorsTypes = keyof typeof ContractorsTypesEnum;

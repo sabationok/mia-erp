@@ -44,7 +44,7 @@ export interface DirectoriesFormProps<
   ItemDataType = any,
   FormData = any,
   DirType extends ApiDirType = any
-> extends Omit<ModalFormProps, 'onSubmit'> {
+> extends Omit<ModalFormProps<any, any, ItemDataType>, 'onSubmit'> {
   _id?: string;
   type?: ItemType;
   data?: ItemDataType;

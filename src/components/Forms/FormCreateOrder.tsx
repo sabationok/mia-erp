@@ -15,10 +15,7 @@ import { useMemo, useState } from 'react';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import ProductCardSimpleOverview from '../Products/ProductCardSimpleOverview';
 import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
-import { useModalProvider } from '../ModalProvider/ModalProvider';
-import { Modals } from '../ModalProvider/Modals';
-import useDirServiceHook from '../../hooks/useDirService.hook';
-import { FormCreateContractorProps } from './FormCreateContractor';
+import { useModalFormCreateCounterparty } from '../../hooks/modalHooks';
 
 export interface FormCreateOrderProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<IOrder>;
@@ -31,29 +28,6 @@ const useContractorsDirectorySelectorByType = <T extends ContractorsTypesEnum = 
   return useMemo(() => customers.filter(el => el.type === type), [type, customers]);
 };
 
-export const useModalFormCreateContractor = () => {
-  const modalS = useModalProvider();
-  const service = useDirServiceHook();
-  const open = (props?: FormCreateContractorProps) => {
-    const modal = modalS.handleOpenModal({
-      Modal: Modals.FormCreateContractor,
-      props: {
-        title: 'Create:',
-        ...props,
-        onSubmit: (data, o) => {
-          service.create({
-            data: { data, dirType: ApiDirType.CONTRACTORS },
-            onSuccess: () => {
-              modal?.onClose && modal?.onClose();
-            },
-          });
-        },
-      },
-    });
-  };
-
-  return open;
-};
 export interface FormCreateOrderState extends Omit<IOrder, '_id' | 'createdAt' | 'updatedAt' | 'deletedAt'> {}
 
 const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmit, ...props }) => {
@@ -61,7 +35,7 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
   const { directory: shipmentMethods } = useDirectoriesSelector(ApiDirType.METHODS_SHIPMENT);
   const { directory: communicationMethods } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
   const customers = useContractorsDirectorySelectorByType(ContractorsTypesEnum.CUSTOMER);
-  const onCreateContractor = useModalFormCreateContractor();
+  const onCreateCounterparty = useModalFormCreateCounterparty();
   const managers = usePermissionsAsDirItemOptions();
   const [isReceiverInfo, setIsReceiverInfo] = useState(false);
 
@@ -112,7 +86,11 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
                 placeholder: 'Оберіть замовника',
                 required: true,
                 getLabel: o => `${o?.name} ${o?.secondName}`,
-                onCreatePress: () => onCreateContractor({ defaultState: { type: ContractorsTypesEnum.CUSTOMER } }),
+                onCreatePress: () =>
+                  onCreateCounterparty({
+                    defaultState: { type: ContractorsTypesEnum.CUSTOMER },
+                    isFilterByTypeOn: false,
+                  }),
               })}
             />
 
@@ -147,6 +125,11 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
                   placeholder: 'Оберіть отримувача',
                   required: true,
                   getLabel: o => `${o?.name} ${o?.secondName}`,
+                  onCreatePress: () =>
+                    onCreateCounterparty({
+                      defaultState: { type: ContractorsTypesEnum.CUSTOMER },
+                      isFilterByTypeOn: false,
+                    }),
                 })}
               />
 

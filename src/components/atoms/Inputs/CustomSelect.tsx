@@ -227,10 +227,12 @@ const Options = styled(FlexBox)<{ isOpen?: boolean; inView?: boolean; intersecti
   width: 100%;
   overflow: hidden;
 
-  margin-top: 4px;
+  margin-top: 6px;
 
   border-radius: 2px;
-  background-color: ${({ theme }) => theme.fieldBackgroundColor};
+  background-color: ${({ theme }) => theme.modalBackgroundColor};
+  border: 1px solid ${({ theme }) => theme.fieldBackgroundColor};
+  box-shadow: 0 10px 12px 5px rgba(21, 21, 21, 0.25), 0 10px 12px 4px rgba(211, 211, 211, 0.15);
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
 `;
 
@@ -238,6 +240,7 @@ const Option = styled(FieldBox)<{ isActive?: boolean }>`
   min-height: 28px;
 
   font-weight: ${({ isActive }) => (isActive ? 700 : '')};
+  background-color: ${({ theme }) => theme.modalBackgroundColor};
 `;
 
 const LabelInner = styled.fieldset<{

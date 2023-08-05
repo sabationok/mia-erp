@@ -25,7 +25,11 @@ import { StorageItemFilterOption } from '../redux/products/products.types';
 import { ModalChildrenProps, Modals } from '../components/ModalProvider/Modals';
 import { FilterOpt } from '../components/ModalForm/ModalFilter';
 import { enumToArray } from '../utils';
-import { ContractorsTypesEnum } from '../redux/contractors/contractors.types';
+import {
+  ContractorsTypesEnum,
+  CounterpartyOwnershipEnum,
+  CounterpartyOwnershipFilterOption,
+} from '../redux/contractors/contractors.types';
 
 export const categoriesFilterOptions: CategoryFilterOpt[] = [
   { label: t('INCOMES'), value: 'INCOME' },
@@ -44,10 +48,23 @@ export const tagsFilterOptions: FilterOpt<ContractorsTypesEnum>[] = enumToArray(
   label: t(ContractorsTypesEnum[el]),
   value: el,
 }));
-export const ContractorFilterOptions: FilterOpt<ContractorsTypesEnum>[] = enumToArray(ContractorsTypesEnum).map(el => ({
-  label: t(ContractorsTypesEnum[el]),
+export const counterpartyFilterOptions: FilterOpt<ContractorsTypesEnum>[] = enumToArray(ContractorsTypesEnum).map(
+  el => ({
+    label: t(ContractorsTypesEnum[el]),
+    value: el,
+  })
+);
+export const counterpartyOwnershipFilterOptions: CounterpartyOwnershipFilterOption[] = enumToArray(
+  CounterpartyOwnershipEnum
+).map(el => ({
+  label: t(CounterpartyOwnershipEnum[el]),
   value: el,
 }));
+//     [
+//   { value: CounterpartyEntrepreneurshipEnum.COMPANY, label: 'Компанія' },
+//   { value: CounterpartyEntrepreneurshipEnum.ENTREPRENEUR, label: 'ФОП' },
+//   { value: CounterpartyEntrepreneurshipEnum.PERSON, label: 'Фізична особа' },
+// ];
 export const getDirInTreeActionsCreator =
   (
     Modal: Modals = Modals.FormCreateDirTreeComp,
@@ -201,7 +218,7 @@ const ContractorsProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
   title: t('contractors'),
   fillHeight: true,
   dirType: ApiDirType.CONTRACTORS,
-  filterOptions: ContractorFilterOptions,
+  filterOptions: counterpartyFilterOptions,
   getTableSettings: ({ service, modalService, type, dirType }) => ({
     tableTitles: contractorsColumns,
     tableSearchParams: contractorsSearchParams,

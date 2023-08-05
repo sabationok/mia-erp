@@ -10,7 +10,7 @@ export interface ModalFormFilterProps<V = any, D = any> {
   filterOptions?: FilterOpt<V, D>[];
   defaultFilterValue?: string;
 }
-
+export interface IFilterOptionBase {}
 export interface FilterOpt<V = any, D = any> extends Record<string, any> {
   _id?: string;
   label: string;
@@ -81,10 +81,12 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
     [current, filterOptions, handleSelectOpt]
   );
 
-  return (
+  return filterOptions?.length && filterOptions?.length > 0 ? (
     <Filter className="filter" gridRepeat={filterOptions?.length} {...props}>
       {renderOptions}
     </Filter>
+  ) : (
+    <></>
   );
 };
 

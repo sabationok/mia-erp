@@ -1,5 +1,5 @@
 import { ApiDirType } from '../redux/APP_CONFIGS';
-import { ContractorsTypesEnum } from '../redux/contractors/contractors.types';
+import { ContractorsTypesEnum, CounterpartyOwnershipEnum } from '../redux/contractors/contractors.types';
 
 export const langUa = {
   // DIRECTORIES
@@ -9,8 +9,8 @@ export const langUa = {
   [ApiDirType.BRANDS]: 'Бренди',
   [ApiDirType.TAGS]: 'Теги',
 
-  [ContractorsTypesEnum.COUNTER]: 'Бухгалтер',
-  [ContractorsTypesEnum.AUDITOR]: 'Аудитор',
+  counter: 'Бухгалтер',
+  auditor: 'Аудитор',
   [ContractorsTypesEnum.SUPPLIER]: 'Постачальник',
   [ContractorsTypesEnum.CUSTOMER]: 'Клієнт',
   [ContractorsTypesEnum.CONTRACTOR]: 'Підрядник',
@@ -22,6 +22,10 @@ export const langUa = {
   [ContractorsTypesEnum.COMMISSION_AGENT]: 'Комісіонер',
   [ContractorsTypesEnum.CONSIGNOR]: 'Комітент',
   [ContractorsTypesEnum.TRANSPORTER]: 'Перевізник',
+
+  [CounterpartyOwnershipEnum.company]: 'Юридична особа',
+  [CounterpartyOwnershipEnum.entrepreneur]: 'ФОП',
+  [CounterpartyOwnershipEnum.person]: 'Фізична особа',
 
   brand: 'Бренд',
   selectBrand: 'Оберіть бренд',
@@ -61,7 +65,7 @@ export const langUa = {
   subCountIn: 'Суб-рахунок IN',
   countOut: 'Рахунок OUT',
   subCountOut: 'Суб-рахунок OUT',
-
+  ownership: 'Форма власності',
   name: "Ім'я",
   insertName: "Введіть ім'я",
   type: 'Тип',
@@ -118,7 +122,8 @@ export const langUa = {
   archive: 'Архівувати',
   unArchive: 'Відновити',
 
-  taxCode: 'ІПН/ЄДРПОУ',
+  taxCode: 'ЄДРПОУ',
+  personalTaxCode: 'ІПН',
 
   INCOME: 'Дохід',
   INCOMES: 'Доходи',

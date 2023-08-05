@@ -13,11 +13,14 @@ import React, { useMemo } from 'react';
 import { useAppForm } from '../../hooks';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import { ContractorFilterOptions } from '../../data/directories.data';
+import { counterpartyFilterOptions, counterpartyOwnershipFilterOptions } from '../../data/directories.data';
 import CustomSelect from '../atoms/Inputs/CustomSelect';
+import ButtonGroup from '../atoms/ButtonGroup';
 
 export interface FormCreateContractorProps
-  extends DirectoriesFormProps<ContractorsTypesEnum, IContractor, IContractorFormData> {}
+  extends DirectoriesFormProps<ContractorsTypesEnum, IContractor, IContractorFormData> {
+  isFilterByTypeOn?: boolean;
+}
 
 const validation = yup.object().shape({
   type: yup.string().required(),
@@ -30,7 +33,15 @@ const validation = yup.object().shape({
   description: yup.string().max(250).optional(),
 });
 
-const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, type, parent, data, ...props }) => {
+const FormCreateContractor: React.FC<FormCreateContractorProps> = ({
+  isFilterByTypeOn = true,
+  onSubmit,
+  type,
+  parent,
+  data,
+  defaultState,
+  ...props
+}) => {
   const {
     formState: { errors, isValid },
     formValues: { type: currentType },
@@ -42,7 +53,7 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
     closeAfterSave,
     toggleAfterSubmitOption,
   } = useAppForm<IContractorFormData>({
-    defaultValues: data,
+    defaultValues: defaultState,
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
@@ -60,7 +71,8 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
         ContractorsTypesEnum.SUPPLIER,
         ContractorsTypesEnum.COMMISSION_AGENT,
         ContractorsTypesEnum.CONSIGNOR,
-        ContractorsTypesEnum.AUDITOR,
+        ContractorsTypesEnum.CONTRACTOR,
+        ContractorsTypesEnum.SUB_CONTRACTOR,
       ].includes(currentType)
     );
   }, [currentType]);
@@ -68,23 +80,17 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
   const renderNamesInputs = useMemo(() => {
     return (
       currentType &&
-      [
-        ContractorsTypesEnum.CUSTOMER,
-        ContractorsTypesEnum.AUDITOR,
-        ContractorsTypesEnum.CONSIGNOR,
-        ContractorsTypesEnum.COUNTER,
-        ContractorsTypesEnum.WORKER,
-      ].includes(currentType)
+      [ContractorsTypesEnum.CUSTOMER, ContractorsTypesEnum.CONSIGNOR, ContractorsTypesEnum.WORKER].includes(currentType)
     );
   }, [currentType]);
 
   return (
     <ModalForm
-      style={{ maxWidth: 480 }}
+      style={{ maxWidth: '100%', width: 480 }}
       {...props}
       onSubmit={formEventWrapper(onSubmit)}
       onOptSelect={(_o, v) => setValue('type', v)}
-      filterOptions={ContractorFilterOptions}
+      filterOptions={isFilterByTypeOn ? counterpartyFilterOptions : undefined}
       isValid={isValid}
       title={`Створити контрагента: ${t(currentType)}`}
       extraFooter={
@@ -97,35 +103,38 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
     >
       <Inputs>
         {!renderNamesInputs && renderLabelInput && (
-          <InputLabel label={t('label')} direction={'vertical'} error={errors.label} required={!renderNamesInputs}>
+          <InputLabel label={t('label')} error={errors.label} required={!renderNamesInputs}>
             <InputText placeholder={t('insertLabel')} {...register('label')} required={!renderNamesInputs} autoFocus />
           </InputLabel>
         )}
         {renderNamesInputs && (
           <>
-            <InputLabel label={t('name')} direction={'vertical'} error={errors.name} required={renderLabelInput}>
+            <InputLabel label={t('name')} error={errors.name} required={renderLabelInput}>
               <InputText placeholder={t('insertLabel')} {...register('name')} required={renderLabelInput} autoFocus />
             </InputLabel>
-            <InputLabel
-              label={t('secondName')}
-              direction={'vertical'}
-              error={errors.secondName}
-              required={renderLabelInput}
-            >
+
+            <InputLabel label={t('secondName')} error={errors.secondName} required={renderLabelInput}>
               <InputText placeholder={t('insertSecondName')} {...register('secondName')} required={renderLabelInput} />
             </InputLabel>
           </>
         )}
+        <InputLabel label={t('ownership')} error={errors.label} required={!renderNamesInputs}>
+          <ButtonGroup options={counterpartyOwnershipFilterOptions} borderRadius={'4px'} />
+        </InputLabel>
 
-        <InputLabel label={t('taxCode')} direction={'vertical'} error={errors.taxCode}>
+        <InputLabel label={t('taxCode')} error={errors.taxCode}>
           <InputText placeholder={t('taxCode')} {...register('taxCode')} />
         </InputLabel>
 
-        <InputLabel label={t('email')} direction={'vertical'} error={errors.email}>
+        <InputLabel label={t('personalTaxCode')} error={errors.taxCode}>
+          <InputText placeholder={t('personalTaxCode')} {...register('personalTaxCode')} />
+        </InputLabel>
+
+        <InputLabel label={t('email')} error={errors.email}>
           <InputText placeholder={t('email')} {...register('email')} />
         </InputLabel>
 
-        <InputLabel label={t('phone')} direction={'vertical'} error={errors.phone}>
+        <InputLabel label={t('phone')} error={errors.phone}>
           <InputText placeholder={t('phone')} {...register('phone')} />
         </InputLabel>
 
@@ -136,7 +145,7 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
           })}
         />
 
-        <InputLabel label={t('comment')} direction={'vertical'} error={errors.description}>
+        <InputLabel label={t('comment')} error={errors.description}>
           <TextareaPrimary placeholder={t('insertComment')} {...register('description')} maxLength={250} />
         </InputLabel>
       </Inputs>
@@ -149,6 +158,8 @@ const Inputs = styled.div`
   gap: 8px;
 
   padding: 16px;
+
+  overflow: auto;
 
   background-color: inherit;
 `;
