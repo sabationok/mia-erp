@@ -85,7 +85,7 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
                 label: 'Замовник',
                 placeholder: 'Оберіть замовника',
                 required: true,
-                getLabel: o => `${o?.name} ${o?.secondName}`,
+                getLabel: o => `${o?.name} ${o?.secondName} ${o?.label || ''}`,
                 onCreatePress: () =>
                   onCreateCounterparty({
                     defaultState: { type: ContractorsTypesEnum.CUSTOMER },
@@ -124,7 +124,7 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
                   label: 'Отримувач',
                   placeholder: 'Оберіть отримувача',
                   required: true,
-                  getLabel: o => `${o?.name} ${o?.secondName}`,
+                  getLabel: o => `${o?.name} ${o?.secondName} ${o?.label || ''}`,
                   onCreatePress: () =>
                     onCreateCounterparty({
                       defaultState: { type: ContractorsTypesEnum.CUSTOMER },

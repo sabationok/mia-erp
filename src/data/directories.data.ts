@@ -26,8 +26,8 @@ import { ModalChildrenProps, Modals } from '../components/ModalProvider/Modals';
 import { FilterOpt } from '../components/ModalForm/ModalFilter';
 import { enumToArray } from '../utils';
 import {
+  BusinessSubjectTypeEnum,
   ContractorsTypesEnum,
-  CounterpartyOwnershipEnum,
   CounterpartyOwnershipFilterOption,
 } from '../redux/contractors/contractors.types';
 
@@ -54,10 +54,10 @@ export const counterpartyFilterOptions: FilterOpt<ContractorsTypesEnum>[] = enum
     value: el,
   })
 );
-export const counterpartyOwnershipFilterOptions: CounterpartyOwnershipFilterOption[] = enumToArray(
-  CounterpartyOwnershipEnum
+export const businessSubjectTypeFilterOptions: CounterpartyOwnershipFilterOption[] = enumToArray(
+  BusinessSubjectTypeEnum
 ).map(el => ({
-  label: t(CounterpartyOwnershipEnum[el]),
+  label: t(BusinessSubjectTypeEnum[el]),
   value: el,
 }));
 //     [

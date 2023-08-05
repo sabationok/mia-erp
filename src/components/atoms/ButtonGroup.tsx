@@ -4,28 +4,33 @@ import ButtonIcon from './ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import { FilterOpt } from '../ModalForm/ModalFilter';
 
-export interface ButtonGroupProps {
-  options?: FilterOpt[];
-  onSelect?: (option: FilterOpt, value?: any, index?: number) => void;
+export interface ButtonGroupProps<V = any> {
+  options?: FilterOpt<V>[];
+  onSelect?: ButtonGroupOnSelectHandler<V>;
   backgroundColor?: string;
   borderRadius?: string;
 }
-
+export type ButtonGroupOnSelectHandler<V = any> = (info: { option: FilterOpt<V>; value?: V; index: number }) => void;
 const ButtonGroup: React.FC<ButtonGroupProps> = ({ options, borderRadius, onSelect }) => {
   const [current, setCurrent] = useState(0);
 
   const handleSelect = useCallback(
-    (idx: number) => () => {
-      setCurrent(idx);
-      onSelect && options && onSelect(options[idx], options[idx].value, idx);
+    (option: FilterOpt, index: number) => () => {
+      setCurrent(index);
+      onSelect && options && onSelect({ option, value: option?.value, index });
     },
     [onSelect, options]
   );
 
   const renderButtons = useMemo(() => {
     return options?.map((opt, idx) => (
-      <OptionButton variant={current === idx ? 'filledSmall' : 'defOutlinedSmall'} onClick={handleSelect(idx)}>
-        <span className={'inner'}>{opt.label}</span>
+      <OptionButton
+        key={`group-option-${opt?.label || idx}`}
+        variant={current === idx ? 'filledSmall' : 'defOutlinedSmall'}
+        onClick={handleSelect(opt, idx)}
+      >
+        {opt.label && <div className={'inner'}>{opt.label}</div>}
+        {opt?.extraLabel}
       </OptionButton>
     ));
   }, [current, handleSelect, options]);
@@ -44,6 +49,8 @@ const OptionButton = styled(ButtonIcon)`
   flex: 1;
   padding: 4px 8px;
   min-width: 50px;
+
+  overflow: hidden;
 
   & .inner {
     text-overflow: ellipsis;

@@ -1,5 +1,5 @@
 import { ApiDirType } from '../redux/APP_CONFIGS';
-import { ContractorsTypesEnum, CounterpartyOwnershipEnum } from '../redux/contractors/contractors.types';
+import { BusinessSubjectTypeEnum, ContractorsTypesEnum } from '../redux/contractors/contractors.types';
 
 export const langUa = {
   // DIRECTORIES
@@ -23,9 +23,9 @@ export const langUa = {
   [ContractorsTypesEnum.CONSIGNOR]: 'Комітент',
   [ContractorsTypesEnum.TRANSPORTER]: 'Перевізник',
 
-  [CounterpartyOwnershipEnum.company]: 'Юридична особа',
-  [CounterpartyOwnershipEnum.entrepreneur]: 'ФОП',
-  [CounterpartyOwnershipEnum.person]: 'Фізична особа',
+  [BusinessSubjectTypeEnum.company]: 'Юридична особа',
+  [BusinessSubjectTypeEnum.entrepreneur]: 'ФОП',
+  [BusinessSubjectTypeEnum.person]: 'Фізична особа',
 
   brand: 'Бренд',
   selectBrand: 'Оберіть бренд',
@@ -66,6 +66,7 @@ export const langUa = {
   countOut: 'Рахунок OUT',
   subCountOut: 'Суб-рахунок OUT',
   ownership: 'Форма власності',
+  businessSubjectType: "Тип суб'кта господарювання",
   name: "Ім'я",
   insertName: "Введіть ім'я",
   type: 'Тип',

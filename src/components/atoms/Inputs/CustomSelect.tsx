@@ -239,6 +239,8 @@ const Options = styled(FlexBox)<{ isOpen?: boolean; inView?: boolean; intersecti
 const Option = styled(FieldBox)<{ isActive?: boolean }>`
   min-height: 28px;
 
+  cursor: default;
+
   font-weight: ${({ isActive }) => (isActive ? 700 : '')};
   background-color: ${({ theme }) => theme.modalBackgroundColor};
 `;

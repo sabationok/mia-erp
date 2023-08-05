@@ -124,6 +124,8 @@ export const FieldBox = styled(FlexBox)`
   background: ${({ theme }) => theme.field.backgroundColor};
   border-radius: 2px;
 
+  cursor: default;
+
   &:hover {
     background: ${({ theme }) => theme.field.backgroundColorHover};
   }

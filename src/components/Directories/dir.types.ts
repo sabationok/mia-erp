@@ -52,7 +52,7 @@ export interface DirectoriesFormProps<
   create?: boolean;
   edit?: boolean;
   dirType?: DirType;
-  onSubmit?: AppSubmitHandler<FormData>;
+  onSubmit?: AppSubmitHandler<FormData, { logAfterSubmit?: boolean }>;
 }
 
 // export type RegisterChangeArchiveStatus<ItemDataType = any, ItemType = any> = {

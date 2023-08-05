@@ -8,6 +8,7 @@ export interface IContractor<T extends ContractorsTypesEnum = any>
   name?: string;
   fullName?: string;
   secondName?: string;
+  businessSubjectType?: BusinessSubjectTypeEnum;
   label?: string;
   email?: string;
   phone?: string;
@@ -23,20 +24,18 @@ export interface IContractorFormData extends Omit<IContractor, '_id' | 'createdA
 export enum ContractorsTypesEnum {
   // COUNTER = 'COUNTER',
   // AUDITOR = 'AUDITOR',
-  SUPPLIER = 'SUPPLIER',
   CUSTOMER = 'CUSTOMER',
+  SUPPLIER = 'SUPPLIER',
+  WORKER = 'WORKER',
   CONTRACTOR = 'CONTRACTOR',
   SUB_CONTRACTOR = 'SUB_CONTRACTOR',
-  WORKER = 'WORKER',
   COMMISSION_AGENT = 'COMMISSION_AGENT',
   CONSIGNOR = 'CONSIGNOR',
   TRANSPORTER = 'TRANSPORTER',
 }
-export enum CounterpartyOwnershipEnum {
+export enum BusinessSubjectTypeEnum {
   company = 'company',
   entrepreneur = 'entrepreneur',
   person = 'person',
 }
-export type CounterpartyOwnershipFilterOption = FilterOpt<CounterpartyOwnershipEnum>;
-
-export type ContractorsTypes = keyof typeof ContractorsTypesEnum;
+export type CounterpartyOwnershipFilterOption = FilterOpt<BusinessSubjectTypeEnum>;

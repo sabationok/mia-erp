@@ -83,7 +83,7 @@ export enum ApiDirType {
   SOURCE_ATTRACTION = 'attractionSource',
   COLLECTION = 'collection',
   COLLECTIONS = 'collections',
-
+  UNSET = 'unset',
   DEFAULT = 'DEFAULT',
 }
 
