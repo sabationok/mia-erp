@@ -1,107 +1,18 @@
-import styled from 'styled-components';
+import { IOrderSlotItem } from '../../redux/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
-import { useMemo } from 'react';
+import styled from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { IProduct } from '../../redux/products/products.types';
 
-export interface ProductCardForSelectorProps {
-  product: IProduct;
-  isSelected?: boolean;
+export interface OrderSlotItemOverviewProps {
+  item: IOrderSlotItem;
+  index: number;
   onSelect?: () => void;
   onRemove?: () => void;
   disabled?: boolean;
 }
-
-const ProductCardSimpleOverview: React.FC<ProductCardForSelectorProps> = ({
-  product,
-  disabled,
-  isSelected,
-  onSelect,
-  onRemove,
-}) => {
-  const cells = useMemo(
-    (): { value?: string; title?: string; gridArea: string; isLastInRow?: boolean }[] => [
-      {
-        title: 'Назва',
-        value: product.label,
-        gridArea: '1/1/1/9',
-      },
-      {
-        title: 'Артикул | SKU',
-        value: product.sku,
-        gridArea: '1/9/1/13',
-        isLastInRow: true,
-      },
-      {
-        title: 'Категорія',
-        value: product.category?.label,
-        gridArea: '2/1/2/5',
-      },
-      {
-        title: 'Бренд',
-        value: product.brand?.label,
-        gridArea: '2/5/2/9',
-      },
-      {
-        title: 'Постачальник',
-        value: product.brand?.label,
-        gridArea: '2/9/2/13',
-
-        isLastInRow: true,
-      },
-      {
-        title: 'Опис',
-        value: product.brand?.label,
-        gridArea: '3/1/3/13',
-        isLastInRow: true,
-      },
-    ],
-    [product.brand?.label, product.category?.label, product.label, product.sku]
-  );
-
+const OrderSlotItemOverview: React.FC<OrderSlotItemOverviewProps> = ({ disabled, onSelect, onRemove }) => {
   return (
-    <Card fillWidth gap={8} isSelected={isSelected} disabled={disabled}>
-      <ImageBox>
-        <img
-          src={
-            (product?.images && product?.images[0]?.img_1x) ||
-            'https://cdn.create.vista.com/api/media/medium/186787692/stock-photo-profile-young-stylish-man-eyeglasses?token='
-          }
-          style={{ objectFit: 'contain' }}
-          alt={''}
-          width={'100%'}
-          height={'100%'}
-        />
-      </ImageBox>
-
-      <FlexBox gap={8} flex={1}>
-        <CardGridBox>
-          {cells.map(({ title, value, gridArea, isLastInRow }) => (
-            <CardGridBoxInner key={`cardCell-${title}`} gridArea={gridArea || '1/1/1/9'} isLastInRow={isLastInRow}>
-              <div
-                className={'text title'}
-                style={{
-                  textAlign: 'start',
-                  fontSize: 10,
-                }}
-              >
-                {title || 'Title'}
-              </div>
-              <div
-                className={'text'}
-                style={{
-                  textAlign: 'end',
-                  fontSize: 12,
-                  fontWeight: 500,
-                }}
-              >
-                {value || '-'}
-              </div>
-            </CardGridBoxInner>
-          ))}
-        </CardGridBox>
-      </FlexBox>
-
+    <Card>
       {!disabled && (
         <Buttons justifyContent={'space-between'} gap={4}>
           <ButtonIcon variant={'onlyIcon'} iconSize={'100%'} size={'24px'} icon={'info'} />
@@ -130,7 +41,6 @@ const ProductCardSimpleOverview: React.FC<ProductCardForSelectorProps> = ({
     </Card>
   );
 };
-
 const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
   display: grid;
   grid-template-columns: 80px 1fr min-content;
@@ -219,4 +129,4 @@ const ImageBox = styled(FlexBox)`
 
   background-color: ${({ theme }) => theme.fieldBackgroundColor};
 `;
-export default ProductCardSimpleOverview;
+export default OrderSlotItemOverview;

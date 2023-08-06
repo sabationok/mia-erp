@@ -44,9 +44,10 @@ export interface IModalProviderContext {
   isOpen: boolean;
   modalContent: IModalRenderItemParams[];
 }
-
+export interface ModalService extends IModalProviderContext {}
 export const ModalProviderContext = createContext({});
 export const useModalProvider = () => useContext(ModalProviderContext) as IModalProviderContext;
+export const useModalService = () => useContext(ModalProviderContext) as ModalService;
 
 const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) => {
   const [modalContent, setModalContent] = useState<IModalRenderItemParams<any, any>[]>([]);

@@ -5,19 +5,21 @@ import FormCreateContractor, { FormCreateContractorProps } from '../Forms/FormCr
 import FormCreateTransaction, { FormCreateTransactionProps } from '../Forms/FormCreateTransaction';
 import FormCreateCategory, { FormCreateCategoryProps } from '../Forms/FormCreateCategory';
 import FormCreatePriceList, { FormCreatePriceListProps } from '../Forms/FormCreatePriceList';
-import FormCreatePrice, { FormCreatePriceProps } from '../Forms/FormCreatePrice';
+import FormCreatePrice, { FormCreatePriceProps } from '../Forms/FormCreatePrice/FormCreatePrice';
 import FormCreateCustomRole, { FormCreateCustomRoleProps } from '../Forms/FormCreateCustomRole';
 import FormCreateCount, { FormCreateCountProps } from '../Forms/FormCreateCount';
 import PriceListOverview, { PriceListOverviewProps } from '../Modals/PriceListOverview';
 import ProductOverview, { ProductOverviewProps } from '../Modals/ProductOverview';
 import FormCreateCompany, { FormCreateCompanyProps } from '../Forms/FormCreateCompany';
-import FormCreateOrder, { FormCreateOrderProps } from '../Forms/FormCreateOrder';
+import FormCreateOrder, { FormCreateOrderProps } from '../Forms/FormCreateOrder/FormCreateOrder';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { IBaseDirItem } from '../Directories/dir.types';
 import FormCreateTag, { FormCreateTagProps } from '../Forms/FormCreateTag';
 import FormCreateMethod, { FormCreateMethodProps } from '../Forms/FormCreateMetod';
 import OrderOverview, { OrderOverviewProps } from '../Modals/OrderOverview';
 import FormInviteUser, { FormInviteUserProps } from '../Forms/FromInviteUser';
+import SelectProductModal, { SelectProductModalProps } from '../Modals/SelectProductModal';
+import SelectOrderSlotItemModal, { SelectOrderSlotItemModalProps } from '../Modals/SelectOrderSlotItemModal';
 
 export enum Modals {
   ModalForm = 'ModalForm',
@@ -39,6 +41,8 @@ export enum Modals {
   PriceListOverview = 'PriceListOverview',
   ProductOverview = 'ProductOverview',
   OrderOverview = 'OrderOverview',
+  SelectProductModal = 'SelectProductModal',
+  SelectOrderSlotItemModal = 'SelectOrderSlotItemModal',
 }
 
 export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
@@ -61,6 +65,8 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   [Modals.OrderOverview]: OrderOverview,
   [Modals.PriceListOverview]: PriceListOverview,
   [Modals.ProductOverview]: ProductOverview,
+  [Modals.SelectProductModal]: SelectProductModal,
+  [Modals.SelectOrderSlotItemModal]: SelectOrderSlotItemModal,
 };
 
 export interface ModalChildrenProps {
@@ -79,9 +85,11 @@ export interface ModalChildrenProps {
   [Modals.FormCreateCustomRole]: FormCreateCustomRoleProps;
   [Modals.FormCreateMethod]: FormCreateMethodProps;
   [Modals.FormCreateTag]: FormCreateTagProps;
-  [Modals.OrderOverview]: OrderOverviewProps;
   [Modals.FormInviteUser]: FormInviteUserProps;
 
+  [Modals.OrderOverview]: OrderOverviewProps;
   [Modals.PriceListOverview]: PriceListOverviewProps;
   [Modals.ProductOverview]: ProductOverviewProps;
+  [Modals.SelectProductModal]: SelectProductModalProps;
+  [Modals.SelectOrderSlotItemModal]: SelectOrderSlotItemModalProps;
 }

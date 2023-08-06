@@ -31,10 +31,10 @@ export type OrderStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'succe
 export interface IOrderSlotItem extends IPriceListItem {
   slot?: OnlyUUID;
   order?: OnlyUUID;
-  owner: ICompany;
+  owner?: ICompany;
   manager?: IManager;
 
-  origin?: IPriceListItem;
+  origin?: Partial<IPriceListItem>;
 }
 
 export interface IOrderSlot extends IBase {
@@ -58,10 +58,10 @@ export interface IOrder extends IBase {
   receiver?: ICustomerDirItem;
   receiverCommunicationMethod?: ICommunicationDirItem;
 
-  slots?: IOrderSlot[];
   status?: OrderStatus;
   payments?: OnlyUUID[];
 
+  content?: IOrderSlotItem[];
   destination?: string;
   shipmentMethod?: IShipmentDirItem;
   paymentMethod?: IPaymentDirItem;

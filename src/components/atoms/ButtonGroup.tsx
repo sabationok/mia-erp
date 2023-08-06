@@ -28,6 +28,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({ options, borderRadius, onSele
         key={`group-option-${opt?.label || idx}`}
         variant={current === idx ? 'filledSmall' : 'defOutlinedSmall'}
         onClick={handleSelect(opt, idx)}
+        disabled={opt?.disabled}
       >
         {opt.label && <div className={'inner'}>{opt.label}</div>}
         {opt?.extraLabel}

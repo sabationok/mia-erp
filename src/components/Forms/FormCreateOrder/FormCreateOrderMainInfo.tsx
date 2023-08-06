@@ -1,102 +1,51 @@
-import ModalForm, { ModalFormProps } from '../ModalForm';
-import FlexBox from '../atoms/FlexBox';
-import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import { IOrder } from '../../redux/orders/orders.types';
-import { useAppForm } from '../../hooks';
-import InputLabel from '../atoms/Inputs/InputLabel';
-import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
-import CustomSelect from '../atoms/Inputs/CustomSelect';
-import { useDirectoriesSelector } from '../../redux/selectors.store';
-import { ApiDirType } from '../../redux/APP_CONFIGS';
-import FormAccordeonItem from './components/FormAccordeonItem';
+import FlexBox from '../../atoms/FlexBox';
+import { UseAppFormReturn } from '../../../hooks/useAppForm.hook';
+import { useDirectoriesSelector } from '../../../redux/selectors.store';
+import { ApiDirType } from '../../../redux/APP_CONFIGS';
+import usePermissionsAsDirItemOptions from '../../../hooks/usePermisionsAsWorkersOptions';
+import { useCounterpartyDirectorySelectorByType } from '../../../hooks/selectorHooks.hooks';
+import { ContractorsTypesEnum } from '../../../redux/contractors/contractors.types';
+import { useModalFormCreateCounterparty } from '../../../hooks/modalHooks';
+import { useState } from 'react';
+import ButtonGroup from '../../atoms/ButtonGroup';
+import { orderTypeFilterOptions } from '../../../data/orders.data';
+import CustomSelect from '../../atoms/Inputs/CustomSelect';
+import FormAccordeonItem from '../components/FormAccordeonItem';
+import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
 import styled from 'styled-components';
-import usePermissionsAsDirItemOptions from '../../hooks/usePermisionsAsWorkersOptions';
-import { useEffect, useMemo, useState } from 'react';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import ProductCardSimpleOverview from '../Products/ProductCardSimpleOverview';
-import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
-import { useModalFormCreateCounterparty } from '../../hooks/modalHooks';
-import { orderTypeFilterOptions } from '../../data/orders.data';
+import { FormCreateOrderState } from './FormCreateOrder';
 
-import * as yup from 'yup';
-import { useCounterpartyDirectorySelectorByType } from '../../hooks/selectorHooks.hooks';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { IUser } from '../../redux/auth/auth.types';
-
-const orderValidation = yup.object().shape({
-  manager: yup
-    .object()
-    .shape({ _id: yup.string().required() } as Record<keyof IUser, any>)
-    .required(),
-} as Record<keyof IOrder, any>);
-
-export interface FormCreateOrderProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
-  onSubmit?: AppSubmitHandler<IOrder>;
-}
-
-export interface FormCreateOrderState extends Omit<IOrder, '_id' | 'createdAt' | 'updatedAt' | 'deletedAt'> {}
-
-const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmit, ...props }) => {
+export interface FormCreateOrderMainInfoProps
+  extends Pick<UseAppFormReturn<FormCreateOrderState>, 'register' | 'registerSelect' | 'formState'> {}
+const FormCreateOrderMainInfo: React.FC<FormCreateOrderMainInfoProps> = ({ register, registerSelect, formState }) => {
   const { directory: paymentsMethods } = useDirectoriesSelector(ApiDirType.METHODS_PAYMENT);
   const { directory: shipmentMethods } = useDirectoriesSelector(ApiDirType.METHODS_SHIPMENT);
   const { directory: communicationMethods } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
+  const managers = usePermissionsAsDirItemOptions();
   const customers = useCounterpartyDirectorySelectorByType(ContractorsTypesEnum.CUSTOMER);
   const onCreateCounterparty = useModalFormCreateCounterparty();
-  const managers = usePermissionsAsDirItemOptions();
   const [isReceiverInfo, setIsReceiverInfo] = useState(false);
 
-  const {
-    formState: { isValid },
-    formValues,
-    register,
-    registerSelect,
-    handleSubmit,
-  } = useAppForm<FormCreateOrderState>({
-    defaultValues: defaultState,
-    resolver: yupResolver(orderValidation),
-  });
-
-  useEffect(() => {
-    console.log('order formValues', formValues);
-  }, [formValues]);
-
-  const onValid = (data?: FormCreateOrderState) => {
-    console.log('FormCreateOrder');
-    console.log(data);
-  };
-
-  const renderProducts = useMemo(() => {
-    const list = [
-      { _id: 'sdfbsdfb', label: 'Товар 1' },
-      { _id: 'sdfbsdfb', label: 'Товар 2' },
-      { _id: 'sdfbsdfb', label: 'Товар 3' },
-      { _id: 'sdfbsdfb', label: 'Товар 4' },
-    ];
-    return list.map((p, idx) => <ProductCardSimpleOverview key={idx.toString()} product={p} />);
-  }, []);
-
   return (
-    <ModalForm
-      fillHeight
-      filterOptions={orderTypeFilterOptions}
-      {...props}
-      isValid={isValid}
-      onSubmit={handleSubmit(onValid)}
-    >
-      <Container flex={1} padding={'8px 0'}>
-        <FlexBox padding={'0 16px 8px'}>
-          <CustomSelect
-            {...registerSelect('manager', {
-              options: managers,
-              label: 'Менеджер',
-              placeholder: 'Оберіть відповідального менеджера',
-              required: true,
-            })}
-          />
-        </FlexBox>
+    <Container flex={1} padding={'8px 0'}>
+      <FlexBox padding={'0 16px 8px'}>
+        <ButtonGroup options={orderTypeFilterOptions} />
 
-        <FlexBox>
-          <FormAccordeonItem renderHeader={'Вміст'}>{renderProducts}</FormAccordeonItem>
+        <CustomSelect
+          {...registerSelect('manager', {
+            options: managers,
+            label: 'Менеджер',
+            placeholder: 'Оберіть відповідального менеджера',
+            required: true,
+          })}
+        />
+      </FlexBox>
+
+      <FlexBox>
+        <FlexBox style={{ position: 'relative' }}>
+          {/*<FormAccordeonItem renderHeader={'Вміст'}>{renderProducts}</FormAccordeonItem>*/}
 
           <FormAccordeonItem open renderHeader={'Замовник'}>
             <CustomSelect
@@ -184,12 +133,12 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
               })}
             />
 
-            <InputLabel label={'Місце призначення'}>
+            <InputLabel label={'Місце призначення'} required>
               <TextareaPrimary
                 maxLength={250}
                 required
                 placeholder={'Введіть інформацію про призначення'}
-                {...register('destination')}
+                {...register('destination', { required: true })}
               />
             </InputLabel>
           </FormAccordeonItem>
@@ -223,14 +172,12 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
             </InputLabel>
           </FormAccordeonItem>
         </FlexBox>
-      </Container>
-    </ModalForm>
+      </FlexBox>
+    </Container>
   );
 };
-
 const Container = styled(FlexBox)`
   position: relative;
   overflow: auto;
 `;
-
-export default FormCreateOrder;
+export default FormCreateOrderMainInfo;

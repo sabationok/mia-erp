@@ -36,6 +36,7 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
       setIsOpen(false);
     }
   }, [disabled]);
+
   return (
     <Container style={{ maxHeight: isOpen ? '100%' : maxHeight }}>
       <StButton
@@ -47,18 +48,17 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
       >
         {renderHeader}
       </StButton>
-
       <ContentBox {...contentContainerStyle}>{children}</ContentBox>
     </Container>
   );
 };
 
 const Container = styled(FlexBox)`
-  display: grid;
+  display: flex;
   grid-template-columns: 1fr;
   //grid-template-rows: repeat(10, 200px);
 
-  position: relative;
+  //position: relative;
   min-height: 32px;
   //height: max-content;
   max-height: 32px;
@@ -70,25 +70,25 @@ const Container = styled(FlexBox)`
     border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
   }
 
-  .isOpenItem {
-    overflow: visible;
-    max-height: 100%;
-
-    & .btn {
-      background-color: ${({ theme }) => theme.fieldColor};
-    }
-
-    & .icon {
-      transform: rotate(0deg);
-    }
-
-    & .contentBox {
-      // max-height: 100%;
-    }
-  }
+  // .isOpenItem {
+  //   overflow: visible;
+  //   max-height: 100%;
+  //
+  //   & .btn {
+  //     background-color: ${({ theme }) => theme.fieldColor};
+  //   }
+  //
+  //   & .icon {
+  //     transform: rotate(0deg);
+  //   }
+  //
+  //   & .contentBox {
+  //     // max-height: 100%;
+  //   }
+  //}
 `;
+
 const ContentBox = styled(FlexBox)`
-  position: relative;
   // max-height: 0px;
   //overflow: hidden;
   height: max-content;

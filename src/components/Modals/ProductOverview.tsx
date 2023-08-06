@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
 import { ExtractId } from '../../utils/dataTransform';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
-import FormCreatePrice from '../Forms/FormCreatePrice';
+import FormCreatePrice from '../Forms/FormCreatePrice/FormCreatePrice';
 
 export interface ProductOverviewProps extends Omit<ModalFormProps, 'onSelect' | 'onSubmit'> {
   product?: IProduct;
