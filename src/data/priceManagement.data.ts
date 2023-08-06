@@ -1,6 +1,7 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import t from '../lang';
-import { IPriceList, IPriceListItem } from '../redux/priceManagement/priceManagement.types';
+import { IPriceList, IPriceListItem, PriceListTypeEnum } from '../redux/priceManagement/priceManagement.types';
+import { enumToFilterOptions } from '../utils/fabrics';
 
 export type DataPath =
   | 'category.label'
@@ -42,6 +43,7 @@ export type DataPath =
   | 'product.sku'
   | 'timeFrom'
   | 'timeTo';
+export const priceListTypeFilterOptions = enumToFilterOptions(PriceListTypeEnum);
 
 export const priceListColumns: CellTittleProps<IPriceList, DataPath>[] = [
   {

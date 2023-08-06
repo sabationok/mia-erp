@@ -1,10 +1,5 @@
 import { DirectoriesFormProps } from '../Directories/dir.types';
-import {
-  BusinessSubjectTypeEnum,
-  ContractorsTypesEnum,
-  IContractor,
-  IContractorFormData,
-} from 'redux/contractors/contractors.types';
+import { ContractorsTypesEnum, IContractor, IContractorFormData } from 'redux/contractors/contractors.types';
 import ModalForm from '../ModalForm';
 
 import * as yup from 'yup';
@@ -27,6 +22,7 @@ import { Modals } from '../ModalProvider/Modals';
 import { FormCreateDirTreeCompProps } from './FormCreateDirTreeComp';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useDirectoriesSelector } from '../../redux/selectors.store';
+import { BusinessSubjectTypeEnum } from '../../redux/companies/companies.types';
 
 export interface FormCreateContractorProps
   extends DirectoriesFormProps<ContractorsTypesEnum, IContractor, IContractorFormData> {

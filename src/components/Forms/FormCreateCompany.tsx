@@ -1,87 +1,164 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
-import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
-import { ICompany } from '../../redux/companies/companies.types';
+import { BusinessSubjectTypeEnum, ICompany } from '../../redux/companies/companies.types';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
-
-export interface Props {}
+import ButtonGroup from '../atoms/ButtonGroup';
+import { businessSubjectTypeFilterOptions } from '../../data/directories.data';
+import t from '../../lang';
+import { useAppForm } from '../../hooks';
+import CustomSelect from '../atoms/Inputs/CustomSelect';
+import { ownershipTypeFilterOptions } from '../../data/companies.data';
+import FlexBox from '../atoms/FlexBox';
+import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
 
 export interface ICreateCompanyFormData
   extends Omit<ICompany, '_id' | 'createdAt' | 'updatedAt' | 'company_token' | 'configs' | 'owner' | 'permissions'> {}
 
-const defaultValues: ICreateCompanyFormData = {
-  name: '',
-  fullName: '',
-  email: '',
-  phone: '',
-  taxCode: '',
-};
 const validFormData = yup.object().shape({
   name: yup.string().required(),
-  email: yup.string().required(),
   fullName: yup.string().required(),
+  label: yup.string(),
+  fullLabel: yup.string(),
+  email: yup.string().required(),
   phone: yup.string(),
-  taxCode: yup.string().required(),
-});
+  taxCode: yup.string(),
+  ownershipType: yup.string(),
+  businessSubjectType: yup.string().oneOf(Object.values(BusinessSubjectTypeEnum), 'Недопустима роль').required(),
+} as Record<keyof ICreateCompanyFormData, any>);
 
-export type FormCreateCompanyProps = Props & Omit<ModalFormProps, 'onSubmit'>;
-const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ ...props }) => {
+export interface FormCreateCompanyProps extends Omit<ModalFormProps<any, any, ICompany>, 'onSubmit'> {}
+const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...props }) => {
   const { permissions } = useAppServiceProvider();
 
   const {
     register,
     formState: { errors, isValid },
     handleSubmit,
-  } = useForm<ICreateCompanyFormData>({
-    defaultValues,
+    formValues: { businessSubjectType, type: currentType },
+    registerSelect,
+    setValue,
+  } = useAppForm<ICreateCompanyFormData>({
+    defaultValues: { businessSubjectType: BusinessSubjectTypeEnum.company, ...defaultState },
     reValidateMode: 'onSubmit',
     resolver: yupResolver(validFormData),
   });
 
+  const formRenderConfig = useMemo(
+    () => ({
+      renderOwnershipTypeSelect: businessSubjectType === BusinessSubjectTypeEnum.company,
+      renderLabelInput:
+        businessSubjectType &&
+        [BusinessSubjectTypeEnum.company, BusinessSubjectTypeEnum.entrepreneur].includes(businessSubjectType),
+      renderNamesInputs:
+        businessSubjectType &&
+        [BusinessSubjectTypeEnum.person, BusinessSubjectTypeEnum.entrepreneur].includes(businessSubjectType),
+      renderPersonalTaxCode:
+        businessSubjectType &&
+        [BusinessSubjectTypeEnum.person, BusinessSubjectTypeEnum.entrepreneur].includes(businessSubjectType),
+      renderTaxCode:
+        businessSubjectType &&
+        [BusinessSubjectTypeEnum.company, BusinessSubjectTypeEnum.entrepreneur].includes(businessSubjectType),
+      renderAttractionSourceSelect: currentType === ContractorsTypesEnum.CUSTOMER,
+    }),
+    [currentType, businessSubjectType]
+  );
   function onFormSubmit(data: ICreateCompanyFormData) {
     if (data) console.log(data);
 
-    permissions.createCompany({
-      data,
-      onSuccess(data) {
-        console.log('Registered company', data);
-        toast.success(`Company created: ${data?.name}`);
-      },
-      onError() {
-        toast.error('Error');
-      },
-      onLoading() {},
-    });
+    permissions
+      .createCompany({
+        data,
+        onSuccess(data) {
+          console.log('Company created', data);
+          toast.success(`Company created: ${data?.name || data?.label}`);
+        },
+        onError() {
+          toast.error('Error');
+        },
+        onLoading() {},
+      })
+      .then();
   }
 
   return (
-    <Form fillHeight {...props} onSubmit={handleSubmit(onFormSubmit)} isValid={isValid}>
-      <Inputs>
-        <InputLabel label={'Назва'} direction={'vertical'} error={errors.name} required>
-          <InputText {...register('name')} required />
-        </InputLabel>
-        <InputLabel label={'Повна назва'} direction={'vertical'} error={errors.fullName} required>
-          <InputText {...register('fullName')} required />
-        </InputLabel>
-        <InputLabel label={'Електронна адреса'} direction={'vertical'} error={errors.email} required>
-          <InputText {...register('email')} type={'email'} required />
-        </InputLabel>
-        <InputLabel label={'Телефон'} direction={'vertical'} error={errors.phone}>
-          <InputText {...register('phone')} />
+    <Form fillHeight width={'480px'} {...props} onSubmit={handleSubmit(onFormSubmit)} isValid={isValid}>
+      <Inputs flex={1} overflow={'auto'}>
+        <InputLabel label={t('businessSubjectType')} error={errors.name} required>
+          <ButtonGroup
+            options={businessSubjectTypeFilterOptions}
+            onSelect={({ value }) => {
+              setValue('businessSubjectType', value);
+            }}
+          />
         </InputLabel>
 
-        <InputLabel label={'Тип'} direction={'vertical'} error={errors.type}>
-          <InputText {...register('type')} />
+        {formRenderConfig.renderOwnershipTypeSelect && (
+          <CustomSelect
+            {...registerSelect('ownershipType', {
+              options: ownershipTypeFilterOptions,
+              label: 'Форма власності',
+              placeholder: 'Оберіть форму власності компанії',
+            })}
+          />
+        )}
+
+        {formRenderConfig.renderNamesInputs && (
+          <>
+            <InputLabel label={t('name')} error={errors.name} required>
+              <InputText
+                placeholder={t('insertLabel')}
+                {...register('name')}
+                required
+                autoFocus={formRenderConfig.renderNamesInputs}
+              />
+            </InputLabel>
+
+            <InputLabel label={t('secondName')} error={errors.secondName} required>
+              <InputText placeholder={t('insertSecondName')} {...register('secondName')} required />
+            </InputLabel>
+          </>
+        )}
+
+        {formRenderConfig.renderLabelInput && (
+          <>
+            <InputLabel label={t('label')} error={errors.label} required={!formRenderConfig.renderNamesInputs}>
+              <InputText
+                placeholder={t('insertLabel')}
+                {...register('label')}
+                required={!formRenderConfig.renderNamesInputs}
+                autoFocus={!formRenderConfig.renderNamesInputs}
+              />
+            </InputLabel>
+            <InputLabel label={'Повна назва'} error={errors.fullName}>
+              <InputText placeholder={'Ввведіть повну назву'} {...register('fullName')} />
+            </InputLabel>
+          </>
+        )}
+
+        <InputLabel label={'Емейл (основний)'} error={errors.email} required>
+          <InputText placeholder={'Введіть основний емейл'} {...register('email')} type={'email'} required />
         </InputLabel>
-        <InputLabel label={'Податковий номер'} direction={'vertical'} error={errors.taxCode} required>
-          <InputText {...register('taxCode')} required />
+        <InputLabel label={'Телефон (основний)'} error={errors.phone}>
+          <InputText placeholder={'Введіть осний контактний номер'} {...register('phone')} />
         </InputLabel>
+
+        {formRenderConfig.renderTaxCode && (
+          <InputLabel label={t('taxCode')} error={errors.taxCode}>
+            <InputText placeholder={t('taxCode')} {...register('taxCode')} />
+          </InputLabel>
+        )}
+
+        {formRenderConfig.renderPersonalTaxCode && (
+          <InputLabel label={t('personalTaxCode')} error={errors.taxCode}>
+            <InputText placeholder={t('personalTaxCode')} {...register('personalTaxCode')} />
+          </InputLabel>
+        )}
       </Inputs>
     </Form>
   );
@@ -89,14 +166,10 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ ...props }) => {
 
 const Form = styled(ModalForm)``;
 
-const Inputs = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  margin-bottom: 12px;
+const Inputs = styled(FlexBox)`
   width: 100%;
 
-  padding: 8px 16px;
+  padding: 8px 16px 16px;
 
   fill: ${({ theme }) => theme.accentColor.base};
 `;

@@ -21,50 +21,24 @@ import { toast } from 'react-toastify';
 import DirTableComp, { DirTableCompProps } from '../components/Directories/DirTableComp';
 import FormCreateContractor from '../components/Forms/FormCreateContractor';
 import { createDataForReq } from '../utils/dataTransform';
-import { StorageItemFilterOption } from '../redux/products/products.types';
+import { StorageItemFilterOption, StorageItemTypeEnum } from '../redux/products/products.types';
 import { ModalChildrenProps, Modals } from '../components/ModalProvider/Modals';
 import { FilterOpt } from '../components/ModalForm/ModalFilter';
-import { enumToArray } from '../utils';
-import {
-  BusinessSubjectTypeEnum,
-  ContractorsTypesEnum,
-  CounterpartyOwnershipFilterOption,
-} from '../redux/contractors/contractors.types';
+import { ContractorsTypesEnum } from '../redux/contractors/contractors.types';
+import { BusinessSubjectFilterOption, BusinessSubjectTypeEnum } from '../redux/companies/companies.types';
+import { enumToFilterOptions } from '../utils/fabrics';
+import { CountsTypesEnum } from '../redux/directories/counts.types';
+import { CategoryTrTypeEnum } from '../redux/directories/directories.types';
 
-export const categoriesFilterOptions: CategoryFilterOpt[] = [
-  { label: t('INCOMES'), value: 'INCOME' },
-  { label: t('TRANSFERS'), value: 'TRANSFER' },
-  { label: t('EXPENSES'), value: 'EXPENSE' },
-];
-export const countsFilterOptions: CountFilterOpt[] = [
-  { label: t('ACTIVES'), value: 'ACTIVE' },
-  { label: t('PASSIVES'), value: 'PASSIVE' },
-];
-export const StorageItemTypeFilterOptions: StorageItemFilterOption[] = [
-  { label: 'GOODS', value: 'GOODS' },
-  { label: 'SERVICE', value: 'SERVICE' },
-];
-export const tagsFilterOptions: FilterOpt<ContractorsTypesEnum>[] = enumToArray(ContractorsTypesEnum).map(el => ({
-  label: t(ContractorsTypesEnum[el]),
-  value: el,
-}));
-export const counterpartyFilterOptions: FilterOpt<ContractorsTypesEnum>[] = enumToArray(ContractorsTypesEnum).map(
-  el => ({
-    label: t(ContractorsTypesEnum[el]),
-    value: el,
-  })
-);
-export const businessSubjectTypeFilterOptions: CounterpartyOwnershipFilterOption[] = enumToArray(
-  BusinessSubjectTypeEnum
-).map(el => ({
-  label: t(BusinessSubjectTypeEnum[el]),
-  value: el,
-}));
-//     [
-//   { value: CounterpartyEntrepreneurshipEnum.COMPANY, label: 'Компанія' },
-//   { value: CounterpartyEntrepreneurshipEnum.ENTREPRENEUR, label: 'ФОП' },
-//   { value: CounterpartyEntrepreneurshipEnum.PERSON, label: 'Фізична особа' },
-// ];
+export const categoriesFilterOptions: CategoryFilterOpt[] = enumToFilterOptions(CategoryTrTypeEnum);
+export const countsFilterOptions: CountFilterOpt[] = enumToFilterOptions(CountsTypesEnum);
+export const StorageItemTypeFilterOptions: StorageItemFilterOption[] = enumToFilterOptions(StorageItemTypeEnum);
+
+export const tagsFilterOptions = enumToFilterOptions(ContractorsTypesEnum);
+
+export const counterpartyFilterOptions: FilterOpt<ContractorsTypesEnum>[] = enumToFilterOptions(ContractorsTypesEnum);
+export const businessSubjectTypeFilterOptions: BusinessSubjectFilterOption[] =
+  enumToFilterOptions(BusinessSubjectTypeEnum);
 export const getDirInTreeActionsCreator =
   (
     Modal: Modals = Modals.FormCreateDirTreeComp,

@@ -68,7 +68,6 @@ const Form: React.FC<FormProps> = ({ edit, onSubmit, copy, defaultState, addInpu
     clearAfterSave,
   } = useAppForm<IStorageItem>({
     defaultValues: { currency: 'UAH', ...defaultState },
-    reValidateMode: 'onSubmit',
   });
 
   // TODO eventDate: formatDateForInputValue(defaultState?.eventDate)

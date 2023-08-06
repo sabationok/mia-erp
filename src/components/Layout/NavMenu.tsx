@@ -108,6 +108,7 @@ const StyledNavMenu = styled.div`
 
   font-size: 12px;
   font-weight: 600;
+
   @media screen and (min-width: 768px) {
     min-width: 200px;
   }
@@ -146,11 +147,21 @@ const NavMenuContainer = styled.div<MenuState>`
   min-width: 100%;
   max-width: calc(100% + 30px);
 
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
-  max-height: ${({ isOpen }) => (isOpen ? '80vh' : '0')};
-  box-shadow: ${({ isOpen, theme }) => (isOpen ? theme.globals.shadowMain : '')};
-  transition: max-height ${({ theme }) => theme.globals.timingFnMain},
-    box-shadow ${({ theme }) => theme.globals.timingFnMain};
+  max-height: ${({ isOpen }) => (isOpen ? '80vh' : '170px')};
+  box-shadow: ${({ isOpen, theme }) =>
+    isOpen ? '0 6px 18px 0px rgba(21, 21, 21, 0.15), 0 6px 18px 0px rgba(211, 211, 211, 0.15)' : ''};
+
+  // box-shadow: ${({ theme }) => theme.globals.shadowSecondary};
+
+  opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
+  pointer-events: ${({ isOpen }) => (isOpen ? 'all' : 'none')};
+  visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
+  transform-origin: top center;
+  //transform: scaleY(${({ isOpen, theme }) => (isOpen ? 1 : 0.8)});
+
+  transition: all ${({ theme }) => theme.globals.timingFnMain};
+  // transition: max-height ${({ theme }) => theme.globals.timingFnMain},
+  //   box-shadow ${({ theme }) => theme.globals.timingFnMain};
 `;
 
 const NavList = styled.div`
@@ -162,6 +173,9 @@ const NavList = styled.div`
   max-height: 100%;
 
   padding: 8px 0;
+  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+
+  box-shadow: ${({ theme }) => theme.globals.shadowMain};
 `;
 
 const StyledNavLink = styled(NavLink)`

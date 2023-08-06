@@ -1,5 +1,6 @@
 import { ApiDirType } from '../redux/APP_CONFIGS';
-import { BusinessSubjectTypeEnum, ContractorsTypesEnum } from '../redux/contractors/contractors.types';
+import { ContractorsTypesEnum } from '../redux/contractors/contractors.types';
+import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../redux/companies/companies.types';
 
 export const langUa = {
   // DIRECTORIES
@@ -26,6 +27,17 @@ export const langUa = {
   [BusinessSubjectTypeEnum.company]: 'Юридична особа',
   [BusinessSubjectTypeEnum.entrepreneur]: 'ФОП',
   [BusinessSubjectTypeEnum.person]: 'Фізична особа',
+
+  [OwnershipTypeEnum.UA_TOV]: 'Товариство з обмеженою відповідальністю (ТОВ)',
+  [OwnershipTypeEnum.UA_CLOSED_JOINT_STOCK_COMPANY]: 'Закрите акціонерне товариство (ЗАТ)',
+  [OwnershipTypeEnum.UA_PUBLIC_JOINT_STOCK_COMPANY]: 'Відкрите акціонерне товариство (ВАТ)',
+  [OwnershipTypeEnum.UA_COOPERATIVE]: 'Кооператив',
+  [OwnershipTypeEnum.UA_SOLE_PROPRIETORSHIP]: 'Індивідуальне підприємство',
+  [OwnershipTypeEnum.UA_STATE_COMPANY]: 'Державна компанія',
+  [OwnershipTypeEnum.UA_JOINT_VENTURE]: 'Спільне підприємство',
+  [OwnershipTypeEnum.UA_BRANCH]: 'Філія',
+  [OwnershipTypeEnum.UA_FRANCHISING_COMPANY]: 'Франчайзингова компанія',
+  [OwnershipTypeEnum.UA_COLLECTIVE_ENTERPRISE]: 'Колективне підприємство',
 
   brand: 'Бренд',
   selectBrand: 'Оберіть бренд',
@@ -66,7 +78,7 @@ export const langUa = {
   countOut: 'Рахунок OUT',
   subCountOut: 'Суб-рахунок OUT',
   ownership: 'Форма власності',
-  businessSubjectType: "Тип суб'кта господарювання",
+  businessSubjectType: "Тип суб'єкта господарювання",
   name: "Ім'я",
   insertName: "Введіть ім'я",
   type: 'Тип',

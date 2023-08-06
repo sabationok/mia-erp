@@ -34,7 +34,8 @@ export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> exte
   email?: string;
   phone?: string;
 }
-export interface IDirItemBase<DT extends ApiDirType = any, T = any> extends IBaseDirItem<T, DT> {}
+export interface IDirItemBase<DirType extends ApiDirType = any, ItemType = any>
+  extends IBaseDirItem<ItemType, DirType> {}
 export interface DirBaseProps extends ModalFormProps {
   title: string;
 }

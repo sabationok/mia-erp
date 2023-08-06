@@ -11,22 +11,28 @@ import { ApiDirType } from '../../redux/APP_CONFIGS';
 import FormAccordeonItem from './components/FormAccordeonItem';
 import styled from 'styled-components';
 import usePermissionsAsDirItemOptions from '../../hooks/usePermisionsAsWorkersOptions';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import ProductCardSimpleOverview from '../Products/ProductCardSimpleOverview';
 import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
 import { useModalFormCreateCounterparty } from '../../hooks/modalHooks';
+import { orderTypeFilterOptions } from '../../data/orders.data';
+
+import * as yup from 'yup';
+import { useCounterpartyDirectorySelectorByType } from '../../hooks/selectorHooks.hooks';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { IUser } from '../../redux/auth/auth.types';
+
+const orderValidation = yup.object().shape({
+  manager: yup
+    .object()
+    .shape({ _id: yup.string().required() } as Record<keyof IUser, any>)
+    .required(),
+} as Record<keyof IOrder, any>);
 
 export interface FormCreateOrderProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<IOrder>;
 }
-const useContractorsDirectorySelectorByType = <T extends ContractorsTypesEnum = any>(type: T) => {
-  const { directory: customers } = useDirectoriesSelector<ApiDirType.CONTRACTORS, ContractorsTypesEnum.CUSTOMER>(
-    ApiDirType.CONTRACTORS
-  );
-
-  return useMemo(() => customers.filter(el => el.type === type), [type, customers]);
-};
 
 export interface FormCreateOrderState extends Omit<IOrder, '_id' | 'createdAt' | 'updatedAt' | 'deletedAt'> {}
 
@@ -34,17 +40,25 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
   const { directory: paymentsMethods } = useDirectoriesSelector(ApiDirType.METHODS_PAYMENT);
   const { directory: shipmentMethods } = useDirectoriesSelector(ApiDirType.METHODS_SHIPMENT);
   const { directory: communicationMethods } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
-  const customers = useContractorsDirectorySelectorByType(ContractorsTypesEnum.CUSTOMER);
+  const customers = useCounterpartyDirectorySelectorByType(ContractorsTypesEnum.CUSTOMER);
   const onCreateCounterparty = useModalFormCreateCounterparty();
   const managers = usePermissionsAsDirItemOptions();
   const [isReceiverInfo, setIsReceiverInfo] = useState(false);
 
   const {
     formState: { isValid },
+    formValues,
     register,
     registerSelect,
     handleSubmit,
-  } = useAppForm<FormCreateOrderState>({ defaultValues: defaultState });
+  } = useAppForm<FormCreateOrderState>({
+    defaultValues: defaultState,
+    resolver: yupResolver(orderValidation),
+  });
+
+  useEffect(() => {
+    console.log('order formValues', formValues);
+  }, [formValues]);
 
   const onValid = (data?: FormCreateOrderState) => {
     console.log('FormCreateOrder');
@@ -62,7 +76,13 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
   }, []);
 
   return (
-    <ModalForm fillHeight {...props} isValid={isValid} onSubmit={handleSubmit(onValid)}>
+    <ModalForm
+      fillHeight
+      filterOptions={orderTypeFilterOptions}
+      {...props}
+      isValid={isValid}
+      onSubmit={handleSubmit(onValid)}
+    >
       <Container flex={1} padding={'8px 0'}>
         <FlexBox padding={'0 16px 8px'}>
           <CustomSelect
@@ -178,8 +198,8 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
             <CustomSelect
               {...registerSelect('paymentMethod', {
                 options: paymentsMethods,
-                label: 'Тип оплати',
-                placeholder: 'Оберіть тип оплати',
+                label: 'Спосіб оплати',
+                placeholder: 'Оберіть спосіб оплати',
                 required: true,
               })}
             />

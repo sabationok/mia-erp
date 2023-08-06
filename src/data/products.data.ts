@@ -1,7 +1,8 @@
 import { SelectItem } from 'components/TableList/TableList';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import t from '../lang';
-import { IProduct } from '../redux/products/products.types';
+import { IProduct, StorageItemTypeEnum } from '../redux/products/products.types';
+import { enumToFilterOptions } from '../utils/fabrics';
 
 export type DataPath =
   | 'category.label'
@@ -39,6 +40,7 @@ export type DataPath =
   | 'availabilityInfo.primaryOrderTime'
   | 'availabilityInfo.customOrder'
   | 'availabilityInfo.customOrderTime';
+export const productTypeFilterOptions = enumToFilterOptions(StorageItemTypeEnum);
 
 export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
   {

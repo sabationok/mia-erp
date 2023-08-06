@@ -1,5 +1,5 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { IOrder } from '../redux/orders/orders.types';
+import { IOrder, OrderTypeEnum, OrderTypeFilterOption } from '../redux/orders/orders.types';
 import t from '../lang';
 import { SelectItem } from '../components/TableList/tableTypes.types';
 
@@ -41,6 +41,17 @@ export type DataPath =
   | 'payments'
   | 'transporters';
 
+export const orderTypeFilterOptions: OrderTypeFilterOption[] = [
+  {
+    label: OrderTypeEnum.SET,
+    value: OrderTypeEnum.SET,
+  },
+  {
+    label: OrderTypeEnum.SIMPLE,
+    value: OrderTypeEnum.SIMPLE,
+    disabled: true,
+  },
+];
 export const ordersTableColumns: CellTittleProps<IOrder, DataPath>[] = [
   {
     top: { name: t('date'), align: 'center', path: 'eventDate' },

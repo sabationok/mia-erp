@@ -1,6 +1,6 @@
 import { ApiDirType } from '../APP_CONFIGS';
 import { IDirItemBase } from '../../components/Directories/dir.types';
-import { FilterOpt } from '../../components/ModalForm/ModalFilter';
+import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../companies/companies.types';
 
 export interface IContractor<T extends ContractorsTypesEnum = any>
   extends IDirItemBase<ApiDirType.CONTRACTORS, ContractorsTypesEnum> {
@@ -14,7 +14,7 @@ export interface IContractor<T extends ContractorsTypesEnum = any>
   phone?: string;
   personalTaxCode?: string;
   attractionSource?: IDirItemBase<ApiDirType.SOURCE_ATTRACTION>;
-  ownershipType?: string;
+  ownershipType?: OwnershipTypeEnum;
   description?: string;
   tags?: string[];
 }
@@ -33,9 +33,3 @@ export enum ContractorsTypesEnum {
   CONSIGNOR = 'CONSIGNOR',
   TRANSPORTER = 'TRANSPORTER',
 }
-export enum BusinessSubjectTypeEnum {
-  company = 'company',
-  entrepreneur = 'entrepreneur',
-  person = 'person',
-}
-export type CounterpartyOwnershipFilterOption = FilterOpt<BusinessSubjectTypeEnum>;

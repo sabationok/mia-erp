@@ -1,8 +1,18 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { SelectItem } from '../components/TableList/TableList';
 import t from '../lang';
+import { ICompany, OwnershipTypeEnum } from '../redux/companies/companies.types';
+import { enumToFilterOptions } from '../utils/fabrics';
 
-export const companiesTableColumns: CellTittleProps[] = [
+export const ownershipTypeFilterOptions = enumToFilterOptions(OwnershipTypeEnum);
+
+export const companiesTableColumns: CellTittleProps<ICompany>[] = [
+  {
+    top: { name: 'Назва', align: 'start', path: 'company.name' },
+    bottom: { name: 'Тип', align: 'start', path: 'company.taxCode', getData: rd => rd.businessSubjectType },
+    width: '200px',
+    action: 'valueByPath',
+  },
   {
     top: { name: 'Назва', align: 'start', path: 'company.name' },
     bottom: { name: 'ІПН/ЄДРПОУ', align: 'start', path: 'company.taxCode' },

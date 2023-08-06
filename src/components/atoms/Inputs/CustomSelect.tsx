@@ -129,7 +129,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
             (opt?._id && opt?._id === currentOption?._id) || (opt?.value && opt?.value === currentOption?.value)
           }
         >
-          {getLabel ? getLabel(opt) : opt.label || opt.name}
+          <span className={'inner'}>{getLabel ? getLabel(opt) : opt.label || opt.name}</span>
         </Option>
       )),
     [currentOption?._id, currentOption?.value, getLabel, handleOnSelect, options]
@@ -238,11 +238,22 @@ const Options = styled(FlexBox)<{ isOpen?: boolean; inView?: boolean; intersecti
 
 const Option = styled(FieldBox)<{ isActive?: boolean }>`
   min-height: 28px;
+  height: max-content;
 
   cursor: default;
 
   font-weight: ${({ isActive }) => (isActive ? 700 : '')};
   background-color: ${({ theme }) => theme.modalBackgroundColor};
+
+  & .inner {
+    height: max-content;
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
 `;
 
 const LabelInner = styled.fieldset<{

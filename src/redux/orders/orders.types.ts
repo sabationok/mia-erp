@@ -22,7 +22,7 @@ import {
 } from '../../components/Directories/dir.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 
-export type OrderFilterOption = FilterOpt;
+export type OrderTypeFilterOption = FilterOpt;
 export enum OrderTypeEnum {
   SIMPLE = 'SIMPLE',
   SET = 'SET',
