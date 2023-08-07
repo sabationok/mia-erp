@@ -61,7 +61,7 @@ export interface IOrder extends IBase {
   status?: OrderStatus;
   payments?: OnlyUUID[];
 
-  content?: IOrderSlotItem[];
+  // content?: IOrderSlotItem[];
   destination?: string;
   shipmentMethod?: IShipmentDirItem;
   paymentMethod?: IPaymentDirItem;

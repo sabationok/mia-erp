@@ -20,6 +20,9 @@ import OrderOverview, { OrderOverviewProps } from '../Modals/OrderOverview';
 import FormInviteUser, { FormInviteUserProps } from '../Forms/FromInviteUser';
 import SelectProductModal, { SelectProductModalProps } from '../Modals/SelectProductModal';
 import SelectOrderSlotItemModal, { SelectOrderSlotItemModalProps } from '../Modals/SelectOrderSlotItemModal';
+import FormCreateOrderSlotItem, {
+  FormCreateOrderSlotItemProps,
+} from '../Forms/FormCreateOrder/FormCreateOrderSlotitem';
 
 export enum Modals {
   ModalForm = 'ModalForm',
@@ -37,6 +40,7 @@ export enum Modals {
   FormCreateOrder = 'FormCreateOrder',
   FormCreateMethod = 'FormCreateMethod',
   FormInviteUser = 'FormInviteUser',
+  FormCreateOrderSlotItem = 'FormCreateOrderSlotItem',
 
   PriceListOverview = 'PriceListOverview',
   ProductOverview = 'ProductOverview',
@@ -61,6 +65,7 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   [Modals.FormCreateTag]: FormCreateTag,
   [Modals.FormCreateMethod]: FormCreateMethod,
   [Modals.FormInviteUser]: FormInviteUser,
+  [Modals.FormCreateOrderSlotItem]: FormCreateOrderSlotItem,
 
   [Modals.OrderOverview]: OrderOverview,
   [Modals.PriceListOverview]: PriceListOverview,
@@ -86,6 +91,7 @@ export interface ModalChildrenProps {
   [Modals.FormCreateMethod]: FormCreateMethodProps;
   [Modals.FormCreateTag]: FormCreateTagProps;
   [Modals.FormInviteUser]: FormInviteUserProps;
+  [Modals.FormCreateOrderSlotItem]: FormCreateOrderSlotItemProps;
 
   [Modals.OrderOverview]: OrderOverviewProps;
   [Modals.PriceListOverview]: PriceListOverviewProps;

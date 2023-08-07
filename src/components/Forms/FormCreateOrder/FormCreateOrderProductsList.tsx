@@ -1,12 +1,12 @@
 import FlexBox from '../../atoms/FlexBox';
 import { useCallback, useMemo, useState } from 'react';
-import ProductCardSimpleOverview from '../../Products/ProductCardSimpleOverview';
 import styled from 'styled-components';
-import FormProductSelectorForOrder from './FormProductSelectorForOrder';
+import FormAddOrderSlotItem from './FormAddOrderSlotItem';
 import { OnlyUUID } from '../../../redux/global.types';
 import { IProduct } from '../../../redux/products/products.types';
 import { ExtractId } from '../../../utils/dataTransform';
 import { IOrderSlotItem } from '../../../redux/orders/orders.types';
+import OrderSlotItemOverview from '../../Products/OrderSlotItemOverview';
 
 export interface FormCreateOrderProductsListProps {
   onSelect: (item: IProduct | IOrderSlotItem) => void;
@@ -33,7 +33,7 @@ const FormCreateOrderProductsList: React.FC<FormCreateOrderProductsListProps> = 
 
   const renderProducts = useMemo(() => {
     return data?.map((p, idx) => (
-      <ProductCardSimpleOverview key={idx.toString()} product={p} onRemove={() => handleRemove(ExtractId(p))} />
+      <OrderSlotItemOverview key={idx.toString()} index={idx} item={p} onRemove={() => handleRemove(ExtractId(p))} />
     ));
   }, [data, handleRemove]);
 
@@ -44,7 +44,7 @@ const FormCreateOrderProductsList: React.FC<FormCreateOrderProductsListProps> = 
       </FlexBox>
 
       <Footer>
-        <FormProductSelectorForOrder onSelect={handleSelect} />
+        <FormAddOrderSlotItem onSelect={handleSelect} />
       </Footer>
     </Container>
   );

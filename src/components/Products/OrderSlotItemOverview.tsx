@@ -2,17 +2,86 @@ import { IOrderSlotItem } from '../../redux/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import { useMemo } from 'react';
 
 export interface OrderSlotItemOverviewProps {
   item: IOrderSlotItem;
-  index: number;
+  index?: number;
   onSelect?: () => void;
   onRemove?: () => void;
   disabled?: boolean;
 }
-const OrderSlotItemOverview: React.FC<OrderSlotItemOverviewProps> = ({ disabled, onSelect, onRemove }) => {
+const OrderSlotItemOverview: React.FC<OrderSlotItemOverviewProps> = ({ item, disabled, onSelect, onRemove }) => {
+  const cells = useMemo(
+    (): { value?: string; title?: string; gridArea: string; isLastInRow?: boolean }[] => [
+      {
+        title: 'Назва',
+        value: item?.product?.label,
+        gridArea: '1/1/1/9',
+      },
+      {
+        title: 'Артикул | SKU',
+        value: item?.product?.sku,
+        gridArea: '1/9/1/13',
+        isLastInRow: true,
+      },
+      {
+        title: 'Категорія',
+        value: item?.product?.category?.label,
+        gridArea: '2/1/2/5',
+      },
+      {
+        title: 'Бренд',
+        value: item?.product?.brand?.label,
+        gridArea: '2/5/2/9',
+      },
+      {
+        title: 'Постачальник',
+        value: item?.product?.brand?.label,
+        gridArea: '2/9/2/13',
+
+        isLastInRow: true,
+      },
+      {
+        title: 'Опис',
+        value: item?.product?.brand?.label,
+        gridArea: '3/1/3/13',
+        isLastInRow: true,
+      },
+    ],
+    [item?.product?.brand?.label, item?.product?.category?.label, item?.product?.label, item?.product?.sku]
+  );
+
   return (
     <Card>
+      <FlexBox></FlexBox>
+      <FlexBox gap={8} flex={1}>
+        <CardGridBox>
+          {cells.map(({ title, value, gridArea, isLastInRow }) => (
+            <CardGridBoxInner key={`cardCell-${title}`} gridArea={gridArea || '1/1/1/9'} isLastInRow={isLastInRow}>
+              <div
+                className={'text title'}
+                style={{
+                  textAlign: 'start',
+                  fontSize: 10,
+                }}
+              >
+                {title || 'Title'}
+              </div>
+              <div
+                className={'text'}
+                style={{
+                  textAlign: 'end',
+                  fontSize: 12,
+                  fontWeight: 500,
+                }}
+              >
+                {value || '-'}
+              </div>
+            </CardGridBoxInner>
+          ))}
+        </CardGridBox>
+      </FlexBox>
       {!disabled && (
         <Buttons justifyContent={'space-between'} gap={4}>
           <ButtonIcon variant={'onlyIcon'} iconSize={'100%'} size={'24px'} icon={'info'} />
