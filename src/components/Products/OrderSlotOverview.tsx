@@ -1,55 +1,55 @@
-import { IOrderSlotItem } from '../../redux/orders/orders.types';
+import { IOrderSlot } from '../../redux/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { useMemo } from 'react';
 
-export interface OrderSlotItemOverviewProps {
-  item: IOrderSlotItem;
+export interface OrderSlotOverviewProps {
+  slot: IOrderSlot;
   index?: number;
   onSelect?: () => void;
   onRemove?: () => void;
   disabled?: boolean;
 }
-const OrderSlotItemOverview: React.FC<OrderSlotItemOverviewProps> = ({ item, disabled, onSelect, onRemove }) => {
+const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({ slot, disabled, onSelect, onRemove }) => {
   const cells = useMemo(
     (): { value?: string; title?: string; gridArea: string; isLastInRow?: boolean }[] => [
       {
         title: 'Назва',
-        value: item?.product?.label,
+        value: slot?.product?.label,
         gridArea: '1/1/1/9',
       },
       {
         title: 'Артикул | SKU',
-        value: item?.product?.sku,
+        value: slot?.product?.sku,
         gridArea: '1/9/1/13',
         isLastInRow: true,
       },
       {
         title: 'Категорія',
-        value: item?.product?.category?.label,
+        value: slot?.product?.category?.label,
         gridArea: '2/1/2/5',
       },
       {
         title: 'Бренд',
-        value: item?.product?.brand?.label,
+        value: slot?.product?.brand?.label,
         gridArea: '2/5/2/9',
       },
       {
         title: 'Постачальник',
-        value: item?.product?.brand?.label,
+        value: slot?.product?.brand?.label,
         gridArea: '2/9/2/13',
 
         isLastInRow: true,
       },
       {
         title: 'Опис',
-        value: item?.product?.brand?.label,
+        value: slot?.product?.brand?.label,
         gridArea: '3/1/3/13',
         isLastInRow: true,
       },
     ],
-    [item?.product?.brand?.label, item?.product?.category?.label, item?.product?.label, item?.product?.sku]
+    [slot?.product?.brand?.label, slot?.product?.category?.label, slot?.product?.label, slot?.product?.sku]
   );
 
   return (
@@ -198,4 +198,4 @@ const ImageBox = styled(FlexBox)`
 
   background-color: ${({ theme }) => theme.fieldBackgroundColor};
 `;
-export default OrderSlotItemOverview;
+export default OrderSlotOverview;

@@ -5,6 +5,7 @@ import { ContractorsTypesEnum } from '../contractors/contractors.types';
 import { ApiDirType } from '../APP_CONFIGS';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
+import { ICompany } from '../companies/companies.types';
 
 export type StorageItemStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
@@ -42,6 +43,8 @@ export interface IStorageItemBase extends IBase {
 export interface IStorageItem extends IStorageItemBase {
   label: string;
   sku?: string;
+
+  owner?: ICompany;
 
   category?: IBaseDirItem<any, ApiDirType.CATEGORIES_PROD>;
   subCategory?: IBaseDirItem<any, ApiDirType.CATEGORIES_PROD>;

@@ -1,6 +1,6 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { IOrder, IOrderSlotItem } from '../../../redux/orders/orders.types';
+import { IOrder, IOrderSlot } from '../../../redux/orders/orders.types';
 import { useAppForm } from '../../../hooks';
 import { useCallback, useMemo, useState } from 'react';
 import * as yup from 'yup';
@@ -8,7 +8,6 @@ import { IUser } from '../../../redux/auth/auth.types';
 import { FilterOpt } from '../../ModalForm/ModalFilter';
 import FormCreateOrderProductsList from './FormCreateOrderProductsList';
 import FormCreateOrderMainInfo from './FormCreateOrderMainInfo';
-import { IProduct } from '../../../redux/products/products.types';
 import { OnlyUUID } from '../../../redux/global.types';
 
 const orderValidation = yup.object().shape({
@@ -28,7 +27,7 @@ export interface FormCreateOrderState extends Omit<IOrder, '_id' | 'createdAt' |
 
 const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmit, ...props }) => {
   const [currentTab, setCurrentTab] = useState<number>(0);
-  const [content, setContent] = useState<(IProduct | IOrderSlotItem)[]>([]);
+  const [content, setContent] = useState<IOrderSlot[]>([]);
 
   const {
     formState: { errors, ...formStateOthers },
@@ -39,11 +38,11 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
     defaultValues: defaultState,
   });
 
-  const handleSelect = useCallback((item: IProduct | IOrderSlotItem) => {
-    setContent(prev => [...prev, item]);
+  const handleSelect = useCallback((slot: IOrderSlot) => {
+    setContent(prev => [...prev, slot]);
   }, []);
-  const handleRemove = useCallback((item: OnlyUUID) => {
-    setContent(prev => prev.filter(el => el._id !== item._id));
+  const handleRemove = useCallback((slot: OnlyUUID) => {
+    setContent(prev => prev.filter(el => el._id !== slot._id));
   }, []);
 
   const onValid = (data?: FormCreateOrderState) => {

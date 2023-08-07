@@ -2,10 +2,10 @@ import FormCreateInner from '../components/FormCreateInner';
 import { useModalService } from '../../ModalProvider/ModalProvider';
 import { Modals } from '../../ModalProvider/Modals';
 import { IProduct } from '../../../redux/products/products.types';
-import { IOrderSlotItem } from '../../../redux/orders/orders.types';
+import { IOrderSlot } from '../../../redux/orders/orders.types';
 
 export interface FormAddOrderSlotItemProps {
-  onSelect: (item: IOrderSlotItem) => void;
+  onSelect: (slot: IOrderSlot) => void;
 }
 
 const FormAddOrderSlotItem: React.FC<FormAddOrderSlotItemProps> = ({ onSelect, ...props }) => {
@@ -23,8 +23,8 @@ const FormAddOrderSlotItem: React.FC<FormAddOrderSlotItemProps> = ({ onSelect, .
       },
     });
   };
-  const onAddOrderSlotItem = (item?: IOrderSlotItem) => {
-    console.log(item);
+  const onAddOrderSlotItem = (slot?: IOrderSlot) => {
+    console.log(slot);
   };
   return (
     <FormCreateInner

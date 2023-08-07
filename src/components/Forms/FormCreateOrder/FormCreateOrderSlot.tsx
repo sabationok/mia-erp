@@ -1,20 +1,20 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { IOrderSlotItem } from '../../../redux/orders/orders.types';
+import { IOrderSlot } from '../../../redux/orders/orders.types';
 import { useCallback, useState } from 'react';
-import OrderSlotItemOverview from '../../Products/OrderSlotItemOverview';
+import OrderSlotOverview from '../../Products/OrderSlotOverview';
 
 export interface FormCreateOrderSlotItemProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
-  onSubmit?: AppSubmitHandler<IOrderSlotItem>;
+  onSubmit?: AppSubmitHandler<IOrderSlot>;
 }
-const FormCreateOrderSlotItem: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit, ...props }) => {
-  const [loadedData, setLoadedData] = useState<IOrderSlotItem>();
+const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit, ...props }) => {
+  const [loadedData, setLoadedData] = useState<IOrderSlot>();
 
   const getData = useCallback(() => {}, []);
   return (
     <ModalForm width={'480px'} title={'Створення позиції для замовлення'} {...props}>
-      {loadedData && <OrderSlotItemOverview item={loadedData} />}
+      {loadedData && <OrderSlotOverview slot={loadedData} />}
     </ModalForm>
   );
 };
-export default FormCreateOrderSlotItem;
+export default FormCreateOrderSlot;

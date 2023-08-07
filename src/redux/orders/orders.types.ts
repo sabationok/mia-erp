@@ -37,10 +37,11 @@ export interface IOrderSlotItem extends IPriceListItem {
   origin?: Partial<IPriceListItem>;
 }
 
-export interface IOrderSlot extends IBase {
+export interface IOrderSlot extends IPriceListItem {
   owner: ICompany;
   order?: OnlyUUID;
-  items?: IOrderSlotItem[];
+
+  origin?: Partial<IPriceListItem>;
   status?: OrderStatus;
   warehouse?: IWarehouseDirItem;
   supplier?: ISupplierDirItem;
@@ -62,6 +63,7 @@ export interface IOrder extends IBase {
   payments?: OnlyUUID[];
 
   // content?: IOrderSlotItem[];
+  slots?: IOrderSlot[];
   destination?: string;
   shipmentMethod?: IShipmentDirItem;
   paymentMethod?: IPaymentDirItem;

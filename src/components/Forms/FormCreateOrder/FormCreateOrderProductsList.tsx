@@ -3,21 +3,20 @@ import { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import FormAddOrderSlotItem from './FormAddOrderSlotItem';
 import { OnlyUUID } from '../../../redux/global.types';
-import { IProduct } from '../../../redux/products/products.types';
 import { ExtractId } from '../../../utils/dataTransform';
-import { IOrderSlotItem } from '../../../redux/orders/orders.types';
-import OrderSlotItemOverview from '../../Products/OrderSlotItemOverview';
+import { IOrderSlot } from '../../../redux/orders/orders.types';
+import OrderSlotOverview from '../../Products/OrderSlotOverview';
 
 export interface FormCreateOrderProductsListProps {
-  onSelect: (item: IProduct | IOrderSlotItem) => void;
+  onSelect: (item: IOrderSlot) => void;
   onRemove: (item: OnlyUUID) => void;
-  list?: IProduct[];
+  list?: IOrderSlot[];
 }
 const FormCreateOrderProductsList: React.FC<FormCreateOrderProductsListProps> = ({ onSelect, onRemove, list }) => {
-  const [data, setData] = useState<(IProduct | IOrderSlotItem)[]>(list || []);
+  const [data, setData] = useState<IOrderSlot[]>(list || []);
 
   const handleSelect = useCallback(
-    (item: IProduct | IOrderSlotItem) => {
+    (item: IOrderSlot) => {
       onSelect && onSelect(item);
       setData(prev => [...prev, item]);
     },
@@ -33,7 +32,7 @@ const FormCreateOrderProductsList: React.FC<FormCreateOrderProductsListProps> = 
 
   const renderProducts = useMemo(() => {
     return data?.map((p, idx) => (
-      <OrderSlotItemOverview key={idx.toString()} index={idx} item={p} onRemove={() => handleRemove(ExtractId(p))} />
+      <OrderSlotOverview key={idx.toString()} index={idx} slot={p} onRemove={() => handleRemove(ExtractId(p))} />
     ));
   }, [data, handleRemove]);
 
