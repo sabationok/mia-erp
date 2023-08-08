@@ -11,7 +11,7 @@ const TableOverHead: React.FC<React.HTMLAttributes<HTMLDivElement>> = props => {
   const { actionsCreator, isFilter, tableSearchParams, isSearch = true } = useTable();
 
   return (
-    <OverHead className="tOverHead" {...props}>
+    <OverHead className="tOverHead" padding={isFilter || isSearch || actionsCreator ? '4px 8px' : '0'} {...props}>
       <LeftSide className="leftSide">{isSearch && <TableSearchForm {...{ tableSearchParams }} />}</LeftSide>
 
       <DeviceControl.MinDesktop>
@@ -27,18 +27,18 @@ const TableOverHead: React.FC<React.HTMLAttributes<HTMLDivElement>> = props => {
   );
 };
 
-const OverHead = styled.div`
+const OverHead = styled.div<{ padding?: string }>`
   display: grid;
   grid-template-columns: 1fr;
   justify-content: space-between;
 
   gap: 8px;
+  padding: ${({ padding = '0' }) => padding};
 
   position: relative;
   z-index: 50;
 
   width: 100%;
-  padding: 4px 8px;
 
   background-color: ${({ theme }) => theme.tableBackgroundColor};
   @media screen and (max-height: 480px) {

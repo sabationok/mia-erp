@@ -43,8 +43,8 @@ const ProductCardSimpleOverview: React.FC<ProductCardForSelectorProps> = ({
         gridArea: '2/5/2/9',
       },
       {
-        title: 'Постачальник',
-        value: product.brand?.label,
+        title: 'Тип',
+        value: product.type,
         gridArea: '2/9/2/13',
 
         isLastInRow: true,
@@ -56,7 +56,7 @@ const ProductCardSimpleOverview: React.FC<ProductCardForSelectorProps> = ({
         isLastInRow: true,
       },
     ],
-    [product.brand?.label, product.category?.label, product.label, product.sku]
+    [product.brand?.label, product.category?.label, product.label, product.sku, product.type]
   );
 
   return (

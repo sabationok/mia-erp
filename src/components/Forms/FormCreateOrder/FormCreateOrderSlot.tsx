@@ -11,6 +11,8 @@ import { createApiCall, OrdersApi } from '../../../api';
 import { OnlyUUID } from '../../../redux/global.types';
 import FlexBox from '../../atoms/FlexBox';
 import { IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
+import styled from 'styled-components';
+import { warehousesTableColumnsForOrderCreateOrderSlotForm } from '../../../data';
 
 export interface FormCreateOrderSlotItemProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<IOrderSlot>;
@@ -44,9 +46,10 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit,
   return (
     <ModalForm width={'600px'} fillHeight title={'Створення позиції для замовлення'} {...props}>
       <FlexBox overflow={'auto'} style={{ minHeight: '100%' }}>
-        <OrderSlotOverview price={selectedPrice} dataForSlot={dataForSlot} />
+        <OrderSlotOverview price={selectedPrice} dataForSlot={dataForSlot} disabled />
 
-        <FlexBox style={{ minHeight: 150 }} flex={1}>
+        <TableTitle>{'Оберіть ціну'}</TableTitle>
+        <TableBox flex={1}>
           <TableList
             tableTitles={pricesColumnsForProductReview}
             tableData={dataForSlot?.prices}
@@ -57,13 +60,30 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit,
               rowData && setSelectedPrice(rowData);
             }}
           />
-        </FlexBox>
+        </TableBox>
 
-        <FlexBox style={{ minHeight: 150 }} flex={1}>
-          <TableList tableTitles={pricesColumnsForProductReview} isSearch={false} isFilter={false} />
-        </FlexBox>
+        <TableTitle>{'Оберіть склад відвантаження'}</TableTitle>
+        <TableBox flex={1} overflow={'hidden'}>
+          <TableList
+            tableTitles={warehousesTableColumnsForOrderCreateOrderSlotForm}
+            isSearch={false}
+            isFilter={false}
+          />
+        </TableBox>
       </FlexBox>
     </ModalForm>
   );
 };
+const TableBox = styled(FlexBox)`
+  min-height: 150px;
+  padding: 0 8px;
+  border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
+`;
+const TableTitle = styled.div`
+  padding: 8px;
+  font-size: 14px;
+  font-weight: 600;
+
+  height: 32px;
+`;
 export default FormCreateOrderSlot;

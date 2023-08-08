@@ -2,8 +2,8 @@ import { IOrderSlot } from '../../redux/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { useMemo } from 'react';
-import { IProduct } from '../../redux/products/products.types';
+import { useMemo, useState } from 'react';
+import { IProduct, IStorageItem } from '../../redux/products/products.types';
 import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
 
 export interface OrderSlotOverviewProps {
@@ -15,129 +15,133 @@ export interface OrderSlotOverviewProps {
   onRemove?: () => void;
   disabled?: boolean;
 }
+
+const createOverviewCellsData = (
+  dataForSlot?: IStorageItem,
+  activePriceData?: IPriceListItem
+): {
+  value?: string | number;
+  title?: string;
+  borderBottom?: boolean;
+  gridArea?:
+    | 'label'
+    | 'sku'
+    | 'qty'
+    | 'price'
+    | 'discount'
+    | 'total'
+    | 'currency'
+    | 'ttnCost'
+    | 'ttn'
+    | 'transporter'
+    | 'category'
+    | 'brand'
+    | 'type'
+    | '_';
+  isLastInRow?: boolean;
+}[] => [
+  {
+    title: 'Назва',
+    value: dataForSlot?.label,
+    gridArea: 'label',
+  },
+  {
+    title: 'Артикул | SKU',
+    value: dataForSlot?.sku,
+    gridArea: 'sku',
+    isLastInRow: true,
+  },
+  {
+    title: 'Категорія',
+    value: dataForSlot?.category?.label,
+    gridArea: 'category',
+  },
+  {
+    title: 'Бренд',
+    value: dataForSlot?.brand?.label,
+    gridArea: 'brand',
+  },
+  {
+    title: 'Тип',
+    value: dataForSlot?.type,
+    gridArea: 'type',
+    isLastInRow: true,
+  },
+  { borderBottom: true, isLastInRow: true, gridArea: '_' },
+  {
+    title: 'Кількість',
+    value: '',
+    gridArea: 'qty',
+  },
+  {
+    title: 'Ціна',
+    value: activePriceData?.price,
+    gridArea: 'price',
+  },
+  {
+    title: 'Знижка',
+    value: activePriceData?.discount,
+    gridArea: 'discount',
+  },
+  {
+    title: 'Сума',
+    value: '',
+    gridArea: 'total',
+  },
+  {
+    title: 'Валюта',
+    value: '',
+    gridArea: 'currency',
+    isLastInRow: true,
+  },
+];
 const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({ dataForSlot, price, disabled, onSelect, onRemove }) => {
-  const cells = useMemo(
-    (): {
-      value?: string | number;
-      title?: string;
-      borderBottom?: boolean;
-      gridArea?:
-        | 'label'
-        | 'sku'
-        | 'qty'
-        | 'price'
-        | 'discount'
-        | 'total'
-        | 'currency'
-        | 'ttnCost'
-        | 'ttn'
-        | 'transporter'
-        | 'category'
-        | 'brand'
-        | 'type'
-        | '_';
-      isLastInRow?: boolean;
-    }[] => [
-      {
-        title: 'Назва',
-        value: dataForSlot?.label,
-        gridArea: 'label',
-      },
-      {
-        title: 'Артикул | SKU',
-        value: dataForSlot?.sku,
-        gridArea: 'sku',
-        isLastInRow: true,
-      },
-      {
-        title: 'Категорія',
-        value: dataForSlot?.category?.label,
-        gridArea: 'category',
-      },
-      {
-        title: 'Бренд',
-        value: dataForSlot?.brand?.label,
-        gridArea: 'brand',
-      },
-      {
-        title: 'Тип',
-        value: dataForSlot?.type,
-        gridArea: 'type',
-        isLastInRow: true,
-      },
-      { borderBottom: true, isLastInRow: true, gridArea: '_' },
-      {
-        title: 'Кількість',
-        value: '',
-        gridArea: 'qty',
-      },
-      {
-        title: 'Ціна',
-        value: price?.price,
-        gridArea: 'price',
-      },
-      {
-        title: 'Знижка',
-        value: price?.discount,
-        gridArea: 'discount',
-      },
-      {
-        title: 'Сума',
-        value: '',
-        gridArea: 'total',
-      },
-      {
-        title: 'Валюта',
-        value: '',
-        gridArea: 'currency',
-        isLastInRow: true,
-      },
-    ],
-    [
-      dataForSlot?.brand?.label,
-      dataForSlot?.category?.label,
-      dataForSlot?.label,
-      dataForSlot?.sku,
-      dataForSlot?.type,
-      price?.discount,
-      price?.price,
-    ]
-  );
+  const [countedData, setCountedData] = useState<IPriceListItem & { qty?: number }>();
+  const cells = useMemo(() => createOverviewCellsData(dataForSlot, countedData), [countedData, dataForSlot]);
 
   return (
-    <Card>
-      <FlexBox></FlexBox>
-      <FlexBox gap={8} flex={1}>
-        <CardGridBox>
-          {cells.map(({ borderBottom, title, value, gridArea, isLastInRow }) => (
-            <CardGridBoxInner key={`cardCell-${title}`} gridArea={gridArea || '1/1/1/9'} isLastInRow={isLastInRow}>
-              {!borderBottom && (
-                <>
-                  <div
-                    className={'text title'}
-                    style={{
-                      textAlign: 'start',
-                      fontSize: 10,
-                    }}
-                  >
-                    {!borderBottom && (title || 'Title')}
-                  </div>
-                  <div
-                    className={'text'}
-                    style={{
-                      textAlign: 'end',
-                      fontSize: 12,
-                      fontWeight: 500,
-                    }}
-                  >
-                    {value || '-'}
-                  </div>
-                </>
-              )}
-            </CardGridBoxInner>
-          ))}
-        </CardGridBox>
-      </FlexBox>
+    <Card disabled={disabled}>
+      <ImageBox>
+        <img
+          src={
+            (dataForSlot?.images && dataForSlot?.images[0]?.img_1x) ||
+            'https://cdn.create.vista.com/api/media/medium/186787692/stock-photo-profile-young-stylish-man-eyeglasses?token='
+          }
+          style={{ objectFit: 'contain' }}
+          alt={''}
+          width={'100%'}
+          height={'100%'}
+        />
+      </ImageBox>
+      <CardGridBox>
+        {cells.map(({ borderBottom, title, value, gridArea, isLastInRow }) => (
+          <CardGridBoxInner key={`cardCell-${title}`} gridArea={gridArea || '1/1/1/9'} isLastInRow={isLastInRow}>
+            {!borderBottom && (
+              <>
+                <div
+                  className={'text title'}
+                  style={{
+                    textAlign: 'start',
+                    fontSize: 10,
+                  }}
+                >
+                  {!borderBottom && (title || 'Title')}
+                </div>
+                <div
+                  className={'text'}
+                  style={{
+                    textAlign: 'end',
+                    fontSize: 12,
+                    fontWeight: 500,
+                  }}
+                >
+                  {value || '-'}
+                </div>
+              </>
+            )}
+          </CardGridBoxInner>
+        ))}
+      </CardGridBox>
       {!disabled && (
         <Buttons justifyContent={'space-between'} gap={4}>
           <ButtonIcon variant={'onlyIcon'} iconSize={'100%'} size={'24px'} icon={'info'} disabled />
@@ -171,6 +175,8 @@ const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
   grid-template-columns: 80px 1fr min-content;
   gap: 8px;
 
+  height: fit-content;
+
   position: relative;
 
   padding: 8px;
@@ -199,7 +205,7 @@ const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
 
   @media screen and (max-width: 480px) {
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr max-content min-content;
+    grid-template-rows: 150px max-content min-content;
     max-height: 100%;
   }
 `;
@@ -214,6 +220,7 @@ const CardGridBox = styled(FlexBox)`
     'qty price discount total currency';
 
   //max-width: 270px;
+  height: max-content;
   border-top: 1px solid ${({ theme }) => theme.trBorderClr};
 `;
 const CardGridBoxInner = styled(FlexBox)<{ borderBottom?: boolean; gridArea: string; isLastInRow?: boolean }>`
@@ -249,13 +256,18 @@ const Buttons = styled(FlexBox)`
 `;
 
 const ImageBox = styled(FlexBox)`
-  height: 100%;
-  width: 100%;
+  height: fit-content;
 
+  width: 100%;
   object-position: center;
   object-fit: fill;
   overflow: hidden;
 
   background-color: ${({ theme }) => theme.fieldBackgroundColor};
+
+  @media screen and (max-width: 480px) {
+    width: 100px;
+    margin: auto;
+  }
 `;
 export default OrderSlotOverview;
