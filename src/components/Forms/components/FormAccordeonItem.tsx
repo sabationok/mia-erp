@@ -25,7 +25,6 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
   contentContainerStyle,
 }) => {
   const [isOpen, setIsOpen] = useState(!!disabled || open);
-
   function handleToggleOpen() {
     if (!toggled) return;
     setIsOpen(prev => !prev);
@@ -48,7 +47,9 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
       >
         {renderHeader}
       </StButton>
-      <ContentBox {...contentContainerStyle}>{children}</ContentBox>
+      <ContentBox padding={'8px 16px'} {...contentContainerStyle}>
+        {children}
+      </ContentBox>
     </Container>
   );
 };
@@ -69,30 +70,10 @@ const Container = styled(FlexBox)`
   &:last-child {
     border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
   }
-
-  // .isOpenItem {
-  //   overflow: visible;
-  //   max-height: 100%;
-  //
-  //   & .btn {
-  //     background-color: ${({ theme }) => theme.fieldColor};
-  //   }
-  //
-  //   & .icon {
-  //     transform: rotate(0deg);
-  //   }
-  //
-  //   & .contentBox {
-  //     // max-height: 100%;
-  //   }
-  //}
 `;
 
 const ContentBox = styled(FlexBox)`
-  // max-height: 0px;
-  //overflow: hidden;
   height: max-content;
-  padding: 8px 16px;
 
   transition: all ${({ theme }) => theme.globals.timingFnMain};
 `;

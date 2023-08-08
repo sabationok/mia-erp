@@ -19,7 +19,7 @@ export interface FormCreateOrderProps extends Omit<ModalFormProps, 'onSubmit' | 
 }
 
 export const FormCreateOrderTabs: FilterOpt[] = [
-  { label: 'Main', value: 'main' },
+  { label: 'Info', value: 'info' },
   { label: 'Products', value: 'products' },
 ];
 

@@ -20,7 +20,7 @@ const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
           modals.handleOpenModal({
             Modal: Modals.OrderOverview,
             props: {
-              order: { _id: ctx.selectedRow?._id, owner: {} as any },
+              order: ctx.tableData?.find(el => el._id === ctx.selectedRow?._id),
             },
           });
         },
