@@ -3,53 +3,105 @@ import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { useMemo } from 'react';
+import { IProduct } from '../../redux/products/products.types';
+import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
 
 export interface OrderSlotOverviewProps {
-  slot: IOrderSlot;
+  slot?: IOrderSlot;
+  price?: IPriceListItem;
+  dataForSlot?: IProduct;
   index?: number;
   onSelect?: () => void;
   onRemove?: () => void;
   disabled?: boolean;
 }
-const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({ slot, disabled, onSelect, onRemove }) => {
+const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({ dataForSlot, price, disabled, onSelect, onRemove }) => {
   const cells = useMemo(
-    (): { value?: string; title?: string; gridArea: string; isLastInRow?: boolean }[] => [
+    (): {
+      value?: string | number;
+      title?: string;
+      borderBottom?: boolean;
+      gridArea?:
+        | 'label'
+        | 'sku'
+        | 'qty'
+        | 'price'
+        | 'discount'
+        | 'total'
+        | 'currency'
+        | 'ttnCost'
+        | 'ttn'
+        | 'transporter'
+        | 'category'
+        | 'brand'
+        | 'type'
+        | '_';
+      isLastInRow?: boolean;
+    }[] => [
       {
         title: 'Назва',
-        value: slot?.product?.label,
-        gridArea: '1/1/1/9',
+        value: dataForSlot?.label,
+        gridArea: 'label',
       },
       {
         title: 'Артикул | SKU',
-        value: slot?.product?.sku,
-        gridArea: '1/9/1/13',
+        value: dataForSlot?.sku,
+        gridArea: 'sku',
         isLastInRow: true,
       },
       {
         title: 'Категорія',
-        value: slot?.product?.category?.label,
-        gridArea: '2/1/2/5',
+        value: dataForSlot?.category?.label,
+        gridArea: 'category',
       },
       {
         title: 'Бренд',
-        value: slot?.product?.brand?.label,
-        gridArea: '2/5/2/9',
+        value: dataForSlot?.brand?.label,
+        gridArea: 'brand',
       },
       {
-        title: 'Постачальник',
-        value: slot?.product?.brand?.label,
-        gridArea: '2/9/2/13',
-
+        title: 'Тип',
+        value: dataForSlot?.type,
+        gridArea: 'type',
         isLastInRow: true,
       },
+      { borderBottom: true, isLastInRow: true, gridArea: '_' },
       {
-        title: 'Опис',
-        value: slot?.product?.brand?.label,
-        gridArea: '3/1/3/13',
+        title: 'Кількість',
+        value: '',
+        gridArea: 'qty',
+      },
+      {
+        title: 'Ціна',
+        value: price?.price,
+        gridArea: 'price',
+      },
+      {
+        title: 'Знижка',
+        value: price?.discount,
+        gridArea: 'discount',
+      },
+      {
+        title: 'Сума',
+        value: '',
+        gridArea: 'total',
+      },
+      {
+        title: 'Валюта',
+        value: '',
+        gridArea: 'currency',
         isLastInRow: true,
       },
     ],
-    [slot?.product?.brand?.label, slot?.product?.category?.label, slot?.product?.label, slot?.product?.sku]
+    [
+      dataForSlot?.brand?.label,
+      dataForSlot?.category?.label,
+      dataForSlot?.label,
+      dataForSlot?.sku,
+      dataForSlot?.type,
+      price?.discount,
+      price?.price,
+    ]
   );
 
   return (
@@ -57,34 +109,38 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({ slot, disabled, o
       <FlexBox></FlexBox>
       <FlexBox gap={8} flex={1}>
         <CardGridBox>
-          {cells.map(({ title, value, gridArea, isLastInRow }) => (
+          {cells.map(({ borderBottom, title, value, gridArea, isLastInRow }) => (
             <CardGridBoxInner key={`cardCell-${title}`} gridArea={gridArea || '1/1/1/9'} isLastInRow={isLastInRow}>
-              <div
-                className={'text title'}
-                style={{
-                  textAlign: 'start',
-                  fontSize: 10,
-                }}
-              >
-                {title || 'Title'}
-              </div>
-              <div
-                className={'text'}
-                style={{
-                  textAlign: 'end',
-                  fontSize: 12,
-                  fontWeight: 500,
-                }}
-              >
-                {value || '-'}
-              </div>
+              {!borderBottom && (
+                <>
+                  <div
+                    className={'text title'}
+                    style={{
+                      textAlign: 'start',
+                      fontSize: 10,
+                    }}
+                  >
+                    {!borderBottom && (title || 'Title')}
+                  </div>
+                  <div
+                    className={'text'}
+                    style={{
+                      textAlign: 'end',
+                      fontSize: 12,
+                      fontWeight: 500,
+                    }}
+                  >
+                    {value || '-'}
+                  </div>
+                </>
+              )}
             </CardGridBoxInner>
           ))}
         </CardGridBox>
       </FlexBox>
       {!disabled && (
         <Buttons justifyContent={'space-between'} gap={4}>
-          <ButtonIcon variant={'onlyIcon'} iconSize={'100%'} size={'24px'} icon={'info'} />
+          <ButtonIcon variant={'onlyIcon'} iconSize={'100%'} size={'24px'} icon={'info'} disabled />
           {onRemove && (
             <ButtonIcon
               variant={'onlyIcon'}
@@ -113,7 +169,7 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({ slot, disabled, o
 const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
   display: grid;
   grid-template-columns: 80px 1fr min-content;
-  grid-template-rows: 120px;
+  gap: 8px;
 
   position: relative;
 
@@ -149,14 +205,18 @@ const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
 `;
 const CardGridBox = styled(FlexBox)`
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(4, 40px);
+  grid-template-areas:
+    'label label label sku sku'
+    'category category brand brand type'
+    '_ _ _ _ _'
+    'qty price discount total currency';
 
   //max-width: 270px;
-  height: 100%;
   border-top: 1px solid ${({ theme }) => theme.trBorderClr};
 `;
-const CardGridBoxInner = styled(FlexBox)<{ gridArea: string; isLastInRow?: boolean }>`
+const CardGridBoxInner = styled(FlexBox)<{ borderBottom?: boolean; gridArea: string; isLastInRow?: boolean }>`
   justify-content: space-between;
 
   grid-area: ${({ gridArea = '' }) => gridArea};

@@ -74,10 +74,7 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
         <StButtonIcon
           key={idx}
           variant="def"
-          disabled={(() => {
-            console.log(opt?.disabled);
-            return opt?.disabled;
-          })()}
+          disabled={opt?.disabled}
           className={current === idx ? 'filterBtn active' : 'filterBtn'}
           onClick={handleSelectOpt(idx, opt)}
         >

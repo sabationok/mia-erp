@@ -45,6 +45,7 @@ export enum Endpoints {
 
   getAllOrderSlots = 'getAllOrderSlots',
   addSlotToOrder = 'addSlotToOrder',
+  getDataForNewOrderSlot = 'getDataForNewOrderSlot',
   removeSlotFromOrder = 'removeSlotFromOrder',
   softDeleteOrderSlot = 'softDeleteOrderSlot',
   addItemToOrderSlot = 'addItemToOrderSlot',
@@ -194,6 +195,8 @@ const ordersEndpoints: ApiEndpointsMap = {
     `${API_BASE_ROUTES.ORDERS}/${Endpoints.updateListItem}/${listId}/${priceId}`,
   [Endpoints.updateById]: (orderId: string) => `${API_BASE_ROUTES.ORDERS}/${Endpoints.updateById}/${orderId}`,
   [Endpoints.getAllOrderSlots]: () => `${API_BASE_ROUTES.ORDERS}/${Endpoints.getAllOrderSlots}`,
+  [Endpoints.getDataForNewOrderSlot]: (productId: string) =>
+    `${API_BASE_ROUTES.ORDERS}/${[Endpoints.getDataForNewOrderSlot]}/${productId}`,
 };
 
 const APP_CONFIGS = {

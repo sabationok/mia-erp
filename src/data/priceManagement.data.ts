@@ -183,6 +183,12 @@ export const pricesColumnsForProductReview: CellTittleProps<IPriceListItem, Data
     action: 'valueByPath',
   },
   {
+    top: { name: 'Прайс лист', getData: d => d?.list?.label },
+    bottom: { name: 'Тип', getData: d => d?.list?.type },
+    width: '170px',
+    action: 'valueByPath',
+  },
+  {
     top: {
       name: t('timeTo'),
       align: 'center',
@@ -195,11 +201,5 @@ export const pricesColumnsForProductReview: CellTittleProps<IPriceListItem, Data
     },
     width: '150px',
     action: 'dateDbl',
-  },
-  {
-    top: { name: 'Прайс лист', getData: d => d?.list?.label },
-    bottom: { name: 'Тип', getData: d => d?.list?.type },
-    width: '170px',
-    action: 'valueByPath',
   },
 ];

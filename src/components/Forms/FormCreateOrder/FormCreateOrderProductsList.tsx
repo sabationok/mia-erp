@@ -1,7 +1,7 @@
 import FlexBox from '../../atoms/FlexBox';
 import { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import FormAddOrderSlotItem from './FormAddOrderSlotItem';
+import FormAddOrderSlot from './FormAddOrderSlot';
 import { OnlyUUID } from '../../../redux/global.types';
 import { ExtractId } from '../../../utils/dataTransform';
 import { IOrderSlot } from '../../../redux/orders/orders.types';
@@ -43,7 +43,7 @@ const FormCreateOrderProductsList: React.FC<FormCreateOrderProductsListProps> = 
       </FlexBox>
 
       <Footer>
-        <FormAddOrderSlotItem onSelect={handleSelect} />
+        <FormAddOrderSlot onSelect={handleSelect} />
       </Footer>
     </Container>
   );
@@ -54,8 +54,6 @@ const Container = styled(FlexBox)`
   overflow: hidden;
 `;
 const Footer = styled(FlexBox)`
-  //padding: 0 16px 0;
-
   border-top: 1px solid ${({ theme }) => theme.modalBorderColor};
   background-color: ${({ theme }) => theme.modalBackgroundColor};
 `;

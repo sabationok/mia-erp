@@ -1,5 +1,4 @@
 import { AppResponse } from '../redux/global.types';
-import { ThunkPayload } from '../redux/store.store';
 import { isAxiosError } from 'axios';
 
 export type GetResponseCallback<SD = any, RD = any, MD = any> = (arg?: SD) => Promise<AppResponse<RD, MD> | undefined>;
@@ -88,7 +87,7 @@ export const createThunkPayloadCreator = <SD = any, RD = any, MD = any, E = any,
 };
 
 async function apiCaller<SD = any, RD = any, E = any, MD = any>(
-  { onLoading, onError, onSuccess, data }: ThunkPayload<SD, RD, E>,
+  { onLoading, onError, onSuccess, data }: ApiCallerPayload<SD, RD, E>,
   getResponseCallback: GetResponseCallback<SD, RD, MD>
 ) {
   const callback = async (data?: SD) => getResponseCallback(data);

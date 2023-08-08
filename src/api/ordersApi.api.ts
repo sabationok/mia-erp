@@ -1,7 +1,8 @@
 import baseApi from './baseApi';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { IAllOrdersRes, IOrder, IOrderRes, IOrderSlot } from '../redux/orders/orders.types';
-import { AppResponse } from '../redux/global.types';
+import { AppResponse, OnlyUUID } from '../redux/global.types';
+import { IProduct } from '../redux/products/products.types';
 
 export default class OrdersApi {
   private static api = baseApi;
@@ -36,10 +37,14 @@ export default class OrdersApi {
   public static async softDeleteOrderSlot(...args: any[]): Promise<AppResponse<IOrderSlot & { result: boolean }>> {
     return this.api.get(this.endpoints.softDeleteSlotFromOrder());
   }
-  public static async addOrderSlotItem(...args: any[]): Promise<AppResponse<IOrderSlot>> {
-    return this.api.post(this.endpoints.addItemToOrderSlot(), { ...args });
+  public static async addOrderSlotItem(order: OnlyUUID): Promise<AppResponse<IOrderSlot>> {
+    return this.api.post(this.endpoints.addItemToOrderSlot(order._id));
   }
   public static async softDeleteOrderSlotItem(...args: any[]): Promise<AppResponse<IOrderSlot & { result: boolean }>> {
     return this.api.get(this.endpoints.softDeleteOrderSlotItem());
+  }
+
+  public static async getPreparedDataForNewSlot(product?: OnlyUUID): Promise<AppResponse<IProduct>> {
+    return this.api.get(this.endpoints.getDataForNewOrderSlot(product?._id));
   }
 }
