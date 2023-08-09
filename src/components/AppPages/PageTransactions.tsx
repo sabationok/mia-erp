@@ -27,6 +27,10 @@ const PageTransactions: React.FC<any> = (props: Props) => {
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
+  useEffect(() => {
+    console.log(state.transactions[0]);
+  }, [state.transactions]);
+
   const tableConfig = useMemo(
     (): ITableListProps<ITransaction> => ({
       tableData: state.transactions,

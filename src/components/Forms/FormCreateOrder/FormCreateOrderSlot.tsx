@@ -13,6 +13,8 @@ import FlexBox from '../../atoms/FlexBox';
 import { IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
 import styled from 'styled-components';
 import { warehousesTableColumnsForOrderCreateOrderSlotForm } from '../../../data';
+import TableVariations from '../../TableVariations';
+import FormAccordeonItem from '../components/FormAccordeonItem';
 
 export interface FormCreateOrderSlotItemProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<IOrderSlot>;
@@ -45,45 +47,53 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit,
   }, [getData]);
   return (
     <ModalForm width={'600px'} fillHeight title={'Створення позиції для замовлення'} {...props}>
-      <FlexBox overflow={'auto'} style={{ minHeight: '100%' }}>
+      <FlexBox overflow={'hidden'} style={{ minHeight: '100%' }}>
         <OrderSlotOverview price={selectedPrice} dataForSlot={dataForSlot} disabled />
 
-        <TableTitle>{'Оберіть ціну'}</TableTitle>
-        <TableBox flex={1}>
-          <TableList
-            tableTitles={pricesColumnsForProductReview}
-            tableData={dataForSlot?.prices}
-            isSearch={false}
-            isFilter={false}
-            onRowClick={data => {
-              const rowData = dataForSlot?.prices?.find(p => p._id === data?._id);
-              rowData && setSelectedPrice(rowData);
-            }}
-          />
-        </TableBox>
+        <FlexBox overflow={'auto'}>
+          <FlexBox>
+            <FormAccordeonItem contentContainerStyle={{ padding: '0 16px' }} renderHeader={'Оберіть ціну'}>
+              <TableBox flex={1}>
+                <TableList
+                  tableTitles={pricesColumnsForProductReview}
+                  tableData={dataForSlot?.prices}
+                  isSearch={false}
+                  isFilter={false}
+                  onRowClick={data => {
+                    const rowData = dataForSlot?.prices?.find(p => p._id === data?._id);
+                    rowData && setSelectedPrice(rowData);
+                  }}
+                />
+              </TableBox>
+            </FormAccordeonItem>
 
-        <TableTitle>{'Оберіть склад відвантаження'}</TableTitle>
-        <TableBox flex={1} overflow={'hidden'}>
-          <TableList
-            tableTitles={warehousesTableColumnsForOrderCreateOrderSlotForm}
-            isSearch={false}
-            isFilter={false}
-          />
-        </TableBox>
+            <FormAccordeonItem
+              contentContainerStyle={{ padding: '0 16px' }}
+              renderHeader={'Оберіть склад відвантаження'}
+            >
+              <TableBox flex={1}>
+                <TableList
+                  tableTitles={warehousesTableColumnsForOrderCreateOrderSlotForm}
+                  isSearch={false}
+                  isFilter={false}
+                />
+              </TableBox>
+            </FormAccordeonItem>
+
+            <FormAccordeonItem contentContainerStyle={{ padding: '0 16px' }} renderHeader={'Оберіть варіацію'}>
+              <TableBox flex={1} minHeigh={'250px'}>
+                <TableVariations />
+              </TableBox>
+            </FormAccordeonItem>
+          </FlexBox>
+        </FlexBox>
       </FlexBox>
     </ModalForm>
   );
 };
-const TableBox = styled(FlexBox)`
-  min-height: 150px;
-  padding: 0 8px;
+const TableBox = styled(FlexBox)<{ minHeigh?: string }>`
+  min-height: ${({ minHeigh = '150px' }) => minHeigh};
+  //padding: 0 8px;
   border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
-`;
-const TableTitle = styled.div`
-  padding: 8px;
-  font-size: 14px;
-  font-weight: 600;
-
-  height: 32px;
 `;
 export default FormCreateOrderSlot;
