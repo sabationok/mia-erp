@@ -1,6 +1,6 @@
 import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const columns = [
   { label: 'S', id: 'atr_1_1', width: '100px' },
@@ -52,20 +52,20 @@ export interface IProductVariation {
   atr_2?: { id?: string; label?: string; quantity?: number; reserved?: number };
 }
 const TableVariations: React.FC<TableVariationsProps> = ({ onSelect, defaultState }) => {
-  const [current, setCurrent] = useState<IProductVariation>({});
+  const [current, setCurrent] = useState<IProductVariation>(defaultState || {});
   const isCellActive = (colId: string, rowId: string) => {
     return current?.atr_1?.id === colId && current?.atr_2?.id === rowId;
   };
   const isRowActive = (rowId: string) => current.atr_2?.id === rowId;
 
-  const parseMyString = async () => {
-    const parsedStringData = await JSON.parse(stringData);
-
-    console.log('parsedStringData', parsedStringData);
-  };
-  useEffect(() => {
-    parseMyString();
-  }, []);
+  // const parseMyString = async () => {
+  //   const parsedStringData = await JSON.parse(stringData);
+  //
+  //   console.log('parsedStringData', parsedStringData);
+  // };
+  // useEffect(() => {
+  //   parseMyString();
+  // }, []);
 
   return (
     <Table>

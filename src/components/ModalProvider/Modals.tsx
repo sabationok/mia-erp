@@ -8,15 +8,15 @@ import FormCreatePriceList, { FormCreatePriceListProps } from '../Forms/FormCrea
 import FormCreatePrice, { FormCreatePriceProps } from '../Forms/FormCreatePrice/FormCreatePrice';
 import FormCreateCustomRole, { FormCreateCustomRoleProps } from '../Forms/FormCreateCustomRole';
 import FormCreateCount, { FormCreateCountProps } from '../Forms/FormCreateCount';
-import PriceListOverview, { PriceListOverviewProps } from '../Modals/PriceListOverview';
-import ProductOverview, { ProductOverviewProps } from '../Modals/ProductOverview';
+import PriceListOverview, { PriceListOverviewProps } from '../Overviews/PriceListOverview';
+import ProductOverview, { ProductOverviewProps } from '../Overviews/ProductOverview';
 import FormCreateCompany, { FormCreateCompanyProps } from '../Forms/FormCreateCompany';
 import FormCreateOrder, { FormCreateOrderProps } from '../Forms/FormCreateOrder/FormCreateOrder';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { IBaseDirItem } from '../Directories/dir.types';
 import FormCreateTag, { FormCreateTagProps } from '../Forms/FormCreateTag';
 import FormCreateMethod, { FormCreateMethodProps } from '../Forms/FormCreateMetod';
-import OrderOverview, { OrderOverviewProps } from '../Modals/OrderOverview';
+import OrderOverview, { OrderOverviewProps } from '../Overviews/OrderOverview';
 import FormInviteUser, { FormInviteUserProps } from '../Forms/FromInviteUser';
 import SelectProductModal, { SelectProductModalProps } from '../Modals/SelectProductModal';
 import FormCreateOrderSlot, { FormCreateOrderSlotItemProps } from '../Forms/FormCreateOrder/FormCreateOrderSlot';

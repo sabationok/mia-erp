@@ -86,7 +86,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit,
                   isFilter={false}
                 />
               )}
-              {currentTab === 2 && <TableVariations onSelect={setSelectedVariation} defaultState={selectedVariation} />}{' '}
+              {currentTab === 2 && <TableVariations onSelect={setSelectedVariation} defaultState={selectedVariation} />}
             </TableBox>
           </FlexBox>
         </FlexBox>

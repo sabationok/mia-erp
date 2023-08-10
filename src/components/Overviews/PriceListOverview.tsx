@@ -43,6 +43,10 @@ const PriceListOverview: React.FC<PriceListOverviewProps> = ({
     (): ITableListProps<IPriceListItem> => getTableSetting(tableData),
     [tableData, getTableSetting]
   );
+
+  useEffect(() => {
+    console.log(tableData);
+  }, [tableData]);
   // const onValidSubmit = (data: IPriceList) => {
   //   onSubmit &&
   //     data.prices &&

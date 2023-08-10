@@ -53,18 +53,6 @@ export const priceListColumns: CellTittleProps<IPriceList, DataPath>[] = [
     width: '210px',
     action: 'valueByPath',
   },
-  // {
-  //   top: { name: 'Теги клієнтів', align: 'start', path: 'tags', getData: () => initialCompany.customerTags },
-  //   // bottom: { name: 'Емейл', align: 'start', path: 'author.email' },
-  //   width: '230px',
-  //   action: 'tags',
-  // },
-  // {
-  //   top: { name: 'Теги постачальників', align: 'start', path: 'tags' },
-  //   // bottom: { name: 'Емейл', align: 'start', path: 'author.email' },
-  //   width: '230px',
-  //   action: 'tags',
-  // },
 
   {
     top: { name: 'Коментар', align: 'start', path: 'description' },
@@ -84,6 +72,18 @@ export const priceListColumns: CellTittleProps<IPriceList, DataPath>[] = [
     },
     width: '150px',
     action: 'dateDbl',
+  },
+  {
+    top: { name: 'Теги клієнтів', align: 'start', path: 'tags' },
+    // bottom: { name: 'Емейл', align: 'start', path: 'author.email' },
+    width: '230px',
+    action: 'tags',
+  },
+  {
+    top: { name: 'Теги постачальників', align: 'start', path: 'tags' },
+    // bottom: { name: 'Емейл', align: 'start', path: 'author.email' },
+    width: '230px',
+    action: 'tags',
   },
   {
     top: { name: 'Автор', align: 'start', path: 'author.name' },
@@ -107,21 +107,21 @@ export const priceListContentColumns: CellTittleProps<IPriceListItem, DataPath>[
     action: 'doubleDataWithAvatar',
   },
   {
-    bottom: { name: 'Вхідна ціна', getData: d => d?.cost },
-    top: { name: 'Вихідна ціна', getData: d => d?.price },
+    top: { name: 'Вихідна ціна', align: 'end', getData: d => numberWithSpaces(Number(d?.price || 0)) },
+    bottom: { name: 'Вхідна ціна', align: 'end', getData: d => numberWithSpaces(Number(d?.cost || 0)) },
     width: '170px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Комісія, сума', getData: d => d?.commissionAmount },
-    bottom: { name: 'Комісія, %', getData: d => d?.commissionPercentage },
+    top: { name: 'Комісія, сума', align: 'end', getData: d => d?.commissionAmount },
+    bottom: { name: 'Комісія, %', align: 'end', getData: d => d?.commissionPercentage },
     width: '170px',
     action: 'valueByPath',
   },
 
   {
-    top: { name: 'Націнка, сума', getData: d => d?.markupAmount },
-    bottom: { name: 'Націнка, %', getData: d => d?.markupPercentage },
+    top: { name: 'Націнка, сума', align: 'end', getData: d => d?.markupAmount },
+    bottom: { name: 'Націнка, %', align: 'end', getData: d => d?.markupPercentage },
     width: '170px',
     action: 'valueByPath',
   },
@@ -161,8 +161,8 @@ export const priceListContentColumns: CellTittleProps<IPriceListItem, DataPath>[
 
 export const pricesColumnsForProductReview: CellTittleProps<IPriceListItem, DataPath>[] = [
   {
+    top: { name: 'Вихідна ціна', align: 'end', getData: d => numberWithSpaces(Number(d?.price || 0)) },
     bottom: { name: 'Вхідна ціна', align: 'end', getData: d => numberWithSpaces(Number(d?.cost || 0)) },
-    top: { name: 'Вихідна ціна', align: 'end', getData: d => numberWithSpaces(Number(d?.cost || 0)) },
     width: '170px',
     action: 'valueByPath',
   },

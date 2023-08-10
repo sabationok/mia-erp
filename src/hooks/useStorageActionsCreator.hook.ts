@@ -5,7 +5,7 @@ import { TableActionCreator } from '../components/TableList/tableTypes.types';
 import { IStorageItem, StorageItemFilterOption } from '../redux/products/products.types';
 import { useProductsSelector } from '../redux/selectors.store';
 import ProductForm from '../components/Forms/FormCreateProduct';
-import ProductOverview from '../components/Modals/ProductOverview';
+import ProductOverview from '../components/Overviews/ProductOverview';
 import { omit } from 'lodash';
 
 export type StorageActionsCreator = TableActionCreator<IStorageItem>;
