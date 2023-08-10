@@ -9,14 +9,8 @@ import { useState } from 'react';
 export interface OrderOverviewProps extends Omit<ModalFormProps, 'onSubmit'> {
   order?: IOrder;
 }
-const mainOrderInfo: { label?: string; getData?: (data: IOrder) => React.ReactNode | void }[] = [
-  { label: 'ID', getData: o => o._id },
-  { label: 'Статус', getData: o => o.status },
-  { label: 'Тип', getData: o => '' },
-  { label: 'Менеджер', getData: o => o.manager?.name },
-  { label: 'Створив / Дата', getData: o => new Date(o.createdAt || '').getDate() },
-  { label: 'Оновив / Дата', getData: o => new Date(o.deletedAt || '').getDate() },
-];
+export type OrderInfoBoxProps = { label?: string; getData?: (data: IOrder) => React.ReactNode | void };
+
 export const OrderOverview: React.FC<OrderOverviewProps> = ({ order, ...props }) => {
   const [currenTab, setCurrentTab] = useState(0);
 
@@ -27,25 +21,56 @@ export const OrderOverview: React.FC<OrderOverviewProps> = ({ order, ...props })
         setCurrentTab(index);
       }}
       fillHeight
-      title={`Order: ${order?.code ? order?.code : '"code"'}`}
+      title={`Order: ${order?.code ? order?.code : '000000000'}`}
       {...props}
     >
       <Container flex={1}>
         {currenTab === 0 && (
           <FlexBox height={'max-content'}>
-            <FormAccordeonItem open renderHeader={'Загальна інформація'}>
+            <FormAccordeonItem
+              open
+              contentContainerStyle={{ padding: '0 8px 8px' }}
+              renderHeader={'Загальна інформація'}
+            >
               {mainOrderInfo.map((el, idx) => (
                 <InfoBox key={idx.toString()}>
                   <InfoBoxTitle>{el.label || 'Title'}</InfoBoxTitle>
-                  <InfoBoxContent>{(order && el.getData && el.getData(order)) || '-'}</InfoBoxContent>
+                  <InfoBoxContent>{(order && el.getData && el.getData(order)) || 'Не визначено'}</InfoBoxContent>
                 </InfoBox>
               ))}
             </FormAccordeonItem>
-            <FormAccordeonItem renderHeader={'Замовник'}></FormAccordeonItem>
-            <FormAccordeonItem renderHeader={'Отримувач'}></FormAccordeonItem>
-            <FormAccordeonItem renderHeader={'Інформація про відвантаження'}></FormAccordeonItem>
-            <FormAccordeonItem renderHeader={'Інформація про оплату'}></FormAccordeonItem>
-            <FormAccordeonItem renderHeader={'Додаткова інформація'}></FormAccordeonItem>
+            <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} renderHeader={'Замовник'}>
+              {orderCustomerInfo.map((el, idx) => (
+                <InfoBox key={idx.toString()}>
+                  <InfoBoxTitle>{el.label || 'Title'}</InfoBoxTitle>
+                  <InfoBoxContent>{(order && el.getData && el.getData(order)) || 'Не визначено'}</InfoBoxContent>
+                </InfoBox>
+              ))}
+            </FormAccordeonItem>
+            <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} renderHeader={'Отримувач'}>
+              {orderReceiverInfo.map((el, idx) => (
+                <InfoBox key={idx.toString()}>
+                  <InfoBoxTitle>{el.label || 'Title'}</InfoBoxTitle>
+                  <InfoBoxContent>{(order && el.getData && el.getData(order)) || 'Не визначено'}</InfoBoxContent>
+                </InfoBox>
+              ))}
+            </FormAccordeonItem>
+            <FormAccordeonItem
+              contentContainerStyle={{ padding: '0 8px 8px' }}
+              renderHeader={'Інформація про відвантаження'}
+            ></FormAccordeonItem>
+            <FormAccordeonItem
+              contentContainerStyle={{ padding: '0 8px 8px' }}
+              renderHeader={'Інформація про оплату'}
+            ></FormAccordeonItem>
+            <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} renderHeader={'Додаткова інформація'}>
+              {orderAdditionalInfo.map((el, idx) => (
+                <InfoBox key={idx.toString()}>
+                  <InfoBoxTitle>{el.label || 'Title'}</InfoBoxTitle>
+                  <InfoBoxContent>{(order && el.getData && el.getData(order)) || 'Не визначено'}</InfoBoxContent>
+                </InfoBox>
+              ))}
+            </FormAccordeonItem>
           </FlexBox>
         )}
       </Container>
@@ -58,6 +83,7 @@ const Container = styled(FlexBox)`
 `;
 
 const InfoBox = styled(FlexBox)`
+  height: 44px;
   border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;
 const InfoBoxTitle = styled(FlexBox)`
@@ -73,3 +99,50 @@ const InfoBoxContent = styled(FlexBox)`
 `;
 
 export default OrderOverview;
+const mainOrderInfo: OrderInfoBoxProps[] = [
+  { label: 'ID', getData: o => o._id },
+  { label: 'Статус', getData: o => o.status },
+  { label: 'Тип', getData: o => '' },
+  { label: 'Менеджер', getData: o => o.manager?.name },
+  { label: 'Створив / Дата', getData: o => new Date(o.createdAt || '').getDate() },
+  { label: 'Оновив / Дата', getData: o => new Date(o.deletedAt || '').getDate() },
+];
+const orderCustomerInfo: OrderInfoBoxProps[] = [
+  { label: 'ID', getData: o => o.customer?._id },
+  {
+    label: 'ПІП',
+    getData: o =>
+      !o.customer?.label ? `${o.customer?.name || ''} ${o.customer?.secondName || ''}` : `${o.customer?.label || ''}`,
+  },
+  { label: 'Статус', getData: o => o.customer?.status },
+  { label: 'Телефон', getData: o => o.customer?.phone },
+  { label: 'Емейл', getData: o => o.customer?.email },
+  { label: 'Спосіб комунікації', getData: o => o.customerCommunicationMethod?.label },
+];
+const orderReceiverInfo: OrderInfoBoxProps[] = [
+  { label: 'ID', getData: o => o.receiver?._id },
+  {
+    label: 'ПІП',
+    getData: o =>
+      !o.receiver?.label ? `${o.receiver?.name || ''} ${o.receiver?.secondName || ''}` : `${o.receiver?.label || ''}`,
+  },
+  { label: 'Статус', getData: o => o.receiver?.status },
+  { label: 'Телефон', getData: o => o.receiver?.phone },
+  { label: 'Емейл', getData: o => o.receiver?.email },
+  { label: 'Спосіб комунікації', getData: o => o.receiverCommunicationMethod?.label },
+];
+const orderAdditionalInfo: OrderInfoBoxProps[] = [
+  { label: 'Коментар', getData: o => o.comment },
+  { label: 'Внутрішній коментар', getData: o => o.innerComment },
+];
+const orderShipmentInfo: OrderInfoBoxProps[] = [
+  {
+    label: 'ПІП',
+    getData: o =>
+      !o.receiver?.label ? `${o.receiver?.name || ''} ${o.receiver?.secondName || ''}` : `${o.receiver?.label || ''}`,
+  },
+  { label: 'Статус', getData: o => o.receiver?.status },
+  { label: 'Телефон', getData: o => o.receiver?.phone },
+  { label: 'Емейл', getData: o => o.receiver?.email },
+  { label: 'Спосіб комунікації', getData: o => o.receiverCommunicationMethod?.label },
+];

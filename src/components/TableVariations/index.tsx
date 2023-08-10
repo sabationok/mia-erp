@@ -68,11 +68,11 @@ const TableVariations: React.FC<TableVariationsProps> = ({ onSelect, defaultStat
   // }, []);
 
   return (
-    <Table>
+    <Table flex={1}>
       <TableScroll overflow={'auto'}>
         <Head fxDirection={'row'} height={'40px'}>
           <HeadRow fxDirection={'row'}>
-            <RowStickyCell borderColor={'#fff'} padding={'0 10px'}>
+            <RowStickyCell isInHeader={true} padding={'0 10px'}>
               {'Параметр'}
             </RowStickyCell>
 
@@ -85,6 +85,7 @@ const TableVariations: React.FC<TableVariationsProps> = ({ onSelect, defaultStat
             </HeadTitles>
           </HeadRow>
         </Head>
+
         <Body>
           {rows.map(row => (
             <Row key={`row-${row.label}`} height={'40px'} fxDirection={'row'} isActive={isRowActive(row.id)}>
@@ -122,6 +123,24 @@ const TableVariations: React.FC<TableVariationsProps> = ({ onSelect, defaultStat
 const Table = styled(FlexBox)`
   position: relative;
   overflow: hidden;
+
+  background-color: ${({ theme }) => theme.tableBackgroundColor};
+`;
+
+const Body = styled(FlexBox)`
+  position: relative;
+  background-color: inherit;
+`;
+const TableScroll = styled(FlexBox)`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 40px 1fr min-content;
+
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+
+  background-color: inherit;
 `;
 const Head = styled(FlexBox)`
   position: sticky;
@@ -132,22 +151,13 @@ const Head = styled(FlexBox)`
   text-transform: uppercase;
   background-color: ${({ theme }) => theme.tableHeaderBackground};
 `;
-const TableScroll = styled(FlexBox)`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 40px 1fr min-content;
-
-  height: 100%;
-  width: 100%;
-  overflow: auto;
-`;
 const HeadRow = styled(FlexBox)`
   padding: 4px 0;
   background-color: inherit;
 `;
 const HeadTitles = styled(FlexBox)``;
 
-const RowStickyCell = styled(FlexBox)<{ borderColor?: string; backgroundColor?: string }>`
+const RowStickyCell = styled(FlexBox)<{ isInHeader?: boolean; backgroundColor?: string }>`
   position: sticky;
   top: 0;
   left: 0;
@@ -155,17 +165,28 @@ const RowStickyCell = styled(FlexBox)<{ borderColor?: string; backgroundColor?: 
 
   width: 150px;
   background-color: ${({ backgroundColor = 'inherit' }) => backgroundColor};
-  border-right: 2px solid ${({ borderColor = 'inherit' }) => borderColor};
+  //border-right: 2px solid ${({ theme, isInHeader = false }) => (isInHeader ? theme.tableHeaderStroke : 'inherit')};
 
   font-weight: 700;
   text-transform: uppercase;
+
+  &::after {
+    display: block;
+    content: ' ';
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+
+    height: ${({ isInHeader = false }) => (isInHeader ? '100%' : 'calc(100% - 8px)')};
+
+    border: 1px solid ${({ theme, isInHeader = false }) => theme.tableHeaderStroke};
+  }
 `;
-const Body = styled(FlexBox)`
-  position: relative;
-`;
+
 const CellTitle = styled(FlexBox)`
   padding: 0 10px;
-  border-right: 2px solid #fff;
+  border-right: 2px solid ${({ theme }) => theme.tableHeaderStroke};
 
   font-weight: 700;
   text-transform: uppercase;
@@ -175,7 +196,7 @@ const Row = styled(FlexBox)<{ isActive?: boolean }>`
 
   border-top: 1px solid ${({ theme, isActive }) => (isActive ? theme.accentColor.light : 'transparent')};
   border-bottom: 1px solid ${({ theme, isActive }) => (isActive ? theme.accentColor.light : theme.modalBorderColor)};
-  background-color: ${({ theme }) => theme.modalBackgroundColor};
+  background-color: inherit;
 
   &:hover {
     background-color: ${({ theme }) => theme.tableRowBackgroundHover};

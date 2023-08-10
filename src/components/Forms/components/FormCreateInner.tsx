@@ -9,7 +9,7 @@ export interface FormCreateInnerProps {
 
 const FormCreateInner: React.FC<FormCreateInnerProps> = ({ buttonText, onClick }) => {
   return (
-    <Container fillHeight fillWidth padding={'16px'}>
+    <Container fillHeight fillWidth padding={'8px'}>
       <ButtonIcon variant={'outlinedSmall'} onClick={onClick}>
         {buttonText || 'Create'}
       </ButtonIcon>
@@ -17,7 +17,7 @@ const FormCreateInner: React.FC<FormCreateInnerProps> = ({ buttonText, onClick }
   );
 };
 const Container = styled(FlexBox)`
-  min-height: 50px;
+  min-height: 44px;
   border-top: 1px solid ${({ theme }) => theme.modalBorderColor};
   border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;

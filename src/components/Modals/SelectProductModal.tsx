@@ -19,13 +19,10 @@ export interface SelectProductModalProps extends Omit<ModalFormProps<any, any, I
   searchBy?: AppQueryParams['searchBy'];
 }
 
-const productSelectorFilterOptions: FilterOpt[] = [
-  { label: 'By label', value: 'label' },
-  {
-    label: 'By sku',
-    value: 'sku',
-  },
-  { label: 'By warehouse', value: 'warehouse' },
+const productSelectorFilterOptions: (FilterOpt & { placeholder?: string })[] = [
+  { label: 'By label', value: 'label', placeholder: 'Введіть назву продукту' },
+  { label: 'By sku', value: 'sku', placeholder: 'Введіть артикул продукту' },
+  { label: 'By warehouse', value: 'warehouse', placeholder: 'Введіть номер складу' },
 ];
 const SelectProductModal: React.FC<SelectProductModalProps> = ({ selected, onSelect }) => {
   const { register, setValue, watch, handleSubmit } = useForm<Pick<SelectProductModalProps, 'search' | 'searchBy'>>({
@@ -36,6 +33,7 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ selected, onSel
   });
   const [loadedData, setLoadedData] = useState<IProduct[] | null>(null);
   const [current, setCurrent] = useState<IProduct | undefined>(selected);
+  const [currentTab, setCurrentTab] = useState<number>(0);
 
   const { search, searchBy } = watch();
 
@@ -82,17 +80,22 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ selected, onSel
       isValid={!!current}
       footer={false}
       filterOptions={productSelectorFilterOptions}
-      onOptSelect={(o, v) => {
+      onOptSelect={(_o, v, index) => {
         setValue('searchBy', v);
+        setCurrentTab(index);
       }}
       onSubmit={handleSubmit(onValid)}
     >
       <FlexBox fillWidth padding={'8px 8px'} fxDirection={'row'} gap={12} alignItems={'flex-end'}>
-        <InputLabel label={`Параметр пошуку: ${searchBy}`} direction={'vertical'}>
-          <InputText placeholder={'Введіть назву продукту'} {...register('search')} autoFocus />
+        <InputLabel label={`Параметр пошуку: ${searchBy?.toUpperCase()}`} direction={'vertical'}>
+          <InputText
+            placeholder={productSelectorFilterOptions[currentTab]?.placeholder}
+            {...register('search')}
+            autoFocus
+          />
         </InputLabel>
 
-        <ButtonIcon variant={'onlyIcon'} type={'submit'} icon={'search'} iconSize={'24px'} />
+        <ButtonIcon variant={'onlyIcon'} type={'submit'} icon={'search'} iconSize={'30px'} />
       </FlexBox>
       <FlexBox overflow={'auto'} fillWidth flex={'1'} padding={'8px 8px 16px'}>
         {renderProducts}

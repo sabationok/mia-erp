@@ -222,14 +222,15 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
 const Options = styled(FlexBox)<{ isOpen?: boolean; inView?: boolean; intersectionRatio?: number }>`
   font-size: 14px;
 
-  max-height: ${({ isOpen }) => (isOpen ? '120px' : 0)};
+  max-height: ${({ isOpen }) => (isOpen ? '140px' : 0)};
   opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
   width: 100%;
   overflow: hidden;
 
   margin-top: 6px;
 
-  border-radius: 2px;
+  border-radius: 4px;
+
   background-color: ${({ theme }) => theme.modalBackgroundColor};
   border: 1px solid ${({ theme }) => theme.fieldBackgroundColor};
   box-shadow: 0 10px 12px 5px rgba(21, 21, 21, 0.25), 0 10px 12px 4px rgba(211, 211, 211, 0.15);

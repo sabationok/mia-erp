@@ -13,6 +13,7 @@ export interface FormAccordeonItemProps {
   open?: boolean;
   disabled?: boolean;
   contentContainerStyle?: FlexBoxProps;
+  activeBackgroundColor?: string;
 }
 
 const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
@@ -23,6 +24,7 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
   open = false,
   disabled,
   contentContainerStyle,
+  activeBackgroundColor = 'rgba(220, 220, 220, 1)',
 }) => {
   const [isOpen, setIsOpen] = useState(!!disabled || open);
   function handleToggleOpen() {
@@ -39,15 +41,17 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
   return (
     <Container style={{ maxHeight: isOpen ? '100%' : maxHeight }}>
       <StButton
-        icon={toggled ? (!isOpen ? 'SmallArrowDown' : 'SmallArrowUp') : undefined}
+        icon={toggled ? (!isOpen ? 'SmallArrowDown' : 'SmallArrowRight') : undefined}
         iconSize={'24px'}
         variant={'def'}
         onClick={handleToggleOpen}
         disabled={!toggled || disabled || !children}
+        isOpen={isOpen}
+        activeBackgroundColor={activeBackgroundColor}
       >
         {renderHeader}
       </StButton>
-      <ContentBox padding={'8px 16px'} {...contentContainerStyle}>
+      <ContentBox padding={'0 8px'} {...contentContainerStyle}>
         {children}
       </ContentBox>
     </Container>
@@ -78,7 +82,7 @@ const ContentBox = styled(FlexBox)`
   transition: all ${({ theme }) => theme.globals.timingFnMain};
 `;
 
-const StButton = styled(ButtonIcon)`
+const StButton = styled(ButtonIcon)<{ isOpen?: boolean; activeBackgroundColor?: string }>`
   justify-content: flex-start;
 
   padding: 0 8px;
@@ -96,6 +100,7 @@ const StButton = styled(ButtonIcon)`
 
   fill: ${({ theme }) => theme.accentColor.base};
   border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
+  background-color: ${({ theme, isOpen }) => (isOpen ? theme.fieldBackgroundColor : theme.modalBackgroundColor)};
 `;
 
 export default FormAccordeonItem;

@@ -47,7 +47,7 @@ const FormCreateOrderMainInfo: React.FC<FormCreateOrderMainInfoProps> = ({ regis
         <FlexBox style={{ position: 'relative' }}>
           {/*<FormAccordeonItem renderHeader={'Вміст'}>{renderProducts}</FormAccordeonItem>*/}
 
-          <FormAccordeonItem open renderHeader={'Замовник'}>
+          <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} open renderHeader={'Замовник'}>
             <CustomSelect
               {...registerSelect('customer', {
                 options: customers,
@@ -86,7 +86,11 @@ const FormCreateOrderMainInfo: React.FC<FormCreateOrderMainInfoProps> = ({ regis
           </FormAccordeonItem>
 
           {isReceiverInfo && (
-            <FormAccordeonItem renderHeader={'Отримувач'} open={isReceiverInfo}>
+            <FormAccordeonItem
+              contentContainerStyle={{ padding: '0 8px 8px' }}
+              renderHeader={'Отримувач'}
+              open={isReceiverInfo}
+            >
               <CustomSelect
                 {...registerSelect('receiver', {
                   options: customers,
@@ -123,7 +127,7 @@ const FormCreateOrderMainInfo: React.FC<FormCreateOrderMainInfoProps> = ({ regis
             </FormAccordeonItem>
           )}
 
-          <FormAccordeonItem open renderHeader={'Інформація про відвантаження'}>
+          <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} open renderHeader={'Відвантаження'}>
             <CustomSelect
               {...registerSelect('shipmentMethod', {
                 options: shipmentMethods,
@@ -143,7 +147,7 @@ const FormCreateOrderMainInfo: React.FC<FormCreateOrderMainInfoProps> = ({ regis
             </InputLabel>
           </FormAccordeonItem>
 
-          <FormAccordeonItem open renderHeader={'Інформація про оплату'}>
+          <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} open renderHeader={'Оплата'}>
             <CustomSelect
               {...registerSelect('paymentMethod', {
                 options: paymentsMethods,
@@ -154,7 +158,11 @@ const FormCreateOrderMainInfo: React.FC<FormCreateOrderMainInfoProps> = ({ regis
             />
           </FormAccordeonItem>
 
-          <FormAccordeonItem open renderHeader={'Додаткова інформація'}>
+          <FormAccordeonItem
+            contentContainerStyle={{ padding: '0 8px 8px' }}
+            open
+            renderHeader={'Додаткова інформація'}
+          >
             <InputLabel label={'Коментар'}>
               <TextareaPrimary
                 maxLength={250}
