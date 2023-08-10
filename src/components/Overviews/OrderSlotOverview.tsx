@@ -8,11 +8,13 @@ import { IPriceListItem } from '../../redux/priceManagement/priceManagement.type
 import { IProductVariation } from '../TableVariations';
 import { isUndefined } from 'lodash';
 import numberWithSpaces from '../../utils/numbers';
+import { IWarehouseDirItem } from '../Directories/dir.types';
 
 export interface OrderSlotOverviewProps {
   slot?: IOrderSlot;
   price?: IPriceListItem;
   dataForSlot?: IProduct;
+  warehouse?: IWarehouseDirItem;
   index?: number;
   onSelect?: () => void;
   onRemove?: () => void;
@@ -23,7 +25,8 @@ export interface OrderSlotOverviewProps {
 const createOverviewCellsData = (
   dataForSlot?: IStorageItem,
   countedPrice?: IPriceListItem & { qty?: number; total?: number },
-  variation?: IProductVariation
+  variation?: IProductVariation,
+  warehouse?: IWarehouseDirItem
 ): {
   value?: string | number;
   title?: string;
@@ -45,6 +48,7 @@ const createOverviewCellsData = (
     | 'type'
     | 'atr_1'
     | 'atr_2'
+    | 'warehouse'
     | '_';
   isLastInRow?: boolean;
 }[] => [
@@ -109,6 +113,7 @@ const createOverviewCellsData = (
     gridArea: 'currency',
     isLastInRow: true,
   },
+  { title: 'Склад', value: warehouse?.label, gridArea: 'warehouse', isLastInRow: true },
 ];
 const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
   dataForSlot,
@@ -242,12 +247,13 @@ const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
 const CardGridArea = styled(FlexBox)`
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(4, min-content);
+  grid-template-rows: repeat(5, min-content);
   grid-template-areas:
     'label label label label sku sku'
     'category category brand brand type type'
     'atr_1 atr_1  atr_2  atr_2 qty qty'
-    'price bonuses discount total total currency';
+    'price bonuses discount total total currency'
+    'warehouse warehouse warehouse warehouse warehouse warehouse';
 
   //max-width: 270px;
   height: max-content;
@@ -261,12 +267,15 @@ const CardGridArea = styled(FlexBox)`
       'category category brand brand type type'
       'atr_1 atr_1 atr_1 atr_2 atr_2 atr_2'
       'qty qty price price bonuses discount'
-      'total total total total currency currency';
+      'total total total total currency currency'
+      'warehouse warehouse warehouse warehouse warehouse warehouse';
   }
 `;
 const CardGridBox = styled(FlexBox)<{ borderBottom?: boolean; gridArea: string; isLastInRow?: boolean }>`
   justify-content: space-between;
   height: 40px;
+  width: 100%;
+  overflow: hidden;
   grid-area: ${({ gridArea = '' }) => gridArea};
 
   padding: 4px 6px;

@@ -14,7 +14,6 @@ import { IPriceListItem } from '../../../redux/priceManagement/priceManagement.t
 import styled from 'styled-components';
 import { warehousesTableColumnsForOrderCreateOrderSlotForm } from '../../../data';
 import TableVariations, { IProductVariation } from '../../TableVariations';
-import FormAccordeonItem from '../components/FormAccordeonItem';
 
 export interface FormCreateOrderSlotItemProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<IOrderSlot>;
@@ -25,7 +24,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit,
   const [dataForSlot, setDataForSlot] = useState<IProduct>();
   const [selectedPrice, setSelectedPrice] = useState<IPriceListItem>();
   const [selectedVariation, setSelectedVariation] = useState<IProductVariation>();
-
+  const [currentTab, setCurrentTab] = useState(1);
   const modalS = useModalService();
 
   const getData = useCallback(() => {
@@ -48,14 +47,27 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit,
     getData();
   }, [getData]);
   return (
-    <ModalForm width={'600px'} fillHeight title={'Створення позиції для замовлення'} {...props}>
-      <FlexBox overflow={'hidden'} style={{ minHeight: '100%' }}>
+    <ModalForm
+      width={'600px'}
+      filterOptions={[
+        { label: 'Ціна', value: 'warehouse' },
+        { label: 'Склад', value: 'warehouse' },
+        { label: 'Варіація', value: 'warehouse' },
+      ]}
+      onOptSelect={(_option, _value, index) => {
+        setCurrentTab(index);
+      }}
+      fillHeight
+      title={'Створення позиції для замовлення'}
+      {...props}
+    >
+      <FlexBox style={{ minHeight: '100%' }} overflow={'auto'}>
         <OrderSlotOverview price={selectedPrice} variation={selectedVariation} dataForSlot={dataForSlot} disabled />
 
-        <FlexBox overflow={'auto'}>
-          <FlexBox>
-            <FormAccordeonItem contentContainerStyle={{ padding: '0 8px' }} renderHeader={'Оберіть ціну'}>
-              <TableBox flex={1}>
+        <FlexBox flex={1}>
+          <FlexBox padding={'0 8px'} style={{ minHeight: '100%' }}>
+            <TableBox flex={1} minHeight={'300px'}>
+              {currentTab === 0 && (
                 <TableList
                   tableTitles={pricesColumnsForProductReview}
                   tableData={dataForSlot?.prices}
@@ -63,39 +75,27 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit,
                   isFilter={false}
                   onRowClick={data => {
                     const rowData = dataForSlot?.prices?.find(p => p._id === data?._id);
-                    console.log(rowData);
                     rowData && setSelectedPrice(rowData);
                   }}
                 />
-              </TableBox>
-            </FormAccordeonItem>
-
-            <FormAccordeonItem
-              contentContainerStyle={{ padding: '0 8px' }}
-              renderHeader={'Оберіть склад відвантаження'}
-            >
-              <TableBox flex={1}>
+              )}
+              {currentTab === 1 && (
                 <TableList
                   tableTitles={warehousesTableColumnsForOrderCreateOrderSlotForm}
                   isSearch={false}
                   isFilter={false}
                 />
-              </TableBox>
-            </FormAccordeonItem>
-
-            <FormAccordeonItem contentContainerStyle={{ padding: '0 8px' }} renderHeader={'Оберіть варіацію'}>
-              <TableBox flex={1} minHeigh={'250px'}>
-                <TableVariations onSelect={setSelectedVariation} defaultState={selectedVariation} />
-              </TableBox>
-            </FormAccordeonItem>
+              )}
+              {currentTab === 2 && <TableVariations onSelect={setSelectedVariation} defaultState={selectedVariation} />}{' '}
+            </TableBox>
           </FlexBox>
         </FlexBox>
       </FlexBox>
     </ModalForm>
   );
 };
-const TableBox = styled(FlexBox)<{ minHeigh?: string }>`
-  min-height: ${({ minHeigh = '150px' }) => minHeigh};
+const TableBox = styled(FlexBox)<{ minHeight?: string }>`
+  min-height: ${({ minHeight = '150px' }) => minHeight};
   //padding: 0 8px;
   border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;

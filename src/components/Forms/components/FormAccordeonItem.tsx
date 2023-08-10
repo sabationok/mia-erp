@@ -39,11 +39,11 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
   return (
     <Container style={{ maxHeight: isOpen ? '100%' : maxHeight }}>
       <StButton
-        icon={!isOpen ? 'SmallArrowDown' : 'SmallArrowUp'}
+        icon={toggled ? (!isOpen ? 'SmallArrowDown' : 'SmallArrowUp') : undefined}
         iconSize={'24px'}
         variant={'def'}
         onClick={handleToggleOpen}
-        disabled={disabled || !children}
+        disabled={!toggled || disabled || !children}
       >
         {renderHeader}
       </StButton>
