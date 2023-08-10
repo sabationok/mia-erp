@@ -2,7 +2,7 @@ import { IOrderSlot } from '../../redux/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { useEffect, useMemo, useState } from 'react';
+import { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
 import { IProduct, IStorageItem } from '../../redux/products/products.types';
 import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
 import { IProductVariation } from '../TableVariations';
@@ -115,6 +115,50 @@ const createOverviewCellsData = (
   },
   { title: 'Склад', value: warehouse?.label, gridArea: 'warehouse', isLastInRow: true },
 ];
+const CountSelector = ({
+  value = 0,
+  onInputChange,
+  width,
+  height = '20px',
+  disabled,
+  className,
+  autoFocus,
+  onChange,
+}: {
+  value?: number;
+  onInputChange: ChangeEventHandler<HTMLInputElement>;
+  onChange?: (number: number) => void;
+  height?: string;
+  width?: string;
+  disabled?: boolean;
+  className?: string;
+  autoFocus?: boolean;
+}) => {
+  const [count, setCount] = useState(value);
+  const handleIncrementChange = (increment: number) => () => {
+    setCount(prev => {
+      onChange && onChange(prev + increment);
+      return prev + increment;
+    });
+  };
+
+  return (
+    <FlexBox fxDirection={'row'} gap={4} width={width} alignItems={'center'}>
+      <ButtonIcon variant={'onlyIcon'} size={height} icon={'minus'} onClick={handleIncrementChange(-1)} />
+      <StyledInput
+        value={count}
+        disabled={disabled}
+        className={className}
+        onChange={({ target: { value } }) => {
+          setCount(Number(value));
+          onChange && onChange(Number(value));
+        }}
+        autoFocus={autoFocus}
+      />
+      <ButtonIcon variant={'onlyIcon'} size={height} icon={'plus'} onClick={handleIncrementChange(1)} />
+    </FlexBox>
+  );
+};
 const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
   dataForSlot,
   variation,
@@ -161,12 +205,13 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
                 {gridArea !== 'qty' ? (
                   <div className={'text'}>{value || '-'}</div>
                 ) : (
-                  <StyledInput
+                  <CountSelector
                     value={quantity}
                     disabled={false}
                     className={'text'}
                     autoFocus
-                    onChange={({ target }) => {
+                    onChange={setQuantity}
+                    onInputChange={({ target }) => {
                       setQuantity(Number(target.value));
                     }}
                   />
@@ -341,9 +386,14 @@ const StyledInput = styled.input`
   border: 0;
   color: inherit;
   background: transparent;
-  text-align: right;
+  text-align: center;
   font-family: inherit;
   font-size: inherit;
   font-weight: inherit;
+
+  border-radius: 2px;
+  &:focus {
+    box-shadow: 0 1px 8px ${({ theme }) => theme.accentColor.base};
+  }
 `;
 export default OrderSlotOverview;

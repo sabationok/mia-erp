@@ -14,12 +14,12 @@ export const warehousesTableColumnsForOrderCreateOrderSlotForm: CellTittleProps[
     action: 'valueByPath',
   },
   {
-    top: { name: '' },
+    top: { name: 'Локація' },
     width: '150px',
     action: 'valueByPath',
   },
   {
-    top: { name: '' },
+    top: { name: 'Інфо' },
     width: '150px',
     action: 'valueByPath',
   },
