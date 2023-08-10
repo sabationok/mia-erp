@@ -3,7 +3,7 @@ import FlexBox from '../../atoms/FlexBox';
 import { useState } from 'react';
 import { useModalProvider } from '../../ModalProvider/ModalProvider';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import ProductCardSimpleOverview from '../../Products/ProductCardSimpleOverview';
+import ProductCardSimpleOverview from '../../Overviews/ProductCardSimpleOverview';
 import { Modals } from '../../ModalProvider/Modals';
 
 export interface FormProductSelectorForPricingProps<D = any> {

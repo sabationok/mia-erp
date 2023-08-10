@@ -56,6 +56,7 @@ export interface IPriceListItem extends IBase {
   price?: number;
   cost?: number;
   discount?: number;
+  currency?: string;
   markupPercentage?: number;
   markupAmount?: number;
   commissionPercentage?: number;

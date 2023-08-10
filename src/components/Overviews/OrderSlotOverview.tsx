@@ -2,9 +2,12 @@ import { IOrderSlot } from '../../redux/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { IProduct, IStorageItem } from '../../redux/products/products.types';
 import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
+import { IProductVariation } from '../TableVariations';
+import { isUndefined } from 'lodash';
+import numberWithSpaces from '../../utils/numbers';
 
 export interface OrderSlotOverviewProps {
   slot?: IOrderSlot;
@@ -14,11 +17,13 @@ export interface OrderSlotOverviewProps {
   onSelect?: () => void;
   onRemove?: () => void;
   disabled?: boolean;
+  variation?: IProductVariation;
 }
 
 const createOverviewCellsData = (
   dataForSlot?: IStorageItem,
-  activePriceData?: IPriceListItem
+  countedPrice?: IPriceListItem & { qty?: number; total?: number },
+  variation?: IProductVariation
 ): {
   value?: string | number;
   title?: string;
@@ -29,6 +34,7 @@ const createOverviewCellsData = (
     | 'qty'
     | 'price'
     | 'discount'
+    | 'bonuses'
     | 'total'
     | 'currency'
     | 'ttnCost'
@@ -37,6 +43,8 @@ const createOverviewCellsData = (
     | 'category'
     | 'brand'
     | 'type'
+    | 'atr_1'
+    | 'atr_2'
     | '_';
   isLastInRow?: boolean;
 }[] => [
@@ -67,37 +75,63 @@ const createOverviewCellsData = (
     gridArea: 'type',
     isLastInRow: true,
   },
-  { borderBottom: true, isLastInRow: true, gridArea: '_' },
+  { title: 'Атрибут 1', value: variation?.atr_1?.label, gridArea: 'atr_1' },
+  { title: 'Атрибут 2', value: variation?.atr_2?.label, gridArea: 'atr_2' },
   {
     title: 'Кількість',
-    value: '',
+    value: numberWithSpaces(countedPrice?.qty),
     gridArea: 'qty',
+    isLastInRow: true,
   },
   {
     title: 'Ціна',
-    value: activePriceData?.price,
+    value: numberWithSpaces(Number(countedPrice?.price || 0)),
     gridArea: 'price',
   },
   {
-    title: 'Знижка',
-    value: activePriceData?.discount,
+    title: 'Бонуси',
+    value: numberWithSpaces(countedPrice?.discount || 0),
     gridArea: 'discount',
   },
   {
+    title: 'Знижка',
+    value: numberWithSpaces(countedPrice?.discount || 0),
+    gridArea: 'bonuses',
+  },
+  {
     title: 'Сума',
-    value: '',
+    value: numberWithSpaces(countedPrice?.total || 0),
     gridArea: 'total',
   },
   {
     title: 'Валюта',
-    value: '',
+    value: countedPrice?.currency,
     gridArea: 'currency',
     isLastInRow: true,
   },
 ];
-const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({ dataForSlot, price, disabled, onSelect, onRemove }) => {
-  const [countedData, setCountedData] = useState<IPriceListItem & { qty?: number }>();
-  const cells = useMemo(() => createOverviewCellsData(dataForSlot, countedData), [countedData, dataForSlot]);
+const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
+  dataForSlot,
+  variation,
+  price,
+  disabled,
+  onSelect,
+  onRemove,
+}) => {
+  const [quantity, setQuantity] = useState(0);
+  const [countedData, setCountedData] = useState<(IPriceListItem & { qty?: number; total?: number }) | undefined>(
+    price || undefined
+  );
+  const cells = useMemo(
+    () => createOverviewCellsData(dataForSlot, countedData, variation),
+    [countedData, dataForSlot, variation]
+  );
+
+  useEffect(() => {
+    if (!isUndefined(price)) {
+      setCountedData({ ...price, qty: quantity, total: price?.price ? quantity * price?.price : 0 });
+    }
+  }, [price, quantity]);
 
   return (
     <Card disabled={disabled}>
@@ -113,35 +147,31 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({ dataForSlot, pric
           height={'100%'}
         />
       </ImageBox>
-      <CardGridBox>
+      <CardGridArea>
         {cells.map(({ borderBottom, title, value, gridArea, isLastInRow }) => (
-          <CardGridBoxInner key={`cardCell-${title}`} gridArea={gridArea || '1/1/1/9'} isLastInRow={isLastInRow}>
+          <CardGridBox key={`cardCell-${title}`} gridArea={gridArea || ''} isLastInRow={isLastInRow}>
             {!borderBottom && (
               <>
-                <div
-                  className={'text title'}
-                  style={{
-                    textAlign: 'start',
-                    fontSize: 10,
-                  }}
-                >
-                  {!borderBottom && (title || 'Title')}
-                </div>
-                <div
-                  className={'text'}
-                  style={{
-                    textAlign: 'end',
-                    fontSize: 12,
-                    fontWeight: 500,
-                  }}
-                >
-                  {value || '-'}
-                </div>
+                <div className={'title'}>{!borderBottom && (title || 'Title')}</div>
+                {gridArea !== 'qty' ? (
+                  <div className={'text'}>{value || '-'}</div>
+                ) : (
+                  <StyledInput
+                    value={quantity}
+                    disabled={false}
+                    className={'text'}
+                    autoFocus
+                    onChange={({ target }) => {
+                      setQuantity(Number(target.value));
+                    }}
+                  />
+                )}
               </>
             )}
-          </CardGridBoxInner>
+          </CardGridBox>
         ))}
-      </CardGridBox>
+      </CardGridArea>
+
       {!disabled && (
         <Buttons justifyContent={'space-between'} gap={4}>
           <ButtonIcon variant={'onlyIcon'} iconSize={'100%'} size={'24px'} icon={'info'} disabled />
@@ -172,7 +202,7 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({ dataForSlot, pric
 };
 const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
   display: grid;
-  grid-template-columns: 80px 1fr min-content;
+  grid-template-columns: ${({ disabled }) => (disabled ? `80px 1fr` : `80px 1fr min-content`)};
   gap: 8px;
 
   height: fit-content;
@@ -183,11 +213,11 @@ const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
   border-bottom: 2px solid ${({ theme }) => theme.fieldBackgroundColor};
 
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
-  pointer-events: ${({ disabled }) => disabled && 'none'};
   cursor: default;
 
   &:hover {
-    box-shadow: 0 4px 6px 4px rgba(0, 0, 0, 0.16), 0 4px 6px 4px rgba(210, 210, 210, 0.25);
+    box-shadow: ${({ disabled }) =>
+      !disabled && '0 4px 6px 4px rgba(0, 0, 0, 0.16), 0 4px 6px 4px rgba(210, 210, 210, 0.25)'};
   }
 
   &::after {
@@ -209,23 +239,34 @@ const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
     max-height: 100%;
   }
 `;
-const CardGridBox = styled(FlexBox)`
+const CardGridArea = styled(FlexBox)`
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(4, 40px);
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(4, min-content);
   grid-template-areas:
-    'label label label sku sku'
-    'category category brand brand type'
-    '_ _ _ _ _'
-    'qty price discount total currency';
+    'label label label label sku sku'
+    'category category brand brand type type'
+    'atr_1 atr_1  atr_2  atr_2 qty qty'
+    'price bonuses discount total total currency';
 
   //max-width: 270px;
   height: max-content;
   border-top: 1px solid ${({ theme }) => theme.trBorderClr};
-`;
-const CardGridBoxInner = styled(FlexBox)<{ borderBottom?: boolean; gridArea: string; isLastInRow?: boolean }>`
-  justify-content: space-between;
 
+  @media screen and (max-width: 480px) {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(5, min-content);
+    grid-template-areas:
+      'label label label label sku sku'
+      'category category brand brand type type'
+      'atr_1 atr_1 atr_1 atr_2 atr_2 atr_2'
+      'qty qty price price bonuses discount'
+      'total total total total currency currency';
+  }
+`;
+const CardGridBox = styled(FlexBox)<{ borderBottom?: boolean; gridArea: string; isLastInRow?: boolean }>`
+  justify-content: space-between;
+  height: 40px;
   grid-area: ${({ gridArea = '' }) => gridArea};
 
   padding: 4px 6px;
@@ -240,12 +281,26 @@ const CardGridBoxInner = styled(FlexBox)<{ borderBottom?: boolean; gridArea: str
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
+
+    text-align: right;
+    font-weight: 600;
+    font-size: 12px;
   }
 
   & .title {
+    font-size: 10px;
+    line-height: 1.5;
     color: ${({ theme }) => theme.globals.inputPlaceholderColor};
   }
-
+  @media screen and (max-width: 480px) {
+    height: 50px;
+    & .text {
+      font-size: 16px;
+    }
+    & .title {
+      font-size: 12px;
+    }
+  }
   //outline: 1px solid tomato;
 `;
 const Buttons = styled(FlexBox)`
@@ -269,5 +324,17 @@ const ImageBox = styled(FlexBox)`
     width: 100px;
     margin: auto;
   }
+`;
+const StyledInput = styled.input`
+  flex: 1;
+  width: 100%;
+
+  border: 0;
+  color: inherit;
+  background: transparent;
+  text-align: right;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
 `;
 export default OrderSlotOverview;

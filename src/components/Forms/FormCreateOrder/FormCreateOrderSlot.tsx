@@ -2,7 +2,7 @@ import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { IOrderSlot } from '../../../redux/orders/orders.types';
 import { useCallback, useEffect, useState } from 'react';
-import OrderSlotOverview from '../../Products/OrderSlotOverview';
+import OrderSlotOverview from '../../Overviews/OrderSlotOverview';
 import { IProduct } from '../../../redux/products/products.types';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
 import TableList from '../../TableList/TableList';
@@ -13,7 +13,7 @@ import FlexBox from '../../atoms/FlexBox';
 import { IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
 import styled from 'styled-components';
 import { warehousesTableColumnsForOrderCreateOrderSlotForm } from '../../../data';
-import TableVariations from '../../TableVariations';
+import TableVariations, { IProductVariation } from '../../TableVariations';
 import FormAccordeonItem from '../components/FormAccordeonItem';
 
 export interface FormCreateOrderSlotItemProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
@@ -24,6 +24,8 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit,
   const [loadedData, setLoadedData] = useState<IOrderSlot>();
   const [dataForSlot, setDataForSlot] = useState<IProduct>();
   const [selectedPrice, setSelectedPrice] = useState<IPriceListItem>();
+  const [selectedVariation, setSelectedVariation] = useState<IProductVariation>();
+
   const modalS = useModalService();
 
   const getData = useCallback(() => {
@@ -48,11 +50,11 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit,
   return (
     <ModalForm width={'600px'} fillHeight title={'Створення позиції для замовлення'} {...props}>
       <FlexBox overflow={'hidden'} style={{ minHeight: '100%' }}>
-        <OrderSlotOverview price={selectedPrice} dataForSlot={dataForSlot} disabled />
+        <OrderSlotOverview price={selectedPrice} variation={selectedVariation} dataForSlot={dataForSlot} disabled />
 
         <FlexBox overflow={'auto'}>
           <FlexBox>
-            <FormAccordeonItem contentContainerStyle={{ padding: '0 16px' }} renderHeader={'Оберіть ціну'}>
+            <FormAccordeonItem contentContainerStyle={{ padding: '0 8px' }} renderHeader={'Оберіть ціну'}>
               <TableBox flex={1}>
                 <TableList
                   tableTitles={pricesColumnsForProductReview}
@@ -61,6 +63,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit,
                   isFilter={false}
                   onRowClick={data => {
                     const rowData = dataForSlot?.prices?.find(p => p._id === data?._id);
+                    console.log(rowData);
                     rowData && setSelectedPrice(rowData);
                   }}
                 />
@@ -68,7 +71,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit,
             </FormAccordeonItem>
 
             <FormAccordeonItem
-              contentContainerStyle={{ padding: '0 16px' }}
+              contentContainerStyle={{ padding: '0 8px' }}
               renderHeader={'Оберіть склад відвантаження'}
             >
               <TableBox flex={1}>
@@ -80,9 +83,9 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit,
               </TableBox>
             </FormAccordeonItem>
 
-            <FormAccordeonItem contentContainerStyle={{ padding: '0 16px' }} renderHeader={'Оберіть варіацію'}>
+            <FormAccordeonItem contentContainerStyle={{ padding: '0 8px' }} renderHeader={'Оберіть варіацію'}>
               <TableBox flex={1} minHeigh={'250px'}>
-                <TableVariations />
+                <TableVariations onSelect={setSelectedVariation} defaultState={selectedVariation} />
               </TableBox>
             </FormAccordeonItem>
           </FlexBox>

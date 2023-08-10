@@ -1,7 +1,7 @@
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import FlexBox from '../atoms/FlexBox';
 import { IProduct } from '../../redux/products/products.types';
-import ProductCardSimpleOverview from '../Products/ProductCardSimpleOverview';
+import ProductCardSimpleOverview from '../Overviews/ProductCardSimpleOverview';
 import TableList from '../TableList/TableList';
 import styled from 'styled-components';
 import { pricesColumnsForProductReview } from '../../data/priceManagement.data';

@@ -2,6 +2,7 @@ import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import t from '../lang';
 import { IPriceList, IPriceListItem, PriceListTypeEnum } from '../redux/priceManagement/priceManagement.types';
 import { enumToFilterOptions } from '../utils/fabrics';
+import numberWithSpaces from '../utils/numbers';
 
 export type DataPath =
   | 'category.label'
@@ -160,20 +161,32 @@ export const priceListContentColumns: CellTittleProps<IPriceListItem, DataPath>[
 
 export const pricesColumnsForProductReview: CellTittleProps<IPriceListItem, DataPath>[] = [
   {
-    bottom: { name: 'Вхідна ціна', getData: d => d?.cost },
-    top: { name: 'Вихідна ціна', getData: d => d?.price },
+    bottom: { name: 'Вхідна ціна', align: 'end', getData: d => numberWithSpaces(Number(d?.cost || 0)) },
+    top: { name: 'Вихідна ціна', align: 'end', getData: d => numberWithSpaces(Number(d?.cost || 0)) },
     width: '170px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Комісія, сума', getData: d => d?.commissionAmount },
-    bottom: { name: 'Комісія, %', getData: d => d?.commissionPercentage },
+    top: { name: 'Комісія, сума', align: 'end', getData: d => numberWithSpaces(Number(d?.commissionAmount || 0)) },
+    bottom: { name: 'Комісія, %', align: 'end', getData: d => numberWithSpaces(Number(d?.commissionPercentage || 0)) },
     width: '170px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Націнка, сума', getData: d => d?.markupAmount },
-    bottom: { name: 'Націнка, %', getData: d => d?.markupPercentage },
+    top: { name: 'Націнка, сума', align: 'end', getData: d => numberWithSpaces(Number(d?.markupAmount || 0)) },
+    bottom: { name: 'Націнка, %', align: 'end', getData: d => numberWithSpaces(Number(d?.markupPercentage || 0)) },
+    width: '170px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Знижка, сума', align: 'end', getData: d => numberWithSpaces(Number(d?.discount || 0)) },
+    bottom: { name: 'Знижка, %', align: 'end', getData: d => numberWithSpaces(Number(d?.discount || 0)) },
+    width: '170px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Бонуси, сума', align: 'end', getData: d => numberWithSpaces(Number(d?.discount || 0)) },
+    bottom: { name: 'Бонуси, %', align: 'end', getData: d => numberWithSpaces(Number(d?.discount || 0)) },
     width: '170px',
     action: 'valueByPath',
   },

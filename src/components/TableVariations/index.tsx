@@ -1,6 +1,6 @@
 import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const columns = [
   { label: 'S', id: 'atr_1_1', width: '100px' },
@@ -14,35 +14,59 @@ const rows = [
   { label: 'red', id: 'atr_2_3' },
   { label: 'black', id: 'atr_2_4' },
 ];
+const variationEntity = {
+  id: '546546846532',
+  atr_1: columns,
+  atr_2: rows,
+};
 const variation = {
   product_id: 123,
   product_name: 'Футболка з коротким рукавом',
   description: 'Красива футболка для літньої погоди',
+  variationId: '546546846532',
   variations: {
     atr_2_1: {
       id: 'atr_2_1',
-      atr_1_1: { id: 'atr_1_1', quantity: 6, reserved: 0 },
-      atr_1_2: { id: 'atr_1_2', quantity: 5, reserved: 0 },
+      atr_1_1: { id: 'atr_1_1', quantity: 6, reserved: 2 },
+      atr_1_2: { id: 'atr_1_2', quantity: 5, reserved: 5 },
       atr_1_4: { id: 'atr_1_4', quantity: 12, reserved: 0 },
     },
     atr_2_2: {
       id: 'atr_2_2',
-      atr_1_1: { id: 'atr_1_1', quantity: 12, reserved: 0 },
-      atr_1_2: { id: 'atr_1_2', quantity: 25, reserved: 0 },
+      atr_1_1: { id: 'atr_1_1', quantity: 12, reserved: 4 },
+      atr_1_2: { id: 'atr_1_2', quantity: 25, reserved: 5 },
       atr_1_3: { id: 'atr_1_3', quantity: 5, reserved: 0 },
     },
-  } as Record<string, Record<string, { quantity?: number; reserved?: number }>>,
+  } as Record<string, Record<string, { id?: string; label?: string; quantity?: number; reserved?: number }>>,
 };
-interface TableVariationsState {
+
+const stringData =
+  '{"product_id":123,"product_name":"Футболка з коротким рукавом","description":"Красива футболка для літньої погоди","data":{"atr_2_1":{"id":"atr_2_1","atr_1_1":{"id":"atr_1_1","quantity":6,"reserved":0},"atr_1_2":{"id":"atr_1_2","quantity":5,"reserved":0},"atr_1_4":{"id":"atr_1_4","quantity":12,"reserved":0}},"atr_2_2":{"id":"atr_2_2","atr_1_1":{"id":"atr_1_1","quantity":12,"reserved":0},"atr_1_2":{"id":"atr_1_2","quantity":25,"reserved":0},"atr_1_3":{"id":"atr_1_3","quantity":5,"reserved":0}}}}';
+
+export interface TableVariationsProps {
+  onSelect?: (variation: IProductVariation) => void;
+  defaultState?: IProductVariation;
+}
+export interface IProductVariation {
   atr_1?: { id?: string; label?: string };
   atr_2?: { id?: string; label?: string; quantity?: number; reserved?: number };
 }
-const TableVariations = () => {
-  const [current, setCurrent] = useState<TableVariationsState>({});
+const TableVariations: React.FC<TableVariationsProps> = ({ onSelect, defaultState }) => {
+  const [current, setCurrent] = useState<IProductVariation>({});
   const isCellActive = (colId: string, rowId: string) => {
     return current?.atr_1?.id === colId && current?.atr_2?.id === rowId;
   };
   const isRowActive = (rowId: string) => current.atr_2?.id === rowId;
+
+  const parseMyString = async () => {
+    const parsedStringData = await JSON.parse(stringData);
+
+    console.log('parsedStringData', parsedStringData);
+  };
+  useEffect(() => {
+    parseMyString();
+  }, []);
+
   return (
     <Table>
       <TableScroll overflow={'auto'}>
@@ -74,10 +98,12 @@ const TableVariations = () => {
                       width={col.width}
                       isActive={isCellActive(col.id, row.id)}
                       onClick={() => {
-                        setCurrent({
+                        const variation = {
                           atr_1: col,
                           atr_2: { ...data, ...row },
-                        });
+                        };
+                        setCurrent(variation);
+                        onSelect && onSelect(variation);
                       }}
                     >
                       <span className={'quantity'}>{data ? data?.quantity || 0 : '-'}</span>
@@ -177,13 +203,7 @@ const Cell = styled(FlexBox)<{ isActive?: boolean }>`
   }
 
   &:hover {
-    z-index: 25;
-    transform: scale(1.25);
-
-    background-color: ${({ theme, isActive }) => (isActive ? theme.accentColor.light : 'inherit')};
-
-    border-radius: 4px;
-    box-shadow: ${({ theme }) => theme.tableRowShadow};
+    background-color: ${({ theme, isActive }) => theme.accentColor.base};
   }
 `;
 export default TableVariations;
