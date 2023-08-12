@@ -22,7 +22,7 @@ export interface SelectProductModalProps extends Omit<ModalFormProps<any, any, I
 const productSelectorFilterOptions: (FilterOpt & { placeholder?: string })[] = [
   { label: 'By label', value: 'label', placeholder: 'Введіть назву продукту' },
   { label: 'By sku', value: 'sku', placeholder: 'Введіть артикул продукту' },
-  { label: 'By warehouse', value: 'warehouse', placeholder: 'Введіть номер складу' },
+  // { label: 'By warehouse', value: 'warehouse', placeholder: 'Введіть номер складу' },
 ];
 const SelectProductModal: React.FC<SelectProductModalProps> = ({ selected, onSelect }) => {
   const { register, setValue, watch, handleSubmit } = useForm<Pick<SelectProductModalProps, 'search' | 'searchBy'>>({

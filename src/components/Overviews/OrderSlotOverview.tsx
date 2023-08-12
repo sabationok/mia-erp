@@ -178,8 +178,8 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
     price || undefined
   );
   const cells = useMemo(
-    () => createOverviewCellsData(dataForSlot, countedData, variation),
-    [countedData, dataForSlot, variation]
+    () => createOverviewCellsData(dataForSlot, countedData, variation, warehouse),
+    [countedData, dataForSlot, variation, warehouse]
   );
 
   useEffect(() => {
@@ -194,7 +194,7 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
         <img
           src={
             (dataForSlot?.images && dataForSlot?.images[0]?.img_1x) ||
-            'https://cdn.create.vista.com/api/media/medium/186787692/stock-photo-profile-young-stylish-man-eyeglasses?token='
+            'https://gymbeam.ua/media/catalog/product/cache/bf5a31e851f50f3ed6850cbbf183db11/w/-/w-gymbeam-sweatpants-joggers-trn-olive-1.jpg'
           }
           style={{ objectFit: 'contain' }}
           alt={''}

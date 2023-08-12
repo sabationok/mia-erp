@@ -65,7 +65,7 @@ const ProductCardSimpleOverview: React.FC<ProductCardForSelectorProps> = ({
         <img
           src={
             (product?.images && product?.images[0]?.img_1x) ||
-            'https://cdn.create.vista.com/api/media/medium/186787692/stock-photo-profile-young-stylish-man-eyeglasses?token='
+            'https://gymbeam.ua/media/catalog/product/cache/bf5a31e851f50f3ed6850cbbf183db11/w/-/w-gymbeam-sweatpants-joggers-trn-olive-1.jpg'
           }
           style={{ objectFit: 'contain' }}
           alt={''}

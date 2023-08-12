@@ -27,6 +27,7 @@ const directoriesForLoading: { dirType: ApiDirType; createTreeData?: boolean }[]
     createTreeData: true,
   },
   { dirType: ApiDirType.CONTRACTORS },
+  { dirType: ApiDirType.WAREHOUSES },
   { dirType: ApiDirType.TAGS },
   { dirType: ApiDirType.METHODS_PAYMENT },
   { dirType: ApiDirType.METHODS_SHIPMENT },
