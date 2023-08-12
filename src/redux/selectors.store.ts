@@ -12,6 +12,7 @@ import { IBaseDirItem } from '../components/Directories/dir.types';
 import { IDirectoriesState } from './directories/directories.slice';
 import { IOrdersState } from './orders/orders.slice';
 import { useMemo } from 'react';
+import { IRefundsState } from './refunds/refunds.slice';
 
 export const useAuthSelector = () => useSelector<RootState, IAuthState>((state: RootState) => state.auth);
 export const useUsersSelector = () => useSelector<RootState, IUsersState>((state: RootState) => state.users);
@@ -25,6 +26,8 @@ export const useProductsSelector = () =>
   useSelector<RootState, IProductsState>((state: RootState): IProductsState => state.products);
 export const useOrdersSelector = () =>
   useSelector<RootState, IOrdersState>((state: RootState): IOrdersState => state.orders);
+export const useRefundsSelector = () =>
+  useSelector<RootState, IRefundsState>((state: RootState): IRefundsState => state.refunds);
 export const usePriceListsSelector = () =>
   useSelector<RootState, IPriceListsState>((state: RootState): IPriceListsState => state.priceLists);
 export const useCustomRolesSelector = () =>

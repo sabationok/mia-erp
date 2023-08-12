@@ -179,7 +179,9 @@ export interface ICustomerDirItem extends IBaseDirItem<ContractorsTypesEnum.CUST
 export interface IShipmentDirItem extends IBaseDirItem<any, ApiDirType.METHODS_SHIPMENT> {}
 export interface ICommunicationDirItem extends IBaseDirItem<any, ApiDirType.METHODS_COMMUNICATION> {}
 export interface IPaymentDirItem extends IBaseDirItem<any, ApiDirType.METHODS_PAYMENT> {}
-export interface IWarehouseDirItem extends IBaseDirItem<any, ApiDirType.WAREHOUSES> {}
+export interface IWarehouseDirItem extends IBaseDirItem<any, ApiDirType.WAREHOUSES> {
+  code?: string | number;
+}
 
 export type MethodDirType = ApiDirType.METHODS_SHIPMENT | ApiDirType.METHODS_COMMUNICATION | ApiDirType.METHODS_PAYMENT;
 export type IMethodDirItem = IShipmentDirItem | ICommunicationDirItem | IPaymentDirItem;

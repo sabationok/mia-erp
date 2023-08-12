@@ -17,6 +17,7 @@ export interface FilterOpt<V = any, D = any> extends Record<string, any> {
   name?: string;
   value: V;
   data?: D;
+  color?: string;
   extraLabel?: string | React.ReactNode;
   getLabel?: (data?: D) => string | React.ReactNode;
   disabled?: boolean;

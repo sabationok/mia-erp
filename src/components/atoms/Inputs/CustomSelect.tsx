@@ -1,7 +1,7 @@
 import InputLabel, { InputLabelProps } from './InputLabel';
 import { forwardRef, InputHTMLAttributes, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { omit, pick } from 'lodash';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import FlexBox, { FieldBox } from '../FlexBox';
 import { RefCallBack } from 'react-hook-form';
 import { SelectItem } from '../../TableList/tableTypes.types';
@@ -25,13 +25,14 @@ export interface CustomSelectBaseProps<OptType = any> {
   fieldMode?: boolean;
   validateOption?: (option: CustomSelectOption<OptType>) => boolean;
   getLabel?: (option: CustomSelectOption<OptType>) => string;
-
+  dropDownIsAbsolute?: boolean;
   onCreatePress?: () => void;
 }
 
 export type CustomSelectOnClickHandler<OptType = any> = <Option extends OptType = any>(
   option?: Option,
-  value?: keyof Option
+  value?: keyof Option,
+  index?: number
 ) => void;
 
 interface CustomSelectOptionBaseProps extends SelectItem {
@@ -44,7 +45,7 @@ export type CustomSelectProps<OptType = any> = CustomSelectBaseProps<OptType> &
   Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'> &
   Omit<InputLabelProps, 'onSelect'>;
 
-const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
+const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps<SelectItem>> = (
   {
     InputComponent,
     inputProps = {},
@@ -62,6 +63,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
     required,
     getLabel,
     onCreatePress,
+    dropDownIsAbsolute,
     ...props
   },
   ref
@@ -92,16 +94,16 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
   }, [currentOption, getLabel]);
 
   const handleOnSelect = useCallback(
-    (option?: any) => {
+    (index: number, option?: any) => {
       if (!options || options?.length === 0) return;
       return () => {
         setCurrentOption(option);
         if (onSelect && valueKey && valueKey && option[valueKey]) {
-          onSelect(option, option[valueKey]);
+          onSelect(option, option[valueKey], index);
           return;
         }
         if (onSelect) {
-          onSelect(option, option?.value);
+          onSelect(option, option?.value, index);
         }
         handleOpenState();
       };
@@ -120,13 +122,15 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
       options?.map((opt, idx) => (
         <Option
           key={`select-opt-${opt._id || opt?.value || idx}`}
-          onClick={handleOnSelect(opt)}
+          onClick={handleOnSelect(idx, opt)}
           justifyContent={'flex-start'}
           fillWidth
           fxDirection={'row'}
           padding={'5px 8px'}
           isActive={
-            (opt?._id && opt?._id === currentOption?._id) || (opt?.value && opt?.value === currentOption?.value)
+            (opt?._id && opt?._id === currentOption?._id) ||
+            (opt?.value && opt?.value === currentOption?.value) ||
+            false
           }
         >
           <span className={'inner'}>{getLabel ? getLabel(opt) : opt.label || opt.name}</span>
@@ -136,7 +140,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
   );
 
   useEffect(() => {
-    const isValid = isValidOption(selectValue);
+    const isValid = isValidOption(selectValue as any);
 
     if (selectValue && isValid) return setCurrentOption(selectValue);
     if (!selectValue || !isValid) return setCurrentOption(undefined);
@@ -199,7 +203,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
         </InputLabel>
       </FlexBox>
 
-      <Options isOpen={isOpen}>
+      <Options isOpen={isOpen} isInAbsolute={dropDownIsAbsolute}>
         <FlexBox fillWidth overflow={'auto'}>
           {options && options?.length > 0 ? (
             renderOptions
@@ -219,7 +223,21 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
   );
 };
 
-const Options = styled(FlexBox)<{ isOpen?: boolean; inView?: boolean; intersectionRatio?: number }>`
+const Options = styled(FlexBox)<{
+  isOpen?: boolean;
+  inView?: boolean;
+  intersectionRatio?: number;
+  isInAbsolute?: boolean;
+}>`
+  ${({ isInAbsolute }) => {
+    return css`
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 500;
+    `;
+  }}
+
   font-size: 14px;
 
   max-height: ${({ isOpen }) => (isOpen ? '140px' : 0)};

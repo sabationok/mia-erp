@@ -51,7 +51,7 @@ const AppRoutes: React.FC = () => {
 
           <Route path={AppPagesEnum.storage} element={<AppPages.AppGridPage path={'storage'} />} />
           <Route path={AppPagesEnum.orders} element={<AppPages.PageOrders path={'orders'} />} />
-          <Route path={AppPagesEnum.refunds} element={<AppPages.AppGridPage path={'refunds'} />} />
+          <Route path={AppPagesEnum.refunds} element={<AppPages.PageRefunds path={'refunds'} />} />
           <Route path={AppPagesEnum.dashboard} element={<AppPages.AppGridPage path={'dashboard'} />} />
           <Route path={AppPagesEnum.supplement} element={<AppPages.AppGridPage path={'supplement'} />} />
 

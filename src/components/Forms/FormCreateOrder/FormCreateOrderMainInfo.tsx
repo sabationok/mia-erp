@@ -16,6 +16,7 @@ import InputLabel from '../../atoms/Inputs/InputLabel';
 import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
 import styled from 'styled-components';
 import { FormCreateOrderState } from './FormCreateOrder';
+import Changer from '../../atoms/Changer';
 
 export interface FormCreateOrderMainInfoProps
   extends Pick<UseAppFormReturn<FormCreateOrderState>, 'register' | 'registerSelect' | 'formState'> {}
@@ -41,6 +42,22 @@ const FormCreateOrderMainInfo: React.FC<FormCreateOrderMainInfoProps> = ({ regis
             required: true,
           })}
         />
+
+        <InputLabel label={'Статус'}>
+          <Changer
+            options={[
+              { _id: '1', value: '1', label: 'Нове', color: 'lightGreen' },
+              { _id: '2', value: '2', label: 'Взято у роботу', color: 'lightGreen' },
+              // { _id: '4', value: '4', label: 'Пакування', color: 'lightGrey' },
+              // { _id: '5', value: '5', label: 'Відвантажено', color: 'lightBlue' },
+              { _id: '6', value: '6', label: 'Скасовано замовником', color: 'lightBlue' },
+              { _id: '7', value: '7', label: 'Скасовано менеджером', color: 'lightBlue' },
+              { _id: '9', value: '9', label: 'Активне', color: 'orange' },
+              { _id: '8', value: '8', label: 'Завершено успішно', color: 'lightGreen' },
+              { _id: '10', value: '10', label: 'Архів', color: 'lightGrey' },
+            ]}
+          />
+        </InputLabel>
       </FlexBox>
 
       <FlexBox>

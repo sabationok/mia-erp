@@ -17,7 +17,7 @@ import { IBaseDirItem } from '../Directories/dir.types';
 import FormCreateTag, { FormCreateTagProps } from '../Forms/FormCreateTag';
 import FormCreateMethod, { FormCreateMethodProps } from '../Forms/FormCreateMetod';
 import OrderOverview, { OrderOverviewProps } from '../Overviews/OrderOverview';
-import FormInviteUser, { FormInviteUserProps } from '../Forms/FromInviteUser';
+import FormInviteUser, { FormInviteUserProps } from '../Forms/FormInviteUser';
 import SelectProductModal, { SelectProductModalProps } from '../Modals/SelectProductModal';
 import FormCreateOrderSlot, { FormCreateOrderSlotItemProps } from '../Forms/FormCreateOrder/FormCreateOrderSlot';
 

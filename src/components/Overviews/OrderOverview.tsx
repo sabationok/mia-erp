@@ -57,13 +57,15 @@ export const OrderOverview: React.FC<OrderOverviewProps> = ({ order, ...props })
             </FormAccordeonItem>
             <FormAccordeonItem
               contentContainerStyle={{ padding: '0 8px 8px' }}
-              renderHeader={'Інформація про відвантаження'}
+              renderHeader={'Відвантаження'}
             ></FormAccordeonItem>
+
             <FormAccordeonItem
               contentContainerStyle={{ padding: '0 8px 8px' }}
-              renderHeader={'Інформація про оплату'}
+              renderHeader={'Оплата'}
             ></FormAccordeonItem>
-            <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} renderHeader={'Додаткова інформація'}>
+
+            <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} renderHeader={'Додатково'}>
               {orderAdditionalInfo.map((el, idx) => (
                 <InfoBox key={idx.toString()}>
                   <InfoBoxTitle>{el.label || 'Title'}</InfoBoxTitle>

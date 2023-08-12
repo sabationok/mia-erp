@@ -113,7 +113,12 @@ const createOverviewCellsData = (
     gridArea: 'currency',
     isLastInRow: true,
   },
-  { title: 'Склад', value: warehouse?.label, gridArea: 'warehouse', isLastInRow: true },
+  {
+    title: 'Склад',
+    value: `${warehouse?.label || 'warehouse'} | ${warehouse?.code}`,
+    gridArea: 'warehouse',
+    isLastInRow: true,
+  },
 ];
 const CountSelector = ({
   value = 0,
@@ -166,6 +171,7 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
   disabled,
   onSelect,
   onRemove,
+  warehouse,
 }) => {
   const [quantity, setQuantity] = useState(0);
   const [countedData, setCountedData] = useState<(IPriceListItem & { qty?: number; total?: number }) | undefined>(

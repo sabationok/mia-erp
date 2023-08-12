@@ -12,18 +12,26 @@ import { OnlyUUID } from '../../../redux/global.types';
 import FlexBox from '../../atoms/FlexBox';
 import { IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
 import styled from 'styled-components';
-import { warehousesTableColumnsForOrderCreateOrderSlotForm } from '../../../data';
 import TableVariations, { IProductVariation } from '../../TableVariations';
+import { IWarehouseDirItem } from '../../Directories/dir.types';
+import CustomSelect from '../../atoms/Inputs/CustomSelect';
+import { isUndefined } from 'lodash';
 
 export interface FormCreateOrderSlotItemProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<IOrderSlot>;
   product?: OnlyUUID;
 }
+const warehouses = [
+  { _id: '6', value: '6', label: 'Нижні Винники | 000256', code: '000256' },
+  { _id: '7', value: '7', label: 'Івано-Франкова | 000217', code: '000217' },
+  { _id: '9', value: '9', label: 'Сокільники | 000635', code: '000635' },
+];
 const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit, product, ...props }) => {
   const [loadedData, setLoadedData] = useState<IOrderSlot>();
   const [dataForSlot, setDataForSlot] = useState<IProduct>();
   const [selectedPrice, setSelectedPrice] = useState<IPriceListItem>();
   const [selectedVariation, setSelectedVariation] = useState<IProductVariation>();
+  const [warehouse, setWarehouse] = useState<IWarehouseDirItem | undefined>();
   const [currentTab, setCurrentTab] = useState(1);
   const modalS = useModalService();
 
@@ -31,12 +39,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit,
     createApiCall(
       {
         data: product,
-        onSuccess: data => {
-          setDataForSlot(data);
-          console.log(data);
-        },
-        logError: true,
-        logRes: true,
+        onSuccess: setDataForSlot,
       },
       OrdersApi.getPreparedDataForNewSlot,
       OrdersApi
@@ -48,10 +51,9 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit,
   }, [getData]);
   return (
     <ModalForm
-      width={'600px'}
+      // width={'600px'}
       filterOptions={[
         { label: 'Ціна', value: 'warehouse' },
-        { label: 'Склад', value: 'warehouse' },
         { label: 'Варіація', value: 'warehouse' },
       ]}
       onOptSelect={(_option, _value, index) => {
@@ -62,7 +64,13 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit,
       {...props}
     >
       <FlexBox style={{ minHeight: '100%' }} overflow={'auto'}>
-        <OrderSlotOverview price={selectedPrice} variation={selectedVariation} dataForSlot={dataForSlot} disabled />
+        <OrderSlotOverview
+          price={selectedPrice}
+          variation={selectedVariation}
+          dataForSlot={dataForSlot}
+          warehouse={warehouse}
+          disabled
+        />
 
         <FlexBox flex={1}>
           <FlexBox padding={'0 8px'} style={{ minHeight: '100%' }}>
@@ -80,13 +88,22 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit,
                 />
               )}
               {currentTab === 1 && (
-                <TableList
-                  tableTitles={warehousesTableColumnsForOrderCreateOrderSlotForm}
-                  isSearch={false}
-                  isFilter={false}
-                />
+                <>
+                  <FlexBox fillWidth padding={'0 0 8px'}>
+                    <CustomSelect
+                      label={'Склад'}
+                      placeholder={'Оберіть склад'}
+                      dropDownIsAbsolute
+                      onSelect={(option, value, index) => {
+                        !isUndefined(index) && setWarehouse(warehouses[index]);
+                      }}
+                      options={warehouses}
+                    />
+                  </FlexBox>
+
+                  <TableVariations onSelect={setSelectedVariation} defaultState={selectedVariation} />
+                </>
               )}
-              {currentTab === 2 && <TableVariations onSelect={setSelectedVariation} defaultState={selectedVariation} />}
             </TableBox>
           </FlexBox>
         </FlexBox>
