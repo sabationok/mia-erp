@@ -88,6 +88,7 @@ const FlexBox = styled.div<FlexBoxProps>`
   border: ${({ border = 'none' }) => border};
   gap: ${({ gap = 0 }) => gap}px;
   padding: ${({ padding = 0 }) => padding};
+  margin: ${({ margin = 0 }) => margin};
   align-self: ${({ alignSelf = 'none' }) => alignSelf};
   max-width: ${({ maxWidth = null }) => (maxWidth ? maxWidth : 'none')};
   max-height: ${({ maxHeight = null }) => (maxHeight ? maxHeight : 'none')};

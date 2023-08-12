@@ -33,6 +33,7 @@ export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> exte
   manufacturer?: string;
   email?: string;
   phone?: string;
+  code?: string | number;
 }
 export interface IDirItemBase<DirType extends ApiDirType = any, ItemType = any>
   extends IBaseDirItem<ItemType, DirType> {}
@@ -179,6 +180,11 @@ export interface ICustomerDirItem extends IBaseDirItem<ContractorsTypesEnum.CUST
 export interface IShipmentDirItem extends IBaseDirItem<any, ApiDirType.METHODS_SHIPMENT> {}
 export interface ICommunicationDirItem extends IBaseDirItem<any, ApiDirType.METHODS_COMMUNICATION> {}
 export interface IPaymentDirItem extends IBaseDirItem<any, ApiDirType.METHODS_PAYMENT> {}
+// ???
+export interface IWarehouse extends IBaseDirItem {}
+export interface IWarehouseFormData extends Omit<IWarehouse, '_id' | 'createdAt' | 'updatedAt'> {}
+export interface DirWarehousesProps
+  extends IDirInTreeProps<ApiDirType.WAREHOUSES, any, IWarehouseFormData, IWarehouseFormData, IWarehouse> {}
 export interface IWarehouseDirItem extends IBaseDirItem<any, ApiDirType.WAREHOUSES> {
   code?: string | number;
 }

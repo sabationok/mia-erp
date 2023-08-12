@@ -39,7 +39,7 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
     handleSubmit,
     closeAfterSave,
     clearAfterSave,
-    toggleAfterSubmitOption,
+    toggleAfterSubmitOption: toggleOption,
   } = useAppForm<IBaseDirItem>({
     defaultValues: parent?._id
       ? {
@@ -71,40 +71,40 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
       onSubmit={formEventWrapper(onSubmit)}
       {...props}
       isValid={isValid}
-      extraFooter={
-        <FormAfterSubmitOptions
-          clearAfterSave={clearAfterSave}
-          closeAfterSave={closeAfterSave}
-          toggleOption={toggleAfterSubmitOption}
-        />
-      }
+      extraFooter={<FormAfterSubmitOptions {...{ closeAfterSave, clearAfterSave, toggleOption }} />}
     >
       <Inputs>
-        <InputLabel label={t('type')} direction={'vertical'} error={errors.type} disabled>
+        <InputLabel label={t('type')} error={errors.type} disabled>
           <InputText defaultValue={type ? t(`${type}s` as any).toUpperCase() : type} disabled />
         </InputLabel>
 
         {parent?._id && (
-          <InputLabel label={t('parentItem')} direction={'vertical'} error={errors.type} disabled>
+          <InputLabel label={t('parentItem')} error={errors.type} disabled>
             <InputText defaultValue={parent?.label} disabled />
           </InputLabel>
         )}
 
-        <InputLabel label={t('label')} direction={'vertical'} error={errors.label} required>
+        <InputLabel label={t('label')} error={errors.label} required>
           <InputText placeholder={t('insertLabel')} {...register('label')} required autoFocus />
         </InputLabel>
 
-        {dirType === 'brands' && (
-          <InputLabel label={t('manufacturer')} direction={'vertical'} error={errors.manufacturer}>
+        {dirType === ApiDirType.BRANDS && (
+          <InputLabel label={t('manufacturer')} error={errors.manufacturer}>
             <InputText placeholder={t('manufacturer')} {...register('manufacturer')} />
           </InputLabel>
         )}
 
-        {/*<InputLabel label={t('')} direction={'vertical'} error={errors.label}>*/}
+        {dirType === ApiDirType.WAREHOUSES && (
+          <InputLabel label={t('code')} error={errors.code}>
+            <InputText placeholder={t('insertCode')} {...register('code')} />
+          </InputLabel>
+        )}
+
+        {/*<InputLabel label={t('')} error={errors.label}>*/}
         {/*  <InputText placeholder={t('insertLabel')} {...register('label')} autoFocus />*/}
         {/*</InputLabel>*/}
 
-        <InputLabel label={t('comment')} direction={'vertical'} error={errors.description}>
+        <InputLabel label={t('comment')} error={errors.description}>
           <TextareaPrimary placeholder={t('insertComment')} {...register('description')} maxLength={250} />
         </InputLabel>
       </Inputs>

@@ -9,6 +9,7 @@ export const langUa = {
   [ApiDirType.CATEGORIES_PROD]: 'Категорії',
   [ApiDirType.BRANDS]: 'Бренди',
   [ApiDirType.TAGS]: 'Теги',
+  [ApiDirType.WAREHOUSES]: 'Склади',
 
   counter: 'Бухгалтер',
   auditor: 'Аудитор',
@@ -68,6 +69,9 @@ export const langUa = {
   document: 'Документ',
   documents: 'Документи',
   status: 'Статус',
+
+  code: 'Код',
+  insertCode: 'Впишіть код',
 
   closeAfterSave: 'Закрити після збереження',
   clearAfterSave: 'Очистити після збереження',
