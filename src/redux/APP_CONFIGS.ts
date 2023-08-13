@@ -12,6 +12,7 @@ export enum API_BASE_ROUTES {
   ORDERS = '/orders',
   REFUNDS = '/refunds',
   PRICE_MANAGEMENT = '/priceManagement',
+  WAREHOUSES = '/warehouses',
 }
 
 export enum Endpoints {
@@ -199,8 +200,17 @@ const ordersEndpoints: ApiEndpointsMap = {
     `${API_BASE_ROUTES.ORDERS}/${[Endpoints.getDataForNewOrderSlot]}/${productId}`,
 };
 
+const warehousesEndpoints = {
+  [Endpoints.getAll]: () => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.getAll}`,
+  [Endpoints.getById]: (id: string) => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.getById}/${id}`,
+  [Endpoints.create]: () => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.create}`,
+  [Endpoints.updateById]: (id: string) => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.updateById}/${id}`,
+  [Endpoints.deleteById]: (id: string) => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.deleteById}/${id}`,
+};
+
 const APP_CONFIGS = {
   endpoints: {
+    appSettings,
     permissions: permissionsApiEndpoints,
     companies: companiesApiEndpoints,
     auth: authApiEndpoints,
@@ -208,9 +218,9 @@ const APP_CONFIGS = {
     customRoles: customRoles,
     transactions: transactionsApiEndpoints,
     products: productsApiEndpoints,
+    warehousesEndpoints,
     priceManagementEndpoints,
     ordersEndpoints,
-    appSettings,
   },
 };
 
