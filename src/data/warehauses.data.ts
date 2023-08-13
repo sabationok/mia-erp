@@ -62,10 +62,20 @@ export const warehouseOverviewTableColumns: CellTittleProps<IProductInventory>[]
     action: 'status',
   },
   {
-    top: { name: 'Наявність', align: 'start', path: 'availabilityInfo.status' },
-    bottom: { name: 'Видимість', align: 'start', path: 'visibility' },
+    top: {
+      name: 'Таблиця варіацій (назва)',
+      align: 'start',
+      getData: rd => (rd?.hasVariations ? rd?.template?.label : 'Без варіацій'),
+    },
+    bottom: { name: 'Резервування', align: 'start', getData: rd => (rd?.reservation ? 'ТАК' : 'НІ') },
+    width: '190px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Наявність (заг)', align: 'start', getData: rd => rd.stock },
+    bottom: { name: 'Резерв (заг)', align: 'start', getData: rd => rd.reserved },
     width: '150px',
-    action: 'status',
+    action: 'valueByPath',
   },
   {
     top: { name: 'Бренд', align: 'start', path: 'brand.label' },

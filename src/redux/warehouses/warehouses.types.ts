@@ -78,6 +78,7 @@ export interface VariationDto {
 }
 export interface IVariationTableTemplate {
   owner?: ICompany;
+  label?: string;
   options?: IVariationTableTemplateOption;
 }
 export interface IVariationTableTemplateOption {
