@@ -1,5 +1,5 @@
 import { IconIdType } from '../img/sprite';
-import t, { LangTextKey } from '../lang';
+import t from '../lang';
 
 export enum AppPagesEnum {
   companies = 'companies',
@@ -12,6 +12,7 @@ export enum AppPagesEnum {
   storage = 'storage',
   manager = 'manager',
   admin = 'admin',
+  warehouses = 'warehouses',
   notFound = 'notFound',
   documentsFlow = 'documentsFlow',
   priceManagement = 'priceManagement',
@@ -39,16 +40,18 @@ export const appPages: Record<string, IAppPage<PagePathType>> = {
   orders: { path: 'orders', iconId: 'assignmentOkOutlined' },
   refunds: { path: 'refunds', iconId: 'assignmentBackOutlined' },
   supplement: { path: 'supplement', iconId: 'assignmentInOutlined' },
-  storage: { path: 'storage', iconId: 'storageOutlined' },
+  warehouses: { path: 'warehouses', iconId: 'storageOutlined' },
   products: { path: 'products', iconId: 'storageOutlined' },
   priceManagement: { path: 'priceManagement', iconId: 'assignment' },
   manager: { path: 'manager', iconId: 'assignmentPersonOutlined' },
-  director: { path: 'director', iconId: 'assignmentPersonOutlined' },
+  // director: { path: 'director', iconId: 'assignmentPersonOutlined' },
 };
 
-export const pages: IAppPage[] = Object.entries(appPages).map(([path, page]) => ({
-  ...page,
-  title: t(page.path as LangTextKey),
-  moduleName: path,
-  path,
-}));
+export const pages: IAppPage[] = Object.entries(appPages).map(([path, page]) => {
+  return {
+    ...page,
+    title: t(page.path),
+    moduleName: path,
+    path,
+  };
+});

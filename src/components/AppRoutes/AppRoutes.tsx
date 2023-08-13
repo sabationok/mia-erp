@@ -54,6 +54,11 @@ const AppRoutes: React.FC = () => {
           <Route path={AppPagesEnum.refunds} element={<AppPages.PageRefunds path={'refunds'} />} />
           <Route path={AppPagesEnum.dashboard} element={<AppPages.AppGridPage path={'dashboard'} />} />
           <Route path={AppPagesEnum.supplement} element={<AppPages.AppGridPage path={'supplement'} />} />
+          <Route path={AppPagesEnum.warehouses} element={<AppPages.PageWarehouses path={AppPagesEnum.warehouses} />} />
+          <Route
+            path={`${AppPagesEnum.warehouses}/:warehouseId`}
+            element={<AppPages.PageWarehouseOverview path={AppPagesEnum.warehouses} />}
+          />
 
           <Route
             path={AppPagesEnum.priceManagement}

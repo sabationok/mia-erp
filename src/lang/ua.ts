@@ -53,6 +53,7 @@ export const langUa = {
   productCategories: 'Категорії для товарів/послуг',
   productSubCategories: 'Під-категорії для товарів',
   subCategory: 'Під-категорія',
+  parentCategory: 'Батьківська категорія',
   subCategories: 'Під-категорії',
   contractor: 'Контрагент',
   contractors: 'Контрагенти',

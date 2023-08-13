@@ -2,30 +2,45 @@ import { AppResponse, IBase, OnlyUUID } from '../global.types';
 import { IProduct } from '../products/products.types';
 import { ICompany } from '../companies/companies.types';
 
+export enum WarehouseTypeEnum {
+  WAREHOUSE = 'warehouse',
+  STORE = 'store',
+}
 export interface IWarehouse extends IBase {
   owner?: ICompany;
+  label: string;
   code?: string | number;
+  type?: WarehouseTypeEnum;
   location?: string;
-  variationTables?: IVariationsTable[];
+  items?: IProductInventory[];
 }
 
 export type VariationSTableStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
-export interface IVariationsTable extends IBase {
+export interface IProductInventory extends IBase {
   owner?: ICompany;
-  template?: IVariationTableTemplate;
   product?: Partial<IProduct>;
-  variations?: IVariation[];
 
-  totalStock?: number;
-  totalReserved?: number;
+  stock?: number;
+  reserved?: number;
+
+  reservation?: boolean;
+  hasVariations?: boolean;
+  template?: IVariationTableTemplate;
+  variations?: IVariation[];
 
   timeFrom?: string;
   timeTo?: string;
 }
-export interface IVariationTableDto {
+export interface IProductInventoryDto {
   product?: Partial<IProduct>;
   status?: VariationSTableStatus;
+
+  stock?: number;
+  reserved?: number;
+
+  reservation?: boolean;
+  hasVariations?: boolean;
   template?: IVariationTableTemplate;
 
   customerTags?: string[];
@@ -70,9 +85,13 @@ export interface IVariationTableTemplateOption {
   label?: string;
   isColumn?: boolean;
 }
+export interface IWarehouseDto {
+  label: string;
+  code?: string;
+}
 export interface IWarehouseReqData {
   _id?: string;
-  data: IWarehouse;
+  data: IWarehouseDto;
 }
 export interface IVariationReqData {
   _id?: string;
@@ -92,7 +111,7 @@ export interface IAllWarehousesRes extends AppResponse<IWarehouse[]> {}
 export interface IWarehouseRes extends AppResponse<IWarehouse> {}
 export interface IAllVariationTableTemplatesRes extends AppResponse<IVariationTableTemplate[]> {}
 export interface IVariationTableTemplateRes extends AppResponse<IVariationTableTemplate> {}
-export interface IAllVariationsTablesRes extends AppResponse<IVariation[]> {}
-export interface IVariationsTablesRes extends AppResponse<IVariation> {}
+export interface IProductInventoriesRes extends AppResponse<IProductInventory[]> {}
+export interface IProductInventoryRes extends AppResponse<IProductInventory> {}
 export interface IAllVariationsRes extends AppResponse<IVariation[]> {}
 export interface IVariationRes extends AppResponse<IVariation> {}

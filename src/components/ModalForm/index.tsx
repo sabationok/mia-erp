@@ -113,7 +113,7 @@ const ModalFormContainer = styled.form<
   min-height: 200px;
   max-height: 100%;
 
-  width: ${({ width = '', fillWidth, fitContentH }) =>
+  width: ${({ width = '480px', fillWidth, fitContentH }) =>
     (fillWidth && '100vw') || (fitContentH && 'max-content') || width};
   height: ${({ height = '', fillHeight, fitContentV }) =>
     (fillHeight && '100vh') || (fitContentV && 'max-content') || height};

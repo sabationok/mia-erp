@@ -13,7 +13,6 @@ import {
   DirMarksProps,
   DirProductCategoriesProps,
   DirTagsProps,
-  DirWarehousesProps,
 } from '../components/Directories/dir.types';
 import t from '../lang';
 import DirTreeComp from '../components/Directories/DirTreeComp';
@@ -313,21 +312,21 @@ const brandsDir: IDirectory<DirBrandsProps> = {
   modalChildrenProps: brandsProps,
   disabled: false,
 };
-const warehousesProps: DirWarehousesProps = {
-  title: t(ApiDirType.WAREHOUSES),
-  createParentTitle: 'Create warehouse',
-  dirType: ApiDirType.WAREHOUSES,
-  fillHeight: true,
-  availableLevels: 1,
-  actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateDirTreeComp, 'Create warehouse'),
-};
-const warehousesDir: IDirectory<DirWarehousesProps> = {
-  title: warehousesProps.title,
-  iconId: iconId.storage,
-  ModalChildren: DirTreeComp,
-  modalChildrenProps: warehousesProps,
-  disabled: false,
-};
+// const warehousesProps: DirWarehousesProps = {
+//   title: t(ApiDirType.WAREHOUSES),
+//   createParentTitle: 'Create warehouse',
+//   dirType: ApiDirType.WAREHOUSES,
+//   fillHeight: true,
+//   availableLevels: 1,
+//   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateDirTreeComp, 'Create warehouse'),
+// };
+// const warehousesDir: IDirectory<DirWarehousesProps> = {
+//   title: warehousesProps.title,
+//   iconId: iconId.storage,
+//   ModalChildren: DirTreeComp,
+//   modalChildrenProps: warehousesProps,
+//   disabled: false,
+// };
 
 const directories: Partial<IDirectory>[] = [
   {
@@ -346,7 +345,6 @@ const directories: Partial<IDirectory>[] = [
   marksDir,
   brandsDir,
   tagsDir,
-  warehousesDir,
   {
     title: 'Статуси для замовлень',
     disabled: true,

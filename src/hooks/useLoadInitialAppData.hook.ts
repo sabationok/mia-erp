@@ -27,7 +27,6 @@ const directoriesForLoading: { dirType: ApiDirType; createTreeData?: boolean }[]
     createTreeData: true,
   },
   { dirType: ApiDirType.CONTRACTORS },
-  { dirType: ApiDirType.WAREHOUSES },
   { dirType: ApiDirType.TAGS },
   { dirType: ApiDirType.METHODS_PAYMENT },
   { dirType: ApiDirType.METHODS_SHIPMENT },
@@ -49,6 +48,7 @@ const useLoadInitialAppDataHook = ({
     products,
     priceManagement,
     transactions,
+    warehouses,
   } = useAppServiceProvider();
   const { getAppActions } = useAppSettings();
   // const [_isLoading, setIsLoading] = useState(false);
@@ -69,6 +69,8 @@ const useLoadInitialAppDataHook = ({
         await priceManagement.getAll({ data: { refresh: true } });
 
         await transactions.getAll({ data: { refresh: true } });
+
+        await warehouses.getAll({ data: { refresh: true } });
 
         if (company?._id) {
           await prService.getAllByCompanyId({ data: { refresh: true, companyId: company._id } });

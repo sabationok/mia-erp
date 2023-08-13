@@ -44,35 +44,9 @@ export const productTypeFilterOptions = enumToFilterOptions(StorageItemTypeEnum)
 
 export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
   {
-    top: { name: t('label'), align: 'start', path: 'label' },
-    bottom: { name: t('sku'), align: 'start', path: 'sku' },
-    width: '150px',
-    action: 'valueByPath',
-  },
-  // {
-  //   top: { name: t('price'), align: 'end', path: 'price' },
-  //   bottom: { name: 'Валюта', align: 'end', path: 'currency' },
-  //   width: '120px',
-  //   action: 'numberWithSpaces',
-  // },
-  // {
-  //   top: { name: t('sale'), align: 'end', path: 'cashback.sale' },
-  //   bottom: { name: 'Рівень кешбеку', align: 'end', path: 'cashback.level' },
-  //   width: '120px',
-  //   action: 'numberWithSpaces',
-  // },
-  {
-    top: {
-      name: t('category'),
-      align: 'start',
-      path: 'category.label',
-    },
-    bottom: {
-      name: t('subCategory'),
-      align: 'start',
-      path: 'subCategory.label',
-    },
-    width: '150px',
+    top: { name: t('label'), align: 'start', getData: rd => rd?.label },
+    bottom: { name: t('sku'), align: 'start', getData: rd => rd?.sku },
+    width: '200px',
     action: 'valueByPath',
   },
   {
@@ -82,11 +56,26 @@ export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
     action: 'status',
   },
   {
-    top: { name: 'Наявність', align: 'start', path: 'availabilityInfo.status' },
-    bottom: { name: 'Видимість', align: 'start', path: 'visibility' },
-    width: '150px',
-    action: 'status',
+    top: {
+      name: t('category'),
+      align: 'start',
+      getData: rd => rd.category?.label,
+    },
+    bottom: {
+      name: t('parentCategory'),
+      align: 'start',
+      getData: rd => rd.parentCategory?.label,
+    },
+    width: '180px',
+    action: 'valueByPath',
   },
+
+  // {
+  //   top: { name: 'Наявність', align: 'start', path: 'availabilityInfo.status' },
+  //   bottom: { name: 'Видимість', align: 'start', path: 'visibility' },
+  //   width: '150px',
+  //   action: 'status',
+  // },
   {
     top: { name: 'Бренд', align: 'start', path: 'brand.label' },
     bottom: { name: 'Виробник', align: 'start', path: 'manufacturer.name' },

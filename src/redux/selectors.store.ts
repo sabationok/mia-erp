@@ -13,6 +13,7 @@ import { IDirectoriesState } from './directories/directories.slice';
 import { IOrdersState } from './orders/orders.slice';
 import { useMemo } from 'react';
 import { IRefundsState } from './refunds/refunds.slice';
+import { IWarehouseState } from './warehouses/warehouses.slice';
 
 export const useAuthSelector = () => useSelector<RootState, IAuthState>((state: RootState) => state.auth);
 export const useUsersSelector = () => useSelector<RootState, IUsersState>((state: RootState) => state.users);
@@ -30,6 +31,8 @@ export const useRefundsSelector = () =>
   useSelector<RootState, IRefundsState>((state: RootState): IRefundsState => state.refunds);
 export const usePriceListsSelector = () =>
   useSelector<RootState, IPriceListsState>((state: RootState): IPriceListsState => state.priceLists);
+export const useWarehousesSelector = () =>
+  useSelector<RootState, IWarehouseState>((state: RootState): IWarehouseState => state.warehouses);
 export const useCustomRolesSelector = () =>
   useSelector<RootState, ICustomRolesState>((state: RootState) => state.customRoles);
 export const useDirectoriesSelector = <DT extends ApiDirType = any, T = any>(

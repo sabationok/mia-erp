@@ -48,6 +48,7 @@ export interface IStorageItem extends IStorageItemBase {
 
   category?: IBaseDirItem<any, ApiDirType.CATEGORIES_PROD>;
   subCategory?: IBaseDirItem<any, ApiDirType.CATEGORIES_PROD>;
+  parentCategory?: IBaseDirItem<any, ApiDirType.CATEGORIES_PROD>;
 
   brand?: IBaseDirItem<any, ApiDirType.BRANDS>;
   supplier?: IBaseDirItem<ContractorsTypesEnum, ApiDirType.CONTRACTORS>;
@@ -65,10 +66,14 @@ export interface IStorageItem extends IStorageItemBase {
 
 export type ProductImage = { img_preview?: string; img_1x: string; img_2x: string; webp: string };
 
-export interface IStorageItemFroReq extends Partial<Record<keyof IStorageItem, any>> {
+export interface IStorageItemFroReq {
   type?: StorageItemType;
   currency?: CurrencyCode;
   status?: StorageItemStatus;
+
+  category?: OnlyUUID;
+  parentCategory?: OnlyUUID;
+
   tags?: string[];
   supplier?: OnlyUUID;
   brand?: OnlyUUID;

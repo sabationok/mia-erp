@@ -2,10 +2,11 @@ import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { createTransactionThunk, getAllTransactionsThunk } from 'redux/transactions/transactions.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { IVariation, IWarehouse } from './warehouses.types';
-import { createWarehouseThunk, getAllWarehousesThunk } from './warehouses.thunks';
+import { createWarehouseThunk, getAllWarehousesThunk, getWarehouseByIdThunk } from './warehouses.thunks';
 
 export interface IWarehouseState {
   warehouses: IWarehouse[];
+  current?: IWarehouse;
   filteredLists?: IVariation[];
   isLoading: boolean;
   error: StateErrorType;
@@ -13,6 +14,11 @@ export interface IWarehouseState {
 
 const initialState: IWarehouseState = {
   warehouses: [],
+  current: {
+    _id: '',
+    label: '',
+    items: [],
+  },
   filteredLists: [],
   isLoading: false,
   error: null,
@@ -38,6 +44,12 @@ export const warehousesSlice = createSlice({
         s.isLoading = false;
         if (a.payload) {
           s.warehouses = [a.payload, ...s.warehouses];
+        }
+      })
+      .addCase(getWarehouseByIdThunk.fulfilled, (s, a) => {
+        s.isLoading = false;
+        if (a.payload) {
+          s.current = a.payload;
         }
       })
       // .addCase(refreshPriceListByIdThunk.fulfilled, (s, { payload: p }) => {

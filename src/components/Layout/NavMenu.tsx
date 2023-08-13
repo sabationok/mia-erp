@@ -55,7 +55,9 @@ const NavMenu: React.FC = () => {
   );
 
   useEffect(() => {
-    const currentPageData = pages.find(page => page.path === location.pathname);
+    const currentPageData = pages.find(
+      page => page.path === location.pathname || location.pathname.includes(page.path)
+    );
 
     setActivePage(currentPageData || pages[0]);
   }, [location.pathname, pages, permissionId]);
