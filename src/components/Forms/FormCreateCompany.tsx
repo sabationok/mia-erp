@@ -12,7 +12,7 @@ import ButtonGroup from '../atoms/ButtonGroup';
 import { businessSubjectTypeFilterOptions } from '../../data/directories.data';
 import t from '../../lang';
 import { useAppForm } from '../../hooks';
-import CustomSelect from '../atoms/Inputs/CustomSelect';
+import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
 import { ownershipTypeFilterOptions } from '../../data/companies.data';
 import FlexBox from '../atoms/FlexBox';
 import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';

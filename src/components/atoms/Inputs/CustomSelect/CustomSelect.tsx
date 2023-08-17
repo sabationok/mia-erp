@@ -1,30 +1,33 @@
-import InputLabel, { InputLabelProps } from './InputLabel';
+import InputLabel, { InputLabelProps } from '../InputLabel';
 import { forwardRef, InputHTMLAttributes, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { omit, pick } from 'lodash';
 import styled, { css } from 'styled-components';
-import FlexBox, { FieldBox } from '../FlexBox';
+import FlexBox, { FieldBox } from '../../FlexBox';
 import { RefCallBack } from 'react-hook-form';
-import { SelectItem } from '../../TableList/tableTypes.types';
-import ButtonIcon from '../ButtonIcon/ButtonIcon';
+import { SelectItem } from '../../../TableList/tableTypes.types';
+import ButtonIcon from '../../ButtonIcon/ButtonIcon';
 import { nanoid } from '@reduxjs/toolkit';
+import CheckBox from '../../../TableList/TebleCells/CellComponents/CheckBox';
 
-export interface CustomSelectBaseProps<OptType = any> {
+export interface CustomSelectBaseProps {
   InputComponent?: React.FC<InputHTMLAttributes<HTMLInputElement>>;
   valueKey?: string;
-  options?: CustomSelectOption<OptType>[];
-  getOptions?: () => CustomSelectOption<OptType>[];
-  onSelect?: CustomSelectOnClickHandler<CustomSelectOption<OptType>>;
+  options?: CustomSelectOption[];
+  getOptions?: () => CustomSelectOption[];
+  onSelect?: CustomSelectOnClickHandler<CustomSelectOption>;
   onClear?: () => void;
   handleOpenState?: (prevState: boolean) => boolean;
   open?: boolean;
   ref?: RefCallBack;
-  selectValue?: CustomSelectOption<OptType>;
+  selectValue?: CustomSelectOption;
   keepOpen?: boolean;
   inputProps?: Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'>;
   labelProps?: Omit<InputLabelProps, 'onSelect'>;
   fieldMode?: boolean;
-  validateOption?: (option: CustomSelectOption<OptType>) => boolean;
-  getLabel?: (option: CustomSelectOption<OptType>) => string;
+  treeMode?: boolean;
+  multipleMode?: boolean;
+  validateOption?: (option: CustomSelectOption) => boolean;
+  getLabel?: (option: CustomSelectOption) => string;
   dropDownIsAbsolute?: boolean;
   onCreatePress?: () => void;
 }
@@ -35,17 +38,89 @@ export type CustomSelectOnClickHandler<OptType = any> = <Option extends OptType 
   index?: number
 ) => void;
 
-interface CustomSelectOptionBaseProps extends SelectItem {
-  onClick?: CustomSelectOnClickHandler;
+export interface CustomSelectOption {
+  _id?: string;
+  id?: string;
+  label?: string;
+  name?: string;
+  secondName?: string;
+  value?: string | number;
+  parent?: CustomSelectOption;
+  childrenList?: CustomSelectOption[];
 }
+export interface CustomSelectItemProps extends CustomSelectOption {
+  index: number;
+  isActive?: boolean;
+  currentOptionId?: string;
+  currentOptionValue?: string | number;
+  treeMode?: boolean;
+  option?: CustomSelectOption;
+  level: number;
+  getLabel?: (option: CustomSelectOption) => string;
+  onClick?: CustomSelectOnClickHandler;
+  onSelect?: (index: number, option?: any) => void;
+}
+const CustomSelectOptionComponent: React.FC<CustomSelectItemProps> = ({
+  getLabel,
+  treeMode,
+  option,
+  onSelect,
+  onClick,
+  index,
+  currentOptionId,
+  currentOptionValue,
+  level = 0,
+  ...props
+}) => {
+  const isActiveMemorized = useMemo(
+    () =>
+      (option?._id && option?._id === currentOptionId) ||
+      (option?.value && option?.value === currentOptionValue) ||
+      false,
+    [currentOptionId, currentOptionValue, option?._id, option?.value]
+  );
+  const renderChildrenList = useMemo(() => {
+    return option?.childrenList?.map((ch, index) => (
+      <CustomSelectOptionComponent
+        option={ch}
+        index={index}
+        onSelect={onSelect}
+        treeMode={treeMode}
+        getLabel={getLabel}
+        level={level + 1}
+        currentOptionId={currentOptionId}
+        currentOptionValue={currentOptionValue}
+      />
+    ));
+  }, [currentOptionId, currentOptionValue, level, onSelect, option?.childrenList, treeMode, getLabel]);
 
-export type CustomSelectOption<OptType = Record<string, any>> = CustomSelectOptionBaseProps & OptType;
+  return (
+    <>
+      <Option
+        justifyContent={'flex-start'}
+        gap={8}
+        fillWidth
+        fxDirection={'row'}
+        padding={'5px 8px'}
+        onClick={() => onSelect && onSelect(index, option)}
+        isActive={isActiveMemorized}
+        {...props}
+      >
+        {treeMode && <CheckBox size={'16px'} checked={isActiveMemorized} />}
 
-export type CustomSelectProps<OptType = any> = CustomSelectBaseProps<OptType> &
+        <span className={'inner'}>{getLabel && option ? getLabel(option) : option?.label || option?.name}</span>
+      </Option>
+
+      {treeMode && <FlexBox padding={'0 0 0 8px'}>{renderChildrenList}</FlexBox>}
+    </>
+  );
+};
+
+export type CustomSelectProps = CustomSelectBaseProps &
   Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'> &
   Omit<InputLabelProps, 'onSelect'>;
 
-const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps<SelectItem>> = (
+const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
   {
     InputComponent,
     inputProps = {},
@@ -63,27 +138,28 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps<Select
     required,
     getLabel,
     onCreatePress,
-    dropDownIsAbsolute,
+    dropDownIsAbsolute = false,
+    treeMode,
     ...props
   },
-  ref
+  _ref
 ) => {
   const [currentOption, setCurrentOption] = useState<SelectItem | undefined>(selectValue);
   const [isOpen, setIsOpen] = useState<boolean>(keepOpen || open);
   const labelRef = useRef<HTMLLabelElement>(null);
 
-  const uid = useMemo(() => nanoid(5), []);
+  const selectId = useMemo(() => (id ? id : nanoid(5)), [id]);
 
   const handleOpenState = useCallback(() => {
     !keepOpen && setIsOpen(prev => !prev);
   }, [keepOpen]);
 
-  const isValidOption = useCallback(
-    (option: CustomSelectOption<{ _id?: string }>) => {
-      return options?.some((opt: { _id?: string }) => opt?._id === option?._id);
-    },
-    [options]
-  );
+  // const isValidOption = useCallback(
+  //   (option: CustomSelectOption) => {
+  //     return options?.some((opt: { _id?: string }) => opt?._id === option?._id);
+  //   },
+  //   [options]
+  // );
 
   const inputCurrentValue = useMemo(() => {
     return getLabel && currentOption
@@ -93,22 +169,37 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps<Select
       : '';
   }, [currentOption, getLabel]);
 
-  const handleOnSelect = useCallback(
+  // const handleOnSelect = useCallback(
+  //   (index: number, option?: any) => {
+  //     if (!options || options?.length === 0) return;
+  //
+  //     return () => {
+  //       setCurrentOption(option);
+  //       if (onSelect && valueKey && valueKey && option[valueKey]) {
+  //         onSelect(option, option[valueKey], index);
+  //         return;
+  //       }
+  //       if (onSelect) {
+  //         onSelect(option, option?.value, index);
+  //       }
+  //       !treeMode && handleOpenState();
+  //     };
+  //   },
+  //   [handleOpenState, treeMode, onSelect, options, valueKey]
+  // );
+  const onSelectOption = useCallback(
     (index: number, option?: any) => {
-      if (!options || options?.length === 0) return;
-      return () => {
-        setCurrentOption(option);
-        if (onSelect && valueKey && valueKey && option[valueKey]) {
-          onSelect(option, option[valueKey], index);
-          return;
-        }
-        if (onSelect) {
-          onSelect(option, option?.value, index);
-        }
-        handleOpenState();
-      };
+      setCurrentOption(option);
+      if (onSelect && valueKey && valueKey && option[valueKey]) {
+        onSelect(option, option[valueKey], index);
+        return;
+      }
+      if (onSelect) {
+        onSelect(option, option?.value, index);
+      }
+      handleOpenState();
     },
-    [handleOpenState, onSelect, options, valueKey]
+    [handleOpenState, onSelect, valueKey]
   );
 
   const handleOnClear = useCallback(() => {
@@ -120,34 +211,27 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps<Select
   const renderOptions = useMemo(
     () =>
       options?.map((opt, idx) => (
-        <Option
+        <CustomSelectOptionComponent
           key={`select-opt-${opt._id || opt?.value || idx}`}
-          onClick={handleOnSelect(idx, opt)}
-          justifyContent={'flex-start'}
-          fillWidth
-          fxDirection={'row'}
-          padding={'5px 8px'}
-          isActive={
-            (opt?._id && opt?._id === currentOption?._id) ||
-            (opt?.value && opt?.value === currentOption?.value) ||
-            false
-          }
-        >
-          <span className={'inner'}>{getLabel ? getLabel(opt) : opt.label || opt.name}</span>
-        </Option>
+          index={idx}
+          option={opt}
+          level={0}
+          treeMode={treeMode}
+          onSelect={onSelectOption}
+          currentOptionId={currentOption?._id}
+          currentOptionValue={currentOption?.value}
+        />
       )),
-    [currentOption?._id, currentOption?.value, getLabel, handleOnSelect, options]
+    [currentOption?._id, currentOption?.value, onSelectOption, options, treeMode]
   );
 
   useEffect(() => {
-    const isValid = isValidOption(selectValue as any);
-
-    if (selectValue && isValid) return setCurrentOption(selectValue);
-    if (!selectValue || !isValid) return setCurrentOption(undefined);
-  }, [isValidOption, selectValue]);
+    if (selectValue) return setCurrentOption(selectValue);
+    if (!selectValue) return setCurrentOption(undefined);
+  }, [selectValue]);
 
   return (
-    <FlexBox fillWidth style={{ position: 'relative' }} data-select={id || uid}>
+    <FlexBox fillWidth style={{ position: 'relative' }} data-select={selectId}>
       <FlexBox fillWidth style={{ position: 'relative' }}>
         <InputLabel
           direction={'vertical'}
@@ -230,27 +314,30 @@ const Options = styled(FlexBox)<{
   isInAbsolute?: boolean;
 }>`
   ${({ isInAbsolute }) => {
-    return css`
-      position: absolute;
-      top: 100%;
-      left: 0;
-      z-index: 500;
-    `;
+    return isInAbsolute
+      ? css`
+          position: absolute;
+          top: 100%;
+          left: 0;
+          z-index: 500;
+        `
+      : '';
   }}
 
   font-size: 14px;
+  overflow: hidden;
 
   max-height: ${({ isOpen }) => (isOpen ? '140px' : 0)};
   opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
-  width: 100%;
-  overflow: hidden;
 
-  margin-top: 6px;
+  width: 100%;
+
+  //margin-top: 6px;
 
   border-radius: 4px;
+  border: 1px solid ${({ theme }) => theme.fieldBackgroundColor};
 
   background-color: ${({ theme }) => theme.modalBackgroundColor};
-  border: 1px solid ${({ theme }) => theme.fieldBackgroundColor};
   box-shadow: 0 10px 12px 5px rgba(21, 21, 21, 0.25), 0 10px 12px 4px rgba(211, 211, 211, 0.15);
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
 `;

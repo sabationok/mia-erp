@@ -1,18 +1,18 @@
 import { useModalProvider } from '../components/ModalProvider/ModalProvider';
-import useStorageServiceHook from './useStorageService.hook';
+import useStorageServiceHook from './useProductsService.hook';
 import { useCallback } from 'react';
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
-import { IStorageItem, StorageItemFilterOption } from '../redux/products/products.types';
+import { IProduct, ProductFilterOpt, ProductTypeEnum } from '../redux/products/products.types';
 import { useProductsSelector } from '../redux/selectors.store';
 import ProductForm from '../components/Forms/FormCreateProduct';
 import ProductOverview from '../components/Overviews/ProductOverview';
 import { omit } from 'lodash';
 
-export type StorageActionsCreator = TableActionCreator<IStorageItem>;
+export type StorageActionsCreator = TableActionCreator<IProduct>;
 
-export const StorageItemTypeFilterOptions: StorageItemFilterOption[] = [
-  { label: 'GOODS', value: 'GOODS' },
-  { label: 'SERVICE', value: 'SERVICE' },
+export const StorageItemTypeFilterOptions: ProductFilterOpt[] = [
+  { label: 'GOODS', value: ProductTypeEnum.GOODS },
+  { label: 'SERVICE', value: ProductTypeEnum.SERVICE },
 ];
 
 const useStorageActionsCreator = (): StorageActionsCreator => {
@@ -142,7 +142,7 @@ const useStorageActionsCreator = (): StorageActionsCreator => {
             modalChildrenProps: {
               title: 'Створити',
               filterOptions: StorageItemTypeFilterOptions,
-              defaultState: { type: 'GOODS' },
+              defaultState: { type: ProductTypeEnum.GOODS },
               onSubmit: (data, o) => {
                 service.create({
                   data,

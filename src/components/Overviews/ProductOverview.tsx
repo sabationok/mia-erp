@@ -9,8 +9,6 @@ import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { useEffect, useState } from 'react';
 import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
 import { ExtractId } from '../../utils/dataTransform';
-import { useModalProvider } from '../ModalProvider/ModalProvider';
-import FormCreatePrice from '../Forms/FormCreatePrice/FormCreatePrice';
 
 export interface ProductOverviewProps extends Omit<ModalFormProps, 'onSelect' | 'onSubmit'> {
   product?: IProduct;
@@ -20,7 +18,6 @@ const ProductOverview: React.FC<ProductOverviewProps> = ({ product, ...props }) 
   const { priceManagement } = useAppServiceProvider();
   const [priceList, setPriceList] = useState<IPriceListItem[]>([]);
   const [loading, setLoading] = useState(false);
-  const modals = useModalProvider();
 
   useEffect(() => {
     if (product?._id) {
@@ -44,25 +41,7 @@ const ProductOverview: React.FC<ProductOverviewProps> = ({ product, ...props }) 
         <PricesBox>
           <TableList
             tableTitles={pricesColumnsForProductReview}
-            tableData={[...priceList, ...priceList, ...priceList]}
-            actionsCreator={ctx => {
-              return [
-                {
-                  icon: 'plus',
-                  onClick: async () => {
-                    const modal = modals.handleOpenModal({
-                      ModalChildren: FormCreatePrice,
-                      modalChildrenProps: {
-                        defaultState: { _id: '', label: '', product },
-                        onSubmit: d => {
-                          modal?.onClose && modal?.onClose();
-                        },
-                      },
-                    });
-                  },
-                },
-              ];
-            }}
+            tableData={priceList}
             isSearch={false}
             isFilter={false}
             isLoading={loading}

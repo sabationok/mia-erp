@@ -1,31 +1,34 @@
 import FlexBox from '../../atoms/FlexBox';
-import { UseAppFormReturn } from '../../../hooks/useAppForm.hook';
 import { useDirectoriesSelector } from '../../../redux/selectors.store';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
-import usePermissionsAsDirItemOptions from '../../../hooks/usePermisionsAsWorkersOptions';
 import { useCounterpartyDirectorySelectorByType } from '../../../hooks/selectorHooks.hooks';
 import { ContractorsTypesEnum } from '../../../redux/contractors/contractors.types';
 import { useModalFormCreateCounterparty } from '../../../hooks/modalHooks';
 import { useState } from 'react';
 import ButtonGroup from '../../atoms/ButtonGroup';
 import { orderTypeFilterOptions } from '../../../data/orders.data';
-import CustomSelect from '../../atoms/Inputs/CustomSelect';
+import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import FormAccordeonItem from '../components/FormAccordeonItem';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
 import styled from 'styled-components';
-import { FormCreateOrderState } from './FormCreateOrder';
 import Changer from '../../atoms/Changer';
+import usePermissionsAsDirItemOptions from '../../../hooks/usePermisionsAsWorkersOptions';
+import { UseAppFormReturn } from '../../../hooks/useAppForm.hook';
+import { ICreateOrderFormState } from '../../../redux/orders/orders.types';
 
-export interface FormCreateOrderMainInfoProps
-  extends Pick<UseAppFormReturn<FormCreateOrderState>, 'register' | 'registerSelect' | 'formState'> {}
-const FormCreateOrderMainInfo: React.FC<FormCreateOrderMainInfoProps> = ({ register, registerSelect, formState }) => {
+export interface FormCreateOrderMainInfoProps {
+  form: UseAppFormReturn<ICreateOrderFormState>;
+}
+const FormCreateOrderMainInfo: React.FC<FormCreateOrderMainInfoProps> = ({ form }) => {
+  const { register, registerSelect } = form;
+
   const { directory: paymentsMethods } = useDirectoriesSelector(ApiDirType.METHODS_PAYMENT);
   const { directory: shipmentMethods } = useDirectoriesSelector(ApiDirType.METHODS_SHIPMENT);
   const { directory: communicationMethods } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
-  const managers = usePermissionsAsDirItemOptions();
   const customers = useCounterpartyDirectorySelectorByType(ContractorsTypesEnum.CUSTOMER);
+  const managers = usePermissionsAsDirItemOptions();
   const onCreateCounterparty = useModalFormCreateCounterparty();
   const [isReceiverInfo, setIsReceiverInfo] = useState(false);
 
@@ -62,8 +65,6 @@ const FormCreateOrderMainInfo: React.FC<FormCreateOrderMainInfoProps> = ({ regis
 
       <FlexBox>
         <FlexBox style={{ position: 'relative' }}>
-          {/*<FormAccordeonItem renderHeader={'Вміст'}>{renderProducts}</FormAccordeonItem>*/}
-
           <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} open renderHeader={'Замовник'}>
             <CustomSelect
               {...registerSelect('customer', {

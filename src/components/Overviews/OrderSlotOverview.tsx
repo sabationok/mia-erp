@@ -3,7 +3,7 @@ import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
-import { IProduct, IStorageItem } from '../../redux/products/products.types';
+import { IProduct } from '../../redux/products/products.types';
 import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
 import { IProductVariation } from '../TableVariations';
 import { isUndefined } from 'lodash';
@@ -23,7 +23,7 @@ export interface OrderSlotOverviewProps {
 }
 
 const createOverviewCellsData = (
-  dataForSlot?: IStorageItem,
+  dataForSlot?: IProduct,
   countedPrice?: IPriceListItem & { qty?: number; total?: number },
   variation?: IProductVariation,
   warehouse?: IWarehouseDirItem

@@ -9,10 +9,10 @@ import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import * as _ from 'lodash';
 import { useCallback, useEffect } from 'react';
-import { IProduct, IStorageItem } from '../../../redux/products/products.types';
+import { IProduct } from '../../../redux/products/products.types';
 // import * as yup from 'yup';
 import { usePriceListsSelector } from '../../../redux/selectors.store';
-import CustomSelect from '../../atoms/Inputs/CustomSelect';
+import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 
 // const validation = yup.object().shape({
 //   cost: yup.number(),
@@ -22,7 +22,7 @@ import CustomSelect from '../../atoms/Inputs/CustomSelect';
 export interface FormCreatePriceProps
   extends Omit<ModalFormProps<any, any, IPriceListItem>, 'onSubmit' | 'afterSubmit'> {
   list?: OnlyUUID;
-  product?: IProduct | IStorageItem;
+  product?: IProduct;
   onSubmit: (
     data: {
       data: IPriceListItem | IPriceListItem[];

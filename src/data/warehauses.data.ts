@@ -50,7 +50,7 @@ export const warehouseOverviewTableColumns: CellTittleProps<IProductInventory>[]
     bottom: {
       name: t('parentCategory'),
       align: 'start',
-      getData: rd => rd.product?.parentCategory?.label,
+      getData: rd => rd.product?.category?.parent?.label,
     },
     width: '180px',
     action: 'valueByPath',

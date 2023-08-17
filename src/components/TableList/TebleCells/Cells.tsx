@@ -142,15 +142,16 @@ const Content = styled.div<
   justify-content: ${({ align }) => (align === 'center' ? 'center' : `flex-${align}`)};
 
   & .inner {
+    height: fit-content;
     max-width: 100%;
     /* display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1; */
     //word-break: break-word;
+    line-height: 1.2;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 1;
   }
 `;
 const AvatarBox = styled.div`

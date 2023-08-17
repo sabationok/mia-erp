@@ -12,15 +12,9 @@ import { AppResponse, IBase, OnlyUUID } from '../global.types';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
 import { ICompany } from '../companies/companies.types';
 import { IManager } from '../auth/auth.types';
-import {
-  ICommunicationDirItem,
-  ICustomerDirItem,
-  IPaymentDirItem,
-  IShipmentDirItem,
-  ISupplierDirItem,
-  IWarehouseDirItem,
-} from '../../components/Directories/dir.types';
+import { IPaymentDirItem, ISupplierDirItem, IWarehouseDirItem } from '../../components/Directories/dir.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
+import { IContractor } from '../contractors/contractors.types';
 
 export type OrderTypeFilterOption = FilterOpt;
 export enum OrderTypeEnum {
@@ -53,11 +47,11 @@ export interface IOrder extends IBase {
   barCode?: string;
   code?: string;
 
-  customer?: ICustomerDirItem;
-  customerCommunicationMethod?: ICommunicationDirItem;
+  customer?: IContractor;
+  customerCommunicationMethod?: IContractor;
 
-  receiver?: ICustomerDirItem;
-  receiverCommunicationMethod?: ICommunicationDirItem;
+  receiver?: IContractor;
+  receiverCommunicationMethod?: IContractor;
 
   status?: OrderStatus;
   payments?: OnlyUUID[];
@@ -65,8 +59,33 @@ export interface IOrder extends IBase {
   // content?: IOrderSlotItem[];
   slots?: IOrderSlot[];
   destination?: string;
-  shipmentMethod?: IShipmentDirItem;
+  shipmentMethod?: IPaymentDirItem;
   paymentMethod?: IPaymentDirItem;
+
+  comment?: string;
+  innerComment?: string;
+}
+
+export interface ICreateOrderFormState {
+  manager?: { _id: string; name?: string; secondName?: string };
+
+  barCode?: string;
+  code?: string;
+
+  customer?: { _id: string; name?: string; secondName?: string; label?: string };
+  customerCommunicationMethod?: { _id: string; name?: string; secondName?: string; label?: string };
+
+  receiver?: { _id: string; name?: string; secondName?: string; label?: string };
+  receiverCommunicationMethod?: { _id: string; name?: string; secondName?: string; label?: string };
+
+  status?: OrderStatus;
+  payments?: OnlyUUID[];
+
+  // content?: IOrderSlotItem[];
+  slots?: OnlyUUID[];
+  destination?: string;
+  shipmentMethod?: { _id: string; name?: string; secondName?: string; label?: string };
+  paymentMethod?: { _id: string; name?: string; secondName?: string; label?: string };
 
   comment?: string;
   innerComment?: string;

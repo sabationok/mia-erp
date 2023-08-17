@@ -14,7 +14,7 @@ import { IPriceListItem } from 'redux/priceManagement/priceManagement.types';
 import styled from 'styled-components';
 import { IProductVariation } from '../../TableVariations';
 import { IWarehouseDirItem } from '../../Directories/dir.types';
-import CustomSelect from '../../atoms/Inputs/CustomSelect';
+import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { isUndefined } from 'lodash';
 import { useDirectoriesSelector } from 'redux/selectors.store';
 import { ApiDirType } from 'redux/APP_CONFIGS';

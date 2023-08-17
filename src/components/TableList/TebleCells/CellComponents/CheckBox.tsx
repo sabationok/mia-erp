@@ -18,14 +18,9 @@ export interface CustomCheckboxEvent {
   event?: React.MouseEvent<HTMLButtonElement>;
 }
 
-const CheckBox: React.FC<CustomCheckBoxProps & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>> = ({
-  onChange,
-  disabled,
-  id = '1',
-  checked = false,
-  size = '20px',
-  icon,
-}) => {
+const CheckBox: React.FC<
+  CustomCheckBoxProps & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'size'>
+> = ({ onChange, disabled, id = '1', checked = false, size = '20px', icon }) => {
   const [isChecked, setIsChecked] = useState(checked);
 
   function onChangeHandler(event: React.MouseEvent<HTMLButtonElement>) {

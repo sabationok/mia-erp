@@ -1,8 +1,7 @@
 import { SelectItem } from 'components/TableList/TableList';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import t from '../lang';
-import { IProduct, StorageItemTypeEnum } from '../redux/products/products.types';
-import { enumToFilterOptions } from '../utils/fabrics';
+import { IProduct } from '../redux/products/products.types';
 
 export type DataPath =
   | 'category.label'
@@ -40,21 +39,28 @@ export type DataPath =
   | 'availabilityInfo.primaryOrderTime'
   | 'availabilityInfo.customOrder'
   | 'availabilityInfo.customOrderTime';
-export const productTypeFilterOptions = enumToFilterOptions(StorageItemTypeEnum);
 
 export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
   {
     top: { name: t('label'), align: 'start', getData: rd => rd?.label },
-    bottom: { name: t('sku'), align: 'start', getData: rd => rd?.sku },
+    // bottom: { name: t('sku'), align: 'start', getData: rd => rd?.sku },
     width: '200px',
     action: 'valueByPath',
   },
   {
+    top: { name: t('sku'), align: 'start', getData: rd => rd?.sku },
+    bottom: { name: t('barCode'), align: 'start', getData: rd => rd?.barCode },
+    width: '200px',
+    action: 'valueByPath',
+  },
+
+  {
     top: { name: t('type'), align: 'start', path: 'type' },
-    bottom: { name: t('status'), align: 'start', path: 'status' },
+    bottom: { name: t('status'), align: 'start', getData: d => d.approvedStatus },
     width: '100px',
     action: 'status',
   },
+
   {
     top: {
       name: t('category'),
@@ -64,27 +70,20 @@ export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
     bottom: {
       name: t('parentCategory'),
       align: 'start',
-      getData: rd => rd.parentCategory?.label,
+      getData: rd => rd.category?.parent?.label,
     },
     width: '180px',
     action: 'valueByPath',
   },
-
-  // {
-  //   top: { name: 'Наявність', align: 'start', path: 'availabilityInfo.status' },
-  //   bottom: { name: 'Видимість', align: 'start', path: 'visibility' },
-  //   width: '150px',
-  //   action: 'status',
-  // },
   {
-    top: { name: 'Бренд', align: 'start', path: 'brand.label' },
-    bottom: { name: 'Виробник', align: 'start', path: 'manufacturer.name' },
+    top: { name: t('variation'), align: 'start', getData: rd => rd?.productInventory?.template?.label },
+    // bottom: { name: t('barCode'), align: 'start', getData: rd => rd?.barCode },
     width: '150px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Автор', align: 'start', path: 'author.name' },
-    bottom: { name: 'Емейл', align: 'start', path: 'author.email' },
+    top: { name: 'Бренд', align: 'start', path: 'brand.label' },
+    bottom: { name: 'Виробник', align: 'start', path: 'manufacturer.name' },
     width: '150px',
     action: 'valueByPath',
   },
@@ -94,8 +93,14 @@ export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Створено', align: 'center', path: 'createdAt' },
-    bottom: { name: 'Оновлено', align: 'center', path: 'updatedAt' },
+    top: { name: 'Оновив', align: 'start', getData: rd => rd?.editor?.email },
+    bottom: { name: 'Автор', align: 'start', getData: rd => rd?.author?.email },
+    width: '150px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Оновлено', align: 'center', path: 'updatedAt' },
+    bottom: { name: 'Створено', align: 'center', path: 'createdAt' },
     width: '150px',
     action: 'dateDbl',
   },

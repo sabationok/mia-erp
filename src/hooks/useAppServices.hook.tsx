@@ -1,5 +1,5 @@
 import usePermissionsServiceHook, { PermissionService } from './usePermissionsService.hook';
-import useStorageServiceHook, { StorageService } from './useStorageService.hook';
+import useProductsServiceHook, { ProductsService } from './useProductsService.hook';
 import useTransactionsServiceHook, { TransactionsService } from './useTransactionsService.hook';
 import { DirectoriesService } from './useDirService.hook';
 import { useDirService } from './index';
@@ -26,7 +26,7 @@ export enum ServiceName {
 
 export interface AppService {
   [ServiceName.permissions]: PermissionService;
-  [ServiceName.products]: StorageService;
+  [ServiceName.products]: ProductsService;
   [ServiceName.transactions]: TransactionsService;
   [ServiceName.directories]: DirectoriesService;
   [ServiceName.priceManagement]: PriceManagementService;
@@ -37,7 +37,7 @@ export interface AppService {
 
 const useAppService = (): AppService => {
   const permissions = usePermissionsServiceHook();
-  const products = useStorageServiceHook();
+  const products = useProductsServiceHook();
   const transactions = useTransactionsServiceHook();
   const directories = useDirService();
   const priceManagement = usePriceManagementServiceHook();

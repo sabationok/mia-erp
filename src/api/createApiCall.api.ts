@@ -35,6 +35,8 @@ const createApiCall = async <SD = any, RD = any, E = any, MD = any, CTX = any>(
       onSuccess(res.data.data);
     }
     logRes && console.log(res);
+    onLoading && onLoading(false);
+
     return res;
   } catch (e) {
     onError && onError(e as unknown as E);

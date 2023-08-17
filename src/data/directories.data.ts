@@ -21,7 +21,7 @@ import { toast } from 'react-toastify';
 import DirTableComp, { DirTableCompProps } from '../components/Directories/DirTableComp';
 import FormCreateContractor from '../components/Forms/FormCreateContractor';
 import { createDataForReq } from '../utils/dataTransform';
-import { StorageItemFilterOption, StorageItemTypeEnum } from '../redux/products/products.types';
+import { ProductFilterOpt, ProductTypeEnum } from '../redux/products/products.types';
 import { ModalChildrenProps, Modals } from '../components/ModalProvider/Modals';
 import { FilterOpt } from '../components/ModalForm/ModalFilter';
 import { ContractorsTypesEnum } from '../redux/contractors/contractors.types';
@@ -32,7 +32,7 @@ import { CategoryTrTypeEnum } from '../redux/directories/directories.types';
 
 export const categoriesFilterOptions: CategoryFilterOpt[] = enumToFilterOptions(CategoryTrTypeEnum);
 export const countsFilterOptions: CountFilterOpt[] = enumToFilterOptions(CountsTypesEnum);
-export const StorageItemTypeFilterOptions: StorageItemFilterOption[] = enumToFilterOptions(StorageItemTypeEnum);
+export const StorageItemTypeFilterOptions: ProductFilterOpt[] = enumToFilterOptions(ProductTypeEnum);
 
 export const tagsFilterOptions = enumToFilterOptions(ContractorsTypesEnum);
 

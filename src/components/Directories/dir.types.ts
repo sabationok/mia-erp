@@ -165,6 +165,7 @@ export interface DirActivitiesProps
   extends IDirInTreeProps<ApiDirType.ACTIVITIES, any, IActivityFormData, IActivityFormData, IActivity> {}
 export interface IBrand extends IBaseDirItem {}
 
+export interface IProductCategoryDirItem extends IBaseDirItem<any, ApiDirType.CATEGORIES_PROD> {}
 export interface IBrandFormData extends Omit<IBrand, '_id' | 'createdAt' | 'updatedAt'> {}
 export interface DirBrandsProps
   extends IDirInTreeProps<ApiDirType.BRANDS, any, IBrandFormData, IBrandFormData, IBrand> {}

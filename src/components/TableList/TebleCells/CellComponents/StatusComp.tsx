@@ -2,7 +2,7 @@ import React, { CSSProperties, memo, useMemo } from 'react';
 import { statusDataMap } from 'data';
 
 import styled, { css } from 'styled-components';
-import { StatusNames } from 'data/statuses.data';
+import { StatusData, StatusNames } from 'data/statuses.data';
 import SvgIcon from '../../../atoms/SvgIcon/SvgIcon';
 
 export type StatusCompVariants = 'outlined' | 'filled' | 'text';
@@ -22,7 +22,10 @@ const StatusComp: React.FC<StatusCompProps> = ({
   fontWeight,
   fillWidth = false,
 }) => {
-  const { label, color, iconId, backgroundColor, description } = useMemo(() => statusDataMap[status] || {}, [status]);
+  const { label, color, iconId, backgroundColor, description } = useMemo(
+    (): StatusData => statusDataMap[status] || {},
+    [status]
+  );
 
   return (
     <StStatusComp

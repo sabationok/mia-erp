@@ -12,6 +12,7 @@ export interface CellTextDblProps {
 
 const CellStatus: React.FC<CellTextDblProps & React.HTMLAttributes<HTMLDivElement>> = ({
   titleInfo: { top, bottom, width = '100px' },
+  titleInfo,
   idx,
   ...props
 }) => {
@@ -20,19 +21,23 @@ const CellStatus: React.FC<CellTextDblProps & React.HTMLAttributes<HTMLDivElemen
   const cellConfig = useMemo(
     (): IDataCellProps => ({
       content: {
-        data: getValueByPath<StatusNames>({
-          data: rowData,
-          ...top,
-        }),
+        data: top.getData
+          ? top.getData(rowData, titleInfo)
+          : getValueByPath<StatusNames>({
+              data: rowData,
+              ...top,
+            }),
       },
       subContent: {
-        data: getValueByPath<StatusNames>({
-          data: rowData,
-          ...bottom,
-        }),
+        data: bottom?.getData
+          ? bottom?.getData(rowData, titleInfo)
+          : getValueByPath<StatusNames>({
+              data: rowData,
+              ...bottom,
+            }),
       },
     }),
-    [bottom, rowData, top]
+    [bottom, rowData, titleInfo, top]
   );
 
   return <Cells.DoubleStatus {...cellConfig} width={width} />;

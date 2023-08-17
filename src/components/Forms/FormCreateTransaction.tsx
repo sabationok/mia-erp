@@ -9,7 +9,7 @@ import InputText from '../atoms/Inputs/InputText';
 import * as yup from 'yup';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import { FilterOpt } from '../ModalForm/ModalFilter';
-import CustomSelect from '../atoms/Inputs/CustomSelect';
+import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
 import { createTransactionForReq, formatDateForInputValue } from '../../utils';
 import { useAppSelector } from '../../redux/store.store';
 import FlexBox from '../atoms/FlexBox';

@@ -14,7 +14,7 @@ import { useAppForm } from '../../hooks';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler, UseAppFormAfterSubmitOptions } from '../../hooks/useAppForm.hook';
 import { businessSubjectTypeFilterOptions, counterpartyFilterOptions } from '../../data/directories.data';
-import CustomSelect from '../atoms/Inputs/CustomSelect';
+import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
 import ButtonGroup from '../atoms/ButtonGroup';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
 import useDirServiceHook from '../../hooks/useDirService.hook';
