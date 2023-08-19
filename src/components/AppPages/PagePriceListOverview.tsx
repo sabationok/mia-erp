@@ -1,0 +1,85 @@
+import { useAppParams } from '../../hooks';
+import { AppGridPage } from './index';
+import styled from 'styled-components';
+import { takeFullGridArea } from './pagesStyles';
+import { PagePathType } from '../../data/pages.data';
+import { usePriceListOverviewActionsCreator } from '../../hooks/usePriceListOverviewActionsCreator.hook';
+import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import { useEffect, useMemo, useState } from 'react';
+import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
+import { ITableListProps } from '../TableList/tableTypes.types';
+import { ISortParams } from '../../api';
+import { FilterReturnDataType } from '../Filter/AppFilter';
+import TableList from '../TableList/TableList';
+import { priceListContentColumns } from '../../data';
+
+export interface PagePriceListOverviewProps {
+  path: PagePathType;
+}
+const PagePriceListOverview: React.FC<PagePriceListOverviewProps> = ({ path }) => {
+  const listId = useAppParams()?.priceListId;
+  const actionsCreator = usePriceListOverviewActionsCreator(listId);
+  const { priceManagement } = useAppServiceProvider();
+  const [tableData, setTableData] = useState<IPriceListItem[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [sortParams, setSortParams] = useState<ISortParams>();
+  const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
+
+  const tableConfig = useMemo(
+    (): ITableListProps<IPriceListItem> => ({
+      tableData: tableData,
+      isFilter: false,
+      isSearch: true,
+      footer: false,
+      checkBoxes: true,
+      actionsCreator,
+      onFilterSubmit: filterParams => {
+        setFilterParams(filterParams);
+      },
+      handleTableSort: (param, sortOrder) => {
+        setSortParams({ dataPath: param.dataPath, sortOrder });
+      },
+    }),
+    [actionsCreator, tableData]
+  );
+  useEffect(() => {
+    console.log(tableData);
+  }, [tableData]);
+  // const onValidSubmit = (data: IPriceList) => {
+  //   onSubmit &&
+  //     data.prices &&
+  //     onSubmit(data.prices, {
+  //       clearAfterSave: true,
+  //       closeAfterSave: true,
+  //       onLoading: l => {},
+  //       onSuccess: d => {},
+  //     });
+  // };
+
+  useEffect(() => {
+    if (listId) {
+      priceManagement.getAllPricesByListId({
+        data: { listId: { _id: listId } },
+        onSuccess: setTableData,
+        onLoading: setIsLoading,
+      });
+    }
+  }, [listId, priceManagement]);
+  return (
+    <AppGridPage path={path}>
+      <Page>
+        <TableList
+          {...tableConfig}
+          isLoading={isLoading}
+          actionsCreator={actionsCreator}
+          isSearch={false}
+          tableTitles={priceListContentColumns}
+        />
+      </Page>
+    </AppGridPage>
+  );
+};
+const Page = styled.div`
+  ${takeFullGridArea}
+`;
+export default PagePriceListOverview;

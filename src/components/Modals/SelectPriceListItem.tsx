@@ -1,9 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { IProduct } from '../../redux/products/products.types';
 import ProductCardSimpleOverview from '../Overviews/ProductCardSimpleOverview';
-import { AppQueryParams, createApiCall } from '../../api';
-import ProductsApi from '../../api/products.api';
+import { AppQueryParams, createApiCall, PriceManagementApi } from '../../api';
 import FlexBox from '../atoms/FlexBox';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
@@ -11,10 +9,12 @@ import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import { FilterOpt } from '../ModalForm/ModalFilter';
+import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
 
-export interface SelectProductModalProps extends Omit<ModalFormProps<any, any, IProduct>, 'onSubmit' | 'onSelect'> {
-  selected?: IProduct;
-  onSelect?: (product: IProduct) => void;
+export interface SelectPriceListItemProps
+  extends Omit<ModalFormProps<any, any, IPriceListItem>, 'onSubmit' | 'onSelect'> {
+  selected?: IPriceListItem;
+  onSelect?: (product: IPriceListItem) => void;
   search?: AppQueryParams['search'];
   searchBy?: AppQueryParams['searchBy'];
 }
@@ -24,21 +24,21 @@ const productSelectorFilterOptions: (FilterOpt & { placeholder?: string })[] = [
   { label: 'By sku', value: 'sku', placeholder: 'Введіть артикул продукту' },
   // { label: 'By warehouse', value: 'warehouse', placeholder: 'Введіть номер складу' },
 ];
-const SelectProductModal: React.FC<SelectProductModalProps> = ({ selected, onSelect }) => {
-  const { register, setValue, watch, handleSubmit } = useForm<Pick<SelectProductModalProps, 'search' | 'searchBy'>>({
+const SelectPriceListItem: React.FC<SelectPriceListItemProps> = ({ selected, onSelect }) => {
+  const { register, setValue, watch, handleSubmit } = useForm<Pick<SelectPriceListItemProps, 'search' | 'searchBy'>>({
     defaultValues: {
       searchBy: 'label',
       search: '',
     },
   });
-  const [loadedData, setLoadedData] = useState<IProduct[] | null>(null);
-  const [current, setCurrent] = useState<IProduct | undefined>(selected);
+  const [loadedData, setLoadedData] = useState<IPriceListItem[] | null>(null);
+  const [current, setCurrent] = useState<IPriceListItem | undefined>(selected);
   const [currentTab, setCurrentTab] = useState<number>(0);
 
   const { search, searchBy } = watch();
 
   const onItemSelect = useCallback(
-    (p: IProduct) => {
+    (p: IPriceListItem) => {
       setCurrent(p);
       onSelect && onSelect(p);
     },
@@ -62,12 +62,13 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ selected, onSel
           data: { search, searchBy },
           onSuccess: setLoadedData,
         },
-        ProductsApi.getAll,
-        ProductsApi
+        PriceManagementApi.getAllForUser,
+        PriceManagementApi
       ),
     []
   );
-  const onValid = ({ search, searchBy }: Pick<SelectProductModalProps, 'search' | 'searchBy'>) =>
+
+  const onValid = ({ search, searchBy }: Pick<SelectPriceListItemProps, 'search' | 'searchBy'>) =>
     getData(search, searchBy);
 
   useEffect(() => {
@@ -97,7 +98,6 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ selected, onSel
 
         <ButtonIcon variant={'onlyIcon'} type={'submit'} icon={'search'} iconSize={'30px'} />
       </FlexBox>
-
       <FlexBox overflow={'auto'} fillWidth flex={'1'} padding={'8px 8px 16px'}>
         {renderProducts}
       </FlexBox>
@@ -110,4 +110,4 @@ const StModalForm = styled(ModalForm)`
   }
 `;
 
-export default SelectProductModal;
+export default SelectPriceListItem;

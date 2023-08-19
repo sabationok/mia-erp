@@ -1,25 +1,26 @@
-import TableList from 'components/TableList/TableList';
+import TableList, { ITableListContext } from 'components/TableList/TableList';
 import { takeFullGridArea } from './pagesStyles';
 import styled from 'styled-components';
 import { useEffect, useMemo, useState } from 'react';
-import { ITableListProps } from '../TableList/tableTypes.types';
+import { ITableListProps, TableActionCreator } from '../TableList/tableTypes.types';
 import AppGridPage from './AppGridPage';
 import { useWarehousesSelector } from '../../redux/selectors.store';
 import { ISortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
 import { PagePathType } from '../../data/pages.data';
 import { warehouseOverviewTableColumns } from '../../data/warehauses.data';
-import { useAppParams, useAppServices } from '../../hooks';
+import { useAppParams } from '../../hooks';
 import { IProductInventory } from '../../redux/warehouses/warehouses.types';
-import { ServiceName } from '../../hooks/useAppServices.hook';
+import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 
 type Props = {
   path: PagePathType;
 };
 const PageWarehouseOverview: React.FC<any> = (props: Props) => {
   const warehouseId = useAppParams().warehouseId;
-  const service = useAppServices()[ServiceName.warehouses];
+  const service = useAppServiceProvider().warehouses;
   const state = useWarehousesSelector();
+  const actionsCreator = useWarehouseOverviewActionsCreator();
   const [isLoading, setIsLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
@@ -31,6 +32,7 @@ const PageWarehouseOverview: React.FC<any> = (props: Props) => {
       isSearch: true,
       footer: false,
       checkBoxes: true,
+      actionsCreator,
       onFilterSubmit: filterParams => {
         setFilterParams(filterParams);
       },
@@ -38,7 +40,7 @@ const PageWarehouseOverview: React.FC<any> = (props: Props) => {
         setSortParams({ dataPath: param.dataPath, sortOrder });
       },
     }),
-    [state]
+    [actionsCreator, state]
   );
 
   useEffect(() => {
@@ -62,4 +64,14 @@ const Page = styled.div`
   ${takeFullGridArea}
 `;
 
+type WarehouseTableActionsCreator = TableActionCreator<IProductInventory>;
+
+const useWarehouseOverviewActionsCreator = (): WarehouseTableActionsCreator => {
+  const service = useAppServiceProvider().warehouses;
+
+  return (ctx: ITableListContext) => [
+    { name: 'deleteProductToWarehouse', icon: 'plus', onClick: () => {} },
+    { name: 'addProductToWarehouse', icon: 'plus', onClick: () => {} },
+  ];
+};
 export default PageWarehouseOverview;

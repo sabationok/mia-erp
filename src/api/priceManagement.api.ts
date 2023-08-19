@@ -22,6 +22,13 @@ export class PriceManagementApi {
     return this.api.patch(this.endpoints.updateList(data?._id), data?.data);
   }
 
+  public static async getAllForUser(params?: {
+    search: string | undefined;
+    searchBy: string | undefined;
+  }): Promise<IAllPriceListItemsRes> {
+    return this.api.get('', { params });
+  }
+
   public static async getAllPriceLists(query?: AppQueryParams): Promise<IAllPriceListsRes> {
     return this.api.get(this.endpoints.getAll(), { params: query });
   }

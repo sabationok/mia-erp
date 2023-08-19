@@ -115,7 +115,7 @@ const createOverviewCellsData = (
   },
   {
     title: 'Склад',
-    value: `${warehouse?.label || 'warehouse'} | ${warehouse?.code}`,
+    value: warehouse ? `${warehouse?.label || ''} | ${warehouse?.code || ''}` : '-',
     gridArea: 'warehouse',
     isLastInRow: true,
   },
@@ -142,9 +142,9 @@ const CountSelector = ({
   const [count, setCount] = useState(value);
   const handleIncrementChange = (increment: number) => () => {
     setCount(prev => {
-      onChange && onChange(prev + increment);
       return prev + increment;
     });
+    onChange && onChange(count + increment);
   };
 
   return (

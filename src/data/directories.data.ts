@@ -139,6 +139,7 @@ const CountsProps: DirCountsProps = {
   fillHeight: true,
   createParentTitle: t('createParentCount'),
   dirType: ApiDirType.COUNTS,
+  availableLevels: 2,
   filterSearchPath: 'type',
   filterDefaultValue: 'ACTIVE',
   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCount),
@@ -158,6 +159,8 @@ const CategoriesProps: DirCategoriesProps = {
   fillHeight: true,
   createParentTitle: t('createParentCategory'),
   dirType: ApiDirType.CATEGORIES_TR,
+  availableLevels: 2,
+
   filterSearchPath: 'type',
   filterDefaultValue: 'INCOME',
   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCategory),
@@ -287,7 +290,6 @@ const activitiesProps: DirActivitiesProps = {
   createParentTitle: t('createDirParentItem'),
   dirType: ApiDirType.ACTIVITIES,
   fillHeight: true,
-  availableLevels: 2,
   actionsCreator: getDirInTreeActionsCreator(),
 };
 const activitiesDir: IDirectory<DirActivitiesProps> = {

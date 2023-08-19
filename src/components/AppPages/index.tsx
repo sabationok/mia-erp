@@ -8,6 +8,8 @@ const PageSelectCompany = lazy(() => import('./PageSelectCompany'));
 const PageHome = lazy(() => import('./PageHome'));
 const PageAuth = lazy(() => import('./PageAuth'));
 const PagePriceManagement = lazy(() => import('./PagePriceManagement'));
+const PagePriceListOverview = lazy(() => import('./PagePriceListOverview'));
+
 const PageWarehouses = lazy(() => import('./PageWarehouses'));
 const PageWarehouseOverview = lazy(() => import('./PageWarehouseOverview'));
 const PageOrders = lazy(() => import('./PageOrders'));
@@ -28,6 +30,7 @@ const AppPages = {
   PageRefunds,
   PageWarehouses,
   PageWarehouseOverview,
+  PagePriceListOverview,
 };
 
 export {
@@ -43,6 +46,7 @@ export {
   PageRefunds,
   PageWarehouses,
   PageWarehouseOverview,
+  PagePriceListOverview,
 };
 
 export default AppPages;

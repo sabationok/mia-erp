@@ -16,8 +16,7 @@ import { IProductVariation } from '../../TableVariations';
 import { IWarehouseDirItem } from '../../Directories/dir.types';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { isUndefined } from 'lodash';
-import { useDirectoriesSelector } from 'redux/selectors.store';
-import { ApiDirType } from 'redux/APP_CONFIGS';
+import { useWarehousesSelector } from 'redux/selectors.store';
 
 export interface FormCreateOrderSlotItemProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<IOrderSlot>;
@@ -26,8 +25,10 @@ export interface FormCreateOrderSlotItemProps extends Omit<ModalFormProps, 'onSu
 const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit, product, ...props }) => {
   const modalS = useModalService();
   const [loadedData, setLoadedData] = useState<IOrderSlot>();
-  const warehouses = useDirectoriesSelector(ApiDirType.WAREHOUSES).directory;
   const [dataForSlot, setDataForSlot] = useState<IProduct>();
+
+  const [loadedPrices, setLoadedPrices] = useState();
+  const warehouses = useWarehousesSelector().warehouses;
   const [selectedPrice, setSelectedPrice] = useState<IPriceListItem>();
   const [selectedVariation, setSelectedVariation] = useState<IProductVariation>();
   const [selectedWarehouse, setSelectedWarehouse] = useState<IWarehouseDirItem | undefined>();

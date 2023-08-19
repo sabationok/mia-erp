@@ -108,4 +108,6 @@ export interface ITableAction<N extends string = any> {
   iconSize?: string;
 }
 
-export type TableActionCreator<TData = any> = (ctx: ITableListContext<TData>) => ITableAction[];
+export type TableActionCreator<TData = any, N extends string = any> = (
+  ctx: ITableListContext<TData>
+) => ITableAction<N>[];
