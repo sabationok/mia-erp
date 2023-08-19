@@ -2,16 +2,12 @@ import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { createTransactionThunk, getAllTransactionsThunk } from 'redux/transactions/transactions.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { IPriceList } from './priceManagement.types';
-import {
-  createPriceListThunk,
-  getAllPriceListsThunk,
-  refreshPriceListByIdThunk,
-  updatePriceListByIdThunk,
-} from './priceManagement.thunks';
+import * as thunks from './priceManagement.thunks';
 
 export interface IPriceListsState {
   lists: IPriceList[];
   filteredLists?: IPriceList[];
+  current?: IPriceList | null;
   isLoading: boolean;
   error: StateErrorType;
 }
@@ -20,6 +16,7 @@ const initialState: IPriceListsState = {
   isLoading: false,
   error: null,
   lists: [],
+  current: null,
   filteredLists: [],
 };
 
@@ -29,7 +26,7 @@ export const priceManagementSlice = createSlice({
   reducers: {},
   extraReducers: builder =>
     builder
-      .addCase(getAllPriceListsThunk.fulfilled, (s, a) => {
+      .addCase(thunks.getAllPriceListsThunk.fulfilled, (s, a) => {
         s.isLoading = false;
         const inputArr = a?.payload?.data && Array.isArray(a?.payload?.data) ? a?.payload?.data : [];
 
@@ -39,26 +36,40 @@ export const priceManagementSlice = createSlice({
         }
         s.lists = [...inputArr, ...s.lists];
       })
-      .addCase(createPriceListThunk.fulfilled, (s, a) => {
+      .addCase(thunks.createPriceListThunk.fulfilled, (s, a) => {
         s.isLoading = false;
         if (a.payload) {
           s.lists = [a.payload, ...s.lists];
         }
       })
-      .addCase(refreshPriceListByIdThunk.fulfilled, (s, { payload: p }) => {
-        const idx = s.lists.findIndex(l => l._id === p?._id);
-        if (idx >= 0 && p) {
-          s.lists.splice(idx, 1, p);
-          console.log('refreshPriceListById action', `idx-${idx}`, s.lists);
+      .addCase(thunks.refreshPriceListByIdThunk.fulfilled, (s, a) => {
+        const idx = s.lists.findIndex(l => l._id === a.payload?._id);
+        if (idx >= 0 && a.payload) {
+          s.lists.splice(idx, 1, a.payload);
         }
       })
-      .addCase(updatePriceListByIdThunk.fulfilled, (s, p) => {
+      .addCase(thunks.updatePriceListByIdThunk.fulfilled, (s, a) => {
         const idx = s.lists.findIndex(l => l._id === 'p?._id');
-        if (idx >= 0 && p.payload) {
-          s.lists.splice(idx, 1, p.payload);
+        if (idx >= 0 && a.payload) {
+          s.lists.splice(idx, 1, a.payload);
           console.log('updateList action', `idx-${idx}`, s.lists);
         }
       })
+      .addCase(thunks.getPriceListByIdThunk.fulfilled, (s, a) => {
+        s.current = a.payload;
+      })
+      .addCase(thunks.addPriceToListThunk.fulfilled, (s, a) => {
+        s.current = a.payload;
+
+        const idx = s.lists.findIndex(l => l._id === 'p?._id');
+        if (idx >= 0 && a.payload) {
+          s.lists.splice(idx, 1, a.payload);
+          console.log('updateList action', `idx-${idx}`, s.lists);
+        }
+      })
+      .addCase(thunks.deletePriceFromListThunk.fulfilled, (s, a) => {})
+      .addCase(thunks.updatePriceInListThunk.fulfilled, (s, a) => {})
+
       .addMatcher(inPending, s => {
         s.isLoading = true;
         s.error = null;

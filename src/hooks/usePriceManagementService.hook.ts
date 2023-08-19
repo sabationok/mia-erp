@@ -18,7 +18,7 @@ export interface PriceManagementService {
   createList: ServiceDispatcherAsync<IPriceListReqData, IPriceList>;
   deleteById?: ServiceApiCaller<string, IPriceList>; // !!!!! ===>>> ServiceDispatcher
   updateById?: ServiceApiCaller<IPriceListReqData, IPriceList>; // !!!!! ===>>> ServiceDispatcher
-  getById: ServiceApiCaller<OnlyUUID, IPriceList>;
+  getById: ServiceDispatcherAsync<{ list: OnlyUUID; query?: AppQueryParams }, IPriceList>;
   getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IPriceList[]>;
   refreshListById: ServiceDispatcherAsync<OnlyUUID, IPriceList>;
   getAllPricesByProductId: ServiceApiCaller<{ productId?: OnlyUUID }, IPriceListItem[]>;
@@ -38,7 +38,7 @@ const usePriceManagementService = (): PriceManagementService => {
     return {
       createList: async arg => dispatch(thunks.createPriceListThunk(defaultThunkPayload(arg))),
       getAll: async arg => dispatch(thunks.getAllPriceListsThunk(defaultThunkPayload(arg))),
-      getById: async arg => createApiCall(defaultApiCallPayload(arg), getPriceListById, PriceManagementApi),
+      getById: async arg => dispatch(thunks.getPriceListByIdThunk(defaultThunkPayload(arg))),
       refreshListById: async arg => dispatch(thunks.refreshPriceListByIdThunk(defaultThunkPayload(arg))),
       addItemToList: async arg => dispatch(thunks.addPriceToListThunk(defaultThunkPayload(arg))),
 

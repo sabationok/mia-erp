@@ -12,6 +12,7 @@ import { ISortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
 import TableList from '../TableList/TableList';
 import { priceListContentColumns } from '../../data';
+import { usePriceListsSelector } from '../../redux/selectors.store';
 
 export interface PagePriceListOverviewProps {
   path: PagePathType;
@@ -19,15 +20,17 @@ export interface PagePriceListOverviewProps {
 const PagePriceListOverview: React.FC<PagePriceListOverviewProps> = ({ path }) => {
   const listId = useAppParams()?.priceListId;
   const actionsCreator = usePriceListOverviewActionsCreator(listId);
-  const { priceManagement } = useAppServiceProvider();
-  const [tableData, setTableData] = useState<IPriceListItem[]>([]);
+  const {
+    priceManagement: { getById },
+  } = useAppServiceProvider();
+  const list = usePriceListsSelector()?.current;
   const [isLoading, setIsLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   const tableConfig = useMemo(
     (): ITableListProps<IPriceListItem> => ({
-      tableData: tableData,
+      tableData: list?.prices,
       isFilter: false,
       isSearch: true,
       footer: false,
@@ -40,11 +43,11 @@ const PagePriceListOverview: React.FC<PagePriceListOverviewProps> = ({ path }) =
         setSortParams({ dataPath: param.dataPath, sortOrder });
       },
     }),
-    [actionsCreator, tableData]
+    [actionsCreator, list?.prices]
   );
   useEffect(() => {
-    console.log(tableData);
-  }, [tableData]);
+    list && console.log(list);
+  }, [list]);
   // const onValidSubmit = (data: IPriceList) => {
   //   onSubmit &&
   //     data.prices &&
@@ -58,13 +61,13 @@ const PagePriceListOverview: React.FC<PagePriceListOverviewProps> = ({ path }) =
 
   useEffect(() => {
     if (listId) {
-      priceManagement.getAllPricesByListId({
-        data: { listId: { _id: listId } },
-        onSuccess: setTableData,
+      getById({
+        data: { list: { _id: listId } },
         onLoading: setIsLoading,
       });
     }
-  }, [listId, priceManagement]);
+  }, [listId, getById]);
+
   return (
     <AppGridPage path={path}>
       <Page>

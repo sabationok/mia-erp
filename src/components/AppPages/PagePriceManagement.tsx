@@ -51,7 +51,7 @@ const PagePriceManagement: React.FC<any> = (props: Props) => {
         }).then();
       },
     }),
-    [actionsCreator, filterParams, getAll, sortParams, state.lists]
+    [actionsCreator, filterParams, getAll, navigate, sortParams, state.lists]
   );
 
   useEffect(() => {
