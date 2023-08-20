@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import FlexBox from '../../atoms/FlexBox';
+import FlexBox, { FlexBoxProps } from '../../atoms/FlexBox';
 import styled from 'styled-components';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import { isUndefined } from 'lodash';
 
 export interface FormAccordeonItemProps {
   children?: React.ReactNode;
@@ -10,6 +11,9 @@ export interface FormAccordeonItemProps {
   renderHeader?: React.ReactNode;
   toggled?: boolean;
   open?: boolean;
+  disabled?: boolean;
+  contentContainerStyle?: FlexBoxProps;
+  activeBackgroundColor?: string;
 }
 
 const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
@@ -18,39 +22,48 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
   renderHeader = 'Інформація',
   toggled = true,
   open = false,
+  disabled,
+  contentContainerStyle,
+  activeBackgroundColor = 'rgba(220, 220, 220, 1)',
 }) => {
-  const [isOpen, setIsOpen] = useState(open);
-
+  const [isOpen, setIsOpen] = useState(!!disabled || open);
   function handleToggleOpen() {
     if (!toggled) return;
-    setIsOpen(!isOpen);
+    setIsOpen(prev => !prev);
   }
+
+  useEffect(() => {
+    if (!isUndefined(disabled) && disabled) {
+      setIsOpen(false);
+    }
+  }, [disabled]);
 
   return (
     <Container style={{ maxHeight: isOpen ? '100%' : maxHeight }}>
       <StButton
-        icon={!isOpen ? 'SmallArrowDown' : 'SmallArrowUp'}
+        icon={toggled ? (!isOpen ? 'SmallArrowDown' : 'SmallArrowRight') : undefined}
         iconSize={'24px'}
         variant={'def'}
         onClick={handleToggleOpen}
-        disabled={!children && true}
+        disabled={!toggled || disabled || !children}
+        isOpen={isOpen}
+        activeBackgroundColor={activeBackgroundColor}
       >
         {renderHeader}
       </StButton>
-
-      <ContentBox>
-        <Content>{children}</Content>
+      <ContentBox padding={'0 8px'} {...contentContainerStyle}>
+        {children}
       </ContentBox>
     </Container>
   );
 };
 
 const Container = styled(FlexBox)`
-  display: grid;
+  display: flex;
   grid-template-columns: 1fr;
   //grid-template-rows: repeat(10, 200px);
 
-  position: relative;
+  //position: relative;
   min-height: 32px;
   //height: max-content;
   max-height: 32px;
@@ -61,40 +74,15 @@ const Container = styled(FlexBox)`
   &:last-child {
     border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
   }
-
-  .isOpenItem {
-    overflow: visible;
-    max-height: 100%;
-
-    & .btn {
-      background-color: rgba(254, 254, 254, 0.5);
-    }
-
-    & .icon {
-      transform: rotate(0deg);
-    }
-
-    & .contentBox {
-      // max-height: 100%;
-    }
-  }
 `;
+
 const ContentBox = styled(FlexBox)`
-  position: relative;
-  // max-height: 0px;
-  //overflow: hidden;
   height: max-content;
 
   transition: all ${({ theme }) => theme.globals.timingFnMain};
 `;
-const Content = styled(FlexBox)`
-  //max-height: 100%;
-  height: max-content;
-  max-width: 100%;
-  //overflow: hidden;
-`;
 
-const StButton = styled(ButtonIcon)`
+const StButton = styled(ButtonIcon)<{ isOpen?: boolean; activeBackgroundColor?: string }>`
   justify-content: flex-start;
 
   padding: 0 8px;
@@ -112,6 +100,7 @@ const StButton = styled(ButtonIcon)`
 
   fill: ${({ theme }) => theme.accentColor.base};
   border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
+  background-color: ${({ theme, isOpen }) => (isOpen ? theme.fieldBackgroundColor : theme.modalBackgroundColor)};
 `;
 
 export default FormAccordeonItem;

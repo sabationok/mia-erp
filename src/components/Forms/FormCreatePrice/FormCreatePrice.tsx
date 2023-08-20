@@ -1,18 +1,18 @@
-import ModalForm, { ModalFormProps } from '../ModalForm';
-import FlexBox from '../atoms/FlexBox';
-import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
-import { OnlyUUID } from '../../redux/global.types';
-import { UseAppFormAfterSubmitOptions } from '../../hooks/useAppForm.hook';
-import { useAppForm } from '../../hooks';
-import FormProductSelector from './components/FormProductSelector';
-import InputLabel from '../atoms/Inputs/InputLabel';
-import InputText from '../atoms/Inputs/InputText';
+import ModalForm, { ModalFormProps } from '../../ModalForm';
+import FlexBox from '../../atoms/FlexBox';
+import { IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
+import { OnlyUUID } from '../../../redux/global.types';
+import { UseAppFormAfterSubmitOptions } from '../../../hooks/useAppForm.hook';
+import { useAppForm } from '../../../hooks';
+import FormProductSelectorForPricing from './FormProductSelectorForPricing';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import InputText from '../../atoms/Inputs/InputText';
 import * as _ from 'lodash';
 import { useCallback, useEffect } from 'react';
-import { IProduct, IStorageItem } from '../../redux/products/products.types';
+import { IProduct } from '../../../redux/products/products.types';
 // import * as yup from 'yup';
-import { usePriceListsSelector } from '../../redux/selectors.store';
-import CustomSelect from '../atoms/Inputs/CustomSelect';
+import { usePriceListsSelector } from '../../../redux/selectors.store';
+import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 
 // const validation = yup.object().shape({
 //   cost: yup.number(),
@@ -22,7 +22,7 @@ import CustomSelect from '../atoms/Inputs/CustomSelect';
 export interface FormCreatePriceProps
   extends Omit<ModalFormProps<any, any, IPriceListItem>, 'onSubmit' | 'afterSubmit'> {
   list?: OnlyUUID;
-  product?: IProduct | IStorageItem;
+  product?: IProduct;
   onSubmit: (
     data: {
       data: IPriceListItem | IPriceListItem[];
@@ -90,7 +90,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, product
       {...props}
     >
       <FlexBox padding={'8px 16px 16px'}>
-        <FormProductSelector
+        <FormProductSelectorForPricing
           selected={formValues.product}
           disabled={!list?._id}
           title={'Select product for pricing'}

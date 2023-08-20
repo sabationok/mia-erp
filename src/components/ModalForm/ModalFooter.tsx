@@ -4,7 +4,7 @@ import FlexBox from '../atoms/FlexBox';
 
 export interface IModalFooterProps {
   onSubmitPassed?: boolean;
-  extraFooter?: JSX.Element;
+  extraFooter?: React.ReactNode;
   isValid?: boolean;
 }
 

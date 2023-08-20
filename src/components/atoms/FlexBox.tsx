@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { Property } from 'csstype';
 
-interface FlexBoxBaseProps {
+export interface FlexBoxBaseProps {
   fxDirection?: Property.FlexDirection;
   alignItems?: Property.AlignItems;
   justifyContent?: Property.JustifyContent;
@@ -24,7 +24,7 @@ interface FlexBoxBaseProps {
   overflow?: Property.Overflow;
 }
 
-interface FlexBoxProps extends FlexBoxBaseProps {
+export interface FlexBoxProps extends FlexBoxBaseProps {
   xsStyles?: FlexBoxBaseProps;
   xlStyles?: FlexBoxBaseProps;
 }
@@ -88,6 +88,7 @@ const FlexBox = styled.div<FlexBoxProps>`
   border: ${({ border = 'none' }) => border};
   gap: ${({ gap = 0 }) => gap}px;
   padding: ${({ padding = 0 }) => padding};
+  margin: ${({ margin = 0 }) => margin};
   align-self: ${({ alignSelf = 'none' }) => alignSelf};
   max-width: ${({ maxWidth = null }) => (maxWidth ? maxWidth : 'none')};
   max-height: ${({ maxHeight = null }) => (maxHeight ? maxHeight : 'none')};
@@ -123,6 +124,8 @@ export const FieldBox = styled(FlexBox)`
 
   background: ${({ theme }) => theme.field.backgroundColor};
   border-radius: 2px;
+
+  cursor: default;
 
   &:hover {
     background: ${({ theme }) => theme.field.backgroundColorHover};

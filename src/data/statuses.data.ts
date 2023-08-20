@@ -1,4 +1,5 @@
 import { iconId } from '../img/sprite/iconId.data';
+import translate from '../lang';
 
 export const statusName = {
   approved: 'Узгоджено',
@@ -103,8 +104,6 @@ export interface StatusData {
   description?: string;
 }
 
-export type StatusNames = keyof typeof statusDataMap;
-
 export const statusDataMap = {
   noStatus: {
     name: 'NO_STATUS',
@@ -145,19 +144,39 @@ export const statusDataMap = {
   INCOME: {
     name: 'INCOME',
     color: colors.clrSuccess,
-    label: 'Дохід',
+    label: 'ДОХІД',
     backgroundColor: colors.clrSuccess,
   } as StatusData,
   EXPENSE: {
     name: 'EXPENSE',
     color: colors.clrError,
-    label: 'Витрата',
+    label: 'ДОХІД',
     backgroundColor: colors.clrError,
   } as StatusData,
   TRANSFER: {
     name: 'TRANSFER',
     color: colors.clrInfo,
-    label: 'Переказ',
+    label: 'ПЕРЕКАЗ',
     backgroundColor: colors.clrInfo,
   } as StatusData,
+  pending: {
+    name: 'pending',
+    label: translate('pending'),
+    color: colors.clrLight,
+    backgroundColor: colors.clrInfo,
+  },
+  fulfilled: {
+    name: 'fulfilled',
+    label: translate('fulfilled'),
+    color: colors.clrLight,
+    backgroundColor: colors.clrSuccess,
+  },
+  rejected: {
+    name: 'rejected',
+    label: translate('rejected'),
+    color: colors.clrLight,
+    backgroundColor: colors.clrError,
+  },
 };
+
+export type StatusNames = keyof typeof statusDataMap;

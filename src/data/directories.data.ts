@@ -21,33 +21,24 @@ import { toast } from 'react-toastify';
 import DirTableComp, { DirTableCompProps } from '../components/Directories/DirTableComp';
 import FormCreateContractor from '../components/Forms/FormCreateContractor';
 import { createDataForReq } from '../utils/dataTransform';
-import { StorageItemFilterOption } from '../redux/products/products.types';
+import { ProductFilterOpt, ProductTypeEnum } from '../redux/products/products.types';
 import { ModalChildrenProps, Modals } from '../components/ModalProvider/Modals';
 import { FilterOpt } from '../components/ModalForm/ModalFilter';
-import { enumToArray } from '../utils';
 import { ContractorsTypesEnum } from '../redux/contractors/contractors.types';
+import { BusinessSubjectFilterOption, BusinessSubjectTypeEnum } from '../redux/companies/companies.types';
+import { enumToFilterOptions } from '../utils/fabrics';
+import { CountsTypesEnum } from '../redux/directories/counts.types';
+import { CategoryTrTypeEnum } from '../redux/directories/directories.types';
 
-export const categoriesFilterOptions: CategoryFilterOpt[] = [
-  { label: t('INCOMES'), value: 'INCOME' },
-  { label: t('TRANSFERS'), value: 'TRANSFER' },
-  { label: t('EXPENSES'), value: 'EXPENSE' },
-];
-export const countsFilterOptions: CountFilterOpt[] = [
-  { label: t('ACTIVES'), value: 'ACTIVE' },
-  { label: t('PASSIVES'), value: 'PASSIVE' },
-];
-export const StorageItemTypeFilterOptions: StorageItemFilterOption[] = [
-  { label: 'GOODS', value: 'GOODS' },
-  { label: 'SERVICE', value: 'SERVICE' },
-];
-export const tagsFilterOptions: FilterOpt<ContractorsTypesEnum>[] = enumToArray(ContractorsTypesEnum).map(el => ({
-  label: t(ContractorsTypesEnum[el]),
-  value: el,
-}));
-export const ContractorFilterOptions: FilterOpt<ContractorsTypesEnum>[] = enumToArray(ContractorsTypesEnum).map(el => ({
-  label: t(ContractorsTypesEnum[el]),
-  value: el,
-}));
+export const categoriesFilterOptions: CategoryFilterOpt[] = enumToFilterOptions(CategoryTrTypeEnum);
+export const countsFilterOptions: CountFilterOpt[] = enumToFilterOptions(CountsTypesEnum);
+export const StorageItemTypeFilterOptions: ProductFilterOpt[] = enumToFilterOptions(ProductTypeEnum);
+
+export const tagsFilterOptions = enumToFilterOptions(ContractorsTypesEnum);
+
+export const counterpartyFilterOptions: FilterOpt<ContractorsTypesEnum>[] = enumToFilterOptions(ContractorsTypesEnum);
+export const businessSubjectTypeFilterOptions: BusinessSubjectFilterOption[] =
+  enumToFilterOptions(BusinessSubjectTypeEnum);
 export const getDirInTreeActionsCreator =
   (
     Modal: Modals = Modals.FormCreateDirTreeComp,
@@ -148,6 +139,7 @@ const CountsProps: DirCountsProps = {
   fillHeight: true,
   createParentTitle: t('createParentCount'),
   dirType: ApiDirType.COUNTS,
+  availableLevels: 2,
   filterSearchPath: 'type',
   filterDefaultValue: 'ACTIVE',
   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCount),
@@ -167,6 +159,8 @@ const CategoriesProps: DirCategoriesProps = {
   fillHeight: true,
   createParentTitle: t('createParentCategory'),
   dirType: ApiDirType.CATEGORIES_TR,
+  availableLevels: 2,
+
   filterSearchPath: 'type',
   filterDefaultValue: 'INCOME',
   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCategory),
@@ -187,7 +181,7 @@ const ProductCategoriesProps: DirProductCategoriesProps = {
   filterOptions: StorageItemTypeFilterOptions,
   filterSearchPath: 'type',
   filterDefaultValue: 'GOODS',
-  availableLevels: 2,
+  availableLevels: 5,
 };
 const prodCategoriesDir: IDirectory<DirProductCategoriesProps> = {
   title: ProductCategoriesProps.title,
@@ -201,7 +195,7 @@ const ContractorsProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
   title: t('contractors'),
   fillHeight: true,
   dirType: ApiDirType.CONTRACTORS,
-  filterOptions: ContractorFilterOptions,
+  filterOptions: counterpartyFilterOptions,
   getTableSettings: ({ service, modalService, type, dirType }) => ({
     tableTitles: contractorsColumns,
     tableSearchParams: contractorsSearchParams,
@@ -296,7 +290,6 @@ const activitiesProps: DirActivitiesProps = {
   createParentTitle: t('createDirParentItem'),
   dirType: ApiDirType.ACTIVITIES,
   fillHeight: true,
-  availableLevels: 2,
   actionsCreator: getDirInTreeActionsCreator(),
 };
 const activitiesDir: IDirectory<DirActivitiesProps> = {
@@ -321,6 +314,21 @@ const brandsDir: IDirectory<DirBrandsProps> = {
   modalChildrenProps: brandsProps,
   disabled: false,
 };
+// const warehousesProps: DirWarehousesProps = {
+//   title: t(ApiDirType.WAREHOUSES),
+//   createParentTitle: 'Create warehouse',
+//   dirType: ApiDirType.WAREHOUSES,
+//   fillHeight: true,
+//   availableLevels: 1,
+//   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateDirTreeComp, 'Create warehouse'),
+// };
+// const warehousesDir: IDirectory<DirWarehousesProps> = {
+//   title: warehousesProps.title,
+//   iconId: iconId.storage,
+//   ModalChildren: DirTreeComp,
+//   modalChildrenProps: warehousesProps,
+//   disabled: false,
+// };
 
 const directories: Partial<IDirectory>[] = [
   {
@@ -395,13 +403,7 @@ const directories: Partial<IDirectory>[] = [
     title: 'Каси',
     disabled: true,
   },
-  {
-    title: 'Склади',
-    disabled: true,
-    modalChildrenProps: {
-      dirType: ApiDirType.WAREHOUSES,
-    },
-  },
+
   {
     title: 'Працівники',
     disabled: true,

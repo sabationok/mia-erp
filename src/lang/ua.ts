@@ -1,5 +1,6 @@
-import { ApiDirType } from '../redux/APP_CONFIGS';
+import { ApiDirType, AppPagesEnum } from '../redux/APP_CONFIGS';
 import { ContractorsTypesEnum } from '../redux/contractors/contractors.types';
+import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../redux/companies/companies.types';
 
 export const langUa = {
   // DIRECTORIES
@@ -8,20 +9,48 @@ export const langUa = {
   [ApiDirType.CATEGORIES_PROD]: 'Категорії',
   [ApiDirType.BRANDS]: 'Бренди',
   [ApiDirType.TAGS]: 'Теги',
+  [ApiDirType.WAREHOUSES]: 'Склади',
 
-  [ContractorsTypesEnum.COUNTER]: 'Бухгалтер',
-  [ContractorsTypesEnum.AUDITOR]: 'Аудитор',
+  counter: 'Бухгалтер',
+  auditor: 'Аудитор',
   [ContractorsTypesEnum.SUPPLIER]: 'Постачальник',
   [ContractorsTypesEnum.CUSTOMER]: 'Клієнт',
-  [ContractorsTypesEnum.MANAGER]: 'Менеджер',
-  [ContractorsTypesEnum.FIN_MANAGER]: 'Фінансит',
-  [ContractorsTypesEnum.BRAND_MANAGER]: 'Бренд менеджер',
-  [ContractorsTypesEnum.SUPPLY_MANAGER]: 'Менеджер з постачання',
-  [ContractorsTypesEnum.SALES_MANAGER]: 'Менеджер з продажу',
+  [ContractorsTypesEnum.CONTRACTOR]: 'Підрядник',
+  [ContractorsTypesEnum.SUB_CONTRACTOR]: 'Суб-підрядник',
+  // [ContractorsTypesEnum.BRAND_MANAGER]: 'Бренд менеджер',
+  // [ContractorsTypesEnum.SUPPLY_MANAGER]: 'Менеджер з постачання',
+  // [ContractorsTypesEnum.SALES_MANAGER]: 'Менеджер з продажу',
   [ContractorsTypesEnum.WORKER]: 'Робітник',
   [ContractorsTypesEnum.COMMISSION_AGENT]: 'Комісіонер',
   [ContractorsTypesEnum.CONSIGNOR]: 'Комітент',
   [ContractorsTypesEnum.TRANSPORTER]: 'Перевізник',
+
+  [BusinessSubjectTypeEnum.company]: 'Юридична особа',
+  [BusinessSubjectTypeEnum.entrepreneur]: 'ФОП',
+  [BusinessSubjectTypeEnum.person]: 'Фізична особа',
+
+  [OwnershipTypeEnum.UA_TOV]: 'Товариство з обмеженою відповідальністю (ТОВ)',
+  [OwnershipTypeEnum.UA_CLOSED_JOINT_STOCK_COMPANY]: 'Закрите акціонерне товариство (ЗАТ)',
+  [OwnershipTypeEnum.UA_PUBLIC_JOINT_STOCK_COMPANY]: 'Відкрите акціонерне товариство (ВАТ)',
+  [OwnershipTypeEnum.UA_COOPERATIVE]: 'Кооператив',
+  [OwnershipTypeEnum.UA_SOLE_PROPRIETORSHIP]: 'Індивідуальне підприємство',
+  [OwnershipTypeEnum.UA_STATE_COMPANY]: 'Державна компанія',
+  [OwnershipTypeEnum.UA_JOINT_VENTURE]: 'Спільне підприємство',
+  [OwnershipTypeEnum.UA_BRANCH]: 'Філія',
+  [OwnershipTypeEnum.UA_FRANCHISING_COMPANY]: 'Франчайзингова компанія',
+  [OwnershipTypeEnum.UA_COLLECTIVE_ENTERPRISE]: 'Колективне підприємство',
+
+  [AppPagesEnum.priceLists]: 'Прайс листи',
+  [AppPagesEnum.documentsFlow]: 'Документи',
+  [AppPagesEnum.companies]: 'Компанії',
+  [AppPagesEnum.dashboard]: 'Дашборд',
+  [AppPagesEnum.transactions]: 'Рух коштів',
+  [AppPagesEnum.orders]: 'Замовлення',
+  [AppPagesEnum.refunds]: 'Повернення',
+  [AppPagesEnum.supplement]: 'Постачання',
+  [AppPagesEnum.storage]: 'Склад',
+  [AppPagesEnum.products]: 'Продукти',
+  [AppPagesEnum.manager]: 'Менеджер',
 
   brand: 'Бренд',
   selectBrand: 'Оберіть бренд',
@@ -36,6 +65,7 @@ export const langUa = {
   productCategories: 'Категорії для товарів/послуг',
   productSubCategories: 'Під-категорії для товарів',
   subCategory: 'Під-категорія',
+  parentCategory: 'Батьківська категорія',
   subCategories: 'Під-категорії',
   contractor: 'Контрагент',
   contractors: 'Контрагенти',
@@ -53,6 +83,13 @@ export const langUa = {
   documents: 'Документи',
   status: 'Статус',
 
+  code: 'Код',
+  barCode: 'Штрих-код',
+  qrCode: 'QR-Code',
+  innerCode: 'Внутрішній код',
+  insertCode: 'Впишіть код',
+  variation: 'Варіація',
+
   closeAfterSave: 'Закрити після збереження',
   clearAfterSave: 'Очистити після збереження',
 
@@ -61,7 +98,8 @@ export const langUa = {
   subCountIn: 'Суб-рахунок IN',
   countOut: 'Рахунок OUT',
   subCountOut: 'Суб-рахунок OUT',
-
+  ownership: 'Форма власності',
+  businessSubjectType: "Тип суб'єкта господарювання",
   name: "Ім'я",
   insertName: "Введіть ім'я",
   type: 'Тип',
@@ -118,7 +156,8 @@ export const langUa = {
   archive: 'Архівувати',
   unArchive: 'Відновити',
 
-  taxCode: 'ІПН/ЄДРПОУ',
+  taxCode: 'ЄДРПОУ',
+  personalTaxCode: 'ІПН',
 
   INCOME: 'Дохід',
   INCOMES: 'Доходи',
@@ -164,14 +203,4 @@ export const langUa = {
   sku: 'Артикул | SKU',
   sizesTable: 'Розмірна сітка',
   visibility: 'Видимість',
-
-  companies: 'Компанії',
-  dashboard: 'Дашборд',
-  transactions: 'Рух коштів',
-  orders: 'Замовлення',
-  refunds: 'Повернення',
-  supplement: 'Постачання',
-  storage: 'Склад',
-  products: 'Продукти',
-  manager: 'Менеджер',
 };

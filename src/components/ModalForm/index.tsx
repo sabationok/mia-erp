@@ -11,7 +11,7 @@ export interface ModalFormBaseProps<T = any>
   onSubmit?: (ev: FormEvent<HTMLFormElement>) => void;
   onReset?: (args?: any) => void;
   footer?: boolean;
-  defaultState?: T;
+  defaultState?: Partial<T>;
   beforeSubmit?: () => void;
   afterSubmit?: () => void;
   beforeClose?: () => void;
@@ -22,11 +22,14 @@ export interface ModalFormBaseProps<T = any>
 
 export interface ModalFormAddsProps {
   footer?: boolean;
-  extraFooter?: JSX.Element;
+  extraFooter?: React.ReactNode;
+  extraHeader?: React.ReactNode;
   fillWidth?: boolean;
   fillHeight?: boolean;
   fitContentV?: boolean;
   fitContentH?: boolean;
+  height?: string;
+  width?: string;
 }
 
 export type ModalFormProps<V = any, D = any, DataType = any> = ModalFormBaseProps<DataType> &
@@ -48,6 +51,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
   closeAfterSubmit,
   defaultOption,
   extraFooter,
+  extraHeader,
   isValid = true,
   ...props
 }) => {
@@ -85,6 +89,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
             defaultOption={defaultOption}
           />
         )}
+        {extraHeader}
       </ModalHeader>
 
       <ModalMain className="main" filterOn={!!filterOptions}>
@@ -97,7 +102,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
 };
 
 const ModalFormContainer = styled.form<
-  Pick<ModalFormAddsProps, 'fillHeight' | 'fillWidth' | 'fitContentH' | 'fitContentV'>
+  Pick<ModalFormAddsProps, 'fillHeight' | 'fillWidth' | 'fitContentH' | 'fitContentV' | 'width' | 'height'>
 >`
   display: grid;
   grid-template-columns: 1fr;
@@ -107,11 +112,14 @@ const ModalFormContainer = styled.form<
 
   min-height: 200px;
   max-height: 100%;
+
+  width: ${({ width = '480px', fillWidth, fitContentH }) =>
+    (fillWidth && '100vw') || (fitContentH && 'max-content') || width};
+  height: ${({ height = '', fillHeight, fitContentV }) =>
+    (fillHeight && '100vh') || (fitContentV && 'max-content') || height};
+
   min-width: 250px;
   max-width: 100%;
-
-  width: ${({ fillWidth, fitContentH }) => (fillWidth && '100vw') || (fitContentH && 'max-content') || ''};
-  height: ${({ fillHeight, fitContentV }) => (fillHeight && '100vh') || (fitContentV && 'max-content') || ''};
 
   //overflow: hidden;
 

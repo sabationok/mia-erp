@@ -1,17 +1,36 @@
 // type EndpointCreator = (...args: any[]) => string;
+export enum AppPagesEnum {
+  companies = 'companies',
+  transactions = 'transactions',
+  orders = 'orders',
+  refunds = 'refunds',
+  supplement = 'supplement',
+  products = 'products',
+  dashboard = 'dashboard',
+  storage = 'storage',
+  manager = 'manager',
+  admin = 'admin',
+  warehouses = 'warehouses',
+  notFound = 'notFound',
+  documentsFlow = 'documentsFlow',
+  priceLists = 'priceLists',
+  director = 'director',
+}
 
+export type PagePathType = keyof typeof AppPagesEnum | AppPagesEnum;
 export enum API_BASE_ROUTES {
   APP = 'APP',
   AUTH = '/auth',
   PERMISSIONS = '/permissions',
   COMPANIES = '/companies',
   DIRECTORIES = '/directories',
-  TRANSACTIONS = '/transactions',
+  TRANSACTIONS = `/transactions`,
   CUSTOM_ROLES = '/roles',
   PRODUCTS = '/products',
   ORDERS = '/orders',
   REFUNDS = '/refunds',
   PRICE_MANAGEMENT = '/priceManagement',
+  WAREHOUSES = '/warehouses',
 }
 
 export enum Endpoints {
@@ -45,6 +64,7 @@ export enum Endpoints {
 
   getAllOrderSlots = 'getAllOrderSlots',
   addSlotToOrder = 'addSlotToOrder',
+  getDataForNewOrderSlot = 'getDataForNewOrderSlot',
   removeSlotFromOrder = 'removeSlotFromOrder',
   softDeleteOrderSlot = 'softDeleteOrderSlot',
   addItemToOrderSlot = 'addItemToOrderSlot',
@@ -80,9 +100,10 @@ export enum ApiDirType {
   METHODS_PAYMENT = 'methods_payment',
   METHODS_SHIPMENT = 'methods_shipment',
   METHODS_COMMUNICATION = 'methods_communication',
+  SOURCE_ATTRACTION = 'attractionSource',
   COLLECTION = 'collection',
   COLLECTIONS = 'collections',
-
+  UNSET = 'unset',
   DEFAULT = 'DEFAULT',
 }
 
@@ -193,10 +214,21 @@ const ordersEndpoints: ApiEndpointsMap = {
     `${API_BASE_ROUTES.ORDERS}/${Endpoints.updateListItem}/${listId}/${priceId}`,
   [Endpoints.updateById]: (orderId: string) => `${API_BASE_ROUTES.ORDERS}/${Endpoints.updateById}/${orderId}`,
   [Endpoints.getAllOrderSlots]: () => `${API_BASE_ROUTES.ORDERS}/${Endpoints.getAllOrderSlots}`,
+  [Endpoints.getDataForNewOrderSlot]: (productId: string) =>
+    `${API_BASE_ROUTES.ORDERS}/${[Endpoints.getDataForNewOrderSlot]}/${productId}`,
+};
+
+const warehousesEndpoints = {
+  [Endpoints.getAll]: () => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.getAll}`,
+  [Endpoints.getById]: (id: string) => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.getById}/${id}`,
+  [Endpoints.create]: () => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.create}`,
+  [Endpoints.updateById]: (id: string) => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.updateById}/${id}`,
+  [Endpoints.deleteById]: (id: string) => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.deleteById}/${id}`,
 };
 
 const APP_CONFIGS = {
   endpoints: {
+    appSettings,
     permissions: permissionsApiEndpoints,
     companies: companiesApiEndpoints,
     auth: authApiEndpoints,
@@ -204,9 +236,9 @@ const APP_CONFIGS = {
     customRoles: customRoles,
     transactions: transactionsApiEndpoints,
     products: productsApiEndpoints,
+    warehousesEndpoints,
     priceManagementEndpoints,
     ordersEndpoints,
-    appSettings,
   },
 };
 

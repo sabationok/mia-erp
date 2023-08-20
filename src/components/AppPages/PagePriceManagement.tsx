@@ -12,6 +12,7 @@ import { PagePathType } from '../../data/pages.data';
 import usePriceManagementServiceHook from '../../hooks/usePriceManagementService.hook';
 import usePriceManagementActionsCreatorHook from '../../hooks/usePriceManagementActionsCreator.hook';
 import { IPriceList } from '../../redux/priceManagement/priceManagement.types';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   path: PagePathType;
@@ -19,6 +20,7 @@ type Props = {
 const PagePriceManagement: React.FC<any> = (props: Props) => {
   const service = usePriceManagementServiceHook();
   const state = usePriceListsSelector();
+  const navigate = useNavigate();
   const { getAll } = service;
   const actionsCreator = usePriceManagementActionsCreatorHook(service);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,6 +36,9 @@ const PagePriceManagement: React.FC<any> = (props: Props) => {
       footer: false,
       checkBoxes: true,
       actionsCreator,
+      onRowClick: ev => {
+        ev?._id && navigate(`${ev?._id}`);
+      },
       onFilterSubmit: filterParams => {
         setFilterParams(filterParams);
         getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading }).then();
@@ -46,7 +51,7 @@ const PagePriceManagement: React.FC<any> = (props: Props) => {
         }).then();
       },
     }),
-    [actionsCreator, filterParams, getAll, sortParams, state.lists]
+    [actionsCreator, filterParams, getAll, navigate, sortParams, state.lists]
   );
 
   useEffect(() => {
@@ -66,6 +71,7 @@ const PagePriceManagement: React.FC<any> = (props: Props) => {
       }
     }
   }, [filterParams, getAll, sortParams, state.lists.length]);
+
   return (
     <AppGridPage path={props.path}>
       <Page>

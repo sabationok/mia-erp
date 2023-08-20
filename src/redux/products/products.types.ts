@@ -1,71 +1,74 @@
 import { AppResponse, IBase, OnlyUUID } from '../global.types';
 import { CurrencyCode } from '../transactions/transactions.types';
-import { IBaseDirItem } from '../../components/Directories/dir.types';
-import { ContractorsTypesEnum } from '../contractors/contractors.types';
-import { ApiDirType } from '../APP_CONFIGS';
+import { IProductCategoryDirItem } from '../../components/Directories/dir.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
+import { ICompany } from '../companies/companies.types';
+import { IProductInventory, IWarehouse } from '../warehouses/warehouses.types';
+import { IBrand } from '../directories/brands.types';
+import { IUser } from '../auth/auth.types';
 
-export type StorageItemStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
+export type ProductStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
 export enum StorageItemTypeEnum {
   SERVICE = 'SERVICE',
   GOODS = 'GOODS',
 }
-
-export type StorageItemType = keyof typeof StorageItemTypeEnum;
-
-export type StorageItemFilterOption = FilterOpt<StorageItemType>;
-export type ProductFilterOpt = StorageItemFilterOption;
-
-export enum StorageItemPriceTypeEnum {
-  DEFAULT = 'DEFAULT',
-  COMMISSION = 'COMMISSION',
-  COMMISSION_FIX = 'COMMISSION_FIX',
+export enum ProductTypeEnum {
+  SERVICE = 'SERVICE',
+  GOODS = 'GOODS',
+  SET = 'SET',
 }
 
-export type StorageItemPriceType = 'COMMISSION' | 'DEFAULT' | 'COMMISSION_FIX';
+export type ProductFilterOpt = FilterOpt<ProductTypeEnum>;
 
 export interface IStorageItemBase extends IBase {
-  price?: number;
-  priceType?: StorageItemPriceType;
-  type?: StorageItemType;
-  currency?: CurrencyCode;
-  status?: StorageItemStatus;
+  author?: IUser;
+  editor?: IUser;
+
+  type?: ProductTypeEnum;
+  status?: ProductStatus;
+  approvedStatus?: ProductStatus;
   archived?: boolean;
   visible?: boolean;
   description?: string;
   tags?: string[];
-  isService?: boolean;
 }
 
 export interface IStorageItem extends IStorageItemBase {
   label: string;
   sku?: string;
-
-  category?: IBaseDirItem<any, ApiDirType.CATEGORIES_PROD>;
-  subCategory?: IBaseDirItem<any, ApiDirType.CATEGORIES_PROD>;
-
-  brand?: IBaseDirItem<any, ApiDirType.BRANDS>;
-  supplier?: IBaseDirItem<ContractorsTypesEnum, ApiDirType.CONTRACTORS>;
-  contractor?: IBaseDirItem<ContractorsTypesEnum, ApiDirType.CONTRACTORS>;
-  storages?: IBaseDirItem<any, ApiDirType.STORAGES>;
-
   barCode?: string;
   qrCode?: string;
+
+  owner?: ICompany;
+
+  category?: IProductCategoryDirItem;
+  subCategory?: IProductCategoryDirItem;
+
+  brand?: IBrand;
+  // supplier?: IContractor;
+  // contractor?: IContractor;
+  warehouses?: IWarehouse;
+
   unitsOfMeasurement?: string;
 
   prices?: IPriceListItem[];
+  productInventory?: IProductInventory;
 
   images?: ProductImage[];
 }
 
 export type ProductImage = { img_preview?: string; img_1x: string; img_2x: string; webp: string };
 
-export interface IStorageItemFroReq extends Partial<Record<keyof IStorageItem, any>> {
-  type?: StorageItemType;
+export interface IStorageItemFroReq {
+  type?: ProductTypeEnum;
   currency?: CurrencyCode;
-  status?: StorageItemStatus;
+  status?: ProductStatus;
+
+  category?: OnlyUUID;
+  parentCategory?: OnlyUUID;
+
   tags?: string[];
   supplier?: OnlyUUID;
   brand?: OnlyUUID;

@@ -6,8 +6,11 @@ import { IPage } from 'redux/page/pageSlice';
 import styled from 'styled-components';
 
 import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
-import Text from '../atoms/Text';
-import { useAppPages, useAppParams } from '../../hooks';
+import Text from '../../atoms/Text';
+import { useAppPages, useAppParams, useCloseByEscapeOrClickOnBackdrop } from '../../../hooks';
+import SubNavMenu from './SubNavMenu';
+import FlexBox from '../../atoms/FlexBox';
+import { AppPagesEnum } from '../../../redux/APP_CONFIGS';
 
 const NavMenu: React.FC = () => {
   const { permissionId } = useAppParams();
@@ -15,6 +18,7 @@ const NavMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [activePage, setActivePage] = useState<IPage>(pages[0]);
   const location = useLocation();
+  const [isSubMenuOpen, setIsSubMenuOpen] = useState<Record<string, boolean>>({});
 
   const handleOpenNavMenu = useCallback(() => {
     setIsOpen(!isOpen);
@@ -33,48 +37,65 @@ const NavMenu: React.FC = () => {
     [handleOpenNavMenu]
   );
 
+  // TODO need refactoring
+  const onOpenSubMenuStateChange = useCallback((key: AppPagesEnum) => {
+    setIsSubMenuOpen(prev => ({ ...prev, [key]: !prev[key] }));
+  }, []);
+
   const renderLinks = useMemo(
     () =>
       pages.map(item => {
         return (
-          <StyledNavLink
-            key={item?.path}
-            // to={companyId ? `/${companyId}/${item?.path}` : `/${item.path}`}
-            to={item.path}
-            onClick={() => {
-              onNavLinkClick(item);
-            }}
-          >
-            <SvgIcon iconId={item.iconId} size="18px" style={{ display: 'none' }} />
+          <React.Fragment key={`nav-item-${item.path}`}>
+            <FlexBox fxDirection={'row'}>
+              <StyledNavLink
+                key={item?.path}
+                to={item.path}
+                onClick={() => {
+                  onNavLinkClick(item);
+                }}
+              >
+                <SvgIcon iconId={item.iconId} size="18px" style={{ display: 'none' }} />
 
-            <Text>{item?.title || '---'}</Text>
-          </StyledNavLink>
+                <Text>{item?.title || '---'}</Text>
+              </StyledNavLink>
+
+              {item.subMenuKey && (
+                <ButtonIcon
+                  variant={'onlyIconNoEffects'}
+                  icon={isSubMenuOpen[item.subMenuKey] ? 'SmallArrowDown' : 'SmallArrowLeft'}
+                  size={'32px'}
+                  onClick={() => item.subMenuKey && onOpenSubMenuStateChange(item.subMenuKey)}
+                />
+              )}
+            </FlexBox>
+
+            {item?.subMenuKey && (
+              <FlexBox height={isSubMenuOpen[item.subMenuKey] ? 'max-content' : '0'} overflow={'hidden'}>
+                <SubNavMenu
+                  key={item?.subMenuKey}
+                  subMenuKey={item.subMenuKey}
+                  onActive={key => {
+                    setIsSubMenuOpen(prev => ({ ...prev, [key]: true }));
+                  }}
+                />
+              </FlexBox>
+            )}
+          </React.Fragment>
         );
       }),
-    [onNavLinkClick, pages]
+    [isSubMenuOpen, onNavLinkClick, onOpenSubMenuStateChange, pages]
   );
 
   useEffect(() => {
-    const currentPageData = pages.find(page => page.path === location.pathname);
+    const currentPageData = pages.find(
+      page => page.path === location.pathname || location.pathname.includes(page.path)
+    );
 
     setActivePage(currentPageData || pages[0]);
   }, [location.pathname, pages, permissionId]);
 
-  useEffect(() => {
-    function onMenuClose(ev: MouseEvent | KeyboardEvent) {
-      const { target } = ev;
-      if (target instanceof HTMLElement && !target?.closest('[data-nav-menu]')) setIsOpen(false);
-      if (ev instanceof KeyboardEvent && ev?.code === 'Escape') setIsOpen(false);
-    }
-
-    document.addEventListener('click', onMenuClose);
-    document.addEventListener('keydown', onMenuClose);
-
-    return () => {
-      document.removeEventListener('click', onMenuClose);
-      document.removeEventListener('keydown', onMenuClose);
-    };
-  }, []);
+  useCloseByEscapeOrClickOnBackdrop(setIsOpen, 'data-nav-menu', true);
 
   return (
     <StyledNavMenu data-nav-menu>
@@ -108,8 +129,9 @@ const StyledNavMenu = styled.div`
 
   font-size: 12px;
   font-weight: 600;
+
   @media screen and (min-width: 768px) {
-    min-width: 200px;
+    min-width: 250px;
   }
 `;
 const MenuButton = styled(ButtonIcon)<{ isOpen: boolean }>`
@@ -145,12 +167,25 @@ const NavMenuContainer = styled.div<MenuState>`
   overflow: hidden;
   min-width: 100%;
   max-width: calc(100% + 30px);
+  height: ${({ isOpen }) => (isOpen ? 'calc(100vh - 50px)' : '80vh')};
 
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
-  max-height: ${({ isOpen }) => (isOpen ? '80vh' : '0')};
-  box-shadow: ${({ isOpen, theme }) => (isOpen ? theme.globals.shadowMain : '')};
-  transition: max-height ${({ theme }) => theme.globals.timingFnMain},
-    box-shadow ${({ theme }) => theme.globals.timingFnMain};
+  border-radius: 2px;
+  border: 1px solid ${p => p.theme.modalBorderColor};
+
+  background-color: ${({ theme }) => theme.modalBackgroundColor};
+
+  box-shadow: ${({ isOpen, theme }) =>
+    isOpen ? '0 6px 18px 0px rgba(21, 21, 21, 0.15), 0 6px 18px 0px rgba(211, 211, 211, 0.15)' : ''};
+
+  // box-shadow: ${({ theme }) => theme.globals.shadowSecondary};
+
+  opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
+  pointer-events: ${({ isOpen }) => (isOpen ? 'all' : 'none')};
+  visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
+  transform-origin: top center;
+  //transform: scaleY(${({ isOpen, theme }) => (isOpen ? 1 : 0.8)});
+
+  transition: all ${({ theme }) => theme.globals.timingFnMain};
 `;
 
 const NavList = styled.div`
@@ -160,6 +195,8 @@ const NavList = styled.div`
 
   min-width: 100%;
   max-height: 100%;
+
+  overflow: auto;
 
   padding: 8px 0;
 `;
@@ -218,7 +255,7 @@ const StyledNavLink = styled(NavLink)`
   }
 
   @media screen and (min-width: 768px) {
-    min-height: 24px;
+    min-height: 32px;
     font-size: 12px;
     height: min-content;
   }

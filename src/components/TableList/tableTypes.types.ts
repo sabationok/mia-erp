@@ -11,6 +11,7 @@ export interface SelectItemBase<DPath extends string = any> extends Record<strin
   search?: boolean;
   label?: string;
   name?: string;
+  secondName?: string;
   value?: string | number;
   dataKey?: string;
   sort?: boolean;
@@ -107,4 +108,6 @@ export interface ITableAction<N extends string = any> {
   iconSize?: string;
 }
 
-export type TableActionCreator<TData = any> = (ctx: ITableListContext<TData>) => ITableAction[];
+export type TableActionCreator<TData = any, N extends string = any> = (
+  ctx: ITableListContext<TData>
+) => ITableAction<N>[];

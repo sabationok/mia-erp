@@ -4,7 +4,7 @@ import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import usePriceManagementServiceHook from './usePriceManagementService.hook';
 import { useCallback } from 'react';
 import { OnlyUUID } from '../redux/global.types';
-import FormCreatePrice from '../components/Forms/FormCreatePrice';
+import FormCreatePrice from '../components/Forms/FormCreatePrice/FormCreatePrice';
 import { toast } from 'react-toastify';
 
 export type PriceListOverviewActionsCreatorType = TableActionCreator<IPriceListItem>;

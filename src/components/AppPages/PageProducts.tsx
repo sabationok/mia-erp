@@ -8,8 +8,8 @@ import AppGridPage from './AppGridPage';
 import { useProductsSelector } from '../../redux/selectors.store';
 import { ISortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
-import { IStorageItem } from '../../redux/products/products.types';
-import useStorageServiceHook from '../../hooks/useStorageService.hook';
+import { IProduct } from '../../redux/products/products.types';
+import useStorageServiceHook from '../../hooks/useProductsService.hook';
 import { PagePathType } from '../../data/pages.data';
 import useProductsFilterSelectorsHook from '../../redux/products/useStorageFilterSelectors.hook';
 import useStorageActionsCreator from '../../hooks/useStorageActionsCreator.hook';
@@ -29,7 +29,7 @@ export const useProductsTableSettings = () => {
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   const tableConfig = useMemo(
-    (): ITableListProps<IStorageItem> => ({
+    (): ITableListProps<IProduct> => ({
       tableData: state.products,
       tableTitles: productsColumns,
       tableSortParams: transactionsSearchParams.filter(el => el.sort),
@@ -86,7 +86,7 @@ const PageProducts: React.FC<any> = (props: Props) => {
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   const tableConfig = useMemo(
-    (): ITableListProps<IStorageItem> => ({
+    (): ITableListProps<IProduct> => ({
       tableData: state.products,
       tableTitles: productsColumns,
       tableSortParams: transactionsSearchParams.filter(el => el.sort),

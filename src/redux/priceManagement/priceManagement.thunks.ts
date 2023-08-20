@@ -132,6 +132,27 @@ export const updatePriceListByIdThunk = createAsyncThunk<
     return thunkAPI.rejectWithValue(axiosErrorCheck(e));
   }
 });
+export const getPriceListByIdThunk = createAsyncThunk<
+  IPriceList | undefined,
+  ThunkPayload<{ list: OnlyUUID; query?: AppQueryParams }, IPriceList>
+>('priceLists/getPriceListByIdThunk', async (args, thunkAPI) => {
+  const { data, onLoading, onSuccess, onError } = args;
+
+  onLoading && onLoading(true);
+  try {
+    const res = await PriceManagementApi.getPriceListById(data?.list, data?.query);
+    if (res?.data.data) {
+      onSuccess && onSuccess(res?.data.data);
+    }
+    onLoading && onLoading(false);
+    return res?.data.data;
+  } catch (e) {
+    onLoading && onLoading(false);
+    onError && onError(e);
+    return thunkAPI.rejectWithValue(axiosErrorCheck(e));
+  }
+});
+
 export const addPriceToListThunk = createAsyncThunk<
   IPriceList | undefined,
   ThunkPayload<ICreatePriceListItemReqData, IPriceList>
@@ -162,4 +183,5 @@ export const addPriceToListThunk = createAsyncThunk<
   }
 });
 
-export const addPricesToListThunk = createAsyncThunk('priceLists/addPricesToListThunk', async () => {});
+export const deletePriceFromListThunk = createAsyncThunk('priceLists/deletePriceFromListThunk', async () => {});
+export const updatePriceInListThunk = createAsyncThunk('priceLists/updatePriceInListThunk', async () => {});

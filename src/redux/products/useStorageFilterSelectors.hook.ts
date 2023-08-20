@@ -2,12 +2,6 @@ import { FilterSelectorType } from 'components/Filter/AppFilter';
 import { IProduct } from './products.types';
 
 const useStorageFilterSelectors = (): FilterSelectorType<keyof IProduct>[] => {
-  // const transactionTypes = [
-  //   { _id: 'ds6d5vf6sd5f1v6sd', name: 'INCOME', label: 'ДОХІД' },
-  //   { _id: 'ds6d5vf6sd6f1v61d', name: 'TRANSFER', label: 'ПЕРЕКАЗ' },
-  //   { _id: 'ds6d5vf6dd6f1v68d', name: 'EXPENSE', label: 'ВИТРАТИ' },
-  // ];
-
   return [
     // {
     //   label: 'Рахунок OUT',

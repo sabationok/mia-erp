@@ -2,15 +2,42 @@ import { AppResponse, ContactsDto, IBase, LocationDto } from '../global.types';
 import { IPermission } from '../permissions/permissions.types';
 import { IUser } from '../auth/auth.types';
 import { StateErrorType } from '../reduxTypes.types';
+import { FilterOpt } from '../../components/ModalForm/ModalFilter';
+
+export enum OwnershipTypeEnum {
+  UA_TOV = 'ua_tov',
+  UA_CLOSED_JOINT_STOCK_COMPANY = 'ua_closed_jsc',
+  UA_PUBLIC_JOINT_STOCK_COMPANY = 'ua_public_jsc',
+  UA_COOPERATIVE = 'ua_cooperative',
+  UA_SOLE_PROPRIETORSHIP = 'ua_sole_proprietorship',
+  UA_STATE_COMPANY = 'ua_state_company',
+  UA_JOINT_VENTURE = 'ua_joint_venture',
+  UA_BRANCH = 'ua_branch',
+  UA_FRANCHISING_COMPANY = 'ua_franchising_company',
+  UA_COLLECTIVE_ENTERPRISE = 'ua_collective_enterprise',
+}
+export type OwnershipTypeFilterOption = FilterOpt<OwnershipTypeEnum>;
+export enum BusinessSubjectTypeEnum {
+  company = 'company',
+  entrepreneur = 'entrepreneur',
+  person = 'person',
+}
+export type BusinessSubjectFilterOption = FilterOpt<BusinessSubjectTypeEnum>;
 
 export interface ICompanyConfigs {}
 
 export interface ICompany extends IBase {
   name: string;
+  secondName?: string;
   email: string;
   fullName: string;
+  label?: string;
+  fullLabel?: string;
+  ownershipType?: string;
+  businessSubjectType?: BusinessSubjectTypeEnum;
   phone?: string;
   taxCode?: string;
+  personalTaxCode?: string;
   owner: Pick<IUser, '_id' | 'name' | 'email'>;
   permissions?: Partial<IPermission>[];
   company_token?: string;

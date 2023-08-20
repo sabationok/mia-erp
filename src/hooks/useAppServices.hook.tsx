@@ -1,5 +1,5 @@
 import usePermissionsServiceHook, { PermissionService } from './usePermissionsService.hook';
-import useStorageServiceHook, { StorageService } from './useStorageService.hook';
+import useProductsServiceHook, { ProductsService } from './useProductsService.hook';
 import useTransactionsServiceHook, { TransactionsService } from './useTransactionsService.hook';
 import { DirectoriesService } from './useDirService.hook';
 import { useDirService } from './index';
@@ -7,6 +7,7 @@ import usePriceManagementServiceHook, { PriceManagementService } from './usePric
 import useAppSettingsHook, { AppSettingsService } from './useAppSettings.hook';
 import useCompaniesService, { CompaniesService } from './useCompaniesService.hook';
 import { createContext, useContext, useEffect } from 'react';
+import useWarehousesServiceHook, { WarehousesService } from './useWarehousesService.hook';
 
 export enum ServiceName {
   permissions = 'permissions',
@@ -20,26 +21,29 @@ export enum ServiceName {
   priceManagement = 'priceManagement',
   appSettings = 'appSettings',
   companies = 'companies',
+  warehouses = 'warehouses',
 }
 
 export interface AppService {
   [ServiceName.permissions]: PermissionService;
-  [ServiceName.products]: StorageService;
+  [ServiceName.products]: ProductsService;
   [ServiceName.transactions]: TransactionsService;
   [ServiceName.directories]: DirectoriesService;
   [ServiceName.priceManagement]: PriceManagementService;
   [ServiceName.appSettings]: AppSettingsService;
   [ServiceName.companies]: CompaniesService;
+  [ServiceName.warehouses]: WarehousesService;
 }
 
 const useAppService = (): AppService => {
   const permissions = usePermissionsServiceHook();
-  const products = useStorageServiceHook();
+  const products = useProductsServiceHook();
   const transactions = useTransactionsServiceHook();
   const directories = useDirService();
   const priceManagement = usePriceManagementServiceHook();
   const appSettings = useAppSettingsHook();
   const companies = useCompaniesService();
+  const warehouses = useWarehousesServiceHook();
 
   useEffect(() => {
     console.log('Apply useAppService | permissions');
@@ -62,15 +66,19 @@ const useAppService = (): AppService => {
   useEffect(() => {
     console.log('Apply useAppService | companies');
   }, [companies]);
+  useEffect(() => {
+    console.log('Apply useAppService | warehouses');
+  }, [warehouses]);
 
   return {
-    [ServiceName.permissions]: permissions,
-    [ServiceName.transactions]: transactions,
-    [ServiceName.products]: products,
-    [ServiceName.priceManagement]: priceManagement,
-    [ServiceName.directories]: directories,
-    [ServiceName.appSettings]: appSettings,
-    [ServiceName.companies]: companies,
+    permissions,
+    transactions,
+    products,
+    priceManagement,
+    directories,
+    appSettings,
+    companies,
+    warehouses,
   };
 };
 export const AppServiceCTX = createContext<AppService>({} as AppService);

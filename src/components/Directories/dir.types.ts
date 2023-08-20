@@ -1,6 +1,11 @@
 import { ModalFormProps } from '../ModalForm';
-import { CategoryTypes, ICategory, ICategoryFormData } from '../../redux/directories/directories.types';
-import { CountType, ICount, ICountFormData } from '../../redux/directories/counts.types';
+import {
+  CategoryTrTypeEnum,
+  CategoryTypes,
+  ICategory,
+  ICategoryFormData,
+} from '../../redux/directories/directories.types';
+import { CountsTypesEnum, CountType, ICount, ICountFormData } from '../../redux/directories/counts.types';
 import { FilterOpt } from '../ModalForm/ModalFilter';
 import { IBase } from '../../redux/global.types';
 import { ICompany } from '../../redux/companies/companies.types';
@@ -20,6 +25,7 @@ export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> exte
   childrenList?: IBaseDirItem<Type, DirType>[];
   type?: Type;
   name?: string;
+  secondName?: string;
   label?: string;
   status?: 'ARCHIVED' | 'DELETED' | 'ACTIVE';
   taxCode?: string | number;
@@ -27,17 +33,20 @@ export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> exte
   manufacturer?: string;
   email?: string;
   phone?: string;
+  code?: string | number;
 }
+export interface IDirItemBase<DirType extends ApiDirType = any, ItemType = any>
+  extends IBaseDirItem<ItemType, DirType> {}
 export interface DirBaseProps extends ModalFormProps {
   title: string;
 }
-
+export type DirectoryItemType = ContractorsTypesEnum & CountsTypesEnum & CategoryTrTypeEnum;
 export interface DirectoriesFormProps<
   ItemType = any,
   ItemDataType = any,
   FormData = any,
   DirType extends ApiDirType = any
-> extends Omit<ModalFormProps, 'onSubmit'> {
+> extends Omit<ModalFormProps<any, any, ItemDataType>, 'onSubmit'> {
   _id?: string;
   type?: ItemType;
   data?: ItemDataType;
@@ -45,7 +54,7 @@ export interface DirectoriesFormProps<
   create?: boolean;
   edit?: boolean;
   dirType?: DirType;
-  onSubmit?: AppSubmitHandler<FormData>;
+  onSubmit?: AppSubmitHandler<FormData, { logAfterSubmit?: boolean }>;
 }
 
 // export type RegisterChangeArchiveStatus<ItemDataType = any, ItemType = any> = {
@@ -156,6 +165,7 @@ export interface DirActivitiesProps
   extends IDirInTreeProps<ApiDirType.ACTIVITIES, any, IActivityFormData, IActivityFormData, IActivity> {}
 export interface IBrand extends IBaseDirItem {}
 
+export interface IProductCategoryDirItem extends IBaseDirItem<any, ApiDirType.CATEGORIES_PROD> {}
 export interface IBrandFormData extends Omit<IBrand, '_id' | 'createdAt' | 'updatedAt'> {}
 export interface DirBrandsProps
   extends IDirInTreeProps<ApiDirType.BRANDS, any, IBrandFormData, IBrandFormData, IBrand> {}
@@ -165,12 +175,20 @@ export interface ITagDirItem extends IBaseDirItem<ContractorsTypesEnum, ApiDirTy
 export interface DirTagsProps extends IDirInTreeProps<ApiDirType.TAGS> {}
 
 export interface ISupplierDirItem extends IBaseDirItem<ContractorsTypesEnum.SUPPLIER, ApiDirType.CONTRACTORS> {}
-export interface ICustomerDirItem extends IBaseDirItem<ContractorsTypesEnum.CUSTOMER, ApiDirType.CONTRACTORS> {}
+export interface ICustomerDirItem extends IBaseDirItem<ContractorsTypesEnum.CUSTOMER, ApiDirType.CONTRACTORS> {
+  secondName?: string;
+}
 export interface IShipmentDirItem extends IBaseDirItem<any, ApiDirType.METHODS_SHIPMENT> {}
 export interface ICommunicationDirItem extends IBaseDirItem<any, ApiDirType.METHODS_COMMUNICATION> {}
 export interface IPaymentDirItem extends IBaseDirItem<any, ApiDirType.METHODS_PAYMENT> {}
-export interface IManagerDirItem extends IBaseDirItem<ContractorsTypesEnum.MANAGER, ApiDirType.CONTRACTORS> {}
-export interface IWarehouseDirItem extends IBaseDirItem<any, ApiDirType.WAREHOUSES> {}
+// ???
+export interface IWarehouse extends IBaseDirItem {}
+export interface IWarehouseFormData extends Omit<IWarehouse, '_id' | 'createdAt' | 'updatedAt'> {}
+export interface DirWarehousesProps
+  extends IDirInTreeProps<ApiDirType.WAREHOUSES, any, IWarehouseFormData, IWarehouseFormData, IWarehouse> {}
+export interface IWarehouseDirItem extends IBaseDirItem<any, ApiDirType.WAREHOUSES> {
+  code?: string | number;
+}
 
 export type MethodDirType = ApiDirType.METHODS_SHIPMENT | ApiDirType.METHODS_COMMUNICATION | ApiDirType.METHODS_PAYMENT;
 export type IMethodDirItem = IShipmentDirItem | ICommunicationDirItem | IPaymentDirItem;

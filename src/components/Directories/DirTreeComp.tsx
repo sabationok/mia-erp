@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ModalForm from 'components/ModalForm';
 import DirList from './DirList/DirList';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
@@ -18,11 +18,15 @@ const DirTreeComp: React.FC<IDirInTreeProps> = ({
   ...props
 }) => {
   const { directory } = useDirectoriesSelector(dirType);
-  console.log(directory);
   const service = useDirService();
   const findById = useCallback((id: string) => directory.find(el => el._id === id), [directory]);
   const modalService = useModalProvider();
   const [current, setCurrent] = useState(filterDefaultValue);
+
+  useEffect(() => {
+    console.log(current);
+    console.log({ filterSearchPath, current, directory });
+  });
   const actions = useMemo(
     () =>
       actionsCreator &&

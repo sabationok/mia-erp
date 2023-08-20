@@ -17,7 +17,7 @@ const CellDateSimple: React.FC<CellDateSimpleProps & React.HTMLAttributes<HTMLDi
   ...props
 }) => {
   const { rowData } = useRow();
-  // const { top, bottom, width = '100px' } = titleInfo;
+
   const contentTop = useMemo(() => {
     return top.getData
       ? top.getData(rowData, titleInfo)
@@ -34,7 +34,6 @@ const CellDateSimple: React.FC<CellDateSimpleProps & React.HTMLAttributes<HTMLDi
           ...bottom,
         });
   }, [bottom, rowData, titleInfo]);
-
   return (
     <CellBase style={{ width }} {...props}>
       <Top align={top.align}>
@@ -56,6 +55,8 @@ const CellBase = styled.div`
 
   height: 100%;
   padding: 4px 10px 4px 10px;
+
+  overflow: hidden;
 
   /* outline: 1px solid #8b8b8b; */
 `;

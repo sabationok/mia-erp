@@ -1,19 +1,9 @@
 import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { ITableListContext, TableActionCreator } from '../components/TableList/tableTypes.types';
-import { IOrder, OrderFilterOption, OrderTypeEnum } from '../redux/orders/orders.types';
+import { IOrder } from '../redux/orders/orders.types';
 import { Modals } from '../components/ModalProvider/Modals';
 
-const orderFilterOptions: OrderFilterOption[] = [
-  {
-    label: OrderTypeEnum.SIMPLE,
-    value: OrderTypeEnum.SIMPLE,
-  },
-  {
-    label: OrderTypeEnum.SET,
-    value: OrderTypeEnum.SET,
-  },
-];
 export type OrdersActionsCreator = TableActionCreator<IOrder>;
 const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
   const modals = useModalProvider();
@@ -24,12 +14,13 @@ const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
       {
         name: 'openOrderOverview',
         icon: 'openInNew',
+        disabled: !ctx.selectedRow?._id,
         onClick: () => {
           if (!ctx.selectedRow?._id) return;
           modals.handleOpenModal({
             Modal: Modals.OrderOverview,
             props: {
-              order: { _id: ctx.selectedRow?._id, owner: {} as any },
+              order: ctx.tableData?.find(el => el._id === ctx.selectedRow?._id),
             },
           });
         },
@@ -51,7 +42,6 @@ const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
             Modal: Modals.FormCreateOrder,
             props: {
               title: 'Edit order',
-              filterOptions: orderFilterOptions,
             },
           });
         },
@@ -65,7 +55,6 @@ const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
             Modal: Modals.FormCreateOrder,
             props: {
               title: `Copy order: ${ctx?.selectedRow?._id}`,
-              filterOptions: orderFilterOptions,
             },
           });
         },
@@ -80,7 +69,6 @@ const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
             Modal: Modals.FormCreateOrder,
             props: {
               title: `Create order`,
-              filterOptions: orderFilterOptions,
             },
           });
         },

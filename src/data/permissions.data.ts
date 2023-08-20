@@ -4,12 +4,19 @@ import { IPermission, PermissionStatus } from '../redux/permissions/permissions.
 import { initialCompany } from '../redux/companies/companies.slice';
 import { testUserKarina } from './usersDir.data';
 import { initialCustomRole } from './customRoles.data';
+import t from '../lang';
 
-export const permissionsTableColumns: CellTittleProps[] = [
+export const permissionsTableColumns: CellTittleProps<IPermission>[] = [
   {
-    top: { name: 'Назва', align: 'start', path: 'company.name' },
+    top: {
+      name: t('label'),
+      align: 'start',
+      path: 'company.name',
+      getData: rd => rd.company?.name || rd.company?.label,
+    },
     bottom: { name: 'ІПН/ЄДРПОУ', align: 'start', path: 'company.taxCode' },
-    width: '200px',
+
+    width: '250px',
     action: 'doubleDataWithAvatar',
   },
   {
@@ -18,6 +25,18 @@ export const permissionsTableColumns: CellTittleProps[] = [
     width: '160px',
     action: 'valueByPath',
   },
+  {
+    top: {
+      name: t('businessSubjectType'),
+      align: 'start',
+      path: 'company.taxCode',
+      getData: rd => rd.company?.businessSubjectType,
+    },
+    bottom: { name: t('ownership'), align: 'start', path: 'company.name', getData: rd => rd.company?.ownershipType },
+    width: '220px',
+    action: 'valueByPath',
+  },
+
   {
     top: { name: 'Власник', align: 'start', path: 'owner.name' },
     bottom: { name: 'Емейл', align: 'start', path: 'owner.email' },

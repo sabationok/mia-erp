@@ -12,11 +12,51 @@ import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import React, { useMemo } from 'react';
 import { useAppForm } from '../../hooks';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
-import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import { ContractorFilterOptions } from '../../data/directories.data';
+import { AppSubmitHandler, UseAppFormAfterSubmitOptions } from '../../hooks/useAppForm.hook';
+import { businessSubjectTypeFilterOptions, counterpartyFilterOptions } from '../../data/directories.data';
+import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
+import ButtonGroup from '../atoms/ButtonGroup';
+import { useModalProvider } from '../ModalProvider/ModalProvider';
+import useDirServiceHook from '../../hooks/useDirService.hook';
+import { Modals } from '../ModalProvider/Modals';
+import { FormCreateDirTreeCompProps } from './FormCreateDirTreeComp';
+import { ApiDirType } from '../../redux/APP_CONFIGS';
+import { useDirectoriesSelector } from '../../redux/selectors.store';
+import { BusinessSubjectTypeEnum } from '../../redux/companies/companies.types';
 
 export interface FormCreateContractorProps
-  extends DirectoriesFormProps<ContractorsTypesEnum, IContractor, IContractorFormData> {}
+  extends DirectoriesFormProps<ContractorsTypesEnum, IContractor, IContractorFormData> {
+  isFilterByTypeOn?: boolean;
+}
+
+const useCreateDirTreeItemModalForm = (_options?: {}) => {
+  const modalS = useModalProvider();
+  const service = useDirServiceHook();
+
+  const open = (props?: FormCreateDirTreeCompProps, afterSubmitOptions?: UseAppFormAfterSubmitOptions) => {
+    if (props?.dirType) {
+      const modal = modalS.handleOpenModal({
+        Modal: Modals.FormCreateDirTreeComp,
+        props: {
+          dirType: props?.dirType,
+          onSubmit: (data, o) => {
+            service
+              .create({
+                data: { data, dirType: props?.dirType || ApiDirType.UNSET },
+                onSuccess: (data, _meta) => {
+                  console.log(`Created dir item: ${props.dirType}`, data);
+                  (o?.closeAfterSave || afterSubmitOptions?.closeAfterSave) && modal?.onClose();
+                },
+              })
+              .then();
+          },
+          ...props,
+        },
+      });
+    }
+  };
+  return open;
+};
 
 const validation = yup.object().shape({
   type: yup.string().required(),
@@ -29,21 +69,35 @@ const validation = yup.object().shape({
   description: yup.string().max(250).optional(),
 });
 
-const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, type, parent, data, ...props }) => {
+const FormCreateContractor: React.FC<FormCreateContractorProps> = ({
+  isFilterByTypeOn = true,
+  onSubmit,
+  type,
+  parent,
+  data,
+  defaultState,
+  ...props
+}) => {
   const {
     formState: { errors, isValid },
-    formValues: { type: currentType },
+    formValues: { type: currentType, businessSubjectType },
     register,
+    registerSelect,
     handleSubmit,
     setValue,
     clearAfterSave,
     closeAfterSave,
     toggleAfterSubmitOption,
   } = useAppForm<IContractorFormData>({
-    defaultValues: data,
+    defaultValues: {
+      businessSubjectType: BusinessSubjectTypeEnum.company,
+      ...defaultState,
+      dirType: ApiDirType.CONTRACTORS,
+    },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
+  const attractionSourcesList = useDirectoriesSelector(ApiDirType.SOURCE_ATTRACTION).directory;
 
   function formEventWrapper(evHandler?: AppSubmitHandler<IContractorFormData>) {
     if (evHandler) {
@@ -51,45 +105,35 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
     }
   }
 
-  const renderLabelInput = useMemo(() => {
-    return (
-      currentType &&
-      [
-        ContractorsTypesEnum.SUPPLIER,
-        ContractorsTypesEnum.COMMISSION_AGENT,
-        ContractorsTypesEnum.CONSIGNOR,
-        ContractorsTypesEnum.AUDITOR,
-      ].includes(currentType)
-    );
-  }, [currentType]);
-
-  const renderNamesInputs = useMemo(() => {
-    return (
-      currentType &&
-      [
-        ContractorsTypesEnum.CUSTOMER,
-        ContractorsTypesEnum.AUDITOR,
-        ContractorsTypesEnum.CONSIGNOR,
-        ContractorsTypesEnum.COUNTER,
-        ContractorsTypesEnum.WORKER,
-        ContractorsTypesEnum.MANAGER,
-        ContractorsTypesEnum.FIN_MANAGER,
-        ContractorsTypesEnum.BRAND_MANAGER,
-        ContractorsTypesEnum.SALES_MANAGER,
-        ContractorsTypesEnum.SUPPLY_MANAGER,
-      ].includes(currentType)
-    );
-  }, [currentType]);
+  const renderFormConfig = useMemo(
+    () => ({
+      renderLabelInput:
+        businessSubjectType &&
+        [BusinessSubjectTypeEnum.company, BusinessSubjectTypeEnum.entrepreneur].includes(businessSubjectType),
+      renderNamesInputs:
+        businessSubjectType &&
+        [BusinessSubjectTypeEnum.person, BusinessSubjectTypeEnum.entrepreneur].includes(businessSubjectType),
+      renderPersonalTaxCode:
+        businessSubjectType &&
+        [BusinessSubjectTypeEnum.person, BusinessSubjectTypeEnum.entrepreneur].includes(businessSubjectType),
+      renderTaxCode:
+        businessSubjectType &&
+        [BusinessSubjectTypeEnum.company, BusinessSubjectTypeEnum.entrepreneur].includes(businessSubjectType),
+      renderAttractionSourceSelect: currentType === ContractorsTypesEnum.CUSTOMER,
+    }),
+    [currentType, businessSubjectType]
+  );
 
   return (
     <ModalForm
-      style={{ maxWidth: 480 }}
+      width={'480px'}
+      fillHeight
+      title={`Створити контрагента: ${t(currentType)}`}
       {...props}
       onSubmit={formEventWrapper(onSubmit)}
       onOptSelect={(_o, v) => setValue('type', v)}
-      filterOptions={ContractorFilterOptions}
+      filterOptions={isFilterByTypeOn ? counterpartyFilterOptions : undefined}
       isValid={isValid}
-      title={`Створити контрагента: ${t(currentType)}`}
       extraFooter={
         <FormAfterSubmitOptions
           clearAfterSave={clearAfterSave}
@@ -99,40 +143,75 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({ onSubmit, t
       }
     >
       <Inputs>
-        {!renderNamesInputs && renderLabelInput && (
-          <InputLabel label={t('label')} direction={'vertical'} error={errors.label} required={!renderNamesInputs}>
-            <InputText placeholder={t('insertLabel')} {...register('label')} required={!renderNamesInputs} autoFocus />
-          </InputLabel>
-        )}
-        {renderNamesInputs && (
+        <InputLabel label={t('businessSubjectType')} error={errors.label} required>
+          <ButtonGroup
+            options={businessSubjectTypeFilterOptions}
+            borderRadius={'4px'}
+            onSelect={({ option, value, index }) => {
+              setValue('businessSubjectType', option.value);
+            }}
+          />
+        </InputLabel>
+
+        {renderFormConfig.renderNamesInputs && (
           <>
-            <InputLabel label={t('name')} direction={'vertical'} error={errors.name} required={renderLabelInput}>
-              <InputText placeholder={t('insertLabel')} {...register('name')} required={renderLabelInput} autoFocus />
+            <InputLabel label={t('name')} error={errors.name} required>
+              <InputText
+                placeholder={t('insertLabel')}
+                {...register('name')}
+                required
+                autoFocus={renderFormConfig.renderNamesInputs}
+              />
             </InputLabel>
-            <InputLabel
-              label={t('secondName')}
-              direction={'vertical'}
-              error={errors.secondName}
-              required={renderLabelInput}
-            >
-              <InputText placeholder={t('insertSecondName')} {...register('secondName')} required={renderLabelInput} />
+
+            <InputLabel label={t('secondName')} error={errors.secondName} required>
+              <InputText placeholder={t('insertSecondName')} {...register('secondName')} required />
             </InputLabel>
           </>
         )}
 
-        <InputLabel label={t('taxCode')} direction={'vertical'} error={errors.taxCode}>
-          <InputText placeholder={t('taxCode')} {...register('taxCode')} />
-        </InputLabel>
+        {renderFormConfig.renderLabelInput && (
+          <InputLabel label={t('label')} error={errors.label} required={!renderFormConfig.renderNamesInputs}>
+            <InputText
+              placeholder={t('insertLabel')}
+              {...register('label')}
+              required={!renderFormConfig.renderNamesInputs}
+              autoFocus={!renderFormConfig.renderNamesInputs}
+            />
+          </InputLabel>
+        )}
 
-        <InputLabel label={t('email')} direction={'vertical'} error={errors.email}>
+        {renderFormConfig.renderTaxCode && (
+          <InputLabel label={t('taxCode')} error={errors.taxCode}>
+            <InputText placeholder={t('taxCode')} {...register('taxCode')} />
+          </InputLabel>
+        )}
+
+        {renderFormConfig.renderPersonalTaxCode && (
+          <InputLabel label={t('personalTaxCode')} error={errors.taxCode}>
+            <InputText placeholder={t('personalTaxCode')} {...register('personalTaxCode')} />
+          </InputLabel>
+        )}
+
+        <InputLabel label={t('email')} error={errors.email}>
           <InputText placeholder={t('email')} {...register('email')} />
         </InputLabel>
 
-        <InputLabel label={t('phone')} direction={'vertical'} error={errors.phone}>
+        <InputLabel label={t('phone')} error={errors.phone}>
           <InputText placeholder={t('phone')} {...register('phone')} />
         </InputLabel>
 
-        <InputLabel label={t('comment')} direction={'vertical'} error={errors.description}>
+        {renderFormConfig.renderAttractionSourceSelect && (
+          <CustomSelect
+            {...registerSelect('attractionSource', {
+              options: attractionSourcesList,
+              label: 'Джерело залучення',
+              placeholder: 'Оберіть джерело залучення',
+            })}
+          />
+        )}
+
+        <InputLabel label={t('comment')} error={errors.description}>
           <TextareaPrimary placeholder={t('insertComment')} {...register('description')} maxLength={250} />
         </InputLabel>
       </Inputs>
@@ -145,6 +224,8 @@ const Inputs = styled.div`
   gap: 8px;
 
   padding: 16px;
+
+  overflow: auto;
 
   background-color: inherit;
 `;

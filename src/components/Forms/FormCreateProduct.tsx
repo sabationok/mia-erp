@@ -4,30 +4,24 @@ import ModalForm, { ModalFormProps } from '../ModalForm';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
-import CustomSelect from '../atoms/Inputs/CustomSelect';
+import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
 import { useAppSelector } from '../../redux/store.store';
 import FlexBox from '../atoms/FlexBox';
 import translate from '../../lang';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useAppForm } from '../../hooks';
-import { IStorageItem, IStorageItemReqData, StorageItemFilterOption } from '../../redux/products/products.types';
+import { IProduct, IProductReqData, ProductFilterOpt } from '../../redux/products/products.types';
 import { createDataForReq } from '../../utils/dataTransform';
-import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { UseAppFormAfterSubmitOptions } from '../../hooks/useAppForm.hook';
-
-export interface AfterSubmitFormOptions {
-  close?: boolean;
-  clear?: boolean;
-}
 
 export interface FormProps extends Omit<ModalFormProps, 'onSubmit'> {
   edit?: boolean;
   copy?: boolean;
   id?: string;
-  onSubmit?: (data: IStorageItemReqData, options?: UseAppFormAfterSubmitOptions) => void;
-  filterOptions?: StorageItemFilterOption[];
-  defaultState?: Partial<IStorageItem>;
+  onSubmit?: (data: IProductReqData, options?: UseAppFormAfterSubmitOptions) => void;
+  filterOptions?: ProductFilterOpt[];
+  defaultState?: Partial<IProduct>;
   addInputs?: boolean;
 }
 
@@ -66,14 +60,13 @@ const Form: React.FC<FormProps> = ({ edit, onSubmit, copy, defaultState, addInpu
     toggleAfterSubmitOption,
     closeAfterSave,
     clearAfterSave,
-  } = useAppForm<IStorageItem>({
-    defaultValues: { currency: 'UAH', ...defaultState },
-    reValidateMode: 'onSubmit',
+  } = useAppForm<IProduct>({
+    defaultValues: defaultState,
   });
 
   // TODO eventDate: formatDateForInputValue(defaultState?.eventDate)
-  function onValidSubmit(submitData: IStorageItem) {
-    const omitPathArr: (keyof IStorageItem)[] = [];
+  function onValidSubmit(submitData: IProduct) {
+    const omitPathArr: (keyof IProduct)[] = [];
 
     const productForSubmit = createDataForReq(submitData, omitPathArr);
 
@@ -86,49 +79,9 @@ const Form: React.FC<FormProps> = ({ edit, onSubmit, copy, defaultState, addInpu
         }
       );
   }
-
-  const renderCategoriesSelects = useMemo(() => {
-    const parentOptions = directories[ApiDirType.CATEGORIES_PROD];
-
-    const childOptions = parentOptions.find(el => el._id === formValues.category?._id)?.childrenList;
-
-    return (
-      <>
-        <CustomSelect
-          {...registerSelect(
-            'category',
-            {
-              label: translate('category'),
-              placeholder: translate('category'),
-              required: true,
-              options: parentOptions,
-            },
-            { childName: 'subCategory' }
-          )}
-        />
-        {childOptions && childOptions.length > 0 && (
-          <CustomSelect
-            label={translate('subCategory')}
-            placeholder={translate('subCategory')}
-            {...registerSelect('subCategory', { options: childOptions })}
-          />
-        )}
-      </>
-    );
-  }, [directories, formValues.category?._id, registerSelect]);
-
-  const renderSupplierSelect = useMemo(
-    () => (
-      <CustomSelect
-        {...registerSelect('supplier', {
-          options: directories[ApiDirType.CONTRACTORS].filter(el => el.type === ContractorsTypesEnum.SUPPLIER),
-          placeholder: translate(ContractorsTypesEnum.SUPPLIER),
-          label: translate(ContractorsTypesEnum.SUPPLIER),
-        })}
-      />
-    ),
-    [directories, registerSelect]
-  );
+  const categories = useMemo(() => {
+    return directories[ApiDirType.CATEGORIES_PROD].filter(el => el.type === formValues.type);
+  }, [directories, formValues.type]);
 
   const renderBrandsSelect = useMemo(
     () => (
@@ -146,9 +99,9 @@ const Form: React.FC<FormProps> = ({ edit, onSubmit, copy, defaultState, addInpu
 
   return (
     <ModalForm
+      {...props}
       onSubmit={handleSubmit(onValidSubmit, data => console.log(data))}
       onOptSelect={({ value }) => value && setValue('type', value)}
-      {...props}
       extraFooter={
         <FormAfterSubmitOptions
           toggleOption={toggleAfterSubmitOption}
@@ -166,8 +119,16 @@ const Form: React.FC<FormProps> = ({ edit, onSubmit, copy, defaultState, addInpu
           <InputText placeholder={translate('sku')} {...register('sku', { max: 120 })} />
         </InputLabel>
 
-        {renderCategoriesSelects}
-        {renderSupplierSelect}
+        <CustomSelect
+          treeMode
+          {...registerSelect('category', {
+            label: translate('category'),
+            placeholder: translate('category'),
+            required: true,
+            options: categories,
+          })}
+        />
+
         {renderBrandsSelect}
 
         <InputLabel label={translate('status')} direction={'vertical'} error={errors.status} disabled>

@@ -13,7 +13,7 @@ import FormCreatePriceList from '../components/Forms/FormCreatePriceList';
 import { toast } from 'react-toastify';
 import { omit } from 'lodash';
 import { ExtractId } from '../utils/dataTransform';
-import PriceListOverview from '../components/Modals/PriceListOverview';
+import PriceListOverview from '../components/Overviews/PriceListOverview';
 
 export type PriceManagementActionsCreator = TableActionCreator<IPriceList>;
 

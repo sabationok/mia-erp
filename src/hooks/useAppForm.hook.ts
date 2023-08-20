@@ -1,16 +1,21 @@
 import { Path, SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import { FieldValues, UseFormProps, UseFormReturn } from 'react-hook-form/dist/types';
 import { useCallback, useState } from 'react';
-import { CustomSelectProps } from '../components/atoms/Inputs/CustomSelect';
 import { UseFormHandleSubmit } from 'react-hook-form/dist/types/form';
+import { InputLabelProps } from '../components/atoms/Inputs/InputLabel';
+import { CustomSelectBaseProps } from '../components/atoms/Inputs/CustomSelect/CustomSelect';
+
+export type CustomSelectProps = CustomSelectBaseProps &
+  Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'> &
+  Omit<InputLabelProps, 'onSelect'>;
 
 export type RegisterSelect<TFieldValues extends FieldValues = FieldValues> = (
   name: Path<TFieldValues>,
-  props?: Omit<CustomSelectProps<TFieldValues[Path<TFieldValues>]>, 'name'>,
+  props?: Omit<CustomSelectProps, 'name'>,
   childControl?: {
     childName?: Path<TFieldValues>;
   }
-) => CustomSelectProps<TFieldValues[Path<TFieldValues>]>;
+) => CustomSelectProps;
 
 export interface UseAppFormReturn<TFieldValues extends FieldValues = FieldValues, TContext = any>
   extends UseFormReturn<TFieldValues, TContext> {
@@ -53,11 +58,11 @@ const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = a
   const registerSelect = useCallback(
     (
       name: Path<TFieldValues>,
-      props?: Omit<CustomSelectProps<TFieldValues[Path<TFieldValues>]>, 'name'>,
+      props?: Omit<CustomSelectProps, 'name'>,
       childControl?: {
         childName?: Path<TFieldValues>;
       }
-    ): CustomSelectProps<TFieldValues[Path<TFieldValues>]> => {
+    ): CustomSelectProps => {
       return {
         ...register(name),
         onSelect: (option, _value) => {

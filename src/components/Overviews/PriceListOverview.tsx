@@ -7,7 +7,7 @@ import { priceListContentColumns } from '../../data';
 import { usePriceListOverviewActionsCreator } from '../../hooks/usePriceListOverviewActionsCreator.hook';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { usePriceListsSelector } from '../../redux/selectors.store';
-import { FormCreatePriceProps } from '../Forms/FormCreatePrice';
+import { FormCreatePriceProps } from '../Forms/FormCreatePrice/FormCreatePrice';
 
 export interface PriceListOverviewProps extends Omit<ModalFormProps, 'onSubmit' | 'afterSubmit'> {
   createFormProps?: FormCreatePriceProps;
@@ -43,6 +43,10 @@ const PriceListOverview: React.FC<PriceListOverviewProps> = ({
     (): ITableListProps<IPriceListItem> => getTableSetting(tableData),
     [tableData, getTableSetting]
   );
+
+  useEffect(() => {
+    console.log(tableData);
+  }, [tableData]);
   // const onValidSubmit = (data: IPriceList) => {
   //   onSubmit &&
   //     data.prices &&

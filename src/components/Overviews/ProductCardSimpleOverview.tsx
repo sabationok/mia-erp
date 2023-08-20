@@ -8,6 +8,7 @@ export interface ProductCardForSelectorProps {
   product: IProduct;
   isSelected?: boolean;
   onSelect?: () => void;
+  onRemove?: () => void;
   disabled?: boolean;
 }
 
@@ -16,6 +17,7 @@ const ProductCardSimpleOverview: React.FC<ProductCardForSelectorProps> = ({
   disabled,
   isSelected,
   onSelect,
+  onRemove,
 }) => {
   const cells = useMemo(
     (): { value?: string; title?: string; gridArea: string; isLastInRow?: boolean }[] => [
@@ -41,8 +43,8 @@ const ProductCardSimpleOverview: React.FC<ProductCardForSelectorProps> = ({
         gridArea: '2/5/2/9',
       },
       {
-        title: 'Постачальник',
-        value: product.brand?.label,
+        title: 'Тип',
+        value: product.type,
         gridArea: '2/9/2/13',
 
         isLastInRow: true,
@@ -54,7 +56,7 @@ const ProductCardSimpleOverview: React.FC<ProductCardForSelectorProps> = ({
         isLastInRow: true,
       },
     ],
-    [product.brand?.label, product.category?.label, product.label, product.sku]
+    [product.brand?.label, product.category?.label, product.label, product.sku, product.type]
   );
 
   return (
@@ -63,7 +65,7 @@ const ProductCardSimpleOverview: React.FC<ProductCardForSelectorProps> = ({
         <img
           src={
             (product?.images && product?.images[0]?.img_1x) ||
-            'https://cdn.create.vista.com/api/media/medium/186787692/stock-photo-profile-young-stylish-man-eyeglasses?token='
+            'https://gymbeam.ua/media/catalog/product/cache/bf5a31e851f50f3ed6850cbbf183db11/w/-/w-gymbeam-sweatpants-joggers-trn-olive-1.jpg'
           }
           style={{ objectFit: 'contain' }}
           alt={''}
@@ -102,10 +104,27 @@ const ProductCardSimpleOverview: React.FC<ProductCardForSelectorProps> = ({
 
       {!disabled && (
         <Buttons justifyContent={'space-between'} gap={4}>
-          <ButtonIcon variant={'onlyIcon'} iconSize={'100%'} size={'24px'} />
           <ButtonIcon variant={'onlyIcon'} iconSize={'100%'} size={'24px'} icon={'info'} />
-
-          <ButtonIcon variant={'onlyIcon'} iconSize={'100%'} size={'24px'} icon={'doneAll'} onClick={onSelect} />
+          {onRemove && (
+            <ButtonIcon
+              variant={'onlyIcon'}
+              iconSize={'100%'}
+              size={'24px'}
+              icon={'delete'}
+              disabled={!onRemove}
+              onClick={onRemove}
+            />
+          )}
+          {onSelect && (
+            <ButtonIcon
+              variant={'onlyIcon'}
+              iconSize={'100%'}
+              size={'24px'}
+              icon={'doneAll'}
+              disabled={!onSelect}
+              onClick={onSelect}
+            />
+          )}
         </Buttons>
       )}
     </Card>
@@ -120,15 +139,13 @@ const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
   position: relative;
 
   padding: 8px;
-  border-bottom: 2px solid ${({ theme, isSelected }) => theme.fieldBackgroundColor};
-  //box-shadow: ${({ theme, isSelected }) => '0px 2px 6px 0px rgba(0, 0, 0, 0.16)'};
+  border-bottom: 2px solid ${({ theme }) => theme.fieldBackgroundColor};
 
-  transition: all ${({ theme, isSelected }) => theme.globals.timingFunctionMain};
+  transition: all ${({ theme }) => theme.globals.timingFunctionMain};
   pointer-events: ${({ disabled }) => disabled && 'none'};
   cursor: default;
 
   &:hover {
-    //box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.16);
     box-shadow: 0 4px 6px 4px rgba(0, 0, 0, 0.16), 0 4px 6px 4px rgba(210, 210, 210, 0.25);
   }
 

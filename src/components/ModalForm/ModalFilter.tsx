@@ -10,19 +10,24 @@ export interface ModalFormFilterProps<V = any, D = any> {
   filterOptions?: FilterOpt<V, D>[];
   defaultFilterValue?: string;
 }
-
+export interface IFilterOptionBase {}
 export interface FilterOpt<V = any, D = any> extends Record<string, any> {
   _id?: string;
   label: string;
   name?: string;
   value: V;
   data?: D;
+  color?: string;
   extraLabel?: string | React.ReactNode;
   getLabel?: (data?: D) => string | React.ReactNode;
   disabled?: boolean;
 }
 
-export type FilterOptionSelectHandler<V = any, D = any> = (option: FilterOpt<V, D>, value: FilterOpt['value']) => void;
+export type FilterOptionSelectHandler<V = any, D = any> = (
+  option: FilterOpt<V, D>,
+  value: FilterOpt['value'],
+  index: number
+) => void;
 
 const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivElement>> = ({
   filterOptions,
@@ -40,7 +45,7 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
       return () => {
         setCurrent(idx);
         if (!onOptSelect) return console.log('No passed "onSelect" handler', option);
-        if (typeof onOptSelect === 'function') onOptSelect(option, option.value);
+        if (typeof onOptSelect === 'function') onOptSelect(option, option.value, idx);
       };
     },
     [onOptSelect]
@@ -50,7 +55,7 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
     if (preventFilter || defaultFilterValue) return;
 
     if (filterOptions && Array.isArray(filterOptions)) {
-      typeof onOptSelect === 'function' && onOptSelect(filterOptions[current], filterOptions[current].value);
+      typeof onOptSelect === 'function' && onOptSelect(filterOptions[current], filterOptions[current].value, current);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -81,10 +86,12 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
     [current, filterOptions, handleSelectOpt]
   );
 
-  return (
+  return filterOptions?.length && filterOptions?.length > 0 ? (
     <Filter className="filter" gridRepeat={filterOptions?.length} {...props}>
       {renderOptions}
     </Filter>
+  ) : (
+    <></>
   );
 };
 
