@@ -1,19 +1,23 @@
 import FlexBox from '../../atoms/FlexBox';
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../../redux/store.store';
 import { IPermission } from '../../../redux/permissions/permissions.types';
 import { IWarehouse } from '../../../redux/warehouses/warehouses.types';
 import { IPriceList } from '../../../redux/priceManagement/priceManagement.types';
 import { AppPagesEnum } from '../../../redux/APP_CONFIGS';
 import { usePermissionsSelector } from '../../../hooks/usePermissionsService.hook';
+import { useEffect, useMemo } from 'react';
 
 export interface SubNavMenuProps {
   subMenuKey: AppPagesEnum;
   onActive?: (key: AppPagesEnum) => void;
 }
 const getLinkDataMap: Record<AppPagesEnum | string, ((option: any) => { id?: string; label?: string }) | undefined> = {
-  [AppPagesEnum.warehouses]: (warehouse: IWarehouse) => ({ id: warehouse._id, label: warehouse?.label }),
+  [AppPagesEnum.warehouses]: (warehouse: IWarehouse) => ({
+    id: warehouse._id,
+    label: `${warehouse?.label} | ${warehouse?.code}`,
+  }),
   [AppPagesEnum.priceLists]: (priceList: IPriceList) => ({ id: priceList._id, label: priceList?.label }),
   [AppPagesEnum.companies]: (permission: IPermission) => ({
     id: permission?.company?._id,
@@ -21,37 +25,45 @@ const getLinkDataMap: Record<AppPagesEnum | string, ((option: any) => { id?: str
   }),
 };
 const SubNavMenu: React.FC<SubNavMenuProps> = ({ subMenuKey, onActive }) => {
+  const pathname = useLocation().pathname;
   const { permission } = usePermissionsSelector();
   const { warehouses, priceLists, permissions } = useAppSelector();
 
-  const map: Record<AppPagesEnum | string, any[] | undefined> = {
-    [AppPagesEnum.warehouses]: warehouses.warehouses,
-    [AppPagesEnum.priceLists]: priceLists.lists,
-    [AppPagesEnum.companies]: permissions.permissions,
-  };
+  const renderLinks = useMemo(() => {
+    const map: Record<AppPagesEnum | string, any[] | undefined> = {
+      [AppPagesEnum.warehouses]: warehouses.warehouses,
+      [AppPagesEnum.priceLists]: priceLists.lists,
+      [AppPagesEnum.companies]: permissions.permissions,
+    };
+    return map[subMenuKey]?.map(el => {
+      const getLinkData = getLinkDataMap[subMenuKey];
+
+      const linkData = getLinkData ? getLinkData(el) : undefined;
+
+      return (
+        linkData?.id &&
+        linkData.label && (
+          <StyledNavLink
+            key={`${subMenuKey}-${linkData.id}`}
+            to={`/app/${permission._id}/${subMenuKey}/${linkData.id}`}
+          >
+            {linkData.label}
+          </StyledNavLink>
+        )
+      );
+    });
+  }, [permission._id, permissions.permissions, priceLists.lists, subMenuKey, warehouses.warehouses]);
+
+  useEffect(() => {
+    if (pathname.includes(subMenuKey)) {
+      onActive && onActive(subMenuKey);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <FlexBox fillWidth padding={'0 0 0 8px'}>
-      {map[subMenuKey]?.map(el => {
-        const getLinkData = getLinkDataMap[subMenuKey];
-
-        const linkData = getLinkData ? getLinkData(el) : undefined;
-
-        return (
-          linkData?.id &&
-          linkData.label && (
-            <StyledNavLink
-              key={`${subMenuKey}-${linkData.id}`}
-              to={`/app/${permission._id}/${subMenuKey}/${linkData.id}`}
-              onClick={() => {
-                onActive && onActive(subMenuKey);
-              }}
-            >
-              {linkData.label}
-            </StyledNavLink>
-          )
-        );
-      })}
+      {renderLinks}
     </FlexBox>
   );
 };

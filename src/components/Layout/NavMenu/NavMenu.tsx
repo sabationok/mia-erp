@@ -10,6 +10,7 @@ import Text from '../../atoms/Text';
 import { useAppPages, useAppParams, useCloseByEscapeOrClickOnBackdrop } from '../../../hooks';
 import SubNavMenu from './SubNavMenu';
 import FlexBox from '../../atoms/FlexBox';
+import { AppPagesEnum } from '../../../redux/APP_CONFIGS';
 
 const NavMenu: React.FC = () => {
   const { permissionId } = useAppParams();
@@ -35,8 +36,9 @@ const NavMenu: React.FC = () => {
     },
     [handleOpenNavMenu]
   );
-  const onOpenSubMenuStateChange = useCallback((key: string) => {
+  const onOpenSubMenuStateChange = useCallback((key: AppPagesEnum) => {
     setIsSubMenuOpen(prev => ({ ...prev, [key]: !prev[key] }));
+    console.log(isSubMenuOpen);
   }, []);
 
   const renderLinks = useMemo(
@@ -61,7 +63,7 @@ const NavMenu: React.FC = () => {
               {item.subMenuKey && (
                 <ButtonIcon
                   variant={'onlyIconNoEffects'}
-                  icon={isSubMenuOpen[item.subMenuKey] ? 'SmallArrowLeft' : 'SmallArrowDown'}
+                  icon={isSubMenuOpen[item.subMenuKey] ? 'SmallArrowDown' : 'SmallArrowLeft'}
                   size={'32px'}
                   onClick={() => item.subMenuKey && onOpenSubMenuStateChange(item.subMenuKey)}
                 />
@@ -69,11 +71,15 @@ const NavMenu: React.FC = () => {
             </FlexBox>
 
             {item?.subMenuKey && (
-              <SubNavMenu
-                key={item?.subMenuKey}
-                subMenuKey={item.subMenuKey}
-                onActive={key => setIsSubMenuOpen(prev => ({ ...prev, [key]: true }))}
-              />
+              <FlexBox height={isSubMenuOpen[item.subMenuKey] ? 'max-content' : '0'} overflow={'hidden'}>
+                <SubNavMenu
+                  key={item?.subMenuKey}
+                  subMenuKey={item.subMenuKey}
+                  onActive={key => {
+                    setIsSubMenuOpen(prev => ({ ...prev, [key]: true }));
+                  }}
+                />
+              </FlexBox>
             )}
           </React.Fragment>
         );
@@ -162,7 +168,11 @@ const NavMenuContainer = styled.div<MenuState>`
   min-width: 100%;
   max-width: calc(100% + 30px);
 
-  max-height: ${({ isOpen }) => (isOpen ? '80vh' : '170px')};
+  backdrop-filter: blur(2px);
+  border-radius: 2px;
+  border: 1px solid ${p => p.theme.modalBorderColor};
+
+  height: ${({ isOpen }) => (isOpen ? 'calc(100vh - 50px)' : '80vh')};
   box-shadow: ${({ isOpen, theme }) =>
     isOpen ? '0 6px 18px 0px rgba(21, 21, 21, 0.15), 0 6px 18px 0px rgba(211, 211, 211, 0.15)' : ''};
 
@@ -187,10 +197,9 @@ const NavList = styled.div`
   min-width: 100%;
   max-height: 100%;
 
-  padding: 8px 0;
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  overflow: auto;
 
-  box-shadow: ${({ theme }) => theme.globals.shadowMain};
+  padding: 8px 0;
 `;
 
 const StyledNavLink = styled(NavLink)`
