@@ -62,7 +62,7 @@ const SubNavMenu: React.FC<SubNavMenuProps> = ({ subMenuKey, onActive }) => {
   }, []);
 
   return (
-    <FlexBox fillWidth padding={'0 0 0 8px'}>
+    <FlexBox fillWidth padding={'0 0 0 16px'}>
       {renderLinks}
     </FlexBox>
   );
@@ -81,7 +81,7 @@ const StyledNavLink = styled(NavLink)`
   font-weight: 400;
   height: min-content;
 
-  padding: 4px 16px;
+  padding: 4px 8px;
 
   border-radius: 0;
   border-style: none;

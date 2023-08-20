@@ -36,9 +36,10 @@ const NavMenu: React.FC = () => {
     },
     [handleOpenNavMenu]
   );
+
+  // TODO need refactoring
   const onOpenSubMenuStateChange = useCallback((key: AppPagesEnum) => {
     setIsSubMenuOpen(prev => ({ ...prev, [key]: !prev[key] }));
-    console.log(isSubMenuOpen);
   }, []);
 
   const renderLinks = useMemo(
@@ -49,7 +50,6 @@ const NavMenu: React.FC = () => {
             <FlexBox fxDirection={'row'}>
               <StyledNavLink
                 key={item?.path}
-                // to={companyId ? `/${companyId}/${item?.path}` : `/${item.path}`}
                 to={item.path}
                 onClick={() => {
                   onNavLinkClick(item);
@@ -167,12 +167,13 @@ const NavMenuContainer = styled.div<MenuState>`
   overflow: hidden;
   min-width: 100%;
   max-width: calc(100% + 30px);
+  height: ${({ isOpen }) => (isOpen ? 'calc(100vh - 50px)' : '80vh')};
 
-  backdrop-filter: blur(2px);
   border-radius: 2px;
   border: 1px solid ${p => p.theme.modalBorderColor};
 
-  height: ${({ isOpen }) => (isOpen ? 'calc(100vh - 50px)' : '80vh')};
+  background-color: ${({ theme }) => theme.modalBackgroundColor};
+
   box-shadow: ${({ isOpen, theme }) =>
     isOpen ? '0 6px 18px 0px rgba(21, 21, 21, 0.15), 0 6px 18px 0px rgba(211, 211, 211, 0.15)' : ''};
 
@@ -185,8 +186,6 @@ const NavMenuContainer = styled.div<MenuState>`
   //transform: scaleY(${({ isOpen, theme }) => (isOpen ? 1 : 0.8)});
 
   transition: all ${({ theme }) => theme.globals.timingFnMain};
-  // transition: max-height ${({ theme }) => theme.globals.timingFnMain},
-  //   box-shadow ${({ theme }) => theme.globals.timingFnMain};
 `;
 
 const NavList = styled.div`

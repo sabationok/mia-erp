@@ -84,7 +84,11 @@ export const langUa = {
   status: 'Статус',
 
   code: 'Код',
+  barCode: 'Штрих-код',
+  qrCode: 'QR-Code',
+  innerCode: 'Внутрішній код',
   insertCode: 'Впишіть код',
+  variation: 'Варіація',
 
   closeAfterSave: 'Закрити після збереження',
   clearAfterSave: 'Очистити після збереження',
