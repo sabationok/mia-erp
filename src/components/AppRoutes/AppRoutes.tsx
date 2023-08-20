@@ -66,12 +66,12 @@ const AppRoutes: React.FC = () => {
           />
 
           <Route
-            path={AppPagesEnum.priceManagement}
-            element={<AppPages.PagePriceManagement path={AppPagesEnum.priceManagement} />}
+            path={AppPagesEnum.priceLists}
+            element={<AppPages.PagePriceManagement path={AppPagesEnum.priceLists} />}
           />
           <Route
-            path={`${AppPagesEnum.priceManagement}/:${AppUrlParamKeys.priceListId}`}
-            element={<AppPages.PagePriceListOverview path={AppPagesEnum.priceManagement} />}
+            path={`${AppPagesEnum.priceLists}/:${AppUrlParamKeys.priceListId}`}
+            element={<AppPages.PagePriceListOverview path={AppPagesEnum.priceLists} />}
           />
 
           <Route {...notFoundRouteProps} />

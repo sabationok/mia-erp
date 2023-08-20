@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import NavMenu from './NavMenu';
+import NavMenu from './NavMenu/NavMenu';
 import LogoSvg from './LogoSvg';
 
 import UserMenu from './UserMenu';

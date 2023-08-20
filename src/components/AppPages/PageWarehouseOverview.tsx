@@ -70,8 +70,9 @@ const useWarehouseOverviewActionsCreator = (): WarehouseTableActionsCreator => {
   const service = useAppServiceProvider().warehouses;
 
   return (ctx: ITableListContext) => [
-    { name: 'deleteProductToWarehouse', icon: 'plus', onClick: () => {} },
-    { name: 'addProductToWarehouse', icon: 'plus', onClick: () => {} },
+    { name: 'deleteProductInventory', icon: 'delete', onClick: () => {} },
+    { name: 'editProductInventory', icon: 'edit', onClick: () => {} },
+    { name: 'addProductInventory', icon: 'plus', onClick: () => {} },
   ];
 };
 export default PageWarehouseOverview;

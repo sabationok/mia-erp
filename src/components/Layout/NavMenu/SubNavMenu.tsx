@@ -1,0 +1,120 @@
+import FlexBox from '../../atoms/FlexBox';
+import styled from 'styled-components';
+import { NavLink } from 'react-router-dom';
+import { useAppSelector } from '../../../redux/store.store';
+import { IPermission } from '../../../redux/permissions/permissions.types';
+import { IWarehouse } from '../../../redux/warehouses/warehouses.types';
+import { IPriceList } from '../../../redux/priceManagement/priceManagement.types';
+import { AppPagesEnum } from '../../../redux/APP_CONFIGS';
+import { usePermissionsSelector } from '../../../hooks/usePermissionsService.hook';
+
+export interface SubNavMenuProps {
+  subMenuKey: AppPagesEnum;
+  onActive?: (key: AppPagesEnum) => void;
+}
+const getLinkDataMap: Record<AppPagesEnum | string, ((option: any) => { id?: string; label?: string }) | undefined> = {
+  [AppPagesEnum.warehouses]: (warehouse: IWarehouse) => ({ id: warehouse._id, label: warehouse?.label }),
+  [AppPagesEnum.priceLists]: (priceList: IPriceList) => ({ id: priceList._id, label: priceList?.label }),
+  [AppPagesEnum.companies]: (permission: IPermission) => ({
+    id: permission?.company?._id,
+    label: permission?.company?.label,
+  }),
+};
+const SubNavMenu: React.FC<SubNavMenuProps> = ({ subMenuKey, onActive }) => {
+  const { permission } = usePermissionsSelector();
+  const { warehouses, priceLists, permissions } = useAppSelector();
+
+  const map: Record<AppPagesEnum | string, any[] | undefined> = {
+    [AppPagesEnum.warehouses]: warehouses.warehouses,
+    [AppPagesEnum.priceLists]: priceLists.lists,
+    [AppPagesEnum.companies]: permissions.permissions,
+  };
+
+  return (
+    <FlexBox fillWidth padding={'0 0 0 8px'}>
+      {map[subMenuKey]?.map(el => {
+        const getLinkData = getLinkDataMap[subMenuKey];
+
+        const linkData = getLinkData ? getLinkData(el) : undefined;
+
+        return (
+          linkData?.id &&
+          linkData.label && (
+            <StyledNavLink
+              key={`${subMenuKey}-${linkData.id}`}
+              to={`/app/${permission._id}/${subMenuKey}/${linkData.id}`}
+              onClick={() => {
+                onActive && onActive(subMenuKey);
+              }}
+            >
+              {linkData.label}
+            </StyledNavLink>
+          )
+        );
+      })}
+    </FlexBox>
+  );
+};
+
+const StyledNavLink = styled(NavLink)`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  position: relative;
+
+  width: 100%;
+  min-height: 34px;
+  font-size: 14px;
+  font-weight: 400;
+  height: min-content;
+
+  padding: 4px 16px;
+
+  border-radius: 0;
+  border-style: none;
+  transition: none;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+
+    width: 3px;
+    height: 0;
+
+    background-color: transparent;
+
+    transform: translateY(-50%);
+    transition: all ${({ theme }) => theme.globals.timingFunctionLong};
+  }
+
+  &:hover {
+    background-color: rgba(254, 254, 254, 0.25);
+
+    &::before {
+      height: 100%;
+      background-color: var(--darkOrange);
+    }
+  }
+
+  &.active {
+    background-color: rgba(254, 254, 254, 0.05);
+    /* color: var(--darkOrange); */
+    /* fill: var(--darkOrange); */
+
+    &::before {
+      height: 80%;
+      background-color: ${({ theme: { accentColor } }) => accentColor.base};
+    }
+  }
+
+  @media screen and (min-width: 768px) {
+    min-height: 24px;
+    font-size: 12px;
+    height: min-content;
+  }
+`;
+
+export default SubNavMenu;

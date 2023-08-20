@@ -1,4 +1,4 @@
-import { ApiDirType } from '../redux/APP_CONFIGS';
+import { ApiDirType, AppPagesEnum } from '../redux/APP_CONFIGS';
 import { ContractorsTypesEnum } from '../redux/contractors/contractors.types';
 import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../redux/companies/companies.types';
 
@@ -39,6 +39,18 @@ export const langUa = {
   [OwnershipTypeEnum.UA_BRANCH]: 'Філія',
   [OwnershipTypeEnum.UA_FRANCHISING_COMPANY]: 'Франчайзингова компанія',
   [OwnershipTypeEnum.UA_COLLECTIVE_ENTERPRISE]: 'Колективне підприємство',
+
+  [AppPagesEnum.priceLists]: 'Прайс листи',
+  [AppPagesEnum.documentsFlow]: 'Документи',
+  [AppPagesEnum.companies]: 'Компанії',
+  [AppPagesEnum.dashboard]: 'Дашборд',
+  [AppPagesEnum.transactions]: 'Рух коштів',
+  [AppPagesEnum.orders]: 'Замовлення',
+  [AppPagesEnum.refunds]: 'Повернення',
+  [AppPagesEnum.supplement]: 'Постачання',
+  [AppPagesEnum.storage]: 'Склад',
+  [AppPagesEnum.products]: 'Продукти',
+  [AppPagesEnum.manager]: 'Менеджер',
 
   brand: 'Бренд',
   selectBrand: 'Оберіть бренд',
@@ -187,14 +199,4 @@ export const langUa = {
   sku: 'Артикул | SKU',
   sizesTable: 'Розмірна сітка',
   visibility: 'Видимість',
-
-  companies: 'Компанії',
-  dashboard: 'Дашборд',
-  transactions: 'Рух коштів',
-  orders: 'Замовлення',
-  refunds: 'Повернення',
-  supplement: 'Постачання',
-  storage: 'Склад',
-  products: 'Продукти',
-  manager: 'Менеджер',
 };

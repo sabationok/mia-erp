@@ -1,12 +1,30 @@
 // type EndpointCreator = (...args: any[]) => string;
+export enum AppPagesEnum {
+  companies = 'companies',
+  transactions = 'transactions',
+  orders = 'orders',
+  refunds = 'refunds',
+  supplement = 'supplement',
+  products = 'products',
+  dashboard = 'dashboard',
+  storage = 'storage',
+  manager = 'manager',
+  admin = 'admin',
+  warehouses = 'warehouses',
+  notFound = 'notFound',
+  documentsFlow = 'documentsFlow',
+  priceLists = 'priceLists',
+  director = 'director',
+}
 
+export type PagePathType = keyof typeof AppPagesEnum | AppPagesEnum;
 export enum API_BASE_ROUTES {
   APP = 'APP',
   AUTH = '/auth',
   PERMISSIONS = '/permissions',
   COMPANIES = '/companies',
   DIRECTORIES = '/directories',
-  TRANSACTIONS = '/transactions',
+  TRANSACTIONS = `/transactions`,
   CUSTOM_ROLES = '/roles',
   PRODUCTS = '/products',
   ORDERS = '/orders',
