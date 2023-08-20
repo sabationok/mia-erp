@@ -87,40 +87,44 @@ const StyledNavLink = styled(NavLink)`
   border-style: none;
   transition: none;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-
-    width: 3px;
-    height: 0;
-
-    background-color: transparent;
-
-    transform: translateY(-50%);
-    transition: all ${({ theme }) => theme.globals.timingFunctionLong};
-  }
-
-  &:hover {
-    background-color: rgba(254, 254, 254, 0.25);
-
-    &::before {
-      height: 100%;
-      background-color: var(--darkOrange);
-    }
-  }
-
   &.active {
-    background-color: rgba(254, 254, 254, 0.05);
-    /* color: var(--darkOrange); */
-    /* fill: var(--darkOrange); */
-
-    &::before {
-      height: 80%;
-      background-color: ${({ theme: { accentColor } }) => accentColor.base};
-    }
+    color: ${p => p.theme.accentColor.base};
   }
+
+  // &::before {
+  //   content: '';
+  //   position: absolute;
+  //   top: 50%;
+  //   left: 0;
+  //
+  //   width: 3px;
+  //   height: 0;
+  //
+  //   background-color: transparent;
+  //
+  //   transform: translateY(-50%);
+  //   transition: all ${({ theme }) => theme.globals.timingFunctionLong};
+  // }
+
+  //&:hover {
+  //  background-color: rgba(254, 254, 254, 0.25);
+  //
+  //  &::before {
+  //    height: 100%;
+  //    background-color: var(--darkOrange);
+  //  }
+  //}
+
+  // &.active {
+  //   background-color: rgba(254, 254, 254, 0.05);
+  //   /* color: var(--darkOrange); */
+  //   /* fill: var(--darkOrange); */
+  //
+  //   &::before {
+  //     height: 80%;
+  //     background-color: ${({ theme: { accentColor } }) => accentColor.base};
+  //   }
+  // }
 
   @media screen and (min-width: 768px) {
     min-height: 24px;

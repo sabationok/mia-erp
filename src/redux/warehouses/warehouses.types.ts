@@ -1,6 +1,7 @@
 import { AppResponse, IBase, OnlyUUID } from '../global.types';
 import { IProduct } from '../products/products.types';
 import { ICompany } from '../companies/companies.types';
+import { IPriceListItem } from '../priceManagement/priceManagement.types';
 
 export enum WarehouseTypeEnum {
   WAREHOUSE = 'warehouse',
@@ -28,6 +29,8 @@ export interface IProductInventory extends IBase {
   hasVariations?: boolean;
   template?: IVariationTableTemplate;
   variations?: IVariation[];
+
+  price?: IPriceListItem;
 
   timeFrom?: string;
   timeTo?: string;

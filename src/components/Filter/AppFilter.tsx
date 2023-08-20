@@ -45,13 +45,13 @@ export type FilterReturnDataType = FilterQueryType & {
 //   marks: yup.array().of(yup.string()).optional(),
 // });
 
-export interface FilterProps extends Omit<ModalFormProps, 'defaultFilterValue' | 'onSubmit'> {
+export interface AppFilterProps extends Omit<ModalFormProps, 'defaultFilterValue' | 'onSubmit'> {
   filterSelectors?: FilterSelectorType[];
   filterDefaultValues?: Partial<FilterReturnDataType>;
   onFilterSubmit?: SubmitHandler<FilterReturnDataType>;
 }
 
-const AppFilter: React.FC<FilterProps> = props => {
+const AppFilter: React.FC<AppFilterProps> = props => {
   if (!props.filterSelectors) {
     return <SelectorErr>'Filter selectors' not passed</SelectorErr>;
   }
@@ -63,7 +63,7 @@ const AppFilter: React.FC<FilterProps> = props => {
   return <Filter {...props} />;
 };
 
-const Filter: React.FC<FilterProps> = ({ filterSelectors, filterDefaultValues, onFilterSubmit, ...props }) => {
+const Filter: React.FC<AppFilterProps> = ({ filterSelectors, filterDefaultValues, onFilterSubmit, ...props }) => {
   const [CurrentData, setCurrentData] = useState<FilterSelectorType | null>(
     filterSelectors ? filterSelectors[0] : null
   );

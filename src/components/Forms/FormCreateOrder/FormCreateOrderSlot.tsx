@@ -2,7 +2,7 @@ import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { IOrderSlot } from 'redux/orders/orders.types';
 import { useCallback, useEffect, useState } from 'react';
-import OrderSlotOverview from '../../Overviews/OrderSlotOverview';
+import OrderSlotOverview from '../../Modals/Overviews/OrderSlotOverview';
 import { IProduct } from 'redux/products/products.types';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
 import TableList from '../../TableList/TableList';

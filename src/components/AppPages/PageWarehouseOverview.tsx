@@ -12,6 +12,8 @@ import { warehouseOverviewTableColumns } from '../../data/warehauses.data';
 import { useAppParams } from '../../hooks';
 import { IProductInventory } from '../../redux/warehouses/warehouses.types';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import { useModalProvider } from '../ModalProvider/ModalProvider';
+import { Modals } from '../ModalProvider/Modals';
 
 type Props = {
   path: PagePathType;
@@ -68,11 +70,18 @@ type WarehouseTableActionsCreator = TableActionCreator<IProductInventory>;
 
 const useWarehouseOverviewActionsCreator = (): WarehouseTableActionsCreator => {
   const service = useAppServiceProvider().warehouses;
+  const modalS = useModalProvider();
 
   return (ctx: ITableListContext) => [
     { name: 'deleteProductInventory', icon: 'delete', onClick: () => {} },
     { name: 'editProductInventory', icon: 'edit', onClick: () => {} },
-    { name: 'addProductInventory', icon: 'plus', onClick: () => {} },
+    {
+      name: 'addProductInventory',
+      icon: 'plus',
+      onClick: () => {
+        modalS.handleOpenModal({ Modal: Modals.FormCreateProductInventory });
+      },
+    },
   ];
 };
 export default PageWarehouseOverview;

@@ -8,18 +8,20 @@ import FormCreatePriceList, { FormCreatePriceListProps } from '../Forms/FormCrea
 import FormCreatePrice, { FormCreatePriceProps } from '../Forms/FormCreatePrice/FormCreatePrice';
 import FormCreateCustomRole, { FormCreateCustomRoleProps } from '../Forms/FormCreateCustomRole';
 import FormCreateCount, { FormCreateCountProps } from '../Forms/FormCreateCount';
-import PriceListOverview, { PriceListOverviewProps } from '../Overviews/PriceListOverview';
-import ProductOverview, { ProductOverviewProps } from '../Overviews/ProductOverview';
+import PriceListOverview, { PriceListOverviewProps } from '../Modals/Overviews/PriceListOverview';
+import ProductOverview, { ProductOverviewProps } from '../Modals/Overviews/ProductOverview';
 import FormCreateCompany, { FormCreateCompanyProps } from '../Forms/FormCreateCompany';
 import FormCreateOrder, { FormCreateOrderProps } from '../Forms/FormCreateOrder/FormCreateOrder';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { IBaseDirItem } from '../Directories/dir.types';
 import FormCreateTag, { FormCreateTagProps } from '../Forms/FormCreateTag';
 import FormCreateMethod, { FormCreateMethodProps } from '../Forms/FormCreateMetod';
-import OrderOverview, { OrderOverviewProps } from '../Overviews/OrderOverview';
+import OrderOverview, { OrderOverviewProps } from '../Modals/Overviews/OrderOverview';
 import FormInviteUser, { FormInviteUserProps } from '../Forms/FormInviteUser';
 import SelectProductModal, { SelectProductModalProps } from '../Modals/SelectProductModal';
 import FormCreateOrderSlot, { FormCreateOrderSlotItemProps } from '../Forms/FormCreateOrder/FormCreateOrderSlot';
+import FormCreateProductInventory, { FormCreateProductInventoryProps } from '../Forms/FormCreateProductInventory';
+import AppFilter, { AppFilterProps } from '../Filter/AppFilter';
 
 export enum Modals {
   ModalForm = 'ModalForm',
@@ -38,15 +40,20 @@ export enum Modals {
   FormCreateMethod = 'FormCreateMethod',
   FormInviteUser = 'FormInviteUser',
   FormCreateOrderSlotItem = 'FormCreateOrderSlotItem',
+  FormCreateProductInventory = 'FormCreateProductInventory',
 
   PriceListOverview = 'PriceListOverview',
   ProductOverview = 'ProductOverview',
   OrderOverview = 'OrderOverview',
   SelectProductModal = 'SelectProductModal',
+  AppFilter = 'AppFilter',
 }
 
 export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
-  [Modals.ModalForm]: ModalForm, //
+  // * Base modal
+  [Modals.ModalForm]: ModalForm,
+
+  // * Forms
   [Modals.FormCreateDirTreeComp]: FormCreateDirTreeComp,
   [Modals.FormCreateActivity]: FormCreateActivity,
   [Modals.FormCreateContractor]: FormCreateContractor,
@@ -62,15 +69,21 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   [Modals.FormCreateMethod]: FormCreateMethod,
   [Modals.FormInviteUser]: FormInviteUser,
   [Modals.FormCreateOrderSlotItem]: FormCreateOrderSlot,
+  [Modals.FormCreateProductInventory]: FormCreateProductInventory,
 
+  // * Modals props
   [Modals.OrderOverview]: OrderOverview,
   [Modals.PriceListOverview]: PriceListOverview,
   [Modals.ProductOverview]: ProductOverview,
   [Modals.SelectProductModal]: SelectProductModal,
+  [Modals.AppFilter]: AppFilter,
 };
 
 export interface ModalChildrenProps {
+  // * Base modal props
   [Modals.ModalForm]: ModalFormProps;
+
+  // * Form props
   [Modals.FormCreateDirTreeComp]: FormCreateDirTreeCompProps<any, ApiDirType, IBaseDirItem<any, ApiDirType>>;
   [Modals.FormCreateActivity]: FormCreateCompanyActivityProps;
   [Modals.FormCreateContractor]: FormCreateContractorProps;
@@ -87,9 +100,13 @@ export interface ModalChildrenProps {
   [Modals.FormCreateTag]: FormCreateTagProps;
   [Modals.FormInviteUser]: FormInviteUserProps;
   [Modals.FormCreateOrderSlotItem]: FormCreateOrderSlotItemProps;
+  [Modals.FormCreateProductInventory]: FormCreateProductInventoryProps;
+
+  // * Modals props
 
   [Modals.OrderOverview]: OrderOverviewProps;
   [Modals.PriceListOverview]: PriceListOverviewProps;
   [Modals.ProductOverview]: ProductOverviewProps;
   [Modals.SelectProductModal]: SelectProductModalProps;
+  [Modals.AppFilter]: AppFilterProps;
 }

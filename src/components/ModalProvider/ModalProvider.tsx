@@ -15,7 +15,7 @@ export interface IModalChildrenProps {
   onClose: () => void;
 }
 
-export interface IModalRenderItemParams<P = any, S = any, M extends Modals = any> {
+export interface IModalRenderItemParams<M extends Modals = any, P = any, S = any> {
   ModalChildren?: React.FC<P>;
   Modal?: M;
   props?: ModalChildrenProps[M];
@@ -30,14 +30,27 @@ export type OpenModalReturnType =
       id?: string;
     }
   | undefined;
-type HandleOpenModalAsyncType = <P = any, S = any, M extends Modals = any>(
-  args: IModalRenderItemParams<P, S, M>,
+
+export type CreatedModal = {
+  onClose: () => void;
+  id: string;
+};
+export type ModalCreator<M extends Modals = any, P = any, S = any> = (
+  modal: CreatedModal
+) => IModalRenderItemParams<M, P, S>;
+
+type HandleOpenModalAsyncType = <M extends Modals = any, P = any, S = any>(
+  args: IModalRenderItemParams<M, P, S>,
   getPropsAsync?: () => Promise<P>
 ) => Promise<OpenModalReturnType | undefined>;
 
 export interface IModalProviderContext {
-  handleOpenModal: <P = any, S = any, M extends Modals = any>(
-    args: IModalRenderItemParams<P, S, M>
+  create: <M extends Modals = any, P extends ModalChildrenProps[M] = any, S = any>(
+    creator: ModalCreator<M, P, S>
+  ) => boolean;
+
+  handleOpenModal: <M extends Modals = any, P = any, S = any>(
+    args: IModalRenderItemParams<M, P, S>
   ) => OpenModalReturnType;
   handleCloseModal: (id?: string) => void;
   handleOpenModalAsync: HandleOpenModalAsyncType;
@@ -58,13 +71,13 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
   const createOnClose = useCallback((id?: string | number) => () => onClose(id), [onClose]);
 
   const handleOpenModal = useCallback(
-    <P = any, S = any, M extends Modals = any>({
+    <M extends Modals = any, P = any, S = any>({
       ModalChildren,
       modalChildrenProps,
       settings,
       Modal,
       props,
-    }: IModalRenderItemParams<P, S, M>): OpenModalReturnType => {
+    }: IModalRenderItemParams<M, P, S>): OpenModalReturnType => {
       const id = nanoid(8);
       try {
         if (ModalChildren && typeof ModalChildren === 'function') {
@@ -87,12 +100,43 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
     [createOnClose]
   );
 
+  const createModal = <M extends Modals = any, P = any, S = any>(modalCreator: ModalCreator<M, P, S>) => {
+    if (typeof modalCreator === 'function') {
+      const id = nanoid(8);
+      const { ModalChildren, modalChildrenProps, settings, Modal, props } = modalCreator({
+        id,
+        onClose: createOnClose(id),
+      });
+
+      try {
+        if (ModalChildren && typeof ModalChildren === 'function') {
+          setModalContent(prev => [...prev, { ModalChildren, modalChildrenProps, settings, id }]);
+          return true;
+        }
+        if (Modal && ModalChildrenMap[Modal]) {
+          setModalContent(prev => [
+            ...prev,
+            { ModalChildren: ModalChildrenMap[Modal], modalChildrenProps: props, settings, id },
+          ]);
+          return true;
+        }
+        console.error('Add modal to stack error');
+        toast.error(`Add modal to stack error:\n >>> ${Modal} <<<`);
+      } catch (e) {
+        console.log(e);
+        return false;
+      }
+    }
+    return true;
+  };
+
   const CTX: IModalProviderContext = useMemo(
     () => ({
+      create: createModal,
       handleCloseModal: onClose,
       handleOpenModal,
-      handleOpenModalAsync: async <P = any, S = any>(
-        options: IModalRenderItemParams<P, S>,
+      handleOpenModalAsync: async <M extends Modals = any, P = any, S = any>(
+        options: IModalRenderItemParams<M, P, S>,
         getPropsAsync?: () => Promise<P>
       ) => {
         if (getPropsAsync) {
@@ -103,7 +147,7 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
       isOpen: modalContent.length > 0,
       modalContent,
     }),
-    [handleOpenModal, modalContent, onClose]
+    [createModal, handleOpenModal, modalContent, onClose]
   );
 
   const renderModalContent = useMemo(() => {
