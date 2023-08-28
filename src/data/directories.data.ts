@@ -13,6 +13,8 @@ import {
   DirMarksProps,
   DirProductCategoriesProps,
   DirTagsProps,
+  GetDirInTreeActionsCreatorOptions,
+  IDirItemBase,
 } from '../components/Directories/dir.types';
 import t from '../lang';
 import DirTreeComp from '../components/Directories/DirTreeComp';
@@ -29,6 +31,7 @@ import { BusinessSubjectFilterOption, BusinessSubjectTypeEnum } from '../redux/c
 import { enumToFilterOptions } from '../utils/fabrics';
 import { CountsTypesEnum } from '../redux/directories/counts.types';
 import { CategoryTrTypeEnum } from '../redux/directories/directories.types';
+import { DirectoriesService } from '../hooks/useDirService.hook';
 
 export const categoriesFilterOptions: CategoryFilterOpt[] = enumToFilterOptions(CategoryTrTypeEnum);
 export const countsFilterOptions: CountFilterOpt[] = enumToFilterOptions(CountsTypesEnum);
@@ -39,16 +42,15 @@ export const tagsFilterOptions = enumToFilterOptions(ContractorsTypesEnum);
 export const counterpartyFilterOptions: FilterOpt<ContractorsTypesEnum>[] = enumToFilterOptions(ContractorsTypesEnum);
 export const businessSubjectTypeFilterOptions: BusinessSubjectFilterOption[] =
   enumToFilterOptions(BusinessSubjectTypeEnum);
+
 export const getDirInTreeActionsCreator =
   (
     Modal: Modals = Modals.FormCreateDirTreeComp,
-    createParentTitle?: string,
-    createChildTitle?: string,
-    updateItemTitle?: string
-  ): DirInTreeActionsCreatorType =>
+    { createParentTitle, createChildTitle, updateItemTitle }: GetDirInTreeActionsCreatorOptions = {}
+  ): DirInTreeActionsCreatorType<ApiDirType, any, IDirItemBase, DirectoriesService> =>
   ({ modalService, service, type, dirType, findById }) => {
     return {
-      onCreateParent: async () => {
+      onCreateParent: () => {
         const modal = modalService.handleOpenModal({
           Modal: Modal,
           props: {
@@ -56,18 +58,20 @@ export const getDirInTreeActionsCreator =
             type,
             dirType,
             onSubmit: (data, o) => {
-              service.create({
-                data: { dirType, data },
-                onSuccess: rd => {
-                  o?.closeAfterSave && modal?.onClose();
-                  toast.success(`Created: ${data.label}`);
-                },
-              });
+              service
+                .create({
+                  data: { dirType, data },
+                  onSuccess: rd => {
+                    o?.closeAfterSave && modal?.onClose();
+                    toast.success(`Created: ${data.label}`);
+                  },
+                })
+                .then();
             },
           } as ModalChildrenProps[Modals.FormCreateDirTreeComp],
         });
       },
-      onCreateChild: async (parentId, parent) => {
+      onCreateChild: (parentId, parent) => {
         const modal = modalService.handleOpenModal({
           Modal,
           props: {
@@ -76,20 +80,20 @@ export const getDirInTreeActionsCreator =
             parent,
             dirType,
             onSubmit: (data, o) => {
-              service.create({
-                data: { dirType, data },
-                onSuccess: rd => {
-                  o?.closeAfterSave && modal?.onClose();
-                  toast.success(`Created: ${data.label}`);
-                },
-              });
+              service
+                .create({
+                  data: { dirType, data },
+                  onSuccess: rd => {
+                    o?.closeAfterSave && modal?.onClose();
+                    toast.success(`Created: ${data.label}`);
+                  },
+                })
+                .then();
             },
           } as ModalChildrenProps[Modals.FormCreateDirTreeComp],
         });
       },
-      onUpdateItem: async (_id, o) => {
-        const dataForUpdate = findById ? findById(_id) : undefined;
-        if (!dataForUpdate) return;
+      onUpdate: (_id, dataForUpdate, o) => {
         const modal = modalService.handleOpenModal({
           Modal,
           props: {
@@ -98,30 +102,35 @@ export const getDirInTreeActionsCreator =
             dirType,
             data: dataForUpdate,
             onSubmit: (data, o) => {
-              service?.update({
-                data: { dirType, _id, data },
-                onSuccess: rd => {
-                  o?.closeAfterSave && modal?.onClose();
-                  toast.success(`Updated: ${data.label}`);
-                },
-              });
+              service
+                ?.update({
+                  data: { dirType, _id, data },
+                  onSuccess: rd => {
+                    o?.closeAfterSave && modal?.onClose();
+                    toast.success(`Updated: ${data.label}`);
+                  },
+                })
+                .then();
             },
           } as ModalChildrenProps[Modals.FormCreateDirTreeComp],
         });
       },
-
-      onChangeArchiveStatus: service?.changeArchiveStatus
-        ? async (id, status, o) => {
-            const dataForUpdate = findById ? findById(id) : undefined;
-            if (!dataForUpdate) return;
-            service?.changeArchiveStatus({
-              data: { dirType, data: { isArchived: status } },
-              onSuccess: (rd: any) => {
-                toast.success(`${dataForUpdate.label} => ${status ? 'archived' : 'unarchived'}`);
-              },
-            });
-          }
-        : undefined,
+      onChangeArchiveStatus: (_id, status) => {
+        service
+          .changeArchiveStatus({
+            data: { dirType, _id, data: { isArchived: status } },
+            onSuccess: (rd, meta) => {
+              console.log(rd);
+              // toast.success(`${dataForUpdate.label} => ${status ? 'archived' : 'unarchived'}`);
+            },
+          })
+          .then();
+      },
+      onChangeDisableStatus: (_id, status) => {
+        service
+          .changeDisabledStatus({ data: { dirType, _id, data: { disabled: status } }, onSuccess: (rd, meta) => {} })
+          .then();
+      },
     };
   };
 

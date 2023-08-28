@@ -7,20 +7,12 @@ import useCustomRolesService, { CustomRolesService } from 'hooks/useCustomRolesS
 import FlexBox from '../atoms/FlexBox';
 import { useCustomRolesSelector } from '../../redux/selectors.store';
 
-import { DirInTreeActionsCreatorOptions, IDirInTreeProps } from '../Directories/dir.types';
+import { IDirInTreeProps } from '../Directories/dir.types';
 import { ICustomRole } from '../../redux/customRoles/customRoles.types';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 
 export interface DirCustomRolesProps
-  extends Omit<IDirInTreeProps<any, any, ICustomRole, ICustomRole, ICustomRole>, 'actionsCreator'> {
-  actionsCreator: (options: DirInTreeActionsCreatorOptions<any, any, ICustomRole, CustomRolesService>) => {
-    onCreateChild?: (parentId: string) => void;
-    onCreateParent?: () => void;
-    onUpdateItem?: (id: string) => void;
-    onDeleteItem?: (id: string) => void;
-    onChangeArchiveStatus?: (id: string, status?: boolean) => void;
-  };
-}
+  extends IDirInTreeProps<any, any, ICustomRole, ICustomRole, ICustomRole, CustomRolesService> {}
 
 const DirCustomRoles: React.FC<DirCustomRolesProps> = ({ createParentTitle, actionsCreator, ...props }) => {
   const { customRoles } = useCustomRolesSelector();
@@ -41,15 +33,8 @@ const DirCustomRoles: React.FC<DirCustomRolesProps> = ({ createParentTitle, acti
 
   return (
     <StModalForm {...props}>
-      <FlexBox fillWidth flex={'1'} padding={'0 12px'} maxHeight={'100%'}>
-        <DirList
-          list={customRoles}
-          createParentTitle={createParentTitle}
-          onEdit={actions?.onUpdateItem}
-          onDelete={actions?.onDeleteItem}
-          onChangeArchiveStatus={actions?.onChangeArchiveStatus}
-          onCreateParent={actions?.onCreateParent}
-        />
+      <FlexBox fillWidth flex={'1'} padding={'0'} maxHeight={'100%'}>
+        <DirList list={customRoles} createParentTitle={createParentTitle} {...actions} />
       </FlexBox>
     </StModalForm>
   );

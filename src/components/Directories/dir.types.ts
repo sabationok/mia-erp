@@ -29,6 +29,7 @@ export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> exte
   label?: string;
   status?: 'ARCHIVED' | 'DELETED' | 'ACTIVE';
   taxCode?: string | number;
+  personalTaxCode?: string | number;
   description?: string;
   manufacturer?: string;
   email?: string;
@@ -56,20 +57,19 @@ export interface DirectoriesFormProps<
   dirType?: DirType;
   onSubmit?: AppSubmitHandler<FormData, { logAfterSubmit?: boolean }>;
 }
-
-// export type RegisterChangeArchiveStatus<ItemDataType = any, ItemType = any> = {
-//   modalService: IModalProviderContext;
-//   serviceDispatcher: DirectoriesService['changeArchiveStatus'];
-//   type?: ItemType;
-//   findById: (id: string) => ItemDataType | undefined;
-// };
+export interface GetDirInTreeActionsCreatorOptions {
+  createParentTitle?: string;
+  createChildTitle?: string;
+  updateItemTitle?: string;
+}
 
 export interface IDirInTreeProps<
   DirType extends ApiDirType = any,
   ItemType = any,
   CreateDTO = any,
   UpdateDTO = any,
-  ItemDataType = any
+  ItemDataType extends IDirItemBase = any,
+  Service = any
 > extends DirBaseProps {
   filterOptions?: FilterOpt<ItemType>[];
   type?: ItemType;
@@ -79,14 +79,22 @@ export interface IDirInTreeProps<
   filterDefaultValue?: ItemType;
   availableLevels?: number;
 
-  actionsCreator: (options: ActionsCreatorOptions<DirType, ItemType, CreateDTO, UpdateDTO, ItemDataType>) => {
-    onCreateChild?: (parentId: string, parent: IBaseDirItem<ItemType>, options?: UseAppFormAfterSubmitOptions) => void;
-    onCreateParent?: (options?: UseAppFormAfterSubmitOptions) => void;
-    onUpdateItem?: (id: string, options?: UseAppFormAfterSubmitOptions) => void;
-    onDeleteItem?: (id: string, options?: UseAppFormAfterSubmitOptions) => void;
-    onChangeArchiveStatus?: (id: string, status: boolean, options?: UseAppFormAfterSubmitOptions) => void;
-  };
+  editing?: boolean;
+  creatingParent?: boolean;
+  creatingChild?: boolean;
+  changeDisableStatus?: boolean;
+  changeArchiveStatus?: boolean;
+
+  actionsCreator: DirInTreeActionsCreatorType<DirType, ItemType, ItemDataType, Service>;
 }
+
+// (options: ActionsCreatorOptions<DirType, ItemType, CreateDTO, UpdateDTO, ItemDataType>) => {
+//   onCreateChild?: (parentId: string, parent: IBaseDirItem<ItemType>, options?: UseAppFormAfterSubmitOptions) => void;
+//   onCreateParent?: (options?: UseAppFormAfterSubmitOptions) => void;
+//   onUpdateItem?: (id: string, options?: UseAppFormAfterSubmitOptions) => void;
+//   onDeleteItem?: (id: string, options?: UseAppFormAfterSubmitOptions) => void;
+//   onChangeArchiveStatus?: (id: string, status: boolean, options?: UseAppFormAfterSubmitOptions) => void;
+// }
 
 export type ActionsCreatorOptions<
   DirType extends ApiDirType = any,
@@ -113,39 +121,19 @@ export type DirInTreeActionsCreatorOptions<
   type?: ItemType;
   findById?: (id: string) => ItemDataType | undefined;
 };
-export type DirInTreeActionsCreatorType = (
-  options: DirInTreeActionsCreatorOptions<ApiDirType, any, IBaseDirItem, DirectoriesService>
-) => {
+export type DirInTreeActionsCreatorType<
+  DirType extends ApiDirType = any,
+  ItemType = any,
+  ItemDataType extends IDirItemBase = any,
+  Service = any
+> = (options: DirInTreeActionsCreatorOptions<DirType, ItemType, ItemDataType, Service>) => {
   onCreateChild?: (parentId: string, parent: IBaseDirItem, options?: UseAppFormAfterSubmitOptions) => void;
   onCreateParent?: (options?: UseAppFormAfterSubmitOptions) => void;
-  onUpdateItem?: (id: string, options?: UseAppFormAfterSubmitOptions) => void;
-  onDeleteItem?: (id: string, options?: UseAppFormAfterSubmitOptions) => void;
+  onUpdate?: (id: string, data: ItemDataType, options?: UseAppFormAfterSubmitOptions) => void;
+  onDelete?: (id: string, options?: UseAppFormAfterSubmitOptions) => void;
   onChangeArchiveStatus?: (id: string, status: boolean, options?: UseAppFormAfterSubmitOptions) => void;
-
-  onGoToConfig?: (id: string) => void;
-  onToggleDisabledStatus?: (id: string, status?: boolean) => void;
-  onToggleArchiveStatus?: (id: string, status?: boolean) => void;
+  onChangeDisableStatus?: (id: string, status: boolean, options?: UseAppFormAfterSubmitOptions) => void;
 };
-
-export type DirMethodsActionsCreator = (
-  options: DirInTreeActionsCreatorOptions<MethodDirType, any, IMethodDirItem, DirectoriesService>
-) => {
-  onCreateChild?: (parentId: string) => void;
-  onCreateParent?: () => void;
-  onUpdateItem?: (id: string) => void;
-  onDeleteItem?: (id: string) => void;
-  onGoToConfig?: (id: string) => void;
-  onToggleDisabledStatus?: (id: string, status?: boolean) => void;
-  onToggleArchiveStatus?: (id: string, status?: boolean) => void;
-  onChangeArchiveStatus?: (id: string, status?: boolean) => void;
-};
-// export type RegisterCreateChildReturn = (parentId: string) => void;
-// export type RegisterUpdateItem<ItemDataType = any, ItemType = any> = {
-//   modalService: IModalProviderContext;
-//   serviceDispatcher: DirectoriesService['update'];
-//   type?: ItemType;
-//   findById: (id: string) => ItemDataType | undefined;
-// };
 
 export interface DirCategoriesProps
   extends IDirInTreeProps<ApiDirType.CATEGORIES_TR, CategoryTypes, ICategoryFormData, ICategoryFormData, ICategory> {}

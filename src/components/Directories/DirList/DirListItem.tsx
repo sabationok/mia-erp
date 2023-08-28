@@ -2,18 +2,33 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import React, { memo, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import DirList from './DirList';
-import { IBaseDirItem } from '../dir.types';
-import { isUndefined } from 'lodash';
+import { IBaseDirItem, IDirItemBase } from '../dir.types';
+import { isUndefined, omit } from 'lodash';
 
 export interface DirListItemAddsProps<T = any> {
   list: IBaseDirItem<T>[];
   item?: IBaseDirItem<T>;
+  archived?: boolean;
+  disabled?: boolean;
+  deleted?: boolean;
+  onUpdate?: (id: string, data: IDirItemBase) => void;
   onDelete?: (id: string) => void;
-  onEdit?: (id: string) => void;
+  onChangeDisableStatus?: (id: string, status: boolean) => void;
   onChangeArchiveStatus?: (id: string, status: boolean) => void;
   onCreateChild?: (parentId: string, parent: IBaseDirItem<T>) => void;
   currentLevel?: number;
   availableLevels?: number;
+
+  creatingParent?: boolean;
+  changeDisableStatus?: boolean;
+  changeArchiveStatus?: boolean;
+  creatingChild?: boolean;
+  editing?: boolean;
+}
+interface DirListItemState {
+  archived?: boolean;
+  disabled?: boolean;
+  deleted?: boolean;
 }
 
 const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
@@ -24,15 +39,46 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
   _id,
   list,
   onDelete,
+  onChangeDisableStatus,
   onChangeArchiveStatus,
-  onEdit,
+  onUpdate,
   onCreateChild,
   childrenList,
   currentLevel,
   availableLevels,
+  archived,
+  deleted,
+  disabled = false,
+  changeDisableStatus,
+  changeArchiveStatus = true,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [state, setState] = useState<DirListItemState>({ archived, deleted, disabled });
+
+  const stateActionsMap: Record<keyof DirListItemState, ((id: string, status: boolean) => void) | undefined> = {
+    archived: onChangeArchiveStatus,
+    disabled: onChangeDisableStatus,
+    deleted: onDelete,
+  };
+
+  const registerStateAction = (name: keyof DirListItemState) => {
+    const action = stateActionsMap[name];
+
+    const props = {
+      disabled: !action,
+      isActive: !state[name],
+      onClick: () => {
+        setState(prev => {
+          const newState = { ...prev, [name]: !prev[name] };
+          action && action(_id, !prev[name]);
+          return newState;
+        });
+      },
+    };
+
+    return props;
+  };
 
   const canHasChildren = useMemo(() => {
     return !isUndefined(availableLevels) && !isUndefined(currentLevel) ? availableLevels > currentLevel + 1 : !parent;
@@ -42,7 +88,7 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
     setIsOpen(prev => !prev);
   }
 
-  function evHandlerWrapper(evHandler: (...arg: any[]) => void, ...arg: any[]) {
+  function evHandlerWrapper(evHandler?: (...arg: any[]) => void, ...arg: any[]) {
     return () => {
       if (typeof evHandler === 'function') {
         evHandler(...arg);
@@ -60,17 +106,14 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
               iconSize="24px"
               icon="plus"
               disabled={!canHasChildren || !onCreateChild}
-              onClick={
-                onCreateChild &&
-                evHandlerWrapper(
-                  onCreateChild,
-                  _id,
-                  item || {
-                    label,
-                    name,
-                  }
-                )
-              }
+              onClick={evHandlerWrapper(
+                onCreateChild,
+                _id,
+                item || {
+                  label,
+                  name,
+                }
+              )}
             />
           )}
         </ActionsField>
@@ -89,31 +132,26 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
         </LabelField>
 
         <ActionsField>
-          <ButtonIcon
+          <ActionButton
             variant="onlyIcon"
             iconSize="24px"
             icon="edit"
-            disabled={!onEdit}
-            onClick={onEdit && evHandlerWrapper(onEdit, _id)}
+            disabled={!onUpdate}
+            onClick={evHandlerWrapper(onUpdate, _id, omit(item, ['childrenList', 'parent']))}
           />
 
-          {onDelete && (
-            <ButtonIcon
-              variant="onlyIcon"
-              iconSize="24px"
-              icon="delete"
-              disabled={!onDelete}
-              onClick={onDelete && evHandlerWrapper(onDelete, _id)}
-            />
+          {changeArchiveStatus && (
+            <ActionButton variant="onlyIcon" iconSize="24px" icon={'archive'} {...registerStateAction('archived')} />
           )}
 
-          <ButtonIcon
-            variant="onlyIcon"
-            iconSize="24px"
-            icon={'archive'}
-            disabled={!onChangeArchiveStatus}
-            onClick={onChangeArchiveStatus && evHandlerWrapper(onChangeArchiveStatus, _id)}
-          />
+          {changeDisableStatus && (
+            <ActionButton
+              variant="onlyIcon"
+              iconSize="22px"
+              icon={!state.disabled ? 'lightMode' : 'darkMode'}
+              {...registerStateAction('disabled')}
+            />
+          )}
         </ActionsField>
       </ItemGrid>
 
@@ -123,9 +161,7 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
             list={list}
             parent={{ label, name, _id: _id || '' }}
             entryList={childrenList}
-            onDelete={onDelete}
-            onEdit={onEdit}
-            onCreateChild={onCreateChild}
+            {...{ onDelete, onUpdate, onChangeArchiveStatus, onChangeDisableStatus, onCreateChild }}
             currentLevel={!isUndefined(currentLevel) ? currentLevel + 1 : currentLevel}
             availableLevels={availableLevels}
           />
@@ -168,7 +204,7 @@ const LabelField = styled.div`
   overflow: hidden;
 
   border-radius: 2px;
-  background-color: ${({ theme }) => theme.fieldColor};
+  background-color: ${({ theme }) => theme.field.backgroundColor};
   cursor: default;
 `;
 const Label = styled.div`
@@ -187,4 +223,22 @@ const Children = styled.ul<{ isOpen: boolean }>`
 
   padding-left: 34px;
 `;
+const ActionButton = styled(ButtonIcon)`
+  fill: ${({ isActive = true, theme }) => (isActive ? theme.accentColor.base : theme.accentColor.light)};
+  &[disabled] {
+    opacity: 1;
+    fill: ${({ theme }) => theme.fieldColor};
+  }
+`;
+
 export default memo(DirListItem);
+
+// {!onDelete && (
+//   <ButtonIcon
+//     variant="onlyIcon"
+//     iconSize="24px"
+//     icon="delete"
+//     // disabled={!onDelete}
+//     // onClick={evHandlerWrapper(onDelete, _id)}
+//   />
+// )}

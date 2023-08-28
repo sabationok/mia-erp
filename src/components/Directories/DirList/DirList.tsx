@@ -20,18 +20,15 @@ export interface DirListProps<T = any> extends Partial<DirListItemAddsProps> {
 const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLDivElement>> = ({
   entryList,
   list,
-  parent,
-  onDelete,
-  onEdit,
-  onCreateChild,
-  onCreateParent,
-  onChangeArchiveStatus,
   createParentTitle,
-  currentLevel = 0,
+  onCreateParent,
   containerProps,
   listBoxProps,
   listProps,
+
+  currentLevel = 0,
   availableLevels = 1,
+
   ...props
 }) => {
   const listForRender = useMemo(() => (entryList ? entryList : list), [entryList, list]);
@@ -43,17 +40,13 @@ const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLDivElement>> = (
           key={item?._id || idx}
           {...item}
           item={item}
-          parent={parent && parent}
-          onDelete={onDelete}
-          onEdit={onEdit}
-          onCreateChild={onCreateChild}
-          onChangeArchiveStatus={onChangeArchiveStatus}
+          {...props}
           list={list}
           availableLevels={availableLevels}
           currentLevel={currentLevel}
         />
       )),
-    [availableLevels, currentLevel, list, listForRender, onChangeArchiveStatus, onCreateChild, onDelete, onEdit, parent]
+    [availableLevels, currentLevel, list, listForRender, props]
   );
 
   return (

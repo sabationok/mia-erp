@@ -60,42 +60,46 @@ const CustomRolesProps: DirCustomRolesProps = {
   createParentTitle: 'Створити роль',
   fillHeight: true,
   actionsCreator: ({ service, modalService, findById }) => ({
-    onUpdateItem: id => {
-      console.log(findById ? findById(id) : undefined);
+    onUpdate: (id, dataForUpdate, options) => {
       const modal = modalService.handleOpenModal({
         ModalChildren: FormCreateCustomRole,
         modalChildrenProps: {
           title: 'Редагувати роль',
-          customRole: findById ? findById(id) : undefined,
+          customRole: dataForUpdate,
           onSubmit: data => {
             service.edit &&
-              service.edit({
-                data,
-                onSuccess: () => {
-                  modal?.onClose();
-                },
-              });
+              service
+                .edit({
+                  data,
+                  onSuccess: () => {
+                    modal?.onClose();
+                  },
+                })
+                .then();
           },
         },
       });
     },
-    onCreateParent: () => {
+    onCreateParent: options => {
       const modal = modalService.handleOpenModal({
         ModalChildren: FormCreateCustomRole,
         modalChildrenProps: {
           title: 'Створити роль',
           onSubmit: data => {
-            service.create({
-              data,
-              onSuccess: () => {
-                modal?.onClose();
-              },
-            });
+            service
+              .create({
+                data,
+                onSuccess: () => {
+                  modal?.onClose();
+                },
+              })
+              .then();
           },
         },
       });
     },
     onChangeArchiveStatus: () => {},
+    onChangeDisableStatus: () => {},
   }),
 };
 const subCompanies = {
@@ -148,8 +152,13 @@ export const comapnySettings: IDirectory[] = [
       title: 'Способи відвантаження',
       dirType: ApiDirType.METHODS_SHIPMENT,
       createParentTitle: 'Додати спосіб відвантаження',
+      changeDisableStatus: true,
+      creatingParent: false,
       availableLevels: 1,
-      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod),
+      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {
+        createParentTitle: 'Створити спосіб відвантаження',
+        updateItemTitle: 'Редагувати спосіб відвантаження',
+      }),
     },
     disabled: true,
   },
@@ -162,7 +171,12 @@ export const comapnySettings: IDirectory[] = [
       dirType: ApiDirType.METHODS_COMMUNICATION,
       createParentTitle: 'Додати спосіб комунікації',
       availableLevels: 1,
-      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, 'Додати спосіб комунікації'),
+      changeDisableStatus: true,
+      creatingParent: false,
+      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {
+        createParentTitle: 'Додати спосіб комунікації',
+        updateItemTitle: 'Редагувати спосіб комунікації',
+      }),
     },
     disabled: true,
   },

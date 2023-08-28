@@ -1,9 +1,6 @@
 import React, { memo } from 'react';
-import sprite from 'img/sprite';
+import sprite, { IconIdType } from 'img/sprite';
 import styled, { css, DefaultTheme, FlattenInterpolation, ThemeProps } from 'styled-components';
-import { iconId } from 'data';
-
-export type IconIdType = keyof typeof iconId;
 
 type TextTransform = 'uppercase' | 'lowercase' | 'capitalize' | 'none';
 

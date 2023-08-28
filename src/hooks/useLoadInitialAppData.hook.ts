@@ -76,7 +76,7 @@ const useLoadInitialAppDataHook = ({
           await prService.getAllByCompanyId({ data: { refresh: true, companyId: company._id } });
         }
 
-        Promise.all(
+        await Promise.all(
           directoriesForLoading.map(async ({ dirType, createTreeData }) => {
             return await getAllByDirType({
               data: { dirType, params: { createTreeData } },

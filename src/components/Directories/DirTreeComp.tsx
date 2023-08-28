@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import ModalForm from 'components/ModalForm';
 import DirList from './DirList/DirList';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
@@ -23,10 +23,6 @@ const DirTreeComp: React.FC<IDirInTreeProps> = ({
   const modalService = useModalProvider();
   const [current, setCurrent] = useState(filterDefaultValue);
 
-  useEffect(() => {
-    console.log(current);
-    console.log({ filterSearchPath, current, directory });
-  });
   const actions = useMemo(
     () =>
       actionsCreator &&
@@ -56,12 +52,8 @@ const DirTreeComp: React.FC<IDirInTreeProps> = ({
         list={fList}
         currentLevel={0}
         availableLevels={availableLevels}
-        onEdit={actions?.onUpdateItem}
-        onDelete={actions?.onDeleteItem}
-        onCreateChild={actions?.onCreateChild}
-        onCreateParent={actions?.onCreateParent}
-        onChangeArchiveStatus={actions?.onChangeArchiveStatus}
         createParentTitle={createParentTitle}
+        {...actions}
       />
     </ModalForm>
   );

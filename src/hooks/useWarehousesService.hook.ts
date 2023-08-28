@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ServiceApiCaller, ServiceDispatcher } from '../redux/global.types';
+import { ServiceApiCaller, ServiceDispatcherAsync } from '../redux/global.types';
 import { AppQueryParams } from '../api';
 import { IWarehouse } from '../redux/warehouses/warehouses.types';
 import { getAllWarehousesThunk, getWarehouseByIdThunk } from '../redux/warehouses/warehouses.thunks';
@@ -7,17 +7,17 @@ import { defaultThunkPayload } from '../utils/fabrics';
 import { useAppDispatch } from '../redux/store.store';
 
 export interface WarehousesService {
-  getAll: ServiceDispatcher<{ refresh?: boolean; query?: AppQueryParams }, IWarehouse[]>;
+  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IWarehouse[]>;
   getAllTables?: ServiceApiCaller;
   getTableById?: ServiceApiCaller;
-  getById: ServiceDispatcher<IWarehouse, Partial<IWarehouse>>;
+  getById: ServiceDispatcherAsync<IWarehouse, Partial<IWarehouse>>;
 }
 export const useWarehousesService = (): WarehousesService => {
   const dispatch = useAppDispatch();
   return useMemo(
     (): WarehousesService => ({
-      getAll: async p => dispatch(getAllWarehousesThunk(defaultThunkPayload(p))),
-      getById: args => dispatch(getWarehouseByIdThunk(defaultThunkPayload(args))),
+      getAll: async args => dispatch(getAllWarehousesThunk(defaultThunkPayload(args))),
+      getById: async args => dispatch(getWarehouseByIdThunk(defaultThunkPayload(args))),
     }),
     [dispatch]
   );
