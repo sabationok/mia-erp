@@ -6,7 +6,7 @@ import { IPage } from 'redux/page/pageSlice';
 import styled from 'styled-components';
 
 import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
-import Text from '../../atoms/Text';
+import { Text } from '../../atoms/Text';
 import { useAppPages, useAppParams, useCloseByEscapeOrClickOnBackdrop } from '../../../hooks';
 import SubNavMenu from './SubNavMenu';
 import FlexBox from '../../atoms/FlexBox';

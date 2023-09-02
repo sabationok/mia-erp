@@ -5,11 +5,16 @@ import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../redux/companies/c
 export const langUa = {
   // DIRECTORIES
 
-  [ApiDirType.CATEGORIES_TR]: 'Категорії',
-  [ApiDirType.CATEGORIES_PROD]: 'Категорії',
+  [ApiDirType.CATEGORIES_TR]: 'Статті доходів/витрат',
+  [ApiDirType.CATEGORIES_PROD]: 'Категорії товарів/послуг',
   [ApiDirType.BRANDS]: 'Бренди',
   [ApiDirType.TAGS]: 'Теги',
   [ApiDirType.WAREHOUSES]: 'Склади',
+  [ApiDirType.VARIATIONS]: 'Варіації',
+  [ApiDirType.BANK_ACCOUNTS]: 'Банківські рахунки',
+  [ApiDirType.PROPERTIES_PRODUCTS]: 'Характеристики товарів/послуг',
+  variationsTemplate: 'Таблиця варіацій',
+  variationsTemplates: 'Таблиці варіацій',
 
   counter: 'Бухгалтер',
   auditor: 'Аудитор',

@@ -5,7 +5,7 @@ import CheckBox from '../../TableList/TebleCells/CellComponents/CheckBox';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { iconId } from '../../../img/sprite';
 import styled from 'styled-components';
-import Text from '../../atoms/Text';
+import { Text } from '../../atoms/Text';
 import { countPercentage, numberWithSpaces } from '../../../utils';
 
 export interface ReportListItemBaseProps<T = any> extends React.HTMLAttributes<HTMLDivElement> {

@@ -4,10 +4,11 @@ import styled from 'styled-components';
 import DirList from './DirList';
 import { IBaseDirItem, IDirItemBase } from '../dir.types';
 import { isUndefined, omit } from 'lodash';
+import { ApiDirType } from '../../../redux/APP_CONFIGS';
 
 export interface DirListItemAddsProps<T = any> {
-  list: IBaseDirItem<T>[];
-  item?: IBaseDirItem<T>;
+  list: IDirItemBase<ApiDirType, T>[];
+  item?: IDirItemBase<ApiDirType, T>;
   archived?: boolean;
   disabled?: boolean;
   deleted?: boolean;
@@ -32,24 +33,24 @@ interface DirListItemState {
 }
 
 const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
+  _id,
   label,
   name,
   parent,
   item,
-  _id,
   list,
-  onDelete,
-  onChangeDisableStatus,
-  onChangeArchiveStatus,
+  availableLevels = 1,
+  currentLevel = 0,
   onUpdate,
   onCreateChild,
   childrenList,
-  currentLevel,
-  availableLevels,
-  archived,
-  deleted,
+  deleted = false,
+  onDelete,
   disabled = false,
+  onChangeDisableStatus,
   changeDisableStatus,
+  archived = false,
+  onChangeArchiveStatus,
   changeArchiveStatus = true,
   ...props
 }) => {

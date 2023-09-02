@@ -6,31 +6,18 @@ import { toast } from 'react-toastify';
 import { useAppServiceProvider } from './useAppServices.hook';
 
 const directoriesForLoading: { dirType: ApiDirType; createTreeData?: boolean }[] = [
-  {
-    dirType: ApiDirType.COUNTS,
-    createTreeData: true,
-  },
-  {
-    dirType: ApiDirType.CATEGORIES_TR,
-    createTreeData: true,
-  },
-  {
-    dirType: ApiDirType.CATEGORIES_PROD,
-    createTreeData: true,
-  },
-  {
-    dirType: ApiDirType.ACTIVITIES,
-    createTreeData: true,
-  },
-  {
-    dirType: ApiDirType.BRANDS,
-    createTreeData: true,
-  },
+  { dirType: ApiDirType.COUNTS, createTreeData: true },
+  { dirType: ApiDirType.CATEGORIES_TR, createTreeData: true },
+  { dirType: ApiDirType.CATEGORIES_PROD, createTreeData: true },
+  { dirType: ApiDirType.ACTIVITIES, createTreeData: true },
+  { dirType: ApiDirType.BRANDS, createTreeData: true },
+  { dirType: ApiDirType.PROPERTIES_PRODUCTS, createTreeData: true },
   { dirType: ApiDirType.CONTRACTORS },
   { dirType: ApiDirType.TAGS },
   { dirType: ApiDirType.METHODS_PAYMENT },
   { dirType: ApiDirType.METHODS_SHIPMENT },
   { dirType: ApiDirType.METHODS_COMMUNICATION },
+  { dirType: ApiDirType.VARIATIONS },
 ];
 const useLoadInitialAppDataHook = ({
   onLoading,

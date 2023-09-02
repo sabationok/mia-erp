@@ -12,7 +12,9 @@ import {
   DirInTreeActionsCreatorType,
   DirMarksProps,
   DirProductCategoriesProps,
+  DirPropertiesProps,
   DirTagsProps,
+  DirVariationsTemplatesProps,
   GetDirInTreeActionsCreatorOptions,
   IDirItemBase,
 } from '../components/Directories/dir.types';
@@ -57,6 +59,7 @@ export const getDirInTreeActionsCreator =
             title: createParentTitle || t('createDirParentItem'),
             type,
             dirType,
+            create: true,
             onSubmit: (data, o) => {
               service
                 .create({
@@ -71,7 +74,7 @@ export const getDirInTreeActionsCreator =
           } as ModalChildrenProps[Modals.FormCreateDirTreeComp],
         });
       },
-      onCreateChild: (parentId, parent) => {
+      onCreateChild: (_, parent) => {
         const modal = modalService.handleOpenModal({
           Modal,
           props: {
@@ -79,6 +82,7 @@ export const getDirInTreeActionsCreator =
             type,
             parent,
             dirType,
+            create: true,
             onSubmit: (data, o) => {
               service
                 .create({
@@ -100,6 +104,7 @@ export const getDirInTreeActionsCreator =
             title: updateItemTitle || t('update'),
             type,
             dirType,
+            edit: true,
             data: dataForUpdate,
             onSubmit: (data, o) => {
               service
@@ -323,6 +328,44 @@ const brandsDir: IDirectory<DirBrandsProps> = {
   modalChildrenProps: brandsProps,
   disabled: false,
 };
+const variationsProps: DirVariationsTemplatesProps = {
+  title: t('variationsTemplates'),
+  createParentTitle: 'Create variations template',
+  dirType: ApiDirType.VARIATIONS_TEMPLATES,
+  fillHeight: true,
+  availableLevels: 1,
+  actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateVariationsTemplate, {
+    createParentTitle: 'Create warehouse',
+  }),
+};
+const variationsDir: IDirectory<DirVariationsTemplatesProps> = {
+  title: variationsProps.title,
+  iconId: iconId.storage,
+  ModalChildren: DirTreeComp,
+  modalChildrenProps: variationsProps,
+  disabled: false,
+};
+
+const prodPropertiesProps: DirPropertiesProps = {
+  title: t(ApiDirType.PROPERTIES_PRODUCTS),
+  createParentTitle: 'Create product property',
+  dirType: ApiDirType.PROPERTIES_PRODUCTS,
+  fillHeight: true,
+  availableLevels: 2,
+  creatingChild: true,
+  actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateDirTreeComp, {
+    createParentTitle: 'Create product property',
+    createChildTitle: 'Create property value',
+  }),
+};
+const prodPropertiesDir: IDirectory<DirPropertiesProps> = {
+  title: prodPropertiesProps.title,
+  iconId: iconId.storage,
+  ModalChildren: DirTreeComp,
+  modalChildrenProps: prodPropertiesProps,
+  disabled: false,
+};
+
 // const warehousesProps: DirWarehousesProps = {
 //   title: t(ApiDirType.WAREHOUSES),
 //   createParentTitle: 'Create warehouse',
@@ -356,6 +399,8 @@ const directories: Partial<IDirectory>[] = [
   marksDir,
   brandsDir,
   tagsDir,
+  variationsDir,
+  prodPropertiesDir,
   {
     title: 'Статуси для замовлень',
     disabled: true,
@@ -420,10 +465,7 @@ const directories: Partial<IDirectory>[] = [
       dirType: ApiDirType.WORKERS,
     },
   },
-  {
-    title: 'Специфікації',
-    disabled: true,
-  },
+
   {
     title: 'Розмірні сітки',
     disabled: true,

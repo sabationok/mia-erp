@@ -7,6 +7,8 @@ import { useDirService, useFilteredLisData } from 'hooks';
 
 import { FilterOpt } from '../ModalForm/ModalFilter';
 import { useDirectoriesSelector } from '../../redux/selectors.store';
+import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import styled from 'styled-components';
 
 const DirTreeComp: React.FC<IDirInTreeProps> = ({
   createParentTitle,
@@ -47,7 +49,20 @@ const DirTreeComp: React.FC<IDirInTreeProps> = ({
   });
 
   return (
-    <ModalForm style={{ maxWidth: 480 }} {...props} onOptSelect={handleFilterData}>
+    <ModalForm
+      style={{ maxWidth: 480 }}
+      {...props}
+      onOptSelect={handleFilterData}
+      extraFooter={
+        actions?.onCreateParent && (
+          <CreateParent>
+            <ButtonIcon variant="outlinedSmall" onClick={() => actions?.onCreateParent && actions.onCreateParent()}>
+              {createParentTitle || 'Create parent'}
+            </ButtonIcon>
+          </CreateParent>
+        )
+      }
+    >
       <DirList
         list={fList}
         currentLevel={0}
@@ -58,5 +73,20 @@ const DirTreeComp: React.FC<IDirInTreeProps> = ({
     </ModalForm>
   );
 };
+const CreateParent = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
+  width: 100%;
+
+  //position: sticky;
+  //bottom: 0;
+  //left: 0;
+  //z-index: 5;
+
+  padding: 8px;
+
+  //border-top: 1px solid ${({ theme }) => theme.modalBorderColor};
+`;
 export default DirTreeComp;

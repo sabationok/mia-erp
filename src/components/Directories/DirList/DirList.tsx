@@ -1,4 +1,3 @@
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import React, { useMemo } from 'react';
 import DirListItem, { DirListItemAddsProps } from './DirListItem';
 import styled from 'styled-components';
@@ -22,6 +21,7 @@ const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLDivElement>> = (
   list,
   createParentTitle,
   onCreateParent,
+  creatingParent = true,
   containerProps,
   listBoxProps,
   listProps,
@@ -66,14 +66,6 @@ const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLDivElement>> = (
           <EmptyList>Список порожній</EmptyList>
         )}
       </ListBox>
-
-      {onCreateParent && (
-        <CreateParent>
-          <ButtonIcon variant="outlinedSmall" onClick={() => onCreateParent()}>
-            {createParentTitle || 'Create parent'}
-          </ButtonIcon>
-        </CreateParent>
-      )}
     </Box>
   );
 };

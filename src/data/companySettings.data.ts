@@ -139,6 +139,7 @@ export const comapnySettings: IDirectory[] = [
       title: 'Способи оплати',
       dirType: ApiDirType.METHODS_PAYMENT,
       createParentTitle: 'Додати спосіб оплати',
+      changeDisableStatus: true,
       availableLevels: 1,
       actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod),
     },

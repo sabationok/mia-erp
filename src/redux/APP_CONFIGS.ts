@@ -31,6 +31,7 @@ export enum API_BASE_ROUTES {
   REFUNDS = '/refunds',
   PRICE_MANAGEMENT = '/priceManagement',
   WAREHOUSES = '/warehouses',
+  PAYMENTS = '/payments',
 }
 
 export enum Endpoints {
@@ -104,6 +105,9 @@ export enum ApiDirType {
   COLLECTION = 'collection',
   COLLECTIONS = 'collections',
   UNSET = 'unset',
+  PROPERTIES_PRODUCTS = 'properties_products',
+  VARIATIONS = 'variations',
+  VARIATIONS_TEMPLATES = 'variations_templates',
   DEFAULT = 'DEFAULT',
 }
 
@@ -225,6 +229,10 @@ const warehousesEndpoints = {
   [Endpoints.updateById]: (id: string) => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.updateById}/${id}`,
   [Endpoints.deleteById]: (id: string) => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.deleteById}/${id}`,
 };
+const payments = {
+  [Endpoints.create]: () => `${API_BASE_ROUTES.PAYMENTS}/${Endpoints.create}`,
+  [Endpoints.getAll]: () => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.getAll}`,
+};
 
 const APP_CONFIGS = {
   endpoints: {
@@ -239,6 +247,7 @@ const APP_CONFIGS = {
     warehousesEndpoints,
     priceManagementEndpoints,
     ordersEndpoints,
+    payments,
   },
 };
 

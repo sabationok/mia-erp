@@ -15,6 +15,15 @@ import { DirectoriesService } from '../../hooks/useDirService.hook';
 // import { DirTableCompProps } from './DirTableComp';
 import { AppSubmitHandler, UseAppFormAfterSubmitOptions } from '../../hooks/useAppForm.hook';
 import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
+import { ProductTypeEnum } from '../../redux/products/products.types';
+
+export interface ItemTypeByDirType extends Record<ApiDirType, any> {
+  [ApiDirType.CATEGORIES_TR]: CategoryTrTypeEnum;
+  [ApiDirType.CATEGORIES_PROD]: ProductTypeEnum;
+  [ApiDirType.PROPERTIES_PRODUCTS]: ProductTypeEnum;
+  [ApiDirType.CONTRACTORS]: ContractorsTypesEnum;
+  [ApiDirType.COUNTS]: CountsTypesEnum;
+}
 
 export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> extends IBase {
   dirType?: DirType;
@@ -157,6 +166,37 @@ export interface IProductCategoryDirItem extends IBaseDirItem<any, ApiDirType.CA
 export interface IBrandFormData extends Omit<IBrand, '_id' | 'createdAt' | 'updatedAt'> {}
 export interface DirBrandsProps
   extends IDirInTreeProps<ApiDirType.BRANDS, any, IBrandFormData, IBrandFormData, IBrand> {}
+
+// ? PRODUCTS PROPERTIES
+export interface IPropertyDirItem extends IBaseDirItem {}
+
+export interface IPropertyFormData extends Omit<IPropertyDirItem, '_id' | 'createdAt' | 'updatedAt' | 'childrenList'> {}
+
+export interface DirPropertiesProps
+  extends IDirInTreeProps<
+    ApiDirType.PROPERTIES_PRODUCTS,
+    any,
+    IPropertyFormData,
+    IPropertyFormData,
+    IPropertyDirItem
+  > {}
+// ? VARIATIONS TABLE TEMPLATES
+export interface IVariationsTemplateDirItem extends IBaseDirItem {
+  properties?: IPropertyDirItem[];
+}
+
+export interface IVariationsTemplateFormData
+  extends Omit<IVariationsTemplateDirItem, '_id' | 'createdAt' | 'updatedAt' | 'childrenList'> {}
+
+export interface DirVariationsTemplatesProps
+  extends IDirInTreeProps<
+    ApiDirType.VARIATIONS_TEMPLATES,
+    any,
+    IVariationsTemplateFormData,
+    IVariationsTemplateFormData,
+    IVariationsTemplateDirItem
+  > {}
+
 export interface DirMarksProps extends IDirInTreeProps<ApiDirType.MARKS> {}
 
 export interface ITagDirItem extends IBaseDirItem<ContractorsTypesEnum, ApiDirType.TAGS> {}

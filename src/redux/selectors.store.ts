@@ -8,7 +8,7 @@ import { IAppSettings } from './appSettings/appSettings.slice';
 import { IProductsState } from './products/products.slice';
 import { IPriceListsState } from './priceManagement/priceManagement.slice';
 import { ApiDirType } from './APP_CONFIGS';
-import { IBaseDirItem } from '../components/Directories/dir.types';
+import { IDirItemBase, ItemTypeByDirType } from '../components/Directories/dir.types';
 import { IDirectoriesState } from './directories/directories.slice';
 import { IOrdersState } from './orders/orders.slice';
 import { useMemo } from 'react';
@@ -35,10 +35,11 @@ export const useWarehousesSelector = () =>
   useSelector<RootState, IWarehouseState>((state: RootState): IWarehouseState => state.warehouses);
 export const useCustomRolesSelector = () =>
   useSelector<RootState, ICustomRolesState>((state: RootState) => state.customRoles);
-export const useDirectoriesSelector = <DT extends ApiDirType = any, T = any>(
+
+export const useDirectoriesSelector = <DT extends ApiDirType = any>(
   dirType: DT
 ): {
-  directory: IBaseDirItem<T, DT>[];
+  directory: IDirItemBase<DT, ItemTypeByDirType[DT]>[];
   error?: IDirectoriesState['error'];
   isLoading?: IDirectoriesState['isLoading'];
 } => {
