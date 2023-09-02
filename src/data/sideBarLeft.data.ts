@@ -11,7 +11,7 @@ import Notifications from '../components/SideBarContent/Notifications';
 export const sideBarButtons: ISidebarOptionsItem[] = [
   {
     iconId: iconId.folder,
-    maxWidth: '',
+    maxWidth: '320px',
     options: directories,
     title: 'Довідники',
     corp: true,

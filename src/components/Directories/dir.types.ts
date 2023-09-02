@@ -182,7 +182,10 @@ export interface DirPropertiesProps
   > {}
 // ? VARIATIONS TABLE TEMPLATES
 export interface IVariationsTemplateDirItem extends IBaseDirItem {
-  properties?: IPropertyDirItem[];
+  properties?: IVariationProperty[];
+}
+export interface IVariationProperty extends IDirItemBase<ApiDirType.PROPERTIES_PRODUCTS> {
+  isSelectableForUser?: boolean;
 }
 
 export interface IVariationsTemplateFormData

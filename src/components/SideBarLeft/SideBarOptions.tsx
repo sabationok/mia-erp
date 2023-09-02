@@ -119,6 +119,10 @@ const Container = styled.div<{ isOpen: boolean; maxWidth?: string }>`
   transform: ${({ isOpen }) => `translate(${isOpen ? '0' : '-100%'})`};
   transition: transform ${({ theme }) => theme.globals.timingFunctionMain},
     max-width ${({ theme }) => theme.globals.timingFunctionMain};
+
+  @media screen and (max-width: 480px) {
+    max-width: 480px;
+  }
 `;
 const Header = styled.header`
   display: flex;

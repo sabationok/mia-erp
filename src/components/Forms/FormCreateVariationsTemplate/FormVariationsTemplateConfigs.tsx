@@ -1,112 +1,179 @@
 import FlexBox from '../../atoms/FlexBox';
-import { IDirItemBase } from '../../Directories/dir.types';
-import { useCallback, useMemo, useState } from 'react';
-import styled from 'styled-components';
+import { IVariationProperty } from '../../Directories/dir.types';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import styled, { useTheme } from 'styled-components';
 import { useDirectoriesSelector } from '../../../redux/selectors.store';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
-import CustomSelect, { CustomSelectOnClickHandler } from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import { CustomSelectOnClickHandler } from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { Text } from '../../atoms/Text';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { OnlyUUID } from '../../../redux/global.types';
+import Switch from '../../atoms/Switch';
+import { OnCheckBoxChangeHandler } from '../../TableList/tableTypes.types';
+import { isUndefined } from 'lodash';
 
 export interface FormVariationsTemplateConfigsProps {
-  onSelect?: (ids: OnlyUUID[]) => void;
+  onSelect?: (id: OnlyUUID) => void;
+  onChange?: (ids: OnlyUUID[]) => void;
 }
 
-const FormVariationsTemplateConfigs: React.FC<FormVariationsTemplateConfigsProps> = () => {
-  const [selectedItems, setSelectedItems] = useState<IDirItemBase<ApiDirType.PROPERTIES_PRODUCTS>[]>([]);
+export interface VariationTemplateSelectedOptionProps {
+  item?: IVariationProperty;
+  index: number;
+  onRemovePress?: () => void;
+  isSelectableForUser?: boolean;
+  onChangeSelectableForUser?: (value: boolean) => void;
+}
 
-  const properties = useDirectoriesSelector(ApiDirType.PROPERTIES_PRODUCTS).directory;
+const VariationTemplateSelectedOption: React.FC<VariationTemplateSelectedOptionProps> = ({
+  item,
+  onRemovePress,
+  isSelectableForUser,
+  onChangeSelectableForUser,
+}) => {
+  const [hasSelector, setHasSelector] = useState(false);
+  const theme = useTheme();
 
-  const onRemoveItem = useCallback((id: string) => {
-    setSelectedItems(prev => prev.filter(el => el._id !== id));
-  }, []);
+  const onChange: OnCheckBoxChangeHandler = data => {
+    setHasSelector(data.checked);
+    onChangeSelectableForUser && onChangeSelectableForUser(data.checked);
+  };
 
-  const onSelectItem: CustomSelectOnClickHandler<IDirItemBase> = useCallback(
-    option => {
-      if (!option) {
-        return;
-      } else if (selectedItems.find(el => el?._id === option?._id)) {
-        option && onRemoveItem(option?._id);
-        return;
-      } else {
-        setSelectedItems(prev => [...prev, option]);
-      }
-    },
-    [onRemoveItem, selectedItems]
+  const renderChildrenList = useMemo(
+    () =>
+      item?.childrenList &&
+      item?.childrenList.length > 0 && (
+        <FlexBox fxDirection={'row'} fillWidth flex={1} flexWrap={'wrap'} gap={4} padding={'0 16px'}>
+          <Text $size={12} color={theme.globals.colors.info}>
+            {item?.childrenList?.map(el => el.label).join(', ')}
+          </Text>
+        </FlexBox>
+      ),
+    [item?.childrenList, theme.globals.colors.info]
   );
 
-  const selectOptions = useMemo(() => {
-    return properties
-      .filter(el => !el?.parent)
-      .map((el, index) => {
-        return el;
-      });
-  }, [properties]);
+  useEffect(() => {
+    if (!isUndefined(isSelectableForUser)) {
+      setHasSelector(isSelectableForUser);
+    }
+  }, [isSelectableForUser]);
+  return (
+    <Option alignItems={'flex-start'} justifyContent={'space-between'} fillWidth gap={4} padding={'0 8px'}>
+      <FlexBox fxDirection={'row'} alignItems={'center'} gap={8} fillWidth justifyContent={'space-between'}>
+        <Text $size={14} $weight={600}>
+          {item?.label}
+        </Text>
 
-  const renderSelectedOptions = useMemo(() => {
+        <RemoveButton
+          variant={'onlyIconNoEffects'}
+          size={'24px'}
+          iconSize={'100%'}
+          icon={'close'}
+          onClick={onRemovePress}
+        />
+      </FlexBox>
+
+      {renderChildrenList}
+
+      <FlexBox fxDirection={'row'} gap={8} alignItems={'center'}>
+        <Switch size={'32px'} checked={hasSelector} onChange={onChange} />
+
+        <Text $size={10}>{'Доступний для вибору'}</Text>
+      </FlexBox>
+    </Option>
+  );
+};
+
+const FormVariationsTemplateConfigs: React.FC<FormVariationsTemplateConfigsProps> = () => {
+  const properties = useDirectoriesSelector(ApiDirType.PROPERTIES_PRODUCTS).directory;
+  const [availableItems, setAvailableItems] = useState<IVariationProperty[]>(properties);
+  const [selectedItems, setSelectedItems] = useState<IVariationProperty[]>([]);
+
+  const onRemoveItem = useCallback((option: IVariationProperty) => {
+    setSelectedItems(prev => prev.filter(el => el._id !== option?._id));
+    setAvailableItems(p => [...p, option]);
+  }, []);
+
+  const onSelectItem: CustomSelectOnClickHandler<IVariationProperty> = useCallback(option => {
+    if (!option) {
+      return;
+    } else {
+      setAvailableItems(prev => prev.filter(el => el._id !== option?._id));
+      setSelectedItems(p => [...p, option]);
+    }
+  }, []);
+  const renderAvailableOptions = useMemo(() => {
+    return availableItems.map((item, idx) => {
+      return (
+        <ButtonIcon
+          key={`opt-${item._id}`}
+          variant={'outlinedSmall'}
+          onClick={() => onSelectItem(item)}
+          style={{ minWidth: 'fit-content', flexBasis: 100 }}
+        >
+          <Text>{item?.label}</Text>
+        </ButtonIcon>
+      );
+    });
+  }, [availableItems, onSelectItem]);
+  const renderOptions = useMemo(() => {
     return selectedItems.map((el, index) => {
       return (
-        <SelectedOption
-          key={el?._id || index}
-          fxDirection={'row'}
-          alignItems={'flex-start'}
-          justifyContent={'space-between'}
-          fillWidth
-        >
-          <FlexBox>
-            <Text $size={14}>{el?.label}</Text>
-
-            <FlexBox fxDirection={'row'} fillWidth flex={1} flexWrap={'wrap'} gap={4} padding={'2px 4px'}>
-              {el?.childrenList &&
-                el?.childrenList?.map((ch, chIdx) => (
-                  <Text key={ch._id} $size={10}>
-                    {`${ch.label}${el?.childrenList && chIdx + 1 < el?.childrenList?.length ? ', ' : ''}`}
-                  </Text>
-                ))}
-            </FlexBox>
-          </FlexBox>
-          <RemoveButton
-            variant={'onlyIconNoEffects'}
-            size={'36px'}
-            iconSize={'80%'}
-            icon={'delete'}
-            onClick={() => onRemoveItem(el?._id)}
-          />
-        </SelectedOption>
+        <VariationTemplateSelectedOption
+          key={`opt-${el._id}`}
+          index={index}
+          item={el}
+          onRemovePress={() => onRemoveItem(el)}
+        />
       );
     });
   }, [onRemoveItem, selectedItems]);
 
   return (
-    <FlexBox flex={1} fillWidth fxDirection={'row'} padding={'4px 8px'} gap={8}>
-      <FlexBox fillHeight flex={'1'} gap={8}>
-        <CustomSelect
-          dropDownIsAbsolute
-          options={selectOptions}
-          label={'Доступні характеристики'}
-          placeholder={'Оберіть доступні характеристики'}
-          onSelect={onSelectItem}
-        />
+    <FlexBox flex={1} fillWidth overflow={'hidden'} gap={0}>
+      {availableItems.length > 0 && (
+        <>
+          <FlexBox fillWidth padding={'4px 16px'}>
+            <Text $size={16} $weight={600}>
+              {'Доступні характеристики'}
+            </Text>
+          </FlexBox>
 
-        <FlexBox fillWidth padding={'8px'}>
-          <Text $size={16} $weight={600}>
-            {'Обрані характеристики'}
-          </Text>
-        </FlexBox>
-        <FlexBox fillWidth overflow={'auto'}>
-          {renderSelectedOptions}
-        </FlexBox>
+          <FlexBox
+            fillWidth
+            flexWrap={'wrap'}
+            padding={'4px 8px'}
+            fxDirection={'row'}
+            gap={8}
+            alignItems={'flex-start'}
+          >
+            {renderAvailableOptions}
+          </FlexBox>
+        </>
+      )}
+
+      <FlexBox fillWidth padding={'4px 16px'}>
+        <Text $size={16} $weight={600}>
+          {'Обрані характеристики'}
+        </Text>
       </FlexBox>
+
+      <Container fillWidth overflow={'auto'} flex={1} padding={'0 8px'}>
+        {renderOptions}
+      </Container>
     </FlexBox>
   );
 };
 
-const SelectedOption = styled(FlexBox)`
-  //height: 36px;
-  padding: 0 8px;
+const Container = styled(FlexBox)`
+  border-top: 1px solid ${p => p.theme.modalBorderColor};
+  //border-bottom: 1px solid ${p => p.theme.modalBorderColor};
+`;
 
+const Option = styled(FlexBox)`
   border-bottom: 1px solid ${p => p.theme.modalBorderColor};
+  &:not(:last-child) {
+  }
 `;
 const RemoveButton = styled(ButtonIcon)`
   & .icon {
