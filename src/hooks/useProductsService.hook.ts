@@ -1,11 +1,12 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
-import { IProduct, IProductReqData } from '../redux/products/products.types';
+import { IProduct, IProductReqData, IProperty, IPropertyReqData } from '../redux/products/products.types';
 import { ServiceApiCaller, ServiceDispatcherAsync } from 'redux/global.types';
 import { createProductThunk, getAllProductsThunk } from '../redux/products/products.thunks';
 import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
 import { AppQueryParams, createApiCall } from 'api';
 import ProductsApi from '../api/products.api';
+import PropertiesApi from '../api/properties.api';
 
 export interface ProductsService {
   create: ServiceDispatcherAsync<IProductReqData, IProduct>;
@@ -13,6 +14,14 @@ export interface ProductsService {
   updateById: ServiceApiCaller<IProductReqData, IProduct>; // !!!!! ===>>> ServiceDispatcher
   getById: ServiceApiCaller<string, IProduct>;
   getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IProduct[]>;
+
+  // * PROPERTIES
+
+  createProperty: ServiceApiCaller<IPropertyReqData, IProperty[]>;
+  deletePropertyById: ServiceApiCaller<IPropertyReqData, IProperty[]>;
+  updatePropertyById: ServiceApiCaller<IPropertyReqData, IProperty[]>;
+  getPropertyById: ServiceApiCaller<IPropertyReqData, IProperty>;
+  getAllProperties: ServiceApiCaller<IPropertyReqData, IProperty[]>;
 }
 
 const useProductsService = (): ProductsService => {
@@ -21,11 +30,18 @@ const useProductsService = (): ProductsService => {
   return useMemo((): Omit<ProductsService, 'state' | 'dispatch'> => {
     const { deleteById, updateById, getById } = ProductsApi;
     return {
-      create: async payload => dispatch(createProductThunk(defaultThunkPayload(payload))),
-      deleteById: async payload => createApiCall(defaultApiCallPayload(payload), deleteById, ProductsApi),
-      updateById: async payload => createApiCall(defaultApiCallPayload(payload), updateById, ProductsApi),
-      getById: async payload => createApiCall(defaultApiCallPayload(payload), getById, ProductsApi),
-      getAll: async payload => dispatch(getAllProductsThunk(defaultThunkPayload(payload))),
+      create: payload => dispatch(createProductThunk(defaultThunkPayload(payload))),
+      deleteById: payload => createApiCall(defaultApiCallPayload(payload), deleteById, ProductsApi),
+      updateById: payload => createApiCall(defaultApiCallPayload(payload), updateById, ProductsApi),
+      getById: payload => createApiCall(defaultApiCallPayload(payload), getById, ProductsApi),
+      getAll: payload => dispatch(getAllProductsThunk(defaultThunkPayload(payload))),
+
+      // * PROPERTIES
+      createProperty: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.create, PropertiesApi),
+      deletePropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.deleteById, PropertiesApi),
+      updatePropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.updateById, PropertiesApi),
+      getPropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.getById, PropertiesApi),
+      getAllProperties: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.getAll, PropertiesApi),
     };
   }, [dispatch]);
 };

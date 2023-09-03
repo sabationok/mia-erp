@@ -8,6 +8,7 @@ import SelectProductModal, { SelectProductModalProps } from '../Modals/SelectPro
 import AppFilter, { AppFilterProps } from '../Filter/AppFilter';
 import DirVariationsTemplate, { DirVariationsTemplateProps } from '../Directories/DirVariationsTemplate';
 import * as Forms from '../Forms';
+import DirPoperties, { DirPropertiesProps } from '../Directories/DirPoperties';
 
 export enum Modals {
   ModalForm = 'ModalForm',
@@ -28,8 +29,11 @@ export enum Modals {
   FormCreateOrderSlotItem = 'FormCreateOrderSlotItem',
   FormCreateProductInventory = 'FormCreateProductInventory',
   FormCreateVariationsTemplate = 'FormCreateVariationsTemplate',
+  FormCreateProperty = 'FormCreateProperty',
 
+  // * DIRECTORIES
   DirVariationsTemplate = 'DirVariationsTemplate',
+  DirProperties = 'DirProperties',
 
   PriceListOverview = 'PriceListOverview',
   ProductOverview = 'ProductOverview',
@@ -60,7 +64,11 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   [Modals.FormCreateOrderSlotItem]: Forms.FormCreateOrderSlot,
   [Modals.FormCreateProductInventory]: Forms.FormCreateProductInventory,
   [Modals.FormCreateVariationsTemplate]: Forms.FormCreateVariationsTemplate,
+  [Modals.FormCreateProperty]: Forms.FormCreateProperty,
+
+  // * DIRECTORIES
   [Modals.DirVariationsTemplate]: DirVariationsTemplate,
+  [Modals.DirProperties]: DirPoperties,
 
   // * Modals props
   [Modals.OrderOverview]: OrderOverview,
@@ -93,6 +101,10 @@ export interface ModalChildrenProps extends Record<Modals, any> {
   [Modals.FormCreateOrderSlotItem]: Forms.FormCreateOrderSlotItemProps;
   [Modals.FormCreateProductInventory]: Forms.FormCreateProductInventoryProps;
   [Modals.FormCreateVariationsTemplate]: Forms.FormCreateVariationsTemplateProps;
+  [Modals.FormCreateProperty]: Forms.FormCreatePropertyProps;
+
+  // * DIRECTORIES
+  [Modals.DirProperties]: DirPropertiesProps;
   [Modals.DirVariationsTemplate]: DirVariationsTemplateProps;
 
   // * Modals props

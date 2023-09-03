@@ -80,13 +80,6 @@ const CreateParent = styled.div`
 
   width: 100%;
 
-  //position: sticky;
-  //bottom: 0;
-  //left: 0;
-  //z-index: 5;
-
   padding: 8px;
-
-  //border-top: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;
 export default DirTreeComp;

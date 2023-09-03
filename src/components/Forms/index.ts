@@ -30,6 +30,8 @@ import FormCreateOrderSlot, { FormCreateOrderSlotItemProps } from './FormCreateO
 
 import FormCreateProductInventory, { FormCreateProductInventoryProps } from './FormCreateProductInventory';
 
+import FormCreateProperty, { FormCreatePropertyProps } from './FormCreateProperty';
+
 import FormCreateVariationsTemplate, {
   FormCreateVariationsTemplateProps,
 } from './FormCreateVariationsTemplate/FormCreateVariationsTemplate';
@@ -52,6 +54,7 @@ export {
   FormCreateOrderSlot,
   FormCreateProductInventory,
   FormCreateVariationsTemplate,
+  FormCreateProperty,
 };
 
 export type {
@@ -72,4 +75,5 @@ export type {
   FormCreateOrderSlotItemProps,
   FormCreateProductInventoryProps,
   FormCreateVariationsTemplateProps,
+  FormCreatePropertyProps,
 };

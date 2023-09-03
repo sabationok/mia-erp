@@ -27,11 +27,13 @@ export enum API_BASE_ROUTES {
   TRANSACTIONS = `/transactions`,
   CUSTOM_ROLES = '/roles',
   PRODUCTS = '/products',
+  PROPERTIES = '/properties',
   ORDERS = '/orders',
   REFUNDS = '/refunds',
   PRICE_MANAGEMENT = '/priceManagement',
   WAREHOUSES = '/warehouses',
   PAYMENTS = '/payments',
+  VARIATIONS = '/variations',
 }
 
 export enum Endpoints {
@@ -133,6 +135,26 @@ const productsApiEndpoints: ApiEndpointsMap = {
   [Endpoints.deleteById]: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.deleteById}/${id || ''}`,
   [Endpoints.updateById]: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.updateById}/${id || ''}`,
   [Endpoints.getById]: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.getById}/${id || ''}`,
+};
+const propertiesApiEndpoints: ApiEndpointsMap = {
+  [Endpoints.getAll]: (): string => `${API_BASE_ROUTES.PRODUCTS}/${API_BASE_ROUTES.PROPERTIES}/${Endpoints.getAll}`,
+  [Endpoints.create]: (): string => `${API_BASE_ROUTES.PRODUCTS}/${API_BASE_ROUTES.PROPERTIES}/${Endpoints.create}`,
+  [Endpoints.deleteById]: (id?: string): string =>
+    `${API_BASE_ROUTES.PRODUCTS}/${API_BASE_ROUTES.PROPERTIES}/${Endpoints.deleteById}/${id || ''}`,
+  [Endpoints.updateById]: (id?: string): string =>
+    `${API_BASE_ROUTES.PRODUCTS}/${API_BASE_ROUTES.PROPERTIES}/${Endpoints.updateById}/${id || ''}`,
+  [Endpoints.getById]: (id?: string): string =>
+    `${API_BASE_ROUTES.PRODUCTS}/${API_BASE_ROUTES.PROPERTIES}/${Endpoints.getById}/${id || ''}`,
+};
+const variationsApiEndpoints = {
+  [Endpoints.getAll]: (): string => `${API_BASE_ROUTES.PRODUCTS}/${API_BASE_ROUTES.VARIATIONS}/${Endpoints.getAll}`,
+  [Endpoints.create]: (): string => `${API_BASE_ROUTES.PRODUCTS}/${API_BASE_ROUTES.VARIATIONS}/${Endpoints.create}`,
+  [Endpoints.deleteById]: (id?: string): string =>
+    `${API_BASE_ROUTES.PRODUCTS}/${API_BASE_ROUTES.VARIATIONS}/${Endpoints.deleteById}/${id || ''}`,
+  [Endpoints.updateById]: (id?: string): string =>
+    `${API_BASE_ROUTES.PRODUCTS}/${API_BASE_ROUTES.VARIATIONS}/${Endpoints.updateById}/${id || ''}`,
+  [Endpoints.getById]: (id?: string): string =>
+    `${API_BASE_ROUTES.PRODUCTS}/${API_BASE_ROUTES.VARIATIONS}/${Endpoints.getById}/${id || ''}`,
 };
 const permissionsApiEndpoints: ApiEndpointsMap = {
   [Endpoints.updateById]: (permissionId?: string) =>
@@ -244,6 +266,8 @@ const APP_CONFIGS = {
     customRoles: customRoles,
     transactions: transactionsApiEndpoints,
     products: productsApiEndpoints,
+    propertiesApiEndpoints,
+    variationsApiEndpoints,
     warehousesEndpoints,
     priceManagementEndpoints,
     ordersEndpoints,

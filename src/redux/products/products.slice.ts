@@ -6,6 +6,7 @@ import { createProductThunk, getAllProductsThunk } from './products.thunks';
 
 export interface IProductsState {
   products: IProduct[];
+  currentProduct?: IProduct;
   filteredProducts?: IProduct[];
   isLoading: boolean;
   error: StateErrorType;

@@ -1,6 +1,6 @@
 import ModalForm from '../../ModalForm';
 import FlexBox from '../../atoms/FlexBox';
-import { DirectoriesFormProps, IVariationsTemplateFormData } from '../../Directories/dir.types';
+import { DirectoriesFormProps } from '../../Directories/dir.types';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
@@ -17,7 +17,7 @@ const FormCreateVariationsTemplate: React.FC<FormCreateVariationsTemplateProps> 
   create,
   edit,
 }) => {
-  const { register, handleSubmit } = useForm<Omit<IVariationsTemplateFormData, 'childrenList'>>();
+  const { register, handleSubmit } = useForm();
 
   const onValid = (data: any) => {
     onSubmit && onSubmit(data);

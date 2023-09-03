@@ -12,9 +12,7 @@ import {
   DirInTreeActionsCreatorType,
   DirMarksProps,
   DirProductCategoriesProps,
-  DirPropertiesProps,
   DirTagsProps,
-  DirVariationsTemplatesProps,
   GetDirInTreeActionsCreatorOptions,
   IDirItemBase,
 } from '../components/Directories/dir.types';
@@ -34,6 +32,7 @@ import { enumToFilterOptions } from '../utils/fabrics';
 import { CountsTypesEnum } from '../redux/directories/counts.types';
 import { CategoryTrTypeEnum } from '../redux/directories/directories.types';
 import { DirectoriesService } from '../hooks/useDirService.hook';
+import DirProperties, { dirPropertiesActionsCreator, DirPropertiesProps } from '../components/Directories/DirPoperties';
 
 export const categoriesFilterOptions: CategoryFilterOpt[] = enumToFilterOptions(CategoryTrTypeEnum);
 export const countsFilterOptions: CountFilterOpt[] = enumToFilterOptions(CountsTypesEnum);
@@ -328,40 +327,37 @@ const brandsDir: IDirectory<DirBrandsProps> = {
   modalChildrenProps: brandsProps,
   disabled: false,
 };
-const variationsProps: DirVariationsTemplatesProps = {
-  title: t('variationsTemplates'),
-  createParentTitle: 'Create variations template',
-  dirType: ApiDirType.VARIATIONS_TEMPLATES,
-  fillHeight: true,
-  availableLevels: 1,
-  actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateVariationsTemplate, {
-    createParentTitle: 'Create warehouse',
-  }),
-};
-const variationsDir: IDirectory<DirVariationsTemplatesProps> = {
-  title: variationsProps.title,
-  iconId: iconId.storage,
-  ModalChildren: DirTreeComp,
-  modalChildrenProps: variationsProps,
-  disabled: false,
-};
+// const variationsProps: DirVariationsTemplatesProps = {
+//   title: t('variationsTemplates'),
+//   createParentTitle: 'Create variations template',
+//   dirType: ApiDirType.VARIATIONS_TEMPLATES,
+//   fillHeight: true,
+//   availableLevels: 1,
+//   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateVariationsTemplate, {
+//     createParentTitle: 'Create warehouse',
+//   }),
+// };
+// const variationsDir: IDirectory<DirVariationsTemplatesProps> = {
+//   title: variationsProps.title,
+//   iconId: iconId.storage,
+//   ModalChildren: DirTreeComp,
+//   modalChildrenProps: variationsProps,
+//   disabled: false,
+// };
 
 const prodPropertiesProps: DirPropertiesProps = {
   title: t(ApiDirType.PROPERTIES_PRODUCTS),
   createParentTitle: 'Create product property',
   dirType: ApiDirType.PROPERTIES_PRODUCTS,
   fillHeight: true,
-  availableLevels: 2,
+  availableLevels: 3,
   creatingChild: true,
-  actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateDirTreeComp, {
-    createParentTitle: 'Create product property',
-    createChildTitle: 'Create property value',
-  }),
+  actionsCreator: dirPropertiesActionsCreator,
 };
 const prodPropertiesDir: IDirectory<DirPropertiesProps> = {
   title: prodPropertiesProps.title,
   iconId: iconId.storage,
-  ModalChildren: DirTreeComp,
+  ModalChildren: DirProperties,
   modalChildrenProps: prodPropertiesProps,
   disabled: false,
 };
@@ -399,7 +395,7 @@ const directories: Partial<IDirectory>[] = [
   marksDir,
   brandsDir,
   tagsDir,
-  variationsDir,
+  // variationsDir,
   prodPropertiesDir,
   {
     title: 'Статуси для замовлень',

@@ -1,13 +1,13 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { createTransactionThunk, getAllTransactionsThunk } from 'redux/transactions/transactions.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
-import { IVariation, IWarehouse } from './warehouses.types';
+import { IWarehouse } from './warehouses.types';
 import { createWarehouseThunk, getAllWarehousesThunk, getWarehouseByIdThunk } from './warehouses.thunks';
 
 export interface IWarehouseState {
   warehouses: IWarehouse[];
   current?: IWarehouse;
-  filteredLists?: IVariation[];
+  filteredLists?: IWarehouse[];
   isLoading: boolean;
   error: StateErrorType;
 }

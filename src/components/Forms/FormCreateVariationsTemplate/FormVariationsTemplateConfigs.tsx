@@ -1,5 +1,4 @@
 import FlexBox from '../../atoms/FlexBox';
-import { IVariationProperty } from '../../Directories/dir.types';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import { useDirectoriesSelector } from '../../../redux/selectors.store';
@@ -11,6 +10,7 @@ import { OnlyUUID } from '../../../redux/global.types';
 import Switch from '../../atoms/Switch';
 import { OnCheckBoxChangeHandler } from '../../TableList/tableTypes.types';
 import { isUndefined } from 'lodash';
+import { IVariationProperty } from '../../../redux/products/products.types';
 
 export interface FormVariationsTemplateConfigsProps {
   onSelect?: (id: OnlyUUID) => void;
@@ -45,7 +45,7 @@ const VariationTemplateSelectedOption: React.FC<VariationTemplateSelectedOptionP
       item?.childrenList.length > 0 && (
         <FlexBox fxDirection={'row'} fillWidth flex={1} flexWrap={'wrap'} gap={4} padding={'0 16px'}>
           <Text $size={12} color={theme.globals.colors.info}>
-            {item?.childrenList?.map(el => el.label).join(', ')}
+            {/*{item?.childrenList?.map(el => el.label).join(', ')}*/}
           </Text>
         </FlexBox>
       ),

@@ -180,25 +180,6 @@ export interface DirPropertiesProps
     IPropertyFormData,
     IPropertyDirItem
   > {}
-// ? VARIATIONS TABLE TEMPLATES
-export interface IVariationsTemplateDirItem extends IBaseDirItem {
-  properties?: IVariationProperty[];
-}
-export interface IVariationProperty extends IDirItemBase<ApiDirType.PROPERTIES_PRODUCTS> {
-  isSelectableForUser?: boolean;
-}
-
-export interface IVariationsTemplateFormData
-  extends Omit<IVariationsTemplateDirItem, '_id' | 'createdAt' | 'updatedAt' | 'childrenList'> {}
-
-export interface DirVariationsTemplatesProps
-  extends IDirInTreeProps<
-    ApiDirType.VARIATIONS_TEMPLATES,
-    any,
-    IVariationsTemplateFormData,
-    IVariationsTemplateFormData,
-    IVariationsTemplateDirItem
-  > {}
 
 export interface DirMarksProps extends IDirInTreeProps<ApiDirType.MARKS> {}
 
