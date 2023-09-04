@@ -32,7 +32,7 @@ export interface DirPropertiesProps
     IPropertyDto,
     IProperty,
     ProductsService,
-    LevelType
+    LevelType & { onSuccess: (data: IProperty[]) => void }
   > {}
 const DirProperties: React.FC<DirPropertiesProps> = ({
   createParentTitle,
@@ -86,16 +86,15 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
         item={item}
         index={index}
         onUpdate={(data, o) => {
-          actions.onUpdate && actions.onUpdate(data._id, data.data, o);
-          onRefreshData();
+          actions.onUpdate && actions.onUpdate(data._id, data.data, { ...o, onSuccess: setLoadedData });
         }}
         onCreateValue={(data, o) => {
-          actions?.onCreateValue && actions?.onCreateValue(data.parent._id, data?.parent, o);
-          onRefreshData();
+          actions?.onCreateValue &&
+            actions?.onCreateValue(data.parent._id, data?.parent, { ...o, onSuccess: setLoadedData });
         }}
         onCreateChild={(data, o) => {
-          actions?.onCreateChild && actions?.onCreateChild(data.parent._id, data?.parent, o);
-          onRefreshData();
+          actions?.onCreateChild &&
+            actions?.onCreateChild(data.parent._id, data?.parent, { ...o, onSuccess: setLoadedData });
         }}
       />
     ));
@@ -155,44 +154,44 @@ const DirPropertyGroup: React.FC<DiPropertiesRenderItemProps> = ({
     <FlexBox>
       <FlexBox
         gap={4}
-        padding={'6px 4px'}
+        padding={'6px 8px'}
         fxDirection={'row'}
         style={{
           borderBottomStyle: 'solid',
-          borderBottomColor: theme.field.backgroundColor,
+          borderBottomColor: theme.sideBarBorderColor,
           borderBottomWidth: 1,
         }}
       >
-        <FlexBox gap={6} fillHeight alignItems={'center'} flex={1} padding={'0 4px'} fxDirection={'row'}>
-          <Text $weight={600} $size={18}>
+        <FlexBox gap={6} fillHeight alignItems={'center'} flex={1} padding={'0 8px'} fxDirection={'row'}>
+          <ButtonIcon
+            variant={'onlyIcon'}
+            icon={'plus'}
+            size={'26px'}
+            iconSize={'24px'}
+            onClick={() => {
+              onCreateChild && onCreateChild({ parent: item }, { isGroup: true });
+            }}
+          />
+
+          <ButtonIcon
+            variant={'onlyIcon'}
+            icon={'edit'}
+            size={'26px'}
+            iconSize={'24px'}
+            onClick={() => {
+              onUpdate && onUpdate({ _id: item._id, data: item }, { isGroup: true });
+            }}
+          />
+          <ButtonIcon variant={'onlyIcon'} icon={'archive'} size={'26px'} iconSize={'24px'} />
+
+          <Text $weight={600} $size={18} $align={'right'} style={{ flex: 1 }}>
             {item.label}
           </Text>
         </FlexBox>
 
         <ButtonIcon
           variant={'onlyIcon'}
-          icon={'plus'}
-          size={'26px'}
-          iconSize={'24px'}
-          onClick={() => {
-            onCreateChild && onCreateChild({ parent: item }, { isGroup: true });
-          }}
-        />
-
-        <ButtonIcon
-          variant={'onlyIcon'}
-          icon={'edit'}
-          size={'26px'}
-          iconSize={'24px'}
-          onClick={() => {
-            onUpdate && onUpdate({ _id: item._id, data: item }, { isGroup: true });
-          }}
-        />
-        <ButtonIcon variant={'onlyIcon'} icon={'archive'} size={'26px'} iconSize={'24px'} />
-
-        <ButtonIcon
-          variant={'onlyIcon'}
-          icon={isOpen ? 'SmallArrowDown' : 'SmallArrowDown'}
+          icon={isOpen ? 'SmallArrowDown' : 'SmallArrowLeft'}
           size={'26px'}
           iconSize={'24px'}
           onClick={() => {
@@ -202,7 +201,7 @@ const DirPropertyGroup: React.FC<DiPropertiesRenderItemProps> = ({
       </FlexBox>
 
       {item.childrenList && item.childrenList?.length > 0 && (
-        <FlexBox padding={isOpen ? '6px 8px' : ''} gap={6} fillWidth overflow={'hidden'} maxHeight={isOpen ? '' : '0'}>
+        <FlexBox padding={isOpen ? '6px 8px' : ''} gap={6} flex={1} overflow={'hidden'} maxHeight={isOpen ? '' : '0'}>
           {renderChildren}
         </FlexBox>
       )}
@@ -227,46 +226,54 @@ const DirPropertyItem: React.FC<DiPropertiesRenderItemProps> = ({ item, index, o
     ));
   }, [item.childrenList, onCreateValue, onDelete, onUpdate]);
   return (
-    <StPropertyItem fillWidth gap={4}>
-      <StPropertyItemHeader fillWidth padding={'4px'}>
-        <FlexBox fillWidth fxDirection={'row'} gap={4} alignItems={'center'}>
-          <Text style={{ flex: 1 }} $weight={600}>
-            {item?.label}
-          </Text>
-
-          <ButtonIcon
-            variant={'onlyIcon'}
-            icon={'plus'}
-            size={'26px'}
-            iconSize={'24px'}
-            onClick={() => {
-              onCreateValue && onCreateValue({ parent: item });
-            }}
-          />
-          <ButtonIcon
-            variant={'onlyIcon'}
-            icon={'edit'}
-            size={'26px'}
-            iconSize={'24px'}
-            onClick={() => {
-              onUpdate && onUpdate({ _id: item._id, data: item }, { isProperty: true });
-            }}
-          />
-          <ButtonIcon variant={'onlyIcon'} icon={'archive'} size={'26px'} iconSize={'24px'} disabled />
+    <FlexBox fxDirection={'row'} fillWidth gap={8}>
+      <StPropertyItem flex={1} gap={4}>
+        <FlexBox fillWidth padding={'4px'}>
+          <FlexBox fillWidth fxDirection={'row'} gap={4} alignItems={'center'}>
+            <Text style={{ flex: 1 }} $weight={600}>
+              {item?.label}
+            </Text>
+          </FlexBox>
         </FlexBox>
-      </StPropertyItemHeader>
 
-      {item.childrenList && item.childrenList?.length > 0 && (
-        <StPropertyItemContent fillWidth gap={4} padding={'8px 4px'}>
-          {renderChildren}
+        <StPropertyItemContent fillWidth gap={4} padding={'8px 4px'} flex={1}>
+          {item.childrenList && item.childrenList?.length > 0 ? (
+            renderChildren
+          ) : (
+            <FlexBox fillHeight justifyContent={'center'} alignItems={'center'}>
+              <Text>{'Додайте опції до характеристики'}</Text>
+            </FlexBox>
+          )}
         </StPropertyItemContent>
-      )}
 
-      <FlexBox fxDirection={'row'} gap={4} padding={'0 4px'} alignItems={'center'}>
-        <Switch size={'26px'} checked={isSelectable} onChange={onChange} />
-        <Text $size={12}>{'Доступно для вибору при формуванні замовлення'}</Text>
+        <FlexBox fxDirection={'row'} gap={4} padding={'0 4px'} alignItems={'center'}>
+          <Switch size={'26px'} checked={isSelectable} onChange={onChange} />
+          <Text $size={12}>{'Доступно для вибору при формуванні замовлення'}</Text>
+        </FlexBox>
+      </StPropertyItem>
+
+      <FlexBox gap={8}>
+        <ButtonIcon
+          variant={'onlyIcon'}
+          icon={'plus'}
+          size={'26px'}
+          iconSize={'24px'}
+          onClick={() => {
+            onCreateValue && onCreateValue({ parent: item });
+          }}
+        />
+        <ButtonIcon
+          variant={'onlyIcon'}
+          icon={'edit'}
+          size={'26px'}
+          iconSize={'24px'}
+          onClick={() => {
+            onUpdate && onUpdate({ _id: item._id, data: item }, { isProperty: true });
+          }}
+        />
+        <ButtonIcon variant={'onlyIcon'} icon={'archive'} size={'26px'} iconSize={'24px'} disabled />
       </FlexBox>
-    </StPropertyItem>
+    </FlexBox>
   );
 };
 
@@ -276,34 +283,41 @@ const StPropertyItem = styled(FlexBox)`
 
   overflow: hidden;
 `;
-const StPropertyItemHeader = styled(FlexBox)`
-  border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
-`;
+
 const StPropertyItemContent = styled(FlexBox)`
+  border-top: 1px solid ${p => p.theme.sideBarBorderColor};
   border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
 `;
 const DirPropertyValue: React.FC<DiPropertiesRenderItemProps> = ({ item, index, onUpdate, onDelete }) => {
   const theme = useTheme();
 
   return (
-    <FlexBox fxDirection={'row'} gap={6} alignItems={'center'}>
+    <FlexBox fxDirection={'row'} gap={6} alignItems={'stretch'}>
       <FlexBox
         flex={1}
         padding={'4px 6px'}
-        style={{ borderRadius: 2, marginLeft: 8, backgroundColor: theme.accentColor.light }}
+        fxDirection={'row'}
+        alignItems={'center'}
+        style={{ borderRadius: 2, backgroundColor: theme.accentColor.light }}
       >
-        <Text>{item?.label}</Text>
+        <Text $size={12} $weight={600}>
+          {item?.label}
+        </Text>
       </FlexBox>
 
       <ButtonIcon
-        variant={'onlyIconNoEffects'}
-        icon={'edit'}
-        size={'26px'}
-        iconSize={'24px'}
+        variant={'outlinedSmall'}
+        // icon={'edit'}
+        // size={'26px'}
+        // iconSize={'24px'}
+
+        style={{ paddingLeft: 12, paddingRight: 12 }}
         onClick={() => {
           onUpdate && onUpdate({ _id: item._id, data: item }, { isValue: true });
         }}
-      />
+      >
+        {'Редагувати'}
+      </ButtonIcon>
 
       <ButtonIcon variant={'onlyIconNoEffects'} icon={'archive'} size={'26px'} iconSize={'24px'} disabled />
     </FlexBox>
@@ -326,10 +340,10 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
   IProperty,
   ProductsService,
   IPropertyDto,
-  LevelType
+  LevelType & { onSuccess: (data: IProperty[]) => void }
 > = ({ modalService, service, type }) => {
   return {
-    onCreateParent: () => {
+    onCreateParent: options => {
       const modal = modalService.handleOpenModal({
         Modal: Modals.FormCreateProperty,
         props: {
@@ -342,6 +356,7 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
               .createProperty({
                 data: { data, params: { createTreeData: true } },
                 onSuccess: rd => {
+                  options?.onSuccess && options?.onSuccess(rd);
                   o?.closeAfterSave && modal?.onClose();
                   toast.success(`Created: ${data.label}`);
                 },
@@ -351,7 +366,7 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
         },
       });
     },
-    onCreateChild: (_, parent, o) => {
+    onCreateChild: (_, parent, options) => {
       const modal = modalService.handleOpenModal({
         Modal: Modals.FormCreateProperty,
         props: {
@@ -365,6 +380,7 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
               .createProperty({
                 data: { data: { ...data, parent }, params: { createTreeData: true } },
                 onSuccess: rd => {
+                  options?.onSuccess && options?.onSuccess(rd);
                   o?.closeAfterSave && modal?.onClose();
                   toast.success(`Created: ${data.label}`);
                 },
@@ -374,7 +390,7 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
         },
       });
     },
-    onCreateValue: (_, parent, o) => {
+    onCreateValue: (_, parent, options) => {
       const modal = modalService.handleOpenModal({
         Modal: Modals.FormCreateProperty,
         props: {
@@ -388,6 +404,8 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
               .createProperty({
                 data: { data: { ...data, parent }, params: { createTreeData: true } },
                 onSuccess: rd => {
+                  options?.onSuccess && options?.onSuccess(rd);
+
                   o?.closeAfterSave && modal?.onClose();
                   toast.success(`Created: ${data.label}`);
                 },
@@ -397,22 +415,23 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
         },
       });
     },
-    onUpdate: (_id, defaultState, o) => {
-      console.log('onUpdate options', o);
+    onUpdate: (_id, defaultState, options) => {
       const modal = modalService.handleOpenModal({
         Modal: Modals.FormCreateProperty,
         props: {
           title: t('update'),
           type,
           edit: true,
-          ...o,
+          ...options,
           defaultState,
-          filterOptions: o?.isGroup ? productsFilterOptions : undefined,
+          filterOptions: options?.isGroup ? productsFilterOptions : undefined,
           onSubmit: (data, o) => {
             service
               ?.updatePropertyById({
                 data: { _id, data, params: { createTreeData: true } },
                 onSuccess: rd => {
+                  options?.onSuccess && options?.onSuccess(rd);
+
                   o?.closeAfterSave && modal?.onClose();
                   toast.success(`Updated: ${data.label}`);
                 },
