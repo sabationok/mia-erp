@@ -102,6 +102,7 @@ export interface IPropertyDto {
   type?: ProductTypeEnum;
   isSelectable?: boolean;
   parent?: OnlyUUID;
+  description?: string;
 }
 
 export interface IPropertyReqData {

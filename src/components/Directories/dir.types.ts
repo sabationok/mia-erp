@@ -13,7 +13,7 @@ import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { IModalProviderContext } from '../ModalProvider/ModalProvider';
 import { DirectoriesService } from '../../hooks/useDirService.hook';
 // import { DirTableCompProps } from './DirTableComp';
-import { AppSubmitHandler, UseAppFormAfterSubmitOptions } from '../../hooks/useAppForm.hook';
+import { AppSubmitHandler, UseAppFormSubmitOptions } from '../../hooks/useAppForm.hook';
 import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
 import { ProductTypeEnum } from '../../redux/products/products.types';
 
@@ -78,7 +78,8 @@ export interface IDirInTreeProps<
   CreateDTO = any,
   UpdateDTO = any,
   ItemDataType extends IDirItemBase = any,
-  Service = any
+  Service = any,
+  SubmitOptions = any
 > extends DirBaseProps {
   filterOptions?: FilterOpt<ItemType>[];
   type?: ItemType;
@@ -94,15 +95,22 @@ export interface IDirInTreeProps<
   changeDisableStatus?: boolean;
   changeArchiveStatus?: boolean;
 
-  actionsCreator: DirInTreeActionsCreatorType<DirType, ItemType, ItemDataType, Service>;
+  actionsCreator: DirInTreeActionsCreatorType<
+    DirType,
+    ItemType,
+    ItemDataType,
+    Service,
+    CreateDTO | UpdateDTO,
+    SubmitOptions
+  >;
 }
 
 // (options: ActionsCreatorOptions<DirType, ItemType, CreateDTO, UpdateDTO, ItemDataType>) => {
-//   onCreateChild?: (parentId: string, parent: IBaseDirItem<ItemType>, options?: UseAppFormAfterSubmitOptions) => void;
-//   onCreateParent?: (options?: UseAppFormAfterSubmitOptions) => void;
-//   onUpdateItem?: (id: string, options?: UseAppFormAfterSubmitOptions) => void;
-//   onDeleteItem?: (id: string, options?: UseAppFormAfterSubmitOptions) => void;
-//   onChangeArchiveStatus?: (id: string, status: boolean, options?: UseAppFormAfterSubmitOptions) => void;
+//   onCreateChild?: (parentId: string, parent: IBaseDirItem<ItemType>, options?: UseAppFormSubmitOptions) => void;
+//   onCreateParent?: (options?: UseAppFormSubmitOptions) => void;
+//   onUpdateItem?: (id: string, options?: UseAppFormSubmitOptions) => void;
+//   onDeleteItem?: (id: string, options?: UseAppFormSubmitOptions) => void;
+//   onChangeArchiveStatus?: (id: string, status: boolean, options?: UseAppFormSubmitOptions) => void;
 // }
 
 export type ActionsCreatorOptions<
@@ -134,14 +142,19 @@ export type DirInTreeActionsCreatorType<
   DirType extends ApiDirType = any,
   ItemType = any,
   ItemDataType extends IDirItemBase = any,
-  Service = any
+  Service = any,
+  ItemDtoType = any,
+  SubmitOptions = any
 > = (options: DirInTreeActionsCreatorOptions<DirType, ItemType, ItemDataType, Service>) => {
-  onCreateChild?: (parentId: string, parent: IBaseDirItem, options?: UseAppFormAfterSubmitOptions) => void;
-  onCreateParent?: (options?: UseAppFormAfterSubmitOptions) => void;
-  onUpdate?: (id: string, data: ItemDataType, options?: UseAppFormAfterSubmitOptions) => void;
-  onDelete?: (id: string, options?: UseAppFormAfterSubmitOptions) => void;
-  onChangeArchiveStatus?: (id: string, status: boolean, options?: UseAppFormAfterSubmitOptions) => void;
-  onChangeDisableStatus?: (id: string, status: boolean, options?: UseAppFormAfterSubmitOptions) => void;
+  onCreateParent?: (options?: UseAppFormSubmitOptions & SubmitOptions) => void;
+  onCreateChild?: (parentId: string, parent: IBaseDirItem, options?: UseAppFormSubmitOptions & SubmitOptions) => void;
+  onCreateValue?: (parentId: string, parent: IBaseDirItem, options?: UseAppFormSubmitOptions & SubmitOptions) => void;
+
+  onUpdate?: (id: string, data: ItemDtoType, options?: UseAppFormSubmitOptions & SubmitOptions) => void;
+  onDelete?: (id: string, options?: UseAppFormSubmitOptions & SubmitOptions) => void;
+
+  onChangeArchiveStatus?: (id: string, status: boolean, options?: UseAppFormSubmitOptions) => void;
+  onChangeDisableStatus?: (id: string, status: boolean, options?: UseAppFormSubmitOptions) => void;
 };
 
 export interface DirCategoriesProps

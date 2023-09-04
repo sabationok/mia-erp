@@ -137,14 +137,14 @@ const productsApiEndpoints: ApiEndpointsMap = {
   [Endpoints.getById]: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.getById}/${id || ''}`,
 };
 const propertiesApiEndpoints: ApiEndpointsMap = {
-  [Endpoints.getAll]: (): string => `${API_BASE_ROUTES.PRODUCTS}/${API_BASE_ROUTES.PROPERTIES}/${Endpoints.getAll}`,
-  [Endpoints.create]: (): string => `${API_BASE_ROUTES.PRODUCTS}/${API_BASE_ROUTES.PROPERTIES}/${Endpoints.create}`,
+  [Endpoints.getAll]: (): string => `${API_BASE_ROUTES.PRODUCTS}${API_BASE_ROUTES.PROPERTIES}/${Endpoints.getAll}`,
+  [Endpoints.create]: (): string => `${API_BASE_ROUTES.PRODUCTS}${API_BASE_ROUTES.PROPERTIES}/${Endpoints.create}`,
   [Endpoints.deleteById]: (id?: string): string =>
-    `${API_BASE_ROUTES.PRODUCTS}/${API_BASE_ROUTES.PROPERTIES}/${Endpoints.deleteById}/${id || ''}`,
+    `${API_BASE_ROUTES.PRODUCTS}${API_BASE_ROUTES.PROPERTIES}/${Endpoints.deleteById}/${id || ''}`,
   [Endpoints.updateById]: (id?: string): string =>
-    `${API_BASE_ROUTES.PRODUCTS}/${API_BASE_ROUTES.PROPERTIES}/${Endpoints.updateById}/${id || ''}`,
+    `${API_BASE_ROUTES.PRODUCTS}${API_BASE_ROUTES.PROPERTIES}/${Endpoints.updateById}/${id || ''}`,
   [Endpoints.getById]: (id?: string): string =>
-    `${API_BASE_ROUTES.PRODUCTS}/${API_BASE_ROUTES.PROPERTIES}/${Endpoints.getById}/${id || ''}`,
+    `${API_BASE_ROUTES.PRODUCTS}${API_BASE_ROUTES.PROPERTIES}/${Endpoints.getById}/${id || ''}`,
 };
 const variationsApiEndpoints = {
   [Endpoints.getAll]: (): string => `${API_BASE_ROUTES.PRODUCTS}/${API_BASE_ROUTES.VARIATIONS}/${Endpoints.getAll}`,

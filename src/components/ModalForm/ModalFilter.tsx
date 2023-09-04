@@ -6,7 +6,7 @@ export interface ModalFormFilterProps<V = any, D = any> {
   defaultOption?: number | FilterOpt<V, D> | V;
   getDefaultValue?: (opt: FilterOpt<V, D>) => number;
   preventFilter?: boolean;
-  onOptSelect?: FilterOptionSelectHandler<V>;
+  onOptSelect?: FilterOptionSelectHandler<V, D>;
   filterOptions?: FilterOpt<V, D>[];
   defaultFilterValue?: string;
 }

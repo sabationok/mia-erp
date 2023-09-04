@@ -4,22 +4,22 @@ import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import translate from '../../../lang';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
-import { UseAppFormAfterSubmitOptions } from '../../../hooks/useAppForm.hook';
+import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
 
-export interface FormAfterSubmitOptionsProps extends UseAppFormAfterSubmitOptions {
+export interface FormAfterOptionsProps extends UseAppFormSubmitOptions {
   close?: boolean;
   clear?: boolean;
-  onOptionsChange?: (options: FormAfterSubmitOptionsProps) => void;
-  toggleOption?: (option: keyof UseAppFormAfterSubmitOptions) => void;
+  onOptionsChange?: (options: FormAfterOptionsProps) => void;
+  toggleOption?: (option: keyof UseAppFormSubmitOptions) => void;
 }
 
-const FormAfterSubmitOptions: React.FC<FormAfterSubmitOptionsProps> = ({ toggleOption, onOptionsChange, ...props }) => {
-  const [{ closeAfterSave, clearAfterSave }, setAfterSubmitOptions] = useState<FormAfterSubmitOptionsProps>({
+const FormAfterSubmitOptions: React.FC<FormAfterOptionsProps> = ({ toggleOption, onOptionsChange, ...props }) => {
+  const [{ closeAfterSave, clearAfterSave }, setAfterSubmitOptions] = useState<FormAfterOptionsProps>({
     closeAfterSave: props?.close || props?.closeAfterSave,
     clearAfterSave: props?.clear || props?.clearAfterSave,
   });
   const toggleStateOption = useCallback(
-    (option: keyof UseAppFormAfterSubmitOptions) =>
+    (option: keyof UseAppFormSubmitOptions) =>
       setAfterSubmitOptions(prev => {
         const newOptions = {
           ...prev,

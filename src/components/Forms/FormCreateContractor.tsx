@@ -12,7 +12,7 @@ import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import React, { useMemo } from 'react';
 import { useAppForm } from '../../hooks';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
-import { AppSubmitHandler, UseAppFormAfterSubmitOptions } from '../../hooks/useAppForm.hook';
+import { AppSubmitHandler, UseAppFormSubmitOptions } from '../../hooks/useAppForm.hook';
 import { businessSubjectTypeFilterOptions, counterpartyFilterOptions } from '../../data/directories.data';
 import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
 import ButtonGroup from '../atoms/ButtonGroup';
@@ -33,7 +33,7 @@ const useCreateDirTreeItemModalForm = (_options?: {}) => {
   const modalS = useModalProvider();
   const service = useDirServiceHook();
 
-  const open = (props?: FormCreateDirTreeCompProps, afterSubmitOptions?: UseAppFormAfterSubmitOptions) => {
+  const open = (props?: FormCreateDirTreeCompProps, afterSubmitOptions?: UseAppFormSubmitOptions) => {
     if (props?.dirType) {
       const modal = modalS.handleOpenModal({
         Modal: Modals.FormCreateDirTreeComp,

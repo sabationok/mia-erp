@@ -37,9 +37,8 @@ import DirProperties, { dirPropertiesActionsCreator, DirPropertiesProps } from '
 export const categoriesFilterOptions: CategoryFilterOpt[] = enumToFilterOptions(CategoryTrTypeEnum);
 export const countsFilterOptions: CountFilterOpt[] = enumToFilterOptions(CountsTypesEnum);
 export const StorageItemTypeFilterOptions: ProductFilterOpt[] = enumToFilterOptions(ProductTypeEnum);
-
+export const productsFilterOptions = enumToFilterOptions(ProductTypeEnum);
 export const tagsFilterOptions = enumToFilterOptions(ContractorsTypesEnum);
-
 export const counterpartyFilterOptions: FilterOpt<ContractorsTypesEnum>[] = enumToFilterOptions(ContractorsTypesEnum);
 export const businessSubjectTypeFilterOptions: BusinessSubjectFilterOption[] =
   enumToFilterOptions(BusinessSubjectTypeEnum);
@@ -350,6 +349,8 @@ const prodPropertiesProps: DirPropertiesProps = {
   createParentTitle: 'Create product property',
   dirType: ApiDirType.PROPERTIES_PRODUCTS,
   fillHeight: true,
+  filterOptions: productsFilterOptions,
+  filterSearchPath: 'type',
   availableLevels: 3,
   creatingChild: true,
   actionsCreator: dirPropertiesActionsCreator,

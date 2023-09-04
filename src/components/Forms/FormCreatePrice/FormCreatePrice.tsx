@@ -2,7 +2,7 @@ import ModalForm, { ModalFormProps } from '../../ModalForm';
 import FlexBox from '../../atoms/FlexBox';
 import { IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
 import { OnlyUUID } from '../../../redux/global.types';
-import { UseAppFormAfterSubmitOptions } from '../../../hooks/useAppForm.hook';
+import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
 import { useAppForm } from '../../../hooks';
 import FormProductSelectorForPricing from './FormProductSelectorForPricing';
 import InputLabel from '../../atoms/Inputs/InputLabel';
@@ -28,7 +28,7 @@ export interface FormCreatePriceProps
       data: IPriceListItem | IPriceListItem[];
       list: OnlyUUID;
     },
-    options: UseAppFormAfterSubmitOptions & {}
+    options: UseAppFormSubmitOptions & {}
   ) => void;
 }
 

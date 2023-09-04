@@ -18,7 +18,7 @@ import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useAppForm } from '../../hooks';
 import { yupResolver } from '@hookform/resolvers/yup';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
-import { UseAppFormAfterSubmitOptions } from '../../hooks/useAppForm.hook';
+import { UseAppFormSubmitOptions } from '../../hooks/useAppForm.hook';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
 
@@ -26,7 +26,7 @@ export interface FormCreateTransactionProps extends Omit<ModalFormProps, 'onSubm
   edit?: boolean;
   copy?: boolean;
   id?: string;
-  onSubmit?: (data: ITransactionReqData, options?: UseAppFormAfterSubmitOptions) => void;
+  onSubmit?: (data: ITransactionReqData, options?: UseAppFormSubmitOptions) => void;
   filterOptions?: TransactionsFilterOpt[];
   defaultState?: Partial<ITransaction>;
   addInputs?: boolean;

@@ -2,7 +2,7 @@ import ModalForm, { ModalFormProps } from '../../ModalForm';
 import TableList, { ITableListProps } from '../../TableList/TableList';
 import { useEffect, useMemo, useState } from 'react';
 import { IPriceList, IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
-import { UseAppFormAfterSubmitOptions } from '../../../hooks/useAppForm.hook';
+import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
 import { priceListContentColumns } from '../../../data';
 import { usePriceListOverviewActionsCreator } from '../../../hooks/usePriceListOverviewActionsCreator.hook';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
@@ -16,7 +16,7 @@ export interface PriceListOverviewProps extends Omit<ModalFormProps, 'onSubmit' 
   listId?: string;
   onSubmit?: (
     data: IPriceListItem | IPriceListItem[],
-    options: UseAppFormAfterSubmitOptions & {
+    options: UseAppFormSubmitOptions & {
       onSuccess: (newData: IPriceList) => void;
       onLoading: (l: boolean) => void;
     }

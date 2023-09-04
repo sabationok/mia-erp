@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled, { css, FlattenSimpleInterpolation } from 'styled-components';
 import { Property } from 'csstype';
 
 export interface FlexBoxBaseProps {
@@ -22,8 +22,9 @@ export interface FlexBoxBaseProps {
   flex?: Property.Flex;
   flexWrap?: Property.FlexWrap;
   overflow?: Property.Overflow;
-}
 
+  css?: FlattenSimpleInterpolation;
+}
 export interface FlexBoxProps extends FlexBoxBaseProps {
   xsStyles?: FlexBoxBaseProps;
   xlStyles?: FlexBoxBaseProps;
@@ -79,6 +80,7 @@ const XlStyles = css<FlexBoxProps>`
 
 const FlexBox = styled.div<FlexBoxProps>`
   display: flex;
+
   flex-direction: ${({ fxDirection = 'column' }) => fxDirection};
   align-items: ${({ alignItems = '' }) => alignItems};
   justify-content: ${({ justifyContent = '' }) => justifyContent};
@@ -104,6 +106,8 @@ const FlexBox = styled.div<FlexBoxProps>`
   ${({ xlStyles }) => {
     if (xlStyles) return XlStyles;
   }};
+
+  ${p => p?.css}
 `;
 
 export const PrimaryBox = styled(FlexBox)`

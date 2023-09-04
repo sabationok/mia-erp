@@ -25,23 +25,24 @@ export interface UseAppFormReturn<TFieldValues extends FieldValues = FieldValues
     onValid: SubmitHandler<TFieldValues>,
     onInvalid: SubmitErrorHandler<TFieldValues>
   ) => UseFormHandleSubmit<TFieldValues>;
-  toggleAfterSubmitOption: (option: keyof UseAppFormAfterSubmitOptions) => void;
+  toggleAfterSubmitOption: (option: keyof UseAppFormSubmitOptions) => void;
 }
 
-export interface UseAppFormAfterSubmitOptions {
+export interface UseAppFormSubmitOptions {
   closeAfterSave?: boolean;
   clearAfterSave?: boolean;
-  // onOptionsChange?: (options: UseAppFormAfterSubmitOptions) => void;
+  // onOptionsChange?: (options: UseAppFormSubmitOptions) => void;
 }
 
-export type AppSubmitHandler<D = any, O = any> = (data: D, options?: UseAppFormAfterSubmitOptions & O) => void;
-export type AppErrorSubmitHandler<E = any, O = any> = (errors: E, options?: UseAppFormAfterSubmitOptions & O) => void;
+export type AppSubmitHandler<D = any, O = any> = (data: D, options?: UseAppFormSubmitOptions & O) => void;
+
+export type AppErrorSubmitHandler<E = any, O = any> = (errors: E, options?: UseAppFormSubmitOptions & O) => void;
 const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = any>(
   formProps?: UseFormProps<TFieldValues, TContext>
-): UseAppFormReturn<TFieldValues, TContext> & UseAppFormAfterSubmitOptions => {
+): UseAppFormReturn<TFieldValues, TContext> & UseAppFormSubmitOptions => {
   const form = useForm<TFieldValues>(formProps);
   const { setValue, unregister, register, watch } = form;
-  const [afterSubmitOptions, setAfterSubmitOptions] = useState<UseAppFormAfterSubmitOptions>({
+  const [afterSubmitOptions, setAfterSubmitOptions] = useState<UseAppFormSubmitOptions>({
     closeAfterSave: true,
     clearAfterSave: true,
   });
@@ -90,7 +91,7 @@ const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = a
   );
 
   const toggleAfterSubmitOption = useCallback(
-    (option: keyof UseAppFormAfterSubmitOptions) =>
+    (option: keyof UseAppFormSubmitOptions) =>
       setAfterSubmitOptions(prev => ({
         ...prev,
         [option]: !prev[option],

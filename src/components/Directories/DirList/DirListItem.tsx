@@ -3,7 +3,7 @@ import React, { memo, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import DirList from './DirList';
 import { IBaseDirItem, IDirItemBase } from '../dir.types';
-import { isUndefined, omit } from 'lodash';
+import { isUndefined } from 'lodash';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 
 export interface DirListItemAddsProps<T = any> {
@@ -138,7 +138,12 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
             iconSize="24px"
             icon="edit"
             disabled={!onUpdate}
-            onClick={evHandlerWrapper(onUpdate, _id, omit(item, ['childrenList', 'parent']))}
+            onClick={evHandlerWrapper(
+              onUpdate,
+              _id,
+              item
+              // omit(item, ['childrenList', 'parent.childrenList', 'parent.parent.childrenList'])
+            )}
           />
 
           {changeArchiveStatus && (

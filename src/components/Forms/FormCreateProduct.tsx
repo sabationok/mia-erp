@@ -13,13 +13,13 @@ import { useAppForm } from '../../hooks';
 import { IProduct, IProductReqData, ProductFilterOpt } from '../../redux/products/products.types';
 import { createDataForReq } from '../../utils/dataTransform';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
-import { UseAppFormAfterSubmitOptions } from '../../hooks/useAppForm.hook';
+import { UseAppFormSubmitOptions } from '../../hooks/useAppForm.hook';
 
 export interface FormProps extends Omit<ModalFormProps, 'onSubmit'> {
   edit?: boolean;
   copy?: boolean;
   id?: string;
-  onSubmit?: (data: IProductReqData, options?: UseAppFormAfterSubmitOptions) => void;
+  onSubmit?: (data: IProductReqData, options?: UseAppFormSubmitOptions) => void;
   filterOptions?: ProductFilterOpt[];
   defaultState?: Partial<IProduct>;
   addInputs?: boolean;
