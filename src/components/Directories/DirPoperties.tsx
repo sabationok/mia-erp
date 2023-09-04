@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import ModalForm from 'components/ModalForm';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import { DirInTreeActionsCreatorType, IBaseDirItem, IDirInTreeProps } from './dir.types';
@@ -21,6 +21,7 @@ import Switch from '../atoms/Switch';
 import { OnCheckBoxChangeHandler } from '../TableList/tableTypes.types';
 import { productsFilterOptions } from '../../data/directories.data';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
+import { useProductsSelector } from '../../redux/selectors.store';
 
 type LevelType = { isGroup?: boolean; isProperty?: boolean; isValue?: boolean };
 
@@ -32,7 +33,7 @@ export interface DirPropertiesProps
     IPropertyDto,
     IProperty,
     ProductsService,
-    LevelType & { onSuccess: (data: IProperty[]) => void }
+    LevelType & { onSuccess?: (data: IProperty[]) => void }
   > {}
 const DirProperties: React.FC<DirPropertiesProps> = ({
   createParentTitle,
@@ -45,9 +46,10 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   ...props
 }) => {
   const service = useAppServiceProvider()[ServiceName.products];
+  const { properties } = useProductsSelector();
   const modalService = useModalProvider();
   const [current, setCurrent] = useState(filterDefaultValue);
-  const [loadedData, setLoadedData] = useState<IProperty[]>([]);
+  // const [loadedData, setLoadedData] = useState<IProperty[]>([]);
   const [loading, setLoading] = useState(false);
 
   const actions = useMemo(
@@ -61,21 +63,17 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   const fList = useFilteredLisData<IBaseDirItem>({
     searchParam: filterSearchPath,
     searchQuery: current,
-    data: loadedData,
+    data: properties,
   });
 
-  const onRefreshData = useCallback(() => {
+  useEffect(() => {
     service
       .getAllProperties({
         data: { params: { createTreeData: true } },
-        onSuccess: setLoadedData,
+        // onSuccess: setLoadedData,
         onLoading: setLoading,
       })
       .then();
-  }, [service]);
-
-  useEffect(() => {
-    onRefreshData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -86,19 +84,18 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
         item={item}
         index={index}
         onUpdate={(data, o) => {
-          actions.onUpdate && actions.onUpdate(data._id, data.data, { ...o, onSuccess: setLoadedData });
+          actions.onUpdate && actions.onUpdate(data._id, data.data, { ...o });
         }}
         onCreateValue={(data, o) => {
-          actions?.onCreateValue &&
-            actions?.onCreateValue(data.parent._id, data?.parent, { ...o, onSuccess: setLoadedData });
+          actions?.onCreateValue && actions?.onCreateValue(data.parent._id, data?.parent, { ...o });
         }}
         onCreateChild={(data, o) => {
-          actions?.onCreateChild &&
-            actions?.onCreateChild(data.parent._id, data?.parent, { ...o, onSuccess: setLoadedData });
+          actions?.onCreateChild && actions?.onCreateChild(data.parent._id, data?.parent, { ...o });
         }}
       />
     ));
-  }, [actions, fList, onRefreshData]);
+  }, [actions, fList]);
+
   return (
     <ModalForm
       style={{ maxWidth: 480 }}
@@ -137,7 +134,7 @@ const DirPropertyGroup: React.FC<DiPropertiesRenderItemProps> = ({
   onDelete,
   onCreateValue,
 }) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const theme = useTheme();
 
   const renderChildren = useMemo(() => {
@@ -340,7 +337,7 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
   IProperty,
   ProductsService,
   IPropertyDto,
-  LevelType & { onSuccess: (data: IProperty[]) => void }
+  LevelType & { onSuccess?: (data: IProperty[]) => void }
 > = ({ modalService, service, type }) => {
   return {
     onCreateParent: options => {

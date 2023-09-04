@@ -1,7 +1,12 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { IProduct, IProductReqData, IProperty, IPropertyReqData } from '../redux/products/products.types';
 import { ServiceApiCaller, ServiceDispatcherAsync } from 'redux/global.types';
-import { createProductThunk, getAllProductsThunk } from '../redux/products/products.thunks';
+import {
+  createProductThunk,
+  createPropertyThunk,
+  getAllProductsThunk,
+  getAllPropertiesThunk,
+} from '../redux/products/products.thunks';
 import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
 import { AppQueryParams, createApiCall } from 'api';
@@ -17,11 +22,11 @@ export interface ProductsService {
 
   // * PROPERTIES
 
-  createProperty: ServiceApiCaller<IPropertyReqData, IProperty[]>;
+  createProperty: ServiceDispatcherAsync<IPropertyReqData, IProperty[]>;
   deletePropertyById: ServiceApiCaller<IPropertyReqData, IProperty[]>;
   updatePropertyById: ServiceApiCaller<IPropertyReqData, IProperty[]>;
   getPropertyById: ServiceApiCaller<IPropertyReqData, IProperty>;
-  getAllProperties: ServiceApiCaller<IPropertyReqData, IProperty[]>;
+  getAllProperties: ServiceDispatcherAsync<IPropertyReqData, IProperty[]>;
 }
 
 const useProductsService = (): ProductsService => {
@@ -37,11 +42,11 @@ const useProductsService = (): ProductsService => {
       getAll: payload => dispatch(getAllProductsThunk(defaultThunkPayload(payload))),
 
       // * PROPERTIES
-      createProperty: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.create, PropertiesApi),
+      createProperty: args => dispatch(createPropertyThunk(defaultThunkPayload(args))),
       deletePropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.deleteById, PropertiesApi),
       updatePropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.updateById, PropertiesApi),
       getPropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.getById, PropertiesApi),
-      getAllProperties: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.getAll, PropertiesApi),
+      getAllProperties: args => dispatch(getAllPropertiesThunk(defaultThunkPayload(args))),
     };
   }, [dispatch]);
 };

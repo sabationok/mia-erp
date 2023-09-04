@@ -73,20 +73,22 @@ const createThunkApiCall = async <SD = any, RD = any, E = any, MD = any, CTX = a
   }
 };
 
-export const createThunkPayloadCreator = <SD = any, RD = any, MD = any, E = any, Context = any>(
-  getResponseCallback: GetResponseCallback<SD, RD, MD>,
-  context?: Context
-) => {
-  return async (payload: ApiCallerPayload<SD, RD, E>, thunkApi: any) => {
-    try {
-      const res = await createThunkApiCall<SD, RD, E, MD, Context>(payload, getResponseCallback, context);
+export const createThunkPayloadCreator =
+  <SD = any, RD = any, MD = any, E = any, Context = any>(
+    getResponseCallback: GetResponseCallback<SD, RD, MD>,
+    context?: Context
+  ) =>
+  () => {
+    return async (payload: ApiCallerPayload<SD, RD, E>, thunkApi: any) => {
+      try {
+        const res = await createThunkApiCall<SD, RD, E, MD, Context>(payload, getResponseCallback, context);
 
-      if (res) return res.data.data;
-    } catch (e) {
-      return thunkApi?.rejectWithValue(isAxiosError(e));
-    }
+        if (res) return res.data.data;
+      } catch (e) {
+        return thunkApi?.rejectWithValue(isAxiosError(e));
+      }
+    };
   };
-};
 
 async function apiCaller<SD = any, RD = any, E = any, MD = any>(
   { onLoading, onError, onSuccess, data }: ApiCallerPayload<SD, RD, E>,

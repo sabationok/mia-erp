@@ -1,13 +1,14 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { createTransactionThunk, getAllTransactionsThunk } from 'redux/transactions/transactions.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
-import { IProduct } from './products.types';
-import { createProductThunk, getAllProductsThunk } from './products.thunks';
+import { IProduct, IProperty } from './products.types';
+import { createProductThunk, createPropertyThunk, getAllProductsThunk, getAllPropertiesThunk } from './products.thunks';
 
 export interface IProductsState {
   products: IProduct[];
   currentProduct?: IProduct;
   filteredProducts?: IProduct[];
+  properties: IProperty[];
   isLoading: boolean;
   error: StateErrorType;
 }
@@ -17,6 +18,7 @@ const initialState: IProductsState = {
   error: null,
   products: [],
   filteredProducts: [],
+  properties: [],
 };
 
 export const productsSlice = createSlice({
@@ -39,6 +41,18 @@ export const productsSlice = createSlice({
         s.isLoading = false;
 
         s.products = a.payload ? [a.payload, ...s.products] : s.products;
+      })
+      .addCase(getAllPropertiesThunk.fulfilled, (s, a) => {
+        if (a.payload) {
+          console.log(a);
+          s.properties = a.payload;
+        }
+      })
+      .addCase(createPropertyThunk.fulfilled, (s, a) => {
+        if (a.payload) {
+          console.log(a);
+          s.properties = a.payload;
+        }
       })
       .addMatcher(inPending, s => {
         s.isLoading = true;

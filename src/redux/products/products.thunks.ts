@@ -2,10 +2,11 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import { ThunkPayload } from '../store.store';
 import { isAxiosError } from 'axios';
-import { IProduct, IProductReqData } from './products.types';
+import { IProduct, IProductReqData, IProperty, IPropertyReqData } from './products.types';
 import { AppQueryParams, createApiCall } from '../../api';
 import { createThunkPayloadCreator } from '../../api/createApiCall.api';
 import ProductsApi from '../../api/products.api';
+import PropertiesApi from '../../api/properties.api';
 
 // export async function payloadCreator<R = any>(
 //   getResponse: () => R,
@@ -70,6 +71,45 @@ export const deleteProductThunk = createAsyncThunk(
   'products/deleteProductThunk',
   createThunkPayloadCreator(ProductsApi.deleteById, ProductsApi)
 );
+
+export const getAllPropertiesThunk = createAsyncThunk<
+  IProperty[] | undefined,
+  ThunkPayload<IPropertyReqData, IProperty[]>
+>('products/getAllPropertiesThunk', async (args, thunkApi) => {
+  args?.onLoading && args?.onLoading(true);
+
+  try {
+    const res = await PropertiesApi.getAll(args.data);
+    args?.onLoading && args?.onLoading(false);
+    args?.onSuccess && args?.onSuccess(res?.data?.data);
+
+    return res?.data.data;
+  } catch (e) {
+    args?.onLoading && args?.onLoading(false);
+    args?.onError && args?.onError(e);
+    return thunkApi.rejectWithValue(isAxiosError(e));
+  }
+});
+
+export const createPropertyThunk = createAsyncThunk<
+  IProperty[] | undefined,
+  ThunkPayload<IPropertyReqData, IProperty[]>
+>('products/createPropertyThunk', async (args, thunkApi) => {
+  args?.onLoading && args?.onLoading(true);
+
+  try {
+    const res = await PropertiesApi.create(args.data);
+    args?.onLoading && args?.onLoading(false);
+    args?.onSuccess && args?.onSuccess(res?.data?.data);
+
+    return res?.data.data;
+  } catch (e) {
+    args?.onLoading && args?.onLoading(false);
+    args?.onError && args?.onError(e);
+    return thunkApi.rejectWithValue(isAxiosError(e));
+  }
+});
+
 // export const deleteProductThunk = createAsyncThunk(
 //   'products/deleteProductThunk',
 //   async (payload, thunkAPI) => {
@@ -80,7 +120,7 @@ export const deleteProductThunk = createAsyncThunk(
 //       payload?.onSuccess();
 //
 //       return response.data;
-//     } catch (error) {
+//     } catch (e) {
 //       console.log(error);
 //
 //       payload?.onError();
