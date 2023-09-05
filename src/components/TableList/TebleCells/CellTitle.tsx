@@ -4,7 +4,7 @@ import { CellActionsName } from '../TebleCells';
 import { IconIdType } from '../../../img/sprite/iconId.data';
 import { IBase } from '../../../redux/global.types';
 
-export type CellTitleContent<DataType extends IBase = any, DataPath extends string = any> = {
+export type CellTitleContent<DataType = any, DataPath extends string = any> = {
   name: string;
   action?: string;
   dataKey?: string;
@@ -22,7 +22,7 @@ export type CellTitleContent<DataType extends IBase = any, DataPath extends stri
   ) => string | string[] | number | number[] | Date | undefined;
 };
 
-export type CellTittleProps<DataType extends IBase = any, DataPath extends string = any> = {
+export type CellTittleProps<DataType = any, DataPath extends string = any> = {
   top: CellTitleContent<DataType, DataPath>;
   bottom?: CellTitleContent<DataType, DataPath>;
   imgPreviewPath?: DataType;

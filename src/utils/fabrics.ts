@@ -10,15 +10,15 @@ function createThunkPayload<SD extends FieldValues = any, RD = any, E = any>(
   const { logData, logError, logLoading, logAll, onError, onSuccess, onLoading } = options || {};
   return {
     onSuccess: (d: RD) => {
-      (logAll || logData) && console.log('createSubmitHandlerWithPayload onSuccess', d);
+      (logAll || logData) && console.log('createThunkPayload onSuccess', d);
       onSuccess && onSuccess(d);
     },
     onError: (e: E) => {
-      (logAll || logError) && console.log('createSubmitHandlerWithPayload onError', e);
+      (logAll || logError) && console.log('createThunkPayload onError', e);
       onError && onError(e);
     },
     onLoading(l) {
-      (logAll || logLoading) && console.log('createSubmitHandlerWithPayload onLoading', l);
+      (logAll || logLoading) && console.log('createThunkPayload onLoading', l);
       onLoading && onLoading(l);
     },
     data: payloadData,
@@ -80,22 +80,22 @@ function defaultApiCallPayload<SD = any, RD = any, E = any>({
 }: CreateThunkPayloadOptions<SD, RD, E> = {}): ThunkPayload<SD, RD, E> {
   return {
     onSuccess: (d: RD) => {
-      (logAll || logData) && console.log('createSubmitHandlerWithPayload onSuccess', d);
+      (logAll || logData) && console.log('defaultApiCallPayload onSuccess', d);
       onSuccess && onSuccess(d);
     },
     onError: (e: E) => {
-      (logAll || logError) && console.log('createSubmitHandlerWithPayload onError', e);
+      (logAll || logError) && console.log('defaultApiCallPayload onError', e);
       onError && onError(e);
     },
     onLoading(l) {
-      (logAll || logLoading) && console.log('createSubmitHandlerWithPayload onLoading', l);
+      (logAll || logLoading) && console.log('defaultApiCallPayload onLoading', l);
       onLoading && onLoading(l);
     },
     data: data,
   };
 }
 
-// function createSubmitHandlerWithPayload<SD extends FieldValues = any, RD = any, E = any>(
+// function defaultApiCallPayload<SD extends FieldValues = any, RD = any, E = any>(
 //   options?: CreateThunkPayloadOptions<SD, RD, E>
 // ): SubmitHandler<SD> {
 //   return (formData: SD) => createThunkPayload<SD, RD, E>(formData, options);
@@ -105,7 +105,7 @@ function defaultApiCallPayload<SD = any, RD = any, E = any>({
 //   options?: CreateThunkPayloadOptions<SD, RD, E>
 // ): SubmitHandler<SD> {
 //   // eslint-disable-next-line react-hooks/exhaustive-deps
-//   return useCallback(createSubmitHandlerWithPayload<SD, RD, E>(options), []);
+//   return useCallback(defaultApiCallPayload<SD, RD, E>(options), []);
 // }
 // Функція, яка перетворює Enum на масив
 function enumToArray<T extends object = any>(enumObj: T): Array<T[keyof T]> {

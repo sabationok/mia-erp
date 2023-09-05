@@ -16,8 +16,8 @@ export const useWarehousesService = (): WarehousesService => {
   const dispatch = useAppDispatch();
   return useMemo(
     (): WarehousesService => ({
-      getAll: async args => dispatch(getAllWarehousesThunk(defaultThunkPayload(args))),
-      getById: async args => dispatch(getWarehouseByIdThunk(defaultThunkPayload(args))),
+      getAll: args => dispatch(getAllWarehousesThunk(defaultThunkPayload(args))),
+      getById: args => dispatch(getWarehouseByIdThunk(defaultThunkPayload(args))),
     }),
     [dispatch]
   );

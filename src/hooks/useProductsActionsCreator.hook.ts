@@ -2,21 +2,18 @@ import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import useStorageServiceHook from './useProductsService.hook';
 import { useCallback } from 'react';
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
-import { IProduct, ProductFilterOpt, ProductTypeEnum } from '../redux/products/products.types';
+import { IProduct, ProductTypeEnum } from '../redux/products/products.types';
 import { useProductsSelector } from '../redux/selectors.store';
 import ProductForm from '../components/Forms/FormCreateProduct';
-import ProductOverview from '../components/Modals/Overviews/ProductOverview';
 import { omit } from 'lodash';
+import { productsFilterOptions } from '../data/directories.data';
+import { useNavigate } from 'react-router-dom';
 
-export type StorageActionsCreator = TableActionCreator<IProduct>;
+export type ProductsActionsCreator = TableActionCreator<IProduct>;
 
-export const StorageItemTypeFilterOptions: ProductFilterOpt[] = [
-  { label: 'GOODS', value: ProductTypeEnum.GOODS },
-  { label: 'SERVICE', value: ProductTypeEnum.SERVICE },
-];
-
-const useStorageActionsCreator = (): StorageActionsCreator => {
+const useProductsActionsCreator = (): ProductsActionsCreator => {
   const service = useStorageServiceHook();
+  const navigate = useNavigate();
   const state = useProductsSelector();
   const modals = useModalProvider();
   // const onSubmitCreateWrapper = useCallback(
@@ -43,21 +40,22 @@ const useStorageActionsCreator = (): StorageActionsCreator => {
         disabled: !ctx.selectedRow?._id,
         type: 'onlyIcon',
         onClick: () => {
-          modals.handleOpenModal({
-            ModalChildren: ProductOverview,
-            modalChildrenProps: {
-              title: 'Перегляд продукту',
-              product: state.products.find(el => el._id === ctx.selectedRow?._id),
-              // filterOptions: StorageItemTypeFilterOptions,
-              // defaultOption: StorageItemTypeFilterOptions.findIndex(el => el.value === product?.type),
-              // onSubmit: data => {
-              //   service.updateById({
-              //     data,
-              //     onSuccess(d) {},
-              //   });
-              // },
-            },
-          });
+          ctx.selectedRow?._id && navigate(ctx.selectedRow?._id);
+          // modals.handleOpenModal({
+          //   ModalChildren: ProductOverview,
+          //   modalChildrenProps: {
+          //     title: 'Перегляд продукту',
+          //     product: state.products.find(el => el._id === ctx.selectedRow?._id),
+          //     // filterOptions: productsFilterOptions,
+          //     // defaultOption: StorageItemTypeFilterOptions.findIndex(el => el.value === product?.type),
+          //     // onSubmit: data => {
+          //     //   service.updateById({
+          //     //     data,
+          //     //     onSuccess(d) {},
+          //     //   });
+          //     // },
+          //   },
+          // });
         },
       },
       {
@@ -72,7 +70,7 @@ const useStorageActionsCreator = (): StorageActionsCreator => {
             ModalChildren: ProductForm,
             modalChildrenProps: {
               title: 'Копіювати',
-              filterOptions: StorageItemTypeFilterOptions,
+              filterOptions: productsFilterOptions,
               defaultState: omit(
                 state.products.find(p => p._id === ctx?.selectedRow?._id),
                 ['_id', 'createdAt', 'updatedAt']
@@ -102,7 +100,7 @@ const useStorageActionsCreator = (): StorageActionsCreator => {
             ModalChildren: ProductForm,
             modalChildrenProps: {
               title: 'Змінити',
-              filterOptions: StorageItemTypeFilterOptions,
+              filterOptions: productsFilterOptions,
               defaultState: omit(
                 state.products.find(p => p._id === ctx?.selectedRow?._id),
                 ['createdAt', 'updatedAt']
@@ -141,7 +139,7 @@ const useStorageActionsCreator = (): StorageActionsCreator => {
             ModalChildren: ProductForm,
             modalChildrenProps: {
               title: 'Створити',
-              filterOptions: StorageItemTypeFilterOptions,
+              filterOptions: productsFilterOptions,
               defaultState: { type: ProductTypeEnum.GOODS },
               onSubmit: (data, o) => {
                 service.create({
@@ -162,4 +160,4 @@ const useStorageActionsCreator = (): StorageActionsCreator => {
   );
 };
 
-export default useStorageActionsCreator;
+export default useProductsActionsCreator;

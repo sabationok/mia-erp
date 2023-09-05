@@ -10,7 +10,7 @@ import { OnlyUUID } from '../../../redux/global.types';
 import Switch from '../../atoms/Switch';
 import { OnCheckBoxChangeHandler } from '../../TableList/tableTypes.types';
 import { isUndefined } from 'lodash';
-import { IVariationProperty } from '../../../redux/products/products.types';
+import { IProperty } from '../../../redux/products/products.types';
 
 export interface FormVariationsTemplateConfigsProps {
   onSelect?: (id: OnlyUUID) => void;
@@ -18,7 +18,7 @@ export interface FormVariationsTemplateConfigsProps {
 }
 
 export interface VariationTemplateSelectedOptionProps {
-  item?: IVariationProperty;
+  item?: IProperty;
   index: number;
   onRemovePress?: () => void;
   isSelectableForUser?: boolean;
@@ -86,15 +86,15 @@ const VariationTemplateSelectedOption: React.FC<VariationTemplateSelectedOptionP
 
 const FormVariationsTemplateConfigs: React.FC<FormVariationsTemplateConfigsProps> = () => {
   const properties = useDirectoriesSelector(ApiDirType.PROPERTIES_PRODUCTS).directory;
-  const [availableItems, setAvailableItems] = useState<IVariationProperty[]>(properties);
-  const [selectedItems, setSelectedItems] = useState<IVariationProperty[]>([]);
+  const [availableItems, setAvailableItems] = useState<IProperty[]>(properties);
+  const [selectedItems, setSelectedItems] = useState<IProperty[]>([]);
 
-  const onRemoveItem = useCallback((option: IVariationProperty) => {
+  const onRemoveItem = useCallback((option: IProperty) => {
     setSelectedItems(prev => prev.filter(el => el._id !== option?._id));
     setAvailableItems(p => [...p, option]);
   }, []);
 
-  const onSelectItem: CustomSelectOnClickHandler<IVariationProperty> = useCallback(option => {
+  const onSelectItem: CustomSelectOnClickHandler<IProperty> = useCallback(option => {
     if (!option) {
       return;
     } else {

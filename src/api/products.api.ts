@@ -15,7 +15,6 @@ export default class ProductsApi {
   }
 
   public static async create(data?: IProductReqData): Promise<ICreateProductRes> {
-    console.log('api product create', data);
     return this.api.post(this.endpoints.create(), data?.data);
   }
 
@@ -24,6 +23,7 @@ export default class ProductsApi {
   }
 
   public static async getById(id?: string): Promise<IProductRes> {
+    console.log('ProductsApi getById', this.api.defaults.headers);
     return this.api.get(this.endpoints.getById(id));
   }
 

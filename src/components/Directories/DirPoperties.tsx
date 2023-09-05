@@ -289,37 +289,69 @@ const DirPropertyValue: React.FC<DiPropertiesRenderItemProps> = ({ item, index, 
   const theme = useTheme();
 
   return (
-    <FlexBox fxDirection={'row'} gap={6} alignItems={'stretch'}>
-      <FlexBox
-        flex={1}
-        padding={'4px 6px'}
-        fxDirection={'row'}
-        alignItems={'center'}
-        style={{ borderRadius: 2, backgroundColor: theme.accentColor.light }}
-      >
+    <DirPropertyValueBox
+      fxDirection={'row'}
+      gap={6}
+      alignItems={'stretch'}
+      style={{ borderRadius: 4, backgroundColor: theme.accentColor.light }}
+    >
+      <FlexBox flex={1} fillHeight padding={'4px 8px'} fxDirection={'row'} alignItems={'center'}>
         <Text $size={12} $weight={600}>
           {item?.label}
         </Text>
       </FlexBox>
 
-      <ButtonIcon
-        variant={'outlinedSmall'}
-        // icon={'edit'}
-        // size={'26px'}
-        // iconSize={'24px'}
-
-        style={{ paddingLeft: 12, paddingRight: 12 }}
-        onClick={() => {
-          onUpdate && onUpdate({ _id: item._id, data: item }, { isValue: true });
-        }}
+      <DirPropertyValueActions
+        className={'actions'}
+        fillHeight
+        padding={'0 8px'}
+        fxDirection={'row'}
+        gap={4}
+        alignItems={'center'}
       >
-        {'Редагувати'}
-      </ButtonIcon>
+        <ButtonIcon
+          variant={'onlyIconNoEffects'}
+          icon={'edit'}
+          size={'26px'}
+          iconSize={'24px'}
+          onClick={() => {
+            onUpdate && onUpdate({ _id: item._id, data: item }, { isValue: true });
+          }}
+        ></ButtonIcon>
 
-      <ButtonIcon variant={'onlyIconNoEffects'} icon={'archive'} size={'26px'} iconSize={'24px'} disabled />
-    </FlexBox>
+        <ButtonIcon variant={'onlyIconNoEffects'} icon={'archive'} size={'26px'} iconSize={'24px'} disabled />
+      </DirPropertyValueActions>
+    </DirPropertyValueBox>
   );
 };
+
+const DirPropertyValueBox = styled(FlexBox)`
+  overflow: hidden;
+  height: 36px;
+
+  &:hover {
+    & .actions {
+      right: 0;
+      transform: translateX(0);
+    }
+  }
+`;
+const DirPropertyValueActions = styled(FlexBox)`
+  //position: absolute;
+  //
+  //top: 0;
+  //right: 0;
+  //height: 100%;
+  //z-index: 20;
+
+  border-radius: 4px;
+  background-color: ${p => p.theme.modalBackgroundColor};
+  border: 2px solid ${p => p.theme.accentColor.light};
+
+  transform: translateX(100%);
+
+  transition: all ${p => p.theme.globals.timingFunctionMain};
+`;
 
 const CreateParent = styled.div`
   display: flex;

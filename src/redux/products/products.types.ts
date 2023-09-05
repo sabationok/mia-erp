@@ -1,20 +1,19 @@
 import { AppResponse, IBase, OnlyUUID } from '../global.types';
 import { CurrencyCode } from '../transactions/transactions.types';
-import { IBaseDirItem, IProductCategoryDirItem, IPropertyDirItem } from '../../components/Directories/dir.types';
+import { IProductCategoryDirItem } from '../../components/Directories/dir.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
 import { ICompany } from '../companies/companies.types';
 import { IProductInventory, IWarehouse } from '../warehouses/warehouses.types';
 import { IBrand } from '../directories/brands.types';
 import { IUser } from '../auth/auth.types';
-import { ApiDirType } from '../APP_CONFIGS';
 import { AppQueryParams } from '../../api';
 
 export type ProductStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
 export enum ProductTypeEnum {
-  SERVICE = 'SERVICE',
   GOODS = 'GOODS',
+  SERVICE = 'SERVICE',
   SET = 'SET',
 }
 
@@ -49,7 +48,7 @@ export interface IProduct extends IProductBase {
   warehouses?: IWarehouse;
   variations?: IVariation[];
   hasVariations?: boolean;
-  template?: IVariationsTemplateDirItem;
+  template?: IVariationTemplate;
 
   unitsOfMeasurement?: string;
 
@@ -88,13 +87,23 @@ export interface IProductRes extends AppResponse<IProduct> {}
 export interface ICreateProductRes extends AppResponse<IProduct> {}
 
 // ? PROPERTIES ================================================
-export interface IProperty extends IBase {
+
+export interface IPropertyBase extends IBase {
   label?: string;
   type?: ProductTypeEnum;
   isSelectable?: boolean;
+}
 
-  parent?: IProperty;
+export interface IVariationTemplate extends IPropertyBase {
   childrenList?: IProperty[];
+}
+export interface IProperty extends IPropertyBase {
+  parent?: IVariationTemplate;
+  childrenList?: IPropertyValue[];
+}
+
+export interface IPropertyValue extends IPropertyBase {
+  parent?: IProperty;
 }
 
 export interface IPropertyDto {
@@ -112,12 +121,15 @@ export interface IPropertyReqData {
 }
 
 // ? VARIATIONS +===========================
+
 export interface IVariation extends IBase {
   owner?: ICompany;
   product?: IProduct;
   productInventories?: IProductInventory[];
 
   properties?: Omit<IProperty, 'childrenList'>[];
+
+  price?: IPriceListItem;
 
   timeFrom?: string | number | Date;
   timeTo?: string | number | Date;
@@ -133,24 +145,23 @@ export interface VariationDto {
 export interface IVariationReqData {
   _id?: string;
   data: VariationDto;
+  params?: AppQueryParams;
 }
 
-export interface IVariationsTemplate {
-  owner?: ICompany;
-  label?: string;
-  properties?: IVariationProperty;
-}
+// export interface IVariationsTemplate {
+//   owner?: ICompany;
+//   label?: string;
+//   properties?: IVariationProperty;
+// }
 
 // ? VARIATIONS TABLE TEMPLATES
-export interface IVariationsTemplateDirItem extends IBaseDirItem<ApiDirType.VARIATIONS_TEMPLATES> {
-  properties?: IVariationProperty[];
-}
-export interface IVariationProperty extends IPropertyDirItem {
-  isSelectable?: boolean;
-}
+// export interface IVariationsTemplateDirItem extends IBaseDirItem<ApiDirType.VARIATIONS_TEMPLATES> {
+//   properties?: IVariationProperty[];
+// }
+// export interface IVariationProperty extends IProperty {}
 
-export interface IVariationsTemplateFormData
-  extends Omit<IVariationsTemplateDirItem, '_id' | 'createdAt' | 'updatedAt' | 'childrenList'> {}
+// export interface IVariationsTemplateFormData
+//   extends Omit<IVariationsTemplateDirItem, '_id' | 'createdAt' | 'updatedAt' | 'childrenList'> {}
 
 // export interface DirVariationsTemplatesProps
 //   extends IDirInTreeProps<
@@ -160,7 +171,3 @@ export interface IVariationsTemplateFormData
 //     IVariationsTemplateFormData,
 //     IVariationsTemplateDirItem
 //   > {}
-export interface IAllVariationsTemplatesRes extends AppResponse<IVariationsTemplate[]> {}
-export interface IVariationsTemplateRes extends AppResponse<IVariationsTemplate> {}
-export interface IAllVariationsRes extends AppResponse<IVariation[]> {}
-export interface IVariationRes extends AppResponse<IVariation> {}

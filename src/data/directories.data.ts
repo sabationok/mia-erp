@@ -390,6 +390,7 @@ const directories: Partial<IDirectory>[] = [
   countsDir,
   trCategoriesDir,
   prodCategoriesDir,
+  prodPropertiesDir,
   activitiesDir,
   contractorsDir,
   projectsDir,
@@ -397,7 +398,6 @@ const directories: Partial<IDirectory>[] = [
   brandsDir,
   tagsDir,
   // variationsDir,
-  prodPropertiesDir,
   {
     title: 'Статуси для замовлень',
     disabled: true,

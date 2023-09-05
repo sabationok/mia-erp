@@ -1,3 +1,5 @@
+import { lazy } from 'react';
+
 import FormCreateDirTreeComp, { FormCreateDirTreeCompProps } from './FormCreateDirTreeComp';
 
 import FormCreateActivity, { FormCreateCompanyActivityProps } from './FormCreateActivity';
@@ -36,6 +38,10 @@ import FormCreateVariationsTemplate, {
   FormCreateVariationsTemplateProps,
 } from './FormCreateVariationsTemplate/FormCreateVariationsTemplate';
 
+import { FormCreateVariationProps } from './FormCreateVariation';
+
+const FormCreateVariation = lazy(() => import('./FormCreateVariation'));
+
 export {
   FormCreateDirTreeComp,
   FormCreateActivity,
@@ -55,6 +61,7 @@ export {
   FormCreateProductInventory,
   FormCreateVariationsTemplate,
   FormCreateProperty,
+  FormCreateVariation,
 };
 
 export type {
@@ -76,4 +83,5 @@ export type {
   FormCreateProductInventoryProps,
   FormCreateVariationsTemplateProps,
   FormCreatePropertyProps,
+  FormCreateVariationProps,
 };

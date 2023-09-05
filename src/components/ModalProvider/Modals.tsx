@@ -30,6 +30,7 @@ export enum Modals {
   FormCreateProductInventory = 'FormCreateProductInventory',
   FormCreateVariationsTemplate = 'FormCreateVariationsTemplate',
   FormCreateProperty = 'FormCreateProperty',
+  FormCreateVariation = 'FormCreateVariation',
 
   // * DIRECTORIES
   DirVariationsTemplate = 'DirVariationsTemplate',
@@ -65,6 +66,7 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   [Modals.FormCreateProductInventory]: Forms.FormCreateProductInventory,
   [Modals.FormCreateVariationsTemplate]: Forms.FormCreateVariationsTemplate,
   [Modals.FormCreateProperty]: Forms.FormCreateProperty,
+  [Modals.FormCreateVariation]: Forms.FormCreateVariation,
 
   // * DIRECTORIES
   [Modals.DirVariationsTemplate]: DirVariationsTemplate,
@@ -102,6 +104,7 @@ export interface ModalChildrenProps extends Record<Modals, any> {
   [Modals.FormCreateProductInventory]: Forms.FormCreateProductInventoryProps;
   [Modals.FormCreateVariationsTemplate]: Forms.FormCreateVariationsTemplateProps;
   [Modals.FormCreateProperty]: Forms.FormCreatePropertyProps;
+  [Modals.FormCreateVariation]: Forms.FormCreateVariationProps;
 
   // * DIRECTORIES
   [Modals.DirProperties]: DirPropertiesProps;

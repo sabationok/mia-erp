@@ -1,19 +1,12 @@
-import AppLoader from 'components/atoms/AppLoader';
-import { Suspense } from 'react';
 import AppRoutes from 'components/AppRoutes/AppRoutes';
 import { ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
-import GlobalStyles from './theme/globalStyles';
-import { useBaseApiWithAccessToken, useBaseApiWithPermissionToken } from './api/baseApi';
 import { useAppSettingsSelector } from './redux/selectors.store';
 import useLoadInitialAppDataHook from './hooks/useLoadInitialAppData.hook';
+import GlobalStyles from './theme/globalStyles';
 
 const App: React.FC = () => {
   const { isDarkMode } = useAppSettingsSelector();
-
-  useBaseApiWithAccessToken();
-
-  useBaseApiWithPermissionToken();
 
   useLoadInitialAppDataHook();
 
@@ -21,9 +14,8 @@ const App: React.FC = () => {
     <>
       <AppContainer>
         <GlobalStyles />
-        <Suspense fallback={<AppLoader isLoading comment={'Please wait while minions do their work...'} />}>
-          <AppRoutes />
-        </Suspense>
+
+        <AppRoutes />
       </AppContainer>
 
       <ToastContainer

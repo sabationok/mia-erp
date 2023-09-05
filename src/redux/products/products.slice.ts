@@ -1,14 +1,14 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { createTransactionThunk, getAllTransactionsThunk } from 'redux/transactions/transactions.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
-import { IProduct, IProperty } from './products.types';
+import { IProduct, IVariationTemplate } from './products.types';
 import { createProductThunk, createPropertyThunk, getAllProductsThunk, getAllPropertiesThunk } from './products.thunks';
 
 export interface IProductsState {
   products: IProduct[];
   currentProduct?: IProduct;
   filteredProducts?: IProduct[];
-  properties: IProperty[];
+  properties: IVariationTemplate[];
   isLoading: boolean;
   error: StateErrorType;
 }

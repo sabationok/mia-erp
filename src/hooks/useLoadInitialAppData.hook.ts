@@ -37,6 +37,7 @@ const useLoadInitialAppDataHook = ({
     transactions,
     warehouses,
   } = useAppServiceProvider();
+
   const { getAppActions } = useAppSettings();
   // const [_isLoading, setIsLoading] = useState(false);
   // const [_statuses, setStatuses] = useState<Partial<Record<ApiDirType, boolean>>>();
@@ -50,18 +51,18 @@ const useLoadInitialAppDataHook = ({
 
       try {
         await getAppActions();
+        if (company?._id) {
+          await prService.getAllByCompanyId({ data: { refresh: true, companyId: company._id } });
+        }
 
         await products.getAll({ data: { refresh: true } });
+        await products.getAllProperties({ data: { params: { createTreeData: true } } });
 
         await priceManagement.getAll({ data: { refresh: true } });
 
         await transactions.getAll({ data: { refresh: true } });
 
         await warehouses.getAll({ data: { refresh: true } });
-
-        if (company?._id) {
-          await prService.getAllByCompanyId({ data: { refresh: true, companyId: company._id } });
-        }
 
         await Promise.all(
           directoriesForLoading.map(async ({ dirType, createTreeData }) => {

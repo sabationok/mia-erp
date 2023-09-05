@@ -55,7 +55,7 @@ export type OnCheckBoxChangeHandler<V = any> = (data: OnCheckBoxChangeHandlerEve
 export type OnHeadCheckBoxChangeHandler<V = any> = (data: V) => any;
 
 export interface ITableListProps<TDataType = any> {
-  tableTitles?: CellTittleProps[];
+  tableTitles?: CellTittleProps<TDataType>[];
   tableSearchParams?: SelectItem[];
   tableSortParams?: SelectItem[];
   tableData?: TDataType[];

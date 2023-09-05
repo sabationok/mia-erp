@@ -29,7 +29,7 @@ export const useOrderTableConfigs = () => {
   const tableConfig = useMemo(
     (): ITableListProps<IRefund> => ({
       tableData: state.refunds,
-      tableTitles: ordersTableColumns,
+      tableTitles: ordersTableColumns as never,
       // tableSortParams: ordersSearchParams.filter(el => el.sort),
       isFilter: true,
       isSearch: true,

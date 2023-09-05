@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 
@@ -13,6 +13,7 @@ import './index.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import SideBarProvider from 'components/SideBarLeft/SideBarProvider';
 import { AppServiceProvider } from './hooks/useAppServices.hook';
+import AppLoader from './components/atoms/AppLoader';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
@@ -22,11 +23,13 @@ root.render(
       <BrowserRouter basename="/counter-app-ts">
         <AppServiceProvider>
           <AppThemeProvider>
-            <ModalProvider>
-              <SideBarProvider>
-                <App />
-              </SideBarProvider>
-            </ModalProvider>
+            <Suspense fallback={<AppLoader isLoading comment={'Please wait while minions do their work...'} />}>
+              <ModalProvider>
+                <SideBarProvider>
+                  <App />
+                </SideBarProvider>
+              </ModalProvider>
+            </Suspense>
           </AppThemeProvider>
         </AppServiceProvider>
       </BrowserRouter>
