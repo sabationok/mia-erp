@@ -3,7 +3,8 @@ import CloseButton from './CloseButton';
 import styled from 'styled-components';
 
 interface ModalComponentProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  RenderModalComponentChildren?: React.FC<RenderModalComponentChildrenProps>;
   idx?: number | string;
   settings?: IModalSettings;
   onClose: () => void;
@@ -11,6 +12,7 @@ interface ModalComponentProps {
   totalLength?: number;
   isLast?: boolean;
 }
+export interface RenderModalComponentChildrenProps extends ModalCTX {}
 
 export enum ModalAnimationType {
   ScaleCenter = 'ScaleCenter',
@@ -77,6 +79,7 @@ export const useModal = () => useContext(ModalContext) as ModalCTX;
 
 const ModalComponent: React.FC<ModalComponentProps> = ({
   children,
+  RenderModalComponentChildren,
   idx,
   settings,
   onClose,
@@ -135,7 +138,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
         <Modal style={modalSettings.modalStyle} modalSettings={modalSettings}>
           {modalSettings?.closeBtn && <CloseButton onClick={onClose} />}
 
-          {children}
+          {RenderModalComponentChildren ? <RenderModalComponentChildren {...CTX} /> : children}
         </Modal>
       </ModalContext.Provider>
     </Backdrop>

@@ -2,19 +2,20 @@ import { PagePathType } from '../../redux/APP_CONFIGS';
 import styled from 'styled-components';
 import { takeFullGridArea } from './pagesStyles';
 import AppGridPage from './AppGridPage';
-import { useProductsSelector } from '../../redux/selectors.store';
 import { useEffect, useMemo, useState } from 'react';
 import FlexBox from '../atoms/FlexBox';
 import TableList from '../TableList/TableList';
 import { useAppParams } from '../../hooks';
 import { CellTittleProps } from '../TableList/TebleCells/CellTitle';
 import { IProduct, IVariation, IVariationTemplate } from '../../redux/products/products.types';
-import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { toast } from 'react-toastify';
-import { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
 import { Modals } from '../ModalProvider/Modals';
-import { baseApi } from '../../api';
+import { pricesColumnsForProductReview } from '../../data/priceManagement.data';
+import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
+import { ExtractId } from '../../utils/dataTransform';
+import { useAppSelector } from '../../redux/store.store';
 
 export interface PageProductOverviewProps {
   path: PagePathType;
@@ -37,30 +38,46 @@ const createToastLoader = (messaege: string): ToastLoaderRemover => {
   const toastId = toast.loading(messaege);
   return () => toast.dismiss(toastId);
 };
+
+const toggleOptions = [{}];
+
 const PageProductOverview: React.FC<PageProductOverviewProps> = ({ path }) => {
-  const {
-    permission: { _id: permissionId },
-  } = usePermissionsSelector();
-
   const { productId } = useAppParams();
-  const { getById } = useAppServiceProvider()[ServiceName.products];
-  const [loading, setLoading] = useState(false);
   const modalS = useModalProvider();
-  const [loaderId, setLoaderId] = useState<number | string>();
-  const [loadedData, setLoadedData] = useState<IProduct>();
+  const {
+    priceManagement,
+    products: { getById, getProductFullInfo },
+  } = useAppServiceProvider();
+  const {
+    products: { currentProduct, properties },
+  } = useAppSelector();
 
-  const productsState = useProductsSelector();
+  const [product, setLoadedData] = useState<IProduct>();
+  const [priceList, setPriceList] = useState<IPriceListItem[]>([]);
+
+  const [loading, setLoading] = useState(false);
+  const [loadingPriceList, setLoadingPriceList] = useState<boolean>();
 
   const tableTitles = useMemo(() => {
-    return createTableTitlesFromTemplate(loadedData?.template || productsState.properties[2]);
-  }, [loadedData?.template, productsState.properties]);
+    return currentProduct?.template ? createTableTitlesFromTemplate(currentProduct?.template) : [];
+  }, [currentProduct?.template]);
 
   useEffect(() => {
-    console.log('PageProductOverview', baseApi.defaults.headers);
+    if (product?._id) {
+      priceManagement
+        .getAllPricesByProductId({
+          data: { productId: ExtractId(product) },
+          onSuccess: setPriceList,
+          onLoading: setLoadingPriceList,
+        })
+        .then();
+    }
+  }, [priceManagement, product]);
+
+  useEffect(() => {
     if (productId) {
-      (async () => {})();
-      getById({
-        data: productId,
+      getProductFullInfo({
+        data: { _id: productId },
         onSuccess: setLoadedData,
         onLoading: setLoading,
 
@@ -68,23 +85,15 @@ const PageProductOverview: React.FC<PageProductOverviewProps> = ({ path }) => {
           console.warn('PageProductOverview', e);
         },
       }).finally();
-      setTimeout(() => {}, 3000);
     }
-  }, []);
-
-  // useEffect(() => {
-  //   const remover = createToastLoader('Loading........');
-  //   if (loading) {
-  //   }
-  //   return remover;
-  // }, [loading]);
+  }, [getProductFullInfo, productId]);
 
   return (
     <AppGridPage path={path}>
       <Page>
-        <FlexBox>
-          {loadedData
-            ? Object.entries(loadedData).map(([k, v]) => {
+        <LeftSide>
+          {currentProduct
+            ? Object.entries(currentProduct).map(([k, v]) => {
                 return ['string', 'number'].includes(typeof v) ? (
                   <FlexBox key={`prKey-${k}`} padding={'4px'}>
                     {v}
@@ -92,23 +101,56 @@ const PageProductOverview: React.FC<PageProductOverviewProps> = ({ path }) => {
                 ) : null;
               })
             : null}
-        </FlexBox>
+        </LeftSide>
 
-        <FlexBox padding={'8px'}>
-          <TableList
-            actionsCreator={ctx => {
-              return [
-                {
-                  icon: 'plus',
-                  onClick: () => {
-                    modalS.handleOpenModal({ Modal: Modals.FormCreateVariation });
+        <RightSide>
+          <Top fillWidth flex={1}>
+            <TableList
+              tableData={currentProduct?.variations}
+              isSearch={false}
+              actionsCreator={ctx => {
+                return [
+                  {
+                    icon: 'plus',
+                    type: 'onlyIconFilled',
+                    onClick: () => {
+                      modalS.handleOpenModal({
+                        Modal: Modals.FormCreateVariation,
+                        props: { title: 'Створити варіацію' },
+                      });
+                    },
                   },
-                },
-              ];
-            }}
-            tableTitles={tableTitles}
-          />
-        </FlexBox>
+                ];
+              }}
+              tableTitles={tableTitles}
+              isLoading={loading}
+            />
+          </Top>
+          <Bottom fillWidth flex={1}>
+            <TableList
+              tableTitles={pricesColumnsForProductReview}
+              tableData={currentProduct?.prices}
+              actionsCreator={ctx => {
+                return [
+                  {
+                    icon: 'plus',
+                    type: 'onlyIconFilled',
+
+                    onClick: () => {
+                      modalS.handleOpenModal({
+                        Modal: Modals.FormCreatePrice,
+                        props: { onSubmit: () => {}, product: product },
+                      });
+                    },
+                  },
+                ];
+              }}
+              isSearch={false}
+              isFilter={false}
+              isLoading={loadingPriceList}
+            />
+          </Bottom>
+        </RightSide>
       </Page>
     </AppGridPage>
   );
@@ -118,6 +160,18 @@ const Page = styled.div`
   grid-template-columns: 1fr 2fr;
 
   ${takeFullGridArea}
+`;
+const OverviewBox = styled(FlexBox)``;
+const LeftSide = styled(FlexBox)`
+  border-right: 1px solid ${p => p.theme.modalBorderColor};
+`;
+const RightSide = styled(FlexBox)``;
+
+const Top = styled(FlexBox)`
+  border-bottom: 1px solid ${p => p.theme.modalBorderColor};
+`;
+const Bottom = styled(FlexBox)`
+  border-bottom: 1px solid ${p => p.theme.modalBorderColor};
 `;
 
 export default PageProductOverview;

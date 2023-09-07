@@ -1,87 +1,68 @@
 import { lazy } from 'react';
 
-import FormCreateDirTreeComp, { FormCreateDirTreeCompProps } from './FormCreateDirTreeComp';
+import * as FormPropTypes from './form.types';
 
-import FormCreateActivity, { FormCreateCompanyActivityProps } from './FormCreateActivity';
+const CreateDirTreeComp = lazy(() => import('./FormCreateDirTreeComp'));
 
-import FormCreateContractor, { FormCreateContractorProps } from './FormCreateContractor';
+const CreateActivity = lazy(() => import('./FormCreateActivity'));
 
-import FormCreateTransaction, { FormCreateTransactionProps } from './FormCreateTransaction';
+const CreateContractor = lazy(() => import('./FormCreateContractor'));
 
-import FormCreateCategory, { FormCreateCategoryProps } from './FormCreateCategory';
+const CreateCategory = lazy(() => import('./FormCreateCategory'));
 
-import FormCreatePriceList, { FormCreatePriceListProps } from './FormCreatePriceList';
+const CreatePriceList = lazy(() => import('./FormCreatePriceList'));
 
-import FormCreatePrice, { FormCreatePriceProps } from './FormCreatePrice/FormCreatePrice';
+const CreatePrice = lazy(() => import('./FormCreatePrice/FormCreatePrice'));
 
-import FormCreateCustomRole, { FormCreateCustomRoleProps } from './FormCreateCustomRole';
+const CreateCustomRole = lazy(() => import('./FormCreateCustomRole'));
 
-import FormCreateCount, { FormCreateCountProps } from './FormCreateCount';
+const CreateCount = lazy(() => import('./FormCreateCount'));
 
-import FormCreateCompany, { FormCreateCompanyProps } from './FormCreateCompany';
+const CreateCompany = lazy(() => import('./FormCreateCompany'));
 
-import FormCreateOrder, { FormCreateOrderProps } from './FormCreateOrder/FormCreateOrder';
+const CreateOrder = lazy(() => import('./FormCreateOrder/FormCreateOrder'));
 
-import FormCreateTag, { FormCreateTagProps } from './FormCreateTag';
+const CreateTag = lazy(() => import('./FormCreateTag'));
 
-import FormCreateMethod, { FormCreateMethodProps } from './FormCreateMetod';
+const CreateMethod = lazy(() => import('./FormCreateMetod'));
 
-import FormInviteUser, { FormInviteUserProps } from './FormInviteUser';
+const InviteUser = lazy(() => import('./FormInviteUser'));
 
-import FormCreateOrderSlot, { FormCreateOrderSlotItemProps } from './FormCreateOrder/FormCreateOrderSlot';
+const CreateOrderSlot = lazy(() => import('./FormCreateOrder/FormAddOrderSlot'));
 
-import FormCreateProductInventory, { FormCreateProductInventoryProps } from './FormCreateProductInventory';
+const CreateProductInventory = lazy(() => import('./FormCreateProductInventory'));
 
-import FormCreateProperty, { FormCreatePropertyProps } from './FormCreateProperty';
+const CreateProperty = lazy(() => import('./FormCreateProperty'));
 
-import FormCreateVariationsTemplate, {
-  FormCreateVariationsTemplateProps,
-} from './FormCreateVariationsTemplate/FormCreateVariationsTemplate';
+const CreateVariationsTemplate = lazy(() => import('./FormCreateVariationsTemplate/FormCreateVariationsTemplate'));
 
-import { FormCreateVariationProps } from './FormCreateVariation';
+const CreateVariation = lazy(() => import('./FormCreateVariation'));
+const CreateTransaction = lazy(() => import('./FormCreateTransaction'));
+const CreateWarehouse = lazy(() => import('./FormCreateWarehouse'));
 
-const FormCreateVariation = lazy(() => import('./FormCreateVariation'));
-
-export {
-  FormCreateDirTreeComp,
-  FormCreateActivity,
-  FormCreateContractor,
-  FormCreateTransaction,
-  FormCreateCategory,
-  FormCreatePriceList,
-  FormCreatePrice,
-  FormCreateCustomRole,
-  FormCreateCount,
-  FormCreateCompany,
-  FormCreateOrder,
-  FormCreateTag,
-  FormCreateMethod,
-  FormInviteUser,
-  FormCreateOrderSlot,
-  FormCreateProductInventory,
-  FormCreateVariationsTemplate,
-  FormCreateProperty,
-  FormCreateVariation,
+export const Forms = {
+  CreateDirTreeComp,
+  CreateActivity,
+  CreateContractor,
+  CreateTransaction,
+  CreateCategory,
+  CreatePriceList,
+  CreatePrice,
+  CreateCustomRole,
+  CreateCount,
+  CreateCompany,
+  CreateOrder,
+  CreateTag,
+  CreateMethod,
+  InviteUser,
+  CreateOrderSlot,
+  CreateProductInventory,
+  CreateVariationsTemplate,
+  CreateProperty,
+  CreateVariation,
+  CreateWarehouse,
 };
 
-export type {
-  FormCreateDirTreeCompProps,
-  FormCreateCompanyActivityProps,
-  FormCreateContractorProps,
-  FormCreateTransactionProps,
-  FormCreateCategoryProps,
-  FormCreatePriceListProps,
-  FormCreatePriceProps,
-  FormCreateCustomRoleProps,
-  FormCreateCountProps,
-  FormCreateCompanyProps,
-  FormCreateOrderProps,
-  FormCreateTagProps,
-  FormCreateMethodProps,
-  FormInviteUserProps,
-  FormCreateOrderSlotItemProps,
-  FormCreateProductInventoryProps,
-  FormCreateVariationsTemplateProps,
-  FormCreatePropertyProps,
-  FormCreateVariationProps,
-};
+export { FormPropTypes };
+
+export default Forms;

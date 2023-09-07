@@ -11,7 +11,7 @@ const TableOverHead: React.FC<React.HTMLAttributes<HTMLDivElement>> = props => {
   const { actionsCreator, isFilter, tableSearchParams, isSearch = true } = useTable();
 
   return (
-    <OverHead className="tOverHead" padding={isFilter || isSearch || actionsCreator ? '4px 8px' : '0'} {...props}>
+    <OverHead className="tOverHead" {...props}>
       <LeftSide className="leftSide">{isSearch && <TableSearchForm {...{ tableSearchParams }} />}</LeftSide>
 
       <DeviceControl.MinDesktop>
@@ -59,6 +59,8 @@ const LeftSide = styled.div`
   align-items: center;
   justify-content: space-between;
 
+  padding: 0 8px;
+
   /* overflow: hidden; */
 `;
 const RightSide = styled.div`
@@ -69,6 +71,7 @@ const RightSide = styled.div`
   align-items: center;
   gap: 8px;
 
+  padding: 4px 8px;
   /* overflow: hidden; */
 `;
 const Separator = styled.div`

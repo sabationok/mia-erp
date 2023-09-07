@@ -64,6 +64,27 @@ export const getAllProductsThunk = createAsyncThunk<
   }
 });
 
+export const getProductFullInfoThunk = createAsyncThunk<IProduct, ThunkPayload<OnlyUUID, IProduct>>(
+  'products/getProductFullInfoThunk',
+  async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
+    onLoading && onLoading(true);
+
+    try {
+      const response = await ProductsApi.getFullInfoById(data?._id);
+
+      onSuccess && onSuccess(response.data.data);
+
+      return response.data.data;
+    } catch (error) {
+      onError && onError(error);
+
+      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+    } finally {
+      onLoading && onLoading(false);
+    }
+  }
+);
+
 export const createProductThunk = createAsyncThunk<IProduct | undefined, ThunkPayload<IProductReqData, IProduct>>(
   'products/createProductThunk',
   async (payload, thunkApi) => {

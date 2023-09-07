@@ -13,6 +13,7 @@ import {
   createPropertyThunk,
   getAllProductsThunk,
   getAllPropertiesThunk,
+  getProductFullInfoThunk,
 } from '../redux/products/products.thunks';
 import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
@@ -27,6 +28,7 @@ export interface ProductsService {
   updateById: ServiceApiCaller<IProductReqData, IProduct>; // !!!!! ===>>> ServiceDispatcher
   getById: ServiceApiCaller<string, IProduct>;
   getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IProduct[]>;
+  getProductFullInfo: ServiceDispatcherAsync<OnlyUUID, IProduct>;
 
   // * PROPERTIES
 
@@ -54,6 +56,7 @@ const useProductsService = (): ProductsService => {
       updateById: payload => createApiCall(defaultApiCallPayload(payload), ProductsApi.updateById, ProductsApi),
       getById: payload => createApiCall(defaultApiCallPayload(payload), ProductsApi.getById, ProductsApi),
       getAll: payload => dispatch(getAllProductsThunk(defaultThunkPayload(payload))),
+      getProductFullInfo: args => dispatch(getProductFullInfoThunk(defaultThunkPayload(args))),
 
       // * PROPERTIES
       createProperty: args => dispatch(createPropertyThunk(defaultThunkPayload(args))),

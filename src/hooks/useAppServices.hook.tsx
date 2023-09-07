@@ -8,6 +8,7 @@ import useAppSettingsHook, { AppSettingsService } from './useAppSettings.hook';
 import useCompaniesService, { CompaniesService } from './useCompaniesService.hook';
 import { createContext, useContext, useEffect } from 'react';
 import useWarehousesServiceHook, { WarehousesService } from './useWarehousesService.hook';
+import useAppAuthHook, { AuthService } from './useAppAuth.hook';
 
 export enum ServiceName {
   permissions = 'permissions',
@@ -33,9 +34,11 @@ export interface AppService {
   [ServiceName.appSettings]: AppSettingsService;
   [ServiceName.companies]: CompaniesService;
   [ServiceName.warehouses]: WarehousesService;
+  [ServiceName.auth]: AuthService;
 }
 
 const useAppService = (): AppService => {
+  const auth = useAppAuthHook();
   const permissions = usePermissionsServiceHook();
   const products = useProductsServiceHook();
   const transactions = useTransactionsServiceHook();
@@ -79,6 +82,7 @@ const useAppService = (): AppService => {
     appSettings,
     companies,
     warehouses,
+    auth,
   };
 };
 export const AppServiceCTX = createContext<AppService>({} as AppService);

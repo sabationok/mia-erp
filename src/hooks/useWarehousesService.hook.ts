@@ -1,16 +1,28 @@
 import { useMemo } from 'react';
-import { ServiceApiCaller, ServiceDispatcherAsync } from '../redux/global.types';
+import { OnlyUUID, ServiceApiCaller, ServiceDispatcherAsync } from '../redux/global.types';
 import { AppQueryParams } from '../api';
-import { IWarehouse } from '../redux/warehouses/warehouses.types';
-import { getAllWarehousesThunk, getWarehouseByIdThunk } from '../redux/warehouses/warehouses.thunks';
+import {
+  IProductInventory,
+  IProductInventoryDto,
+  IWarehouse,
+  IWarehouseReqData,
+} from '../redux/warehouses/warehouses.types';
+import {
+  createWarehouseThunk,
+  getAllWarehousesThunk,
+  getWarehouseByIdThunk,
+} from '../redux/warehouses/warehouses.thunks';
 import { defaultThunkPayload } from '../utils/fabrics';
 import { useAppDispatch } from '../redux/store.store';
 
 export interface WarehousesService {
   getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IWarehouse[]>;
-  getAllTables?: ServiceApiCaller;
-  getTableById?: ServiceApiCaller;
   getById: ServiceDispatcherAsync<IWarehouse, Partial<IWarehouse>>;
+
+  create: ServiceDispatcherAsync<IWarehouseReqData, IWarehouse>;
+  update?: ServiceApiCaller<IWarehouseReqData, IWarehouse>;
+  addItem?: ServiceApiCaller<{ _id?: OnlyUUID; data: IProductInventoryDto; warehouse: OnlyUUID }, IProductInventory>;
+  removeItem?: ServiceApiCaller<{ _id?: OnlyUUID; data: IProductInventoryDto; warehouse: OnlyUUID }, IProductInventory>;
 }
 export const useWarehousesService = (): WarehousesService => {
   const dispatch = useAppDispatch();
@@ -18,6 +30,7 @@ export const useWarehousesService = (): WarehousesService => {
     (): WarehousesService => ({
       getAll: args => dispatch(getAllWarehousesThunk(defaultThunkPayload(args))),
       getById: args => dispatch(getWarehouseByIdThunk(defaultThunkPayload(args))),
+      create: args => dispatch(createWarehouseThunk(defaultThunkPayload(args))),
     }),
     [dispatch]
   );

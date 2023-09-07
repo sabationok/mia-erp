@@ -45,8 +45,18 @@ export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> exte
   phone?: string;
   code?: string | number;
 }
+
 export interface IDirItemBase<DirType extends ApiDirType = any, ItemType = any>
   extends IBaseDirItem<ItemType, DirType> {}
+
+export interface IDirTreeParentItem<DirType extends ApiDirType = any, ItemType = any>
+  extends Omit<IDirItemBase<DirType, ItemType>, 'parent'> {}
+
+export interface IDirTreeItem<DirType extends ApiDirType = any, ItemType = any>
+  extends IDirItemBase<DirType, ItemType> {}
+export interface IDirTreeChildItem<DirType extends ApiDirType = any, ItemType = any>
+  extends Omit<IDirItemBase<DirType, ItemType>, 'childrenList'> {}
+
 export interface DirBaseProps extends ModalFormProps {
   title: string;
 }
@@ -175,6 +185,8 @@ export interface DirActivitiesProps
   extends IDirInTreeProps<ApiDirType.ACTIVITIES, any, IActivityFormData, IActivityFormData, IActivity> {}
 export interface IBrand extends IBaseDirItem {}
 
+export interface IProductParentCategoryDirItem extends IBaseDirItem<any, ApiDirType.CATEGORIES_PROD> {}
+export interface IProductCategoryDirItem extends IBaseDirItem<any, ApiDirType.CATEGORIES_PROD> {}
 export interface IProductCategoryDirItem extends IBaseDirItem<any, ApiDirType.CATEGORIES_PROD> {}
 export interface IBrandFormData extends Omit<IBrand, '_id' | 'createdAt' | 'updatedAt'> {}
 export interface DirBrandsProps

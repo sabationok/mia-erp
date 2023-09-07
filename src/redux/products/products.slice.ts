@@ -2,7 +2,13 @@ import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { createTransactionThunk, getAllTransactionsThunk } from 'redux/transactions/transactions.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { IProduct, IVariationTemplate } from './products.types';
-import { createProductThunk, createPropertyThunk, getAllProductsThunk, getAllPropertiesThunk } from './products.thunks';
+import {
+  createProductThunk,
+  createPropertyThunk,
+  getAllProductsThunk,
+  getAllPropertiesThunk,
+  getProductFullInfoThunk,
+} from './products.thunks';
 
 export interface IProductsState {
   products: IProduct[];
@@ -42,15 +48,16 @@ export const productsSlice = createSlice({
 
         s.products = a.payload ? [a.payload, ...s.products] : s.products;
       })
+      .addCase(getProductFullInfoThunk.fulfilled, (s, a) => {
+        s.currentProduct = a.payload;
+      })
       .addCase(getAllPropertiesThunk.fulfilled, (s, a) => {
         if (a.payload) {
-          console.log(a);
           s.properties = a.payload;
         }
       })
       .addCase(createPropertyThunk.fulfilled, (s, a) => {
         if (a.payload) {
-          console.log(a);
           s.properties = a.payload;
         }
       })

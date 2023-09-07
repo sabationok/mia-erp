@@ -53,12 +53,26 @@ export interface IProduct extends IProductBase {
   unitsOfMeasurement?: string;
 
   prices?: IPriceListItem[];
-  productInventory?: IProductInventory;
+  productInventories?: IProductInventory[];
 
   images?: ProductImage[];
 }
 
 export type ProductImage = { img_preview?: string; img_1x: string; img_2x: string; webp: string };
+
+export interface IProductFormData {
+  type?: ProductTypeEnum;
+  currency?: CurrencyCode;
+  status?: ProductStatus;
+
+  category?: Omit<IProductCategoryDirItem, 'childrenList'>;
+  parentCategory?: OnlyUUID;
+
+  tags?: string[];
+  supplier?: OnlyUUID;
+  brand?: OnlyUUID;
+  document?: OnlyUUID;
+}
 
 export interface IProductDto {
   type?: ProductTypeEnum;

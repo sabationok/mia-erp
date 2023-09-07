@@ -3,6 +3,7 @@ import { ThunkPayload } from '../store.store';
 import { AppQueryParams, createApiCall, WarehousesApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
 import { IWarehouse, IWarehouseReqData } from './warehouses.types';
+import { OnlyUUID } from '../global.types';
 
 export const getAllWarehousesThunk = createAsyncThunk<
   | {
@@ -43,53 +44,38 @@ export const getAllWarehousesThunk = createAsyncThunk<
     return thunkAPI.rejectWithValue(axiosErrorCheck(e));
   }
 });
-export const createWarehouseThunk = createAsyncThunk<
-  IWarehouse | undefined,
-  ThunkPayload<IWarehouseReqData, IWarehouse>
->('warehouses/createWarehouseThunk', async (arg, thunkAPI) => {
-  const { data, onLoading, onSuccess, onError } = arg;
-
-  onLoading && onLoading(true);
-
-  try {
-    const res = await createApiCall(
-      {
-        data: data,
-        logRes: true,
-        logError: true,
-      },
-      WarehousesApi.createWarehouse,
-      WarehousesApi
-    );
-    if (res?.data.data) {
-      onSuccess && onSuccess(res?.data.data);
-    }
-    onLoading && onLoading(false);
-    return res?.data.data;
-  } catch (e) {
-    onLoading && onLoading(false);
-    onError && onError(e);
-    return thunkAPI.rejectWithValue(axiosErrorCheck(e));
-  }
-});
-
-export const getWarehouseByIdThunk = createAsyncThunk<IWarehouse | undefined, ThunkPayload<IWarehouse, IWarehouse>>(
-  'warehouses/getWarehouseByIdThunk',
+export const createWarehouseThunk = createAsyncThunk<IWarehouse, ThunkPayload<IWarehouseReqData, IWarehouse>>(
+  'warehouses/createWarehouseThunk',
   async (arg, thunkAPI) => {
-    const { data: args, onLoading, onSuccess, onError } = arg;
+    const { data, onLoading, onSuccess, onError } = arg;
 
     onLoading && onLoading(true);
 
     try {
-      const res = await createApiCall(
-        {
-          data: args,
-          logRes: true,
-          logError: true,
-        },
-        WarehousesApi.getById,
-        WarehousesApi
-      );
+      const res = await WarehousesApi.createWarehouse(data);
+
+      if (res?.data.data) {
+        onSuccess && onSuccess(res?.data.data);
+      }
+      onLoading && onLoading(false);
+      return res?.data.data;
+    } catch (e) {
+      onLoading && onLoading(false);
+      onError && onError(e);
+      return thunkAPI.rejectWithValue(axiosErrorCheck(e));
+    }
+  }
+);
+
+export const getWarehouseByIdThunk = createAsyncThunk<IWarehouse | undefined, ThunkPayload<OnlyUUID, IWarehouse>>(
+  'warehouses/getWarehouseByIdThunk',
+  async (arg, thunkAPI) => {
+    const { data, onLoading, onSuccess, onError } = arg;
+
+    onLoading && onLoading(true);
+
+    try {
+      const res = await WarehousesApi.getById(data);
 
       if (res?.data.data) {
         onSuccess && onSuccess(res?.data?.data);
@@ -192,4 +178,4 @@ export const getWarehouseByIdThunk = createAsyncThunk<IWarehouse | undefined, Th
 //   }
 // });
 
-export const addPricesToListThunk = createAsyncThunk('warehouses/addPricesToListThunk', async () => {});
+export const addItemsToWarehouseThunk = createAsyncThunk('warehouses/addItemsToWarehouseThunk', async () => {});

@@ -1,12 +1,30 @@
-import React from 'react';
-import usePermissionsServiceHook from '../../hooks/usePermissionsService.hook';
+import React, { useMemo } from 'react';
+import { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
 
-const CorpComponent: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  const { isCurrentValid } = usePermissionsServiceHook();
+const CorpComponent = ({
+  children,
+  Component,
+}: {
+  children?: React.ReactNode;
+  Component?: React.FC<{ disabled?: boolean; onClick?: () => void }>;
+}) => {
+  const { permission } = usePermissionsSelector();
 
-  console.log('CorpComponent', { isCurrentValid });
+  const hasPermission = useMemo(() => !!permission._id, [permission._id]);
 
-  return <>{isCurrentValid ? children : null}</>;
+  const handleOnClickAlert = () => {};
+
+  const p = useMemo(
+    (): { disabled?: boolean; onClick?: () => void } | undefined =>
+      hasPermission
+        ? {
+            disabled: true,
+            onClick: handleOnClickAlert,
+          }
+        : undefined,
+    [hasPermission]
+  );
+  return Component ? <Component {...p} /> : hasPermission ? children : null;
 };
 
 export default CorpComponent;

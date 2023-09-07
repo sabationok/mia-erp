@@ -1,4 +1,4 @@
-import { AppResponse, IBase } from '../global.types';
+import { IBase, OnlyUUID } from '../global.types';
 import { IProduct, IVariation } from '../products/products.types';
 import { ICompany } from '../companies/companies.types';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
@@ -16,7 +16,7 @@ export interface IWarehouse extends IBase {
   items?: IProductInventory[];
 }
 
-export type VariationsStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
+export type ProductInventoryStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
 export interface IProductInventory extends IBase {
   owner?: ICompany;
@@ -33,10 +33,11 @@ export interface IProductInventory extends IBase {
   timeFrom?: string;
   timeTo?: string;
 }
-export interface IProductInventoryDto {
-  product?: Partial<IProduct>;
+export interface IProductInventoryFormData {
+  product?: Omit<IProduct, 'category' | 'productInventory'>;
   variation?: IVariation;
-  status?: VariationsStatus;
+  status?: ProductInventoryStatus;
+  priceInfo?: Omit<IPriceListItem, 'list' | 'product'>;
 
   stock?: number;
   reserved?: number;
@@ -48,18 +49,34 @@ export interface IProductInventoryDto {
   timeFrom?: string;
   timeTo?: string;
 }
+export interface IProductInventoryDto {
+  product?: OnlyUUID;
+  variation?: OnlyUUID;
+  status?: OnlyUUID;
+  price?: OnlyUUID;
 
+  stock?: number;
+  reserved?: number;
+
+  reservation?: boolean;
+
+  customerTags?: string[];
+  supplierTags?: string[];
+  timeFrom?: string;
+  timeTo?: string;
+}
+export interface IProductInventoryReqData {
+  _id?: OnlyUUID;
+  warehouse?: OnlyUUID;
+  data: IProductInventoryDto;
+}
 export interface IWarehouseDto {
   label: string;
   code?: string;
+  type?: WarehouseTypeEnum;
+  location?: string;
 }
 export interface IWarehouseReqData {
   _id?: string;
   data: IWarehouseDto;
 }
-
-export interface IAllWarehousesRes extends AppResponse<IWarehouse[]> {}
-export interface IWarehouseRes extends AppResponse<IWarehouse> {}
-
-export interface IProductInventoriesRes extends AppResponse<IProductInventory[]> {}
-export interface IProductInventoryRes extends AppResponse<IProductInventory> {}

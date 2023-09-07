@@ -1,9 +1,10 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, Suspense, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import ModalPortal from './ModalPortal';
 import ModalComponent, { IModalSettings } from './ModalComponent';
 import { nanoid } from '@reduxjs/toolkit';
 import { ModalChildrenMap, ModalChildrenProps, Modals } from './Modals';
 import { toast } from 'react-toastify';
+import AppLoader from '../atoms/AppLoader';
 
 interface IModalProviderProps {
   children: React.ReactNode;
@@ -165,12 +166,14 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
               isLast: idx === modalContent.length - 1,
               onClose: createOnClose(Item.id),
             }}
-          >
-            {Item?.ModalChildren && (
-              <Item.ModalChildren {...{ ...Item?.modalChildrenProps, onClose: createOnClose(Item.id) }} />
-            )}
-            {/*{Item?.Modal && <ModalChildren {...{ ...Item?.props, onClose: createOnClose(Item.id) }} />}*/}
-          </ModalComponent>
+            RenderModalComponentChildren={props =>
+              Item?.ModalChildren ? (
+                <Item.ModalChildren {...{ ...Item?.modalChildrenProps, onClose: createOnClose(Item.id) }} />
+              ) : (
+                <></>
+              )
+            }
+          />
         );
       })
     );
@@ -187,14 +190,14 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
   }, [modalContent.length]);
 
   return (
-    <ModalProviderContext.Provider
-      {...{
-        value: CTX,
-      }}
-    >
+    <ModalProviderContext.Provider value={CTX}>
       {children}
 
-      <ModalPortal portalId={portalId}>{renderModalContent}</ModalPortal>
+      <Suspense
+        fallback={<AppLoader isLoading comment={'Please wait while minions do their work... (Loading modal module)'} />}
+      >
+        <ModalPortal portalId={portalId}>{renderModalContent}</ModalPortal>
+      </Suspense>
     </ModalProviderContext.Provider>
   );
 };

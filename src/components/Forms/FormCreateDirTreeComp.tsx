@@ -7,14 +7,14 @@ import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import t from '../../lang';
-import { DirectoriesFormProps, IBaseDirItem } from '../Directories/dir.types';
+import { DirectoriesFormProps, IBaseDirItem, IDirItemBase } from '../Directories/dir.types';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { useAppForm } from '../../hooks';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 
 export interface FormCreateDirTreeCompProps<T = any, D extends ApiDirType = any, FD = any>
-  extends DirectoriesFormProps<T, IBaseDirItem<T, D>, FD> {
+  extends DirectoriesFormProps<T, IDirItemBase<D, T>, FD> {
   dirType?: ApiDirType;
 }
 

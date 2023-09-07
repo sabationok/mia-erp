@@ -56,7 +56,7 @@ export const usePermissionsSelector = () => useSelector((state: RootState) => st
 const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOptions = {}): PermissionService => {
   const dispatch: AppDispatch = useAppDispatch();
 
-  const dispatchers = useMemo((): PermissionService => {
+  return useMemo((): PermissionService => {
     return {
       // getAllByCompanyId:  args => dispatch(getAllPermissionsByCompanyIdThunk(defaultThunkPayload(args))),
       getAllByUserId: args => dispatch(getAllPermissionsByUserIdThunk(defaultThunkPayload(args))),
@@ -79,8 +79,6 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
       createInvitation: args => dispatch(inviteUserThunk(defaultThunkPayload(args))),
     };
   }, [dispatch]);
-
-  return dispatchers;
 };
 
 export default usePermissionsService as typeof usePermissionsService;
