@@ -13,8 +13,8 @@ export const langUa = {
   [ApiDirType.VARIATIONS]: 'Варіації',
   [ApiDirType.BANK_ACCOUNTS]: 'Банківські рахунки',
   [ApiDirType.PROPERTIES_PRODUCTS]: 'Характеристики товарів/послуг',
-  variationsTemplate: 'Таблиця варіацій',
-  variationsTemplates: 'Таблиці варіацій',
+  variationsTemplate: 'Список характеристик',
+  variationsTemplates: 'Списки характеристик',
 
   counter: 'Бухгалтер',
   auditor: 'Аудитор',
@@ -60,6 +60,8 @@ export const langUa = {
   brand: 'Бренд',
   selectBrand: 'Оберіть бренд',
   createTag: 'Створити тег',
+
+  selectVariationsTemplate: 'Список доступних характеристик',
 
   counts: 'Облікові рахунки',
   count: 'Обліковий рахунок',

@@ -20,11 +20,12 @@ const SideBarOptions: React.FC = () => {
   }
 
   useEffect(() => {
-    if (modal.isOpen) return;
+    const isModalOpen = modal.getState().length > 0;
+    if (isModalOpen) return;
     if (!RightSideContent) return;
 
     function onMenuClose(ev: KeyboardEvent | MouseEvent) {
-      if (modal.isOpen) return;
+      if (isModalOpen) return;
 
       const { target } = ev;
       if (target instanceof HTMLElement && !target?.closest('[data-sidebar]')) onClose && onClose();
@@ -40,7 +41,7 @@ const SideBarOptions: React.FC = () => {
       rootEl?.removeEventListener('click', onMenuClose);
       rootEl?.removeEventListener('keydown', onMenuClose);
     };
-  }, [onClose, modal.isOpen, RightSideContent]);
+  }, [onClose, modal, RightSideContent]);
 
   return (
     <Backdrop

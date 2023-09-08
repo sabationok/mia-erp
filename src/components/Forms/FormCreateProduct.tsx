@@ -15,7 +15,7 @@ import { createDataForReq } from '../../utils/dataTransform';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { UseAppFormSubmitOptions } from '../../hooks/useAppForm.hook';
 
-export interface FormProps extends Omit<ModalFormProps, 'onSubmit'> {
+export interface FormCreateProductProps extends Omit<ModalFormProps, 'onSubmit'> {
   edit?: boolean;
   copy?: boolean;
   id?: string;
@@ -45,9 +45,17 @@ export interface FormProps extends Omit<ModalFormProps, 'onSubmit'> {
 //   yup.object().shape({
 //     category: requiredSelectItem,
 //   });
-const Form: React.FC<FormProps> = ({ edit, onSubmit, copy, defaultState, addInputs, ...props }) => {
+const FormCreateProduct: React.FC<FormCreateProductProps> = ({
+  edit,
+  onSubmit,
+  copy,
+  defaultState,
+  addInputs,
+  ...props
+}) => {
   const {
     directories: { directories },
+    products: { properties },
   } = useAppSelector();
 
   const {
@@ -83,20 +91,6 @@ const Form: React.FC<FormProps> = ({ edit, onSubmit, copy, defaultState, addInpu
     return directories[ApiDirType.CATEGORIES_PROD].filter(el => el.type === formValues.type);
   }, [directories, formValues.type]);
 
-  const renderBrandsSelect = useMemo(
-    () => (
-      <CustomSelect
-        {...registerSelect('brand', {
-          // options: directories[ApiDirType.BRANDS].filter(el => el?.parent?._id === formValues?.contractor?._id),
-          options: directories[ApiDirType.BRANDS],
-          placeholder: translate('selectBrand'),
-          label: translate('brand'),
-        })}
-      />
-    ),
-    [directories, registerSelect]
-  );
-
   return (
     <ModalForm
       {...props}
@@ -129,7 +123,21 @@ const Form: React.FC<FormProps> = ({ edit, onSubmit, copy, defaultState, addInpu
           })}
         />
 
-        {renderBrandsSelect}
+        <CustomSelect
+          {...registerSelect('brand', {
+            options: directories[ApiDirType.BRANDS],
+            label: translate('brand'),
+            placeholder: translate('selectBrand'),
+          })}
+        />
+
+        <CustomSelect
+          {...registerSelect('template', {
+            options: properties,
+            label: translate('variationsTemplate'),
+            placeholder: translate('selectVariationsTemplate'),
+          })}
+        />
 
         <InputLabel label={translate('status')} direction={'vertical'} error={errors.status} disabled>
           <InputText placeholder={translate('status')} {...register('status')} disabled />
@@ -157,4 +165,4 @@ const Form: React.FC<FormProps> = ({ edit, onSubmit, copy, defaultState, addInpu
 //   gap: 12px;
 // `;
 
-export default Form;
+export default FormCreateProduct;

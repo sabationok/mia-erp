@@ -68,8 +68,8 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
 
   return (
     <ModalForm
-      onSubmit={formEventWrapper(onSubmit)}
       {...props}
+      onSubmit={formEventWrapper(onSubmit)}
       isValid={isValid}
       extraFooter={<FormAfterSubmitOptions {...{ closeAfterSave, clearAfterSave, toggleOption }} />}
     >

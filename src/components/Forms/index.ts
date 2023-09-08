@@ -1,44 +1,26 @@
-import { lazy } from 'react';
-
 import * as FormPropTypes from './form.types';
+import CreateDirTreeComp from './FormCreateDirTreeComp';
+import CreateActivity from './FormCreateActivity';
+import CreateContractor from './FormCreateContractor';
+import CreateCategory from './FormCreateCategory';
+import CreatePriceList from './FormCreatePriceList';
+import CreateCustomRole from './FormCreateCustomRole';
+import CreateCount from './FormCreateCount';
+import CreateCompany from './FormCreateCompany';
+import CreateTag from './FormCreateTag';
+import CreateMethod from './FormCreateMetod';
+import InviteUser from './FormInviteUser';
+import CreateProductInventory from './FormCreateProductInventory';
+import CreateProperty from './FormCreateProperty';
+import CreateVariation from './FormCreateVariation';
+import CreateTransaction from './FormCreateTransaction';
+import CreateWarehouse from './FormCreateWarehouse';
+import CreateProduct from './FormCreateProduct';
 
-const CreateDirTreeComp = lazy(() => import('./FormCreateDirTreeComp'));
-
-const CreateActivity = lazy(() => import('./FormCreateActivity'));
-
-const CreateContractor = lazy(() => import('./FormCreateContractor'));
-
-const CreateCategory = lazy(() => import('./FormCreateCategory'));
-
-const CreatePriceList = lazy(() => import('./FormCreatePriceList'));
-
-const CreatePrice = lazy(() => import('./FormCreatePrice/FormCreatePrice'));
-
-const CreateCustomRole = lazy(() => import('./FormCreateCustomRole'));
-
-const CreateCount = lazy(() => import('./FormCreateCount'));
-
-const CreateCompany = lazy(() => import('./FormCreateCompany'));
-
-const CreateOrder = lazy(() => import('./FormCreateOrder/FormCreateOrder'));
-
-const CreateTag = lazy(() => import('./FormCreateTag'));
-
-const CreateMethod = lazy(() => import('./FormCreateMetod'));
-
-const InviteUser = lazy(() => import('./FormInviteUser'));
-
-const CreateOrderSlot = lazy(() => import('./FormCreateOrder/FormAddOrderSlot'));
-
-const CreateProductInventory = lazy(() => import('./FormCreateProductInventory'));
-
-const CreateProperty = lazy(() => import('./FormCreateProperty'));
-
-const CreateVariationsTemplate = lazy(() => import('./FormCreateVariationsTemplate/FormCreateVariationsTemplate'));
-
-const CreateVariation = lazy(() => import('./FormCreateVariation'));
-const CreateTransaction = lazy(() => import('./FormCreateTransaction'));
-const CreateWarehouse = lazy(() => import('./FormCreateWarehouse'));
+import CreateOrder from './FormCreateOrder/FormCreateOrder';
+import CreatePrice from './FormCreatePrice/FormCreatePrice';
+import CreateOrderSlot from './FormCreateOrder/FormAddOrderSlot';
+import CreateVariationsTemplate from './FormCreateVariationsTemplate/FormCreateVariationsTemplate';
 
 export const Forms = {
   CreateDirTreeComp,
@@ -61,6 +43,7 @@ export const Forms = {
   CreateProperty,
   CreateVariation,
   CreateWarehouse,
+  CreateProduct,
 };
 
 export { FormPropTypes };

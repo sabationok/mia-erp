@@ -11,6 +11,7 @@ import { OnlyUUID, ServiceApiCaller, ServiceDispatcherAsync } from 'redux/global
 import {
   createProductThunk,
   createPropertyThunk,
+  createVariationThunk,
   getAllProductsThunk,
   getAllPropertiesThunk,
   getProductFullInfoThunk,
@@ -38,7 +39,7 @@ export interface ProductsService {
   getPropertyById: ServiceApiCaller<IPropertyReqData, IProperty>;
   getAllProperties: ServiceDispatcherAsync<IPropertyReqData, IProperty[]>;
 
-  createVariation: ServiceApiCaller<IVariationReqData, IVariation>;
+  createVariation: ServiceDispatcherAsync<IVariationReqData, IVariation>;
   getAllVariationsByProductId: ServiceApiCaller<{ product: OnlyUUID; params?: AppQueryParams }, IVariation[]>;
   // deleteVariationById: ServiceApiCaller<IVariationReqData, IVariation>;
   // updateVariationById: ServiceApiCaller<IVariationReqData, IVariation>;
@@ -65,11 +66,11 @@ const useProductsService = (): ProductsService => {
       getPropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.getById, PropertiesApi),
       getAllProperties: args => dispatch(getAllPropertiesThunk(defaultThunkPayload(args))),
 
-      createVariation: args => createApiCall(defaultApiCallPayload(args), VariationsApi.create, VariationsApi),
+      // createVariation: args => createApiCall(defaultApiCallPayload(args), VariationsApi.create, VariationsApi),
+      createVariation: args => dispatch(createVariationThunk(defaultThunkPayload(args))),
       getAllVariationsByProductId: args =>
         createApiCall(defaultApiCallPayload(args), VariationsApi.getAllByProductId, VariationsApi),
 
-      // createVariation: args => dispatch(createVariationThunk(defaultThunkPayload(args))),
       // getAllVariationsByProductId: args => dispatch(getAllVariationsByProductIdThunk(defaultThunkPayload(args))),
     };
   }, [dispatch]);

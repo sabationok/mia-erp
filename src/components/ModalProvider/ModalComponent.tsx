@@ -1,18 +1,23 @@
-import React, { createContext, memo, useContext, useEffect, useState } from 'react';
+import React, { createContext, memo, Suspense, useContext, useEffect, useMemo, useState } from 'react';
 import CloseButton from './CloseButton';
 import styled from 'styled-components';
 
-interface ModalComponentProps {
+interface ModalComponentProps<P = any> {
   children?: React.ReactNode;
-  RenderModalComponentChildren?: React.FC<RenderModalComponentChildrenProps>;
-  idx?: number | string;
+  RenderModalComponentChildren?: React.FC<RenderModalComponentChildrenProps & P>;
+  childrenProps?: P;
+  idx?: number;
   settings?: IModalSettings;
   onClose: () => void;
   id?: number | string;
   totalLength?: number;
   isLast?: boolean;
 }
-export interface RenderModalComponentChildrenProps extends ModalCTX {}
+export interface RenderModalComponentChildrenProps {
+  onClose?: () => void;
+  id?: string | number;
+  index?: number;
+}
 
 export enum ModalAnimationType {
   ScaleCenter = 'ScaleCenter',
@@ -98,15 +103,21 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
     if (typeof onClose === 'function') onClose();
   }
 
-  const CTX: ModalCTX = {
-    onClose,
-    modalIdx: idx,
-    modalSettings,
-    id,
-    totalLength,
-    isLast,
-    handleSetModalSettings,
-  };
+  const CTX: ModalCTX = useMemo(
+    () => ({
+      onClose,
+      modalIdx: idx,
+      modalSettings,
+      id,
+      handleSetModalSettings,
+    }),
+    [id, idx, modalSettings, onClose]
+  );
+
+  useEffect(() => {
+    console.log('ModalComponent render', 'id', id);
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     if (!modalSettings.onEscapePressClose) return;
@@ -126,6 +137,16 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
     };
   }, [isLast, modalSettings.onEscapePressClose, onClose]);
 
+  const renderChildren = useMemo(() => {
+    console.log('RenderModalComponentChildren useMemo', 'id', id);
+    return RenderModalComponentChildren ? (
+      <RenderModalComponentChildren id={id} onClose={onClose} index={idx} />
+    ) : (
+      children
+    );
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <Backdrop
       key={idx}
@@ -134,13 +155,15 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
       style={modalSettings.backdropStyle}
       modalSettings={modalSettings}
     >
-      <ModalContext.Provider value={CTX}>
-        <Modal style={modalSettings.modalStyle} modalSettings={modalSettings}>
-          {modalSettings?.closeBtn && <CloseButton onClick={onClose} />}
+      <Suspense>
+        <ModalContext.Provider value={CTX}>
+          <Modal style={modalSettings.modalStyle} modalSettings={modalSettings}>
+            {modalSettings?.closeBtn && <CloseButton onClick={onClose} />}
 
-          {RenderModalComponentChildren ? <RenderModalComponentChildren {...CTX} /> : children}
-        </Modal>
-      </ModalContext.Provider>
+            {renderChildren}
+          </Modal>
+        </ModalContext.Provider>
+      </Suspense>
     </Backdrop>
   );
 };

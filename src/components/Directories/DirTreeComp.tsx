@@ -39,6 +39,7 @@ const DirTreeComp: React.FC<IDirInTreeProps> = ({
   );
 
   function handleFilterData({ value }: FilterOpt) {
+    console.log('DirTreeComp handleFilterData apply');
     value && setCurrent(value);
   }
 
@@ -62,6 +63,7 @@ const DirTreeComp: React.FC<IDirInTreeProps> = ({
           </CreateParent>
         )
       }
+      preventFilter={true}
     >
       <DirList
         list={fList}

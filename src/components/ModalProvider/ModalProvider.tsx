@@ -1,14 +1,14 @@
-import { createContext, Suspense, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import ModalPortal from './ModalPortal';
 import ModalComponent, { IModalSettings } from './ModalComponent';
 import { nanoid } from '@reduxjs/toolkit';
 import { ModalChildrenMap, ModalChildrenProps, Modals } from './Modals';
 import { toast } from 'react-toastify';
-import AppLoader from '../atoms/AppLoader';
 
 interface IModalProviderProps {
   children: React.ReactNode;
   portalId?: string;
+  isDevMode?: boolean;
 }
 
 export interface IModalChildrenProps {
@@ -46,17 +46,14 @@ type HandleOpenModalAsyncType = <M extends Modals = any, P = any, S = any>(
 ) => Promise<OpenModalReturnType | undefined>;
 
 export interface IModalProviderContext {
-  create: <M extends Modals = any, P extends ModalChildrenProps[M] = any, S = any>(
-    creator: ModalCreator<M, P, S>
-  ) => boolean;
+  create: <M extends Modals = any, S = any>(creator: ModalCreator<M, ModalChildrenProps[M], S>) => boolean;
 
   handleOpenModal: <M extends Modals = any, P = any, S = any>(
     args: IModalRenderItemParams<M, P, S>
   ) => OpenModalReturnType;
   handleCloseModal: (id?: string) => void;
   handleOpenModalAsync: HandleOpenModalAsyncType;
-  isOpen: boolean;
-  modalContent: IModalRenderItemParams[];
+  getState: () => IModalRenderItemParams[];
 }
 export interface ModalService extends IModalProviderContext {}
 export const ModalProviderContext = createContext({});
@@ -69,7 +66,10 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
     setModalContent(prev => (id ? prev.filter(el => el.id !== id) : [...prev].splice(-1)));
   }, []);
 
-  const createOnClose = useCallback((id?: string | number) => () => onClose(id), [onClose]);
+  const getState = useCallback(() => {
+    return modalContent;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleOpenModal = useCallback(
     <M extends Modals = any, P = any, S = any>({
@@ -79,18 +79,20 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
       Modal,
       props,
     }: IModalRenderItemParams<M, P, S>): OpenModalReturnType => {
-      const id = nanoid(8);
       try {
-        if (ModalChildren && typeof ModalChildren === 'function') {
+        if (ModalChildren && (typeof ModalChildren === 'function' || typeof ModalChildren === 'object')) {
+          const id = `${ModalChildren.name}_${nanoid(8)}`;
           setModalContent(prev => [...prev, { ModalChildren, modalChildrenProps, settings, id }]);
-          return { onClose: createOnClose(id), id };
+          return { onClose: () => onClose(id), id };
         }
         if (Modal && ModalChildrenMap[Modal]) {
+          const id = `${Modal}_${nanoid(8)}`;
+
           setModalContent(prev => [
             ...prev,
             { ModalChildren: ModalChildrenMap[Modal], modalChildrenProps: props, settings, id },
           ]);
-          return { onClose: createOnClose(id), id };
+          return { onClose: () => onClose(id), id };
         }
         console.error('Add modal to stack error');
         toast.error(`Add modal to stack error:\n >>> ${Modal} <<<`);
@@ -98,38 +100,41 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
         console.log(e);
       }
     },
-    [createOnClose]
+    [onClose]
   );
 
-  const createModal = <M extends Modals = any, P = any, S = any>(modalCreator: ModalCreator<M, P, S>) => {
-    if (typeof modalCreator === 'function') {
-      const id = nanoid(8);
-      const { ModalChildren, modalChildrenProps, settings, Modal, props } = modalCreator({
-        id,
-        onClose: createOnClose(id),
-      });
+  const createModal = useCallback(
+    <M extends Modals = any, P = any, S = any>(modalCreator: ModalCreator<M, P, S>) => {
+      if (typeof modalCreator === 'function') {
+        const id = nanoid(8);
+        const { ModalChildren, modalChildrenProps, settings, Modal, props } = modalCreator({
+          id,
+          onClose: () => onClose(id),
+        });
 
-      try {
-        if (ModalChildren && typeof ModalChildren === 'function') {
-          setModalContent(prev => [...prev, { ModalChildren, modalChildrenProps, settings, id }]);
-          return true;
+        try {
+          if (ModalChildren && (typeof ModalChildren === 'function' || typeof ModalChildren === 'object')) {
+            setModalContent(prev => [...prev, { ModalChildren, modalChildrenProps, settings, id }]);
+            return true;
+          }
+          if (Modal && ModalChildrenMap[Modal]) {
+            setModalContent(prev => [
+              ...prev,
+              { ModalChildren: ModalChildrenMap[Modal], modalChildrenProps: props, settings, id },
+            ]);
+            return true;
+          }
+          console.error('Add modal to stack error');
+          toast.error(`Add modal to stack error:\n >>> ${Modal} <<<`);
+        } catch (e) {
+          console.log(e);
+          return false;
         }
-        if (Modal && ModalChildrenMap[Modal]) {
-          setModalContent(prev => [
-            ...prev,
-            { ModalChildren: ModalChildrenMap[Modal], modalChildrenProps: props, settings, id },
-          ]);
-          return true;
-        }
-        console.error('Add modal to stack error');
-        toast.error(`Add modal to stack error:\n >>> ${Modal} <<<`);
-      } catch (e) {
-        console.log(e);
-        return false;
       }
-    }
-    return true;
-  };
+      return true;
+    },
+    [onClose]
+  );
 
   const CTX: IModalProviderContext = useMemo(
     () => ({
@@ -145,39 +150,35 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
           if (props) return handleOpenModal({ ...options, modalChildrenProps: props });
         }
       },
-      isOpen: modalContent.length > 0,
-      modalContent,
+      getState,
     }),
-    [createModal, handleOpenModal, modalContent, onClose]
+    [createModal, getState, handleOpenModal, onClose]
   );
 
   const renderModalContent = useMemo(() => {
-    return (
-      modalContent?.length > 0 &&
-      modalContent.map((Item, idx) => {
-        return (
-          <ModalComponent
-            key={Item.id}
-            {...{
-              ...Item,
-              idx,
-              id: Item.id,
-              totalLength: modalContent.length,
-              isLast: idx === modalContent.length - 1,
-              onClose: createOnClose(Item.id),
-            }}
-            RenderModalComponentChildren={props =>
-              Item?.ModalChildren ? (
-                <Item.ModalChildren {...{ ...Item?.modalChildrenProps, onClose: createOnClose(Item.id) }} />
-              ) : (
-                <></>
-              )
-            }
-          />
-        );
-      })
-    );
-  }, [modalContent, createOnClose]);
+    return modalContent.map((Item, idx) => {
+      return (
+        <ModalComponent
+          key={Item.id}
+          {...{
+            ...Item,
+            idx,
+            id: Item.id,
+            totalLength: modalContent.length,
+            isLast: idx === modalContent.length - 1,
+            onClose: () => onClose(Item.id),
+          }}
+          RenderModalComponentChildren={props =>
+            Item?.ModalChildren ? (
+              <Item.ModalChildren {...{ ...Item?.modalChildrenProps, onClose: () => onClose(Item.id) }} />
+            ) : (
+              <></>
+            )
+          }
+        />
+      );
+    });
+  }, [modalContent, onClose]);
 
   useEffect(() => {
     if (modalContent.length === 0) document.querySelector('body')?.classList.remove('NotScroll');
@@ -193,11 +194,7 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
     <ModalProviderContext.Provider value={CTX}>
       {children}
 
-      <Suspense
-        fallback={<AppLoader isLoading comment={'Please wait while minions do their work... (Loading modal module)'} />}
-      >
-        <ModalPortal portalId={portalId}>{renderModalContent}</ModalPortal>
-      </Suspense>
+      <ModalPortal portalId={portalId}>{renderModalContent}</ModalPortal>
     </ModalProviderContext.Provider>
   );
 };

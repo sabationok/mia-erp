@@ -18,6 +18,7 @@ import { FormCreatePropertyProps } from './FormCreateProperty';
 import { FormCreateVariationProps } from './FormCreateVariation';
 import { FormCreateVariationsTemplateProps } from './FormCreateVariationsTemplate/FormCreateVariationsTemplate';
 import { FormCreateWarehouseProps } from './FormCreateWarehouse';
+import { FormCreateProductProps } from './FormCreateProduct';
 
 export type {
   FormCreateWarehouseProps,
@@ -40,4 +41,5 @@ export type {
   FormCreateProductInventoryProps,
   FormCreatePropertyProps,
   FormCreateVariationProps,
+  FormCreateProductProps,
 };

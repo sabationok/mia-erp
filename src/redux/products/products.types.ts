@@ -8,6 +8,7 @@ import { IProductInventory, IWarehouse } from '../warehouses/warehouses.types';
 import { IBrand } from '../directories/brands.types';
 import { IUser } from '../auth/auth.types';
 import { AppQueryParams } from '../../api';
+import { IContractor } from '../contractors/contractors.types';
 
 export type ProductStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
@@ -36,26 +37,29 @@ export interface IProductBase extends IBase {
   visible?: boolean;
   description?: string;
   tags?: string[];
+
+  images?: ProductImage[];
+
+  defWarehouse?: IWarehouse;
+  defPrice?: IPriceListItem;
+  defVariation?: IVariation;
+  defSupplier?: IContractor;
 }
 
 export interface IProduct extends IProductBase {
   category?: IProductCategoryDirItem;
-  subCategory?: IProductCategoryDirItem;
 
+  recommends?: IProduct[];
   brand?: IBrand;
-  // supplier?: IContractor;
-  // contractor?: IContractor;
-  warehouses?: IWarehouse;
-  variations?: IVariation[];
-  hasVariations?: boolean;
   template?: IVariationTemplate;
 
   unitsOfMeasurement?: string;
 
+  warehouses?: IWarehouse[];
+  variations?: IVariation[];
+  hasVariations?: boolean;
   prices?: IPriceListItem[];
   productInventories?: IProductInventory[];
-
-  images?: ProductImage[];
 }
 
 export type ProductImage = { img_preview?: string; img_1x: string; img_2x: string; webp: string };
@@ -66,12 +70,16 @@ export interface IProductFormData {
   status?: ProductStatus;
 
   category?: Omit<IProductCategoryDirItem, 'childrenList'>;
-  parentCategory?: OnlyUUID;
 
   tags?: string[];
-  supplier?: OnlyUUID;
   brand?: OnlyUUID;
-  document?: OnlyUUID;
+
+  defaults?: {
+    warehouse?: IWarehouse;
+    price?: IPriceListItem;
+    variation?: IVariation;
+    supplier?: IContractor;
+  };
 }
 
 export interface IProductDto {
