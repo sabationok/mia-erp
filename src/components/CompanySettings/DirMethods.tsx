@@ -10,15 +10,22 @@ import { IDirInTreeProps, IMethodDirItem, MethodDirType } from '../Directories/d
 import useDirServiceHook from '../../hooks/useDirService.hook';
 
 export interface DirMethodsProps
-  extends IDirInTreeProps<MethodDirType, any, IMethodDirItem, IMethodDirItem, IMethodDirItem> {}
+  extends IDirInTreeProps<MethodDirType, any, IMethodDirItem, IMethodDirItem, IMethodDirItem> {
+  updating?: boolean;
+  disabling?: boolean;
+  archiving?: boolean;
+  creating?: boolean;
+}
 
 const DirMethods: React.FC<DirMethodsProps> = ({
   createParentTitle,
   availableLevels,
   actionsCreator,
   dirType,
-  creatingParent,
-  changeDisableStatus,
+  updating,
+  disabling = true,
+  archiving,
+  creating,
   ...props
 }) => {
   const { directory } = useDirectoriesSelector(dirType);
@@ -49,9 +56,14 @@ const DirMethods: React.FC<DirMethodsProps> = ({
           list={directory}
           currentLevel={0}
           availableLevels={availableLevels}
-          createParentTitle={createParentTitle}
-          creatingParent={creatingParent}
-          changeDisableStatus={changeDisableStatus}
+          disabling
+          updating
+          creatingParent
+          // createParentTitle={createParentTitle}
+          // onCreateParent={creating ? actions.onCreateParent : undefined}
+          // onCreateChild={creating ? actions.onCreateChild : undefined}
+          // onChangeDisableStatus={disabling ? actions.onChangeDisableStatus : undefined}
+          // onChangeArchiveStatus={archiving ? actions.onChangeArchiveStatus : undefined}
           {...actions}
         />
       </FlexBox>

@@ -5,6 +5,7 @@ import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import { iconId } from 'data';
 import { useSideBar } from './SideBarProvider';
 import styled, { css } from 'styled-components';
+import FlexBox from '../atoms/FlexBox';
 
 const SideBarOptions: React.FC = () => {
   const { RightSideContent, onClose, isOpen } = useSideBar();
@@ -114,7 +115,7 @@ const Container = styled.div<{ isOpen: boolean; maxWidth?: string }>`
   max-width: ${({ maxWidth }) => (maxWidth ? maxWidth : '250px')};
   overflow: hidden;
 
-  background-color: ${({ theme }) => theme.backgroundColorLight};
+  background-color: ${({ theme }) => theme.sideBarBackgroundColor};
   border-right: 1px solid ${({ theme }) => theme.sideBarBorderColor};
 
   transform: ${({ isOpen }) => `translate(${isOpen ? '0' : '-100%'})`};
@@ -150,7 +151,7 @@ const Title = styled.div`
   font-weight: 700;
 `;
 
-const ContentScroll = styled.div`
+const ContentScroll = styled(FlexBox)`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -161,7 +162,7 @@ const ContentScroll = styled.div`
   overflow: auto;
 
   /* padding: 4px; */
-  background-color: ${({ theme }) => theme.sideBarButtonBackgroundColorActive};
+  background-color: ${({ theme }) => theme.sideBarOptionsBackgroundColor};
   border-top: 1px solid ${({ theme }) => theme.sideBarBorderColor};
 `;
 

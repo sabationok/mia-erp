@@ -64,7 +64,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
     if (!onSubmit) return console.log('No passed "onSubmit" handler');
 
     // if (typeof beforeSubmit === 'function') beforeSubmit();
-    // if (typeof onSubmit === 'function') onSubmit(ev);
+    if (typeof onSubmit === 'function') onSubmit(ev);
     // if (typeof afterSubmit === 'function') afterSubmit();
   }
 
@@ -73,7 +73,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
     // handleCloseModal();
     if (!onReset) return console.log('No passed "onReset" handler');
     // if (typeof beforeClose === 'function') beforeClose();
-    // if (typeof onReset === 'function') onReset();
+    if (typeof onReset === 'function') onReset();
     // if (typeof afterClose === 'function') afterClose();
   }
 

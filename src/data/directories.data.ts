@@ -59,6 +59,7 @@ export const getDirInTreeActionsCreator =
             dirType,
             create: true,
             onSubmit: (data, o) => {
+              console.log('onCreateParent', data);
               service
                 .create({
                   data: { dirType, data },
@@ -95,16 +96,18 @@ export const getDirInTreeActionsCreator =
           } as ModalChildrenProps[Modals.FormCreateDirTreeComp],
         });
       },
-      onUpdate: (_id, dataForUpdate, o) => {
+      onUpdate: (_id, dataForUpdate) => {
         const modal = modalService.handleOpenModal({
           Modal,
           props: {
             title: updateItemTitle || t('update'),
             type,
             dirType,
+            _id,
             edit: true,
-            data: dataForUpdate,
+            defaultState: dataForUpdate,
             onSubmit: (data, o) => {
+              console.log('on update dir item', data);
               service
                 ?.update({
                   data: { dirType, _id, data },

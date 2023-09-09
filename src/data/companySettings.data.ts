@@ -141,7 +141,7 @@ export const comapnySettings: IDirectory[] = [
       createParentTitle: 'Додати спосіб оплати',
       changeDisableStatus: true,
       availableLevels: 1,
-      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod),
+      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {}),
     },
     disabled: true,
   },

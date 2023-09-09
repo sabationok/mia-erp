@@ -106,7 +106,8 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
   const createModal = useCallback(
     <M extends Modals = any, P = any, S = any>(modalCreator: ModalCreator<M, P, S>) => {
       if (typeof modalCreator === 'function') {
-        const id = nanoid(8);
+        let id = nanoid(8);
+
         const { ModalChildren, modalChildrenProps, settings, Modal, props } = modalCreator({
           id,
           onClose: () => onClose(id),
@@ -161,20 +162,14 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
         <ModalComponent
           key={Item.id}
           {...{
-            ...Item,
             idx,
             id: Item.id,
             totalLength: modalContent.length,
             isLast: idx === modalContent.length - 1,
             onClose: () => onClose(Item.id),
           }}
-          RenderModalComponentChildren={props =>
-            Item?.ModalChildren ? (
-              <Item.ModalChildren {...{ ...Item?.modalChildrenProps, onClose: () => onClose(Item.id) }} />
-            ) : (
-              <></>
-            )
-          }
+          RenderModalComponentChildren={Item.ModalChildren}
+          childrenProps={Item.props || Item.modalChildrenProps}
         />
       );
     });

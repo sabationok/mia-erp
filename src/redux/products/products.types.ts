@@ -157,7 +157,6 @@ export interface IVariation extends IBase {
   timeTo?: string | number | Date;
 }
 export interface VariationDto {
-  product?: OnlyUUID;
   properties?: OnlyUUID[];
 
   timeFrom?: string | number | Date;

@@ -19,8 +19,10 @@ import { FormCreateVariationProps } from './FormCreateVariation';
 import { FormCreateVariationsTemplateProps } from './FormCreateVariationsTemplate/FormCreateVariationsTemplate';
 import { FormCreateWarehouseProps } from './FormCreateWarehouse';
 import { FormCreateProductProps } from './FormCreateProduct';
+import { FormVariationProps } from './FormVariation';
 
 export type {
+  FormVariationProps,
   FormCreateWarehouseProps,
   FormCreateVariationsTemplateProps,
   FormCreateDirTreeCompProps,

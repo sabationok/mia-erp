@@ -33,7 +33,9 @@ const Directories: React.FC<IDirectoriesProps> = ({ options = [] }) => {
               modal.handleOpenModal({ ModalChildren, modalChildrenProps, Modal, props });
             }}
           >
-            <Text $align={'left'}>{title}</Text>
+            <Text $align={'left'} $weight={500}>
+              {title}
+            </Text>
           </Trigger>
         </ListItem>
       )),

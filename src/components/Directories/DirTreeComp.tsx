@@ -63,7 +63,6 @@ const DirTreeComp: React.FC<IDirInTreeProps> = ({
           </CreateParent>
         )
       }
-      preventFilter={true}
     >
       <DirList
         list={fList}

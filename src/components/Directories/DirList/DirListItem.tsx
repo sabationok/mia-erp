@@ -1,10 +1,10 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import React, { memo, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import DirList from './DirList';
 import { IBaseDirItem, IDirItemBase } from '../dir.types';
 import { isUndefined } from 'lodash';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
+import FlexBox from '../../atoms/FlexBox';
 
 export interface DirListItemAddsProps<T = any> {
   list: IDirItemBase<ApiDirType, T>[];
@@ -21,10 +21,10 @@ export interface DirListItemAddsProps<T = any> {
   availableLevels?: number;
 
   creatingParent?: boolean;
-  changeDisableStatus?: boolean;
-  changeArchiveStatus?: boolean;
   creatingChild?: boolean;
-  editing?: boolean;
+  disabling?: boolean;
+  archiving?: boolean;
+  updating?: boolean;
 }
 interface DirListItemState {
   archived?: boolean;
@@ -48,10 +48,11 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
   onDelete,
   disabled = false,
   onChangeDisableStatus,
-  changeDisableStatus,
+  disabling,
   archived = false,
   onChangeArchiveStatus,
-  changeArchiveStatus = true,
+  archiving,
+  updating,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -63,13 +64,13 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
     deleted: onDelete,
   };
 
-  const registerStateAction = (name: keyof DirListItemState) => {
+  const registerStateAction = (name: keyof DirListItemState, handlerKey: 'onClick' | 'onChange' = 'onClick') => {
     const action = stateActionsMap[name];
 
     const props = {
       disabled: !action,
       isActive: !state[name],
-      onClick: () => {
+      [handlerKey]: () => {
         setState(prev => {
           const newState = { ...prev, [name]: !prev[name] };
           action && action(_id, !prev[name]);
@@ -97,110 +98,146 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
     };
   }
 
-  return (
-    <Item>
-      <ItemGrid>
-        <ActionsField canHasChildren={canHasChildren}>
-          {canHasChildren && (
-            <ButtonIcon
-              variant="onlyIcon"
-              iconSize="24px"
-              icon="plus"
-              disabled={!canHasChildren || !onCreateChild}
-              onClick={evHandlerWrapper(
-                onCreateChild,
-                _id,
-                item || {
-                  label,
-                  name,
-                }
-              )}
-            />
-          )}
-        </ActionsField>
-
-        <LabelField>
-          <Label title={label || name}>{label || name}</Label>
-
-          {!(!childrenList || childrenList?.length === 0) && (
-            <ButtonIcon
-              variant="onlyIconNoEffects"
-              icon={isOpen ? 'SmallArrowUp' : 'SmallArrowDown'}
-              iconSize="24px"
-              onClick={onOpenClick}
-            />
-          )}
-        </LabelField>
-
-        <ActionsField>
-          <ActionButton
-            variant="onlyIcon"
-            iconSize="24px"
-            icon="edit"
-            disabled={!onUpdate}
-            onClick={evHandlerWrapper(
+  const renderChildren = useMemo(() => {
+    return (
+      childrenList &&
+      childrenList.length > 0 &&
+      childrenList.map(ch => {
+        return (
+          <DirListItem
+            key={`dirItem_lvl_${currentLevel + 1}_${ch?._id}`}
+            {...ch}
+            item={ch}
+            {...{
+              list: ch?.childrenList || [],
+              parent: item,
+              availableLevels,
+              currentLevel: currentLevel + 1,
               onUpdate,
-              _id,
-              item
-              // omit(item, ['childrenList', 'parent.childrenList', 'parent.parent.childrenList'])
+              onCreateChild,
+              deleted,
+              onDelete,
+              disabled,
+              onChangeDisableStatus,
+              disabling,
+              archived,
+              onChangeArchiveStatus,
+              archiving,
+            }}
+          />
+        );
+      })
+    );
+  }, [
+    archived,
+    availableLevels,
+    archiving,
+    disabling,
+    childrenList,
+    currentLevel,
+    deleted,
+    disabled,
+    item,
+    onChangeArchiveStatus,
+    onChangeDisableStatus,
+    onCreateChild,
+    onDelete,
+    onUpdate,
+  ]);
+
+  return (
+    <>
+      <Item>
+        <ItemBox fxDirection={'row'}>
+          {canHasChildren && (
+            <Actions canHasChildren={canHasChildren}>
+              <ButtonIcon
+                variant="onlyIcon"
+                iconSize="24px"
+                icon="plus"
+                disabled={!canHasChildren || !onCreateChild}
+                onClick={evHandlerWrapper(
+                  onCreateChild,
+                  _id,
+                  item || {
+                    label,
+                    name,
+                  }
+                )}
+              />
+            </Actions>
+          )}
+
+          <LabelField>
+            <Label title={label || name}>{label || name}</Label>
+
+            {!(!childrenList || childrenList?.length === 0) && (
+              <ButtonIcon
+                variant="onlyIconNoEffects"
+                icon={isOpen ? 'SmallArrowUp' : 'SmallArrowDown'}
+                iconSize="24px"
+                onClick={onOpenClick}
+              />
             )}
-          />
+          </LabelField>
 
-          {changeArchiveStatus && (
-            <ActionButton variant="onlyIcon" iconSize="24px" icon={'archive'} {...registerStateAction('archived')} />
-          )}
+          <Actions>
+            {updating && (
+              <ActionButton
+                variant="onlyIcon"
+                iconSize="24px"
+                icon="edit"
+                disabled={!onUpdate}
+                onClick={evHandlerWrapper(onUpdate, _id, item)}
+              />
+            )}
 
-          {changeDisableStatus && (
-            <ActionButton
-              variant="onlyIcon"
-              iconSize="22px"
-              icon={!state.disabled ? 'lightMode' : 'darkMode'}
-              {...registerStateAction('disabled')}
-            />
-          )}
-        </ActionsField>
-      </ItemGrid>
+            {archiving && (
+              <ActionButton variant="onlyIcon" iconSize="24px" icon={'archive'} {...registerStateAction('archived')} />
+            )}
 
-      <Children isOpen={isOpen}>
-        {childrenList && childrenList.length > 0 && (
-          <DirList
-            list={list}
-            parent={{ label, name, _id: _id || '' }}
-            entryList={childrenList}
-            {...{ onDelete, onUpdate, onChangeArchiveStatus, onChangeDisableStatus, onCreateChild }}
-            currentLevel={!isUndefined(currentLevel) ? currentLevel + 1 : currentLevel}
-            availableLevels={availableLevels}
-          />
-        )}
-      </Children>
-    </Item>
+            {disabling && (
+              <ActionButton
+                variant="onlyIcon"
+                iconSize="22px"
+                icon={!state.disabled ? 'lightMode' : 'darkMode'}
+                {...registerStateAction('disabled')}
+              />
+            )}
+
+            {/*{onChangeDisableStatus && <Toggler {...registerStateAction('disabled', 'onChange')} />}*/}
+          </Actions>
+        </ItemBox>
+        <ChildrenList isOpen={isOpen}>{renderChildren}</ChildrenList>
+      </Item>
+    </>
   );
 };
-const Item = styled.li``;
+// <Item>
+// <ChildrenList isOpen={isOpen}>{renderChildren}</ChildrenList>
+// </Item>
+const Item = styled.li`
+  overflow: hidden;
+  max-width: 100%;
+`;
 
-const ItemGrid = styled.div`
-  display: grid;
-  grid-template-columns: min-content 1fr min-content;
+const ItemBox = styled(FlexBox)<{ level?: number }>`
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 
-  height: 26px;
-  width: 100%;
+  height: 32px;
+  padding: 0 6px;
 
   fill: ${({ theme }) => theme.fillColorHeader};
   color: ${({ theme }) => theme.fontColorHeader};
-`;
 
-const ActionsField = styled.div<{ canHasChildren?: boolean }>`
-  display: flex;
-  align-items: center;
+  border-radius: 2px;
 
-  min-width: 12px;
-  height: 100%;
+  //background-color: ${({ theme }) => theme.field.backgroundColor};
 `;
 
 const LabelField = styled.div`
-  flex-grow: 1;
+  flex: 1;
 
   display: flex;
   justify-content: space-between;
@@ -222,15 +259,30 @@ const Label = styled.div`
   overflow: hidden;
 `;
 
-const Children = styled.ul<{ isOpen: boolean }>`
-  overflow: hidden;
+const ChildrenList = styled.ul<{ isOpen: boolean }>`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  overflow-y: hidden;
+  overflow-x: visible;
 
   max-height: ${({ isOpen }) => (isOpen ? '' : '0')};
 
-  padding-left: 34px;
+  visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
+  padding: ${p => (p.isOpen ? `6px 0 0 12px` : '')};
+`;
+const Actions = styled.div<{ canHasChildren?: boolean }>`
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  height: 100%;
 `;
 const ActionButton = styled(ButtonIcon)`
   fill: ${({ isActive = true, theme }) => (isActive ? theme.accentColor.base : theme.accentColor.light)};
+
   &[disabled] {
     opacity: 1;
     fill: ${({ theme }) => theme.fieldColor};

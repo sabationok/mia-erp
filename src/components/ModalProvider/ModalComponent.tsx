@@ -15,7 +15,7 @@ interface ModalComponentProps<P = any> {
 }
 export interface RenderModalComponentChildrenProps {
   onClose?: () => void;
-  id?: string | number;
+  modalId?: string | number;
   index?: number;
 }
 
@@ -85,6 +85,7 @@ export const useModal = () => useContext(ModalContext) as ModalCTX;
 const ModalComponent: React.FC<ModalComponentProps> = ({
   children,
   RenderModalComponentChildren,
+  childrenProps,
   idx,
   settings,
   onClose,
@@ -114,6 +115,12 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
     [id, idx, modalSettings, onClose]
   );
 
+  const renderChildren = useMemo(() => {
+    return RenderModalComponentChildren ? (
+      <RenderModalComponentChildren modalId={id} onClose={onClose} index={idx} {...childrenProps} />
+    ) : null;
+  }, [childrenProps, id, idx]);
+
   useEffect(() => {
     console.log('ModalComponent render', 'id', id);
     // eslint-disable-next-line
@@ -136,16 +143,6 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
       document.removeEventListener('keydown', handleToggleModalByEsc);
     };
   }, [isLast, modalSettings.onEscapePressClose, onClose]);
-
-  const renderChildren = useMemo(() => {
-    console.log('RenderModalComponentChildren useMemo', 'id', id);
-    return RenderModalComponentChildren ? (
-      <RenderModalComponentChildren id={id} onClose={onClose} index={idx} />
-    ) : (
-      children
-    );
-    // eslint-disable-next-line
-  }, []);
 
   return (
     <Backdrop

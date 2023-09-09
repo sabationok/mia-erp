@@ -26,9 +26,8 @@ const validation = yup.object().shape({
 const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
   _id,
   type,
-  parent,
   edit,
-  data,
+  defaultState,
   onSubmit,
   dirType,
   ...props
@@ -41,14 +40,14 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
     clearAfterSave,
     toggleAfterSubmitOption: toggleOption,
   } = useAppForm<IBaseDirItem>({
-    defaultValues: parent?._id
+    defaultValues: defaultState?.parent?._id
       ? {
-          ...data,
+          ...defaultState,
           type,
-          parent: { _id: parent?._id },
+          parent: { _id: defaultState?.parent?._id },
         }
       : {
-          ...data,
+          ...defaultState,
           type,
         },
     resolver: yupResolver(validation),
@@ -63,6 +62,8 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
           clearAfterSave,
         })
       );
+    } else {
+      console.log('FormCreateDirTreeComp onSubmit not passed.', dirType);
     }
   }
 
@@ -78,9 +79,9 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
           <InputText defaultValue={type ? t(`${type}s` as any).toUpperCase() : type} disabled />
         </InputLabel>
 
-        {parent?._id && (
+        {defaultState?.parent?._id && (
           <InputLabel label={t('parentItem')} error={errors.type} disabled>
-            <InputText defaultValue={parent?.label} disabled />
+            <InputText defaultValue={defaultState?.parent?.label} disabled />
           </InputLabel>
         )}
 

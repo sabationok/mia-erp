@@ -40,9 +40,9 @@ export interface ProductsService {
   getAllProperties: ServiceDispatcherAsync<IPropertyReqData, IProperty[]>;
 
   createVariation: ServiceDispatcherAsync<IVariationReqData, IVariation>;
+  updateVariationById: ServiceDispatcherAsync<IVariationReqData, IVariation>;
   getAllVariationsByProductId: ServiceApiCaller<{ product: OnlyUUID; params?: AppQueryParams }, IVariation[]>;
   // deleteVariationById: ServiceApiCaller<IVariationReqData, IVariation>;
-  // updateVariationById: ServiceApiCaller<IVariationReqData, IVariation>;
   // getVariationById: ServiceApiCaller<IVariationReqData, IVariation>;
   // getAllVariations: ServiceApiCaller<IVariationReqData, IVariation[]>;
 }
@@ -68,6 +68,7 @@ const useProductsService = (): ProductsService => {
 
       // createVariation: args => createApiCall(defaultApiCallPayload(args), VariationsApi.create, VariationsApi),
       createVariation: args => dispatch(createVariationThunk(defaultThunkPayload(args))),
+      updateVariationById: args => dispatch(createVariationThunk(defaultThunkPayload(args))),
       getAllVariationsByProductId: args =>
         createApiCall(defaultApiCallPayload(args), VariationsApi.getAllByProductId, VariationsApi),
 
