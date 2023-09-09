@@ -1,7 +1,7 @@
 import ModalForm, { ModalFormProps } from '../ModalForm';
-import { IVariationTemplate } from '../../redux/products/products.types';
 import { useEffect, useState } from 'react';
 import { useProductsSelector } from '../../redux/selectors.store';
+import { IVariationTemplate } from '../../redux/products/properties.types';
 
 export interface FormCreateVariationProps extends Omit<ModalFormProps, 'onSubmit'> {
   template?: IVariationTemplate;

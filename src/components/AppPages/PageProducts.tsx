@@ -11,7 +11,7 @@ import { FilterReturnDataType } from '../Filter/AppFilter';
 import { IProduct } from '../../redux/products/products.types';
 import useStorageServiceHook from '../../hooks/useProductsService.hook';
 import { PagePathType } from '../../data/pages.data';
-import useProductsFilterSelectorsHook from '../../redux/products/useStorageFilterSelectors.hook';
+import useProductsFilterSelectorsHook from '../../hooks/useProductsFilterSelectors.hook';
 import useProductsActionsCreator from '../../hooks/useProductsActionsCreator.hook';
 
 type Props = {

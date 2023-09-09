@@ -46,14 +46,31 @@ const PageCurrentProductProvider: React.FC<PageCurrentProductProviderProps> = ({
   const createOverlayComponent: OverlayHandler = useCallback(
     params => {
       const id = `${params.RenderComponent.name}_${nanoid(8)}`;
+
       if (typeof params.RenderComponent === 'function') {
-        setOverlayStack(pStack => [
-          ...pStack,
-          {
-            ...params,
-            id,
-          },
-        ]);
+        setOverlayStack(prev => {
+          const isExist = prev.find(el => el.id.includes(params.RenderComponent.name));
+
+          if (isExist) {
+            const clearedStack = prev.filter(el => el.id !== isExist.id);
+
+            return [
+              ...clearedStack,
+              {
+                ...params,
+                id,
+              },
+            ];
+          }
+
+          return [
+            ...prev,
+            {
+              ...params,
+              id,
+            },
+          ];
+        });
       }
 
       const returnData: OverlayHandlerReturn = {

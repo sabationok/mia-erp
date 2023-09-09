@@ -42,6 +42,7 @@ const createApiCall = async <SD = any, RD = any, E = any, MD = any, CTX = any>(
     onError && onError(e as unknown as E);
     logError && console.error(e);
     onLoading && onLoading(false);
+
     if (throwError) {
       throw e;
     }

@@ -1,14 +1,10 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-// import { createTransactionThunk, getAllTransactionsThunk } from 'redux/transactions/transactions.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
-import { IProduct, IVariationTemplate } from './products.types';
-import {
-  createProductThunk,
-  createPropertyThunk,
-  getAllProductsThunk,
-  getAllPropertiesThunk,
-  getProductFullInfoThunk,
-} from './products.thunks';
+import { IProduct } from './products.types';
+import { createProductThunk, getAllProductsThunk, getProductFullInfoThunk } from './products.thunks';
+import { createVariationThunk } from './variations.thunks';
+import { IVariationTemplate } from './properties.types';
+import { createPropertyThunk, getAllPropertiesThunk } from './properties.thunks';
 
 export interface IProductsState {
   products: IProduct[];
@@ -23,6 +19,7 @@ const initialState: IProductsState = {
   isLoading: false,
   error: null,
   products: [],
+  currentProduct: undefined,
   filteredProducts: [],
   properties: [],
 };
@@ -60,6 +57,13 @@ export const productsSlice = createSlice({
         if (a.payload) {
           s.properties = a.payload;
         }
+      })
+      .addCase(createVariationThunk.fulfilled, (s, a) => {
+        if (!a.payload) {
+          return;
+        }
+
+        s?.currentProduct?.variations?.unshift(a.payload);
       })
       .addMatcher(inPending, s => {
         s.isLoading = true;

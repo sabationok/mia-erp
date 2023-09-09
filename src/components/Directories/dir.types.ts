@@ -102,6 +102,8 @@ export interface IDirInTreeProps<
   editing?: boolean;
   creatingParent?: boolean;
   creatingChild?: boolean;
+  disabling?: boolean;
+  archiving?: boolean;
   changeDisableStatus?: boolean;
   changeArchiveStatus?: boolean;
 

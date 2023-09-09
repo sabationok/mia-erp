@@ -7,6 +7,7 @@ import { Text } from '../atoms/Text';
 import t from '../../lang';
 import FormCreateVariation from '../Forms/FormVariation';
 import { OverlayHandler, usePageCurrentProduct } from '../AppPages/PageCurrentProductProvider';
+import { useProductsSelector } from '../../redux/selectors.store';
 
 export interface ProductOverviewXLProps {
   product?: IProduct;
@@ -24,20 +25,28 @@ export interface OverviewRenderCellReturnData {
   gridArea?: keyof IProduct;
   getValue?: () => React.ReactNode;
 }
-
+export interface ProductOverviewCell {
+  value?: string | number;
+  title?: string;
+  gridArea?: keyof IProduct;
+  renderCell?: RenderOverviewCell<IProduct>;
+  CellComponent?: React.FC<{ data?: IProduct; cell: ProductOverviewCell; setOverlayContent: OverlayHandler }>;
+  getValue?: (product?: IProduct) => string | number;
+}
 export type RenderOverviewCell<T = any> = (
   cell: ProductOverviewCell,
   setOverlayContent: OverlayHandler,
   data?: T
 ) => React.ReactNode;
-const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }) => {
+const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, onOpenRightSide, ...p }) => {
+  const product = useProductsSelector().currentProduct;
   const page = usePageCurrentProduct();
 
   const renderCells = useMemo(
     () =>
       productOverviewCells.map(({ CellComponent, ...cell }) => {
         if (cell.renderCell) {
-          return cell.renderCell(cell, page.createOverlayComponent, p.product);
+          return cell.renderCell(cell, page.createOverlayComponent, product);
         }
         if (CellComponent) {
           return (
@@ -45,14 +54,14 @@ const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }
               key={cell.title}
               setOverlayContent={page.createOverlayComponent}
               cell={cell}
-              data={p.product}
+              data={product}
             />
           );
         }
-        const value = cell.getValue && cell.getValue(p.product);
+        const value = cell.getValue && cell.getValue(product);
         return renderTextCell(cell.title, value);
       }),
-    [page.createOverlayComponent, p.product]
+    [page.createOverlayComponent, product]
   );
 
   return (
@@ -79,7 +88,7 @@ const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }
           variant={'onlyIcon'}
           iconSize={'85%'}
           icon={'SmallArrowLeft'}
-          onClick={p?.onOpenRightSide}
+          onClick={onOpenRightSide}
         />
       </Footer>
     </Container>
@@ -104,8 +113,21 @@ const OpenBtn = styled(ButtonIcon)`
     display: none;
   }
 `;
+const OverlayOpenButton = styled.button`
+  border: 0;
+  background-color: transparent;
+
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 12px;
+  padding: 2px 6px;
+  color: ${p => p.theme.accentColor.base};
+
+  cursor: pointer;
+`;
 
 const Cell = styled(FlexBox)`
+  min-height: 50px;
   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
 `;
 
@@ -123,14 +145,6 @@ const CellText = styled(Text)<{ $isTitle?: boolean }>`
       : undefined};
 `;
 export default ProductOverviewXL;
-export interface ProductOverviewCell {
-  value?: string | number;
-  title?: string;
-  gridArea?: keyof IProduct;
-  renderCell?: RenderOverviewCell<IProduct>;
-  CellComponent?: React.FC<{ data?: IProduct; cell: ProductOverviewCell; setOverlayContent: OverlayHandler }>;
-  getValue?: (product?: IProduct) => string | number;
-}
 
 const renderTextCell = (title?: string, value?: string | number) => {
   return (
@@ -162,29 +176,32 @@ const VariationsTemplateCell: React.FC<{
 }> = ({ cell, setOverlayContent, data }) => {
   return (
     <Cell key={cell.title} padding={'4px'}>
-      <CellText $isTitle $size={12}>
-        {cell.title}
-      </CellText>
+      <FlexBox alignItems={'center'} fxDirection={'row'} justifyContent={'space-between'} gap={8}>
+        <CellText $isTitle $size={12}>
+          {cell.title}
+        </CellText>
+
+        {data?.template && (
+          <OverlayOpenButton
+            type={'button'}
+            onClick={() => {
+              setOverlayContent({ RenderComponent: FormCreateVariation, props: { create: true } });
+            }}
+          >
+            {'Перегляд'}
+          </OverlayOpenButton>
+        )}
+      </FlexBox>
 
       <FlexBox
         fillWidth
         fxDirection={'row'}
         gap={8}
-        justifyContent={'space-between'}
-        alignItems={'center'}
+        height={'24px'}
+        justifyContent={'flex-end'}
+        alignItems={'flex-end'}
         overflow={'hidden'}
       >
-        {data?.template ? (
-          <ButtonIcon
-            variant={'textExtraSmall'}
-            onClick={() => {
-              setOverlayContent({ RenderComponent: FormCreateVariation, props: { onSubmit: () => {}, create: true } });
-            }}
-          >
-            {'Перегляд'}
-          </ButtonIcon>
-        ) : null}
-
         <CellText $disabled={!data?.template?.label} $weight={500}>{`${data?.template?.label}`}</CellText>
       </FlexBox>
     </Cell>

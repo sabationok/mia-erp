@@ -23,7 +23,7 @@ import { toast } from 'react-toastify';
 import DirTableComp, { DirTableCompProps } from '../components/Directories/DirTableComp';
 import FormCreateContractor from '../components/Forms/FormCreateContractor';
 import { createDataForReq } from '../utils/dataTransform';
-import { ProductFilterOpt, ProductTypeEnum } from '../redux/products/products.types';
+import { ProductTypeEnum } from '../redux/products/products.types';
 import { ModalChildrenProps, Modals } from '../components/ModalProvider/Modals';
 import { FilterOpt } from '../components/ModalForm/ModalFilter';
 import { ContractorsTypesEnum } from '../redux/contractors/contractors.types';
@@ -36,7 +36,6 @@ import DirProperties, { dirPropertiesActionsCreator, DirPropertiesProps } from '
 
 export const categoriesFilterOptions: CategoryFilterOpt[] = enumToFilterOptions(CategoryTrTypeEnum);
 export const countsFilterOptions: CountFilterOpt[] = enumToFilterOptions(CountsTypesEnum);
-export const StorageItemTypeFilterOptions: ProductFilterOpt[] = enumToFilterOptions(ProductTypeEnum);
 export const productsFilterOptions = enumToFilterOptions(ProductTypeEnum);
 export const tagsFilterOptions = enumToFilterOptions(ContractorsTypesEnum);
 export const counterpartyFilterOptions: FilterOpt<ContractorsTypesEnum>[] = enumToFilterOptions(ContractorsTypesEnum);
@@ -107,7 +106,6 @@ export const getDirInTreeActionsCreator =
             edit: true,
             defaultState: dataForUpdate,
             onSubmit: (data, o) => {
-              console.log('on update dir item', data);
               service
                 ?.update({
                   data: { dirType, _id, data },
@@ -155,6 +153,10 @@ const CountsProps: DirCountsProps = {
   createParentTitle: t('createParentCount'),
   dirType: ApiDirType.COUNTS,
   availableLevels: 2,
+  editing: true,
+  creatingChild: true,
+  creatingParent: true,
+  archiving: true,
   filterSearchPath: 'type',
   filterDefaultValue: 'ACTIVE',
   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCount),
@@ -172,6 +174,10 @@ const CategoriesProps: DirCategoriesProps = {
   title: 'Статті доходів/витрат',
   filterOptions: categoriesFilterOptions,
   fillHeight: true,
+  editing: true,
+  creatingChild: true,
+  creatingParent: true,
+  archiving: true,
   createParentTitle: t('createParentCategory'),
   dirType: ApiDirType.CATEGORIES_TR,
   availableLevels: 2,
@@ -193,9 +199,13 @@ const ProductCategoriesProps: DirProductCategoriesProps = {
   createParentTitle: t('createParentCategory'),
   dirType: ApiDirType.CATEGORIES_PROD,
   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCategory),
-  filterOptions: StorageItemTypeFilterOptions,
+  filterOptions: productsFilterOptions,
+  editing: true,
+  creatingChild: true,
+  creatingParent: true,
+  archiving: true,
   filterSearchPath: 'type',
-  filterDefaultValue: 'GOODS',
+  filterDefaultValue: ProductTypeEnum.GOODS,
   availableLevels: 5,
 };
 const prodCategoriesDir: IDirectory<DirProductCategoriesProps> = {

@@ -1,7 +1,8 @@
 import { IBase, OnlyUUID } from '../global.types';
-import { IProduct, IVariation } from '../products/products.types';
+import { IProduct } from '../products/products.types';
 import { ICompany } from '../companies/companies.types';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
+import { IVariation } from '../products/variations.types';
 
 export enum WarehouseTypeEnum {
   WAREHOUSE = 'warehouse',

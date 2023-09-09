@@ -4,7 +4,6 @@ import * as FormPropTypes from './form.types';
 const CreateOrder = lazy(() => import('./FormCreateOrder/FormCreateOrder'));
 const CreatePrice = lazy(() => import('./FormCreatePrice/FormCreatePrice'));
 const CreateOrderSlot = lazy(() => import('./FormCreateOrder/FormAddOrderSlot'));
-const CreateVariationsTemplate = lazy(() => import('./FormCreateVariationsTemplate/FormCreateVariationsTemplate'));
 
 const CreateDirTreeComp = lazy(() => import('./FormCreateDirTreeComp'));
 const CreateActivity = lazy(() => import('./FormCreateActivity'));
@@ -41,7 +40,6 @@ export const Forms = {
   InviteUser,
   CreateOrderSlot,
   CreateProductInventory,
-  CreateVariationsTemplate,
   CreateProperty,
   CreateVariation,
   CreateWarehouse,

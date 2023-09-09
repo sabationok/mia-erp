@@ -21,15 +21,17 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
 
     return stack.map(({ RenderComponent, props, id }, index) => {
       return (
-        <RenderComponent
-          key={`overlay-${id}`}
-          {...props}
-          onClose={() => {
-            page.handleRemoveStackItem(id);
-          }}
-          overlayId={id}
-          index={index}
-        />
+        <OverlayBox key={`overlay-${id}`} style={{ zIndex: 20 + index }} fillHeight fillWidth>
+          <RenderComponent
+            key={`overlay-${id}`}
+            {...props}
+            onClose={() => {
+              page.handleRemoveStackItem(id);
+            }}
+            overlayId={id}
+            index={index}
+          />
+        </OverlayBox>
       );
     });
   }, [page]);
@@ -87,4 +89,14 @@ const Backdrop = styled(FlexBox)`
 
   transition: all ${p => p.theme.globals.timingFunctionMain};
 `;
+
+const OverlayBox = styled(FlexBox)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 20;
+
+  animation: 'OverlayFromRight';
+`;
+
 export default PageProductOverviewRightSide;

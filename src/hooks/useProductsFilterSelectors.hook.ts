@@ -1,5 +1,5 @@
 import { FilterSelectorType } from 'components/Filter/AppFilter';
-import { IProduct } from './products.types';
+import { IProduct } from '../redux/products/products.types';
 
 const useStorageFilterSelectors = (): FilterSelectorType<keyof IProduct>[] => {
   return [

@@ -1,8 +1,7 @@
 import { usePageCurrentProduct } from '../PageCurrentProductProvider';
 import { useMemo, useState } from 'react';
-import TableList from '../../TableList/TableList';
+import TableList, { ITableListProps } from '../../TableList/TableList';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
-import { Modals } from '../../ModalProvider/Modals';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import { createTableTitlesFromTemplate } from '../../../utils';
 import { useModalProvider } from '../../ModalProvider/ModalProvider';
@@ -11,6 +10,9 @@ import ModalFilter from '../../ModalForm/ModalFilter';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
+import FormCreateVariation from '../../Forms/FormVariation';
+import { IPriceListItem } from 'redux/priceManagement/priceManagement.types';
+import { IVariation } from 'redux/products/variations.types';
 
 enum RightSideOptionEnum {
   Variations = 'Variations',
@@ -22,6 +24,10 @@ export interface PageProductOverviewRightSideProps {
   isVisible?: boolean;
   toggleVisibility?: () => void;
 }
+interface ITableDataByType {
+  [RightSideOptionEnum.Variations]: IVariation;
+  [RightSideOptionEnum.Prices]: IPriceListItem;
+}
 const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> = ({ isVisible, toggleVisibility }) => {
   const page = usePageCurrentProduct();
   const modalS = useModalProvider();
@@ -31,57 +37,50 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
     return createTableTitlesFromTemplate(page.currentProduct?.template);
   }, [page.currentProduct?.template]);
 
-  const renderRightSideContent = useMemo(() => {
-    if (current === RightSideOptionEnum.Prices) {
-      return (
-        <TableList
-          tableTitles={pricesColumnsForProductReview}
-          tableData={page?.currentProduct?.prices}
-          actionsCreator={ctx => {
-            return [
-              {
-                icon: 'plus',
-                type: 'onlyIconFilled',
-
-                onClick: () => {
-                  modalS.handleOpenModal({
-                    Modal: Modals.FormCreatePrice,
-                    props: { onSubmit: () => {}, product: page?.currentProduct },
-                  });
-                },
-              },
-            ];
-          }}
-          isSearch={false}
-          isFilter={false}
-        />
-      );
-    }
+  const currentTableSettings = useMemo((): ITableListProps | undefined => {
     if (current === RightSideOptionEnum.Variations) {
-      return (
-        <TableList
-          tableData={page?.currentProduct?.variations}
-          isSearch={false}
-          tableTitles={tableTitles}
-          actionsCreator={ctx => {
-            return [
-              {
-                icon: 'plus',
-                type: 'onlyIconFilled',
-                onClick: () => {
-                  modalS.handleOpenModal({
-                    Modal: Modals.FormCreateVariation,
-                    props: { title: 'Створити варіацію' },
-                  });
-                },
+      return {
+        tableTitles: tableTitles,
+        tableData: page?.currentProduct?.variations,
+        actionsCreator: ctx => {
+          return [
+            {
+              icon: 'delete',
+              type: 'onlyIcon',
+              onClick: () => {},
+            },
+            {
+              icon: 'edit',
+              type: 'onlyIcon',
+              onClick: () => {
+                const currentId = ctx.selectedRow?._id;
+                page.createOverlayComponent({ RenderComponent: FormCreateVariation, props: { update: 'currentId' } });
+                toggleVisibility && toggleVisibility();
+                if (currentId) {
+                }
               },
-            ];
-          }}
-        />
-      );
+            },
+            {
+              icon: 'plus',
+              type: 'onlyIconFilled',
+              onClick: () => {
+                toggleVisibility && toggleVisibility();
+                page.createOverlayComponent({ RenderComponent: FormCreateVariation, props: { create: true } });
+              },
+            },
+          ];
+        },
+      } as ITableListProps<IVariation>;
     }
-    return null;
-  }, [current, modalS, page?.currentProduct, tableTitles]);
+
+    if (current === RightSideOptionEnum.Prices) {
+      return {
+        tableData: page?.currentProduct?.prices,
+        tableTitles: pricesColumnsForProductReview,
+        actionsCreator: ctx => [{ icon: 'plus' }],
+      } as ITableListProps<IPriceListItem>;
+    }
+  }, [current, page, tableTitles]);
 
   return (
     <RightSide overflow={'auto'} fillHeight isVisible={isVisible}>
@@ -99,7 +98,7 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
         }}
       />
 
-      {renderRightSideContent}
+      <TableList isSearch={false} isFilter={false} {...currentTableSettings} />
 
       <Bottom fillWidth flex={1} fxDirection={'row'} justifyContent={'flex-end'}>
         <ButtonIcon variant={'textExtraSmall'} endIcon={'SmallArrowRight'} onClick={toggleVisibility}>

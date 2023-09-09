@@ -1,14 +1,14 @@
 import baseApi from './baseApi';
 
 import APP_CONFIGS from '../redux/APP_CONFIGS';
-import { IProperty, IPropertyReqData } from '../redux/products/products.types';
 import { AppResponse } from '../redux/global.types';
+import { IProperty, IPropertyReqData } from 'redux/products/properties.types';
 
 export default class PropertiesApi {
   private static api = baseApi;
   private static endpoints = APP_CONFIGS.endpoints.propertiesApiEndpoints;
 
-  public static async getAll(data?: IPropertyReqData): Promise<AppResponse<IProperty[]>> {
+  public static async getAll({ data }: { data?: IPropertyReqData }): Promise<AppResponse<IProperty[]>> {
     return this.api.get(this.endpoints.getAll(), { params: data?.params });
   }
 

@@ -9,7 +9,7 @@ import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import styled, { useTheme } from 'styled-components';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { ProductsService } from '../../hooks/useProductsService.hook';
-import { IProperty, IPropertyDto, ProductTypeEnum } from '../../redux/products/products.types';
+import { ProductTypeEnum } from '../../redux/products/products.types';
 import { Modals } from '../ModalProvider/Modals';
 import t from '../../lang';
 import { toast } from 'react-toastify';
@@ -22,6 +22,7 @@ import { OnCheckBoxChangeHandler } from '../TableList/tableTypes.types';
 import { productsFilterOptions } from '../../data/directories.data';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useProductsSelector } from '../../redux/selectors.store';
+import { IProperty, IPropertyDto } from '../../redux/products/properties.types';
 
 type LevelType = { isGroup?: boolean; isProperty?: boolean; isValue?: boolean };
 
@@ -41,8 +42,8 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   filterSearchPath,
   filterDefaultValue,
   availableLevels = 3,
-  actionsCreator,
   title,
+  actionsCreator,
   ...props
 }) => {
   const service = useAppServiceProvider()[ServiceName.products];
@@ -52,10 +53,9 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   // const [loadedData, setLoadedData] = useState<IProperty[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const actions = useMemo(
-    () => actionsCreator({ modalService, type: current, service, dirType }),
-    [actionsCreator, current, dirType, modalService, service]
-  );
+  const actions = useMemo(() => {
+    return actionsCreator({ modalService, type: current, service, dirType });
+  }, [actionsCreator, current, dirType, modalService, service]);
   function handleFilterData({ value }: FilterOpt) {
     value && setCurrent(value);
   }

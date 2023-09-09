@@ -29,7 +29,6 @@ export enum Modals {
   FormCreateOrderSlotItem = 'FormCreateOrderSlotItem',
   FormCreateProduct = 'FormCreateProduct',
   FormCreateProductInventory = 'FormCreateProductInventory',
-  FormCreateVariationsTemplate = 'FormCreateVariationsTemplate',
   FormCreateProperty = 'FormCreateProperty',
   FormCreateVariation = 'FormCreateVariation',
   FormCreateWarehouse = 'FormCreateWarehouse',
@@ -66,7 +65,6 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   [Modals.FormInviteUser]: Forms.InviteUser,
   [Modals.FormCreateOrderSlotItem]: Forms.CreateOrderSlot,
   [Modals.FormCreateProductInventory]: Forms.CreateProductInventory,
-  [Modals.FormCreateVariationsTemplate]: Forms.CreateVariationsTemplate,
   [Modals.FormCreateProperty]: Forms.CreateProperty,
   [Modals.FormCreateVariation]: Forms.CreateVariation,
   [Modals.FormCreateWarehouse]: Forms.CreateWarehouse,
@@ -111,7 +109,6 @@ export interface ModalChildrenProps extends Record<Modals, any> {
   [Modals.FormCreateOrderSlotItem]: FormPropTypes.FormCreateOrderSlotItemProps;
   [Modals.FormCreateProductInventory]: FormPropTypes.FormCreateProductInventoryProps;
   [Modals.FormCreateProduct]: FormPropTypes.FormCreateProductProps;
-  [Modals.FormCreateVariationsTemplate]: FormPropTypes.FormCreateVariationsTemplateProps;
   [Modals.FormCreateProperty]: FormPropTypes.FormCreatePropertyProps;
   [Modals.FormCreateVariation]: FormPropTypes.FormCreateVariationProps;
   [Modals.FormCreateWarehouse]: FormPropTypes.FormCreateWarehouseProps;

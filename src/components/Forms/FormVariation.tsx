@@ -8,7 +8,9 @@ import { Text } from '../atoms/Text';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { OverlayHandlerReturn } from '../AppPages/PageCurrentProductProvider';
 import { useForm } from 'react-hook-form';
-import { IVariation, IVariationReqData } from '../../redux/products/products.types';
+import { createVariationFormData, createVariationReqData } from '../../utils/dataTransform';
+import { IVariation } from '../../redux/products/variations.types';
+import { OnlyUUID } from '../../redux/global.types';
 
 export interface FormVariationBaseProps {
   onSubmit?: AppSubmitHandler<IVariationFormData>;
@@ -17,31 +19,9 @@ export interface FormVariationBaseProps {
   update?: string;
 }
 
-const createVariationReqData = (formData: IVariationFormData, _id?: string): IVariationReqData => {
-  const data = {
-    data: {
-      timeFrom: formData.timeFrom,
-      timeTo: formData.timeTo,
-      properties: Object.values(formData.properties).map(v => ({ _id: v })),
-    },
-  };
-  console.log('createVariationReqData', data);
-  return _id ? { ...data, _id } : data;
-};
-const createVariationFormData = (variation: IVariation): IVariationFormData => {
-  let propertiesMap: Record<string, string> = {};
-  variation.properties?.map(prop => {
-    if (prop?._id && prop?.parent?._id) propertiesMap = { ...propertiesMap, [prop._id]: prop.parent?._id };
-  });
-
-  return {
-    timeFrom: variation.timeFrom,
-    properties: propertiesMap,
-  };
-};
-
 export interface FormVariationProps extends OverlayHandlerReturn {
   onSubmit?: AppSubmitHandler<IVariationFormData>;
+  product?: OnlyUUID;
 
   create?: boolean;
   update?: string;
@@ -50,17 +30,21 @@ export interface FormVariationProps extends OverlayHandlerReturn {
 }
 export interface IVariationFormData {
   properties: Record<string, string>;
+  product?: OnlyUUID;
   timeFrom?: string | number | Date;
   timeTo?: string | number | Date;
 }
-const FormVariation: React.FC<FormVariationProps> = ({ onClose, defaultState, onSubmit, update, create }) => {
+const FormVariation: React.FC<FormVariationProps> = ({ onClose, defaultState, onSubmit, update, create, ...props }) => {
   const product = useProductsSelector().currentProduct;
   const service = useAppServiceProvider()[ServiceName.products];
 
   const defaultFormState = useMemo(() => {
+    if (defaultState) {
+      return createVariationFormData(defaultState);
+    }
     const dataForUpdate = product?.variations?.find(variation => variation._id === update);
     return dataForUpdate ? createVariationFormData(dataForUpdate) : {};
-  }, [product?.variations, update]);
+  }, [defaultState, product?.variations, update]);
 
   const { setValue, watch, handleSubmit, ...form } = useForm<IVariationFormData>({ defaultValues: defaultFormState });
   const formValues = watch();
@@ -71,8 +55,12 @@ const FormVariation: React.FC<FormVariationProps> = ({ onClose, defaultState, on
         service
           .createVariation({
             data: createVariationReqData(data),
-            onSuccess: () => {
+            onSuccess: data => {
+              console.log('createVariation onSuccess', data);
               onClose && onClose();
+            },
+            onError: e => {
+              console.log(e);
             },
           })
           .then();
@@ -81,8 +69,13 @@ const FormVariation: React.FC<FormVariationProps> = ({ onClose, defaultState, on
         service
           .updateVariationById({
             data: createVariationReqData(data, update),
-            onSuccess: () => {
+            onSuccess: data => {
+              console.log('updateVariationById onSuccess', data);
+
               onClose && onClose();
+            },
+            onError: e => {
+              console.log(e);
             },
           })
           .then();
@@ -154,7 +147,7 @@ const FormVariation: React.FC<FormVariationProps> = ({ onClose, defaultState, on
           iconSize={'28px'}
           textTransform={'uppercase'}
           icon={'close'}
-        ></ButtonIcon>
+        />
 
         <ButtonIcon
           type={'submit'}
@@ -162,6 +155,7 @@ const FormVariation: React.FC<FormVariationProps> = ({ onClose, defaultState, on
           variant={'outlinedLarge'}
           textTransform={'uppercase'}
           endIcon={'SmallArrowRight'}
+          style={{ flex: 1 }}
         >
           {update ? 'Підтвердити' : 'Додати'}
         </ButtonIcon>

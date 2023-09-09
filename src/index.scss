@@ -201,6 +201,17 @@ img {
   }
 }
 
+@keyframes OverlayFromRight {
+  from {
+    //right: -100%;
+    transform: translateX(100%);
+  }
+  to {
+    //right: 0;
+     transform: translateX(0);
+  }
+}
+
 @keyframes animate-border {
   0% {
     border-image: linear-gradient(to right, red, yellow);

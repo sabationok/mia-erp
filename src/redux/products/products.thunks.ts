@@ -2,19 +2,10 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import { ThunkPayload } from '../store.store';
 import { isAxiosError } from 'axios';
-import {
-  IProduct,
-  IProductReqData,
-  IProperty,
-  IPropertyReqData,
-  IVariation,
-  IVariationReqData,
-} from './products.types';
+import { IProduct, IProductReqData } from './products.types';
 import { AppQueryParams, createApiCall } from '../../api';
 import { createThunkPayloadCreator } from '../../api/createApiCall.api';
 import ProductsApi from '../../api/products.api';
-import PropertiesApi from '../../api/properties.api';
-import VariationsApi from '../../api/variations.api';
 import { OnlyUUID } from '../global.types';
 
 // export async function payloadCreator<R = any>(
@@ -97,86 +88,25 @@ export const createProductThunk = createAsyncThunk<IProduct | undefined, ThunkPa
     }
   }
 );
+
+export const updateProductThunk = createAsyncThunk<IProduct | undefined, ThunkPayload<IProductReqData, IProduct>>(
+  'products/updateProductThunk',
+  async (payload, thunkApi) => {
+    try {
+      const res = await createApiCall({ ...payload, throwError: true }, ProductsApi.updateById, ProductsApi);
+
+      return res?.data.data;
+    } catch (error) {
+      return thunkApi.rejectWithValue(isAxiosError(error));
+    }
+  }
+);
 export const deleteProductThunk = createAsyncThunk(
   'products/deleteProductThunk',
   createThunkPayloadCreator(ProductsApi.deleteById, ProductsApi)
 );
 
-export const getAllPropertiesThunk = createAsyncThunk<
-  IProperty[] | undefined,
-  ThunkPayload<IPropertyReqData, IProperty[]>
->('products/getAllPropertiesThunk', async (args, thunkApi) => {
-  args?.onLoading && args?.onLoading(true);
-
-  try {
-    const res = await PropertiesApi.getAll(args.data);
-    args?.onLoading && args?.onLoading(false);
-    args?.onSuccess && args?.onSuccess(res?.data?.data);
-
-    return res?.data.data;
-  } catch (e) {
-    args?.onLoading && args?.onLoading(false);
-    args?.onError && args?.onError(e);
-    return thunkApi.rejectWithValue(isAxiosError(e));
-  }
-});
-
-export const createPropertyThunk = createAsyncThunk<
-  IProperty[] | undefined,
-  ThunkPayload<IPropertyReqData, IProperty[]>
->('products/createPropertyThunk', async (args, thunkApi) => {
-  args?.onLoading && args?.onLoading(true);
-
-  try {
-    const res = await PropertiesApi.create(args.data);
-    args?.onLoading && args?.onLoading(false);
-    args?.onSuccess && args?.onSuccess(res?.data?.data);
-
-    return res?.data.data;
-  } catch (e) {
-    args?.onLoading && args?.onLoading(false);
-    args?.onError && args?.onError(e);
-    return thunkApi.rejectWithValue(isAxiosError(e));
-  }
-});
 // ??? VARIATIONS
-export const createVariationThunk = createAsyncThunk<
-  IVariation | undefined,
-  ThunkPayload<IVariationReqData, IVariation>
->('products/createVariationThunk', async (args, thunkApi) => {
-  args?.onLoading && args?.onLoading(true);
-
-  try {
-    const res = await VariationsApi.create(args.data);
-    args?.onLoading && args?.onLoading(false);
-    args?.onSuccess && args?.onSuccess(res?.data?.data);
-
-    return res?.data.data;
-  } catch (e) {
-    args?.onLoading && args?.onLoading(false);
-    args?.onError && args?.onError(e);
-    return thunkApi.rejectWithValue(isAxiosError(e));
-  }
-});
-
-export const getAllVariationsByProductIdThunk = createAsyncThunk<
-  IVariation[] | undefined,
-  ThunkPayload<{ product: OnlyUUID; params?: AppQueryParams }, IVariation[]>
->('products/getAllVariationsByProductIdThunk', async (args, thunkApi) => {
-  args?.onLoading && args?.onLoading(true);
-
-  try {
-    const res = await VariationsApi.getAllByProductId(args?.data);
-    args?.onLoading && args?.onLoading(false);
-    args?.onSuccess && args?.onSuccess(res?.data?.data);
-
-    return res?.data.data;
-  } catch (e) {
-    args?.onLoading && args?.onLoading(false);
-    args?.onError && args?.onError(e);
-    return thunkApi.rejectWithValue(isAxiosError(e));
-  }
-});
 
 // export const deleteProductThunk = createAsyncThunk(
 //   'products/deleteProductThunk',

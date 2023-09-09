@@ -1,27 +1,17 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
-import {
-  IProduct,
-  IProductReqData,
-  IProperty,
-  IPropertyReqData,
-  IVariation,
-  IVariationReqData,
-} from '../redux/products/products.types';
+import { IProduct, IProductReqData } from '../redux/products/products.types';
 import { OnlyUUID, ServiceApiCaller, ServiceDispatcherAsync } from 'redux/global.types';
-import {
-  createProductThunk,
-  createPropertyThunk,
-  createVariationThunk,
-  getAllProductsThunk,
-  getAllPropertiesThunk,
-  getProductFullInfoThunk,
-} from '../redux/products/products.thunks';
+import { createProductThunk, getAllProductsThunk, getProductFullInfoThunk } from '../redux/products/products.thunks';
 import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
 import { AppQueryParams, createApiCall } from 'api';
 import ProductsApi from '../api/products.api';
 import PropertiesApi from '../api/properties.api';
 import VariationsApi from '../api/variations.api';
+import { IProperty, IPropertyReqData } from '../redux/products/properties.types';
+import { createPropertyThunk, getAllPropertiesThunk } from '../redux/products/properties.thunks';
+import { createVariationThunk } from '../redux/products/variations.thunks';
+import { IVariation, IVariationReqData } from '../redux/products/variations.types';
 
 export interface ProductsService {
   create: ServiceDispatcherAsync<IProductReqData, IProduct>;
@@ -34,10 +24,10 @@ export interface ProductsService {
   // * PROPERTIES
 
   createProperty: ServiceDispatcherAsync<IPropertyReqData, IProperty[]>;
-  deletePropertyById: ServiceApiCaller<IPropertyReqData, IProperty[]>;
-  updatePropertyById: ServiceApiCaller<IPropertyReqData, IProperty[]>;
-  getPropertyById: ServiceApiCaller<IPropertyReqData, IProperty>;
   getAllProperties: ServiceDispatcherAsync<IPropertyReqData, IProperty[]>;
+  updatePropertyById: ServiceApiCaller<IPropertyReqData, IProperty[]>;
+  deletePropertyById: ServiceApiCaller<IPropertyReqData, IProperty[]>;
+  getPropertyById: ServiceApiCaller<IPropertyReqData, IProperty>;
 
   createVariation: ServiceDispatcherAsync<IVariationReqData, IVariation>;
   updateVariationById: ServiceDispatcherAsync<IVariationReqData, IVariation>;
@@ -53,18 +43,18 @@ const useProductsService = (): ProductsService => {
   return useMemo((): Omit<ProductsService, 'state' | 'dispatch'> => {
     return {
       create: payload => dispatch(createProductThunk(defaultThunkPayload(payload))),
-      deleteById: payload => createApiCall(defaultApiCallPayload(payload), ProductsApi.deleteById, ProductsApi),
       updateById: payload => createApiCall(defaultApiCallPayload(payload), ProductsApi.updateById, ProductsApi),
+      deleteById: payload => createApiCall(defaultApiCallPayload(payload), ProductsApi.deleteById, ProductsApi),
       getById: payload => createApiCall(defaultApiCallPayload(payload), ProductsApi.getById, ProductsApi),
       getAll: payload => dispatch(getAllProductsThunk(defaultThunkPayload(payload))),
       getProductFullInfo: args => dispatch(getProductFullInfoThunk(defaultThunkPayload(args))),
 
       // * PROPERTIES
       createProperty: args => dispatch(createPropertyThunk(defaultThunkPayload(args))),
+      getAllProperties: args => dispatch(getAllPropertiesThunk(defaultThunkPayload(args))),
       deletePropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.deleteById, PropertiesApi),
       updatePropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.updateById, PropertiesApi),
       getPropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.getById, PropertiesApi),
-      getAllProperties: args => dispatch(getAllPropertiesThunk(defaultThunkPayload(args))),
 
       // createVariation: args => createApiCall(defaultApiCallPayload(args), VariationsApi.create, VariationsApi),
       createVariation: args => dispatch(createVariationThunk(defaultThunkPayload(args))),

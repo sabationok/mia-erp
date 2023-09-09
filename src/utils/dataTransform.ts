@@ -1,6 +1,8 @@
 import { ITransaction, ITransactionForReq } from '../redux/transactions/transactions.types';
 import { pick } from 'lodash';
 import { OnlyUUID } from '../redux/global.types';
+import { IVariationFormData } from '../components/Forms/FormVariation';
+import { IVariation, IVariationReqData } from '../redux/products/variations.types';
 
 const ExtractId = <T extends OnlyUUID>(data: T) => (pick(data, '_id')._id ? pick(data, '_id') : { _id: '' });
 const ExtractIdString = <T extends OnlyUUID>(data: Partial<T>) => ('_id' in data ? pick(data, '_id')._id : undefined);
@@ -114,5 +116,33 @@ function createDataForReq<
   });
   return outData;
 }
+
+export const createVariationReqData = (formData: IVariationFormData, _id?: string): IVariationReqData => {
+  console.log('createVariationReqData formData', formData);
+
+  const data = {
+    timeFrom: formData?.timeFrom,
+    timeTo: formData?.timeTo,
+    properties: formData?.properties ? Object.values(formData?.properties) : [],
+  };
+  console.log('createVariationReqData', data);
+  return _id ? { data, _id } : { data };
+};
+export const createVariationFormData = (variation: IVariation): IVariationFormData => {
+  let propertiesMap: Record<string, string> = {};
+  variation.properties?.map(prop => {
+    if (prop?._id && prop?.parent?._id) {
+      propertiesMap = { ...propertiesMap, [prop._id]: prop.parent?._id };
+    }
+    return null;
+  });
+
+  return {
+    timeFrom: variation.timeFrom,
+    timeTo: variation.timeTo,
+    product: variation?.product ? ExtractId(variation?.product) : undefined,
+    properties: propertiesMap,
+  };
+};
 
 export { getValueByPath, formatPhoneNumber, createTransactionForReq, createDataForReq, ExtractId, ExtractIdString };

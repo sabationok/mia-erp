@@ -1,11 +1,12 @@
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import { IProperty, IPropertyDto, ProductTypeEnum } from '../../redux/products/products.types';
+import { ProductTypeEnum } from '../../redux/products/products.types';
 import FlexBox from '../atoms/FlexBox';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import t from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
 import { useAppForm } from '../../hooks';
+import { IProperty, IPropertyDto } from '../../redux/products/properties.types';
 
 export interface FormCreatePropertyProps extends Omit<ModalFormProps<ProductTypeEnum, any, IProperty>, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<IPropertyDto, { isGroup?: boolean; isProperty?: boolean; isValue?: boolean }>;

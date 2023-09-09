@@ -82,6 +82,7 @@ const CustomSelectOptionComponent: React.FC<CustomSelectItemProps> = ({
   const renderChildrenList = useMemo(() => {
     return option?.childrenList?.map((ch, index) => (
       <CustomSelectOptionComponent
+        key={`select-opt_${ch?._id}`}
         option={ch}
         index={index}
         onSelect={onSelect}
