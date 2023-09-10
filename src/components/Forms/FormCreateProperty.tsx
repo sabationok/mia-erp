@@ -6,9 +6,9 @@ import InputLabel from '../atoms/Inputs/InputLabel';
 import t from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
 import { useAppForm } from '../../hooks';
-import { IProperty, IPropertyDto } from '../../redux/products/properties.types';
+import { IProperty, IPropertyBase, IPropertyDto } from '../../redux/products/properties.types';
 
-export interface FormCreatePropertyProps extends Omit<ModalFormProps<ProductTypeEnum, any, IProperty>, 'onSubmit'> {
+export interface FormCreatePropertyProps extends Omit<ModalFormProps<ProductTypeEnum, any, IPropertyBase>, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<IPropertyDto, { isGroup?: boolean; isProperty?: boolean; isValue?: boolean }>;
   type?: ProductTypeEnum;
   create?: boolean;
@@ -55,7 +55,7 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
           <InputLabel label={t(isProperty ? 'group' : 'property')} disabled>
             <InputText
               placeholder={t(isProperty ? 'group' : 'property')}
-              defaultValue={defaultState?.parent?.label}
+              defaultValue={defaultState?.parent?.label || defaultState?.parent?.label}
               disabled
             />
           </InputLabel>

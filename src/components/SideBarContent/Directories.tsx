@@ -1,6 +1,6 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
-import { useModalProvider } from 'components/ModalProvider/ModalProvider';
+import { useModalService } from 'components/ModalProvider/ModalProvider';
 import { useMemo } from 'react';
 import { ModalChildrenProps, Modals } from '../ModalProvider/Modals';
 import { Text } from '../atoms/Text';
@@ -20,7 +20,7 @@ export interface IDirectoriesProps {
 }
 
 const Directories: React.FC<IDirectoriesProps> = ({ options = [] }) => {
-  const modal = useModalProvider();
+  const modalS = useModalService();
 
   const renderList = useMemo(
     () =>
@@ -30,8 +30,7 @@ const Directories: React.FC<IDirectoriesProps> = ({ options = [] }) => {
             variant="def"
             disabled={disabled}
             onClick={() => {
-              console.log('Directories', { ModalChildren, modalChildrenProps, Modal, props });
-              modal.handleOpenModal({ ModalChildren, modalChildrenProps, Modal, props });
+              modalS.handleOpenModal({ ModalChildren, modalChildrenProps, Modal, props });
             }}
           >
             <Text $align={'left'} $weight={500}>
@@ -40,7 +39,7 @@ const Directories: React.FC<IDirectoriesProps> = ({ options = [] }) => {
           </Trigger>
         </ListItem>
       )),
-    [modal, options]
+    [modalS, options]
   );
   return <Container>{renderList}</Container>;
 };

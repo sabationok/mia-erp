@@ -42,6 +42,7 @@ const AppRoutes: React.FC = () => {
 
       <Route path={'/app/*'} element={<PrivateRoute redirectTo={'/auth'} />}>
         <Route index element={<Navigate to={'/app/home'} />} />
+
         <Route path={AppPagesEnum.companies} element={<AppPages.PageSelectCompany path={AppPagesEnum.companies} />} />
 
         <Route path={`:${AppUrlParamKeys.permissionId}`} element={<PermissionCheck redirectTo={'/app/companies'} />}>

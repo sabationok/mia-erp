@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { ErrorContent } from 'components/atoms';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
-import { iconId } from 'data';
 import { useSideBar } from './SideBarProvider';
 import styled, { css } from 'styled-components';
 import FlexBox from '../atoms/FlexBox';
@@ -10,7 +9,7 @@ import FlexBox from '../atoms/FlexBox';
 const SideBarOptions: React.FC = () => {
   const { RightSideContent, onClose, isOpen } = useSideBar();
   const modal = useModalProvider();
-
+  const rootRef = useRef(document.getElementById('root'));
   function handleCloseMenu() {
     onClose && onClose();
   }
@@ -20,33 +19,40 @@ const SideBarOptions: React.FC = () => {
     if (target === currentTarget) handleCloseMenu();
   }
 
-  useEffect(() => {
-    const isModalOpen = modal.getState().length > 0;
-    if (isModalOpen) return;
-    if (!RightSideContent) return;
-
-    function onMenuClose(ev: KeyboardEvent | MouseEvent) {
-      if (isModalOpen) return;
+  const onMenuClose = useCallback(
+    (ev: KeyboardEvent | MouseEvent) => {
+      console.log('onMenuClose useCallback | modal', modal.isOpen());
+      if (modal.isOpen()) return;
 
       const { target } = ev;
       if (target instanceof HTMLElement && !target?.closest('[data-sidebar]')) onClose && onClose();
       if (ev instanceof KeyboardEvent && ev?.code === 'Escape') onClose && onClose();
-    }
+    },
+    [modal, onClose]
+  );
 
-    const rootEl = document.getElementById('root');
+  const subscribe = useCallback((listener: (ev: KeyboardEvent | MouseEvent) => void) => {
+    rootRef.current?.addEventListener('click', listener, {});
+    rootRef.current?.addEventListener('keydown', listener);
 
-    rootEl?.addEventListener('click', onMenuClose);
-    rootEl?.addEventListener('keydown', onMenuClose);
-
-    return () => {
-      rootEl?.removeEventListener('click', onMenuClose);
-      rootEl?.removeEventListener('keydown', onMenuClose);
+    return function () {
+      rootRef.current?.removeEventListener('click', listener);
+      rootRef.current?.removeEventListener('keydown', listener);
     };
-  }, [onClose, modal, RightSideContent]);
+  }, []);
+
+  useEffect(() => {
+    if (modal.isOpen()) return;
+    if (!RightSideContent) return;
+
+    const unsubscribe = subscribe(onMenuClose);
+
+    return unsubscribe;
+  }, [RightSideContent, modal, onMenuClose, subscribe]);
 
   return (
     <Backdrop
-      className="backdrop"
+      className="sidebar-options-backdrop"
       isOpen={!!(isOpen && RightSideContent?.RenderComponent)}
       maxWidth={RightSideContent?.maxWidth}
       onClick={onBackdropClick}
@@ -55,18 +61,12 @@ const SideBarOptions: React.FC = () => {
         <Header>
           <Title>{RightSideContent?.title}</Title>
 
-          <ButtonIcon
-            iconSize="18px"
-            size="22px"
-            iconId={iconId.close}
-            variant="defNoEffects"
-            onClick={handleCloseMenu}
-          />
+          <ButtonIcon iconSize="18px" size="22px" icon={'close'} variant="defNoEffects" onClick={handleCloseMenu} />
         </Header>
 
         <ContentScroll>
           {typeof RightSideContent?.RenderComponent === 'function' ? (
-            <RightSideContent.RenderComponent {...{ options: RightSideContent.options }} />
+            <RightSideContent.RenderComponent options={RightSideContent.options} />
           ) : (
             <ErrorContent />
           )}

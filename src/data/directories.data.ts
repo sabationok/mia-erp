@@ -42,10 +42,7 @@ export const getDirInTreeActionsCreator = (
   Modal: Modals = Modals.FormCreateDirTreeComp,
   { createParentTitle, createChildTitle, updateItemTitle }: GetDirInTreeActionsCreatorOptions = {}
 ): DirInTreeActionsCreatorType<ApiDirType, any, IDirItemBase, DirectoriesService> => {
-  console.log('getDirInTreeActionsCreator apply', Modal);
-
   return ({ modalService, service, type, dirType, findById }) => {
-    console.log('actions creator apply', dirType);
     return {
       onCreateParent: () => {
         const modal = modalService.handleOpenModal({

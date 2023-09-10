@@ -6,9 +6,12 @@ export interface IPropertyBase extends IBase {
   label?: string;
   type?: ProductTypeEnum;
   isSelectable?: boolean;
+
+  parent?: IPropertyBase;
+  childrenList?: IPropertyBase[];
 }
 
-export interface IVariationTemplate extends IPropertyBase {
+export interface IVariationTemplate extends Omit<IPropertyBase, 'parent'> {
   childrenList?: IProperty[];
 }
 export interface IProperty extends IPropertyBase {
@@ -16,7 +19,7 @@ export interface IProperty extends IPropertyBase {
   childrenList?: IPropertyValue[];
 }
 
-export interface IPropertyValue extends IPropertyBase {
+export interface IPropertyValue extends Omit<IPropertyBase, 'childrenList'> {
   parent?: IProperty;
 }
 
