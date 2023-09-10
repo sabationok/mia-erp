@@ -29,7 +29,7 @@ export type OverlayRenderComponentProps<Props = any> = OverlayHandlerReturn & Pr
 export interface OverlayHandlerReturn {
   onClose?: () => void;
   index?: number;
-  id?: string;
+  overlayId?: string;
 }
 export const PageCurrentProductCTX = createContext({});
 export const usePageCurrentProduct = () => useContext(PageCurrentProductCTX) as PageCurrentProductProviderValue;
@@ -74,7 +74,7 @@ const PageCurrentProductProvider: React.FC<PageCurrentProductProviderProps> = ({
 
       const returnData: OverlayHandlerReturn = {
         onClose: () => handleRemoveStackItem(id),
-        id,
+        overlayId: id,
       };
       return returnData;
     },

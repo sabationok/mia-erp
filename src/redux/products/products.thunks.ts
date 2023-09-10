@@ -3,7 +3,7 @@ import { axiosErrorCheck } from 'utils';
 import { ThunkPayload } from '../store.store';
 import { isAxiosError } from 'axios';
 import { IProduct, IProductReqData } from './products.types';
-import { AppQueryParams, createApiCall } from '../../api';
+import { AppQueryParams } from '../../api';
 import { createThunkPayloadCreator } from '../../api/createApiCall.api';
 import ProductsApi from '../../api/products.api';
 import { OnlyUUID } from '../global.types';
@@ -76,31 +76,47 @@ export const getProductFullInfoThunk = createAsyncThunk<IProduct, ThunkPayload<O
   }
 );
 
-export const createProductThunk = createAsyncThunk<IProduct | undefined, ThunkPayload<IProductReqData, IProduct>>(
-  'products/createProductThunk',
-  async (payload, thunkApi) => {
-    try {
-      const res = await createApiCall(payload, ProductsApi.create, ProductsApi);
-      console.log(res);
-      return res?.data.data;
-    } catch (error) {
-      return thunkApi.rejectWithValue(isAxiosError(error));
-    }
-  }
-);
+export const createProductThunk = createAsyncThunk<
+  { data: IProduct } | undefined,
+  ThunkPayload<IProductReqData, IProduct>
+>('products/createProductThunk', async (args, thunkApi) => {
+  args?.onLoading && args?.onLoading(true);
 
-export const updateProductThunk = createAsyncThunk<IProduct | undefined, ThunkPayload<IProductReqData, IProduct>>(
-  'products/updateProductThunk',
-  async (payload, thunkApi) => {
-    try {
-      const res = await createApiCall({ ...payload, throwError: true }, ProductsApi.updateById, ProductsApi);
-
-      return res?.data.data;
-    } catch (error) {
-      return thunkApi.rejectWithValue(isAxiosError(error));
+  try {
+    const res = await ProductsApi.create(args?.data);
+    if (res) {
+      args?.onSuccess && args?.onSuccess(res?.data.data);
     }
+
+    args?.onLoading && args?.onLoading(false);
+    return { data: res?.data.data };
+  } catch (error) {
+    args?.onLoading && args?.onLoading(false);
+    args?.onError && args?.onError(error);
+    return thunkApi.rejectWithValue(isAxiosError(error));
   }
-);
+});
+
+export const updateProductThunk = createAsyncThunk<
+  { data?: IProduct; refreshCurrent?: boolean } | undefined,
+  ThunkPayload<IProductReqData & { refreshCurrent?: boolean }, IProduct>
+>('products/updateProductThunk', async (args, thunkApi) => {
+  args?.onLoading && args?.onLoading(true);
+
+  try {
+    const res = await ProductsApi.updateById(args?.data);
+    if (res) {
+      args?.onSuccess && args?.onSuccess(res?.data.data);
+    }
+
+    args?.onLoading && args?.onLoading(false);
+    return { data: res?.data.data, refreshCurrent: args?.data?.refreshCurrent };
+  } catch (error) {
+    args?.onLoading && args?.onLoading(false);
+    args?.onError && args?.onError(error);
+    return thunkApi.rejectWithValue(isAxiosError(error));
+  }
+});
 export const deleteProductThunk = createAsyncThunk(
   'products/deleteProductThunk',
   createThunkPayloadCreator(ProductsApi.deleteById, ProductsApi)

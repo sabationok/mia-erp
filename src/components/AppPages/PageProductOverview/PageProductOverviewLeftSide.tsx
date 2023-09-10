@@ -45,10 +45,11 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
             Modal: Modals.FormCreateProduct,
             props: {
               edit: true,
+              _id: page?.currentProduct?._id,
               defaultState: page?.currentProduct,
               onSubmit: (d, o) => {
                 productsS.updateById({
-                  data: d,
+                  data: { ...d },
                   onSuccess: () => {
                     o?.closeAfterSave && m?.onClose();
                     toast.success(`Updated product`);

@@ -65,26 +65,36 @@ const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, onOpen
   );
 
   return (
-    <Container fillWidth flex={1} className={className}>
+    <Container fillWidth flex={1} className={className} padding={'0 8px'}>
+      <Header alignItems={'center'} justifyContent={'space-between'} fxDirection={'row'} gap={6} fillWidth>
+        <FlexBox fxDirection={'row'} padding={'4px 0'} alignItems={'center'} fillHeight>
+          <Text $weight={600} $size={18}>
+            {'Перегляд продукту'}
+          </Text>
+        </FlexBox>
+
+        <ButtonIcon variant={'onlyIcon'} icon={'close'} />
+      </Header>
+
       <FlexBox fillWidth flex={1} overflow={'auto'}>
         {renderCells}
       </FlexBox>
 
-      <Footer fillWidth fxDirection={'row'} gap={6} padding={'8px'}>
-        <ButtonIcon size={'32px'} variant={'onlyIcon'} iconSize={'85%'} icon={'edit'} onClick={p?.onEdit} />
+      <Footer fillWidth fxDirection={'row'} gap={6} padding={'6px 0'}>
+        <ButtonIcon size={'36px'} variant={'onlyIcon'} iconSize={'85%'} icon={'edit'} onClick={p?.onEdit} />
 
         <ButtonIcon
           variant={'onlyIcon'}
-          size={'32px'}
+          size={'36px'}
           iconSize={'85%'}
           icon={p?.product?.visible ? 'visibilityOn' : 'visibilityOff'}
           onClick={p?.onHide}
         />
 
-        <DeleteBtn variant={'onlyIcon'} size={'32px'} iconSize={'85%'} icon={'delete'} onClick={p?.onDelete} />
+        <DeleteBtn variant={'onlyIcon'} size={'36px'} iconSize={'85%'} icon={'delete'} onClick={p?.onDelete} />
 
         <OpenBtn
-          size={'32px'}
+          size={'36px'}
           variant={'onlyIcon'}
           iconSize={'85%'}
           icon={'SmallArrowLeft'}
@@ -99,7 +109,9 @@ const Container = styled(FlexBox)`
   position: relative;
   overflow: hidden;
 `;
-
+const Header = styled(FlexBox)`
+  height: 32px;
+`;
 const Footer = styled(FlexBox)`
   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
 `;
@@ -114,13 +126,16 @@ const OpenBtn = styled(ButtonIcon)`
   }
 `;
 const OverlayOpenButton = styled.button`
+  display: flex;
+  align-items: center;
+
   border: 0;
   background-color: transparent;
 
   font-family: inherit;
   font-weight: 500;
   font-size: 12px;
-  padding: 2px 6px;
+  padding: 0 6px;
   color: ${p => p.theme.accentColor.base};
 
   cursor: pointer;

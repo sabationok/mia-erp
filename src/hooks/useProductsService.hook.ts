@@ -15,7 +15,7 @@ import { IVariation, IVariationReqData } from '../redux/products/variations.type
 export interface ProductsService {
   create: ServiceDispatcherAsync<IProductReqData, IProduct>;
   deleteById: ServiceApiCaller<string, IProduct>; // !!!!! ===>>> ServiceDispatcher
-  updateById: ServiceApiCaller<IProductReqData, IProduct>; // !!!!! ===>>> ServiceDispatcher
+  updateById: ServiceApiCaller<IProductReqData & { refreshCurrent?: boolean }, IProduct>; // !!!!! ===>>> ServiceDispatcher
   getById: ServiceApiCaller<string, IProduct>;
   getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IProduct[]>;
   getProductFullInfo: ServiceDispatcherAsync<OnlyUUID, IProduct>;

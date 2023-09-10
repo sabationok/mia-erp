@@ -3,17 +3,21 @@ import FlexBox from '../atoms/FlexBox';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { useProductsSelector, usePropertiesSelector } from '../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Text } from '../atoms/Text';
-import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
+import { AppSubmitHandler, UseAppFormSubmitOptions } from '../../hooks/useAppForm.hook';
 import { OverlayHandlerReturn } from '../AppPages/PageCurrentProductProvider';
 import { useForm } from 'react-hook-form';
 import { createVariationFormData, createVariationReqData } from '../../utils/dataTransform';
 import { IVariation } from '../../redux/products/variations.types';
 import { OnlyUUID } from '../../redux/global.types';
 import { ToastService } from '../../services';
+import AppLoader from '../atoms/AppLoader';
+import { ModalFormProps } from '../ModalForm';
 
-export interface FormVariationProps extends OverlayHandlerReturn {
+export interface FormVariationProps
+  extends OverlayHandlerReturn,
+    Omit<ModalFormProps<any, any, IVariation>, 'onSubmit' | 'defaultState'> {
   onSubmit?: AppSubmitHandler<IVariationFormData>;
   product?: OnlyUUID;
 
@@ -33,6 +37,9 @@ const FormVariation: React.FC<FormVariationProps> = ({ onClose, defaultState, on
   const product = useProductsSelector().currentProduct;
   const service = useAppServiceProvider()[ServiceName.products];
   const templates = usePropertiesSelector();
+  const [loading, setLoading] = useState(false);
+
+  const [afterSubmit, setAfterSubmit] = useState<UseAppFormSubmitOptions>({});
 
   defaultState && console.log('FormVariationProps defaultState', defaultState);
 
@@ -63,6 +70,7 @@ const FormVariation: React.FC<FormVariationProps> = ({ onClose, defaultState, on
             onError: e => {
               console.log(e);
             },
+            onLoading: setLoading,
           })
           .then();
       } else {
@@ -77,6 +85,7 @@ const FormVariation: React.FC<FormVariationProps> = ({ onClose, defaultState, on
               console.log(e);
               ToastService.error('createVariation error');
             },
+            onLoading: setLoading,
           })
           .then();
       }
@@ -124,11 +133,11 @@ const FormVariation: React.FC<FormVariationProps> = ({ onClose, defaultState, on
   }, [formValues, handleSelect, template?.childrenList]);
 
   return (
-    <FormContainer onSubmit={handleSubmit(onValid)}>
+    <FormContainer onSubmit={handleSubmit(onValid)} {...props}>
       <Header alignItems={'center'} justifyContent={'space-between'} fxDirection={'row'} gap={6} fillWidth>
         <FlexBox fxDirection={'row'} padding={'4px 0'} alignItems={'center'} fillHeight>
           <Text $weight={600} $size={18}>
-            {product?.template?.label || 'Title'}
+            {`${product?.label} | ${product?.template?.label}` || 'Title'}
           </Text>
         </FlexBox>
 
@@ -139,7 +148,7 @@ const FormVariation: React.FC<FormVariationProps> = ({ onClose, defaultState, on
         {renderTemplate}
       </TemplateBox>
 
-      <FlexBox padding={'6px'} fxDirection={'row'} gap={8} alignItems={'center'}>
+      <Footer padding={'6px 0'} fxDirection={'row'} gap={8} alignItems={'center'}>
         <ButtonIcon
           onClick={onClose}
           variant={'onlyIconFilled'}
@@ -155,11 +164,14 @@ const FormVariation: React.FC<FormVariationProps> = ({ onClose, defaultState, on
           variant={'outlinedLarge'}
           textTransform={'uppercase'}
           endIcon={'SmallArrowRight'}
+          disabled={loading}
           style={{ flex: 1 }}
         >
           {update ? 'Підтвердити' : 'Додати'}
         </ButtonIcon>
-      </FlexBox>
+      </Footer>
+
+      <AppLoader isLoading={loading} />
     </FormContainer>
   );
 };
@@ -173,6 +185,8 @@ const FormContainer = styled.form`
 
   overflow: hidden;
 
+  max-width: 480px;
+
   background-color: ${p => p.theme.tableBackgroundColor};
 `;
 const Header = styled(FlexBox)`
@@ -181,15 +195,23 @@ const Header = styled(FlexBox)`
 
 const TemplateBox = styled(FlexBox)`
   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
-  border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
+  //border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
+  padding-bottom: 8px;
 `;
 
 const PropertyBox = styled(FlexBox)`
-  border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
+  &:not(:first-child) {
+    border-top: 1px solid ${p => p.theme.sideBarBorderColor};
+  }
 `;
+
+const Footer = styled(FlexBox)`
+  border-top: 1px solid ${p => p.theme.sideBarBorderColor};
+`;
+
 const ValueTag = styled(ButtonIcon)`
   flex-basis: 100px;
-  width: max-content;
+  min-width: max-content;
 
   // border-radius: 2px;
   // border: 2px solid ${p => p.theme.accentColor.light};
