@@ -119,12 +119,8 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
     return RenderModalComponentChildren ? (
       <RenderModalComponentChildren modalId={id} onClose={onClose} index={idx} {...childrenProps} />
     ) : null;
-  }, [childrenProps, id, idx]);
-
-  useEffect(() => {
-    console.log('ModalComponent render', 'id', id);
     // eslint-disable-next-line
-  }, []);
+  }, [childrenProps, id, idx]);
 
   useEffect(() => {
     if (!modalSettings.onEscapePressClose) return;

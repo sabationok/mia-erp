@@ -13,10 +13,8 @@ import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { useAppForm } from '../../hooks';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 
-export interface FormCreateDirTreeCompProps<T = any, D extends ApiDirType = any, FD = any>
-  extends DirectoriesFormProps<T, IDirItemBase<D, T>, FD> {
-  dirType?: ApiDirType;
-}
+export interface FormCreateDirTreeCompProps<DirType extends ApiDirType = any, FD = any>
+  extends DirectoriesFormProps<DirType, IDirItemBase<DirType>, FD> {}
 
 const validation = yup.object().shape({
   label: yup.string().required(),
@@ -75,9 +73,11 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
       extraFooter={<FormAfterSubmitOptions {...{ closeAfterSave, clearAfterSave, toggleOption }} />}
     >
       <Inputs>
-        <InputLabel label={t('type')} error={errors.type} disabled>
-          <InputText defaultValue={type ? t(`${type}s` as any).toUpperCase() : type} disabled />
-        </InputLabel>
+        {props.filterOptions && (
+          <InputLabel label={t('type')} error={errors.type} disabled>
+            <InputText defaultValue={type ? t(`${type}s` as any).toUpperCase() : type} disabled />
+          </InputLabel>
+        )}
 
         {defaultState?.parent?._id && (
           <InputLabel label={t('parentItem')} error={errors.type} disabled>

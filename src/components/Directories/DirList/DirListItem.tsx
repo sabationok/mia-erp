@@ -1,14 +1,14 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import React, { memo, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { IBaseDirItem, IDirItemBase } from '../dir.types';
+import { IDirItemBase } from '../dir.types';
 import { isUndefined } from 'lodash';
-import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import FlexBox from '../../atoms/FlexBox';
 
-export interface DirListItemAddsProps<T = any> {
-  list: IDirItemBase<ApiDirType, T>[];
-  item?: IDirItemBase<ApiDirType, T>;
+export interface DirListItemProps {
+  list?: IDirItemBase[];
+  item?: IDirItemBase;
+  parent?: IDirItemBase;
   archived?: boolean;
   disabled?: boolean;
   deleted?: boolean;
@@ -16,7 +16,7 @@ export interface DirListItemAddsProps<T = any> {
   onDelete?: (id: string) => void;
   onChangeDisableStatus?: (id: string, status: boolean) => void;
   onChangeArchiveStatus?: (id: string, status: boolean) => void;
-  onCreateChild?: (parentId: string, parent: IBaseDirItem<T>) => void;
+  onCreateChild?: (parentId: string, parent: IDirItemBase) => void;
   currentLevel?: number;
   availableLevels?: number;
 
@@ -24,7 +24,7 @@ export interface DirListItemAddsProps<T = any> {
   creatingChild?: boolean;
   disabling?: boolean;
   archiving?: boolean;
-  updating?: boolean;
+  editing?: boolean;
 }
 interface DirListItemState {
   archived?: boolean;
@@ -32,59 +32,64 @@ interface DirListItemState {
   deleted?: boolean;
 }
 
-const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
-  _id,
-  label,
-  name,
-  parent,
-  item,
-  list,
-  availableLevels = 1,
-  currentLevel = 0,
-  onUpdate,
-  onCreateChild,
-  childrenList,
-  deleted = false,
-  onDelete,
-  disabled = false,
-  onChangeDisableStatus,
-  disabling,
-  archived = false,
-  onChangeArchiveStatus,
-  archiving,
-  updating,
-  ...props
-}) => {
+const DirListItem: React.FC<DirListItemProps> = props => {
+  const {
+    item,
+    parent,
+    availableLevels = 1,
+    currentLevel = 0,
+    onUpdate,
+    onCreateChild,
+    deleted = false,
+    onDelete,
+    disabled = false,
+    onChangeDisableStatus,
+    disabling,
+    archived = false,
+    onChangeArchiveStatus,
+    archiving,
+    editing,
+  } = props;
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [state, setState] = useState<DirListItemState>({ archived, deleted, disabled });
 
-  const stateActionsMap: Record<keyof DirListItemState, ((id: string, status: boolean) => void) | undefined> = {
-    archived: onChangeArchiveStatus,
-    disabled: onChangeDisableStatus,
-    deleted: onDelete,
-  };
-
-  const registerStateAction = (name: keyof DirListItemState, handlerKey: 'onClick' | 'onChange' = 'onClick') => {
-    const action = stateActionsMap[name];
-
-    const props = {
-      disabled: !action,
-      isActive: !state[name],
-      [handlerKey]: () => {
-        setState(prev => {
-          const newState = { ...prev, [name]: !prev[name] };
-          action && action(_id, !prev[name]);
-          return newState;
-        });
-      },
-    };
-
-    return props;
-  };
+  // const stateActionsMap: Record<keyof DirListItemState, ((id: string, status: boolean) => void) | undefined> = {
+  //   archived: onChangeArchiveStatus,
+  //   disabled: onChangeDisableStatus,
+  //   deleted: onDelete,
+  // };
+  //
+  // const registerStateAction = (name: keyof DirListItemState, handlerKey: 'onClick' | 'onChange' = 'onClick') => {
+  //   const action = stateActionsMap[name];
+  //
+  //   const props = {
+  //     disabled: !action,
+  //     isActive: !state[name],
+  //     [handlerKey]: () => {
+  //       setState(prev => {
+  //         const newState = { ...prev, [name]: !prev[name] };
+  //         action && action(item?._id, !prev[name]);
+  //         return newState;
+  //       });
+  //     },
+  //   };
+  //
+  //   return props;
+  // };
+  const isTreeItem = useMemo(() => {
+    return availableLevels > 1;
+  }, [availableLevels]);
 
   const canHasChildren = useMemo(() => {
-    return !isUndefined(availableLevels) && !isUndefined(currentLevel) ? availableLevels > currentLevel + 1 : !parent;
-  }, [availableLevels, currentLevel, parent]);
+    return !isUndefined(availableLevels) && !isUndefined(currentLevel)
+      ? availableLevels > currentLevel + 1
+      : !item?.parent;
+  }, [availableLevels, currentLevel, item?.parent]);
+
+  const hasChildren = useMemo(() => {
+    return item?.childrenList && item?.childrenList?.length > 0;
+  }, [item?.childrenList]);
 
   function onOpenClick() {
     setIsOpen(prev => !prev);
@@ -99,124 +104,84 @@ const DirListItem: React.FC<IBaseDirItem & DirListItemAddsProps> = ({
   }
 
   const renderChildren = useMemo(() => {
-    return (
-      childrenList &&
-      childrenList.length > 0 &&
-      childrenList.map(ch => {
-        return (
-          <DirListItem
-            key={`dirItem_lvl_${currentLevel + 1}_${ch?._id}`}
-            {...ch}
-            item={ch}
-            {...{
-              list: ch?.childrenList || [],
-              parent: item,
-              availableLevels,
-              currentLevel: currentLevel + 1,
-              onUpdate,
-              onCreateChild,
-              deleted,
-              onDelete,
-              disabled,
-              onChangeDisableStatus,
-              disabling,
-              archived,
-              onChangeArchiveStatus,
-              archiving,
-            }}
-          />
-        );
-      })
-    );
-  }, [
-    archived,
-    availableLevels,
-    archiving,
-    disabling,
-    childrenList,
-    currentLevel,
-    deleted,
-    disabled,
-    item,
-    onChangeArchiveStatus,
-    onChangeDisableStatus,
-    onCreateChild,
-    onDelete,
-    onUpdate,
-  ]);
+    if (!item?.childrenList || item.childrenList.length === 0) return null;
+    return item?.childrenList.map(ch => {
+      return (
+        <DirListItem
+          key={`dirItem_lvl_${currentLevel + 1}_${ch?._id}`}
+          {...props}
+          item={ch}
+          list={ch?.childrenList}
+          parent={item}
+          currentLevel={currentLevel + 1}
+        />
+      );
+    });
+  }, [currentLevel, props, item]);
 
   return (
-    <>
-      <Item>
+    <Item>
+      <ButtonIcon
+        variant="onlyIconNoEffects"
+        icon={hasChildren && isOpen ? 'SmallArrowUp' : 'SmallArrowDown'}
+        size={'32px'}
+        iconSize={'24px'}
+        disabled={!hasChildren}
+        onClick={onOpenClick}
+      />
+
+      <FlexBox flex={1}>
         <ItemBox fxDirection={'row'}>
-          {canHasChildren && (
-            <Actions canHasChildren={canHasChildren}>
-              <ButtonIcon
-                variant="onlyIcon"
-                iconSize="24px"
-                icon="plus"
-                disabled={!canHasChildren || !onCreateChild}
-                onClick={evHandlerWrapper(
-                  onCreateChild,
-                  _id,
-                  item || {
-                    label,
-                    name,
-                  }
-                )}
-              />
-            </Actions>
-          )}
-
           <LabelField>
-            <Label title={label || name}>{label || name}</Label>
+            <Label>{item?.label || item?.name}</Label>
 
-            {!(!childrenList || childrenList?.length === 0) && (
-              <ButtonIcon
-                variant="onlyIconNoEffects"
-                icon={isOpen ? 'SmallArrowUp' : 'SmallArrowDown'}
-                iconSize="24px"
-                onClick={onOpenClick}
-              />
+            {canHasChildren && (
+              <Actions canHasChildren={canHasChildren}>
+                <ButtonIcon
+                  variant="onlyIcon"
+                  size={'32px'}
+                  iconSize={'24px'}
+                  icon="plus"
+                  disabled={!canHasChildren || !onCreateChild}
+                  onClick={evHandlerWrapper(onCreateChild, item?._id, item)}
+                />
+              </Actions>
             )}
           </LabelField>
 
           <Actions>
-            {updating && (
+            {editing && (
               <ActionButton
                 variant="onlyIcon"
                 iconSize="24px"
                 icon="edit"
                 disabled={!onUpdate}
-                onClick={evHandlerWrapper(onUpdate, _id, item)}
+                onClick={evHandlerWrapper(onUpdate, item?._id, item)}
               />
             )}
 
-            {archiving && (
-              <ActionButton variant="onlyIcon" iconSize="24px" icon={'archive'} {...registerStateAction('archived')} />
-            )}
+            {archiving && <ActionButton variant="onlyIcon" iconSize="24px" icon={'archive'} />}
 
             {disabling && (
-              <ActionButton
-                variant="onlyIcon"
-                iconSize="22px"
-                icon={!state.disabled ? 'lightMode' : 'darkMode'}
-                {...registerStateAction('disabled')}
-              />
+              <ActionButton variant="onlyIcon" iconSize="22px" icon={!state.disabled ? 'lightMode' : 'darkMode'} />
             )}
 
             {/*{onChangeDisableStatus && <Toggler {...registerStateAction('disabled', 'onChange')} />}*/}
           </Actions>
         </ItemBox>
+
         <ChildrenList isOpen={isOpen}>{renderChildren}</ChildrenList>
-      </Item>
-    </>
+      </FlexBox>
+    </Item>
   );
 };
 // <Item>
 // <ChildrenList isOpen={isOpen}>{renderChildren}</ChildrenList>
 // </Item>
 const Item = styled.li`
+  display: flex;
+  align-items: flex-start;
+
   overflow: hidden;
   max-width: 100%;
 `;
@@ -226,7 +191,7 @@ const ItemBox = styled(FlexBox)<{ level?: number }>`
   gap: 6px;
 
   height: 32px;
-  padding: 0 6px;
+  //padding: 0 6px;
 
   fill: ${({ theme }) => theme.fillColorHeader};
   color: ${({ theme }) => theme.fontColorHeader};
@@ -270,7 +235,7 @@ const ChildrenList = styled.ul<{ isOpen: boolean }>`
   max-height: ${({ isOpen }) => (isOpen ? '' : '0')};
 
   visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
-  padding: ${p => (p.isOpen ? `6px 0 0 12px` : '')};
+  padding: ${p => (p.isOpen ? `6px 0 0` : '')};
 `;
 const Actions = styled.div<{ canHasChildren?: boolean }>`
   display: flex;
@@ -289,7 +254,7 @@ const ActionButton = styled(ButtonIcon)`
   }
 `;
 
-export default memo(DirListItem);
+export default DirListItem;
 
 // {!onDelete && (
 //   <ButtonIcon

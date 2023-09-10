@@ -8,7 +8,7 @@ import { IAppSettings } from './appSettings/appSettings.slice';
 import { IProductsState } from './products/products.slice';
 import { IPriceListsState } from './priceManagement/priceManagement.slice';
 import { ApiDirType } from './APP_CONFIGS';
-import { IDirItemBase, ItemTypeByDirType } from '../components/Directories/dir.types';
+import { IDirItemBase } from '../components/Directories/dir.types';
 import { IDirectoriesState } from './directories/directories.slice';
 import { IOrdersState } from './orders/orders.slice';
 import { useMemo } from 'react';
@@ -39,7 +39,7 @@ export const useCustomRolesSelector = () =>
 export const useDirectoriesSelector = <DT extends ApiDirType = any>(
   dirType: DT
 ): {
-  directory: IDirItemBase<DT, ItemTypeByDirType[DT]>[];
+  directory: IDirItemBase<DT>[];
   error?: IDirectoriesState['error'];
   isLoading?: IDirectoriesState['isLoading'];
 } => {

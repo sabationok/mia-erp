@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { ModalChildrenProps, Modals } from '../ModalProvider/Modals';
 import { Text } from '../atoms/Text';
 
-export interface IDirectory<M extends Modals = any, P = any> {
+export interface IDirectoryListItem<M extends Modals = any, P = any> {
   title: string;
   iconId?: string;
   Modal?: M;
@@ -16,7 +16,7 @@ export interface IDirectory<M extends Modals = any, P = any> {
 }
 
 export interface IDirectoriesProps {
-  options: IDirectory[];
+  options: IDirectoryListItem[];
 }
 
 const Directories: React.FC<IDirectoriesProps> = ({ options = [] }) => {
@@ -30,6 +30,7 @@ const Directories: React.FC<IDirectoriesProps> = ({ options = [] }) => {
             variant="def"
             disabled={disabled}
             onClick={() => {
+              console.log('Directories', { ModalChildren, modalChildrenProps, Modal, props });
               modal.handleOpenModal({ ModalChildren, modalChildrenProps, Modal, props });
             }}
           >

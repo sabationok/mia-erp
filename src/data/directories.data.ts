@@ -2,10 +2,7 @@ import { DirProjectsProps } from 'components/Directories/DirProjects';
 import { iconId } from '../img/sprite';
 import { contractorsColumns, contractorsSearchParams } from './contractors.data';
 import {
-  CategoryFilterOpt,
-  CountFilterOpt,
   DirActivitiesProps,
-  DirBaseProps,
   DirBrandsProps,
   DirCategoriesProps,
   DirCountsProps,
@@ -25,29 +22,30 @@ import FormCreateContractor from '../components/Forms/FormCreateContractor';
 import { createDataForReq } from '../utils/dataTransform';
 import { ProductTypeEnum } from '../redux/products/products.types';
 import { ModalChildrenProps, Modals } from '../components/ModalProvider/Modals';
-import { FilterOpt } from '../components/ModalForm/ModalFilter';
 import { ContractorsTypesEnum } from '../redux/contractors/contractors.types';
-import { BusinessSubjectFilterOption, BusinessSubjectTypeEnum } from '../redux/companies/companies.types';
+import { BusinessSubjectTypeEnum } from '../redux/companies/companies.types';
 import { enumToFilterOptions } from '../utils/fabrics';
 import { CountsTypesEnum } from '../redux/directories/counts.types';
 import { CategoryTrTypeEnum } from '../redux/directories/directories.types';
 import { DirectoriesService } from '../hooks/useDirService.hook';
 import DirProperties, { dirPropertiesActionsCreator, DirPropertiesProps } from '../components/Directories/DirPoperties';
+import { IDirectoryListItem } from '../components/SideBarContent/Directories';
 
-export const categoriesFilterOptions: CategoryFilterOpt[] = enumToFilterOptions(CategoryTrTypeEnum);
-export const countsFilterOptions: CountFilterOpt[] = enumToFilterOptions(CountsTypesEnum);
+export const categoriesFilterOptions = enumToFilterOptions(CategoryTrTypeEnum);
+export const countsFilterOptions = enumToFilterOptions(CountsTypesEnum);
 export const productsFilterOptions = enumToFilterOptions(ProductTypeEnum);
 export const tagsFilterOptions = enumToFilterOptions(ContractorsTypesEnum);
-export const counterpartyFilterOptions: FilterOpt<ContractorsTypesEnum>[] = enumToFilterOptions(ContractorsTypesEnum);
-export const businessSubjectTypeFilterOptions: BusinessSubjectFilterOption[] =
-  enumToFilterOptions(BusinessSubjectTypeEnum);
+export const counterpartyFilterOptions = enumToFilterOptions(ContractorsTypesEnum);
+export const businessSubjectTypeFilterOptions = enumToFilterOptions(BusinessSubjectTypeEnum);
 
-export const getDirInTreeActionsCreator =
-  (
-    Modal: Modals = Modals.FormCreateDirTreeComp,
-    { createParentTitle, createChildTitle, updateItemTitle }: GetDirInTreeActionsCreatorOptions = {}
-  ): DirInTreeActionsCreatorType<ApiDirType, any, IDirItemBase, DirectoriesService> =>
-  ({ modalService, service, type, dirType, findById }) => {
+export const getDirInTreeActionsCreator = (
+  Modal: Modals = Modals.FormCreateDirTreeComp,
+  { createParentTitle, createChildTitle, updateItemTitle }: GetDirInTreeActionsCreatorOptions = {}
+): DirInTreeActionsCreatorType<ApiDirType, any, IDirItemBase, DirectoriesService> => {
+  console.log('getDirInTreeActionsCreator apply', Modal);
+
+  return ({ modalService, service, type, dirType, findById }) => {
+    console.log('actions creator apply', dirType);
     return {
       onCreateParent: () => {
         const modal = modalService.handleOpenModal({
@@ -137,18 +135,18 @@ export const getDirInTreeActionsCreator =
       },
     };
   };
+};
 
-export interface IDirectory<P extends DirBaseProps = any> {
-  title: string;
-  iconId: string;
-  ModalChildren: React.FC<P>;
-  modalChildrenProps: P;
-  disabled: boolean;
-}
+// export interface IDirectoryListItem<P extends DirBaseProps = any> {
+//   title: string;
+//   iconId: string;
+//   ModalChildren: React.FC<P>;
+//   modalChildrenProps: P;
+//   disabled: boolean;
+// }
 
 const CountsProps: DirCountsProps = {
   title: t('counts'),
-  filterOptions: countsFilterOptions,
   fillHeight: true,
   createParentTitle: t('createParentCount'),
   dirType: ApiDirType.COUNTS,
@@ -158,11 +156,12 @@ const CountsProps: DirCountsProps = {
   creatingParent: true,
   archiving: true,
   filterSearchPath: 'type',
-  filterDefaultValue: 'ACTIVE',
+  filterOptions: countsFilterOptions,
+  filterDefaultValue: CountsTypesEnum.ACTIVE,
   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCount),
 };
 
-const countsDir: IDirectory<DirCountsProps> = {
+const countsDir: IDirectoryListItem<any, DirCountsProps> = {
   title: CountsProps.title,
   iconId: iconId.wallet,
   ModalChildren: DirTreeComp,
@@ -181,12 +180,11 @@ const CategoriesProps: DirCategoriesProps = {
   createParentTitle: t('createParentCategory'),
   dirType: ApiDirType.CATEGORIES_TR,
   availableLevels: 2,
-
   filterSearchPath: 'type',
-  filterDefaultValue: 'INCOME',
+  filterDefaultValue: CategoryTrTypeEnum.INCOME,
   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCategory),
 };
-const trCategoriesDir: IDirectory<DirCategoriesProps> = {
+const trCategoriesDir: IDirectoryListItem<any, DirCategoriesProps> = {
   title: CategoriesProps.title,
   iconId: iconId.folder,
   ModalChildren: DirTreeComp,
@@ -208,7 +206,7 @@ const ProductCategoriesProps: DirProductCategoriesProps = {
   filterDefaultValue: ProductTypeEnum.GOODS,
   availableLevels: 5,
 };
-const prodCategoriesDir: IDirectory<DirProductCategoriesProps> = {
+const prodCategoriesDir: IDirectoryListItem<any, DirProductCategoriesProps> = {
   title: ProductCategoriesProps.title,
   iconId: iconId.folder,
   ModalChildren: DirTreeComp,
@@ -257,7 +255,7 @@ const ContractorsProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
     ],
   }),
 };
-const contractorsDir: IDirectory<DirTableCompProps> = {
+const contractorsDir: IDirectoryListItem<any, DirTableCompProps> = {
   title: ContractorsProps.title,
   iconId: iconId.partners,
   ModalChildren: DirTableComp,
@@ -271,7 +269,7 @@ const ProjectsProps: DirProjectsProps = {
   fillHeight: true,
   getTableSettings: ContractorsProps.getTableSettings,
 };
-const projectsDir: IDirectory<DirProjectsProps> = {
+const projectsDir: IDirectoryListItem<any, DirProjectsProps> = {
   title: ProjectsProps.title,
   iconId: iconId.assignment,
   ModalChildren: DirTableComp,
@@ -285,7 +283,7 @@ const MarksProps: DirMarksProps = {
   createParentTitle: t('createDirParentItem'),
   actionsCreator: getDirInTreeActionsCreator(),
 };
-const marksDir: IDirectory<DirMarksProps> = {
+const marksDir: IDirectoryListItem<any, DirMarksProps> = {
   title: MarksProps.title,
   iconId: iconId.bookMarkAdd,
   ModalChildren: DirTreeComp,
@@ -302,7 +300,7 @@ const dirTagsProps: DirTagsProps = {
   fillHeight: true,
   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateTag),
 };
-const tagsDir: IDirectory<DirTagsProps> = {
+const tagsDir: IDirectoryListItem<any, DirTagsProps> = {
   title: dirTagsProps.title,
   iconId: iconId.bookMarkAdd,
   ModalChildren: DirTreeComp,
@@ -317,7 +315,7 @@ const activitiesProps: DirActivitiesProps = {
   fillHeight: true,
   actionsCreator: getDirInTreeActionsCreator(),
 };
-const activitiesDir: IDirectory<DirActivitiesProps> = {
+const activitiesDir: IDirectoryListItem<any, DirActivitiesProps> = {
   title: activitiesProps.title,
   iconId: iconId.folder,
   ModalChildren: DirTreeComp,
@@ -332,7 +330,7 @@ const brandsProps: DirBrandsProps = {
   availableLevels: 1,
   actionsCreator: getDirInTreeActionsCreator(),
 };
-const brandsDir: IDirectory<DirBrandsProps> = {
+const brandsDir: IDirectoryListItem<any, DirBrandsProps> = {
   title: brandsProps.title,
   iconId: iconId.folder,
   ModalChildren: DirTreeComp,
@@ -349,7 +347,7 @@ const brandsDir: IDirectory<DirBrandsProps> = {
 //     createParentTitle: 'Create warehouse',
 //   }),
 // };
-// const variationsDir: IDirectory<DirVariationsTemplatesProps> = {
+// const variationsDir: IDirectoryListItem<any,DirVariationsTemplatesProps> = {
 //   title: variationsProps.title,
 //   iconId: iconId.storage,
 //   ModalChildren: DirTreeComp,
@@ -368,7 +366,7 @@ const prodPropertiesProps: DirPropertiesProps = {
   creatingChild: true,
   actionsCreator: dirPropertiesActionsCreator,
 };
-const prodPropertiesDir: IDirectory<DirPropertiesProps> = {
+const prodPropertiesDir: IDirectoryListItem<any, DirPropertiesProps> = {
   title: prodPropertiesProps.title,
   iconId: iconId.storage,
   ModalChildren: DirProperties,
@@ -384,7 +382,7 @@ const prodPropertiesDir: IDirectory<DirPropertiesProps> = {
 //   availableLevels: 1,
 //   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateDirTreeComp, 'Create warehouse'),
 // };
-// const warehousesDir: IDirectory<DirWarehousesProps> = {
+// const warehousesDir: IDirectoryListItem<DirWarehousesProps> = {
 //   title: warehousesProps.title,
 //   iconId: iconId.storage,
 //   ModalChildren: DirTreeComp,
@@ -392,7 +390,7 @@ const prodPropertiesDir: IDirectory<DirPropertiesProps> = {
 //   disabled: false,
 // };
 
-const directories: Partial<IDirectory>[] = [
+const directories: Partial<IDirectoryListItem>[] = [
   {
     title: 'Банківські рахунки',
     disabled: true,

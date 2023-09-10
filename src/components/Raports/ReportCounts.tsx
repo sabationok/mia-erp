@@ -5,8 +5,8 @@ import ModalForm from '../ModalForm';
 import { IReportBaseProps } from './report.types';
 import FlexBox from '../atoms/FlexBox';
 import { FilterOpt } from '../ModalForm/ModalFilter';
-import { enumToArray, founder, numberWithSpaces } from 'utils';
-import { CountsTypesEnum, CountType } from 'redux/directories/counts.types';
+import { numberWithSpaces } from 'utils';
+import { CountType } from 'redux/directories/counts.types';
 import { CurrencyCode } from '../../redux/transactions/transactions.types';
 import styled from 'styled-components';
 
@@ -48,10 +48,10 @@ const ReportCounts: React.FC<IReportCountsProps<CountType>> = ({ entryList, filt
 
     if (!entryList) return data;
 
-    enumToArray(CountsTypesEnum).map(key => {
-      data[key] = founder({ searchParam: 'type', searchQuery: key, data: entryList });
-      return '';
-    });
+    // enumToArray(CountsTypesEnum).map(key => {
+    //   data[key] = founder({ searchParam: 'type', searchQuery: key, data: entryList });
+    //   return '';
+    // });
 
     return data;
   }, [entryList]);
@@ -64,11 +64,7 @@ const ReportCounts: React.FC<IReportCountsProps<CountType>> = ({ entryList, filt
     <ModalForm {...props} preventFilter filterOptions={filterOptionsMemo} onOptSelect={handleSelect}>
       <FlexBox fillWidth flex={'1'}>
         {filterOpt.value && (
-          <ReportList
-            entryList={entryLists[filterOpt.value] || []}
-            totalAmount={countedTotals[filterOpt.value] || 0}
-            currency={currency}
-          />
+          <ReportList entryList={[]} totalAmount={countedTotals[filterOpt.value] || 0} currency={currency} />
         )}
 
         {!filterOpt.value && (

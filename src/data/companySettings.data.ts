@@ -2,13 +2,14 @@ import DirUsers, { DirUsersProps } from '../components/CompanySettings/DirUsers'
 import { usersDirColumns } from './usersDir.data';
 
 import DirCustomRoles, { DirCustomRolesProps } from '../components/CompanySettings/DirCustomRoles';
-import { getDirInTreeActionsCreator, IDirectory } from './directories.data';
+import { getDirInTreeActionsCreator } from './directories.data';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { iconId } from '../img/sprite';
 import FormCreateCustomRole from '../components/Forms/FormCreateCustomRole';
 import ModalForm from '../components/ModalForm';
 import DirMethods from '../components/CompanySettings/DirMethods';
 import { Modals } from '../components/ModalProvider/Modals';
+import { IDirectoryListItem } from '../components/SideBarContent/Directories';
 
 const UsersProps: DirUsersProps = {
   title: 'Користувачі',
@@ -113,7 +114,7 @@ const subCompanies = {
     fillWidth: true,
   },
 };
-export const comapnySettings: IDirectory[] = [
+export const comapnySettings: IDirectoryListItem[] = [
   subCompanies,
 
   {

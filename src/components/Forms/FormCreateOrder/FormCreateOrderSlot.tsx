@@ -13,10 +13,10 @@ import FlexBox from '../../atoms/FlexBox';
 import { IPriceListItem } from 'redux/priceManagement/priceManagement.types';
 import styled from 'styled-components';
 import { IProductVariation } from '../../TableVariations';
-import { IWarehouseDirItem } from '../../Directories/dir.types';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { isUndefined } from 'lodash';
 import { useWarehousesSelector } from 'redux/selectors.store';
+import { IWarehouse } from '../../../redux/warehouses/warehouses.types';
 
 export interface FormCreateOrderSlotItemProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<IOrderSlot>;
@@ -31,7 +31,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit,
   const warehouses = useWarehousesSelector().warehouses;
   const [selectedPrice, setSelectedPrice] = useState<IPriceListItem>();
   const [selectedVariation, setSelectedVariation] = useState<IProductVariation>();
-  const [selectedWarehouse, setSelectedWarehouse] = useState<IWarehouseDirItem | undefined>();
+  const [selectedWarehouse, setSelectedWarehouse] = useState<IWarehouse | undefined>();
   const [currentTab, setCurrentTab] = useState(1);
 
   const getData = useCallback(() => {

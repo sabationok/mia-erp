@@ -1,8 +1,6 @@
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import PriceListOverview, { PriceListOverviewProps } from '../Modals/Overviews/PriceListOverview';
 import ProductOverview, { ProductOverviewProps } from '../Modals/Overviews/ProductOverview';
-import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { IBaseDirItem } from '../Directories/dir.types';
 import OrderOverview, { OrderOverviewProps } from '../Modals/Overviews/OrderOverview';
 import SelectProductModal, { SelectProductModalProps } from '../Modals/SelectProductModal';
 import AppFilter, { AppFilterProps } from '../Filter/AppFilter';
@@ -36,6 +34,7 @@ export enum Modals {
   // * DIRECTORIES
   DirVariationsTemplate = 'DirVariationsTemplate',
   DirProperties = 'DirProperties',
+  // DirTreeComponent = 'DirTreeComponent',
 
   PriceListOverview = 'PriceListOverview',
   ProductOverview = 'ProductOverview',
@@ -73,7 +72,7 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   // * DIRECTORIES
   [Modals.DirVariationsTemplate]: DirVariationsTemplate,
   [Modals.DirProperties]: DirPoperties,
-
+  // [Modals.DirTreeComponent]: DirTreeComp,
   // * Modals props
   [Modals.OrderOverview]: OrderOverview,
   [Modals.PriceListOverview]: PriceListOverview,
@@ -87,11 +86,7 @@ export interface ModalChildrenProps extends Record<Modals, any> {
   [Modals.ModalForm]: ModalFormProps;
 
   // * Form props
-  [Modals.FormCreateDirTreeComp]: FormPropTypes.FormCreateDirTreeCompProps<
-    any,
-    ApiDirType,
-    IBaseDirItem<any, ApiDirType>
-  >;
+  [Modals.FormCreateDirTreeComp]: FormPropTypes.FormCreateDirTreeCompProps;
   [Modals.FormCreateActivity]: FormPropTypes.FormCreateCompanyActivityProps;
   [Modals.FormCreateContractor]: FormPropTypes.FormCreateContractorProps;
   [Modals.FormCreateTransaction]: FormPropTypes.FormCreateTransactionProps;
@@ -116,7 +111,7 @@ export interface ModalChildrenProps extends Record<Modals, any> {
   // * DIRECTORIES
   [Modals.DirProperties]: DirPropertiesProps;
   [Modals.DirVariationsTemplate]: DirVariationsTemplateProps;
-
+  // [Modals.DirTreeComponent]: IDirInTreeProps;
   // * Modals props
 
   [Modals.OrderOverview]: OrderOverviewProps;

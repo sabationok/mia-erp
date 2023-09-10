@@ -2,14 +2,30 @@ import { ITableAction, ITableListContext } from '../components/TableList/tableTy
 import { IModalProviderContext, useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { WarehousesService } from './useWarehousesService.hook';
-import { IWarehouse } from '../redux/warehouses/warehouses.types';
+import { IWarehouse, IWarehouseReqData } from '../redux/warehouses/warehouses.types';
 import { Modals } from '../components/ModalProvider/Modals';
 import { ApiDirType } from '../redux/APP_CONFIGS';
+import { IWarehouseFormData } from '../components/Forms/FormCreateWarehouse';
 
 export type WarehouseActionCreatorOptions = {
   ctx: ITableListContext<IWarehouse>;
   service: WarehousesService;
   modalService: IModalProviderContext;
+};
+const createWarehouseReqData = (data: IWarehouseFormData, _id?: string): IWarehouseReqData => {
+  const reqData = {
+    data: {
+      label: data?.label!,
+    },
+  };
+  if (_id) {
+    return {
+      ...reqData,
+      _id,
+    };
+  }
+
+  return reqData;
 };
 
 export type WarehouseActionGenerator = (options: WarehouseActionCreatorOptions) => ITableAction;
@@ -26,7 +42,7 @@ const createNewWarehouseAction: WarehouseActionGenerator = ({ service, modalServ
           dirType: ApiDirType.WAREHOUSES,
           onSubmit: (data, o) => {
             service.create({
-              data: { data },
+              data: createWarehouseReqData(data, ctx?.selectedRow?._id),
               onLoading: ctx.onRefresh,
               onSuccess: () => {
                 if (o?.closeAfterSave && modal?.onClose) {
@@ -44,13 +60,23 @@ const editWarehouseAction: WarehouseActionGenerator = ({ service, modalService, 
   return {
     icon: 'edit',
     onClick: () => {
-      modalService.handleOpenModal({
+      const m = modalService.handleOpenModal({
         Modal: Modals.FormCreateWarehouse,
         props: {
           edit: true,
           title: 'Оновити дані складу',
           dirType: ApiDirType.WAREHOUSES,
-          onSubmit: (d, o) => {},
+          onSubmit: (data, o) => {
+            service.create({
+              data: createWarehouseReqData(data, ctx?.selectedRow?._id),
+              onLoading: ctx.onRefresh,
+              onSuccess: () => {
+                if (o?.closeAfterSave && m?.onClose) {
+                  m?.onClose();
+                }
+              },
+            });
+          },
         },
       });
     },

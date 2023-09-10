@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
-import DirListItem, { DirListItemAddsProps } from './DirListItem';
+import DirListItem from './DirListItem';
 import styled from 'styled-components';
-import { IBaseDirItem } from '../dir.types';
+import { IDirItemBase } from '../dir.types';
 
-export interface DirListProps<T = any> extends Partial<DirListItemAddsProps> {
-  list: IBaseDirItem<T>[];
-  entryList?: IBaseDirItem<T>[];
-  parent?: T;
+export interface DirListProps {
+  list: IDirItemBase[];
+  entryList?: IDirItemBase[];
+  parent?: IDirItemBase;
   onCreateParent?: (...args: any[]) => void;
   createParentTitle?: string;
   currentLevel?: number;
@@ -14,9 +14,17 @@ export interface DirListProps<T = any> extends Partial<DirListItemAddsProps> {
   listBoxProps?: React.HTMLAttributes<HTMLDivElement>;
   listProps?: React.HTMLAttributes<HTMLUListElement>;
   availableLevels?: number;
+
+  editing?: boolean;
+  creatingParent?: boolean;
+  creatingChild?: boolean;
+  disabling?: boolean;
+  archiving?: boolean;
+  changeDisableStatus?: boolean;
+  changeArchiveStatus?: boolean;
 }
 
-const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLDivElement>> = ({
+const DirList: React.FC<DirListProps> = ({
   entryList,
   list,
 
@@ -45,13 +53,13 @@ const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLDivElement>> = (
   );
 
   return (
-    <ListBox {...listBoxProps} style={{ ...listBoxProps?.style, padding: '0 12px' }}>
+    <ListBox {...listBoxProps} style={{ ...listBoxProps?.style, padding: '0 ' }}>
       {listForRender.length > 0 ? (
         <List
           {...listProps}
           style={{
             ...listProps?.style,
-            padding: '12px 0',
+            padding: '12px',
           }}
         >
           {renderList}

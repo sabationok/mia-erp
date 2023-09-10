@@ -34,7 +34,7 @@ const usePriceManagementService = (): PriceManagementService => {
   const dispatch: AppDispatch = useAppDispatch();
 
   return useMemo((): PriceManagementService => {
-    const { getPriceListById, getAllItems } = PriceManagementApi;
+    const { getAllItems } = PriceManagementApi;
     return {
       createList: arg => dispatch(thunks.createPriceListThunk(defaultThunkPayload(arg))),
       getAll: arg => dispatch(thunks.getAllPriceListsThunk(defaultThunkPayload(arg))),

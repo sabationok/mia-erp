@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import ModalForm from 'components/ModalForm';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
-import { DirInTreeActionsCreatorType, IBaseDirItem, IDirInTreeProps } from './dir.types';
+import { DirInTreeActionsCreatorType, IDirInTreeProps, IDirItemBase } from './dir.types';
 import { useFilteredLisData } from 'hooks';
 
 import { FilterOpt } from '../ModalForm/ModalFilter';
@@ -29,7 +29,6 @@ type LevelType = { isGroup?: boolean; isProperty?: boolean; isValue?: boolean };
 export interface DirPropertiesProps
   extends IDirInTreeProps<
     ApiDirType.PROPERTIES_PRODUCTS,
-    ProductTypeEnum,
     IPropertyDto,
     IPropertyDto,
     IProperty,
@@ -60,7 +59,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
     value && setCurrent(value);
   }
 
-  const fList = useFilteredLisData<IBaseDirItem>({
+  const fList = useFilteredLisData<IDirItemBase>({
     searchParam: filterSearchPath,
     searchQuery: current,
     data: properties,

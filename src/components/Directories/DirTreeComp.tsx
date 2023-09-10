@@ -1,29 +1,29 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import ModalForm from 'components/ModalForm';
-import DirList from './DirList/DirList';
-import { useModalProvider } from 'components/ModalProvider/ModalProvider';
-import { IBaseDirItem, IDirInTreeProps } from './dir.types';
-import { useDirService, useFilteredLisData } from 'hooks';
-
-import { FilterOpt } from '../ModalForm/ModalFilter';
-import { useDirectoriesSelector } from '../../redux/selectors.store';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
+import ModalForm from '../ModalForm';
+import { useCallback, useMemo, useState } from 'react';
+import { useModalProvider } from '../ModalProvider/ModalProvider';
+import { useDirService, useFilteredLisData } from '../../hooks';
+import { useDirectoriesSelector } from '../../redux/selectors.store';
+import { FilterOpt } from '../ModalForm/ModalFilter';
+import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import DirListItem from './DirList/DirListItem';
+import FlexBox from '../atoms/FlexBox';
 
-const DirTreeComp: React.FC<IDirInTreeProps> = ({
+const DirTreeComp = ({
   createParentTitle,
   dirType,
   filterSearchPath,
   filterDefaultValue,
   actionsCreator,
   availableLevels,
+
   ...props
-}) => {
+}: any) => {
   const { directory } = useDirectoriesSelector(dirType);
   const service = useDirService();
-  const findById = useCallback((id: string) => directory.find(el => el._id === id), [directory]);
   const modalService = useModalProvider();
   const [current, setCurrent] = useState(filterDefaultValue);
+  const findById = useCallback((id: string) => directory.find(el => el._id === id), [directory]);
 
   const actions = useMemo(
     () =>
@@ -39,15 +39,20 @@ const DirTreeComp: React.FC<IDirInTreeProps> = ({
   );
 
   function handleFilterData({ value }: FilterOpt) {
-    console.log('DirTreeComp handleFilterData apply');
     value && setCurrent(value);
   }
 
-  const fList = useFilteredLisData<IBaseDirItem>({
+  const fList = useFilteredLisData({
     searchParam: filterSearchPath,
     searchQuery: current,
     data: directory,
   });
+
+  const renderList = useMemo(() => {
+    return fList.map((item, index) => {
+      return <DirListItem key={`${dirType}_${item._id}`} item={item} list={item?.childrenList} />;
+    });
+  }, [dirType, fList]);
 
   return (
     <ModalForm
@@ -57,20 +62,16 @@ const DirTreeComp: React.FC<IDirInTreeProps> = ({
       extraFooter={
         actions?.onCreateParent && (
           <CreateParent>
-            <ButtonIcon variant="outlinedSmall" onClick={() => actions?.onCreateParent && actions.onCreateParent()}>
+            <ButtonIcon variant="outlinedSmall" onClick={() => actions.onCreateParent()}>
               {createParentTitle || 'Create parent'}
             </ButtonIcon>
           </CreateParent>
         )
       }
     >
-      <DirList
-        list={fList}
-        currentLevel={0}
-        availableLevels={availableLevels}
-        createParentTitle={createParentTitle}
-        {...actions}
-      />
+      <FlexBox padding={'12px'} overflow={'auto'} gap={8}>
+        {renderList}
+      </FlexBox>
     </ModalForm>
   );
 };

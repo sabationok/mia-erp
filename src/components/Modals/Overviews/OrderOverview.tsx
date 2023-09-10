@@ -116,7 +116,7 @@ const orderCustomerInfo: OrderInfoBoxProps[] = [
     getData: o =>
       !o.customer?.label ? `${o.customer?.name || ''} ${o.customer?.secondName || ''}` : `${o.customer?.label || ''}`,
   },
-  { label: 'Статус', getData: o => o.customer?.status },
+  // { label: 'Статус', getData: o => o.customer?.status },
   { label: 'Телефон', getData: o => o.customer?.phone },
   { label: 'Емейл', getData: o => o.customer?.email },
   { label: 'Спосіб комунікації', getData: o => o.customerCommunicationMethod?.label },
@@ -128,7 +128,7 @@ const orderReceiverInfo: OrderInfoBoxProps[] = [
     getData: o =>
       !o.receiver?.label ? `${o.receiver?.name || ''} ${o.receiver?.secondName || ''}` : `${o.receiver?.label || ''}`,
   },
-  { label: 'Статус', getData: o => o.receiver?.status },
+  // { label: 'Статус', getData: o => o.receiver?.status },
   { label: 'Телефон', getData: o => o.receiver?.phone },
   { label: 'Емейл', getData: o => o.receiver?.email },
   { label: 'Спосіб комунікації', getData: o => o.receiverCommunicationMethod?.label },
@@ -143,7 +143,7 @@ const orderShipmentInfo: OrderInfoBoxProps[] = [
     getData: o =>
       !o.receiver?.label ? `${o.receiver?.name || ''} ${o.receiver?.secondName || ''}` : `${o.receiver?.label || ''}`,
   },
-  { label: 'Статус', getData: o => o.receiver?.status },
+  // { label: 'Статус', getData: o => o.receiver?.status },
   { label: 'Телефон', getData: o => o.receiver?.phone },
   { label: 'Емейл', getData: o => o.receiver?.email },
   { label: 'Спосіб комунікації', getData: o => o.receiverCommunicationMethod?.label },

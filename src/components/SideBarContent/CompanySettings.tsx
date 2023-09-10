@@ -2,14 +2,14 @@ import * as React from 'react';
 import styled from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
-import { IDirectory } from './Directories';
+import { IDirectoryListItem } from './Directories';
 
 export interface IDirectoriesProps {
-  options: IDirectory[];
+  options: IDirectoryListItem[];
 }
 
 export interface Props {
-  options: IDirectory[];
+  options: IDirectoryListItem[];
 }
 const CompanySettings: React.FC<Props> = ({ options }) => {
   const modal = useModalProvider();

@@ -79,6 +79,8 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
       Modal,
       props,
     }: IModalRenderItemParams<M, P, S>): OpenModalReturnType => {
+      console.log('handleOpenModal', { ModalChildren, modalChildrenProps, settings, Modal, props });
+
       try {
         if (ModalChildren && (typeof ModalChildren === 'function' || typeof ModalChildren === 'object')) {
           const id = `${ModalChildren.name}_${nanoid(8)}`;

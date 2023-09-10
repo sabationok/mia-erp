@@ -1,5 +1,5 @@
 import ModalForm from 'components/ModalForm';
-import { CategoryTypes, ICategory, ICategoryFormData } from 'redux/directories/directories.types';
+import { ICategory, ICategoryFormData } from 'redux/directories/directories.types';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import * as yup from 'yup';
@@ -11,8 +11,10 @@ import t from '../../lang';
 import { DirectoriesFormProps } from '../Directories/dir.types';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { useAppForm } from '../../hooks';
+import { ApiDirType } from '../../redux/APP_CONFIGS';
 
-export interface FormCreateCategoryProps extends DirectoriesFormProps<CategoryTypes, ICategory, ICategoryFormData> {}
+export interface FormCreateCategoryProps
+  extends DirectoriesFormProps<ApiDirType.CATEGORIES_PROD, ICategory, ICategoryFormData> {}
 
 const validation = yup.object().shape({
   label: yup.string().required(),

@@ -2,8 +2,7 @@ import { ApiDirType } from '../APP_CONFIGS';
 import { IDirItemBase } from '../../components/Directories/dir.types';
 import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../companies/companies.types';
 
-export interface IContractor<T extends ContractorsTypesEnum = any>
-  extends IDirItemBase<ApiDirType.CONTRACTORS, ContractorsTypesEnum> {
+export interface IContractor<T extends ContractorsTypesEnum = any> extends IDirItemBase<ApiDirType.CONTRACTORS> {
   type: T;
   name?: string;
   fullName?: string;

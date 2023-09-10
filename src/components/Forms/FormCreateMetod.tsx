@@ -1,8 +1,10 @@
 import {
   DirectoriesFormProps,
   ICommunicationDirItem,
+  IDirItemBase,
   IPaymentDirItem,
   IShipmentDirItem,
+  MethodDirType,
 } from '../Directories/dir.types';
 import ModalForm from '../ModalForm';
 
@@ -16,15 +18,8 @@ import React from 'react';
 import { useAppForm } from '../../hooks';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import { ApiDirType } from '../../redux/APP_CONFIGS';
 
-export interface FormCreateMethodProps
-  extends DirectoriesFormProps<
-    any,
-    IPaymentDirItem | IShipmentDirItem | ICommunicationDirItem,
-    IMethodFormData,
-    ApiDirType.METHODS_PAYMENT | ApiDirType.METHODS_SHIPMENT | ApiDirType.METHODS_COMMUNICATION
-  > {}
+export interface FormCreateMethodProps extends DirectoriesFormProps<MethodDirType, IDirItemBase, IMethodFormData> {}
 
 export interface IMethodFormData
   extends Omit<

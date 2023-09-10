@@ -1,8 +1,8 @@
 import { AppResponse } from '../global.types';
-import { IBaseDirItem } from '../../components/Directories/dir.types';
+import { IDirItemBase } from '../../components/Directories/dir.types';
 import { ApiDirType } from '../APP_CONFIGS';
 
-export interface ICount extends IBaseDirItem<CountType, ApiDirType.COUNTS> {
+export interface ICount extends IDirItemBase<ApiDirType.COUNTS> {
   balance?: number;
   code?: number | string;
 }
@@ -12,7 +12,7 @@ export enum CountsTypesEnum {
   ACTIVE = 'ACTIVE',
 }
 
-export type CountType = keyof typeof CountsTypesEnum;
+export type CountType = keyof typeof CountsTypesEnum | CountsTypesEnum;
 
 export interface ICountFormData extends Omit<ICount, '_id' | 'createdAt' | 'updatedAt' | 'parent'> {
   parent?: ICount;

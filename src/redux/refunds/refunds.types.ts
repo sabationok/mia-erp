@@ -18,9 +18,9 @@ import {
   IPaymentDirItem,
   IShipmentDirItem,
   ISupplierDirItem,
-  IWarehouseDirItem,
 } from '../../components/Directories/dir.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
+import { IWarehouse } from '../warehouses/warehouses.types';
 
 export type RefundTypeFilterOption = FilterOpt;
 export enum RefundTypeEnum {
@@ -41,9 +41,9 @@ export interface IRefundSlot extends IPriceListItem {
   owner: ICompany;
   order?: OnlyUUID;
 
-  origin?: Partial<IPriceListItem>;
+  origin?: IPriceListItem;
   status?: RefundStatus;
-  warehouse?: IWarehouseDirItem;
+  warehouse?: IWarehouse;
   supplier?: ISupplierDirItem;
 }
 export interface IRefund extends IBase {

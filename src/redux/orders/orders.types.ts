@@ -12,9 +12,10 @@ import { AppResponse, IBase, OnlyUUID } from '../global.types';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
 import { ICompany } from '../companies/companies.types';
 import { IManager } from '../auth/auth.types';
-import { IPaymentDirItem, ISupplierDirItem, IWarehouseDirItem } from '../../components/Directories/dir.types';
+import { IPaymentDirItem, ISupplierDirItem } from '../../components/Directories/dir.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 import { IContractor } from '../contractors/contractors.types';
+import { IWarehouse } from '../warehouses/warehouses.types';
 
 export type OrderTypeFilterOption = FilterOpt;
 export enum OrderTypeEnum {
@@ -37,7 +38,7 @@ export interface IOrderSlot extends IPriceListItem {
 
   origin?: Partial<IPriceListItem>;
   status?: OrderStatus;
-  warehouse?: IWarehouseDirItem;
+  warehouse?: IWarehouse;
   supplier?: ISupplierDirItem;
 }
 export interface IOrder extends IBase {
