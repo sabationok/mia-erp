@@ -56,9 +56,10 @@ export type OnHeadCheckBoxChangeHandler<V = any> = (data: V) => any;
 
 export interface ITableListProps<TDataType = any> {
   tableTitles?: CellTittleProps<TDataType>[];
+  tableData?: TDataType[];
   tableSearchParams?: SelectItem[];
   tableSortParams?: SelectItem[];
-  tableData?: TDataType[];
+  transformData?: <T = any>(data: TDataType) => T;
   RowActionsComp?: React.ReactNode;
   tableActions?: TableActionsProps<TDataType>;
   TableActionsComp?: React.ReactNode;

@@ -23,6 +23,7 @@ import { productsFilterOptions } from '../../data/directories.data';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useProductsSelector } from '../../redux/selectors.store';
 import { IProperty, IPropertyDto } from '../../redux/products/properties.types';
+import { ToastService } from '../../services';
 
 type LevelType = { isGroup?: boolean; isProperty?: boolean; isValue?: boolean };
 
@@ -66,13 +67,14 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   });
 
   useEffect(() => {
+    const close = () => setTimeout(ToastService.createToastLoader('Loading properties...'), 1000);
     service
       .getAllProperties({
         data: { params: { createTreeData: true } },
         // onSuccess: setLoadedData,
         onLoading: setLoading,
       })
-      .then();
+      .finally(close);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

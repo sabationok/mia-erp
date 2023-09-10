@@ -6,11 +6,11 @@ export interface ModalFormFilterProps<V = any, D = any> {
   defaultOption?: number | FilterOpt<V, D> | V;
   getDefaultValue?: (opt: FilterOpt<V, D>) => number;
   preventFilter?: boolean;
-  onOptSelect?: FilterOptionSelectHandler<V, D>;
-  filterOptions?: FilterOpt<V, D>[];
+  onOptSelect?: FilterSelectHandler<V, D>;
+  filterOptions?: FilterOption<V, D>[];
   defaultFilterValue?: string;
 }
-export interface IFilterOptionBase {}
+
 export interface FilterOpt<V = any, D = any> extends Record<string, any> {
   _id?: string;
   label: string;
@@ -22,12 +22,10 @@ export interface FilterOpt<V = any, D = any> extends Record<string, any> {
   getLabel?: (data?: D) => string | React.ReactNode;
   disabled?: boolean;
 }
+export type FilterOptionSelectHandler<V = any, D = any> = (option: FilterOpt<V, D>, value: V, index: number) => void;
 
-export type FilterOptionSelectHandler<V = any, D = any> = (
-  option: FilterOpt<V, D>,
-  value: FilterOpt['value'],
-  index: number
-) => void;
+export interface FilterOption<V = any, D = any> extends FilterOpt<V, D> {}
+export type FilterSelectHandler<V = any, D = any> = (option: FilterOption<V, D>, value: V, index: number) => void;
 
 const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivElement>> = ({
   filterOptions,

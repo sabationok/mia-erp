@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import FlexBox from '../atoms/FlexBox';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { useProductsSelector } from '../../redux/selectors.store';
+import { useProductsSelector, usePropertiesSelector } from '../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { useCallback, useMemo } from 'react';
 import { Text } from '../atoms/Text';
@@ -11,13 +11,7 @@ import { useForm } from 'react-hook-form';
 import { createVariationFormData, createVariationReqData } from '../../utils/dataTransform';
 import { IVariation } from '../../redux/products/variations.types';
 import { OnlyUUID } from '../../redux/global.types';
-
-export interface FormVariationBaseProps {
-  onSubmit?: AppSubmitHandler<IVariationFormData>;
-
-  create?: boolean;
-  update?: string;
-}
+import { ToastService } from '../../services';
 
 export interface FormVariationProps extends OverlayHandlerReturn {
   onSubmit?: AppSubmitHandler<IVariationFormData>;
@@ -29,7 +23,8 @@ export interface FormVariationProps extends OverlayHandlerReturn {
   defaultState?: IVariation;
 }
 export interface IVariationFormData {
-  properties: Record<string, string>;
+  propertiesMap: Record<string, string>;
+  price?: OnlyUUID;
   product?: OnlyUUID;
   timeFrom?: string | number | Date;
   timeTo?: string | number | Date;
@@ -37,34 +32,25 @@ export interface IVariationFormData {
 const FormVariation: React.FC<FormVariationProps> = ({ onClose, defaultState, onSubmit, update, create, ...props }) => {
   const product = useProductsSelector().currentProduct;
   const service = useAppServiceProvider()[ServiceName.products];
+  const templates = usePropertiesSelector();
 
-  const defaultFormState = useMemo(() => {
-    if (defaultState) {
-      return createVariationFormData(defaultState);
-    }
-    const dataForUpdate = product?.variations?.find(variation => variation._id === update);
-    return dataForUpdate ? createVariationFormData(dataForUpdate) : {};
-  }, [defaultState, product?.variations, update]);
+  defaultState && console.log('FormVariationProps defaultState', defaultState);
 
-  const { setValue, watch, handleSubmit, ...form } = useForm<IVariationFormData>({ defaultValues: defaultFormState });
+  const { setValue, watch, handleSubmit, ...form } = useForm<IVariationFormData>({
+    defaultValues: defaultState ? createVariationFormData({ ...defaultState, product }) : { product },
+  });
   const formValues = watch();
+
+  const template = useMemo(() => {
+    const pr = defaultState?.product || product;
+
+    return templates.find(t => t._id === pr?.template?._id);
+  }, [defaultState?.product, product, templates]);
+
+  formValues && console.log('FormVariationProps formValues', formValues);
 
   const onValid = useCallback(
     (data: IVariationFormData) => {
-      if (create) {
-        service
-          .createVariation({
-            data: createVariationReqData(data),
-            onSuccess: data => {
-              console.log('createVariation onSuccess', data);
-              onClose && onClose();
-            },
-            onError: e => {
-              console.log(e);
-            },
-          })
-          .then();
-      }
       if (update) {
         service
           .updateVariationById({
@@ -79,22 +65,36 @@ const FormVariation: React.FC<FormVariationProps> = ({ onClose, defaultState, on
             },
           })
           .then();
+      } else {
+        service
+          .createVariation({
+            data: createVariationReqData(data),
+            onSuccess: data => {
+              console.log('createVariation onSuccess', data);
+              onClose && onClose();
+            },
+            onError: e => {
+              console.log(e);
+              ToastService.error('createVariation error');
+            },
+          })
+          .then();
       }
 
       onSubmit && onSubmit(data);
     },
-    [create, onClose, onSubmit, service, update]
+    [onClose, onSubmit, service, update]
   );
 
   const handleSelect = useCallback(
     (parentId: string, id: string) => {
-      setValue(`properties.${parentId}`, id);
+      setValue(`propertiesMap.${parentId}`, id);
     },
     [setValue]
   );
 
   const renderTemplate = useMemo(() => {
-    return product?.template?.childrenList?.map(prop => {
+    return template?.childrenList?.map(prop => {
       return (
         <PropertyBox key={`property-${prop._id}`} gap={8} fillWidth padding={'8px 0 0'}>
           <Text style={{ flex: 1, paddingLeft: 12 }} $weight={500}>
@@ -102,26 +102,26 @@ const FormVariation: React.FC<FormVariationProps> = ({ onClose, defaultState, on
           </Text>
 
           <FlexBox fillWidth padding={'8px 0'} fxDirection={'row'} gap={6} flexWrap={'wrap'}>
-            {prop.childrenList?.map(value => (
-              <ValueTag
-                key={`prop-value-${value._id}`}
-                variant={
-                  formValues?.properties && formValues?.properties[prop._id] === value._id
-                    ? 'filledSmall'
-                    : 'outlinedSmall'
-                }
-                padding={'6px 8px'}
-                fontWeight={500}
-                onClick={() => handleSelect(prop._id, value._id)}
-              >
-                {value.label}
-              </ValueTag>
-            ))}
+            {prop.childrenList?.map(value => {
+              const isActive = formValues?.propertiesMap && formValues?.propertiesMap[prop._id] === value._id;
+
+              return (
+                <ValueTag
+                  key={`prop-value-${value._id}`}
+                  variant={isActive ? 'filledSmall' : 'outlinedSmall'}
+                  padding={'6px 8px'}
+                  fontWeight={500}
+                  onClick={() => handleSelect(prop._id, value._id)}
+                >
+                  {value.label}
+                </ValueTag>
+              );
+            })}
           </FlexBox>
         </PropertyBox>
       );
     });
-  }, [formValues, handleSelect, product?.template?.childrenList]);
+  }, [formValues, handleSelect, template?.childrenList]);
 
   return (
     <FormContainer onSubmit={handleSubmit(onValid)}>

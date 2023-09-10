@@ -27,7 +27,7 @@ export interface IProductBase extends IBase {
   author?: IUser;
   editor?: IUser;
 
-  label: string;
+  label?: string;
   sku?: string;
   barCode?: string;
   qrCode?: string;

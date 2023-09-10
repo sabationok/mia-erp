@@ -25,6 +25,10 @@ export const useTransactionsSelector = (): ITransactionsState =>
 
 export const useProductsSelector = () =>
   useSelector<RootState, IProductsState>((state: RootState): IProductsState => state.products);
+export const usePropertiesSelector = () =>
+  useSelector<RootState, IProductsState['properties']>(
+    (state: RootState): IProductsState['properties'] => state.products.properties
+  );
 export const useOrdersSelector = () =>
   useSelector<RootState, IOrdersState>((state: RootState): IOrdersState => state.orders);
 export const useRefundsSelector = () =>

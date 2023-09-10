@@ -1,15 +1,38 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { IVariationTemplate } from '../redux/products/properties.types';
-import { IVariation } from '../redux/products/variations.types';
 import t from '../lang';
+import { IVariation, IVariationTableData, VariationPropertiesMap } from '../redux/products/variations.types';
+
+export const transformVariationTableData = (variation: IVariation): IVariationTableData => {
+  let propertiesMap: VariationPropertiesMap = {};
+
+  variation.properties?.map(value => {
+    if (value.parent?._id) {
+      propertiesMap = { ...propertiesMap, [value.parent?._id]: value };
+    }
+    return value;
+  });
+
+  return { ...variation, propertiesMap };
+};
 
 export function createTableTitlesFromTemplate(
   template?: IVariationTemplate
-): CellTittleProps<IVariation>[] | undefined {
+): CellTittleProps<IVariationTableData>[] | undefined {
   if (template && template?.childrenList) {
     const titles = template?.childrenList?.map(p => {
-      const title: CellTittleProps<IVariation> = {
-        top: { name: p?.label || '---' },
+      const title: CellTittleProps<IVariationTableData> = {
+        top: {
+          name: p?.label || '---',
+          dataKey: p?._id,
+          getData: (rd, t) => {
+            if (t?.top?.dataKey && rd.propertiesMap[t?.top?.dataKey]) {
+              const value = rd.propertiesMap[t?.top?.dataKey];
+              return value?.label;
+            }
+            return '---';
+          },
+        },
         width: `${(p?.label && p?.label.length * 10 > 120 ? p?.label.length * 10 : 120) + 20}px`,
         action: 'valueByPath',
       };
@@ -34,7 +57,6 @@ export function createTableTitlesFromTemplate(
         width: '150px',
         action: 'valueByPath',
       },
-
       {
         top: {
           name: t('timeTo'),

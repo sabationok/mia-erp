@@ -5,9 +5,10 @@ import { IconIdType } from '../../../img/sprite/iconId.data';
 import { IBase } from '../../../redux/global.types';
 
 export type CellTitleContent<DataType = any, DataPath extends string = any> = {
+  _id?: string;
   name: string;
   action?: string;
-  dataKey?: string;
+  dataKey?: keyof DataType | string;
   nestedDataKey?: string;
   def?: string;
   sort?: boolean;
@@ -53,11 +54,11 @@ const CellTitle: React.FC<CellTittleProps & React.HTMLAttributes<HTMLDivElement>
     <StCellHead width={width} onClick={onClick} {...props}>
       <Wrapper>
         <Top align={top.align} title={top?.description || top.name}>
-          <span className="inner">{top.name || top.dataKey}</span>
+          <span className="inner">{top.name}</span>
         </Top>
 
         <Bottom align={bottom?.align} title={bottom?.description || bottom?.name}>
-          {(bottom?.name || bottom?.dataKey) && <span className="inner">{bottom?.name || bottom?.dataKey}</span>}
+          {(bottom?.name || bottom?.dataKey) && <span className="inner">{bottom?.name}</span>}
         </Bottom>
       </Wrapper>
 

@@ -7,10 +7,9 @@ import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
 import { AppQueryParams, createApiCall } from 'api';
 import ProductsApi from '../api/products.api';
 import PropertiesApi from '../api/properties.api';
-import VariationsApi from '../api/variations.api';
 import { IProperty, IPropertyReqData } from '../redux/products/properties.types';
 import { createPropertyThunk, getAllPropertiesThunk } from '../redux/products/properties.thunks';
-import { createVariationThunk } from '../redux/products/variations.thunks';
+import { createVariationThunk, getAllVariationsByProductIdThunk } from '../redux/products/variations.thunks';
 import { IVariation, IVariationReqData } from '../redux/products/variations.types';
 
 export interface ProductsService {
@@ -31,7 +30,10 @@ export interface ProductsService {
 
   createVariation: ServiceDispatcherAsync<IVariationReqData, IVariation>;
   updateVariationById: ServiceDispatcherAsync<IVariationReqData, IVariation>;
-  getAllVariationsByProductId: ServiceApiCaller<{ product: OnlyUUID; params?: AppQueryParams }, IVariation[]>;
+  getAllVariationsByProductId: ServiceDispatcherAsync<
+    { product: OnlyUUID; params?: AppQueryParams; refreshCurrent?: boolean },
+    IVariation[]
+  >;
   // deleteVariationById: ServiceApiCaller<IVariationReqData, IVariation>;
   // getVariationById: ServiceApiCaller<IVariationReqData, IVariation>;
   // getAllVariations: ServiceApiCaller<IVariationReqData, IVariation[]>;
@@ -59,8 +61,7 @@ const useProductsService = (): ProductsService => {
       // createVariation: args => createApiCall(defaultApiCallPayload(args), VariationsApi.create, VariationsApi),
       createVariation: args => dispatch(createVariationThunk(defaultThunkPayload(args))),
       updateVariationById: args => dispatch(createVariationThunk(defaultThunkPayload(args))),
-      getAllVariationsByProductId: args =>
-        createApiCall(defaultApiCallPayload(args), VariationsApi.getAllByProductId, VariationsApi),
+      getAllVariationsByProductId: args => dispatch(getAllVariationsByProductIdThunk(defaultThunkPayload(args))),
 
       // getAllVariationsByProductId: args => dispatch(getAllVariationsByProductIdThunk(defaultThunkPayload(args))),
     };

@@ -354,7 +354,7 @@ const brandsDir: IDirectoryListItem<any, DirBrandsProps> = {
 
 const prodPropertiesProps: DirPropertiesProps = {
   title: t(ApiDirType.PROPERTIES_PRODUCTS),
-  createParentTitle: 'Create product property',
+  createParentTitle: 'Create properties group',
   dirType: ApiDirType.PROPERTIES_PRODUCTS,
   fillHeight: true,
   filterOptions: productsFilterOptions,

@@ -2,7 +2,7 @@ import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { IProduct } from './products.types';
 import { createProductThunk, getAllProductsThunk, getProductFullInfoThunk } from './products.thunks';
-import { createVariationThunk } from './variations.thunks';
+import { createVariationThunk, getAllVariationsByProductIdThunk } from './variations.thunks';
 import { IVariationTemplate } from './properties.types';
 import { createPropertyThunk, getAllPropertiesThunk } from './properties.thunks';
 
@@ -64,6 +64,11 @@ export const productsSlice = createSlice({
         }
 
         s?.currentProduct?.variations?.unshift(a.payload);
+      })
+      .addCase(getAllVariationsByProductIdThunk.fulfilled, (s, a) => {
+        if (a.payload?.refreshCurrent) {
+          s.currentProduct = { ...(s.currentProduct as IProduct), variations: a.payload.data };
+        }
       })
       .addMatcher(inPending, s => {
         s.isLoading = true;

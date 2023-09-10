@@ -36,7 +36,6 @@ export const usePageCurrentProduct = () => useContext(PageCurrentProductCTX) as 
 
 const PageCurrentProductProvider: React.FC<PageCurrentProductProviderProps> = ({ children }) => {
   const { currentProduct } = useProductsSelector();
-
   const [overlayStack, setOverlayStack] = useState<OverlayStackItemData[]>([]);
 
   const handleRemoveStackItem = useCallback((id: string) => {
@@ -92,7 +91,7 @@ const PageCurrentProductProvider: React.FC<PageCurrentProductProviderProps> = ({
       handleRemoveStackItem,
       getOverlayStack,
     }),
-    [createOverlayComponent, currentProduct, handleRemoveStackItem, overlayStack]
+    [createOverlayComponent, currentProduct, getOverlayStack, handleRemoveStackItem, overlayStack]
   );
 
   return <PageCurrentProductCTX.Provider value={CTX}>{children}</PageCurrentProductCTX.Provider>;

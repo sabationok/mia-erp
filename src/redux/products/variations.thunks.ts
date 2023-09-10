@@ -14,9 +14,12 @@ export const createVariationThunk = createAsyncThunk<
 
   try {
     const res = await VariationsApi.create(args.data);
-    args?.onLoading && args?.onLoading(false);
-    args?.onSuccess && args?.onSuccess(res?.data?.data);
+    if (res) {
+      console.log('createVariationThunk res', res);
+      args?.onSuccess && args?.onSuccess(res?.data?.data);
+    }
 
+    args?.onLoading && args?.onLoading(false);
     return res?.data.data;
   } catch (e) {
     args?.onLoading && args?.onLoading(false);
@@ -26,17 +29,18 @@ export const createVariationThunk = createAsyncThunk<
 });
 
 export const getAllVariationsByProductIdThunk = createAsyncThunk<
-  IVariation[] | undefined,
-  ThunkPayload<{ product: OnlyUUID; params?: AppQueryParams }, IVariation[]>
+  { data: IVariation[]; refreshCurrent?: boolean } | undefined,
+  ThunkPayload<{ product: OnlyUUID; params?: AppQueryParams; refreshCurrent?: boolean }, IVariation[]>
 >('products/getAllVariationsByProductIdThunk', async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
 
   try {
     const res = await VariationsApi.getAllByProductId(args?.data);
+    if (res) {
+      args?.onSuccess && args?.onSuccess(res?.data?.data);
+    }
     args?.onLoading && args?.onLoading(false);
-    args?.onSuccess && args?.onSuccess(res?.data?.data);
-
-    return res?.data.data;
+    return { data: res?.data.data, refreshCurrent: args.data?.refreshCurrent };
   } catch (e) {
     args?.onLoading && args?.onLoading(false);
     args?.onError && args?.onError(e);
