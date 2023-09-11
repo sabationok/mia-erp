@@ -12,51 +12,47 @@ import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import React, { useMemo } from 'react';
 import { useAppForm } from '../../hooks';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
-import { AppSubmitHandler, UseAppFormAfterSubmitOptions } from '../../hooks/useAppForm.hook';
+import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { businessSubjectTypeFilterOptions, counterpartyFilterOptions } from '../../data/directories.data';
 import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
 import ButtonGroup from '../atoms/ButtonGroup';
-import { useModalProvider } from '../ModalProvider/ModalProvider';
-import useDirServiceHook from '../../hooks/useDirService.hook';
-import { Modals } from '../ModalProvider/Modals';
-import { FormCreateDirTreeCompProps } from './FormCreateDirTreeComp';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useDirectoriesSelector } from '../../redux/selectors.store';
 import { BusinessSubjectTypeEnum } from '../../redux/companies/companies.types';
 
 export interface FormCreateContractorProps
-  extends DirectoriesFormProps<ContractorsTypesEnum, IContractor, IContractorFormData> {
+  extends DirectoriesFormProps<ApiDirType.CONTRACTORS, IContractor, IContractorFormData> {
   isFilterByTypeOn?: boolean;
 }
 
-const useCreateDirTreeItemModalForm = (_options?: {}) => {
-  const modalS = useModalProvider();
-  const service = useDirServiceHook();
-
-  const open = (props?: FormCreateDirTreeCompProps, afterSubmitOptions?: UseAppFormAfterSubmitOptions) => {
-    if (props?.dirType) {
-      const modal = modalS.handleOpenModal({
-        Modal: Modals.FormCreateDirTreeComp,
-        props: {
-          dirType: props?.dirType,
-          onSubmit: (data, o) => {
-            service
-              .create({
-                data: { data, dirType: props?.dirType || ApiDirType.UNSET },
-                onSuccess: (data, _meta) => {
-                  console.log(`Created dir item: ${props.dirType}`, data);
-                  (o?.closeAfterSave || afterSubmitOptions?.closeAfterSave) && modal?.onClose();
-                },
-              })
-              .then();
-          },
-          ...props,
-        },
-      });
-    }
-  };
-  return open;
-};
+// const useCreateDirTreeItemModalForm = (_options?: {}) => {
+//   const modalS = useModalProvider();
+//   const service = useDirServiceHook();
+//
+//   const open = (props?: FormCreateDirTreeCompProps, afterSubmitOptions?: UseAppFormSubmitOptions) => {
+//     if (props?.dirType) {
+//       const modal = modalS.handleOpenModal({
+//         Modal: Modals.FormCreateDirTreeComp,
+//         props: {
+//           dirType: props?.dirType,
+//           onSubmit: (data, o) => {
+//             service
+//               .create({
+//                 data: { data, dirType: props?.dirType || ApiDirType.UNSET },
+//                 onSuccess: (data, _meta) => {
+//                   console.log(`Created dir item: ${props.dirType}`, data);
+//                   (o?.closeAfterSave || afterSubmitOptions?.closeAfterSave) && modal?.onClose();
+//                 },
+//               })
+//               .then();
+//           },
+//           ...props,
+//         },
+//       });
+//     }
+//   };
+//   return open;
+// };
 
 const validation = yup.object().shape({
   type: yup.string().required(),

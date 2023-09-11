@@ -14,11 +14,11 @@ const rows = [
   { label: 'red', id: 'atr_2_3' },
   { label: 'black', id: 'atr_2_4' },
 ];
-const variationEntity = {
-  id: '546546846532',
-  atr_1: columns,
-  atr_2: rows,
-};
+// const variationEntity = {
+//   id: '546546846532',
+//   atr_1: columns,
+//   atr_2: rows,
+// };
 const variation = {
   product_id: 123,
   product_name: 'Футболка з коротким рукавом',
@@ -40,8 +40,8 @@ const variation = {
   } as Record<string, Record<string, { id?: string; label?: string; quantity?: number; reserved?: number }>>,
 };
 
-const stringData =
-  '{"product_id":123,"product_name":"Футболка з коротким рукавом","description":"Красива футболка для літньої погоди","data":{"atr_2_1":{"id":"atr_2_1","atr_1_1":{"id":"atr_1_1","quantity":6,"reserved":0},"atr_1_2":{"id":"atr_1_2","quantity":5,"reserved":0},"atr_1_4":{"id":"atr_1_4","quantity":12,"reserved":0}},"atr_2_2":{"id":"atr_2_2","atr_1_1":{"id":"atr_1_1","quantity":12,"reserved":0},"atr_1_2":{"id":"atr_1_2","quantity":25,"reserved":0},"atr_1_3":{"id":"atr_1_3","quantity":5,"reserved":0}}}}';
+// const stringData =
+//   '{"product_id":123,"product_name":"Футболка з коротким рукавом","description":"Красива футболка для літньої погоди","data":{"atr_2_1":{"id":"atr_2_1","atr_1_1":{"id":"atr_1_1","quantity":6,"reserved":0},"atr_1_2":{"id":"atr_1_2","quantity":5,"reserved":0},"atr_1_4":{"id":"atr_1_4","quantity":12,"reserved":0}},"atr_2_2":{"id":"atr_2_2","atr_1_1":{"id":"atr_1_1","quantity":12,"reserved":0},"atr_1_2":{"id":"atr_1_2","quantity":25,"reserved":0},"atr_1_3":{"id":"atr_1_3","quantity":5,"reserved":0}}}}';
 
 export interface TableVariationsProps {
   onSelect?: (variation: IProductVariation) => void;

@@ -28,6 +28,12 @@ const PagePriceListOverview: React.FC<PagePriceListOverviewProps> = ({ path }) =
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
+  useEffect(() => {
+    console.log('PagePriceListOverview ==============>>>>>>>>>>>');
+    console.log(sortParams);
+    console.log(filterParams);
+  }, [filterParams, sortParams]);
+
   const tableConfig = useMemo(
     (): ITableListProps<IPriceListItem> => ({
       tableData: list?.prices,

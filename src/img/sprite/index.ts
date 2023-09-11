@@ -9,6 +9,8 @@ export const iconId = {
   SmallArrowRight: 'SmallArrowRight',
   SmallArrowUp: 'SmallArrowUp',
   StackedLineChart: 'StackedLineChart',
+  switchOn: 'darkMode',
+  switchOff: 'lightMode',
   actionsH: 'actionsH',
   actionsV: 'actionsV',
   addToCart: 'addToCart',

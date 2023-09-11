@@ -11,7 +11,7 @@ import { PagePathType } from '../../data/pages.data';
 import useWarehousesActionsCreatorHook from '../../hooks/useWarehousesActionsCreator.hook';
 import { warehousesTableColumns } from '../../data/warehauses.data';
 import { IWarehouse } from '../../redux/warehouses/warehouses.types';
-import useAppService, { ServiceName } from '../../hooks/useAppServices.hook';
+import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { useNavigate } from 'react-router-dom';
 
 type Props = {
@@ -19,13 +19,12 @@ type Props = {
 };
 const PageWarehouses: React.FC<any> = (props: Props) => {
   const navigate = useNavigate();
-  const service = useAppService()[ServiceName.warehouses];
+  const { getAll } = useAppServiceProvider()[ServiceName.warehouses];
   const state = useWarehousesSelector();
-  const { getAll, getById } = service;
-  const actionsCreator = useWarehousesActionsCreatorHook(service);
   const [isLoading, setIsLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
+  const actionsCreator = useWarehousesActionsCreatorHook();
 
   const tableConfig = useMemo(
     (): ITableListProps<IWarehouse> => ({
@@ -37,9 +36,6 @@ const PageWarehouses: React.FC<any> = (props: Props) => {
       actionsCreator,
       onRowClick(ev) {
         ev?._id && navigate(ev?._id);
-        const current = state.warehouses.find(w => w._id === ev?._id);
-
-        current && getById({ data: current });
       },
       onFilterSubmit: filterParams => {
         setFilterParams(filterParams);
@@ -53,7 +49,7 @@ const PageWarehouses: React.FC<any> = (props: Props) => {
         }).then();
       },
     }),
-    [actionsCreator, filterParams, getAll, sortParams, state.warehouses]
+    [actionsCreator, filterParams, getAll, navigate, sortParams, state.warehouses]
   );
 
   useEffect(() => {
@@ -66,7 +62,7 @@ const PageWarehouses: React.FC<any> = (props: Props) => {
         getAll({
           data: { refresh: true },
           onLoading: setIsLoading,
-          onSuccess(d) {
+          onSuccess(_data) {
             console.log('PageWarehouses onSuccess getAll');
           },
         });

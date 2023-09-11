@@ -3,14 +3,14 @@ import ModalFilter, { ModalFormFilterProps } from './ModalFilter';
 import ModalFooter from './ModalFooter';
 
 import styled from 'styled-components';
-import { FormEvent } from 'react';
-import { useModal } from 'components/ModalProvider/ModalComponent';
+import { FormEvent, memo } from 'react';
 
 export interface ModalFormBaseProps<T = any>
   extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit' | 'onReset'> {
   onSubmit?: (ev: FormEvent<HTMLFormElement>) => void;
   onReset?: (args?: any) => void;
   footer?: boolean;
+  onClose?: () => void;
   defaultState?: Partial<T>;
   beforeSubmit?: () => void;
   afterSubmit?: () => void;
@@ -53,29 +53,28 @@ const ModalForm: React.FC<ModalFormProps> = ({
   extraFooter,
   extraHeader,
   isValid = true,
+  onClose,
   ...props
 }) => {
-  const modal = useModal();
-
   function handleSubmit(ev: FormEvent<HTMLFormElement>) {
     ev.preventDefault();
 
-    closeAfterSubmit && modal.onClose();
+    // closeAfterSubmit && onClose && onClose();
 
     if (!onSubmit) return console.log('No passed "onSubmit" handler');
 
-    if (typeof beforeSubmit === 'function') beforeSubmit();
+    // if (typeof beforeSubmit === 'function') beforeSubmit();
     if (typeof onSubmit === 'function') onSubmit(ev);
-    if (typeof afterSubmit === 'function') afterSubmit();
+    // if (typeof afterSubmit === 'function') afterSubmit();
   }
 
   function handleReset() {
-    modal.onClose();
+    onClose && onClose();
     // handleCloseModal();
     if (!onReset) return console.log('No passed "onReset" handler');
-    if (typeof beforeClose === 'function') beforeClose();
+    // if (typeof beforeClose === 'function') beforeClose();
     if (typeof onReset === 'function') onReset();
-    if (typeof afterClose === 'function') afterClose();
+    // if (typeof afterClose === 'function') afterClose();
   }
 
   return (
@@ -137,7 +136,7 @@ const ModalFormContainer = styled.form<
   }
 
   @media screen and (min-width: 480px) {
-    min-width: 450px;
+    width: 450px;
   }
 `;
 
@@ -161,4 +160,4 @@ const ModalMain = styled.main<{ filterOn: boolean }>`
   border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;
 
-export default ModalForm;
+export default memo(ModalForm);

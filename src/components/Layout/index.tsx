@@ -2,8 +2,7 @@ import React, { createContext, useContext, useMemo } from 'react';
 import Header from './Header';
 import styled from 'styled-components';
 import SideBar from 'components/SideBarLeft/SideBar';
-import useAppParams from '../../hooks/useAppParams.hook';
-import usePermissionsServiceHook, { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
+import { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
 
 interface ILayoutCTX {}
 
@@ -11,14 +10,9 @@ export const LayoutCTX = createContext({});
 export const useLayout = () => useContext(LayoutCTX) as ILayoutCTX;
 
 const Layout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  const { permissionId } = useAppParams();
-  const { permission_token, permission } = usePermissionsSelector();
-  const { isCurrentValid } = usePermissionsServiceHook({ permissionId });
+  const { permission } = usePermissionsSelector();
 
-  const havePermission = useMemo(
-    () => !!permission._id || (!!permission_token && isCurrentValid),
-    [isCurrentValid, permission._id, permission_token]
-  );
+  const havePermission = useMemo(() => !!permission._id, [permission._id]);
 
   const CTX = {};
 

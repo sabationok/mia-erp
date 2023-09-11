@@ -1,20 +1,20 @@
-import { IOrderSlot } from '../../redux/orders/orders.types';
-import FlexBox from '../atoms/FlexBox';
+import { IOrderSlot } from '../../../redux/orders/orders.types';
+import FlexBox from '../../atoms/FlexBox';
 import styled from 'styled-components';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
-import { IProduct } from '../../redux/products/products.types';
-import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
-import { IProductVariation } from '../TableVariations';
+import { IProduct } from '../../../redux/products/products.types';
+import { IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
+import { IProductVariation } from '../../TableVariations';
 import { isUndefined } from 'lodash';
-import numberWithSpaces from '../../utils/numbers';
-import { IWarehouseDirItem } from '../Directories/dir.types';
+import numberWithSpaces from '../../../utils/numbers';
+import { IWarehouse } from '../../../redux/warehouses/warehouses.types';
 
 export interface OrderSlotOverviewProps {
   slot?: IOrderSlot;
   price?: IPriceListItem;
   dataForSlot?: IProduct;
-  warehouse?: IWarehouseDirItem;
+  warehouse?: IWarehouse;
   index?: number;
   onSelect?: () => void;
   onRemove?: () => void;
@@ -26,7 +26,7 @@ const createOverviewCellsData = (
   dataForSlot?: IProduct,
   countedPrice?: IPriceListItem & { qty?: number; total?: number },
   variation?: IProductVariation,
-  warehouse?: IWarehouseDirItem
+  warehouse?: IWarehouse
 ): {
   value?: string | number;
   title?: string;

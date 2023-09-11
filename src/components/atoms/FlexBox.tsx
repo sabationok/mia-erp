@@ -22,8 +22,9 @@ export interface FlexBoxBaseProps {
   flex?: Property.Flex;
   flexWrap?: Property.FlexWrap;
   overflow?: Property.Overflow;
-}
 
+  isActive?: boolean;
+}
 export interface FlexBoxProps extends FlexBoxBaseProps {
   xsStyles?: FlexBoxBaseProps;
   xlStyles?: FlexBoxBaseProps;
@@ -79,6 +80,7 @@ const XlStyles = css<FlexBoxProps>`
 
 const FlexBox = styled.div<FlexBoxProps>`
   display: flex;
+
   flex-direction: ${({ fxDirection = 'column' }) => fxDirection};
   align-items: ${({ alignItems = '' }) => alignItems};
   justify-content: ${({ justifyContent = '' }) => justifyContent};
@@ -97,7 +99,9 @@ const FlexBox = styled.div<FlexBoxProps>`
   background: ${({ background = 'none' }) => background};
   border-radius: ${({ borderRadius = 'none' }) => borderRadius};
   overflow: ${({ overflow }) => overflow};
+  border: ${p => p.border};
 
+  cursor: default;
   ${({ xsStyles }) => {
     if (xsStyles) return XsStyles;
   }};

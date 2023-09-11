@@ -1,54 +1,70 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 import ModalForm from 'components/ModalForm';
-import DirList from '../Directories/DirList/DirList';
 import styled from 'styled-components';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FlexBox from '../atoms/FlexBox';
 import { useDirectoriesSelector } from '../../redux/selectors.store';
 
-import { DirMethodsActionsCreator, IDirInTreeProps, IMethodDirItem, MethodDirType } from '../Directories/dir.types';
+import { IDirInTreeProps, IMethodDirItem, MethodDirType } from '../Directories/dir.types';
 import useDirServiceHook from '../../hooks/useDirService.hook';
+import DirListItem from '../Directories/DirList/DirListItem';
 
 export interface DirMethodsProps
-  extends Omit<IDirInTreeProps<MethodDirType, any, IMethodDirItem, IMethodDirItem, IMethodDirItem>, 'actionsCreator'> {
-  actionsCreator: DirMethodsActionsCreator;
+  extends IDirInTreeProps<MethodDirType, IMethodDirItem, IMethodDirItem, IMethodDirItem> {
+  updating?: boolean;
+  disabling?: boolean;
+  archiving?: boolean;
+  creating?: boolean;
 }
 
-const DirMethods: React.FC<DirMethodsProps> = ({ createParentTitle, availableLevels, actionsCreator, ...props }) => {
-  const { directory } = useDirectoriesSelector(props?.dirType);
+const DirMethods: React.FC<DirMethodsProps> = ({
+  createParentTitle,
+  availableLevels,
+  actionsCreator,
+  dirType,
+  updating,
+  disabling = true,
+  archiving,
+  creating,
+  ...props
+}) => {
+  const { directory } = useDirectoriesSelector(dirType);
 
+  useEffect(() => {
+    console.log(process.env);
+  }, []);
   const service = useDirServiceHook();
   const modalService = useModalProvider();
 
   const actions = useMemo(() => {
-    const findById = (id: string) => directory.find(el => el._id === id);
-
     return actionsCreator
       ? actionsCreator({
-          findById: findById as any,
           modalService,
           service,
-          dirType: props?.dirType,
+          dirType,
         })
       : {};
-  }, [actionsCreator, modalService, service, props?.dirType, directory]);
+  }, [actionsCreator, modalService, service, dirType]);
 
-  useEffect(() => {
-    console.log({ createParentTitle, availableLevels });
-  });
+  const renderList = useMemo(
+    () =>
+      directory?.map((item, idx) => (
+        <DirListItem
+          key={`treeItem_${item?._id || idx}`}
+          {...item}
+          {...props}
+          {...actions}
+          item={item}
+          availableLevels={1}
+          currentLevel={0}
+        />
+      )),
+    [actions, directory, props]
+  );
   return (
     <StModalForm style={{ maxWidth: 480 }} {...props}>
-      <FlexBox fillWidth flex={'1'} padding={'0 12px'} maxHeight={'100%'}>
-        <DirList
-          list={directory}
-          currentLevel={0}
-          availableLevels={availableLevels}
-          createParentTitle={createParentTitle}
-          onEdit={actions?.onUpdateItem}
-          onDelete={actions?.onDeleteItem}
-          onChangeArchiveStatus={actions?.onChangeArchiveStatus}
-          onCreateParent={actions?.onCreateParent}
-        />
+      <FlexBox fillWidth flex={'1'} gap={8} padding={'12px'} maxHeight={'100%'} overflow={'auto'}>
+        {renderList}
       </FlexBox>
     </StModalForm>
   );
@@ -56,4 +72,4 @@ const DirMethods: React.FC<DirMethodsProps> = ({ createParentTitle, availableLev
 
 const StModalForm = styled(ModalForm)``;
 
-export default DirMethods;
+export default memo(DirMethods);

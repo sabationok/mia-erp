@@ -75,12 +75,12 @@ export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
     width: '180px',
     action: 'valueByPath',
   },
-  {
-    top: { name: t('variation'), align: 'start', getData: rd => rd?.productInventory?.template?.label },
-    // bottom: { name: t('barCode'), align: 'start', getData: rd => rd?.barCode },
-    width: '150px',
-    action: 'valueByPath',
-  },
+  // {
+  //   top: { name: t('variation'), align: 'start', getData: rd => rd?.productInventory?.template?.label },
+  //   // bottom: { name: t('barCode'), align: 'start', getData: rd => rd?.barCode },
+  //   width: '150px',
+  //   action: 'valueByPath',
+  // },
   {
     top: { name: 'Бренд', align: 'start', path: 'brand.label' },
     bottom: { name: 'Виробник', align: 'start', path: 'manufacturer.name' },

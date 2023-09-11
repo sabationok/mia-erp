@@ -8,6 +8,7 @@ import { countPercentage, numberWithSpaces } from './numbers';
 import founderByDataPath from './founderByDataPath';
 import { formatDateForInputValue } from './dateTime.utils';
 import { enumToArray } from './fabrics';
+import { createTableTitlesFromTemplate } from './tables';
 
 export {
   founder,
@@ -23,4 +24,5 @@ export {
   createTransactionForReq,
   formatDateForInputValue,
   enumToArray,
+  createTableTitlesFromTemplate,
 };

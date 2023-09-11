@@ -1,6 +1,6 @@
 import ModalForm from 'components/ModalForm';
 import styled from 'styled-components';
-import { CountType, ICount, ICountFormData } from 'redux/directories/counts.types';
+import { ICount, ICountFormData } from 'redux/directories/counts.types';
 import React from 'react';
 import translate from '../../lang';
 import t from '../../lang';
@@ -14,8 +14,9 @@ import { useAppForm } from '../../hooks';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { pick } from 'lodash';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
+import { ApiDirType } from '../../redux/APP_CONFIGS';
 
-export interface FormCreateCountProps extends DirectoriesFormProps<CountType, ICount, ICountFormData> {}
+export interface FormCreateCountProps extends DirectoriesFormProps<ApiDirType.COUNTS, ICount, ICountFormData> {}
 
 const validation = yup.object().shape({
   label: yup.string().required(),

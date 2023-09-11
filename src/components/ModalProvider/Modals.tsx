@@ -1,25 +1,12 @@
 import ModalForm, { ModalFormProps } from '../ModalForm';
-import FormCreateDirTreeComp, { FormCreateDirTreeCompProps } from '../Forms/FormCreateDirTreeComp';
-import FormCreateActivity, { FormCreateCompanyActivityProps } from '../Forms/FormCreateActivity';
-import FormCreateContractor, { FormCreateContractorProps } from '../Forms/FormCreateContractor';
-import FormCreateTransaction, { FormCreateTransactionProps } from '../Forms/FormCreateTransaction';
-import FormCreateCategory, { FormCreateCategoryProps } from '../Forms/FormCreateCategory';
-import FormCreatePriceList, { FormCreatePriceListProps } from '../Forms/FormCreatePriceList';
-import FormCreatePrice, { FormCreatePriceProps } from '../Forms/FormCreatePrice/FormCreatePrice';
-import FormCreateCustomRole, { FormCreateCustomRoleProps } from '../Forms/FormCreateCustomRole';
-import FormCreateCount, { FormCreateCountProps } from '../Forms/FormCreateCount';
-import PriceListOverview, { PriceListOverviewProps } from '../Overviews/PriceListOverview';
-import ProductOverview, { ProductOverviewProps } from '../Overviews/ProductOverview';
-import FormCreateCompany, { FormCreateCompanyProps } from '../Forms/FormCreateCompany';
-import FormCreateOrder, { FormCreateOrderProps } from '../Forms/FormCreateOrder/FormCreateOrder';
-import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { IBaseDirItem } from '../Directories/dir.types';
-import FormCreateTag, { FormCreateTagProps } from '../Forms/FormCreateTag';
-import FormCreateMethod, { FormCreateMethodProps } from '../Forms/FormCreateMetod';
-import OrderOverview, { OrderOverviewProps } from '../Overviews/OrderOverview';
-import FormInviteUser, { FormInviteUserProps } from '../Forms/FormInviteUser';
+import PriceListOverview, { PriceListOverviewProps } from '../Modals/Overviews/PriceListOverview';
+import ProductOverview, { ProductOverviewProps } from '../Modals/Overviews/ProductOverview';
+import OrderOverview, { OrderOverviewProps } from '../Modals/Overviews/OrderOverview';
 import SelectProductModal, { SelectProductModalProps } from '../Modals/SelectProductModal';
-import FormCreateOrderSlot, { FormCreateOrderSlotItemProps } from '../Forms/FormCreateOrder/FormCreateOrderSlot';
+import AppFilter, { AppFilterProps } from '../Filter/AppFilter';
+import DirVariationsTemplate, { DirVariationsTemplateProps } from '../Directories/DirVariationsTemplate';
+import DirPoperties, { DirPropertiesProps } from '../Directories/DirPoperties';
+import Forms, { FormPropTypes } from '../Forms';
 
 export enum Modals {
   ModalForm = 'ModalForm',
@@ -38,58 +25,98 @@ export enum Modals {
   FormCreateMethod = 'FormCreateMethod',
   FormInviteUser = 'FormInviteUser',
   FormCreateOrderSlotItem = 'FormCreateOrderSlotItem',
+  FormCreateProduct = 'FormCreateProduct',
+  FormCreateProductInventory = 'FormCreateProductInventory',
+  FormCreateProperty = 'FormCreateProperty',
+  FormCreateVariation = 'FormCreateVariation',
+  FormCreateWarehouse = 'FormCreateWarehouse',
+
+  // * DIRECTORIES
+  DirVariationsTemplate = 'DirVariationsTemplate',
+  DirProperties = 'DirProperties',
+  // DirTreeComponent = 'DirTreeComponent',
 
   PriceListOverview = 'PriceListOverview',
   ProductOverview = 'ProductOverview',
   OrderOverview = 'OrderOverview',
   SelectProductModal = 'SelectProductModal',
+  AppFilter = 'AppFilter',
 }
 
 export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
-  [Modals.ModalForm]: ModalForm, //
-  [Modals.FormCreateDirTreeComp]: FormCreateDirTreeComp,
-  [Modals.FormCreateActivity]: FormCreateActivity,
-  [Modals.FormCreateContractor]: FormCreateContractor,
-  [Modals.FormCreateTransaction]: FormCreateTransaction,
-  [Modals.FormCreateCategory]: FormCreateCategory,
-  [Modals.FormCreatePriceList]: FormCreatePriceList,
-  [Modals.FormCreatePrice]: FormCreatePrice,
-  [Modals.FormCreateCustomRole]: FormCreateCustomRole,
-  [Modals.FormCreateCount]: FormCreateCount,
-  [Modals.FormCreateCompany]: FormCreateCompany,
-  [Modals.FormCreateOrder]: FormCreateOrder,
-  [Modals.FormCreateTag]: FormCreateTag,
-  [Modals.FormCreateMethod]: FormCreateMethod,
-  [Modals.FormInviteUser]: FormInviteUser,
-  [Modals.FormCreateOrderSlotItem]: FormCreateOrderSlot,
+  // * Base modal
+  [Modals.ModalForm]: ModalForm,
 
+  // * Forms
+  [Modals.FormCreateDirTreeComp]: Forms.CreateDirTreeComp,
+  [Modals.FormCreateActivity]: Forms.CreateActivity,
+  [Modals.FormCreateContractor]: Forms.CreateContractor,
+  [Modals.FormCreateTransaction]: Forms.CreateTransaction,
+  [Modals.FormCreateCategory]: Forms.CreateCategory,
+  [Modals.FormCreatePriceList]: Forms.CreatePriceList,
+  [Modals.FormCreatePrice]: Forms.CreatePrice,
+  [Modals.FormCreateCustomRole]: Forms.CreateCustomRole,
+  [Modals.FormCreateCount]: Forms.CreateCount,
+  [Modals.FormCreateCompany]: Forms.CreateCompany,
+  [Modals.FormCreateOrder]: Forms.CreateOrder,
+  [Modals.FormCreateTag]: Forms.CreateTag,
+  [Modals.FormCreateMethod]: Forms.CreateMethod,
+  [Modals.FormInviteUser]: Forms.InviteUser,
+  [Modals.FormCreateOrderSlotItem]: Forms.CreateOrderSlot,
+  [Modals.FormCreateProductInventory]: Forms.CreateProductInventory,
+  [Modals.FormCreateProperty]: Forms.CreateProperty,
+  [Modals.FormCreateVariation]: Forms.CreateVariation,
+  [Modals.FormCreateWarehouse]: Forms.CreateWarehouse,
+  [Modals.FormCreateProduct]: Forms.CreateProduct,
+
+  // * DIRECTORIES
+  [Modals.DirVariationsTemplate]: DirVariationsTemplate,
+  [Modals.DirProperties]: DirPoperties,
+  // [Modals.DirTreeComponent]: DirTreeComp,
+  // * Modals props
   [Modals.OrderOverview]: OrderOverview,
   [Modals.PriceListOverview]: PriceListOverview,
   [Modals.ProductOverview]: ProductOverview,
   [Modals.SelectProductModal]: SelectProductModal,
+  [Modals.AppFilter]: AppFilter,
 };
 
-export interface ModalChildrenProps {
+export interface ModalChildrenProps extends Record<Modals, any> {
+  // * Base modal props
   [Modals.ModalForm]: ModalFormProps;
-  [Modals.FormCreateDirTreeComp]: FormCreateDirTreeCompProps<any, ApiDirType, IBaseDirItem<any, ApiDirType>>;
-  [Modals.FormCreateActivity]: FormCreateCompanyActivityProps;
-  [Modals.FormCreateContractor]: FormCreateContractorProps;
-  [Modals.FormCreateTransaction]: FormCreateTransactionProps;
-  [Modals.FormCreateCategory]: FormCreateCategoryProps;
-  [Modals.FormCreatePriceList]: FormCreatePriceListProps;
-  [Modals.FormCreatePrice]: FormCreatePriceProps;
-  [Modals.FormCreateCategory]: FormCreateCategoryProps;
-  [Modals.FormCreateCount]: FormCreateCountProps;
-  [Modals.FormCreateCompany]: FormCreateCompanyProps;
-  [Modals.FormCreateOrder]: FormCreateOrderProps;
-  [Modals.FormCreateCustomRole]: FormCreateCustomRoleProps;
-  [Modals.FormCreateMethod]: FormCreateMethodProps;
-  [Modals.FormCreateTag]: FormCreateTagProps;
-  [Modals.FormInviteUser]: FormInviteUserProps;
-  [Modals.FormCreateOrderSlotItem]: FormCreateOrderSlotItemProps;
+
+  // * Form props
+  [Modals.FormCreateDirTreeComp]: FormPropTypes.FormCreateDirTreeCompProps;
+  [Modals.FormCreateActivity]: FormPropTypes.FormCreateCompanyActivityProps;
+  [Modals.FormCreateContractor]: FormPropTypes.FormCreateContractorProps;
+  [Modals.FormCreateTransaction]: FormPropTypes.FormCreateTransactionProps;
+  [Modals.FormCreateCategory]: FormPropTypes.FormCreateCategoryProps;
+  [Modals.FormCreatePriceList]: FormPropTypes.FormCreatePriceListProps;
+  [Modals.FormCreatePrice]: FormPropTypes.FormCreatePriceProps;
+  [Modals.FormCreateCategory]: FormPropTypes.FormCreateCategoryProps;
+  [Modals.FormCreateCount]: FormPropTypes.FormCreateCountProps;
+  [Modals.FormCreateCompany]: FormPropTypes.FormCreateCompanyProps;
+  [Modals.FormCreateOrder]: FormPropTypes.FormCreateOrderProps;
+  [Modals.FormCreateCustomRole]: FormPropTypes.FormCreateCustomRoleProps;
+  [Modals.FormCreateMethod]: FormPropTypes.FormCreateMethodProps;
+  [Modals.FormCreateTag]: FormPropTypes.FormCreateTagProps;
+  [Modals.FormInviteUser]: FormPropTypes.FormInviteUserProps;
+  [Modals.FormCreateOrderSlotItem]: FormPropTypes.FormCreateOrderSlotItemProps;
+  [Modals.FormCreateProductInventory]: FormPropTypes.FormCreateProductInventoryProps;
+  [Modals.FormCreateProduct]: FormPropTypes.FormCreateProductProps;
+  [Modals.FormCreateProperty]: FormPropTypes.FormCreatePropertyProps;
+  [Modals.FormCreateVariation]: FormPropTypes.FormCreateVariationProps;
+  [Modals.FormCreateWarehouse]: FormPropTypes.FormCreateWarehouseProps;
+
+  // * DIRECTORIES
+  [Modals.DirProperties]: DirPropertiesProps;
+  [Modals.DirVariationsTemplate]: DirVariationsTemplateProps;
+  // [Modals.DirTreeComponent]: IDirInTreeProps;
+  // * Modals props
 
   [Modals.OrderOverview]: OrderOverviewProps;
   [Modals.PriceListOverview]: PriceListOverviewProps;
   [Modals.ProductOverview]: ProductOverviewProps;
   [Modals.SelectProductModal]: SelectProductModalProps;
+  [Modals.AppFilter]: AppFilterProps;
 }

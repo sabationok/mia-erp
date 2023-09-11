@@ -55,16 +55,12 @@ export type OnCheckBoxChangeHandler<V = any> = (data: OnCheckBoxChangeHandlerEve
 export type OnHeadCheckBoxChangeHandler<V = any> = (data: V) => any;
 
 export interface ITableListProps<TDataType = any> {
-  tableTitles?: CellTittleProps[];
+  tableTitles?: CellTittleProps<TDataType>[];
+  tableData?: TDataType[];
   tableSearchParams?: SelectItem[];
   tableSortParams?: SelectItem[];
-  tableData?: TDataType[];
-  isLoading?: boolean;
+  transformData?: <T = any>(data: TDataType) => T;
   RowActionsComp?: React.ReactNode;
-  quickActions?: {
-    ActionsStart?: React.ReactNode;
-    ActionsEnd?: React.ReactNode;
-  };
   tableActions?: TableActionsProps<TDataType>;
   TableActionsComp?: React.ReactNode;
   isFilter?: boolean;
@@ -86,6 +82,9 @@ export interface ITableListProps<TDataType = any> {
   handleTableSort?: (param: SelectItem, sortOrder: SelectItem['sortOrder']) => void;
   actionsCreator?: TableActionCreator<TDataType>;
   selectedRow?: Partial<TDataType>;
+
+  isLoading?: boolean;
+  onRefresh?: (loading: boolean) => void;
 }
 
 export interface ITableListContext<TDataType = any> extends ITableListProps<TDataType> {

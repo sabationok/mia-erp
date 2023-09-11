@@ -1,6 +1,11 @@
 import { ITransaction, ITransactionForReq } from '../redux/transactions/transactions.types';
 import { pick } from 'lodash';
 import { OnlyUUID } from '../redux/global.types';
+import { IVariationFormData } from '../components/Forms/FormVariation';
+import { IVariation, IVariationReqData } from '../redux/products/variations.types';
+import { ConfigService } from '../services';
+
+const isDevMode = ConfigService.isDevMode();
 
 const ExtractId = <T extends OnlyUUID>(data: T) => (pick(data, '_id')._id ? pick(data, '_id') : { _id: '' });
 const ExtractIdString = <T extends OnlyUUID>(data: Partial<T>) => ('_id' in data ? pick(data, '_id')._id : undefined);
@@ -114,5 +119,41 @@ function createDataForReq<
   });
   return outData;
 }
+
+export const createVariationReqData = (formData: IVariationFormData, _id?: string): IVariationReqData => {
+  isDevMode && console.log('createVariationReqData input', formData);
+
+  const data = {
+    timeFrom: formData?.timeFrom,
+    timeTo: formData?.timeTo,
+    product: formData?.product ? ExtractId(formData?.product) : undefined,
+    price: formData?.price,
+    properties: formData?.propertiesMap ? Object.values(formData?.propertiesMap) : [],
+  };
+  isDevMode && console.log('createVariationReqData output', data);
+
+  const dataForReq = createDataForReq(data);
+
+  isDevMode && console.log('createVariationReqData createDataForReq output', dataForReq);
+
+  return _id ? { data, _id } : { data };
+};
+export const createVariationFormData = (variation: IVariation): IVariationFormData => {
+  let propertiesMap: Record<string, string> = {};
+  variation?.properties?.map(prop => {
+    if (prop?._id && prop?.parent?._id) {
+      propertiesMap = { ...propertiesMap, [prop.parent?._id]: prop._id };
+    }
+    return null;
+  });
+
+  return {
+    timeFrom: variation?.timeFrom,
+    timeTo: variation?.timeTo,
+    product: variation?.product ? ExtractId(variation?.product) : undefined,
+    price: variation?.price,
+    propertiesMap,
+  };
+};
 
 export { getValueByPath, formatPhoneNumber, createTransactionForReq, createDataForReq, ExtractId, ExtractIdString };

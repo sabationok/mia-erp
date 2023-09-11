@@ -1,22 +1,20 @@
 import { useModalProvider } from '../components/ModalProvider/ModalProvider';
-import useStorageServiceHook from './useProductsService.hook';
 import { useCallback } from 'react';
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
-import { IProduct, ProductFilterOpt, ProductTypeEnum } from '../redux/products/products.types';
+import { IProduct, ProductTypeEnum } from '../redux/products/products.types';
 import { useProductsSelector } from '../redux/selectors.store';
-import ProductForm from '../components/Forms/FormCreateProduct';
-import ProductOverview from '../components/Overviews/ProductOverview';
+import FormCreateProduct from '../components/Forms/FormCreateProduct';
 import { omit } from 'lodash';
+import { productsFilterOptions } from '../data/directories.data';
+import { useNavigate } from 'react-router-dom';
+import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
+import { ToastService } from '../services';
 
-export type StorageActionsCreator = TableActionCreator<IProduct>;
+export type ProductsActionsCreator = TableActionCreator<IProduct>;
 
-export const StorageItemTypeFilterOptions: ProductFilterOpt[] = [
-  { label: 'GOODS', value: ProductTypeEnum.GOODS },
-  { label: 'SERVICE', value: ProductTypeEnum.SERVICE },
-];
-
-const useStorageActionsCreator = (): StorageActionsCreator => {
-  const service = useStorageServiceHook();
+const useProductsActionsCreator = (): ProductsActionsCreator => {
+  const service = useAppServiceProvider()[ServiceName.products];
+  const navigate = useNavigate();
   const state = useProductsSelector();
   const modals = useModalProvider();
   // const onSubmitCreateWrapper = useCallback(
@@ -43,21 +41,22 @@ const useStorageActionsCreator = (): StorageActionsCreator => {
         disabled: !ctx.selectedRow?._id,
         type: 'onlyIcon',
         onClick: () => {
-          modals.handleOpenModal({
-            ModalChildren: ProductOverview,
-            modalChildrenProps: {
-              title: 'Перегляд продукту',
-              product: state.products.find(el => el._id === ctx.selectedRow?._id),
-              // filterOptions: StorageItemTypeFilterOptions,
-              // defaultOption: StorageItemTypeFilterOptions.findIndex(el => el.value === product?.type),
-              // onSubmit: data => {
-              //   service.updateById({
-              //     data,
-              //     onSuccess(d) {},
-              //   });
-              // },
-            },
-          });
+          ctx.selectedRow?._id && navigate(ctx.selectedRow?._id);
+          // modals.handleOpenModal({
+          //   ModalChildren: ProductOverview,
+          //   modalChildrenProps: {
+          //     title: 'Перегляд продукту',
+          //     product: state.products.find(el => el._id === ctx.selectedRow?._id),
+          //     // filterOptions: productsFilterOptions,
+          //     // defaultOption: StorageItemTypeFilterOptions.findIndex(el => el.value === product?.type),
+          //     // onSubmit: data => {
+          //     //   service.updateById({
+          //     //     data,
+          //     //     onSuccess(d) {},
+          //     //   });
+          //     // },
+          //   },
+          // });
         },
       },
       {
@@ -67,21 +66,25 @@ const useStorageActionsCreator = (): StorageActionsCreator => {
         iconSize: '90%',
         type: 'onlyIcon',
         disabled: !ctx?.selectedRow?._id,
-        onClick: async () => {
+        onClick: () => {
+          const product = state.products.find(p => p._id === ctx?.selectedRow?._id);
+
           const modal = modals.handleOpenModal({
-            ModalChildren: ProductForm,
+            ModalChildren: FormCreateProduct,
             modalChildrenProps: {
               title: 'Копіювати',
-              filterOptions: StorageItemTypeFilterOptions,
-              defaultState: omit(
-                state.products.find(p => p._id === ctx?.selectedRow?._id),
-                ['_id', 'createdAt', 'updatedAt']
-              ),
+              _id: ctx?.selectedRow?._id,
+              filterOptions: productsFilterOptions,
+              defaultState: omit(product, ['_id', 'createdAt', 'updatedAt']),
               onSubmit: (data, o) => {
-                service.create({
+                service.updateById({
                   data,
                   onSuccess(d) {
                     o?.closeAfterSave && modal?.onClose();
+                    ToastService.success(`Product updated`);
+                  },
+                  onError: e => {
+                    console.error('Product apdate action', e);
                   },
                 });
               },
@@ -97,18 +100,17 @@ const useStorageActionsCreator = (): StorageActionsCreator => {
         iconSize: '90%',
         type: 'onlyIcon',
         disabled: !ctx?.selectedRow?._id,
-        onClick: async () => {
+        onClick: () => {
+          const product = state.products.find(p => p._id === ctx?.selectedRow?._id);
+
           const modal = modals.handleOpenModal({
-            ModalChildren: ProductForm,
+            ModalChildren: FormCreateProduct,
             modalChildrenProps: {
               title: 'Змінити',
-              filterOptions: StorageItemTypeFilterOptions,
-              defaultState: omit(
-                state.products.find(p => p._id === ctx?.selectedRow?._id),
-                ['createdAt', 'updatedAt']
-              ),
+              filterOptions: productsFilterOptions,
+              defaultState: omit(product, ['createdAt', 'updatedAt']),
               onSubmit: (data, o) => {
-                service.create({
+                service.updateById({
                   data,
                   onSuccess(d) {
                     o?.closeAfterSave && modal?.onClose();
@@ -136,12 +138,12 @@ const useStorageActionsCreator = (): StorageActionsCreator => {
         iconSize: '90%',
         type: 'onlyIconFilled',
         disabled: false,
-        onClick: async () => {
+        onClick: () => {
           const modal = modals.handleOpenModal({
-            ModalChildren: ProductForm,
+            ModalChildren: FormCreateProduct,
             modalChildrenProps: {
               title: 'Створити',
-              filterOptions: StorageItemTypeFilterOptions,
+              filterOptions: productsFilterOptions,
               defaultState: { type: ProductTypeEnum.GOODS },
               onSubmit: (data, o) => {
                 service.create({
@@ -158,8 +160,8 @@ const useStorageActionsCreator = (): StorageActionsCreator => {
       },
     ],
 
-    [modals, service, state.products]
+    [modals, navigate, service, state.products]
   );
 };
 
-export default useStorageActionsCreator;
+export default useProductsActionsCreator;

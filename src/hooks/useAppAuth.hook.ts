@@ -1,31 +1,29 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { ILoginUserData, IRegistrationData } from '../redux/auth/auth.types';
 import { logInUserThunk, logOutUserThunk, registerUserThunk } from '../redux/auth/auth.thunks';
-import { ServiceDispatcher, ServiceDispatcherAsync } from '../redux/global.types';
+import { ServiceDispatcherAsync } from '../redux/global.types';
 import { useMemo } from 'react';
 import { defaultThunkPayload } from '../utils/fabrics';
 
-interface AuthServiceDispatchers {
+export interface AuthService {
   sendRecoveryEmail: ServiceDispatcherAsync<Pick<ILoginUserData, 'email'>>;
-  recoveryPassword: ServiceDispatcher<Pick<ILoginUserData, 'password'>>;
   logOutUser: ServiceDispatcherAsync;
   loginUser: ServiceDispatcherAsync<ILoginUserData>;
   registerUser: ServiceDispatcherAsync<IRegistrationData>;
+  recoveryPassword: (...args: any[]) => void;
 }
-
-interface AuthService extends AuthServiceDispatchers {}
-
 const useAuthService = (): AuthService => {
   const dispatch: AppDispatch = useAppDispatch();
-  // const state = useAuthSelector();
 
-  return useMemo((): AuthServiceDispatchers => {
+  return useMemo((): AuthService => {
     return {
-      sendRecoveryEmail: async payload => dispatch(logInUserThunk(defaultThunkPayload(payload))),
-      loginUser: async payload => dispatch(logInUserThunk(defaultThunkPayload(payload))),
-      logOutUser: async payload => dispatch(logOutUserThunk(defaultThunkPayload(payload))),
-      registerUser: async payload => dispatch(registerUserThunk(defaultThunkPayload(payload))),
-      recoveryPassword: async payload => console.log(defaultThunkPayload(payload)),
+      sendRecoveryEmail: payload => dispatch(logInUserThunk(defaultThunkPayload(payload))),
+      loginUser: payload => dispatch(logInUserThunk(defaultThunkPayload(payload))),
+      logOutUser: payload => dispatch(logOutUserThunk(defaultThunkPayload(payload))),
+      registerUser: payload => dispatch(registerUserThunk(defaultThunkPayload(payload))),
+      recoveryPassword: payload => {
+        console.log(defaultThunkPayload(payload));
+      },
     };
   }, [dispatch]);
 };

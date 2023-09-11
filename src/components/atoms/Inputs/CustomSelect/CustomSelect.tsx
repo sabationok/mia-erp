@@ -82,6 +82,7 @@ const CustomSelectOptionComponent: React.FC<CustomSelectItemProps> = ({
   const renderChildrenList = useMemo(() => {
     return option?.childrenList?.map((ch, index) => (
       <CustomSelectOptionComponent
+        key={`select-opt_${ch?._id}`}
         option={ch}
         index={index}
         onSelect={onSelect}
@@ -297,7 +298,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
             </NoOptions>
           )}
           {onCreatePress && (
-            <CreateButton variant={'defOutlinedSmall'} endIcon={'plus'} endIconSize={'24px'} onClick={onCreatePress}>
+            <CreateButton variant={'defOutlinedSmall'} icon={'plus'} iconSize={'16px'} onClick={onCreatePress}>
               <span>{'Створити'}</span>
             </CreateButton>
           )}
@@ -399,7 +400,6 @@ const LabelInner = styled.fieldset<{
   &:focus,
   &:focus-visible {
     border-color: ${({ theme }) => theme.accentColor.base};
-    //box-shadow: 0 0 5px ${({ theme }) => theme.accentColor.base};
     outline: 1px solid ${({ theme }) => theme.accentColor.base};
   }
 
@@ -407,8 +407,6 @@ const LabelInner = styled.fieldset<{
     font-size: inherit;
     color: ${({ theme }) => theme.globals.inputPlaceholderColor};
   }
-
-  //transition: border-color ${({ theme }) => theme.globals.timingFunctionMain};
 
   &[disabled] {
     pointer-events: none;
@@ -441,18 +439,14 @@ const StyledInput = styled.input`
   }
 `;
 const NoOptions = styled(FlexBox)`
+  margin-top: 8px;
+
   min-height: 28px;
 
   font-weight: 700;
   line-height: 1.3;
 `;
 const IconsBox = styled(FlexBox)`
-  //position: absolute;
-  //top: 50%;
-  //right: 4px;
-  //z-index: 5;
-  //transform: translateY(-50%);
-
   max-height: 100%;
 
   color: ${({ theme }) => theme.accentColor.base};
@@ -460,6 +454,8 @@ const IconsBox = styled(FlexBox)`
 `;
 
 const CreateButton = styled(ButtonIcon)`
+  margin-top: 8px;
+
   color: ${({ theme }) => theme.accentColor.base};
   fill: ${({ theme }) => theme.accentColor.base};
 `;

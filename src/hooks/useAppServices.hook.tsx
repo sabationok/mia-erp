@@ -8,6 +8,8 @@ import useAppSettingsHook, { AppSettingsService } from './useAppSettings.hook';
 import useCompaniesService, { CompaniesService } from './useCompaniesService.hook';
 import { createContext, useContext, useEffect } from 'react';
 import useWarehousesServiceHook, { WarehousesService } from './useWarehousesService.hook';
+import useAppAuthHook, { AuthService } from './useAppAuth.hook';
+import { ConfigService } from '../services';
 
 export enum ServiceName {
   permissions = 'permissions',
@@ -33,9 +35,11 @@ export interface AppService {
   [ServiceName.appSettings]: AppSettingsService;
   [ServiceName.companies]: CompaniesService;
   [ServiceName.warehouses]: WarehousesService;
+  [ServiceName.auth]: AuthService;
 }
-
+const isDevMode = ConfigService.isDevMode();
 const useAppService = (): AppService => {
+  const auth = useAppAuthHook();
   const permissions = usePermissionsServiceHook();
   const products = useProductsServiceHook();
   const transactions = useTransactionsServiceHook();
@@ -46,28 +50,28 @@ const useAppService = (): AppService => {
   const warehouses = useWarehousesServiceHook();
 
   useEffect(() => {
-    console.log('Apply useAppService | permissions');
+    isDevMode && console.log('Apply useAppService | permissions');
   }, [permissions]);
   useEffect(() => {
-    console.log('Apply useAppService | products');
+    isDevMode && console.log('Apply useAppService | products');
   }, [products]);
   useEffect(() => {
-    console.log('Apply useAppService | transactions');
+    isDevMode && console.log('Apply useAppService | transactions');
   }, [transactions]);
   useEffect(() => {
-    console.log('Apply useAppService | directories');
+    isDevMode && console.log('Apply useAppService | directories');
   }, [directories]);
   useEffect(() => {
-    console.log('Apply useAppService | priceManagement');
+    isDevMode && console.log('Apply useAppService | priceManagement');
   }, [priceManagement]);
   useEffect(() => {
-    console.log('Apply useAppService | appSettings');
+    isDevMode && console.log('Apply useAppService | appSettings');
   }, [appSettings]);
   useEffect(() => {
-    console.log('Apply useAppService | companies');
+    isDevMode && console.log('Apply useAppService | companies');
   }, [companies]);
   useEffect(() => {
-    console.log('Apply useAppService | warehouses');
+    isDevMode && console.log('Apply useAppService | warehouses');
   }, [warehouses]);
 
   return {
@@ -79,15 +83,16 @@ const useAppService = (): AppService => {
     appSettings,
     companies,
     warehouses,
+    auth,
   };
 };
 export const AppServiceCTX = createContext<AppService>({} as AppService);
 
 export const useAppServiceProvider = () => useContext(AppServiceCTX);
 
-export const AppServiceProvider = ({ children }: { children?: React.ReactNode }) => {
+export const AppServiceProvider = ({ children }: { children?: React.ReactNode; isDevMode?: boolean }) => {
   const appService = useAppService();
 
   return <AppServiceCTX.Provider value={appService}>{children}</AppServiceCTX.Provider>;
 };
-export default useAppService;
+export default AppServiceProvider;

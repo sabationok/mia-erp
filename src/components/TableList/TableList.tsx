@@ -161,7 +161,7 @@ const Table = styled.div`
 
   height: 100%;
   width: 100%;
-  //overflow: hidden;
+  overflow: hidden;
 
   background-color: ${({ theme }) => theme.tableBackgroundColor};
 `;

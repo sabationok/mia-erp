@@ -2,13 +2,14 @@ import DirUsers, { DirUsersProps } from '../components/CompanySettings/DirUsers'
 import { usersDirColumns } from './usersDir.data';
 
 import DirCustomRoles, { DirCustomRolesProps } from '../components/CompanySettings/DirCustomRoles';
-import { getDirInTreeActionsCreator, IDirectory } from './directories.data';
+import { getDirInTreeActionsCreator } from './directories.data';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { iconId } from '../img/sprite';
 import FormCreateCustomRole from '../components/Forms/FormCreateCustomRole';
 import ModalForm from '../components/ModalForm';
 import DirMethods from '../components/CompanySettings/DirMethods';
 import { Modals } from '../components/ModalProvider/Modals';
+import { IDirectoryListItem } from '../components/SideBarContent/Directories';
 
 const UsersProps: DirUsersProps = {
   title: 'Користувачі',
@@ -60,42 +61,46 @@ const CustomRolesProps: DirCustomRolesProps = {
   createParentTitle: 'Створити роль',
   fillHeight: true,
   actionsCreator: ({ service, modalService, findById }) => ({
-    onUpdateItem: id => {
-      console.log(findById ? findById(id) : undefined);
+    onUpdate: (id, dataForUpdate, options) => {
       const modal = modalService.handleOpenModal({
         ModalChildren: FormCreateCustomRole,
         modalChildrenProps: {
           title: 'Редагувати роль',
-          customRole: findById ? findById(id) : undefined,
+          customRole: dataForUpdate,
           onSubmit: data => {
             service.edit &&
-              service.edit({
-                data,
-                onSuccess: () => {
-                  modal?.onClose();
-                },
-              });
+              service
+                .edit({
+                  data,
+                  onSuccess: () => {
+                    modal?.onClose();
+                  },
+                })
+                .then();
           },
         },
       });
     },
-    onCreateParent: () => {
+    onCreateParent: options => {
       const modal = modalService.handleOpenModal({
         ModalChildren: FormCreateCustomRole,
         modalChildrenProps: {
           title: 'Створити роль',
           onSubmit: data => {
-            service.create({
-              data,
-              onSuccess: () => {
-                modal?.onClose();
-              },
-            });
+            service
+              .create({
+                data,
+                onSuccess: () => {
+                  modal?.onClose();
+                },
+              })
+              .then();
           },
         },
       });
     },
     onChangeArchiveStatus: () => {},
+    onChangeDisableStatus: () => {},
   }),
 };
 const subCompanies = {
@@ -109,7 +114,7 @@ const subCompanies = {
     fillWidth: true,
   },
 };
-export const comapnySettings: IDirectory[] = [
+export const comapnySettings: IDirectoryListItem[] = [
   subCompanies,
 
   {
@@ -135,8 +140,9 @@ export const comapnySettings: IDirectory[] = [
       title: 'Способи оплати',
       dirType: ApiDirType.METHODS_PAYMENT,
       createParentTitle: 'Додати спосіб оплати',
+      changeDisableStatus: true,
       availableLevels: 1,
-      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod),
+      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {}),
     },
     disabled: true,
   },
@@ -148,8 +154,13 @@ export const comapnySettings: IDirectory[] = [
       title: 'Способи відвантаження',
       dirType: ApiDirType.METHODS_SHIPMENT,
       createParentTitle: 'Додати спосіб відвантаження',
+      changeDisableStatus: true,
+      creatingParent: false,
       availableLevels: 1,
-      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod),
+      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {
+        createParentTitle: 'Створити спосіб відвантаження',
+        updateItemTitle: 'Редагувати спосіб відвантаження',
+      }),
     },
     disabled: true,
   },
@@ -162,7 +173,12 @@ export const comapnySettings: IDirectory[] = [
       dirType: ApiDirType.METHODS_COMMUNICATION,
       createParentTitle: 'Додати спосіб комунікації',
       availableLevels: 1,
-      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, 'Додати спосіб комунікації'),
+      changeDisableStatus: true,
+      creatingParent: false,
+      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {
+        createParentTitle: 'Додати спосіб комунікації',
+        updateItemTitle: 'Редагувати спосіб комунікації',
+      }),
     },
     disabled: true,
   },

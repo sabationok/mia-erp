@@ -3,16 +3,14 @@ import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { ICreateOrderFormState, IOrder, IOrderSlot } from '../../../redux/orders/orders.types';
 import { useAppForm } from '../../../hooks';
 import { useCallback, useMemo, useState } from 'react';
-import * as yup from 'yup';
-import { IUser } from '../../../redux/auth/auth.types';
 import { FilterOpt } from '../../ModalForm/ModalFilter';
 import FormCreateOrderProductsList from './FormCreateOrderProductsList';
 import FormCreateOrderMainInfo from './FormCreateOrderMainInfo';
 import { OnlyUUID } from '../../../redux/global.types';
 
-const orderValidation = yup.object().shape({
-  manager: yup.object().shape({ _id: yup.string() } as Record<keyof IUser, any>),
-} as Record<keyof IOrder, any>);
+// const orderValidation = yup.object().shape({
+//   manager: yup.object().shape({ _id: yup.string() } as Record<keyof IUser, any>),
+// } as Record<keyof IOrder, any>);
 
 export interface FormCreateOrderProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect' | 'filterOptions'> {
   onSubmit?: AppSubmitHandler<IOrder>;

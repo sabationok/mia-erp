@@ -1,5 +1,4 @@
 import { DirectoriesFormProps, ITagDirItem } from '../Directories/dir.types';
-import { ContractorsTypesEnum } from 'redux/contractors/contractors.types';
 import ModalForm from '../ModalForm';
 
 import * as yup from 'yup';
@@ -15,15 +14,21 @@ import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { tagsFilterOptions } from '../../data/directories.data';
 
-export interface FormCreateTagProps
-  extends DirectoriesFormProps<ContractorsTypesEnum, ITagDirItem, ITagDirItem, ApiDirType.TAGS> {}
+export interface FormCreateTagProps extends DirectoriesFormProps<ApiDirType.TAGS, ITagDirItem, ITagDirItem> {}
 
 const validation = yup.object().shape({
   type: yup.string().required(),
   label: yup.string().max(100).required(),
 });
 
-const FormCreateTag: React.FC<FormCreateTagProps> = ({ onSubmit, type, parent, data, ...props }) => {
+const FormCreateTag: React.FC<FormCreateTagProps> = ({
+  filterOptions = tagsFilterOptions,
+  onSubmit,
+  type,
+  parent,
+  data,
+  ...props
+}) => {
   const {
     formState: { errors, isValid },
     register,
@@ -31,6 +36,7 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({ onSubmit, type, parent, d
     setValue,
     clearAfterSave,
     closeAfterSave,
+    formValues,
     toggleAfterSubmitOption,
   } = useAppForm<ITagDirItem>({
     defaultValues: {
@@ -51,7 +57,7 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({ onSubmit, type, parent, d
     <ModalForm
       {...props}
       style={{ maxWidth: 480 }}
-      filterOptions={tagsFilterOptions}
+      filterOptions={filterOptions}
       onOptSelect={(_o, v) => {
         setValue('type', v);
       }}
@@ -66,6 +72,16 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({ onSubmit, type, parent, d
       }
     >
       <Inputs>
+        {filterOptions && (
+          <InputLabel label={t('type')} error={errors.type} disabled>
+            <InputText
+              disabled
+              {...register('type')}
+              value={formValues?.type ? t(`${formValues?.type}` as any).toUpperCase() : type}
+            />
+          </InputLabel>
+        )}
+
         <InputLabel label={t('label')} direction={'vertical'} error={errors.label} required>
           <InputText placeholder={t('insertLabel')} {...register('label')} required autoFocus />
         </InputLabel>

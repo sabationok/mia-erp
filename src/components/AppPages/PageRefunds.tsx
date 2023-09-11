@@ -10,6 +10,7 @@ import { FilterReturnDataType } from '../Filter/AppFilter';
 import { PagePathType } from '../../data/pages.data';
 import { mockOrdersData, ordersTableColumns } from '../../data/orders.data';
 import { IRefund } from '../../redux/refunds/refunds.types';
+import useOrdersServiceHook from '../../hooks/useOrdersService.hook';
 // import useOrdersActionsCreatorHook from '../../hooks/useOrdersActionsCreator.hook';
 
 type Props = {
@@ -17,9 +18,9 @@ type Props = {
 };
 
 export const useOrderTableConfigs = () => {
-  // const service = useOrdersServiceHook();
+  const service = useOrdersServiceHook();
   const state = useRefundsSelector();
-  // const { getAll } = service;
+  const { getAll } = service;
   // const actionsCreator = useOrdersActionsCreatorHook();
   // const filterSelectors = useProductsFilterSelectorsHook();
   const [isLoading, setIsLoading] = useState(false);
@@ -29,26 +30,26 @@ export const useOrderTableConfigs = () => {
   const tableConfig = useMemo(
     (): ITableListProps<IRefund> => ({
       tableData: state.refunds,
-      tableTitles: ordersTableColumns,
+      tableTitles: ordersTableColumns as never,
       // tableSortParams: ordersSearchParams.filter(el => el.sort),
       isFilter: true,
       isSearch: true,
       footer: true,
       checkBoxes: true,
       // actionsCreator,
-      // onFilterSubmit: filterParams => {
-      //   setFilterParams(filterParams);
-      //   getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading }).then();
-      // },
-      // handleTableSort: (param, sortOrder) => {
-      //   setSortParams({ dataPath: param.dataPath, sortOrder });
-      //   getAll({
-      //     data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },
-      //     onLoading: setIsLoading,
-      //   }).then();
-      // },
+      onFilterSubmit: filterParams => {
+        setFilterParams(filterParams);
+        getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading }).then();
+      },
+      handleTableSort: (param, sortOrder) => {
+        setSortParams({ dataPath: param.dataPath, sortOrder });
+        getAll({
+          data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },
+          onLoading: setIsLoading,
+        }).then();
+      },
     }),
-    [state.refunds]
+    [filterParams, getAll, sortParams, state.refunds]
   );
 
   // useEffect(() => {

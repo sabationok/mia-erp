@@ -5,7 +5,7 @@ import FormAddOrderSlot from './FormAddOrderSlot';
 import { OnlyUUID } from '../../../redux/global.types';
 import { ExtractId } from '../../../utils/dataTransform';
 import { IOrderSlot } from '../../../redux/orders/orders.types';
-import OrderSlotOverview from '../../Overviews/OrderSlotOverview';
+import OrderSlotOverview from '../../Modals/Overviews/OrderSlotOverview';
 
 export interface FormCreateOrderProductsListProps {
   onSelect: (item: IOrderSlot) => void;

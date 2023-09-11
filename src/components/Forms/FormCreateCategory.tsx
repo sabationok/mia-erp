@@ -1,5 +1,5 @@
 import ModalForm from 'components/ModalForm';
-import { CategoryTypes, ICategory, ICategoryFormData } from 'redux/directories/directories.types';
+import { ICategory, ICategoryFormData } from 'redux/directories/directories.types';
 import React from 'react';
 import styled from 'styled-components';
 import * as yup from 'yup';
@@ -9,11 +9,12 @@ import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import t from '../../lang';
 import { DirectoriesFormProps } from '../Directories/dir.types';
-import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { useAppForm } from '../../hooks';
+import { ApiDirType } from '../../redux/APP_CONFIGS';
 
-export interface FormCreateCategoryProps extends DirectoriesFormProps<CategoryTypes, ICategory, ICategoryFormData> {}
+export interface FormCreateCategoryProps
+  extends DirectoriesFormProps<ApiDirType.CATEGORIES_PROD, ICategory, ICategoryFormData> {}
 
 const validation = yup.object().shape({
   label: yup.string().required(),
@@ -23,9 +24,8 @@ const validation = yup.object().shape({
 const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
   _id,
   type,
-  parent,
   edit,
-  data,
+  defaultState,
   onSubmit,
   ...props
 }) => {
@@ -37,35 +37,24 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
     clearAfterSave,
     toggleAfterSubmitOption,
   } = useAppForm<ICategoryFormData>({
-    defaultValues: parent?._id
-      ? {
-          ...data,
-          type,
-          parent: { _id: parent?._id },
-        }
-      : {
-          ...data,
-          type,
-        },
+    defaultValues: defaultState,
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
 
-  function formEventWrapper(evHandler?: AppSubmitHandler<ICategoryFormData>) {
-    if (evHandler) {
-      return handleSubmit(data =>
-        evHandler(data, {
-          closeAfterSave,
-          clearAfterSave,
-        })
-      );
-    }
-  }
+  const onValid = (data: ICategoryFormData) => {
+    console.log('FormCreateCategory on valid', data, onSubmit);
 
+    onSubmit &&
+      onSubmit(data, {
+        closeAfterSave,
+        clearAfterSave,
+      });
+  };
   return (
     <ModalForm
-      onSubmit={formEventWrapper(onSubmit)}
       {...props}
+      onSubmit={handleSubmit(onValid)}
       isValid={isValid}
       extraFooter={
         <FormAfterSubmitOptions
@@ -77,12 +66,12 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
     >
       <Inputs>
         <InputLabel label={t('type')} direction={'vertical'} error={errors.type} disabled>
-          <InputText defaultValue={type ? t(`${type}S`).toUpperCase() : type} disabled />
+          <InputText defaultValue={type ? t(type).toUpperCase() : type} disabled />
         </InputLabel>
 
-        {parent?._id && (
+        {defaultState?.parent?._id && (
           <InputLabel label={t('parentItem')} direction={'vertical'} error={errors.type} disabled>
-            <InputText defaultValue={parent?.label} disabled />
+            <InputText defaultValue={defaultState?.parent?.label} disabled />
           </InputLabel>
         )}
 

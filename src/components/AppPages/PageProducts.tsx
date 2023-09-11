@@ -11,8 +11,8 @@ import { FilterReturnDataType } from '../Filter/AppFilter';
 import { IProduct } from '../../redux/products/products.types';
 import useStorageServiceHook from '../../hooks/useProductsService.hook';
 import { PagePathType } from '../../data/pages.data';
-import useProductsFilterSelectorsHook from '../../redux/products/useStorageFilterSelectors.hook';
-import useStorageActionsCreator from '../../hooks/useStorageActionsCreator.hook';
+import useProductsFilterSelectorsHook from '../../hooks/useProductsFilterSelectors.hook';
+import useProductsActionsCreator from '../../hooks/useProductsActionsCreator.hook';
 
 type Props = {
   path: PagePathType;
@@ -23,7 +23,7 @@ export const useProductsTableSettings = () => {
   const state = useProductsSelector();
   const { getAll } = service;
   const filterSelectors = useProductsFilterSelectorsHook();
-  const actionsCreator = useStorageActionsCreator();
+  const actionsCreator = useProductsActionsCreator();
   const [isLoading, setIsLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
@@ -80,7 +80,7 @@ const PageProducts: React.FC<any> = (props: Props) => {
   const { getAll } = useStorageServiceHook();
   const state = useProductsSelector();
   const filterSelectors = useProductsFilterSelectorsHook();
-  const actionsCreator = useStorageActionsCreator();
+  const actionsCreator = useProductsActionsCreator();
   const [isLoading, setIsLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();

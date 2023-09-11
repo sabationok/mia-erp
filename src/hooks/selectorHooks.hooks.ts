@@ -4,9 +4,7 @@ import { ApiDirType } from '../redux/APP_CONFIGS';
 import { useMemo } from 'react';
 
 export const useCounterpartyDirectorySelectorByType = <T extends ContractorsTypesEnum = any>(type: T) => {
-  const { directory: customers } = useDirectoriesSelector<ApiDirType.CONTRACTORS, ContractorsTypesEnum.CUSTOMER>(
-    ApiDirType.CONTRACTORS
-  );
+  const { directory: customers } = useDirectoriesSelector<ApiDirType.CONTRACTORS>(ApiDirType.CONTRACTORS);
 
   return useMemo(() => customers.filter(el => el.type === type), [type, customers]);
 };

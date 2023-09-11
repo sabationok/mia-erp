@@ -1,15 +1,13 @@
 import React, { memo } from 'react';
-import sprite from 'img/sprite';
+import sprite, { IconIdType } from 'img/sprite';
 import styled, { css, DefaultTheme, FlattenInterpolation, ThemeProps } from 'styled-components';
-import { iconId } from 'data';
-
-export type IconIdType = keyof typeof iconId;
 
 type TextTransform = 'uppercase' | 'lowercase' | 'capitalize' | 'none';
 
 interface ButtonProps {
   size?: string;
   variant: ButtonIconVariant;
+  padding?: string;
   icon?: IconIdType;
   iconId?: string;
   iconSize?: string;
@@ -39,6 +37,7 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
   endIconId = '',
   endIconSize = '18px',
   endIconStyles = {},
+  padding,
   onClick = () => {
     console.log('ButtonIcon click');
   },
@@ -127,6 +126,7 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
     //fill: ${({ theme }) => theme.field.backgroundColor};
     //color: ${({ theme }) => theme.modalBorderColor};
   }
+  padding: ${p => p.padding};
 
   @media screen and (max-width: 480px) {
     //text-transform: uppercase;
@@ -261,6 +261,12 @@ const pointerBottom = css`
   &:active {
   }
 `;
+const extraSmall = css`
+  padding: 4px 12px;
+
+  //min-width: 115px;
+  //min-height: 28px;
+`;
 const small = css`
   padding: 6px 22px;
 
@@ -391,6 +397,10 @@ const text = css`
     color: ${({ theme }) => theme.accentColor.pressed};
   }
 `;
+const textExtraSmall = css`
+  ${text};
+  ${extraSmall};
+`;
 const textSmall = css`
   ${text};
   ${small};
@@ -432,6 +442,7 @@ const variants = {
   outlinedSmall,
   filledSmall,
   underlinedText,
+  textExtraSmall,
   textSmall,
   textLarge,
   onlyIcon,

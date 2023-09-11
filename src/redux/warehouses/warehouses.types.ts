@@ -1,6 +1,9 @@
-import { AppResponse, IBase, OnlyUUID } from '../global.types';
+import { IBase, OnlyUUID } from '../global.types';
 import { IProduct } from '../products/products.types';
 import { ICompany } from '../companies/companies.types';
+import { IPriceListItem } from '../priceManagement/priceManagement.types';
+import { IVariation } from '../products/variations.types';
+import { AppQueryParams } from '../../api';
 
 export enum WarehouseTypeEnum {
   WAREHOUSE = 'warehouse',
@@ -15,104 +18,69 @@ export interface IWarehouse extends IBase {
   items?: IProductInventory[];
 }
 
-export type VariationSTableStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
+export type ProductInventoryStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
 export interface IProductInventory extends IBase {
   owner?: ICompany;
+
   product?: Partial<IProduct>;
+  variation?: IVariation;
+  price?: IPriceListItem;
 
   stock?: number;
   reserved?: number;
 
   reservation?: boolean;
-  hasVariations?: boolean;
-  template?: IVariationTableTemplate;
-  variations?: IVariation[];
 
   timeFrom?: string;
   timeTo?: string;
 }
-export interface IProductInventoryDto {
-  product?: Partial<IProduct>;
-  status?: VariationSTableStatus;
+export interface IProductInventoryFormData {
+  product?: Omit<IProduct, 'category' | 'productInventory'>;
+  variation?: IVariation;
+  status?: ProductInventoryStatus;
+  priceInfo?: Omit<IPriceListItem, 'list' | 'product'>;
 
   stock?: number;
   reserved?: number;
 
   reservation?: boolean;
-  hasVariations?: boolean;
-  template?: IVariationTableTemplate;
 
   customerTags?: string[];
   supplierTags?: string[];
   timeFrom?: string;
   timeTo?: string;
 }
-
-export interface IVariation extends IBase {
-  owner?: ICompany;
-  product?: IProduct;
-  table?: OnlyUUID;
-
-  stock?: number;
-  reserved?: number;
-
-  attribute_1?: IVariationTableTemplateOption;
-  attribute_2?: IVariationTableTemplateOption;
-
-  timeFrom?: string | number | Date;
-  timeTo?: string | number | Date;
-}
-export interface VariationDto {
+export interface IProductInventoryDto {
   product?: OnlyUUID;
-  table?: OnlyUUID;
+  variation?: OnlyUUID;
+  status?: OnlyUUID;
+  price?: OnlyUUID;
+
+  warehouse?: OnlyUUID;
 
   stock?: number;
   reserved?: number;
 
-  attribute_1?: OnlyUUID;
-  attribute_2?: OnlyUUID;
+  reservation?: boolean;
 
-  timeFrom?: string | number | Date;
-  timeTo?: string | number | Date;
+  customerTags?: string[];
+  supplierTags?: string[];
+  timeFrom?: string;
+  timeTo?: string;
 }
-export interface IVariationTableTemplate {
-  owner?: ICompany;
-  label?: string;
-  options?: IVariationTableTemplateOption;
-}
-export interface IVariationTableTemplateOption {
-  table?: IVariationTableTemplate;
-  label?: string;
-  isColumn?: boolean;
+export interface IProductInventoryReqData {
+  _id?: OnlyUUID;
+  data: IProductInventoryDto;
+  params?: AppQueryParams;
 }
 export interface IWarehouseDto {
   label: string;
   code?: string;
+  type?: WarehouseTypeEnum;
+  location?: string;
 }
 export interface IWarehouseReqData {
   _id?: string;
   data: IWarehouseDto;
 }
-export interface IVariationReqData {
-  _id?: string;
-  data: VariationDto;
-}
-
-export interface IVariationReqData {
-  _id?: string;
-  data: VariationDto;
-}
-
-export interface ICreateVariationReqData {
-  table: OnlyUUID;
-  data: VariationDto;
-}
-export interface IAllWarehousesRes extends AppResponse<IWarehouse[]> {}
-export interface IWarehouseRes extends AppResponse<IWarehouse> {}
-export interface IAllVariationTableTemplatesRes extends AppResponse<IVariationTableTemplate[]> {}
-export interface IVariationTableTemplateRes extends AppResponse<IVariationTableTemplate> {}
-export interface IProductInventoriesRes extends AppResponse<IProductInventory[]> {}
-export interface IProductInventoryRes extends AppResponse<IProductInventory> {}
-export interface IAllVariationsRes extends AppResponse<IVariation[]> {}
-export interface IVariationRes extends AppResponse<IVariation> {}

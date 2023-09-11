@@ -1,13 +1,12 @@
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import React, { useMemo } from 'react';
-import DirListItem, { DirListItemAddsProps } from './DirListItem';
+import DirListItem from './DirListItem';
 import styled from 'styled-components';
-import { IBaseDirItem } from '../dir.types';
+import { IDirItemBase } from '../dir.types';
 
-export interface DirListProps<T = any> extends Partial<DirListItemAddsProps> {
-  list: IBaseDirItem<T>[];
-  entryList?: IBaseDirItem<T>[];
-  parent?: T;
+export interface DirListProps {
+  list: IDirItemBase[];
+  entryList?: IDirItemBase[];
+  parent?: IDirItemBase;
   onCreateParent?: (...args: any[]) => void;
   createParentTitle?: string;
   currentLevel?: number;
@@ -15,23 +14,24 @@ export interface DirListProps<T = any> extends Partial<DirListItemAddsProps> {
   listBoxProps?: React.HTMLAttributes<HTMLDivElement>;
   listProps?: React.HTMLAttributes<HTMLUListElement>;
   availableLevels?: number;
+
+  editing?: boolean;
+  creatingParent?: boolean;
+  creatingChild?: boolean;
+  disabling?: boolean;
+  archiving?: boolean;
+  changeDisableStatus?: boolean;
+  changeArchiveStatus?: boolean;
 }
 
-const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLDivElement>> = ({
+const DirList: React.FC<DirListProps> = ({
   entryList,
   list,
-  parent,
-  onDelete,
-  onEdit,
-  onCreateChild,
-  onCreateParent,
-  onChangeArchiveStatus,
-  createParentTitle,
-  currentLevel = 0,
-  containerProps,
+
   listBoxProps,
   listProps,
   availableLevels = 1,
+
   ...props
 }) => {
   const listForRender = useMemo(() => (entryList ? entryList : list), [entryList, list]);
@@ -40,92 +40,68 @@ const DirList: React.FC<DirListProps & React.HTMLAttributes<HTMLDivElement>> = (
     () =>
       listForRender?.map((item, idx) => (
         <DirListItem
-          key={item?._id || idx}
+          key={`treeItem_${item?._id || idx}`}
           {...item}
+          {...props}
           item={item}
-          parent={parent && parent}
-          onDelete={onDelete}
-          onEdit={onEdit}
-          onCreateChild={onCreateChild}
-          onChangeArchiveStatus={onChangeArchiveStatus}
           list={list}
           availableLevels={availableLevels}
-          currentLevel={currentLevel}
+          currentLevel={0}
         />
       )),
-    [availableLevels, currentLevel, list, listForRender, onChangeArchiveStatus, onCreateChild, onDelete, onEdit, parent]
+    [availableLevels, list, listForRender, props]
   );
 
   return (
-    <Box {...containerProps}>
-      <ListBox {...listBoxProps} style={{ ...listBoxProps?.style, padding: currentLevel === 0 ? '0 12px' : '0' }}>
-        {listForRender.length > 0 ? (
-          <List
-            {...listProps}
-            style={{
-              ...listProps?.style,
-              padding: currentLevel === 0 ? '12px 0' : '',
-            }}
-          >
-            {renderList}
-          </List>
-        ) : (
-          <EmptyList>Список порожній</EmptyList>
-        )}
-      </ListBox>
-
-      {onCreateParent && (
-        <CreateParent>
-          <ButtonIcon variant="outlinedSmall" onClick={() => onCreateParent()}>
-            {createParentTitle || 'Create parent'}
-          </ButtonIcon>
-        </CreateParent>
+    <ListBox {...listBoxProps} style={{ ...listBoxProps?.style, padding: '0 ' }}>
+      {listForRender.length > 0 ? (
+        <List
+          {...listProps}
+          style={{
+            ...listProps?.style,
+            padding: '12px',
+          }}
+        >
+          {renderList}
+        </List>
+      ) : (
+        <EmptyList>Список порожній</EmptyList>
       )}
-    </Box>
+    </ListBox>
   );
 };
-const Box = styled.div`
-  //display: flex;
-  //flex-direction: column;
-
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr min-content;
-
-  position: relative;
-
-  height: 100%;
-  max-height: 100%;
-
-  overflow: hidden;
-`;
+// const Box = styled.div`
+//   //display: flex;
+//   //flex-direction: column;
+//
+//   display: grid;
+//   grid-template-columns: 1fr;
+//   grid-template-rows: 1fr min-content;
+//
+//   position: relative;
+//
+//   height: 100%;
+//   max-height: 100%;
+//
+//   overflow: hidden;
+// `;
 const ListBox = styled.div`
   flex: 1;
+
+  width: 100%;
   max-height: 100%;
+
   overflow: auto;
 `;
 const List = styled.ul`
   flex-grow: 1;
 
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: 1fr;
+
+  gap: 8px;
 
   padding-top: 12px;
-`;
-const CreateParent = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  z-index: 5;
-
-  padding: 8px;
-
-  border-top: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;
 const EmptyList = styled.div`
   display: flex;

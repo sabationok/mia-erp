@@ -11,10 +11,12 @@ import { DirectoriesFormProps } from '../Directories/dir.types';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { useAppForm } from '../../hooks';
+import { ApiDirType } from '../../redux/APP_CONFIGS';
 
 const validation = yup.object().shape({});
 
-export interface FormCreateCompanyActivityProps extends DirectoriesFormProps<any, IActivity, IActivityFormData> {}
+export interface FormCreateCompanyActivityProps
+  extends DirectoriesFormProps<ApiDirType.ACTIVITIES, IActivity, IActivityFormData> {}
 
 const FormCreateActivity: React.FC<FormCreateCompanyActivityProps> = ({ _id, edit, data, onSubmit, ...props }) => {
   const {

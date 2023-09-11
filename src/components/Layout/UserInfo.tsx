@@ -3,7 +3,7 @@ import ProfileCard from 'components/atoms/ProfileCard/ProfileCard';
 import usePermissionsServiceHook, { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
 import FlexBox from '../atoms/FlexBox';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import Text from '../atoms/Text';
+import { Text } from '../atoms/Text';
 import useAppAuthHook from '../../hooks/useAppAuth.hook';
 import { useMemo } from 'react';
 import { useAuthSelector } from '../../redux/selectors.store';

@@ -7,16 +7,14 @@ import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import t from '../../lang';
-import { DirectoriesFormProps, IBaseDirItem } from '../Directories/dir.types';
+import { DirectoriesFormProps, IBaseDirItem, IDirItemBase } from '../Directories/dir.types';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { useAppForm } from '../../hooks';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 
-export interface FormCreateDirTreeCompProps<T = any, D extends ApiDirType = any, FD = any>
-  extends DirectoriesFormProps<T, IBaseDirItem<T, D>, FD> {
-  dirType?: ApiDirType;
-}
+export interface FormCreateDirTreeCompProps<DirType extends ApiDirType = any, FD = any>
+  extends DirectoriesFormProps<DirType, IDirItemBase<DirType>, FD> {}
 
 const validation = yup.object().shape({
   label: yup.string().required(),
@@ -26,9 +24,8 @@ const validation = yup.object().shape({
 const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
   _id,
   type,
-  parent,
   edit,
-  data,
+  defaultState,
   onSubmit,
   dirType,
   ...props
@@ -41,14 +38,14 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
     clearAfterSave,
     toggleAfterSubmitOption: toggleOption,
   } = useAppForm<IBaseDirItem>({
-    defaultValues: parent?._id
+    defaultValues: defaultState?.parent?._id
       ? {
-          ...data,
+          ...defaultState,
           type,
-          parent: { _id: parent?._id },
+          parent: { _id: defaultState?.parent?._id },
         }
       : {
-          ...data,
+          ...defaultState,
           type,
         },
     resolver: yupResolver(validation),
@@ -63,24 +60,28 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
           clearAfterSave,
         })
       );
+    } else {
+      console.log('FormCreateDirTreeComp onSubmit not passed.', dirType);
     }
   }
 
   return (
     <ModalForm
-      onSubmit={formEventWrapper(onSubmit)}
       {...props}
+      onSubmit={formEventWrapper(onSubmit)}
       isValid={isValid}
       extraFooter={<FormAfterSubmitOptions {...{ closeAfterSave, clearAfterSave, toggleOption }} />}
     >
       <Inputs>
-        <InputLabel label={t('type')} error={errors.type} disabled>
-          <InputText defaultValue={type ? t(`${type}s` as any).toUpperCase() : type} disabled />
-        </InputLabel>
+        {props.filterOptions && (
+          <InputLabel label={t('type')} error={errors.type} disabled>
+            <InputText defaultValue={type ? t(`${type}s` as any).toUpperCase() : type} disabled />
+          </InputLabel>
+        )}
 
-        {parent?._id && (
+        {defaultState?.parent?._id && (
           <InputLabel label={t('parentItem')} error={errors.type} disabled>
-            <InputText defaultValue={parent?.label} disabled />
+            <InputText defaultValue={defaultState?.parent?.label} disabled />
           </InputLabel>
         )}
 

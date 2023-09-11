@@ -2,36 +2,35 @@ import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { IOrderSlot } from 'redux/orders/orders.types';
 import { useCallback, useEffect, useState } from 'react';
-import OrderSlotOverview from '../../Overviews/OrderSlotOverview';
+import OrderSlotOverview from '../../Modals/Overviews/OrderSlotOverview';
 import { IProduct } from 'redux/products/products.types';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
 import TableList from '../../TableList/TableList';
-import { useModalService } from '../../ModalProvider/ModalProvider';
 import { createApiCall, OrdersApi } from '../../../api';
 import { OnlyUUID } from 'redux/global.types';
 import FlexBox from '../../atoms/FlexBox';
 import { IPriceListItem } from 'redux/priceManagement/priceManagement.types';
 import styled from 'styled-components';
 import { IProductVariation } from '../../TableVariations';
-import { IWarehouseDirItem } from '../../Directories/dir.types';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { isUndefined } from 'lodash';
 import { useWarehousesSelector } from 'redux/selectors.store';
+import { IWarehouse } from '../../../redux/warehouses/warehouses.types';
 
 export interface FormCreateOrderSlotItemProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<IOrderSlot>;
   product?: OnlyUUID;
 }
 const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit, product, ...props }) => {
-  const modalS = useModalService();
-  const [loadedData, setLoadedData] = useState<IOrderSlot>();
+  // const modalS = useModalService();
+  // const [loadedData, setLoadedData] = useState<IOrderSlot>();
   const [dataForSlot, setDataForSlot] = useState<IProduct>();
 
-  const [loadedPrices, setLoadedPrices] = useState();
+  // const [loadedPrices, setLoadedPrices] = useState();
   const warehouses = useWarehousesSelector().warehouses;
   const [selectedPrice, setSelectedPrice] = useState<IPriceListItem>();
-  const [selectedVariation, setSelectedVariation] = useState<IProductVariation>();
-  const [selectedWarehouse, setSelectedWarehouse] = useState<IWarehouseDirItem | undefined>();
+  const [selectedVariation] = useState<IProductVariation>();
+  const [selectedWarehouse, setSelectedWarehouse] = useState<IWarehouse | undefined>();
   const [currentTab, setCurrentTab] = useState(1);
 
   const getData = useCallback(() => {

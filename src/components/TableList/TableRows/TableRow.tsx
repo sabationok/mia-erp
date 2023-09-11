@@ -30,8 +30,9 @@ export interface RowCTXValue extends TableRowProps {
 export const RowCTX = createContext<any>({});
 export const useRow = () => useContext(RowCTX) as RowCTXValue;
 
-const TableRow: React.FC<TableRowProps> = ({ checked, ...props }) => {
-  const { tableTitles, selectedRows, tableData, rowGrid, checkBoxes, onCheckboxChange } = useTable<TRowDataType>();
+const TableRow: React.FC<TableRowProps> = ({ checked, rowData, ...props }) => {
+  const { tableTitles, selectedRows, tableData, rowGrid, checkBoxes, onCheckboxChange, transformData } =
+    useTable<TRowDataType>();
   const [isActionsOpen, setIsActionsOpen] = useState(false);
   const [isChecked, setIsChecked] = useState<boolean>(checked ?? false);
 
@@ -45,6 +46,8 @@ const TableRow: React.FC<TableRowProps> = ({ checked, ...props }) => {
     },
     [onCheckboxChange]
   );
+
+  const currentRowData = useMemo(() => (transformData ? transformData(rowData) : rowData), [rowData, transformData]);
 
   const onCloseActions = useCallback(() => {
     setIsActionsOpen(false);
@@ -67,15 +70,17 @@ const TableRow: React.FC<TableRowProps> = ({ checked, ...props }) => {
   const CTX = useMemo((): RowCTXValue => {
     return {
       ...props,
-      checked: selectedRows?.includes(props.rowData._id),
+      rowData: currentRowData,
+      checked: selectedRows?.includes(currentRowData._id),
       isActionsOpen,
       onToggleActions,
       onCloseActions,
       onRowCheckboxChange,
     };
-  }, [props, selectedRows, isActionsOpen, onToggleActions, onCloseActions, onRowCheckboxChange]);
+  }, [props, currentRowData, selectedRows, isActionsOpen, onToggleActions, onCloseActions, onRowCheckboxChange]);
+
   return (
-    <Row id={props?.rowData?._id} checked={isChecked} data-row>
+    <Row id={currentRowData?._id} checked={isChecked} data-row>
       <RowCTX.Provider value={CTX}>
         <RowStickyEl>{checkBoxes && <CellCheckBox />}</RowStickyEl>
 

@@ -83,6 +83,7 @@ const darkTheme = {
   tableRowBackgroundSelected: '#323234',
 
   sideBarBackgroundColor: 'rgba(39, 39, 41, 1)',
+  sideBarOptionsBackgroundColor: 'rgb(50, 50, 52)',
   sideBarBorderColor: 'rgba(70, 70, 73, 1)',
   sideBarButtonBackgroundColorActive: 'rgba(50, 50, 52, 1)',
   sideBarTogglerBackgroundColor: 'rgba(70, 70, 73, 1)',
@@ -165,6 +166,7 @@ const lightTheme: Partial<ITheme & Record<string, any>> = {
   tableRowBackgroundActive: '#F2F2F2',
 
   sideBarBackgroundColor: 'rgba(250, 250, 250, 1)',
+  sideBarOptionsBackgroundColor: 'rgba(250, 250, 250, 1)',
   sideBarBorderColor: 'rgba(218, 218, 218, 1)',
   sideBarButtonBackgroundColorActive: 'rgba(233, 233, 233, 1)',
   sideBarTogglerBackgroundColor: 'rgba(235, 235, 235, 1)',

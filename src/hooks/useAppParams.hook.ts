@@ -5,6 +5,7 @@ export enum AppUrlParamKeys {
   permissionId = 'permissionId',
   warehouseId = 'warehouseId',
   priceListId = 'priceListId',
+  productId = 'productId',
 }
 export type AppUrlParams = Record<AppUrlParamKeys, string>;
 const useAppParams = (): Readonly<Partial<AppUrlParams>> => useParams<AppUrlParams>();

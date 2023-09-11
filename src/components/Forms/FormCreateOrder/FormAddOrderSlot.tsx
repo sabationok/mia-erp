@@ -3,7 +3,6 @@ import { useModalService } from '../../ModalProvider/ModalProvider';
 import { Modals } from '../../ModalProvider/Modals';
 import { IProduct } from '../../../redux/products/products.types';
 import { IOrderSlot } from '../../../redux/orders/orders.types';
-import { useState } from 'react';
 import { ExtractId } from '../../../utils/dataTransform';
 
 export interface FormAddOrderSlotProps {
@@ -12,11 +11,11 @@ export interface FormAddOrderSlotProps {
 
 const FormAddOrderSlot: React.FC<FormAddOrderSlotProps> = ({ onSelect, ...props }) => {
   const modalS = useModalService();
-  const [loadedData, setLoadedData] = useState<IProduct | undefined>();
+  // const [loadedData, setLoadedData] = useState<IProduct | undefined>();
 
   const onProductSelect = (d?: IProduct) => {
     if (!d) return;
-    setLoadedData(d);
+
     const modal = modalS.handleOpenModal({
       Modal: Modals.FormCreateOrderSlotItem,
       props: {
@@ -37,13 +36,17 @@ const FormAddOrderSlot: React.FC<FormAddOrderSlotProps> = ({ onSelect, ...props 
     <FormCreateInner
       buttonText={'Add position to order'}
       onClick={() => {
-        const modal = modalS.handleOpenModal({
+        const m = modalS.handleOpenModal({
           Modal: Modals.SelectProductModal,
           props: {
             title: 'Add product to order',
             onSelect: d => {
               onProductSelect(d);
               console.log(d);
+
+              if (d && m?.onClose) {
+                m?.onClose();
+              }
             },
           },
         });

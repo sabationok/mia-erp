@@ -1,15 +1,22 @@
-import React, { createContext, memo, useContext, useEffect, useState } from 'react';
+import React, { createContext, memo, Suspense, useContext, useEffect, useMemo, useState } from 'react';
 import CloseButton from './CloseButton';
 import styled from 'styled-components';
 
-interface ModalComponentProps {
-  children: React.ReactNode;
-  idx?: number | string;
+interface ModalComponentProps<P = any> {
+  children?: React.ReactNode;
+  RenderModalComponentChildren?: React.FC<RenderModalComponentChildrenProps & P>;
+  childrenProps?: P;
+  idx?: number;
   settings?: IModalSettings;
   onClose: () => void;
   id?: number | string;
   totalLength?: number;
   isLast?: boolean;
+}
+export interface RenderModalComponentChildrenProps {
+  onClose?: () => void;
+  modalId?: string | number;
+  index?: number;
 }
 
 export enum ModalAnimationType {
@@ -77,6 +84,8 @@ export const useModal = () => useContext(ModalContext) as ModalCTX;
 
 const ModalComponent: React.FC<ModalComponentProps> = ({
   children,
+  RenderModalComponentChildren,
+  childrenProps,
   idx,
   settings,
   onClose,
@@ -95,15 +104,23 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
     if (typeof onClose === 'function') onClose();
   }
 
-  const CTX: ModalCTX = {
-    onClose,
-    modalIdx: idx,
-    modalSettings,
-    id,
-    totalLength,
-    isLast,
-    handleSetModalSettings,
-  };
+  const CTX: ModalCTX = useMemo(
+    () => ({
+      onClose,
+      modalIdx: idx,
+      modalSettings,
+      id,
+      handleSetModalSettings,
+    }),
+    [id, idx, modalSettings, onClose]
+  );
+
+  const renderChildren = useMemo(() => {
+    return RenderModalComponentChildren ? (
+      <RenderModalComponentChildren modalId={id} onClose={onClose} index={idx} {...childrenProps} />
+    ) : null;
+    // eslint-disable-next-line
+  }, [childrenProps, id, idx]);
 
   useEffect(() => {
     if (!modalSettings.onEscapePressClose) return;
@@ -131,13 +148,15 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
       style={modalSettings.backdropStyle}
       modalSettings={modalSettings}
     >
-      <ModalContext.Provider value={CTX}>
-        <Modal style={modalSettings.modalStyle} modalSettings={modalSettings}>
-          {modalSettings?.closeBtn && <CloseButton onClick={onClose} />}
+      <Suspense>
+        <ModalContext.Provider value={CTX}>
+          <Modal style={modalSettings.modalStyle} modalSettings={modalSettings}>
+            {modalSettings?.closeBtn && <CloseButton onClick={onClose} />}
 
-          {children}
-        </Modal>
-      </ModalContext.Provider>
+            {renderChildren}
+          </Modal>
+        </ModalContext.Provider>
+      </Suspense>
     </Backdrop>
   );
 };

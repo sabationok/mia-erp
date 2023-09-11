@@ -34,16 +34,16 @@ const usePriceManagementService = (): PriceManagementService => {
   const dispatch: AppDispatch = useAppDispatch();
 
   return useMemo((): PriceManagementService => {
-    const { getPriceListById, getAllItems } = PriceManagementApi;
+    const { getAllItems } = PriceManagementApi;
     return {
-      createList: async arg => dispatch(thunks.createPriceListThunk(defaultThunkPayload(arg))),
-      getAll: async arg => dispatch(thunks.getAllPriceListsThunk(defaultThunkPayload(arg))),
-      getById: async arg => dispatch(thunks.getPriceListByIdThunk(defaultThunkPayload(arg))),
-      refreshListById: async arg => dispatch(thunks.refreshPriceListByIdThunk(defaultThunkPayload(arg))),
-      addItemToList: async arg => dispatch(thunks.addPriceToListThunk(defaultThunkPayload(arg))),
+      createList: arg => dispatch(thunks.createPriceListThunk(defaultThunkPayload(arg))),
+      getAll: arg => dispatch(thunks.getAllPriceListsThunk(defaultThunkPayload(arg))),
+      getById: arg => dispatch(thunks.getPriceListByIdThunk(defaultThunkPayload(arg))),
+      refreshListById: arg => dispatch(thunks.refreshPriceListByIdThunk(defaultThunkPayload(arg))),
+      addItemToList: arg => dispatch(thunks.addPriceToListThunk(defaultThunkPayload(arg))),
 
-      getAllPricesByProductId: async arg => createApiCall(defaultApiCallPayload(arg), getAllItems, PriceManagementApi),
-      getAllPricesByListId: async arg => createApiCall(defaultApiCallPayload(arg), getAllItems, PriceManagementApi),
+      getAllPricesByProductId: arg => createApiCall(defaultApiCallPayload(arg), getAllItems, PriceManagementApi),
+      getAllPricesByListId: arg => createApiCall(defaultApiCallPayload(arg), getAllItems, PriceManagementApi),
 
       // createList: async payload => dispatch(createProductThunk(defaultThunkPayload(payload))),
       // deleteById: async payload => createApiCall(defaultApiCallPayload(payload), deleteById, ProductsApi),

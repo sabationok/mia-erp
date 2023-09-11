@@ -27,21 +27,28 @@ export enum API_BASE_ROUTES {
   TRANSACTIONS = `/transactions`,
   CUSTOM_ROLES = '/roles',
   PRODUCTS = '/products',
+  PROPERTIES = '/products/properties',
+  VARIATIONS = '/products/variations',
   ORDERS = '/orders',
   REFUNDS = '/refunds',
   PRICE_MANAGEMENT = '/priceManagement',
   WAREHOUSES = '/warehouses',
+  PAYMENTS = '/payments',
 }
 
 export enum Endpoints {
   getAll = 'getAll',
+  getAllByProductId = 'getAllByProductId',
+  getAllByWarehouseId = 'getAllByWarehouseId',
   getAllByType = 'getAllByType',
   getAllGrouped = 'getAllGrouped',
   create = 'create',
+  update = 'update',
   delete = 'delete',
   deleteById = 'deleteById',
   updateById = 'updateById',
   getById = 'getById',
+  getFullInfoById = 'getFullInfoById',
   getCurrent = 'getCurrent',
   register = 'register',
   logOut = 'logOut',
@@ -104,6 +111,9 @@ export enum ApiDirType {
   COLLECTION = 'collection',
   COLLECTIONS = 'collections',
   UNSET = 'unset',
+  PROPERTIES_PRODUCTS = 'properties_products',
+  VARIATIONS = 'variations',
+  VARIATIONS_TEMPLATES = 'variations_templates',
   DEFAULT = 'DEFAULT',
 }
 
@@ -116,19 +126,35 @@ export enum ApiDefaultDirType {
 const transactionsApiEndpoints: ApiEndpointsMap = {
   [Endpoints.getAll]: (): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.getAll}`,
   [Endpoints.create]: (): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.create}`,
-  [Endpoints.deleteById]: (id?: string): string =>
-    `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.deleteById}/${id || ''}`,
-  [Endpoints.updateById]: (id?: string): string =>
-    `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.updateById}/${id || ''}`,
-  [Endpoints.getById]: (id?: string): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.getById}/${id || ''}`,
+  [Endpoints.deleteById]: (id?: string): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.deleteById}/${id}`,
+  [Endpoints.updateById]: (id?: string): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.updateById}/${id}`,
+  [Endpoints.getById]: (id?: string): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.getById}/${id}`,
 };
 
 const productsApiEndpoints: ApiEndpointsMap = {
   [Endpoints.getAll]: (): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.getAll}`,
   [Endpoints.create]: (): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.create}`,
-  [Endpoints.deleteById]: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.deleteById}/${id || ''}`,
-  [Endpoints.updateById]: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.updateById}/${id || ''}`,
-  [Endpoints.getById]: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.getById}/${id || ''}`,
+  [Endpoints.deleteById]: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.deleteById}/${id}`,
+  [Endpoints.updateById]: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.updateById}/${id}`,
+  [Endpoints.getById]: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.getById}/${id}`,
+  [Endpoints.getFullInfoById]: (id?: string): string =>
+    `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.getFullInfoById}/${id}`,
+};
+const propertiesApiEndpoints: ApiEndpointsMap = {
+  [Endpoints.getAll]: (): string => `${API_BASE_ROUTES.PROPERTIES}/${Endpoints.getAll}`,
+  [Endpoints.create]: (): string => `${API_BASE_ROUTES.PROPERTIES}/${Endpoints.create}`,
+  [Endpoints.deleteById]: (id?: string): string => `${API_BASE_ROUTES.PROPERTIES}/${Endpoints.deleteById}/${id}`,
+  [Endpoints.updateById]: (id?: string): string => `${API_BASE_ROUTES.PROPERTIES}/${Endpoints.updateById}/${id}`,
+  [Endpoints.getById]: (id?: string): string => `${API_BASE_ROUTES.PROPERTIES}/${Endpoints.getById}/${id}`,
+};
+const variationsApiEndpoints = {
+  [Endpoints.getAll]: (): string => `${API_BASE_ROUTES.VARIATIONS}/${Endpoints.getAll}`,
+  [Endpoints.getAllByProductId]: (id?: string): string =>
+    `${API_BASE_ROUTES.VARIATIONS}/${Endpoints.getAllByProductId}/${id}`,
+  [Endpoints.create]: (): string => `${API_BASE_ROUTES.VARIATIONS}/${Endpoints.create}`,
+  [Endpoints.deleteById]: (id?: string): string => `${API_BASE_ROUTES.VARIATIONS}/${Endpoints.deleteById}/${id}`,
+  [Endpoints.updateById]: (id?: string): string => `${API_BASE_ROUTES.VARIATIONS}/${Endpoints.updateById}/${id}`,
+  [Endpoints.getById]: (id?: string): string => `${API_BASE_ROUTES.VARIATIONS}/${Endpoints.getById}/${id}`,
 };
 const permissionsApiEndpoints: ApiEndpointsMap = {
   [Endpoints.updateById]: (permissionId?: string) =>
@@ -139,9 +165,9 @@ const permissionsApiEndpoints: ApiEndpointsMap = {
   [Endpoints.getAllByUserId]: (userId?: string) =>
     `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.getAllByUserId}/${userId}`,
   [Endpoints.getAllByCompanyId]: (companyId?: string) =>
-    `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.getAllByCompanyId}/${companyId || ''}`,
+    `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.getAllByCompanyId}/${companyId}`,
   [Endpoints.getCurrent]: () => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.getCurrent}`,
-  [Endpoints.logIn]: (id?: string) => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.logIn}/${id || ''}`,
+  [Endpoints.logIn]: (id?: string) => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.logIn}/${id}`,
   [Endpoints.logOut]: () => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.logOut}`,
   [Endpoints.inviteUser]: () => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.inviteUser}`,
 };
@@ -152,7 +178,7 @@ const companiesApiEndpoints: ApiEndpointsMap = {
   [Endpoints.updateById]: (permissionId?: string) =>
     `${API_BASE_ROUTES.COMPANIES}/${Endpoints.updateById}/${permissionId}`,
   [Endpoints.create]: () => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.create}`,
-  [Endpoints.getById]: (id?: string) => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.getById}/${id || ''}`,
+  [Endpoints.getById]: (id?: string) => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.getById}/${id}`,
   [Endpoints.getAllByOwnerId]: (ownerId?: string) =>
     `${API_BASE_ROUTES.COMPANIES}/${Endpoints.getAllByOwnerId}/${ownerId}`,
 };
@@ -219,11 +245,17 @@ const ordersEndpoints: ApiEndpointsMap = {
 };
 
 const warehousesEndpoints = {
-  [Endpoints.getAll]: () => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.getAll}`,
-  [Endpoints.getById]: (id: string) => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.getById}/${id}`,
   [Endpoints.create]: () => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.create}`,
-  [Endpoints.updateById]: (id: string) => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.updateById}/${id}`,
-  [Endpoints.deleteById]: (id: string) => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.deleteById}/${id}`,
+  [Endpoints.delete]: (id?: string) => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.delete}/${id}`,
+  [Endpoints.update]: (id?: string) => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.update}/${id}`,
+  [Endpoints.getById]: (id?: string) => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.getById}/${id}`,
+  [Endpoints.getAll]: () => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.getAll}`,
+  [Endpoints.getAllByWarehouseId]: (id?: string) =>
+    `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.getAllByWarehouseId}/${id}`,
+};
+const payments = {
+  [Endpoints.create]: () => `${API_BASE_ROUTES.PAYMENTS}/${Endpoints.create}`,
+  [Endpoints.getAll]: () => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.getAll}`,
 };
 
 const APP_CONFIGS = {
@@ -236,9 +268,12 @@ const APP_CONFIGS = {
     customRoles: customRoles,
     transactions: transactionsApiEndpoints,
     products: productsApiEndpoints,
+    propertiesApiEndpoints,
+    variationsApiEndpoints,
     warehousesEndpoints,
     priceManagementEndpoints,
     ordersEndpoints,
+    payments,
   },
 };
 

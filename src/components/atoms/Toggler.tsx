@@ -1,67 +1,73 @@
-import React, { memo, useEffect, useState } from 'react'
-import styled from 'styled-components'
+import React, { memo, useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 type Props = {
-  active?: boolean
-  onChangeValue?: (value: boolean) => void
-  mr?: number
-  disabled?: boolean
-}
+  active?: boolean;
+  onChange?: (value: boolean) => void;
+  size?: number;
+  disabled?: boolean;
+};
 
-function Toggler({
-  active = false,
-  onChangeValue,
-  mr,
-  disabled = false,
-}: Props) {
-  const [_active, setActive] = useState(active ?? false)
+function Toggler({ active = false, onChange, size = 14, disabled = false }: Props) {
+  const [_active, setActive] = useState(active ?? false);
 
   useEffect(() => {
-    setActive(disabled ? false : active ?? false)
-  }, [active, disabled])
+    setActive(disabled ? false : active ?? false);
+  }, [active, disabled]);
   const onTogglerPress = () => {
-    setActive(!_active)
-    onChangeValue && onChangeValue(!_active)
-  }
+    setActive(!_active);
+    onChange && onChange(!_active);
+  };
 
   return (
     <Container
-      mr={mr}
       onClick={onTogglerPress}
+      size={size}
       isActive={_active ?? false}
       disabled={disabled}
       aria-checked={_active}
     >
-      <Circle isActive={_active ?? false} />
+      <Circle isActive={_active ?? false} size={size} />
     </Container>
-  )
+  );
 }
 
 const Container = styled.div<{
-  isActive: boolean
-  mr?: number
-  disabled?: boolean
+  isActive: boolean;
+  disabled?: boolean;
+  size?: number;
 }>`
-  cursor: pointer;
-  width: 44px;
-  height: 28px;
-  background-color: #fff;
-  margin-right: ${({ mr = 0 }) => mr}px;
+  display: flex;
+  align-items: center;
+  //position: relative;
+  //justify-content: ${p => (p.isActive ? 'flex-end' : 'flex-start')};
+
+  padding: 2px;
+  width: ${({ size = 16 }) => size * 2.5}px;
+  height: ${({ size = 16 }) => size + 6}px;
+
+  //background-color: ${p => p.theme.sideBarBackgroundColor};
   border-radius: 100px;
-  border: 1px solid ${({ isActive }) => (isActive ? '#62C45B' : '#e9e7dd')};
+  background-color: ${({ isActive, theme }) => (isActive ? theme.accentColor.light : theme.sideBarBackgroundColor)};
+
+  border: 1px solid ${({ isActive, theme }) => (isActive ? theme.accentColor.base : '#e9e7dd')};
 
   opacity: ${({ disabled }) => (disabled ? '70%' : 1)};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'all')};
-`
+  cursor: pointer;
 
-const Circle = styled.div<{ isActive: boolean }>`
-  width: 22px;
-  height: 22px;
-  background-color: ${({ isActive }) => (isActive ? '#62C45B' : '#838383')};
-  border-radius: 11px;
-  margin-top: 2px;
-  transition: all 0.2s;
-  margin-left: ${({ isActive }) => (isActive ? 18 : 2)}px;
-`
+  transition: all ${p => p.theme.globals.timingFunctionMain};
+`;
 
-export default memo(Toggler)
+const Circle = styled.div<{ isActive: boolean; size?: number }>`
+  width: ${({ size = 16 }) => size}px;
+  height: ${({ size = 16 }) => size}px;
+
+  margin-left: ${({ isActive, size = 16 }) => (isActive ? size * 1.5 - 6 : 0)}px;
+
+  border-radius: 50%;
+  background-color: ${({ isActive, theme }) => (isActive ? theme.accentColor.base : '#e9e7dd')};
+  transition: all ${p => p.theme.globals.timingFunctionMain};
+`;
+
+export default memo(Toggler);

@@ -6,7 +6,7 @@ import { IPage } from 'redux/page/pageSlice';
 import styled from 'styled-components';
 
 import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
-import Text from '../../atoms/Text';
+import { Text } from '../../atoms/Text';
 import { useAppPages, useAppParams, useCloseByEscapeOrClickOnBackdrop } from '../../../hooks';
 import SubNavMenu from './SubNavMenu';
 import FlexBox from '../../atoms/FlexBox';
@@ -235,7 +235,7 @@ const StyledNavLink = styled(NavLink)`
   }
 
   &:hover {
-    background-color: rgba(254, 254, 254, 0.25);
+    //background-color: rgba(254, 254, 254, 0.25);
 
     &::before {
       height: 100%;
@@ -244,7 +244,7 @@ const StyledNavLink = styled(NavLink)`
   }
 
   &.active {
-    background-color: rgba(254, 254, 254, 0.05);
+    //background-color: rgba(254, 254, 254, 0.05);
     /* color: var(--darkOrange); */
     /* fill: var(--darkOrange); */
 

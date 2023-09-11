@@ -37,7 +37,13 @@ export const warehousesTableColumns: CellTittleProps<IWarehouse>[] = [
 export const warehouseOverviewTableColumns: CellTittleProps<IProductInventory>[] = [
   {
     top: { name: t('label'), align: 'start', getData: rd => rd.product?.label },
-    bottom: { name: t('sku'), align: 'start', getData: rd => rd.product?.sku },
+    getImgPreview: d => (d.product?.images ? d.product?.images[0]?.img_preview : ''),
+    width: '220px',
+    action: 'doubleDataWithAvatar',
+  },
+  {
+    top: { name: t('sku'), align: 'start', getData: rd => rd.product?.sku },
+    bottom: { name: t('barCode'), align: 'start', getData: rd => rd.product?.barCode },
     width: '200px',
     action: 'valueByPath',
   },
@@ -61,16 +67,16 @@ export const warehouseOverviewTableColumns: CellTittleProps<IProductInventory>[]
     width: '120px',
     action: 'status',
   },
-  {
-    top: {
-      name: 'Таблиця варіацій (назва)',
-      align: 'start',
-      getData: rd => (rd?.hasVariations ? rd?.template?.label : 'Без варіацій'),
-    },
-    bottom: { name: 'Резервування', align: 'start', getData: rd => (rd?.reservation ? 'ТАК' : 'НІ') },
-    width: '190px',
-    action: 'valueByPath',
-  },
+  // {
+  //   top: {
+  //     name: 'Таблиця варіацій (назва)',
+  //     align: 'start',
+  //     getData: rd => (rd?.hasVariations ? rd?.template?.label : 'Без варіацій'),
+  //   },
+  //   bottom: { name: 'Резервування', align: 'start', getData: rd => (rd?.reservation ? 'ТАК' : 'НІ') },
+  //   width: '190px',
+  //   action: 'valueByPath',
+  // },
   {
     top: { name: 'Наявність (заг)', align: 'start', getData: rd => rd.stock },
     bottom: { name: 'Резерв (заг)', align: 'start', getData: rd => rd.reserved },

@@ -25,7 +25,7 @@ export interface ThunkPayload<SD = any, RD = any, E = any | unknown, MD = any> {
 }
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof rootReducer>;
 
 export const useAppSelector = (): RootState => useSelector((state: RootState): RootState => state) as RootState;
 

@@ -1,6 +1,6 @@
 import { AppDispatch, useAppDispatch } from '../redux/store.store';
 import { useMemo } from 'react';
-import { ServiceDispatcherAsync } from '../redux/global.types';
+import { OnlyUUID, ServiceDispatcherAsync } from '../redux/global.types';
 import {
   createDirectoryItemThunk,
   CreateDirItemThunkSubmitData,
@@ -21,10 +21,18 @@ export interface DirectoriesService<
   UpdateDTO = any,
   ItemDataType = IBaseDirItem<ItemType, DirType>
 > {
-  changeArchiveStatus?: any;
   getAllByDirType: ServiceDispatcherAsync<DirThunkBaseSubmitData, DirThunkBaseReturnData<ItemDataType[]>>;
   create: ServiceDispatcherAsync<CreateDirItemThunkSubmitData<CreateDTO>, DirThunkBaseReturnData<ItemDataType[]>>;
   update: ServiceDispatcherAsync<UpdateDirItemThunkSubmitData<UpdateDTO>, DirThunkBaseReturnData<ItemDataType[]>>;
+  delete?: ServiceDispatcherAsync<OnlyUUID, DirThunkBaseReturnData<ItemDataType[]>>;
+  changeDisabledStatus: ServiceDispatcherAsync<
+    UpdateDirItemThunkSubmitData<UpdateDTO>,
+    DirThunkBaseReturnData<ItemDataType[]>
+  >;
+  changeArchiveStatus: ServiceDispatcherAsync<
+    UpdateDirItemThunkSubmitData<UpdateDTO>,
+    DirThunkBaseReturnData<ItemDataType[]>
+  >;
 }
 
 const useDirService = (): DirectoriesService => {
@@ -32,9 +40,11 @@ const useDirService = (): DirectoriesService => {
 
   return useMemo(
     (): DirectoriesService => ({
-      getAllByDirType: async payload => dispatch(getAllDirectoryItemsThunk(defaultThunkPayload(payload))),
-      create: async payload => dispatch(createDirectoryItemThunk(defaultThunkPayload(payload))),
-      update: async payload => dispatch(updateDirectoryItemThunk(defaultThunkPayload(payload))),
+      getAllByDirType: args => dispatch(getAllDirectoryItemsThunk(defaultThunkPayload(args))),
+      create: args => dispatch(createDirectoryItemThunk(defaultThunkPayload(args))),
+      update: args => dispatch(updateDirectoryItemThunk(defaultThunkPayload(args))),
+      changeDisabledStatus: args => dispatch(updateDirectoryItemThunk(defaultThunkPayload(args))),
+      changeArchiveStatus: args => dispatch(updateDirectoryItemThunk(defaultThunkPayload(args))),
     }),
     [dispatch]
   );
