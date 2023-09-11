@@ -19,9 +19,8 @@ type Props = {
 };
 const PageWarehouses: React.FC<any> = (props: Props) => {
   const navigate = useNavigate();
-  const service = useAppServiceProvider()[ServiceName.warehouses];
+  const { getAll } = useAppServiceProvider()[ServiceName.warehouses];
   const state = useWarehousesSelector();
-  const { getAll, getById } = service;
   const [isLoading, setIsLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
@@ -63,7 +62,7 @@ const PageWarehouses: React.FC<any> = (props: Props) => {
         getAll({
           data: { refresh: true },
           onLoading: setIsLoading,
-          onSuccess(d) {
+          onSuccess(_data) {
             console.log('PageWarehouses onSuccess getAll');
           },
         });

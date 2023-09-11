@@ -41,7 +41,6 @@ const DirListItem: React.FC<DirListItemProps> = props => {
     onUpdate,
     onCreateChild,
     deleted = false,
-    onDelete,
     disabled = false,
     onChangeDisableStatus,
     disabling,
@@ -53,6 +52,10 @@ const DirListItem: React.FC<DirListItemProps> = props => {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [state, setState] = useState<DirListItemState>({ archived, deleted, disabled });
+
+  const handleState = (key: keyof DirListItemState) => {
+    setState(p => ({ ...p, [key]: !p[key] }));
+  };
 
   // const stateActionsMap: Record<keyof DirListItemState, ((id: string, status: boolean) => void) | undefined> = {
   //   archived: onChangeArchiveStatus,
@@ -77,9 +80,9 @@ const DirListItem: React.FC<DirListItemProps> = props => {
   //
   //   return props;
   // };
-  const isTreeItem = useMemo(() => {
-    return availableLevels > 1;
-  }, [availableLevels]);
+  // const isTreeItem = useMemo(() => {
+  //   return availableLevels > 1;
+  // }, [availableLevels]);
 
   const canHasChildren = useMemo(() => {
     return !isUndefined(availableLevels) && !isUndefined(currentLevel)
@@ -93,6 +96,17 @@ const DirListItem: React.FC<DirListItemProps> = props => {
 
   function onOpenClick() {
     setIsOpen(prev => !prev);
+  }
+
+  function logInfo() {
+    console.log('==============>>>>>>>>>>>>>', item?.label);
+    console.log({
+      availableLevels,
+      currentLevel,
+    });
+    console.log('parent', !!parent);
+    console.log('item?.parent', !!item?.parent);
+    console.log('canHasChildren', canHasChildren);
   }
 
   function evHandlerWrapper(evHandler?: (...arg: any[]) => void, ...arg: any[]) {
@@ -120,15 +134,17 @@ const DirListItem: React.FC<DirListItemProps> = props => {
   }, [currentLevel, props, item]);
 
   return (
-    <Item>
-      <ButtonIcon
-        variant="onlyIconNoEffects"
-        icon={hasChildren && isOpen ? 'SmallArrowUp' : 'SmallArrowDown'}
-        size={'32px'}
-        iconSize={'24px'}
-        disabled={!hasChildren}
-        onClick={onOpenClick}
-      />
+    <Item style={{ paddingLeft: canHasChildren ? 0 : 32 }} onClick={logInfo}>
+      {canHasChildren && (
+        <ButtonIcon
+          variant="onlyIconNoEffects"
+          icon={hasChildren && isOpen ? 'SmallArrowUp' : 'SmallArrowDown'}
+          size={'32px'}
+          iconSize={'24px'}
+          disabled={!hasChildren}
+          onClick={onOpenClick}
+        />
+      )}
 
       <FlexBox flex={1}>
         <ItemBox fxDirection={'row'}>
@@ -160,10 +176,28 @@ const DirListItem: React.FC<DirListItemProps> = props => {
               />
             )}
 
-            {archiving && <ActionButton variant="onlyIcon" iconSize="24px" icon={'archive'} />}
+            {archiving && (
+              <ActionButton
+                variant="onlyIcon"
+                iconSize="24px"
+                icon={state.archived ? 'archive' : 'unArchive'}
+                onClick={() => {
+                  handleState('archived');
+                  onChangeArchiveStatus && item?._id && onChangeArchiveStatus(item?._id, !state.archived);
+                }}
+              />
+            )}
 
             {disabling && (
-              <ActionButton variant="onlyIcon" iconSize="22px" icon={!state.disabled ? 'lightMode' : 'darkMode'} />
+              <ActionButton
+                variant="onlyIcon"
+                iconSize="22px"
+                icon={!state.disabled ? 'lightMode' : 'darkMode'}
+                onClick={() => {
+                  handleState('disabled');
+                  onChangeDisableStatus && item?._id && onChangeDisableStatus(item?._id, !state.disabled);
+                }}
+              />
             )}
 
             {/*{onChangeDisableStatus && <Toggler {...registerStateAction('disabled', 'onChange')} />}*/}

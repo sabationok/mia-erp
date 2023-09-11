@@ -14,6 +14,7 @@ import { OnlyUUID } from '../../redux/global.types';
 import { ToastService } from '../../services';
 import AppLoader from '../atoms/AppLoader';
 import { ModalFormProps } from '../ModalForm';
+import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 
 export interface FormVariationProps
   extends OverlayHandlerReturn,
@@ -33,17 +34,26 @@ export interface IVariationFormData {
   timeFrom?: string | number | Date;
   timeTo?: string | number | Date;
 }
-const FormVariation: React.FC<FormVariationProps> = ({ onClose, defaultState, onSubmit, update, create, ...props }) => {
+const FormVariation: React.FC<FormVariationProps> = ({
+  onClose,
+  title,
+  defaultState,
+  onSubmit,
+  update,
+  create,
+  ...props
+}) => {
   const product = useProductsSelector().currentProduct;
   const service = useAppServiceProvider()[ServiceName.products];
   const templates = usePropertiesSelector();
   const [loading, setLoading] = useState(false);
 
-  const [afterSubmit, setAfterSubmit] = useState<UseAppFormSubmitOptions>({});
+  const [submitOptions, setSubmitOptions] = useState<UseAppFormSubmitOptions>({});
+  const handleChangeAfterSubmit = (key: keyof UseAppFormSubmitOptions) => {
+    setSubmitOptions(prev => ({ ...prev, [key]: !prev[key] }));
+  };
 
-  defaultState && console.log('FormVariationProps defaultState', defaultState);
-
-  const { setValue, watch, handleSubmit, ...form } = useForm<IVariationFormData>({
+  const { setValue, watch, handleSubmit } = useForm<IVariationFormData>({
     defaultValues: defaultState ? createVariationFormData({ ...defaultState, product }) : { product },
   });
   const formValues = watch();
@@ -53,8 +63,6 @@ const FormVariation: React.FC<FormVariationProps> = ({ onClose, defaultState, on
 
     return templates.find(t => t._id === pr?.template?._id);
   }, [defaultState?.product, product, templates]);
-
-  formValues && console.log('FormVariationProps formValues', formValues);
 
   const onValid = useCallback(
     (data: IVariationFormData) => {
@@ -137,7 +145,7 @@ const FormVariation: React.FC<FormVariationProps> = ({ onClose, defaultState, on
       <Header alignItems={'center'} justifyContent={'space-between'} fxDirection={'row'} gap={6} fillWidth>
         <FlexBox fxDirection={'row'} padding={'4px 0'} alignItems={'center'} fillHeight>
           <Text $weight={600} $size={18}>
-            {`${product?.label} | ${product?.template?.label}` || 'Title'}
+            {title || template?.label || 'Title'}
           </Text>
         </FlexBox>
 
@@ -148,27 +156,37 @@ const FormVariation: React.FC<FormVariationProps> = ({ onClose, defaultState, on
         {renderTemplate}
       </TemplateBox>
 
-      <Footer padding={'6px 0'} fxDirection={'row'} gap={8} alignItems={'center'}>
-        <ButtonIcon
-          onClick={onClose}
-          variant={'onlyIconFilled'}
-          size={'36px'}
-          iconSize={'28px'}
-          textTransform={'uppercase'}
-          icon={'close'}
-        />
+      <Footer>
+        <ExtraFooterBox>
+          <FormAfterSubmitOptions
+            clear={submitOptions.clearAfterSave}
+            close={submitOptions.closeAfterSave}
+            toggleOption={handleChangeAfterSubmit}
+          />
+        </ExtraFooterBox>
 
-        <ButtonIcon
-          type={'submit'}
-          fontWeight={600}
-          variant={'outlinedLarge'}
-          textTransform={'uppercase'}
-          endIcon={'SmallArrowRight'}
-          disabled={loading}
-          style={{ flex: 1 }}
-        >
-          {update ? 'Підтвердити' : 'Додати'}
-        </ButtonIcon>
+        <FlexBox padding={'6px 0'} fxDirection={'row'} gap={8} alignItems={'center'}>
+          <ButtonIcon
+            onClick={onClose}
+            variant={'onlyIconFilled'}
+            size={'36px'}
+            iconSize={'28px'}
+            textTransform={'uppercase'}
+            icon={'close'}
+          />
+
+          <ButtonIcon
+            type={'submit'}
+            fontWeight={600}
+            variant={'outlinedLarge'}
+            textTransform={'uppercase'}
+            endIcon={'SmallArrowRight'}
+            disabled={loading}
+            style={{ flex: 1 }}
+          >
+            {update ? 'Підтвердити' : 'Додати'}
+          </ButtonIcon>
+        </FlexBox>
       </Footer>
 
       <AppLoader isLoading={loading} />
@@ -207,6 +225,9 @@ const PropertyBox = styled(FlexBox)`
 
 const Footer = styled(FlexBox)`
   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
+`;
+const ExtraFooterBox = styled(FlexBox)`
+  border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
 `;
 
 const ValueTag = styled(ButtonIcon)`

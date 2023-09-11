@@ -12,13 +12,17 @@ import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import FormCreateVariation from '../../Forms/FormVariation';
 import { IPriceListItem } from 'redux/priceManagement/priceManagement.types';
-import { IVariation, IVariationTableData } from 'redux/products/variations.types';
+import { IVariationTableData } from 'redux/products/variations.types';
 import { transformVariationTableData } from '../../../utils/tables';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { ToastService } from '../../../services';
 import { ExtractId } from '../../../utils/dataTransform';
 import { usePropertiesSelector } from '../../../redux/selectors.store';
+import AppLoader from '../../atoms/AppLoader';
 
+// const openLoader = (current: RightSideOptionEnum) =>
+//   ToastService.createLoader('Loading data...').open({
+//     afterClose: [`${current} data loaded`, { type: 'success' }],
+//   });
 enum RightSideOptionEnum {
   Variations = 'Variations',
   Prices = 'Prices',
@@ -29,16 +33,17 @@ export interface PageProductOverviewRightSideProps {
   isVisible?: boolean;
   toggleVisibility?: () => void;
 }
-interface ITableDataByType {
-  [RightSideOptionEnum.Variations]: IVariation;
-  [RightSideOptionEnum.Prices]: IPriceListItem;
-}
+// interface ITableDataByType {
+//   [RightSideOptionEnum.Variations]: IVariation;
+//   [RightSideOptionEnum.Prices]: IPriceListItem;
+// }
 const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> = ({ isVisible, toggleVisibility }) => {
   const page = usePageCurrentProduct();
   const [current, setCurrent] = useState<RightSideOptionEnum>(RightSideOptionEnum.Prices);
   const modalS = useModalProvider();
   const productsS = useAppServiceProvider()[ServiceName.products];
   const pricesS = useAppServiceProvider()[ServiceName.priceManagement];
+  const [loading, setLoading] = useState(false);
 
   const templates = usePropertiesSelector();
 
@@ -49,14 +54,21 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
 
   const loadCurrentData = useCallback(
     (current: RightSideOptionEnum) => {
-      const close = ToastService.createLoader('Loading data...');
       if (current === RightSideOptionEnum.Variations && page.currentProduct) {
         productsS
-          .getAllVariationsByProductId({ data: { product: ExtractId(page.currentProduct), refreshCurrent: true } })
-          .finally(close);
+          .getAllVariationsByProductId({
+            data: { product: ExtractId(page.currentProduct), refreshCurrent: true },
+            onLoading: setLoading,
+          })
+          .finally();
       }
       if (current === RightSideOptionEnum.Prices && page.currentProduct) {
-        pricesS.getAllPricesByProductId({ data: { productId: ExtractId(page.currentProduct) } }).finally(close);
+        pricesS
+          .getAllPricesByProductId({
+            data: { productId: ExtractId(page.currentProduct) },
+            onLoading: setLoading,
+          })
+          .finally();
       }
     },
     [page.currentProduct, pricesS, productsS]
@@ -147,13 +159,15 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
 
       <ModalFilter filterOptions={toggleOptions} onOptSelect={filterHandler} />
 
-      <TableList isSearch={false} isFilter={false} {...currentTableSettings} />
+      <TableList isSearch={false} isFilter={false} checkBoxes {...currentTableSettings} />
 
       <Bottom fillWidth flex={1} fxDirection={'row'} justifyContent={'flex-end'}>
         <ButtonIcon variant={'textExtraSmall'} endIcon={'SmallArrowRight'} onClick={toggleVisibility}>
           {'Згорнути'}
         </ButtonIcon>
       </Bottom>
+
+      <AppLoader isLoading={loading} />
     </RightSide>
   );
 };

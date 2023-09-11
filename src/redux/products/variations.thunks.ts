@@ -15,7 +15,6 @@ export const createVariationThunk = createAsyncThunk<
   try {
     const res = await VariationsApi.create(args.data);
     if (res) {
-      console.log('createVariationThunk res', res);
       args?.onSuccess && args?.onSuccess(res?.data?.data);
     }
 
@@ -27,7 +26,6 @@ export const createVariationThunk = createAsyncThunk<
     return thunkApi.rejectWithValue(isAxiosError(e));
   }
 });
-
 export const getAllVariationsByProductIdThunk = createAsyncThunk<
   { data: IVariation[]; refreshCurrent?: boolean } | undefined,
   ThunkPayload<{ product: OnlyUUID; params?: AppQueryParams; refreshCurrent?: boolean }, IVariation[]>

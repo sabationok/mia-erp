@@ -43,18 +43,18 @@ const ReportCounts: React.FC<IReportCountsProps<CountType>> = ({ entryList, filt
     }));
   }, [countedTotals, currency, filterOptions]);
 
-  const entryLists = useMemo((): Partial<Record<CountType, ReportListItemProps<CountType>[]>> => {
-    let data: Partial<Record<CountType, ReportListItemProps<CountType>[]>> = {};
-
-    if (!entryList) return data;
-
-    // enumToArray(CountsTypesEnum).map(key => {
-    //   data[key] = founder({ searchParam: 'type', searchQuery: key, data: entryList });
-    //   return '';
-    // });
-
-    return data;
-  }, [entryList]);
+  // const entryLists = useMemo((): Partial<Record<CountType, ReportListItemProps<CountType>[]>> => {
+  //   let data: Partial<Record<CountType, ReportListItemProps<CountType>[]>> = {};
+  //
+  //   if (!entryList) return data;
+  //
+  //   enumToArray(CountsTypesEnum).map(key => {
+  //     data[key] = founder({ searchParam: 'type', searchQuery: key, data: entryList });
+  //     return '';
+  //   });
+  //
+  //   return data;
+  // }, [entryList]);
 
   function handleSelect(option: FilterOpt<CountType>, value: CountType) {
     setFilterOpt(option);

@@ -1,7 +1,12 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { IProduct, IProductReqData } from '../redux/products/products.types';
 import { OnlyUUID, ServiceApiCaller, ServiceDispatcherAsync } from 'redux/global.types';
-import { createProductThunk, getAllProductsThunk, getProductFullInfoThunk } from '../redux/products/products.thunks';
+import {
+  createProductThunk,
+  getAllProductsThunk,
+  getProductFullInfoThunk,
+  updateProductThunk,
+} from '../redux/products/products.thunks';
 import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
 import { AppQueryParams, createApiCall } from 'api';
@@ -15,7 +20,7 @@ import { IVariation, IVariationReqData } from '../redux/products/variations.type
 export interface ProductsService {
   create: ServiceDispatcherAsync<IProductReqData, IProduct>;
   deleteById: ServiceApiCaller<string, IProduct>; // !!!!! ===>>> ServiceDispatcher
-  updateById: ServiceApiCaller<IProductReqData & { refreshCurrent?: boolean }, IProduct>; // !!!!! ===>>> ServiceDispatcher
+  updateById: ServiceDispatcherAsync<IProductReqData & { refreshCurrent?: boolean }, IProduct>; // !!!!! ===>>> ServiceDispatcher
   getById: ServiceApiCaller<string, IProduct>;
   getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IProduct[]>;
   getProductFullInfo: ServiceDispatcherAsync<OnlyUUID, IProduct>;
@@ -44,11 +49,11 @@ const useProductsService = (): ProductsService => {
 
   return useMemo((): Omit<ProductsService, 'state' | 'dispatch'> => {
     return {
-      create: payload => dispatch(createProductThunk(defaultThunkPayload(payload))),
-      updateById: payload => createApiCall(defaultApiCallPayload(payload), ProductsApi.updateById, ProductsApi),
-      deleteById: payload => createApiCall(defaultApiCallPayload(payload), ProductsApi.deleteById, ProductsApi),
-      getById: payload => createApiCall(defaultApiCallPayload(payload), ProductsApi.getById, ProductsApi),
-      getAll: payload => dispatch(getAllProductsThunk(defaultThunkPayload(payload))),
+      create: args => dispatch(createProductThunk(defaultThunkPayload(args))),
+      updateById: args => dispatch(updateProductThunk(defaultThunkPayload(args))),
+      deleteById: args => createApiCall(defaultApiCallPayload(args), ProductsApi.deleteById, ProductsApi),
+      getById: args => createApiCall(defaultApiCallPayload(args), ProductsApi.getById, ProductsApi),
+      getAll: args => dispatch(getAllProductsThunk(defaultThunkPayload(args))),
       getProductFullInfo: args => dispatch(getProductFullInfoThunk(defaultThunkPayload(args))),
 
       // * PROPERTIES
@@ -58,6 +63,7 @@ const useProductsService = (): ProductsService => {
       updatePropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.updateById, PropertiesApi),
       getPropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.getById, PropertiesApi),
 
+      // * VARIATIONS
       // createVariation: args => createApiCall(defaultApiCallPayload(args), VariationsApi.create, VariationsApi),
       createVariation: args => dispatch(createVariationThunk(defaultThunkPayload(args))),
       updateVariationById: args => dispatch(createVariationThunk(defaultThunkPayload(args))),

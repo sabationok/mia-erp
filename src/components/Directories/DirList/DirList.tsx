@@ -70,21 +70,21 @@ const DirList: React.FC<DirListProps> = ({
     </ListBox>
   );
 };
-const Box = styled.div`
-  //display: flex;
-  //flex-direction: column;
-
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr min-content;
-
-  position: relative;
-
-  height: 100%;
-  max-height: 100%;
-
-  overflow: hidden;
-`;
+// const Box = styled.div`
+//   //display: flex;
+//   //flex-direction: column;
+//
+//   display: grid;
+//   grid-template-columns: 1fr;
+//   grid-template-rows: 1fr min-content;
+//
+//   position: relative;
+//
+//   height: 100%;
+//   max-height: 100%;
+//
+//   overflow: hidden;
+// `;
 const ListBox = styled.div`
   flex: 1;
 

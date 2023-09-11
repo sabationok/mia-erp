@@ -3,6 +3,7 @@ import { IProduct } from '../products/products.types';
 import { ICompany } from '../companies/companies.types';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
 import { IVariation } from '../products/variations.types';
+import { AppQueryParams } from '../../api';
 
 export enum WarehouseTypeEnum {
   WAREHOUSE = 'warehouse',
@@ -56,6 +57,8 @@ export interface IProductInventoryDto {
   status?: OnlyUUID;
   price?: OnlyUUID;
 
+  warehouse?: OnlyUUID;
+
   stock?: number;
   reserved?: number;
 
@@ -68,8 +71,8 @@ export interface IProductInventoryDto {
 }
 export interface IProductInventoryReqData {
   _id?: OnlyUUID;
-  warehouse?: OnlyUUID;
   data: IProductInventoryDto;
+  params?: AppQueryParams;
 }
 export interface IWarehouseDto {
   label: string;

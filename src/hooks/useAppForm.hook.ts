@@ -31,9 +31,16 @@ export interface UseAppFormReturn<TFieldValues extends FieldValues = FieldValues
 export interface UseAppFormSubmitOptions {
   closeAfterSave?: boolean;
   clearAfterSave?: boolean;
+  close?: boolean;
+  clear?: boolean;
   // onOptionsChange?: (options: UseAppFormSubmitOptions) => void;
 }
-
+const initialOptions: UseAppFormSubmitOptions = {
+  closeAfterSave: true,
+  clearAfterSave: true,
+  close: true,
+  clear: true,
+};
 export type AppSubmitHandler<D = any, O = any> = (data: D, options?: UseAppFormSubmitOptions & O) => void;
 
 export type AppErrorSubmitHandler<E = any, O = any> = (errors: E, options?: UseAppFormSubmitOptions & O) => void;
@@ -42,10 +49,7 @@ const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = a
 ): UseAppFormReturn<TFieldValues, TContext> & UseAppFormSubmitOptions => {
   const form = useForm<TFieldValues>(formProps);
   const { setValue, unregister, register, watch } = form;
-  const [afterSubmitOptions, setAfterSubmitOptions] = useState<UseAppFormSubmitOptions>({
-    closeAfterSave: true,
-    clearAfterSave: true,
-  });
+  const [afterSubmitOptions, setAfterSubmitOptions] = useState<UseAppFormSubmitOptions>(initialOptions);
   const formValues = watch();
 
   // function onSubmitHandler(onValid: AppSubmitHandler<TFieldValues>, onInvalid: AppErrorSubmitHandler<TFieldValues>) {

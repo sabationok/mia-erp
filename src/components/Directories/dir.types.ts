@@ -122,14 +122,7 @@ export interface IDirInTreeProps<
   changeDisableStatus?: boolean;
   changeArchiveStatus?: boolean;
 
-  actionsCreator: DirInTreeActionsCreatorType<
-    DirType,
-    unknown,
-    ItemDataType,
-    Service,
-    CreateDTO | UpdateDTO,
-    SubmitOptions
-  >;
+  actionsCreator: DirInTreeActionsCreatorType<DirType, ItemDataType, Service, CreateDTO | UpdateDTO, SubmitOptions>;
 }
 
 export type ActionsCreatorOptions<
@@ -154,7 +147,6 @@ export type DirInTreeActionsCreatorOptions<DirType extends ApiDirType = any, Ite
 };
 export type DirInTreeActionsCreatorType<
   DirType extends ApiDirType = any,
-  ItemType = any,
   ItemDataType extends IDirItemBase = any,
   Service = any,
   ItemDto = any,

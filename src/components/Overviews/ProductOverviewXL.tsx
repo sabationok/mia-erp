@@ -8,6 +8,7 @@ import t from '../../lang';
 import FormCreateVariation from '../Forms/FormVariation';
 import { OverlayHandler, usePageCurrentProduct } from '../AppPages/PageCurrentProductProvider';
 import { useProductsSelector } from '../../redux/selectors.store';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export interface ProductOverviewXLProps {
   product?: IProduct;
@@ -41,6 +42,8 @@ export type RenderOverviewCell<T = any> = (
 const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, onOpenRightSide, ...p }) => {
   const product = useProductsSelector().currentProduct;
   const page = usePageCurrentProduct();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const renderCells = useMemo(
     () =>
@@ -73,7 +76,17 @@ const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, onOpen
           </Text>
         </FlexBox>
 
-        <ButtonIcon variant={'onlyIcon'} icon={'close'} />
+        <ButtonIcon
+          variant={'onlyIcon'}
+          icon={'close'}
+          onClick={() => {
+            if (product && location?.pathname) {
+              const newPath = location?.pathname?.replace(`/${product?._id}`, '');
+
+              newPath && navigate(newPath);
+            }
+          }}
+        />
       </Header>
 
       <FlexBox fillWidth flex={1} overflow={'auto'}>
@@ -226,22 +239,22 @@ const VariationsTemplateCell: React.FC<{
 const productOverviewCells: ProductOverviewCell[] = [
   {
     title: 'Назва',
-    renderCell: (cell, setOverlayContent, product) => renderTextCell(cell.title, product?.label),
+    renderCell: (cell, _, product) => renderTextCell(cell.title, product?.label),
     gridArea: 'label',
   },
   {
     title: 'Тип',
-    renderCell: (cell, setOverlayContent, product) => renderTextCell(cell.title, product?.type),
+    renderCell: (cell, _, product) => renderTextCell(cell.title, product?.type),
     gridArea: 'type',
   },
   {
     title: 'Артикул | SKU',
-    renderCell: (cell, setOverlayContent, product) => renderTextCell(cell.title, product?.sku),
+    renderCell: (cell, _, product) => renderTextCell(cell.title, product?.sku),
     gridArea: 'sku',
   },
   {
     title: 'Штрих-код',
-    renderCell: (cell, setOverlayContent, product) => renderTextCell(cell.title, product?.barCode),
+    renderCell: (cell, _, product) => renderTextCell(cell.title, product?.barCode),
     gridArea: 'barCode',
   },
   {
@@ -251,18 +264,19 @@ const productOverviewCells: ProductOverviewCell[] = [
   },
   {
     title: 'Категорія',
-    renderCell: (cell, setOverlayContent, product) => renderTextCell(cell.title, product?.category?.label),
+    renderCell: (cell, _, product) =>
+      renderTextCell(cell.title, `${product?.category?.parent?.label || ''}/${product?.category?.label}`),
     gridArea: 'category',
   },
   {
     title: 'Бренд',
-    renderCell: (cell, setOverlayContent, product) => renderTextCell(cell.title, product?.brand?.label),
+    renderCell: (cell, _, product) => renderTextCell(cell.title, product?.brand?.label),
     gridArea: 'brand',
   },
 
   {
     title: 'Опис',
-    renderCell: (cell, setOverlayContent, product) => renderTextCell(cell.title, product?.description),
+    renderCell: (cell, _, product) => renderTextCell(cell.title, product?.description),
     gridArea: 'description',
   },
 ];

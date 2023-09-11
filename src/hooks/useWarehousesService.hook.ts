@@ -3,7 +3,7 @@ import { OnlyUUID, ServiceApiCaller, ServiceDispatcherAsync } from '../redux/glo
 import { AppQueryParams } from '../api';
 import {
   IProductInventory,
-  IProductInventoryDto,
+  IProductInventoryReqData,
   IWarehouse,
   IWarehouseReqData,
 } from '../redux/warehouses/warehouses.types';
@@ -17,12 +17,14 @@ import { useAppDispatch } from '../redux/store.store';
 
 export interface WarehousesService {
   getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IWarehouse[]>;
-  getById: ServiceDispatcherAsync<IWarehouse, Partial<IWarehouse>>;
-
+  getById: ServiceDispatcherAsync<OnlyUUID, IWarehouse>;
   create: ServiceDispatcherAsync<IWarehouseReqData, IWarehouse>;
+
   update?: ServiceApiCaller<IWarehouseReqData, IWarehouse>;
-  addItem?: ServiceApiCaller<{ _id?: OnlyUUID; data: IProductInventoryDto; warehouse: OnlyUUID }, IProductInventory>;
-  removeItem?: ServiceApiCaller<{ _id?: OnlyUUID; data: IProductInventoryDto; warehouse: OnlyUUID }, IProductInventory>;
+
+  // ? PRODUCT INVENTORIES
+  addItem?: ServiceApiCaller<IProductInventoryReqData, IProductInventory>;
+  removeItem?: ServiceApiCaller<IProductInventoryReqData, IProductInventory>;
 }
 export const useWarehousesService = (): WarehousesService => {
   const dispatch = useAppDispatch();

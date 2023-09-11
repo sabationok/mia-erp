@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import ModalForm from '../ModalForm';
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
 import { useDirService, useFilteredLisData } from '../../hooks';
 import { useDirectoriesSelector } from '../../redux/selectors.store';
@@ -8,34 +8,43 @@ import { FilterOpt } from '../ModalForm/ModalFilter';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import DirListItem from './DirList/DirListItem';
 import FlexBox from '../atoms/FlexBox';
+import { ApiDirType } from '../../redux/APP_CONFIGS';
+import { DirInTreeActionsCreatorType, IDirItemBase } from './dir.types';
+import { RenderModalComponentChildrenProps } from '../ModalProvider/ModalComponent';
 
+export interface DirTreeComponentProps extends RenderModalComponentChildrenProps {
+  createParentTitle?: string;
+  dirType: ApiDirType;
+  filterSearchPath?: keyof IDirItemBase;
+  filterDefaultValue?: string;
+  actionsCreator?: DirInTreeActionsCreatorType;
+}
 const DirTreeComp = ({
   createParentTitle,
   dirType,
   filterSearchPath,
   filterDefaultValue,
   actionsCreator,
-  availableLevels,
+  onClose,
+  modalId,
 
   ...props
-}: any) => {
+}: DirTreeComponentProps) => {
   const { directory } = useDirectoriesSelector(dirType);
   const service = useDirService();
   const modalService = useModalProvider();
   const [current, setCurrent] = useState(filterDefaultValue);
-  const findById = useCallback((id: string) => directory.find(el => el._id === id), [directory]);
 
   const actions = useMemo(
     () =>
       actionsCreator &&
       actionsCreator({
-        findById,
         modalService,
         type: current,
         service,
         dirType,
       }),
-    [actionsCreator, current, service, dirType, findById, modalService]
+    [actionsCreator, current, service, dirType, modalService]
   );
 
   function handleFilterData({ value }: FilterOpt) {
@@ -50,9 +59,18 @@ const DirTreeComp = ({
 
   const renderList = useMemo(() => {
     return fList.map((item, index) => {
-      return <DirListItem key={`${dirType}_${item._id}`} item={item} list={item?.childrenList} />;
+      return (
+        <DirListItem
+          key={`${dirType}_${item._id}`}
+          item={item}
+          list={item?.childrenList}
+          currentLevel={0}
+          {...props}
+          {...actions}
+        />
+      );
     });
-  }, [dirType, fList]);
+  }, [actions, dirType, fList, props]);
 
   return (
     <ModalForm
@@ -62,14 +80,14 @@ const DirTreeComp = ({
       extraFooter={
         actions?.onCreateParent && (
           <CreateParent>
-            <ButtonIcon variant="outlinedSmall" onClick={() => actions.onCreateParent()}>
+            <ButtonIcon variant="outlinedSmall" onClick={actions?.onCreateParent}>
               {createParentTitle || 'Create parent'}
             </ButtonIcon>
           </CreateParent>
         )
       }
     >
-      <FlexBox padding={'12px'} overflow={'auto'} gap={8}>
+      <FlexBox padding={'12px 6px'} overflow={'auto'} gap={8}>
         {renderList}
       </FlexBox>
     </ModalForm>

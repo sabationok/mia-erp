@@ -137,14 +137,14 @@ const orderAdditionalInfo: OrderInfoBoxProps[] = [
   { label: 'Коментар', getData: o => o.comment },
   { label: 'Внутрішній коментар', getData: o => o.innerComment },
 ];
-const orderShipmentInfo: OrderInfoBoxProps[] = [
-  {
-    label: 'ПІП',
-    getData: o =>
-      !o.receiver?.label ? `${o.receiver?.name || ''} ${o.receiver?.secondName || ''}` : `${o.receiver?.label || ''}`,
-  },
-  // { label: 'Статус', getData: o => o.receiver?.status },
-  { label: 'Телефон', getData: o => o.receiver?.phone },
-  { label: 'Емейл', getData: o => o.receiver?.email },
-  { label: 'Спосіб комунікації', getData: o => o.receiverCommunicationMethod?.label },
-];
+// const orderShipmentInfo: OrderInfoBoxProps[] = [
+//   {
+//     label: 'ПІП',
+//     getData: o =>
+//       !o.receiver?.label ? `${o.receiver?.name || ''} ${o.receiver?.secondName || ''}` : `${o.receiver?.label || ''}`,
+//   },
+//   // { label: 'Статус', getData: o => o.receiver?.status },
+//   { label: 'Телефон', getData: o => o.receiver?.phone },
+//   { label: 'Емейл', getData: o => o.receiver?.email },
+//   { label: 'Спосіб комунікації', getData: o => o.receiverCommunicationMethod?.label },
+// ];

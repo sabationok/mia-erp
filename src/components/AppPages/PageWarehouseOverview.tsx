@@ -11,7 +11,7 @@ import { PagePathType } from '../../data/pages.data';
 import { warehouseOverviewTableColumns } from '../../data/warehauses.data';
 import { useAppParams } from '../../hooks';
 import { IProductInventory } from '../../redux/warehouses/warehouses.types';
-import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
 import { Modals } from '../ModalProvider/Modals';
 
@@ -20,7 +20,7 @@ type Props = {
 };
 const PageWarehouseOverview: React.FC<any> = (props: Props) => {
   const warehouseId = useAppParams().warehouseId;
-  const service = useAppServiceProvider().warehouses;
+  const { getById } = useAppServiceProvider()[ServiceName.warehouses];
   const state = useWarehousesSelector();
   const actionsCreator = useWarehouseOverviewActionsCreator();
   const [isLoading, setIsLoading] = useState(false);
@@ -47,11 +47,16 @@ const PageWarehouseOverview: React.FC<any> = (props: Props) => {
 
   useEffect(() => {
     if (warehouseId) {
-      const currentForReq = state.warehouses.find(w => w._id === warehouseId);
-
-      service.getById({ data: currentForReq });
+      getById({ data: { _id: warehouseId }, onLoading: setIsLoading });
     }
+    // eslint-disable-next-line
   }, [warehouseId]);
+
+  useEffect(() => {
+    console.log('PageWarehouseOverview ============>>>>>>>>>>');
+    console.log(sortParams);
+    console.log(filterParams);
+  }, [filterParams, sortParams]);
 
   return (
     <AppGridPage path={props.path}>
@@ -69,10 +74,10 @@ const Page = styled.div`
 type WarehouseTableActionsCreator = TableActionCreator<IProductInventory>;
 
 const useWarehouseOverviewActionsCreator = (): WarehouseTableActionsCreator => {
-  const service = useAppServiceProvider().warehouses;
+  // const service = useAppServiceProvider().warehouses;
   const modalS = useModalProvider();
 
-  return (ctx: ITableListContext) => [
+  return (_ctx: ITableListContext) => [
     { name: 'deleteProductInventory', icon: 'delete', onClick: () => {} },
     { name: 'editProductInventory', icon: 'edit', onClick: () => {} },
     {

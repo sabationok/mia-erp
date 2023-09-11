@@ -9,7 +9,6 @@ import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import styled, { useTheme } from 'styled-components';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { ProductsService } from '../../hooks/useProductsService.hook';
-import { ProductTypeEnum } from '../../redux/products/products.types';
 import { Modals } from '../ModalProvider/Modals';
 import t from '../../lang';
 import { toast } from 'react-toastify';
@@ -365,8 +364,7 @@ const CreateParent = styled.div`
 `;
 export default DirProperties;
 export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
-  any,
-  ProductTypeEnum,
+  ApiDirType.PROPERTIES_PRODUCTS,
   IProperty,
   ProductsService,
   IPropertyDto,

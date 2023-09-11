@@ -7,6 +7,7 @@ import t from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
 import { useAppForm } from '../../hooks';
 import { IProperty, IPropertyBase, IPropertyDto } from '../../redux/products/properties.types';
+import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 
 export interface FormCreatePropertyProps extends Omit<ModalFormProps<ProductTypeEnum, any, IPropertyBase>, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<IPropertyDto, { isGroup?: boolean; isProperty?: boolean; isValue?: boolean }>;
@@ -45,6 +46,13 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
       onOptSelect={(option, value, index) => {
         setValue('type', value);
       }}
+      extraFooter={
+        <FormAfterSubmitOptions
+          toggleOption={toggleAfterSubmitOption}
+          clearAfterSave={clearAfterSave}
+          closeAfterSave={closeAfterSave}
+        />
+      }
     >
       <FlexBox padding={'4px 8px'} flex={1} fillWidth>
         <InputLabel label={t('type')} disabled>

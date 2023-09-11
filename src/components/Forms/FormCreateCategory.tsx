@@ -1,6 +1,6 @@
 import ModalForm from 'components/ModalForm';
 import { ICategory, ICategoryFormData } from 'redux/directories/directories.types';
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -42,9 +42,6 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
     reValidateMode: 'onSubmit',
   });
 
-  useEffect(() => {
-    console.log({ _id, type, edit, defaultState, onSubmit, ...props });
-  }, []);
   const onValid = (data: ICategoryFormData) => {
     console.log('FormCreateCategory on valid', data, onSubmit);
 

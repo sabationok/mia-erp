@@ -60,20 +60,19 @@ export const useBaseApiWithAccessToken = () => {
 export const useBaseApiWithPermissionToken = () => {
   const { permission_token, permission } = usePermissionsSelector();
 
-  // if (permission_token) console.log('permission_token', permission_token);
-  useEffect(() => {
-    if (permission._id) {
-      permissionToken.set(permission._id);
-      console.log('baseApi with permission_token token', '==//==', baseApi.defaults.headers);
-    }
-  }, [permission._id]);
+  const tempToken = useMemo(() => {
+    return permission_token || permission?.permission_token || permission?._id;
+  }, [permission?._id, permission?.permission_token, permission_token]);
 
   useEffect(() => {
-    if (!permission._id) {
+    if (tempToken) {
+      permissionToken.set(tempToken);
+      console.log('baseApi with permission_token token', '==//==', baseApi.defaults.headers);
+    } else {
       permissionToken.unset();
       console.log('baseApi without permission_token token', '==//==', baseApi.defaults.headers);
     }
-  }, [permission._id]);
+  }, [tempToken]);
 };
 
 export function useBaseURLWithPermission(id?: string) {

@@ -2,8 +2,8 @@ import usePermissionsServiceHook, { usePermissionsSelector } from './usePermissi
 import useAppSettings from './useAppSettings.hook';
 import { useEffect } from 'react';
 import { ApiDirType } from '../redux/APP_CONFIGS';
-import { toast } from 'react-toastify';
 import { useAppServiceProvider } from './useAppServices.hook';
+import { ToastService } from '../services';
 
 const directoriesForLoading: { dirType: ApiDirType; createTreeData?: boolean }[] = [
   { dirType: ApiDirType.COUNTS, createTreeData: true },
@@ -46,6 +46,14 @@ const useLoadInitialAppDataHook = ({
     // toast.success(`Updated data for directory: ${dirType}`);
   };
   const load = async () => {
+    const close = () =>
+      setTimeout(
+        ToastService.createLoader('Loading app data...').open({
+          afterClose: ['App data loaded', { type: 'success' }],
+        }).close,
+        2000
+      );
+
     if (permission_token || _id) {
       // setIsLoading(true);
 
@@ -72,12 +80,12 @@ const useLoadInitialAppDataHook = ({
             });
           })
         );
-        toast.success('App data loaded', { autoClose: 2000 });
-
         onSuccess && onSuccess();
         // setIsLoading(false);
       } catch (e) {
         // setIsLoading(false);
+      } finally {
+        close();
       }
     }
   };

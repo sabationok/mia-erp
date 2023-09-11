@@ -41,7 +41,7 @@ export const businessSubjectTypeFilterOptions = enumToFilterOptions(BusinessSubj
 export const getDirInTreeActionsCreator = (
   Modal: Modals = Modals.FormCreateDirTreeComp,
   { createParentTitle, createChildTitle, updateItemTitle }: GetDirInTreeActionsCreatorOptions = {}
-): DirInTreeActionsCreatorType<ApiDirType, any, IDirItemBase, DirectoriesService> => {
+): DirInTreeActionsCreatorType<ApiDirType, IDirItemBase, DirectoriesService> => {
   return ({ modalService, service, type, dirType, findById }) => {
     return {
       onCreateParent: () => {

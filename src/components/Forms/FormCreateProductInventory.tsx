@@ -10,13 +10,12 @@ import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
 import translate from '../../lang';
 import TableList from '../TableList/TableList';
 import { pricesColumnsForProductReview } from '../../data/priceManagement.data';
-import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
 
 export interface FormCreateProductInventoryProps extends Omit<ModalFormProps, 'onSubmit'> {}
 const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({ ...props }) => {
   const modalS = useModalProvider();
   const [selectedProduct, setSelectedProduct] = useState<IProduct | undefined>();
-  const [selectedPrice, setSelectedPrice] = useState<IPriceListItem | undefined>();
+  // const [selectedPrice, setSelectedPrice] = useState<IPriceListItem | undefined>();
 
   const onProductSelect = () => {
     modalS.create<Modals.SelectProductModal>(m => ({

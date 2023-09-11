@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { memo, useCallback, useMemo, useState } from 'react';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import translate from '../../../lang';
+import { memo, useState } from 'react';
+import t from '../../../lang';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
+import CheckBox from '../../TableList/TebleCells/CellComponents/CheckBox';
 
 export interface FormAfterOptionsProps extends UseAppFormSubmitOptions {
   close?: boolean;
@@ -18,56 +18,59 @@ const FormAfterSubmitOptions: React.FC<FormAfterOptionsProps> = ({ toggleOption,
     closeAfterSave: props?.close || props?.closeAfterSave,
     clearAfterSave: props?.clear || props?.clearAfterSave,
   });
-  const toggleStateOption = useCallback(
-    (option: keyof UseAppFormSubmitOptions) =>
-      setAfterSubmitOptions(prev => {
-        const newOptions = {
-          ...prev,
-          [option]: !prev[option],
-        };
-        onOptionsChange && onOptionsChange(newOptions);
-        toggleOption && toggleOption(option);
-        return newOptions;
-      }),
-    [onOptionsChange, toggleOption]
-  );
+  const toggleStateOption = (option: keyof UseAppFormSubmitOptions) => {
+    setAfterSubmitOptions(prev => {
+      const newOptions = {
+        ...prev,
+        [option]: !prev[option],
+      };
+      onOptionsChange && onOptionsChange(newOptions);
+      toggleOption && toggleOption(option);
 
-  return useMemo(() => {
-    return (
-      <Container fillWidth gap={4} padding={'4px 8px'} alignItems={'flex-start'}>
-        <Label
-          gap={8}
-          fxDirection={'row'}
-          onClick={() => {
+      return newOptions;
+    });
+  };
+
+  return (
+    <Container fillWidth gap={4} padding={'4px 8px'} alignItems={'flex-start'}>
+      <Label
+        gap={8}
+        fxDirection={'row'}
+        onClick={() => {
+          toggleStateOption('clearAfterSave');
+        }}
+      >
+        <CheckBox
+          size={'12px'}
+          checked={clearAfterSave}
+          name={'clearAfterSave'}
+          onChange={() => {
             toggleStateOption('clearAfterSave');
           }}
-        >
-          <ButtonIcon
-            variant={'onlyIconNoEffects'}
-            size={'14px'}
-            iconSize={'90%'}
-            icon={clearAfterSave ? 'checkBoxOn' : 'checkBoxOff'}
-          />
-          <div>{translate('clearAfterSave')}</div>
-        </Label>
-        <Label
-          gap={8}
-          fxDirection={'row'}
-          onClick={() => {
+        />
+
+        <div>{t('clearAfterSave')}</div>
+      </Label>
+      <Label
+        gap={8}
+        fxDirection={'row'}
+        onClick={() => {
+          toggleStateOption('closeAfterSave');
+        }}
+      >
+        <CheckBox
+          size={'12px'}
+          checked={closeAfterSave}
+          name={'closeAfterSave'}
+          onChange={() => {
             toggleStateOption('closeAfterSave');
           }}
-        >
-          <ButtonIcon
-            variant={'onlyIconNoEffects'}
-            size={'14px'}
-            iconSize={'90%'}
-            icon={closeAfterSave ? 'checkBoxOn' : 'checkBoxOff'}
-          />
-          <div>{translate('closeAfterSave')}</div>
-        </Label>
-      </Container>
-    );
-  }, [clearAfterSave, closeAfterSave, toggleStateOption]);
+        />
+
+        <div>{t('closeAfterSave')}</div>
+      </Label>
+    </Container>
+  );
 };
 
 const Container = styled(FlexBox)`

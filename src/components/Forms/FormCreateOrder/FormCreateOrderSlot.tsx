@@ -6,7 +6,6 @@ import OrderSlotOverview from '../../Modals/Overviews/OrderSlotOverview';
 import { IProduct } from 'redux/products/products.types';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
 import TableList from '../../TableList/TableList';
-import { useModalService } from '../../ModalProvider/ModalProvider';
 import { createApiCall, OrdersApi } from '../../../api';
 import { OnlyUUID } from 'redux/global.types';
 import FlexBox from '../../atoms/FlexBox';
@@ -23,14 +22,14 @@ export interface FormCreateOrderSlotItemProps extends Omit<ModalFormProps, 'onSu
   product?: OnlyUUID;
 }
 const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit, product, ...props }) => {
-  const modalS = useModalService();
-  const [loadedData, setLoadedData] = useState<IOrderSlot>();
+  // const modalS = useModalService();
+  // const [loadedData, setLoadedData] = useState<IOrderSlot>();
   const [dataForSlot, setDataForSlot] = useState<IProduct>();
 
-  const [loadedPrices, setLoadedPrices] = useState();
+  // const [loadedPrices, setLoadedPrices] = useState();
   const warehouses = useWarehousesSelector().warehouses;
   const [selectedPrice, setSelectedPrice] = useState<IPriceListItem>();
-  const [selectedVariation, setSelectedVariation] = useState<IProductVariation>();
+  const [selectedVariation] = useState<IProductVariation>();
   const [selectedWarehouse, setSelectedWarehouse] = useState<IWarehouse | undefined>();
   const [currentTab, setCurrentTab] = useState(1);
 

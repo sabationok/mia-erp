@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import React, { useMemo } from 'react';
 import { Modals } from '../../ModalProvider/Modals';
-import { toast } from 'react-toastify';
+import { ToastService } from '../../../services';
 
 export interface PageProductOverviewRightSideProps {
   toggleRightSideVisibility?: () => void;
@@ -49,10 +49,10 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
               defaultState: page?.currentProduct,
               onSubmit: (d, o) => {
                 productsS.updateById({
-                  data: { ...d },
+                  data: { ...d, refreshCurrent: true },
                   onSuccess: () => {
                     o?.closeAfterSave && m?.onClose();
-                    toast.success(`Updated product`);
+                    ToastService.success(`Updated product`);
                   },
                 });
               },

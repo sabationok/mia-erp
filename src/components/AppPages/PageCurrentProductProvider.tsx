@@ -12,6 +12,7 @@ export interface PageCurrentProductProviderValue {
   overlayStack: OverlayStackItemData[];
   createOverlayComponent: OverlayHandler;
   handleRemoveStackItem: (id: string) => void;
+  mainPagePath?: string;
 }
 export type OverlayHandler = <Props = any>(params: OverlayHandlerParams<Props>) => OverlayHandlerReturn;
 export interface OverlayHandlerParams<Props = any> {

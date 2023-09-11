@@ -5,11 +5,11 @@ import AppGridPage from './AppGridPage';
 import { useCallback, useEffect, useState } from 'react';
 import { useAppParams } from '../../hooks';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
-import { useAppSelector } from '../../redux/store.store';
 import PageCurrentProductProvider from './PageCurrentProductProvider';
 import { ToastService } from '../../services';
 import PageProductOverviewRightSide from './PageProductOverview/PageProductOverviewRightSide';
 import PageProductOverviewLeftSide from './PageProductOverview/PageProductOverviewLeftSide';
+import AppLoader from '../atoms/AppLoader';
 
 export interface PageProductOverviewProps {
   path: PagePathType;
@@ -18,15 +18,12 @@ export interface PageProductOverviewProps {
 const PageProductOverview: React.FC<PageProductOverviewProps> = ({ path }) => {
   const { productId } = useAppParams();
   const [isRightSideVisible, setIsRightSideVisible] = useState<boolean>(false);
-  const { priceManagement: pricesS, products: productsS } = useAppServiceProvider();
-
-  const {
-    products: { currentProduct, properties },
-  } = useAppSelector();
+  const { products: productsS } = useAppServiceProvider();
 
   const toggleRightSide = useCallback(() => {
     setIsRightSideVisible(p => !p);
   }, []);
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -53,6 +50,8 @@ const PageProductOverview: React.FC<PageProductOverviewProps> = ({ path }) => {
           <PageProductOverviewRightSide isVisible={isRightSideVisible} toggleVisibility={toggleRightSide} />
         </Page>
       </PageCurrentProductProvider>
+
+      <AppLoader isLoading={loading} />
     </AppGridPage>
   );
 };
