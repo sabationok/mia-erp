@@ -61,7 +61,7 @@ export const langUa = {
   selectBrand: 'Оберіть бренд',
   createTag: 'Створити тег',
 
-  selectVariationsTemplate: 'Список доступних характеристик',
+  selectVariationsTemplate: 'Оберіть список доступних характеристик',
 
   counts: 'Облікові рахунки',
   count: 'Обліковий рахунок',

@@ -21,7 +21,7 @@ const CreateProperty = lazy(() => import('./FormCreateProperty'));
 const CreateVariation = lazy(() => import('./FormCreateVariation'));
 const CreateTransaction = lazy(() => import('./FormCreateTransaction'));
 const CreateWarehouse = lazy(() => import('./FormCreateWarehouse'));
-const CreateProduct = lazy(() => import('./FormCreateProduct'));
+const CreateProduct = lazy(() => import('./FormCreateProduct/FormCreateProduct'));
 
 export const Forms = {
   CreateDirTreeComp,

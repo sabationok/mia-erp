@@ -3,12 +3,12 @@ import { useCallback } from 'react';
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
 import { IProduct, ProductTypeEnum } from '../redux/products/products.types';
 import { useProductsSelector } from '../redux/selectors.store';
-import FormCreateProduct from '../components/Forms/FormCreateProduct';
+import FormCreateProduct from '../components/Forms/FormCreateProduct/FormCreateProduct';
 import { productsFilterOptions } from '../data/directories.data';
 import { useNavigate } from 'react-router-dom';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { ToastService } from '../services';
-import { createProductFromData } from '../utils/dataTransform';
+import { createProductFormData } from '../utils/dataTransform';
 
 export type ProductsActionsCreator = TableActionCreator<IProduct>;
 
@@ -17,6 +17,7 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
   const navigate = useNavigate();
   const state = useProductsSelector();
   const modals = useModalProvider();
+
   // const onSubmitCreateWrapper = useCallback(
   //   (onCloseModal: () => void) => {
   //     return (data: ITransactionReqData, options: AfterFormSubmitOptions,) => {
@@ -42,21 +43,6 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
         type: 'onlyIcon',
         onClick: () => {
           ctx.selectedRow?._id && navigate(ctx.selectedRow?._id);
-          // modals.handleOpenModal({
-          //   ModalChildren: ProductOverview,
-          //   modalChildrenProps: {
-          //     title: 'Перегляд продукту',
-          //     product: state.products.find(el => el._id === ctx.selectedRow?._id),
-          //     // filterOptions: productsFilterOptions,
-          //     // defaultOption: StorageItemTypeFilterOptions.findIndex(el => el.value === product?.type),
-          //     // onSubmit: data => {
-          //     //   service.updateById({
-          //     //     data,
-          //     //     onSuccess(d) {},
-          //     //   });
-          //     // },
-          //   },
-          // });
         },
       },
       {
@@ -68,14 +54,17 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
         disabled: !ctx?.selectedRow?._id,
         onClick: () => {
           const product = state.products.find(p => p._id === ctx?.selectedRow?._id);
-
+          if (!product) {
+            return;
+          }
+          const formData = createProductFormData(product);
           const modal = modals.handleOpenModal({
             ModalChildren: FormCreateProduct,
             modalChildrenProps: {
               title: 'Копіювати',
               _id: ctx?.selectedRow?._id,
               filterOptions: productsFilterOptions,
-              defaultState: product ? createProductFromData(product) : undefined,
+              defaultState: formData,
               onSubmit: (data, o) => {
                 service.updateById({
                   data,
@@ -102,13 +91,17 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
         disabled: !ctx?.selectedRow?._id,
         onClick: () => {
           const product = state.products.find(p => p._id === ctx?.selectedRow?._id);
+          if (!product) {
+            return;
+          }
+          const formData = createProductFormData(product);
 
           const modal = modals.handleOpenModal({
             ModalChildren: FormCreateProduct,
             modalChildrenProps: {
               title: 'Змінити',
               filterOptions: productsFilterOptions,
-              defaultState: product ? createProductFromData(product) : undefined,
+              defaultState: formData,
 
               onSubmit: (data, o) => {
                 service.updateById({

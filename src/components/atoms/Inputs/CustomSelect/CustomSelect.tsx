@@ -14,7 +14,7 @@ export interface CustomSelectBaseProps {
   valueKey?: string;
   options?: CustomSelectOption[];
   getOptions?: () => CustomSelectOption[];
-  onSelect?: CustomSelectOnClickHandler<CustomSelectOption>;
+  onSelect?: CustomSelectHandler;
   onClear?: () => void;
   handleOpenState?: (prevState: boolean) => boolean;
   open?: boolean;
@@ -32,11 +32,9 @@ export interface CustomSelectBaseProps {
   onCreatePress?: () => void;
 }
 
-export type CustomSelectOnClickHandler<OptType = any> = <Option extends OptType = any>(
-  option?: Option,
-  value?: keyof Option,
-  index?: number
-) => void;
+export type CustomSelectOnClickHandler = <Option = any>(option?: Option, value?: keyof Option, index?: number) => void;
+
+export type CustomSelectHandler<Option = any> = (option?: Option, value?: keyof Option, index?: number) => void;
 
 export interface CustomSelectOption {
   _id?: string;

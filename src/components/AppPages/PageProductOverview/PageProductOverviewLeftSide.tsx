@@ -7,7 +7,7 @@ import FlexBox from '../../atoms/FlexBox';
 import React, { useMemo } from 'react';
 import { Modals } from '../../ModalProvider/Modals';
 import { ToastService } from '../../../services';
-import { createProductFromData } from '../../../utils/dataTransform';
+import { createProductFormData } from '../../../utils/dataTransform';
 
 export interface PageProductOverviewRightSideProps {
   toggleRightSideVisibility?: () => void;
@@ -41,25 +41,36 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
     <LeftSide>
       <ProductOverviewXL
         product={page?.currentProduct}
-        onEdit={() => {
-          const m = modalS.handleOpenModal({
-            Modal: Modals.FormCreateProduct,
-            props: {
-              edit: true,
-              _id: page?.currentProduct?._id,
-              defaultState: page?.currentProduct ? createProductFromData(page?.currentProduct) : undefined,
-              onSubmit: (d, o) => {
-                productsS.updateById({
-                  data: { ...d, refreshCurrent: true },
-                  onSuccess: () => {
-                    o?.closeAfterSave && m?.onClose();
-                    ToastService.success(`Updated product`);
+        onEdit={
+          page.currentProduct
+            ? () => {
+                if (!page.currentProduct) {
+                  return;
+                }
+                const formData = createProductFormData(page?.currentProduct);
+
+                const m = modalS.handleOpenModal({
+                  Modal: Modals.FormCreateProduct,
+                  props: {
+                    edit: true,
+                    _id: page?.currentProduct?._id,
+                    defaultState: formData,
+                    onSubmit: (d, o) => {
+                      productsS
+                        .updateById({
+                          data: { ...d, refreshCurrent: true },
+                          onSuccess: () => {
+                            o?.closeAfterSave && m?.onClose();
+                            ToastService.success(`Updated product`);
+                          },
+                        })
+                        .finally();
+                    },
                   },
                 });
-              },
-            },
-          });
-        }}
+              }
+            : undefined
+        }
         onDelete={() => {}}
         onArchive={() => {}}
         onHide={() => {}}

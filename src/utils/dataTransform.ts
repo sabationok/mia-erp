@@ -1,5 +1,5 @@
 import { ITransaction, ITransactionForReq } from '../redux/transactions/transactions.types';
-import { omit, pick } from 'lodash';
+import { cloneDeep, omit, pick } from 'lodash';
 import { OnlyUUID } from '../redux/global.types';
 import { IVariationFormData } from '../components/Forms/FormVariation';
 import { IVariation, IVariationReqData } from '../redux/products/variations.types';
@@ -164,15 +164,16 @@ export const createVariationFormData = (variation: IVariation): IVariationFormDa
   };
 };
 
-export function createProductFromData(data: IProduct, omitPaths?: [string | keyof IProduct]): IProductFullFormData {
+export function createProductFormData(input: IProduct, omitPaths?: [string | keyof IProduct]): IProductFullFormData {
+  const data = cloneDeep(input);
   let output: Record<keyof IProduct | string, any> = {};
-  console.log('createProductFromData input', data);
+  // console.log('createProductFromData input', data);
 
   const getFormValuePickPaths = (data?: any) => {
     return data ? ['_id', 'label', 'email', 'dirType', 'parent', 'name', 'secondName'].filter(key => key in data) : [];
   };
 
-  const dataInArray = Object.entries(data).map(([k, v], index) => {
+  Object.entries(data).map(([k, v], index) => {
     if (v === null) {
       // output[k as keyof IProductFullFormData] = v;
       return (output[k as keyof IProductFullFormData] = v);
@@ -211,8 +212,8 @@ export function createProductFromData(data: IProduct, omitPaths?: [string | keyo
     }
   });
 
-  console.log({ dataInArray });
+  // console.log({ dataInArray });
 
-  console.log('createProductFromData output', output);
+  // console.log('createProductFromData output', output);
   return omit(output, omitPaths ? omitPaths : ['_id', 'createdAt', 'updatedAt']);
 }
