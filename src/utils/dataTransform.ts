@@ -1,16 +1,23 @@
 import { ITransaction, ITransactionForReq } from '../redux/transactions/transactions.types';
-import { pick } from 'lodash';
+import { omit, pick } from 'lodash';
 import { OnlyUUID } from '../redux/global.types';
 import { IVariationFormData } from '../components/Forms/FormVariation';
 import { IVariation, IVariationReqData } from '../redux/products/variations.types';
 import { ConfigService } from '../services';
+import {
+  IProduct,
+  IProductDefaults,
+  IProductDefaultsFormData,
+  IProductFullFormData,
+} from '../redux/products/products.types';
 
 const isDevMode = ConfigService.isDevMode();
 
-const ExtractId = <T extends OnlyUUID>(data: T) => (pick(data, '_id')._id ? pick(data, '_id') : { _id: '' });
-const ExtractIdString = <T extends OnlyUUID>(data: Partial<T>) => ('_id' in data ? pick(data, '_id')._id : undefined);
+export const ExtractId = <T extends OnlyUUID>(data: T) => (pick(data, '_id')._id ? pick(data, '_id') : { _id: '' });
+export const ExtractIdString = <T extends OnlyUUID>(data: Partial<T>) =>
+  '_id' in data ? pick(data, '_id')._id : undefined;
 
-function getValueByPath({ data, path }: { data?: object; path?: string }): any {
+export function getValueByPath({ data, path }: { data?: object; path?: string }): any {
   if (!data || !path) {
     return null;
   }
@@ -27,7 +34,7 @@ function getValueByPath({ data, path }: { data?: object; path?: string }): any {
   });
 }
 
-function formatPhoneNumber(phoneNumberString: string): string | null {
+export function formatPhoneNumber(phoneNumberString: string): string | null {
   // Видалити всі символи крім цифр
   const cleaned = phoneNumberString.replace(/\D/g, '');
 
@@ -43,7 +50,7 @@ function formatPhoneNumber(phoneNumberString: string): string | null {
   return null;
 }
 
-function createTransactionForReq(
+export function createTransactionForReq(
   transaction: ITransaction,
   omitPathArr: (keyof ITransaction)[] = [],
   dateToNumberPath?: keyof Pick<ITransaction, 'eventDate'> | string,
@@ -80,7 +87,7 @@ function createTransactionForReq(
   return transformedData;
 }
 
-function createDataForReq<
+export function createDataForReq<
   IncomeDataType extends Record<string, any> = any,
   OutDataType extends Record<keyof IncomeDataType, any> = any
 >(
@@ -94,6 +101,7 @@ function createDataForReq<
   let outData: Partial<OutDataType> = {};
 
   const keys = Object.keys(incomeData) as (keyof IncomeDataType)[];
+
   keys.map(key => {
     if (['_id', 'createdAt', 'updatedAt', ...omitPathArr]?.includes(key)) return '';
 
@@ -156,4 +164,55 @@ export const createVariationFormData = (variation: IVariation): IVariationFormDa
   };
 };
 
-export { getValueByPath, formatPhoneNumber, createTransactionForReq, createDataForReq, ExtractId, ExtractIdString };
+export function createProductFromData(data: IProduct, omitPaths?: [string | keyof IProduct]): IProductFullFormData {
+  let output: Record<keyof IProduct | string, any> = {};
+  console.log('createProductFromData input', data);
+
+  const getFormValuePickPaths = (data?: any) => {
+    return data ? ['_id', 'label', 'email', 'dirType', 'parent', 'name', 'secondName'].filter(key => key in data) : [];
+  };
+
+  const dataInArray = Object.entries(data).map(([k, v], index) => {
+    if (v === null) {
+      // output[k as keyof IProductFullFormData] = v;
+      return (output[k as keyof IProductFullFormData] = v);
+    }
+    if (!v) {
+      return { [k]: v };
+    }
+    if (['string', 'number'].includes(typeof v)) {
+      // output[k as keyof IProductFullFormData] = v;
+      return (output[k as keyof IProductFullFormData] = v);
+    } else if (typeof v === 'object') {
+      if (Array.isArray(v)) {
+        // output[k as keyof IProductFullFormData] = v;
+        return (output[k as keyof IProductFullFormData] = v);
+      }
+      if (k === 'defaults') {
+        const newDefaults: Record<keyof IProductDefaults | string, any> = {};
+
+        Object.entries(v as IProductDefaults).map(([dk, dv]) => {
+          const newDefValue = pick(dv, getFormValuePickPaths(v));
+          // newDefaults[dk as keyof IProductDefaultsFormData] = newDefValue;
+          return (newDefaults[dk as keyof IProductDefaultsFormData] = newDefValue);
+        });
+
+        return newDefaults;
+      }
+
+      const newValue = pick(v, getFormValuePickPaths(v));
+      k === 'category' && console.log({ newValue, value: v });
+      // console.log('newValue', newValue);
+      // output[k as keyof IProductFullFormData] = newValue;
+      return (output[k as keyof IProductFullFormData] = newValue);
+    } else {
+      // output[k as keyof IProductFullFormData] = v;
+      return (output[k as keyof IProductFullFormData] = v);
+    }
+  });
+
+  console.log({ dataInArray });
+
+  console.log('createProductFromData output', output);
+  return omit(output, omitPaths ? omitPaths : ['_id', 'createdAt', 'updatedAt']);
+}

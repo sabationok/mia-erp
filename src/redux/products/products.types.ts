@@ -1,6 +1,5 @@
-import { IBase, OnlyUUID } from '../global.types';
-import { CurrencyCode } from '../transactions/transactions.types';
-import { IProductCategoryDirItem } from '../../components/Directories/dir.types';
+import { IBase, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
+import { IProductCategoryDirItem, ISupplierDirItem } from '../../components/Directories/dir.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
 import { ICompany } from '../companies/companies.types';
@@ -8,9 +7,8 @@ import { IProductInventory, IWarehouse } from '../warehouses/warehouses.types';
 import { IBrand } from '../directories/brands.types';
 import { IUser } from '../auth/auth.types';
 import { AppQueryParams } from '../../api';
-import { IContractor } from '../contractors/contractors.types';
 import { IVariation } from './variations.types';
-import { IVariationTemplate } from './properties.types';
+import { IPropertyValue, IVariationTemplate } from './properties.types';
 
 export type ProductStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
@@ -23,92 +21,85 @@ export enum ProductTypeEnum {
 export type ProductFilterOpt = FilterOpt<ProductTypeEnum>;
 
 export interface IProductBase extends IBase {
+  label?: string;
+  sku?: string;
+  barCode?: string;
+  qrCode?: string;
+  measurement?: IMeasurement;
+  hasVariations?: boolean;
+  type?: ProductTypeEnum;
+  status?: ProductStatus;
+  approvedStatus?: ProductStatus;
+  archived?: boolean;
+  visible?: boolean;
+  description?: string;
+  tags?: string[];
+  images?: IProductImage[];
+}
+
+export interface IProductAddsFields extends IProductBase {
   owner?: ICompany;
   author?: IUser;
   editor?: IUser;
 
-  label?: string;
-  sku?: string;
-  barCode?: string;
-  qrCode?: string;
-
-  type?: ProductTypeEnum;
-  status?: ProductStatus;
-  approvedStatus?: ProductStatus;
-  archived?: boolean;
-  visible?: boolean;
-  description?: string;
-  tags?: string[];
-
-  images?: ProductImage[];
-
-  defWarehouse?: IWarehouse;
-  defPrice?: IPriceListItem;
-  defVariation?: IVariation;
-  defSupplier?: IContractor;
-}
-
-export interface IProduct extends IProductBase {
   category?: IProductCategoryDirItem;
 
   recommends?: IProduct[];
+  properties?: IPropertyValue[];
   brand?: IBrand;
   template?: IVariationTemplate;
 
-  unitsOfMeasurement?: string;
-
   warehouses?: IWarehouse[];
   variations?: IVariation[];
-
   inventories?: IProductInventory[];
-
-  hasVariations?: boolean;
   prices?: IPriceListItem[];
 }
+export interface IProductDefaults {
+  warehouse?: IWarehouse;
+  price?: IPriceListItem;
+  supplier?: ISupplierDirItem;
+  inventory?: IProductInventory;
+}
+export interface IProductWithDefaults extends IProductAddsFields {
+  defaults?: IProductDefaults;
+}
 
-export type ProductImage = { img_preview?: string; img_1x: string; img_2x: string; webp: string };
+export interface IProduct extends IProductWithDefaults {}
 
-export interface IProductFormData {
-  type?: ProductTypeEnum;
-  currency?: CurrencyCode;
-  status?: ProductStatus;
+export interface IProductImage extends IBase {
+  img_preview?: string;
+  img_1x: string;
+  img_2x: string;
+  webp: string;
+}
 
-  category?: Omit<IProductCategoryDirItem, 'childrenList'>;
+export interface IMeasurement {
+  units?: string;
+}
+// * >>>>>>> FORM DATA <<<<<<<
+export interface IProductBaseFormData extends IProductBaseDto {}
+export interface IProductDefaultsFormData extends Record<keyof IProductDefaults, IFormDataValueWithUUID> {}
+export interface IProductWithAddsFieldsFormData extends IProductBaseFormData {}
+export interface IProductFullFormData extends IProductFullDto {
+  defaults?: IProductDefaultsFormData;
+}
+export interface IProductFormData extends IProductFullFormData {}
 
+// * >>>>>> PRODUCT DTO <<<<<<<
+export interface IProductBaseDto extends Omit<IProductBase, '_id' | 'createdAt' | 'deletedAt' | 'updatedAt'> {}
+
+export interface IProductWithAddsFieldsDto extends IProductBaseDto {
+  category?: OnlyUUID;
   brand?: OnlyUUID;
   template?: OnlyUUID;
-
-  label?: string;
-  sku?: string;
-  barCode?: string;
-  qrCode?: string;
-  unitsOfMeasurement?: string;
-  approvedStatus?: ProductStatus;
-  archived?: boolean;
-  visible?: boolean;
-  tags?: string[];
-  description?: string;
-  inventories?: IProductInventory[];
-
-  defWarehouse?: IWarehouse;
-  defPrice?: IPriceListItem;
-  defVariation?: IVariation;
-  defSupplier?: IContractor;
+  recommends?: OnlyUUID[];
+  properties?: OnlyUUID[];
 }
-
-export interface IProductDto {
-  type?: ProductTypeEnum;
-  currency?: CurrencyCode;
-  status?: ProductStatus;
-
-  category?: OnlyUUID;
-  parentCategory?: OnlyUUID;
-
-  tags?: string[];
-  supplier?: OnlyUUID;
-  brand?: OnlyUUID;
-  document?: OnlyUUID;
+export interface IProductDefaultsDto extends Record<keyof IProductDefaults, OnlyUUID> {}
+export interface IProductFullDto extends IProductWithAddsFieldsDto {
+  defaults?: IProductDefaultsDto;
 }
+export interface IProductDto extends IProductFullDto {}
 
 export interface IProductReqData {
   _id?: string;

@@ -12,10 +12,12 @@ import { AppResponse, IBase, OnlyUUID } from '../global.types';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
 import { ICompany } from '../companies/companies.types';
 import { IManager } from '../auth/auth.types';
-import { IPaymentDirItem, ISupplierDirItem } from '../../components/Directories/dir.types';
+import { ICommunicationDirItem, IPaymentDirItem, IShipmentDirItem } from '../../components/Directories/dir.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 import { IContractor } from '../contractors/contractors.types';
-import { IWarehouse } from '../warehouses/warehouses.types';
+import { IProductInventory, IWarehouse } from '../warehouses/warehouses.types';
+import { IProductBase } from '../products/products.types';
+import { IVariation } from '../products/variations.types';
 
 export type OrderTypeFilterOption = FilterOpt;
 export enum OrderTypeEnum {
@@ -36,10 +38,17 @@ export interface IOrderSlot extends IPriceListItem {
   owner: ICompany;
   order?: OnlyUUID;
 
-  origin?: Partial<IPriceListItem>;
+  product?: IProductBase;
+  origin?: IPriceListItem;
   status?: OrderStatus;
+
   warehouse?: IWarehouse;
-  supplier?: ISupplierDirItem;
+  shipment?: IShipmentDirItem;
+
+  variation?: IVariation;
+  inventory?: IProductInventory;
+
+  amount?: number;
 }
 export interface IOrder extends IBase {
   owner: ICompany;
@@ -49,19 +58,23 @@ export interface IOrder extends IBase {
   code?: string;
 
   customer?: IContractor;
-  customerCommunicationMethod?: IContractor;
+  customerCommunicationMethods?: ICommunicationDirItem[];
 
   receiver?: IContractor;
-  receiverCommunicationMethod?: IContractor;
+  receiverCommunicationMethods?: ICommunicationDirItem[];
 
   status?: OrderStatus;
-  payments?: OnlyUUID[];
 
-  // content?: IOrderSlotItem[];
-  slots?: IOrderSlot[];
   destination?: string;
-  shipmentMethod?: IPaymentDirItem;
-  paymentMethod?: IPaymentDirItem;
+  slots?: IOrderSlot[];
+  invoices?: IBase[];
+
+  total?: number;
+  shipmentType?: IPaymentDirItem;
+  shipments?: IBase[];
+
+  paymentType?: IPaymentDirItem;
+  payments?: IBase[];
 
   comment?: string;
   innerComment?: string;

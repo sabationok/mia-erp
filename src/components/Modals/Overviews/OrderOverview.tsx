@@ -119,7 +119,7 @@ const orderCustomerInfo: OrderInfoBoxProps[] = [
   // { label: 'Статус', getData: o => o.customer?.status },
   { label: 'Телефон', getData: o => o.customer?.phone },
   { label: 'Емейл', getData: o => o.customer?.email },
-  { label: 'Спосіб комунікації', getData: o => o.customerCommunicationMethod?.label },
+  { label: 'Способи комунікації', getData: o => o?.receiverCommunicationMethods?.map(m => m?.label).join(', ') },
 ];
 const orderReceiverInfo: OrderInfoBoxProps[] = [
   { label: 'ID', getData: o => o.receiver?._id },
@@ -131,7 +131,7 @@ const orderReceiverInfo: OrderInfoBoxProps[] = [
   // { label: 'Статус', getData: o => o.receiver?.status },
   { label: 'Телефон', getData: o => o.receiver?.phone },
   { label: 'Емейл', getData: o => o.receiver?.email },
-  { label: 'Спосіб комунікації', getData: o => o.receiverCommunicationMethod?.label },
+  { label: 'Способи комунікації', getData: o => o?.receiverCommunicationMethods?.map(m => m?.label).join(', ') },
 ];
 const orderAdditionalInfo: OrderInfoBoxProps[] = [
   { label: 'Коментар', getData: o => o.comment },

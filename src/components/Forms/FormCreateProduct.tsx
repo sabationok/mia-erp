@@ -55,6 +55,7 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
   const categories = useMemo(() => {
     return directories[ApiDirType.CATEGORIES_PROD].filter(el => el.type === formValues.type);
   }, [directories, formValues.type]);
+
   // TODO eventDate: formatDateForInputValue(defaultState?.eventDate)
   function onValidSubmit(submitData: IProductFormData) {
     const omitPathArr: (keyof IProductFormData)[] = [];
@@ -127,8 +128,8 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
           <InputText placeholder={'Штрих-код'} {...register('barCode')} />
         </InputLabel>
 
-        <InputLabel label={'Одиниці виміру'} direction={'vertical'} error={errors.unitsOfMeasurement} disabled>
-          <InputText placeholder={'Одиниці виміру'} {...register('unitsOfMeasurement')} disabled />
+        <InputLabel label={'Одиниці виміру'} direction={'vertical'} error={errors?.measurement} disabled>
+          <InputText placeholder={'Одиниці виміру'} {...register('measurement.units')} disabled />
         </InputLabel>
 
         <InputLabel label={t('description')} direction={'vertical'} error={errors.description}>

@@ -24,7 +24,7 @@ const productSelectorFilterOptions: (FilterOpt & { placeholder?: string })[] = [
   { label: 'By sku', value: 'sku', placeholder: 'Введіть артикул продукту' },
   // { label: 'By warehouse', value: 'warehouse', placeholder: 'Введіть номер складу' },
 ];
-const SelectProductModal: React.FC<SelectProductModalProps> = ({ selected, onSelect }) => {
+const SelectProductModal: React.FC<SelectProductModalProps> = ({ selected, onSelect, ...props }) => {
   const { register, setValue, watch, handleSubmit } = useForm<Pick<SelectProductModalProps, 'search' | 'searchBy'>>({
     defaultValues: {
       searchBy: 'label',
@@ -77,9 +77,10 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ selected, onSel
     <StModalForm
       fillHeight
       title={'Select product'}
+      {...props}
+      filterOptions={productSelectorFilterOptions}
       isValid={!!current}
       footer={false}
-      filterOptions={productSelectorFilterOptions}
       onOptSelect={(_o, v, index) => {
         setValue('searchBy', v);
         setCurrentTab(index);

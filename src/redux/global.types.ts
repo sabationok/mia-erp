@@ -1,6 +1,7 @@
 import { ThunkPayload } from './store.store';
 import { AxiosResponse } from 'axios';
 import { ApiCallerPayload } from '../api/createApiCall.api';
+import { ApiDirType } from './APP_CONFIGS';
 
 export interface OnlyUUID {
   _id: string;
@@ -11,6 +12,20 @@ export interface IBase extends OnlyUUID {
   updatedAt?: Date | string;
   deletedAt?: Date | string;
 }
+
+export interface IFormDataValueWithUUID extends OnlyUUID {
+  label?: string;
+  name?: string;
+  secondName?: string;
+  dirType?: ApiDirType;
+  email?: string;
+  parent?: Omit<IFormDataValueWithUUID, 'parent'>;
+}
+export interface IBaseWithPeriod extends IBase {
+  timeFrom?: string | number | Date | null;
+  timeTo?: string | number | Date | null;
+}
+export type IFormDataValue = IFormDataValueWithUUID | string | number | boolean | Date | null;
 
 export interface RoleActionType extends OnlyUUID {
   label?: string;

@@ -177,6 +177,34 @@ const CardGridBox = styled(FlexBox)`
   height: 100%;
   border-top: 1px solid ${({ theme }) => theme.trBorderClr};
 `;
+
+const CardGridArea = styled(FlexBox)`
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(5, min-content);
+  grid-template-areas:
+    'img img label label sku sku'
+    'img img brand brand type type'
+    'atr_1 atr_1  atr_2  atr_2 qty qty'
+    'price bonuses discount total total currency'
+    'warehouse warehouse warehouse warehouse warehouse warehouse';
+
+  //max-width: 270px;
+  height: max-content;
+  border-top: 1px solid ${({ theme }) => theme.trBorderClr};
+
+  @media screen and (max-width: 480px) {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(5, min-content);
+    grid-template-areas:
+      'label label label label sku sku'
+      'category category brand brand type type'
+      'atr_1 atr_1 atr_1 atr_2 atr_2 atr_2'
+      'qty qty price price bonuses discount'
+      'total total total total currency currency'
+      'warehouse warehouse warehouse warehouse warehouse warehouse';
+  }
+`;
 const CardGridBoxInner = styled(FlexBox)<{ gridArea: string; isLastInRow?: boolean }>`
   justify-content: space-between;
 

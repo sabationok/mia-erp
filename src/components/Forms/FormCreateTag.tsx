@@ -7,12 +7,16 @@ import styled from 'styled-components';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import t from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useAppForm } from '../../hooks';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { tagsFilterOptions } from '../../data/directories.data';
+import FlexBox from '../atoms/FlexBox';
+import { FilterOption } from '../ModalForm/ModalFilter';
+import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
+import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 
 export interface FormCreateTagProps extends DirectoriesFormProps<ApiDirType.TAGS, ITagDirItem, ITagDirItem> {}
 
@@ -47,20 +51,42 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({
     reValidateMode: 'onSubmit',
   });
 
+  const handleFilter = useCallback(
+    (option: FilterOption<ContractorsTypesEnum>) => {
+      setValue('type', option?.value);
+    },
+    [setValue]
+  );
+
   function formEventWrapper(evHandler?: AppSubmitHandler<ITagDirItem>) {
     if (evHandler) {
       return handleSubmit(data => evHandler(data, { clearAfterSave, closeAfterSave }));
     }
   }
 
+  const renderFilter = useMemo(() => {
+    return filterOptions.map((opt, index) => {
+      return (
+        <ButtonIcon
+          isActive={formValues?.type === opt.value}
+          key={`f-opt_${opt.value}`}
+          variant={formValues?.type === opt.value ? 'filledSmall' : 'outlinedSmall'}
+          onClick={() => handleFilter(opt)}
+        >
+          {t(opt.value)}
+        </ButtonIcon>
+      );
+    });
+  }, [filterOptions, formValues?.type, handleFilter]);
+
   return (
     <ModalForm
       {...props}
       style={{ maxWidth: 480 }}
       filterOptions={filterOptions}
-      onOptSelect={(_o, v) => {
-        setValue('type', v);
-      }}
+      // onOptSelect={(_o, v) => {
+      //   setValue('type', v);
+      // }}
       onSubmit={formEventWrapper(onSubmit)}
       isValid={isValid}
       extraFooter={
@@ -71,7 +97,19 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({
         />
       }
     >
-      <Inputs>
+      <FlexBox
+        fillWidth
+        gap={8}
+        padding={'8px'}
+        fxDirection={'row'}
+        flex={1}
+        flexWrap={'wrap'}
+        style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}
+      >
+        {renderFilter}
+      </FlexBox>
+
+      <Inputs gap={8} fillWidth padding={'8px'}>
         {filterOptions && (
           <InputLabel label={t('type')} error={errors.type} disabled>
             <InputText
@@ -89,13 +127,8 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({
     </ModalForm>
   );
 };
-const Inputs = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
 
-  padding: 16px;
-
+const Inputs = styled(FlexBox)`
   background-color: inherit;
 `;
 export default FormCreateTag;

@@ -7,6 +7,7 @@ import FlexBox from '../../atoms/FlexBox';
 import React, { useMemo } from 'react';
 import { Modals } from '../../ModalProvider/Modals';
 import { ToastService } from '../../../services';
+import { createProductFromData } from '../../../utils/dataTransform';
 
 export interface PageProductOverviewRightSideProps {
   toggleRightSideVisibility?: () => void;
@@ -46,7 +47,7 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
             props: {
               edit: true,
               _id: page?.currentProduct?._id,
-              defaultState: page?.currentProduct,
+              defaultState: page?.currentProduct ? createProductFromData(page?.currentProduct) : undefined,
               onSubmit: (d, o) => {
                 productsS.updateById({
                   data: { ...d, refreshCurrent: true },

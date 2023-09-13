@@ -4,11 +4,11 @@ import { TableActionCreator } from '../components/TableList/tableTypes.types';
 import { IProduct, ProductTypeEnum } from '../redux/products/products.types';
 import { useProductsSelector } from '../redux/selectors.store';
 import FormCreateProduct from '../components/Forms/FormCreateProduct';
-import { omit } from 'lodash';
 import { productsFilterOptions } from '../data/directories.data';
 import { useNavigate } from 'react-router-dom';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { ToastService } from '../services';
+import { createProductFromData } from '../utils/dataTransform';
 
 export type ProductsActionsCreator = TableActionCreator<IProduct>;
 
@@ -75,7 +75,7 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
               title: 'Копіювати',
               _id: ctx?.selectedRow?._id,
               filterOptions: productsFilterOptions,
-              defaultState: omit(product, ['_id', 'createdAt', 'updatedAt']),
+              defaultState: product ? createProductFromData(product) : undefined,
               onSubmit: (data, o) => {
                 service.updateById({
                   data,
@@ -108,7 +108,8 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
             modalChildrenProps: {
               title: 'Змінити',
               filterOptions: productsFilterOptions,
-              defaultState: omit(product, ['createdAt', 'updatedAt']),
+              defaultState: product ? createProductFromData(product) : undefined,
+
               onSubmit: (data, o) => {
                 service.updateById({
                   data,
