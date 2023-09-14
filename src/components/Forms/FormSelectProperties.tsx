@@ -6,7 +6,7 @@ import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.h
 import { useCallback, useMemo, useState } from 'react';
 import { Text } from '../atoms/Text';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import { OverlayHandlerReturn } from '../AppPages/PageCurrentProductProvider';
+import { OverlayHandlerReturn } from '../AppPages/PageProductOverview/PageCurrentProductProvider';
 import { OnlyUUID } from '../../redux/global.types';
 import AppLoader from '../atoms/AppLoader';
 import { ModalFormProps } from '../ModalForm';

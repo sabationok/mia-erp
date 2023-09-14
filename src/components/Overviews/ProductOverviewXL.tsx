@@ -5,7 +5,7 @@ import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import { Text } from '../atoms/Text';
 import t from '../../lang';
-import { OverlayHandler, usePageCurrentProduct } from '../AppPages/PageCurrentProductProvider';
+import { OverlayHandler, usePageCurrentProduct } from '../AppPages/PageProductOverview/PageCurrentProductProvider';
 import { useProductsSelector } from '../../redux/selectors.store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import * as Cells from './components/Cells';
@@ -182,11 +182,11 @@ const productOverviewCells: ProductOverviewCell[] = [
     getValue: product => product?.brand?.label,
     gridArea: 'brand',
   },
-  { title: 'Характеристики', CellComponent: Cells.Properties, gridArea: 'properties' },
   {
     title: 'Опис',
     CellComponent: Cells.OverviewTextCell,
     getValue: product => product?.description,
     gridArea: 'description',
   },
+  { title: 'Додаткові характеристики', CellComponent: Cells.Properties, gridArea: 'properties' },
 ];

@@ -6,7 +6,7 @@ import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.h
 import { useCallback, useMemo, useState } from 'react';
 import { Text } from '../atoms/Text';
 import { AppSubmitHandler, UseAppFormSubmitOptions } from '../../hooks/useAppForm.hook';
-import { OverlayHandlerReturn } from '../AppPages/PageCurrentProductProvider';
+import { OverlayHandlerReturn } from '../AppPages/PageProductOverview/PageCurrentProductProvider';
 import { useForm } from 'react-hook-form';
 import { createVariationFormData, createVariationReqData } from '../../utils/dataTransform';
 import { IVariation } from '../../redux/products/variations.types';

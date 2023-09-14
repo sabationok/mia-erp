@@ -2,11 +2,12 @@ import FlexBox from '../../atoms/FlexBox';
 import React, { useMemo } from 'react';
 import { RenderOverviewCellComponent } from '../ProductOverviewXL';
 import FormCreateVariation from '../../Forms/FormVariation';
-import { IPropertyValue } from '../../../redux/products/properties.types';
+import { IProperty } from '../../../redux/products/properties.types';
 import styled from 'styled-components';
 import { Text } from '../../atoms/Text';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import FormSelectProperties from '../../Forms/FormSelectProperties';
+import { IProduct } from '../../../redux/products/products.types';
 
 export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) => {
   const value = cell.getValue ? cell.getValue(data) : null;
@@ -66,23 +67,34 @@ export const VariationsTemplateCell: RenderOverviewCellComponent = ({ cell, setO
     </Cell>
   );
 };
-const PropertyComponent: React.FC<{ item: IPropertyValue; index: number }> = ({ item, index }) => {
+const PropertyComponent: React.FC<{ item: IProperty; availableItems?: string[]; data?: IProduct; index: number }> = ({
+  item,
+  data,
+  availableItems,
+  index,
+}) => {
+  const renderValues = useMemo(() => {
+    return item.childrenList
+      ?.filter(el => availableItems?.includes(el._id))
+      ?.map((value, index) => {
+        return (
+          <FlexBox padding={'4px 12px'} border={'1px solid lightgrey'} borderRadius={'4px'} key={`prop-v-${value._id}`}>
+            {value.label}
+          </FlexBox>
+        );
+      });
+  }, [availableItems, item.childrenList]);
+
   return (
-    <FlexBox padding={'4px'} fxDirection={'row'} gap={8}>
-      <FlexBox alignItems={'center'} fxDirection={'row'} justifyContent={'space-between'} gap={8}>
-        <CellText $size={12}>{item?.parent?.label}</CellText>
+    <FlexBox className={'PROPERTY'} gap={8}>
+      <FlexBox alignItems={'center'} fxDirection={'row'} justifyContent={'flex-end'} fillWidth gap={8}>
+        <CellText $size={14} $weight={600}>
+          {item?.label}
+        </CellText>
       </FlexBox>
 
-      <FlexBox
-        fillWidth
-        fxDirection={'row'}
-        gap={8}
-        height={'24px'}
-        justifyContent={'flex-end'}
-        alignItems={'flex-end'}
-        overflow={'hidden'}
-      >
-        <CellText>{`${item?.label}`}</CellText>
+      <FlexBox fillWidth fxDirection={'row'} flexWrap={'wrap'} gap={8}>
+        {renderValues && renderValues?.length > 0 ? renderValues : '---'}
       </FlexBox>
     </FlexBox>
   );
@@ -90,22 +102,33 @@ const PropertyComponent: React.FC<{ item: IPropertyValue; index: number }> = ({ 
 export const Properties: RenderOverviewCellComponent = ({ cell, setOverlayContent, data }) => {
   const templates = useProductsSelector().properties;
 
-  const renderList = useMemo(() => {
+  const availableItems = useMemo(() => {
+    return data?.properties?.map(p => p._id);
+  }, [data?.properties]);
+
+  const renderProperties = useMemo(() => {
     const arr = data?.properties
       ? data?.properties
-      : templates[0]?.childrenList && templates[0]?.childrenList[0]?.childrenList
-      ? [...templates[0]?.childrenList[0]?.childrenList]
+      : templates[0]?.childrenList && templates[0]?.childrenList
+      ? [...templates[0]?.childrenList]
       : [];
 
     return arr.map((prop, index) => {
       return (
-        <PropertyComponent key={`prop-${prop?._id}`} {...{ index, setOverlayContent, item: prop }}></PropertyComponent>
+        <PropertyComponent
+          key={`prop-${prop?._id}`}
+          {...{ index, setOverlayContent, item: prop, availableItems }}
+        ></PropertyComponent>
       );
     });
-  }, [data?.properties, setOverlayContent, templates]);
+  }, [availableItems, data?.properties, setOverlayContent, templates]);
 
   return (
-    <Cell padding={'4px'}>
+    <Cell
+      padding={'4px'}
+      gap={8}
+      style={{ minHeight: renderProperties && renderProperties?.length > 0 ? 'max-content' : 50 }}
+    >
       <FlexBox alignItems={'center'} fxDirection={'row'} justifyContent={'space-between'} gap={8}>
         <CellText $isTitle $size={12}>
           {cell?.title}
@@ -123,14 +146,15 @@ export const Properties: RenderOverviewCellComponent = ({ cell, setOverlayConten
 
       <FlexBox
         fillWidth
-        fxDirection={'row'}
         gap={8}
-        height={'24px'}
-        justifyContent={'flex-end'}
-        alignItems={'flex-end'}
-        overflow={'hidden'}
+        className={'PROPERTIES_LIST'}
+        alignItems={renderProperties && renderProperties?.length > 0 ? 'stretch' : 'flex-end'}
       >
-        {renderList}
+        {renderProperties && renderProperties?.length > 0 ? (
+          renderProperties
+        ) : (
+          <CellText $weight={500}>{'не визначено'}</CellText>
+        )}
       </FlexBox>
     </Cell>
   );

@@ -1,4 +1,4 @@
-import { usePageCurrentProduct } from '../PageCurrentProductProvider';
+import { usePageCurrentProduct } from './PageCurrentProductProvider';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import TableList, { ITableListProps } from '../../TableList/TableList';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';

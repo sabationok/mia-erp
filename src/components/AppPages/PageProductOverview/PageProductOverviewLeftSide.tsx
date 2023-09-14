@@ -1,10 +1,10 @@
-import { usePageCurrentProduct } from '../PageCurrentProductProvider';
+import { usePageCurrentProduct } from './PageCurrentProductProvider';
 import ProductOverviewXL from '../../Overviews/ProductOverviewXL';
 import { useModalProvider } from '../../ModalProvider/ModalProvider';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
-import React, { useMemo } from 'react';
+import React, { MouseEventHandler, useCallback, useMemo } from 'react';
 import { Modals } from '../../ModalProvider/Modals';
 import { ToastService } from '../../../services';
 import { createProductFormData } from '../../../utils/dataTransform';
@@ -17,17 +17,34 @@ const PageProductOverviewLeftSide: React.FC<PageProductOverviewLeftSideProps> = 
   const modalS = useModalProvider();
   const { products: productsS } = useAppServiceProvider();
 
+  const onOverlayBackdropClick = useCallback(
+    (id: string): MouseEventHandler<HTMLDivElement> =>
+      ev => {
+        if (ev.target === ev.currentTarget) {
+          page.removeStackItem(id);
+        }
+      },
+    [page]
+  );
+
   const renderOverlayStack = useMemo(() => {
     const stack = page.getOverlayStack();
 
     return stack.map(({ RenderComponent, props, id }, index) => {
       return (
-        <OverlayBox key={`overlay-${id}`} style={{ zIndex: 20 + index }} fillHeight fillWidth>
+        <OverlayBox
+          key={`overlay-${id}`}
+          className={`overlay-${id}`}
+          style={{ zIndex: 20 + index }}
+          fillHeight
+          fillWidth
+          onClick={onOverlayBackdropClick(id)}
+        >
           <RenderComponent
             key={`overlay-${id}`}
             {...props}
             onClose={() => {
-              page.handleRemoveStackItem(id);
+              page.removeStackItem(id);
             }}
             overlayId={id}
             index={index}
@@ -35,7 +52,7 @@ const PageProductOverviewLeftSide: React.FC<PageProductOverviewLeftSideProps> = 
         </OverlayBox>
       );
     });
-  }, [page]);
+  }, [onOverlayBackdropClick, page]);
 
   return (
     <LeftSide>

@@ -5,7 +5,7 @@ import AppGridPage from './AppGridPage';
 import { useCallback, useEffect, useState } from 'react';
 import { useAppParams } from '../../hooks';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
-import PageCurrentProductProvider from './PageCurrentProductProvider';
+import PageCurrentProductProvider from './PageProductOverview/PageCurrentProductProvider';
 import { ToastService } from '../../services';
 import PageProductOverviewRightSide from './PageProductOverview/PageProductOverviewRightSide';
 import PageProductOverviewLeftSide from './PageProductOverview/PageProductOverviewLeftSide';

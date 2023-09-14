@@ -476,14 +476,11 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
         },
       });
     },
-    onChangeDisableStatus: (_id, status) => {
+    onChangeDisableStatus: (_id, status, o) => {
       console.log(_id, status);
       service
         .changeDisabledStatus({
           data: { _id, data: { isSelectable: status }, params: { createTreeData: true } },
-          onSuccess: rd => {
-            console.log('changeDisabledStatus', rd);
-          },
         })
         .then();
     },
