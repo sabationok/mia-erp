@@ -2,20 +2,20 @@ import FlexBox from './FlexBox';
 import { useCallback, useMemo, useState } from 'react';
 import ButtonIcon from './ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
-import { FilterOpt } from '../ModalForm/ModalFilter';
+import { FilterOption } from '../ModalForm/ModalFilter';
 
 export interface ButtonGroupProps<V = any> {
-  options?: FilterOpt<V>[];
-  onSelect?: ButtonGroupOnSelectHandler<V>;
+  options?: FilterOption<V>[];
+  onSelect?: ButtonGroupSelectHandler<V>;
   backgroundColor?: string;
   borderRadius?: string;
 }
-export type ButtonGroupOnSelectHandler<V = any> = (info: { option: FilterOpt<V>; value?: V; index: number }) => void;
-const ButtonGroup: React.FC<ButtonGroupProps> = ({ options, borderRadius, onSelect }) => {
+export type ButtonGroupSelectHandler<V = any> = (info: { option: FilterOption<V>; value?: V; index: number }) => void;
+const ButtonGroup = <V = any,>({ options, borderRadius, onSelect }: ButtonGroupProps<V>) => {
   const [current, setCurrent] = useState(0);
 
   const handleSelect = useCallback(
-    (option: FilterOpt, index: number) => () => {
+    (option: FilterOption, index: number) => () => {
       setCurrent(index);
       onSelect && options && onSelect({ option, value: option?.value, index });
     },

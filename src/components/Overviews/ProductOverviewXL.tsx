@@ -5,10 +5,10 @@ import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import { Text } from '../atoms/Text';
 import t from '../../lang';
-import FormCreateVariation from '../Forms/FormVariation';
 import { OverlayHandler, usePageCurrentProduct } from '../AppPages/PageCurrentProductProvider';
 import { useProductsSelector } from '../../redux/selectors.store';
 import { useLocation, useNavigate } from 'react-router-dom';
+import * as Cells from './components/Cells';
 
 export interface ProductOverviewXLProps {
   product?: IProduct;
@@ -20,25 +20,21 @@ export interface ProductOverviewXLProps {
   onOpenRightSide?: () => void;
   className?: string;
 }
-export interface OverviewRenderCellReturnData {
-  value?: string | number;
-  title?: string;
-  gridArea?: keyof IProduct;
-  getValue?: () => React.ReactNode;
-}
+
+export type RenderOverviewCellComponent = React.FC<{
+  cell: ProductOverviewCell;
+  setOverlayContent: OverlayHandler;
+  data?: IProduct;
+}>;
+
 export interface ProductOverviewCell {
   value?: string | number;
   title?: string;
   gridArea?: keyof IProduct;
-  renderCell?: RenderOverviewCell<IProduct>;
-  CellComponent?: React.FC<{ data?: IProduct; cell: ProductOverviewCell; setOverlayContent: OverlayHandler }>;
-  getValue?: (product?: IProduct) => string | number;
+  CellComponent?: RenderOverviewCellComponent;
+  getValue?: (product?: IProduct) => string | number | undefined;
 }
-export type RenderOverviewCell<T = any> = (
-  cell: ProductOverviewCell,
-  setOverlayContent: OverlayHandler,
-  data?: T
-) => React.ReactNode;
+
 const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, onOpenRightSide, ...p }) => {
   const product = useProductsSelector().currentProduct;
   const page = usePageCurrentProduct();
@@ -48,9 +44,6 @@ const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, onOpen
   const renderCells = useMemo(
     () =>
       productOverviewCells.map(({ CellComponent, ...cell }) => {
-        if (cell.renderCell) {
-          return cell.renderCell(cell, page.createOverlayComponent, product);
-        }
         if (CellComponent) {
           return (
             <CellComponent
@@ -61,8 +54,14 @@ const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, onOpen
             />
           );
         }
-        const value = cell.getValue && cell.getValue(product);
-        return renderTextCell(cell.title, value);
+        return (
+          <Cells.OverviewTextCell
+            key={cell.title}
+            setOverlayContent={page.createOverlayComponent}
+            cell={cell}
+            data={product}
+          />
+        );
       }),
     [page.createOverlayComponent, product]
   );
@@ -138,145 +137,56 @@ const OpenBtn = styled(ButtonIcon)`
     display: none;
   }
 `;
-const OverlayOpenButton = styled.button`
-  display: flex;
-  align-items: center;
 
-  border: 0;
-  background-color: transparent;
-
-  font-family: inherit;
-  font-weight: 500;
-  font-size: 12px;
-  padding: 0 6px;
-  color: ${p => p.theme.accentColor.base};
-
-  cursor: pointer;
-`;
-
-const Cell = styled(FlexBox)`
-  min-height: 50px;
-  border-top: 1px solid ${p => p.theme.sideBarBorderColor};
-`;
-
-const CellText = styled(Text)<{ $isTitle?: boolean }>`
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  max-width: 100%;
-
-  color: ${p =>
-    p.$isTitle
-      ? p.theme.globals.inputPlaceholderColor
-      : p.$disabled
-      ? p.theme.globals.inputPlaceholderColor
-      : undefined};
-`;
 export default ProductOverviewXL;
-
-const renderTextCell = (title?: string, value?: string | number) => {
-  return (
-    <Cell key={title} padding={'4px'}>
-      <CellText $isTitle $size={12}>
-        {title}
-      </CellText>
-
-      <FlexBox
-        fillWidth
-        flex={1}
-        fxDirection={'row'}
-        justifyContent={'flex-end'}
-        alignItems={'flex-end'}
-        overflow={'hidden'}
-        style={{ minHeight: 24 }}
-      >
-        <CellText $disabled={!value} $weight={500}>
-          {value || 'не визначено'}
-        </CellText>
-      </FlexBox>
-    </Cell>
-  );
-};
-const VariationsTemplateCell: React.FC<{
-  cell: ProductOverviewCell;
-  setOverlayContent: OverlayHandler;
-  data?: IProduct;
-}> = ({ cell, setOverlayContent, data }) => {
-  return (
-    <Cell key={cell.title} padding={'4px'}>
-      <FlexBox alignItems={'center'} fxDirection={'row'} justifyContent={'space-between'} gap={8}>
-        <CellText $isTitle $size={12}>
-          {cell.title}
-        </CellText>
-
-        {data?.template && (
-          <OverlayOpenButton
-            type={'button'}
-            onClick={() => {
-              setOverlayContent({ RenderComponent: FormCreateVariation, props: { create: true } });
-            }}
-          >
-            {'Перегляд'}
-          </OverlayOpenButton>
-        )}
-      </FlexBox>
-
-      <FlexBox
-        fillWidth
-        fxDirection={'row'}
-        gap={8}
-        height={'24px'}
-        justifyContent={'flex-end'}
-        alignItems={'flex-end'}
-        overflow={'hidden'}
-      >
-        <CellText $disabled={!data?.template?.label} $weight={500}>{`${data?.template?.label}`}</CellText>
-      </FlexBox>
-    </Cell>
-  );
-};
 
 const productOverviewCells: ProductOverviewCell[] = [
   {
     title: 'Назва',
-    renderCell: (cell, _, product) => renderTextCell(cell.title, product?.label),
+    CellComponent: Cells.OverviewTextCell,
+    getValue: product => product?.label,
     gridArea: 'label',
   },
   {
     title: 'Тип',
-    renderCell: (cell, _, product) => renderTextCell(cell.title, product?.type),
+    CellComponent: Cells.OverviewTextCell,
+    getValue: product => product?.type,
     gridArea: 'type',
   },
   {
     title: 'Артикул | SKU',
-    renderCell: (cell, _, product) => renderTextCell(cell.title, product?.sku),
+    CellComponent: Cells.OverviewTextCell,
+    getValue: product => product?.sku,
     gridArea: 'sku',
   },
   {
     title: 'Штрих-код',
-    renderCell: (cell, _, product) => renderTextCell(cell.title, product?.barCode),
+    CellComponent: Cells.OverviewTextCell,
+    getValue: product => product?.barCode,
     gridArea: 'barCode',
   },
   {
     title: t('variationsTemplate'),
-    CellComponent: VariationsTemplateCell,
+    CellComponent: Cells.VariationsTemplateCell,
     gridArea: 'template',
   },
   {
     title: 'Категорія',
-    renderCell: (cell, _, product) =>
-      renderTextCell(cell.title, `${product?.category?.parent?.label || ''}/${product?.category?.label}`),
+    CellComponent: Cells.OverviewTextCell,
+    getValue: product => `${product?.category?.parent?.label || ''}/${product?.category?.label}`,
     gridArea: 'category',
   },
   {
     title: 'Бренд',
-    renderCell: (cell, _, product) => renderTextCell(cell.title, product?.brand?.label),
+    CellComponent: Cells.OverviewTextCell,
+    getValue: product => product?.brand?.label,
     gridArea: 'brand',
   },
-
+  { title: 'Характеристики', CellComponent: Cells.Properties, gridArea: 'properties' },
   {
     title: 'Опис',
-    renderCell: (cell, _, product) => renderTextCell(cell.title, product?.description),
+    CellComponent: Cells.OverviewTextCell,
+    getValue: product => product?.description,
     gridArea: 'description',
   },
 ];

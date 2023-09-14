@@ -77,7 +77,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const renderItems = useMemo(() => {
+  const renderGroups = useMemo(() => {
     return fList.map((item, index) => (
       <DirPropertyGroup
         key={`group_${item._id}`}
@@ -91,6 +91,9 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
         }}
         onCreateChild={(data, o) => {
           actions?.onCreateChild && actions?.onCreateChild(data.parent._id, data?.parent, { ...o });
+        }}
+        onChangeSelectableStatus={(_id, status) => {
+          actions?.onChangeDisableStatus && actions?.onChangeDisableStatus(_id, status);
         }}
       />
     ));
@@ -112,8 +115,8 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
         )
       }
     >
-      <FlexBox gap={6} flex={1} overflow={'auto'} justifyContent={'flex-start'}>
-        {renderItems}
+      <FlexBox flex={1} overflow={'auto'} justifyContent={'flex-start'}>
+        {renderGroups}
       </FlexBox>
     </ModalForm>
   );
@@ -126,6 +129,7 @@ export interface DiPropertiesRenderItemProps {
   onCreateChild?: AppSubmitHandler<{ parent: IProperty }, LevelType>;
   onUpdate?: AppSubmitHandler<{ _id: string; data: IProperty }, LevelType>;
   onDelete?: AppSubmitHandler<OnlyUUID>;
+  onChangeSelectableStatus?: (_id: string, status: boolean) => void;
 }
 const DirPropertyGroup: React.FC<DiPropertiesRenderItemProps> = ({
   item,
@@ -133,6 +137,7 @@ const DirPropertyGroup: React.FC<DiPropertiesRenderItemProps> = ({
   onCreateChild,
   onDelete,
   onCreateValue,
+  onChangeSelectableStatus,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const theme = useTheme();
@@ -143,10 +148,11 @@ const DirPropertyGroup: React.FC<DiPropertiesRenderItemProps> = ({
         key={`property_${el?._id}`}
         item={el}
         index={index}
-        {...{ onUpdate, onCreateChild, onDelete, onCreateValue }}
+        {...{ onUpdate, onCreateChild, onDelete, onCreateValue, onChangeSelectableStatus }}
       />
     ));
-  }, [item.childrenList, onCreateChild, onCreateValue, onDelete, onUpdate]);
+  }, [item.childrenList, onChangeSelectableStatus, onCreateChild, onCreateValue, onDelete, onUpdate]);
+
   return (
     <FlexBox>
       <FlexBox
@@ -205,11 +211,19 @@ const DirPropertyGroup: React.FC<DiPropertiesRenderItemProps> = ({
     </FlexBox>
   );
 };
-const DirPropertyItem: React.FC<DiPropertiesRenderItemProps> = ({ item, index, onUpdate, onDelete, onCreateValue }) => {
+const DirPropertyItem: React.FC<DiPropertiesRenderItemProps> = ({
+  item,
+  index,
+  onChangeSelectableStatus,
+  onUpdate,
+  onDelete,
+  onCreateValue,
+}) => {
   const [isSelectable, setIsSelectable] = useState(item?.isSelectable);
 
   const onChange: OnCheckBoxChangeHandler = e => {
     setIsSelectable(e.checked);
+    onChangeSelectableStatus && onChangeSelectableStatus(item?._id, e.checked);
   };
 
   const renderChildren = useMemo(() => {
@@ -337,13 +351,6 @@ const DirPropertyValueBox = styled(FlexBox)`
   }
 `;
 const DirPropertyValueActions = styled(FlexBox)`
-  //position: absolute;
-  //
-  //top: 0;
-  //right: 0;
-  //height: 100%;
-  //z-index: 20;
-
   border-radius: 4px;
   background-color: ${p => p.theme.modalBackgroundColor};
   border: 2px solid ${p => p.theme.accentColor.light};
@@ -469,6 +476,17 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
         },
       });
     },
+    onChangeDisableStatus: (_id, status) => {
+      console.log(_id, status);
+      service
+        .changeDisabledStatus({
+          data: { _id, data: { isSelectable: status }, params: { createTreeData: true } },
+          onSuccess: rd => {
+            console.log('changeDisabledStatus', rd);
+          },
+        })
+        .then();
+    },
     // onChangeArchiveStatus: (_id, status) => {
     //   service
     //     .changeArchiveStatus({
@@ -479,9 +497,6 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
     //       },
     //     })
     //     .then();
-    // },
-    // onChangeDisableStatus: (_id, status) => {
-    //   service.changeDisabledStatus({ data: { _id, data: { disabled: status } }, onSuccess: (rd, meta) => {} }).then();
     // },
   };
 };

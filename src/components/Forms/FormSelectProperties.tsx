@@ -5,115 +5,69 @@ import { useProductsSelector, usePropertiesSelector } from '../../redux/selector
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { useCallback, useMemo, useState } from 'react';
 import { Text } from '../atoms/Text';
-import { AppSubmitHandler, UseAppFormSubmitOptions } from '../../hooks/useAppForm.hook';
+import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { OverlayHandlerReturn } from '../AppPages/PageCurrentProductProvider';
-import { useForm } from 'react-hook-form';
-import { createVariationFormData, createVariationReqData } from '../../utils/dataTransform';
-import { IVariation } from '../../redux/products/variations.types';
 import { OnlyUUID } from '../../redux/global.types';
-import { ToastService } from '../../services';
 import AppLoader from '../atoms/AppLoader';
 import { ModalFormProps } from '../ModalForm';
-import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 
-export interface FormVariationProps
+export interface FormSelectPropertiesProps
   extends OverlayHandlerReturn,
-    Omit<ModalFormProps<any, any, IVariation>, 'onSubmit' | 'defaultState'> {
-  onSubmit?: AppSubmitHandler<IVariationFormData>;
+    Omit<ModalFormProps<any, any, string[]>, 'onSubmit' | 'onChange' | 'onSelect'> {
+  onSubmit?: AppSubmitHandler<string[]>;
+  onSelect?: (id: string) => void;
+  onChange?: (id: string, ids: string[]) => void;
+
   product?: OnlyUUID;
+  template?: OnlyUUID;
 
   create?: boolean;
   update?: string;
+}
 
-  defaultState?: IVariation;
-}
-export interface IVariationFormData {
-  propertiesMap: Record<string, string>;
-  price?: OnlyUUID;
-  product?: OnlyUUID;
-  timeFrom?: string | number | Date;
-  timeTo?: string | number | Date;
-}
-const FormVariation: React.FC<FormVariationProps> = ({
+const FormSelectProperties: React.FC<FormSelectPropertiesProps> = ({
   onClose,
   title,
   defaultState,
   onSubmit,
   update,
   create,
+  product,
+  template,
+  onSelect,
+  onChange,
   ...props
 }) => {
-  const product = useProductsSelector().currentProduct;
+  const currentProduct = useProductsSelector().currentProduct;
   const service = useAppServiceProvider()[ServiceName.products];
   const templates = usePropertiesSelector();
   const [loading, setLoading] = useState(false);
+  const [selected, setSelected] = useState<string[]>([]);
+  // const [submitOptions, setSubmitOptions] = useState<UseAppFormSubmitOptions>({});
+  // const handleChangeAfterSubmit = (key: keyof UseAppFormSubmitOptions) => {
+  //   setSubmitOptions(prev => ({ ...prev, [key]: !prev[key] }));
+  // };
 
-  const [submitOptions, setSubmitOptions] = useState<UseAppFormSubmitOptions>({});
-  const handleChangeAfterSubmit = (key: keyof UseAppFormSubmitOptions) => {
-    setSubmitOptions(prev => ({ ...prev, [key]: !prev[key] }));
-  };
+  const templateData = useMemo(() => {
+    return templates.find(t => t._id === template?._id || currentProduct?.template?._id);
+  }, [currentProduct?.template?._id, template?._id, templates]);
 
-  const { setValue, watch, handleSubmit } = useForm<IVariationFormData>({
-    defaultValues: defaultState ? createVariationFormData({ ...defaultState, product }) : { product },
-  });
-  const formValues = watch();
+  const handleSubmit = useCallback(() => {
+    if (update) {
+      service.updateById({ data: { data: { properties: selected.map(_id => ({ _id })) } } });
+    } else {
+      console.log();
+    }
 
-  const template = useMemo(() => {
-    const pr = defaultState?.product || product;
+    onSubmit && onSubmit(selected);
+  }, [onSubmit, selected, service, update]);
 
-    return templates.find(t => t._id === pr?.template?._id);
-  }, [defaultState?.product, product, templates]);
-
-  const onValid = useCallback(
-    (data: IVariationFormData) => {
-      if (update) {
-        service
-          .updateVariationById({
-            data: createVariationReqData(data, update),
-            onSuccess: data => {
-              console.log('updateVariationById onSuccess', data);
-
-              onClose && onClose();
-            },
-            onError: e => {
-              console.log(e);
-            },
-            onLoading: setLoading,
-          })
-          .then();
-      } else {
-        service
-          .createVariation({
-            data: createVariationReqData(data),
-            onSuccess: data => {
-              console.log('createVariation onSuccess', data);
-              onClose && onClose();
-            },
-            onError: e => {
-              console.log(e);
-              ToastService.error('createVariation error');
-            },
-            onLoading: setLoading,
-          })
-          .then();
-      }
-
-      onSubmit && onSubmit(data);
-    },
-    [onClose, onSubmit, service, update]
-  );
-
-  const handleSelect = useCallback(
-    (parentId: string, id: string) => {
-      setValue(`propertiesMap.${parentId}`, id);
-    },
-    [setValue]
-  );
+  const handleSelect = useCallback((id: string, parentId: string) => {}, []);
 
   const renderTemplate = useMemo(() => {
-    return template?.childrenList
-      ?.filter(el => el?.isSelectable)
-      ?.map(prop => {
+    return templateData?.childrenList
+      ?.filter(el => !el?.isSelectable)
+      .map(prop => {
         return (
           <PropertyBox key={`property-${prop._id}`} gap={8} fillWidth padding={'8px 0 0'}>
             <Text style={{ flex: 1, paddingLeft: 12 }} $weight={500}>
@@ -122,7 +76,7 @@ const FormVariation: React.FC<FormVariationProps> = ({
 
             <FlexBox fillWidth padding={'8px 0'} fxDirection={'row'} gap={6} flexWrap={'wrap'}>
               {prop.childrenList?.map(value => {
-                const isActive = formValues?.propertiesMap && formValues?.propertiesMap[prop._id] === value._id;
+                const isActive = selected.includes(value._id);
 
                 return (
                   <ValueTag
@@ -130,7 +84,7 @@ const FormVariation: React.FC<FormVariationProps> = ({
                     variant={isActive ? 'filledSmall' : 'outlinedSmall'}
                     padding={'6px 8px'}
                     fontWeight={500}
-                    onClick={() => handleSelect(prop._id, value._id)}
+                    onClick={() => handleSelect(value._id, prop._id)}
                   >
                     {value.label}
                   </ValueTag>
@@ -140,14 +94,14 @@ const FormVariation: React.FC<FormVariationProps> = ({
           </PropertyBox>
         );
       });
-  }, [formValues, handleSelect, template?.childrenList]);
+  }, [handleSelect, selected, templateData?.childrenList]);
 
   return (
-    <FormContainer onSubmit={handleSubmit(onValid)} {...props}>
+    <FormContainer onSubmit={handleSubmit} {...props}>
       <Header alignItems={'center'} justifyContent={'space-between'} fxDirection={'row'} gap={6} fillWidth>
         <FlexBox fxDirection={'row'} padding={'4px 0'} alignItems={'center'} fillHeight>
           <Text $weight={600} $size={18}>
-            {title || template?.label || 'Title'}
+            {title || templateData?.label || 'Title'}
           </Text>
         </FlexBox>
 
@@ -159,13 +113,13 @@ const FormVariation: React.FC<FormVariationProps> = ({
       </TemplateBox>
 
       <Footer>
-        <ExtraFooterBox>
-          <FormAfterSubmitOptions
-            clear={submitOptions.clearAfterSave}
-            close={submitOptions.closeAfterSave}
-            toggleOption={handleChangeAfterSubmit}
-          />
-        </ExtraFooterBox>
+        {/*<ExtraFooterBox>*/}
+        {/*  <FormAfterSubmitOptions*/}
+        {/*    clear={submitOptions.clearAfterSave}*/}
+        {/*    close={submitOptions.closeAfterSave}*/}
+        {/*    toggleOption={handleChangeAfterSubmit}*/}
+        {/*  />*/}
+        {/*</ExtraFooterBox>*/}
 
         <FlexBox padding={'6px 0'} fxDirection={'row'} gap={8} alignItems={'center'}>
           <ButtonIcon
@@ -243,4 +197,4 @@ const ValueTag = styled(ButtonIcon)`
   //   border: 2px solid ${p => p.theme.accentColor.base};
   // }
 `;
-export default FormVariation;
+export default FormSelectProperties;

@@ -32,7 +32,12 @@ export interface ProductsService {
   updatePropertyById: ServiceApiCaller<IPropertyReqData, IProperty[]>;
   deletePropertyById: ServiceApiCaller<IPropertyReqData, IProperty[]>;
   getPropertyById: ServiceApiCaller<IPropertyReqData, IProperty>;
+  changeDisabledStatus: ServiceApiCaller<
+    OnlyUUID & { data?: { isSelectable?: boolean }; params?: AppQueryParams },
+    IProperty[]
+  >;
 
+  // * VARIATIONS
   createVariation: ServiceDispatcherAsync<IVariationReqData, IVariation>;
   updateVariationById: ServiceDispatcherAsync<IVariationReqData, IVariation>;
   getAllVariationsByProductId: ServiceDispatcherAsync<
@@ -62,7 +67,7 @@ const useProductsService = (): ProductsService => {
       deletePropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.deleteById, PropertiesApi),
       updatePropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.updateById, PropertiesApi),
       getPropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.getById, PropertiesApi),
-
+      changeDisabledStatus: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.updateById, PropertiesApi),
       // * VARIATIONS
       // createVariation: args => createApiCall(defaultApiCallPayload(args), VariationsApi.create, VariationsApi),
       createVariation: args => dispatch(createVariationThunk(defaultThunkPayload(args))),

@@ -18,6 +18,8 @@ import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppService
 import { ExtractId } from '../../../utils/dataTransform';
 import { usePropertiesSelector } from '../../../redux/selectors.store';
 import AppLoader from '../../atoms/AppLoader';
+import { warehouseOverviewTableColumns } from '../../../data/warehauses.data';
+import { IProductInventory } from '../../../redux/warehouses/warehouses.types';
 
 // const openLoader = (current: RightSideOptionEnum) =>
 //   ToastService.createLoader('Loading data...').open({
@@ -26,6 +28,7 @@ import AppLoader from '../../atoms/AppLoader';
 enum RightSideOptionEnum {
   Variations = 'Variations',
   Prices = 'Prices',
+  Warehousing = 'Warehousing',
 }
 const toggleOptions = enumToFilterOptions(RightSideOptionEnum);
 
@@ -132,8 +135,25 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
       return {
         tableData: page?.currentProduct?.prices,
         tableTitles: pricesColumnsForProductReview,
-        actionsCreator: ctx => [{ icon: 'plus' }],
+        actionsCreator: ctx => [
+          { icon: 'delete', type: 'onlyIcon' },
+          { icon: 'edit', type: 'onlyIcon' },
+          { icon: 'copy', type: 'onlyIcon' },
+          { icon: 'plus', type: 'onlyIconFilled' },
+        ],
       } as ITableListProps<IPriceListItem>;
+    }
+    if (current === RightSideOptionEnum.Warehousing) {
+      return {
+        tableData: page?.currentProduct?.inventories,
+        tableTitles: warehouseOverviewTableColumns,
+        actionsCreator: ctx => [
+          { icon: 'delete', type: 'onlyIcon' },
+          { icon: 'edit', type: 'onlyIcon' },
+          { icon: 'copy', type: 'onlyIcon' },
+          { icon: 'plus', type: 'onlyIconFilled' },
+        ],
+      } as ITableListProps<IProductInventory>;
     }
   }, [current, modalS, page, variationsTableTitles]);
 
@@ -159,7 +179,7 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
 
       <ModalFilter filterOptions={toggleOptions} onOptSelect={filterHandler} />
 
-      <TableList isSearch={false} isFilter={false} checkBoxes {...currentTableSettings} />
+      <TableList isSearch={false} isFilter={false} {...currentTableSettings} />
 
       <Bottom fillWidth flex={1} fxDirection={'row'} justifyContent={'flex-end'}>
         <ButtonIcon variant={'textExtraSmall'} endIcon={'SmallArrowRight'} onClick={toggleVisibility}>

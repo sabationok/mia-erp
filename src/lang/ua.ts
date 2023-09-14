@@ -13,8 +13,12 @@ export const langUa = {
   [ApiDirType.VARIATIONS]: 'Варіації',
   [ApiDirType.BANK_ACCOUNTS]: 'Банківські рахунки',
   [ApiDirType.PROPERTIES_PRODUCTS]: 'Характеристики товарів/послуг',
-  variationsTemplate: 'Список характеристик',
-  variationsTemplates: 'Списки характеристик',
+  variationsTemplate: 'Шаблон для варіацій',
+  variationsTemplates: 'Шаблони для варіацій',
+
+  propertiesList: 'Список характеристик',
+  staticProperties: 'Статичні характеристики',
+  availableProperties: 'Доступні характеристики',
 
   counter: 'Бухгалтер',
   auditor: 'Аудитор',

@@ -9,10 +9,10 @@ import { Modals } from '../../ModalProvider/Modals';
 import { ToastService } from '../../../services';
 import { createProductFormData } from '../../../utils/dataTransform';
 
-export interface PageProductOverviewRightSideProps {
+export interface PageProductOverviewLeftSideProps {
   toggleRightSideVisibility?: () => void;
 }
-const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> = ({ toggleRightSideVisibility }) => {
+const PageProductOverviewLeftSide: React.FC<PageProductOverviewLeftSideProps> = ({ toggleRightSideVisibility }) => {
   const page = usePageCurrentProduct();
   const modalS = useModalProvider();
   const { products: productsS } = useAppServiceProvider();
@@ -112,4 +112,4 @@ const OverlayBox = styled(FlexBox)`
   animation: 'OverlayFromRight';
 `;
 
-export default PageProductOverviewRightSide;
+export default PageProductOverviewLeftSide;

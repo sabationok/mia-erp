@@ -10,7 +10,7 @@ import { FilterOpt } from '../ModalForm/ModalFilter';
 import { IBase, OnlyUUID } from '../../redux/global.types';
 import { ICompany } from '../../redux/companies/companies.types';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { IModalProviderContext } from '../ModalProvider/ModalProvider';
+import { IModalProviderContext, ModalService } from '../ModalProvider/ModalProvider';
 import { DirectoriesService } from '../../hooks/useDirService.hook';
 import { AppSubmitHandler, UseAppFormSubmitOptions } from '../../hooks/useAppForm.hook';
 import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
@@ -139,7 +139,7 @@ export type ActionsCreatorOptions<
   findById?: (id: string) => ItemDataType | undefined;
 };
 export type DirInTreeActionsCreatorOptions<DirType extends ApiDirType = any, ItemDataType = any, Service = any> = {
-  modalService: IModalProviderContext;
+  modalService: ModalService;
   dirType: DirType;
   service: Service;
   type?: ItemTypeByDirType[DirType];
