@@ -26,6 +26,8 @@ export enum IsSelectableEnum {
   No = 'No',
   Yes = 'Yes',
 }
+const filterOptions = enumToFilterOptions(IsSelectableEnum);
+
 export interface IPropertyFormData extends IPropertyDto {}
 
 const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
@@ -89,8 +91,12 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
         )}
 
         {isProperty && (
-          <InputLabel label={'Вибір користувачем'}>
-            <ButtonGroup options={enumToFilterOptions(IsSelectableEnum)} onSelect={handleIsSelectableByUser} />
+          <InputLabel label={'Доступно для формування варіацій'}>
+            <ButtonGroup
+              options={filterOptions}
+              onSelect={handleIsSelectableByUser}
+              defaultIndex={defaultState?.isSelectable ? 1 : 0}
+            />
           </InputLabel>
         )}
       </FlexBox>

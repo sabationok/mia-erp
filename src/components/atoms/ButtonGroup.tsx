@@ -1,17 +1,19 @@
 import FlexBox from './FlexBox';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import ButtonIcon from './ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import { FilterOption } from '../ModalForm/ModalFilter';
+import { isUndefined } from 'lodash';
 
 export interface ButtonGroupProps<V = any> {
   options?: FilterOption<V>[];
+  defaultIndex?: number;
   onSelect?: ButtonGroupSelectHandler<V>;
   backgroundColor?: string;
   borderRadius?: string;
 }
 export type ButtonGroupSelectHandler<V = any> = (info: { option: FilterOption<V>; value?: V; index: number }) => void;
-const ButtonGroup = <V = any,>({ options, borderRadius, onSelect }: ButtonGroupProps<V>) => {
+const ButtonGroup = <V = any,>({ options, borderRadius, onSelect, defaultIndex }: ButtonGroupProps<V>) => {
   const [current, setCurrent] = useState(0);
 
   const handleSelect = useCallback(
@@ -21,6 +23,12 @@ const ButtonGroup = <V = any,>({ options, borderRadius, onSelect }: ButtonGroupP
     },
     [onSelect, options]
   );
+
+  useEffect(() => {
+    if (!isUndefined(defaultIndex)) {
+      setCurrent(defaultIndex);
+    }
+  }, [defaultIndex]);
 
   const renderButtons = useMemo(() => {
     return options?.map((opt, idx) => (

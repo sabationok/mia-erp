@@ -20,24 +20,26 @@ export function createTableTitlesFromTemplate(
   template?: IVariationTemplate
 ): CellTittleProps<IVariationTableData>[] | undefined {
   if (template && template?.childrenList) {
-    const titles = template?.childrenList?.map(p => {
-      const title: CellTittleProps<IVariationTableData> = {
-        top: {
-          name: p?.label || '---',
-          dataKey: p?._id,
-          getData: (rd, t) => {
-            if (t?.top?.dataKey && rd.propertiesMap[t?.top?.dataKey]) {
-              const value = rd.propertiesMap[t?.top?.dataKey];
-              return value?.label;
-            }
-            return '---';
+    const titles = template?.childrenList
+      ?.filter(el => el?.isSelectable)
+      ?.map(p => {
+        const title: CellTittleProps<IVariationTableData> = {
+          top: {
+            name: p?.label || '---',
+            dataKey: p?._id,
+            getData: (rd, t) => {
+              if (t?.top?.dataKey && rd.propertiesMap[t?.top?.dataKey]) {
+                const value = rd.propertiesMap[t?.top?.dataKey];
+                return value?.label;
+              }
+              return '---';
+            },
           },
-        },
-        width: `${(p?.label && p?.label.length * 10 > 120 ? p?.label.length * 10 : 120) + 20}px`,
-        action: 'valueByPath',
-      };
-      return title;
-    });
+          width: `${(p?.label && p?.label.length * 10 > 120 ? p?.label.length * 10 : 120) + 20}px`,
+          action: 'valueByPath',
+        };
+        return title;
+      });
 
     return [
       ...titles,

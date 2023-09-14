@@ -67,15 +67,15 @@ export const VariationsTemplateCell: RenderOverviewCellComponent = ({ cell, setO
     </Cell>
   );
 };
-const PropertyComponent: React.FC<{ item: IProperty; availableItems?: string[]; data?: IProduct; index: number }> = ({
+const PropertyComponent: React.FC<{ item: IProperty; selectedItems?: string[]; data?: IProduct; index: number }> = ({
   item,
   data,
-  availableItems,
+  selectedItems,
   index,
 }) => {
   const renderValues = useMemo(() => {
     return item.childrenList
-      ?.filter(el => availableItems?.includes(el._id))
+      ?.filter(el => selectedItems?.includes(el._id))
       ?.map((value, index) => {
         return (
           <FlexBox padding={'4px 12px'} border={'1px solid lightgrey'} borderRadius={'4px'} key={`prop-v-${value._id}`}>
@@ -83,7 +83,7 @@ const PropertyComponent: React.FC<{ item: IProperty; availableItems?: string[]; 
           </FlexBox>
         );
       });
-  }, [availableItems, item.childrenList]);
+  }, [selectedItems, item.childrenList]);
 
   return (
     <FlexBox className={'PROPERTY'} gap={8}>
@@ -102,26 +102,24 @@ const PropertyComponent: React.FC<{ item: IProperty; availableItems?: string[]; 
 export const Properties: RenderOverviewCellComponent = ({ cell, setOverlayContent, data }) => {
   const templates = useProductsSelector().properties;
 
-  const availableItems = useMemo(() => {
+  const availableProperties = useMemo(() => {
+    return templates.find(t => t._id === data?.template?._id)?.childrenList?.filter(prop => !prop.isSelectable);
+  }, [data?.template?._id, templates]);
+
+  const selectedItems = useMemo(() => {
     return data?.properties?.map(p => p._id);
   }, [data?.properties]);
 
   const renderProperties = useMemo(() => {
-    const arr = data?.properties
-      ? data?.properties
-      : templates[0]?.childrenList && templates[0]?.childrenList
-      ? [...templates[0]?.childrenList]
-      : [];
-
-    return arr.map((prop, index) => {
+    return availableProperties?.map((prop, index) => {
       return (
         <PropertyComponent
           key={`prop-${prop?._id}`}
-          {...{ index, setOverlayContent, item: prop, availableItems }}
+          {...{ index, setOverlayContent, item: prop, selectedItems }}
         ></PropertyComponent>
       );
     });
-  }, [availableItems, data?.properties, setOverlayContent, templates]);
+  }, [availableProperties, setOverlayContent, selectedItems]);
 
   return (
     <Cell
@@ -137,7 +135,7 @@ export const Properties: RenderOverviewCellComponent = ({ cell, setOverlayConten
         <OverlayOpenButton
           type={'button'}
           onClick={() => {
-            setOverlayContent({ RenderComponent: FormSelectProperties, props: { create: true } });
+            setOverlayContent({ RenderComponent: FormSelectProperties, props: { update: data?._id } });
           }}
         >
           {'Змінити'}

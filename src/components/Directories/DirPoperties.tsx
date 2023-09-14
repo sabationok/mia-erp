@@ -259,7 +259,7 @@ const DirPropertyItem: React.FC<DiPropertiesRenderItemProps> = ({
 
         <FlexBox fxDirection={'row'} gap={4} padding={'0 4px'} alignItems={'center'}>
           <Switch size={'26px'} checked={isSelectable} onChange={onChange} />
-          <Text $size={12}>{'Доступно для вибору при формуванні замовлення'}</Text>
+          <Text $size={12}>{'Доступно для формування варіацій'}</Text>
         </FlexBox>
       </StPropertyItem>
 

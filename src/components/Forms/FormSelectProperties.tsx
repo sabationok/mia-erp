@@ -3,25 +3,25 @@ import FlexBox from '../atoms/FlexBox';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { useProductsSelector, usePropertiesSelector } from '../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
-import { useCallback, useMemo, useState } from 'react';
+import { FormEventHandler, useCallback, useMemo, useState } from 'react';
 import { Text } from '../atoms/Text';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { OverlayHandlerReturn } from '../AppPages/PageProductOverview/PageCurrentProductProvider';
 import { OnlyUUID } from '../../redux/global.types';
 import AppLoader from '../atoms/AppLoader';
 import { ModalFormProps } from '../ModalForm';
+import { ToastService } from '../../services';
 
 export interface FormSelectPropertiesProps
   extends OverlayHandlerReturn,
     Omit<ModalFormProps<any, any, string[]>, 'onSubmit' | 'onChange' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<string[]>;
   onSelect?: (id: string) => void;
-  onChange?: (id: string, ids: string[]) => void;
+  onChange?: (ids: string[]) => void;
 
   product?: OnlyUUID;
   template?: OnlyUUID;
 
-  create?: boolean;
   update?: string;
 }
 
@@ -31,7 +31,6 @@ const FormSelectProperties: React.FC<FormSelectPropertiesProps> = ({
   defaultState,
   onSubmit,
   update,
-  create,
   product,
   template,
   onSelect,
@@ -42,7 +41,7 @@ const FormSelectProperties: React.FC<FormSelectPropertiesProps> = ({
   const service = useAppServiceProvider()[ServiceName.products];
   const templates = usePropertiesSelector();
   const [loading, setLoading] = useState(false);
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   // const [submitOptions, setSubmitOptions] = useState<UseAppFormSubmitOptions>({});
   // const handleChangeAfterSubmit = (key: keyof UseAppFormSubmitOptions) => {
   //   setSubmitOptions(prev => ({ ...prev, [key]: !prev[key] }));
@@ -52,17 +51,43 @@ const FormSelectProperties: React.FC<FormSelectPropertiesProps> = ({
     return templates.find(t => t._id === template?._id || currentProduct?.template?._id);
   }, [currentProduct?.template?._id, template?._id, templates]);
 
-  const handleSubmit = useCallback(() => {
-    if (update) {
-      service.updateById({ data: { data: { properties: selected.map(_id => ({ _id })) } } });
-    } else {
-      console.log();
-    }
+  const handleSubmit: FormEventHandler = useCallback(
+    event => {
+      event.preventDefault();
 
-    onSubmit && onSubmit(selected);
-  }, [onSubmit, selected, service, update]);
+      if (update) {
+        service.updateById({
+          data: { _id: update, data: { properties: selectedIds } },
+          onLoading: setLoading,
+          onSuccess: (data, _meta) => {
+            console.log('updated product data', data);
 
-  const handleSelect = useCallback((id: string, parentId: string) => {}, []);
+            ToastService.success('Product updated');
+            onClose && onClose();
+          },
+        });
+      } else {
+        console.log('selectedIds', selectedIds);
+      }
+
+      onSubmit && onSubmit(selectedIds);
+    },
+    [onSubmit, selectedIds, service, update]
+  );
+
+  const handleSelect = useCallback(
+    (id: string, parentId?: string) => {
+      setSelectedIds(prev => {
+        const newData = prev.includes(id) ? prev.filter(el => el !== id) : [...prev, id];
+
+        onChange && onChange(newData);
+        onSelect && onSelect(id);
+
+        return newData;
+      });
+    },
+    [onChange, onSelect]
+  );
 
   const renderTemplate = useMemo(() => {
     return templateData?.childrenList
@@ -76,7 +101,7 @@ const FormSelectProperties: React.FC<FormSelectPropertiesProps> = ({
 
             <FlexBox fillWidth padding={'8px 0'} fxDirection={'row'} gap={6} flexWrap={'wrap'}>
               {prop.childrenList?.map(value => {
-                const isActive = selected.includes(value._id);
+                const isActive = selectedIds.includes(value._id);
 
                 return (
                   <ValueTag
@@ -94,7 +119,7 @@ const FormSelectProperties: React.FC<FormSelectPropertiesProps> = ({
           </PropertyBox>
         );
       });
-  }, [handleSelect, selected, templateData?.childrenList]);
+  }, [handleSelect, selectedIds, templateData?.childrenList]);
 
   return (
     <FormContainer onSubmit={handleSubmit} {...props}>
@@ -140,7 +165,7 @@ const FormSelectProperties: React.FC<FormSelectPropertiesProps> = ({
             disabled={loading}
             style={{ flex: 1 }}
           >
-            {update ? 'Підтвердити' : 'Додати'}
+            {'Підтвердити'}
           </ButtonIcon>
         </FlexBox>
       </Footer>

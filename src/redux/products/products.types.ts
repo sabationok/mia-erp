@@ -80,7 +80,9 @@ export interface IMeasurement {
 export interface IProductBaseFormData extends IProductBaseDto {}
 export interface IProductDefaultsFormData extends Record<keyof IProductDefaults, IFormDataValueWithUUID> {}
 export interface IProductWithAddsFieldsFormData extends IProductBaseFormData {}
-export interface IProductFullFormData extends IProductFullDto {
+export interface IProductFullFormData extends Omit<IProductFullDto, 'recommends' | 'properties'> {
+  recommends?: IFormDataValueWithUUID[];
+  properties?: IFormDataValueWithUUID[];
   defaults?: IProductDefaultsFormData;
 }
 export interface IProductFormData extends IProductFullFormData {}
@@ -92,8 +94,8 @@ export interface IProductWithAddsFieldsDto extends IProductBaseDto {
   category?: OnlyUUID;
   brand?: OnlyUUID;
   template?: OnlyUUID;
-  recommends?: OnlyUUID[];
-  properties?: OnlyUUID[];
+  recommends?: string[];
+  properties?: string[];
 }
 export interface IProductDefaultsDto extends Record<keyof IProductDefaults, OnlyUUID> {}
 export interface IProductFullDto extends IProductWithAddsFieldsDto {
