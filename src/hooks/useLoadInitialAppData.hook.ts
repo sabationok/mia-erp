@@ -46,6 +46,7 @@ const useLoadInitialAppDataHook = ({
     // toast.success(`Updated data for directory: ${dirType}`);
   };
   const load = async () => {
+    onLoading && onLoading(true);
     const close = () =>
       setTimeout(
         ToastService.createLoader('Loading app data...').open({
@@ -67,9 +68,7 @@ const useLoadInitialAppDataHook = ({
         await products.getAllProperties({ data: { params: { createTreeData: true } } });
 
         await priceManagement.getAll({ data: { refresh: true } });
-
         await transactions.getAll({ data: { refresh: true } });
-
         await warehouses.getAll({ data: { refresh: true } });
 
         await Promise.all(
@@ -81,11 +80,14 @@ const useLoadInitialAppDataHook = ({
           })
         );
         onSuccess && onSuccess();
+        onLoading && onLoading(false);
+        close();
         // setIsLoading(false);
       } catch (e) {
-        // setIsLoading(false);
-      } finally {
+        onLoading && onLoading(false);
+        onError && onError(e);
         close();
+        // setIsLoading(false);
       }
     }
   };

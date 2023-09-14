@@ -25,7 +25,7 @@ export interface IProductBase extends IBase {
   sku?: string;
   barCode?: string;
   qrCode?: string;
-  measurement?: IMeasurement;
+  measurement?: IProductMeasurement;
   hasVariations?: boolean;
   type?: ProductTypeEnum;
   status?: ProductStatus;
@@ -73,7 +73,10 @@ export interface IProductImage extends IBase {
   webp: string;
 }
 
-export interface IMeasurement {
+export interface IProductMeasurement {
+  min?: number;
+  max?: number;
+  step?: number;
   units?: string;
 }
 // * >>>>>>> FORM DATA <<<<<<<

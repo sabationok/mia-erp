@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
-import { memo, useEffect, useMemo } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import useAppParams from '../../hooks/useAppParams.hook';
 import baseApi, { permissionToken } from '../../api/baseApi';
 import { AxiosError } from 'axios';
@@ -8,11 +8,15 @@ import { toast } from 'react-toastify';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import AppLoader from '../atoms/AppLoader';
 import { isUndefined } from 'lodash';
+import useLoadInitialAppDataHook from '../../hooks/useLoadInitialAppData.hook';
 
 type Props = {
   redirectTo?: string;
 };
 const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const { permissionId } = useAppParams();
   const {
     permissions: { clearCurrent },
@@ -35,6 +39,11 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
   }, [permissionId, state.permission._id]);
 
   const hasPermission = useMemo(() => !!state.permission._id, [state.permission._id]);
+
+  useLoadInitialAppDataHook({
+    onLoading: setLoading,
+    onSuccess: () => setIsLoaded(true),
+  });
 
   useEffect(() => {
     if (!hasPermission) {
@@ -63,7 +72,7 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
     };
   }, [clearCurrent, hasPermission, logOutUser, permissionId]);
 
-  if (state.isLoading) {
+  if (state.isLoading || loading || !isLoaded) {
     return <AppLoader isLoading comment={'Permission check. Please wait.'} />;
   }
 

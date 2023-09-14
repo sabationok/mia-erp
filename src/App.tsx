@@ -2,15 +2,12 @@ import AppRoutes from 'components/AppRoutes/AppRoutes';
 import { ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
 import { useAppSettingsSelector } from './redux/selectors.store';
-import useLoadInitialAppDataHook from './hooks/useLoadInitialAppData.hook';
 import GlobalStyles from './theme/globalStyles';
 import React, { Suspense } from 'react';
 import AppLoader from './components/atoms/AppLoader';
 
 const App: React.FC = () => {
   const { isDarkMode } = useAppSettingsSelector();
-
-  useLoadInitialAppDataHook();
 
   return (
     <>

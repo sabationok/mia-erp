@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { ITableListProps, SelectItem } from 'components/TableList/TableList';
 import { useModalProvider } from '../../ModalProvider/ModalProvider';
 import ModalForm from '../../ModalForm';
+import { RenderModalComponentChildrenProps } from '../../ModalProvider/ModalComponent';
 
 export interface TableSortProps {
   tableSortParams: SelectItem[];
@@ -27,9 +28,9 @@ const TableSort: React.FC<TableSortProps> = ({ tableSortParams, onSelect }) => {
     sortOrder && onSelect && onSelect(param, sortOrder);
   }
 
-  const ModalSort = () => {
+  const ModalSort: React.FC<RenderModalComponentChildrenProps> = ({ ...props }) => {
     return (
-      <ModalForm fitContentH fitContentV footer={false} title={'Сортування'}>
+      <ModalForm fitContentH fitContentV footer={false} title={'Сортування'} {...props}>
         <TableSortParamsList {...{ tableSortParams, onSelect: handleSelect, current, isOpen: true }} />
       </ModalForm>
     );

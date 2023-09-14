@@ -10,7 +10,7 @@ import { AppUrlParamKeys } from '../../hooks/useAppParams.hook';
 
 const { PageNotFound } = AppPages;
 
-const AppRoutes: React.FC = () => {
+const AppRoutes: React.FC<{ isLoaded?: boolean }> = () => {
   const { access_token } = useAuthSelector();
 
   const isAuthorized = useMemo(() => !!access_token, [access_token]);
