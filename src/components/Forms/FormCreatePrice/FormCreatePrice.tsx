@@ -1,6 +1,6 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import FlexBox from '../../atoms/FlexBox';
-import { IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
+import { IPriceFormData } from '../../../redux/priceManagement/priceManagement.types';
 import { OnlyUUID } from '../../../redux/global.types';
 import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
 import { useAppForm } from '../../../hooks';
@@ -13,6 +13,7 @@ import { IProduct } from '../../../redux/products/products.types';
 // import * as yup from 'yup';
 import { usePriceListsSelector } from '../../../redux/selectors.store';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import { IVariation } from '../../../redux/products/variations.types';
 
 // const validation = yup.object().shape({
 //   cost: yup.number(),
@@ -20,25 +21,35 @@ import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 // });
 
 export interface FormCreatePriceProps
-  extends Omit<ModalFormProps<any, any, IPriceListItem>, 'onSubmit' | 'afterSubmit'> {
+  extends Omit<ModalFormProps<any, any, IPriceFormData>, 'onSubmit' | 'afterSubmit'> {
   list?: OnlyUUID;
   product?: IProduct;
+  variation?: IVariation;
+  update?: string;
   onSubmit: (
     data: {
-      data: IPriceListItem | IPriceListItem[];
-      list: OnlyUUID;
+      data: IPriceFormData | IPriceFormData[];
     },
     options: UseAppFormSubmitOptions & {}
   ) => void;
 }
 
-const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, product, list, onSubmit, ...props }) => {
-  const { formValues, register, setValue, handleSubmit, registerSelect } = useAppForm<IPriceListItem>({
+const FormCreatePrice: React.FC<FormCreatePriceProps> = ({
+  defaultState,
+  update,
+  product,
+  list,
+  onSubmit,
+  ...props
+}) => {
+  const { formValues, register, setValue, handleSubmit, registerSelect } = useAppForm<IPriceFormData>({
     defaultValues: { ...defaultState, product },
   });
+
   const { lists } = usePriceListsSelector();
 
   const { price, cost } = formValues;
+
   const calculateValuesThrottled = _.throttle(() => {
     // toast.info('calculateValuesThrottled throttle');
     const parseFloatFromValue = (v?: number) => parseFloat(v?.toString() ?? '0');
@@ -58,38 +69,30 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, product
 
   const recalculateValues = useCallback(() => calculateValuesThrottled(), [calculateValuesThrottled]);
 
-  const onValid = (d: IPriceListItem) => {
-    const data: IPriceListItem = { ...d, price: Number(d.price), cost: Number(d.cost) };
+  const onValid = (formData: IPriceFormData) => {
+    const data: IPriceFormData = { ...formData, price: Number(formData.price), cost: Number(formData.cost) };
+
     console.log('onValid', { list, data, onSubmit });
-    list &&
-      onSubmit &&
-      onSubmit(
-        {
-          data: d,
-          list,
-        },
-        {}
-      );
+
+    list && onSubmit && onSubmit({ data: formData }, {});
   };
-
-  useEffect(() => {
-    console.log(product);
-
-    console.log(lists);
-  }, [product, lists]);
 
   useEffect(() => {
     recalculateValues();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cost, price, setValue]);
+
   return (
     <ModalForm
       isValid={!!formValues.product}
       onSubmit={handleSubmit(onValid)}
-      title={`${defaultState?._id ? 'Edit' : 'Create'} price for: ${formValues?.product?.label}`}
+      fillHeight
+      title={`${update ? 'Edit' : 'Create'} price for: ${formValues?.product?.label || '---'} | ${
+        formValues?.variation?.label || '---'
+      }`}
       {...props}
     >
-      <FlexBox padding={'8px 16px 16px'}>
+      <FlexBox padding={'8px'} flex={1}>
         <FormProductSelectorForPricing
           selected={formValues.product}
           disabled={!list?._id}
@@ -103,6 +106,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, product
           <CustomSelect
             {...registerSelect('list', {
               options: lists,
+              dropDownIsAbsolute: true,
               label: 'Прайс лист',
               placeholder: 'Оберіть прайс лист',
             })}

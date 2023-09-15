@@ -165,11 +165,7 @@ const productOverviewCells: ProductOverviewCell[] = [
     getValue: product => product?.barCode,
     gridArea: 'barCode',
   },
-  {
-    title: t('variationsTemplate'),
-    CellComponent: Cells.VariationsTemplateCell,
-    gridArea: 'template',
-  },
+
   {
     title: 'Категорія',
     CellComponent: Cells.OverviewTextCell,
@@ -188,5 +184,40 @@ const productOverviewCells: ProductOverviewCell[] = [
     getValue: product => product?.description,
     gridArea: 'description',
   },
-  { title: 'Додаткові характеристики', CellComponent: Cells.Properties, gridArea: 'properties' },
+  {
+    title: 'Вимірювання',
+    CellComponent: Cells.OverviewTextCell,
+    getValue: product => product?.measurement?.units,
+    gridArea: 'measurement',
+  },
+  // * PROPERTIES
+  {
+    title: t('variationsTemplate'),
+    CellComponent: Cells.VariationsTemplateCell,
+    gridArea: 'template',
+  },
+  { title: 'Додаткові характеристики', CellComponent: Cells.StaticProperties, gridArea: 'properties' },
+  // * DEFAULTS
+  {
+    title: 'Склад за замовчуванням',
+    CellComponent: Cells.OverviewTextCell,
+    getValue: product => product?.defaults?.warehouse?.label,
+    gridArea: 'measurement',
+  },
+  {
+    title: 'Постачальник за замовчуванням',
+    CellComponent: Cells.OverviewTextCell,
+    getValue: product => product?.defaults?.supplier?.label,
+    gridArea: 'measurement',
+  },
+  {
+    title: 'Ціна за замовчуванням',
+    CellComponent: Cells.OverviewTextCell,
+    getValue: product => {
+      const { discount, price, cost, currency } = product?.defaults?.price || {};
+
+      return `Price: ${price || 0} | Cost: ${cost || 0} | Discount: ${discount || 0} | Currency: ${currency || '---'}`;
+    },
+    gridArea: 'measurement',
+  },
 ];

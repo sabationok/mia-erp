@@ -9,48 +9,44 @@ import { Text } from '../../atoms/Text';
 export interface FormProductStaticPropertiesProps {
   template?: IVariationTemplate;
   formData?: IFormDataValueWithUUID[];
-  onSelect?: (key: string, option: IPropertyValue) => void;
+  onSelect?: (id: string, option?: IPropertyValue) => void;
+  onChange?: (ids: string[]) => void;
   children?: React.ReactNode;
+  defaultData?: string[];
 }
 const FormProductStaticProperties: React.FC<FormProductStaticPropertiesProps> = ({
   children,
-  formData,
   onSelect,
+  onChange,
   template,
+  defaultData,
 }) => {
-  const [selectedData, setSelectedData] = useState<Record<string, IPropertyValue>>({});
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   useEffect(() => {
-    if (formData) {
-      const map: Record<string, IFormDataValueWithUUID> = {};
-      formData.map(el => {
-        if (el?.parent?._id) {
-          map[el?.parent?._id] = el;
-        }
-        return el;
-      });
-      setSelectedData(map);
+    if (defaultData) {
+      setSelectedIds(defaultData);
     }
-  }, [formData]);
-  const handleSelect = useCallback(
-    (key: string, option: IPropertyValue) => {
-      setSelectedData(prev => (option ? { ...prev, [key]: option } : prev));
+  }, [defaultData]);
 
-      onSelect && onSelect(key, option);
+  const handleSelect = useCallback(
+    (id: string, option?: IPropertyValue) => {
+      setSelectedIds(p => {
+        const newData = p.includes(id) ? p.filter(el => el !== id) : [...p, id];
+        onSelect && onSelect(id);
+        onChange && onChange(newData);
+        return newData;
+      });
     },
-    [onSelect]
+    [onChange, onSelect]
   );
 
-  const renderSelects = useMemo(() => {
-    return template?.childrenList?.map(item => {
-      // const configs: CustomSelectProps = {
-      //   label: item?.label,
-      //   placeholder: item?.label,
-      //   options: item?.childrenList,
-      //   onSelect: option => handleSelect(item?._id, option),
-      //   selectValue: selectedData[item?._id],
-      // };
+  const currentTemplateData = useMemo(() => {
+    return template?.childrenList?.filter(props => !props.isSelectable);
+  }, [template?.childrenList]);
 
+  const renderProperties = useMemo(() => {
+    return currentTemplateData?.map(item => {
       return (
         <PropertyBox key={`prop-${item?._id}`} gap={8} fillWidth padding={'8px 0'}>
           <Text $weight={500} $size={12} style={{ marginInline: 8 }}>
@@ -59,7 +55,13 @@ const FormProductStaticProperties: React.FC<FormProductStaticPropertiesProps> = 
 
           <FlexBox fillWidth gap={8} fxDirection={'row'} flexWrap={'wrap'}>
             {item?.childrenList?.map(value => (
-              <ButtonIcon key={`prop-value-${value?._id}`} variant={'outlinedSmall'}>
+              <ButtonIcon
+                key={`prop-value-${value?._id}`}
+                variant={selectedIds.includes(value?._id) ? 'filledSmall' : 'outlinedSmall'}
+                onClick={() => {
+                  handleSelect(value?._id);
+                }}
+              >
                 {value?.label}
               </ButtonIcon>
             ))}
@@ -67,17 +69,18 @@ const FormProductStaticProperties: React.FC<FormProductStaticPropertiesProps> = 
         </PropertyBox>
       );
     });
-  }, [template?.childrenList]);
+  }, [currentTemplateData, handleSelect, selectedIds]);
 
   return (
     <Container fillWidth>
       <FlexBox padding={'8px 8px 0'}>
         <Text $size={14} $weight={600}>
-          {'Статичні характеристики'}
+          {'Доступні харктеристики'}
         </Text>
       </FlexBox>
       {children}
-      {renderSelects}
+
+      {renderProperties}
     </Container>
   );
 };

@@ -3,7 +3,7 @@ import FlexBox from '../atoms/FlexBox';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { useProductsSelector, usePropertiesSelector } from '../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
-import { FormEventHandler, useCallback, useMemo, useState } from 'react';
+import { FormEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
 import { Text } from '../atoms/Text';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { OverlayHandlerReturn } from '../AppPages/PageProductOverview/PageCurrentProductProvider';
@@ -60,8 +60,6 @@ const FormSelectProperties: React.FC<FormSelectPropertiesProps> = ({
           data: { _id: update, data: { properties: selectedIds } },
           onLoading: setLoading,
           onSuccess: (data, _meta) => {
-            console.log('updated product data', data);
-
             ToastService.success('Product updated');
             onClose && onClose();
           },
@@ -72,7 +70,7 @@ const FormSelectProperties: React.FC<FormSelectPropertiesProps> = ({
 
       onSubmit && onSubmit(selectedIds);
     },
-    [onSubmit, selectedIds, service, update]
+    [onClose, onSubmit, selectedIds, service, update]
   );
 
   const handleSelect = useCallback(
@@ -120,6 +118,13 @@ const FormSelectProperties: React.FC<FormSelectPropertiesProps> = ({
         );
       });
   }, [handleSelect, selectedIds, templateData?.childrenList]);
+
+  useEffect(() => {
+    if (currentProduct?.properties) {
+      setSelectedIds(currentProduct?.properties.map(p => p._id));
+      console.log('useEffect properties');
+    }
+  }, [currentProduct?.properties]);
 
   return (
     <FormContainer onSubmit={handleSubmit} {...props}>

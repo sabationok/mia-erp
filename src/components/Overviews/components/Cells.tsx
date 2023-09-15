@@ -99,7 +99,7 @@ const PropertyComponent: React.FC<{ item: IProperty; selectedItems?: string[]; d
     </FlexBox>
   );
 };
-export const Properties: RenderOverviewCellComponent = ({ cell, setOverlayContent, data }) => {
+export const StaticProperties: RenderOverviewCellComponent = ({ cell, setOverlayContent, data }) => {
   const templates = useProductsSelector().properties;
 
   const availableProperties = useMemo(() => {

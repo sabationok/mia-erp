@@ -1,6 +1,8 @@
-import { AppResponse, IBase, OnlyUUID } from '../global.types';
+import { AppResponse, IBase, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 import { IProduct } from '../products/products.types';
+import { IVariation } from '../products/variations.types';
+import { AppQueryParams } from '../../api';
 
 export enum PriceListTypeEnum {
   PURCHASES = 'purchases',
@@ -37,7 +39,11 @@ export interface IPriceList extends IBase {
   type?: PriceListType;
 }
 
-export interface PriceListItemDto {
+export interface IPriceDto {
+  product?: OnlyUUID;
+  variation?: OnlyUUID;
+  list?: OnlyUUID;
+
   label?: string;
   price?: number;
   cost?: number;
@@ -46,13 +52,14 @@ export interface PriceListItemDto {
   markupAmount?: number;
   commissionPercentage?: number;
   commissionAmount?: number;
-  product?: OnlyUUID;
 }
 
 export interface IPriceListItem extends IBase {
-  label: string;
   product?: IProduct;
+  variation?: IVariation;
   list?: IPriceList;
+
+  label: string;
   price?: number;
   cost?: number;
   discount?: number;
@@ -61,23 +68,33 @@ export interface IPriceListItem extends IBase {
   markupAmount?: number;
   commissionPercentage?: number;
   commissionAmount?: number;
+  // * OPTIONAL
   timeFrom?: string | number | Date;
   timeTo?: string | number | Date;
+}
+
+export interface IPriceFormData extends Omit<IPriceDto, 'product' | 'variation' | 'list'> {
+  product?: IFormDataValueWithUUID;
+  variation?: IFormDataValueWithUUID;
+  list?: IFormDataValueWithUUID;
 }
 
 export interface IPriceListReqData {
   _id?: string;
   data: PriceListDto;
+  params?: AppQueryParams;
 }
 
 export interface IPriceListItemReqData {
   _id?: string;
-  data: PriceListItemDto;
+  data: IPriceDto;
+  params?: AppQueryParams;
 }
 
 export interface ICreatePriceListItemReqData {
   list: OnlyUUID;
-  data: PriceListItemDto;
+  data: IPriceDto;
+  params?: AppQueryParams;
 }
 
 export interface IAllPriceListsRes extends AppResponse<IPriceList[]> {}

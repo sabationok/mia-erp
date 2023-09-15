@@ -85,7 +85,7 @@ export interface IProductDefaultsFormData extends Record<keyof IProductDefaults,
 export interface IProductWithAddsFieldsFormData extends IProductBaseFormData {}
 export interface IProductFullFormData extends Omit<IProductFullDto, 'recommends' | 'properties'> {
   recommends?: IFormDataValueWithUUID[];
-  properties?: IFormDataValueWithUUID[];
+  properties?: string[];
   defaults?: IProductDefaultsFormData;
 }
 export interface IProductFormData extends IProductFullFormData {}

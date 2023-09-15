@@ -141,9 +141,9 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
 
         <FormProductStaticProperties
           template={currentTemplate}
-          formData={formValues?.properties}
-          onSelect={(key, option) => {
-            console.log('FormStaticProductProperties on select prop', { [key]: option });
+          defaultData={formValues?.properties}
+          onChange={ids => {
+            setValue('properties', ids);
           }}
         >
           <CustomSelect
