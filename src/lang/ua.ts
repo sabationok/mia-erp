@@ -135,7 +135,11 @@ export const langUa = {
   expireAt: 'Дійсне до',
 
   manufacturer: 'Виробник',
-
+  min: 'MIN',
+  max: 'MAX',
+  step: 'Крок',
+  units: 'Од. виміру',
+  discount: 'Знижка',
   balance: 'Баланс',
   startBalance: 'Початковий баланс',
   insertStartBalance: 'Введіть початковий баланс',

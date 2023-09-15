@@ -16,6 +16,7 @@ export interface ProductOverviewXLProps {
   onDelete?: () => void;
   onArchive?: () => void;
   onHide?: () => void;
+  onRefresh?: () => void;
   onCreateVariation?: (data: Record<string, string>, onSuccess?: () => void) => void;
   onOpenRightSide?: () => void;
   className?: string;
@@ -35,7 +36,7 @@ export interface ProductOverviewCell {
   getValue?: (product?: IProduct) => string | number | undefined;
 }
 
-const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, onOpenRightSide, ...p }) => {
+const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }) => {
   const product = useProductsSelector().currentProduct;
   const page = usePageCurrentProduct();
   const navigate = useNavigate();
@@ -70,48 +71,79 @@ const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, onOpen
     <Container fillWidth flex={1} className={className} padding={'0 8px'}>
       <Header alignItems={'center'} justifyContent={'space-between'} fxDirection={'row'} gap={6} fillWidth>
         <FlexBox fxDirection={'row'} padding={'4px 0'} alignItems={'center'} fillHeight>
+          <ButtonIcon
+            variant={'textExtraSmall'}
+            icon={'SmallArrowLeft'}
+            style={{ gap: 0 }}
+            onClick={() => {
+              if (product && location?.pathname) {
+                const newPath = location?.pathname?.replace(`/${product?._id}`, '');
+
+                newPath && navigate(newPath);
+              }
+            }}
+          >
+            {'Back'}
+          </ButtonIcon>
+        </FlexBox>
+
+        <FlexBox fxDirection={'row'} padding={'4px 0'} alignItems={'center'} fillHeight>
           <Text $weight={600} $size={18}>
             {'Перегляд продукту'}
           </Text>
         </FlexBox>
-
-        <ButtonIcon
-          variant={'onlyIcon'}
-          icon={'close'}
-          onClick={() => {
-            if (product && location?.pathname) {
-              const newPath = location?.pathname?.replace(`/${product?._id}`, '');
-
-              newPath && navigate(newPath);
-            }
-          }}
-        />
       </Header>
 
-      <FlexBox fillWidth flex={1} overflow={'auto'}>
+      <Content fillWidth flex={1} overflow={'auto'}>
         {renderCells}
-      </FlexBox>
+      </Content>
 
       <Footer fillWidth fxDirection={'row'} gap={6} padding={'6px 0'}>
-        <ButtonIcon size={'36px'} variant={'onlyIcon'} iconSize={'85%'} icon={'edit'} onClick={p?.onEdit} />
+        <ButtonIcon
+          size={'36px'}
+          variant={'onlyIcon'}
+          iconSize={'85%'}
+          icon={'edit'}
+          disabled={!p?.onEdit}
+          onClick={p?.onEdit}
+        />
 
         <ButtonIcon
           variant={'onlyIcon'}
           size={'36px'}
           iconSize={'85%'}
+          disabled={!p?.onHide}
           icon={p?.product?.visible ? 'visibilityOn' : 'visibilityOff'}
           onClick={p?.onHide}
         />
 
-        <DeleteBtn variant={'onlyIcon'} size={'36px'} iconSize={'85%'} icon={'delete'} onClick={p?.onDelete} />
-
-        <OpenBtn
-          size={'36px'}
+        <DeleteBtn
           variant={'onlyIcon'}
+          size={'36px'}
           iconSize={'85%'}
-          icon={'SmallArrowLeft'}
-          onClick={onOpenRightSide}
+          icon={'delete'}
+          disabled={!p?.onDelete}
+          onClick={p?.onDelete}
         />
+
+        <FlexBox fxDirection={'row'} gap={6} margin={'0 0 0 auto'}>
+          <OpenBtn
+            size={'36px'}
+            variant={'onlyIcon'}
+            iconSize={'85%'}
+            icon={'SmallArrowLeft'}
+            disabled={!p?.onOpenRightSide}
+            onClick={p?.onOpenRightSide}
+          />
+          <ButtonIcon
+            size={'36px'}
+            variant={'onlyIcon'}
+            iconSize={'85%'}
+            icon={'refresh'}
+            disabled={!p?.onRefresh}
+            onClick={p?.onRefresh}
+          />
+        </FlexBox>
       </Footer>
     </Container>
   );
@@ -124,15 +156,15 @@ const Container = styled(FlexBox)`
 const Header = styled(FlexBox)`
   height: 32px;
 `;
-const Footer = styled(FlexBox)`
+const Content = styled(FlexBox)`
   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
+  border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
 `;
+const Footer = styled(FlexBox)``;
 const DeleteBtn = styled(ButtonIcon)`
   fill: ${p => p.theme.globals.colors.error};
 `;
 const OpenBtn = styled(ButtonIcon)`
-  margin-left: auto;
-
   @media screen and (min-width: 768px) {
     display: none;
   }
@@ -187,7 +219,16 @@ const productOverviewCells: ProductOverviewCell[] = [
   {
     title: 'Вимірювання',
     CellComponent: Cells.OverviewTextCell,
-    getValue: product => product?.measurement?.units,
+    getValue: product => {
+      const arr = [
+        `${t('min')}: ${product?.measurement?.min || 0}`,
+        `${t('max')}: ${product?.measurement?.max || 0}`,
+        `${t('step')}: ${product?.measurement?.step || 0}`,
+        `${t('units')}: ${product?.measurement?.units || 0}`,
+      ];
+
+      return arr.join(' | ');
+    },
     gridArea: 'measurement',
   },
   // * PROPERTIES
@@ -214,9 +255,14 @@ const productOverviewCells: ProductOverviewCell[] = [
     title: 'Ціна за замовчуванням',
     CellComponent: Cells.OverviewTextCell,
     getValue: product => {
-      const { discount, price, cost, currency } = product?.defaults?.price || {};
+      const arr = [
+        `${t('price')}: ${product?.defaults?.price?.price || 0}`,
+        `${t('cost')}: ${product?.defaults?.price?.cost || 0}`,
+        `${t('discount')}: ${product?.defaults?.price?.discount || 0}`,
+        `${t('currency')}: ${product?.defaults?.price?.currency || 'UAH'}`,
+      ];
 
-      return `Price: ${price || 0} | Cost: ${cost || 0} | Discount: ${discount || 0} | Currency: ${currency || '---'}`;
+      return arr.join(' | ');
     },
     gridArea: 'measurement',
   },

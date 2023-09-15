@@ -264,11 +264,11 @@ const pointerBottom = css`
 const extraSmall = css`
   padding: 4px 12px;
 
-  //min-width: 115px;
-  //min-height: 28px;
+  min-width: 75px;
+  min-height: 20px;
 `;
 const small = css`
-  padding: 6px 22px;
+  padding: 6px 18px;
 
   min-width: 115px;
   min-height: 28px;
@@ -307,13 +307,17 @@ const outlined = css`
     border-color: ${({ theme }) => theme.field.backgroundColor};
   }
 `;
+const outlinedExtraSmall = css`
+  ${small};
+  ${extraSmall};
+`;
 const outlinedSmall = css`
-  ${small}
-  ${outlined}
+  ${small};
+  ${outlined};
 `;
 const outlinedLarge = css`
-  ${outlined}
-  ${large}
+  ${outlined};
+  ${large};
 `;
 const filled = css`
   color: ${({ theme }) => theme.colorLight};
@@ -440,6 +444,7 @@ const variants = {
   outlinedLarge,
   filledLarge,
   outlinedSmall,
+  outlinedExtraSmall,
   filledSmall,
   underlinedText,
   textExtraSmall,

@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import { RenderOverviewCellComponent } from '../ProductOverviewXL';
 import FormCreateVariation from '../../Forms/FormVariation';
 import { IProperty } from '../../../redux/products/properties.types';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { Text } from '../../atoms/Text';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import FormSelectProperties from '../../Forms/FormSelectProperties';
@@ -32,7 +32,6 @@ export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) =>
     </Cell>
   );
 };
-
 export const VariationsTemplateCell: RenderOverviewCellComponent = ({ cell, setOverlayContent, data }) => {
   return (
     <Cell padding={'4px'}>
@@ -67,38 +66,50 @@ export const VariationsTemplateCell: RenderOverviewCellComponent = ({ cell, setO
     </Cell>
   );
 };
-const PropertyComponent: React.FC<{ item: IProperty; selectedItems?: string[]; data?: IProduct; index: number }> = ({
-  item,
-  data,
-  selectedItems,
-  index,
-}) => {
+interface OverviewPropertyComponentProps {
+  item: IProperty;
+  selectedItems?: string[];
+  data?: IProduct;
+  index: number;
+}
+const OverviewPropertyComponent: React.FC<OverviewPropertyComponentProps> = ({ item, selectedItems }) => {
+  const theme = useTheme();
+
   const renderValues = useMemo(() => {
     return item.childrenList
       ?.filter(el => selectedItems?.includes(el._id))
       ?.map((value, index) => {
         return (
-          <FlexBox padding={'4px 12px'} border={'1px solid lightgrey'} borderRadius={'4px'} key={`prop-v-${value._id}`}>
-            {value.label}
+          <FlexBox
+            key={`prop-v-${value._id}`}
+            padding={'4px 12px'}
+            border={`1px solid ${theme.sideBarBorderColor}`}
+            background={theme.fieldBackgroundColor}
+            borderRadius={'4px'}
+            flex={1}
+            maxWidth={'130px'}
+          >
+            <Text $size={12}>{value.label}</Text>
           </FlexBox>
         );
       });
-  }, [selectedItems, item.childrenList]);
+  }, [item.childrenList, selectedItems, theme.sideBarBorderColor, theme.fieldBackgroundColor]);
 
   return (
-    <FlexBox className={'PROPERTY'} gap={8}>
-      <FlexBox alignItems={'center'} fxDirection={'row'} justifyContent={'flex-end'} fillWidth gap={8}>
+    <FlexBox className={'PROPERTY'} gap={8} alignItems={'flex-end'}>
+      <FlexBox alignItems={'center'} fxDirection={'row'} fillWidth gap={8}>
         <CellText $size={14} $weight={600}>
           {item?.label}
         </CellText>
       </FlexBox>
 
-      <FlexBox fillWidth fxDirection={'row'} flexWrap={'wrap'} gap={8}>
-        {renderValues && renderValues?.length > 0 ? renderValues : '---'}
+      <FlexBox fxDirection={'row-reverse'} flexWrap={'wrap'} fillWidth gap={8}>
+        {renderValues && renderValues?.length > 0 ? renderValues : <Text $size={12}>{'---'}</Text>}
       </FlexBox>
     </FlexBox>
   );
 };
+
 export const StaticProperties: RenderOverviewCellComponent = ({ cell, setOverlayContent, data }) => {
   const templates = useProductsSelector().properties;
 
@@ -113,17 +124,17 @@ export const StaticProperties: RenderOverviewCellComponent = ({ cell, setOverlay
   const renderProperties = useMemo(() => {
     return availableProperties?.map((prop, index) => {
       return (
-        <PropertyComponent
+        <OverviewPropertyComponent
           key={`prop-${prop?._id}`}
           {...{ index, setOverlayContent, item: prop, selectedItems }}
-        ></PropertyComponent>
+        ></OverviewPropertyComponent>
       );
     });
   }, [availableProperties, setOverlayContent, selectedItems]);
 
   return (
     <Cell
-      padding={'4px'}
+      padding={'4px 4px 8px'}
       gap={8}
       style={{ minHeight: renderProperties && renderProperties?.length > 0 ? 'max-content' : 50 }}
     >
@@ -176,7 +187,10 @@ const OverlayOpenButton = styled.button`
 
 const Cell = styled(FlexBox)`
   min-height: 50px;
-  border-top: 1px solid ${p => p.theme.sideBarBorderColor};
+
+  &:not(:first-child) {
+    border-top: 1px solid ${p => p.theme.sideBarBorderColor};
+  }
 `;
 
 const CellText = styled(Text)<{ $isTitle?: boolean }>`

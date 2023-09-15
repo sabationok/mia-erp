@@ -15,23 +15,23 @@ export const persistorConfigs = {
   appSettings: {
     key: 'appSettings',
     storage,
-    whitelist: ['isDarkMode', 'appTheme'],
+    whitelist: ['isDarkMode', 'appTheme', 'isLoaded'],
   },
   pageSettings: {
     key: 'appPage',
     storage: storageSession,
     whitelist: ['pageGrid'],
   },
-  categories: {
-    key: 'categories',
-    storage: storageSession,
-    whitelist: ['categories'],
-  },
-  counts: {
-    key: 'counts',
-    storage: storageSession,
-    whitelist: ['counts'],
-  },
+  // categories: {
+  //   key: 'categories',
+  //   storage: storageSession,
+  //   whitelist: ['categories'],
+  // },
+  // counts: {
+  //   key: 'counts',
+  //   storage: storageSession,
+  //   whitelist: ['counts'],
+  // },
   directories: {
     key: 'directories',
     storage: storageSession,
@@ -45,17 +45,17 @@ export const persistorConfigs = {
   products: {
     key: 'products',
     storage: storageSession,
-    whitelist: ['products'],
+    whitelist: ['products', 'currentProduct', 'properties'],
   },
   orders: {
     key: 'orders',
     storage: storageSession,
-    whitelist: ['orders'],
+    whitelist: ['orders', 'currentOrder'],
   },
   refunds: {
     key: 'refunds',
     storage: storageSession,
-    whitelist: ['refunds'],
+    whitelist: ['refunds', 'currentRefund'],
   },
   warehouses: {
     key: 'warehouses',
