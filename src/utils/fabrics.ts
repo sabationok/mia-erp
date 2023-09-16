@@ -1,6 +1,6 @@
 import { ThunkPayload } from '../redux/store.store';
 import { FieldValues } from 'react-hook-form';
-import { FilterOpt } from '../components/ModalForm/ModalFilter';
+import { FilterOption } from '../components/ModalForm/ModalFilter';
 import t from '../lang';
 
 function createThunkPayload<SD extends FieldValues = any, RD = any, E = any>(
@@ -111,7 +111,7 @@ function defaultApiCallPayload<SD = any, RD = any, E = any>({
 function enumToArray<T extends object = any>(enumObj: T): Array<T[keyof T]> {
   return Object.values(enumObj);
 }
-function enumToFilterOptions<T extends Record<string, any> = any>(enumObj: T): FilterOpt<T[keyof T]>[] {
+function enumToFilterOptions<T extends Record<string, any> = any>(enumObj: T): FilterOption<T[keyof T]>[] {
   return enumToArray(enumObj).map(el => ({ label: t(el as string), value: el }));
 }
 
