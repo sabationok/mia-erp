@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
-import RowActionItem from './RowActionItem';
-import { useRow } from '../TableRow';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useRow } from '../TableRow';
+import RowActionItem from './RowActionItem';
 
 import s from './RowActions.module.scss';
 
@@ -16,7 +16,7 @@ const RowActions = () => {
   const location = useLocation();
   const { isActionsOpen, handleToggleActions, rowData } = useRow();
   const pathRef = useRef(`${location.pathname}/${rowData._id}/${baseRoutes[location.pathname]}`);
-  const linkRef = useRef(`${window.location.origin}/crm-app${pathRef.current}`);
+  const linkRef = useRef(`${window.location.origin}/counter-app-ts${pathRef.current}`);
   const navigate = useNavigate();
 
   function navigateById() {

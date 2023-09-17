@@ -10,18 +10,13 @@ import FlexBox from '../../atoms/FlexBox';
 import t from '../../../lang';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { useAppForm } from '../../../hooks';
-import {
-  IProductFormData,
-  IProductImage,
-  IProductReqData,
-  ProductFilterOpt,
-} from '../../../redux/products/products.types';
+import { IProductFormData, IProductReqData, ProductFilterOpt } from '../../../redux/products/products.types';
 import { createDataForReq } from '../../../utils/dataTransform';
 import FormAfterSubmitOptions from '../components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { IVariationTemplate } from '../../../redux/products/properties.types';
-import { Text } from '../../atoms/Text';
 import FormProductStaticProperties from './FormProductStaticProperties';
+import FormProductImages from './FormProductImages';
 
 export interface FormCreateProductProps extends Omit<ModalFormProps<any, any, IProductFormData>, 'onSubmit'> {
   copy?: boolean;
@@ -156,7 +151,7 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
           />
         </FormProductStaticProperties>
 
-        <FormProductImages></FormProductImages>
+        <FormProductImages />
       </FlexBox>
     </ModalForm>
   );
@@ -169,28 +164,6 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
 // `;
 
 export default FormCreateProduct;
-
-export interface FormProductImagesProps {
-  onSelect?: (imageInfo: IProductImage) => void;
-  formData?: IProductImage[];
-}
-const FormProductImages: React.FC<FormProductImagesProps> = ({}) => {
-  const renderImages = useMemo(() => {
-    return <FlexBox></FlexBox>;
-  }, []);
-
-  return (
-    <FlexBox fillWidth style={{ minHeight: 200 }}>
-      <FlexBox padding={'8px 8px 0'}>
-        <Text $weight={600} $size={14}>
-          {'Фото'}
-        </Text>
-      </FlexBox>
-
-      {renderImages}
-    </FlexBox>
-  );
-};
 
 // const optionalSelectItem = yup
 //   .object()
