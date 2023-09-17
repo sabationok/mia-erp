@@ -27,8 +27,14 @@ const ButtonGroup = <V = any,>({ options, borderRadius, onSelect, defaultIndex }
   useEffect(() => {
     if (!isUndefined(defaultIndex)) {
       setCurrent(defaultIndex);
+
+      onSelect &&
+        options &&
+        onSelect({ option: options[defaultIndex], value: options[defaultIndex]?.value, index: defaultIndex });
     }
-  }, [defaultIndex]);
+
+    // eslint-disable-next-line
+  }, []);
 
   const renderButtons = useMemo(() => {
     return options?.map((opt, idx) => (

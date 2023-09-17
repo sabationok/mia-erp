@@ -1,18 +1,12 @@
 import FlexBox from '../../atoms/FlexBox';
 import { IProductImage } from '../../../redux/products/products.types';
 import * as React from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Text } from '../../atoms/Text';
-import ModalForm, { ModalFormProps } from '../../ModalForm';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { useModalService } from '../../ModalProvider/ModalProvider';
-import { useForm } from 'react-hook-form';
-import SvgIcon from '../../atoms/SvgIcon/SvgIcon';
-import InputLabel from '../../atoms/Inputs/InputLabel';
-import InputText from '../../atoms/Inputs/InputText';
-import { FilterOption } from '../../ModalForm/ModalFilter';
-import ButtonGroup from '../../atoms/ButtonGroup';
+import FormAddImageSet, { FormAddImageSetData, formAddImageSetTabs, ImageSetSrcType } from './FormAddImageSet';
+import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 
 export interface FormProductImagesProps {
   onSetImage?: (image: IProductImage) => void;
@@ -23,56 +17,67 @@ const FormProductImages: React.FC<FormProductImagesProps> = ({ onSetImage, initi
   const modalS = useModalService();
   const [formData, setFormData] = useState<Partial<IProductImage>[]>([]);
 
-  const addImageInfo = (info: FormAddImageData) => {
+  const handleAddImageSet = (info: FormAddImageSetData) => {
     setFormData(prev => [...prev, info]);
   };
-  const removeImageData = (index: number) => {
-    setFormData(prev => prev.filter((_el, idx) => idx === index));
-  };
 
-  const renderImageInfo = (src: string, title: string) => {
-    return (
-      <FlexBox
-        fillWidth
-        overflow={'hidden'}
-        gap={4}
-        height={'115px'}
-        border={'1px solid lightgrey'}
-        borderRadius={'2px'}
-        style={{ position: 'relative' }}
-      >
-        {src && <img src={src} alt={title} style={{ width: '100%' }} />}
-
-        <ImageBottom padding={'4px'} fillWidth>
-          <Text $size={12} $weight={500} color={'#fff'}>
-            {title}
-          </Text>
-        </ImageBottom>
-      </FlexBox>
+  const handleAddImageToSet = useCallback((uri: string, type: ImageSetSrcType, setId?: string, setIndex?: number) => {
+    setFormData(prev => {
+      return prev.map((set, index) => {
+        if (set._id === setId || setIndex === index) {
+          return { ...set, [type as never]: uri };
+        }
+        return set;
+      });
+    });
+  }, []);
+  const handleRemoveImageFromSetSet = (setId?: string, setIndex?: number, imgType?: ImageSetSrcType) => {
+    setFormData(prev =>
+      prev.map((set, index) => {
+        if (set._id === setId || setIndex === index) {
+          return { ...set, [imgType as never]: '' };
+        }
+        return set;
+      })
     );
   };
 
-  const ImageBottom = styled(FlexBox)`
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    z-index: 5;
-
-    background-color: rgba(26, 26, 26, 0.2);
-    backdrop-filter: blur(3px);
-  `;
-
-  const renderImages = useMemo(() => {
+  const renderImagePreviews = useMemo(() => {
     return formData?.map((imageInfo, index) => {
-      const renderInnerData = formAddImageTabs.map(el => renderImageInfo(imageInfo[el.value] as never, el.label));
+      const renderInnerData = formAddImageSetTabs.map(el => {
+        return (
+          <ImageSmallPreview
+            key={`small-prev_${el.value}`}
+            src={imageInfo[el.value as never]}
+            title={el.label}
+            onEditPress={() => {
+              modalS.open({
+                ModalChildren: FormAddImageSet,
+                modalChildrenProps: {
+                  defaultState: imageInfo,
+                  type: el.value,
+                  onSubmit: data => {
+                    el.value &&
+                      data[el.value] &&
+                      handleAddImageToSet(data[el.value] || '', el.value, imageInfo._id, index);
+                  },
+                },
+              });
+            }}
+            onDeletePress={() => {
+              handleRemoveImageFromSetSet('', index, el.value);
+            }}
+          />
+        );
+      });
 
       return (
-        <FlexBox width={'90px'} gap={6}>
+        <FlexBox key={`imgs-set_${imageInfo._id || index}`} overflow={'auto'} gap={6} fxDirection={'row'}>
           {renderInnerData}
         </FlexBox>
       );
     });
-  }, [formData]);
+  }, [formData, modalS]);
 
   useEffect(() => {
     if (initialData) {
@@ -88,138 +93,134 @@ const FormProductImages: React.FC<FormProductImagesProps> = ({ onSetImage, initi
           {'Фото'}
         </Text>
 
-        <ButtonIcon
-          variant={'textExtraSmall'}
+        <AddImageSetButton
+          type={'button'}
           onClick={() => {
             modalS.open({
-              ModalChildren: FormAddImage,
+              ModalChildren: FormAddImageSet,
               modalChildrenProps: {
                 onSubmit: data => {
-                  addImageInfo(data);
+                  handleAddImageSet(data);
                 },
               },
             });
           }}
         >
           {'Додати'}
-        </ButtonIcon>
+        </AddImageSetButton>
       </FlexBox>
 
-      <FlexBox fxDirection={'row'} gap={8} padding={'8px 0'} overflow={'auto'}>
-        {renderImages}
+      <FlexBox gap={8} padding={'8px 0'} overflow={'hidden'}>
+        {renderImagePreviews}
       </FlexBox>
     </FlexBox>
   );
 };
-
-const formAddImageTabs: FilterOption<keyof FormAddImageData>[] = [
-  { label: 'Preview', value: 'img_preview', required: true },
-  { label: '1x', value: 'img_1x' },
-  { label: '2x', value: 'img_2x' },
-  { label: 'Webp', value: 'webp' },
-];
-
-export interface FormAddImageData extends Omit<IProductImage, '_id' | 'createdAt' | 'updatedAt'> {}
-export interface FormAddImageProps extends Omit<ModalFormProps, 'onSubmit'> {
-  onSubmit?: (data: FormAddImageData) => void;
+export interface ImageSmallPreviewProps {
+  src: string;
+  title: string;
+  type?: string;
+  onDeletePress?: () => void;
+  onEditPress?: () => void;
+  onAddNewPress?: () => void;
 }
-const FormAddImage = ({ title, fillHeight = true, onSubmit, onClose, ...props }: FormAddImageProps) => {
-  const { register, watch, handleSubmit } = useForm<FormAddImageData>();
-  const [current, setCurrent] = useState<FilterOption<keyof FormAddImageData> | undefined>(formAddImageTabs[0]);
-  const formValues = watch();
-
-  const onValid = (data: FormAddImageData) => {
-    onSubmit && onSubmit(data);
-    onClose && onClose();
-  };
-
-  const renderInput = useMemo(() => {
-    return (
-      current?.value && (
-        <InputLabel label={current?.label?.replace('img_', 'image ').toUpperCase()} required={current?.required}>
-          <InputText
-            {...register(current?.value, { required: current?.required })}
-            value={formValues[current?.value as never]}
-            placeholder={'Впишіть або вставте посилання на зображення'}
-            required={current?.required}
-          />
-        </InputLabel>
-      )
-    );
-  }, [current?.label, current?.required, current?.value, formValues, register]);
-
+const ImageSmallPreview = ({ type, title, src, onDeletePress, onEditPress, onAddNewPress }: ImageSmallPreviewProps) => {
   return (
-    <ModalForm
-      title={title || 'Додати нове зображення'}
-      fillHeight={fillHeight}
-      {...props}
-      onSubmit={handleSubmit(onValid)}
+    <ImageSmallPreviewBox
+      className={`ImagePreview_${title}`}
+      fillWidth
+      overflow={'hidden'}
+      gap={4}
+      height={'115px'}
+      border={'1px solid lightgrey'}
+      borderRadius={'2px'}
+      style={{ position: 'relative' }}
     >
-      <FormContentGrid>
-        <FlexBox fillWidth fillHeight alignItems={'center'} overflow={'hidden'}>
-          {current?.value && formValues[current?.value] ? (
-            <Image src={formValues[current?.value] as never} />
-          ) : (
-            <AddImageBox>
-              <SvgIcon icon={'plus'} size={'56px'} />
+      <ImagePreviewTop
+        className={'top'}
+        fxDirection={'row'}
+        gap={6}
+        style={{ fill: '#fff' }}
+        alignItems={'center'}
+        justifyContent={'space-between'}
+        padding={'2px 4px'}
+        fillWidth
+      >
+        <ButtonIcon
+          variant={'onlyIcon'}
+          icon={'plus'}
+          size={'18px'}
+          disabled={!onAddNewPress}
+          onClick={onAddNewPress}
+        />
+        <ButtonIcon variant={'onlyIcon'} icon={'edit'} size={'18px'} disabled={!onEditPress} onClick={onEditPress} />
+        <ButtonIcon
+          variant={'onlyIcon'}
+          icon={'delete'}
+          size={'18px'}
+          disabled={!onDeletePress}
+          onClick={onDeletePress}
+        />
+      </ImagePreviewTop>
 
-              <input name={'img_preview'} type={'file'} className={'visually-hidden'} />
-            </AddImageBox>
-          )}
-        </FlexBox>
+      {src && <img src={src} alt={title} style={{ width: '100%' }} />}
 
-        {renderInput}
-
-        <FlexBox padding={'8px 0'}>
-          <ButtonGroup
-            options={formAddImageTabs}
-            onSelect={info => {
-              setCurrent(info.option);
-            }}
-          />
-        </FlexBox>
-      </FormContentGrid>
-    </ModalForm>
+      <ImagePreviewBottom padding={'4px'} fillWidth>
+        <Text $size={12} $weight={500} color={'#fff'}>
+          {title}
+        </Text>
+      </ImagePreviewBottom>
+    </ImageSmallPreviewBox>
   );
 };
-const FormContentGrid = styled.div`
-  flex: 1;
 
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr min-content min-content;
-  gap: 6px;
-
-  padding: 8px;
-  overflow: hidden;
+const ImageSmallPreviewBox = styled(FlexBox)`
+  &:hover {
+    & .top {
+      transform: translateY(0);
+    }
+  }
 `;
-const AddImageBox = styled.label`
+
+const AddImageSetButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
 
-  height: 100%;
-  width: 100%;
-  max-height: 100%;
+  color: ${p => p.theme.accentColor.base};
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 6px;
 
-  fill: ${p => p.theme.sideBarBorderColor};
+  background-color: transparent;
+  border: 0;
 
-  border-radius: 2px;
-  border: 2px solid ${p => p.theme.sideBarBorderColor};
+  cursor: pointer;
+`;
+const ImagePreviewTop = styled(FlexBox)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
 
-  transition: ${p => p.theme.globals.timingFnMui};
-  &:hover {
-    fill: ${p => p.theme.accentColor.base};
-    border-color: ${p => p.theme.accentColor.light};
-  }
+  min-height: 24px;
+
+  transform: translateY(-100%);
+
+  background-color: rgba(26, 26, 26, 0.2);
+  backdrop-filter: blur(3px);
+
+  transition: all ${p => p.theme.globals.timingFnMain};
+`;
+const ImagePreviewBottom = styled(FlexBox)`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+
+  background-color: rgba(26, 26, 26, 0.2);
+  backdrop-filter: blur(3px);
 `;
 
-const Image = styled.img`
-  //min-width: 100px;
-  //max-width: 100px;
-  //
-  //height: 145px;
-
-  max-height: 100%;
-`;
 export default FormProductImages;
