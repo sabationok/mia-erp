@@ -1,15 +1,15 @@
-import { PagePathType } from '../../redux/APP_CONFIGS';
+import { PagePathType } from '../../../redux/APP_CONFIGS';
 import styled from 'styled-components';
-import { takeFullGridArea } from './pagesStyles';
-import AppGridPage from './AppGridPage';
+import { takeFullGridArea } from '../pagesStyles';
+import AppGridPage from '../AppGridPage';
 import { useCallback, useEffect, useState } from 'react';
-import { useAppParams } from '../../hooks';
-import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
-import PageCurrentProductProvider from './PageProductOverview/PageCurrentProductProvider';
-import { ToastService } from '../../services';
-import PageProductOverviewRightSide from './PageProductOverview/PageProductOverviewRightSide';
-import PageProductOverviewLeftSide from './PageProductOverview/PageProductOverviewLeftSide';
-import AppLoader from '../atoms/AppLoader';
+import { useAppParams } from '../../../hooks';
+import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import PageCurrentProductProvider from './PageCurrentProductProvider';
+import { ToastService } from '../../../services';
+import PageProductOverviewRightSide from './PageProductOverviewRightSide';
+import PageProductOverviewLeftSide from './PageProductOverviewLeftSide';
+import AppLoader from '../../atoms/AppLoader';
 
 export interface PageProductOverviewProps {
   path: PagePathType;

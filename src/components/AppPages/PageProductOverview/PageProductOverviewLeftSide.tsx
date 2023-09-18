@@ -4,7 +4,7 @@ import { useModalProvider } from '../../ModalProvider/ModalProvider';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
-import React, { MouseEventHandler, useCallback, useMemo } from 'react';
+import React, { MouseEventHandler, useCallback, useMemo, useState } from 'react';
 import { Modals } from '../../ModalProvider/Modals';
 import { ToastService } from '../../../services';
 import { createProductFormData } from '../../../utils/dataTransform';
@@ -15,6 +15,7 @@ export interface PageProductOverviewLeftSideProps {
 const PageProductOverviewLeftSide: React.FC<PageProductOverviewLeftSideProps> = ({ toggleRightSideVisibility }) => {
   const page = usePageCurrentProduct();
   const modalS = useModalProvider();
+  const [loading, setLoading] = useState(false);
   const { products: productsS } = useAppServiceProvider();
 
   const onOverlayBackdropClick = useCallback(
@@ -55,49 +56,66 @@ const PageProductOverviewLeftSide: React.FC<PageProductOverviewLeftSideProps> = 
   }, [onOverlayBackdropClick, page]);
 
   return (
-    <LeftSide>
-      <ProductOverviewXL
-        product={page?.currentProduct}
-        onEdit={
-          page.currentProduct
-            ? () => {
-                if (!page.currentProduct) {
-                  return;
-                }
-                const formData = createProductFormData(page?.currentProduct);
+    <>
+      <LeftSide>
+        <ProductOverviewXL
+          product={page?.currentProduct}
+          onEdit={
+            page.currentProduct
+              ? () => {
+                  if (!page.currentProduct) {
+                    return;
+                  }
+                  const formData = createProductFormData(page?.currentProduct);
 
-                const m = modalS.handleOpenModal({
-                  Modal: Modals.FormCreateProduct,
-                  props: {
-                    edit: true,
-                    _id: page?.currentProduct?._id,
-                    defaultState: formData,
-                    onSubmit: (d, o) => {
-                      productsS
-                        .updateById({
-                          data: { ...d, refreshCurrent: true },
-                          onSuccess: () => {
-                            o?.closeAfterSave && m?.onClose();
-                            ToastService.success(`Updated product`);
-                          },
-                        })
-                        .finally();
+                  const m = modalS.handleOpenModal({
+                    Modal: Modals.FormCreateProduct,
+                    props: {
+                      edit: true,
+                      _id: page?.currentProduct?._id,
+                      defaultState: formData,
+                      onSubmit: (d, o) => {
+                        productsS
+                          .updateById({
+                            data: { ...d, refreshCurrent: true },
+                            onSuccess: () => {
+                              o?.closeAfterSave && m?.onClose();
+                              ToastService.success(`Updated product`);
+                            },
+                          })
+                          .finally();
+                      },
                     },
-                  },
-                });
-              }
-            : undefined
-        }
-        onDelete={() => {}}
-        onArchive={() => {}}
-        onHide={() => {}}
-        onOpenRightSide={toggleRightSideVisibility}
-      />
+                  });
+                }
+              : undefined
+          }
+          onRefresh={
+            loading
+              ? undefined
+              : () => {
+                  const handler = ToastService.createLoader('Refreshing...').open();
+                  page.currentProduct?._id &&
+                    productsS
+                      .getProductFullInfo({
+                        data: { _id: page.currentProduct?._id },
+                        onSuccess: () => {
+                          handler.close();
+                          ToastService.success(`Data refreshed`);
+                        },
+                        onLoading: setLoading,
+                      })
+                      .finally(handler.close);
+                }
+          }
+          onOpenRightSide={toggleRightSideVisibility}
+        />
 
-      <Backdrop fillWidth fillHeight isActive={renderOverlayStack.length > 0} overflow={'hidden'}>
-        {renderOverlayStack}
-      </Backdrop>
-    </LeftSide>
+        <Backdrop fillWidth fillHeight isActive={renderOverlayStack.length > 0} overflow={'hidden'}>
+          {renderOverlayStack}
+        </Backdrop>
+      </LeftSide>
+    </>
   );
 };
 

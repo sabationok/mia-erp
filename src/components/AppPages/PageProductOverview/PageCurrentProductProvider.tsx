@@ -28,6 +28,7 @@ export interface OverlayStackItemData<Props = any> {
 export interface OverlayRenderComponent<Props = any> extends React.FC<OverlayRenderComponentProps<Props>> {}
 
 export type OverlayRenderComponentProps<Props = any> = OverlayHandlerReturn & Props;
+
 export interface OverlayHandlerReturn {
   onClose?: () => void;
   index?: number;

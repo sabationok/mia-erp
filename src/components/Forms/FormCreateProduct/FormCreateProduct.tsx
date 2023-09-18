@@ -16,7 +16,7 @@ import FormAfterSubmitOptions from '../components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { IVariationTemplate } from '../../../redux/products/properties.types';
 import FormProductStaticProperties from './FormProductStaticProperties';
-import FormProductImages from './FormProductImages';
+import FormCreateProductImagesComponent from './FormCreateProductImagesComponent';
 
 export interface FormCreateProductProps extends Omit<ModalFormProps<any, any, IProductFormData>, 'onSubmit'> {
   copy?: boolean;
@@ -62,6 +62,7 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
   const currentTemplate = useMemo((): IVariationTemplate | undefined => {
     return properties.find(t => t._id === formValues?.template?._id);
   }, [formValues?.template?._id, properties]);
+
   // TODO eventDate: formatDateForInputValue(defaultState?.eventDate)
   function onValidSubmit(submitData: IProductFormData) {
     const omitPathArr: (keyof IProductFormData)[] = [];
@@ -151,7 +152,12 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
           />
         </FormProductStaticProperties>
 
-        <FormProductImages />
+        <FormCreateProductImagesComponent
+          initialData={formValues?.images}
+          onChangeState={data => {
+            setValue('images', data);
+          }}
+        />
       </FlexBox>
     </ModalForm>
   );

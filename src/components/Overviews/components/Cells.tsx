@@ -8,6 +8,9 @@ import { Text } from '../../atoms/Text';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import FormSelectProperties from '../../Forms/FormSelectProperties';
 import { IProduct } from '../../../redux/products/products.types';
+import { formAddImageSetTabs } from '../../Forms/FormCreateProduct/FormAddImageSet';
+import FormProductImages from '../../Forms/FormProductImagesOverlay';
+import ImagePreviewSmall from '../../atoms/ImagePreviewSmall';
 
 export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) => {
   const value = cell.getValue ? cell.getValue(data) : null;
@@ -109,6 +112,41 @@ const OverviewPropertyComponent: React.FC<OverviewPropertyComponentProps> = ({ i
     </FlexBox>
   );
 };
+export const ImagesCell: RenderOverviewCellComponent = ({ data, cell, setOverlayContent }) => {
+  const renderImageSets = useMemo(() => {
+    return data?.images?.map((set, index) => {
+      return (
+        <ImagesSetBox key={`set_${set?._id || index}`} fxDirection={'row'} gap={8} overflow={'auto'}>
+          {formAddImageSetTabs.map(el => (
+            <ImagePreviewSmall key={`img_${el.value}`} src={set[el.value] || ''} title={el.label} disabled />
+          ))}
+        </ImagesSetBox>
+      );
+    });
+  }, [data?.images]);
+
+  return (
+    <Cell style={{ minHeight: 'max-content' }}>
+      <FlexBox fxDirection={'row'} justifyContent={'space-between'}>
+        <CellText $isTitle $size={12}>
+          {cell?.title}
+        </CellText>
+
+        <OverlayOpenButton
+          onClick={() => {
+            setOverlayContent({ RenderComponent: FormProductImages });
+          }}
+        >
+          {'Змінити'}
+        </OverlayOpenButton>
+      </FlexBox>
+
+      <FlexBox gap={8} height={'max-content'} padding={'8px 0'}>
+        {renderImageSets}
+      </FlexBox>
+    </Cell>
+  );
+};
 
 export const StaticProperties: RenderOverviewCellComponent = ({ cell, setOverlayContent, data }) => {
   const templates = useProductsSelector().properties;
@@ -177,7 +215,7 @@ const OverlayOpenButton = styled.button`
   background-color: transparent;
 
   font-family: inherit;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 12px;
   padding: 0 6px;
   color: ${p => p.theme.accentColor.base};
@@ -187,6 +225,11 @@ const OverlayOpenButton = styled.button`
 
 const Cell = styled(FlexBox)`
   min-height: 50px;
+  height: max-content;
+
+  padding: 4px;
+
+  //overflow: hidden;
 
   &:not(:first-child) {
     border-top: 1px solid ${p => p.theme.sideBarBorderColor};
@@ -205,4 +248,10 @@ const CellText = styled(Text)<{ $isTitle?: boolean }>`
       : p.$disabled
       ? p.theme.globals.inputPlaceholderColor
       : undefined};
+`;
+const ImagesSetBox = styled(FlexBox)`
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
 `;

@@ -5,7 +5,7 @@ type ToastLoaderHandler = {
   open: (params?: {
     beforeClose?: [message?: ToastContent, options?: ToastOptions];
     afterClose?: [message?: ToastContent, options?: ToastOptions];
-  }) => { close: ToastLoaderRemover };
+  }) => { close: ToastLoaderRemover; toastId: string | number };
 };
 export default class ToastService {
   public static createToastLoader(message?: ToastContent, options?: ToastOptions): ToastLoaderRemover {
@@ -17,6 +17,7 @@ export default class ToastService {
       open: params => {
         const toastId = toast.loading(message, options);
         return {
+          toastId,
           close: () => {
             // controls?.beforeClose && controls?.beforeClose();
             params?.afterClose && toast(...params?.afterClose);

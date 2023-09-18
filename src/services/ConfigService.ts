@@ -10,6 +10,15 @@ export enum ENV_KEYS {
   FRB_appId = 'FRB_appId',
   FRB_measurementId = 'FRB_measurementId',
 }
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyAjEoVyohiTfAKpW-5AdvVdik1Uy656iJk',
+  authDomain: 'react-native-homework-1.firebaseapp.com',
+  projectId: 'react-native-homework-1',
+  storageBucket: 'react-native-homework-1.appspot.com',
+  messagingSenderId: '304210435678',
+  appId: '1:304210435678:web:1e1cfad321443f40101ecf',
+};
 export default class ConfigService {
   private static IS_DEV_MODE = process.env.NODE_ENV === 'development';
 

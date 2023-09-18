@@ -66,7 +66,7 @@ export interface IProductWithDefaults extends IProductAddsFields {
 
 export interface IProduct extends IProductWithDefaults {}
 
-export interface IProductImage extends IBase {
+export interface IProductImage extends Partial<IBase> {
   img_preview?: string;
   img_1x: string;
   img_2x: string;
@@ -83,10 +83,11 @@ export interface IProductMeasurement {
 export interface IProductBaseFormData extends IProductBaseDto {}
 export interface IProductDefaultsFormData extends Record<keyof IProductDefaults, IFormDataValueWithUUID> {}
 export interface IProductWithAddsFieldsFormData extends IProductBaseFormData {}
-export interface IProductFullFormData extends Omit<IProductFullDto, 'recommends' | 'properties'> {
+export interface IProductFullFormData extends Omit<IProductFullDto, 'recommends' | 'properties' | 'images'> {
   recommends?: IFormDataValueWithUUID[];
   properties?: string[];
   defaults?: IProductDefaultsFormData;
+  images?: Partial<IProductImage>[];
 }
 export interface IProductFormData extends IProductFullFormData {}
 

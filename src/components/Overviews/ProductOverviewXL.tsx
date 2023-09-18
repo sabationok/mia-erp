@@ -69,26 +69,31 @@ const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }
 
   return (
     <Container fillWidth flex={1} className={className} padding={'0 8px'}>
-      <Header alignItems={'center'} justifyContent={'space-between'} fxDirection={'row'} gap={6} fillWidth>
-        <FlexBox fxDirection={'row'} padding={'4px 0'} alignItems={'center'} fillHeight>
-          <ButtonIcon
-            variant={'textExtraSmall'}
-            icon={'SmallArrowLeft'}
-            style={{ gap: 0 }}
-            onClick={() => {
-              if (product && location?.pathname) {
-                const newPath = location?.pathname?.replace(`/${product?._id}`, '');
+      <Header
+        alignItems={'center'}
+        justifyContent={'space-between'}
+        fxDirection={'row'}
+        gap={6}
+        padding={'4px 0'}
+        fillWidth
+      >
+        <ButtonIcon
+          variant={'textExtraSmall'}
+          icon={'SmallArrowLeft'}
+          style={{ gap: 0 }}
+          onClick={() => {
+            if (product && location?.pathname) {
+              const newPath = location?.pathname?.replace(`/${product?._id}`, '');
 
-                newPath && navigate(newPath);
-              }
-            }}
-          >
-            {'Back'}
-          </ButtonIcon>
-        </FlexBox>
+              newPath && navigate(newPath);
+            }
+          }}
+        >
+          {'Back'}
+        </ButtonIcon>
 
-        <FlexBox fxDirection={'row'} padding={'4px 0'} alignItems={'center'} fillHeight>
-          <Text $weight={600} $size={18}>
+        <FlexBox fxDirection={'row'} padding={'4px 0'} alignItems={'center'} fillHeight overflow={'hidden'}>
+          <Text $weight={600} $size={16} className={'title'}>
             {'Перегляд продукту'}
           </Text>
         </FlexBox>
@@ -127,14 +132,6 @@ const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }
         />
 
         <FlexBox fxDirection={'row'} gap={6} margin={'0 0 0 auto'}>
-          <OpenBtn
-            size={'36px'}
-            variant={'onlyIcon'}
-            iconSize={'85%'}
-            icon={'SmallArrowLeft'}
-            disabled={!p?.onOpenRightSide}
-            onClick={p?.onOpenRightSide}
-          />
           <ButtonIcon
             size={'36px'}
             variant={'onlyIcon'}
@@ -142,6 +139,15 @@ const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }
             icon={'refresh'}
             disabled={!p?.onRefresh}
             onClick={p?.onRefresh}
+          />
+
+          <OpenBtn
+            size={'36px'}
+            variant={'onlyIcon'}
+            iconSize={'85%'}
+            icon={'SmallArrowLeft'}
+            disabled={!p?.onOpenRightSide}
+            onClick={p?.onOpenRightSide}
           />
         </FlexBox>
       </Footer>
@@ -155,6 +161,12 @@ const Container = styled(FlexBox)`
 `;
 const Header = styled(FlexBox)`
   height: 32px;
+
+  & .title {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 `;
 const Content = styled(FlexBox)`
   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
@@ -210,6 +222,7 @@ const productOverviewCells: ProductOverviewCell[] = [
     getValue: product => product?.brand?.label,
     gridArea: 'brand',
   },
+
   {
     title: 'Опис',
     CellComponent: Cells.OverviewTextCell,
@@ -239,6 +252,13 @@ const productOverviewCells: ProductOverviewCell[] = [
   },
   { title: 'Додаткові характеристики', CellComponent: Cells.StaticProperties, gridArea: 'properties' },
   // * DEFAULTS
+
+  {
+    title: 'Фото',
+    CellComponent: Cells.ImagesCell,
+    gridArea: 'images',
+  },
+
   {
     title: 'Склад за замовчуванням',
     CellComponent: Cells.OverviewTextCell,
@@ -265,5 +285,18 @@ const productOverviewCells: ProductOverviewCell[] = [
       return arr.join(' | ');
     },
     gridArea: 'measurement',
+  },
+
+  {
+    title: 'Створено',
+    CellComponent: Cells.OverviewTextCell,
+    getValue: product => `${product?.author?.name}`,
+    gridArea: 'createdAt',
+  },
+  {
+    title: 'Оновлено',
+    CellComponent: Cells.OverviewTextCell,
+    getValue: product => `${product?.editor?.name}`,
+    gridArea: 'updatedAt',
   },
 ];
