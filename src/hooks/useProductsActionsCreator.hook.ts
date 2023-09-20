@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { ToastService } from '../services';
 import { createProductFormData } from '../utils/dataTransform';
+import { createApiCall, ProductsApi } from '../api';
 
 export type ProductsActionsCreator = TableActionCreator<IProduct>;
 
@@ -52,12 +53,14 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
         iconSize: '90%',
         type: 'onlyIcon',
         disabled: !ctx?.selectedRow?._id,
-        onClick: () => {
-          const product = state.products.find(p => p._id === ctx?.selectedRow?._id);
-          if (!product) {
+        onClick: async () => {
+          const res = await createApiCall({ data: ctx?.selectedRow?._id }, ProductsApi.getFullInfoById, ProductsApi);
+          if (!res?.data.data) {
             return;
           }
-          const formData = createProductFormData(product);
+          console.log(res?.data.data);
+          const formData = createProductFormData(res?.data.data);
+
           const modal = modals.handleOpenModal({
             ModalChildren: FormCreateProduct,
             modalChildrenProps: {
@@ -89,12 +92,13 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
         iconSize: '90%',
         type: 'onlyIcon',
         disabled: !ctx?.selectedRow?._id,
-        onClick: () => {
-          const product = state.products.find(p => p._id === ctx?.selectedRow?._id);
-          if (!product) {
+        onClick: async () => {
+          const res = await createApiCall({ data: ctx?.selectedRow?._id }, ProductsApi.getFullInfoById, ProductsApi);
+          if (!res?.data.data) {
             return;
           }
-          const formData = createProductFormData(product);
+          console.log(res?.data.data);
+          const formData = createProductFormData(res?.data.data);
 
           const modal = modals.handleOpenModal({
             ModalChildren: FormCreateProduct,
@@ -104,7 +108,7 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
               defaultState: formData,
 
               onSubmit: (data, o) => {
-                service.updateById({
+                service.create({
                   data,
                   onSuccess(d) {
                     o?.closeAfterSave && modal?.onClose();

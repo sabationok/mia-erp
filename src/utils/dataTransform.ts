@@ -214,6 +214,6 @@ export function createProductFormData(input: IProduct, omitPaths?: [string | key
 
   // console.log({ dataInArray });
 
-  console.log('createProductFromData output', output);
+  console.log('createProductFormData output', output);
   return omit(output, omitPaths ? omitPaths : ['_id', 'createdAt', 'updatedAt']);
 }
