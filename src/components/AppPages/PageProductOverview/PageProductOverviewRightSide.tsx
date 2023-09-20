@@ -87,6 +87,7 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
           const currentId = ctx.selectedRow?._id;
 
           return [
+            { icon: 'refresh', type: 'onlyIcon' },
             {
               icon: 'delete',
               type: 'onlyIcon',
@@ -135,24 +136,32 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
       return {
         tableData: page?.currentProduct?.prices,
         tableTitles: pricesColumnsForProductReview,
-        actionsCreator: ctx => [
-          { icon: 'delete', type: 'onlyIcon' },
-          { icon: 'edit', type: 'onlyIcon' },
-          { icon: 'copy', type: 'onlyIcon' },
-          { icon: 'plus', type: 'onlyIconFilled' },
-        ],
+        actionsCreator: ctx => {
+          const currentId = ctx.selectedRow?._id;
+
+          return [
+            { icon: 'refresh', type: 'onlyIcon' },
+            { icon: 'delete', type: 'onlyIcon' },
+            { icon: 'edit', type: 'onlyIcon', disabled: !currentId },
+            { icon: 'plus', type: 'onlyIconFilled' },
+          ];
+        },
       } as ITableListProps<IPriceListItem>;
     }
     if (current === RightSideOptionEnum.Warehousing) {
       return {
         tableData: page?.currentProduct?.inventories,
         tableTitles: warehouseOverviewTableColumns,
-        actionsCreator: ctx => [
-          { icon: 'delete', type: 'onlyIcon' },
-          { icon: 'edit', type: 'onlyIcon' },
-          { icon: 'copy', type: 'onlyIcon' },
-          { icon: 'plus', type: 'onlyIconFilled' },
-        ],
+        actionsCreator: ctx => {
+          const currentId = ctx.selectedRow?._id;
+
+          return [
+            { icon: 'refresh', type: 'onlyIcon' },
+            { icon: 'delete', type: 'onlyIcon' },
+            { icon: 'edit', type: 'onlyIcon', disabled: !currentId },
+            { icon: 'plus', type: 'onlyIconFilled' },
+          ];
+        },
       } as ITableListProps<IProductInventory>;
     }
   }, [current, modalS, page, variationsTableTitles]);

@@ -135,7 +135,7 @@ const FormProductImagesComponent: React.FC<FormProductImagesComponentProps> = ({
       return (
         <ImagesSetBox
           key={`images-set_${set?._id || setIndex}`}
-          gap={6}
+          gap={2}
           fxDirection={'row'}
           fillWidth
           overflow={'auto'}
@@ -183,7 +183,7 @@ const FormProductImagesComponent: React.FC<FormProductImagesComponentProps> = ({
           padding={'4px 8px'}
           height={'32px'}
           fxDirection={'row'}
-          gap={8}
+          gap={2}
           alignItems={'center'}
           justifyContent={'space-between'}
         >
@@ -209,7 +209,7 @@ const FormProductImagesComponent: React.FC<FormProductImagesComponentProps> = ({
         </FlexBox>
       )}
 
-      <FlexBox gap={8} padding={'8px 0'} overflow={'hidden'}>
+      <FlexBox gap={2} padding={'8px 0'} overflow={'hidden'}>
         {renderImageSets}
       </FlexBox>
     </FlexBox>

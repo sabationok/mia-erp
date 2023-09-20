@@ -116,7 +116,7 @@ export const ImagesCell: RenderOverviewCellComponent = ({ data, cell, setOverlay
   const renderImageSets = useMemo(() => {
     return data?.images?.map((set, index) => {
       return (
-        <ImagesSetBox key={`set_${set?._id || index}`} fxDirection={'row'} gap={8} overflow={'auto'}>
+        <ImagesSetBox key={`set_${set?._id || index}`} fxDirection={'row'} gap={2} overflow={'auto'}>
           {formAddImageSetTabs.map(el => (
             <ImagePreviewSmall key={`img_${el.value}`} src={set[el.value] || ''} title={el.label} disabled />
           ))}
@@ -141,7 +141,7 @@ export const ImagesCell: RenderOverviewCellComponent = ({ data, cell, setOverlay
         </OverlayOpenButton>
       </FlexBox>
 
-      <FlexBox gap={8} height={'max-content'} padding={'8px 0'}>
+      <FlexBox gap={2} height={'max-content'} padding={'8px 0'}>
         {renderImageSets}
       </FlexBox>
     </Cell>
