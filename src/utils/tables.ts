@@ -42,6 +42,29 @@ export function createTableTitlesFromTemplate(
       });
 
     return [
+      {
+        top: {
+          name: 'Назва',
+          align: 'start',
+          getData: d => d?.label,
+        },
+        width: '200px',
+        action: 'doubleDataWithAvatar',
+      },
+      {
+        top: {
+          name: 'Артикул | SKU',
+          align: 'start',
+          getData: d => d?.sku,
+        },
+        bottom: {
+          name: 'Штрих-код',
+          align: 'start',
+          getData: d => d?.barCode,
+        },
+        width: '170px',
+        action: 'valueByPath',
+      },
       ...titles,
       {
         top: {

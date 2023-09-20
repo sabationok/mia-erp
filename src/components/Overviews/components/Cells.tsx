@@ -8,15 +8,15 @@ import { Text } from '../../atoms/Text';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import FormSelectProperties from '../../Forms/FormSelectProperties';
 import { IProduct } from '../../../redux/products/products.types';
-import { formAddImageSetTabs } from '../../Forms/FormCreateProduct/FormAddImageSet';
-import FormProductImages from '../../Forms/FormProductImagesOverlay';
+import { formAddImageSetTabs } from '../../Forms/FormProduct/FormAddImageSet';
+import FormProductImages from '../../Forms/FormProduct/FormProductImagesOverlay';
 import ImagePreviewSmall from '../../atoms/ImagePreviewSmall';
 
 export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) => {
   const value = cell.getValue ? cell.getValue(data) : null;
 
   return (
-    <Cell padding={'4px'}>
+    <Cell>
       <CellText $isTitle $size={12}>
         {cell?.title}
       </CellText>
@@ -126,7 +126,7 @@ export const ImagesCell: RenderOverviewCellComponent = ({ data, cell, setOverlay
   }, [data?.images]);
 
   return (
-    <Cell style={{ minHeight: 'max-content', padding: 0 }}>
+    <Cell style={{ minHeight: 'max-content', padding: '4px 0' }}>
       <FlexBox fxDirection={'row'} justifyContent={'space-between'}>
         <CellText $isTitle $size={12}>
           {cell?.title}

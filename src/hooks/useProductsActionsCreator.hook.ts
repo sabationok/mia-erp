@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
 import { IProduct, ProductTypeEnum } from '../redux/products/products.types';
 import { useProductsSelector } from '../redux/selectors.store';
-import FormCreateProduct from '../components/Forms/FormCreateProduct/FormCreateProduct';
+import FormCreateProduct from '../components/Forms/FormProduct/FormCreateProduct';
 import { productsFilterOptions } from '../data/directories.data';
 import { useNavigate } from 'react-router-dom';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';

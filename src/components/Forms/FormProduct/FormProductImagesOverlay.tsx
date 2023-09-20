@@ -1,13 +1,13 @@
-import FormCreateProductImagesComponent from './FormCreateProduct/FormCreateProductImagesComponent';
+import FormProductImagesComponent from './FormProductImagesComponent';
 import { FormEventHandler, useState } from 'react';
-import { OverlayHandlerReturn } from '../AppPages/PageProductOverview/PageCurrentProductProvider';
-import { IProduct, IProductImage } from '../../redux/products/products.types';
+import { OverlayHandlerReturn } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
+import { IProduct, IProductImage } from '../../../redux/products/products.types';
 import styled from 'styled-components';
-import { useProductsSelector } from '../../redux/selectors.store';
-import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
-import { ExtractId } from '../../utils/dataTransform';
+import { useProductsSelector } from '../../../redux/selectors.store';
+import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import { ExtractId } from '../../../utils/dataTransform';
 import FlexBox from 'components/atoms/FlexBox';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 
 export interface FormProductImagesOverlayProps extends OverlayHandlerReturn {
   product?: IProduct;
@@ -36,7 +36,7 @@ const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onC
       <Header></Header>
 
       <Content flex={1} fillWidth>
-        <FormCreateProductImagesComponent initialData={state} onChangeState={setState} />
+        <FormProductImagesComponent initialData={state} onChangeState={setState} />
       </Content>
 
       <Footer fxDirection={'row'} gap={8} padding={'8px 0'} justifyContent={'stretch'}>

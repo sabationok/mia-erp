@@ -7,27 +7,51 @@ import { Text } from '../../atoms/Text';
 import { useModalService } from '../../ModalProvider/ModalProvider';
 import FormAddImageSet, { FormAddImageSetData, formAddImageSetTabs, ImageSetSrcType } from './FormAddImageSet';
 import ImagePreviewSmall from '../../atoms/ImagePreviewSmall';
+import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import { check } from '../../../utils';
 
-export interface FormProductImagesProps {
+export interface FormProductImagesComponentProps {
   onChangeState?: (state: Partial<IProductImage>[]) => void;
   initialData?: Partial<IProductImage>[];
   renderHeader?: React.ReactNode;
+  canEditOrder?: boolean;
 }
 
-const FormCreateProductImagesComponent: React.FC<FormProductImagesProps> = ({
+const FormProductImagesComponent: React.FC<FormProductImagesComponentProps> = ({
   onChangeState,
   renderHeader,
   initialData,
+  canEditOrder = true,
 }) => {
   const modalS = useModalService();
-  const [formData, setFormData] = useState<Partial<IProductImage>[]>([]);
+  // const [isEditOrderMode,setIsEditOrderMode]=useState(false)
+  const [formData, setFormData] = useState<(Partial<IProductImage> & { order: number })[]>([]);
 
   const handleAddImageSet = (info: FormAddImageSetData) => {
     setFormData(prev => {
-      const updatedData = [...prev, info];
+      const updatedData = [...prev, { ...info, order: formData.length + 1 }];
       onChangeState && onChangeState(updatedData);
 
       return updatedData;
+    });
+  };
+  const handleChangeOrder = (currentSetOrder: number, increment: number) => {
+    setFormData(prev => {
+      const newOrder = currentSetOrder + increment;
+
+      const updateData = prev.map((set, index) => {
+        if (newOrder > formData.length || newOrder < 1) {
+          return set;
+        }
+        if (set.order === newOrder) {
+          return { ...set, order: currentSetOrder };
+        } else if (set.order === currentSetOrder) {
+          return { ...set, order: newOrder };
+        } else {
+          return set;
+        }
+      });
+      return updateData;
     });
   };
 
@@ -35,7 +59,7 @@ const FormCreateProductImagesComponent: React.FC<FormProductImagesProps> = ({
     ({ setId, setIndex, type, uri }: { setId?: string; setIndex?: number; uri?: string; type?: ImageSetSrcType }) => {
       setFormData(prev => {
         const updatedData = prev.map((set, index) => {
-          if ((setId && set?._id === setId) || setIndex === index) {
+          if (setIndex === index) {
             return { ...set, [type as never]: uri };
           }
           return set;
@@ -46,23 +70,26 @@ const FormCreateProductImagesComponent: React.FC<FormProductImagesProps> = ({
     },
     [onChangeState]
   );
-
+  // TODO need refactoring
   const handleRemoveImageFromSet = useCallback(
     ({ setId, setIndex, type }: { setId?: string; setIndex?: number; type?: ImageSetSrcType }) => {
       const confirmed =
         type !== ImageSetSrcType.img_preview || window.confirm('Буде видалено цілий сет фото.\nПродовжити?');
       if (!confirmed) return;
+
       setFormData(prev => {
         const updatedData = prev
           .map((set, index) => {
-            if ((setId && set._id === setId) || setIndex === index) {
+            if (setIndex === index) {
               return { ...set, [type as never]: '' };
             }
             return set;
           })
           .filter(set => {
             return set.img_preview;
-          });
+          })
+          .map((set, index) => ({ ...set, order: index + 1 }));
+
         onChangeState && onChangeState(updatedData);
         return updatedData;
       });
@@ -71,7 +98,13 @@ const FormCreateProductImagesComponent: React.FC<FormProductImagesProps> = ({
   );
 
   const renderImageSets = useMemo(() => {
-    return formData?.map((set, setIndex) => {
+    let dataForRender = formData;
+    try {
+      const sorted = formData.sort((a, b) => a?.order! - b?.order!);
+      dataForRender = sorted;
+    } catch (e) {}
+
+    return dataForRender?.map((set, setIndex) => {
       const renderPreviews = formAddImageSetTabs.map(el => {
         return (
           <ImagePreviewSmall
@@ -100,19 +133,48 @@ const FormCreateProductImagesComponent: React.FC<FormProductImagesProps> = ({
       });
 
       return (
-        <ImagesSetBox key={`imgs-set_${set?._id || setIndex}`} gap={6} fxDirection={'row'} fillWidth overflow={'auto'}>
+        <ImagesSetBox
+          key={`images-set_${set?._id || setIndex}`}
+          gap={6}
+          fxDirection={'row'}
+          fillWidth
+          overflow={'auto'}
+        >
+          {canEditOrder && (
+            <SlotOrderChanger
+              currentOrder={set?.order}
+              canMoveUp={set?.order > 1}
+              onMoveUpPress={() => {
+                check.isNum(set.order) && handleChangeOrder(set.order, -1);
+              }}
+              canMoveDown={set?.order < formData.length}
+              onMoveDownPress={() => {
+                check.isNum(set.order) && handleChangeOrder(set.order, +1);
+              }}
+            />
+          )}
+
           {renderPreviews}
         </ImagesSetBox>
       );
     });
-  }, [formData, handleAddImageToSet, handleRemoveImageFromSet, modalS]);
+  }, [canEditOrder, formData, handleAddImageToSet, handleChangeOrder, handleRemoveImageFromSet, modalS]);
 
   useEffect(() => {
     if (initialData) {
-      setFormData(initialData);
+      setFormData(initialData as Required<IProductImage>[]);
     }
     // eslint-disable-next-line
   }, []);
+
+  // useEffect(() => {
+  //   setFormData(prev => {
+  //     const updatedData = prev.map((set, index) => ({ ...set, order: index + 1 }));
+  //
+  //     onChangeState && onChangeState(updatedData);
+  //     return updatedData;
+  //   });
+  // }, []);
 
   return (
     <FlexBox fillWidth>
@@ -176,5 +238,35 @@ const ImagesSetBox = styled(FlexBox)`
     height: 0;
   }
 `;
+const SlotOrderChanger = ({
+  onMoveUpPress,
+  onMoveDownPress,
+  currentOrder,
+  canMoveDown,
+  canMoveUp,
+}: {
+  onMoveUpPress?: () => void;
+  onMoveDownPress?: () => void;
+  currentOrder?: number;
+  canMoveDown?: boolean;
+  canMoveUp?: boolean;
+  inverse?: boolean;
+}) => {
+  return (
+    <FlexBox
+      style={{ minWidth: 'fit-content' }}
+      fillHeight
+      gap={6}
+      justifyContent={'space-between'}
+      overflow={'hidden'}
+    >
+      <ButtonIcon variant={'onlyIcon'} icon={'SmallArrowUp'} disabled={!canMoveUp} onClick={onMoveUpPress} />
+      <Text $align={'center'} $weight={600}>
+        {currentOrder || 0}
+      </Text>
+      <ButtonIcon variant={'onlyIcon'} icon={'SmallArrowDown'} disabled={!canMoveDown} onClick={onMoveDownPress} />
+    </FlexBox>
+  );
+};
 
-export default FormCreateProductImagesComponent;
+export default FormProductImagesComponent;

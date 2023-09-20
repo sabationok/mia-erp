@@ -12,9 +12,13 @@ export interface IVariation extends IBase {
   author?: IUser;
   editor?: IUser;
 
+  label?: string;
+  sku?: string;
+  barCode?: string;
+
   product?: IProduct;
-  inventories?: IProductInventory[];
   price?: IPriceListItem;
+  inventories?: IProductInventory[];
 
   properties?: IPropertyValue[];
 

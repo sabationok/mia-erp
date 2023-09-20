@@ -97,7 +97,7 @@ const FormSelectProperties: React.FC<FormSelectPropertiesProps> = ({
               {prop.label}
             </Text>
 
-            <FlexBox fillWidth padding={'8px 0'} fxDirection={'row'} gap={6} flexWrap={'wrap'}>
+            <PropertyValuesList fillWidth padding={'8px 0'} gap={6} flexWrap={'wrap'} fxDirection={'row'}>
               {prop.childrenList?.map(value => {
                 const isActive = selectedIds.includes(value._id);
 
@@ -113,7 +113,7 @@ const FormSelectProperties: React.FC<FormSelectPropertiesProps> = ({
                   </ValueTag>
                 );
               })}
-            </FlexBox>
+            </PropertyValuesList>
           </PropertyBox>
         );
       });
@@ -143,14 +143,6 @@ const FormSelectProperties: React.FC<FormSelectPropertiesProps> = ({
       </TemplateBox>
 
       <Footer>
-        {/*<ExtraFooterBox>*/}
-        {/*  <FormAfterSubmitOptions*/}
-        {/*    clear={submitOptions.clearAfterSave}*/}
-        {/*    close={submitOptions.closeAfterSave}*/}
-        {/*    toggleOption={handleChangeAfterSubmit}*/}
-        {/*  />*/}
-        {/*</ExtraFooterBox>*/}
-
         <FlexBox padding={'6px 0'} fxDirection={'row'} gap={8} alignItems={'center'}>
           <ButtonIcon
             onClick={onClose}
@@ -208,17 +200,25 @@ const PropertyBox = styled(FlexBox)`
     border-top: 1px solid ${p => p.theme.sideBarBorderColor};
   }
 `;
+const PropertyValuesList = styled(FlexBox)<{ numColumns?: number }>`
+  //display: grid;
+  //grid-template-columns: repeat(auto-fill, 25%);
+  //
+  //@media screen and (max-width: 480px) {
+  //  grid-template-columns: repeat(auto-fill, 50%);
+  //}
+`;
 
 const Footer = styled(FlexBox)`
   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
-`;
-const ExtraFooterBox = styled(FlexBox)`
-  border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
 `;
 
 const ValueTag = styled(ButtonIcon)`
   flex-basis: 100px;
   min-width: max-content;
+
+  //width: 100%;
+  //min-width: unset;
 
   // border-radius: 2px;
   // border: 2px solid ${p => p.theme.accentColor.light};

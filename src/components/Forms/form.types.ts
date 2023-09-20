@@ -13,11 +13,11 @@ import { FormCreateTagProps } from './FormCreateTag';
 import { FormCreateMethodProps } from './FormCreateMetod';
 import { FormInviteUserProps } from './FormInviteUser';
 import { FormCreateOrderSlotItemProps } from './FormCreateOrder/FormCreateOrderSlot';
-import { FormCreateProductInventoryProps } from './FormCreateProductInventory';
 import { FormCreatePropertyProps } from './FormCreateProperty';
 import { FormCreateVariationProps } from './FormCreateVariation';
 import { FormCreateWarehouseProps } from './FormCreateWarehouse';
-import { FormCreateProductProps } from './FormCreateProduct/FormCreateProduct';
+import { FormCreateProductInventoryProps } from './FormCreateProductInventory';
+import { FormCreateProductProps } from './FormProduct/FormCreateProduct';
 import { FormVariationProps } from './FormVariation';
 
 export type {

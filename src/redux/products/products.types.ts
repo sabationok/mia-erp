@@ -71,6 +71,7 @@ export interface IProductImage extends Partial<IBase> {
   img_1x: string;
   img_2x: string;
   webp: string;
+  order: number;
 }
 
 export interface IProductMeasurement {

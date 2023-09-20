@@ -10,6 +10,8 @@ import { formatDateForInputValue } from './dateTime.utils';
 import { enumToArray } from './fabrics';
 import { createTableTitlesFromTemplate } from './tables';
 
+export * as check from './check';
+
 export {
   founder,
   founderByDataPath,
