@@ -126,7 +126,7 @@ export const ImagesCell: RenderOverviewCellComponent = ({ data, cell, setOverlay
   }, [data?.images]);
 
   return (
-    <Cell style={{ minHeight: 'max-content' }}>
+    <Cell style={{ minHeight: 'max-content', padding: 0 }}>
       <FlexBox fxDirection={'row'} justifyContent={'space-between'}>
         <CellText $isTitle $size={12}>
           {cell?.title}

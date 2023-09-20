@@ -57,33 +57,6 @@ const DirListItem: React.FC<DirListItemProps> = props => {
     setState(p => ({ ...p, [key]: !p[key] }));
   };
 
-  // const stateActionsMap: Record<keyof DirListItemState, ((id: string, status: boolean) => void) | undefined> = {
-  //   archived: onChangeArchiveStatus,
-  //   disabled: onChangeDisableStatus,
-  //   deleted: onDelete,
-  // };
-  //
-  // const registerStateAction = (name: keyof DirListItemState, handlerKey: 'onClick' | 'onChange' = 'onClick') => {
-  //   const action = stateActionsMap[name];
-  //
-  //   const props = {
-  //     disabled: !action,
-  //     isActive: !state[name],
-  //     [handlerKey]: () => {
-  //       setState(prev => {
-  //         const newState = { ...prev, [name]: !prev[name] };
-  //         action && action(item?._id, !prev[name]);
-  //         return newState;
-  //       });
-  //     },
-  //   };
-  //
-  //   return props;
-  // };
-  // const isTreeItem = useMemo(() => {
-  //   return availableLevels > 1;
-  // }, [availableLevels]);
-
   const canHasChildren = useMemo(() => {
     return !isUndefined(availableLevels) && !isUndefined(currentLevel)
       ? availableLevels > currentLevel + 1

@@ -52,17 +52,19 @@ export const getDirInTreeActionsCreator = (
             type,
             dirType,
             create: true,
+            defaultState: { dirType, type },
             onSubmit: (data, o) => {
               console.log('onCreateParent', data);
-              service
-                .create({
-                  data: { dirType, data },
-                  onSuccess: rd => {
-                    o?.closeAfterSave && modal?.onClose();
-                    toast.success(`Created: ${data.label}`);
-                  },
-                })
-                .then();
+              dirType &&
+                service
+                  .create({
+                    data: { dirType, data },
+                    onSuccess: rd => {
+                      o?.closeAfterSave && modal?.onClose();
+                      toast.success(`Created: ${data.label}`);
+                    },
+                  })
+                  .then();
             },
           } as ModalChildrenProps[Modals.FormCreateDirTreeComp],
         });
@@ -75,6 +77,7 @@ export const getDirInTreeActionsCreator = (
             type,
             parent,
             dirType,
+            defaultState: { dirType, type, parent },
             create: true,
             onSubmit: (data, o) => {
               service

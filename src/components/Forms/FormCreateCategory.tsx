@@ -14,7 +14,7 @@ import { useAppForm } from '../../hooks';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 
 export interface FormCreateCategoryProps
-  extends DirectoriesFormProps<ApiDirType.CATEGORIES_PROD, ICategory, ICategoryFormData> {}
+  extends DirectoriesFormProps<ApiDirType.CATEGORIES_PROD & ApiDirType.CATEGORIES_TR, ICategory, ICategoryFormData> {}
 
 const validation = yup.object().shape({
   label: yup.string().required(),
@@ -27,6 +27,8 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
   edit,
   defaultState,
   onSubmit,
+  dirType,
+  parent,
   ...props
 }) => {
   const {
@@ -43,7 +45,7 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
   });
 
   const onValid = (data: ICategoryFormData) => {
-    console.log('FormCreateCategory on valid', data, onSubmit);
+    console.log('FormCreateCategory on valid', { defaultState, data });
 
     onSubmit &&
       onSubmit(data, {
@@ -71,7 +73,7 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
 
         {defaultState?.parent?._id && (
           <InputLabel label={t('parentItem')} direction={'vertical'} error={errors.type} disabled>
-            <InputText defaultValue={defaultState?.parent?.label} disabled />
+            <InputText {...register('parent.label')} disabled />
           </InputLabel>
         )}
 

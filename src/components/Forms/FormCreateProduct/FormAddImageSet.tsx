@@ -90,6 +90,7 @@ const FormAddImageSet = ({
                 onChange={handleInputChange}
                 placeholder={'Впишіть або вставте посилання на зображення'}
                 required={current?.required}
+                autoFocus
               />
             </InputLabel>
 

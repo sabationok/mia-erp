@@ -22,9 +22,10 @@ export interface UpdateDirItemThunkSubmitData<DTO = any> extends GetAllByDirType
   data: DTO;
 }
 
-export interface DirThunkBaseReturnData<T = any> {
+export interface DirThunkBaseReturnData<Data = any, Meta = any> {
   dirType?: ApiDirType;
-  data: T;
+  data: Data;
+  meta?: Meta;
 }
 
 export const getAllDirectoryItemsThunk = createAsyncThunk<
@@ -49,18 +50,25 @@ export const getAllDirectoryItemsThunk = createAsyncThunk<
 export const createDirectoryItemThunk = createAsyncThunk<
   DirThunkBaseReturnData<IBaseDirItem[]>,
   ThunkPayload<CreateDirItemThunkSubmitData<IBaseDirItem>, DirThunkBaseReturnData<IBaseDirItem[]>>
->('directories/createDirectoryItemThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
+>('directories/createDirectoryItemThunk', async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
+  onLoading && onLoading(true);
+
+  console.log('createDirectoryItemThunk', data);
   try {
+    if (!data?.dirType) {
+      throw 'Not dir type passed to thunk';
+    }
+
     const res = await DirectoriesApi.create(data as CreateDirItemThunkSubmitData);
 
     if (res && onSuccess) {
       onSuccess({ dirType: data?.dirType, data: res.data.data });
     }
-
+    onLoading && onLoading(false);
     return { dirType: data?.dirType, data: res.data.data };
   } catch (error) {
     onError && onError(error);
-
+    onLoading && onLoading(false);
     return thunkAPI.rejectWithValue(axiosErrorCheck(error));
   }
 });
@@ -68,17 +76,21 @@ export const createDirectoryItemThunk = createAsyncThunk<
 export const updateDirectoryItemThunk = createAsyncThunk<
   DirThunkBaseReturnData<IBaseDirItem[]>,
   ThunkPayload<UpdateDirItemThunkSubmitData, DirThunkBaseReturnData<IBaseDirItem[]>>
->('directories/updateDirectoryItemThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
+>('directories/updateDirectoryItemThunk', async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
+  onLoading && onLoading(true);
+
   try {
     const res = await DirectoriesApi.update<IBaseDirItem>(data as UpdateDirItemThunkSubmitData);
 
     if (res && onSuccess) {
       onSuccess({ dirType: data?.dirType, data: res.data.data });
     }
+    onLoading && onLoading(false);
 
     return { dirType: data?.dirType, data: res.data.data };
   } catch (error) {
     onError && onError(error);
+    onLoading && onLoading(false);
 
     return thunkAPI.rejectWithValue(axiosErrorCheck(error));
   }
