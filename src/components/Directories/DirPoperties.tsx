@@ -16,13 +16,13 @@ import FlexBox from '../atoms/FlexBox';
 import { Text } from '../atoms/Text';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { OnlyUUID } from '../../redux/global.types';
-import Switch from '../atoms/Switch';
 import { OnCheckBoxChangeHandler } from '../TableList/tableTypes.types';
 import { productsFilterOptions } from '../../data/directories.data';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useProductsSelector } from '../../redux/selectors.store';
 import { IProperty, IPropertyDto } from '../../redux/products/properties.types';
 import { ToastService } from '../../services';
+import Switch from 'components/atoms/Switch';
 
 type LevelType = { isGroup?: boolean; isProperty?: boolean; isValue?: boolean };
 
@@ -133,13 +133,14 @@ export interface DiPropertiesRenderItemProps {
 }
 const DirPropertyGroup: React.FC<DiPropertiesRenderItemProps> = ({
   item,
+
   onUpdate,
   onCreateChild,
   onDelete,
   onCreateValue,
   onChangeSelectableStatus,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const theme = useTheme();
 
   const renderChildren = useMemo(() => {
@@ -156,16 +157,15 @@ const DirPropertyGroup: React.FC<DiPropertiesRenderItemProps> = ({
   return (
     <FlexBox>
       <FlexBox
-        gap={4}
-        padding={'6px 8px'}
+        gap={8}
+        padding={'4px 6px'}
         fxDirection={'row'}
         style={{
-          borderBottomStyle: 'solid',
-          borderBottomColor: theme.sideBarBorderColor,
-          borderBottomWidth: 1,
+          borderTop: `1px solid ${theme.sideBarBorderColor}`,
+          borderBottom: isOpen ? `1px solid ${theme.sideBarBorderColor}` : '',
         }}
       >
-        <FlexBox gap={6} fillHeight alignItems={'center'} flex={1} padding={'0 8px'} fxDirection={'row'}>
+        <FlexBox gap={6} fillHeight alignItems={'center'} fxDirection={'row'}>
           <ButtonIcon
             variant={'onlyIcon'}
             icon={'plus'}
@@ -186,21 +186,21 @@ const DirPropertyGroup: React.FC<DiPropertiesRenderItemProps> = ({
             }}
           />
           <ButtonIcon variant={'onlyIcon'} icon={'archive'} size={'26px'} iconSize={'24px'} />
-
-          <Text $weight={600} $size={18} $align={'right'} style={{ flex: 1 }}>
-            {item.label}
-          </Text>
         </FlexBox>
 
         <ButtonIcon
-          variant={'onlyIcon'}
-          icon={isOpen ? 'SmallArrowDown' : 'SmallArrowLeft'}
-          size={'26px'}
-          iconSize={'24px'}
-          onClick={() => {
-            setIsOpen(p => !p);
-          }}
-        />
+          variant={'def'}
+          endIcon={isOpen ? 'SmallArrowDown' : 'SmallArrowLeft'}
+          endIconSize={'24px'}
+          onClick={() => setIsOpen(p => !p)}
+          flex={1}
+          justifyContent={'space-between'}
+        >
+          <Text $weight={600} $size={16} $align={'left'}>
+            {item.label}
+            {` (${item.childrenList?.length || 0})`}
+          </Text>
+        </ButtonIcon>
       </FlexBox>
 
       {item.childrenList && item.childrenList?.length > 0 && (
@@ -211,6 +211,7 @@ const DirPropertyGroup: React.FC<DiPropertiesRenderItemProps> = ({
     </FlexBox>
   );
 };
+
 const DirPropertyItem: React.FC<DiPropertiesRenderItemProps> = ({
   item,
   index,
@@ -220,10 +221,13 @@ const DirPropertyItem: React.FC<DiPropertiesRenderItemProps> = ({
   onCreateValue,
 }) => {
   const [isSelectable, setIsSelectable] = useState(item?.isSelectable);
-
+  const [isOpen, setIsOpen] = useState(false);
   const onChange: OnCheckBoxChangeHandler = e => {
     setIsSelectable(e.checked);
     onChangeSelectableStatus && onChangeSelectableStatus(item?._id, e.checked);
+  };
+  const handleOpen = () => {
+    setIsOpen(p => !p);
   };
 
   const renderChildren = useMemo(() => {
@@ -236,17 +240,46 @@ const DirPropertyItem: React.FC<DiPropertiesRenderItemProps> = ({
       />
     ));
   }, [item.childrenList, onCreateValue, onDelete, onUpdate]);
-  return (
-    <FlexBox fxDirection={'row'} fillWidth gap={8}>
-      <StPropertyItem flex={1} gap={4}>
-        <FlexBox fillWidth padding={'4px'}>
-          <FlexBox fillWidth fxDirection={'row'} gap={4} alignItems={'center'}>
-            <Text style={{ flex: 1 }} $weight={600}>
-              {item?.label}
-            </Text>
-          </FlexBox>
-        </FlexBox>
 
+  return (
+    <StPropertyItem>
+      <StPropertyHeader fillWidth gap={6} padding={'4px 8px'} fxDirection={'row'} justifyContent={'space-between'}>
+        <ButtonIcon
+          variant={'defNoEffects'}
+          icon={isOpen ? 'SmallArrowDown' : 'SmallArrowRight'}
+          iconSize={'24px'}
+          onClick={handleOpen}
+          flex={1}
+        >
+          <Text style={{ flex: 1 }} $weight={600}>
+            {item?.label}
+          </Text>
+        </ButtonIcon>
+
+        <FlexBox fxDirection={'row'}>
+          <ButtonIcon
+            variant={'onlyIcon'}
+            icon={'plus'}
+            size={'26px'}
+            iconSize={'24px'}
+            onClick={() => {
+              onCreateValue && onCreateValue({ parent: item });
+            }}
+          />
+          <ButtonIcon
+            variant={'onlyIcon'}
+            icon={'edit'}
+            size={'26px'}
+            iconSize={'24px'}
+            onClick={() => {
+              onUpdate && onUpdate({ _id: item._id, data: item }, { isProperty: true });
+            }}
+          />
+          <ButtonIcon variant={'onlyIcon'} icon={'archive'} size={'26px'} iconSize={'24px'} disabled />
+        </FlexBox>
+      </StPropertyHeader>
+
+      <FlexBox fillWidth overflow={'hidden'} maxHeight={isOpen ? '' : '0'}>
         <StPropertyItemContent fillWidth gap={4} padding={'8px 4px'} flex={1}>
           {item.childrenList && item.childrenList?.length > 0 ? (
             renderChildren
@@ -257,34 +290,12 @@ const DirPropertyItem: React.FC<DiPropertiesRenderItemProps> = ({
           )}
         </StPropertyItemContent>
 
-        <FlexBox fxDirection={'row'} gap={4} padding={'0 4px'} alignItems={'center'}>
+        <FlexBox fxDirection={'row'} gap={4} padding={'4px 8px'} alignItems={'center'}>
           <Switch size={'26px'} checked={isSelectable} onChange={onChange} />
           <Text $size={12}>{'Доступно для формування варіацій'}</Text>
         </FlexBox>
-      </StPropertyItem>
-
-      <FlexBox gap={8}>
-        <ButtonIcon
-          variant={'onlyIcon'}
-          icon={'plus'}
-          size={'26px'}
-          iconSize={'24px'}
-          onClick={() => {
-            onCreateValue && onCreateValue({ parent: item });
-          }}
-        />
-        <ButtonIcon
-          variant={'onlyIcon'}
-          icon={'edit'}
-          size={'26px'}
-          iconSize={'24px'}
-          onClick={() => {
-            onUpdate && onUpdate({ _id: item._id, data: item }, { isProperty: true });
-          }}
-        />
-        <ButtonIcon variant={'onlyIcon'} icon={'archive'} size={'26px'} iconSize={'24px'} disabled />
       </FlexBox>
-    </FlexBox>
+    </StPropertyItem>
   );
 };
 
@@ -294,8 +305,15 @@ const StPropertyItem = styled(FlexBox)`
 
   overflow: hidden;
 `;
+const StPropertyHeader = styled(FlexBox)`
+  position: relative;
+  overflow: hidden;
+`;
 
 const StPropertyItemContent = styled(FlexBox)`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
   border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
 `;
@@ -305,6 +323,7 @@ const DirPropertyValue: React.FC<DiPropertiesRenderItemProps> = ({ item, index, 
   return (
     <DirPropertyValueBox
       fxDirection={'row'}
+      flex={'1 1 30%'}
       gap={6}
       alignItems={'stretch'}
       style={{ borderRadius: 4, backgroundColor: theme.accentColor.light }}
@@ -340,22 +359,26 @@ const DirPropertyValue: React.FC<DiPropertiesRenderItemProps> = ({ item, index, 
 };
 
 const DirPropertyValueBox = styled(FlexBox)`
+  position: relative;
+
   overflow: hidden;
-  height: 36px;
+  height: 32px;
 
   &:hover {
     & .actions {
-      right: 0;
-      transform: translateX(0);
+      transform: translateX(-100%);
     }
   }
 `;
 const DirPropertyValueActions = styled(FlexBox)`
+  position: absolute;
+  top: 0;
+  left: 100%;
+  z-index: 2;
+
   border-radius: 4px;
   background-color: ${p => p.theme.modalBackgroundColor};
   border: 2px solid ${p => p.theme.accentColor.light};
-
-  transform: translateX(100%);
 
   transition: all ${p => p.theme.globals.timingFunctionMain};
 `;

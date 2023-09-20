@@ -1,10 +1,24 @@
 import React, { memo } from 'react';
 import sprite, { IconIdType } from 'img/sprite';
 import styled, { css, DefaultTheme, FlattenInterpolation, ThemeProps } from 'styled-components';
+import { Property } from 'csstype';
 
 type TextTransform = 'uppercase' | 'lowercase' | 'capitalize' | 'none';
 
-interface ButtonProps {
+interface ButtonIconStyleProps {
+  flex?: Property.Flex;
+  alignItems?: Property.AlignItems;
+  justifyContent?: Property.JustifyContent;
+  gap?: Property.Gap;
+  padding?: Property.Padding;
+  margin?: Property.Margin;
+  // maxWidth?: string;
+  // maxHeight?: string;
+  // width?: Property.Width;
+  // height?: Property.Height;
+  // border?: Property.Border;
+}
+interface ButtonProps extends ButtonIconStyleProps {
   size?: string;
   variant: ButtonIconVariant;
   padding?: string;
@@ -93,10 +107,12 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
 };
 
 const StyledButtonIcon = styled.button<ButtonIconProps>`
+  flex: ${p => p?.flex};
+
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  align-items: ${p => p?.alignItems || 'center'};
+  justify-content: ${p => p?.justifyContent || 'center'};
+  gap: ${p => p?.gap || 0}px;
 
   text-align: center;
   font-size: 12px;
@@ -107,7 +123,8 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
   fill: currentColor;
   text-transform: ${({ textTransform = 'none' }) => textTransform};
 
-  padding: 0;
+  padding: ${p => p?.padding || 0};
+  margin: ${p => p?.margin || 0};
 
   cursor: pointer;
 
