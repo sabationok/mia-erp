@@ -44,8 +44,9 @@ export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
   {
     top: { name: t('label'), align: 'start', getData: rd => rd?.label },
     // bottom: { name: t('sku'), align: 'start', getData: rd => rd?.sku },
+    getImgPreview: pr => (pr.images ? pr.images[0]?.img_preview : undefined),
     width: '200px',
-    action: 'valueByPath',
+    action: 'doubleDataWithAvatar',
   },
   {
     top: { name: t('sku'), align: 'start', getData: rd => rd?.sku },

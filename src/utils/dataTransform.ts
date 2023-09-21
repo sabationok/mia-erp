@@ -96,6 +96,7 @@ export function createDataForReq<
   options?: {
     dateToNumberPath?: keyof IncomeDataType | string;
     amountToNumberPath?: keyof IncomeDataType | string;
+    checkArrayPath?: keyof IncomeDataType | string;
   }
 ): Partial<Omit<OutDataType, keyof IncomeDataType>> {
   let outData: Partial<OutDataType> = {};
@@ -108,11 +109,11 @@ export function createDataForReq<
     const value = incomeData[key];
     if (!value) return '';
 
-    if (options?.dateToNumberPath && key === options?.dateToNumberPath && typeof value === 'string') {
+    if (options?.dateToNumberPath && key === options?.dateToNumberPath) {
       outData[key] = new Date(value).valueOf() as any;
       return '';
     }
-    if (options?.amountToNumberPath && key === options?.amountToNumberPath && typeof value === 'string') {
+    if (options?.amountToNumberPath && key === options?.amountToNumberPath) {
       outData[key] = (Number(value) || 0) as any;
       return '';
     }
@@ -121,10 +122,17 @@ export function createDataForReq<
       if ('value' in value) outData[key] = value?.value;
       return '';
     }
+    if (Array.isArray(value) && value.length > 0) {
+      console.log({ key, value });
+      outData[key] = value as any;
+      return '';
+    }
 
     outData[key] = value as any;
     return '';
   });
+
+  console.log('outData', outData);
   return outData;
 }
 

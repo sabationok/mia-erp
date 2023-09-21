@@ -51,11 +51,12 @@ const SimpleDataCell: React.FC<Omit<IDataCellProps, 'subContent'>> = ({ width, c
   );
 };
 
-const DoubleDataWithAvatarCell: React.FC<IDataCellProps> = ({ width, content, subContent }) => {
+const DoubleDataWithAvatarCell: React.FC<IDataCellProps> = ({ width, content, subContent, imgUrl }) => {
   return (
     <CellDoubleDataWithAvatar style={{ width }}>
       <AvatarBox>
         <Avatar
+          src={imgUrl}
           shape={'square'}
           style={{ borderRadius: '2px' }}
           icon={

@@ -87,7 +87,7 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
           const currentId = ctx.selectedRow?._id;
 
           return [
-            { icon: 'refresh', type: 'onlyIcon' },
+            { icon: 'refresh', type: 'onlyIcon', onClick: () => loadCurrentData(current) },
             {
               icon: 'delete',
               type: 'onlyIcon',

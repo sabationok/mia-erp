@@ -104,6 +104,9 @@ export const langUa = {
   closeAfterSave: 'Закрити після збереження',
   clearAfterSave: 'Очистити після збереження',
 
+  afterSave: 'Після збереження',
+  clear: 'Очистити',
+  close: 'Закрити',
   // Transaction form
   countIn: 'Рахунок IN',
   subCountIn: 'Суб-рахунок IN',

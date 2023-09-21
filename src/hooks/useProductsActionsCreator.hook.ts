@@ -97,7 +97,6 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
           if (!res?.data.data) {
             return;
           }
-          console.log(res?.data.data);
           const formData = createProductFormData(res?.data.data);
 
           const modal = modals.handleOpenModal({
@@ -108,12 +107,12 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
               defaultState: formData,
 
               onSubmit: (data, o) => {
-                service.create({
-                  data,
-                  onSuccess(d) {
-                    o?.closeAfterSave && modal?.onClose();
-                  },
-                });
+                // service.create({
+                //   data,
+                //   onSuccess(d) {
+                //     o?.closeAfterSave && modal?.onClose();
+                //   },
+                // });
               },
               fillHeight: true,
             },

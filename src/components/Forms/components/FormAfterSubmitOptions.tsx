@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
 import CheckBox from '../../TableList/TebleCells/CellComponents/CheckBox';
+import { Text } from '../../atoms/Text';
 
 export interface FormAfterOptionsProps extends UseAppFormSubmitOptions {
   close?: boolean;
@@ -32,49 +33,61 @@ const FormAfterSubmitOptions: React.FC<FormAfterOptionsProps> = ({ toggleOption,
   };
 
   return (
-    <Container fillWidth gap={4} padding={'4px 8px'} alignItems={'flex-start'}>
-      <Label
-        gap={8}
-        fxDirection={'row'}
-        onClick={() => {
-          toggleStateOption('clearAfterSave');
-        }}
-      >
-        <CheckBox
-          size={'12px'}
-          checked={clearAfterSave}
-          name={'clearAfterSave'}
-          onChange={() => {
+    <Container fillWidth gap={4} padding={'4px 8px'} alignItems={'center'}>
+      <Text>{`${t('afterSave')}: `}</Text>
+
+      <FlexBox fxDirection={'row'} gap={8} flex={1}>
+        <Label
+          gap={8}
+          flex={1}
+          fxDirection={'row'}
+          justifyContent={'center'}
+          onClick={() => {
             toggleStateOption('clearAfterSave');
           }}
-        />
+        >
+          <CheckBox
+            size={'12px'}
+            checked={clearAfterSave}
+            name={'clearAfterSave'}
+            onChange={() => {
+              toggleStateOption('clearAfterSave');
+            }}
+          />
 
-        <div>{t('clearAfterSave')}</div>
-      </Label>
-      <Label
-        gap={8}
-        fxDirection={'row'}
-        onClick={() => {
-          toggleStateOption('closeAfterSave');
-        }}
-      >
-        <CheckBox
-          size={'12px'}
-          checked={closeAfterSave}
-          name={'closeAfterSave'}
-          onChange={() => {
+          <div>{t('clear')}</div>
+        </Label>
+        <Label
+          gap={8}
+          flex={1}
+          fxDirection={'row'}
+          justifyContent={'center'}
+          onClick={() => {
             toggleStateOption('closeAfterSave');
           }}
-        />
+        >
+          <CheckBox
+            size={'12px'}
+            checked={closeAfterSave}
+            name={'closeAfterSave'}
+            onChange={() => {
+              toggleStateOption('closeAfterSave');
+            }}
+          />
 
-        <div>{t('closeAfterSave')}</div>
-      </Label>
+          <div>{t('close')}</div>
+        </Label>
+      </FlexBox>
     </Container>
   );
 };
 
 const Container = styled(FlexBox)`
-  min-height: 40px;
+  flex-direction: column;
+
+  @media screen and (min-width: 480px) {
+    flex-direction: row;
+  }
 `;
 
 const Label = styled(FlexBox)`
