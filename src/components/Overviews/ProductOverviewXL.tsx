@@ -117,8 +117,8 @@ const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }
           variant={'onlyIcon'}
           size={'36px'}
           iconSize={'85%'}
-          disabled={!p?.onHide}
           icon={p?.product?.visible ? 'visibilityOn' : 'visibilityOff'}
+          disabled={!p?.onHide}
           onClick={p?.onHide}
         />
 

@@ -68,6 +68,8 @@ const PageProductOverviewLeftSide: React.FC<PageProductOverviewLeftSideProps> = 
                   }
                   const formData = createProductFormData(page?.currentProduct);
 
+                  console.log('PageProductOverviewLeftSide', formData);
+
                   const m = modalS.handleOpenModal({
                     Modal: Modals.FormCreateProduct,
                     props: {

@@ -19,21 +19,6 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
   const state = useProductsSelector();
   const modals = useModalProvider();
 
-  // const onSubmitCreateWrapper = useCallback(
-  //   (onCloseModal: () => void) => {
-  //     return (data: ITransactionReqData, options: AfterFormSubmitOptions,) => {
-  //       service.create({
-  //         data,
-  //         onSuccess(d) {
-  //           toast.success(`Сторено транзакцію на суму: ${d.amount}`);
-  //           options?.close && onCloseModal();
-  //         },
-  //       });
-  //     };
-  //   },
-  //   [service]
-  // );
-
   return useCallback(
     ctx => [
       {
@@ -64,7 +49,7 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
           const modal = modals.handleOpenModal({
             ModalChildren: FormCreateProduct,
             modalChildrenProps: {
-              title: 'Копіювати',
+              title: 'Змінити',
               _id: ctx?.selectedRow?._id,
               filterOptions: productsFilterOptions,
               defaultState: formData,
@@ -107,12 +92,12 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
               defaultState: formData,
 
               onSubmit: (data, o) => {
-                // service.create({
-                //   data,
-                //   onSuccess(d) {
-                //     o?.closeAfterSave && modal?.onClose();
-                //   },
-                // });
+                service.create({
+                  data,
+                  onSuccess(d) {
+                    o?.closeAfterSave && modal?.onClose();
+                  },
+                });
               },
               fillHeight: true,
             },
@@ -157,8 +142,25 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
       },
     ],
 
-    [modals, navigate, service, state.products]
+    [modals, navigate, service]
   );
 };
 
 export default useProductsActionsCreator;
+
+// const currentProduct=useProductsSelector().currentProduct
+
+// const onSubmitCreateWrapper = useCallback(
+//   (onCloseModal: () => void) => {
+//     return (data: ITransactionReqData, options: AfterFormSubmitOptions,) => {
+//       service.create({
+//         data,
+//         onSuccess(d) {
+//           toast.success(`Сторено транзакцію на суму: ${d.amount}`);
+//           options?.close && onCloseModal();
+//         },
+//       });
+//     };
+//   },
+//   [service]
+// );
