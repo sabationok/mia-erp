@@ -35,6 +35,54 @@ export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) =>
     </Cell>
   );
 };
+export const CategoriesCell: RenderOverviewCellComponent = ({ cell, data }) => {
+  const renderItems = useMemo(() => {
+    return data?.categories?.map((c, index) => {
+      return (
+        <CategoryItem key={`cat_${c._id}`}>{`${c?.parent?.label && `${c?.parent?.label}/`}${c?.label}`}</CategoryItem>
+      );
+    });
+  }, [data?.categories]);
+
+  return (
+    <Cell style={{ minHeight: 'max-content' }}>
+      <CellText $isTitle $size={12}>
+        {cell?.title}
+      </CellText>
+
+      <FlexBox
+        fillWidth
+        fxDirection={'row'}
+        justifyContent={'flex-end'}
+        flexWrap={'wrap'}
+        // overflow={'hidden'}
+        gap={8}
+        style={{ minHeight: 'max-content' }}
+      >
+        {renderItems}
+      </FlexBox>
+    </Cell>
+  );
+};
+
+const CategoryItem = styled(FlexBox)`
+  align-items: center;
+  justify-content: center;
+
+  flex-direction: row;
+
+  padding: 4px 12px;
+
+  font-weight: 500;
+  font-size: 12px;
+  color: ${p => p.theme.fontColorSidebar};
+
+  min-height: 28px;
+
+  border-radius: 2px;
+  background-color: ${p => p.theme.fieldBackgroundColor};
+  //border: 1px solid ${p => p.theme.accentColor.base};
+`;
 export const VariationsTemplateCell: RenderOverviewCellComponent = ({ cell, setOverlayContent, data }) => {
   return (
     <Cell padding={'4px'}>
@@ -50,7 +98,7 @@ export const VariationsTemplateCell: RenderOverviewCellComponent = ({ cell, setO
               setOverlayContent({ RenderComponent: FormCreateVariation, props: { create: true } });
             }}
           >
-            {'Створити'}
+            {'Перегляд'}
           </OverlayOpenButton>
         )}
       </FlexBox>
@@ -83,17 +131,9 @@ const OverviewPropertyComponent: React.FC<OverviewPropertyComponentProps> = ({ i
       ?.filter(el => selectedItems?.includes(el._id))
       ?.map((value, index) => {
         return (
-          <FlexBox
-            key={`prop-v-${value._id}`}
-            padding={'4px 12px'}
-            border={`1px solid ${theme.sideBarBorderColor}`}
-            background={theme.fieldBackgroundColor}
-            borderRadius={'4px'}
-            flex={1}
-            maxWidth={'130px'}
-          >
-            <Text $size={12}>{value.label}</Text>
-          </FlexBox>
+          <CategoryItem key={`prop-v-${value._id}`} maxWidth={'130px'}>
+            {value.label}
+          </CategoryItem>
         );
       });
   }, [item.childrenList, selectedItems, theme.sideBarBorderColor, theme.fieldBackgroundColor]);
@@ -141,7 +181,7 @@ export const ImagesCell: RenderOverviewCellComponent = ({ data, cell, setOverlay
         </OverlayOpenButton>
       </FlexBox>
 
-      <FlexBox gap={2} height={'max-content'} padding={'8px 0'}>
+      <FlexBox gap={2} height={'max-content'} padding={'8px 0'} style={{ minHeight: 26 }}>
         {renderImageSets}
       </FlexBox>
     </Cell>

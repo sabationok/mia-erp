@@ -118,18 +118,18 @@ export function createDataForReq<
       return '';
     }
     if (value && typeof value === 'object') {
-      if ('_id' in value) outData[key] = { _id: value?._id } as any;
-      if ('value' in value) outData[key] = value?.value;
-      return '';
-    }
-    if (Array.isArray(value) && value.length > 0) {
-      console.log({ key, value });
-      outData[key] = value as any;
+      if ('_id' in value) return (outData[key] = { _id: value?._id } as any);
+      if ('value' in value) return (outData[key] = value?.value);
+      if (Array.isArray(value) && value.length > 0) {
+        console.log('createDataForReq isArray', { key, value });
+        outData[key] = value as any;
+        return '';
+      }
       return '';
     }
 
     outData[key] = value as any;
-    return '';
+    return value;
   });
 
   console.log('outData', outData);

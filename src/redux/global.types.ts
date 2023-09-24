@@ -6,6 +6,7 @@ import { ApiDirType } from './APP_CONFIGS';
 export interface OnlyUUID {
   _id: string;
 }
+export type ArrayUUID = Array<string>;
 
 export interface IBase extends OnlyUUID {
   createdAt?: Date | string;
@@ -13,13 +14,13 @@ export interface IBase extends OnlyUUID {
   deletedAt?: Date | string;
 }
 
-export interface IFormDataValueWithUUID extends OnlyUUID {
+export interface IFormDataValueWithUUID<DirType extends ApiDirType = any> extends OnlyUUID {
   label?: string;
   name?: string;
   secondName?: string;
-  dirType?: ApiDirType;
+  dirType?: DirType;
   email?: string;
-  parent?: Omit<IFormDataValueWithUUID, 'parent'>;
+  parent?: Omit<IFormDataValueWithUUID<DirType>, 'parent'>;
 }
 export interface IBaseWithPeriod extends IBase {
   timeFrom?: string | number | Date | null;

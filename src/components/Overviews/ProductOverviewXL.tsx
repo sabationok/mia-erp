@@ -211,10 +211,9 @@ const productOverviewCells: ProductOverviewCell[] = [
   },
 
   {
-    title: 'Категорія',
-    CellComponent: Cells.OverviewTextCell,
-    getValue: product => `${product?.category?.parent?.label || ''}/${product?.category?.label}`,
-    gridArea: 'category',
+    title: 'Категорії',
+    CellComponent: Cells.CategoriesCell,
+    gridArea: 'categories',
   },
   {
     title: 'Бренд',
@@ -234,10 +233,10 @@ const productOverviewCells: ProductOverviewCell[] = [
     CellComponent: Cells.OverviewTextCell,
     getValue: product => {
       const arr = [
+        `${t('unit')}: ${product?.measurement?.unit || 0}`,
         `${t('min')}: ${product?.measurement?.min || 0}`,
         `${t('max')}: ${product?.measurement?.max || 0}`,
         `${t('step')}: ${product?.measurement?.step || 0}`,
-        `${t('units')}: ${product?.measurement?.units || 0}`,
       ];
 
       return arr.join(' | ');

@@ -138,6 +138,7 @@ export const langUa = {
   expireAt: 'Дійсне до',
 
   manufacturer: 'Виробник',
+  unit: 'Одиниця',
   min: 'MIN',
   max: 'MAX',
   step: 'Крок',

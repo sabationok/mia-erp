@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
@@ -10,13 +10,19 @@ import FlexBox from '../../atoms/FlexBox';
 import t from '../../../lang';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { useAppForm } from '../../../hooks';
-import { IProductFormData, IProductReqData, ProductFilterOpt } from '../../../redux/products/products.types';
+import {
+  IProductFormData,
+  IProductMeasurement,
+  IProductReqData,
+  ProductFilterOpt,
+} from '../../../redux/products/products.types';
 import { createDataForReq } from '../../../utils/dataTransform';
 import FormAfterSubmitOptions from '../components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { IVariationTemplate } from '../../../redux/products/properties.types';
 import FormProductStaticProperties from './FormProductStaticProperties';
 import FormProductImagesComponent from './FormProductImagesComponent';
+import FormProductCategories from './FormProductCategories';
 
 export interface FormCreateProductProps extends Omit<ModalFormProps<any, any, IProductFormData>, 'onSubmit'> {
   copy?: boolean;
@@ -28,6 +34,13 @@ export interface FormCreateProductProps extends Omit<ModalFormProps<any, any, IP
   defaultState?: IProductFormData;
   addInputs?: boolean;
 }
+
+const measurementInputs: { label?: string; placeholder?: string; name: keyof IProductMeasurement }[] = [
+  { name: 'unit', label: t('unit'), placeholder: t('unit') },
+  { name: 'min', label: t('min'), placeholder: t('min') },
+  { name: 'max', label: t('max'), placeholder: t('max') },
+  { name: 'step', label: t('step'), placeholder: t('step') },
+];
 
 const FormCreateProduct: React.FC<FormCreateProductProps> = ({
   edit,
@@ -55,6 +68,10 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
   } = useAppForm<IProductFormData>({
     defaultValues: defaultState,
   });
+
+  useEffect(() => {
+    console.log('formValues', formValues);
+  }, [formValues]);
   const categories = useMemo(() => {
     return directories[ApiDirType.CATEGORIES_PROD].filter(el => el.type === formValues.type);
   }, [directories, formValues.type]);
@@ -71,7 +88,7 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
 
     onSubmit &&
       onSubmit(
-        { _id, data: productForSubmit },
+        { _id, data: { ...productForSubmit, categories: submitData.categories?.map(el => el._id) } },
         {
           closeAfterSave,
           clearAfterSave,
@@ -97,18 +114,32 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
           <InputText placeholder={t('label')} {...register('label')} required autoFocus />
         </InputLabel>
 
-        <InputLabel label={t('sku')} direction={'vertical'} error={errors.sku}>
-          <InputText placeholder={t('sku')} {...register('sku', { max: 120 })} />
-        </InputLabel>
+        <FlexBox fxDirection={'row'} gap={6} fillWidth>
+          <InputLabel label={t('sku')} direction={'vertical'} error={errors.sku}>
+            <InputText placeholder={t('sku')} {...register('sku', { max: 120 })} />
+          </InputLabel>
 
-        <CustomSelect
-          treeMode
-          {...registerSelect('category', {
-            label: t('category'),
-            placeholder: t('category'),
-            required: true,
-            options: categories,
-          })}
+          <InputLabel label={'Штрих-код'} direction={'vertical'} error={errors.barCode}>
+            <InputText placeholder={'Штрих-код'} {...register('barCode')} />
+          </InputLabel>
+        </FlexBox>
+
+        {/*<CustomSelect*/}
+        {/*  treeMode*/}
+        {/*  {...registerSelect('category', {*/}
+        {/*    label: t('category'),*/}
+        {/*    placeholder: t('category'),*/}
+        {/*    required: true,*/}
+        {/*    options: categories,*/}
+        {/*  })}*/}
+        {/*/>*/}
+
+        <FormProductCategories
+          options={categories}
+          defaultData={formValues?.categories}
+          onChange={data => {
+            setValue('categories', data);
+          }}
         />
 
         <CustomSelect
@@ -116,6 +147,7 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
             options: directories[ApiDirType.BRANDS],
             label: t('brand'),
             placeholder: t('selectBrand'),
+            multipleMode: true,
           })}
         />
 
@@ -123,13 +155,21 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
           <InputText placeholder={t('status')} {...register('status')} disabled />
         </InputLabel>
 
-        <InputLabel label={'Штрих-код'} direction={'vertical'} error={errors.barCode}>
-          <InputText placeholder={'Штрих-код'} {...register('barCode')} />
-        </InputLabel>
-
-        <InputLabel label={'Одиниці виміру'} direction={'vertical'} error={errors?.measurement} disabled>
-          <InputText placeholder={'Одиниці виміру'} {...register('measurement.units')} disabled />
-        </InputLabel>
+        <FlexBox fxDirection={'row'} gap={6} fillWidth>
+          {measurementInputs.map(input => {
+            return (
+              <InputLabel
+                key={input.name}
+                label={input.label}
+                direction={'vertical'}
+                error={errors?.measurement ? errors?.measurement[input.name] : undefined}
+                disabled
+              >
+                <InputText placeholder={input.placeholder} {...register(`measurement.${input.name}`)} disabled />
+              </InputLabel>
+            );
+          })}
+        </FlexBox>
 
         <InputLabel label={t('description')} direction={'vertical'} error={errors.description}>
           <TextareaPrimary placeholder={t('description')} {...register('description')} />

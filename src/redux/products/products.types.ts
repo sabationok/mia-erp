@@ -1,4 +1,4 @@
-import { IBase, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
+import { ArrayUUID, IBase, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
 import { IProductCategoryDirItem, ISupplierDirItem } from '../../components/Directories/dir.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
@@ -43,6 +43,7 @@ export interface IProductAddsFields extends IProductBase {
   editor?: IUser;
 
   category?: IProductCategoryDirItem;
+  categories?: IProductCategoryDirItem[];
 
   recommends?: IProduct[];
   properties?: IPropertyValue[];
@@ -78,13 +79,15 @@ export interface IProductMeasurement {
   min?: number;
   max?: number;
   step?: number;
-  units?: string;
+  unit?: string;
 }
 // * >>>>>>> FORM DATA <<<<<<<
 export interface IProductBaseFormData extends IProductBaseDto {}
 export interface IProductDefaultsFormData extends Record<keyof IProductDefaults, IFormDataValueWithUUID> {}
 export interface IProductWithAddsFieldsFormData extends IProductBaseFormData {}
-export interface IProductFullFormData extends Omit<IProductFullDto, 'recommends' | 'properties' | 'images'> {
+export interface IProductFullFormData
+  extends Omit<IProductFullDto, 'recommends' | 'properties' | 'images' | 'categories'> {
+  categories?: IFormDataValueWithUUID[];
   recommends?: IFormDataValueWithUUID[];
   properties?: string[];
   defaults?: IProductDefaultsFormData;
@@ -97,10 +100,11 @@ export interface IProductBaseDto extends Omit<IProductBase, '_id' | 'createdAt' 
 
 export interface IProductWithAddsFieldsDto extends IProductBaseDto {
   category?: OnlyUUID;
+  categories?: ArrayUUID;
   brand?: OnlyUUID;
   template?: OnlyUUID;
-  recommends?: string[];
-  properties?: string[];
+  recommends?: ArrayUUID;
+  properties?: ArrayUUID;
 }
 export interface IProductDefaultsDto extends Record<keyof IProductDefaults, OnlyUUID> {}
 export interface IProductFullDto extends IProductWithAddsFieldsDto {
