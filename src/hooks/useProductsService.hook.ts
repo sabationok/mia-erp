@@ -1,6 +1,6 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { IProduct, IProductReqData } from '../redux/products/products.types';
-import { OnlyUUID, ServiceApiCaller, ServiceDispatcherAsync } from 'redux/global.types';
+import { OnlyUUID, ServiceApiCaller, ServiceDispatcher, ServiceDispatcherAsync } from 'redux/global.types';
 import {
   createProductThunk,
   getAllProductsThunk,
@@ -16,6 +16,7 @@ import { IProperty, IPropertyReqData } from '../redux/products/properties.types'
 import { createPropertyThunk, getAllPropertiesThunk } from '../redux/products/properties.thunks';
 import { createVariationThunk, getAllVariationsByProductIdThunk } from '../redux/products/variations.thunks';
 import { IVariation, IVariationReqData } from '../redux/products/variations.types';
+import { clearCurrentProductAction } from '../redux/products/products.actions';
 
 export interface ProductsService {
   create: ServiceDispatcherAsync<IProductReqData, IProduct>;
@@ -24,7 +25,7 @@ export interface ProductsService {
   getById: ServiceApiCaller<string, IProduct>;
   getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IProduct[]>;
   getProductFullInfo: ServiceDispatcherAsync<OnlyUUID, IProduct>;
-
+  clearCurrent: ServiceDispatcher<undefined>;
   // * PROPERTIES
 
   createProperty: ServiceDispatcherAsync<IPropertyReqData, IProperty[]>;
@@ -60,7 +61,7 @@ const useProductsService = (): ProductsService => {
       getById: args => createApiCall(defaultApiCallPayload(args), ProductsApi.getById, ProductsApi),
       getAll: args => dispatch(getAllProductsThunk(defaultThunkPayload(args))),
       getProductFullInfo: args => dispatch(getProductFullInfoThunk(defaultThunkPayload(args))),
-
+      clearCurrent: () => dispatch(clearCurrentProductAction()),
       // * PROPERTIES
       createProperty: args => dispatch(createPropertyThunk(defaultThunkPayload(args))),
       getAllProperties: args => dispatch(getAllPropertiesThunk(defaultThunkPayload(args))),

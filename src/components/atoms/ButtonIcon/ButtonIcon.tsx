@@ -123,9 +123,6 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
   fill: currentColor;
   text-transform: ${({ textTransform = 'none' }) => textTransform};
 
-  padding: ${p => p?.padding || 0};
-  margin: ${p => p?.margin || 0};
-
   cursor: pointer;
 
   overflow: hidden;
@@ -135,7 +132,11 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
 
   transition: ${({ theme }) => theme.globals.timingFunctionMain};
 
+  padding: ${p => p?.padding || 0};
+  margin: ${p => p?.margin || 0};
+
   ${({ variant = 'def' }) => getVariant(variant)}
+
   &[disabled] {
     pointer-events: none;
     opacity: 0.6;

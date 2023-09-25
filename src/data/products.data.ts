@@ -57,7 +57,7 @@ export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
 
   {
     top: { name: t('type'), align: 'start', path: 'type' },
-    bottom: { name: t('status'), align: 'start', getData: d => d.approvedStatus },
+    bottom: { name: t('status'), align: 'start', getData: d => d.approved },
     width: '100px',
     action: 'status',
   },
@@ -76,12 +76,6 @@ export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
     width: '180px',
     action: 'valueByPath',
   },
-  // {
-  //   top: { name: t('variation'), align: 'start', getData: rd => rd?.productInventory?.template?.label },
-  //   // bottom: { name: t('barCode'), align: 'start', getData: rd => rd?.barCode },
-  //   width: '150px',
-  //   action: 'valueByPath',
-  // },
   {
     top: { name: 'Бренд', align: 'start', path: 'brand.label' },
     bottom: { name: 'Виробник', align: 'start', path: 'manufacturer.name' },

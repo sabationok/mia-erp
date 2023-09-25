@@ -31,6 +31,7 @@ export enum AppQueryKey {
 export interface AppQueryParams {
   dirType?: ApiDirType;
   isArchived?: boolean;
+  deleted?: boolean;
   createTreeData?: boolean;
   owner?: string;
   sortParams?: ISortParams;

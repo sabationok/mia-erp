@@ -91,7 +91,7 @@ const FormProductCategories: React.FC<FormProductCategoriesProps> = ({
         onSelect={handleSelect}
       />
 
-      <FlexBox fxDirection={'row'} flexWrap={'wrap'} gap={8} padding={'6px 0'}>
+      <FlexBox fxDirection={'row'} flexWrap={'wrap'} gap={8}>
         {renderSelected}
       </FlexBox>
     </FlexBox>

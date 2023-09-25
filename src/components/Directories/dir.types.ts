@@ -16,7 +16,7 @@ import { AppSubmitHandler, UseAppFormSubmitOptions } from '../../hooks/useAppFor
 import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
 import { ProductTypeEnum } from '../../redux/products/products.types';
 
-export interface ItemTypeByDirType extends Record<ApiDirType, any> {
+export interface DirItemTypeByDirType extends Record<ApiDirType, any> {
   [ApiDirType.COUNTS]: CountsTypesEnum;
   [ApiDirType.CATEGORIES_TR]: CategoryTrTypeEnum;
   [ApiDirType.CATEGORIES_PROD]: ProductTypeEnum;
@@ -56,7 +56,7 @@ export interface IDirItemBase<DirType extends ApiDirType = any> extends IBase {
   orders?: OnlyUUID[];
   parent?: IDirItemBase<DirType>;
   childrenList?: IDirItemBase<DirType>[];
-  type?: ItemTypeByDirType[DirType];
+  type?: DirItemTypeByDirType[DirType];
   name?: string;
   secondName?: string;
   label?: string;
@@ -85,7 +85,7 @@ export interface DirectoriesFormProps<DirType extends ApiDirType = any, ItemData
   extends Omit<ModalFormProps<any, any, ItemDataType>, 'onSubmit'> {
   _id?: string;
   dirType?: DirType;
-  type?: ItemTypeByDirType[DirType];
+  type?: DirItemTypeByDirType[DirType];
   data?: ItemDataType;
   parent?: Partial<ItemDataType>;
   create?: boolean;
@@ -107,11 +107,11 @@ export interface IDirInTreeProps<
   SubmitOptions = any
 > extends DirBaseProps {
   dirType: DirType;
-  type?: ItemTypeByDirType[DirType];
+  type?: DirItemTypeByDirType[DirType];
   createParentTitle?: string;
-  filterOptions?: FilterOpt<ItemTypeByDirType[DirType]>[];
+  filterOptions?: FilterOpt<DirItemTypeByDirType[DirType]>[];
   filterSearchPath?: keyof IDirItemBase<DirType>;
-  filterDefaultValue?: ItemTypeByDirType[DirType];
+  filterDefaultValue?: DirItemTypeByDirType[DirType];
   availableLevels?: number;
 
   editing?: boolean;
@@ -127,22 +127,21 @@ export interface IDirInTreeProps<
 
 export type ActionsCreatorOptions<
   DirType extends ApiDirType = any,
-  ItemType = any,
   CreateDTO = any,
   UpdateDTO = any,
   ItemDataType = any
 > = {
   modalService: IModalProviderContext;
-  service: DirectoriesService<DirType, ItemType, CreateDTO, UpdateDTO, ItemDataType>;
+  service: DirectoriesService<DirType, CreateDTO, UpdateDTO, ItemDataType>;
   dirType: DirType;
-  type?: ItemTypeByDirType[DirType];
+  type?: DirItemTypeByDirType[DirType];
   findById?: (id: string) => ItemDataType | undefined;
 };
 export type DirInTreeActionsCreatorOptions<DirType extends ApiDirType = any, ItemDataType = any, Service = any> = {
   modalService: ModalService;
   dirType: DirType;
   service: Service;
-  type?: ItemTypeByDirType[DirType];
+  type?: DirItemTypeByDirType[DirType];
   findById?: (id: string) => ItemDataType | undefined;
 };
 export type DirInTreeActionsCreatorType<

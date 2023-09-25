@@ -80,7 +80,7 @@ const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }
         <ButtonIcon
           variant={'textExtraSmall'}
           icon={'SmallArrowLeft'}
-          style={{ gap: 0 }}
+          style={{ gap: 0, padding: 6, minWidth: 'fit-content' }}
           onClick={() => {
             if (product && location?.pathname) {
               const newPath = location?.pathname?.replace(`/${product?._id}`, '');

@@ -1,12 +1,12 @@
 import FlexBox from '../../atoms/FlexBox';
 import React, { useMemo } from 'react';
 import { RenderOverviewCellComponent } from '../ProductOverviewXL';
-import FormCreateVariation from '../../Forms/FormVariation';
+import FormCreateVariation from '../../Forms/FormProduct/FormVariation';
 import { IProperty } from '../../../redux/products/properties.types';
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 import { Text } from '../../atoms/Text';
 import { useProductsSelector } from '../../../redux/selectors.store';
-import FormSelectProperties from '../../Forms/FormSelectProperties';
+import FormSelectProperties from '../../Forms/FormProduct/FormSelectProperties';
 import { IProduct } from '../../../redux/products/products.types';
 import { formAddImageSetTabs } from '../../Forms/FormProduct/FormAddImageSet';
 import FormProductImages from '../../Forms/FormProduct/FormProductImagesOverlay';
@@ -46,9 +46,13 @@ export const CategoriesCell: RenderOverviewCellComponent = ({ cell, data }) => {
 
   return (
     <Cell style={{ minHeight: 'max-content' }}>
-      <CellText $isTitle $size={12}>
-        {cell?.title}
-      </CellText>
+      <FlexBox fxDirection={'row'} justifyContent={'space-between'}>
+        <CellText $isTitle $size={12}>
+          {cell?.title}
+        </CellText>
+
+        <OverlayOpenButton>{'Змінити'}</OverlayOpenButton>
+      </FlexBox>
 
       <FlexBox
         fillWidth
@@ -57,32 +61,13 @@ export const CategoriesCell: RenderOverviewCellComponent = ({ cell, data }) => {
         flexWrap={'wrap'}
         // overflow={'hidden'}
         gap={8}
-        style={{ minHeight: 'max-content' }}
+        style={{ height: 'max-content', minHeight: 26 }}
       >
         {renderItems}
       </FlexBox>
     </Cell>
   );
 };
-
-const CategoryItem = styled(FlexBox)`
-  align-items: center;
-  justify-content: center;
-
-  flex-direction: row;
-
-  padding: 4px 12px;
-
-  font-weight: 500;
-  font-size: 12px;
-  color: ${p => p.theme.fontColorSidebar};
-
-  min-height: 28px;
-
-  border-radius: 2px;
-  background-color: ${p => p.theme.fieldBackgroundColor};
-  //border: 1px solid ${p => p.theme.accentColor.base};
-`;
 export const VariationsTemplateCell: RenderOverviewCellComponent = ({ cell, setOverlayContent, data }) => {
   return (
     <Cell padding={'4px'}>
@@ -123,35 +108,6 @@ interface OverviewPropertyComponentProps {
   data?: IProduct;
   index: number;
 }
-const OverviewPropertyComponent: React.FC<OverviewPropertyComponentProps> = ({ item, selectedItems }) => {
-  const theme = useTheme();
-
-  const renderValues = useMemo(() => {
-    return item.childrenList
-      ?.filter(el => selectedItems?.includes(el._id))
-      ?.map((value, index) => {
-        return (
-          <CategoryItem key={`prop-v-${value._id}`} maxWidth={'130px'}>
-            {value.label}
-          </CategoryItem>
-        );
-      });
-  }, [item.childrenList, selectedItems, theme.sideBarBorderColor, theme.fieldBackgroundColor]);
-
-  return (
-    <FlexBox className={'PROPERTY'} gap={8} alignItems={'flex-end'}>
-      <FlexBox alignItems={'center'} fxDirection={'row'} fillWidth gap={8}>
-        <CellText $size={14} $weight={600}>
-          {item?.label}
-        </CellText>
-      </FlexBox>
-
-      <FlexBox fxDirection={'row-reverse'} flexWrap={'wrap'} fillWidth gap={8}>
-        {renderValues && renderValues?.length > 0 ? renderValues : <Text $size={12}>{'---'}</Text>}
-      </FlexBox>
-    </FlexBox>
-  );
-};
 export const ImagesCell: RenderOverviewCellComponent = ({ data, cell, setOverlayContent }) => {
   const renderImageSets = useMemo(() => {
     return data?.images?.map((set, index) => {
@@ -247,6 +203,34 @@ export const StaticProperties: RenderOverviewCellComponent = ({ cell, setOverlay
   );
 };
 
+const OverviewPropertyComponent: React.FC<OverviewPropertyComponentProps> = ({ item, selectedItems }) => {
+  const renderValues = useMemo(() => {
+    return item.childrenList
+      ?.filter(el => selectedItems?.includes(el._id))
+      ?.map((value, index) => {
+        return (
+          <CategoryItem key={`prop-v-${value._id}`} maxWidth={'130px'}>
+            {value.label}
+          </CategoryItem>
+        );
+      });
+  }, [item.childrenList, selectedItems]);
+
+  return (
+    <FlexBox className={'PROPERTY'} gap={8} alignItems={'flex-end'}>
+      <FlexBox alignItems={'center'} fxDirection={'row'} fillWidth gap={8}>
+        <CellText $size={14} $weight={600}>
+          {item?.label}
+        </CellText>
+      </FlexBox>
+
+      <FlexBox fxDirection={'row-reverse'} flexWrap={'wrap'} fillWidth gap={8}>
+        {renderValues && renderValues?.length > 0 ? renderValues : <Text $size={12}>{'---'}</Text>}
+      </FlexBox>
+    </FlexBox>
+  );
+};
+
 const OverlayOpenButton = styled.button`
   display: flex;
   align-items: center;
@@ -268,6 +252,7 @@ const Cell = styled(FlexBox)`
   height: max-content;
 
   padding: 4px;
+  gap: 4px;
 
   //overflow: hidden;
 
@@ -294,4 +279,22 @@ const ImagesSetBox = styled(FlexBox)`
     width: 0;
     height: 0;
   }
+`;
+const CategoryItem = styled(FlexBox)`
+  align-items: center;
+  justify-content: center;
+
+  flex-direction: row;
+
+  padding: 4px 12px;
+
+  font-weight: 500;
+  font-size: 12px;
+  color: ${p => p.theme.fontColorSidebar};
+
+  min-height: 28px;
+
+  border-radius: 2px;
+  background-color: ${p => p.theme.fieldBackgroundColor};
+  //border: 1px solid ${p => p.theme.accentColor.base};
 `;

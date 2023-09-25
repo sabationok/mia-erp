@@ -30,15 +30,6 @@ export default class DirectoriesApi {
     });
   }
 
-  public static async delete<RD = IBaseDirItem>({
-    dirType,
-    _id,
-  }: {
-    _id: string;
-  } & GetAllByDirTypeOptions): Promise<IDirRes<RD & { deletedChildren?: number }>> {
-    return this.api.delete(this.endpoints[Endpoints.deleteById](dirType, _id));
-  }
-
   public static async changeArchiveStatus<RD = IBaseDirItem>({
     dirType,
     params,
@@ -73,6 +64,23 @@ export default class DirectoriesApi {
     return this.api.patch(this.endpoints[Endpoints.updateById](dirType, _id), data, {
       params: {
         isArchived: false,
+        createTreeData: true,
+        ...params,
+      },
+    });
+  }
+
+  public static async delete<DTO = any, RD = IBaseDirItem>({
+    dirType,
+    _id,
+    params,
+  }: {
+    _id: string;
+  } & GetAllByDirTypeOptions): Promise<IDirRes<RD[]>> {
+    return this.api.delete(this.endpoints[Endpoints.deleteById](dirType, _id), {
+      params: {
+        isArchived: false,
+        deleted: false,
         createTreeData: true,
         ...params,
       },

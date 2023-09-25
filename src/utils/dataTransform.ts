@@ -1,7 +1,7 @@
 import { ITransaction, ITransactionForReq } from '../redux/transactions/transactions.types';
-import { cloneDeep, omit, pick } from 'lodash';
+import { cloneDeep, isObject, omit, pick } from 'lodash';
 import { OnlyUUID } from '../redux/global.types';
-import { IVariationFormData } from '../components/Forms/FormVariation';
+import { IVariationFormData } from '../components/Forms/FormProduct/FormVariation';
 import { IVariation, IVariationReqData } from '../redux/products/variations.types';
 import { ConfigService } from '../services';
 import {
@@ -172,29 +172,36 @@ export const createVariationFormData = (variation: IVariation): IVariationFormDa
   };
 };
 
-export function createProductFormData(input: IProduct, omitPaths?: [string | keyof IProduct]): IProductFullFormData {
-  const data = cloneDeep(input);
+const createProductFormDataOmitPaths: (keyof IProduct | string)[] = ['variations', 'inventories', 'prices'];
+const getFormValuePickPaths = (data?: any) => {
+  return data ? ['_id', 'label', 'email', 'dirType', 'parent', 'name', 'secondName'].filter(key => key in data) : [];
+};
+const isArrayForTransformToIdsArray = <T extends keyof IProduct | string = any>(key: T) => {
+  return ['properties', 'categories'].includes(key);
+};
+export function createProductFormData(
+  input: IProduct,
+  omitPaths: (keyof IProduct | string)[] = createProductFormDataOmitPaths
+): IProductFullFormData {
+  const data = cloneDeep(omitPaths ? omit(input, omitPaths) : input);
   let output: Record<keyof IProduct | string, any> = {};
-  // console.log('createProductFromData input', data);
-
-  const getFormValuePickPaths = (data?: any) => {
-    return data ? ['_id', 'label', 'email', 'dirType', 'parent', 'name', 'secondName'].filter(key => key in data) : [];
-  };
 
   Object.entries(data).map(([k, v], index) => {
     if (v === null) {
-      // output[k as keyof IProductFullFormData] = v;
       return (output[k as keyof IProductFullFormData] = v);
     }
     if (!v) {
       return { [k]: v };
     }
     if (['string', 'number'].includes(typeof v)) {
-      // output[k as keyof IProductFullFormData] = v;
       return (output[k as keyof IProductFullFormData] = v);
     } else if (typeof v === 'object') {
       if (Array.isArray(v)) {
-        // output[k as keyof IProductFullFormData] = v;
+        if (isArrayForTransformToIdsArray(k)) {
+          return (output[k as keyof IProductFullFormData] = v.map(el => isObject(el) && '_id' in el && el._id)).filter(
+            el => el
+          );
+        }
         return (output[k as keyof IProductFullFormData] = v);
       }
       if (k === 'defaults') {
@@ -210,12 +217,8 @@ export function createProductFormData(input: IProduct, omitPaths?: [string | key
       }
 
       const newValue = pick(v, getFormValuePickPaths(v));
-      k === 'category' && console.log({ newValue, value: v });
-      // console.log('newValue', newValue);
-      // output[k as keyof IProductFullFormData] = newValue;
       return (output[k as keyof IProductFullFormData] = newValue);
     } else {
-      // output[k as keyof IProductFullFormData] = v;
       return (output[k as keyof IProductFullFormData] = v);
     }
   });

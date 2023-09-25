@@ -10,6 +10,7 @@ import {
 import { createVariationThunk, getAllVariationsByProductIdThunk } from './variations.thunks';
 import { IVariationTemplate } from './properties.types';
 import { createPropertyThunk, getAllPropertiesThunk } from './properties.thunks';
+import { clearCurrentProductAction } from './products.actions';
 
 export interface IProductsState {
   products: IProduct[];
@@ -80,8 +81,15 @@ export const productsSlice = createSlice({
           s.currentProduct = { ...(s.currentProduct as IProduct), variations: a.payload.data };
         }
       })
+      .addCase(clearCurrentProductAction, s => {
+        s.currentProduct = { _id: '' };
+      })
       .addMatcher(inPending, s => {
         s.isLoading = true;
+        s.error = null;
+      })
+      .addMatcher(inFulfilled, s => {
+        s.isLoading = false;
         s.error = null;
       })
       .addMatcher(inError, (s, a: PayloadAction<StateErrorType>) => {
@@ -93,42 +101,11 @@ export const productsSlice = createSlice({
 function inPending(a: AnyAction) {
   return a.type.endsWith('pending');
 }
-
+function inFulfilled(a: AnyAction) {
+  return a.type.endsWith('fulfilled');
+}
 function inError(a: AnyAction) {
   return a.type.endsWith('rejected');
 }
 
 export const productsReducer = productsSlice.reducer;
-
-// [addTransactionThunk.fulfilled]: (s,a) => {
-//   s.isloading = false;
-//   s.products.unshift(action.payload.data);
-// },
-// [addTransactionThunk.pending]: (s,a) => {
-//   s.isloading = true;
-// },
-// [addTransactionThunk.rejected]: (s,a) => {
-//   s.isloading = false;
-//   s.error =a.payload;
-// },
-
-// [deleteTransactionThunk.fulfilled]: (s,a) => {
-//   s.isLoading = false;
-// },
-// [deleteTransactionThunk.pending]: (s,a) => {
-//   s.isLoading = true;
-// },
-// [deleteTransactionThunk.rejected]: (s,a) => {
-//   s.isLoading = false;
-// },
-
-// [editTransactionThunk.fulfilled]: (s, { payload }) => {
-//   s.isLoading = false;
-//   const index = s.products.findIndex(el => el._id === payload.data._id);
-
-//   s.products[index] = { ...payload.data };
-
-//   console.log(index, s.products[index].isArchived);
-// },
-// [editTransactionThunk.pending]: (s,a) => {},
-// [editTransactionThunk.rejected]: (s,a) => {},

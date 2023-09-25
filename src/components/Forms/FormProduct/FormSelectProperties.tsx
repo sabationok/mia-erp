@@ -1,16 +1,15 @@
 import styled from 'styled-components';
-import FlexBox from '../atoms/FlexBox';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { useProductsSelector, usePropertiesSelector } from '../../redux/selectors.store';
-import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import FlexBox from '../../atoms/FlexBox';
+import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import { useProductsSelector, usePropertiesSelector } from '../../../redux/selectors.store';
+import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { FormEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
-import { Text } from '../atoms/Text';
-import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import { OverlayHandlerReturn } from '../AppPages/PageProductOverview/PageCurrentProductProvider';
-import { OnlyUUID } from '../../redux/global.types';
-import AppLoader from '../atoms/AppLoader';
-import { ModalFormProps } from '../ModalForm';
-import { ToastService } from '../../services';
+import { Text } from '../../atoms/Text';
+import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
+import { OverlayHandlerReturn } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
+import { OnlyUUID } from '../../../redux/global.types';
+import { ModalFormProps } from '../../ModalForm';
+import { ToastService } from '../../../services';
 
 export interface FormSelectPropertiesProps
   extends OverlayHandlerReturn,
@@ -129,45 +128,39 @@ const FormSelectProperties: React.FC<FormSelectPropertiesProps> = ({
   return (
     <FormContainer onSubmit={handleSubmit} {...props}>
       <Header alignItems={'center'} justifyContent={'space-between'} fxDirection={'row'} gap={6} fillWidth>
+        <ButtonIcon
+          variant={'textExtraSmall'}
+          onClick={onClose}
+          icon={'SmallArrowLeft'}
+          style={{ minWidth: 6, padding: 6 }}
+        >
+          {'Back'}
+        </ButtonIcon>
+
         <FlexBox fxDirection={'row'} padding={'4px 0'} alignItems={'center'} fillHeight>
           <Text $weight={600} $size={18}>
             {title || templateData?.label || 'Title'}
           </Text>
         </FlexBox>
-
-        <ButtonIcon variant={'onlyIcon'} onClick={onClose} icon={'close'}></ButtonIcon>
       </Header>
 
       <TemplateBox flex={1} overflow={'auto'}>
         {renderTemplate}
       </TemplateBox>
 
-      <Footer>
-        <FlexBox padding={'6px 0'} fxDirection={'row'} gap={8} alignItems={'center'}>
-          <ButtonIcon
-            onClick={onClose}
-            variant={'onlyIconFilled'}
-            size={'36px'}
-            iconSize={'28px'}
-            textTransform={'uppercase'}
-            icon={'close'}
-          />
-
-          <ButtonIcon
-            type={'submit'}
-            fontWeight={600}
-            variant={'outlinedLarge'}
-            textTransform={'uppercase'}
-            endIcon={'SmallArrowRight'}
-            disabled={loading}
-            style={{ flex: 1 }}
-          >
-            {'Підтвердити'}
-          </ButtonIcon>
-        </FlexBox>
+      <Footer padding={'6px 0'} fxDirection={'row'} gap={8} alignItems={'center'}>
+        <ButtonIcon
+          type={'submit'}
+          fontWeight={600}
+          variant={'filledLarge'}
+          textTransform={'uppercase'}
+          endIcon={'SmallArrowRight'}
+          disabled={loading}
+          style={{ flex: 1 }}
+        >
+          {loading ? 'Loading...' : 'Підтвердити'}
+        </ButtonIcon>
       </Footer>
-
-      <AppLoader isLoading={loading} />
     </FormContainer>
   );
 };

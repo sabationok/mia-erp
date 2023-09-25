@@ -1,20 +1,19 @@
 import styled from 'styled-components';
-import FlexBox from '../atoms/FlexBox';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { useProductsSelector, usePropertiesSelector } from '../../redux/selectors.store';
-import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import FlexBox from '../../atoms/FlexBox';
+import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import { useProductsSelector, usePropertiesSelector } from '../../../redux/selectors.store';
+import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useCallback, useMemo, useState } from 'react';
-import { Text } from '../atoms/Text';
-import { AppSubmitHandler, UseAppFormSubmitOptions } from '../../hooks/useAppForm.hook';
-import { OverlayHandlerReturn } from '../AppPages/PageProductOverview/PageCurrentProductProvider';
+import { Text } from '../../atoms/Text';
+import { AppSubmitHandler, UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
+import { OverlayHandlerReturn } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
 import { useForm } from 'react-hook-form';
-import { createVariationFormData, createVariationReqData } from '../../utils/dataTransform';
-import { IVariation } from '../../redux/products/variations.types';
-import { OnlyUUID } from '../../redux/global.types';
-import { ToastService } from '../../services';
-import AppLoader from '../atoms/AppLoader';
-import { ModalFormProps } from '../ModalForm';
-import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
+import { createVariationFormData, createVariationReqData } from '../../../utils/dataTransform';
+import { IVariation } from '../../../redux/products/variations.types';
+import { OnlyUUID } from '../../../redux/global.types';
+import { ToastService } from '../../../services';
+import { ModalFormProps } from '../../ModalForm';
+import FormAfterSubmitOptions from '../components/FormAfterSubmitOptions';
 
 export interface FormVariationProps
   extends OverlayHandlerReturn,
@@ -48,7 +47,10 @@ const FormVariation: React.FC<FormVariationProps> = ({
   const templates = usePropertiesSelector();
   const [loading, setLoading] = useState(false);
 
-  const [submitOptions, setSubmitOptions] = useState<UseAppFormSubmitOptions>({});
+  const [submitOptions, setSubmitOptions] = useState<UseAppFormSubmitOptions>({
+    closeAfterSave: true,
+    clearAfterSave: true,
+  });
   const handleChangeAfterSubmit = (key: keyof UseAppFormSubmitOptions) => {
     setSubmitOptions(prev => ({ ...prev, [key]: !prev[key] }));
   };
@@ -87,7 +89,7 @@ const FormVariation: React.FC<FormVariationProps> = ({
             data: createVariationReqData(data),
             onSuccess: data => {
               console.log('createVariation onSuccess', data);
-              onClose && onClose();
+              submitOptions.closeAfterSave && onClose && onClose();
             },
             onError: e => {
               console.log(e);
@@ -145,13 +147,20 @@ const FormVariation: React.FC<FormVariationProps> = ({
   return (
     <FormContainer onSubmit={handleSubmit(onValid)} {...props}>
       <Header alignItems={'center'} justifyContent={'space-between'} fxDirection={'row'} gap={6} fillWidth>
+        <ButtonIcon
+          variant={'textSmall'}
+          onClick={onClose}
+          icon={'SmallArrowLeft'}
+          style={{ padding: 6, minWidth: 'fit-content' }}
+        >
+          {'Back'}
+        </ButtonIcon>
+
         <FlexBox fxDirection={'row'} padding={'4px 0'} alignItems={'center'} fillHeight>
           <Text $weight={600} $size={18}>
             {title || template?.label || 'Title'}
           </Text>
         </FlexBox>
-
-        <ButtonIcon variant={'onlyIcon'} onClick={onClose} icon={'close'}></ButtonIcon>
       </Header>
 
       <TemplateBox flex={1} overflow={'auto'}>
@@ -169,29 +178,18 @@ const FormVariation: React.FC<FormVariationProps> = ({
 
         <FlexBox padding={'6px 0'} fxDirection={'row'} gap={8} alignItems={'center'}>
           <ButtonIcon
-            onClick={onClose}
-            variant={'onlyIconFilled'}
-            size={'36px'}
-            iconSize={'28px'}
-            textTransform={'uppercase'}
-            icon={'close'}
-          />
-
-          <ButtonIcon
             type={'submit'}
             fontWeight={600}
-            variant={'outlinedLarge'}
+            variant={'filledLarge'}
             textTransform={'uppercase'}
-            endIcon={'SmallArrowRight'}
+            endIcon={loading ? undefined : 'SmallArrowRight'}
             disabled={loading}
             style={{ flex: 1 }}
           >
-            {update ? 'Підтвердити' : 'Додати'}
+            {loading ? 'Loading...' : update ? 'Підтвердити' : 'Додати'}
           </ButtonIcon>
         </FlexBox>
       </Footer>
-
-      <AppLoader isLoading={loading} />
     </FormContainer>
   );
 };
@@ -206,7 +204,7 @@ const FormContainer = styled.form`
   overflow: hidden;
 
   max-width: 480px;
-
+  color: ${p => p.theme.fontColorSidebar};
   background-color: ${p => p.theme.tableBackgroundColor};
 `;
 const Header = styled(FlexBox)`

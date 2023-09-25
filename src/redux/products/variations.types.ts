@@ -1,4 +1,4 @@
-import { IBase } from '../global.types';
+import { IBase, OnlyUUID } from '../global.types';
 import { ICompany } from '../companies/companies.types';
 import { IProductInventory } from '../warehouses/warehouses.types';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
@@ -33,6 +33,7 @@ export type VariationPropertiesMap = Record<string, IPropertyValue>;
 
 export interface VariationDto {
   properties?: string[];
+  product?: OnlyUUID;
 
   timeFrom?: string | number | Date;
   timeTo?: string | number | Date;

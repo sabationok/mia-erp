@@ -2,12 +2,13 @@ import FormProductImagesComponent from './FormProductImagesComponent';
 import { FormEventHandler, useState } from 'react';
 import { OverlayHandlerReturn } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
 import { IProduct, IProductImage } from '../../../redux/products/products.types';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { ExtractId } from '../../../utils/dataTransform';
 import FlexBox from 'components/atoms/FlexBox';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import { Text } from '../../atoms/Text';
 
 export interface FormProductImagesOverlayProps extends OverlayHandlerReturn {
   product?: IProduct;
@@ -16,6 +17,7 @@ export interface FormProductImagesOverlayProps extends OverlayHandlerReturn {
 const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onClose }) => {
   const currentProduct = useProductsSelector().currentProduct;
   const service = useAppServiceProvider()[ServiceName.products];
+  const theme = useTheme();
 
   const [state, setState] = useState<Partial<IProductImage>[]>(currentProduct?.images || []);
 
@@ -33,19 +35,61 @@ const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onC
 
   return (
     <Form onSubmit={handleFormSubmit}>
-      <Header></Header>
+      <FormProductImagesComponent
+        initialData={state}
+        onClose={onClose}
+        onChangeState={setState}
+        contentContainerStyle={{
+          flex: 1,
+          borderTop: `1px solid ${theme.sideBarBorderColor}`,
+          borderBottom: `1px solid ${theme.sideBarBorderColor}`,
+        }}
+        renderHeader={
+          <FlexBox
+            fillWidth
+            fxDirection={'row'}
+            justifyContent={'space-between'}
+            alignItems={'stretch'}
+            height={'32px'}
+          >
+            <ButtonIcon variant={'textExtraSmall'} icon={'SmallArrowLeft'} onClick={onClose}>
+              {'Back'}
+            </ButtonIcon>
 
-      <Content flex={1} fillWidth>
-        <FormProductImagesComponent initialData={state} onChangeState={setState} />
-      </Content>
+            <FlexBox justifyContent={'center'}>
+              <Text $weight={600} $size={16}>
+                {'Фото'}
+              </Text>
+            </FlexBox>
+          </FlexBox>
+        }
+        FooterComponent={props => {
+          return (
+            <Footer fxDirection={'row'} gap={8} padding={'8px 0'} justifyContent={'stretch'} fillWidth>
+              <ButtonIcon
+                variant={'onlyIcon'}
+                icon={'plus'}
+                size={'36px'}
+                iconSize={'80%'}
+                onClick={props.onAddNewImageSetPress}
+              />
 
-      <Footer fxDirection={'row'} gap={8} padding={'8px 0'} justifyContent={'stretch'}>
-        <ButtonIcon variant={'onlyIconFilled'} icon={'close'} size={'36px'} onClick={onClose} />
-
-        <ButtonIcon variant={'outlinedLarge'} type={'submit'} textTransform={'uppercase'} fontWeight={600}>
-          {'Прийняти'}
-        </ButtonIcon>
-      </Footer>
+              <ButtonIcon
+                variant={'filledLarge'}
+                flex={1}
+                type={'submit'}
+                style={{ padding: '0 12px' }}
+                textTransform={'uppercase'}
+                fontWeight={600}
+                endIcon={'SmallArrowRight'}
+                endIconSize={'24px'}
+              >
+                {'Прийняти'}
+              </ButtonIcon>
+            </Footer>
+          );
+        }}
+      />
     </Form>
   );
 };
@@ -65,8 +109,8 @@ const Form = styled.form`
 `;
 const Header = styled(FlexBox)``;
 const Content = styled(FlexBox)`
-  border-top: 1px solid ${p => p.theme.sideBarBorderColor};
-  border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
+  border-top: 1px solid ${p => 'tomato' || p.theme.sideBarBorderColor};
+  border-bottom: 1px solid ${p => 'tomato' || p.theme.sideBarBorderColor};
 `;
 const Footer = styled(FlexBox)``;
 export default FormProductImagesOverlay;

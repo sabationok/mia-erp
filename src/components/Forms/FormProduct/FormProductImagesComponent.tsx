@@ -15,13 +15,21 @@ export interface FormProductImagesComponentProps {
   initialData?: Partial<IProductImage>[];
   renderHeader?: React.ReactNode;
   canEditOrder?: boolean;
+  onClose?: () => void;
+  contentContainerStyle?: React.CSSProperties;
+  FooterComponent?: React.FC<{ onAddNewImageSetPress: () => void }>;
+  HeaderComponent?: React.FC;
 }
+export interface FormProductImagesRenderComponentProps {}
 
 const FormProductImagesComponent: React.FC<FormProductImagesComponentProps> = ({
   onChangeState,
   renderHeader,
   initialData,
   canEditOrder = true,
+  onClose,
+  FooterComponent,
+  contentContainerStyle,
 }) => {
   const modalS = useModalService();
   // const [isEditOrderMode,setIsEditOrderMode]=useState(false)
@@ -97,6 +105,17 @@ const FormProductImagesComponent: React.FC<FormProductImagesComponentProps> = ({
     [onChangeState]
   );
 
+  const handleAddNewSet = () => {
+    modalS.open({
+      ModalChildren: FormAddImageSet,
+      modalChildrenProps: {
+        onSubmit: data => {
+          handleAddImageSet(data);
+        },
+      },
+    });
+  };
+
   const renderImageSets = useMemo(() => {
     let dataForRender = formData;
     try {
@@ -167,17 +186,8 @@ const FormProductImagesComponent: React.FC<FormProductImagesComponentProps> = ({
     // eslint-disable-next-line
   }, []);
 
-  // useEffect(() => {
-  //   setFormData(prev => {
-  //     const updatedData = prev.map((set, index) => ({ ...set, order: index + 1 }));
-  //
-  //     onChangeState && onChangeState(updatedData);
-  //     return updatedData;
-  //   });
-  // }, []);
-
   return (
-    <FlexBox fillWidth>
+    <>
       {renderHeader || (
         <FlexBox
           padding={'4px 8px'}
@@ -191,28 +201,18 @@ const FormProductImagesComponent: React.FC<FormProductImagesComponentProps> = ({
             {'Фото'}
           </Text>
 
-          <AddImageSetButton
-            type={'button'}
-            onClick={() => {
-              modalS.open({
-                ModalChildren: FormAddImageSet,
-                modalChildrenProps: {
-                  onSubmit: data => {
-                    handleAddImageSet(data);
-                  },
-                },
-              });
-            }}
-          >
-            {'Додати'}
+          <AddImageSetButton type={'button'} onClick={onClose || handleAddNewSet}>
+            {onClose ? 'Закрити' : 'Додати'}
           </AddImageSetButton>
         </FlexBox>
       )}
 
-      <FlexBox gap={2} padding={'8px 0'} overflow={'hidden'}>
+      <FlexBox gap={2} padding={'8px 0'} style={contentContainerStyle}>
         {renderImageSets}
       </FlexBox>
-    </FlexBox>
+
+      {FooterComponent && <FooterComponent onAddNewImageSetPress={handleAddNewSet} />}
+    </>
   );
 };
 const AddImageSetButton = styled.button`

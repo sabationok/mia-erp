@@ -7,10 +7,9 @@ import { createTableTitlesFromTemplate } from '../../../utils';
 import { useModalProvider } from '../../ModalProvider/ModalProvider';
 import { Text } from '../../atoms/Text';
 import ModalFilter, { FilterSelectHandler } from '../../ModalForm/ModalFilter';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
-import FormCreateVariation from '../../Forms/FormVariation';
+import FormCreateVariation from '../../Forms/FormProduct/FormVariation';
 import { IPriceListItem } from 'redux/priceManagement/priceManagement.types';
 import { IVariationTableData } from 'redux/products/variations.types';
 import { transformVariationTableData } from '../../../utils/tables';
@@ -20,6 +19,7 @@ import { usePropertiesSelector } from '../../../redux/selectors.store';
 import AppLoader from '../../atoms/AppLoader';
 import { warehouseOverviewTableColumns } from '../../../data/warehauses.data';
 import { IProductInventory } from '../../../redux/warehouses/warehouses.types';
+import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 
 // const openLoader = (current: RightSideOptionEnum) =>
 //   ToastService.createLoader('Loading data...').open({
@@ -177,24 +177,29 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
   }, [current, page.currentProduct?._id]);
 
   return (
-    <RightSide overflow={'auto'} fillHeight isVisible={isVisible}>
-      <Top fillWidth padding={'4px 8px'} gap={4} height={'44px'} isVisible={isVisible}>
-        <Text $weight={600} $size={16}>
-          {page?.currentProduct?.label}
-        </Text>
+    <RightSide overflow={'hidden'} fillHeight isVisible={isVisible}>
+      <Top fillWidth gap={4} isVisible={isVisible} fxDirection={'row'} justifyContent={'space-between'}>
+        <ButtonIcon
+          variant={'textExtraSmall'}
+          icon={'SmallArrowLeft'}
+          style={{ padding: 6 }}
+          onClick={toggleVisibility}
+        >
+          {'Back'}
+        </ButtonIcon>
 
-        <Text $size={12}>{page?.currentProduct?.sku}</Text>
+        <FlexBox padding={'0 8px'}>
+          <Text $weight={600} $size={14}>
+            {page?.currentProduct?.label}
+          </Text>
+
+          <Text $size={10}>{page?.currentProduct?.sku}</Text>
+        </FlexBox>
       </Top>
 
       <ModalFilter filterOptions={toggleOptions} onOptSelect={filterHandler} />
 
       <TableList isSearch={false} isFilter={false} {...currentTableSettings} />
-
-      <Bottom fillWidth flex={1} fxDirection={'row'} justifyContent={'flex-end'}>
-        <ButtonIcon variant={'textExtraSmall'} endIcon={'SmallArrowRight'} onClick={toggleVisibility}>
-          {'Згорнути'}
-        </ButtonIcon>
-      </Bottom>
 
       <AppLoader isLoading={loading} />
     </RightSide>
@@ -204,6 +209,7 @@ const RightSide = styled(FlexBox)<{ isVisible?: boolean }>`
   overflow: auto;
 
   min-width: 320px;
+  max-width: 100%;
 
   transition: ${p => p.theme.globals.timingFunctionMain};
   background-color: ${p => p.theme.backgroundColorLight};

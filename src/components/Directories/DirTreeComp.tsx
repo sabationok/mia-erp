@@ -25,9 +25,7 @@ const DirTreeComp = ({
   filterSearchPath,
   filterDefaultValue,
   actionsCreator,
-  onClose,
   modalId,
-
   ...props
 }: DirTreeComponentProps) => {
   const { directory } = useDirectoriesSelector(dirType);

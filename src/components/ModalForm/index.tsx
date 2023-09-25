@@ -39,16 +39,11 @@ const ModalForm: React.FC<ModalFormProps> = ({
   title = 'default modal title',
   footer = true,
   children,
-  beforeSubmit,
   filterOptions,
   preventFilter,
   onSubmit,
-  afterSubmit,
-  beforeClose,
   onReset,
-  afterClose,
   onOptSelect,
-  closeAfterSubmit,
   defaultOption,
   extraFooter,
   extraHeader,
@@ -59,22 +54,15 @@ const ModalForm: React.FC<ModalFormProps> = ({
   function handleSubmit(ev: FormEvent<HTMLFormElement>) {
     ev.preventDefault();
 
-    // closeAfterSubmit && onClose && onClose();
-
     if (!onSubmit) return console.log('No passed "onSubmit" handler');
 
-    // if (typeof beforeSubmit === 'function') beforeSubmit();
     if (typeof onSubmit === 'function') onSubmit(ev);
-    // if (typeof afterSubmit === 'function') afterSubmit();
   }
 
   function handleReset() {
-    onClose && onClose();
-    // handleCloseModal();
+    onClose ? onClose() : console.warn('No passed onClose handler');
     if (!onReset) return console.log('No passed "onReset" handler');
-    // if (typeof beforeClose === 'function') beforeClose();
     if (typeof onReset === 'function') onReset();
-    // if (typeof afterClose === 'function') afterClose();
   }
 
   return (

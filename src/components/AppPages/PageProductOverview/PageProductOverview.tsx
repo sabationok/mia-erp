@@ -4,7 +4,7 @@ import { takeFullGridArea } from '../pagesStyles';
 import AppGridPage from '../AppGridPage';
 import { useCallback, useEffect, useState } from 'react';
 import { useAppParams } from '../../../hooks';
-import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import PageCurrentProductProvider from './PageCurrentProductProvider';
 import { ToastService } from '../../../services';
 import PageProductOverviewRightSide from './PageProductOverviewRightSide';
@@ -18,7 +18,7 @@ export interface PageProductOverviewProps {
 const PageProductOverview: React.FC<PageProductOverviewProps> = ({ path }) => {
   const { productId } = useAppParams();
   const [isRightSideVisible, setIsRightSideVisible] = useState<boolean>(false);
-  const { products: productsS } = useAppServiceProvider();
+  const productsS = useAppServiceProvider()[ServiceName.products];
 
   const toggleRightSide = useCallback(() => {
     setIsRightSideVisible(p => !p);
@@ -40,6 +40,14 @@ const PageProductOverview: React.FC<PageProductOverviewProps> = ({ path }) => {
         .finally(rt);
     }
   }, [productId, productsS]);
+
+  useEffect(() => {
+    return () => {
+      productsS.clearCurrent({});
+    };
+
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <AppGridPage path={path}>

@@ -29,7 +29,7 @@ export interface IProductBase extends IBase {
   hasVariations?: boolean;
   type?: ProductTypeEnum;
   status?: ProductStatus;
-  approvedStatus?: ProductStatus;
+  approved?: ProductStatus;
   archived?: boolean;
   visible?: boolean;
   description?: string;
