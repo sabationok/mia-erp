@@ -21,29 +21,31 @@ export interface PriceManagementService {
   getById: ServiceDispatcherAsync<{ list: OnlyUUID; query?: AppQueryParams }, IPriceList>;
   getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IPriceList[]>;
   refreshListById: ServiceDispatcherAsync<OnlyUUID, IPriceList>;
-  getAllPricesByProductId: ServiceApiCaller<{ productId?: OnlyUUID }, IPriceListItem[]>;
-  getAllPricesByListId: ServiceApiCaller<{ listId?: OnlyUUID }, IPriceListItem[]>;
 
-  updateItemById?: ServiceApiCaller<IPriceListItemReqData, IPriceListItem>; // !!!!! ===>>> ServiceDispatcher
-  addItemToList: ServiceDispatcherAsync<ICreatePriceListItemReqData, IPriceList>;
-  // addItemToList?: ServiceDispatcherAsync<IPriceListItemReqData, IPriceListItem>;
-  deleteItemById?: ServiceApiCaller<OnlyUUID, IPriceListItem>; // !!!!! ===>>> ServiceDispatcher
+  // ? PRICES
+  getAllPricesByProductId: ServiceApiCaller<Pick<AppQueryParams, 'product'>, IPriceListItem[]>;
+  getAllPricesByListId: ServiceApiCaller<Pick<AppQueryParams, 'list'>, IPriceListItem[]>;
+  updatePriceById?: ServiceApiCaller<IPriceListItemReqData, IPriceListItem>; // !!!!! ===>>> ServiceDispatcher
+  addPriceToList: ServiceDispatcherAsync<ICreatePriceListItemReqData, IPriceList>;
+  deletePriceById?: ServiceApiCaller<OnlyUUID, IPriceListItem>; // !!!!! ===>>> ServiceDispatcher
 }
 
 const usePriceManagementService = (): PriceManagementService => {
   const dispatch: AppDispatch = useAppDispatch();
 
   return useMemo((): PriceManagementService => {
-    const { getAllItems } = PriceManagementApi;
+    const { getAllPricesByProductId, getAllPricesByListId } = PriceManagementApi;
     return {
       createList: arg => dispatch(thunks.createPriceListThunk(defaultThunkPayload(arg))),
       getAll: arg => dispatch(thunks.getAllPriceListsThunk(defaultThunkPayload(arg))),
       getById: arg => dispatch(thunks.getPriceListByIdThunk(defaultThunkPayload(arg))),
       refreshListById: arg => dispatch(thunks.refreshPriceListByIdThunk(defaultThunkPayload(arg))),
-      addItemToList: arg => dispatch(thunks.addPriceToListThunk(defaultThunkPayload(arg))),
 
-      getAllPricesByProductId: arg => createApiCall(defaultApiCallPayload(arg), getAllItems, PriceManagementApi),
-      getAllPricesByListId: arg => createApiCall(defaultApiCallPayload(arg), getAllItems, PriceManagementApi),
+      // ? PRICES
+      addPriceToList: arg => dispatch(thunks.addPriceToListThunk(defaultThunkPayload(arg))),
+      getAllPricesByProductId: arg =>
+        createApiCall(defaultApiCallPayload(arg), getAllPricesByProductId, PriceManagementApi),
+      getAllPricesByListId: arg => createApiCall(defaultApiCallPayload(arg), getAllPricesByListId, PriceManagementApi),
 
       // createList: async payload => dispatch(createProductThunk(defaultThunkPayload(payload))),
       // deleteById: async payload => createApiCall(defaultApiCallPayload(payload), deleteById, ProductsApi),

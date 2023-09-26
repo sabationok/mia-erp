@@ -168,7 +168,7 @@ export const addPriceToListThunk = createAsyncThunk<
         logRes: true,
         logError: true,
       },
-      PriceManagementApi.addItemToList,
+      PriceManagementApi.addPriceToList,
       PriceManagementApi
     );
     if (res?.data.data) {

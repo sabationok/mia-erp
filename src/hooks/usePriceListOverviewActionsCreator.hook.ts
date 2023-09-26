@@ -1,17 +1,18 @@
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
 import { IPriceListItem } from '../redux/priceManagement/priceManagement.types';
 import { useModalProvider } from '../components/ModalProvider/ModalProvider';
-import usePriceManagementServiceHook from './usePriceManagementService.hook';
 import { useCallback } from 'react';
 import { OnlyUUID } from '../redux/global.types';
 import FormCreatePrice from '../components/Forms/FormCreatePrice/FormCreatePrice';
 import { toast } from 'react-toastify';
+import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 
 export type PriceListOverviewActionsCreatorType = TableActionCreator<IPriceListItem>;
 
 export const usePricesModal = () => {
   const modalService = useModalProvider();
-  const service = usePriceManagementServiceHook();
+  const service = useAppServiceProvider()[ServiceName.priceManagement];
+
   const openAddPriceToListModal = useCallback(
     (list: OnlyUUID) => {
       const modal = modalService.handleOpenModal({
@@ -22,7 +23,7 @@ export const usePricesModal = () => {
           onSubmit: async ({ data: sData }, o) => {
             if (!Array.isArray(sData)) {
               console.log('usePricesModal => create one price', sData);
-              await service.addItemToList({
+              await service.addPriceToList({
                 data: { data: sData, list },
                 // data: createPriceDataForReq(data),
                 onSuccess: data => {
@@ -50,7 +51,7 @@ export const usePricesModal = () => {
 };
 export const usePriceListOverviewActionsCreator = (listId?: string): PriceListOverviewActionsCreatorType => {
   // const modalService = useModalProvider();
-  const service = usePriceManagementServiceHook();
+  const service = useAppServiceProvider()[ServiceName.priceManagement];
   const { openAddPriceToListModal } = usePricesModal();
   return useCallback(
     _ctx => [

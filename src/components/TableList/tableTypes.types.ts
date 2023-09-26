@@ -74,16 +74,18 @@ export interface ITableListProps<TDataType = any> {
   filterTitle?: string;
   filterSelectors?: FilterSelectorType[];
   filterDefaultValues?: FilterReturnDataType;
+  selectedRow?: Partial<TDataType>;
+  isLoading?: boolean;
+
+  actionsCreator?: TableActionCreator<TDataType>;
+
   onFilterSubmit?: (filterData: FilterReturnDataType) => void;
+  handleTableSort?: (param: SelectItem, sortOrder: SelectItem['sortOrder']) => void;
   onRowClick?: OnRowClickHandler<TDataType | undefined>;
+  onRowDoubleClick?: OnRowClickHandler<TDataType | undefined>;
   onCheckboxChange?: OnCheckBoxChangeHandler;
   onHeadCheckboxChange?: OnHeadCheckBoxChangeHandler;
   onTableSortParamChange?: (params: SelectItem) => void;
-  handleTableSort?: (param: SelectItem, sortOrder: SelectItem['sortOrder']) => void;
-  actionsCreator?: TableActionCreator<TDataType>;
-  selectedRow?: Partial<TDataType>;
-
-  isLoading?: boolean;
   onRefresh?: (loading: boolean) => void;
 }
 

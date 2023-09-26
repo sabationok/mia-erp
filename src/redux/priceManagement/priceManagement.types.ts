@@ -1,8 +1,17 @@
-import { AppResponse, IBase, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
+import {
+  AppResponse,
+  IBase,
+  IBaseWithPeriod,
+  IDataWithPeriod,
+  IFormDataValueWithUUID,
+  OnlyUUID,
+} from '../global.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 import { IProduct } from '../products/products.types';
 import { IVariation } from '../products/variations.types';
 import { AppQueryParams } from '../../api';
+import { ICompany } from '../companies/companies.types';
+import { IUser } from '../auth/auth.types';
 
 export enum PriceListTypeEnum {
   PURCHASES = 'purchases',
@@ -15,17 +24,13 @@ export type PriceListType = 'purchases' | 'sales';
 
 export type PriceListFilterOption = FilterOpt<PriceListType>;
 
-export interface PriceListDto {
+export interface PriceListDto extends IDataWithPeriod {
   label: string;
   status?: PriceListStatus;
   type?: PriceListType;
   customerTags?: string[];
   supplierTags?: string[];
-  timeFrom?: string;
-  timeTo?: string;
   description?: string;
-  // prices?: OnlyUUID[];
-  // products?: OnlyUUID[];
 }
 
 export interface IPriceList extends IBase {
@@ -39,12 +44,13 @@ export interface IPriceList extends IBase {
   type?: PriceListType;
 }
 
-export interface IPriceDto {
+export interface IPriceDto extends IDataWithPeriod {
+  list?: OnlyUUID;
   product?: OnlyUUID;
   variation?: OnlyUUID;
-  list?: OnlyUUID;
 
   label?: string;
+
   price?: number;
   cost?: number;
   discount?: number;
@@ -54,7 +60,11 @@ export interface IPriceDto {
   commissionAmount?: number;
 }
 
-export interface IPriceListItem extends IBase {
+export interface IPriceListItem extends IBaseWithPeriod {
+  owner?: ICompany;
+  author?: IUser;
+  editor?: IUser;
+
   product?: IProduct;
   variation?: IVariation;
   list?: IPriceList;
@@ -68,9 +78,6 @@ export interface IPriceListItem extends IBase {
   markupAmount?: number;
   commissionPercentage?: number;
   commissionAmount?: number;
-  // * OPTIONAL
-  timeFrom?: string | number | Date;
-  timeTo?: string | number | Date;
 }
 
 export interface IPriceFormData extends Omit<IPriceDto, 'product' | 'variation' | 'list'> {

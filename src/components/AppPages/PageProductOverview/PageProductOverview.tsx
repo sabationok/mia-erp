@@ -65,12 +65,14 @@ const PageProductOverview: React.FC<PageProductOverviewProps> = ({ path }) => {
 };
 const Page = styled.div`
   display: grid;
-  grid-template-columns: minmax(360px, 1fr) 2fr;
+  grid-template-columns: minmax(220px, 1fr) 0;
 
   ${takeFullGridArea};
 
-  @media screen and (max-width: 768px) {
-    grid-template-columns: minmax(280px, 1fr) 0;
+  //@media screen and (max-width: 768px) {
+  //}
+  @media screen and (min-width: 768px) {
+    grid-template-columns: minmax(360px, 1fr) 2fr;
   }
 `;
 

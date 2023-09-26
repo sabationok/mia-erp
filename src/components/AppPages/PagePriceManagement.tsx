@@ -22,7 +22,7 @@ const PagePriceManagement: React.FC<any> = (props: Props) => {
   const state = usePriceListsSelector();
   const navigate = useNavigate();
   const { getAll } = service;
-  const actionsCreator = usePriceManagementActionsCreatorHook(service);
+  const actionsCreator = usePriceManagementActionsCreatorHook();
   const [isLoading, setIsLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
@@ -36,7 +36,7 @@ const PagePriceManagement: React.FC<any> = (props: Props) => {
       footer: false,
       checkBoxes: true,
       actionsCreator,
-      onRowClick: ev => {
+      onRowDoubleClick: ev => {
         ev?._id && navigate(`${ev?._id}`);
       },
       onFilterSubmit: filterParams => {

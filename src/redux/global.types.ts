@@ -22,10 +22,12 @@ export interface IFormDataValueWithUUID<DirType extends ApiDirType = any> extend
   email?: string;
   parent?: Omit<IFormDataValueWithUUID<DirType>, 'parent'>;
 }
-export interface IBaseWithPeriod extends IBase {
+export interface IDataWithPeriod {
   timeFrom?: string | number | Date | null;
   timeTo?: string | number | Date | null;
 }
+export interface IBaseWithPeriod extends IBase, IDataWithPeriod {}
+
 export type IFormDataValue = IFormDataValueWithUUID | string | number | boolean | Date | null;
 
 export interface RoleActionType extends OnlyUUID {

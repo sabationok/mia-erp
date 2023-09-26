@@ -32,7 +32,6 @@ const PriceListOverview: React.FC<PriceListOverviewProps> = ({
   ...props
 }) => {
   const { lists } = usePriceListsSelector();
-
   const actionsCreator = usePriceListOverviewActionsCreator(listId);
   const { priceManagement } = useAppServiceProvider();
   const [tableData, setTableData] = useState<IPriceListItem[]>([]);
@@ -45,26 +44,14 @@ const PriceListOverview: React.FC<PriceListOverviewProps> = ({
   );
 
   useEffect(() => {
-    console.log(tableData);
-  }, [tableData]);
-  // const onValidSubmit = (data: IPriceList) => {
-  //   onSubmit &&
-  //     data.prices &&
-  //     onSubmit(data.prices, {
-  //       clearAfterSave: true,
-  //       closeAfterSave: true,
-  //       onLoading: l => {},
-  //       onSuccess: d => {},
-  //     });
-  // };
-
-  useEffect(() => {
     if (listId) {
-      priceManagement.getAllPricesByListId({
-        data: { listId: { _id: listId } },
-        onSuccess: setTableData,
-        onLoading: setIsLoading,
-      });
+      priceManagement
+        .getAllPricesByListId({
+          data: { list: { _id: listId } },
+          onSuccess: setTableData,
+          onLoading: setIsLoading,
+        })
+        .then();
     }
   }, [listId, priceManagement]);
 

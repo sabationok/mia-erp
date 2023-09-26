@@ -68,7 +68,7 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
       if (current === RightSideOptionEnum.Prices && page.currentProduct) {
         pricesS
           .getAllPricesByProductId({
-            data: { productId: ExtractId(page.currentProduct) },
+            data: { product: ExtractId(page.currentProduct) },
             onLoading: setLoading,
           })
           .finally();
@@ -164,7 +164,7 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
         },
       } as ITableListProps<IProductInventory>;
     }
-  }, [current, modalS, page, variationsTableTitles]);
+  }, [current, loadCurrentData, modalS, page.currentProduct, variationsTableTitles]);
 
   const filterHandler: FilterSelectHandler<RightSideOptionEnum> = (_, value, index) => {
     setCurrent(value);
@@ -208,13 +208,14 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
 const RightSide = styled(FlexBox)<{ isVisible?: boolean }>`
   overflow: auto;
 
-  min-width: 320px;
   max-width: 100%;
 
   transition: ${p => p.theme.globals.timingFunctionMain};
   background-color: ${p => p.theme.backgroundColorLight};
 
-  //border: 1px solid blue;
+  @media screen and (min-width: 768px) {
+    min-width: 320px;
+  }
 
   @media screen and (max-width: 768px) {
     position: absolute;
@@ -233,12 +234,5 @@ const Top = styled(FlexBox)<{ isVisible?: boolean }>`
     display: none;
   }
   border-bottom: 1px solid ${p => p.theme.modalBorderColor};
-`;
-const Bottom = styled(FlexBox)`
-  border-top: 1px solid ${p => p.theme.modalBorderColor};
-
-  @media screen and (min-width: 768px) {
-    display: none;
-  }
 `;
 export default PageProductOverviewRightSide;

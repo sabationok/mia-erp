@@ -135,12 +135,12 @@ export const priceListContentColumns: CellTittleProps<IPriceListItem, DataPath>[
     top: {
       name: t('timeTo'),
       align: 'center',
-      getData: d => d?.timeTo,
+      getData: d => `${d?.timeTo}`,
     },
     bottom: {
       name: t('timeFrom'),
       align: 'center',
-      getData: d => d?.timeFrom,
+      getData: d => `${d?.timeFrom}`,
     },
     width: '150px',
     action: 'dateDbl',
@@ -205,12 +205,12 @@ export const pricesColumnsForProductReview: CellTittleProps<IPriceListItem, Data
     top: {
       name: t('timeTo'),
       align: 'center',
-      getData: d => d?.timeTo,
+      getData: d => `${d?.timeTo}`,
     },
     bottom: {
       name: t('timeFrom'),
       align: 'center',
-      getData: d => d?.timeFrom,
+      getData: d => `${d?.timeFrom}`,
     },
     width: '150px',
     action: 'dateDbl',

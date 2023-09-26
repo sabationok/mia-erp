@@ -3,6 +3,7 @@ import baseApi, { baseURL, token } from './baseApi';
 import { createApiCall } from './createApiCall.api';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { FilterReturnDataType } from '../components/Filter/AppFilter';
+import { OnlyUUID } from '../redux/global.types';
 
 export { default as TransactionsApi } from './transactions.api';
 export { default as CompaniesApi } from './companies.api';
@@ -37,6 +38,14 @@ export interface AppQueryParams {
   sortParams?: ISortParams;
   search?: string;
   searchBy?: string;
+
+  parent?: OnlyUUID;
+  product?: OnlyUUID;
+  inventory?: OnlyUUID;
+  variation?: OnlyUUID;
+  list?: OnlyUUID;
+  price?: OnlyUUID;
+
   timeFrom?: string | number | Date;
   timeTo?: string | number | Date;
   filterParams?: Partial<FilterReturnDataType>;
