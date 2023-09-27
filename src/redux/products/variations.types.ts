@@ -27,11 +27,26 @@ export interface IVariation extends IBase {
 }
 
 export interface IVariationTableData extends IVariation {
-  propertiesMap: VariationPropertiesMap;
+  propertiesMap: VariationPropertiesMapInTableData;
 }
-export type VariationPropertiesMap = Record<string, IPropertyValue>;
+
+export type VariationPropertiesMapInTableData = Record<string, IPropertyValue>;
+export type VariationPropertiesMapInFormData = Record<string, string>;
+export interface IVariationFormData {
+  sku?: string;
+  label?: string;
+
+  propertiesMap: VariationPropertiesMapInFormData;
+  product?: OnlyUUID & { label?: string };
+
+  timeFrom?: string | number | Date;
+  timeTo?: string | number | Date;
+}
 
 export interface VariationDto {
+  sku?: string;
+  label?: string;
+
   properties?: string[];
   product?: OnlyUUID;
 

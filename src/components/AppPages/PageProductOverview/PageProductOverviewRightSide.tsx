@@ -112,7 +112,6 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
                     defaultState: dataForUpdate,
                   },
                 });
-                // toggleVisibility && toggleVisibility();
               },
             },
             {
@@ -141,7 +140,7 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
 
           return [
             { icon: 'refresh', type: 'onlyIcon' },
-            { icon: 'delete', type: 'onlyIcon' },
+            { icon: 'delete', type: 'onlyIcon', disabled: !currentId },
             { icon: 'edit', type: 'onlyIcon', disabled: !currentId },
             { icon: 'plus', type: 'onlyIconFilled' },
           ];
@@ -157,7 +156,7 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
 
           return [
             { icon: 'refresh', type: 'onlyIcon' },
-            { icon: 'delete', type: 'onlyIcon' },
+            { icon: 'delete', type: 'onlyIcon', disabled: !currentId },
             { icon: 'edit', type: 'onlyIcon', disabled: !currentId },
             { icon: 'plus', type: 'onlyIconFilled' },
           ];

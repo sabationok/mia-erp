@@ -16,4 +16,9 @@ function translate(key: LangTextKey): string {
   return key;
 }
 
+export function t(key: LangTextKey): string {
+  if (`${key}` in langPacks.ua) return langPacks.ua[key];
+  if (`${key}` in langPacks.en) return langPacks.en[key];
+  return key;
+}
 export default translate;

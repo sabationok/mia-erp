@@ -9,7 +9,7 @@ import { AppSubmitHandler, UseAppFormSubmitOptions } from '../../../hooks/useApp
 import { OverlayHandlerReturn } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
 import { useForm } from 'react-hook-form';
 import { createVariationFormData, createVariationReqData } from '../../../utils/dataTransform';
-import { IVariation } from '../../../redux/products/variations.types';
+import { IVariation, IVariationFormData } from '../../../redux/products/variations.types';
 import { OnlyUUID } from '../../../redux/global.types';
 import { ToastService } from '../../../services';
 import { ModalFormProps } from '../../ModalForm';
@@ -26,13 +26,7 @@ export interface FormVariationProps
 
   defaultState?: IVariation;
 }
-export interface IVariationFormData {
-  propertiesMap: Record<string, string>;
-  price?: OnlyUUID;
-  product?: OnlyUUID;
-  timeFrom?: string | number | Date;
-  timeTo?: string | number | Date;
-}
+
 const FormVariation: React.FC<FormVariationProps> = ({
   onClose,
   title,

@@ -7,7 +7,6 @@ export const warehousesTableColumns: CellTittleProps<IWarehouse>[] = [
     top: { name: 'Склад', getData: rd => rd.label },
     bottom: { name: 'Номер', getData: rd => rd.code },
     width: '220px',
-
     action: 'valueByPath',
   },
   {

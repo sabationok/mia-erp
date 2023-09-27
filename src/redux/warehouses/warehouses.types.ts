@@ -1,9 +1,10 @@
-import { IBase, OnlyUUID } from '../global.types';
+import { IBase, IBaseWithPeriod, OnlyUUID } from '../global.types';
 import { IProduct } from '../products/products.types';
 import { ICompany } from '../companies/companies.types';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
 import { IVariation } from '../products/variations.types';
 import { AppQueryParams } from '../../api';
+import { IUser } from '../auth/auth.types';
 
 export enum WarehouseTypeEnum {
   WAREHOUSE = 'warehouse',
@@ -11,33 +12,34 @@ export enum WarehouseTypeEnum {
 }
 export interface IWarehouse extends IBase {
   owner?: ICompany;
+  manager?: IUser;
+
   label: string;
   code?: string | number;
   type?: WarehouseTypeEnum;
+
   location?: string;
-  items?: IProductInventory[];
+  inventories?: IProductInventory[];
 }
 
 export type ProductInventoryStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
-export interface IProductInventory extends IBase {
+export interface IProductInventory extends IBaseWithPeriod {
   owner?: ICompany;
 
-  product?: Partial<IProduct>;
+  product?: IProduct;
   variation?: IVariation;
   price?: IPriceListItem;
 
+  batch?: string;
   stock?: number;
   reserved?: number;
 
   reservation?: boolean;
-
-  timeFrom?: string;
-  timeTo?: string;
 }
 export interface IProductInventoryFormData {
-  product?: Omit<IProduct, 'category' | 'productInventory'>;
-  variation?: IVariation;
+  product?: Omit<IProduct, 'categories' | 'inventories' | 'category' | 'properties'>;
+  variation?: Omit<IVariation, 'properties'>;
   status?: ProductInventoryStatus;
   priceInfo?: Omit<IPriceListItem, 'list' | 'product'>;
 

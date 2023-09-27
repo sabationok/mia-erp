@@ -205,6 +205,9 @@ export const langUa = {
   successfully: 'Успішно',
   error: 'Помилка',
   pending: 'У процесі',
+  rejected: 'Відхилено',
+  approved: 'Прийнято',
+  warning: 'Увага',
 
   logOutUser: 'Вийти з профілю',
   logOutPermission: 'Вийти з компанії',

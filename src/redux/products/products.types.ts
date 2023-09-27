@@ -10,6 +10,27 @@ import { AppQueryParams } from '../../api';
 import { IVariation } from './variations.types';
 import { IPropertyValue, IVariationTemplate } from './properties.types';
 
+export enum ProductStatusEnum {
+  pending = 'pending',
+  rejected = 'rejected',
+  approved = 'approved',
+  error = 'error',
+  success = 'success',
+  warning = 'warning',
+  // info = 'info',
+}
+
+export enum MeasurementUnit {
+  Pc = 'Pc', // Штука (Piece)
+  G = 'G', // Грам (Gram)
+  Kg = 'Kg', // Кілограм (Kilogram)
+  Ml = 'Ml', // Мілілітр (Milliliter)
+  L = 'L', // Літр (Liter)
+  M = 'M', // Метр (Meter)
+  SqM = 'SqM', // Квадратний метр (SquareMeter)
+  CuM = 'CuM', // Кубічний метр (CubicMeter)
+  Other = 'Other', // Інше (Other)
+}
 export type ProductStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
 export enum ProductTypeEnum {
@@ -55,12 +76,14 @@ export interface IProductAddsFields extends IProductBase {
   inventories?: IProductInventory[];
   prices?: IPriceListItem[];
 }
+
 export interface IProductDefaults {
   warehouse?: IWarehouse;
   price?: IPriceListItem;
   supplier?: ISupplierDirItem;
   inventory?: IProductInventory;
 }
+
 export interface IProductWithDefaults extends IProductAddsFields {
   defaults?: IProductDefaults;
 }
@@ -79,20 +102,25 @@ export interface IProductMeasurement {
   min?: number;
   max?: number;
   step?: number;
-  unit?: string;
+  unit?: MeasurementUnit;
 }
+
 // * >>>>>>> FORM DATA <<<<<<<
 export interface IProductBaseFormData extends IProductBaseDto {}
+
 export interface IProductDefaultsFormData extends Record<keyof IProductDefaults, IFormDataValueWithUUID> {}
+
 export interface IProductWithAddsFieldsFormData extends IProductBaseFormData {}
+
 export interface IProductFullFormData
   extends Omit<IProductFullDto, 'recommends' | 'properties' | 'images' | 'categories'> {
-  categories?: IFormDataValueWithUUID[];
+  categories?: string[];
   recommends?: IFormDataValueWithUUID[];
   properties?: string[];
   defaults?: IProductDefaultsFormData;
   images?: Partial<IProductImage>[];
 }
+
 export interface IProductFormData extends IProductFullFormData {}
 
 // * >>>>>> PRODUCT DTO <<<<<<<
@@ -106,10 +134,13 @@ export interface IProductWithAddsFieldsDto extends IProductBaseDto {
   recommends?: ArrayUUID;
   properties?: ArrayUUID;
 }
+
 export interface IProductDefaultsDto extends Record<keyof IProductDefaults, OnlyUUID> {}
+
 export interface IProductFullDto extends IProductWithAddsFieldsDto {
   defaults?: IProductDefaultsDto;
 }
+
 export interface IProductDto extends IProductFullDto {}
 
 export interface IProductReqData {

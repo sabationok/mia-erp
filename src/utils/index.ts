@@ -9,8 +9,7 @@ import founderByDataPath from './founderByDataPath';
 import { formatDateForInputValue } from './dateTime.utils';
 import { enumToArray } from './fabrics';
 import { createTableTitlesFromTemplate } from './tables';
-
-export * as check from './check';
+import * as checks from './check';
 
 export {
   founder,
@@ -27,4 +26,5 @@ export {
   formatDateForInputValue,
   enumToArray,
   createTableTitlesFromTemplate,
+  checks,
 };

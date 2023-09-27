@@ -17,7 +17,7 @@ const initialState: IWarehouseState = {
   current: {
     _id: '',
     label: '',
-    items: [],
+    inventories: [],
   },
   filteredLists: [],
   isLoading: false,

@@ -1,10 +1,10 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { IVariationTemplate } from '../redux/products/properties.types';
 import t from '../lang';
-import { IVariation, IVariationTableData, VariationPropertiesMap } from '../redux/products/variations.types';
+import { IVariation, IVariationTableData, VariationPropertiesMapInTableData } from '../redux/products/variations.types';
 
 export const transformVariationTableData = (variation: IVariation): IVariationTableData => {
-  let propertiesMap: VariationPropertiesMap = {};
+  let propertiesMap: VariationPropertiesMapInTableData = {};
 
   variation.properties?.map(value => {
     if (value.parent?._id) {

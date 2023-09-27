@@ -78,18 +78,24 @@ const FormProductStaticProperties: React.FC<FormProductStaticPropertiesProps> = 
           {'Доступні харктеристики'}
         </Text>
       </FlexBox>
-      {children}
+
+      {children && (
+        <FlexBox fillWidth padding={'6px 0'}>
+          {children}
+        </FlexBox>
+      )}
 
       {renderProperties}
     </Container>
   );
 };
 const Container = styled(FlexBox)`
+  margin: 8px 0 0;
   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
   border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
 `;
 const PropertyBox = styled(FlexBox)`
   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
-  border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
+  //border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
 `;
 export default FormProductStaticProperties;

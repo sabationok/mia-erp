@@ -295,6 +295,6 @@ const CategoryItem = styled(FlexBox)`
   min-height: 28px;
 
   border-radius: 2px;
-  background-color: ${p => p.theme.fieldBackgroundColor};
+  background-color: ${p => p.theme.field.backgroundColor};
   //border: 1px solid ${p => p.theme.accentColor.base};
 `;

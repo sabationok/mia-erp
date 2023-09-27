@@ -12,9 +12,10 @@ import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { useAppForm } from '../../../hooks';
 import {
   IProductFormData,
-  IProductMeasurement,
   IProductReqData,
+  MeasurementUnit,
   ProductFilterOpt,
+  ProductStatusEnum,
 } from '../../../redux/products/products.types';
 import { createDataForReq } from '../../../utils/dataTransform';
 import FormAfterSubmitOptions from '../components/FormAfterSubmitOptions';
@@ -23,6 +24,9 @@ import { IVariationTemplate } from '../../../redux/products/properties.types';
 import FormProductStaticProperties from './FormProductStaticProperties';
 import FormProductImagesComponent from './FormProductImagesComponent';
 import FormProductCategories from './FormProductCategories';
+import { Path } from 'react-hook-form';
+import { enumToFilterOptions } from '../../../utils/fabrics';
+import { FilterOption } from '../../ModalForm/ModalFilter';
 
 export interface FormCreateProductProps extends Omit<ModalFormProps<any, any, IProductFormData>, 'onSubmit'> {
   copy?: boolean;
@@ -34,12 +38,23 @@ export interface FormCreateProductProps extends Omit<ModalFormProps<any, any, IP
   defaultState?: IProductFormData;
   addInputs?: boolean;
 }
-
-const measurementInputs: { label?: string; placeholder?: string; name: keyof IProductMeasurement }[] = [
-  { name: 'unit', label: t('unit'), placeholder: t('unit') },
-  { name: 'min', label: t('min'), placeholder: t('min') },
-  { name: 'max', label: t('max'), placeholder: t('max') },
-  { name: 'step', label: t('step'), placeholder: t('step') },
+const productsStatusOption = enumToFilterOptions(ProductStatusEnum);
+const productsMeasurementUnitOption = enumToFilterOptions(MeasurementUnit);
+const visibilityOptions: FilterOption<boolean>[] = [
+  { label: 'yes', value: true },
+  { label: 'no', value: false },
+];
+const measurementInputs: {
+  label?: string;
+  placeholder?: string;
+  name: Path<IProductFormData>;
+  type?: HTMLInputElement['type'];
+  options?: FilterOption[];
+}[] = [
+  { name: 'measurement.unit', label: t('unit'), placeholder: t('unit'), options: productsMeasurementUnitOption },
+  { name: 'measurement.min', label: t('min'), placeholder: t('min'), type: 'number' },
+  { name: 'measurement.max', label: t('max'), placeholder: t('max'), type: 'number' },
+  // { name: 'measurement.step', label: t('step'), placeholder: t('step'), type: 'number' },
 ];
 
 const FormCreateProduct: React.FC<FormCreateProductProps> = ({
@@ -82,13 +97,11 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
 
   // TODO eventDate: formatDateForInputValue(defaultState?.eventDate)
   function onValidSubmit(submitData: IProductFormData) {
-    const omitPathArr: (keyof IProductFormData)[] = [];
-
-    const productForSubmit = createDataForReq(submitData, omitPathArr);
+    const productForSubmit = createDataForReq(submitData, { ignorePaths: ['measurement'] });
 
     onSubmit &&
       onSubmit(
-        { _id, data: { ...productForSubmit, categories: submitData.categories?.map(el => el._id) } },
+        { _id, data: { ...productForSubmit } },
         {
           closeAfterSave,
           clearAfterSave,
@@ -110,29 +123,19 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
       }
     >
       <FlexBox className={'inputs'} flex={'1'} fillWidth maxHeight={'100%'} padding={'12px'} overflow={'auto'}>
-        <InputLabel label={t('label')} direction={'vertical'} error={errors.label} required>
+        <InputLabel label={t('label')} error={errors.label} required>
           <InputText placeholder={t('label')} {...register('label')} required autoFocus />
         </InputLabel>
 
         <FlexBox fxDirection={'row'} gap={6} fillWidth>
-          <InputLabel label={t('sku')} direction={'vertical'} error={errors.sku}>
-            <InputText placeholder={t('sku')} {...register('sku', { max: 120 })} />
+          <InputLabel label={t('sku')} error={errors.sku}>
+            <InputText placeholder={t('sku')} {...register('sku')} />
           </InputLabel>
 
-          <InputLabel label={'Штрих-код'} direction={'vertical'} error={errors.barCode}>
+          <InputLabel label={'Штрих-код'} error={errors.barCode}>
             <InputText placeholder={'Штрих-код'} {...register('barCode')} />
           </InputLabel>
         </FlexBox>
-
-        {/*<CustomSelect*/}
-        {/*  treeMode*/}
-        {/*  {...registerSelect('category', {*/}
-        {/*    label: t('category'),*/}
-        {/*    placeholder: t('category'),*/}
-        {/*    required: true,*/}
-        {/*    options: categories,*/}
-        {/*  })}*/}
-        {/*/>*/}
 
         <FormProductCategories
           options={categories}
@@ -151,27 +154,44 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
           })}
         />
 
-        <InputLabel label={t('status')} direction={'vertical'} error={errors.status} disabled>
-          <InputText placeholder={t('status')} {...register('status')} disabled />
-        </InputLabel>
+        <CustomSelect
+          {...registerSelect('approved', {
+            options: productsStatusOption,
+            label: t('status'),
+            placeholder: t('status'),
+          })}
+        />
 
-        <FlexBox fxDirection={'row'} gap={6} fillWidth>
+        <FlexBox fxDirection={'row'} gap={6} fillWidth style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr' }}>
           {measurementInputs.map(input => {
-            return (
-              <InputLabel
+            return input.options ? (
+              <CustomSelect
                 key={input.name}
-                label={input.label}
-                direction={'vertical'}
-                error={errors?.measurement ? errors?.measurement[input.name] : undefined}
-                disabled
-              >
-                <InputText placeholder={input.placeholder} {...register(`measurement.${input.name}`)} disabled />
+                {...registerSelect(input?.name, {
+                  options: input?.options,
+                  label: input?.label,
+                  placeholder: input?.label,
+                  dropDownIsAbsolute: true,
+                  onlyValue: true,
+                })}
+              />
+            ) : (
+              <InputLabel key={input.name} label={input.label} error={errors[input.name as never]}>
+                <InputText
+                  placeholder={input.placeholder}
+                  min={input?.type === 'number' ? 1 : undefined}
+                  type={input?.type}
+                  {...register(input.name, {
+                    valueAsNumber: input?.type === 'number',
+                    min: input?.type === 'number' ? 1 : undefined,
+                  })}
+                />
               </InputLabel>
             );
           })}
         </FlexBox>
 
-        <InputLabel label={t('description')} direction={'vertical'} error={errors.description}>
+        <InputLabel label={t('description')} error={errors.description}>
           <TextareaPrimary placeholder={t('description')} {...register('description')} />
         </InputLabel>
 

@@ -1,4 +1,4 @@
-import { IProduct } from '../../redux/products/products.types';
+import { IProduct, IProductMeasurement } from '../../redux/products/products.types';
 import FlexBox from '../atoms/FlexBox';
 import React, { useMemo } from 'react';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
@@ -158,6 +158,8 @@ const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }
 const Container = styled(FlexBox)`
   position: relative;
   overflow: hidden;
+
+  background-color: ${p => p.theme.sideBarBackgroundColor};
 `;
 const Header = styled(FlexBox)`
   height: 32px;
@@ -232,14 +234,19 @@ const productOverviewCells: ProductOverviewCell[] = [
     title: 'Вимірювання',
     CellComponent: Cells.OverviewTextCell,
     getValue: product => {
-      const arr = [
-        `${t('unit')}: ${product?.measurement?.unit || 0}`,
-        `${t('min')}: ${product?.measurement?.min || 0}`,
-        `${t('max')}: ${product?.measurement?.max || 0}`,
-        `${t('step')}: ${product?.measurement?.step || 0}`,
-      ];
+      try {
+        const data: IProductMeasurement = product?.measurement ? JSON.parse(product?.measurement as string) : {};
+        const arr = [
+          `${t('unit')}: ${data?.unit || 0}`,
+          `${t('min')}: ${data?.min || 0}`,
+          `${t('max')}: ${data?.max || 0}`,
+          `${t('step')}: ${data?.step || 0}`,
+        ];
 
-      return arr.join(' | ');
+        return arr.join(' | ');
+      } catch (e) {
+        return '';
+      }
     },
     gridArea: 'measurement',
   },

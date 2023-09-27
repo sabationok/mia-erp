@@ -32,7 +32,7 @@ const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = (
     required,
     ...props
   },
-  ref: React.ForwardedRef<any>
+  _ref: React.ForwardedRef<any>
 ) => {
   return (
     <Label className={className} disabled={disabled} {...props}>

@@ -1,8 +1,7 @@
 import { ITransaction, ITransactionForReq } from '../redux/transactions/transactions.types';
 import { cloneDeep, isObject, omit, pick } from 'lodash';
 import { OnlyUUID } from '../redux/global.types';
-import { IVariationFormData } from '../components/Forms/FormProduct/FormVariation';
-import { IVariation, IVariationReqData } from '../redux/products/variations.types';
+import { IVariation, IVariationFormData, IVariationReqData } from '../redux/products/variations.types';
 import { ConfigService } from '../services';
 import {
   IProduct,
@@ -12,7 +11,9 @@ import {
 } from '../redux/products/products.types';
 
 const isDevMode = ConfigService.isDevMode();
-
+export function parseBool(key?: 'false' | 'true' | string) {
+  return key === 'true';
+}
 export const ExtractId = <T extends OnlyUUID>(data: T) => (pick(data, '_id')._id ? pick(data, '_id') : { _id: '' });
 export const ExtractIdString = <T extends OnlyUUID>(data: Partial<T>) =>
   '_id' in data ? pick(data, '_id')._id : undefined;
@@ -92,11 +93,12 @@ export function createDataForReq<
   OutDataType extends Record<keyof IncomeDataType, any> = any
 >(
   incomeData: IncomeDataType,
-  omitPathArr: (keyof IncomeDataType)[] = [],
   options?: {
+    omitPathArr?: (keyof IncomeDataType)[];
     dateToNumberPath?: keyof IncomeDataType | string;
     amountToNumberPath?: keyof IncomeDataType | string;
     checkArrayPath?: keyof IncomeDataType | string;
+    ignorePaths?: (keyof IncomeDataType)[];
   }
 ): Partial<Omit<OutDataType, keyof IncomeDataType>> {
   let outData: Partial<OutDataType> = {};
@@ -104,9 +106,13 @@ export function createDataForReq<
   const keys = Object.keys(incomeData) as (keyof IncomeDataType)[];
 
   keys.map(key => {
-    if (['_id', 'createdAt', 'updatedAt', ...omitPathArr]?.includes(key)) return '';
-
+    if (['_id', 'createdAt', 'updatedAt', ...(options?.omitPathArr || [])]?.includes(key)) return '';
     const value = incomeData[key];
+
+    if (options?.ignorePaths && options.ignorePaths.includes(key)) {
+      outData[key] = value;
+      return '';
+    }
     if (!value) return '';
 
     if (options?.dateToNumberPath && key === options?.dateToNumberPath) {
@@ -139,12 +145,12 @@ export function createDataForReq<
 export const createVariationReqData = (formData: IVariationFormData, _id?: string): IVariationReqData => {
   isDevMode && console.log('createVariationReqData input', formData);
 
-  const data = {
+  const data: IVariationReqData['data'] = {
     timeFrom: formData?.timeFrom,
     timeTo: formData?.timeTo,
     product: formData?.product ? ExtractId(formData?.product) : undefined,
-    price: formData?.price,
-    properties: formData?.propertiesMap ? Object.values(formData?.propertiesMap) : [],
+    label: formData?.label,
+    properties: formData?.propertiesMap ? Object.values(formData?.propertiesMap) : undefined,
   };
   isDevMode && console.log('createVariationReqData output', data);
 
@@ -166,13 +172,21 @@ export const createVariationFormData = (variation: IVariation): IVariationFormDa
   return {
     timeFrom: variation?.timeFrom,
     timeTo: variation?.timeTo,
-    product: variation?.product ? ExtractId(variation?.product) : undefined,
-    price: variation?.price,
+    label: variation.label ? variation.label : variation?.product?.label,
+    product: variation?.product ? ExtractId(variation.product) : undefined,
     propertiesMap,
   };
 };
 
-const createProductFormDataOmitPaths: (keyof IProduct | string)[] = ['variations', 'inventories', 'prices'];
+const createProductFormDataOmitPaths: (keyof IProduct | string)[] = [
+  'variations',
+  'inventories',
+  'prices',
+  '_id',
+  'createdAt',
+  'updatedAt',
+  'deletedAt',
+];
 const getFormValuePickPaths = (data?: any) => {
   return data ? ['_id', 'label', 'email', 'dirType', 'parent', 'name', 'secondName'].filter(key => key in data) : [];
 };

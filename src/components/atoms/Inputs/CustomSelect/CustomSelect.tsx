@@ -12,9 +12,10 @@ import CheckBox from '../../../TableList/TebleCells/CellComponents/CheckBox';
 export interface CustomSelectBaseProps {
   InputComponent?: React.FC<InputHTMLAttributes<HTMLInputElement>>;
   valueKey?: string;
+  onSelect?: CustomSelectHandler;
+
   options?: CustomSelectOption[];
   getOptions?: () => CustomSelectOption[];
-  onSelect?: CustomSelectHandler;
   onClear?: () => void;
   handleOpenState?: (prevState: boolean) => boolean;
   open?: boolean;
@@ -153,13 +154,6 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
     !keepOpen && setIsOpen(prev => !prev);
   }, [keepOpen]);
 
-  // const isValidOption = useCallback(
-  //   (option: CustomSelectOption) => {
-  //     return options?.some((opt: { _id?: string }) => opt?._id === option?._id);
-  //   },
-  //   [options]
-  // );
-
   const inputCurrentValue = useMemo(() => {
     return getLabel && currentOption
       ? getLabel(currentOption)
@@ -168,24 +162,6 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
       : '';
   }, [currentOption, getLabel]);
 
-  // const handleOnSelect = useCallback(
-  //   (index: number, option?: any) => {
-  //     if (!options || options?.length === 0) return;
-  //
-  //     return () => {
-  //       setCurrentOption(option);
-  //       if (onSelect && valueKey && valueKey && option[valueKey]) {
-  //         onSelect(option, option[valueKey], index);
-  //         return;
-  //       }
-  //       if (onSelect) {
-  //         onSelect(option, option?.value, index);
-  //       }
-  //       !treeMode && handleOpenState();
-  //     };
-  //   },
-  //   [handleOpenState, treeMode, onSelect, options, valueKey]
-  // );
   const onSelectOption = useCallback(
     (index: number, option?: any) => {
       setCurrentOption(option);
@@ -420,6 +396,7 @@ const LabelInner = styled.fieldset<{
 const StyledInput = styled.input`
   flex: 1;
   height: 100%;
+  width: 100%;
 
   padding: 4px 8px;
   color: inherit;

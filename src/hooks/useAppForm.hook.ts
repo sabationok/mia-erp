@@ -11,7 +11,8 @@ export type CustomSelectProps = CustomSelectBaseProps &
 
 export type RegisterSelect<TFieldValues extends FieldValues = FieldValues> = (
   name: Path<TFieldValues>,
-  props?: Omit<CustomSelectProps, 'name'>,
+
+  props?: Omit<CustomSelectProps, 'name'> & { onlyValue?: true },
   childControl?: {
     childName?: Path<TFieldValues>;
   }
@@ -63,15 +64,15 @@ const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = a
   const registerSelect = useCallback(
     (
       name: Path<TFieldValues>,
-      props?: Omit<CustomSelectProps, 'name'>,
+      props?: Omit<CustomSelectProps, 'name'> & { onlyValue?: true },
       childControl?: {
         childName?: Path<TFieldValues>;
       }
     ): CustomSelectProps => {
       return {
         ...register(name),
-        onSelect: (option, _value) => {
-          setValue<Path<TFieldValues>>(name, option as any);
+        onSelect: (option, value) => {
+          setValue<Path<TFieldValues>>(name, props?.onlyValue ? value : (option as any));
           // if (childControl?.childName) clearChild(childControl?.childName);
         },
         name,

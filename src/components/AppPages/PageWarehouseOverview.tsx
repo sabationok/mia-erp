@@ -29,7 +29,7 @@ const PageWarehouseOverview: React.FC<any> = (props: Props) => {
 
   const tableConfig = useMemo(
     (): ITableListProps<IProductInventory> => ({
-      tableData: state.current?.items,
+      tableData: state.current?.inventories,
       isFilter: false,
       isSearch: true,
       footer: false,

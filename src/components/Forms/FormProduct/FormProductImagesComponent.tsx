@@ -8,7 +8,7 @@ import { useModalService } from '../../ModalProvider/ModalProvider';
 import FormAddImageSet, { FormAddImageSetData, formAddImageSetTabs, ImageSetSrcType } from './FormAddImageSet';
 import ImagePreviewSmall from '../../atoms/ImagePreviewSmall';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import { check } from '../../../utils';
+import { checks as check } from '../../../utils';
 
 export interface FormProductImagesComponentProps {
   onChangeState?: (state: Partial<IProductImage>[]) => void;
