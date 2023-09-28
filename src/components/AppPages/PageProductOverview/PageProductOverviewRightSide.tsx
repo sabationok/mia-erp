@@ -3,7 +3,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import TableList, { ITableListProps } from '../../TableList/TableList';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
 import { enumToFilterOptions } from '../../../utils/fabrics';
-import { createTableTitlesFromTemplate } from '../../../utils';
 import { useModalProvider } from '../../ModalProvider/ModalProvider';
 import { Text } from '../../atoms/Text';
 import ModalFilter, { FilterSelectHandler } from '../../ModalForm/ModalFilter';
@@ -15,7 +14,6 @@ import { IVariationTableData } from 'redux/products/variations.types';
 import { transformVariationTableData } from '../../../utils/tables';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { ExtractId } from '../../../utils/dataTransform';
-import { usePropertiesSelector } from '../../../redux/selectors.store';
 import AppLoader from '../../atoms/AppLoader';
 import { warehouseOverviewTableColumns } from '../../../data/warehauses.data';
 import { IProductInventory } from '../../../redux/warehouses/warehouses.types';
@@ -50,13 +48,6 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
   const pricesS = useAppServiceProvider()[ServiceName.priceManagement];
   const [loading, setLoading] = useState(false);
 
-  const templates = usePropertiesSelector();
-
-  const variationsTableTitles = useMemo(() => {
-    const template = templates.find(t => t._id === page.currentProduct?.template?._id);
-    return createTableTitlesFromTemplate(template);
-  }, [page.currentProduct?.template?._id, templates]);
-
   const loadCurrentData = useCallback(
     (current: RightSideOptionEnum) => {
       if (!page.currentProduct) return;
@@ -80,7 +71,7 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
   const currentTableSettings = useMemo((): ITableListProps | undefined => {
     if (current === RightSideOptionEnum.Variations) {
       return {
-        tableTitles: variationsTableTitles,
+        tableTitles: page?.variationsTableTitles,
         tableData: page?.currentProduct?.variations,
         transformData: transformVariationTableData,
         actionsCreator: ctx => {
@@ -88,6 +79,7 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
 
           return [
             { icon: 'refresh', type: 'onlyIcon', onClick: () => loadCurrentData(current) },
+            { separator: true },
             {
               icon: 'delete',
               type: 'onlyIcon',
@@ -96,6 +88,7 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
                 window.confirm(`Видалити варіацію:\n ${currentId}`);
               },
             },
+            { icon: 'copy', type: 'onlyIcon', disabled: !currentId },
             {
               icon: 'edit',
               type: 'onlyIcon',
@@ -114,6 +107,7 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
                 });
               },
             },
+            { separator: true },
             {
               icon: 'plus',
               type: 'onlyIconFilled',
@@ -140,8 +134,11 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
 
           return [
             { icon: 'refresh', type: 'onlyIcon' },
+            { separator: true },
             { icon: 'delete', type: 'onlyIcon', disabled: !currentId },
+            { icon: 'copy', type: 'onlyIcon', disabled: !currentId },
             { icon: 'edit', type: 'onlyIcon', disabled: !currentId },
+            { separator: true },
             {
               icon: 'plus',
               type: 'onlyIconFilled',
@@ -170,8 +167,11 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
 
           return [
             { icon: 'refresh', type: 'onlyIcon' },
+            { separator: true },
             { icon: 'delete', type: 'onlyIcon', disabled: !currentId },
+            { icon: 'copy', type: 'onlyIcon', disabled: !currentId },
             { icon: 'edit', type: 'onlyIcon', disabled: !currentId },
+            { separator: true },
             {
               icon: 'plus',
               type: 'onlyIconFilled',
@@ -186,7 +186,7 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
         },
       } as ITableListProps<IProductInventory>;
     }
-  }, [current, loadCurrentData, modalS, page.currentProduct, variationsTableTitles]);
+  }, [current, loadCurrentData, modalS, page.currentProduct, page?.variationsTableTitles]);
 
   const filterHandler: FilterSelectHandler<RightSideOptionEnum> = (_, value, index) => {
     setCurrent(value);
