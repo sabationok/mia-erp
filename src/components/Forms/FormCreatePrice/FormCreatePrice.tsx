@@ -1,19 +1,18 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import FlexBox from '../../atoms/FlexBox';
 import { IPriceFormData } from '../../../redux/priceManagement/priceManagement.types';
-import { OnlyUUID } from '../../../redux/global.types';
 import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
 import { useAppForm } from '../../../hooks';
 import FormProductSelectorForPricing from './FormProductSelectorForPricing';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import * as _ from 'lodash';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { IProduct } from '../../../redux/products/products.types';
 // import * as yup from 'yup';
 import { usePriceListsSelector } from '../../../redux/selectors.store';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
-import { IVariation } from '../../../redux/products/variations.types';
+import FormAfterSubmitOptions from '../components/FormAfterSubmitOptions';
 
 // const validation = yup.object().shape({
 //   cost: yup.number(),
@@ -22,28 +21,26 @@ import { IVariation } from '../../../redux/products/variations.types';
 
 export interface FormCreatePriceProps
   extends Omit<ModalFormProps<any, any, IPriceFormData>, 'onSubmit' | 'afterSubmit'> {
-  list?: OnlyUUID;
   product?: IProduct;
-  variation?: IVariation;
   update?: string;
-  onSubmit: (
-    data: {
-      data: IPriceFormData | IPriceFormData[];
-    },
-    options: UseAppFormSubmitOptions & {}
-  ) => void;
+  onSubmit: (data: IPriceFormData, options: UseAppFormSubmitOptions & {}) => void;
 }
 
-const FormCreatePrice: React.FC<FormCreatePriceProps> = ({
-  defaultState,
-  update,
-  product,
-  list,
-  onSubmit,
-  ...props
-}) => {
-  const { formValues, register, setValue, handleSubmit, registerSelect } = useAppForm<IPriceFormData>({
-    defaultValues: { ...defaultState, product },
+const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update, product, onSubmit, ...props }) => {
+  const currentProduct = useMemo(() => {
+    return product;
+  }, [product]);
+  const {
+    formValues,
+    register,
+    setValue,
+    handleSubmit,
+    registerSelect,
+    toggleAfterSubmitOption,
+    closeAfterSave,
+    clearAfterSave,
+  } = useAppForm<IPriceFormData>({
+    defaultValues: { ...defaultState, product: currentProduct },
   });
 
   const { lists } = usePriceListsSelector();
@@ -72,9 +69,11 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({
   const onValid = (formData: IPriceFormData) => {
     const data: IPriceFormData = { ...formData, price: Number(formData.price), cost: Number(formData.cost) };
 
-    console.log('onValid', { list, data, onSubmit });
-
-    list && onSubmit && onSubmit({ data: formData }, {});
+    onSubmit &&
+      onSubmit(formData, {
+        closeAfterSave,
+        clearAfterSave,
+      });
   };
 
   useEffect(() => {
@@ -90,28 +89,36 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({
       title={`${update ? 'Edit' : 'Create'} price for: ${formValues?.product?.label || '---'} | ${
         formValues?.variation?.label || '---'
       }`}
+      extraFooter={
+        <FormAfterSubmitOptions
+          closeAfterSave={closeAfterSave}
+          clearAfterSave={closeAfterSave}
+          toggleOption={toggleAfterSubmitOption}
+        />
+      }
       {...props}
     >
       <FlexBox padding={'8px'} flex={1}>
         <FormProductSelectorForPricing
           selected={formValues.product}
-          disabled={!list?._id}
+          disabled={!defaultState?.list?._id}
           title={'Select product for pricing'}
           onSelect={(p: IProduct) => {
             setValue('product', p);
           }}
         />
 
-        {!list?._id && (
-          <CustomSelect
-            {...registerSelect('list', {
-              options: lists,
-              dropDownIsAbsolute: true,
-              label: 'Прайс лист',
-              placeholder: 'Оберіть прайс лист',
-            })}
-          />
-        )}
+        <CustomSelect
+          {...registerSelect('list', {
+            options: lists,
+            dropDownIsAbsolute: true,
+            label: 'Прайс лист',
+            placeholder: 'Оберіть прайс лист',
+            getLabel: d => {
+              return `${d?.label}`;
+            },
+          })}
+        />
 
         <FlexBox fxDirection={'row'} gap={12}>
           <InputLabel label={'Вхідна ціна'} direction={'vertical'} required>
@@ -139,7 +146,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({
             <InputText
               placeholder={'Введіть суму комісії'}
               type={'number'}
-              {...register('commissionAmount')}
+              {...register('commissionAmount', { valueAsNumber: true })}
               disabled
             />
           </InputLabel>
@@ -148,7 +155,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({
             <InputText
               placeholder={'Введіть % комісії'}
               type={'number'}
-              {...register('commissionPercentage')}
+              {...register('commissionPercentage', { valueAsNumber: true })}
               disabled
             />
           </InputLabel>

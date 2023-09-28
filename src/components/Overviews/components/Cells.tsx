@@ -1,16 +1,19 @@
 import FlexBox from '../../atoms/FlexBox';
 import React, { useMemo } from 'react';
 import { RenderOverviewCellComponent } from '../ProductOverviewXL';
-import FormCreateVariation from '../../Forms/FormProduct/FormVariation';
+import FormCreateVariation from '../../Forms/FormProduct/FormCreateVariationOverlay';
 import { IProperty } from '../../../redux/products/properties.types';
 import styled from 'styled-components';
 import { Text } from '../../atoms/Text';
-import { useProductsSelector } from '../../../redux/selectors.store';
-import FormSelectProperties from '../../Forms/FormProduct/FormSelectProperties';
+import { useDirectoriesSelector, useProductsSelector } from '../../../redux/selectors.store';
+import FormSelectPropertiesOverlay from '../../Forms/FormProduct/FormSelectPropertiesOverlay';
 import { IProduct } from '../../../redux/products/products.types';
 import { formAddImageSetTabs } from '../../Forms/FormProduct/FormAddImageSet';
 import FormProductImages from '../../Forms/FormProduct/FormProductImagesOverlay';
 import ImagePreviewSmall from '../../atoms/ImagePreviewSmall';
+import { IProductCategoryDirItem } from '../../Directories/dir.types';
+import { ApiDirType } from '../../../redux/APP_CONFIGS';
+import FormProductCategoriesOverlay from '../../Forms/FormProduct/FormSelectCategoriesOverlay';
 
 export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) => {
   const value = cell.getValue ? cell.getValue(data) : null;
@@ -35,14 +38,17 @@ export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) =>
     </Cell>
   );
 };
-export const CategoriesCell: RenderOverviewCellComponent = ({ cell, data }) => {
-  const renderItems = useMemo(() => {
-    return data?.categories?.map((c, index) => {
-      return (
-        <CategoryItem key={`cat_${c._id}`}>{`${c?.parent?.label && `${c?.parent?.label}/`}${c?.label}`}</CategoryItem>
-      );
-    });
+export const CategoriesCell: RenderOverviewCellComponent = ({ cell, setOverlayContent, data }) => {
+  const categories = useDirectoriesSelector(ApiDirType.CATEGORIES_PROD).directory;
+  const selectedCategoryIds = useMemo(() => {
+    return data?.categories?.map(el => el._id) ?? [];
   }, [data?.categories]);
+
+  const renderItems = useMemo(() => {
+    return categories.map((c, index) => {
+      return <NotActiveTreeDataItem key={`cat_${c._id}`} selectedIds={selectedCategoryIds} item={c} />;
+    });
+  }, [categories, selectedCategoryIds]);
 
   return (
     <Cell style={{ minHeight: 'max-content' }}>
@@ -51,7 +57,15 @@ export const CategoriesCell: RenderOverviewCellComponent = ({ cell, data }) => {
           {cell?.title}
         </CellText>
 
-        <OverlayOpenButton>{'Змінити'}</OverlayOpenButton>
+        <OverlayOpenButton
+          onClick={() => {
+            setOverlayContent({
+              RenderComponent: FormProductCategoriesOverlay,
+            });
+          }}
+        >
+          {'Змінити'}
+        </OverlayOpenButton>
       </FlexBox>
 
       <FlexBox
@@ -68,6 +82,43 @@ export const CategoriesCell: RenderOverviewCellComponent = ({ cell, data }) => {
     </Cell>
   );
 };
+
+const NotActiveTreeDataItem: React.FC<{
+  item: IProductCategoryDirItem;
+  lvl?: number;
+  index?: number;
+  selectedIds: string[];
+}> = ({ item, index = 0, lvl = 0, selectedIds }) => {
+  const renderChildren = useMemo(() => {
+    return item?.childrenList?.map((item, index) => {
+      return (
+        <NotActiveTreeDataItem
+          key={`item_lvl_${lvl}_${item._id}`}
+          item={item}
+          index={index}
+          lvl={lvl + 1}
+          selectedIds={selectedIds}
+        />
+      );
+    });
+  }, [item?.childrenList, lvl, selectedIds]);
+
+  const isSelected = useMemo(() => {
+    return selectedIds.includes(item._id);
+  }, [item._id, selectedIds]);
+  return (
+    <>
+      {isSelected && (
+        <CategoryItem fxDirection={'row'} alignItems={'center'} padding={'0 2px 0 12px'} gap={2}>
+          {item?.parent?.label && `${item?.parent?.label}/`}
+          {`${item?.label}`}
+        </CategoryItem>
+      )}
+      {renderChildren}
+    </>
+  );
+};
+
 export const VariationsTemplateCell: RenderOverviewCellComponent = ({ cell, setOverlayContent, data }) => {
   return (
     <Cell padding={'4px'}>
@@ -180,7 +231,7 @@ export const StaticProperties: RenderOverviewCellComponent = ({ cell, setOverlay
         <OverlayOpenButton
           type={'button'}
           onClick={() => {
-            setOverlayContent({ RenderComponent: FormSelectProperties, props: { update: data?._id } });
+            setOverlayContent({ RenderComponent: FormSelectPropertiesOverlay, props: { update: data?._id } });
           }}
         >
           {'Змінити'}
@@ -209,7 +260,7 @@ const OverviewPropertyComponent: React.FC<OverviewPropertyComponentProps> = ({ i
       ?.filter(el => selectedItems?.includes(el._id))
       ?.map((value, index) => {
         return (
-          <CategoryItem key={`prop-v-${value._id}`} maxWidth={'130px'}>
+          <CategoryItem key={`prop-v-${value._id}`} className={'PROP_VALUE'} maxWidth={'130px'}>
             {value.label}
           </CategoryItem>
         );

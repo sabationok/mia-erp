@@ -25,6 +25,6 @@ export const CreateProductInventory = lazy(() => import('./FormCreateProductInve
 // * PRODUCTS
 export const CreateProduct = lazy(() => import('./FormProduct/FormCreateProduct'));
 export const CreateVariation = lazy(() => import('./FormCreateVariation'));
-export const Variation = lazy(() => import('./FormProduct/FormVariation'));
+export const Variation = lazy(() => import('./FormProduct/FormCreateVariationOverlay'));
 export const CreateProperty = lazy(() => import('./FormCreateProperty'));
-export const SelectProperties = lazy(() => import('./FormProduct/FormSelectProperties'));
+export const SelectProperties = lazy(() => import('./FormProduct/FormSelectPropertiesOverlay'));

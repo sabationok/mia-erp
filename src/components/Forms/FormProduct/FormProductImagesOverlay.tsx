@@ -6,9 +6,7 @@ import styled, { useTheme } from 'styled-components';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { ExtractId } from '../../../utils/dataTransform';
-import FlexBox from 'components/atoms/FlexBox';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import { Text } from '../../atoms/Text';
+import { OverlayFooter, OverlayHeader } from './components';
 
 export interface FormProductImagesOverlayProps extends OverlayHandlerReturn {
   product?: IProduct;
@@ -44,50 +42,9 @@ const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onC
           borderTop: `1px solid ${theme.sideBarBorderColor}`,
           borderBottom: `1px solid ${theme.sideBarBorderColor}`,
         }}
-        renderHeader={
-          <FlexBox
-            fillWidth
-            fxDirection={'row'}
-            justifyContent={'space-between'}
-            alignItems={'stretch'}
-            height={'32px'}
-          >
-            <ButtonIcon variant={'textExtraSmall'} icon={'SmallArrowLeft'} onClick={onClose}>
-              {'Back'}
-            </ButtonIcon>
-
-            <FlexBox justifyContent={'center'}>
-              <Text $weight={600} $size={16}>
-                {'Фото'}
-              </Text>
-            </FlexBox>
-          </FlexBox>
-        }
+        renderHeader={<OverlayHeader title={'Зображення'} onClose={onClose} showSubmitButton />}
         FooterComponent={props => {
-          return (
-            <Footer fxDirection={'row'} gap={8} padding={'8px 0'} justifyContent={'stretch'} fillWidth>
-              <ButtonIcon
-                variant={'onlyIcon'}
-                icon={'plus'}
-                size={'36px'}
-                iconSize={'80%'}
-                onClick={props.onAddNewImageSetPress}
-              />
-
-              <ButtonIcon
-                variant={'filledLarge'}
-                flex={1}
-                type={'submit'}
-                style={{ padding: '0 12px' }}
-                textTransform={'uppercase'}
-                fontWeight={600}
-                endIcon={'SmallArrowRight'}
-                endIconSize={'24px'}
-              >
-                {'Прийняти'}
-              </ButtonIcon>
-            </Footer>
-          );
+          return <OverlayFooter onCreatePress={props.onAddNewImageSetPress} />;
         }}
       />
     </Form>
@@ -107,10 +64,8 @@ const Form = styled.form`
 
   background-color: ${p => p.theme.sideBarBackgroundColor};
 `;
-const Header = styled(FlexBox)``;
-const Content = styled(FlexBox)`
-  border-top: 1px solid ${p => 'tomato' || p.theme.sideBarBorderColor};
-  border-bottom: 1px solid ${p => 'tomato' || p.theme.sideBarBorderColor};
-`;
-const Footer = styled(FlexBox)``;
+// const Content = styled(FlexBox)`
+//   border-top: 1px solid ${p => 'tomato' || p.theme.sideBarBorderColor};
+//   border-bottom: 1px solid ${p => 'tomato' || p.theme.sideBarBorderColor};
+// `;
 export default FormProductImagesOverlay;

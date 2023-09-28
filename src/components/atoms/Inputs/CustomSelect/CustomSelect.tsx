@@ -4,31 +4,30 @@ import { omit, pick } from 'lodash';
 import styled, { css } from 'styled-components';
 import FlexBox, { FieldBox } from '../../FlexBox';
 import { RefCallBack } from 'react-hook-form';
-import { SelectItem } from '../../../TableList/tableTypes.types';
 import ButtonIcon from '../../ButtonIcon/ButtonIcon';
 import { nanoid } from '@reduxjs/toolkit';
 import CheckBox from '../../../TableList/TebleCells/CellComponents/CheckBox';
 
-export interface CustomSelectBaseProps {
+export interface CustomSelectBaseProps<Option = CustomSelectOptionBase> {
   InputComponent?: React.FC<InputHTMLAttributes<HTMLInputElement>>;
   valueKey?: string;
   onSelect?: CustomSelectHandler;
 
-  options?: CustomSelectOption[];
-  getOptions?: () => CustomSelectOption[];
+  options?: CustomSelectOption<Option>[];
+  getOptions?: () => CustomSelectOption<Option>[];
   onClear?: () => void;
   handleOpenState?: (prevState: boolean) => boolean;
   open?: boolean;
   ref?: RefCallBack;
-  selectValue?: CustomSelectOption;
+  selectValue?: CustomSelectOption<Option>;
   keepOpen?: boolean;
   inputProps?: Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'>;
   labelProps?: Omit<InputLabelProps, 'onSelect'>;
   fieldMode?: boolean;
   treeMode?: boolean;
   multipleMode?: boolean;
-  validateOption?: (option: CustomSelectOption) => boolean;
-  getLabel?: (option: CustomSelectOption) => string;
+  validateOption?: (option: CustomSelectOption<Option>) => boolean;
+  getLabel?: (option: CustomSelectOption<Option>) => string;
   dropDownIsAbsolute?: boolean;
   onCreatePress?: () => void;
 }
@@ -37,25 +36,28 @@ export type CustomSelectOnClickHandler = <Option = any>(option?: Option, value?:
 
 export type CustomSelectHandler<Option = any> = (option?: Option, value?: keyof Option, index?: number) => void;
 
-export interface CustomSelectOption {
+export type CustomSelectOptionBase = {
   _id?: string;
   id?: string;
   label?: string;
   name?: string;
   secondName?: string;
   value?: string | number;
-  parent?: CustomSelectOption;
-  childrenList?: CustomSelectOption[];
-}
+};
+export type CustomSelectOption<Data = any> = {
+  parent?: CustomSelectOption<Data>;
+  childrenList?: CustomSelectOption<Data>[];
+} & CustomSelectOptionBase &
+  Data;
 export interface CustomSelectItemProps extends CustomSelectOption {
   index: number;
   isActive?: boolean;
   currentOptionId?: string;
   currentOptionValue?: string | number;
   treeMode?: boolean;
-  option?: CustomSelectOption;
+  option?: CustomSelectOption<CustomSelectOptionBase>;
   level: number;
-  getLabel?: (option: CustomSelectOption) => string;
+  getLabel?: <Data = any>(option: CustomSelectOption<Data>) => string;
   onClick?: CustomSelectOnClickHandler;
   onSelect?: (index: number, option?: any) => void;
 }
@@ -116,11 +118,11 @@ const CustomSelectOptionComponent: React.FC<CustomSelectItemProps> = ({
   );
 };
 
-export type CustomSelectProps = CustomSelectBaseProps &
+export type CustomSelectProps<OptionData = any> = CustomSelectBaseProps<OptionData> &
   Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'> &
   Omit<InputLabelProps, 'onSelect'>;
-
-const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
+// : React.ForwardRefRenderFunction<any, CustomSelectProps>
+const CustomSelect = <Ref = any, OptionData = any>(
   {
     InputComponent,
     inputProps = {},
@@ -141,10 +143,10 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
     dropDownIsAbsolute = false,
     treeMode,
     ...props
-  },
-  _ref
+  }: CustomSelectProps<OptionData>,
+  _ref: React.ForwardedRef<any>
 ) => {
-  const [currentOption, setCurrentOption] = useState<SelectItem | undefined>(selectValue);
+  const [currentOption, setCurrentOption] = useState<CustomSelectOption | undefined>(selectValue);
   const [isOpen, setIsOpen] = useState<boolean>(keepOpen || open);
   const labelRef = useRef<HTMLLabelElement>(null);
 

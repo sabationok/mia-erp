@@ -7,7 +7,7 @@ import * as thunks from './priceManagement.thunks';
 export interface IPriceListsState {
   lists: IPriceList[];
   filteredLists?: IPriceList[];
-  current?: IPriceList | null;
+  current?: IPriceList;
   isLoading: boolean;
   error: StateErrorType;
 }
@@ -16,7 +16,10 @@ const initialState: IPriceListsState = {
   isLoading: false,
   error: null,
   lists: [],
-  current: null,
+  current: {
+    _id: '',
+    label: '',
+  },
   filteredLists: [],
 };
 
@@ -59,13 +62,23 @@ export const priceManagementSlice = createSlice({
         s.current = a.payload;
       })
       .addCase(thunks.addPriceToListThunk.fulfilled, (s, a) => {
-        s.current = a.payload;
-
-        const idx = s.lists.findIndex(l => l._id === 'p?._id');
-        if (idx >= 0 && a.payload) {
-          s.lists.splice(idx, 1, a.payload);
-          console.log('updateList action', `idx-${idx}`, s.lists);
+        if (s?.current) {
+          if (a.payload?.updateCurrent && a.payload.data) {
+            s.current = {
+              ...s.current,
+              prices: s.current?.prices ? [...s.current?.prices, a.payload?.data] : [a.payload.data],
+            };
+          } else if (a.payload?.refreshCurrent && a.payload?.data) {
+            s.current = { ...s.current, prices: [a.payload?.data] };
+          }
         }
+
+        // s.current = a.payload;
+        // const idx = s.lists.findIndex(l => l._id === 'p?._id');
+        // if (idx >= 0 && a.payload) {
+        //   s.lists.splice(idx, 1, a.payload);
+        //   console.log('updateList action', `idx-${idx}`, s.lists);
+        // }
       })
       .addCase(thunks.deletePriceFromListThunk.fulfilled, (s, a) => {})
       .addCase(thunks.updatePriceInListThunk.fulfilled, (s, a) => {})

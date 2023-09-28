@@ -1,11 +1,4 @@
-import {
-  AppResponse,
-  IBase,
-  IBaseWithPeriod,
-  IDataWithPeriod,
-  IFormDataValueWithUUID,
-  OnlyUUID,
-} from '../global.types';
+import { IBase, IBaseWithPeriod, IDataWithPeriod, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 import { IProduct } from '../products/products.types';
 import { IVariation } from '../products/variations.types';
@@ -98,16 +91,12 @@ export interface IPriceListItemReqData {
   params?: AppQueryParams;
 }
 
-export interface ICreatePriceListItemReqData {
-  list: OnlyUUID;
+export interface ICreatePriceReqData {
   data: IPriceDto;
   params?: AppQueryParams;
 }
-
-export interface IAllPriceListsRes extends AppResponse<IPriceList[]> {}
-
-export interface IPriceListRes extends AppResponse<IPriceList> {}
-
-export interface IAllPriceListItemsRes extends AppResponse<IPriceListItem[]> {}
-
-export interface IPriceListItemRes extends AppResponse<IPriceListItem> {}
+export interface IUpdatePriceReqData {
+  _id?: string;
+  data: Omit<IPriceDto, 'list' | 'product' | 'variation'>;
+  params?: AppQueryParams;
+}

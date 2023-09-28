@@ -51,7 +51,6 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
   endIconId = '',
   endIconSize = '18px',
   endIconStyles = {},
-  padding,
   onClick = () => {
     console.log('ButtonIcon click');
   },
@@ -112,7 +111,7 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
   display: flex;
   align-items: ${p => p?.alignItems || 'center'};
   justify-content: ${p => p?.justifyContent || 'center'};
-  gap: ${p => p?.gap || 0}px;
+  gap: ${p => p?.gap || 0};
 
   text-align: center;
   font-size: 12px;

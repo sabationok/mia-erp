@@ -10,6 +10,7 @@ import { OverlayHandlerReturn } from '../../AppPages/PageProductOverview/PageCur
 import { OnlyUUID } from '../../../redux/global.types';
 import { ModalFormProps } from '../../ModalForm';
 import { ToastService } from '../../../services';
+import { OverlayFooter, OverlayForm, OverlayHeader } from './components';
 
 export interface FormSelectPropertiesProps
   extends OverlayHandlerReturn,
@@ -24,7 +25,7 @@ export interface FormSelectPropertiesProps
   update?: string;
 }
 
-const FormSelectProperties: React.FC<FormSelectPropertiesProps> = ({
+const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
   onClose,
   title,
   defaultState,
@@ -126,65 +127,21 @@ const FormSelectProperties: React.FC<FormSelectPropertiesProps> = ({
   }, [currentProduct?.properties]);
 
   return (
-    <FormContainer onSubmit={handleSubmit} {...props}>
-      <Header alignItems={'center'} justifyContent={'space-between'} fxDirection={'row'} gap={6} fillWidth>
-        <ButtonIcon
-          variant={'textExtraSmall'}
-          onClick={onClose}
-          icon={'SmallArrowLeft'}
-          style={{ minWidth: 6, padding: 6 }}
-        >
-          {'Back'}
-        </ButtonIcon>
-
-        <FlexBox fxDirection={'row'} padding={'4px 0'} alignItems={'center'} fillHeight>
-          <Text $weight={600} $size={18}>
-            {title || templateData?.label || 'Title'}
-          </Text>
-        </FlexBox>
-      </Header>
+    <OverlayForm onSubmit={handleSubmit} {...props}>
+      <OverlayHeader onClose={onClose} title={title || templateData?.label} showSubmitButton />
 
       <TemplateBox flex={1} overflow={'auto'}>
         {renderTemplate}
       </TemplateBox>
 
-      <Footer padding={'6px 0'} fxDirection={'row'} gap={8} alignItems={'center'}>
-        <ButtonIcon
-          type={'submit'}
-          fontWeight={600}
-          variant={'filledLarge'}
-          textTransform={'uppercase'}
-          endIcon={'SmallArrowRight'}
-          disabled={loading}
-          style={{ flex: 1 }}
-        >
-          {loading ? 'Loading...' : 'Підтвердити'}
-        </ButtonIcon>
-      </Footer>
-    </FormContainer>
+      <OverlayFooter loading={loading} submitButtonText={loading ? 'Loading...' : 'Підтвердити'} />
+    </OverlayForm>
   );
 };
-const FormContainer = styled.form`
-  flex: 1;
-
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: 0 8px;
-
-  overflow: hidden;
-
-  max-width: 480px;
-
-  background-color: ${p => p.theme.tableBackgroundColor};
-`;
-const Header = styled(FlexBox)`
-  height: 32px;
-`;
 
 const TemplateBox = styled(FlexBox)`
   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
-  //border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
+  border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
   padding-bottom: 8px;
 `;
 
@@ -202,10 +159,6 @@ const PropertyValuesList = styled(FlexBox)<{ numColumns?: number }>`
   //}
 `;
 
-const Footer = styled(FlexBox)`
-  border-top: 1px solid ${p => p.theme.sideBarBorderColor};
-`;
-
 const ValueTag = styled(ButtonIcon)`
   flex-basis: 100px;
   min-width: max-content;
@@ -220,4 +173,4 @@ const ValueTag = styled(ButtonIcon)`
   //   border: 2px solid ${p => p.theme.accentColor.base};
   // }
 `;
-export default FormSelectProperties;
+export default FormSelectPropertiesOverlay;

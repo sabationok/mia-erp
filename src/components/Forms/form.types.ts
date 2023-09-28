@@ -18,7 +18,7 @@ import { FormCreateVariationProps } from './FormCreateVariation';
 import { FormCreateWarehouseProps } from './FormCreateWarehouse';
 import { FormCreateProductInventoryProps } from './FormCreateProductInventory';
 import { FormCreateProductProps } from './FormProduct/FormCreateProduct';
-import { FormVariationProps } from './FormProduct/FormVariation';
+import { FormVariationProps } from './FormProduct/FormCreateVariationOverlay';
 
 export type {
   FormVariationProps,

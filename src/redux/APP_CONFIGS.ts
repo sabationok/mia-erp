@@ -68,7 +68,7 @@ export enum Endpoints {
   getDefaultDirectories = 'getDefaultDirectories',
   updateList = 'updateList',
   inviteUser = 'inviteUser',
-
+  prices = 'prices',
   getAllOrderSlots = 'getAllOrderSlots',
   addSlotToOrder = 'addSlotToOrder',
   getDataForNewOrderSlot = 'getDataForNewOrderSlot',
@@ -216,14 +216,12 @@ const priceManagementEndpoints: ApiEndpointsMap = {
   [Endpoints.getAll]: () => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.getAll}`,
   [Endpoints.getById]: (listId: string) => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.getById}/${listId}`,
   [Endpoints.createList]: () => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.createList}`,
-  [Endpoints.addItemToList]: (listId: string) =>
-    `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.updateList}/${listId}/addPrice`,
-  [Endpoints.softDeleteItemFromList]: (listId: string, priceId: string) =>
-    `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.softDeleteItemFromList}/${listId}/${priceId}`,
-  [Endpoints.updateListItem]: (listId: string, priceId: string) =>
-    `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.updateListItem}/${listId}/${priceId}`,
   [Endpoints.updateList]: (listId: string) => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.updateList}/${listId}`,
   [Endpoints.getAllPrices]: () => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.getAllPrices}`,
+
+  createPrice: () => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.prices}/${Endpoints.create}`,
+  updatePrice: (id?: string) => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.prices}/${Endpoints.update}/${id}`,
+  deletePrice: (id?: string) => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.prices}/${Endpoints.delete}/${id}`,
 };
 
 const ordersEndpoints: ApiEndpointsMap = {

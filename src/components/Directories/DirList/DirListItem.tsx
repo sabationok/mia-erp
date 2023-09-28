@@ -111,7 +111,7 @@ const DirListItem: React.FC<DirListItemProps> = props => {
       {canHasChildren && (
         <ButtonIcon
           variant="onlyIconNoEffects"
-          icon={hasChildren && isOpen ? 'SmallArrowUp' : 'SmallArrowDown'}
+          icon={hasChildren && isOpen ? 'SmallArrowDown' : 'SmallArrowRight'}
           size={'32px'}
           iconSize={'24px'}
           disabled={!hasChildren}

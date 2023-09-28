@@ -14,6 +14,9 @@ import { OnlyUUID } from '../../../redux/global.types';
 import { ToastService } from '../../../services';
 import { ModalFormProps } from '../../ModalForm';
 import FormAfterSubmitOptions from '../components/FormAfterSubmitOptions';
+import { OverlayFooter, OverlayHeader } from './components';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 export interface FormVariationProps
   extends OverlayHandlerReturn,
@@ -26,8 +29,19 @@ export interface FormVariationProps
 
   defaultState?: IVariation;
 }
-
-const FormVariation: React.FC<FormVariationProps> = ({
+const validation = yup.object().shape({
+  sku: yup.string(),
+  label: yup.string(),
+  propertiesMap: yup.object().shape<{}>({
+    // Ваша схема для propertiesMap
+  }),
+  product: yup.object().shape({
+    label: yup.string(),
+  }),
+  timeFrom: yup.mixed(), // Ось тут потрібно додати відповідні перевірки для дати та числа
+  timeTo: yup.mixed(),
+});
+const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
   onClose,
   title,
   defaultState,
@@ -40,19 +54,20 @@ const FormVariation: React.FC<FormVariationProps> = ({
   const service = useAppServiceProvider()[ServiceName.products];
   const templates = usePropertiesSelector();
   const [loading, setLoading] = useState(false);
-
+  const { setValue, watch, handleSubmit } = useForm<IVariationFormData>({
+    defaultValues: defaultState ? createVariationFormData({ ...defaultState, product }) : { product },
+    resolver: yupResolver(validation),
+    reValidateMode: 'onSubmit',
+  });
   const [submitOptions, setSubmitOptions] = useState<UseAppFormSubmitOptions>({
     closeAfterSave: true,
     clearAfterSave: true,
   });
+  const formValues = watch();
+
   const handleChangeAfterSubmit = (key: keyof UseAppFormSubmitOptions) => {
     setSubmitOptions(prev => ({ ...prev, [key]: !prev[key] }));
   };
-
-  const { setValue, watch, handleSubmit } = useForm<IVariationFormData>({
-    defaultValues: defaultState ? createVariationFormData({ ...defaultState, product }) : { product },
-  });
-  const formValues = watch();
 
   const template = useMemo(() => {
     const pr = defaultState?.product || product;
@@ -72,7 +87,8 @@ const FormVariation: React.FC<FormVariationProps> = ({
               onClose && onClose();
             },
             onError: e => {
-              console.log(e);
+              console.error('createVariation error:', e);
+              ToastService.error('createVariation error');
             },
             onLoading: setLoading,
           })
@@ -86,7 +102,7 @@ const FormVariation: React.FC<FormVariationProps> = ({
               submitOptions.closeAfterSave && onClose && onClose();
             },
             onError: e => {
-              console.log(e);
+              console.error('createVariation error:', e);
               ToastService.error('createVariation error');
             },
             onLoading: setLoading,
@@ -96,7 +112,7 @@ const FormVariation: React.FC<FormVariationProps> = ({
 
       onSubmit && onSubmit(data);
     },
-    [onClose, onSubmit, service, update]
+    [onClose, onSubmit, service, submitOptions.closeAfterSave, update]
   );
 
   const handleSelect = useCallback(
@@ -140,50 +156,25 @@ const FormVariation: React.FC<FormVariationProps> = ({
 
   return (
     <FormContainer onSubmit={handleSubmit(onValid)} {...props}>
-      <Header alignItems={'center'} justifyContent={'space-between'} fxDirection={'row'} gap={6} fillWidth>
-        <ButtonIcon
-          variant={'textSmall'}
-          onClick={onClose}
-          icon={'SmallArrowLeft'}
-          style={{ padding: 6, minWidth: 'fit-content' }}
-        >
-          {'Back'}
-        </ButtonIcon>
-
-        <FlexBox fxDirection={'row'} padding={'4px 0'} alignItems={'center'} fillHeight>
-          <Text $weight={600} $size={18}>
-            {title || template?.label || 'Title'}
-          </Text>
-        </FlexBox>
-      </Header>
+      <OverlayHeader onClose={onClose} title={title || template?.label} showSubmitButton />
 
       <TemplateBox flex={1} overflow={'auto'}>
         {renderTemplate}
       </TemplateBox>
 
-      <Footer>
-        <ExtraFooterBox>
-          <FormAfterSubmitOptions
-            clear={submitOptions.clearAfterSave}
-            close={submitOptions.closeAfterSave}
-            toggleOption={handleChangeAfterSubmit}
-          />
-        </ExtraFooterBox>
-
-        <FlexBox padding={'6px 0'} fxDirection={'row'} gap={8} alignItems={'center'}>
-          <ButtonIcon
-            type={'submit'}
-            fontWeight={600}
-            variant={'filledLarge'}
-            textTransform={'uppercase'}
-            endIcon={loading ? undefined : 'SmallArrowRight'}
-            disabled={loading}
-            style={{ flex: 1 }}
-          >
-            {loading ? 'Loading...' : update ? 'Підтвердити' : 'Додати'}
-          </ButtonIcon>
-        </FlexBox>
-      </Footer>
+      <OverlayFooter
+        extraFooter={
+          <ExtraFooterBox>
+            <FormAfterSubmitOptions
+              clear={submitOptions.clearAfterSave}
+              close={submitOptions.closeAfterSave}
+              toggleOption={handleChangeAfterSubmit}
+            />
+          </ExtraFooterBox>
+        }
+        loading={loading}
+        submitButtonText={loading ? 'Loading...' : update ? 'Підтвердити' : 'Додати'}
+      />
     </FormContainer>
   );
 };
@@ -201,13 +192,10 @@ const FormContainer = styled.form`
   color: ${p => p.theme.fontColorSidebar};
   background-color: ${p => p.theme.tableBackgroundColor};
 `;
-const Header = styled(FlexBox)`
-  height: 32px;
-`;
 
 const TemplateBox = styled(FlexBox)`
   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
-  //border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
+  border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
   padding-bottom: 8px;
 `;
 
@@ -217,9 +205,6 @@ const PropertyBox = styled(FlexBox)`
   }
 `;
 
-const Footer = styled(FlexBox)`
-  border-top: 1px solid ${p => p.theme.sideBarBorderColor};
-`;
 const ExtraFooterBox = styled(FlexBox)`
   border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
 `;
@@ -235,4 +220,4 @@ const ValueTag = styled(ButtonIcon)`
   //   border: 2px solid ${p => p.theme.accentColor.base};
   // }
 `;
-export default FormVariation;
+export default FormCreateVariationOverlay;

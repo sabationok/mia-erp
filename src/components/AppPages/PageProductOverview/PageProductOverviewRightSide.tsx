@@ -9,7 +9,7 @@ import { Text } from '../../atoms/Text';
 import ModalFilter, { FilterSelectHandler } from '../../ModalForm/ModalFilter';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
-import FormCreateVariation from '../../Forms/FormProduct/FormVariation';
+import FormCreateVariation from '../../Forms/FormProduct/FormCreateVariationOverlay';
 import { IPriceListItem } from 'redux/priceManagement/priceManagement.types';
 import { IVariationTableData } from 'redux/products/variations.types';
 import { transformVariationTableData } from '../../../utils/tables';
@@ -20,6 +20,7 @@ import AppLoader from '../../atoms/AppLoader';
 import { warehouseOverviewTableColumns } from '../../../data/warehauses.data';
 import { IProductInventory } from '../../../redux/warehouses/warehouses.types';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import FormCreatePrice from '../../Forms/FormCreatePrice/FormCreatePrice';
 
 // const openLoader = (current: RightSideOptionEnum) =>
 //   ToastService.createLoader('Loading data...').open({
@@ -142,7 +143,21 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
             { icon: 'refresh', type: 'onlyIcon' },
             { icon: 'delete', type: 'onlyIcon', disabled: !currentId },
             { icon: 'edit', type: 'onlyIcon', disabled: !currentId },
-            { icon: 'plus', type: 'onlyIconFilled' },
+            {
+              icon: 'plus',
+              type: 'onlyIconFilled',
+              onClick: () => {
+                modalS.open({
+                  ModalChildren: FormCreatePrice,
+                  modalChildrenProps: {
+                    product: page.currentProduct,
+                    onSubmit: d => {
+                      console.log('FormCreatePrice submit pr overview', d);
+                    },
+                  },
+                });
+              },
+            },
           ];
         },
       } as ITableListProps<IPriceListItem>;

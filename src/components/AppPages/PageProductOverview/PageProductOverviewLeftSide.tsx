@@ -27,6 +27,14 @@ const PageProductOverviewLeftSide: React.FC<PageProductOverviewLeftSideProps> = 
       },
     [page]
   );
+  // const onTransitionEnd = useCallback(
+  //   (id: string): TransitionEventHandler<HTMLDivElement> | undefined =>
+  //     ev => {
+  //       // page.removeStackItem(id);
+  //       // console.log(ev);
+  //     },
+  //   []
+  // );
 
   const renderOverlayStack = useMemo(() => {
     const stack = page.getOverlayStack();
@@ -39,6 +47,7 @@ const PageProductOverviewLeftSide: React.FC<PageProductOverviewLeftSideProps> = 
           style={{ zIndex: 20 + index }}
           fillHeight
           fillWidth
+          alignItems={'flex-end'}
           onClick={onOverlayBackdropClick(id)}
         >
           <RenderComponent
@@ -143,7 +152,7 @@ const Backdrop = styled(FlexBox)`
 const OverlayBox = styled(FlexBox)`
   position: absolute;
   top: 0;
-  left: 0;
+  right: 0;
   z-index: 20;
 
   animation: 'OverlayFromRight';

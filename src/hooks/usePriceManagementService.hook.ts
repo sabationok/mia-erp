@@ -4,14 +4,15 @@ import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
 import { AppQueryParams, createApiCall } from 'api';
 import {
-  ICreatePriceListItemReqData,
+  ICreatePriceReqData,
   IPriceList,
   IPriceListItem,
-  IPriceListItemReqData,
   IPriceListReqData,
+  IUpdatePriceReqData,
 } from '../redux/priceManagement/priceManagement.types';
 import { PriceManagementApi } from '../api/priceManagement.api';
 import * as thunks from '../redux/priceManagement/priceManagement.thunks';
+import { IPricesThunksData } from '../redux/priceManagement/priceManagement.thunks';
 
 export interface PriceManagementService {
   // createList?: ServiceDispatcherAsync<IPriceListReqData, IPriceList>;
@@ -25,8 +26,8 @@ export interface PriceManagementService {
   // ? PRICES
   getAllPricesByProductId: ServiceApiCaller<Pick<AppQueryParams, 'product'>, IPriceListItem[]>;
   getAllPricesByListId: ServiceApiCaller<Pick<AppQueryParams, 'list'>, IPriceListItem[]>;
-  updatePriceById?: ServiceApiCaller<IPriceListItemReqData, IPriceListItem>; // !!!!! ===>>> ServiceDispatcher
-  addPriceToList: ServiceDispatcherAsync<ICreatePriceListItemReqData, IPriceList>;
+  updatePriceById?: ServiceApiCaller<IUpdatePriceReqData, IPriceListItem>; // !!!!! ===>>> ServiceDispatcher
+  addPriceToList: ServiceDispatcherAsync<IPricesThunksData<ICreatePriceReqData>, IPriceListItem>;
   deletePriceById?: ServiceApiCaller<OnlyUUID, IPriceListItem>; // !!!!! ===>>> ServiceDispatcher
 }
 

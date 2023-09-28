@@ -2,10 +2,11 @@ import baseApi from './baseApi';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppResponse, OnlyUUID } from '../redux/global.types';
 import {
-  ICreatePriceListItemReqData,
+  ICreatePriceReqData,
   IPriceList,
   IPriceListItem,
   IPriceListReqData,
+  IUpdatePriceReqData,
 } from '../redux/priceManagement/priceManagement.types';
 import { AppQueryParams } from './index';
 
@@ -29,8 +30,11 @@ export class PriceManagementApi {
     return this.api.get(this.endpoints.getById(list?._id), { params: query });
   }
 
-  public static async addPriceToList(input?: ICreatePriceListItemReqData): Promise<AppResponse<IPriceList>> {
-    return this.api.post(this.endpoints.addItemToList(input?.list._id), input?.data);
+  public static async createPrice(input?: ICreatePriceReqData): Promise<AppResponse<IPriceListItem>> {
+    return this.api.post(this.endpoints.addItemToList(), input?.data);
+  }
+  public static async updatePriceById(input?: IUpdatePriceReqData): Promise<AppResponse<IPriceListItem>> {
+    return this.api.post(this.endpoints.addItemToList(input?._id), input?.data);
   }
 
   public static async getAllPricesByListId(
