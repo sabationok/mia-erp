@@ -122,7 +122,7 @@ export type CustomSelectProps<OptionData = any> = CustomSelectBaseProps<OptionDa
   Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'> &
   Omit<InputLabelProps, 'onSelect'>;
 // : React.ForwardRefRenderFunction<any, CustomSelectProps>
-const CustomSelect = <Ref = any, OptionData = any>(
+const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
   {
     InputComponent,
     inputProps = {},
@@ -143,8 +143,8 @@ const CustomSelect = <Ref = any, OptionData = any>(
     dropDownIsAbsolute = false,
     treeMode,
     ...props
-  }: CustomSelectProps<OptionData>,
-  _ref: React.ForwardedRef<any>
+  },
+  _ref
 ) => {
   const [currentOption, setCurrentOption] = useState<CustomSelectOption | undefined>(selectValue);
   const [isOpen, setIsOpen] = useState<boolean>(keepOpen || open);
@@ -193,13 +193,14 @@ const CustomSelect = <Ref = any, OptionData = any>(
           index={idx}
           option={opt}
           level={0}
+          getLabel={getLabel}
           treeMode={treeMode}
           onSelect={onSelectOption}
           currentOptionId={currentOption?._id}
           currentOptionValue={currentOption?.value}
         />
       )),
-    [currentOption?._id, currentOption?.value, onSelectOption, options, treeMode]
+    [currentOption?._id, currentOption?.value, getLabel, onSelectOption, options, treeMode]
   );
 
   useEffect(() => {

@@ -260,12 +260,6 @@ const productOverviewCells: ProductOverviewCell[] = [
   // * DEFAULTS
 
   {
-    title: 'Фото',
-    CellComponent: Cells.ImagesCell,
-    gridArea: 'images',
-  },
-
-  {
     title: 'Склад за замовчуванням',
     CellComponent: Cells.OverviewTextCell,
     getValue: product => product?.defaults?.warehouse?.label,
@@ -304,5 +298,11 @@ const productOverviewCells: ProductOverviewCell[] = [
     CellComponent: Cells.OverviewTextCell,
     getValue: product => `${product?.editor?.name}`,
     gridArea: 'updatedAt',
+  },
+
+  {
+    title: 'Фото',
+    CellComponent: Cells.ImagesCell,
+    gridArea: 'images',
   },
 ];

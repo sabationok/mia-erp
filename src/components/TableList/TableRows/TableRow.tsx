@@ -18,6 +18,7 @@ export interface TableRowProps {
   rowData: TRowDataType;
   idx: number;
   checked?: boolean;
+  isActive?: boolean;
 }
 
 export interface RowCTXValue extends TableRowProps {
@@ -79,8 +80,13 @@ const TableRow: React.FC<TableRowProps> = ({ checked, rowData, ...props }) => {
     };
   }, [props, currentRowData, selectedRows, isActionsOpen, onToggleActions, onCloseActions, onRowCheckboxChange]);
 
+  // useEffect(() => {
+  //   if (props?.isActive) {
+  //     console.log(props?.isActive, rowData._id);
+  //   }
+  // }, [props?.isActive]);
   return (
-    <Row id={currentRowData?._id} checked={isChecked} data-row>
+    <Row id={`_${currentRowData?._id}`} isActive={props?.isActive} checked={isChecked} data-row>
       <RowCTX.Provider value={CTX}>
         <RowStickyEl>{checkBoxes && <CellCheckBox />}</RowStickyEl>
 
@@ -92,7 +98,7 @@ const TableRow: React.FC<TableRowProps> = ({ checked, rowData, ...props }) => {
   );
 };
 
-const Row = styled(ThRow)<{ checked?: boolean }>`
+const Row = styled(ThRow)<{ checked?: boolean; isActive?: boolean }>`
   display: grid;
   grid-template-columns: min-content 1fr;
   grid-template-rows: 1fr;
@@ -106,7 +112,8 @@ const Row = styled(ThRow)<{ checked?: boolean }>`
   border-bottom: 1px solid transparent;
   border-bottom-color: ${({ theme }) => theme.trBorderClr};
 
-  background-color: ${({ theme, checked }) => (checked ? theme.tableRowBackgroundActive : theme.tableBackgroundColor)};
+  background-color: ${({ theme, checked, isActive }) =>
+    isActive ? theme.tableRowBackgroundActive : theme.tableBackgroundColor};
 
   &:hover {
     //border-color: ${({ theme }) => theme.accentColor.base};

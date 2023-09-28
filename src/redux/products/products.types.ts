@@ -82,6 +82,7 @@ export interface IProductDefaults {
   price?: IPriceListItem;
   supplier?: ISupplierDirItem;
   inventory?: IProductInventory;
+  variation?: IVariation;
 }
 
 export interface IProductWithDefaults extends IProductAddsFields {

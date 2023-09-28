@@ -7,7 +7,9 @@ export const OverlayHeader = ({
   onClose,
   title,
   showSubmitButton,
+  canSubmit,
 }: {
+  canSubmit?: boolean;
   onClose?: () => void;
   title?: string;
   showSubmitButton?: boolean;
@@ -45,6 +47,7 @@ export const OverlayHeader = ({
             endIcon={'done'}
             endIconSize={'22px'}
             style={{ minWidth: 'max-content', minHeight: '100%' }}
+            disabled={!canSubmit}
           >
             {'Ok'}
           </ButtonIcon>
@@ -62,7 +65,9 @@ export const OverlayFooter = ({
   submitButtonText = 'Прийняти',
   loading,
   extraFooter,
+  canSubmit,
 }: {
+  canSubmit?: boolean;
   extraFooter?: React.ReactNode;
   loading?: boolean;
   onCreatePress?: () => void;
@@ -86,7 +91,7 @@ export const OverlayFooter = ({
           fontWeight={600}
           endIcon={'SmallArrowRight'}
           endIconSize={'24px'}
-          disabled={loading}
+          disabled={loading || !canSubmit}
         >
           {submitButtonText}
         </ButtonIcon>

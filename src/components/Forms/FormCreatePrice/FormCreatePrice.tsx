@@ -1,6 +1,6 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import FlexBox from '../../atoms/FlexBox';
-import { IPriceFormData } from '../../../redux/priceManagement/priceManagement.types';
+import { IPriceFormData, IPriceList } from '../../../redux/priceManagement/priceManagement.types';
 import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
 import { useAppForm } from '../../../hooks';
 import FormProductSelectorForPricing from './FormProductSelectorForPricing';
@@ -10,14 +10,26 @@ import * as _ from 'lodash';
 import { useCallback, useEffect, useMemo } from 'react';
 import { IProduct } from '../../../redux/products/products.types';
 // import * as yup from 'yup';
-import { usePriceListsSelector } from '../../../redux/selectors.store';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import { usePriceListsSelector, useProductsSelector } from '../../../redux/selectors.store';
+import CustomSelect, { CustomSelectOption } from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import FormAfterSubmitOptions from '../components/FormAfterSubmitOptions';
+import { t } from '../../../lang';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
-// const validation = yup.object().shape({
-//   cost: yup.number(),
-//   price: yup.number(),
-// });
+const validation = yup.object().shape({
+  cost: yup.number(),
+  price: yup.number(),
+  variation: yup.object().shape({
+    _id: yup.string().required(),
+  }),
+  list: yup.object().shape({
+    _id: yup.string().required(),
+  }),
+  product: yup.object().shape({
+    _id: yup.string().required(),
+  }),
+});
 
 export interface FormCreatePriceProps
   extends Omit<ModalFormProps<any, any, IPriceFormData>, 'onSubmit' | 'afterSubmit'> {
@@ -27,9 +39,10 @@ export interface FormCreatePriceProps
 }
 
 const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update, product, onSubmit, ...props }) => {
+  const productInState = useProductsSelector().currentProduct;
   const currentProduct = useMemo(() => {
-    return product;
-  }, [product]);
+    return product || productInState;
+  }, [product, productInState]);
   const {
     formValues,
     register,
@@ -39,8 +52,11 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
     toggleAfterSubmitOption,
     closeAfterSave,
     clearAfterSave,
+    formState: { errors, isValid },
   } = useAppForm<IPriceFormData>({
     defaultValues: { ...defaultState, product: currentProduct },
+    resolver: yupResolver(validation),
+    reValidateMode: 'onSubmit',
   });
 
   const { lists } = usePriceListsSelector();
@@ -83,7 +99,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
 
   return (
     <ModalForm
-      isValid={!!formValues.product}
+      isValid={isValid}
       onSubmit={handleSubmit(onValid)}
       fillHeight
       title={`${update ? 'Edit' : 'Create'} price for: ${formValues?.product?.label || '---'} | ${
@@ -103,19 +119,25 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
           selected={formValues.product}
           disabled={!defaultState?.list?._id}
           title={'Select product for pricing'}
-          onSelect={(p: IProduct) => {
+          variation={formValues.variation}
+          onChange={(p, v) => {
             setValue('product', p);
+            setValue('variation', v);
           }}
         />
 
         <CustomSelect
+          options={lists}
+          getLabel={d => {
+            return '';
+          }}
           {...registerSelect('list', {
             options: lists,
             dropDownIsAbsolute: true,
             label: 'Прайс лист',
             placeholder: 'Оберіть прайс лист',
-            getLabel: d => {
-              return `${d?.label}`;
+            getLabel: (d: CustomSelectOption & IPriceList) => {
+              return `${d?.label} | ${t(d.type)}`;
             },
           })}
         />

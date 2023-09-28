@@ -1,5 +1,5 @@
 import FlexBox from '../../atoms/FlexBox';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useModalProvider } from '../../ModalProvider/ModalProvider';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import ProductCardSimpleOverview from '../../Overviews/ProductCardSimpleOverview';
@@ -10,13 +10,20 @@ import { IVariation } from '../../../redux/products/variations.types';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import { ExtractId } from '../../../utils/dataTransform';
 import { createTableTitlesFromTemplate } from '../../../utils';
+import { transformVariationTableData } from '../../../utils/tables';
+import { Text } from '../../atoms/Text';
+import { OnRowClickHandler } from '../../TableList/tableTypes.types';
+import { OnlyUUID } from '../../../redux/global.types';
+import { IProduct } from '../../../redux/products/products.types';
 
-export interface FormProductSelectorForPricingProps<D = any> {
+export interface FormProductSelectorForPricingProps {
   title?: string;
-  onSubmit?: (data?: D) => void;
-  onSelect?: (data?: D) => void;
-  selected?: D;
+  onSubmit?: (data?: IProduct) => void;
+  onSelect?: (data?: IProduct) => void;
+  selected?: IProduct;
   disabled?: boolean;
+  variation?: IVariation;
+  onChange?: (p?: IProduct, v?: IVariation) => void;
 }
 
 const FormProductSelectorForPricing: React.FC<FormProductSelectorForPricingProps> = ({
@@ -24,39 +31,61 @@ const FormProductSelectorForPricing: React.FC<FormProductSelectorForPricingProps
   disabled,
   onSubmit,
   selected,
+  onChange,
+  variation,
   ...props
 }) => {
   const modals = useModalProvider();
   const prService = useAppServiceProvider()[ServiceName.products];
   const { currentProduct, properties: templates } = useProductsSelector();
-  // const [currentProduct, setCurrentProduct] = useState<IProduct | undefined>(selected);
-  const [loadedVariations, setLoadedVariations] = useState<IVariation[] | undefined>();
-  const [currentVariation, setCurrentVariation] = useState<IVariation | undefined>();
+  const [loadedVariations, setLoadedVariations] = useState<IVariation[]>([]);
+  const [currentVariation, setCurrentVariation] = useState<OnlyUUID | undefined>(currentProduct?.defaults?.variation);
+  const [selectedProduct, setSelectedProduct] = useState<OnlyUUID | undefined>(currentProduct);
 
   const tableTitles = useMemo(() => {
     const t = templates.find(t => t._id === currentProduct?.template?._id);
     return t ? createTableTitlesFromTemplate(t) : undefined;
   }, [currentProduct?.template?._id, templates]);
+
+  const transformedTableData = useMemo(() => {
+    return currentProduct?.variations ? currentProduct?.variations.map(v => transformVariationTableData(v)) : [];
+  }, [currentProduct?.variations]);
+
+  const handleTableRowClick: OnRowClickHandler<IVariation> = data => {
+    setCurrentVariation(prev => {
+      const newData = data?._id ? { _id: data?._id } : prev;
+      onChange && onChange(selectedProduct, newData);
+      return newData;
+    });
+  };
+
+  useEffect(() => {
+    if (variation) {
+      setCurrentVariation(variation);
+    }
+  }, [variation]);
+  const onSelectProduct = (product: IProduct, onSuccessLoad?: () => void) => {
+    setSelectedProduct(product);
+
+    prService.getProductFullInfo({
+      data: ExtractId(product),
+      onSuccess: data => {
+        prService.getAllVariationsByProductId({
+          data: { product: ExtractId(data), refreshCurrent: true },
+          onSuccess: setLoadedVariations,
+        });
+
+        onSuccessLoad && onSuccessLoad();
+      },
+    });
+  };
+
   const onOpenSelectorClick = () => {
     const modal = modals.handleOpenModal({
       Modal: Modals.SelectProductModal,
       props: {
         onSelect: p => {
-          prService
-            .getProductFullInfo({
-              data: ExtractId(p),
-              onSuccess: data => {
-                prService.getAllVariationsByProductId({
-                  data: { product: ExtractId(data), refreshCurrent: true },
-                });
-              },
-            })
-            .then(d => {
-              console.log(d);
-            });
-
-          onSelect && onSelect(p);
-          modal?.onClose();
+          onSelectProduct(p, modal?.onClose);
         },
         selected: currentProduct,
       },
@@ -72,7 +101,7 @@ const FormProductSelectorForPricing: React.FC<FormProductSelectorForPricingProps
       flex={1}
       // alignItems={'stretch'}
       // overflow={'hidden'}
-      padding={'8px 0 8px'}
+      // padding={'8px 0 8px'}
     >
       {currentProduct && (
         <FlexBox fillWidth>
@@ -84,14 +113,16 @@ const FormProductSelectorForPricing: React.FC<FormProductSelectorForPricingProps
         {`${currentProduct ? 'Change' : 'Select'} product for pricing`}
       </ButtonIcon>
 
+      <Text $weight={500}>{'Оберіть варіацію для оцінки'}</Text>
+
       <FlexBox style={{ minWidth: 250, maxHeight: 250 }} overflow={'hidden'} flex={1}>
         <TableList
           tableTitles={tableTitles}
+          tableData={transformedTableData}
+          selectedRow={currentVariation}
           isSearch={false}
           isFilter={false}
-          onRowClick={data => {
-            console.log('onRowClick variation for pricing', data);
-          }}
+          onRowClick={handleTableRowClick}
         />
       </FlexBox>
     </FlexBox>

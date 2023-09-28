@@ -76,6 +76,10 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
     return templates.find(t => t._id === pr?.template?._id);
   }, [defaultState?.product, product, templates]);
 
+  const canSubmit = useMemo(() => {
+    return formValues.propertiesMap && Object.values(formValues.propertiesMap).length > 0;
+  }, [formValues.propertiesMap]);
+
   const onValid = useCallback(
     (data: IVariationFormData) => {
       if (update) {
@@ -151,13 +155,16 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
 
   return (
     <FormContainer onSubmit={handleSubmit(onValid)} {...props}>
-      <OverlayHeader onClose={onClose} title={title || template?.label} showSubmitButton />
+      <OverlayHeader onClose={onClose} title={title || template?.label} canSubmit={canSubmit} showSubmitButton />
 
       <TemplateBox flex={1} overflow={'auto'}>
         {renderTemplate}
       </TemplateBox>
 
       <OverlayFooter
+        loading={loading}
+        submitButtonText={loading ? 'Loading...' : update ? 'Підтвердити' : 'Додати'}
+        canSubmit={canSubmit}
         extraFooter={
           <ExtraFooterBox>
             <FormAfterSubmitOptions
@@ -167,8 +174,6 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
             />
           </ExtraFooterBox>
         }
-        loading={loading}
-        submitButtonText={loading ? 'Loading...' : update ? 'Підтвердити' : 'Додати'}
       />
     </FormContainer>
   );

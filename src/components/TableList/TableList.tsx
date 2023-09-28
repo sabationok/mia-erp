@@ -1,4 +1,4 @@
-import React, { createContext, memo, useCallback, useContext, useMemo, useRef, useState } from 'react';
+import React, { createContext, memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import TableHead from './TableHead';
 import TableBody from './TableBody';
 import AppLoader from 'components/atoms/AppLoader';
@@ -40,7 +40,7 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
 }) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const rowRef = useRef<HTMLElement>();
-  const [selectedRow, setSelectedRow] = useState<any | undefined>();
+  const [selectedRow, setSelectedRow] = useState<any | undefined>(props?.selectedRow);
   const setFilterData = useState<FilterReturnDataType>()[1];
 
   const rowGrid = useMemo(
@@ -125,6 +125,11 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
     ]
   );
 
+  useEffect(() => {
+    if (props?.selectedRow) {
+      setSelectedRow(props?.selectedRow);
+    }
+  }, [props?.selectedRow]);
   return (
     <Table {...props}>
       <TableCTX.Provider value={CTX}>

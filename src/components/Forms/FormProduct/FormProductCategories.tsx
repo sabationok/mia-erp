@@ -18,12 +18,6 @@ export interface FormProductCategoriesProps {
 const FormProductCategories: React.FC<FormProductCategoriesProps> = ({ options, onSelect, onChange, defaultData }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  useEffect(() => {
-    if (defaultData) {
-      setSelectedIds(defaultData);
-    }
-  }, [defaultData]);
-
   const handleSelect = useCallback(
     (option?: IProductCategoryDirItem) => {
       setSelectedIds(prev => {
@@ -64,6 +58,12 @@ const FormProductCategories: React.FC<FormProductCategoriesProps> = ({ options, 
       );
     });
   }, [handleRemove, options, selectedIds]);
+
+  useEffect(() => {
+    if (defaultData) {
+      setSelectedIds(defaultData);
+    }
+  }, [defaultData]);
 
   return (
     <FlexBox fillWidth gap={6}>
