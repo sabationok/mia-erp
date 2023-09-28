@@ -3,12 +3,12 @@ import FlexBox from '../atoms/FlexBox';
 import React, { useMemo } from 'react';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
-import { Text } from '../atoms/Text';
 import t from '../../lang';
 import { OverlayHandler, usePageCurrentProduct } from '../AppPages/PageProductOverview/PageCurrentProductProvider';
 import { useProductsSelector } from '../../redux/selectors.store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import * as Cells from './components/Cells';
+import { OverlayHeader } from '../Forms/FormProduct/components';
 
 export interface ProductOverviewXLProps {
   product?: IProduct;
@@ -69,35 +69,16 @@ const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }
 
   return (
     <Container fillWidth flex={1} className={className} padding={'0 8px'}>
-      <Header
-        alignItems={'center'}
-        justifyContent={'space-between'}
-        fxDirection={'row'}
-        gap={6}
-        padding={'4px 0'}
-        fillWidth
-      >
-        <ButtonIcon
-          variant={'textExtraSmall'}
-          icon={'SmallArrowLeft'}
-          style={{ gap: 0, padding: 6, minWidth: 'fit-content' }}
-          onClick={() => {
-            if (product && location?.pathname) {
-              const newPath = location?.pathname?.replace(`/${product?._id}`, '');
+      <OverlayHeader
+        title={'Перегляд продукту'}
+        onClose={() => {
+          if (product && location?.pathname) {
+            const newPath = location?.pathname?.replace(`/${product?._id}`, '');
 
-              newPath && navigate(newPath);
-            }
-          }}
-        >
-          {'Back'}
-        </ButtonIcon>
-
-        <FlexBox fxDirection={'row'} padding={'4px 0'} alignItems={'center'} fillHeight overflow={'hidden'}>
-          <Text $weight={600} $size={16} className={'title'}>
-            {'Перегляд продукту'}
-          </Text>
-        </FlexBox>
-      </Header>
+            newPath && navigate(newPath);
+          }
+        }}
+      />
 
       <Content fillWidth flex={1} overflow={'auto'}>
         {renderCells}

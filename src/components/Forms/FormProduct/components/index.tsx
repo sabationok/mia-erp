@@ -31,7 +31,7 @@ export const OverlayHeader = ({
         <FlexBox justifyContent={'center'} overflow={'hidden'}>
           <Text
             $weight={600}
-            $size={16}
+            $size={14}
             style={{ textTransform: 'uppercase', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}
           >
             {title}

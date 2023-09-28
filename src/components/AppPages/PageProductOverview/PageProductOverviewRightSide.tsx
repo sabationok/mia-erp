@@ -21,6 +21,7 @@ import { warehouseOverviewTableColumns } from '../../../data/warehauses.data';
 import { IProductInventory } from '../../../redux/warehouses/warehouses.types';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import FormCreatePrice from '../../Forms/FormCreatePrice/FormCreatePrice';
+import FormCreateProductInventory from '../../Forms/FormCreateProductInventory';
 
 // const openLoader = (current: RightSideOptionEnum) =>
 //   ToastService.createLoader('Loading data...').open({
@@ -171,7 +172,16 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
             { icon: 'refresh', type: 'onlyIcon' },
             { icon: 'delete', type: 'onlyIcon', disabled: !currentId },
             { icon: 'edit', type: 'onlyIcon', disabled: !currentId },
-            { icon: 'plus', type: 'onlyIconFilled' },
+            {
+              icon: 'plus',
+              type: 'onlyIconFilled',
+              onClick: () => {
+                modalS.open({
+                  ModalChildren: FormCreateProductInventory,
+                  modalChildrenProps: {},
+                });
+              },
+            },
           ];
         },
       } as ITableListProps<IProductInventory>;

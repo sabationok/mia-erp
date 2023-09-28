@@ -13,10 +13,9 @@ import { IVariationTemplate } from './properties.types';
 import { createPropertyThunk, getAllPropertiesThunk } from './properties.thunks';
 import {
   clearCurrentProductAction,
-  updateCurrentProductAction,
-  updateCurrentProductInventoriesAction,
-  updateCurrentProductPricesAction,
-  updateCurrentProductVariationsAction,
+  setCurrentProductInventoriesAction,
+  setCurrentProductPricesAction,
+  setCurrentProductVariationsAction,
 } from './products.actions';
 
 export interface IProductsState {
@@ -96,25 +95,34 @@ export const productsSlice = createSlice({
       .addCase(clearCurrentProductAction, s => {
         s.currentProduct = { _id: '' };
       })
-      .addCase(updateCurrentProductAction, (s, a) => {
-        s.currentProduct = { ...s.currentProduct, ...a.payload };
-      })
-      .addCase(updateCurrentProductPricesAction, (s, a) => {
+      .addCase(setCurrentProductPricesAction, (s, a) => {
         s.currentProduct = {
           ...(s.currentProduct as IProduct),
-          prices: s.currentProduct?.prices ? [a.payload, ...s.currentProduct?.prices] : [a.payload],
+          prices: a.payload.refresh
+            ? a.payload?.data
+            : s.currentProduct?.prices
+            ? [...a.payload.data, ...s.currentProduct?.prices]
+            : a.payload.data,
         };
       })
-      .addCase(updateCurrentProductVariationsAction, (s, a) => {
+      .addCase(setCurrentProductVariationsAction, (s, a) => {
         s.currentProduct = {
           ...(s.currentProduct as IProduct),
-          variations: s.currentProduct?.variations ? [a.payload, ...s.currentProduct?.variations] : [a.payload],
+          variations: a.payload.refresh
+            ? a.payload?.data
+            : s.currentProduct?.variations
+            ? [...a.payload.data, ...s.currentProduct?.variations]
+            : a.payload.data,
         };
       })
-      .addCase(updateCurrentProductInventoriesAction, (s, a) => {
+      .addCase(setCurrentProductInventoriesAction, (s, a) => {
         s.currentProduct = {
           ...(s.currentProduct as IProduct),
-          inventories: s.currentProduct?.inventories ? [a.payload, ...s.currentProduct?.inventories] : [a.payload],
+          inventories: a.payload.refresh
+            ? a.payload?.data
+            : s.currentProduct?.inventories
+            ? [...a.payload.data, ...s.currentProduct?.inventories]
+            : a.payload.data,
         };
       })
       .addMatcher(inPending, s => {

@@ -40,14 +40,14 @@ export interface IProductInventory extends IBaseWithPeriod {
 export interface IProductInventoryFormData {
   product?: Omit<IProduct, 'categories' | 'inventories' | 'category' | 'properties'>;
   variation?: Omit<IVariation, 'properties'>;
-  status?: ProductInventoryStatus;
-  priceInfo?: Omit<IPriceListItem, 'list' | 'product'>;
+  price?: Omit<IPriceListItem, 'list' | 'product'>;
+  warehouse?: IWarehouse;
 
   stock?: number;
   reserved?: number;
-
   reservation?: boolean;
 
+  status?: ProductInventoryStatus;
   customerTags?: string[];
   supplierTags?: string[];
   timeFrom?: string;
