@@ -52,15 +52,17 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
       baseApi.interceptors.response.use(
         async value => value,
         async (e: AxiosError) => {
-          console.log(e);
           if (e.status === 409) {
+            console.log(e);
             toast.error('Forbidden company action');
             clearCurrent();
           }
           if (e.status === 401) {
+            console.log(e);
             toast.error('Auth failed');
             logOutUser();
           }
+          throw e;
         },
         {}
       );

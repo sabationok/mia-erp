@@ -11,13 +11,11 @@ export const createVariationThunk = createAsyncThunk<
   ThunkPayload<IVariationReqData, IVariation>
 >('products/createVariationThunk', async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
-
   try {
     const res = await VariationsApi.create(args.data);
     if (res) {
       args?.onSuccess && args?.onSuccess(res?.data?.data);
     }
-
     args?.onLoading && args?.onLoading(false);
     return res?.data.data;
   } catch (e) {

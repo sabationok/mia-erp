@@ -1,4 +1,5 @@
 import { toast, ToastContent, ToastOptions } from 'react-toastify';
+import { AxiosError } from 'axios';
 
 type ToastLoaderRemover = () => void;
 type ToastLoaderHandler = {
@@ -39,5 +40,14 @@ export default class ToastService {
     const toastId = toast.error(content, options);
     console.log(toastId, content);
     return () => toast.dismiss(toastId);
+  }
+  public static toastAxiosError(e: AxiosError<{ message?: string | string[] }>) {
+    if (Array.isArray(e.response?.data.message)) {
+      e.response?.data.message.map(msg => {
+        return toast.error(msg);
+      });
+    } else {
+      toast.error(e.response?.data.message);
+    }
   }
 }

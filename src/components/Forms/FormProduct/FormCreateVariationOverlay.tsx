@@ -41,6 +41,7 @@ const validation = yup.object().shape({
   timeFrom: yup.mixed(), // Ось тут потрібно додати відповідні перевірки для дати та числа
   timeTo: yup.mixed(),
 });
+
 const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
   onClose,
   title,
@@ -86,10 +87,7 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
 
               onClose && onClose();
             },
-            onError: e => {
-              console.error('createVariation error:', e);
-              ToastService.error('createVariation error');
-            },
+            onError: ToastService.toastAxiosError,
             onLoading: setLoading,
           })
           .then();
@@ -101,10 +99,7 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
               console.log('createVariation onSuccess', data);
               submitOptions.closeAfterSave && onClose && onClose();
             },
-            onError: e => {
-              console.error('createVariation error:', e);
-              ToastService.error('createVariation error');
-            },
+            onError: ToastService.toastAxiosError,
             onLoading: setLoading,
           })
           .then();
