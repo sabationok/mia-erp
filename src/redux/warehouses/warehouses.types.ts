@@ -1,4 +1,4 @@
-import { IBase, IBaseWithPeriod, OnlyUUID } from '../global.types';
+import { IBase, IBaseWithPeriod, IDataWithPeriod, OnlyUUID } from '../global.types';
 import { IProduct } from '../products/products.types';
 import { ICompany } from '../companies/companies.types';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
@@ -53,13 +53,13 @@ export interface IProductInventoryFormData {
   timeFrom?: string;
   timeTo?: string;
 }
-export interface IProductInventoryDto {
+export interface IProductInventoryDto extends IDataWithPeriod {
+  warehouse?: OnlyUUID;
   product?: OnlyUUID;
   variation?: OnlyUUID;
-  status?: OnlyUUID;
   price?: OnlyUUID;
 
-  warehouse?: OnlyUUID;
+  status?: OnlyUUID;
 
   stock?: number;
   reserved?: number;
@@ -68,8 +68,6 @@ export interface IProductInventoryDto {
 
   customerTags?: string[];
   supplierTags?: string[];
-  timeFrom?: string;
-  timeTo?: string;
 }
 export interface IProductInventoryReqData {
   _id?: OnlyUUID;

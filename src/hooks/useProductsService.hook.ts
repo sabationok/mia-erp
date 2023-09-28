@@ -3,6 +3,7 @@ import { IProduct, IProductReqData } from '../redux/products/products.types';
 import { OnlyUUID, ServiceApiCaller, ServiceDispatcher, ServiceDispatcherAsync } from 'redux/global.types';
 import {
   createProductThunk,
+  getAllPricesByCurrentProduct,
   getAllProductsThunk,
   getProductFullInfoThunk,
   updateProductThunk,
@@ -17,6 +18,7 @@ import { createPropertyThunk, getAllPropertiesThunk } from '../redux/products/pr
 import { createVariationThunk, getAllVariationsByProductIdThunk } from '../redux/products/variations.thunks';
 import { IVariation, IVariationReqData } from '../redux/products/variations.types';
 import { clearCurrentProductAction } from '../redux/products/products.actions';
+import { IPriceListItem } from '../redux/priceManagement/priceManagement.types';
 
 export interface ProductsService {
   create: ServiceDispatcherAsync<IProductReqData, IProduct>;
@@ -44,6 +46,12 @@ export interface ProductsService {
   getAllVariationsByProductId: ServiceDispatcherAsync<
     { product: OnlyUUID; params?: AppQueryParams; refreshCurrent?: boolean },
     IVariation[]
+  >;
+
+  // * PRICES
+  getAllPricesByCurrentProduct: ServiceDispatcherAsync<
+    { refreshCurrent?: boolean; params: Pick<AppQueryParams, 'product' | 'list' | 'variation'> },
+    IPriceListItem[]
   >;
   // deleteVariationById: ServiceApiCaller<IVariationReqData, IVariation>;
   // getVariationById: ServiceApiCaller<IVariationReqData, IVariation>;
@@ -75,6 +83,8 @@ const useProductsService = (): ProductsService => {
       updateVariationById: args => dispatch(createVariationThunk(defaultThunkPayload(args))),
       getAllVariationsByProductId: args => dispatch(getAllVariationsByProductIdThunk(defaultThunkPayload(args))),
 
+      // * PRICES
+      getAllPricesByCurrentProduct: args => dispatch(getAllPricesByCurrentProduct(defaultThunkPayload(args))),
       // getAllVariationsByProductId: args => dispatch(getAllVariationsByProductIdThunk(defaultThunkPayload(args))),
     };
   }, [dispatch]);

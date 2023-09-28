@@ -3,6 +3,7 @@ import { StateErrorType } from 'redux/reduxTypes.types';
 import { IProduct } from './products.types';
 import {
   createProductThunk,
+  getAllPricesByCurrentProduct,
   getAllProductsThunk,
   getProductFullInfoThunk,
   updateProductThunk,
@@ -10,7 +11,13 @@ import {
 import { createVariationThunk, getAllVariationsByProductIdThunk } from './variations.thunks';
 import { IVariationTemplate } from './properties.types';
 import { createPropertyThunk, getAllPropertiesThunk } from './properties.thunks';
-import { clearCurrentProductAction } from './products.actions';
+import {
+  clearCurrentProductAction,
+  updateCurrentProductAction,
+  updateCurrentProductInventoriesAction,
+  updateCurrentProductPricesAction,
+  updateCurrentProductVariationsAction,
+} from './products.actions';
 
 export interface IProductsState {
   products: IProduct[];
@@ -81,8 +88,34 @@ export const productsSlice = createSlice({
           s.currentProduct = { ...(s.currentProduct as IProduct), variations: a.payload.data };
         }
       })
+      .addCase(getAllPricesByCurrentProduct.fulfilled, (s, a) => {
+        if (a.payload?.refreshCurrent) {
+          s.currentProduct = { ...(s.currentProduct as IProduct), prices: a.payload.data };
+        }
+      })
       .addCase(clearCurrentProductAction, s => {
         s.currentProduct = { _id: '' };
+      })
+      .addCase(updateCurrentProductAction, (s, a) => {
+        s.currentProduct = { ...s.currentProduct, ...a.payload };
+      })
+      .addCase(updateCurrentProductPricesAction, (s, a) => {
+        s.currentProduct = {
+          ...(s.currentProduct as IProduct),
+          prices: s.currentProduct?.prices ? [a.payload, ...s.currentProduct?.prices] : [a.payload],
+        };
+      })
+      .addCase(updateCurrentProductVariationsAction, (s, a) => {
+        s.currentProduct = {
+          ...(s.currentProduct as IProduct),
+          variations: s.currentProduct?.variations ? [a.payload, ...s.currentProduct?.variations] : [a.payload],
+        };
+      })
+      .addCase(updateCurrentProductInventoriesAction, (s, a) => {
+        s.currentProduct = {
+          ...(s.currentProduct as IProduct),
+          inventories: s.currentProduct?.inventories ? [a.payload, ...s.currentProduct?.inventories] : [a.payload],
+        };
       })
       .addMatcher(inPending, s => {
         s.isLoading = true;

@@ -131,20 +131,20 @@ export const priceListContentColumns: CellTittleProps<IPriceListItem, DataPath>[
     action: 'valueByPath',
   },
 
-  {
-    top: {
-      name: t('timeTo'),
-      align: 'center',
-      getData: d => `${d?.timeTo}`,
-    },
-    bottom: {
-      name: t('timeFrom'),
-      align: 'center',
-      getData: d => `${d?.timeFrom}`,
-    },
-    width: '150px',
-    action: 'dateDbl',
-  },
+  // {
+  //   top: {
+  //     name: t('timeTo'),
+  //     align: 'center',
+  //     getData: d => `${d?.timeTo}`,
+  //   },
+  //   bottom: {
+  //     name: t('timeFrom'),
+  //     align: 'center',
+  //     getData: d => `${d?.timeFrom}`,
+  //   },
+  //   width: '150px',
+  //   action: 'dateDbl',
+  // },
   {
     top: { name: 'Автор', align: 'start', path: 'author.name' },
     bottom: { name: 'Емейл', align: 'start', path: 'author.email' },
@@ -160,6 +160,24 @@ export const priceListContentColumns: CellTittleProps<IPriceListItem, DataPath>[
 ];
 
 export const pricesColumnsForProductReview: CellTittleProps<IPriceListItem, DataPath>[] = [
+  {
+    top: { name: 'Назва варіації', align: 'end', getData: d => d?.variation?.label },
+    // bottom: { name: '', align: 'end', getData: d => ''},
+    width: '170px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Артикул | SKU', align: 'end', getData: d => d?.variation?.sku },
+    bottom: { name: 'Штрих-код', align: 'end', getData: d => d?.variation?.barCode },
+    width: '170px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Прайс лист', getData: d => d?.list?.label },
+    bottom: { name: 'Тип', getData: d => d?.list?.type },
+    width: '170px',
+    action: 'valueByPath',
+  },
   {
     top: { name: 'Вихідна ціна', align: 'end', getData: d => numberWithSpaces(Number(d?.price || 0)) },
     bottom: { name: 'Вхідна ціна', align: 'end', getData: d => numberWithSpaces(Number(d?.cost || 0)) },
@@ -195,24 +213,19 @@ export const pricesColumnsForProductReview: CellTittleProps<IPriceListItem, Data
     width: '150px',
     action: 'valueByPath',
   },
-  {
-    top: { name: 'Прайс лист', getData: d => d?.list?.label },
-    bottom: { name: 'Тип', getData: d => d?.list?.type },
-    width: '170px',
-    action: 'valueByPath',
-  },
-  {
-    top: {
-      name: t('timeTo'),
-      align: 'center',
-      getData: d => `${d?.timeTo}`,
-    },
-    bottom: {
-      name: t('timeFrom'),
-      align: 'center',
-      getData: d => `${d?.timeFrom}`,
-    },
-    width: '150px',
-    action: 'dateDbl',
-  },
+
+  // {
+  //   top: {
+  //     name: t('timeTo'),
+  //     align: 'center',
+  //     getData: d => `${d?.list?.timeTo}`,
+  //   },
+  //   bottom: {
+  //     name: t('timeFrom'),
+  //     align: 'center',
+  //     getData: d => `${d?.list?.timeFrom}`,
+  //   },
+  //   width: '150px',
+  //   action: 'dateDbl',
+  // },
 ];

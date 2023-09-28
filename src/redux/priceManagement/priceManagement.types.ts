@@ -1,4 +1,4 @@
-import { IBase, IBaseWithPeriod, IDataWithPeriod, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
+import { IBase, IDataWithPeriod, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 import { IProduct } from '../products/products.types';
 import { IVariation } from '../products/variations.types';
@@ -42,18 +42,23 @@ export interface IPriceDto extends IDataWithPeriod {
   product?: OnlyUUID;
   variation?: OnlyUUID;
 
-  label?: string;
-
   price?: number;
   cost?: number;
-  discount?: number;
+
+  discountAmount?: number;
+  discountPercentage?: number;
+  cashbackAmount?: number;
+  cashbackPercentage?: number;
   markupPercentage?: number;
   markupAmount?: number;
   commissionPercentage?: number;
   commissionAmount?: number;
+
+  discountLabel?: string;
+  cashbackLabel?: string;
 }
 
-export interface IPriceListItem extends IBaseWithPeriod {
+export interface IPriceListItem extends IBase {
   owner?: ICompany;
   author?: IUser;
   editor?: IUser;

@@ -45,6 +45,9 @@ export interface AppQueryParams {
   variation?: OnlyUUID;
   list?: OnlyUUID;
   price?: OnlyUUID;
+  category?: OnlyUUID;
+
+  categories?: string[];
 
   timeFrom?: string | number | Date;
   timeTo?: string | number | Date;

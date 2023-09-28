@@ -31,10 +31,11 @@ export class PriceManagementApi {
   }
 
   public static async createPrice(input?: ICreatePriceReqData): Promise<AppResponse<IPriceListItem>> {
-    return this.api.post(this.endpoints.addItemToList(), input?.data);
+    console.log(this.endpoints.createPrice());
+    return this.api.post(this.endpoints.createPrice(), input?.data);
   }
   public static async updatePriceById(input?: IUpdatePriceReqData): Promise<AppResponse<IPriceListItem>> {
-    return this.api.post(this.endpoints.addItemToList(input?._id), input?.data);
+    return this.api.post(this.endpoints.updatePrice(input?._id), input?.data);
   }
 
   public static async getAllPricesByListId(
@@ -43,7 +44,12 @@ export class PriceManagementApi {
     return this.api.get(this.endpoints.getAllPrices(), { params });
   }
   public static async getAllPricesByProductId(
-    params?: Pick<AppQueryParams, 'product'>
+    params?: Pick<AppQueryParams, 'product' | 'list' | 'variation'>
+  ): Promise<AppResponse<IPriceListItem[]>> {
+    return this.api.get(this.endpoints.getAllPrices(), { params });
+  }
+  public static async getAllPrices(
+    params?: Pick<AppQueryParams, 'product' | 'list' | 'variation'>
   ): Promise<AppResponse<IPriceListItem[]>> {
     return this.api.get(this.endpoints.getAllPrices(), { params });
   }

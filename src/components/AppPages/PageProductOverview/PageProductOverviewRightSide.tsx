@@ -58,24 +58,22 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
 
   const loadCurrentData = useCallback(
     (current: RightSideOptionEnum) => {
-      if (current === RightSideOptionEnum.Variations && page.currentProduct) {
-        productsS
-          .getAllVariationsByProductId({
-            data: { product: ExtractId(page.currentProduct), refreshCurrent: true },
-            onLoading: setLoading,
-          })
-          .finally();
+      if (!page.currentProduct) return;
+
+      if (current === RightSideOptionEnum.Variations) {
+        productsS.getAllVariationsByProductId({
+          data: { product: ExtractId(page.currentProduct), refreshCurrent: true },
+          onLoading: setLoading,
+        });
       }
-      if (current === RightSideOptionEnum.Prices && page.currentProduct) {
-        pricesS
-          .getAllPricesByProductId({
-            data: { product: ExtractId(page.currentProduct) },
-            onLoading: setLoading,
-          })
-          .finally();
+      if (current === RightSideOptionEnum.Prices) {
+        productsS.getAllPricesByCurrentProduct({
+          data: { refreshCurrent: true, params: { product: ExtractId(page.currentProduct) } },
+          onLoading: setLoading,
+        });
       }
     },
-    [page.currentProduct, pricesS, productsS]
+    [page.currentProduct, productsS]
   );
 
   const currentTableSettings = useMemo((): ITableListProps | undefined => {

@@ -3,10 +3,11 @@ import { axiosErrorCheck } from 'utils';
 import { ThunkPayload } from '../store.store';
 import { isAxiosError } from 'axios';
 import { IProduct, IProductReqData } from './products.types';
-import { AppQueryParams } from '../../api';
+import { AppQueryParams, PriceManagementApi } from '../../api';
 import { createThunkPayloadCreator } from '../../api/createApiCall.api';
 import ProductsApi from '../../api/products.api';
 import { OnlyUUID } from '../global.types';
+import { IPriceListItem } from '../priceManagement/priceManagement.types';
 
 enum productsThunkType {
   getAllProductsThunk = 'products/getAllProductsThunk',
@@ -14,6 +15,7 @@ enum productsThunkType {
   createProductThunk = 'products/createProductThunk',
   updateProductThunk = 'products/updateProductThunk',
   deleteProductThunk = 'products/deleteProductThunk',
+  getAllPrices = 'getAllPrices',
 }
 export const getAllProductsThunk = createAsyncThunk<
   { refresh?: boolean; data?: IProduct[] },
@@ -109,7 +111,27 @@ export const deleteProductThunk = createAsyncThunk(
   productsThunkType.deleteProductThunk,
   createThunkPayloadCreator(ProductsApi.deleteById, ProductsApi)
 );
+export const getAllPricesByCurrentProduct = createAsyncThunk<
+  { refreshCurrent?: boolean; data: IPriceListItem[] },
+  ThunkPayload<
+    { refreshCurrent?: boolean; params: Pick<AppQueryParams, 'list' | 'product' | 'variation'> },
+    IPriceListItem[]
+  >
+>(productsThunkType.getAllPrices, async (args, thunkApi) => {
+  try {
+    const res = await PriceManagementApi.getAllPrices(args?.data?.params);
+    if (res) {
+      args?.onSuccess && args?.onSuccess(res?.data.data);
+    }
 
+    args?.onLoading && args?.onLoading(false);
+    return { data: res?.data.data, refreshCurrent: args?.data?.refreshCurrent };
+  } catch (error) {
+    args?.onLoading && args?.onLoading(false);
+    args?.onError && args?.onError(error);
+    return thunkApi.rejectWithValue(isAxiosError(error));
+  }
+});
 // ??? VARIATIONS
 
 // export const deleteProductThunk = createAsyncThunk(

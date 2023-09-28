@@ -77,6 +77,9 @@ export enum Endpoints {
   addItemToOrderSlot = 'addItemToOrderSlot',
   removeItemFromOrderSlot = 'removeItemFromOrderSlot',
   softDeleteOrderSlotItem = 'softDeleteOrderSlotItem',
+  createPrice = 'createPrice',
+  updatePrice = 'updatePrice',
+  deletePrice = 'deletePrice',
 }
 
 export type GetEndpoint = (...args: any[]) => string;
