@@ -11,10 +11,10 @@ import { useProductsSelector } from '../../../redux/selectors.store';
 import { ExtractId } from '../../../utils/dataTransform';
 import { createTableTitlesFromTemplate } from '../../../utils';
 import { transformVariationTableData } from '../../../utils/tables';
-import { Text } from '../../atoms/Text';
 import { OnRowClickHandler } from '../../TableList/tableTypes.types';
 import { OnlyUUID } from '../../../redux/global.types';
 import { IProduct } from '../../../redux/products/products.types';
+import InputLabel from '../../atoms/Inputs/InputLabel';
 
 export interface FormProductSelectorForPricingProps {
   title?: string;
@@ -113,18 +113,20 @@ const FormProductSelectorForPricing: React.FC<FormProductSelectorForPricingProps
         {`${currentProduct ? 'Change' : 'Select'} product for pricing`}
       </ButtonIcon>
 
-      <Text $weight={500}>{'Оберіть варіацію для оцінки'}</Text>
+      {/*<Text $weight={500}>{'Оберіть варіацію для оцінки'}</Text>*/}
 
-      <FlexBox style={{ minWidth: 250, maxHeight: 250 }} overflow={'hidden'} flex={1}>
-        <TableList
-          tableTitles={tableTitles}
-          tableData={transformedTableData}
-          selectedRow={currentVariation}
-          isSearch={false}
-          isFilter={false}
-          onRowClick={handleTableRowClick}
-        />
-      </FlexBox>
+      <InputLabel label={'Оберіть варіацію для оцінки'}>
+        <FlexBox style={{ minWidth: 180, maxHeight: 500, height: 300 }} overflow={'hidden'} flex={1}>
+          <TableList
+            tableTitles={tableTitles}
+            tableData={transformedTableData}
+            selectedRow={currentVariation}
+            isSearch={false}
+            isFilter={false}
+            onRowClick={handleTableRowClick}
+          />
+        </FlexBox>
+      </InputLabel>
     </FlexBox>
   );
 };

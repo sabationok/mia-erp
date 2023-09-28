@@ -9,13 +9,16 @@ import InputText from '../../atoms/Inputs/InputText';
 import * as _ from 'lodash';
 import { useCallback, useEffect, useMemo } from 'react';
 import { IProduct } from '../../../redux/products/products.types';
-// import * as yup from 'yup';
 import { usePriceListsSelector, useProductsSelector } from '../../../redux/selectors.store';
 import CustomSelect, { CustomSelectOption } from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import FormAfterSubmitOptions from '../components/FormAfterSubmitOptions';
 import { t } from '../../../lang';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import styled from 'styled-components';
+import { Path } from 'react-hook-form';
+import { createDataForReq } from '../../../utils/dataTransform';
 
 const validation = yup.object().shape({
   cost: yup.number(),
@@ -38,8 +41,34 @@ export interface FormCreatePriceProps
   onSubmit: (data: IPriceFormData, options: UseAppFormSubmitOptions & {}) => void;
 }
 
+const inputsFormCreatePrice: {
+  name: Path<IPriceFormData>;
+  disabled?: boolean;
+  label?: string;
+  placeholder?: string;
+  required?: boolean;
+  autoFocus?: boolean;
+}[] = [
+  { label: t('Price IN'), placeholder: t('Price IN'), required: true, autoFocus: true, name: 'cost' },
+  { label: t('Price OUT'), placeholder: t('Price OUT'), required: true, name: 'price' },
+  {
+    label: t('Commission amount'),
+    placeholder: t('Enter commission amount'),
+    disabled: true,
+    name: 'commissionAmount',
+  },
+  {
+    label: t('Commission percentage'),
+    placeholder: t('Enter commission percentage'),
+    disabled: true,
+    name: 'commissionPercentage',
+  },
+];
+
 const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update, product, onSubmit, ...props }) => {
   const productInState = useProductsSelector().currentProduct;
+  const { lists } = usePriceListsSelector();
+  const service = useAppServiceProvider()[ServiceName.priceManagement];
   const currentProduct = useMemo(() => {
     return product || productInState;
   }, [product, productInState]);
@@ -52,14 +81,19 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
     toggleAfterSubmitOption,
     closeAfterSave,
     clearAfterSave,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useAppForm<IPriceFormData>({
-    defaultValues: { ...defaultState, product: currentProduct },
+    defaultValues: {
+      price: 0,
+      cost: 0,
+      commissionAmount: 0,
+      commissionPercentage: 0,
+      ...defaultState,
+      product: currentProduct,
+    },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
-
-  const { lists } = usePriceListsSelector();
 
   const { price, cost } = formValues;
 
@@ -83,10 +117,30 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
   const recalculateValues = useCallback(() => calculateValuesThrottled(), [calculateValuesThrottled]);
 
   const onValid = (formData: IPriceFormData) => {
-    const data: IPriceFormData = { ...formData, price: Number(formData.price), cost: Number(formData.cost) };
+    const dataForReq = createDataForReq(formData);
+    console.log(dataForReq);
+
+    if (update) {
+      service.updatePriceById({
+        data: { data: { _id: update, data: dataForReq }, updateCurrent: true },
+        onSuccess: (data, meta) => {
+          console.log('update price', { data, meta });
+          closeAfterSave && props?.onClose && props?.onClose();
+        },
+      });
+      return;
+    } else {
+      service.addPriceToList({
+        data: { data: { data: dataForReq }, updateCurrent: true },
+        onSuccess: (data, meta) => {
+          console.log('create new price', { data, meta });
+          closeAfterSave && props?.onClose && props?.onClose();
+        },
+      });
+    }
 
     onSubmit &&
-      onSubmit(formData, {
+      onSubmit(dataForReq, {
         closeAfterSave,
         clearAfterSave,
       });
@@ -99,7 +153,6 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
 
   return (
     <ModalForm
-      isValid={isValid}
       onSubmit={handleSubmit(onValid)}
       fillHeight
       title={`${update ? 'Edit' : 'Create'} price for: ${formValues?.product?.label || '---'} | ${
@@ -114,7 +167,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
       }
       {...props}
     >
-      <FlexBox padding={'8px'} flex={1}>
+      <FlexBox padding={'8px'} flex={1} overflow={'auto'}>
         <FormProductSelectorForPricing
           selected={formValues.product}
           disabled={!defaultState?.list?._id}
@@ -127,65 +180,49 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
         />
 
         <CustomSelect
-          options={lists}
-          getLabel={d => {
-            return '';
-          }}
           {...registerSelect('list', {
             options: lists,
             dropDownIsAbsolute: true,
-            label: 'Прайс лист',
-            placeholder: 'Оберіть прайс лист',
+            label: t('Price list'),
+            placeholder: t('Select price list'),
             getLabel: (d: CustomSelectOption & IPriceList) => {
               return `${d?.label} | ${t(d.type)}`;
             },
           })}
         />
 
-        <FlexBox fxDirection={'row'} gap={12}>
-          <InputLabel label={'Вхідна ціна'} direction={'vertical'} required>
-            <InputText
-              placeholder={'Вхідна ціна'}
-              type={'number'}
-              {...register('cost', { valueAsNumber: true })}
-              required
-              autoFocus
-            />
-          </InputLabel>
-
-          <InputLabel label={'Вихідна ціна'} direction={'vertical'} required>
-            <InputText
-              placeholder={'Вихідна ціна'}
-              type={'number'}
-              {...register('price', { valueAsNumber: true })}
-              required
-            />
-          </InputLabel>
-        </FlexBox>
-
-        <FlexBox fxDirection={'row'} gap={12}>
-          <InputLabel label={'Комісійна винагорода'} direction={'vertical'} disabled>
-            <InputText
-              placeholder={'Введіть суму комісії'}
-              type={'number'}
-              {...register('commissionAmount', { valueAsNumber: true })}
-              disabled
-            />
-          </InputLabel>
-
-          <InputLabel label={'Комісія, у %'} direction={'vertical'} disabled>
-            <InputText
-              placeholder={'Введіть % комісії'}
-              type={'number'}
-              {...register('commissionPercentage', { valueAsNumber: true })}
-              disabled
-            />
-          </InputLabel>
-        </FlexBox>
+        <Inputs>
+          {inputsFormCreatePrice.map(info => {
+            return (
+              <InputLabel
+                key={`input_${info.name}`}
+                label={info?.label}
+                required={info?.required}
+                disabled={info?.disabled}
+                error={errors[info.name as never]}
+              >
+                <InputText
+                  align={'right'}
+                  {...register(info?.name, { valueAsNumber: true })}
+                  placeholder={info?.placeholder}
+                  required={info?.required}
+                  autoFocus={info?.autoFocus}
+                  disabled={info?.disabled}
+                />
+              </InputLabel>
+            );
+          })}
+        </Inputs>
       </FlexBox>
     </ModalForm>
   );
 };
+const Inputs = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 2fr;
+
+  gap: 8px;
+`;
 export default FormCreatePrice;
 // if (!canCount) {
 //   setValue('markupAmount', 0);
