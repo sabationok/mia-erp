@@ -67,15 +67,21 @@ export interface IPriceListItem extends IBase {
   variation?: IVariation;
   list?: IPriceList;
 
-  label: string;
+  label?: string;
+
   price?: number;
   cost?: number;
-  discount?: number;
-  currency?: string;
+
+  discountAmount?: number;
+  discountPercentage?: number;
+  cashbackAmount?: number;
+  cashbackPercentage?: number;
   markupPercentage?: number;
   markupAmount?: number;
   commissionPercentage?: number;
   commissionAmount?: number;
+  discountLabel?: string;
+  cashbackLabel?: string;
 }
 
 export interface IPriceFormData extends Omit<IPriceDto, 'product' | 'variation' | 'list'> {

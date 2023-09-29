@@ -1,6 +1,6 @@
-import FormCreateDirTreeComp, { FormCreateDirTreeCompProps } from './FormCreateDirTreeComp';
-import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { IWarehouseDto } from '../../redux/warehouses/warehouses.types';
+import FormCreateDirTreeComp, { FormCreateDirTreeCompProps } from '../FormCreateDirTreeComp';
+import { ApiDirType } from '../../../redux/APP_CONFIGS';
+import { IWarehouseDto } from '../../../redux/warehouses/warehouses.types';
 
 export interface FormCreateWarehouseProps
   extends FormCreateDirTreeCompProps<ApiDirType.WAREHOUSES, IWarehouseFormData> {}

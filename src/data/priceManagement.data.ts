@@ -197,14 +197,14 @@ export const pricesColumnsForProductReview: CellTittleProps<IPriceListItem, Data
     action: 'valueByPath',
   },
   {
-    top: { name: 'Знижка, сума', align: 'end', getData: d => numberWithSpaces(Number(d?.discount || 0)) },
-    bottom: { name: 'Знижка, %', align: 'end', getData: d => numberWithSpaces(Number(d?.discount || 0)) },
+    top: { name: 'Знижка, сума', align: 'end', getData: d => numberWithSpaces(Number(d?.discountAmount || 0)) },
+    bottom: { name: 'Знижка, %', align: 'end', getData: d => numberWithSpaces(Number(d?.discountPercentage || 0)) },
     width: '170px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Бонуси, сума', align: 'end', getData: d => numberWithSpaces(Number(d?.discount || 0)) },
-    bottom: { name: 'Бонуси, %', align: 'end', getData: d => numberWithSpaces(Number(d?.discount || 0)) },
+    top: { name: 'Бонуси, сума', align: 'end', getData: d => numberWithSpaces(Number(d?.cashbackAmount || 0)) },
+    bottom: { name: 'Бонуси, %', align: 'end', getData: d => numberWithSpaces(Number(d?.cashbackPercentage || 0)) },
     width: '170px',
     action: 'valueByPath',
   },

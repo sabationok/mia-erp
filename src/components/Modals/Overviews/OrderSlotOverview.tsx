@@ -94,12 +94,12 @@ const createOverviewCellsData = (
   },
   {
     title: 'Бонуси',
-    value: numberWithSpaces(countedPrice?.discount || 0),
+    value: numberWithSpaces(countedPrice?.cashbackAmount || 0),
     gridArea: 'discount',
   },
   {
     title: 'Знижка',
-    value: numberWithSpaces(countedPrice?.discount || 0),
+    value: numberWithSpaces(countedPrice?.discountAmount || 0),
     gridArea: 'bonuses',
   },
   {
@@ -107,12 +107,12 @@ const createOverviewCellsData = (
     value: numberWithSpaces(countedPrice?.total || 0),
     gridArea: 'total',
   },
-  {
-    title: 'Валюта',
-    value: countedPrice?.currency,
-    gridArea: 'currency',
-    isLastInRow: true,
-  },
+  // {
+  //   title: 'Валюта',
+  //   value: countedPrice.,
+  //   gridArea: 'currency',
+  //   isLastInRow: true,
+  // },
   {
     title: 'Склад',
     value: warehouse ? `${warehouse?.label || ''} | ${warehouse?.code || ''}` : '-',

@@ -96,7 +96,7 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
     const price = data?._id ? { _id: data._id } : null;
     if (!price) return;
 
-    setSelectedPrice(variation);
+    setSelectedPrice(price);
   }, []);
 
   const onValid = (data: IProductInventoryFormData) => {

@@ -9,6 +9,7 @@ import { useProductsSelector } from '../../redux/selectors.store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import * as Cells from './components/Cells';
 import { OverlayHeader } from '../Forms/FormProduct/components';
+import numberWithSpaces from '../../utils/numbers';
 
 export interface ProductOverviewXLProps {
   product?: IProduct;
@@ -257,10 +258,10 @@ const productOverviewCells: ProductOverviewCell[] = [
     CellComponent: Cells.OverviewTextCell,
     getValue: product => {
       const arr = [
-        `${t('price')}: ${product?.defaults?.price?.price || 0}`,
-        `${t('cost')}: ${product?.defaults?.price?.cost || 0}`,
-        `${t('discount')}: ${product?.defaults?.price?.discount || 0}`,
-        `${t('currency')}: ${product?.defaults?.price?.currency || 'UAH'}`,
+        `${t('price')}: ${numberWithSpaces(product?.defaults?.price?.price || 0)}`,
+        `${t('cost')}: ${numberWithSpaces(product?.defaults?.price?.cost || 0)}`,
+        `${t('discount')}: ${numberWithSpaces(product?.defaults?.price?.discountAmount || 0)}`,
+        `${t('cashback')}: ${numberWithSpaces(product?.defaults?.price?.cashbackAmount || 0)}`,
       ];
 
       return arr.join(' | ');

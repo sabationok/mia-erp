@@ -5,7 +5,7 @@ import { WarehousesService } from './useWarehousesService.hook';
 import { IWarehouse, IWarehouseReqData } from '../redux/warehouses/warehouses.types';
 import { Modals } from '../components/ModalProvider/Modals';
 import { ApiDirType } from '../redux/APP_CONFIGS';
-import { IWarehouseFormData } from '../components/Forms/FormCreateWarehouse';
+import { IWarehouseFormData } from '../components/Forms/warehousing/FormCreateWarehouse';
 
 export type WarehouseActionCreatorOptions = {
   ctx: ITableListContext<IWarehouse>;

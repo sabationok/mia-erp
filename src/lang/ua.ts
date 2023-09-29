@@ -1,6 +1,7 @@
 import { ApiDirType, AppPagesEnum } from '../redux/APP_CONFIGS';
 import { ContractorsTypesEnum } from '../redux/contractors/contractors.types';
 import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../redux/companies/companies.types';
+import { WarehouseDocumentType } from '../redux/warehouses/warehouses.types';
 
 export const langUa = {
   // DIRECTORIES
@@ -231,4 +232,10 @@ export const langUa = {
   sku: 'Артикул | SKU',
   sizesTable: 'Розмірна сітка',
   visibility: 'Видимість',
+
+  [WarehouseDocumentType.addToStock]: 'Прихід на склад',
+  [WarehouseDocumentType.removeFromStock]: 'Списання зі складу',
+  [WarehouseDocumentType.reserveFromStock]: 'Резерв',
+  [WarehouseDocumentType.returnFromReserve]: 'Повернення з резерву',
+  [WarehouseDocumentType.removeFromReserve]: 'Списання з резерву',
 };

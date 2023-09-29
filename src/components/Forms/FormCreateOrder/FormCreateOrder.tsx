@@ -7,6 +7,7 @@ import { FilterOpt } from '../../ModalForm/ModalFilter';
 import FormCreateOrderProductsList from './FormCreateOrderProductsList';
 import FormCreateOrderMainInfo from './FormCreateOrderMainInfo';
 import { OnlyUUID } from '../../../redux/global.types';
+import { enumToFilterOptions } from '../../../utils/fabrics';
 
 // const orderValidation = yup.object().shape({
 //   manager: yup.object().shape({ _id: yup.string() } as Record<keyof IUser, any>),
@@ -20,9 +21,15 @@ export const FormCreateOrderTabs: FilterOpt[] = [
   { label: 'Info', value: 'info' },
   { label: 'Products', value: 'products' },
 ];
+export enum OrderTabsEnum {
+  content = 'content',
+  info = 'info',
+  total = 'total',
+}
+export const formCreateOrderTabs = enumToFilterOptions(OrderTabsEnum);
 
 const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmit, ...props }) => {
-  const [currentTab, setCurrentTab] = useState<number>(0);
+  const [currentTab, setCurrentTab] = useState<OrderTabsEnum>(OrderTabsEnum.info);
   const [content, setContent] = useState<IOrderSlot[]>([]);
 
   const form = useAppForm<ICreateOrderFormState>({
@@ -42,8 +49,8 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
   };
 
   const renderTab = useMemo(() => {
-    if (currentTab === 0) return <FormCreateOrderMainInfo form={form} />;
-    if (currentTab === 1)
+    if (currentTab === OrderTabsEnum.info) return <FormCreateOrderMainInfo form={form} />;
+    if (currentTab === OrderTabsEnum.content)
       return <FormCreateOrderProductsList list={content} onSelect={handleSelect} onRemove={handleRemove} />;
   }, [currentTab, form, content, handleSelect, handleRemove]);
 
@@ -52,8 +59,8 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
       fillHeight
       width={'480px'}
       {...props}
-      onOptSelect={(_o, _v, index) => setCurrentTab(index)}
-      filterOptions={FormCreateOrderTabs}
+      onOptSelect={(_o, v: OrderTabsEnum) => setCurrentTab(v)}
+      filterOptions={formCreateOrderTabs}
       onSubmit={form.handleSubmit(onValid)}
     >
       {renderTab}

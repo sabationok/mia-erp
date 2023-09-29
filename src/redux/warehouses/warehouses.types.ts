@@ -10,6 +10,14 @@ export enum WarehouseTypeEnum {
   WAREHOUSE = 'warehouse',
   STORE = 'store',
 }
+
+export enum WarehouseDocumentType {
+  addToStock = 'addOnStock',
+  reserveFromStock = 'reserveFromStock',
+  removeFromStock = 'removeFromStock',
+  returnFromReserve = 'returnFromReserve',
+  removeFromReserve = 'removeFromReserve',
+}
 export interface IWarehouse extends IBase {
   owner?: ICompany;
   manager?: IUser;
@@ -26,7 +34,7 @@ export type ProductInventoryStatus = 'rejected' | 'approved' | 'pending' | 'erro
 
 export interface IProductInventory extends IBaseWithPeriod {
   owner?: ICompany;
-
+  warehouse?: IWarehouse;
   product?: IProduct;
   variation?: IVariation;
   price?: IPriceListItem;
@@ -34,8 +42,18 @@ export interface IProductInventory extends IBaseWithPeriod {
   batch?: string;
   stock?: number;
   reserved?: number;
+}
 
-  reservation?: boolean;
+export interface IWarehouseDoc extends IBaseWithPeriod {
+  owner?: ICompany;
+  author?: IUser;
+  warehouse?: IWarehouse;
+  product?: IProduct;
+  variation?: IVariation;
+  price?: IPriceListItem;
+
+  amount?: number;
+  type?: WarehouseDocumentType;
 }
 export interface IProductInventoryFormData {
   product?: Omit<IProduct, 'categories' | 'inventories' | 'category' | 'properties'>;
