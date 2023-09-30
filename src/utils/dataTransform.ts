@@ -14,7 +14,8 @@ const isDevMode = ConfigService.isDevMode();
 export function parseBool(key?: 'false' | 'true' | string) {
   return key === 'true';
 }
-export const ExtractId = <T extends OnlyUUID>(data: T) => (pick(data, '_id')._id ? pick(data, '_id') : { _id: '' });
+export const ExtractId = <T extends OnlyUUID>(data: T): OnlyUUID =>
+  pick(data, '_id')._id ? pick(data, '_id') : { _id: '' };
 export const ExtractIdString = <T extends OnlyUUID>(data: Partial<T>) =>
   '_id' in data ? pick(data, '_id')._id : undefined;
 

@@ -9,5 +9,6 @@ export { default as useListDataHooks } from './useListData.hook';
 export { default as useCloseByEscapeOrClickOnBackdrop } from './useCloseByEscapeOrClickOnBackdrop.hook';
 export { default as useAppServices } from './useAppServices.hook';
 export { default as useAppDate } from './useAppDate.hook';
+export { default as useScrollTo } from './useScrollTo.hook';
 
 export { useFilteredLisData, useEntryListData };

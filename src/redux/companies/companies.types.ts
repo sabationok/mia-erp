@@ -27,10 +27,10 @@ export type BusinessSubjectFilterOption = FilterOpt<BusinessSubjectTypeEnum>;
 export interface ICompanyConfigs {}
 
 export interface ICompany extends IBase {
-  name: string;
+  name?: string;
   secondName?: string;
-  email: string;
-  fullName: string;
+  email?: string;
+  fullName?: string;
   label?: string;
   fullLabel?: string;
   ownershipType?: string;
@@ -38,23 +38,16 @@ export interface ICompany extends IBase {
   phone?: string;
   taxCode?: string;
   personalTaxCode?: string;
-  owner: Pick<IUser, '_id' | 'name' | 'email'>;
+  owner?: Pick<IUser, '_id' | 'name' | 'email'>;
   permissions?: Partial<IPermission>[];
-  company_token?: string;
   configs?: ICompanyConfigs;
   type?: string;
   holders?: string[];
   avatarUrl?: string;
   avatarPreviewUrl?: string;
+
   contacts?: ContactsDto[];
   locations?: LocationDto[];
-  customerTags?: string[];
-  supplierTags?: string[];
-  contractorTags?: string[];
-  productTags?: string[];
-  orderTags?: string[];
-  paymentTags?: string[];
-  shipmentTags?: string[];
 }
 
 export interface ICompaniesState {

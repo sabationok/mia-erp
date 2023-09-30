@@ -54,8 +54,8 @@ const PageWarehouseOverview: React.FC<any> = (props: Props) => {
 
   useEffect(() => {
     console.log('PageWarehouseOverview ============>>>>>>>>>>');
-    console.log(sortParams);
-    console.log(filterParams);
+    console.log('sortParams', sortParams);
+    console.log('filterParams', filterParams);
   }, [filterParams, sortParams]);
 
   return (
@@ -77,16 +77,34 @@ const useWarehouseOverviewActionsCreator = (): WarehouseTableActionsCreator => {
   // const service = useAppServiceProvider().warehouses;
   const modalS = useModalProvider();
 
-  return (_ctx: ITableListContext) => [
-    { name: 'deleteProductInventory', icon: 'delete', onClick: () => {} },
-    { name: 'editProductInventory', icon: 'edit', onClick: () => {} },
-    {
-      name: 'addProductInventory',
-      icon: 'plus',
-      onClick: () => {
-        modalS.handleOpenModal({ Modal: Modals.FormCreateProductInventory });
+  return (ctx: ITableListContext<IProductInventory>) => {
+    const current = ctx.selectedRow;
+
+    return [
+      { name: 'deleteProductInventory', icon: 'delete', onClick: () => {} },
+      { name: 'editProductInventory', icon: 'edit', onClick: () => {} },
+      {
+        name: 'addProductInventory',
+        icon: 'plus',
+        type: 'onlyIconFilled',
+        onClick: () => {
+          const m = modalS.open({
+            Modal: Modals.SelectProductModal,
+            props: {
+              onSelect: p => {
+                const cm = modalS.open({
+                  Modal: Modals.FormCreateWarehouseDocument,
+                  props: {
+                    product: p,
+                    title: `Create warehouse document for product: ${p?.label}`,
+                  },
+                });
+              },
+            },
+          });
+        },
       },
-    },
-  ];
+    ];
+  };
 };
 export default PageWarehouseOverview;

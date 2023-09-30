@@ -6,19 +6,21 @@ import DeviceControl from 'components/atoms/DeviceTypeInformer/DeviceTypeControl
 import TableSearchForm from './TableSearchForm/TableSearchForm';
 import TActions from '../TableActions';
 import TableFilter from '../TableFilter';
-import FlexBox from '../../atoms/FlexBox';
 
 const TableOverHead: React.FC<React.HTMLAttributes<HTMLDivElement>> = props => {
   const { actionsCreator, isFilter, tableSearchParams, isSearch = true } = useTable();
 
   return (
     <OverHead className="tOverHead" {...props}>
-      <LeftSide className={'leftSide'} padding={isSearch ? '4px 8px' : '0'}>
+      <LeftSide className={'leftSide'} style={{ padding: isSearch ? '4px 8px' : '0' }}>
         {isSearch && <TableSearchForm {...{ tableSearchParams }} />}
       </LeftSide>
 
       <DeviceControl.MinDesktop>
-        <RightSide className={'rightSide'} padding={!isFilter && !isFilter && !actionsCreator ? '0' : '4px 8px'}>
+        <RightSide
+          className={'rightSide'}
+          style={{ padding: !isFilter && !isFilter && !actionsCreator ? '0' : '4px 8px' }}
+        >
           {isFilter && <TableFilter />}
 
           {isFilter && actionsCreator && <Separator />}
@@ -30,13 +32,12 @@ const TableOverHead: React.FC<React.HTMLAttributes<HTMLDivElement>> = props => {
   );
 };
 
-const OverHead = styled.div<{ padding?: string }>`
+const OverHead = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   justify-content: space-between;
 
   gap: 8px;
-  padding: ${({ padding = '0' }) => padding};
 
   position: relative;
   z-index: 50;
@@ -57,13 +58,15 @@ const OverHead = styled.div<{ padding?: string }>`
     flex-direction: row;
   }
 `;
-const LeftSide = styled(FlexBox)`
+const LeftSide = styled.div`
+  display: flex;
   align-items: center;
   justify-content: space-between;
 
   /* overflow: hidden; */
 `;
-const RightSide = styled(FlexBox)`
+const RightSide = styled.div`
+  display: flex;
   align-self: flex-end;
 
   justify-content: flex-end;

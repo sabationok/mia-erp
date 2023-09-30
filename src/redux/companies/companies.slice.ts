@@ -9,8 +9,6 @@ export const initialCompany: ICompany = {
   email: 'company@mail.com',
   taxCode: '51651348435',
   owner: testUserKarina,
-  company_token: 'company_token',
-  customerTags: ['Новий', 'Дивний', 'Нервовий', 'VIP', 'Premium', 'Econom', 'Default'],
 };
 
 const initialCompState: ICompaniesState = {

@@ -1,6 +1,7 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
+import { useScrollTo } from '../../hooks';
 
 export interface ModalFormFilterProps<V = any, D = any> {
   defaultOption?: number | FilterOpt<V, D> | V;
@@ -37,6 +38,7 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
   ...props
 }) => {
   const [current, setCurrent] = useState<number>(typeof defaultOption === 'number' ? defaultOption : 0);
+  const { listRef } = useScrollTo<HTMLDivElement>(current.toString());
 
   const handleSelectOpt = useCallback(
     (idx: number, option: FilterOpt) => {
@@ -72,6 +74,7 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
       filterOptions?.map((opt, idx) => (
         <StButtonIcon
           key={idx}
+          id={`_${idx}`}
           variant="def"
           disabled={opt?.disabled}
           className={current === idx ? 'filterBtn active' : 'filterBtn'}

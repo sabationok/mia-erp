@@ -5,7 +5,6 @@ import {
   IPriceList,
   IPriceListItem,
   IPriceListItemReqData,
-  PriceListFilterOption,
   PriceListTypeEnum,
 } from '../redux/priceManagement/priceManagement.types';
 import FormCreatePriceList from '../components/Forms/FormCreatePriceList';
@@ -14,13 +13,11 @@ import { omit } from 'lodash';
 import { ExtractId } from '../utils/dataTransform';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { useNavigate } from 'react-router-dom';
+import { enumToFilterOptions } from '../utils/fabrics';
 
 export type PriceManagementActionsCreator = TableActionCreator<IPriceList>;
 
-export const PriceManagementItemTypeFilterOptions: PriceListFilterOption[] = [
-  { label: PriceListTypeEnum.SALES, value: PriceListTypeEnum.SALES },
-  { label: PriceListTypeEnum.PURCHASES, value: PriceListTypeEnum.PURCHASES },
-];
+export const PriceManagementItemTypeFilterOptions = enumToFilterOptions(PriceListTypeEnum);
 
 export const createPriceDataForReq = (input: Required<IPriceListItem>): IPriceListItemReqData => {
   return {

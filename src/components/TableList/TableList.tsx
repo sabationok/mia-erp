@@ -168,7 +168,7 @@ const Table = styled.div`
   width: 100%;
   overflow: hidden;
 
-  background-color: ${({ theme }) => theme.tableBackgroundColor};
+  //background-color: ${({ theme }) => theme.tableBackgroundColor};
 `;
 const TableScroll = styled.div`
   display: grid;

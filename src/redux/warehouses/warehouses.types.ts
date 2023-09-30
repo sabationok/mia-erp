@@ -1,4 +1,4 @@
-import { IBase, IBaseWithPeriod, IDataWithPeriod, OnlyUUID } from '../global.types';
+import { IBase, IBaseWithPeriod, IDataWithPeriod, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
 import { IProduct } from '../products/products.types';
 import { ICompany } from '../companies/companies.types';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
@@ -51,6 +51,30 @@ export interface IWarehouseDoc extends IBaseWithPeriod {
   product?: IProduct;
   variation?: IVariation;
   price?: IPriceListItem;
+
+  amount?: number;
+  type?: WarehouseDocumentType;
+}
+
+export interface IWarehouseDocFormData {
+  owner?: IFormDataValueWithUUID;
+  author?: IFormDataValueWithUUID;
+  warehouse?: IFormDataValueWithUUID;
+  product?: IFormDataValueWithUUID;
+  variation?: IFormDataValueWithUUID;
+  price?: IFormDataValueWithUUID;
+
+  amount?: number;
+  type?: WarehouseDocumentType;
+}
+
+export interface IWarehouseDocDto {
+  owner?: OnlyUUID;
+  author?: OnlyUUID;
+  warehouse?: OnlyUUID;
+  product?: OnlyUUID;
+  variation?: OnlyUUID;
+  price?: OnlyUUID;
 
   amount?: number;
   type?: WarehouseDocumentType;

@@ -17,7 +17,7 @@ const AppGridPage: React.FC<{ path?: PagePathType; children?: React.ReactNode }>
 
   return (
     <Layout>
-      <GridPage>{children}</GridPage>;
+      <GridPage>{children}</GridPage>
     </Layout>
   );
 };
