@@ -97,11 +97,12 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
                 if (!currentId || !ctx.selectedRow) return;
                 const dataForUpdate = page.currentProduct?.variations?.find(v => v?._id === currentId);
 
+                console.log('dataForUpdate', dataForUpdate);
+
                 modalS.open({
                   ModalChildren: FormCreateVariation,
                   modalChildrenProps: {
                     update: currentId,
-                    product: page.currentProduct,
                     defaultState: dataForUpdate,
                   },
                 });

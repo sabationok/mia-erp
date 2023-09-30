@@ -17,6 +17,7 @@ import FormAfterSubmitOptions from '../components/FormAfterSubmitOptions';
 import { OverlayFooter, OverlayHeader } from './components';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { IProperty } from '../../../redux/products/properties.types';
 
 export interface FormVariationProps
   extends OverlayHandlerReturn,
@@ -51,12 +52,14 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
   create,
   ...props
 }) => {
-  const product = useProductsSelector().currentProduct;
+  const currentProduct = useProductsSelector().currentProduct;
   const service = useAppServiceProvider()[ServiceName.products];
   const templates = usePropertiesSelector();
   const [loading, setLoading] = useState(false);
   const { setValue, watch, handleSubmit } = useForm<IVariationFormData>({
-    defaultValues: defaultState ? createVariationFormData({ ...defaultState, product }) : { product },
+    defaultValues: defaultState
+      ? createVariationFormData({ ...defaultState, product: currentProduct })
+      : { product: currentProduct },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
@@ -66,19 +69,16 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
   });
   const formValues = watch();
 
-  const handleChangeAfterSubmit = (key: keyof UseAppFormSubmitOptions) => {
-    setSubmitOptions(prev => ({ ...prev, [key]: !prev[key] }));
-  };
-
   const template = useMemo(() => {
-    const pr = defaultState?.product || product;
-
-    return templates.find(t => t._id === pr?.template?._id);
-  }, [defaultState?.product, product, templates]);
-
+    return templates.find(t => t._id === currentProduct?.template?._id);
+  }, [currentProduct, templates]);
   const canSubmit = useMemo(() => {
     return formValues.propertiesMap && Object.values(formValues.propertiesMap).length > 0;
   }, [formValues.propertiesMap]);
+
+  const handleChangeAfterSubmit = (key: keyof UseAppFormSubmitOptions) => {
+    setSubmitOptions(prev => ({ ...prev, [key]: !prev[key] }));
+  };
 
   const onValid = useCallback(
     (data: IVariationFormData) => {
@@ -126,32 +126,14 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
       ?.filter(el => el?.isSelectable)
       ?.map(prop => {
         return (
-          <PropertyBox key={`property-${prop._id}`} gap={8} fillWidth padding={'8px 0 0'}>
-            <Text style={{ flex: 1, paddingLeft: 12 }} $weight={500}>
-              {prop.label}
-            </Text>
-
-            <FlexBox fillWidth padding={'8px 0'} fxDirection={'row'} gap={6} flexWrap={'wrap'}>
-              {prop.childrenList?.map(value => {
-                const isActive = formValues?.propertiesMap && formValues?.propertiesMap[prop._id] === value._id;
-
-                return (
-                  <ValueTag
-                    key={`prop-value-${value._id}`}
-                    variant={isActive ? 'filledSmall' : 'outlinedSmall'}
-                    padding={'6px 8px'}
-                    fontWeight={500}
-                    onClick={() => handleSelect(prop._id, value._id)}
-                  >
-                    {value.label}
-                  </ValueTag>
-                );
-              })}
-            </FlexBox>
-          </PropertyBox>
+          <RenderProperty
+            item={prop}
+            onSelect={handleSelect}
+            selectedValue={formValues?.propertiesMap ? formValues?.propertiesMap[prop._id] : undefined}
+          />
         );
       });
-  }, [formValues, handleSelect, template?.childrenList]);
+  }, [formValues?.propertiesMap, handleSelect, template?.childrenList]);
 
   return (
     <FormContainer onSubmit={handleSubmit(onValid)} {...props}>
@@ -220,4 +202,43 @@ const ValueTag = styled(ButtonIcon)`
   //   border: 2px solid ${p => p.theme.accentColor.base};
   // }
 `;
+
+const RenderProperty = ({
+  item,
+  selectedValue,
+  onSelect,
+}: {
+  item: IProperty;
+  selectedValue?: string;
+  onSelect?: (propId: string, valueId: string) => void;
+}) => {
+  const renderChildren = useMemo(() => {
+    return item.childrenList?.map(value => {
+      return (
+        <ValueTag
+          key={`prop-value-${value._id}`}
+          variant={selectedValue === value._id ? 'filledSmall' : 'outlinedSmall'}
+          padding={'6px 8px'}
+          fontWeight={500}
+          onClick={() => onSelect && onSelect(item._id, value._id)}
+        >
+          {value.label}
+        </ValueTag>
+      );
+    });
+  }, [item._id, item.childrenList, onSelect, selectedValue]);
+
+  return (
+    <PropertyBox key={`property-${item._id}`} gap={8} fillWidth padding={'8px 0 0'}>
+      <Text style={{ flex: 1, paddingLeft: 12 }} $weight={500}>
+        {item.label}
+      </Text>
+
+      <FlexBox fillWidth padding={'8px 0'} fxDirection={'row'} gap={6} flexWrap={'wrap'}>
+        {renderChildren}
+      </FlexBox>
+    </PropertyBox>
+  );
+};
+
 export default FormCreateVariationOverlay;
