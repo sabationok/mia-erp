@@ -3,7 +3,8 @@ import { StateErrorType } from 'redux/reduxTypes.types';
 import { IProduct } from './products.types';
 import {
   createProductThunk,
-  getAllPricesByCurrentProduct,
+  getAllInventoriesByProductIdThunk,
+  getAllPricesByProductIdThunk,
   getAllProductsThunk,
   getProductFullInfoThunk,
   updateProductThunk,
@@ -77,8 +78,6 @@ export const productsSlice = createSlice({
         if (!a.payload) {
           return;
         } else {
-          console.log('createVariationThunk', a.payload);
-
           s?.currentProduct?.variations?.unshift(a.payload);
         }
       })
@@ -87,9 +86,14 @@ export const productsSlice = createSlice({
           s.currentProduct = { ...(s.currentProduct as IProduct), variations: a.payload.data };
         }
       })
-      .addCase(getAllPricesByCurrentProduct.fulfilled, (s, a) => {
+      .addCase(getAllPricesByProductIdThunk.fulfilled, (s, a) => {
         if (a.payload?.refreshCurrent) {
           s.currentProduct = { ...(s.currentProduct as IProduct), prices: a.payload.data };
+        }
+      })
+      .addCase(getAllInventoriesByProductIdThunk.fulfilled, (s, a) => {
+        if (a.payload?.refreshCurrent) {
+          s.currentProduct = { ...(s.currentProduct as IProduct), inventories: a.payload.data };
         }
       })
       .addCase(clearCurrentProductAction, s => {

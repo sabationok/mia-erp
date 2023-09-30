@@ -1,5 +1,5 @@
 import baseApi from './baseApi';
-import APP_CONFIGS, { Endpoints } from '../redux/APP_CONFIGS';
+import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import {
   IProductInventory,
@@ -28,11 +28,8 @@ export class WarehousesApi {
     return this.api.get(this.endpoints.getAll(), { params: params });
   }
 
-  public static async getAllItems(
-    warehouse?: IWarehouse,
-    params?: AppQueryParams
-  ): Promise<AppResponse<IProductInventory[]>> {
-    return this.api.get(this.endpoints[Endpoints.getAllByWarehouseId](warehouse?._id), { params });
+  public static async getAllInventories(params?: AppQueryParams): Promise<AppResponse<IProductInventory[]>> {
+    return this.api.get(this.endpoints.getAllInventories(), { params });
   }
 
   // public static async getPriceListById(list?: OnlyUUID, params?: AppQueryParams): Promise<IWarehouseRe> {

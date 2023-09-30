@@ -101,7 +101,7 @@ const Filter = styled.div<{ gridRepeat?: number }>`
   align-items: center;
   grid-template-columns: ${({ gridRepeat }) => `repeat(${gridRepeat || 1}, minmax(150px, 1fr))`};
 
-  min-height: 36px;
+  min-height: 32px;
   overflow: auto;
 
   background-color: ${({ theme }) => theme.modalBackgroundColor};

@@ -3,7 +3,8 @@ import { IProduct, IProductReqData } from '../redux/products/products.types';
 import { OnlyUUID, ServiceApiCaller, ServiceDispatcher, ServiceDispatcherAsync } from 'redux/global.types';
 import {
   createProductThunk,
-  getAllPricesByCurrentProduct,
+  getAllInventoriesByProductIdThunk,
+  getAllPricesByProductIdThunk,
   getAllProductsThunk,
   getProductFullInfoThunk,
   updateProductThunk,
@@ -19,6 +20,7 @@ import { createVariationThunk, getAllVariationsByProductIdThunk } from '../redux
 import { IVariation, IVariationReqData } from '../redux/products/variations.types';
 import { clearCurrentProductAction } from '../redux/products/products.actions';
 import { IPriceListItem } from '../redux/priceManagement/priceManagement.types';
+import { IProductInventory } from '../redux/warehouses/warehouses.types';
 
 export interface ProductsService {
   create: ServiceDispatcherAsync<IProductReqData, IProduct>;
@@ -49,19 +51,21 @@ export interface ProductsService {
   >;
 
   // * PRICES
-  getAllPricesByCurrentProduct: ServiceDispatcherAsync<
+  getAllPricesByProductId: ServiceDispatcherAsync<
     { refreshCurrent?: boolean; params: Pick<AppQueryParams, 'product' | 'list' | 'variation'> },
     IPriceListItem[]
   >;
-  // deleteVariationById: ServiceApiCaller<IVariationReqData, IVariation>;
-  // getVariationById: ServiceApiCaller<IVariationReqData, IVariation>;
-  // getAllVariations: ServiceApiCaller<IVariationReqData, IVariation[]>;
+  // * INVENTORIES
+  getAllInventoriesByProductId: ServiceDispatcherAsync<
+    { refreshCurrent?: boolean; params: Pick<AppQueryParams, 'product' | 'warehouse' | 'variation' | 'price'> },
+    IProductInventory[]
+  >;
 }
 
 const useProductsService = (): ProductsService => {
   const dispatch: AppDispatch = useAppDispatch();
 
-  return useMemo((): Omit<ProductsService, 'state' | 'dispatch'> => {
+  return useMemo((): ProductsService => {
     return {
       create: args => dispatch(createProductThunk(defaultThunkPayload(args))),
       updateById: args => dispatch(updateProductThunk(defaultThunkPayload(args))),
@@ -84,8 +88,10 @@ const useProductsService = (): ProductsService => {
       getAllVariationsByProductId: args => dispatch(getAllVariationsByProductIdThunk(defaultThunkPayload(args))),
 
       // * PRICES
-      getAllPricesByCurrentProduct: args => dispatch(getAllPricesByCurrentProduct(defaultThunkPayload(args))),
-      // getAllVariationsByProductId: args => dispatch(getAllVariationsByProductIdThunk(defaultThunkPayload(args))),
+      getAllPricesByProductId: args => dispatch(getAllPricesByProductIdThunk(defaultThunkPayload(args))),
+
+      // * WAREHOUSING
+      getAllInventoriesByProductId: args => dispatch(getAllInventoriesByProductIdThunk(defaultThunkPayload(args))),
     };
   }, [dispatch]);
 };

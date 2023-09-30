@@ -61,13 +61,15 @@ const Header = styled(FlexBox)`
 `;
 
 export const OverlayFooter = ({
-  onCreatePress,
   submitButtonText = 'Прийняти',
   loading,
   extraFooter,
   canSubmit,
+  onCreatePress,
+  resetButtonShown,
 }: {
   canSubmit?: boolean;
+  resetButtonShown?: boolean;
   extraFooter?: React.ReactNode;
   loading?: boolean;
   onCreatePress?: () => void;
@@ -78,6 +80,10 @@ export const OverlayFooter = ({
       {extraFooter}
 
       <FlexBox padding={'8px 8px'} fxDirection={'row'} gap={8} alignItems={'center'}>
+        {resetButtonShown && (
+          <ButtonIcon variant={'onlyIcon'} icon={'clear'} size={'36px'} iconSize={'80%'} type={'reset'} />
+        )}
+
         {onCreatePress && (
           <ButtonIcon variant={'onlyIcon'} icon={'plus'} size={'36px'} iconSize={'80%'} onClick={onCreatePress} />
         )}

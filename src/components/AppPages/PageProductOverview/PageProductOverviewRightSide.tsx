@@ -59,7 +59,13 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
         });
       }
       if (current === RightSideOptionEnum.Prices) {
-        productsS.getAllPricesByCurrentProduct({
+        productsS.getAllPricesByProductId({
+          data: { refreshCurrent: true, params: { product: ExtractId(page.currentProduct) } },
+          onLoading: setLoading,
+        });
+      }
+      if (current === RightSideOptionEnum.Warehousing) {
+        productsS.getAllInventoriesByProductId({
           data: { refreshCurrent: true, params: { product: ExtractId(page.currentProduct) } },
           onLoading: setLoading,
         });
@@ -96,8 +102,6 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
               onClick: () => {
                 if (!currentId || !ctx.selectedRow) return;
                 const dataForUpdate = page.currentProduct?.variations?.find(v => v?._id === currentId);
-
-                console.log('dataForUpdate', dataForUpdate);
 
                 modalS.open({
                   ModalChildren: FormCreateVariation,
@@ -164,14 +168,14 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
         tableData: page?.currentProduct?.inventories,
         tableTitles: warehouseOverviewTableColumns,
         actionsCreator: ctx => {
-          const currentId = ctx.selectedRow?._id;
+          // const currentId = ctx.selectedRow?._id;
 
           return [
             { icon: 'refresh', type: 'onlyIcon' },
-            { separator: true },
-            { icon: 'delete', type: 'onlyIcon', disabled: !currentId },
-            { icon: 'copy', type: 'onlyIcon', disabled: !currentId },
-            { icon: 'edit', type: 'onlyIcon', disabled: !currentId },
+            // { separator: true },
+            // { icon: 'delete', type: 'onlyIcon', disabled: !currentId },
+            // { icon: 'copy', type: 'onlyIcon', disabled: !currentId },
+            // { icon: 'edit', type: 'onlyIcon', disabled: !currentId },
             { separator: true },
             {
               icon: 'plus',
@@ -179,7 +183,6 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
               onClick: () => {
                 modalS.open({
                   ModalChildren: Forms.CreateWarehouseDocument,
-                  modalChildrenProps: {},
                 });
               },
             },

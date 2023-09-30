@@ -161,14 +161,14 @@ export const priceListContentColumns: CellTittleProps<IPriceListItem, DataPath>[
 
 export const pricesColumnsForProductReview: CellTittleProps<IPriceListItem, DataPath>[] = [
   {
-    top: { name: 'Назва варіації', align: 'end', getData: d => d?.variation?.label },
-    // bottom: { name: '', align: 'end', getData: d => ''},
+    top: { name: 'Назва варіації', getData: d => d?.variation?.label },
+    // bottom: { name: '',  getData: d => ''},
     width: '170px',
-    action: 'valueByPath',
+    action: 'doubleDataWithAvatar',
   },
   {
-    top: { name: 'Артикул | SKU', align: 'end', getData: d => d?.variation?.sku },
-    bottom: { name: 'Штрих-код', align: 'end', getData: d => d?.variation?.barCode },
+    top: { name: 'Артикул | SKU', getData: d => d?.variation?.sku },
+    bottom: { name: 'Штрих-код', getData: d => d?.variation?.barCode },
     width: '170px',
     action: 'valueByPath',
   },
