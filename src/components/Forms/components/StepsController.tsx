@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
-import { FilterOption, FilterOptionSelectHandler } from '../../ModalForm/ModalFilter';
+import { FilterOption, FilterSelectHandler } from '../../ModalForm/ModalFilter';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { useMemo, useState } from 'react';
 
 export interface StepsControllerProps<V = any> {
   steps?: FilterOption<V>[];
   initialStepIndex?: number;
-  onNextPress?: FilterOptionSelectHandler<V>;
-  onPrevPress?: FilterOptionSelectHandler<V>;
+  onNextPress?: FilterSelectHandler<V>;
+  onPrevPress?: FilterSelectHandler<V>;
 }
 
 const StepsController = <V = any,>({

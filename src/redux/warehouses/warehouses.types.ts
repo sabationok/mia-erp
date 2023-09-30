@@ -12,7 +12,7 @@ export enum WarehouseTypeEnum {
 }
 
 export enum WarehouseDocumentType {
-  addToStock = 'addOnStock',
+  addToStock = 'addToStock',
   reserveFromStock = 'reserveFromStock',
   removeFromStock = 'removeFromStock',
   returnFromReserve = 'returnFromReserve',
@@ -39,46 +39,10 @@ export interface IProductInventory extends IBaseWithPeriod {
   variation?: IVariation;
   price?: IPriceListItem;
 
-  batch?: string;
   stock?: number;
   reserved?: number;
 }
 
-export interface IWarehouseDoc extends IBaseWithPeriod {
-  owner?: ICompany;
-  author?: IUser;
-  warehouse?: IWarehouse;
-  product?: IProduct;
-  variation?: IVariation;
-  price?: IPriceListItem;
-
-  amount?: number;
-  type?: WarehouseDocumentType;
-}
-
-export interface IWarehouseDocFormData {
-  owner?: IFormDataValueWithUUID;
-  author?: IFormDataValueWithUUID;
-  warehouse?: IFormDataValueWithUUID;
-  product?: IFormDataValueWithUUID;
-  variation?: IFormDataValueWithUUID;
-  price?: IFormDataValueWithUUID;
-
-  amount?: number;
-  type?: WarehouseDocumentType;
-}
-
-export interface IWarehouseDocDto {
-  owner?: OnlyUUID;
-  author?: OnlyUUID;
-  warehouse?: OnlyUUID;
-  product?: OnlyUUID;
-  variation?: OnlyUUID;
-  price?: OnlyUUID;
-
-  amount?: number;
-  type?: WarehouseDocumentType;
-}
 export interface IProductInventoryFormData {
   product?: Omit<IProduct, 'categories' | 'inventories' | 'category' | 'properties'>;
   variation?: Omit<IVariation, 'properties'>;
@@ -125,4 +89,49 @@ export interface IWarehouseDto {
 export interface IWarehouseReqData {
   _id?: string;
   data: IWarehouseDto;
+  params?: AppQueryParams;
+}
+
+export interface IWarehouseDoc extends IBaseWithPeriod {
+  owner?: ICompany;
+  author?: IUser;
+  warehouse?: IWarehouse;
+  product?: IProduct;
+  variation?: IVariation;
+  price?: IPriceListItem;
+
+  amount?: number;
+  batch?: string;
+  type?: WarehouseDocumentType;
+}
+
+export interface IWarehouseDocFormData {
+  owner?: IFormDataValueWithUUID;
+  author?: IFormDataValueWithUUID;
+  warehouse?: IFormDataValueWithUUID;
+  product?: IFormDataValueWithUUID;
+  variation?: IFormDataValueWithUUID;
+  price?: IFormDataValueWithUUID;
+
+  batch?: string;
+  amount?: number;
+  type?: WarehouseDocumentType;
+}
+
+export interface IWarehouseDocDto {
+  owner?: OnlyUUID;
+  author?: OnlyUUID;
+  warehouse?: OnlyUUID;
+  product?: OnlyUUID;
+  variation?: OnlyUUID;
+  price?: OnlyUUID;
+
+  batch?: string;
+  amount?: number;
+  type?: WarehouseDocumentType;
+}
+export interface IWarehouseDocReqData {
+  _id?: string;
+  data?: IWarehouseDocDto;
+  params?: Omit<AppQueryParams, 'warehouse' | 'variation' | 'product' | 'price'>;
 }

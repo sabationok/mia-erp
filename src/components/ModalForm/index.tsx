@@ -96,10 +96,12 @@ const ModalFormContainer = styled.form<
   grid-template-rows: min-content 1fr max-content;
 
   position: relative;
+  padding: 0 8px;
 
   min-height: 200px;
   max-height: 100%;
 
+  color: ${p => p.theme.fontColorSidebar};
   width: ${({ width = '480px', fillWidth, fitContentH }) =>
     (fillWidth && '100vw') || (fitContentH && 'max-content') || width};
   height: ${({ height = '', fillHeight, fitContentV }) =>
@@ -144,8 +146,8 @@ const ModalMain = styled.main<{ filterOn: boolean }>`
 
   background-color: ${({ theme }) => theme.modalBackgroundColor};
 
-  border-right: 1px solid ${({ theme }) => theme.modalBorderColor};
-  border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
+  //border-right: 1px solid ${({ theme }) => theme.modalBorderColor};
+  //border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;
 
 export default memo(ModalForm);

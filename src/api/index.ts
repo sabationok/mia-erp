@@ -42,6 +42,7 @@ export interface AppQueryParams {
   parent?: OnlyUUID;
   product?: OnlyUUID;
   inventory?: OnlyUUID;
+  warehouse?: OnlyUUID;
   variation?: OnlyUUID;
   list?: OnlyUUID;
   price?: OnlyUUID;

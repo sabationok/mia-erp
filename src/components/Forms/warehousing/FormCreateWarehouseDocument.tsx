@@ -4,13 +4,14 @@ import InputText from '../../atoms/Inputs/InputText';
 import styled from 'styled-components';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import {
+  IWarehouse,
   IWarehouseDoc,
   IWarehouseDocFormData,
   WarehouseDocumentType,
 } from '../../../redux/warehouses/warehouses.types';
 import { t } from '../../../lang';
 import { useAppForm } from '../../../hooks';
-import { useProductsSelector, usePropertiesSelector } from '../../../redux/selectors.store';
+import { useProductsSelector, usePropertiesSelector, useWarehousesSelector } from '../../../redux/selectors.store';
 import { Path } from 'react-hook-form';
 import { HTMLInputTypeAttribute, useCallback, useEffect, useMemo } from 'react';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
@@ -25,21 +26,35 @@ import { ExtractId } from '../../../utils/dataTransform';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { createApiCall, WarehousesApi } from '../../../api';
+import { warehousesTableColumns } from '../../../data/warehauses.data';
 
 const docTypeFilterOptions = enumToFilterOptions(WarehouseDocumentType);
 
 const validation = yup.object().shape({
-  amount: yup.number().min(1),
+  amount: yup.number().min(1).required(),
+  variation: yup
+    .object()
+    .shape({
+      _id: yup.string().required(),
+    })
+    .required(),
+  price: yup
+    .object()
+    .shape({
+      _id: yup.string().required(),
+    })
+    .required(),
 });
 
-enum FormSteps {
-  product = 'Product',
-  info = 'Info',
-  variation = 'Variation',
-  price = 'Price',
-}
-
-const steps = enumToFilterOptions(FormSteps);
+// enum FormSteps {
+//   product = 'Product',
+//   info = 'Info',
+//   variation = 'Variation',
+//   price = 'Price',
+// }
+//
+// const steps = enumToFilterOptions(FormSteps);
 
 export interface FormCreateWarehouseDocumentProps
   extends Omit<ModalFormProps<any, any, IWarehouseDocFormData>, 'onSubmit'> {
@@ -56,18 +71,18 @@ const formCreateWarehouseInputs: {
   required?: boolean;
 }[] = [
   { name: 'amount', type: 'number', label: t('Amount'), placeholder: t('Amount') },
-  // { name: 'reserved', label: t('Reserved'), placeholder: t('Reserved') },
+  { name: 'batch', label: t('Batch'), placeholder: t('Batch') },
 ];
 
 const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseDocumentProps) => {
-  const { products: productsS, warehouses: warehousesS } = useAppServiceProvider();
+  const { products: productsS } = useAppServiceProvider();
   const currentProduct = useProductsSelector().currentProduct;
+  const warehouses = useWarehousesSelector().warehouses;
   const currentProductData = useMemo(() => {
     return product || currentProduct;
   }, [currentProduct, product]);
   const {
     register,
-    registerSelect,
     setValue,
     formValues,
     formState: { errors },
@@ -123,9 +138,32 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
     },
     [setValue]
   );
+  const handleSelectWarehouse: OnRowClickHandler<IWarehouse> = useCallback(
+    data => {
+      const w = data?._id ? { _id: data._id } : null;
+      if (!w) return;
 
+      setValue('warehouse', w);
+    },
+    [setValue]
+  );
   const onValid = (data: IWarehouseDocFormData) => {
     console.log('FormCreateWarehouseDocumentFormData', data);
+
+    createApiCall(
+      {
+        data: { data },
+        onSuccess: data => {
+          console.log('FormCreateWarehouseDocument success', data);
+          props?.onClose && props?.onClose();
+        },
+        onError: e => {
+          console.error('FormCreateWarehouseDocument err ', e);
+        },
+      },
+      WarehousesApi.createDocument,
+      WarehousesApi
+    );
   };
 
   useEffect(() => {
@@ -134,22 +172,50 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
     }
   }, [currentProduct?._id, product, productsS]);
 
-  useEffect(() => {
-    console.log('FormCreateWarehouseDocumentFormData', formValues);
-    console.log(errors);
-  }, [errors, formValues]);
   return (
     <Form
       title={'Create new warehouse document'}
       width={'960px'}
       {...props}
       filterOptions={docTypeFilterOptions}
+      onOptSelect={(_o, value, _i) => {
+        setValue('type', value);
+      }}
       onSubmit={handleSubmit(onValid)}
+      extraFooter={
+        <Inputs>
+          {formCreateWarehouseInputs.map(info => {
+            return (
+              <InputLabel key={`${info?.name}`} label={info?.label} disabled={info?.disabled} required={info?.required}>
+                <InputText
+                  align={info?.type === 'number' ? 'center' : 'left'}
+                  disabled={info?.disabled}
+                  type={info?.type}
+                  required={info?.required}
+                  placeholder={info?.placeholder}
+                  {...register(info.name, { required: info?.required, valueAsNumber: info?.type === 'number' })}
+                />
+              </InputLabel>
+            );
+          })}
+        </Inputs>
+      }
     >
-      <Content padding={'0 8px 8px'} overflow={'auto'} gap={8}>
+      <Content padding={'0 0 8px'} overflow={'auto'} gap={8}>
         <FlexBox fillWidth alignItems={'stretch'}>
-          <InputLabel label={t('Select variation')}>
-            <FlexBox fillWidth style={{ height: 300 }} overflow={'hidden'}>
+          <InputLabel label={t('Select warehouse')} error={errors.warehouse}>
+            <FlexBox fillWidth style={{ height: 250 }} overflow={'hidden'}>
+              <TableList
+                tableTitles={warehousesTableColumns}
+                tableData={warehouses}
+                isSearch={false}
+                onRowClick={handleSelectWarehouse}
+              />
+            </FlexBox>
+          </InputLabel>
+
+          <InputLabel label={t('Select variation')} error={errors.variation}>
+            <FlexBox fillWidth style={{ height: 250 }} overflow={'hidden'}>
               <TableList
                 tableTitles={variationsTableTitles}
                 tableData={transformedVariationsTableData}
@@ -159,8 +225,8 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
             </FlexBox>
           </InputLabel>
 
-          <InputLabel label={t('Select price')}>
-            <FlexBox fillWidth style={{ height: 300 }} overflow={'hidden'}>
+          <InputLabel label={t('Select price')} error={errors.price}>
+            <FlexBox fillWidth style={{ height: 250 }} overflow={'hidden'}>
               <TableList
                 tableTitles={pricesColumnsForProductReview}
                 tableData={currentPricesData}
@@ -170,29 +236,6 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
             </FlexBox>
           </InputLabel>
         </FlexBox>
-
-        <Inputs>
-          {formCreateWarehouseInputs.map(info => {
-            return (
-              <InputLabel
-                key={`${info?.name}`}
-                label={info?.label}
-                disabled={info?.disabled}
-                required={info?.required}
-                error={errors?.amount}
-              >
-                <InputText
-                  align={'center'}
-                  disabled={info?.disabled}
-                  type={info?.type}
-                  required={info?.required}
-                  placeholder={info?.placeholder}
-                  {...register('amount', { required: true, valueAsNumber: true })}
-                />
-              </InputLabel>
-            );
-          })}
-        </Inputs>
 
         {/*<InputLabel label={t('Reservation anable')}>*/}
         {/*  <ButtonGroup options={reservationOptions} />*/}
@@ -216,11 +259,13 @@ const Content = styled(FlexBox)`
 `;
 const Inputs = styled.div`
   display: grid;
-  grid-template-columns: 0.5fr;
+  grid-template-columns: 1fr 1fr;
   gap: 8px;
   justify-content: center;
 
   width: 100%;
+
+  padding: 0 8px 8px;
 `;
 
 export default FormCreateWarehouseDocument;

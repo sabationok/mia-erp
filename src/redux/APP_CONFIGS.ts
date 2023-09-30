@@ -43,7 +43,10 @@ export enum Endpoints {
   getAllByType = 'getAllByType',
   getAllGrouped = 'getAllGrouped',
   create = 'create',
+  createDocument = 'createDocument',
   update = 'update',
+  updateDocument = 'updateDocument',
+  documents = 'documents',
   delete = 'delete',
   deleteById = 'deleteById',
   updateById = 'updateById',
@@ -253,6 +256,8 @@ const warehousesEndpoints = {
   [Endpoints.getAll]: () => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.getAll}`,
   [Endpoints.getAllByWarehouseId]: (id?: string) =>
     `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.getAllByWarehouseId}/${id}`,
+
+  createDocument: () => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.documents}/${Endpoints.create}`,
 };
 const payments = {
   [Endpoints.create]: () => `${API_BASE_ROUTES.PAYMENTS}/${Endpoints.create}`,

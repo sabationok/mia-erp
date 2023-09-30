@@ -23,10 +23,10 @@ export interface FilterOpt<V = any, D = any> extends Record<string, any> {
   getLabel?: (data?: D) => string | React.ReactNode;
   disabled?: boolean;
 }
-export type FilterOptionSelectHandler<V = any, D = any> = (option: FilterOpt<V, D>, value: V, index: number) => void;
+// export type FilterOptionSelectHandler<V = any, D = any> = (option: FilterOpt<V, D>, value: V, index: number) => void;
 
-export interface FilterOption<V = any, D = any> extends FilterOpt<V, D> {}
 export type FilterSelectHandler<V = any, D = any> = (option: FilterOption<V, D>, value: V, index: number) => void;
+export interface FilterOption<V = any, D = any> extends FilterOpt<V, D> {}
 
 const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivElement>> = ({
   filterOptions,
@@ -104,10 +104,10 @@ const Filter = styled.div<{ gridRepeat?: number }>`
   min-height: 36px;
   overflow: auto;
 
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  background-color: ${({ theme }) => theme.modalBackgroundColor};
 
-  border-right: 1px solid ${({ theme }) => theme.modalBorderColor};
-  border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
+  //border-right: 1px solid ${({ theme }) => theme.modalBorderColor};
+  //border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
 
   ::-webkit-scrollbar {
     width: 0;

@@ -140,7 +140,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
     required,
     getLabel,
     onCreatePress,
-    dropDownIsAbsolute = false,
+    dropDownIsAbsolute = true,
     treeMode,
     ...props
   },
