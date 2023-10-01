@@ -92,7 +92,7 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({
       dirType: ApiDirType.CONTRACTORS,
     },
     resolver: yupResolver(validation),
-    reValidateMode: 'onSubmit',
+    reValidateMode: 'onChange',
   });
   const attractionSourcesList = useDirectoriesSelector(ApiDirType.SOURCE_ATTRACTION).directory;
 

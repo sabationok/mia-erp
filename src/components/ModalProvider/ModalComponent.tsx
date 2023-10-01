@@ -83,7 +83,6 @@ export const ModalContext = createContext({});
 export const useModal = () => useContext(ModalContext) as ModalCTX;
 
 const ModalComponent: React.FC<ModalComponentProps> = ({
-  children,
   RenderModalComponentChildren,
   childrenProps,
   idx,
@@ -94,14 +93,15 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   isLast,
 }) => {
   const [modalSettings, setModalSettings] = useState<IModalSettings>(settings || initialSettings);
-
   function handleSetModalSettings(settings: IModalSettings) {
     setModalSettings(settings);
   }
 
-  function onBackdropClick(ev: React.MouseEvent) {
-    if (ev.target !== ev.currentTarget) return;
-    if (typeof onClose === 'function') onClose();
+  function handleMouseDownOnBackdrop(ev: React.MouseEvent<HTMLDivElement>) {
+    if (ev.target === ev.currentTarget) {
+      ev.target.addEventListener('mouseup', onClose, { once: true });
+      return;
+    }
   }
 
   const CTX: ModalCTX = useMemo(
@@ -144,9 +144,10 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
     <Backdrop
       key={idx}
       isLast={isLast}
-      onClick={onBackdropClick}
       style={modalSettings.backdropStyle}
       modalSettings={modalSettings}
+      onMouseDown={handleMouseDownOnBackdrop}
+      // onMouseUp={handleCloseByBackdrop}
     >
       <Suspense>
         <ModalContext.Provider value={CTX}>
