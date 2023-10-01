@@ -10,6 +10,8 @@ import ModalForm from '../components/ModalForm';
 import DirMethods from '../components/CompanySettings/DirMethods';
 import { Modals } from '../components/ModalProvider/Modals';
 import { IDirectoryListItem } from '../components/SideBarContent/Directories';
+import CompanySettingsModal from '../components/CompanySettings/CompanySettingsModal';
+import CompanyIntegrationsModal from '../components/CompanySettings/CompanyIntegrationsModal';
 
 const UsersProps: DirUsersProps = {
   title: 'Користувачі',
@@ -23,7 +25,7 @@ const UsersProps: DirUsersProps = {
           icon: 'edit',
           disabled: !ctx?.selectedRow?._id,
           onClick: () => {
-            modalService.handleOpenModal({
+            modalService.open({
               Modal: Modals.FormInviteUser,
               props: {
                 title: 'Змінити дані користувача',
@@ -39,7 +41,7 @@ const UsersProps: DirUsersProps = {
           icon: 'plus',
           type: 'onlyIconFilled',
           onClick: () => {
-            modalService.handleOpenModal({
+            modalService.open({
               Modal: Modals.FormInviteUser,
               props: {
                 title: 'Запросити користувача',
@@ -62,7 +64,7 @@ const CustomRolesProps: DirCustomRolesProps = {
   fillHeight: true,
   actionsCreator: ({ service, modalService, findById }) => ({
     onUpdate: (id, dataForUpdate, options) => {
-      const modal = modalService.handleOpenModal({
+      const modal = modalService.open({
         ModalChildren: FormCreateCustomRole,
         modalChildrenProps: {
           title: 'Редагувати роль',
@@ -82,7 +84,7 @@ const CustomRolesProps: DirCustomRolesProps = {
       });
     },
     onCreateParent: options => {
-      const modal = modalService.handleOpenModal({
+      const modal = modalService.open({
         ModalChildren: FormCreateCustomRole,
         modalChildrenProps: {
           title: 'Створити роль',
@@ -103,7 +105,7 @@ const CustomRolesProps: DirCustomRolesProps = {
     onChangeDisableStatus: () => {},
   }),
 };
-const subCompanies = {
+const childrenCompanies = {
   title: 'Дочірні компанії',
   disabled: true,
   ModalChildren: ModalForm,
@@ -114,8 +116,33 @@ const subCompanies = {
     fillWidth: true,
   },
 };
-export const comapnySettings: IDirectoryListItem[] = [
-  subCompanies,
+
+const companySettingsItem = {
+  title: 'Налаштування компанії',
+  disabled: false,
+  ModalChildren: CompanySettingsModal,
+  iconId: iconId.bank,
+  modalChildrenProps: {
+    title: 'Налаштування компанії',
+    fillHeight: true,
+    fillWidth: true,
+  },
+};
+
+const integrations = {
+  title: 'Інтеграції',
+  disabled: false,
+  ModalChildren: CompanyIntegrationsModal,
+  iconId: iconId.bank,
+  modalChildrenProps: {
+    title: 'Інтеграції',
+    fillHeight: true,
+    fillWidth: true,
+  },
+};
+
+export const companySettings: IDirectoryListItem[] = [
+  childrenCompanies,
 
   {
     title: UsersProps.title,
@@ -182,4 +209,8 @@ export const comapnySettings: IDirectoryListItem[] = [
     },
     disabled: true,
   },
+
+  companySettingsItem,
+
+  integrations,
 ];

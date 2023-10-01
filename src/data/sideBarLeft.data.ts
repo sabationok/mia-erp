@@ -2,7 +2,7 @@ import { ISidebarOptionsItem } from 'components/SideBarLeft/SideBarProvider';
 import { appSettings, directories, reports } from 'data';
 import { iconId } from '../img/sprite';
 
-import { comapnySettings } from './companySettings.data';
+import { companySettings } from './companySettings.data';
 import Directories from '../components/SideBarContent/Directories';
 import Reports from '../components/SideBarContent/Reports';
 import CompanySettings from '../components/SideBarContent/CompanySettings';
@@ -28,7 +28,7 @@ export const sideBarButtons: ISidebarOptionsItem[] = [
   {
     iconId: iconId.bankOutlined,
     maxWidth: '',
-    options: comapnySettings,
+    options: companySettings,
     title: 'Компанія',
     corp: true,
     RenderComponent: CompanySettings,
