@@ -211,13 +211,17 @@ const FormCreateTransaction: React.FC<FormCreateTransactionProps> = ({
         />
       }
     >
-      <FlexBox className={'inputs'} flex={'1'} fillWidth maxHeight={'100%'} padding={'12px'} overflow={'auto'}>
+      <FlexBox className={'inputs'} flex={'1'} fillWidth maxHeight={'100%'} padding={'0 8px 8px'} overflow={'auto'}>
         <InputLabel label={translate('dateAndTime')} direction={'vertical'}>
           <InputText placeholder={translate('dateAndTime')} type="datetime-local" {...register('eventDate')} />
         </InputLabel>
         <GridWrapper>
           <InputLabel label={translate('amount')} direction={'vertical'}>
-            <InputText placeholder={translate('amount')} type={'number'} {...register('amount')} />
+            <InputText
+              placeholder={translate('amount')}
+              type={'number'}
+              {...register('amount', { valueAsNumber: true })}
+            />
           </InputLabel>
 
           <InputLabel label={translate('currency')} direction={'vertical'}>
@@ -248,7 +252,7 @@ const FormCreateTransaction: React.FC<FormCreateTransactionProps> = ({
 const GridWrapper = styled.div<{ gridTemplateColumns?: string }>`
   display: grid;
   grid-template-columns: ${({ gridTemplateColumns }) => gridTemplateColumns || '1fr 120px'};
-  gap: 12px;
+  gap: 8px;
 `;
 
 export default FormCreateTransaction;

@@ -1,6 +1,6 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { iconId } from 'data';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { FilterSelectorProps, IFilterSelectorAddsProps } from '../Selector';
 import SelectsTreeList from './SelectsTreeList';
@@ -8,11 +8,13 @@ import { SelectsTreeListItemProps } from './SelectsTreeListItem';
 import { createApiCall, DirectoriesApi } from '../../../api';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { GetAllByDirTypeOptions } from '../../../api/directories.api';
+import { OnFilterValueChangeHandler } from '../AppFilter';
 
 export interface SelectorContentProps {
   defaultValue?: string[];
   getDefaultValue?: (selectorName?: ApiDirType) => string[];
   onSelectorSubmit?: (name: ApiDirType, value: string[]) => void;
+  onSelectorChange?: OnFilterValueChangeHandler;
   isOpen?: boolean;
   selectorName?: any;
   dirType?: ApiDirType;
@@ -33,12 +35,11 @@ const SelectorContent: React.FC<
   ListComp,
   onSelectorSubmit,
   dirType,
+  onSelectorChange,
   ...props
 }) => {
   const [renderData, setRenderData] = useState<SelectsTreeListItemProps[]>([]);
-  const [selectorData, setSelectorData] = useState<string[]>(
-    defaultValue ? defaultValue : getDefaultValue ? getDefaultValue(selectorName) : []
-  );
+  const [selectorData, setSelectorData] = useState<string[]>([]);
 
   function onSelectorSubmitWrapper() {
     onSelectorSubmit && selectorName && onSelectorSubmit(selectorName, selectorData);
@@ -72,6 +73,11 @@ const SelectorContent: React.FC<
       DirectoriesApi
     );
   }, [dirType]);
+
+  useEffect(() => {
+    const value = defaultValue ? defaultValue : getDefaultValue ? getDefaultValue(selectorName) : null;
+    value && setSelectorData(value);
+  }, [defaultValue, getDefaultValue, selectorName]);
 
   function onCheckSelectStatus(id: string) {
     return selectorData.includes(id);
