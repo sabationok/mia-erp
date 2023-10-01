@@ -131,13 +131,10 @@ const ModalFormContainer = styled.form<
 `;
 
 const ModalMain = styled.main<{ filterOn: boolean }>`
-  // display: grid;
-  // grid-template-columns: 1fr;
-  // grid-template-rows: ${({ filterOn }) => (filterOn ? '32px 1fr' : '1fr')};
   display: flex;
   flex-direction: column;
 
-  overflow: hidden;
+  overflow: auto;
   position: relative;
   height: 100%;
   max-width: 100%;
@@ -146,6 +143,10 @@ const ModalMain = styled.main<{ filterOn: boolean }>`
 
   background-color: ${({ theme }) => theme.modalBackgroundColor};
 
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
   //border-right: 1px solid ${({ theme }) => theme.modalBorderColor};
   //border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;

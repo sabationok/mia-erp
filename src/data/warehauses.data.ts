@@ -35,67 +35,55 @@ export const warehousesTableColumns: CellTittleProps<IWarehouse>[] = [
 ];
 export const warehouseOverviewTableColumns: CellTittleProps<IProductInventory>[] = [
   {
-    top: { name: t('label'), align: 'start', getData: rd => rd.product?.label },
+    top: { name: t('variationLabel'), getData: rd => rd.variation?.label },
     getImgPreview: d => (d.product?.images ? d.product?.images[0]?.img_preview : ''),
     width: '220px',
     action: 'doubleDataWithAvatar',
   },
   {
-    top: { name: t('sku'), align: 'start', getData: rd => rd.product?.sku },
-    bottom: { name: t('barCode'), align: 'start', getData: rd => rd.product?.barCode },
+    top: { name: t('sku'), getData: rd => rd.variation?.sku },
+    bottom: { name: t('barCode'), getData: rd => rd.variation?.barCode },
     width: '200px',
     action: 'valueByPath',
   },
   {
-    top: {
-      name: t('category'),
-      align: 'start',
-      getData: rd => rd.product?.category?.label,
-    },
-    bottom: {
-      name: t('parentCategory'),
-      align: 'start',
-      getData: rd => rd.product?.category?.parent?.label,
-    },
-    width: '180px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: t('type'), align: 'start', path: 'type' },
-    bottom: { name: t('status'), align: 'start', path: 'status' },
+    top: { name: t('type'), path: 'type' },
+    bottom: { name: t('status'), path: 'status' },
     width: '120px',
     action: 'status',
   },
+  {
+    top: { name: 'Наявність', align: 'end', getData: rd => rd.stock || 0 },
+    bottom: { name: 'Резерв', align: 'end', getData: rd => rd.reserved || 0 },
+    width: '150px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Очікується', align: 'end', getData: rd => rd?.awaiting || 0 },
+    bottom: { name: 'Втрачено', align: 'end', getData: rd => rd?.lost || 0 },
+    width: '150px',
+    action: 'valueByPath',
+  },
   // {
-  //   top: {
-  //     name: 'Таблиця варіацій (назва)',
-  //     align: 'start',
-  //     getData: rd => (rd?.hasVariations ? rd?.template?.label : 'Без варіацій'),
-  //   },
-  //   bottom: { name: 'Резервування', align: 'start', getData: rd => (rd?.reservation ? 'ТАК' : 'НІ') },
-  //   width: '190px',
+  //   top: { name: 'Бренд' },
+  //   bottom: { name: 'Виробник' },
+  //   width: '150px',
   //   action: 'valueByPath',
   // },
   {
-    top: { name: 'Наявність (заг)', align: 'start', getData: rd => rd.stock },
-    bottom: { name: 'Резерв (заг)', align: 'start', getData: rd => rd.reserved },
-    width: '150px',
+    top: { name: t('warehouse'), getData: rd => rd.warehouse?.label },
+    bottom: { name: t('code'), getData: rd => rd.warehouse?.code },
+    width: '170px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Бренд', align: 'start', path: 'brand.label' },
-    bottom: { name: 'Виробник', align: 'start', path: 'manufacturer.name' },
-    width: '150px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: 'Автор', align: 'start', path: 'author.name' },
-    bottom: { name: 'Емейл', align: 'start', path: 'author.email' },
+    top: { name: 'Опис', path: 'description' },
     width: '190px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Опис', align: 'start', path: 'description' },
+    top: { name: 'Автор', path: 'author.name' },
+    bottom: { name: 'Емейл', path: 'author.email' },
     width: '190px',
     action: 'valueByPath',
   },
@@ -113,7 +101,6 @@ export const warehousesTableColumnsForOrderCreateOrderSlotForm: CellTittleProps[
     width: '150px',
     action: 'valueByPath',
   },
-
   {
     top: { name: 'Залишок' },
     bottom: { name: 'Резерв' },

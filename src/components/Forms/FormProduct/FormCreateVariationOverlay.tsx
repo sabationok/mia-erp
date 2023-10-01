@@ -35,16 +35,18 @@ export interface FormVariationProps
   defaultState?: IVariation;
 }
 const validation = yup.object().shape({
-  sku: yup.string(),
-  label: yup.string(),
+  label: yup.string().required().min(5).max(50),
+  sku: yup.string().required().min(8).max(36),
+  barCode: yup.string(),
   propertiesMap: yup.object().shape<{}>({
     // Ваша схема для propertiesMap
   }),
   product: yup.object().shape({
     label: yup.string(),
+    _id: yup.string(),
   }),
-  timeFrom: yup.mixed(), // Ось тут потрібно додати відповідні перевірки для дати та числа
-  timeTo: yup.mixed(),
+  timeFrom: yup.date(),
+  timeTo: yup.date(),
 });
 
 const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
@@ -157,16 +159,16 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
 
       <Content flex={1} fillWidth overflow={'auto'}>
         <Inputs padding={'0 8px'}>
-          <InputLabel label={t('label')}>
+          <InputLabel label={t('label')} error={errors.label}>
             <InputText {...register('label', { required: true })} placeholder={t('label')} required />
           </InputLabel>
 
           <FlexBox fxDirection={'row'} gap={8} fillWidth>
-            <InputLabel label={t('sku')}>
+            <InputLabel label={t('sku')} error={errors.sku}>
               <InputText {...register('sku', { required: true })} placeholder={t('sku')} required />
             </InputLabel>
 
-            <InputLabel label={t('barCode')}>
+            <InputLabel label={t('barCode')} error={errors.barCode}>
               <InputText {...register('barCode')} placeholder={t('barCode')} />
             </InputLabel>
           </FlexBox>

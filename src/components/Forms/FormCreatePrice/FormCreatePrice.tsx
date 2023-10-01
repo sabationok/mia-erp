@@ -20,7 +20,7 @@ import { Path } from 'react-hook-form';
 import { createDataForReq } from '../../../utils/dataTransform';
 import { OnRowClickHandler } from '../../TableList/tableTypes.types';
 import TableList from '../../TableList/TableList';
-import { priceListColumns } from '../../../data/priceManagement.data';
+import { priceListColumns } from '../../../data';
 
 const validation = yup.object().shape({
   cost: yup.number(),
@@ -80,7 +80,6 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
     register,
     setValue,
     handleSubmit,
-    registerSelect,
     toggleAfterSubmitOption,
     closeAfterSave,
     clearAfterSave,
@@ -165,9 +164,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
     <ModalForm
       onSubmit={handleSubmit(onValid)}
       fillHeight
-      title={`${update ? 'Edit' : 'Create'} price for: ${formValues?.product?.label || '---'} | ${
-        formValues?.variation?.label || '---'
-      }`}
+      title={`${update ? 'Edit' : 'Create'} price for: ${formValues?.variation?.label || '---'}`}
       extraFooter={
         <FormAfterSubmitOptions
           closeAfterSave={closeAfterSave}
@@ -190,7 +187,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
         />
 
         <InputLabel label={t('Select price list')} error={errors.price}>
-          <FlexBox fillWidth style={{ height: 250 }} overflow={'hidden'}>
+          <FlexBox fillWidth style={{ height: 250 }} padding={'0 2px'} overflow={'hidden'}>
             <TableList
               tableTitles={priceListColumns}
               tableData={lists}
@@ -231,6 +228,8 @@ const Inputs = styled.div`
   grid-template-columns: 2fr 2fr;
 
   gap: 8px;
+
+  padding: 0 8px;
 `;
 export default FormCreatePrice;
 // if (!canCount) {

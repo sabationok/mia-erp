@@ -41,6 +41,8 @@ export interface IProductInventory extends IBaseWithPeriod {
 
   stock?: number;
   reserved?: number;
+  awaiting?: number;
+  lost?: number;
 }
 
 export interface IProductInventoryFormData {
@@ -51,6 +53,8 @@ export interface IProductInventoryFormData {
 
   stock?: number;
   reserved?: number;
+  awaiting?: number;
+  lost?: number;
   reservation?: boolean;
 
   status?: ProductInventoryStatus;
@@ -69,6 +73,8 @@ export interface IProductInventoryDto extends IDataWithPeriod {
 
   stock?: number;
   reserved?: number;
+  awaiting?: number;
+  lost?: number;
 
   reservation?: boolean;
 

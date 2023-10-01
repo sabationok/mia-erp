@@ -36,8 +36,10 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
   onFilterSubmit,
   filterTitle,
   filterDefaultValues,
+  scrollBarWidth,
   ...props
 }) => {
+  const tBodyRef = useRef<HTMLElement>(null);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const rowRef = useRef<HTMLElement>();
   const [selectedRow, setSelectedRow] = useState<any | undefined>(props?.selectedRow);
@@ -137,7 +139,7 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
 
         <TableOverHead />
 
-        <TableScroll className="TableScroll">
+        <TableScroll className={'TableScroll'} scrollBarWidth={scrollBarWidth}>
           <TableHead />
 
           {tableData?.length !== 0 ? <TableBody ref={rowRef} /> : <NoData>Дані відсутні</NoData>}
@@ -170,7 +172,7 @@ const Table = styled.div`
 
   //background-color: ${({ theme }) => theme.tableBackgroundColor};
 `;
-const TableScroll = styled.div`
+const TableScroll = styled.div<{ scrollBarWidth?: number }>`
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 40px 1fr min-content;
@@ -178,6 +180,11 @@ const TableScroll = styled.div`
   height: 100%;
   width: 100%;
   overflow: auto;
+
+  &::-webkit-scrollbar {
+    width: ${({ scrollBarWidth = 6 }) => scrollBarWidth}px;
+    height: ${({ scrollBarWidth = 6 }) => scrollBarWidth}px;
+  }
 `;
 
 export default memo(TableList);

@@ -109,7 +109,7 @@ const Filter = styled.div<{ gridRepeat?: number }>`
   //border-right: 1px solid ${({ theme }) => theme.modalBorderColor};
   //border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
 
-  ::-webkit-scrollbar {
+  &::-webkit-scrollbar {
     width: 0;
     height: 0;
   }

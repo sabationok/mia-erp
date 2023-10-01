@@ -76,7 +76,7 @@ export interface ITableListProps<TDataType = any> {
   filterDefaultValues?: FilterReturnDataType;
   selectedRow?: Partial<TDataType>;
   isLoading?: boolean;
-
+  scrollBarWidth?: number;
   actionsCreator?: TableActionCreator<TDataType>;
 
   onFilterSubmit?: (filterData: FilterReturnDataType) => void;

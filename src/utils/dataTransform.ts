@@ -172,7 +172,7 @@ export const createVariationFormData = (variation: Partial<IVariation>): IVariat
   return {
     timeFrom: variation?.timeFrom,
     timeTo: variation?.timeTo,
-    label: variation.label ? variation.label : variation?.product?.label,
+    label: variation.label ? variation.label : `${variation?.product?.label}_"VARIATION LABEL"`,
     sku: variation.sku ? variation.sku : `${variation?.product?.sku ? variation?.product?.sku + '-' : ''}${nanoid(8)}`,
     product: variation?.product ? ExtractId(variation.product) : undefined,
     propertiesMap,

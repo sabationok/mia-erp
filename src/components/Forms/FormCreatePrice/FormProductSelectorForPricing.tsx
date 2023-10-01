@@ -15,6 +15,7 @@ import { OnRowClickHandler } from '../../TableList/tableTypes.types';
 import { OnlyUUID } from '../../../redux/global.types';
 import { IProduct } from '../../../redux/products/products.types';
 import InputLabel from '../../atoms/Inputs/InputLabel';
+import styled from 'styled-components';
 
 export interface FormProductSelectorForPricingProps {
   title?: string;
@@ -116,7 +117,12 @@ const FormProductSelectorForPricing: React.FC<FormProductSelectorForPricingProps
       {/*<Text $weight={500}>{'Оберіть варіацію для оцінки'}</Text>*/}
 
       <InputLabel label={'Оберіть варіацію для оцінки'}>
-        <FlexBox style={{ minWidth: 180, maxHeight: 500, height: 300 }} overflow={'hidden'} flex={1}>
+        <ScrollBox
+          style={{ minWidth: 180, maxHeight: 500, height: 300 }}
+          padding={'0 2px'}
+          overflow={'hidden'}
+          flex={1}
+        >
           <TableList
             tableTitles={tableTitles}
             tableData={transformedTableData}
@@ -125,10 +131,17 @@ const FormProductSelectorForPricing: React.FC<FormProductSelectorForPricingProps
             isFilter={false}
             onRowClick={handleTableRowClick}
           />
-        </FlexBox>
+        </ScrollBox>
       </InputLabel>
     </FlexBox>
   );
 };
+
+const ScrollBox = styled(FlexBox)`
+  &::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
+`;
 
 export default FormProductSelectorForPricing;

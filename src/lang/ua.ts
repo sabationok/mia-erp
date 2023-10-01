@@ -17,6 +17,7 @@ export const langUa = {
   variationsTemplate: 'Шаблон для варіацій',
   variationsTemplates: 'Шаблони для варіацій',
 
+  warehouse: 'Склад',
   propertiesList: 'Список характеристик',
   staticProperties: 'Статичні характеристики',
   availableProperties: 'Доступні характеристики',
@@ -121,6 +122,8 @@ export const langUa = {
   group: 'Група',
   property: 'Характеристика',
   label: 'Назва',
+  variationLabel: 'Назва варіації',
+  productLabel: 'Назва продукту',
   insertLabel: 'Введіть назву',
   secondName: 'Прізвище',
   insertSecondName: 'Введіть прізвище',

@@ -74,6 +74,9 @@ const Page = styled.div`
   @media screen and (min-width: 768px) {
     grid-template-columns: minmax(360px, 1fr) 2fr;
   }
+  @media screen and (min-width: 1000px) {
+    grid-template-columns: minmax(360px, 400px) 2fr;
+  }
 `;
 
 export default PageProductOverview;
