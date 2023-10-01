@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import AppPages from 'components/AppPages';
+
 import { memo, useMemo } from 'react';
 import { useAuthSelector } from '../../redux/selectors.store';
 import PermissionCheck from '../AppPages/PermissionCheck';
@@ -7,6 +7,7 @@ import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
 import { AppPagesEnum } from '../../data/pages.data';
 import { AppUrlParamKeys } from '../../hooks/useAppParams.hook';
+import { AppPages } from 'components/AppPages';
 
 const { PageNotFound } = AppPages;
 

@@ -13,12 +13,13 @@ import React, { useMemo } from 'react';
 import { useAppForm } from '../../hooks';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import { businessSubjectTypeFilterOptions, counterpartyFilterOptions } from '../../data/directories.data';
+import { counterpartyFilterOptions } from '../../data/directories.data';
 import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
 import ButtonGroup from '../atoms/ButtonGroup';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useDirectoriesSelector } from '../../redux/selectors.store';
 import { BusinessSubjectTypeEnum } from '../../redux/companies/companies.types';
+import { businessSubjectTypeFilterOptions } from '../../data/companies.data';
 
 export interface FormCreateContractorProps
   extends DirectoriesFormProps<ApiDirType.CONTRACTORS, IContractor, IContractorFormData> {

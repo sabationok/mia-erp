@@ -1,5 +1,5 @@
 import { useAppParams } from '../../hooks';
-import { AppGridPage } from './index';
+import { AppGridPage } from './pages';
 import styled from 'styled-components';
 import { takeFullGridArea } from './pagesStyles';
 import { PagePathType } from '../../data/pages.data';

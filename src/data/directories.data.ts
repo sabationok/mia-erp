@@ -23,7 +23,6 @@ import { createDataForReq } from '../utils/dataTransform';
 import { ProductTypeEnum } from '../redux/products/products.types';
 import { ModalChildrenProps, Modals } from '../components/ModalProvider/Modals';
 import { ContractorsTypesEnum } from '../redux/contractors/contractors.types';
-import { BusinessSubjectTypeEnum } from '../redux/companies/companies.types';
 import { enumToFilterOptions } from '../utils/fabrics';
 import { CountsTypesEnum } from '../redux/directories/counts.types';
 import { CategoryTrTypeEnum } from '../redux/directories/directories.types';
@@ -36,7 +35,6 @@ export const countsFilterOptions = enumToFilterOptions(CountsTypesEnum);
 export const productsFilterOptions = enumToFilterOptions(ProductTypeEnum);
 export const tagsFilterOptions = enumToFilterOptions(ContractorsTypesEnum);
 export const counterpartyFilterOptions = enumToFilterOptions(ContractorsTypesEnum);
-export const businessSubjectTypeFilterOptions = enumToFilterOptions(BusinessSubjectTypeEnum);
 
 export const getDirInTreeActionsCreator = (
   Modal: Modals = Modals.FormCreateDirTreeComp,

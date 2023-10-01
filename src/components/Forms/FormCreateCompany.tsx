@@ -9,11 +9,10 @@ import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import ButtonGroup from '../atoms/ButtonGroup';
-import { businessSubjectTypeFilterOptions } from '../../data/directories.data';
 import t from '../../lang';
 import { useAppForm } from '../../hooks';
 import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
-import { ownershipTypeFilterOptions } from '../../data/companies.data';
+import { businessSubjectTypeFilterOptions, ownershipTypeFilterOptions } from '../../data/companies.data';
 import FlexBox from '../atoms/FlexBox';
 import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
 
@@ -23,13 +22,13 @@ export interface ICreateCompanyFormData
 const validFormData = yup.object().shape({
   name: yup.string().required(),
   fullName: yup.string().required(),
+  email: yup.string().required(),
+  businessSubjectType: yup.string().oneOf(Object.values(BusinessSubjectTypeEnum), 'Недопустима роль').required(),
+  ownershipType: yup.string().required(),
+  taxCode: yup.string(),
   label: yup.string(),
   fullLabel: yup.string(),
-  email: yup.string().required(),
   phone: yup.string(),
-  taxCode: yup.string(),
-  ownershipType: yup.string(),
-  businessSubjectType: yup.string().oneOf(Object.values(BusinessSubjectTypeEnum), 'Недопустима роль').required(),
 } as Record<keyof ICreateCompanyFormData, any>);
 
 export interface FormCreateCompanyProps extends Omit<ModalFormProps<any, any, ICompany>, 'onSubmit'> {}
@@ -88,7 +87,7 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
 
   return (
     <Form fillHeight width={'480px'} {...props} onSubmit={handleSubmit(onFormSubmit)} isValid={isValid}>
-      <Inputs flex={1} overflow={'auto'}>
+      <Inputs flex={1} fillWidth padding={'8px 4px'} overflow={'auto'}>
         <InputLabel label={t('businessSubjectType')} error={errors.name} required>
           <ButtonGroup
             options={businessSubjectTypeFilterOptions}
@@ -167,10 +166,6 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
 const Form = styled(ModalForm)``;
 
 const Inputs = styled(FlexBox)`
-  width: 100%;
-
-  padding: 8px 16px 16px;
-
   fill: ${({ theme }) => theme.accentColor.base};
 `;
 
