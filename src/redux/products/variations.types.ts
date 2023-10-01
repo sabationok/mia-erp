@@ -35,6 +35,7 @@ export type VariationPropertiesMapInFormData = Record<string, string>;
 export interface IVariationFormData {
   sku?: string;
   label?: string;
+  barCode?: string;
 
   propertiesMap: VariationPropertiesMapInFormData;
   product?: OnlyUUID & { label?: string };
@@ -46,6 +47,7 @@ export interface IVariationFormData {
 export interface VariationDto {
   sku?: string;
   label?: string;
+  barCode?: string;
 
   properties?: string[];
   product?: OnlyUUID;

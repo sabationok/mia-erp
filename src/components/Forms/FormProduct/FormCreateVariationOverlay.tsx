@@ -3,7 +3,7 @@ import FlexBox from '../../atoms/FlexBox';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { useProductsSelector, usePropertiesSelector } from '../../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Text } from '../../atoms/Text';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { OverlayHandlerReturn } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
@@ -16,8 +16,12 @@ import FormAfterSubmitOptions from '../components/FormAfterSubmitOptions';
 import { OverlayFooter, OverlayHeader } from './components';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { IProperty } from '../../../redux/products/properties.types';
+import { IProperty, IPropertyValue } from '../../../redux/products/properties.types';
 import { useAppForm } from '../../../hooks';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import InputText from '../../atoms/Inputs/InputText';
+import { t } from '../../../lang';
+import { checks } from '../../../utils';
 
 export interface FormVariationProps
   extends OverlayHandlerReturn,
@@ -58,27 +62,32 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
   const [loading, setLoading] = useState(false);
   const {
     setValue,
-    watch,
     handleSubmit,
-    formState: { errors },
+    register,
+    formState: { errors, isValid },
     clearAfterSave,
     closeAfterSave,
     toggleAfterSubmitOption,
+    formValues,
   } = useAppForm<IVariationFormData>({
-    defaultValues: defaultState
-      ? createVariationFormData({ ...defaultState, product: currentProduct })
-      : { product: currentProduct },
+    defaultValues: createVariationFormData(
+      defaultState ? { ...defaultState, product: currentProduct } : { product: currentProduct }
+    ),
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
-  const formValues = watch();
 
   const template = useMemo(() => {
     return templates.find(t => t._id === currentProduct?.template?._id);
   }, [currentProduct, templates]);
+  const selectedIds = useMemo(() => {
+    return formValues?.propertiesMap ? Object.values(formValues?.propertiesMap) : [];
+    // eslint-disable-next-line
+  }, [formValues?.propertiesMap, formValues]);
+
   const canSubmit = useMemo(() => {
-    return formValues.propertiesMap && Object.values(formValues.propertiesMap).length > 0;
-  }, [formValues.propertiesMap]);
+    return selectedIds.length > 0;
+  }, [selectedIds.length]);
 
   const onValid = useCallback(
     (data: IVariationFormData) => {
@@ -119,32 +128,54 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
     },
     [setValue]
   );
+
   const handleClearMap = useCallback(() => {
     setValue('propertiesMap', {});
   }, [setValue]);
 
+  const preparedTemplate = useMemo(
+    () => template?.childrenList?.filter(el => el?.isSelectable),
+    [template?.childrenList]
+  );
+
   const renderTemplate = useMemo(() => {
-    return template?.childrenList
-      ?.filter(el => el?.isSelectable)
-      ?.map(prop => {
-        return (
-          <RenderVariationProperty
-            key={`prop_${prop._id}`}
-            item={prop}
-            onSelect={handleSelect}
-            selectedValue={formValues?.propertiesMap ? formValues?.propertiesMap[prop._id] : undefined}
-          />
-        );
-      });
-  }, [formValues?.propertiesMap, handleSelect, template?.childrenList]);
+    return preparedTemplate?.map(prop => {
+      return (
+        <RenderVariationProperty
+          key={`prop_${prop._id}`}
+          item={prop}
+          selectedIds={selectedIds}
+          onSelect={handleSelect}
+        />
+      );
+    });
+  }, [preparedTemplate, selectedIds, handleSelect]);
 
   return (
-    <FormContainer onSubmit={handleSubmit(onValid)} {...props}>
+    <FormContainer onSubmit={handleSubmit(onValid)} onReset={handleClearMap} {...props}>
       <OverlayHeader onClose={onClose} title={title || template?.label} canSubmit={canSubmit} showSubmitButton />
 
-      <TemplateBox flex={1} overflow={'auto'}>
-        {renderTemplate}
-      </TemplateBox>
+      <Content flex={1} fillWidth overflow={'auto'}>
+        <Inputs padding={'0 8px'}>
+          <InputLabel label={t('label')}>
+            <InputText {...register('label', { required: true })} placeholder={t('label')} required />
+          </InputLabel>
+
+          <FlexBox fxDirection={'row'} gap={8} fillWidth>
+            <InputLabel label={t('sku')}>
+              <InputText {...register('sku', { required: true })} placeholder={t('sku')} required />
+            </InputLabel>
+
+            <InputLabel label={t('barCode')}>
+              <InputText {...register('barCode')} placeholder={t('barCode')} />
+            </InputLabel>
+          </FlexBox>
+        </Inputs>
+
+        <TemplateBox flex={1} overflow={'auto'} padding={'0 0 8px'} margin={'8px 0 0'}>
+          {renderTemplate}
+        </TemplateBox>
+      </Content>
 
       <OverlayFooter
         loading={loading}
@@ -167,34 +198,31 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
 
 export const RenderVariationProperty = ({
   item,
-  selectedValue,
+  selectedIds = [],
   onSelect,
 }: {
   item: IProperty;
   selectedValue?: string;
+  selectedIds?: string[];
   onSelect?: (propId: string, valueId: string) => void;
 }) => {
-  console.log(item._id, item.label);
-  console.log(selectedValue);
-
   const renderChildren = useMemo(() => {
     return item.childrenList?.map(value => {
+      const isSelected = selectedIds.includes(value._id);
+
       return (
-        <ValueTag
+        <RenderPropertyValue
           key={`prop-value-${value._id}`}
-          variant={selectedValue === value._id ? 'filledSmall' : 'outlinedSmall'}
-          padding={'6px 8px'}
-          fontWeight={500}
-          onClick={() => onSelect && onSelect(item._id, value._id)}
-        >
-          {value.label}
-        </ValueTag>
+          item={value}
+          isSelected={isSelected}
+          onSelect={id => onSelect && onSelect(item._id, id)}
+        />
       );
     });
-  }, [item._id, item.childrenList, onSelect, selectedValue]);
+  }, [item._id, item.childrenList, onSelect, selectedIds]);
 
   return (
-    <PropertyBox key={`property-${item._id}`} gap={8} fillWidth padding={'8px 0 0'}>
+    <PropertyBox key={`property-box-${item._id}`} gap={8} fillWidth padding={'8px 0 0'}>
       <Text style={{ flex: 1, paddingLeft: 12 }} $weight={500}>
         {item.label}
       </Text>
@@ -225,16 +253,18 @@ const FormContainer = styled.form`
   color: ${p => p.theme.fontColorSidebar};
   background-color: ${p => p.theme.tableBackgroundColor};
 `;
-
-const TemplateBox = styled(FlexBox)`
+const Content = styled(FlexBox)`
   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
   border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
+`;
+const TemplateBox = styled(FlexBox)`
   padding-bottom: 8px;
 `;
 
 const PropertyBox = styled(FlexBox)`
-  &:not(:first-child) {
-    border-top: 1px solid ${p => p.theme.sideBarBorderColor};
+  border-top: 1px solid ${p => p.theme.sideBarBorderColor};
+  &:last-child {
+    border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
   }
 `;
 
@@ -243,6 +273,7 @@ const PropertyValuesBox = styled(FlexBox)<{ numColumns?: number }>`
   display: grid;
   grid-template-columns: repeat(${({ numColumns = 2 }) => numColumns}, 1fr);
 `;
+const Inputs = styled(FlexBox)``;
 
 const ExtraFooterBox = styled(FlexBox)`
   border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
@@ -253,5 +284,36 @@ const ValueTag = styled(ButtonIcon)`
   max-width: 100%;
   min-width: 50px;
 `;
+
+const RenderPropertyValue = ({
+  item,
+  isSelected,
+  onSelect,
+}: {
+  item: IPropertyValue;
+  isSelected?: boolean;
+  onSelect: (id: string) => void;
+}) => {
+  const [isActive, setIsActive] = useState(false);
+
+  useEffect(() => {
+    if (checks.isNotUnd(isSelected)) {
+      setIsActive(isSelected);
+    }
+  }, [isSelected]);
+
+  return (
+    <ValueTag
+      variant={isActive ? 'filledSmall' : 'outlinedSmall'}
+      padding={'6px 8px'}
+      fontWeight={500}
+      onClick={() => {
+        onSelect && onSelect(item._id);
+      }}
+    >
+      {item.label}
+    </ValueTag>
+  );
+};
 
 export default FormCreateVariationOverlay;

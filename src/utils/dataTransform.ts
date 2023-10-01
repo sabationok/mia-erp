@@ -9,6 +9,7 @@ import {
   IProductDefaultsFormData,
   IProductFullFormData,
 } from '../redux/products/products.types';
+import { nanoid } from '@reduxjs/toolkit';
 
 const isDevMode = ConfigService.isDevMode();
 export function parseBool(key?: 'false' | 'true' | string) {
@@ -147,10 +148,8 @@ export const createVariationReqData = (formData: IVariationFormData, _id?: strin
   isDevMode && console.log('createVariationReqData input', formData);
 
   const data: IVariationReqData['data'] = {
-    timeFrom: formData?.timeFrom,
-    timeTo: formData?.timeTo,
+    ...pick(formData, ['timeFrom', 'timeTo', 'label', 'sku', 'barCode']),
     product: formData?.product ? ExtractId(formData?.product) : undefined,
-    label: formData?.label,
     properties: formData?.propertiesMap ? Object.values(formData?.propertiesMap) : undefined,
   };
   isDevMode && console.log('createVariationReqData output', data);
@@ -161,7 +160,7 @@ export const createVariationReqData = (formData: IVariationFormData, _id?: strin
 
   return _id ? { data, _id } : { data };
 };
-export const createVariationFormData = (variation: IVariation): IVariationFormData => {
+export const createVariationFormData = (variation: Partial<IVariation>): IVariationFormData => {
   let propertiesMap: Record<string, string> = {};
   variation?.properties?.map(prop => {
     if (prop?._id && prop?.parent?._id) {
@@ -174,6 +173,7 @@ export const createVariationFormData = (variation: IVariation): IVariationFormDa
     timeFrom: variation?.timeFrom,
     timeTo: variation?.timeTo,
     label: variation.label ? variation.label : variation?.product?.label,
+    sku: variation.sku ? variation.sku : `${variation?.product?.sku ? variation?.product?.sku + '-' : ''}${nanoid(8)}`,
     product: variation?.product ? ExtractId(variation.product) : undefined,
     propertiesMap,
   };
