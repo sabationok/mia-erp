@@ -63,9 +63,16 @@ export const langUa = {
   [AppPagesEnum.products]: 'Продукти',
   [AppPagesEnum.manager]: 'Менеджер',
 
+  quantity: 'Кількість',
+  batch: 'Партія',
+  'Select warehouse': 'Оберіть склад',
+  'Select variation': 'Оберіть варіацію',
+  'Select price': 'Оберіть ціну',
+
   brand: 'Бренд',
   selectBrand: 'Оберіть бренд',
   createTag: 'Створити тег',
+  'Create warehouse document': 'Створити складський документ',
 
   selectVariationsTemplate: 'Оберіть список доступних характеристик',
 

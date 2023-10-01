@@ -70,8 +70,8 @@ const formCreateWarehouseInputs: {
   disabled?: boolean;
   required?: boolean;
 }[] = [
-  { name: 'amount', type: 'number', label: t('Amount'), placeholder: t('Amount') },
-  { name: 'batch', label: t('Batch'), placeholder: t('Batch') },
+  { name: 'amount', type: 'number', label: t('quantity'), placeholder: t('quantity') },
+  { name: 'batch', label: t('batch'), placeholder: t('batch') },
 ];
 
 const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseDocumentProps) => {
@@ -197,7 +197,7 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
       <Content padding={'0 0 8px'} overflow={'auto'} gap={8}>
         <FlexBox fillWidth alignItems={'stretch'}>
           <InputLabel label={t('Select warehouse')} error={errors.warehouse}>
-            <FlexBox fillWidth style={{ height: 250 }} overflow={'hidden'}>
+            <FlexBox fillWidth style={{ height: 250 }} overflow={'hidden'} padding={'0 2px'}>
               <TableList
                 tableTitles={warehousesTableColumns}
                 tableData={warehouses}
@@ -208,7 +208,7 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
           </InputLabel>
 
           <InputLabel label={t('Select variation')} error={errors.variation}>
-            <FlexBox fillWidth style={{ height: 250 }} overflow={'hidden'}>
+            <FlexBox fillWidth style={{ height: 250 }} overflow={'hidden'} padding={'0 2px'}>
               <TableList
                 tableTitles={variationsTableTitles}
                 tableData={transformedVariationsTableData}
@@ -219,7 +219,7 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
           </InputLabel>
 
           <InputLabel label={t('Select price')} error={errors.price}>
-            <FlexBox fillWidth style={{ height: 250 }} overflow={'hidden'}>
+            <FlexBox fillWidth style={{ height: 250 }} overflow={'hidden'} padding={'0 2px'}>
               <TableList
                 tableTitles={pricesColumnsForProductReview}
                 tableData={currentPricesData}
