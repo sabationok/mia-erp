@@ -24,6 +24,25 @@ export const createVariationThunk = createAsyncThunk<
     return thunkApi.rejectWithValue(isAxiosError(e));
   }
 });
+
+export const updateVariationThunk = createAsyncThunk<
+  IVariation | undefined,
+  ThunkPayload<IVariationReqData, IVariation>
+>('products/updateVariationThunk', async (args, thunkApi) => {
+  args?.onLoading && args?.onLoading(true);
+  try {
+    const res = await VariationsApi.updateById(args.data);
+    if (res) {
+      args?.onSuccess && args?.onSuccess(res?.data?.data);
+    }
+    args?.onLoading && args?.onLoading(false);
+    return res?.data.data;
+  } catch (e) {
+    args?.onLoading && args?.onLoading(false);
+    args?.onError && args?.onError(e);
+    return thunkApi.rejectWithValue(isAxiosError(e));
+  }
+});
 export const getAllVariationsByProductIdThunk = createAsyncThunk<
   { data: IVariation[]; refreshCurrent?: boolean } | undefined,
   ThunkPayload<{ product: OnlyUUID; params?: AppQueryParams; refreshCurrent?: boolean }, IVariation[]>

@@ -9,7 +9,7 @@ import {
   getProductFullInfoThunk,
   updateProductThunk,
 } from './products.thunks';
-import { createVariationThunk, getAllVariationsByProductIdThunk } from './variations.thunks';
+import { createVariationThunk, getAllVariationsByProductIdThunk, updateVariationThunk } from './variations.thunks';
 import { IVariationTemplate } from './properties.types';
 import { createPropertyThunk, getAllPropertiesThunk } from './properties.thunks';
 import {
@@ -79,6 +79,15 @@ export const productsSlice = createSlice({
           return;
         } else {
           s?.currentProduct?.variations?.unshift(a.payload);
+        }
+      })
+      .addCase(updateVariationThunk.fulfilled, (s, a) => {
+        if (!a.payload) {
+          return;
+        } else if (s.currentProduct) {
+          s.currentProduct.variations = s?.currentProduct?.variations?.map(vrn =>
+            vrn._id === a.payload?._id ? a.payload : vrn
+          );
         }
       })
       .addCase(getAllVariationsByProductIdThunk.fulfilled, (s, a) => {

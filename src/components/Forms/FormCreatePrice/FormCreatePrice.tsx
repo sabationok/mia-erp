@@ -1,6 +1,6 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import FlexBox from '../../atoms/FlexBox';
-import { IPriceFormData, IPriceList } from '../../../redux/priceManagement/priceManagement.types';
+import { IPriceFormData } from '../../../redux/priceManagement/priceManagement.types';
 import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
 import { useAppForm } from '../../../hooks';
 import FormProductSelectorForPricing from './FormProductSelectorForPricing';
@@ -10,7 +10,6 @@ import * as _ from 'lodash';
 import { useCallback, useEffect, useMemo } from 'react';
 import { IProduct } from '../../../redux/products/products.types';
 import { usePriceListsSelector, useProductsSelector } from '../../../redux/selectors.store';
-import CustomSelect, { CustomSelectOption } from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import FormAfterSubmitOptions from '../components/FormAfterSubmitOptions';
 import { t } from '../../../lang';
 import * as yup from 'yup';
@@ -19,6 +18,9 @@ import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppService
 import styled from 'styled-components';
 import { Path } from 'react-hook-form';
 import { createDataForReq } from '../../../utils/dataTransform';
+import { OnRowClickHandler } from '../../TableList/tableTypes.types';
+import TableList from '../../TableList/TableList';
+import { priceListColumns } from '../../../data/priceManagement.data';
 
 const validation = yup.object().shape({
   cost: yup.number(),
@@ -68,6 +70,7 @@ const inputsFormCreatePrice: {
 const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update, product, onSubmit, ...props }) => {
   const productInState = useProductsSelector().currentProduct;
   const { lists } = usePriceListsSelector();
+
   const service = useAppServiceProvider()[ServiceName.priceManagement];
   const currentProduct = useMemo(() => {
     return product || productInState;
@@ -113,6 +116,13 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
       calculatedCommissionPercentage ? Number(calculatedCommissionPercentage.toFixed(2)) : 0
     );
   }, 250);
+
+  const handleSelectPriceList: OnRowClickHandler = useCallback(
+    data => {
+      data?._id && setValue('list._id', data?._id);
+    },
+    [setValue]
+  );
 
   const recalculateValues = useCallback(() => calculateValuesThrottled(), [calculateValuesThrottled]);
 
@@ -167,7 +177,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
       }
       {...props}
     >
-      <FlexBox padding={'8px'} flex={1} overflow={'auto'}>
+      <FlexBox padding={'0 0 8px'} flex={1} overflow={'auto'}>
         <FormProductSelectorForPricing
           selected={formValues.product}
           disabled={!defaultState?.list?._id}
@@ -179,17 +189,16 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
           }}
         />
 
-        <CustomSelect
-          {...registerSelect('list', {
-            options: lists,
-            dropDownIsAbsolute: true,
-            label: t('Price list'),
-            placeholder: t('Select price list'),
-            getLabel: (d: CustomSelectOption & IPriceList) => {
-              return `${d?.label} | ${t(d.type)}`;
-            },
-          })}
-        />
+        <InputLabel label={t('Select price list')} error={errors.price}>
+          <FlexBox fillWidth style={{ height: 250 }} overflow={'hidden'}>
+            <TableList
+              tableTitles={priceListColumns}
+              tableData={lists}
+              isSearch={false}
+              onRowClick={handleSelectPriceList}
+            />
+          </FlexBox>
+        </InputLabel>
 
         <Inputs>
           {inputsFormCreatePrice.map(info => {

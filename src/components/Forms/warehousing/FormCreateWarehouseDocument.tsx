@@ -119,31 +119,24 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
 
   const handleSelectVariation: OnRowClickHandler = useCallback(
     data => {
-      const variation = data?._id ? { _id: data._id } : null;
-      if (!variation) return;
+      if (data?._id === formValues.variation?._id) return;
 
       unregister('price');
 
-      setValue('variation', variation);
+      data?._id && setValue('variation._id', data?._id);
     },
-    [setValue, unregister]
+    [formValues.variation?._id, setValue, unregister]
   );
 
   const handleSelectPrice: OnRowClickHandler = useCallback(
     data => {
-      const price = data?._id ? { _id: data._id } : null;
-      if (!price) return;
-
-      setValue('price', price);
+      data?._id && setValue('price._id', data?._id);
     },
     [setValue]
   );
   const handleSelectWarehouse: OnRowClickHandler<IWarehouse> = useCallback(
     data => {
-      const w = data?._id ? { _id: data._id } : null;
-      if (!w) return;
-
-      setValue('warehouse', w);
+      data?._id && setValue('warehouse._id', data?._id);
     },
     [setValue]
   );

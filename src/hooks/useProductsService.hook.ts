@@ -16,7 +16,11 @@ import ProductsApi from '../api/products.api';
 import PropertiesApi from '../api/properties.api';
 import { IProperty, IPropertyReqData } from '../redux/products/properties.types';
 import { createPropertyThunk, getAllPropertiesThunk } from '../redux/products/properties.thunks';
-import { createVariationThunk, getAllVariationsByProductIdThunk } from '../redux/products/variations.thunks';
+import {
+  createVariationThunk,
+  getAllVariationsByProductIdThunk,
+  updateVariationThunk,
+} from '../redux/products/variations.thunks';
 import { IVariation, IVariationReqData } from '../redux/products/variations.types';
 import { clearCurrentProductAction } from '../redux/products/products.actions';
 import { IPriceListItem } from '../redux/priceManagement/priceManagement.types';
@@ -74,6 +78,7 @@ const useProductsService = (): ProductsService => {
       getAll: args => dispatch(getAllProductsThunk(defaultThunkPayload(args))),
       getProductFullInfo: args => dispatch(getProductFullInfoThunk(defaultThunkPayload(args))),
       clearCurrent: () => dispatch(clearCurrentProductAction()),
+
       // * PROPERTIES
       createProperty: args => dispatch(createPropertyThunk(defaultThunkPayload(args))),
       getAllProperties: args => dispatch(getAllPropertiesThunk(defaultThunkPayload(args))),
@@ -81,10 +86,10 @@ const useProductsService = (): ProductsService => {
       updatePropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.updateById, PropertiesApi),
       getPropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.getById, PropertiesApi),
       changeDisabledStatus: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.updateById, PropertiesApi),
+
       // * VARIATIONS
-      // createVariation: args => createApiCall(defaultApiCallPayload(args), VariationsApi.create, VariationsApi),
       createVariation: args => dispatch(createVariationThunk(defaultThunkPayload(args))),
-      updateVariationById: args => dispatch(createVariationThunk(defaultThunkPayload(args))),
+      updateVariationById: args => dispatch(updateVariationThunk(defaultThunkPayload(args))),
       getAllVariationsByProductId: args => dispatch(getAllVariationsByProductIdThunk(defaultThunkPayload(args))),
 
       // * PRICES

@@ -172,7 +172,7 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
           </FlexBox>
         </Inputs>
 
-        <TemplateBox flex={1} overflow={'auto'} padding={'0 0 8px'} margin={'8px 0 0'}>
+        <TemplateBox padding={'0 0 8px'} margin={'8px 0 0'}>
           {renderTemplate}
         </TemplateBox>
       </Content>
