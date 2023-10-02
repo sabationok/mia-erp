@@ -17,6 +17,7 @@ export const langUa = {
   variationsTemplate: 'Шаблон для варіацій',
   variationsTemplates: 'Шаблони для варіацій',
 
+  'Create tag': 'Створити тег',
   warehouse: 'Склад',
   propertiesList: 'Список характеристик',
   staticProperties: 'Статичні характеристики',
@@ -109,6 +110,9 @@ export const langUa = {
   innerCode: 'Внутрішній код',
   insertCode: 'Впишіть код',
   variation: 'Варіація',
+
+  longitude: 'Довгота',
+  latitude: 'Широта',
 
   closeAfterSave: 'Закрити після збереження',
   clearAfterSave: 'Очистити після збереження',

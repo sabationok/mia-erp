@@ -1,6 +1,5 @@
 import ModalForm from 'components/ModalForm';
 import React from 'react';
-import styled from 'styled-components';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputLabel from '../atoms/Inputs/InputLabel';
@@ -8,10 +7,10 @@ import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import t from '../../lang';
 import { DirectoriesFormProps, IBaseDirItem, IDirItemBase } from '../Directories/dir.types';
-import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { useAppForm } from '../../hooks';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
+import { FormInputs } from './components/atoms';
 
 export interface FormCreateDirTreeCompProps<DirType extends ApiDirType = any, FD = any>
   extends DirectoriesFormProps<DirType, IDirItemBase<DirType>, FD> {}
@@ -38,41 +37,30 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
     clearAfterSave,
     toggleAfterSubmitOption: toggleOption,
   } = useAppForm<IBaseDirItem>({
-    defaultValues: defaultState?.parent?._id
-      ? {
-          ...defaultState,
-          type,
-          parent: { _id: defaultState?.parent?._id },
-        }
-      : {
-          ...defaultState,
-          type,
-        },
+    defaultValues: {
+      ...defaultState,
+      type,
+    },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
 
-  function formEventWrapper(evHandler?: AppSubmitHandler<IBaseDirItem>) {
-    if (evHandler) {
-      return handleSubmit(data =>
-        evHandler(data, {
-          closeAfterSave,
-          clearAfterSave,
-        })
-      );
-    } else {
-      console.log('FormCreateDirTreeComp onSubmit not passed.', dirType);
-    }
-  }
+  const onValid = (data: IBaseDirItem) => {
+    onSubmit &&
+      onSubmit(data, {
+        closeAfterSave,
+        clearAfterSave,
+      });
+  };
 
   return (
     <ModalForm
       {...props}
-      onSubmit={formEventWrapper(onSubmit)}
+      onSubmit={handleSubmit(onValid)}
       isValid={isValid}
       extraFooter={<FormAfterSubmitOptions {...{ closeAfterSave, clearAfterSave, toggleOption }} />}
     >
-      <Inputs>
+      <FormInputs>
         {props.filterOptions && (
           <InputLabel label={t('type')} error={errors.type} disabled>
             <InputText defaultValue={type ? t(`${type}s` as any).toUpperCase() : type} disabled />
@@ -95,12 +83,6 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
           </InputLabel>
         )}
 
-        {dirType === ApiDirType.WAREHOUSES && (
-          <InputLabel label={t('code')} error={errors.code}>
-            <InputText placeholder={t('insertCode')} {...register('code')} />
-          </InputLabel>
-        )}
-
         {/*<InputLabel label={t('')} error={errors.label}>*/}
         {/*  <InputText placeholder={t('insertLabel')} {...register('label')} autoFocus />*/}
         {/*</InputLabel>*/}
@@ -108,19 +90,9 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
         <InputLabel label={t('comment')} error={errors.description}>
           <TextareaPrimary placeholder={t('insertComment')} {...register('description')} maxLength={250} />
         </InputLabel>
-      </Inputs>
+      </FormInputs>
     </ModalForm>
   );
 };
-
-const Inputs = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  padding: 16px;
-
-  background-color: inherit;
-`;
 
 export default FormCreateDirTreeComp;

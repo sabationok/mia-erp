@@ -5,6 +5,8 @@ import { IPriceListItem } from '../priceManagement/priceManagement.types';
 import { IVariation } from '../products/variations.types';
 import { AppQueryParams } from '../../api';
 import { IUser } from '../auth/auth.types';
+import { GeolocationPoint } from '../../services/Geolocation.service';
+import { IPermission } from '../permissions/permissions.types';
 
 export enum WarehouseTypeEnum {
   WAREHOUSE = 'warehouse',
@@ -20,15 +22,34 @@ export enum WarehouseDocumentType {
 }
 export interface IWarehouse extends IBase {
   owner?: ICompany;
-  manager?: IUser;
+  manager?: IPermission;
 
   label: string;
   code?: string | number;
   type?: WarehouseTypeEnum;
 
-  location?: string;
+  location?: GeolocationPoint;
+  address?: string;
+
   inventories?: IProductInventory[];
 }
+
+export interface IWarehouseDto {
+  label: string;
+  code?: string;
+  email?: string;
+  phone?: string;
+  type?: WarehouseTypeEnum;
+  manager?: IFormDataValueWithUUID;
+  location?: GeolocationPoint;
+}
+export interface IWarehouseReqData {
+  _id?: string;
+  data: IWarehouseDto;
+  params?: AppQueryParams;
+}
+
+// * INVENTORIES
 
 export type ProductInventoryStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
@@ -86,17 +107,8 @@ export interface IProductInventoryReqData {
   data: IProductInventoryDto;
   params?: AppQueryParams;
 }
-export interface IWarehouseDto {
-  label: string;
-  code?: string;
-  type?: WarehouseTypeEnum;
-  location?: string;
-}
-export interface IWarehouseReqData {
-  _id?: string;
-  data: IWarehouseDto;
-  params?: AppQueryParams;
-}
+
+// * WAREHOUSE DOCUMENTS
 
 export interface IWarehouseDoc extends IBaseWithPeriod {
   owner?: ICompany;

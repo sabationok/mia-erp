@@ -41,7 +41,7 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
   return (
     <Container style={{ maxHeight: isOpen ? '100%' : maxHeight }}>
       <StButton
-        icon={toggled ? (!isOpen ? 'SmallArrowDown' : 'SmallArrowRight') : undefined}
+        icon={toggled ? (isOpen ? 'SmallArrowDown' : 'SmallArrowRight') : undefined}
         iconSize={'24px'}
         variant={'def'}
         onClick={handleToggleOpen}
@@ -63,7 +63,7 @@ const Container = styled(FlexBox)`
   grid-template-columns: 1fr;
   //grid-template-rows: repeat(10, 200px);
 
-  //position: relative;
+  position: relative;
   min-height: 32px;
   //height: max-content;
   max-height: 32px;
@@ -85,7 +85,7 @@ const ContentBox = styled(FlexBox)`
 const StButton = styled(ButtonIcon)<{ isOpen?: boolean; activeBackgroundColor?: string }>`
   justify-content: flex-start;
 
-  padding: 0 8px;
+  padding: 0 8px 0 0;
 
   width: 100%;
   min-height: 32px;

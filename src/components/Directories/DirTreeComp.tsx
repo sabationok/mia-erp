@@ -1,16 +1,15 @@
-import styled from 'styled-components';
 import ModalForm from '../ModalForm';
 import { useMemo, useState } from 'react';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
 import { useDirService, useFilteredLisData } from '../../hooks';
 import { useDirectoriesSelector } from '../../redux/selectors.store';
 import { FilterOpt } from '../ModalForm/ModalFilter';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import DirListItem from './DirList/DirListItem';
 import FlexBox from '../atoms/FlexBox';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { DirInTreeActionsCreatorType, IDirItemBase } from './dir.types';
 import { RenderModalComponentChildrenProps } from '../ModalProvider/ModalComponent';
+import FormCreateInner from '../Forms/components/FormCreateInner';
 
 export interface DirTreeComponentProps extends RenderModalComponentChildrenProps {
   createParentTitle?: string;
@@ -77,27 +76,15 @@ const DirTreeComp = ({
       onOptSelect={handleFilterData}
       extraFooter={
         actions?.onCreateParent && (
-          <CreateParent>
-            <ButtonIcon variant="outlinedSmall" onClick={actions?.onCreateParent}>
-              {createParentTitle || 'Create parent'}
-            </ButtonIcon>
-          </CreateParent>
+          <FormCreateInner buttonText={createParentTitle || 'Create parent'} onClick={actions?.onCreateParent} />
         )
       }
     >
-      <FlexBox padding={'12px 6px'} overflow={'auto'} gap={8}>
+      <FlexBox padding={'8px 0'} overflow={'auto'} gap={8}>
         {renderList}
       </FlexBox>
     </ModalForm>
   );
 };
-const CreateParent = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
 
-  width: 100%;
-
-  padding: 8px;
-`;
 export default DirTreeComp;

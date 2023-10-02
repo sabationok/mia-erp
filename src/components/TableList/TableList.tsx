@@ -37,6 +37,7 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
   filterTitle,
   filterDefaultValues,
   scrollBarWidth,
+  onSubmitSearch,
   ...props
 }) => {
   const tBodyRef = useRef<HTMLElement>(null);
@@ -104,6 +105,7 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
       onRowClick: onRowClickWrapper,
       onCheckboxChange: onCheckboxChangeWrapper,
       onHeadCheckboxChange: onHeadCheckboxChange,
+      onSubmitSearch,
       ...props,
     }),
     [
@@ -117,6 +119,7 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
       onFilterSubmitWrapper,
       onHeadCheckboxChange,
       onRowClickWrapper,
+      onSubmitSearch,
       props,
       rowGrid,
       selectedRow,

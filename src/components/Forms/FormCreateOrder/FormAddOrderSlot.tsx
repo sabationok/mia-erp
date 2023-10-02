@@ -4,6 +4,7 @@ import { Modals } from '../../ModalProvider/Modals';
 import { IProduct } from '../../../redux/products/products.types';
 import { IOrderSlot } from '../../../redux/orders/orders.types';
 import { ExtractId } from '../../../utils/dataTransform';
+import SelectProductModal from './SelectProductModal';
 
 export interface FormAddOrderSlotProps {
   onSelect: (slot: IOrderSlot) => void;
@@ -37,10 +38,11 @@ const FormAddOrderSlot: React.FC<FormAddOrderSlotProps> = ({ onSelect, ...props 
       buttonText={'Add position to order'}
       onClick={() => {
         const m = modalS.handleOpenModal({
-          Modal: Modals.SelectProductModal,
-          props: {
+          ModalChildren: SelectProductModal,
+          modalChildrenProps: {
             title: 'Add product to order',
-            onSelect: d => {
+
+            onSubmit: d => {
               onProductSelect(d);
               console.log(d);
 

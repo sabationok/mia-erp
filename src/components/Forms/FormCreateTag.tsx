@@ -3,26 +3,25 @@ import ModalForm from '../ModalForm';
 
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import styled from 'styled-components';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import t from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useAppForm } from '../../hooks';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { tagsFilterOptions } from '../../data/directories.data';
-import FlexBox from '../atoms/FlexBox';
 import { FilterOption } from '../ModalForm/ModalFilter';
 import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import { FormInputs } from './components/atoms';
+import TagButtonsFilter from 'components/atoms/TagButtonsFilter';
 
 export interface FormCreateTagProps extends DirectoriesFormProps<ApiDirType.TAGS, ITagDirItem, ITagDirItem> {}
 
 const validation = yup.object().shape({
   type: yup.string().required(),
-  label: yup.string().max(100).required(),
+  label: yup.string().max(100).min(3).required(),
 });
 
 const FormCreateTag: React.FC<FormCreateTagProps> = ({
@@ -31,6 +30,7 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({
   type,
   parent,
   data,
+  defaultState,
   ...props
 }) => {
   const {
@@ -45,13 +45,14 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({
   } = useAppForm<ITagDirItem>({
     defaultValues: {
       ...data,
+      ...defaultState,
       type,
     },
     resolver: yupResolver(validation),
-    reValidateMode: 'onSubmit',
+    reValidateMode: 'onChange',
   });
 
-  const handleFilter = useCallback(
+  const handleFilterSelect = useCallback(
     (option: FilterOption<ContractorsTypesEnum>) => {
       setValue('type', option?.value);
     },
@@ -64,29 +65,14 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({
     }
   }
 
-  const renderFilter = useMemo(() => {
-    return filterOptions.map((opt, index) => {
-      return (
-        <ButtonIcon
-          isActive={formValues?.type === opt.value}
-          key={`f-opt_${opt.value}`}
-          variant={formValues?.type === opt.value ? 'filledSmall' : 'outlinedSmall'}
-          onClick={() => handleFilter(opt)}
-        >
-          {t(opt.value)}
-        </ButtonIcon>
-      );
-    });
-  }, [filterOptions, formValues?.type, handleFilter]);
+  useEffect(() => {
+    console.log(formValues);
+  }, [formValues]);
 
   return (
     <ModalForm
       {...props}
-      style={{ maxWidth: 480 }}
-      filterOptions={filterOptions}
-      // onOptSelect={(_o, v) => {
-      //   setValue('type', v);
-      // }}
+      title={t('Create tag')}
       onSubmit={formEventWrapper(onSubmit)}
       isValid={isValid}
       extraFooter={
@@ -97,38 +83,20 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({
         />
       }
     >
-      <FlexBox
-        fillWidth
-        gap={8}
-        padding={'8px'}
-        fxDirection={'row'}
-        flex={1}
-        flexWrap={'wrap'}
-        style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}
-      >
-        {renderFilter}
-      </FlexBox>
-
-      <Inputs gap={8} fillWidth padding={'8px'}>
-        {filterOptions && (
-          <InputLabel label={t('type')} error={errors.type} disabled>
-            <InputText
-              disabled
-              {...register('type')}
-              value={formValues?.type ? t(`${formValues?.type}` as any).toUpperCase() : type}
-            />
-          </InputLabel>
-        )}
+      <FormInputs>
+        <TagButtonsFilter<ContractorsTypesEnum>
+          options={filterOptions}
+          name={'type'}
+          onSelectValue={setValue}
+          values={formValues.type ? [formValues.type] : undefined}
+        />
 
         <InputLabel label={t('label')} direction={'vertical'} error={errors.label} required>
           <InputText placeholder={t('insertLabel')} {...register('label')} required autoFocus />
         </InputLabel>
-      </Inputs>
+      </FormInputs>
     </ModalForm>
   );
 };
 
-const Inputs = styled(FlexBox)`
-  background-color: inherit;
-`;
 export default FormCreateTag;

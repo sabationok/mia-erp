@@ -10,9 +10,9 @@ export const warehousesTableColumns: CellTittleProps<IWarehouse>[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Тип' },
-    bottom: { name: 'Статус' },
-    width: '180px',
+    top: { name: 'Тип', getData: rd => rd?.type },
+    // bottom: { name: 'Статус' },
+    width: '125px',
     action: 'valueByPath',
   },
   {
@@ -22,7 +22,17 @@ export const warehousesTableColumns: CellTittleProps<IWarehouse>[] = [
     action: 'contacts',
   },
   {
-    top: { name: 'Локація' },
+    top: { name: 'Адрес', getData: rd => rd.address || 'не визначено' },
+    bottom: {
+      name: 'Довгота/Широта',
+      getData: rd => `${(rd.location?.longitude || '---') + ', ' + (rd.location?.latitude || '---')}`,
+    },
+    width: '175px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Менеджер', getData: rd => `${rd.manager?.user?.name}` },
+    bottom: { name: 'Email', getData: rd => `${rd.manager?.user?.email}` },
     width: '150px',
     action: 'valueByPath',
   },

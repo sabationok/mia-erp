@@ -3,8 +3,9 @@ import { CellTittleProps } from './TebleCells/CellTitle';
 import { FilterReturnDataType, FilterSelectorType } from '../Filter/AppFilter';
 import { ButtonIconVariant } from '../atoms/ButtonIcon/ButtonIcon';
 import { IconIdType } from '../../img/sprite';
+import { TableSearchFormState } from './TableOverHead/TableSearchForm/TableSearchForm';
 
-export interface SelectItemBase<DPath extends string = any> extends Record<string, any> {
+export interface SelectItemBase<DPath = any> extends Record<string, any> {
   _id?: string;
   id?: string;
   filter?: boolean;
@@ -15,12 +16,12 @@ export interface SelectItemBase<DPath extends string = any> extends Record<strin
   value?: string | number;
   dataKey?: string;
   sort?: boolean;
-  dataPath?: DPath;
+  dataPath?: any;
   path?: string;
   sortOrder?: 'desc' | 'asc';
 }
 
-export interface SelectItem<DPath extends string = any> extends SelectItemBase<DPath> {}
+export interface SelectItem<DPath = any> extends SelectItemBase<DPath> {}
 
 export interface TableActionProps<TDataType = any> {
   separator?: boolean;
@@ -57,8 +58,8 @@ export type OnHeadCheckBoxChangeHandler<V = any> = (data: V) => any;
 export interface ITableListProps<TDataType = any> {
   tableTitles?: CellTittleProps<TDataType>[];
   tableData?: TDataType[];
-  tableSearchParams?: SelectItem[];
-  tableSortParams?: SelectItem[];
+  tableSearchParams?: SelectItem<keyof TDataType>[];
+  tableSortParams?: SelectItem<keyof TDataType>[];
   transformData?: <T = any>(data: TDataType) => T;
   RowActionsComp?: React.ReactNode;
   tableActions?: TableActionsProps<TDataType>;
@@ -79,6 +80,7 @@ export interface ITableListProps<TDataType = any> {
   scrollBarWidth?: number;
   actionsCreator?: TableActionCreator<TDataType>;
 
+  onSubmitSearch?: (data: TableSearchFormState) => void;
   onFilterSubmit?: (filterData: FilterReturnDataType) => void;
   handleTableSort?: (param: SelectItem, sortOrder: SelectItem['sortOrder']) => void;
   onRowClick?: OnRowClickHandler<TDataType | undefined>;

@@ -1,5 +1,4 @@
 import ModalForm from 'components/ModalForm';
-import styled from 'styled-components';
 import { ICount, ICountFormData } from 'redux/directories/counts.types';
 import React from 'react';
 import translate from '../../lang';
@@ -15,6 +14,7 @@ import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { pick } from 'lodash';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
+import { FormInputs } from './components/atoms';
 
 export interface FormCreateCountProps extends DirectoriesFormProps<ApiDirType.COUNTS, ICount, ICountFormData> {}
 
@@ -77,7 +77,7 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
         />
       }
     >
-      <Inputs>
+      <FormInputs>
         <InputLabel label={t('type')} direction={'vertical'} error={errors.type} disabled>
           <InputText placeholder={type ? translate(type) : type} disabled />
         </InputLabel>
@@ -103,19 +103,9 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
         <InputLabel label={t('comment')} direction={'vertical'} error={errors.description}>
           <TextareaPrimary placeholder={t('insertComment')} {...register('description')} maxLength={250} />
         </InputLabel>
-      </Inputs>
+      </FormInputs>
     </ModalForm>
   );
 };
-
-const Inputs = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  padding: 16px;
-
-  background-color: inherit;
-`;
 
 export default FormCreateCount;

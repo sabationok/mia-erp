@@ -10,6 +10,8 @@ import { IDirInTreeProps } from '../Directories/dir.types';
 import { ICustomRole } from '../../redux/customRoles/customRoles.types';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import DirListItem from '../Directories/DirList/DirListItem';
+import FormCreateInner from '../Forms/components/FormCreateInner';
+import { t } from '../../lang';
 
 export interface DirCustomRolesProps
   extends IDirInTreeProps<any, ICustomRole, ICustomRole, ICustomRole, CustomRolesService> {}
@@ -36,17 +38,20 @@ const DirCustomRoles: React.FC<DirCustomRolesProps> = ({ createParentTitle, acti
           key={`treeItem_${item?._id || idx}`}
           {...item}
           {...props}
-          {...actions}
           item={item}
           availableLevels={1}
           currentLevel={0}
+          {...actions}
         />
       )),
     [actions, customRoles, props]
   );
 
   return (
-    <StModalForm {...props}>
+    <StModalForm
+      {...props}
+      extraFooter={<FormCreateInner buttonText={t('Create new role')} onClick={actions?.onCreateParent} />}
+    >
       <FlexBox fillWidth flex={'1'} gap={8} padding={'12px'} maxHeight={'100%'} overflow={'auto'}>
         {renderList}
       </FlexBox>

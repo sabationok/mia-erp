@@ -1,7 +1,6 @@
 import ModalForm from 'components/ModalForm';
 import { ICategory, ICategoryFormData } from 'redux/directories/directories.types';
 import React from 'react';
-import styled from 'styled-components';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputLabel from '../atoms/Inputs/InputLabel';
@@ -12,6 +11,7 @@ import { DirectoriesFormProps } from '../Directories/dir.types';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { useAppForm } from '../../hooks';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
+import { FormInputs } from './components/atoms';
 
 export interface FormCreateCategoryProps
   extends DirectoriesFormProps<ApiDirType.CATEGORIES_PROD & ApiDirType.CATEGORIES_TR, ICategory, ICategoryFormData> {}
@@ -66,7 +66,7 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
         />
       }
     >
-      <Inputs>
+      <FormInputs>
         <InputLabel label={t('type')} direction={'vertical'} error={errors.type} disabled>
           <InputText defaultValue={type ? t(type).toUpperCase() : type} disabled />
         </InputLabel>
@@ -84,19 +84,9 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
         <InputLabel label={t('comment')} direction={'vertical'} error={errors.description}>
           <TextareaPrimary placeholder={t('insertComment')} {...register('description')} maxLength={250} />
         </InputLabel>
-      </Inputs>
+      </FormInputs>
     </ModalForm>
   );
 };
-
-const Inputs = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  padding: 16px;
-
-  background-color: inherit;
-`;
 
 export default FormCreateCategory;

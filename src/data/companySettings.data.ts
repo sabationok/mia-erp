@@ -6,7 +6,6 @@ import { getDirInTreeActionsCreator } from './directories.data';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { iconId } from '../img/sprite';
 import FormCreateCustomRole from '../components/Forms/FormCreateCustomRole';
-import ModalForm from '../components/ModalForm';
 import DirMethods from '../components/CompanySettings/DirMethods';
 import { Modals } from '../components/ModalProvider/Modals';
 import { IDirectoryListItem } from '../components/SideBarContent/Directories';
@@ -19,7 +18,7 @@ const UsersProps: DirUsersProps = {
     tableTitles: usersDirColumns,
     actionsCreator: ctx => {
       return [
-        { name: 'rejectUser', icon: 'refund' },
+        { name: 'rejectUser', icon: 'clear' },
         {
           name: 'editUser',
           icon: 'edit',
@@ -63,27 +62,7 @@ const CustomRolesProps: DirCustomRolesProps = {
   createParentTitle: 'Створити роль',
   fillHeight: true,
   actionsCreator: ({ service, modalService, findById }) => ({
-    onUpdate: (id, dataForUpdate, options) => {
-      const modal = modalService.open({
-        ModalChildren: FormCreateCustomRole,
-        modalChildrenProps: {
-          title: 'Редагувати роль',
-          customRole: dataForUpdate,
-          onSubmit: data => {
-            service.edit &&
-              service
-                .edit({
-                  data,
-                  onSuccess: () => {
-                    modal?.onClose();
-                  },
-                })
-                .then();
-          },
-        },
-      });
-    },
-    onCreateParent: options => {
+    onCreateParent: _o => {
       const modal = modalService.open({
         ModalChildren: FormCreateCustomRole,
         modalChildrenProps: {
@@ -101,21 +80,44 @@ const CustomRolesProps: DirCustomRolesProps = {
         },
       });
     },
+    onUpdate: (_id, dataForUpdate, _o) => {
+      const modal = modalService.open({
+        ModalChildren: FormCreateCustomRole,
+        modalChildrenProps: {
+          title: 'Редагувати роль',
+          defaultState: dataForUpdate,
+          customRole: dataForUpdate,
+          onSubmit: data => {
+            service?.edit &&
+              service
+                ?.edit({
+                  data,
+                  onSuccess: (data, meta) => {
+                    console.log('onUpdate role', data, meta);
+
+                    modal?.onClose();
+                  },
+                })
+                .then();
+          },
+        },
+      });
+    },
     onChangeArchiveStatus: () => {},
     onChangeDisableStatus: () => {},
   }),
 };
-const childrenCompanies = {
-  title: 'Дочірні компанії',
-  disabled: true,
-  ModalChildren: ModalForm,
-  iconId: iconId.bank,
-  modalChildrenProps: {
-    title: 'Дочірні компанії',
-    fillHeight: true,
-    fillWidth: true,
-  },
-};
+// const childrenCompanies = {
+//   title: 'Дочірні компанії',
+//   disabled: true,
+//   ModalChildren: ModalForm,
+//   iconId: iconId.bank,
+//   modalChildrenProps: {
+//     title: 'Дочірні компанії',
+//     fillHeight: true,
+//     fillWidth: true,
+//   },
+// };
 
 const companySettingsItem = {
   title: 'Налаштування компанії',
@@ -142,8 +144,6 @@ const integrations = {
 };
 
 export const companySettings: IDirectoryListItem[] = [
-  childrenCompanies,
-
   {
     title: UsersProps.title,
     iconId: iconId.persons,

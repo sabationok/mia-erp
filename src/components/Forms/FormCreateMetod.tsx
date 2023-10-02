@@ -18,6 +18,7 @@ import React from 'react';
 import { useAppForm } from '../../hooks';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
+import FlexBox from '../atoms/FlexBox';
 
 export interface FormCreateMethodProps extends DirectoriesFormProps<MethodDirType, IDirItemBase, IMethodFormData> {}
 
@@ -90,12 +91,8 @@ const FormCreateMethod: React.FC<FormCreateMethodProps> = ({ onSubmit, parent, d
     </ModalForm>
   );
 };
-const Inputs = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  padding: 16px;
+const Inputs = styled(FlexBox)`
+  padding: 0 8px 8px;
 
   background-color: inherit;
 `;

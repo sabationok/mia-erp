@@ -1,14 +1,16 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { useScrollTo } from '../../hooks';
+import { checks } from '../../utils';
 
 export interface ModalFormFilterProps<V = any, D = any> {
   defaultOption?: number | FilterOpt<V, D> | V;
   getDefaultValue?: (opt: FilterOpt<V, D>) => number;
   preventFilter?: boolean;
   onOptSelect?: FilterSelectHandler<V, D>;
+  onFilterValueSelect?: FilterSelectValueHandler<V>;
   filterOptions?: FilterOption<V, D>[];
+  name?: any;
   defaultFilterValue?: string;
 }
 
@@ -25,7 +27,15 @@ export interface FilterOpt<V = any, D = any> extends Record<string, any> {
 }
 // export type FilterOptionSelectHandler<V = any, D = any> = (option: FilterOpt<V, D>, value: V, index: number) => void;
 
-export type FilterSelectHandler<V = any, D = any> = (option: FilterOption<V, D>, value: V, index: number) => void;
+export type FilterSelectHandler<V = any, D = any> = (
+  option: FilterOption<V, D>,
+  value: V,
+  index: number,
+  name?: string
+) => void;
+export type FilterSelectValueHandler<V = any> = (name: any & string, value: V) => void;
+
+export type FilterChangeHandler<V = any> = (values: V[], name?: string) => void;
 export interface FilterOption<V = any, D = any> extends FilterOpt<V, D> {}
 
 const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivElement>> = ({
@@ -35,27 +45,34 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
   defaultFilterValue,
   defaultOption,
   getDefaultValue,
+  onFilterValueSelect,
+  name,
   ...props
 }) => {
   const [current, setCurrent] = useState<number>(typeof defaultOption === 'number' ? defaultOption : 0);
-  const { listRef } = useScrollTo<HTMLDivElement>(current.toString());
+  // const { listRef } = useScrollTo<HTMLDivElement>(current.toString());
 
   const handleSelectOpt = useCallback(
     (idx: number, option: FilterOpt) => {
       return () => {
         setCurrent(idx);
-        if (!onOptSelect) return console.log('No passed "onSelect" handler', option);
-        if (typeof onOptSelect === 'function') onOptSelect(option, option.value, idx);
+
+        if (checks.isFun(onFilterValueSelect)) {
+          onFilterValueSelect(name, option.value);
+        }
+
+        if (checks.isFun(onOptSelect)) onOptSelect(option, option.value, idx);
       };
     },
-    [onOptSelect]
+    [name, onFilterValueSelect, onOptSelect]
   );
 
   useEffect(() => {
     if (preventFilter || defaultFilterValue) return;
 
     if (filterOptions && Array.isArray(filterOptions)) {
-      typeof onOptSelect === 'function' && onOptSelect(filterOptions[current], filterOptions[current].value, current);
+      checks.isFun(onOptSelect) && onOptSelect(filterOptions[current], filterOptions[current].value, current);
+      checks.isFun(onFilterValueSelect) && onFilterValueSelect(name, filterOptions[current].value);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

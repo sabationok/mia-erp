@@ -13,8 +13,8 @@ import t from '../../lang';
 import { useAppForm } from '../../hooks';
 import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
 import { businessSubjectTypeFilterOptions, ownershipTypeFilterOptions } from '../../data/companies.data';
-import FlexBox from '../atoms/FlexBox';
 import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
+import { FormInputs } from './components/atoms';
 
 export interface ICreateCompanyFormData
   extends Omit<ICompany, '_id' | 'createdAt' | 'updatedAt' | 'company_token' | 'configs' | 'owner' | 'permissions'> {}
@@ -87,7 +87,7 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
 
   return (
     <Form fillHeight width={'480px'} {...props} onSubmit={handleSubmit(onFormSubmit)} isValid={isValid}>
-      <Inputs flex={1} fillWidth padding={'8px 4px'} overflow={'auto'}>
+      <FormInputs flex={1} fillWidth padding={'8px 4px'} overflow={'auto'}>
         <InputLabel label={t('businessSubjectType')} error={errors.name} required>
           <ButtonGroup
             options={businessSubjectTypeFilterOptions}
@@ -158,15 +158,11 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
             <InputText placeholder={t('personalTaxCode')} {...register('personalTaxCode')} />
           </InputLabel>
         )}
-      </Inputs>
+      </FormInputs>
     </Form>
   );
 };
 
 const Form = styled(ModalForm)``;
-
-const Inputs = styled(FlexBox)`
-  fill: ${({ theme }) => theme.accentColor.base};
-`;
 
 export default FormCreateCompany;

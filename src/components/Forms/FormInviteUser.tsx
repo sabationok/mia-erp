@@ -1,5 +1,4 @@
 import ModalForm, { ModalFormProps } from '../ModalForm';
-import FlexBox from '../atoms/FlexBox';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import { useAppForm } from '../../hooks';
 import { ICustomRole } from '../../redux/customRoles/customRoles.types';
@@ -8,6 +7,7 @@ import { useCustomRolesSelector } from '../../redux/selectors.store';
 import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
 import InputText from '../atoms/Inputs/InputText';
 import { IPermission } from '../../redux/permissions/permissions.types';
+import { FormInputs } from './components/atoms';
 
 export interface FormInviteUserProps extends Omit<ModalFormProps<any, any, IPermission>, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<FormInviteUserData, { onSuccess?: (d: IPermission) => void }>;
@@ -32,7 +32,7 @@ const FormInviteUser: React.FC<FormInviteUserProps> = ({ defaultState, onSubmit,
   };
   return (
     <ModalForm isValid={isValid} {...props} onSubmit={handleSubmit(onValidSubmit)}>
-      <FlexBox fillWidth padding={'16px'}>
+      <FormInputs>
         <InputLabel label={'Емейл'} error={errors.email} required>
           <InputText
             {...register('email', { required: true })}
@@ -46,7 +46,7 @@ const FormInviteUser: React.FC<FormInviteUserProps> = ({ defaultState, onSubmit,
         <InputLabel label={'Роль'} error={errors.role}>
           <CustomSelect {...registerSelect('role', { options: roles, placeholder: 'Оберіть роль для користувача' })} />
         </InputLabel>
-      </FlexBox>
+      </FormInputs>
     </ModalForm>
   );
 };

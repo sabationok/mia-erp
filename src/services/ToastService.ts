@@ -36,6 +36,10 @@ export default class ToastService {
     const toastId = toast.success(content, options);
     return () => toast.dismiss(toastId);
   }
+  public static info(content: ToastContent, options?: ToastOptions): ToastLoaderRemover {
+    const toastId = toast.info(content, options);
+    return () => toast.dismiss(toastId);
+  }
   public static error(content: ToastContent, options?: ToastOptions): ToastLoaderRemover {
     const toastId = toast.error(content, options);
     console.log(toastId, content);

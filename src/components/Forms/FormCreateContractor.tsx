@@ -4,7 +4,6 @@ import ModalForm from '../ModalForm';
 
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import styled from 'styled-components';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import t from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
@@ -20,6 +19,7 @@ import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useDirectoriesSelector } from '../../redux/selectors.store';
 import { BusinessSubjectTypeEnum } from '../../redux/companies/companies.types';
 import { businessSubjectTypeFilterOptions } from '../../data/companies.data';
+import { FormInputs } from './components/atoms';
 
 export interface FormCreateContractorProps
   extends DirectoriesFormProps<ApiDirType.CONTRACTORS, IContractor, IContractorFormData> {
@@ -139,7 +139,7 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({
         />
       }
     >
-      <Inputs>
+      <FormInputs>
         <InputLabel label={t('businessSubjectType')} error={errors.label} required>
           <ButtonGroup
             options={businessSubjectTypeFilterOptions}
@@ -211,19 +211,9 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({
         <InputLabel label={t('comment')} error={errors.description}>
           <TextareaPrimary placeholder={t('insertComment')} {...register('description')} maxLength={250} />
         </InputLabel>
-      </Inputs>
+      </FormInputs>
     </ModalForm>
   );
 };
-const Inputs = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
 
-  padding: 16px;
-
-  overflow: auto;
-
-  background-color: inherit;
-`;
 export default FormCreateContractor;

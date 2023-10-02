@@ -8,12 +8,12 @@ import TActions from '../TableActions';
 import TableFilter from '../TableFilter';
 
 const TableOverHead: React.FC<React.HTMLAttributes<HTMLDivElement>> = props => {
-  const { actionsCreator, isFilter, tableSearchParams, isSearch = true } = useTable();
+  const { actionsCreator, isFilter, onSubmitSearch, tableSearchParams, isSearch = true } = useTable();
 
   return (
     <OverHead className="tOverHead" {...props}>
       <LeftSide className={'leftSide'} style={{ padding: isSearch ? '4px 8px' : '0' }}>
-        {isSearch && <TableSearchForm {...{ tableSearchParams }} />}
+        {isSearch && <TableSearchForm {...{ tableSearchParams }} onSubmit={onSubmitSearch} />}
       </LeftSide>
 
       <DeviceControl.MinDesktop>

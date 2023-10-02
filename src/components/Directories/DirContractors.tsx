@@ -9,12 +9,9 @@ export interface DirContractorsProps extends DirBaseProps {
   tableSettings?: ITableListProps<IContractor>;
 }
 
-const DirContractors: React.FC<DirContractorsProps> = ({
-  tableSettings,
-  ...props
-}) => {
+const DirContractors: React.FC<DirContractorsProps> = ({ tableSettings, ...props }) => {
   return (
-    <StModalForm {...props}>
+    <StModalForm fillWidth fillHeight {...props}>
       <TableList {...tableSettings} />
     </StModalForm>
   );

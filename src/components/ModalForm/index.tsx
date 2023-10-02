@@ -30,6 +30,7 @@ export interface ModalFormAddsProps {
   fitContentH?: boolean;
   height?: string;
   width?: string;
+  filterName?: any;
 }
 
 export type ModalFormProps<V = any, D = any, DataType = any> = ModalFormBaseProps<DataType> &
@@ -49,6 +50,8 @@ const ModalForm: React.FC<ModalFormProps> = ({
   extraHeader,
   isValid = true,
   onClose,
+  onFilterValueSelect,
+  filterName,
   ...props
 }) => {
   function handleSubmit(ev: FormEvent<HTMLFormElement>) {
@@ -74,6 +77,8 @@ const ModalForm: React.FC<ModalFormProps> = ({
             filterOptions={filterOptions}
             preventFilter={preventFilter}
             defaultOption={defaultOption}
+            onFilterValueSelect={onFilterValueSelect}
+            name={filterName}
           />
         )}
         {extraHeader}
@@ -126,7 +131,7 @@ const ModalFormContainer = styled.form<
   }
 
   @media screen and (min-width: 480px) {
-    width: 450px;
+    width: ${p => (p.fillWidth ? '98vw' : '450px')};
   }
 `;
 

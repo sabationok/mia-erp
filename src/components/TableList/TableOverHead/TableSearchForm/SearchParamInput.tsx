@@ -1,9 +1,9 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-
 import { SelectItem } from 'components/TableList/TableList';
 import { iconId } from 'data';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
+import { checks } from 'utils';
 
 export interface ISearchParamInputProps {
   data?: SelectItem[];
@@ -13,69 +13,34 @@ export interface ISearchParamInputProps {
 }
 
 const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue, selectedItem, onSelect }) => {
-  const [inputValue, setInputValue] = useState({ searchParam: '' });
-  const [filteredData, setFilteredData] = useState<SelectItem[]>(data || []);
-  const setCurrent = useState<SelectItem | null>(defaultValue || selectedItem || null)[1];
+  const [current, setCurrent] = useState<number>(0);
   const [isOpen, setIsOpen] = useState(false);
 
   function handleToggleList() {
     setIsOpen(prev => {
-      prev && setInputValue({ searchParam: '' });
       return !prev;
     });
   }
 
-  // function onChange(ev: React.ChangeEvent<HTMLInputElement>) {
-  //   const { name, value } = ev.target;
-  //
-  //   current && setCurrent(null);
-  //   setInputValue(prev => {
-  //     return { ...prev, [name]: value };
-  //   });
-  // }
-
-  // function onSearchParamReset() {
-  //   setInputValue({ searchParam: '' });
-  // }
-
-  // const renderinput = (
-  //   <StyledLabel className={isOpen ? 'isOpen' : ''}>
-  //     <StyledInput
-  //       type="text"
-  //       placeholder="Параметр"
-  //       name="searchParam"
-  //       className={isOpen ? 'isOpen' : ''}
-  //       value={inputValue.searchParam}
-  //       onChange={onChange}
-  //     />
-  //
-  //     <ClearButton
-  //       onClick={onSearchParamReset}
-  //       variant="onlyIconNoEffects"
-  //       disabled={!inputValue?.searchParam}
-  //     >
-  //       <SvgIcon iconId={iconId.close} className={'svgIcon'} size="24px" />
-  //     </ClearButton>
-  //   </StyledLabel>
-  // );
   const handleSelect = useCallback(
-    (item: SelectItem) => {
-      // setCurrent(item);
+    (item: SelectItem, index: number) => {
+      setCurrent(index);
 
-      if (onSelect instanceof Function) {
-        onSelect(item);
-        setCurrent(item);
-        setInputValue({ searchParam: item.label ? item.label : '' });
-      }
+      checks.isFun(onSelect) && onSelect(item);
 
       handleToggleList();
     },
     [onSelect, setCurrent]
   );
   const renderFilteredList = useMemo(() => {
-    return filteredData.length > 0 ? (
-      filteredData.map((item, _idx) => (
-        <ListItem key={item.dataKey || item.dataPath} title={item.label} onClick={() => handleSelect(item)}>
+    return data ? (
+      data.map((item, index) => (
+        <ListItem
+          key={item.dataKey || item.dataPath}
+          title={item.label}
+          isSelected={index === current}
+          onClick={() => handleSelect(item, index)}
+        >
           <span>{item.label}</span>
         </ListItem>
       ))
@@ -84,25 +49,7 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
         <span>Нічого не знайдено</span>
       </ListItem>
     );
-  }, [filteredData, handleSelect]);
-
-  useEffect(() => {
-    if (data?.length === 0) {
-      return;
-    }
-
-    const filteredData = data?.filter(el => {
-      if (inputValue?.searchParam && el?.name)
-        return !(inputValue?.searchParam && !el?.name.toLowerCase().includes(inputValue?.searchParam.toLowerCase()));
-
-      if (inputValue?.searchParam && el?.label)
-        return !(inputValue?.searchParam && !el?.label.toLowerCase().includes(inputValue?.searchParam.toLowerCase()));
-
-      return true;
-    });
-
-    filteredData && setFilteredData(filteredData);
-  }, [data, inputValue, inputValue?.searchParam]);
+  }, [current, data, handleSelect]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -113,7 +60,6 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
         (target instanceof HTMLElement && !target.closest('[data-select]')) ||
         (ev instanceof KeyboardEvent && ev?.code === 'Escape');
       allowClose && setIsOpen(false);
-      allowClose && setInputValue({ searchParam: '' });
     }
 
     document.addEventListener('click', onMenuClose);
@@ -160,7 +106,7 @@ const InputBox = styled.label<{ isOpen?: boolean }>`
   max-height: ${({ isOpen }) => (isOpen ? '40vh' : '0')};
   overflow: hidden;
 
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  background-color: ${({ theme }) => theme.modalBackgroundColor};
   border-radius: 2px;
   border: ${({ isOpen }) => (isOpen ? '1px' : '0')} solid ${({ theme }) => theme.trBorderClr};
 
@@ -274,7 +220,7 @@ const ParamsList = styled.ul<{ isOpen: boolean }>`
   overflow: auto;
 `;
 
-const ListItem = styled.li<{ listEmpty?: boolean }>`
+const ListItem = styled.li<{ listEmpty?: boolean; isSelected?: boolean }>`
   display: flex;
   align-items: center;
 
@@ -286,9 +232,11 @@ const ListItem = styled.li<{ listEmpty?: boolean }>`
   overflow: hidden;
   white-space: nowrap;
 
+  background-color: ${({ isSelected, theme }) => (!isSelected ? '' : theme.fieldBackgroundColor)};
+
   &:hover {
     cursor: default;
-    background-color: ${({ listEmpty }) => (listEmpty ? '' : 'rgba(254, 254, 254, 0.1)')};
+    background-color: ${({ listEmpty, theme }) => (listEmpty ? '' : theme.fieldBackgroundColor)};
   }
 
   @media screen and (max-width: 480px) {
