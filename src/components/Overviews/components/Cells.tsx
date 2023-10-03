@@ -1,6 +1,5 @@
 import FlexBox from '../../atoms/FlexBox';
 import React, { useMemo } from 'react';
-import { RenderOverviewCellComponent } from '../ProductOverviewXL';
 import FormCreateVariation from '../../Forms/FormProduct/FormCreateVariationOverlay';
 import { IProperty } from '../../../redux/products/properties.types';
 import styled from 'styled-components';
@@ -14,7 +13,21 @@ import ImagePreviewSmall from '../../atoms/ImagePreviewSmall';
 import { IProductCategoryDirItem } from '../../Directories/dir.types';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import FormProductCategoriesOverlay from '../../Forms/FormProduct/FormSelectCategoriesOverlay';
+import { OverlayHandler } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
 
+export type RenderOverviewCellComponent<Data = any> = React.FC<{
+  cell: OverviewCellProps<Data>;
+  setOverlayContent: OverlayHandler;
+  data?: Data;
+}>;
+
+export interface OverviewCellProps<Data = any> {
+  value?: string | number;
+  title?: string;
+  gridArea?: keyof Data;
+  CellComponent?: RenderOverviewCellComponent<Data>;
+  getValue?: (data?: Data) => string | number | undefined;
+}
 export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) => {
   const value = cell.getValue ? cell.getValue(data) : null;
 
@@ -38,7 +51,7 @@ export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) =>
     </Cell>
   );
 };
-export const CategoriesCell: RenderOverviewCellComponent = ({ cell, setOverlayContent, data }) => {
+export const CategoriesCell: RenderOverviewCellComponent<IProduct> = ({ cell, setOverlayContent, data }) => {
   const categories = useDirectoriesSelector(ApiDirType.CATEGORIES_PROD).directory;
   const selectedCategoryIds = useMemo(() => {
     return data?.categories?.map(el => el._id) ?? [];
@@ -159,7 +172,7 @@ interface OverviewPropertyComponentProps {
   data?: IProduct;
   index: number;
 }
-export const ImagesCell: RenderOverviewCellComponent = ({ data, cell, setOverlayContent }) => {
+export const ImagesCell: RenderOverviewCellComponent<IProduct> = ({ data, cell, setOverlayContent }) => {
   const renderImageSets = useMemo(() => {
     return data?.images?.map((set, index) => {
       return (
@@ -195,7 +208,7 @@ export const ImagesCell: RenderOverviewCellComponent = ({ data, cell, setOverlay
   );
 };
 
-export const StaticProperties: RenderOverviewCellComponent = ({ cell, setOverlayContent, data }) => {
+export const StaticProperties: RenderOverviewCellComponent<IProduct> = ({ cell, setOverlayContent, data }) => {
   const templates = useProductsSelector().properties;
 
   const availableProperties = useMemo(() => {

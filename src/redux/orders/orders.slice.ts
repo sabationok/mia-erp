@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { IOrder } from './orders.types';
 
 export interface IOrdersState {
   orders: any[];
-  currentOrder?: any;
+  currentOrder?: IOrder;
   filteredOrders?: [];
   isLoading: boolean;
   error: any;

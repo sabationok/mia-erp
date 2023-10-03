@@ -4,10 +4,11 @@ import React, { useMemo } from 'react';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import t from '../../lang';
-import { OverlayHandler, usePageCurrentProduct } from '../AppPages/PageProductOverview/PageCurrentProductProvider';
+import { usePageCurrentProduct } from '../AppPages/PageProductOverview/PageCurrentProductProvider';
 import { useProductsSelector } from '../../redux/selectors.store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import * as Cells from './components/Cells';
+import { OverviewCellProps } from './components/Cells';
 import { OverlayHeader } from '../Forms/FormProduct/components';
 import numberWithSpaces from '../../utils/numbers';
 
@@ -21,20 +22,6 @@ export interface ProductOverviewXLProps {
   onCreateVariation?: (data: Record<string, string>, onSuccess?: () => void) => void;
   onOpenRightSide?: () => void;
   className?: string;
-}
-
-export type RenderOverviewCellComponent = React.FC<{
-  cell: ProductOverviewCell;
-  setOverlayContent: OverlayHandler;
-  data?: IProduct;
-}>;
-
-export interface ProductOverviewCell {
-  value?: string | number;
-  title?: string;
-  gridArea?: keyof IProduct;
-  CellComponent?: RenderOverviewCellComponent;
-  getValue?: (product?: IProduct) => string | number | undefined;
 }
 
 const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }) => {
@@ -168,7 +155,7 @@ const OpenBtn = styled(ButtonIcon)`
 
 export default ProductOverviewXL;
 
-const productOverviewCells: ProductOverviewCell[] = [
+const productOverviewCells: OverviewCellProps<IProduct>[] = [
   {
     title: 'Назва',
     CellComponent: Cells.OverviewTextCell,
