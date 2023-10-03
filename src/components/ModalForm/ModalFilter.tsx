@@ -49,7 +49,7 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
   name,
   ...props
 }) => {
-  const [current, setCurrent] = useState<number>(typeof defaultOption === 'number' ? defaultOption : 0);
+  const [current, setCurrent] = useState<number>(0);
   // const { listRef } = useScrollTo<HTMLDivElement>(current.toString());
 
   const handleSelectOpt = useCallback(
@@ -78,7 +78,7 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
   }, []);
 
   useEffect(() => {
-    if (defaultFilterValue && Array.isArray(filterOptions)) {
+    if (defaultFilterValue && filterOptions) {
       const defIndex = filterOptions.findIndex(el => el.value === defaultFilterValue);
       defIndex > 0 && setCurrent(defIndex);
     }

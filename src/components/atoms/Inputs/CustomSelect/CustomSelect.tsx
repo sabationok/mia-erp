@@ -209,7 +209,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
   }, [selectValue]);
 
   return (
-    <FlexBox fillWidth style={{ position: 'relative' }} data-select={selectId}>
+    <FlexBox className={'select-box'} fillWidth style={{ position: 'relative' }} data-select={selectId}>
       <FlexBox fillWidth style={{ position: 'relative' }}>
         <InputLabel
           direction={'vertical'}

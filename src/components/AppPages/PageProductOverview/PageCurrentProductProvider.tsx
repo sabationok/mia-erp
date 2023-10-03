@@ -1,11 +1,8 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
-import { useProductsSelector, usePropertiesSelector } from '../../../redux/selectors.store';
+import { useProductsSelector } from '../../../redux/selectors.store';
 import { IProduct } from '../../../redux/products/products.types';
 import { nanoid } from '@reduxjs/toolkit';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { CellTittleProps } from '../../TableList/TebleCells/CellTitle';
-import { IVariationTableData } from '../../../redux/products/variations.types';
-import { createTableTitlesFromTemplate } from '../../../utils';
 
 export interface PageCurrentProductProviderProps {
   children?: React.ReactNode;
@@ -20,7 +17,6 @@ export interface PageCurrentProductProviderValue {
   removeStackItem: (id: string) => void;
   clearStack: () => void;
   mainPagePath?: string;
-  variationsTableTitles?: CellTittleProps<IVariationTableData>[];
 }
 
 export type OverlayHandler = <Props = any>(params: OverlayHandlerParams<Props>) => OverlayHandlerReturn;
@@ -46,13 +42,14 @@ export interface OverlayHandlerReturn {
 }
 
 export const PageCurrentProductCTX = createContext({});
+
 export const usePageCurrentProduct = () => useContext(PageCurrentProductCTX) as PageCurrentProductProviderValue;
 
 const PageCurrentProductProvider: React.FC<PageCurrentProductProviderProps> = ({ children }) => {
   const { currentProduct } = useProductsSelector();
   const service = useAppServiceProvider()[ServiceName.products];
   const [overlayStack, setOverlayStack] = useState<OverlayStackItemData[]>([]);
-  const templates = usePropertiesSelector();
+
   const clearCurrent = useCallback(() => {
     service.clearCurrent({});
   }, [service]);
@@ -64,11 +61,6 @@ const PageCurrentProductProvider: React.FC<PageCurrentProductProviderProps> = ({
   const clearStack = useCallback(() => {
     setOverlayStack([]);
   }, []);
-
-  const variationsTableTitles = useMemo(() => {
-    const template = templates.find(t => t._id === currentProduct?.template?._id);
-    return createTableTitlesFromTemplate(template);
-  }, [currentProduct?.template?._id, templates]);
 
   const createOverlayComponent: OverlayHandler = useCallback(
     params => {
@@ -120,18 +112,8 @@ const PageCurrentProductProvider: React.FC<PageCurrentProductProviderProps> = ({
       getOverlayStack,
       clearStack,
       clearCurrent,
-      variationsTableTitles,
     }),
-    [
-      currentProduct,
-      createOverlayComponent,
-      overlayStack,
-      removeStackItem,
-      getOverlayStack,
-      clearStack,
-      clearCurrent,
-      variationsTableTitles,
-    ]
+    [currentProduct, createOverlayComponent, overlayStack, removeStackItem, getOverlayStack, clearStack, clearCurrent]
   );
 
   return <PageCurrentProductCTX.Provider value={CTX}>{children}</PageCurrentProductCTX.Provider>;

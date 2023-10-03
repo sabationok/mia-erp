@@ -27,14 +27,6 @@ const PageProductOverviewLeftSide: React.FC<PageProductOverviewLeftSideProps> = 
       },
     [page]
   );
-  // const onTransitionEnd = useCallback(
-  //   (id: string): TransitionEventHandler<HTMLDivElement> | undefined =>
-  //     ev => {
-  //       // page.removeStackItem(id);
-  //       // console.log(ev);
-  //     },
-  //   []
-  // );
 
   const renderOverlayStack = useMemo(() => {
     const stack = page.getOverlayStack();

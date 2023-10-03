@@ -3,43 +3,43 @@ import styled from 'styled-components';
 import { takeFullGridArea } from '../pagesStyles';
 import AppGridPage from '../AppGridPage';
 import { useCallback, useEffect, useState } from 'react';
-import { useAppParams } from '../../../hooks';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import PageCurrentProductProvider from './PageCurrentProductProvider';
-import { ToastService } from '../../../services';
 import PageProductOverviewRightSide from './PageProductOverviewRightSide';
 import PageProductOverviewLeftSide from './PageProductOverviewLeftSide';
-import AppLoader from '../../atoms/AppLoader';
+import { useAppParams } from '../../../hooks';
+import { useProductsSelector } from '../../../redux/selectors.store';
+import { ToastService } from '../../../services';
 
 export interface PageProductOverviewProps {
   path: PagePathType;
 }
+const loader = ToastService.createLoader('Loading product info');
 
 const PageProductOverview: React.FC<PageProductOverviewProps> = ({ path }) => {
-  const { productId } = useAppParams();
   const [isRightSideVisible, setIsRightSideVisible] = useState<boolean>(false);
   const productsS = useAppServiceProvider()[ServiceName.products];
+  const { productId } = useAppParams();
+
+  const { currentProduct } = useProductsSelector();
 
   const toggleRightSide = useCallback(() => {
     setIsRightSideVisible(p => !p);
   }, []);
 
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
-    const rt = ToastService.createToastLoader('Loading product');
-    if (productId) {
+    if (productId && productId !== currentProduct?._id) {
+      const close = loader.open().close;
+      console.log('==========>>>>>>>>>>>>');
+      console.log('PageProductOverview get full info');
       productsS
         .getProductFullInfo({
           data: { _id: productId },
-          onLoading: setLoading,
-          onError: e => {
-            console.warn('PageProductOverview', e);
-          },
         })
-        .finally(rt);
+        .finally(close);
     }
-  }, [productId, productsS]);
+    // eslint-disable-next-line
+  }, [productId]);
 
   useEffect(() => {
     return () => {
@@ -58,8 +58,6 @@ const PageProductOverview: React.FC<PageProductOverviewProps> = ({ path }) => {
           <PageProductOverviewRightSide isVisible={isRightSideVisible} toggleVisibility={toggleRightSide} />
         </Page>
       </PageCurrentProductProvider>
-
-      <AppLoader isLoading={loading} />
     </AppGridPage>
   );
 };

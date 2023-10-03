@@ -1,7 +1,7 @@
 import ModalForm from 'components/ModalForm';
 import React from 'react';
 import styled from 'styled-components';
-import { IActivity, IActivityFormData } from 'redux/companyActivities/activities.types';
+import { IActivity, IActivityFormData } from 'redux/directories/activities.types';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputLabel from '../atoms/Inputs/InputLabel';

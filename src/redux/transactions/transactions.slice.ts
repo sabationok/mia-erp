@@ -2,6 +2,7 @@ import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { createTransactionThunk, getAllTransactionsThunk } from 'redux/transactions/transactions.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { ITransaction } from 'redux/transactions/transactions.types';
+import { checks } from '../../utils';
 
 export interface ITransactionsState {
   transactions: ITransaction[];
@@ -51,15 +52,17 @@ export const transactionsSlice = createSlice({
         s.error = a.payload;
       }),
 });
-
+function isTransactionsCase(type: string) {
+  return checks.isStr(type) && type.startsWith('transactions');
+}
 function inPending(a: AnyAction) {
-  return a.type.endsWith('pending');
+  return isTransactionsCase(a.type) && a.type.endsWith('pending');
 }
 function inFulfilled(a: AnyAction) {
-  return a.type.endsWith('fulfilled');
+  return isTransactionsCase(a.type) && a.type.endsWith('fulfilled');
 }
 function inError(a: AnyAction) {
-  return a.type.endsWith('rejected');
+  return isTransactionsCase(a.type) && a.type.endsWith('rejected');
 }
 
 export const transactionsReducer = transactionsSlice.reducer;

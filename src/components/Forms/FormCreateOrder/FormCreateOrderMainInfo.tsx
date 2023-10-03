@@ -2,7 +2,7 @@ import FlexBox from '../../atoms/FlexBox';
 import { useDirectoriesSelector } from '../../../redux/selectors.store';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { useCounterpartyDirectorySelectorByType } from '../../../hooks/selectorHooks.hooks';
-import { ContractorsTypesEnum } from '../../../redux/contractors/contractors.types';
+import { ContractorsTypesEnum } from '../../../redux/directories/contractors.types';
 import { useModalFormCreateCounterparty } from '../../../hooks/modalHooks';
 import { useState } from 'react';
 import ButtonGroup from '../../atoms/ButtonGroup';

@@ -14,7 +14,7 @@ import { ICompany } from '../companies/companies.types';
 import { IManager } from '../auth/auth.types';
 import { ICommunicationDirItem, IPaymentDirItem, IShipmentDirItem } from '../../components/Directories/dir.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
-import { IContractor } from '../contractors/contractors.types';
+import { IContractor } from '../directories/contractors.types';
 import { IProductInventory, IWarehouse } from '../warehouses/warehouses.types';
 import { IProductBase } from '../products/products.types';
 import { IVariation } from '../products/variations.types';

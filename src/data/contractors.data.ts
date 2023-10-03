@@ -1,4 +1,4 @@
-import { IContractor } from '../redux/contractors/contractors.types';
+import { IContractor } from '../redux/directories/contractors.types';
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { SelectItem } from '../components/TableList/tableTypes.types';
 import t from '../lang';

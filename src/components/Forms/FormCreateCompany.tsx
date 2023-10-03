@@ -13,7 +13,7 @@ import t from '../../lang';
 import { useAppForm } from '../../hooks';
 import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
 import { businessSubjectTypeFilterOptions, ownershipTypeFilterOptions } from '../../data/companies.data';
-import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
+import { ContractorsTypesEnum } from '../../redux/directories/contractors.types';
 import { FormInputs } from './components/atoms';
 
 export interface ICreateCompanyFormData

@@ -20,6 +20,7 @@ import {
 import { initialPermission, testPermissions } from '../../data/permissions.data';
 import { clearCurrentPermission, setMockPermissionData } from './permissions.action';
 import { pages } from '../../data';
+import { checks } from '../../utils';
 import { StateErrorType } from '../reduxTypes.types';
 
 const initialPermissionStateState: IPermissionsState = {
@@ -121,12 +122,15 @@ export const permissionsSlice = createSlice({
         s.error = a.payload;
       }),
 });
+function isPermissionsCase(type: string) {
+  return checks.isStr(type) && type.startsWith('permissions');
+}
 function inPending(a: AnyAction) {
-  return a.type.endsWith('pending');
+  return isPermissionsCase(a.type) && a.type.endsWith('pending');
 }
 function inFulfilled(a: AnyAction) {
-  return a.type.endsWith('fulfilled');
+  return isPermissionsCase(a.type) && a.type.endsWith('fulfilled');
 }
 function inError(a: AnyAction) {
-  return a.type.endsWith('rejected');
+  return isPermissionsCase(a.type) && a.type.endsWith('rejected');
 }

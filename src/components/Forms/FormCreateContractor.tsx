@@ -1,5 +1,5 @@
 import { DirectoriesFormProps } from '../Directories/dir.types';
-import { ContractorsTypesEnum, IContractor, IContractorFormData } from 'redux/contractors/contractors.types';
+import { ContractorsTypesEnum, IContractor, IContractorFormData } from 'redux/directories/contractors.types';
 import ModalForm from '../ModalForm';
 
 import * as yup from 'yup';

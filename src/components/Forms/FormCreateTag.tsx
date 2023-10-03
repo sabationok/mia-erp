@@ -13,7 +13,7 @@ import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { tagsFilterOptions } from '../../data/directories.data';
 import { FilterOption } from '../ModalForm/ModalFilter';
-import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
+import { ContractorsTypesEnum } from '../../redux/directories/contractors.types';
 import { FormInputs } from './components/atoms';
 import TagButtonsFilter from 'components/atoms/TagButtonsFilter';
 

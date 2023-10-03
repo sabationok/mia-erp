@@ -3,6 +3,7 @@ import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { IWarehouse } from './warehouses.types';
 import { createWarehouseThunk, getAllWarehousesThunk, getWarehouseByIdThunk } from './warehouses.thunks';
+import { checks } from '../../utils';
 
 export interface IWarehouseState {
   warehouses: IWarehouse[];
@@ -76,13 +77,15 @@ export const warehousesSlice = createSlice({
         s.error = a.payload;
       }),
 });
-
+function isWarehousingCase(type: string) {
+  return checks.isStr(type) && type.startsWith('warehouses');
+}
 function inPending(a: AnyAction) {
-  return a.type.endsWith('pending');
+  return isWarehousingCase(a.type) && a.type.endsWith('pending');
 }
 function inFulfilled(a: AnyAction) {
-  return a.type.endsWith('fulfilled');
+  return isWarehousingCase(a.type) && a.type.endsWith('fulfilled');
 }
 function inError(a: AnyAction) {
-  return a.type.endsWith('rejected');
+  return isWarehousingCase(a.type) && a.type.endsWith('rejected');
 }

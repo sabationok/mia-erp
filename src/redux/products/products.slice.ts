@@ -18,6 +18,7 @@ import {
   setCurrentProductPricesAction,
   setCurrentProductVariationsAction,
 } from './products.actions';
+import { checks } from '../../utils';
 
 export interface IProductsState {
   products: IProduct[];
@@ -152,14 +153,17 @@ export const productsSlice = createSlice({
       }),
 });
 
+function isProductsCase(type: string) {
+  return checks.isStr(type) && type.startsWith('products');
+}
 function inPending(a: AnyAction) {
-  return a.type.endsWith('pending');
+  return isProductsCase(a.type) && a.type.endsWith('pending');
 }
 function inFulfilled(a: AnyAction) {
-  return a.type.endsWith('fulfilled');
+  return isProductsCase(a.type) && a.type.endsWith('fulfilled');
 }
 function inError(a: AnyAction) {
-  return a.type.endsWith('rejected');
+  return isProductsCase(a.type) && a.type.endsWith('rejected');
 }
 
 export const productsReducer = productsSlice.reducer;

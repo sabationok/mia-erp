@@ -1,6 +1,6 @@
 import { AppResponse, IBase } from '../global.types';
-import { IContractor } from '../contractors/contractors.types';
-import { IActivity } from '../companyActivities/activities.types';
+import { IContractor } from '../directories/contractors.types';
+import { IActivity } from '../directories/activities.types';
 import { ICount } from '../directories/counts.types';
 import { ICategory } from '../directories/directories.types';
 

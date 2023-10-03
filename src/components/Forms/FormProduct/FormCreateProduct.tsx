@@ -122,7 +122,7 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
         />
       }
     >
-      <FlexBox className={'inputs'} flex={'1'} fillWidth maxHeight={'100%'} padding={'12px'} overflow={'auto'}>
+      <FlexBox className={'inputs'} flex={'1'} fillWidth maxHeight={'100%'} padding={'0 8px 8px'} overflow={'auto'}>
         <InputLabel label={t('label')} error={errors.label} required>
           <InputText placeholder={t('label')} {...register('label')} required autoFocus />
         </InputLabel>

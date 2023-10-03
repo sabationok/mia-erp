@@ -9,7 +9,7 @@ import {
 } from './directories.thunk';
 import { IDirItemBase } from '../../components/Directories/dir.types';
 import { DefaultDirectoryType } from './directories.types';
-import { enumToArray } from '../../utils';
+import { checks, enumToArray } from '../../utils';
 
 export interface IDirectoriesState extends Record<string, any> {
   defaultDirectories?: Record<string, DefaultDirectoryType[]>;
@@ -75,14 +75,17 @@ export const directoriesSlice = createSlice({
       }),
 });
 
+function isDirectoriesCase(type: string) {
+  return checks.isStr(type) && type.startsWith('directories');
+}
 function inPending(a: AnyAction) {
-  return a.type.endsWith('pending');
+  return isDirectoriesCase(a.type) && a.type.endsWith('pending');
 }
 function inFulfilled(a: AnyAction) {
-  return a.type.endsWith('fulfilled');
+  return isDirectoriesCase(a.type) && a.type.endsWith('fulfilled');
 }
 function inError(a: AnyAction) {
-  return a.type.endsWith('rejected');
+  return isDirectoriesCase(a.type) && a.type.endsWith('rejected');
 }
 
 export const directoriesReducer = directoriesSlice.reducer;

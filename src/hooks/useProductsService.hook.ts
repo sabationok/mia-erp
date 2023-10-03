@@ -29,7 +29,7 @@ import { IProductInventory } from '../redux/warehouses/warehouses.types';
 export interface ProductsService {
   create: ServiceDispatcherAsync<IProductReqData, IProduct>;
   deleteById: ServiceApiCaller<string, IProduct>; // !!!!! ===>>> ServiceDispatcher
-  updateById: ServiceDispatcherAsync<IProductReqData & { refreshCurrent?: boolean }, IProduct>; // !!!!! ===>>> ServiceDispatcher
+  updateById: ServiceDispatcherAsync<IProductReqData & { refreshCurrent?: boolean; updateCurrent?: boolean }, IProduct>; // !!!!! ===>>> ServiceDispatcher
   getById: ServiceApiCaller<string, IProduct>;
   getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IProduct[]>;
   getProductFullInfo: ServiceDispatcherAsync<OnlyUUID, IProduct>;
@@ -50,18 +50,26 @@ export interface ProductsService {
   createVariation: ServiceDispatcherAsync<IVariationReqData, IVariation>;
   updateVariationById: ServiceDispatcherAsync<IVariationReqData, IVariation>;
   getAllVariationsByProductId: ServiceDispatcherAsync<
-    { product: OnlyUUID; params?: AppQueryParams; refreshCurrent?: boolean },
+    { product: OnlyUUID; params?: AppQueryParams; refreshCurrent?: boolean; updateCurrent?: boolean },
     IVariation[]
   >;
 
   // * PRICES
   getAllPricesByProductId: ServiceDispatcherAsync<
-    { refreshCurrent?: boolean; params: Pick<AppQueryParams, 'product' | 'list' | 'variation'> },
+    {
+      refreshCurrent?: boolean;
+      updateCurrent?: boolean;
+      params: Pick<AppQueryParams, 'product' | 'list' | 'variation'>;
+    },
     IPriceListItem[]
   >;
   // * INVENTORIES
   getAllInventoriesByProductId: ServiceDispatcherAsync<
-    { refreshCurrent?: boolean; params: Pick<AppQueryParams, 'product' | 'warehouse' | 'variation' | 'price'> },
+    {
+      refreshCurrent?: boolean;
+      updateCurrent?: boolean;
+      params: Pick<AppQueryParams, 'product' | 'warehouse' | 'variation' | 'price'>;
+    },
     IProductInventory[]
   >;
 }

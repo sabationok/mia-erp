@@ -13,7 +13,7 @@ import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { IModalProviderContext, ModalService } from '../ModalProvider/ModalProvider';
 import { DirectoriesService } from '../../hooks/useDirService.hook';
 import { AppSubmitHandler, UseAppFormSubmitOptions } from '../../hooks/useAppForm.hook';
-import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
+import { ContractorsTypesEnum } from '../../redux/directories/contractors.types';
 import { ProductTypeEnum } from '../../redux/products/products.types';
 
 export interface DirItemTypeByDirType extends Record<ApiDirType, any> {

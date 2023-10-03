@@ -1,5 +1,5 @@
 import { ApiDirType, AppPagesEnum } from '../redux/APP_CONFIGS';
-import { ContractorsTypesEnum } from '../redux/contractors/contractors.types';
+import { ContractorsTypesEnum } from '../redux/directories/contractors.types';
 import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../redux/companies/companies.types';
 import { WarehouseDocumentType } from '../redux/warehouses/warehouses.types';
 

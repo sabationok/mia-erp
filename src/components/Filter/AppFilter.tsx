@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import SelectorContent from './SelectorContent/SelectorContent';
 import { ICount } from 'redux/directories/counts.types';
 import { ICategory } from 'redux/directories/directories.types';
-import { IContractor } from 'redux/contractors/contractors.types';
+import { IContractor } from 'redux/directories/contractors.types';
 import { IProject } from 'redux/transactions/transactions.types';
 import { ApiDirType } from 'redux/APP_CONFIGS';
 import InputLabel from '../atoms/Inputs/InputLabel';

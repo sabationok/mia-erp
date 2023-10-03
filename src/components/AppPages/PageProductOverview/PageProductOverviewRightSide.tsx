@@ -1,25 +1,14 @@
 import { usePageCurrentProduct } from './PageCurrentProductProvider';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import TableList, { ITableListProps } from '../../TableList/TableList';
-import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
+import { useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../../utils/fabrics';
-import { useModalProvider } from '../../ModalProvider/ModalProvider';
 import { Text } from '../../atoms/Text';
 import ModalFilter, { FilterSelectHandler } from '../../ModalForm/ModalFilter';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
-import FormCreateVariation from '../../Forms/FormProduct/FormCreateVariationOverlay';
-import { IPriceListItem } from 'redux/priceManagement/priceManagement.types';
-import { IVariationTableData } from 'redux/products/variations.types';
-import { transformVariationTableData } from '../../../utils/tables';
-import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { ExtractId } from '../../../utils/dataTransform';
-import AppLoader from '../../atoms/AppLoader';
-import { warehouseOverviewTableColumns } from '../../../data/warehauses.data';
-import { IProductInventory } from '../../../redux/warehouses/warehouses.types';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import FormCreatePrice from '../../Forms/FormCreatePrice/FormCreatePrice';
-import Forms from '../../Forms';
+import VariationsTab from './tabs/VariationsTab';
+import PricesTab from './tabs/PricesTab';
+import WarehousingTab from './tabs/WarehousingTab';
 
 // const openLoader = (current: RightSideOptionEnum) =>
 //   ToastService.createLoader('Loading data...').open({
@@ -42,165 +31,24 @@ export interface PageProductOverviewRightSideProps {
 // }
 const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> = ({ isVisible, toggleVisibility }) => {
   const page = usePageCurrentProduct();
-  const [current, setCurrent] = useState<RightSideOptionEnum>(RightSideOptionEnum.Prices);
-  const modalS = useModalProvider();
-  const productsS = useAppServiceProvider()[ServiceName.products];
-  const pricesS = useAppServiceProvider()[ServiceName.priceManagement];
-  const [loading, setLoading] = useState(false);
+  const [current, setCurrent] = useState<RightSideOptionEnum>(RightSideOptionEnum.Variations);
 
-  const loadCurrentData = useCallback(
-    (current: RightSideOptionEnum) => {
-      if (!page.currentProduct) return;
-
-      if (current === RightSideOptionEnum.Variations) {
-        productsS.getAllVariationsByProductId({
-          data: { product: ExtractId(page.currentProduct), refreshCurrent: true },
-          onLoading: setLoading,
-        });
-      }
-      if (current === RightSideOptionEnum.Prices) {
-        productsS.getAllPricesByProductId({
-          data: { refreshCurrent: true, params: { product: ExtractId(page.currentProduct) } },
-          onLoading: setLoading,
-        });
-      }
-      if (current === RightSideOptionEnum.Warehousing) {
-        productsS.getAllInventoriesByProductId({
-          data: { refreshCurrent: true, params: { product: ExtractId(page.currentProduct) } },
-          onLoading: setLoading,
-        });
-      }
-    },
-    [page.currentProduct, productsS]
-  );
-
-  const currentTableSettings = useMemo((): ITableListProps | undefined => {
+  const renderTab = useMemo(() => {
     if (current === RightSideOptionEnum.Variations) {
-      return {
-        tableTitles: page?.variationsTableTitles,
-        tableData: page?.currentProduct?.variations,
-        transformData: transformVariationTableData,
-        actionsCreator: ctx => {
-          const currentId = ctx.selectedRow?._id;
-
-          return [
-            { icon: 'refresh', type: 'onlyIcon', onClick: () => loadCurrentData(current) },
-            { separator: true },
-            {
-              icon: 'delete',
-              type: 'onlyIcon',
-              disabled: !currentId,
-              onClick: () => {
-                window.confirm(`Видалити варіацію:\n ${currentId}`);
-              },
-            },
-            { icon: 'copy', type: 'onlyIcon', disabled: !currentId },
-            {
-              icon: 'edit',
-              type: 'onlyIcon',
-              disabled: !currentId,
-              onClick: () => {
-                if (!currentId || !ctx.selectedRow) return;
-                const dataForUpdate = page.currentProduct?.variations?.find(v => v?._id === currentId);
-
-                modalS.open({
-                  ModalChildren: FormCreateVariation,
-                  modalChildrenProps: {
-                    update: currentId,
-                    defaultState: dataForUpdate,
-                  },
-                });
-              },
-            },
-            { separator: true },
-            {
-              icon: 'plus',
-              type: 'onlyIconFilled',
-              onClick: () => {
-                // toggleVisibility && toggleVisibility();
-
-                modalS.open({
-                  ModalChildren: FormCreateVariation,
-                  modalChildrenProps: { product: page.currentProduct },
-                });
-              },
-            },
-          ];
-        },
-      } as ITableListProps<IVariationTableData>;
+      return <VariationsTab />;
     }
 
     if (current === RightSideOptionEnum.Prices) {
-      return {
-        tableData: page?.currentProduct?.prices,
-        tableTitles: pricesColumnsForProductReview,
-        actionsCreator: ctx => {
-          const currentId = ctx.selectedRow?._id;
-
-          return [
-            { icon: 'refresh', type: 'onlyIcon' },
-            { separator: true },
-            { icon: 'delete', type: 'onlyIcon', disabled: !currentId },
-            { icon: 'copy', type: 'onlyIcon', disabled: !currentId },
-            { icon: 'edit', type: 'onlyIcon', disabled: !currentId },
-            { separator: true },
-            {
-              icon: 'plus',
-              type: 'onlyIconFilled',
-              onClick: () => {
-                modalS.open({
-                  ModalChildren: FormCreatePrice,
-                  modalChildrenProps: {
-                    product: page.currentProduct,
-                    onSubmit: d => {
-                      console.log('FormCreatePrice submit pr overview', d);
-                    },
-                  },
-                });
-              },
-            },
-          ];
-        },
-      } as ITableListProps<IPriceListItem>;
+      return <PricesTab />;
     }
     if (current === RightSideOptionEnum.Warehousing) {
-      return {
-        tableData: page?.currentProduct?.inventories,
-        tableTitles: warehouseOverviewTableColumns,
-        actionsCreator: ctx => {
-          // const currentId = ctx.selectedRow?._id;
-
-          return [
-            { icon: 'refresh', type: 'onlyIcon' },
-            // { separator: true },
-            // { icon: 'delete', type: 'onlyIcon', disabled: !currentId },
-            // { icon: 'copy', type: 'onlyIcon', disabled: !currentId },
-            // { icon: 'edit', type: 'onlyIcon', disabled: !currentId },
-            { separator: true },
-            {
-              icon: 'plus',
-              type: 'onlyIconFilled',
-              onClick: () => {
-                modalS.open({
-                  ModalChildren: Forms.CreateWarehouseDocument,
-                });
-              },
-            },
-          ];
-        },
-      } as ITableListProps<IProductInventory>;
+      return <WarehousingTab />;
     }
-  }, [current, loadCurrentData, modalS, page.currentProduct, page?.variationsTableTitles]);
+  }, [current]);
 
   const filterHandler: FilterSelectHandler<RightSideOptionEnum> = (_, value, index) => {
     setCurrent(value);
-    // loadCurrentData(value);
   };
-
-  useEffect(() => {
-    current && page.currentProduct && loadCurrentData(current);
-    // eslint-disable-next-line
-  }, [current, page.currentProduct?._id]);
 
   return (
     <RightSide overflow={'hidden'} fillHeight isVisible={isVisible}>
@@ -223,11 +71,9 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
         </FlexBox>
       </Top>
 
-      <ModalFilter filterOptions={toggleOptions} onOptSelect={filterHandler} />
+      <ModalFilter filterOptions={toggleOptions} defaultValue={current} onOptSelect={filterHandler} preventFilter />
 
-      <TableList isSearch={false} isFilter={false} {...currentTableSettings} />
-
-      <AppLoader isLoading={loading} />
+      {renderTab}
     </RightSide>
   );
 };
