@@ -20,3 +20,4 @@ export type { FormCreateProductInventoryProps } from './FormCreateProductInvento
 export type { FormCreateProductProps } from './FormProduct/FormCreateProduct';
 export type { FormVariationProps } from './FormProduct/FormCreateVariationOverlay';
 export type { FormCreateWarehouseDocumentProps } from './warehousing/FormCreateWarehouseDocument';
+export type { FormWarehousingSettingsProps } from './warehousing/FormWarehousingSettings';

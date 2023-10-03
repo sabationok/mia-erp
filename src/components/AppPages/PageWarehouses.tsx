@@ -34,7 +34,7 @@ const PageWarehouses: React.FC<any> = (props: Props) => {
       isSearch: true,
       footer: false,
       actionsCreator,
-      onRowClick(ev) {
+      onRowDoubleClick(ev) {
         ev?._id && navigate(ev?._id);
       },
       onFilterSubmit: filterParams => {

@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IPermissionsState } from './permissions.types';
 import {
   createCompanyWithPermissionThunk,
@@ -7,10 +7,12 @@ import {
   deletePermissionByIdThunk,
   getAllPermissionsByCompanyIdThunk,
   getAllPermissionsByUserIdThunk,
+  getCurrentCompanyConfigsThunk,
   getCurrentPermissionThunk,
   inviteUserThunk,
   logInPermissionThunk,
   logOutPermissionThunk,
+  setCurrentCompanyConfigsThunk,
   updateCompanyWithPermissionThunk,
   updatePermissionThunk,
 } from './permissions.thunk';
@@ -18,6 +20,7 @@ import {
 import { initialPermission, testPermissions } from '../../data/permissions.data';
 import { clearCurrentPermission, setMockPermissionData } from './permissions.action';
 import { pages } from '../../data';
+import { StateErrorType } from '../reduxTypes.types';
 
 const initialPermissionStateState: IPermissionsState = {
   permission: {},
@@ -86,5 +89,44 @@ export const permissionsSlice = createSlice({
         s.users = [a.payload, ...s.permissions];
       })
       .addCase(updateCompanyWithPermissionThunk.fulfilled, (s, a) => {})
-      .addCase(deleteCompanyWithPermissionThunk.fulfilled, (s, a) => {}),
+      .addCase(deleteCompanyWithPermissionThunk.fulfilled, (s, a) => {})
+      .addCase(setCurrentCompanyConfigsThunk.fulfilled, (s, a) => {
+        if (s.permission.company) {
+          if (a.payload.refreshCurrent) {
+            s.permission.company.configs = { ...s.permission.company.configs, ...a.payload.data };
+          } else {
+            s.permission.company.configs = a.payload.data;
+          }
+        }
+      })
+      .addCase(getCurrentCompanyConfigsThunk.fulfilled, (s, a) => {
+        if (s.permission.company) {
+          if (a.payload.refreshCurrent) {
+            s.permission.company.configs = { ...s.permission.company.configs, ...a.payload.data };
+          } else {
+            s.permission.company.configs = a.payload.data;
+          }
+        }
+      })
+      .addMatcher(inPending, s => {
+        s.isLoading = true;
+        s.error = null;
+      })
+      .addMatcher(inFulfilled, s => {
+        s.isLoading = false;
+        s.error = null;
+      })
+      .addMatcher(inError, (s, a: PayloadAction<StateErrorType>) => {
+        s.isLoading = false;
+        s.error = a.payload;
+      }),
 });
+function inPending(a: AnyAction) {
+  return a.type.endsWith('pending');
+}
+function inFulfilled(a: AnyAction) {
+  return a.type.endsWith('fulfilled');
+}
+function inError(a: AnyAction) {
+  return a.type.endsWith('rejected');
+}

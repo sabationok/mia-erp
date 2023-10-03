@@ -137,7 +137,9 @@ const actionCreators: WarehouseActionGenerator[] = [
   ({ ctx, navigate }) => ({
     icon: 'openInNew',
     disabled: !ctx.selectedRow?._id,
-    onClick: () => {},
+    onClick: () => {
+      ctx.selectedRow?._id && navigate(ctx.selectedRow?._id);
+    },
   }),
   editWarehouseAction,
   () => ({ icon: 'delete' }),
@@ -148,7 +150,7 @@ const actionCreators: WarehouseActionGenerator[] = [
 export type UseWarehousesActionsCreatorOptions = { service: WarehousesService };
 const useWarehousesActionsCreator = (): WarehouseTableActionsCreator => {
   const modalService = useModalProvider();
-  const service: WarehousesService = useAppServiceProvider()[ServiceName.warehouses];
+  const service = useAppServiceProvider()[ServiceName.warehouses];
   const navigate = useNavigate();
 
   return (ctx: ITableListContext<IWarehouse>) => actionCreators.map(a => a({ modalService, service, ctx, navigate }));

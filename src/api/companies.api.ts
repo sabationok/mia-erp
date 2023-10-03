@@ -1,6 +1,8 @@
 import baseApi from './baseApi';
 import { FilterReturnDataType } from '../components/Filter/AppFilter';
 import {
+  ICompanyConfigs,
+  ICompanyConfigsDto,
   ICompanyCreatingRes,
   ICompanyDeletingRes,
   ICompanyReqData,
@@ -8,6 +10,7 @@ import {
   IGetAllCompaniesRes,
 } from '../redux/companies/companies.types';
 import APP_CONFIGS from 'redux/APP_CONFIGS';
+import { AppResponse } from '../redux/global.types';
 
 export default class CompaniesApi {
   private static api = baseApi;
@@ -33,5 +36,12 @@ export default class CompaniesApi {
 
   public static async deleteById(id?: string): Promise<ICompanyDeletingRes> {
     return this.api.post(this.endpoints.deleteById(id));
+  }
+
+  public static async setConfigs(data?: ICompanyConfigsDto): Promise<AppResponse<ICompanyConfigs>> {
+    return this.api.post(this.endpoints.setConfigs(), data);
+  }
+  public static async getConfigs(): Promise<AppResponse<ICompanyConfigs>> {
+    return this.api.get(this.endpoints.getConfigs());
   }
 }

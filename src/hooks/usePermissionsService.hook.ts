@@ -7,10 +7,12 @@ import {
   deletePermissionByIdThunk,
   getAllPermissionsByCompanyIdThunk,
   getAllPermissionsByUserIdThunk,
+  getCurrentCompanyConfigsThunk,
   getCurrentPermissionThunk,
   inviteUserThunk,
   logInPermissionThunk,
   logOutPermissionThunk,
+  setCurrentCompanyConfigsThunk,
   updateCompanyWithPermissionThunk,
   updatePermissionThunk,
 } from '../redux/permissions/permissions.thunk';
@@ -19,7 +21,7 @@ import { useMemo } from 'react';
 import { ServiceDispatcherAsync } from 'redux/global.types';
 import { clearCurrentPermission } from '../redux/permissions/permissions.action';
 import { defaultThunkPayload } from '../utils/fabrics';
-import { ICompanyForReq, ICompanyReqData } from '../redux/companies/companies.types';
+import { ICompanyConfigsDto, ICompanyForReq, ICompanyReqData } from '../redux/companies/companies.types';
 
 export interface PermissionService {
   getAllByCompanyId: ServiceDispatcherAsync<{ companyId: string; refresh?: boolean }, IPermission[]>;
@@ -39,6 +41,8 @@ export interface PermissionService {
   createCompany: ServiceDispatcherAsync<ICompanyForReq>;
   updateCompany: ServiceDispatcherAsync<Required<ICompanyReqData>>;
   deleteCompany: ServiceDispatcherAsync<{ _id: string }>;
+  setCurrentConfigs: ServiceDispatcherAsync<{ refreshCurrent?: boolean; data: ICompanyConfigsDto }>;
+  getCurrentConfigs: ServiceDispatcherAsync<{ refreshCurrent?: boolean }>;
 
   logOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean }>;
   logIn: ServiceDispatcherAsync<{ _id: string }, IPermission>;
@@ -71,12 +75,16 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
       logOut: args => dispatch(logOutPermissionThunk(defaultThunkPayload(args))),
       logIn: args => dispatch(logInPermissionThunk(defaultThunkPayload(args))),
       clearCurrent: () => dispatch(clearCurrentPermission()),
+      // * INVITATIONS
+      createInvitation: args => dispatch(inviteUserThunk(defaultThunkPayload(args))),
 
+      // * COMPANIES
       createCompany: args => dispatch(createCompanyWithPermissionThunk(defaultThunkPayload(args))),
       deleteCompany: args => dispatch(deleteCompanyWithPermissionThunk(defaultThunkPayload(args))),
       updateCompany: args => dispatch(updateCompanyWithPermissionThunk(defaultThunkPayload(args))),
-
-      createInvitation: args => dispatch(inviteUserThunk(defaultThunkPayload(args))),
+      // * CURRENT COMPANY
+      setCurrentConfigs: args => dispatch(setCurrentCompanyConfigsThunk(defaultThunkPayload(args))),
+      getCurrentConfigs: args => dispatch(getCurrentCompanyConfigsThunk(defaultThunkPayload(args))),
     };
   }, [dispatch]);
 };

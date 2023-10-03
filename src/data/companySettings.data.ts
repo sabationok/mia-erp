@@ -9,8 +9,9 @@ import FormCreateCustomRole from '../components/Forms/FormCreateCustomRole';
 import DirMethods from '../components/CompanySettings/DirMethods';
 import { Modals } from '../components/ModalProvider/Modals';
 import { IDirectoryListItem } from '../components/SideBarContent/Directories';
-import CompanySettingsModal from '../components/CompanySettings/CompanySettingsModal';
 import CompanyIntegrationsModal from '../components/CompanySettings/CompanyIntegrationsModal';
+import { t } from '../lang';
+import Forms from '../components/Forms';
 
 const UsersProps: DirUsersProps = {
   title: 'Користувачі',
@@ -107,30 +108,6 @@ const CustomRolesProps: DirCustomRolesProps = {
     onChangeDisableStatus: () => {},
   }),
 };
-// const childrenCompanies = {
-//   title: 'Дочірні компанії',
-//   disabled: true,
-//   ModalChildren: ModalForm,
-//   iconId: iconId.bank,
-//   modalChildrenProps: {
-//     title: 'Дочірні компанії',
-//     fillHeight: true,
-//     fillWidth: true,
-//   },
-// };
-
-const companySettingsItem = {
-  title: 'Налаштування компанії',
-  disabled: false,
-  ModalChildren: CompanySettingsModal,
-  iconId: iconId.bank,
-  modalChildrenProps: {
-    title: 'Налаштування компанії',
-    fillHeight: true,
-    fillWidth: true,
-  },
-};
-
 const integrations = {
   title: 'Інтеграції',
   disabled: false,
@@ -141,6 +118,12 @@ const integrations = {
     fillHeight: true,
     fillWidth: true,
   },
+};
+const warehousingSettings = {
+  title: t('Warehousing settings'),
+  disabled: false,
+  ModalChildren: Forms.WarehousingSettings,
+  iconId: iconId.bank,
 };
 
 export const companySettings: IDirectoryListItem[] = [
@@ -210,7 +193,6 @@ export const companySettings: IDirectoryListItem[] = [
     disabled: true,
   },
 
-  companySettingsItem,
-
   integrations,
+  warehousingSettings,
 ];

@@ -1,8 +1,10 @@
-import { AppResponse, ContactsDto, IBase, LocationDto } from '../global.types';
+import { AppResponse, ContactsDto, IBase, IFormDataValueWithUUID, LocationDto, OnlyUUID } from '../global.types';
 import { IPermission } from '../permissions/permissions.types';
 import { IUser } from '../auth/auth.types';
 import { StateErrorType } from '../reduxTypes.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
+import { IWarehouse } from '../warehouses/warehouses.types';
+import { ISupplierDirItem } from '../../components/Directories/dir.types';
 
 export enum OwnershipTypeEnum {
   UA_TOV = 'ua_tov',
@@ -65,6 +67,22 @@ export interface ICompanyReqData {
   _id?: string;
   id?: string;
   data: ICompanyForReq;
+}
+
+export interface ICompanyConfigs {
+  warehouse?: IWarehouse;
+  supplier?: ISupplierDirItem;
+  manager?: IPermission;
+}
+export interface ICompanyConfigsDto {
+  warehouse?: OnlyUUID;
+  supplier?: OnlyUUID;
+  manager?: OnlyUUID;
+}
+export interface ICompanyConfigsFormData extends ICompanyConfigsDto {
+  warehouse?: IFormDataValueWithUUID;
+  supplier?: IFormDataValueWithUUID;
+  manager?: IFormDataValueWithUUID;
 }
 
 export interface IGetAllCompaniesRes extends AppResponse<ICompany[]> {}

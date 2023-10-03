@@ -108,6 +108,16 @@ export interface IProductInventoryReqData {
   params?: AppQueryParams;
 }
 
+// * WAREHOUSE SETTINGS
+export interface WarehouseSettingsDto {
+  warehouse?: OnlyUUID;
+  isReservationAvailable?: boolean;
+}
+export interface WarehousingSettingsFormData {
+  warehouse?: IFormDataValueWithUUID;
+  isReservationAvailable?: boolean;
+}
+
 // * WAREHOUSE DOCUMENTS
 
 export interface IWarehouseDoc extends IBaseWithPeriod {

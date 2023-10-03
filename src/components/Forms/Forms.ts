@@ -23,6 +23,7 @@ export const CreateMethod = lazy(() => import('./FormCreateMetod'));
 export const CreateWarehouseDocument = lazy(() => import('./warehousing/FormCreateWarehouseDocument'));
 export const CreateWarehouse = lazy(() => import('./warehousing/FormCreateWarehouse'));
 export const CreateProductInventory = lazy(() => import('./FormCreateProductInventory'));
+export const WarehousingSettings = lazy(() => import('./warehousing/FormWarehousingSettings'));
 // * PRODUCTS
 export const CreateProduct = lazy(() => import('./FormProduct/FormCreateProduct'));
 export const CreateVariation = lazy(() => import('./FormCreateVariation'));

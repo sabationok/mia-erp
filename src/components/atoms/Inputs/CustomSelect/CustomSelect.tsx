@@ -27,7 +27,7 @@ export interface CustomSelectBaseProps<Option = CustomSelectOptionBase> {
   treeMode?: boolean;
   multipleMode?: boolean;
   validateOption?: (option: CustomSelectOption<Option>) => boolean;
-  getLabel?: (option: CustomSelectOption<Option>) => string;
+  getLabel?: <Data = any>(option: CustomSelectOption<Data>) => React.ReactNode;
   dropDownIsAbsolute?: boolean;
   onCreatePress?: () => void;
 }
@@ -57,7 +57,7 @@ export interface CustomSelectItemProps extends CustomSelectOption {
   treeMode?: boolean;
   option?: CustomSelectOption<CustomSelectOptionBase>;
   level: number;
-  getLabel?: <Data = any>(option: CustomSelectOption<Data>) => string;
+  getLabel?: <Data = any>(option: CustomSelectOption<Data>) => React.ReactNode;
   onClick?: CustomSelectOnClickHandler;
   onSelect?: (index: number, option?: any) => void;
 }
@@ -316,7 +316,7 @@ const Options = styled(FlexBox)<{
   border: 1px solid ${({ theme }) => theme.fieldBackgroundColor};
 
   background-color: ${({ theme }) => theme.modalBackgroundColor};
-  box-shadow: 0 10px 12px 5px rgba(21, 21, 21, 0.25), 0 10px 12px 4px rgba(211, 211, 211, 0.15);
+  box-shadow: 0 3px 4px 4px rgba(21, 21, 21, 0.15), 0 3px 4px 4px rgba(99, 99, 99, 0.15);
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
 `;
 

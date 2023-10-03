@@ -61,6 +61,7 @@ export enum Endpoints {
   getAllByCompanyId = 'getAllByCompanyId',
   getAllByOwnerId = 'getAllByOwnerId',
   rejectById = 'rejectById',
+  configs = 'configs',
   acceptById = 'acceptById',
   changeArchiveStatus = 'changeArchiveStatusById',
   createList = 'createList',
@@ -179,7 +180,7 @@ const permissionsApiEndpoints: ApiEndpointsMap = {
   [Endpoints.inviteUser]: () => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.inviteUser}`,
 };
 
-const companiesApiEndpoints: ApiEndpointsMap = {
+const companiesApiEndpoints = {
   [Endpoints.deleteById]: (permissionId?: string) =>
     `${API_BASE_ROUTES.COMPANIES}/${Endpoints.deleteById}/${permissionId}`,
   [Endpoints.updateById]: (permissionId?: string) =>
@@ -188,6 +189,8 @@ const companiesApiEndpoints: ApiEndpointsMap = {
   [Endpoints.getById]: (id?: string) => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.getById}/${id}`,
   [Endpoints.getAllByOwnerId]: (ownerId?: string) =>
     `${API_BASE_ROUTES.COMPANIES}/${Endpoints.getAllByOwnerId}/${ownerId}`,
+  setConfigs: () => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.configs}`,
+  getConfigs: () => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.configs}`,
 };
 
 const authApiEndpoints: ApiEndpointsMap = {
