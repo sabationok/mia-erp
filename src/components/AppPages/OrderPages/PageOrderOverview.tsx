@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { takeFullGridArea } from '../pagesStyles';
-import AppLoader from '../../atoms/AppLoader';
 import { AppGridPage } from '../pages';
 import { PagePathType } from '../../../redux/APP_CONFIGS';
 
@@ -13,7 +12,6 @@ const PageOrderOverview: React.FC<PageOrderOverviewProps> = ({ path }) => {
   return (
     <AppGridPage path={path}>
       <Page></Page>
-      <AppLoader isLoading={false} />
     </AppGridPage>
   );
 };

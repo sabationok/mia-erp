@@ -10,6 +10,7 @@ import { OnlyUUID } from '../global.types';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
 import { IProductInventory } from '../warehouses/warehouses.types';
 import { IVariation } from './variations.types';
+import _ from 'lodash';
 
 enum ProductsThunkType {
   getAllProductsThunk = 'products/getAllProductsThunk',
@@ -17,10 +18,11 @@ enum ProductsThunkType {
   createProductThunk = 'products/createProductThunk',
   updateProductThunk = 'products/updateProductThunk',
   deleteProductThunk = 'products/deleteProductThunk',
+  getAllVariations = 'products/getAllVariations',
   getAllPrices = 'products/getAllPrices',
   getAllInventories = 'products/getAllInventories',
-  getAllVariations = 'products/getAllVariations',
 }
+type ActionWithCurrent = { refreshCurrent?: boolean; updateCurrent?: boolean };
 export interface ProductThunkPayloadByType {
   [ProductsThunkType.getAllProductsThunk]: {};
   [ProductsThunkType.getProductFullInfoThunk]: {};
@@ -28,15 +30,15 @@ export interface ProductThunkPayloadByType {
   [ProductsThunkType.updateProductThunk]: {};
   [ProductsThunkType.deleteProductThunk]: {};
   [ProductsThunkType.getAllVariations]: ThunkPayload<
-    { refreshCurrent?: boolean; params?: Pick<AppQueryParams, 'list' | 'product' | 'variation'> },
+    ActionWithCurrent & { params?: Pick<AppQueryParams, 'list' | 'product' | 'variation'> },
     IVariation[]
   >;
   [ProductsThunkType.getAllPrices]: ThunkPayload<
-    { refreshCurrent?: boolean; params?: Pick<AppQueryParams, 'list' | 'product' | 'variation'> },
+    ActionWithCurrent & { params?: Pick<AppQueryParams, 'list' | 'product' | 'variation'> },
     IPriceListItem[]
   >;
   [ProductsThunkType.getAllInventories]: ThunkPayload<
-    { refreshCurrent?: boolean; params?: Pick<AppQueryParams, 'price' | 'product' | 'variation' | 'warehouse'> },
+    ActionWithCurrent & { params?: Pick<AppQueryParams, 'price' | 'product' | 'variation' | 'warehouse'> },
     IProductInventory[]
   >;
 }
@@ -46,9 +48,9 @@ export interface ProductThunkReturnDataByType {
   [ProductsThunkType.createProductThunk]: {};
   [ProductsThunkType.updateProductThunk]: {};
   [ProductsThunkType.deleteProductThunk]: {};
-  [ProductsThunkType.getAllVariations]: { refreshCurrent?: boolean; data: IVariation[] };
-  [ProductsThunkType.getAllPrices]: { refreshCurrent?: boolean; data: IPriceListItem[] };
-  [ProductsThunkType.getAllInventories]: { refreshCurrent?: boolean; data: IProductInventory[] };
+  [ProductsThunkType.getAllVariations]: ActionWithCurrent & { data: IVariation[] };
+  [ProductsThunkType.getAllPrices]: ActionWithCurrent & { data: IPriceListItem[] };
+  [ProductsThunkType.getAllInventories]: ActionWithCurrent & { data: IProductInventory[] };
 }
 export const getAllProductsThunk = createAsyncThunk<
   { refresh?: boolean; data?: IProduct[] },
@@ -78,8 +80,8 @@ export const getAllProductsThunk = createAsyncThunk<
 });
 
 export const getProductFullInfoThunk = createAsyncThunk<
-  IProduct,
-  ThunkPayload<OnlyUUID & { omit?: [keyof IProduct] }, IProduct>
+  ActionWithCurrent & { data: IProduct },
+  ThunkPayload<OnlyUUID & ActionWithCurrent & { omit?: [keyof IProduct] }, IProduct>
 >(ProductsThunkType.getProductFullInfoThunk, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
   onLoading && onLoading(true);
 
@@ -89,7 +91,7 @@ export const getProductFullInfoThunk = createAsyncThunk<
       onSuccess && onSuccess(res.data.data);
     }
 
-    return res.data.data;
+    return { data: res.data.data, ..._.pick(data, ['refreshCurrent', 'updateCurrent']) };
   } catch (error) {
     onError && onError(error);
 
@@ -121,8 +123,8 @@ export const createProductThunk = createAsyncThunk<
 });
 
 export const updateProductThunk = createAsyncThunk<
-  { data?: IProduct; refreshCurrent?: boolean } | undefined,
-  ThunkPayload<IProductReqData & { refreshCurrent?: boolean }, IProduct>
+  (ActionWithCurrent & { data?: IProduct }) | undefined,
+  ThunkPayload<IProductReqData & ActionWithCurrent, IProduct>
 >(ProductsThunkType.updateProductThunk, async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
 

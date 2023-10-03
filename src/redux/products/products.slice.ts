@@ -63,7 +63,11 @@ export const productsSlice = createSlice({
         }
       })
       .addCase(getProductFullInfoThunk.fulfilled, (s, a) => {
-        s.currentProduct = a.payload;
+        if (a.payload.refreshCurrent) {
+          s.currentProduct = a.payload?.data;
+        } else {
+          s.currentProduct = { ...(s.currentProduct as IProduct), ...a.payload?.data };
+        }
       })
       .addCase(getAllPropertiesThunk.fulfilled, (s, a) => {
         if (a.payload) {

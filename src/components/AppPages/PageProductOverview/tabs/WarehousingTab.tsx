@@ -45,6 +45,7 @@ const WarehousingTab = (p: WarehousingTabProps) => {
             onClick: () => {
               modalS.open({
                 ModalChildren: Forms.CreateWarehouseDocument,
+                modalChildrenProps: {},
               });
             },
           },

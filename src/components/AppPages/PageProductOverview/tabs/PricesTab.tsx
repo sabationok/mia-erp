@@ -22,7 +22,7 @@ const PricesTab = ({}: PricesTabProps) => {
       const product = ExtractId(currentProduct);
 
       productsS.getAllPricesByProductId({
-        data: { params: { product } },
+        data: { params: { product }, refreshCurrent: refresh, updateCurrent: update },
         onLoading: setLoading,
       });
     },
@@ -64,9 +64,9 @@ const PricesTab = ({}: PricesTabProps) => {
   }, [currentProduct, loadData, modalS]);
 
   useEffect(() => {
-    // if ((!currentProduct?.prices || currentProduct?.prices?.length === 0) && currentProduct?._id) {
-    // }
-    loadData({ refresh: true });
+    if ((!currentProduct?.prices || currentProduct?.prices?.length === 0) && currentProduct?._id) {
+      loadData({ refresh: true });
+    }
     // eslint-disable-next-line
   }, []);
 
