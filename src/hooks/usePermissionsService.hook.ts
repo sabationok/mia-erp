@@ -16,7 +16,12 @@ import {
   updateCompanyWithPermissionThunk,
   updatePermissionThunk,
 } from '../redux/permissions/permissions.thunk';
-import { IPermission, IPermissionForReq, IPermissionReqData } from '../redux/permissions/permissions.types';
+import {
+  IPermission,
+  IPermissionForReq,
+  IPermissionReqData,
+  IPermissionsState,
+} from '../redux/permissions/permissions.types';
 import { useMemo } from 'react';
 import { ServiceDispatcherAsync } from 'redux/global.types';
 import { clearCurrentPermission } from '../redux/permissions/permissions.action';
@@ -56,7 +61,8 @@ export interface ValidatePermissionOptions {
   userId?: string;
 }
 
-export const usePermissionsSelector = () => useSelector((state: RootState) => state.permissions);
+export const usePermissionsSelector = () =>
+  useSelector<RootState, IPermissionsState>((state: RootState): IPermissionsState => state['permissions']);
 const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOptions = {}): PermissionService => {
   const dispatch: AppDispatch = useAppDispatch();
 

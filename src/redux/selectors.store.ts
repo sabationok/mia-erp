@@ -14,6 +14,7 @@ import { IOrdersState } from './orders/orders.slice';
 import { useMemo } from 'react';
 import { IRefundsState } from './refunds/refunds.slice';
 import { IWarehouseState } from './warehouses/warehouses.slice';
+import { IPermissionsState } from './permissions/permissions.types';
 
 export const useAuthSelector = () => useSelector<RootState, IAuthState>((state: RootState) => state.auth);
 export const useUsersSelector = () => useSelector<RootState, IUsersState>((state: RootState) => state.users);
@@ -31,8 +32,11 @@ export const usePropertiesSelector = () =>
   );
 export const useOrdersSelector = () =>
   useSelector<RootState, IOrdersState>((state: RootState): IOrdersState => state.orders);
+
+export const usePermissionsSelector = () =>
+  useSelector<RootState, IPermissionsState>((state: RootState): IPermissionsState => state['permissions']);
 export const useRefundsSelector = () =>
-  useSelector<RootState, IRefundsState>((state: RootState): IRefundsState => state.refunds);
+  useSelector<RootState, IRefundsState>((state: RootState): IRefundsState => state['refunds']);
 export const usePriceListsSelector = () =>
   useSelector<RootState, IPriceListsState>((state: RootState): IPriceListsState => state.priceLists);
 export const useWarehousesSelector = () =>

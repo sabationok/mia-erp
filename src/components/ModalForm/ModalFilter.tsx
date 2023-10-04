@@ -11,7 +11,9 @@ export interface ModalFormFilterProps<V = any, D = any> {
   onFilterValueSelect?: FilterSelectValueHandler<V>;
   filterOptions?: FilterOption<V, D>[];
   name?: any;
+  currentIndex?: number;
   defaultFilterValue?: string;
+  asStepper?: boolean;
 }
 
 export interface FilterOpt<V = any, D = any> extends Record<string, any> {
@@ -38,18 +40,20 @@ export type FilterSelectValueHandler<V = any> = (name: any & string, value: V) =
 export type FilterChangeHandler<V = any> = (values: V[], name?: string) => void;
 export interface FilterOption<V = any, D = any> extends FilterOpt<V, D> {}
 
-const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivElement>> = ({
-  filterOptions,
+const ModalFilter = <V = any, D = any>({
+  filterOptions = [],
   onOptSelect,
   preventFilter,
   defaultFilterValue,
   defaultOption,
   getDefaultValue,
   onFilterValueSelect,
+  currentIndex = 0,
+  asStepper,
   name,
   ...props
-}) => {
-  const [current, setCurrent] = useState<number>(0);
+}: ModalFormFilterProps<V, D> & React.HTMLAttributes<HTMLDivElement>) => {
+  const [current, setCurrent] = useState<number>(currentIndex);
   // const { listRef } = useScrollTo<HTMLDivElement>(current.toString());
 
   const handleSelectOpt = useCallback(
@@ -68,40 +72,44 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
   );
 
   useEffect(() => {
+    if (checks.isNotUnd(currentIndex)) {
+      setCurrent(currentIndex);
+      return;
+    }
+
+    if (checks.isNotUnd(defaultFilterValue)) {
+      const defIndex = filterOptions.findIndex(el => el.value === defaultFilterValue);
+      defIndex > 0 && setCurrent(defIndex);
+    }
+  }, [currentIndex, defaultFilterValue, filterOptions]);
+
+  useEffect(() => {
     if (preventFilter || defaultFilterValue) return;
 
-    if (filterOptions && Array.isArray(filterOptions)) {
+    if (filterOptions.length > 0) {
       checks.isFun(onOptSelect) && onOptSelect(filterOptions[current], filterOptions[current].value, current);
       checks.isFun(onFilterValueSelect) && onFilterValueSelect(name, filterOptions[current].value);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (defaultFilterValue && filterOptions) {
-      const defIndex = filterOptions.findIndex(el => el.value === defaultFilterValue);
-      defIndex > 0 && setCurrent(defIndex);
-    }
-  }, [defaultFilterValue, filterOptions]);
-
   const renderOptions = useMemo(
     () =>
-      filterOptions &&
-      filterOptions?.length > 0 &&
       filterOptions?.map((opt, idx) => (
         <StButtonIcon
           key={idx}
-          id={`_${idx}`}
+          id={`filter-opt_${opt?.value || idx}`}
           variant="def"
-          disabled={opt?.disabled}
-          className={current === idx ? 'filterBtn active' : 'filterBtn'}
+          disabled={asStepper || opt?.disabled}
           onClick={handleSelectOpt(idx, opt)}
+          asStep={asStepper}
+          isActive={asStepper ? idx <= current : current === idx}
         >
           <span className={'inner'}>{opt?.label}</span>
           {opt.extraLabel || null}
         </StButtonIcon>
       )),
-    [current, filterOptions, handleSelectOpt]
+    [asStepper, current, filterOptions, handleSelectOpt]
   );
 
   return filterOptions?.length && filterOptions?.length > 0 ? (
@@ -132,7 +140,7 @@ const Filter = styled.div<{ gridRepeat?: number }>`
   }
 `;
 
-const StButtonIcon = styled(ButtonIcon)`
+const StButtonIcon = styled(ButtonIcon)<{ asStep?: boolean }>`
   position: relative;
   flex-direction: column;
   justify-content: space-around;
@@ -177,22 +185,16 @@ const StButtonIcon = styled(ButtonIcon)`
     content: '';
     position: absolute;
     bottom: 0;
-    left: 50%;
+    left: ${p => (p.asStep ? 0 : 50)}%;
     height: 2px;
-    width: 0;
+    width: ${p => (p.isActive ? 100 : 0)}%;
     transition: all ${({ theme }) => theme.globals.timingFnMui};
-    transform: translate(-50%);
+    transform: translate(${p => (p.asStep ? 0 : -50)}%);
     background-color: ${({ theme }) => theme.accentColor.base};
   }
 
-  &.active {
-    &::after {
-      width: 100%;
-    }
-  }
-
   &[disabled] {
-    opacity: 60%;
+    opacity: ${p => (p?.asStep ? 1 : '60%')};
   }
 `;
 

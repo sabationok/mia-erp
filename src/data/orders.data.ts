@@ -1,5 +1,5 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { IOrder, OrderTypeEnum, OrderTypeFilterOption } from '../redux/orders/orders.types';
+import { IOrder, IOrderSlot, OrderTypeEnum, OrderTypeFilterOption } from '../redux/orders/orders.types';
 import t from '../lang';
 import { SelectItem } from '../components/TableList/tableTypes.types';
 
@@ -166,6 +166,16 @@ export const ordersSearchParams: SelectItem<DataPath>[] = [
     search: false,
     sort: true,
   },
+];
+
+export const orderSlotTableColumns: CellTittleProps<IOrderSlot>[] = [
+  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
+  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
+  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
+  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
+  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
+  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
+  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
 ];
 
 export const mockOrdersData: IOrder[] = [{ _id: '51651651', owner: { _id: '4515135135131' } as any }];

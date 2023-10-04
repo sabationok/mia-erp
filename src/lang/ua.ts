@@ -69,6 +69,7 @@ export const langUa = {
   'Select warehouse': 'Оберіть склад',
   'Select variation': 'Оберіть варіацію',
   'Select price': 'Оберіть ціну',
+  'Select product': 'Оберіть продукт',
 
   brand: 'Бренд',
   selectBrand: 'Оберіть бренд',
@@ -77,6 +78,7 @@ export const langUa = {
 
   selectVariationsTemplate: 'Оберіть список доступних характеристик',
 
+  product: 'Продукт',
   counts: 'Облікові рахунки',
   count: 'Обліковий рахунок',
   categories: 'Категорії',
@@ -88,8 +90,10 @@ export const langUa = {
   subCategory: 'Під-категорія',
   parentCategory: 'Батьківська категорія',
   subCategories: 'Під-категорії',
-  contractor: 'Контрагент',
-  contractors: 'Контрагенти',
+  contractor: 'Підрядник',
+  contractors: 'Підрядники',
+  counterparty: 'Контрагент',
+  counterparties: 'Контрагенти',
   mark: 'Мітка',
   marks: 'Мітки',
   activityType: 'Вид діяльності',

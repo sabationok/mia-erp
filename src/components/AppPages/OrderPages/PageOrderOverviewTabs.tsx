@@ -4,45 +4,50 @@ import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { Text } from '../../atoms/Text';
 import ModalFilter, { FilterSelectHandler } from '../../ModalForm/ModalFilter';
 import { useMemo, useState } from 'react';
-import VariationsTab from '../PageProductOverview/tabs/VariationsTab';
-import PricesTab from '../PageProductOverview/tabs/PricesTab';
-import WarehousingTab from '../PageProductOverview/tabs/WarehousingTab';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useAppParams } from '../../../hooks';
+import OrderContentTab from './tabs/OrderContentTab';
+import OrderInvoicesTab from './tabs/OrderInvoicesTab';
+import OrderPaymentsTab from './tabs/OrderPaymentsTab';
+import OrderShipmentsTab from './tabs/OrderShipmentsTab';
 
 export interface PageOrderOverviewTabsProps {
   isVisible?: boolean;
   toggleVisibility?: () => void;
 }
-enum RightSideOptionEnum {
-  Variations = 'Variations',
-  Prices = 'Prices',
-  Warehousing = 'Warehousing',
+enum OrderTabNameEnum {
+  Content = 'Content',
+  Invoices = 'Invoices',
+  Payments = 'Payments',
+  Shipments = 'Shipments',
 }
-const toggleOptions = enumToFilterOptions(RightSideOptionEnum);
+const toggleOptions = enumToFilterOptions(OrderTabNameEnum);
 const PageOrderOverviewTabs = ({ toggleVisibility, isVisible }: PageOrderOverviewTabsProps) => {
   const orderId = useAppParams()?.orderId;
 
   const { currentOrder } = useOrdersSelector();
   const service = useAppServiceProvider()[ServiceName.orders];
-  const [current, setCurrent] = useState<RightSideOptionEnum>(RightSideOptionEnum.Variations);
+  const [current, setCurrent] = useState<OrderTabNameEnum>(OrderTabNameEnum.Content);
 
   const renderTab = useMemo(() => {
-    if (current === RightSideOptionEnum.Variations) {
-      return <VariationsTab />;
+    if (current === OrderTabNameEnum.Content) {
+      return <OrderContentTab />;
     }
 
-    if (current === RightSideOptionEnum.Prices) {
-      return <PricesTab />;
+    if (current === OrderTabNameEnum.Invoices) {
+      return <OrderInvoicesTab />;
     }
-    if (current === RightSideOptionEnum.Warehousing) {
-      return <WarehousingTab />;
+    if (current === OrderTabNameEnum.Payments) {
+      return <OrderPaymentsTab />;
+    }
+    if (current === OrderTabNameEnum.Shipments) {
+      return <OrderShipmentsTab />;
     }
   }, [current]);
 
-  const filterHandler: FilterSelectHandler<RightSideOptionEnum> = (_, value, index) => {
+  const filterHandler: FilterSelectHandler<OrderTabNameEnum> = (_, value, index) => {
     setCurrent(value);
   };
 

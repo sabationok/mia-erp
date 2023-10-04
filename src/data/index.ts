@@ -13,25 +13,25 @@ import sideBarLeftData from './sideBarLeft.data';
 import { activitiesMockData } from './activities.data';
 import { permissionsSearchParams, permissionsTableColumns } from './permissions.data';
 import { productsColumns, productsSearchParams } from './products.data';
+
 import { warehousesTableColumnsForOrderCreateOrderSlotForm } from './warehauses.data';
 
 import { priceListColumns, priceListContentColumns } from './priceManagement.data';
 
-const reportsTableColumns = {
-  reportByContractorsColumns,
-};
+import { orderSlotTableColumns, ordersSearchParams, ordersTableColumns, orderTypeFilterOptions } from './orders.data';
+
 export {
   priceListColumns,
   priceListContentColumns,
   productsColumns,
   productsSearchParams,
-  reportsTableColumns,
   sideBarLeftData,
   statusData,
   trCategories,
   addButtons,
   statusDataMap,
   companiesTableColumns,
+  reportByContractorsColumns,
   colors,
   selects,
   iconId,
@@ -49,4 +49,8 @@ export {
   permissionsTableColumns,
   permissionsSearchParams,
   warehousesTableColumnsForOrderCreateOrderSlotForm,
+  orderSlotTableColumns,
+  ordersTableColumns,
+  orderTypeFilterOptions,
+  ordersSearchParams,
 };

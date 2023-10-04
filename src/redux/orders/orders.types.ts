@@ -16,7 +16,7 @@ import { ICommunicationDirItem, IPaymentDirItem, IShipmentDirItem } from '../../
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 import { IContractor } from '../directories/contractors.types';
 import { IProductInventory, IWarehouse } from '../warehouses/warehouses.types';
-import { IProductBase } from '../products/products.types';
+import { IProduct } from '../products/products.types';
 import { IVariation } from '../products/variations.types';
 
 export type OrderTypeFilterOption = FilterOpt;
@@ -34,20 +34,21 @@ export interface IOrderSlotItem extends IPriceListItem {
   origin?: Partial<IPriceListItem>;
 }
 
-export interface IOrderSlot extends IPriceListItem {
-  owner: ICompany;
+export interface IOrderSlotBase {
+  product?: IProduct;
+  variation?: IVariation;
+  origin?: IPriceListItem;
+}
+
+export interface IOrderSlot extends IPriceListItem, IOrderSlotBase {
+  owner?: ICompany;
   order?: OnlyUUID;
 
-  product?: IProductBase;
-  origin?: IPriceListItem;
-  status?: OrderStatus;
-
+  inventory?: IProductInventory;
   warehouse?: IWarehouse;
   shipment?: IShipmentDirItem;
 
-  variation?: IVariation;
-  inventory?: IProductInventory;
-
+  status?: OrderStatus;
   amount?: number;
 }
 export interface IOrder extends IBase {

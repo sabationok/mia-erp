@@ -3,9 +3,9 @@ import { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import FormAddOrderSlot from './FormAddOrderSlot';
 import { OnlyUUID } from '../../../redux/global.types';
-import { ExtractId } from '../../../utils/dataTransform';
-import { IOrderSlot } from '../../../redux/orders/orders.types';
+import { IOrderSlot, IOrderSlotBase } from '../../../redux/orders/orders.types';
 import OrderSlotOverview from '../../Modals/Overviews/OrderSlotOverview';
+import { nanoid } from '@reduxjs/toolkit';
 
 export interface FormCreateOrderProductsListProps {
   onSelect: (item: IOrderSlot) => void;
@@ -13,26 +13,21 @@ export interface FormCreateOrderProductsListProps {
   list?: IOrderSlot[];
 }
 const FormCreateOrderProductsList: React.FC<FormCreateOrderProductsListProps> = ({ onSelect, onRemove, list }) => {
-  const [data, setData] = useState<IOrderSlot[]>(list || []);
+  const [data, setData] = useState<(Partial<IOrderSlot> & { tempId?: string })[]>(list || []);
 
-  const handleSelect = useCallback(
-    (item: IOrderSlot) => {
-      onSelect && onSelect(item);
-      setData(prev => [...prev, item]);
-    },
-    [onSelect]
-  );
-  const handleRemove = useCallback(
-    (item: OnlyUUID) => {
-      onRemove && onRemove(item);
-      setData(prev => prev.filter(el => el._id !== item._id));
-    },
-    [onRemove]
-  );
+  const handleSelect = useCallback((item: IOrderSlotBase) => {
+    // onSelect && onSelect(item);
+    setData(prev => [...prev, { ...item, tempId: nanoid(8) }]);
+  }, []);
+
+  const handleRemove = useCallback((id?: string) => {
+    // onRemove && onRemove();
+    setData(prev => prev.filter(el => (el?._id || el.tempId) !== id));
+  }, []);
 
   const renderProducts = useMemo(() => {
     return data?.map((p, idx) => (
-      <OrderSlotOverview key={idx.toString()} index={idx} slot={p} onRemove={() => handleRemove(ExtractId(p))} />
+      <OrderSlotOverview key={idx.toString()} index={idx} slot={p} onRemove={() => handleRemove(p?._id || p?.tempId)} />
     ));
   }, [data, handleRemove]);
 

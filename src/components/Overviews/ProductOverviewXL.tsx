@@ -231,7 +231,8 @@ const productOverviewCells: OverviewCellProps<IProduct>[] = [
   {
     title: 'Склад за замовчуванням',
     CellComponent: Cells.OverviewTextCell,
-    getValue: product => product?.defaults?.warehouse?.label,
+    getValue: product =>
+      `${product?.defaults?.warehouse?.label || '---'} | ${product?.defaults?.warehouse?.code || '---'}`,
     gridArea: 'measurement',
   },
   {

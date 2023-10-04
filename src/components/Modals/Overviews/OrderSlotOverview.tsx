@@ -11,7 +11,7 @@ import numberWithSpaces from '../../../utils/numbers';
 import { IWarehouse } from '../../../redux/warehouses/warehouses.types';
 
 export interface OrderSlotOverviewProps {
-  slot?: IOrderSlot;
+  slot?: Partial<IOrderSlot> & { tempId?: string };
   price?: IPriceListItem;
   dataForSlot?: IProduct;
   warehouse?: IWarehouse;

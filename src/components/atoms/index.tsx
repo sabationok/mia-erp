@@ -12,11 +12,13 @@ export const ErrorContent: React.FC<{ error?: string }> = ({ error } = {}) => {
 
 export const ModalHeader = ({
   onClose,
+  onBackPress,
   title,
   showSubmitButton,
   canSubmit,
 }: {
   canSubmit?: boolean;
+  onBackPress?: () => void;
   onClose?: () => void;
   title?: string;
   showSubmitButton?: boolean;
@@ -30,7 +32,7 @@ export const ModalHeader = ({
           iconSize={'22px'}
           padding={'0 6px'}
           style={{ minWidth: 'max-content', minHeight: '100%' }}
-          onClick={onClose}
+          onClick={onBackPress || onClose}
         >
           {'Back'}
         </ButtonIcon>
@@ -49,7 +51,7 @@ export const ModalHeader = ({
           <ButtonIcon
             variant={'textExtraSmall'}
             gap={'6px'}
-            type={'submit'}
+            type={showSubmitButton ? 'submit' : 'button'}
             padding={'0 6px'}
             endIcon={'done'}
             endIconSize={'22px'}
