@@ -11,6 +11,8 @@ import { enumToArray } from './fabrics';
 import { createTableTitlesFromTemplate } from './tables';
 import * as checks from './check';
 
+export { default as createStepsChecker } from './createStepChecker';
+
 export {
   founder,
   founderByDataPath,

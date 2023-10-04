@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ITableListProps } from '../../TableList/tableTypes.types';
 import TableList from '../../TableList/TableList';
 import { productsColumns } from '../../../data';
-import { createApiCall, PriceManagementApi, ProductsApi } from '../../../api';
+import { createApiCall, PriceManagementApi, ProductsApi, WarehousesApi } from '../../../api';
 import { t } from '../../../lang';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import ModalFilter, { FilterSelectHandler } from '../../ModalForm/ModalFilter';
@@ -16,13 +16,15 @@ import { ModalHeader } from '../../atoms';
 import FlexBox from '../../atoms/FlexBox';
 import StepsController from '../components/StepsController';
 import { useAppForm } from '../../../hooks';
-import { createTableTitlesFromTemplate } from '../../../utils';
+import { createStepsChecker, createTableTitlesFromTemplate } from '../../../utils';
 import { usePropertiesSelector } from '../../../redux/selectors.store';
 import VariationsApi from '../../../api/variations.api';
 import { transformVariationTableData } from '../../../utils/tables';
 import { ExtractId } from '../../../utils/dataTransform';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
 import { IOrderSlotBase } from '../../../redux/orders/orders.types';
+import { IProductInventory, IWarehouse } from '../../../redux/warehouses/warehouses.types';
+import { warehouseOverviewTableColumns } from '../../../data/warehauses.data';
 
 export interface SelectProductModalProps
   extends Omit<ModalFormProps<SelectProductModalSteps, any, SelectProductModalFormData>, 'onSubmit' | 'onSelect'> {
@@ -33,29 +35,33 @@ enum SelectProductModalSteps {
   product = 'product',
   variation = 'variation',
   price = 'price',
+  warehausing = 'warehausing',
 }
 
 const steps = enumToFilterOptions(SelectProductModalSteps);
-
-type FormKey = 'price' | 'variation' | 'product' | string;
-
-export interface SelectProductModalFormData extends Record<FormKey, any> {
+const checkStep = (idx: number) => createStepsChecker(steps)(idx);
+export interface SelectProductModalFormData {
   price?: IPriceListItem;
   variation?: IVariationTableData;
   product?: IProduct;
+  warehouse?: IWarehouse;
+  inventory?: IProductInventory;
 }
+type FormKey = keyof SelectProductModalFormData;
 
 const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, onSubmit, onClose, ...props }) => {
   const [currentTab, setCurrentTab] = useState(0);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [variations, setVariations] = useState<IVariationTableData[]>([]);
+  const [prices, setPrices] = useState<IPriceListItem[]>([]);
+  const [inventories, setInventories] = useState<IProductInventory[]>([]);
+
   const [formData, setFormData] = useState<SelectProductModalFormData>({});
 
   const setFormValue = useCallback(<Key extends FormKey = any>(key: Key, value: SelectProductModalFormData[Key]) => {
     setFormData(prev => ({ ...prev, [key]: value }));
   }, []);
 
-  const [prices, setPrices] = useState<IPriceListItem[]>([]);
   const templates = usePropertiesSelector();
 
   const { watch, setValue } = useAppForm<{ search?: string; searchBy?: string }>();
@@ -116,38 +122,59 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
     [prices, setFormValue]
   );
 
+  const warehousingTableConfig = useMemo(
+    (): ITableListProps<IProductInventory> => ({
+      tableTitles: warehouseOverviewTableColumns,
+      tableData: inventories,
+      isSearch: false,
+      onRowClick: data => {
+        const v = inventories.find(p => p._id === data?._id);
+
+        v && setFormValue('inventory', v);
+        v?.warehouse && setFormValue('warehouse', v?.warehouse);
+      },
+    }),
+    [inventories, setFormValue]
+  );
+
   const tableConfig = useMemo((): ITableListProps | undefined => {
-    if (steps[currentTab].value === SelectProductModalSteps.product) {
+    if (checkStep(currentTab)?.product) {
       return productTableConfig;
     }
-    if (steps[currentTab].value === SelectProductModalSteps.variation) {
+    if (checkStep(currentTab)?.variation) {
       return variationsTableConfig;
     }
-    if (steps[currentTab].value === SelectProductModalSteps.price) {
+    if (checkStep(currentTab)?.price) {
       return pricesTableConfig;
     }
+    if (checkStep(currentTab)?.warehausing) {
+      return warehousingTableConfig;
+    }
     return;
-  }, [currentTab, pricesTableConfig, productTableConfig, variationsTableConfig]);
+  }, [currentTab, pricesTableConfig, productTableConfig, variationsTableConfig, warehousingTableConfig]);
 
   const canGoNext = useMemo((): boolean => {
-    if (steps[currentTab].value === SelectProductModalSteps.product) {
+    if (checkStep(currentTab)?.product) {
       return !!formData?.product;
     }
-    if (steps[currentTab].value === SelectProductModalSteps.variation) {
+    if (checkStep(currentTab)?.variation) {
       return !!formData?.product && !!formData?.variation;
     }
-    if (steps[currentTab].value === SelectProductModalSteps.price) {
+    if (checkStep(currentTab)?.price) {
       return !!formData?.product && !!formData?.variation && !!formData?.price;
     }
+    if (checkStep(currentTab)?.warehausing) {
+      return !!formData?.inventory;
+    }
     return false;
-  }, [currentTab, formData?.price, formData?.product, formData?.variation]);
+  }, [currentTab, formData?.inventory, formData?.price, formData?.product, formData?.variation]);
 
   const canAccept = useMemo(() => {
-    return Object.values(formData).length === 3;
+    return Object.values(formData).length >= 4;
   }, [formData]);
 
   const loadData = useCallback(() => {
-    if (steps[currentTab].value === SelectProductModalSteps.product) {
+    if (checkStep(currentTab)?.product) {
       createApiCall(
         {
           data: { search, searchBy },
@@ -157,7 +184,7 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
         ProductsApi
       );
     }
-    if (steps[currentTab].value === SelectProductModalSteps.variation) {
+    if (checkStep(currentTab)?.variation) {
       formData?.product &&
         createApiCall(
           {
@@ -171,7 +198,7 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
           VariationsApi
         );
     }
-    if (steps[currentTab].value === SelectProductModalSteps.price) {
+    if (checkStep(currentTab)?.price) {
       formData?.product &&
         createApiCall(
           {
@@ -185,7 +212,22 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
           PriceManagementApi
         );
     }
-  }, [currentTab, formData?.product, formData?.variation, search, searchBy]);
+    if (checkStep(currentTab)?.price) {
+      formData?.product &&
+        createApiCall(
+          {
+            data: {
+              product: ExtractId(formData?.product),
+              variation: formData?.variation ? ExtractId(formData?.variation) : undefined,
+              price: formData?.price ? ExtractId(formData?.price) : undefined,
+            },
+            onSuccess: setInventories,
+          },
+          WarehousesApi.getAllInventories,
+          WarehousesApi
+        );
+    }
+  }, [currentTab, formData?.price, formData?.product, formData?.variation, search, searchBy]);
 
   useEffect(() => {
     loadData();

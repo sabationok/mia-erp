@@ -2,12 +2,14 @@ import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { ICreateOrderFormState, IOrder, IOrderSlot } from '../../../redux/orders/orders.types';
 import { useAppForm } from '../../../hooks';
-import { useCallback, useMemo, useState } from 'react';
-import { FilterOpt } from '../../ModalForm/ModalFilter';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import ModalFilter from '../../ModalForm/ModalFilter';
 import FormCreateOrderProductsList from './FormCreateOrderProductsList';
 import FormCreateOrderMainInfo from './FormCreateOrderMainInfo';
 import { OnlyUUID } from '../../../redux/global.types';
 import { enumToFilterOptions } from '../../../utils/fabrics';
+import styled from 'styled-components';
+import { createStepsChecker } from '../../../utils';
 
 // const orderValidation = yup.object().shape({
 //   manager: yup.object().shape({ _id: yup.string() } as Record<keyof IUser, any>),
@@ -17,19 +19,19 @@ export interface FormCreateOrderProps extends Omit<ModalFormProps, 'onSubmit' | 
   onSubmit?: AppSubmitHandler<IOrder>;
 }
 
-export const FormCreateOrderTabs: FilterOpt[] = [
-  { label: 'Info', value: 'info' },
-  { label: 'Products', value: 'products' },
-];
 export enum OrderTabsEnum {
   content = 'content',
+  availability = 'availability',
   info = 'info',
-  total = 'total',
+  summary = 'summary',
+  invoices = 'invoices',
 }
-export const formCreateOrderTabs = enumToFilterOptions(OrderTabsEnum);
+export const FormCreateOrderTabs = enumToFilterOptions(OrderTabsEnum);
+
+const checkStep = (idx: number = 0) => createStepsChecker(FormCreateOrderTabs)(idx);
 
 const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmit, ...props }) => {
-  const [currentTab, setCurrentTab] = useState<OrderTabsEnum>(OrderTabsEnum.info);
+  const [currentTab, setCurrentTab] = useState<number>(0);
   const [content, setContent] = useState<IOrderSlot[]>([]);
 
   const form = useAppForm<ICreateOrderFormState>({
@@ -48,24 +50,45 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
     console.log(data);
   };
 
+  useEffect(() => {
+    console.log(checkStep(currentTab));
+  }, [currentTab]);
+
   const renderTab = useMemo(() => {
-    if (currentTab === OrderTabsEnum.info) return <FormCreateOrderMainInfo form={form} />;
-    if (currentTab === OrderTabsEnum.content)
+    if (checkStep(currentTab)?.info) return <FormCreateOrderMainInfo form={form} />;
+    if (checkStep(currentTab)?.content)
       return <FormCreateOrderProductsList list={content} onSelect={handleSelect} onRemove={handleRemove} />;
+
+    if (checkStep(currentTab)?.availability) {
+    }
+    if (checkStep(currentTab)?.summary) {
+    }
+    if (checkStep(currentTab)?.invoices) {
+    }
   }, [currentTab, form, content, handleSelect, handleRemove]);
 
+  const renderFilter = useMemo(() => {
+    return (
+      <ModalFilter
+        filterOptions={FormCreateOrderTabs}
+        onOptSelect={(_o, _v, i) => {
+          setCurrentTab(i);
+        }}
+      />
+    );
+  }, []);
+
   return (
-    <ModalForm
-      fillHeight
-      width={'480px'}
-      {...props}
-      onOptSelect={(_o, v: OrderTabsEnum) => setCurrentTab(v)}
-      filterOptions={formCreateOrderTabs}
-      onSubmit={form.handleSubmit(onValid)}
-    >
+    <StModalForm fitContentH fillHeight {...props} onSubmit={form.handleSubmit(onValid)} extraHeader={renderFilter}>
       {renderTab}
-    </ModalForm>
+    </StModalForm>
   );
 };
+
+const StModalForm = styled(ModalForm)`
+  @media screen and (min-width: 480px) {
+    width: fit-content;
+  }
+`;
 
 export default FormCreateOrder;
