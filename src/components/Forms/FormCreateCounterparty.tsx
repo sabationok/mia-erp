@@ -66,7 +66,7 @@ const validation = yup.object().shape({
   description: yup.string().max(250).optional(),
 });
 
-const FormCreateContractor: React.FC<FormCreateContractorProps> = ({
+const FormCreateCounterparty: React.FC<FormCreateContractorProps> = ({
   isFilterByTypeOn = true,
   onSubmit,
   type,
@@ -216,4 +216,4 @@ const FormCreateContractor: React.FC<FormCreateContractorProps> = ({
   );
 };
 
-export default FormCreateContractor;
+export default FormCreateCounterparty;

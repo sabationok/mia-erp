@@ -2,7 +2,7 @@ import FlexBox from '../../atoms/FlexBox';
 import React, { useMemo } from 'react';
 import FormCreateVariation from '../../Forms/FormProduct/FormCreateVariationOverlay';
 import { IProperty } from '../../../redux/products/properties.types';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { Text } from '../../atoms/Text';
 import { useDirectoriesSelector, useProductsSelector } from '../../../redux/selectors.store';
 import FormSelectPropertiesOverlay from '../../Forms/FormProduct/FormSelectPropertiesOverlay';
@@ -14,6 +14,9 @@ import { IProductCategoryDirItem } from '../../Directories/dir.types';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import FormProductCategoriesOverlay from '../../Forms/FormProduct/FormSelectCategoriesOverlay';
 import { OverlayHandler } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
+import numberWithSpaces from '../../../utils/numbers';
+import { t } from '../../../lang';
+import { checks } from '../../../utils';
 
 export type RenderOverviewCellComponent<Data = any> = React.FC<{
   cell: OverviewCellProps<Data>;
@@ -24,9 +27,9 @@ export type RenderOverviewCellComponent<Data = any> = React.FC<{
 export interface OverviewCellProps<Data = any> {
   value?: string | number;
   title?: string;
-  gridArea?: keyof Data;
+  gridArea?: keyof Data | string;
   CellComponent?: RenderOverviewCellComponent<Data>;
-  getValue?: (data?: Data) => string | number | undefined;
+  getValue?: (data: Data) => React.ReactNode | undefined | null;
 }
 export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) => {
   const value = cell.getValue ? cell.getValue(data) : null;
@@ -46,7 +49,114 @@ export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) =>
         overflow={'hidden'}
         style={{ minHeight: 24 }}
       >
-        <CellText $weight={500}>{value || 'не визначено'}</CellText>
+        <CellText $isTitle={!value} $weight={500}>
+          {value || 'не визначено'}
+        </CellText>
+      </FlexBox>
+    </Cell>
+  );
+};
+
+export const ProductDefaultsCell: RenderOverviewCellComponent<IProduct> = ({ data, cell, setOverlayContent }) => {
+  const warehouse = data?.defaults?.warehouse;
+  const variation = data?.defaults?.variation;
+  const supplier = data?.defaults?.supplier;
+
+  const theme = useTheme();
+  const priceInfoCellsData = useMemo((): { title: string; amount?: number; percentage?: number }[] => {
+    const priceInfo = data?.defaults?.price;
+    return [
+      { title: t('Price'), amount: priceInfo?.price },
+      { title: t('Cost'), amount: priceInfo?.cost },
+      {
+        title: t('Commission'),
+        amount: priceInfo?.commissionAmount,
+        percentage: priceInfo?.commissionPercentage || 0,
+      },
+      {
+        title: t('Markup'),
+        amount: priceInfo?.markupAmount,
+        percentage: priceInfo?.markupPercentage || 0,
+      },
+      {
+        title: t('Discount'),
+        amount: priceInfo?.discountAmount,
+        percentage: priceInfo?.discountPercentage || 0,
+      },
+      {
+        title: t('Bonus'),
+        amount: priceInfo?.bonusAmount,
+        percentage: priceInfo?.bonusPercentage || 0,
+      },
+      {
+        title: t('Cashback'),
+        amount: priceInfo?.cashbackAmount,
+        percentage: priceInfo?.cashbackPercentage || 0,
+      },
+    ];
+  }, [data?.defaults?.price]);
+
+  const renderPriceInfo = useMemo(() => {
+    return priceInfoCellsData.map((item, index) => {
+      return (
+        <FlexBox
+          key={item?.title}
+          padding={'4px 12px'}
+          height={'28px'}
+          justifyContent={'center'}
+          style={{ borderRadius: 2, backgroundColor: theme?.fieldBackgroundColor }}
+        >
+          {`${item?.title}: `}
+          {numberWithSpaces(item?.amount || 0)}
+          {checks.isNum(item?.percentage) && ` | ${numberWithSpaces(item?.percentage)}%`}
+        </FlexBox>
+      );
+    });
+  }, [priceInfoCellsData, theme?.fieldBackgroundColor]);
+
+  return (
+    <Cell style={{ minHeight: 'max-content' }}>
+      <CellHeader
+        title={cell?.title}
+        onOpenOverlayPress={() => {
+          console.log('onOpenOverlayPress');
+        }}
+      />
+
+      <FlexBox fillWidth gap={6}>
+        <CellText $isTitle $weight={500} style={{ color: theme?.fontColorHeader }}>
+          {t('warehouse')}
+        </CellText>
+        <CellText $isTitle={!warehouse} $align={'right'}>
+          {warehouse ? `${warehouse?.label} | ${warehouse?.code}` : 'не визначено'}
+        </CellText>
+      </FlexBox>
+
+      <FlexBox fillWidth gap={6}>
+        <CellText $isTitle $weight={500} style={{ color: theme?.fontColorHeader }}>
+          {t('supplier')}
+        </CellText>
+        <CellText $isTitle={!supplier} $align={'right'}>
+          {supplier ? `${supplier?.label} | ${supplier?.code}` : 'не визначено'}
+        </CellText>
+      </FlexBox>
+
+      <FlexBox fillWidth gap={6}>
+        <CellText $weight={500}>{t('variation')}</CellText>
+        <CellText $isTitle={!variation} $align={'right'}>
+          {variation
+            ? `${variation?.label} | ${variation?.barCode || 'barCode'} | ${variation?.sku || 'SKU'}`
+            : 'не визначено'}
+        </CellText>
+      </FlexBox>
+
+      <FlexBox fillWidth gap={6}>
+        <CellText $isTitle $weight={500} style={{ color: theme?.fontColorHeader }}>
+          {t('price')}
+        </CellText>
+        <FlexBox fillWidth flexWrap={'wrap'} fxDirection={'row'} gap={8}>
+          {renderPriceInfo}
+        </FlexBox>
       </FlexBox>
     </Cell>
   );
@@ -65,21 +175,15 @@ export const CategoriesCell: RenderOverviewCellComponent<IProduct> = ({ cell, se
 
   return (
     <Cell style={{ minHeight: 'max-content' }}>
-      <FlexBox fxDirection={'row'} justifyContent={'space-between'}>
-        <CellText $isTitle $size={12}>
-          {cell?.title}
-        </CellText>
-
-        <OverlayOpenButton
-          onClick={() => {
-            setOverlayContent({
-              RenderComponent: FormProductCategoriesOverlay,
-            });
-          }}
-        >
-          {'Змінити'}
-        </OverlayOpenButton>
-      </FlexBox>
+      <CellHeader
+        title={cell?.title}
+        openOverlayButtonTitle={'Змінити'}
+        onOpenOverlayPress={() => {
+          setOverlayContent({
+            RenderComponent: FormProductCategoriesOverlay,
+          });
+        }}
+      />
 
       <FlexBox
         fillWidth
@@ -135,22 +239,13 @@ const NotActiveTreeDataItem: React.FC<{
 export const VariationsTemplateCell: RenderOverviewCellComponent = ({ cell, setOverlayContent, data }) => {
   return (
     <Cell padding={'4px'}>
-      <FlexBox alignItems={'center'} fxDirection={'row'} justifyContent={'space-between'} gap={8}>
-        <CellText $isTitle $size={12}>
-          {cell.title}
-        </CellText>
-
-        {data?.template && (
-          <OverlayOpenButton
-            type={'button'}
-            onClick={() => {
-              setOverlayContent({ RenderComponent: FormCreateVariation, props: { create: true } });
-            }}
-          >
-            {'Перегляд'}
-          </OverlayOpenButton>
-        )}
-      </FlexBox>
+      <CellHeader
+        title={cell.title}
+        openOverlayButtonTitle={'Перегляд'}
+        onOpenOverlayPress={() => {
+          setOverlayContent({ RenderComponent: FormCreateVariation, props: { create: true } });
+        }}
+      />
 
       <FlexBox
         fillWidth
@@ -187,19 +282,12 @@ export const ImagesCell: RenderOverviewCellComponent<IProduct> = ({ data, cell, 
 
   return (
     <Cell style={{ minHeight: 'max-content', padding: '4px 0' }}>
-      <FlexBox fxDirection={'row'} justifyContent={'space-between'}>
-        <CellText $isTitle $size={12}>
-          {cell?.title}
-        </CellText>
-
-        <OverlayOpenButton
-          onClick={() => {
-            setOverlayContent({ RenderComponent: FormProductImages });
-          }}
-        >
-          {'Змінити'}
-        </OverlayOpenButton>
-      </FlexBox>
+      <CellHeader
+        title={cell?.title}
+        onOpenOverlayPress={() => {
+          setOverlayContent({ RenderComponent: FormProductImages });
+        }}
+      />
 
       <FlexBox gap={2} height={'max-content'} padding={'8px 0'} style={{ minHeight: 26 }}>
         {renderImageSets}
@@ -211,9 +299,13 @@ export const ImagesCell: RenderOverviewCellComponent<IProduct> = ({ data, cell, 
 export const StaticProperties: RenderOverviewCellComponent<IProduct> = ({ cell, setOverlayContent, data }) => {
   const templates = useProductsSelector().properties;
 
-  const availableProperties = useMemo(() => {
-    return templates.find(t => t._id === data?.template?._id)?.childrenList?.filter(prop => !prop.isSelectable);
+  const template = useMemo(() => {
+    return templates.find(t => t._id === data?.template?._id);
   }, [data?.template?._id, templates]);
+
+  const availableProperties = useMemo(() => {
+    return template?.childrenList?.filter(prop => !prop.isSelectable);
+  }, [template?.childrenList]);
 
   const selectedItems = useMemo(() => {
     return data?.properties?.map(p => p._id);
@@ -234,29 +326,21 @@ export const StaticProperties: RenderOverviewCellComponent<IProduct> = ({ cell, 
     <Cell
       padding={'4px 4px 8px'}
       gap={8}
+      className={'PROPERTIES_LIST_CELL'}
       style={{ minHeight: renderProperties && renderProperties?.length > 0 ? 'max-content' : 50 }}
     >
-      <FlexBox alignItems={'center'} fxDirection={'row'} justifyContent={'space-between'} gap={8}>
-        <CellText $isTitle $size={12}>
-          {cell?.title}
-        </CellText>
+      <CellHeader
+        title={cell?.title}
+        onOpenOverlayPress={() => {
+          if (!template) return;
 
-        <OverlayOpenButton
-          type={'button'}
-          onClick={() => {
-            setOverlayContent({ RenderComponent: FormSelectPropertiesOverlay, props: { update: data?._id } });
-          }}
-        >
-          {'Змінити'}
-        </OverlayOpenButton>
-      </FlexBox>
+          setOverlayContent({
+            RenderComponent: FormSelectPropertiesOverlay,
+          });
+        }}
+      />
 
-      <FlexBox
-        fillWidth
-        gap={8}
-        className={'PROPERTIES_LIST'}
-        alignItems={renderProperties && renderProperties?.length > 0 ? 'stretch' : 'flex-end'}
-      >
+      <FlexBox fillWidth gap={8} alignItems={renderProperties && renderProperties?.length > 0 ? 'stretch' : 'flex-end'}>
         {renderProperties && renderProperties?.length > 0 ? (
           renderProperties
         ) : (
@@ -291,6 +375,28 @@ const OverviewPropertyComponent: React.FC<OverviewPropertyComponentProps> = ({ i
       <FlexBox fxDirection={'row-reverse'} flexWrap={'wrap'} fillWidth gap={8}>
         {renderValues && renderValues?.length > 0 ? renderValues : <Text $size={12}>{'---'}</Text>}
       </FlexBox>
+    </FlexBox>
+  );
+};
+
+const CellHeader = ({
+  title = 'Title',
+  openOverlayButtonTitle = t('Change'),
+  onOpenOverlayPress,
+}: {
+  title?: string;
+  openOverlayButtonTitle?: string;
+  onOpenOverlayPress?: () => void;
+}) => {
+  return (
+    <FlexBox fxDirection={'row'} justifyContent={'space-between'}>
+      <CellText $isTitle $size={12}>
+        {title}
+      </CellText>
+
+      {onOpenOverlayPress && (
+        <OverlayOpenButton onClick={onOpenOverlayPress}>{openOverlayButtonTitle}</OverlayOpenButton>
+      )}
     </FlexBox>
   );
 };

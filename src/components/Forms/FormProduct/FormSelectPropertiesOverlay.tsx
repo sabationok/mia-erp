@@ -42,14 +42,14 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
   const templates = usePropertiesSelector();
   const [loading, setLoading] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  // const [submitOptions, setSubmitOptions] = useState<UseAppFormSubmitOptions>({});
-  // const handleChangeAfterSubmit = (key: keyof UseAppFormSubmitOptions) => {
-  //   setSubmitOptions(prev => ({ ...prev, [key]: !prev[key] }));
-  // };
 
   const templateData = useMemo(() => {
-    return templates.find(t => t._id === template?._id || currentProduct?.template?._id);
+    return templates.find(t => t._id === (template?._id || currentProduct?.template?._id));
   }, [currentProduct?.template?._id, template?._id, templates]);
+
+  const canSubmit = useMemo(() => {
+    return currentProduct?.properties?.map(p => p._id).join(',') !== selectedIds.join(',');
+  }, [currentProduct?.properties, selectedIds]);
 
   const handleSubmit: FormEventHandler = useCallback(
     event => {
@@ -122,19 +122,22 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
   useEffect(() => {
     if (currentProduct?.properties) {
       setSelectedIds(currentProduct?.properties.map(p => p._id));
-      console.log('useEffect properties');
     }
   }, [currentProduct?.properties]);
 
   return (
     <OverlayForm onSubmit={handleSubmit} {...props}>
-      <OverlayHeader onClose={onClose} title={title || templateData?.label} showSubmitButton />
+      <OverlayHeader onClose={onClose} canSubmit={canSubmit} title={title || templateData?.label} showSubmitButton />
 
       <TemplateBox flex={1} overflow={'auto'}>
         {renderTemplate}
       </TemplateBox>
 
-      <OverlayFooter loading={loading} submitButtonText={loading ? 'Loading...' : 'Підтвердити'} />
+      <OverlayFooter
+        canSubmit={canSubmit}
+        loading={loading}
+        submitButtonText={loading ? 'Loading...' : 'Підтвердити'}
+      />
     </OverlayForm>
   );
 };

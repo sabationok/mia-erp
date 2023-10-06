@@ -3,8 +3,8 @@ import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 import { IProduct } from '../products/products.types';
 import { IVariation } from '../products/variations.types';
 import { AppQueryParams } from '../../api';
-import { ICompany } from '../companies/companies.types';
-import { IUser } from '../auth/auth.types';
+import { ICompanyBase } from '../companies/companies.types';
+import { IUserBase } from '../auth/auth.types';
 
 export enum PriceListTypeEnum {
   PURCHASES = 'purchases',
@@ -59,13 +59,13 @@ export interface IPriceDto extends IDataWithPeriod {
 }
 
 export interface IPriceListItem extends IBase {
-  owner?: ICompany;
-  author?: IUser;
-  editor?: IUser;
+  owner?: ICompanyBase;
+  author?: IUserBase;
+  editor?: IUserBase;
 
+  list?: IPriceList;
   product?: IProduct;
   variation?: IVariation;
-  list?: IPriceList;
 
   label?: string;
 
@@ -76,6 +76,8 @@ export interface IPriceListItem extends IBase {
   discountPercentage?: number;
   cashbackAmount?: number;
   cashbackPercentage?: number;
+  bonusAmount?: number;
+  bonusPercentage?: number;
   markupPercentage?: number;
   markupAmount?: number;
   commissionPercentage?: number;

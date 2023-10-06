@@ -9,6 +9,7 @@ import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import AppLoader from '../atoms/AppLoader';
 import { isUndefined } from 'lodash';
 import useLoadInitialAppDataHook from '../../hooks/useLoadInitialAppData.hook';
+import { t } from '../../lang';
 
 type Props = {
   redirectTo?: string;
@@ -75,7 +76,7 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
   }, [clearCurrent, hasPermission, logOutUser, permissionId]);
 
   if (loading || !isLoaded) {
-    return <AppLoader isLoading comment={'Permission check. Please wait.'} />;
+    return <AppLoader isLoading comment={t('Permission check, please wait')} />;
   }
 
   return isValidPermissionId ? <Outlet /> : <Navigate to={redirectTo || '/app'} />;

@@ -5,6 +5,7 @@ import { useAppSettingsSelector } from './redux/selectors.store';
 import GlobalStyles from './theme/globalStyles';
 import React, { Suspense } from 'react';
 import AppLoader from './components/atoms/AppLoader';
+import { t } from './lang';
 
 const App: React.FC = () => {
   const { isDarkMode } = useAppSettingsSelector();
@@ -14,14 +15,14 @@ const App: React.FC = () => {
       <AppContainer>
         <GlobalStyles />
 
-        <Suspense fallback={<AppLoader isLoading comment={'Please wait while minions do their work...'} />}>
+        <Suspense fallback={<AppLoader isLoading comment={t('Please wait while minions do their work...')} />}>
           <AppRoutes />
         </Suspense>
       </AppContainer>
 
       <ToastContainer
         position="bottom-left"
-        autoClose={3000}
+        autoClose={1000}
         limit={4}
         hideProgressBar={false}
         newestOnTop={true}

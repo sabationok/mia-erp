@@ -18,7 +18,7 @@ import DirTreeComp from '../components/Directories/DirTreeComp';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { toast } from 'react-toastify';
 import DirTableComp, { DirTableCompProps } from '../components/Directories/DirTableComp';
-import FormCreateContractor from '../components/Forms/FormCreateContractor';
+import FormCreateCounterparty from '../components/Forms/FormCreateCounterparty';
 import { createDataForReq } from '../utils/dataTransform';
 import { ProductTypeEnum } from '../redux/products/products.types';
 import { ModalChildrenProps, Modals } from '../components/ModalProvider/Modals';
@@ -231,15 +231,15 @@ const ContractorsProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
         icon: 'plus',
         onClick: async () => {
           const modal = modalService.handleOpenModal({
-            ModalChildren: FormCreateContractor,
+            ModalChildren: FormCreateCounterparty,
             modalChildrenProps: {
-              title: t('createContractor'),
+              title: t('Create counterparty'),
               fillHeight: true,
               onSubmit: async data => {
                 service.create({
                   data: { dirType, data: createDataForReq(data) },
                   onSuccess: rd => {
-                    console.log(t('createContractor'), rd);
+                    console.log(t('Create counterparty rd'), rd);
                     toast.success(`Created: ${data.label || data.name}`);
                     modal?.onClose();
                   },
@@ -307,10 +307,11 @@ const tagsDir: IDirectoryListItem<any, DirTagsProps> = {
 };
 
 const activitiesProps: DirActivitiesProps = {
-  title: t('activityTypes'),
-  createParentTitle: t('createDirParentItem'),
+  title: t('Activities'),
+  createParentTitle: t('Create activity'),
   dirType: ApiDirType.ACTIVITIES,
   fillHeight: true,
+  availableLevels: 2,
   actionsCreator: getDirInTreeActionsCreator(),
 };
 const activitiesDir: IDirectoryListItem<any, DirActivitiesProps> = {
@@ -335,23 +336,6 @@ const brandsDir: IDirectoryListItem<any, DirBrandsProps> = {
   modalChildrenProps: brandsProps,
   disabled: false,
 };
-// const variationsProps: DirVariationsTemplatesProps = {
-//   title: t('variationsTemplates'),
-//   createParentTitle: 'Create variations template',
-//   dirType: ApiDirType.VARIATIONS_TEMPLATES,
-//   fillHeight: true,
-//   availableLevels: 1,
-//   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateVariationsTemplate, {
-//     createParentTitle: 'Create warehouse',
-//   }),
-// };
-// const variationsDir: IDirectoryListItem<any,DirVariationsTemplatesProps> = {
-//   title: variationsProps.title,
-//   iconId: iconId.storage,
-//   ModalChildren: DirTreeComp,
-//   modalChildrenProps: variationsProps,
-//   disabled: false,
-// };
 
 const prodPropertiesProps: DirPropertiesProps = {
   title: t(ApiDirType.PROPERTIES_PRODUCTS),
@@ -371,22 +355,6 @@ const prodPropertiesDir: IDirectoryListItem<any, DirPropertiesProps> = {
   modalChildrenProps: prodPropertiesProps,
   disabled: false,
 };
-
-// const warehousesProps: DirWarehousesProps = {
-//   title: t(ApiDirType.WAREHOUSES),
-//   createParentTitle: 'Create warehouse',
-//   dirType: ApiDirType.WAREHOUSES,
-//   fillHeight: true,
-//   availableLevels: 1,
-//   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateDirTreeComp, 'Create warehouse'),
-// };
-// const warehousesDir: IDirectoryListItem<DirWarehousesProps> = {
-//   title: warehousesProps.title,
-//   iconId: iconId.storage,
-//   ModalChildren: DirTreeComp,
-//   modalChildrenProps: warehousesProps,
-//   disabled: false,
-// };
 
 const directories: Partial<IDirectoryListItem>[] = [
   {

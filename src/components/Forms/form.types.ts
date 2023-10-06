@@ -1,6 +1,6 @@
 export type { FormCreateDirTreeCompProps } from './FormCreateDirTreeComp';
 export type { FormCreateCompanyActivityProps } from './FormCreateActivity';
-export type { FormCreateContractorProps } from './FormCreateContractor';
+export type { FormCreateContractorProps } from './FormCreateCounterparty';
 export type { FormCreateTransactionProps } from './FormCreateTransaction';
 export type { FormCreateCategoryProps } from './FormCreateCategory';
 export type { FormCreatePriceListProps } from './FormCreatePriceList';

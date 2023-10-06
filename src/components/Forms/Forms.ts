@@ -7,7 +7,7 @@ export const CreateTransaction = lazy(() => import('./FormCreateTransaction'));
 export const CreateCount = lazy(() => import('./FormCreateCount'));
 // * OTHER DIRECTORIES
 export const CreateDirTreeComp = lazy(() => import('./FormCreateDirTreeComp'));
-export const CreateContractor = lazy(() => import('./FormCreateContractor'));
+export const CreateContractor = lazy(() => import('./FormCreateCounterparty'));
 export const CreateCategory = lazy(() => import('./FormCreateCategory'));
 export const CreateTag = lazy(() => import('./FormCreateTag'));
 // * PRICING

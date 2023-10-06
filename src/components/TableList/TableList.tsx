@@ -17,6 +17,7 @@ import {
 } from './tableTypes.types';
 import { FilterReturnDataType } from '../Filter/AppFilter';
 import { IBase } from '../../redux/global.types';
+import { t } from '../../lang';
 
 export type { ITableListContext, ITableListProps, OnCheckBoxChangeHandlerEvent, UseTableHookType, SelectItem };
 export const TableCTX = createContext({});
@@ -138,7 +139,7 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
   return (
     <Table {...props}>
       <TableCTX.Provider value={CTX}>
-        <AppLoader isLoading={isLoading} comment={'Waiting for new data...'} />
+        <AppLoader isLoading={isLoading} comment={t('Loading content...')} />
 
         <TableOverHead />
 

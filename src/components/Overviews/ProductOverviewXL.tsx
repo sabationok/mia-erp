@@ -10,7 +10,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import * as Cells from './components/Cells';
 import { OverviewCellProps } from './components/Cells';
 import { OverlayHeader } from '../Forms/FormProduct/components';
-import numberWithSpaces from '../../utils/numbers';
+import { formatDate } from '../../utils/dateTime.utils';
+import { checks } from '../../utils';
 
 export interface ProductOverviewXLProps {
   product?: IProduct;
@@ -149,50 +150,50 @@ export default ProductOverviewXL;
 
 const productOverviewCells: OverviewCellProps<IProduct>[] = [
   {
-    title: 'Назва',
+    title: t('Label'),
     CellComponent: Cells.OverviewTextCell,
     getValue: product => product?.label,
     gridArea: 'label',
   },
   {
-    title: 'Тип',
+    title: t('Type'),
     CellComponent: Cells.OverviewTextCell,
     getValue: product => product?.type,
     gridArea: 'type',
   },
   {
-    title: 'Артикул | SKU',
+    title: t('SKU'),
     CellComponent: Cells.OverviewTextCell,
     getValue: product => product?.sku,
     gridArea: 'sku',
   },
   {
-    title: 'Штрих-код',
+    title: t('Bar-code'),
     CellComponent: Cells.OverviewTextCell,
     getValue: product => product?.barCode,
     gridArea: 'barCode',
   },
 
   {
-    title: 'Категорії',
+    title: t('Categories'),
     CellComponent: Cells.CategoriesCell,
     gridArea: 'categories',
   },
   {
-    title: 'Бренд',
+    title: t('Brand'),
     CellComponent: Cells.OverviewTextCell,
     getValue: product => product?.brand?.label,
     gridArea: 'brand',
   },
 
   {
-    title: 'Опис',
+    title: t('Description'),
     CellComponent: Cells.OverviewTextCell,
     getValue: product => product?.description,
     gridArea: 'description',
   },
   {
-    title: 'Вимірювання',
+    title: t('Measurement'),
     CellComponent: Cells.OverviewTextCell,
     getValue: product => {
       try {
@@ -213,57 +214,44 @@ const productOverviewCells: OverviewCellProps<IProduct>[] = [
   },
   // * PROPERTIES
   {
-    title: t('variationsTemplate'),
+    title: t('Variations template'),
     CellComponent: Cells.VariationsTemplateCell,
     gridArea: 'template',
   },
-  { title: 'Додаткові характеристики', CellComponent: Cells.StaticProperties, gridArea: 'properties' },
+  { title: t('Properties'), CellComponent: Cells.StaticProperties, gridArea: 'properties' },
+
   // * DEFAULTS
+  {
+    title: t('Default values'),
+    CellComponent: Cells.ProductDefaultsCell,
+    gridArea: 'defaults',
+  },
 
   {
-    title: 'Склад за замовчуванням',
+    title: t('Created by / Date / Time'),
     CellComponent: Cells.OverviewTextCell,
     getValue: product =>
-      `${product?.defaults?.warehouse?.label || '---'} | ${product?.defaults?.warehouse?.code || '---'}`,
-    gridArea: 'measurement',
+      product?.author
+        ? `${product?.author?.email} / ${
+            product?.createdAt && checks.isStr(product?.createdAt) ? formatDate(Date.parse(product?.createdAt)) : ''
+          }`
+        : null,
+    gridArea: 'created',
   },
   {
-    title: 'Постачальник за замовчуванням',
+    title: t('Updated by / Date / Time'),
     CellComponent: Cells.OverviewTextCell,
-    getValue: product => product?.defaults?.supplier?.label,
-    gridArea: 'measurement',
-  },
-  {
-    title: 'Ціна за замовчуванням',
-    CellComponent: Cells.OverviewTextCell,
-    getValue: product => {
-      const arr = [
-        `${t('price')}: ${numberWithSpaces(product?.defaults?.price?.price || 0)}`,
-        `${t('cost')}: ${numberWithSpaces(product?.defaults?.price?.cost || 0)}`,
-        `${t('discount')}: ${numberWithSpaces(product?.defaults?.price?.discountAmount || 0)}`,
-        `${t('cashback')}: ${numberWithSpaces(product?.defaults?.price?.cashbackAmount || 0)}`,
-      ];
-
-      return arr.join(' | ');
-    },
-    gridArea: 'measurement',
+    getValue: product =>
+      product?.editor
+        ? `${product?.editor?.email} / ${
+            product?.updatedAt && checks.isStr(product?.updatedAt) ? formatDate(Date.parse(product?.updatedAt)) : ''
+          }`
+        : null,
+    gridArea: 'updated',
   },
 
   {
-    title: 'Створено',
-    CellComponent: Cells.OverviewTextCell,
-    getValue: product => `${product?.author?.name}`,
-    gridArea: 'createdAt',
-  },
-  {
-    title: 'Оновлено',
-    CellComponent: Cells.OverviewTextCell,
-    getValue: product => `${product?.editor?.name}`,
-    gridArea: 'updatedAt',
-  },
-
-  {
-    title: 'Фото',
+    title: t('Images'),
     CellComponent: Cells.ImagesCell,
     gridArea: 'images',
   },

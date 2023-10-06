@@ -17,7 +17,8 @@ export const langUa = {
   variationsTemplate: 'Шаблон для варіацій',
   variationsTemplates: 'Шаблони для варіацій',
 
-  'Create tag': 'Створити тег',
+  Change: 'Змінити',
+  Review: 'Перегляд',
   warehouse: 'Склад',
   propertiesList: 'Список характеристик',
   staticProperties: 'Статичні характеристики',
@@ -66,17 +67,18 @@ export const langUa = {
 
   quantity: 'Кількість',
   batch: 'Партія',
-  'Select warehouse': 'Оберіть склад',
-  'Select variation': 'Оберіть варіацію',
-  'Select price': 'Оберіть ціну',
-  'Select product': 'Оберіть продукт',
 
+  selectVariationsTemplate: 'Оберіть список доступних характеристик',
   brand: 'Бренд',
   selectBrand: 'Оберіть бренд',
   createTag: 'Створити тег',
-  'Create warehouse document': 'Створити складський документ',
-
-  selectVariationsTemplate: 'Оберіть список доступних характеристик',
+  Price: 'Ціна',
+  Cost: 'Собівартість',
+  Discount: 'Знижка',
+  Bonus: 'Бонус',
+  Cashback: 'Кеш-бек',
+  Commission: 'Комісія',
+  Markup: 'Націнка',
 
   product: 'Продукт',
   counts: 'Облікові рахунки',
@@ -114,7 +116,7 @@ export const langUa = {
   innerCode: 'Внутрішній код',
   insertCode: 'Впишіть код',
   variation: 'Варіація',
-
+  supplier: 'Постачальник',
   longitude: 'Довгота',
   latitude: 'Широта',
 
@@ -253,7 +255,38 @@ export const langUa = {
 
   [WarehouseDocumentType.addToStock]: 'Прихід на склад',
   [WarehouseDocumentType.removeFromStock]: 'Списання зі складу',
-  [WarehouseDocumentType.reserveFromStock]: 'Резерв',
+  [WarehouseDocumentType.reserveFromStock]: 'Резервування',
   [WarehouseDocumentType.returnFromReserve]: 'Повернення з резерву',
   [WarehouseDocumentType.removeFromReserve]: 'Списання з резерву',
+
+  Description: 'Description',
+  SKU: 'Артикул | SKU',
+  Images: 'Зображення',
+  Brand: 'Бренд',
+  Categories: 'Категорії',
+  Properties: 'Характеристики',
+  Measurement: 'Вимірювання',
+
+  'Variations template': 'Шаблон варіацій',
+  'Default params': 'Параметри за замовчуванням',
+  'Default values': 'Значення за замовчуванням',
+  'Default warehouse': 'Склад за замовчуванням',
+  'Default supplier': 'Постачальник за замовчуванням',
+  'Default variation': 'Варіація за замовчуванням',
+  'Default price': 'Ціна за замовчуванням',
+  'Created by / Date / Time': 'Створено / Дата / Час',
+  'Updated by / Date / Time': 'Оновлено / Дата / Час',
+
+  'Select warehouse': 'Оберіть склад',
+  'Select variation': 'Оберіть варіацію',
+  'Select price': 'Оберіть ціну',
+  'Select product': 'Оберіть продукт',
+  'Create tag': 'Створити тег',
+  'Create warehouse document': 'Створити складський документ',
+  'Select list of properties': 'Оберіть список доступних характеристик',
+
+  'Permission check, please wait': 'Перевірка дозволу, будь ласка зачекайте',
+
+  'Please wait while minions do their work...': 'Будь ласка зачекайте поки міньйони роблять свою роботу...',
+  'Loading content...': 'Завантаження вмісту...',
 };
