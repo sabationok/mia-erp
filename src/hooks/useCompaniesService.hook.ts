@@ -1,4 +1,4 @@
-import { ICompany, ICompanyReqData } from '../redux/companies/companies.types';
+import { ICompanyReqData } from '../redux/companies/companies.types';
 import { IPermission } from '../redux/permissions/permissions.types';
 import { useMemo } from 'react';
 import { CompaniesApi, createApiCall } from '../api';
@@ -7,7 +7,7 @@ import { ApiCaller } from '../api/createApiCall.api';
 
 export interface CompaniesService {
   delete?: ApiCaller<string, Partial<IPermission>>;
-  create?: ApiCaller<Partial<ICompany>, IPermission>;
+  create?: ApiCaller<ICompanyReqData, IPermission>;
   update?: ApiCaller<Required<ICompanyReqData>, IPermission>;
 }
 
@@ -24,4 +24,4 @@ const useCompaniesServiceHook = (): CompaniesService => {
   }, []);
 };
 
-export default useCompaniesServiceHook as typeof useCompaniesServiceHook;
+export default useCompaniesServiceHook;

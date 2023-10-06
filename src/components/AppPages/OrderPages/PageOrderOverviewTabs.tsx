@@ -6,7 +6,6 @@ import ModalFilter, { FilterSelectHandler } from '../../ModalForm/ModalFilter';
 import { useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import { useOrdersSelector } from '../../../redux/selectors.store';
-import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useAppParams } from '../../../hooks';
 import OrderContentTab from './tabs/OrderContentTab';
 import OrderInvoicesTab from './tabs/OrderInvoicesTab';
@@ -28,14 +27,13 @@ const PageOrderOverviewTabs = ({ toggleVisibility, isVisible }: PageOrderOvervie
   const orderId = useAppParams()?.orderId;
 
   const { currentOrder } = useOrdersSelector();
-  const service = useAppServiceProvider()[ServiceName.orders];
+  // const service = useAppServiceProvider()[ServiceName.orders];
   const [current, setCurrent] = useState<OrderTabNameEnum>(OrderTabNameEnum.Content);
 
   const renderTab = useMemo(() => {
     if (current === OrderTabNameEnum.Content) {
       return <OrderContentTab />;
     }
-
     if (current === OrderTabNameEnum.Invoices) {
       return <OrderInvoicesTab />;
     }

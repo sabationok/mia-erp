@@ -80,7 +80,7 @@ const DirTreeComp = ({
         )
       }
     >
-      <FlexBox padding={'8px 0'} overflow={'auto'} gap={8}>
+      <FlexBox padding={'8px 0'} gap={8}>
         {renderList}
       </FlexBox>
     </ModalForm>

@@ -3,8 +3,8 @@ import { IPermission, IPermissionForReq, IPermissionReqData } from './permission
 import { ThunkPayload } from '../store.store';
 import { axiosErrorCheck } from 'utils';
 import { CompaniesApi, PermissionsApi } from '../../api';
-import { ICompanyForReq, ICompanyReqData } from '../companies/companies.types';
-import { createGetCompanyConfigsThunk, createSetCompanyConfigsThunk } from '../companies/companies.thunks';
+import { ICompanyForReq } from '../companies/companies.types';
+import { createUpdateCompanyThunk } from '../companies/companies.thunks';
 
 enum PermissionsThunkType {
   getAllPermissionsByUserId = 'permissions/getAllPermissionsByUserIdThunk',
@@ -17,17 +17,10 @@ enum PermissionsThunkType {
   inviteUser = 'permissions/inviteUserThunk',
   createCompanyWithPermission = 'permissions/createCompanyWithPermissionThunk',
   deleteCompanyWithPermission = 'permissions/deleteCompanyWithPermissionThunk',
-  updateCompanyWithPermission = 'permissions/updateCompanyWithPermissionThunk',
+  updateCurrentCompanyThunk = 'permissions/updateCurrentCompanyThunk',
   setCurrentCompanyConfigs = 'permissions/setCurrentCompanyConfigsThunk',
   getCurrentCompanyConfigs = 'permissions/getCurrentCompanyConfigsThunk',
 }
-
-export const setCurrentCompanyConfigsThunk = createSetCompanyConfigsThunk(
-  PermissionsThunkType.setCurrentCompanyConfigs
-);
-export const getCurrentCompanyConfigsThunk = createGetCompanyConfigsThunk(
-  PermissionsThunkType.getCurrentCompanyConfigs
-);
 
 export const getAllPermissionsByUserIdThunk = createAsyncThunk<
   IPermission[],
@@ -166,7 +159,7 @@ export const createCompanyWithPermissionThunk = createAsyncThunk<IPermission, Th
   PermissionsThunkType.createCompanyWithPermission,
   async ({ data, onSuccess, onError }, thunkAPI) => {
     try {
-      const response = await CompaniesApi.create(data as ICompanyForReq);
+      const response = await CompaniesApi.create({ data: data as ICompanyForReq });
 
       if (response) {
         onSuccess && onSuccess(response.data.data);
@@ -178,22 +171,7 @@ export const createCompanyWithPermissionThunk = createAsyncThunk<IPermission, Th
     }
   }
 );
-export const updateCompanyWithPermissionThunk = createAsyncThunk<IPermission, ThunkPayload<Required<ICompanyReqData>>>(
-  PermissionsThunkType.updateCompanyWithPermission,
-  async ({ data, onSuccess, onError }, thunkAPI) => {
-    try {
-      const response = await CompaniesApi.updateById(data as Required<ICompanyReqData>);
 
-      if (response) {
-        onSuccess && onSuccess(response.data.data);
-      }
-      return response.data.data;
-    } catch (error) {
-      onError && onError(error);
-      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-    }
-  }
-);
 export const deleteCompanyWithPermissionThunk = createAsyncThunk<
   Partial<{ _id?: string; result: boolean }>,
   ThunkPayload<{ _id: string }>
@@ -244,6 +222,9 @@ export const deletePermissionByIdThunk = createAsyncThunk<
     return thunkAPI.rejectWithValue(axiosErrorCheck(error));
   }
 });
+
+export const updateCurrentCompanyThunk = createUpdateCompanyThunk(PermissionsThunkType.updateCurrentCompanyThunk);
+
 // export const getAllPermissionsByCompanyIdThunk = createAsyncThunk<
 //   Partial<IPermission>[],
 //   ThunkPayload<{

@@ -7,13 +7,11 @@ import {
   deletePermissionByIdThunk,
   getAllPermissionsByCompanyIdThunk,
   getAllPermissionsByUserIdThunk,
-  getCurrentCompanyConfigsThunk,
   getCurrentPermissionThunk,
   inviteUserThunk,
   logInPermissionThunk,
   logOutPermissionThunk,
-  setCurrentCompanyConfigsThunk,
-  updateCompanyWithPermissionThunk,
+  updateCurrentCompanyThunk,
   updatePermissionThunk,
 } from './permissions.thunk';
 
@@ -89,26 +87,10 @@ export const permissionsSlice = createSlice({
       .addCase(inviteUserThunk.fulfilled, (s, a) => {
         s.users = [a.payload, ...s.permissions];
       })
-      .addCase(updateCompanyWithPermissionThunk.fulfilled, (s, a) => {})
+      .addCase(updateCurrentCompanyThunk.fulfilled, (s, a) => {
+        s.permission.company = a.payload;
+      })
       .addCase(deleteCompanyWithPermissionThunk.fulfilled, (s, a) => {})
-      .addCase(setCurrentCompanyConfigsThunk.fulfilled, (s, a) => {
-        if (s.permission.company) {
-          if (a.payload.refreshCurrent) {
-            s.permission.company.configs = { ...s.permission.company.configs, ...a.payload.data };
-          } else {
-            s.permission.company.configs = a.payload.data;
-          }
-        }
-      })
-      .addCase(getCurrentCompanyConfigsThunk.fulfilled, (s, a) => {
-        if (s.permission.company) {
-          if (a.payload.refreshCurrent) {
-            s.permission.company.configs = { ...s.permission.company.configs, ...a.payload.data };
-          } else {
-            s.permission.company.configs = a.payload.data;
-          }
-        }
-      })
       .addMatcher(inPending, s => {
         s.isLoading = true;
         s.error = null;

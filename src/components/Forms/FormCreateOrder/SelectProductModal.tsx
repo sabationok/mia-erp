@@ -35,7 +35,7 @@ enum SelectProductModalSteps {
   product = 'product',
   variation = 'variation',
   price = 'price',
-  warehausing = 'warehausing',
+  warehouse = 'warehouse',
 }
 
 const steps = enumToFilterOptions(SelectProductModalSteps);
@@ -78,6 +78,7 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
         { dataPath: 'label', label: t('label') },
         { dataPath: 'sku', label: t('sku') },
       ],
+      selectedRow: formData?.product,
       onSubmitSearch: data => {
         setValue('search', data.search);
         setValue('searchBy', data.searchParam?.dataPath);
@@ -88,7 +89,7 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
         v && setFormValue('product', v);
       },
     }),
-    [products, setFormValue, setValue]
+    [formData?.product, products, setFormValue, setValue]
   );
   const variationTableTitles = useMemo(() => {
     const template = templates.find(t => t._id === formData?.product?.template?._id);
@@ -100,26 +101,28 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
       tableTitles: variationTableTitles,
       tableData: variations,
       isSearch: false,
+      selectedRow: formData?.variation,
       onRowClick: data => {
         const v = variations.find(p => p._id === data?._id);
 
         v && setFormValue('variation', v);
       },
     }),
-    [setFormValue, variationTableTitles, variations]
+    [formData?.variation, setFormValue, variationTableTitles, variations]
   );
   const pricesTableConfig = useMemo(
     (): ITableListProps<IProduct> => ({
       tableTitles: pricesColumnsForProductReview,
       tableData: prices,
       isSearch: false,
+      selectedRow: formData?.price,
       onRowClick: data => {
         const v = prices.find(p => p._id === data?._id);
 
         v && setFormValue('price', v);
       },
     }),
-    [prices, setFormValue]
+    [formData?.price, prices, setFormValue]
   );
 
   const warehousingTableConfig = useMemo(
@@ -127,6 +130,7 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
       tableTitles: warehouseOverviewTableColumns,
       tableData: inventories,
       isSearch: false,
+      selectedRow: formData?.inventory,
       onRowClick: data => {
         const v = inventories.find(p => p._id === data?._id);
 
@@ -134,7 +138,7 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
         v?.warehouse && setFormValue('warehouse', v?.warehouse);
       },
     }),
-    [inventories, setFormValue]
+    [formData?.inventory, inventories, setFormValue]
   );
 
   const tableConfig = useMemo((): ITableListProps | undefined => {
@@ -147,7 +151,7 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
     if (checkStep(currentTab)?.price) {
       return pricesTableConfig;
     }
-    if (checkStep(currentTab)?.warehausing) {
+    if (checkStep(currentTab)?.warehouse) {
       return warehousingTableConfig;
     }
     return;
@@ -163,7 +167,7 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
     if (checkStep(currentTab)?.price) {
       return !!formData?.product && !!formData?.variation && !!formData?.price;
     }
-    if (checkStep(currentTab)?.warehausing) {
+    if (checkStep(currentTab)?.warehouse) {
       return !!formData?.inventory;
     }
     return false;
@@ -212,7 +216,7 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
           PriceManagementApi
         );
     }
-    if (checkStep(currentTab)?.price) {
+    if (checkStep(currentTab)?.warehouse) {
       formData?.product &&
         createApiCall(
           {

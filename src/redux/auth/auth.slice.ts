@@ -3,6 +3,7 @@ import { AuthErrorType } from 'redux/reduxTypes.types';
 import { getCurrentUserThunk, logInUserThunk, logOutUserThunk, registerUserThunk } from './auth.thunks';
 import { IAuthState } from './auth.types';
 import { karina_avatar } from '../../img';
+import { checks } from '../../utils';
 
 const initialState: IAuthState = {
   user: {
@@ -57,89 +58,25 @@ export const authSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
+      .addMatcher(inFulfilled, state => {
+        state.isLoading = false;
+        state.error = null;
+      })
       .addMatcher(inError, (state, action: PayloadAction<AuthErrorType>) => {
         state.isLoading = false;
         state.error = action.payload;
       }),
 });
 
-function inPending(action: AnyAction) {
-  return action.type.endsWith('pending');
+export function isAuthCase(type: string) {
+  return checks.isStr(type) && type.startsWith('users');
 }
-
-function inError(action: AnyAction) {
-  return action.type.endsWith('rejected');
+function inPending(a: AnyAction) {
+  return isAuthCase(a.type) && a.type.endsWith('pending');
 }
-
-export const authReducer = authSlice.reducer;
-// extraReducers: {
-//   //* РЕЄСТРАЦІЯ
-//   [registerUserThunk.fulfilled]: (state, { payload }) => {
-//     state.isLoading = false;
-//     state.isLoggedIn = false;
-
-//     console.log(payload);
-//   },
-//   [registerUserThunk.pending]: (state, action) => {
-//     state.isLoading = true;
-//   },
-//   [registerUserThunk.rejected]: (state, action) => {
-//     state.isLoading = false;
-//     state.error = action.payload.error;
-//   },
-//   // * РЕЄСТРАЦІЯ АДМІНІСТРАТОРОМ
-//   [registerUserByAdminThunk.fulfilled]: (state, { payload }) => {
-//     state.isLoading = false;
-//   },
-//   [registerUserByAdminThunk.pending]: (state, action) => {
-//     state.isLoading = true;
-//   },
-//   [registerUserByAdminThunk.rejected]: (state, action) => {
-//     state.isLoading = false;
-//     state.error = action.payload.error;
-//   },
-//   //* ВХІД
-//   [logInUserThunk.fulfilled]: (state, { payload }) => {
-//     state.isLoading = false;
-//     state.isLoggedIn = true;
-//     state.token = payload.access_token;
-//   },
-//   [logInUserThunk.pending]: (state, { payload }) => {
-//     state.isLoading = true;
-//   },
-//   [logInUserThunk.rejected]: (state, action) => {
-//     state.isLoading = false;
-//     state.isLoggedIn = false;
-//     state.error = action.payload.error;
-//   },
-
-//   //* ВИХІД
-//   [logOutUserThunk.fulfilled]: (state, action) => {
-//     state.isLoading = false;
-//     state.isLoggedIn = false;
-//     state.user = initialState.user;
-//     state.token = null;
-//   },
-//   [logOutUserThunk.pending]: (state, action) => {
-//     state.isLoading = true;
-//   },
-//   [logOutUserThunk.rejected]: (state, action) => {
-//     state.isLoading = true;
-//     state.error = action.payload.error;
-//   },
-//   //* ПОТОЧНИЙ ЮЗЕР
-//   [getCurrentUserThunk.fulfilled]: (state, { payload }) => {
-//     state.isLoading = false;
-//     state.isLoggedIn = true;
-
-//     state.user = { ...state.user, ...payload };
-//   },
-//   [getCurrentUserThunk.pending]: (state, action) => {
-//     state.isLoading = true;
-//   },
-//   [getCurrentUserThunk.rejected]: (state, action) => {
-//     state.isLoading = false;
-//     state.error = action.error;
-//     state.isLoggedIn = false;
-//   },
-// },
+function inFulfilled(a: AnyAction) {
+  return isAuthCase(a.type) && a.type.endsWith('fulfilled');
+}
+function inError(a: AnyAction) {
+  return isAuthCase(a.type) && a.type.endsWith('rejected');
+}

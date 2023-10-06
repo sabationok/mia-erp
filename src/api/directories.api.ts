@@ -70,7 +70,7 @@ export default class DirectoriesApi {
     });
   }
 
-  public static async delete<DTO = any, RD = IBaseDirItem>({
+  public static async delete<RD = IBaseDirItem>({
     dirType,
     _id,
     params,

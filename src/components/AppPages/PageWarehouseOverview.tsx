@@ -88,11 +88,12 @@ const useWarehouseOverviewActionsCreator = (): WarehouseTableActionsCreator => {
         icon: 'plus',
         type: 'onlyIconFilled',
         onClick: () => {
-          const m = modalS.open({
+          console.log(current);
+          modalS.open({
             Modal: Modals.SelectProductModal,
             props: {
               onSelect: p => {
-                const cm = modalS.open({
+                modalS.open({
                   Modal: Modals.FormCreateWarehouseDocument,
                   props: {
                     product: p,

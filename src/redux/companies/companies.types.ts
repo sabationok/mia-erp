@@ -1,10 +1,8 @@
-import { AppResponse, ContactsDto, IBase, IFormDataValueWithUUID, LocationDto, OnlyUUID } from '../global.types';
+import { AddressDto, AppResponse, ContactsDto, IBase, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
 import { IPermission } from '../permissions/permissions.types';
-import { IUser } from '../auth/auth.types';
+import { IUserBase } from '../auth/auth.types';
 import { StateErrorType } from '../reduxTypes.types';
-import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 import { IWarehouse } from '../warehouses/warehouses.types';
-import { ISupplierDirItem } from '../../components/Directories/dir.types';
 
 export enum OwnershipTypeEnum {
   UA_TOV = 'ua_tov',
@@ -18,17 +16,14 @@ export enum OwnershipTypeEnum {
   UA_FRANCHISING_COMPANY = 'ua_franchising_company',
   UA_COLLECTIVE_ENTERPRISE = 'ua_collective_enterprise',
 }
-export type OwnershipTypeFilterOption = FilterOpt<OwnershipTypeEnum>;
+
 export enum BusinessSubjectTypeEnum {
   company = 'company',
   entrepreneur = 'entrepreneur',
   person = 'person',
 }
-export type BusinessSubjectFilterOption = FilterOpt<BusinessSubjectTypeEnum>;
 
-export interface ICompanyConfigs {}
-
-export interface ICompany extends IBase {
+export interface ICompanyBase extends IBase {
   name?: string;
   secondName?: string;
   email?: string;
@@ -40,16 +35,17 @@ export interface ICompany extends IBase {
   phone?: string;
   taxCode?: string;
   personalTaxCode?: string;
-  owner?: Pick<IUser, '_id' | 'name' | 'email'>;
-  permissions?: Partial<IPermission>[];
-  configs?: ICompanyConfigs;
   type?: string;
   holders?: string[];
   avatarUrl?: string;
   avatarPreviewUrl?: string;
-
   contacts?: ContactsDto[];
-  locations?: LocationDto[];
+  locations?: AddressDto;
+}
+
+export interface ICompany extends ICompanyBase {
+  owner?: Pick<IUserBase, '_id' | 'name' | 'email'>;
+  permissions?: Partial<IPermission>[];
 }
 
 export interface ICompaniesState {
@@ -58,22 +54,36 @@ export interface ICompaniesState {
   error: StateErrorType;
 }
 
-export interface ICompanyForReq
-  extends Partial<
-    Omit<ICompany, '_id' | 'createdAt' | 'updatedAt' | 'owner' | 'company_token' | 'configs' | 'permissions'>
-  > {}
+export interface ICompanyFormData extends ICompanyBase {
+  warehouse?: IFormDataValueWithUUID;
+  suppliers?: IFormDataValueWithUUID;
+  manager?: IFormDataValueWithUUID & { user?: IUserBase };
+}
+
+export interface ICompanyDto extends Omit<ICompanyBase, '_id' | 'createdAt' | 'updatedAt' | 'deletedAt'> {
+  warehouse?: OnlyUUID;
+  supplier?: OnlyUUID;
+  manager?: OnlyUUID;
+}
+export interface ICompanyForReq extends ICompanyDto {}
 
 export interface ICompanyReqData {
   _id?: string;
   id?: string;
-  data: ICompanyForReq;
+  data: ICompanyDto;
 }
 
+// export interface ICompanyConfigs {
+//   warehouse?: IWarehouse;
+//   supplier?: ISupplierDirItem;
+//   manager?: Pick<IPermission, '_id' | 'createdAt' | 'deletedAt' | 'updatedAt' | 'user'>;
+// }
 export interface ICompanyConfigs {
   warehouse?: IWarehouse;
-  supplier?: ISupplierDirItem;
-  manager?: IPermission;
+  supplier?: IFormDataValueWithUUID;
+  manager?: any;
 }
+export interface ICompanyWithConfigs extends ICompanyBase, ICompanyConfigs {}
 export interface ICompanyConfigsDto {
   warehouse?: OnlyUUID;
   supplier?: OnlyUUID;
@@ -89,7 +99,7 @@ export interface IGetAllCompaniesRes extends AppResponse<ICompany[]> {}
 
 export interface ICompanyRes extends AppResponse<ICompany> {}
 
-export interface ICompanyUpdatingRes extends AppResponse<IPermission> {}
+export interface ICompanyUpdatingRes extends AppResponse<ICompany> {}
 
 export interface ICompanyCreatingRes extends AppResponse<IPermission> {}
 

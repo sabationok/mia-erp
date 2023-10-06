@@ -5,7 +5,7 @@ import { ButtonIconVariant } from '../atoms/ButtonIcon/ButtonIcon';
 import { IconIdType } from '../../img/sprite';
 import { TableSearchFormState } from './TableOverHead/TableSearchForm/TableSearchForm';
 
-export interface SelectItemBase<DPath = any> extends Record<string, any> {
+export interface SelectItemBase extends Record<string, any> {
   _id?: string;
   id?: string;
   filter?: boolean;
@@ -21,7 +21,7 @@ export interface SelectItemBase<DPath = any> extends Record<string, any> {
   sortOrder?: 'desc' | 'asc';
 }
 
-export interface SelectItem<DPath = any> extends SelectItemBase<DPath> {}
+export interface SelectItem extends SelectItemBase {}
 
 export interface TableActionProps<TDataType = any> {
   separator?: boolean;
@@ -58,8 +58,8 @@ export type OnHeadCheckBoxChangeHandler<V = any> = (data: V) => any;
 export interface ITableListProps<TDataType = any> {
   tableTitles?: CellTittleProps<TDataType>[];
   tableData?: TDataType[];
-  tableSearchParams?: SelectItem<keyof TDataType>[];
-  tableSortParams?: SelectItem<keyof TDataType>[];
+  tableSearchParams?: SelectItem[];
+  tableSortParams?: SelectItem[];
   transformData?: <T = any>(data: TDataType) => T;
   RowActionsComp?: React.ReactNode;
   tableActions?: TableActionsProps<TDataType>;

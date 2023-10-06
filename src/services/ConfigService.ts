@@ -11,7 +11,7 @@ export enum ENV_KEYS {
   FRB_measurementId = 'FRB_measurementId',
 }
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: 'AIzaSyAjEoVyohiTfAKpW-5AdvVdik1Uy656iJk',
   authDomain: 'react-native-homework-1.firebaseapp.com',
   projectId: 'react-native-homework-1',

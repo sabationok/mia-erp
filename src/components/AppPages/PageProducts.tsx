@@ -14,7 +14,6 @@ import { PagePathType } from '../../data/pages.data';
 import useProductsFilterSelectorsHook from '../../hooks/useProductsFilterSelectors.hook';
 import useProductsActionsCreator from '../../hooks/useProductsActionsCreator.hook';
 import { Path } from 'react-hook-form';
-import { useAppForm } from '../../hooks';
 
 type Props = {
   path: PagePathType;
@@ -34,8 +33,6 @@ const PageProducts: React.FC<any> = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
-
-  const form = useAppForm<UseTableForm<IProduct>>();
 
   const tableConfig = useMemo(
     (): ITableListProps<IProduct> => ({

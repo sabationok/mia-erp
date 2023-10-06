@@ -101,7 +101,7 @@ export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
   },
 ];
 
-export const productsSearchParams: SelectItem<DataPath>[] = [
+export const productsSearchParams: SelectItem[] = [
   // {
   //   label: t('type'),
   //   dataPath: 'type',

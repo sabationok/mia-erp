@@ -235,7 +235,7 @@ export const transactionsColumns: CellTittleProps<ITransaction, DataPath>[] = [
   },
 ];
 
-export const transactionsSearchParams: SelectItem<DataPath>[] = [
+export const transactionsSearchParams: SelectItem[] = [
   {
     label: 'Дата',
     dataPath: 'eventDate',

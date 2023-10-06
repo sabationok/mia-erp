@@ -61,7 +61,7 @@ const WarehousingTab = (p: WarehousingTabProps) => {
     // eslint-disable-next-line
   }, []);
 
-  return <TableList {...tableConfigs} isSearch={false} isFilter={false} />;
+  return <TableList {...tableConfigs} isSearch={false} isFilter={false} isLoading={loading} />;
 };
 
 export default WarehousingTab;

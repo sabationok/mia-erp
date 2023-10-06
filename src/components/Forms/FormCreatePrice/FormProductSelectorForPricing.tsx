@@ -43,6 +43,9 @@ const FormProductSelectorForPricing: React.FC<FormProductSelectorForPricingProps
   const [currentVariation, setCurrentVariation] = useState<OnlyUUID | undefined>(currentProduct?.defaults?.variation);
   const [selectedProduct, setSelectedProduct] = useState<OnlyUUID | undefined>(currentProduct);
 
+  useEffect(() => {
+    console.log('FormProductSelectorForPricing', loadedVariations);
+  }, [loadedVariations]);
   const tableTitles = useMemo(() => {
     const t = templates.find(t => t._id === currentProduct?.template?._id);
     return t ? createTableTitlesFromTemplate(t) : undefined;

@@ -82,7 +82,7 @@ const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
         },
       ];
     },
-    [modals]
+    [modals, navigate]
   );
 };
 export default useOrdersActionsCreatorHook;

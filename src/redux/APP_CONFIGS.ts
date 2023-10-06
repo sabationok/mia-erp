@@ -183,14 +183,13 @@ const permissionsApiEndpoints: ApiEndpointsMap = {
 const companiesApiEndpoints = {
   [Endpoints.deleteById]: (permissionId?: string) =>
     `${API_BASE_ROUTES.COMPANIES}/${Endpoints.deleteById}/${permissionId}`,
-  [Endpoints.updateById]: (permissionId?: string) =>
-    `${API_BASE_ROUTES.COMPANIES}/${Endpoints.updateById}/${permissionId}`,
   [Endpoints.create]: () => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.create}`,
   [Endpoints.getById]: (id?: string) => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.getById}/${id}`,
   [Endpoints.getAllByOwnerId]: (ownerId?: string) =>
     `${API_BASE_ROUTES.COMPANIES}/${Endpoints.getAllByOwnerId}/${ownerId}`,
   setConfigs: () => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.configs}`,
   getConfigs: () => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.configs}`,
+  updateById: (id?: string) => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.updateById}/${id || ''}`,
 };
 
 const authApiEndpoints: ApiEndpointsMap = {

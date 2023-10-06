@@ -3,6 +3,7 @@ import { getAllRolesThunk } from './customRoles.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { rolesMockData } from 'data/customRoles.data';
 import { ICustomRole } from 'redux/customRoles/customRoles.types';
+import { checks } from '../../utils';
 
 export interface ICustomRolesState {
   customRoles: ICustomRole[];
@@ -30,66 +31,25 @@ export const customRolesSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
+      .addMatcher(inFulfilled, (state, action: PayloadAction<StateErrorType>) => {
+        state.isLoading = false;
+        state.error = false;
+      })
       .addMatcher(inError, (state, action: PayloadAction<StateErrorType>) => {
         state.isLoading = false;
         state.error = action.payload;
       }),
 });
 
-function inPending(action: AnyAction) {
-  return action.type.endsWith('pending');
+export function isCustomRolesCase(type: string) {
+  return checks.isStr(type) && type.startsWith('users');
 }
-
-function inError(action: AnyAction) {
-  return action.type.endsWith('rejected');
+function inPending(a: AnyAction) {
+  return isCustomRolesCase(a.type) && a.type.endsWith('pending');
 }
-
-export const customRolesReducer = customRolesSlice.reducer;
-// .addCase(addCountThunk.fulfilled, (state, action) => {})
-// .addCase(deleteCountThunk.fulfilled, (state, action) => {})
-// .addCase(editCountThunk.fulfilled, (state, action) => {})
-// extraReducers: {
-//   [getAllCountsThunk.fulfilled]: (state, action) => {
-//     state.isLoading = false;
-
-//     state.counts = action.payload.data;
-//   },
-//   [getAllCountsThunk.pending]: (state, action) => {
-//     state.isLoading = true;
-//   },
-//   [getAllCountsThunk.rejected]: (state, action) => {
-//     state.isLoading = false;
-//     state.error = action.payload;
-//   },
-
-//   [getCountsByParentIdThunk.fulfilled]: (state, action) => {},
-//   [getCountsByParentIdThunk.pending]: (state, action) => {},
-//   [getCountsByParentIdThunk.rejected]: (state, action) => {},
-
-//   [addCountThunk.fulfilled]: (state, action) => {
-//     state.isloading = false;
-//     state.counts.push(action.payload.data);
-//   },
-//   [addCountThunk.pending]: (state, action) => {
-//     state.isloading = true;
-//   },
-//   [addCountThunk.rejected]: (state, action) => {
-//     state.isloading = false;
-//     state.error = action.payload;
-//   },
-
-//   [deleteCountThunk.fulfilled]: (state, action) => {},
-//   [deleteCountThunk.pending]: (state, action) => {},
-//   [deleteCountThunk.rejected]: (state, action) => {},
-
-//   [editCountThunk.fulfilled]: (state, { payload }) => {
-//     state.isLoading = false;
-//     const index = state.counts.findIndex(el => el._id === payload.data._id);
-
-//     state.counts[index] = { ...payload.data };
-
-//     console.log(index, state.counts[index].isArchived);
-//   },
-//   [editCountThunk.pending]: (state, action) => {},
-//   [editCountThunk.rejected]: (state, action) => {},
-// },
+function inFulfilled(a: AnyAction) {
+  return isCustomRolesCase(a.type) && a.type.endsWith('fulfilled');
+}
+function inError(a: AnyAction) {
+  return isCustomRolesCase(a.type) && a.type.endsWith('rejected');
+}

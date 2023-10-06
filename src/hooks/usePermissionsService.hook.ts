@@ -7,13 +7,11 @@ import {
   deletePermissionByIdThunk,
   getAllPermissionsByCompanyIdThunk,
   getAllPermissionsByUserIdThunk,
-  getCurrentCompanyConfigsThunk,
   getCurrentPermissionThunk,
   inviteUserThunk,
   logInPermissionThunk,
   logOutPermissionThunk,
-  setCurrentCompanyConfigsThunk,
-  updateCompanyWithPermissionThunk,
+  updateCurrentCompanyThunk,
   updatePermissionThunk,
 } from '../redux/permissions/permissions.thunk';
 import {
@@ -26,7 +24,7 @@ import { useMemo } from 'react';
 import { ServiceDispatcherAsync } from 'redux/global.types';
 import { clearCurrentPermission } from '../redux/permissions/permissions.action';
 import { defaultThunkPayload } from '../utils/fabrics';
-import { ICompanyConfigsDto, ICompanyForReq, ICompanyReqData } from '../redux/companies/companies.types';
+import { ICompany, ICompanyForReq, ICompanyReqData } from '../redux/companies/companies.types';
 
 export interface PermissionService {
   getAllByCompanyId: ServiceDispatcherAsync<{ companyId: string; refresh?: boolean }, IPermission[]>;
@@ -36,6 +34,10 @@ export interface PermissionService {
   create: ServiceDispatcherAsync<IPermissionForReq>;
   getCurrent: ServiceDispatcherAsync<{ id: string }>;
   permissionLogOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean }>;
+  logOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean }>;
+  logIn: ServiceDispatcherAsync<{ _id: string }, IPermission>;
+  clearCurrent: () => void;
+  validatePermission?: (validateBy: ValidatePermissionOptions) => boolean;
 
   createInvitation: ServiceDispatcherAsync<IPermissionForReq, IPermission>;
   updateInvitation?: ServiceDispatcherAsync<IPermissionForReq, IPermission>;
@@ -44,15 +46,9 @@ export interface PermissionService {
   deleteInvitation?: ServiceDispatcherAsync<IPermissionForReq, IPermission>;
 
   createCompany: ServiceDispatcherAsync<ICompanyForReq>;
-  updateCompany: ServiceDispatcherAsync<Required<ICompanyReqData>>;
   deleteCompany: ServiceDispatcherAsync<{ _id: string }>;
-  setCurrentConfigs: ServiceDispatcherAsync<{ refreshCurrent?: boolean; data: ICompanyConfigsDto }>;
-  getCurrentConfigs: ServiceDispatcherAsync<{ refreshCurrent?: boolean }>;
 
-  logOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean }>;
-  logIn: ServiceDispatcherAsync<{ _id: string }, IPermission>;
-  clearCurrent: () => void;
-  validatePermission?: (validateBy: ValidatePermissionOptions) => boolean;
+  updateCurrentCompany: ServiceDispatcherAsync<ICompanyReqData, ICompany>;
 }
 
 export interface ValidatePermissionOptions {
@@ -87,10 +83,8 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
       // * COMPANIES
       createCompany: args => dispatch(createCompanyWithPermissionThunk(defaultThunkPayload(args))),
       deleteCompany: args => dispatch(deleteCompanyWithPermissionThunk(defaultThunkPayload(args))),
-      updateCompany: args => dispatch(updateCompanyWithPermissionThunk(defaultThunkPayload(args))),
       // * CURRENT COMPANY
-      setCurrentConfigs: args => dispatch(setCurrentCompanyConfigsThunk(defaultThunkPayload(args))),
-      getCurrentConfigs: args => dispatch(getCurrentCompanyConfigsThunk(defaultThunkPayload(args))),
+      updateCurrentCompany: args => dispatch(updateCurrentCompanyThunk(defaultThunkPayload(args))),
     };
   }, [dispatch]);
 };

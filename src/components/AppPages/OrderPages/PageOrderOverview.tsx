@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { takeFullGridArea } from '../pagesStyles';
 import { AppGridPage } from '../pages';
 import { PagePathType } from '../../../redux/APP_CONFIGS';
-import { ToastService } from '../../../services';
 import { useAppParams } from '../../../hooks';
 import PageCurrentOrderProvider from './PageCurrentOrderProvider';
 import PageOverlayProvider from '../../atoms/PageOverlayProvider';
@@ -13,7 +12,7 @@ import PageOrderOverviewTabs from './PageOrderOverviewTabs';
 export interface PageOrderOverviewProps {
   path: PagePathType;
 }
-const loader = ToastService.createLoader('Loading order info');
+// const loader = ToastService.createLoader('Loading order info');
 
 const PageOrderOverview: React.FC<PageOrderOverviewProps> = ({ path }) => {
   const [isTabsSideVisible, setIsTabsSideVisible] = useState<boolean>(false);
@@ -34,9 +33,9 @@ const PageOrderOverview: React.FC<PageOrderOverviewProps> = ({ path }) => {
       <PageCurrentOrderProvider>
         <PageOverlayProvider>
           <Page>
-            <PageOrderOverviewLeftSide />
+            <PageOrderOverviewLeftSide toggleRightSideVisibility={toggleRightSide} />
 
-            <PageOrderOverviewTabs />
+            <PageOrderOverviewTabs toggleVisibility={toggleRightSide} isVisible={isTabsSideVisible} />
           </Page>
         </PageOverlayProvider>
       </PageCurrentOrderProvider>

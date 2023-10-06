@@ -1,12 +1,9 @@
-import { useModalProvider } from '../../ModalProvider/ModalProvider';
-import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
-import React, { MouseEventHandler, useCallback, useMemo, useState } from 'react';
+import React, { MouseEventHandler, useCallback, useMemo } from 'react';
 import { usePageOverlayService } from '../../atoms/PageOverlayProvider';
 import OrderOverviewXL from '../../Overviews/OrderOverviewXL';
 import { useOrdersSelector } from '../../../redux/selectors.store';
-import { ToastService } from '../../../services';
 
 export interface PageOrderOverviewLeftSideProps {
   toggleRightSideVisibility?: () => void;
@@ -14,9 +11,9 @@ export interface PageOrderOverviewLeftSideProps {
 const PageOrderOverviewLeftSide: React.FC<PageOrderOverviewLeftSideProps> = ({ toggleRightSideVisibility }) => {
   const { currentOrder } = useOrdersSelector();
   const overlayService = usePageOverlayService();
-  const modalS = useModalProvider();
-  const [loading, setLoading] = useState(false);
-  const { products: productsS } = useAppServiceProvider();
+  // const modalS = useModalProvider();
+  // const [loading, setLoading] = useState(false);
+  // const { products: productsS } = useAppServiceProvider();
 
   const onOverlayBackdropClick = useCallback(
     (id: string): MouseEventHandler<HTMLDivElement> =>
@@ -90,13 +87,13 @@ const PageOrderOverviewLeftSide: React.FC<PageOrderOverviewLeftSideProps> = ({ t
                 }
               : undefined
           }
-          onRefresh={
-            loading
-              ? undefined
-              : () => {
-                  const handler = ToastService.createLoader('Refreshing...').open;
-                }
-          }
+          // onRefresh={
+          //   loading
+          //     ? undefined
+          //     : () => {
+          //         // const handler = ToastService.createLoader('Refreshing...').open;
+          //       }
+          // }
           onOpenRightSide={toggleRightSideVisibility}
         />
 

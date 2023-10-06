@@ -6,13 +6,15 @@ import { IVariation } from '../products/variations.types';
 import { AppQueryParams } from '../../api';
 import { IUser } from '../auth/auth.types';
 import { GeolocationPoint } from '../../services/Geolocation.service';
-import { IPermission } from '../permissions/permissions.types';
 
 export enum WarehouseTypeEnum {
   WAREHOUSE = 'warehouse',
   STORE = 'store',
 }
-
+export enum DeliverNameEnum {
+  novaposhta = 'novaposhta',
+  ukrposhta = 'ukrposhta',
+}
 export enum WarehouseDocumentType {
   addToStock = 'addToStock',
   reserveFromStock = 'reserveFromStock',
@@ -22,7 +24,7 @@ export enum WarehouseDocumentType {
 }
 export interface IWarehouse extends IBase {
   owner?: ICompany;
-  manager?: IPermission;
+  manager?: any;
 
   label: string;
   code?: string | number;
@@ -32,6 +34,9 @@ export interface IWarehouse extends IBase {
   address?: string;
 
   inventories?: IProductInventory[];
+
+  novaposhtaApiKey?: string;
+  ukrposhtaApiKey?: string;
 }
 
 export interface IWarehouseDto {

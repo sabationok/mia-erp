@@ -65,7 +65,7 @@ export interface ContactsDto {
   phone?: string;
 }
 
-export interface LocationDto {
+export interface AddressDto {
   country?: string;
   region?: string;
   city?: string;

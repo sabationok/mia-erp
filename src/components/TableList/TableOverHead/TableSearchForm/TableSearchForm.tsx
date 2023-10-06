@@ -29,7 +29,6 @@ const TableSearchForm: React.FC<TableSearchProps> = ({ onSubmit, tableSearchPara
     register,
     watch,
     setValue,
-    unregister,
   } = useForm<TableSearchFormState>({
     defaultValues: { search: '' },
     reValidateMode: 'onChange',

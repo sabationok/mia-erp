@@ -2,7 +2,6 @@ import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
 import { IProduct, ProductTypeEnum } from '../redux/products/products.types';
-import { useProductsSelector } from '../redux/selectors.store';
 import FormCreateProduct from '../components/Forms/FormProduct/FormCreateProduct';
 import { productsFilterOptions } from '../data/directories.data';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +15,7 @@ export type ProductsActionsCreator = TableActionCreator<IProduct>;
 const useProductsActionsCreator = (): ProductsActionsCreator => {
   const service = useAppServiceProvider()[ServiceName.products];
   const navigate = useNavigate();
-  const state = useProductsSelector();
+  // const state = useProductsSelector();
   const modals = useModalProvider();
 
   return useCallback(

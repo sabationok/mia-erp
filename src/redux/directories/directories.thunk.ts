@@ -65,7 +65,7 @@ export const createDirectoryItemThunk = createAsyncThunk<
 
   try {
     if (!data?.dirType) {
-      throw 'Not dir type passed to thunk';
+      throw new Error('Not dir type passed to thunk');
     }
 
     const res = await DirectoriesApi.create(data as CreateDirItemThunkSubmitData);
@@ -90,7 +90,7 @@ export const deleteDirectoryItemThunk = createAsyncThunk<
 
   try {
     if (!data?.dirType) {
-      throw 'Not dir type passed to thunk';
+      throw new Error('Not dir type passed to thunk');
     }
     const res = await DirectoriesApi.update<IDirItemBase>(data as UpdateDirItemThunkSubmitData);
 
@@ -116,7 +116,7 @@ export const updateDirectoryItemThunk = createAsyncThunk<
 
   try {
     if (!data?.dirType) {
-      throw 'Not dir type passed to thunk';
+      throw new Error('Not dir type passed to thunk');
     }
     const res = await DirectoriesApi.update<IDirItemBase>(data as UpdateDirItemThunkSubmitData);
 

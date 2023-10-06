@@ -239,7 +239,7 @@ const ChildrenList = styled.ul<{ isOpen: boolean }>`
   overflow-y: hidden;
   overflow-x: visible;
 
-  max-height: ${({ isOpen }) => (isOpen ? '' : '0')};
+  max-height: ${({ isOpen }) => (isOpen ? 'max-content' : '0')};
 
   visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
   padding: ${p => (p.isOpen ? `6px 0 0` : '')};

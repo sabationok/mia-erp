@@ -40,7 +40,7 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
   onSubmitSearch,
   ...props
 }) => {
-  const tBodyRef = useRef<HTMLElement>(null);
+  // const tBodyRef = useRef<HTMLElement>(null);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const rowRef = useRef<HTMLElement>();
   const [selectedRow, setSelectedRow] = useState<any | undefined>(props?.selectedRow);

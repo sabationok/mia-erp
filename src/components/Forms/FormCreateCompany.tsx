@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
-import { BusinessSubjectTypeEnum, ICompany } from '../../redux/companies/companies.types';
+import { BusinessSubjectTypeEnum, ICompanyFormData } from '../../redux/companies/companies.types';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
@@ -16,9 +16,6 @@ import { businessSubjectTypeFilterOptions, ownershipTypeFilterOptions } from '..
 import { ContractorsTypesEnum } from '../../redux/directories/contractors.types';
 import { FormInputs } from './components/atoms';
 
-export interface ICreateCompanyFormData
-  extends Omit<ICompany, '_id' | 'createdAt' | 'updatedAt' | 'company_token' | 'configs' | 'owner' | 'permissions'> {}
-
 const validFormData = yup.object().shape({
   name: yup.string().required(),
   fullName: yup.string().required(),
@@ -29,9 +26,9 @@ const validFormData = yup.object().shape({
   label: yup.string(),
   fullLabel: yup.string(),
   phone: yup.string(),
-} as Record<keyof ICreateCompanyFormData, any>);
+} as Record<keyof ICompanyFormData, any>);
 
-export interface FormCreateCompanyProps extends Omit<ModalFormProps<any, any, ICompany>, 'onSubmit'> {}
+export interface FormCreateCompanyProps extends Omit<ModalFormProps<any, any, ICompanyFormData>, 'onSubmit'> {}
 const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...props }) => {
   const { permissions } = useAppServiceProvider();
 
@@ -42,7 +39,7 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
     formValues: { businessSubjectType, type: currentType },
     registerSelect,
     setValue,
-  } = useAppForm<ICreateCompanyFormData>({
+  } = useAppForm<ICompanyFormData>({
     defaultValues: { businessSubjectType: BusinessSubjectTypeEnum.company, ...defaultState },
     reValidateMode: 'onSubmit',
     resolver: yupResolver(validFormData),
@@ -67,7 +64,7 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
     }),
     [currentType, businessSubjectType]
   );
-  function onFormSubmit(data: ICreateCompanyFormData) {
+  function onFormSubmit(data: ICompanyFormData) {
     if (data) console.log(data);
 
     permissions

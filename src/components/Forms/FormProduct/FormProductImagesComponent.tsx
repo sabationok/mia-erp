@@ -43,25 +43,27 @@ const FormProductImagesComponent: React.FC<FormProductImagesComponentProps> = ({
       return updatedData;
     });
   };
-  const handleChangeOrder = (currentSetOrder: number, increment: number) => {
-    setFormData(prev => {
-      const newOrder = currentSetOrder + increment;
+  const handleChangeOrder = useCallback(
+    (currentSetOrder: number, increment: number) => {
+      setFormData(prev => {
+        const newOrder = currentSetOrder + increment;
 
-      const updateData = prev.map((set, index) => {
-        if (newOrder > formData.length || newOrder < 1) {
-          return set;
-        }
-        if (set.order === newOrder) {
-          return { ...set, order: currentSetOrder };
-        } else if (set.order === currentSetOrder) {
-          return { ...set, order: newOrder };
-        } else {
-          return set;
-        }
+        return prev.map((set, index) => {
+          if (newOrder > formData.length || newOrder < 1) {
+            return set;
+          }
+          if (set.order === newOrder) {
+            return { ...set, order: currentSetOrder };
+          } else if (set.order === currentSetOrder) {
+            return { ...set, order: newOrder };
+          } else {
+            return set;
+          }
+        });
       });
-      return updateData;
-    });
-  };
+    },
+    [formData.length]
+  );
 
   const handleAddImageToSet = useCallback(
     ({ setId, setIndex, type, uri }: { setId?: string; setIndex?: number; uri?: string; type?: ImageSetSrcType }) => {

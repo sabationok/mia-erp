@@ -6,13 +6,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import t from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useAppForm } from '../../hooks';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { tagsFilterOptions } from '../../data/directories.data';
-import { FilterOption } from '../ModalForm/ModalFilter';
 import { ContractorsTypesEnum } from '../../redux/directories/contractors.types';
 import { FormInputs } from './components/atoms';
 import TagButtonsFilter from 'components/atoms/TagButtonsFilter';
@@ -52,12 +51,12 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({
     reValidateMode: 'onChange',
   });
 
-  const handleFilterSelect = useCallback(
-    (option: FilterOption<ContractorsTypesEnum>) => {
-      setValue('type', option?.value);
-    },
-    [setValue]
-  );
+  // const handleFilterSelect = useCallback(
+  //   (option: FilterOption<ContractorsTypesEnum>) => {
+  //     setValue('type', option?.value);
+  //   },
+  //   [setValue]
+  // );
 
   function formEventWrapper(evHandler?: AppSubmitHandler<ITagDirItem>) {
     if (evHandler) {

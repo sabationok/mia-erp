@@ -122,7 +122,7 @@ export const ordersTableColumns: CellTittleProps<IOrder, DataPath>[] = [
   },
 ];
 
-export const ordersSearchParams: SelectItem<DataPath>[] = [
+export const ordersSearchParams: SelectItem[] = [
   {
     label: 'Дата',
     dataPath: 'eventDate',

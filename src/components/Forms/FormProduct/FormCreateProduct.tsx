@@ -40,10 +40,10 @@ export interface FormCreateProductProps extends Omit<ModalFormProps<any, any, IP
 }
 const productsStatusOption = enumToFilterOptions(ProductStatusEnum);
 const productsMeasurementUnitOption = enumToFilterOptions(MeasurementUnit);
-const visibilityOptions: FilterOption<boolean>[] = [
-  { label: 'yes', value: true },
-  { label: 'no', value: false },
-];
+// const visibilityOptions: FilterOption<boolean>[] = [
+//   { label: 'yes', value: true },
+//   { label: 'no', value: false },
+// ];
 const measurementInputs: {
   label?: string;
   placeholder?: string;

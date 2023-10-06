@@ -9,9 +9,9 @@ import { useModalProvider } from '../../../ModalProvider/ModalProvider';
 import { ExtractId } from '../../../../utils/dataTransform';
 
 export interface PricesTabProps {}
-const PricesTab = ({}: PricesTabProps) => {
+const PricesTab: React.FC<PricesTabProps> = () => {
   const currentProduct = useProductsSelector().currentProduct;
-  const pricesS = useAppServiceProvider()[ServiceName.priceManagement];
+  // const pricesS = useAppServiceProvider()[ServiceName.priceManagement];
   const modalS = useModalProvider();
   const productsS = useAppServiceProvider()[ServiceName.products];
   const [loading, setLoading] = useState(false);
@@ -70,7 +70,7 @@ const PricesTab = ({}: PricesTabProps) => {
     // eslint-disable-next-line
   }, []);
 
-  return <TableList {...tableConfig} isSearch={false} isFilter={false} />;
+  return <TableList {...tableConfig} isSearch={false} isFilter={false} isLoading={loading} />;
 };
 
 export default PricesTab;

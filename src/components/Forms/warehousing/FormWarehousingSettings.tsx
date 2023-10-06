@@ -3,39 +3,63 @@ import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useAppForm } from '../../../hooks';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
-import { useWarehousesSelector } from '../../../redux/selectors.store';
+import { usePermissionsSelector, useWarehousesSelector } from '../../../redux/selectors.store';
 import { FilterOption } from '../../ModalForm/ModalFilter';
 import FlexBox from '../../atoms/FlexBox';
 import styled from 'styled-components';
 import { IWarehouse, WarehousingSettingsFormData } from '../../../redux/warehouses/warehouses.types';
 import { t } from 'lang';
-import { ICompanyConfigs, ICompanyConfigsDto } from 'redux/companies/companies.types';
+import { ICompany, ICompanyDto, ICompanyForReq, ICompanyWithConfigs } from 'redux/companies/companies.types';
 import { Text } from '../../atoms/Text';
 import Switch from '../../atoms/Switch';
 import { ExtractId } from '../../../utils/dataTransform';
+import { useMemo } from 'react';
 
-export interface FormWarehousingSettingsProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
-  onSubmit?: AppSubmitHandler<ICompanyConfigsDto>;
+export interface FormWarehousingSettingsProps
+  extends Omit<ModalFormProps<any, any, ICompany>, 'onSubmit' | 'onSelect'> {
+  onSubmit?: AppSubmitHandler<ICompanyForReq>;
 }
-function createWarehouseFormData(configs: ICompanyConfigs): WarehousingSettingsFormData {
+export function createWarehousingSettingsFormData(
+  company?: Partial<ICompanyWithConfigs>
+): WarehousingSettingsFormData | undefined {
+  if (!createWarehousingSettingsFormData) return;
   return {
-    warehouse: configs?.warehouse,
+    warehouse: company?.warehouse,
   };
 }
-function createWarehouseReqData(fData: WarehousingSettingsFormData): ICompanyConfigsDto {
+export function createWarehousingSettingsReqData(fData?: WarehousingSettingsFormData): ICompanyDto | undefined {
+  if (!fData) return;
+  if (!fData?.warehouse) return;
   return {
-    warehouse: fData?.warehouse ? ExtractId(fData?.warehouse) : undefined,
+    warehouse: ExtractId(fData?.warehouse),
   };
 }
-export const FormWarehousingSettings: React.FC<FormWarehousingSettingsProps> = ({ onSubmit, onClose, ...p }) => {
+const useWarehousesAsSelectOptions = (): FilterOption[] => {
+  return useWarehousesSelector().warehouses.map(w => ({ ...w, value: w._id }));
+};
+export const FormWarehousingSettings: React.FC<FormWarehousingSettingsProps> = ({
+  defaultState,
+  onSubmit,
+  onClose,
+  ...p
+}) => {
   const prServ = useAppServiceProvider()[ServiceName.permissions];
+  const currentPermission = usePermissionsSelector()?.permission;
+  const warehousesSelectOptions = useWarehousesAsSelectOptions();
 
-  const warehousesSelectOptions: FilterOption[] = useWarehousesSelector().warehouses.map(w => ({ ...w, value: w._id }));
+  const currenCompanyData = useMemo(
+    () => defaultState || currentPermission?.company,
+    [currentPermission?.company, defaultState]
+  );
 
-  const { setValue, formValues, handleSubmit, registerSelect } = useAppForm<WarehousingSettingsFormData>();
+  const { setValue, formValues, handleSubmit, registerSelect } = useAppForm<WarehousingSettingsFormData>({
+    defaultValues: createWarehousingSettingsFormData(currenCompanyData),
+  });
 
   const onValid = (fData: WarehousingSettingsFormData) => {
-    prServ.setCurrentConfigs({ data: { data: createWarehouseReqData(fData) } });
+    const reqData = createWarehousingSettingsReqData(fData);
+
+    reqData && prServ.updateCurrentCompany({ data: { _id: currenCompanyData?._id, data: reqData } });
   };
 
   return (

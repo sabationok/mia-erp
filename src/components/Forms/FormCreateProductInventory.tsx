@@ -1,11 +1,9 @@
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import FlexBox from '../atoms/FlexBox';
-import { useModalProvider } from '../ModalProvider/ModalProvider';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { IProduct } from '../../redux/products/products.types';
 import TableList from '../TableList/TableList';
 import { pricesColumnsForProductReview } from '../../data/priceManagement.data';
-import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { IProductInventoryFormData } from '../../redux/warehouses/warehouses.types';
 import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
 import { IVariation } from '../../redux/products/variations.types';
@@ -43,7 +41,7 @@ enum ReservationOptions {
 }
 const reservationOptions = enumToFilterOptions(ReservationOptions);
 const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({ ...props }) => {
-  const modalS = useModalProvider();
+  // const modalS = useModalProvider();
   const currentProduct = useProductsSelector().currentProduct;
 
   const form = useForm({});
@@ -52,10 +50,14 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
     return props?.product || currentProduct;
   }, [currentProduct, props?.product]);
 
-  const { products: productsS, warehouses: warehousesS } = useAppServiceProvider();
+  // const { products: productsS, warehouses: warehousesS } = useAppServiceProvider();
   const [loadedPrices, setLoadedPrices] = useState<IPriceListItem[]>([]);
   const [selectedPrice, setSelectedPrice] = useState<IPriceListItem | undefined>();
   const [selectedVariation, setSelectedVariation] = useState<IVariation>();
+
+  useEffect(() => {
+    console.log('FormCreateProductInventory selectedPrice', selectedPrice);
+  }, [selectedPrice]);
 
   const templates = usePropertiesSelector();
 

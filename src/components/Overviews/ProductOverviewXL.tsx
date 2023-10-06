@@ -130,15 +130,7 @@ const Container = styled(FlexBox)`
 
   background-color: ${p => p.theme.sideBarBackgroundColor};
 `;
-const Header = styled(FlexBox)`
-  height: 32px;
 
-  & .title {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-`;
 const Content = styled(FlexBox)`
   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
   border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};

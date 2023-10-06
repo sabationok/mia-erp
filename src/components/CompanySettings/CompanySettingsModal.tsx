@@ -37,7 +37,7 @@ const CompanyConfigsTab = ({ onClose }: CompanySettingsTabsBaseProps) => {
     [warehouses]
   );
 
-  const onValid = (data: ICompanyConfigsFormData) => {};
+  // const onValid = (data: ICompanyConfigsFormData) => {};
 
   return (
     <FlexBox>

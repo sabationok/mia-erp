@@ -47,7 +47,7 @@ const TagButtonsFilter = <Value extends string | number = any>({
         return newData;
       });
     },
-    [multiple, name, onChange, onSelect]
+    [multiple, name, onChange, onSelect, onSelectValue]
   );
 
   const renderFilter = useMemo(() => {

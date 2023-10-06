@@ -11,7 +11,7 @@ import { ExtractId } from '../../../../utils/dataTransform';
 
 export interface VariationsTabProps {}
 
-const VariationsTab = ({}: VariationsTabProps) => {
+const VariationsTab: React.FC<VariationsTabProps> = () => {
   const page = usePageCurrentProduct();
   const modalS = useModalProvider();
   const currentProduct = useProductsSelector().currentProduct;
@@ -99,6 +99,6 @@ const VariationsTab = ({}: VariationsTabProps) => {
     // eslint-disable-next-line
   }, []);
 
-  return <TableList {...tableConfig} isSearch={false} isFilter={false} />;
+  return <TableList {...tableConfig} isSearch={false} isFilter={false} isLoading={loading} />;
 };
 export default VariationsTab;

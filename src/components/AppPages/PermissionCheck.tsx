@@ -74,7 +74,7 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
     };
   }, [clearCurrent, hasPermission, logOutUser, permissionId]);
 
-  if (state.isLoading || loading || !isLoaded) {
+  if (loading || !isLoaded) {
     return <AppLoader isLoading comment={'Permission check. Please wait.'} />;
   }
 

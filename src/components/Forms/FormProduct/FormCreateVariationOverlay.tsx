@@ -66,7 +66,7 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
     setValue,
     handleSubmit,
     register,
-    formState: { errors, isValid },
+    formState: { errors },
     clearAfterSave,
     closeAfterSave,
     toggleAfterSubmitOption,

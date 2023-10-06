@@ -8,16 +8,19 @@ export interface ISystemRole extends IBase {
   actions: string[];
 }
 
-export interface IUser extends IBase {
+export interface IUserBase extends IBase {
   name?: string;
   secondName?: string;
   email?: string;
   avatarURL?: string;
   sysRole?: ISystemRole;
+}
+
+export interface IUser extends IUserBase {
   permissions?: Partial<IPermission>[];
 }
 
-export interface IManager extends Omit<IUser, 'permissions'> {
+export interface IManager extends IUserBase {
   code?: string;
   permission?: IPermission;
 }

@@ -1,7 +1,6 @@
 import React, { createContext, useCallback, useContext, useMemo } from 'react';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { IProduct } from '../../../redux/products/products.types';
-import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 
 export interface PageCurrentOrderProviderProps {
   children?: React.ReactNode;
@@ -19,7 +18,7 @@ export const usePageCurrentOrder = () => useContext(PageCurrentOrderCTX) as Page
 
 const PageCurrentOrderProvider: React.FC<PageCurrentOrderProviderProps> = ({ children }) => {
   const { currentOrder } = useOrdersSelector();
-  const service = useAppServiceProvider()[ServiceName.orders];
+  // const service = useAppServiceProvider()[ServiceName.orders];
 
   const clearCurrent = useCallback(() => {
     // service.clearCurrent({});
