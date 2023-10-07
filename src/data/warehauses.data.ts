@@ -31,8 +31,8 @@ export const warehousesTableColumns: CellTittleProps<IWarehouse>[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Менеджер', getData: rd => `${rd.manager?.user?.name}` },
-    bottom: { name: 'Email', getData: rd => `${rd.manager?.user?.email}` },
+    top: { name: 'Менеджер', getData: rd => `${rd.manager?.user?.name || '---'}` },
+    bottom: { name: 'Email', getData: rd => `${rd.manager?.user?.email || '---'}` },
     width: '150px',
     action: 'valueByPath',
   },

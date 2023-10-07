@@ -8,10 +8,14 @@ import FormCreateVariation from '../../../Forms/FormProduct/FormCreateVariationO
 import { IVariationTableData } from '../../../../redux/products/variations.types';
 import { useProductsSelector, usePropertiesSelector } from '../../../../redux/selectors.store';
 import { ExtractId } from '../../../../utils/dataTransform';
+import { OnlyUUID } from '../../../../redux/global.types';
 
-export interface VariationsTabProps {}
+export interface VariationsTabProps {
+  onSelect?: (variation: OnlyUUID) => void;
+  selected?: OnlyUUID;
+}
 
-const VariationsTab: React.FC<VariationsTabProps> = () => {
+const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected }) => {
   const page = usePageCurrentProduct();
   const modalS = useModalProvider();
   const currentProduct = useProductsSelector().currentProduct;
@@ -34,14 +38,25 @@ const VariationsTab: React.FC<VariationsTabProps> = () => {
 
   const variationsTableTitles = useMemo(() => {
     const template = templates.find(t => t._id === currentProduct?.template?._id);
+
     return createTableTitlesFromTemplate(template);
   }, [currentProduct?.template?._id, templates]);
 
   const tableConfig = useMemo(() => {
     return {
       tableTitles: variationsTableTitles,
-      tableData: page?.currentProduct?.variations,
+      tableData: currentProduct?.variations,
       transformData: transformVariationTableData,
+      onRowClick: data => {
+        if (onSelect) {
+          if (data?.rowData) {
+            onSelect(ExtractId(data?.rowData));
+            return;
+          } else if (data?._id) {
+            onSelect({ _id: data?._id });
+          }
+        }
+      },
       actionsCreator: ctx => {
         const currentId = ctx.selectedRow?._id;
 
@@ -63,7 +78,7 @@ const VariationsTab: React.FC<VariationsTabProps> = () => {
             disabled: !currentId,
             onClick: () => {
               if (!currentId || !ctx.selectedRow) return;
-              const dataForUpdate = page.currentProduct?.variations?.find(v => v?._id === currentId);
+              const dataForUpdate = currentProduct?.variations?.find(v => v?._id === currentId);
 
               modalS.open({
                 ModalChildren: FormCreateVariation,
@@ -90,7 +105,7 @@ const VariationsTab: React.FC<VariationsTabProps> = () => {
         ];
       },
     } as ITableListProps<IVariationTableData>;
-  }, [loadData, modalS, page.currentProduct, variationsTableTitles]);
+  }, [currentProduct?.variations, loadData, modalS, onSelect, page.currentProduct, variationsTableTitles]);
 
   useEffect(() => {
     if ((!currentProduct?.variations || currentProduct?.variations?.length === 0) && currentProduct?._id) {
@@ -99,6 +114,6 @@ const VariationsTab: React.FC<VariationsTabProps> = () => {
     // eslint-disable-next-line
   }, []);
 
-  return <TableList {...tableConfig} isSearch={false} isFilter={false} isLoading={loading} />;
+  return <TableList {...tableConfig} isSearch={false} isFilter={false} isLoading={loading} selectedRow={selected} />;
 };
 export default VariationsTab;

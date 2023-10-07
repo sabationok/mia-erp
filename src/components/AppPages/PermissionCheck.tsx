@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
 import { memo, useEffect, useMemo, useState } from 'react';
 import useAppParams from '../../hooks/useAppParams.hook';
@@ -17,6 +17,7 @@ type Props = {
 const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const { permissionId } = useAppParams();
   const {
@@ -29,14 +30,17 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
   // const [loading, setLoading] = useState(false);
 
   const isValidPermissionId = useMemo(() => {
-    const isValid = !isUndefined(permissionId) && state.permission._id === permissionId;
+    const isValid = !isUndefined(permissionId) && state?.permission?._id === permissionId;
     if (isValid) {
       permissionToken.set(permissionId);
     } else {
-      console.log('PermissionCheck ACCESS DENIED', baseApi.defaults.headers.Permission);
+      console.warn(
+        'PermissionCheck ACCESS DENIED',
+        baseApi?.defaults?.headers?.Permission || baseApi?.defaults?.headers
+      );
       permissionToken.unset();
     }
-    return baseApi.defaults.headers.Permission === permissionId;
+    return baseApi.defaults?.headers?.Permission === permissionId;
   }, [permissionId, state.permission._id]);
 
   const hasPermission = useMemo(() => !!state.permission._id, [state.permission._id]);
@@ -45,6 +49,12 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
     onLoading: setLoading,
     onSuccess: () => setIsLoaded(true),
   });
+
+  useEffect(() => {
+    if (!isValidPermissionId) {
+      navigate('/');
+    }
+  }, [isValidPermissionId, navigate]);
 
   useEffect(() => {
     if (!hasPermission) {

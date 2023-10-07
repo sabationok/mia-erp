@@ -144,14 +144,22 @@ const DirPropertyGroup: React.FC<DiPropertiesRenderItemProps> = ({
   const theme = useTheme();
 
   const renderChildren = useMemo(() => {
-    return item.childrenList?.map((el, index) => (
-      <DirPropertyItem
-        key={`property_${el?._id}`}
-        item={el}
-        index={index}
-        {...{ onUpdate, onCreateChild, onDelete, onCreateValue, onChangeSelectableStatus }}
-      />
-    ));
+    return !item.childrenList || item.childrenList.length === 0 ? (
+      <FlexBox justifyContent={'stretch'}>
+        <Text $weight={500} $size={16} $align={'center'}>
+          {'Характеристики відсутні'}
+        </Text>
+      </FlexBox>
+    ) : (
+      item.childrenList?.map((el, index) => (
+        <DirPropertyItem
+          key={`property_${el?._id}`}
+          item={el}
+          index={index}
+          {...{ onUpdate, onCreateChild, onDelete, onCreateValue, onChangeSelectableStatus }}
+        />
+      ))
+    );
   }, [item.childrenList, onChangeSelectableStatus, onCreateChild, onCreateValue, onDelete, onUpdate]);
 
   return (
@@ -203,11 +211,9 @@ const DirPropertyGroup: React.FC<DiPropertiesRenderItemProps> = ({
         </ButtonIcon>
       </FlexBox>
 
-      {item.childrenList && item.childrenList?.length > 0 && (
-        <FlexBox padding={isOpen ? '6px 8px' : ''} gap={6} flex={1} overflow={'hidden'} maxHeight={isOpen ? '' : '0'}>
-          {renderChildren}
-        </FlexBox>
-      )}
+      <FlexBox padding={isOpen ? '6px 8px' : ''} gap={6} flex={1} overflow={'hidden'} maxHeight={isOpen ? '' : '0'}>
+        {renderChildren}
+      </FlexBox>
     </FlexBox>
   );
 };
@@ -284,8 +290,10 @@ const DirPropertyItem: React.FC<DiPropertiesRenderItemProps> = ({
           {item.childrenList && item.childrenList?.length > 0 ? (
             renderChildren
           ) : (
-            <FlexBox fillHeight justifyContent={'center'} alignItems={'center'}>
-              <Text>{'Додайте опції до характеристики'}</Text>
+            <FlexBox fillHeight>
+              <Text $weight={500} $size={16} $align={'center'}>
+                {'Додайте опції до характеристики'}
+              </Text>
             </FlexBox>
           )}
         </StPropertyItemContent>
@@ -300,7 +308,7 @@ const DirPropertyItem: React.FC<DiPropertiesRenderItemProps> = ({
 };
 
 const StPropertyItem = styled(FlexBox)`
-  border: 1px solid ${p => p.theme.accentColor.base};
+  border: 1px solid ${p => p.theme.modalBorderColor};
   border-left-width: 3px;
 
   overflow: hidden;

@@ -7,9 +7,13 @@ import { IPriceListItem } from '../../../../redux/priceManagement/priceManagemen
 import { useProductsSelector } from '../../../../redux/selectors.store';
 import { useModalProvider } from '../../../ModalProvider/ModalProvider';
 import { ExtractId } from '../../../../utils/dataTransform';
+import { OnlyUUID } from '../../../../redux/global.types';
 
-export interface PricesTabProps {}
-const PricesTab: React.FC<PricesTabProps> = () => {
+export interface PricesTabProps {
+  onSelect?: (price: OnlyUUID) => void;
+  selected?: OnlyUUID;
+}
+const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected }) => {
   const currentProduct = useProductsSelector().currentProduct;
   // const pricesS = useAppServiceProvider()[ServiceName.priceManagement];
   const modalS = useModalProvider();
@@ -33,6 +37,16 @@ const PricesTab: React.FC<PricesTabProps> = () => {
     return {
       tableData: currentProduct?.prices,
       tableTitles: pricesColumnsForProductReview,
+      onRowClick: data => {
+        if (onSelect) {
+          if (data?.rowData) {
+            onSelect(ExtractId(data?.rowData));
+            return;
+          } else if (data?._id) {
+            onSelect({ _id: data?._id });
+          }
+        }
+      },
       actionsCreator: ctx => {
         const currentId = ctx.selectedRow?._id;
 
@@ -70,7 +84,7 @@ const PricesTab: React.FC<PricesTabProps> = () => {
     // eslint-disable-next-line
   }, []);
 
-  return <TableList {...tableConfig} isSearch={false} isFilter={false} isLoading={loading} />;
+  return <TableList {...tableConfig} isSearch={false} isFilter={false} isLoading={loading} selectedRow={selected} />;
 };
 
 export default PricesTab;

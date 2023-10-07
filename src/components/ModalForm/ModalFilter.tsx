@@ -10,6 +10,7 @@ export interface ModalFormFilterProps<V = any, D = any> {
   onOptSelect?: FilterSelectHandler<V, D>;
   onFilterValueSelect?: FilterSelectValueHandler<V>;
   filterOptions?: FilterOption<V, D>[];
+  onChangeIndex?: (index: number) => void;
   name?: any;
   currentIndex?: number;
   defaultFilterValue?: string;
@@ -51,6 +52,7 @@ const ModalFilter = <V = any, D = any>({
   currentIndex = 0,
   asStepper,
   name,
+  onChangeIndex,
   ...props
 }: ModalFormFilterProps<V, D> & React.HTMLAttributes<HTMLDivElement>) => {
   const [current, setCurrent] = useState<number>(currentIndex);
@@ -61,14 +63,12 @@ const ModalFilter = <V = any, D = any>({
       return () => {
         setCurrent(idx);
 
-        if (checks.isFun(onFilterValueSelect)) {
-          onFilterValueSelect(name, option.value);
-        }
-
+        if (checks.isFun(onChangeIndex)) onChangeIndex(idx);
+        if (checks.isFun(onFilterValueSelect)) onFilterValueSelect(name, option.value);
         if (checks.isFun(onOptSelect)) onOptSelect(option, option.value, idx);
       };
     },
-    [name, onFilterValueSelect, onOptSelect]
+    [name, onFilterValueSelect, onOptSelect, onChangeIndex]
   );
 
   useEffect(() => {

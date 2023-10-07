@@ -7,10 +7,14 @@ import { useModalProvider } from '../../../ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useProductsSelector } from '../../../../redux/selectors.store';
 import { ExtractId } from '../../../../utils/dataTransform';
+import { OnlyUUID } from '../../../../redux/global.types';
 
-export interface WarehousingTabProps {}
+export interface WarehousingTabProps {
+  onSelect?: (inventory: OnlyUUID) => void;
+  selected?: OnlyUUID;
+}
 
-const WarehousingTab = (p: WarehousingTabProps) => {
+const WarehousingTab = ({ onSelect, selected }: WarehousingTabProps) => {
   const currentProduct = useProductsSelector().currentProduct;
   const modalS = useModalProvider();
   const productsS = useAppServiceProvider()[ServiceName.products];
@@ -32,6 +36,16 @@ const WarehousingTab = (p: WarehousingTabProps) => {
     return {
       tableData: currentProduct?.inventories,
       tableTitles: warehouseOverviewTableColumns,
+      onRowClick: data => {
+        if (onSelect) {
+          if (data?.rowData) {
+            onSelect(ExtractId(data?.rowData));
+            return;
+          } else if (data?._id) {
+            onSelect({ _id: data?._id });
+          }
+        }
+      },
       actionsCreator: ctx => {
         // const currentId = ctx.selectedRow?._id;
 
@@ -52,7 +66,7 @@ const WarehousingTab = (p: WarehousingTabProps) => {
         ];
       },
     };
-  }, [currentProduct?.inventories, loadData, modalS]);
+  }, [currentProduct?.inventories, loadData, modalS, onSelect]);
 
   useEffect(() => {
     // if ((!currentProduct?.inventories || currentProduct?.inventories?.length === 0) && currentProduct?._id) {
@@ -61,7 +75,7 @@ const WarehousingTab = (p: WarehousingTabProps) => {
     // eslint-disable-next-line
   }, []);
 
-  return <TableList {...tableConfigs} isSearch={false} isFilter={false} isLoading={loading} />;
+  return <TableList {...tableConfigs} isSearch={false} isFilter={false} isLoading={loading} selectedRow={selected} />;
 };
 
 export default WarehousingTab;
