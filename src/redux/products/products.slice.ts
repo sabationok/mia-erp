@@ -7,6 +7,7 @@ import {
   getAllPricesByProductIdThunk,
   getAllProductsThunk,
   getProductFullInfoThunk,
+  updateProductDefaultsThunk,
   updateProductThunk,
 } from './products.thunks';
 import { createVariationThunk, getAllVariationsByProductIdThunk, updateVariationThunk } from './variations.thunks';
@@ -84,6 +85,13 @@ export const productsSlice = createSlice({
           return;
         } else {
           s?.currentProduct?.variations?.unshift(a.payload);
+        }
+      })
+      .addCase(updateProductDefaultsThunk.fulfilled, (s, a) => {
+        if (a.payload?.updateCurrent && s.currentProduct) {
+          s.currentProduct.defaults = a.payload.data?.defaults;
+        } else if (a.payload?.refreshCurrent && s.currentProduct) {
+          s.currentProduct = { ...s.currentProduct, ...a.payload?.data };
         }
       })
       .addCase(updateVariationThunk.fulfilled, (s, a) => {

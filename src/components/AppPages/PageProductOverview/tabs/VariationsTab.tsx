@@ -13,9 +13,10 @@ import { OnlyUUID } from '../../../../redux/global.types';
 export interface VariationsTabProps {
   onSelect?: (variation: OnlyUUID) => void;
   selected?: OnlyUUID;
+  withActions?: boolean;
 }
 
-const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected }) => {
+const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withActions = true }) => {
   const page = usePageCurrentProduct();
   const modalS = useModalProvider();
   const currentProduct = useProductsSelector().currentProduct;
@@ -57,55 +58,57 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected }) => 
           }
         }
       },
-      actionsCreator: ctx => {
-        const currentId = ctx.selectedRow?._id;
+      actionsCreator: !withActions
+        ? undefined
+        : ctx => {
+            const currentId = ctx.selectedRow?._id;
 
-        return [
-          { icon: 'refresh', type: 'onlyIcon', onClick: () => loadData({ refresh: true }) },
-          { separator: true },
-          {
-            icon: 'delete',
-            type: 'onlyIcon',
-            disabled: !currentId,
-            onClick: () => {
-              window.confirm(`Видалити варіацію:\n ${currentId}`);
-            },
-          },
-          { icon: 'copy', type: 'onlyIcon', disabled: !currentId },
-          {
-            icon: 'edit',
-            type: 'onlyIcon',
-            disabled: !currentId,
-            onClick: () => {
-              if (!currentId || !ctx.selectedRow) return;
-              const dataForUpdate = currentProduct?.variations?.find(v => v?._id === currentId);
-
-              modalS.open({
-                ModalChildren: FormCreateVariation,
-                modalChildrenProps: {
-                  update: currentId,
-                  defaultState: dataForUpdate,
+            return [
+              { icon: 'refresh', type: 'onlyIcon', onClick: () => loadData({ refresh: true }) },
+              { separator: true },
+              {
+                icon: 'delete',
+                type: 'onlyIcon',
+                disabled: !currentId,
+                onClick: () => {
+                  window.confirm(`Видалити варіацію:\n ${currentId}`);
                 },
-              });
-            },
-          },
-          { separator: true },
-          {
-            icon: 'plus',
-            type: 'onlyIconFilled',
-            onClick: () => {
-              // toggleVisibility && toggleVisibility();
+              },
+              { icon: 'copy', type: 'onlyIcon', disabled: !currentId },
+              {
+                icon: 'edit',
+                type: 'onlyIcon',
+                disabled: !currentId,
+                onClick: () => {
+                  if (!currentId || !ctx.selectedRow) return;
+                  const dataForUpdate = currentProduct?.variations?.find(v => v?._id === currentId);
 
-              modalS.open({
-                ModalChildren: FormCreateVariation,
-                modalChildrenProps: { product: page.currentProduct },
-              });
-            },
+                  modalS.open({
+                    ModalChildren: FormCreateVariation,
+                    modalChildrenProps: {
+                      update: currentId,
+                      defaultState: dataForUpdate,
+                    },
+                  });
+                },
+              },
+              { separator: true },
+              {
+                icon: 'plus',
+                type: 'onlyIconFilled',
+                onClick: () => {
+                  // toggleVisibility && toggleVisibility();
+
+                  modalS.open({
+                    ModalChildren: FormCreateVariation,
+                    modalChildrenProps: { product: page.currentProduct },
+                  });
+                },
+              },
+            ];
           },
-        ];
-      },
     } as ITableListProps<IVariationTableData>;
-  }, [currentProduct?.variations, loadData, modalS, onSelect, page.currentProduct, variationsTableTitles]);
+  }, [currentProduct?.variations, loadData, modalS, onSelect, page.currentProduct, variationsTableTitles, withActions]);
 
   useEffect(() => {
     if ((!currentProduct?.variations || currentProduct?.variations?.length === 0) && currentProduct?._id) {

@@ -70,6 +70,7 @@ const FormProductCategories: React.FC<FormProductCategoriesProps> = ({ options, 
       <CustomSelect
         treeMode
         dropDownIsAbsolute
+        defaultValue={defaultData}
         {...{
           label: translate('categories'),
           placeholder: translate('categories'),

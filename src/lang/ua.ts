@@ -2,6 +2,7 @@ import { ApiDirType, AppPagesEnum } from '../redux/APP_CONFIGS';
 import { ContractorsTypesEnum } from '../redux/directories/contractors.types';
 import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../redux/companies/companies.types';
 import { WarehouseDocumentType } from '../redux/warehouses/warehouses.types';
+import { MeasurementUnit } from '../redux/products/products.types';
 
 export const langUa = {
   // DIRECTORIES
@@ -64,6 +65,17 @@ export const langUa = {
   [AppPagesEnum.storage]: 'Склад',
   [AppPagesEnum.products]: 'Продукти',
   [AppPagesEnum.manager]: 'Менеджер',
+
+  [MeasurementUnit.Pc]: 'шт.', // Штука (Piece)
+  [MeasurementUnit.G]: 'г.', // Грам (Gram)
+  [MeasurementUnit.Kg]: 'кг.', // Кілограм (Kilogram)
+  [MeasurementUnit.Ml]: 'мл.', // Мілілітр (Milliliter)
+  [MeasurementUnit.L]: 'л.', // Літр (Liter)
+  [MeasurementUnit.M]: 'м.', // Метр (Meter)
+  [MeasurementUnit.Sm]: 'см.', // Метр (Meter)
+  [MeasurementUnit.SqM]: 'кв.м.', // Квадратний метр (SquareMeter)
+  [MeasurementUnit.CuM]: 'куб.м.', // Кубічний метр (CubicMeter)
+  [MeasurementUnit.Other]: 'інше', // Інше (Other)
 
   quantity: 'Кількість',
   batch: 'Партія',
@@ -175,6 +187,12 @@ export const langUa = {
   insertEmail: 'Емейл',
   selectCurrency: 'Оберіть валюту',
   selectTags: 'Оберть теги',
+  Author: 'Автор',
+
+  Height: 'Висота',
+  Width: 'Ширина',
+  Length: 'Довжина',
+  Weight: 'Вага',
 
   createDirParentItem: 'Створити батьківський елемент',
   createDirChildItem: 'Створити дочірній елемент',
@@ -196,7 +214,7 @@ export const langUa = {
   deleteChildCategory: 'Видалити під-категорію',
 
   createContractor: 'Створити',
-  copyContractor: 'Клпіювати',
+  copyContractor: 'Копіювати',
   deleteContractor: 'Видалити',
   editContractor: 'Редагувати',
   archive: 'Архівувати',
@@ -249,7 +267,7 @@ export const langUa = {
   loaded: 'Завантажено',
   loading: 'Завантаження',
   cost: 'Собівартість',
-  sku: 'Артикул | SKU',
+  sku: 'SKU',
   sizesTable: 'Розмірна сітка',
   visibility: 'Видимість',
 
@@ -260,7 +278,7 @@ export const langUa = {
   [WarehouseDocumentType.removeFromReserve]: 'Списання з резерву',
 
   Description: 'Description',
-  SKU: 'Артикул | SKU',
+  SKU: 'SKU',
   Images: 'Зображення',
   Brand: 'Бренд',
   Categories: 'Категорії',
@@ -268,6 +286,8 @@ export const langUa = {
   Measurement: 'Вимірювання',
 
   'Variations template': 'Шаблон варіацій',
+  'Product label': 'Назва продукту',
+  'Variation label': 'Назва варіації',
   'Default params': 'Параметри за замовчуванням',
   'Default values': 'Значення за замовчуванням',
   'Default warehouse': 'Склад за замовчуванням',
@@ -289,4 +309,17 @@ export const langUa = {
 
   'Please wait while minions do their work...': 'Будь ласка зачекайте поки міньйони роблять свою роботу...',
   'Loading content...': 'Завантаження вмісту...',
+
+  'Price OUT': 'Вихідна ціна',
+  'Price IN': 'Вхідна ціна',
+  'Commission, amount': 'Комісія, сума',
+  'Commission, %': 'Комісія, %',
+  'Markup, amount': 'Націнка, сума',
+  'Markup, %': 'Націнка, %',
+  'Discount, amount': 'Знижка, сума',
+  'Discount, %': 'Знижка, %',
+  'Bonus, amount': 'Бонус, сума',
+  'Bonus, %': 'Бонус, %',
+  'Cashback, amount': 'Кешбек, сума',
+  'Cashback, %': 'Кешбек, %',
 };

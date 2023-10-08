@@ -13,12 +13,13 @@ import { IPropertyValue, IVariationTemplate } from './properties.types';
 export enum ProductStatusEnum {
   pending = 'pending',
   rejected = 'rejected',
+  success = 'success',
   approved = 'approved',
   error = 'error',
-  success = 'success',
   warning = 'warning',
-  // info = 'info',
+  info = 'info',
 }
+export type ProductStatus = keyof ProductStatusEnum | ProductStatusEnum;
 
 export enum MeasurementUnit {
   Pc = 'Pc', // Штука (Piece)
@@ -26,12 +27,14 @@ export enum MeasurementUnit {
   Kg = 'Kg', // Кілограм (Kilogram)
   Ml = 'Ml', // Мілілітр (Milliliter)
   L = 'L', // Літр (Liter)
+  Sm = 'Sm', // Сантиметр
   M = 'M', // Метр (Meter)
+  SqSm = 'SqSm', // Квадратний метр (SquareSMeter)
+  CuSm = 'CuSm,', // Кубічний метр (CubicSMeter)
   SqM = 'SqM', // Квадратний метр (SquareMeter)
   CuM = 'CuM', // Кубічний метр (CubicMeter)
   Other = 'Other', // Інше (Other)
 }
-export type ProductStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
 export enum ProductTypeEnum {
   GOODS = 'GOODS',
@@ -47,6 +50,7 @@ export interface IProductBase extends IBase {
   barCode?: string;
   qrCode?: string;
   measurement?: IProductMeasurement;
+  dimensions?: IProductDimensions;
   hasVariations?: boolean;
   type?: ProductTypeEnum;
   status?: ProductStatus;
@@ -78,11 +82,11 @@ export interface IProductAddsFields extends IProductBase {
 }
 
 export interface IProductDefaults {
-  warehouse?: IWarehouse;
-  price?: IPriceListItem;
-  supplier?: ISupplierDirItem;
-  inventory?: IProductInventory;
   variation?: IVariation;
+  price?: IPriceListItem;
+  warehouse?: IWarehouse;
+  inventory?: IProductInventory;
+  supplier?: ISupplierDirItem;
 }
 
 export interface IProductWithDefaults extends IProductAddsFields {
@@ -104,6 +108,12 @@ export interface IProductMeasurement {
   max?: number;
   step?: number;
   unit?: MeasurementUnit;
+}
+export interface IProductDimensions {
+  width?: number;
+  height?: number;
+  length?: number;
+  weight?: number;
 }
 
 // * >>>>>>> FORM DATA <<<<<<<

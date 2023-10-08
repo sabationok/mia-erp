@@ -5,10 +5,10 @@ import { Text } from '../../atoms/Text';
 import ModalFilter, { FilterSelectHandler } from '../../ModalForm/ModalFilter';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import VariationsTab from './tabs/VariationsTab';
 import PricesTab from './tabs/PricesTab';
 import WarehousingTab from './tabs/WarehousingTab';
+import { ModalHeader } from '../../atoms';
 
 // const openLoader = (current: RightSideOptionEnum) =>
 //   ToastService.createLoader('Loading data...').open({
@@ -52,28 +52,26 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
 
   return (
     <RightSide overflow={'hidden'} fillHeight isVisible={isVisible}>
-      <Top fillWidth gap={4} isVisible={isVisible} fxDirection={'row'} justifyContent={'space-between'}>
-        <ButtonIcon
-          variant={'textExtraSmall'}
-          icon={'SmallArrowLeft'}
-          style={{ padding: 6 }}
-          onClick={toggleVisibility}
-        >
-          {'Back'}
-        </ButtonIcon>
+      {isVisible && (
+        <ModalHeader
+          onBackPress={toggleVisibility}
+          renderTitle={
+            <FlexBox padding={'0 8px'} fxDirection={'row'} alignItems={'center'} justifyContent={'center'} gap={8}>
+              <Text $weight={600} $size={14}>
+                {page?.currentProduct?.label}
+              </Text>
 
-        <FlexBox padding={'0 8px'}>
-          <Text $weight={600} $size={14}>
-            {page?.currentProduct?.label}
-          </Text>
+              <Text $size={14}>{page?.currentProduct?.sku}</Text>
+            </FlexBox>
+          }
+        />
+      )}
 
-          <Text $size={10}>{page?.currentProduct?.sku}</Text>
-        </FlexBox>
-      </Top>
+      <TabBox overflow={'hidden'} fillWidth flex={1}>
+        <ModalFilter filterOptions={toggleOptions} defaultValue={current} onOptSelect={filterHandler} preventFilter />
 
-      <ModalFilter filterOptions={toggleOptions} defaultValue={current} onOptSelect={filterHandler} preventFilter />
-
-      {renderTab}
+        {renderTab}
+      </TabBox>
     </RightSide>
   );
 };
@@ -101,10 +99,9 @@ const RightSide = styled(FlexBox)<{ isVisible?: boolean }>`
   }
 `;
 
-const Top = styled(FlexBox)<{ isVisible?: boolean }>`
-  @media screen and (min-width: 768px) {
-    display: none;
-  }
-  border-bottom: 1px solid ${p => p.theme.modalBorderColor};
+const TabBox = styled(FlexBox)`
+  border-top: 1px solid ${p => p.theme.modalBorderColor};
+  //border-bottom: 1px solid ${p => p.theme.modalBorderColor};
 `;
+
 export default PageProductOverviewRightSide;

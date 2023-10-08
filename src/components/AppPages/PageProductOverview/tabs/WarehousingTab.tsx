@@ -12,9 +12,10 @@ import { OnlyUUID } from '../../../../redux/global.types';
 export interface WarehousingTabProps {
   onSelect?: (inventory: OnlyUUID) => void;
   selected?: OnlyUUID;
+  withActions?: boolean;
 }
 
-const WarehousingTab = ({ onSelect, selected }: WarehousingTabProps) => {
+const WarehousingTab = ({ onSelect, selected, withActions }: WarehousingTabProps) => {
   const currentProduct = useProductsSelector().currentProduct;
   const modalS = useModalProvider();
   const productsS = useAppServiceProvider()[ServiceName.products];
@@ -46,27 +47,29 @@ const WarehousingTab = ({ onSelect, selected }: WarehousingTabProps) => {
           }
         }
       },
-      actionsCreator: ctx => {
-        // const currentId = ctx.selectedRow?._id;
+      actionsCreator: !withActions
+        ? undefined
+        : ctx => {
+            // const currentId = ctx.selectedRow?._id;
 
-        return [
-          { icon: 'refresh', type: 'onlyIcon', onClick: () => loadData({ refresh: true }) },
+            return [
+              { icon: 'refresh', type: 'onlyIcon', onClick: () => loadData({ refresh: true }) },
 
-          { separator: true },
-          {
-            icon: 'plus',
-            type: 'onlyIconFilled',
-            onClick: () => {
-              modalS.open({
-                ModalChildren: Forms.CreateWarehouseDocument,
-                modalChildrenProps: {},
-              });
-            },
+              { separator: true },
+              {
+                icon: 'plus',
+                type: 'onlyIconFilled',
+                onClick: () => {
+                  modalS.open({
+                    ModalChildren: Forms.CreateWarehouseDocument,
+                    modalChildrenProps: {},
+                  });
+                },
+              },
+            ];
           },
-        ];
-      },
     };
-  }, [currentProduct?.inventories, loadData, modalS, onSelect]);
+  }, [currentProduct?.inventories, loadData, modalS, onSelect, withActions]);
 
   useEffect(() => {
     // if ((!currentProduct?.inventories || currentProduct?.inventories?.length === 0) && currentProduct?._id) {

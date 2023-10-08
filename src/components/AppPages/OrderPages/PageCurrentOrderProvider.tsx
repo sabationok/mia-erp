@@ -1,13 +1,13 @@
 import React, { createContext, useCallback, useContext, useMemo } from 'react';
 import { useOrdersSelector } from '../../../redux/selectors.store';
-import { IProduct } from '../../../redux/products/products.types';
+import { IOrder } from '../../../redux/orders/orders.types';
 
 export interface PageCurrentOrderProviderProps {
   children?: React.ReactNode;
 }
 
 export interface PageCurrentOrderProviderValue {
-  currentOrder?: IProduct;
+  currentOrder?: IOrder;
   clearCurrent: () => void;
   mainPagePath?: string;
 }

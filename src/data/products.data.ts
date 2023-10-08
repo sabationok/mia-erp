@@ -57,7 +57,7 @@ export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
 
   {
     top: { name: t('type'), align: 'start', path: 'type' },
-    bottom: { name: t('status'), align: 'start', getData: d => d.approved },
+    bottom: { name: t('status'), align: 'start', getData: d => d.approved as never },
     width: '100px',
     action: 'status',
   },

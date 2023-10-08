@@ -11,9 +11,10 @@ import { warehousesTableColumns } from '../../../../data/warehauses.data';
 export interface WarehousesTabProps {
   onSelect?: (warehouse: OnlyUUID) => void;
   selected?: OnlyUUID;
+  withActions?: boolean;
 }
 
-const WarehousesTab: React.FC<WarehousesTabProps> = ({ onSelect, selected }) => {
+const WarehousesTab: React.FC<WarehousesTabProps> = ({ onSelect, selected, withActions }) => {
   const currentProduct = useProductsSelector().currentProduct;
   const modalS = useModalProvider();
   const productsS = useAppServiceProvider()[ServiceName.products];
@@ -47,18 +48,20 @@ const WarehousesTab: React.FC<WarehousesTabProps> = ({ onSelect, selected }) => 
           }
         }
       },
-      actionsCreator: ctx => {
-        // const currentId = ctx.selectedRow?._id;
+      actionsCreator: !withActions
+        ? undefined
+        : ctx => {
+            // const currentId = ctx.selectedRow?._id;
 
-        return [
-          // { icon: 'refresh', type: 'onlyIcon', onClick: () => loadData({ refresh: true }) },
-          // { separator: true },
-          // {
-          //   icon: 'plus',
-          //   type: 'onlyIconFilled',
-          // },
-        ];
-      },
+            return [
+              // { icon: 'refresh', type: 'onlyIcon', onClick: () => loadData({ refresh: true }) },
+              // { separator: true },
+              // {
+              //   icon: 'plus',
+              //   type: 'onlyIconFilled',
+              // },
+            ];
+          },
     };
   }, [onSelect, warehouses]);
 
@@ -69,7 +72,7 @@ const WarehousesTab: React.FC<WarehousesTabProps> = ({ onSelect, selected }) => 
   //   // eslint-disable-next-line
   // }, []);
 
-  return <TableList {...tableConfigs} selectedRow={selected} />;
+  return <TableList isSearch={false} {...tableConfigs} selectedRow={selected} />;
 };
 
 export default WarehousesTab;

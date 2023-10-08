@@ -39,6 +39,8 @@ export interface AppQueryParams {
   search?: string;
   searchBy?: string;
 
+  fullInfo?: boolean;
+
   parent?: OnlyUUID;
   product?: OnlyUUID;
   inventory?: OnlyUUID;

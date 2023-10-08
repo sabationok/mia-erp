@@ -2,15 +2,18 @@ import { IOrder } from '../../redux/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import { ModalHeader } from '../atoms';
 import React, { useMemo } from 'react';
-import { OverlayHandler } from '../AppPages/PageProductOverview/PageCurrentProductProvider';
 import { useOrdersSelector } from '../../redux/selectors.store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import * as Cells from './components/Cells';
+import { OverviewCellProps } from './components/Cells';
 import styled from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { usePageOverlayService } from '../atoms/PageOverlayProvider';
 import { t } from '../../lang';
+import { useAppParams } from '../../hooks';
+import { enumToFilterOptions } from '../../utils/fabrics';
+import ModalFilter from '../ModalForm/ModalFilter';
 
 export interface OrderOverviewXLProps {
   order?: IOrder;
@@ -23,21 +26,19 @@ export interface OrderOverviewXLProps {
   onOpenRightSide?: () => void;
   className?: string;
 }
-export type RenderOverviewCellComponent = React.FC<{
-  cell: OrderOverviewCell;
-  setOverlayContent: OverlayHandler;
-  data?: IOrder;
-}>;
-
-export interface OrderOverviewCell {
-  value?: string | number;
-  title?: string;
-  gridArea?: keyof IOrder;
-  CellComponent?: RenderOverviewCellComponent;
-  getValue?: (product?: IOrder) => string | number | undefined;
+export enum OrderOverviewTabs {
+  info = 'Info',
+  statuses = 'Statuses',
+  chat = 'Chat',
+  comments = 'Comments',
+  tasks = 'tasks',
 }
+
+const tabs = enumToFilterOptions(OrderOverviewTabs);
+
 const OrderOverviewXL: React.FC<OrderOverviewXLProps> = p => {
   const orderS = useAppServiceProvider()[ServiceName.orders];
+  const orderId = useAppParams()?.orderId;
   const currentOrder = useOrdersSelector().currentOrder;
   const navigate = useNavigate();
   const location = useLocation();
@@ -70,9 +71,22 @@ const OrderOverviewXL: React.FC<OrderOverviewXLProps> = p => {
 
   return (
     <Container flex={1} fillWidth padding={'0 8px'}>
-      <ModalHeader title={t('Order overview')} />
+      <ModalHeader
+        title={t('Order overview')}
+        onBackPress={() => {
+          if (location?.pathname) {
+            const newPath = location?.pathname?.replace(`/${currentOrder?._id || orderId}`, '');
 
-      <Content flex={1} fillWidth overflow={'auto'}></Content>
+            newPath && navigate(newPath);
+          }
+        }}
+      />
+
+      <Content flex={1} fillWidth overflow={'auto'}>
+        <ModalFilter filterOptions={tabs} />
+
+        {renderCells}
+      </Content>
 
       <Footer fxDirection={'row'} alignItems={'center'} justifyContent={'space-between'} padding={'8px 0'}>
         <ButtonIcon
@@ -122,15 +136,7 @@ const Container = styled(FlexBox)`
 
   background-color: ${p => p.theme.sideBarBackgroundColor};
 `;
-const Header = styled(FlexBox)`
-  height: 32px;
 
-  & .title {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-`;
 const Content = styled(FlexBox)`
   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
   border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
@@ -146,4 +152,4 @@ const OpenBtn = styled(ButtonIcon)`
 `;
 export default OrderOverviewXL;
 
-const orderOverviewCells: OrderOverviewCell[] = [];
+const orderOverviewCells: OverviewCellProps<IOrder>[] = [];

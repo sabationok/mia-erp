@@ -21,6 +21,7 @@ enum ProductsThunkType {
   getAllVariations = 'products/getAllVariations',
   getAllPrices = 'products/getAllPrices',
   getAllInventories = 'products/getAllInventories',
+  updateDefaultsById = 'products/updateDefaultsByIdThunk',
 }
 type ActionWithCurrent = { refreshCurrent?: boolean; updateCurrent?: boolean };
 export interface ProductThunkPayloadByType {
@@ -130,6 +131,26 @@ export const updateProductThunk = createAsyncThunk<
 
   try {
     const res = await ProductsApi.updateById(args?.data);
+    if (res) {
+      args?.onSuccess && args?.onSuccess(res?.data.data);
+    }
+
+    args?.onLoading && args?.onLoading(false);
+    return { data: res?.data.data, refreshCurrent: args?.data?.refreshCurrent };
+  } catch (error) {
+    args?.onLoading && args?.onLoading(false);
+    args?.onError && args?.onError(error);
+    return thunkApi.rejectWithValue(isAxiosError(error));
+  }
+});
+export const updateProductDefaultsThunk = createAsyncThunk<
+  (ActionWithCurrent & { data?: IProduct }) | undefined,
+  ThunkPayload<IProductReqData & ActionWithCurrent, IProduct>
+>(ProductsThunkType.updateDefaultsById, async (args, thunkApi) => {
+  args?.onLoading && args?.onLoading(true);
+
+  try {
+    const res = await ProductsApi.updateDefaultsById(args?.data);
     if (res) {
       args?.onSuccess && args?.onSuccess(res?.data.data);
     }

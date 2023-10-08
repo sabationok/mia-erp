@@ -15,13 +15,15 @@ import { DirectoriesService } from '../../hooks/useDirService.hook';
 import { AppSubmitHandler, UseAppFormSubmitOptions } from '../../hooks/useAppForm.hook';
 import { ContractorsTypesEnum } from '../../redux/directories/contractors.types';
 import { ProductTypeEnum } from '../../redux/products/products.types';
+import { CounterpartyTypesEnum } from '../../redux/directories/counterparties.types';
 
 export interface DirItemTypeByDirType extends Record<ApiDirType, any> {
   [ApiDirType.COUNTS]: CountsTypesEnum;
   [ApiDirType.CATEGORIES_TR]: CategoryTrTypeEnum;
   [ApiDirType.CATEGORIES_PROD]: ProductTypeEnum;
   [ApiDirType.PROPERTIES_PRODUCTS]: ProductTypeEnum;
-  [ApiDirType.CONTRACTORS]: ContractorsTypesEnum;
+  [ApiDirType.CONTRACTORS]: ContractorsTypesEnum | CounterpartyTypesEnum;
+  [ApiDirType.COUNTERPARTIES]: ContractorsTypesEnum | CounterpartyTypesEnum;
   [ApiDirType.TAGS]: ContractorsTypesEnum;
   [ApiDirType.METHODS_SHIPMENT]: IShipmentDirItem;
   [ApiDirType.METHODS_COMMUNICATION]: ICommunicationDirItem;
@@ -50,13 +52,13 @@ export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> exte
 }
 
 export interface IDirItemBase<DirType extends ApiDirType = any> extends IBase {
+  type?: DirItemTypeByDirType[DirType];
   dirType?: DirType;
   owner?: Pick<ICompany, '_id' | 'name' | 'email'>;
   products?: OnlyUUID[];
   orders?: OnlyUUID[];
   parent?: IDirItemBase<DirType>;
   childrenList?: IDirItemBase<DirType>[];
-  type?: DirItemTypeByDirType[DirType];
   name?: string;
   secondName?: string;
   label?: string;

@@ -12,6 +12,7 @@ import { OverviewCellProps } from './components/Cells';
 import { OverlayHeader } from '../Forms/FormProduct/components';
 import { formatDate } from '../../utils/dateTime.utils';
 import { checks } from '../../utils';
+import { useAppParams } from '../../hooks';
 
 export interface ProductOverviewXLProps {
   product?: IProduct;
@@ -28,6 +29,7 @@ export interface ProductOverviewXLProps {
 const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }) => {
   const product = useProductsSelector().currentProduct;
   const page = usePageCurrentProduct();
+  const productId = useAppParams()?.productId;
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -59,10 +61,10 @@ const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }
   return (
     <Container fillWidth flex={1} className={className} padding={'0 8px'}>
       <OverlayHeader
-        title={'Перегляд продукту'}
+        title={t('Product overview')}
         onClose={() => {
-          if (product && location?.pathname) {
-            const newPath = location?.pathname?.replace(`/${product?._id}`, '');
+          if (location?.pathname) {
+            const newPath = location?.pathname?.replace(`/${product?._id || productId}`, '');
 
             newPath && navigate(newPath);
           }

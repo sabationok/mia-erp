@@ -19,8 +19,9 @@ export const transformVariationTableData = (variation: IVariation): IVariationTa
 export function createTableTitlesFromTemplate(
   template?: IVariationTemplate
 ): CellTittleProps<IVariationTableData>[] | undefined {
+  let titles: CellTittleProps<IVariationTableData>[] = [];
   if (template && template?.childrenList) {
-    const titles = template?.childrenList
+    titles = template?.childrenList
       ?.filter(el => el?.isSelectable)
       ?.map(p => {
         const title: CellTittleProps<IVariationTableData> = {
@@ -40,68 +41,67 @@ export function createTableTitlesFromTemplate(
         };
         return title;
       });
-
-    return [
-      {
-        top: {
-          name: 'Назва',
-          align: 'start',
-          getData: d => d?.label,
-        },
-        width: '200px',
-        action: 'doubleDataWithAvatar',
-      },
-      {
-        top: {
-          name: 'Артикул | SKU',
-          align: 'start',
-          getData: d => d?.sku,
-        },
-        bottom: {
-          name: 'Штрих-код',
-          align: 'start',
-          getData: d => d?.barCode,
-        },
-        width: '170px',
-        action: 'valueByPath',
-      },
-      ...titles,
-      {
-        top: {
-          name: 'Автор',
-          align: 'start',
-          path: 'author.name',
-          // getData: d => d?.timeTo,
-        },
-        bottom: {
-          name: 'Емейл',
-          align: 'start',
-          path: 'author.email',
-          // getData: d => d?.timeTo,
-        },
-        width: '150px',
-        action: 'valueByPath',
-      },
-      {
-        top: {
-          name: t('timeTo'),
-          align: 'center',
-          getData: d => d?.timeTo,
-        },
-        bottom: {
-          name: t('timeFrom'),
-          align: 'center',
-          getData: d => d?.timeFrom,
-        },
-        width: '150px',
-        action: 'dateDbl',
-      },
-      {
-        top: { name: 'Створено', getData: d => d?.createdAt },
-        bottom: { name: 'Оновлено', getData: d => d?.updatedAt },
-        width: '170px',
-        action: 'dateDbl',
-      },
-    ];
   }
+  return [
+    {
+      top: {
+        name: t('label'),
+        align: 'start',
+        getData: d => d?.label,
+      },
+      width: '200px',
+      action: 'doubleDataWithAvatar',
+    },
+    {
+      top: {
+        name: t('SKU'),
+        align: 'start',
+        getData: d => d?.sku,
+      },
+      bottom: {
+        name: t('barCode'),
+        align: 'start',
+        getData: d => d?.barCode,
+      },
+      width: '170px',
+      action: 'valueByPath',
+    },
+    ...titles,
+    {
+      top: {
+        name: t('author'),
+        align: 'start',
+        path: 'author.name',
+        // getData: d => d?.timeTo,
+      },
+      bottom: {
+        name: t('email'),
+        align: 'start',
+        path: 'author.email',
+        // getData: d => d?.timeTo,
+      },
+      width: '150px',
+      action: 'valueByPath',
+    },
+    {
+      top: {
+        name: t('timeTo'),
+        align: 'center',
+        getData: d => d?.timeTo,
+      },
+      bottom: {
+        name: t('timeFrom'),
+        align: 'center',
+        getData: d => d?.timeFrom,
+      },
+      width: '150px',
+      action: 'dateDbl',
+    },
+    {
+      top: { name: t('created'), getData: d => d?.createdAt },
+      bottom: { name: t('updated'), getData: d => d?.updatedAt },
+      width: '170px',
+      action: 'dateDbl',
+    },
+  ];
 }

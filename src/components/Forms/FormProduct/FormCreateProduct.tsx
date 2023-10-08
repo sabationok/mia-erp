@@ -13,7 +13,6 @@ import { useAppForm } from '../../../hooks';
 import {
   IProductFormData,
   IProductReqData,
-  MeasurementUnit,
   ProductFilterOpt,
   ProductStatusEnum,
 } from '../../../redux/products/products.types';
@@ -24,9 +23,9 @@ import { IVariationTemplate } from '../../../redux/products/properties.types';
 import FormProductStaticProperties from './FormProductStaticProperties';
 import FormProductImagesComponent from './FormProductImagesComponent';
 import FormProductCategories from './FormProductCategories';
-import { Path } from 'react-hook-form';
 import { enumToFilterOptions } from '../../../utils/fabrics';
-import { FilterOption } from '../../ModalForm/ModalFilter';
+import DimensionsInputs from './components/DimensionsInputs';
+import MeasurementInputs from './components/MeasuremenInputs';
 
 export interface FormCreateProductProps extends Omit<ModalFormProps<any, any, IProductFormData>, 'onSubmit'> {
   copy?: boolean;
@@ -39,23 +38,6 @@ export interface FormCreateProductProps extends Omit<ModalFormProps<any, any, IP
   addInputs?: boolean;
 }
 const productsStatusOption = enumToFilterOptions(ProductStatusEnum);
-const productsMeasurementUnitOption = enumToFilterOptions(MeasurementUnit);
-// const visibilityOptions: FilterOption<boolean>[] = [
-//   { label: 'yes', value: true },
-//   { label: 'no', value: false },
-// ];
-const measurementInputs: {
-  label?: string;
-  placeholder?: string;
-  name: Path<IProductFormData>;
-  type?: HTMLInputElement['type'];
-  options?: FilterOption[];
-}[] = [
-  { name: 'measurement.unit', label: t('unit'), placeholder: t('unit'), options: productsMeasurementUnitOption },
-  { name: 'measurement.min', label: t('min'), placeholder: t('min'), type: 'number' },
-  { name: 'measurement.max', label: t('max'), placeholder: t('max'), type: 'number' },
-  // { name: 'measurement.step', label: t('step'), placeholder: t('step'), type: 'number' },
-];
 
 const FormCreateProduct: React.FC<FormCreateProductProps> = ({
   edit,
@@ -70,6 +52,9 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
     directories: { directories },
     products: { properties },
   } = useAppSelector();
+  const form = useAppForm<IProductFormData>({
+    defaultValues: defaultState,
+  });
   const {
     formState: { errors },
     formValues,
@@ -80,9 +65,7 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
     toggleAfterSubmitOption,
     closeAfterSave,
     clearAfterSave,
-  } = useAppForm<IProductFormData>({
-    defaultValues: defaultState,
-  });
+  } = form;
 
   useEffect(() => {
     console.log('formValues', formValues);
@@ -162,34 +145,9 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
           })}
         />
 
-        <FlexBox fxDirection={'row'} gap={6} fillWidth style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr' }}>
-          {measurementInputs.map(input => {
-            return input.options ? (
-              <CustomSelect
-                key={input.name}
-                {...registerSelect(input?.name, {
-                  options: input?.options,
-                  label: input?.label,
-                  placeholder: input?.label,
-                  dropDownIsAbsolute: true,
-                  onlyValue: true,
-                })}
-              />
-            ) : (
-              <InputLabel key={input.name} label={input.label} error={errors[input.name as never]}>
-                <InputText
-                  placeholder={input.placeholder}
-                  min={input?.type === 'number' ? 1 : undefined}
-                  type={input?.type}
-                  {...register(input.name, {
-                    valueAsNumber: input?.type === 'number',
-                    min: input?.type === 'number' ? 1 : undefined,
-                  })}
-                />
-              </InputLabel>
-            );
-          })}
-        </FlexBox>
+        <MeasurementInputs appForm={form} />
+
+        <DimensionsInputs form={form} />
 
         <InputLabel label={t('description')} error={errors.description}>
           <TextareaPrimary placeholder={t('description')} {...register('description')} />

@@ -7,6 +7,7 @@ import {
   getAllPricesByProductIdThunk,
   getAllProductsThunk,
   getProductFullInfoThunk,
+  updateProductDefaultsThunk,
   updateProductThunk,
 } from '../redux/products/products.thunks';
 import { useMemo } from 'react';
@@ -34,8 +35,12 @@ export interface ProductsService {
   getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IProduct[]>;
   getProductFullInfo: ServiceDispatcherAsync<OnlyUUID, IProduct>;
   clearCurrent: ServiceDispatcher<undefined>;
-  // * PROPERTIES
+  setDefaults: ServiceDispatcherAsync<
+    IProductReqData & { refreshCurrent?: boolean; updateCurrent?: boolean },
+    IProduct
+  >;
 
+  // * PROPERTIES
   createProperty: ServiceDispatcherAsync<IPropertyReqData, IProperty[]>;
   getAllProperties: ServiceDispatcherAsync<IPropertyReqData, IProperty[]>;
   updatePropertyById: ServiceApiCaller<IPropertyReqData, IProperty[]>;
@@ -86,6 +91,7 @@ const useProductsService = (): ProductsService => {
       getAll: args => dispatch(getAllProductsThunk(defaultThunkPayload(args))),
       getProductFullInfo: args => dispatch(getProductFullInfoThunk(defaultThunkPayload(args))),
       clearCurrent: () => dispatch(clearCurrentProductAction()),
+      setDefaults: args => dispatch(updateProductDefaultsThunk(defaultThunkPayload(args))),
 
       // * PROPERTIES
       createProperty: args => dispatch(createPropertyThunk(defaultThunkPayload(args))),

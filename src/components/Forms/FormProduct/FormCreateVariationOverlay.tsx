@@ -3,6 +3,7 @@ import FlexBox from '../../atoms/FlexBox';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { useProductsSelector, usePropertiesSelector } from '../../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Text } from '../../atoms/Text';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
@@ -22,7 +23,18 @@ import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import { t } from '../../../lang';
 import { checks } from '../../../utils';
+import { Path } from 'react-hook-form';
 
+const dimensionsInputs: {
+  label?: string;
+  placeholder?: string;
+  name: Path<IVariationFormData>;
+}[] = [
+  { name: 'dimensions.height', label: t('Height'), placeholder: t('Sm') },
+  { name: 'dimensions.width', label: t('Width'), placeholder: t('Sm') },
+  { name: 'dimensions.length', label: t('Length'), placeholder: t('Sm') },
+  { name: 'dimensions.weight', label: t('Weight'), placeholder: t('Kg') },
+];
 export interface FormVariationProps
   extends OverlayHandlerReturn,
     Omit<ModalFormProps<any, any, IVariation>, 'onSubmit' | 'defaultState'> {
@@ -171,6 +183,24 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
             <InputLabel label={t('barCode')} error={errors.barCode}>
               <InputText {...register('barCode')} placeholder={t('barCode')} />
             </InputLabel>
+          </FlexBox>
+
+          <FlexBox gap={8} fillWidth style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
+            {dimensionsInputs.map(input => {
+              return (
+                <InputLabel key={input.name} label={input.label} error={errors[input.name as never]}>
+                  <InputText
+                    placeholder={input.placeholder}
+                    min={1}
+                    type={'number'}
+                    {...register(input.name, {
+                      valueAsNumber: true,
+                      min: 1,
+                    })}
+                  />
+                </InputLabel>
+              );
+            })}
           </FlexBox>
         </Inputs>
 

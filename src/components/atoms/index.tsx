@@ -16,12 +16,14 @@ export const ModalHeader = ({
   title,
   showSubmitButton,
   canSubmit,
+  renderTitle,
 }: {
   canSubmit?: boolean;
   onBackPress?: () => void;
   onClose?: () => void;
   title?: string;
   showSubmitButton?: boolean;
+  renderTitle?: React.ReactNode;
 }) => {
   return (
     <Header padding={'4px 0'}>
@@ -37,15 +39,17 @@ export const ModalHeader = ({
           {'Back'}
         </ButtonIcon>
 
-        <FlexBox justifyContent={'center'} overflow={'hidden'}>
-          <Text
-            $weight={600}
-            $size={14}
-            style={{ textTransform: 'uppercase', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}
-          >
-            {title}
-          </Text>
-        </FlexBox>
+        {renderTitle || (
+          <FlexBox justifyContent={'center'} overflow={'hidden'}>
+            <Text
+              $weight={600}
+              $size={14}
+              style={{ textTransform: 'uppercase', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}
+            >
+              {title}
+            </Text>
+          </FlexBox>
+        )}
 
         {showSubmitButton && (
           <ButtonIcon

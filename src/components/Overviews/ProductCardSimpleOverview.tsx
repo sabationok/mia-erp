@@ -3,6 +3,7 @@ import FlexBox from '../atoms/FlexBox';
 import { useMemo } from 'react';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { IProduct } from '../../redux/products/products.types';
+import { t } from '../../lang';
 
 export interface ProductCardForSelectorProps {
   product: IProduct;
@@ -27,7 +28,7 @@ const ProductCardSimpleOverview: React.FC<ProductCardForSelectorProps> = ({
         gridArea: '1/1/1/9',
       },
       {
-        title: 'Артикул | SKU',
+        title: t('SKU'),
         value: product.sku,
         gridArea: '1/9/1/13',
         isLastInRow: true,
@@ -64,8 +65,9 @@ const ProductCardSimpleOverview: React.FC<ProductCardForSelectorProps> = ({
       <ImageBox>
         <img
           src={
-            (product?.images && product?.images[0]?.img_1x) ||
-            'https://gymbeam.ua/media/catalog/product/cache/bf5a31e851f50f3ed6850cbbf183db11/w/-/w-gymbeam-sweatpants-joggers-trn-olive-1.jpg'
+            product?.images
+              ? product?.images[0]?.img_preview
+              : 'https://gymbeam.ua/media/catalog/product/cache/bf5a31e851f50f3ed6850cbbf183db11/w/-/w-gymbeam-sweatpants-joggers-trn-olive-1.jpg'
           }
           style={{ objectFit: 'contain' }}
           alt={''}
@@ -139,15 +141,15 @@ const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
   position: relative;
 
   padding: 8px;
-  border-bottom: 2px solid ${({ theme }) => theme.fieldBackgroundColor};
+  //border-bottom: 2px solid ${({ theme }) => theme.fieldBackgroundColor};
 
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
   pointer-events: ${({ disabled }) => disabled && 'none'};
   cursor: default;
 
-  &:hover {
-    box-shadow: 0 4px 6px 4px rgba(0, 0, 0, 0.16), 0 4px 6px 4px rgba(210, 210, 210, 0.25);
-  }
+  //&:hover {
+  //  box-shadow: 0 4px 6px 4px rgba(0, 0, 0, 0.16), 0 4px 6px 4px rgba(210, 210, 210, 0.25);
+  //}
 
   &::after {
     display: block;
@@ -167,6 +169,8 @@ const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
     grid-template-rows: 1fr max-content min-content;
     max-height: 100%;
   }
+
+  border: 1px solid tomato;
 `;
 const CardGridBox = styled(FlexBox)`
   display: grid;

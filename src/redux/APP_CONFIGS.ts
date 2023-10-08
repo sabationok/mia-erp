@@ -106,6 +106,7 @@ export enum ApiDirType {
   STORAGES = 'storages',
   WAREHOUSES = 'warehouses',
   BRANDS = 'brands',
+  COUNTERPARTIES = 'counterparties',
   TRANSPORTERS = 'transporters',
   CUSTOM_FIELDS = 'custom_fields',
   STATUSES_ORDER = 'statuses_order',
@@ -139,7 +140,7 @@ const transactionsApiEndpoints: ApiEndpointsMap = {
   [Endpoints.getById]: (id?: string): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.getById}/${id}`,
 };
 
-const productsApiEndpoints: ApiEndpointsMap = {
+const productsApiEndpoints = {
   [Endpoints.getAll]: (): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.getAll}`,
   [Endpoints.create]: (): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.create}`,
   [Endpoints.deleteById]: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.deleteById}/${id}`,
@@ -147,6 +148,7 @@ const productsApiEndpoints: ApiEndpointsMap = {
   [Endpoints.getById]: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.getById}/${id}`,
   [Endpoints.getFullInfoById]: (id?: string): string =>
     `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.getFullInfoById}/${id}`,
+  updateDefaultsById: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.update}/defaults/${id}`,
 };
 const propertiesApiEndpoints: ApiEndpointsMap = {
   [Endpoints.getAll]: (): string => `${API_BASE_ROUTES.PROPERTIES}/${Endpoints.getAll}`,

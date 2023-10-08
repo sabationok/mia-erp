@@ -17,7 +17,7 @@ import { OverlayHandler } from '../../AppPages/PageProductOverview/PageCurrentPr
 import numberWithSpaces from '../../../utils/numbers';
 import { t } from '../../../lang';
 import { checks } from '../../../utils';
-import FormProductDefaultsOverlay from '../../Forms/FormCreateOrder/FormProductDefaultsOverlay';
+import FormProductDefaultsOverlay from '../../Forms/FormProduct/FormProductDefaultsOverlay';
 
 export type RenderOverviewCellComponent<Data = any> = React.FC<{
   cell: OverviewCellProps<Data>;
