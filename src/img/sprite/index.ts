@@ -14,6 +14,8 @@ export const iconId = {
   actionsH: 'actionsH',
   actionsV: 'actionsV',
   addToCart: 'addToCart',
+  AddToList: 'AddToList',
+  AddToListOutlined: 'AddToListOutlined',
   admin: 'admin',
   archive: 'archive',
   arrowDown: 'arrowDown',

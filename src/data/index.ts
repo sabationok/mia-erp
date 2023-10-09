@@ -18,7 +18,7 @@ import { warehousesTableColumnsForOrderCreateOrderSlotForm } from './warehauses.
 
 import { priceListColumns, priceListContentColumns } from './priceManagement.data';
 
-import { orderSlotTableColumns, ordersSearchParams, ordersTableColumns, orderTypeFilterOptions } from './orders.data';
+import { orderSlotTableColumns, ordersSearchParams, ordersTableColumns } from './orders.data';
 
 export {
   priceListColumns,
@@ -51,6 +51,5 @@ export {
   warehousesTableColumnsForOrderCreateOrderSlotForm,
   orderSlotTableColumns,
   ordersTableColumns,
-  orderTypeFilterOptions,
   ordersSearchParams,
 };

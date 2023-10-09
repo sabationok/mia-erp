@@ -57,16 +57,7 @@ export interface IPriceDto extends IDataWithPeriod {
   discountLabel?: string;
   cashbackLabel?: string;
 }
-
-export interface IPriceListItem extends IBase {
-  owner?: ICompanyBase;
-  author?: IUserBase;
-  editor?: IUserBase;
-
-  list?: IPriceList;
-  product?: IProduct;
-  variation?: IVariation;
-
+export interface IPriceBase {
   label?: string;
 
   price?: number;
@@ -84,6 +75,15 @@ export interface IPriceListItem extends IBase {
   commissionAmount?: number;
   discountLabel?: string;
   cashbackLabel?: string;
+}
+export interface IPriceListItem extends IBase, IPriceBase {
+  owner?: ICompanyBase;
+  author?: IUserBase;
+  editor?: IUserBase;
+
+  list?: IPriceList;
+  product?: IProduct;
+  variation?: IVariation;
 }
 
 export interface IPriceFormData extends Omit<IPriceDto, 'product' | 'variation' | 'list'> {

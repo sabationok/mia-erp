@@ -2,6 +2,7 @@ import ButtonIcon from './ButtonIcon/ButtonIcon';
 import FlexBox from './FlexBox';
 import { Text } from './Text';
 import styled from 'styled-components';
+import { t } from '../../lang';
 
 export const DefaultContent: React.FC<{ content?: string }> = ({ content } = {}) => {
   return <div>{`Default content: ${content}`}</div>;
@@ -28,16 +29,18 @@ export const ModalHeader = ({
   return (
     <Header padding={'4px 0'}>
       <FlexBox fillWidth fxDirection={'row'} justifyContent={'space-between'} alignItems={'stretch'} height={'32px'}>
-        <ButtonIcon
-          variant={'textExtraSmall'}
-          icon={'SmallArrowLeft'}
-          iconSize={'22px'}
-          padding={'0 6px'}
-          style={{ minWidth: 'max-content', minHeight: '100%' }}
-          onClick={onBackPress || onClose}
-        >
-          {'Back'}
-        </ButtonIcon>
+        {onBackPress && (
+          <ButtonIcon
+            variant={'textExtraSmall'}
+            icon={'SmallArrowLeft'}
+            iconSize={'22px'}
+            padding={'0 6px'}
+            style={{ minWidth: 'max-content', minHeight: '100%' }}
+            onClick={onBackPress || onClose}
+          >
+            {t('Back')}
+          </ButtonIcon>
+        )}
 
         {renderTitle || (
           <FlexBox justifyContent={'center'} overflow={'hidden'}>
@@ -64,6 +67,17 @@ export const ModalHeader = ({
           >
             {'Ok'}
           </ButtonIcon>
+        )}
+
+        {onClose && (
+          <ButtonIcon
+            variant={'onlyIconNoEffects'}
+            icon={'close'}
+            iconSize={'95%'}
+            size={'24px'}
+            padding={'0'}
+            onClick={onClose}
+          ></ButtonIcon>
         )}
       </FlexBox>
     </Header>

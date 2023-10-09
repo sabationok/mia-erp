@@ -17,6 +17,7 @@ export interface StepsControllerProps<V = any> {
 
   canGoNext?: boolean;
   canAccept?: boolean;
+  canSubmit?: boolean;
 }
 
 const StepsController = <V = any,>({
@@ -28,6 +29,7 @@ const StepsController = <V = any,>({
   onAcceptPress,
   canGoNext = true,
   canAccept,
+  canSubmit,
 }: StepsControllerProps<V>) => {
   const [current, setCurrent] = useState<number>(currentIndex);
 
@@ -111,8 +113,14 @@ const StepsController = <V = any,>({
         </ButtonIcon>
       )}
 
-      {onAcceptPress && (
-        <ButtonIcon variant={'filledSmall'} style={{ flex: 1 }} onClick={onAcceptPress} disabled={!canAccept}>
+      {(canSubmit || onAcceptPress) && (
+        <ButtonIcon
+          variant={'filledSmall'}
+          type={canSubmit ? 'submit' : 'button'}
+          style={{ flex: 1 }}
+          onClick={onAcceptPress}
+          disabled={canSubmit ? !canSubmit : !canAccept}
+        >
           {t('Accept')}
         </ButtonIcon>
       )}

@@ -2,10 +2,10 @@ import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { ICreateOrderFormState, IOrder, IOrderSlot } from '../../../redux/orders/orders.types';
 import { useAppForm } from '../../../hooks';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import ModalFilter from '../../ModalForm/ModalFilter';
-import FormCreateOrderProductsList from './FormCreateOrderProductsList';
-import FormCreateOrderMainInfo from './FormCreateOrderMainInfo';
+import FormOrderProductsList from './tabs/FormOrderProductsList';
+import FormCreateOrderMainInfo from './tabs/FormCreateOrderMainInfo';
 import { OnlyUUID } from '../../../redux/global.types';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import styled from 'styled-components';
@@ -21,17 +21,18 @@ export interface FormCreateOrderProps extends Omit<ModalFormProps, 'onSubmit' | 
 
 export enum OrderTabsEnum {
   content = 'content',
-  availability = 'availability',
+  // availability = 'availability',
   info = 'info',
   summary = 'summary',
   invoices = 'invoices',
 }
 export const FormCreateOrderTabs = enumToFilterOptions(OrderTabsEnum);
 
-const checkStep = (idx: number = 0) => createStepsChecker(FormCreateOrderTabs)(idx);
+const checkStep = createStepsChecker(FormCreateOrderTabs);
 
 const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmit, ...props }) => {
   const [currentTab, setCurrentTab] = useState<number>(0);
+
   const [content, setContent] = useState<IOrderSlot[]>([]);
 
   const form = useAppForm<ICreateOrderFormState>({
@@ -50,17 +51,17 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
     console.log(data);
   };
 
-  useEffect(() => {
-    console.log(checkStep(currentTab));
-  }, [currentTab]);
-
   const renderTab = useMemo(() => {
-    if (checkStep(currentTab)?.info) return <FormCreateOrderMainInfo form={form} />;
-    if (checkStep(currentTab)?.content)
-      return <FormCreateOrderProductsList list={content} onSelect={handleSelect} onRemove={handleRemove} />;
-
-    if (checkStep(currentTab)?.availability) {
+    if (checkStep(currentTab)?.content) {
+      return <FormOrderProductsList list={content} onSelect={handleSelect} onRemove={handleRemove} />;
     }
+
+    if (checkStep(currentTab)?.info) {
+      return <FormCreateOrderMainInfo form={form} />;
+    }
+
+    // if (checkStep(currentTab)?.availability) {
+    // }
     if (checkStep(currentTab)?.summary) {
     }
     if (checkStep(currentTab)?.invoices) {
@@ -68,15 +69,8 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
   }, [currentTab, form, content, handleSelect, handleRemove]);
 
   const renderFilter = useMemo(() => {
-    return (
-      <ModalFilter
-        filterOptions={FormCreateOrderTabs}
-        onOptSelect={(_o, _v, i) => {
-          setCurrentTab(i);
-        }}
-      />
-    );
-  }, []);
+    return <ModalFilter filterOptions={FormCreateOrderTabs} onChangeIndex={setCurrentTab} currentIndex={currentTab} />;
+  }, [currentTab]);
 
   return (
     <StModalForm fitContentH fillHeight {...props} onSubmit={form.handleSubmit(onValid)} extraHeader={renderFilter}>

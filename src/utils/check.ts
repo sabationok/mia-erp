@@ -2,6 +2,7 @@ import { OnlyUUID } from '../redux/global.types';
 
 export const isNum = (v: any): v is number => typeof v === 'number';
 export const isStr = (v: any): v is string => typeof v === 'string';
+export const isSym = (v: any): v is symbol => typeof v === 'symbol';
 
 export const isDate = (v: any): boolean => isNum(Date.parse(v));
 export const isFun = (v: any): v is Function => typeof v === 'function';

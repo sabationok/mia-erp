@@ -1,25 +1,24 @@
-import { IOrderSlot } from '../../../redux/orders/orders.types';
+import { IOrderSlot, IOrderSlotBase, IOrderTempSlot } from '../../../redux/orders/orders.types';
 import FlexBox from '../../atoms/FlexBox';
 import styled from 'styled-components';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
+import { ChangeEventHandler, useState } from 'react';
 import { IProduct } from '../../../redux/products/products.types';
 import { IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
 import { IProductVariation } from '../../TableVariations';
-import { isUndefined } from 'lodash';
 import numberWithSpaces from '../../../utils/numbers';
 import { IWarehouse } from '../../../redux/warehouses/warehouses.types';
 
 export interface OrderSlotOverviewProps {
   slot?: Partial<IOrderSlot> & { tempId?: string };
-  price?: IPriceListItem;
-  dataForSlot?: IProduct;
-  warehouse?: IWarehouse;
+
   index?: number;
   onSelect?: () => void;
-  onRemove?: () => void;
+  onRemove?: (id: string) => void;
+  onRemovePress?: () => void;
   disabled?: boolean;
-  variation?: IProductVariation;
+
+  onUpdate?: (slot: IOrderTempSlot) => void;
 }
 
 const createOverviewCellsData = (
@@ -164,38 +163,27 @@ const CountSelector = ({
     </FlexBox>
   );
 };
-const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
-  dataForSlot,
-  variation,
-  price,
-  disabled,
-  onSelect,
-  onRemove,
-  warehouse,
-}) => {
+const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({ slot, disabled, onSelect, onRemovePress }) => {
   const [quantity, setQuantity] = useState(0);
-  const [countedData, setCountedData] = useState<(IPriceListItem & { qty?: number; total?: number }) | undefined>(
-    price || undefined
+  const [countedData, setCountedData] = useState<(IOrderSlotBase & { quantity?: number; total?: number }) | undefined>(
+    slot || undefined
   );
-  const cells = useMemo(
-    () => createOverviewCellsData(dataForSlot, countedData, variation, warehouse),
-    [countedData, dataForSlot, variation, warehouse]
-  );
+  // const cells = useMemo(
+  //   () => createOverviewCellsData(dataForSlot, countedData, variation, warehouse),
+  //   [countedData, dataForSlot, variation, warehouse]
+  // );
 
-  useEffect(() => {
-    if (!isUndefined(price)) {
-      setCountedData({ ...price, qty: quantity, total: price?.price ? quantity * price?.price : 0 });
-    }
-  }, [price, quantity]);
+  // useEffect(() => {
+  //   if (!isUndefined(price)) {
+  //     setCountedData({ ...price, qty: quantity, total: price?.price ? quantity * price?.price : 0 });
+  //   }
+  // }, [price, quantity]);
 
   return (
     <Card disabled={disabled}>
       <ImageBox>
         <img
-          src={
-            (dataForSlot?.images && dataForSlot?.images[0]?.img_1x) ||
-            'https://gymbeam.ua/media/catalog/product/cache/bf5a31e851f50f3ed6850cbbf183db11/w/-/w-gymbeam-sweatpants-joggers-trn-olive-1.jpg'
-          }
+          src={slot?.product?.images ? slot?.product?.images[0]?.img_1x : ''}
           style={{ objectFit: 'contain' }}
           alt={''}
           width={'100%'}
@@ -203,42 +191,42 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
         />
       </ImageBox>
       <CardGridArea>
-        {cells.map(({ borderBottom, title, value, gridArea, isLastInRow }) => (
-          <CardGridBox key={`cardCell-${title}`} gridArea={gridArea || ''} isLastInRow={isLastInRow}>
-            {!borderBottom && (
-              <>
-                <div className={'title'}>{!borderBottom && (title || 'Title')}</div>
-                {gridArea !== 'qty' ? (
-                  <div className={'text'}>{value || '-'}</div>
-                ) : (
-                  <CountSelector
-                    value={quantity}
-                    disabled={false}
-                    className={'text'}
-                    autoFocus
-                    onChange={setQuantity}
-                    onInputChange={({ target }) => {
-                      setQuantity(Number(target.value));
-                    }}
-                  />
-                )}
-              </>
-            )}
-          </CardGridBox>
-        ))}
+        {/*{cells.map(({ borderBottom, title, value, gridArea, isLastInRow }) => (*/}
+        {/*  <CardGridBox key={`cardCell-${title}`} gridArea={gridArea || ''} isLastInRow={isLastInRow}>*/}
+        {/*    {!borderBottom && (*/}
+        {/*      <>*/}
+        {/*        <div className={'title'}>{!borderBottom && (title || 'Title')}</div>*/}
+        {/*        {gridArea !== 'qty' ? (*/}
+        {/*          <div className={'text'}>{value || '-'}</div>*/}
+        {/*        ) : (*/}
+        {/*          <CountSelector*/}
+        {/*            value={quantity}*/}
+        {/*            disabled={false}*/}
+        {/*            className={'text'}*/}
+        {/*            autoFocus*/}
+        {/*            onChange={setQuantity}*/}
+        {/*            onInputChange={({ target }) => {*/}
+        {/*              setQuantity(Number(target.value));*/}
+        {/*            }}*/}
+        {/*          />*/}
+        {/*        )}*/}
+        {/*      </>*/}
+        {/*    )}*/}
+        {/*  </CardGridBox>*/}
+        {/*))}*/}
       </CardGridArea>
 
       {!disabled && (
         <Buttons justifyContent={'space-between'} gap={4}>
           <ButtonIcon variant={'onlyIcon'} iconSize={'100%'} size={'24px'} icon={'info'} disabled />
-          {onRemove && (
+          {onRemovePress && (
             <ButtonIcon
               variant={'onlyIcon'}
               iconSize={'100%'}
               size={'24px'}
               icon={'delete'}
-              disabled={!onRemove}
-              onClick={onRemove}
+              disabled={!onRemovePress}
+              onClick={onRemovePress}
             />
           )}
           {onSelect && (
@@ -265,15 +253,14 @@ const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
 
   position: relative;
 
-  padding: 8px;
-  border-bottom: 2px solid ${({ theme }) => theme.fieldBackgroundColor};
+  //border-bottom: 2px solid ${({ theme }) => theme.fieldBackgroundColor};
 
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
   cursor: default;
 
   &:hover {
     box-shadow: ${({ disabled }) =>
-      !disabled && '0 4px 6px 4px rgba(0, 0, 0, 0.16), 0 4px 6px 4px rgba(210, 210, 210, 0.25)'};
+      !disabled && '0 4px 10px 2px rgba(0, 0, 0, 0.1), 0 4px 10px 2px rgba(210, 210, 210, 0.25)'};
   }
 
   &::after {
@@ -308,7 +295,7 @@ const CardGridArea = styled(FlexBox)`
 
   //max-width: 270px;
   height: max-content;
-  border-top: 1px solid ${({ theme }) => theme.trBorderClr};
+  //border-top: 1px solid ${({ theme }) => theme.trBorderClr};
 
   @media screen and (max-width: 480px) {
     grid-template-columns: repeat(6, 1fr);
@@ -352,11 +339,13 @@ const CardGridBox = styled(FlexBox)<{ borderBottom?: boolean; gridArea: string; 
     line-height: 1.5;
     color: ${({ theme }) => theme.globals.inputPlaceholderColor};
   }
+
   @media screen and (max-width: 480px) {
     height: 50px;
     & .text {
       font-size: 16px;
     }
+
     & .title {
       font-size: 12px;
     }
@@ -398,6 +387,7 @@ const StyledInput = styled.input`
   font-weight: inherit;
 
   border-radius: 2px;
+
   &:focus {
     box-shadow: 0 1px 8px ${({ theme }) => theme.accentColor.base};
   }

@@ -1,26 +1,27 @@
-import ModalForm, { ModalFormProps } from '../../ModalForm';
-import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
+import ModalForm, { ModalFormProps } from '../../../ModalForm';
+import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import { IOrderSlot } from 'redux/orders/orders.types';
 import { useCallback, useEffect, useState } from 'react';
-import OrderSlotOverview from '../../Modals/Overviews/OrderSlotOverview';
+import OrderSlotOverview from '../../../Modals/Overviews/OrderSlotOverview';
 import { IProduct } from 'redux/products/products.types';
-import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
-import TableList from '../../TableList/TableList';
-import { createApiCall, OrdersApi } from '../../../api';
+import { pricesColumnsForProductReview } from '../../../../data/priceManagement.data';
+import TableList from '../../../TableList/TableList';
+import { createApiCall, OrdersApi } from '../../../../api';
 import { OnlyUUID } from 'redux/global.types';
-import FlexBox from '../../atoms/FlexBox';
+import FlexBox from '../../../atoms/FlexBox';
 import { IPriceListItem } from 'redux/priceManagement/priceManagement.types';
 import styled from 'styled-components';
-import { IProductVariation } from '../../TableVariations';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import { IProductVariation } from '../../../TableVariations';
+import CustomSelect from '../../../atoms/Inputs/CustomSelect/CustomSelect';
 import { isUndefined } from 'lodash';
 import { useWarehousesSelector } from 'redux/selectors.store';
-import { IWarehouse } from '../../../redux/warehouses/warehouses.types';
+import { IWarehouse } from '../../../../redux/warehouses/warehouses.types';
 
 export interface FormCreateOrderSlotItemProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<IOrderSlot>;
   product?: OnlyUUID;
 }
+
 const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit, product, ...props }) => {
   // const modalS = useModalService();
   // const [loadedData, setLoadedData] = useState<IOrderSlot>();
@@ -54,22 +55,14 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotItemProps> = ({ onSubmit,
         { label: 'Ціна', value: 'price' },
         { label: 'Склад', value: 'warehouse' },
       ]}
-      onOptSelect={(_option, _value, index) => {
-        setCurrentTab(index);
-      }}
+      onChangeIndex={setCurrentTab}
       fillHeight
       title={'Створення позиції для замовлення'}
       {...props}
     >
       <FlexBox style={{ minHeight: '100%' }} overflow={'auto'}>
         <FlexBox margin={'0 auto'} maxWidth={'480px'}>
-          <OrderSlotOverview
-            price={selectedPrice}
-            variation={selectedVariation}
-            dataForSlot={dataForSlot}
-            warehouse={selectedWarehouse}
-            disabled
-          />
+          <OrderSlotOverview disabled />
         </FlexBox>
 
         <FlexBox flex={1}>

@@ -1,22 +1,20 @@
-import FlexBox from '../../atoms/FlexBox';
-import { useDirectoriesSelector } from '../../../redux/selectors.store';
-import { ApiDirType } from '../../../redux/APP_CONFIGS';
-import { useCounterpartyDirectorySelectorByType } from '../../../hooks/selectorHooks.hooks';
-import { ContractorsTypesEnum } from '../../../redux/directories/contractors.types';
-import { useModalFormCreateCounterparty } from '../../../hooks/modalHooks';
+import FlexBox from '../../../atoms/FlexBox';
+import { useDirectoriesSelector } from '../../../../redux/selectors.store';
+import { ApiDirType } from '../../../../redux/APP_CONFIGS';
+import { useCounterpartyDirectorySelectorByType } from '../../../../hooks/selectorHooks.hooks';
+import { ContractorsTypesEnum } from '../../../../redux/directories/contractors.types';
+import { useModalFormCreateCounterparty } from '../../../../hooks/modalHooks';
 import { useState } from 'react';
-import ButtonGroup from '../../atoms/ButtonGroup';
-import { orderTypeFilterOptions } from '../../../data/orders.data';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
-import FormAccordeonItem from '../components/FormAccordeonItem';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import InputLabel from '../../atoms/Inputs/InputLabel';
-import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
+import CustomSelect from '../../../atoms/Inputs/CustomSelect/CustomSelect';
+import FormAccordeonItem from '../../components/FormAccordeonItem';
+import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import InputLabel from '../../../atoms/Inputs/InputLabel';
+import TextareaPrimary from '../../../atoms/Inputs/TextareaPrimary';
 import styled from 'styled-components';
-import Changer from '../../atoms/Changer';
-import usePermissionsAsDirItemOptions from '../../../hooks/usePermisionsAsWorkersOptions';
-import { UseAppFormReturn } from '../../../hooks/useAppForm.hook';
-import { ICreateOrderFormState } from '../../../redux/orders/orders.types';
+import Changer from '../../../atoms/Changer';
+import usePermissionsAsDirItemOptions from '../../../../hooks/usePermisionsAsWorkersOptions';
+import { UseAppFormReturn } from '../../../../hooks/useAppForm.hook';
+import { ICreateOrderFormState } from '../../../../redux/orders/orders.types';
 
 export interface FormCreateOrderMainInfoProps {
   form: UseAppFormReturn<ICreateOrderFormState>;
@@ -35,8 +33,6 @@ const FormCreateOrderMainInfo: React.FC<FormCreateOrderMainInfoProps> = ({ form 
   return (
     <Container flex={1} padding={'8px 0'}>
       <FlexBox padding={'0 16px 8px'}>
-        <ButtonGroup options={orderTypeFilterOptions} />
-
         <CustomSelect
           {...registerSelect('manager', {
             options: managers,

@@ -5,10 +5,11 @@ import { IOrder } from '../redux/orders/orders.types';
 import { Modals } from '../components/ModalProvider/Modals';
 import { useNavigate } from 'react-router-dom';
 import { ExtractIdString } from '../utils/dataTransform';
+import { t } from '../lang';
 
 export type OrdersActionsCreator = TableActionCreator<IOrder>;
 const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
-  const modals = useModalProvider();
+  const modalS = useModalProvider();
   const navigate = useNavigate();
   // const { orders } = useAppServiceProvider();
 
@@ -24,7 +25,7 @@ const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
           disabled: !selectedId,
           onClick: () => {
             selectedId && navigate(selectedId);
-            // modals.handleOpenModal({
+            // modalS.open({
             //   Modal: Modals.OrderOverview,
             //   props: {
             //     order: ctx.tableData?.find(el => el._id === selectedId),
@@ -45,7 +46,7 @@ const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
           icon: 'edit',
           disabled: !selectedId,
           onClick: () => {
-            modals.handleOpenModal({
+            modalS.open({
               Modal: Modals.FormCreateOrder,
               props: {
                 title: 'Edit order',
@@ -58,7 +59,7 @@ const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
           icon: 'copy',
           disabled: !selectedId,
           onClick: () => {
-            modals.handleOpenModal({
+            modalS.open({
               Modal: Modals.FormCreateOrder,
               props: {
                 title: `Copy order: ${selectedId}`,
@@ -69,20 +70,33 @@ const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
         { separator: true },
         {
           name: 'createOrder',
+          icon: 'AddToList',
+          type: 'onlyIconFilled',
+          onClick: () => {
+            modalS.open({
+              Modal: Modals.FormCreateOrdersGroup,
+              props: {
+                title: t(`Create orders group`),
+              },
+            });
+          },
+        },
+        {
+          name: 'createOrder',
           icon: 'plus',
           type: 'onlyIconFilled',
           onClick: () => {
-            modals.handleOpenModal({
+            modalS.open({
               Modal: Modals.FormCreateOrder,
               props: {
-                title: `Create order`,
+                title: t(`Create order`),
               },
             });
           },
         },
       ];
     },
-    [modals, navigate]
+    [modalS, navigate]
   );
 };
 export default useOrdersActionsCreatorHook;

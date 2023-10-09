@@ -86,7 +86,7 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({
         <TagButtonsFilter<ContractorsTypesEnum>
           options={filterOptions}
           name={'type'}
-          onSelectValue={setValue}
+          onSelectValue={({ name, value }) => setValue(name, value)}
           values={formValues.type ? [formValues.type] : undefined}
         />
 

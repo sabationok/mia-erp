@@ -21,7 +21,6 @@ export enum Modals {
   FormCreateCount = 'FormCreateCount',
   FormCreateCategory = 'FormCreateCategory',
   FormCreateCompany = 'FormCreateCompany',
-  FormCreateOrder = 'FormCreateOrder',
   FormCreateMethod = 'FormCreateMethod',
   FormInviteUser = 'FormInviteUser',
   FormCreateOrderSlotItem = 'FormCreateOrderSlotItem',
@@ -32,6 +31,11 @@ export enum Modals {
   FormCreateWarehouse = 'FormCreateWarehouse',
   FormCreateWarehouseDocument = 'FormCreateWarehouseDocument',
 
+  // ? ORDERS
+  FormCreateOrder = 'FormCreateOrder',
+  FormCreateOrdersGroup = 'FormCreateOrdersGroup',
+  SelectOrderType = 'SelectOrderType',
+  FormSelectProduct = 'FormSelectProduct',
   // * DIRECTORIES
   DirVariationsTemplate = 'DirVariationsTemplate',
   DirProperties = 'DirProperties',
@@ -59,7 +63,6 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   [Modals.FormCreateCustomRole]: Forms.CreateCustomRole,
   [Modals.FormCreateCount]: Forms.CreateCount,
   [Modals.FormCreateCompany]: Forms.CreateCompany,
-  [Modals.FormCreateOrder]: Forms.CreateOrder,
   [Modals.FormCreateTag]: Forms.CreateTag,
   [Modals.FormCreateMethod]: Forms.CreateMethod,
   [Modals.FormInviteUser]: Forms.InviteUser,
@@ -70,7 +73,11 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   [Modals.FormCreateWarehouse]: Forms.CreateWarehouse,
   [Modals.FormCreateProduct]: Forms.CreateProduct,
   [Modals.FormCreateWarehouseDocument]: Forms.CreateWarehouseDocument,
-
+  // * ORDERS
+  [Modals.FormCreateOrder]: Forms.CreateOrder,
+  [Modals.FormCreateOrdersGroup]: Forms.CreateOrdersGroup,
+  [Modals.FormSelectProduct]: Forms.SelectProduct,
+  [Modals.SelectOrderType]: Forms.SelectOrderType,
   // * DIRECTORIES
   [Modals.DirVariationsTemplate]: DirVariationsTemplate,
   [Modals.DirProperties]: DirPoperties,
@@ -98,11 +105,10 @@ export interface ModalChildrenProps extends Record<Modals, any> {
   [Modals.FormCreateCategory]: FormPropTypes.FormCreateCategoryProps;
   [Modals.FormCreateCount]: FormPropTypes.FormCreateCountProps;
   [Modals.FormCreateCompany]: FormPropTypes.FormCreateCompanyProps;
-  [Modals.FormCreateOrder]: FormPropTypes.FormCreateOrderProps;
   [Modals.FormCreateCustomRole]: FormPropTypes.FormCreateCustomRoleProps;
   [Modals.FormCreateMethod]: FormPropTypes.FormCreateMethodProps;
-  [Modals.FormCreateTag]: FormPropTypes.FormCreateTagProps;
   [Modals.FormInviteUser]: FormPropTypes.FormInviteUserProps;
+  [Modals.FormCreateTag]: FormPropTypes.FormCreateTagProps;
   [Modals.FormCreateOrderSlotItem]: FormPropTypes.FormCreateOrderSlotItemProps;
   [Modals.FormCreateProductInventory]: FormPropTypes.FormCreateProductInventoryProps;
   [Modals.FormCreateProduct]: FormPropTypes.FormCreateProductProps;
@@ -110,6 +116,12 @@ export interface ModalChildrenProps extends Record<Modals, any> {
   [Modals.FormCreateVariation]: FormPropTypes.FormCreateVariationProps;
   [Modals.FormCreateWarehouse]: FormPropTypes.FormCreateWarehouseProps;
   [Modals.FormCreateWarehouseDocument]: FormPropTypes.FormCreateWarehouseDocumentProps;
+
+  // * ORDERS
+  [Modals.FormCreateOrder]: FormPropTypes.FormCreateOrderProps;
+  [Modals.FormCreateOrdersGroup]: FormPropTypes.FormCreateOrdersGroupProps;
+  [Modals.SelectOrderType]: FormPropTypes.SelectOrderTypeModalProps;
+  [Modals.FormSelectProduct]: FormPropTypes.SelectProductModalProps;
 
   // * DIRECTORIES
   [Modals.DirProperties]: DirPropertiesProps;

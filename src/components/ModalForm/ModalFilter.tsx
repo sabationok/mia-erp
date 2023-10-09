@@ -4,17 +4,22 @@ import styled from 'styled-components';
 import { checks } from '../../utils';
 
 export interface ModalFormFilterProps<V = any, D = any> {
-  defaultOption?: number | FilterOpt<V, D> | V;
   getDefaultValue?: (opt: FilterOpt<V, D>) => number;
   preventFilter?: boolean;
+  filterOptions?: FilterOption<V, D>[];
+
   onOptSelect?: FilterSelectHandler<V, D>;
   onFilterValueSelect?: FilterSelectValueHandler<V>;
-  filterOptions?: FilterOption<V, D>[];
   onChangeIndex?: (index: number) => void;
+
   name?: any;
+  defaultOption?: number | FilterOpt<V, D> | V;
   currentIndex?: number;
   defaultFilterValue?: string;
+
   asStepper?: boolean;
+
+  optionProps?: { fitContentH?: boolean };
 }
 
 export interface FilterOpt<V = any, D = any> extends Record<string, any> {
@@ -36,7 +41,7 @@ export type FilterSelectHandler<V = any, D = any> = (
   index: number,
   name?: string
 ) => void;
-export type FilterSelectValueHandler<V = any> = (name: any & string, value: V) => void;
+export type FilterSelectValueHandler<V = any> = (info: { name: any & string; value: V }) => void;
 
 export type FilterChangeHandler<V = any> = (values: V[], name?: string) => void;
 export interface FilterOption<V = any, D = any> extends FilterOpt<V, D> {}
@@ -53,6 +58,7 @@ const ModalFilter = <V = any, D = any>({
   asStepper,
   name,
   onChangeIndex,
+  optionProps,
   ...props
 }: ModalFormFilterProps<V, D> & React.HTMLAttributes<HTMLDivElement>) => {
   const [current, setCurrent] = useState<number>(currentIndex);
@@ -64,7 +70,7 @@ const ModalFilter = <V = any, D = any>({
         setCurrent(idx);
 
         if (checks.isFun(onChangeIndex)) onChangeIndex(idx);
-        if (checks.isFun(onFilterValueSelect)) onFilterValueSelect(name, option.value);
+        if (checks.isFun(onFilterValueSelect)) onFilterValueSelect({ name, value: option.value });
         if (checks.isFun(onOptSelect)) onOptSelect(option, option.value, idx);
       };
     },
@@ -87,8 +93,9 @@ const ModalFilter = <V = any, D = any>({
     if (preventFilter || defaultFilterValue) return;
 
     if (filterOptions.length > 0) {
+      checks.isFun(onChangeIndex) && onChangeIndex(current);
       checks.isFun(onOptSelect) && onOptSelect(filterOptions[current], filterOptions[current].value, current);
-      checks.isFun(onFilterValueSelect) && onFilterValueSelect(name, filterOptions[current].value);
+      checks.isFun(onFilterValueSelect) && onFilterValueSelect({ name, value: filterOptions[current].value });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -113,7 +120,7 @@ const ModalFilter = <V = any, D = any>({
   );
 
   return filterOptions?.length && filterOptions?.length > 0 ? (
-    <Filter className="filter" gridRepeat={filterOptions?.length} {...props}>
+    <Filter className="filter" gridRepeat={filterOptions?.length} optionProps={optionProps} {...props}>
       {renderOptions}
     </Filter>
   ) : (
@@ -121,10 +128,11 @@ const ModalFilter = <V = any, D = any>({
   );
 };
 
-const Filter = styled.div<{ gridRepeat?: number }>`
+const Filter = styled.div<{ gridRepeat?: number; optionProps?: { fitContentH?: boolean } }>`
   display: grid;
   align-items: center;
-  grid-template-columns: ${({ gridRepeat }) => `repeat(${gridRepeat || 1}, minmax(150px, 1fr))`};
+  grid-template-columns: ${({ gridRepeat, optionProps }) =>
+    `repeat(${gridRepeat || 1}, minmax(${(optionProps?.fitContentH && 'min-content') || '150px'} ,1fr))`};
 
   min-height: 32px;
   overflow: auto;

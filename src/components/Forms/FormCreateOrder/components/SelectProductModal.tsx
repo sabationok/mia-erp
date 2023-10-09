@@ -1,45 +1,50 @@
-import { ModalFormProps } from '../../ModalForm';
-import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { IProduct } from '../../../redux/products/products.types';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ITableListProps } from '../../TableList/tableTypes.types';
-import TableList from '../../TableList/TableList';
-import { productsColumns } from '../../../data';
-import { createApiCall, PriceManagementApi, ProductsApi, WarehousesApi } from '../../../api';
-import { t } from '../../../lang';
-import { enumToFilterOptions } from '../../../utils/fabrics';
-import ModalFilter, { FilterSelectHandler } from '../../ModalForm/ModalFilter';
-import { IVariationTableData } from '../../../redux/products/variations.types';
-import { IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
+import { ModalFormProps } from '../../../ModalForm';
+import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
+import { IProduct } from '../../../../redux/products/products.types';
+import { FormEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
+import { ITableListProps } from '../../../TableList/tableTypes.types';
+import TableList from '../../../TableList/TableList';
+import { productsColumns } from '../../../../data';
+import { createApiCall, PriceManagementApi, ProductsApi, WarehousesApi } from '../../../../api';
+import { t } from '../../../../lang';
+import { enumToFilterOptions } from '../../../../utils/fabrics';
+import ModalFilter from '../../../ModalForm/ModalFilter';
+import { IVariationTableData } from '../../../../redux/products/variations.types';
+import { IPriceListItem } from '../../../../redux/priceManagement/priceManagement.types';
 import styled from 'styled-components';
-import { ModalHeader } from '../../atoms';
-import FlexBox from '../../atoms/FlexBox';
-import StepsController from '../components/StepsController';
-import { useAppForm } from '../../../hooks';
-import { createStepsChecker, createTableTitlesFromTemplate } from '../../../utils';
-import { usePropertiesSelector } from '../../../redux/selectors.store';
-import VariationsApi from '../../../api/variations.api';
-import { transformVariationTableData } from '../../../utils/tables';
-import { ExtractId } from '../../../utils/dataTransform';
-import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
-import { IOrderSlotBase } from '../../../redux/orders/orders.types';
-import { IProductInventory, IWarehouse } from '../../../redux/warehouses/warehouses.types';
-import { warehouseOverviewTableColumns } from '../../../data/warehauses.data';
+import { ModalHeader } from '../../../atoms';
+import FlexBox from '../../../atoms/FlexBox';
+import StepsController from '../../components/StepsController';
+import { useAppForm } from '../../../../hooks';
+import { createTableTitlesFromTemplate } from '../../../../utils';
+import { usePropertiesSelector } from '../../../../redux/selectors.store';
+import VariationsApi from '../../../../api/variations.api';
+import { transformVariationTableData } from '../../../../utils/tables';
+import { ExtractId } from '../../../../utils/dataTransform';
+import { pricesColumnsForProductReview } from '../../../../data/priceManagement.data';
+import { IOrderTempSlot } from '../../../../redux/orders/orders.types';
+import { IProductInventory, IWarehouse } from '../../../../redux/warehouses/warehouses.types';
+import { warehouseOverviewTableColumns } from '../../../../data/warehauses.data';
+import { useStepsHandler } from '../../../../utils/createStepChecker';
+import _ from 'lodash';
+import { nanoid } from '@reduxjs/toolkit';
 
 export interface SelectProductModalProps
   extends Omit<ModalFormProps<SelectProductModalSteps, any, SelectProductModalFormData>, 'onSubmit' | 'onSelect'> {
-  onSubmit?: AppSubmitHandler<IOrderSlotBase>;
+  onSubmit?: AppSubmitHandler<IOrderTempSlot>;
 }
 
 enum SelectProductModalSteps {
   product = 'product',
   variation = 'variation',
   price = 'price',
-  warehouse = 'warehouse',
+  // warehouse = 'warehouse',
+  batch = 'batch',
 }
 
-const steps = enumToFilterOptions(SelectProductModalSteps);
-const checkStep = (idx: number) => createStepsChecker(steps)(idx);
+const stepsLong = enumToFilterOptions(SelectProductModalSteps);
+// TODO const stepsShort = enumToFilterOptions(SelectProductModalSteps).filter(el => el.value !== 'batch');
+
 export interface SelectProductModalFormData {
   price?: IPriceListItem;
   variation?: IVariationTableData;
@@ -50,12 +55,11 @@ export interface SelectProductModalFormData {
 type FormKey = keyof SelectProductModalFormData;
 
 const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, onSubmit, onClose, ...props }) => {
-  const [currentTab, setCurrentTab] = useState(0);
+  const { stepCheck, stepIdx, stepsCount, setPrevStep, setNextStep } = useStepsHandler(stepsLong);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [variations, setVariations] = useState<IVariationTableData[]>([]);
   const [prices, setPrices] = useState<IPriceListItem[]>([]);
   const [inventories, setInventories] = useState<IProductInventory[]>([]);
-
   const [formData, setFormData] = useState<SelectProductModalFormData>({});
 
   const setFormValue = useCallback(<Key extends FormKey = any>(key: Key, value: SelectProductModalFormData[Key]) => {
@@ -66,9 +70,6 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
 
   const { watch, setValue } = useAppForm<{ search?: string; searchBy?: string }>();
   const { search, searchBy } = watch();
-  const onSetStep: FilterSelectHandler<SelectProductModalSteps> = (_o, _v, i) => {
-    setCurrentTab(i);
-  };
 
   const productTableConfig = useMemo(
     (): ITableListProps<IProduct> => ({
@@ -87,9 +88,10 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
         const v = products.find(p => p._id === data?._id);
 
         v && setFormValue('product', v);
+        setNextStep();
       },
     }),
-    [formData?.product, products, setFormValue, setValue]
+    [formData?.product, products, setFormValue, setNextStep, setValue]
   );
   const variationTableTitles = useMemo(() => {
     const template = templates.find(t => t._id === formData?.product?.template?._id);
@@ -106,9 +108,10 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
         const v = variations.find(p => p._id === data?._id);
 
         v && setFormValue('variation', v);
+        setNextStep();
       },
     }),
-    [formData?.variation, setFormValue, variationTableTitles, variations]
+    [formData?.variation, setFormValue, setNextStep, variationTableTitles, variations]
   );
   const pricesTableConfig = useMemo(
     (): ITableListProps<IProduct> => ({
@@ -120,9 +123,10 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
         const v = prices.find(p => p._id === data?._id);
 
         v && setFormValue('price', v);
+        setNextStep();
       },
     }),
-    [formData?.price, prices, setFormValue]
+    [formData?.price, prices, setFormValue, setNextStep]
   );
 
   const warehousingTableConfig = useMemo(
@@ -136,49 +140,50 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
 
         v && setFormValue('inventory', v);
         v?.warehouse && setFormValue('warehouse', v?.warehouse);
+        setNextStep();
       },
     }),
-    [formData?.inventory, inventories, setFormValue]
+    [formData?.inventory, inventories, setFormValue, setNextStep]
   );
 
   const tableConfig = useMemo((): ITableListProps | undefined => {
-    if (checkStep(currentTab)?.product) {
+    if (stepCheck(SelectProductModalSteps.product)) {
       return productTableConfig;
     }
-    if (checkStep(currentTab)?.variation) {
+    if (stepCheck(SelectProductModalSteps.variation)) {
       return variationsTableConfig;
     }
-    if (checkStep(currentTab)?.price) {
+    if (stepCheck(SelectProductModalSteps.price)) {
       return pricesTableConfig;
     }
-    if (checkStep(currentTab)?.warehouse) {
+    if (stepCheck(SelectProductModalSteps.batch)) {
       return warehousingTableConfig;
     }
     return;
-  }, [currentTab, pricesTableConfig, productTableConfig, variationsTableConfig, warehousingTableConfig]);
+  }, [stepCheck, productTableConfig, variationsTableConfig, pricesTableConfig, warehousingTableConfig]);
 
   const canGoNext = useMemo((): boolean => {
-    if (checkStep(currentTab)?.product) {
+    if (stepCheck(SelectProductModalSteps.product)) {
       return !!formData?.product;
     }
-    if (checkStep(currentTab)?.variation) {
+    if (stepCheck(SelectProductModalSteps.variation)) {
       return !!formData?.product && !!formData?.variation;
     }
-    if (checkStep(currentTab)?.price) {
+    if (stepCheck(SelectProductModalSteps.price)) {
       return !!formData?.product && !!formData?.variation && !!formData?.price;
     }
-    if (checkStep(currentTab)?.warehouse) {
+    if (stepCheck(SelectProductModalSteps.batch)) {
       return !!formData?.inventory;
     }
     return false;
-  }, [currentTab, formData?.inventory, formData?.price, formData?.product, formData?.variation]);
+  }, [formData?.inventory, formData?.price, formData?.product, formData?.variation, stepCheck]);
 
-  const canAccept = useMemo(() => {
+  const canSubmit = useMemo(() => {
     return Object.values(formData).length >= 4;
   }, [formData]);
 
   const loadData = useCallback(() => {
-    if (checkStep(currentTab)?.product) {
+    if (stepCheck(SelectProductModalSteps.product)) {
       createApiCall(
         {
           data: { search, searchBy },
@@ -188,7 +193,7 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
         ProductsApi
       );
     }
-    if (checkStep(currentTab)?.variation) {
+    if (stepCheck(SelectProductModalSteps.variation)) {
       formData?.product &&
         createApiCall(
           {
@@ -202,7 +207,7 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
           VariationsApi
         );
     }
-    if (checkStep(currentTab)?.price) {
+    if (stepCheck(SelectProductModalSteps.price)) {
       formData?.product &&
         createApiCall(
           {
@@ -216,7 +221,7 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
           PriceManagementApi
         );
     }
-    if (checkStep(currentTab)?.warehouse) {
+    if (stepCheck(SelectProductModalSteps.batch)) {
       formData?.product &&
         createApiCall(
           {
@@ -231,7 +236,23 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
           WarehousesApi
         );
     }
-  }, [currentTab, formData?.price, formData?.product, formData?.variation, search, searchBy]);
+  }, [formData?.price, formData?.product, formData?.variation, search, searchBy, stepCheck]);
+
+  const handleSubmit: FormEventHandler = e => {
+    e.preventDefault();
+
+    const slot: IOrderTempSlot = {
+      ..._.omit(formData, ['price']),
+      ..._.omit(formData?.price, ['author', 'owner', 'list']),
+      origin: _.pick(formData?.price, ['_id']),
+      tempId: nanoid(8),
+    };
+
+    console.log('handleSubmit', slot);
+
+    onSubmit && onSubmit(slot);
+    onClose && onClose();
+  };
 
   useEffect(() => {
     loadData();
@@ -244,31 +265,24 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ defaultState, o
   }, [formData.product?._id, formData.variation?.product?._id]);
 
   return (
-    <Form fillWidth fillHeight {...props}>
+    <Form fillWidth fillHeight {...props} onSubmit={handleSubmit}>
       <ModalHeader title={t('Select product')} onBackPress={onClose} />
 
       <Content fillWidth flex={1} overflow={'hidden'}>
-        <ModalFilter filterOptions={steps} asStepper currentIndex={currentTab} />
+        <ModalFilter filterOptions={stepsLong} asStepper currentIndex={stepIdx} />
+
         <TableList {...tableConfig} />
       </Content>
 
       <Footer padding={'8px'}>
         <StepsController
-          steps={steps}
-          onNextPress={onSetStep}
-          onPrevPress={onSetStep}
-          onCancelPress={currentTab === 0 ? onClose : undefined}
+          steps={stepsLong}
+          onPrevPress={() => setPrevStep()}
+          onNextPress={() => setNextStep()}
+          onCancelPress={stepIdx === 0 ? onClose : undefined}
           canGoNext={canGoNext}
-          canAccept={canAccept}
-          currentIndex={currentTab}
-          onAcceptPress={
-            currentTab + 1 === steps.length
-              ? () => {
-                  onSubmit && onSubmit(formData);
-                  onClose && onClose();
-                }
-              : undefined
-          }
+          canSubmit={canSubmit}
+          currentIndex={stepIdx}
         />
       </Footer>
     </Form>

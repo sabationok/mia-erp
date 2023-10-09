@@ -170,6 +170,39 @@ export const langUa = {
   parentItem: 'Батьківський елемент',
   expireAt: 'Дійсне до',
 
+  Invoices: 'Інвойси',
+  Invoice: 'Інвойс',
+
+  Payments: 'Оплати',
+  Payment: 'Оплата',
+
+  Shipments: 'Відвантаження',
+  Shipment: 'Відвантаження',
+
+  Deliveries: 'Доставки',
+  Delivery: 'Доставка',
+
+  Realizations: 'Реалізації',
+  Realization: 'Реалізація',
+
+  Refunds: 'Повернення',
+  Refund: 'Повернення',
+
+  Orders: 'Замовлення',
+  Order: 'Замовлення',
+
+  Stuffing: 'Комлектування',
+  Completing: 'Комлектування',
+
+  Summary: 'Підсумок',
+  Info: 'Інфо',
+
+  Priority: 'Пріорітетність',
+  'Total amount': 'Сумарно',
+  'Total q-ty': 'Сумарна к-ть',
+  Number: 'Номер',
+  Group: 'Група',
+
   manufacturer: 'Виробник',
   unit: 'Одиниця',
   min: 'MIN',
@@ -304,6 +337,7 @@ export const langUa = {
   'Create tag': 'Створити тег',
   'Create warehouse document': 'Створити складський документ',
   'Select list of properties': 'Оберіть список доступних характеристик',
+  'Add position to order': 'Додати позицію до замовлення',
 
   'Permission check, please wait': 'Перевірка дозволу, будь ласка зачекайте',
 

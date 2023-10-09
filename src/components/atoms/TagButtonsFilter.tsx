@@ -38,7 +38,7 @@ const TagButtonsFilter = <Value extends string | number = any>({
       setSelectedValues(prev => {
         if (!multiple) {
           onSelect && onSelect(option, option.value, index);
-          onSelectValue && onSelectValue(name, option.value);
+          onSelectValue && onSelectValue({ name, value: option.value });
           return [option.value];
         }
 

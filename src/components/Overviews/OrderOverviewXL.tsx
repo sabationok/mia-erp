@@ -1,19 +1,17 @@
 import { IOrder } from '../../redux/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import { ModalHeader } from '../atoms';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useOrdersSelector } from '../../redux/selectors.store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
-import * as Cells from './components/Cells';
-import { OverviewCellProps } from './components/Cells';
 import styled from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { usePageOverlayService } from '../atoms/PageOverlayProvider';
 import { t } from '../../lang';
 import { useAppParams } from '../../hooks';
 import { enumToFilterOptions } from '../../utils/fabrics';
 import ModalFilter from '../ModalForm/ModalFilter';
+import OrderOverviewInfoTab from './components/OrderOverviewInfoTab';
 
 export interface OrderOverviewXLProps {
   order?: IOrder;
@@ -28,8 +26,8 @@ export interface OrderOverviewXLProps {
 }
 export enum OrderOverviewTabs {
   info = 'Info',
-  statuses = 'Statuses',
   chat = 'Chat',
+  statuses = 'Statuses',
   comments = 'Comments',
   tasks = 'tasks',
 }
@@ -37,37 +35,26 @@ export enum OrderOverviewTabs {
 const tabs = enumToFilterOptions(OrderOverviewTabs);
 
 const OrderOverviewXL: React.FC<OrderOverviewXLProps> = p => {
+  const [currentTab, setCurrentTab] = useState<number>(0);
   const orderS = useAppServiceProvider()[ServiceName.orders];
   const orderId = useAppParams()?.orderId;
   const currentOrder = useOrdersSelector().currentOrder;
   const navigate = useNavigate();
   const location = useLocation();
-  const overlayS = usePageOverlayService();
 
-  const renderCells = useMemo(
-    () =>
-      orderOverviewCells.map(({ CellComponent, ...cell }) => {
-        if (CellComponent) {
-          return (
-            <CellComponent
-              key={cell.title}
-              setOverlayContent={overlayS.createOverlayComponent}
-              cell={cell}
-              data={currentOrder}
-            />
-          );
-        }
-        return (
-          <Cells.OverviewTextCell
-            key={cell.title}
-            setOverlayContent={overlayS.createOverlayComponent}
-            cell={cell}
-            data={currentOrder}
-          />
-        );
-      }),
-    [overlayS.createOverlayComponent, currentOrder]
-  );
+  const renderTab = useMemo(() => {
+    if (tabs[currentTab].value === OrderOverviewTabs.info) {
+      return <OrderOverviewInfoTab />;
+    }
+    if (tabs[currentTab].value === OrderOverviewTabs.chat) {
+      return <OrderOverviewInfoTab />;
+    }
+    if (tabs[currentTab].value === OrderOverviewTabs.statuses) {
+      return <OrderOverviewInfoTab />;
+    }
+
+    return;
+  }, [currentTab]);
 
   return (
     <Container flex={1} fillWidth padding={'0 8px'}>
@@ -83,9 +70,9 @@ const OrderOverviewXL: React.FC<OrderOverviewXLProps> = p => {
       />
 
       <Content flex={1} fillWidth overflow={'auto'}>
-        <ModalFilter filterOptions={tabs} />
+        <ModalFilter filterOptions={tabs} optionProps={{ fitContentH: true }} />
 
-        {renderCells}
+        {renderTab}
       </Content>
 
       <Footer fxDirection={'row'} alignItems={'center'} justifyContent={'space-between'} padding={'8px 0'}>
@@ -151,5 +138,3 @@ const OpenBtn = styled(ButtonIcon)`
   }
 `;
 export default OrderOverviewXL;
-
-const orderOverviewCells: OverviewCellProps<IOrder>[] = [];

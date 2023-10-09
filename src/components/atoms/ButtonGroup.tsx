@@ -12,7 +12,7 @@ export interface ButtonGroupProps<V = any> {
   backgroundColor?: string;
   borderRadius?: string;
 }
-export type ButtonGroupSelectHandler<V = any> = (info: { option: FilterOption<V>; value?: V; index: number }) => void;
+export type ButtonGroupSelectHandler<V = any> = (info: { option: FilterOption<V>; value: V; index: number }) => void;
 const ButtonGroup = <V = any,>({ options, borderRadius, onSelect, defaultIndex }: ButtonGroupProps<V>) => {
   const [current, setCurrent] = useState(0);
 

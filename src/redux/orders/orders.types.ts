@@ -9,7 +9,7 @@
 //
 
 import { AppResponse, IBase, OnlyUUID } from '../global.types';
-import { IPriceListItem } from '../priceManagement/priceManagement.types';
+import { IPriceBase, IPriceListItem } from '../priceManagement/priceManagement.types';
 import { ICompany } from '../companies/companies.types';
 import { IManager } from '../auth/auth.types';
 import { ICommunicationDirItem, IPaymentDirItem, IShipmentDirItem } from '../../components/Directories/dir.types';
@@ -21,38 +21,33 @@ import { IVariation } from '../products/variations.types';
 
 export type OrderTypeFilterOption = FilterOpt;
 export enum OrderTypeEnum {
-  SIMPLE = 'SIMPLE',
-  SET = 'SET',
+  Order = 'Order',
+  Group = 'Group',
 }
 export type OrderStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
-export interface IOrderSlotItem extends IPriceListItem {
-  slot?: OnlyUUID;
-  order?: OnlyUUID;
-  owner?: ICompany;
-  manager?: IManager;
 
-  origin?: Partial<IPriceListItem>;
-}
-
-export interface IOrderSlotBase {
+export interface IOrderSlotBase extends IPriceBase {
   product?: IProduct;
   variation?: IVariation;
-  origin?: IPriceListItem;
+  origin?: Partial<IPriceListItem>;
+  inventory?: IProductInventory;
+  warehouse?: IWarehouse;
 }
 
 export interface IOrderSlot extends IPriceListItem, IOrderSlotBase {
   owner?: ICompany;
   order?: OnlyUUID;
 
-  inventory?: IProductInventory;
-  warehouse?: IWarehouse;
   shipment?: IShipmentDirItem;
 
   status?: OrderStatus;
   amount?: number;
 }
+export interface IOrderTempSlot extends IOrderSlotBase {
+  tempId: string;
+}
 export interface IOrder extends IBase {
-  owner: ICompany;
+  owner?: ICompany;
   manager?: IManager;
 
   barCode?: string;
@@ -96,7 +91,6 @@ export interface ICreateOrderFormState {
   status?: OrderStatus;
   payments?: OnlyUUID[];
 
-  // content?: IOrderSlotItem[];
   slots?: OnlyUUID[];
   destination?: string;
   shipmentMethod?: { _id: string; name?: string; secondName?: string; label?: string };
@@ -105,9 +99,6 @@ export interface ICreateOrderFormState {
   comment?: string;
   innerComment?: string;
 }
-
-export interface IAllOrderSlotItemsRes extends AppResponse<IOrderSlotItem[]> {}
-export interface IOrderSlotItemRes extends AppResponse<IOrderSlotItem> {}
 
 export interface IAllOrderSlotsRes extends AppResponse<IOrderSlot[]> {}
 export interface IOrderSlotRes extends AppResponse<IOrderSlot> {}
@@ -124,7 +115,7 @@ export interface IOrderSlotReqData {
 }
 export interface IOrderSlotItemReqData {
   _id?: string;
-  data: IOrderSlotItem;
+  data: IOrderSlot;
 }
 
 // export type OrderStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';

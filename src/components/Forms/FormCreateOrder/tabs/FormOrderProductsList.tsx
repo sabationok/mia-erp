@@ -1,10 +1,10 @@
-import FlexBox from '../../atoms/FlexBox';
+import FlexBox from '../../../atoms/FlexBox';
 import { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import FormAddOrderSlot from './FormAddOrderSlot';
-import { OnlyUUID } from '../../../redux/global.types';
-import { IOrderSlot, IOrderSlotBase } from '../../../redux/orders/orders.types';
-import OrderSlotOverview from '../../Modals/Overviews/OrderSlotOverview';
+import FormAddOrderSlot from '../components/FormAddOrderSlot';
+import { OnlyUUID } from '../../../../redux/global.types';
+import { IOrderSlot, IOrderSlotBase } from '../../../../redux/orders/orders.types';
+import OrderSlotOverview from '../../../Modals/Overviews/OrderSlotOverview';
 import { nanoid } from '@reduxjs/toolkit';
 
 export interface FormCreateOrderProductsListProps {
@@ -12,7 +12,7 @@ export interface FormCreateOrderProductsListProps {
   onRemove: (item: OnlyUUID) => void;
   list?: IOrderSlot[];
 }
-const FormCreateOrderProductsList: React.FC<FormCreateOrderProductsListProps> = ({ onSelect, onRemove, list }) => {
+const FormOrderProductsList: React.FC<FormCreateOrderProductsListProps> = ({ onSelect, onRemove, list }) => {
   const [data, setData] = useState<(Partial<IOrderSlot> & { tempId?: string })[]>(list || []);
 
   const handleSelect = useCallback((item: IOrderSlotBase) => {
@@ -37,9 +37,7 @@ const FormCreateOrderProductsList: React.FC<FormCreateOrderProductsListProps> = 
         <FlexBox>{renderProducts}</FlexBox>
       </FlexBox>
 
-      <Footer>
-        <FormAddOrderSlot onSelect={handleSelect} />
-      </Footer>
+      <FormAddOrderSlot onSelect={handleSelect} />
     </Container>
   );
 };
@@ -48,8 +46,4 @@ const Container = styled(FlexBox)`
   position: relative;
   overflow: hidden;
 `;
-const Footer = styled(FlexBox)`
-  border-top: 1px solid ${({ theme }) => theme.modalBorderColor};
-  background-color: ${({ theme }) => theme.modalBackgroundColor};
-`;
-export default FormCreateOrderProductsList;
+export default FormOrderProductsList;

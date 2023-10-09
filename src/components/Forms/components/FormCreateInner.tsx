@@ -9,7 +9,7 @@ export interface FormCreateInnerProps {
 
 const FormCreateInner: React.FC<FormCreateInnerProps> = ({ buttonText, onClick }) => {
   return (
-    <Container fillHeight fillWidth padding={'8px'}>
+    <Container fillWidth padding={'8px'}>
       <ButtonIcon variant={'outlinedSmall'} onClick={onClick}>
         {buttonText || 'Create'}
       </ButtonIcon>
