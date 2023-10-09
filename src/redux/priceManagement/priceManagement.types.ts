@@ -65,14 +65,19 @@ export interface IPriceBase {
 
   discountAmount?: number;
   discountPercentage?: number;
+
   cashbackAmount?: number;
   cashbackPercentage?: number;
+
   bonusAmount?: number;
   bonusPercentage?: number;
+
   markupPercentage?: number;
   markupAmount?: number;
+
   commissionPercentage?: number;
   commissionAmount?: number;
+
   discountLabel?: string;
   cashbackLabel?: string;
 }

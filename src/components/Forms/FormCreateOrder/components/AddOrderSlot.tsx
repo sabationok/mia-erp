@@ -8,7 +8,7 @@ export interface FormAddOrderSlotProps {
   onSelect: (slot: IOrderTempSlot) => void;
 }
 
-const FormAddOrderSlot: React.FC<FormAddOrderSlotProps> = ({ onSelect, ...p }) => {
+const AddOrderSlot: React.FC<FormAddOrderSlotProps> = ({ onSelect, ...p }) => {
   const modalS = useModalService();
 
   return (
@@ -16,7 +16,7 @@ const FormAddOrderSlot: React.FC<FormAddOrderSlotProps> = ({ onSelect, ...p }) =
       buttonText={t('Add position to order')}
       onClick={() => {
         const m = modalS.handleOpenModal({
-          Modal: Modals.FormSelectProduct,
+          Modal: Modals.FormCreateOrderSlot,
           props: {
             onSubmit: d => {
               onSelect(d);
@@ -31,4 +31,4 @@ const FormAddOrderSlot: React.FC<FormAddOrderSlotProps> = ({ onSelect, ...p }) =
     />
   );
 };
-export default FormAddOrderSlot;
+export default AddOrderSlot;

@@ -5,6 +5,7 @@ import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { checks } from '../../../utils';
 import { t } from '../../../lang';
+import { useMediaQuery } from 'react-responsive';
 
 export interface StepsControllerProps<V = any> {
   steps?: FilterOption<V>[];
@@ -18,6 +19,11 @@ export interface StepsControllerProps<V = any> {
   canGoNext?: boolean;
   canAccept?: boolean;
   canSubmit?: boolean;
+
+  cancelButton?: boolean;
+  submitButton?: boolean;
+  acceptButton?: boolean;
+  arrowButtons?: boolean;
 }
 
 const StepsController = <V = any,>({
@@ -30,7 +36,13 @@ const StepsController = <V = any,>({
   canGoNext = true,
   canAccept,
   canSubmit,
+  cancelButton = true,
+  submitButton = true,
+  acceptButton,
+  arrowButtons = true,
 }: StepsControllerProps<V>) => {
+  const isTablet = useMediaQuery({ query: '(max-width: 768px)' });
+  const isMobile = useMediaQuery({ query: '(max-width: 480px)' });
   const [current, setCurrent] = useState<number>(currentIndex);
 
   const prevData = useMemo((): { label?: string; value: V } | null => {
@@ -82,47 +94,44 @@ const StepsController = <V = any,>({
   }, [currentIndex]);
 
   return (
-    <Container fxDirection={'row'} gap={8} fillWidth>
-      {onCancelPress && (
-        <ButtonIcon variant={'filledSmall'} style={{ flex: 1 }} onClick={onCancelPress}>
+    <Container fxDirection={'row'} gap={8} fillWidth overflow={'hidden'}>
+      {cancelButton && !isTablet && (
+        <ActionButton variant={'defOutlinedSmall'} onClick={onCancelPress}>
           {t('Cancel')}
-        </ButtonIcon>
+        </ActionButton>
       )}
 
-      {prevData && (
-        <ButtonIcon
-          variant={'filledSmall'}
+      {arrowButtons && (
+        <ArrowButton
+          variant={isMobile ? 'onlyIconFilled' : 'filledSmall'}
           icon={'SmallArrowLeft'}
-          style={{ flex: 1 }}
           onClick={handlePrevPress}
           disabled={!prevData}
         >
           {prevData?.label}
-        </ButtonIcon>
+        </ArrowButton>
       )}
 
-      {nextData && (
-        <ButtonIcon
-          variant={'filledSmall'}
+      {arrowButtons && (
+        <ArrowButton
+          variant={isMobile ? 'onlyIconFilled' : 'filledSmall'}
           endIcon={'SmallArrowRight'}
-          style={{ flex: 1 }}
           onClick={handleNextPress}
           disabled={!nextData}
         >
           {nextData?.label}
-        </ButtonIcon>
+        </ArrowButton>
       )}
 
-      {(canSubmit || onAcceptPress) && (
-        <ButtonIcon
+      {(submitButton || acceptButton) && (
+        <ActionButton
           variant={'filledSmall'}
-          type={canSubmit ? 'submit' : 'button'}
-          style={{ flex: 1 }}
+          type={canSubmit && submitButton ? 'submit' : 'button'}
           onClick={onAcceptPress}
-          disabled={canSubmit ? !canSubmit : !canAccept}
+          disabled={canSubmit && submitButton ? !canSubmit : !canAccept}
         >
           {t('Accept')}
-        </ButtonIcon>
+        </ActionButton>
       )}
     </Container>
   );
@@ -132,5 +141,17 @@ const Container = styled(FlexBox)`
   //min-height: 44px;
   // border-top: 1px solid ${({ theme }) => theme.modalBorderColor};
   // border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
+`;
+const ActionButton = styled(ButtonIcon)`
+  flex: 1;
+  min-width: min-content;
+`;
+const ArrowButton = styled(ButtonIcon)`
+  min-width: 34px;
+  height: 100%;
+
+  @media screen and (min-width: 480px) {
+    flex: 1;
+  }
 `;
 export default StepsController;

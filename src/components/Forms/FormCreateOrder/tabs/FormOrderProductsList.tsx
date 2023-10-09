@@ -1,7 +1,7 @@
 import FlexBox from '../../../atoms/FlexBox';
 import { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import FormAddOrderSlot from '../components/FormAddOrderSlot';
+import AddOrderSlot from '../components/AddOrderSlot';
 import { OnlyUUID } from '../../../../redux/global.types';
 import { IOrderSlot, IOrderSlotBase } from '../../../../redux/orders/orders.types';
 import OrderSlotOverview from '../../../Modals/Overviews/OrderSlotOverview';
@@ -37,7 +37,7 @@ const FormOrderProductsList: React.FC<FormCreateOrderProductsListProps> = ({ onS
         <FlexBox>{renderProducts}</FlexBox>
       </FlexBox>
 
-      <FormAddOrderSlot onSelect={handleSelect} />
+      <AddOrderSlot onSelect={handleSelect} />
     </Container>
   );
 };

@@ -30,8 +30,8 @@ const PagePriceListOverview: React.FC<PagePriceListOverviewProps> = ({ path }) =
 
   useEffect(() => {
     (filterParams || sortParams) && console.log('PagePriceListOverview ==============>>>>>>>>>>>');
-    sortParams && console.log(sortParams);
-    filterParams && console.log(filterParams);
+    sortParams && console.log({ sortParams });
+    filterParams && console.log({ filterParams });
   }, [filterParams, sortParams]);
 
   const tableConfig = useMemo(
@@ -51,19 +51,10 @@ const PagePriceListOverview: React.FC<PagePriceListOverviewProps> = ({ path }) =
     }),
     [actionsCreator, list?.prices]
   );
+
   useEffect(() => {
     list && console.log(list);
   }, [list]);
-  // const onValidSubmit = (data: IPriceList) => {
-  //   onSubmit &&
-  //     data.prices &&
-  //     onSubmit(data.prices, {
-  //       clearAfterSave: true,
-  //       closeAfterSave: true,
-  //       onLoading: l => {},
-  //       onSuccess: d => {},
-  //     });
-  // };
 
   useEffect(() => {
     if (listId) {
@@ -72,7 +63,8 @@ const PagePriceListOverview: React.FC<PagePriceListOverviewProps> = ({ path }) =
         onLoading: setIsLoading,
       });
     }
-  }, [listId, getById]);
+    // eslint-disable-next-line
+  }, [listId]);
 
   return (
     <AppGridPage path={path}>

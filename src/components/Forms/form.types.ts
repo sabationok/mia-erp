@@ -12,7 +12,6 @@ export type { FormCreateOrderProps } from './FormCreateOrder/FormCreateOrder';
 export type { FormCreateTagProps } from './FormCreateTag';
 export type { FormCreateMethodProps } from './FormCreateMetod';
 export type { FormInviteUserProps } from './FormInviteUser';
-export type { FormCreateOrderSlotItemProps } from './FormCreateOrder/components/FormCreateOrderSlot';
 export type { FormCreatePropertyProps } from './FormCreateProperty';
 export type { FormCreateVariationProps } from './FormCreateVariation';
 export type { FormCreateWarehouseProps } from './warehousing/FormCreateWarehouse';
@@ -23,4 +22,4 @@ export type { FormCreateWarehouseDocumentProps } from './warehousing/FormCreateW
 export type { FormWarehousingSettingsProps } from './warehousing/FormWarehousingSettings';
 export type { FormCreateOrdersGroupProps } from './FormCreateOrder/FormCreateOrdersGroup';
 export type { SelectOrderTypeModalProps } from './FormCreateOrder/components/SelectOrderTypeModal';
-export type { SelectProductModalProps } from './FormCreateOrder/components/SelectProductModal';
+export type { FormCreateOrderSlotProps } from './FormCreateOrder/components/FormCreateOrderSlot';

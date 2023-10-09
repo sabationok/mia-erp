@@ -2,7 +2,7 @@ import { IOrderSlot, IOrderSlotBase, IOrderTempSlot } from '../../../redux/order
 import FlexBox from '../../atoms/FlexBox';
 import styled from 'styled-components';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import { ChangeEventHandler, useState } from 'react';
+import { ChangeEventHandler, useEffect, useState } from 'react';
 import { IProduct } from '../../../redux/products/products.types';
 import { IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
 import { IProductVariation } from '../../TableVariations';
@@ -164,8 +164,7 @@ const CountSelector = ({
   );
 };
 const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({ slot, disabled, onSelect, onRemovePress }) => {
-  const [quantity, setQuantity] = useState(0);
-  const [countedData, setCountedData] = useState<(IOrderSlotBase & { quantity?: number; total?: number }) | undefined>(
+  const [formData, setFormData] = useState<(IOrderSlotBase & { quantity?: number; total?: number }) | undefined>(
     slot || undefined
   );
   // const cells = useMemo(
@@ -179,41 +178,32 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({ slot, disabled, o
   //   }
   // }, [price, quantity]);
 
+  const handleUpdateQuantity = (value: number) => {
+    setFormData(prev => ({
+      ...prev,
+      quantity: value,
+      total: !prev?.price ? prev?.price : value * prev?.price,
+    }));
+  };
+
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
+
   return (
     <Card disabled={disabled}>
       <ImageBox>
         <img
-          src={slot?.product?.images ? slot?.product?.images[0]?.img_1x : ''}
+          src={formData?.product?.images ? formData?.product?.images[0]?.img_1x : ''}
           style={{ objectFit: 'contain' }}
           alt={''}
           width={'100%'}
-          height={'100%'}
         />
       </ImageBox>
       <CardGridArea>
-        {/*{cells.map(({ borderBottom, title, value, gridArea, isLastInRow }) => (*/}
-        {/*  <CardGridBox key={`cardCell-${title}`} gridArea={gridArea || ''} isLastInRow={isLastInRow}>*/}
-        {/*    {!borderBottom && (*/}
-        {/*      <>*/}
-        {/*        <div className={'title'}>{!borderBottom && (title || 'Title')}</div>*/}
-        {/*        {gridArea !== 'qty' ? (*/}
-        {/*          <div className={'text'}>{value || '-'}</div>*/}
-        {/*        ) : (*/}
-        {/*          <CountSelector*/}
-        {/*            value={quantity}*/}
-        {/*            disabled={false}*/}
-        {/*            className={'text'}*/}
-        {/*            autoFocus*/}
-        {/*            onChange={setQuantity}*/}
-        {/*            onInputChange={({ target }) => {*/}
-        {/*              setQuantity(Number(target.value));*/}
-        {/*            }}*/}
-        {/*          />*/}
-        {/*        )}*/}
-        {/*      </>*/}
-        {/*    )}*/}
-        {/*  </CardGridBox>*/}
-        {/*))}*/}
+        {[].map(({ title, value, isLastInRow }) => (
+          <CardGridBox key={`cardCell-${title}`} gridArea={''} isLastInRow={isLastInRow}></CardGridBox>
+        ))}
       </CardGridArea>
 
       {!disabled && (

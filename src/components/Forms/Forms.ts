@@ -3,8 +3,7 @@ import { lazy } from 'react';
 export const CreateOrder = lazy(() => import('./FormCreateOrder/FormCreateOrder'));
 export const CreateOrdersGroup = lazy(() => import('./FormCreateOrder/FormCreateOrdersGroup'));
 export const SelectOrderType = lazy(() => import('./FormCreateOrder/components/SelectOrderTypeModal'));
-export const SelectProduct = lazy(() => import('./FormCreateOrder/components/SelectProductModal'));
-export const CreateOrderSlot = lazy(() => import('./FormCreateOrder/components/FormAddOrderSlot'));
+export const CreateOrderSlot = lazy(() => import('./FormCreateOrder/components/FormCreateOrderSlot'));
 // * TRANSACTIONS
 export const CreateTransaction = lazy(() => import('./FormCreateTransaction'));
 export const CreateCount = lazy(() => import('./FormCreateCount'));

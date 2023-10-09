@@ -13,7 +13,7 @@ import {
   UpdateSlotInGroupAction,
 } from '../../../../redux/orders/orders.sctions';
 import { Text } from '../../../atoms/Text';
-import FormAddOrderSlot from '../components/FormAddOrderSlot';
+import AddOrderSlot from '../components/AddOrderSlot';
 
 export interface OrderGroupsStuffingStepProps {
   slots?: IOrderTempSlot[];
@@ -82,7 +82,7 @@ const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = _p => {
         {renderGroupedData}
       </Content>
 
-      <FormAddOrderSlot onSelect={handelAddSlot} />
+      <AddOrderSlot onSelect={handelAddSlot} />
     </Container>
   );
 };

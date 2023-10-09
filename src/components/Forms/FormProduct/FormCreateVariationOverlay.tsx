@@ -329,7 +329,7 @@ const RenderPropertyValue = ({
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
-    if (checks.isNotUnd(isSelected)) {
+    if (!checks.isUnd(isSelected)) {
       setIsActive(isSelected);
     }
   }, [isSelected]);

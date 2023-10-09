@@ -9,7 +9,7 @@ export const useScrollTo = <E extends HTMLElement = any>(
   const listRef = useRef<E>(null);
 
   const scrollTo = useCallback(
-    (id: string) => {
+    (id: string | number) => {
       try {
         if (!(listRef.current instanceof HTMLElement)) {
           return;
@@ -38,7 +38,7 @@ export const useScrollTo = <E extends HTMLElement = any>(
   );
 
   useEffect(() => {
-    if (checks.isNotUnd(id)) {
+    if (!checks.isUnd(id)) {
       setTimeout(() => {
         scrollTo(id);
       }, options?.delay || 500);

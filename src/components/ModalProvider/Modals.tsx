@@ -23,7 +23,6 @@ export enum Modals {
   FormCreateCompany = 'FormCreateCompany',
   FormCreateMethod = 'FormCreateMethod',
   FormInviteUser = 'FormInviteUser',
-  FormCreateOrderSlotItem = 'FormCreateOrderSlotItem',
   FormCreateProduct = 'FormCreateProduct',
   FormCreateProductInventory = 'FormCreateProductInventory',
   FormCreateProperty = 'FormCreateProperty',
@@ -35,7 +34,7 @@ export enum Modals {
   FormCreateOrder = 'FormCreateOrder',
   FormCreateOrdersGroup = 'FormCreateOrdersGroup',
   SelectOrderType = 'SelectOrderType',
-  FormSelectProduct = 'FormSelectProduct',
+  FormCreateOrderSlot = 'FormCreateOrderSlot',
   // * DIRECTORIES
   DirVariationsTemplate = 'DirVariationsTemplate',
   DirProperties = 'DirProperties',
@@ -66,7 +65,7 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   [Modals.FormCreateTag]: Forms.CreateTag,
   [Modals.FormCreateMethod]: Forms.CreateMethod,
   [Modals.FormInviteUser]: Forms.InviteUser,
-  [Modals.FormCreateOrderSlotItem]: Forms.CreateOrderSlot,
+
   [Modals.FormCreateProductInventory]: Forms.CreateProductInventory,
   [Modals.FormCreateProperty]: Forms.CreateProperty,
   [Modals.FormCreateVariation]: Forms.CreateVariation,
@@ -76,7 +75,7 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   // * ORDERS
   [Modals.FormCreateOrder]: Forms.CreateOrder,
   [Modals.FormCreateOrdersGroup]: Forms.CreateOrdersGroup,
-  [Modals.FormSelectProduct]: Forms.SelectProduct,
+  [Modals.FormCreateOrderSlot]: Forms.CreateOrderSlot,
   [Modals.SelectOrderType]: Forms.SelectOrderType,
   // * DIRECTORIES
   [Modals.DirVariationsTemplate]: DirVariationsTemplate,
@@ -109,7 +108,6 @@ export interface ModalChildrenProps extends Record<Modals, any> {
   [Modals.FormCreateMethod]: FormPropTypes.FormCreateMethodProps;
   [Modals.FormInviteUser]: FormPropTypes.FormInviteUserProps;
   [Modals.FormCreateTag]: FormPropTypes.FormCreateTagProps;
-  [Modals.FormCreateOrderSlotItem]: FormPropTypes.FormCreateOrderSlotItemProps;
   [Modals.FormCreateProductInventory]: FormPropTypes.FormCreateProductInventoryProps;
   [Modals.FormCreateProduct]: FormPropTypes.FormCreateProductProps;
   [Modals.FormCreateProperty]: FormPropTypes.FormCreatePropertyProps;
@@ -121,7 +119,7 @@ export interface ModalChildrenProps extends Record<Modals, any> {
   [Modals.FormCreateOrder]: FormPropTypes.FormCreateOrderProps;
   [Modals.FormCreateOrdersGroup]: FormPropTypes.FormCreateOrdersGroupProps;
   [Modals.SelectOrderType]: FormPropTypes.SelectOrderTypeModalProps;
-  [Modals.FormSelectProduct]: FormPropTypes.SelectProductModalProps;
+  [Modals.FormCreateOrderSlot]: FormPropTypes.FormCreateOrderSlotProps;
 
   // * DIRECTORIES
   [Modals.DirProperties]: DirPropertiesProps;
