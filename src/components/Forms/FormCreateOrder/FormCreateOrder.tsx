@@ -4,7 +4,7 @@ import { ICreateOrderFormState, IOrder, IOrderSlot } from '../../../redux/orders
 import { useAppForm } from '../../../hooks';
 import { useCallback, useMemo, useState } from 'react';
 import ModalFilter from '../../ModalForm/ModalFilter';
-import FormOrderProductsList from './tabs/FormOrderProductsList';
+import OrderSlotsList from './tabs/OrderSlotsList';
 import FormCreateOrderMainInfo from './tabs/FormCreateOrderMainInfo';
 import { OnlyUUID } from '../../../redux/global.types';
 import { enumToFilterOptions } from '../../../utils/fabrics';
@@ -53,7 +53,7 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
 
   const renderTab = useMemo(() => {
     if (checkStep(currentTab)?.content) {
-      return <FormOrderProductsList list={content} onSelect={handleSelect} onRemove={handleRemove} />;
+      return <OrderSlotsList list={content} onSelect={handleSelect} onRemove={handleRemove} />;
     }
 
     if (checkStep(currentTab)?.info) {

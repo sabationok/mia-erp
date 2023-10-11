@@ -170,7 +170,7 @@ const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
     max-height: 100%;
   }
 
-  border: 1px solid tomato;
+  //border: 1px solid tomato;
 `;
 const CardGridBox = styled(FlexBox)`
   display: grid;

@@ -7,6 +7,10 @@ import { t } from '../../lang';
 export interface OrderSlotProps {
   slot?: IOrderSlot;
   index: number;
+  isSelected?: boolean;
+  onSelect?: () => void;
+  onRemove?: () => void;
+  disabled?: boolean;
 }
 
 const OrderSlot: React.FC<OrderSlotProps> = ({ index = 0, slot }) => {

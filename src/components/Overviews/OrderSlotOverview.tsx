@@ -1,17 +1,15 @@
-import { IOrderSlot, IOrderSlotBase, IOrderTempSlot } from '../../../redux/orders/orders.types';
-import FlexBox from '../../atoms/FlexBox';
+import { IOrderSlot, IOrderSlotBase, IOrderTempSlot } from '../../redux/orders/orders.types';
+import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import { ChangeEventHandler, useEffect, useState } from 'react';
-import { IProduct } from '../../../redux/products/products.types';
-import { IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
-import { IProductVariation } from '../../TableVariations';
-import numberWithSpaces from '../../../utils/numbers';
-import { IWarehouse } from '../../../redux/warehouses/warehouses.types';
+import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
+import { IProductImage } from '../../redux/products/products.types';
+import { Text } from '../atoms/Text';
+import InputLabel from '../atoms/Inputs/InputLabel';
+import InputText from '../atoms/Inputs/InputText';
 
 export interface OrderSlotOverviewProps {
   slot?: Partial<IOrderSlot> & { tempId?: string };
-
   index?: number;
   onSelect?: () => void;
   onRemove?: (id: string) => void;
@@ -21,104 +19,6 @@ export interface OrderSlotOverviewProps {
   onUpdate?: (slot: IOrderTempSlot) => void;
 }
 
-const createOverviewCellsData = (
-  dataForSlot?: IProduct,
-  countedPrice?: IPriceListItem & { qty?: number; total?: number },
-  variation?: IProductVariation,
-  warehouse?: IWarehouse
-): {
-  value?: string | number;
-  title?: string;
-  borderBottom?: boolean;
-  gridArea?:
-    | 'label'
-    | 'sku'
-    | 'qty'
-    | 'price'
-    | 'discount'
-    | 'bonuses'
-    | 'total'
-    | 'currency'
-    | 'ttnCost'
-    | 'ttn'
-    | 'transporter'
-    | 'category'
-    | 'brand'
-    | 'type'
-    | 'atr_1'
-    | 'atr_2'
-    | 'warehouse'
-    | '_';
-  isLastInRow?: boolean;
-}[] => [
-  {
-    title: 'Назва',
-    value: dataForSlot?.label,
-    gridArea: 'label',
-  },
-  {
-    title: 'Артикул | SKU',
-    value: dataForSlot?.sku,
-    gridArea: 'sku',
-    isLastInRow: true,
-  },
-  {
-    title: 'Категорія',
-    value: dataForSlot?.category?.label,
-    gridArea: 'category',
-  },
-  {
-    title: 'Бренд',
-    value: dataForSlot?.brand?.label,
-    gridArea: 'brand',
-  },
-  {
-    title: 'Тип',
-    value: dataForSlot?.type,
-    gridArea: 'type',
-    isLastInRow: true,
-  },
-  { title: 'Атрибут 1', value: variation?.atr_1?.label, gridArea: 'atr_1' },
-  { title: 'Атрибут 2', value: variation?.atr_2?.label, gridArea: 'atr_2' },
-  {
-    title: 'Кількість',
-    value: numberWithSpaces(countedPrice?.qty),
-    gridArea: 'qty',
-    isLastInRow: true,
-  },
-  {
-    title: 'Ціна',
-    value: numberWithSpaces(Number(countedPrice?.price || 0)),
-    gridArea: 'price',
-  },
-  {
-    title: 'Бонуси',
-    value: numberWithSpaces(countedPrice?.cashbackAmount || 0),
-    gridArea: 'discount',
-  },
-  {
-    title: 'Знижка',
-    value: numberWithSpaces(countedPrice?.discountAmount || 0),
-    gridArea: 'bonuses',
-  },
-  {
-    title: 'Сума',
-    value: numberWithSpaces(countedPrice?.total || 0),
-    gridArea: 'total',
-  },
-  // {
-  //   title: 'Валюта',
-  //   value: countedPrice.,
-  //   gridArea: 'currency',
-  //   isLastInRow: true,
-  // },
-  {
-    title: 'Склад',
-    value: warehouse ? `${warehouse?.label || ''} | ${warehouse?.code || ''}` : '-',
-    gridArea: 'warehouse',
-    isLastInRow: true,
-  },
-];
 const CountSelector = ({
   value = 0,
   onInputChange,
@@ -164,19 +64,7 @@ const CountSelector = ({
   );
 };
 const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({ slot, disabled, onSelect, onRemovePress }) => {
-  const [formData, setFormData] = useState<(IOrderSlotBase & { quantity?: number; total?: number }) | undefined>(
-    slot || undefined
-  );
-  // const cells = useMemo(
-  //   () => createOverviewCellsData(dataForSlot, countedData, variation, warehouse),
-  //   [countedData, dataForSlot, variation, warehouse]
-  // );
-
-  // useEffect(() => {
-  //   if (!isUndefined(price)) {
-  //     setCountedData({ ...price, qty: quantity, total: price?.price ? quantity * price?.price : 0 });
-  //   }
-  // }, [price, quantity]);
+  const [formData, setFormData] = useState<IOrderSlotBase | undefined>(slot || undefined);
 
   const handleUpdateQuantity = (value: number) => {
     setFormData(prev => ({
@@ -186,24 +74,66 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({ slot, disabled, o
     }));
   };
 
+  const imgPreview = useMemo(() => {
+    let images: IProductImage[] = [];
+    if (formData?.product?.images) {
+      images = formData?.product?.images;
+    }
+    if (formData?.variation?.product?.images) {
+      images = formData?.variation?.product?.images;
+    }
+    if (formData?.inventory?.product?.images) {
+      images = formData?.inventory?.product?.images;
+    }
+    if (formData?.origin?.product?.images) {
+      images = formData?.origin?.product?.images;
+    }
+    return images[0]?.img_preview || '';
+  }, [
+    formData?.product?.images,
+    formData?.variation?.product?.images,
+    formData?.origin?.product?.images,
+    formData?.inventory?.product?.images,
+  ]);
+
+  const renderInputs = useMemo(() => {
+    return overviewInputs.map(info => {
+      return (
+        <InputLabel key={info.name} label={info.label}>
+          <InputText
+            placeholder={info.label}
+            // value={numberWithSpaces(info.name && formData ? numberWithSpaces(formData[info.name] || 0) : 0)}
+          />
+        </InputLabel>
+      );
+    });
+  }, []);
+
   useEffect(() => {
-    console.log(formData);
+    console.log('OrderSlotOverview', formData);
   }, [formData]);
 
   return (
     <Card disabled={disabled}>
       <ImageBox>
-        <img
-          src={formData?.product?.images ? formData?.product?.images[0]?.img_1x : ''}
-          style={{ objectFit: 'contain' }}
-          alt={''}
-          width={'100%'}
-        />
+        <img src={imgPreview} style={{ objectFit: 'contain' }} alt={''} width={'100%'} />
       </ImageBox>
-      <CardGridArea>
-        {[].map(({ title, value, isLastInRow }) => (
-          <CardGridBox key={`cardCell-${title}`} gridArea={''} isLastInRow={isLastInRow}></CardGridBox>
-        ))}
+
+      <CardGridArea flex={1}>
+        <FlexBox fxDirection={'row'} gap={8} fillWidth height={'30px'} alignItems={'center'} padding={'0 8px'}>
+          <Text style={{ flex: 1 }}>{slot?.variation?.label}</Text>
+          <Text>{slot?.variation?.sku}</Text>
+          <Text>{slot?.product?.type}</Text>
+        </FlexBox>
+        <FlexBox fxDirection={'row'} gap={8} fillWidth alignItems={'center'} justifyContent={'space-between'}>
+          {renderInputs}
+          {/*<Text>{numberWithSpaces(slot?.quantity || 0)}</Text>*/}
+          {/*<Text>{numberWithSpaces(slot?.price || 0)}</Text>*/}
+          {/*<Text>{numberWithSpaces(slot?.discountAmount || 0)}</Text>*/}
+          {/*<Text>{numberWithSpaces(slot?.cashbackAmount || 0)}</Text>*/}
+          {/*<Text>{numberWithSpaces(slot?.bonusAmount || 0)}</Text>*/}
+          {/*<Text>{numberWithSpaces(slot?.total || 0)}</Text>*/}
+        </FlexBox>
       </CardGridArea>
 
       {!disabled && (
@@ -236,22 +166,26 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({ slot, disabled, o
 };
 const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
   display: grid;
-  grid-template-columns: ${({ disabled }) => (disabled ? `80px 1fr` : `80px 1fr min-content`)};
+  grid-template-columns: ${({ disabled }) => (disabled ? `min-content 1fr` : `min-content 1fr min-content`)};
   gap: 8px;
 
-  height: fit-content;
-
   position: relative;
+  height: fit-content;
+  padding: 4px;
 
   //border-bottom: 2px solid ${({ theme }) => theme.fieldBackgroundColor};
 
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
   cursor: default;
 
+  box-shadow: 0 4px 10px 1px rgba(0, 0, 0, 0.05);
+
   &:hover {
     box-shadow: ${({ disabled }) =>
       !disabled && '0 4px 10px 2px rgba(0, 0, 0, 0.1), 0 4px 10px 2px rgba(210, 210, 210, 0.25)'};
   }
+
+  border-left: 3px solid ${({ theme }) => theme.accentColor.base};
 
   &::after {
     display: block;
@@ -273,33 +207,33 @@ const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
   }
 `;
 const CardGridArea = styled(FlexBox)`
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(5, min-content);
-  grid-template-areas:
-    'label label label label sku sku'
-    'category category brand brand type type'
-    'atr_1 atr_1  atr_2  atr_2 qty qty'
-    'price bonuses discount total total currency'
-    'warehouse warehouse warehouse warehouse warehouse warehouse';
+  //display: grid;
+  //grid-template-columns: repeat(6, 1fr);
+  //grid-template-rows: repeat(5, min-content);
+  //grid-template-areas:
+  //  'label label label label sku sku'
+  //  'price bonus discount bonus cashback total';
+  //'category category brand brand type type'
+  //'atr_1 atr_1  atr_2  atr_2 qty qty'
+  //'warehouse warehouse warehouse warehouse warehouse warehouse';
 
   //max-width: 270px;
   height: max-content;
   //border-top: 1px solid ${({ theme }) => theme.trBorderClr};
 
-  @media screen and (max-width: 480px) {
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(5, min-content);
-    grid-template-areas:
-      'label label label label sku sku'
-      'category category brand brand type type'
-      'atr_1 atr_1 atr_1 atr_2 atr_2 atr_2'
-      'qty qty price price bonuses discount'
-      'total total total total currency currency'
-      'warehouse warehouse warehouse warehouse warehouse warehouse';
-  }
+  //@media screen and (max-width: 480px) {
+  //  grid-template-columns: repeat(6, 1fr);
+  //  grid-template-rows: repeat(5, min-content);
+  //  grid-template-areas:
+  //    'variation.label variation.label variation.label variation.label variation.sku variation.sku'
+  //    'category category brand brand type type'
+  //    'atr_1 atr_1 atr_1 atr_2 atr_2 atr_2'
+  //    'qty qty price price bonuses discount'
+  //    'total total total total currency currency'
+  //    'warehouse warehouse warehouse warehouse warehouse warehouse';
+  //}
 `;
-const CardGridBox = styled(FlexBox)<{ borderBottom?: boolean; gridArea: string; isLastInRow?: boolean }>`
+const CardGridBox = styled(FlexBox)<{ borderBottom?: boolean; gridArea?: string; isLastInRow?: boolean }>`
   justify-content: space-between;
   height: 40px;
   width: 100%;
@@ -350,13 +284,14 @@ const Buttons = styled(FlexBox)`
 `;
 
 const ImageBox = styled(FlexBox)`
-  height: fit-content;
+  //height: fit-content;
 
-  width: 100%;
+  //width: 100%;
   object-position: center;
   object-fit: fill;
   overflow: hidden;
-
+  height: 60px;
+  width: 60px;
   background-color: ${({ theme }) => theme.fieldBackgroundColor};
 
   @media screen and (max-width: 480px) {
@@ -382,4 +317,43 @@ const StyledInput = styled.input`
     box-shadow: 0 1px 8px ${({ theme }) => theme.accentColor.base};
   }
 `;
+
 export default OrderSlotOverview;
+
+const overviewInputs: {
+  name?: keyof IOrderSlot | string;
+  label?: string;
+  value?: React.ReactNode;
+  borderBottom?: boolean;
+}[] = [
+  {
+    label: 'Кількість',
+    // value: numberWithSpaces(slot?.quantity || 0),
+    name: 'quantity',
+  },
+  {
+    label: 'Ціна',
+    // value: numberWithSpaces(Number(slot?.price || 0)),
+    name: 'price',
+  },
+  {
+    label: 'Бонус',
+    // value: numberWithSpaces(slot?.bonusAmount || 0),
+    name: 'bonus',
+  },
+  {
+    label: 'Кешбек',
+    // value: numberWithSpaces(slot?.cashbackAmount || 0),
+    name: 'cashback',
+  },
+  {
+    label: 'Знижка',
+    // value: numberWithSpaces(slot?.discountAmount || 0),
+    name: 'discount',
+  },
+  {
+    label: 'Сума',
+    // value: numberWithSpaces(slot?.total || 0),
+    name: 'total',
+  },
+];

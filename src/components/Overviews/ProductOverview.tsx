@@ -1,14 +1,14 @@
-import ModalForm, { ModalFormProps } from '../../ModalForm';
-import FlexBox from '../../atoms/FlexBox';
-import { IProduct } from '../../../redux/products/products.types';
-import ProductCardSimpleOverview from '../../Overviews/ProductCardSimpleOverview';
-import TableList from '../../TableList/TableList';
+import ModalForm, { ModalFormProps } from '../ModalForm';
+import FlexBox from '../atoms/FlexBox';
+import { IProduct } from '../../redux/products/products.types';
+import ProductCardSimpleOverview from './ProductCardSimpleOverview';
+import TableList from '../TableList/TableList';
 import styled from 'styled-components';
-import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
-import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import { pricesColumnsForProductReview } from '../../data/priceManagement.data';
+import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { useEffect, useState } from 'react';
-import { IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
-import { ExtractId } from '../../../utils/dataTransform';
+import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
+import { ExtractId } from '../../utils/dataTransform';
 
 export interface ProductOverviewProps extends Omit<ModalFormProps, 'onSelect' | 'onSubmit'> {
   product?: IProduct;

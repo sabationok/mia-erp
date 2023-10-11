@@ -1,7 +1,7 @@
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import PriceListOverview, { PriceListOverviewProps } from '../Modals/Overviews/PriceListOverview';
-import ProductOverview, { ProductOverviewProps } from '../Modals/Overviews/ProductOverview';
-import OrderOverview, { OrderOverviewProps } from '../Modals/Overviews/OrderOverview';
+import ProductOverview, { ProductOverviewProps } from '../Overviews/ProductOverview';
+import OrderOverview, { OrderOverviewProps } from '../Overviews/OrderOverview';
 import SelectProductModal, { SelectProductModalProps } from '../Modals/SelectProductModal';
 import AppFilter, { AppFilterProps } from '../Filter/AppFilter';
 import DirVariationsTemplate, { DirVariationsTemplateProps } from '../Directories/DirVariationsTemplate';

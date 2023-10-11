@@ -27,6 +27,9 @@ export enum OrderTypeEnum {
 export type OrderStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
 export interface IOrderSlotBase extends IPriceBase {
+  quantity?: number;
+  total?: number;
+
   product?: IProduct;
   variation?: IVariation;
   origin?: Partial<IPriceListItem>;

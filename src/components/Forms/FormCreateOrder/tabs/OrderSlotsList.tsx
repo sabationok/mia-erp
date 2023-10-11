@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import AddOrderSlot from '../components/AddOrderSlot';
 import { OnlyUUID } from '../../../../redux/global.types';
 import { IOrderSlot, IOrderSlotBase } from '../../../../redux/orders/orders.types';
-import OrderSlotOverview from '../../../Modals/Overviews/OrderSlotOverview';
+import OrderSlotOverview from '../../../Overviews/OrderSlotOverview';
 import { nanoid } from '@reduxjs/toolkit';
 
 export interface FormCreateOrderProductsListProps {
@@ -12,7 +12,7 @@ export interface FormCreateOrderProductsListProps {
   onRemove: (item: OnlyUUID) => void;
   list?: IOrderSlot[];
 }
-const FormOrderProductsList: React.FC<FormCreateOrderProductsListProps> = ({ onSelect, onRemove, list }) => {
+const OrderSlotsList: React.FC<FormCreateOrderProductsListProps> = ({ onSelect, onRemove, list }) => {
   const [data, setData] = useState<(Partial<IOrderSlot> & { tempId?: string })[]>(list || []);
 
   const handleSelect = useCallback((item: IOrderSlotBase) => {
@@ -46,4 +46,4 @@ const Container = styled(FlexBox)`
   position: relative;
   overflow: hidden;
 `;
-export default FormOrderProductsList;
+export default OrderSlotsList;

@@ -215,6 +215,12 @@ const batchPricesColumns: CellTittleProps<IProductInventory>[] = [
 ];
 
 export const warehouseBatchColumns: CellTittleProps<IProductInventory>[] = [
+  {
+    top: { name: t('batch') },
+    // bottom: { name: t('code') },
+    width: '150px',
+    action: 'valueByPath',
+  },
   // {
   //   top: { name: t('Variation label') },
   //   bottom: { name: t('Product label') },
@@ -234,26 +240,21 @@ export const warehouseBatchColumns: CellTittleProps<IProductInventory>[] = [
   //   action: 'valueByPath',
   // },
   {
-    top: { name: t('warehouse') },
-    bottom: { name: t('code') },
+    top: { name: t('warehouse'), getData: rd => rd.warehouse?.label },
+    bottom: { name: t('code'), getData: rd => rd.warehouse?.code },
+    width: '170px',
+    action: 'valueByPath',
+  },
+
+  {
+    top: { name: t('Stock'), align: 'end', getData: rd => rd.stock || 0 },
+    bottom: { name: t('Reserved'), align: 'end', getData: rd => rd.reserved || 0 },
     width: '150px',
     action: 'valueByPath',
   },
   {
-    top: { name: t('batch') },
-    // bottom: { name: t('code') },
-    width: '150px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: t('Stock') },
-    bottom: { name: t('Reserved') },
-    width: '150px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: t('Awaiting') },
-    bottom: { name: t('Lost') },
+    top: { name: t('Awaiting'), align: 'end', getData: rd => rd?.awaiting || 0 },
+    bottom: { name: t('Lost'), align: 'end', getData: rd => rd?.lost || 0 },
     width: '150px',
     action: 'valueByPath',
   },

@@ -1,9 +1,9 @@
-import ModalForm, { ModalFormProps } from '../../ModalForm';
-import { IOrder } from '../../../redux/orders/orders.types';
-import FlexBox from '../../atoms/FlexBox';
+import ModalForm, { ModalFormProps } from '../ModalForm';
+import { IOrder } from '../../redux/orders/orders.types';
+import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
-import FormAccordeonItem from '../../Forms/components/FormAccordeonItem';
-import { FormCreateOrderTabs } from '../../Forms/FormCreateOrder/FormCreateOrder';
+import FormAccordeonItem from '../Forms/components/FormAccordeonItem';
+import { FormCreateOrderTabs } from '../Forms/FormCreateOrder/FormCreateOrder';
 import { useState } from 'react';
 
 export interface OrderOverviewProps extends Omit<ModalFormProps, 'onSubmit'> {

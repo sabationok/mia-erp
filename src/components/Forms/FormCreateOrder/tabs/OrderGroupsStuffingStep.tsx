@@ -4,7 +4,7 @@ import FlexBox from '../../../atoms/FlexBox';
 import styled from 'styled-components';
 import FormAccordeonItem from '../../components/FormAccordeonItem';
 import { IWarehouse } from '../../../../redux/warehouses/warehouses.types';
-import OrderSlotOverview from '../../../Modals/Overviews/OrderSlotOverview';
+import OrderSlotOverview from '../../../Overviews/OrderSlotOverview';
 import { useOrdersSelector } from '../../../../redux/selectors.store';
 import { useDispatch } from 'react-redux';
 import {
