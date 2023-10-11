@@ -46,7 +46,7 @@ const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = _p => {
   );
 
   const groupedData = useMemo(() => {
-    const map: Record<string, { slots: (IOrderTempSlot & { tempId: string })[]; warehouse?: IWarehouse }> = {};
+    const map: Record<string, { slots: (IOrderTempSlot & { tempId?: string })[]; warehouse?: IWarehouse }> = {};
 
     slots?.map(slot => {
       if (slot.warehouse?._id) {
@@ -78,7 +78,7 @@ const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = _p => {
 
   return (
     <Container flex={1} fillWidth>
-      <Content padding={'8px'} flex={1} overflow={'auto'}>
+      <Content padding={'8px 4px'} flex={1} overflow={'auto'}>
         {renderGroupedData}
       </Content>
 
@@ -95,7 +95,7 @@ const OrderGroupItem = ({
   onRemove,
   onUpdate,
 }: {
-  slots: (IOrderTempSlot & { tempId: string })[];
+  slots: IOrderTempSlot[];
   renderHeader?: React.ReactNode;
   onRemove?: (id: string) => void;
   onUpdate?: (slot: IOrderTempSlot) => void;
@@ -103,16 +103,16 @@ const OrderGroupItem = ({
   const renderSlots = useMemo(() => {
     return slots.map(slot => (
       <OrderSlotOverview
-        key={`slot_${slot.tempId}`}
+        key={`slot_${slot?.tempId}`}
         slot={slot}
-        onRemovePress={() => onRemove && onRemove(slot.tempId)}
+        onRemovePress={() => slot?.tempId && onRemove && onRemove(slot?.tempId)}
         onUpdate={onUpdate}
       />
     ));
   }, [onRemove, onUpdate, slots]);
 
   return (
-    <FormAccordeonItem open renderHeader={renderHeader} contentContainerStyle={{ padding: '8px' }}>
+    <FormAccordeonItem open renderHeader={renderHeader} contentContainerStyle={{ padding: '4px 0' }}>
       {renderSlots}
     </FormAccordeonItem>
   );

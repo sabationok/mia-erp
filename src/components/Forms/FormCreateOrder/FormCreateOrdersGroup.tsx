@@ -57,7 +57,7 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
       <ModalHeader title={t('Select product')} onBackPress={onClose} />
 
       <Content fillWidth flex={1} overflow={'hidden'}>
-        <ModalFilter filterOptions={steps} asStepper currentIndex={stepIdx} />
+        <ModalFilter filterOptions={steps} asStepper currentIndex={stepIdx} optionProps={{ fitContentH: true }} />
 
         {renderStep}
       </Content>

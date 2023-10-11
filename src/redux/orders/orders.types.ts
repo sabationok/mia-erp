@@ -47,7 +47,7 @@ export interface IOrderSlot extends IPriceListItem, IOrderSlotBase {
   amount?: number;
 }
 export interface IOrderTempSlot extends IOrderSlotBase {
-  tempId: string;
+  tempId?: string;
 }
 export interface IOrder extends IBase {
   owner?: ICompany;

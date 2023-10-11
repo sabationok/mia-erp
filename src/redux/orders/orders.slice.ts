@@ -9,7 +9,7 @@ export interface IOrdersState {
   orders: any[];
   currentOrder?: IOrder;
   currentGroup: {
-    slots: (Partial<IOrderSlot> & { tempId: string })[];
+    slots: (Partial<IOrderSlot> & { tempId?: string })[];
     orders?: IOrder[];
   };
   currentOrdersGroupFormData?: FormCreateOrdersGroupFormData;
@@ -77,6 +77,8 @@ export const ordersSlice = createSlice({
         s.currentGroup.slots = s.currentGroup.slots.filter(sl => sl.tempId !== a.payload);
       })
       .addCase(UpdateSlotInGroupAction, (s, a) => {
-        s.currentGroup.slots.map(sl => (sl.tempId === a.payload.tempId ? a.payload : sl));
+        console.log('UpdateSlotInGroupAction', a.payload);
+        s.currentGroup.slots = s.currentGroup.slots.map(sl => (sl?.tempId === a.payload?.tempId ? a.payload : sl));
+        console.log(s.currentGroup.slots);
       }),
 });

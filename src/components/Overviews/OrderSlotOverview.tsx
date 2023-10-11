@@ -1,27 +1,28 @@
-import { IOrderSlot, IOrderSlotBase, IOrderTempSlot } from '../../redux/orders/orders.types';
+import { IOrderSlot } from '../../redux/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
+import { ChangeEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
 import { IProductImage } from '../../redux/products/products.types';
 import { Text } from '../atoms/Text';
-import InputLabel from '../atoms/Inputs/InputLabel';
-import InputText from '../atoms/Inputs/InputText';
+import numberWithSpaces from '../../utils/numbers';
+import { t } from '../../lang';
 
+export type SlotOverviewData = Partial<IOrderSlot> & { tempId?: string };
 export interface OrderSlotOverviewProps {
-  slot?: Partial<IOrderSlot> & { tempId?: string };
+  slot?: SlotOverviewData;
   index?: number;
-  onSelect?: () => void;
+  onSelectPress?: () => void;
   onRemove?: (id: string) => void;
   onRemovePress?: () => void;
   disabled?: boolean;
-
-  onUpdate?: (slot: IOrderTempSlot) => void;
+  onEditPress?: () => void;
+  onUpdate?: (slot: SlotOverviewData) => void;
 }
 
 const CountSelector = ({
   value = 0,
-  onInputChange,
+  onChangeValue,
   width,
   height = '20px',
   disabled,
@@ -30,8 +31,8 @@ const CountSelector = ({
   onChange,
 }: {
   value?: number;
-  onInputChange: ChangeEventHandler<HTMLInputElement>;
-  onChange?: (number: number) => void;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  onChangeValue?: (number: number) => void;
   height?: string;
   width?: string;
   disabled?: boolean;
@@ -43,7 +44,7 @@ const CountSelector = ({
     setCount(prev => {
       return prev + increment;
     });
-    onChange && onChange(count + increment);
+    onChangeValue && onChangeValue(count + increment);
   };
 
   return (
@@ -55,7 +56,7 @@ const CountSelector = ({
         className={className}
         onChange={({ target: { value } }) => {
           setCount(Number(value));
-          onChange && onChange(Number(value));
+          onChangeValue && onChangeValue(Number(value));
         }}
         autoFocus={autoFocus}
       />
@@ -63,16 +64,32 @@ const CountSelector = ({
     </FlexBox>
   );
 };
-const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({ slot, disabled, onSelect, onRemovePress }) => {
-  const [formData, setFormData] = useState<IOrderSlotBase | undefined>(slot || undefined);
+const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
+  slot,
+  onEditPress,
+  disabled,
+  onSelectPress,
+  onRemovePress,
+  onUpdate,
+}) => {
+  const [formData, setFormData] = useState<SlotOverviewData | undefined>(slot);
 
-  const handleUpdateQuantity = (value: number) => {
-    setFormData(prev => ({
-      ...prev,
-      quantity: value,
-      total: !prev?.price ? prev?.price : value * prev?.price,
-    }));
-  };
+  const handleUpdateQuantity = useCallback(
+    (value: number) => {
+      setFormData(prev => {
+        if (!prev) return prev;
+
+        const newData = {
+          ...prev,
+          quantity: value,
+          total: !prev?.price ? prev?.price : value * prev?.price,
+        };
+        onUpdate && onUpdate(newData);
+        return newData;
+      });
+    },
+    [onUpdate]
+  );
 
   const imgPreview = useMemo(() => {
     let images: IProductImage[] = [];
@@ -96,18 +113,41 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({ slot, disabled, o
     formData?.inventory?.product?.images,
   ]);
 
-  const renderInputs = useMemo(() => {
+  const renderPriceInfo = useMemo(() => {
     return overviewInputs.map(info => {
       return (
-        <InputLabel key={info.name} label={info.label}>
-          <InputText
-            placeholder={info.label}
-            // value={numberWithSpaces(info.name && formData ? numberWithSpaces(formData[info.name] || 0) : 0)}
-          />
-        </InputLabel>
+        <FlexBox key={info.name} justifyContent={'flex-start'} fillWidth padding={'4px'} gap={4}>
+          <CardText colorType={'secondary'} $size={10}>
+            {info.label}
+          </CardText>
+
+          {info.name === 'quantity' ? (
+            <CountSelector onChangeValue={handleUpdateQuantity} value={formData?.quantity} />
+          ) : (
+            <Text $size={12} $align={'right'} $weight={500}>
+              {numberWithSpaces((formData && info.name && formData[info.name as never]) || 0)}
+            </Text>
+          )}
+        </FlexBox>
       );
     });
-  }, []);
+  }, [formData, handleUpdateQuantity]);
+
+  const renderProperties = useMemo(() => {
+    return slot?.variation?.properties?.map(prop => {
+      return (
+        <FlexBox key={prop?._id} justifyContent={'flex-start'} fillWidth padding={'4px'} gap={4}>
+          <CardText colorType={'secondary'} $size={10}>
+            {prop?.parent?.label}
+          </CardText>
+
+          <Text $size={12} $align={'right'} $weight={500}>
+            {prop?.label}
+          </Text>
+        </FlexBox>
+      );
+    });
+  }, [slot?.variation?.properties]);
 
   useEffect(() => {
     console.log('OrderSlotOverview', formData);
@@ -115,100 +155,80 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({ slot, disabled, o
 
   return (
     <Card disabled={disabled}>
-      <ImageBox>
-        <img src={imgPreview} style={{ objectFit: 'contain' }} alt={''} width={'100%'} />
-      </ImageBox>
+      <FlexBox fillWidth gap={8} fxDirection={'row'}>
+        <ImageBox justifyContent={'flex-start'}>
+          <img src={imgPreview} style={{ objectFit: 'cover', objectPosition: 'center' }} alt={''} width={'100%'} />
+        </ImageBox>
 
-      <CardGridArea flex={1}>
-        <FlexBox fxDirection={'row'} gap={8} fillWidth height={'30px'} alignItems={'center'} padding={'0 8px'}>
-          <Text style={{ flex: 1 }}>{slot?.variation?.label}</Text>
-          <Text>{slot?.variation?.sku}</Text>
-          <Text>{slot?.product?.type}</Text>
-        </FlexBox>
-        <FlexBox fxDirection={'row'} gap={8} fillWidth alignItems={'center'} justifyContent={'space-between'}>
-          {renderInputs}
-          {/*<Text>{numberWithSpaces(slot?.quantity || 0)}</Text>*/}
-          {/*<Text>{numberWithSpaces(slot?.price || 0)}</Text>*/}
-          {/*<Text>{numberWithSpaces(slot?.discountAmount || 0)}</Text>*/}
-          {/*<Text>{numberWithSpaces(slot?.cashbackAmount || 0)}</Text>*/}
-          {/*<Text>{numberWithSpaces(slot?.bonusAmount || 0)}</Text>*/}
-          {/*<Text>{numberWithSpaces(slot?.total || 0)}</Text>*/}
-        </FlexBox>
-      </CardGridArea>
+        <FlexBox flex={1}>
+          <FlexBox fxDirection={'row'} gap={8} fillWidth alignItems={'flex-start'}>
+            <FlexBox fxDirection={'row'} flexWrap={'wrap'} gap={8} flex={1} alignItems={'center'} padding={'4px 8px'}>
+              <CardText style={{ flex: 1 }}>{slot?.variation?.label}</CardText>
 
-      {!disabled && (
-        <Buttons justifyContent={'space-between'} gap={4}>
-          <ButtonIcon variant={'onlyIcon'} iconSize={'100%'} size={'24px'} icon={'info'} disabled />
-          {onRemovePress && (
-            <ButtonIcon
-              variant={'onlyIcon'}
-              iconSize={'100%'}
-              size={'24px'}
-              icon={'delete'}
-              disabled={!onRemovePress}
-              onClick={onRemovePress}
-            />
-          )}
-          {onSelect && (
-            <ButtonIcon
-              variant={'onlyIcon'}
-              iconSize={'100%'}
-              size={'24px'}
-              icon={'doneAll'}
-              disabled={!onSelect}
-              onClick={onSelect}
-            />
-          )}
-        </Buttons>
-      )}
+              <CardText $size={12} colorType={'secondary'}>
+                {slot?.variation?.sku}
+              </CardText>
+
+              <CardText $size={12} colorType={'secondary'}>
+                {slot?.product?.type}
+              </CardText>
+            </FlexBox>
+
+            {/*<ButtonIcon variant={'textExtraSmall'} iconSize={'100%'} size={'24px'} icon={'info'} disabled />*/}
+
+            <FlexBox>
+              {onRemovePress && (
+                <ActionButton variant={'textExtraSmall'} disabled={!onRemovePress} onClick={onRemovePress}>
+                  {t('Delete')}
+                </ActionButton>
+              )}
+
+              {onSelectPress && (
+                <ActionButton variant={'textExtraSmall'} disabled={!onSelectPress} onClick={onSelectPress}>
+                  {t('Select')}
+                </ActionButton>
+              )}
+
+              {onEditPress && (
+                <ActionButton variant={'textExtraSmall'} disabled={!onEditPress} onClick={onEditPress}>
+                  {t('Edit')}
+                </ActionButton>
+              )}
+            </FlexBox>
+          </FlexBox>
+
+          <CardGridArea fillWidth alignItems={'flex-start'} justifyContent={'space-between'} margin={'0 0 8px'}>
+            {renderPriceInfo}
+          </CardGridArea>
+
+          <Properties fillWidth alignItems={'flex-start'}>
+            {renderProperties}
+          </Properties>
+        </FlexBox>
+      </FlexBox>
     </Card>
   );
 };
 const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
-  display: grid;
-  grid-template-columns: ${({ disabled }) => (disabled ? `min-content 1fr` : `min-content 1fr min-content`)};
-  gap: 8px;
-
   position: relative;
   height: fit-content;
   padding: 4px;
 
   //border-bottom: 2px solid ${({ theme }) => theme.fieldBackgroundColor};
 
-  transition: all ${({ theme }) => theme.globals.timingFunctionMain};
   cursor: default;
 
-  box-shadow: 0 4px 10px 1px rgba(0, 0, 0, 0.05);
-
   &:hover {
-    box-shadow: ${({ disabled }) =>
-      !disabled && '0 4px 10px 2px rgba(0, 0, 0, 0.1), 0 4px 10px 2px rgba(210, 210, 210, 0.25)'};
+    border-color: ${({ disabled, theme }) => !disabled && theme.accentColor.base};
   }
-
+  border: 1px solid transparent;
   border-left: 3px solid ${({ theme }) => theme.accentColor.base};
 
-  &::after {
-    display: block;
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 2px;
-    height: 100%;
-    z-index: 5;
-
-    background-color: ${({ theme, isSelected }) => (isSelected ? theme.accentColor.base : 'transparent')};
-  }
-
-  @media screen and (max-width: 480px) {
-    grid-template-columns: 1fr;
-    grid-template-rows: 150px max-content min-content;
-    max-height: 100%;
-  }
+  transition: all ${({ theme }) => theme.globals.timingFunctionMain};
 `;
 const CardGridArea = styled(FlexBox)`
-  //display: grid;
-  //grid-template-columns: repeat(6, 1fr);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
   //grid-template-rows: repeat(5, min-content);
   //grid-template-areas:
   //  'label label label label sku sku'
@@ -219,68 +239,11 @@ const CardGridArea = styled(FlexBox)`
 
   //max-width: 270px;
   height: max-content;
-  //border-top: 1px solid ${({ theme }) => theme.trBorderClr};
-
-  //@media screen and (max-width: 480px) {
-  //  grid-template-columns: repeat(6, 1fr);
-  //  grid-template-rows: repeat(5, min-content);
-  //  grid-template-areas:
-  //    'variation.label variation.label variation.label variation.label variation.sku variation.sku'
-  //    'category category brand brand type type'
-  //    'atr_1 atr_1 atr_1 atr_2 atr_2 atr_2'
-  //    'qty qty price price bonuses discount'
-  //    'total total total total currency currency'
-  //    'warehouse warehouse warehouse warehouse warehouse warehouse';
-  //}
+  border-top: 1px solid ${({ theme }) => theme.modalBorderColor};
+  border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;
-const CardGridBox = styled(FlexBox)<{ borderBottom?: boolean; gridArea?: string; isLastInRow?: boolean }>`
-  justify-content: space-between;
-  height: 40px;
-  width: 100%;
-  overflow: hidden;
-  grid-area: ${({ gridArea = '' }) => gridArea};
-
-  padding: 4px 6px;
-
-  border-right: 1px solid ${({ theme, isLastInRow }) => (!isLastInRow ? theme.trBorderClr : 'transparent')};
-  border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
-
-  & .text {
-    color: ${({ theme }) => theme.fontColor};
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-
-    text-align: right;
-    font-weight: 600;
-    font-size: 12px;
-  }
-
-  & .title {
-    font-size: 10px;
-    line-height: 1.5;
-    color: ${({ theme }) => theme.globals.inputPlaceholderColor};
-  }
-
-  @media screen and (max-width: 480px) {
-    height: 50px;
-    & .text {
-      font-size: 16px;
-    }
-
-    & .title {
-      font-size: 12px;
-    }
-  }
-  //outline: 1px solid tomato;
-`;
-const Buttons = styled(FlexBox)`
-  @media screen and (max-width: 480px) {
-    flex-direction: row;
-    justify-content: flex-end;
-  }
+const Properties = styled(CardGridArea)`
+  grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
 `;
 
 const ImageBox = styled(FlexBox)`
@@ -288,20 +251,21 @@ const ImageBox = styled(FlexBox)`
 
   //width: 100%;
   object-position: center;
-  object-fit: fill;
+  object-fit: contain;
   overflow: hidden;
-  height: 60px;
   width: 60px;
-  background-color: ${({ theme }) => theme.fieldBackgroundColor};
+  height: 100px;
+  //background-color: ${({ theme }) => theme.fieldBackgroundColor};
 
-  @media screen and (max-width: 480px) {
-    width: 100px;
-    margin: auto;
-  }
+  //@media screen and (max-width: 480px) {
+  //  width: 100px;
+  //  margin: auto;
+  //}
 `;
 const StyledInput = styled.input`
   flex: 1;
   width: 100%;
+  height: 100%;
 
   border: 0;
   color: inherit;
@@ -316,6 +280,13 @@ const StyledInput = styled.input`
   &:focus {
     box-shadow: 0 1px 8px ${({ theme }) => theme.accentColor.base};
   }
+`;
+const CardText = styled(Text)<{ colorType?: 'secondary' | 'primary' }>`
+  color: ${({ theme, colorType }) =>
+    colorType === 'secondary' ? theme.globals.inputPlaceholderColor : theme.fontColorSidebar};
+`;
+const ActionButton = styled(ButtonIcon)`
+  padding: 4px 8px;
 `;
 
 export default OrderSlotOverview;
