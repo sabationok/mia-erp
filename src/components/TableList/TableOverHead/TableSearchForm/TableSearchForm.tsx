@@ -1,6 +1,5 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { SelectItem } from 'components/TableList/TableList';
-import { iconId } from 'data';
 import React from 'react';
 import styled from 'styled-components';
 import SearchParamInput from './SearchParamInput';
@@ -63,7 +62,7 @@ const TableSearchForm: React.FC<TableSearchProps> = ({ onSubmit, tableSearchPara
       </StyledLabel>
 
       <ButtonIcon
-        iconId={iconId.search}
+        icon={'search'}
         size={'28px'}
         iconSize={'90%'}
         variant={'onlyIconNoEffects'}

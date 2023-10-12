@@ -11,10 +11,10 @@ import { useAppForm } from '../../hooks';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { tagsFilterOptions } from '../../data/directories.data';
 import { ContractorsTypesEnum } from '../../redux/directories/contractors.types';
 import { FormInputs } from './components/atoms';
 import TagButtonsFilter from 'components/atoms/TagButtonsFilter';
+import { tagsFilterOptions } from '../../data/modalFilterOptions.data';
 
 export interface FormCreateTagProps extends DirectoriesFormProps<ApiDirType.TAGS, ITagDirItem, ITagDirItem> {}
 

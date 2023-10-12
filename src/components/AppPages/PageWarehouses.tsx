@@ -7,16 +7,15 @@ import AppGridPage from './AppGridPage';
 import { useWarehousesSelector } from '../../redux/selectors.store';
 import { ISortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
-import { PagePathType } from '../../data/pages.data';
 import useWarehousesActionsCreatorHook from '../../hooks/useWarehousesActionsCreator.hook';
 import { warehousesTableColumns } from '../../data/warehauses.data';
 import { IWarehouse } from '../../redux/warehouses/warehouses.types';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { useNavigate } from 'react-router-dom';
+import { BaseAppPageProps } from './index';
 
-type Props = {
-  path: PagePathType;
-};
+interface Props extends BaseAppPageProps {}
+
 const PageWarehouses: React.FC<any> = (props: Props) => {
   const navigate = useNavigate();
   const { getAll } = useAppServiceProvider()[ServiceName.warehouses];

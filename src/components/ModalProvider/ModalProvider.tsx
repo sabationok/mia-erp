@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import ModalPortal from './ModalPortal';
 import ModalComponent, { IModalSettings } from './ModalComponent';
 import { nanoid } from '@reduxjs/toolkit';
-import { ModalChildrenMap, ModalChildrenProps, Modals } from './Modals';
+import { ModalChildrenMap, ModalChildrenProps, Modals } from '../Modals';
 import { toast } from 'react-toastify';
 import { ToastService } from '../../services';
 

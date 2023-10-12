@@ -14,12 +14,11 @@ import {
   updateCurrentCompanyThunk,
   updatePermissionThunk,
 } from './permissions.thunk';
-
 import { initialPermission, testPermissions } from '../../data/permissions.data';
 import { clearCurrentPermission, setMockPermissionData } from './permissions.action';
-import { pages } from '../../data';
 import { checks } from '../../utils';
 import { StateErrorType } from '../reduxTypes.types';
+import { getAllAccessKeys } from '../../components/AppPages';
 
 const initialPermissionStateState: IPermissionsState = {
   permission: {},
@@ -38,14 +37,14 @@ export const permissionsSlice = createSlice({
       .addCase(getCurrentPermissionThunk.fulfilled, (s: IPermissionsState, a) => {
         s.permission = {
           ...a.payload,
-          role: { ...a.payload.role, accessKeys: Object.entries(pages).map(([path, page]) => page.path) },
+          role: { ...a.payload.role, accessKeys: getAllAccessKeys() },
         };
         s.permission_token = a.payload.permission_token;
       })
       .addCase(setMockPermissionData, (s, a) => {
         s.permission = {
           ...a.payload,
-          role: { ...a.payload.role, accessKeys: Object.entries(pages).map(([path, page]) => page.path) },
+          role: { ...a.payload.role, accessKeys: getAllAccessKeys() },
         };
         s.permission_token = a.payload.permission_token;
       })

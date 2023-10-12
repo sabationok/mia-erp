@@ -3,7 +3,7 @@ import { IModalProviderContext, useModalProvider } from '../components/ModalProv
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { WarehousesService } from './useWarehousesService.hook';
 import { IWarehouse, IWarehouseDto, IWarehouseReqData } from '../redux/warehouses/warehouses.types';
-import { Modals } from '../components/ModalProvider/Modals';
+import { Modals } from '../components/Modals';
 import { IWarehouseFormData } from '../components/Forms/warehousing/FormCreateWarehouse';
 import { useNavigate } from 'react-router-dom';
 import { NavigateFunction } from 'react-router/dist/lib/hooks';

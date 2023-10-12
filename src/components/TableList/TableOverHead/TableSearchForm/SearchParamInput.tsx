@@ -1,6 +1,5 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { SelectItem } from 'components/TableList/TableList';
-import { iconId } from 'data';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { checks } from 'utils';
@@ -74,7 +73,7 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
   return (
     <>
       <ButtonIcon
-        iconId={iconId.tune}
+        icon={'tune'}
         size="28px"
         iconSize={'90%'}
         variant="onlyIconNoEffects"

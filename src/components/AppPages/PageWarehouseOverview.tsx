@@ -7,17 +7,16 @@ import AppGridPage from './AppGridPage';
 import { useWarehousesSelector } from '../../redux/selectors.store';
 import { ISortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
-import { PagePathType } from '../../data/pages.data';
 import { warehouseOverviewTableColumns } from '../../data/warehauses.data';
 import { useAppParams } from '../../hooks';
 import { IProductInventory } from '../../redux/warehouses/warehouses.types';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
-import { Modals } from '../ModalProvider/Modals';
+import { Modals } from '../Modals';
+import { BaseAppPageProps } from './index';
 
-type Props = {
-  path: PagePathType;
-};
+interface Props extends BaseAppPageProps {}
+
 const PageWarehouseOverview: React.FC<any> = (props: Props) => {
   const warehouseId = useAppParams().warehouseId;
   const { getById } = useAppServiceProvider()[ServiceName.warehouses];

@@ -1,6 +1,5 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import useAppSettings from 'hooks/useAppSettings.hook';
-import { iconId } from 'data';
 import { useAppSettingsSelector } from '../../../redux/selectors.store';
 
 const ToggleThemeMode = () => {
@@ -12,7 +11,7 @@ const ToggleThemeMode = () => {
       variant="defNoEffects"
       iconSize="20px"
       size="100%"
-      iconId={isDarkMode ? iconId.darkMode : iconId.lightMode}
+      icon={isDarkMode ? 'darkMode' : 'lightMode'}
       onClick={toggleAppMode}
     />
   );

@@ -1,11 +1,9 @@
 import AppGridPage from './AppGridPage';
 import PageHome from './PageHome';
 import { memo } from 'react';
-import { PagePathType } from '../../data/pages.data';
+import { BaseAppPageProps } from './index';
 
-type Props = {
-  path: PagePathType;
-};
+interface Props extends BaseAppPageProps {}
 
 const PageSelectCompany: React.FC<Props> = ({ path }) => {
   return (

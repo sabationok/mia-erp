@@ -2,7 +2,7 @@ import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { ITableListContext, TableActionCreator } from '../components/TableList/tableTypes.types';
 import { IOrder } from '../redux/orders/orders.types';
-import { Modals } from '../components/ModalProvider/Modals';
+import { Modals } from '../components/Modals';
 import { useNavigate } from 'react-router-dom';
 import { ExtractIdString } from '../utils/dataTransform';
 import { t } from '../lang';

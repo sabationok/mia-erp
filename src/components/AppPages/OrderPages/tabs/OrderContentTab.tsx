@@ -1,10 +1,10 @@
 import FlexBox from '../../../atoms/FlexBox';
 import ModalFilter from '../../../ModalForm/ModalFilter';
-import { productsFilterOptions } from 'data/directories.data';
 import TableList from '../../../TableList/TableList';
 import { useOrdersSelector } from '../../../../redux/selectors.store';
 import { useMemo, useState } from 'react';
-import { orderSlotTableColumns } from 'data';
+import { orderSlotTableColumns } from '../../../../data/orders.data';
+import { productsFilterOptions } from '../../../../data/modalFilterOptions.data';
 
 export interface OrderContentTabProps {}
 

@@ -1,5 +1,5 @@
-import { sideBarLeftData } from 'data';
 import { createContext, useContext, useState } from 'react';
+import sideBarLeftData from '../../data/sideBarLeft.data';
 
 export interface ISidebarOptionsItem {
   iconId: string;

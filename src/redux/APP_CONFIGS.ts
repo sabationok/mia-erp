@@ -1,23 +1,3 @@
-// type EndpointCreator = (...args: any[]) => string;
-export enum AppPagesEnum {
-  companies = 'companies',
-  transactions = 'transactions',
-  orders = 'orders',
-  refunds = 'refunds',
-  supplement = 'supplement',
-  products = 'products',
-  dashboard = 'dashboard',
-  storage = 'storage',
-  manager = 'manager',
-  admin = 'admin',
-  warehouses = 'warehouses',
-  notFound = 'notFound',
-  documentsFlow = 'documentsFlow',
-  priceLists = 'priceLists',
-  director = 'director',
-}
-
-export type PagePathType = keyof typeof AppPagesEnum | AppPagesEnum;
 export enum API_BASE_ROUTES {
   APP = 'APP',
   AUTH = '/auth',
@@ -34,6 +14,10 @@ export enum API_BASE_ROUTES {
   PRICE_MANAGEMENT = '/priceManagement',
   WAREHOUSES = '/warehouses',
   PAYMENTS = '/payments',
+  INVOICES = '/invoices',
+  SHIPMENTS = '/shipments',
+  CUSTOMERS = '/customers',
+  COUNTERPARTIES = '/counterparties',
 }
 
 export enum Endpoints {
@@ -267,8 +251,22 @@ const warehousesEndpoints = {
   getAllDocuments: () => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.documents}/${Endpoints.getAll}`,
 };
 const payments = {
-  [Endpoints.create]: () => `${API_BASE_ROUTES.PAYMENTS}/${Endpoints.create}`,
-  [Endpoints.getAll]: () => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.getAll}`,
+  create: () => `${API_BASE_ROUTES.PAYMENTS}/${Endpoints.create}`,
+  getAll: () => `${API_BASE_ROUTES.PAYMENTS}/${Endpoints.getAll}`,
+};
+const invoices = {
+  create: () => `${API_BASE_ROUTES.INVOICES}/${Endpoints.create}`,
+  getAll: () => `${API_BASE_ROUTES.INVOICES}/${Endpoints.getAll}`,
+};
+const shipments = {
+  create: () => `${API_BASE_ROUTES.SHIPMENTS}/${Endpoints.create}`,
+  getAll: () => `${API_BASE_ROUTES.SHIPMENTS}/${Endpoints.getAll}`,
+};
+const customers = {
+  create: () => `${API_BASE_ROUTES.CUSTOMERS}/${Endpoints.create}`,
+  updated: () => `${API_BASE_ROUTES.CUSTOMERS}/${Endpoints.update}`,
+  getAll: () => `${API_BASE_ROUTES.CUSTOMERS}/${Endpoints.getAll}`,
+  getById: (id?: string) => `${API_BASE_ROUTES.CUSTOMERS}/${Endpoints.getById}/${id}`,
 };
 
 const APP_CONFIGS = {
@@ -287,6 +285,9 @@ const APP_CONFIGS = {
     priceManagementEndpoints,
     ordersEndpoints,
     payments,
+    invoices,
+    customers,
+    shipments,
   },
 };
 

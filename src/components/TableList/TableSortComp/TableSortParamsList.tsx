@@ -1,9 +1,9 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { ModalFormProps } from 'components/ModalForm';
-import { iconId } from 'data';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { SelectItem } from 'components/TableList/TableList';
+import { iconId } from '../../../img/sprite';
 
 export interface TableSortParamsListProps extends Omit<ModalFormProps, 'onSelect'> {
   tableSortParams?: SelectItem[];

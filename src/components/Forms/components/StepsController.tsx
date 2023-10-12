@@ -117,7 +117,7 @@ const StepsController = <V = any,>({
           variant={isMobile ? 'onlyIconFilled' : 'filledSmall'}
           endIcon={'SmallArrowRight'}
           onClick={handleNextPress}
-          disabled={!nextData}
+          disabled={!canGoNext || !nextData}
         >
           {nextData?.label}
         </ArrowButton>

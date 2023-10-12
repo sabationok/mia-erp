@@ -1,4 +1,4 @@
-import { ApiDirType, AppPagesEnum } from '../redux/APP_CONFIGS';
+import { ApiDirType } from '../redux/APP_CONFIGS';
 import { ContractorsTypesEnum } from '../redux/directories/contractors.types';
 import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../redux/companies/companies.types';
 import { WarehouseDocumentType } from '../redux/warehouses/warehouses.types';
@@ -54,17 +54,17 @@ export const langUa = {
   [OwnershipTypeEnum.UA_FRANCHISING_COMPANY]: 'Франчайзингова компанія',
   [OwnershipTypeEnum.UA_COLLECTIVE_ENTERPRISE]: 'Колективне підприємство',
 
-  [AppPagesEnum.priceLists]: 'Прайс листи',
-  [AppPagesEnum.documentsFlow]: 'Документи',
-  [AppPagesEnum.companies]: 'Компанії',
-  [AppPagesEnum.dashboard]: 'Дашборд',
-  [AppPagesEnum.transactions]: 'Рух коштів',
-  [AppPagesEnum.orders]: 'Замовлення',
-  [AppPagesEnum.refunds]: 'Повернення',
-  [AppPagesEnum.supplement]: 'Постачання',
-  [AppPagesEnum.storage]: 'Склад',
-  [AppPagesEnum.products]: 'Продукти',
-  [AppPagesEnum.manager]: 'Менеджер',
+  priceLists: 'Прайс листи',
+  documentsFlow: 'Документи',
+  companies: 'Компанії',
+  dashboard: 'Дашборд',
+  transactions: 'Рух коштів',
+  orders: 'Замовлення',
+  refunds: 'Повернення',
+  supplement: 'Постачання',
+  storage: 'Склад',
+  products: 'Продукти',
+  manager: 'Менеджер',
 
   [MeasurementUnit.Pc]: 'шт.', // Штука (Piece)
   [MeasurementUnit.G]: 'г.', // Грам (Gram)

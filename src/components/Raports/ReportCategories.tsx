@@ -5,10 +5,10 @@ import ModalForm from '../ModalForm';
 import { IReportBaseProps } from './report.types';
 import FlexBox from 'components/atoms/FlexBox';
 import { FilterOpt } from '../ModalForm/ModalFilter';
-import { categoriesFilterOptions } from '../../data/directories.data';
 import { CategoryTrTypeEnum, CategoryTypes } from '../../redux/directories/directories.types';
 import styled from 'styled-components';
 import { enumToArray, founder, numberWithSpaces } from '../../utils';
+import { categoriesFilterOptions } from '../../data/modalFilterOptions.data';
 
 export interface IReportCategoriesProps<V = any, D = any> extends IReportBaseProps<unknown, V, D> {
   entryList?: ReportListItemProps<CategoryTypes>[];

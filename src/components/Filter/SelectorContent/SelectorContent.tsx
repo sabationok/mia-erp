@@ -1,5 +1,4 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { iconId } from 'data';
 import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { FilterSelectorProps, IFilterSelectorAddsProps } from '../Selector';
@@ -95,19 +94,13 @@ const SelectorContent: React.FC<
       )}
 
       <AcceptButtons>
-        <ButtonIcon
-          variant="onlyIcon"
-          size="32px"
-          iconSize="90%"
-          iconId={iconId.done}
-          onClick={onSelectorSubmitWrapper}
-        />
+        <ButtonIcon variant="onlyIcon" size="32px" iconSize="90%" icon={'done'} onClick={onSelectorSubmitWrapper} />
 
         <ButtonIcon
           variant="onlyIcon"
           size="32px"
           iconSize="90%"
-          iconId={iconId.close}
+          icon={'close'}
           onClick={() => {
             setSelectorData([]);
             onSelectorSubmit && selectorName && onSelectorSubmit(selectorName, []);

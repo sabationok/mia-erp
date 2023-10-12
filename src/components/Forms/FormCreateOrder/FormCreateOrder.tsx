@@ -5,7 +5,7 @@ import { useAppForm } from '../../../hooks';
 import { useCallback, useMemo, useState } from 'react';
 import ModalFilter from '../../ModalForm/ModalFilter';
 import OrderSlotsList from './tabs/OrderSlotsList';
-import FormCreateOrderMainInfo from './tabs/FormCreateOrderMainInfo';
+import FormOrderMainInfo from './tabs/FormOrderMainInfo';
 import { OnlyUUID } from '../../../redux/global.types';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import styled from 'styled-components';
@@ -57,7 +57,7 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
     }
 
     if (checkStep(currentTab)?.info) {
-      return <FormCreateOrderMainInfo form={form} />;
+      return <FormOrderMainInfo form={form} />;
     }
 
     // if (checkStep(currentTab)?.availability) {

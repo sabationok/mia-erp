@@ -2,7 +2,7 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import { useModalService } from 'components/ModalProvider/ModalProvider';
 import { useMemo } from 'react';
-import { ModalChildrenProps, Modals } from '../ModalProvider/Modals';
+import { ModalChildrenProps, Modals } from '../Modals';
 import { Text } from '../atoms/Text';
 
 export interface IDirectoryListItem<M extends Modals = any, P = any> {

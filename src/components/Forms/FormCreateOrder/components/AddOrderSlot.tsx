@@ -2,7 +2,7 @@ import FormCreateInner from '../../components/FormCreateInner';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import { IOrderTempSlot } from '../../../../redux/orders/orders.types';
 import { t } from '../../../../lang';
-import { Modals } from '../../../ModalProvider/Modals';
+import { Modals } from '../../../Modals';
 
 export interface FormAddOrderSlotProps {
   onSelect: (slot: IOrderTempSlot) => void;
@@ -13,9 +13,9 @@ const AddOrderSlot: React.FC<FormAddOrderSlotProps> = ({ onSelect, ...p }) => {
 
   return (
     <FormCreateInner
-      buttonText={t('Add position to order')}
+      buttonText={t('Add position to group')}
       onClick={() => {
-        const m = modalS.handleOpenModal({
+        const m = modalS.open({
           Modal: Modals.FormCreateOrderSlot,
           props: {
             onSubmit: d => {

@@ -5,7 +5,7 @@ import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import React, { MouseEventHandler, useCallback, useMemo, useState } from 'react';
-import { Modals } from '../../ModalProvider/Modals';
+import { Modals } from '../../Modals';
 import { ToastService } from '../../../services';
 import { createProductFormData } from '../../../utils/dataTransform';
 

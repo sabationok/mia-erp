@@ -15,12 +15,17 @@ import Changer from '../../../atoms/Changer';
 import usePermissionsAsDirItemOptions from '../../../../hooks/usePermisionsAsWorkersOptions';
 import { UseAppFormReturn } from '../../../../hooks/useAppForm.hook';
 import { ICreateOrderFormState } from '../../../../redux/orders/orders.types';
+import { useAppForm } from '../../../../hooks';
+import { FilterOption } from '../../../ModalForm/ModalFilter';
+import CheckBox from '../../../TableList/TebleCells/CellComponents/CheckBox';
+import { Text } from '../../../atoms/Text';
+import { t } from '../../../../lang';
 
 export interface FormCreateOrderMainInfoProps {
   form: UseAppFormReturn<ICreateOrderFormState>;
 }
-const FormCreateOrderMainInfo: React.FC<FormCreateOrderMainInfoProps> = ({ form }) => {
-  const { register, registerSelect } = form;
+const FormOrderMainInfo: React.FC<FormCreateOrderMainInfoProps> = () => {
+  const { register, registerSelect } = useAppForm();
 
   const { directory: paymentsMethods } = useDirectoriesSelector(ApiDirType.METHODS_PAYMENT);
   const { directory: shipmentMethods } = useDirectoriesSelector(ApiDirType.METHODS_SHIPMENT);
@@ -34,6 +39,7 @@ const FormCreateOrderMainInfo: React.FC<FormCreateOrderMainInfoProps> = ({ form 
     <Container flex={1} padding={'8px 0'}>
       <FlexBox padding={'0 16px 8px'}>
         <CustomSelect
+          dropDownIsAbsolute={false}
           {...registerSelect('manager', {
             options: managers,
             label: 'Менеджер',
@@ -63,12 +69,13 @@ const FormCreateOrderMainInfo: React.FC<FormCreateOrderMainInfoProps> = ({ form 
         <FlexBox style={{ position: 'relative' }}>
           <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} open renderHeader={'Замовник'}>
             <CustomSelect
+              dropDownIsAbsolute={false}
               {...registerSelect('customer', {
                 options: customers,
                 label: 'Замовник',
                 placeholder: 'Оберіть замовника',
                 required: true,
-                getLabel: o => `${o?.name} ${o?.secondName} ${o?.label || ''}`,
+                getLabel: o => `${o?.name || ''} ${o?.secondName} ${o?.label || ''}`,
                 onCreatePress: () =>
                   onCreateCounterparty({
                     defaultState: { type: ContractorsTypesEnum.CUSTOMER },
@@ -142,14 +149,17 @@ const FormCreateOrderMainInfo: React.FC<FormCreateOrderMainInfoProps> = ({ form 
           )}
 
           <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} open renderHeader={'Відвантаження'}>
-            <CustomSelect
-              {...registerSelect('shipmentMethod', {
-                options: shipmentMethods,
-                label: 'Спосіб відвантаження',
-                placeholder: 'Оберіть спосіб відвантаження',
-                required: true,
-              })}
-            />
+            {/*<CustomSelect*/}
+            {/*  {...registerSelect('shipmentMethod', {*/}
+            {/*    options: shipmentMethods,*/}
+            {/*    label: 'Спосіб відвантаження',*/}
+            {/*    placeholder: 'Оберіть спосіб відвантаження',*/}
+            {/*    required: true,*/}
+            {/*  })}*/}
+            {/*/>*/}
+            <InputLabel label={t('Shipment method')} required>
+              <CheckboxesListSelector options={shipmentMethods.map(el => ({ ...el, value: el._id }))} />
+            </InputLabel>
 
             <InputLabel label={'Місце призначення'} required>
               <TextareaPrimary
@@ -162,14 +172,17 @@ const FormCreateOrderMainInfo: React.FC<FormCreateOrderMainInfoProps> = ({ form 
           </FormAccordeonItem>
 
           <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} open renderHeader={'Оплата'}>
-            <CustomSelect
-              {...registerSelect('paymentMethod', {
-                options: paymentsMethods,
-                label: 'Спосіб оплати',
-                placeholder: 'Оберіть спосіб оплати',
-                required: true,
-              })}
-            />
+            {/*<CustomSelect*/}
+            {/*  {...registerSelect('paymentMethod', {*/}
+            {/*    options: paymentsMethods,*/}
+            {/*    label: 'Спосіб оплати',*/}
+            {/*    placeholder: 'Оберіть спосіб оплати',*/}
+            {/*    required: true,*/}
+            {/*  })}*/}
+            {/*/>*/}
+            <InputLabel label={t('Payment method')}>
+              <CheckboxesListSelector options={paymentsMethods.map(el => ({ ...el, value: el._id }))} />
+            </InputLabel>
           </FormAccordeonItem>
 
           <FormAccordeonItem
@@ -202,4 +215,40 @@ const Container = styled(FlexBox)`
   position: relative;
   overflow: auto;
 `;
-export default FormCreateOrderMainInfo;
+
+const CheckboxesListSelector = ({
+  options,
+  onSelect,
+}: {
+  onSelect?: (index: number) => void;
+  options?: Partial<FilterOption>[];
+}) => {
+  const [current, setCurrent] = useState(0);
+
+  const handleSetCurrent = (idx: number) => {
+    setCurrent(idx);
+    onSelect && onSelect(idx);
+  };
+  return (
+    <FlexBox fillWidth>
+      {options?.map((o, idx) => {
+        return (
+          <FlexBox
+            key={`m-opt_${o.value}`}
+            fxDirection={'row'}
+            gap={8}
+            alignItems={'center'}
+            onClick={() => {
+              handleSetCurrent(idx);
+            }}
+          >
+            <CheckBox checked={idx === current} />
+
+            <Text>{o?.label}</Text>
+          </FlexBox>
+        );
+      })}
+    </FlexBox>
+  );
+};
+export default FormOrderMainInfo;

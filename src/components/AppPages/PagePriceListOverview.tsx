@@ -2,7 +2,7 @@ import { useAppParams } from '../../hooks';
 import { AppGridPage } from './pages';
 import styled from 'styled-components';
 import { takeFullGridArea } from './pagesStyles';
-import { PagePathType } from '../../data/pages.data';
+
 import { usePriceListOverviewActionsCreator } from '../../hooks/usePriceListOverviewActionsCreator.hook';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { useEffect, useMemo, useState } from 'react';
@@ -11,13 +11,12 @@ import { ITableListProps } from '../TableList/tableTypes.types';
 import { ISortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
 import TableList from '../TableList/TableList';
-import { priceListContentColumns } from '../../data';
 import { usePriceListsSelector } from '../../redux/selectors.store';
+import { BaseAppPageProps } from './index';
+import { priceListContentColumns } from '../../data/priceManagement.data';
 
-export interface PagePriceListOverviewProps {
-  path: PagePathType;
-}
-const PagePriceListOverview: React.FC<PagePriceListOverviewProps> = ({ path }) => {
+interface Props extends BaseAppPageProps {}
+const PagePriceListOverview: React.FC<Props> = ({ path }) => {
   const listId = useAppParams()?.priceListId;
   const actionsCreator = usePriceListOverviewActionsCreator(listId);
   const {

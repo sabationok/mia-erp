@@ -1,10 +1,10 @@
-import baseApi from './baseApi';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
+import baseApi from './baseApi';
 
-export default class PaymentsApi {
+export default class InvoicesApi {
   private static api = baseApi;
-  private static endpoints = APP_CONFIGS.endpoints.payments;
+  private static endpoints = APP_CONFIGS.endpoints.invoices;
 
   public static createForOrder() {
     return this.api.post(this.endpoints.create());

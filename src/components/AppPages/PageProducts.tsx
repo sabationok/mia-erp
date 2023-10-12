@@ -1,6 +1,5 @@
 import TableList from 'components/TableList/TableList';
 import { takeFullGridArea } from './pagesStyles';
-import { productsColumns, transactionsSearchParams } from 'data';
 import styled from 'styled-components';
 import { useEffect, useMemo, useState } from 'react';
 import { ITableListProps } from '../TableList/tableTypes.types';
@@ -10,20 +9,13 @@ import { ISortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
 import { IProduct } from '../../redux/products/products.types';
 import useStorageServiceHook from '../../hooks/useProductsService.hook';
-import { PagePathType } from '../../data/pages.data';
 import useProductsFilterSelectorsHook from '../../hooks/useProductsFilterSelectors.hook';
 import useProductsActionsCreator from '../../hooks/useProductsActionsCreator.hook';
-import { Path } from 'react-hook-form';
+import { BaseAppPageProps } from './index';
+import { productsColumns } from '../../data/products.data';
+import { transactionsSearchParams } from '../../data/transactions.data';
 
-type Props = {
-  path: PagePathType;
-};
-export type UseTableForm<TData = any> = FilterReturnDataType & {
-  sortKey?: Path<TData>;
-  sortOrder?: 'DESC' | 'ACS';
-  search?: string;
-  searchKey?: Path<TData>;
-};
+interface Props extends BaseAppPageProps {}
 
 const PageProducts: React.FC<any> = (props: Props) => {
   const { getAll } = useStorageServiceHook();
@@ -38,7 +30,6 @@ const PageProducts: React.FC<any> = (props: Props) => {
     (): ITableListProps<IProduct> => ({
       tableData: state.products,
       tableTitles: productsColumns,
-      tableSortParams: transactionsSearchParams.filter(el => el.sort),
       filterSelectors,
       isFilter: true,
       isSearch: true,

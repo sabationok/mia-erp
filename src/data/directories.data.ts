@@ -21,20 +21,22 @@ import DirTableComp, { DirTableCompProps } from '../components/Directories/DirTa
 import FormCreateCounterparty from '../components/Forms/FormCreateCounterparty';
 import { createDataForReq } from '../utils/dataTransform';
 import { ProductTypeEnum } from '../redux/products/products.types';
-import { ModalChildrenProps, Modals } from '../components/ModalProvider/Modals';
-import { ContractorsTypesEnum } from '../redux/directories/contractors.types';
-import { enumToFilterOptions } from '../utils/fabrics';
+import { ModalChildrenProps, Modals } from '../components/Modals';
 import { CountsTypesEnum } from '../redux/directories/counts.types';
 import { CategoryTrTypeEnum } from '../redux/directories/directories.types';
 import { DirectoriesService } from '../hooks/useDirService.hook';
-import DirProperties, { dirPropertiesActionsCreator, DirPropertiesProps } from '../components/Directories/DirPoperties';
+import DirProperties, {
+  dirPropertiesActionsCreator,
+  DirPropertiesProps,
+} from '../components/Directories/DirProperties';
 import { IDirectoryListItem } from '../components/SideBarContent/Directories';
-
-export const categoriesFilterOptions = enumToFilterOptions(CategoryTrTypeEnum);
-export const countsFilterOptions = enumToFilterOptions(CountsTypesEnum);
-export const productsFilterOptions = enumToFilterOptions(ProductTypeEnum);
-export const tagsFilterOptions = enumToFilterOptions(ContractorsTypesEnum);
-export const counterpartyFilterOptions = enumToFilterOptions(ContractorsTypesEnum);
+import {
+  categoriesFilterOptions,
+  counterpartyFilterOptions,
+  countsFilterOptions,
+  productsFilterOptions,
+  tagsFilterOptions,
+} from './modalFilterOptions.data';
 
 export const getDirInTreeActionsCreator = (
   Modal: Modals = Modals.FormCreateDirTreeComp,

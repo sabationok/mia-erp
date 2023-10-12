@@ -1,4 +1,3 @@
-import { PagePathType } from '../../../redux/APP_CONFIGS';
 import styled from 'styled-components';
 import { takeFullGridArea } from '../pagesStyles';
 import AppGridPage from '../AppGridPage';
@@ -10,13 +9,13 @@ import PageProductOverviewLeftSide from './PageProductOverviewLeftSide';
 import { useAppParams } from '../../../hooks';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import { ToastService } from '../../../services';
+import { BaseAppPageProps } from '../index';
 
-export interface PageProductOverviewProps {
-  path: PagePathType;
-}
+interface Props extends BaseAppPageProps {}
+
 const loader = ToastService.createLoader('Loading product info');
 
-const PageProductOverview: React.FC<PageProductOverviewProps> = ({ path }) => {
+const PageProductOverview: React.FC<Props> = ({ path }) => {
   const [isRightSideVisible, setIsRightSideVisible] = useState<boolean>(false);
   const productsS = useAppServiceProvider()[ServiceName.products];
   const { productId } = useAppParams();

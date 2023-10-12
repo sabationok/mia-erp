@@ -1,5 +1,4 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { iconId } from 'data';
 import styled from 'styled-components';
 
 export interface ModalFormHeaderProps {
@@ -18,7 +17,7 @@ const ModalHeader: React.FC<ModalFormHeaderProps & React.ImgHTMLAttributes<HTMLD
           {title}
         </Title>
 
-        <ButtonIcon type="reset" size="28px" iconSize={'90%'} iconId={iconId.close} variant="onlyIconNoEffects" />
+        <ButtonIcon type="reset" size="28px" iconSize={'90%'} icon={'close'} variant="onlyIconNoEffects" />
       </Header>
 
       {children && <ExtraHeader>{children}</ExtraHeader>}

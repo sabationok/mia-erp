@@ -1,5 +1,4 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { iconId } from 'data';
 import styled from 'styled-components';
 import { FilterSelectorDataType } from './AppFilter';
 import React from 'react';
@@ -37,7 +36,7 @@ const Selector: React.FC<FilterSelectorProps & React.HTMLAttributes<Element>> = 
       <StOpenButton
         variant="defNoEffects"
         isCurrent={currentIdx === idx}
-        endIconId={iconId.SmallArrowDown}
+        endIcon={'SmallArrowDown'}
         endIconSize="22px"
         onClick={() => onSelectorClick && onSelectorClick()}
       >

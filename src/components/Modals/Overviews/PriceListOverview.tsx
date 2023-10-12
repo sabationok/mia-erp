@@ -3,11 +3,11 @@ import TableList, { ITableListProps } from '../../TableList/TableList';
 import { useEffect, useMemo, useState } from 'react';
 import { IPriceList, IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
 import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
-import { priceListContentColumns } from '../../../data';
 import { usePriceListOverviewActionsCreator } from '../../../hooks/usePriceListOverviewActionsCreator.hook';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { usePriceListsSelector } from '../../../redux/selectors.store';
 import { FormCreatePriceProps } from '../../Forms/FormCreatePrice/FormCreatePrice';
+import { priceListContentColumns } from '../../../data/priceManagement.data';
 
 export interface PriceListOverviewProps extends Omit<ModalFormProps, 'onSubmit' | 'afterSubmit'> {
   createFormProps?: FormCreatePriceProps;

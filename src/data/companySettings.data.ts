@@ -7,7 +7,7 @@ import { ApiDirType } from '../redux/APP_CONFIGS';
 import { iconId } from '../img/sprite';
 import FormCreateCustomRole from '../components/Forms/FormCreateCustomRole';
 import DirMethods from '../components/CompanySettings/DirMethods';
-import { Modals } from '../components/ModalProvider/Modals';
+import { Modals } from '../components/Modals';
 import { IDirectoryListItem } from '../components/SideBarContent/Directories';
 import CompanyIntegrationsModal from '../components/CompanySettings/CompanyIntegrationsModal';
 import { t } from '../lang';

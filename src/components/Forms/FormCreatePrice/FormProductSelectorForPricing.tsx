@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useModalProvider } from '../../ModalProvider/ModalProvider';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import ProductCardSimpleOverview from '../../Overviews/ProductCardSimpleOverview';
-import { Modals } from '../../ModalProvider/Modals';
+import { Modals } from '../../Modals';
 import TableList from '../../TableList/TableList';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { IVariation } from '../../../redux/products/variations.types';

@@ -3,13 +3,12 @@ import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import ModalFilter from '../../ModalForm/ModalFilter';
 import { useStepsHandler } from '../../../utils/createStepChecker';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import { ModalHeader } from '../../atoms';
 import { t } from '../../../lang';
 import StepsController from '../components/StepsController';
-import { IOrderSlot } from '../../../redux/orders/orders.types';
 import OrderGroupsStuffingStep from './tabs/OrderGroupsStuffingStep';
 
 export interface FormCreateOrdersGroupProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
@@ -18,7 +17,6 @@ export interface FormCreateOrdersGroupProps extends Omit<ModalFormProps, 'onSubm
 export interface FormCreateOrdersGroupFormData {}
 export enum FormCreateOrdersGroupStepsEnum {
   Stuffing = 'Stuffing',
-  Orders = 'Orders',
   Info = 'Info',
   Shipments = 'Shipments',
   Summary = 'Summary',
@@ -30,14 +28,9 @@ const steps = enumToFilterOptions(FormCreateOrdersGroupStepsEnum);
 const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit, onClose, ...p }) => {
   const { stepsMap, stepIdx, setStepIdx, stepsCount } = useStepsHandler(steps);
 
-  const [groupData, setGroupData] = useState<Record<string, IOrderSlot>>({});
-
   const renderStep = useMemo(() => {
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Stuffing]) {
       return <OrderGroupsStuffingStep />;
-    }
-    if (stepsMap[FormCreateOrdersGroupStepsEnum.Orders]) {
-      return <></>;
     }
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Info]) {
       return <></>;
@@ -72,8 +65,8 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
             setStepIdx(index);
           }}
           onCancelPress={stepIdx === 0 ? onClose : undefined}
-          canGoNext={!!'canGoNext'}
-          canAccept={!!'canAccept'}
+          canGoNext={true}
+          canSubmit={true}
           currentIndex={stepIdx}
           onAcceptPress={
             stepIdx + 1 === stepsCount

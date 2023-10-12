@@ -16,6 +16,9 @@ export { default as OrdersApi } from './orders.api';
 export { default as RefundsApi } from './refunds.api';
 export { default as WarehousesApi } from './warehouses.api';
 export { default as PaymentsApi } from './payments.api';
+export { default as InvoicesApi } from './invoices.api';
+export { default as ShipmentsApi } from './shipments.api';
+export { default as CustomersApi } from './customers.api';
 
 export enum AppQueryKey {
   dirType = 'dirType',

@@ -5,9 +5,8 @@ import { useAuthSelector } from '../../redux/selectors.store';
 import PermissionCheck from '../AppPages/PermissionCheck';
 import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
-import { AppPagesEnum } from '../../data/pages.data';
 import { AppUrlParamKeys } from '../../hooks/useAppParams.hook';
-import { AppPages } from 'components/AppPages';
+import { AppPages, AppPagesEnum } from 'components/AppPages';
 
 const { PageNotFound } = AppPages;
 
@@ -74,6 +73,12 @@ const AppRoutes: React.FC<{ isLoaded?: boolean }> = () => {
           <Route
             path={`${AppPagesEnum.warehouses}/:${AppUrlParamKeys.warehouseId}`}
             element={<AppPages.PageWarehouseOverview path={AppPagesEnum.warehouses} />}
+          />
+
+          <Route path={AppPagesEnum.customers} element={<AppPages.PageCustomers path={AppPagesEnum.customers} />} />
+          <Route
+            path={`${AppPagesEnum.customers}/:${AppUrlParamKeys.customerId}`}
+            element={<AppPages.PageCustomerOverview path={AppPagesEnum.customers} />}
           />
 
           <Route

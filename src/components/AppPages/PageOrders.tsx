@@ -7,16 +7,13 @@ import AppGridPage from './AppGridPage';
 import { useOrdersSelector } from '../../redux/selectors.store';
 import { ISortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
-import { PagePathType } from '../../data/pages.data';
 import { mockOrdersData, ordersSearchParams, ordersTableColumns } from '../../data/orders.data';
 import useOrdersServiceHook from '../../hooks/useOrdersService.hook';
 import { IOrder } from '../../redux/orders/orders.types';
 import useOrdersActionsCreatorHook from '../../hooks/useOrdersActionsCreator.hook';
-// import useOrdersActionsCreatorHook from '../../hooks/useOrdersActionsCreator.hook';
+import { BaseAppPageProps } from './index';
 
-type Props = {
-  path: PagePathType;
-};
+interface Props extends BaseAppPageProps {}
 
 export const useOrderTableConfigs = () => {
   const service = useOrdersServiceHook();

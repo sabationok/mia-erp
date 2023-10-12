@@ -20,7 +20,7 @@ import { Path } from 'react-hook-form';
 import { createDataForReq } from '../../../utils/dataTransform';
 import { OnRowClickHandler } from '../../TableList/tableTypes.types';
 import TableList from '../../TableList/TableList';
-import { priceListColumns } from '../../../data';
+import { priceListColumns } from '../../../data/priceManagement.data';
 
 const validation = yup.object().shape({
   cost: yup.number(),

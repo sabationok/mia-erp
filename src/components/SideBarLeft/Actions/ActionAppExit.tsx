@@ -1,8 +1,6 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import useAppSettings from 'hooks/useAppSettings.hook';
 
-import { iconId } from 'data';
-
 const ActionAppExit: React.FC = () => {
   const appSettings = useAppSettings();
 
@@ -17,7 +15,7 @@ const ActionAppExit: React.FC = () => {
   return (
     <ButtonIcon
       variant="def"
-      iconId={iconId.logOut}
+      icon={'logOut'}
       iconSize="20px"
       style={{ width: '100%', height: '32px' }}
       onClick={handleExitApp}

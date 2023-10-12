@@ -1,8 +1,7 @@
 import React, { CSSProperties, memo, useMemo } from 'react';
-import { statusDataMap } from 'data';
 
 import styled, { css } from 'styled-components';
-import { StatusData, StatusNames } from 'data/statuses.data';
+import { StatusData, statusDataMap, StatusNames } from 'data/statuses.data';
 import SvgIcon from '../../../atoms/SvgIcon/SvgIcon';
 
 export type StatusCompVariants = 'outlined' | 'filled' | 'text';

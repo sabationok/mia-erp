@@ -18,6 +18,7 @@ import { IContractor } from '../directories/contractors.types';
 import { IProductInventory, IWarehouse } from '../warehouses/warehouses.types';
 import { IProduct } from '../products/products.types';
 import { IVariation } from '../products/variations.types';
+import { ICustomerBase } from '../customers/customers.types';
 
 export type OrderTypeFilterOption = FilterOpt;
 export enum OrderTypeEnum {
@@ -79,38 +80,59 @@ export interface IOrder extends IBase {
   innerComment?: string;
 }
 
-export interface ICreateOrderFormState {
-  manager?: { _id: string; name?: string; secondName?: string };
+export interface ICreateOrderBaseFormState {
+  manager?: { _id: string; user: { _id: string; name?: string; secondName?: string; email?: string } };
 
   barCode?: string;
   code?: string;
 
-  customer?: { _id: string; name?: string; secondName?: string; label?: string };
-  customerCommunicationMethod?: { _id: string; name?: string; secondName?: string; label?: string };
+  customer?: ICustomerBase;
+  customerCommunicationMethods?: { _id: string; name?: string; secondName?: string; label?: string }[];
 
-  receiver?: { _id: string; name?: string; secondName?: string; label?: string };
-  receiverCommunicationMethod?: { _id: string; name?: string; secondName?: string; label?: string };
+  receiver?: ICustomerBase;
+  receiverCommunicationMethods?: { _id: string; name?: string; secondName?: string; label?: string }[];
 
   status?: OrderStatus;
-  payments?: OnlyUUID[];
 
-  slots?: OnlyUUID[];
   destination?: string;
-  shipmentMethod?: { _id: string; name?: string; secondName?: string; label?: string };
-  paymentMethod?: { _id: string; name?: string; secondName?: string; label?: string };
+
+  shipmentMethod?: { _id: string; label?: string };
+  paymentMethod?: { _id: string; label?: string };
 
   comment?: string;
   innerComment?: string;
 }
 
-export interface IAllOrderSlotsRes extends AppResponse<IOrderSlot[]> {}
-export interface IOrderSlotRes extends AppResponse<IOrderSlot> {}
+export interface ICreateOrderFormState extends ICreateOrderBaseFormState {
+  slots?: IOrderSlotReqData[];
+}
+
+export interface CreateOrdersGroupFormData extends ICreateOrderBaseFormState {
+  slots?: IOrderSlotReqData[];
+}
+
 export interface IAllOrdersRes extends AppResponse<IOrder[]> {}
 export interface IOrderRes extends AppResponse<IOrder> {}
 
 export interface IOrderReqData {
   _id?: string;
   data: IOrder;
+}
+
+export interface IOrderBaseDto {
+  manager?: OnlyUUID;
+  barCode?: number;
+  code?: number;
+  customer?: OnlyUUID;
+  customerCommunicationMethods?: string[];
+  receiver?: OnlyUUID;
+  receiverCommunicationMethods?: string[];
+  status?: OrderStatus;
+  destination?: string;
+  shipmentMethod?: OnlyUUID;
+  paymentMethod?: OnlyUUID;
+  comment?: string;
+  innerComment?: string;
 }
 export interface IOrderSlotReqData {
   _id?: string;

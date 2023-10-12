@@ -2,19 +2,18 @@ import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { takeFullGridArea } from '../pagesStyles';
 import { AppGridPage } from '../pages';
-import { PagePathType } from '../../../redux/APP_CONFIGS';
 import { useAppParams } from '../../../hooks';
 import PageCurrentOrderProvider from './PageCurrentOrderProvider';
 import PageOverlayProvider from '../../atoms/PageOverlayProvider';
 import PageOrderOverviewLeftSide from './PageOrderOverviewLeftSide';
 import PageOrderOverviewTabs from './PageOrderOverviewTabs';
+import { BaseAppPageProps } from '../index';
 
-export interface PageOrderOverviewProps {
-  path: PagePathType;
-}
+interface Props extends BaseAppPageProps {}
+
 // const loader = ToastService.createLoader('Loading order info');
 
-const PageOrderOverview: React.FC<PageOrderOverviewProps> = ({ path }) => {
+const PageOrderOverview: React.FC<Props> = ({ path }) => {
   const [isTabsSideVisible, setIsTabsSideVisible] = useState<boolean>(false);
   const { orderId } = useAppParams();
 

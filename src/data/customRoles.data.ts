@@ -1,5 +1,5 @@
 import { ICustomRole } from '../redux/customRoles/customRoles.types';
-import { pages } from './pages.data';
+import { getAllAccessKeys } from '../components/AppPages';
 
 export const initialCustomRole: ICustomRole = {
   _id: 'dfbsdgbd',
@@ -18,7 +18,7 @@ export const initialCustomRole: ICustomRole = {
   //   'products',
   //   'dashboard',
   // ],
-  accessKeys: Object.entries(pages).map(([path, page]) => page.path),
+  accessKeys: getAllAccessKeys(),
 };
 
 export const rolesMockData: ICustomRole[] = [

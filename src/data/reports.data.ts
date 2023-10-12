@@ -8,7 +8,7 @@ import ReportCategories, { IReportCategoriesProps } from 'components/Raports/Rep
 import ReportCounts, { IReportCountsProps } from 'components/Raports/ReportCounts';
 import ReportContractors, { IReportContractorsProps } from 'components/Raports/ReportContractors';
 import ReportProjects, { IReportProjectsProps } from '../components/Raports/ReportProjects';
-import { categoriesFilterOptions, countsFilterOptions } from './directories.data';
+import { categoriesFilterOptions, countsFilterOptions } from './modalFilterOptions.data';
 
 const categoriesReport: IReportConfigs<IReportCategoriesProps> = {
   title: 'Доходи/Витрати',

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { CompanyQueryType } from '../redux/global.types';
 import { toast } from 'react-toastify';
 import { NavigateFunction } from 'react-router/dist/lib/hooks';
-import { Modals } from '../components/ModalProvider/Modals';
+import { Modals } from '../components/Modals';
 
 export type PermissionsActionsCreator = TableActionCreator<IPermission>;
 

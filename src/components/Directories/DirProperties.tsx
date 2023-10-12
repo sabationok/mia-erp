@@ -9,7 +9,7 @@ import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import styled, { useTheme } from 'styled-components';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { ProductsService } from '../../hooks/useProductsService.hook';
-import { Modals } from '../ModalProvider/Modals';
+import { Modals } from '../Modals';
 import t from '../../lang';
 import { toast } from 'react-toastify';
 import FlexBox from '../atoms/FlexBox';
@@ -17,12 +17,12 @@ import { Text } from '../atoms/Text';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { OnlyUUID } from '../../redux/global.types';
 import { OnCheckBoxChangeHandler } from '../TableList/tableTypes.types';
-import { productsFilterOptions } from '../../data/directories.data';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useProductsSelector } from '../../redux/selectors.store';
 import { IProperty, IPropertyDto } from '../../redux/products/properties.types';
 import { ToastService } from '../../services';
 import Switch from 'components/atoms/Switch';
+import { productsFilterOptions } from '../../data/modalFilterOptions.data';
 
 type LevelType = { isGroup?: boolean; isProperty?: boolean; isValue?: boolean };
 

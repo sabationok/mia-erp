@@ -26,6 +26,9 @@ export const PageWarehouseOverview = lazy(() => import('./PageWarehouseOverview'
 export const PageOrders = lazy(() => import('./PageOrders'));
 export const PageOrderOverview = lazy(() => import('./OrderPages/PageOrderOverview'));
 
+// * CUSTOMERS
+export const PageCustomers = lazy(() => import('./customers/PageCustomers'));
+export const PageCustomerOverview = lazy(() => import('./customers/PageCustomerOverview'));
 // * REFUNDS
 export const PageRefunds = lazy(() => import('./PageRefunds'));
 export const AppGridPage = lazy(() => import('./AppGridPage'));

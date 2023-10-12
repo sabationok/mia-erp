@@ -1,5 +1,4 @@
 import { IBase } from '../global.types';
-import { PagePathType } from '../../data/pages.data';
 import { ICompanyBase } from '../companies/companies.types';
 
 export type RoleActionType = {
@@ -8,7 +7,7 @@ export type RoleActionType = {
   value?: string;
   type?: string;
 };
-export type RoleAccessKeyType = PagePathType;
+export type RoleAccessKeyType = string;
 
 export interface ICustomRole extends IBase {
   owner?: ICompanyBase;

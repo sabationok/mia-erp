@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { NavLink, useLocation } from 'react-router-dom';
-import { iconId } from 'data';
 import { IPage } from 'redux/page/pageSlice';
 import styled from 'styled-components';
 
@@ -10,7 +9,8 @@ import { Text } from '../../atoms/Text';
 import { useAppPages, useAppParams, useCloseByEscapeOrClickOnBackdrop } from '../../../hooks';
 import SubNavMenu from './SubNavMenu';
 import FlexBox from '../../atoms/FlexBox';
-import { AppPagesEnum } from '../../../redux/APP_CONFIGS';
+import { AppPagesEnum } from '../../AppPages';
+import { iconId } from '../../../img/sprite';
 
 const NavMenu: React.FC = () => {
   const { permissionId } = useAppParams();
@@ -74,7 +74,7 @@ const NavMenu: React.FC = () => {
               <FlexBox height={isSubMenuOpen[item.subMenuKey] ? 'max-content' : '0'} overflow={'hidden'}>
                 <SubNavMenu
                   key={item?.subMenuKey}
-                  subMenuKey={item.subMenuKey}
+                  subMenuKey={item?.subMenuKey}
                   onActive={key => {
                     setIsSubMenuOpen(prev => ({ ...prev, [key]: true }));
                   }}

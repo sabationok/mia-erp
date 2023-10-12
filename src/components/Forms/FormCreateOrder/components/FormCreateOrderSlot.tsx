@@ -4,7 +4,6 @@ import { IProduct } from '../../../../redux/products/products.types';
 import { FormEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
 import { ITableListProps } from '../../../TableList/tableTypes.types';
 import TableList from '../../../TableList/TableList';
-import { productsColumns } from '../../../../data';
 import { createApiCall, ProductsApi, WarehousesApi } from '../../../../api';
 import { t } from '../../../../lang';
 import { enumToFilterOptions } from '../../../../utils/fabrics';
@@ -28,6 +27,7 @@ import { warehouseBatchColumns } from '../../../../data/warehauses.data';
 import { useStepsHandler } from '../../../../utils/createStepChecker';
 import _ from 'lodash';
 import { nanoid } from '@reduxjs/toolkit';
+import { productsColumns } from '../../../../data/products.data';
 
 export interface FormCreateOrderSlotProps
   extends Omit<ModalFormProps<FormCreateOrderSlotSteps, any, FormCreateOrderSlotFormData>, 'onSubmit' | 'onSelect'> {

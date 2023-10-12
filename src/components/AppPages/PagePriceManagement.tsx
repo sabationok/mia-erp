@@ -1,6 +1,5 @@
 import TableList from 'components/TableList/TableList';
 import { takeFullGridArea } from './pagesStyles';
-import { priceListColumns } from 'data';
 import styled from 'styled-components';
 import { useEffect, useMemo, useState } from 'react';
 import { ITableListProps } from '../TableList/tableTypes.types';
@@ -8,15 +7,14 @@ import AppGridPage from './AppGridPage';
 import { usePriceListsSelector } from '../../redux/selectors.store';
 import { ISortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
-import { PagePathType } from '../../data/pages.data';
 import usePriceManagementServiceHook from '../../hooks/usePriceManagementService.hook';
 import usePriceManagementActionsCreatorHook from '../../hooks/usePriceManagementActionsCreator.hook';
 import { IPriceList } from '../../redux/priceManagement/priceManagement.types';
 import { useNavigate } from 'react-router-dom';
+import { BaseAppPageProps } from './index';
+import { priceListColumns } from '../../data/priceManagement.data';
 
-type Props = {
-  path: PagePathType;
-};
+interface Props extends BaseAppPageProps {}
 const PagePriceManagement: React.FC<any> = (props: Props) => {
   const service = usePriceManagementServiceHook();
   const state = usePriceListsSelector();
