@@ -1,22 +1,15 @@
 import { useMemo } from 'react';
 import { usePermissionsSelector } from './usePermissionsService.hook';
-import { appPages, IAppPage } from '../components/AppPages';
+import { IAppPage, pages } from '../components/AppPages';
+import { t } from '../lang';
 
-export const pages: IAppPage[] = Object.entries(appPages).map(([path, page]) => {
-  return {
-    ...page,
-    title: page.path,
-    moduleName: path,
-    path,
-  };
-});
 const useAppPages = ({ permissionId }: { permissionId?: string }) => {
   const { permission } = usePermissionsSelector();
 
   return useMemo((): IAppPage[] => {
     const isCompanyValid = permission?._id === permissionId;
 
-    const appPages: IAppPage[] = [{ title: 'Головна', path: 'companies', iconId: 'bank' }];
+    const appPages: IAppPage[] = [{ title: t('Main'), path: 'companies', iconId: 'bank' }];
     if (isCompanyValid) {
       const availablePages = pages
         // .filter(page => {

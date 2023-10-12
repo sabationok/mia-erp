@@ -23,6 +23,7 @@ export enum AppPagesEnum {
   priceLists = 'priceLists',
   director = 'director',
   customers = 'customers',
+  counterparties = 'counterparties',
 }
 
 export enum AppRoleName {}

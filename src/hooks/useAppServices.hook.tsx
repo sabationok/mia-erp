@@ -11,6 +11,7 @@ import useWarehousesServiceHook, { WarehousesService } from './useWarehousesServ
 import useAppAuthHook, { AuthService } from './useAppAuth.hook';
 import { ConfigService } from '../services';
 import useOrdersServiceHook, { OrdersService } from './useOrdersService.hook';
+import useCustomersService, { CustomersService } from './useCustomersService';
 
 export enum ServiceName {
   permissions = 'permissions',
@@ -25,6 +26,7 @@ export enum ServiceName {
   appSettings = 'appSettings',
   companies = 'companies',
   warehouses = 'warehouses',
+  customers = 'customers',
 }
 
 export interface AppService {
@@ -38,6 +40,7 @@ export interface AppService {
   [ServiceName.warehouses]: WarehousesService;
   [ServiceName.auth]: AuthService;
   [ServiceName.orders]: OrdersService;
+  [ServiceName.customers]: CustomersService;
 }
 const isDevMode = ConfigService.isDevMode();
 const useAppService = (): AppService => {
@@ -51,6 +54,7 @@ const useAppService = (): AppService => {
   const companies = useCompaniesService();
   const warehouses = useWarehousesServiceHook();
   const orders = useOrdersServiceHook();
+  const customers = useCustomersService();
 
   useEffect(() => {
     isDevMode && console.log('Apply useAppService | permissions');
@@ -88,6 +92,7 @@ const useAppService = (): AppService => {
     priceManagement,
     warehouses,
     orders,
+    customers,
   };
 };
 export const AppServiceCTX = createContext<AppService>({} as AppService);

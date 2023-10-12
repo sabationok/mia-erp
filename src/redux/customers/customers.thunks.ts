@@ -25,10 +25,10 @@ export const createCustomerThunk = createAsyncThunk<ICustomer, ThunkPayload<ICus
 );
 export const getAllCustomersThunk = createAsyncThunk<
   { refresh?: boolean; data: ICustomer[] },
-  ThunkPayload<{ refresh?: boolean; data: AppQueryParams }, ICustomer[]>
+  ThunkPayload<{ refresh?: boolean; params: AppQueryParams }, ICustomer[]>
 >(CustomersThunkTypeEnum.create, async (arg, thunkAPI) => {
   try {
-    const res = await CustomersApi.getAllByQueries(arg.data?.data);
+    const res = await CustomersApi.getAllByQueries(arg.data?.params);
     if (res) {
       arg?.onSuccess && arg?.onSuccess(res?.data?.data);
     }
