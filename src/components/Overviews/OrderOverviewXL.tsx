@@ -52,6 +52,12 @@ const OrderOverviewXL: React.FC<OrderOverviewXLProps> = p => {
     if (tabs[currentTab].value === OrderOverviewTabs.statuses) {
       return <OrderOverviewInfoTab />;
     }
+    if (tabs[currentTab].value === OrderOverviewTabs.comments) {
+      return <OrderOverviewInfoTab />;
+    }
+    if (tabs[currentTab].value === OrderOverviewTabs.tasks) {
+      return <OrderOverviewInfoTab />;
+    }
 
     return;
   }, [currentTab]);

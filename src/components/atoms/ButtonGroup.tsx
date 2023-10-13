@@ -9,19 +9,27 @@ export interface ButtonGroupProps<V = any> {
   options?: FilterOption<V>[];
   defaultIndex?: number;
   onSelect?: ButtonGroupSelectHandler<V>;
+  onChangeIndex?: (index: number) => void;
   backgroundColor?: string;
   borderRadius?: string;
 }
 export type ButtonGroupSelectHandler<V = any> = (info: { option: FilterOption<V>; value: V; index: number }) => void;
-const ButtonGroup = <V = any,>({ options, borderRadius, onSelect, defaultIndex }: ButtonGroupProps<V>) => {
+const ButtonGroup = <V = any,>({
+  options,
+  borderRadius,
+  onSelect,
+  defaultIndex,
+  onChangeIndex,
+}: ButtonGroupProps<V>) => {
   const [current, setCurrent] = useState(0);
 
   const handleSelect = useCallback(
     (option: FilterOption, index: number) => () => {
       setCurrent(index);
       onSelect && options && onSelect({ option, value: option?.value, index });
+      onChangeIndex && onChangeIndex(index);
     },
-    [onSelect, options]
+    [onSelect, options, onChangeIndex]
   );
 
   useEffect(() => {

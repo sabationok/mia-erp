@@ -24,23 +24,23 @@ export const contractorsColumns: CellTittleProps<IContractor>[] = [
     action: 'contacts',
   },
   {
-    top: { name: 'Локація' },
+    top: { name: t('Address') },
     width: '170px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Теги', path: 'tags' },
+    top: { name: t('Tags'), path: 'tags' },
     width: '200px',
     action: 'tags',
   },
   {
-    top: { name: 'Коментар', path: 'description' },
+    top: { name: t('description'), path: 'description' },
     width: '170px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Створено', align: 'center', path: 'createdAt' },
-    bottom: { name: 'Оновлено', align: 'center', path: 'updatedAt' },
+    top: { name: t('updated'), align: 'center', path: 'updatedAt' },
+    bottom: { name: t('created'), align: 'center', path: 'createdAt' },
     width: '150px',
     action: 'dateSimple',
   },

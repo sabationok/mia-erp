@@ -6,7 +6,7 @@ import { useDirService } from './index';
 import usePriceManagementServiceHook, { PriceManagementService } from './usePriceManagementService.hook';
 import useAppSettingsHook, { AppSettingsService } from './useAppSettings.hook';
 import useCompaniesService, { CompaniesService } from './useCompaniesService.hook';
-import { createContext, useContext, useEffect } from 'react';
+import { createContext, useContext } from 'react';
 import useWarehousesServiceHook, { WarehousesService } from './useWarehousesService.hook';
 import useAppAuthHook, { AuthService } from './useAppAuth.hook';
 import { ConfigService } from '../services';
@@ -56,30 +56,30 @@ const useAppService = (): AppService => {
   const orders = useOrdersServiceHook();
   const customers = useCustomersService();
 
-  useEffect(() => {
-    isDevMode && console.log('Apply useAppService | permissions');
-  }, [permissions]);
-  useEffect(() => {
-    isDevMode && console.log('Apply useAppService | products');
-  }, [products]);
-  useEffect(() => {
-    isDevMode && console.log('Apply useAppService | transactions');
-  }, [transactions]);
-  useEffect(() => {
-    isDevMode && console.log('Apply useAppService | directories');
-  }, [directories]);
-  useEffect(() => {
-    isDevMode && console.log('Apply useAppService | priceManagement');
-  }, [priceManagement]);
-  useEffect(() => {
-    isDevMode && console.log('Apply useAppService | appSettings');
-  }, [appSettings]);
-  useEffect(() => {
-    isDevMode && console.log('Apply useAppService | companies');
-  }, [companies]);
-  useEffect(() => {
-    isDevMode && console.log('Apply useAppService | warehouses');
-  }, [warehouses]);
+  // useEffect(() => {
+  //   isDevMode && console.log('Apply useAppService | permissions');
+  // }, [permissions]);
+  // useEffect(() => {
+  //   isDevMode && console.log('Apply useAppService | products');
+  // }, [products]);
+  // useEffect(() => {
+  //   isDevMode && console.log('Apply useAppService | transactions');
+  // }, [transactions]);
+  // useEffect(() => {
+  //   isDevMode && console.log('Apply useAppService | directories');
+  // }, [directories]);
+  // useEffect(() => {
+  //   isDevMode && console.log('Apply useAppService | priceManagement');
+  // }, [priceManagement]);
+  // useEffect(() => {
+  //   isDevMode && console.log('Apply useAppService | appSettings');
+  // }, [appSettings]);
+  // useEffect(() => {
+  //   isDevMode && console.log('Apply useAppService | companies');
+  // }, [companies]);
+  // useEffect(() => {
+  //   isDevMode && console.log('Apply useAppService | warehouses');
+  // }, [warehouses]);
 
   return {
     auth,

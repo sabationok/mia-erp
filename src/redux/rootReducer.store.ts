@@ -14,6 +14,7 @@ import { priceManagementSlice } from './priceManagement/priceManagement.slice';
 import { ordersSlice } from './orders/orders.slice';
 import { refundsSlice } from './refunds/refunds.slice';
 import { warehousesSlice } from './warehouses/warehouses.slice';
+import { customersSlice } from './customers/customers.slice';
 
 const rootReducer = combineReducers({
   [authSlice.name]: persistReducer(persistorConfigs.auth, authSlice.reducer),
@@ -29,8 +30,7 @@ const rootReducer = combineReducers({
   [priceManagementSlice.name]: persistReducer(persistorConfigs.priceLists, priceManagementSlice.reducer),
   [refundsSlice.name]: persistReducer(persistorConfigs.refunds, refundsSlice.reducer),
   [warehousesSlice.name]: persistReducer(persistorConfigs.warehouses, warehousesSlice.reducer),
+  [customersSlice.name]: persistReducer(persistorConfigs.customers, customersSlice.reducer),
 });
-
-export type RootReducerType = typeof rootReducer;
 
 export default rootReducer;

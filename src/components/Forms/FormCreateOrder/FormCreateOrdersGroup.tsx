@@ -9,7 +9,8 @@ import FlexBox from '../../atoms/FlexBox';
 import { ModalHeader } from '../../atoms';
 import { t } from '../../../lang';
 import StepsController from '../components/StepsController';
-import OrderGroupsStuffingStep from './tabs/OrderGroupsStuffingStep';
+import OrderGroupsStuffingStep from './steps/OrderGroupsStuffingStep';
+import OrderMainInfoStep from './steps/OrderMainInfoStep';
 
 export interface FormCreateOrdersGroupProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<FormCreateOrdersGroupFormData>;
@@ -18,7 +19,7 @@ export interface FormCreateOrdersGroupFormData {}
 export enum FormCreateOrdersGroupStepsEnum {
   Stuffing = 'Stuffing',
   Info = 'Info',
-  Shipments = 'Shipments',
+  // Shipments = 'Shipments',
   Summary = 'Summary',
   Invoices = 'Invoices',
 }
@@ -27,24 +28,31 @@ const steps = enumToFilterOptions(FormCreateOrdersGroupStepsEnum);
 
 const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit, onClose, ...p }) => {
   const { stepsMap, stepIdx, setStepIdx, stepsCount } = useStepsHandler(steps);
+  // const infoForm = useAppForm<FormCreateOrdersGroupFormData>();
 
   const renderStep = useMemo(() => {
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Stuffing]) {
       return <OrderGroupsStuffingStep />;
     }
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Info]) {
-      return <></>;
+      // return <OrderMainInfoStep form={infoForm} />;
+      return <OrderMainInfoStep />;
     }
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Summary]) {
       return <></>;
     }
-    if (stepsMap[FormCreateOrdersGroupStepsEnum.Shipments]) {
-      return <></>;
-    }
+    // if (stepsMap[FormCreateOrdersGroupStepsEnum.Shipments]) {
+    //   return <></>;
+    // }
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Invoices]) {
       return <></>;
     }
   }, [stepsMap]);
+
+  const canSubmit = useMemo(() => {
+    return true;
+  }, []);
+
   return (
     <Form>
       <ModalHeader title={t('Select product')} onBackPress={onClose} />
@@ -66,16 +74,8 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
           }}
           onCancelPress={stepIdx === 0 ? onClose : undefined}
           canGoNext={true}
-          canSubmit={true}
+          canSubmit={canSubmit}
           currentIndex={stepIdx}
-          onAcceptPress={
-            stepIdx + 1 === stepsCount
-              ? () => {
-                  // onSubmit && onSubmit(formData);
-                  onClose && onClose();
-                }
-              : undefined
-          }
         />
       </Footer>
     </Form>

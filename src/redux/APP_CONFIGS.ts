@@ -110,12 +110,6 @@ export enum ApiDirType {
   DEFAULT = 'DEFAULT',
 }
 
-export enum ApiDefaultDirType {
-  SHIPMENT_TYPES = 'shipments',
-  PAYMENT_TYPES = 'payments',
-  COMMUNICATION_TYPES = 'communications',
-}
-
 const transactionsApiEndpoints: ApiEndpointsMap = {
   [Endpoints.getAll]: (): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.getAll}`,
   [Endpoints.create]: (): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.create}`,
@@ -183,13 +177,13 @@ const authApiEndpoints: ApiEndpointsMap = {
   [Endpoints.logIn]: () => `${API_BASE_ROUTES.AUTH}/${Endpoints.logIn}`,
   [Endpoints.logOut]: () => `${API_BASE_ROUTES.AUTH}/${Endpoints.logOut}`,
   [Endpoints.deleteById]: (id?: string) => `${API_BASE_ROUTES.AUTH}/${Endpoints.deleteById}`,
-  [Endpoints.getCurrent]: (id?: string) => `${API_BASE_ROUTES.AUTH}/${Endpoints.getCurrent}`,
+  [Endpoints.getCurrent]: () => `${API_BASE_ROUTES.AUTH}/${Endpoints.getCurrent}`,
 };
 
 const directoriesApiEndpoints: ApiEndpointsMap = {
   [Endpoints.getAllByType]: (dirType?: ApiDirType) =>
     `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.getAllByType}/${dirType || '_'}`,
-  [Endpoints.getAllGrouped]: (dirType?: string) => `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.getAllGrouped}`,
+  [Endpoints.getAllGrouped]: () => `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.getAllGrouped}`,
   [Endpoints.create]: (dirType?: ApiDirType) => `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.create}/${dirType}`,
   [Endpoints.deleteById]: (dirType?: ApiDirType, id?: string) =>
     `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.deleteById}/${dirType || '_'}/${id}`,

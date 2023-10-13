@@ -4,8 +4,8 @@ import { ICreateOrderFormState, IOrder, IOrderSlot } from '../../../redux/orders
 import { useAppForm } from '../../../hooks';
 import { useCallback, useMemo, useState } from 'react';
 import ModalFilter from '../../ModalForm/ModalFilter';
-import OrderSlotsList from './tabs/OrderSlotsList';
-import FormOrderMainInfo from './tabs/FormOrderMainInfo';
+import OrderSlotsList from './steps/OrderSlotsList';
+import OrderMainInfoStep from './steps/OrderMainInfoStep';
 import { OnlyUUID } from '../../../redux/global.types';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import styled from 'styled-components';
@@ -21,11 +21,11 @@ export interface FormCreateOrderProps extends Omit<ModalFormProps, 'onSubmit' | 
 
 export enum OrderTabsEnum {
   content = 'content',
-  // availability = 'availability',
   info = 'info',
   summary = 'summary',
   invoices = 'invoices',
 }
+
 export const FormCreateOrderTabs = enumToFilterOptions(OrderTabsEnum);
 
 const checkStep = createStepsChecker(FormCreateOrderTabs);
@@ -55,13 +55,9 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
     if (checkStep(currentTab)?.content) {
       return <OrderSlotsList list={content} onSelect={handleSelect} onRemove={handleRemove} />;
     }
-
     if (checkStep(currentTab)?.info) {
-      return <FormOrderMainInfo form={form} />;
+      return <OrderMainInfoStep form={form} />;
     }
-
-    // if (checkStep(currentTab)?.availability) {
-    // }
     if (checkStep(currentTab)?.summary) {
     }
     if (checkStep(currentTab)?.invoices) {

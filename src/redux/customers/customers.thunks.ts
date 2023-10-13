@@ -6,7 +6,7 @@ import { axiosErrorCheck } from '../../utils';
 
 enum CustomersThunkTypeEnum {
   create = 'customers/createCustomerThunk',
-  gwtAll = 'customers/getAllCustomersThunk',
+  getAll = 'customers/getAllCustomersThunk',
 }
 export const createCustomerThunk = createAsyncThunk<ICustomer, ThunkPayload<ICustomerReqDta, ICustomer>>(
   CustomersThunkTypeEnum.create,
@@ -26,7 +26,7 @@ export const createCustomerThunk = createAsyncThunk<ICustomer, ThunkPayload<ICus
 export const getAllCustomersThunk = createAsyncThunk<
   { refresh?: boolean; data: ICustomer[] },
   ThunkPayload<{ refresh?: boolean; params: AppQueryParams }, ICustomer[]>
->(CustomersThunkTypeEnum.create, async (arg, thunkAPI) => {
+>(CustomersThunkTypeEnum.getAll, async (arg, thunkAPI) => {
   try {
     const res = await CustomersApi.getAllByQueries(arg.data?.params);
     if (res) {
