@@ -23,6 +23,7 @@ const SelectCustomerModal: React.FC<SelectCustomerModalProps> = ({ onSelect, onS
 
   const tableConfigs = useMemo((): ITableListProps<ICustomer> => {
     return {
+      tableData: customers,
       tableTitles: customersColumns,
       actionsCreator: ctx => {
         return [

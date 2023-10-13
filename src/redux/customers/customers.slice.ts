@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ICustomerBase } from './customers.types';
+import { ICustomer } from './customers.types';
 import { StateErrorType } from '../reduxTypes.types';
 import { createCustomerThunk, getAllCustomersThunk } from './customers.thunks';
 
 export interface CustomersState {
-  customers: ICustomerBase[];
-  current?: ICustomerBase;
+  customers: ICustomer[];
+  current?: ICustomer;
   error: StateErrorType | null;
   isLoading: boolean;
 }

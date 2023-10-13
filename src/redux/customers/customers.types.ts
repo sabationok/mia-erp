@@ -1,5 +1,5 @@
 import { AppQueryParams } from '../../api';
-import { IBase } from '../global.types';
+import { IBase, OnlyUUID } from '../global.types';
 import { IOrder } from '../orders/orders.types';
 import { BusinessSubjectTypeEnum } from '../companies/companies.types';
 
@@ -31,11 +31,18 @@ export interface ICustomerBase extends IBase {
 }
 export interface ICustomer extends ICustomerBase {
   orders?: IOrder[];
+
+  referer?: ICustomer;
+  referrals?: ICustomer[];
 }
 
-export interface ICustomerDto extends ICustomerBase {}
+export interface ICustomerDto extends ICustomerBase {
+  referrer?: OnlyUUID;
+}
 
-export interface ICustomerFormData extends ICustomerDto {}
+export interface ICustomerFormData extends ICustomerDto {
+  referrer?: OnlyUUID;
+}
 
 export interface ICustomerReqDta {
   _id?: string;

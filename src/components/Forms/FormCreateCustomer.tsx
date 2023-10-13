@@ -6,23 +6,21 @@ import styled from 'styled-components';
 import FlexBox from '../atoms/FlexBox';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
-import { useAppForm } from '../../hooks';
 import ButtonGroup from '../atoms/ButtonGroup';
 import { businessSubjectTypeFilterOptions } from '../../data/companies.data';
 import { createDataForReq } from '../../utils/dataTransform';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import { useForm } from 'react-hook-form';
 
 export interface FormCreateCustomerProps extends Omit<ModalFormProps<any, any, ICustomerFormData>, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<ICustomerFormData>;
 }
 
 const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({ onSubmit, onClose, ...p }) => {
-  const { register, registerSelect, setValue, handleSubmit, ...f } = useAppForm<ICustomerFormData>();
+  const { register, setValue, handleSubmit, ...f } = useForm<ICustomerFormData>();
   const service = useAppServiceProvider()[ServiceName.customers];
   const onValid = (fData: FormCreateCustomerProps) => {
     const reqData = createDataForReq(fData);
-
-    console.log('FormCreateCustomer', reqData);
 
     service.create({
       data: { data: reqData },

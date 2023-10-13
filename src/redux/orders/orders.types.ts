@@ -87,10 +87,10 @@ export interface ICreateOrderBaseFormState {
   code?: string;
 
   customer?: ICustomerBase;
-  customerCommunicationMethods?: { _id: string; name?: string; secondName?: string; label?: string }[];
+  customerCommunicationMethods?: string[];
 
   receiver?: ICustomerBase;
-  receiverCommunicationMethods?: { _id: string; name?: string; secondName?: string; label?: string }[];
+  receiverCommunicationMethods?: string[];
 
   status?: OrderStatus;
 
