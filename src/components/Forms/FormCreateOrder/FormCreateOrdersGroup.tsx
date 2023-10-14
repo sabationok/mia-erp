@@ -10,6 +10,7 @@ import { ModalHeader } from '../../atoms';
 import { t } from '../../../lang';
 import StepsController from '../components/StepsController';
 import OrderGroupsStuffingStep from './tabs/OrderGroupsStuffingStep';
+import OrderInfoStep from './tabs/OrderInfoStep';
 
 export interface FormCreateOrdersGroupProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<FormCreateOrdersGroupFormData>;
@@ -41,10 +42,10 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
 
   const renderStep = useMemo(() => {
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Stuffing]) {
-      return <OrderGroupsStuffingStep setStepFinished={setStepFinished(FormCreateOrdersGroupStepsEnum.Stuffing)} />;
+      return <OrderGroupsStuffingStep onFinish={setStepFinished(FormCreateOrdersGroupStepsEnum.Stuffing)} />;
     }
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Info]) {
-      return <></>;
+      return <OrderInfoStep onFinish={setStepFinished(FormCreateOrdersGroupStepsEnum.Info)} />;
     }
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Summary]) {
       return <></>;
