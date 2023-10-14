@@ -1,7 +1,7 @@
 import FlexBox from '../../../atoms/FlexBox';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ICustomer } from '../../../../redux/customers/customers.types';
 import { checks } from '../../../../utils';
 import { t } from '../../../../lang';
@@ -20,12 +20,25 @@ import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import SelectCustomerModal from '../components/SelectCustomerModal';
 import ButtonGroup from '../../../atoms/ButtonGroup';
 import { enumToFilterOptions } from '../../../../utils/fabrics';
+import TagButtonsFilter from '../../../atoms/TagButtonsFilter';
+import SelectManagerModal from '../components/SelectManagerModal';
 
 export interface OrderInfoStepProps {
   onFinish?: () => void;
 }
 const buttonGroupOptions = enumToFilterOptions({ 'The same': 'The same', Another: 'Another' });
 
+const orderStatuses: FilterOption[] = [
+  { _id: '1', value: '1', label: 'Нове', color: 'lightGreen' },
+  { _id: '2', value: '2', label: 'Взято у роботу', color: 'lightGreen' },
+  // { _id: '4', value: '4', label: 'Пакування', color: 'lightGrey' },
+  // { _id: '5', value: '5', label: 'Відвантажено', color: 'lightBlue' },
+  { _id: '6', value: '6', label: 'Скасовано замовником', color: 'lightBlue' },
+  { _id: '7', value: '7', label: 'Скасовано менеджером', color: 'lightBlue' },
+  { _id: '9', value: '9', label: 'Активне', color: 'orange' },
+  { _id: '8', value: '8', label: 'Завершено успішно', color: 'lightGreen' },
+  { _id: '10', value: '10', label: 'Архів', color: 'lightGrey' },
+];
 const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish }) => {
   const { register, setValue, watch } = useForm<ICreateOrderBaseFormState>();
   const modalS = useModalService();
@@ -46,20 +59,25 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish }) => {
   return (
     <Inputs flex={1} overflow={'auto'}>
       <FlexBox fillWidth gap={8} padding={'8px'}>
+        <ButtonIcon
+          variant={'outlinedSmall'}
+          onClick={() => {
+            const m = modalS.open({
+              ModalChildren: SelectManagerModal,
+              modalChildrenProps: {
+                onSelect: i => {
+                  // setValue('manager', i);
+                  m?.onClose && m?.onClose();
+                },
+              },
+            });
+          }}
+        >
+          {t(!formValues?.manager ? 'Select manager' : 'Change manager')}
+        </ButtonIcon>
+
         <InputLabel label={t('Status')}>
-          <Changer
-            options={[
-              { _id: '1', value: '1', label: 'Нове', color: 'lightGreen' },
-              { _id: '2', value: '2', label: 'Взято у роботу', color: 'lightGreen' },
-              // { _id: '4', value: '4', label: 'Пакування', color: 'lightGrey' },
-              // { _id: '5', value: '5', label: 'Відвантажено', color: 'lightBlue' },
-              { _id: '6', value: '6', label: 'Скасовано замовником', color: 'lightBlue' },
-              { _id: '7', value: '7', label: 'Скасовано менеджером', color: 'lightBlue' },
-              { _id: '9', value: '9', label: 'Активне', color: 'orange' },
-              { _id: '8', value: '8', label: 'Завершено успішно', color: 'lightGreen' },
-              { _id: '10', value: '10', label: 'Архів', color: 'lightGrey' },
-            ]}
-          />
+          <Changer options={orderStatuses} />
         </InputLabel>
       </FlexBox>
 
@@ -85,8 +103,20 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish }) => {
               });
             }}
           >
-            {!formValues?.customer ? 'Select customer' : 'Change customer'}
+            {t(!formValues?.customer ? 'Select customer' : 'Change customer')}
           </ButtonIcon>
+
+          <InputLabel label={t('Preferred communication methods')}>
+            <BorderedBox fillWidth padding={'8px'}>
+              <TagButtonsFilter
+                multiple
+                numColumns={3}
+                resetButtonLabel={t('Not needed')}
+                options={communicationMethods.map(mtd => ({ ...mtd, value: mtd._id }))}
+                resetButtonPosition={'start'}
+              />
+            </BorderedBox>
+          </InputLabel>
 
           <ButtonGroup options={buttonGroupOptions} onChangeIndex={setHasReceiverInfo} />
 
@@ -107,8 +137,22 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish }) => {
                 });
               }}
             >
-              {!formValues?.receiver ? 'Select receiver' : 'Change receiver'}
+              {t(!formValues?.receiver ? 'Select receiver' : 'Change receiver')}
             </ButtonIcon>
+          )}
+          {hasReceiverInfo > 0 && formValues?.receiver && (
+            <InputLabel label={t('Preferred communication methods')}>
+              <BorderedBox fillWidth padding={'8px'}>
+                <TagButtonsFilter
+                  multiple
+                  numColumns={3}
+                  onChange={value => {}}
+                  resetButtonLabel={t('Not needed')}
+                  options={communicationMethods.map(mtd => ({ ...mtd, value: mtd._id }))}
+                  resetButtonPosition={'start'}
+                />
+              </BorderedBox>
+            </InputLabel>
           )}
         </FormAccordeonItem>
 
@@ -165,6 +209,11 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish }) => {
   );
 };
 const Inputs = styled(FlexBox)``;
+
+const BorderedBox = styled(FlexBox)`
+  border-top: 1px solid ${p => p.theme.modalBorderColor};
+  border-bottom: 1px solid ${p => p.theme.modalBorderColor};
+`;
 export default OrderInfoStep;
 
 const CheckboxesListSelector = ({
@@ -212,20 +261,21 @@ const CheckboxesListSelector = ({
   );
 };
 const CustomerInfoComponent = ({ info }: { info?: ICustomer }) => {
-  const renderCells = useMemo(() => {
-    if (!info) return undefined;
+  // const renderCells = useMemo(() => {
+  //   if (!info) return undefined;
+  //
+  //   return Object.entries(info).map(([k, v]) => {
+  //     const value = checks.isArray(v) ? v.join(', ') : v;
+  //
+  //     console.log('CustomerInfoComponent', value);
+  //     return (
+  //       <FlexBox key={k} gap={4} padding={'4px'}>
+  //         <Text $size={12}>{t(k)}</Text>
+  //         <Text $align={'right'}>{value}</Text>
+  //       </FlexBox>
+  //     );
+  //   });
+  // }, [info]);
 
-    return Object.entries(info).map(([k, v]) => {
-      const value = checks.isArray(v) ? v.join(', ') : v;
-
-      return (
-        <FlexBox key={k} gap={4} padding={'4px'}>
-          <Text $size={12}>{t(k)}</Text>
-          <Text $align={'right'}>{value}</Text>
-        </FlexBox>
-      );
-    });
-  }, [info]);
-
-  return <FlexBox fillWidth>{renderCells}</FlexBox>;
+  return <FlexBox fillWidth>{}</FlexBox>;
 };

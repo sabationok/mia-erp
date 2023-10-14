@@ -22,9 +22,9 @@ export interface ModalFormFilterProps<V = any, D = any> {
   optionProps?: { fitContentH?: boolean };
 }
 
-export interface FilterOpt<V = any, D = any> extends Record<string, any> {
+export interface FilterOption<V = any, D = any> extends Record<string, any> {
   _id?: string;
-  label: string;
+  label?: string;
   name?: string;
   value: V;
   data?: D;
@@ -44,7 +44,7 @@ export type FilterSelectHandler<V = any, D = any> = (
 export type FilterSelectValueHandler<V = any> = (info: { name: any & string; value: V }) => void;
 
 export type FilterChangeHandler<V = any> = (values: V[], name?: string) => void;
-export interface FilterOption<V = any, D = any> extends FilterOpt<V, D> {}
+export interface FilterOpt<V = any, D = any> extends FilterOption<V, D> {}
 
 const ModalFilter = <V = any, D = any>({
   filterOptions = [],

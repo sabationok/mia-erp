@@ -18,6 +18,9 @@ export const langUa = {
   variationsTemplate: 'Шаблон для варіацій',
   variationsTemplates: 'Шаблони для варіацій',
 
+  'The same': 'Той самий',
+  Another: 'Інший',
+
   Change: 'Змінити',
   Review: 'Перегляд',
   warehouse: 'Склад',
@@ -339,8 +342,15 @@ export const langUa = {
   'Select list of properties': 'Оберіть список доступних характеристик',
   'Add position to order': 'Додати позицію до замовлення',
 
+  'Select manager': 'Обрати менеджера',
+  'Select receiver': 'Обрати отримувача',
+  'Change receiver': 'Змінити отримувача',
+  'Select customer': 'Обрати замовника',
+  'Change customer': 'Змінити замовника',
+  'Preferred communication methods': 'Бажані способи комунікацій',
+  'Not needed': 'Не потрібно',
+  'Add position to group': 'Дадати поцію до групи',
   'Permission check, please wait': 'Перевірка дозволу, будь ласка зачекайте',
-
   'Please wait while minions do their work...': 'Будь ласка зачекайте поки міньйони роблять свою роботу...',
   'Loading content...': 'Завантаження вмісту...',
 

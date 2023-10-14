@@ -20,6 +20,8 @@ const TagButtonsFilter = <Value extends string | number = any>({
   onSelect,
   onChange,
   onSelectValue,
+  resetButtonPosition,
+  resetButtonLabel,
 }: {
   options?: FilterOption<Value>[];
   values?: Value[];
@@ -30,6 +32,8 @@ const TagButtonsFilter = <Value extends string | number = any>({
   numColumns?: number;
   gap?: number;
   name?: string;
+  resetButtonPosition?: 'start' | 'end';
+  resetButtonLabel?: string;
 }) => {
   const [selectedValues, setSelectedValues] = useState<Value[]>([]);
 
@@ -60,7 +64,7 @@ const TagButtonsFilter = <Value extends string | number = any>({
           variant={isActive ? 'filledSmall' : 'outlinedSmall'}
           onClick={() => handleSelect(opt, index)}
         >
-          {checks.isStr(opt.value) ? t(opt.value) : opt.value}
+          {checks.isStr(opt?.label) ? t(opt.label) : opt.value}
         </ButtonIcon>
       );
     });
@@ -81,7 +85,25 @@ const TagButtonsFilter = <Value extends string | number = any>({
       flexWrap={'wrap'}
       style={{ display: 'grid', gridTemplateColumns: `repeat(${numColumns || 2}, 1fr)` }}
     >
+      {resetButtonPosition === 'start' && (
+        <ButtonIcon
+          variant={selectedValues.length === 0 ? 'filledSmall' : 'outlinedSmall'}
+          onClick={() => setSelectedValues([])}
+        >
+          {resetButtonLabel || 'Clear'}
+        </ButtonIcon>
+      )}
+
       {renderFilter}
+
+      {resetButtonPosition === 'end' && (
+        <ButtonIcon
+          variant={selectedValues.length === 0 ? 'filledSmall' : 'outlinedSmall'}
+          onClick={() => setSelectedValues([])}
+        >
+          {resetButtonLabel || 'Clear'}
+        </ButtonIcon>
+      )}
     </FlexBox>
   );
 };
