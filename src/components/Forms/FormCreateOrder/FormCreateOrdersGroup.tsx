@@ -3,7 +3,7 @@ import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import ModalFilter from '../../ModalForm/ModalFilter';
 import { useStepsHandler } from '../../../utils/createStepChecker';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import { ModalHeader } from '../../atoms';
@@ -18,19 +18,30 @@ export interface FormCreateOrdersGroupFormData {}
 export enum FormCreateOrdersGroupStepsEnum {
   Stuffing = 'Stuffing',
   Info = 'Info',
-  Shipments = 'Shipments',
+  // Shipments = 'Shipments',
   Summary = 'Summary',
   Invoices = 'Invoices',
 }
 
 const steps = enumToFilterOptions(FormCreateOrdersGroupStepsEnum);
-
+const stepsState: Record<FormCreateOrdersGroupStepsEnum | string, boolean> = {
+  [FormCreateOrdersGroupStepsEnum.Stuffing]: true,
+  [FormCreateOrdersGroupStepsEnum.Info]: false,
+  [FormCreateOrdersGroupStepsEnum.Summary]: false,
+  [FormCreateOrdersGroupStepsEnum.Invoices]: false,
+};
 const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit, onClose, ...p }) => {
-  const { stepsMap, stepIdx, setStepIdx, stepsCount } = useStepsHandler(steps);
+  const { stepsMap, stepIdx, setStepIdx, stepsCount, getCurrentStep } = useStepsHandler(steps);
+  const [isStepFinished, setIsStepFinished] =
+    useState<Record<FormCreateOrdersGroupStepsEnum | string, boolean>>(stepsState);
+
+  const setStepFinished = (name: FormCreateOrdersGroupStepsEnum) => () => {
+    setIsStepFinished(p => ({ ...p, [name]: true }));
+  };
 
   const renderStep = useMemo(() => {
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Stuffing]) {
-      return <OrderGroupsStuffingStep />;
+      return <OrderGroupsStuffingStep setStepFinished={setStepFinished(FormCreateOrdersGroupStepsEnum.Stuffing)} />;
     }
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Info]) {
       return <></>;
@@ -38,13 +49,22 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Summary]) {
       return <></>;
     }
-    if (stepsMap[FormCreateOrdersGroupStepsEnum.Shipments]) {
-      return <></>;
-    }
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Invoices]) {
       return <></>;
     }
   }, [stepsMap]);
+
+  const canSubmit = useMemo(() => {
+    if (stepsMap[FormCreateOrdersGroupStepsEnum.Summary]) {
+      return true;
+    }
+    return false;
+  }, [stepsMap]);
+
+  const canGoNext = useMemo(() => {
+    return isStepFinished[getCurrentStep().value];
+  }, [getCurrentStep, isStepFinished]);
+
   return (
     <Form>
       <ModalHeader title={t('Select product')} onBackPress={onClose} />
@@ -65,8 +85,8 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
             setStepIdx(index);
           }}
           onCancelPress={stepIdx === 0 ? onClose : undefined}
-          canGoNext={true}
-          canSubmit={true}
+          canGoNext={canGoNext}
+          canSubmit={canSubmit}
           currentIndex={stepIdx}
           onAcceptPress={
             stepIdx + 1 === stepsCount

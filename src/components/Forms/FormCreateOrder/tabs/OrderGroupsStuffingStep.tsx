@@ -19,9 +19,10 @@ export interface OrderGroupsStuffingStepProps {
   slots?: IOrderTempSlot[];
   onAddSlot?: (slot: IOrderTempSlot) => void;
   onRemoveSlot?: (id: string) => void;
+  setStepFinished?: () => void;
 }
 
-const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = _p => {
+const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ setStepFinished }) => {
   const { slots } = useOrdersSelector().currentGroup;
 
   const dispatch = useDispatch();

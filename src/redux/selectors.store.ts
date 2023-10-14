@@ -15,11 +15,13 @@ import { useMemo } from 'react';
 import { IRefundsState } from './refunds/refunds.slice';
 import { IWarehouseState } from './warehouses/warehouses.slice';
 import { IPermissionsState } from './permissions/permissions.types';
+import { CustomersState } from './customers/customers.slice';
 
 export const useAuthSelector = () => useSelector<RootState, IAuthState>((state: RootState) => state.auth);
 export const useUsersSelector = () => useSelector<RootState, IUsersState>((state: RootState) => state.users);
 export const useAppSettingsSelector = () =>
   useSelector<RootState, IAppSettings>((state: RootState) => state.appSettings);
+export const useCustomersSelector = () => useSelector<RootState, CustomersState>((state: RootState) => state.customers);
 export const useAppPageSettingsSelector = () => useSelector((state: RootState) => state.appPage);
 export const useTransactionsSelector = (): ITransactionsState =>
   useSelector<RootState, ITransactionsState>((state: RootState): ITransactionsState => state.transactions);
