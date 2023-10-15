@@ -13,19 +13,21 @@ export interface SelectManagerModalProps extends Omit<ModalFormProps, 'onSubmit'
 }
 
 const SelectManagerModal: React.FC<SelectManagerModalProps> = ({ onSubmit, onSelect, onClose, ...p }) => {
-  const permissions = usePermissionsSelector().permissions;
+  const { users } = usePermissionsSelector();
 
   const tableConfigs = useMemo((): ITableListProps<IPermission> => {
     return {
+      tableData: users,
       onRowClick: data => {
-        const res = permissions.find(pr => pr._id === data?._id);
+        const res = users.find(pr => pr._id === data?._id);
         res && onSelect && onSelect(res);
       },
     };
-  }, [onSelect, permissions]);
+  }, [onSelect, users]);
+
   return (
     <ModalForm fitContentH fillHeight onClose={onClose} title={t('Select manager')}>
-      <TableList tableTitles={usersDirColumns} {...tableConfigs} />
+      <TableList tableTitles={usersDirColumns} {...tableConfigs} isSearch={false} />
     </ModalForm>
   );
 };

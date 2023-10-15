@@ -22,6 +22,8 @@ export interface ICustomerBase extends IBase {
   email?: string;
   phone?: string;
   age?: string;
+  taxCode?: string;
+  personalTaxCode?: string;
   type?: CustomerTypeEnum;
   businessType?: BusinessSubjectTypeEnum;
   birthDate?: string | number | Date;

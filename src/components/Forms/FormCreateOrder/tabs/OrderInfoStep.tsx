@@ -1,7 +1,7 @@
 import FlexBox from '../../../atoms/FlexBox';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ICustomer } from '../../../../redux/customers/customers.types';
 import { checks } from '../../../../utils';
 import { t } from '../../../../lang';
@@ -52,13 +52,18 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish }) => {
 
   useEffect(() => {
     return () => {
+      //* set formvalues to orders state
       console.log('OrderMainInfoStep before unload | formValues', formValues);
     };
-  }, []);
+  }, [formValues]);
 
   return (
     <Inputs flex={1} overflow={'auto'}>
       <FlexBox fillWidth gap={8} padding={'8px'}>
+        <InputLabel label={t('manager')}>
+          <CustomerInfoComponent info={formValues.manager?.user as never} isManager />
+        </InputLabel>
+
         <ButtonIcon
           variant={'outlinedSmall'}
           onClick={() => {
@@ -66,7 +71,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish }) => {
               ModalChildren: SelectManagerModal,
               modalChildrenProps: {
                 onSelect: i => {
-                  // setValue('manager', i);
+                  setValue('manager', i);
                   m?.onClose && m?.onClose();
                 },
               },
@@ -111,9 +116,13 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish }) => {
               <TagButtonsFilter
                 multiple
                 numColumns={3}
+                values={formValues.customerCommunicationMethods}
                 resetButtonLabel={t('Not needed')}
                 options={communicationMethods.map(mtd => ({ ...mtd, value: mtd._id }))}
                 resetButtonPosition={'start'}
+                onChange={value => {
+                  setValue('customerCommunicationMethods', value);
+                }}
               />
             </BorderedBox>
           </InputLabel>
@@ -146,7 +155,10 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish }) => {
                 <TagButtonsFilter
                   multiple
                   numColumns={3}
-                  onChange={value => {}}
+                  onChange={value => {
+                    setValue('receiverCommunicationMethods', value);
+                  }}
+                  values={formValues.receiverCommunicationMethods}
                   resetButtonLabel={t('Not needed')}
                   options={communicationMethods.map(mtd => ({ ...mtd, value: mtd._id }))}
                   resetButtonPosition={'start'}
@@ -174,7 +186,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish }) => {
             <TextareaPrimary
               maxLength={250}
               required
-              placeholder={t('Type destination address')}
+              placeholder={t('Enter destination address')}
               {...register('destination', { required: true })}
             />
           </InputLabel>
@@ -260,22 +272,58 @@ const CheckboxesListSelector = ({
     </FlexBox>
   );
 };
-const CustomerInfoComponent = ({ info }: { info?: ICustomer }) => {
-  // const renderCells = useMemo(() => {
-  //   if (!info) return undefined;
-  //
-  //   return Object.entries(info).map(([k, v]) => {
-  //     const value = checks.isArray(v) ? v.join(', ') : v;
-  //
-  //     console.log('CustomerInfoComponent', value);
-  //     return (
-  //       <FlexBox key={k} gap={4} padding={'4px'}>
-  //         <Text $size={12}>{t(k)}</Text>
-  //         <Text $align={'right'}>{value}</Text>
-  //       </FlexBox>
-  //     );
-  //   });
-  // }, [info]);
+const getCustomerInfoComponentCells = ({
+  info,
+  isReceiver,
+  isManager,
+}: {
+  info?: ICustomer;
+  isReceiver?: boolean;
+  isManager?: boolean;
+}) => [
+  { label: t('label'), getValue: (info?: ICustomer) => info?.label || '---', visible: !isManager },
+  { label: t('name'), getValue: (info?: ICustomer) => info?.name || '---', visible: true },
+  { label: t('secondName'), getValue: (info?: ICustomer) => info?.secondName || '---', visible: true },
+  { label: t('email'), getValue: (info?: ICustomer) => info?.email || '---', visible: true },
+  { label: t('taxCode'), getValue: (info?: ICustomer) => info?.taxCode || '---', visible: !isManager },
+  { label: t('personalTaxCode'), getValue: (info?: ICustomer) => info?.personalTaxCode || '---', visible: !isManager },
+  { label: t('tags'), getValue: (info?: ICustomer) => info?.tags?.join(', ') || '---', visible: !isManager },
+];
+const CustomerInfoComponent = ({
+  info,
+  isReceiver,
+  isManager,
+}: {
+  info?: ICustomer;
+  isReceiver?: boolean;
+  isManager?: boolean;
+}) => {
+  const theme = useTheme();
+  const renderCells = useMemo(() => {
+    if (!info) return undefined;
 
-  return <FlexBox fillWidth>{}</FlexBox>;
+    return getCustomerInfoComponentCells({ info, isReceiver, isManager }).map(({ label, getValue, visible }) => {
+      return (
+        visible && (
+          <FlexBox
+            key={label}
+            gap={4}
+            padding={'4px'}
+            flex={'1 1 50%'}
+            maxWidth={'50%'}
+            border={`1px solid ${theme.modalBorderColor}`}
+          >
+            <Text $size={12}>{label}</Text>
+            <Text $align={'right'}>{getValue(info)}</Text>
+          </FlexBox>
+        )
+      );
+    });
+  }, [info, isManager, isReceiver, theme.modalBorderColor]);
+
+  return (
+    <FlexBox fillWidth flexWrap={'wrap'} fxDirection={'row'} border={`1px solid ${theme.modalBorderColor}`}>
+      {renderCells}
+    </FlexBox>
+  );
 };

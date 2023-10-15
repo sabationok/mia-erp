@@ -4,13 +4,16 @@ import { t } from '../lang';
 
 export const customersColumns: CellTittleProps<ICustomer>[] = [
   {
-    top: { name: 'Назва', path: 'label', getData: d => d?.label || `${d?.name || ''} ${d?.secondName || ''}` },
-    bottom: { name: 'ІПН/ЄДРПОУ', path: 'taxCode' },
+    top: {
+      name: `${t('label')}/${t('name')}`,
+      getData: d => d?.label || `${d?.name || '---'} ${d?.secondName || '---'}`,
+    },
+    bottom: { name: 'ІПН/ЄДРПОУ', getData: d => (d.personalTaxCode || '---') + '/' + (d.taxCode || '---') },
     width: '240px',
     action: 'doubleDataWithAvatar',
   },
   {
-    top: { name: 'Тип', path: 'type', getData: d => t(`${d?.type}`) },
+    top: { name: 'Тип', path: 'type', getData: d => d?.type },
     bottom: { name: 'Статус', path: 'status' },
     width: '120px',
     action: 'valueByPath',

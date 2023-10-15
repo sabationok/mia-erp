@@ -11,7 +11,7 @@
 import { AppResponse, IBase, OnlyUUID } from '../global.types';
 import { IPriceBase, IPriceListItem } from '../priceManagement/priceManagement.types';
 import { ICompany } from '../companies/companies.types';
-import { IManager } from '../auth/auth.types';
+import { IManager, IUserBase } from '../auth/auth.types';
 import { ICommunicationDirItem, IPaymentDirItem, IShipmentDirItem } from '../../components/Directories/dir.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 import { IContractor } from '../directories/contractors.types';
@@ -81,16 +81,19 @@ export interface IOrder extends IBase {
 }
 
 export interface ICreateOrderBaseFormState {
-  manager?: { _id: string; user: { _id: string; name?: string; secondName?: string; email?: string } };
+  manager?: {
+    _id?: string;
+    user?: Partial<IUserBase>;
+  };
 
   barCode?: string;
   code?: string;
 
   customer?: ICustomerBase;
-  customerCommunicationMethods?: { _id: string; name?: string; secondName?: string; label?: string }[];
+  customerCommunicationMethods?: string[];
 
   receiver?: ICustomerBase;
-  receiverCommunicationMethods?: { _id: string; name?: string; secondName?: string; label?: string }[];
+  receiverCommunicationMethods?: string[];
 
   status?: OrderStatus;
 

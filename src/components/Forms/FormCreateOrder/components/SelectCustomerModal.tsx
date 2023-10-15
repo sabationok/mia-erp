@@ -1,7 +1,7 @@
 import { ICustomer } from '../../../../redux/customers/customers.types';
 import ModalForm, { ModalFormProps } from '../../../ModalForm';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { ITableListProps } from '../../../TableList/tableTypes.types';
 import { customersColumns } from '../../../../data/customers.data';
 import { t } from '../../../../lang';
@@ -57,6 +57,13 @@ const SelectCustomerModal: React.FC<SelectCustomerModalProps> = ({ onSelect, onS
       },
     };
   }, [service, customers, onClose, modalS, onSelect]);
+
+  useEffect(() => {
+    service.getAll({
+      data: { refresh: true, params: {} },
+    });
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <ModalForm

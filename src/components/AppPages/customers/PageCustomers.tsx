@@ -10,6 +10,8 @@ import { Path } from 'react-hook-form';
 import { ICustomerBase } from '../../../redux/customers/customers.types';
 import { customersColumns } from '../../../data/customers.data';
 import { BaseAppPageProps } from '../index';
+import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import { useCustomersSelector } from '../../../redux/selectors.store';
 
 interface Props extends BaseAppPageProps {}
 
@@ -24,15 +26,28 @@ const PageCustomers: React.FC<Props> = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
+  const service = useAppServiceProvider()[ServiceName.customers];
+  const tableData = useCustomersSelector().customers;
 
   const tableConfig = useMemo(
     (): ITableListProps<ICustomerBase> => ({
-      // tableData: state.products,
+      tableData,
       tableTitles: customersColumns,
       isFilter: true,
       isSearch: true,
       footer: false,
       checkBoxes: true,
+      actionsCreator: ctx => {
+        const selected = ctx?.selectedRow;
+        return [
+          {
+            icon: 'refresh',
+            onClick: () => {
+              service.getAll({ data: { refresh: true, params: {} } });
+            },
+          },
+        ];
+      },
       onFilterSubmit: filterParams => {
         setFilterParams(filterParams);
         // getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading }).then();
