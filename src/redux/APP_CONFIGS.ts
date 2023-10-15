@@ -18,6 +18,7 @@ export enum API_BASE_ROUTES {
   SHIPMENTS = '/shipments',
   CUSTOMERS = '/customers',
   COUNTERPARTIES = '/counterparties',
+  INTEGRATIONS = '/integrations',
 }
 
 export enum Endpoints {
@@ -261,12 +262,19 @@ const invoices = {
 const shipments = {
   create: () => `${API_BASE_ROUTES.SHIPMENTS}/${Endpoints.create}`,
   getAll: () => `${API_BASE_ROUTES.SHIPMENTS}/${Endpoints.getAll}`,
+  getById: (id?: string) => `${API_BASE_ROUTES.SHIPMENTS}/${Endpoints.getById}/${id}`,
 };
 const customers = {
   create: () => `${API_BASE_ROUTES.CUSTOMERS}/${Endpoints.create}`,
-  updated: () => `${API_BASE_ROUTES.CUSTOMERS}/${Endpoints.update}`,
+  update: () => `${API_BASE_ROUTES.CUSTOMERS}/${Endpoints.update}`,
   getAll: () => `${API_BASE_ROUTES.CUSTOMERS}/${Endpoints.getAll}`,
   getById: (id?: string) => `${API_BASE_ROUTES.CUSTOMERS}/${Endpoints.getById}/${id}`,
+};
+const integrations = {
+  create: () => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.create}`,
+  update: () => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.update}`,
+  getAll: () => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.getAll}`,
+  getById: (id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.getById}/${id}`,
 };
 
 const APP_CONFIGS = {
@@ -288,6 +296,7 @@ const APP_CONFIGS = {
     invoices,
     customers,
     shipments,
+    integrations,
   },
 };
 

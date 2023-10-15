@@ -6,6 +6,11 @@ import { OnlyUUID } from '../../../../redux/global.types';
 import { IOrderSlot, IOrderSlotBase } from '../../../../redux/orders/orders.types';
 import OrderSlotOverview from '../../../Overviews/OrderSlotOverview';
 import { nanoid } from '@reduxjs/toolkit';
+import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import { t } from '../../../../lang';
+import { Modals } from '../../../Modals';
+import { useModalService } from '../../../ModalProvider/ModalProvider';
+import { ToastService } from '../../../../services';
 
 export interface FormCreateOrderProductsListProps {
   onSelect: (item: IOrderSlot) => void;
@@ -14,7 +19,7 @@ export interface FormCreateOrderProductsListProps {
 }
 const OrderSlotsList: React.FC<FormCreateOrderProductsListProps> = ({ onSelect, onRemove, list }) => {
   const [data, setData] = useState<(Partial<IOrderSlot> & { tempId?: string })[]>(list || []);
-
+  const modalS = useModalService();
   const handleSelect = useCallback((item: IOrderSlotBase) => {
     // onSelect && onSelect(item);
     setData(prev => [...prev, { ...item, tempId: nanoid(8) }]);
@@ -38,6 +43,40 @@ const OrderSlotsList: React.FC<FormCreateOrderProductsListProps> = ({ onSelect, 
       </FlexBox>
 
       <AddOrderSlot onSelect={handleSelect} />
+
+      <Buttons fxDirection={'row'} gap={8} padding={'8px'}>
+        <ButtonIcon
+          variant={'defOutlinedSmall'}
+          onClick={() => {
+            const res = window.confirm('Remove all items?');
+            if (res) {
+              ToastService.info('All items will be remove');
+            }
+          }}
+        >
+          {t('Remove all')}
+        </ButtonIcon>
+
+        <ButtonIcon
+          variant={'outlinedSmall'}
+          onClick={() => {
+            const m = modalS.open({
+              Modal: Modals.FormCreateOrderSlot,
+              props: {
+                onSubmit: d => {
+                  handleSelect(d);
+
+                  if (d && m?.onClose) {
+                    m?.onClose();
+                  }
+                },
+              },
+            });
+          }}
+        >
+          {t('Add position to order')}
+        </ButtonIcon>
+      </Buttons>
     </Container>
   );
 };
@@ -45,5 +84,10 @@ const OrderSlotsList: React.FC<FormCreateOrderProductsListProps> = ({ onSelect, 
 const Container = styled(FlexBox)`
   position: relative;
   overflow: hidden;
+`;
+
+const Buttons = styled(FlexBox)`
+  border-top: 1px solid ${p => p.theme.modalBorderColor};
+  border-bottom: 1px solid ${p => p.theme.modalBorderColor};
 `;
 export default OrderSlotsList;

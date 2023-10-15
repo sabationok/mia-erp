@@ -87,9 +87,14 @@ export const ordersSlice = createSlice({
         s.ordersGroupFormData.slots = s.currentGroup.slots.filter(sl => sl.tempId !== a.payload);
       })
       .addCase(UpdateSlotInGroupAction, (s, a) => {
-        s.ordersGroupFormData.slots = s.currentGroup.slots.map(sl =>
-          sl?.tempId === a.payload?.tempId ? a.payload : sl
-        );
+        console.log(a);
+        s.ordersGroupFormData.slots = s.currentGroup.slots.map(sl => {
+          if (sl?.tempId === a.payload?.tempId) {
+            return a.payload;
+          } else {
+            return sl;
+          }
+        });
       })
       .addCase(UpdateCurrentGroupInfoFormDataAction, (s, a) => {
         s.ordersGroupFormData = { ...s.ordersGroupFormData, ...a.payload };

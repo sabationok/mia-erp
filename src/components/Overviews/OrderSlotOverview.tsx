@@ -2,7 +2,7 @@ import { IOrderSlot } from '../../redux/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { ChangeEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
+import { ChangeEventHandler, useCallback, useMemo, useState } from 'react';
 import { IProductImage } from '../../redux/products/products.types';
 import { Text } from '../atoms/Text';
 import numberWithSpaces from '../../utils/numbers';
@@ -124,9 +124,9 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
           {info.name === 'quantity' ? (
             <CountSelector onChangeValue={handleUpdateQuantity} value={formData?.quantity} />
           ) : (
-            <Text $size={12} $align={'right'} $weight={500}>
+            <CardText $size={12} $align={'right'} $weight={500}>
               {numberWithSpaces((formData && info.name && formData[info.name as never]) || 0)}
-            </Text>
+            </CardText>
           )}
         </FlexBox>
       );
@@ -149,16 +149,38 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
     });
   }, [slot?.variation?.properties]);
 
-  useEffect(() => {
-    console.log('OrderSlotOverview', formData);
-  }, [formData]);
+  // useEffect(() => {
+  //   console.log('OrderSlotOverview', formData);
+  // }, [formData]);
 
   return (
     <Card disabled={disabled}>
       <FlexBox fillWidth gap={8} fxDirection={'row'}>
-        <ImageBox justifyContent={'flex-start'}>
-          <img src={imgPreview} style={{ objectFit: 'cover', objectPosition: 'center' }} alt={''} width={'100%'} />
-        </ImageBox>
+        <LeftSide>
+          <ImageBox justifyContent={'flex-start'}>
+            <img src={imgPreview} style={{ objectFit: 'cover', objectPosition: 'center' }} alt={''} width={'100%'} />
+          </ImageBox>
+
+          <FlexBox>
+            {onRemovePress && (
+              <ActionButton variant={'textExtraSmall'} disabled={!onRemovePress} onClick={onRemovePress}>
+                {t('Delete')}
+              </ActionButton>
+            )}
+
+            {!onSelectPress && (
+              <ActionButton variant={'textExtraSmall'} disabled={!onSelectPress} onClick={onSelectPress}>
+                {t('Select')}
+              </ActionButton>
+            )}
+
+            {!onEditPress && (
+              <ActionButton variant={'textExtraSmall'} disabled={!onEditPress} onClick={onEditPress}>
+                {t('Edit')}
+              </ActionButton>
+            )}
+          </FlexBox>
+        </LeftSide>
 
         <FlexBox flex={1}>
           <FlexBox fxDirection={'row'} gap={8} fillWidth alignItems={'flex-start'}>
@@ -175,26 +197,6 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
             </FlexBox>
 
             {/*<ButtonIcon variant={'textExtraSmall'} iconSize={'100%'} size={'24px'} icon={'info'} disabled />*/}
-
-            <FlexBox>
-              {onRemovePress && (
-                <ActionButton variant={'textExtraSmall'} disabled={!onRemovePress} onClick={onRemovePress}>
-                  {t('Delete')}
-                </ActionButton>
-              )}
-
-              {onSelectPress && (
-                <ActionButton variant={'textExtraSmall'} disabled={!onSelectPress} onClick={onSelectPress}>
-                  {t('Select')}
-                </ActionButton>
-              )}
-
-              {onEditPress && (
-                <ActionButton variant={'textExtraSmall'} disabled={!onEditPress} onClick={onEditPress}>
-                  {t('Edit')}
-                </ActionButton>
-              )}
-            </FlexBox>
           </FlexBox>
 
           <CardGridArea fillWidth alignItems={'flex-start'} justifyContent={'space-between'} margin={'0 0 8px'}>
@@ -211,11 +213,13 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
 };
 const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
   position: relative;
-  height: fit-content;
+  //height: fit-content;
   padding: 4px;
 
-  //border-bottom: 2px solid ${({ theme }) => theme.fieldBackgroundColor};
+  //height: min-content;
 
+  //border-bottom: 2px solid ${({ theme }) => theme.fieldBackgroundColor};
+  color: ${({ theme }) => theme.fontColorSidebar};
   cursor: default;
 
   &:hover {
@@ -225,6 +229,14 @@ const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
   border-left: 3px solid ${({ theme }) => theme.accentColor.base};
 
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
+`;
+const LeftSide = styled(FlexBox)`
+  width: min-content;
+  @media screen and (min-width: 768px) {
+    width: max-content;
+    flex-direction: row;
+    gap: 8px;
+  }
 `;
 const CardGridArea = styled(FlexBox)`
   display: grid;
@@ -253,9 +265,10 @@ const ImageBox = styled(FlexBox)`
   object-position: center;
   object-fit: contain;
   overflow: hidden;
-  width: 60px;
-  height: 100px;
-  //background-color: ${({ theme }) => theme.fieldBackgroundColor};
+  width: 100%;
+  max-width: 125px;
+  //max-height: 100px;
+  //height: 100px;
 
   //@media screen and (max-width: 480px) {
   //  width: 100px;

@@ -239,9 +239,8 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({ defaultState,
       ..._.omit(formData, ['price']),
       origin: _.pick(formData?.inventory?.price, ['_id']),
       tempId: nanoid(8),
+      quantity: 1,
     };
-
-    console.log('handleSubmit new slot data', slot);
 
     onSubmit && onSubmit(slot);
     onClose && onClose();
@@ -289,6 +288,8 @@ const Form = styled.form`
   width: 98vw;
   height: 98vh;
   padding: 0 8px;
+
+  color: ${p => p.theme.fontColorSidebar};
 
   background-color: ${p => p.theme.modalBackgroundColor};
 `;

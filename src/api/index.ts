@@ -37,13 +37,13 @@ export interface AppQueryParams {
   isArchived?: boolean;
   deleted?: boolean;
   createTreeData?: boolean;
-  owner?: string;
   sortParams?: ISortParams;
   search?: string;
   searchBy?: string;
 
   fullInfo?: boolean;
 
+  owner?: OnlyUUID;
   parent?: OnlyUUID;
   product?: OnlyUUID;
   inventory?: OnlyUUID;
@@ -51,7 +51,12 @@ export interface AppQueryParams {
   variation?: OnlyUUID;
   list?: OnlyUUID;
   price?: OnlyUUID;
+  order?: OnlyUUID;
+  slot?: OnlyUUID;
   category?: OnlyUUID;
+  payment?: OnlyUUID;
+  invoice?: OnlyUUID;
+  shipment?: OnlyUUID;
 
   categories?: string[];
 

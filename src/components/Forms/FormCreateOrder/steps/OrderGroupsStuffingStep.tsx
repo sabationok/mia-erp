@@ -2,9 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { IOrderTempSlot } from '../../../../redux/orders/orders.types';
 import FlexBox from '../../../atoms/FlexBox';
 import styled from 'styled-components';
-import FormAccordeonItem from '../../components/FormAccordeonItem';
 import { IWarehouse } from '../../../../redux/warehouses/warehouses.types';
-import OrderSlotOverview from '../../../Overviews/OrderSlotOverview';
 import { useOrdersSelector } from '../../../../redux/selectors.store';
 import { useDispatch } from 'react-redux';
 import {
@@ -13,7 +11,12 @@ import {
   UpdateSlotInGroupAction,
 } from '../../../../redux/orders/orders.actions';
 import { Text } from '../../../atoms/Text';
-import AddOrderSlot from '../components/AddOrderSlot';
+import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import { ToastService } from '../../../../services';
+import { t } from '../../../../lang';
+import { Modals } from '../../../Modals';
+import { useModalService } from '../../../ModalProvider/ModalProvider';
+import OrderGroupItem from './OrderGroupItem';
 
 export interface OrderGroupsStuffingStepProps {
   slots?: IOrderTempSlot[];
@@ -24,7 +27,7 @@ export interface OrderGroupsStuffingStepProps {
 
 const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onFinish }) => {
   const { slots } = useOrdersSelector().ordersGroupFormData;
-
+  const modalS = useModalService();
   const dispatch = useDispatch();
 
   const handelAddSlot = useCallback(
@@ -85,39 +88,51 @@ const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onFin
         </FlexBox>
       </Content>
 
-      <AddOrderSlot onSelect={handelAddSlot} />
+      <Buttons fxDirection={'row'} gap={8} padding={'8px'}>
+        <ButtonIcon
+          variant={'defOutlinedSmall'}
+          onClick={() => {
+            const res = window.confirm('Remove all items?');
+            if (res) {
+              ToastService.info('All items will be remove');
+            }
+          }}
+        >
+          {t('Remove all')}
+        </ButtonIcon>
+
+        <ButtonIcon
+          variant={'outlinedSmall'}
+          flex={1}
+          onClick={() => {
+            const m = modalS.open({
+              Modal: Modals.FormCreateOrderSlot,
+              props: {
+                onSubmit: d => {
+                  handelAddSlot(d);
+
+                  if (d && m?.onClose) {
+                    m?.onClose();
+                  }
+                },
+              },
+            });
+          }}
+        >
+          {t('Add position to group')}
+        </ButtonIcon>
+      </Buttons>
     </Container>
   );
 };
 
-const Container = styled(FlexBox)``;
+const Container = styled(FlexBox)`
+  color: ${p => p.theme.fontColorSidebar};
+`;
 const Content = styled(FlexBox)``;
-const OrderGroupItem = ({
-  renderHeader,
-  slots,
-  onRemove,
-  onUpdate,
-}: {
-  slots: IOrderTempSlot[];
-  renderHeader?: React.ReactNode;
-  onRemove?: (id: string) => void;
-  onUpdate?: (slot: IOrderTempSlot) => void;
-}) => {
-  const renderSlots = useMemo(() => {
-    return slots.map(slot => (
-      <OrderSlotOverview
-        key={`slot_${slot?.tempId}`}
-        slot={slot}
-        onRemovePress={() => slot?.tempId && onRemove && onRemove(slot?.tempId)}
-        onUpdate={onUpdate}
-      />
-    ));
-  }, [onRemove, onUpdate, slots]);
+const Buttons = styled(FlexBox)`
+  border-top: 1px solid ${p => p.theme.modalBorderColor};
+  border-bottom: 1px solid ${p => p.theme.modalBorderColor};
+`;
 
-  return (
-    <FormAccordeonItem open renderHeader={renderHeader} contentContainerStyle={{ padding: '4px 0' }}>
-      {renderSlots}
-    </FormAccordeonItem>
-  );
-};
 export default OrderGroupsStuffingStep;

@@ -118,6 +118,8 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
   );
 };
 const Form = styled.form`
+  color: ${p => p.theme.fontColorSidebar};
+
   display: flex;
   flex-direction: column;
 

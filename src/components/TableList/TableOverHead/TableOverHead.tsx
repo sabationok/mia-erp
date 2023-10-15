@@ -44,7 +44,7 @@ const OverHead = styled.div`
 
   width: 100%;
 
-  background-color: ${({ theme }) => theme.tableBackgroundColor};
+  //background-color: ${({ theme }) => theme.tableBackgroundColor};
   @media screen and (max-height: 480px) {
     //padding: 8px;
   }

@@ -112,8 +112,7 @@ const Row = styled(ThRow)<{ checked?: boolean; isActive?: boolean }>`
   border-bottom: 1px solid transparent;
   border-bottom-color: ${({ theme }) => theme.trBorderClr};
 
-  background-color: ${({ theme, checked, isActive }) =>
-    isActive ? theme.tableRowBackgroundActive : theme.tableBackgroundColor};
+  background-color: ${({ theme, checked, isActive }) => (isActive ? theme.tableRowBackgroundActive : 'inherit')};
 
   &:hover {
     //border-color: ${({ theme }) => theme.accentColor.base};
