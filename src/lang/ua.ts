@@ -307,6 +307,15 @@ export const langUa = {
   sizesTable: 'Розмірна сітка',
   visibility: 'Видимість',
 
+  Close: 'Закрити',
+  Open: 'Вікдрити',
+  More: 'Більше',
+  Hide: 'Приховати',
+  Back: 'Назад',
+
+  Customer: 'Клієнт',
+  Receiver: 'Отримувач',
+
   [WarehouseDocumentType.addToStock]: 'Прихід на склад',
   [WarehouseDocumentType.removeFromStock]: 'Списання зі складу',
   [WarehouseDocumentType.reserveFromStock]: 'Резервування',
@@ -333,6 +342,11 @@ export const langUa = {
   'Created by / Date / Time': 'Створено / Дата / Час',
   'Updated by / Date / Time': 'Оновлено / Дата / Час',
 
+  Comment: 'Коментар',
+  'Enter comment for customer': 'Введіть коментар для клієнта',
+  'Service comment': 'Службовий коментар',
+  'Enter service comment': 'Введіть службовий коментар',
+
   'Select warehouse': 'Оберіть склад',
   'Select variation': 'Оберіть варіацію',
   'Select price': 'Оберіть ціну',
@@ -340,6 +354,8 @@ export const langUa = {
   'Create tag': 'Створити тег',
   'Create warehouse document': 'Створити складський документ',
   'Select list of properties': 'Оберіть список доступних характеристик',
+
+  'Add position to group': 'Дадати позицію до групи',
   'Add position to order': 'Додати позицію до замовлення',
 
   'Select manager': 'Обрати менеджера',
@@ -349,7 +365,6 @@ export const langUa = {
   'Change customer': 'Змінити замовника',
   'Preferred communication methods': 'Бажані способи комунікацій',
   'Not needed': 'Не потрібно',
-  'Add position to group': 'Дадати поцію до групи',
   'Permission check, please wait': 'Перевірка дозволу, будь ласка зачекайте',
   'Please wait while minions do their work...': 'Будь ласка зачекайте поки міньйони роблять свою роботу...',
   'Loading content...': 'Завантаження вмісту...',

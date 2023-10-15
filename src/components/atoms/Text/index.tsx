@@ -10,6 +10,7 @@ export interface TextProps {
   $weight?: FontWeight;
   $align?: Property.TextAlign;
   $textTransform?: Property.TextTransform;
+  $ellipsisMode?: boolean;
 }
 
 // ! DEFAULT VALUES
@@ -25,4 +26,8 @@ export const Text = styled.span<TextProps>`
   color: ${({ color, ...p }) => color || 'inherit'};
 
   cursor: inherit;
+
+  text-overflow: ${p => (p.$ellipsisMode ? 'ellipsis' : 'unset')};
+  overflow: ${p => (p.$ellipsisMode ? 'hidden' : 'unset')};
+  white-space: ${p => (p.$ellipsisMode ? 'nowrap' : 'unset')};
 `;

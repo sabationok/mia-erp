@@ -1,16 +1,19 @@
 import { IOrderTempSlot } from '../../../../redux/orders/orders.types';
 import { useMemo } from 'react';
 import OrderSlotOverview from '../../../Overviews/OrderSlotOverview';
-import FormAccordeonItem from '../../components/FormAccordeonItem';
+import FormAccordionItem from '../../components/FormAccordionItem';
+import styled from 'styled-components';
 
 const OrderGroupItem = ({
-  renderHeader,
   slots,
   onRemove,
   onUpdate,
+  renderHeader,
+  title,
 }: {
   slots: IOrderTempSlot[];
   renderHeader?: React.ReactNode;
+  title?: React.ReactNode;
   onRemove?: (id: string) => void;
   onUpdate?: (slot: IOrderTempSlot) => void;
 }) => {
@@ -26,9 +29,17 @@ const OrderGroupItem = ({
   }, [onRemove, onUpdate, slots]);
 
   return (
-    <FormAccordeonItem open renderHeader={renderHeader} contentContainerStyle={{ padding: '4px 0' }}>
+    <StAccordionItem open renderHeader={renderHeader} title={title}>
       {renderSlots}
-    </FormAccordeonItem>
+    </StAccordionItem>
   );
 };
+
+const StAccordionItem = styled(FormAccordionItem)`
+  & .header {
+  }
+  & .content {
+    padding: 0;
+  }
+`;
 export default OrderGroupItem;

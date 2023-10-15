@@ -1,23 +1,28 @@
 import FlexBox from './FlexBox';
 import ButtonIcon from './ButtonIcon/ButtonIcon';
 import { useEffect, useMemo, useState } from 'react';
-import { FilterOpt, FilterOption } from '../ModalForm/ModalFilter';
+import { FilterOption } from '../ModalForm/ModalFilter';
 import { isUndefined } from 'lodash';
+import { useTheme } from 'styled-components';
+import { Text } from './Text';
 
 export interface StatusChangerProps<V = any> {
-  options?: FilterOpt[];
+  options?: (FilterOption<V> & { color?: string })[];
   onChange?: (event: ChangerEvent<V>) => void;
   currentIndex?: number;
+  currentOption?: FilterOption<V>;
 }
+
 export interface ChangerEvent<V = any> {
   index: number;
   value?: FilterOption<V>['value'];
   option?: FilterOption<V>;
 }
 
-const Changer: React.FC<StatusChangerProps> = ({ options = [], onChange, currentIndex }) => {
+const Changer: React.FC<StatusChangerProps> = ({ options = [], onChange, currentOption, currentIndex }) => {
   const [current, setCurrent] = useState<number>(0);
   const currentStatus = useMemo(() => (options ? options[current] : null), [current, options]);
+  const theme = useTheme();
   const handleChange = (increment: number) => () => {
     if (current >= 0 && current + 1 <= options?.length) {
       setCurrent(prev => {
@@ -33,7 +38,14 @@ const Changer: React.FC<StatusChangerProps> = ({ options = [], onChange, current
       setCurrent(currentIndex);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentIndex]);
+
+  useEffect(() => {
+    if (!isUndefined(currentOption)) {
+      const index = options.findIndex(o => o?.value === currentOption?.value || o?._id === currentOption?._id);
+      setCurrent(index);
+    }
+  }, [currentOption, options]);
   return (
     <FlexBox fxDirection={'row'} fillWidth height={'28px'} alignItems={'center'} gap={8}>
       <ButtonIcon
@@ -43,27 +55,30 @@ const Changer: React.FC<StatusChangerProps> = ({ options = [], onChange, current
         disabled={current === 0}
         onClick={handleChange(-1)}
       />
+
       <FlexBox
         flex={1}
-        alignItems={'center'}
+        alignItems={'stretch'}
         justifyContent={'center'}
+        overflow={'hidden'}
         style={{
           borderRadius: 2,
-          fontSize: 14,
-          fontWeight: 600,
-          backgroundColor: 'rgb(228, 228, 228)',
-          // color: '#fff',
-          // backgroundColor: currentStatus?.color || 'lightgreen',
+          backgroundColor: theme.fieldBackgroundColor,
+          color: theme.fontColorSidebar,
           height: '100%',
         }}
       >
-        <span
-          className={'inner'}
-          style={{ textAlign: 'center', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}
-        >
-          {currentStatus?.label}
-        </span>
+        <FlexBox fillWidth fxDirection={'row'} justifyContent={'center'} alignItems={'center'} flex={1}>
+          <Text $size={15} $weight={600} className={'inner'} $ellipsisMode={true}>
+            {currentStatus?.label}
+          </Text>
+        </FlexBox>
+
+        {options[current]?.color && (
+          <FlexBox fillWidth height={'4px'} style={{ backgroundColor: options[current]?.color }} />
+        )}
       </FlexBox>
+
       <ButtonIcon
         variant={'onlyIconNoEffects'}
         icon={'SmallArrowRight'}

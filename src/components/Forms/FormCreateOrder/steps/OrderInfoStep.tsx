@@ -7,7 +7,7 @@ import { t } from '../../../../lang';
 import { Text } from '../../../atoms/Text';
 import CheckBox from '../../../TableList/TebleCells/CellComponents/CheckBox';
 import { FilterOption } from '../../../ModalForm/ModalFilter';
-import FormAccordeonItem from '../../components/FormAccordeonItem';
+import FormAccordionItem from '../../components/FormAccordionItem';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
 import TextareaPrimary from '../../../atoms/Inputs/TextareaPrimary';
 import { ICreateOrderBaseFormState } from '../../../../redux/orders/orders.types';
@@ -55,7 +55,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, form }) =
 
   return (
     <Inputs flex={1} overflow={'auto'}>
-      <FlexBox fillWidth gap={8} padding={'8px'} style={{ maxWidth: 480, width: '100%', margin: 'auto' }}>
+      <FlexBox fillWidth gap={8} padding={'8px'} style={{ maxWidth: 480, width: '100%', margin: '0 auto' }}>
         <InputLabel label={t('manager')}>
           <CustomerInfoComponent info={formValues.manager?.user as never} isManager />
         </InputLabel>
@@ -92,7 +92,9 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, form }) =
         <StAccordionItem
           contentContainerStyle={{ padding: '8px', gap: 8 }}
           open
-          renderHeader={`${t('Customer')} | ${t('Receiver')}`}
+          renderHeader={
+            <Text $ellipsisMode={true} $size={16} $weight={500}>{`${t('Customer')} | ${t('Receiver')}`}</Text>
+          }
         >
           {formValues?.customer && <CustomerInfoComponent info={formValues.customer} />}
 
@@ -183,7 +185,11 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, form }) =
         <StAccordionItem
           contentContainerStyle={{ padding: '0 8px 8px' }}
           open
-          renderHeader={`${t('Shipment')} | ${t('Delivery')}`}
+          renderHeader={
+            <Text $ellipsisMode={true} $size={16} $weight={500}>
+              {`${t('Shipment')} | ${t('Delivery')}`}
+            </Text>
+          }
         >
           <InputLabel label={t('Shipment method')} required>
             <CheckboxesListSelector
@@ -204,8 +210,16 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, form }) =
           </InputLabel>
         </StAccordionItem>
 
-        <StAccordionItem contentContainerStyle={{ padding: '0 8px 8px' }} open renderHeader={'Оплата'}>
-          <InputLabel label={t('Payment method')}>
+        <StAccordionItem
+          contentContainerStyle={{ padding: '0 8px 8px' }}
+          open
+          renderHeader={
+            <Text $ellipsisMode={true} $size={16} $weight={500}>
+              {t('Payment')}
+            </Text>
+          }
+        >
+          <InputLabel label={t('Payment method')} required>
             <CheckboxesListSelector
               options={paymentsMethods.map(el => ({ ...el, value: el._id }))}
               onChangeIndex={i => {
@@ -215,17 +229,21 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, form }) =
           </InputLabel>
         </StAccordionItem>
 
-        <StAccordionItem contentContainerStyle={{ padding: '0 8px 8px' }} open renderHeader={'Додаткова інформація'}>
-          <InputLabel label={'Коментар'}>
-            <TextareaPrimary maxLength={250} placeholder={'Введіть коментар до замовлення'} {...register('comment')} />
+        <StAccordionItem
+          contentContainerStyle={{ padding: '0 8px 8px' }}
+          open
+          renderHeader={
+            <Text $ellipsisMode={true} $size={16} $weight={500}>
+              {t('Additionally')}
+            </Text>
+          }
+        >
+          <InputLabel label={t('Comment')}>
+            <TextareaPrimary maxLength={250} placeholder={t('Enter comment for customer')} {...register('comment')} />
           </InputLabel>
 
-          <InputLabel label={'Службовий коментар'}>
-            <TextareaPrimary
-              maxLength={250}
-              placeholder={'Цей коментар будть бачити лише працівники компанії'}
-              {...register('innerComment')}
-            />
+          <InputLabel label={t('Service comment')}>
+            <TextareaPrimary maxLength={250} placeholder={t('Enter service comment')} {...register('innerComment')} />
           </InputLabel>
         </StAccordionItem>
       </FlexBox>
@@ -238,7 +256,7 @@ const BorderedBox = styled(FlexBox)`
   border-top: 1px solid ${p => p.theme.modalBorderColor};
   border-bottom: 1px solid ${p => p.theme.modalBorderColor};
 `;
-const StAccordionItem = styled(FormAccordeonItem)`
+const StAccordionItem = styled(FormAccordionItem)`
   & .content {
     max-width: 480px;
     width: 100%;

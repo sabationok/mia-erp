@@ -6,7 +6,7 @@ import { ContractorsTypesEnum } from '../../../../redux/directories/contractors.
 import { useModalFormCreateCounterparty } from '../../../../hooks/modalHooks';
 import { useState } from 'react';
 import CustomSelect from '../../../atoms/Inputs/CustomSelect/CustomSelect';
-import FormAccordeonItem from '../../components/FormAccordeonItem';
+import FormAccordionItem from '../../components/FormAccordionItem';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
 import TextareaPrimary from '../../../atoms/Inputs/TextareaPrimary';
@@ -68,7 +68,7 @@ const OrderMainInfoStep: React.FC<FormCreateOrderMainInfoProps> = () => {
 
       <FlexBox>
         <FlexBox style={{ position: 'relative' }}>
-          <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} open renderHeader={'Замовник'}>
+          <FormAccordionItem contentContainerStyle={{ padding: '0 8px 8px' }} open renderHeader={'Замовник'}>
             <CustomSelect
               dropDownIsAbsolute={false}
               {...registerSelect('customer', {
@@ -105,10 +105,10 @@ const OrderMainInfoStep: React.FC<FormCreateOrderMainInfoProps> = () => {
                 {'Встановити отримувача'}
               </ButtonIcon>
             )}
-          </FormAccordeonItem>
+          </FormAccordionItem>
 
           {isReceiverInfo && (
-            <FormAccordeonItem
+            <FormAccordionItem
               contentContainerStyle={{ padding: '0 8px 8px' }}
               renderHeader={'Отримувач'}
               open={isReceiverInfo}
@@ -146,10 +146,10 @@ const OrderMainInfoStep: React.FC<FormCreateOrderMainInfoProps> = () => {
               >
                 {'Видалити отримувача'}
               </ButtonIcon>
-            </FormAccordeonItem>
+            </FormAccordionItem>
           )}
 
-          <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} open renderHeader={'Відвантаження'}>
+          <FormAccordionItem contentContainerStyle={{ padding: '0 8px 8px' }} open renderHeader={'Відвантаження'}>
             {/*<CustomSelect*/}
             {/*  {...registerSelect('shipmentMethod', {*/}
             {/*    options: shipmentMethods,*/}
@@ -170,9 +170,9 @@ const OrderMainInfoStep: React.FC<FormCreateOrderMainInfoProps> = () => {
                 {...register('destination', { required: true })}
               />
             </InputLabel>
-          </FormAccordeonItem>
+          </FormAccordionItem>
 
-          <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} open renderHeader={'Оплата'}>
+          <FormAccordionItem contentContainerStyle={{ padding: '0 8px 8px' }} open renderHeader={'Оплата'}>
             {/*<CustomSelect*/}
             {/*  {...registerSelect('paymentMethod', {*/}
             {/*    options: paymentsMethods,*/}
@@ -184,9 +184,9 @@ const OrderMainInfoStep: React.FC<FormCreateOrderMainInfoProps> = () => {
             <InputLabel label={t('Payment method')}>
               <CheckboxesListSelector options={paymentsMethods.map(el => ({ ...el, value: el._id }))} />
             </InputLabel>
-          </FormAccordeonItem>
+          </FormAccordionItem>
 
-          <FormAccordeonItem
+          <FormAccordionItem
             contentContainerStyle={{ padding: '0 8px 8px' }}
             open
             renderHeader={'Додаткова інформація'}
@@ -206,7 +206,7 @@ const OrderMainInfoStep: React.FC<FormCreateOrderMainInfoProps> = () => {
                 {...register('innerComment')}
               />
             </InputLabel>
-          </FormAccordeonItem>
+          </FormAccordionItem>
         </FlexBox>
       </FlexBox>
     </Container>

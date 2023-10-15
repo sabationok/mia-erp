@@ -2,7 +2,7 @@ import ModalForm, { ModalFormProps } from '../ModalForm';
 import { IOrder } from '../../redux/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
-import FormAccordeonItem from '../Forms/components/FormAccordeonItem';
+import FormAccordionItem from '../Forms/components/FormAccordionItem';
 import { FormCreateOrderTabs } from '../Forms/FormCreateOrder/FormCreateOrder';
 import { useState } from 'react';
 
@@ -27,7 +27,7 @@ export const OrderOverview: React.FC<OrderOverviewProps> = ({ order, ...props })
       <Container flex={1}>
         {currenTab === 0 && (
           <FlexBox height={'max-content'}>
-            <FormAccordeonItem
+            <FormAccordionItem
               open
               contentContainerStyle={{ padding: '0 8px 8px' }}
               renderHeader={'Загальна інформація'}
@@ -38,41 +38,41 @@ export const OrderOverview: React.FC<OrderOverviewProps> = ({ order, ...props })
                   <InfoBoxContent>{(order && el.getData && el.getData(order)) || 'Не визначено'}</InfoBoxContent>
                 </InfoBox>
               ))}
-            </FormAccordeonItem>
-            <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} renderHeader={'Замовник'}>
+            </FormAccordionItem>
+            <FormAccordionItem contentContainerStyle={{ padding: '0 8px 8px' }} renderHeader={'Замовник'}>
               {orderCustomerInfo.map((el, idx) => (
                 <InfoBox key={idx.toString()}>
                   <InfoBoxTitle>{el.label || 'Title'}</InfoBoxTitle>
                   <InfoBoxContent>{(order && el.getData && el.getData(order)) || 'Не визначено'}</InfoBoxContent>
                 </InfoBox>
               ))}
-            </FormAccordeonItem>
-            <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} renderHeader={'Отримувач'}>
+            </FormAccordionItem>
+            <FormAccordionItem contentContainerStyle={{ padding: '0 8px 8px' }} renderHeader={'Отримувач'}>
               {orderReceiverInfo.map((el, idx) => (
                 <InfoBox key={idx.toString()}>
                   <InfoBoxTitle>{el.label || 'Title'}</InfoBoxTitle>
                   <InfoBoxContent>{(order && el.getData && el.getData(order)) || 'Не визначено'}</InfoBoxContent>
                 </InfoBox>
               ))}
-            </FormAccordeonItem>
-            <FormAccordeonItem
+            </FormAccordionItem>
+            <FormAccordionItem
               contentContainerStyle={{ padding: '0 8px 8px' }}
               renderHeader={'Відвантаження'}
-            ></FormAccordeonItem>
+            ></FormAccordionItem>
 
-            <FormAccordeonItem
+            <FormAccordionItem
               contentContainerStyle={{ padding: '0 8px 8px' }}
               renderHeader={'Оплата'}
-            ></FormAccordeonItem>
+            ></FormAccordionItem>
 
-            <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} renderHeader={'Додатково'}>
+            <FormAccordionItem contentContainerStyle={{ padding: '0 8px 8px' }} renderHeader={'Додатково'}>
               {orderAdditionalInfo.map((el, idx) => (
                 <InfoBox key={idx.toString()}>
                   <InfoBoxTitle>{el.label || 'Title'}</InfoBoxTitle>
                   <InfoBoxContent>{(order && el.getData && el.getData(order)) || 'Не визначено'}</InfoBoxContent>
                 </InfoBox>
               ))}
-            </FormAccordeonItem>
+            </FormAccordionItem>
           </FlexBox>
         )}
       </Container>

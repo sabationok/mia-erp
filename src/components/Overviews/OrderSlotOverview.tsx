@@ -222,13 +222,14 @@ const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
   color: ${({ theme }) => theme.fontColorSidebar};
   cursor: default;
 
+  border: 1px solid ${({ theme }) => theme.modalBorderColor};
+  border-left: 3px solid ${({ theme }) => theme.modalBorderColor};
+
+  transition: all ${({ theme }) => theme.globals.timingFunctionMain};
+
   &:hover {
     border-color: ${({ disabled, theme }) => !disabled && theme.accentColor.base};
   }
-  border: 1px solid transparent;
-  border-left: 3px solid ${({ theme }) => theme.accentColor.base};
-
-  transition: all ${({ theme }) => theme.globals.timingFunctionMain};
 `;
 const LeftSide = styled(FlexBox)`
   width: min-content;

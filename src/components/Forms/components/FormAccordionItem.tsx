@@ -4,10 +4,12 @@ import FlexBox, { FlexBoxProps } from '../../atoms/FlexBox';
 import styled from 'styled-components';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { isUndefined } from 'lodash';
+import { t } from '../../../lang';
 
 export interface FormAccordeonItemProps {
   children?: React.ReactNode;
   maxHeight?: string;
+  title?: React.ReactNode;
   renderHeader?: React.ReactNode;
   toggled?: boolean;
   open?: boolean;
@@ -17,10 +19,11 @@ export interface FormAccordeonItemProps {
   className?: string;
 }
 
-const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
+const FormAccordionItem: React.FC<FormAccordeonItemProps> = ({
   children,
+  title,
   maxHeight = '32px',
-  renderHeader = 'Інформація',
+  renderHeader,
   toggled = true,
   open = false,
   disabled,
@@ -42,20 +45,30 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
 
   return (
     <Container style={{ maxHeight: isOpen ? '100%' : maxHeight }} className={className}>
-      <StButton
-        icon={toggled ? (isOpen ? 'SmallArrowDown' : 'SmallArrowRight') : undefined}
-        iconSize={'24px'}
-        variant={'def'}
-        onClick={handleToggleOpen}
-        disabled={!toggled || disabled || !children}
-        isOpen={isOpen}
-        activeBackgroundColor={activeBackgroundColor}
+      <Header
+        fillWidth
+        fxDirection={'row'}
         className={'header'}
+        isOpen={isOpen}
+        alignItems={'center'}
+        justifyContent={'space-between'}
+        activeBackgroundColor={activeBackgroundColor}
       >
-        {renderHeader}
-      </StButton>
+        <StButton
+          icon={toggled ? (isOpen ? 'SmallArrowDown' : 'SmallArrowRight') : undefined}
+          iconSize={'24px'}
+          variant={'def'}
+          onClick={handleToggleOpen}
+          disabled={!toggled || disabled || !children}
+          isOpen={isOpen}
+        >
+          {title || isOpen ? t('Close') : t('Open')}
+        </StButton>
 
-      <ContentBox padding={'0 8px'} {...contentContainerStyle} className={'content'}>
+        {renderHeader}
+      </Header>
+
+      <ContentBox padding={'0 8px'} overflow={'hidden'} {...contentContainerStyle} className={'content'}>
         {children}
       </ContentBox>
     </Container>
@@ -63,21 +76,32 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
 };
 
 const Container = styled(FlexBox)`
-  display: flex;
-  grid-template-columns: 1fr;
-  //grid-template-rows: repeat(10, 200px);
-
-  position: relative;
+  //position: relative;
   min-height: 32px;
   //height: max-content;
   max-height: 32px;
-  overflow: hidden;
+  //overflow: hidden;
+
+  color: inherit;
 
   border-top: 1px solid ${({ theme }) => theme.trBorderClr};
   transition: all ${({ theme }) => theme.globals.timingFnMain};
   &:last-child {
     border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
   }
+`;
+
+const Header = styled(FlexBox)<{ isOpen?: boolean; activeBackgroundColor?: string }>`
+  min-height: 32px;
+
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 50;
+
+  color: inherit;
+  border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
+  background-color: ${({ theme }) => theme.modalBackgroundColor};
 `;
 
 const ContentBox = styled(FlexBox)`
@@ -91,20 +115,21 @@ const StButton = styled(ButtonIcon)<{ isOpen?: boolean; activeBackgroundColor?: 
 
   padding: 0 8px 0 0;
 
-  width: 100%;
-  min-height: 32px;
+  min-width: min-content;
 
-  position: sticky;
-  top: 0;
-  left: 0;
-  z-index: 10;
+  flex: 1;
 
   font-size: 14px;
   font-weight: 700;
+  color: inherit;
 
   fill: ${({ theme }) => theme.accentColor.base};
-  border-bottom: 1px solid ${({ theme }) => theme.trBorderClr};
-  background-color: ${({ theme, isOpen }) => (isOpen ? theme.fieldBackgroundColor : theme.modalBackgroundColor)};
+
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: inherit;
+  }
 `;
 
-export default FormAccordeonItem;
+export default FormAccordionItem;

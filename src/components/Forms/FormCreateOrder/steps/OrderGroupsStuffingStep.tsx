@@ -16,7 +16,7 @@ import { ToastService } from '../../../../services';
 import { t } from '../../../../lang';
 import { Modals } from '../../../Modals';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
-import OrderGroupItem from './OrderGroupItem';
+import OrderGroupItem from '../components/OrderGroupItem';
 
 export interface OrderGroupsStuffingStepProps {
   slots?: IOrderTempSlot[];
@@ -54,7 +54,10 @@ const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onFin
 
     slots?.map(slot => {
       if (slot.warehouse?._id) {
-        map[slot.warehouse._id] = { warehouse: slot?.warehouse, slots: [] };
+        map[slot.warehouse._id] = {
+          warehouse: slot.warehouse,
+          slots: map[slot.warehouse._id]?.slots ? map[slot.warehouse._id]?.slots : [],
+        };
 
         map[slot.warehouse?._id]?.slots.push(slot);
       }
@@ -72,7 +75,7 @@ const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onFin
         <OrderGroupItem
           key={`pre-order_${v.warehouse?._id || i}`}
           slots={v.slots}
-          renderHeader={<Text $weight={500}>{v?.warehouse?.label}</Text>}
+          title={<Text $weight={500}>{v?.warehouse?.label}</Text>}
           onRemove={handelRemoveSlot}
           onUpdate={handelUpdateSlot}
         />
@@ -81,8 +84,8 @@ const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onFin
   }, [groupedData, handelRemoveSlot, handelUpdateSlot]);
 
   return (
-    <Container flex={1} fillWidth overflow={'hidden'}>
-      <Content padding={'8px 4px'} flex={1} overflow={'auto'}>
+    <Container flex={1} fillWidth overflow={'hidden'} style={{ position: 'relative' }}>
+      <Content flex={1} overflow={'auto'}>
         <FlexBox flex={1} fillWidth>
           {renderGroupedData}
         </FlexBox>
