@@ -38,23 +38,23 @@ const stepsState: Record<FormCreateOrdersGroupStepsEnum | string, boolean> = {
   [FormCreateOrdersGroupStepsEnum.Invoices]: false,
 };
 const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit, onClose, ...p }) => {
+  const service = useAppServiceProvider()[ServiceName.orders];
   const { stepsMap, stepIdx, setStepIdx, stepsCount, getCurrentStep } = useStepsHandler(steps);
   const [isStepFinished, setIsStepFinished] =
     useState<Record<FormCreateOrdersGroupStepsEnum | string, boolean>>(stepsState);
   const currentGroupFormState = useOrdersSelector().ordersGroupFormData;
+
   const form = useForm<ICreateOrderBaseFormState>({ defaultValues: currentGroupFormState });
-  const setStepFinished = (name: FormCreateOrdersGroupStepsEnum) => () => {
+  const handleFinishStep = (name: FormCreateOrdersGroupStepsEnum) => () => {
     setIsStepFinished(p => ({ ...p, [name]: true }));
   };
 
-  const service = useAppServiceProvider()[ServiceName.orders];
-
   const renderStep = useMemo(() => {
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Stuffing]) {
-      return <OrderGroupsStuffingStep onFinish={setStepFinished(FormCreateOrdersGroupStepsEnum.Stuffing)} />;
+      return <OrderGroupsStuffingStep onFinish={handleFinishStep(FormCreateOrdersGroupStepsEnum.Stuffing)} />;
     }
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Info]) {
-      return <OrderInfoStep form={form} onFinish={setStepFinished(FormCreateOrdersGroupStepsEnum.Info)} />;
+      return <OrderInfoStep form={form} onFinish={handleFinishStep(FormCreateOrdersGroupStepsEnum.Info)} />;
     }
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Summary]) {
       return <></>;
@@ -88,13 +88,13 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
       <Footer padding={'8px'}>
         <StepsController
           steps={steps}
-          onNextPress={(_o, _v, index, _n) => {
+          onNextPress={({ index }) => {
             if (getCurrentStep().value === 'Info') {
               service.updateCurrentGroupFormData(form.getValues());
             }
             setStepIdx(index);
           }}
-          onPrevPress={(_o, _v, index, _n) => {
+          onPrevPress={({ index }) => {
             if (getCurrentStep().value === 'Info') {
               service.updateCurrentGroupFormData(form.getValues());
             }

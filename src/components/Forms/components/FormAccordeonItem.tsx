@@ -14,6 +14,7 @@ export interface FormAccordeonItemProps {
   disabled?: boolean;
   contentContainerStyle?: FlexBoxProps;
   activeBackgroundColor?: string;
+  className?: string;
 }
 
 const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
@@ -25,6 +26,7 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
   disabled,
   contentContainerStyle,
   activeBackgroundColor = 'rgba(220, 220, 220, 1)',
+  className,
 }) => {
   const [isOpen, setIsOpen] = useState(!!disabled || open);
   function handleToggleOpen() {
@@ -39,7 +41,7 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
   }, [disabled]);
 
   return (
-    <Container style={{ maxHeight: isOpen ? '100%' : maxHeight }}>
+    <Container style={{ maxHeight: isOpen ? '100%' : maxHeight }} className={className}>
       <StButton
         icon={toggled ? (isOpen ? 'SmallArrowDown' : 'SmallArrowRight') : undefined}
         iconSize={'24px'}
@@ -48,10 +50,12 @@ const FormAccordeonItem: React.FC<FormAccordeonItemProps> = ({
         disabled={!toggled || disabled || !children}
         isOpen={isOpen}
         activeBackgroundColor={activeBackgroundColor}
+        className={'header'}
       >
         {renderHeader}
       </StButton>
-      <ContentBox padding={'0 8px'} {...contentContainerStyle}>
+
+      <ContentBox padding={'0 8px'} {...contentContainerStyle} className={'content'}>
         {children}
       </ContentBox>
     </Container>

@@ -1,17 +1,24 @@
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
-import { FilterOption, FilterSelectHandler } from '../../ModalForm/ModalFilter';
+import { FilterOption } from '../../ModalForm/ModalFilter';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { checks } from '../../../utils';
 import { t } from '../../../lang';
 import { useMediaQuery } from 'react-responsive';
 
+export type StepChangeEvent<V = any, D = any> = {
+  option: FilterOption<V, D>;
+  value: V;
+  index: number;
+  name?: string;
+};
+export type StepChangeHandler<V = any, D = any> = (event: StepChangeEvent<V, D>) => void;
 export interface StepsControllerProps<V = any> {
   steps?: FilterOption<V>[];
   currentIndex?: number;
-  onNextPress?: FilterSelectHandler<V>;
-  onPrevPress?: FilterSelectHandler<V>;
+  onNextPress?: StepChangeHandler<V>;
+  onPrevPress?: StepChangeHandler<V>;
 
   onCancelPress?: () => void;
   onAcceptPress?: () => void;
@@ -63,7 +70,7 @@ const StepsController = <V = any,>({
           return prev;
         } else {
           const newValue = prev - 1;
-          onPrevPress && onPrevPress(steps[newValue], steps[newValue].value, newValue);
+          onPrevPress && onPrevPress({ option: steps[newValue], value: steps[newValue].value, index: newValue });
           return newValue;
         }
       }
@@ -78,7 +85,7 @@ const StepsController = <V = any,>({
           onAcceptPress && onAcceptPress();
           return prev;
         } else {
-          onNextPress && onNextPress(steps[newValue], steps[newValue].value, newValue);
+          onNextPress && onNextPress({ option: steps[newValue], value: steps[newValue].value, index: newValue });
           return newValue;
         }
       }

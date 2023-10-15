@@ -75,7 +75,6 @@ export const ordersSlice = createSlice({
         const exist = s.ordersGroupFormData?.slots?.find(sl => {
           return ['inventory', 'warehouse', 'price', 'variation', 'product'].some(k => {
             const r = compareIdsByKey(sl, a.payload, k);
-            console.log('AddSlotToGroupAction compareIdsByKey', k, r);
 
             return r;
           });

@@ -55,7 +55,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish, form }) => {
 
   return (
     <Inputs flex={1} overflow={'auto'}>
-      <FlexBox fillWidth gap={8} padding={'8px'}>
+      <FlexBox fillWidth gap={8} padding={'8px'} style={{ maxWidth: 480, width: '100%', margin: 'auto' }}>
         <InputLabel label={t('manager')}>
           <CustomerInfoComponent info={formValues.manager?.user as never} isManager />
         </InputLabel>
@@ -89,7 +89,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish, form }) => {
       </FlexBox>
 
       <FlexBox padding={'0 2px'}>
-        <FormAccordeonItem
+        <StAccordionItem
           contentContainerStyle={{ padding: '8px', gap: 8 }}
           open
           renderHeader={`${t('Customer')} | ${t('Receiver')}`}
@@ -178,9 +178,9 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish, form }) => {
               </BorderedBox>
             </InputLabel>
           )}
-        </FormAccordeonItem>
+        </StAccordionItem>
 
-        <FormAccordeonItem
+        <StAccordionItem
           contentContainerStyle={{ padding: '0 8px 8px' }}
           open
           renderHeader={`${t('Shipment')} | ${t('Delivery')}`}
@@ -202,9 +202,9 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish, form }) => {
               {...register('destination', { required: true })}
             />
           </InputLabel>
-        </FormAccordeonItem>
+        </StAccordionItem>
 
-        <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} open renderHeader={'Оплата'}>
+        <StAccordionItem contentContainerStyle={{ padding: '0 8px 8px' }} open renderHeader={'Оплата'}>
           <InputLabel label={t('Payment method')}>
             <CheckboxesListSelector
               options={paymentsMethods.map(el => ({ ...el, value: el._id }))}
@@ -213,9 +213,9 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish, form }) => {
               }}
             />
           </InputLabel>
-        </FormAccordeonItem>
+        </StAccordionItem>
 
-        <FormAccordeonItem contentContainerStyle={{ padding: '0 8px 8px' }} open renderHeader={'Додаткова інформація'}>
+        <StAccordionItem contentContainerStyle={{ padding: '0 8px 8px' }} open renderHeader={'Додаткова інформація'}>
           <InputLabel label={'Коментар'}>
             <TextareaPrimary maxLength={250} placeholder={'Введіть коментар до замовлення'} {...register('comment')} />
           </InputLabel>
@@ -227,7 +227,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish, form }) => {
               {...register('innerComment')}
             />
           </InputLabel>
-        </FormAccordeonItem>
+        </StAccordionItem>
       </FlexBox>
     </Inputs>
   );
@@ -237,6 +237,13 @@ const Inputs = styled(FlexBox)``;
 const BorderedBox = styled(FlexBox)`
   border-top: 1px solid ${p => p.theme.modalBorderColor};
   border-bottom: 1px solid ${p => p.theme.modalBorderColor};
+`;
+const StAccordionItem = styled(FormAccordeonItem)`
+  & .content {
+    max-width: 480px;
+    width: 100%;
+    margin: auto;
+  }
 `;
 export default OrderInfoStep;
 
