@@ -107,11 +107,13 @@ export interface ICreateOrderBaseFormState {
 }
 
 export interface ICreateOrderFormState extends ICreateOrderBaseFormState {
-  slots?: IOrderSlotReqData[];
+  slots?: IOrderTempSlot[];
+  orders?: IOrder[];
 }
 
 export interface CreateOrdersGroupFormData extends ICreateOrderBaseFormState {
   slots?: IOrderSlotReqData[];
+  orders?: IOrder[];
 }
 
 export interface IAllOrdersRes extends AppResponse<IOrder[]> {}

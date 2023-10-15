@@ -11,7 +11,7 @@ import {
   AddSlotToGroupAction,
   RemoveSlotFromGroupAction,
   UpdateSlotInGroupAction,
-} from '../../../../redux/orders/orders.sctions';
+} from '../../../../redux/orders/orders.actions';
 import { Text } from '../../../atoms/Text';
 import AddOrderSlot from '../components/AddOrderSlot';
 
@@ -23,7 +23,7 @@ export interface OrderGroupsStuffingStepProps {
 }
 
 const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onFinish }) => {
-  const { slots } = useOrdersSelector().currentGroup;
+  const { slots } = useOrdersSelector().ordersGroupFormData;
 
   const dispatch = useDispatch();
 
@@ -78,9 +78,11 @@ const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onFin
   }, [groupedData, handelRemoveSlot, handelUpdateSlot]);
 
   return (
-    <Container flex={1} fillWidth>
+    <Container flex={1} fillWidth overflow={'hidden'}>
       <Content padding={'8px 4px'} flex={1} overflow={'auto'}>
-        {renderGroupedData}
+        <FlexBox flex={1} fillWidth>
+          {renderGroupedData}
+        </FlexBox>
       </Content>
 
       <AddOrderSlot onSelect={handelAddSlot} />

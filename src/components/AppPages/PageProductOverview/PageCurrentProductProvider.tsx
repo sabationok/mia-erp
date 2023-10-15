@@ -51,7 +51,7 @@ const PageCurrentProductProvider: React.FC<PageCurrentProductProviderProps> = ({
   const [overlayStack, setOverlayStack] = useState<OverlayStackItemData[]>([]);
 
   const clearCurrent = useCallback(() => {
-    service.clearCurrent({});
+    service.clearCurrent(undefined);
   }, [service]);
 
   const removeStackItem = useCallback((id: string) => {

@@ -9,13 +9,19 @@ import FlexBox from '../../atoms/FlexBox';
 import { ModalHeader } from '../../atoms';
 import { t } from '../../../lang';
 import StepsController from '../components/StepsController';
-import OrderGroupsStuffingStep from './tabs/OrderGroupsStuffingStep';
-import OrderInfoStep from './tabs/OrderInfoStep';
+import OrderGroupsStuffingStep from './steps/OrderGroupsStuffingStep';
+import OrderInfoStep from './steps/OrderInfoStep';
+import { ICreateOrderBaseFormState } from '../../../redux/orders/orders.types';
+import { useForm } from 'react-hook-form';
+import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import { useOrdersSelector } from '../../../redux/selectors.store';
 
 export interface FormCreateOrdersGroupProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<FormCreateOrdersGroupFormData>;
 }
-export interface FormCreateOrdersGroupFormData {}
+export interface FormCreateOrdersGroupFormData {
+  info: ICreateOrderBaseFormState;
+}
 export enum FormCreateOrdersGroupStepsEnum {
   Stuffing = 'Stuffing',
   Info = 'Info',
@@ -35,17 +41,20 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
   const { stepsMap, stepIdx, setStepIdx, stepsCount, getCurrentStep } = useStepsHandler(steps);
   const [isStepFinished, setIsStepFinished] =
     useState<Record<FormCreateOrdersGroupStepsEnum | string, boolean>>(stepsState);
-
+  const currentGroupFormState = useOrdersSelector().ordersGroupFormData;
+  const form = useForm<ICreateOrderBaseFormState>({ defaultValues: currentGroupFormState });
   const setStepFinished = (name: FormCreateOrdersGroupStepsEnum) => () => {
     setIsStepFinished(p => ({ ...p, [name]: true }));
   };
+
+  const service = useAppServiceProvider()[ServiceName.orders];
 
   const renderStep = useMemo(() => {
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Stuffing]) {
       return <OrderGroupsStuffingStep onFinish={setStepFinished(FormCreateOrdersGroupStepsEnum.Stuffing)} />;
     }
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Info]) {
-      return <OrderInfoStep onFinish={setStepFinished(FormCreateOrdersGroupStepsEnum.Info)} />;
+      return <OrderInfoStep form={form} onFinish={setStepFinished(FormCreateOrdersGroupStepsEnum.Info)} />;
     }
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Summary]) {
       return <></>;
@@ -53,7 +62,7 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Invoices]) {
       return <></>;
     }
-  }, [stepsMap]);
+  }, [form, stepsMap]);
 
   const canSubmit = useMemo(() => {
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Summary]) {
@@ -68,7 +77,7 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
 
   return (
     <Form>
-      <ModalHeader title={t('Select product')} onBackPress={onClose} />
+      <ModalHeader title={t('Create orders group')} onBackPress={onClose} />
 
       <Content fillWidth flex={1} overflow={'hidden'}>
         <ModalFilter filterOptions={steps} asStepper currentIndex={stepIdx} optionProps={{ fitContentH: true }} />
@@ -80,9 +89,15 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
         <StepsController
           steps={steps}
           onNextPress={(_o, _v, index, _n) => {
+            if (getCurrentStep().value === 'Info') {
+              service.updateCurrentGroupFormData(form.getValues());
+            }
             setStepIdx(index);
           }}
           onPrevPress={(_o, _v, index, _n) => {
+            if (getCurrentStep().value === 'Info') {
+              service.updateCurrentGroupFormData(form.getValues());
+            }
             setStepIdx(index);
           }}
           onCancelPress={stepIdx === 0 ? onClose : undefined}

@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
 import { useAppDispatch } from '../redux/store.store';
-import { OnlyUUID, ServiceDispatcherAsync } from '../redux/global.types';
+import { OnlyUUID, ServiceDispatcher, ServiceDispatcherAsync } from '../redux/global.types';
 // import { createOrderThunk, getAllOrdersThunk, getOrderByIdThunk } from '../redux/orders/orders.thunks';
-import { IOrder, IOrderReqData } from '../redux/orders/orders.types';
+import { ICreateOrderBaseFormState, IOrder, IOrderReqData } from '../redux/orders/orders.types';
 import { AppQueryParams } from '../api';
+import { ClearCurrentGroupFormDataAction, UpdateCurrentGroupInfoFormDataAction } from '../redux/orders/orders.actions';
 
 type EmptyFn = (...args: any[]) => Promise<any>;
 
@@ -12,19 +13,14 @@ export interface OrdersService {
   deleteOne: EmptyFn | ServiceDispatcherAsync;
   updateOne: EmptyFn | ServiceDispatcherAsync;
   getById: EmptyFn | ServiceDispatcherAsync<OnlyUUID, IOrder>;
-  getAll:
-    | EmptyFn
-    | ServiceDispatcherAsync<
-        {
-          refresh?: boolean;
-          query?: AppQueryParams;
-        },
-        IOrder[]
-      >;
+  getAll: EmptyFn | ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IOrder[]>;
   getSlotsByOrderId: EmptyFn | ServiceDispatcherAsync<OnlyUUID>;
   getShipmentsByOrderId: EmptyFn | ServiceDispatcherAsync<OnlyUUID>;
   getPaymentsByOrderId: EmptyFn | ServiceDispatcherAsync<OnlyUUID>;
   getInvoicesByOrderId: EmptyFn | ServiceDispatcherAsync<OnlyUUID>;
+
+  updateCurrentGroupFormData: ServiceDispatcher<ICreateOrderBaseFormState>;
+  clearCurrentGroupFormData: ServiceDispatcher;
 }
 
 const useOrdersServiceHook = (): OrdersService => {
@@ -42,6 +38,9 @@ const useOrdersServiceHook = (): OrdersService => {
       getShipmentsByOrderId: async () => dispatch(() => {}),
       getPaymentsByOrderId: async () => dispatch(() => {}),
       getInvoicesByOrderId: async () => dispatch(() => {}),
+
+      updateCurrentGroupFormData: args => dispatch(UpdateCurrentGroupInfoFormDataAction(args)),
+      clearCurrentGroupFormData: () => dispatch(ClearCurrentGroupFormDataAction({})),
     }),
     [dispatch]
   );

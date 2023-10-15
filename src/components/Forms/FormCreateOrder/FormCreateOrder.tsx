@@ -4,8 +4,8 @@ import { ICreateOrderFormState, IOrder, IOrderSlot } from '../../../redux/orders
 import { useAppForm } from '../../../hooks';
 import { useCallback, useMemo, useState } from 'react';
 import ModalFilter from '../../ModalForm/ModalFilter';
-import OrderSlotsList from './tabs/OrderSlotsList';
-import FormOrderMainInfo from './tabs/FormOrderMainInfo';
+import OrderSlotsList from './steps/OrderSlotsList';
+import FormOrderMainInfo from './steps/FormOrderMainInfo';
 import { OnlyUUID } from '../../../redux/global.types';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import styled from 'styled-components';

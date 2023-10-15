@@ -42,7 +42,7 @@ const PageProductOverview: React.FC<Props> = ({ path }) => {
 
   useEffect(() => {
     return () => {
-      productsS.clearCurrent({});
+      productsS.clearCurrent(undefined);
     };
 
     // eslint-disable-next-line

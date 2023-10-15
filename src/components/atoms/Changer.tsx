@@ -1,13 +1,18 @@
 import FlexBox from './FlexBox';
 import ButtonIcon from './ButtonIcon/ButtonIcon';
 import { useEffect, useMemo, useState } from 'react';
-import { FilterOpt } from '../ModalForm/ModalFilter';
+import { FilterOpt, FilterOption } from '../ModalForm/ModalFilter';
 import { isUndefined } from 'lodash';
 
-export interface StatusChangerProps {
+export interface StatusChangerProps<V = any> {
   options?: FilterOpt[];
-  onChange?: (index: number, value?: FilterOpt['value'], option?: FilterOpt) => void;
+  onChange?: (event: ChangerEvent<V>) => void;
   currentIndex?: number;
+}
+export interface ChangerEvent<V = any> {
+  index: number;
+  value?: FilterOption<V>['value'];
+  option?: FilterOption<V>;
 }
 
 const Changer: React.FC<StatusChangerProps> = ({ options = [], onChange, currentIndex }) => {
@@ -17,7 +22,7 @@ const Changer: React.FC<StatusChangerProps> = ({ options = [], onChange, current
     if (current >= 0 && current + 1 <= options?.length) {
       setCurrent(prev => {
         const newIndex = prev + increment;
-        onChange && onChange(newIndex, options[newIndex]?.value, options[newIndex]);
+        onChange && onChange({ index: newIndex, value: options[newIndex]?.value, option: options[newIndex] });
 
         return newIndex;
       });

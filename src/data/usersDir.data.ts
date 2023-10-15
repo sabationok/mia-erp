@@ -18,7 +18,7 @@ export const testUserKarina: IUser = {
 };
 export const usersDirColumns: CellTittleProps<IPermission>[] = [
   {
-    top: { name: 'ПІП', path: 'user.name' },
+    top: { name: 'ПІП', getData: d => (d?.user?.name ? `${d.user.name} ${d.user?.secondName}` : '--- ---') },
     bottom: { name: 'Статус', path: 'status' },
     width: '250px',
     action: 'valueByPath',

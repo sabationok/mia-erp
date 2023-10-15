@@ -1,6 +1,5 @@
 import FlexBox from '../../../atoms/FlexBox';
 import styled, { useTheme } from 'styled-components';
-import { useForm } from 'react-hook-form';
 import { useEffect, useMemo, useState } from 'react';
 import { ICustomer } from '../../../../redux/customers/customers.types';
 import { checks } from '../../../../utils';
@@ -22,8 +21,10 @@ import ButtonGroup from '../../../atoms/ButtonGroup';
 import { enumToFilterOptions } from '../../../../utils/fabrics';
 import TagButtonsFilter from '../../../atoms/TagButtonsFilter';
 import SelectManagerModal from '../components/SelectManagerModal';
+import { UseFormReturn } from 'react-hook-form/dist/types';
 
 export interface OrderInfoStepProps {
+  form: UseFormReturn<ICreateOrderBaseFormState>;
   onFinish?: () => void;
 }
 const buttonGroupOptions = enumToFilterOptions({ 'The same': 'The same', Another: 'Another' });
@@ -34,28 +35,23 @@ const orderStatuses: FilterOption[] = [
   // { _id: '4', value: '4', label: 'Пакування', color: 'lightGrey' },
   // { _id: '5', value: '5', label: 'Відвантажено', color: 'lightBlue' },
   { _id: '6', value: '6', label: 'Скасовано замовником', color: 'lightBlue' },
-  { _id: '7', value: '7', label: 'Скасовано менеджером', color: 'lightBlue' },
+  { _id: '6.1', value: '6.1', label: 'Скасовано менеджером', color: 'lightBlue' },
   { _id: '9', value: '9', label: 'Активне', color: 'orange' },
-  { _id: '8', value: '8', label: 'Завершено успішно', color: 'lightGreen' },
+  { _id: '8.1', value: '8', label: 'Завершено успішно', color: 'lightGreen' },
+  { _id: '8.1', value: '8.1', label: 'Завершено з поверненням', color: 'lightGreen' },
   { _id: '10', value: '10', label: 'Архів', color: 'lightGrey' },
 ];
-const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish }) => {
-  const { register, setValue, watch } = useForm<ICreateOrderBaseFormState>();
+const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish, form }) => {
+  const { register, setValue, watch, unregister } = form;
   const modalS = useModalService();
-  const [hasReceiverInfo, setHasReceiverInfo] = useState(0);
-
-  const formValues = watch();
 
   const { directory: paymentsMethods } = useDirectoriesSelector(ApiDirType.METHODS_PAYMENT);
   const { directory: shipmentMethods } = useDirectoriesSelector(ApiDirType.METHODS_SHIPMENT);
   const { directory: communicationMethods } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
 
-  useEffect(() => {
-    return () => {
-      //* set formvalues to orders state
-      console.log('OrderMainInfoStep before unload | formValues', formValues);
-    };
-  }, [formValues]);
+  const formValues = watch();
+
+  const [hasReceiverInfo, setHasReceiverInfo] = useState(formValues.receiver ? 1 : 0);
 
   return (
     <Inputs flex={1} overflow={'auto'}>
@@ -82,7 +78,13 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish }) => {
         </ButtonIcon>
 
         <InputLabel label={t('Status')}>
-          <Changer options={orderStatuses} />
+          <Changer
+            options={orderStatuses}
+            currentIndex={formValues?.status ? orderStatuses.findIndex(d => d?.value === formValues?.status) : 0}
+            onChange={({ value }) => {
+              setValue('status', value);
+            }}
+          />
         </InputLabel>
       </FlexBox>
 
@@ -127,7 +129,17 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish }) => {
             </BorderedBox>
           </InputLabel>
 
-          <ButtonGroup options={buttonGroupOptions} onChangeIndex={setHasReceiverInfo} />
+          <ButtonGroup
+            options={buttonGroupOptions}
+            onChangeIndex={i => {
+              if (!i) {
+                unregister('receiver');
+                unregister('receiverCommunicationMethods');
+              }
+              setHasReceiverInfo(i);
+            }}
+            defaultIndex={hasReceiverInfo}
+          />
 
           {hasReceiverInfo > 0 && formValues?.receiver && <CustomerInfoComponent info={formValues.receiver} />}
 
@@ -228,14 +240,16 @@ const BorderedBox = styled(FlexBox)`
 `;
 export default OrderInfoStep;
 
-const CheckboxesListSelector = ({
+const CheckboxesListSelector = <V = any,>({
   options,
   onChangeIndex,
   currentIndex,
+  currentOption,
 }: {
   onChangeIndex?: (index: number) => void;
-  options?: Partial<FilterOption>[];
+  options?: Partial<FilterOption<V>>[];
   currentIndex?: number;
+  currentOption?: Partial<FilterOption<V>>;
 }) => {
   const [current, setCurrent] = useState(0);
 
@@ -249,6 +263,12 @@ const CheckboxesListSelector = ({
       setCurrent(currentIndex);
     }
   }, [currentIndex]);
+
+  useEffect(() => {
+    if (!checks.isUnd(currentOption) && !checks.isUnd(options)) {
+      setCurrent(options.findIndex(o => o?.value === currentOption?.value || o?._id === currentOption?._id));
+    }
+  }, [currentOption, options]);
   return (
     <FlexBox fillWidth>
       {options?.map((o, idx) => {
