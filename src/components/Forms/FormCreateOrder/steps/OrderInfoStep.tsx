@@ -22,10 +22,10 @@ import { enumToFilterOptions } from '../../../../utils/fabrics';
 import TagButtonsFilter from '../../../atoms/TagButtonsFilter';
 import SelectManagerModal from '../components/SelectManagerModal';
 import { UseFormReturn } from 'react-hook-form/dist/types';
+import { FormOrderStepBaseProps } from '../FormOrder.types';
 
-export interface OrderInfoStepProps {
+export interface OrderInfoStepProps extends FormOrderStepBaseProps {
   form: UseFormReturn<ICreateOrderBaseFormState>;
-  onFinish?: () => void;
 }
 const buttonGroupOptions = enumToFilterOptions({ 'The same': 'The same', Another: 'Another' });
 
@@ -41,7 +41,7 @@ const orderStatuses: FilterOption[] = [
   { _id: '8.1', value: '8.1', label: 'Завершено з поверненням', color: 'lightGreen' },
   { _id: '10', value: '10', label: 'Архів', color: 'lightGrey' },
 ];
-const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onFinish, form }) => {
+const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, form }) => {
   const { register, setValue, watch, unregister } = form;
   const modalS = useModalService();
 

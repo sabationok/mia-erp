@@ -20,11 +20,12 @@ import { FilterOption } from '../../../ModalForm/ModalFilter';
 import CheckBox from '../../../TableList/TebleCells/CellComponents/CheckBox';
 import { Text } from '../../../atoms/Text';
 import { t } from '../../../../lang';
+import { FormOrderStepBaseProps } from '../FormOrder.types';
 
-export interface FormCreateOrderMainInfoProps {
+export interface FormCreateOrderMainInfoProps extends FormOrderStepBaseProps {
   form: UseAppFormReturn<ICreateOrderFormState>;
 }
-const FormOrderMainInfo: React.FC<FormCreateOrderMainInfoProps> = () => {
+const OrderMainInfoStep: React.FC<FormCreateOrderMainInfoProps> = () => {
   const { register, registerSelect } = useAppForm();
 
   const { directory: paymentsMethods } = useDirectoriesSelector(ApiDirType.METHODS_PAYMENT);
@@ -251,4 +252,4 @@ const CheckboxesListSelector = ({
     </FlexBox>
   );
 };
-export default FormOrderMainInfo;
+export default OrderMainInfoStep;

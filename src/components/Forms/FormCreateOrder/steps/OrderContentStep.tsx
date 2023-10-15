@@ -9,7 +9,7 @@ enum OrderContentTabsEnum {
   set = 'set',
 }
 const OrderContentTabs = enumToFilterOptions(OrderContentTabsEnum);
-const OrderContentTab: React.FC<OrderContentTabProps> = ({}) => {
+const OrderContentStep: React.FC<OrderContentTabProps> = ({}) => {
   return (
     <FlexBox fillWidth flex={1}>
       <ModalFilter filterOptions={OrderContentTabs} />
@@ -17,4 +17,4 @@ const OrderContentTab: React.FC<OrderContentTabProps> = ({}) => {
   );
 };
 
-export default OrderContentTab;
+export default OrderContentStep;

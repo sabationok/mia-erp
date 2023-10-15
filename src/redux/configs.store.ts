@@ -52,6 +52,21 @@ export const persistorConfigs = {
     storage: storageSession,
     whitelist: ['orders', 'currentOrder', 'currentGroup', 'ordersGroupFormData'],
   },
+  invoices: {
+    key: 'invoices',
+    storage: storageSession,
+    whitelist: ['invoices', 'currentInvoice'],
+  },
+  payments: {
+    key: 'payments',
+    storage: storageSession,
+    whitelist: ['payments', 'currentPayment'],
+  },
+  shipments: {
+    key: 'shipments',
+    storage: storageSession,
+    whitelist: ['shipments', 'currentShipment'],
+  },
   refunds: {
     key: 'refunds',
     storage: storageSession,

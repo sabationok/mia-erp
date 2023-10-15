@@ -31,7 +31,7 @@ export enum FormCreateOrdersGroupStepsEnum {
 }
 
 const steps = enumToFilterOptions(FormCreateOrdersGroupStepsEnum);
-const stepsState: Record<FormCreateOrdersGroupStepsEnum | string, boolean> = {
+const stepsProcessInitialState: Record<FormCreateOrdersGroupStepsEnum | string, boolean> = {
   [FormCreateOrdersGroupStepsEnum.Stuffing]: true,
   [FormCreateOrdersGroupStepsEnum.Info]: false,
   [FormCreateOrdersGroupStepsEnum.Summary]: false,
@@ -39,10 +39,10 @@ const stepsState: Record<FormCreateOrdersGroupStepsEnum | string, boolean> = {
 };
 const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit, onClose, ...p }) => {
   const service = useAppServiceProvider()[ServiceName.orders];
+  const currentGroupFormState = useOrdersSelector().ordersGroupFormData;
   const { stepsMap, stepIdx, setStepIdx, stepsCount, getCurrentStep } = useStepsHandler(steps);
   const [isStepFinished, setIsStepFinished] =
-    useState<Record<FormCreateOrdersGroupStepsEnum | string, boolean>>(stepsState);
-  const currentGroupFormState = useOrdersSelector().ordersGroupFormData;
+    useState<Record<FormCreateOrdersGroupStepsEnum | string, boolean>>(stepsProcessInitialState);
 
   const form = useForm<ICreateOrderBaseFormState>({ defaultValues: currentGroupFormState });
   const handleFinishStep = (name: FormCreateOrdersGroupStepsEnum) => () => {

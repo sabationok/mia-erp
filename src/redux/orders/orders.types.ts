@@ -1,26 +1,16 @@
-// import { AppResponse, IBase, OnlyUUID } from '../global.types';
-// import { CurrencyCode } from '../transactions/transactions.types';
-// import { IBaseDirItem } from '../../components/Directories/dir.types';
-// import { ApiDirType } from '../APP_CONFIGS';
-// import { FilterOpt } from '../../components/ModalForm/ModalFilter';
-// import { IManager } from '../auth/auth.types';
-// import { ICompany } from '../companies/companies.types';
-// import { IPriceListItem } from '../priceManagement/priceManagement.types';
-//
-
 import { AppResponse, IBase, OnlyUUID } from '../global.types';
 import { IPriceBase, IPriceListItem } from '../priceManagement/priceManagement.types';
 import { ICompany } from '../companies/companies.types';
 import { IManager, IUserBase } from '../auth/auth.types';
-import { ICommunicationDirItem, IPaymentDirItem, IShipmentDirItem } from '../../components/Directories/dir.types';
-import { FilterOpt } from '../../components/ModalForm/ModalFilter';
-import { IContractor } from '../directories/contractors.types';
+import { ICommunicationDirItem, IPaymentDirItem } from '../../components/Directories/dir.types';
 import { IProductInventory, IWarehouse } from '../warehouses/warehouses.types';
 import { IProduct } from '../products/products.types';
 import { IVariation } from '../products/variations.types';
 import { ICustomerBase } from '../customers/customers.types';
+import { IShipment } from '../shipments/shipments.types';
+import { IPayment } from '../payments/payments.types';
+import { IInvoice } from '../invoices/invoices.types';
 
-export type OrderTypeFilterOption = FilterOpt;
 export enum OrderTypeEnum {
   Order = 'Order',
   Group = 'Group',
@@ -30,6 +20,7 @@ export type OrderStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'succe
 export interface IOrderSlotBase extends IPriceBase {
   quantity?: number;
   total?: number;
+  status?: OrderStatus;
 
   product?: IProduct;
   variation?: IVariation;
@@ -42,10 +33,7 @@ export interface IOrderSlot extends IPriceListItem, IOrderSlotBase {
   owner?: ICompany;
   order?: OnlyUUID;
 
-  shipment?: IShipmentDirItem;
-
-  status?: OrderStatus;
-  amount?: number;
+  shipment?: IShipment;
 }
 export interface IOrderTempSlot extends IOrderSlotBase {
   tempId?: string;
@@ -57,24 +45,25 @@ export interface IOrder extends IBase {
   barCode?: string;
   code?: string;
 
-  customer?: IContractor;
+  customer?: ICustomerBase;
   customerCommunicationMethods?: ICommunicationDirItem[];
 
-  receiver?: IContractor;
+  receiver?: ICustomerBase;
   receiverCommunicationMethods?: ICommunicationDirItem[];
 
   status?: OrderStatus;
 
   destination?: string;
   slots?: IOrderSlot[];
-  invoices?: IBase[];
 
   total?: number;
   shipmentType?: IPaymentDirItem;
-  shipments?: IBase[];
+  shipments?: IShipment[];
 
   paymentType?: IPaymentDirItem;
-  payments?: IBase[];
+  payments?: IPayment[];
+
+  invoices?: IInvoice[];
 
   comment?: string;
   innerComment?: string;

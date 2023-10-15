@@ -4,8 +4,8 @@ import { ICreateOrderFormState, IOrder, IOrderSlot } from '../../../redux/orders
 import { useAppForm } from '../../../hooks';
 import { useCallback, useMemo, useState } from 'react';
 import ModalFilter from '../../ModalForm/ModalFilter';
-import OrderSlotsList from './steps/OrderSlotsList';
-import FormOrderMainInfo from './steps/FormOrderMainInfo';
+import OrderSlotsList from './components/OrderSlotsList';
+import OrderMainInfoStep from './steps/OrderMainInfoStep';
 import { OnlyUUID } from '../../../redux/global.types';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import styled from 'styled-components';
@@ -57,7 +57,7 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
     }
 
     if (checkStep(currentTab)?.info) {
-      return <FormOrderMainInfo form={form} />;
+      return <OrderMainInfoStep form={form} />;
     }
 
     // if (checkStep(currentTab)?.availability) {

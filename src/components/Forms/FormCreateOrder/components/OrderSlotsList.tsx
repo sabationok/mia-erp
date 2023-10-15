@@ -1,7 +1,7 @@
 import FlexBox from '../../../atoms/FlexBox';
 import { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import AddOrderSlot from '../components/AddOrderSlot';
+import AddOrderSlot from './AddOrderSlot';
 import { OnlyUUID } from '../../../../redux/global.types';
 import { IOrderSlot, IOrderSlotBase } from '../../../../redux/orders/orders.types';
 import OrderSlotOverview from '../../../Overviews/OrderSlotOverview';
