@@ -15,7 +15,7 @@ const directoriesForLoading: { dirType: ApiDirType; createTreeData?: boolean }[]
   { dirType: ApiDirType.CONTRACTORS },
   { dirType: ApiDirType.TAGS },
   // { dirType: ApiDirType.METHODS_PAYMENT },
-  { dirType: ApiDirType.METHODS_SHIPMENT },
+  // { dirType: ApiDirType.METHODS_SHIPMENT },
   { dirType: ApiDirType.METHODS_COMMUNICATION },
   { dirType: ApiDirType.VARIATIONS },
 ];
@@ -37,6 +37,7 @@ const useLoadInitialAppDataHook = ({
     transactions,
     warehouses,
     payments,
+    shipments,
   } = useAppServiceProvider();
 
   const { getAppActions } = useAppSettings();
@@ -71,7 +72,9 @@ const useLoadInitialAppDataHook = ({
         await priceManagement.getAll({ data: { refresh: true } });
         await transactions.getAll({ data: { refresh: true } });
         await warehouses.getAll({ data: { refresh: true } });
+
         await payments.getAllMethods();
+        await shipments.getAllMethods();
 
         await Promise.all(
           directoriesForLoading.map(async ({ dirType, createTreeData }) => {

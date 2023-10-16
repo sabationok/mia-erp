@@ -191,11 +191,15 @@ export const langUa = {
   Payment: 'Оплата',
   'Payment method': 'Спосіб оплати',
   'Payment methods': 'Способи оплати',
+  'Add payment method': 'Додати спосіб оплати',
+  'Update payment method': 'Оновити спосіб оплати',
 
   Shipments: 'Відвантаження',
   Shipment: 'Відвантаження',
   'Shipment method': 'Спосіб відвантаження',
   'Shipment methods': 'Способи відвантаження',
+  'Add shipment method': 'Додати спосіб відвантаження',
+  'Update shipment method': 'Оновити спосіб відвантаження',
 
   Deliveries: 'Доставки',
   Delivery: 'Доставка',

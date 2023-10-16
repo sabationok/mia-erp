@@ -13,6 +13,7 @@ import CompanyIntegrationsModal from '../components/CompanySettings/CompanyInteg
 import { t } from '../lang';
 import Forms from '../components/Forms';
 import DirPaymentMethods from '../components/CompanySettings/DirPaymentMethods';
+import DirShipmentsMethods from '../components/CompanySettings/DirShipmentsMethods';
 
 const UsersProps: DirUsersProps = {
   title: 'Користувачі',
@@ -153,24 +154,27 @@ export const companySettings: IDirectoryListItem[] = [
       createParentTitle: t('Add payment method'),
       changeDisableStatus: true,
       availableLevels: 1,
-      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {}),
+      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {
+        createParentTitle: t('Add payment method'),
+        updateItemTitle: t('Update payment method'),
+      }),
     },
     disabled: true,
   },
   {
-    title: 'Способи відвантаження',
+    title: t('Shipment methods'),
     iconId: iconId.persons,
-    ModalChildren: DirMethods,
+    ModalChildren: DirShipmentsMethods,
     modalChildrenProps: {
-      title: 'Способи відвантаження',
+      title: t('Shipment methods'),
       dirType: ApiDirType.METHODS_SHIPMENT,
-      createParentTitle: 'Додати спосіб відвантаження',
+      createParentTitle: t('Add shipment method'),
       changeDisableStatus: true,
       creatingParent: false,
       availableLevels: 1,
       actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {
-        createParentTitle: 'Створити спосіб відвантаження',
-        updateItemTitle: 'Редагувати спосіб відвантаження',
+        createParentTitle: t('Add shipment method'),
+        updateItemTitle: t('Update shipment method'),
       }),
     },
     disabled: true,
