@@ -7,10 +7,10 @@ import FlexBox from '../atoms/FlexBox';
 import { DirInTreeActionsCreatorType, IDirInTreeProps, IMethodDirItem, MethodDirType } from '../Directories/dir.types';
 import DirListItem from '../Directories/DirList/DirListItem';
 import { IPaymentMethod } from '../../redux/payments/payments.types';
-import usePaymentsServiceHook from '../../hooks/usePaymentsService.hook';
-import useTranslatedPaymentMethods from '../../hooks/useTranslatedPaymentMethods.hook';
+import useShipmentsService from '../../hooks/useShipmentsService.hook';
+import useTranslatedShipmentMethods from '../../hooks/useTranslatedShipmentMethods.hook';
 
-export interface DirPaymentMethodsProps
+export interface DirShipmentsMethodsProps
   extends IDirInTreeProps<MethodDirType, IMethodDirItem, IMethodDirItem, IMethodDirItem> {
   updating?: boolean;
   disabling?: boolean;
@@ -18,7 +18,7 @@ export interface DirPaymentMethodsProps
   creating?: boolean;
 }
 
-const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
+const DirShipmentsMethods: React.FC<DirShipmentsMethodsProps> = ({
   createParentTitle,
   availableLevels,
   actionsCreator,
@@ -29,9 +29,9 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
   creating,
   ...props
 }) => {
-  const service = usePaymentsServiceHook();
+  const service = useShipmentsService();
   const modalService = useModalProvider();
-  const methods = useTranslatedPaymentMethods();
+  const methods = useTranslatedShipmentMethods();
 
   const renderList = useMemo(
     () =>
@@ -48,7 +48,7 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
     [methods, props]
   );
   return (
-    <StModalForm style={{ maxWidth: 480 }} {...props}>
+    <StModalForm width={'480px'} {...props}>
       <FlexBox fillWidth flex={'1'} gap={8} padding={'12px'} maxHeight={'100%'} overflow={'auto'}>
         {renderList}
       </FlexBox>
@@ -58,9 +58,9 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
 
 const StModalForm = styled(ModalForm)``;
 
-export default memo(DirPaymentMethods);
+export default memo(DirShipmentsMethods);
 
-const actionsCreatorForDirPaymentMethods: DirInTreeActionsCreatorType<
+const actionsCreatorForDirShipmentsMethods: DirInTreeActionsCreatorType<
   MethodDirType,
   IPaymentMethod,
   any,

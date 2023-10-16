@@ -22,7 +22,7 @@ import { UseFormReturn } from 'react-hook-form/dist/types';
 import { FormOrderStepBaseProps } from '../FormOrder.types';
 import { orderStatuses } from '../../../../data/orders.data';
 import CheckboxesListSelector from '../../../atoms/CheckboxesListSelector';
-import { useTranslatedPaymentMethods } from '../../../../hooks/useTranslatedPaymetMethods.hook';
+import useTranslatedPaymentMethods from '../../../../hooks/useTranslatedPaymentMethods.hook';
 
 export interface OrderInfoStepProps extends FormOrderStepBaseProps {
   form: UseFormReturn<ICreateOrderBaseFormState>;
