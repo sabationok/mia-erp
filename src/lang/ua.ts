@@ -189,9 +189,13 @@ export const langUa = {
 
   Payments: 'Оплати',
   Payment: 'Оплата',
+  'Payment method': 'Спосіб оплати',
+  'Payment methods': 'Способи оплати',
 
   Shipments: 'Відвантаження',
   Shipment: 'Відвантаження',
+  'Shipment method': 'Спосіб відвантаження',
+  'Shipment methods': 'Способи відвантаження',
 
   Deliveries: 'Доставки',
   Delivery: 'Доставка',
@@ -210,6 +214,7 @@ export const langUa = {
 
   Summary: 'Підсумок',
   Info: 'Інфо',
+  Description: 'Опис',
 
   Priority: 'Пріорітетність',
   'Total amount': 'Сумарно',
@@ -234,12 +239,18 @@ export const langUa = {
   insertEmail: 'Емейл',
   selectCurrency: 'Оберіть валюту',
   selectTags: 'Оберть теги',
-  Author: 'Автор',
 
+  Author: 'Автор',
   Height: 'Висота',
   Width: 'Ширина',
   Length: 'Довжина',
   Weight: 'Вага',
+
+  'Remove all': 'Видалити все',
+  Delete: 'Видалити',
+  Remove: 'Видалити',
+  Edit: 'Редагувати',
+  Select: 'Обрати',
 
   createDirParentItem: 'Створити батьківський елемент',
   createDirChildItem: 'Створити дочірній елемент',
@@ -333,7 +344,6 @@ export const langUa = {
   [WarehouseDocumentType.returnFromReserve]: 'Повернення з резерву',
   [WarehouseDocumentType.removeFromReserve]: 'Списання з резерву',
 
-  Description: 'Description',
   SKU: 'SKU',
   Images: 'Зображення',
   Brand: 'Бренд',

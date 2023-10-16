@@ -70,6 +70,7 @@ export enum Endpoints {
   createPrice = 'createPrice',
   updatePrice = 'updatePrice',
   deletePrice = 'deletePrice',
+  methods = 'methods',
 }
 
 export type GetEndpoint = (...args: any[]) => string;
@@ -254,6 +255,8 @@ const warehousesEndpoints = {
 const payments = {
   create: () => `${API_BASE_ROUTES.PAYMENTS}/${Endpoints.create}`,
   getAll: () => `${API_BASE_ROUTES.PAYMENTS}/${Endpoints.getAll}`,
+  getAllMethods: () => `${API_BASE_ROUTES.PAYMENTS}/${Endpoints.methods}/${Endpoints.getAll}`,
+  updateMethod: (id?: string) => `${API_BASE_ROUTES.PAYMENTS}/${Endpoints.methods}/${Endpoints.update}/${id}`,
 };
 const invoices = {
   create: () => `${API_BASE_ROUTES.INVOICES}/${Endpoints.create}`,
@@ -263,6 +266,8 @@ const shipments = {
   create: () => `${API_BASE_ROUTES.SHIPMENTS}/${Endpoints.create}`,
   getAll: () => `${API_BASE_ROUTES.SHIPMENTS}/${Endpoints.getAll}`,
   getById: (id?: string) => `${API_BASE_ROUTES.SHIPMENTS}/${Endpoints.getById}/${id}`,
+  getAllMethods: () => `${API_BASE_ROUTES.SHIPMENTS}/${Endpoints.methods}/${Endpoints.getAll}`,
+  updateMethod: (id?: string) => `${API_BASE_ROUTES.SHIPMENTS}/${Endpoints.methods}/${Endpoints.update}/${id}`,
 };
 const customers = {
   create: () => `${API_BASE_ROUTES.CUSTOMERS}/${Endpoints.create}`,

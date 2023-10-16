@@ -58,5 +58,4 @@ const usePriceManagementService = (): PriceManagementService => {
   }, [dispatch]);
 };
 
-export type usePriceManagementServiceHookType = typeof usePriceManagementService;
-export default usePriceManagementService as usePriceManagementServiceHookType;
+export default usePriceManagementService;

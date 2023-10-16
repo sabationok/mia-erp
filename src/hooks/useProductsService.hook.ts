@@ -115,5 +115,4 @@ const useProductsService = (): ProductsService => {
   }, [dispatch]);
 };
 
-export type useProductsServiceHookType = typeof useProductsService;
-export default useProductsService as useProductsServiceHookType;
+export default useProductsService;

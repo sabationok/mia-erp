@@ -14,7 +14,7 @@ const directoriesForLoading: { dirType: ApiDirType; createTreeData?: boolean }[]
   { dirType: ApiDirType.PROPERTIES_PRODUCTS, createTreeData: true },
   { dirType: ApiDirType.CONTRACTORS },
   { dirType: ApiDirType.TAGS },
-  { dirType: ApiDirType.METHODS_PAYMENT },
+  // { dirType: ApiDirType.METHODS_PAYMENT },
   { dirType: ApiDirType.METHODS_SHIPMENT },
   { dirType: ApiDirType.METHODS_COMMUNICATION },
   { dirType: ApiDirType.VARIATIONS },
@@ -93,7 +93,7 @@ const useLoadInitialAppDataHook = ({
   };
 
   useEffect(() => {
-    load();
+    permission_token && load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [permission_token]);
 

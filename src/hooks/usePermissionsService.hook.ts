@@ -89,4 +89,4 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
   }, [dispatch]);
 };
 
-export default usePermissionsService as typeof usePermissionsService;
+export default usePermissionsService;

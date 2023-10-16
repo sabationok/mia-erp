@@ -9,9 +9,11 @@ import useCompaniesService, { CompaniesService } from './useCompaniesService.hoo
 import { createContext, useContext } from 'react';
 import useWarehousesServiceHook, { WarehousesService } from './useWarehousesService.hook';
 import useAppAuthHook, { AuthService } from './useAppAuth.hook';
-import { ConfigService } from '../services';
 import useOrdersServiceHook, { OrdersService } from './useOrdersService.hook';
 import useCustomersService, { CustomersService } from './useCustomersService';
+import usePaymentsServiceHook, { UsePaymentsService } from './usePaymentsService.hook';
+import useInvoicesService, { UseInvoicesService } from './useInvoicesService.hook';
+import useShipmentsService, { UseShipmentsService } from './useShipmentsService.hook';
 
 export enum ServiceName {
   permissions = 'permissions',
@@ -27,6 +29,9 @@ export enum ServiceName {
   companies = 'companies',
   warehouses = 'warehouses',
   customers = 'customers',
+  payments = 'payments',
+  invoices = 'invoices',
+  shipments = 'shipments',
 }
 
 export interface AppService {
@@ -41,8 +46,11 @@ export interface AppService {
   [ServiceName.auth]: AuthService;
   [ServiceName.orders]: OrdersService;
   [ServiceName.customers]: CustomersService;
+  [ServiceName.payments]: UsePaymentsService;
+  [ServiceName.invoices]: UseInvoicesService;
+  [ServiceName.shipments]: UseShipmentsService;
 }
-const isDevMode = ConfigService.isDevMode();
+// const isDevMode = ConfigService.isDevMode();
 const useAppService = (): AppService => {
   const auth = useAppAuthHook();
   const permissions = usePermissionsServiceHook();
@@ -55,6 +63,9 @@ const useAppService = (): AppService => {
   const warehouses = useWarehousesServiceHook();
   const orders = useOrdersServiceHook();
   const customers = useCustomersService();
+  const payments = usePaymentsServiceHook();
+  const invoices = useInvoicesService();
+  const shipments = useShipmentsService();
 
   return {
     auth,
@@ -68,6 +79,9 @@ const useAppService = (): AppService => {
     warehouses,
     orders,
     customers,
+    payments,
+    invoices,
+    shipments,
   };
 };
 export const AppServiceCTX = createContext<AppService>({} as AppService);

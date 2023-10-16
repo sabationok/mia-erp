@@ -49,4 +49,4 @@ const useDirService = (): DirectoriesService => {
   );
 };
 
-export default useDirService as typeof useDirService;
+export default useDirService;

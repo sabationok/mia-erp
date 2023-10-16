@@ -28,4 +28,4 @@ const useAuthService = (): AuthService => {
   }, [dispatch]);
 };
 
-export default useAuthService as typeof useAuthService;
+export default useAuthService;

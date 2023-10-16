@@ -36,6 +36,8 @@ export interface AppQueryParams {
   dirType?: ApiDirType;
   isArchived?: boolean;
   deleted?: boolean;
+  isDefault?: boolean;
+  disabled?: boolean;
   createTreeData?: boolean;
   sortParams?: ISortParams;
   search?: string;
