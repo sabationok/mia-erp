@@ -35,14 +35,14 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
 
   const renderTab = useMemo(() => {
     if (current === RightSideOptionEnum.Variations) {
-      return <VariationsTab />;
+      return <VariationsTab withActions />;
     }
 
     if (current === RightSideOptionEnum.Prices) {
-      return <PricesTab />;
+      return <PricesTab withActions />;
     }
     if (current === RightSideOptionEnum.Warehousing) {
-      return <WarehousingTab />;
+      return <WarehousingTab withActions />;
     }
   }, [current]);
 
