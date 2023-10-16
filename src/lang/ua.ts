@@ -3,6 +3,7 @@ import { ContractorsTypesEnum } from '../redux/directories/contractors.types';
 import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../redux/companies/companies.types';
 import { WarehouseDocumentType } from '../redux/warehouses/warehouses.types';
 import { MeasurementUnit } from '../redux/products/products.types';
+import { OrderStatusEnum } from '../redux/orders/orders.types';
 
 export const langUa = {
   // DIRECTORIES
@@ -15,6 +16,16 @@ export const langUa = {
   [ApiDirType.VARIATIONS]: 'Варіації',
   [ApiDirType.BANK_ACCOUNTS]: 'Банківські рахунки',
   [ApiDirType.PROPERTIES_PRODUCTS]: 'Характеристики товарів/послуг',
+
+  [OrderStatusEnum.new]: 'Нове',
+  [OrderStatusEnum.inWork]: 'Взято у роботу',
+  [OrderStatusEnum.rejectedByCustomer]: 'Скасовано замовником',
+  [OrderStatusEnum.active]: 'Активне',
+  [OrderStatusEnum.fulfilled]: 'Завершено успішно',
+  [OrderStatusEnum.fulfilledWithRefund]: 'Завершено з поверненням',
+  [OrderStatusEnum.archived]: 'Архів',
+  [OrderStatusEnum.expired]: 'Протерміновано',
+
   variationsTemplate: 'Шаблон для варіацій',
   variationsTemplates: 'Шаблони для варіацій',
 

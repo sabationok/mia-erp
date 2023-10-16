@@ -1,7 +1,35 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { IOrder, IOrderSlot } from '../redux/orders/orders.types';
+import { IOrder, IOrderSlot, OrderStatusEnum } from '../redux/orders/orders.types';
 import t from '../lang';
 import { SelectItem } from '../components/TableList/tableTypes.types';
+import { FilterOption } from '../components/ModalForm/ModalFilter';
+
+export const orderStatuses: FilterOption<OrderStatusEnum>[] = [
+  { _id: '1', value: OrderStatusEnum.new, label: t(OrderStatusEnum.new), color: 'rgb(136,222,255)' },
+  { _id: '2', value: OrderStatusEnum.inWork, label: t(OrderStatusEnum.inWork), color: 'rgb(239,173,255)' },
+  {
+    _id: '3.1',
+    value: OrderStatusEnum.rejectedByCustomer,
+    label: t(OrderStatusEnum.rejectedByCustomer),
+    color: 'rgb(255,145,2)',
+  },
+  {
+    _id: '3.2',
+    value: OrderStatusEnum.rejectedByManager,
+    label: t(OrderStatusEnum.rejectedByManager),
+    color: 'rgb(255,205,105)',
+  },
+  { _id: '4.1', value: OrderStatusEnum.active, label: t(OrderStatusEnum.active), color: 'rgb(255,236,84)' },
+  { _id: '4.2', value: OrderStatusEnum.fulfilled, label: t(OrderStatusEnum.fulfilled), color: 'rgb(151,255,95)' },
+  {
+    _id: '4.3',
+    value: OrderStatusEnum.fulfilledWithRefund,
+    label: t(OrderStatusEnum.fulfilledWithRefund),
+    color: 'rgb(255,53,53)',
+  },
+  { _id: '5.1', value: OrderStatusEnum.archived, label: t(OrderStatusEnum.archived), color: 'rgb(164,171,182)' },
+  { _id: '5.2', value: OrderStatusEnum.expired, label: t(OrderStatusEnum.expired), color: 'rgb(164,171,182)' },
+];
 
 export type DataPath =
   | 'owner.label'

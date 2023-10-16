@@ -1,12 +1,9 @@
 import FlexBox from '../../../atoms/FlexBox';
 import styled, { useTheme } from 'styled-components';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ICustomer } from '../../../../redux/customers/customers.types';
-import { checks } from '../../../../utils';
 import { t } from '../../../../lang';
 import { Text } from '../../../atoms/Text';
-import CheckBox from '../../../TableList/TebleCells/CellComponents/CheckBox';
-import { FilterOption } from '../../../ModalForm/ModalFilter';
 import FormAccordionItem from '../../components/FormAccordionItem';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
 import TextareaPrimary from '../../../atoms/Inputs/TextareaPrimary';
@@ -23,25 +20,16 @@ import TagButtonsFilter from '../../../atoms/TagButtonsFilter';
 import SelectManagerModal from '../components/SelectManagerModal';
 import { UseFormReturn } from 'react-hook-form/dist/types';
 import { FormOrderStepBaseProps } from '../FormOrder.types';
+import { orderStatuses } from '../../../../data/orders.data';
+import CheckboxesListSelector from '../../../atoms/CheckboxesListSelector';
 
 export interface OrderInfoStepProps extends FormOrderStepBaseProps {
   form: UseFormReturn<ICreateOrderBaseFormState>;
+  isGroup?: boolean;
 }
 const buttonGroupOptions = enumToFilterOptions({ 'The same': 'The same', Another: 'Another' });
 
-const orderStatuses: FilterOption[] = [
-  { _id: '1', value: '1', label: 'Нове', color: 'lightGreen' },
-  { _id: '2', value: '2', label: 'Взято у роботу', color: 'lightGreen' },
-  // { _id: '4', value: '4', label: 'Пакування', color: 'lightGrey' },
-  // { _id: '5', value: '5', label: 'Відвантажено', color: 'lightBlue' },
-  { _id: '6', value: '6', label: 'Скасовано замовником', color: 'lightBlue' },
-  { _id: '6.1', value: '6.1', label: 'Скасовано менеджером', color: 'lightBlue' },
-  { _id: '9', value: '9', label: 'Активне', color: 'orange' },
-  { _id: '8.1', value: '8', label: 'Завершено успішно', color: 'lightGreen' },
-  { _id: '8.1', value: '8.1', label: 'Завершено з поверненням', color: 'lightGreen' },
-  { _id: '10', value: '10', label: 'Архів', color: 'lightGrey' },
-];
-const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, form }) => {
+const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, isGroup, form }) => {
   const { register, setValue, watch, unregister } = form;
   const modalS = useModalService();
 
@@ -80,7 +68,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, form }) =
         <InputLabel label={t('Status')}>
           <Changer
             options={orderStatuses}
-            currentIndex={formValues?.status ? orderStatuses.findIndex(d => d?.value === formValues?.status) : 0}
+            currentOption={{ value: formValues?.status }}
             onChange={({ value }) => {
               setValue('status', value);
             }}
@@ -229,23 +217,25 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, form }) =
           </InputLabel>
         </StAccordionItem>
 
-        <StAccordionItem
-          contentContainerStyle={{ padding: '0 8px 8px' }}
-          open
-          renderHeader={
-            <Text $ellipsisMode={true} $size={16} $weight={500}>
-              {t('Additionally')}
-            </Text>
-          }
-        >
-          <InputLabel label={t('Comment')}>
-            <TextareaPrimary maxLength={250} placeholder={t('Enter comment for customer')} {...register('comment')} />
-          </InputLabel>
+        {!isGroup && (
+          <StAccordionItem
+            contentContainerStyle={{ padding: '0 8px 8px' }}
+            open
+            renderHeader={
+              <Text $ellipsisMode={true} $size={16} $weight={500}>
+                {t('Additionally')}
+              </Text>
+            }
+          >
+            <InputLabel label={t('Comment')}>
+              <TextareaPrimary maxLength={250} placeholder={t('Enter comment for customer')} {...register('comment')} />
+            </InputLabel>
 
-          <InputLabel label={t('Service comment')}>
-            <TextareaPrimary maxLength={250} placeholder={t('Enter service comment')} {...register('innerComment')} />
-          </InputLabel>
-        </StAccordionItem>
+            <InputLabel label={t('Service comment')}>
+              <TextareaPrimary maxLength={250} placeholder={t('Enter service comment')} {...register('innerComment')} />
+            </InputLabel>
+          </StAccordionItem>
+        )}
       </FlexBox>
     </Inputs>
   );
@@ -265,59 +255,7 @@ const StAccordionItem = styled(FormAccordionItem)`
 `;
 export default OrderInfoStep;
 
-const CheckboxesListSelector = <V = any,>({
-  options,
-  onChangeIndex,
-  currentIndex,
-  currentOption,
-}: {
-  onChangeIndex?: (index: number) => void;
-  options?: Partial<FilterOption<V>>[];
-  currentIndex?: number;
-  currentOption?: Partial<FilterOption<V>>;
-}) => {
-  const [current, setCurrent] = useState(0);
-
-  const handleSetCurrent = (idx: number) => {
-    setCurrent(idx);
-    onChangeIndex && onChangeIndex(idx);
-  };
-
-  useEffect(() => {
-    if (!checks.isUnd(currentIndex)) {
-      setCurrent(currentIndex);
-    }
-  }, [currentIndex]);
-
-  useEffect(() => {
-    if (!checks.isUnd(currentOption) && !checks.isUnd(options)) {
-      setCurrent(options.findIndex(o => o?.value === currentOption?.value || o?._id === currentOption?._id));
-    }
-  }, [currentOption, options]);
-  return (
-    <FlexBox fillWidth>
-      {options?.map((o, idx) => {
-        return (
-          <FlexBox
-            key={`m-opt_${o.value}`}
-            fxDirection={'row'}
-            gap={8}
-            padding={'2px 4px'}
-            alignItems={'center'}
-            onClick={() => {
-              handleSetCurrent(idx);
-            }}
-          >
-            <CheckBox checked={idx === current} size={'22px'} />
-
-            <Text>{o?.label}</Text>
-          </FlexBox>
-        );
-      })}
-    </FlexBox>
-  );
-};
-const getCustomerInfoComponentCells = ({
+function getCustomerInfoComponentCells({
   info,
   isReceiver,
   isManager,
@@ -325,15 +263,21 @@ const getCustomerInfoComponentCells = ({
   info?: ICustomer;
   isReceiver?: boolean;
   isManager?: boolean;
-}) => [
-  { label: t('label'), getValue: (info?: ICustomer) => info?.label || '---', visible: !isManager },
-  { label: t('name'), getValue: (info?: ICustomer) => info?.name || '---', visible: true },
-  { label: t('secondName'), getValue: (info?: ICustomer) => info?.secondName || '---', visible: true },
-  { label: t('email'), getValue: (info?: ICustomer) => info?.email || '---', visible: true },
-  { label: t('taxCode'), getValue: (info?: ICustomer) => info?.taxCode || '---', visible: !isManager },
-  { label: t('personalTaxCode'), getValue: (info?: ICustomer) => info?.personalTaxCode || '---', visible: !isManager },
-  { label: t('tags'), getValue: (info?: ICustomer) => info?.tags?.join(', ') || '---', visible: !isManager },
-];
+}) {
+  return [
+    { label: t('label'), getValue: (info?: ICustomer) => info?.label || '---', visible: !isManager },
+    { label: t('name'), getValue: (info?: ICustomer) => info?.name || '---', visible: true },
+    { label: t('secondName'), getValue: (info?: ICustomer) => info?.secondName || '---', visible: true },
+    { label: t('email'), getValue: (info?: ICustomer) => info?.email || '---', visible: true },
+    { label: t('taxCode'), getValue: (info?: ICustomer) => info?.taxCode || '---', visible: !isManager },
+    {
+      label: t('personalTaxCode'),
+      getValue: (info?: ICustomer) => info?.personalTaxCode || '---',
+      visible: !isManager,
+    },
+    { label: t('tags'), getValue: (info?: ICustomer) => info?.tags?.join(', ') || '---', visible: !isManager },
+  ];
+}
 const CustomerInfoComponent = ({
   info,
   isReceiver,

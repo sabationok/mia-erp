@@ -54,7 +54,7 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
       return <OrderGroupsStuffingStep onFinish={handleFinishStep(FormCreateOrdersGroupStepsEnum.Stuffing)} />;
     }
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Info]) {
-      return <OrderInfoStep form={form} onFinish={handleFinishStep(FormCreateOrdersGroupStepsEnum.Info)} />;
+      return <OrderInfoStep isGroup form={form} onFinish={handleFinishStep(FormCreateOrdersGroupStepsEnum.Info)} />;
     }
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Summary]) {
       return <></>;

@@ -15,12 +15,25 @@ export enum OrderTypeEnum {
   Order = 'Order',
   Group = 'Group',
 }
-export type OrderStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
+
+export enum OrderStatusEnum {
+  new = 'order_new',
+  inWork = 'order_inWork',
+  rejectedByCustomer = 'order_rejectedByCustomer',
+  rejectedByManager = 'order_rejectedByManager',
+  active = 'order_active',
+  fulfilled = 'order_fulfilled',
+  fulfilledWithRefund = 'order_fulfilledWithRefund',
+  archived = 'order_archived',
+  expired = 'order_expired',
+}
+
+// export type OrderStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
 export interface IOrderSlotBase extends IPriceBase {
   quantity?: number;
   total?: number;
-  status?: OrderStatus;
+  status?: OrderStatusEnum;
 
   product?: IProduct;
   variation?: IVariation;
@@ -35,9 +48,11 @@ export interface IOrderSlot extends IPriceListItem, IOrderSlotBase {
 
   shipment?: IShipment;
 }
+
 export interface IOrderTempSlot extends IOrderSlotBase {
   tempId?: string;
 }
+
 export interface IOrder extends IBase {
   owner?: ICompany;
   manager?: IManager;
@@ -51,7 +66,7 @@ export interface IOrder extends IBase {
   receiver?: ICustomerBase;
   receiverCommunicationMethods?: ICommunicationDirItem[];
 
-  status?: OrderStatus;
+  status?: OrderStatusEnum;
 
   destination?: string;
   slots?: IOrderSlot[];
@@ -84,7 +99,7 @@ export interface ICreateOrderBaseFormState {
   receiver?: ICustomerBase;
   receiverCommunicationMethods?: string[];
 
-  status?: OrderStatus;
+  status?: OrderStatusEnum;
 
   destination?: string;
 
@@ -106,6 +121,7 @@ export interface CreateOrdersGroupFormData extends ICreateOrderBaseFormState {
 }
 
 export interface IAllOrdersRes extends AppResponse<IOrder[]> {}
+
 export interface IOrderRes extends AppResponse<IOrder> {}
 
 export interface IOrderReqData {
@@ -117,21 +133,23 @@ export interface IOrderBaseDto {
   manager?: OnlyUUID;
   barCode?: number;
   code?: number;
+  status?: OrderStatusEnum;
   customer?: OnlyUUID;
   customerCommunicationMethods?: string[];
   receiver?: OnlyUUID;
   receiverCommunicationMethods?: string[];
-  status?: OrderStatus;
   destination?: string;
   shipmentMethod?: OnlyUUID;
   paymentMethod?: OnlyUUID;
   comment?: string;
   innerComment?: string;
 }
+
 export interface IOrderSlotReqData {
   _id?: string;
   data: IOrderSlot;
 }
+
 export interface IOrderSlotItemReqData {
   _id?: string;
   data: IOrderSlot;

@@ -11,6 +11,7 @@ export interface StatusChangerProps<V = any> {
   onChange?: (event: ChangerEvent<V>) => void;
   currentIndex?: number;
   currentOption?: FilterOption<V>;
+  colorIndicator?: boolean;
 }
 
 export interface ChangerEvent<V = any> {
@@ -19,7 +20,13 @@ export interface ChangerEvent<V = any> {
   option?: FilterOption<V>;
 }
 
-const Changer: React.FC<StatusChangerProps> = ({ options = [], onChange, currentOption, currentIndex }) => {
+const Changer: React.FC<StatusChangerProps> = ({
+  options = [],
+  colorIndicator = true,
+  onChange,
+  currentOption,
+  currentIndex,
+}) => {
   const [current, setCurrent] = useState<number>(0);
   const currentStatus = useMemo(() => (options ? options[current] : null), [current, options]);
   const theme = useTheme();
@@ -43,7 +50,7 @@ const Changer: React.FC<StatusChangerProps> = ({ options = [], onChange, current
   useEffect(() => {
     if (!isUndefined(currentOption)) {
       const index = options.findIndex(o => o?.value === currentOption?.value || o?._id === currentOption?._id);
-      setCurrent(index);
+      index > 0 && setCurrent(index);
     }
   }, [currentOption, options]);
   return (
@@ -74,8 +81,8 @@ const Changer: React.FC<StatusChangerProps> = ({ options = [], onChange, current
           </Text>
         </FlexBox>
 
-        {options[current]?.color && (
-          <FlexBox fillWidth height={'4px'} style={{ backgroundColor: options[current]?.color }} />
+        {colorIndicator && currentStatus?.color && (
+          <FlexBox fillWidth height={'4px'} style={{ backgroundColor: currentStatus?.color }} />
         )}
       </FlexBox>
 
