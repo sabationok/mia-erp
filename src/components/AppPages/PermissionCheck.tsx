@@ -45,9 +45,11 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
 
   const hasPermission = useMemo(() => !!state.permission._id, [state.permission._id]);
 
+  const onAppLoadFinish = () => setIsLoaded(true);
+
   useLoadInitialAppDataHook({
     onLoading: setLoading,
-    onSuccess: () => setIsLoaded(true),
+    onSuccess: onAppLoadFinish,
   });
 
   useEffect(() => {

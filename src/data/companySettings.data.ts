@@ -12,6 +12,7 @@ import { IDirectoryListItem } from '../components/SideBarContent/Directories';
 import CompanyIntegrationsModal from '../components/CompanySettings/CompanyIntegrationsModal';
 import { t } from '../lang';
 import Forms from '../components/Forms';
+import DirPaymentMethods from '../components/CompanySettings/DirPaymentMethods';
 
 const UsersProps: DirUsersProps = {
   title: 'Користувачі',
@@ -143,13 +144,13 @@ export const companySettings: IDirectoryListItem[] = [
     disabled: true,
   },
   {
-    title: 'Способи оплати',
+    title: t('Payment methods'),
     iconId: iconId.persons,
-    ModalChildren: DirMethods,
+    ModalChildren: DirPaymentMethods,
     modalChildrenProps: {
-      title: 'Способи оплати',
+      title: t('Payment methods'),
       dirType: ApiDirType.METHODS_PAYMENT,
-      createParentTitle: 'Додати спосіб оплати',
+      createParentTitle: t('Add payment method'),
       changeDisableStatus: true,
       availableLevels: 1,
       actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {}),

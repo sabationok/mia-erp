@@ -36,6 +36,7 @@ const useLoadInitialAppDataHook = ({
     priceManagement,
     transactions,
     warehouses,
+    payments,
   } = useAppServiceProvider();
 
   const { getAppActions } = useAppSettings();
@@ -70,6 +71,7 @@ const useLoadInitialAppDataHook = ({
         await priceManagement.getAll({ data: { refresh: true } });
         await transactions.getAll({ data: { refresh: true } });
         await warehouses.getAll({ data: { refresh: true } });
+        await payments.getAllMethods();
 
         await Promise.all(
           directoriesForLoading.map(async ({ dirType, createTreeData }) => {
@@ -79,6 +81,7 @@ const useLoadInitialAppDataHook = ({
             });
           })
         );
+
         onSuccess && onSuccess();
         onLoading && onLoading(false);
         close();
@@ -93,7 +96,7 @@ const useLoadInitialAppDataHook = ({
   };
 
   useEffect(() => {
-    permission_token && load();
+    load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [permission_token]);
 

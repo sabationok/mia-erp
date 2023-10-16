@@ -1,6 +1,6 @@
 import FlexBox from '../../../atoms/FlexBox';
 import styled, { useTheme } from 'styled-components';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ICustomer } from '../../../../redux/customers/customers.types';
 import { t } from '../../../../lang';
 import { Text } from '../../../atoms/Text';
@@ -22,7 +22,7 @@ import { UseFormReturn } from 'react-hook-form/dist/types';
 import { FormOrderStepBaseProps } from '../FormOrder.types';
 import { orderStatuses } from '../../../../data/orders.data';
 import CheckboxesListSelector from '../../../atoms/CheckboxesListSelector';
-import { createApiCall, PaymentsApi } from '../../../../api';
+import { useTranslatedPaymentMethods } from '../../../../hooks/useTranslatedPaymetMethods.hook';
 
 export interface OrderInfoStepProps extends FormOrderStepBaseProps {
   form: UseFormReturn<ICreateOrderBaseFormState>;
@@ -34,32 +34,15 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, isGroup, 
   const { register, setValue, watch, unregister } = form;
   const modalS = useModalService();
 
-  const { directory: paymentsMethods } = useDirectoriesSelector(ApiDirType.METHODS_PAYMENT);
+  const { directory: paymentsDir } = useDirectoriesSelector(ApiDirType.METHODS_PAYMENT);
   const { directory: shipmentMethods } = useDirectoriesSelector(ApiDirType.METHODS_SHIPMENT);
   const { directory: communicationMethods } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
 
-  const [pMethods, setPMethods] = useState<any[]>([]);
+  const paymentsMethods = useTranslatedPaymentMethods();
 
   const formValues = watch();
 
   const [hasReceiverInfo, setHasReceiverInfo] = useState(formValues.receiver ? 1 : 0);
-
-  useEffect(() => {
-    if (pMethods.length === 0) {
-      createApiCall(
-        {
-          data: {},
-          onSuccess: d => {
-            setPMethods(d);
-            console.log('getAllMethods', d);
-          },
-        },
-        PaymentsApi.getAllMethods,
-        PaymentsApi
-      );
-    }
-    // eslint-disable-next-line
-  }, []);
 
   return (
     <Inputs flex={1} overflow={'auto'}>
@@ -229,7 +212,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, isGroup, 
         >
           <InputLabel label={t('Payment method')} required>
             <CheckboxesListSelector
-              options={paymentsMethods.map(el => ({ ...el, value: el._id }))}
+              options={paymentsMethods}
               onChangeIndex={i => {
                 setValue('paymentMethod', paymentsMethods[i]);
               }}
