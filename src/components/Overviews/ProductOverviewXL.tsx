@@ -187,13 +187,6 @@ const productOverviewCells: OverviewCellProps<IProduct>[] = [
     getValue: product => product?.brand?.label,
     gridArea: 'brand',
   },
-
-  {
-    title: t('Description'),
-    CellComponent: Cells.OverviewTextCell,
-    getValue: product => product?.description,
-    gridArea: 'description',
-  },
   {
     title: t('Measurement'),
     CellComponent: Cells.OverviewTextCell,
@@ -213,6 +206,12 @@ const productOverviewCells: OverviewCellProps<IProduct>[] = [
       }
     },
     gridArea: 'measurement',
+  },
+  {
+    title: t('Description'),
+    CellComponent: Cells.OverviewTextCell,
+    getValue: product => product?.description,
+    gridArea: 'description',
   },
   // * PROPERTIES
   {

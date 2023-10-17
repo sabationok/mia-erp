@@ -114,7 +114,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({ defaultState,
     [formData?.variation, setFormValue, setNextStep, variationTableTitles, variations]
   );
   const pricesTableConfig = useMemo(
-    (): ITableListProps<IProduct> => ({
+    (): ITableListProps<IPriceListItem> => ({
       tableTitles: pricesColumnsForProductReview,
       tableData: prices,
       isSearch: false,

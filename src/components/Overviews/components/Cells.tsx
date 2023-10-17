@@ -59,13 +59,13 @@ export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) =>
 };
 
 export const ProductDefaultsCell: RenderOverviewCellComponent<IProduct> = ({ data, cell, setOverlayContent }) => {
-  const warehouse = data?.defaults?.warehouse;
-  const variation = data?.defaults?.variation;
-  const supplier = data?.defaults?.supplier;
+  const warehouse = data?.warehouse;
+  const variation = data?.variation;
+  const supplier = data?.supplier;
 
   const theme = useTheme();
   const priceInfoCellsData = useMemo((): { title: string; amount?: number; percentage?: number }[] => {
-    const priceInfo = data?.defaults?.price;
+    const priceInfo = data?.price;
     return [
       { title: t('Price'), amount: priceInfo?.price },
       { title: t('Cost'), amount: priceInfo?.cost },
@@ -95,7 +95,7 @@ export const ProductDefaultsCell: RenderOverviewCellComponent<IProduct> = ({ dat
         percentage: priceInfo?.cashbackPercentage || 0,
       },
     ];
-  }, [data?.defaults?.price]);
+  }, [data?.price]);
 
   const renderPriceInfo = useMemo(() => {
     return priceInfoCellsData.map((item, index) => {

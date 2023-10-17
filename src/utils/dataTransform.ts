@@ -1,14 +1,9 @@
 import { ITransaction, ITransactionForReq } from '../redux/transactions/transactions.types';
-import { cloneDeep, isObject, omit, pick } from 'lodash';
+import _, { isObject, pick } from 'lodash';
 import { OnlyUUID } from '../redux/global.types';
 import { IVariation, IVariationFormData, IVariationReqData } from '../redux/products/variations.types';
 import { ConfigService } from '../services';
-import {
-  IProduct,
-  IProductDefaults,
-  IProductDefaultsFormData,
-  IProductFullFormData,
-} from '../redux/products/products.types';
+import { IProduct, IProductFullFormData } from '../redux/products/products.types';
 import { nanoid } from '@reduxjs/toolkit';
 
 const isDevMode = ConfigService.isDevMode();
@@ -145,18 +140,15 @@ export function createDataForReq<
 }
 
 export const createVariationReqData = (formData: IVariationFormData, _id?: string): IVariationReqData => {
-  isDevMode && console.log('createVariationReqData input', formData);
+  // isDevMode && console.log('createVariationReqData input', formData);
 
   const data: IVariationReqData['data'] = {
     ...pick(formData, ['timeFrom', 'timeTo', 'label', 'sku', 'barCode']),
     product: formData?.product ? ExtractId(formData?.product) : undefined,
     properties: formData?.propertiesMap ? Object.values(formData?.propertiesMap) : undefined,
   };
-  isDevMode && console.log('createVariationReqData output', data);
 
-  const dataForReq = createDataForReq(data);
-
-  isDevMode && console.log('createVariationReqData createDataForReq output', dataForReq);
+  // const dataForReq = createDataForReq(data);
 
   return _id ? { data, _id } : { data };
 };
@@ -180,13 +172,14 @@ export const createVariationFormData = (variation: Partial<IVariation>): IVariat
 };
 
 const createProductFormDataOmitPaths: (keyof IProduct | string)[] = [
-  'variations',
-  'inventories',
-  'prices',
   '_id',
   'createdAt',
   'updatedAt',
   'deletedAt',
+  'prices',
+  'variations',
+  'warehouses',
+  'inventories',
 ];
 const getFormValuePickPaths = (data?: any) => {
   return data ? ['_id', 'label', 'email', 'dirType', 'parent', 'name', 'secondName'].filter(key => key in data) : [];
@@ -194,14 +187,11 @@ const getFormValuePickPaths = (data?: any) => {
 const isArrayForTransformToIdsArray = <T extends keyof IProduct | string = any>(key: T) => {
   return ['properties', 'categories'].includes(key);
 };
-export function createProductFormData(
-  input: IProduct,
-  omitPaths: (keyof IProduct | string)[] = createProductFormDataOmitPaths
-): IProductFullFormData {
-  const data = cloneDeep(omitPaths ? omit(input, omitPaths) : input);
-  let output: Record<keyof IProduct | string, any> = {};
+export function createProductFormData(input: IProduct): IProductFullFormData {
+  const data = _.cloneDeep(_.omit(input, createProductFormDataOmitPaths));
+  let output: Record<keyof IProductFullFormData | string, any> = {};
 
-  Object.entries(data).map(([k, v], index) => {
+  Object.entries(data).map(([k, v], _index) => {
     if (v === null) {
       return (output[k as keyof IProductFullFormData] = v);
     }
@@ -219,17 +209,17 @@ export function createProductFormData(
         }
         return (output[k as keyof IProductFullFormData] = v);
       }
-      if (k === 'defaults') {
-        const newDefaults: Record<keyof IProductDefaults | string, any> = {};
-
-        Object.entries(v as IProductDefaults).map(([dk, dv]) => {
-          const newDefValue = pick(dv, getFormValuePickPaths(v));
-          // newDefaults[dk as keyof IProductDefaultsFormData] = newDefValue;
-          return (newDefaults[dk as keyof IProductDefaultsFormData] = newDefValue);
-        });
-
-        return newDefaults;
-      }
+      // if (k === 'defaults') {
+      //   const newDefaults: Record<keyof IProductDefaults | string, any> = {};
+      //
+      //   Object.entries(v as IProductDefaults).map(([dk, dv]) => {
+      //     const newDefValue = pick(dv, getFormValuePickPaths(v));
+      //     // newDefaults[dk as keyof IProductDefaultsFormData] = newDefValue;
+      //     return (newDefaults[dk as keyof IProductDefaultsFormData] = newDefValue);
+      //   });
+      //
+      //   return newDefaults;
+      // }
 
       const newValue = pick(v, getFormValuePickPaths(v));
       return (output[k as keyof IProductFullFormData] = newValue);
@@ -241,5 +231,5 @@ export function createProductFormData(
   // console.log({ dataInArray });
 
   console.log('createProductFormData output', output);
-  return omit(output, omitPaths ? omitPaths : ['_id', 'createdAt', 'updatedAt']);
+  return output;
 }

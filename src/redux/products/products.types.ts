@@ -1,6 +1,6 @@
 import { ArrayUUID, IBase, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
 import { IProductCategoryDirItem, ISupplierDirItem } from '../../components/Directories/dir.types';
-import { FilterOpt } from '../../components/ModalForm/ModalFilter';
+import { FilterOption } from '../../components/ModalForm/ModalFilter';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
 import { ICompany } from '../companies/companies.types';
 import { IProductInventory, IWarehouse } from '../warehouses/warehouses.types';
@@ -39,10 +39,9 @@ export enum MeasurementUnit {
 export enum ProductTypeEnum {
   GOODS = 'GOODS',
   SERVICE = 'SERVICE',
-  SET = 'SET',
 }
 
-export type ProductFilterOpt = FilterOpt<ProductTypeEnum>;
+export type ProductFilterOpt = FilterOption<ProductTypeEnum>;
 
 export interface IProductBase extends IBase {
   label?: string;
@@ -70,10 +69,11 @@ export interface IProductAddsFields extends IProductBase {
   category?: IProductCategoryDirItem;
   categories?: IProductCategoryDirItem[];
 
-  recommends?: IProduct[];
-  properties?: IPropertyValue[];
   brand?: IBrand;
+  recommends?: IProduct[];
+
   template?: IVariationTemplate;
+  properties?: IPropertyValue[];
 
   warehouses?: IWarehouse[];
   variations?: IVariation[];
@@ -89,7 +89,7 @@ export interface IProductDefaults {
   supplier?: ISupplierDirItem;
 }
 
-export interface IProductWithDefaults extends IProductAddsFields {
+export interface IProductWithDefaults extends IProductAddsFields, IProductDefaults {
   defaults?: IProductDefaults;
 }
 
@@ -146,9 +146,9 @@ export interface IProductWithAddsFieldsDto extends IProductBaseDto {
   properties?: ArrayUUID;
 }
 
-export interface IProductDefaultsDto extends Record<keyof IProductDefaults, OnlyUUID> {}
+export interface IProductDefaultsDto extends Partial<Record<keyof IProductDefaults, OnlyUUID>> {}
 
-export interface IProductFullDto extends IProductWithAddsFieldsDto {
+export interface IProductFullDto extends IProductWithAddsFieldsDto, IProductDefaultsDto {
   defaults?: IProductDefaultsDto;
 }
 
