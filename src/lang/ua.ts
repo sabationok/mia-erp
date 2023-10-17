@@ -184,6 +184,9 @@ export const langUa = {
   parentItem: 'Батьківський елемент',
   expireAt: 'Дійсне до',
 
+  Label: 'Назва',
+  'Bar-code': 'Штрих-код',
+
   Invoices: 'Інвойси',
   Invoice: 'Інвойс',
 

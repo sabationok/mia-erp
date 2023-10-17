@@ -13,7 +13,7 @@ import {
   GetDirInTreeActionsCreatorOptions,
   IDirItemBase,
 } from '../components/Directories/dir.types';
-import t from '../lang';
+import { t } from '../lang';
 import DirTreeComp from '../components/Directories/DirTreeComp';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { toast } from 'react-toastify';

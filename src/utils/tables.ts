@@ -1,6 +1,6 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { IVariationTemplate } from '../redux/products/properties.types';
-import t from '../lang';
+import { t } from '../lang';
 import { IVariation, IVariationTableData, VariationPropertiesMapInTableData } from '../redux/products/variations.types';
 
 export const transformVariationTableData = (variation: IVariation): IVariationTableData => {

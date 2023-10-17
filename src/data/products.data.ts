@@ -1,6 +1,6 @@
 import { SelectItem } from 'components/TableList/TableList';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
-import t from '../lang';
+import { t } from '../lang';
 import { IProduct } from '../redux/products/products.types';
 
 export type DataPath =

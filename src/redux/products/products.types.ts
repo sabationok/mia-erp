@@ -53,7 +53,7 @@ export interface IProductBase extends IBase {
   hasVariations?: boolean;
   type?: ProductTypeEnum;
   status?: ProductStatus;
-  approved?: ProductStatus;
+  approved?: ProductStatusEnum;
   archived?: boolean;
   visible?: boolean;
   description?: string;
@@ -75,10 +75,10 @@ export interface IProductAddsFields extends IProductBase {
   template?: IVariationTemplate;
   properties?: IPropertyValue[];
 
-  warehouses?: IWarehouse[];
   variations?: IVariation[];
-  inventories?: IProductInventory[];
   prices?: IPriceListItem[];
+  warehouses?: IWarehouse[];
+  inventories?: IProductInventory[];
 }
 
 export interface IProductDefaults {

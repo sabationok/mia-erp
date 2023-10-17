@@ -1,7 +1,7 @@
 import { IContractor } from '../redux/directories/contractors.types';
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { SelectItem } from '../components/TableList/tableTypes.types';
-import t from '../lang';
+import { t } from '../lang';
 import { ICounterparty } from '../redux/directories/counterparties.types';
 
 export const contractorsColumns: CellTittleProps<IContractor>[] = [

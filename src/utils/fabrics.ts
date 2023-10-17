@@ -1,7 +1,7 @@
 import { ThunkPayload } from '../redux/store.store';
 import { FieldValues } from 'react-hook-form';
 import { FilterOption } from '../components/ModalForm/ModalFilter';
-import t from '../lang';
+import { t } from '../lang';
 
 function createThunkPayload<SD extends FieldValues = any, RD = any, E = any>(
   payloadData?: SD,

@@ -158,6 +158,12 @@ const productOverviewCells: OverviewCellProps<IProduct>[] = [
     gridArea: 'label',
   },
   {
+    title: t('status'),
+    CellComponent: Cells.ProductStatusChangerCell,
+    getValue: product => product?.approved as string | null | undefined,
+    gridArea: 'approved',
+  },
+  {
     title: t('Type'),
     CellComponent: Cells.OverviewTextCell,
     getValue: product => product?.type,
@@ -181,6 +187,7 @@ const productOverviewCells: OverviewCellProps<IProduct>[] = [
     CellComponent: Cells.CategoriesCell,
     gridArea: 'categories',
   },
+
   {
     title: t('Brand'),
     CellComponent: Cells.OverviewTextCell,

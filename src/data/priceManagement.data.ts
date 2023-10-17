@@ -1,5 +1,5 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
-import t from '../lang';
+import { t } from '../lang';
 import { IPriceList, IPriceListItem } from '../redux/priceManagement/priceManagement.types';
 import numberWithSpaces from '../utils/numbers';
 

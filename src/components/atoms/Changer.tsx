@@ -2,7 +2,7 @@ import FlexBox from './FlexBox';
 import ButtonIcon from './ButtonIcon/ButtonIcon';
 import { useEffect, useMemo, useState } from 'react';
 import { FilterOption } from '../ModalForm/ModalFilter';
-import { isUndefined } from 'lodash';
+import _ from 'lodash';
 import { useTheme } from 'styled-components';
 import { Text } from './Text';
 
@@ -12,6 +12,7 @@ export interface StatusChangerProps<V = any> {
   currentIndex?: number;
   currentOption?: FilterOption<V>;
   colorIndicator?: boolean;
+  disabled?: boolean;
 }
 
 export interface ChangerEvent<V = any> {
@@ -20,13 +21,14 @@ export interface ChangerEvent<V = any> {
   option?: FilterOption<V>;
 }
 
-const Changer: React.FC<StatusChangerProps> = ({
+const Changer = <V = any,>({
   options = [],
   colorIndicator = true,
   onChange,
   currentOption,
   currentIndex,
-}) => {
+  disabled,
+}: StatusChangerProps<V>): JSX.Element => {
   const [current, setCurrent] = useState<number>(0);
   const currentStatus = useMemo(() => (options ? options[current] : null), [current, options]);
   const theme = useTheme();
@@ -41,14 +43,14 @@ const Changer: React.FC<StatusChangerProps> = ({
     }
   };
   useEffect(() => {
-    if (!isUndefined(currentIndex) && current >= 0 && current + 1 <= options.length) {
+    if (!_.isUndefined(currentIndex) && current >= 0 && current + 1 <= options.length) {
       setCurrent(currentIndex);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex]);
 
   useEffect(() => {
-    if (!isUndefined(currentOption)) {
+    if (!_.isUndefined(currentOption)) {
       const index = options.findIndex(o => o?.value === currentOption?.value || o?._id === currentOption?._id);
       index > 0 && setCurrent(index);
     }
@@ -59,7 +61,7 @@ const Changer: React.FC<StatusChangerProps> = ({
         variant={'onlyIconNoEffects'}
         icon={'SmallArrowLeft'}
         iconSize={'28px'}
-        disabled={current === 0}
+        disabled={disabled || current === 0}
         onClick={handleChange(-1)}
       />
 
@@ -90,7 +92,7 @@ const Changer: React.FC<StatusChangerProps> = ({
         variant={'onlyIconNoEffects'}
         icon={'SmallArrowRight'}
         iconSize={'28px'}
-        disabled={current + 1 === options.length}
+        disabled={disabled || current + 1 === options.length}
         onClick={handleChange(1)}
       />
     </FlexBox>

@@ -1,12 +1,12 @@
 import FlexBox from '../../atoms/FlexBox';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import FormCreateVariation from '../../Forms/FormProduct/FormCreateVariationOverlay';
 import { IProperty } from '../../../redux/products/properties.types';
 import styled, { useTheme } from 'styled-components';
 import { Text } from '../../atoms/Text';
 import { useDirectoriesSelector, useProductsSelector } from '../../../redux/selectors.store';
 import FormSelectPropertiesOverlay from '../../Forms/FormProduct/FormSelectPropertiesOverlay';
-import { IProduct } from '../../../redux/products/products.types';
+import { IProduct, ProductStatusEnum } from '../../../redux/products/products.types';
 import { formAddImageSetTabs } from '../../Forms/FormProduct/FormAddImageSet';
 import FormProductImages from '../../Forms/FormProduct/FormProductImagesOverlay';
 import ImagePreviewSmall from '../../atoms/ImagePreviewSmall';
@@ -18,6 +18,9 @@ import numberWithSpaces from '../../../utils/numbers';
 import { t } from '../../../lang';
 import { checks } from '../../../utils';
 import FormProductDefaultsOverlay from '../../Forms/FormProduct/FormProductDefaultsOverlay';
+import Changer from '../../atoms/Changer';
+import { getStatusesByEnum } from '../../../data/statuses.data';
+import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 
 export type RenderOverviewCellComponent<Data = any> = React.FC<{
   cell: OverviewCellProps<Data>;
@@ -32,6 +35,7 @@ export interface OverviewCellProps<Data = any> {
   CellComponent?: RenderOverviewCellComponent<Data>;
   getValue?: (data: Data) => React.ReactNode | undefined | null;
 }
+
 export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) => {
   const value = cell.getValue ? cell.getValue(data) : null;
 
@@ -53,6 +57,57 @@ export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) =>
         <CellText $isTitle={!value} $weight={500}>
           {value || 'не визначено'}
         </CellText>
+      </FlexBox>
+    </Cell>
+  );
+};
+
+export const ProductStatusChangerCell: RenderOverviewCellComponent<IProduct> = ({ cell, data }) => {
+  const [canEdit, setCanEdit] = useState(false);
+  const [current, setCurrent] = useState<ProductStatusEnum | undefined>(data?.approved);
+
+  const statuses = useMemo(() => getStatusesByEnum(ProductStatusEnum), []);
+
+  const canAccept = useMemo(() => {
+    return current !== data?.approved;
+  }, [current, data?.approved]);
+
+  useEffect(() => {
+    console.log({ current, canAccept, approved: data?.approved });
+  }, [canAccept, current, data?.approved]);
+
+  // useEffect(() => {
+  //   if (data?.approved) {
+  //     setCurrent(data.approved);
+  //   }
+  //   // eslint-disable-next-line
+  // }, []);
+
+  return (
+    <Cell style={{ minHeight: 'max-content' }}>
+      <CellHeader
+        title={cell?.title}
+        onCancelPress={() => setCanEdit(false)}
+        onEditPress={() => setCanEdit(true)}
+        editMode={canEdit}
+      />
+
+      <FlexBox
+        fillWidth
+        flex={1}
+        justifyContent={'flex-start'}
+        alignItems={'stretch'}
+        overflow={'hidden'}
+        style={{ minHeight: 24 }}
+        gap={8}
+      >
+        <Changer options={statuses} currentOption={{ value: current }} onChange={e => setCurrent(e?.value as never)} />
+
+        {canEdit && (
+          <ButtonIcon variant={'filledSmall'} disabled={!canAccept}>
+            {t('Ok')}
+          </ButtonIcon>
+        )}
       </FlexBox>
     </Cell>
   );
@@ -264,12 +319,14 @@ export const VariationsTemplateCell: RenderOverviewCellComponent = ({ cell, setO
     </Cell>
   );
 };
+
 interface OverviewPropertyComponentProps {
   item: IProperty;
   selectedItems?: string[];
   data?: IProduct;
   index: number;
 }
+
 export const ImagesCell: RenderOverviewCellComponent<IProduct> = ({ data, cell, setOverlayContent }) => {
   const renderImageSets = useMemo(() => {
     return data?.images?.map((set, index) => {
@@ -386,25 +443,62 @@ const CellHeader = ({
   title = 'Title',
   openOverlayButtonTitle = t('Change'),
   onOpenOverlayPress,
+  editButtonText = t('Change'),
+  onEditPress,
+  acceptButtonText = t('Ok'),
+  onAcceptPress,
+  editMode = false,
+  canAccept = false,
+  cancelButtonText = t('Cancel'),
+  onCancelPress,
 }: {
   title?: string;
   openOverlayButtonTitle?: string;
   onOpenOverlayPress?: () => void;
+  editButtonText?: string;
+  onEditPress?: () => void;
+  acceptButtonText?: string;
+  onAcceptPress?: () => void;
+  cancelButtonText?: string;
+  onCancelPress?: () => void;
+  editMode?: boolean;
+  editable?: boolean;
+  canAccept?: boolean;
 }) => {
   return (
     <FlexBox fxDirection={'row'} justifyContent={'space-between'}>
-      <CellText $isTitle $size={12}>
+      <CellText $isTitle $size={12} style={{ marginRight: 'auto' }}>
         {title}
       </CellText>
 
       {onOpenOverlayPress && (
-        <OverlayOpenButton onClick={onOpenOverlayPress}>{openOverlayButtonTitle}</OverlayOpenButton>
+        <CellHeaderButton type={'button'} onClick={onOpenOverlayPress}>
+          {openOverlayButtonTitle}
+        </CellHeaderButton>
+      )}
+
+      {!editMode && onEditPress && (
+        <CellHeaderButton type={'button'} onClick={onEditPress}>
+          {editButtonText}
+        </CellHeaderButton>
+      )}
+
+      {editMode && onCancelPress && (
+        <CellHeaderButton type={'button'} onClick={onCancelPress}>
+          {cancelButtonText}
+        </CellHeaderButton>
+      )}
+
+      {editMode && onAcceptPress && (
+        <CellHeaderButton type={'button'} disabled={!canAccept} onClick={onAcceptPress}>
+          {acceptButtonText}
+        </CellHeaderButton>
       )}
     </FlexBox>
   );
 };
 
-const OverlayOpenButton = styled.button`
+const CellHeaderButton = styled.button`
   display: flex;
   align-items: center;
 
@@ -418,6 +512,11 @@ const OverlayOpenButton = styled.button`
   color: ${p => p.theme.accentColor.base};
 
   cursor: pointer;
+
+  &[disabled] {
+    pointer-events: none;
+    color: ${p => p.theme.modalBorderColor};
+  }
 `;
 
 const Cell = styled(FlexBox)`
