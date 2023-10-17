@@ -2,11 +2,13 @@ import { IOrderSlot } from '../../redux/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { ChangeEventHandler, useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { IProductImage } from '../../redux/products/products.types';
 import { Text } from '../atoms/Text';
 import numberWithSpaces from '../../utils/numbers';
 import { t } from '../../lang';
+import CountSelectorBase from '../atoms/CountSelectorBase';
+import InputLabel from '../atoms/Inputs/InputLabel';
 
 export type SlotOverviewData = Partial<IOrderSlot> & { tempId?: string };
 export interface OrderSlotOverviewProps {
@@ -16,54 +18,11 @@ export interface OrderSlotOverviewProps {
   onRemove?: (id: string) => void;
   onRemovePress?: () => void;
   disabled?: boolean;
+  editable?: boolean;
   onEditPress?: () => void;
   onUpdate?: (slot: SlotOverviewData) => void;
 }
 
-const CountSelector = ({
-  value = 0,
-  onChangeValue,
-  width,
-  height = '20px',
-  disabled,
-  className,
-  autoFocus,
-  onChange,
-}: {
-  value?: number;
-  onChange?: ChangeEventHandler<HTMLInputElement>;
-  onChangeValue?: (number: number) => void;
-  height?: string;
-  width?: string;
-  disabled?: boolean;
-  className?: string;
-  autoFocus?: boolean;
-}) => {
-  const [count, setCount] = useState(value);
-  const handleIncrementChange = (increment: number) => () => {
-    setCount(prev => {
-      return prev + increment;
-    });
-    onChangeValue && onChangeValue(count + increment);
-  };
-
-  return (
-    <FlexBox fxDirection={'row'} gap={4} width={width} alignItems={'center'}>
-      <ButtonIcon variant={'onlyIcon'} size={height} icon={'minus'} onClick={handleIncrementChange(-1)} />
-      <StyledInput
-        value={count}
-        disabled={disabled}
-        className={className}
-        onChange={({ target: { value } }) => {
-          setCount(Number(value));
-          onChangeValue && onChangeValue(Number(value));
-        }}
-        autoFocus={autoFocus}
-      />
-      <ButtonIcon variant={'onlyIcon'} size={height} icon={'plus'} onClick={handleIncrementChange(1)} />
-    </FlexBox>
-  );
-};
 const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
   slot,
   onEditPress,
@@ -71,6 +30,7 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
   onSelectPress,
   onRemovePress,
   onUpdate,
+  editable,
 }) => {
   const [formData, setFormData] = useState<SlotOverviewData | undefined>(slot);
 
@@ -115,14 +75,16 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
 
   const renderPriceInfo = useMemo(() => {
     return overviewInputs.map(info => {
-      return (
+      return info.name === 'quantity' ? (
+        <></>
+      ) : (
         <FlexBox key={info.name} justifyContent={'flex-start'} fillWidth padding={'4px'} gap={4}>
           <CardText colorType={'secondary'} $size={10}>
             {info.label}
           </CardText>
 
-          {info.name === 'quantity' ? (
-            <CountSelector onChangeValue={handleUpdateQuantity} value={formData?.quantity} />
+          {info.name === 'quantity' && editable ? (
+            <CountSelectorBase onChangeValue={handleUpdateQuantity} value={formData?.quantity} />
           ) : (
             <CardText $size={12} $align={'right'} $weight={500}>
               {numberWithSpaces((formData && info.name && formData[info.name as never]) || 0)}
@@ -131,7 +93,7 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
         </FlexBox>
       );
     });
-  }, [formData, handleUpdateQuantity]);
+  }, [editable, formData, handleUpdateQuantity]);
 
   const renderProperties = useMemo(() => {
     return slot?.variation?.properties?.map(prop => {
@@ -161,25 +123,39 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
             <img src={imgPreview} style={{ objectFit: 'cover', objectPosition: 'center' }} alt={''} width={'100%'} />
           </ImageBox>
 
-          <FlexBox>
-            {onRemovePress && (
-              <ActionButton variant={'textExtraSmall'} disabled={!onRemovePress} onClick={onRemovePress}>
-                {t('Delete')}
-              </ActionButton>
-            )}
+          {!disabled && (
+            <FlexBox maxWidth={'125px'}>
+              {editable && (
+                <InputLabel label={t('quantity')} style={{ width: '100%', marginBottom: 8 }} disabled={disabled}>
+                  <CountSelectorBase
+                    onChangeValue={handleUpdateQuantity}
+                    value={formData?.quantity}
+                    disabled={disabled}
+                  />
+                </InputLabel>
+              )}
 
-            {!onSelectPress && (
-              <ActionButton variant={'textExtraSmall'} disabled={!onSelectPress} onClick={onSelectPress}>
-                {t('Select')}
-              </ActionButton>
-            )}
+              <Buttons>
+                {onRemovePress && (
+                  <ActionButton variant={'textExtraSmall'} disabled={!onRemovePress} onClick={onRemovePress}>
+                    {t('Delete')}
+                  </ActionButton>
+                )}
 
-            {!onEditPress && (
-              <ActionButton variant={'textExtraSmall'} disabled={!onEditPress} onClick={onEditPress}>
-                {t('Edit')}
-              </ActionButton>
-            )}
-          </FlexBox>
+                {onSelectPress && (
+                  <ActionButton variant={'textExtraSmall'} disabled={!onSelectPress} onClick={onSelectPress}>
+                    {t('Select')}
+                  </ActionButton>
+                )}
+
+                {onEditPress && (
+                  <ActionButton variant={'textExtraSmall'} disabled={!onEditPress} onClick={onEditPress}>
+                    {t('Edit')}
+                  </ActionButton>
+                )}
+              </Buttons>
+            </FlexBox>
+          )}
         </LeftSide>
 
         <FlexBox flex={1}>
@@ -195,8 +171,6 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
                 {slot?.product?.type}
               </CardText>
             </FlexBox>
-
-            {/*<ButtonIcon variant={'textExtraSmall'} iconSize={'100%'} size={'24px'} icon={'info'} disabled />*/}
           </FlexBox>
 
           <CardGridArea fillWidth alignItems={'flex-start'} justifyContent={'space-between'} margin={'0 0 8px'}>
@@ -276,31 +250,16 @@ const ImageBox = styled(FlexBox)`
   //  margin: auto;
   //}
 `;
-const StyledInput = styled.input`
-  flex: 1;
-  width: 100%;
-  height: 100%;
 
-  border: 0;
-  color: inherit;
-  background: transparent;
-  text-align: center;
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-
-  border-radius: 2px;
-
-  &:focus {
-    box-shadow: 0 1px 8px ${({ theme }) => theme.accentColor.base};
-  }
-`;
 const CardText = styled(Text)<{ colorType?: 'secondary' | 'primary' }>`
   color: ${({ theme, colorType }) =>
     colorType === 'secondary' ? theme.globals.inputPlaceholderColor : theme.fontColorSidebar};
 `;
 const ActionButton = styled(ButtonIcon)`
-  padding: 4px 8px;
+  padding: 6px 10px;
+`;
+const Buttons = styled(FlexBox)`
+  border-top: 1px solid ${p => p.theme.modalBorderColor};
 `;
 
 export default OrderSlotOverview;

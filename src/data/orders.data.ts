@@ -3,7 +3,9 @@ import { IOrder, IOrderSlot, OrderStatusEnum } from '../redux/orders/orders.type
 import { t } from '../lang';
 import { SelectItem } from '../components/TableList/tableTypes.types';
 import { FilterOption } from '../components/ModalForm/ModalFilter';
+import { getStatusesByEnum } from './statuses.data';
 
+export const orderStatusesData = getStatusesByEnum(OrderStatusEnum);
 export const orderStatuses: FilterOption<OrderStatusEnum>[] = [
   { _id: '1', value: OrderStatusEnum.new, label: t(OrderStatusEnum.new), color: 'rgb(136,222,255)' },
   { _id: '2', value: OrderStatusEnum.inWork, label: t(OrderStatusEnum.inWork), color: 'rgb(239,173,255)' },

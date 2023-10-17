@@ -22,6 +22,7 @@ const OrderGroupItem = ({
       <OrderSlotOverview
         key={`slot_${slot?.tempId}`}
         slot={slot}
+        editable
         onRemovePress={() => slot?.tempId && onRemove && onRemove(slot?.tempId)}
         onUpdate={onUpdate}
       />

@@ -79,16 +79,16 @@ export const ordersSlice = createSlice({
             return r;
           });
         });
+
         exist && console.log('AddSlotToGroupAction', exist);
 
         s.ordersGroupFormData.slots?.push(a.payload);
       })
       .addCase(RemoveSlotFromGroupAction, (s, a) => {
-        s.ordersGroupFormData.slots = s.currentGroup.slots.filter(sl => sl.tempId !== a.payload);
+        s.ordersGroupFormData.slots = s.ordersGroupFormData.slots?.filter(sl => sl.tempId !== a.payload);
       })
       .addCase(UpdateSlotInGroupAction, (s, a) => {
-        console.log(a);
-        s.ordersGroupFormData.slots = s.currentGroup.slots.map(sl => {
+        s.ordersGroupFormData.slots = s.ordersGroupFormData.slots?.map(sl => {
           if (sl?.tempId === a.payload?.tempId) {
             return a.payload;
           } else {
