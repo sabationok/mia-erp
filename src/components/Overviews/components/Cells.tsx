@@ -24,7 +24,6 @@ import { productStatusesData } from '../../../data/products.data';
 import { getStatusData } from '../../../data/statuses.data';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { ToastService } from '../../../services';
-import { Tag } from 'antd';
 
 export type RenderOverviewCellComponent<Data = any> = React.FC<{
   cell: OverviewCellProps<Data>;
@@ -99,6 +98,8 @@ export const ProductStatusChangerCell: RenderOverviewCellComponent<IProduct> = (
     // eslint-disable-next-line
   }, []);
 
+  console.log(currentStatusData);
+
   return (
     <Cell style={{ minHeight: 'max-content' }}>
       <CellHeader
@@ -139,13 +140,12 @@ export const ProductStatusChangerCell: RenderOverviewCellComponent<IProduct> = (
         ) : (
           <Tag
             style={{
-              borderColor: currentStatusData?.backgroundColor,
               alignSelf: 'flex-end',
-              color: currentStatusData?.color,
-              padding: '4px 8px',
+              borderColor: currentStatusData?.backgroundColor,
+              backgroundColor: currentStatusData?.backgroundColor,
             }}
           >
-            <CellText $isTitle={!current} $weight={500} $align={'right'}>
+            <CellText $isTitle={!current} $weight={600} $align={'right'}>
               {t(current || 'undefined')}
             </CellText>
           </Tag>
@@ -573,6 +573,22 @@ const Cell = styled(FlexBox)`
   &:not(:first-child) {
     border-top: 1px solid ${p => p.theme.sideBarBorderColor};
   }
+`;
+
+const Tag = styled(FlexBox)`
+  justify-content: center;
+  align-items: center;
+
+  padding: 4px 8px;
+  min-height: 28px;
+  color: #fcfcfc;
+
+  background-color: ${p => p.theme.fieldBackgroundColor};
+
+  //background-color: #f1f1f1;
+
+  border-radius: 4px;
+  border: 1px solid ${p => p.theme.modalBorderColor};
 `;
 
 const CellText = styled(Text)<{ $isTitle?: boolean }>`
