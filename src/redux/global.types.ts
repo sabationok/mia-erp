@@ -6,7 +6,12 @@ import { ApiDirType } from './APP_CONFIGS';
 export interface OnlyUUID {
   _id: string;
 }
+
 export type ArrayUUID = Array<string>;
+export type ArrayOfObjUUID = Array<OnlyUUID>;
+
+export type IdKeyVersion = '_id' | 'id';
+export type ObjUUID<K extends IdKeyVersion = '_id'> = Record<K, string>;
 
 export interface IBase extends OnlyUUID {
   createdAt?: Date | string;

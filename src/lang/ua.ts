@@ -135,6 +135,7 @@ export const langUa = {
   document: 'Документ',
   documents: 'Документи',
   status: 'Статус',
+  undefined: 'Не визначено',
 
   code: 'Код',
   barCode: 'Штрих-код',
@@ -300,6 +301,7 @@ export const langUa = {
   PASSIVES: 'Пасиви',
 
   DEFAULT: 'DEFAULT',
+
   CUSTOM: 'CUSTOM',
 
   BASE: 'BASE',

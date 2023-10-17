@@ -157,7 +157,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({ defaultState,
       return warehousingTableConfig;
     }
     return;
-  }, [stepCheck, productTableConfig, variationsTableConfig, pricesTableConfig, warehousingTableConfig]);
+  }, [stepCheck, productTableConfig, variationsTableConfig, warehousingTableConfig]);
 
   const canGoNext = useMemo((): boolean => {
     if (stepCheck(FormCreateOrderSlotSteps.product)) {
@@ -170,7 +170,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({ defaultState,
       return !!formData?.inventory;
     }
     return false;
-  }, [formData?.inventory, formData?.price, formData?.product, formData?.variation, stepCheck]);
+  }, [formData?.inventory, formData?.product, formData?.variation, stepCheck]);
 
   const canSubmit = useMemo(() => {
     return Object.values(formData).length >= 4;

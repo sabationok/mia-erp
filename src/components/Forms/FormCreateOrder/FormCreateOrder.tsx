@@ -59,9 +59,6 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
     if (checkStep(currentTab)?.info) {
       return <OrderMainInfoStep form={form} />;
     }
-
-    // if (checkStep(currentTab)?.availability) {
-    // }
     if (checkStep(currentTab)?.summary) {
     }
     if (checkStep(currentTab)?.invoices) {

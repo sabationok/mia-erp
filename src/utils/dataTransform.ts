@@ -1,18 +1,23 @@
 import { ITransaction, ITransactionForReq } from '../redux/transactions/transactions.types';
 import _, { isObject, pick } from 'lodash';
-import { OnlyUUID } from '../redux/global.types';
+import { IdKeyVersion, ObjUUID, OnlyUUID } from '../redux/global.types';
 import { IVariation, IVariationFormData, IVariationReqData } from '../redux/products/variations.types';
-import { ConfigService } from '../services';
 import { IProduct, IProductFullFormData } from '../redux/products/products.types';
 import { nanoid } from '@reduxjs/toolkit';
 
-const isDevMode = ConfigService.isDevMode();
+// const isDevMode = ConfigService.isDevMode();
 export function parseBool(key?: 'false' | 'true' | string) {
   return key === 'true';
 }
-export const ExtractId = <T extends OnlyUUID>(data: T): OnlyUUID =>
-  pick(data, '_id')._id ? pick(data, '_id') : { _id: '' };
-export const ExtractIdString = <T extends OnlyUUID>(data: Partial<T>) =>
+export const ExtractId = <T extends OnlyUUID>(data: T, key: '_id' = '_id'): OnlyUUID =>
+  key in data ? pick(data, key) : { [key]: '' };
+
+// * REFACTORING NEEDED
+export const ExtractObjId = <T extends ObjUUID, K extends IdKeyVersion = '_id'>(data: T, key: K) => {
+  return (key in data ? pick(data, key) : { [key]: '' }) as ObjUUID<K>;
+};
+
+export const ExtractIdString = <T extends OnlyUUID>(data: Partial<T>, key: IdKeyVersion = '_id') =>
   '_id' in data ? pick(data, '_id')._id : undefined;
 
 export function getValueByPath({ data, path }: { data?: object; path?: string }): any {

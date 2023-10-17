@@ -1,24 +1,36 @@
 import FlexBox from './FlexBox';
 import ButtonIcon from './ButtonIcon/ButtonIcon';
 import { useEffect, useMemo, useState } from 'react';
-import { FilterOption } from '../ModalForm/ModalFilter';
 import _ from 'lodash';
 import { useTheme } from 'styled-components';
 import { Text } from './Text';
+import { IconIdType } from '../../img/sprite';
+import { LangPack } from '../../lang';
+
+export interface ChangerOption<T = any, D = any> {
+  _id?: string;
+  value: T;
+  data?: D;
+  color?: string;
+  icon?: IconIdType;
+  backgroundColor?: string;
+  label?: string;
+  lang?: LangPack;
+}
 
 export interface StatusChangerProps<V = any> {
-  options?: (FilterOption<V> & { color?: string })[];
+  options?: ChangerOption<V>[];
   onChange?: (event: ChangerEvent<V>) => void;
   currentIndex?: number;
-  currentOption?: FilterOption<V>;
+  currentOption?: ChangerOption<V>;
   colorIndicator?: boolean;
   disabled?: boolean;
 }
 
 export interface ChangerEvent<V = any> {
   index: number;
-  value?: FilterOption<V>['value'];
-  option?: FilterOption<V>;
+  value: ChangerOption<V>['value'];
+  option?: ChangerOption<V>;
 }
 
 const Changer = <V = any,>({
@@ -50,9 +62,11 @@ const Changer = <V = any,>({
   }, [currentIndex]);
 
   useEffect(() => {
+    console.log(currentOption, options);
+
     if (!_.isUndefined(currentOption)) {
       const index = options.findIndex(o => o?.value === currentOption?.value || o?._id === currentOption?._id);
-      index > 0 && setCurrent(index);
+      index >= 0 && setCurrent(index);
     }
   }, [currentOption, options]);
   return (
@@ -84,7 +98,7 @@ const Changer = <V = any,>({
         </FlexBox>
 
         {colorIndicator && currentStatus?.color && (
-          <FlexBox fillWidth height={'4px'} style={{ backgroundColor: currentStatus?.color }} />
+          <FlexBox fillWidth height={'4px'} style={{ backgroundColor: currentStatus?.backgroundColor }} />
         )}
       </FlexBox>
 

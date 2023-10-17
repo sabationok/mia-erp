@@ -73,21 +73,22 @@ export const ProductStatusChangerCell: RenderOverviewCellComponent<IProduct> = (
   }, [current, data?.approved]);
 
   useEffect(() => {
-    console.log({ current, canAccept, approved: data?.approved });
-  }, [canAccept, current, data?.approved]);
+    if (data?.approved) {
+      setCurrent(data.approved);
+    }
+    // eslint-disable-next-line
+  }, []);
 
-  // useEffect(() => {
-  //   if (data?.approved) {
-  //     setCurrent(data.approved);
-  //   }
-  //   // eslint-disable-next-line
-  // }, []);
+  const handleCancelPress = () => {
+    setCurrent(data?.approved ?? (statuses[0].value as never));
+    setCanEdit(false);
+  };
 
   return (
     <Cell style={{ minHeight: 'max-content' }}>
       <CellHeader
         title={cell?.title}
-        onCancelPress={() => setCanEdit(false)}
+        onCancelPress={handleCancelPress}
         onEditPress={() => setCanEdit(true)}
         editMode={canEdit}
       />
@@ -101,7 +102,12 @@ export const ProductStatusChangerCell: RenderOverviewCellComponent<IProduct> = (
         style={{ minHeight: 24 }}
         gap={8}
       >
-        <Changer options={statuses} currentOption={{ value: current }} onChange={e => setCurrent(e?.value as never)} />
+        <Changer
+          disabled={!canEdit}
+          options={statuses}
+          currentOption={{ value: current }}
+          onChange={e => setCurrent(e?.value as never)}
+        />
 
         {canEdit && (
           <ButtonIcon variant={'filledSmall'} disabled={!canAccept}>

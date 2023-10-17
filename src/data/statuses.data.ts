@@ -77,19 +77,19 @@ export const statusData = {
   name: statusName,
   iconId: statusIconId,
 };
-export const colors = {
+const colors = {
   clrLight: '#fff',
   clrDark: '#121212',
   default: 'rgb(154, 154, 154)',
   defaultLight: '#E9E9E9',
   clrInfo: '#3498db',
-  clrInfoLight: 'rgba(0, 117, 255, 0.24)',
+  clrInfoLight: 'rgb(156,200,255)',
   clrSuccess: '#07bc0c',
-  clrSuccessLight: 'rgba(52, 199, 89, 0.16)',
+  clrSuccessLight: 'rgb(165,255,155)',
   clrWarning: '#f1c40f',
-  clrWarningLight: 'rgba(255, 245, 0, 0.24)',
+  clrWarningLight: 'rgb(255,250,155)',
   clrError: '#e74c3c',
-  clrErrorLight: 'rgba(255, 59, 48, 0.16)',
+  clrErrorLight: 'rgb(255,158,155)',
   clrPrimary: '#cdcdcd',
   expense: '#FF3B30',
   income: '#30D158',
@@ -127,14 +127,14 @@ export const statusDataMap: Record<StatusNameEnum, StatusData> = {
     name: 'NO_STATUS',
     color: 'inherit',
     iconId: 'info',
-    label: 'Без статусу',
+    label: t('undefined'),
     backgroundColor: colors.defaultLight,
   },
   error: {
     name: 'error',
     color: 'inherit',
     iconId: 'error',
-    label: 'error',
+    label: t('error'),
     backgroundColor: colors.clrErrorLight,
     description: 'error',
   },
@@ -142,21 +142,21 @@ export const statusDataMap: Record<StatusNameEnum, StatusData> = {
     name: 'success',
     color: 'inherit',
     iconId: 'success',
-    label: 'success',
+    label: t('success'),
     backgroundColor: colors.clrSuccessLight,
   },
   info: {
     name: 'info',
     color: 'inherit',
     iconId: 'info',
-    label: 'info',
+    label: t('info'),
     backgroundColor: colors.clrInfoLight,
   },
   warning: {
     name: 'warning',
     color: 'inherit',
     iconId: 'warning',
-    label: 'warning',
+    label: t('warning'),
     backgroundColor: colors.clrWarningLight,
   },
   INCOME: {
@@ -232,7 +232,5 @@ export function getStatusesByEnum<T extends object = any>(enumObj: T): Array<Sta
     })
     .filter(v => !isUndefined(v)) as Array<StatusFilterOption<keyof T>>;
 }
-
-console.log('statusesMap', statusesMap);
 
 export type StatusNames = keyof typeof statusDataMap;

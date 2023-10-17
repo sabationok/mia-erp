@@ -15,11 +15,12 @@ export enum ProductStatusEnum {
   rejected = 'rejected',
   success = 'success',
   approved = 'approved',
-  error = 'error',
+  // error = 'error',
   warning = 'warning',
-  info = 'info',
+  // info = 'info',
 }
-export type ProductStatus = keyof ProductStatusEnum | ProductStatusEnum;
+
+// export type ProductStatus = keyof ProductStatusEnum | ProductStatusEnum;
 
 export enum MeasurementUnit {
   Pc = 'Pc', // Штука (Piece)
@@ -52,7 +53,7 @@ export interface IProductBase extends IBase {
   dimensions?: IProductDimensions;
   hasVariations?: boolean;
   type?: ProductTypeEnum;
-  status?: ProductStatus;
+  status?: ProductStatusEnum;
   approved?: ProductStatusEnum;
   archived?: boolean;
   visible?: boolean;
