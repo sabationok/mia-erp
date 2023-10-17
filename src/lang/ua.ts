@@ -33,6 +33,8 @@ export const langUa = {
   Another: 'Інший',
 
   Change: 'Змінити',
+  Cancel: 'Скасувати',
+
   Review: 'Перегляд',
   warehouse: 'Склад',
   propertiesList: 'Список характеристик',
@@ -306,6 +308,8 @@ export const langUa = {
 
   BASE: 'BASE',
   ADDITIONAL: 'ADDITIONAL',
+
+  Additional: 'Додатково',
 
   success: 'Успіх',
   successfully: 'Успішно',

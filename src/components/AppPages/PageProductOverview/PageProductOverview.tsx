@@ -19,6 +19,7 @@ const PageProductOverview: React.FC<Props> = ({ path }) => {
   const [isRightSideVisible, setIsRightSideVisible] = useState<boolean>(false);
   const productsS = useAppServiceProvider()[ServiceName.products];
   const { productId } = useAppParams();
+  const [loading, setLoading] = useState(false);
 
   const { currentProduct } = useProductsSelector();
 
@@ -27,6 +28,7 @@ const PageProductOverview: React.FC<Props> = ({ path }) => {
   }, []);
 
   useEffect(() => {
+    if (loading) return;
     if (productId && productId !== currentProduct?._id) {
       const close = loader.open().close;
       console.log('==========>>>>>>>>>>>>');
@@ -34,6 +36,7 @@ const PageProductOverview: React.FC<Props> = ({ path }) => {
       productsS
         .getProductFullInfo({
           data: { _id: productId },
+          onLoading: setLoading,
         })
         .finally(close);
     }

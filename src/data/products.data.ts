@@ -1,7 +1,10 @@
 import { SelectItem } from 'components/TableList/TableList';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { t } from '../lang';
-import { IProduct } from '../redux/products/products.types';
+import { IProduct, ProductStatusEnum } from '../redux/products/products.types';
+import { getStatusesByEnum } from './statuses.data';
+
+export const productStatusesData = getStatusesByEnum(ProductStatusEnum);
 
 export type DataPath =
   | 'category.label'

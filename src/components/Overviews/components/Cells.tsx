@@ -19,8 +19,12 @@ import { t } from '../../../lang';
 import { checks } from '../../../utils';
 import FormProductDefaultsOverlay from '../../Forms/FormProduct/FormProductDefaultsOverlay';
 import Changer from '../../atoms/Changer';
-import { getStatusesByEnum } from '../../../data/statuses.data';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import { productStatusesData } from '../../../data/products.data';
+import { getStatusData } from '../../../data/statuses.data';
+import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import { ToastService } from '../../../services';
+import { Tag } from 'antd';
 
 export type RenderOverviewCellComponent<Data = any> = React.FC<{
   cell: OverviewCellProps<Data>;
@@ -55,7 +59,7 @@ export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) =>
         style={{ minHeight: 24 }}
       >
         <CellText $isTitle={!value} $weight={500}>
-          {value || 'не визначено'}
+          {value || t('undefined')}
         </CellText>
       </FlexBox>
     </Cell>
@@ -66,11 +70,27 @@ export const ProductStatusChangerCell: RenderOverviewCellComponent<IProduct> = (
   const [canEdit, setCanEdit] = useState(false);
   const [current, setCurrent] = useState<ProductStatusEnum | undefined>(data?.approved);
 
-  const statuses = useMemo(() => getStatusesByEnum(ProductStatusEnum), []);
+  const service = useAppServiceProvider()[ServiceName.products];
+
+  const currentStatusData = useMemo(() => getStatusData(current), [current]);
 
   const canAccept = useMemo(() => {
     return current !== data?.approved;
   }, [current, data?.approved]);
+  const handleCancelPress = () => {
+    setCurrent(data?.approved ?? (productStatusesData[0].value as never));
+    setCanEdit(false);
+  };
+
+  const handleAcceptPress = () => {
+    service.updateById({
+      data: { _id: data?._id, data: { approved: current }, refreshCurrent: true },
+      onSuccess: () => {
+        setCanEdit(false);
+        ToastService.success('Product updated');
+      },
+    });
+  };
 
   useEffect(() => {
     if (data?.approved) {
@@ -78,11 +98,6 @@ export const ProductStatusChangerCell: RenderOverviewCellComponent<IProduct> = (
     }
     // eslint-disable-next-line
   }, []);
-
-  const handleCancelPress = () => {
-    setCurrent(data?.approved ?? (statuses[0].value as never));
-    setCanEdit(false);
-  };
 
   return (
     <Cell style={{ minHeight: 'max-content' }}>
@@ -96,23 +111,44 @@ export const ProductStatusChangerCell: RenderOverviewCellComponent<IProduct> = (
       <FlexBox
         fillWidth
         flex={1}
-        justifyContent={'flex-start'}
+        justifyContent={'flex-end'}
         alignItems={'stretch'}
         overflow={'hidden'}
         style={{ minHeight: 24 }}
         gap={8}
       >
-        <Changer
-          disabled={!canEdit}
-          options={statuses}
-          currentOption={{ value: current }}
-          onChange={e => setCurrent(e?.value as never)}
-        />
+        {canEdit ? (
+          <>
+            <Changer
+              disabled={!canEdit}
+              options={productStatusesData}
+              currentOption={{ value: current }}
+              onChange={e => setCurrent(e?.value as never)}
+            />
 
-        {canEdit && (
-          <ButtonIcon variant={'filledSmall'} disabled={!canAccept}>
-            {t('Ok')}
-          </ButtonIcon>
+            <FlexBox fxDirection={'row'} gap={8} fillWidth>
+              <ButtonIcon variant={'outlinedSmall'} disabled={!canAccept} onClick={handleCancelPress}>
+                {t('Cancel')}
+              </ButtonIcon>
+
+              <ButtonIcon variant={'filledSmall'} disabled={!canAccept} flex={1} onClick={handleAcceptPress}>
+                {t('Ok')}
+              </ButtonIcon>
+            </FlexBox>
+          </>
+        ) : (
+          <Tag
+            style={{
+              borderColor: currentStatusData?.backgroundColor,
+              alignSelf: 'flex-end',
+              color: currentStatusData?.color,
+              padding: '4px 8px',
+            }}
+          >
+            <CellText $isTitle={!current} $weight={500} $align={'right'}>
+              {t(current || 'undefined')}
+            </CellText>
+          </Tag>
         )}
       </FlexBox>
     </Cell>
@@ -192,7 +228,7 @@ export const ProductDefaultsCell: RenderOverviewCellComponent<IProduct> = ({ dat
           {t('warehouse')}
         </CellText>
         <CellText $isTitle={!warehouse} $align={'right'}>
-          {warehouse ? `${warehouse?.label} | ${warehouse?.code}` : 'не визначено'}
+          {warehouse ? `${warehouse?.label} | ${warehouse?.code}` : t('undefined')}
         </CellText>
       </FlexBox>
 
@@ -201,7 +237,7 @@ export const ProductDefaultsCell: RenderOverviewCellComponent<IProduct> = ({ dat
           {t('supplier')}
         </CellText>
         <CellText $isTitle={!supplier} $align={'right'}>
-          {supplier ? `${supplier?.label} | ${supplier?.code}` : 'не визначено'}
+          {supplier ? `${supplier?.label} | ${supplier?.code}` : t('undefined')}
         </CellText>
       </FlexBox>
 
@@ -210,7 +246,7 @@ export const ProductDefaultsCell: RenderOverviewCellComponent<IProduct> = ({ dat
         <CellText $isTitle={!variation} $align={'right'}>
           {variation
             ? `${variation?.label} | ${variation?.barCode || 'barCode'} | ${variation?.sku || 'SKU'}`
-            : 'не визначено'}
+            : t('undefined')}
         </CellText>
       </FlexBox>
 
@@ -410,7 +446,7 @@ export const StaticProperties: RenderOverviewCellComponent<IProduct> = ({ cell, 
         {renderProperties && renderProperties?.length > 0 ? (
           renderProperties
         ) : (
-          <CellText $weight={500}>{'не визначено'}</CellText>
+          <CellText $weight={500}>{t('undefined')}</CellText>
         )}
       </FlexBox>
     </Cell>

@@ -1,11 +1,11 @@
 import FlexBox from './FlexBox';
 import ButtonIcon from './ButtonIcon/ButtonIcon';
 import { useEffect, useMemo, useState } from 'react';
-import _ from 'lodash';
 import { useTheme } from 'styled-components';
 import { Text } from './Text';
 import { IconIdType } from '../../img/sprite';
 import { LangPack } from '../../lang';
+import { checks } from '../../utils';
 
 export interface ChangerOption<T = any, D = any> {
   _id?: string;
@@ -18,17 +18,19 @@ export interface ChangerOption<T = any, D = any> {
   lang?: LangPack;
 }
 
-export interface StatusChangerProps<V = any> {
+export interface StatusChangerProps<V = any, N = any> {
+  name?: N;
   options?: ChangerOption<V>[];
-  onChange?: (event: ChangerEvent<V>) => void;
+  onChange?: (event: ChangerEvent<V, N>) => void;
   currentIndex?: number;
   currentOption?: ChangerOption<V>;
   colorIndicator?: boolean;
   disabled?: boolean;
 }
 
-export interface ChangerEvent<V = any> {
+export interface ChangerEvent<V = any, N = any> {
   index: number;
+  name?: N;
   value: ChangerOption<V>['value'];
   option?: ChangerOption<V>;
 }
@@ -40,35 +42,52 @@ const Changer = <V = any,>({
   currentOption,
   currentIndex,
   disabled,
+  name,
 }: StatusChangerProps<V>): JSX.Element => {
   const [current, setCurrent] = useState<number>(0);
   const currentStatus = useMemo(() => (options ? options[current] : null), [current, options]);
   const theme = useTheme();
-  const handleChange = (increment: number) => () => {
-    if (current >= 0 && current + 1 <= options?.length) {
-      setCurrent(prev => {
-        const newIndex = prev + increment;
-        onChange && onChange({ index: newIndex, value: options[newIndex]?.value, option: options[newIndex] });
 
-        return newIndex;
-      });
+  useEffect(() => {
+    if (checks.isFun(onChange) && checks.isUnd(currentOption ?? currentIndex)) {
+      console.warn('Changer', 'You try to use uncontrolled "Changer" component\n', 'You need to pass option or index');
+    }
+  }, [onChange, currentOption, currentIndex]);
+  const handleChange = (increment: number) => () => {
+    if (checks.isFun(onChange)) {
+      const newIndex = current + increment;
+      onChange({ index: newIndex, value: options[newIndex]?.value, option: options[newIndex] });
+      return;
+    }
+
+    if (current >= 0 && current + 1 <= options?.length) {
+      setCurrent(prev => prev + increment);
     }
   };
   useEffect(() => {
-    if (!_.isUndefined(currentIndex) && current >= 0 && current + 1 <= options.length) {
+    if (!checks.isUnd(currentIndex) && current >= 0 && current + 1 <= options.length) {
       setCurrent(currentIndex);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex]);
 
   useEffect(() => {
-    console.log(currentOption, options);
+    if (!checks.isUnd(currentOption)) {
+      const index = options.findIndex(o => {
+        if (currentOption?.value) {
+          return o?.value === currentOption?.value;
+        } else if (currentOption?._id) {
+          return o?._id === currentOption?._id;
+        }
+        return false;
+      });
 
-    if (!_.isUndefined(currentOption)) {
-      const index = options.findIndex(o => o?.value === currentOption?.value || o?._id === currentOption?._id);
-      index >= 0 && setCurrent(index);
+      index >= 0 && index !== current && setCurrent(index);
     }
-  }, [currentOption, options]);
+
+    // eslint-disable-next-line
+  }, [currentOption]);
+
   return (
     <FlexBox fxDirection={'row'} fillWidth height={'28px'} alignItems={'center'} gap={8}>
       <ButtonIcon

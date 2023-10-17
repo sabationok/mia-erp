@@ -50,13 +50,13 @@ export default OrderOverviewInfoTab;
 
 const orderOverviewCells: OverviewCellProps<IOrder>[] = [
   { title: t('Manager') },
-  { title: t('Type') },
-  { title: t('Current status') },
-  { title: t('Client info') },
-  { title: t('Receiver info') },
+  { title: t('Group') },
+  { title: t('Status') },
+  { title: t('Client') },
+  { title: t('Receiver') },
   { title: t('Delivery') },
   { title: t('Payment') },
-  { title: t('Code') },
-  { title: t('Code') },
-  { title: t('Code') },
+  { title: t('Additional') },
+  // { title: t('Code _') },
+  // { title: t('Code __') },
 ];
