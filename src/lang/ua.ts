@@ -393,11 +393,16 @@ export const langUa = {
   'Add position to order': 'Додати позицію до замовлення',
 
   'Select manager': 'Обрати менеджера',
-  'Select receiver': 'Обрати отримувача',
-  'Change receiver': 'Змінити отримувача',
+
   'Select customer': 'Обрати замовника',
   'Change customer': 'Змінити замовника',
-  'Preferred communication methods': 'Бажані способи комунікацій',
+  'Customer information': 'Інформація про замовника',
+
+  'Select receiver': 'Обрати отримувача',
+  'Change receiver': 'Змінити отримувача',
+  'Receiver information': 'Інформація про отримувача',
+
+  'Communication methods': 'Способи комунікацій',
   'Not needed': 'Не потрібно',
   'Permission check, please wait': 'Перевірка дозволу, будь ласка зачекайте',
   'Please wait while minions do their work...': 'Будь ласка зачекайте поки міньйони роблять свою роботу...',

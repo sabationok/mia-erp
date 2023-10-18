@@ -1,44 +1,47 @@
-import FlexBox from '../../../atoms/FlexBox';
+import FlexBox from 'components/atoms/FlexBox';
 import styled, { useTheme } from 'styled-components';
 import { useMemo, useState } from 'react';
-import { ICustomer } from '../../../../redux/customers/customers.types';
-import { t } from '../../../../lang';
-import { Text } from '../../../atoms/Text';
+import { ICustomer } from 'redux/customers/customers.types';
+import { t } from 'lang';
+import { Text } from 'components/atoms/Text';
 import FormAccordionItem from '../../components/FormAccordionItem';
-import InputLabel from '../../../atoms/Inputs/InputLabel';
-import TextareaPrimary from '../../../atoms/Inputs/TextareaPrimary';
-import { ICreateOrderBaseFormState } from '../../../../redux/orders/orders.types';
+import InputLabel from 'components/atoms/Inputs/InputLabel';
+import TextareaPrimary from 'components/atoms/Inputs/TextareaPrimary';
+import { ICreateOrderBaseFormState } from 'redux/orders/orders.types';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
-import { useDirectoriesSelector } from '../../../../redux/selectors.store';
-import { ApiDirType } from '../../../../redux/APP_CONFIGS';
-import Changer from '../../../atoms/Changer';
-import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import { useDirectoriesSelector } from 'redux/selectors.store';
+import { ApiDirType } from 'redux/APP_CONFIGS';
+import Changer from 'components/atoms/Changer';
+import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import SelectCustomerModal from '../components/SelectCustomerModal';
-import ButtonGroup from '../../../atoms/ButtonGroup';
-import { enumToFilterOptions } from '../../../../utils/fabrics';
-import TagButtonsFilter from '../../../atoms/TagButtonsFilter';
+import ButtonGroup from 'components/atoms/ButtonGroup';
+import { enumToFilterOptions } from 'utils/fabrics';
+import TagButtonsFilter from 'components/atoms/TagButtonsFilter';
 import SelectManagerModal from '../components/SelectManagerModal';
 import { UseFormReturn } from 'react-hook-form/dist/types';
 import { FormOrderStepBaseProps } from '../FormOrder.types';
-import { orderStatuses } from '../../../../data/orders.data';
-import CheckboxesListSelector from '../../../atoms/CheckboxesListSelector';
-import useTranslatedPaymentMethods from '../../../../hooks/useTranslatedPaymentMethods.hook';
+import { orderStatuses } from 'data/orders.data';
+import CheckboxesListSelector from 'components/atoms/CheckboxesListSelector';
+import useTranslatedPaymentMethods from 'hooks/useTranslatedPaymentMethods.hook';
+import FormCreateCustomer from '../../FormCreateCustomer';
+import { ServiceName, useAppServiceProvider } from 'hooks/useAppServices.hook';
+import useTranslatedShipmentMethods from 'hooks/useTranslatedShipmentMethods.hook';
 
 export interface OrderInfoStepProps extends FormOrderStepBaseProps {
   form: UseFormReturn<ICreateOrderBaseFormState>;
   isGroup?: boolean;
 }
-const buttonGroupOptions = enumToFilterOptions({ 'The same': 'The same', Another: 'Another' });
 
-const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, isGroup, form }) => {
+const receiverOptions = enumToFilterOptions({ 'The same': 'The same', Another: 'Another' });
+
+const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form }) => {
   const { register, setValue, watch, unregister } = form;
   const modalS = useModalService();
 
-  const { directory: paymentsDir } = useDirectoriesSelector(ApiDirType.METHODS_PAYMENT);
-  const { directory: shipmentMethods } = useDirectoriesSelector(ApiDirType.METHODS_SHIPMENT);
   const { directory: communicationMethods } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
 
   const paymentsMethods = useTranslatedPaymentMethods();
+  const shipmentMethods = useTranslatedShipmentMethods();
 
   const formValues = watch();
 
@@ -46,7 +49,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, isGroup, 
 
   return (
     <Inputs flex={1} overflow={'auto'}>
-      <FlexBox fillWidth gap={8} padding={'8px'} style={{ maxWidth: 480, width: '100%', margin: '0 auto' }}>
+      <FlexBox fillWidth gap={8} padding={'8px 2px'} style={{ maxWidth: 480, width: '100%', margin: '0 auto' }}>
         <InputLabel label={t('manager')}>
           <CustomerInfoComponent info={formValues.manager?.user as never} isManager />
         </InputLabel>
@@ -69,6 +72,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, isGroup, 
         </ButtonIcon>
 
         <InputLabel label={t('Status')}>
+          {/* TODO need refactoring and FIXES*/}
           <Changer
             options={orderStatuses}
             currentOption={{ value: formValues?.status }}
@@ -81,100 +85,135 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, isGroup, 
 
       <FlexBox padding={'0 2px'}>
         <StAccordionItem
-          contentContainerStyle={{ padding: '8px', gap: 8 }}
+          contentContainerStyle={{ padding: '8px 0', gap: 8 }}
           open
           renderHeader={
             <Text $ellipsisMode={true} $size={16} $weight={500}>{`${t('Customer')} | ${t('Receiver')}`}</Text>
           }
         >
-          {formValues?.customer && <CustomerInfoComponent info={formValues.customer} />}
+          {formValues?.customer && (
+            <>
+              <InputLabel label={t('Customer information')}>
+                <CustomerInfoComponent info={formValues.customer} />
+              </InputLabel>
 
-          <ButtonIcon
-            variant={'outlinedSmall'}
-            onClick={() => {
-              const m = modalS.open({
-                ModalChildren: SelectCustomerModal,
-                modalChildrenProps: {
-                  onSelect: i => {
-                    setValue('customer', i);
-                    m?.onClose && m?.onClose();
-                  },
-                },
-              });
-            }}
-          >
-            {t(!formValues?.customer ? 'Select customer' : 'Change customer')}
-          </ButtonIcon>
+              <InputLabel label={t('Communication methods')}>
+                <BorderedBox fillWidth padding={'8px'}>
+                  <TagButtonsFilter
+                    multiple
+                    numColumns={3}
+                    values={formValues.customerCommunicationMethods}
+                    resetButtonLabel={t('Not needed')}
+                    options={communicationMethods.map(mtd => ({ ...mtd, value: mtd._id }))}
+                    resetButtonPosition={'start'}
+                    onChange={value => {
+                      setValue('customerCommunicationMethods', value);
+                    }}
+                  />
+                </BorderedBox>
+              </InputLabel>
+            </>
+          )}
 
-          <InputLabel label={t('Preferred communication methods')}>
-            <BorderedBox fillWidth padding={'8px'}>
-              <TagButtonsFilter
-                multiple
-                numColumns={3}
-                values={formValues.customerCommunicationMethods}
-                resetButtonLabel={t('Not needed')}
-                options={communicationMethods.map(mtd => ({ ...mtd, value: mtd._id }))}
-                resetButtonPosition={'start'}
-                onChange={value => {
-                  setValue('customerCommunicationMethods', value);
-                }}
-              />
-            </BorderedBox>
-          </InputLabel>
+          <FlexBox fxDirection={'row'} gap={8} fillWidth alignItems={'center'}>
+            <CreateCustomerIconButton
+              onSuccess={d => {
+                setValue('customer', d);
+              }}
+            />
 
-          <ButtonGroup
-            options={buttonGroupOptions}
-            onChangeIndex={i => {
-              if (!i) {
-                unregister('receiver');
-                unregister('receiverCommunicationMethods');
-              }
-              setHasReceiverInfo(i);
-            }}
-            defaultIndex={hasReceiverInfo}
-          />
-
-          {hasReceiverInfo > 0 && formValues?.receiver && <CustomerInfoComponent info={formValues.receiver} />}
-
-          {hasReceiverInfo > 0 && (
             <ButtonIcon
               variant={'outlinedSmall'}
+              flex={1}
               onClick={() => {
                 const m = modalS.open({
                   ModalChildren: SelectCustomerModal,
                   modalChildrenProps: {
                     onSelect: i => {
-                      setValue('receiver', i);
+                      setValue('customer', i);
                       m?.onClose && m?.onClose();
                     },
                   },
                 });
               }}
             >
-              {t(!formValues?.receiver ? 'Select receiver' : 'Change receiver')}
+              {t(!formValues?.customer ? 'Select customer' : 'Change customer')}
             </ButtonIcon>
-          )}
+          </FlexBox>
+
+          <BorderedBox fillWidth padding={'8px'} gap={4}>
+            <Text $size={12} $weight={500}>
+              {'Хто отримувач?'}
+            </Text>
+
+            <ButtonGroup
+              options={receiverOptions}
+              onChangeIndex={i => {
+                if (!i) {
+                  unregister('receiver');
+                  unregister('receiverCommunicationMethods');
+                }
+                setHasReceiverInfo(i);
+              }}
+              defaultIndex={hasReceiverInfo}
+            />
+          </BorderedBox>
+
           {hasReceiverInfo > 0 && formValues?.receiver && (
-            <InputLabel label={t('Preferred communication methods')}>
-              <BorderedBox fillWidth padding={'8px'}>
-                <TagButtonsFilter
-                  multiple
-                  numColumns={3}
-                  onChange={value => {
-                    setValue('receiverCommunicationMethods', value);
-                  }}
-                  values={formValues.receiverCommunicationMethods}
-                  resetButtonLabel={t('Not needed')}
-                  options={communicationMethods.map(mtd => ({ ...mtd, value: mtd._id }))}
-                  resetButtonPosition={'start'}
-                />
-              </BorderedBox>
-            </InputLabel>
+            <>
+              <InputLabel label={t('Receiver information')}>
+                <CustomerInfoComponent info={formValues.receiver} />{' '}
+              </InputLabel>
+              <InputLabel label={t('Communication methods')}>
+                <BorderedBox fillWidth padding={'8px'}>
+                  <TagButtonsFilter
+                    multiple
+                    numColumns={3}
+                    onChange={value => {
+                      setValue('receiverCommunicationMethods', value);
+                    }}
+                    values={formValues.receiverCommunicationMethods}
+                    resetButtonLabel={t('Not needed')}
+                    options={communicationMethods.map(mtd => ({ ...mtd, value: mtd._id }))}
+                    resetButtonPosition={'start'}
+                  />
+                </BorderedBox>
+              </InputLabel>
+            </>
+          )}
+
+          {hasReceiverInfo > 0 && (
+            <FlexBox fxDirection={'row'} gap={8} fillWidth alignItems={'center'}>
+              <CreateCustomerIconButton
+                isReceiver
+                onSuccess={d => {
+                  setValue('receiver', d);
+                }}
+              />
+
+              <ButtonIcon
+                variant={'outlinedSmall'}
+                flex={1}
+                onClick={() => {
+                  const m = modalS.open({
+                    ModalChildren: SelectCustomerModal,
+                    modalChildrenProps: {
+                      onSelect: i => {
+                        setValue('receiver', i);
+                        m?.onClose && m?.onClose();
+                      },
+                    },
+                  });
+                }}
+              >
+                {t(!formValues?.receiver ? 'Select receiver' : 'Change receiver')}
+              </ButtonIcon>
+            </FlexBox>
           )}
         </StAccordionItem>
 
         <StAccordionItem
-          contentContainerStyle={{ padding: '0 8px 8px' }}
+          contentContainerStyle={{ padding: '8px 2px' }}
           open
           renderHeader={
             <Text $ellipsisMode={true} $size={16} $weight={500}>
@@ -184,7 +223,8 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, isGroup, 
         >
           <InputLabel label={t('Shipment method')} required>
             <CheckboxesListSelector
-              options={shipmentMethods.map(el => ({ ...el, value: el._id }))}
+              options={shipmentMethods}
+              currentOption={formValues?.shipmentMethod}
               onChangeIndex={i => {
                 setValue('shipmentMethod', shipmentMethods[i]);
               }}
@@ -202,7 +242,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, isGroup, 
         </StAccordionItem>
 
         <StAccordionItem
-          contentContainerStyle={{ padding: '0 8px 8px' }}
+          contentContainerStyle={{ padding: '8px 2px' }}
           open
           renderHeader={
             <Text $ellipsisMode={true} $size={16} $weight={500}>
@@ -213,6 +253,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, isGroup, 
           <InputLabel label={t('Payment method')} required>
             <CheckboxesListSelector
               options={paymentsMethods}
+              currentOption={formValues?.paymentMethod}
               onChangeIndex={i => {
                 setValue('paymentMethod', paymentsMethods[i]);
               }}
@@ -222,7 +263,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ name, onFinish, isGroup, 
 
         {!isGroup && (
           <StAccordionItem
-            contentContainerStyle={{ padding: '0 8px 8px' }}
+            contentContainerStyle={{ padding: '8px 2px' }}
             open
             renderHeader={
               <Text $ellipsisMode={true} $size={16} $weight={500}>
@@ -258,15 +299,7 @@ const StAccordionItem = styled(FormAccordionItem)`
 `;
 export default OrderInfoStep;
 
-function getCustomerInfoComponentCells({
-  info,
-  isReceiver,
-  isManager,
-}: {
-  info?: ICustomer;
-  isReceiver?: boolean;
-  isManager?: boolean;
-}) {
+function getCustomerInfoComponentCells({ isManager }: { info?: ICustomer; isReceiver?: boolean; isManager?: boolean }) {
   return [
     { label: t('label'), getValue: (info?: ICustomer) => info?.label || '---', visible: !isManager },
     { label: t('name'), getValue: (info?: ICustomer) => info?.name || '---', visible: true },
@@ -281,6 +314,41 @@ function getCustomerInfoComponentCells({
     { label: t('tags'), getValue: (info?: ICustomer) => info?.tags?.join(', ') || '---', visible: !isManager },
   ];
 }
+
+const CreateCustomerIconButton = ({
+  onSuccess,
+  isReceiver,
+}: {
+  onSuccess?: (customer: ICustomer) => void;
+  isReceiver?: boolean;
+}) => {
+  const customerS = useAppServiceProvider()[ServiceName.customers];
+  const modalS = useModalService();
+
+  return (
+    <ButtonIcon
+      variant={'onlyIcon'}
+      icon={'plus'}
+      iconSize={'100%'}
+      size={'30px'}
+      onClick={() => {
+        modalS.open({
+          ModalChildren: FormCreateCustomer,
+          modalChildrenProps: {
+            title: isReceiver ? t('Create receiver') : undefined,
+            onSubmit: d => {
+              customerS.create({
+                data: d,
+                onSuccess: onSuccess,
+              });
+            },
+          },
+        });
+      }}
+    ></ButtonIcon>
+  );
+};
+
 const CustomerInfoComponent = ({
   info,
   isReceiver,

@@ -5,6 +5,12 @@ import FlexBox from './FlexBox';
 import CheckBox from '../TableList/TebleCells/CellComponents/CheckBox';
 import { Text } from './Text';
 
+export interface CheckboxesListOption<V = any> extends Partial<FilterOption<V>> {
+  description?: string;
+}
+
+export type CheckboxesListOnChangeHandler = (ids: string[]) => void;
+
 const CheckboxesListSelector = <V = any,>({
   options,
   onChangeIndex,
@@ -12,12 +18,14 @@ const CheckboxesListSelector = <V = any,>({
   currentOption,
   multiple,
   onChange,
+  value,
 }: {
   onChangeIndex?: (index: number) => void;
-  onChange?: (ids: string[]) => void;
-  options?: Partial<FilterOption<V>>[];
+  onChange?: CheckboxesListOnChangeHandler;
+  options?: CheckboxesListOption<V>[];
   currentIndex?: number;
-  currentOption?: Partial<FilterOption<V>>;
+  currentOption?: CheckboxesListOption<V>;
+  value?: string[];
   multiple?: boolean;
 }) => {
   const [current, setCurrent] = useState(0);
@@ -47,12 +55,20 @@ const CheckboxesListSelector = <V = any,>({
   }, [currentIndex]);
 
   useEffect(() => {
+    if (multiple) return;
     if (!checks.isUnd(currentOption) && !checks.isUnd(options)) {
       setCurrent(options.findIndex(o => o?.value === currentOption?.value || o?._id === currentOption?._id));
     }
-  }, [currentOption, options]);
+  }, [currentOption, multiple, options]);
+
+  useEffect(() => {
+    if (!multiple) return;
+    if (!checks.isUnd(value) && checks.isArray(value)) {
+      setSelectedIds(value);
+    }
+  }, [multiple, value]);
   return (
-    <FlexBox fillWidth>
+    <FlexBox fillWidth gap={8}>
       {options?.map((o, idx) => {
         return (
           <FlexBox

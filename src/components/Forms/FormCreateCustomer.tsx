@@ -31,7 +31,7 @@ const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({ onSubmit, onClo
   };
 
   return (
-    <ModalForm title={t('Create customer')} {...p} onSubmit={handleSubmit(onValid)}>
+    <ModalForm {...p} title={p.title ? p.title : t('Create customer')} onSubmit={handleSubmit(onValid)}>
       <Inputs padding={'0 8px 8px'}>
         <InputLabel label={t('type')}>
           <ButtonGroup
