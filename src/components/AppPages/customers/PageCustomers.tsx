@@ -7,11 +7,14 @@ import AppGridPage from '../AppGridPage';
 import { ISortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import { Path } from 'react-hook-form';
-import { ICustomerBase } from '../../../redux/customers/customers.types';
+import { ICustomer, ICustomerBase } from '../../../redux/customers/customers.types';
 import { customersColumns } from '../../../data/customers.data';
 import { BaseAppPageProps } from '../index';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useCustomersSelector } from '../../../redux/selectors.store';
+import { useModalService } from '../../ModalProvider/ModalProvider';
+import FormCreateCustomer from '../../Forms/FormCreateCustomer';
+import _ from 'lodash';
 
 interface Props extends BaseAppPageProps {}
 
@@ -24,14 +27,15 @@ export type UseTableForm<TData = any> = FilterReturnDataType & {
 
 const PageCustomers: React.FC<Props> = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false);
+  const modalS = useModalService();
+  const state = useCustomersSelector();
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
   const service = useAppServiceProvider()[ServiceName.customers];
-  const tableData = useCustomersSelector().customers;
 
   const tableConfig = useMemo(
-    (): ITableListProps<ICustomerBase> => ({
-      tableData,
+    (): ITableListProps<ICustomer> => ({
+      tableData: state.customers,
       tableTitles: customersColumns,
       isFilter: true,
       isSearch: true,
@@ -44,6 +48,47 @@ const PageCustomers: React.FC<Props> = (props: Props) => {
             icon: 'refresh',
             onClick: () => {
               service.getAll({ data: { refresh: true, params: {} } });
+            },
+          },
+          { separator: true },
+          {
+            icon: 'edit',
+            type: 'onlyIcon',
+            onClick: () => {
+              const m = modalS.open({
+                ModalChildren: FormCreateCustomer,
+                modalChildrenProps: {
+                  defaultState: state.customers.find(c => c._id === selected?._id),
+                  onSubmit: d => {
+                    service.create({
+                      data: { data: { ...d } },
+                      onSuccess: (data, meta) => {
+                        console.log(data);
+                        m?.onClose && m?.onClose();
+                      },
+                    });
+                  },
+                },
+              });
+            },
+          },
+          { separator: true },
+          {
+            icon: 'plus',
+            type: 'onlyIconFilled',
+            onClick: () => {
+              const m = modalS.open({
+                ModalChildren: FormCreateCustomer,
+                modalChildrenProps: {
+                  withReferer: true,
+                  defaultState: { referrer: { _id: '7785f833-c56b-4d94-8827-a6a4ae9e0ed5' } },
+                  onSubmit: d => {
+                    service.create({
+                      data: { data: d?.referrer?._id ? d : _.omit(d, ['referrer']), params: {} },
+                    });
+                  },
+                },
+              });
             },
           },
         ];
@@ -60,23 +105,24 @@ const PageCustomers: React.FC<Props> = (props: Props) => {
         // }).then();
       },
     }),
-    []
+    [service, state.customers]
   );
 
-  // useEffect(() => {
-  //   if (sortParams || filterParams) {
-  //     return;
-  //   }
-  //
-  //   if (!sortParams && !filterParams) {
-  //     if (state.products.length === 0) {
-  //       getAll({
-  //         data: { refresh: true },
-  //         onLoading: setIsLoading,
-  //       });
-  //     }
-  //   }
-  // }, [filterParams, getAll, sortParams, state.products.length]);
+  useEffect(() => {
+    if (sortParams || filterParams) {
+      return;
+    }
+
+    if (!sortParams && !filterParams) {
+      if (state.customers.length === 0) {
+        service.getAll({
+          data: { refresh: true, params: {} },
+          onLoading: setIsLoading,
+        });
+      }
+    }
+  }, [filterParams, service, sortParams, state.customers.length]);
+
   return (
     <AppGridPage path={props.path}>
       <Page>

@@ -64,12 +64,12 @@ export enum CompanyQueryTypeEnum {
   invites = 'invites',
   invited = 'invited',
 }
-
+export interface IContactsSlot extends ContactsDto, IBase {}
 export interface ContactsDto {
   email?: string;
   phone?: string;
 }
-
+export interface IAddressSlot extends AddressDto, IBase {}
 export interface AddressDto {
   country?: string;
   region?: string;

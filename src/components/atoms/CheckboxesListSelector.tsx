@@ -19,6 +19,7 @@ const CheckboxesListSelector = <V = any,>({
   multiple,
   onChange,
   value,
+  disabled,
 }: {
   onChangeIndex?: (index: number) => void;
   onChange?: CheckboxesListOnChangeHandler;
@@ -27,6 +28,7 @@ const CheckboxesListSelector = <V = any,>({
   currentOption?: CheckboxesListOption<V>;
   value?: string[];
   multiple?: boolean;
+  disabled?: boolean;
 }) => {
   const [current, setCurrent] = useState(0);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -77,12 +79,18 @@ const CheckboxesListSelector = <V = any,>({
             gap={8}
             padding={'2px 4px'}
             alignItems={'center'}
+            style={{ opacity: disabled ? 0.7 : 1, pointerEvents: disabled ? 'none' : 'all' }}
             onClick={() => {
+              if (disabled) return;
               handleSetCurrent(idx);
               o?._id && handleSelect(o?._id);
             }}
           >
-            <CheckBox checked={(o?._id && selectedIds.includes(o?._id)) || idx === current} size={'22px'} />
+            <CheckBox
+              checked={(o?._id && selectedIds.includes(o?._id)) || idx === current}
+              size={'22px'}
+              disabled={disabled}
+            />
 
             <Text>{o?.label}</Text>
           </FlexBox>

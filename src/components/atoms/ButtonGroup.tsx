@@ -4,6 +4,7 @@ import ButtonIcon from './ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import { FilterOption } from '../ModalForm/ModalFilter';
 import { isUndefined } from 'lodash';
+import { checks } from '../../utils';
 
 export interface ButtonGroupProps<V = any> {
   options?: FilterOption<V>[];
@@ -11,6 +12,7 @@ export interface ButtonGroupProps<V = any> {
   onSelect?: ButtonGroupSelectHandler<V>;
   backgroundColor?: string;
   borderRadius?: string;
+  currentOption?: FilterOption<V>;
   onChangeIndex?: (index: number) => void;
 }
 export type ButtonGroupSelectHandler<V = any> = (info: { option: FilterOption<V>; value: V; index: number }) => void;
@@ -20,6 +22,7 @@ const ButtonGroup = <V = any,>({
   onSelect,
   defaultIndex,
   onChangeIndex,
+  currentOption,
 }: ButtonGroupProps<V>) => {
   const [current, setCurrent] = useState(0);
 
@@ -57,6 +60,14 @@ const ButtonGroup = <V = any,>({
       </OptionButton>
     ));
   }, [current, handleSelect, options]);
+
+  useEffect(() => {
+    if (!checks.isUnd(currentOption) && !checks.isUnd(options)) {
+      setCurrent(
+        options.findIndex(o => (o?.value ? o?.value === currentOption?.value : o?._id === currentOption?._id))
+      );
+    }
+  }, [currentOption, options]);
 
   return (
     <Buttons fillWidth borderRadius={borderRadius ?? '6px'} fxDirection={'row'} gap={4} padding={'4px'}>
