@@ -49,7 +49,7 @@ export interface ICustomer extends ICustomerBase {
   contacts?: IAddressSlot[];
 }
 
-export interface ICustomerDto extends ICustomerBase {
+export interface ICustomerDto extends Omit<ICustomerBase, '_id' | 'createdAt' | 'updatedAt' | 'deletedAt'> {
   referrer?: OnlyUUID;
 }
 

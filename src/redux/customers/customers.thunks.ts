@@ -7,6 +7,7 @@ import { axiosErrorCheck } from '../../utils';
 enum CustomersThunkTypeEnum {
   create = 'customers/createCustomerThunk',
   getAll = 'customers/getAllCustomersThunk',
+  update = 'customers/updateCustomerThunk',
 }
 export const createCustomerThunk = createAsyncThunk<ICustomer, ThunkPayload<ICustomerReqDta, ICustomer>>(
   CustomersThunkTypeEnum.create,
@@ -23,6 +24,24 @@ export const createCustomerThunk = createAsyncThunk<ICustomer, ThunkPayload<ICus
     }
   }
 );
+export const updateCustomerThunk = createAsyncThunk<
+  { data: ICustomer; refresh?: boolean },
+  ThunkPayload<{ data: ICustomerReqDta; refresh?: boolean }, ICustomer>
+>(CustomersThunkTypeEnum.update, async (arg, thunkAPI) => {
+  console.log('updateCustomerThunk');
+
+  try {
+    const res = await CustomersApi.update(arg?.data?.data);
+
+    if (res) {
+      arg?.onSuccess && arg?.onSuccess(res?.data?.data);
+    }
+
+    return { data: res?.data?.data, refresh: true };
+  } catch (e) {
+    return thunkAPI.rejectWithValue(axiosErrorCheck(e));
+  }
+});
 export const getAllCustomersThunk = createAsyncThunk<
   { refresh?: boolean; data: ICustomer[] },
   ThunkPayload<{ refresh?: boolean; params: AppQueryParams }, ICustomer[]>

@@ -15,6 +15,7 @@ import { useCustomersSelector } from '../../../redux/selectors.store';
 import { useModalService } from '../../ModalProvider/ModalProvider';
 import FormCreateCustomer from '../../Forms/FormCreateCustomer';
 import _ from 'lodash';
+import { createDataForReq } from '../../../utils/dataTransform';
 
 interface Props extends BaseAppPageProps {}
 
@@ -59,11 +60,12 @@ const PageCustomers: React.FC<Props> = (props: Props) => {
                 ModalChildren: FormCreateCustomer,
                 modalChildrenProps: {
                   defaultState: state.customers.find(c => c._id === selected?._id),
+
                   onSubmit: d => {
-                    service.create({
-                      data: { data: { ...d } },
+                    service.update({
+                      data: { data: { data: createDataForReq(d), _id: selected?._id }, refresh: true },
                       onSuccess: (data, meta) => {
-                        console.log(data);
+                        console.log('edit customer P', data);
                         m?.onClose && m?.onClose();
                       },
                     });
@@ -84,7 +86,10 @@ const PageCustomers: React.FC<Props> = (props: Props) => {
                   defaultState: { referrer: { _id: '7785f833-c56b-4d94-8827-a6a4ae9e0ed5' } },
                   onSubmit: d => {
                     service.create({
-                      data: { data: d?.referrer?._id ? d : _.omit(d, ['referrer']), params: {} },
+                      data: {
+                        data: d?.referrer?._id ? createDataForReq(d) : createDataForReq(_.omit(d, ['referrer'])),
+                        params: {},
+                      },
                     });
                   },
                 },

@@ -11,6 +11,9 @@ export default class CustomersApi {
   public static create(info?: ICustomerReqDta): Promise<AppResponse<ICustomer>> {
     return this.api.post(this.endpoints.create(), info?.data);
   }
+  public static update(info?: ICustomerReqDta): Promise<AppResponse<ICustomer>> {
+    return this.api.patch(this.endpoints.update(info?._id), info?.data);
+  }
   public static getAllByQueries(params?: AppQueryParams): Promise<AppResponse<ICustomer[]>> {
     return this.api.get(this.endpoints.getAll(), { params });
   }

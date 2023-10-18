@@ -8,21 +8,22 @@ import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import ButtonGroup from '../atoms/ButtonGroup';
 import { businessSubjectTypeFilterOptions } from '../../data/companies.data';
-import { createDataForReq } from '../../utils/dataTransform';
-import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { useForm } from 'react-hook-form';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import CheckboxesListSelector from '../atoms/CheckboxesListSelector';
 import { enumToFilterOptions } from '../../utils/fabrics';
-import { useState } from 'react';
+import { useMemo } from 'react';
 import { ConfigService } from '../../services';
 import { BusinessSubjectTypeEnum } from '../../redux/companies/companies.types';
+import _ from 'lodash';
 
 const isDevMode = ConfigService.isDevMode();
+
 export interface FormCreateCustomerProps extends Omit<ModalFormProps<any, any, ICustomerFormData>, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<ICustomerFormData>;
   withReferer?: boolean;
 }
+
 const engagementSourceOptions = enumToFilterOptions(EngagementSource);
 const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({
   defaultState,
@@ -31,21 +32,15 @@ const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({
   onClose,
   ...p
 }) => {
-  const { register, setValue, handleSubmit, ...f } = useForm<ICustomerFormData>({
+  const { register, setValue, handleSubmit, watch, ...f } = useForm<ICustomerFormData>({
     defaultValues: { ...defaultState, businessType: BusinessSubjectTypeEnum.company },
   });
-  const service = useAppServiceProvider()[ServiceName.customers];
+  const formValues = watch();
 
-  const [currentSource, setCurrentSource] = useState<EngagementSource>();
-  const onValid = (fData: FormCreateCustomerProps) => {
-    const reqData = createDataForReq(fData);
+  const isEditMode = useMemo(() => !!defaultState?.email, [defaultState?.email]);
 
-    service.create({
-      data: { data: reqData as never },
-      onSuccess: () => {
-        onClose && onClose();
-      },
-    });
+  const onValid = (fData: ICustomerFormData) => {
+    onSubmit && onSubmit(_.omit(fData, isEditMode ? ['engagementSource', 'email'] : ['engagementSource']));
   };
 
   return (
@@ -68,8 +63,14 @@ const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({
           <InputText placeholder={t('secondName')} {...register('secondName')} />
         </InputLabel>
 
-        <InputLabel label={t('email')} required>
-          <InputText placeholder={t('email')} type={'email'} {...register('email', { required: true })} required />
+        <InputLabel label={t('email')} disabled={isEditMode} required>
+          <InputText
+            placeholder={t('email')}
+            type={'email'}
+            {...register('email', { required: true })}
+            disabled={isEditMode}
+            required
+          />
         </InputLabel>
 
         <InputLabel label={t('phone')}>
@@ -90,14 +91,14 @@ const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({
           <CheckboxesListSelector
             disabled
             options={engagementSourceOptions}
-            currentOption={{ value: currentSource }}
+            currentOption={{ value: formValues?.engagementSource }}
             onChangeIndex={i => {
-              setCurrentSource(engagementSourceOptions[i].value);
+              setValue('engagementSource', engagementSourceOptions[i].value);
             }}
           />
         </InputLabel>
 
-        {currentSource === EngagementSource.referralSystem && (
+        {formValues?.engagementSource === EngagementSource.referralSystem && (
           <FlexBox gap={8} fillWidth>
             <InputLabel label={t('Referrer')} required>
               <InputText placeholder={t('Referrer')} type={'email'} required />

@@ -10,6 +10,7 @@ import { useCustomersSelector } from '../../../../redux/selectors.store';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import FormCreateCustomer from '../../FormCreateCustomer';
+import { createDataForReq } from '../../../../utils/dataTransform';
 
 export interface SelectCustomerModalProps extends Omit<ModalFormProps, 'onSelect' | 'onSubmit'> {
   onSelect?: (customer: ICustomer) => void;
@@ -25,7 +26,7 @@ const SelectCustomerModal: React.FC<SelectCustomerModalProps> = ({ onSelect, onS
     return {
       tableData: customers,
       tableTitles: customersColumns,
-      actionsCreator: ctx => {
+      actionsCreator: _ctx => {
         return [
           {
             icon: 'refresh',
@@ -33,6 +34,7 @@ const SelectCustomerModal: React.FC<SelectCustomerModalProps> = ({ onSelect, onS
               service.getAll();
             },
           },
+          { separator: true },
           {
             icon: 'plus',
             onClick: () => {
@@ -40,7 +42,7 @@ const SelectCustomerModal: React.FC<SelectCustomerModalProps> = ({ onSelect, onS
                 ModalChildren: FormCreateCustomer,
                 modalChildrenProps: {
                   onSubmit: d => {
-                    service.create({ data: d });
+                    service.create({ data: createDataForReq(d) });
                   },
                 },
               });

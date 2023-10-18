@@ -271,7 +271,7 @@ const shipments = {
 };
 const customers = {
   create: () => `${API_BASE_ROUTES.CUSTOMERS}/${Endpoints.create}`,
-  update: () => `${API_BASE_ROUTES.CUSTOMERS}/${Endpoints.update}`,
+  update: (id?: string) => `${API_BASE_ROUTES.CUSTOMERS}/${Endpoints.update}/${id}`,
   getAll: () => `${API_BASE_ROUTES.CUSTOMERS}/${Endpoints.getAll}`,
   getById: (id?: string) => `${API_BASE_ROUTES.CUSTOMERS}/${Endpoints.getById}/${id}`,
 };

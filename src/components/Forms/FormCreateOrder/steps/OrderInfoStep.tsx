@@ -26,6 +26,7 @@ import useTranslatedPaymentMethods from 'hooks/useTranslatedPaymentMethods.hook'
 import FormCreateCustomer from '../../FormCreateCustomer';
 import { ServiceName, useAppServiceProvider } from 'hooks/useAppServices.hook';
 import useTranslatedShipmentMethods from 'hooks/useTranslatedShipmentMethods.hook';
+import { createDataForReq } from '../../../../utils/dataTransform';
 
 export interface OrderInfoStepProps extends FormOrderStepBaseProps {
   form: UseFormReturn<ICreateOrderBaseFormState>;
@@ -338,7 +339,7 @@ const CreateCustomerIconButton = ({
             title: isReceiver ? t('Create receiver') : undefined,
             onSubmit: d => {
               customerS.create({
-                data: d,
+                data: createDataForReq(d),
                 onSuccess: onSuccess,
               });
             },

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ICustomerBase } from './customers.types';
 import { StateErrorType } from '../reduxTypes.types';
-import { createCustomerThunk, getAllCustomersThunk } from './customers.thunks';
+import { createCustomerThunk, getAllCustomersThunk, updateCustomerThunk } from './customers.thunks';
 
 export interface CustomersState {
   customers: ICustomerBase[];
@@ -9,6 +9,7 @@ export interface CustomersState {
   error: StateErrorType | null;
   isLoading: boolean;
 }
+
 const initialState: CustomersState = {
   customers: [],
   error: null,
@@ -20,14 +21,17 @@ export const customersSlice = createSlice({
   reducers: {},
   extraReducers: builder =>
     builder
-      .addCase(createCustomerThunk.fulfilled, (s, a) => {
-        s.customers.unshift(a.payload);
-      })
       .addCase(getAllCustomersThunk.fulfilled, (s, a) => {
         if (a.payload?.refresh) {
           s.customers = a.payload?.data;
         } else {
           s.customers = [...a.payload?.data, ...s.customers];
         }
+      })
+      .addCase(createCustomerThunk.fulfilled, (s, a) => {
+        s.customers.unshift(a.payload);
+      })
+      .addCase(updateCustomerThunk.fulfilled, (s, a) => {
+        s.customers = s.customers.map(cmr => (cmr._id === a.payload.data._id ? a.payload.data : cmr));
       }),
 });
