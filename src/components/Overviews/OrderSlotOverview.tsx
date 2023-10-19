@@ -75,9 +75,7 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
 
   const renderPriceInfo = useMemo(() => {
     return overviewInputs.map(info => {
-      return info.name === 'quantity' ? (
-        <></>
-      ) : (
+      return info.name === 'quantity' ? null : (
         <FlexBox key={info.name} justifyContent={'flex-start'} fillWidth padding={'4px'} gap={4}>
           <CardText colorType={'secondary'} $size={10}>
             {info.label}

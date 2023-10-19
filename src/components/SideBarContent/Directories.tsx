@@ -30,10 +30,10 @@ const Directories: React.FC<IDirectoriesProps> = ({ options = [] }) => {
             variant="def"
             disabled={disabled}
             onClick={() => {
-              modalS.handleOpenModal({ ModalChildren, modalChildrenProps, Modal, props });
+              modalS.open({ ModalChildren, modalChildrenProps, Modal, props });
             }}
           >
-            <Text $align={'left'} $weight={500}>
+            <Text $align={'left'} $weight={500} $size={12}>
               {title}
             </Text>
           </Trigger>

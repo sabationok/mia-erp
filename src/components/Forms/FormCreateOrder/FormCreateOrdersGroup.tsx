@@ -11,16 +11,67 @@ import { t } from '../../../lang';
 import StepsController from '../components/StepsController';
 import OrderGroupsStuffingStep from './steps/OrderGroupsStuffingStep';
 import OrderInfoStep from './steps/OrderInfoStep';
-import { ICreateOrderBaseFormState } from '../../../redux/orders/orders.types';
+import { ICreateOrderBaseFormState, IOrderTempSlot } from '../../../redux/orders/orders.types';
 import { useForm } from 'react-hook-form';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useOrdersSelector } from '../../../redux/selectors.store';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
-export interface FormCreateOrdersGroupProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
+const validation = yup.object().shape({
+  manager: yup
+    .object()
+    .shape({
+      _id: yup.string(),
+    })
+    .required(),
+  customer: yup
+    .object()
+    .shape({
+      _id: yup.string(),
+    })
+    .required(),
+  customerCommunicationMethods: yup
+    .object()
+    .shape({
+      _id: yup.string(),
+    })
+    .required(),
+  receiver: yup
+    .object()
+    .shape({
+      _id: yup.string(),
+    })
+    .required(),
+  receiverCommunicationMethods: yup
+    .object()
+    .shape({
+      _id: yup.string(),
+    })
+    .required(),
+  status: yup.string(),
+  destination: yup.string(),
+  shipmentMethod: yup
+    .object()
+    .shape({
+      _id: yup.string(),
+    })
+    .required(),
+  paymentMethod: yup
+    .object()
+    .shape({
+      _id: yup.string(),
+    })
+    .required(),
+});
+
+export interface FormCreateOrdersGroupProps
+  extends Omit<ModalFormProps<any, any, ICreateOrderBaseFormState>, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<FormCreateOrdersGroupFormData>;
 }
 export interface FormCreateOrdersGroupFormData {
   info: ICreateOrderBaseFormState;
+  slots: IOrderTempSlot[];
 }
 export enum FormCreateOrdersGroupStepsEnum {
   Stuffing = 'Stuffing',
@@ -31,20 +82,26 @@ export enum FormCreateOrdersGroupStepsEnum {
 }
 
 const steps = enumToFilterOptions(FormCreateOrdersGroupStepsEnum);
+
 const stepsProcessInitialState: Record<FormCreateOrdersGroupStepsEnum | string, boolean> = {
   [FormCreateOrdersGroupStepsEnum.Stuffing]: true,
-  [FormCreateOrdersGroupStepsEnum.Info]: false,
-  [FormCreateOrdersGroupStepsEnum.Summary]: false,
+  [FormCreateOrdersGroupStepsEnum.Info]: true,
+  [FormCreateOrdersGroupStepsEnum.Summary]: true,
   [FormCreateOrdersGroupStepsEnum.Invoices]: false,
 };
 const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit, onClose, ...p }) => {
   const service = useAppServiceProvider()[ServiceName.orders];
   const currentGroupFormState = useOrdersSelector().ordersGroupFormData;
   const { stepsMap, stepIdx, setStepIdx, stepsCount, getCurrentStep } = useStepsHandler(steps);
+
   const [isStepFinished, setIsStepFinished] =
     useState<Record<FormCreateOrdersGroupStepsEnum | string, boolean>>(stepsProcessInitialState);
 
-  const form = useForm<ICreateOrderBaseFormState>({ defaultValues: currentGroupFormState });
+  const form = useForm<ICreateOrderBaseFormState>({
+    defaultValues: currentGroupFormState,
+    resolver: yupResolver(validation),
+    reValidateMode: 'onChange',
+  });
   const handleFinishStep = (name: FormCreateOrdersGroupStepsEnum) => () => {
     setIsStepFinished(p => ({ ...p, [name]: true }));
   };
@@ -68,8 +125,11 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Summary]) {
       return true;
     }
+    if (stepsMap[FormCreateOrdersGroupStepsEnum.Info]) {
+      return form?.formState?.isValid;
+    }
     return false;
-  }, [stepsMap]);
+  }, [form?.formState?.isValid, stepsMap]);
 
   const canGoNext = useMemo(() => {
     return isStepFinished[getCurrentStep().value];
@@ -102,22 +162,17 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
           }}
           onCancelPress={stepIdx === 0 ? onClose : undefined}
           canGoNext={canGoNext}
-          canSubmit={canSubmit}
+          canAccept={canSubmit}
           currentIndex={stepIdx}
-          onAcceptPress={
-            stepIdx + 1 === stepsCount
-              ? () => {
-                  // onSubmit && onSubmit(formData);
-                  onClose && onClose();
-                }
-              : undefined
-          }
+          onAcceptPress={() => {
+            console.log(form.getValues());
+          }}
         />
       </Footer>
     </Form>
   );
 };
-const Form = styled.form`
+const Form = styled.div`
   color: ${p => p.theme.fontColorSidebar};
 
   display: flex;

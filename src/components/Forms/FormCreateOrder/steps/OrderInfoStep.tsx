@@ -34,11 +34,11 @@ export interface OrderInfoStepProps extends FormOrderStepBaseProps {
 }
 
 const receiverOptions = enumToFilterOptions({ 'The same': 'The same', Another: 'Another' });
-
 const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form }) => {
   const { register, setValue, watch, unregister } = form;
   const modalS = useModalService();
 
+  // TODO refactoring
   const { directory: communicationMethods } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
 
   const paymentsMethods = useTranslatedPaymentMethods();
