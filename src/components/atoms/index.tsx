@@ -18,6 +18,7 @@ export const ModalHeader = ({
   showSubmitButton,
   canSubmit,
   renderTitle,
+  ...props
 }: {
   canSubmit?: boolean;
   onBackPress?: () => void;
@@ -27,7 +28,7 @@ export const ModalHeader = ({
   renderTitle?: React.ReactNode;
 }) => {
   return (
-    <Header padding={'4px 0'}>
+    <Header padding={'4px 0'} {...props}>
       <FlexBox fillWidth fxDirection={'row'} justifyContent={'space-between'} alignItems={'stretch'} height={'32px'}>
         {onBackPress && (
           <ButtonIcon
