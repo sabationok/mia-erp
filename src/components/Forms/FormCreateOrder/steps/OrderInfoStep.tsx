@@ -1,6 +1,6 @@
 import FlexBox from 'components/atoms/FlexBox';
 import styled, { useTheme } from 'styled-components';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ICustomer } from 'redux/customers/customers.types';
 import { t } from 'lang';
 import { Text } from 'components/atoms/Text';
@@ -14,8 +14,6 @@ import { ApiDirType } from 'redux/APP_CONFIGS';
 import Changer from 'components/atoms/Changer';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import SelectCustomerModal from '../components/SelectCustomerModal';
-import ButtonGroup from 'components/atoms/ButtonGroup';
-import { enumToFilterOptions } from 'utils/fabrics';
 import TagButtonsFilter from 'components/atoms/TagButtonsFilter';
 import SelectManagerModal from '../components/SelectManagerModal';
 import { UseFormReturn } from 'react-hook-form/dist/types';
@@ -27,16 +25,29 @@ import FormCreateCustomer from '../../FormCreateCustomer';
 import { ServiceName, useAppServiceProvider } from 'hooks/useAppServices.hook';
 import useTranslatedShipmentMethods from 'hooks/useTranslatedShipmentMethods.hook';
 import { createDataForReq } from '../../../../utils/dataTransform';
+import ButtonSwitch from '../../../atoms/ButtonSwitch';
 
 export interface OrderInfoStepProps extends FormOrderStepBaseProps {
   form: UseFormReturn<ICreateOrderBaseFormState>;
   isGroup?: boolean;
 }
 
-const receiverOptions = enumToFilterOptions({ 'The same': 'The same', Another: 'Another' });
+type ConfirmsStateKay = 'hasShipmentPayment' | 'holdShipmentPayment' | 'holdOrderPayment' | 'hasReceiverInfo';
+
 const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form }) => {
   const { register, setValue, watch, unregister } = form;
   const modalS = useModalService();
+  const [confirms, setConfirms] = useState<Record<ConfirmsStateKay | string, boolean>>({});
+
+  useEffect(() => {
+    console.log(confirms);
+  }, [confirms]);
+
+  const registerConfirmSelectHandler = (name: ConfirmsStateKay) => {
+    return (res: boolean) => {
+      setConfirms(p => ({ ...p, [name]: res }));
+    };
+  };
 
   // TODO refactoring
   const { directory: communicationMethods } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
@@ -147,16 +158,11 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form }) => {
               {'Хто отримувач?'}
             </Text>
 
-            <ButtonGroup
-              options={receiverOptions}
-              onChangeIndex={i => {
-                if (!i) {
-                  unregister('receiver');
-                  unregister('receiverCommunicationMethods');
-                }
-                setHasReceiverInfo(i);
-              }}
-              defaultIndex={hasReceiverInfo}
+            <ButtonSwitch
+              onChange={registerConfirmSelectHandler('hasReceiverInfo')}
+              value={confirms?.hasReceiverInfo}
+              rejectLabel={'The same'}
+              acceptLabel={'Another'}
             />
           </BorderedBox>
 
@@ -232,6 +238,20 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form }) => {
             />
           </InputLabel>
 
+          <InputLabel label={t('Has payment')} required>
+            <ButtonSwitch
+              onChange={registerConfirmSelectHandler('hasShipmentPayment')}
+              value={confirms?.hasShipmentPayment}
+            />
+          </InputLabel>
+
+          <InputLabel label={t('Hold payment')} required>
+            <ButtonSwitch
+              onChange={registerConfirmSelectHandler('holdShipmentPayment')}
+              value={confirms?.holdShipmentPayment}
+            />
+          </InputLabel>
+
           <InputLabel label={t('Destination')} required>
             <TextareaPrimary
               maxLength={250}
@@ -258,6 +278,13 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form }) => {
               onChangeIndex={i => {
                 setValue('paymentMethod', paymentsMethods[i]);
               }}
+            />
+          </InputLabel>
+
+          <InputLabel label={t('Hold payment')} required>
+            <ButtonSwitch
+              onChange={registerConfirmSelectHandler('holdOrderPayment')}
+              value={confirms?.holdOrderPayment}
             />
           </InputLabel>
         </StAccordionItem>

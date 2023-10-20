@@ -6,16 +6,21 @@ import { FilterOption } from '../ModalForm/ModalFilter';
 import { isUndefined } from 'lodash';
 import { checks } from '../../utils';
 
+export type ButtonGroupOption<V = any> = FilterOption<V>;
 export interface ButtonGroupProps<V = any> {
-  options?: FilterOption<V>[];
+  options?: ButtonGroupOption<V>[];
   defaultIndex?: number;
   onSelect?: ButtonGroupSelectHandler<V>;
   backgroundColor?: string;
   borderRadius?: string;
-  currentOption?: FilterOption<V>;
+  currentOption?: ButtonGroupOption<V>;
   onChangeIndex?: (index: number) => void;
 }
-export type ButtonGroupSelectHandler<V = any> = (info: { option: FilterOption<V>; value: V; index: number }) => void;
+export type ButtonGroupSelectHandler<V = any> = (info: {
+  option: ButtonGroupOption<V>;
+  value: V;
+  index: number;
+}) => void;
 const ButtonGroup = <V = any,>({
   options,
   borderRadius,
@@ -27,7 +32,7 @@ const ButtonGroup = <V = any,>({
   const [current, setCurrent] = useState(0);
 
   const handleSelect = useCallback(
-    (option: FilterOption, index: number) => () => {
+    (option: ButtonGroupOption, index: number) => () => {
       setCurrent(index);
       onSelect && options && onSelect({ option, value: option?.value, index });
       onChangeIndex && onChangeIndex(index);

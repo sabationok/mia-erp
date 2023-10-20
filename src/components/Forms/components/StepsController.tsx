@@ -63,36 +63,43 @@ const StepsController = <V = any,>({
   }, [current, steps]);
 
   const handlePrevPress = useCallback(() => {
-    setCurrent(prev => {
-      if (steps) {
-        if (prev === 0) {
+    if (steps) {
+      if (onPrevPress) {
+        if (current === 0) {
           onCancelPress && onCancelPress();
-          return prev;
+          return;
         } else {
-          const newValue = prev - 1;
+          const newValue = current - 1;
           onPrevPress && onPrevPress({ option: steps[newValue], value: steps[newValue].value, index: newValue });
-          return newValue;
         }
+      } else {
+        setCurrent(prev => {
+          if (prev === 0) {
+            return prev;
+          } else {
+            return prev - 1;
+          }
+        });
       }
-      return prev;
-    });
-  }, [onCancelPress, onPrevPress, steps]);
-  const handleNextPress = useCallback(() => {
-    setCurrent(prev => {
-      if (steps) {
-        const newValue = prev + 1;
-        if (newValue === steps.length) {
-          onAcceptPress && onAcceptPress();
-          return prev;
-        } else {
-          onNextPress && onNextPress({ option: steps[newValue], value: steps[newValue].value, index: newValue });
-          return newValue;
-        }
-      }
+    }
+  }, [current, onCancelPress, onPrevPress, steps]);
 
-      return prev;
-    });
-  }, [onAcceptPress, onNextPress, steps]);
+  const handleNextPress = useCallback(() => {
+    if (steps) {
+      if (onNextPress) {
+        const newValue = current + 1;
+        if (newValue === steps.length) {
+          return onAcceptPress && onAcceptPress();
+        } else {
+          return onNextPress({ option: steps[newValue], value: steps[newValue].value, index: newValue });
+        }
+      } else {
+        setCurrent(prev => {
+          return prev + 1 === steps.length ? prev + 1 : prev;
+        });
+      }
+    }
+  }, [current, onAcceptPress, onNextPress, steps]);
 
   useEffect(() => {
     if (checks.isNotUnd(currentIndex)) {
