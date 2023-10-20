@@ -35,7 +35,6 @@ interface DirListItemState {
 const DirListItem: React.FC<DirListItemProps> = props => {
   const {
     item,
-    parent,
     availableLevels = 1,
     currentLevel = 0,
     onUpdate,
@@ -48,6 +47,7 @@ const DirListItem: React.FC<DirListItemProps> = props => {
     onChangeArchiveStatus,
     archiving,
     editing,
+    creatingChild,
   } = props;
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -72,14 +72,7 @@ const DirListItem: React.FC<DirListItemProps> = props => {
   }
 
   function logInfo() {
-    console.log('==============>>>>>>>>>>>>>', item?.label);
-    console.log({
-      availableLevels,
-      currentLevel,
-    });
-    console.log('parent', !!parent);
-    console.log('item?.parent', !!item?.parent);
-    console.log('canHasChildren', canHasChildren);
+    console.log(item);
   }
 
   function evHandlerWrapper(evHandler?: (...arg: any[]) => void, ...arg: any[]) {
@@ -107,7 +100,7 @@ const DirListItem: React.FC<DirListItemProps> = props => {
   }, [currentLevel, props, item]);
 
   return (
-    <Item style={{ paddingLeft: canHasChildren ? 0 : 32 }} onClick={logInfo}>
+    <Item style={{ paddingLeft: currentLevel > 0 ? (canHasChildren ? 0 : 32) : 0 }} onClick={logInfo}>
       {canHasChildren && (
         <ButtonIcon
           variant="onlyIconNoEffects"
@@ -124,7 +117,7 @@ const DirListItem: React.FC<DirListItemProps> = props => {
           <LabelField>
             <Label>{item?.label || item?.name}</Label>
 
-            {canHasChildren && (
+            {creatingChild && (
               <Actions canHasChildren={canHasChildren}>
                 <ButtonIcon
                   variant="onlyIcon"
@@ -165,10 +158,10 @@ const DirListItem: React.FC<DirListItemProps> = props => {
               <ActionButton
                 variant="onlyIcon"
                 iconSize="22px"
-                icon={!state.disabled ? 'lightMode' : 'darkMode'}
+                icon={state?.disabled ? 'lightMode' : 'darkMode'}
                 onClick={() => {
                   handleState('disabled');
-                  onChangeDisableStatus && item?._id && onChangeDisableStatus(item?._id, !state.disabled);
+                  onChangeDisableStatus && item?._id && onChangeDisableStatus(item?._id, !!state?.disabled);
                 }}
               />
             )}

@@ -28,11 +28,13 @@ export function getTranslatedString(langPack: LangPack | string, langKey: LangKe
   try {
     if (checks.isStr(langPack)) {
       return JSON.parse(langPack)[langKey];
-    } else {
+    } else if (checks.isObj(langPack)) {
       return langPack[langKey];
+    } else {
+      return langPack;
     }
   } catch (e) {
-    console.log('getTranslatedString', e);
+    console.error('getTranslatedString error', e);
     console.log({ langPack, langKey });
     return 'Translate error';
   }

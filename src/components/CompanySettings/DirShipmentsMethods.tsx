@@ -49,7 +49,7 @@ const DirShipmentsMethods: React.FC<DirShipmentsMethodsProps> = ({
   );
   return (
     <StModalForm width={'480px'} {...props}>
-      <FlexBox fillWidth flex={'1'} gap={8} padding={'12px'} maxHeight={'100%'} overflow={'auto'}>
+      <FlexBox fillWidth flex={'1'} gap={8} padding={'8px 4px'} maxHeight={'100%'} overflow={'auto'}>
         {renderList}
       </FlexBox>
     </StModalForm>
