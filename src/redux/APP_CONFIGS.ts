@@ -279,6 +279,7 @@ const integrations = {
   create: () => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.create}`,
   update: () => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.update}`,
   getAll: () => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.getAll}`,
+  getAllIntegrationProviders: () => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.getAll}`,
   getById: (id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.getById}/${id}`,
 };
 

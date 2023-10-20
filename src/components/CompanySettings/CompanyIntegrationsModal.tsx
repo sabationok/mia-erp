@@ -1,9 +1,9 @@
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import FlexBox from '../atoms/FlexBox';
-import { useMemo, useState } from 'react';
+import { ReactElement, useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../utils/fabrics';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import ModalFilter, { FilterOption } from '../ModalForm/ModalFilter';
+import PaymentIntegrationsTab from './integrations/PaymentIntegrationsTab';
 
 export interface CompanyIntegrationsProps extends Omit<ModalFormProps, 'onSubmit'> {}
 enum CompanyIntegrationsTabs {
@@ -12,34 +12,24 @@ enum CompanyIntegrationsTabs {
   Stores = 'Stores',
 }
 
-const TestTabComp = <V = any, Name = any>(props: {
-  onClose?: () => void;
-  compId: string;
-  name?: Name;
-  options?: FilterOption[];
-  onChangeValue?: (info: { name: Name; value: V }) => void;
-}) => {
+const TestTabComp = (props: IntegrationTabProps) => {
   return (
     <FlexBox flex={1} fillWidth alignItems={'center'} justifyContent={'center'}>
-      <ModalFilter filterOptions={props.options} onFilterValueSelect={props?.onChangeValue} name={props?.name} />
-
-      <ButtonIcon variant={'filledLarge'} onClick={props.onClose}>{`Закрити ${props.compId}`}</ButtonIcon>
+      <ButtonIcon variant={'filledLarge'} onClick={props?.onClose}>{`Закрити ${props.compId}`}</ButtonIcon>
     </FlexBox>
   );
 };
+export interface IntegrationTabProps {
+  onClose?: () => void;
+  compId: string;
+}
 
 const RenderTabComponent: Record<
   CompanyIntegrationsTabs,
-  <V = any, Name = any>(props: {
-    onClose?: () => void;
-    compId: string;
-    name: Name;
-    options?: FilterOption[];
-    onChangeValue?: (info: { name: any; value: V }) => void;
-  }) => JSX.Element
+  <P = any>(props: IntegrationTabProps & P) => ReactElement<P> | null
 > = {
   [CompanyIntegrationsTabs.Deliveries]: TestTabComp,
-  [CompanyIntegrationsTabs.Payments]: TestTabComp,
+  [CompanyIntegrationsTabs.Payments]: PaymentIntegrationsTab,
   [CompanyIntegrationsTabs.Stores]: TestTabComp,
 };
 
@@ -62,7 +52,7 @@ const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose,
       filterOptions={tabs}
       onFilterValueSelect={info => setCurrent(info?.value)}
     >
-      <RenderTab name={'in'} onClose={onClose} compId={current} />
+      <RenderTab onClose={onClose} compId={current} />
     </ModalForm>
   );
 };

@@ -4,6 +4,7 @@ import { IInvoice } from '../invoices/invoices.types';
 import { IShipment } from '../shipments/shipments.types';
 import { AppQueryParams } from '../../api';
 import { LangPack } from '../../lang';
+import { ExtServProviderBase } from '../integrations/integrations.types';
 
 export enum PaymentProviderEnum {
   privat24 = 'privat24',
@@ -65,17 +66,3 @@ export interface PaymentServProvider extends ExtServProviderBase {
 }
 
 // TODO refactoring
-
-export enum ExternalServiceProviderTypeEnum {
-  payments = 'payments',
-  shipments = 'shipments',
-  invoices = 'invoices',
-  emailService = 'emailService',
-  phoneService = 'phoneService',
-  smsService = 'smsService',
-}
-export interface ExtServProviderBase extends IBase {
-  type?: ExternalServiceProviderTypeEnum;
-  label: string;
-  lang?: LangPack;
-}

@@ -9,6 +9,11 @@ export default class IntegrationsApi {
   public static create() {
     return this.api.post(this.endpoints.create());
   }
+
+  public static getAllIntegrationProviders(params?: AppQueryParams) {
+    return this.api.get(this.endpoints.getAll(), { params });
+  }
+
   public static getAllByQueries(params?: AppQueryParams) {
     return this.api.get(this.endpoints.getAll(), { params });
   }
