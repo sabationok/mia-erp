@@ -3,7 +3,7 @@ import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import ModalFilter from '../../ModalForm/ModalFilter';
 import { useStepsHandler } from '../../../utils/createStepChecker';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import { ModalHeader } from '../../atoms';
@@ -97,7 +97,7 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
     useState<Record<FormCreateOrdersGroupStepsEnum | string, boolean>>(stepsProcessInitialState);
 
   const form = useForm<ICreateOrderBaseFormState>({
-    defaultValues: currentGroupFormState,
+    defaultValues: currentGroupFormState?.info,
     resolver: yupResolver(validation),
     reValidateMode: 'onChange',
   });
@@ -120,10 +120,6 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
     }
   }, [form, stepsMap]);
 
-  useEffect(() => {
-    console.log('errors', form.formState.errors);
-  }, [form.formState.errors]);
-
   const canSubmit = useMemo(() => {
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Orders]) {
       return true;
@@ -140,19 +136,21 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
 
   const handlePrevPress = useCallback(() => {
     if (getCurrentStep().value === 'Info') {
-      service.updateCurrentGroupFormData(form.getValues());
+      service.updateCurrentGroupFormInfoData(form.getValues());
     }
     setPrevStep();
   }, [form, getCurrentStep, service, setPrevStep]);
   const handleNextPress = useCallback(() => {
     if (getCurrentStep().value === 'Info') {
       console.log(getCurrentStep());
+      console.log(form.getValues());
+      console.log(currentGroupFormState);
 
-      service.updateCurrentGroupFormData(form.getValues());
+      service.updateCurrentGroupFormInfoData(form.getValues());
       return;
     }
-    setNextStep();
-  }, [form, getCurrentStep, service, setNextStep]);
+    canGoNext && setNextStep();
+  }, [canGoNext, currentGroupFormState, form, getCurrentStep, service, setNextStep]);
 
   return (
     <Form>

@@ -7,9 +7,9 @@ import { IProductInventory, IWarehouse } from '../warehouses/warehouses.types';
 import { IProduct } from '../products/products.types';
 import { IVariation } from '../products/variations.types';
 import { ICustomerBase } from '../customers/customers.types';
-import { IShipment } from '../shipments/shipments.types';
+import { IShipment, IShipmentFormData } from '../shipments/shipments.types';
 import { IPayment } from '../payments/payments.types';
-import { IInvoice } from '../invoices/invoices.types';
+import { IInvoice, IInvoiceBaseFormData } from '../invoices/invoices.types';
 
 export enum OrderTypeEnum {
   Order = 'Order',
@@ -90,9 +90,6 @@ export interface ICreateOrderBaseFormState {
     user?: Partial<IUserBase>;
   };
 
-  barCode?: string;
-  code?: string;
-
   customer?: ICustomerBase;
   customerCommunicationMethods?: string[];
 
@@ -103,15 +100,14 @@ export interface ICreateOrderBaseFormState {
 
   destination?: string;
 
-  shipmentMethod?: { _id: string; label?: string };
-  paymentMethod?: { _id: string; label?: string };
+  invoice?: IInvoiceBaseFormData;
 
-  comment?: string;
-  innerComment?: string;
+  shipment?: IShipmentFormData;
 }
 
-export interface ICreateOrderFormState extends ICreateOrderBaseFormState {
+export interface ICreateOrderFormState {
   slots?: IOrderTempSlot[];
+  info?: ICreateOrderBaseFormState;
   orders?: IOrder[];
 }
 

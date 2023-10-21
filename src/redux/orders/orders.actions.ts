@@ -8,7 +8,7 @@ enum OrdersActionTypeEnum {
   addSlotToGroup = 'orders/addSlotToGroupAction',
   removeSlotFromGroup = 'orders/removeSlotFromGroupAction',
   updateSlotInGroup = 'orders/updateSlotInGroupAction',
-  updateGroupInfoFormData = 'orders/updateGroupInfoFormDataAction',
+  updateGroupFormInfoData = 'orders/updateGroupFormInfoDataAction',
   clearGroupFormData = 'orders/clearGroupFormDataAction',
 }
 export const AddSlotToOrderAction = createAction<IOrderTempSlot, OrdersActionTypeEnum.addSlotToOrder>(
@@ -26,10 +26,10 @@ export const RemoveSlotFromGroupAction = createAction<string, OrdersActionTypeEn
 export const UpdateSlotInGroupAction = createAction<IOrderTempSlot, OrdersActionTypeEnum.updateSlotInGroup>(
   OrdersActionTypeEnum.updateSlotInGroup
 );
-export const UpdateCurrentGroupInfoFormDataAction = createAction<
+export const UpdateCurrentGroupFormInfoDataAction = createAction<
   ICreateOrderBaseFormState,
-  OrdersActionTypeEnum.updateGroupInfoFormData
->(OrdersActionTypeEnum.updateGroupInfoFormData);
+  OrdersActionTypeEnum.updateGroupFormInfoData
+>(OrdersActionTypeEnum.updateGroupFormInfoData);
 
 export const ClearCurrentGroupFormDataAction = createAction<any, OrdersActionTypeEnum.clearGroupFormData>(
   OrdersActionTypeEnum.clearGroupFormData

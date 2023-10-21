@@ -1,6 +1,6 @@
 import { IOrderSlot } from '../../redux/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { useCallback, useMemo, useState } from 'react';
 import { IProductImage } from '../../redux/products/products.types';
@@ -112,17 +112,18 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
   // useEffect(() => {
   //   console.log('OrderSlotOverview', formData);
   // }, [formData]);
+  const theme = useTheme();
 
   return (
     <Card disabled={disabled}>
       <FlexBox fillWidth gap={8} fxDirection={'row'}>
-        <LeftSide>
+        <LeftSide style={{ borderRight: `1px solid ${theme.modalBorderColor}` }} padding={'0 4px 0 0'}>
           <ImageBox justifyContent={'flex-start'}>
             <img src={imgPreview} style={{ objectFit: 'cover', objectPosition: 'center' }} alt={''} width={'100%'} />
           </ImageBox>
 
           {!disabled && (
-            <FlexBox maxWidth={'125px'}>
+            <FlexBox maxWidth={'125px'} justifyContent={'space-between'}>
               {editable && (
                 <InputLabel label={t('quantity')} style={{ width: '100%', marginBottom: 8 }} disabled={disabled}>
                   <CountSelectorBase
@@ -156,7 +157,7 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
           )}
         </LeftSide>
 
-        <FlexBox flex={1}>
+        <FlexBox flex={1} gap={2}>
           <FlexBox fxDirection={'row'} gap={8} fillWidth alignItems={'flex-start'}>
             <FlexBox fxDirection={'row'} flexWrap={'wrap'} gap={8} flex={1} alignItems={'center'} padding={'4px 8px'}>
               <CardText style={{ flex: 1 }}>{slot?.variation?.label}</CardText>
@@ -171,10 +172,16 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
             </FlexBox>
           </FlexBox>
 
-          <CardGridArea fillWidth alignItems={'flex-start'} justifyContent={'space-between'} margin={'0 0 8px'}>
+          <Text $size={12} $weight={600}>
+            {t('Price')}
+          </Text>
+          <CardGridArea fillWidth alignItems={'flex-start'} justifyContent={'space-between'}>
             {renderPriceInfo}
           </CardGridArea>
 
+          <Text $size={12} $weight={600}>
+            {t('Properties')}
+          </Text>
           <Properties fillWidth alignItems={'flex-start'}>
             {renderProperties}
           </Properties>
@@ -257,7 +264,7 @@ const ActionButton = styled(ButtonIcon)`
   padding: 6px 10px;
 `;
 const Buttons = styled(FlexBox)`
-  border-top: 1px solid ${p => p.theme.modalBorderColor};
+  //border-top: 1px solid ${p => p.theme.modalBorderColor};
 `;
 
 export default OrderSlotOverview;

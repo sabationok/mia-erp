@@ -4,11 +4,10 @@ import {
   AddSlotToGroupAction,
   ClearCurrentGroupFormDataAction,
   RemoveSlotFromGroupAction,
-  UpdateCurrentGroupInfoFormDataAction,
+  UpdateCurrentGroupFormInfoDataAction,
   UpdateSlotInGroupAction,
 } from './orders.actions';
 import { OnlyUUID } from '../global.types';
-import { ExtractId } from '../../utils/dataTransform';
 
 export interface IOrdersState {
   orders: any[];
@@ -27,9 +26,8 @@ export interface IOrdersGroupBase {
   orders: IOrder[];
 }
 const initialOrdersGroupFormData: ICreateOrderFormState = {
-  manager: {},
-
   slots: [],
+  info: { manager: { _id: '' } },
   orders: [],
 };
 const initialOrdersState: IOrdersState = {
@@ -50,7 +48,7 @@ const compareIdsByKey = <Key extends string = any>(
   key?: Key
 ) => {
   if (obj1 && obj2 && key) {
-    return ExtractId(obj1[key])._id === ExtractId(obj2[key])._id;
+    return obj1[key]?._id === obj2[key]?._id;
   }
   return false;
 };
@@ -96,8 +94,8 @@ export const ordersSlice = createSlice({
           }
         });
       })
-      .addCase(UpdateCurrentGroupInfoFormDataAction, (s, a) => {
-        s.ordersGroupFormData = { ...s.ordersGroupFormData, ...a.payload };
+      .addCase(UpdateCurrentGroupFormInfoDataAction, (s, a) => {
+        s.ordersGroupFormData.info = { ...s.ordersGroupFormData?.info, ...a.payload };
       })
       .addCase(ClearCurrentGroupFormDataAction, (s, a) => {
         s.ordersGroupFormData = {};

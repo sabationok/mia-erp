@@ -1,6 +1,6 @@
 import FlexBox from 'components/atoms/FlexBox';
 import styled, { useTheme } from 'styled-components';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ICustomer } from 'redux/customers/customers.types';
 import { t } from 'lang';
 import { Text } from 'components/atoms/Text';
@@ -34,14 +34,10 @@ export interface OrderInfoStepProps extends FormOrderStepBaseProps {
 
 type ConfirmsStateKay = 'hasShipmentPayment' | 'holdShipmentPayment' | 'holdOrderPayment' | 'hasReceiverInfo';
 
-const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form }) => {
+const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form, onFinish }) => {
   const { register, setValue, watch, unregister } = form;
   const modalS = useModalService();
   const [confirms, setConfirms] = useState<Record<ConfirmsStateKay | string, boolean>>({});
-
-  useEffect(() => {
-    console.log(confirms);
-  }, [confirms]);
 
   const registerConfirmSelectHandler = (name: ConfirmsStateKay) => {
     return (res: boolean) => {
@@ -56,8 +52,6 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form }) => {
   const shipmentMethods = useTranslatedShipmentMethods();
 
   const formValues = watch();
-
-  const [hasReceiverInfo, setHasReceiverInfo] = useState(formValues.receiver ? 1 : 0);
 
   return (
     <Inputs flex={1} overflow={'auto'}>
@@ -109,8 +103,8 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form }) => {
                 <CustomerInfoComponent info={formValues.customer} />
               </InputLabel>
 
-              <InputLabel label={t('Communication methods')}>
-                <BorderedBox fillWidth padding={'8px'}>
+              <BorderedBox fillWidth padding={'0 0 8px'} overflow={'hidden'}>
+                <InputLabel label={t('Communication methods')}>
                   <TagButtonsFilter
                     multiple
                     numColumns={3}
@@ -122,8 +116,8 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form }) => {
                       setValue('customerCommunicationMethods', value);
                     }}
                   />
-                </BorderedBox>
-              </InputLabel>
+                </InputLabel>
+              </BorderedBox>
             </>
           )}
 
@@ -166,13 +160,14 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form }) => {
             />
           </BorderedBox>
 
-          {hasReceiverInfo > 0 && formValues?.receiver && (
+          {confirms?.hasReceiverInfo && formValues?.receiver && (
             <>
               <InputLabel label={t('Receiver information')}>
                 <CustomerInfoComponent info={formValues.receiver} />{' '}
               </InputLabel>
-              <InputLabel label={t('Communication methods')}>
-                <BorderedBox fillWidth padding={'8px'}>
+
+              <BorderedBox fillWidth padding={'0 0 8px'}>
+                <InputLabel label={t('Communication methods')}>
                   <TagButtonsFilter
                     multiple
                     numColumns={3}
@@ -184,12 +179,12 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form }) => {
                     options={communicationMethods.map(mtd => ({ ...mtd, value: mtd._id }))}
                     resetButtonPosition={'start'}
                   />
-                </BorderedBox>
-              </InputLabel>
+                </InputLabel>
+              </BorderedBox>
             </>
           )}
 
-          {hasReceiverInfo > 0 && (
+          {confirms?.hasReceiverInfo && (
             <FlexBox fxDirection={'row'} gap={8} fillWidth alignItems={'center'}>
               <CreateCustomerIconButton
                 isReceiver
@@ -224,90 +219,94 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form }) => {
           open
           renderHeader={
             <Text $ellipsisMode={true} $size={16} $weight={500}>
-              {`${t('Shipment')} | ${t('Delivery')}`}
-            </Text>
-          }
-        >
-          <InputLabel label={t('Shipment method')} required>
-            <CheckboxesListSelector
-              options={shipmentMethods}
-              currentOption={formValues?.shipmentMethod}
-              onChangeIndex={i => {
-                setValue('shipmentMethod', shipmentMethods[i]);
-              }}
-            />
-          </InputLabel>
-
-          <InputLabel label={t('Has payment')} required>
-            <ButtonSwitch
-              onChange={registerConfirmSelectHandler('hasShipmentPayment')}
-              value={confirms?.hasShipmentPayment}
-            />
-          </InputLabel>
-
-          <InputLabel label={t('Hold payment')} required>
-            <ButtonSwitch
-              onChange={registerConfirmSelectHandler('holdShipmentPayment')}
-              value={confirms?.holdShipmentPayment}
-            />
-          </InputLabel>
-
-          <InputLabel label={t('Destination')} required>
-            <TextareaPrimary
-              maxLength={250}
-              required
-              placeholder={t('Enter destination address')}
-              {...register('destination', { required: true })}
-            />
-          </InputLabel>
-        </StAccordionItem>
-
-        <StAccordionItem
-          contentContainerStyle={{ padding: '8px 2px' }}
-          open
-          renderHeader={
-            <Text $ellipsisMode={true} $size={16} $weight={500}>
-              {t('Payment')}
+              {t('Order invoices')}
             </Text>
           }
         >
           <InputLabel label={t('Payment method')} required>
             <CheckboxesListSelector
               options={paymentsMethods}
-              currentOption={formValues?.paymentMethod}
+              currentOption={formValues?.invoice?.method}
               onChangeIndex={i => {
-                setValue('paymentMethod', paymentsMethods[i]);
+                setValue('invoice.method', paymentsMethods[i]);
               }}
-            />
-          </InputLabel>
-
-          <InputLabel label={t('Hold payment')} required>
-            <ButtonSwitch
-              onChange={registerConfirmSelectHandler('holdOrderPayment')}
-              value={confirms?.holdOrderPayment}
             />
           </InputLabel>
         </StAccordionItem>
 
-        {!isGroup && (
-          <StAccordionItem
-            contentContainerStyle={{ padding: '8px 2px' }}
-            open
-            renderHeader={
-              <Text $ellipsisMode={true} $size={16} $weight={500}>
-                {t('Additionally')}
-              </Text>
-            }
-          >
-            <InputLabel label={t('Comment')}>
-              <TextareaPrimary maxLength={250} placeholder={t('Enter comment for customer')} {...register('comment')} />
+        <StAccordionItem
+          contentContainerStyle={{ padding: '0 2px' }}
+          open
+          renderHeader={
+            <Text $ellipsisMode={true} $size={16} $weight={500}>
+              {`${t('Shipment')} | ${t('Delivery')}`}
+            </Text>
+          }
+        >
+          <BorderedBox fillWidth gap={8} padding={'0 0 8px'}>
+            <InputLabel label={t('Shipment method')} required>
+              <CheckboxesListSelector
+                options={shipmentMethods}
+                currentOption={formValues?.shipment?.method}
+                onChangeIndex={i => {
+                  setValue('shipment.method', shipmentMethods[i]);
+                }}
+              />
+            </InputLabel>
+          </BorderedBox>
+
+          <BorderedBox fillWidth gap={8} padding={'0 0 8px'}>
+            <InputLabel label={t('Destination')} required>
+              <TextareaPrimary
+                maxLength={250}
+                required
+                placeholder={t('Enter destination address')}
+                {...register('destination', { required: true })}
+              />
+            </InputLabel>
+          </BorderedBox>
+
+          <BorderedBox fillWidth gap={8} padding={'0 0 8px'}>
+            <InputLabel label={t('Has payment')} required>
+              <ButtonSwitch
+                onChange={registerConfirmSelectHandler('hasShipmentPayment')}
+                value={confirms?.hasShipmentPayment}
+              />
             </InputLabel>
 
-            <InputLabel label={t('Service comment')}>
-              <TextareaPrimary maxLength={250} placeholder={t('Enter service comment')} {...register('innerComment')} />
-            </InputLabel>
-          </StAccordionItem>
-        )}
+            {confirms?.hasShipmentPayment && (
+              <InputLabel label={t('Payment method')} required>
+                <CheckboxesListSelector
+                  options={paymentsMethods}
+                  currentOption={formValues?.shipment?.paymentMethod}
+                  onChangeIndex={i => {
+                    setValue('shipment.paymentMethod', paymentsMethods[i]);
+                  }}
+                />
+              </InputLabel>
+            )}
+          </BorderedBox>
+        </StAccordionItem>
+
+        {/*{!isGroup && (*/}
+        {/*  <StAccordionItem*/}
+        {/*    contentContainerStyle={{ padding: '8px 2px' }}*/}
+        {/*    open*/}
+        {/*    renderHeader={*/}
+        {/*      <Text $ellipsisMode={true} $size={16} $weight={500}>*/}
+        {/*        {t('Additionally')}*/}
+        {/*      </Text>*/}
+        {/*    }*/}
+        {/*  >*/}
+        {/*    <InputLabel label={t('Comment')}>*/}
+        {/*      <TextareaPrimary maxLength={250} placeholder={t('Enter comment for customer')} {...register('comment')} />*/}
+        {/*    </InputLabel>*/}
+
+        {/*    <InputLabel label={t('Service comment')}>*/}
+        {/*      <TextareaPrimary maxLength={250} placeholder={t('Enter service comment')} {...register('innerComment')} />*/}
+        {/*    </InputLabel>*/}
+        {/*  </StAccordionItem>*/}
+        {/*)}*/}
       </FlexBox>
     </Inputs>
   );

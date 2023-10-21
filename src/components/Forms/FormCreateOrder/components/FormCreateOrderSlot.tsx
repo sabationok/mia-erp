@@ -4,7 +4,7 @@ import { IProduct } from '../../../../redux/products/products.types';
 import { FormEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
 import { ITableListProps } from '../../../TableList/tableTypes.types';
 import TableList from '../../../TableList/TableList';
-import { createApiCall, ProductsApi, WarehousesApi } from '../../../../api';
+import { AppQueryParams, createApiCall, ProductsApi, WarehousesApi } from '../../../../api';
 import { t } from '../../../../lang';
 import { enumToFilterOptions } from '../../../../utils/fabrics';
 import ModalFilter from '../../../ModalForm/ModalFilter';
@@ -20,7 +20,6 @@ import { usePropertiesSelector } from '../../../../redux/selectors.store';
 import VariationsApi from '../../../../api/variations.api';
 import { transformVariationTableData } from '../../../../utils/tables';
 import { ExtractId } from '../../../../utils/dataTransform';
-import { pricesColumnsForProductReview } from '../../../../data/priceManagement.data';
 import { IOrderTempSlot } from '../../../../redux/orders/orders.types';
 import { IProductInventory, IWarehouse } from '../../../../redux/warehouses/warehouses.types';
 import { warehouseBatchColumns } from '../../../../data/warehauses.data';
@@ -32,6 +31,7 @@ import { productsColumns } from '../../../../data/products.data';
 export interface FormCreateOrderSlotProps
   extends Omit<ModalFormProps<FormCreateOrderSlotSteps, any, FormCreateOrderSlotFormData>, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<IOrderTempSlot>;
+  params?: Pick<AppQueryParams, 'warehouse' | 'product' | 'variation' | 'price' | 'inventory'>;
 }
 
 enum FormCreateOrderSlotSteps {
@@ -54,7 +54,13 @@ export interface FormCreateOrderSlotFormData {
 }
 type FormKey = keyof FormCreateOrderSlotFormData;
 
-const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({ defaultState, onSubmit, onClose, ...props }) => {
+const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
+  params,
+  defaultState,
+  onSubmit,
+  onClose,
+  ...props
+}) => {
   const { stepCheck, stepIdx, stepsCount, setPrevStep, setNextStep } = useStepsHandler(stepsLong);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [variations, setVariations] = useState<IVariationTableData[]>([]);
@@ -113,21 +119,21 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({ defaultState,
     }),
     [formData?.variation, setFormValue, setNextStep, variationTableTitles, variations]
   );
-  const pricesTableConfig = useMemo(
-    (): ITableListProps<IPriceListItem> => ({
-      tableTitles: pricesColumnsForProductReview,
-      tableData: prices,
-      isSearch: false,
-      selectedRow: formData?.price,
-      onRowClick: data => {
-        const v = prices.find(p => p._id === data?._id);
-
-        v && setFormValue('price', v);
-        setNextStep();
-      },
-    }),
-    [formData?.price, prices, setFormValue, setNextStep]
-  );
+  // const pricesTableConfig = useMemo(
+  //   (): ITableListProps<IPriceListItem> => ({
+  //     tableTitles: pricesColumnsForProductReview,
+  //     tableData: prices,
+  //     isSearch: false,
+  //     selectedRow: formData?.price,
+  //     onRowClick: data => {
+  //       const v = prices.find(p => p._id === data?._id);
+  //
+  //       v && setFormValue('price', v);
+  //       setNextStep();
+  //     },
+  //   }),
+  //   [formData?.price, prices, setFormValue, setNextStep]
+  // );
 
   const warehousingTableConfig = useMemo(
     (): ITableListProps<IProductInventory> => ({
@@ -222,6 +228,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({ defaultState,
             data: {
               product: ExtractId(formData?.product),
               variation: formData?.variation ? ExtractId(formData?.variation) : undefined,
+              warehouse: params?.warehouse,
             },
             onSuccess: setInventories,
           },
@@ -229,7 +236,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({ defaultState,
           WarehousesApi
         );
     }
-  }, [formData?.product, formData?.variation, search, searchBy, stepCheck]);
+  }, [formData?.product, formData?.variation, params, search, searchBy, stepCheck]);
 
   const handleSubmit: FormEventHandler = e => {
     e.preventDefault();

@@ -9,6 +9,7 @@ import ButtonIcon from './ButtonIcon/ButtonIcon';
 import { checks } from '../../utils';
 import FlexBox from './FlexBox';
 import { t } from '../../lang';
+import { Text } from './Text';
 
 const TagButtonsFilter = <Value extends string | number = any>({
   options,
@@ -63,8 +64,11 @@ const TagButtonsFilter = <Value extends string | number = any>({
           key={`f-opt_${opt.value}`}
           variant={isActive ? 'filledSmall' : 'outlinedSmall'}
           onClick={() => handleSelect(opt, index)}
+          style={{ width: '100%', minWidth: 'unset', padding: '4px 8px' }}
         >
-          {checks.isStr(opt?.label) ? t(opt.label) : opt.value}
+          <Text $ellipsisMode={true} $size={12} style={{ fontWeight: 'inherit' }}>
+            {checks.isStr(opt?.label) ? t(opt.label) : opt.value}
+          </Text>
         </ButtonIcon>
       );
     });
@@ -89,8 +93,11 @@ const TagButtonsFilter = <Value extends string | number = any>({
         <ButtonIcon
           variant={selectedValues.length === 0 ? 'filledSmall' : 'outlinedSmall'}
           onClick={() => setSelectedValues([])}
+          style={{ width: '100%', minWidth: 'unset', padding: '4px 8px' }}
         >
-          {resetButtonLabel || 'Clear'}
+          <Text $ellipsisMode={true} $size={12} style={{ fontWeight: 'inherit' }}>
+            {resetButtonLabel || 'Clear'}
+          </Text>
         </ButtonIcon>
       )}
 

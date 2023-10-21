@@ -4,26 +4,25 @@ import { useOrdersSelector } from 'redux/selectors.store';
 import { useMemo } from 'react';
 import styled from 'styled-components';
 import { IOrder } from 'redux/orders/orders.types';
-import { IShipmentDirItem } from '../../../Directories/dir.types';
 
-export interface OrdersGroupSummaryStepProps extends FormOrderStepBaseProps {}
+export interface OrderConfirmationStepProps extends FormOrderStepBaseProps {}
 
-const OrdersGroupSummaryStep: React.FC<OrdersGroupSummaryStepProps> = ({ onFinish, name }) => {
+const OrderConfirmationStep: React.FC<OrderConfirmationStepProps> = ({ onFinish, name }) => {
   const ordersGroup = useOrdersSelector().ordersGroupFormData;
 
-  return <SummaryTable orders={[]} shipments={[]} />;
+  return <SummaryTable orders={[]} />;
 };
 
-const SummaryTable = ({ orders }: { orders: IOrder[]; shipments?: IShipmentDirItem[] }) => {
-  const renderRows = useMemo(() => {
+const SummaryTable = ({ orders }: { orders: IOrder[] }) => {
+  const renderOrders = useMemo(() => {
     return null;
   }, []);
 
   return (
     <FlexBox flex={1} fillWidth>
-      {renderRows}
+      {renderOrders}
     </FlexBox>
   );
 };
 const Table = styled(FlexBox)``;
-export default OrdersGroupSummaryStep;
+export default OrderConfirmationStep;

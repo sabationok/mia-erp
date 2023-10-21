@@ -10,13 +10,13 @@ import {
   RemoveSlotFromGroupAction,
   UpdateSlotInGroupAction,
 } from '../../../../redux/orders/orders.actions';
-import { Text } from '../../../atoms/Text';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import { ToastService } from '../../../../services';
 import { t } from '../../../../lang';
 import { Modals } from '../../../Modals';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import OrderGroupItem from '../components/OrderGroupItem';
+import { ExtractId } from '../../../../utils/dataTransform';
 
 export interface OrderGroupsStuffingStepProps {
   slots?: IOrderTempSlot[];
@@ -50,16 +50,14 @@ const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onFin
   );
 
   const groupedData = useMemo(() => {
-    const map: Record<string, { slots: (IOrderTempSlot & { tempId?: string })[]; warehouse?: IWarehouse }> = {};
+    let map: Record<string, { slots: (IOrderTempSlot & { tempId?: string })[]; warehouse?: IWarehouse }> = {};
 
     slots?.map(slot => {
       if (slot.warehouse?._id) {
         map[slot.warehouse._id] = {
           warehouse: slot.warehouse,
-          slots: map[slot.warehouse._id]?.slots ? map[slot.warehouse._id]?.slots : [],
+          slots: map[slot.warehouse._id]?.slots ? [...map[slot.warehouse._id]?.slots, slot] : [slot],
         };
-
-        map[slot.warehouse?._id]?.slots.push(slot);
       }
 
       return '';
@@ -75,9 +73,25 @@ const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onFin
         <OrderGroupItem
           key={`pre-order_${v.warehouse?._id || i}`}
           slots={v.slots}
-          title={<Text $weight={500}>{v?.warehouse?.label}</Text>}
+          title={v?.warehouse?.label}
           onRemove={handelRemoveSlot}
           onUpdate={handelUpdateSlot}
+          onAddSlotPress={() => {
+            const m = modalS.open({
+              Modal: Modals.FormCreateOrderSlot,
+
+              props: {
+                params: v?.warehouse ? { warehouse: ExtractId(v?.warehouse) } : undefined,
+                onSubmit: d => {
+                  handelAddSlot(d);
+
+                  if (d && m?.onClose) {
+                    m?.onClose();
+                  }
+                },
+              },
+            });
+          }}
         />
       );
     });

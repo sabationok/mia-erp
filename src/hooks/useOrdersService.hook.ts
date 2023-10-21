@@ -1,10 +1,9 @@
 import { useMemo } from 'react';
 import { useAppDispatch } from '../redux/store.store';
 import { OnlyUUID, ServiceDispatcher, ServiceDispatcherAsync } from '../redux/global.types';
-// import { createOrderThunk, getAllOrdersThunk, getOrderByIdThunk } from '../redux/orders/orders.thunks';
 import { ICreateOrderBaseFormState, IOrder, IOrderReqData } from '../redux/orders/orders.types';
 import { AppQueryParams } from '../api';
-import { ClearCurrentGroupFormDataAction, UpdateCurrentGroupInfoFormDataAction } from '../redux/orders/orders.actions';
+import { ClearCurrentGroupFormDataAction, UpdateCurrentGroupFormInfoDataAction } from '../redux/orders/orders.actions';
 
 type EmptyFn = (...args: any[]) => Promise<any>;
 
@@ -19,7 +18,7 @@ export interface OrdersService {
   getPaymentsByOrderId: EmptyFn | ServiceDispatcherAsync<OnlyUUID>;
   getInvoicesByOrderId: EmptyFn | ServiceDispatcherAsync<OnlyUUID>;
 
-  updateCurrentGroupFormData: ServiceDispatcher<ICreateOrderBaseFormState>;
+  updateCurrentGroupFormInfoData: ServiceDispatcher<ICreateOrderBaseFormState>;
   clearCurrentGroupFormData: ServiceDispatcher;
 }
 
@@ -39,7 +38,7 @@ const useOrdersServiceHook = (): OrdersService => {
       getPaymentsByOrderId: async () => dispatch(() => {}),
       getInvoicesByOrderId: async () => dispatch(() => {}),
 
-      updateCurrentGroupFormData: args => dispatch(UpdateCurrentGroupInfoFormDataAction(args)),
+      updateCurrentGroupFormInfoData: args => dispatch(UpdateCurrentGroupFormInfoDataAction(args)),
       clearCurrentGroupFormData: () => dispatch(ClearCurrentGroupFormDataAction({})),
     }),
     [dispatch]

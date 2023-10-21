@@ -279,19 +279,19 @@ const pointerBottom = css`
   }
 `;
 const extraSmall = css`
-  padding: 4px 12px;
+  padding: 4px 8px;
 
   min-width: 75px;
   min-height: 20px;
 `;
 const small = css`
-  padding: 6px 18px;
+  padding: 6px 12px;
 
   min-width: 115px;
   min-height: 28px;
 `;
 const large = css`
-  padding: 6px 22px;
+  padding: 6px 16px;
 
   min-width: 150px;
   min-height: 36px;
@@ -421,6 +421,8 @@ const text = css`
 const textExtraSmall = css`
   ${text};
   ${extraSmall};
+
+  height: fit-content;
 `;
 const textSmall = css`
   ${text};
