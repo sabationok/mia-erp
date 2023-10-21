@@ -76,8 +76,8 @@ export interface FormCreateOrdersGroupFormData {
 export enum FormCreateOrdersGroupStepsEnum {
   Stuffing = 'Stuffing',
   Info = 'Info',
-  Orders = 'Orders',
-  Invoices = 'Invoices',
+  Confirmation = 'Confirmation',
+  // Invoices = 'Invoices',
 }
 
 const steps = enumToFilterOptions(FormCreateOrdersGroupStepsEnum);
@@ -85,8 +85,8 @@ const steps = enumToFilterOptions(FormCreateOrdersGroupStepsEnum);
 const stepsProcessInitialState: Record<FormCreateOrdersGroupStepsEnum | string, boolean> = {
   [FormCreateOrdersGroupStepsEnum.Stuffing]: true,
   [FormCreateOrdersGroupStepsEnum.Info]: true,
-  [FormCreateOrdersGroupStepsEnum.Orders]: true,
-  [FormCreateOrdersGroupStepsEnum.Invoices]: false,
+  [FormCreateOrdersGroupStepsEnum.Confirmation]: true,
+  // [FormCreateOrdersGroupStepsEnum.Invoices]: false,
 };
 const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit, onClose, ...p }) => {
   const service = useAppServiceProvider()[ServiceName.orders];
@@ -112,16 +112,13 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Info]) {
       return <OrderInfoStep isGroup form={form} onFinish={handleFinishStep(FormCreateOrdersGroupStepsEnum.Info)} />;
     }
-    if (stepsMap[FormCreateOrdersGroupStepsEnum.Orders]) {
-      return <></>;
-    }
-    if (stepsMap[FormCreateOrdersGroupStepsEnum.Invoices]) {
+    if (stepsMap[FormCreateOrdersGroupStepsEnum.Confirmation]) {
       return <></>;
     }
   }, [form, stepsMap]);
 
   const canSubmit = useMemo(() => {
-    if (stepsMap[FormCreateOrdersGroupStepsEnum.Orders]) {
+    if (stepsMap[FormCreateOrdersGroupStepsEnum.Confirmation]) {
       return true;
     }
     if (stepsMap[FormCreateOrdersGroupStepsEnum.Info]) {
@@ -131,8 +128,10 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
   }, [form?.formState?.isValid, stepsMap]);
 
   const canGoNext = useMemo(() => {
+    console.log('form.formState.isValid', form.formState.isValid);
+
     return isStepFinished[getCurrentStep().value];
-  }, [getCurrentStep, isStepFinished]);
+  }, [form.formState.isValid, getCurrentStep, isStepFinished]);
 
   const handlePrevPress = useCallback(() => {
     if (getCurrentStep().value === 'Info') {
@@ -142,15 +141,11 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
   }, [form, getCurrentStep, service, setPrevStep]);
   const handleNextPress = useCallback(() => {
     if (getCurrentStep().value === 'Info') {
-      console.log(getCurrentStep());
-      console.log(form.getValues());
-      console.log(currentGroupFormState);
-
       service.updateCurrentGroupFormInfoData(form.getValues());
       return;
     }
     canGoNext && setNextStep();
-  }, [canGoNext, currentGroupFormState, form, getCurrentStep, service, setNextStep]);
+  }, [canGoNext, form, getCurrentStep, service, setNextStep]);
 
   return (
     <Form>
@@ -172,7 +167,9 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
           canAccept={canSubmit}
           currentIndex={stepIdx}
           onAcceptPress={() => {
+            console.log(getCurrentStep());
             console.log(form.getValues());
+            console.log(currentGroupFormState);
           }}
         />
       </Footer>

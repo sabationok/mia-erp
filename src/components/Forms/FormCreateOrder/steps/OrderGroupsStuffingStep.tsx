@@ -27,6 +27,7 @@ export interface OrderGroupsStuffingStepProps {
 
 const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onFinish }) => {
   const { slots } = useOrdersSelector().ordersGroupFormData;
+
   const modalS = useModalService();
   const dispatch = useDispatch();
 
@@ -79,7 +80,6 @@ const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onFin
           onAddSlotPress={() => {
             const m = modalS.open({
               Modal: Modals.FormCreateOrderSlot,
-
               props: {
                 params: v?.warehouse ? { warehouse: ExtractId(v?.warehouse) } : undefined,
                 onSubmit: d => {
@@ -95,7 +95,7 @@ const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onFin
         />
       );
     });
-  }, [groupedData, handelRemoveSlot, handelUpdateSlot]);
+  }, [groupedData, handelAddSlot, handelRemoveSlot, handelUpdateSlot, modalS]);
 
   return (
     <Container flex={1} fillWidth overflow={'hidden'} style={{ position: 'relative' }}>

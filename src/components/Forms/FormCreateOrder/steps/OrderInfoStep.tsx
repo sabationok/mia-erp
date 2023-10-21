@@ -1,5 +1,6 @@
 import FlexBox from 'components/atoms/FlexBox';
 import styled, { useTheme } from 'styled-components';
+import * as React from 'react';
 import { useMemo, useState } from 'react';
 import { ICustomer } from 'redux/customers/customers.types';
 import { t } from 'lang';
@@ -17,7 +18,7 @@ import SelectCustomerModal from '../components/SelectCustomerModal';
 import TagButtonsFilter from 'components/atoms/TagButtonsFilter';
 import SelectManagerModal from '../components/SelectManagerModal';
 import { UseFormReturn } from 'react-hook-form/dist/types';
-import { FormOrderStepBaseProps } from '../FormOrder.types';
+import { FormOrderStepBaseProps } from '../formOrder.types';
 import { orderStatuses } from 'data/orders.data';
 import CheckboxesListSelector from 'components/atoms/CheckboxesListSelector';
 import useTranslatedPaymentMethods from 'hooks/useTranslatedPaymentMethods.hook';
@@ -42,6 +43,10 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form, onFinish }
   const registerConfirmSelectHandler = (name: ConfirmsStateKay) => {
     return (res: boolean) => {
       setConfirms(p => ({ ...p, [name]: res }));
+
+      if (!res && name === 'hasShipmentPayment') {
+        unregister('shipmentInfo.paymentMethod');
+      }
     };
   };
 
@@ -226,9 +231,9 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form, onFinish }
           <InputLabel label={t('Payment method')} required>
             <CheckboxesListSelector
               options={paymentsMethods}
-              currentOption={formValues?.invoice?.method}
+              currentOption={formValues?.invoiceInfo?.method}
               onChangeIndex={i => {
-                setValue('invoice.method', paymentsMethods[i]);
+                setValue('invoiceInfo.method', paymentsMethods[i]);
               }}
             />
           </InputLabel>
@@ -247,9 +252,9 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form, onFinish }
             <InputLabel label={t('Shipment method')} required>
               <CheckboxesListSelector
                 options={shipmentMethods}
-                currentOption={formValues?.shipment?.method}
+                currentOption={formValues?.shipmentInfo?.method}
                 onChangeIndex={i => {
-                  setValue('shipment.method', shipmentMethods[i]);
+                  setValue('shipmentInfo.method', shipmentMethods[i]);
                 }}
               />
             </InputLabel>
@@ -270,17 +275,17 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form, onFinish }
             <InputLabel label={t('Has payment')} required>
               <ButtonSwitch
                 onChange={registerConfirmSelectHandler('hasShipmentPayment')}
-                value={confirms?.hasShipmentPayment}
+                value={confirms?.hasShipmentPayment || !!formValues?.shipmentInfo?.paymentMethod}
               />
             </InputLabel>
 
-            {confirms?.hasShipmentPayment && (
+            {(confirms?.hasShipmentPayment || !!formValues?.shipmentInfo?.paymentMethod) && (
               <InputLabel label={t('Payment method')} required>
                 <CheckboxesListSelector
                   options={paymentsMethods}
-                  currentOption={formValues?.shipment?.paymentMethod}
+                  currentOption={formValues?.shipmentInfo?.paymentMethod}
                   onChangeIndex={i => {
-                    setValue('shipment.paymentMethod', paymentsMethods[i]);
+                    setValue('shipmentInfo.paymentMethod', paymentsMethods[i]);
                   }}
                 />
               </InputLabel>

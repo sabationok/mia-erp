@@ -11,7 +11,7 @@ export interface DimensionsFormData {
   dimensions?: IProductDimensions;
 }
 
-const dimensionsInputs: {
+export const dimensionsInputsProps: {
   label?: string;
   placeholder?: string;
   name: keyof IProductDimensions;
@@ -25,7 +25,7 @@ const dimensionsInputs: {
 const DimensionsInputs = ({ form }: { form: UseFormReturn<DimensionsFormData> }) => {
   return (
     <Box fillWidth>
-      {dimensionsInputs.map(input => {
+      {dimensionsInputsProps.map(input => {
         return (
           <InputLabel key={input.name} label={input.label}>
             <InputText

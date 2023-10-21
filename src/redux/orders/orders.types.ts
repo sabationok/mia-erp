@@ -100,9 +100,9 @@ export interface ICreateOrderBaseFormState {
 
   destination?: string;
 
-  invoice?: IInvoiceBaseFormData;
+  invoiceInfo?: Pick<IInvoiceBaseFormData, 'method'>;
 
-  shipment?: IShipmentFormData;
+  shipmentInfo?: Pick<IShipmentFormData, 'paymentMethod' | 'destination' | 'method'>;
 }
 
 export interface ICreateOrderFormState {

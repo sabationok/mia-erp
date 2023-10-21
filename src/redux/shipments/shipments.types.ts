@@ -79,7 +79,10 @@ export interface IShipmentDto extends IShipmentBaseDto {
 export interface IShipmentBaseFormData {
   declaredValue?: number;
   contentTotalValue?: number;
-  cost?: number;
+  price?: number;
+  returnAmount?: number;
+  commissionAmount?: number;
+  ttn?: string;
 
   provider?: IFormDataValueWithUUID;
   method?: IFormDataValueWithUUID;
@@ -87,8 +90,6 @@ export interface IShipmentBaseFormData {
   destination?: AddressDto;
 
   description?: string;
-
-  paymentMethod?: IFormDataValueWithUUID;
 }
 export interface IShipmentFormData extends IShipmentBaseFormData {
   order?: IFormDataValueWithUUID;
@@ -96,14 +97,26 @@ export interface IShipmentFormData extends IShipmentBaseFormData {
 
   payment?: IFormDataValueWithUUID;
   invoice?: IFormDataValueWithUUID;
-  ttn?: string;
 
-  destination?: AddressDto;
   dimensions?: IProductDimensions;
   status?: ShipmentStatusTypeEnum;
 
+  paymentMethod?: IFormDataValueWithUUID;
   shipmentInvoice?: IFormDataValueWithUUID;
   shipmentPayment?: IFormDataValueWithUUID;
+}
+
+export interface IShipmentServiceFormData {
+  order?: OnlyUUID;
+  slots?: string[];
+  ttn?: string;
+  price?: number;
+
+  destination?: AddressDto; // TODO refactoring
+
+  dimensions?: IProductDimensions;
+
+  paymentMethod?: IFormDataValueWithUUID;
 }
 
 // * Method
