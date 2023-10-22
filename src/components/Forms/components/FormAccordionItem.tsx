@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import FlexBox, { FlexBoxProps } from '../../atoms/FlexBox';
 import styled from 'styled-components';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import { isUndefined } from 'lodash';
+import { isBoolean } from 'lodash';
 import { t } from '../../../lang';
 
 export interface FormAccordeonItemProps {
@@ -11,6 +11,7 @@ export interface FormAccordeonItemProps {
   maxHeight?: string;
   title?: React.ReactNode;
   renderHeader?: React.ReactNode;
+  renderFooter?: React.ReactNode;
   toggled?: boolean;
   open?: boolean;
   disabled?: boolean;
@@ -21,9 +22,9 @@ export interface FormAccordeonItemProps {
 
 const FormAccordionItem: React.FC<FormAccordeonItemProps> = ({
   children,
-  title,
   maxHeight = '32px',
   renderHeader,
+  renderFooter,
   toggled = true,
   open = false,
   disabled,
@@ -38,7 +39,7 @@ const FormAccordionItem: React.FC<FormAccordeonItemProps> = ({
   }
 
   useEffect(() => {
-    if (!isUndefined(disabled) && disabled) {
+    if (isBoolean(disabled) && disabled) {
       setIsOpen(false);
     }
   }, [disabled]);
@@ -62,7 +63,7 @@ const FormAccordionItem: React.FC<FormAccordeonItemProps> = ({
           disabled={!toggled || disabled || !children}
           isOpen={isOpen}
         >
-          {title || isOpen ? t('Close') : t('Open')}
+          {isOpen ? t('Close') : t('Open')}
         </StButton>
 
         {renderHeader}
@@ -71,6 +72,8 @@ const FormAccordionItem: React.FC<FormAccordeonItemProps> = ({
       <ContentBox padding={'0 8px'} overflow={'hidden'} {...contentContainerStyle} className={'content'}>
         {children}
       </ContentBox>
+
+      {renderFooter}
     </Container>
   );
 };
@@ -120,7 +123,7 @@ const StButton = styled(ButtonIcon)<{ isOpen?: boolean; activeBackgroundColor?: 
   flex: 1;
 
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 500;
   color: inherit;
 
   fill: ${({ theme }) => theme.accentColor.base};

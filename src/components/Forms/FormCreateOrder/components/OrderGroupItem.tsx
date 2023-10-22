@@ -15,9 +15,11 @@ const OrderGroupItem = ({
   renderHeader,
   title,
   onAddSlotPress,
+  renderFooter,
 }: {
   slots: IOrderTempSlot[];
   renderHeader?: React.ReactNode;
+  renderFooter?: React.ReactNode;
   title?: React.ReactNode;
   onRemove?: (id: string) => void;
   onUpdate?: (slot: IOrderTempSlot) => void;
@@ -30,7 +32,7 @@ const OrderGroupItem = ({
         key={`slot_${slot?.tempId}`}
         slot={slot}
         editable
-        onRemovePress={() => slot?.tempId && onRemove && onRemove(slot?.tempId)}
+        onRemovePress={onRemove ? () => slot?.tempId && onRemove(slot?.tempId) : undefined}
         onUpdate={onUpdate}
       />
     ));
@@ -44,24 +46,29 @@ const OrderGroupItem = ({
             {title}
           </Text>
         )}
-        <FlexBox height={'80%'} border={`1px solid ${theme.modalBorderColor}`}></FlexBox>
 
-        <ButtonIcon
-          variant={'textExtraSmall'}
-          style={{ minWidth: 'fit-content', height: '100%', fontWeight: 600 }}
-          disabled={!onAddSlotPress}
-          onClick={onAddSlotPress}
-        >
-          {t('Add')}
-        </ButtonIcon>
+        {onAddSlotPress && <FlexBox height={'80%'} border={`1px solid ${theme.modalBorderColor}`} />}
+
+        {onAddSlotPress && (
+          <ButtonIcon
+            variant={'textExtraSmall'}
+            style={{ minWidth: 'fit-content', height: '100%', fontWeight: 600 }}
+            disabled={!onAddSlotPress}
+            onClick={onAddSlotPress}
+          >
+            {t('Add')}
+          </ButtonIcon>
+        )}
       </FlexBox>
     );
-  }, [renderHeader, theme.modalBorderColor, title]);
+  }, [onAddSlotPress, renderHeader, theme.modalBorderColor, title]);
 
   return (
-    <StAccordionItem open renderHeader={renderHeaderComp} title={title}>
-      {renderSlots}
-    </StAccordionItem>
+    <>
+      <StAccordionItem open renderHeader={renderHeaderComp} renderFooter={renderFooter} title={title}>
+        {renderSlots}
+      </StAccordionItem>
+    </>
   );
 };
 

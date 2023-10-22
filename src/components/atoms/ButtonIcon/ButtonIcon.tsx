@@ -281,20 +281,20 @@ const pointerBottom = css`
 const extraSmall = css`
   padding: 4px 8px;
 
-  min-width: 75px;
-  min-height: 20px;
+  min-width: 40px;
+  height: 20px;
 `;
 const small = css`
   padding: 6px 12px;
 
-  min-width: 115px;
-  min-height: 28px;
+  min-width: 50px;
+  height: 28px;
 `;
 const large = css`
   padding: 6px 16px;
 
-  min-width: 150px;
-  min-height: 36px;
+  min-width: 100px;
+  height: 36px;
 `;
 const icon = css`
   min-width: 26px;

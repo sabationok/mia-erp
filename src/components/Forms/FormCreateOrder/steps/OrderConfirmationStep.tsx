@@ -1,7 +1,7 @@
 import { FormOrderStepBaseProps } from '../formOrder.types';
 import FlexBox from '../../../atoms/FlexBox';
 import { useOrdersSelector } from 'redux/selectors.store';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { IOrderTempSlot } from 'redux/orders/orders.types';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
@@ -11,8 +11,8 @@ import OrderGroupItem from '../components/OrderGroupItem';
 
 export interface OrderConfirmationStepProps extends FormOrderStepBaseProps {}
 
-const OrderConfirmationStep: React.FC<OrderConfirmationStepProps> = ({ onFinish, name }) => {
-  const { slots } = useOrdersSelector().ordersGroupFormData;
+const OrderConfirmationStep: React.FC<OrderConfirmationStepProps> = ({ onChangeValidStatus, name }) => {
+  const { slots, orders } = useOrdersSelector().ordersGroupFormData;
 
   const modalS = useModalService();
   const dispatch = useDispatch();
@@ -38,11 +38,26 @@ const OrderConfirmationStep: React.FC<OrderConfirmationStepProps> = ({ onFinish,
     return Object.keys(groupedData).map((k, i) => {
       const v = groupedData[k];
 
-      return <OrderGroupItem key={`pre-order_${v.warehouse?._id || i}`} slots={v.slots} title={v?.warehouse?.label} />;
+      return (
+        <OrderGroupItem
+          key={`pre-order_${v.warehouse?._id || i}`}
+          slots={v.slots}
+          title={v?.warehouse?.label}
+          renderFooter={<Footer fillWidth />}
+        />
+      );
     });
   }, [groupedData]);
 
-  return <>{renderGroupedData}</>;
+  useEffect(() => {
+    if (onChangeValidStatus) onChangeValidStatus(orders?.length === slots?.length);
+  }, [onChangeValidStatus, orders?.length, slots?.length]);
+
+  return (
+    <FlexBox fillWidth overflow={'auto'}>
+      <FlexBox fillWidth>{renderGroupedData}</FlexBox>
+    </FlexBox>
+  );
 };
 
 const SummaryTable = ({}: {}) => {
@@ -57,4 +72,17 @@ const SummaryTable = ({}: {}) => {
   );
 };
 const Table = styled(FlexBox)``;
+
+const Footer = styled(FlexBox)<{ isOpen?: boolean }>`
+  min-height: 32px;
+
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  z-index: 40;
+
+  color: inherit;
+  border: 3px solid ${({ theme }) => 'tomato' || theme.trBorderClr};
+  background-color: ${({ theme }) => theme.modalBackgroundColor};
+`;
 export default OrderConfirmationStep;

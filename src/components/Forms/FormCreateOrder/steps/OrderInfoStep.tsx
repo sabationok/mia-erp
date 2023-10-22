@@ -56,11 +56,6 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
   const paymentsMethodsList = useTranslatedPaymentMethods();
   const shipmentMethodsList = useTranslatedShipmentMethods();
 
-  useEffect(() => {
-    if (Object.values(touchedFields).length > 0) {
-      throttledLogger('touchedFields', touchedFields);
-    }
-  }, [touchedFields]);
   const setTouchedField = (path: FormFieldPaths) => {
     setTouchedFields(p => ({ ...p, [path]: true }));
   };
@@ -110,10 +105,6 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
   useEffect(() => {
     if (onChangeValidStatus) onChangeValidStatus(isValid);
   }, [isValid, onChangeValidStatus]);
-
-  useEffect(() => {
-    throttledLogger(formValues);
-  }, [formValues]);
 
   return (
     <Inputs flex={1} overflow={'auto'}>

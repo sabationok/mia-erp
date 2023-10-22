@@ -112,9 +112,9 @@ export interface ICreateOrderInfoFormState {
 }
 
 export interface ICreateOrdersGroupFormState {
-  slots?: IOrderTempSlot[];
+  slots: IOrderTempSlot[];
   info?: ICreateOrderInfoFormState;
-  orders?: IOrder[];
+  orders: IOrder[];
 }
 
 export interface FormCreateOrdersGroupFormData {

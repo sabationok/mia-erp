@@ -91,9 +91,29 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
     reValidateMode: 'onSubmit',
   });
 
+  const [propLabelsByParentId, setPropLabelsByParentId] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    if (update) return;
+
+    let newLabel = '';
+    console.log(propLabelsByParentId);
+    const labels = Object.values(propLabelsByParentId);
+
+    if (labels.length === 0) {
+      newLabel = `${currentProduct?.label}. {{VARIATION_LABEL}}`;
+      return;
+    } else {
+      const propLabelsString = labels.join('. ');
+      newLabel = currentProduct?.label ? `${currentProduct?.label}. ${propLabelsString}` : propLabelsString;
+    }
+    setValue('label', newLabel);
+  }, [currentProduct?.label, propLabelsByParentId, setValue, update]);
+
   const template = useMemo(() => {
     return templates.find(t => t._id === currentProduct?.template?._id);
   }, [currentProduct, templates]);
+
   const selectedIds = useMemo(() => {
     return formValues?.propertiesMap ? Object.values(formValues?.propertiesMap) : [];
     // eslint-disable-next-line
@@ -137,14 +157,16 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
   );
 
   const handleSelect = useCallback(
-    (parentId: string, id: string) => {
+    (parentId: string, id: string, label?: string) => {
       setValue(`propertiesMap.${parentId}`, id);
+      label && setPropLabelsByParentId(p => ({ ...p, [parentId]: label }));
     },
     [setValue]
   );
 
   const handleClearMap = useCallback(() => {
     setValue('propertiesMap', {});
+    setPropLabelsByParentId({});
   }, [setValue]);
 
   const preparedTemplate = useMemo(
@@ -236,7 +258,7 @@ export const RenderVariationProperty = ({
   item: IProperty;
   selectedValue?: string;
   selectedIds?: string[];
-  onSelect?: (propId: string, valueId: string) => void;
+  onSelect?: (propId: string, valueId: string, label?: string) => void;
 }) => {
   const renderChildren = useMemo(() => {
     return item.childrenList?.map(value => {
@@ -247,7 +269,7 @@ export const RenderVariationProperty = ({
           key={`prop-value-${value._id}`}
           item={value}
           isSelected={isSelected}
-          onSelect={id => onSelect && onSelect(item._id, id)}
+          onSelect={id => onSelect && onSelect(item._id, id, value?.label)}
         />
       );
     });

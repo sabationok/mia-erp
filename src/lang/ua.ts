@@ -355,6 +355,7 @@ export const langUa = {
   More: 'Більше',
   Hide: 'Приховати',
   Back: 'Назад',
+  Add: 'Додати',
 
   Customer: 'Клієнт',
   Receiver: 'Отримувач',

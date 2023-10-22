@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ICreateOrdersGroupFormState, IOrder, IOrderSlot } from './orders.types';
+import { ICreateOrdersGroupFormState, IOrder, IOrderTempSlot } from './orders.types';
 
 import {
   AddSlotToGroupAction,
@@ -13,10 +13,6 @@ import { OnlyUUID } from '../global.types';
 export interface IOrdersState {
   orders: any[];
   currentOrder?: IOrder;
-  currentGroup: {
-    slots: (Partial<IOrderSlot> & { tempId?: string })[];
-    orders?: IOrder[];
-  };
   ordersGroupFormData: ICreateOrdersGroupFormState;
   filteredOrders?: [];
   isLoading: boolean;
@@ -35,10 +31,6 @@ const initialOrdersGroupFormData: ICreateOrdersGroupFormState = {
 const initialOrdersState: IOrdersState = {
   orders: [],
   currentOrder: { _id: '' },
-  currentGroup: {
-    slots: [],
-    orders: [],
-  },
   ordersGroupFormData: initialOrdersGroupFormData,
   isLoading: false,
   error: null,
@@ -54,6 +46,18 @@ const compareIdsByKey = <Key extends string = any>(
   }
   return false;
 };
+
+function findSlotByIdKeys(
+  slots: IOrderTempSlot[],
+  slot: IOrderTempSlot,
+  keys = ['product', 'inventory', 'warehouse', 'price', 'variation']
+) {
+  return slots?.find(sl => {
+    return keys.some(k => {
+      return compareIdsByKey(sl, slot, k);
+    });
+  });
+}
 
 export const ordersSlice = createSlice({
   name: 'orders',
@@ -72,16 +76,6 @@ export const ordersSlice = createSlice({
       //   // }
       // })
       .addCase(AddSlotToGroupAction, (s, a) => {
-        const exist = s.ordersGroupFormData?.slots?.find(sl => {
-          return ['inventory', 'warehouse', 'price', 'variation', 'product'].some(k => {
-            const r = compareIdsByKey(sl, a.payload, k);
-
-            return r;
-          });
-        });
-
-        exist && console.log('AddSlotToGroupAction', exist);
-
         s.ordersGroupFormData.slots?.push(a.payload);
       })
       .addCase(RemoveSlotFromGroupAction, (s, a) => {
@@ -97,14 +91,9 @@ export const ordersSlice = createSlice({
         });
       })
       .addCase(UpdateCurrentGroupFormInfoDataAction, (s, a) => {
-        console.log('before', { ...s.ordersGroupFormData.info }, a.payload);
-
-        // s.ordersGroupFormData.info = { ...s.ordersGroupFormData, info: { ...s.ordersGroupFormData.info, ...a.payload } };
         s.ordersGroupFormData.info = { ...s.ordersGroupFormData.info, ...a.payload };
-
-        console.log('after', s.ordersGroupFormData.info, a.payload);
       })
       .addCase(ClearCurrentGroupFormDataAction, (s, a) => {
-        s.ordersGroupFormData = {};
+        s.ordersGroupFormData = { ...initialOrdersGroupFormData };
       }),
 });
