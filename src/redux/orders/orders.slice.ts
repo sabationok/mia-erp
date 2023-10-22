@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ICreateOrderFormState, IOrder, IOrderSlot } from './orders.types';
+import { ICreateOrdersGroupFormState, IOrder, IOrderSlot } from './orders.types';
+
 import {
   AddSlotToGroupAction,
   ClearCurrentGroupFormDataAction,
@@ -16,7 +17,7 @@ export interface IOrdersState {
     slots: (Partial<IOrderSlot> & { tempId?: string })[];
     orders?: IOrder[];
   };
-  ordersGroupFormData: ICreateOrderFormState;
+  ordersGroupFormData: ICreateOrdersGroupFormState;
   filteredOrders?: [];
   isLoading: boolean;
   error: any;
@@ -25,9 +26,10 @@ export interface IOrdersState {
 export interface IOrdersGroupBase {
   orders: IOrder[];
 }
-const initialOrdersGroupFormData: ICreateOrderFormState = {
+
+const initialOrdersGroupFormData: ICreateOrdersGroupFormState = {
   slots: [],
-  info: { manager: { _id: '' } },
+  info: {},
   orders: [],
 };
 const initialOrdersState: IOrdersState = {
@@ -95,7 +97,12 @@ export const ordersSlice = createSlice({
         });
       })
       .addCase(UpdateCurrentGroupFormInfoDataAction, (s, a) => {
-        s.ordersGroupFormData.info = { ...s.ordersGroupFormData?.info, ...a.payload };
+        console.log('before', { ...s.ordersGroupFormData.info }, a.payload);
+
+        // s.ordersGroupFormData.info = { ...s.ordersGroupFormData, info: { ...s.ordersGroupFormData.info, ...a.payload } };
+        s.ordersGroupFormData.info = { ...s.ordersGroupFormData.info, ...a.payload };
+
+        console.log('after', s.ordersGroupFormData.info, a.payload);
       })
       .addCase(ClearCurrentGroupFormDataAction, (s, a) => {
         s.ordersGroupFormData = {};

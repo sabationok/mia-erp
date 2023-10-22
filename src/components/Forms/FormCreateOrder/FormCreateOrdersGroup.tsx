@@ -3,7 +3,7 @@ import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import ModalFilter from '../../ModalForm/ModalFilter';
 import { useStepsHandler } from '../../../utils/createStepChecker';
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import { ModalHeader } from '../../atoms';
@@ -11,67 +11,26 @@ import { t } from '../../../lang';
 import StepsController from '../components/StepsController';
 import OrderGroupsStuffingStep from './steps/OrderGroupsStuffingStep';
 import OrderInfoStep from './steps/OrderInfoStep';
-import { ICreateOrderBaseFormState, IOrderTempSlot } from '../../../redux/orders/orders.types';
-import { useForm } from 'react-hook-form';
-import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import { ICreateOrderInfoFormState, IOrder, IOrderTempSlot } from '../../../redux/orders/orders.types';
 import { useOrdersSelector } from '../../../redux/selectors.store';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
 
-const validation = yup.object().shape({
-  manager: yup
-    .object()
-    .shape({
-      _id: yup.string(),
-    })
-    .required(),
-  customer: yup
-    .object()
-    .shape({
-      _id: yup.string(),
-    })
-    .required(),
-  customerCommunicationMethods: yup
-    .object()
-    .shape({
-      _id: yup.string(),
-    })
-    .required(),
-  receiver: yup
-    .object()
-    .shape({
-      _id: yup.string(),
-    })
-    .required(),
-  receiverCommunicationMethods: yup
-    .object()
-    .shape({
-      _id: yup.string(),
-    })
-    .required(),
-  status: yup.string(),
-  destination: yup.string(),
-  shipmentMethod: yup
-    .object()
-    .shape({
-      _id: yup.string(),
-    })
-    .required(),
-  paymentMethod: yup
-    .object()
-    .shape({
-      _id: yup.string(),
-    })
-    .required(),
-});
+import OrderConfirmationStep from './steps/OrderConfirmationStep';
+import { ToastService } from '../../../services';
+import _ from 'lodash';
+import { FormProvider, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { orderInfoBaseSchema } from '../validation';
+import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 
 export interface FormCreateOrdersGroupProps
-  extends Omit<ModalFormProps<any, any, ICreateOrderBaseFormState>, 'onSubmit' | 'onSelect'> {
-  onSubmit?: AppSubmitHandler<FormCreateOrdersGroupFormData>;
+  extends Omit<ModalFormProps<any, any, FormCreateOrdersGroupStepsData>, 'onSubmit'> {
+  onSubmit?: AppSubmitHandler<FormCreateOrdersGroupStepsData>;
 }
-export interface FormCreateOrdersGroupFormData {
-  info: ICreateOrderBaseFormState;
-  slots: IOrderTempSlot[];
+export interface FormCreateOrdersGroupStepsData {
+  slots?: IOrderTempSlot[];
+  info?: ICreateOrderInfoFormState;
+
+  orders?: IOrder[];
 }
 export enum FormCreateOrdersGroupStepsEnum {
   Stuffing = 'Stuffing',
@@ -84,96 +43,131 @@ const steps = enumToFilterOptions(FormCreateOrdersGroupStepsEnum);
 
 const stepsProcessInitialState: Record<FormCreateOrdersGroupStepsEnum | string, boolean> = {
   [FormCreateOrdersGroupStepsEnum.Stuffing]: true,
-  [FormCreateOrdersGroupStepsEnum.Info]: true,
-  [FormCreateOrdersGroupStepsEnum.Confirmation]: true,
+  [FormCreateOrdersGroupStepsEnum.Info]: false,
+  [FormCreateOrdersGroupStepsEnum.Confirmation]: false,
   // [FormCreateOrdersGroupStepsEnum.Invoices]: false,
 };
-const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit, onClose, ...p }) => {
+const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit, onClose }) => {
   const service = useAppServiceProvider()[ServiceName.orders];
   const currentGroupFormState = useOrdersSelector().ordersGroupFormData;
-  const { stepsMap, stepIdx, setNextStep, setPrevStep, stepsCount, getCurrentStep } = useStepsHandler(steps);
+  const { stepsMap, stepIdx, setNextStep, setPrevStep, getCurrentStep, isLast } = useStepsHandler(steps);
 
   const [isStepFinished, setIsStepFinished] =
     useState<Record<FormCreateOrdersGroupStepsEnum | string, boolean>>(stepsProcessInitialState);
-
-  const form = useForm<ICreateOrderBaseFormState>({
-    defaultValues: currentGroupFormState?.info,
-    resolver: yupResolver(validation),
-    reValidateMode: 'onChange',
-  });
-  const handleFinishStep = (name: FormCreateOrdersGroupStepsEnum) => () => {
-    setIsStepFinished(p => ({ ...p, [name]: true }));
+  const handleFinishStep = (name: keyof typeof FormCreateOrdersGroupStepsEnum) => (value: boolean) => {
+    setIsStepFinished(p => ({ ...p, [FormCreateOrdersGroupStepsEnum[name]]: value }));
   };
 
-  const renderStep = useMemo(() => {
-    if (stepsMap[FormCreateOrdersGroupStepsEnum.Stuffing]) {
-      return <OrderGroupsStuffingStep onFinish={handleFinishStep(FormCreateOrdersGroupStepsEnum.Stuffing)} />;
+  const getDefaultValues = () => {
+    try {
+      const cloned = _.cloneDeep(currentGroupFormState.info);
+      return cloned!;
+    } catch (e) {
+      console.log('getDefaultValues', e);
+      return currentGroupFormState.info!;
     }
-    if (stepsMap[FormCreateOrdersGroupStepsEnum.Info]) {
-      return <OrderInfoStep isGroup form={form} onFinish={handleFinishStep(FormCreateOrdersGroupStepsEnum.Info)} />;
-    }
-    if (stepsMap[FormCreateOrdersGroupStepsEnum.Confirmation]) {
-      return <></>;
-    }
-  }, [form, stepsMap]);
+  };
 
-  const canSubmit = useMemo(() => {
-    if (stepsMap[FormCreateOrdersGroupStepsEnum.Confirmation]) {
-      return true;
+  const formOrderInfo = useForm<ICreateOrderInfoFormState>({
+    defaultValues: currentGroupFormState.info,
+    resolver: yupResolver(orderInfoBaseSchema),
+    reValidateMode: 'onChange',
+  });
+
+  const orderInfoFormValues = formOrderInfo.watch();
+
+  const renderStep = useMemo(() => {
+    if (stepsMap?.Stuffing) {
+      return <OrderGroupsStuffingStep onChangeValidStatus={handleFinishStep('Stuffing')} />;
     }
-    if (stepsMap[FormCreateOrdersGroupStepsEnum.Info]) {
-      return form?.formState?.isValid;
+    if (stepsMap?.Info) {
+      return (
+        <OrderInfoStep isGroup getFormMethods={() => formOrderInfo} onChangeValidStatus={handleFinishStep('Info')} />
+      );
     }
-    return false;
-  }, [form?.formState?.isValid, stepsMap]);
+    if (stepsMap?.Confirmation) {
+      return <OrderConfirmationStep onFinish={handleFinishStep('Confirmation')} />;
+    }
+  }, [formOrderInfo, stepsMap?.Confirmation, stepsMap?.Info, stepsMap?.Stuffing]);
 
   const canGoNext = useMemo(() => {
-    console.log('form.formState.isValid', form.formState.isValid);
-
     return isStepFinished[getCurrentStep().value];
-  }, [form.formState.isValid, getCurrentStep, isStepFinished]);
+  }, [getCurrentStep, isStepFinished]);
 
-  const handlePrevPress = useCallback(() => {
+  const handlePrevPress = () => {
     if (getCurrentStep().value === 'Info') {
-      service.updateCurrentGroupFormInfoData(form.getValues());
+      service.updateCurrentGroupFormInfoData(_.cloneDeep(orderInfoFormValues));
     }
     setPrevStep();
-  }, [form, getCurrentStep, service, setPrevStep]);
-  const handleNextPress = useCallback(() => {
+  };
+
+  const handleNextPress = () => {
     if (getCurrentStep().value === 'Info') {
-      service.updateCurrentGroupFormInfoData(form.getValues());
+      service.updateCurrentGroupFormInfoData(_.cloneDeep(orderInfoFormValues));
+    }
+
+    if (canGoNext) {
+      setNextStep();
+    } else {
+      ToastService.error(`${t('Step is not finished')}: "${getCurrentStep().value.toUpperCase()}"`);
+    }
+  };
+  const canAccept = useMemo(() => {
+    if (stepsMap.Stuffing) {
+      return isStepFinished.Stuffing;
+    }
+    if (stepsMap.Info) {
+      return isStepFinished.Info;
+    }
+    if (stepsMap.Confirmation) {
+      return isStepFinished.Confirmation;
+    }
+    return false;
+  }, [
+    isStepFinished.Confirmation,
+    isStepFinished.Info,
+    isStepFinished.Stuffing,
+    stepsMap.Confirmation,
+    stepsMap.Info,
+    stepsMap.Stuffing,
+  ]);
+
+  const handleAcceptPress = () => {
+    if (!canAccept) {
+      ToastService.error('Form is not valid');
       return;
     }
-    canGoNext && setNextStep();
-  }, [canGoNext, form, getCurrentStep, service, setNextStep]);
+
+    console.log(getCurrentStep());
+    console.log(currentGroupFormState);
+    onClose && onClose();
+  };
 
   return (
-    <Form>
-      <ModalHeader title={t('Create orders group')} onBackPress={onClose} />
+    <FormProvider {...formOrderInfo}>
+      <Form>
+        <ModalHeader title={t('Create orders group by warehouse')} onBackPress={onClose} />
 
-      <Content fillWidth flex={1} overflow={'hidden'}>
-        <ModalFilter filterOptions={steps} asStepper currentIndex={stepIdx} optionProps={{ fitContentH: true }} />
+        <Content fillWidth flex={1} overflow={'hidden'}>
+          <ModalFilter filterOptions={steps} asStepper currentIndex={stepIdx} optionProps={{ fitContentH: true }} />
 
-        {renderStep}
-      </Content>
+          {renderStep}
+        </Content>
 
-      <Footer padding={'8px'}>
-        <StepsController
-          steps={steps}
-          onNextPress={handleNextPress}
-          onPrevPress={handlePrevPress}
-          onCancelPress={stepIdx === 0 ? onClose : undefined}
-          canGoNext={canGoNext}
-          canAccept={canSubmit}
-          currentIndex={stepIdx}
-          onAcceptPress={() => {
-            console.log(getCurrentStep());
-            console.log(form.getValues());
-            console.log(currentGroupFormState);
-          }}
-        />
-      </Footer>
-    </Form>
+        <Footer padding={'8px'}>
+          <StepsController
+            steps={steps}
+            onNextPress={handleNextPress}
+            onPrevPress={handlePrevPress}
+            currentIndex={stepIdx}
+            canGoNext={true}
+            canAccept={isLast}
+            onAcceptPress={handleAcceptPress}
+            onCancelPress={stepIdx === 0 ? onClose : undefined}
+          />
+        </Footer>
+      </Form>
+    </FormProvider>
   );
 };
 const Form = styled.div`

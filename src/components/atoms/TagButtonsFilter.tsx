@@ -11,6 +11,11 @@ import FlexBox from './FlexBox';
 import { t } from '../../lang';
 import { Text } from './Text';
 
+export type TagButtonsFilterOnSelectValue<Value = any> = FilterSelectValueHandler<Value>;
+export type TagButtonsFilterOnSelect<Value = any> = FilterSelectHandler<Value>;
+export type TagButtonsFilterOnChange<Value = any> = FilterChangeHandler<Value>;
+export type TagButtonsFilterOption<Value = any> = FilterOption<Value>;
+
 const TagButtonsFilter = <Value extends string | number = any>({
   options,
   multiple,
@@ -24,11 +29,11 @@ const TagButtonsFilter = <Value extends string | number = any>({
   resetButtonPosition,
   resetButtonLabel,
 }: {
-  options?: FilterOption<Value>[];
+  options?: TagButtonsFilterOption[];
   values?: Value[];
-  onSelect?: FilterSelectHandler<Value>;
-  onSelectValue?: FilterSelectValueHandler<Value>;
-  onChange?: FilterChangeHandler<Value>;
+  onSelect?: TagButtonsFilterOnSelect<Value>;
+  onChange?: TagButtonsFilterOnChange<Value>;
+  onSelectValue?: TagButtonsFilterOnSelectValue<Value>;
   multiple?: boolean;
   numColumns?: number;
   gap?: number;
@@ -39,21 +44,30 @@ const TagButtonsFilter = <Value extends string | number = any>({
   const [selectedValues, setSelectedValues] = useState<Value[]>([]);
 
   const handleSelect = useCallback(
-    (option: FilterOption<Value>, index: number) => {
-      setSelectedValues(prev => {
-        if (!multiple) {
-          onSelect && onSelect(option, option.value, index);
-          onSelectValue && onSelectValue({ name, value: option.value });
-          return [option.value];
+    (option: TagButtonsFilterOption<Value>, index: number) => {
+      if (!multiple) {
+        if (onSelect) onSelect(option, option.value, index);
+        if (onSelectValue) onSelectValue({ name, value: option.value });
+        setSelectedValues([option.value]);
+      } else {
+        const newData = !selectedValues.includes(option.value)
+          ? [...selectedValues, option.value]
+          : selectedValues.filter(el => el !== option.value);
+        if (onChange) {
+          onChange(newData, name);
+        } else {
+          setSelectedValues(newData);
         }
-
-        const newData = !prev.includes(option.value) ? [...prev, option.value] : prev.filter(el => el !== option.value);
-        onChange && onChange(newData, name);
-        return newData;
-      });
+      }
     },
-    [multiple, name, onChange, onSelect, onSelectValue]
+    [multiple, name, onChange, onSelect, onSelectValue, selectedValues]
   );
+
+  useEffect(() => {
+    if (checks.isArray(values)) {
+      setSelectedValues(values);
+    }
+  }, [values]);
 
   const renderFilter = useMemo(() => {
     return options?.map((opt, index) => {
@@ -73,12 +87,6 @@ const TagButtonsFilter = <Value extends string | number = any>({
       );
     });
   }, [handleSelect, options, selectedValues]);
-
-  useEffect(() => {
-    if (checks.isArray(values)) {
-      setSelectedValues(values);
-    }
-  }, [values]);
 
   return (
     <FlexBox

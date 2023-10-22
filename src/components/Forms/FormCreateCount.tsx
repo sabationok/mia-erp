@@ -1,8 +1,7 @@
 import ModalForm from 'components/ModalForm';
 import { ICount, ICountFormData } from 'redux/directories/counts.types';
 import React from 'react';
-import translate from '../../lang';
-import t from '../../lang';
+import translate, { t } from '../../lang';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';

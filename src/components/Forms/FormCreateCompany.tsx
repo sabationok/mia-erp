@@ -9,7 +9,7 @@ import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import ButtonGroup from '../atoms/ButtonGroup';
-import t from '../../lang';
+import { t } from '../../lang';
 import { useAppForm } from '../../hooks';
 import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
 import { businessSubjectTypeFilterOptions, ownershipTypeFilterOptions } from '../../data/companies.data';

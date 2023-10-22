@@ -42,7 +42,6 @@ export default class ToastService {
   }
   public static error(content: ToastContent, options?: ToastOptions): ToastLoaderRemover {
     const toastId = toast.error(content, options);
-    console.log(toastId, content);
     return () => toast.dismiss(toastId);
   }
   public static toastAxiosError(e: AxiosError<{ message?: string | string[] }>) {

@@ -12,7 +12,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import styled from 'styled-components';
 import InputLabel from '../atoms/Inputs/InputLabel';
-import t from '../../lang';
+import { t } from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
 import React from 'react';
 import { useAppForm } from '../../hooks';

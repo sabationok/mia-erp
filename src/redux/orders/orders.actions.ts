@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { ICreateOrderBaseFormState, IOrderTempSlot } from './orders.types';
+import { ICreateOrderInfoFormState, IOrderTempSlot } from './orders.types';
 
 enum OrdersActionTypeEnum {
   addSlotToOrder = 'orders/addSlotToOrderAction',
@@ -11,6 +11,7 @@ enum OrdersActionTypeEnum {
   updateGroupFormInfoData = 'orders/updateGroupFormInfoDataAction',
   clearGroupFormData = 'orders/clearGroupFormDataAction',
 }
+
 export const AddSlotToOrderAction = createAction<IOrderTempSlot, OrdersActionTypeEnum.addSlotToOrder>(
   OrdersActionTypeEnum.addSlotToOrder
 );
@@ -27,7 +28,7 @@ export const UpdateSlotInGroupAction = createAction<IOrderTempSlot, OrdersAction
   OrdersActionTypeEnum.updateSlotInGroup
 );
 export const UpdateCurrentGroupFormInfoDataAction = createAction<
-  ICreateOrderBaseFormState,
+  ICreateOrderInfoFormState,
   OrdersActionTypeEnum.updateGroupFormInfoData
 >(OrdersActionTypeEnum.updateGroupFormInfoData);
 

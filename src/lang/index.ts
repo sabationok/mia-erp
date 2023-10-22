@@ -13,18 +13,31 @@ const langDirectory: Record<LangKey, LangDir> = {
   pl: langUa,
 };
 
-function translate(key: LangTextKey): string {
-  if (`${key}` in langDirectory.ua) return langDirectory.ua[key];
-  if (`${key}` in langDirectory.en) return langDirectory.en[key];
+export class LocalizeService {
+  private static lang: LangKey = 'ua';
+
+  public static setLang(key: LangKey) {
+    this.lang = key;
+  }
+  public static getLang() {
+    return this.lang;
+  }
+}
+
+function translate(key: LangTextKey, lang: LangKey = LocalizeService.getLang()): string {
+  if (key in langDirectory[lang] && langDirectory[lang][key]) return langDirectory[lang][key];
   return key;
 }
 
-export function t(key: LangTextKey): string {
-  if (key in langDirectory.ua && langDirectory.ua[key]) return langDirectory.ua[key];
-  if (key in langDirectory.en && langDirectory.en[key]) return langDirectory.en[key];
+export function t(key: LangTextKey, lang: LangKey = LocalizeService.getLang()): string {
+  // if (!(key in langDirectory[lang])) {
+  //   console.log('key in langDirectory[lang]', key, key in langDirectory[lang]);
+  //   console.log({ lang });
+  // }
+  if (key in langDirectory[lang] && langDirectory[lang][key]) return langDirectory[lang][key];
   return key;
 }
-export function getTranslatedString(langPack: LangPack | string, langKey: LangKey = 'ua') {
+export function getTranslatedString(langPack: LangPack | string, langKey: LangKey = LocalizeService.getLang()) {
   try {
     if (checks.isStr(langPack)) {
       return JSON.parse(langPack)[langKey];

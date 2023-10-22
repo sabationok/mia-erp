@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { IOrderTempSlot } from '../../../../redux/orders/orders.types';
 import FlexBox from '../../../atoms/FlexBox';
 import styled from 'styled-components';
@@ -17,15 +17,15 @@ import { Modals } from '../../../Modals';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import OrderGroupItem from '../components/OrderGroupItem';
 import { ExtractId } from '../../../../utils/dataTransform';
+import { FormOrderStepBaseProps } from '../formOrder.types';
 
-export interface OrderGroupsStuffingStepProps {
+export interface OrderGroupsStuffingStepProps extends FormOrderStepBaseProps {
   slots?: IOrderTempSlot[];
   onAddSlot?: (slot: IOrderTempSlot) => void;
   onRemoveSlot?: (id: string) => void;
-  onFinish?: () => void;
 }
 
-const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onFinish }) => {
+const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onChangeValidStatus }) => {
   const { slots } = useOrdersSelector().ordersGroupFormData;
 
   const modalS = useModalService();
@@ -66,6 +66,10 @@ const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onFin
 
     return map;
   }, [slots]);
+
+  useEffect(() => {
+    onChangeValidStatus && onChangeValidStatus(!!slots?.length && slots?.length > 0);
+  }, [onChangeValidStatus, slots?.length]);
 
   const renderGroupedData = useMemo(() => {
     return Object.keys(groupedData).map((k, i) => {

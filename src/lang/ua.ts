@@ -206,9 +206,14 @@ export const langUa = {
   'Shipment methods': 'Способи відвантаження',
   'Add shipment method': 'Додати спосіб відвантаження',
   'Update shipment method': 'Оновити спосіб відвантаження',
+  Destination: 'Місце призначенн',
+  'Enter destination address': 'Введіть адресу призначення',
+  'Has payment': 'Підлягає оплаті',
 
   Deliveries: 'Доставки',
   Delivery: 'Доставка',
+
+  Confirmation: 'Підтвердження',
 
   Realizations: 'Реалізації',
   Realization: 'Реалізація',
@@ -223,7 +228,7 @@ export const langUa = {
   Completing: 'Комлектування',
 
   Summary: 'Підсумок',
-  Info: 'Інфо',
+  Info: 'Інформація',
   Description: 'Опис',
 
   Priority: 'Пріорітетність',
@@ -231,6 +236,9 @@ export const langUa = {
   'Total q-ty': 'Сумарна к-ть',
   Number: 'Номер',
   Group: 'Група',
+
+  Accept: 'Прийняти',
+  Invoicing: 'Інвойсинг',
 
   manufacturer: 'Виробник',
   unit: 'Одиниця',
@@ -364,6 +372,7 @@ export const langUa = {
   Properties: 'Характеристики',
   Measurement: 'Вимірювання',
 
+  'Step is not finished': 'Крок не завершено',
   'Variations template': 'Шаблон варіацій',
   'Product label': 'Назва продукту',
   'Variation label': 'Назва варіації',

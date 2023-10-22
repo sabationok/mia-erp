@@ -10,7 +10,7 @@ import styled, { useTheme } from 'styled-components';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { ProductsService } from '../../hooks/useProductsService.hook';
 import { Modals } from '../Modals';
-import t from '../../lang';
+import { t } from '../../lang';
 import { toast } from 'react-toastify';
 import FlexBox from '../atoms/FlexBox';
 import { Text } from '../atoms/Text';

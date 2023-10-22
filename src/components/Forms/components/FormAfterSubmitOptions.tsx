@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { memo, useState } from 'react';
-import t from '../../../lang';
+import { t } from '../../../lang';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';

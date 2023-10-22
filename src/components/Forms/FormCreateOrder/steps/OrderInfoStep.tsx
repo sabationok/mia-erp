@@ -1,69 +1,128 @@
 import FlexBox from 'components/atoms/FlexBox';
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 import * as React from 'react';
-import { useMemo, useState } from 'react';
-import { ICustomer } from 'redux/customers/customers.types';
+import { useEffect, useState } from 'react';
 import { t } from 'lang';
 import { Text } from 'components/atoms/Text';
 import FormAccordionItem from '../../components/FormAccordionItem';
 import InputLabel from 'components/atoms/Inputs/InputLabel';
-import TextareaPrimary from 'components/atoms/Inputs/TextareaPrimary';
-import { ICreateOrderBaseFormState } from 'redux/orders/orders.types';
+import { ICreateOrderInfoFormState } from 'redux/orders/orders.types';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import { useDirectoriesSelector } from 'redux/selectors.store';
 import { ApiDirType } from 'redux/APP_CONFIGS';
-import Changer from 'components/atoms/Changer';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import SelectCustomerModal from '../components/SelectCustomerModal';
 import TagButtonsFilter from 'components/atoms/TagButtonsFilter';
 import SelectManagerModal from '../components/SelectManagerModal';
-import { UseFormReturn } from 'react-hook-form/dist/types';
 import { FormOrderStepBaseProps } from '../formOrder.types';
-import { orderStatuses } from 'data/orders.data';
 import CheckboxesListSelector from 'components/atoms/CheckboxesListSelector';
 import useTranslatedPaymentMethods from 'hooks/useTranslatedPaymentMethods.hook';
-import FormCreateCustomer from '../../FormCreateCustomer';
 import { ServiceName, useAppServiceProvider } from 'hooks/useAppServices.hook';
 import useTranslatedShipmentMethods from 'hooks/useTranslatedShipmentMethods.hook';
-import { createDataForReq } from '../../../../utils/dataTransform';
 import ButtonSwitch from '../../../atoms/ButtonSwitch';
+import InputText from '../../../atoms/Inputs/InputText';
+import { Path, useFormContext, UseFormSetValue } from 'react-hook-form';
+import CreateCustomerButtonIcon from '../components/CreateCustomerButtonIcon';
+import CustomerInfoComponent from '../components/CustomerInfoComponent';
+import _ from 'lodash';
+import { destinationAddressInputsProps } from '../components/DestinationInputs';
+import { UseFormReturn } from 'react-hook-form/dist/types';
 
 export interface OrderInfoStepProps extends FormOrderStepBaseProps {
-  form: UseFormReturn<ICreateOrderBaseFormState>;
   isGroup?: boolean;
+  defaultValues?: ICreateOrderInfoFormState;
+  getFormMethods?: () => UseFormReturn<ICreateOrderInfoFormState>;
 }
 
-type ConfirmsStateKay = 'hasShipmentPayment' | 'holdShipmentPayment' | 'holdOrderPayment' | 'hasReceiverInfo';
+const throttledLogger = _.throttle((...args: any) => {
+  console.log('throttled Logger', ...args);
+}, 5000);
 
-const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form, onFinish }) => {
-  const { register, setValue, watch, unregister } = form;
+const throttledCallback = _.throttle(<T extends (...args: any) => any>(fn: T) => {
+  console.log('throttled Callback', fn.name);
+  fn();
+}, 5000);
+const useOrderInfoForm = () => useFormContext<ICreateOrderInfoFormState>();
+type ConfirmsStateKay = 'hasShipmentPayment' | 'holdShipmentPayment' | 'holdOrderPayment' | 'hasReceiverInfo';
+type FormFieldPaths = Path<ICreateOrderInfoFormState>;
+const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeValidStatus }) => {
+  const service = useAppServiceProvider()[ServiceName.orders];
+  const [touchedFields, setTouchedFields] = useState<Record<FormFieldPaths | string, boolean>>({});
   const modalS = useModalService();
   const [confirms, setConfirms] = useState<Record<ConfirmsStateKay | string, boolean>>({});
+  // TODO refactoring
+  const { directory: communicationMethodsList } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
 
+  const paymentsMethodsList = useTranslatedPaymentMethods();
+  const shipmentMethodsList = useTranslatedShipmentMethods();
+
+  useEffect(() => {
+    if (Object.values(touchedFields).length > 0) {
+      throttledLogger('touchedFields', touchedFields);
+    }
+  }, [touchedFields]);
+  const setTouchedField = (path: FormFieldPaths) => {
+    setTouchedFields(p => ({ ...p, [path]: true }));
+  };
+
+  const {
+    formState: { isValid, errors },
+    register,
+    setValue,
+    unregister,
+    watch,
+    trigger,
+  } = useOrderInfoForm();
+
+  const formValues = watch();
+
+  const handleOnChangeValue: UseFormSetValue<ICreateOrderInfoFormState> = (path, value) => {
+    try {
+      setValue(path, value as never);
+      throttledCallback(() =>
+        trigger()
+          .then(isValid => {
+            isValid && onChangeValidStatus && onChangeValidStatus(isValid);
+          })
+          .catch(e => {
+            console.error('handleOnChangeValue trigger error', e);
+          })
+      );
+      setTouchedField(path);
+    } catch (e) {
+      console.error('handleOnChangeValue: ', e);
+    }
+  };
   const registerConfirmSelectHandler = (name: ConfirmsStateKay) => {
-    return (res: boolean) => {
-      setConfirms(p => ({ ...p, [name]: res }));
-
-      if (!res && name === 'hasShipmentPayment') {
-        unregister('shipmentInfo.paymentMethod');
+    return (value: boolean) => {
+      setConfirms(p => ({ ...p, [name]: value }));
+      if (!value) {
+        if (name === 'hasShipmentPayment') {
+          return unregister('shipmentInfo.paymentMethod');
+        }
+        if (name === 'hasReceiverInfo') {
+          return unregister('receiver');
+        }
       }
     };
   };
 
-  // TODO refactoring
-  const { directory: communicationMethods } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
+  useEffect(() => {
+    if (onChangeValidStatus) onChangeValidStatus(isValid);
+  }, [isValid, onChangeValidStatus]);
 
-  const paymentsMethods = useTranslatedPaymentMethods();
-  const shipmentMethods = useTranslatedShipmentMethods();
-
-  const formValues = watch();
+  useEffect(() => {
+    throttledLogger(formValues);
+  }, [formValues]);
 
   return (
     <Inputs flex={1} overflow={'auto'}>
       <FlexBox fillWidth gap={8} padding={'8px 2px'} style={{ maxWidth: 480, width: '100%', margin: '0 auto' }}>
-        <InputLabel label={t('manager')}>
-          <CustomerInfoComponent info={formValues.manager?.user as never} isManager />
-        </InputLabel>
+        {formValues?.manager && (
+          <InputLabel label={t('manager')}>
+            <CustomerInfoComponent info={formValues?.manager?.user as never} isManager />
+          </InputLabel>
+        )}
 
         <ButtonIcon
           variant={'outlinedSmall'}
@@ -71,8 +130,8 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form, onFinish }
             const m = modalS.open({
               ModalChildren: SelectManagerModal,
               modalChildrenProps: {
-                onSelect: i => {
-                  setValue('manager', i);
+                onSelect: pr => {
+                  handleOnChangeValue('manager', pr);
                   m?.onClose && m?.onClose();
                 },
               },
@@ -81,17 +140,6 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form, onFinish }
         >
           {t(!formValues?.manager ? 'Select manager' : 'Change manager')}
         </ButtonIcon>
-
-        <InputLabel label={t('Status')}>
-          {/* TODO need refactoring and FIXES*/}
-          <Changer
-            options={orderStatuses}
-            currentOption={{ value: formValues?.status }}
-            onChange={({ value }) => {
-              setValue('status', value);
-            }}
-          />
-        </InputLabel>
       </FlexBox>
 
       <FlexBox padding={'0 2px'}>
@@ -105,20 +153,20 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form, onFinish }
           {formValues?.customer && (
             <>
               <InputLabel label={t('Customer information')}>
-                <CustomerInfoComponent info={formValues.customer} />
+                <CustomerInfoComponent info={formValues?.customer} />
               </InputLabel>
 
-              <BorderedBox fillWidth padding={'0 0 8px'} overflow={'hidden'}>
+              <BorderedBox fillWidth overflow={'hidden'}>
                 <InputLabel label={t('Communication methods')}>
                   <TagButtonsFilter
                     multiple
                     numColumns={3}
-                    values={formValues.customerCommunicationMethods}
+                    values={formValues?.customerCommunicationMethods}
                     resetButtonLabel={t('Not needed')}
-                    options={communicationMethods.map(mtd => ({ ...mtd, value: mtd._id }))}
+                    options={communicationMethodsList.map(mtd => ({ ...mtd, value: mtd._id }))}
                     resetButtonPosition={'start'}
                     onChange={value => {
-                      setValue('customerCommunicationMethods', value);
+                      handleOnChangeValue('customerCommunicationMethods', value);
                     }}
                   />
                 </InputLabel>
@@ -127,9 +175,9 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form, onFinish }
           )}
 
           <FlexBox fxDirection={'row'} gap={8} fillWidth alignItems={'center'}>
-            <CreateCustomerIconButton
+            <CreateCustomerButtonIcon
               onSuccess={d => {
-                setValue('customer', d);
+                handleOnChangeValue('customer', d);
               }}
             />
 
@@ -140,8 +188,8 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form, onFinish }
                 const m = modalS.open({
                   ModalChildren: SelectCustomerModal,
                   modalChildrenProps: {
-                    onSelect: i => {
-                      setValue('customer', i);
+                    onSelect: data => {
+                      handleOnChangeValue('customer', data);
                       m?.onClose && m?.onClose();
                     },
                   },
@@ -152,37 +200,35 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form, onFinish }
             </ButtonIcon>
           </FlexBox>
 
-          <BorderedBox fillWidth padding={'8px'} gap={4}>
-            <Text $size={12} $weight={500}>
-              {'Хто отримувач?'}
-            </Text>
-
-            <ButtonSwitch
-              onChange={registerConfirmSelectHandler('hasReceiverInfo')}
-              value={confirms?.hasReceiverInfo}
-              rejectLabel={'The same'}
-              acceptLabel={'Another'}
-            />
+          <BorderedBox fillWidth gap={4}>
+            <InputLabel label={t('Receiver')}>
+              <ButtonSwitch
+                onChange={registerConfirmSelectHandler('hasReceiverInfo')}
+                value={confirms?.hasReceiverInfo || !!formValues?.receiver}
+                rejectLabel={'The same'}
+                acceptLabel={'Another'}
+              />
+            </InputLabel>
           </BorderedBox>
 
-          {confirms?.hasReceiverInfo && formValues?.receiver && (
+          {(confirms?.hasReceiverInfo || formValues?.receiver) && (
             <>
               <InputLabel label={t('Receiver information')}>
-                <CustomerInfoComponent info={formValues.receiver} />{' '}
+                <CustomerInfoComponent info={formValues?.receiver} />{' '}
               </InputLabel>
 
-              <BorderedBox fillWidth padding={'0 0 8px'}>
+              <BorderedBox fillWidth>
                 <InputLabel label={t('Communication methods')}>
                   <TagButtonsFilter
                     multiple
                     numColumns={3}
-                    onChange={value => {
-                      setValue('receiverCommunicationMethods', value);
-                    }}
-                    values={formValues.receiverCommunicationMethods}
-                    resetButtonLabel={t('Not needed')}
-                    options={communicationMethods.map(mtd => ({ ...mtd, value: mtd._id }))}
+                    values={formValues?.receiverCommunicationMethods}
+                    resetButtonLabel={t('No one')}
+                    options={communicationMethodsList.map(mtd => ({ ...mtd, value: mtd._id }))}
                     resetButtonPosition={'start'}
+                    onChange={value => {
+                      handleOnChangeValue('receiverCommunicationMethods', value);
+                    }}
                   />
                 </InputLabel>
               </BorderedBox>
@@ -191,10 +237,10 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form, onFinish }
 
           {confirms?.hasReceiverInfo && (
             <FlexBox fxDirection={'row'} gap={8} fillWidth alignItems={'center'}>
-              <CreateCustomerIconButton
+              <CreateCustomerButtonIcon
                 isReceiver
                 onSuccess={d => {
-                  setValue('receiver', d);
+                  handleOnChangeValue('receiver', d);
                 }}
               />
 
@@ -206,7 +252,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form, onFinish }
                     ModalChildren: SelectCustomerModal,
                     modalChildrenProps: {
                       onSelect: i => {
-                        setValue('receiver', i);
+                        handleOnChangeValue('receiver', i);
                         m?.onClose && m?.onClose();
                       },
                     },
@@ -224,17 +270,26 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form, onFinish }
           open
           renderHeader={
             <Text $ellipsisMode={true} $size={16} $weight={500}>
-              {t('Order invoices')}
+              {t('Invoicing')}
             </Text>
           }
         >
           <InputLabel label={t('Payment method')} required>
             <CheckboxesListSelector
-              options={paymentsMethods}
+              options={paymentsMethodsList}
               currentOption={formValues?.invoiceInfo?.method}
               onChangeIndex={i => {
-                setValue('invoiceInfo.method', paymentsMethods[i]);
+                handleOnChangeValue('invoiceInfo.method', paymentsMethodsList[i]);
               }}
+            />
+          </InputLabel>
+
+          <InputLabel label={t('Expired at')} required>
+            <InputText
+              placeholder={t('Expired at')}
+              type={'datetime-local'}
+              required
+              {...register('invoiceInfo.expiredAt', { required: true })}
             />
           </InputLabel>
         </StAccordionItem>
@@ -248,44 +303,54 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form, onFinish }
             </Text>
           }
         >
-          <BorderedBox fillWidth gap={8} padding={'0 0 8px'}>
+          <BorderedBox fillWidth gap={8}>
             <InputLabel label={t('Shipment method')} required>
               <CheckboxesListSelector
-                options={shipmentMethods}
+                options={shipmentMethodsList}
                 currentOption={formValues?.shipmentInfo?.method}
                 onChangeIndex={i => {
-                  setValue('shipmentInfo.method', shipmentMethods[i]);
+                  handleOnChangeValue('shipmentInfo.method', shipmentMethodsList[i]);
                 }}
               />
             </InputLabel>
           </BorderedBox>
 
-          <BorderedBox fillWidth gap={8} padding={'0 0 8px'}>
-            <InputLabel label={t('Destination')} required>
-              <TextareaPrimary
-                maxLength={250}
-                required
-                placeholder={t('Enter destination address')}
-                {...register('destination', { required: true })}
-              />
-            </InputLabel>
+          <BorderedBox fillWidth style={{ columnGap: 8, display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+            {destinationAddressInputsProps.map(({ name, label, required }) => {
+              return (
+                <InputLabel
+                  key={`dest-addr-${label}`}
+                  label={label}
+                  error={errors?.shipmentInfo?.destination ? errors?.shipmentInfo?.destination[name] : undefined}
+                  required={required}
+                >
+                  <InputText
+                    required={required}
+                    placeholder={label}
+                    {...register(`shipmentInfo.destination.${name}`, { required })}
+                  />
+                </InputLabel>
+              );
+            })}
           </BorderedBox>
 
-          <BorderedBox fillWidth gap={8} padding={'0 0 8px'}>
+          <BorderedBox fillWidth gap={8}>
             <InputLabel label={t('Has payment')} required>
               <ButtonSwitch
                 onChange={registerConfirmSelectHandler('hasShipmentPayment')}
                 value={confirms?.hasShipmentPayment || !!formValues?.shipmentInfo?.paymentMethod}
               />
             </InputLabel>
+          </BorderedBox>
 
+          <BorderedBox fillWidth gap={8}>
             {(confirms?.hasShipmentPayment || !!formValues?.shipmentInfo?.paymentMethod) && (
               <InputLabel label={t('Payment method')} required>
                 <CheckboxesListSelector
-                  options={paymentsMethods}
+                  options={paymentsMethodsList}
                   currentOption={formValues?.shipmentInfo?.paymentMethod}
                   onChangeIndex={i => {
-                    setValue('shipmentInfo.paymentMethod', paymentsMethods[i]);
+                    handleOnChangeValue('shipmentInfo.paymentMethod', paymentsMethodsList[i]);
                   }}
                 />
               </InputLabel>
@@ -319,6 +384,8 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ isGroup, form, onFinish }
 const Inputs = styled(FlexBox)``;
 
 const BorderedBox = styled(FlexBox)`
+  padding-bottom: 8px;
+
   border-top: 1px solid ${p => p.theme.modalBorderColor};
   border-bottom: 1px solid ${p => p.theme.modalBorderColor};
 `;
@@ -330,92 +397,3 @@ const StAccordionItem = styled(FormAccordionItem)`
   }
 `;
 export default OrderInfoStep;
-
-function getCustomerInfoComponentCells({ isManager }: { info?: ICustomer; isReceiver?: boolean; isManager?: boolean }) {
-  return [
-    { label: t('label'), getValue: (info?: ICustomer) => info?.label || '---', visible: !isManager },
-    { label: t('name'), getValue: (info?: ICustomer) => info?.name || '---', visible: true },
-    { label: t('secondName'), getValue: (info?: ICustomer) => info?.secondName || '---', visible: true },
-    { label: t('email'), getValue: (info?: ICustomer) => info?.email || '---', visible: true },
-    { label: t('taxCode'), getValue: (info?: ICustomer) => info?.taxCode || '---', visible: !isManager },
-    {
-      label: t('personalTaxCode'),
-      getValue: (info?: ICustomer) => info?.personalTaxCode || '---',
-      visible: !isManager,
-    },
-    { label: t('tags'), getValue: (info?: ICustomer) => info?.tags?.join(', ') || '---', visible: !isManager },
-  ];
-}
-
-const CreateCustomerIconButton = ({
-  onSuccess,
-  isReceiver,
-}: {
-  onSuccess?: (customer: ICustomer) => void;
-  isReceiver?: boolean;
-}) => {
-  const customerS = useAppServiceProvider()[ServiceName.customers];
-  const modalS = useModalService();
-
-  return (
-    <ButtonIcon
-      variant={'onlyIcon'}
-      icon={'plus'}
-      iconSize={'100%'}
-      size={'30px'}
-      onClick={() => {
-        modalS.open({
-          ModalChildren: FormCreateCustomer,
-          modalChildrenProps: {
-            title: isReceiver ? t('Create receiver') : undefined,
-            onSubmit: d => {
-              customerS.create({
-                data: createDataForReq(d),
-                onSuccess: onSuccess,
-              });
-            },
-          },
-        });
-      }}
-    ></ButtonIcon>
-  );
-};
-
-const CustomerInfoComponent = ({
-  info,
-  isReceiver,
-  isManager,
-}: {
-  info?: ICustomer;
-  isReceiver?: boolean;
-  isManager?: boolean;
-}) => {
-  const theme = useTheme();
-  const renderCells = useMemo(() => {
-    if (!info) return undefined;
-
-    return getCustomerInfoComponentCells({ info, isReceiver, isManager }).map(({ label, getValue, visible }) => {
-      return (
-        visible && (
-          <FlexBox
-            key={label}
-            gap={4}
-            padding={'4px'}
-            flex={'1 1 50%'}
-            maxWidth={'50%'}
-            border={`1px solid ${theme.modalBorderColor}`}
-          >
-            <Text $size={12}>{label}</Text>
-            <Text $align={'right'}>{getValue(info)}</Text>
-          </FlexBox>
-        )
-      );
-    });
-  }, [info, isManager, isReceiver, theme.modalBorderColor]);
-
-  return (
-    <FlexBox fillWidth flexWrap={'wrap'} fxDirection={'row'} border={`1px solid ${theme.modalBorderColor}`}>
-      {renderCells}
-    </FlexBox>
-  );
-};

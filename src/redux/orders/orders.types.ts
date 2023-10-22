@@ -1,4 +1,4 @@
-import { AppResponse, IBase, OnlyUUID } from '../global.types';
+import { AddressDto, AppResponse, IBase, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
 import { IPriceBase, IPriceListItem } from '../priceManagement/priceManagement.types';
 import { ICompany } from '../companies/companies.types';
 import { IManager, IUserBase } from '../auth/auth.types';
@@ -7,9 +7,10 @@ import { IProductInventory, IWarehouse } from '../warehouses/warehouses.types';
 import { IProduct } from '../products/products.types';
 import { IVariation } from '../products/variations.types';
 import { ICustomerBase } from '../customers/customers.types';
-import { IShipment, IShipmentFormData } from '../shipments/shipments.types';
+import { IShipment } from '../shipments/shipments.types';
 import { IPayment } from '../payments/payments.types';
-import { IInvoice, IInvoiceBaseFormData } from '../invoices/invoices.types';
+import { IInvoice } from '../invoices/invoices.types';
+import { AppQueryParams } from '../../api';
 
 export enum OrderTypeEnum {
   Order = 'Order',
@@ -84,7 +85,7 @@ export interface IOrder extends IBase {
   innerComment?: string;
 }
 
-export interface ICreateOrderBaseFormState {
+export interface ICreateOrderInfoFormState {
   manager?: {
     _id?: string;
     user?: Partial<IUserBase>;
@@ -98,22 +99,29 @@ export interface ICreateOrderBaseFormState {
 
   status?: OrderStatusEnum;
 
-  destination?: string;
+  invoiceInfo?: {
+    method?: IFormDataValueWithUUID;
+    expiredAt?: string | number | Date;
+  };
 
-  invoiceInfo?: Pick<IInvoiceBaseFormData, 'method'>;
-
-  shipmentInfo?: Pick<IShipmentFormData, 'paymentMethod' | 'destination' | 'method'>;
+  shipmentInfo?: {
+    method?: IFormDataValueWithUUID;
+    destination?: AddressDto;
+    paymentMethod?: IFormDataValueWithUUID;
+  };
 }
 
-export interface ICreateOrderFormState {
+export interface ICreateOrdersGroupFormState {
   slots?: IOrderTempSlot[];
-  info?: ICreateOrderBaseFormState;
+  info?: ICreateOrderInfoFormState;
   orders?: IOrder[];
 }
 
-export interface CreateOrdersGroupFormData extends ICreateOrderBaseFormState {
+export interface FormCreateOrdersGroupFormData {
+  info?: ICreateOrdersGroupFormState;
   slots?: IOrderSlotReqData[];
-  orders?: IOrder[];
+  invoices?: any[];
+  shipments?: any[];
 }
 
 export interface IAllOrdersRes extends AppResponse<IOrder[]> {}
@@ -122,7 +130,17 @@ export interface IOrderRes extends AppResponse<IOrder> {}
 
 export interface IOrderReqData {
   _id?: string;
-  data: IOrder;
+  data: IOrderBaseDto;
+  params?: AppQueryParams;
+}
+
+export interface ICreateOrdersGroupDto {
+  slots?: IOrderTempSlot;
+  info?: ICreateOrderInfoFormState;
+}
+export interface ICreateOrdersWithSlotsAndGroupByWarehousesReqData {
+  data: ICreateOrdersGroupDto;
+  params?: AppQueryParams;
 }
 
 export interface IOrderBaseDto {

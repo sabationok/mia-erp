@@ -1,8 +1,15 @@
 import baseApi from './baseApi';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
-import { IAllOrdersRes, IOrder, IOrderRes, IOrderSlot } from '../redux/orders/orders.types';
+import {
+  IAllOrdersRes,
+  ICreateOrdersWithSlotsAndGroupByWarehousesReqData,
+  IOrder,
+  IOrderRes,
+  IOrderSlot,
+} from '../redux/orders/orders.types';
 import { AppResponse, OnlyUUID } from '../redux/global.types';
 import { IProduct } from '../redux/products/products.types';
+import { AppQueryParams } from './index';
 
 export default class OrdersApi {
   private static api = baseApi;
@@ -18,6 +25,13 @@ export default class OrdersApi {
 
   public static async createOne(...args: any[]): Promise<IOrderRes> {
     return this.api.post(this.endpoints.create());
+  }
+
+  public static async createGroupWithSlots(
+    data: ICreateOrdersWithSlotsAndGroupByWarehousesReqData,
+    params?: AppQueryParams
+  ): Promise<IOrderRes> {
+    return this.api.post(this.endpoints.create(), data, { params });
   }
 
   public static async deleteOne(...args: any[]): Promise<AppResponse<IOrder & { result: boolean }>> {

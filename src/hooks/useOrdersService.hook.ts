@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useAppDispatch } from '../redux/store.store';
 import { OnlyUUID, ServiceDispatcher, ServiceDispatcherAsync } from '../redux/global.types';
-import { ICreateOrderBaseFormState, IOrder, IOrderReqData } from '../redux/orders/orders.types';
+import { ICreateOrderInfoFormState, IOrder, IOrderReqData } from '../redux/orders/orders.types';
 import { AppQueryParams } from '../api';
 import { ClearCurrentGroupFormDataAction, UpdateCurrentGroupFormInfoDataAction } from '../redux/orders/orders.actions';
 
@@ -18,7 +18,7 @@ export interface OrdersService {
   getPaymentsByOrderId: EmptyFn | ServiceDispatcherAsync<OnlyUUID>;
   getInvoicesByOrderId: EmptyFn | ServiceDispatcherAsync<OnlyUUID>;
 
-  updateCurrentGroupFormInfoData: ServiceDispatcher<ICreateOrderBaseFormState>;
+  updateCurrentGroupFormInfoData: ServiceDispatcher<ICreateOrderInfoFormState>;
   clearCurrentGroupFormData: ServiceDispatcher;
 }
 

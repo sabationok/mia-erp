@@ -4,7 +4,7 @@ import ModalForm from '../ModalForm';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputLabel from '../atoms/Inputs/InputLabel';
-import t from '../../lang';
+import { t } from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
 import React, { useEffect } from 'react';
 import { useAppForm } from '../../hooks';

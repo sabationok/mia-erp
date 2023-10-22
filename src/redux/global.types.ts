@@ -73,10 +73,13 @@ export interface IAddressSlot extends AddressDto, IBase {}
 export interface AddressDto {
   country?: string;
   region?: string;
+  district?: boolean;
+  area?: string;
   city?: string;
   street?: string;
   house?: number;
   office?: string;
+  room?: string;
 }
 
 export interface AppResponse<D = any, M = any>

@@ -3,7 +3,7 @@ import FlexBox from '../atoms/FlexBox';
 import React, { useMemo } from 'react';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
-import t from '../../lang';
+import { t } from '../../lang';
 import { usePageCurrentProduct } from '../AppPages/PageProductOverview/PageCurrentProductProvider';
 import { useProductsSelector } from '../../redux/selectors.store';
 import { useLocation, useNavigate } from 'react-router-dom';

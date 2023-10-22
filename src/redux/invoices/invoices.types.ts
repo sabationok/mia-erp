@@ -20,6 +20,8 @@ export interface IInvoiceBaseFormData {
   method?: IFormDataValueWithUUID;
   amount?: number;
 
+  expiredAt?: Date | string | number;
+
   order?: IFormDataValueWithUUID;
   slots?: IFormDataValueWithUUID[];
 

@@ -3,7 +3,7 @@ import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { ProductTypeEnum } from '../../redux/products/products.types';
 import FlexBox from '../atoms/FlexBox';
 import InputLabel from '../atoms/Inputs/InputLabel';
-import t from '../../lang';
+import { t } from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
 import { useAppForm } from '../../hooks';
 import { IProperty, IPropertyBase, IPropertyDto } from '../../redux/products/properties.types';

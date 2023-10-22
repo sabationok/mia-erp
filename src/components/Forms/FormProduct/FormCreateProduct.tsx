@@ -7,7 +7,7 @@ import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { useAppSelector } from '../../../redux/store.store';
 import FlexBox from '../../atoms/FlexBox';
-import t from '../../../lang';
+import { t } from '../../../lang';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { useAppForm } from '../../../hooks';
 import {
