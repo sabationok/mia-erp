@@ -8,6 +8,8 @@ import { useModalService } from '../../../ModalProvider/ModalProvider';
 import { useDispatch } from 'react-redux';
 import { IWarehouse } from '../../../../redux/warehouses/warehouses.types';
 import OrderGroupItem from '../components/OrderGroupItem';
+import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import { t } from '../../../../lang';
 
 export interface OrderConfirmationStepProps extends FormOrderStepBaseProps {}
 
@@ -43,7 +45,11 @@ const OrderConfirmationStep: React.FC<OrderConfirmationStepProps> = ({ onChangeV
           key={`pre-order_${v.warehouse?._id || i}`}
           slots={v.slots}
           title={v?.warehouse?.label}
-          renderFooter={<Footer fillWidth />}
+          renderFooter={
+            <Footer fillWidth fxDirection={'row'} alignItems={'center'} padding={'4px 8px'}>
+              <ButtonIcon variant={'outlinedSmall'}>{t('Invoice')}</ButtonIcon>
+            </Footer>
+          }
         />
       );
     });
@@ -82,7 +88,7 @@ const Footer = styled(FlexBox)<{ isOpen?: boolean }>`
   z-index: 40;
 
   color: inherit;
-  border: 3px solid ${({ theme }) => 'tomato' || theme.trBorderClr};
+  border: 1px solid ${({ theme }) => theme.modalBorderColor};
   background-color: ${({ theme }) => theme.modalBackgroundColor};
 `;
 export default OrderConfirmationStep;

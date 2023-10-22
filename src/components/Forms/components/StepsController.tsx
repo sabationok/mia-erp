@@ -159,11 +159,14 @@ const Container = styled(FlexBox)`
 const ActionButton = styled(ButtonIcon)`
   flex: 1;
   min-width: min-content;
+  height: 100%;
 `;
 const ArrowButton = styled(ButtonIcon)`
   min-width: 34px;
   height: 100%;
-
+  color: ${p => p.theme.accentColor.base};
+  fill: ${p => p.theme.accentColor.base};
+  background-color: ${p => p.theme.accentColor.light};
   @media screen and (min-width: 480px) {
     flex: 1;
   }
