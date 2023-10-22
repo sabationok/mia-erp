@@ -63,6 +63,9 @@ export interface IPriceBase {
   price?: number;
   cost?: number;
 
+  in?: number;
+  out?: number;
+
   discountAmount?: number;
   discountPercentage?: number;
 

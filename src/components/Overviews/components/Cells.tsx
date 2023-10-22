@@ -98,8 +98,6 @@ export const ProductStatusChangerCell: RenderOverviewCellComponent<IProduct> = (
     // eslint-disable-next-line
   }, []);
 
-  console.log(currentStatusData);
-
   return (
     <Cell style={{ minHeight: 'max-content' }}>
       <CellHeader
@@ -155,12 +153,41 @@ export const ProductStatusChangerCell: RenderOverviewCellComponent<IProduct> = (
   );
 };
 
+const DefaultTag = styled(FlexBox)`
+  justify-content: center;
+
+  border-radius: 2px;
+  padding: 4px 12px;
+  height: 28px;
+
+  background-color: ${p => p.theme.fieldBackgroundColor};
+`;
 export const ProductDefaultsCell: RenderOverviewCellComponent<IProduct> = ({ data, cell, setOverlayContent }) => {
+  const theme = useTheme();
   const warehouse = data?.warehouse;
-  const variation = data?.variation;
   const supplier = data?.supplier;
 
-  const theme = useTheme();
+  const renderVariationTags = useMemo(() => {
+    const variation = data?.variation;
+    const tagsData: { title: string; value?: number | string }[] = [
+      { title: t('Label'), value: variation?.label },
+      { title: t('Bar-code'), value: variation?.barCode },
+      {
+        title: t('SKU'),
+        value: variation?.sku,
+      },
+    ];
+
+    return tagsData.map((item, index) => {
+      return (
+        <DefaultTag key={item?.title}>
+          {`${item?.title}: `}
+          {item?.value || '---'}
+        </DefaultTag>
+      );
+    });
+  }, [data?.variation]);
+
   const priceInfoCellsData = useMemo((): { title: string; amount?: number; percentage?: number }[] => {
     const priceInfo = data?.price;
     return [
@@ -197,20 +224,14 @@ export const ProductDefaultsCell: RenderOverviewCellComponent<IProduct> = ({ dat
   const renderPriceInfo = useMemo(() => {
     return priceInfoCellsData.map((item, index) => {
       return (
-        <FlexBox
-          key={item?.title}
-          padding={'4px 12px'}
-          height={'28px'}
-          justifyContent={'center'}
-          style={{ borderRadius: 2, backgroundColor: theme?.fieldBackgroundColor }}
-        >
+        <DefaultTag key={item?.title}>
           {`${item?.title}: `}
           {numberWithSpaces(item?.amount || 0)}
           {checks.isNum(item?.percentage) && ` | ${numberWithSpaces(item?.percentage)}%`}
-        </FlexBox>
+        </DefaultTag>
       );
     });
-  }, [priceInfoCellsData, theme?.fieldBackgroundColor]);
+  }, [priceInfoCellsData]);
 
   return (
     <Cell style={{ minHeight: 'max-content' }}>
@@ -224,34 +245,39 @@ export const ProductDefaultsCell: RenderOverviewCellComponent<IProduct> = ({ dat
       />
 
       <FlexBox fillWidth gap={6}>
-        <CellText $isTitle $weight={500} style={{ color: theme?.fontColorHeader }}>
+        <CellText $isTitle $weight={500} style={{ color: theme?.fontColorHeader, marginInline: 8 }}>
           {t('warehouse')}
         </CellText>
-        <CellText $isTitle={!warehouse} $align={'right'}>
-          {warehouse ? `${warehouse?.label} | ${warehouse?.code}` : t('undefined')}
-        </CellText>
+
+        <FlexBox fillWidth flexWrap={'wrap'} fxDirection={'row'} gap={8}>
+          <DefaultTag>{`${t('Label')}: ${warehouse?.label || '---'}`}</DefaultTag>
+          <DefaultTag>{`${t('Code')}: ${warehouse?.code || '---'}`}</DefaultTag>
+        </FlexBox>
       </FlexBox>
 
       <FlexBox fillWidth gap={6}>
-        <CellText $isTitle $weight={500} style={{ color: theme?.fontColorHeader }}>
+        <CellText $isTitle $weight={500} style={{ color: theme?.fontColorHeader, marginInline: 8 }}>
           {t('supplier')}
         </CellText>
-        <CellText $isTitle={!supplier} $align={'right'}>
-          {supplier ? `${supplier?.label} | ${supplier?.code}` : t('undefined')}
-        </CellText>
+
+        <FlexBox fillWidth flexWrap={'wrap'} fxDirection={'row'} gap={8}>
+          <DefaultTag>{`${t('Label')}: ${supplier?.label || '---'}`}</DefaultTag>
+          <DefaultTag>{`${t('Code')}: ${supplier?.code || '---'}`}</DefaultTag>
+        </FlexBox>
       </FlexBox>
 
       <FlexBox fillWidth gap={6}>
-        <CellText $weight={500}>{t('variation')}</CellText>
-        <CellText $isTitle={!variation} $align={'right'}>
-          {variation
-            ? `${variation?.label} | ${variation?.barCode || 'barCode'} | ${variation?.sku || 'SKU'}`
-            : t('undefined')}
+        <CellText $weight={500} style={{ color: theme?.fontColorHeader, marginInline: 8 }}>
+          {t('variation')}
         </CellText>
+
+        <FlexBox fillWidth flexWrap={'wrap'} fxDirection={'row'} gap={8}>
+          {renderVariationTags}
+        </FlexBox>
       </FlexBox>
 
       <FlexBox fillWidth gap={6}>
-        <CellText $isTitle $weight={500} style={{ color: theme?.fontColorHeader }}>
+        <CellText $isTitle $weight={500} style={{ color: theme?.fontColorHeader, marginInline: 8 }}>
           {t('price')}
         </CellText>
         <FlexBox fillWidth flexWrap={'wrap'} fxDirection={'row'} gap={8}>
