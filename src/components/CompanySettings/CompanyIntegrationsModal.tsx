@@ -1,14 +1,16 @@
 import { ModalFormProps } from '../ModalForm';
 import FlexBox from '../atoms/FlexBox';
-import { ReactElement, useMemo, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../utils/fabrics';
-import { IntegrationProviderTypeEnum } from '../../redux/integrations/integrations.types';
+import { ExtServProviderBase, IntegrationProviderTypeEnum } from '../../redux/integrations/integrations.types';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { ModalHeader } from '../atoms';
 import InvoicesIntegrationsTab from './integrations/InvoicesIntegrationsTab';
 import ShipmentsIntegrationsTab from './integrations/ShipmentsIntegrationsTab';
 import ModalFilter from '../ModalForm/ModalFilter';
+import { AppQueryParams, createApiCall } from '../../api';
+import IntegrationsApi from '../../api/integrations.api';
 
 export interface CompanyIntegrationsProps extends Omit<ModalFormProps, 'onSubmit'> {}
 
@@ -37,12 +39,38 @@ const tabsMap: Record<
 
 const tabs = enumToFilterOptions(CompanyIntegrationsTabs);
 
+const useIntegrationsService = () => {
+  const [integrationProviders, setIntegrationProviders] = useState<ExtServProviderBase[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const loadProviders = ({ params }: { params?: AppQueryParams } = {}) =>
+    createApiCall(
+      { data: params, onSuccess: setIntegrationProviders, onLoading: setIsLoading },
+      IntegrationsApi.getAllIntegrationProviders,
+      IntegrationsApi
+    );
+
+  return {
+    loadProviders,
+    integrationProviders,
+    isLoading,
+  };
+};
+
 const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose, ...props }) => {
   const [current, setCurrent] = useState(tabs[0].value);
+  const { loadProviders, integrationProviders } = useIntegrationsService();
 
   const RenderTab = useMemo(() => {
     return tabsMap[current] || tabsMap[tabs[0].value];
   }, [current]);
+
+  useEffect(() => {
+    if (integrationProviders.length === 0) {
+      loadProviders();
+    }
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <Container overflow={'hidden'}>

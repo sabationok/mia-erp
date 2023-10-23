@@ -17,7 +17,8 @@ export interface DirCustomRolesProps
   extends IDirInTreeProps<any, ICustomRole, ICustomRole, ICustomRole, CustomRolesService> {}
 
 const DirCustomRoles: React.FC<DirCustomRolesProps> = ({ createParentTitle, actionsCreator, ...props }) => {
-  const { customRoles } = useCustomRolesSelector();
+  const { customRoles, modules } = useCustomRolesSelector();
+
   const service = useCustomRolesService();
   const modalService = useModalProvider();
 
@@ -30,7 +31,7 @@ const DirCustomRoles: React.FC<DirCustomRolesProps> = ({ createParentTitle, acti
         })
       : {};
   }, [actionsCreator, modalService, service]);
-
+  // !!! REFACTORING ACTIONS
   const renderList = useMemo(
     () =>
       customRoles?.map((item, idx) => (
@@ -41,7 +42,7 @@ const DirCustomRoles: React.FC<DirCustomRolesProps> = ({ createParentTitle, acti
           item={item}
           availableLevels={1}
           currentLevel={0}
-          {...actions}
+          {...(actions as object)}
         />
       )),
     [actions, customRoles, props]

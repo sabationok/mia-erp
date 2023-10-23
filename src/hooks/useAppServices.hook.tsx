@@ -14,6 +14,7 @@ import useCustomersService, { CustomersService } from './useCustomersService';
 import usePaymentsServiceHook, { UsePaymentsService } from './usePaymentsService.hook';
 import useInvoicesService, { UseInvoicesService } from './useInvoicesService.hook';
 import useShipmentsService, { UseShipmentsService } from './useShipmentsService.hook';
+import useCustomRolesServiceHook, { CustomRolesService } from './useCustomRolesService.hook';
 
 export enum ServiceName {
   permissions = 'permissions',
@@ -32,6 +33,7 @@ export enum ServiceName {
   payments = 'payments',
   invoices = 'invoices',
   shipments = 'shipments',
+  roles = 'roles',
 }
 
 export interface AppService {
@@ -49,6 +51,7 @@ export interface AppService {
   [ServiceName.payments]: UsePaymentsService;
   [ServiceName.invoices]: UseInvoicesService;
   [ServiceName.shipments]: UseShipmentsService;
+  [ServiceName.roles]: CustomRolesService;
 }
 // const isDevMode = ConfigService.isDevMode();
 const useAppService = (): AppService => {
@@ -66,10 +69,12 @@ const useAppService = (): AppService => {
   const payments = usePaymentsServiceHook();
   const invoices = useInvoicesService();
   const shipments = useShipmentsService();
+  const roles = useCustomRolesServiceHook();
 
   return {
     auth,
     permissions,
+    roles,
     appSettings,
     companies,
     transactions,

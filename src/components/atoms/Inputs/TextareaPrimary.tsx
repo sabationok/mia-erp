@@ -4,7 +4,7 @@ import { InputStyles } from './InputText';
 const TextareaPrimary = styled.textarea<{ error?: boolean }>`
   ${InputStyles};
 
-  height: 50px;
+  height: 44px;
 
   resize: none;
 

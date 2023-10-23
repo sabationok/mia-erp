@@ -7,16 +7,17 @@ import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import FlexBox from '../atoms/FlexBox';
 import { useAppForm } from '../../hooks';
 import { SubmitErrorHandler, SubmitHandler } from 'react-hook-form';
-import { useAppSettingsSelector } from '../../redux/selectors.store';
-import { useEffect, useMemo } from 'react';
-import TitleBase from '../atoms/TitleBase';
+import { useCustomRolesSelector } from '../../redux/selectors.store';
+import { useCallback, useEffect, useMemo } from 'react';
 import CheckBox from '../TableList/TebleCells/CellComponents/CheckBox';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import translate from '../../lang';
+import translate, { getTranslatedString } from '../../lang';
 import { FieldValues } from 'react-hook-form/dist/types';
 import { AppErrorSubmitHandler, AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
+import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import { Text } from '../atoms/Text';
 
 export interface FormCreateCustomRoleProps extends Omit<ModalFormProps, 'onSubmit'> {
   _id?: string;
@@ -33,7 +34,8 @@ const validation = yup.object().shape({
   description: yup.string(),
 });
 const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({ onSubmit, customRole, edit, _id, ...props }) => {
-  const { appActions } = useAppSettingsSelector();
+  const { modules } = useCustomRolesSelector();
+  const service = useAppServiceProvider()[ServiceName.roles];
 
   const {
     formState: { errors, isValid },
@@ -44,8 +46,8 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({ onSubmit, c
     clearAfterSave,
     closeAfterSave,
     toggleAfterSubmitOption,
-  } = useAppForm<Partial<ICustomRole>>({
-    defaultValues: customRole,
+  } = useAppForm<ICustomRole>({
+    defaultValues: { ...customRole, actions: customRole?.actions || [] },
     reValidateMode: 'onChange',
     resolver: yupResolver(validation),
   });
@@ -61,35 +63,63 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({ onSubmit, c
     const onInvalidSubmit: SubmitErrorHandler<Partial<ICustomRole>> = errors => console.log(errors);
     return handleSubmit(onValidSubmit, onInvalidSubmit);
   }
+
+  const handleSelectActions = (value: string) => {
+    setValue('actions', value ? [...(formValues?.actions || []), value] : formValues.actions);
+  };
+  const handleRemoveAction = (value: string) => {
+    setValue(
+      'actions',
+      formValues.actions?.filter(r => r !== value)
+    );
+  };
+
+  const handleUpdateActions = useCallback(
+    (value: string) => {
+      const remove = formValues.actions.includes(value);
+
+      if (remove) {
+        setValue(
+          'actions',
+          formValues.actions?.filter(r => r !== value)
+        );
+      } else {
+        setValue('actions', value ? [...(formValues.actions || []), value] : formValues.actions);
+      }
+    },
+    [formValues, setValue]
+  );
+
   useEffect(() => {
-    console.log(formValues);
-  }, [formValues]);
+    if (modules.length === 0) {
+      service.getAllActions();
+    }
+    // eslint-disable-next-line
+  }, []);
 
   const renderList = useMemo(() => {
-    return Object.entries(appActions).map(([name, value]) => {
+    return modules.map(module => {
       return (
-        <List key={name}>
-          <TitleBase>{name}</TitleBase>
+        <List key={module.label}>
+          <Text $weight={600} $textTransform={'uppercase'} style={{ padding: '4px 8px' }}>
+            {getTranslatedString(module.labels)}
+          </Text>
 
-          <List>
-            {value.map(el => (
-              <ListItem key={el?.type}>
+          <List gap={8} padding={'8px 2px 8px'}>
+            {module.actions?.map(action => (
+              <ListItem key={action?.type}>
                 <CheckBox
-                  onChange={customEvent => {
-                    if (Array.isArray(formValues.actions)) {
-                      customEvent.checked
-                        ? setValue('actions', el.value ? [...formValues.actions, el.value] : formValues.actions)
-                        : setValue(
-                            'actions',
-                            formValues.actions.filter(r => r !== el.type)
-                          );
-                    }
+                  onChange={ev => {
+                    console.log(ev.checked);
+                    action.type && handleUpdateActions(action.type);
                   }}
-                  checked={formValues.actions?.some(r => r === el.type)}
+                  checked={action.type && formValues.actions?.includes(action.type)}
                 />
 
-                <Field flex={'1'} justifyContent={'center'} padding={'0 12px'}>
-                  {el?.type}
+                <Field flex={'1'} justifyContent={'center'}>
+                  <Text $weight={400} $size={12}>
+                    {getTranslatedString(action.labels)}
+                  </Text>
                 </Field>
               </ListItem>
             ))}
@@ -97,7 +127,7 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({ onSubmit, c
         </List>
       );
     });
-  }, [appActions, formValues.actions, setValue]);
+  }, [formValues.actions, handleUpdateActions, modules]);
 
   return (
     <StModalForm
@@ -114,22 +144,27 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({ onSubmit, c
       }
     >
       <FlexBox alignItems={'unset'} flex={'1'} overflow={'hidden'}>
-        <FlexBox padding={'12px'}>
-          <InputLabel label={translate('label')} direction={'vertical'} required error={errors.label}>
-            <InputText placeholder={translate('insertLabel')} {...register('label')} required />
-          </InputLabel>
+        <FlexBox
+          padding={'0 0 8px'}
+          style={{ boxShadow: '0 5px 6px rgba(0, 0, 0, 0.1)', position: 'relative', zIndex: 20 }}
+        >
+          <FlexBox fillWidth fxDirection={'row'} gap={8}>
+            <InputLabel label={translate('label')} required error={errors.label}>
+              <InputText placeholder={translate('insertLabel')} {...register('label')} required />
+            </InputLabel>
 
-          <InputLabel label={translate('dateAndTime')} direction={'vertical'}>
-            <InputText placeholder={translate('dateAndTime')} type="datetime-local" {...register('expireAt')} />
-          </InputLabel>
+            <InputLabel label={translate('dateAndTime')}>
+              <InputText placeholder={translate('dateAndTime')} type="datetime-local" {...register('expireAt')} />
+            </InputLabel>
+          </FlexBox>
 
-          <InputLabel label={'Коментар'} direction={'vertical'}>
+          <InputLabel label={'Коментар'}>
             <TextareaPrimary placeholder="Введіть короткий коментар" {...register('description')} />
           </InputLabel>
         </FlexBox>
 
-        <FlexBox padding={'12px'} gap={8} flex={'1'} fillHeight justifyContent={'flex-start'} overflow={'auto'}>
-          <List>{renderList}</List>
+        <FlexBox padding={'8px 0'} gap={8} flex={'1'} fillHeight justifyContent={'flex-start'} overflow={'auto'}>
+          <List padding={'8px 0'}>{renderList}</List>
         </FlexBox>
       </FlexBox>
     </StModalForm>
@@ -139,10 +174,14 @@ const StModalForm = styled(ModalForm)`
   min-height: 250px;
 `;
 
-const List = styled.ul`
+const List = styled.ul<{ gap?: number; padding?: string }>`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: ${p => p.gap || 0}px;
+
+  padding: ${p => p.padding};
+
+  border-top: 1px solid ${({ theme }) => theme.field.backgroundColor};
 `;
 
 const ListItem = styled.li`
@@ -150,11 +189,19 @@ const ListItem = styled.li`
   grid-template-columns: 26px 1fr;
   gap: 8px;
 
-  height: 26px;
+  align-items: center;
+
+  min-height: 28px;
 `;
 const Field = styled(FlexBox)`
+  position: static;
+  z-index: 0;
+
+  height: 100%;
+  padding: 4px 8px;
   border-radius: 2px;
-  background-color: ${({ theme }) => theme.field.backgroundColor};
+  background-color: ${({ theme }) => theme.modalBackgroundColor};
+  border: 1px solid ${({ theme }) => theme.field.backgroundColor};
 `;
 
 export default FormCreateCustomRole;

@@ -99,6 +99,7 @@ export enum ApiDirType {
   STATUSES_REFUND = 'statuses_refund',
   STATUSES_SHIPMENT = 'statuses_shipment',
   STATUSES_PAYMENT = 'statuses_payment',
+  STATUSES_INVOICE = 'statuses_invoice',
   METHODS_PAYMENT = 'methods_payment',
   METHODS_SHIPMENT = 'methods_shipment',
   METHODS_COMMUNICATION = 'methods_communication',
@@ -204,7 +205,9 @@ const directoriesApiEndpoints: ApiEndpointsMap = {
   [Endpoints.getDefaultDirectories]: () => `${API_BASE_ROUTES.DIRECTORIES}/${Endpoints.getDefaultDirectories}`,
 };
 
-const customRoles: ApiEndpointsMap = {};
+const customRoles = {
+  getAllActions: () => `${API_BASE_ROUTES.CUSTOM_ROLES}/v2/getAllActions`,
+};
 
 const appSettings: ApiEndpointsMap = {
   getAllActions: () => `${API_BASE_ROUTES.APP}/getAllActions`,
@@ -279,7 +282,7 @@ const integrations = {
   create: () => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.create}`,
   update: () => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.update}`,
   getAll: () => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.getAll}`,
-  getAllIntegrationProviders: () => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.getAll}`,
+  getAllIntegrationProviders: () => `${API_BASE_ROUTES.INTEGRATIONS}/providers/${Endpoints.getAll}`,
   getById: (id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.getById}/${id}`,
 };
 

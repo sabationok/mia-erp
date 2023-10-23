@@ -1,18 +1,20 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getAllRolesThunk } from './customRoles.thunks';
+import { getAllActionsThunk, getAllRolesThunk } from './customRoles.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { rolesMockData } from 'data/customRoles.data';
-import { ICustomRole } from 'redux/customRoles/customRoles.types';
+import { ICustomRole, ModuleWithActions } from 'redux/customRoles/customRoles.types';
 import { checks } from '../../utils';
 
 export interface ICustomRolesState {
   customRoles: ICustomRole[];
   isLoading: boolean;
+  modules: ModuleWithActions[];
   error: StateErrorType;
 }
 
 const initialState: ICustomRolesState = {
   isLoading: false,
+  modules: [],
   error: null,
   customRoles: [...rolesMockData],
 };
@@ -24,8 +26,10 @@ export const customRolesSlice = createSlice({
   extraReducers: builder =>
     builder
       .addCase(getAllRolesThunk.fulfilled, (state, action) => {
-        state.isLoading = false;
         state.customRoles = action.payload.data;
+      })
+      .addCase(getAllActionsThunk.fulfilled, (state, action) => {
+        state.modules = action?.payload?.data;
       })
       .addMatcher(inPending, state => {
         state.isLoading = true;
@@ -33,7 +37,7 @@ export const customRolesSlice = createSlice({
       })
       .addMatcher(inFulfilled, (state, action: PayloadAction<StateErrorType>) => {
         state.isLoading = false;
-        state.error = false;
+        state.error = null;
       })
       .addMatcher(inError, (state, action: PayloadAction<StateErrorType>) => {
         state.isLoading = false;

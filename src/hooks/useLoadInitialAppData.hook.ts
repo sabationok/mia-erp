@@ -61,7 +61,6 @@ const useLoadInitialAppDataHook = ({
       // setIsLoading(true);
 
       try {
-        await getAppActions();
         if (company?._id) {
           await prService.getAllByCompanyId({ data: { refresh: true, companyId: company._id } });
         }

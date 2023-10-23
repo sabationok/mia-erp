@@ -32,7 +32,7 @@ export enum AppQueryKey {
   timeTo = 'timeTo',
   filterParams = 'filterParams',
 }
-export interface AppQueryParams {
+export interface AppQueryParams<Type = any> {
   dirType?: ApiDirType;
   isArchived?: boolean;
   deleted?: boolean;
@@ -42,6 +42,7 @@ export interface AppQueryParams {
   sortParams?: ISortParams;
   search?: string;
   searchBy?: string;
+  type?: Type;
 
   fullInfo?: boolean;
 

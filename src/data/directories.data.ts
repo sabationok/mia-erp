@@ -309,7 +309,7 @@ const tagsDir: IDirectoryListItem<any, DirTagsProps> = {
 };
 
 const activitiesProps: DirActivitiesProps = {
-  title: t('Activities'),
+  title: t('Company activities'),
   createParentTitle: t('Create activity'),
   dirType: ApiDirType.ACTIVITIES,
   fillHeight: true,
@@ -359,13 +359,6 @@ const prodPropertiesDir: IDirectoryListItem<any, DirPropertiesProps> = {
 };
 
 const directories: Partial<IDirectoryListItem>[] = [
-  {
-    title: 'Банківські рахунки',
-    disabled: true,
-    modalChildrenProps: {
-      dirType: ApiDirType.BANK_ACCOUNTS,
-    },
-  },
   countsDir,
   trCategoriesDir,
   prodCategoriesDir,
@@ -376,78 +369,74 @@ const directories: Partial<IDirectoryListItem>[] = [
   marksDir,
   brandsDir,
   tagsDir,
-  // variationsDir,
+
   {
-    title: 'Статуси для замовлень',
+    title: t('Bank counts'),
+    disabled: true,
+    modalChildrenProps: {
+      dirType: ApiDirType.BANK_ACCOUNTS,
+    },
+  },
+  {
+    title: t('Order statuses'),
     disabled: true,
     modalChildrenProps: {
       dirType: ApiDirType.STATUSES_ORDER,
     },
   },
   {
-    title: 'Статуси для повернень',
+    title: t('Refund statuses'),
     disabled: true,
     modalChildrenProps: {
       dirType: ApiDirType.STATUSES_REFUND,
     },
   },
   {
-    title: 'Статуси для відправлень',
+    title: t('Invoice statuses'),
+    disabled: true,
+    modalChildrenProps: {
+      dirType: ApiDirType.STATUSES_INVOICE,
+    },
+  },
+  {
+    title: t('Invoice shipment'),
     disabled: true,
     modalChildrenProps: {
       dirType: ApiDirType.STATUSES_SHIPMENT,
     },
   },
+
   {
-    title: 'Статуси для оплат',
-    disabled: true,
-    modalChildrenProps: {
-      dirType: ApiDirType.STATUSES_PAYMENT,
-    },
-  },
-  {
-    title: 'Статуси для клієнтів',
+    title: t('Customer statuses'),
     disabled: true,
   },
   {
-    title: 'Статуси для контрагентів',
+    title: t('Counterparty statuses'),
     disabled: true,
   },
   {
-    title: 'Контракти',
+    title: t('Contracts'),
     disabled: true,
   },
 
   {
-    title: 'Кастомні поля',
+    title: t('Custom fields'),
     disabled: true,
     modalChildrenProps: {
       dirType: ApiDirType.CUSTOM_FIELDS,
     },
   },
   {
-    title: 'Джерело залучення',
+    title: t('Engagement sources'),
     disabled: true,
   },
   {
-    title: 'Каси',
+    title: t('Cash boxes'),
     disabled: true,
   },
 
   {
-    title: 'Працівники',
-    disabled: true,
-    modalChildrenProps: {
-      dirType: ApiDirType.WORKERS,
-    },
-  },
-
-  {
-    title: 'Розмірні сітки',
-    disabled: true,
-  },
-  {
-    title: "Способи зв'язку",
+    title: t('Size tabels'),
     disabled: true,
   },
 ];

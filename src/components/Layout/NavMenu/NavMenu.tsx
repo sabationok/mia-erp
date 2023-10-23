@@ -239,7 +239,7 @@ const StyledNavLink = styled(NavLink)`
 
     &::before {
       height: 100%;
-      background-color: var(--darkOrange);
+      background-color: ${({ theme: { accentColor } }) => accentColor.base};
     }
   }
 
