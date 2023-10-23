@@ -1,40 +1,67 @@
 import * as React from 'react';
-import { memo, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { t } from '../../../lang';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
-import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
 import CheckBox from '../../TableList/TebleCells/CellComponents/CheckBox';
 import { Text } from '../../atoms/Text';
+import _ from 'lodash';
 
-export interface FormAfterOptionsProps extends UseAppFormSubmitOptions {
+export interface UseFormSubmitOptions {
+  closeAfterSave?: boolean;
   close?: boolean;
   clear?: boolean;
-  onOptionsChange?: (options: FormAfterOptionsProps) => void;
-  toggleOption?: (option: keyof UseAppFormSubmitOptions) => void;
+}
+const initialOptions: UseFormSubmitOptions = {
+  close: true,
+  clear: true,
+};
+export type FormAfterSubmitOptionsControl = (option: keyof UseFormSubmitOptions) => void;
+export interface FormAfterSubmitOptionsProps extends UseFormSubmitOptions {
+  state?: UseFormSubmitOptions;
+  onOptionsChange?: (options: FormAfterSubmitOptionsProps) => void;
+  toggleOption?: FormAfterSubmitOptionsControl;
+  control?: FormAfterSubmitOptionsControl;
 }
 
-const FormAfterSubmitOptions: React.FC<FormAfterOptionsProps> = ({ toggleOption, onOptionsChange, ...props }) => {
-  const [{ closeAfterSave, clearAfterSave }, setAfterSubmitOptions] = useState<FormAfterOptionsProps>({
-    closeAfterSave: props?.close || props?.closeAfterSave,
-    clearAfterSave: props?.clear || props?.clearAfterSave,
-  });
-  const toggleStateOption = (option: keyof UseAppFormSubmitOptions) => {
-    setAfterSubmitOptions(prev => {
-      const newOptions = {
+export const useAfterSubmitOptions = () => {
+  const [state, setState] = useState<UseFormSubmitOptions>({ ...initialOptions });
+
+  const control: FormAfterSubmitOptionsControl = useCallback((option: keyof UseFormSubmitOptions) => {
+    setState(prev => ({
+      ...prev,
+      [option]: !prev[option],
+    }));
+  }, []);
+
+  return {
+    state,
+    control,
+  };
+};
+
+const FormAfterSubmitOptions: React.FC<FormAfterSubmitOptionsProps> = ({ control, toggleOption, state }) => {
+  const [{ close, clear }, setAfterSubmitOptions] = useState<FormAfterSubmitOptionsProps>(initialOptions);
+  const toggleStateOption = (option: keyof UseFormSubmitOptions) => {
+    if (control) {
+      control(option);
+    } else {
+      setAfterSubmitOptions(prev => ({
         ...prev,
         [option]: !prev[option],
-      };
-      onOptionsChange && onOptionsChange(newOptions);
-      toggleOption && toggleOption(option);
-
-      return newOptions;
-    });
+      }));
+    }
   };
+
+  useEffect(() => {
+    if (!_.isUndefined(state)) {
+      setAfterSubmitOptions(p => ({ ...p, ...state }));
+    }
+  }, [state]);
 
   return (
     <Container fillWidth gap={4} padding={'4px 8px'} alignItems={'center'}>
-      <Text>{`${t('afterSave')}: `}</Text>
+      <Text $size={12}>{`${t('afterSave')}: `}</Text>
 
       <FlexBox fxDirection={'row'} gap={8} flex={1}>
         <Label
@@ -43,15 +70,15 @@ const FormAfterSubmitOptions: React.FC<FormAfterOptionsProps> = ({ toggleOption,
           fxDirection={'row'}
           justifyContent={'center'}
           onClick={() => {
-            toggleStateOption('clearAfterSave');
+            toggleStateOption('clear');
           }}
         >
           <CheckBox
             size={'12px'}
-            checked={clearAfterSave}
-            name={'clearAfterSave'}
+            checked={clear}
+            name={'clear'}
             onChange={() => {
-              toggleStateOption('clearAfterSave');
+              toggleStateOption('clear');
             }}
           />
 
@@ -63,14 +90,16 @@ const FormAfterSubmitOptions: React.FC<FormAfterOptionsProps> = ({ toggleOption,
           fxDirection={'row'}
           justifyContent={'center'}
           onClick={() => {
+            toggleStateOption('close');
             toggleStateOption('closeAfterSave');
           }}
         >
           <CheckBox
             size={'12px'}
-            checked={closeAfterSave}
-            name={'closeAfterSave'}
+            checked={close}
+            name={'close'}
             onChange={() => {
+              toggleStateOption('close');
               toggleStateOption('closeAfterSave');
             }}
           />

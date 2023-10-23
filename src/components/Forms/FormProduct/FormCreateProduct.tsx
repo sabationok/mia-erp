@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
@@ -17,7 +17,7 @@ import {
   ProductStatusEnum,
 } from '../../../redux/products/products.types';
 import { createDataForReq } from '../../../utils/dataTransform';
-import FormAfterSubmitOptions from '../components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { IVariationTemplate } from '../../../redux/products/properties.types';
 import FormProductStaticProperties from './FormProductStaticProperties';
@@ -37,6 +37,7 @@ export interface FormCreateProductProps extends Omit<ModalFormProps<any, any, IP
   defaultState?: IProductFormData;
   addInputs?: boolean;
 }
+
 const productsStatusOption = enumToFilterOptions(ProductStatusEnum);
 
 const FormCreateProduct: React.FC<FormCreateProductProps> = ({
@@ -48,6 +49,7 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
   addInputs,
   ...props
 }) => {
+  const submitOptions = useAfterSubmitOptions();
   const {
     directories: { directories },
     products: { properties },
@@ -62,14 +64,8 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
     setValue,
     registerSelect,
     handleSubmit,
-    toggleAfterSubmitOption,
-    closeAfterSave,
-    clearAfterSave,
   } = form;
 
-  useEffect(() => {
-    console.log('formValues', formValues);
-  }, [formValues]);
   const categories = useMemo(() => {
     return directories[ApiDirType.CATEGORIES_PROD].filter(el => el.type === formValues.type);
   }, [directories, formValues.type]);
@@ -86,8 +82,7 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
       onSubmit(
         { _id, data: productForSubmit },
         {
-          closeAfterSave,
-          clearAfterSave,
+          ...submitOptions.state,
         }
       );
   }
@@ -97,13 +92,7 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
       {...props}
       onSubmit={handleSubmit(onValidSubmit, data => console.log(data))}
       onOptSelect={({ value }) => value && setValue('type', value)}
-      extraFooter={
-        <FormAfterSubmitOptions
-          toggleOption={toggleAfterSubmitOption}
-          closeAfterSave={closeAfterSave}
-          clearAfterSave={clearAfterSave}
-        />
-      }
+      extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
       <FlexBox className={'inputs'} flex={'1'} fillWidth maxHeight={'100%'} padding={'0 8px 8px'} overflow={'auto'}>
         <InputLabel label={t('label')} error={errors.label} required>

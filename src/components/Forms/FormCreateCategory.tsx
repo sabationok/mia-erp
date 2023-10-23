@@ -8,7 +8,7 @@ import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import { t } from '../../lang';
 import { DirectoriesFormProps } from '../Directories/dir.types';
-import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
 import { useAppForm } from '../../hooks';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { FormInputs } from './components/atoms';
@@ -31,13 +31,12 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
   parent,
   ...props
 }) => {
+  const submitOptions = useAfterSubmitOptions();
+
   const {
     formState: { errors, isValid },
     register,
     handleSubmit,
-    closeAfterSave,
-    clearAfterSave,
-    toggleAfterSubmitOption,
   } = useAppForm<ICategoryFormData>({
     defaultValues: defaultState,
     resolver: yupResolver(validation),
@@ -49,8 +48,7 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
 
     onSubmit &&
       onSubmit(data, {
-        closeAfterSave,
-        clearAfterSave,
+        ...submitOptions.state,
       });
   };
   return (
@@ -58,13 +56,7 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
       {...props}
       onSubmit={handleSubmit(onValid)}
       isValid={isValid}
-      extraFooter={
-        <FormAfterSubmitOptions
-          clearAfterSave={clearAfterSave}
-          closeAfterSave={closeAfterSave}
-          toggleOption={toggleAfterSubmitOption}
-        />
-      }
+      extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
       <FormInputs>
         <InputLabel label={t('type')} direction={'vertical'} error={errors.type} disabled>

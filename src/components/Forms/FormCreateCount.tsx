@@ -11,7 +11,7 @@ import { DirectoriesFormProps } from '../Directories/dir.types';
 import { useAppForm } from '../../hooks';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { pick } from 'lodash';
-import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { FormInputs } from './components/atoms';
 
@@ -31,6 +31,8 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
   onSubmit,
   ...props
 }) => {
+  const submitOptions = useAfterSubmitOptions();
+
   const {
     formState: { errors },
     register,
@@ -57,8 +59,7 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
     if (evHandler) {
       return handleSubmit(data =>
         evHandler(data, {
-          closeAfterSave,
-          clearAfterSave,
+          ...submitOptions.state,
         })
       );
     }
@@ -68,13 +69,7 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
     <ModalForm
       onSubmit={formEventWrapper(onSubmit)}
       {...props}
-      extraFooter={
-        <FormAfterSubmitOptions
-          toggleOption={toggleAfterSubmitOption}
-          closeAfterSave={closeAfterSave}
-          clearAfterSave={clearAfterSave}
-        />
-      }
+      extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
       <FormInputs>
         <InputLabel label={t('type')} direction={'vertical'} error={errors.type} disabled>

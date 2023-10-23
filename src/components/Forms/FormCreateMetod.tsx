@@ -16,7 +16,7 @@ import { t } from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
 import React from 'react';
 import { useAppForm } from '../../hooks';
-import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import FlexBox from '../atoms/FlexBox';
 
@@ -35,13 +35,11 @@ const validation = yup.object().shape({
 });
 
 const FormCreateMethod: React.FC<FormCreateMethodProps> = ({ onSubmit, parent, data, ...props }) => {
+  const submitOptions = useAfterSubmitOptions();
   const {
     formState: { errors, isValid },
     register,
     handleSubmit,
-    clearAfterSave,
-    closeAfterSave,
-    toggleAfterSubmitOption,
   } = useAppForm<IMethodFormData>({
     defaultValues: { ...data },
     resolver: yupResolver(validation),
@@ -55,7 +53,7 @@ const FormCreateMethod: React.FC<FormCreateMethodProps> = ({ onSubmit, parent, d
   function formEventWrapper(evHandler?: AppSubmitHandler<IMethodFormData>) {
     if (evHandler) {
       return handleSubmit(data => {
-        evHandler(data, { clearAfterSave, closeAfterSave });
+        evHandler(data, { ...submitOptions.state });
       });
     }
   }
@@ -65,25 +63,9 @@ const FormCreateMethod: React.FC<FormCreateMethodProps> = ({ onSubmit, parent, d
       {...props}
       onSubmit={formEventWrapper(onSubmit)}
       isValid={isValid}
-      extraFooter={
-        <FormAfterSubmitOptions
-          clearAfterSave={clearAfterSave}
-          closeAfterSave={closeAfterSave}
-          toggleOption={toggleAfterSubmitOption}
-        />
-      }
+      extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
       <Inputs>
-        {/*<CustomSelect*/}
-        {/*  {...registerSelect('type', {*/}
-        {/*    label: t('type'),*/}
-        {/*    placeholder: t('type'),*/}
-        {/*    required: true,*/}
-        {/*    error: errors.type,*/}
-        {/*    options: filterOptions,*/}
-        {/*  })}*/}
-        {/*/>*/}
-
         <InputLabel label={t('label')} direction={'vertical'} error={errors.label} required>
           <InputText placeholder={t('insertLabel')} {...register('label')} required autoFocus />
         </InputLabel>

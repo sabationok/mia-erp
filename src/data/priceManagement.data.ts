@@ -15,7 +15,6 @@ export const priceListColumns: CellTittleProps<IPriceList>[] = [
     width: '210px',
     action: 'valueByPath',
   },
-
   {
     top: { name: 'Коментар', align: 'start', path: 'description' },
     width: '250px',

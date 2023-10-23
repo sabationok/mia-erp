@@ -15,7 +15,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import translate, { getTranslatedString } from '../../lang';
 import { FieldValues } from 'react-hook-form/dist/types';
 import { AppErrorSubmitHandler, AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { Text } from '../atoms/Text';
 
@@ -36,16 +36,13 @@ const validation = yup.object().shape({
 const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({ onSubmit, customRole, edit, _id, ...props }) => {
   const { modules } = useCustomRolesSelector();
   const service = useAppServiceProvider()[ServiceName.roles];
-
+  const submitOptions = useAfterSubmitOptions();
   const {
     formState: { errors, isValid },
     register,
     handleSubmit,
     setValue,
     formValues,
-    clearAfterSave,
-    closeAfterSave,
-    toggleAfterSubmitOption,
   } = useAppForm<ICustomRole>({
     defaultValues: { ...customRole, actions: customRole?.actions || [] },
     reValidateMode: 'onChange',
@@ -56,23 +53,22 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({ onSubmit, c
     if (!submitHandler) return;
     const onValidSubmit: SubmitHandler<Partial<ICustomRole>> = data =>
       onSubmit(data, {
-        clearAfterSave,
-        closeAfterSave,
+        ...submitOptions.state,
       });
 
     const onInvalidSubmit: SubmitErrorHandler<Partial<ICustomRole>> = errors => console.log(errors);
     return handleSubmit(onValidSubmit, onInvalidSubmit);
   }
 
-  const handleSelectActions = (value: string) => {
-    setValue('actions', value ? [...(formValues?.actions || []), value] : formValues.actions);
-  };
-  const handleRemoveAction = (value: string) => {
-    setValue(
-      'actions',
-      formValues.actions?.filter(r => r !== value)
-    );
-  };
+  // const handleSelectActions = (value: string) => {
+  //   setValue('actions', value ? [...(formValues?.actions || []), value] : formValues.actions);
+  // };
+  // const handleRemoveAction = (value: string) => {
+  //   setValue(
+  //     'actions',
+  //     formValues.actions?.filter(r => r !== value)
+  //   );
+  // };
 
   const handleUpdateActions = useCallback(
     (value: string) => {
@@ -135,13 +131,7 @@ const FormCreateCustomRole: React.FC<FormCreateCustomRoleProps> = ({ onSubmit, c
       {...props}
       onSubmit={onSubmitWrapper(onSubmit)}
       isValid={isValid}
-      extraFooter={
-        <FormAfterSubmitOptions
-          toggleOption={toggleAfterSubmitOption}
-          clearAfterSave={clearAfterSave}
-          closeAfterSave={closeAfterSave}
-        />
-      }
+      extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
       <FlexBox alignItems={'unset'} flex={'1'} overflow={'hidden'}>
         <FlexBox

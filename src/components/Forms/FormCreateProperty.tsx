@@ -7,7 +7,7 @@ import { t } from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
 import { useAppForm } from '../../hooks';
 import { IProperty, IPropertyBase, IPropertyDto } from '../../redux/products/properties.types';
-import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
 import ButtonGroup, { ButtonGroupSelectHandler } from '../atoms/ButtonGroup';
 import { enumToFilterOptions } from '../../utils/fabrics';
 
@@ -40,11 +40,12 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
   parent,
   ...props
 }) => {
+  const submitOptions = useAfterSubmitOptions();
   const { register, handleSubmit, setValue, toggleAfterSubmitOption, closeAfterSave, clearAfterSave } =
     useAppForm<IPropertyFormData>({ defaultValues: { ...defaultState, type } });
 
   const onValid = (data: IPropertyFormData) => {
-    onSubmit && onSubmit(data, { closeAfterSave, clearAfterSave });
+    onSubmit && onSubmit(data, { ...submitOptions.state });
   };
   const handleIsSelectableByUser: ButtonGroupSelectHandler<IsSelectableEnum> = info => {
     setValue('isSelectable', info?.option?.value === 'Yes');
@@ -57,13 +58,7 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
       onOptSelect={(option, value, index) => {
         setValue('type', value);
       }}
-      extraFooter={
-        <FormAfterSubmitOptions
-          toggleOption={toggleAfterSubmitOption}
-          clearAfterSave={clearAfterSave}
-          closeAfterSave={closeAfterSave}
-        />
-      }
+      extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
       <FlexBox padding={'4px 8px 8px'} flex={1} fillWidth>
         <InputLabel label={t('type')} disabled>

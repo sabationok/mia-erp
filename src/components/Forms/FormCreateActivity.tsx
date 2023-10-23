@@ -9,7 +9,7 @@ import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import { DirectoriesFormProps } from '../Directories/dir.types';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
 import { useAppForm } from '../../hooks';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 
@@ -19,13 +19,12 @@ export interface FormCreateCompanyActivityProps
   extends DirectoriesFormProps<ApiDirType.ACTIVITIES, IActivity, IActivityFormData> {}
 
 const FormCreateActivity: React.FC<FormCreateCompanyActivityProps> = ({ _id, edit, data, onSubmit, ...props }) => {
+  const submitOptions = useAfterSubmitOptions();
+
   const {
     formState: { errors },
     register,
     handleSubmit,
-    closeAfterSave,
-    clearAfterSave,
-    toggleAfterSubmitOption,
   } = useAppForm<IActivityFormData>({
     defaultValues: {
       ...data,
@@ -36,7 +35,7 @@ const FormCreateActivity: React.FC<FormCreateCompanyActivityProps> = ({ _id, edi
 
   function formEventWrapper(evHandler?: AppSubmitHandler<IActivityFormData>) {
     if (evHandler) {
-      return handleSubmit(data => evHandler(data, { clearAfterSave, closeAfterSave }));
+      return handleSubmit(data => evHandler(data, { ...submitOptions.state }));
     }
   }
 
@@ -44,13 +43,7 @@ const FormCreateActivity: React.FC<FormCreateCompanyActivityProps> = ({ _id, edi
     <ModalForm
       onSubmit={formEventWrapper(onSubmit)}
       {...props}
-      extraFooter={
-        <FormAfterSubmitOptions
-          closeAfterSave={closeAfterSave}
-          clearAfterSave={clearAfterSave}
-          toggleOption={toggleAfterSubmitOption}
-        />
-      }
+      extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
       <Inputs>
         <InputLabel label="Назва" error={errors.label}>

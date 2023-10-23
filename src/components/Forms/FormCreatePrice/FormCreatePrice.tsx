@@ -9,7 +9,7 @@ import InputText from '../../atoms/Inputs/InputText';
 import { useCallback, useEffect, useMemo } from 'react';
 import { IProduct } from '../../../redux/products/products.types';
 import { usePriceListsSelector, useProductsSelector } from '../../../redux/selectors.store';
-import FormAfterSubmitOptions from '../components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
 import { t } from '../../../lang';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -79,6 +79,8 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
     return product || productInState;
   }, [product, productInState]);
 
+  const submitOptions = useAfterSubmitOptions();
+
   const priceForm = useAppForm<IPriceFormData>({
     defaultValues: {
       in: 0,
@@ -95,13 +97,12 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
     register,
     setValue,
     handleSubmit,
-    toggleAfterSubmitOption,
+
     closeAfterSave,
-    clearAfterSave,
     formState: { errors },
   } = priceForm;
 
-  const { in: price, out: cost } = formValues;
+  const { in: cost, out: price } = formValues;
 
   const recalculateValues = useCallback(() => {
     const parseFloatFromValue = (v?: number) => parseFloat(v?.toString() ?? '0');
@@ -169,13 +170,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
       })}
       fillHeight
       title={`${update ? 'Edit' : 'Create'} price for: ${formValues?.variation?.label || '---'}`}
-      extraFooter={
-        <FormAfterSubmitOptions
-          closeAfterSave={closeAfterSave}
-          clearAfterSave={closeAfterSave}
-          toggleOption={toggleAfterSubmitOption}
-        />
-      }
+      extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
       {...props}
     >
       <FlexBox padding={'0 0 8px'} flex={1} overflow={'auto'}>

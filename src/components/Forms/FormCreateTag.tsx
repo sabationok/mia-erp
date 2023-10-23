@@ -6,9 +6,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import { t } from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useAppForm } from '../../hooks';
-import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { ContractorsTypesEnum } from '../../redux/directories/contractors.types';
@@ -57,16 +57,13 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({
   //   },
   //   [setValue]
   // );
+  const submitOptions = useAfterSubmitOptions();
 
   function formEventWrapper(evHandler?: AppSubmitHandler<ITagDirItem>) {
     if (evHandler) {
-      return handleSubmit(data => evHandler(data, { clearAfterSave, closeAfterSave }));
+      return handleSubmit(data => evHandler(data, { ...submitOptions.state }));
     }
   }
-
-  useEffect(() => {
-    console.log(formValues);
-  }, [formValues]);
 
   return (
     <ModalForm
@@ -74,13 +71,7 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({
       title={t('Create tag')}
       onSubmit={formEventWrapper(onSubmit)}
       isValid={isValid}
-      extraFooter={
-        <FormAfterSubmitOptions
-          clearAfterSave={clearAfterSave}
-          closeAfterSave={closeAfterSave}
-          toggleOption={toggleAfterSubmitOption}
-        />
-      }
+      extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
       <FormInputs>
         <TagButtonsFilter<ContractorsTypesEnum>

@@ -10,7 +10,7 @@ import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import React, { useMemo } from 'react';
 import { useAppForm } from '../../hooks';
-import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
 import ButtonGroup from '../atoms/ButtonGroup';
@@ -75,6 +75,8 @@ const FormCreateCounterparty: React.FC<FormCreateContractorProps> = ({
   defaultState,
   ...props
 }) => {
+  const submitOptions = useAfterSubmitOptions();
+
   const {
     formState: { errors, isValid },
     formValues: { type: currentType, businessSubjectType },
@@ -82,9 +84,6 @@ const FormCreateCounterparty: React.FC<FormCreateContractorProps> = ({
     registerSelect,
     handleSubmit,
     setValue,
-    clearAfterSave,
-    closeAfterSave,
-    toggleAfterSubmitOption,
   } = useAppForm<IContractorFormData>({
     defaultValues: {
       businessSubjectType: BusinessSubjectTypeEnum.company,
@@ -98,7 +97,7 @@ const FormCreateCounterparty: React.FC<FormCreateContractorProps> = ({
 
   function formEventWrapper(evHandler?: AppSubmitHandler<IContractorFormData>) {
     if (evHandler) {
-      return handleSubmit(data => evHandler(data, { clearAfterSave, closeAfterSave }));
+      return handleSubmit(data => evHandler(data, { ...submitOptions.state }));
     }
   }
 
@@ -131,13 +130,7 @@ const FormCreateCounterparty: React.FC<FormCreateContractorProps> = ({
       onOptSelect={(_o, v) => setValue('type', v)}
       filterOptions={isFilterByTypeOn ? counterpartyFilterOptions : undefined}
       isValid={isValid}
-      extraFooter={
-        <FormAfterSubmitOptions
-          clearAfterSave={clearAfterSave}
-          closeAfterSave={closeAfterSave}
-          toggleOption={toggleAfterSubmitOption}
-        />
-      }
+      extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
       <FormInputs>
         <InputLabel label={t('businessSubjectType')} error={errors.label} required>
