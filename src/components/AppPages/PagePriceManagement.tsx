@@ -15,7 +15,7 @@ import { BaseAppPageProps } from './index';
 import { priceListColumns } from '../../data/priceManagement.data';
 
 interface Props extends BaseAppPageProps {}
-const PagePriceManagement: React.FC<any> = (props: Props) => {
+const PagePriceManagement: React.FC<BaseAppPageProps> = (props: Props) => {
   const service = usePriceManagementServiceHook();
   const state = usePriceListsSelector();
   const navigate = useNavigate();

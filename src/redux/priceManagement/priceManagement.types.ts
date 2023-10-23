@@ -5,6 +5,7 @@ import { IVariation } from '../products/variations.types';
 import { AppQueryParams } from '../../api';
 import { ICompanyBase } from '../companies/companies.types';
 import { IUserBase } from '../auth/auth.types';
+import { Path } from 'react-hook-form';
 
 export enum PriceListTypeEnum {
   PURCHASES = 'purchases',
@@ -37,53 +38,38 @@ export interface IPriceList extends IBase {
   type?: PriceListType;
 }
 
-export interface IPriceDto extends IDataWithPeriod {
-  list?: OnlyUUID;
-  product?: OnlyUUID;
-  variation?: OnlyUUID;
-
-  price?: number;
-  cost?: number;
-
-  discountAmount?: number;
-  discountPercentage?: number;
-  cashbackAmount?: number;
-  cashbackPercentage?: number;
-  markupPercentage?: number;
-  markupAmount?: number;
-  commissionPercentage?: number;
-  commissionAmount?: number;
-
-  discountLabel?: string;
-  cashbackLabel?: string;
+export interface AmountAndPercentage {
+  amount?: number;
+  percentage?: number;
 }
-export interface IPriceBase {
-  label?: string;
+export type PriceAmountAndPercentageFieldsKey =
+  | 'discount'
+  | 'cashback'
+  | 'bonus'
+  | 'markup'
+  | 'commission'
+  | 'tax'
+  | 'vat';
+export interface PriceAmountAndPercentageFields
+  extends Record<PriceAmountAndPercentageFieldsKey, AmountAndPercentage> {}
 
-  price?: number;
-  cost?: number;
+export interface IPriceBase extends PriceAmountAndPercentageFields {
+  label?: string;
 
   in?: number;
   out?: number;
 
-  discountAmount?: number;
-  discountPercentage?: number;
-
-  cashbackAmount?: number;
-  cashbackPercentage?: number;
-
-  bonusAmount?: number;
-  bonusPercentage?: number;
-
-  markupPercentage?: number;
-  markupAmount?: number;
-
-  commissionPercentage?: number;
-  commissionAmount?: number;
-
   discountLabel?: string;
   cashbackLabel?: string;
 }
+export type BasePriceInfoPath = Path<IPriceBase>;
+export interface IPriceDto extends IPriceBase, IDataWithPeriod {
+  list?: OnlyUUID;
+  product?: OnlyUUID;
+  variation?: OnlyUUID;
+}
+export type UpdatePriceDto = Partial<Omit<IPriceDto, 'list' | 'product' | 'variation'>>;
+
 export interface IPriceListItem extends IBase, IPriceBase {
   owner?: ICompanyBase;
   author?: IUserBase;
@@ -118,6 +104,6 @@ export interface ICreatePriceReqData {
 }
 export interface IUpdatePriceReqData {
   _id?: string;
-  data: Omit<IPriceDto, 'list' | 'product' | 'variation'>;
+  data: UpdatePriceDto;
   params?: AppQueryParams;
 }

@@ -26,12 +26,11 @@ export interface PriceListOverviewProps extends Omit<ModalFormProps, 'onSubmit' 
 const PriceListOverview: React.FC<PriceListOverviewProps> = ({
   getTableSetting,
   createFormProps,
-
   listId,
   onSubmit,
   ...props
 }) => {
-  const { lists } = usePriceListsSelector();
+  const { lists, current } = usePriceListsSelector();
   const actionsCreator = usePriceListOverviewActionsCreator(listId);
   const { priceManagement } = useAppServiceProvider();
   const [tableData, setTableData] = useState<IPriceListItem[]>([]);
@@ -46,8 +45,8 @@ const PriceListOverview: React.FC<PriceListOverviewProps> = ({
   useEffect(() => {
     if (listId) {
       priceManagement
-        .getAllPricesByListId({
-          data: { list: { _id: listId } },
+        .getAllPrices({
+          data: { params: { list: { _id: listId } }, refreshCurrent: true },
           onSuccess: setTableData,
           onLoading: setIsLoading,
         })

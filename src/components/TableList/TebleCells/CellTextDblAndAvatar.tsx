@@ -1,7 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import { useRow } from '../TableRows/TableRow';
 import { CellTittleProps } from './CellTitle';
-import getValueByPath from '../../../utils/getValueByPath';
 import Cell, { IDataCellProps } from './Cells';
 
 export interface CellTextDblAndAvatarProps {
@@ -11,66 +10,31 @@ export interface CellTextDblAndAvatarProps {
 }
 
 const CellTextDblAndAvatar: React.FC<CellTextDblAndAvatarProps & React.HTMLAttributes<HTMLDivElement>> = ({
-  titleInfo: { top, bottom, width, imgPreviewPath, getImgPreview },
+  titleInfo: { top, bottom, width, getImgPreview, imgPreviewIcon },
   titleInfo,
   idx,
 }) => {
   const { rowData } = useRow();
 
-  // const cellConfig = useMemo(
-  //   (): IDataCellProps => ({
-  //     content: {
-  //       data: getValueByPath({
-  //         data: rowData,
-  //         ...top,
-  //       }),
-  //     },
-  //     subContent: {
-  //       data: getValueByPath({
-  //         data: rowData,
-  //         ...bottom,
-  //       }),
-  //     },
-  //     width,
-  //     imgUrl,
-  //   }),
-  //   [bottom, imgUrl, rowData, top, width]
-  // );
-
   const imgPreview = useMemo(() => {
-    return getImgPreview
-      ? getImgPreview(rowData, titleInfo)
-      : getValueByPath({
-          data: rowData,
-          path: imgPreviewPath,
-        });
-  }, [getImgPreview, imgPreviewPath, rowData, titleInfo]);
+    return getImgPreview ? getImgPreview(rowData, titleInfo) : null;
+  }, [getImgPreview, rowData, titleInfo]);
 
   const cellConfig = useMemo(
     (): IDataCellProps => ({
       content: {
-        data: top.getData
-          ? top.getData(rowData, titleInfo)
-          : getValueByPath({
-              data: rowData,
-              ...top,
-            }),
+        data: top.getData ? top.getData(rowData, titleInfo) : null,
         align: top.align,
         uppercase: top.uppercase,
       },
       subContent: {
-        data:
-          bottom && bottom.getData
-            ? bottom.getData(rowData, titleInfo)
-            : getValueByPath({
-                data: rowData,
-                ...bottom,
-              }),
+        data: bottom && bottom.getData ? bottom.getData(rowData, titleInfo) : null,
         align: bottom?.align,
         uppercase: bottom?.uppercase,
       },
       width,
       imgUrl: imgPreview,
+      imgPreviewIcon,
     }),
     [bottom, imgPreview, rowData, titleInfo, top, width]
   );

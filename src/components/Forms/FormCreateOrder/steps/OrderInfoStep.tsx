@@ -24,9 +24,9 @@ import InputText from '../../../atoms/Inputs/InputText';
 import { Path, useFormContext, UseFormSetValue } from 'react-hook-form';
 import CreateCustomerButtonIcon from '../components/CreateCustomerButtonIcon';
 import CustomerInfoComponent from '../components/CustomerInfoComponent';
-import _ from 'lodash';
 import { destinationAddressInputsProps } from '../components/DestinationInputs';
 import { UseFormReturn } from 'react-hook-form/dist/types';
+import { throttleCallback } from '../../../../utils/lodash.utils';
 
 export interface OrderInfoStepProps extends FormOrderStepBaseProps {
   isGroup?: boolean;
@@ -34,14 +34,6 @@ export interface OrderInfoStepProps extends FormOrderStepBaseProps {
   getFormMethods?: () => UseFormReturn<ICreateOrderInfoFormState>;
 }
 
-const throttledLogger = _.throttle((...args: any) => {
-  console.log('throttled Logger', ...args);
-}, 5000);
-
-const throttledCallback = _.throttle(<T extends (...args: any) => any>(fn: T) => {
-  console.log('throttled Callback', fn.name);
-  fn();
-}, 5000);
 const useOrderInfoForm = () => useFormContext<ICreateOrderInfoFormState>();
 type ConfirmsStateKay = 'hasShipmentPayment' | 'holdShipmentPayment' | 'holdOrderPayment' | 'hasReceiverInfo';
 type FormFieldPaths = Path<ICreateOrderInfoFormState>;
@@ -74,7 +66,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
   const handleOnChangeValue: UseFormSetValue<ICreateOrderInfoFormState> = (path, value) => {
     try {
       setValue(path, value as never);
-      throttledCallback(() =>
+      throttleCallback(() =>
         trigger()
           .then(isValid => {
             isValid && onChangeValidStatus && onChangeValidStatus(isValid);

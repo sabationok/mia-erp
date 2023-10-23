@@ -22,8 +22,8 @@ const ProductOverview: React.FC<ProductOverviewProps> = ({ product, ...props }) 
   useEffect(() => {
     if (product?._id) {
       priceManagement
-        .getAllPricesByProductId({
-          data: { product: ExtractId(product) },
+        .getAllPrices({
+          data: { params: { product: ExtractId(product) } },
           onSuccess: setPriceList,
           onLoading: setLoading,
         })

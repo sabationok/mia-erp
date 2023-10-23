@@ -4,8 +4,8 @@ import { useModalService } from '../components/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { OnlyUUID } from '../redux/global.types';
 import FormCreatePrice from '../components/Forms/FormCreatePrice/FormCreatePrice';
-import { toast } from 'react-toastify';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
+import { ToastService } from '../services';
 
 export type PriceListOverviewActionsCreatorType = TableActionCreator<IPriceListItem>;
 
@@ -13,29 +13,27 @@ export const usePricesModal = () => {
   const modalS = useModalService();
   const service = useAppServiceProvider()[ServiceName.priceManagement];
 
-  const openAddPriceToListModal = useCallback(
+  const addPriceToList = useCallback(
     (list: OnlyUUID) => {
-      const modal = modalS.open({
+      const m = modalS.open({
         ModalChildren: FormCreatePrice,
         modalChildrenProps: {
           title: 'Create new price',
           defaultState: { list },
           onSubmit: async (sData, o) => {
             if (!Array.isArray(sData)) {
-              console.log('usePricesModal => create one price', sData);
               await service.addPriceToList({
                 data: { data: { data: sData }, updateCurrent: true },
-                onSuccess: data => {
-                  console.log('usePricesModal => created one price', data);
-                  o.closeAfterSave && modal?.onClose();
-                  toast.success('Price created');
+                onSuccess: () => {
+                  m?.onClose();
+                  ToastService.success('Price added');
                 },
                 onError: () => {
-                  toast.error('Price creating error');
+                  ToastService.error('Price creating error');
                 },
               });
             } else {
-              toast.warning('Passed array of items');
+              ToastService.warning('Passed array of items');
             }
           },
         },
@@ -45,15 +43,29 @@ export const usePricesModal = () => {
   );
 
   return {
-    openAddPriceToListModal,
+    addPriceToList,
   };
 };
 export const usePriceListOverviewActionsCreator = (listId?: string): PriceListOverviewActionsCreatorType => {
   // const modalS = useModalProvider();
   const service = useAppServiceProvider()[ServiceName.priceManagement];
-  const { openAddPriceToListModal } = usePricesModal();
+  const { addPriceToList } = usePricesModal();
+
   return useCallback(
     _ctx => [
+      {
+        name: 'refreshPrices',
+        title: 'Оновити',
+        icon: 'refresh',
+        type: 'onlyIconFilled',
+        onClick: async () => {
+          if (listId) {
+            await service.getAllPrices({
+              data: { params: { list: { _id: listId } }, refreshCurrent: true },
+            });
+          }
+        },
+      },
       {
         name: 'createPrice',
         title: 'Створити',
@@ -63,12 +75,12 @@ export const usePriceListOverviewActionsCreator = (listId?: string): PriceListOv
           if (listId) {
             await service.refreshListById({
               data: { _id: listId },
-              onSuccess: (data, _meta) => openAddPriceToListModal(data),
+              onSuccess: (data, _meta) => addPriceToList(data),
             });
           }
         },
       },
     ],
-    [openAddPriceToListModal, listId, service]
+    [addPriceToList, listId, service]
   );
 };

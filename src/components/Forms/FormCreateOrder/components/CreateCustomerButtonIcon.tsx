@@ -30,7 +30,7 @@ const CreateCustomerButtonIcon = ({
             title: isReceiver ? t('Create receiver') : undefined,
             onSubmit: d => {
               customerS.create({
-                data: createDataForReq(d),
+                data: createDataForReq(d) as never,
                 onSuccess: onSuccess,
               });
             },

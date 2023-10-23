@@ -1,8 +1,8 @@
 import { ITransaction, ITransactionForReq } from '../redux/transactions/transactions.types';
 import _, { isObject, pick } from 'lodash';
-import { IdKeyVersion, ObjUUID, OnlyUUID } from '../redux/global.types';
+import { ArrayOfObjUUID, ArrayUUID, IdKeyVersion, ObjUUID, OnlyUUID } from '../redux/global.types';
 import { IVariation, IVariationFormData, IVariationReqData } from '../redux/products/variations.types';
-import { IProduct, IProductFullFormData } from '../redux/products/products.types';
+import { IProduct, IProductFullDto, IProductFullFormData } from '../redux/products/products.types';
 import { nanoid } from '@reduxjs/toolkit';
 
 // const isDevMode = ConfigService.isDevMode();
@@ -90,10 +90,7 @@ export function createTransactionForReq(
   return transformedData;
 }
 
-export function createDataForReq<
-  IncomeDataType extends Record<string, any> = any,
-  OutDataType extends Record<keyof IncomeDataType, any> = any
->(
+export function createDataForReq<IncomeDataType extends Record<string, any> = any>(
   incomeData: IncomeDataType,
   options?: {
     omitPathArr?: (keyof IncomeDataType)[];
@@ -102,8 +99,8 @@ export function createDataForReq<
     checkArrayPath?: keyof IncomeDataType | string;
     ignorePaths?: (keyof IncomeDataType)[];
   }
-): Partial<Omit<OutDataType, keyof IncomeDataType>> {
-  let outData: Partial<OutDataType> = {};
+): Partial<IncomeDataType> {
+  let outData: Partial<IncomeDataType> = {};
 
   const keys = Object.keys(incomeData) as (keyof IncomeDataType)[];
 
@@ -144,6 +141,33 @@ export function createDataForReq<
   return outData;
 }
 
+const createProductFormDataOmitPaths: (keyof IProduct | string)[] = [
+  '_id',
+  'createdAt',
+  'updatedAt',
+  'deletedAt',
+  'prices',
+  'variations',
+  'warehouses',
+  'inventories',
+];
+const createArrayOfObjUUID = (arr: string[]): ArrayOfObjUUID => {
+  return arr.map(_id => ({ _id }));
+};
+const createArrayStringUUID = (arr: OnlyUUID[]): ArrayUUID => {
+  return arr.map(obj => obj._id);
+};
+const getFormValuePickPaths = (data?: any) => {
+  return data ? ['_id', 'label', 'email', 'dirType', 'parent', 'name', 'secondName'].filter(key => key in data) : [];
+};
+const idsArrToObjIdArrPaths = <T extends keyof IProduct | string = any>(key: T) => {
+  return ['properties', 'categories', 'recommends'].includes(key);
+};
+export function createProductDto(input: IProductFullFormData): IProductFullDto {
+  const arrPaths = ['properties', 'categories', 'recommends'];
+  return input;
+}
+
 export const createVariationReqData = (formData: IVariationFormData, _id?: string): IVariationReqData => {
   // isDevMode && console.log('createVariationReqData input', formData);
 
@@ -176,23 +200,23 @@ export const createVariationFormData = (variation: Partial<IVariation>): IVariat
   };
 };
 
-const createProductFormDataOmitPaths: (keyof IProduct | string)[] = [
-  '_id',
-  'createdAt',
-  'updatedAt',
-  'deletedAt',
-  'prices',
-  'variations',
-  'warehouses',
-  'inventories',
-];
-const getFormValuePickPaths = (data?: any) => {
-  return data ? ['_id', 'label', 'email', 'dirType', 'parent', 'name', 'secondName'].filter(key => key in data) : [];
-};
-const isArrayForTransformToIdsArray = <T extends keyof IProduct | string = any>(key: T) => {
-  return ['properties', 'categories'].includes(key);
-};
 export function createProductFormData(input: IProduct): IProductFullFormData {
+  const createProductFormDataOmitPaths: (keyof IProduct | string)[] = [
+    '_id',
+    'createdAt',
+    'updatedAt',
+    'deletedAt',
+    'prices',
+    'variations',
+    'warehouses',
+    'inventories',
+  ];
+  const getFormValuePickPaths = (data?: any) => {
+    return data ? ['_id', 'label', 'email', 'dirType', 'parent', 'name', 'secondName'].filter(key => key in data) : [];
+  };
+  const isArrayForTransformToIdsArray = <T extends keyof IProduct | string = any>(key: T) => {
+    return ['properties', 'categories'].includes(key);
+  };
   const data = _.cloneDeep(_.omit(input, createProductFormDataOmitPaths));
   let output: Record<keyof IProductFullFormData | string, any> = {};
 
@@ -214,18 +238,6 @@ export function createProductFormData(input: IProduct): IProductFullFormData {
         }
         return (output[k as keyof IProductFullFormData] = v);
       }
-      // if (k === 'defaults') {
-      //   const newDefaults: Record<keyof IProductDefaults | string, any> = {};
-      //
-      //   Object.entries(v as IProductDefaults).map(([dk, dv]) => {
-      //     const newDefValue = pick(dv, getFormValuePickPaths(v));
-      //     // newDefaults[dk as keyof IProductDefaultsFormData] = newDefValue;
-      //     return (newDefaults[dk as keyof IProductDefaultsFormData] = newDefValue);
-      //   });
-      //
-      //   return newDefaults;
-      // }
-
       const newValue = pick(v, getFormValuePickPaths(v));
       return (output[k as keyof IProductFullFormData] = newValue);
     } else {

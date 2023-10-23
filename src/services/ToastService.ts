@@ -44,6 +44,10 @@ export default class ToastService {
     const toastId = toast.error(content, options);
     return () => toast.dismiss(toastId);
   }
+  public static warning(content: ToastContent, options?: ToastOptions): ToastLoaderRemover {
+    const toastId = toast.warning(content, options);
+    return () => toast.dismiss(toastId);
+  }
   public static toastAxiosError(e: AxiosError<{ message?: string | string[] }>) {
     if (Array.isArray(e.response?.data.message)) {
       e.response?.data.message.map(msg => {

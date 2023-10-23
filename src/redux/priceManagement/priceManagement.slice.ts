@@ -8,7 +8,7 @@ import { checks } from '../../utils';
 export interface IPriceListsState {
   lists: IPriceList[];
   filteredLists?: IPriceList[];
-  current?: IPriceList;
+  current?: IPriceList | null;
   isLoading: boolean;
   error: StateErrorType;
 }
@@ -17,10 +17,7 @@ const initialState: IPriceListsState = {
   isLoading: false,
   error: null,
   lists: [],
-  current: {
-    _id: '',
-    label: '',
-  },
+  current: null,
   filteredLists: [],
 };
 
@@ -51,35 +48,38 @@ export const priceManagementSlice = createSlice({
         if (idx >= 0 && a.payload) {
           s.lists.splice(idx, 1, a.payload);
         }
+        if (s.current?._id === a.payload?._id) {
+          s.current = a.payload;
+        }
       })
       .addCase(thunks.updatePriceListByIdThunk.fulfilled, (s, a) => {
-        const idx = s.lists.findIndex(l => l._id === 'p?._id');
+        const idx = s.lists.findIndex(l => l._id === a.payload?._id);
         if (idx >= 0 && a.payload) {
           s.lists.splice(idx, 1, a.payload);
-          console.log('updateList action', `idx-${idx}`, s.lists);
         }
       })
       .addCase(thunks.getPriceListByIdThunk.fulfilled, (s, a) => {
-        s.current = a.payload;
+        if (a.payload.refreshCurrent && s.current) {
+          s.current = { ...s.current, ...a.payload.data };
+        } else {
+          s.current = a.payload.data;
+        }
       })
       .addCase(thunks.addPriceToListThunk.fulfilled, (s, a) => {
         if (s?.current) {
-          if (a.payload?.updateCurrent && a.payload.data) {
+          if (a.payload.data) {
             s.current = {
               ...s.current,
               prices: s.current?.prices ? [...s.current?.prices, a.payload?.data] : [a.payload.data],
             };
           } else if (a.payload?.refreshCurrent && a.payload?.data) {
-            s.current = { ...s.current, prices: [a.payload?.data] };
           }
         }
-
-        // s.current = a.payload;
-        // const idx = s.lists.findIndex(l => l._id === 'p?._id');
-        // if (idx >= 0 && a.payload) {
-        //   s.lists.splice(idx, 1, a.payload);
-        //   console.log('updateList action', `idx-${idx}`, s.lists);
-        // }
+      })
+      .addCase(thunks.getAllPricesThunk.fulfilled, (s, a) => {
+        if (a.payload.refreshCurrent) {
+          s.current = { ...(s.current as IPriceList), prices: a.payload?.data };
+        }
       })
       .addCase(thunks.deletePriceFromListThunk.fulfilled, (s, a) => {})
       .addCase(thunks.updatePriceInListThunk.fulfilled, (s, a) => {})
@@ -111,37 +111,9 @@ function inError(a: AnyAction) {
   return isPriceManagementCase(a.type) && a.type.endsWith('rejected');
 }
 
-export const productsReducer = priceManagementSlice.reducer;
-
-// [addTransactionThunk.fulfilled]: (s,a) => {
-//   s.isloading = false;
-//   s.lists.unshift(action.payload.data);
-// },
-// [addTransactionThunk.pending]: (s,a) => {
-//   s.isloading = true;
-// },
-// [addTransactionThunk.rejected]: (s,a) => {
-//   s.isloading = false;
-//   s.error =a.payload;
-// },
-
-// [deleteTransactionThunk.fulfilled]: (s,a) => {
-//   s.isLoading = false;
-// },
-// [deleteTransactionThunk.pending]: (s,a) => {
-//   s.isLoading = true;
-// },
-// [deleteTransactionThunk.rejected]: (s,a) => {
-//   s.isLoading = false;
-// },
-
-// [editTransactionThunk.fulfilled]: (s, { payload }) => {
-//   s.isLoading = false;
-//   const index = s.lists.findIndex(el => el._id === payload.data._id);
-
-//   s.lists[index] = { ...payload.data };
-
-//   console.log(index, s.lists[index].isArchived);
-// },
-// [editTransactionThunk.pending]: (s,a) => {},
-// [editTransactionThunk.rejected]: (s,a) => {},
+// s.current = a.payload;
+// const idx = s.lists.findIndex(l => l._id === 'p?._id');
+// if (idx >= 0 && a.payload) {
+//   s.lists.splice(idx, 1, a.payload);
+//   console.log('updateList action', `idx-${idx}`, s.lists);
+// }

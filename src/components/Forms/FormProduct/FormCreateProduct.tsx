@@ -84,7 +84,7 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
 
     onSubmit &&
       onSubmit(
-        { _id, data: { ...productForSubmit } },
+        { _id, data: productForSubmit },
         {
           closeAfterSave,
           clearAfterSave,

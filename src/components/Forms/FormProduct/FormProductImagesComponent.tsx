@@ -11,7 +11,7 @@ import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { checks as check } from '../../../utils';
 
 export interface FormProductImagesComponentProps {
-  onChangeState?: (state: Partial<IProductImage>[]) => void;
+  onChangeState?: (state: IProductImage[]) => void;
   initialData?: Partial<IProductImage>[];
   renderHeader?: React.ReactNode;
   canEditOrder?: boolean;

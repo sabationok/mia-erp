@@ -1,4 +1,4 @@
-import { IOrderSlot } from '../../redux/orders/orders.types';
+import { IOrderSlot, IOrderTempSlot } from '../../redux/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import styled, { useTheme } from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
@@ -10,9 +10,8 @@ import { t } from '../../lang';
 import CountSelectorBase from '../atoms/CountSelectorBase';
 import InputLabel from '../atoms/Inputs/InputLabel';
 
-export type SlotOverviewData = Partial<IOrderSlot> & { tempId?: string };
 export interface OrderSlotOverviewProps {
-  slot?: SlotOverviewData;
+  slot?: IOrderTempSlot;
   index?: number;
   onSelectPress?: () => void;
   onRemove?: (id: string) => void;
@@ -20,7 +19,7 @@ export interface OrderSlotOverviewProps {
   disabled?: boolean;
   editable?: boolean;
   onEditPress?: () => void;
-  onUpdate?: (slot: SlotOverviewData) => void;
+  onUpdate?: (slot: IOrderTempSlot) => void;
 }
 
 const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
@@ -32,7 +31,7 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
   onUpdate,
   editable,
 }) => {
-  const [formData, setFormData] = useState<SlotOverviewData | undefined>(slot);
+  const [formData, setFormData] = useState<IOrderTempSlot | undefined>(slot);
 
   const handleUpdateQuantity = useCallback(
     (value: number) => {
@@ -42,7 +41,7 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
         const newData = {
           ...prev,
           quantity: value,
-          total: !prev?.price ? prev?.price : value * prev?.price,
+          total: !prev?.in ? prev?.in : value * prev?.in,
         };
         onUpdate && onUpdate(newData);
         return newData;

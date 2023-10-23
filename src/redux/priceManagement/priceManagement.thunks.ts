@@ -10,6 +10,7 @@ import { ThunkPayload } from '../store.store';
 import { AppQueryParams, createApiCall, PriceManagementApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
 import { OnlyUUID } from '../global.types';
+import { isAxiosError } from 'axios';
 
 enum PriceManagementThunkType {
   getAllPriceLists = 'priceLists/getAllPriceListsThunk',
@@ -20,7 +21,9 @@ enum PriceManagementThunkType {
   addPriceToList = 'priceLists/addPriceToListThunk',
   deletePriceFromList = 'priceLists/deletePriceFromListThunk',
   updatePriceInList = 'priceLists/updatePriceInListThunk',
+  getAllPrices = 'priceLists/getAllPricesThunk',
 }
+
 export const getAllPriceListsThunk = createAsyncThunk<
   | {
       refresh?: boolean;
@@ -149,8 +152,8 @@ export const updatePriceListByIdThunk = createAsyncThunk<
   }
 });
 export const getPriceListByIdThunk = createAsyncThunk<
-  IPriceList | undefined,
-  ThunkPayload<{ list: OnlyUUID; query?: AppQueryParams }, IPriceList>
+  { data: IPriceList; refreshCurrent?: boolean },
+  ThunkPayload<{ list: OnlyUUID; query?: AppQueryParams; refreshCurrent?: boolean }, IPriceList>
 >(PriceManagementThunkType.getPriceListById, async (args, thunkAPI) => {
   const { data, onLoading, onSuccess, onError } = args;
 
@@ -161,7 +164,7 @@ export const getPriceListByIdThunk = createAsyncThunk<
       onSuccess && onSuccess(res?.data.data);
     }
     onLoading && onLoading(false);
-    return res?.data.data;
+    return { data: res?.data.data, refreshCurrent: args.data?.refreshCurrent };
   } catch (e) {
     onLoading && onLoading(false);
     onError && onError(e);
@@ -174,6 +177,7 @@ export interface IPricesThunksData<T> {
   updateCurrent?: boolean;
   data?: T;
 }
+
 export const addPriceToListThunk = createAsyncThunk<
   IPricesThunksData<IPriceListItem>,
   ThunkPayload<IPricesThunksData<ICreatePriceReqData>, IPriceListItem>
@@ -219,5 +223,30 @@ export const updatePriceInListThunk = createAsyncThunk<
     return thunkAPI.rejectWithValue(axiosErrorCheck(e));
   }
 });
+
+export const getAllPricesThunk = createGetAllPricesThunk(PriceManagementThunkType.getAllPrices);
+function createGetAllPricesThunk(type: string) {
+  return createAsyncThunk<
+    { refreshCurrent?: boolean; data: IPriceListItem[] },
+    ThunkPayload<
+      { refreshCurrent?: boolean; params?: Pick<AppQueryParams, 'list' | 'product' | 'variation'> },
+      IPriceListItem[]
+    >
+  >(type, async (args, thunkApi) => {
+    try {
+      const res = await PriceManagementApi.getAllPrices(args?.data?.params);
+      if (res) {
+        args?.onSuccess && args?.onSuccess(res?.data.data);
+      }
+
+      args?.onLoading && args?.onLoading(false);
+      return { data: res?.data.data, refreshCurrent: args?.data?.refreshCurrent };
+    } catch (error) {
+      args?.onLoading && args?.onLoading(false);
+      args?.onError && args?.onError(error);
+      return thunkApi.rejectWithValue(isAxiosError(error));
+    }
+  });
+}
 
 export const deletePriceFromListThunk = createAsyncThunk(PriceManagementThunkType.deletePriceFromList, async () => {});

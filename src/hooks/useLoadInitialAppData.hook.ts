@@ -1,5 +1,4 @@
 import usePermissionsServiceHook, { usePermissionsSelector } from './usePermissionsService.hook';
-import useAppSettings from './useAppSettings.hook';
 import { useEffect } from 'react';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { useAppServiceProvider } from './useAppServices.hook';
@@ -40,9 +39,6 @@ const useLoadInitialAppDataHook = ({
     shipments,
   } = useAppServiceProvider();
 
-  const { getAppActions } = useAppSettings();
-  // const [_isLoading, setIsLoading] = useState(false);
-  // const [_statuses, setStatuses] = useState<Partial<Record<ApiDirType, boolean>>>();
   const onSuccessToast = (dirType: ApiDirType) => () => {
     // setStatuses(prev => ({ ...prev, [dirType]: true }));
     // toast.success(`Updated data for directory: ${dirType}`);

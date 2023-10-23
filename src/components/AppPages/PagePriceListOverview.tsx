@@ -14,13 +14,14 @@ import TableList from '../TableList/TableList';
 import { usePriceListsSelector } from '../../redux/selectors.store';
 import { BaseAppPageProps } from './index';
 import { priceListContentColumns } from '../../data/priceManagement.data';
+import { ExtractId } from '../../utils/dataTransform';
 
 interface Props extends BaseAppPageProps {}
 const PagePriceListOverview: React.FC<Props> = ({ path }) => {
   const listId = useAppParams()?.priceListId;
   const actionsCreator = usePriceListOverviewActionsCreator(listId);
   const {
-    priceManagement: { getById },
+    priceManagement: { getById, getAllPrices },
   } = useAppServiceProvider();
   const list = usePriceListsSelector()?.current;
   const [isLoading, setIsLoading] = useState(false);
@@ -52,14 +53,17 @@ const PagePriceListOverview: React.FC<Props> = ({ path }) => {
   );
 
   useEffect(() => {
-    list && console.log(list);
+    list && console.log('PagePriceListOverview', list);
   }, [list]);
 
   useEffect(() => {
     if (listId) {
       getById({
-        data: { list: { _id: listId } },
+        data: { list: { _id: listId }, refreshCurrent: true },
         onLoading: setIsLoading,
+        onSuccess: d => {
+          getAllPrices({ data: { params: { list: ExtractId(d) }, refreshCurrent: true } });
+        },
       });
     }
     // eslint-disable-next-line

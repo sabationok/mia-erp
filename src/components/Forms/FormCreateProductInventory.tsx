@@ -20,6 +20,7 @@ import { createApiCall, PriceManagementApi } from '../../api';
 import { ExtractId } from '../../utils/dataTransform';
 import { OnRowClickHandler } from '../TableList/tableTypes.types';
 import { useForm } from 'react-hook-form';
+import { OnlyUUID } from '../../redux/global.types';
 
 export interface FormCreateProductInventoryProps extends Omit<ModalFormProps<IProductInventoryFormData>, 'onSubmit'> {
   product?: IProduct;
@@ -52,7 +53,7 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
 
   // const { products: productsS, warehouses: warehousesS } = useAppServiceProvider();
   const [loadedPrices, setLoadedPrices] = useState<IPriceListItem[]>([]);
-  const [selectedPrice, setSelectedPrice] = useState<IPriceListItem | undefined>();
+  const [selectedPrice, setSelectedPrice] = useState<IPriceListItem | OnlyUUID | undefined>();
   const [selectedVariation, setSelectedVariation] = useState<IVariation>();
 
   useEffect(() => {

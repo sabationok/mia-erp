@@ -42,7 +42,7 @@ const SelectCustomerModal: React.FC<SelectCustomerModalProps> = ({ onSelect, onS
                 ModalChildren: FormCreateCustomer,
                 modalChildrenProps: {
                   onSubmit: d => {
-                    service.create({ data: createDataForReq(d) });
+                    service.create({ data: createDataForReq(d) as never });
                   },
                 },
               });

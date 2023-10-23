@@ -1,12 +1,11 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import FlexBox from '../../atoms/FlexBox';
 import { IPriceFormData } from '../../../redux/priceManagement/priceManagement.types';
-import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
+import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { useAppForm } from '../../../hooks';
 import FormProductSelectorForPricing from './FormProductSelectorForPricing';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
-import * as _ from 'lodash';
 import { useCallback, useEffect, useMemo } from 'react';
 import { IProduct } from '../../../redux/products/products.types';
 import { usePriceListsSelector, useProductsSelector } from '../../../redux/selectors.store';
@@ -21,49 +20,53 @@ import { createDataForReq } from '../../../utils/dataTransform';
 import { OnRowClickHandler } from '../../TableList/tableTypes.types';
 import TableList from '../../TableList/TableList';
 import { priceListColumns } from '../../../data/priceManagement.data';
+import { objUUIDSchema } from '../validation';
+import _ from 'lodash';
+import { AnyFn } from '../../../utils/types';
+import { IVariation } from '../../../redux/products/variations.types';
+import { ToastService } from '../../../services';
+
+const throttleCallback = _.throttle(<T extends AnyFn>(fn: T) => {
+  fn();
+}, 1500);
 
 const validation = yup.object().shape({
-  cost: yup.number(),
-  price: yup.number(),
-  variation: yup.object().shape({
-    _id: yup.string().required(),
-  }),
-  list: yup.object().shape({
-    _id: yup.string().required(),
-  }),
-  product: yup.object().shape({
-    _id: yup.string().required(),
-  }),
+  in: yup.number(),
+  out: yup.number(),
+  list: objUUIDSchema.required(),
+  product: objUUIDSchema.required(),
+  variation: objUUIDSchema,
 });
 
 export interface FormCreatePriceProps
   extends Omit<ModalFormProps<any, any, IPriceFormData>, 'onSubmit' | 'afterSubmit'> {
+  onSubmit: AppSubmitHandler<IPriceFormData>;
   product?: IProduct;
+  variation?: IVariation;
   update?: string;
-  onSubmit: (data: IPriceFormData, options: UseAppFormSubmitOptions & {}) => void;
 }
-
+export type PriceFormDataPath = Path<IPriceFormData>;
 const inputsFormCreatePrice: {
-  name: Path<IPriceFormData>;
+  name: PriceFormDataPath;
   disabled?: boolean;
   label?: string;
   placeholder?: string;
   required?: boolean;
   autoFocus?: boolean;
 }[] = [
-  { label: t('Price IN'), placeholder: t('Price IN'), required: true, autoFocus: true, name: 'cost' },
-  { label: t('Price OUT'), placeholder: t('Price OUT'), required: true, name: 'price' },
+  { label: t('Price IN'), placeholder: t('Price IN'), required: true, autoFocus: true, name: 'in' },
+  { label: t('Price OUT'), placeholder: t('Price OUT'), required: true, name: 'out' },
   {
-    label: t('Commission amount'),
+    label: t('Commission, amount'),
     placeholder: t('Enter commission amount'),
     disabled: true,
-    name: 'commissionAmount',
+    name: 'cashback.amount',
   },
   {
-    label: t('Commission percentage'),
+    label: t('Commission, %'),
     placeholder: t('Enter commission percentage'),
     disabled: true,
-    name: 'commissionPercentage',
+    name: 'cashback.percentage',
   },
 ];
 
@@ -75,6 +78,18 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
   const currentProduct = useMemo(() => {
     return product || productInState;
   }, [product, productInState]);
+
+  const priceForm = useAppForm<IPriceFormData>({
+    defaultValues: {
+      in: 0,
+      out: 0,
+      commission: { amount: 0, percentage: 0 },
+      ...defaultState,
+      product: currentProduct,
+    },
+    resolver: yupResolver(validation),
+    reValidateMode: 'onSubmit',
+  });
   const {
     formValues,
     register,
@@ -84,23 +99,11 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
     closeAfterSave,
     clearAfterSave,
     formState: { errors },
-  } = useAppForm<IPriceFormData>({
-    defaultValues: {
-      price: 0,
-      cost: 0,
-      commissionAmount: 0,
-      commissionPercentage: 0,
-      ...defaultState,
-      product: currentProduct,
-    },
-    resolver: yupResolver(validation),
-    reValidateMode: 'onSubmit',
-  });
+  } = priceForm;
 
-  const { price, cost } = formValues;
+  const { in: price, out: cost } = formValues;
 
-  const calculateValuesThrottled = _.throttle(() => {
-    // toast.info('calculateValuesThrottled throttle');
+  const recalculateValues = useCallback(() => {
     const parseFloatFromValue = (v?: number) => parseFloat(v?.toString() ?? '0');
     const costNum = parseFloatFromValue(cost);
 
@@ -109,12 +112,12 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
     const calculatedCommissionAmount = priceNum - costNum;
     const calculatedCommissionPercentage = (calculatedCommissionAmount / priceNum) * 100;
 
-    setValue('commissionAmount', calculatedCommissionAmount ? Number(calculatedCommissionAmount.toFixed(2)) : 0);
+    setValue('cashback.amount', calculatedCommissionAmount ? Number(calculatedCommissionAmount.toFixed(2)) : 0);
     setValue(
-      'commissionPercentage',
+      'cashback.percentage',
       calculatedCommissionPercentage ? Number(calculatedCommissionPercentage.toFixed(2)) : 0
     );
-  }, 250);
+  }, [cost, price, setValue]);
 
   const handleSelectPriceList: OnRowClickHandler = useCallback(
     data => {
@@ -123,46 +126,47 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
     [setValue]
   );
 
-  const recalculateValues = useCallback(() => calculateValuesThrottled(), [calculateValuesThrottled]);
-
   const onValid = (formData: IPriceFormData) => {
     const dataForReq = createDataForReq(formData);
-    console.log(dataForReq);
 
     if (update) {
       service.updatePriceById({
         data: { data: { _id: update, data: dataForReq }, updateCurrent: true },
         onSuccess: (data, meta) => {
-          console.log('update price', { data, meta });
           closeAfterSave && props?.onClose && props?.onClose();
+          ToastService.success('Price updated');
         },
       });
       return;
     } else {
       service.addPriceToList({
-        data: { data: { data: dataForReq }, updateCurrent: true },
+        data: { data: { data: dataForReq as never }, updateCurrent: true },
         onSuccess: (data, meta) => {
-          console.log('create new price', { data, meta });
           closeAfterSave && props?.onClose && props?.onClose();
+          ToastService.success('Price created');
         },
       });
     }
 
-    onSubmit &&
-      onSubmit(dataForReq, {
-        closeAfterSave,
-        clearAfterSave,
-      });
+    // onSubmit &&
+    //   onSubmit(dataForReq as never, {
+    //     closeAfterSave,
+    //     clearAfterSave,
+    //   });
   };
 
   useEffect(() => {
-    recalculateValues();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cost, price, setValue]);
+    // const throttledCallback=_.throttle(recalculateValues)
+    throttleCallback(recalculateValues);
+  }, [cost, price, recalculateValues]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 
   return (
     <ModalForm
-      onSubmit={handleSubmit(onValid)}
+      onSubmit={handleSubmit(onValid, e => {
+        ToastService.warning('Invalid form data');
+        console.log(e);
+      })}
       fillHeight
       title={`${update ? 'Edit' : 'Create'} price for: ${formValues?.variation?.label || '---'}`}
       extraFooter={
@@ -186,7 +190,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
           }}
         />
 
-        <InputLabel label={t('Select price list')} error={errors.price}>
+        <InputLabel label={t('Select price list')} error={errors.list}>
           <FlexBox fillWidth style={{ height: 250 }} padding={'0 2px'} overflow={'hidden'}>
             <TableList
               tableTitles={priceListColumns}
@@ -214,6 +218,8 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
                   required={info?.required}
                   autoFocus={info?.autoFocus}
                   disabled={info?.disabled}
+                  type={'number'}
+                  style={{ textAlign: 'center' }}
                 />
               </InputLabel>
             );

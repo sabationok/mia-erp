@@ -31,7 +31,6 @@ export class PriceManagementApi {
   }
 
   public static async createPrice(input?: ICreatePriceReqData): Promise<AppResponse<IPriceListItem>> {
-    console.log(this.endpoints.createPrice());
     return this.api.post(this.endpoints.createPrice(), input?.data);
   }
   public static async updatePriceById(input?: IUpdatePriceReqData): Promise<AppResponse<IPriceListItem>> {

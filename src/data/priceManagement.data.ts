@@ -1,48 +1,13 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { t } from '../lang';
-import { IPriceList, IPriceListItem } from '../redux/priceManagement/priceManagement.types';
+import {
+  IPriceList,
+  IPriceListItem,
+  PriceAmountAndPercentageFieldsKey,
+} from '../redux/priceManagement/priceManagement.types';
 import numberWithSpaces from '../utils/numbers';
+import { priceAmountAndPercentageFieldsLabels } from '../utils/tables';
 
-export type DataPath =
-  | 'category.label'
-  | 'subCategory.label'
-  | 'brand.name'
-  | 'brand.label'
-  | 'owner.name'
-  | 'owner.email'
-  | 'author.name'
-  | 'author.email'
-  | 'editor.name'
-  | 'editor.email'
-  | 'auditor.name'
-  | 'auditor.email'
-  | 'manufacturer.name'
-  | 'manufacturer.email'
-  | 'mark.label'
-  | 'tags'
-  | 'type'
-  | 'status'
-  | 'sale'
-  | 'cashback.sale'
-  | 'cashback.level'
-  | 'cashback.bonuses'
-  | 'currency'
-  | 'description'
-  | 'createdAt'
-  | 'updatedAt'
-  | 'label'
-  | 'sku'
-  | 'price'
-  | 'visibility'
-  | 'availabilityInfo.status'
-  | 'availabilityInfo.primaryOrder'
-  | 'availabilityInfo.primaryOrderTime'
-  | 'availabilityInfo.customOrder'
-  | 'availabilityInfo.customOrderTime'
-  | 'product.label'
-  | 'product.sku'
-  | 'timeFrom'
-  | 'timeTo';
 export const priceListColumns: CellTittleProps<IPriceList>[] = [
   {
     top: { name: t('label'), align: 'start', path: 'label' },
@@ -96,59 +61,50 @@ export const priceListColumns: CellTittleProps<IPriceList>[] = [
   },
 ];
 
+export function createColumnForPriceEntity(
+  name: PriceAmountAndPercentageFieldsKey,
+  width?: string
+): CellTittleProps<IPriceListItem> {
+  const topLabel = priceAmountAndPercentageFieldsLabels[name]?.amount;
+  const countedWidth = width || `${topLabel?.length * 12}px`;
+
+  return {
+    top: {
+      name: topLabel,
+      align: 'end',
+      getData: d => numberWithSpaces(d[name]?.amount),
+    },
+    bottom: {
+      name: priceAmountAndPercentageFieldsLabels[name]?.percentage,
+      align: 'end',
+      getData: d => numberWithSpaces(d[name]?.percentage),
+    },
+    width: countedWidth,
+    action: 'valueByPath',
+  };
+}
+const keys: PriceAmountAndPercentageFieldsKey[] = [
+  'commission',
+  'markup',
+  'bonus',
+  'cashback',
+  'discount',
+  'tax',
+  'vat',
+];
+
 const basePriceColumns: CellTittleProps<IPriceListItem>[] = [
   {
-    top: { name: t('Price OUT'), align: 'end', getData: d => numberWithSpaces(Number(d?.price || 0)) },
-    bottom: { name: t('Price IN'), align: 'end', getData: d => numberWithSpaces(Number(d?.cost || 0)) },
-    width: '170px',
-    action: 'valueByPath',
-  },
-  {
     top: {
-      name: t('Commission, amount'),
+      name: t('Price OUT'),
       align: 'end',
-      getData: d => numberWithSpaces(Number(d?.commissionAmount || 0)),
+      getData: d => numberWithSpaces(d?.out),
     },
-    bottom: {
-      name: t('Commission, %'),
-      align: 'end',
-      getData: d => numberWithSpaces(Number(d?.commissionPercentage || 0)),
-    },
+    bottom: { name: t('Price IN'), align: 'end', getData: d => numberWithSpaces(null) },
     width: '170px',
     action: 'valueByPath',
   },
-  {
-    top: { name: t('Markup, amount'), align: 'end', getData: d => numberWithSpaces(Number(d?.markupAmount || 0)) },
-    bottom: { name: t('Markup, %'), align: 'end', getData: d => numberWithSpaces(Number(d?.markupPercentage || 0)) },
-    width: '170px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: t('Discount, amount'), align: 'end', getData: d => numberWithSpaces(Number(d?.discountAmount || 0)) },
-    bottom: {
-      name: t('Discount, %'),
-      align: 'end',
-      getData: d => numberWithSpaces(Number(d?.discountPercentage || 0)),
-    },
-    width: '170px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: t('Bonus, amount'), align: 'end', getData: d => numberWithSpaces(Number(d?.cashbackAmount || 0)) },
-    bottom: { name: t('Bonus, %'), align: 'end', getData: d => numberWithSpaces(Number(d?.cashbackPercentage || 0)) },
-    width: '170px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: t('Cashback, amount'), align: 'end', getData: d => numberWithSpaces(Number(d?.cashbackAmount || 0)) },
-    bottom: {
-      name: t('Cashback, %'),
-      align: 'end',
-      getData: d => numberWithSpaces(Number(d?.cashbackPercentage || 0)),
-    },
-    width: '170px',
-    action: 'valueByPath',
-  },
+  ...keys.map(k => createColumnForPriceEntity(k)),
   {
     top: { name: t('comment'), align: 'start', path: 'description' },
     width: '150px',
@@ -161,7 +117,7 @@ export const priceListContentColumns: CellTittleProps<IPriceListItem>[] = [
     top: { name: t('Product label'), getData: d => d?.product?.label },
     bottom: { name: t('Variation label'), getData: d => d?.variation?.label },
     width: '270px',
-    getImgPreview: ({ product }, titleProps) => (product?.images ? product?.images[0]?.img_preview : ''),
+    getImgPreview: ({ product }) => (product?.images ? product?.images[0]?.img_preview : ''),
     action: 'doubleDataWithAvatar',
   },
   {

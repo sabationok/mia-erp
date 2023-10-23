@@ -43,9 +43,6 @@ const FormProductSelectorForPricing: React.FC<FormProductSelectorForPricingProps
   const [currentVariation, setCurrentVariation] = useState<OnlyUUID | undefined>(currentProduct?.defaults?.variation);
   const [selectedProduct, setSelectedProduct] = useState<OnlyUUID | undefined>(currentProduct);
 
-  useEffect(() => {
-    console.log('FormProductSelectorForPricing', loadedVariations);
-  }, [loadedVariations]);
   const tableTitles = useMemo(() => {
     const t = templates.find(t => t._id === currentProduct?.template?._id);
     return t ? createTableTitlesFromTemplate(t) : undefined;
@@ -119,23 +116,25 @@ const FormProductSelectorForPricing: React.FC<FormProductSelectorForPricingProps
 
       {/*<Text $weight={500}>{'Оберіть варіацію для оцінки'}</Text>*/}
 
-      <InputLabel label={'Оберіть варіацію для оцінки'}>
-        <ScrollBox
-          style={{ minWidth: 180, maxHeight: 500, height: 300 }}
-          padding={'0 2px'}
-          overflow={'hidden'}
-          flex={1}
-        >
-          <TableList
-            tableTitles={tableTitles}
-            tableData={transformedTableData}
-            selectedRow={currentVariation}
-            isSearch={false}
-            isFilter={false}
-            onRowClick={handleTableRowClick}
-          />
-        </ScrollBox>
-      </InputLabel>
+      {transformedTableData?.length > 0 && (
+        <InputLabel label={'Оберіть варіацію для оцінки'}>
+          <ScrollBox
+            style={{ minWidth: 180, maxHeight: 500, height: 300 }}
+            padding={'0 2px'}
+            overflow={'hidden'}
+            flex={1}
+          >
+            <TableList
+              tableTitles={tableTitles}
+              tableData={transformedTableData}
+              selectedRow={currentVariation}
+              isSearch={false}
+              isFilter={false}
+              onRowClick={handleTableRowClick}
+            />
+          </ScrollBox>
+        </InputLabel>
+      )}
     </FlexBox>
   );
 };

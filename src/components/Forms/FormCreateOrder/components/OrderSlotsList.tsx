@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import AddOrderSlot from './AddOrderSlot';
 import { OnlyUUID } from '../../../../redux/global.types';
-import { IOrderSlot, IOrderSlotBase } from '../../../../redux/orders/orders.types';
+import { IOrderSlot, IOrderSlotBase, IOrderTempSlot } from '../../../../redux/orders/orders.types';
 import OrderSlotOverview from '../../../Overviews/OrderSlotOverview';
 import { nanoid } from '@reduxjs/toolkit';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
@@ -18,7 +18,7 @@ export interface FormCreateOrderProductsListProps {
   list?: IOrderSlot[];
 }
 const OrderSlotsList: React.FC<FormCreateOrderProductsListProps> = ({ onSelect, onRemove, list }) => {
-  const [data, setData] = useState<(Partial<IOrderSlot> & { tempId?: string })[]>(list || []);
+  const [data, setData] = useState<IOrderTempSlot[]>(list || []);
   const modalS = useModalService();
   const handleSelect = useCallback((item: IOrderSlotBase) => {
     // onSelect && onSelect(item);
@@ -27,12 +27,12 @@ const OrderSlotsList: React.FC<FormCreateOrderProductsListProps> = ({ onSelect, 
 
   const handleRemove = useCallback((id?: string) => {
     // onRemove && onRemove();
-    setData(prev => prev.filter(el => (el?._id || el.tempId) !== id));
+    setData(prev => prev.filter(el => el.tempId !== id));
   }, []);
 
   const renderProducts = useMemo(() => {
     return data?.map((p, idx) => (
-      <OrderSlotOverview key={idx.toString()} index={idx} slot={p} onRemove={() => handleRemove(p?._id || p?.tempId)} />
+      <OrderSlotOverview key={idx.toString()} index={idx} slot={p} onRemove={() => handleRemove(p?.tempId)} />
     ));
   }, [data, handleRemove]);
 

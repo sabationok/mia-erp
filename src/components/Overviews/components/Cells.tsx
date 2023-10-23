@@ -24,6 +24,7 @@ import { productStatusesData } from '../../../data/products.data';
 import { getStatusData } from '../../../data/statuses.data';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { ToastService } from '../../../services';
+import { IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
 
 export type RenderOverviewCellComponent<Data = any> = React.FC<{
   cell: OverviewCellProps<Data>;
@@ -188,38 +189,7 @@ export const ProductDefaultsCell: RenderOverviewCellComponent<IProduct> = ({ dat
     });
   }, [data?.variation]);
 
-  const priceInfoCellsData = useMemo((): { title: string; amount?: number; percentage?: number }[] => {
-    const priceInfo = data?.price;
-    return [
-      { title: t('Price'), amount: priceInfo?.price },
-      { title: t('Cost'), amount: priceInfo?.cost },
-      {
-        title: t('Commission'),
-        amount: priceInfo?.commissionAmount,
-        percentage: priceInfo?.commissionPercentage || 0,
-      },
-      {
-        title: t('Markup'),
-        amount: priceInfo?.markupAmount,
-        percentage: priceInfo?.markupPercentage || 0,
-      },
-      {
-        title: t('Discount'),
-        amount: priceInfo?.discountAmount,
-        percentage: priceInfo?.discountPercentage || 0,
-      },
-      {
-        title: t('Bonus'),
-        amount: priceInfo?.bonusAmount,
-        percentage: priceInfo?.bonusPercentage || 0,
-      },
-      {
-        title: t('Cashback'),
-        amount: priceInfo?.cashbackAmount,
-        percentage: priceInfo?.cashbackPercentage || 0,
-      },
-    ];
-  }, [data?.price]);
+  const priceInfoCellsData = useMemo(() => createPriceOverviewTagsData(data?.price), [data?.price]);
 
   const renderPriceInfo = useMemo(() => {
     return priceInfoCellsData.map((item, index) => {
@@ -654,3 +624,32 @@ const CategoryItem = styled(FlexBox)`
   background-color: ${p => p.theme.field.backgroundColor};
   //border: 1px solid ${p => p.theme.accentColor.base};
 `;
+
+export function createPriceOverviewTagsData(
+  price?: IPriceListItem
+): { title: string; amount?: number; percentage?: number }[] {
+  return [
+    { title: t('Price'), amount: price?.in },
+    { title: t('Cost'), amount: price?.out },
+    {
+      title: t('Commission'),
+      ...price?.commission,
+    },
+    {
+      title: t('Markup'),
+      ...price?.markup,
+    },
+    {
+      title: t('Discount'),
+      ...price?.discount,
+    },
+    {
+      title: t('Bonus'),
+      ...price?.bonus,
+    },
+    {
+      title: t('Cashback'),
+      ...price?.cashback,
+    },
+  ];
+}

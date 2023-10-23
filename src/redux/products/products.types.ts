@@ -98,9 +98,9 @@ export interface IProduct extends IProductWithDefaults {}
 
 export interface IProductImage extends Partial<IBase> {
   img_preview?: string;
-  img_1x: string;
-  img_2x: string;
-  webp: string;
+  img_1x?: string;
+  img_2x?: string;
+  webp?: string;
   order: number;
 }
 
@@ -126,11 +126,12 @@ export interface IProductWithAddsFieldsFormData extends IProductBaseFormData {}
 
 export interface IProductFullFormData
   extends Omit<IProductFullDto, 'recommends' | 'properties' | 'images' | 'categories'> {
-  categories?: string[];
-  recommends?: IFormDataValueWithUUID[];
-  properties?: string[];
+  categories?: ArrayUUID;
+  recommends?: ArrayUUID;
+  properties?: ArrayUUID;
+
   defaults?: IProductDefaultsFormData;
-  images?: Partial<IProductImage>[];
+  images?: IProductImage[];
 }
 
 export interface IProductFormData extends IProductFullFormData {}
@@ -140,9 +141,10 @@ export interface IProductBaseDto extends Omit<IProductBase, '_id' | 'createdAt' 
 
 export interface IProductWithAddsFieldsDto extends IProductBaseDto {
   category?: OnlyUUID;
-  categories?: ArrayUUID;
   brand?: OnlyUUID;
   template?: OnlyUUID;
+
+  categories?: ArrayUUID;
   recommends?: ArrayUUID;
   properties?: ArrayUUID;
 }

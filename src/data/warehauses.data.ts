@@ -132,81 +132,81 @@ export const warehousesTableColumnsForOrderCreateOrderSlotForm: CellTittleProps[
 
 const batchPricesColumns: CellTittleProps<IProductInventory>[] = [
   {
-    top: { name: t('Price OUT'), align: 'end', getData: d => numberWithSpaces(Number(d?.price?.price || 0)) },
-    bottom: { name: t('Price IN'), align: 'end', getData: d => numberWithSpaces(Number(d?.price?.cost || 0)) },
+    top: { name: t('Price OUT'), align: 'end', getData: d => numberWithSpaces(Number(d?.price?.in || 0)) },
+    bottom: { name: t('Price IN'), align: 'end', getData: d => numberWithSpaces(Number(d?.price?.out || 0)) },
     width: '170px',
     action: 'valueByPath',
   },
-  {
-    top: {
-      name: t('Commission, amount'),
-      align: 'end',
-      getData: d => numberWithSpaces(Number(d?.price?.commissionAmount || 0)),
-    },
-    bottom: {
-      name: t('Commission, %'),
-      align: 'end',
-      getData: d => numberWithSpaces(Number(d?.price?.commissionPercentage || 0)),
-    },
-    width: '170px',
-    action: 'valueByPath',
-  },
-  {
-    top: {
-      name: t('Markup, amount'),
-      align: 'end',
-      getData: d => numberWithSpaces(Number(d?.price?.markupAmount || 0)),
-    },
-    bottom: {
-      name: t('Markup, %'),
-      align: 'end',
-      getData: d => numberWithSpaces(Number(d?.price?.markupPercentage || 0)),
-    },
-    width: '170px',
-    action: 'valueByPath',
-  },
-  {
-    top: {
-      name: t('Discount, amount'),
-      align: 'end',
-      getData: d => numberWithSpaces(Number(d?.price?.discountAmount || 0)),
-    },
-    bottom: {
-      name: t('Discount, %'),
-      align: 'end',
-      getData: d => numberWithSpaces(Number(d?.price?.discountPercentage || 0)),
-    },
-    width: '170px',
-    action: 'valueByPath',
-  },
-  {
-    top: {
-      name: t('Bonus, amount'),
-      align: 'end',
-      getData: d => numberWithSpaces(Number(d?.price?.cashbackAmount || 0)),
-    },
-    bottom: {
-      name: t('Bonus, %'),
-      align: 'end',
-      getData: d => numberWithSpaces(Number(d?.price?.cashbackPercentage || 0)),
-    },
-    width: '170px',
-    action: 'valueByPath',
-  },
-  {
-    top: {
-      name: t('Cashback, amount'),
-      align: 'end',
-      getData: d => numberWithSpaces(Number(d?.price?.cashbackAmount || 0)),
-    },
-    bottom: {
-      name: t('Cashback, %'),
-      align: 'end',
-      getData: d => numberWithSpaces(Number(d?.price?.cashbackPercentage || 0)),
-    },
-    width: '170px',
-    action: 'valueByPath',
-  },
+  // {
+  //   top: {
+  //     name: t('Commission, amount'),
+  //     align: 'end',
+  //     getData: d => numberWithSpaces(Number(d?.price?.commissionAmount || 0)),
+  //   },
+  //   bottom: {
+  //     name: t('Commission, %'),
+  //     align: 'end',
+  //     getData: d => numberWithSpaces(Number(d?.price?.commissionPercentage || 0)),
+  //   },
+  //   width: '170px',
+  //   action: 'valueByPath',
+  // },
+  // {
+  //   top: {
+  //     name: t('Markup, amount'),
+  //     align: 'end',
+  //     getData: d => numberWithSpaces(Number(d?.price?.markupAmount || 0)),
+  //   },
+  //   bottom: {
+  //     name: t('Markup, %'),
+  //     align: 'end',
+  //     getData: d => numberWithSpaces(Number(d?.price?.markupPercentage || 0)),
+  //   },
+  //   width: '170px',
+  //   action: 'valueByPath',
+  // },
+  // {
+  //   top: {
+  //     name: t('Discount, amount'),
+  //     align: 'end',
+  //     getData: d => numberWithSpaces(Number(d?.price?.discountAmount || 0)),
+  //   },
+  //   bottom: {
+  //     name: t('Discount, %'),
+  //     align: 'end',
+  //     getData: d => numberWithSpaces(Number(d?.price?.discountPercentage || 0)),
+  //   },
+  //   width: '170px',
+  //   action: 'valueByPath',
+  // },
+  // {
+  //   top: {
+  //     name: t('Bonus, amount'),
+  //     align: 'end',
+  //     getData: d => numberWithSpaces(Number(d?.price?.cashbackAmount || 0)),
+  //   },
+  //   bottom: {
+  //     name: t('Bonus, %'),
+  //     align: 'end',
+  //     getData: d => numberWithSpaces(Number(d?.price?.cashbackPercentage || 0)),
+  //   },
+  //   width: '170px',
+  //   action: 'valueByPath',
+  // },
+  // {
+  //   top: {
+  //     name: t('Cashback, amount'),
+  //     align: 'end',
+  //     getData: d => numberWithSpaces(Number(d?.price?.cashbackAmount || 0)),
+  //   },
+  //   bottom: {
+  //     name: t('Cashback, %'),
+  //     align: 'end',
+  //     getData: d => numberWithSpaces(Number(d?.price?.cashbackPercentage || 0)),
+  //   },
+  //   width: '170px',
+  //   action: 'valueByPath',
+  // },
   {
     top: { name: t('comment'), align: 'start', path: 'description' },
     width: '150px',

@@ -6,6 +6,7 @@ import SvgIcon from '../../atoms/SvgIcon/SvgIcon';
 import FlexBox from '../../atoms/FlexBox';
 import StatusComp from './CellComponents/StatusComp';
 import { StatusNames } from '../../../data/statuses.data';
+import { IconIdType } from '../../../img/sprite';
 
 interface IDataCellSectionProps<T = string | null> {
   data?: T;
@@ -17,7 +18,8 @@ export interface IDataCellProps<T = any> {
   content?: IDataCellSectionProps<T>;
   subContent?: IDataCellSectionProps<T>;
   width?: string;
-  imgUrl?: string;
+  imgUrl?: string | null;
+  imgPreviewIcon?: IconIdType;
 }
 
 const DoubleDataCell: React.FC<IDataCellProps> = ({ width, content, subContent }) => {
@@ -51,7 +53,7 @@ const SimpleDataCell: React.FC<Omit<IDataCellProps, 'subContent'>> = ({ width, c
   );
 };
 
-const DoubleDataWithAvatarCell: React.FC<IDataCellProps> = ({ width, content, subContent, imgUrl }) => {
+const DoubleDataWithAvatarCell: React.FC<IDataCellProps> = ({ width, content, subContent, imgUrl, imgPreviewIcon }) => {
   return (
     <CellDoubleDataWithAvatar style={{ width }}>
       <AvatarBox>
@@ -61,7 +63,7 @@ const DoubleDataWithAvatarCell: React.FC<IDataCellProps> = ({ width, content, su
           style={{ borderRadius: '2px' }}
           icon={
             <FlexBox fillWidth fillHeight alignItems={'center'} justifyContent={'center'}>
-              <SvgIcon icon={'bankOutlined'} size={'80%'} fill={'#fff'} />
+              <SvgIcon icon={imgPreviewIcon || 'gallery'} size={'80%'} fill={'#fff'} />
             </FlexBox>
           }
         />
