@@ -8,7 +8,7 @@ import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../
 import DirListItem from '../Directories/DirList/DirListItem';
 import { IPaymentMethod } from '../../redux/payments/payments.types';
 import usePaymentsServiceHook from '../../hooks/usePaymentsService.hook';
-import useTranslatedPaymentMethods from '../../hooks/useTranslatedPaymentMethods.hook';
+import { useTranslatedPaymentMethods } from '../../hooks/useTranslatedPaymentMethods.hook';
 
 export interface DirPaymentMethodsProps
   extends IDirInTreeProps<MethodDirType, IPaymentMethod, IPaymentMethod, IPaymentMethod> {

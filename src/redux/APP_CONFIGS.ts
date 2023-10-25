@@ -264,6 +264,7 @@ const payments = {
 const invoices = {
   create: () => `${API_BASE_ROUTES.INVOICES}/${Endpoints.create}`,
   getAll: () => `${API_BASE_ROUTES.INVOICES}/${Endpoints.getAll}`,
+  getAllMethods: () => `${API_BASE_ROUTES.INVOICES}/${Endpoints.methods}/${Endpoints.getAll}`,
 };
 const shipments = {
   create: () => `${API_BASE_ROUTES.SHIPMENTS}/${Endpoints.create}`,
@@ -282,7 +283,7 @@ const integrations = {
   create: () => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.create}`,
   update: () => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.update}`,
   getAll: () => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.getAll}`,
-  getAllIntegrationProviders: () => `${API_BASE_ROUTES.INTEGRATIONS}/providers/${Endpoints.getAll}`,
+  getAllExtIntegrationServices: () => `${API_BASE_ROUTES.INTEGRATIONS}/services/${Endpoints.getAll}`,
   getById: (id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.getById}/${id}`,
 };
 

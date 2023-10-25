@@ -2,7 +2,6 @@ import { ModalFormProps } from '../ModalForm';
 import FlexBox from '../atoms/FlexBox';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../utils/fabrics';
-import { ExtServProviderBase, IntegrationProviderTypeEnum } from '../../redux/integrations/integrations.types';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { ModalHeader } from '../atoms';
@@ -11,10 +10,13 @@ import ShipmentsIntegrationsTab from './integrations/ShipmentsIntegrationsTab';
 import ModalFilter from '../ModalForm/ModalFilter';
 import { AppQueryParams, createApiCall } from '../../api';
 import IntegrationsApi from '../../api/integrations.api';
+import { ExtIntegrationServiceTypeEnum, ExtServiceBase } from '../../redux/integrations/integrations.types';
+import { Text } from '../atoms/Text';
+import ModalFooter from '../ModalForm/ModalFooter';
 
 export interface CompanyIntegrationsProps extends Omit<ModalFormProps, 'onSubmit'> {}
 
-const CompanyIntegrationsTabs = _.pick(IntegrationProviderTypeEnum, ['invoices', 'shipments']);
+const ExtServiceTabs = _.pick(ExtIntegrationServiceTypeEnum, ['invoices', 'shipments']);
 
 // const TestTabComp = (props: IntegrationTabProps) => {
 //   return (
@@ -30,47 +32,79 @@ export interface IntegrationTabProps {
 }
 
 const tabsMap: Record<
-  IntegrationProviderTypeEnum | string,
+  ExtIntegrationServiceTypeEnum | string,
   <P = any>(props: IntegrationTabProps & P) => ReactElement<P> | null
 > = {
-  [CompanyIntegrationsTabs.invoices]: InvoicesIntegrationsTab,
-  [CompanyIntegrationsTabs.shipments]: ShipmentsIntegrationsTab,
+  [ExtServiceTabs.invoices]: InvoicesIntegrationsTab,
+  [ExtServiceTabs.shipments]: ShipmentsIntegrationsTab,
 };
 
-const tabs = enumToFilterOptions(CompanyIntegrationsTabs);
+const tabs = enumToFilterOptions(ExtServiceTabs);
 
-const useIntegrationsService = () => {
-  const [integrationProviders, setIntegrationProviders] = useState<ExtServProviderBase[]>([]);
+const useExtServProvidersQuery = () => {
+  const [extServProviders, setExtServProviders] = useState<ExtServiceBase[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const loadProviders = ({ params }: { params?: AppQueryParams } = {}) =>
     createApiCall(
-      { data: params, onSuccess: setIntegrationProviders, onLoading: setIsLoading },
-      IntegrationsApi.getAllIntegrationProviders,
+      { data: params, onSuccess: setExtServProviders, onLoading: setIsLoading, logResData: true },
+      IntegrationsApi.getAllExtIntegrationServices,
       IntegrationsApi
     );
 
   return {
     loadProviders,
-    integrationProviders,
+    extServProviders,
     isLoading,
   };
 };
 
 const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose, ...props }) => {
   const [current, setCurrent] = useState(tabs[0].value);
-  const { loadProviders, integrationProviders } = useIntegrationsService();
+  const { loadProviders, extServProviders } = useExtServProvidersQuery();
 
   const RenderTab = useMemo(() => {
     return tabsMap[current] || tabsMap[tabs[0].value];
   }, [current]);
 
   useEffect(() => {
-    if (integrationProviders.length === 0) {
+    if (extServProviders.length === 0) {
       loadProviders();
     }
     // eslint-disable-next-line
   }, []);
+
+  const renderProviders = useMemo(() => {
+    return extServProviders.map(prov => {
+      const availableSubServices = prov.services
+        ? Object.entries(prov.services).map(([k, v]: [k: string, v?: string[]]) => {
+            return (
+              <FlexBox key={k} gap={6}>
+                <Text>{k}</Text>
+
+                <FlexBox fxDirection={'row'} gap={8} border={'1px solid tomato'} borderBottom={'4px'}>
+                  {v?.map(() => {
+                    return (
+                      <Text key={k} $size={12} $weight={500}>
+                        {v}
+                      </Text>
+                    );
+                  })}
+                </FlexBox>
+              </FlexBox>
+            );
+          })
+        : null;
+
+      return (
+        <FlexBox>
+          <FlexBox>{prov?.label}</FlexBox>
+
+          <FlexBox margin={'5px 8px'}>{availableSubServices}</FlexBox>
+        </FlexBox>
+      );
+    });
+  }, [extServProviders]);
 
   return (
     <Container overflow={'hidden'}>
@@ -78,9 +112,11 @@ const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose,
 
       <ModalFilter filterOptions={tabs} onFilterValueSelect={info => setCurrent(info?.value)} />
 
-      <FlexBox flex={1} padding={'8px 0'}>
-        <RenderTab onClose={onClose} compId={current} />
+      <FlexBox flex={1} padding={'8px 0'} overflow={'auto'}>
+        {renderProviders}
       </FlexBox>
+
+      <ModalFooter onClick={onClose}></ModalFooter>
     </Container>
   );
 };

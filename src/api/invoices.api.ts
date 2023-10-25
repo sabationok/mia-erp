@@ -12,4 +12,8 @@ export default class InvoicesApi {
   public static getAllByQueries(params?: AppQueryParams) {
     return this.api.get(this.endpoints.create(), { params });
   }
+
+  public static getAllInvoicingMethods(params?: AppQueryParams) {
+    return this.api.get(this.endpoints.create(), { params });
+  }
 }

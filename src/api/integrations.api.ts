@@ -1,7 +1,7 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import baseApi from './baseApi';
-import { IntegrationProviderTypeEnum } from '../redux/integrations/integrations.types';
+import { ExtServiceBase } from '../redux/integrations/integrations.types';
 
 export default class IntegrationsApi {
   private static api = baseApi;
@@ -11,8 +11,8 @@ export default class IntegrationsApi {
     return this.api.post(this.endpoints.create());
   }
 
-  public static getAllIntegrationProviders(params?: AppQueryParams<IntegrationProviderTypeEnum>) {
-    return this.api.get(this.endpoints.getAllIntegrationProviders(), { params });
+  public static getAllExtIntegrationServices(params?: AppQueryParams<ExtServiceBase>) {
+    return this.api.get(this.endpoints.getAllExtIntegrationServices(), { params });
   }
 
   public static getAllByQueries(params?: AppQueryParams) {

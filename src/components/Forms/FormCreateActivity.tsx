@@ -52,7 +52,6 @@ const FormCreateActivity: React.FC<FormCreateCompanyActivityProps> = ({ _id, edi
         <InputLabel label="Коментар" error={errors.description}>
           <TextareaPrimary placeholder="Введіть коментар" {...register('description')} />
         </InputLabel>
-        ;
       </Inputs>
     </ModalForm>
   );
