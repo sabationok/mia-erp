@@ -5,13 +5,41 @@ import { IPaymentMethod } from '../payments/payments.types';
 import { IInvoicingMethod } from '../invoices/invoices.types';
 
 export enum ExtIntegrationServiceTypeEnum {
-  payments = 'payments',
-  shipments = 'shipments',
-  invoices = 'invoices',
+  payment = 'payment',
+  shipment = 'shipment',
+  invoicing = 'invoicing',
 }
+export enum PaymentProviderName {
+  mono = 'mono',
+  privat24 = 'privat24',
+  liqPay = 'liqPay',
+  wayForPay = 'wayForPay',
+  novapay = 'novapay',
+}
+export enum MonoCheckoutMethod {
+  pan = 'pan',
+  apple = 'apple',
+  google = 'google',
+  monobank = 'monobank',
+  wallet = 'wallet',
+}
+
+export enum LiqPayCheckoutPayTypesEnum {
+  apay = 'apay',
+  gpay = 'gpay',
+  card = 'card',
+  liqpay = 'liqpay',
+  privat24 = 'privat24',
+  paypart = 'paypart',
+  cash = 'cash',
+  invoice = 'invoice',
+  qr = 'qr',
+}
+
 export interface ExtServiceBase extends IBase {
   owner: ICompany;
   label: string;
+  value: string;
   lang?: LangPack;
   integration?: ExtIntegrationBase;
   disabled?: boolean;

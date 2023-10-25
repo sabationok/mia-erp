@@ -11,6 +11,8 @@ export interface TextProps {
   $align?: Property.TextAlign;
   $textTransform?: Property.TextTransform;
   $ellipsisMode?: boolean;
+  $padding?: Property.Padding;
+  $margin?: Property.Margin;
 }
 
 // ! DEFAULT VALUES
@@ -24,6 +26,8 @@ export const Text = styled.span<TextProps>`
   text-align: ${({ $align = 'left' }) => $align};
   text-transform: ${({ $textTransform }) => $textTransform};
   color: ${({ color, ...p }) => color || 'inherit'};
+  padding: ${({ $padding, ...p }) => $padding ?? 0};
+  margin: ${({ $margin, ...p }) => $margin ?? 0};
 
   cursor: inherit;
 

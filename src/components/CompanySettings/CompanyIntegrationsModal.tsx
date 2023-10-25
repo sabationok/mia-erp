@@ -11,61 +11,35 @@ import ModalFilter from '../ModalForm/ModalFilter';
 import { AppQueryParams, createApiCall } from '../../api';
 import IntegrationsApi from '../../api/integrations.api';
 import { ExtIntegrationServiceTypeEnum, ExtServiceBase } from '../../redux/integrations/integrations.types';
-import { Text } from '../atoms/Text';
 import ModalFooter from '../ModalForm/ModalFooter';
 
 export interface CompanyIntegrationsProps extends Omit<ModalFormProps, 'onSubmit'> {}
 
-const ExtServiceTabs = _.pick(ExtIntegrationServiceTypeEnum, ['invoices', 'shipments']);
-
-// const TestTabComp = (props: IntegrationTabProps) => {
-//   return (
-//     <FlexBox flex={1} fillWidth alignItems={'center'} justifyContent={'center'}>
-//       <ButtonIcon variant={'filledLarge'} onClick={props?.onClose}>{`Закрити ${props.compId}`}</ButtonIcon>
-//     </FlexBox>
-//   );
-// };
+const ExtServiceTabs = _.pick(ExtIntegrationServiceTypeEnum, ['invoicing', 'shipment']);
 
 export interface IntegrationTabProps {
   onClose?: () => void;
   compId: string;
+  providers: ExtServiceBase[];
 }
 
 const tabsMap: Record<
   ExtIntegrationServiceTypeEnum | string,
   <P = any>(props: IntegrationTabProps & P) => ReactElement<P> | null
 > = {
-  [ExtServiceTabs.invoices]: InvoicesIntegrationsTab,
-  [ExtServiceTabs.shipments]: ShipmentsIntegrationsTab,
+  [ExtServiceTabs.invoicing]: InvoicesIntegrationsTab,
+  [ExtServiceTabs.shipment]: ShipmentsIntegrationsTab,
 };
 
 const tabs = enumToFilterOptions(ExtServiceTabs);
 
-const useExtServProvidersQuery = () => {
-  const [extServProviders, setExtServProviders] = useState<ExtServiceBase[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const loadProviders = ({ params }: { params?: AppQueryParams } = {}) =>
-    createApiCall(
-      { data: params, onSuccess: setExtServProviders, onLoading: setIsLoading, logResData: true },
-      IntegrationsApi.getAllExtIntegrationServices,
-      IntegrationsApi
-    );
-
-  return {
-    loadProviders,
-    extServProviders,
-    isLoading,
-  };
-};
-
 const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose, ...props }) => {
-  const [current, setCurrent] = useState(tabs[0].value);
+  const [currentType, setCurrentType] = useState(tabs[0].value);
   const { loadProviders, extServProviders } = useExtServProvidersQuery();
 
-  const RenderTab = useMemo(() => {
-    return tabsMap[current] || tabsMap[tabs[0].value];
-  }, [current]);
+  const providers = useMemo(() => {
+    return extServProviders.filter(prov => prov?.services && prov.services[currentType]);
+  }, [currentType, extServProviders]);
 
   useEffect(() => {
     if (extServProviders.length === 0) {
@@ -74,46 +48,16 @@ const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose,
     // eslint-disable-next-line
   }, []);
 
-  const renderProviders = useMemo(() => {
-    return extServProviders.map(prov => {
-      const availableSubServices = prov.services
-        ? Object.entries(prov.services).map(([k, v]: [k: string, v?: string[]]) => {
-            return (
-              <FlexBox key={k} gap={6}>
-                <Text>{k}</Text>
-
-                <FlexBox fxDirection={'row'} gap={8} border={'1px solid tomato'} borderBottom={'4px'}>
-                  {v?.map(() => {
-                    return (
-                      <Text key={k} $size={12} $weight={500}>
-                        {v}
-                      </Text>
-                    );
-                  })}
-                </FlexBox>
-              </FlexBox>
-            );
-          })
-        : null;
-
-      return (
-        <FlexBox>
-          <FlexBox>{prov?.label}</FlexBox>
-
-          <FlexBox margin={'5px 8px'}>{availableSubServices}</FlexBox>
-        </FlexBox>
-      );
-    });
-  }, [extServProviders]);
+  const TabComponent = useMemo(() => tabsMap[currentType], [currentType]);
 
   return (
-    <Container overflow={'hidden'}>
+    <Container overflow={'hidden'} fillWidth>
       <StHeader title={'Company settings'} onClose={onClose} />
 
-      <ModalFilter filterOptions={tabs} onFilterValueSelect={info => setCurrent(info?.value)} />
+      <ModalFilter filterOptions={tabs} onOptSelect={info => setCurrentType(info?.value)} />
 
-      <FlexBox flex={1} padding={'8px 0'} overflow={'auto'}>
-        {renderProviders}
+      <FlexBox flex={1} fillWidth overflow={'auto'}>
+        <TabComponent compId={currentType} providers={providers} />
       </FlexBox>
 
       <ModalFooter onClick={onClose}></ModalFooter>
@@ -137,3 +81,21 @@ const StHeader = styled(ModalHeader)`
 `;
 
 export default CompanyIntegrationsModal;
+
+export function useExtServProvidersQuery() {
+  const [extServProviders, setExtServProviders] = useState<ExtServiceBase[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const loadProviders = ({ params }: { params?: AppQueryParams } = {}) =>
+    createApiCall(
+      { data: params, onSuccess: setExtServProviders, onLoading: setIsLoading, logResData: true },
+      IntegrationsApi.getAllExtIntegrationServices,
+      IntegrationsApi
+    );
+
+  return {
+    loadProviders,
+    extServProviders,
+    isLoading,
+  };
+}
