@@ -280,7 +280,8 @@ const customers = {
   getById: (id?: string) => `${API_BASE_ROUTES.CUSTOMERS}/${Endpoints.getById}/${id}`,
 };
 const integrations = {
-  create: () => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.create}`,
+  createInt: () => `${API_BASE_ROUTES.INTEGRATIONS}/internal/${Endpoints.create}`,
+  createExt: () => `${API_BASE_ROUTES.INTEGRATIONS}/external/${Endpoints.create}`,
   update: () => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.update}`,
   getAll: () => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.getAll}`,
   getAllExtIntegrationServices: () => `${API_BASE_ROUTES.INTEGRATIONS}/services/${Endpoints.getAll}`,

@@ -1,4 +1,4 @@
-import { IBase } from '../global.types';
+import { IBase, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
 import { LangPack } from '../../lang';
 import { ICompany } from '../companies/companies.types';
 import { IPaymentMethod } from '../payments/payments.types';
@@ -59,10 +59,30 @@ export interface ExtIntegrationBase extends IBase {
 
   apiKey?: string; // !
   secret?: string; // !
+  expiredAt?: string | Date;
+  login?: string;
 
   type?: ExtIntegrationServiceTypeEnum;
-  label: string;
+  label?: string;
   description?: string;
+}
+
+export interface ExtIntegrationBaseDto {
+  service?: OnlyUUID;
+  warehouse?: OnlyUUID;
+  finCount?: OnlyUUID;
+  apiKey?: string;
+  secret?: string;
+  expiredAt?: string | Date;
+  label?: string;
+  description?: string;
+  login?: string;
+}
+
+export interface CreateIntegrationFormData extends Partial<Omit<ExtIntegrationBaseDto, 'service'>> {
+  service?: IFormDataValueWithUUID;
+  warehouse?: IFormDataValueWithUUID;
+  finCount?: IFormDataValueWithUUID;
 }
 
 export enum PaymentCheckoutEnum {

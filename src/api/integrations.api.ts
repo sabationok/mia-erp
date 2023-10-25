@@ -1,14 +1,19 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import baseApi from './baseApi';
-import { ExtServiceBase } from '../redux/integrations/integrations.types';
+import { ExtIntegrationBase, ExtIntegrationBaseDto, ExtServiceBase } from '../redux/integrations/integrations.types';
+import { AppResponse } from '../redux/global.types';
 
 export default class IntegrationsApi {
   private static api = baseApi;
   private static endpoints = APP_CONFIGS.endpoints.integrations;
 
-  public static create() {
-    return this.api.post(this.endpoints.create());
+  public static createExternal(data?: { data: ExtIntegrationBaseDto }): Promise<AppResponse<ExtIntegrationBase>> {
+    return this.api.post(this.endpoints.createExt(), data?.data);
+  }
+
+  public static createInternal(data?: { data: ExtIntegrationBaseDto }): Promise<AppResponse<ExtIntegrationBase>> {
+    return this.api.post(this.endpoints.createInt(), data?.data);
   }
 
   public static getAllExtIntegrationServices(params?: AppQueryParams<ExtServiceBase>) {

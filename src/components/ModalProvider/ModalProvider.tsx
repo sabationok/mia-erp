@@ -178,6 +178,7 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
             totalLength: modalStack.length,
             isLast: idx === modalStack.length - 1,
             onClose: () => onClose(Item.id),
+            settings: Item?.settings,
           }}
           RenderModalComponentChildren={Item.ModalChildren}
           childrenProps={Item.props || Item.modalChildrenProps}

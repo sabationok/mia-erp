@@ -57,6 +57,9 @@ export interface IModalSettings {
   closeBtn?: boolean;
   onBackdropClose?: boolean;
   onEscapePressClose?: boolean;
+
+  closeByBackdropPress?: boolean;
+  closeByEscapePress?: boolean;
 }
 
 const initialSettings: IModalSettings = {
@@ -65,8 +68,8 @@ const initialSettings: IModalSettings = {
   modalAnimation: modalAnimation[ModalAnimationType.FromBottom],
   closeBtn: false,
   modalStyle: modalStyle[ModalAnimationType.FromBottom],
-  onBackdropClose: true,
-  onEscapePressClose: true,
+  closeByBackdropPress: true,
+  closeByEscapePress: true,
 };
 
 interface ModalCTX {
@@ -92,15 +95,17 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   totalLength,
   isLast,
 }) => {
-  const [modalSettings, setModalSettings] = useState<IModalSettings>(settings || initialSettings);
+  const [modalSettings, setModalSettings] = useState<IModalSettings>({ ...initialSettings, ...settings });
   function handleSetModalSettings(settings: IModalSettings) {
     setModalSettings(settings);
   }
 
   function handleMouseDownOnBackdrop(ev: React.MouseEvent<HTMLDivElement>) {
-    if (ev.target === ev.currentTarget) {
-      ev.target.addEventListener('mouseup', onClose, { once: true });
-      return;
+    if (modalSettings?.closeByBackdropPress) {
+      if (ev.target === ev.currentTarget) {
+        ev.target.addEventListener('mouseup', onClose, { once: true });
+        return;
+      }
     }
   }
 
@@ -123,10 +128,10 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   }, [childrenProps, id, idx]);
 
   useEffect(() => {
-    if (!modalSettings.onEscapePressClose) return;
+    if (!modalSettings.closeByEscapePress) return;
 
     function handleToggleModalByEsc(evt: KeyboardEvent) {
-      if (!isLast || !modalSettings.onEscapePressClose) return;
+      if (!isLast || !modalSettings.closeByEscapePress) return;
 
       if (evt?.code === 'Escape') {
         if (typeof onClose === 'function') onClose();
@@ -138,7 +143,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
     return () => {
       document.removeEventListener('keydown', handleToggleModalByEsc);
     };
-  }, [isLast, modalSettings.onEscapePressClose, onClose]);
+  }, [isLast, modalSettings.closeByEscapePress, onClose]);
 
   return (
     <Backdrop

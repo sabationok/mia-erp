@@ -72,5 +72,6 @@ const StyledInput = styled.input`
     box-shadow: none;
   }
 `;
+
 export { InputField, StyledInput };
 export default InputText;
