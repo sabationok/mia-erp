@@ -32,11 +32,12 @@ const useLoadInitialAppDataHook = ({
   const {
     directories: { getAllByDirType },
     products,
-    priceManagement,
-    transactions,
-    warehouses,
-    payments,
+    // priceManagement,
+    // transactions,
+    // warehouses,
+    // payments,
     shipments,
+    invoicing,
   } = useAppServiceProvider();
 
   const onSuccessToast = (dirType: ApiDirType) => () => {
@@ -61,24 +62,24 @@ const useLoadInitialAppDataHook = ({
           await prService.getAllByCompanyId({ data: { refresh: true, companyId: company._id } });
         }
 
-        await products.getAll({ data: { refresh: true } });
-        await products.getAllProperties({ data: { params: { createTreeData: true } } });
+        await Promise.all([
+          // products.getAll({ data: { refresh: true } }),
 
-        await priceManagement.getAll({ data: { refresh: true } });
-        await transactions.getAll({ data: { refresh: true } });
-        await warehouses.getAll({ data: { refresh: true } });
+          // priceManagement.getAll({ data: { refresh: true } }),
+          // transactions.getAll({ data: { refresh: true } }),
+          // warehouses.getAll({ data: { refresh: true } }),
 
-        await payments.getAllMethods();
-        await shipments.getAllMethods();
+          products.getAllProperties({ data: { params: { createTreeData: true } } }),
+          invoicing.getAllMethods(),
+          shipments.getAllMethods(),
 
-        await Promise.all(
-          directoriesForLoading.map(async ({ dirType, createTreeData }) => {
-            return await getAllByDirType({
+          ...directoriesForLoading.map(({ dirType, createTreeData }) => {
+            return getAllByDirType({
               data: { dirType, params: { createTreeData } },
               onSuccess: onSuccessToast(dirType),
             });
-          })
-        );
+          }),
+        ]);
 
         onSuccess && onSuccess();
         onLoading && onLoading(false);

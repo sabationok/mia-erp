@@ -43,7 +43,7 @@ export interface ExtServiceBase extends IBase {
   lang?: LangPack;
   integration?: ExtIntegrationBase;
   disabled?: boolean;
-  services?: ExtSubServicesEntity;
+  originServices?: ExtSubServicesEntity;
 }
 
 export interface ExtSubServicesEntity {

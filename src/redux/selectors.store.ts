@@ -26,7 +26,8 @@ export const useAppSettingsSelector = () =>
   useSelector<RootState, IAppSettings>((state: RootState) => state.appSettings);
 export const useCustomersSelector = () => useSelector<RootState, CustomersState>((state: RootState) => state.customers);
 export const usePaymentsSelector = () => useSelector<RootState, PaymentsState>((state: RootState) => state.payments);
-export const useInvoicesSelector = () => useSelector<RootState, InvoicesState>((state: RootState) => state.invoices);
+export const useInvoicesSelector = () =>
+  useSelector<RootState, InvoicesState>((state: RootState) => state['invoicing']);
 export const useShipmentsSelector = () => useSelector<RootState, ShipmentsState>((state: RootState) => state.shipments);
 export const useAppPageSettingsSelector = () => useSelector((state: RootState) => state.appPage);
 export const useTransactionsSelector = (): ITransactionsState =>

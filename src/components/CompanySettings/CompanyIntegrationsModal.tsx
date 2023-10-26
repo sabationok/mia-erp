@@ -38,7 +38,7 @@ const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose,
   const { loadProviders, extServProviders } = useExtServProvidersQuery();
 
   const providers = useMemo(() => {
-    return extServProviders.filter(prov => prov?.services && prov.services[currentType]);
+    return extServProviders.filter(prov => prov?.originServices && prov.originServices[currentType]);
   }, [currentType, extServProviders]);
 
   useEffect(() => {

@@ -55,12 +55,12 @@ export const persistorConfigs = {
   invoices: {
     key: 'invoices',
     storage: storageSession,
-    whitelist: ['invoices', 'currentInvoice'],
+    whitelist: ['invoices', 'currentInvoice', 'methods'],
   },
   payments: {
     key: 'payments',
     storage: storageSession,
-    whitelist: ['payments', 'currentPayment'],
+    whitelist: ['payments', 'currentPayment', 'methods'],
   },
   shipments: {
     key: 'shipments',

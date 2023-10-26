@@ -34,14 +34,14 @@ const InvoicesIntegrationsTab: React.FC<InvoicesIntegrationsTabProps> = ({ provi
 
   const paymentCheckoutTypes = useMemo(
     () =>
-      currentProviderData?.services?.checkout?.map(chType => {
+      currentProviderData?.originServices?.checkout?.map(chType => {
         return (
           <FlexBox key={chType} border={'1px solid lightgrey'} padding={'4px 6px'} borderRadius={'4px'}>
             <Text $size={10}>{t(chType)}</Text>
           </FlexBox>
         );
       }),
-    [currentProviderData?.services?.checkout]
+    [currentProviderData?.originServices?.checkout]
   );
 
   const renderIntegrations = useMemo(() => {

@@ -12,9 +12,9 @@ import useAppAuthHook, { AuthService } from './useAppAuth.hook';
 import useOrdersServiceHook, { OrdersService } from './useOrdersService.hook';
 import useCustomersService, { CustomersService } from './useCustomersService';
 import usePaymentsServiceHook, { UsePaymentsService } from './usePaymentsService.hook';
-import useInvoicesService, { UseInvoicesService } from './useInvoicesService.hook';
 import useShipmentsService, { UseShipmentsService } from './useShipmentsService.hook';
 import useCustomRolesServiceHook, { CustomRolesService } from './useCustomRolesService.hook';
+import useInvoicingService, { UseInvoicingService } from './useInvoicingService.hook';
 
 export enum ServiceName {
   permissions = 'permissions',
@@ -31,7 +31,7 @@ export enum ServiceName {
   warehouses = 'warehouses',
   customers = 'customers',
   payments = 'payments',
-  invoices = 'invoices',
+  invoicing = 'invoicing',
   shipments = 'shipments',
   roles = 'roles',
 }
@@ -49,7 +49,7 @@ export interface AppService {
   [ServiceName.orders]: OrdersService;
   [ServiceName.customers]: CustomersService;
   [ServiceName.payments]: UsePaymentsService;
-  [ServiceName.invoices]: UseInvoicesService;
+  [ServiceName.invoicing]: UseInvoicingService;
   [ServiceName.shipments]: UseShipmentsService;
   [ServiceName.roles]: CustomRolesService;
 }
@@ -67,7 +67,7 @@ const useAppService = (): AppService => {
   const orders = useOrdersServiceHook();
   const customers = useCustomersService();
   const payments = usePaymentsServiceHook();
-  const invoices = useInvoicesService();
+  const invoicing = useInvoicingService();
   const shipments = useShipmentsService();
   const roles = useCustomRolesServiceHook();
 
@@ -85,7 +85,7 @@ const useAppService = (): AppService => {
     orders,
     customers,
     payments,
-    invoices,
+    invoicing,
     shipments,
   };
 };

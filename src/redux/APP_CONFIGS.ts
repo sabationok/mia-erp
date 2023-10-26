@@ -265,6 +265,7 @@ const invoices = {
   create: () => `${API_BASE_ROUTES.INVOICES}/${Endpoints.create}`,
   getAll: () => `${API_BASE_ROUTES.INVOICES}/${Endpoints.getAll}`,
   getAllMethods: () => `${API_BASE_ROUTES.INVOICES}/${Endpoints.methods}/${Endpoints.getAll}`,
+  updateMethod: (id?: string) => `${API_BASE_ROUTES.INVOICES}/${Endpoints.methods}/${Endpoints.update}/${id}`,
 };
 const shipments = {
   create: () => `${API_BASE_ROUTES.SHIPMENTS}/${Endpoints.create}`,
