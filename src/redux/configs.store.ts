@@ -1,7 +1,17 @@
+import { Storage, WebStorage } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import storageSession from 'redux-persist/lib/storage/session';
+import { AppModuleName } from './reduxTypes.types';
 
-export const persistorConfigs = {
+type Key = keyof typeof AppModuleName | string;
+export const persistorConfigs: Record<
+  Key,
+  {
+    key: Key;
+    storage: Storage | WebStorage;
+    whitelist: string[];
+  }
+> = {
   auth: {
     key: 'auth',
     storage,
@@ -71,6 +81,11 @@ export const persistorConfigs = {
     key: 'refunds',
     storage: storageSession,
     whitelist: ['refunds', 'currentRefund'],
+  },
+  integrations: {
+    key: 'integrations',
+    storage: storageSession,
+    whitelist: ['extList'],
   },
   warehouses: {
     key: 'warehouses',

@@ -12,7 +12,7 @@ import FlexBox from '../atoms/FlexBox';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import translate from '../../lang';
-import FormCreateInner from './components/FormCreateInner';
+import ExtraFooterWithButtonButton from './components/ExtraFooterWithButtonButton';
 import * as React from 'react';
 import { useState } from 'react';
 import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
@@ -95,7 +95,7 @@ const FormCreatePriceList: React.FC<FormCreatePriceListProps> = ({
       }}
       extraFooter={
         <FlexBox fxDirection={'column'} fillWidth>
-          {isSuccess && <FormCreateInner buttonText={'Add prices'} onClick={onAddPricesClick} />}
+          {isSuccess && <ExtraFooterWithButtonButton buttonText={'Add prices'} onClick={onAddPricesClick} />}
           <FormAfterSubmitOptions
             {...{
               clearAfterSave,

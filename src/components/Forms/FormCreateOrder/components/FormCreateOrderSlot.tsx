@@ -64,7 +64,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
   const { stepCheck, stepIdx, stepsCount, setPrevStep, setNextStep } = useStepsHandler(stepsLong);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [variations, setVariations] = useState<IVariationTableData[]>([]);
-  const [prices, setPrices] = useState<IPriceListItem[]>([]);
+  // const [prices, setPrices] = useState<IPriceListItem[]>([]);
   const [inventories, setInventories] = useState<IProductInventory[]>([]);
   const [formData, setFormData] = useState<FormCreateOrderSlotFormData>({});
 
@@ -166,25 +166,31 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
   }, [stepCheck, productTableConfig, variationsTableConfig, warehousingTableConfig]);
 
   const canGoNext = useMemo((): boolean => {
+    const { product, variation, inventory } = formData;
     if (stepCheck(FormCreateOrderSlotSteps.product)) {
-      return !!formData?.product;
+      return !!product;
     }
     if (stepCheck(FormCreateOrderSlotSteps.variation)) {
-      return !!formData?.product && !!formData?.variation;
+      if (inventories.length > 0) {
+        return !!product && !!variation;
+      }
+      return !!product;
     }
     if (stepCheck(FormCreateOrderSlotSteps.batch)) {
-      return !!formData?.inventory;
+      return !!inventory;
     }
     return false;
-  }, [formData?.inventory, formData?.product, formData?.variation, stepCheck]);
+  }, [formData, inventories.length, stepCheck]);
 
   const canSubmit = useMemo(() => {
     return Object.values(formData).length >= 4;
   }, [formData]);
 
   const loadData = useCallback(() => {
+    const { product, variation } = formData;
+
     if (stepCheck(FormCreateOrderSlotSteps.product)) {
-      createApiCall(
+      return createApiCall(
         {
           data: { search, searchBy },
           onSuccess: setProducts,
@@ -193,50 +199,34 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
         ProductsApi
       );
     }
-    if (stepCheck(FormCreateOrderSlotSteps.variation)) {
-      formData?.product &&
-        createApiCall(
-          {
-            data: { product: formData?.product },
-            onSuccess: d => {
-              const transformed = d.map(v => transformVariationTableData(v));
-              setVariations(transformed);
-            },
+    if (stepCheck(FormCreateOrderSlotSteps.variation) && product) {
+      return createApiCall(
+        {
+          data: { product: formData?.product },
+          onSuccess: d => {
+            const transformed = d.map(v => transformVariationTableData(v));
+            setVariations(transformed);
           },
-          VariationsApi.getAllByProductId,
-          VariationsApi
-        );
+        },
+        VariationsApi.getAll,
+        VariationsApi
+      );
     }
-    // if (stepCheck(FormCreateOrderSlotSteps.price)) {
-    //   formData?.product &&
-    //     createApiCall(
-    //       {
-    //         data: {
-    //           product: ExtractId(formData?.product),
-    //           variation: formData?.variation ? ExtractId(formData?.variation) : undefined,
-    //         },
-    //         onSuccess: setPrices,
-    //       },
-    //       PriceManagementApi.getAllPrices,
-    //       PriceManagementApi
-    //     );
-    // }
-    if (stepCheck(FormCreateOrderSlotSteps.batch)) {
-      formData?.product &&
-        createApiCall(
-          {
-            data: {
-              product: ExtractId(formData?.product),
-              variation: formData?.variation ? ExtractId(formData?.variation) : undefined,
-              warehouse: params?.warehouse,
-            },
-            onSuccess: setInventories,
+    if (stepCheck(FormCreateOrderSlotSteps.batch) && product) {
+      return createApiCall(
+        {
+          data: {
+            product: ExtractId(product),
+            variation: variation ? ExtractId(variation) : undefined,
+            warehouse: params?.warehouse,
           },
-          WarehousesApi.getAllInventories,
-          WarehousesApi
-        );
+          onSuccess: setInventories,
+        },
+        WarehousesApi.getAllInventories,
+        WarehousesApi
+      );
     }
-  }, [formData?.product, formData?.variation, params, search, searchBy, stepCheck]);
+  }, [formData, params?.warehouse, search, searchBy, stepCheck]);
 
   const handleSubmit: FormEventHandler = e => {
     e.preventDefault();
@@ -308,3 +298,18 @@ const Content = styled(FlexBox)`
 
 const Footer = styled(FlexBox)``;
 export default FormCreateOrderSlot;
+
+// if (stepCheck(FormCreateOrderSlotSteps.price)) {
+//   formData?.product &&
+//     createApiCall(
+//       {
+//         data: {
+//           product: ExtractId(formData?.product),
+//           variation: formData?.variation ? ExtractId(formData?.variation) : undefined,
+//         },
+//         onSuccess: setPrices,
+//       },
+//       PriceManagementApi.getAllPrices,
+//       PriceManagementApi
+//     );
+// }

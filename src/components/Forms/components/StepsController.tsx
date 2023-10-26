@@ -108,7 +108,7 @@ const StepsController = <V = any,>({
   }, [currentIndex]);
 
   return (
-    <Container fxDirection={'row'} gap={8} fillWidth overflow={'hidden'}>
+    <Container fxDirection={'row'} gap={8} fillWidth>
       {cancelButton && !isTablet && (
         <ActionButton variant={'defOutlinedSmall'} onClick={onCancelPress}>
           {t('Cancel')}

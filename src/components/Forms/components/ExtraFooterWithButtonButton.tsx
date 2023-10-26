@@ -7,7 +7,7 @@ export interface FormCreateInnerProps {
   onClick?: () => void;
 }
 
-const FormCreateInner: React.FC<FormCreateInnerProps> = ({ buttonText, onClick }) => {
+const ExtraFooterWithButtonButton: React.FC<FormCreateInnerProps> = ({ buttonText, onClick }) => {
   return (
     <Container fillWidth padding={'8px'}>
       <ButtonIcon variant={'outlinedSmall'} onClick={onClick}>
@@ -21,4 +21,4 @@ const Container = styled(FlexBox)`
   border-top: 1px solid ${({ theme }) => theme.modalBorderColor};
   border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;
-export default FormCreateInner;
+export default ExtraFooterWithButtonButton;

@@ -10,13 +10,14 @@ const directoriesForLoading: { dirType: ApiDirType; createTreeData?: boolean }[]
   { dirType: ApiDirType.CATEGORIES_PROD, createTreeData: true },
   { dirType: ApiDirType.ACTIVITIES, createTreeData: true },
   { dirType: ApiDirType.BRANDS, createTreeData: true },
-  { dirType: ApiDirType.PROPERTIES_PRODUCTS, createTreeData: true },
-  { dirType: ApiDirType.CONTRACTORS },
-  { dirType: ApiDirType.TAGS },
+  // { dirType: ApiDirType.CONTRACTORS },
+  // { dirType: ApiDirType.TAGS },
+  // { dirType: ApiDirType.METHODS_COMMUNICATION },
+  // { dirType: ApiDirType.PROPERTIES_PRODUCTS, createTreeData: true },
+
   // { dirType: ApiDirType.METHODS_PAYMENT },
   // { dirType: ApiDirType.METHODS_SHIPMENT },
-  { dirType: ApiDirType.METHODS_COMMUNICATION },
-  { dirType: ApiDirType.VARIATIONS },
+  // { dirType: ApiDirType.VARIATIONS },
 ];
 const useLoadInitialAppDataHook = ({
   onLoading,
@@ -32,10 +33,11 @@ const useLoadInitialAppDataHook = ({
   const {
     directories: { getAllByDirType },
     products,
-    // priceManagement,
-    // transactions,
-    // warehouses,
-    // payments,
+    priceManagement,
+    transactions,
+    warehouses,
+    payments,
+    integrations,
     shipments,
     invoicing,
   } = useAppServiceProvider();
@@ -62,21 +64,28 @@ const useLoadInitialAppDataHook = ({
           await prService.getAllByCompanyId({ data: { refresh: true, companyId: company._id } });
         }
 
-        await Promise.all([
-          // products.getAll({ data: { refresh: true } }),
+        await products.getAllProperties({ data: { params: { createTreeData: true } } });
 
-          // priceManagement.getAll({ data: { refresh: true } }),
-          // transactions.getAll({ data: { refresh: true } }),
-          // warehouses.getAll({ data: { refresh: true } }),
+        await invoicing.getAllMethods();
+        await payments.getAllMethods();
+        await shipments.getAllMethods();
 
-          products.getAllProperties({ data: { params: { createTreeData: true } } }),
-          invoicing.getAllMethods(),
-          shipments.getAllMethods(),
+        await products.getAll({ data: { refresh: true } });
 
+        await priceManagement.getAll({ data: { refresh: true } });
+        await transactions.getAll({ data: { refresh: true } });
+        await warehouses.getAll({ data: { refresh: true } });
+        await integrations.getAllExtServices();
+
+        await Promise.allSettled([
           ...directoriesForLoading.map(({ dirType, createTreeData }) => {
             return getAllByDirType({
               data: { dirType, params: { createTreeData } },
-              onSuccess: onSuccessToast(dirType),
+            });
+          }),
+          ...directoriesForLoading.map(({ dirType, createTreeData }) => {
+            return getAllByDirType({
+              data: { dirType, params: { createTreeData } },
             });
           }),
         ]);

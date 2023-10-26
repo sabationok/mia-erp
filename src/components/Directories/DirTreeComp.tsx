@@ -1,5 +1,5 @@
 import ModalForm from '../ModalForm';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
 import { useDirService, useFilteredLisData } from '../../hooks';
 import { useDirectoriesSelector } from '../../redux/selectors.store';
@@ -9,7 +9,7 @@ import FlexBox from '../atoms/FlexBox';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { DirInTreeActionsCreatorType, IDirItemBase } from './dir.types';
 import { RenderModalComponentChildrenProps } from '../ModalProvider/ModalComponent';
-import FormCreateInner from '../Forms/components/FormCreateInner';
+import ExtraFooterWithButtonButton from '../Forms/components/ExtraFooterWithButtonButton';
 
 export interface DirTreeComponentProps extends RenderModalComponentChildrenProps {
   createParentTitle?: string;
@@ -44,6 +44,13 @@ const DirTreeComp = ({
     [actionsCreator, current, service, dirType, modalService]
   );
 
+  useEffect(() => {
+    if (!directory.length) {
+      service.getAllByDirType({ data: { dirType } });
+    }
+    // eslint-disable-next-line
+  }, []);
+
   function handleFilterData({ value }: FilterOpt) {
     value && setCurrent(value);
   }
@@ -76,7 +83,10 @@ const DirTreeComp = ({
       onOptSelect={handleFilterData}
       extraFooter={
         actions?.onCreateParent && (
-          <FormCreateInner buttonText={createParentTitle || 'Create parent'} onClick={actions?.onCreateParent} />
+          <ExtraFooterWithButtonButton
+            buttonText={createParentTitle || 'Create parent'}
+            onClick={actions?.onCreateParent}
+          />
         )
       }
     >

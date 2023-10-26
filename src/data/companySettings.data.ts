@@ -145,6 +145,9 @@ export const companySettings: IDirectoryListItem[] = [
     modalChildrenProps: CustomRolesProps,
     disabled: true,
   },
+
+  integrations,
+
   {
     title: t('Invoicing methods'),
     iconId: iconId.assignment,
@@ -216,6 +219,5 @@ export const companySettings: IDirectoryListItem[] = [
     disabled: true,
   },
 
-  integrations,
   warehousingSettings,
 ];

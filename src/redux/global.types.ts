@@ -3,8 +3,9 @@ import { AxiosResponse } from 'axios';
 import { ApiCallerPayload } from '../api/createApiCall.api';
 import { ApiDirType } from './APP_CONFIGS';
 
+export type UUID = string;
 export interface OnlyUUID {
-  _id: string;
+  _id: UUID;
 }
 
 export type ArrayUUID = Array<string>;

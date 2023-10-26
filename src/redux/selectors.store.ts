@@ -19,6 +19,7 @@ import { CustomersState } from './customers/customers.slice';
 import { PaymentsState } from './payments/payments.slice';
 import { InvoicesState } from './invoices/invoices.slice';
 import { ShipmentsState } from './shipments/shipments.slice';
+import { IntegrationsState } from './integrations/integrations.slice';
 
 export const useAuthSelector = () => useSelector<RootState, IAuthState>((state: RootState) => state.auth);
 export const useUsersSelector = () => useSelector<RootState, IUsersState>((state: RootState) => state.users);
@@ -28,6 +29,9 @@ export const useCustomersSelector = () => useSelector<RootState, CustomersState>
 export const usePaymentsSelector = () => useSelector<RootState, PaymentsState>((state: RootState) => state.payments);
 export const useInvoicesSelector = () =>
   useSelector<RootState, InvoicesState>((state: RootState) => state['invoicing']);
+
+export const useIntegrationsSelector = () =>
+  useSelector<RootState, IntegrationsState>((state: RootState) => state['integrations']);
 export const useShipmentsSelector = () => useSelector<RootState, ShipmentsState>((state: RootState) => state.shipments);
 export const useAppPageSettingsSelector = () => useSelector((state: RootState) => state.appPage);
 export const useTransactionsSelector = (): ITransactionsState =>

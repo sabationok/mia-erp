@@ -15,78 +15,48 @@ import usePaymentsServiceHook, { UsePaymentsService } from './usePaymentsService
 import useShipmentsService, { UseShipmentsService } from './useShipmentsService.hook';
 import useCustomRolesServiceHook, { CustomRolesService } from './useCustomRolesService.hook';
 import useInvoicingService, { UseInvoicingService } from './useInvoicingService.hook';
+import { AppModuleName } from '../redux/reduxTypes.types';
+import useIntegrationsService, { UseIntegrationsService } from './useIntegrationsService.hook';
 
-export enum ServiceName {
-  permissions = 'permissions',
-  transactions = 'transactions',
-  products = 'products',
-  customRoles = 'customRoles',
-  storage = 'storage',
-  directories = 'directories',
-  auth = 'auth',
-  orders = 'orders',
-  priceManagement = 'priceManagement',
-  appSettings = 'appSettings',
-  companies = 'companies',
-  warehouses = 'warehouses',
-  customers = 'customers',
-  payments = 'payments',
-  invoicing = 'invoicing',
-  shipments = 'shipments',
-  roles = 'roles',
-}
-
+export { AppModuleName as ServiceName } from '../redux/reduxTypes.types';
 export interface AppService {
-  [ServiceName.permissions]: PermissionService;
-  [ServiceName.products]: ProductsService;
-  [ServiceName.transactions]: TransactionsService;
-  [ServiceName.directories]: DirectoriesService;
-  [ServiceName.priceManagement]: PriceManagementService;
-  [ServiceName.appSettings]: AppSettingsService;
-  [ServiceName.companies]: CompaniesService;
-  [ServiceName.warehouses]: WarehousesService;
-  [ServiceName.auth]: AuthService;
-  [ServiceName.orders]: OrdersService;
-  [ServiceName.customers]: CustomersService;
-  [ServiceName.payments]: UsePaymentsService;
-  [ServiceName.invoicing]: UseInvoicingService;
-  [ServiceName.shipments]: UseShipmentsService;
-  [ServiceName.roles]: CustomRolesService;
+  [AppModuleName.permissions]: PermissionService;
+  [AppModuleName.products]: ProductsService;
+  [AppModuleName.transactions]: TransactionsService;
+  [AppModuleName.directories]: DirectoriesService;
+  [AppModuleName.priceManagement]: PriceManagementService;
+  [AppModuleName.appSettings]: AppSettingsService;
+  [AppModuleName.companies]: CompaniesService;
+  [AppModuleName.warehouses]: WarehousesService;
+  [AppModuleName.auth]: AuthService;
+  [AppModuleName.orders]: OrdersService;
+  [AppModuleName.customers]: CustomersService;
+  [AppModuleName.payments]: UsePaymentsService;
+  [AppModuleName.invoicing]: UseInvoicingService;
+  [AppModuleName.shipments]: UseShipmentsService;
+  [AppModuleName.roles]: CustomRolesService;
+  [AppModuleName.integrations]: UseIntegrationsService;
 }
+
 // const isDevMode = ConfigService.isDevMode();
 const useAppService = (): AppService => {
-  const auth = useAppAuthHook();
-  const permissions = usePermissionsServiceHook();
-  const products = useProductsServiceHook();
-  const transactions = useTransactionsServiceHook();
-  const directories = useDirService();
-  const priceManagement = usePriceManagementServiceHook();
-  const appSettings = useAppSettingsHook();
-  const companies = useCompaniesService();
-  const warehouses = useWarehousesServiceHook();
-  const orders = useOrdersServiceHook();
-  const customers = useCustomersService();
-  const payments = usePaymentsServiceHook();
-  const invoicing = useInvoicingService();
-  const shipments = useShipmentsService();
-  const roles = useCustomRolesServiceHook();
-
   return {
-    auth,
-    permissions,
-    roles,
-    appSettings,
-    companies,
-    transactions,
-    directories,
-    products,
-    priceManagement,
-    warehouses,
-    orders,
-    customers,
-    payments,
-    invoicing,
-    shipments,
+    auth: useAppAuthHook(),
+    permissions: usePermissionsServiceHook(),
+    products: useProductsServiceHook(),
+    transactions: useTransactionsServiceHook(),
+    directories: useDirService(),
+    priceManagement: usePriceManagementServiceHook(),
+    appSettings: useAppSettingsHook(),
+    companies: useCompaniesService(),
+    warehouses: useWarehousesServiceHook(),
+    orders: useOrdersServiceHook(),
+    customers: useCustomersService(),
+    payments: usePaymentsServiceHook(),
+    invoicing: useInvoicingService(),
+    shipments: useShipmentsService(),
+    roles: useCustomRolesServiceHook(),
+    integrations: useIntegrationsService(),
   };
 };
 export const AppServiceCTX = createContext<AppService>({} as AppService);

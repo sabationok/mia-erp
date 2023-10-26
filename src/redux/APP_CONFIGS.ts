@@ -285,7 +285,7 @@ const integrations = {
   createInt: () => `${API_BASE_ROUTES.INTEGRATIONS}/internal/${Endpoints.create}`,
   createExt: () => `${API_BASE_ROUTES.INTEGRATIONS}/external/${Endpoints.create}`,
   update: () => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.update}`,
-  getAll: () => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.getAll}`,
+  getAll: (type?: 'external' | 'internal') => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.getAll}/${type ?? ''}`,
   getAllExtIntegrationServices: () => `${API_BASE_ROUTES.INTEGRATIONS}/services/${Endpoints.getAll}`,
   getById: (id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/${Endpoints.getById}/${id}`,
 };

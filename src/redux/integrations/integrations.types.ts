@@ -59,6 +59,7 @@ export interface ExtIntegrationBase extends IBase {
 
   apiKey?: string; // !
   secret?: string; // !
+  hasSecret?: boolean;
   expiredAt?: string | Date;
   login?: string;
 
@@ -66,6 +67,7 @@ export interface ExtIntegrationBase extends IBase {
   label?: string;
   description?: string;
 }
+export interface IntIntegrationBase extends ExtIntegrationBase {}
 
 export interface ExtIntegrationBaseDto {
   service?: OnlyUUID;

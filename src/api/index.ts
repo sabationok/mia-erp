@@ -3,7 +3,7 @@ import baseApi, { baseURL, token } from './baseApi';
 import { createApiCall } from './createApiCall.api';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { FilterReturnDataType } from '../components/Filter/AppFilter';
-import { OnlyUUID } from '../redux/global.types';
+import { OnlyUUID, UUID } from '../redux/global.types';
 
 export { default as TransactionsApi } from './transactions.api';
 export { default as CompaniesApi } from './companies.api';
@@ -32,7 +32,9 @@ export enum AppQueryKey {
   timeTo = 'timeTo',
   filterParams = 'filterParams',
 }
-export interface AppQueryParams<Type = any> {
+
+export interface AppQueryParams<Type = any> extends Record<string, any> {
+  type?: Type;
   dirType?: ApiDirType;
   isArchived?: boolean;
   deleted?: boolean;
@@ -42,7 +44,6 @@ export interface AppQueryParams<Type = any> {
   sortParams?: ISortParams;
   search?: string;
   searchBy?: string;
-  type?: Type;
 
   fullInfo?: boolean;
 
@@ -60,12 +61,33 @@ export interface AppQueryParams<Type = any> {
   payment?: OnlyUUID;
   invoice?: OnlyUUID;
   shipment?: OnlyUUID;
+  service?: OnlyUUID;
 
   categories?: string[];
 
   timeFrom?: string | number | Date;
   timeTo?: string | number | Date;
   filterParams?: Partial<FilterReturnDataType>;
+}
+
+export interface AppQueries<Type = any> extends Record<string, any> {
+  type?: Type;
+
+  ownerId?: UUID;
+  parentId?: UUID;
+  productId?: UUID;
+  inventoryId?: UUID;
+  warehouseId?: UUID;
+  variationId?: UUID;
+  listId?: UUID;
+  priceId?: UUID;
+  orderId?: UUID;
+  slotId?: UUID;
+  categoryId?: UUID;
+  paymentId?: UUID;
+  invoiceId?: UUID;
+  shipmentId?: UUID;
+  serviceId?: UUID;
 }
 
 export type SortOrder = 'desc' | 'asc' | 'descending' | 'ascending' | 'DESC' | 'ASC';

@@ -54,18 +54,8 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
 
   const [isStepFinished, setIsStepFinished] =
     useState<Record<FormCreateOrdersGroupStepsEnum | string, boolean>>(stepsProcessInitialState);
-  const handleFinishStep = (name: keyof typeof FormCreateOrdersGroupStepsEnum) => (value: boolean) => {
+  const handleValidStatus = (name: keyof typeof FormCreateOrdersGroupStepsEnum) => (value: boolean) => {
     setIsStepFinished(p => ({ ...p, [FormCreateOrdersGroupStepsEnum[name]]: value }));
-  };
-
-  const getDefaultValues = () => {
-    try {
-      const cloned = _.cloneDeep(currentGroupFormState.info);
-      return cloned!;
-    } catch (e) {
-      console.log('getDefaultValues', e);
-      return currentGroupFormState.info!;
-    }
   };
 
   const formOrderInfo = useForm<ICreateOrderInfoFormState>({
@@ -78,15 +68,15 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
 
   const renderStep = useMemo(() => {
     if (stepsMap?.Stuffing) {
-      return <OrderGroupsStuffingStep onChangeValidStatus={handleFinishStep('Stuffing')} />;
+      return <OrderGroupsStuffingStep onChangeValidStatus={handleValidStatus('Stuffing')} />;
     }
     if (stepsMap?.Info) {
       return (
-        <OrderInfoStep isGroup getFormMethods={() => formOrderInfo} onChangeValidStatus={handleFinishStep('Info')} />
+        <OrderInfoStep isGroup getFormMethods={() => formOrderInfo} onChangeValidStatus={handleValidStatus('Info')} />
       );
     }
     if (stepsMap?.Confirmation) {
-      return <OrderConfirmationStep onFinish={handleFinishStep('Confirmation')} />;
+      return <OrderConfirmationStep onFinish={handleValidStatus('Confirmation')} />;
     }
   }, [formOrderInfo, stepsMap?.Confirmation, stepsMap?.Info, stepsMap?.Stuffing]);
 

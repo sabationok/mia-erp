@@ -5,13 +5,13 @@ import { enumToFilterOptions } from '../../utils/fabrics';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { ModalHeader } from '../atoms';
-import InvoicesIntegrationsTab from './integrations/InvoicesIntegrationsTab';
+import InvoicingIntegrationsTab from './integrations/InvoicingIntegrationsTab';
 import ShipmentsIntegrationsTab from './integrations/ShipmentsIntegrationsTab';
 import ModalFilter from '../ModalForm/ModalFilter';
-import { AppQueryParams, createApiCall } from '../../api';
-import IntegrationsApi from '../../api/integrations.api';
+import { AppQueryParams } from '../../api';
 import { ExtIntegrationServiceTypeEnum, ExtServiceBase } from '../../redux/integrations/integrations.types';
 import ModalFooter from '../ModalForm/ModalFooter';
+import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 
 export interface CompanyIntegrationsProps extends Omit<ModalFormProps, 'onSubmit'> {}
 
@@ -27,7 +27,7 @@ const tabsMap: Record<
   ExtIntegrationServiceTypeEnum | string,
   <P = any>(props: IntegrationTabProps & P) => ReactElement<P> | null
 > = {
-  [ExtServiceTabs.invoicing]: InvoicesIntegrationsTab,
+  [ExtServiceTabs.invoicing]: InvoicingIntegrationsTab,
   [ExtServiceTabs.shipment]: ShipmentsIntegrationsTab,
 };
 
@@ -35,7 +35,8 @@ const tabs = enumToFilterOptions(ExtServiceTabs);
 
 const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose, ...props }) => {
   const [currentType, setCurrentType] = useState(tabs[0].value);
-  const { loadProviders, extServProviders } = useExtServProvidersQuery();
+
+  const { loadExtServices, extServProviders } = useExtServProvidersQuery();
 
   const providers = useMemo(() => {
     return extServProviders.filter(prov => prov?.originServices && prov.originServices[currentType]);
@@ -43,7 +44,7 @@ const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose,
 
   useEffect(() => {
     if (extServProviders.length === 0) {
-      loadProviders();
+      loadExtServices();
     }
     // eslint-disable-next-line
   }, []);
@@ -52,7 +53,7 @@ const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose,
 
   return (
     <Container overflow={'hidden'} fillWidth>
-      <StHeader title={'Company settings'} onClose={onClose} />
+      <StHeader title={'External services'} onClose={onClose} />
 
       <ModalFilter filterOptions={tabs} onOptSelect={info => setCurrentType(info?.value)} />
 
@@ -85,16 +86,18 @@ export default CompanyIntegrationsModal;
 export function useExtServProvidersQuery() {
   const [extServProviders, setExtServProviders] = useState<ExtServiceBase[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { integrations } = useAppServiceProvider();
 
-  const loadProviders = ({ params }: { params?: AppQueryParams } = {}) =>
-    createApiCall(
-      { data: params, onSuccess: setExtServProviders, onLoading: setIsLoading, logResData: true },
-      IntegrationsApi.getAllExtIntegrationServices,
-      IntegrationsApi
-    );
+  const loadExtServices = ({ params }: { params?: AppQueryParams } = {}) => {
+    integrations.getAllExtServices({
+      data: { params },
+      onSuccess: setExtServProviders,
+      onLoading: setIsLoading,
+    });
+  };
 
   return {
-    loadProviders,
+    loadExtServices,
     extServProviders,
     isLoading,
   };

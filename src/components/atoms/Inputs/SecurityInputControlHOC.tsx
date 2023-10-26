@@ -24,7 +24,7 @@ const InputSecurityControlHOC = ({
 
   return (
     <FlexBox style={{ position: 'relative' }} fillWidth>
-      {renderInput ? renderInput({ type: isVisible ? 'password' : htmlType, style: { paddingRight: 36 } }) : children}
+      {renderInput ? renderInput({ type: !isVisible ? 'password' : htmlType, style: { paddingRight: 36 } }) : children}
 
       <SecurityButton
         variant={'onlyIcon'}
