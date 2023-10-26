@@ -8,6 +8,7 @@ import ModalFilter from '../../ModalForm/ModalFilter';
 import { useModalService } from '../../ModalProvider/ModalProvider';
 import FormCreateIntegration from '../../Forms/FormCreateIntegration';
 import { ExtIntegrationBase } from '../../../redux/integrations/integrations.types';
+import { useTranslatedPaymentMethods } from '../../../hooks/useTranslatedMethods.hook';
 
 export interface InvoicesIntegrationsTabProps extends IntegrationTabProps {}
 
@@ -15,6 +16,8 @@ const InvoicesIntegrationsTab: React.FC<InvoicesIntegrationsTabProps> = ({ provi
   const [provider, setProvider] = useState<string>();
   const [integrationsList, setIntegrationsList] = useState<ExtIntegrationBase[]>([]);
   const modalS = useModalService();
+
+  const paymentMethods = useTranslatedPaymentMethods();
 
   const currentProviderData = useMemo(() => {
     return providers?.find(pr => pr.value === provider);
@@ -32,17 +35,26 @@ const InvoicesIntegrationsTab: React.FC<InvoicesIntegrationsTabProps> = ({ provi
       });
   };
 
-  const paymentCheckoutTypes = useMemo(
-    () =>
-      currentProviderData?.originServices?.checkout?.map(chType => {
-        return (
-          <FlexBox key={chType} border={'1px solid lightgrey'} padding={'4px 6px'} borderRadius={'4px'}>
-            <Text $size={10}>{t(chType)}</Text>
-          </FlexBox>
-        );
-      }),
-    [currentProviderData?.originServices?.checkout]
-  );
+  const paymentCheckoutTypes = useMemo(() => {
+    // currentProviderData?.originServices?.checkout?.map(chType => {
+    //   return (
+    //     <FlexBox key={chType} border={'1px solid lightgrey'} padding={'4px 6px'} borderRadius={'4px'}>
+    //       <Text $size={10}>{t(chType)}</Text>
+    //     </FlexBox>
+    //   );
+    // }),
+    const methods = paymentMethods.filter(m => {
+      return m.service?._id === currentProviderData?._id;
+    });
+
+    return methods.map(m => {
+      return (
+        <FlexBox key={m._id} border={'1px solid lightgrey'} padding={'4px 6px'} borderRadius={'4px'}>
+          <Text $size={10}>{m.label}</Text>
+        </FlexBox>
+      );
+    });
+  }, [currentProviderData?._id, paymentMethods]);
 
   const renderIntegrations = useMemo(() => {
     return integrationsList.map(int => {

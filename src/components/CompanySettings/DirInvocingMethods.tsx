@@ -6,19 +6,19 @@ import FlexBox from '../atoms/FlexBox';
 
 import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../Directories/dir.types';
 import DirListItem from '../Directories/DirList/DirListItem';
-import { IPaymentMethod } from '../../redux/payments/payments.types';
-import usePaymentsServiceHook from '../../hooks/usePaymentsService.hook';
-import { useTranslatedPaymentMethods } from '../../hooks/useTranslatedMethods.hook';
+import { useTranslatedInvoicingMethods } from '../../hooks/useTranslatedMethods.hook';
+import { IInvoicingMethod } from '../../redux/invoices/invoices.types';
+import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 
-export interface DirPaymentMethodsProps
-  extends IDirInTreeProps<MethodDirType, IPaymentMethod, IPaymentMethod, IPaymentMethod> {
+export interface DirInvoicingMethodsProps
+  extends IDirInTreeProps<MethodDirType, IInvoicingMethod, IInvoicingMethod, IInvoicingMethod> {
   updating?: boolean;
   disabling?: boolean;
   archiving?: boolean;
   creating?: boolean;
 }
 
-const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
+const DirInvoicingMethods: React.FC<DirInvoicingMethodsProps> = ({
   createParentTitle,
   availableLevels,
   actionsCreator,
@@ -29,13 +29,14 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
   creating,
   ...props
 }) => {
-  const service = usePaymentsServiceHook();
+  const service = useAppServiceProvider()[ServiceName.invoicing];
+  const methods = useTranslatedInvoicingMethods();
+
   const modalService = useModalProvider();
-  const methods = useTranslatedPaymentMethods();
 
   const actions = useMemo(
     () =>
-      actionsCreatorForDirPaymentMethods({
+      actionsCreatorForDirInvoicingMethods({
         service,
         modalService,
         dirType,
@@ -44,7 +45,7 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
   );
 
   // const listByProviders = useMemo(() => {
-  //   let providers: Record<string, PaymentServProvider & { childrenList: IPaymentMethod[] }> = {};
+  //   let providers: Record<string, PaymentServProvider & { childrenList: IInvoicingMethod[] }> = {};
   //   methods.map(m => {
   //     if (m.parent) {
   //       const current = providers[m.parent._id] || m.parent;
@@ -69,7 +70,7 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
           disabling
           {...props}
           {...actions}
-          item={item}
+          item={{ ...item, label: item?.fullLabel }}
           creatingChild={false}
           availableLevels={1}
           currentLevel={0}
@@ -82,6 +83,7 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
     service.getAllMethods();
     // eslint-disable-next-line
   }, []);
+
   return (
     <StModalForm style={{ maxWidth: 480 }} {...props}>
       <FlexBox fillWidth flex={'1'} gap={8} padding={'8px 4px'}>
@@ -93,20 +95,20 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
 
 const StModalForm = styled(ModalForm)``;
 
-export default memo(DirPaymentMethods);
+export default memo(DirInvoicingMethods);
 
-const actionsCreatorForDirPaymentMethods: DirInTreeActionsCreatorType<
+const actionsCreatorForDirInvoicingMethods: DirInTreeActionsCreatorType<
   MethodDirType,
-  IPaymentMethod,
+  IInvoicingMethod,
   any,
-  IPaymentMethod
+  IInvoicingMethod
 > = () => {
   return {
     onUpdate: (id, data, options) => {
-      console.log('IPaymentMethod onUpdate', data);
+      console.log('IInvoc onUpdate', data);
     },
     onChangeDisableStatus: (id, status, options) => {
-      console.log('IPaymentMethod onChangeDisableStatus', id, status);
+      console.log('IInvoc onChangeDisableStatus', id, status);
     },
   };
 };

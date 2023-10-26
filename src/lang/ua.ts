@@ -201,6 +201,7 @@ export const langUa = {
   Payment: 'Оплата',
   'Payment method': 'Спосіб оплати',
   'Payment methods': 'Способи оплати',
+  'Invoicing methods': 'Типи інвойсів',
   'Add payment method': 'Додати спосіб оплати',
   'Update payment method': 'Оновити спосіб оплати',
 

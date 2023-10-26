@@ -16,7 +16,7 @@ import TagButtonsFilter from 'components/atoms/TagButtonsFilter';
 import SelectManagerModal from '../components/SelectManagerModal';
 import { FormOrderStepBaseProps } from '../formOrder.types';
 import CheckboxesListSelector from 'components/atoms/CheckboxesListSelector';
-import { useTranslatedPaymentMethods } from 'hooks/useTranslatedPaymentMethods.hook';
+import { useTranslatedPaymentMethods } from 'hooks/useTranslatedMethods.hook';
 import { ServiceName, useAppServiceProvider } from 'hooks/useAppServices.hook';
 import useTranslatedShipmentMethods from 'hooks/useTranslatedShipmentMethods.hook';
 import ButtonSwitch from '../../../atoms/ButtonSwitch';

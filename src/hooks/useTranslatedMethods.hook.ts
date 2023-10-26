@@ -1,4 +1,4 @@
-import { usePaymentsSelector } from '../redux/selectors.store';
+import { useInvoicesSelector, usePaymentsSelector } from '../redux/selectors.store';
 import { useMemo } from 'react';
 import { getTranslatedString, LangKey } from '../lang';
 import { IPaymentMethod } from '../redux/payments/payments.types';
@@ -19,17 +19,20 @@ export const useTranslatedPaymentMethods = (langKey: LangKey = 'ua') => {
       return {
         ...el,
         value: el._id,
-        label: el.lang ? getTranslatedString(el.lang, langKey) : el.label,
+        label: el.labels ? getTranslatedString(el.labels, langKey) : el.label,
         service: parent,
         parent,
       };
     });
   }, [langKey, paymentsState.methods]);
 };
-const useTranslatedInvoicingMethods = (langKey: LangKey = 'ua') => {
-  const paymentsState = usePaymentsSelector();
-  return useMemo((): (IInvoicingMethod & { parent?: ExtPaymentService })[] => {
-    return paymentsState.methods.map(el => {
+export const useTranslatedInvoicingMethods = (langKey: LangKey = 'ua') => {
+  const invState = useInvoicesSelector();
+
+  return useMemo((): (IInvoicingMethod & { parent?: ExtPaymentService; fullLabel?: string })[] => {
+    return invState.methods.map(el => {
+      const label = el.labels ? getTranslatedString(el.labels, langKey) : el.label;
+
       const parent = el?.service
         ? {
             ...el?.service,
@@ -41,10 +44,11 @@ const useTranslatedInvoicingMethods = (langKey: LangKey = 'ua') => {
       return {
         ...el,
         value: el._id,
-        label: el.lang ? getTranslatedString(el.lang, langKey) : el.label,
+        label: label,
+        fullLabel: parent?.label ? `${parent?.label} | ${label}` : label,
         service: parent,
         parent,
       };
     });
-  }, [langKey, paymentsState.methods]);
+  }, [langKey, invState.methods]);
 };

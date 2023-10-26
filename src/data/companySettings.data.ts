@@ -14,6 +14,7 @@ import { t } from '../lang';
 import Forms from '../components/Forms';
 import DirPaymentMethods from '../components/CompanySettings/DirPaymentMethods';
 import DirShipmentsMethods from '../components/CompanySettings/DirShipmentsMethods';
+import DirInvocingMethods from '../components/CompanySettings/DirInvocingMethods';
 
 const UsersProps: DirUsersProps = {
   title: 'Користувачі',
@@ -142,6 +143,23 @@ export const companySettings: IDirectoryListItem[] = [
     iconId: iconId.lockPerson,
     ModalChildren: DirCustomRoles,
     modalChildrenProps: CustomRolesProps,
+    disabled: true,
+  },
+  {
+    title: t('Invoicing methods'),
+    iconId: iconId.assignment,
+    ModalChildren: DirInvocingMethods,
+    modalChildrenProps: {
+      title: t('Invoicing methods'),
+      dirType: ApiDirType.METHODS_INVOICING,
+      createParentTitle: t('Add invoicing method'),
+      changeDisableStatus: true,
+      availableLevels: 1,
+      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {
+        createParentTitle: t('Add invoicing method'),
+        updateItemTitle: t('Update invoicing method'),
+      }),
+    },
     disabled: true,
   },
   {

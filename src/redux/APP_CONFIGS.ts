@@ -101,6 +101,7 @@ export enum ApiDirType {
   STATUSES_PAYMENT = 'statuses_payment',
   STATUSES_INVOICE = 'statuses_invoice',
   METHODS_PAYMENT = 'methods_payment',
+  METHODS_INVOICING = 'methods_invoicing',
   METHODS_SHIPMENT = 'methods_shipment',
   METHODS_COMMUNICATION = 'methods_communication',
   SOURCE_ATTRACTION = 'attractionSource',
