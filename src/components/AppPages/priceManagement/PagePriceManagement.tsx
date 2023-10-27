@@ -1,18 +1,18 @@
 import TableList from 'components/TableList/TableList';
-import { takeFullGridArea } from './pagesStyles';
+import { takeFullGridArea } from '../pagesStyles';
 import styled from 'styled-components';
 import { useEffect, useMemo, useState } from 'react';
-import { ITableListProps } from '../TableList/tableTypes.types';
-import AppGridPage from './AppGridPage';
-import { usePriceListsSelector } from '../../redux/selectors.store';
-import { ISortParams } from '../../api';
-import { FilterReturnDataType } from '../Filter/AppFilter';
-import usePriceManagementServiceHook from '../../hooks/usePriceManagementService.hook';
-import usePriceManagementActionsCreatorHook from '../../hooks/usePriceManagementActionsCreator.hook';
-import { IPriceList } from '../../redux/priceManagement/priceManagement.types';
+import { ITableListProps } from '../../TableList/tableTypes.types';
+import AppGridPage from '../AppGridPage';
+import { usePriceListsSelector } from '../../../redux/selectors.store';
+import { ISortParams } from '../../../api';
+import { FilterReturnDataType } from '../../Filter/AppFilter';
+import usePriceManagementServiceHook from '../../../hooks/usePriceManagementService.hook';
+import usePriceManagementActionsCreatorHook from '../../../hooks/usePriceManagementActionsCreator.hook';
+import { IPriceList } from '../../../redux/priceManagement/priceManagement.types';
 import { useNavigate } from 'react-router-dom';
-import { BaseAppPageProps } from './index';
-import { priceListColumns } from '../../data/priceManagement.data';
+import { BaseAppPageProps } from '../index';
+import { priceListColumns } from '../../../data/priceManagement.data';
 
 interface Props extends BaseAppPageProps {}
 const PagePriceManagement: React.FC<BaseAppPageProps> = (props: Props) => {

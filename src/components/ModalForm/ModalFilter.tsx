@@ -29,9 +29,15 @@ export interface FilterOption<V = any, D = any> extends Record<string, any> {
   value: V;
   data?: D;
   color?: string;
-  extraLabel?: string | React.ReactNode;
-  getLabel?: (data?: D) => string | React.ReactNode;
+  extraLabel?: React.ReactNode;
+  getLabel?: (data?: D) => React.ReactNode;
   disabled?: boolean;
+  isActive?: boolean;
+}
+
+export interface DynamicFilterOption<V = any> extends FilterOption<V> {
+  onPress?: () => void;
+  onSelect?: (option: FilterOption<V>) => void;
 }
 // export type FilterOptionSelectHandler<V = any, D = any> = (option: FilterOpt<V, D>, value: V, index: number) => void;
 

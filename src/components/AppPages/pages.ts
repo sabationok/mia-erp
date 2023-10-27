@@ -11,24 +11,24 @@ export const PageAuth = lazy(() => import('./PageAuth'));
 export const PageTransactions = lazy(() => import('./PageTransactions'));
 
 // * PRODUCTS
-export const PageProducts = lazy(() => import('./PageProducts'));
+export const PageProducts = lazy(() => import('./offersManagement/PageProducts'));
 export const PageProductOverview = lazy(() => import('./PageProductOverview/PageProductOverview'));
 
 // * PRICE MANAGEMENT
-export const PagePriceManagement = lazy(() => import('./PagePriceManagement'));
-export const PagePriceListOverview = lazy(() => import('./PagePriceListOverview'));
+export const PagePriceManagement = lazy(() => import('./priceManagement/PagePriceManagement'));
+export const PagePriceListOverview = lazy(() => import('./priceManagement/PagePriceListOverview'));
 
 // * WAREHOUSING
-export const PageWarehouses = lazy(() => import('./PageWarehouses'));
-export const PageWarehouseOverview = lazy(() => import('./PageWarehouseOverview'));
+export const PageWarehouses = lazy(() => import('./warehousing/PageWarehouses'));
+export const PageWarehouseOverview = lazy(() => import('./warehousing/PageWarehouseOverview'));
 
 // * ORDERS
-export const PageOrders = lazy(() => import('./PageOrders'));
-export const PageOrderOverview = lazy(() => import('./OrderPages/PageOrderOverview'));
+export const PageOrders = lazy(() => import('./orders/PageOrders'));
+export const PageOrderOverview = lazy(() => import('./orders/PageOrderOverview'));
 
 // * CUSTOMERS
 export const PageCustomers = lazy(() => import('./customers/PageCustomers'));
 export const PageCustomerOverview = lazy(() => import('./customers/PageCustomerOverview'));
 // * REFUNDS
-export const PageRefunds = lazy(() => import('./PageRefunds'));
+export const PageRefunds = lazy(() => import('./refundsManagement/PageRefunds'));
 export const AppGridPage = lazy(() => import('./AppGridPage'));

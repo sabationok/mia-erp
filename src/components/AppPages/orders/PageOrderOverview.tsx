@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import { takeFullGridArea } from '../pagesStyles';
 import { AppGridPage } from '../pages';
 import { useAppParams } from '../../../hooks';
-import PageCurrentOrderProvider from './PageCurrentOrderProvider';
 import PageOverlayProvider from '../../atoms/PageOverlayProvider';
 import PageOrderOverviewLeftSide from './PageOrderOverviewLeftSide';
 import PageOrderOverviewTabs from './PageOrderOverviewTabs';
 import { BaseAppPageProps } from '../index';
+import PageCurrentOrderProvider from './PageCurrentOrderProvider';
 
 interface Props extends BaseAppPageProps {}
 

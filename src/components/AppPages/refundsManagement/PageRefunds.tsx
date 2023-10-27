@@ -1,16 +1,16 @@
 import TableList from 'components/TableList/TableList';
-import { takeFullGridArea } from './pagesStyles';
+import { takeFullGridArea } from '../pagesStyles';
 import styled from 'styled-components';
 import { useMemo, useState } from 'react';
-import { ITableListProps } from '../TableList/tableTypes.types';
-import AppGridPage from './AppGridPage';
-import { useRefundsSelector } from '../../redux/selectors.store';
-import { ISortParams } from '../../api';
-import { FilterReturnDataType } from '../Filter/AppFilter';
-import { mockOrdersData, ordersTableColumns } from '../../data/orders.data';
-import { IRefund } from '../../redux/refunds/refunds.types';
-import useOrdersServiceHook from '../../hooks/useOrdersService.hook';
-import { BaseAppPageProps } from './index';
+import { ITableListProps } from '../../TableList/tableTypes.types';
+import AppGridPage from '../AppGridPage';
+import { useRefundsSelector } from '../../../redux/selectors.store';
+import { ISortParams } from '../../../api';
+import { FilterReturnDataType } from '../../Filter/AppFilter';
+import { mockOrdersData, ordersTableColumns } from '../../../data/orders.data';
+import { IRefund } from '../../../redux/refunds/refunds.types';
+import useOrdersServiceHook from '../../../hooks/useOrdersService.hook';
+import { BaseAppPageProps } from '../index';
 
 interface Props extends BaseAppPageProps {}
 

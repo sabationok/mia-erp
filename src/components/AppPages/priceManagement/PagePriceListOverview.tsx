@@ -1,20 +1,20 @@
-import { useAppParams } from '../../hooks';
-import { AppGridPage } from './pages';
+import { useAppParams } from '../../../hooks';
+import { AppGridPage } from '../pages';
 import styled from 'styled-components';
-import { takeFullGridArea } from './pagesStyles';
+import { takeFullGridArea } from '../pagesStyles';
 
-import { usePriceListOverviewActionsCreator } from '../../hooks/usePriceListOverviewActionsCreator.hook';
-import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import { usePriceListOverviewActionsCreator } from '../../../hooks/usePriceListOverviewActionsCreator.hook';
+import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useEffect, useMemo, useState } from 'react';
-import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
-import { ITableListProps } from '../TableList/tableTypes.types';
-import { ISortParams } from '../../api';
-import { FilterReturnDataType } from '../Filter/AppFilter';
-import TableList from '../TableList/TableList';
-import { usePriceListsSelector } from '../../redux/selectors.store';
-import { BaseAppPageProps } from './index';
-import { priceListContentColumns } from '../../data/priceManagement.data';
-import { ExtractId } from '../../utils/dataTransform';
+import { IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
+import { ITableListProps } from '../../TableList/tableTypes.types';
+import { ISortParams } from '../../../api';
+import { FilterReturnDataType } from '../../Filter/AppFilter';
+import TableList from '../../TableList/TableList';
+import { usePriceListsSelector } from '../../../redux/selectors.store';
+import { BaseAppPageProps } from '../index';
+import { priceListContentColumns } from '../../../data/priceManagement.data';
+import { ExtractId } from '../../../utils/dataTransform';
 
 interface Props extends BaseAppPageProps {}
 const PagePriceListOverview: React.FC<Props> = ({ path }) => {

@@ -1,19 +1,19 @@
 import TableList from 'components/TableList/TableList';
-import { takeFullGridArea } from './pagesStyles';
+import { takeFullGridArea } from '../pagesStyles';
 import styled from 'styled-components';
 import { useEffect, useMemo, useState } from 'react';
-import { ITableListProps } from '../TableList/tableTypes.types';
-import AppGridPage from './AppGridPage';
-import { useProductsSelector } from '../../redux/selectors.store';
-import { ISortParams } from '../../api';
-import { FilterReturnDataType } from '../Filter/AppFilter';
-import { IProduct } from '../../redux/products/products.types';
-import useStorageServiceHook from '../../hooks/useProductsService.hook';
-import useProductsFilterSelectorsHook from '../../hooks/useProductsFilterSelectors.hook';
-import useProductsActionsCreator from '../../hooks/useProductsActionsCreator.hook';
-import { BaseAppPageProps } from './index';
-import { productsColumns } from '../../data/products.data';
-import { transactionsSearchParams } from '../../data/transactions.data';
+import { ITableListProps } from '../../TableList/tableTypes.types';
+import AppGridPage from '../AppGridPage';
+import { useProductsSelector } from '../../../redux/selectors.store';
+import { ISortParams } from '../../../api';
+import { FilterReturnDataType } from '../../Filter/AppFilter';
+import { IProduct } from '../../../redux/products/products.types';
+import useStorageServiceHook from '../../../hooks/useProductsService.hook';
+import useProductsFilterSelectorsHook from '../../../hooks/useProductsFilterSelectors.hook';
+import useProductsActionsCreator from '../../../hooks/useProductsActionsCreator.hook';
+import { BaseAppPageProps } from '../index';
+import { productsColumns } from '../../../data/products.data';
+import { transactionsSearchParams } from '../../../data/transactions.data';
 
 interface Props extends BaseAppPageProps {}
 

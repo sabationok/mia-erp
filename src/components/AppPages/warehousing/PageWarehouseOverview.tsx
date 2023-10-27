@@ -1,19 +1,19 @@
 import TableList, { ITableListContext } from 'components/TableList/TableList';
-import { takeFullGridArea } from './pagesStyles';
+import { takeFullGridArea } from '../pagesStyles';
 import styled from 'styled-components';
 import { useEffect, useMemo, useState } from 'react';
-import { ITableListProps, TableActionCreator } from '../TableList/tableTypes.types';
-import AppGridPage from './AppGridPage';
-import { useWarehousesSelector } from '../../redux/selectors.store';
-import { ISortParams } from '../../api';
-import { FilterReturnDataType } from '../Filter/AppFilter';
-import { warehouseOverviewTableColumns } from '../../data/warehauses.data';
-import { useAppParams } from '../../hooks';
-import { IProductInventory } from '../../redux/warehouses/warehouses.types';
-import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
-import { useModalProvider } from '../ModalProvider/ModalProvider';
-import { Modals } from '../Modals';
-import { BaseAppPageProps } from './index';
+import { ITableListProps, TableActionCreator } from '../../TableList/tableTypes.types';
+import AppGridPage from '../AppGridPage';
+import { useWarehousesSelector } from '../../../redux/selectors.store';
+import { ISortParams } from '../../../api';
+import { FilterReturnDataType } from '../../Filter/AppFilter';
+import { warehouseOverviewTableColumns } from '../../../data/warehauses.data';
+import { useAppParams } from '../../../hooks';
+import { IProductInventory } from '../../../redux/warehouses/warehouses.types';
+import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import { useModalProvider } from '../../ModalProvider/ModalProvider';
+import { Modals } from '../../Modals';
+import { BaseAppPageProps } from '../index';
 
 interface Props extends BaseAppPageProps {}
 

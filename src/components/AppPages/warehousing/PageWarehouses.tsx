@@ -1,18 +1,18 @@
 import TableList from 'components/TableList/TableList';
-import { takeFullGridArea } from './pagesStyles';
+import { takeFullGridArea } from '../pagesStyles';
 import styled from 'styled-components';
 import { useEffect, useMemo, useState } from 'react';
-import { ITableListProps } from '../TableList/tableTypes.types';
-import AppGridPage from './AppGridPage';
-import { useWarehousesSelector } from '../../redux/selectors.store';
-import { ISortParams } from '../../api';
-import { FilterReturnDataType } from '../Filter/AppFilter';
-import useWarehousesActionsCreatorHook from '../../hooks/useWarehousesActionsCreator.hook';
-import { warehousesTableColumns } from '../../data/warehauses.data';
-import { IWarehouse } from '../../redux/warehouses/warehouses.types';
-import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import { ITableListProps } from '../../TableList/tableTypes.types';
+import AppGridPage from '../AppGridPage';
+import { useWarehousesSelector } from '../../../redux/selectors.store';
+import { ISortParams } from '../../../api';
+import { FilterReturnDataType } from '../../Filter/AppFilter';
+import useWarehousesActionsCreatorHook from '../../../hooks/useWarehousesActionsCreator.hook';
+import { warehousesTableColumns } from '../../../data/warehauses.data';
+import { IWarehouse } from '../../../redux/warehouses/warehouses.types';
+import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useNavigate } from 'react-router-dom';
-import { BaseAppPageProps } from './index';
+import { BaseAppPageProps } from '../index';
 
 interface Props extends BaseAppPageProps {}
 
