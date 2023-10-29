@@ -20,6 +20,7 @@ const CheckboxesListSelector = <V = any,>({
   onChange,
   value,
   disabled,
+  disabledCheck,
 }: {
   onChangeIndex?: (index: number) => void;
   onChange?: CheckboxesListOnChangeHandler;
@@ -29,6 +30,7 @@ const CheckboxesListSelector = <V = any,>({
   value?: string[];
   multiple?: boolean;
   disabled?: boolean;
+  disabledCheck?: (option: CheckboxesListOption<V>, index: number) => boolean;
 }) => {
   const [current, setCurrent] = useState(0);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -72,6 +74,8 @@ const CheckboxesListSelector = <V = any,>({
   return (
     <FlexBox fillWidth gap={8}>
       {options?.map((o, idx) => {
+        const isDisabled = disabledCheck ? disabledCheck(o, idx) : disabled;
+
         return (
           <FlexBox
             key={`m-opt_${o.value}`}
@@ -79,9 +83,9 @@ const CheckboxesListSelector = <V = any,>({
             gap={8}
             padding={'2px 4px'}
             alignItems={'center'}
-            style={{ opacity: disabled ? 0.7 : 1, pointerEvents: disabled ? 'none' : 'all' }}
+            style={{ opacity: isDisabled ? 0.7 : 1, pointerEvents: isDisabled ? 'none' : 'all' }}
             onClick={() => {
-              if (disabled) return;
+              if (isDisabled) return;
               handleSetCurrent(idx);
               o?._id && handleSelect(o?._id);
             }}
@@ -89,7 +93,7 @@ const CheckboxesListSelector = <V = any,>({
             <CheckBox
               checked={(o?._id && selectedIds.includes(o?._id)) || idx === current}
               size={'22px'}
-              disabled={disabled}
+              disabled={isDisabled}
             />
 
             <Text>{o?.label}</Text>

@@ -4,7 +4,7 @@ import { useProductsSelector, useWarehousesSelector } from '../../../../redux/se
 import { useModalProvider } from '../../../ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useMemo, useState } from 'react';
-import { ExtractId } from '../../../../utils/dataTransform';
+import { getIdRef } from '../../../../utils/dataTransform';
 import { IWarehouse } from '../../../../redux/warehouses/warehouses.types';
 import { warehousesTableColumns } from '../../../../data/warehauses.data';
 
@@ -41,7 +41,7 @@ const WarehousesTab: React.FC<WarehousesTabProps> = ({ onSelect, selected, withA
       onRowClick: data => {
         if (onSelect) {
           if (data?.rowData) {
-            onSelect(ExtractId(data?.rowData));
+            onSelect(getIdRef(data?.rowData));
             return;
           } else if (data?._id) {
             onSelect({ _id: data?._id });

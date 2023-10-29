@@ -42,10 +42,6 @@ const useLoadInitialAppDataHook = ({
     invoicing,
   } = useAppServiceProvider();
 
-  const onSuccessToast = (dirType: ApiDirType) => () => {
-    // setStatuses(prev => ({ ...prev, [dirType]: true }));
-    // toast.success(`Updated data for directory: ${dirType}`);
-  };
   const load = async () => {
     onLoading && onLoading(true);
     const close = () =>
@@ -66,23 +62,21 @@ const useLoadInitialAppDataHook = ({
 
         await products.getAllProperties({ data: { params: { createTreeData: true } } });
 
-        await invoicing.getAllMethods();
-        await payments.getAllMethods();
-        await shipments.getAllMethods();
-
-        await products.getAll({ data: { refresh: true } });
-
-        await priceManagement.getAll({ data: { refresh: true } });
-        await transactions.getAll({ data: { refresh: true } });
+        // await products.getAll({ data: { refresh: true } });
         await warehouses.getAll({ data: { refresh: true } });
-        await integrations.getAllExtServices();
+        await priceManagement.getAll({ data: { refresh: true } });
+
+        await transactions.getAll({ data: { refresh: true } });
+
+        await integrations.getAllExtServices({
+          onSuccess: () => {
+            invoicing.getAllMethods();
+            payments.getAllMethods();
+            shipments.getAllMethods();
+          },
+        });
 
         await Promise.allSettled([
-          ...directoriesForLoading.map(({ dirType, createTreeData }) => {
-            return getAllByDirType({
-              data: { dirType, params: { createTreeData } },
-            });
-          }),
           ...directoriesForLoading.map(({ dirType, createTreeData }) => {
             return getAllByDirType({
               data: { dirType, params: { createTreeData } },

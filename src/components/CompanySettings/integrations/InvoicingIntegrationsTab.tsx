@@ -12,8 +12,8 @@ import { useTranslatedPaymentMethods } from '../../../hooks/useTranslatedMethods
 import { formatDate } from '../../../utils/dateTime.utils';
 import { checks } from '../../../utils';
 import { createApiCall } from '../../../api';
-import IntegrationsApi from '../../../api/integrations.api';
-import { ExtractId, transformQueriesForReq } from '../../../utils/dataTransform';
+import ExtServicesApi from '../../../api/extServices.api';
+import { getIdRef, transformQueriesForReq } from '../../../utils/dataTransform';
 import styled from 'styled-components';
 import ExtraFooterWithButtonButton from '../../Forms/components/ExtraFooterWithButtonButton';
 
@@ -52,13 +52,13 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
     currentServiceData &&
       createApiCall(
         {
-          data: { type: 'external', ...transformQueriesForReq({ service: ExtractId(currentServiceData) }) },
+          data: { type: 'input', ...transformQueriesForReq({ service: getIdRef(currentServiceData) }) },
           onSuccess: data => {
             setIntegrationsList(data);
           },
         },
-        IntegrationsApi.getAllByQueries,
-        IntegrationsApi
+        ExtServicesApi.getAllByQueries,
+        ExtServicesApi
       );
   }, [currentServiceData]);
 
@@ -79,10 +79,14 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
   const renderIntegrations = useMemo(() => {
     return integrationsList.map(int => {
       return (
-        <IntegrationOverview key={int?._id} info={int} isDefault={currentServiceData?.integration?._id === int._id} />
+        <IntegrationOverview
+          key={int?._id}
+          info={int}
+          isDefault={currentServiceData?.defIntegration?._id === int._id}
+        />
       );
     });
-  }, [currentServiceData?.integration?._id, integrationsList]);
+  }, [currentServiceData?.defIntegration?._id, integrationsList]);
 
   useEffect(() => {
     if (!provider && providers) {

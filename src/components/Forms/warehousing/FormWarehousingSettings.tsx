@@ -12,7 +12,7 @@ import { t } from 'lang';
 import { ICompany, ICompanyDto, ICompanyForReq, ICompanyWithConfigs } from 'redux/companies/companies.types';
 import { Text } from '../../atoms/Text';
 import Switch from '../../atoms/Switch';
-import { ExtractId } from '../../../utils/dataTransform';
+import { getIdRef } from '../../../utils/dataTransform';
 import { useMemo } from 'react';
 
 export interface FormWarehousingSettingsProps
@@ -31,7 +31,7 @@ export function createWarehousingSettingsReqData(fData?: WarehousingSettingsForm
   if (!fData) return;
   if (!fData?.warehouse) return;
   return {
-    warehouse: ExtractId(fData?.warehouse),
+    warehouse: getIdRef(fData?.warehouse),
   };
 }
 const useWarehousesAsSelectOptions = (): FilterOption[] => {

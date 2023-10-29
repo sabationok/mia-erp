@@ -6,7 +6,7 @@ import FormCreatePrice from '../../../Forms/FormCreatePrice/FormCreatePrice';
 import { IPriceListItem } from 'redux/priceManagement/priceManagement.types';
 import { useProductsSelector } from 'redux/selectors.store';
 import { useModalProvider } from '../../../ModalProvider/ModalProvider';
-import { ExtractId } from 'utils/dataTransform';
+import { getIdRef } from 'utils/dataTransform';
 import { OnlyUUID } from 'redux/global.types';
 
 export interface PricesTabProps {
@@ -24,7 +24,7 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
   const loadData = useCallback(
     async ({ refresh, update }: { refresh?: boolean; update?: boolean }) => {
       if (!currentProduct) return;
-      const product = ExtractId(currentProduct);
+      const product = getIdRef(currentProduct);
 
       productsS.getAllPricesByProductId({
         data: { params: { product }, refreshCurrent: refresh, updateCurrent: update },
@@ -41,7 +41,7 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
       onRowClick: data => {
         if (onSelect) {
           if (data?.rowData) {
-            onSelect(ExtractId(data?.rowData));
+            onSelect(getIdRef(data?.rowData));
             return;
           } else if (data?._id) {
             onSelect({ _id: data?._id });

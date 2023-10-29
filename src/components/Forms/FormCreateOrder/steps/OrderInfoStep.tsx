@@ -16,7 +16,7 @@ import TagButtonsFilter from 'components/atoms/TagButtonsFilter';
 import SelectManagerModal from '../components/SelectManagerModal';
 import { FormOrderStepBaseProps } from '../formOrder.types';
 import CheckboxesListSelector from 'components/atoms/CheckboxesListSelector';
-import { useTranslatedPaymentMethods } from 'hooks/useTranslatedMethods.hook';
+import { useTranslatedInvoicingMethods } from 'hooks/useTranslatedMethods.hook';
 import { ServiceName, useAppServiceProvider } from 'hooks/useAppServices.hook';
 import useTranslatedShipmentMethods from 'hooks/useTranslatedShipmentMethods.hook';
 import ButtonSwitch from '../../../atoms/ButtonSwitch';
@@ -45,8 +45,9 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
   // TODO refactoring
   const { directory: communicationMethodsList } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
 
-  const paymentsMethodsList = useTranslatedPaymentMethods();
+  // const paymentsMethodsList = useTranslatedPaymentMethods();
   const shipmentMethodsList = useTranslatedShipmentMethods();
+  const invoicingMethods = useTranslatedInvoicingMethods({ withFullLabel: true });
 
   const setTouchedField = (path: FormFieldPaths) => {
     setTouchedFields(p => ({ ...p, [path]: true }));
@@ -206,7 +207,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
                     multiple
                     numColumns={3}
                     values={formValues?.receiverCommunicationMethods}
-                    resetButtonLabel={t('No one')}
+                    resetButtonLabel={t('Without')}
                     options={communicationMethodsList.map(mtd => ({ ...mtd, value: mtd._id }))}
                     resetButtonPosition={'start'}
                     onChange={value => {
@@ -259,10 +260,13 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
         >
           <InputLabel label={t('Payment method')} required>
             <CheckboxesListSelector
-              options={paymentsMethodsList}
+              options={invoicingMethods}
               currentOption={formValues?.invoiceInfo?.method}
+              disabledCheck={(option, i) => {
+                return invoicingMethods[i].disabled || !!invoicingMethods[i].service?.defIntegration?._id;
+              }}
               onChangeIndex={i => {
-                handleOnChangeValue('invoiceInfo.method', paymentsMethodsList[i]);
+                handleOnChangeValue('invoiceInfo.method', invoicingMethods[i]);
               }}
             />
           </InputLabel>
@@ -330,10 +334,10 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
             {(confirms?.hasShipmentPayment || !!formValues?.shipmentInfo?.paymentMethod) && (
               <InputLabel label={t('Payment method')} required>
                 <CheckboxesListSelector
-                  options={paymentsMethodsList}
+                  options={invoicingMethods}
                   currentOption={formValues?.shipmentInfo?.paymentMethod}
                   onChangeIndex={i => {
-                    handleOnChangeValue('shipmentInfo.paymentMethod', paymentsMethodsList[i]);
+                    handleOnChangeValue('shipmentInfo.paymentMethod', invoicingMethods[i]);
                   }}
                 />
               </InputLabel>

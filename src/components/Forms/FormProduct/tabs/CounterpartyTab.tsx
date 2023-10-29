@@ -4,7 +4,7 @@ import { useDirectoriesSelector, useProductsSelector } from '../../../../redux/s
 import { useModalProvider } from '../../../ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useMemo, useState } from 'react';
-import { ExtractId } from '../../../../utils/dataTransform';
+import { getIdRef } from '../../../../utils/dataTransform';
 import { counterpartyColumns } from '../../../../data/contractors.data';
 import { CounterpartyTypesEnum, SupplierType } from '../../../../redux/directories/counterparties.types';
 import { ApiDirType } from '../../../../redux/APP_CONFIGS';
@@ -48,7 +48,7 @@ const CounterpartyTab: React.FC<CounterpartyTabProps> = ({ onSelect, withActions
       onRowClick: data => {
         if (onSelect) {
           if (data?.rowData) {
-            onSelect(ExtractId(data?.rowData));
+            onSelect(getIdRef(data?.rowData));
             return;
           } else if (data?._id) {
             onSelect({ _id: data?._id });

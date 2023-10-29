@@ -12,8 +12,8 @@ import {
   ExtServiceBase,
 } from '../../redux/integrations/integrations.types';
 import { createApiCall } from '../../api';
-import IntegrationsApi from '../../api/integrations.api';
-import { ExtractId } from '../../utils/dataTransform';
+import ExtServicesApi from '../../api/extServices.api';
+import { getIdRef } from '../../utils/dataTransform';
 
 export interface FormCreateIntegrationProps extends Omit<ModalFormProps, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<CreateIntegrationFormData>;
@@ -34,14 +34,14 @@ const FormCreateIntegration: React.FC<FormCreateIntegrationProps> = ({
     createApiCall(
       {
         onSuccess: data => {
-          console.log('FormCreateIntegration', data);
+          console.log('FormCreateIntegration createInputIntegration', data);
           onSuccess && onSuccess({ data });
           onClose && onClose();
         },
-        data: { data: { ...data, service: ExtractId(service) } },
+        data: { data: { ...data, service: getIdRef(service) } },
       },
-      IntegrationsApi.createExternal,
-      IntegrationsApi
+      ExtServicesApi.createInputIntegration,
+      ExtServicesApi
     );
   };
 

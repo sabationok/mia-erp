@@ -42,6 +42,7 @@ export interface AmountAndPercentage {
   amount?: number;
   percentage?: number;
 }
+
 export type PriceAmountAndPercentageFieldsKey =
   | 'discount'
   | 'cashback'
@@ -50,6 +51,7 @@ export type PriceAmountAndPercentageFieldsKey =
   | 'commission'
   | 'tax'
   | 'vat';
+
 export interface PriceAmountAndPercentageFields
   extends Record<PriceAmountAndPercentageFieldsKey, AmountAndPercentage> {}
 
@@ -62,12 +64,15 @@ export interface IPriceBase extends PriceAmountAndPercentageFields {
   discountLabel?: string;
   cashbackLabel?: string;
 }
+
 export type BasePriceInfoPath = Path<IPriceBase>;
+
 export interface IPriceDto extends IPriceBase, IDataWithPeriod {
   list?: OnlyUUID;
   product?: OnlyUUID;
   variation?: OnlyUUID;
 }
+
 export type UpdatePriceDto = Partial<Omit<IPriceDto, 'list' | 'product' | 'variation'>>;
 
 export interface IPriceListItem extends IBase, IPriceBase {
@@ -102,6 +107,7 @@ export interface ICreatePriceReqData {
   data: IPriceDto;
   params?: AppQueryParams;
 }
+
 export interface IUpdatePriceReqData {
   _id?: string;
   data: UpdatePriceDto;

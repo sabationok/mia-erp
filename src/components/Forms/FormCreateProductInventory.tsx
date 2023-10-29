@@ -17,7 +17,7 @@ import ButtonGroup from '../atoms/ButtonGroup';
 import { createTableTitlesFromTemplate } from '../../utils';
 import { transformVariationTableData } from '../../utils/tables';
 import { createApiCall, PriceManagementApi } from '../../api';
-import { ExtractId } from '../../utils/dataTransform';
+import { getIdRef } from '../../utils/dataTransform';
 import { OnRowClickHandler } from '../TableList/tableTypes.types';
 import { useForm } from 'react-hook-form';
 import { OnlyUUID } from '../../redux/global.types';
@@ -70,7 +70,7 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
   useEffect(() => {
     if (selectedVariation) {
       createApiCall(
-        { data: { variation: ExtractId(selectedVariation) }, onSuccess: setLoadedPrices },
+        { data: { variation: getIdRef(selectedVariation) }, onSuccess: setLoadedPrices },
         PriceManagementApi.getAllPrices,
         PriceManagementApi
       );

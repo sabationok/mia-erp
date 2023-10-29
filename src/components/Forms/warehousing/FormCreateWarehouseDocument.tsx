@@ -22,7 +22,7 @@ import { IProduct } from '../../../redux/products/products.types';
 import FlexBox from '../../atoms/FlexBox';
 import TableList from '../../TableList/TableList';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
-import { ExtractId } from '../../../utils/dataTransform';
+import { getIdRef } from '../../../utils/dataTransform';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -93,7 +93,7 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
       amount: 0,
       type: WarehouseDocumentType.addToStock,
       ...props?.defaultState,
-      product: currentProductData ? ExtractId(currentProductData) : undefined,
+      product: currentProductData ? getIdRef(currentProductData) : undefined,
     },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
@@ -161,7 +161,7 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
 
   useEffect(() => {
     if (product && currentProduct?._id !== product?._id) {
-      productsS.getProductFullInfo({ data: ExtractId(product) });
+      productsS.getProductFullInfo({ data: getIdRef(product) });
     }
   }, [currentProduct?._id, product, productsS]);
 

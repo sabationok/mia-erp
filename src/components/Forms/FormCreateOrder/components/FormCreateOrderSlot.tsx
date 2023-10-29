@@ -19,7 +19,7 @@ import { createTableTitlesFromTemplate } from '../../../../utils';
 import { usePropertiesSelector } from '../../../../redux/selectors.store';
 import VariationsApi from '../../../../api/variations.api';
 import { transformVariationTableData } from '../../../../utils/tables';
-import { ExtractId } from '../../../../utils/dataTransform';
+import { getIdRef } from '../../../../utils/dataTransform';
 import { IOrderTempSlot } from '../../../../redux/orders/orders.types';
 import { IProductInventory, IWarehouse } from '../../../../redux/warehouses/warehouses.types';
 import { warehouseBatchColumns } from '../../../../data/warehauses.data';
@@ -202,13 +202,13 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
     if (stepCheck(FormCreateOrderSlotSteps.variation) && product) {
       return createApiCall(
         {
-          data: { product: formData?.product },
+          data: { product: getIdRef(product) },
           onSuccess: d => {
             const transformed = d.map(v => transformVariationTableData(v));
             setVariations(transformed);
           },
         },
-        VariationsApi.getAll,
+        VariationsApi.getAllByProductId,
         VariationsApi
       );
     }
@@ -216,9 +216,9 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
       return createApiCall(
         {
           data: {
-            product: ExtractId(product),
-            variation: variation ? ExtractId(variation) : undefined,
-            warehouse: params?.warehouse,
+            product: getIdRef(product),
+            variation: variation ? getIdRef(variation) : undefined,
+            warehouse: params?.warehouse ? getIdRef(params?.warehouse) : undefined,
           },
           onSuccess: setInventories,
         },

@@ -22,7 +22,7 @@ export const transformQueriesForReq = (queries: Partial<AppQueryParams>): Partia
 export function parseBool(key?: 'false' | 'true' | string) {
   return key === 'true';
 }
-export const ExtractId = <T extends OnlyUUID>(data: T, key: '_id' = '_id'): OnlyUUID =>
+export const getIdRef = <T extends OnlyUUID>(data: T, key: '_id' = '_id'): OnlyUUID =>
   key in data ? pick(data, key) : { [key]: '' };
 
 // * REFACTORING NEEDED
@@ -186,7 +186,7 @@ export const createVariationReqData = (formData: IVariationFormData, _id?: strin
 
   const data: IVariationReqData['data'] = {
     ...pick(formData, ['timeFrom', 'timeTo', 'label', 'sku', 'barCode']),
-    product: formData?.product ? ExtractId(formData?.product) : undefined,
+    product: formData?.product ? getIdRef(formData?.product) : undefined,
     properties: formData?.propertiesMap ? Object.values(formData?.propertiesMap) : undefined,
   };
 
@@ -208,7 +208,7 @@ export const createVariationFormData = (variation: Partial<IVariation>): IVariat
     timeTo: variation?.timeTo,
     label: variation.label ? variation.label : `${variation?.product?.label}. {{VARIATION_LABEL}}`,
     sku: variation.sku ? variation.sku : `${variation?.product?.sku ? variation?.product?.sku + '-' : ''}${nanoid(8)}`,
-    product: variation?.product ? ExtractId(variation.product) : undefined,
+    product: variation?.product ? getIdRef(variation.product) : undefined,
     propertiesMap,
   };
 };

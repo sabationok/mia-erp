@@ -5,7 +5,7 @@ import { IProduct, IProductImage } from '../../../redux/products/products.types'
 import styled, { useTheme } from 'styled-components';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { ExtractId } from '../../../utils/dataTransform';
+import { getIdRef } from '../../../utils/dataTransform';
 import { OverlayFooter, OverlayHeader } from './components';
 
 export interface FormProductImagesOverlayProps extends OverlayHandlerReturn {
@@ -24,7 +24,7 @@ const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onC
 
     currentProduct &&
       service.updateById({
-        data: { ...ExtractId(currentProduct), data: { images: state as IProductImage[] }, refreshCurrent: true },
+        data: { ...getIdRef(currentProduct), data: { images: state as IProductImage[] }, refreshCurrent: true },
         onSuccess: (data, meta) => {
           onClose && onClose();
         },

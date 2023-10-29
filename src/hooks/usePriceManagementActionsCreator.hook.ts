@@ -10,7 +10,7 @@ import {
 import FormCreatePriceList from '../components/Forms/FormCreatePriceList';
 import { toast } from 'react-toastify';
 import { omit } from 'lodash';
-import { ExtractId } from '../utils/dataTransform';
+import { getIdRef } from '../utils/dataTransform';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { useNavigate } from 'react-router-dom';
 import { enumToFilterOptions } from '../utils/fabrics';
@@ -21,10 +21,10 @@ export const PriceManagementItemTypeFilterOptions = enumToFilterOptions(PriceLis
 
 export const createPriceDataForReq = (input: Required<IPriceListItem>): IPriceListItemReqData => {
   return {
-    ...ExtractId(input),
+    ...getIdRef(input),
     data: {
       ...omit(input, ['createdAt', 'updatedAt', 'deletedAt', '_id']),
-      product: ExtractId(input?.product),
+      product: getIdRef(input?.product),
     },
   };
 };

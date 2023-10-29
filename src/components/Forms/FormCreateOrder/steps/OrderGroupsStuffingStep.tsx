@@ -16,7 +16,7 @@ import { t } from '../../../../lang';
 import { Modals } from '../../../Modals';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import OrderGroupItem from '../components/OrderGroupItem';
-import { ExtractId } from '../../../../utils/dataTransform';
+import { getIdRef } from '../../../../utils/dataTransform';
 import { FormOrderStepBaseProps } from '../formOrder.types';
 
 export interface OrderGroupsStuffingStepProps extends FormOrderStepBaseProps {
@@ -85,7 +85,7 @@ const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onCha
             const m = modalS.open({
               Modal: Modals.FormCreateOrderSlot,
               props: {
-                params: v?.warehouse ? { warehouse: ExtractId(v?.warehouse) } : undefined,
+                params: v?.warehouse ? { warehouse: getIdRef(v?.warehouse) } : undefined,
                 onSubmit: d => {
                   handelAddSlot(d);
 

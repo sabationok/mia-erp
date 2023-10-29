@@ -7,7 +7,7 @@ import { createTableTitlesFromTemplate, transformVariationTableData } from '../.
 import FormCreateVariation from '../../../Forms/FormProduct/FormCreateVariationOverlay';
 import { IVariationTableData } from '../../../../redux/products/variations.types';
 import { useProductsSelector, usePropertiesSelector } from '../../../../redux/selectors.store';
-import { ExtractId } from '../../../../utils/dataTransform';
+import { getIdRef } from '../../../../utils/dataTransform';
 import { OnlyUUID } from '../../../../redux/global.types';
 
 export interface VariationsTabProps {
@@ -27,7 +27,7 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
   const loadData = useCallback(
     ({ refresh, update }: { refresh?: boolean; update?: boolean }) => {
       if (!currentProduct) return;
-      const product = ExtractId(currentProduct);
+      const product = getIdRef(currentProduct);
 
       productsS.getAllVariationsByProductId({
         data: { refreshCurrent: refresh, updateCurrent: update, product },
@@ -51,7 +51,7 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
       onRowClick: data => {
         if (onSelect) {
           if (data?.rowData) {
-            onSelect(ExtractId(data?.rowData));
+            onSelect(getIdRef(data?.rowData));
             return;
           } else if (data?._id) {
             onSelect({ _id: data?._id });

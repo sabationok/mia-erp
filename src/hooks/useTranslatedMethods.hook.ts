@@ -26,10 +26,26 @@ export const useTranslatedPaymentMethods = (langKey: LangKey = 'ua') => {
     });
   }, [langKey, paymentsState.methods]);
 };
-export const useTranslatedInvoicingMethods = (langKey: LangKey = 'ua') => {
+export const useTranslatedInvoicingMethods = ({
+  langKey = 'ua',
+  withFullLabel = false,
+  getLabel,
+}: {
+  langKey?: LangKey;
+  withFullLabel?: boolean;
+  getLabel?: (
+    option: IInvoicingMethod & {
+      parent?: ExtPaymentService;
+      fullLabel?: string;
+    }
+  ) => React.ReactNode;
+} = {}) => {
   const invState = useInvoicesSelector();
 
-  return useMemo((): (IInvoicingMethod & { parent?: ExtPaymentService; fullLabel?: string })[] => {
+  return useMemo((): (IInvoicingMethod & {
+    parent?: ExtPaymentService;
+    fullLabel?: string;
+  })[] => {
     return invState.methods.map(el => {
       const label = el.labels ? getTranslatedString(el.labels, langKey) : el.label;
 
@@ -41,14 +57,16 @@ export const useTranslatedInvoicingMethods = (langKey: LangKey = 'ua') => {
           }
         : undefined;
 
+      const fullLabel = parent?.label ? `${parent?.label} | ${label}` : label;
+
       return {
         ...el,
         value: el._id,
-        label: label,
-        fullLabel: parent?.label ? `${parent?.label} | ${label}` : label,
+        label: getLabel ? getLabel({ ...el, label, parent }) : withFullLabel ? fullLabel : label,
+        fullLabel,
         service: parent,
         parent,
       };
     });
-  }, [langKey, invState.methods]);
+  }, [invState.methods, langKey, withFullLabel]);
 };

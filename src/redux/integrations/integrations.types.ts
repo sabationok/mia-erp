@@ -41,7 +41,7 @@ export interface ExtServiceBase extends IBase {
   label: string;
   value: string;
   lang?: LangPack;
-  integration?: ExtIntegrationBase;
+  defIntegration?: ExtIntegrationBase;
   disabled?: boolean;
   originServices?: ExtSubServicesEntity;
 }

@@ -6,7 +6,7 @@ import { IProductInventory } from '../../../../redux/warehouses/warehouses.types
 import { useModalProvider } from '../../../ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useProductsSelector } from '../../../../redux/selectors.store';
-import { ExtractId } from '../../../../utils/dataTransform';
+import { getIdRef } from '../../../../utils/dataTransform';
 import { OnlyUUID } from '../../../../redux/global.types';
 
 export interface WarehousingTabProps {
@@ -24,7 +24,7 @@ const WarehousingTab = ({ onSelect, selected, withActions }: WarehousingTabProps
   const loadData = useCallback(
     ({ refresh, update }: { refresh?: boolean; update?: boolean }) => {
       if (!currentProduct) return;
-      const product = ExtractId(currentProduct);
+      const product = getIdRef(currentProduct);
       productsS.getAllInventoriesByProductId({
         data: { refreshCurrent: refresh, params: { product } },
         onLoading: setLoading,
@@ -40,7 +40,7 @@ const WarehousingTab = ({ onSelect, selected, withActions }: WarehousingTabProps
       onRowClick: data => {
         if (onSelect) {
           if (data?.rowData) {
-            onSelect(ExtractId(data?.rowData));
+            onSelect(getIdRef(data?.rowData));
             return;
           } else if (data?._id) {
             onSelect({ _id: data?._id });

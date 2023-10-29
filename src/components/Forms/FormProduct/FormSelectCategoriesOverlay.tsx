@@ -4,7 +4,7 @@ import FlexBox from '../../atoms/FlexBox';
 import { useDirectoriesSelector, useProductsSelector } from '../../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { FormEventHandler, useEffect, useMemo, useState } from 'react';
-import { ExtractId } from '../../../utils/dataTransform';
+import { getIdRef } from '../../../utils/dataTransform';
 import FormProductCategories from './FormProductCategories';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { OverlayFooter, OverlayForm, OverlayHeader } from './components';
@@ -22,7 +22,7 @@ const FormProductCategoriesOverlay = ({ onClose }: FormSelectCategoriesOverlayPr
 
     currentProduct &&
       service.updateById({
-        data: { ...ExtractId(currentProduct), data: { categories: state }, refreshCurrent: true },
+        data: { ...getIdRef(currentProduct), data: { categories: state }, refreshCurrent: true },
         onSuccess: (data, meta) => {
           onClose && onClose();
         },

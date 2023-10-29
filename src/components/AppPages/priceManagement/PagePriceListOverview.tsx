@@ -14,7 +14,7 @@ import TableList from '../../TableList/TableList';
 import { usePriceListsSelector } from '../../../redux/selectors.store';
 import { BaseAppPageProps } from '../index';
 import { priceListContentColumns } from '../../../data/priceManagement.data';
-import { ExtractId } from '../../../utils/dataTransform';
+import { getIdRef } from '../../../utils/dataTransform';
 
 interface Props extends BaseAppPageProps {}
 const PagePriceListOverview: React.FC<Props> = ({ path }) => {
@@ -62,7 +62,7 @@ const PagePriceListOverview: React.FC<Props> = ({ path }) => {
         data: { list: { _id: listId }, refreshCurrent: true },
         onLoading: setIsLoading,
         onSuccess: d => {
-          getAllPrices({ data: { params: { list: ExtractId(d) }, refreshCurrent: true } });
+          getAllPrices({ data: { params: { list: getIdRef(d) }, refreshCurrent: true } });
         },
       });
     }

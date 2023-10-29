@@ -8,7 +8,7 @@ import { pricesColumnsForProductReview } from '../../data/priceManagement.data';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { useEffect, useState } from 'react';
 import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
-import { ExtractId } from '../../utils/dataTransform';
+import { getIdRef } from '../../utils/dataTransform';
 
 export interface ProductOverviewProps extends Omit<ModalFormProps, 'onSelect' | 'onSubmit'> {
   product?: IProduct;
@@ -23,7 +23,7 @@ const ProductOverview: React.FC<ProductOverviewProps> = ({ product, ...props }) 
     if (product?._id) {
       priceManagement
         .getAllPrices({
-          data: { params: { product: ExtractId(product) } },
+          data: { params: { product: getIdRef(product) } },
           onSuccess: setPriceList,
           onLoading: setLoading,
         })

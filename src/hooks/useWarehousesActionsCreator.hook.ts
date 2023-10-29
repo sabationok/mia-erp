@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { NavigateFunction } from 'react-router/dist/lib/hooks';
 import { ToastService } from '../services';
 import { checks } from '../utils';
-import { ExtractId } from '../utils/dataTransform';
+import { getIdRef } from '../utils/dataTransform';
 
 export type WarehouseActionCreatorOptions = {
   ctx: ITableListContext<IWarehouse>;
@@ -41,7 +41,7 @@ const createWarehouseReqData = (
     }
     if (!checks.isEmptyObj(v)) {
       if (checks.hasUUID(v)) {
-        dto[k] = ExtractId(v) as never;
+        dto[k] = getIdRef(v) as never;
         return '';
       }
       console.log('!checks.isEmptyObj(v)', k, !checks.isEmptyObj(v));
