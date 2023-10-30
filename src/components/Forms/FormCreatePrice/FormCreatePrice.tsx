@@ -20,7 +20,7 @@ import { createDataForReq } from '../../../utils/dataTransform';
 import { OnRowClickHandler } from '../../TableList/tableTypes.types';
 import TableList from '../../TableList/TableList';
 import { priceListColumns } from '../../../data/priceManagement.data';
-import { objUUIDSchema } from '../validation';
+import { UUIDRefSchema } from '../validation';
 import _ from 'lodash';
 import { AnyFn } from '../../../utils/types';
 import { IVariation } from '../../../redux/products/variations.types';
@@ -33,9 +33,9 @@ const throttleCallback = _.throttle(<T extends AnyFn>(fn: T) => {
 const validation = yup.object().shape({
   in: yup.number(),
   out: yup.number(),
-  list: objUUIDSchema.required(),
-  product: objUUIDSchema.required(),
-  variation: objUUIDSchema,
+  list: UUIDRefSchema.required(),
+  product: UUIDRefSchema.required(),
+  variation: UUIDRefSchema,
 });
 
 export interface FormCreatePriceProps

@@ -28,7 +28,7 @@ export default class OrdersApi {
   }
 
   public static async createGroupWithSlots(
-    data: ICreateOrdersWithSlotsAndGroupByWarehousesReqData,
+    data?: ICreateOrdersWithSlotsAndGroupByWarehousesReqData,
     params?: AppQueryParams
   ): Promise<IOrderRes> {
     return this.api.post(this.endpoints.create(), data, { params });

@@ -20,6 +20,7 @@ export const langUa = {
   [OrderStatusEnum.new]: 'Нове',
   [OrderStatusEnum.inWork]: 'Взято у роботу',
   [OrderStatusEnum.rejectedByCustomer]: 'Скасовано замовником',
+  [OrderStatusEnum.rejectedByManager]: 'Скасовано менеджером',
   [OrderStatusEnum.active]: 'Активне',
   [OrderStatusEnum.fulfilled]: 'Завершено успішно',
   [OrderStatusEnum.fulfilledWithRefund]: 'Завершено з поверненням',

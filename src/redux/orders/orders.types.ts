@@ -43,7 +43,7 @@ export interface IOrderSlotBase extends IPriceBase {
   warehouse?: IWarehouse;
 }
 
-export interface IOrderSlot extends IPriceListItem, IOrderSlotBase {
+export interface IOrderSlot extends IBase, IOrderSlotBase {
   owner?: ICompany;
   order?: OnlyUUID;
 
@@ -135,7 +135,7 @@ export interface IOrderReqData {
 }
 
 export interface ICreateOrdersGroupDto {
-  slots?: IOrderTempSlot;
+  slots?: IOrderTempSlot[];
   info?: ICreateOrderInfoFormState;
 }
 export interface ICreateOrdersWithSlotsAndGroupByWarehousesReqData {

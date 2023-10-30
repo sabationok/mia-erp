@@ -9,6 +9,7 @@ import { OnlyUUID } from '../../../redux/global.types';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import styled from 'styled-components';
 import { createStepsChecker } from '../../../utils';
+import { createApiCall, OrdersApi } from '../../../api';
 
 // const orderValidation = yup.object().shape({
 //   manager: yup.object().shape({ _id: yup.string() } as Record<keyof IUser, any>),
@@ -25,6 +26,7 @@ export enum OrderTabsEnum {
   summary = 'summary',
   invoices = 'invoices',
 }
+
 export const FormCreateOrderTabs = enumToFilterOptions(OrderTabsEnum);
 
 const checkStep = createStepsChecker(FormCreateOrderTabs);
@@ -48,6 +50,8 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
   const onValid = (data?: any) => {
     console.log('FormCreateOrderData =======================================');
     console.log(data);
+
+    createApiCall({ data: { data: { slots: content } } }, OrdersApi.createGroupWithSlots, OrdersApi);
   };
 
   const renderTab = useMemo(() => {

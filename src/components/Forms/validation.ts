@@ -2,29 +2,29 @@ import * as yup from 'yup';
 import { AddressDto } from '../../redux/global.types';
 
 export const UUIDSchema = yup.string().uuid();
-export const objUUIDSchema = yup.object().shape({
+export const UUIDRefSchema = yup.object().shape({
   _id: UUIDSchema,
 });
 export const arrOfUUIDSchema = yup.array().of(UUIDSchema).min(1);
 
 export const orderInfoBaseSchema = yup.object().shape({
-  manager: objUUIDSchema.required('Is required field'),
+  manager: UUIDRefSchema.required('Is required field'),
   status: yup.string(),
 
-  customer: objUUIDSchema.required('Is required field'),
+  customer: UUIDRefSchema.required('Is required field'),
   customerCommunicationMethods: arrOfUUIDSchema,
-  receiver: objUUIDSchema,
+  receiver: UUIDRefSchema,
   receiverCommunicationMethods: arrOfUUIDSchema,
 
   invoiceInfo: yup.object().shape({
-    method: objUUIDSchema,
+    method: UUIDRefSchema,
     expiredAt: yup.date().required('Is required field'),
     createForOrders: yup.boolean(),
   }),
 
   shipmentInfo: yup.object().shape({
-    method: objUUIDSchema,
-    paymentMethod: objUUIDSchema,
+    method: UUIDRefSchema,
+    paymentMethod: UUIDRefSchema,
     destination: yup.object().shape({
       country: yup.string().required('Is required field'),
       region: yup.string().required('Is required field'),

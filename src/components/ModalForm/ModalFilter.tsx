@@ -16,6 +16,7 @@ export interface ModalFormFilterProps<V = any, D = any> {
   defaultOption?: number | FilterOpt<V, D> | V;
   currentIndex?: number;
   defaultFilterValue?: string;
+  renderLabel?: (info: { option?: FilterOpt<V, D>; index: number; isActive: boolean }) => React.ReactNode;
 
   asStepper?: boolean;
 
@@ -65,6 +66,7 @@ const ModalFilter = <V = any, D = any>({
   name,
   onChangeIndex,
   optionProps,
+  renderLabel,
   ...props
 }: ModalFormFilterProps<V, D> & React.HTMLAttributes<HTMLDivElement>) => {
   const [current, setCurrent] = useState<number>(currentIndex);
@@ -117,12 +119,19 @@ const ModalFilter = <V = any, D = any>({
           onClick={handleSelectOpt(idx, opt)}
           asStep={asStepper}
           isActive={asStepper ? idx <= current : current === idx}
+          customLabel={!!renderLabel}
         >
-          <span className={'inner'}>{opt?.label}</span>
-          {opt.extraLabel || null}
+          {renderLabel ? (
+            renderLabel({ option: opt, index: idx, isActive: asStepper ? idx <= current : current === idx })
+          ) : (
+            <>
+              <span className={'inner'}>{opt?.label}</span>
+              {opt.extraLabel || null}
+            </>
+          )}
         </StButtonIcon>
       )),
-    [asStepper, current, filterOptions, handleSelectOpt]
+    [asStepper, current, filterOptions, handleSelectOpt, renderLabel]
   );
 
   return filterOptions?.length && filterOptions?.length > 0 ? (
@@ -140,7 +149,7 @@ const Filter = styled.div<{ gridRepeat?: number; optionProps?: { fitContentH?: b
   grid-template-columns: ${({ gridRepeat, optionProps }) =>
     `repeat(${gridRepeat || 1}, minmax(${(optionProps?.fitContentH && 'min-content') || '150px'} ,1fr))`};
 
-  min-height: 32px;
+  height: 32px;
   overflow: auto;
 
   background-color: ${({ theme }) => theme.modalBackgroundColor};
@@ -154,7 +163,7 @@ const Filter = styled.div<{ gridRepeat?: number; optionProps?: { fitContentH?: b
   }
 `;
 
-const StButtonIcon = styled(ButtonIcon)<{ asStep?: boolean }>`
+const StButtonIcon = styled(ButtonIcon)<{ asStep?: boolean; customLabel?: boolean }>`
   position: relative;
   flex-direction: column;
   justify-content: space-around;
@@ -172,7 +181,7 @@ const StButtonIcon = styled(ButtonIcon)<{ asStep?: boolean }>`
   height: 100%;
   min-height: 28px;
 
-  padding: 6px 12px;
+  padding: ${p => (p.customLabel ? '2px 4px' : '6px 12px')};
 
   color: ${({ theme }) => theme.fontColorHeader};
 

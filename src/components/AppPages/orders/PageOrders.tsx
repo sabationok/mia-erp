@@ -14,6 +14,8 @@ import useOrdersActionsCreatorHook from '../../../hooks/useOrdersActionsCreator.
 import { BaseAppPageProps } from '../index';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import ModalFilter from '../../ModalForm/ModalFilter';
+import FlexBox from '../../atoms/FlexBox';
+import { Text } from '../../atoms/Text';
 
 interface Props extends BaseAppPageProps {}
 
@@ -39,6 +41,53 @@ const ordersFilterOptions = enumToFilterOptions(OrderStatusEnum);
 //
 //   return options;
 // };
+
+const PageOrders: React.FC<any> = (props: Props) => {
+  const { tableConfig, isLoading } = useOrderTableConfigs();
+  const [filterButtonResults] = useState<Record<OrderStatusEnum | string, number | string>>({});
+
+  return (
+    <AppGridPage path={props.path}>
+      <Page>
+        <ModalFilter
+          style={{ height: 44 }}
+          filterOptions={ordersFilterOptions}
+          renderLabel={info => {
+            return (
+              <FlexBox
+                justifyContent={'space-between'}
+                fillHeight
+                fillWidth
+                overflow={'hidden'}
+                padding={'2px 4px'}
+                gap={6}
+                style={{ cursor: 'inherit' }}
+              >
+                <Text $size={12} $weight={600} $textTransform={'none'}>
+                  {info?.option?.label ?? null}
+                </Text>
+
+                <Text $size={10} $weight={500} $ellipsisMode>
+                  {info?.option?.value ? filterButtonResults[info?.option?.value] : 0}
+                </Text>
+              </FlexBox>
+            );
+          }}
+        />
+
+        <FlexBox fillWidth flex={1}>
+          <TableList {...tableConfig} tableData={mockOrdersData} isLoading={isLoading} />
+        </FlexBox>
+      </Page>
+    </AppGridPage>
+  );
+};
+
+const Page = styled(FlexBox)`
+  ${takeFullGridArea}
+`;
+
+export default PageOrders;
 
 export const useOrderTableConfigs = () => {
   const service = useOrdersServiceHook();
@@ -97,22 +146,3 @@ export const useOrderTableConfigs = () => {
     filterParams,
   };
 };
-const PageOrders: React.FC<any> = (props: Props) => {
-  const { tableConfig, isLoading } = useOrderTableConfigs();
-
-  return (
-    <AppGridPage path={props.path}>
-      <Page>
-        <ModalFilter filterOptions={ordersFilterOptions} />
-
-        <TableList {...tableConfig} tableData={mockOrdersData} isLoading={isLoading} />
-      </Page>
-    </AppGridPage>
-  );
-};
-
-const Page = styled.div`
-  ${takeFullGridArea}
-`;
-
-export default PageOrders;

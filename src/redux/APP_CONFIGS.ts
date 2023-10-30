@@ -226,20 +226,19 @@ const priceManagementEndpoints: ApiEndpointsMap = {
 };
 
 const ordersEndpoints: ApiEndpointsMap = {
-  [Endpoints.getAll]: () => `${API_BASE_ROUTES.ORDERS}/getAll`,
-  [Endpoints.getById]: (orderId: string) => `${API_BASE_ROUTES.ORDERS}/getById/${orderId}`,
-  [Endpoints.create]: () => `${API_BASE_ROUTES.ORDERS}/create`,
-  [Endpoints.addItemToOrderSlot]: (orderId: string) =>
-    `${API_BASE_ROUTES.ORDERS}/${Endpoints.addItemToOrderSlot}/${orderId}`,
-  [Endpoints.softDeleteOrderSlot]: (orderId: string, orderSlotId: string) =>
+  getAll: () => `${API_BASE_ROUTES.ORDERS}/getAll`,
+  getById: (orderId: string) => `${API_BASE_ROUTES.ORDERS}/getById/${orderId}`,
+  create: () => `${API_BASE_ROUTES.ORDERS}/create`,
+  addItemToOrderSlot: (orderId: string) => `${API_BASE_ROUTES.ORDERS}/${Endpoints.addItemToOrderSlot}/${orderId}`,
+  softDeleteOrderSlot: (orderId: string, orderSlotId: string) =>
     `${API_BASE_ROUTES.ORDERS}/${Endpoints.softDeleteOrderSlot}/${orderId}/${orderSlotId}`,
-  [Endpoints.softDeleteOrderSlotItem]: (orderId: string, orderSlotId: string, slotItemId: string) =>
+  softDeleteOrderSlotItem: (orderId: string, orderSlotId: string, slotItemId: string) =>
     `${API_BASE_ROUTES.ORDERS}/${Endpoints.softDeleteOrderSlotItem}/${orderId}/${orderSlotId}/${slotItemId}`,
-  [Endpoints.updateListItem]: (listId: string, priceId: string) =>
+  updateListItem: (listId: string, priceId: string) =>
     `${API_BASE_ROUTES.ORDERS}/${Endpoints.updateListItem}/${listId}/${priceId}`,
-  [Endpoints.updateById]: (orderId: string) => `${API_BASE_ROUTES.ORDERS}/${Endpoints.updateById}/${orderId}`,
-  [Endpoints.getAllOrderSlots]: () => `${API_BASE_ROUTES.ORDERS}/${Endpoints.getAllOrderSlots}`,
-  [Endpoints.getDataForNewOrderSlot]: (productId: string) =>
+  updateById: (orderId: string) => `${API_BASE_ROUTES.ORDERS}/${Endpoints.updateById}/${orderId}`,
+  getAllOrderSlots: () => `${API_BASE_ROUTES.ORDERS}/${Endpoints.getAllOrderSlots}`,
+  getDataForNewOrderSlot: (productId: string) =>
     `${API_BASE_ROUTES.ORDERS}/${[Endpoints.getDataForNewOrderSlot]}/${productId}`,
 };
 
