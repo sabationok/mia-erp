@@ -8,7 +8,7 @@ import ModalFilter from '../../ModalForm/ModalFilter';
 import { useModalService } from '../../ModalProvider/ModalProvider';
 import FormCreateIntegration from '../../Forms/FormCreateIntegration';
 import { ExtIntegrationBase } from '../../../redux/integrations/integrations.types';
-import { useTranslatedInvoicingMethods, useTranslatedPaymentMethods } from '../../../hooks/useTranslatedMethods.hook';
+import { useTranslatedCommunicationMethods } from '../../../hooks/useTranslatedMethods.hook';
 import { createApiCall } from '../../../api';
 import ExtServicesApi from '../../../api/extServices.api';
 import { getIdRef, transformQueriesForReq } from '../../../utils/dataTransform';
@@ -16,9 +16,9 @@ import styled from 'styled-components';
 import ExtraFooterWithButtonButton from '../../Forms/components/ExtraFooterWithButtonButton';
 import IntegrationOverview from '../components/IntegrationOverview';
 
-export interface InvoicingIntegrationsTabProps extends IntegrationTabProps {}
+export interface CommunicationIntegrationsTabProps extends IntegrationTabProps {}
 
-const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
+const CommunicationIntegrationsTab: React.FC<CommunicationIntegrationsTabProps> = ({
   providers,
   onClose,
   compId,
@@ -29,8 +29,7 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
   const modalS = useModalService();
   const [isListVisible, setIsListVisible] = useState(false);
   const handleToggleListVisibility = () => setIsListVisible(p => !p);
-  const paymentMethods = useTranslatedPaymentMethods();
-  const invoicingMethods = useTranslatedInvoicingMethods();
+  const translatedCommunicationMethods = useTranslatedCommunicationMethods();
 
   const currentServiceData = useMemo(() => {
     return providers?.find(pr => pr.value === provider);
@@ -62,8 +61,8 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
       );
   }, [currentServiceData]);
 
-  const renderInvoicingMethods = useMemo(() => {
-    const methods = invoicingMethods.filter(m => {
+  const renderCommunicationMethods = useMemo(() => {
+    const methods = translatedCommunicationMethods.filter(m => {
       return m.service?._id === currentServiceData?._id;
     });
 
@@ -74,21 +73,7 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
         </FlexBox>
       );
     });
-  }, [currentServiceData?._id, invoicingMethods]);
-
-  const renderPaymentMethods = useMemo(() => {
-    const methods = paymentMethods.filter(m => {
-      return m.service?._id === currentServiceData?._id;
-    });
-
-    return methods.map(m => {
-      return (
-        <FlexBox key={m._id} border={'1px solid lightgrey'} padding={'4px 6px'} borderRadius={'4px'}>
-          <Text $size={10}>{m.label}</Text>
-        </FlexBox>
-      );
-    });
-  }, [currentServiceData?._id, paymentMethods]);
+  }, [currentServiceData?._id, translatedCommunicationMethods]);
 
   const renderIntegrations = useMemo(() => {
     return integrationsList.map(int => {
@@ -115,19 +100,11 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
       <FlexBox fillWidth flex={1} padding={'8px 4px 0'} overflow={'hidden'}>
         <List overflow={'auto'} isVisible={isListVisible} fillWidth>
           <Text $size={11} $weight={600} $margin={'4px 8px'}>
-            {t('Invoicing methods')}
+            {t('Communication methods')}
           </Text>
 
           <FlexBox fxDirection={'row'} padding={'4px 2px'} flexWrap={'wrap'} gap={4} fillWidth>
-            {renderInvoicingMethods}
-          </FlexBox>
-
-          <Text $size={11} $weight={600} $margin={'4px 8px'}>
-            {t('Payment checkout services')}
-          </Text>
-
-          <FlexBox fxDirection={'row'} padding={'4px 2px'} flexWrap={'wrap'} gap={4} fillWidth>
-            {renderPaymentMethods}
+            {renderCommunicationMethods}
           </FlexBox>
 
           {/*<Text $size={11} $weight={600} $margin={'4px 8px'}>*/}
@@ -167,4 +144,4 @@ const List = styled(FlexBox)<{ isVisible?: boolean }>`
   transition: all ${p => p.theme.globals.timingFnLong};
 `;
 
-export default InvoicingIntegrationsTab;
+export default CommunicationIntegrationsTab;

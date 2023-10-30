@@ -1,14 +1,12 @@
 import React, { memo, useMemo } from 'react';
 import ModalForm from 'components/ModalForm';
 import styled from 'styled-components';
-import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FlexBox from '../atoms/FlexBox';
 
 import { DirInTreeActionsCreatorType, IDirInTreeProps, IMethodDirItem, MethodDirType } from '../Directories/dir.types';
 import DirListItem from '../Directories/DirList/DirListItem';
 import { IPaymentMethod } from '../../redux/payments/payments.types';
-import useShipmentsService from '../../hooks/useShipmentsService.hook';
-import useTranslatedShipmentMethods from '../../hooks/useTranslatedShipmentMethods.hook';
+import { useTranslatedShipmentMethods } from '../../hooks/useTranslatedMethods.hook';
 
 export interface DirShipmentsMethodsProps
   extends IDirInTreeProps<MethodDirType, IMethodDirItem, IMethodDirItem, IMethodDirItem> {
@@ -29,8 +27,8 @@ const DirShipmentsMethods: React.FC<DirShipmentsMethodsProps> = ({
   creating,
   ...props
 }) => {
-  const service = useShipmentsService();
-  const modalService = useModalProvider();
+  // const service = useShipmentsService();
+  // const modalService = useModalProvider();
   const methods = useTranslatedShipmentMethods();
 
   const renderList = useMemo(

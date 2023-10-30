@@ -1,24 +1,16 @@
 import { IBase } from '../global.types';
 import { IInvoice } from '../invoices/invoices.types';
 import { AppQueryParams } from '../../api';
-import { LangPack } from '../../lang';
-import { ExtPaymentService } from '../integrations/integrations.types';
+import { ExtPaymentService, ExtServiceMethodBase } from '../integrations/integrations.types';
 
 export interface IPayment extends IBase {
   invoice?: IInvoice;
-  service?: ExtPaymentService;
-
   method?: IPaymentMethod;
-
   amount?: number;
+  status?: string;
 }
 
-export interface IPaymentMethod extends IBase {
-  label?: string;
-  labels?: LangPack;
-  disabled?: boolean;
-  isDefault?: boolean;
-  lang?: LangPack;
+export interface IPaymentMethod extends ExtServiceMethodBase {
   type?: string;
   service?: ExtPaymentService | null;
   extService?: ExtPaymentService | null;

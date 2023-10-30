@@ -17,6 +17,7 @@ export enum API_BASE_ROUTES {
   INVOICES = '/invoices',
   SHIPMENTS = '/shipments',
   CUSTOMERS = '/customers',
+  COMMUNICATION = '/communications',
   COUNTERPARTIES = '/counterparties',
   EXT_SERVICES = '/ext-services',
 }
@@ -104,7 +105,7 @@ export enum ApiDirType {
   METHODS_PAYMENT = 'methods_payment',
   METHODS_INVOICING = 'methods_invoicing',
   METHODS_SHIPMENT = 'methods_shipment',
-  METHODS_COMMUNICATION = 'methods_communication',
+  METHODS_COMMUNICATION = 'methods_communications',
   SOURCE_ATTRACTION = 'attractionSource',
   COLLECTION = 'collection',
   COLLECTIONS = 'collections',
@@ -118,7 +119,7 @@ export enum ApiDirType {
 export enum ApiDefaultDirType {
   SHIPMENT_TYPES = 'shipments',
   PAYMENT_TYPES = 'payments',
-  COMMUNICATION_TYPES = 'communications',
+  COMMUNICATION_TYPES = 'communicationss',
 }
 
 const transactionsApiEndpoints: ApiEndpointsMap = {
@@ -280,6 +281,10 @@ const customers = {
   getAll: () => `${API_BASE_ROUTES.CUSTOMERS}/getAll`,
   getById: (id?: string) => `${API_BASE_ROUTES.CUSTOMERS}/getById/${id}`,
 };
+const communications = {
+  getAllMethods: () => `${API_BASE_ROUTES.COMMUNICATION}/${Endpoints.methods}/getAll`,
+  updateMethod: (id?: string) => `${API_BASE_ROUTES.COMMUNICATION}/${Endpoints.methods}/update/${id}`,
+};
 const extServices = {
   getAllIntegrationsByType: (type: 'input' | 'output' | string = '') =>
     `${API_BASE_ROUTES.EXT_SERVICES}/${Endpoints.integrations}/getAll`,
@@ -313,6 +318,7 @@ const APP_CONFIGS = {
     customers,
     shipments,
     extServices,
+    communications,
   },
 };
 

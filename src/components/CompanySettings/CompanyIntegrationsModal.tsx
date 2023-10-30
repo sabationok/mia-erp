@@ -2,7 +2,6 @@ import { ModalFormProps } from '../ModalForm';
 import FlexBox from '../atoms/FlexBox';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../utils/fabrics';
-import _ from 'lodash';
 import styled from 'styled-components';
 import { ModalHeader } from '../atoms';
 import InvoicingIntegrationsTab from './integrations/InvoicingIntegrationsTab';
@@ -12,11 +11,14 @@ import { AppQueryParams } from '../../api';
 import { ExtIntegrationServiceTypeEnum, ExtServiceBase } from '../../redux/integrations/integrations.types';
 import ModalFooter from '../ModalForm/ModalFooter';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import _ from 'lodash';
+import CommunicationIntegrationsTab from './integrations/CommunicationIntegrationsTab';
 
 export interface CompanyIntegrationsProps extends Omit<ModalFormProps, 'onSubmit'> {}
 
-const ExtServiceTabs = _.pick(ExtIntegrationServiceTypeEnum, ['invoicing', 'shipment']);
+const ExtServiceTabs = _.pick(ExtIntegrationServiceTypeEnum, ['invoicing', 'shipment', 'communication']);
 
+const tabs = enumToFilterOptions(ExtServiceTabs);
 export interface IntegrationTabProps {
   onClose?: () => void;
   compId: string;
@@ -29,9 +31,8 @@ const tabsMap: Record<
 > = {
   [ExtServiceTabs.invoicing]: InvoicingIntegrationsTab,
   [ExtServiceTabs.shipment]: ShipmentsIntegrationsTab,
+  [ExtServiceTabs.communication]: CommunicationIntegrationsTab,
 };
-
-const tabs = enumToFilterOptions(ExtServiceTabs);
 
 const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose, ...props }) => {
   const [currentType, setCurrentType] = useState(tabs[0].value);
@@ -39,7 +40,7 @@ const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose,
   const { loadExtServices, extServProviders } = useExtServProvidersQuery();
 
   const providers = useMemo(() => {
-    return extServProviders.filter(prov => prov?.originServices && prov.originServices[currentType]);
+    return extServProviders.filter(prov => prov?.originServices && prov?.originServices[currentType]);
   }, [currentType, extServProviders]);
 
   useEffect(() => {

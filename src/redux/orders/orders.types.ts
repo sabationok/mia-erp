@@ -97,6 +97,14 @@ export interface ICreateOrderInfoFormState {
   receiver?: ICustomerBase;
   receiverCommunicationMethods?: string[];
 
+  customerInfo?: ICustomerBase & {
+    communication?: string[];
+  };
+
+  receiverInfo?: ICustomerBase & {
+    communication?: string[];
+  };
+
   status?: OrderStatusEnum;
 
   invoiceInfo?: {
@@ -108,6 +116,11 @@ export interface ICreateOrderInfoFormState {
     method?: IFormDataValueWithUUID;
     destination?: AddressDto;
     paymentMethod?: IFormDataValueWithUUID;
+
+    invoiceInfo?: {
+      method?: IFormDataValueWithUUID;
+      expiredAt?: string | number | Date;
+    };
   };
 }
 

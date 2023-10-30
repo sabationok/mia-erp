@@ -2,7 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from '../../utils';
 import { ShipmentsApi } from '../../api';
 import { ThunkPayload } from '../store.store';
-import { IShipmentMethod, IShipmentMethodReqData } from './shipments.types';
+import { IShipmentMethodReqData } from './shipments.types';
+import { IShipmentMethod } from '../integrations/integrations.types';
 
 enum ShipmentsThunkTypeEnum {
   getAll = 'shipments/getAllThunk',

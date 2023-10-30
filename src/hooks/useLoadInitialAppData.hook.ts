@@ -40,6 +40,7 @@ const useLoadInitialAppDataHook = ({
     integrations,
     shipments,
     invoicing,
+    customers,
   } = useAppServiceProvider();
 
   const load = async () => {
@@ -73,6 +74,7 @@ const useLoadInitialAppDataHook = ({
             invoicing.getAllMethods();
             payments.getAllMethods();
             shipments.getAllMethods();
+            customers.getAllMethods();
           },
         });
 

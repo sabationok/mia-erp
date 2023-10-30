@@ -1,7 +1,8 @@
 import { StateErrorType } from '../reduxTypes.types';
-import { IShipment, IShipmentMethod } from './shipments.types';
+import { IShipment } from './shipments.types';
 import { createSlice } from '@reduxjs/toolkit';
 import { getAllShipmentMethodsThunk, updateShipmentMethodThunk } from './shipments.thunks';
+import { IShipmentMethod } from '../integrations/integrations.types';
 
 export interface ShipmentsState {
   shipments: IShipment[];

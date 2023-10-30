@@ -8,17 +8,17 @@ import FormAccordionItem from '../../components/FormAccordionItem';
 import InputLabel from 'components/atoms/Inputs/InputLabel';
 import { ICreateOrderInfoFormState } from 'redux/orders/orders.types';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
-import { useDirectoriesSelector } from 'redux/selectors.store';
-import { ApiDirType } from 'redux/APP_CONFIGS';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import SelectCustomerModal from '../components/SelectCustomerModal';
 import TagButtonsFilter from 'components/atoms/TagButtonsFilter';
 import SelectManagerModal from '../components/SelectManagerModal';
 import { FormOrderStepBaseProps } from '../formOrder.types';
 import CheckboxesListSelector from 'components/atoms/CheckboxesListSelector';
-import { useTranslatedInvoicingMethods } from 'hooks/useTranslatedMethods.hook';
-import { ServiceName, useAppServiceProvider } from 'hooks/useAppServices.hook';
-import useTranslatedShipmentMethods from 'hooks/useTranslatedShipmentMethods.hook';
+import {
+  useTranslatedCommunicationMethods,
+  useTranslatedInvoicingMethods,
+  useTranslatedShipmentMethods,
+} from 'hooks/useTranslatedMethods.hook';
 import ButtonSwitch from '../../../atoms/ButtonSwitch';
 import InputText from '../../../atoms/Inputs/InputText';
 import { Path, useFormContext, UseFormSetValue } from 'react-hook-form';
@@ -35,18 +35,17 @@ export interface OrderInfoStepProps extends FormOrderStepBaseProps {
 }
 
 const useOrderInfoForm = () => useFormContext<ICreateOrderInfoFormState>();
+
 type ConfirmsStateKay = 'hasShipmentPayment' | 'holdShipmentPayment' | 'holdOrderPayment' | 'hasReceiverInfo';
 type FormFieldPaths = Path<ICreateOrderInfoFormState>;
 const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeValidStatus }) => {
-  const service = useAppServiceProvider()[ServiceName.orders];
   const [touchedFields, setTouchedFields] = useState<Record<FormFieldPaths | string, boolean>>({});
   const modalS = useModalService();
   const [confirms, setConfirms] = useState<Record<ConfirmsStateKay | string, boolean>>({});
   // TODO refactoring
-  const { directory: communicationMethodsList } = useDirectoriesSelector(ApiDirType.METHODS_COMMUNICATION);
 
-  // const paymentsMethodsList = useTranslatedPaymentMethods();
   const shipmentMethodsList = useTranslatedShipmentMethods();
+  const communicationMethodsList = useTranslatedCommunicationMethods();
   const invoicingMethods = useTranslatedInvoicingMethods({ withFullLabel: true });
 
   const setTouchedField = (path: FormFieldPaths) => {
@@ -262,9 +261,6 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
             <CheckboxesListSelector
               options={invoicingMethods}
               currentOption={formValues?.invoiceInfo?.method}
-              disabledCheck={(option, i) => {
-                return invoicingMethods[i].disabled || !!invoicingMethods[i].service?.defIntegration?._id;
-              }}
               onChangeIndex={i => {
                 handleOnChangeValue('invoiceInfo.method', invoicingMethods[i]);
               }}

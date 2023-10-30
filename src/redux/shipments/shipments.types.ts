@@ -2,9 +2,9 @@ import { AddressDto, IBase, IFormDataValueWithUUID, OnlyUUID } from '../global.t
 import { IOrder, IOrderSlot } from '../orders/orders.types';
 import { IPayment, IPaymentMethod } from '../payments/payments.types';
 import { IInvoice } from '../invoices/invoices.types';
-import { LangPack } from '../../lang';
 import { AppQueryParams } from '../../api';
 import { IProductDimensions } from '../products/products.types';
+import { IShipmentMethod } from '../integrations/integrations.types';
 
 export enum ShipmentProviderEnum {
   ukrposhta = 'ukrposhta',
@@ -33,14 +33,6 @@ export interface IShipment extends IBase {
 
   method?: IShipmentMethod;
   paymentMethod?: IPaymentMethod;
-}
-
-export interface IShipmentMethod extends IBase {
-  provider?: OnlyUUID;
-  label?: string;
-  lang?: LangPack;
-  isDefault?: boolean;
-  disabled?: boolean;
 }
 
 export interface IShipmentBaseDto {

@@ -1,13 +1,20 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ICustomer, ICustomerReqDta } from './customers.types';
 import { ThunkPayload } from '../store.store';
-import { AppQueryParams, CustomersApi } from '../../api';
+import { AppQueryParams, CommunicationApi, CustomersApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
+import { ICommunicationMethod, ICommunicationMethodReqData } from '../integrations/integrations.types';
 
 enum CustomersThunkTypeEnum {
   create = 'customers/createCustomerThunk',
   getAll = 'customers/getAllCustomersThunk',
   update = 'customers/updateCustomerThunk',
+
+  getAllMethods = 'customers/getAllMethodsThunk',
+  updateMethod = 'customers/updateMethodThunk',
+
+  getAllSources = 'customers/getAllSourcesThunk',
+  updateSource = 'customers/updateSourceThunk',
 }
 export const createCustomerThunk = createAsyncThunk<ICustomer, ThunkPayload<ICustomerReqDta, ICustomer>>(
   CustomersThunkTypeEnum.create,
@@ -54,6 +61,43 @@ export const getAllCustomersThunk = createAsyncThunk<
 
     return { data: res?.data?.data, refresh: arg.data?.refresh };
   } catch (e) {
+    return thunkAPI.rejectWithValue(axiosErrorCheck(e));
+  }
+});
+
+export const getAllCommunicationInvoiceMethodsThunk = createAsyncThunk<
+  ICommunicationMethod[],
+  ThunkPayload<unknown, ICommunicationMethod[]>
+>(CustomersThunkTypeEnum.getAllMethods, async (args, thunkAPI) => {
+  args?.onLoading && args?.onLoading(true);
+  try {
+    const res = await CommunicationApi.getAllMethods();
+    res && args?.onSuccess && args?.onSuccess(res?.data?.data);
+
+    args?.onLoading && args?.onLoading(false);
+    return res?.data?.data;
+  } catch (e) {
+    args?.onLoading && args?.onLoading(false);
+    args?.onError && args?.onError(e);
+
+    return thunkAPI.rejectWithValue(axiosErrorCheck(e));
+  }
+});
+export const updateCommunicationMethodThunk = createAsyncThunk<
+  ICommunicationMethod,
+  ThunkPayload<ICommunicationMethodReqData, ICommunicationMethod>
+>(CustomersThunkTypeEnum.updateMethod, async (args, thunkAPI) => {
+  args?.onLoading && args?.onLoading(true);
+  try {
+    const res = await CommunicationApi.updateMethod(args?.data || {});
+    res && args?.onSuccess && args?.onSuccess(res?.data?.data);
+
+    args?.onLoading && args?.onLoading(false);
+    return res?.data?.data;
+  } catch (e) {
+    args?.onLoading && args?.onLoading(false);
+    args?.onError && args?.onError(e);
+
     return thunkAPI.rejectWithValue(axiosErrorCheck(e));
   }
 });

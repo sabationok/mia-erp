@@ -2,7 +2,8 @@ import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import baseApi from './baseApi';
 import { AppResponse } from '../redux/global.types';
-import { IShipmentMethod, IShipmentMethodReqData } from '../redux/shipments/shipments.types';
+import { IShipmentMethodReqData } from '../redux/shipments/shipments.types';
+import { IShipmentMethod } from '../redux/integrations/integrations.types';
 
 export default class ShipmentsApi {
   private static api = baseApi;

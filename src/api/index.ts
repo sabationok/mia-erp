@@ -1,5 +1,4 @@
 import baseApi, { baseURL, token } from './baseApi';
-// import { token, baseURL } from './baseApi';
 import { createApiCall } from './createApiCall.api';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { FilterReturnDataType } from '../components/Filter/AppFilter';
@@ -9,7 +8,6 @@ export { default as TransactionsApi } from './transactions.api';
 export { default as CompaniesApi } from './companies.api';
 export { default as PermissionsApi } from './permissions.api';
 export { default as DirectoriesApi } from './directories.api';
-
 export { default as PriceManagementApi } from './priceManagement.api';
 export { default as ProductsApi } from './products.api';
 export { default as OrdersApi } from './orders.api';
@@ -19,6 +17,7 @@ export { default as PaymentsApi } from './payments.api';
 export { default as InvoicesApi } from './invoices.api';
 export { default as ShipmentsApi } from './shipments.api';
 export { default as CustomersApi } from './customers.api';
+export { default as CommunicationApi } from './communication.api';
 
 export enum AppQueryKey {
   dirType = 'dirType',
