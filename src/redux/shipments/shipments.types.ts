@@ -4,7 +4,7 @@ import { IPayment, IPaymentMethod } from '../payments/payments.types';
 import { IInvoice } from '../invoices/invoices.types';
 import { AppQueryParams } from '../../api';
 import { IProductDimensions } from '../products/products.types';
-import { IShipmentMethod } from '../integrations/integrations.types';
+import { IDeliveryMethod } from '../integrations/integrations.types';
 
 export enum ShipmentProviderEnum {
   ukrposhta = 'ukrposhta',
@@ -31,7 +31,7 @@ export interface IShipment extends IBase {
   status?: ShipmentStatusTypeEnum;
   description?: string;
 
-  method?: IShipmentMethod;
+  method?: IDeliveryMethod;
   paymentMethod?: IPaymentMethod;
 }
 
@@ -112,8 +112,8 @@ export interface IShipmentServiceFormData {
 }
 
 // * Method
-export interface IShipmentMethodReqData {
+export interface IDeliveryMethodReqData {
   _id?: string;
-  data?: IShipmentMethod;
+  data?: IDeliveryMethod;
   params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>;
 }

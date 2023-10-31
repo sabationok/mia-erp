@@ -14,11 +14,7 @@ import TagButtonsFilter from 'components/atoms/TagButtonsFilter';
 import SelectManagerModal from '../components/SelectManagerModal';
 import { FormOrderStepBaseProps } from '../formOrder.types';
 import CheckboxesListSelector from 'components/atoms/CheckboxesListSelector';
-import {
-  useTranslatedCommunicationMethods,
-  useTranslatedInvoicingMethods,
-  useTranslatedShipmentMethods,
-} from 'hooks/useTranslatedMethods.hook';
+import { useTranslatedListData } from 'hooks/useTranslatedMethods.hook';
 import ButtonSwitch from '../../../atoms/ButtonSwitch';
 import InputText from '../../../atoms/Inputs/InputText';
 import { Path, useFormContext, UseFormSetValue } from 'react-hook-form';
@@ -27,6 +23,7 @@ import CustomerInfoComponent from '../components/CustomerInfoComponent';
 import { destinationAddressInputsProps } from '../components/DestinationInputs';
 import { UseFormReturn } from 'react-hook-form/dist/types';
 import { throttleCallback } from '../../../../utils/lodash.utils';
+import { useCommunicationSelector, useInvoicesSelector, useShipmentsSelector } from '../../../../redux/selectors.store';
 
 export interface OrderInfoStepProps extends FormOrderStepBaseProps {
   isGroup?: boolean;
@@ -44,9 +41,9 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
   const [confirms, setConfirms] = useState<Record<ConfirmsStateKay | string, boolean>>({});
   // TODO refactoring
 
-  const shipmentMethodsList = useTranslatedShipmentMethods();
-  const communicationMethodsList = useTranslatedCommunicationMethods();
-  const invoicingMethods = useTranslatedInvoicingMethods({ withFullLabel: true });
+  const shipmentMethodsList = useTranslatedListData(useShipmentsSelector().methods, { withFullLabel: true });
+  const communicationMethodsList = useTranslatedListData(useCommunicationSelector().methods, { withFullLabel: true });
+  const invoicingMethods = useTranslatedListData(useInvoicesSelector().methods, { withFullLabel: true });
 
   const setTouchedField = (path: FormFieldPaths) => {
     setTouchedFields(p => ({ ...p, [path]: true }));

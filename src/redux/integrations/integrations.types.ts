@@ -132,9 +132,9 @@ export interface ICommunicationMethodReqData {
   params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>;
 }
 export interface ExtShipmentService extends ExtServiceBase {
-  methods?: IShipmentMethod[];
+  methods?: IDeliveryMethod[];
 }
-export interface IShipmentMethod extends ExtServiceMethodBase {
+export interface IDeliveryMethod extends ExtServiceMethodBase {
   type?: string;
   service?: ExtShipmentService | null;
   extService?: ExtShipmentService | null;

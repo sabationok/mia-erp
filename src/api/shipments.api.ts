@@ -2,8 +2,8 @@ import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import baseApi from './baseApi';
 import { AppResponse } from '../redux/global.types';
-import { IShipmentMethodReqData } from '../redux/shipments/shipments.types';
-import { IShipmentMethod } from '../redux/integrations/integrations.types';
+import { IDeliveryMethodReqData } from '../redux/shipments/shipments.types';
+import { IDeliveryMethod } from '../redux/integrations/integrations.types';
 
 export default class ShipmentsApi {
   private static api = baseApi;
@@ -21,10 +21,10 @@ export default class ShipmentsApi {
 
   public static getAllMethods(
     params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>
-  ): Promise<AppResponse<IShipmentMethod[]>> {
+  ): Promise<AppResponse<IDeliveryMethod[]>> {
     return this.api.get(this.endpoints.getAllMethods(), { params });
   }
-  public static updateMethod(args: IShipmentMethodReqData): Promise<AppResponse<IShipmentMethod>> {
+  public static updateMethod(args: IDeliveryMethodReqData): Promise<AppResponse<IDeliveryMethod>> {
     return this.api.patch(this.endpoints.updateMethod(args._id), args.data, { params: args?.params });
   }
 }

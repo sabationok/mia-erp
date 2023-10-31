@@ -5,12 +5,12 @@ import {
   useShipmentsSelector,
 } from '../redux/selectors.store';
 import { useMemo } from 'react';
-import { getTranslatedString, LangKey } from '../lang';
+import { getTranslatedString, LangKey, LangPack } from '../lang';
 import { IPaymentMethod } from '../redux/payments/payments.types';
-import { ExtPaymentService, ICommunicationMethod, IShipmentMethod } from '../redux/integrations/integrations.types';
+import { ExtPaymentService, ICommunicationMethod, IDeliveryMethod } from '../redux/integrations/integrations.types';
 import { IInvoicingMethod } from '../redux/invoices/invoices.types';
 
-interface UseTranslatedMethodsOptionsBase {
+interface UseTranslatedListDataOtions {
   langKey?: LangKey;
   withFullLabel?: boolean;
   getLabel?: (
@@ -20,7 +20,7 @@ interface UseTranslatedMethodsOptionsBase {
     }
   ) => React.ReactNode;
 }
-export const useTranslatedPaymentMethods = (options?: UseTranslatedMethodsOptionsBase) => {
+export const useTranslatedPaymentMethods = (options?: UseTranslatedListDataOtions) => {
   const paymentsState = usePaymentsSelector();
   return useMemo((): (IPaymentMethod & { parent?: ExtPaymentService })[] => {
     return paymentsState.methods.map(el => {
@@ -45,7 +45,7 @@ export const useTranslatedInvoicingMethods = ({
   langKey = 'ua',
   withFullLabel = false,
   getLabel,
-}: UseTranslatedMethodsOptionsBase = {}) => {
+}: UseTranslatedListDataOtions = {}) => {
   const invState = useInvoicesSelector();
 
   return useMemo((): (IInvoicingMethod & {
@@ -77,9 +77,9 @@ export const useTranslatedInvoicingMethods = ({
   }, [getLabel, invState.methods, langKey, withFullLabel]);
 };
 
-export const useTranslatedShipmentMethods = (options?: UseTranslatedMethodsOptionsBase) => {
+export const useTranslatedShipmentMethods = (options?: UseTranslatedListDataOtions) => {
   const state = useShipmentsSelector();
-  return useMemo((): IShipmentMethod[] => {
+  return useMemo((): IDeliveryMethod[] => {
     return state.methods.map(el => ({
       ...el,
       value: el._id,
@@ -88,7 +88,7 @@ export const useTranslatedShipmentMethods = (options?: UseTranslatedMethodsOptio
   }, [options?.langKey, state.methods]);
 };
 
-export const useTranslatedCommunicationMethods = (options?: UseTranslatedMethodsOptionsBase) => {
+export const useTranslatedCommunicationMethods = (options?: UseTranslatedListDataOtions) => {
   const methods = useCommunicationSelector().methods;
   return useMemo((): ICommunicationMethod[] => {
     return methods.map(el => ({
@@ -97,4 +97,59 @@ export const useTranslatedCommunicationMethods = (options?: UseTranslatedMethods
       label: el.labels ? getTranslatedString(el.labels, options?.langKey) : el.label,
     }));
   }, [options?.langKey, methods]);
+};
+
+// export const useTranslatedShipmentMethods = (options?: UseTranslatedMethodsOptionsBase) => {
+//   const state = useShipmentsSelector();
+//   return useMemo((): IDeliveryMethod[] => {
+//     return state.methods.map(el => ({
+//       ...el,
+//       value: el._id,
+//       label: el.labels ? getTranslatedString(el.labels, options?.langKey) : el.label,
+//     }));
+//   }, [options?.langKey, state.methods]);
+// };
+
+export const useTranslatedListData = <
+  T extends {
+    label?: string;
+    labels?: LangPack;
+    value?: any;
+    type?: string;
+    _id: string;
+    parent?: any;
+    service?: any;
+  } = any
+>(
+  data: T[] = [],
+  options?: UseTranslatedListDataOtions
+) => {
+  return useMemo((): T[] => {
+    const trList = data.map(el => {
+      const label = el.labels ? getTranslatedString(el.labels, options?.langKey) : el.label ?? el?.type;
+
+      const parent = el?.service
+        ? {
+            ...el?.service,
+            label: el.service?.lang ? getTranslatedString(el.service?.lang, options?.langKey) : el.service?.label,
+            labels: el.service?.lang ? getTranslatedString(el.service?.lang, options?.langKey) : el.service?.label,
+          }
+        : undefined;
+
+      const fullLabel = parent?.label ? `${parent?.label} | ${label}` : label;
+
+      return {
+        ...el,
+        value: el._id,
+        label: options?.getLabel
+          ? options?.getLabel({ ...el, label, parent })
+          : options?.withFullLabel
+          ? fullLabel
+          : label,
+        parent,
+      };
+    });
+    console.log(trList);
+    return trList;
+  }, [data, options]);
 };

@@ -1,13 +1,13 @@
 import { ServiceDispatcherAsync } from '../redux/global.types';
-import { IShipmentMethodReqData } from '../redux/shipments/shipments.types';
+import { IDeliveryMethodReqData } from '../redux/shipments/shipments.types';
 import { useAppDispatch } from '../redux/store.store';
-import { getAllShipmentMethodsThunk } from '../redux/shipments/shipments.thunks';
+import { getAllDeliveryMethodsThunk } from '../redux/shipments/shipments.thunks';
 import { defaultThunkPayload } from '../utils/fabrics';
 import { useMemo } from 'react';
-import { IShipmentMethod } from '../redux/integrations/integrations.types';
+import { IDeliveryMethod } from '../redux/integrations/integrations.types';
 
 export interface UseShipmentsService {
-  getAllMethods: ServiceDispatcherAsync<IShipmentMethodReqData, IShipmentMethod[]>;
+  getAllMethods: ServiceDispatcherAsync<IDeliveryMethodReqData, IDeliveryMethod[]>;
 }
 
 const useShipmentsService = (): UseShipmentsService => {
@@ -15,7 +15,7 @@ const useShipmentsService = (): UseShipmentsService => {
 
   return useMemo((): UseShipmentsService => {
     return {
-      getAllMethods: args => dispatch(getAllShipmentMethodsThunk(defaultThunkPayload(args))),
+      getAllMethods: args => dispatch(getAllDeliveryMethodsThunk(defaultThunkPayload(args))),
     };
   }, [dispatch]);
 };

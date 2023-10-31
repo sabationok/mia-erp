@@ -6,15 +6,15 @@ import { getDirInTreeActionsCreator } from './directories.data';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { iconId } from '../img/sprite';
 import FormCreateCustomRole from '../components/Forms/FormCreateCustomRole';
-import DirMethods from '../components/CompanySettings/DirMethods';
 import { Modals } from '../components/Modals';
 import { IDirectoryListItem } from '../components/SideBarContent/Directories';
 import CompanyIntegrationsModal from '../components/CompanySettings/CompanyIntegrationsModal';
 import { t } from '../lang';
 import Forms from '../components/Forms';
 import DirPaymentMethods from '../components/CompanySettings/DirPaymentMethods';
-import DirShipmentsMethods from '../components/CompanySettings/DirShipmentsMethods';
+import DirShipmentsMethods from '../components/CompanySettings/DirDeliveryMethods';
 import DirInvocingMethods from '../components/CompanySettings/DirInvocingMethods';
+import DirCommunicationMethods from '../components/CompanySettings/DirCommunicationMethods';
 
 const UsersProps: DirUsersProps = {
   title: 'Користувачі',
@@ -203,7 +203,7 @@ export const companySettings: IDirectoryListItem[] = [
   {
     title: "Способи зв'язку",
     iconId: iconId.persons,
-    ModalChildren: DirMethods,
+    ModalChildren: DirCommunicationMethods,
     modalChildrenProps: {
       title: "Способи зв'язку",
       dirType: ApiDirType.METHODS_COMMUNICATION,

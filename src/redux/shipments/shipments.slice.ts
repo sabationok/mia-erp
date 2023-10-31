@@ -1,12 +1,12 @@
 import { StateErrorType } from '../reduxTypes.types';
 import { IShipment } from './shipments.types';
 import { createSlice } from '@reduxjs/toolkit';
-import { getAllShipmentMethodsThunk, updateShipmentMethodThunk } from './shipments.thunks';
-import { IShipmentMethod } from '../integrations/integrations.types';
+import { getAllDeliveryMethodsThunk, updateShipmentMethodThunk } from './shipments.thunks';
+import { IDeliveryMethod } from '../integrations/integrations.types';
 
 export interface ShipmentsState {
   shipments: IShipment[];
-  methods: IShipmentMethod[];
+  methods: IDeliveryMethod[];
   error: StateErrorType | null;
   isLoading: boolean;
 }
@@ -23,7 +23,7 @@ export const shipmentsSlice = createSlice({
   reducers: {},
   extraReducers: builder =>
     builder
-      .addCase(getAllShipmentMethodsThunk.fulfilled, (s, a) => {
+      .addCase(getAllDeliveryMethodsThunk.fulfilled, (s, a) => {
         s.methods = a.payload;
       })
       .addCase(updateShipmentMethodThunk.fulfilled, (s, a) => {

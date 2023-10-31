@@ -1,22 +1,25 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 import ModalForm from 'components/ModalForm';
 import styled from 'styled-components';
 import FlexBox from '../atoms/FlexBox';
 
-import { DirInTreeActionsCreatorType, IDirInTreeProps, IMethodDirItem, MethodDirType } from '../Directories/dir.types';
+import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../Directories/dir.types';
 import DirListItem from '../Directories/DirList/DirListItem';
 import { IPaymentMethod } from '../../redux/payments/payments.types';
-import { useTranslatedShipmentMethods } from '../../hooks/useTranslatedMethods.hook';
+import { useTranslatedListData } from '../../hooks/useTranslatedMethods.hook';
+import { useCustomersSelector } from '../../redux/selectors.store';
+import { ICommunicationMethod } from '../../redux/integrations/integrations.types';
+import useCustomersService from '../../hooks/useCustomersService';
 
-export interface DirShipmentsMethodsProps
-  extends IDirInTreeProps<MethodDirType, IMethodDirItem, IMethodDirItem, IMethodDirItem> {
+export interface DirCommunicationMethodsProps
+  extends IDirInTreeProps<MethodDirType, ICommunicationMethod, ICommunicationMethod, ICommunicationMethod> {
   updating?: boolean;
   disabling?: boolean;
   archiving?: boolean;
   creating?: boolean;
 }
 
-const DirShipmentsMethods: React.FC<DirShipmentsMethodsProps> = ({
+const DirCommunicationMethods: React.FC<DirCommunicationMethodsProps> = ({
   createParentTitle,
   availableLevels,
   actionsCreator,
@@ -27,9 +30,9 @@ const DirShipmentsMethods: React.FC<DirShipmentsMethodsProps> = ({
   creating,
   ...props
 }) => {
-  // const service = useShipmentsService();
+  const service = useCustomersService();
   // const modalService = useModalProvider();
-  const methods = useTranslatedShipmentMethods();
+  const methods = useTranslatedListData(useCustomersSelector().methods);
 
   const renderList = useMemo(
     () =>
@@ -45,6 +48,14 @@ const DirShipmentsMethods: React.FC<DirShipmentsMethodsProps> = ({
       )),
     [methods, props]
   );
+
+  useEffect(() => {
+    if (methods.length === 0) {
+      service.getAllMethods();
+    }
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <StModalForm width={'480px'} {...props}>
       <FlexBox fillWidth flex={'1'} gap={8} padding={'8px 4px'}>
@@ -56,9 +67,9 @@ const DirShipmentsMethods: React.FC<DirShipmentsMethodsProps> = ({
 
 const StModalForm = styled(ModalForm)``;
 
-export default memo(DirShipmentsMethods);
+export default memo(DirCommunicationMethods);
 
-const actionsCreatorForDirShipmentsMethods: DirInTreeActionsCreatorType<
+const actionsCreatorForDirCommunicationMethods: DirInTreeActionsCreatorType<
   MethodDirType,
   IPaymentMethod,
   any,

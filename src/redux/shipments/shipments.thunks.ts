@@ -2,8 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from '../../utils';
 import { ShipmentsApi } from '../../api';
 import { ThunkPayload } from '../store.store';
-import { IShipmentMethodReqData } from './shipments.types';
-import { IShipmentMethod } from '../integrations/integrations.types';
+import { IDeliveryMethodReqData } from './shipments.types';
+import { IDeliveryMethod } from '../integrations/integrations.types';
 
 enum ShipmentsThunkTypeEnum {
   getAll = 'shipments/getAllThunk',
@@ -12,7 +12,7 @@ enum ShipmentsThunkTypeEnum {
   updateMethod = 'shipments/updateMethodThunk',
 }
 
-export const getAllShipmentMethodsThunk = createAsyncThunk<IShipmentMethod[], ThunkPayload<unknown, IShipmentMethod[]>>(
+export const getAllDeliveryMethodsThunk = createAsyncThunk<IDeliveryMethod[], ThunkPayload<unknown, IDeliveryMethod[]>>(
   ShipmentsThunkTypeEnum.getAllMethods,
   async (args, thunkAPI) => {
     args?.onLoading && args?.onLoading(true);
@@ -31,8 +31,8 @@ export const getAllShipmentMethodsThunk = createAsyncThunk<IShipmentMethod[], Th
   }
 );
 export const updateShipmentMethodThunk = createAsyncThunk<
-  IShipmentMethod,
-  ThunkPayload<IShipmentMethodReqData, IShipmentMethod>
+  IDeliveryMethod,
+  ThunkPayload<IDeliveryMethodReqData, IDeliveryMethod>
 >(ShipmentsThunkTypeEnum.updateMethod, async (args, thunkAPI) => {
   args?.onLoading && args?.onLoading(true);
   try {
