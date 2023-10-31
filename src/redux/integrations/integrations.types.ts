@@ -1,7 +1,7 @@
 import { IBase, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
 import { LangPack } from '../../lang';
 import { ICompany } from '../companies/companies.types';
-import { IPaymentMethod } from '../payments/payments.types';
+import { ICheckoutPaymentMethod } from '../payments/payments.types';
 import { IInvoicingMethod } from '../invoices/invoices.types';
 import { AppQueryParams } from '../../api';
 
@@ -26,7 +26,7 @@ export enum MonoCheckoutMethod {
   wallet = 'wallet',
 }
 
-export enum LiqPayCheckoutPayTypesEnum {
+export enum LiqPayCheckoutMethodEnum {
   apay = 'apay',
   gpay = 'gpay',
   card = 'card',
@@ -111,7 +111,7 @@ export interface ExtServiceMethodBase extends IBase {
   lang?: LangPack;
 }
 export interface ExtPaymentService extends ExtServiceBase {
-  methods?: IPaymentMethod[];
+  methods?: ICheckoutPaymentMethod[];
 }
 export interface ExtInvoicingService extends ExtServiceBase {
   methods?: IInvoicingMethod[];

@@ -1,12 +1,12 @@
 import {
+  useCheckoutPaymentsSelector,
   useCommunicationSelector,
   useInvoicesSelector,
-  usePaymentsSelector,
   useShipmentsSelector,
 } from '../redux/selectors.store';
 import { useMemo } from 'react';
 import { getTranslatedString, LangKey, LangPack } from '../lang';
-import { IPaymentMethod } from '../redux/payments/payments.types';
+import { ICheckoutPaymentMethod } from '../redux/payments/payments.types';
 import { ExtPaymentService, ICommunicationMethod, IDeliveryMethod } from '../redux/integrations/integrations.types';
 import { IInvoicingMethod } from '../redux/invoices/invoices.types';
 
@@ -21,8 +21,8 @@ interface UseTranslatedListDataOtions {
   ) => React.ReactNode;
 }
 export const useTranslatedPaymentMethods = (options?: UseTranslatedListDataOtions) => {
-  const paymentsState = usePaymentsSelector();
-  return useMemo((): (IPaymentMethod & { parent?: ExtPaymentService })[] => {
+  const paymentsState = useCheckoutPaymentsSelector();
+  return useMemo((): (ICheckoutPaymentMethod & { parent?: ExtPaymentService })[] => {
     return paymentsState.methods.map(el => {
       const parent = el?.service
         ? {

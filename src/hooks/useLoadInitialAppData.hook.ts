@@ -56,24 +56,21 @@ const useLoadInitialAppDataHook = ({
           await prService.getAllByCompanyId({ data: { refresh: true, companyId: company._id } });
         }
 
+        await products.getAllProperties({ data: { params: { createTreeData: true } } });
+        await products.getAll({ data: { refresh: true } });
+        await warehouses.getAll({ data: { refresh: true } });
+        await priceManagement.getAll({ data: { refresh: true } });
+        //  transactions.getAll({ data: { refresh: true } });
+
+        await integrations.getAllExtServices({
+          onSuccess: () => {
+            invoicing.getAllMethods();
+            payments.getAllMethods();
+            shipments.getAllMethods();
+            customers.getAllMethods();
+          },
+        });
         await Promise.allSettled([
-          products.getAllProperties({ data: { params: { createTreeData: true } } }),
-
-          products.getAll({ data: { refresh: true } }),
-          warehouses.getAll({ data: { refresh: true } }),
-          priceManagement.getAll({ data: { refresh: true } }),
-
-          //  transactions.getAll({ data: { refresh: true } }),
-
-          integrations.getAllExtServices({
-            onSuccess: () => {
-              invoicing.getAllMethods();
-              payments.getAllMethods();
-              shipments.getAllMethods();
-              customers.getAllMethods();
-            },
-          }),
-
           ...directoriesForLoading.map(({ dirType, createTreeData }) => {
             return getAllByDirType({
               data: { dirType, params: { createTreeData } },

@@ -23,6 +23,7 @@ export interface IntegrationTabProps {
   onClose?: () => void;
   compId: string;
   providers: ExtServiceBase[];
+  currentService?: ExtServiceBase;
 }
 
 const tabsMap: Record<
@@ -36,6 +37,7 @@ const tabsMap: Record<
 
 const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose, ...props }) => {
   const [currentType, setCurrentType] = useState(tabs[0].value);
+  const [providerType, setProviderType] = useState<string>();
 
   const { loadExtServices, extServProviders } = useExtServProvidersQuery();
 
@@ -43,14 +45,24 @@ const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose,
     return extServProviders.filter(prov => prov?.originServices && prov?.originServices[currentType]);
   }, [currentType, extServProviders]);
 
+  const currentServiceData = useMemo(() => {
+    return providers?.find(pr => pr.value === providerType);
+  }, [providerType, providers]);
+
+  const TabComponent = useMemo(() => tabsMap[currentType], [currentType]);
+
   useEffect(() => {
     if (extServProviders.length === 0) {
-      loadExtServices();
+      loadExtServices().then(d => {});
     }
     // eslint-disable-next-line
   }, []);
 
-  const TabComponent = useMemo(() => tabsMap[currentType], [currentType]);
+  useEffect(() => {
+    if (!providerType && providers) {
+      providers[0] && setProviderType(providers[0]?.value);
+    }
+  }, [providerType, providers]);
 
   return (
     <Container overflow={'hidden'} fillWidth>
@@ -58,8 +70,10 @@ const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose,
 
       <ModalFilter filterOptions={tabs} onOptSelect={info => setCurrentType(info?.value)} />
 
+      <ModalFilter filterOptions={providers} onFilterValueSelect={info => setProviderType(info.value)} />
+
       <FlexBox flex={1} fillWidth overflow={'auto'}>
-        <TabComponent compId={currentType} providers={providers} />
+        <TabComponent compId={currentType} providers={providers} currentService={currentServiceData} />
       </FlexBox>
 
       <ModalFooter onClick={onClose}></ModalFooter>
@@ -87,10 +101,12 @@ export default CompanyIntegrationsModal;
 export function useExtServProvidersQuery() {
   const [extServProviders, setExtServProviders] = useState<ExtServiceBase[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { integrations } = useAppServiceProvider();
+  const {
+    integrations: { getAllExtServices },
+  } = useAppServiceProvider();
 
   const loadExtServices = ({ params }: { params?: AppQueryParams } = {}) => {
-    integrations.getAllExtServices({
+    return getAllExtServices({
       data: { params },
       onSuccess: setExtServProviders,
       onLoading: setIsLoading,

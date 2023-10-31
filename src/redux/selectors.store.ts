@@ -25,7 +25,8 @@ export const useAuthSelector = () => useSelector<RootState, IAuthState>((state: 
 export const useUsersSelector = () => useSelector<RootState, IUsersState>((state: RootState) => state.users);
 export const useAppSettingsSelector = () =>
   useSelector<RootState, IAppSettings>((state: RootState) => state.appSettings);
-export const usePaymentsSelector = () => useSelector<RootState, PaymentsState>((state: RootState) => state.payments);
+export const useCheckoutPaymentsSelector = () =>
+  useSelector<RootState, PaymentsState>((state: RootState) => state.payments);
 export const useInvoicesSelector = () =>
   useSelector<RootState, InvoicesState>((state: RootState) => state['invoicing']);
 

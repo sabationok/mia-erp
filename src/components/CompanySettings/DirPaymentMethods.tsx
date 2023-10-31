@@ -6,12 +6,12 @@ import FlexBox from '../atoms/FlexBox';
 
 import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../Directories/dir.types';
 import DirListItem from '../Directories/DirList/DirListItem';
-import { IPaymentMethod } from '../../redux/payments/payments.types';
+import { ICheckoutPaymentMethod } from '../../redux/payments/payments.types';
 import usePaymentsServiceHook from '../../hooks/usePaymentsService.hook';
 import { useTranslatedPaymentMethods } from '../../hooks/useTranslatedMethods.hook';
 
 export interface DirPaymentMethodsProps
-  extends IDirInTreeProps<MethodDirType, IPaymentMethod, IPaymentMethod, IPaymentMethod> {
+  extends IDirInTreeProps<MethodDirType, ICheckoutPaymentMethod, ICheckoutPaymentMethod, ICheckoutPaymentMethod> {
   updating?: boolean;
   disabling?: boolean;
   archiving?: boolean;
@@ -97,9 +97,9 @@ export default memo(DirPaymentMethods);
 
 const actionsCreatorForDirPaymentMethods: DirInTreeActionsCreatorType<
   MethodDirType,
-  IPaymentMethod,
+  ICheckoutPaymentMethod,
   any,
-  IPaymentMethod
+  ICheckoutPaymentMethod
 > = () => {
   return {
     onUpdate: (id, data, options) => {

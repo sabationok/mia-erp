@@ -4,7 +4,6 @@ import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { useEffect, useMemo, useState } from 'react';
 import { Text } from '../../atoms/Text';
 import { t } from '../../../lang';
-import ModalFilter from '../../ModalForm/ModalFilter';
 import { useModalService } from '../../ModalProvider/ModalProvider';
 import FormCreateIntegration from '../../Forms/FormCreateIntegration';
 import { ExtIntegrationBase } from '../../../redux/integrations/integrations.types';
@@ -22,18 +21,14 @@ const ShipmentsIntegrationsTab: React.FC<ShipmentsIntegrationsTabProps> = ({
   providers,
   onClose,
   compId,
+  currentService: currentServiceData,
   ...props
 }) => {
-  const [provider, setProvider] = useState<string>();
   const [integrationsList, setIntegrationsList] = useState<ExtIntegrationBase[]>([]);
   const modalS = useModalService();
   const [isListVisible, setIsListVisible] = useState(false);
   const handleToggleListVisibility = () => setIsListVisible(p => !p);
   const shipmentMethods = useTranslatedShipmentMethods();
-
-  const currentServiceData = useMemo(() => {
-    return providers?.find(pr => pr.value === provider);
-  }, [provider, providers]);
 
   const onOpenModalPress = () => {
     currentServiceData &&
@@ -66,13 +61,15 @@ const ShipmentsIntegrationsTab: React.FC<ShipmentsIntegrationsTabProps> = ({
       return m.service?._id === currentServiceData?._id;
     });
 
-    return methods.map(m => {
-      return (
-        <FlexBox key={m._id} border={'1px solid lightgrey'} padding={'4px 6px'} borderRadius={'4px'}>
-          <Text $size={10}>{m.label}</Text>
-        </FlexBox>
-      );
-    });
+    return methods.length <= 0
+      ? null
+      : methods.map(m => {
+          return (
+            <FlexBox key={m._id} border={'1px solid lightgrey'} padding={'4px 6px'} borderRadius={'4px'}>
+              <Text $size={10}>{m.label}</Text>
+            </FlexBox>
+          );
+        });
   }, [currentServiceData?._id, shipmentMethods]);
 
   const renderIntegrations = useMemo(() => {
@@ -87,38 +84,32 @@ const ShipmentsIntegrationsTab: React.FC<ShipmentsIntegrationsTabProps> = ({
     });
   }, [currentServiceData?.defIntegration?._id, integrationsList]);
 
-  useEffect(() => {
-    if (!provider && providers) {
-      providers[0] && setProvider(providers[0]?.value);
-    }
-  }, [provider, providers]);
-
   return (
     <FlexBox fillWidth flex={1} overflow={'hidden'}>
-      <ModalFilter filterOptions={providers} onFilterValueSelect={info => setProvider(info.value)} />
-
       <FlexBox fillWidth flex={1} padding={'8px 4px 0'} overflow={'hidden'}>
-        <List overflow={'auto'} isVisible={isListVisible} fillWidth>
-          <Text $size={11} $weight={600} $margin={'4px 8px'}>
-            {t('Payment checkout services')}
-          </Text>
+        {renderMethods && (
+          <List overflow={'auto'} isVisible={isListVisible} fillWidth>
+            <Text $size={11} $weight={600} $margin={'4px 8px'}>
+              {t('Delivery types')}
+            </Text>
 
-          <FlexBox fxDirection={'row'} padding={'4px 2px'} flexWrap={'wrap'} gap={4} fillWidth>
-            {renderMethods}
-          </FlexBox>
+            <FlexBox fxDirection={'row'} padding={'4px 2px'} flexWrap={'wrap'} gap={4} fillWidth>
+              {renderMethods}
+            </FlexBox>
 
-          {/*<Text $size={11} $weight={600} $margin={'4px 8px'}>*/}
-          {/*  {t('Support')}*/}
-          {/*</Text>*/}
+            {/*<Text $size={11} $weight={600} $margin={'4px 8px'}>*/}
+            {/*  {t('Support')}*/}
+            {/*</Text>*/}
 
-          {/*<Text $size={16}>{t('+380 5632 55623')}</Text>*/}
+            {/*<Text $size={16}>{t('+380 5632 55623')}</Text>*/}
 
-          {/*<Text $size={11} $weight={600} $margin={'4px 8px'}>*/}
-          {/*  {t('Url')}*/}
-          {/*</Text>*/}
+            {/*<Text $size={11} $weight={600} $margin={'4px 8px'}>*/}
+            {/*  {t('Url')}*/}
+            {/*</Text>*/}
 
-          {/*<Text $size={16}>{t('www.monobank.ua/contacts')}</Text>*/}
-        </List>
+            {/*<Text $size={16}>{t('www.monobank.ua/contacts')}</Text>*/}
+          </List>
+        )}
 
         <ButtonIcon
           variant={'textExtraSmall'}

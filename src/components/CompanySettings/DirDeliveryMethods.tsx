@@ -5,7 +5,7 @@ import FlexBox from '../atoms/FlexBox';
 
 import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../Directories/dir.types';
 import DirListItem from '../Directories/DirList/DirListItem';
-import { IPaymentMethod } from '../../redux/payments/payments.types';
+import { ICheckoutPaymentMethod } from '../../redux/payments/payments.types';
 import { useTranslatedListData } from '../../hooks/useTranslatedMethods.hook';
 import { IDeliveryMethod } from '../../redux/integrations/integrations.types';
 import { useShipmentsSelector } from '../../redux/selectors.store';
@@ -71,9 +71,9 @@ export default memo(DirDeliveryMethods);
 
 const actionsCreatorForDirShipmentsMethods: DirInTreeActionsCreatorType<
   MethodDirType,
-  IPaymentMethod,
+  ICheckoutPaymentMethod,
   any,
-  IPaymentMethod
+  ICheckoutPaymentMethod
 > = () => {
   return {
     onCreateChild: (parentId, parent, options) => {},

@@ -4,17 +4,17 @@ import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { useEffect, useMemo, useState } from 'react';
 import { Text } from '../../atoms/Text';
 import { t } from '../../../lang';
-import ModalFilter from '../../ModalForm/ModalFilter';
 import { useModalService } from '../../ModalProvider/ModalProvider';
 import FormCreateIntegration from '../../Forms/FormCreateIntegration';
 import { ExtIntegrationBase } from '../../../redux/integrations/integrations.types';
-import { useTranslatedInvoicingMethods, useTranslatedPaymentMethods } from '../../../hooks/useTranslatedMethods.hook';
+import { useTranslatedListData } from '../../../hooks/useTranslatedMethods.hook';
 import { createApiCall } from '../../../api';
 import ExtServicesApi from '../../../api/extServices.api';
 import { getIdRef, transformQueriesForReq } from '../../../utils/dataTransform';
 import styled from 'styled-components';
 import ExtraFooterWithButtonButton from '../../Forms/components/ExtraFooterWithButtonButton';
 import IntegrationOverview from '../components/IntegrationOverview';
+import { useCheckoutPaymentsSelector, useInvoicesSelector } from '../../../redux/selectors.store';
 
 export interface InvoicingIntegrationsTabProps extends IntegrationTabProps {}
 
@@ -22,19 +22,15 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
   providers,
   onClose,
   compId,
+  currentService: currentServiceData,
   ...props
 }) => {
-  const [provider, setProvider] = useState<string>();
   const [integrationsList, setIntegrationsList] = useState<ExtIntegrationBase[]>([]);
   const modalS = useModalService();
-  const [isListVisible, setIsListVisible] = useState(false);
+  const [isListVisible, setIsListVisible] = useState(true);
   const handleToggleListVisibility = () => setIsListVisible(p => !p);
-  const paymentMethods = useTranslatedPaymentMethods();
-  const invoicingMethods = useTranslatedInvoicingMethods();
-
-  const currentServiceData = useMemo(() => {
-    return providers?.find(pr => pr.value === provider);
-  }, [provider, providers]);
+  const checkoutMethods = useTranslatedListData(useCheckoutPaymentsSelector().methods);
+  const invoicingMethods = useTranslatedListData(useInvoicesSelector().methods);
 
   const onOpenModalPress = () => {
     currentServiceData &&
@@ -67,17 +63,19 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
       return m.service?._id === currentServiceData?._id;
     });
 
-    return methods.map(m => {
-      return (
-        <FlexBox key={m._id} border={'1px solid lightgrey'} padding={'4px 6px'} borderRadius={'4px'}>
-          <Text $size={10}>{m.label}</Text>
-        </FlexBox>
-      );
-    });
+    return methods.length === 0
+      ? null
+      : methods.map(m => {
+          return (
+            <FlexBox key={m._id} border={'1px solid lightgrey'} padding={'4px 6px'} borderRadius={'4px'}>
+              <Text $size={10}>{m.label}</Text>
+            </FlexBox>
+          );
+        });
   }, [currentServiceData?._id, invoicingMethods]);
 
   const renderPaymentMethods = useMemo(() => {
-    const methods = paymentMethods.filter(m => {
+    const methods = checkoutMethods.filter(m => {
       return m.service?._id === currentServiceData?._id;
     });
 
@@ -88,7 +86,7 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
         </FlexBox>
       );
     });
-  }, [currentServiceData?._id, paymentMethods]);
+  }, [currentServiceData?._id, checkoutMethods]);
 
   const renderIntegrations = useMemo(() => {
     return integrationsList.map(int => {
@@ -102,16 +100,14 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
     });
   }, [currentServiceData?.defIntegration?._id, integrationsList]);
 
-  useEffect(() => {
-    if (!provider && providers) {
-      providers[0] && setProvider(providers[0]?.value);
-    }
-  }, [provider, providers]);
+  // useEffect(() => {
+  //   if (!provider && providers) {
+  //     providers[0] && setProvider(providers[0]?.value);
+  //   }
+  // }, [provider, providers]);
 
   return (
     <FlexBox fillWidth flex={1} overflow={'hidden'}>
-      <ModalFilter filterOptions={providers} onFilterValueSelect={info => setProvider(info.value)} />
-
       <FlexBox fillWidth flex={1} padding={'8px 4px 0'} overflow={'hidden'}>
         <List overflow={'auto'} isVisible={isListVisible} fillWidth>
           <Text $size={11} $weight={600} $margin={'4px 8px'}>
