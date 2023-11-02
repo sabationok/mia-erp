@@ -26,7 +26,7 @@ const SelectManagerModal: React.FC<SelectManagerModalProps> = ({ onSubmit, onSel
   }, [onSelect, users]);
 
   return (
-    <ModalForm fitContentH fillHeight onClose={onClose} title={t('Select manager')}>
+    <ModalForm fillWidth fillHeight onClose={onClose} title={t('Select manager')}>
       <TableList tableTitles={usersDirColumns} {...tableConfigs} isSearch={false} />
     </ModalForm>
   );

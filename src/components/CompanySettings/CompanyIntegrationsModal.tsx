@@ -39,7 +39,7 @@ const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose,
   const [currentType, setCurrentType] = useState(tabs[0].value);
   const [providerType, setProviderType] = useState<string>();
 
-  const { loadExtServices, extServProviders } = useExtServProvidersQuery();
+  const { loadExtServices, extServProviders } = useExtServicesQuery();
 
   const providers = useMemo(() => {
     return extServProviders.filter(prov => prov?.originServices && prov?.originServices[currentType]);
@@ -53,7 +53,7 @@ const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose,
 
   useEffect(() => {
     if (extServProviders.length === 0) {
-      loadExtServices().then(d => {});
+      loadExtServices({ params: { type: 'input' } }).then(d => {});
     }
     // eslint-disable-next-line
   }, []);
@@ -98,14 +98,14 @@ const StHeader = styled(ModalHeader)`
 
 export default CompanyIntegrationsModal;
 
-export function useExtServProvidersQuery() {
+export function useExtServicesQuery() {
   const [extServProviders, setExtServProviders] = useState<ExtServiceBase[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const {
     integrations: { getAllExtServices },
   } = useAppServiceProvider();
 
-  const loadExtServices = ({ params }: { params?: AppQueryParams } = {}) => {
+  const loadExtServices = ({ params }: { params?: AppQueryParams<'input' | 'output'> } = {}) => {
     return getAllExtServices({
       data: { params },
       onSuccess: setExtServProviders,

@@ -11,8 +11,7 @@ import {
   ExtIntegrationBase,
   ExtServiceBase,
 } from '../../redux/integrations/integrations.types';
-import { createApiCall } from '../../api';
-import ExtServicesApi from '../../api/extServices.api';
+import { createApiCall, IntegrationsApi } from '../../api';
 import { getIdRef } from '../../utils/dataTransform';
 
 export interface FormCreateIntegrationProps extends Omit<ModalFormProps, 'onSubmit'> {
@@ -40,8 +39,8 @@ const FormCreateIntegration: React.FC<FormCreateIntegrationProps> = ({
         },
         data: { data: { ...data, service: getIdRef(service) } },
       },
-      ExtServicesApi.createInputIntegration,
-      ExtServicesApi
+      IntegrationsApi.createInputIntegration,
+      IntegrationsApi
     );
   };
 

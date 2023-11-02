@@ -17,11 +17,11 @@ import { ContractorsTypesEnum } from '../../redux/directories/contractors.types'
 import { FormInputs } from './components/atoms';
 
 const validFormData = yup.object().shape({
-  name: yup.string().required(),
-  fullName: yup.string().required(),
-  email: yup.string().required(),
-  businessSubjectType: yup.string().oneOf(Object.values(BusinessSubjectTypeEnum), 'Недопустима роль').required(),
-  ownershipType: yup.string().required(),
+  name: yup.string(),
+  fullName: yup.string(),
+  email: yup.string(),
+  businessSubjectType: yup.string().oneOf(Object.values(BusinessSubjectTypeEnum), 'Недопустима роль'),
+  ownershipType: yup.string(),
   taxCode: yup.string(),
   label: yup.string(),
   fullLabel: yup.string(),
@@ -41,8 +41,9 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
     setValue,
   } = useAppForm<ICompanyFormData>({
     defaultValues: { businessSubjectType: BusinessSubjectTypeEnum.company, ...defaultState },
-    reValidateMode: 'onSubmit',
+    reValidateMode: 'onChange',
     resolver: yupResolver(validFormData),
+    shouldUnregister: true,
   });
 
   const formRenderConfig = useMemo(
@@ -83,9 +84,16 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
   }
 
   return (
-    <Form fillHeight width={'480px'} {...props} onSubmit={handleSubmit(onFormSubmit)} isValid={isValid}>
+    <Form
+      fillHeight
+      width={'480px'}
+      {...props}
+      onSubmit={handleSubmit(onFormSubmit, errors => {
+        console.log(errors);
+      })}
+    >
       <FormInputs flex={1} fillWidth padding={'8px 4px'} overflow={'auto'}>
-        <InputLabel label={t('businessSubjectType')} error={errors.name} required>
+        <InputLabel label={t('businessSubjectType')} error={errors.businessSubjectType} required>
           <ButtonGroup
             options={businessSubjectTypeFilterOptions}
             onSelect={({ value }) => {

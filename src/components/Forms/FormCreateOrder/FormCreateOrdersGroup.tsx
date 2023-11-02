@@ -1,4 +1,4 @@
-import ModalForm, { ModalFormProps } from '../../ModalForm';
+import { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import ModalFilter from '../../ModalForm/ModalFilter';
@@ -20,6 +20,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { orderInfoBaseSchema } from '../validation';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useModalService } from '../../ModalProvider/ModalProvider';
+import { createApiCall, OrdersApi } from '../../../api';
 
 export interface FormCreateOrdersGroupProps
   extends Omit<ModalFormProps<any, any, FormCreateOrdersGroupStepsData>, 'onSubmit'> {
@@ -114,23 +115,38 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
       ToastService.error('Form is not valid');
       return;
     }
-    if (stepsMap.Info) {
-      modalS.open({
-        ModalChildren: (p: { onClose?: () => void; compId?: string }) => {
-          return (
-            <ModalForm
-              {...p}
-              title={t('Accept orders?')}
-              onSubmit={() => {
-                window.confirm('You accept?') && p?.onClose && p?.onClose();
-              }}
-            >
-              <FlexBox fillWidth></FlexBox>
-            </ModalForm>
-          );
+    // if (stepsMap.Info) {
+    //   modalS.open({
+    //     ModalChildren: (p: { onClose?: () => void; compId?: string }) => {
+    //       return (
+    //         <ModalForm
+    //           {...p}
+    //           title={t('Accept orders?')}
+    //           onSubmit={() => {
+    //             window.confirm('You accept?') && p?.onClose && p?.onClose();
+    //           }}
+    //         >
+    //           <FlexBox fillWidth></FlexBox>
+    //         </ModalForm>
+    //       );
+    //     },
+    //   });
+    // }
+
+    createApiCall(
+      {
+        data: { data: { info: orderInfoFormValues, slots: currentGroupFormState.slots } },
+        onSuccess: data => {
+          console.log(data);
         },
-      });
-    }
+        onError: error => {
+          console.log(error);
+        },
+        onLoading: loading => {},
+      },
+      OrdersApi.createManyOrdersGroupedByWarehouse,
+      OrdersApi
+    );
 
     console.log(getCurrentStep());
     console.log(currentGroupFormState);

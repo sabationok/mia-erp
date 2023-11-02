@@ -8,8 +8,7 @@ import { useModalService } from '../../ModalProvider/ModalProvider';
 import FormCreateIntegration from '../../Forms/FormCreateIntegration';
 import { ExtIntegrationBase } from '../../../redux/integrations/integrations.types';
 import { useTranslatedListData } from '../../../hooks/useTranslatedMethods.hook';
-import { createApiCall } from '../../../api';
-import ExtServicesApi from '../../../api/extServices.api';
+import { createApiCall, IntegrationsApi } from '../../../api';
 import { getIdRef, transformQueriesForReq } from '../../../utils/dataTransform';
 import styled from 'styled-components';
 import ExtraFooterWithButtonButton from '../../Forms/components/ExtraFooterWithButtonButton';
@@ -53,8 +52,8 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
             setIntegrationsList(data);
           },
         },
-        ExtServicesApi.getAllByQueries,
-        ExtServicesApi
+        IntegrationsApi.getAllByQueries,
+        IntegrationsApi
       );
   }, [currentServiceData]);
 

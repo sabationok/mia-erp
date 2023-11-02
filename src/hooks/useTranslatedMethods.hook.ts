@@ -149,7 +149,6 @@ export const useTranslatedListData = <
         parent,
       };
     });
-    console.log(trList);
     return trList;
   }, [data, options]);
 };

@@ -18,6 +18,8 @@ export { default as InvoicesApi } from './invoices.api';
 export { default as ShipmentsApi } from './shipments.api';
 export { default as CustomersApi } from './customers.api';
 export { default as CommunicationApi } from './communication.api';
+export { default as ExtServicesApi } from './ext-services.api';
+export { default as IntegrationsApi } from './integrations.api';
 
 export enum AppQueryKey {
   dirType = 'dirType',

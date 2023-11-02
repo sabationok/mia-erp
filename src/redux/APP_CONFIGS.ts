@@ -20,6 +20,7 @@ export enum API_BASE_ROUTES {
   COMMUNICATION = '/communications',
   COUNTERPARTIES = '/counterparties',
   EXT_SERVICES = '/ext-services',
+  INTEGRATIONS = '/integrations',
 }
 
 export enum Endpoints {
@@ -75,9 +76,9 @@ export enum Endpoints {
   integrations = 'integrations',
 }
 
-export type GetEndpoint = (...args: any[]) => string;
+export type EndpointCreator = (...args: any[]) => string;
 
-export interface ApiEndpointsMap extends Record<Endpoints | string, GetEndpoint> {}
+export interface ApiEndpointsMap extends Record<Endpoints | string, EndpointCreator> {}
 
 export enum ApiDirType {
   CATEGORIES_TR = 'categories_tr',
@@ -226,9 +227,9 @@ const priceManagementEndpoints: ApiEndpointsMap = {
   deletePrice: (id?: string) => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.prices}/delete/${id}`,
 };
 
-const ordersEndpoints: ApiEndpointsMap = {
+const ordersEndpoints = {
   getAll: () => `${API_BASE_ROUTES.ORDERS}/getAll`,
-  getById: (orderId: string) => `${API_BASE_ROUTES.ORDERS}/getById/${orderId}`,
+  getById: (orderId?: string) => `${API_BASE_ROUTES.ORDERS}/getById/${orderId}`,
   create: () => `${API_BASE_ROUTES.ORDERS}/create`,
   addItemToOrderSlot: (orderId: string) => `${API_BASE_ROUTES.ORDERS}/${Endpoints.addItemToOrderSlot}/${orderId}`,
   softDeleteOrderSlot: (orderId: string, orderSlotId: string) =>
@@ -241,6 +242,20 @@ const ordersEndpoints: ApiEndpointsMap = {
   getAllOrderSlots: () => `${API_BASE_ROUTES.ORDERS}/${Endpoints.getAllOrderSlots}`,
   getDataForNewOrderSlot: (productId: string) =>
     `${API_BASE_ROUTES.ORDERS}/${[Endpoints.getDataForNewOrderSlot]}/${productId}`,
+  createManyOrdersGroupedByWarehouse: () => `${API_BASE_ROUTES.ORDERS}/create/group/byWarehouses`,
+};
+
+const refunds = {
+  getAll: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
+  getById: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
+  create: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
+  deleteById: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
+  getAllRefundSlots: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
+  addSlotToRefund: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
+  softDeleteSlotFromRefund: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
+  addItemToRefundSlot: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
+  softDeleteRefundSlotItem: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
+  getDataForNewRefundSlot: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
 };
 
 const warehousesEndpoints = {
@@ -297,6 +312,13 @@ const extServices = {
   updateInputInt: () => `${API_BASE_ROUTES.EXT_SERVICES}/${Endpoints.integrations}/input/update`,
   updateOutputInt: () => `${API_BASE_ROUTES.EXT_SERVICES}/${Endpoints.integrations}/output/update`,
 };
+export type IntegrationType = 'input' | 'output';
+const integrations = {
+  getAll: (type: IntegrationType | string = '') => `${API_BASE_ROUTES.INTEGRATIONS}/getAll`,
+  getById: (id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/${id}`,
+  create: (type?: IntegrationType) => `${API_BASE_ROUTES.INTEGRATIONS}/create/${type}`,
+  update: (type?: IntegrationType, id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/update/${type}/${id}`,
+};
 
 const APP_CONFIGS = {
   endpoints: {
@@ -319,6 +341,8 @@ const APP_CONFIGS = {
     shipments,
     extServices,
     communications,
+    refunds,
+    integrations,
   },
 };
 

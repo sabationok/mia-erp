@@ -52,7 +52,8 @@ export function createTableTitlesFromTemplate(
         align: 'start',
         getData: d => d?.label,
       },
-      width: '200px',
+      getImgPreview: rd => (rd.product?.images ? rd.product?.images[0]?.img_preview : ''),
+      width: '270px',
       action: 'doubleDataWithAvatar',
     },
     {

@@ -11,11 +11,10 @@ import {
 } from '../../../redux/warehouses/warehouses.types';
 import { t } from '../../../lang';
 import { useAppForm } from '../../../hooks';
-import { useProductsSelector, usePropertiesSelector, useWarehousesSelector } from '../../../redux/selectors.store';
+import { useProductsSelector, useWarehousesSelector } from '../../../redux/selectors.store';
 import { Path } from 'react-hook-form';
 import { HTMLInputTypeAttribute, useCallback, useEffect, useMemo } from 'react';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { createTableTitlesFromTemplate } from '../../../utils';
 import { transformVariationTableData } from '../../../utils/tables';
 import { OnRowClickHandler } from '../../TableList/tableTypes.types';
 import { IProduct } from '../../../redux/products/products.types';
@@ -28,6 +27,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { createApiCall, WarehousesApi } from '../../../api';
 import { warehousesTableColumns } from '../../../data/warehauses.data';
+import useVariationTableTitlesForCurrentProduct from '../../../hooks/useVariationTableTitlesForCurrentProduct.hook';
 
 const docTypeFilterOptions = enumToFilterOptions(WarehouseDocumentType);
 
@@ -78,6 +78,8 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
   const { products: productsS } = useAppServiceProvider();
   const currentProduct = useProductsSelector().currentProduct;
   const warehouses = useWarehousesSelector().warehouses;
+  // const [availablePrices,setAvailablePrices]=useState()
+
   const currentProductData = useMemo(() => {
     return product || currentProduct;
   }, [currentProduct, product]);
@@ -99,12 +101,7 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
     reValidateMode: 'onSubmit',
   });
 
-  const templates = usePropertiesSelector();
-
-  const variationsTableTitles = useMemo(() => {
-    const template = templates.find(t => t._id === currentProduct?.template?._id);
-    return createTableTitlesFromTemplate(template);
-  }, [currentProduct?.template?._id, templates]);
+  const variationsTableTitles = useVariationTableTitlesForCurrentProduct();
 
   const transformedVariationsTableData = useMemo(() => {
     if (currentProductData?.variations) {
@@ -117,16 +114,25 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
     return currentProduct?.prices?.filter(el => el.variation?._id === formValues.variation?._id);
   }, [currentProduct?.prices, formValues.variation]);
 
+  useEffect(() => {
+    console.log(currentPricesData);
+    console.log('currentProduct?.prices', currentProduct?.prices);
+  }, [currentPricesData, currentProduct?.prices]);
+
   const handleSelectVariation: OnRowClickHandler = useCallback(
     data => {
       if (data?._id === formValues.variation?._id) return;
 
       unregister('price');
 
-      data?._id && setValue('variation._id', data?._id);
+      data?._id && setValue('variation', { _id: data._id });
     },
     [formValues.variation?._id, setValue, unregister]
   );
+
+  useEffect(() => {
+    console.log(formValues.variation);
+  }, [formValues.variation]);
 
   const handleSelectPrice: OnRowClickHandler = useCallback(
     data => {

@@ -6,7 +6,7 @@ import { forwardRef, useMemo } from 'react';
 import { IBase } from '../../redux/global.types';
 
 const TableBody: React.ForwardRefRenderFunction<any, any> = (props, ref) => {
-  const { tableData, rowRef, selectedRow, onRowClick, selectedRows } = useTable();
+  const { tableData, rowRef, selectedRow, onRowClick, selectedRows = [] } = useTable();
 
   const handleOnRowClick = (ev: React.MouseEvent<HTMLDivElement>) => {
     if (!rowRef) return;
@@ -15,13 +15,13 @@ const TableBody: React.ForwardRefRenderFunction<any, any> = (props, ref) => {
 
     if (target instanceof HTMLElement && !target.closest('[data-row]')) {
       rowRef?.current && rowRef.current.classList.remove('selected');
-      onRowClick instanceof Function && onRowClick();
+      // onRowClick instanceof Function && onRowClick();
       return;
     }
     rowEl = target instanceof HTMLElement ? target.closest('[data-row]') : null;
 
     if (rowEl && onRowClick instanceof Function) {
-      onRowClick({ _id: rowEl?.id?.replace('_', '') });
+      // onRowClick({ _id: rowEl?.id?.replace('_', '') });
     }
     if (rowEl !== rowRef.current) {
       rowRef.current?.classList.remove('selected');
@@ -32,28 +32,27 @@ const TableBody: React.ForwardRefRenderFunction<any, any> = (props, ref) => {
     if (rowEl === rowRef.current) {
       rowRef.current?.classList.remove('selected');
       rowRef.current = undefined;
-      onRowClick instanceof Function && onRowClick();
+      // onRowClick instanceof Function && onRowClick();
     }
   };
 
   const renderRows = useMemo(
     () =>
       tableData?.map((rowData, idx) => {
-        const checked = selectedRows?.length ? selectedRows?.includes(rowData._id) : false;
-        const isActive = (selectedRow as IBase)?._id === rowData?._id;
         return (
           <TableRow
             key={idx}
             {...{
               rowData,
               idx,
-              checked,
-              isActive,
+              checked: selectedRows?.includes(rowData._id),
+              isActive: (selectedRow as IBase)?._id === rowData?._id,
+              onPress: () => onRowClick && onRowClick({ _id: rowData?._id, rowData }),
             }}
           />
         );
       }),
-    [selectedRow, selectedRows, tableData]
+    [onRowClick, selectedRow, selectedRows, tableData]
   );
 
   return <TBody onClick={handleOnRowClick}>{renderRows}</TBody>;

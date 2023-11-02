@@ -48,7 +48,7 @@ export const warehouseOverviewTableColumns: CellTittleProps<IProductInventory>[]
   {
     top: { name: t('variationLabel'), getData: rd => rd.variation?.label },
     getImgPreview: d => (d.product?.images ? d.product?.images[0]?.img_preview : ''),
-    width: '220px',
+    width: '270px',
     action: 'doubleDataWithAvatar',
   },
   {

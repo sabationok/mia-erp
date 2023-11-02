@@ -6,49 +6,12 @@ import { getStatusesByEnum } from './statuses.data';
 
 export const productStatusesData = getStatusesByEnum(ProductStatusEnum);
 
-export type DataPath =
-  | 'category.label'
-  | 'subCategory.label'
-  | 'brand.name'
-  | 'brand.label'
-  | 'owner.name'
-  | 'owner.email'
-  | 'author.name'
-  | 'author.email'
-  | 'editor.name'
-  | 'editor.email'
-  | 'auditor.name'
-  | 'auditor.email'
-  | 'manufacturer.name'
-  | 'manufacturer.email'
-  | 'mark.label'
-  | 'tags'
-  | 'type'
-  | 'status'
-  | 'sale'
-  | 'cashback.sale'
-  | 'cashback.level'
-  | 'cashback.bonuses'
-  | 'currency'
-  | 'description'
-  | 'createdAt'
-  | 'updatedAt'
-  | 'label'
-  | 'sku'
-  | 'price'
-  | 'visibility'
-  | 'availabilityInfo.status'
-  | 'availabilityInfo.primaryOrder'
-  | 'availabilityInfo.primaryOrderTime'
-  | 'availabilityInfo.customOrder'
-  | 'availabilityInfo.customOrderTime';
-
-export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
+export const productsColumns: CellTittleProps<IProduct>[] = [
   {
     top: { name: t('label'), align: 'start', getData: rd => rd?.label },
     // bottom: { name: t('sku'), align: 'start', getData: rd => rd?.sku },
     getImgPreview: pr => (pr.images ? pr.images[0]?.img_preview : undefined),
-    width: '200px',
+    width: '270px',
     action: 'doubleDataWithAvatar',
   },
   {

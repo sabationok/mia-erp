@@ -19,6 +19,7 @@ export interface TableRowProps {
   idx: number;
   checked?: boolean;
   isActive?: boolean;
+  onPress?: () => void;
 }
 
 export interface RowCTXValue extends TableRowProps {
@@ -31,7 +32,7 @@ export interface RowCTXValue extends TableRowProps {
 export const RowCTX = createContext<any>({});
 export const useRow = () => useContext(RowCTX) as RowCTXValue;
 
-const TableRow: React.FC<TableRowProps> = ({ checked, rowData, ...props }) => {
+const TableRow: React.FC<TableRowProps> = ({ onPress, checked, rowData, ...props }) => {
   const { tableTitles, selectedRows, tableData, rowGrid, checkBoxes, onCheckboxChange, transformData } =
     useTable<TRowDataType>();
   const [isActionsOpen, setIsActionsOpen] = useState(false);
@@ -80,21 +81,24 @@ const TableRow: React.FC<TableRowProps> = ({ checked, rowData, ...props }) => {
     };
   }, [props, currentRowData, selectedRows, isActionsOpen, onToggleActions, onCloseActions, onRowCheckboxChange]);
 
-  // useEffect(() => {
-  //   if (props?.isActive) {
-  //     console.log(props?.isActive, rowData._id);
-  //   }
-  // }, [props?.isActive]);
   return (
-    <Row id={`_${currentRowData?._id}`} isActive={props?.isActive} checked={isChecked} data-row>
-      <RowCTX.Provider value={CTX}>
+    <RowCTX.Provider value={CTX}>
+      <Row
+        id={`_${currentRowData?._id}`}
+        isActive={props?.isActive}
+        onClick={() => {
+          console.log('rowData', rowData);
+        }}
+        checked={isChecked}
+        data-row
+      >
         <RowStickyEl>{checkBoxes && <CellCheckBox />}</RowStickyEl>
 
-        <RowData gridRepeat={tableData?.length || 0} style={{ ...rowGrid }}>
+        <RowData gridRepeat={tableData?.length || 0} style={{ ...rowGrid }} onClick={onPress}>
           {renderRow}
         </RowData>
-      </RowCTX.Provider>
-    </Row>
+      </Row>
+    </RowCTX.Provider>
   );
 };
 

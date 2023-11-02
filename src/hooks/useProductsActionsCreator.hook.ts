@@ -130,7 +130,7 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
                 service.create({
                   data,
                   onSuccess(d) {
-                    o?.closeAfterSave && modal?.onClose();
+                    (o?.closeAfterSave || o?.close) && modal?.onClose();
                   },
                 });
               },
