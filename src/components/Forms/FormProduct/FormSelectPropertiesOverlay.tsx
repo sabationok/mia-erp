@@ -55,9 +55,10 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
     event => {
       event.preventDefault();
 
-      if (update) {
+      const id = update ?? currentProduct?._id;
+      if (id) {
         service.updateById({
-          data: { _id: update, data: { properties: selectedIds } },
+          data: { _id: id, data: { properties: selectedIds } },
           onLoading: setLoading,
           onSuccess: (data, _meta) => {
             ToastService.success('Product updated');
@@ -65,12 +66,12 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
           },
         });
       } else {
-        console.log('selectedIds', selectedIds);
+        console.debug('selectedIds', selectedIds);
       }
 
       onSubmit && onSubmit(selectedIds);
     },
-    [onClose, onSubmit, selectedIds, service, update]
+    [currentProduct?._id, onClose, onSubmit, selectedIds, service, update]
   );
 
   const handleSelect = useCallback(

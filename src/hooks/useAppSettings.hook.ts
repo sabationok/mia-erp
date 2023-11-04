@@ -2,7 +2,7 @@ import { toast } from 'react-toastify';
 import { logOutUserThunk } from 'redux/auth/auth.thunks';
 import { actionResetPageSettings } from 'redux/page/pageActions';
 import { useAppDispatch } from 'redux/store.store';
-import { AccentColorNamesType } from 'theme/accentColors';
+import { AccentColorName } from 'theme/accentColors';
 import {
   actionResetAppSettings,
   actionSelectAccentColor,
@@ -15,7 +15,7 @@ import { RoleActionType, ServiceDispatcherAsync } from '../redux/global.types';
 
 export interface AppSettingsService {
   toggleAppMode: () => void;
-  selectAccentColor: (color: AccentColorNamesType) => void;
+  selectAccentColor: (color: AccentColorName) => void;
   resetApp: ServiceDispatcherAsync;
   getAppActions: ServiceDispatcherAsync<any, Record<string, RoleActionType[]>>;
 }

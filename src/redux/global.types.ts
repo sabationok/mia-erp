@@ -83,15 +83,15 @@ export interface AddressDto {
   room?: string;
 }
 
-export interface AppResponse<D = any, M = any>
-  extends AxiosResponse<{
-    statusCode?: number;
-    message?: string;
-    innerCode?: number;
-    description?: string;
-    meta: M;
-    data: D;
-  }> {}
+export type AppResponseType<D = any, M = any> = {
+  statusCode?: number;
+  message?: string;
+  innerCode?: number;
+  description?: string;
+  meta: M;
+  data: D;
+};
+export interface AppResponse<D = any, M = any> extends AxiosResponse<AppResponseType<D, M>> {}
 
 export type CompanyQueryType = 'own' | 'all' | 'invites' | 'invited';
 

@@ -3,7 +3,7 @@ import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import ModalFilter from '../../ModalForm/ModalFilter';
 import { useStepsHandler } from '../../../utils/createStepChecker';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import { ModalHeader } from '../../atoms';
@@ -21,6 +21,9 @@ import { orderInfoBaseSchema } from '../validation';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useModalService } from '../../ModalProvider/ModalProvider';
 import { createApiCall, OrdersApi } from '../../../api';
+import { formatDateForInputValue } from '../../../utils';
+
+import * as fns from 'date-fns';
 
 export interface FormCreateOrdersGroupProps
   extends Omit<ModalFormProps<any, any, FormCreateOrdersGroupStepsData>, 'onSubmit'> {
@@ -60,12 +63,21 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
   };
 
   const formOrderInfo = useForm<ICreateOrderInfoFormState>({
-    defaultValues: currentGroupFormState.info,
+    defaultValues: {
+      ...currentGroupFormState.info,
+      invoiceInfo: {
+        expiredAt: formatDateForInputValue(fns.addDays(new Date(), 1)),
+        ...currentGroupFormState.info?.invoiceInfo,
+      },
+    },
     resolver: yupResolver(orderInfoBaseSchema),
     reValidateMode: 'onChange',
   });
-
   const orderInfoFormValues = formOrderInfo.watch();
+
+  useEffect(() => {
+    console.log(orderInfoFormValues);
+  }, [orderInfoFormValues]);
 
   const renderStep = useMemo(() => {
     if (stepsMap?.Stuffing) {

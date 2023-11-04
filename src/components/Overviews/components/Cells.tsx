@@ -1,7 +1,7 @@
 import FlexBox from '../../atoms/FlexBox';
 import React, { useEffect, useMemo, useState } from 'react';
 import FormCreateVariation from '../../Forms/FormProduct/FormCreateVariationOverlay';
-import { IProperty } from '../../../redux/products/properties.types';
+import { IProperty, IPropertyValue } from '../../../redux/products/properties.types';
 import styled, { useTheme } from 'styled-components';
 import { Text } from '../../atoms/Text';
 import { useDirectoriesSelector, useProductsSelector } from '../../../redux/selectors.store';
@@ -419,6 +419,22 @@ export const StaticProperties: RenderOverviewCellComponent<IProduct> = ({ cell, 
       );
     });
   }, [availableProperties, setOverlayContent, selectedItems]);
+
+  const renderPropertiesFromVariations = useMemo(() => {
+    const propsFromVariations = data?.variations?.map(vr => vr.properties)?.flat(1);
+    const unicValuesMap: Record<string, IPropertyValue> = {};
+
+    propsFromVariations?.forEach(value => {
+      if (value?._id) {
+        unicValuesMap[value?._id] = value;
+      }
+    });
+
+    return Object.values(unicValuesMap).map(value => {
+      console.log(value);
+      return <FlexBox></FlexBox>;
+    });
+  }, [data?.variations]);
 
   return (
     <Cell

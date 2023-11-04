@@ -5,6 +5,7 @@ import { axiosErrorCheck } from 'utils';
 import { CompaniesApi, PermissionsApi } from '../../api';
 import { ICompanyForReq } from '../companies/companies.types';
 import { createUpdateCompanyThunk } from '../companies/companies.thunks';
+import { IUser } from '../auth/auth.types';
 
 enum PermissionsThunkType {
   getAllPermissionsByUserId = 'permissions/getAllPermissionsByUserIdThunk',
@@ -99,12 +100,13 @@ export const logInPermissionThunk = createAsyncThunk<IPermission, ThunkPayload<{
   }
 );
 export const logOutPermissionThunk = createAsyncThunk<
-  { _id?: string; result: boolean },
+  { _id?: string; result: boolean; user: IUser },
   ThunkPayload<
     any,
     {
       _id?: string;
       result: boolean;
+      user: IUser;
     }
   >
 >(PermissionsThunkType.logOut, async ({ data, onSuccess, onError }, thunkAPI) => {

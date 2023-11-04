@@ -127,7 +127,9 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
           contentContainerStyle={{ padding: '8px 0', gap: 8 }}
           open
           renderHeader={
-            <Text $ellipsisMode={true} $size={16} $weight={500}>{`${t('Customer')} | ${t('Receiver')}`}</Text>
+            <Text $padding={'0 6px'} $ellipsisMode={true} $size={16} $weight={500}>{`${t('Customer')} | ${t(
+              'Receiver'
+            )}`}</Text>
           }
         >
           {formValues?.customer && (
@@ -249,7 +251,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
           contentContainerStyle={{ padding: '8px 2px' }}
           open
           renderHeader={
-            <Text $ellipsisMode={true} $size={16} $weight={500}>
+            <Text $padding={'0 6px'} $ellipsisMode={true} $size={16} $weight={500}>
               {t('Invoicing')}
             </Text>
           }
@@ -278,7 +280,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
           contentContainerStyle={{ padding: '0 2px' }}
           open
           renderHeader={
-            <Text $ellipsisMode={true} $size={16} $weight={500}>
+            <Text $padding={'0 6px'} $ellipsisMode={true} $size={16} $weight={500}>
               {`${t('Shipment')} | ${t('Delivery')}`}
             </Text>
           }
@@ -337,26 +339,6 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
             )}
           </BorderedBox>
         </StAccordionItem>
-
-        {/*{!isGroup && (*/}
-        {/*  <StAccordionItem*/}
-        {/*    contentContainerStyle={{ padding: '8px 2px' }}*/}
-        {/*    open*/}
-        {/*    renderHeader={*/}
-        {/*      <Text $ellipsisMode={true} $size={16} $weight={500}>*/}
-        {/*        {t('Additionally')}*/}
-        {/*      </Text>*/}
-        {/*    }*/}
-        {/*  >*/}
-        {/*    <InputLabel label={t('Comment')}>*/}
-        {/*      <TextareaPrimary maxLength={250} placeholder={t('Enter comment for customer')} {...register('comment')} />*/}
-        {/*    </InputLabel>*/}
-
-        {/*    <InputLabel label={t('Service comment')}>*/}
-        {/*      <TextareaPrimary maxLength={250} placeholder={t('Enter service comment')} {...register('innerComment')} />*/}
-        {/*    </InputLabel>*/}
-        {/*  </StAccordionItem>*/}
-        {/*)}*/}
       </FlexBox>
     </Inputs>
   );
@@ -376,4 +358,5 @@ const StAccordionItem = styled(FormAccordionItem)`
     margin: auto;
   }
 `;
+
 export default OrderInfoStep;

@@ -26,7 +26,11 @@ export default class OrdersApi {
   public static async createManyOrdersGroupedByWarehouse(
     data?: ICreateOrdersWithSlotsAndGroupByWarehousesReqData
   ): Promise<IOrderRes> {
-    return this.api.post(this.endpoints.createManyOrdersGroupedByWarehouse(), data?.data, { params: data?.params });
+    return this.api.post(
+      this.endpoints.createManyOrdersGroupedByWarehouse(),
+      { slots: data?.data.slots, ...data?.data.info },
+      { params: data?.params }
+    );
   }
 
   public static async createGroupWithSlots(

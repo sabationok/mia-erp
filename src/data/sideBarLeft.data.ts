@@ -9,6 +9,7 @@ import Notifications from '../components/SideBarContent/Notifications';
 import directories from './directories.data';
 import { reports } from './reports.data';
 import { appSettings } from './appSettings.data';
+import AppSettings from '../components/SideBarContent/AppSettings';
 
 export const sideBarButtons: ISidebarOptionsItem[] = [
   {
@@ -51,7 +52,7 @@ export const sideBarButtonsBottom: ISidebarOptionsItem[] = [
     options: appSettings,
     title: 'Налаштування',
     corp: true,
-    RenderComponent: () => null,
+    RenderComponent: AppSettings,
   },
 ];
 

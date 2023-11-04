@@ -8,6 +8,7 @@ import {
   PermissionStatus,
 } from '../redux/permissions/permissions.types';
 import { AppResponse } from '../redux/global.types';
+import { IUser } from '../redux/auth/auth.types';
 
 export default class PermissionsApi {
   private static api = baseApi;
@@ -37,7 +38,7 @@ export default class PermissionsApi {
     return this.api.post(this.endpoints.logIn(id));
   }
 
-  public static logOut(): Promise<AppResponse<{ _id: string; result: boolean }>> {
+  public static logOut(): Promise<AppResponse<{ _id: string; result: boolean; user: IUser }>> {
     return this.api.post(this.endpoints.logOut());
   }
 

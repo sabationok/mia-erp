@@ -25,6 +25,7 @@ import { ServiceDispatcherAsync } from 'redux/global.types';
 import { clearCurrentPermission } from '../redux/permissions/permissions.action';
 import { defaultThunkPayload } from '../utils/fabrics';
 import { ICompany, ICompanyForReq, ICompanyReqData } from '../redux/companies/companies.types';
+import { IUser } from '../redux/auth/auth.types';
 
 export interface PermissionService {
   getAllByCompanyId: ServiceDispatcherAsync<{ companyId: string; refresh?: boolean }, IPermission[]>;
@@ -33,7 +34,7 @@ export interface PermissionService {
   edit: ServiceDispatcherAsync<IPermissionReqData>;
   create: ServiceDispatcherAsync<IPermissionForReq>;
   getCurrent: ServiceDispatcherAsync<{ id: string }>;
-  permissionLogOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean }>;
+  permissionLogOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean; user: IUser }>;
   logOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean }>;
   logIn: ServiceDispatcherAsync<{ _id: string }, IPermission>;
   clearCurrent: () => void;

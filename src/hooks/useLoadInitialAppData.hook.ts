@@ -12,7 +12,6 @@ const directoriesForLoading: { dirType: ApiDirType; createTreeData?: boolean }[]
   { dirType: ApiDirType.BRANDS, createTreeData: true },
   { dirType: ApiDirType.CONTRACTORS },
   { dirType: ApiDirType.TAGS },
-  { dirType: ApiDirType.PROPERTIES_PRODUCTS, createTreeData: true },
 ];
 const useLoadInitialAppDataHook = ({
   onLoading,

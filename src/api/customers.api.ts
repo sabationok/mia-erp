@@ -9,7 +9,8 @@ export default class CustomersApi {
   private static endpoints = APP_CONFIGS.endpoints.customers;
 
   public static create(info?: ICustomerReqDta): Promise<AppResponse<ICustomer>> {
-    return this.api.post(this.endpoints.create(), info?.data);
+    console.table(info);
+    return this.api.post(this.endpoints.create(), info);
   }
   public static update(info?: ICustomerReqDta): Promise<AppResponse<ICustomer>> {
     return this.api.patch(this.endpoints.update(info?._id), info?.data);

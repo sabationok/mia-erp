@@ -78,7 +78,15 @@ const TagButtonsFilter = <Value extends string | number = any>({
           key={`f-opt_${opt.value}`}
           variant={isActive ? 'filledSmall' : 'outlinedSmall'}
           onClick={() => handleSelect(opt, index)}
-          style={{ width: '100%', minWidth: 'unset', padding: '4px 8px' }}
+          style={{
+            width: '100%',
+            minWidth: 'unset',
+            padding: '4px 8px',
+
+            borderColor: !isActive ? opt?.color ?? '' : '',
+            backgroundColor: isActive ? opt?.color ?? '' : '',
+            color: !isActive ? opt?.color ?? '' : '',
+          }}
         >
           <Text $ellipsisMode={true} $size={12} style={{ fontWeight: 'inherit' }}>
             {checks.isStr(opt?.label) ? t(opt.label) : opt.value}

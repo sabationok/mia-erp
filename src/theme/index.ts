@@ -1,7 +1,6 @@
-import { AccentColorNamesType, accentColors, IAccentColor, IAccentColors } from './accentColors';
+import { AccentColorName, IAccentColor, IAccentColors } from './accentColors';
 
-export { accentColors };
-export type { AccentColorNamesType, IAccentColors, IAccentColor };
+export type { AccentColorName, IAccentColors, IAccentColor };
 
 export const globals = {
   colorLight: '#EFEFEF',
@@ -244,7 +243,7 @@ declare module 'styled-components' {
 export function getTheme(themeName?: ThemeType) {
   return themeName && appThemes[themeName] ? appThemes[themeName] : appThemes.light;
 }
-
-export function getAccentColor(colorName?: AccentColorNamesType) {
-  return colorName && accentColors[colorName] ? accentColors[colorName] : accentColors.orange;
-}
+export { getAccentColor } from './accentColors';
+// export function getAccentColor(colorName?: AccentColorNamesType) {
+//   return colorName && accentColors[colorName] ? accentColors[colorName] : accentColors.orange;
+// }

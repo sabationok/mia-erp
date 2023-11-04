@@ -15,7 +15,7 @@ export interface IUserInfoProps {
 }
 
 const UserInfo: React.FC<IUserInfoProps> = ({ isOpen, onClose }) => {
-  const { logOutUser } = useAppAuthHook();
+  const { logOutUser, setLoggedUser } = useAppAuthHook();
   const { user } = useAuthSelector();
   const { permissionLogOut, clearCurrent } = usePermissionsServiceHook();
   const { permission, permission_token } = usePermissionsSelector();
@@ -63,7 +63,9 @@ const UserInfo: React.FC<IUserInfoProps> = ({ isOpen, onClose }) => {
                 endIcon={'logOut'}
                 onClick={() =>
                   permissionLogOut({
-                    onSuccess: () => {
+                    onSuccess: data => {
+                      setLoggedUser(data.user);
+
                       clearCurrent();
                     },
                     onError() {

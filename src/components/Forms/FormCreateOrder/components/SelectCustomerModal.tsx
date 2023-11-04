@@ -28,12 +28,7 @@ const SelectCustomerModal: React.FC<SelectCustomerModalProps> = ({ onSelect, onS
       tableTitles: customersColumns,
       actionsCreator: _ctx => {
         return [
-          {
-            icon: 'refresh',
-            onClick: () => {
-              service.getAll();
-            },
-          },
+          { icon: 'refresh', onClick: () => service.getAll() },
           { separator: true },
           {
             icon: 'plus',
@@ -42,6 +37,8 @@ const SelectCustomerModal: React.FC<SelectCustomerModalProps> = ({ onSelect, onS
                 ModalChildren: FormCreateCustomer,
                 modalChildrenProps: {
                   onSubmit: d => {
+                    console.log('createDataForReq(d) ModalChildren: FormCreateCustomer', createDataForReq(d));
+
                     service.create({ data: createDataForReq(d) as never });
                   },
                 },
@@ -52,8 +49,8 @@ const SelectCustomerModal: React.FC<SelectCustomerModalProps> = ({ onSelect, onS
       },
       onRowClick: data => {
         const fRes = customers.find(c => c._id === data?._id);
-
-        fRes && onSelect && onSelect(fRes);
+        console.log('data?.rowData', data?.rowData);
+        data?.rowData && onSelect && onSelect(data.rowData);
 
         onClose && onClose();
       },

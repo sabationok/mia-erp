@@ -1,9 +1,11 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import { AsyncThunkPayloadCreator, createAsyncThunk } from '@reduxjs/toolkit';
 import { ICustomer, ICustomerReqDta } from './customers.types';
 import { ThunkPayload } from '../store.store';
 import { AppQueryParams, CommunicationApi, CustomersApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
 import { ICommunicationMethod, ICommunicationMethodReqData } from '../integrations/integrations.types';
+import { AxiosResponse } from 'axios';
+import { AppResponseType } from '../global.types';
 
 enum CustomersThunkTypeEnum {
   create = 'customers/createCustomerThunk',
@@ -16,6 +18,24 @@ enum CustomersThunkTypeEnum {
   getAllSources = 'customers/getAllSourcesThunk',
   updateSource = 'customers/updateSourceThunk',
 }
+
+export const asyncThunkPayloadCreatorWrapper =
+  <Return extends AppResponseType = any, Arg extends ThunkPayload = any>(
+    getResponse: () => Promise<AxiosResponse<Return>>
+  ): AsyncThunkPayloadCreator<Return, Arg> =>
+  async (arg, thunkAPI) => {
+    try {
+      const res = await getResponse();
+      if (res) {
+        arg?.onSuccess && arg?.onSuccess(res?.data?.data);
+      }
+
+      return res?.data?.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue(axiosErrorCheck(e));
+    }
+  };
+
 export const createCustomerThunk = createAsyncThunk<ICustomer, ThunkPayload<ICustomerReqDta, ICustomer>>(
   CustomersThunkTypeEnum.create,
   async (arg, thunkAPI) => {
