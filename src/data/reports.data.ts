@@ -1,5 +1,4 @@
-import { IAccordeonOptionProps } from 'components/SideBarContent/AccordeonList';
-import OptionsList from 'components/SideBarContent/OptionsList';
+import { IAccordionOptionProps } from 'components/SideBarContent/AccordeonList';
 import { iconId } from 'img/sprite/iconId.data';
 import ModalForm from 'components/ModalForm';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
@@ -160,25 +159,25 @@ const financeReports: Partial<IReportConfigs>[] = [
   // { title: '', disabled: true },
 ];
 
-export const reports: IAccordeonOptionProps<any, Partial<IReportConfigs>[]>[] = [
-  {
-    title: 'Фінанси',
-    ChildrenComponent: OptionsList,
-    options: financeReports,
-  },
-  {
-    title: 'Продажі',
-    ChildrenComponent: OptionsList,
-    options: financeReports,
-  },
-  {
-    title: 'Склад ',
-    ChildrenComponent: OptionsList,
-    options: financeReports,
-  },
-  {
-    title: 'Інші',
-    ChildrenComponent: OptionsList,
-    options: financeReports,
-  },
+export const reports: IAccordionOptionProps<any, Partial<IReportConfigs>[]>[] = [
+  // {
+  //   title: 'Фінанси',
+  //   ChildrenComponent: OptionsList,
+  //   options: financeReports,
+  // },
+  // {
+  //   title: 'Продажі',
+  //   ChildrenComponent: OptionsList,
+  //   options: financeReports,
+  // },
+  // {
+  //   title: 'Склад ',
+  //   ChildrenComponent: OptionsList,
+  //   options: financeReports,
+  // },
+  // {
+  //   title: 'Інші',
+  //   ChildrenComponent: OptionsList,
+  //   options: financeReports,
+  // },
 ];

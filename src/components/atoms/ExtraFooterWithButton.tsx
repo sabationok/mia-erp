@@ -1,5 +1,5 @@
-import FlexBox from '../../atoms/FlexBox';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import FlexBox from './FlexBox';
+import ButtonIcon from './ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 
 export interface FormCreateInnerProps {
@@ -7,7 +7,7 @@ export interface FormCreateInnerProps {
   onClick?: () => void;
 }
 
-const ExtraFooterWithButtonButton: React.FC<FormCreateInnerProps> = ({ buttonText, onClick }) => {
+const ExtraFooterWithButton: React.FC<FormCreateInnerProps> = ({ buttonText, onClick }) => {
   return (
     <Container fillWidth padding={'8px'}>
       <ButtonIcon variant={'outlinedSmall'} onClick={onClick}>
@@ -21,4 +21,4 @@ const Container = styled(FlexBox)`
   border-top: 1px solid ${({ theme }) => theme.modalBorderColor};
   border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;
-export default ExtraFooterWithButtonButton;
+export default ExtraFooterWithButton;

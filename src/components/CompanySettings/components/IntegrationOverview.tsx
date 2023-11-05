@@ -1,4 +1,4 @@
-import { ExtIntegrationBase } from '../../../redux/integrations/integrations.types';
+import { InputIntegrationBase } from '../../../redux/integrations/integrations.types';
 import { t } from '../../../lang';
 import { checks } from '../../../utils';
 import { formatDate } from '../../../utils/dateTime.utils';
@@ -8,7 +8,7 @@ import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 
 export interface IntegrationOverviewProps {
-  info: ExtIntegrationBase;
+  info: InputIntegrationBase;
   onSetAsDefaultPress?: () => void;
   onDeletePress?: () => void;
   onEditPress?: () => void;

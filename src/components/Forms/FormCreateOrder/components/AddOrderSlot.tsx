@@ -1,4 +1,4 @@
-import ExtraFooterWithButtonButton from '../../components/ExtraFooterWithButtonButton';
+import ExtraFooterWithButton from '../../../atoms/ExtraFooterWithButton';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import { IOrderTempSlot } from '../../../../redux/orders/orders.types';
 import { t } from '../../../../lang';
@@ -12,7 +12,7 @@ const AddOrderSlot: React.FC<FormAddOrderSlotProps> = ({ onSelect, ...p }) => {
   const modalS = useModalService();
 
   return (
-    <ExtraFooterWithButtonButton
+    <ExtraFooterWithButton
       buttonText={t('Add position to group')}
       onClick={() => {
         const m = modalS.open({

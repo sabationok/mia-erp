@@ -8,6 +8,7 @@ import ModalFilter from '../ModalForm/ModalFilter';
 import ModalFooter from '../ModalForm/ModalFooter';
 import InputIntegrationsTab from './integrations/InputIntegrationsTab';
 import { IntegrationTypeEnum } from '../../redux/integrations/integrations.types';
+import OutputIntegrationsTab from './integrations/OutputIntegrationsTab';
 
 export interface CompanyIntegrationsProps extends Omit<ModalFormProps, 'onSubmit'> {}
 
@@ -21,11 +22,7 @@ const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose,
       return <InputIntegrationsTab />;
     }
     if (integrationType === 'output') {
-      return (
-        <FlexBox flex={1} fillWidth>
-          {integrationType}
-        </FlexBox>
-      );
+      return <OutputIntegrationsTab />;
     }
   }, [integrationType]);
 

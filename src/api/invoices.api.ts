@@ -1,8 +1,9 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import baseApi from './baseApi';
-import { IInvoicingMethod, IInvoicingMethodReqData } from '../redux/invoices/invoices.types';
+import { IInvoicingMethodReqData } from '../redux/invoices/invoices.types';
 import { AppResponse } from '../redux/global.types';
+import { IInvoicingMethod } from '../redux/integrations/integrations.types';
 
 export default class InvoicesApi {
   private static api = baseApi;

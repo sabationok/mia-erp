@@ -7,8 +7,8 @@ import FlexBox from '../atoms/FlexBox';
 import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../Directories/dir.types';
 import DirListItem from '../Directories/DirList/DirListItem';
 import { useTranslatedInvoicingMethods } from '../../hooks/useTranslatedMethods.hook';
-import { IInvoicingMethod } from '../../redux/invoices/invoices.types';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import { IInvoicingMethod } from '../../redux/integrations/integrations.types';
 
 export interface DirInvoicingMethodsProps
   extends IDirInTreeProps<MethodDirType, IInvoicingMethod, IInvoicingMethod, IInvoicingMethod> {

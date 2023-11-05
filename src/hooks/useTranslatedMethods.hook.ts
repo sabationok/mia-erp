@@ -7,8 +7,12 @@ import {
 import { useMemo } from 'react';
 import { getTranslatedString, LangKey, LangPack } from '../lang';
 import { ICheckoutPaymentMethod } from '../redux/payments/payments.types';
-import { ExtPaymentService, ICommunicationMethod, IDeliveryMethod } from '../redux/integrations/integrations.types';
-import { IInvoicingMethod } from '../redux/invoices/invoices.types';
+import {
+  ExtPaymentService,
+  ICommunicationMethod,
+  IDeliveryMethod,
+  IInvoicingMethod,
+} from '../redux/integrations/integrations.types';
 
 interface UseTranslatedListDataOtions {
   langKey?: LangKey;

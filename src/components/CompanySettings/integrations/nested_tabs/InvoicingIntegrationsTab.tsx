@@ -1,19 +1,19 @@
-import FlexBox from '../../atoms/FlexBox';
-import { IntegrationTabProps } from './InputIntegrationsTab';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import FlexBox from '../../../atoms/FlexBox';
+import { IntegrationTabProps } from '../InputIntegrationsTab';
+import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import { useEffect, useMemo, useState } from 'react';
-import { Text } from '../../atoms/Text';
-import { t } from '../../../lang';
-import { useModalService } from '../../ModalProvider/ModalProvider';
-import FormCreateIntegration from '../../Forms/FormCreateIntegration';
-import { ExtIntegrationBase } from '../../../redux/integrations/integrations.types';
-import { useTranslatedListData } from '../../../hooks/useTranslatedMethods.hook';
-import { createApiCall, IntegrationsApi } from '../../../api';
-import { getIdRef, transformQueriesForReq } from '../../../utils/dataTransform';
+import { Text } from '../../../atoms/Text';
+import { t } from '../../../../lang';
+import { useModalService } from '../../../ModalProvider/ModalProvider';
+import FormCreateIntegration from '../../../Forms/FormCreateIntegration';
+import { InputIntegrationBase } from '../../../../redux/integrations/integrations.types';
+import { useTranslatedListData } from '../../../../hooks/useTranslatedMethods.hook';
+import { createApiCall, IntegrationsApi } from '../../../../api';
+import { getIdRef, transformQueriesForReq } from '../../../../utils/dataTransform';
 import styled from 'styled-components';
-import ExtraFooterWithButtonButton from '../../Forms/components/ExtraFooterWithButtonButton';
-import IntegrationOverview from '../components/IntegrationOverview';
-import { useCheckoutPaymentsSelector, useInvoicesSelector } from '../../../redux/selectors.store';
+import ExtraFooterWithButton from '../../../atoms/ExtraFooterWithButton';
+import IntegrationOverview from '../../components/IntegrationOverview';
+import { useCheckoutPaymentsSelector, useInvoicesSelector } from '../../../../redux/selectors.store';
 
 export interface InvoicingIntegrationsTabProps extends IntegrationTabProps {}
 
@@ -25,7 +25,7 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
   currentService: currentServiceData,
   ...props
 }) => {
-  const [integrationsList, setIntegrationsList] = useState<ExtIntegrationBase[]>([]);
+  const [integrationsList, setIntegrationsList] = useState<InputIntegrationBase[]>([]);
   const modalS = useModalService();
   const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);
   const handleToggleListVisibility = () => setIsListVisible(p => !p);
@@ -74,7 +74,7 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
         });
   }, [currentServiceData?._id, invoicingMethods]);
 
-  const renderPaymentMethods = useMemo(() => {
+  const renderCheckoutMethods = useMemo(() => {
     const methods = checkoutMethods.filter(m => {
       return m.service?._id === currentServiceData?._id;
     });
@@ -123,7 +123,7 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
           </Text>
 
           <FlexBox fxDirection={'row'} padding={'4px 2px'} flexWrap={'wrap'} gap={4} fillWidth>
-            {renderPaymentMethods}
+            {renderCheckoutMethods}
           </FlexBox>
 
           {/*<Text $size={11} $weight={600} $margin={'4px 8px'}>*/}
@@ -151,7 +151,7 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
           {renderIntegrations}
         </FlexBox>
 
-        <ExtraFooterWithButtonButton onClick={onOpenModalPress} buttonText={t('Add new')} />
+        <ExtraFooterWithButton onClick={onOpenModalPress} buttonText={t('Add new')} />
       </FlexBox>
     </FlexBox>
   );

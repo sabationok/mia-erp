@@ -9,7 +9,7 @@ import FlexBox from '../atoms/FlexBox';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { DirInTreeActionsCreatorType, IDirItemBase } from './dir.types';
 import { RenderModalComponentChildrenProps } from '../ModalProvider/ModalComponent';
-import ExtraFooterWithButtonButton from '../Forms/components/ExtraFooterWithButtonButton';
+import ExtraFooterWithButton from '../atoms/ExtraFooterWithButton';
 
 export interface DirTreeComponentProps extends RenderModalComponentChildrenProps {
   createParentTitle?: string;
@@ -83,10 +83,7 @@ const DirTreeComp = ({
       onOptSelect={handleFilterData}
       extraFooter={
         actions?.onCreateParent && (
-          <ExtraFooterWithButtonButton
-            buttonText={createParentTitle || 'Create parent'}
-            onClick={actions?.onCreateParent}
-          />
+          <ExtraFooterWithButton buttonText={createParentTitle || 'Create parent'} onClick={actions?.onCreateParent} />
         )
       }
     >

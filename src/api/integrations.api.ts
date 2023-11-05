@@ -1,11 +1,11 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
-import { AppQueries, AppQueryParams } from './index';
+import { AppQueries } from './index';
 import baseApi from './baseApi';
 import {
-  ExtIntegrationBase,
-  ExtIntegrationBaseDto,
-  ExtServiceBase,
-  IntIntegrationBase,
+  InputIntegrationBase,
+  InputIntegrationDto,
+  OutputIntegrationBase,
+  OutputIntegrationDto,
 } from '../redux/integrations/integrations.types';
 import { AppResponse } from '../redux/global.types';
 
@@ -17,27 +17,33 @@ export default class ExtServicesApi {
   private static endpoints = APP_CONFIGS.endpoints.integrations;
 
   public static createInputIntegration(data?: {
-    data: ExtIntegrationBaseDto;
-  }): Promise<AppResponse<ExtIntegrationBase>> {
+    data: InputIntegrationDto;
+  }): Promise<AppResponse<InputIntegrationBase>> {
     return this.api.post(this.endpoints.create('input'), data?.data);
   }
 
-  public static updateOutputIntegration(data?: {
-    data: ExtIntegrationBaseDto;
-  }): Promise<AppResponse<ExtIntegrationBase>> {
+  public static createOutputIntegration(data?: {
+    data: OutputIntegrationDto;
+  }): Promise<AppResponse<InputIntegrationBase>> {
     return this.api.post(this.endpoints.create('output'), data?.data);
   }
 
-  public static getAllExtIntegrationServices(
-    params?: AppQueryParams<ExtServiceBase>
-  ): Promise<AppResponse<ExtServiceBase[]>> {
-    console.log(params);
-    return this.api.get(this.endpoints.getAll(), { params });
+  public static updateOutputIntegration(data?: {
+    data: OutputIntegrationDto;
+  }): Promise<AppResponse<InputIntegrationBase>> {
+    return this.api.post(this.endpoints.create('output'), data?.data);
   }
+
+  // public static getAllExtIntegrationServices(
+  //   params?: AppQueryParams<ExtServiceBase>
+  // ): Promise<AppResponse<ExtServiceBase[]>> {
+  //   console.log(params);
+  //   return this.api.get(this.endpoints.getAll(), { params });
+  // }
 
   public static getAllByQueries(
     params?: GetAllIntegrationsQueries
-  ): Promise<AppResponse<(ExtIntegrationBase | IntIntegrationBase)[]>> {
+  ): Promise<AppResponse<(InputIntegrationBase | OutputIntegrationBase)[]>> {
     return this.api.get(this.endpoints.getAll(params?.type), { params });
   }
 }

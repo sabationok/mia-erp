@@ -2,7 +2,6 @@ import { IBase, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
 import { LangPack } from '../../lang';
 import { ICompany } from '../companies/companies.types';
 import { ICheckoutPaymentMethod } from '../payments/payments.types';
-import { IInvoicingMethod } from '../invoices/invoices.types';
 import { AppQueryParams } from '../../api';
 
 export enum IntegrationTypeEnum {
@@ -48,14 +47,14 @@ export interface ExtServiceBase extends IBase {
   label: string;
   value: string;
   lang?: LangPack;
-  defIntegration?: ExtIntegrationBase;
+  defIntegration?: InputIntegrationBase;
   disabled?: boolean;
   originServices?: ExtSubServicesEntity;
 }
 
 export interface ExtSubServicesEntity extends Record<ExtIntegrationServiceTypeEnum | string, string[]> {}
 
-export interface ExtIntegrationBase extends IBase {
+export interface InputIntegrationBase extends IBase {
   owner?: ICompany;
   service: ExtServiceBase;
 
@@ -69,44 +68,42 @@ export interface ExtIntegrationBase extends IBase {
   label?: string;
   description?: string;
 }
-export interface IntIntegrationBase extends ExtIntegrationBase {}
+export interface OutputIntegrationBase extends InputIntegrationBase {}
 
-export interface ExtIntegrationBaseDto {
-  service?: OnlyUUID;
-  warehouse?: OnlyUUID;
-  finCount?: OnlyUUID;
-  apiKey?: string;
-  secret?: string;
-  expiredAt?: string | Date;
+export interface IntegrationBaseDto {
+  expiredAt?: string | Date | number;
   label?: string;
   description?: string;
-  login?: string;
 }
 
-export interface CreateIntegrationFormData extends Partial<Omit<ExtIntegrationBaseDto, 'service'>> {
+export interface CreateIntegrationFormData extends Partial<Omit<IntegrationBaseDto, 'service'>> {
+  apiKey?: string;
+  secret?: string;
+  login?: string;
+
   service?: IFormDataValueWithUUID;
   warehouse?: IFormDataValueWithUUID;
   finCount?: IFormDataValueWithUUID;
 }
 
-export enum PaymentCheckoutEnum {
-  // * liqpay
-  qr = 'qr',
-  card = 'card',
-  cash = 'cash',
-  gpay = 'gpay',
-  apay = 'apay',
-  subscribe = 'subscribe',
-  paydonate = 'paydonate',
-  paysplit = 'paysplit',
-  regular = 'regular ',
-  auth = 'auth ',
+export interface InputIntegrationDto extends IntegrationBaseDto {
+  apiKey?: string;
+  secret?: string;
+  login?: string;
 
-  //* mono
-  apple = 'apple',
-  google = 'google',
-  monobank = 'monobank',
+  service?: OnlyUUID;
+  warehouse?: OnlyUUID;
+  finCount?: OnlyUUID;
 }
+export interface CreateOutputIntegrationFormData
+  extends Partial<Pick<IntegrationBaseDto, 'description' | 'expiredAt' | 'label'>> {
+  role?: IFormDataValueWithUUID;
+}
+export interface OutputIntegrationDto extends IntegrationBaseDto {
+  role?: OnlyUUID;
+  service?: OnlyUUID;
+}
+
 export interface ExtPaymentService extends ExtServiceBase {
   methods?: ICheckoutPaymentMethod[];
 }
@@ -130,16 +127,34 @@ export interface ExtServiceMethodBase<Type = any, Service = any> extends IBase {
   service?: Service | null;
   extService?: Service | null;
 }
-
-export interface ICommunicationMethod extends ExtServiceMethodBase {
-  type?: string;
-  service?: ExtCommunicationService | null;
-  extService?: ExtCommunicationService | null;
-}
-export interface ICommunicationMethodReqData {
+export interface IMethodReqData<Method = any> {
   _id?: string;
-  data?: Omit<ICommunicationMethod, '_id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDefault'>;
-  params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>;
+  data?: Omit<Method, '_id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDefault'>;
+  params?: Pick<AppQueryParams, 'disabled' | 'isDefault' | 'disabledForClient'>;
 }
 
+export interface ICommunicationMethod extends ExtServiceMethodBase<string, ExtCommunicationService> {}
+export interface ICommunicationMethodReqData extends IMethodReqData<ICommunicationMethod> {}
+export interface IInvoicingMethod extends ExtServiceMethodBase<string, ExtInvoicingService> {}
+export interface IInvoicingMethodReqData extends IMethodReqData<IInvoicingMethod> {}
 export interface IDeliveryMethod extends ExtServiceMethodBase<string, ExtDeliveryService> {}
+export interface IDeliveryMethodReqData extends IMethodReqData<IDeliveryMethod> {}
+
+export enum PaymentCheckoutEnum {
+  // * liqpay
+  qr = 'qr',
+  card = 'card',
+  cash = 'cash',
+  gpay = 'gpay',
+  apay = 'apay',
+  subscribe = 'subscribe',
+  paydonate = 'paydonate',
+  paysplit = 'paysplit',
+  regular = 'regular ',
+  auth = 'auth ',
+
+  //* mono
+  apple = 'apple',
+  google = 'google',
+  monobank = 'monobank',
+}

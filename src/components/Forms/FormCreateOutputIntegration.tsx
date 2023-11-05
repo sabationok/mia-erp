@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import { t } from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
-import FlexBox from '../atoms/FlexBox';
+
 import InputSecurityControlHOC from '../atoms/Inputs/SecurityInputControlHOC';
 import {
   CreateIntegrationFormData,
@@ -13,35 +13,38 @@ import {
 } from '../../redux/integrations/integrations.types';
 import { createApiCall, IntegrationsApi } from '../../api';
 import { getIdRef } from '../../utils/dataTransform';
+import FlexBox from '../atoms/FlexBox';
 
-export interface FormCreateIntegrationProps extends Omit<ModalFormProps, 'onSubmit'> {
+export interface FormCreateOutputIntegrationProps extends Omit<ModalFormProps, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<CreateIntegrationFormData>;
   onSuccess?: (data: { data: InputIntegrationBase }) => void;
-  service: ExtServiceBase;
+  service?: ExtServiceBase;
 }
 
-const FormCreateIntegration: React.FC<FormCreateIntegrationProps> = ({
+const FormCreateOutputIntegration: React.FC<FormCreateOutputIntegrationProps> = ({
   onSubmit,
   service,
   onSuccess,
   onClose,
+
   ...p
 }) => {
   const form = useForm<CreateIntegrationFormData>();
 
   const onValid = (data: CreateIntegrationFormData) => {
-    createApiCall(
-      {
-        onSuccess: data => {
-          console.log('FormCreateIntegration createInputIntegration', data);
-          onSuccess && onSuccess({ data });
-          onClose && onClose();
+    service &&
+      createApiCall(
+        {
+          onSuccess: data => {
+            console.log('FormCreateOutputIntegration createInputIntegration', data);
+            onSuccess && onSuccess({ data });
+            onClose && onClose();
+          },
+          data: { data: { ...data, service: getIdRef(service) } },
         },
-        data: { data: { ...data, service: getIdRef(service) } },
-      },
-      IntegrationsApi.createInputIntegration,
-      IntegrationsApi
-    );
+        IntegrationsApi.createOutputIntegration,
+        IntegrationsApi
+      );
   };
 
   return (
@@ -77,4 +80,4 @@ const FormCreateIntegration: React.FC<FormCreateIntegrationProps> = ({
   );
 };
 
-export default FormCreateIntegration;
+export default FormCreateOutputIntegration;

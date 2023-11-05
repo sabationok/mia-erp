@@ -2,8 +2,7 @@ import { IBase, IFormDataValueWithUUID } from '../global.types';
 import { IOrder, IOrderSlot } from '../orders/orders.types';
 import { IPayment } from '../payments/payments.types';
 import { IShipment } from '../shipments/shipments.types';
-import { LangPack } from '../../lang';
-import { ExtInvoicingService } from '../integrations/integrations.types';
+import { IInvoicingMethod } from '../integrations/integrations.types';
 import { AppQueryParams } from '../../api';
 
 export enum InvoicingTypeEnum {
@@ -44,18 +43,18 @@ export interface IInvoiceBaseFormData {
   shipment?: IFormDataValueWithUUID;
 }
 
-export interface IInvoicingMethod extends IBase {
-  label?: string;
-  labels?: LangPack;
-  disabled?: boolean;
-  isDefault?: boolean;
-  lang?: LangPack;
-  type?: string;
-  service?: ExtInvoicingService | null;
-  extService?: ExtInvoicingService | null;
-}
+// export interface IInvoicingMethod extends IBase {
+//   label?: string;
+//   labels?: LangPack;
+//   disabled?: boolean;
+//   isDefault?: boolean;
+//   lang?: LangPack;
+//   type?: string;
+//   service?: ExtInvoicingService | null;
+//   extService?: ExtInvoicingService | null;
+// }
 export interface IInvoicingMethodReqData {
   _id?: string;
-  data?: IInvoicingMethod;
+  data?: Partial<IInvoicingMethod>;
   params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>;
 }
