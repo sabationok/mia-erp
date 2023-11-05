@@ -66,14 +66,13 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
     [currentType, businessSubjectType]
   );
   function onFormSubmit(data: ICompanyFormData) {
-    if (data) console.log(data);
-
     permissions
       .createCompany({
         data,
         onSuccess(data) {
           console.log('Company created', data);
           toast.success(`Company created: ${data?.name || data?.label}`);
+          props?.onClose && props?.onClose();
         },
         onError() {
           toast.error('Error');

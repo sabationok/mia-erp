@@ -6,6 +6,7 @@ import {
   createCustomerThunk,
   getAllCommunicationInvoiceMethodsThunk,
   getAllCustomersThunk,
+  updateCommunicationMethodThunk,
   updateCustomerThunk,
 } from '../redux/customers/customers.thunks';
 import { defaultThunkPayload } from '../utils/fabrics';
@@ -18,6 +19,7 @@ export interface CustomersService {
   update: ServiceDispatcherAsync<{ refresh?: boolean; data: ICustomerReqDta; params?: AppQueryParams }, ICustomer>;
 
   getAllMethods: ServiceDispatcherAsync<ICommunicationMethodReqData, ICommunicationMethod[]>;
+  updateMethod: ServiceDispatcherAsync<ICommunicationMethodReqData, ICommunicationMethod>;
 }
 const useCustomersService = () => {
   const dispatch = useAppDispatch();
@@ -28,6 +30,7 @@ const useCustomersService = () => {
       update: args => dispatch(updateCustomerThunk(defaultThunkPayload(args))),
 
       getAllMethods: args => dispatch(getAllCommunicationInvoiceMethodsThunk(defaultThunkPayload(args))),
+      updateMethod: arg => dispatch(updateCommunicationMethodThunk(defaultThunkPayload(arg))),
     };
   }, [dispatch]);
 };

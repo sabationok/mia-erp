@@ -2,7 +2,7 @@ import { AddressDto, AppResponse, IBase, IFormDataValueWithUUID, OnlyUUID } from
 import { IPriceBase, IPriceListItem } from '../priceManagement/priceManagement.types';
 import { ICompany } from '../companies/companies.types';
 import { IManager, IUserBase } from '../auth/auth.types';
-import { ICommunicationDirItem, IPaymentDirItem } from '../../components/Directories/dir.types';
+import { ICommunicationDirItem } from '../../components/Directories/dir.types';
 import { IProductInventory, IWarehouse } from '../warehouses/warehouses.types';
 import { IProduct } from '../products/products.types';
 import { IVariation } from '../products/variations.types';
@@ -53,7 +53,10 @@ export interface IOrderSlot extends IBase, IOrderSlotBase {
 export interface IOrderTempSlot extends IOrderSlotBase {
   tempId?: string;
 }
-
+export interface OrderTotals {
+  items?: number;
+  amount?: number;
+}
 export interface IOrder extends IBase {
   owner?: ICompany;
   manager?: IManager;
@@ -67,19 +70,25 @@ export interface IOrder extends IBase {
   receiver?: ICustomerBase;
   receiverCommunicationMethods?: ICommunicationDirItem[];
 
+  customerInfo?: ICustomerBase & {
+    communication?: string[];
+  };
+
+  receiverInfo?: ICustomerBase & {
+    communication?: string[];
+  };
+  executeAt?: string | number | Date;
+  executeNow?: boolean;
+
   status?: OrderStatusEnum;
 
-  destination?: string;
+  totals?: OrderTotals;
+
   slots?: IOrderSlot[];
-
-  total?: number;
-  shipmentType?: IPaymentDirItem;
-  shipments?: IShipment[];
-
-  paymentType?: IPaymentDirItem;
-  payments?: IPayment[];
-
   invoices?: IInvoice[];
+  shipments?: IShipment[];
+  deliveries?: IShipment[];
+  payments?: IPayment[];
 
   comment?: string;
   innerComment?: string;
@@ -91,17 +100,19 @@ export interface ICreateOrderInfoFormState {
     user?: Partial<IUserBase>;
   };
 
-  customer?: ICustomerBase;
-  customerCommunicationMethods?: string[];
+  // customer?: ICustomerBase;
+  // customerCommunicationMethods?: string[];
+  //
+  // receiver?: ICustomerBase;
+  // receiverCommunicationMethods?: string[];
 
-  receiver?: ICustomerBase;
-  receiverCommunicationMethods?: string[];
-
-  customerInfo?: ICustomerBase & {
+  customer?: {
+    info?: ICustomerBase;
     communication?: string[];
   };
 
-  receiverInfo?: ICustomerBase & {
+  receiver?: {
+    info?: ICustomerBase;
     communication?: string[];
   };
 
@@ -112,10 +123,16 @@ export interface ICreateOrderInfoFormState {
     expiredAt?: string | number | Date;
   };
 
+  executeAt?: string | number | Date;
+  executeNow?: boolean;
+
   shipmentInfo?: {
+    executeAt?: Date | number | string;
+    executeNow?: boolean;
+  };
+  deliveryInfo?: {
     method?: IFormDataValueWithUUID;
     destination?: AddressDto;
-    paymentMethod?: IFormDataValueWithUUID;
 
     invoiceInfo?: {
       method?: IFormDataValueWithUUID;

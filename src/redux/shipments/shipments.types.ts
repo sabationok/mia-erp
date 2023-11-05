@@ -1,6 +1,6 @@
 import { AddressDto, IBase, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
 import { IOrder, IOrderSlot } from '../orders/orders.types';
-import { ICheckoutPaymentMethod, IPayment } from '../payments/payments.types';
+import { IPayment } from '../payments/payments.types';
 import { IInvoice } from '../invoices/invoices.types';
 import { AppQueryParams } from '../../api';
 import { IProductDimensions } from '../products/products.types';
@@ -18,21 +18,25 @@ export interface IShipment extends IBase {
 
   payment?: IPayment;
   invoice?: IInvoice;
+
+  provider?: ShipmentProviderEnum;
+
+  status?: ShipmentStatusTypeEnum;
+  description?: string;
+
+  deliveries?: IDelivery[];
+}
+
+export interface IDelivery extends IBase {
   ttn?: string;
 
   declaredValue?: number;
   contentTotalValue?: number;
-  cost?: number;
-
-  provider?: ShipmentProviderEnum;
-
   destination?: AddressDto;
   dimensions?: IProductDimensions;
-  status?: ShipmentStatusTypeEnum;
-  description?: string;
-
+  cost?: number;
   method?: IDeliveryMethod;
-  paymentMethod?: ICheckoutPaymentMethod;
+  invoice?: IInvoice;
 }
 
 export interface IShipmentBaseDto {

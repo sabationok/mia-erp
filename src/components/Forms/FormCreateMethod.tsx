@@ -1,54 +1,47 @@
-import {
-  DirectoriesFormProps,
-  ICommunicationDirItem,
-  IDirItemBase,
-  IPaymentDirItem,
-  IShipmentDirItem,
-  MethodDirType,
-} from '../Directories/dir.types';
-import ModalForm from '../ModalForm';
-
+import ModalForm, { ModalFormProps } from '../ModalForm';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import styled from 'styled-components';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import { t } from '../../lang';
-import InputText from '../atoms/Inputs/InputText';
 import React from 'react';
 import { useAppForm } from '../../hooks';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import FlexBox from '../atoms/FlexBox';
+import { ExtServiceMethodBase } from '../../redux/integrations/integrations.types';
+import ButtonSwitch from '../atoms/ButtonSwitch';
 
-export interface FormCreateMethodProps extends DirectoriesFormProps<MethodDirType, IDirItemBase, IMethodFormData> {}
+export interface FormCreateMethodProps extends Omit<ModalFormProps<IMethodFormData>, 'onSubmit'> {
+  _id?: string;
+  create?: boolean;
+  edit?: boolean;
+  onSubmit?: AppSubmitHandler<IMethodFormData, { logAfterSubmit?: boolean }>;
+}
 
 export interface IMethodFormData
   extends Omit<
-    IPaymentDirItem | IShipmentDirItem | ICommunicationDirItem,
-    '_id' | 'createdAt' | 'deletedAt' | 'updatedAt'
+    ExtServiceMethodBase,
+    '_id' | 'createdAt' | 'deletedAt' | 'updatedAt' | 'service' | 'extService' | 'type'
   > {}
 
 const validation = yup.object().shape({
-  label: yup.string().max(100),
-  email: yup.string().max(100).optional(),
+  // label: yup.string().max(100),
+  disabledForClient: yup.boolean().optional(),
   description: yup.string().max(250).optional(),
-});
+} as Record<keyof ExtServiceMethodBase | string, any>);
 
-const FormCreateMethod: React.FC<FormCreateMethodProps> = ({ onSubmit, parent, data, ...props }) => {
+const FormCreateMethod: React.FC<FormCreateMethodProps> = ({ onSubmit, defaultState, ...props }) => {
   const submitOptions = useAfterSubmitOptions();
   const {
     formState: { errors, isValid },
     register,
     handleSubmit,
   } = useAppForm<IMethodFormData>({
-    defaultValues: { ...data },
+    defaultValues: { ...defaultState },
     resolver: yupResolver(validation),
-    reValidateMode: 'onSubmit',
+    reValidateMode: 'onChange',
   });
-
-  // const filterOptions = useMemo(() => {
-  //   return enumToArray(ContractorsTypesEnum).map(el => ({ label: translate(el), value: el }));
-  // }, []);
 
   function formEventWrapper(evHandler?: AppSubmitHandler<IMethodFormData>) {
     if (evHandler) {
@@ -66,8 +59,15 @@ const FormCreateMethod: React.FC<FormCreateMethodProps> = ({ onSubmit, parent, d
       extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
       <Inputs>
-        <InputLabel label={t('label')} direction={'vertical'} error={errors.label} required>
-          <InputText placeholder={t('insertLabel')} {...register('label')} required autoFocus />
+        {/*<InputLabel label={t('label')} direction={'vertical'} error={errors.label} required>*/}
+        {/*  <InputText placeholder={t('insertLabel')} {...register('label')} required autoFocus />*/}
+        {/*</InputLabel>*/}
+        <InputLabel label={t('Disabled')} direction={'vertical'} error={errors.disabled}>
+          <ButtonSwitch />
+        </InputLabel>
+
+        <InputLabel label={t('Disabled for client')} direction={'vertical'} error={errors.disabledForClient}>
+          <ButtonSwitch />
         </InputLabel>
       </Inputs>
     </ModalForm>

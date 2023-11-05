@@ -33,7 +33,7 @@ export interface OrderInfoStepProps extends FormOrderStepBaseProps {
 
 const useOrderInfoForm = () => useFormContext<ICreateOrderInfoFormState>();
 
-type ConfirmsStateKay = 'hasShipmentPayment' | 'holdShipmentPayment' | 'holdOrderPayment' | 'hasReceiverInfo';
+type ConfirmsStateKay = 'hasDeliveryInvoice' | 'holdDeliveryPayment' | 'holdOrderPayment' | 'hasReceiverInfo';
 type FormFieldPaths = Path<ICreateOrderInfoFormState>;
 const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeValidStatus }) => {
   const [touchedFields, setTouchedFields] = useState<Record<FormFieldPaths | string, boolean>>({});
@@ -81,11 +81,11 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
     return (value: boolean) => {
       setConfirms(p => ({ ...p, [name]: value }));
       if (!value) {
-        if (name === 'hasShipmentPayment') {
-          return unregister('shipmentInfo.paymentMethod');
+        if (name === 'hasDeliveryInvoice') {
+          return unregister('deliveryInfo.invoiceInfo');
         }
         if (name === 'hasReceiverInfo') {
-          return unregister('receiver');
+          return unregister('receiver.info');
         }
       }
     };
@@ -132,23 +132,23 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
             )}`}</Text>
           }
         >
-          {formValues?.customer && (
+          {formValues?.customer?.info && (
             <>
               <InputLabel label={t('Customer information')}>
-                <CustomerInfoComponent info={formValues?.customer} />
+                <CustomerInfoComponent info={formValues?.customer.info} />
               </InputLabel>
 
               <BorderedBox fillWidth overflow={'hidden'}>
                 <InputLabel label={t('Communication methods')}>
                   <TagButtonsFilter
                     multiple
-                    numColumns={3}
-                    values={formValues?.customerCommunicationMethods}
+                    numColumns={2}
+                    values={formValues?.customer?.communication}
                     resetButtonLabel={t('Not needed')}
                     options={communicationMethodsList.map(mtd => ({ ...mtd, value: mtd._id }))}
                     resetButtonPosition={'start'}
                     onChange={value => {
-                      handleOnChangeValue('customerCommunicationMethods', value);
+                      handleOnChangeValue('customer.communication', value);
                     }}
                   />
                 </InputLabel>
@@ -159,7 +159,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
           <FlexBox fxDirection={'row'} gap={8} fillWidth alignItems={'center'}>
             <CreateCustomerButtonIcon
               onSuccess={d => {
-                handleOnChangeValue('customer', d);
+                handleOnChangeValue('customer.info', d);
               }}
             />
 
@@ -171,14 +171,14 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
                   ModalChildren: SelectCustomerModal,
                   modalChildrenProps: {
                     onSelect: data => {
-                      handleOnChangeValue('customer', data);
+                      handleOnChangeValue('customer.info', data);
                       m?.onClose && m?.onClose();
                     },
                   },
                 });
               }}
             >
-              {t(!formValues?.customer ? 'Select customer' : 'Change customer')}
+              {t(!formValues?.customer?.info ? 'Select customer' : 'Change customer')}
             </ButtonIcon>
           </FlexBox>
 
@@ -186,30 +186,30 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
             <InputLabel label={t('Receiver')}>
               <ButtonSwitch
                 onChange={registerConfirmSelectHandler('hasReceiverInfo')}
-                value={confirms?.hasReceiverInfo || !!formValues?.receiver}
+                value={confirms?.hasReceiverInfo || !!formValues?.receiver?.info}
                 rejectLabel={'The same'}
                 acceptLabel={'Another'}
               />
             </InputLabel>
           </BorderedBox>
 
-          {(confirms?.hasReceiverInfo || formValues?.receiver) && (
+          {(confirms?.hasReceiverInfo || formValues?.receiver?.info) && (
             <>
               <InputLabel label={t('Receiver information')}>
-                <CustomerInfoComponent info={formValues?.receiver} />{' '}
+                <CustomerInfoComponent info={formValues?.receiver?.info} />{' '}
               </InputLabel>
 
               <BorderedBox fillWidth>
                 <InputLabel label={t('Communication methods')}>
                   <TagButtonsFilter
                     multiple
-                    numColumns={3}
-                    values={formValues?.receiverCommunicationMethods}
+                    numColumns={2}
+                    values={formValues?.receiver?.communication}
                     resetButtonLabel={t('Without')}
                     options={communicationMethodsList.map(mtd => ({ ...mtd, value: mtd._id }))}
                     resetButtonPosition={'start'}
                     onChange={value => {
-                      handleOnChangeValue('receiverCommunicationMethods', value);
+                      handleOnChangeValue('receiver.communication', value);
                     }}
                   />
                 </InputLabel>
@@ -222,7 +222,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
               <CreateCustomerButtonIcon
                 isReceiver
                 onSuccess={d => {
-                  handleOnChangeValue('receiver', d);
+                  handleOnChangeValue('receiver.info', d);
                 }}
               />
 
@@ -234,14 +234,14 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
                     ModalChildren: SelectCustomerModal,
                     modalChildrenProps: {
                       onSelect: i => {
-                        handleOnChangeValue('receiver', i);
+                        handleOnChangeValue('receiver.info', i);
                         m?.onClose && m?.onClose();
                       },
                     },
                   });
                 }}
               >
-                {t(!formValues?.receiver ? 'Select receiver' : 'Change receiver')}
+                {t(!formValues?.receiver?.info ? 'Select receiver' : 'Change receiver')}
               </ButtonIcon>
             </FlexBox>
           )}
@@ -286,12 +286,12 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
           }
         >
           <BorderedBox fillWidth gap={8}>
-            <InputLabel label={t('Shipment method')} required>
+            <InputLabel label={t('Delivery method')} required>
               <CheckboxesListSelector
                 options={shipmentMethodsList}
-                currentOption={formValues?.shipmentInfo?.method}
+                currentOption={formValues?.deliveryInfo?.method}
                 onChangeIndex={i => {
-                  handleOnChangeValue('shipmentInfo.method', shipmentMethodsList[i]);
+                  handleOnChangeValue('deliveryInfo.method', shipmentMethodsList[i]);
                 }}
               />
             </InputLabel>
@@ -303,13 +303,13 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
                 <InputLabel
                   key={`dest-addr-${label}`}
                   label={label}
-                  error={errors?.shipmentInfo?.destination ? errors?.shipmentInfo?.destination[name] : undefined}
+                  error={errors?.deliveryInfo?.destination ? errors?.deliveryInfo?.destination[name] : undefined}
                   required={required}
                 >
                   <InputText
                     required={required}
                     placeholder={label}
-                    {...register(`shipmentInfo.destination.${name}`, { required })}
+                    {...register(`deliveryInfo.destination.${name}`, { required })}
                   />
                 </InputLabel>
               );
@@ -319,20 +319,20 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
           <BorderedBox fillWidth gap={8}>
             <InputLabel label={t('Has payment')} required>
               <ButtonSwitch
-                onChange={registerConfirmSelectHandler('hasShipmentPayment')}
-                value={confirms?.hasShipmentPayment || !!formValues?.shipmentInfo?.paymentMethod}
+                onChange={registerConfirmSelectHandler('hasDeliveryInvoice')}
+                value={confirms?.hasDeliveryInvoice || !!formValues?.deliveryInfo?.invoiceInfo}
               />
             </InputLabel>
           </BorderedBox>
 
           <BorderedBox fillWidth gap={8}>
-            {(confirms?.hasShipmentPayment || !!formValues?.shipmentInfo?.paymentMethod) && (
+            {(confirms?.hasDeliveryInvoice || !!formValues?.deliveryInfo?.invoiceInfo?.method) && (
               <InputLabel label={t('Payment method')} required>
                 <CheckboxesListSelector
                   options={invoicingMethods}
-                  currentOption={formValues?.shipmentInfo?.paymentMethod}
+                  currentOption={formValues?.deliveryInfo?.invoiceInfo?.method}
                   onChangeIndex={i => {
-                    handleOnChangeValue('shipmentInfo.paymentMethod', invoicingMethods[i]);
+                    handleOnChangeValue('deliveryInfo.invoiceInfo.method', invoicingMethods[i]);
                   }}
                 />
               </InputLabel>

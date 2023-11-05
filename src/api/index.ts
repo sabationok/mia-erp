@@ -45,6 +45,7 @@ export interface AppQueryParams<Type = any> extends Record<string, any> {
   sortParams?: ISortParams;
   search?: string;
   searchBy?: string;
+  disabledForClient?: boolean;
 
   fullInfo?: boolean;
 

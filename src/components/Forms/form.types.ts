@@ -10,7 +10,7 @@ export type { FormCreateCountProps } from './FormCreateCount';
 export type { FormCreateCompanyProps } from './FormCreateCompany';
 export type { FormCreateOrderProps } from './FormCreateOrder/FormCreateOrder';
 export type { FormCreateTagProps } from './FormCreateTag';
-export type { FormCreateMethodProps } from './FormCreateMetod';
+export type { FormCreateMethodProps } from './FormCreateMethod';
 export type { FormInviteUserProps } from './FormInviteUser';
 export type { FormCreatePropertyProps } from './FormCreateProperty';
 export type { FormCreateVariationProps } from './FormCreateVariation';

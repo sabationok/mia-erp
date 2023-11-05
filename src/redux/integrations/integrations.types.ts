@@ -102,23 +102,28 @@ export enum PaymentCheckoutEnum {
   google = 'google',
   monobank = 'monobank',
 }
-
-export interface ExtServiceMethodBase extends IBase {
-  label?: string;
-  labels?: LangPack;
-  disabled?: boolean;
-  isDefault?: boolean;
-  lang?: LangPack;
-}
 export interface ExtPaymentService extends ExtServiceBase {
   methods?: ICheckoutPaymentMethod[];
 }
 export interface ExtInvoicingService extends ExtServiceBase {
   methods?: IInvoicingMethod[];
 }
-
 export interface ExtCommunicationService extends ExtServiceBase {
   methods?: ICommunicationMethod[];
+}
+export interface ExtDeliveryService extends ExtServiceBase {
+  methods?: IDeliveryMethod[];
+}
+export interface ExtServiceMethodBase<Type = any, Service = any> extends IBase {
+  label?: string;
+  labels?: LangPack;
+  isDefault?: boolean;
+  disabled?: boolean;
+  disabledForClient?: boolean;
+
+  type?: Type;
+  service?: Service | null;
+  extService?: Service | null;
 }
 
 export interface ICommunicationMethod extends ExtServiceMethodBase {
@@ -128,14 +133,8 @@ export interface ICommunicationMethod extends ExtServiceMethodBase {
 }
 export interface ICommunicationMethodReqData {
   _id?: string;
-  data?: ICommunicationMethod;
+  data?: Omit<ICommunicationMethod, '_id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDefault'>;
   params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>;
 }
-export interface ExtShipmentService extends ExtServiceBase {
-  methods?: IDeliveryMethod[];
-}
-export interface IDeliveryMethod extends ExtServiceMethodBase {
-  type?: string;
-  service?: ExtShipmentService | null;
-  extService?: ExtShipmentService | null;
-}
+
+export interface IDeliveryMethod extends ExtServiceMethodBase<string, ExtDeliveryService> {}

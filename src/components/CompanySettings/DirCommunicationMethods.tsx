@@ -5,11 +5,13 @@ import FlexBox from '../atoms/FlexBox';
 
 import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../Directories/dir.types';
 import DirListItem from '../Directories/DirList/DirListItem';
-import { ICheckoutPaymentMethod } from '../../redux/payments/payments.types';
 import { useTranslatedListData } from '../../hooks/useTranslatedMethods.hook';
 import { useCustomersSelector } from '../../redux/selectors.store';
 import { ICommunicationMethod } from '../../redux/integrations/integrations.types';
-import useCustomersService from '../../hooks/useCustomersService';
+import useCustomersService, { CustomersService } from '../../hooks/useCustomersService';
+import { useModalProvider } from '../ModalProvider/ModalProvider';
+import { ApiDirType } from '../../redux/APP_CONFIGS';
+import FormCreateMethod from '../Forms/FormCreateMethod';
 
 export interface DirCommunicationMethodsProps
   extends IDirInTreeProps<MethodDirType, ICommunicationMethod, ICommunicationMethod, ICommunicationMethod> {
@@ -31,8 +33,14 @@ const DirCommunicationMethods: React.FC<DirCommunicationMethodsProps> = ({
   ...props
 }) => {
   const service = useCustomersService();
-  // const modalService = useModalProvider();
+  const modalService = useModalProvider();
   const methods = useTranslatedListData(useCustomersSelector().methods);
+
+  const actions = actionsCreatorForDirCommunicationMethods({
+    service,
+    modalService,
+    dirType: ApiDirType.METHODS_COMMUNICATION,
+  });
 
   const renderList = useMemo(
     () =>
@@ -44,15 +52,16 @@ const DirCommunicationMethods: React.FC<DirCommunicationMethodsProps> = ({
           item={item}
           availableLevels={1}
           currentLevel={0}
+          {...actions}
         />
       )),
     [methods, props]
   );
 
   useEffect(() => {
-    if (methods.length === 0) {
-      service.getAllMethods();
-    }
+    service.getAllMethods();
+    // if (methods.length === 0) {
+    // }
     // eslint-disable-next-line
   }, []);
 
@@ -71,11 +80,26 @@ export default memo(DirCommunicationMethods);
 
 const actionsCreatorForDirCommunicationMethods: DirInTreeActionsCreatorType<
   MethodDirType,
-  ICheckoutPaymentMethod,
-  any,
-  ICheckoutPaymentMethod
-> = () => {
+  ICommunicationMethod,
+  CustomersService,
+  ICommunicationMethod
+> = ({ service, modalService: mS }) => {
   return {
-    onCreateChild: (parentId, parent, options) => {},
+    onUpdate: (_id, data, o) => {
+      const m = mS.open({
+        ModalChildren: FormCreateMethod,
+        modalChildrenProps: {
+          defaultState: data,
+          onSubmit: (data, o) => {
+            service.updateMethod({
+              data: { _id, data },
+              onSuccess: () => {
+                m?.onClose && m?.onClose();
+              },
+            });
+          },
+        },
+      });
+    },
   };
 };

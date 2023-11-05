@@ -20,7 +20,7 @@ export const InviteUser = lazy(() => import('./FormInviteUser'));
 export const CreateCustomRole = lazy(() => import('./FormCreateCustomRole'));
 export const CreateCompany = lazy(() => import('./FormCreateCompany'));
 export const CreateActivity = lazy(() => import('./FormCreateActivity'));
-export const CreateMethod = lazy(() => import('./FormCreateMetod'));
+export const CreateMethod = lazy(() => import('./FormCreateMethod'));
 // * WAREHOUSING
 export const CreateWarehouseDocument = lazy(() => import('./warehousing/FormCreateWarehouseDocument'));
 export const CreateWarehouse = lazy(() => import('./warehousing/FormCreateWarehouse'));
