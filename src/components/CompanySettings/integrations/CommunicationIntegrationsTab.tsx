@@ -1,5 +1,4 @@
 import FlexBox from '../../atoms/FlexBox';
-import { IntegrationTabProps } from '../CompanyIntegrationsModal';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { useEffect, useMemo, useState } from 'react';
 import { Text } from '../../atoms/Text';
@@ -13,6 +12,7 @@ import { getIdRef, transformQueriesForReq } from '../../../utils/dataTransform';
 import styled from 'styled-components';
 import ExtraFooterWithButtonButton from '../../Forms/components/ExtraFooterWithButtonButton';
 import IntegrationOverview from '../components/IntegrationOverview';
+import { IntegrationTabProps } from './InputIntegrationsTab';
 
 export interface CommunicationIntegrationsTabProps extends IntegrationTabProps {}
 
@@ -20,12 +20,13 @@ const CommunicationIntegrationsTab: React.FC<CommunicationIntegrationsTabProps> 
   providers,
   onClose,
   compId,
+  infoVisible,
   currentService: currentServiceData,
   ...props
 }) => {
   const [integrationsList, setIntegrationsList] = useState<ExtIntegrationBase[]>([]);
   const modalS = useModalService();
-  const [isListVisible, setIsListVisible] = useState(false);
+  const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);
   const handleToggleListVisibility = () => setIsListVisible(p => !p);
   const translatedCommunicationMethods = useTranslatedCommunicationMethods();
 

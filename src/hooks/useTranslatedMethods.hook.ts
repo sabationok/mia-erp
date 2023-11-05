@@ -77,7 +77,7 @@ export const useTranslatedInvoicingMethods = ({
   }, [getLabel, invState.methods, langKey, withFullLabel]);
 };
 
-export const useTranslatedShipmentMethods = (options?: UseTranslatedListDataOtions) => {
+export const useTranslatedDeliveryMethods = (options?: UseTranslatedListDataOtions) => {
   const state = useShipmentsSelector();
   return useMemo((): IDeliveryMethod[] => {
     return state.methods.map(el => ({

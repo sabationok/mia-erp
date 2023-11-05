@@ -1,5 +1,5 @@
 import FlexBox from '../../atoms/FlexBox';
-import { IntegrationTabProps } from '../CompanyIntegrationsModal';
+import { IntegrationTabProps } from './InputIntegrationsTab';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { useEffect, useMemo, useState } from 'react';
 import { Text } from '../../atoms/Text';
@@ -7,27 +7,34 @@ import { t } from '../../../lang';
 import { useModalService } from '../../ModalProvider/ModalProvider';
 import FormCreateIntegration from '../../Forms/FormCreateIntegration';
 import { ExtIntegrationBase } from '../../../redux/integrations/integrations.types';
-import { useTranslatedShipmentMethods } from '../../../hooks/useTranslatedMethods.hook';
+import { useTranslatedDeliveryMethods } from '../../../hooks/useTranslatedMethods.hook';
 import { createApiCall, IntegrationsApi } from '../../../api';
 import { getIdRef, transformQueriesForReq } from '../../../utils/dataTransform';
 import styled from 'styled-components';
 import ExtraFooterWithButtonButton from '../../Forms/components/ExtraFooterWithButtonButton';
 import IntegrationOverview from '../components/IntegrationOverview';
 
-export interface ShipmentsIntegrationsTabProps extends IntegrationTabProps {}
+export interface DeliveryIntegrationsTabProps extends IntegrationTabProps {}
 
-const ShipmentsIntegrationsTab: React.FC<ShipmentsIntegrationsTabProps> = ({
+const DeliveryIntegrationsTab: React.FC<DeliveryIntegrationsTabProps> = ({
   providers,
   onClose,
   compId,
+  infoVisible,
   currentService: currentServiceData,
   ...props
 }) => {
   const [integrationsList, setIntegrationsList] = useState<ExtIntegrationBase[]>([]);
   const modalS = useModalService();
-  const [isListVisible, setIsListVisible] = useState(false);
+  const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);
+  const deliveryMethods = useTranslatedDeliveryMethods();
   const handleToggleListVisibility = () => setIsListVisible(p => !p);
-  const shipmentMethods = useTranslatedShipmentMethods();
+
+  const currentServiceMethods = useMemo(() => {
+    return deliveryMethods.filter(m => {
+      return m.service?._id === currentServiceData?._id;
+    });
+  }, [currentServiceData?._id, deliveryMethods]);
 
   const onOpenModalPress = () => {
     currentServiceData &&
@@ -41,35 +48,17 @@ const ShipmentsIntegrationsTab: React.FC<ShipmentsIntegrationsTabProps> = ({
       });
   };
 
-  useEffect(() => {
-    currentServiceData &&
-      createApiCall(
-        {
-          data: { type: 'input', ...transformQueriesForReq({ service: getIdRef(currentServiceData) }) },
-          onSuccess: data => {
-            setIntegrationsList(data);
-          },
-        },
-        IntegrationsApi.getAllByQueries,
-        IntegrationsApi
-      );
-  }, [currentServiceData]);
-
   const renderMethods = useMemo(() => {
-    const methods = shipmentMethods.filter(m => {
-      return m.service?._id === currentServiceData?._id;
-    });
-
-    return methods.length <= 0
+    return currentServiceMethods.length <= 0
       ? null
-      : methods.map(m => {
+      : currentServiceMethods.map(m => {
           return (
             <FlexBox key={m._id} border={'1px solid lightgrey'} padding={'4px 6px'} borderRadius={'4px'}>
               <Text $size={10}>{m.label}</Text>
             </FlexBox>
           );
         });
-  }, [currentServiceData?._id, shipmentMethods]);
+  }, [currentServiceMethods]);
 
   const renderIntegrations = useMemo(() => {
     return integrationsList.map(int => {
@@ -82,6 +71,21 @@ const ShipmentsIntegrationsTab: React.FC<ShipmentsIntegrationsTabProps> = ({
       );
     });
   }, [currentServiceData?.defIntegration?._id, integrationsList]);
+
+  useEffect(() => {
+    currentServiceData &&
+      setIntegrationsList.length === 0 &&
+      createApiCall(
+        {
+          data: { type: 'input', ...transformQueriesForReq({ service: getIdRef(currentServiceData) }) },
+          onSuccess: data => {
+            setIntegrationsList(data);
+          },
+        },
+        IntegrationsApi.getAllByQueries,
+        IntegrationsApi
+      );
+  }, [currentServiceData, currentServiceMethods.length]);
 
   return (
     <FlexBox fillWidth flex={1} overflow={'hidden'}>
@@ -134,4 +138,4 @@ const List = styled(FlexBox)<{ isVisible?: boolean }>`
   transition: all ${p => p.theme.globals.timingFnLong};
 `;
 
-export default ShipmentsIntegrationsTab;
+export default DeliveryIntegrationsTab;

@@ -1,5 +1,5 @@
 import FlexBox from '../../atoms/FlexBox';
-import { IntegrationTabProps } from '../CompanyIntegrationsModal';
+import { IntegrationTabProps } from './InputIntegrationsTab';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { useEffect, useMemo, useState } from 'react';
 import { Text } from '../../atoms/Text';
@@ -21,12 +21,13 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
   providers,
   onClose,
   compId,
+  infoVisible,
   currentService: currentServiceData,
   ...props
 }) => {
   const [integrationsList, setIntegrationsList] = useState<ExtIntegrationBase[]>([]);
   const modalS = useModalService();
-  const [isListVisible, setIsListVisible] = useState(true);
+  const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);
   const handleToggleListVisibility = () => setIsListVisible(p => !p);
   const checkoutMethods = useTranslatedListData(useCheckoutPaymentsSelector().methods);
   const invoicingMethods = useTranslatedListData(useInvoicesSelector().methods);

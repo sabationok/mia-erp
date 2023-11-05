@@ -5,9 +5,14 @@ import { ICheckoutPaymentMethod } from '../payments/payments.types';
 import { IInvoicingMethod } from '../invoices/invoices.types';
 import { AppQueryParams } from '../../api';
 
+export enum IntegrationTypeEnum {
+  input = 'input',
+  output = 'output',
+}
 export enum ExtIntegrationServiceTypeEnum {
   payment = 'payment',
   shipment = 'shipment',
+  delivery = 'delivery',
   invoicing = 'invoicing',
   communication = 'communication',
 }
