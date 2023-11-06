@@ -65,14 +65,14 @@ export const OrderOverview: React.FC<OrderOverviewProps> = ({ order, ...props })
               renderHeader={'Оплата'}
             ></FormAccordionItem>
 
-            <FormAccordionItem contentContainerStyle={{ padding: '0 8px 8px' }} renderHeader={'Додатково'}>
-              {orderAdditionalInfo.map((el, idx) => (
-                <InfoBox key={idx.toString()}>
-                  <InfoBoxTitle>{el.label || 'Title'}</InfoBoxTitle>
-                  <InfoBoxContent>{(order && el.getData && el.getData(order)) || 'Не визначено'}</InfoBoxContent>
-                </InfoBox>
-              ))}
-            </FormAccordionItem>
+            {/*<FormAccordionItem contentContainerStyle={{ padding: '0 8px 8px' }} renderHeader={'Додатково'}>*/}
+            {/*  {orderAdditionalInfo.map((el, idx) => (*/}
+            {/*    <InfoBox key={idx.toString()}>*/}
+            {/*      <InfoBoxTitle>{el.label || 'Title'}</InfoBoxTitle>*/}
+            {/*      <InfoBoxContent>{(order && el.getData && el.getData(order)) || 'Не визначено'}</InfoBoxContent>*/}
+            {/*    </InfoBox>*/}
+            {/*  ))}*/}
+            {/*</FormAccordionItem>*/}
           </FlexBox>
         )}
       </Container>
@@ -119,7 +119,7 @@ const orderCustomerInfo: OrderInfoBoxProps[] = [
   // { label: 'Статус', getData: o => o.customer?.status },
   { label: 'Телефон', getData: o => o.customer?.phone },
   { label: 'Емейл', getData: o => o.customer?.email },
-  { label: 'Способи комунікації', getData: o => o?.receiverCommunicationMethods?.map(m => m?.label).join(', ') },
+  { label: 'Способи комунікації', getData: o => o?.communication?.customer?.map(m => m).join(', ') },
 ];
 const orderReceiverInfo: OrderInfoBoxProps[] = [
   { label: 'ID', getData: o => o.receiver?._id },
@@ -131,12 +131,12 @@ const orderReceiverInfo: OrderInfoBoxProps[] = [
   // { label: 'Статус', getData: o => o.receiver?.status },
   { label: 'Телефон', getData: o => o.receiver?.phone },
   { label: 'Емейл', getData: o => o.receiver?.email },
-  { label: 'Способи комунікації', getData: o => o?.receiverCommunicationMethods?.map(m => m?.label).join(', ') },
+  { label: 'Способи комунікації', getData: o => o?.communication?.receiver?.map(m => m).join(', ') },
 ];
-const orderAdditionalInfo: OrderInfoBoxProps[] = [
-  { label: 'Коментар', getData: o => o.comment },
-  { label: 'Внутрішній коментар', getData: o => o.innerComment },
-];
+// const orderAdditionalInfo: OrderInfoBoxProps[] = [
+//   { label: 'Коментар', getData: o => o.comment },
+//   { label: 'Внутрішній коментар', getData: o => o.innerComment },
+// ];
 // const orderShipmentInfo: OrderInfoBoxProps[] = [
 //   {
 //     label: 'ПІП',

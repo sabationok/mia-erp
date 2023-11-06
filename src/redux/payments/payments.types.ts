@@ -22,7 +22,7 @@ export interface ICheckoutPaymentMethod extends ExtServiceMethodBase {
 }
 export interface IPaymentMethodReqData {
   _id?: string;
-  data?: ICheckoutPaymentMethod;
+  data?: Partial<ICheckoutPaymentMethod>;
   params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>;
 }
 

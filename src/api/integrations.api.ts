@@ -1,4 +1,4 @@
-import APP_CONFIGS from '../redux/APP_CONFIGS';
+import APP_CONFIGS, { IntegrationType } from '../redux/APP_CONFIGS';
 import { AppQueries } from './index';
 import baseApi from './baseApi';
 import {
@@ -10,7 +10,7 @@ import {
 import { AppResponse } from '../redux/global.types';
 
 export interface GetAllIntegrationsQueries extends Pick<AppQueries, 'warehouseId' | 'serviceId'> {
-  type: 'external' | 'internal';
+  type: IntegrationType;
 }
 export default class ExtServicesApi {
   private static api = baseApi;

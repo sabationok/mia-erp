@@ -21,7 +21,7 @@ export type ApiCaller<SD = any, RD = any, E = any, MD = any, CTX = any> = (
 ) => Promise<AppResponse<RD, MD> | undefined>;
 
 const createApiCall = async <SD = any, RD = any, E = any, MD = any, CTX = any>(
-  { onLoading, onError, onSuccess, data, logError, logRes, throwError }: ApiCallerPayload<SD, RD, E>,
+  { onLoading, onError, onSuccess, data, logError, logRes, logResData, throwError }: ApiCallerPayload<SD, RD, E>,
   getResponseCallback: GetResponseCallback<SD, RD, MD>,
   context?: CTX
 ): Promise<AppResponse<RD, MD> | undefined> => {
@@ -34,13 +34,19 @@ const createApiCall = async <SD = any, RD = any, E = any, MD = any, CTX = any>(
     if (res && res.data.data && onSuccess) {
       onSuccess(res.data.data);
     }
-    logRes && console.log(res);
+    if (logRes || logResData) {
+      console.debug(`[${getResponseCallback.name}]`);
+      logRes && console.log(res);
+      logResData && console.log(res?.data);
+    }
     onLoading && onLoading(false);
-
     return res;
   } catch (e) {
     onError && onError(e as unknown as E);
-    logError && console.error(e);
+    if (logError) {
+      console.debug(`[${getResponseCallback.name}]`);
+      console.error(e);
+    }
     onLoading && onLoading(false);
 
     if (throwError) {

@@ -50,9 +50,9 @@ const DirDeliveryMethods: React.FC<DirDeliveryMethodsProps> = ({
   );
 
   useEffect(() => {
-    if (methods.length === 0) {
-      service.getAllMethods();
-    }
+    service.getAllMethods();
+    // if (methods.length === 0) {
+    // }
     // eslint-disable-next-line
   }, []);
 

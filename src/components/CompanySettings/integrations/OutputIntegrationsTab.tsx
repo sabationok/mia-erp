@@ -4,26 +4,28 @@ import ExtraFooterWithButton from '../../atoms/ExtraFooterWithButton';
 import { t } from '../../../lang';
 import { useModalService } from '../../ModalProvider/ModalProvider';
 import FormCreateOutputIntegration from '../../Forms/FormCreateOutputIntegration';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CreateOutputIntegrationFormData } from '../../../redux/integrations/integrations.types';
 import AccordeonList, { IAccordionOptionProps } from '../../SideBarContent/AccordeonList';
+import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import { AppModuleName } from '../../../redux/reduxTypes.types';
+import { createApiCall, IntegrationsApi } from '../../../api';
 
 export interface OutputIntegrationsTabProps {}
 
 const OutputIntegrationsTab: React.FC<OutputIntegrationsTabProps> = ({}) => {
   const modalS = useModalService();
+  const service = useAppServiceProvider()[AppModuleName.integrations];
+
   const [extServices, setExtServices] = useState<any[]>([]);
-  const [integrationsList, setIntegrationsList] = useState<CreateOutputIntegrationFormData[]>([
-    { label: 'Test 1' },
-    { label: 'Test 2' },
-  ]);
+  const [integrationsList, setIntegrationsList] = useState<CreateOutputIntegrationFormData[]>([]);
 
   const handleCreateOne = () => {
-    const m = modalS.open({
+    modalS.open({
       ModalChildren: FormCreateOutputIntegration,
       modalChildrenProps: {
-        onSubmit: d => {
-          m?.onClose && m?.onClose();
+        onSuccess: ({ data }) => {
+          setIntegrationsList(p => [...p, data]);
         },
       },
     });
@@ -36,6 +38,19 @@ const OutputIntegrationsTab: React.FC<OutputIntegrationsTabProps> = ({}) => {
       };
     });
   }, [integrationsList]);
+
+  useEffect(() => {
+    createApiCall(
+      {
+        data: { type: 'output' },
+        onSuccess: data => {
+          setIntegrationsList(data);
+        },
+      },
+      IntegrationsApi.getAllByQueries,
+      IntegrationsApi
+    );
+  }, []);
 
   return (
     <Container flex={1} fillWidth>

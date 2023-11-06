@@ -4,20 +4,19 @@ import { useForm } from 'react-hook-form';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import { t } from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
-
-import InputSecurityControlHOC from '../atoms/Inputs/SecurityInputControlHOC';
 import {
   CreateIntegrationFormData,
+  CreateOutputIntegrationFormData,
   ExtServiceBase,
-  InputIntegrationBase,
+  OutputIntegrationBase,
 } from '../../redux/integrations/integrations.types';
 import { createApiCall, IntegrationsApi } from '../../api';
-import { getIdRef } from '../../utils/dataTransform';
 import FlexBox from '../atoms/FlexBox';
+import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
 
 export interface FormCreateOutputIntegrationProps extends Omit<ModalFormProps, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<CreateIntegrationFormData>;
-  onSuccess?: (data: { data: InputIntegrationBase }) => void;
+  onSuccess?: (info: { data: OutputIntegrationBase }) => void;
   service?: ExtServiceBase;
 }
 
@@ -29,22 +28,21 @@ const FormCreateOutputIntegration: React.FC<FormCreateOutputIntegrationProps> = 
 
   ...p
 }) => {
-  const form = useForm<CreateIntegrationFormData>();
+  const form = useForm<CreateOutputIntegrationFormData>();
 
   const onValid = (data: CreateIntegrationFormData) => {
-    service &&
-      createApiCall(
-        {
-          onSuccess: data => {
-            console.log('FormCreateOutputIntegration createInputIntegration', data);
-            onSuccess && onSuccess({ data });
-            onClose && onClose();
-          },
-          data: { data: { ...data, service: getIdRef(service) } },
+    createApiCall(
+      {
+        data: { data },
+        onSuccess: data => {
+          onSuccess && onSuccess({ data });
+          onClose && onClose();
         },
-        IntegrationsApi.createOutputIntegration,
-        IntegrationsApi
-      );
+        logResData: true,
+      },
+      IntegrationsApi.createOutputIntegration,
+      IntegrationsApi
+    );
   };
 
   return (
@@ -54,19 +52,20 @@ const FormCreateOutputIntegration: React.FC<FormCreateOutputIntegrationProps> = 
           <InputText placeholder={t('Label')} {...form.register('label')} />
         </InputLabel>
 
-        <InputLabel label={t('Login')}>
-          <InputText placeholder={t('Login')} {...form.register('login')} />
-        </InputLabel>
+        {/*<InputLabel label={t('Login')}>*/}
+        {/*  <InputText placeholder={t('Login')} {...form.register('login')} />*/}
+        {/*</InputLabel>*/}
 
-        <InputLabel label={t('Api-key')}>
-          <InputText placeholder={t('Api-key')} {...form.register('apiKey')} />
-        </InputLabel>
+        {/*<InputLabel label={t('Api-key')}>*/}
+        {/*  <InputText placeholder={t('Api-key')} {...form.register('apiKey')} />*/}
+        {/*</InputLabel>*/}
 
-        <InputLabel label={t('Secret key')}>
-          <InputSecurityControlHOC
-            renderInput={p => <InputText placeholder={t('Secret key')} {...p} {...form.register('secret')} />}
-          />
-        </InputLabel>
+        {/*<InputLabel label={t('Secret key')}>*/}
+        {/*  <InputSecurityControlHOC*/}
+        {/*    renderInput={p => <InputText placeholder={t('Secret key')} {...p} {...form.register('secret')} />}*/}
+        {/*  />*/}
+        {/*</InputLabel>*/}
+        <CustomSelect label={t('Select role')} placeholder={'Select role'} />
 
         <InputLabel label={t('Expired at')}>
           <InputText placeholder={t('Expired at')} type={'datetime-local'} {...form.register('expiredAt')} />
