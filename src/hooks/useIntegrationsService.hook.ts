@@ -1,19 +1,33 @@
 import { useAppDispatch } from '../redux/store.store';
 import { useMemo } from 'react';
-import { ServiceDispatcherAsync } from '../redux/global.types';
-import { defaultThunkPayload } from '../utils/fabrics';
-import { ExtServiceBase } from '../redux/integrations/integrations.types';
+import { ServiceApiCaller, ServiceDispatcherAsync } from '../redux/global.types';
+import { defaultApiCallPayload, defaultThunkPayload } from '../utils/fabrics';
+import {
+  ExtServiceBase,
+  InputIntegrationBase,
+  InputIntegrationDto,
+  OutputIntegrationBase,
+  OutputIntegrationDto,
+} from '../redux/integrations/integrations.types';
 import { getAllExtIntegrationServicesThunk } from '../redux/integrations/integrations.thunk';
+import { createApiCall, IntegrationsApi } from '../api';
+import { GetAllIntegrationsQueries } from '../api/integrations.api';
 
 export interface UseIntegrationsService {
   getAllExtServices: ServiceDispatcherAsync<{ params?: {} }, ExtServiceBase[]>;
+  getAll: ServiceApiCaller<GetAllIntegrationsQueries, (OutputIntegrationBase | InputIntegrationBase)[]>;
+  createInput: ServiceApiCaller<{ data: InputIntegrationDto }, InputIntegrationBase>;
+  createOutput: ServiceApiCaller<{ data: OutputIntegrationDto }, OutputIntegrationBase>;
 }
 const useIntegrationsService = () => {
   const dispatch = useAppDispatch();
-
   return useMemo((): UseIntegrationsService => {
+    const { getAllByQueries, createOutputIntegration, createInputIntegration } = IntegrationsApi;
     return {
       getAllExtServices: args => dispatch(getAllExtIntegrationServicesThunk(defaultThunkPayload(args))),
+      getAll: args => createApiCall(defaultApiCallPayload(args), getAllByQueries, IntegrationsApi),
+      createInput: args => createApiCall(defaultApiCallPayload(args), createInputIntegration, IntegrationsApi),
+      createOutput: args => createApiCall(defaultApiCallPayload(args), createOutputIntegration, IntegrationsApi),
     };
   }, [dispatch]);
 };

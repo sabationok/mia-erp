@@ -1,18 +1,19 @@
-import ModalForm, { ModalFormProps } from '../ModalForm';
-import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
+import ModalForm, { ModalFormProps } from '../../ModalForm';
+import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { useForm } from 'react-hook-form';
-import InputLabel from '../atoms/Inputs/InputLabel';
-import { t } from '../../lang';
-import InputText from '../atoms/Inputs/InputText';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import { t } from '../../../lang';
+import InputText from '../../atoms/Inputs/InputText';
 import {
   CreateIntegrationFormData,
   CreateOutputIntegrationFormData,
   ExtServiceBase,
   OutputIntegrationBase,
-} from '../../redux/integrations/integrations.types';
-import { createApiCall, IntegrationsApi } from '../../api';
-import FlexBox from '../atoms/FlexBox';
-import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
+} from '../../../redux/integrations/integrations.types';
+import FlexBox from '../../atoms/FlexBox';
+import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import { AppModuleName } from '../../../redux/reduxTypes.types';
 
 export interface FormCreateOutputIntegrationProps extends Omit<ModalFormProps, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<CreateIntegrationFormData>;
@@ -29,20 +30,17 @@ const FormCreateOutputIntegration: React.FC<FormCreateOutputIntegrationProps> = 
   ...p
 }) => {
   const form = useForm<CreateOutputIntegrationFormData>();
+  const intServ = useAppServiceProvider()[AppModuleName.integrations];
 
   const onValid = (data: CreateIntegrationFormData) => {
-    createApiCall(
-      {
-        data: { data },
-        onSuccess: data => {
-          onSuccess && onSuccess({ data });
-          onClose && onClose();
-        },
-        logResData: true,
+    intServ.createOutput({
+      onSuccess: data => {
+        console.log('Form Create OUTPUT Integration', data);
+        onSuccess && onSuccess({ data });
+        onClose && onClose();
       },
-      IntegrationsApi.createOutputIntegration,
-      IntegrationsApi
-    );
+      data: { data },
+    });
   };
 
   return (

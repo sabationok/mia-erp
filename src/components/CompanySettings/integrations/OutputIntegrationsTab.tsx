@@ -3,13 +3,12 @@ import styled from 'styled-components';
 import ExtraFooterWithButton from '../../atoms/ExtraFooterWithButton';
 import { t } from '../../../lang';
 import { useModalService } from '../../ModalProvider/ModalProvider';
-import FormCreateOutputIntegration from '../../Forms/FormCreateOutputIntegration';
+import FormCreateOutputIntegration from '../../Forms/integrations/FormCreateOutputIntegration';
 import { useEffect, useMemo, useState } from 'react';
 import { CreateOutputIntegrationFormData } from '../../../redux/integrations/integrations.types';
 import AccordeonList, { IAccordionOptionProps } from '../../SideBarContent/AccordeonList';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
-import { createApiCall, IntegrationsApi } from '../../../api';
 
 export interface OutputIntegrationsTabProps {}
 
@@ -17,7 +16,7 @@ const OutputIntegrationsTab: React.FC<OutputIntegrationsTabProps> = ({}) => {
   const modalS = useModalService();
   const service = useAppServiceProvider()[AppModuleName.integrations];
 
-  const [extServices, setExtServices] = useState<any[]>([]);
+  // const [extServices, setExtServices] = useState<any[]>([]);
   const [integrationsList, setIntegrationsList] = useState<CreateOutputIntegrationFormData[]>([]);
 
   const handleCreateOne = () => {
@@ -40,16 +39,13 @@ const OutputIntegrationsTab: React.FC<OutputIntegrationsTabProps> = ({}) => {
   }, [integrationsList]);
 
   useEffect(() => {
-    createApiCall(
-      {
-        data: { type: 'output' },
-        onSuccess: data => {
-          setIntegrationsList(data);
-        },
+    service.getAll({
+      data: { type: 'output' },
+      onSuccess: data => {
+        setIntegrationsList(data);
       },
-      IntegrationsApi.getAllByQueries,
-      IntegrationsApi
-    );
+    });
+    // eslint-disable-next-line
   }, []);
 
   return (

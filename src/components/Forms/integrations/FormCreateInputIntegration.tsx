@@ -1,47 +1,45 @@
-import ModalForm, { ModalFormProps } from '../ModalForm';
-import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
+import ModalForm, { ModalFormProps } from '../../ModalForm';
+import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { useForm } from 'react-hook-form';
-import InputLabel from '../atoms/Inputs/InputLabel';
-import { t } from '../../lang';
-import InputText from '../atoms/Inputs/InputText';
-import FlexBox from '../atoms/FlexBox';
-import InputSecurityControlHOC from '../atoms/Inputs/SecurityInputControlHOC';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import { t } from '../../../lang';
+import InputText from '../../atoms/Inputs/InputText';
+import FlexBox from '../../atoms/FlexBox';
+import InputSecurityControlHOC from '../../atoms/Inputs/SecurityInputControlHOC';
 import {
   CreateIntegrationFormData,
   ExtServiceBase,
   InputIntegrationBase,
-} from '../../redux/integrations/integrations.types';
-import { createApiCall, IntegrationsApi } from '../../api';
-import { getIdRef } from '../../utils/dataTransform';
+} from '../../../redux/integrations/integrations.types';
+import { getIdRef } from '../../../utils/dataTransform';
+import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import { AppModuleName } from '../../../redux/reduxTypes.types';
 
-export interface FormCreateIntegrationProps extends Omit<ModalFormProps, 'onSubmit'> {
+export interface FormCreateInputIntegrationProps extends Omit<ModalFormProps, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<CreateIntegrationFormData>;
   onSuccess?: (data: { data: InputIntegrationBase }) => void;
   service: ExtServiceBase;
 }
 
-const FormCreateIntegration: React.FC<FormCreateIntegrationProps> = ({
+const FormCreateInputIntegration: React.FC<FormCreateInputIntegrationProps> = ({
   onSubmit,
   service,
   onSuccess,
   onClose,
   ...p
 }) => {
+  const intServ = useAppServiceProvider()[AppModuleName.integrations];
   const form = useForm<CreateIntegrationFormData>();
 
   const onValid = (data: CreateIntegrationFormData) => {
-    createApiCall(
-      {
-        onSuccess: data => {
-          console.log('FormCreateIntegration createInputIntegration', data);
-          onSuccess && onSuccess({ data });
-          onClose && onClose();
-        },
-        data: { data: { ...data, service: getIdRef(service) } },
+    intServ.createInput({
+      onSuccess: data => {
+        console.log('FormCreateIntegration createInputIntegration', data);
+        onSuccess && onSuccess({ data });
+        onClose && onClose();
       },
-      IntegrationsApi.createInputIntegration,
-      IntegrationsApi
-    );
+      data: { data: { ...data, service: getIdRef(service) } },
+    });
   };
 
   return (
@@ -77,4 +75,4 @@ const FormCreateIntegration: React.FC<FormCreateIntegrationProps> = ({
   );
 };
 
-export default FormCreateIntegration;
+export default FormCreateInputIntegration;

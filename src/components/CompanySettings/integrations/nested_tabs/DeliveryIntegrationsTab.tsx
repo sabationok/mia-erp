@@ -5,14 +5,15 @@ import { useEffect, useMemo, useState } from 'react';
 import { Text } from '../../../atoms/Text';
 import { t } from '../../../../lang';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
-import FormCreateIntegration from '../../../Forms/FormCreateIntegration';
+import FormCreateInputIntegration from '../../../Forms/integrations/FormCreateInputIntegration';
 import { InputIntegrationBase } from '../../../../redux/integrations/integrations.types';
 import { useTranslatedDeliveryMethods } from '../../../../hooks/useTranslatedMethods.hook';
-import { createApiCall, IntegrationsApi } from '../../../../api';
 import { getIdRef, transformQueriesForReq } from '../../../../utils/dataTransform';
 import styled from 'styled-components';
 import ExtraFooterWithButton from '../../../atoms/ExtraFooterWithButton';
 import IntegrationOverview from '../../components/IntegrationOverview';
+import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
+import { AppModuleName } from '../../../../redux/reduxTypes.types';
 
 export interface DeliveryIntegrationsTabProps extends IntegrationTabProps {}
 
@@ -24,6 +25,7 @@ const DeliveryIntegrationsTab: React.FC<DeliveryIntegrationsTabProps> = ({
   currentService: currentServiceData,
   ...props
 }) => {
+  const service = useAppServiceProvider()[AppModuleName.integrations];
   const [integrationsList, setIntegrationsList] = useState<InputIntegrationBase[]>([]);
   const modalS = useModalService();
   const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);
@@ -39,7 +41,7 @@ const DeliveryIntegrationsTab: React.FC<DeliveryIntegrationsTabProps> = ({
   const onOpenModalPress = () => {
     currentServiceData &&
       modalS.open({
-        ModalChildren: FormCreateIntegration,
+        ModalChildren: FormCreateInputIntegration,
         modalChildrenProps: {
           onSuccess: d => setIntegrationsList(p => [...p, d?.data]),
           service: currentServiceData,
@@ -74,18 +76,13 @@ const DeliveryIntegrationsTab: React.FC<DeliveryIntegrationsTabProps> = ({
 
   useEffect(() => {
     currentServiceData &&
-      setIntegrationsList.length === 0 &&
-      createApiCall(
-        {
-          data: { type: 'input', ...transformQueriesForReq({ service: getIdRef(currentServiceData) }) },
-          onSuccess: data => {
-            setIntegrationsList(data);
-          },
+      service.getAll({
+        data: { type: 'input', ...transformQueriesForReq({ service: getIdRef(currentServiceData) }) },
+        onSuccess: data => {
+          setIntegrationsList(data);
         },
-        IntegrationsApi.getAllByQueries,
-        IntegrationsApi
-      );
-  }, [currentServiceData, currentServiceMethods.length]);
+      });
+  }, [currentServiceData, service]);
 
   return (
     <FlexBox fillWidth flex={1} overflow={'hidden'}>

@@ -5,15 +5,16 @@ import { useEffect, useMemo, useState } from 'react';
 import { Text } from '../../../atoms/Text';
 import { t } from '../../../../lang';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
-import FormCreateIntegration from '../../../Forms/FormCreateIntegration';
+import FormCreateInputIntegration from '../../../Forms/integrations/FormCreateInputIntegration';
 import { InputIntegrationBase } from '../../../../redux/integrations/integrations.types';
 import { useTranslatedListData } from '../../../../hooks/useTranslatedMethods.hook';
-import { createApiCall, IntegrationsApi } from '../../../../api';
 import { getIdRef, transformQueriesForReq } from '../../../../utils/dataTransform';
 import styled from 'styled-components';
 import ExtraFooterWithButton from '../../../atoms/ExtraFooterWithButton';
 import IntegrationOverview from '../../components/IntegrationOverview';
 import { useCheckoutPaymentsSelector, useInvoicesSelector } from '../../../../redux/selectors.store';
+import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
+import { AppModuleName } from '../../../../redux/reduxTypes.types';
 
 export interface InvoicingIntegrationsTabProps extends IntegrationTabProps {}
 
@@ -25,17 +26,18 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
   currentService: currentServiceData,
   ...props
 }) => {
+  const service = useAppServiceProvider()[AppModuleName.integrations];
   const [integrationsList, setIntegrationsList] = useState<InputIntegrationBase[]>([]);
   const modalS = useModalService();
   const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);
-  const handleToggleListVisibility = () => setIsListVisible(p => !p);
   const checkoutMethods = useTranslatedListData(useCheckoutPaymentsSelector().methods);
   const invoicingMethods = useTranslatedListData(useInvoicesSelector().methods);
+  const handleToggleListVisibility = () => setIsListVisible(p => !p);
 
   const onOpenModalPress = () => {
     currentServiceData &&
       modalS.open({
-        ModalChildren: FormCreateIntegration,
+        ModalChildren: FormCreateInputIntegration,
         modalChildrenProps: {
           onSuccess: d => setIntegrationsList(p => [...p, d?.data]),
           service: currentServiceData,
@@ -46,17 +48,13 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
 
   useEffect(() => {
     currentServiceData &&
-      createApiCall(
-        {
-          data: { type: 'input', ...transformQueriesForReq({ service: getIdRef(currentServiceData) }) },
-          onSuccess: data => {
-            setIntegrationsList(data);
-          },
+      service.getAll({
+        data: { type: 'input', ...transformQueriesForReq({ service: getIdRef(currentServiceData) }) },
+        onSuccess: data => {
+          setIntegrationsList(data);
         },
-        IntegrationsApi.getAllByQueries,
-        IntegrationsApi
-      );
-  }, [currentServiceData]);
+      });
+  }, [currentServiceData, service]);
 
   const renderInvoicingMethods = useMemo(() => {
     const methods = invoicingMethods.filter(m => {
