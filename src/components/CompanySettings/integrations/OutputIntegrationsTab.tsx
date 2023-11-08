@@ -15,7 +15,7 @@ import { isNumber } from 'lodash';
 
 export interface OutputIntegrationsTabProps {}
 
-const OutputIntegrationsTab: React.FC<OutputIntegrationsTabProps> = ({}) => {
+const OutputIntegrationsTab: React.FC<OutputIntegrationsTabProps> = () => {
   const modalS = useModalService();
   const service = useAppServiceProvider()[AppModuleName.integrations];
 

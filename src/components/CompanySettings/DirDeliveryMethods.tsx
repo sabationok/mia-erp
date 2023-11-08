@@ -5,11 +5,12 @@ import FlexBox from '../atoms/FlexBox';
 
 import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../Directories/dir.types';
 import DirListItem from '../Directories/DirList/DirListItem';
-import { ICheckoutPaymentMethod } from '../../redux/payments/payments.types';
 import { useTranslatedListData } from '../../hooks/useTranslatedMethods.hook';
 import { IDeliveryMethod } from '../../redux/integrations/integrations.types';
 import { useShipmentsSelector } from '../../redux/selectors.store';
-import useShipmentsService from '../../hooks/useShipmentsService.hook';
+import useShipmentsService, { UseShipmentsService } from '../../hooks/useShipmentsService.hook';
+import { useModalProvider } from '../ModalProvider/ModalProvider';
+import { ApiDirType } from '../../redux/APP_CONFIGS';
 
 export interface DirDeliveryMethodsProps
   extends IDirInTreeProps<MethodDirType, IDeliveryMethod, IDeliveryMethod, IDeliveryMethod> {
@@ -31,9 +32,9 @@ const DirDeliveryMethods: React.FC<DirDeliveryMethodsProps> = ({
   ...props
 }) => {
   const service = useShipmentsService();
-  // const modalService = useModalProvider();
+  const modalService = useModalProvider();
   const methods = useTranslatedListData(useShipmentsSelector().methods);
-
+  const actions = actionsCreatorForDirShipmentsMethods({ service, modalService, dirType: ApiDirType.METHODS_SHIPMENT });
   const renderList = useMemo(
     () =>
       methods?.map((item, idx) => (
@@ -44,9 +45,10 @@ const DirDeliveryMethods: React.FC<DirDeliveryMethodsProps> = ({
           item={item}
           availableLevels={1}
           currentLevel={0}
+          {...actions}
         />
       )),
-    [methods, props]
+    [actions, methods, props]
   );
 
   useEffect(() => {
@@ -71,9 +73,9 @@ export default memo(DirDeliveryMethods);
 
 const actionsCreatorForDirShipmentsMethods: DirInTreeActionsCreatorType<
   MethodDirType,
-  ICheckoutPaymentMethod,
-  any,
-  ICheckoutPaymentMethod
+  IDeliveryMethod,
+  UseShipmentsService,
+  IDeliveryMethod
 > = () => {
   return {
     onCreateChild: (parentId, parent, options) => {},

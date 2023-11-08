@@ -39,7 +39,7 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
   const {
     register,
     unregister,
-    formState: { errors, isValid },
+    formState: { errors },
     handleSubmit,
     formValues: { businessSubjectType, type: currentType, ...fv },
     registerSelect,

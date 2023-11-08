@@ -4,8 +4,6 @@ import { useOrdersSelector } from 'redux/selectors.store';
 import { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { IOrderTempSlot } from 'redux/orders/orders.types';
-import { useModalService } from '../../../ModalProvider/ModalProvider';
-import { useDispatch } from 'react-redux';
 import { IWarehouse } from '../../../../redux/warehouses/warehouses.types';
 import OrderGroupItem from '../components/OrderGroupItem';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
@@ -16,8 +14,8 @@ export interface OrderConfirmationStepProps extends FormOrderStepBaseProps {}
 const OrderConfirmationStep: React.FC<OrderConfirmationStepProps> = ({ onChangeValidStatus, name }) => {
   const { slots, orders } = useOrdersSelector().ordersGroupFormData;
 
-  const modalS = useModalService();
-  const dispatch = useDispatch();
+  // const modalS = useModalService();
+  // const dispatch = useDispatch();
 
   const groupedData = useMemo(() => {
     let map: Record<string, { slots: (IOrderTempSlot & { tempId?: string })[]; warehouse?: IWarehouse }> = {};
@@ -66,15 +64,15 @@ const OrderConfirmationStep: React.FC<OrderConfirmationStepProps> = ({ onChangeV
   );
 };
 
-const SummaryTable = ({}: {}) => {
+export const SummaryTable: React.FC<any> = p => {
   const renderOrders = useMemo(() => {
     return null;
   }, []);
 
   return (
-    <FlexBox flex={1} fillWidth>
+    <Table flex={1} fillWidth>
       {renderOrders}
-    </FlexBox>
+    </Table>
   );
 };
 const Table = styled(FlexBox)``;

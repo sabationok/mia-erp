@@ -154,16 +154,16 @@ export function createDataForReq<IncomeDataType extends Record<string, any> = an
   return outData;
 }
 
-const createProductFormDataOmitPaths: (keyof IProduct | string)[] = [
-  '_id',
-  'createdAt',
-  'updatedAt',
-  'deletedAt',
-  'prices',
-  'variations',
-  'warehouses',
-  'inventories',
-];
+// const createProductFormDataOmitPaths: (keyof IProduct | string)[] = [
+//   '_id',
+//   'createdAt',
+//   'updatedAt',
+//   'deletedAt',
+//   'prices',
+//   'variations',
+//   'warehouses',
+//   'inventories',
+// ];
 export const createArrayOfObjUUID = (arr: string[]): ArrayOfObjUUID => {
   return arr.map(_id => ({ _id }));
 };

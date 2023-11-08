@@ -1,15 +1,11 @@
 import { OnlyUUID } from '../../../../redux/global.types';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
-import { useDirectoriesSelector, useProductsSelector } from '../../../../redux/selectors.store';
-import { useModalProvider } from '../../../ModalProvider/ModalProvider';
-import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
-import { useMemo, useState } from 'react';
+import { useDirectoriesSelector } from '../../../../redux/selectors.store';
+import { useMemo } from 'react';
 import { getIdRef } from '../../../../utils/dataTransform';
 import { counterpartyColumns } from '../../../../data/contractors.data';
 import { CounterpartyTypesEnum, SupplierType } from '../../../../redux/directories/counterparties.types';
 import { ApiDirType } from '../../../../redux/APP_CONFIGS';
-import styled from 'styled-components';
-import FlexBox from '../../../atoms/FlexBox';
 
 export interface CounterpartyTabProps {
   onSelect?: (supplier: OnlyUUID) => void;
@@ -18,10 +14,10 @@ export interface CounterpartyTabProps {
   types?: CounterpartyTypesEnum[];
 }
 const CounterpartyTab: React.FC<CounterpartyTabProps> = ({ onSelect, withActions, selected, types }) => {
-  const currentProduct = useProductsSelector().currentProduct;
-  const modalS = useModalProvider();
-  const productsS = useAppServiceProvider()[ServiceName.products];
-  const [loading, setLoading] = useState(false);
+  // const currentProduct = useProductsSelector().currentProduct;
+  // const modalS = useModalProvider();
+  // const productsS = useAppServiceProvider()[ServiceName.products];
+  // const [loading, setLoading] = useState(false);
 
   const counterparties = useDirectoriesSelector(ApiDirType.CONTRACTORS).directory;
 
@@ -70,11 +66,9 @@ const CounterpartyTab: React.FC<CounterpartyTabProps> = ({ onSelect, withActions
             ];
           },
     };
-  }, [onSelect, withActions]);
+  }, [filteredData, onSelect, withActions]);
 
   return <TableList isSearch={false} {...tableConfigs} />;
 };
-
-const Card = styled(FlexBox)``;
 
 export default CounterpartyTab;

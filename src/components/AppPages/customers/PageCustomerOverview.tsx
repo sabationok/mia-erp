@@ -21,10 +21,12 @@ export type UseTableForm<TData = any> = FilterReturnDataType & {
 };
 
 const PageCustomerOverview: React.FC<Props> = props => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
-
+  useEffect(() => {
+    console.log('PageCustomerOverview', { sortParams, filterParams });
+  }, [filterParams, sortParams]);
   const tableConfig = useMemo(
     (): ITableListProps<ICustomerBase> => ({
       // tableData: state.products,
@@ -78,7 +80,7 @@ const Page = styled.div`
 export default PageCustomerOverview;
 
 export const useCustomersTableSettings = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 

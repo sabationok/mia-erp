@@ -13,7 +13,7 @@ import { IVariation, IVariationFormData } from '../../../redux/products/variatio
 import { OnlyUUID } from '../../../redux/global.types';
 import { ToastService } from '../../../services';
 import { ModalFormProps } from '../../ModalForm';
-import FormAfterSubmitOptions from '../components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
 import { OverlayFooter, OverlayHeader } from './components';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -70,6 +70,7 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
   create,
   ...props
 }) => {
+  const submitOptions = useAfterSubmitOptions();
   const currentProduct = useProductsSelector().currentProduct;
   const service = useAppServiceProvider()[ServiceName.products];
   const templates = usePropertiesSelector();
@@ -79,9 +80,6 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
     handleSubmit,
     register,
     formState: { errors },
-    clearAfterSave,
-    closeAfterSave,
-    toggleAfterSubmitOption,
     formValues,
   } = useAppForm<IVariationFormData>({
     defaultValues: createVariationFormData(
@@ -143,7 +141,7 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
           .createVariation({
             data: createVariationReqData(data),
             onSuccess: data => {
-              closeAfterSave && onClose && onClose();
+              submitOptions.state.close && onClose && onClose();
             },
             onError: ToastService.toastAxiosError,
             onLoading: setLoading,
@@ -153,7 +151,7 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
 
       onSubmit && onSubmit(data);
     },
-    [onClose, onSubmit, service, closeAfterSave, update]
+    [onClose, onSubmit, service, submitOptions.state.close, update]
   );
 
   const handleSelect = useCallback(
@@ -238,11 +236,7 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
         canSubmit={canSubmit}
         extraFooter={
           <ExtraFooterBox>
-            <FormAfterSubmitOptions
-              clear={clearAfterSave}
-              close={closeAfterSave}
-              toggleOption={toggleAfterSubmitOption}
-            />
+            <FormAfterSubmitOptions {...submitOptions} />
           </ExtraFooterBox>
         }
       />

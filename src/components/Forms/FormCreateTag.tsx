@@ -32,15 +32,14 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({
   defaultState,
   ...props
 }) => {
+  const submitOptions = useAfterSubmitOptions();
   const {
     formState: { errors, isValid },
     register,
     handleSubmit,
     setValue,
-    clearAfterSave,
-    closeAfterSave,
+
     formValues,
-    toggleAfterSubmitOption,
   } = useAppForm<ITagDirItem>({
     defaultValues: {
       ...data,
@@ -57,7 +56,6 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({
   //   },
   //   [setValue]
   // );
-  const submitOptions = useAfterSubmitOptions();
 
   function formEventWrapper(evHandler?: AppSubmitHandler<ITagDirItem>) {
     if (evHandler) {

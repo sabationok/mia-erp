@@ -40,6 +40,9 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
   const modalS = useModalService();
   const [confirms, setConfirms] = useState<Record<ConfirmsStateKay | string, boolean>>({});
   // TODO refactoring
+  useEffect(() => {
+    console.debug('OrderInfoStep', { touchedFields });
+  }, [touchedFields]);
 
   const shipmentMethodsList = useTranslatedListData(useShipmentsSelector().methods, { withFullLabel: true });
   const communicationMethodsList = useTranslatedListData(useCommunicationSelector().methods, { withFullLabel: true });

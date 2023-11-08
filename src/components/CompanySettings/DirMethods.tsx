@@ -3,7 +3,7 @@ import ModalForm from 'components/ModalForm';
 import styled from 'styled-components';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FlexBox from '../atoms/FlexBox';
-import { useCheckoutPaymentsSelector, useDirectoriesSelector } from '../../redux/selectors.store';
+import { useDirectoriesSelector } from '../../redux/selectors.store';
 
 import { IDirInTreeProps, IMethodDirItem, MethodDirType } from '../Directories/dir.types';
 import useDirServiceHook from '../../hooks/useDirService.hook';
@@ -29,8 +29,6 @@ const DirMethods: React.FC<DirMethodsProps> = ({
   ...props
 }) => {
   const { directory } = useDirectoriesSelector(dirType);
-
-  const paymentsMethods = useCheckoutPaymentsSelector().methods;
 
   const service = useDirServiceHook();
   const modalService = useModalProvider();

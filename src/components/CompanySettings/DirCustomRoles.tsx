@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import ModalForm from 'components/ModalForm';
 import styled from 'styled-components';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
@@ -18,7 +18,9 @@ export interface DirCustomRolesProps
 
 const DirCustomRoles: React.FC<DirCustomRolesProps> = ({ createParentTitle, actionsCreator, ...props }) => {
   const { customRoles, modules } = useCustomRolesSelector();
-
+  useEffect(() => {
+    console.log('DirCustomRoles', modules);
+  }, [modules]);
   const service = useCustomRolesService();
   const modalService = useModalProvider();
 

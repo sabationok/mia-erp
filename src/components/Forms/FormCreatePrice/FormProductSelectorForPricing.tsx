@@ -39,7 +39,7 @@ const FormProductSelectorForPricing: React.FC<FormProductSelectorForPricingProps
   const modals = useModalProvider();
   const prService = useAppServiceProvider()[ServiceName.products];
   const { currentProduct, properties: templates } = useProductsSelector();
-  const [loadedVariations, setLoadedVariations] = useState<IVariation[]>([]);
+  const setLoadedVariations = useState<IVariation[]>([])[1];
   const [currentVariation, setCurrentVariation] = useState<OnlyUUID | undefined>(currentProduct?.defaults?.variation);
   const [selectedProduct, setSelectedProduct] = useState<OnlyUUID | undefined>(currentProduct);
 

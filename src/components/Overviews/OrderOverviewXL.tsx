@@ -4,7 +4,6 @@ import { ModalHeader } from '../atoms';
 import React, { useMemo, useState } from 'react';
 import { useOrdersSelector } from '../../redux/selectors.store';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import styled from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { t } from '../../lang';
@@ -36,7 +35,7 @@ const tabs = enumToFilterOptions(OrderOverviewTabs);
 
 const OrderOverviewXL: React.FC<OrderOverviewXLProps> = p => {
   const [currentTab, setCurrentTab] = useState<number>(0);
-  const orderS = useAppServiceProvider()[ServiceName.orders];
+  // const orderS = useAppServiceProvider()[ServiceName.orders];
   const orderId = useAppParams()?.orderId;
   const currentOrder = useOrdersSelector().currentOrder;
   const navigate = useNavigate();
@@ -70,7 +69,11 @@ const OrderOverviewXL: React.FC<OrderOverviewXLProps> = p => {
       />
 
       <Content flex={1} fillWidth overflow={'auto'}>
-        <ModalFilter filterOptions={tabs} optionProps={{ fitContentH: true }} />
+        <ModalFilter
+          filterOptions={tabs}
+          optionProps={{ fitContentH: true }}
+          onOptSelect={(_o, _v, i) => setCurrentTab(i)}
+        />
 
         {renderTab}
       </Content>

@@ -23,12 +23,11 @@ const FormInviteUser: React.FC<FormInviteUserProps> = ({ defaultState, onSubmit,
     registerSelect,
     register,
     handleSubmit,
-    closeAfterSave,
     formState: { errors, isValid },
   } = useAppForm<FormInviteUserData>({ defaultValues: defaultState });
 
   const onValidSubmit = (d: FormInviteUserData) => {
-    onSubmit && onSubmit(d, { closeAfterSave });
+    onSubmit && onSubmit(d);
   };
   return (
     <ModalForm isValid={isValid} {...props} onSubmit={handleSubmit(onValidSubmit)}>

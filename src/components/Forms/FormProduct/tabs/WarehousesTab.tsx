@@ -1,9 +1,7 @@
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { OnlyUUID } from '../../../../redux/global.types';
-import { useProductsSelector, useWarehousesSelector } from '../../../../redux/selectors.store';
-import { useModalProvider } from '../../../ModalProvider/ModalProvider';
-import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
-import { useMemo, useState } from 'react';
+import { useWarehousesSelector } from '../../../../redux/selectors.store';
+import { useMemo } from 'react';
 import { getIdRef } from '../../../../utils/dataTransform';
 import { IWarehouse } from '../../../../redux/warehouses/warehouses.types';
 import { warehousesTableColumns } from '../../../../data/warehauses.data';
@@ -15,10 +13,10 @@ export interface WarehousesTabProps {
 }
 
 const WarehousesTab: React.FC<WarehousesTabProps> = ({ onSelect, selected, withActions }) => {
-  const currentProduct = useProductsSelector().currentProduct;
-  const modalS = useModalProvider();
-  const productsS = useAppServiceProvider()[ServiceName.products];
-  const [loading, setLoading] = useState(false);
+  // const currentProduct = useProductsSelector().currentProduct;
+  // const modalS = useModalProvider();
+  // const productsS = useAppServiceProvider()[ServiceName.products];
+  // const [loading, setLoading] = useState(false);
 
   const warehouses = useWarehousesSelector().warehouses;
 
@@ -63,7 +61,7 @@ const WarehousesTab: React.FC<WarehousesTabProps> = ({ onSelect, selected, withA
             ];
           },
     };
-  }, [onSelect, warehouses]);
+  }, [onSelect, warehouses, withActions]);
 
   // useEffect(() => {
   //   // if ((!currentProduct?.inventories || currentProduct?.inventories?.length === 0) && currentProduct?._id) {

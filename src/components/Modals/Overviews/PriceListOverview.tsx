@@ -30,7 +30,7 @@ const PriceListOverview: React.FC<PriceListOverviewProps> = ({
   onSubmit,
   ...props
 }) => {
-  const { lists, current } = usePriceListsSelector();
+  const { lists } = usePriceListsSelector();
   const actionsCreator = usePriceListOverviewActionsCreator(listId);
   const { priceManagement } = useAppServiceProvider();
   const [tableData, setTableData] = useState<IPriceListItem[]>([]);

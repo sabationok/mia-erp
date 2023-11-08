@@ -48,8 +48,6 @@ const SelectCustomerModal: React.FC<SelectCustomerModalProps> = ({ onSelect, onS
         ];
       },
       onRowClick: data => {
-        const fRes = customers.find(c => c._id === data?._id);
-        console.log('data?.rowData', data?.rowData);
         data?.rowData && onSelect && onSelect(data.rowData);
 
         onClose && onClose();

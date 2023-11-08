@@ -97,8 +97,6 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
     register,
     setValue,
     handleSubmit,
-
-    closeAfterSave,
     formState: { errors },
   } = priceForm;
 
@@ -134,7 +132,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
       service.updatePriceById({
         data: { data: { _id: update, data: dataForReq }, updateCurrent: true },
         onSuccess: (data, meta) => {
-          closeAfterSave && props?.onClose && props?.onClose();
+          submitOptions.state?.close && props?.onClose && props?.onClose();
           ToastService.success('Price updated');
         },
       });
@@ -143,7 +141,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
       service.addPriceToList({
         data: { data: { data: dataForReq as never }, updateCurrent: true },
         onSuccess: (data, meta) => {
-          closeAfterSave && props?.onClose && props?.onClose();
+          submitOptions.state?.close && props?.onClose && props?.onClose();
           ToastService.success('Price created');
         },
       });

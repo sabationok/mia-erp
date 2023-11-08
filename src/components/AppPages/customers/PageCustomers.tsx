@@ -16,6 +16,7 @@ import { useModalService } from '../../ModalProvider/ModalProvider';
 import FormCreateCustomer from '../../Forms/FormCreateCustomer';
 import _ from 'lodash';
 import { createDataForReq } from '../../../utils/dataTransform';
+import { ToastService } from '../../../services';
 
 interface Props extends BaseAppPageProps {}
 
@@ -83,12 +84,14 @@ const PageCustomers: React.FC<Props> = (props: Props) => {
                 ModalChildren: FormCreateCustomer,
                 modalChildrenProps: {
                   withReferer: true,
-                  defaultState: { referrer: { _id: '7785f833-c56b-4d94-8827-a6a4ae9e0ed5' } },
                   onSubmit: d => {
                     service.create({
                       data: {
                         data: d?.referrer?._id ? createDataForReq(d) : createDataForReq(_.omit(d, ['referrer'])),
-                        params: {},
+                      },
+                      onSuccess: data => {
+                        ToastService.success(`New user created: ${data?.email}`);
+                        m?.onClose && m?.onClose();
                       },
                     });
                   },
@@ -110,7 +113,7 @@ const PageCustomers: React.FC<Props> = (props: Props) => {
         // }).then();
       },
     }),
-    [service, state.customers]
+    [modalS, service, state.customers]
   );
 
   useEffect(() => {
@@ -144,7 +147,6 @@ const Page = styled.div`
 export default PageCustomers;
 
 export const useCustomersTableSettings = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
@@ -182,11 +184,10 @@ export const useCustomersTableSettings = () => {
       //   });
       // }
     }
-  }, [filterParams, isLoading, sortParams, tableConfig]);
+  }, [filterParams, sortParams, tableConfig]);
 
   return {
     tableConfig,
-    isLoading,
     sortParams,
     filterParams,
   };

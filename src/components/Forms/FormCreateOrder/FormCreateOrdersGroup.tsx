@@ -19,7 +19,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { orderInfoBaseSchema } from '../validation';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { useModalService } from '../../ModalProvider/ModalProvider';
 import { createApiCall, OrdersApi } from '../../../api';
 import { formatDateForInputValue } from '../../../utils';
 
@@ -56,7 +55,6 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
   const { stepsMap, stepIdx, setNextStep, setPrevStep, getCurrentStep, isLast } = useStepsHandler(steps);
   const [isStepFinished, setIsStepFinished] =
     useState<Record<FormCreateOrdersGroupStepsEnum | string, boolean>>(stepsProcessInitialState);
-  const modalS = useModalService();
 
   const handleValidStatus = (name: keyof typeof FormCreateOrdersGroupStepsEnum) => (value: boolean) => {
     setIsStepFinished(p => ({ ...p, [FormCreateOrdersGroupStepsEnum[name]]: value }));

@@ -27,7 +27,7 @@ const SelectOrderTypeModal: React.FC<SelectOrderTypeModalProps> = ({ onClose, on
 
   useEffect(() => {
     console.log({ current, onSelect, onSubmit });
-  }, [current]);
+  }, [current, onSelect, onSubmit]);
 
   return (
     <Form {...p} onSubmit={handleSubmit}>

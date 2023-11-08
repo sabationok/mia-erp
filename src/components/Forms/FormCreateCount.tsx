@@ -37,9 +37,6 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
     formState: { errors },
     register,
     handleSubmit,
-    closeAfterSave,
-    clearAfterSave,
-    toggleAfterSubmitOption,
   } = useAppForm<ICountFormData>({
     defaultValues: parent?._id
       ? {

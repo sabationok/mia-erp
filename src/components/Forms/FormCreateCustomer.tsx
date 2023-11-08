@@ -32,7 +32,7 @@ const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({
   onClose,
   ...p
 }) => {
-  const { register, setValue, handleSubmit, watch, ...f } = useForm<ICustomerFormData>({
+  const { register, setValue, handleSubmit, watch } = useForm<ICustomerFormData>({
     defaultValues: { ...defaultState, businessType: BusinessSubjectTypeEnum.company },
   });
   const formValues = watch();

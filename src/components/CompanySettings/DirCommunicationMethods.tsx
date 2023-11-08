@@ -55,7 +55,7 @@ const DirCommunicationMethods: React.FC<DirCommunicationMethodsProps> = ({
           {...actions}
         />
       )),
-    [methods, props]
+    [actions, methods, props]
   );
 
   useEffect(() => {

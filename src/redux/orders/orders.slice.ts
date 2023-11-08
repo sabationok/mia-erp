@@ -8,7 +8,6 @@ import {
   UpdateCurrentGroupFormInfoDataAction,
   UpdateSlotInGroupAction,
 } from './orders.actions';
-import { OnlyUUID } from '../global.types';
 
 export interface IOrdersState {
   orders: any[];
@@ -36,16 +35,16 @@ const initialOrdersState: IOrdersState = {
   error: null,
 };
 
-const compareIdsByKey = <Key extends string = any>(
-  obj1?: Record<Key | string, OnlyUUID | any>,
-  obj2?: Record<Key | string, OnlyUUID | any>,
-  key?: Key
-) => {
-  if (obj1 && obj2 && key) {
-    return obj1[key]?._id === obj2[key]?._id;
-  }
-  return false;
-};
+// const compareIdsByKey = <Key extends string = any>(
+//   obj1?: Record<Key | string, OnlyUUID | any>,
+//   obj2?: Record<Key | string, OnlyUUID | any>,
+//   key?: Key
+// ) => {
+//   if (obj1 && obj2 && key) {
+//     return obj1[key]?._id === obj2[key]?._id;
+//   }
+//   return false;
+// };
 
 // function findSlotByIdKeys(
 //   slots: IOrderTempSlot[],

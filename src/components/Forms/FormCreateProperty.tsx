@@ -41,8 +41,9 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
   ...props
 }) => {
   const submitOptions = useAfterSubmitOptions();
-  const { register, handleSubmit, setValue, toggleAfterSubmitOption, closeAfterSave, clearAfterSave } =
-    useAppForm<IPropertyFormData>({ defaultValues: { ...defaultState, type } });
+  const { register, handleSubmit, setValue } = useAppForm<IPropertyFormData>({
+    defaultValues: { ...defaultState, type },
+  });
 
   const onValid = (data: IPropertyFormData) => {
     onSubmit && onSubmit(data, { ...submitOptions.state });

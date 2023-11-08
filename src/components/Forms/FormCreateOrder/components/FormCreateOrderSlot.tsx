@@ -61,7 +61,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
   onClose,
   ...props
 }) => {
-  const { stepCheck, stepIdx, stepsCount, setPrevStep, setNextStep } = useStepsHandler(stepsLong);
+  const { stepCheck, stepIdx, setPrevStep, setNextStep } = useStepsHandler(stepsLong);
   const [products, setProducts] = useState<IProduct[]>([]);
   const [variations, setVariations] = useState<IVariationTableData[]>([]);
   // const [prices, setPrices] = useState<IPriceListItem[]>([]);

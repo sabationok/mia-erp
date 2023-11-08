@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { enumToArray, enumToFilterOptions } from '../../../utils/fabrics';
-import FormAfterSubmitOptions from '../components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
 import React, { useState } from 'react';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
@@ -42,14 +42,12 @@ const validation = yup.object<IWarehouseFormData>().shape({
 });
 
 const FormCreateWarehouse: React.FC<FormCreateWarehouseProps> = ({ defaultState, onSubmit, ...p }) => {
+  const submitOptions = useAfterSubmitOptions();
   const {
     formState: { errors },
     register,
     setValue,
     handleSubmit,
-    closeAfterSave,
-    clearAfterSave,
-    toggleAfterSubmitOption: toggleOption,
   } = useAppForm<IWarehouseFormData>({
     defaultValues: { ...defaultState },
     resolver: yupResolver(validation),
@@ -59,8 +57,8 @@ const FormCreateWarehouse: React.FC<FormCreateWarehouseProps> = ({ defaultState,
   const onValid = (data: IWarehouseFormData) => {
     onSubmit &&
       onSubmit(data, {
-        closeAfterSave,
-        clearAfterSave,
+        closeAfterSave: submitOptions.state.close,
+        clearAfterSave: submitOptions.state.clear,
         isDefault,
       });
   };
@@ -75,7 +73,7 @@ const FormCreateWarehouse: React.FC<FormCreateWarehouseProps> = ({ defaultState,
       filterOptions={warehouseTypeFilterOptions}
       filterName={'type'}
       onFilterValueSelect={({ name, value }) => setValue(name, value)}
-      extraFooter={<FormAfterSubmitOptions {...{ closeAfterSave, clearAfterSave, toggleOption }} />}
+      extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
       <FormInputs>
         <FlexBox style={{ display: 'grid', gridTemplateColumns: '1fr 125px' }} gap={8}>

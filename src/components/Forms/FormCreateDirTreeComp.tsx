@@ -7,7 +7,7 @@ import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import { t } from '../../lang';
 import { DirectoriesFormProps, IBaseDirItem, IDirItemBase } from '../Directories/dir.types';
-import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
 import { useAppForm } from '../../hooks';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { FormInputs } from './components/atoms';
@@ -29,13 +29,11 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
   dirType,
   ...props
 }) => {
+  const submitOptions = useAfterSubmitOptions();
   const {
     formState: { errors, isValid },
     register,
     handleSubmit,
-    closeAfterSave,
-    clearAfterSave,
-    toggleAfterSubmitOption: toggleOption,
   } = useAppForm<IBaseDirItem>({
     defaultValues: {
       ...defaultState,
@@ -46,11 +44,7 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
   });
 
   const onValid = (data: IBaseDirItem) => {
-    onSubmit &&
-      onSubmit(data, {
-        closeAfterSave,
-        clearAfterSave,
-      });
+    onSubmit && onSubmit(data, submitOptions.state);
   };
 
   return (
@@ -58,7 +52,7 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
       {...props}
       onSubmit={handleSubmit(onValid)}
       isValid={isValid}
-      extraFooter={<FormAfterSubmitOptions {...{ closeAfterSave, clearAfterSave, toggleOption }} />}
+      extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
       <FormInputs>
         {props.filterOptions && (

@@ -424,17 +424,18 @@ export const StaticProperties: RenderOverviewCellComponent<IProduct> = ({ cell, 
     const propsFromVariations = data?.variations?.map(vr => vr.properties)?.flat(1);
     const unicValuesMap: Record<string, IPropertyValue> = {};
 
-    propsFromVariations?.forEach(value => {
-      if (value?._id) {
-        unicValuesMap[value?._id] = value;
+    propsFromVariations?.forEach(propVal => {
+      if (propVal?._id) {
+        unicValuesMap[propVal?._id] = propVal;
       }
     });
 
-    return Object.values(unicValuesMap).map(value => {
-      return <FlexBox></FlexBox>;
+    return Object.values(unicValuesMap).map(el => {
+      return <FlexBox>{el.label}</FlexBox>;
     });
   }, [data?.variations]);
 
+  console.log('renderPropertiesFromVariations', renderPropertiesFromVariations);
   return (
     <Cell
       padding={'4px 4px 8px'}
@@ -459,6 +460,8 @@ export const StaticProperties: RenderOverviewCellComponent<IProduct> = ({ cell, 
         ) : (
           <CellText $weight={500}>{t('undefined')}</CellText>
         )}
+
+        {renderPropertiesFromVariations}
       </FlexBox>
     </Cell>
   );

@@ -40,8 +40,7 @@ const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({
 
   const [currentTabIdx, setCurrentTabIdx] = useState(0);
 
-  const { register, registerSelect, setValue, formValues, handleSubmit, ...form } =
-    useAppForm<IProductDefaultsFormData>();
+  const { setValue, formValues, handleSubmit } = useAppForm<IProductDefaultsFormData>();
 
   const handleSelect = useCallback(
     (data: OnlyUUID) => {

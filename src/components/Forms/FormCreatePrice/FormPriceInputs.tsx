@@ -16,7 +16,7 @@ export interface FormPriceInputsProps {
   form: UseFormReturn<IPriceBase>;
 }
 
-const getPriceAdditionalInputsProps = (
+export const getPriceAdditionalInputsProps = (
   form: UseFormReturn<IPriceBase>
 ): ({ name: BasePriceInfoPath } | Record<string, any>)[][] => {
   const names: PriceAmountAndPercentageFieldsKey[] = [];
@@ -34,7 +34,7 @@ const getPriceAdditionalInputsProps = (
   ];
   const props: ({ name: BasePriceInfoPath } | Record<string, any>)[][] = [];
 
-  names.map(key => props.push(createPropsByKey(key)));
+  names.forEach(key => props.push(createPropsByKey(key)));
 
   return props;
 };
@@ -57,13 +57,7 @@ const priceInputsProps: ({
   { name: 'cashbackLabel', label: '', placeholder: '' },
 ];
 const FormPriceInputs: React.FC<FormPriceInputsProps> = ({ form }) => {
-  const {
-    formState: { errors },
-    watch,
-    register,
-  } = form;
-
-  const values = watch();
+  const { register } = form;
 
   return (
     <Inputs fillWidth flex={1} padding={'0 8px'}>

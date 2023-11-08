@@ -35,7 +35,6 @@ const FormCreateMethod: React.FC<FormCreateMethodProps> = ({ onSubmit, defaultSt
   const submitOptions = useAfterSubmitOptions();
   const {
     formState: { errors, isValid },
-    register,
     handleSubmit,
   } = useAppForm<IMethodFormData>({
     defaultValues: { ...defaultState },

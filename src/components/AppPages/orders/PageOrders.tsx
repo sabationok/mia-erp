@@ -19,12 +19,6 @@ import { Text } from '../../atoms/Text';
 
 interface Props extends BaseAppPageProps {}
 
-enum OrderTypes {}
-
-// Active = 'Active',
-// Active = 'Active',
-// Active = 'Active',
-
 const ordersFilterOptions = enumToFilterOptions(OrderStatusEnum);
 
 // const useDynamicFilterOptionsByEnum = <T extends Record<string, any> = any>(
