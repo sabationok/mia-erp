@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkcounter_app_ts=self.webpackChunkcounter_app_ts||[]).push([[977],{4977:function(t,n,r){r.r(n);var e=r(1413),u=r(6459),a=r(2242),c=r(3329);n.default=function(t){var n=Object.assign({},((0,u.Z)(t),t));return(0,c.jsx)(a.Z,(0,e.Z)({width:"480px",title:"FormCreateVariation"},n))}},6459:function(t,n,r){function e(t){if(null==t)throw new TypeError("Cannot destructure "+t)}r.d(n,{Z:function(){return e}})}}]);
-//# sourceMappingURL=977.d6c0d92e.chunk.js.map
