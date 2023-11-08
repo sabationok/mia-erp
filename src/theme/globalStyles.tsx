@@ -51,8 +51,8 @@ const GlobalStyles = createGlobalStyle`
 
   @media screen and (min-width: 480px) {
     ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
     }
 
     ::-webkit-scrollbar-track {
@@ -73,7 +73,7 @@ const GlobalStyles = createGlobalStyle`
     }
 
     ::-webkit-scrollbar-thumb:hover {
-      background-color: ${({ theme }) => theme.accentColor.hover};
+      background-color: ${({ theme }) => theme.accentColor.base};
     }
 
     ::-webkit-scrollbar-thumb:active {

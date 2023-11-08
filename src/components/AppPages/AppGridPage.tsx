@@ -1,28 +1,38 @@
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { actionSetIndexPage } from 'redux/page/pageActions';
-
 import styled from 'styled-components';
 import Layout from '../Layout';
-import { PagePathType } from '../../data/pages.data';
+import { BaseAppPageProps } from './index';
 
-const AppGridPage: React.FC<{ path?: PagePathType; children?: React.ReactNode }> = ({ path, children }) => {
-  const dispatch = useDispatch();
+interface GridProps {
+  numColumns?: number;
+  numRows?: number;
+}
+interface AppGridPageLayoutProps {
+  xs?: GridProps;
+  xl?: GridProps;
+  xxl?: GridProps;
+}
 
-  useEffect(() => {
-    if (path) {
-      dispatch(actionSetIndexPage(path));
-    }
-  }, [dispatch, path]);
+interface Props extends BaseAppPageProps, AppGridPageLayoutProps {
+  children?: React.ReactNode;
+}
+
+const AppGridPage: React.FC<Props> = ({ path, children, xs, xl, xxl }) => {
+  // const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   if (path) {
+  //     dispatch(actionSetIndexPage(path));
+  //   }
+  // }, [dispatch, path]);
 
   return (
     <Layout>
-      <GridPage>{children}</GridPage>;
+      <GridPage>{children}</GridPage>
     </Layout>
   );
 };
 
-const GridPage = styled.div`
+const GridPage = styled.div<AppGridPageLayoutProps>`
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: repeat(12, 1fr);
@@ -30,6 +40,8 @@ const GridPage = styled.div`
   height: 100%;
   max-height: 100%;
   max-width: 100%;
+
+  grid-template-areas: 'area1 area2' 'area3 area4';
 
   // overflow: auto;
   @media screen and (max-width: 768px) {

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { ThRow, ThRowData, ThRowStickyEl } from './TableHeadRow';
 import { IDocument, ITransaction } from '../../../redux/transactions/transactions.types';
 import { ICount } from '../../../redux/directories/counts.types';
-import { IContractor } from '../../../redux/contractors/contractors.types';
+import { IContractor } from '../../../redux/directories/contractors.types';
 import { ICategory } from '../../../redux/directories/directories.types';
 import CellCheckBox from '../TebleCells/CellCheckBox';
 import { CellsMap } from '../TebleCells';
@@ -18,6 +18,8 @@ export interface TableRowProps {
   rowData: TRowDataType;
   idx: number;
   checked?: boolean;
+  isActive?: boolean;
+  onPress?: () => void;
 }
 
 export interface RowCTXValue extends TableRowProps {
@@ -30,7 +32,7 @@ export interface RowCTXValue extends TableRowProps {
 export const RowCTX = createContext<any>({});
 export const useRow = () => useContext(RowCTX) as RowCTXValue;
 
-const TableRow: React.FC<TableRowProps> = ({ checked, rowData, ...props }) => {
+const TableRow: React.FC<TableRowProps> = ({ onPress, checked, rowData, ...props }) => {
   const { tableTitles, selectedRows, tableData, rowGrid, checkBoxes, onCheckboxChange, transformData } =
     useTable<TRowDataType>();
   const [isActionsOpen, setIsActionsOpen] = useState(false);
@@ -80,19 +82,27 @@ const TableRow: React.FC<TableRowProps> = ({ checked, rowData, ...props }) => {
   }, [props, currentRowData, selectedRows, isActionsOpen, onToggleActions, onCloseActions, onRowCheckboxChange]);
 
   return (
-    <Row id={currentRowData?._id} checked={isChecked} data-row>
-      <RowCTX.Provider value={CTX}>
+    <RowCTX.Provider value={CTX}>
+      <Row
+        id={`_${currentRowData?._id}`}
+        isActive={props?.isActive}
+        onClick={() => {
+          console.log('rowData', rowData);
+        }}
+        checked={isChecked}
+        data-row
+      >
         <RowStickyEl>{checkBoxes && <CellCheckBox />}</RowStickyEl>
 
-        <RowData gridRepeat={tableData?.length || 0} style={{ ...rowGrid }}>
+        <RowData gridRepeat={tableData?.length || 0} style={{ ...rowGrid }} onClick={onPress}>
           {renderRow}
         </RowData>
-      </RowCTX.Provider>
-    </Row>
+      </Row>
+    </RowCTX.Provider>
   );
 };
 
-const Row = styled(ThRow)<{ checked?: boolean }>`
+const Row = styled(ThRow)<{ checked?: boolean; isActive?: boolean }>`
   display: grid;
   grid-template-columns: min-content 1fr;
   grid-template-rows: 1fr;
@@ -106,7 +116,7 @@ const Row = styled(ThRow)<{ checked?: boolean }>`
   border-bottom: 1px solid transparent;
   border-bottom-color: ${({ theme }) => theme.trBorderClr};
 
-  background-color: ${({ theme, checked }) => (checked ? theme.tableRowBackgroundActive : theme.tableBackgroundColor)};
+  background-color: ${({ theme, checked, isActive }) => (isActive ? theme.tableRowBackgroundActive : 'inherit')};
 
   &:hover {
     //border-color: ${({ theme }) => theme.accentColor.base};

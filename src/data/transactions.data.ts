@@ -1,7 +1,7 @@
 import { SelectItem } from 'components/TableList/TableList';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { ITransaction } from '../redux/transactions/transactions.types';
-import t from '../lang';
+import { t } from '../lang';
 import { FilterOpt } from '../components/ModalForm/ModalFilter';
 import { CategoryTypes } from '../redux/directories/directories.types';
 
@@ -235,7 +235,7 @@ export const transactionsColumns: CellTittleProps<ITransaction, DataPath>[] = [
   },
 ];
 
-export const transactionsSearchParams: SelectItem<DataPath>[] = [
+export const transactionsSearchParams: SelectItem[] = [
   {
     label: 'Дата',
     dataPath: 'eventDate',

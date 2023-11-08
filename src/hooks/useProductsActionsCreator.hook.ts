@@ -2,35 +2,21 @@ import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
 import { IProduct, ProductTypeEnum } from '../redux/products/products.types';
-import { useProductsSelector } from '../redux/selectors.store';
-import FormCreateProduct from '../components/Forms/FormCreateProduct';
-import { omit } from 'lodash';
-import { productsFilterOptions } from '../data/directories.data';
+import FormCreateProduct from '../components/Forms/FormProduct/FormCreateProduct';
+import { productsFilterOptions } from '../data/modalFilterOptions.data';
 import { useNavigate } from 'react-router-dom';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { ToastService } from '../services';
+import { createProductFormData } from '../utils/dataTransform';
+import { createApiCall, ProductsApi } from '../api';
 
 export type ProductsActionsCreator = TableActionCreator<IProduct>;
 
 const useProductsActionsCreator = (): ProductsActionsCreator => {
   const service = useAppServiceProvider()[ServiceName.products];
   const navigate = useNavigate();
-  const state = useProductsSelector();
+  // const state = useProductsSelector();
   const modals = useModalProvider();
-  // const onSubmitCreateWrapper = useCallback(
-  //   (onCloseModal: () => void) => {
-  //     return (data: ITransactionReqData, options: AfterFormSubmitOptions,) => {
-  //       service.create({
-  //         data,
-  //         onSuccess(d) {
-  //           toast.success(`Сторено транзакцію на суму: ${d.amount}`);
-  //           options?.close && onCloseModal();
-  //         },
-  //       });
-  //     };
-  //   },
-  //   [service]
-  // );
 
   return useCallback(
     ctx => [
@@ -42,21 +28,6 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
         type: 'onlyIcon',
         onClick: () => {
           ctx.selectedRow?._id && navigate(ctx.selectedRow?._id);
-          // modals.handleOpenModal({
-          //   ModalChildren: ProductOverview,
-          //   modalChildrenProps: {
-          //     title: 'Перегляд продукту',
-          //     product: state.products.find(el => el._id === ctx.selectedRow?._id),
-          //     // filterOptions: productsFilterOptions,
-          //     // defaultOption: StorageItemTypeFilterOptions.findIndex(el => el.value === product?.type),
-          //     // onSubmit: data => {
-          //     //   service.updateById({
-          //     //     data,
-          //     //     onSuccess(d) {},
-          //     //   });
-          //     // },
-          //   },
-          // });
         },
       },
       {
@@ -66,16 +37,21 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
         iconSize: '90%',
         type: 'onlyIcon',
         disabled: !ctx?.selectedRow?._id,
-        onClick: () => {
-          const product = state.products.find(p => p._id === ctx?.selectedRow?._id);
+        onClick: async () => {
+          const res = await createApiCall({ data: ctx?.selectedRow?._id }, ProductsApi.getFullInfoById, ProductsApi);
+          if (!res?.data.data) {
+            return;
+          }
+          console.log(res?.data.data);
+          const formData = createProductFormData(res?.data.data);
 
           const modal = modals.handleOpenModal({
             ModalChildren: FormCreateProduct,
             modalChildrenProps: {
-              title: 'Копіювати',
+              title: 'Змінити',
               _id: ctx?.selectedRow?._id,
               filterOptions: productsFilterOptions,
-              defaultState: omit(product, ['_id', 'createdAt', 'updatedAt']),
+              defaultState: formData,
               onSubmit: (data, o) => {
                 service.updateById({
                   data,
@@ -100,17 +76,22 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
         iconSize: '90%',
         type: 'onlyIcon',
         disabled: !ctx?.selectedRow?._id,
-        onClick: () => {
-          const product = state.products.find(p => p._id === ctx?.selectedRow?._id);
+        onClick: async () => {
+          const res = await createApiCall({ data: ctx?.selectedRow?._id }, ProductsApi.getFullInfoById, ProductsApi);
+          if (!res?.data.data) {
+            return;
+          }
+          const formData = createProductFormData(res?.data.data);
 
           const modal = modals.handleOpenModal({
             ModalChildren: FormCreateProduct,
             modalChildrenProps: {
               title: 'Змінити',
               filterOptions: productsFilterOptions,
-              defaultState: omit(product, ['createdAt', 'updatedAt']),
+              defaultState: formData,
+
               onSubmit: (data, o) => {
-                service.updateById({
+                service.create({
                   data,
                   onSuccess(d) {
                     o?.closeAfterSave && modal?.onClose();
@@ -149,7 +130,7 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
                 service.create({
                   data,
                   onSuccess(d) {
-                    o?.closeAfterSave && modal?.onClose();
+                    (o?.closeAfterSave || o?.close) && modal?.onClose();
                   },
                 });
               },
@@ -160,8 +141,25 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
       },
     ],
 
-    [modals, navigate, service, state.products]
+    [modals, navigate, service]
   );
 };
 
 export default useProductsActionsCreator;
+
+// const currentProduct=useProductsSelector().currentProduct
+
+// const onSubmitCreateWrapper = useCallback(
+//   (onCloseModal: () => void) => {
+//     return (data: ITransactionReqData, options: AfterFormSubmitOptions,) => {
+//       service.create({
+//         data,
+//         onSuccess(d) {
+//           toast.success(`Сторено транзакцію на суму: ${d.amount}`);
+//           options?.close && onCloseModal();
+//         },
+//       });
+//     };
+//   },
+//   [service]
+// );

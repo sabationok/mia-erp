@@ -3,22 +3,24 @@ import ModalForm from '../ModalForm';
 
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import styled from 'styled-components';
 import InputLabel from '../atoms/Inputs/InputLabel';
-import t from '../../lang';
+import { t } from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
 import React from 'react';
 import { useAppForm } from '../../hooks';
-import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { tagsFilterOptions } from '../../data/directories.data';
+import { ContractorsTypesEnum } from '../../redux/directories/contractors.types';
+import { FormInputs } from './components/atoms';
+import TagButtonsFilter from 'components/atoms/TagButtonsFilter';
+import { tagsFilterOptions } from '../../data/modalFilterOptions.data';
 
 export interface FormCreateTagProps extends DirectoriesFormProps<ApiDirType.TAGS, ITagDirItem, ITagDirItem> {}
 
 const validation = yup.object().shape({
   type: yup.string().required(),
-  label: yup.string().max(100).required(),
+  label: yup.string().max(100).min(3).required(),
 });
 
 const FormCreateTag: React.FC<FormCreateTagProps> = ({
@@ -27,75 +29,62 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({
   type,
   parent,
   data,
+  defaultState,
   ...props
 }) => {
+  const submitOptions = useAfterSubmitOptions();
   const {
     formState: { errors, isValid },
     register,
     handleSubmit,
     setValue,
-    clearAfterSave,
-    closeAfterSave,
+
     formValues,
-    toggleAfterSubmitOption,
   } = useAppForm<ITagDirItem>({
     defaultValues: {
       ...data,
+      ...defaultState,
       type,
     },
     resolver: yupResolver(validation),
-    reValidateMode: 'onSubmit',
+    reValidateMode: 'onChange',
   });
+
+  // const handleFilterSelect = useCallback(
+  //   (option: FilterOption<ContractorsTypesEnum>) => {
+  //     setValue('type', option?.value);
+  //   },
+  //   [setValue]
+  // );
 
   function formEventWrapper(evHandler?: AppSubmitHandler<ITagDirItem>) {
     if (evHandler) {
-      return handleSubmit(data => evHandler(data, { clearAfterSave, closeAfterSave }));
+      return handleSubmit(data => evHandler(data, { ...submitOptions.state }));
     }
   }
 
   return (
     <ModalForm
       {...props}
-      style={{ maxWidth: 480 }}
-      filterOptions={filterOptions}
-      onOptSelect={(_o, v) => {
-        setValue('type', v);
-      }}
+      title={t('Create tag')}
       onSubmit={formEventWrapper(onSubmit)}
       isValid={isValid}
-      extraFooter={
-        <FormAfterSubmitOptions
-          clearAfterSave={clearAfterSave}
-          closeAfterSave={closeAfterSave}
-          toggleOption={toggleAfterSubmitOption}
-        />
-      }
+      extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
-      <Inputs>
-        {filterOptions && (
-          <InputLabel label={t('type')} error={errors.type} disabled>
-            <InputText
-              disabled
-              {...register('type')}
-              value={formValues?.type ? t(`${formValues?.type}` as any).toUpperCase() : type}
-            />
-          </InputLabel>
-        )}
+      <FormInputs>
+        <TagButtonsFilter<ContractorsTypesEnum>
+          options={filterOptions}
+          name={'type'}
+          onSelectValue={({ name, value }) => setValue(name, value)}
+          values={formValues.type ? [formValues.type] : undefined}
+        />
 
         <InputLabel label={t('label')} direction={'vertical'} error={errors.label} required>
           <InputText placeholder={t('insertLabel')} {...register('label')} required autoFocus />
         </InputLabel>
-      </Inputs>
+      </FormInputs>
     </ModalForm>
   );
 };
-const Inputs = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
 
-  padding: 16px;
-
-  background-color: inherit;
-`;
 export default FormCreateTag;

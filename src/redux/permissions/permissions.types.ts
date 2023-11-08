@@ -1,10 +1,8 @@
 import { ICustomRole } from '../customRoles/customRoles.types';
-import { AppResponse, IBase } from '../global.types';
-import { ICompany } from '../companies/companies.types';
-import { IUser } from '../auth/auth.types';
+import { AppResponse, IBase, OnlyUUID } from '../global.types';
+import { ICompanyBase } from '../companies/companies.types';
+import { IUserBase } from '../auth/auth.types';
 import { StateErrorType } from '../reduxTypes.types';
-
-export type PermissionStatusType = 'active' | 'rejected' | 'pending' | 'baned';
 
 export enum PermissionStatus {
   PENDING = 'PENDING',
@@ -14,21 +12,21 @@ export enum PermissionStatus {
 }
 
 export interface IPermission extends IBase {
-  status?: PermissionStatus;
-  code?: string | number;
-  company?: Partial<ICompany>;
-  user?: Partial<IUser>;
-  owner?: Partial<IUser>;
+  company?: Partial<ICompanyBase>;
+  user?: Partial<IUserBase>;
+  owner?: Partial<IUserBase>;
   role?: Partial<ICustomRole>;
   email?: string;
+  status?: PermissionStatus;
+  code?: string | number;
   expireAt?: number | Date;
   permission_token?: string;
 }
 
 export interface IPermissionForReq {
-  role?: { _id: string };
+  role?: OnlyUUID;
   email?: string;
-  expireAt?: number | Date;
+  expireAt?: string | number | Date;
   actions?: any[];
 }
 

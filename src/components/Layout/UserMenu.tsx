@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { iconId } from 'data';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 
 import styled from 'styled-components';
@@ -30,13 +29,7 @@ const UserMenu = () => {
 
   return (
     <MenuContainer data-user-menu>
-      <ButtonIcon
-        iconId={iconId.personOutlined}
-        size="30px"
-        iconSize="80%"
-        variant="def"
-        onClick={() => handleMenuState()}
-      />
+      <ButtonIcon icon={'personOutlined'} size="30px" iconSize="80%" variant="def" onClick={() => handleMenuState()} />
 
       <UserInfo isOpen={isOpen} onClose={() => handleMenuState()} />
     </MenuContainer>

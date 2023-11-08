@@ -1,15 +1,23 @@
 import styled, { css } from 'styled-components';
+import { Property } from 'csstype';
 
-export const InputStyles = css<{ error?: boolean; success?: boolean }>`
+export interface TextInputProps {
+  error?: boolean;
+  success?: boolean;
+  align?: Property.TextAlign;
+}
+export const InputStyles = css<TextInputProps>`
   padding: 5px 8px;
 
   width: 100%;
   height: 28px;
 
+  text-align: ${({ align = 'left' }) => align};
+
   color: ${({ error, success, theme }) =>
     (error && theme.globals.colors.error) || (success && theme.globals.colors.success) || 'inherit'};
 
-  background-color: transparent;
+  background-color: inherit;
   border-radius: 2px;
   border: 1px solid
     ${({ error, success, theme }) =>
@@ -45,11 +53,11 @@ export const InputStyles = css<{ error?: boolean; success?: boolean }>`
   }
 `;
 
-const InputField = styled.fieldset`
+const InputField = styled.fieldset<TextInputProps>`
   ${InputStyles}
 `;
 
-const InputText = styled.input<{ error?: boolean; success?: boolean }>`
+const InputText = styled.input<TextInputProps>`
   ${InputStyles};
 `;
 const StyledInput = styled.input`
@@ -64,5 +72,6 @@ const StyledInput = styled.input`
     box-shadow: none;
   }
 `;
+
 export { InputField, StyledInput };
 export default InputText;

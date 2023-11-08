@@ -3,6 +3,7 @@ import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { IWarehouse } from './warehouses.types';
 import { createWarehouseThunk, getAllWarehousesThunk, getWarehouseByIdThunk } from './warehouses.thunks';
+import { checks } from '../../utils';
 
 export interface IWarehouseState {
   warehouses: IWarehouse[];
@@ -17,7 +18,7 @@ const initialState: IWarehouseState = {
   current: {
     _id: '',
     label: '',
-    items: [],
+    inventories: [],
   },
   filteredLists: [],
   isLoading: false,
@@ -31,7 +32,6 @@ export const warehousesSlice = createSlice({
   extraReducers: builder =>
     builder
       .addCase(getAllWarehousesThunk.fulfilled, (s, a) => {
-        s.isLoading = false;
         const inputArr = a?.payload?.data && Array.isArray(a?.payload?.data) ? a?.payload?.data : [];
 
         if (a.payload?.refresh) {
@@ -41,13 +41,11 @@ export const warehousesSlice = createSlice({
         s.warehouses = [...inputArr, ...s.warehouses];
       })
       .addCase(createWarehouseThunk.fulfilled, (s, a) => {
-        s.isLoading = false;
         if (a.payload) {
           s.warehouses = [a.payload, ...s.warehouses];
         }
       })
       .addCase(getWarehouseByIdThunk.fulfilled, (s, a) => {
-        s.isLoading = false;
         if (a.payload) {
           s.current = a.payload;
         }
@@ -70,16 +68,24 @@ export const warehousesSlice = createSlice({
         s.isLoading = true;
         s.error = null;
       })
+      .addMatcher(inFulfilled, s => {
+        s.isLoading = false;
+        s.error = null;
+      })
       .addMatcher(inError, (s, a: PayloadAction<StateErrorType>) => {
         s.isLoading = false;
         s.error = a.payload;
       }),
 });
-
-function inPending(a: AnyAction) {
-  return a.type.endsWith('pending');
+function isWarehousingCase(type: string) {
+  return checks.isStr(type) && type.startsWith('warehouses');
 }
-
+function inPending(a: AnyAction) {
+  return isWarehousingCase(a.type) && a.type.endsWith('pending');
+}
+function inFulfilled(a: AnyAction) {
+  return isWarehousingCase(a.type) && a.type.endsWith('fulfilled');
+}
 function inError(a: AnyAction) {
-  return a.type.endsWith('rejected');
+  return isWarehousingCase(a.type) && a.type.endsWith('rejected');
 }

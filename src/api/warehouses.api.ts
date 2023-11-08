@@ -1,7 +1,12 @@
 import baseApi from './baseApi';
-import APP_CONFIGS, { Endpoints } from '../redux/APP_CONFIGS';
+import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
-import { IProductInventory, IWarehouse, IWarehouseReqData } from '../redux/warehouses/warehouses.types';
+import {
+  IProductInventory,
+  IWarehouse,
+  IWarehouseDocReqData,
+  IWarehouseReqData,
+} from '../redux/warehouses/warehouses.types';
 import { AppResponse, OnlyUUID } from '../redux/global.types';
 
 export class WarehousesApi {
@@ -23,20 +28,17 @@ export class WarehousesApi {
     return this.api.get(this.endpoints.getAll(), { params: params });
   }
 
-  public static async getAllItems(
-    warehouse?: IWarehouse,
-    params?: AppQueryParams
-  ): Promise<AppResponse<IProductInventory[]>> {
-    return this.api.get(this.endpoints[Endpoints.getAllByWarehouseId](warehouse?._id), { params });
+  public static async getAllInventories(params?: AppQueryParams): Promise<AppResponse<IProductInventory[]>> {
+    return this.api.get(this.endpoints.getAllInventories(), { params });
   }
 
   // public static async getPriceListById(list?: OnlyUUID, params?: AppQueryParams): Promise<IWarehouseRe> {
   //   return this.api.get(this.endpoints.getById(list?._id), { params: params });
   // }
   //
-  // public static async addItemToList(input?: ICreatePriceListItemReqData): Promise<IPriceListRes> {
-  //   return this.api.post(this.endpoints.addItemToList(input?.list._id), input?.data);
-  // }
+  public static async createDocument(input?: IWarehouseDocReqData): Promise<AppResponse<IProductInventory>> {
+    return this.api.post(this.endpoints.createDocument(), input?.data, { params: input?.params });
+  }
   //
   // public static async getAllItems(params?: {
   //   listId?: OnlyUUID;

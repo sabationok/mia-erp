@@ -1,16 +1,39 @@
 import { ITransaction, ITransactionForReq } from '../redux/transactions/transactions.types';
-import { pick } from 'lodash';
-import { OnlyUUID } from '../redux/global.types';
-import { IVariationFormData } from '../components/Forms/FormVariation';
-import { IVariation, IVariationReqData } from '../redux/products/variations.types';
-import { ConfigService } from '../services';
+import _, { isObject, pick } from 'lodash';
+import { ArrayOfObjUUID, ArrayUUID, IdKeyVersion, ObjUUID, OnlyUUID } from '../redux/global.types';
+import { IVariation, IVariationFormData, IVariationReqData } from '../redux/products/variations.types';
+import { IProduct, IProductFullDto, IProductFullFormData } from '../redux/products/products.types';
+import { nanoid } from '@reduxjs/toolkit';
+import { AppQueries, AppQueryParams } from '../api';
 
-const isDevMode = ConfigService.isDevMode();
+export const transformQueriesForReq = (queries: Partial<AppQueryParams>): Partial<AppQueries> => {
+  let output: Partial<AppQueries> = {};
+  Object.entries(queries).map(([k, v]) => {
+    const newKey = `${k}Id`;
 
-const ExtractId = <T extends OnlyUUID>(data: T) => (pick(data, '_id')._id ? pick(data, '_id') : { _id: '' });
-const ExtractIdString = <T extends OnlyUUID>(data: Partial<T>) => ('_id' in data ? pick(data, '_id')._id : undefined);
+    output[newKey] = v?._id ? `${v?._id}` : v;
+    return '';
+  });
 
-function getValueByPath({ data, path }: { data?: object; path?: string }): any {
+  return output;
+};
+
+// const isDevMode = ConfigService.isDevMode();
+export function parseBool(key?: 'false' | 'true' | string) {
+  return key === 'true';
+}
+export const getIdRef = <T extends OnlyUUID>(data: T, key: '_id' = '_id'): OnlyUUID =>
+  key in data ? pick(data, key) : { [key]: '' };
+
+// * REFACTORING NEEDED
+export const ExtractObjId = <T extends ObjUUID, K extends IdKeyVersion = '_id'>(data: T, key: K) => {
+  return (key in data ? pick(data, key) : { [key]: '' }) as ObjUUID<K>;
+};
+
+export const ExtractIdString = <T extends OnlyUUID>(data: Partial<T>, key: IdKeyVersion = '_id') =>
+  '_id' in data ? pick(data, '_id')._id : undefined;
+
+export function getValueByPath({ data, path }: { data?: object; path?: string }): any {
   if (!data || !path) {
     return null;
   }
@@ -27,7 +50,7 @@ function getValueByPath({ data, path }: { data?: object; path?: string }): any {
   });
 }
 
-function formatPhoneNumber(phoneNumberString: string): string | null {
+export function formatPhoneNumber(phoneNumberString: string): string | null {
   // Видалити всі символи крім цифр
   const cleaned = phoneNumberString.replace(/\D/g, '');
 
@@ -43,7 +66,7 @@ function formatPhoneNumber(phoneNumberString: string): string | null {
   return null;
 }
 
-function createTransactionForReq(
+export function createTransactionForReq(
   transaction: ITransaction,
   omitPathArr: (keyof ITransaction)[] = [],
   dateToNumberPath?: keyof Pick<ITransaction, 'eventDate'> | string,
@@ -80,65 +103,98 @@ function createTransactionForReq(
   return transformedData;
 }
 
-function createDataForReq<
-  IncomeDataType extends Record<string, any> = any,
-  OutDataType extends Record<keyof IncomeDataType, any> = any
->(
+export function createDataForReq<IncomeDataType extends Record<string, any> = any>(
   incomeData: IncomeDataType,
-  omitPathArr: (keyof IncomeDataType)[] = [],
   options?: {
+    omitPathArr?: (keyof IncomeDataType)[];
     dateToNumberPath?: keyof IncomeDataType | string;
     amountToNumberPath?: keyof IncomeDataType | string;
+    checkArrayPath?: keyof IncomeDataType | string;
+    ignorePaths?: (keyof IncomeDataType)[];
   }
-): Partial<Omit<OutDataType, keyof IncomeDataType>> {
-  let outData: Partial<OutDataType> = {};
+): Partial<IncomeDataType> {
+  let outData: Partial<IncomeDataType> = {};
 
   const keys = Object.keys(incomeData) as (keyof IncomeDataType)[];
-  keys.map(key => {
-    if (['_id', 'createdAt', 'updatedAt', ...omitPathArr]?.includes(key)) return '';
 
+  keys.map(key => {
+    if (['_id', 'createdAt', 'updatedAt', ...(options?.omitPathArr || [])]?.includes(key)) return '';
     const value = incomeData[key];
+
+    if (options?.ignorePaths && options.ignorePaths.includes(key)) {
+      outData[key] = value;
+      return '';
+    }
     if (!value) return '';
 
-    if (options?.dateToNumberPath && key === options?.dateToNumberPath && typeof value === 'string') {
+    if (options?.dateToNumberPath && key === options?.dateToNumberPath) {
       outData[key] = new Date(value).valueOf() as any;
       return '';
     }
-    if (options?.amountToNumberPath && key === options?.amountToNumberPath && typeof value === 'string') {
+    if (options?.amountToNumberPath && key === options?.amountToNumberPath) {
       outData[key] = (Number(value) || 0) as any;
       return '';
     }
     if (value && typeof value === 'object') {
-      if ('_id' in value) outData[key] = { _id: value?._id } as any;
-      if ('value' in value) outData[key] = value?.value;
+      if ('_id' in value) return (outData[key] = { _id: value?._id } as any);
+      if ('value' in value) return (outData[key] = value?.value);
+      if (Array.isArray(value) && value.length > 0) {
+        console.log('createDataForReq isArray', { key, value });
+        outData[key] = value as any;
+        return '';
+      }
       return '';
     }
 
     outData[key] = value as any;
-    return '';
+    return value;
   });
+
+  console.log('outData', outData);
   return outData;
 }
 
+// const createProductFormDataOmitPaths: (keyof IProduct | string)[] = [
+//   '_id',
+//   'createdAt',
+//   'updatedAt',
+//   'deletedAt',
+//   'prices',
+//   'variations',
+//   'warehouses',
+//   'inventories',
+// ];
+export const createArrayOfObjUUID = (arr: string[]): ArrayOfObjUUID => {
+  return arr.map(_id => ({ _id }));
+};
+export const createArrayStringUUID = (arr: OnlyUUID[]): ArrayUUID => {
+  return arr.map(obj => obj._id);
+};
+export const getFormValuePickPaths = (data?: any) => {
+  return data ? ['_id', 'label', 'email', 'dirType', 'parent', 'name', 'secondName'].filter(key => key in data) : [];
+};
+export const idsArrToObjIdArrPaths = <T extends keyof IProduct | string = any>(key: T) => {
+  return ['properties', 'categories', 'recommends'].includes(key);
+};
+export function createProductDto(input: IProductFullFormData): IProductFullDto {
+  // const arrPaths = ['properties', 'categories', 'recommends'];
+  return input;
+}
+
 export const createVariationReqData = (formData: IVariationFormData, _id?: string): IVariationReqData => {
-  isDevMode && console.log('createVariationReqData input', formData);
+  // isDevMode && console.log('createVariationReqData input', formData);
 
-  const data = {
-    timeFrom: formData?.timeFrom,
-    timeTo: formData?.timeTo,
-    product: formData?.product ? ExtractId(formData?.product) : undefined,
-    price: formData?.price,
-    properties: formData?.propertiesMap ? Object.values(formData?.propertiesMap) : [],
+  const data: IVariationReqData['data'] = {
+    ...pick(formData, ['timeFrom', 'timeTo', 'label', 'sku', 'barCode']),
+    product: formData?.product ? getIdRef(formData?.product) : undefined,
+    properties: formData?.propertiesMap ? Object.values(formData?.propertiesMap) : undefined,
   };
-  isDevMode && console.log('createVariationReqData output', data);
 
-  const dataForReq = createDataForReq(data);
-
-  isDevMode && console.log('createVariationReqData createDataForReq output', dataForReq);
+  // const dataForReq = createDataForReq(data);
 
   return _id ? { data, _id } : { data };
 };
-export const createVariationFormData = (variation: IVariation): IVariationFormData => {
+export const createVariationFormData = (variation: Partial<IVariation>): IVariationFormData => {
   let propertiesMap: Record<string, string> = {};
   variation?.properties?.map(prop => {
     if (prop?._id && prop?.parent?._id) {
@@ -150,10 +206,60 @@ export const createVariationFormData = (variation: IVariation): IVariationFormDa
   return {
     timeFrom: variation?.timeFrom,
     timeTo: variation?.timeTo,
-    product: variation?.product ? ExtractId(variation?.product) : undefined,
-    price: variation?.price,
+    label: variation.label ? variation.label : `${variation?.product?.label}. {{VARIATION_LABEL}}`,
+    sku: variation.sku ? variation.sku : `${variation?.product?.sku ? variation?.product?.sku + '-' : ''}${nanoid(8)}`,
+    product: variation?.product ? getIdRef(variation.product) : undefined,
     propertiesMap,
   };
 };
 
-export { getValueByPath, formatPhoneNumber, createTransactionForReq, createDataForReq, ExtractId, ExtractIdString };
+export function createProductFormData(input: IProduct): IProductFullFormData {
+  const createProductFormDataOmitPaths: (keyof IProduct | string)[] = [
+    '_id',
+    'createdAt',
+    'updatedAt',
+    'deletedAt',
+    'prices',
+    'variations',
+    'warehouses',
+    'inventories',
+  ];
+  const getFormValuePickPaths = (data?: any) => {
+    return data ? ['_id', 'label', 'email', 'dirType', 'parent', 'name', 'secondName'].filter(key => key in data) : [];
+  };
+  const isArrayForTransformToIdsArray = <T extends keyof IProduct | string = any>(key: T) => {
+    return ['properties', 'categories'].includes(key);
+  };
+  const data = _.cloneDeep(_.omit(input, createProductFormDataOmitPaths));
+  let output: Record<keyof IProductFullFormData | string, any> = {};
+
+  Object.entries(data).map(([k, v], _index) => {
+    if (v === null) {
+      return (output[k as keyof IProductFullFormData] = v);
+    }
+    if (!v) {
+      return { [k]: v };
+    }
+    if (['string', 'number'].includes(typeof v)) {
+      return (output[k as keyof IProductFullFormData] = v);
+    } else if (typeof v === 'object') {
+      if (Array.isArray(v)) {
+        if (isArrayForTransformToIdsArray(k)) {
+          return (output[k as keyof IProductFullFormData] = v.map(el => isObject(el) && '_id' in el && el._id)).filter(
+            el => el
+          );
+        }
+        return (output[k as keyof IProductFullFormData] = v);
+      }
+      const newValue = pick(v, getFormValuePickPaths(v));
+      return (output[k as keyof IProductFullFormData] = newValue);
+    } else {
+      return (output[k as keyof IProductFullFormData] = v);
+    }
+  });
+
+  // console.log({ dataInArray });
+
+  console.log('createProductFormData output', output);
+  return output;
+}

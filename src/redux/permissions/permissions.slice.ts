@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IPermissionsState } from './permissions.types';
 import {
   createCompanyWithPermissionThunk,
@@ -11,13 +11,14 @@ import {
   inviteUserThunk,
   logInPermissionThunk,
   logOutPermissionThunk,
-  updateCompanyWithPermissionThunk,
+  updateCurrentCompanyThunk,
   updatePermissionThunk,
 } from './permissions.thunk';
-
 import { initialPermission, testPermissions } from '../../data/permissions.data';
 import { clearCurrentPermission, setMockPermissionData } from './permissions.action';
-import { pages } from '../../data';
+import { checks } from '../../utils';
+import { StateErrorType } from '../reduxTypes.types';
+import { getAllAccessKeys } from '../../components/AppPages';
 
 const initialPermissionStateState: IPermissionsState = {
   permission: {},
@@ -36,14 +37,14 @@ export const permissionsSlice = createSlice({
       .addCase(getCurrentPermissionThunk.fulfilled, (s: IPermissionsState, a) => {
         s.permission = {
           ...a.payload,
-          role: { ...a.payload.role, accessKeys: Object.entries(pages).map(([path, page]) => page.path) },
+          role: { ...a.payload.role, accessKeys: getAllAccessKeys() },
         };
         s.permission_token = a.payload.permission_token;
       })
       .addCase(setMockPermissionData, (s, a) => {
         s.permission = {
           ...a.payload,
-          role: { ...a.payload.role, accessKeys: Object.entries(pages).map(([path, page]) => page.path) },
+          role: { ...a.payload.role, accessKeys: getAllAccessKeys() },
         };
         s.permission_token = a.payload.permission_token;
       })
@@ -85,6 +86,32 @@ export const permissionsSlice = createSlice({
       .addCase(inviteUserThunk.fulfilled, (s, a) => {
         s.users = [a.payload, ...s.permissions];
       })
-      .addCase(updateCompanyWithPermissionThunk.fulfilled, (s, a) => {})
-      .addCase(deleteCompanyWithPermissionThunk.fulfilled, (s, a) => {}),
+      .addCase(updateCurrentCompanyThunk.fulfilled, (s, a) => {
+        s.permission.company = a.payload;
+      })
+      .addCase(deleteCompanyWithPermissionThunk.fulfilled, (s, a) => {})
+      .addMatcher(inPending, s => {
+        s.isLoading = true;
+        s.error = null;
+      })
+      .addMatcher(inFulfilled, s => {
+        s.isLoading = false;
+        s.error = null;
+      })
+      .addMatcher(inError, (s, a: PayloadAction<StateErrorType>) => {
+        s.isLoading = false;
+        s.error = a.payload;
+      }),
 });
+function isPermissionsCase(type: string) {
+  return checks.isStr(type) && type.startsWith('permissions');
+}
+function inPending(a: AnyAction) {
+  return isPermissionsCase(a.type) && a.type.endsWith('pending');
+}
+function inFulfilled(a: AnyAction) {
+  return isPermissionsCase(a.type) && a.type.endsWith('fulfilled');
+}
+function inError(a: AnyAction) {
+  return isPermissionsCase(a.type) && a.type.endsWith('rejected');
+}

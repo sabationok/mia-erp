@@ -11,6 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import useAuthService from '../../hooks/useAppAuth.hook';
 import InputText from '../atoms/Inputs/InputText';
 import { createThunkPayload } from '../../utils/fabrics';
+import { FormInputs } from './components/atoms';
 
 export interface RecoveryPasswordFormProps {
   helloTitle?: string;
@@ -71,7 +72,7 @@ const RecoveryPasswordForm: React.FC<RecoveryPasswordFormProps & React.HTMLAttri
 
       <Title>{title}</Title>
 
-      <Inputs>
+      <FormInputs>
         {recovery ? (
           <>
             <AuthInputLabel icon="lock_O" error={errors.password}>
@@ -88,7 +89,7 @@ const RecoveryPasswordForm: React.FC<RecoveryPasswordFormProps & React.HTMLAttri
             </AuthInputLabel>
           </>
         )}
-      </Inputs>
+      </FormInputs>
 
       <Buttons>
         <StButtonIcon type={'submit'} variant={'filledSmall'}>
@@ -148,17 +149,6 @@ const Title = styled.p`
   margin-bottom: 20px;
 
   max-width: 280px;
-`;
-
-const Inputs = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-
-  margin-bottom: 12px;
-  width: 100%;
-
-  fill: ${({ theme }) => theme.accentColor.base};
 `;
 
 const Buttons = styled.div`

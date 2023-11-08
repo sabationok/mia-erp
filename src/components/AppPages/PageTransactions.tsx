@@ -1,6 +1,5 @@
 import TableList from 'components/TableList/TableList';
 import { takeFullGridArea } from './pagesStyles';
-import { transactionsColumns, transactionsSearchParams } from 'data';
 import styled from 'styled-components';
 import useTransactionsService from 'hooks/useTransactionsService.hook';
 import { useEffect, useMemo, useState } from 'react';
@@ -12,11 +11,11 @@ import AppGridPage from './AppGridPage';
 import { useTransactionsSelector } from '../../redux/selectors.store';
 import { ISortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
-import { PagePathType } from '../../data/pages.data';
+import { BaseAppPageProps } from './index';
+import { transactionsColumns, transactionsSearchParams } from '../../data/transactions.data';
 
-type Props = {
-  path: PagePathType;
-};
+interface Props extends BaseAppPageProps {}
+
 const PageTransactions: React.FC<any> = (props: Props) => {
   const service = useTransactionsService();
   const state = useTransactionsSelector();

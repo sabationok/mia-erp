@@ -1,51 +1,18 @@
 import { SelectItem } from 'components/TableList/TableList';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
-import t from '../lang';
-import { IProduct } from '../redux/products/products.types';
+import { t } from '../lang';
+import { IProduct, ProductStatusEnum } from '../redux/products/products.types';
+import { getStatusesByEnum } from './statuses.data';
 
-export type DataPath =
-  | 'category.label'
-  | 'subCategory.label'
-  | 'brand.name'
-  | 'brand.label'
-  | 'owner.name'
-  | 'owner.email'
-  | 'author.name'
-  | 'author.email'
-  | 'editor.name'
-  | 'editor.email'
-  | 'auditor.name'
-  | 'auditor.email'
-  | 'manufacturer.name'
-  | 'manufacturer.email'
-  | 'mark.label'
-  | 'tags'
-  | 'type'
-  | 'status'
-  | 'sale'
-  | 'cashback.sale'
-  | 'cashback.level'
-  | 'cashback.bonuses'
-  | 'currency'
-  | 'description'
-  | 'createdAt'
-  | 'updatedAt'
-  | 'label'
-  | 'sku'
-  | 'price'
-  | 'visibility'
-  | 'availabilityInfo.status'
-  | 'availabilityInfo.primaryOrder'
-  | 'availabilityInfo.primaryOrderTime'
-  | 'availabilityInfo.customOrder'
-  | 'availabilityInfo.customOrderTime';
+export const productStatusesData = getStatusesByEnum(ProductStatusEnum);
 
-export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
+export const productsColumns: CellTittleProps<IProduct>[] = [
   {
     top: { name: t('label'), align: 'start', getData: rd => rd?.label },
     // bottom: { name: t('sku'), align: 'start', getData: rd => rd?.sku },
-    width: '200px',
-    action: 'valueByPath',
+    getImgPreview: pr => (pr.images ? pr.images[0]?.img_preview : undefined),
+    width: '270px',
+    action: 'doubleDataWithAvatar',
   },
   {
     top: { name: t('sku'), align: 'start', getData: rd => rd?.sku },
@@ -56,7 +23,7 @@ export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
 
   {
     top: { name: t('type'), align: 'start', path: 'type' },
-    bottom: { name: t('status'), align: 'start', getData: d => d.approvedStatus },
+    bottom: { name: t('status'), align: 'start', getData: d => d.approved as never },
     width: '100px',
     action: 'status',
   },
@@ -75,12 +42,6 @@ export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
     width: '180px',
     action: 'valueByPath',
   },
-  // {
-  //   top: { name: t('variation'), align: 'start', getData: rd => rd?.productInventory?.template?.label },
-  //   // bottom: { name: t('barCode'), align: 'start', getData: rd => rd?.barCode },
-  //   width: '150px',
-  //   action: 'valueByPath',
-  // },
   {
     top: { name: 'Бренд', align: 'start', path: 'brand.label' },
     bottom: { name: 'Виробник', align: 'start', path: 'manufacturer.name' },
@@ -106,7 +67,7 @@ export const productsColumns: CellTittleProps<IProduct, DataPath>[] = [
   },
 ];
 
-export const productsSearchParams: SelectItem<DataPath>[] = [
+export const productsSearchParams: SelectItem[] = [
   // {
   //   label: t('type'),
   //   dataPath: 'type',

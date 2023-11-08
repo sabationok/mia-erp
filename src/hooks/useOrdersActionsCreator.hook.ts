@@ -2,79 +2,101 @@ import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { ITableListContext, TableActionCreator } from '../components/TableList/tableTypes.types';
 import { IOrder } from '../redux/orders/orders.types';
-import { Modals } from '../components/ModalProvider/Modals';
+import { Modals } from '../components/Modals';
+import { useNavigate } from 'react-router-dom';
+import { ExtractIdString } from '../utils/dataTransform';
+import { t } from '../lang';
 
 export type OrdersActionsCreator = TableActionCreator<IOrder>;
 const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
-  const modals = useModalProvider();
+  const modalS = useModalProvider();
+  const navigate = useNavigate();
   // const { orders } = useAppServiceProvider();
 
   return useCallback(
-    (ctx: ITableListContext<IOrder>) => [
-      {
-        name: 'openOrderOverview',
-        icon: 'openInNew',
-        disabled: !ctx.selectedRow?._id,
-        onClick: () => {
-          if (!ctx.selectedRow?._id) return;
-          modals.handleOpenModal({
-            Modal: Modals.OrderOverview,
-            props: {
-              order: ctx.tableData?.find(el => el._id === ctx.selectedRow?._id),
-            },
-          });
+    (ctx: ITableListContext<IOrder>) => {
+      const selected = ctx?.selectedRow;
+      const selectedId = selected ? ExtractIdString(selected) : '';
+
+      return [
+        {
+          name: 'openOrderOverview',
+          icon: 'openInNew',
+          disabled: !selectedId,
+          onClick: () => {
+            selectedId && navigate(selectedId);
+            // modalS.open({
+            //   Modal: Modals.OrderOverview,
+            //   props: {
+            //     order: ctx.tableData?.find(el => el._id === selectedId),
+            //   },
+            // });
+          },
         },
-      },
-      {
-        name: 'archiveOrder',
-        icon: 'archive',
-        disabled: !ctx?.selectedRow?._id,
-        onClick: () => {
-          if (ctx?.selectedRow?._id) window.confirm(`Архівувати замовення: ${ctx?.selectedRow?._id}`);
+        {
+          name: 'archiveOrder',
+          icon: 'archive',
+          disabled: !selectedId,
+          onClick: () => {
+            if (selectedId) window.confirm(`Архівувати замовення: ${selectedId}`);
+          },
         },
-      },
-      {
-        name: 'editOrder',
-        icon: 'edit',
-        disabled: !ctx?.selectedRow?._id,
-        onClick: () => {
-          modals.handleOpenModal({
-            Modal: Modals.FormCreateOrder,
-            props: {
-              title: 'Edit order',
-            },
-          });
+        {
+          name: 'editOrder',
+          icon: 'edit',
+          disabled: !selectedId,
+          onClick: () => {
+            modalS.open({
+              Modal: Modals.FormCreateOrder,
+              props: {
+                title: 'Edit order',
+              },
+            });
+          },
         },
-      },
-      {
-        name: 'copyOrder',
-        icon: 'copy',
-        disabled: !ctx?.selectedRow?._id,
-        onClick: () => {
-          modals.handleOpenModal({
-            Modal: Modals.FormCreateOrder,
-            props: {
-              title: `Copy order: ${ctx?.selectedRow?._id}`,
-            },
-          });
+        {
+          name: 'copyOrder',
+          icon: 'copy',
+          disabled: !selectedId,
+          onClick: () => {
+            modalS.open({
+              Modal: Modals.FormCreateOrder,
+              props: {
+                title: `Copy order: ${selectedId}`,
+              },
+            });
+          },
         },
-      },
-      { separator: true },
-      {
-        name: 'createOrder',
-        icon: 'plus',
-        type: 'onlyIconFilled',
-        onClick: () => {
-          modals.handleOpenModal({
-            Modal: Modals.FormCreateOrder,
-            props: {
-              title: `Create order`,
-            },
-          });
+        { separator: true },
+        {
+          name: 'createOrder',
+          icon: 'AddToList',
+          type: 'onlyIconFilled',
+          onClick: () => {
+            modalS.open({
+              Modal: Modals.FormCreateOrdersGroup,
+              props: {
+                title: t(`Create orders group`),
+              },
+            });
+          },
         },
-      },
-    ],
-    [modals]
+        {
+          name: 'createOrder',
+          icon: 'plus',
+          type: 'onlyIconFilled',
+          onClick: () => {
+            modalS.open({
+              Modal: Modals.FormCreateOrder,
+              props: {
+                title: t(`Create order`),
+              },
+            });
+          },
+        },
+      ];
+    },
+    [modalS, navigate]
   );
 };
 export default useOrdersActionsCreatorHook;

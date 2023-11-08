@@ -1,4 +1,4 @@
-import { ContractorsTypesEnum } from '../redux/contractors/contractors.types';
+import { ContractorsTypesEnum } from '../redux/directories/contractors.types';
 import { useDirectoriesSelector } from '../redux/selectors.store';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { useMemo } from 'react';

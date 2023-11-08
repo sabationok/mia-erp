@@ -1,16 +1,27 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
 import AppGridPage from 'components/AppPages/AppGridPage/AppGridPage';
-import { useSelector } from 'react-redux';
-import { getUserData } from 'redux/selectors';
-import { AppPages } from 'components/AppPages';
+import { AppPages } from 'components/AppPages/pages';
+import DesktopFooter from 'components/Layout/DesktopFooter/DesktopFooter';
 
 import MobileFooter from 'components/Layout/MobileFooter/MobileFooter';
-import DesktopFooter from 'components/Layout/DesktopFooter/DesktopFooter';
+import { useSelector } from 'react-redux';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { getUserData } from 'redux/selectors';
+import AdminRoute from './AdminRoute';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
-import AdminRoute from './AdminRoute';
 
-const { PageHome, PageError, PageNotFound, PageProducts, PageOrders, PageRefunds, PageAdmin, PageLogOut, PageAuth, PageDirectories } = AppPages;
+const {
+  PageHome,
+  PageError,
+  PageNotFound,
+  PageProducts,
+  PageOrders,
+  PageRefunds,
+  PageAdmin,
+  PageLogOut,
+  PageAuth,
+  PageDirectories,
+} = AppPages;
 
 const AppRoutes = ({ locationRef }) => {
   const auth = useSelector(getUserData);

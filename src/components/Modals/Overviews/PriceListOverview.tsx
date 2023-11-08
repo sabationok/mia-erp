@@ -3,11 +3,11 @@ import TableList, { ITableListProps } from '../../TableList/TableList';
 import { useEffect, useMemo, useState } from 'react';
 import { IPriceList, IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
 import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
-import { priceListContentColumns } from '../../../data';
 import { usePriceListOverviewActionsCreator } from '../../../hooks/usePriceListOverviewActionsCreator.hook';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { usePriceListsSelector } from '../../../redux/selectors.store';
 import { FormCreatePriceProps } from '../../Forms/FormCreatePrice/FormCreatePrice';
+import { priceListContentColumns } from '../../../data/priceManagement.data';
 
 export interface PriceListOverviewProps extends Omit<ModalFormProps, 'onSubmit' | 'afterSubmit'> {
   createFormProps?: FormCreatePriceProps;
@@ -26,13 +26,11 @@ export interface PriceListOverviewProps extends Omit<ModalFormProps, 'onSubmit' 
 const PriceListOverview: React.FC<PriceListOverviewProps> = ({
   getTableSetting,
   createFormProps,
-
   listId,
   onSubmit,
   ...props
 }) => {
   const { lists } = usePriceListsSelector();
-
   const actionsCreator = usePriceListOverviewActionsCreator(listId);
   const { priceManagement } = useAppServiceProvider();
   const [tableData, setTableData] = useState<IPriceListItem[]>([]);
@@ -45,26 +43,14 @@ const PriceListOverview: React.FC<PriceListOverviewProps> = ({
   );
 
   useEffect(() => {
-    console.log(tableData);
-  }, [tableData]);
-  // const onValidSubmit = (data: IPriceList) => {
-  //   onSubmit &&
-  //     data.prices &&
-  //     onSubmit(data.prices, {
-  //       clearAfterSave: true,
-  //       closeAfterSave: true,
-  //       onLoading: l => {},
-  //       onSuccess: d => {},
-  //     });
-  // };
-
-  useEffect(() => {
     if (listId) {
-      priceManagement.getAllPricesByListId({
-        data: { listId: { _id: listId } },
-        onSuccess: setTableData,
-        onLoading: setIsLoading,
-      });
+      priceManagement
+        .getAllPrices({
+          data: { params: { list: { _id: listId } }, refreshCurrent: true },
+          onSuccess: setTableData,
+          onLoading: setIsLoading,
+        })
+        .then();
     }
   }, [listId, priceManagement]);
 

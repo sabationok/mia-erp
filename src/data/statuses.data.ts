@@ -1,5 +1,7 @@
-import { iconId } from '../img/sprite/iconId.data';
-import translate from '../lang';
+import { t } from '../lang';
+import { IconIdType } from '../img/sprite';
+import { enumToArray } from '../utils';
+import { isUndefined } from 'lodash';
 
 export const statusName = {
   approved: 'Узгоджено',
@@ -75,19 +77,19 @@ export const statusData = {
   name: statusName,
   iconId: statusIconId,
 };
-export const colors = {
+const colors = {
   clrLight: '#fff',
   clrDark: '#121212',
   default: 'rgb(154, 154, 154)',
   defaultLight: '#E9E9E9',
   clrInfo: '#3498db',
-  clrInfoLight: 'rgba(0, 117, 255, 0.24)',
+  clrInfoLight: 'rgb(156,200,255)',
   clrSuccess: '#07bc0c',
-  clrSuccessLight: 'rgba(52, 199, 89, 0.16)',
+  clrSuccessLight: 'rgb(165,255,155)',
   clrWarning: '#f1c40f',
-  clrWarningLight: 'rgba(255, 245, 0, 0.24)',
+  clrWarningLight: 'rgb(255,250,155)',
   clrError: '#e74c3c',
-  clrErrorLight: 'rgba(255, 59, 48, 0.16)',
+  clrErrorLight: 'rgb(255,158,155)',
   clrPrimary: '#cdcdcd',
   expense: '#FF3B30',
   income: '#30D158',
@@ -95,88 +97,140 @@ export const colors = {
   textPrimary: '#EFEFEF',
 };
 
-export interface StatusData {
-  name: string;
+export interface StatusData<Name extends string | number | symbol = any> {
+  name: Name;
   color?: string;
   backgroundColor?: string;
   label: string;
-  iconId?: string;
+  iconId?: IconIdType;
   description?: string;
 }
 
-export const statusDataMap = {
+export enum StatusNameEnum {
+  noStatus = 'noStatus',
+  error = 'error',
+  success = 'success',
+  info = 'info',
+  warning = 'warning',
+  INCOME = 'INCOME',
+  EXPENSE = 'EXPENSE',
+  TRANSFER = 'TRANSFER',
+  pending = 'pending',
+  fulfilled = 'fulfilled',
+  rejected = 'rejected',
+  GOODS = 'GOODS',
+  SERVICES = 'SERVICES',
+}
+
+export const statusDataMap: Record<StatusNameEnum, StatusData> = {
   noStatus: {
     name: 'NO_STATUS',
     color: 'inherit',
-    iconId: iconId.info,
-    label: 'Без статусу',
+    iconId: 'info',
+    label: t('undefined'),
     backgroundColor: colors.defaultLight,
-  } as StatusData,
+  },
   error: {
     name: 'error',
     color: 'inherit',
-    iconId: iconId.error,
-    label: 'error',
+    iconId: 'error',
+    label: t('error'),
     backgroundColor: colors.clrErrorLight,
     description: 'error',
-  } as StatusData,
+  },
   success: {
     name: 'success',
     color: 'inherit',
-    iconId: iconId.success,
-    label: 'success',
+    iconId: 'success',
+    label: t('success'),
     backgroundColor: colors.clrSuccessLight,
-  } as StatusData,
+  },
   info: {
     name: 'info',
     color: 'inherit',
-    iconId: iconId.info,
-    label: 'info',
+    iconId: 'info',
+    label: t('info'),
     backgroundColor: colors.clrInfoLight,
-  } as StatusData,
+  },
   warning: {
     name: 'warning',
     color: 'inherit',
-    iconId: iconId.warning,
-    label: 'warning',
+    iconId: 'warning',
+    label: t('warning'),
     backgroundColor: colors.clrWarningLight,
-  } as StatusData,
+  },
   INCOME: {
     name: 'INCOME',
     color: colors.clrSuccess,
-    label: 'ДОХІД',
+    label: t('INCOME'),
     backgroundColor: colors.clrSuccess,
-  } as StatusData,
+  },
   EXPENSE: {
     name: 'EXPENSE',
     color: colors.clrError,
-    label: 'ДОХІД',
+    label: t('EXPENSE'),
     backgroundColor: colors.clrError,
-  } as StatusData,
+  },
   TRANSFER: {
     name: 'TRANSFER',
     color: colors.clrInfo,
-    label: 'ПЕРЕКАЗ',
+    label: t('TRANSFER'),
     backgroundColor: colors.clrInfo,
-  } as StatusData,
+  },
   pending: {
     name: 'pending',
-    label: translate('pending'),
+    label: t('pending'),
     color: colors.clrLight,
     backgroundColor: colors.clrInfo,
   },
   fulfilled: {
     name: 'fulfilled',
-    label: translate('fulfilled'),
+    label: t('fulfilled'),
     color: colors.clrLight,
     backgroundColor: colors.clrSuccess,
   },
   rejected: {
     name: 'rejected',
-    label: translate('rejected'),
+    label: t('rejected'),
     color: colors.clrLight,
     backgroundColor: colors.clrError,
   },
+  GOODS: {
+    name: 'rejected',
+    label: t('GOODS'),
+    color: colors.default,
+    backgroundColor: colors.clrError,
+  },
+  SERVICES: {
+    name: 'rejected',
+    label: t('SERVICES'),
+    color: colors.default,
+    backgroundColor: colors.clrError,
+  },
 };
+
+export interface StatusFilterOption<T extends string | number | symbol = any> extends StatusData<T> {
+  _id?: string;
+  value: T;
+}
+
+export const statusesMap = new Map<StatusNameEnum | string, StatusData>(Object.entries(statusDataMap));
+
+export function getStatusData(status?: StatusNameEnum | string): StatusData | undefined {
+  return status && statusesMap.has(status) ? statusesMap.get(status) : undefined;
+}
+
+export function getStatusesByEnum<T extends object = any>(enumObj: T): Array<StatusFilterOption<keyof T>> {
+  const names = enumToArray(enumObj);
+
+  return names
+    .map((k): StatusFilterOption<keyof T> | undefined => {
+      const data = getStatusData(k as string);
+      if (!data) return undefined;
+
+      return { ...data, value: k } as StatusFilterOption<keyof T>;
+    })
+    .filter(v => !isUndefined(v)) as Array<StatusFilterOption<keyof T>>;
+}
 
 export type StatusNames = keyof typeof statusDataMap;

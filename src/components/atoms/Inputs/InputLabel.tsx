@@ -32,10 +32,10 @@ const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = (
     required,
     ...props
   },
-  ref: React.ForwardedRef<any>
+  ref: React.ForwardedRef<HTMLDivElement>
 ) => {
   return (
-    <Label className={className} disabled={disabled} {...props}>
+    <Label className={className} disabled={disabled} {...props} ref={ref}>
       <Wrapper isLabel={!!label} direction={direction}>
         {label && (
           <LabelText htmlFor={id} uppercase={uppercase} align={align} direction={direction} className="label">

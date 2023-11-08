@@ -1,6 +1,9 @@
-import { ApiDirType, AppPagesEnum } from '../redux/APP_CONFIGS';
-import { ContractorsTypesEnum } from '../redux/contractors/contractors.types';
+import { ApiDirType } from '../redux/APP_CONFIGS';
+import { ContractorsTypesEnum } from '../redux/directories/contractors.types';
 import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../redux/companies/companies.types';
+import { WarehouseDocumentType } from '../redux/warehouses/warehouses.types';
+import { MeasurementUnit } from '../redux/products/products.types';
+import { OrderStatusEnum } from '../redux/orders/orders.types';
 
 export const langUa = {
   // DIRECTORIES
@@ -13,8 +16,35 @@ export const langUa = {
   [ApiDirType.VARIATIONS]: 'Варіації',
   [ApiDirType.BANK_ACCOUNTS]: 'Банківські рахунки',
   [ApiDirType.PROPERTIES_PRODUCTS]: 'Характеристики товарів/послуг',
-  variationsTemplate: 'Список характеристик',
-  variationsTemplates: 'Списки характеристик',
+
+  [OrderStatusEnum.new]: 'Нове',
+  [OrderStatusEnum.inWork]: 'Взято у роботу',
+  [OrderStatusEnum.rejectedByCustomer]: 'Скасовано замовником',
+  [OrderStatusEnum.rejectedByManager]: 'Скасовано менеджером',
+  [OrderStatusEnum.active]: 'Активне',
+  [OrderStatusEnum.fulfilled]: 'Завершено успішно',
+  [OrderStatusEnum.fulfilledWithRefund]: 'Завершено з поверненням',
+  [OrderStatusEnum.archived]: 'Архів',
+  [OrderStatusEnum.expired]: 'Протерміновано',
+
+  variationsTemplate: 'Шаблон для варіацій',
+  variationsTemplates: 'Шаблони для варіацій',
+
+  'The same': 'Той самий',
+  Another: 'Інший',
+
+  Change: 'Змінити',
+  Cancel: 'Скасувати',
+
+  'Payment checkout services': 'Сервіси оплати',
+  'Delivery types': 'Спосoби доставки',
+  'Payment hold': 'Холд платежу',
+
+  Review: 'Перегляд',
+  warehouse: 'Склад',
+  propertiesList: 'Список характеристик',
+  staticProperties: 'Статичні характеристики',
+  availableProperties: 'Доступні характеристики',
 
   counter: 'Бухгалтер',
   auditor: 'Аудитор',
@@ -45,24 +75,45 @@ export const langUa = {
   [OwnershipTypeEnum.UA_FRANCHISING_COMPANY]: 'Франчайзингова компанія',
   [OwnershipTypeEnum.UA_COLLECTIVE_ENTERPRISE]: 'Колективне підприємство',
 
-  [AppPagesEnum.priceLists]: 'Прайс листи',
-  [AppPagesEnum.documentsFlow]: 'Документи',
-  [AppPagesEnum.companies]: 'Компанії',
-  [AppPagesEnum.dashboard]: 'Дашборд',
-  [AppPagesEnum.transactions]: 'Рух коштів',
-  [AppPagesEnum.orders]: 'Замовлення',
-  [AppPagesEnum.refunds]: 'Повернення',
-  [AppPagesEnum.supplement]: 'Постачання',
-  [AppPagesEnum.storage]: 'Склад',
-  [AppPagesEnum.products]: 'Продукти',
-  [AppPagesEnum.manager]: 'Менеджер',
+  priceLists: 'Прайс листи',
+  documentsFlow: 'Документи',
+  companies: 'Компанії',
+  dashboard: 'Дашборд',
+  transactions: 'Рух коштів',
+  orders: 'Замовлення',
+  refunds: 'Повернення',
+  supplement: 'Постачання',
+  storage: 'Склад',
+  products: 'Продукти',
+  manager: 'Менеджер',
 
+  [MeasurementUnit.Pc]: 'шт.', // Штука (Piece)
+  [MeasurementUnit.G]: 'г.', // Грам (Gram)
+  [MeasurementUnit.Kg]: 'кг.', // Кілограм (Kilogram)
+  [MeasurementUnit.Ml]: 'мл.', // Мілілітр (Milliliter)
+  [MeasurementUnit.L]: 'л.', // Літр (Liter)
+  [MeasurementUnit.M]: 'м.', // Метр (Meter)
+  [MeasurementUnit.Sm]: 'см.', // Метр (Meter)
+  [MeasurementUnit.SqM]: 'кв.м.', // Квадратний метр (SquareMeter)
+  [MeasurementUnit.CuM]: 'куб.м.', // Кубічний метр (CubicMeter)
+  [MeasurementUnit.Other]: 'інше', // Інше (Other)
+
+  quantity: 'Кількість',
+  batch: 'Партія',
+
+  selectVariationsTemplate: 'Оберіть список доступних характеристик',
   brand: 'Бренд',
   selectBrand: 'Оберіть бренд',
   createTag: 'Створити тег',
+  Price: 'Ціна',
+  Cost: 'Собівартість',
+  Discount: 'Знижка',
+  Bonus: 'Бонус',
+  Cashback: 'Кеш-бек',
+  Commission: 'Комісія',
+  Markup: 'Націнка',
 
-  selectVariationsTemplate: 'Список доступних характеристик',
-
+  product: 'Продукт',
   counts: 'Облікові рахунки',
   count: 'Обліковий рахунок',
   categories: 'Категорії',
@@ -74,8 +125,10 @@ export const langUa = {
   subCategory: 'Під-категорія',
   parentCategory: 'Батьківська категорія',
   subCategories: 'Під-категорії',
-  contractor: 'Контрагент',
-  contractors: 'Контрагенти',
+  contractor: 'Підрядник',
+  contractors: 'Підрядники',
+  counterparty: 'Контрагент',
+  counterparties: 'Контрагенти',
   mark: 'Мітка',
   marks: 'Мітки',
   activityType: 'Вид діяльності',
@@ -89,6 +142,7 @@ export const langUa = {
   document: 'Документ',
   documents: 'Документи',
   status: 'Статус',
+  undefined: 'Не визначено',
 
   code: 'Код',
   barCode: 'Штрих-код',
@@ -96,10 +150,16 @@ export const langUa = {
   innerCode: 'Внутрішній код',
   insertCode: 'Впишіть код',
   variation: 'Варіація',
+  supplier: 'Постачальник',
+  longitude: 'Довгота',
+  latitude: 'Широта',
 
   closeAfterSave: 'Закрити після збереження',
   clearAfterSave: 'Очистити після збереження',
 
+  afterSave: 'Після збереження',
+  clear: 'Очистити',
+  close: 'Закрити',
   // Transaction form
   countIn: 'Рахунок IN',
   subCountIn: 'Суб-рахунок IN',
@@ -113,6 +173,8 @@ export const langUa = {
   group: 'Група',
   property: 'Характеристика',
   label: 'Назва',
+  variationLabel: 'Назва варіації',
+  productLabel: 'Назва продукту',
   insertLabel: 'Введіть назву',
   secondName: 'Прізвище',
   insertSecondName: 'Введіть прізвище',
@@ -130,8 +192,67 @@ export const langUa = {
   parentItem: 'Батьківський елемент',
   expireAt: 'Дійсне до',
 
-  manufacturer: 'Виробник',
+  Label: 'Назва',
+  'Bar-code': 'Штрих-код',
 
+  Invoices: 'Інвойси',
+  Invoice: 'Інвойс',
+
+  Payments: 'Оплати',
+  Payment: 'Оплата',
+  'Payment method': 'Спосіб оплати',
+  'Payment methods': 'Способи оплати',
+  'Invoicing methods': 'Типи інвойсів',
+  'Add payment method': 'Додати спосіб оплати',
+  'Update payment method': 'Оновити спосіб оплати',
+
+  Shipments: 'Відвантаження',
+  Shipment: 'Відвантаження',
+  'Shipment method': 'Спосіб відвантаження',
+  'Shipment methods': 'Способи відвантаження',
+  'Add shipment method': 'Додати спосіб відвантаження',
+  'Update shipment method': 'Оновити спосіб відвантаження',
+  Destination: 'Місце призначенн',
+  'Enter destination address': 'Введіть адресу призначення',
+  'Has payment': 'Підлягає оплаті',
+
+  Deliveries: 'Доставки',
+  Delivery: 'Доставка',
+
+  Confirmation: 'Підтвердження',
+
+  Realizations: 'Реалізації',
+  Realization: 'Реалізація',
+
+  Refunds: 'Повернення',
+  Refund: 'Повернення',
+
+  Orders: 'Замовлення',
+  Order: 'Замовлення',
+
+  Stuffing: 'Комлектування',
+  Completing: 'Комлектування',
+
+  Summary: 'Підсумок',
+  Info: 'Інформація',
+  Description: 'Опис',
+
+  Priority: 'Пріорітетність',
+  'Total amount': 'Сумарно',
+  'Total q-ty': 'Сумарна к-ть',
+  Number: 'Номер',
+  Group: 'Група',
+
+  Accept: 'Прийняти',
+  Invoicing: 'Інвойсинг',
+
+  manufacturer: 'Виробник',
+  unit: 'Одиниця',
+  min: 'MIN',
+  max: 'MAX',
+  step: 'Крок',
+  units: 'Од. виміру',
+  discount: 'Знижка',
   balance: 'Баланс',
   startBalance: 'Початковий баланс',
   insertStartBalance: 'Введіть початковий баланс',
@@ -142,6 +263,18 @@ export const langUa = {
   insertEmail: 'Емейл',
   selectCurrency: 'Оберіть валюту',
   selectTags: 'Оберть теги',
+
+  Author: 'Автор',
+  Height: 'Висота',
+  Width: 'Ширина',
+  Length: 'Довжина',
+  Weight: 'Вага',
+
+  'Remove all': 'Видалити все',
+  Delete: 'Видалити',
+  Remove: 'Видалити',
+  Edit: 'Редагувати',
+  Select: 'Обрати',
 
   createDirParentItem: 'Створити батьківський елемент',
   createDirChildItem: 'Створити дочірній елемент',
@@ -163,7 +296,7 @@ export const langUa = {
   deleteChildCategory: 'Видалити під-категорію',
 
   createContractor: 'Створити',
-  copyContractor: 'Клпіювати',
+  copyContractor: 'Копіювати',
   deleteContractor: 'Видалити',
   editContractor: 'Редагувати',
   archive: 'Архівувати',
@@ -184,15 +317,21 @@ export const langUa = {
   PASSIVES: 'Пасиви',
 
   DEFAULT: 'DEFAULT',
+
   CUSTOM: 'CUSTOM',
 
   BASE: 'BASE',
   ADDITIONAL: 'ADDITIONAL',
 
+  Additional: 'Додатково',
+
   success: 'Успіх',
   successfully: 'Успішно',
   error: 'Помилка',
   pending: 'У процесі',
+  rejected: 'Відхилено',
+  approved: 'Прийнято',
+  warning: 'Увага',
 
   logOutUser: 'Вийти з профілю',
   logOutPermission: 'Вийти з компанії',
@@ -213,7 +352,88 @@ export const langUa = {
   loaded: 'Завантажено',
   loading: 'Завантаження',
   cost: 'Собівартість',
-  sku: 'Артикул | SKU',
+  sku: 'SKU',
   sizesTable: 'Розмірна сітка',
   visibility: 'Видимість',
+
+  Close: 'Закрити',
+  Open: 'Вікдрити',
+  More: 'Більше',
+  Hide: 'Приховати',
+  Back: 'Назад',
+  Add: 'Додати',
+
+  Customer: 'Клієнт',
+  Receiver: 'Отримувач',
+
+  [WarehouseDocumentType.addToStock]: 'Прихід на склад',
+  [WarehouseDocumentType.removeFromStock]: 'Списання зі складу',
+  [WarehouseDocumentType.reserveFromStock]: 'Резервування',
+  [WarehouseDocumentType.returnFromReserve]: 'Повернення з резерву',
+  [WarehouseDocumentType.removeFromReserve]: 'Списання з резерву',
+
+  SKU: 'SKU',
+  Images: 'Зображення',
+  Brand: 'Бренд',
+  Categories: 'Категорії',
+  Properties: 'Характеристики',
+  Measurement: 'Вимірювання',
+
+  'Step is not finished': 'Крок не завершено',
+  'Variations template': 'Шаблон варіацій',
+  'Product label': 'Назва продукту',
+  'Variation label': 'Назва варіації',
+  'Default params': 'Параметри за замовчуванням',
+  'Default values': 'Значення за замовчуванням',
+  'Default warehouse': 'Склад за замовчуванням',
+  'Default supplier': 'Постачальник за замовчуванням',
+  'Default variation': 'Варіація за замовчуванням',
+  'Default price': 'Ціна за замовчуванням',
+  'Created by / Date / Time': 'Створено / Дата / Час',
+  'Updated by / Date / Time': 'Оновлено / Дата / Час',
+
+  Comment: 'Коментар',
+  'Enter comment for customer': 'Введіть коментар для клієнта',
+  'Service comment': 'Службовий коментар',
+  'Enter service comment': 'Введіть службовий коментар',
+
+  'Select warehouse': 'Оберіть склад',
+  'Select variation': 'Оберіть варіацію',
+  'Select price': 'Оберіть ціну',
+  'Select product': 'Оберіть продукт',
+  'Create tag': 'Створити тег',
+  'Create warehouse document': 'Створити складський документ',
+  'Select list of properties': 'Оберіть список доступних характеристик',
+
+  'Add position to group': 'Дадати позицію до групи',
+  'Add position to order': 'Додати позицію до замовлення',
+
+  'Select manager': 'Обрати менеджера',
+
+  'Select customer': 'Обрати замовника',
+  'Change customer': 'Змінити замовника',
+  'Customer information': 'Інформація про замовника',
+
+  'Select receiver': 'Обрати отримувача',
+  'Change receiver': 'Змінити отримувача',
+  'Receiver information': 'Інформація про отримувача',
+
+  'Communication methods': 'Способи комунікацій',
+  'Not needed': 'Не потрібно',
+  'Permission check, please wait': 'Перевірка дозволу, будь ласка зачекайте',
+  'Please wait while minions do their work...': 'Будь ласка зачекайте поки міньйони роблять свою роботу...',
+  'Loading content...': 'Завантаження вмісту...',
+
+  'Price OUT': 'Вихідна ціна',
+  'Price IN': 'Вхідна ціна',
+  'Commission, amount': 'Комісія, сума',
+  'Commission, %': 'Комісія, %',
+  'Markup, amount': 'Націнка, сума',
+  'Markup, %': 'Націнка, %',
+  'Discount, amount': 'Знижка, сума',
+  'Discount, %': 'Знижка, %',
+  'Bonus, amount': 'Бонус, сума',
+  'Bonus, %': 'Бонус, %',
+  'Cashback, amount': 'Кешбек, сума',
+  'Cashback, %': 'Кешбек, %',
 };

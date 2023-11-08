@@ -1,91 +1,141 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
+import { checks } from '../../utils';
 
 export interface ModalFormFilterProps<V = any, D = any> {
-  defaultOption?: number | FilterOpt<V, D> | V;
   getDefaultValue?: (opt: FilterOpt<V, D>) => number;
   preventFilter?: boolean;
-  onOptSelect?: FilterSelectHandler<V, D>;
   filterOptions?: FilterOption<V, D>[];
+
+  onOptSelect?: FilterSelectHandler<V, D>;
+  onFilterValueSelect?: FilterSelectValueHandler<V>;
+  onChangeIndex?: (index: number) => void;
+
+  name?: any;
+  defaultOption?: number | FilterOpt<V, D> | V;
+  currentIndex?: number;
   defaultFilterValue?: string;
+  renderLabel?: (info: { option?: FilterOpt<V, D>; index: number; isActive: boolean }) => React.ReactNode;
+
+  asStepper?: boolean;
+
+  optionProps?: { fitContentH?: boolean };
 }
 
-export interface FilterOpt<V = any, D = any> extends Record<string, any> {
+export interface FilterOption<V = any, D = any> extends Record<string, any> {
   _id?: string;
-  label: string;
+  label?: string;
   name?: string;
   value: V;
   data?: D;
   color?: string;
-  extraLabel?: string | React.ReactNode;
-  getLabel?: (data?: D) => string | React.ReactNode;
+  extraLabel?: React.ReactNode;
+  getLabel?: (data?: D) => React.ReactNode;
   disabled?: boolean;
+  isActive?: boolean;
 }
-export type FilterOptionSelectHandler<V = any, D = any> = (option: FilterOpt<V, D>, value: V, index: number) => void;
 
-export interface FilterOption<V = any, D = any> extends FilterOpt<V, D> {}
-export type FilterSelectHandler<V = any, D = any> = (option: FilterOption<V, D>, value: V, index: number) => void;
+export interface DynamicFilterOption<V = any> extends FilterOption<V> {
+  onPress?: () => void;
+  onSelect?: (option: FilterOption<V>) => void;
+}
+// export type FilterOptionSelectHandler<V = any, D = any> = (option: FilterOpt<V, D>, value: V, index: number) => void;
 
-const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivElement>> = ({
-  filterOptions,
+export type FilterSelectHandler<V = any, D = any> = (
+  option: FilterOption<V, D>,
+  value: V,
+  index: number,
+  name?: string
+) => void;
+export type FilterSelectValueHandler<V = any> = (info: { name: any & string; value: V }) => void;
+
+export type FilterChangeHandler<V = any> = (values: V[], name?: string) => void;
+export interface FilterOpt<V = any, D = any> extends FilterOption<V, D> {}
+
+const ModalFilter = <V = any, D = any>({
+  filterOptions = [],
   onOptSelect,
   preventFilter,
   defaultFilterValue,
   defaultOption,
   getDefaultValue,
+  onFilterValueSelect,
+  currentIndex = 0,
+  asStepper,
+  name,
+  onChangeIndex,
+  optionProps,
+  renderLabel,
   ...props
-}) => {
-  const [current, setCurrent] = useState<number>(typeof defaultOption === 'number' ? defaultOption : 0);
+}: ModalFormFilterProps<V, D> & React.HTMLAttributes<HTMLDivElement>) => {
+  const [current, setCurrent] = useState<number>(currentIndex);
+  // const { listRef } = useScrollTo<HTMLDivElement>(current.toString());
 
   const handleSelectOpt = useCallback(
     (idx: number, option: FilterOpt) => {
       return () => {
         setCurrent(idx);
-        if (!onOptSelect) return console.log('No passed "onSelect" handler', option);
-        if (typeof onOptSelect === 'function') onOptSelect(option, option.value, idx);
+
+        if (checks.isFun(onChangeIndex)) onChangeIndex(idx);
+        if (checks.isFun(onFilterValueSelect)) onFilterValueSelect({ name, value: option.value });
+        if (checks.isFun(onOptSelect)) onOptSelect(option, option.value, idx);
       };
     },
-    [onOptSelect]
+    [name, onFilterValueSelect, onOptSelect, onChangeIndex]
   );
+
+  useEffect(() => {
+    if (checks.isNotUnd(currentIndex)) {
+      setCurrent(currentIndex);
+      return;
+    }
+
+    if (checks.isNotUnd(defaultFilterValue)) {
+      const defIndex = filterOptions.findIndex(el => el.value === defaultFilterValue);
+      defIndex > 0 && setCurrent(defIndex);
+    }
+  }, [currentIndex, defaultFilterValue, filterOptions]);
 
   useEffect(() => {
     if (preventFilter || defaultFilterValue) return;
 
-    if (filterOptions && Array.isArray(filterOptions)) {
-      typeof onOptSelect === 'function' && onOptSelect(filterOptions[current], filterOptions[current].value, current);
+    if (filterOptions.length > 0) {
+      checks.isFun(onChangeIndex) && onChangeIndex(current);
+      checks.isFun(onOptSelect) && onOptSelect(filterOptions[current], filterOptions[current].value, current);
+      checks.isFun(onFilterValueSelect) && onFilterValueSelect({ name, value: filterOptions[current].value });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (defaultFilterValue && Array.isArray(filterOptions)) {
-      const defIndex = filterOptions.findIndex(el => el.value === defaultFilterValue);
-      defIndex > 0 && setCurrent(defIndex);
-    }
-  }, [defaultFilterValue, filterOptions]);
-
   const renderOptions = useMemo(
     () =>
-      filterOptions &&
-      filterOptions?.length > 0 &&
       filterOptions?.map((opt, idx) => (
         <StButtonIcon
           key={idx}
+          id={`filter-opt_${opt?.value || idx}`}
           variant="def"
-          disabled={opt?.disabled}
-          className={current === idx ? 'filterBtn active' : 'filterBtn'}
+          disabled={asStepper || opt?.disabled}
           onClick={handleSelectOpt(idx, opt)}
+          asStep={asStepper}
+          isActive={asStepper ? idx <= current : current === idx}
+          customLabel={!!renderLabel}
         >
-          <span className={'inner'}>{opt?.label}</span>
-          {opt.extraLabel || null}
+          {renderLabel ? (
+            renderLabel({ option: opt, index: idx, isActive: asStepper ? idx <= current : current === idx })
+          ) : (
+            <>
+              <span className={'inner'}>{opt?.label}</span>
+              {opt.extraLabel || null}
+            </>
+          )}
         </StButtonIcon>
       )),
-    [current, filterOptions, handleSelectOpt]
+    [asStepper, current, filterOptions, handleSelectOpt, renderLabel]
   );
 
   return filterOptions?.length && filterOptions?.length > 0 ? (
-    <Filter className="filter" gridRepeat={filterOptions?.length} {...props}>
+    <Filter className="filter" gridRepeat={filterOptions?.length} optionProps={optionProps} {...props}>
       {renderOptions}
     </Filter>
   ) : (
@@ -93,26 +143,27 @@ const ModalFilter: React.FC<ModalFormFilterProps & React.HTMLAttributes<HTMLDivE
   );
 };
 
-const Filter = styled.div<{ gridRepeat?: number }>`
+const Filter = styled.div<{ gridRepeat?: number; optionProps?: { fitContentH?: boolean } }>`
   display: grid;
   align-items: center;
-  grid-template-columns: ${({ gridRepeat }) => `repeat(${gridRepeat || 1}, minmax(150px, 1fr))`};
+  grid-template-columns: ${({ gridRepeat, optionProps }) =>
+    `repeat(${gridRepeat || 1}, minmax(${(optionProps?.fitContentH && 'min-content') || '150px'} ,1fr))`};
 
-  min-height: 36px;
+  height: 32px;
   overflow: auto;
 
-  background-color: ${({ theme }) => theme.backgroundColorSecondary};
+  background-color: ${({ theme }) => theme.modalBackgroundColor};
 
-  border-right: 1px solid ${({ theme }) => theme.modalBorderColor};
-  border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
+  //border-right: 1px solid ${({ theme }) => theme.modalBorderColor};
+  //border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
 
-  ::-webkit-scrollbar {
+  &::-webkit-scrollbar {
     width: 0;
     height: 0;
   }
 `;
 
-const StButtonIcon = styled(ButtonIcon)`
+const StButtonIcon = styled(ButtonIcon)<{ asStep?: boolean; customLabel?: boolean }>`
   position: relative;
   flex-direction: column;
   justify-content: space-around;
@@ -130,7 +181,7 @@ const StButtonIcon = styled(ButtonIcon)`
   height: 100%;
   min-height: 28px;
 
-  padding: 6px 12px;
+  padding: ${p => (p.customLabel ? '2px 4px' : '6px 12px')};
 
   color: ${({ theme }) => theme.fontColorHeader};
 
@@ -157,22 +208,16 @@ const StButtonIcon = styled(ButtonIcon)`
     content: '';
     position: absolute;
     bottom: 0;
-    left: 50%;
+    left: ${p => (p.asStep ? 0 : 50)}%;
     height: 2px;
-    width: 0;
+    width: ${p => (p.isActive ? 100 : 0)}%;
     transition: all ${({ theme }) => theme.globals.timingFnMui};
-    transform: translate(-50%);
+    transform: translate(${p => (p.asStep ? 0 : -50)}%);
     background-color: ${({ theme }) => theme.accentColor.base};
   }
 
-  &.active {
-    &::after {
-      width: 100%;
-    }
-  }
-
   &[disabled] {
-    opacity: 60%;
+    opacity: ${p => (p?.asStep ? 1 : '60%')};
   }
 `;
 

@@ -4,7 +4,7 @@ import { IPermission, PermissionStatus } from '../redux/permissions/permissions.
 import { initialCompany } from '../redux/companies/companies.slice';
 import { testUserKarina } from './usersDir.data';
 import { initialCustomRole } from './customRoles.data';
-import t from '../lang';
+import { t } from '../lang';
 
 export const permissionsTableColumns: CellTittleProps<IPermission>[] = [
   {

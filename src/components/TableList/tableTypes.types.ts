@@ -3,8 +3,9 @@ import { CellTittleProps } from './TebleCells/CellTitle';
 import { FilterReturnDataType, FilterSelectorType } from '../Filter/AppFilter';
 import { ButtonIconVariant } from '../atoms/ButtonIcon/ButtonIcon';
 import { IconIdType } from '../../img/sprite';
+import { TableSearchFormState } from './TableOverHead/TableSearchForm/TableSearchForm';
 
-export interface SelectItemBase<DPath extends string = any> extends Record<string, any> {
+export interface SelectItemBase extends Record<string, any> {
   _id?: string;
   id?: string;
   filter?: boolean;
@@ -15,12 +16,12 @@ export interface SelectItemBase<DPath extends string = any> extends Record<strin
   value?: string | number;
   dataKey?: string;
   sort?: boolean;
-  dataPath?: DPath;
+  dataPath?: any;
   path?: string;
   sortOrder?: 'desc' | 'asc';
 }
 
-export interface SelectItem<DPath extends string = any> extends SelectItemBase<DPath> {}
+export interface SelectItem extends SelectItemBase {}
 
 export interface TableActionProps<TDataType = any> {
   separator?: boolean;
@@ -74,16 +75,19 @@ export interface ITableListProps<TDataType = any> {
   filterTitle?: string;
   filterSelectors?: FilterSelectorType[];
   filterDefaultValues?: FilterReturnDataType;
+  selectedRow?: Partial<TDataType>;
+  isLoading?: boolean;
+  scrollBarWidth?: number;
+  actionsCreator?: TableActionCreator<TDataType>;
+
+  onSubmitSearch?: (data: TableSearchFormState) => void;
   onFilterSubmit?: (filterData: FilterReturnDataType) => void;
+  handleTableSort?: (param: SelectItem, sortOrder: SelectItem['sortOrder']) => void;
   onRowClick?: OnRowClickHandler<TDataType | undefined>;
+  onRowDoubleClick?: OnRowClickHandler<TDataType | undefined>;
   onCheckboxChange?: OnCheckBoxChangeHandler;
   onHeadCheckboxChange?: OnHeadCheckBoxChangeHandler;
   onTableSortParamChange?: (params: SelectItem) => void;
-  handleTableSort?: (param: SelectItem, sortOrder: SelectItem['sortOrder']) => void;
-  actionsCreator?: TableActionCreator<TDataType>;
-  selectedRow?: Partial<TDataType>;
-
-  isLoading?: boolean;
   onRefresh?: (loading: boolean) => void;
 }
 

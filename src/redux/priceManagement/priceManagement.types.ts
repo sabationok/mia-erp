@@ -1,6 +1,11 @@
-import { AppResponse, IBase, OnlyUUID } from '../global.types';
+import { IBase, IDataWithPeriod, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 import { IProduct } from '../products/products.types';
+import { IVariation } from '../products/variations.types';
+import { AppQueryParams } from '../../api';
+import { ICompanyBase } from '../companies/companies.types';
+import { IUserBase } from '../auth/auth.types';
+import { Path } from 'react-hook-form';
 
 export enum PriceListTypeEnum {
   PURCHASES = 'purchases',
@@ -13,17 +18,13 @@ export type PriceListType = 'purchases' | 'sales';
 
 export type PriceListFilterOption = FilterOpt<PriceListType>;
 
-export interface PriceListDto {
+export interface PriceListDto extends IDataWithPeriod {
   label: string;
   status?: PriceListStatus;
   type?: PriceListType;
   customerTags?: string[];
   supplierTags?: string[];
-  timeFrom?: string;
-  timeTo?: string;
   description?: string;
-  // prices?: OnlyUUID[];
-  // products?: OnlyUUID[];
 }
 
 export interface IPriceList extends IBase {
@@ -37,53 +38,78 @@ export interface IPriceList extends IBase {
   type?: PriceListType;
 }
 
-export interface PriceListItemDto {
-  label?: string;
-  price?: number;
-  cost?: number;
-  discount?: number;
-  markupPercentage?: number;
-  markupAmount?: number;
-  commissionPercentage?: number;
-  commissionAmount?: number;
-  product?: OnlyUUID;
+export interface AmountAndPercentage {
+  amount?: number;
+  percentage?: number;
 }
 
-export interface IPriceListItem extends IBase {
-  label: string;
-  product?: IProduct;
+export type PriceAmountAndPercentageFieldsKey =
+  | 'discount'
+  | 'cashback'
+  | 'bonus'
+  | 'markup'
+  | 'commission'
+  | 'tax'
+  | 'vat';
+
+export interface PriceAmountAndPercentageFields
+  extends Record<PriceAmountAndPercentageFieldsKey, AmountAndPercentage> {}
+
+export interface IPriceBase extends PriceAmountAndPercentageFields {
+  label?: string;
+
+  in?: number;
+  out?: number;
+
+  discountLabel?: string;
+  cashbackLabel?: string;
+}
+
+export type BasePriceInfoPath = Path<IPriceBase>;
+
+export interface IPriceDto extends IPriceBase, IDataWithPeriod {
+  list?: OnlyUUID;
+  product?: OnlyUUID;
+  variation?: OnlyUUID;
+}
+
+export type UpdatePriceDto = Partial<Omit<IPriceDto, 'list' | 'product' | 'variation'>>;
+
+export interface IPriceListItem extends IBase, IPriceBase {
+  owner?: ICompanyBase;
+  author?: IUserBase;
+  editor?: IUserBase;
+
   list?: IPriceList;
-  price?: number;
-  cost?: number;
-  discount?: number;
-  currency?: string;
-  markupPercentage?: number;
-  markupAmount?: number;
-  commissionPercentage?: number;
-  commissionAmount?: number;
-  timeFrom?: string | number | Date;
-  timeTo?: string | number | Date;
+  product?: IProduct;
+  variation?: IVariation;
+}
+
+export interface IPriceFormData extends Omit<IPriceDto, 'product' | 'variation' | 'list'> {
+  product?: IFormDataValueWithUUID;
+  variation?: IFormDataValueWithUUID;
+  list?: IFormDataValueWithUUID;
 }
 
 export interface IPriceListReqData {
   _id?: string;
   data: PriceListDto;
+  params?: AppQueryParams;
 }
 
 export interface IPriceListItemReqData {
   _id?: string;
-  data: PriceListItemDto;
+  data: IPriceDto;
+  params?: AppQueryParams;
 }
 
-export interface ICreatePriceListItemReqData {
-  list: OnlyUUID;
-  data: PriceListItemDto;
+export interface ICreatePriceReqData {
+  data: IPriceDto;
+  params?: AppQueryParams;
 }
 
-export interface IAllPriceListsRes extends AppResponse<IPriceList[]> {}
-
-export interface IPriceListRes extends AppResponse<IPriceList> {}
-
-export interface IAllPriceListItemsRes extends AppResponse<IPriceListItem[]> {}
-
-export interface IPriceListItemRes extends AppResponse<IPriceListItem> {}
+export interface IUpdatePriceReqData {
+  _id?: string;
+  data: UpdatePriceDto;
+  params?: AppQueryParams;
+}

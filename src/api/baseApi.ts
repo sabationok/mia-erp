@@ -2,16 +2,18 @@ import axios from 'axios';
 import { useEffect, useMemo } from 'react';
 import { usePermissionsSelector } from '../hooks/usePermissionsService.hook';
 import { useAuthSelector } from '../redux/selectors.store';
+import { ConfigService } from '../services';
 
 // const mockApi = axios.create({
 //   baseURL: 'https://635ec7b303d2d4d47af5fbcd.mockapi.io/',
 // });
-const PORT = 5000;
+const BASE_URL_LOCALHOST = `http://localhost:5000/api/`;
+const BASE_URL_RAILWAY = `https://crm-nest-api-production.up.railway.app/api/`;
 
-const BASE_URL_LOCALHOST = `http://localhost:${PORT}/api/`;
-const BASE_URL_RAILWAY = `https://web-production-c6e8.up.railway.app/api/`;
+const isDevMode = ConfigService.isDevMode();
+
 const baseApi = axios.create({
-  baseURL: BASE_URL_LOCALHOST,
+  baseURL: isDevMode ? BASE_URL_LOCALHOST : BASE_URL_RAILWAY,
 });
 
 export const token = {

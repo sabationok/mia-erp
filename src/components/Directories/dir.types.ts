@@ -10,18 +10,20 @@ import { FilterOpt } from '../ModalForm/ModalFilter';
 import { IBase, OnlyUUID } from '../../redux/global.types';
 import { ICompany } from '../../redux/companies/companies.types';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { IModalProviderContext } from '../ModalProvider/ModalProvider';
+import { IModalProviderContext, ModalService } from '../ModalProvider/ModalProvider';
 import { DirectoriesService } from '../../hooks/useDirService.hook';
 import { AppSubmitHandler, UseAppFormSubmitOptions } from '../../hooks/useAppForm.hook';
-import { ContractorsTypesEnum } from '../../redux/contractors/contractors.types';
+import { ContractorsTypesEnum } from '../../redux/directories/contractors.types';
 import { ProductTypeEnum } from '../../redux/products/products.types';
+import { CounterpartyTypesEnum } from '../../redux/directories/counterparties.types';
 
-export interface ItemTypeByDirType extends Record<ApiDirType, any> {
+export interface DirItemTypeByDirType extends Record<ApiDirType, any> {
   [ApiDirType.COUNTS]: CountsTypesEnum;
   [ApiDirType.CATEGORIES_TR]: CategoryTrTypeEnum;
   [ApiDirType.CATEGORIES_PROD]: ProductTypeEnum;
   [ApiDirType.PROPERTIES_PRODUCTS]: ProductTypeEnum;
-  [ApiDirType.CONTRACTORS]: ContractorsTypesEnum;
+  [ApiDirType.CONTRACTORS]: ContractorsTypesEnum | CounterpartyTypesEnum;
+  [ApiDirType.COUNTERPARTIES]: ContractorsTypesEnum | CounterpartyTypesEnum;
   [ApiDirType.TAGS]: ContractorsTypesEnum;
   [ApiDirType.METHODS_SHIPMENT]: IShipmentDirItem;
   [ApiDirType.METHODS_COMMUNICATION]: ICommunicationDirItem;
@@ -50,13 +52,13 @@ export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> exte
 }
 
 export interface IDirItemBase<DirType extends ApiDirType = any> extends IBase {
+  type?: DirItemTypeByDirType[DirType];
   dirType?: DirType;
   owner?: Pick<ICompany, '_id' | 'name' | 'email'>;
   products?: OnlyUUID[];
   orders?: OnlyUUID[];
   parent?: IDirItemBase<DirType>;
   childrenList?: IDirItemBase<DirType>[];
-  type?: ItemTypeByDirType[DirType];
   name?: string;
   secondName?: string;
   label?: string;
@@ -85,7 +87,7 @@ export interface DirectoriesFormProps<DirType extends ApiDirType = any, ItemData
   extends Omit<ModalFormProps<any, any, ItemDataType>, 'onSubmit'> {
   _id?: string;
   dirType?: DirType;
-  type?: ItemTypeByDirType[DirType];
+  type?: DirItemTypeByDirType[DirType];
   data?: ItemDataType;
   parent?: Partial<ItemDataType>;
   create?: boolean;
@@ -107,11 +109,11 @@ export interface IDirInTreeProps<
   SubmitOptions = any
 > extends DirBaseProps {
   dirType: DirType;
-  type?: ItemTypeByDirType[DirType];
+  type?: DirItemTypeByDirType[DirType];
   createParentTitle?: string;
-  filterOptions?: FilterOpt<ItemTypeByDirType[DirType]>[];
+  filterOptions?: FilterOpt<DirItemTypeByDirType[DirType]>[];
   filterSearchPath?: keyof IDirItemBase<DirType>;
-  filterDefaultValue?: ItemTypeByDirType[DirType];
+  filterDefaultValue?: DirItemTypeByDirType[DirType];
   availableLevels?: number;
 
   editing?: boolean;
@@ -127,22 +129,21 @@ export interface IDirInTreeProps<
 
 export type ActionsCreatorOptions<
   DirType extends ApiDirType = any,
-  ItemType = any,
   CreateDTO = any,
   UpdateDTO = any,
   ItemDataType = any
 > = {
   modalService: IModalProviderContext;
-  service: DirectoriesService<DirType, ItemType, CreateDTO, UpdateDTO, ItemDataType>;
+  service: DirectoriesService<DirType, CreateDTO, UpdateDTO, ItemDataType>;
   dirType: DirType;
-  type?: ItemTypeByDirType[DirType];
+  type?: DirItemTypeByDirType[DirType];
   findById?: (id: string) => ItemDataType | undefined;
 };
 export type DirInTreeActionsCreatorOptions<DirType extends ApiDirType = any, ItemDataType = any, Service = any> = {
-  modalService: IModalProviderContext;
+  modalService: ModalService;
   dirType: DirType;
   service: Service;
-  type?: ItemTypeByDirType[DirType];
+  type?: DirItemTypeByDirType[DirType];
   findById?: (id: string) => ItemDataType | undefined;
 };
 export type DirInTreeActionsCreatorType<

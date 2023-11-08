@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import ModalForm from 'components/ModalForm';
 import styled from 'styled-components';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
@@ -30,9 +30,6 @@ const DirMethods: React.FC<DirMethodsProps> = ({
 }) => {
   const { directory } = useDirectoriesSelector(dirType);
 
-  useEffect(() => {
-    console.log(process.env);
-  }, []);
   const service = useDirServiceHook();
   const modalService = useModalProvider();
 
@@ -63,7 +60,7 @@ const DirMethods: React.FC<DirMethodsProps> = ({
   );
   return (
     <StModalForm style={{ maxWidth: 480 }} {...props}>
-      <FlexBox fillWidth flex={'1'} gap={8} padding={'12px'} maxHeight={'100%'} overflow={'auto'}>
+      <FlexBox fillWidth flex={'1'} gap={8} padding={'12px'}>
         {renderList}
       </FlexBox>
     </StModalForm>
@@ -72,4 +69,4 @@ const DirMethods: React.FC<DirMethodsProps> = ({
 
 const StModalForm = styled(ModalForm)``;
 
-export default memo(DirMethods);
+export default DirMethods;

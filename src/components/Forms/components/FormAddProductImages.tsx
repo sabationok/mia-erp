@@ -1,10 +1,10 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
-import { ProductImage } from '../../../redux/products/products.types';
+import { IProductImage } from '../../../redux/products/products.types';
 
 export interface FormAddProductImagesProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
-  defaultState?: ProductImage[];
-  onSubmit?: (imageData: ProductImage) => void;
-  onSelect?: (imageData: ProductImage) => void;
+  defaultState?: IProductImage[];
+  onSubmit?: (imageData: IProductImage) => void;
+  onSelect?: (imageData: IProductImage) => void;
 }
 
 const FormAddProductImages: React.FC<FormAddProductImagesProps> = ({ defaultState }) => {

@@ -1,7 +1,17 @@
+import { Storage, WebStorage } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import storageSession from 'redux-persist/lib/storage/session';
+import { AppModuleName } from './reduxTypes.types';
 
-export const persistorConfigs = {
+type Key = keyof typeof AppModuleName | string;
+export const persistorConfigs: Record<
+  Key,
+  {
+    key: Key;
+    storage: Storage | WebStorage;
+    whitelist: string[];
+  }
+> = {
   auth: {
     key: 'auth',
     storage,
@@ -15,23 +25,23 @@ export const persistorConfigs = {
   appSettings: {
     key: 'appSettings',
     storage,
-    whitelist: ['isDarkMode', 'appTheme'],
+    whitelist: ['isDarkMode', 'appTheme', 'isLoaded'],
   },
   pageSettings: {
     key: 'appPage',
     storage: storageSession,
     whitelist: ['pageGrid'],
   },
-  categories: {
-    key: 'categories',
-    storage: storageSession,
-    whitelist: ['categories'],
-  },
-  counts: {
-    key: 'counts',
-    storage: storageSession,
-    whitelist: ['counts'],
-  },
+  // categories: {
+  //   key: 'categories',
+  //   storage: storageSession,
+  //   whitelist: ['categories'],
+  // },
+  // counts: {
+  //   key: 'counts',
+  //   storage: storageSession,
+  //   whitelist: ['counts'],
+  // },
   directories: {
     key: 'directories',
     storage: storageSession,
@@ -45,22 +55,47 @@ export const persistorConfigs = {
   products: {
     key: 'products',
     storage: storageSession,
-    whitelist: ['products'],
+    whitelist: ['products', 'currentProduct', 'properties'],
   },
   orders: {
     key: 'orders',
     storage: storageSession,
-    whitelist: ['orders'],
+    whitelist: ['orders', 'currentOrder', 'currentGroup', 'ordersGroupFormData'],
+  },
+  invoices: {
+    key: 'invoices',
+    storage: storageSession,
+    whitelist: ['invoices', 'currentInvoice', 'methods'],
+  },
+  payments: {
+    key: 'payments',
+    storage: storageSession,
+    whitelist: ['payments', 'currentPayment', 'methods'],
+  },
+  shipments: {
+    key: 'shipments',
+    storage: storageSession,
+    whitelist: ['shipments', 'currentShipment'],
   },
   refunds: {
     key: 'refunds',
     storage: storageSession,
-    whitelist: ['refunds'],
+    whitelist: ['refunds', 'currentRefund'],
+  },
+  integrations: {
+    key: 'integrations',
+    storage: storageSession,
+    whitelist: ['extList'],
   },
   warehouses: {
     key: 'warehouses',
     storage: storageSession,
     whitelist: ['warehouses'],
+  },
+  customers: {
+    key: 'customers',
+    storage: storageSession,
+    whitelist: ['customers'],
   },
   priceLists: {
     key: 'priceLists',

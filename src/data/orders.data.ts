@@ -1,7 +1,37 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { IOrder, OrderTypeEnum, OrderTypeFilterOption } from '../redux/orders/orders.types';
-import t from '../lang';
+import { IOrder, IOrderSlot, OrderStatusEnum } from '../redux/orders/orders.types';
+import { t } from '../lang';
 import { SelectItem } from '../components/TableList/tableTypes.types';
+import { FilterOption } from '../components/ModalForm/ModalFilter';
+import { getStatusesByEnum } from './statuses.data';
+
+export const orderStatusesData = getStatusesByEnum(OrderStatusEnum);
+export const orderStatuses: FilterOption<OrderStatusEnum>[] = [
+  { _id: '1', value: OrderStatusEnum.new, label: t(OrderStatusEnum.new), color: 'rgb(136,222,255)' },
+  { _id: '2', value: OrderStatusEnum.inWork, label: t(OrderStatusEnum.inWork), color: 'rgb(239,173,255)' },
+  {
+    _id: '3.1',
+    value: OrderStatusEnum.rejectedByCustomer,
+    label: t(OrderStatusEnum.rejectedByCustomer),
+    color: 'rgb(255,145,2)',
+  },
+  {
+    _id: '3.2',
+    value: OrderStatusEnum.rejectedByManager,
+    label: t(OrderStatusEnum.rejectedByManager),
+    color: 'rgb(255,205,105)',
+  },
+  { _id: '4.1', value: OrderStatusEnum.active, label: t(OrderStatusEnum.active), color: 'rgb(255,236,84)' },
+  { _id: '4.2', value: OrderStatusEnum.fulfilled, label: t(OrderStatusEnum.fulfilled), color: 'rgb(151,255,95)' },
+  {
+    _id: '4.3',
+    value: OrderStatusEnum.fulfilledWithRefund,
+    label: t(OrderStatusEnum.fulfilledWithRefund),
+    color: 'rgb(255,53,53)',
+  },
+  { _id: '5.1', value: OrderStatusEnum.archived, label: t(OrderStatusEnum.archived), color: 'rgb(164,171,182)' },
+  { _id: '5.2', value: OrderStatusEnum.expired, label: t(OrderStatusEnum.expired), color: 'rgb(164,171,182)' },
+];
 
 export type DataPath =
   | 'owner.label'
@@ -33,6 +63,7 @@ export type DataPath =
   | 'total'
   | 'manager.name'
   | 'manager.code'
+  | 'manager.email'
   | 'customer.name'
   | 'customer.phone'
   | 'receiver.name'
@@ -40,18 +71,6 @@ export type DataPath =
   | 'invoices'
   | 'payments'
   | 'transporters';
-
-export const orderTypeFilterOptions: OrderTypeFilterOption[] = [
-  {
-    label: OrderTypeEnum.SET,
-    value: OrderTypeEnum.SET,
-  },
-  {
-    label: OrderTypeEnum.SIMPLE,
-    value: OrderTypeEnum.SIMPLE,
-    disabled: true,
-  },
-];
 export const ordersTableColumns: CellTittleProps<IOrder, DataPath>[] = [
   {
     top: { name: t('date'), align: 'center', path: 'eventDate' },
@@ -60,69 +79,85 @@ export const ordersTableColumns: CellTittleProps<IOrder, DataPath>[] = [
     action: 'dateSimple',
   },
   {
-    top: { name: t('status'), align: 'start', path: 'status' },
-    bottom: { name: t('type'), align: 'start', path: 'type' },
+    top: { name: t('status'), path: 'status' },
+    bottom: { name: t('type'), path: 'type' },
     width: '100px',
     action: 'status',
   },
   {
-    top: { name: t('amount'), align: 'end', path: 'total' },
-    bottom: { name: 'Валюта', align: 'end', path: 'currency' },
+    top: { name: t('Priority') },
+    // bottom: { name: t('type'), path: 'type' },
+    width: '100px',
+    action: 'status',
+  },
+  {
+    top: { name: t('Total amount'), align: 'end', path: 'total' },
+    bottom: { name: t('Total q-ty'), align: 'end' },
     width: '120px',
     action: 'numberWithSpaces',
   },
   {
-    top: { name: 'Менеджер', align: 'start', path: 'manager.name' },
-    bottom: { name: 'Код', align: 'start', path: 'manager.code' },
+    top: { name: t('Group') },
+    bottom: { name: t('Number'), path: 'manager.email' },
     width: '180px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Замовник', align: 'start', path: 'customer.name' },
-    bottom: { name: 'Телефон', align: 'start', path: 'customer.phone' },
+    top: { name: 'Замовник', path: 'customer.name' },
+    bottom: { name: 'Телефон', path: 'customer.phone' },
     width: '180px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Отримувач', align: 'start', path: 'receiver.name' },
-    bottom: { name: 'Телефон', align: 'start', path: 'receiver.phone' },
+    top: { name: 'Отримувач', path: 'receiver.name' },
+    bottom: { name: 'Телефон', path: 'receiver.phone' },
     width: '180px',
     action: 'valueByPath',
   },
   {
     top: {
-      name: 'Інвойси',
-      align: 'start',
-      path: 'invoices',
-      getData: () => ['5651651323213', '6546565165651', '546565165651', '565165132321', '54656516565'],
+      name: t('Invoices'),
+
+      // getData: () => ['5651651323213', '6546565165651', '546565165651', '565165132321', '54656516565'],
     },
     width: '200px',
     action: 'tags',
   },
   {
-    top: { name: 'Оплати', align: 'start', path: 'payments' },
+    top: { name: t('Payments') },
     width: '200px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Перевізники', align: 'start', path: 'transporters' },
+    top: { name: t('Shipments') },
     width: '200px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Коментар', align: 'start', path: 'comment' },
+    top: { name: t('comment'), path: 'comment' },
     width: '170px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Створено', align: 'center', path: 'createdAt' },
-    bottom: { name: 'Оновлено', align: 'center', path: 'updatedAt' },
+    top: { name: t('Refunds') },
+    width: '200px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: t('manager'), path: 'manager.name' },
+    bottom: { name: t('email'), path: 'manager.email' },
+    width: '180px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: t('updated'), align: 'center', path: 'updatedAt' },
+    bottom: { name: t('created'), align: 'center', path: 'createdAt' },
     width: '150px',
     action: 'dateDbl',
   },
 ];
 
-export const ordersSearchParams: SelectItem<DataPath>[] = [
+export const ordersSearchParams: SelectItem[] = [
   {
     label: 'Дата',
     dataPath: 'eventDate',
@@ -166,6 +201,16 @@ export const ordersSearchParams: SelectItem<DataPath>[] = [
     search: false,
     sort: true,
   },
+];
+
+export const orderSlotTableColumns: CellTittleProps<IOrderSlot>[] = [
+  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
+  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
+  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
+  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
+  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
+  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
+  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
 ];
 
 export const mockOrdersData: IOrder[] = [{ _id: '51651651', owner: { _id: '4515135135131' } as any }];

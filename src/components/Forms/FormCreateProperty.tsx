@@ -3,11 +3,13 @@ import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { ProductTypeEnum } from '../../redux/products/products.types';
 import FlexBox from '../atoms/FlexBox';
 import InputLabel from '../atoms/Inputs/InputLabel';
-import t from '../../lang';
+import { t } from '../../lang';
 import InputText from '../atoms/Inputs/InputText';
 import { useAppForm } from '../../hooks';
 import { IProperty, IPropertyBase, IPropertyDto } from '../../redux/products/properties.types';
-import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
+import ButtonsGroup, { ButtonGroupSelectHandler } from '../atoms/ButtonsGroup';
+import { enumToFilterOptions } from '../../utils/fabrics';
 
 export interface FormCreatePropertyProps extends Omit<ModalFormProps<ProductTypeEnum, any, IPropertyBase>, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<IPropertyDto, { isGroup?: boolean; isProperty?: boolean; isValue?: boolean }>;
@@ -15,10 +17,16 @@ export interface FormCreatePropertyProps extends Omit<ModalFormProps<ProductType
   create?: boolean;
   parent?: IProperty;
   edit?: boolean;
+
   isGroup?: boolean;
   isProperty?: boolean;
   isValue?: boolean;
 }
+export enum IsSelectableEnum {
+  No = 'No',
+  Yes = 'Yes',
+}
+const filterOptions = enumToFilterOptions(IsSelectableEnum);
 
 export interface IPropertyFormData extends IPropertyDto {}
 
@@ -32,11 +40,16 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
   parent,
   ...props
 }) => {
-  const { register, handleSubmit, setValue, toggleAfterSubmitOption, closeAfterSave, clearAfterSave } =
-    useAppForm<IPropertyFormData>({ defaultValues: { ...defaultState, type } });
+  const submitOptions = useAfterSubmitOptions();
+  const { register, handleSubmit, setValue } = useAppForm<IPropertyFormData>({
+    defaultValues: { ...defaultState, type },
+  });
 
   const onValid = (data: IPropertyFormData) => {
-    onSubmit && onSubmit(data, { closeAfterSave, clearAfterSave });
+    onSubmit && onSubmit(data, { ...submitOptions.state });
+  };
+  const handleIsSelectableByUser: ButtonGroupSelectHandler<IsSelectableEnum> = info => {
+    setValue('isSelectable', info?.option?.value === 'Yes');
   };
 
   return (
@@ -46,15 +59,9 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
       onOptSelect={(option, value, index) => {
         setValue('type', value);
       }}
-      extraFooter={
-        <FormAfterSubmitOptions
-          toggleOption={toggleAfterSubmitOption}
-          clearAfterSave={clearAfterSave}
-          closeAfterSave={closeAfterSave}
-        />
-      }
+      extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
-      <FlexBox padding={'4px 8px'} flex={1} fillWidth>
+      <FlexBox padding={'4px 8px 8px'} flex={1} fillWidth>
         <InputLabel label={t('type')} disabled>
           <InputText placeholder={t('type')} {...register('type')} disabled />
         </InputLabel>
@@ -76,6 +83,16 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
         {isGroup && (
           <InputLabel label={t('description')}>
             <InputText placeholder={t('description')} {...register('description')} />
+          </InputLabel>
+        )}
+
+        {isProperty && (
+          <InputLabel label={'Доступно для формування варіацій'}>
+            <ButtonsGroup
+              options={filterOptions}
+              onSelect={handleIsSelectableByUser}
+              defaultIndex={defaultState?.isSelectable ? 1 : 0}
+            />
           </InputLabel>
         )}
       </FlexBox>

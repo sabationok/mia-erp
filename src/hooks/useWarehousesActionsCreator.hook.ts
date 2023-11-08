@@ -2,30 +2,67 @@ import { ITableAction, ITableListContext } from '../components/TableList/tableTy
 import { IModalProviderContext, useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { WarehousesService } from './useWarehousesService.hook';
-import { IWarehouse, IWarehouseReqData } from '../redux/warehouses/warehouses.types';
-import { Modals } from '../components/ModalProvider/Modals';
-import { ApiDirType } from '../redux/APP_CONFIGS';
-import { IWarehouseFormData } from '../components/Forms/FormCreateWarehouse';
+import { IWarehouse, IWarehouseDto, IWarehouseReqData } from '../redux/warehouses/warehouses.types';
+import { Modals } from '../components/Modals';
+import { IWarehouseFormData } from '../components/Forms/warehousing/FormCreateWarehouse';
+import { useNavigate } from 'react-router-dom';
+import { NavigateFunction } from 'react-router/dist/lib/hooks';
+import { ToastService } from '../services';
+import { checks } from '../utils';
+import { getIdRef } from '../utils/dataTransform';
 
 export type WarehouseActionCreatorOptions = {
   ctx: ITableListContext<IWarehouse>;
   service: WarehousesService;
   modalService: IModalProviderContext;
+  navigate: NavigateFunction;
 };
-const createWarehouseReqData = (data: IWarehouseFormData, _id?: string): IWarehouseReqData => {
-  const reqData = {
-    data: {
-      label: data?.label!,
-    },
-  };
+const createWarehouseReqData = (
+  input: IWarehouseFormData,
+  _id?: string,
+  omit?: (keyof IWarehouseFormData)[]
+): IWarehouseReqData => {
+  const dto = {} as IWarehouseDto;
+
+  const keys = Object.keys(input).filter(
+    k => !omit?.includes(k as keyof IWarehouseFormData)
+  ) as (keyof IWarehouseFormData)[];
+
+  keys.map(k => {
+    const v = input[k] as IWarehouseFormData[typeof k];
+
+    if (!v) {
+      return '';
+    }
+    if (checks.isStr(v)) {
+      dto[k] = v as never;
+
+      return k;
+    }
+    if (!checks.isEmptyObj(v)) {
+      if (checks.hasUUID(v)) {
+        dto[k] = getIdRef(v) as never;
+        return '';
+      }
+      console.log('!checks.isEmptyObj(v)', k, !checks.isEmptyObj(v));
+      dto[k] = v as never;
+      return k;
+    }
+    if (v) {
+      dto[k] = v as never;
+      return '';
+    }
+
+    return k;
+  });
+
   if (_id) {
     return {
-      ...reqData,
+      data: dto,
       _id,
     };
   }
-
-  return reqData;
+  return { data: dto };
 };
 
 export type WarehouseActionGenerator = (options: WarehouseActionCreatorOptions) => ITableAction;
@@ -34,17 +71,21 @@ export type WarehouseTableActionsCreator = (ctx: ITableListContext) => ITableAct
 const createNewWarehouseAction: WarehouseActionGenerator = ({ service, modalService, ctx }) => {
   return {
     icon: 'plus',
+    type: 'onlyIconFilled',
     onClick: () => {
       const modal = modalService.handleOpenModal({
         Modal: Modals.FormCreateWarehouse,
         props: {
           title: 'Створити склад',
-          dirType: ApiDirType.WAREHOUSES,
           onSubmit: (data, o) => {
             service.create({
-              data: createWarehouseReqData(data, ctx?.selectedRow?._id),
+              data: createWarehouseReqData(data, ctx?.selectedRow?._id, ['manager']),
               onLoading: ctx.onRefresh,
               onSuccess: () => {
+                if (o?.isDefault) {
+                  ToastService.info('Warehouse wil be set as default');
+                }
+
                 if (o?.closeAfterSave && modal?.onClose) {
                   modal?.onClose();
                 }
@@ -63,12 +104,11 @@ const editWarehouseAction: WarehouseActionGenerator = ({ service, modalService, 
       const m = modalService.handleOpenModal({
         Modal: Modals.FormCreateWarehouse,
         props: {
-          edit: true,
+          update: ctx.selectedRow?._id,
           title: 'Оновити дані складу',
-          dirType: ApiDirType.WAREHOUSES,
           onSubmit: (data, o) => {
             service.create({
-              data: createWarehouseReqData(data, ctx?.selectedRow?._id),
+              data: createWarehouseReqData(data, ctx?.selectedRow?._id, ['manager']),
               onLoading: ctx.onRefresh,
               onSuccess: () => {
                 if (o?.closeAfterSave && m?.onClose) {
@@ -91,14 +131,29 @@ const refreshWarehousesDataAction: WarehouseActionGenerator = ({ service, modalS
   };
 };
 
-const actionGenerators = [createNewWarehouseAction, editWarehouseAction, refreshWarehousesDataAction];
+const actionCreators: WarehouseActionGenerator[] = [
+  refreshWarehousesDataAction,
+  () => ({ separator: true }),
+  ({ ctx, navigate }) => ({
+    icon: 'openInNew',
+    disabled: !ctx.selectedRow?._id,
+    onClick: () => {
+      ctx.selectedRow?._id && navigate(ctx.selectedRow?._id);
+    },
+  }),
+  editWarehouseAction,
+  () => ({ icon: 'delete' }),
+  () => ({ separator: true }),
+  createNewWarehouseAction,
+];
 
 export type UseWarehousesActionsCreatorOptions = { service: WarehousesService };
 const useWarehousesActionsCreator = (): WarehouseTableActionsCreator => {
   const modalService = useModalProvider();
-  const service: WarehousesService = useAppServiceProvider()[ServiceName.warehouses];
+  const service = useAppServiceProvider()[ServiceName.warehouses];
+  const navigate = useNavigate();
 
-  return (ctx: ITableListContext<IWarehouse>) => actionGenerators.map(a => a({ modalService, service, ctx }));
+  return (ctx: ITableListContext<IWarehouse>) => actionCreators.map(a => a({ modalService, service, ctx, navigate }));
 };
 
 export default useWarehousesActionsCreator;

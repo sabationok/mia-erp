@@ -2,20 +2,20 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 
-export interface IAccordeonOptionProps<T = any, C = any[]> extends React.HTMLAttributes<HTMLLIElement> {
+export interface IAccordionOptionProps<Props = any, Opt = any> extends React.HTMLAttributes<HTMLLIElement> {
   title?: string;
-  options?: C;
+  options?: Opt[];
   disabled?: boolean;
-  ChildrenComponent?: React.FC<T>;
-  childrenComponentProps?: T;
+  ChildrenComponent?: React.FC<Props>;
+  childrenComponentProps?: Props;
   renderChildren?: React.ReactNode;
 }
 
-export interface IAccordeonListProps extends React.HTMLAttributes<HTMLUListElement> {
-  options: IAccordeonOptionProps[];
+export interface IAccordionListProps extends React.HTMLAttributes<HTMLUListElement> {
+  options: IAccordionOptionProps[];
 }
 
-const AccordeonList: React.FC<IAccordeonListProps> = ({ options, children }) => {
+const AccordeonList: React.FC<IAccordionListProps> = ({ options, children }) => {
   const [current, setCurrent] = useState<number | null>(0);
 
   function onCurrentClick(idx: number) {
@@ -26,7 +26,7 @@ const AccordeonList: React.FC<IAccordeonListProps> = ({ options, children }) => 
     () =>
       options?.length > 0 &&
       options.map(({ title, options, renderChildren, ChildrenComponent, childrenComponentProps, disabled }, idx) => (
-        <AccordeonItem key={`AccordeonListItem-${title || idx}`} isOpen={current === idx}>
+        <AccordeonItem key={`AccordionListItem-${title || idx}`} isOpen={current === idx}>
           <OpenButton
             variant="def"
             endIconId="SmallArrowDown"

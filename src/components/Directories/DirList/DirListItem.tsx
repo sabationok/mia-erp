@@ -35,7 +35,6 @@ interface DirListItemState {
 const DirListItem: React.FC<DirListItemProps> = props => {
   const {
     item,
-    parent,
     availableLevels = 1,
     currentLevel = 0,
     onUpdate,
@@ -48,6 +47,7 @@ const DirListItem: React.FC<DirListItemProps> = props => {
     onChangeArchiveStatus,
     archiving,
     editing,
+    creatingChild,
   } = props;
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -56,33 +56,6 @@ const DirListItem: React.FC<DirListItemProps> = props => {
   const handleState = (key: keyof DirListItemState) => {
     setState(p => ({ ...p, [key]: !p[key] }));
   };
-
-  // const stateActionsMap: Record<keyof DirListItemState, ((id: string, status: boolean) => void) | undefined> = {
-  //   archived: onChangeArchiveStatus,
-  //   disabled: onChangeDisableStatus,
-  //   deleted: onDelete,
-  // };
-  //
-  // const registerStateAction = (name: keyof DirListItemState, handlerKey: 'onClick' | 'onChange' = 'onClick') => {
-  //   const action = stateActionsMap[name];
-  //
-  //   const props = {
-  //     disabled: !action,
-  //     isActive: !state[name],
-  //     [handlerKey]: () => {
-  //       setState(prev => {
-  //         const newState = { ...prev, [name]: !prev[name] };
-  //         action && action(item?._id, !prev[name]);
-  //         return newState;
-  //       });
-  //     },
-  //   };
-  //
-  //   return props;
-  // };
-  // const isTreeItem = useMemo(() => {
-  //   return availableLevels > 1;
-  // }, [availableLevels]);
 
   const canHasChildren = useMemo(() => {
     return !isUndefined(availableLevels) && !isUndefined(currentLevel)
@@ -99,14 +72,7 @@ const DirListItem: React.FC<DirListItemProps> = props => {
   }
 
   function logInfo() {
-    console.log('==============>>>>>>>>>>>>>', item?.label);
-    console.log({
-      availableLevels,
-      currentLevel,
-    });
-    console.log('parent', !!parent);
-    console.log('item?.parent', !!item?.parent);
-    console.log('canHasChildren', canHasChildren);
+    console.log(item);
   }
 
   function evHandlerWrapper(evHandler?: (...arg: any[]) => void, ...arg: any[]) {
@@ -134,11 +100,11 @@ const DirListItem: React.FC<DirListItemProps> = props => {
   }, [currentLevel, props, item]);
 
   return (
-    <Item style={{ paddingLeft: canHasChildren ? 0 : 32 }} onClick={logInfo}>
+    <Item style={{ paddingLeft: currentLevel > 0 ? (canHasChildren ? 0 : 32) : 0 }} onClick={logInfo}>
       {canHasChildren && (
         <ButtonIcon
           variant="onlyIconNoEffects"
-          icon={hasChildren && isOpen ? 'SmallArrowUp' : 'SmallArrowDown'}
+          icon={hasChildren && isOpen ? 'SmallArrowDown' : 'SmallArrowRight'}
           size={'32px'}
           iconSize={'24px'}
           disabled={!hasChildren}
@@ -151,7 +117,7 @@ const DirListItem: React.FC<DirListItemProps> = props => {
           <LabelField>
             <Label>{item?.label || item?.name}</Label>
 
-            {canHasChildren && (
+            {creatingChild && (
               <Actions canHasChildren={canHasChildren}>
                 <ButtonIcon
                   variant="onlyIcon"
@@ -192,10 +158,10 @@ const DirListItem: React.FC<DirListItemProps> = props => {
               <ActionButton
                 variant="onlyIcon"
                 iconSize="22px"
-                icon={!state.disabled ? 'lightMode' : 'darkMode'}
+                icon={state?.disabled ? 'lightMode' : 'darkMode'}
                 onClick={() => {
                   handleState('disabled');
-                  onChangeDisableStatus && item?._id && onChangeDisableStatus(item?._id, !state.disabled);
+                  onChangeDisableStatus && item?._id && onChangeDisableStatus(item?._id, !!state?.disabled);
                 }}
               />
             )}
@@ -266,7 +232,7 @@ const ChildrenList = styled.ul<{ isOpen: boolean }>`
   overflow-y: hidden;
   overflow-x: visible;
 
-  max-height: ${({ isOpen }) => (isOpen ? '' : '0')};
+  max-height: ${({ isOpen }) => (isOpen ? 'max-content' : '0')};
 
   visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
   padding: ${p => (p.isOpen ? `6px 0 0` : '')};

@@ -3,6 +3,7 @@
 import styled, { useTheme } from 'styled-components';
 import { Oval } from 'react-loader-spinner';
 import FlexBox from './FlexBox';
+import { Text } from './Text';
 
 interface AppLoaderProps {
   isLoading: boolean;
@@ -13,7 +14,7 @@ const AppLoader: React.FC<AppLoaderProps> = ({ isLoading, comment = 'Please wait
   const theme = useTheme();
   return (
     <Backdrop isOpen={isLoading}>
-      <FlexBox gap={16} fxDirection={'column'} alignItems={'center'}>
+      <FlexBox gap={16} alignItems={'center'}>
         <Oval
           height="60"
           width="60"
@@ -26,7 +27,11 @@ const AppLoader: React.FC<AppLoaderProps> = ({ isLoading, comment = 'Please wait
           strokeWidth={3}
           strokeWidthSecondary={3}
         />
-        {comment && <Text>{comment}</Text>}
+        {comment && (
+          <Text $align={'center'} $size={22} $weight={600} color={'#fff'}>
+            {comment}
+          </Text>
+        )}
       </FlexBox>
     </Backdrop>
   );
@@ -47,10 +52,5 @@ const Backdrop = styled.div<{ isOpen: boolean }>`
   background: ${({ theme }) => theme.backdropColor};
   backdrop-filter: blur(1px);
 `;
-const Text = styled.div`
-  font-size: 22px;
-  font-weight: 600;
 
-  color: ${({ theme }) => theme.colorLight};
-`;
 export default AppLoader;

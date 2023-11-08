@@ -1,16 +1,16 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import AppPages from 'components/AppPages';
+
 import { memo, useMemo } from 'react';
 import { useAuthSelector } from '../../redux/selectors.store';
 import PermissionCheck from '../AppPages/PermissionCheck';
 import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
-import { AppPagesEnum } from '../../data/pages.data';
 import { AppUrlParamKeys } from '../../hooks/useAppParams.hook';
+import { AppPages, AppPagesEnum } from 'components/AppPages';
 
 const { PageNotFound } = AppPages;
 
-const AppRoutes: React.FC = () => {
+const AppRoutes: React.FC<{ isLoaded?: boolean }> = () => {
   const { access_token } = useAuthSelector();
 
   const isAuthorized = useMemo(() => !!access_token, [access_token]);
@@ -31,7 +31,7 @@ const AppRoutes: React.FC = () => {
     <Routes>
       <Route index element={<Navigate to={isAuthorized ? '/app' : '/auth'} />} />
 
-      <Route path={'/auth/*'} element={<PublicRoute redirectTo={'/app/home'} />}>
+      <Route path={'/auth/*'} element={<PublicRoute redirectTo={`/app/${AppPagesEnum.companies}`} />}>
         <Route index element={<Navigate to="/auth/login" />} />
         <Route path="register" element={<AppPages.PageAuth register />} />
         <Route path="login" element={<AppPages.PageAuth login />} />
@@ -41,7 +41,7 @@ const AppRoutes: React.FC = () => {
       </Route>
 
       <Route path={'/app/*'} element={<PrivateRoute redirectTo={'/auth'} />}>
-        <Route index element={<Navigate to={'/app/home'} />} />
+        <Route index element={<Navigate to={`/app/${AppPagesEnum.companies}`} />} />
 
         <Route path={AppPagesEnum.companies} element={<AppPages.PageSelectCompany path={AppPagesEnum.companies} />} />
 
@@ -59,8 +59,12 @@ const AppRoutes: React.FC = () => {
             element={<AppPages.PageProductOverview path={AppPagesEnum.products} />}
           />
 
-          <Route path={AppPagesEnum.storage} element={<AppPages.AppGridPage path={AppPagesEnum.storage} />} />
           <Route path={AppPagesEnum.orders} element={<AppPages.PageOrders path={AppPagesEnum.orders} />} />
+          <Route
+            path={`${AppPagesEnum.orders}/:${AppUrlParamKeys.orderId}`}
+            element={<AppPages.PageOrderOverview path={AppPagesEnum.products} />}
+          />
+
           <Route path={AppPagesEnum.refunds} element={<AppPages.PageRefunds path={AppPagesEnum.refunds} />} />
           <Route path={AppPagesEnum.dashboard} element={<AppPages.AppGridPage path={AppPagesEnum.dashboard} />} />
           <Route path={AppPagesEnum.supplement} element={<AppPages.AppGridPage path={AppPagesEnum.supplement} />} />
@@ -69,6 +73,12 @@ const AppRoutes: React.FC = () => {
           <Route
             path={`${AppPagesEnum.warehouses}/:${AppUrlParamKeys.warehouseId}`}
             element={<AppPages.PageWarehouseOverview path={AppPagesEnum.warehouses} />}
+          />
+
+          <Route path={AppPagesEnum.customers} element={<AppPages.PageCustomers path={AppPagesEnum.customers} />} />
+          <Route
+            path={`${AppPagesEnum.customers}/:${AppUrlParamKeys.customerId}`}
+            element={<AppPages.PageCustomerOverview path={AppPagesEnum.customers} />}
           />
 
           <Route

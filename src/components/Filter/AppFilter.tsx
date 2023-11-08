@@ -1,17 +1,21 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Selector from './Selector';
-import ModalDefault, { ModalFormProps } from 'components/ModalForm';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import ModalForm, { ModalFormProps } from 'components/ModalForm';
+import { SubmitHandler } from 'react-hook-form';
 import styled from 'styled-components';
 import SelectorContent from './SelectorContent/SelectorContent';
 import { ICount } from 'redux/directories/counts.types';
 import { ICategory } from 'redux/directories/directories.types';
-import InputTextPrimary from '../atoms/Inputs/InputTextPrimary';
-import { IContractor } from '../../redux/contractors/contractors.types';
-import { IProject } from '../../redux/transactions/transactions.types';
-import { ApiDirType } from '../../redux/APP_CONFIGS';
+import { IContractor } from 'redux/directories/contractors.types';
+import { IProject } from 'redux/transactions/transactions.types';
+import { ApiDirType } from 'redux/APP_CONFIGS';
+import InputLabel from '../atoms/Inputs/InputLabel';
+import InputText from '../atoms/Inputs/InputText';
+import { useAppForm } from '../../hooks';
+import { FilterOption } from '../ModalForm/ModalFilter';
+import FlexBox from '../atoms/FlexBox';
 
-export type FilterSelectorDataType = ICount | ICategory | IContractor | IProject | any;
+export type FilterSelectorDataType = ICount | ICategory | IContractor | IProject | FilterOption;
 export type FilterSelectorType<Key = any> = {
   selectorName?: Key;
   dirType?: ApiDirType;
@@ -20,20 +24,22 @@ export type FilterSelectorType<Key = any> = {
   data: FilterSelectorDataType[];
 };
 
-export interface FilterQueryType extends Record<ApiDirType | string, string[] | undefined> {
-  [ApiDirType.CATEGORIES_PROD]?: string[];
-  [ApiDirType.CATEGORIES_TR]?: string[];
-  [ApiDirType.COUNTS]?: string[];
-  [ApiDirType.CONTRACTORS]?: string[];
-  [ApiDirType.DOCUMENTS]?: string[];
-  [ApiDirType.PROJECTS]?: string[];
-  [ApiDirType.ACTIVITIES]?: string[];
-  [ApiDirType.MARKS]?: string[];
-}
+// {
+// [ApiDirType.CATEGORIES_PROD]?: string[];
+// [ApiDirType.CATEGORIES_TR]?: string[];
+// [ApiDirType.COUNTS]?: string[];
+// [ApiDirType.CONTRACTORS]?: string[];
+// [ApiDirType.DOCUMENTS]?: string[];
+// [ApiDirType.PROJECTS]?: string[];
+// [ApiDirType.ACTIVITIES]?: string[];
+// [ApiDirType.MARKS]?: string[];
+// }
+export type FilterQueryType = Record<ApiDirType & string, string[] | undefined>;
+export type OnFilterValueChangeHandler = (key: ApiDirType & string, value?: string[]) => void;
 
 export type FilterReturnDataType = FilterQueryType & {
-  from?: number | string;
-  to?: number | string;
+  timeFrom?: number | string;
+  timeTo?: number | string;
 };
 
 // const validation = yup.object().shape({
@@ -49,48 +55,51 @@ export interface AppFilterProps extends Omit<ModalFormProps, 'defaultFilterValue
   filterSelectors?: FilterSelectorType[];
   filterDefaultValues?: Partial<FilterReturnDataType>;
   onFilterSubmit?: SubmitHandler<FilterReturnDataType>;
+  onSubmit?: SubmitHandler<FilterReturnDataType>;
 }
 
-const AppFilter: React.FC<AppFilterProps> = props => {
+const AppFilter = (props: AppFilterProps) => {
   if (!props.filterSelectors) {
-    return <SelectorErr>'Filter selectors' not passed</SelectorErr>;
+    return <SelectorErr>{'Filter selectors are not passed'}</SelectorErr>;
   }
 
   if (!Array.isArray(props.filterSelectors) || props.filterSelectors.some(sel => !isSelectorType(sel))) {
-    return <SelectorErr>Invalid filter selectors</SelectorErr>;
+    return <SelectorErr>{'Invalid filter selectors'}</SelectorErr>;
   }
 
   return <Filter {...props} />;
 };
 
-const Filter: React.FC<AppFilterProps> = ({ filterSelectors, filterDefaultValues, onFilterSubmit, ...props }) => {
+const Filter: React.FC<AppFilterProps> = ({
+  onSubmit,
+  onClose,
+  filterSelectors,
+  filterDefaultValues,
+  onFilterSubmit,
+  ...props
+}) => {
   const [CurrentData, setCurrentData] = useState<FilterSelectorType | null>(
     filterSelectors ? filterSelectors[0] : null
   );
   const [currentIdx, setCurrentIdx] = useState<number | null>(0);
 
-  const {
-    // formState: { errors },
-    register,
-    unregister,
-    handleSubmit,
-    setValue,
-    watch,
-  } = useForm<FilterReturnDataType>({
+  const { register, unregister, handleSubmit, setValue, formValues } = useAppForm<FilterReturnDataType>({
     defaultValues: filterDefaultValues,
-    reValidateMode: 'onSubmit',
   });
-  const formValues = watch();
 
-  const onFilterDataChange = useCallback(
-    (name: ApiDirType, value?: string[]) => {
-      if (name && value) setValue(name, value);
-      if (!value) unregister(name);
+  const onFilterValueChange: OnFilterValueChangeHandler = useCallback(
+    (name, value) => {
+      if (name && value) return setValue(name, value);
+      if (!value) return unregister(name);
     },
     [setValue, unregister]
   );
 
-  const onSelectorClick = useCallback(
+  useEffect(() => {
+    console.log('filter formValues', formValues);
+  }, [formValues]);
+
+  const handleOpenSelector = useCallback(
     (idx: number) => {
       setCurrentIdx(idx);
       filterSelectors && setCurrentData(filterSelectors[idx]);
@@ -111,61 +120,64 @@ const Filter: React.FC<AppFilterProps> = ({ filterSelectors, filterDefaultValues
             childrenListCount={1}
             selectedChildrenCount={1}
             idx={idx}
-            onSelectorClick={() => onSelectorClick(idx)}
+            onSelectorClick={() => handleOpenSelector(idx)}
             currentIdx={currentIdx}
             CurrentData={CurrentData}
           >
             <SelectorContent
               getDefaultValue={(selectorName?: ApiDirType) => (selectorName && formValues[selectorName]) || []}
-              onSelectorSubmit={onFilterDataChange}
+              onSelectorSubmit={onFilterValueChange}
+              onSelectorChange={onFilterValueChange}
               {...selector}
             />
           </Selector>
         );
       }),
-    [CurrentData, currentIdx, filterSelectors, formValues, onFilterDataChange, onSelectorClick]
+    [CurrentData, currentIdx, filterSelectors, formValues, onFilterValueChange, handleOpenSelector]
   );
+
+  const onValid = (data: FilterReturnDataType) => {
+    onFilterSubmit && onFilterSubmit(data);
+    onSubmit && onSubmit(data);
+    onClose && onClose();
+  };
 
   // const renderSelectorContent = useMemo(() =>
   //     (<SelectorContent
   //       defaultValue={CurrentData?.selectorName ? filterData[CurrentData?.selectorName] : []}
-  //       onSelectorSubmit={onFilterDataChange}
+  //       onSelectorSubmit={onFilterValueChange}
   //       data={CurrentData?.data || []}
   //       selectorName={CurrentData?.selectorName}
   //       ListComp={CurrentData?.ListComp}
   //     />),
-  //   [CurrentData?.ListComp, CurrentData?.data, CurrentData?.selectorName, filterData, onFilterDataChange]);
+  //   [CurrentData?.ListComp, CurrentData?.data, CurrentData?.selectorName, filterData, onFilterValueChange]);
 
   return (
-    <StModalDefault {...props} onSubmit={onFilterSubmit ? handleSubmit(onFilterSubmit) : undefined}>
+    <StModalForm fillHeight {...props} onSubmit={handleSubmit(onValid)}>
       <FilterContainer>
         <DatePickers>
-          <InputTextPrimary
-            label="Від (дата і час)"
-            type="datetime-local"
-            placeholder="Від (дата і час)"
-            {...register('from')}
-          />
-          <InputTextPrimary
-            label="До (дата і час)"
-            type="datetime-local"
-            placeholder="До (дата і час)"
-            {...register('to')}
-          />
+          <InputLabel label={'Від (дата і час)'}>
+            <InputText type={'datetime-local'} placeholder={'Від (дата і час)'} {...register('timeFrom')} />
+          </InputLabel>
+
+          <InputLabel label={'Від (дата і час)'}>
+            <InputText type={'datetime-local'} placeholder={'До (дата і час)'} {...register('timeTo')} />
+          </InputLabel>
         </DatePickers>
 
         <Bottom>
           <LeftSide>
-            <SelectorsList>{renderSelectors}</SelectorsList>
+            <SelectorsList fillWidth padding={'0 2px'}>
+              {renderSelectors}
+            </SelectorsList>
           </LeftSide>
         </Bottom>
       </FilterContainer>
-    </StModalDefault>
+    </StModalForm>
   );
 };
 
-const StModalDefault = styled(ModalDefault)`
-  height: 98vh;
+const StModalForm = styled(ModalForm)`
   max-width: 480px;
   //@media screen and (min-width: 768px) {
   //  width: 680px;
@@ -192,15 +204,15 @@ const FilterContainer = styled.div`
 
 const DatePickers = styled.div`
   display: grid;
-
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 8px;
+
+  padding: 0 8px 8px;
 
   color: inherit;
-  padding: 12px;
-
   width: 100%;
 
+  border-bottom: 1px solid ${p => p.theme.modalBorderColor};
   //@media screen and (min-width: 480px) {
   //  gap: 24px;
   //  grid-template-columns: 1fr 1fr;
@@ -216,7 +228,7 @@ const Bottom = styled.div`
   min-height: 100%;
   max-height: 100%;
 
-  padding-bottom: 12px;
+  padding: 8px 0;
 
   overflow: hidden;
 
@@ -237,17 +249,12 @@ const LeftSide = styled(Side)``;
 //     display: none;
 //   }
 // `;
-const SelectorsList = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 12px;
+const SelectorsList = styled(FlexBox)`
+  gap: 8px;
 
   max-height: 100%;
   min-height: 100%;
   overflow: auto;
-
-  padding: 0 12px;
 `;
 
 const SelectorErr = styled.div`

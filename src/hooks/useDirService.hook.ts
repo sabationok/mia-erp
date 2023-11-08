@@ -11,20 +11,19 @@ import {
   UpdateDirItemThunkSubmitData,
 } from '../redux/directories/directories.thunk';
 import { defaultThunkPayload } from '../utils/fabrics';
-import { IBaseDirItem } from '../components/Directories/dir.types';
+import { IDirItemBase } from '../components/Directories/dir.types';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 
 export interface DirectoriesService<
   DirType extends ApiDirType = any,
-  ItemType = any,
   CreateDTO = any,
   UpdateDTO = any,
-  ItemDataType = IBaseDirItem<ItemType, DirType>
+  ItemDataType = IDirItemBase<DirType>
 > {
   getAllByDirType: ServiceDispatcherAsync<DirThunkBaseSubmitData, DirThunkBaseReturnData<ItemDataType[]>>;
   create: ServiceDispatcherAsync<CreateDirItemThunkSubmitData<CreateDTO>, DirThunkBaseReturnData<ItemDataType[]>>;
   update: ServiceDispatcherAsync<UpdateDirItemThunkSubmitData<UpdateDTO>, DirThunkBaseReturnData<ItemDataType[]>>;
-  delete?: ServiceDispatcherAsync<OnlyUUID, DirThunkBaseReturnData<ItemDataType[]>>;
+  delete?: ServiceDispatcherAsync<OnlyUUID & { refresh?: boolean }, DirThunkBaseReturnData<ItemDataType[]>>;
   changeDisabledStatus: ServiceDispatcherAsync<
     UpdateDirItemThunkSubmitData<UpdateDTO>,
     DirThunkBaseReturnData<ItemDataType[]>
@@ -50,4 +49,4 @@ const useDirService = (): DirectoriesService => {
   );
 };
 
-export default useDirService as typeof useDirService;
+export default useDirService;

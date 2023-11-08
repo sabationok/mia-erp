@@ -1,5 +1,4 @@
 import React from 'react';
-import { iconId } from 'data';
 import styled from 'styled-components';
 import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
 import { IconIdType } from 'img/sprite/iconId.data';
@@ -26,7 +25,7 @@ const AuthInputLabel: React.FC<AuthInputLabelProps & Omit<InputLabelProps, 'succ
         <SvgIcon size="26px" iconId={icon} />
         {children}
 
-        <StIcon size="26px" iconId={!!error ? iconId.error : iconId.success} isError={!!error} isSuccess={!!success} />
+        <StIcon size="26px" iconId={!error ? 'success' : 'error'} isError={!!error} isSuccess={!!success} />
       </Wrapper>
 
       {(error?.message || success?.message || helperText) && (

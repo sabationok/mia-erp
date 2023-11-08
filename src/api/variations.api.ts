@@ -23,7 +23,7 @@ export default class VariationsApi {
     return this.api.post(this.endpoints.create(), data?.data, { params: data?.params });
   }
 
-  public static async updateById(data?: IVariationReqData): Promise<AppResponse<IVariation[]>> {
+  public static async updateById(data?: IVariationReqData): Promise<AppResponse<IVariation>> {
     return this.api.patch(this.endpoints.updateById(data?._id), data?.data, { params: data?.params });
   }
 

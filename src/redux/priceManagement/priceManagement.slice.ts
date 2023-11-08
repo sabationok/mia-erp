@@ -3,6 +3,7 @@ import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { IPriceList } from './priceManagement.types';
 import * as thunks from './priceManagement.thunks';
+import { checks } from '../../utils';
 
 export interface IPriceListsState {
   lists: IPriceList[];
@@ -47,24 +48,37 @@ export const priceManagementSlice = createSlice({
         if (idx >= 0 && a.payload) {
           s.lists.splice(idx, 1, a.payload);
         }
+        if (s.current?._id === a.payload?._id) {
+          s.current = a.payload;
+        }
       })
       .addCase(thunks.updatePriceListByIdThunk.fulfilled, (s, a) => {
-        const idx = s.lists.findIndex(l => l._id === 'p?._id');
+        const idx = s.lists.findIndex(l => l._id === a.payload?._id);
         if (idx >= 0 && a.payload) {
           s.lists.splice(idx, 1, a.payload);
-          console.log('updateList action', `idx-${idx}`, s.lists);
         }
       })
       .addCase(thunks.getPriceListByIdThunk.fulfilled, (s, a) => {
-        s.current = a.payload;
+        if (a.payload.refreshCurrent && s.current) {
+          s.current = { ...s.current, ...a.payload.data };
+        } else {
+          s.current = a.payload.data;
+        }
       })
       .addCase(thunks.addPriceToListThunk.fulfilled, (s, a) => {
-        s.current = a.payload;
-
-        const idx = s.lists.findIndex(l => l._id === 'p?._id');
-        if (idx >= 0 && a.payload) {
-          s.lists.splice(idx, 1, a.payload);
-          console.log('updateList action', `idx-${idx}`, s.lists);
+        if (s?.current) {
+          if (a.payload.data) {
+            s.current = {
+              ...s.current,
+              prices: s.current?.prices ? [...s.current?.prices, a.payload?.data] : [a.payload.data],
+            };
+          } else if (a.payload?.refreshCurrent && a.payload?.data) {
+          }
+        }
+      })
+      .addCase(thunks.getAllPricesThunk.fulfilled, (s, a) => {
+        if (a.payload.refreshCurrent) {
+          s.current = { ...(s.current as IPriceList), prices: a.payload?.data };
         }
       })
       .addCase(thunks.deletePriceFromListThunk.fulfilled, (s, a) => {})
@@ -74,51 +88,32 @@ export const priceManagementSlice = createSlice({
         s.isLoading = true;
         s.error = null;
       })
+      .addMatcher(inFulfilled, s => {
+        s.isLoading = false;
+        s.error = null;
+      })
       .addMatcher(inError, (s, a: PayloadAction<StateErrorType>) => {
         s.isLoading = false;
         s.error = a.payload;
       }),
 });
 
+export function isPriceManagementCase(type: string) {
+  return checks.isStr(type) && type.startsWith('users');
+}
 function inPending(a: AnyAction) {
-  return a.type.endsWith('pending');
+  return isPriceManagementCase(a.type) && a.type.endsWith('pending');
 }
-
+function inFulfilled(a: AnyAction) {
+  return isPriceManagementCase(a.type) && a.type.endsWith('fulfilled');
+}
 function inError(a: AnyAction) {
-  return a.type.endsWith('rejected');
+  return isPriceManagementCase(a.type) && a.type.endsWith('rejected');
 }
 
-export const productsReducer = priceManagementSlice.reducer;
-
-// [addTransactionThunk.fulfilled]: (s,a) => {
-//   s.isloading = false;
-//   s.lists.unshift(action.payload.data);
-// },
-// [addTransactionThunk.pending]: (s,a) => {
-//   s.isloading = true;
-// },
-// [addTransactionThunk.rejected]: (s,a) => {
-//   s.isloading = false;
-//   s.error =a.payload;
-// },
-
-// [deleteTransactionThunk.fulfilled]: (s,a) => {
-//   s.isLoading = false;
-// },
-// [deleteTransactionThunk.pending]: (s,a) => {
-//   s.isLoading = true;
-// },
-// [deleteTransactionThunk.rejected]: (s,a) => {
-//   s.isLoading = false;
-// },
-
-// [editTransactionThunk.fulfilled]: (s, { payload }) => {
-//   s.isLoading = false;
-//   const index = s.lists.findIndex(el => el._id === payload.data._id);
-
-//   s.lists[index] = { ...payload.data };
-
-//   console.log(index, s.lists[index].isArchived);
-// },
-// [editTransactionThunk.pending]: (s,a) => {},
-// [editTransactionThunk.rejected]: (s,a) => {},
+// s.current = a.payload;
+// const idx = s.lists.findIndex(l => l._id === 'p?._id');
+// if (idx >= 0 && a.payload) {
+//   s.lists.splice(idx, 1, a.payload);
+//   console.log('updateList action', `idx-${idx}`, s.lists);
+// }

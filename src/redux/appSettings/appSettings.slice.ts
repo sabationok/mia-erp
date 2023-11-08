@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { AccentColorNamesType, accentColors, appThemes, getAccentColor, getTheme, globals, IAppTheme } from 'theme';
+import { AccentColorName, appThemes, getAccentColor, getTheme, globals, IAppTheme } from 'theme';
 import { actionResetAppSettings, actionSelectAccentColor, actionToggleDarkMode } from './appSettings.actions';
 import { getAppActionsThunk } from './appSettings.thunks';
 import { RoleActionType } from '../global.types';
 
 export interface IAppSettings {
   isDarkMode?: boolean;
-  accentColor?: AccentColorNamesType;
+  accentColor?: AccentColorName;
   appTheme: IAppTheme;
   appActions: Record<string, RoleActionType[]>;
 }
@@ -15,7 +15,7 @@ const initialState: IAppSettings = {
   isDarkMode: false,
   accentColor: 'orange',
   appActions: {},
-  appTheme: { ...appThemes.light, accentColor: accentColors.orange, globals: globals },
+  appTheme: { ...appThemes.light, accentColor: getAccentColor('orange'), globals: globals },
 };
 
 export const appSettingsSlice = createSlice({
@@ -29,8 +29,11 @@ export const appSettingsSlice = createSlice({
         state.appTheme = { ...state.appTheme, ...getTheme(state.isDarkMode ? 'dark' : 'light') };
       })
       .addCase(actionSelectAccentColor, (state, action) => {
-        state.accentColor = action.payload;
-        state.appTheme.accentColor = getAccentColor(action.payload);
+        // state.accentColor = action.payload;
+
+        state.appTheme = { ...state.appTheme, accentColor: getAccentColor(action.payload) };
+
+        console.debug(state);
       })
       .addCase(getAppActionsThunk.fulfilled, (s, a) => {
         s.appActions = a.payload;

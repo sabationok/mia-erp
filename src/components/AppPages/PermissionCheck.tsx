@@ -1,6 +1,6 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
-import { memo, useEffect, useMemo } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import useAppParams from '../../hooks/useAppParams.hook';
 import baseApi, { permissionToken } from '../../api/baseApi';
 import { AxiosError } from 'axios';
@@ -8,11 +8,17 @@ import { toast } from 'react-toastify';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import AppLoader from '../atoms/AppLoader';
 import { isUndefined } from 'lodash';
+import useLoadInitialAppDataHook from '../../hooks/useLoadInitialAppData.hook';
+import { t } from '../../lang';
 
 type Props = {
   redirectTo?: string;
 };
 const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
   const { permissionId } = useAppParams();
   const {
     permissions: { clearCurrent },
@@ -24,17 +30,33 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
   // const [loading, setLoading] = useState(false);
 
   const isValidPermissionId = useMemo(() => {
-    const isValid = !isUndefined(permissionId) && state.permission._id === permissionId;
+    const isValid = !isUndefined(permissionId) && state?.permission?._id === permissionId;
     if (isValid) {
       permissionToken.set(permissionId);
     } else {
-      console.log('PermissionCheck ACCESS DENIED', baseApi.defaults.headers.Permission);
+      console.warn(
+        'PermissionCheck ACCESS DENIED',
+        baseApi?.defaults?.headers?.Permission || baseApi?.defaults?.headers
+      );
       permissionToken.unset();
     }
-    return baseApi.defaults.headers.Permission === permissionId;
+    return baseApi.defaults?.headers?.Permission === permissionId;
   }, [permissionId, state.permission._id]);
 
   const hasPermission = useMemo(() => !!state.permission._id, [state.permission._id]);
+
+  const onAppLoadFinish = () => setIsLoaded(true);
+
+  useLoadInitialAppDataHook({
+    onLoading: setLoading,
+    onSuccess: onAppLoadFinish,
+  });
+
+  useEffect(() => {
+    if (!isValidPermissionId) {
+      navigate('/');
+    }
+  }, [isValidPermissionId, navigate]);
 
   useEffect(() => {
     if (!hasPermission) {
@@ -43,15 +65,17 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
       baseApi.interceptors.response.use(
         async value => value,
         async (e: AxiosError) => {
-          console.log(e);
           if (e.status === 409) {
+            console.log(e);
             toast.error('Forbidden company action');
             clearCurrent();
           }
           if (e.status === 401) {
+            console.log(e);
             toast.error('Auth failed');
             logOutUser();
           }
+          throw e;
         },
         {}
       );
@@ -63,8 +87,8 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
     };
   }, [clearCurrent, hasPermission, logOutUser, permissionId]);
 
-  if (state.isLoading) {
-    return <AppLoader isLoading comment={'Permission check. Please wait.'} />;
+  if (loading || !isLoaded) {
+    return <AppLoader isLoading comment={t('Permission check, please wait')} />;
   }
 
   return isValidPermissionId ? <Outlet /> : <Navigate to={redirectTo || '/app'} />;

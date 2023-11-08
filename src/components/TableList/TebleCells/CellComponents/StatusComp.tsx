@@ -1,8 +1,7 @@
 import React, { CSSProperties, memo, useMemo } from 'react';
-import { statusDataMap } from 'data';
 
 import styled, { css } from 'styled-components';
-import { StatusData, StatusNames } from 'data/statuses.data';
+import { getStatusData, StatusData, StatusNames } from 'data/statuses.data';
 import SvgIcon from '../../../atoms/SvgIcon/SvgIcon';
 
 export type StatusCompVariants = 'outlined' | 'filled' | 'text';
@@ -22,23 +21,20 @@ const StatusComp: React.FC<StatusCompProps> = ({
   fontWeight,
   fillWidth = false,
 }) => {
-  const { label, color, iconId, backgroundColor, description } = useMemo(
-    (): StatusData => statusDataMap[status] || {},
-    [status]
-  );
+  const statusData = useMemo((): StatusData | undefined => getStatusData(status), [status]);
 
   return (
     <StStatusComp
       variant={variant}
-      title={description}
-      color={color}
-      backgroundColor={backgroundColor}
+      title={statusData?.description}
+      color={statusData?.color}
+      backgroundColor={statusData?.backgroundColor}
       fillWidth={fillWidth}
     >
-      {iconId && <SvgIcon iconId={iconId} size="20px" />}
+      {statusData?.iconId && <SvgIcon icon={statusData?.iconId} size="20px" />}
 
-      <Label className={'inner'} fontSize={fontSize} fontWeight={label || fontWeight ? fontWeight : 400}>
-        {label || status}
+      <Label className={'inner'} fontSize={fontSize} fontWeight={statusData?.label || fontWeight ? fontWeight : 400}>
+        {statusData?.label || status}
       </Label>
     </StStatusComp>
   );

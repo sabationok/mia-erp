@@ -1,8 +1,15 @@
-import { usePermissionsSelector } from './usePermissionsService.hook';
 import { useMemo } from 'react';
-import { pages } from '../data';
-import { IAppPage } from '../data/pages.data';
+import { usePermissionsSelector } from './usePermissionsService.hook';
+import { IAppPage, pages } from '../components/AppPages';
 
+// export const pages: IAppPage[] = Object.entries(appPages).map(([path, page]) => {
+//   return {
+//     ...page,
+//     title: page.path,
+//     moduleName: path,
+//     path,
+//   };
+// });
 const useAppPages = ({ permissionId }: { permissionId?: string }) => {
   const { permission } = usePermissionsSelector();
 

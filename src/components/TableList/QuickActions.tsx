@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { iconId } from 'data';
 
 import styled, { css } from 'styled-components';
 import { useTable } from './TableList';
@@ -35,14 +34,7 @@ const QuickActions: React.FC<{ closeOnClickOut?: boolean }> = ({ closeOnClickOut
         {actionsCreator && <TActions btnSize={36} renderSeparator={<Separator />} />}
       </List>
 
-      <ToggleButton
-        isShown={isShown}
-        iconId={iconId.plus}
-        variant="def"
-        iconSize="70%"
-        size="48px"
-        onClick={onMenuBtnClick}
-      />
+      <ToggleButton isShown={isShown} icon={'plus'} variant="def" iconSize="70%" size="48px" onClick={onMenuBtnClick} />
     </Menu>
   );
 };

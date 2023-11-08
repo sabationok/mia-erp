@@ -1,270 +1,110 @@
 import { useModalProvider } from '../components/ModalProvider/ModalProvider';
-import { PriceManagementService } from './usePriceManagementService.hook';
 import { useCallback } from 'react';
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
 import {
   IPriceList,
   IPriceListItem,
   IPriceListItemReqData,
-  PriceListFilterOption,
   PriceListTypeEnum,
 } from '../redux/priceManagement/priceManagement.types';
 import FormCreatePriceList from '../components/Forms/FormCreatePriceList';
 import { toast } from 'react-toastify';
 import { omit } from 'lodash';
-import { ExtractId } from '../utils/dataTransform';
-import PriceListOverview from '../components/Modals/Overviews/PriceListOverview';
+import { getIdRef } from '../utils/dataTransform';
+import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
+import { useNavigate } from 'react-router-dom';
+import { enumToFilterOptions } from '../utils/fabrics';
 
 export type PriceManagementActionsCreator = TableActionCreator<IPriceList>;
 
-export const PriceManagementItemTypeFilterOptions: PriceListFilterOption[] = [
-  { label: PriceListTypeEnum.SALES, value: PriceListTypeEnum.SALES },
-  { label: PriceListTypeEnum.PURCHASES, value: PriceListTypeEnum.PURCHASES },
-];
+export const PriceManagementItemTypeFilterOptions = enumToFilterOptions(PriceListTypeEnum);
 
 export const createPriceDataForReq = (input: Required<IPriceListItem>): IPriceListItemReqData => {
   return {
-    ...ExtractId(input),
+    ...getIdRef(input),
     data: {
       ...omit(input, ['createdAt', 'updatedAt', 'deletedAt', '_id']),
-      product: ExtractId(input?.product),
+      product: getIdRef(input?.product),
     },
   };
 };
-const usePriceManagementActionsCreator = (service: PriceManagementService): PriceManagementActionsCreator => {
+const usePriceManagementActionsCreator = (): PriceManagementActionsCreator => {
   const modals = useModalProvider();
+  const service = useAppServiceProvider()[ServiceName.priceManagement];
 
-  // const onSubmitCreateWrapper = useCallback(
-  //   (onCloseModal: () => void) => {
-  //     return (data: ITransactionReqData, options: AfterFormSubmitOptions,) => {
-  //       service.create({
-  //         data,
-  //         onSuccess(d) {
-  //           toast.success(`Сторено транзакцію на суму: ${d.amount}`);
-  //           options?.close && onCloseModal();
-  //         },
-  //       });
-  //     };
-  //   },
-  //   [service]
-  // );
+  const navigate = useNavigate();
 
   return useCallback(
-    ctx => [
-      // {
-      //   name: 'editTr',
-      //   title: 'Редагування транзакції',
-      //   icon: 'edit',
-      //   disabled: !ctx.selectedRow?._id,
-      //   type: 'onlyIcon',
-      //   onClick: async () => {
-      //     const tr = state.transactions.find(el => el._id === ctx.selectedRow?._id);
-      //
-      //     const modal = modals.handleOpenModal({
-      //       ModalChildren: TransactionForm,
-      //       modalChildrenProps: {
-      //         title: 'Редагування транзакції',
-      //         filterOptions,
-      //         defaultOption: filterOptions.findIndex(el => el.value === tr?.type),
-      //         defaultState: tr,
-      //         fillHeight: true,
-      //         onSubmit: data => {
-      //           service.updateById({
-      //             data,
-      //             onSuccess(d) {},
-      //           });
-      //         },
-      //       },
-      //     });
-      //   },
-      // },
-      // {
-      //   name: 'copyTr',
-      //   title: 'Копіювання транзакції',
-      //   icon: 'copy',
-      //   type: 'onlyIcon',
-      //   disabled: !ctx.selectedRow?._id,
-      //   onClick: async () => {
-      //     const tr = state.transactions.find(el => el._id === ctx.selectedRow?._id);
-      //
-      //     const modal = modals.handleOpenModal({
-      //       ModalChildren: TransactionForm,
-      //       modalChildrenProps: {
-      //         title: 'Копіювання транзакції',
-      //         filterOptions,
-      //         defaultOption: filterOptions.findIndex(el => el.value === tr?.type),
-      //         defaultState: tr,
-      //         fillHeight: true,
-      //         onSubmit: (data, o) => {
-      //           service.create({
-      //             data,
-      //             onSuccess(d) {
-      //               toast.success(`Транзакцію створено`);
-      //               o?.close && modal?.onClose();
-      //             },
-      //           });
-      //         },
-      //       },
-      //     });
-      //   },
-      // },
-      // {
-      //   name: 'deleteTr',
-      //   title: 'Видалення транзакції',
-      //   icon: 'delete',
-      //   iconSize: '90%',
-      //   type: 'onlyIcon',
-      //   disabled: !ctx.selectedRow?._id,
-      //   onClick: () => {
-      //     service.deleteById({
-      //       data: ctx.selectedRow?._id,
-      //     });
-      //   },
-      // },
-      // { separator: true },
-      // {
-      //   name: 'createIncomeTr',
-      //   title: 'Дохід',
-      //   icon: 'INCOME',
-      //   iconSize: '90%',
-      //   type: 'onlyIconFilled',
-      //   disabled: false,
-      //   onClick: () => {
-      //     const modal = modals.handleOpenModal({
-      //       ModalChildren: TransactionForm,
-      //       modalChildrenProps: {
-      //         title: 'Створити',
-      //         filterOptions,
-      //         defaultOption: 0,
-      //         fillHeight: true,
-      //         defaultState: { type: 'INCOME' },
-      //         onSubmit: (data, o) => {
-      //           service.create({
-      //             data,
-      //             onSuccess(d) {
-      //               o?.close && modal?.onClose();
-      //             },
-      //           });
-      //         },
-      //       },
-      //     });
-      //   },
-      // },
-      // {
-      //   name: 'createTransferTr',
-      //   title: 'Переказ між рахунками',
-      //   icon: 'TRANSFER',
-      //   iconSize: '90%',
-      //   type: 'onlyIconFilled',
-      //   disabled: false,
-      //   onClick: () => {
-      //     const modal = modals.handleOpenModal({
-      //       ModalChildren: TransactionForm,
-      //       modalChildrenProps: {
-      //         title: 'Створити нову',
-      //         filterOptions,
-      //         defaultOption: 1,
-      //         fillHeight: true,
-      //         defaultState: { type: 'TRANSFER' },
-      //         onSubmit: (data, o) => {
-      //           service.create({
-      //             data,
-      //             onSuccess(d) {
-      //               o?.close && modal?.onClose();
-      //             },
-      //           });
-      //         },
-      //       },
-      //     });
-      //   },
-      // },
-      {
-        name: 'openPriceList',
-        title: 'Відкрити',
-        icon: 'openInNew',
-        iconSize: '90%',
-        type: 'onlyIcon',
-        disabled: !ctx.selectedRow?._id,
-        onClick: async () => {
-          modals.handleOpenModal({
-            ModalChildren: PriceListOverview,
-            modalChildrenProps: {
-              listId: ctx.selectedRow?._id,
-              getTableSetting: data => ({}),
-              // onSubmit: ({ data: itemOrArr, list }, o) => {
-              //   if (isArray(itemOrArr)) {
-              //     toast.warning('Array of prices passed. Dispatcher warn');
-              //     return;
-              //   }
-              //   service.addItemToList({
-              //     data: { data: createPriceDataForReq(itemOrArr).data, list },
-              //     onSuccess: data => {
-              //       console.log('IPriceListRes');
-              //       o?.closeAfterSave && modal?.onClose();
-              //       toast.success(`Price created`);
-              //     },
-              //   });
-              // },
-            },
-          });
+    ctx => {
+      const selected = ctx.selectedRow;
+      return [
+        {
+          name: 'openPriceList',
+          title: 'Відкрити',
+          icon: 'openInNew',
+          iconSize: '90%',
+          type: 'onlyIcon',
+          disabled: !selected?._id,
+          onClick: () => {
+            selected?._id && navigate(`${selected?._id}`);
+          },
         },
-      },
 
-      {
-        name: 'editPriceList',
-        title: 'Редагувати',
-        icon: 'edit',
-        iconSize: '90%',
-        type: 'onlyIcon',
-        disabled: true,
-      },
-      {
-        name: 'copyPriceList',
-        title: 'Копіювати',
-        icon: 'copy',
-        iconSize: '90%',
-        type: 'onlyIcon',
-        disabled: true,
-      },
-      {
-        name: 'archivePriceList',
-        title: 'Архів',
-        icon: 'archive',
-        iconSize: '90%',
-        type: 'onlyIcon',
-        disabled: true,
-      },
-      { separator: true },
-      {
-        name: 'createPriceList',
-        title: 'Новий',
-        icon: 'plus',
-        iconSize: '90%',
-        type: 'onlyIconFilled',
-        disabled: false,
-        onClick: async () => {
-          const modal = modals.handleOpenModal({
-            ModalChildren: FormCreatePriceList,
-            modalChildrenProps: {
-              filterOptions: PriceManagementItemTypeFilterOptions,
-              defaultData: { type: 'purchases' },
-              onSubmit: (data, o) => {
-                service.createList({
-                  data,
-                  onSuccess: data => {
-                    o?.onSuccess && o?.onSuccess(data);
-                    o?.closeAfterSave && modal?.onClose();
-                    toast.success(`Created price list: ${data.label}`);
-                  },
-                });
+        {
+          name: 'editPriceList',
+          title: 'Редагувати',
+          icon: 'edit',
+          iconSize: '90%',
+          type: 'onlyIcon',
+          disabled: true,
+        },
+        {
+          name: 'copyPriceList',
+          title: 'Копіювати',
+          icon: 'copy',
+          iconSize: '90%',
+          type: 'onlyIcon',
+          disabled: true,
+        },
+        {
+          name: 'archivePriceList',
+          title: 'Архів',
+          icon: 'archive',
+          iconSize: '90%',
+          type: 'onlyIcon',
+          disabled: true,
+        },
+        { separator: true },
+        {
+          name: 'createPriceList',
+          title: 'Новий',
+          icon: 'plus',
+          iconSize: '90%',
+          type: 'onlyIconFilled',
+          disabled: false,
+          onClick: async () => {
+            const modal = modals.handleOpenModal({
+              ModalChildren: FormCreatePriceList,
+              modalChildrenProps: {
+                filterOptions: PriceManagementItemTypeFilterOptions,
+                defaultData: { type: 'purchases' },
+                onSubmit: (data, o) => {
+                  service.createList({
+                    data,
+                    onSuccess: data => {
+                      o?.onSuccess && o?.onSuccess(data);
+                      o?.closeAfterSave && modal?.onClose();
+                      toast.success(`Created price list: ${data.label}`);
+                    },
+                  });
+                },
               },
-            },
-          });
+            });
+          },
         },
-      },
-    ],
-
-    [modals, service]
+      ];
+    },
+    [modals, navigate, service]
   );
 };
 

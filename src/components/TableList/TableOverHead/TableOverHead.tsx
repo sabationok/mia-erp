@@ -8,14 +8,19 @@ import TActions from '../TableActions';
 import TableFilter from '../TableFilter';
 
 const TableOverHead: React.FC<React.HTMLAttributes<HTMLDivElement>> = props => {
-  const { actionsCreator, isFilter, tableSearchParams, isSearch = true } = useTable();
+  const { actionsCreator, isFilter, onSubmitSearch, tableSearchParams, isSearch = true } = useTable();
 
   return (
     <OverHead className="tOverHead" {...props}>
-      <LeftSide className="leftSide">{isSearch && <TableSearchForm {...{ tableSearchParams }} />}</LeftSide>
+      <LeftSide className={'leftSide'} style={{ padding: isSearch ? '4px 8px' : '0' }}>
+        {isSearch && <TableSearchForm {...{ tableSearchParams }} onSubmit={onSubmitSearch} />}
+      </LeftSide>
 
       <DeviceControl.MinDesktop>
-        <RightSide className="rightSide">
+        <RightSide
+          className={'rightSide'}
+          style={{ padding: !isFilter && !isFilter && !actionsCreator ? '0' : '4px 8px' }}
+        >
           {isFilter && <TableFilter />}
 
           {isFilter && actionsCreator && <Separator />}
@@ -27,20 +32,19 @@ const TableOverHead: React.FC<React.HTMLAttributes<HTMLDivElement>> = props => {
   );
 };
 
-const OverHead = styled.div<{ padding?: string }>`
+const OverHead = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   justify-content: space-between;
 
   gap: 8px;
-  padding: ${({ padding = '0' }) => padding};
 
   position: relative;
   z-index: 50;
 
   width: 100%;
 
-  background-color: ${({ theme }) => theme.tableBackgroundColor};
+  //background-color: ${({ theme }) => theme.tableBackgroundColor};
   @media screen and (max-height: 480px) {
     //padding: 8px;
   }
@@ -59,19 +63,16 @@ const LeftSide = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  padding: 0 8px;
-
   /* overflow: hidden; */
 `;
 const RightSide = styled.div`
+  display: flex;
   align-self: flex-end;
 
-  display: flex;
   justify-content: flex-end;
   align-items: center;
   gap: 8px;
 
-  padding: 4px 8px;
   /* overflow: hidden; */
 `;
 const Separator = styled.div`

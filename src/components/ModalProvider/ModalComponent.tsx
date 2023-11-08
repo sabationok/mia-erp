@@ -57,6 +57,9 @@ export interface IModalSettings {
   closeBtn?: boolean;
   onBackdropClose?: boolean;
   onEscapePressClose?: boolean;
+
+  closeByBackdropPress?: boolean;
+  closeByEscapePress?: boolean;
 }
 
 const initialSettings: IModalSettings = {
@@ -65,8 +68,8 @@ const initialSettings: IModalSettings = {
   modalAnimation: modalAnimation[ModalAnimationType.FromBottom],
   closeBtn: false,
   modalStyle: modalStyle[ModalAnimationType.FromBottom],
-  onBackdropClose: true,
-  onEscapePressClose: true,
+  closeByBackdropPress: true,
+  closeByEscapePress: true,
 };
 
 interface ModalCTX {
@@ -83,7 +86,6 @@ export const ModalContext = createContext({});
 export const useModal = () => useContext(ModalContext) as ModalCTX;
 
 const ModalComponent: React.FC<ModalComponentProps> = ({
-  children,
   RenderModalComponentChildren,
   childrenProps,
   idx,
@@ -93,15 +95,18 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   totalLength,
   isLast,
 }) => {
-  const [modalSettings, setModalSettings] = useState<IModalSettings>(settings || initialSettings);
-
+  const [modalSettings, setModalSettings] = useState<IModalSettings>({ ...initialSettings, ...settings });
   function handleSetModalSettings(settings: IModalSettings) {
     setModalSettings(settings);
   }
 
-  function onBackdropClick(ev: React.MouseEvent) {
-    if (ev.target !== ev.currentTarget) return;
-    if (typeof onClose === 'function') onClose();
+  function handleMouseDownOnBackdrop(ev: React.MouseEvent<HTMLDivElement>) {
+    if (modalSettings?.closeByBackdropPress) {
+      if (ev.target === ev.currentTarget) {
+        ev.target.addEventListener('mouseup', onClose, { once: true });
+        return;
+      }
+    }
   }
 
   const CTX: ModalCTX = useMemo(
@@ -123,10 +128,10 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   }, [childrenProps, id, idx]);
 
   useEffect(() => {
-    if (!modalSettings.onEscapePressClose) return;
+    if (!modalSettings.closeByEscapePress) return;
 
     function handleToggleModalByEsc(evt: KeyboardEvent) {
-      if (!isLast || !modalSettings.onEscapePressClose) return;
+      if (!isLast || !modalSettings.closeByEscapePress) return;
 
       if (evt?.code === 'Escape') {
         if (typeof onClose === 'function') onClose();
@@ -138,15 +143,16 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
     return () => {
       document.removeEventListener('keydown', handleToggleModalByEsc);
     };
-  }, [isLast, modalSettings.onEscapePressClose, onClose]);
+  }, [isLast, modalSettings.closeByEscapePress, onClose]);
 
   return (
     <Backdrop
       key={idx}
       isLast={isLast}
-      onClick={onBackdropClick}
       style={modalSettings.backdropStyle}
       modalSettings={modalSettings}
+      onMouseDown={handleMouseDownOnBackdrop}
+      // onMouseUp={handleCloseByBackdrop}
     >
       <Suspense>
         <ModalContext.Provider value={CTX}>

@@ -45,14 +45,17 @@ const SelectPriceListItem: React.FC<SelectPriceListItemProps> = ({ selected, onS
     [onSelect]
   );
   const renderProducts = useMemo(() => {
-    return loadedData?.map(p => (
-      <ProductCardSimpleOverview
-        key={`product-${p._id}`}
-        product={p}
-        onSelect={() => onItemSelect(p)}
-        isSelected={p._id === selected?._id}
-      />
-    ));
+    return loadedData?.map(
+      p =>
+        p?.product && (
+          <ProductCardSimpleOverview
+            key={`product-${p._id}`}
+            product={p?.product}
+            onSelect={() => onItemSelect(p)}
+            isSelected={p._id === selected?._id}
+          />
+        )
+    );
   }, [onItemSelect, loadedData, selected?._id]);
 
   const getData = useCallback(

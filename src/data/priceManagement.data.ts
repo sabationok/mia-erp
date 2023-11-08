@@ -1,203 +1,169 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
-import t from '../lang';
-import { IPriceList, IPriceListItem, PriceListTypeEnum } from '../redux/priceManagement/priceManagement.types';
-import { enumToFilterOptions } from '../utils/fabrics';
+import { t } from '../lang';
+import {
+  IPriceList,
+  IPriceListItem,
+  PriceAmountAndPercentageFieldsKey,
+} from '../redux/priceManagement/priceManagement.types';
 import numberWithSpaces from '../utils/numbers';
+import { priceAmountAndPercentageFieldsLabels } from '../utils/tables';
 
-export type DataPath =
-  | 'category.label'
-  | 'subCategory.label'
-  | 'brand.name'
-  | 'brand.label'
-  | 'owner.name'
-  | 'owner.email'
-  | 'author.name'
-  | 'author.email'
-  | 'editor.name'
-  | 'editor.email'
-  | 'auditor.name'
-  | 'auditor.email'
-  | 'manufacturer.name'
-  | 'manufacturer.email'
-  | 'mark.label'
-  | 'tags'
-  | 'type'
-  | 'status'
-  | 'sale'
-  | 'cashback.sale'
-  | 'cashback.level'
-  | 'cashback.bonuses'
-  | 'currency'
-  | 'description'
-  | 'createdAt'
-  | 'updatedAt'
-  | 'label'
-  | 'sku'
-  | 'price'
-  | 'visibility'
-  | 'availabilityInfo.status'
-  | 'availabilityInfo.primaryOrder'
-  | 'availabilityInfo.primaryOrderTime'
-  | 'availabilityInfo.customOrder'
-  | 'availabilityInfo.customOrderTime'
-  | 'product.label'
-  | 'product.sku'
-  | 'timeFrom'
-  | 'timeTo';
-export const priceListTypeFilterOptions = enumToFilterOptions(PriceListTypeEnum);
-
-export const priceListColumns: CellTittleProps<IPriceList, DataPath>[] = [
+const dateColumn: CellTittleProps = {
+  top: { name: t('Updated'), align: 'center', getData: d => d?.createdAt },
+  bottom: { name: t('Created'), align: 'center', getData: d => d?.updatedAt },
+  width: '170px',
+  action: 'dateDbl',
+};
+export const priceListColumns: CellTittleProps<IPriceList>[] = [
   {
-    top: { name: t('label'), align: 'start', path: 'label' },
-    bottom: { name: t('type'), align: 'start', path: 'type' },
+    top: { name: t('label'), path: 'label' },
+    bottom: { name: t('type'), path: 'type' },
     width: '210px',
     action: 'valueByPath',
   },
 
   {
-    top: { name: 'Коментар', align: 'start', path: 'description' },
+    top: {
+      name: t('timeTo'),
+      align: 'center',
+      getData: d => d?.timeTo,
+    },
+    bottom: {
+      name: t('timeFrom'),
+      align: 'center',
+      getData: d => d?.timeFrom,
+    },
+    width: '150px',
+    action: 'dateDbl',
+  },
+  {
+    top: { name: 'Теги клієнтів', path: 'tags' },
+    // bottom: { name: 'Емейл', path: 'author.email' },
+    width: '230px',
+    action: 'tags',
+  },
+  {
+    top: { name: 'Теги постачальників', path: 'tags' },
+    // bottom: { name: 'Емейл', path: 'author.email' },
+    width: '230px',
+    action: 'tags',
+  },
+  {
+    top: { name: 'Автор', path: 'author.name' },
+    bottom: { name: 'Емейл', path: 'author.email' },
+    width: '170px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Коментар', path: 'description' },
     width: '250px',
     action: 'valueByPath',
   },
-  {
+  dateColumn,
+];
+
+export function createColumnForPriceEntity(
+  name: PriceAmountAndPercentageFieldsKey,
+  width?: string
+): CellTittleProps<IPriceListItem> {
+  const topLabel = priceAmountAndPercentageFieldsLabels[name]?.amount;
+  const countedWidth = width || `${topLabel?.length * 12}px`;
+
+  return {
     top: {
-      name: t('timeTo'),
-      align: 'center',
-      getData: d => d?.timeTo,
+      name: topLabel,
+      align: 'end',
+      getData: d => numberWithSpaces(d[name]?.amount),
     },
     bottom: {
-      name: t('timeFrom'),
-      align: 'center',
-      getData: d => d?.timeFrom,
+      name: priceAmountAndPercentageFieldsLabels[name]?.percentage,
+      align: 'end',
+      getData: d => numberWithSpaces(d[name]?.percentage),
     },
-    width: '150px',
-    action: 'dateDbl',
-  },
+    width: countedWidth,
+    action: 'valueByPath',
+  };
+}
+const keys: PriceAmountAndPercentageFieldsKey[] = [
+  'commission',
+  'markup',
+  'bonus',
+  'cashback',
+  'discount',
+  'tax',
+  'vat',
+];
+
+const basePriceColumns: CellTittleProps<IPriceListItem>[] = [
   {
-    top: { name: 'Теги клієнтів', align: 'start', path: 'tags' },
-    // bottom: { name: 'Емейл', align: 'start', path: 'author.email' },
-    width: '230px',
-    action: 'tags',
-  },
-  {
-    top: { name: 'Теги постачальників', align: 'start', path: 'tags' },
-    // bottom: { name: 'Емейл', align: 'start', path: 'author.email' },
-    width: '230px',
-    action: 'tags',
-  },
-  {
-    top: { name: 'Автор', align: 'start', path: 'author.name' },
-    bottom: { name: 'Емейл', align: 'start', path: 'author.email' },
+    top: {
+      name: t('Price OUT'),
+      align: 'end',
+      getData: d => numberWithSpaces(d?.out),
+    },
+    bottom: { name: t('Price IN'), align: 'end', getData: d => numberWithSpaces(null) },
     width: '170px',
     action: 'valueByPath',
   },
+  ...keys.map(k => createColumnForPriceEntity(k)),
   {
-    top: { name: 'Створено', getData: d => d?.createdAt },
-    bottom: { name: 'Оновлено', getData: d => d?.updatedAt },
-    width: '170px',
-    action: 'dateDbl',
+    top: { name: t('description'), path: 'description' },
+    width: '150px',
+    action: 'valueByPath',
   },
 ];
-export const priceListContentColumns: CellTittleProps<IPriceListItem, DataPath>[] = [
+
+export const priceListContentColumns: CellTittleProps<IPriceListItem>[] = [
   {
-    top: { name: 'Продукт', getData: d => d?.product?.label },
-    bottom: { name: t('sku'), getData: d => d?.product?.sku },
+    top: { name: t('Product label'), getData: d => d?.product?.label },
+    bottom: { name: t('Variation label'), getData: d => d?.variation?.label },
     width: '270px',
-    getImgPreview: ({ product }, titleProps) => (product?.images ? product?.images[0]?.img_preview : ''),
+    getImgPreview: ({ product }) => (product?.images ? product?.images[0]?.img_preview : ''),
     action: 'doubleDataWithAvatar',
   },
   {
-    top: { name: 'Вихідна ціна', align: 'end', getData: d => numberWithSpaces(Number(d?.price || 0)) },
-    bottom: { name: 'Вхідна ціна', align: 'end', getData: d => numberWithSpaces(Number(d?.cost || 0)) },
-    width: '170px',
+    top: { name: t('SKU'), getData: d => d?.product?.sku },
+    bottom: { name: t('SKU'), getData: d => d?.variation?.sku },
+    width: '150px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Комісія, сума', align: 'end', getData: d => d?.commissionAmount },
-    bottom: { name: 'Комісія, %', align: 'end', getData: d => d?.commissionPercentage },
-    width: '170px',
-    action: 'valueByPath',
-  },
-
-  {
-    top: { name: 'Націнка, сума', align: 'end', getData: d => d?.markupAmount },
-    bottom: { name: 'Націнка, %', align: 'end', getData: d => d?.markupPercentage },
-    width: '170px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: 'Коментар', align: 'start', path: 'description' },
+    top: { name: t('barCode'), getData: d => d?.product?.barCode },
+    bottom: { name: t('barCode'), getData: d => d?.variation?.barCode },
     width: '150px',
     action: 'valueByPath',
   },
 
+  ...basePriceColumns,
   {
-    top: {
-      name: t('timeTo'),
-      align: 'center',
-      getData: d => d?.timeTo,
-    },
-    bottom: {
-      name: t('timeFrom'),
-      align: 'center',
-      getData: d => d?.timeFrom,
-    },
-    width: '150px',
-    action: 'dateDbl',
-  },
-  {
-    top: { name: 'Автор', align: 'start', path: 'author.name' },
-    bottom: { name: 'Емейл', align: 'start', path: 'author.email' },
+    top: { name: t('Author'), path: 'author.name' },
+    bottom: { name: t('email'), path: 'author.email' },
     width: '150px',
     action: 'valueByPath',
   },
-  {
-    top: { name: 'Створено', getData: d => d?.createdAt },
-    bottom: { name: 'Оновлено', getData: d => d?.updatedAt },
-    width: '170px',
-    action: 'dateDbl',
-  },
+
+  dateColumn,
 ];
 
-export const pricesColumnsForProductReview: CellTittleProps<IPriceListItem, DataPath>[] = [
+export const pricesColumnsForProductReview: CellTittleProps<IPriceListItem>[] = [
   {
-    top: { name: 'Вихідна ціна', align: 'end', getData: d => numberWithSpaces(Number(d?.price || 0)) },
-    bottom: { name: 'Вхідна ціна', align: 'end', getData: d => numberWithSpaces(Number(d?.cost || 0)) },
+    top: { name: t('Variation label'), getData: d => d?.variation?.label },
+    // bottom: { name: '',  getData: d => ''},
+    getImgPreview: rd => (rd.product?.images ? rd.product?.images[0]?.img_preview : ''),
+    width: '170px',
+    action: 'doubleDataWithAvatar',
+  },
+  {
+    top: { name: t('SKU'), getData: d => d?.variation?.sku },
+    bottom: { name: t('barCode'), getData: d => d?.variation?.barCode },
     width: '170px',
     action: 'valueByPath',
   },
+
+  ...basePriceColumns,
   {
-    top: { name: 'Комісія, сума', align: 'end', getData: d => numberWithSpaces(Number(d?.commissionAmount || 0)) },
-    bottom: { name: 'Комісія, %', align: 'end', getData: d => numberWithSpaces(Number(d?.commissionPercentage || 0)) },
-    width: '170px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: 'Націнка, сума', align: 'end', getData: d => numberWithSpaces(Number(d?.markupAmount || 0)) },
-    bottom: { name: 'Націнка, %', align: 'end', getData: d => numberWithSpaces(Number(d?.markupPercentage || 0)) },
-    width: '170px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: 'Знижка, сума', align: 'end', getData: d => numberWithSpaces(Number(d?.discount || 0)) },
-    bottom: { name: 'Знижка, %', align: 'end', getData: d => numberWithSpaces(Number(d?.discount || 0)) },
-    width: '170px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: 'Бонуси, сума', align: 'end', getData: d => numberWithSpaces(Number(d?.discount || 0)) },
-    bottom: { name: 'Бонуси, %', align: 'end', getData: d => numberWithSpaces(Number(d?.discount || 0)) },
-    width: '170px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: 'Коментар', align: 'start', path: 'description' },
-    width: '150px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: 'Прайс лист', getData: d => d?.list?.label },
-    bottom: { name: 'Тип', getData: d => d?.list?.type },
+    top: { name: t('Price list'), getData: d => d?.list?.label },
+    bottom: { name: t('type'), getData: d => d?.list?.type },
     width: '170px',
     action: 'valueByPath',
   },
@@ -205,14 +171,16 @@ export const pricesColumnsForProductReview: CellTittleProps<IPriceListItem, Data
     top: {
       name: t('timeTo'),
       align: 'center',
-      getData: d => d?.timeTo,
+      getData: d => `${d?.list?.timeTo}`,
     },
     bottom: {
       name: t('timeFrom'),
       align: 'center',
-      getData: d => d?.timeFrom,
+      getData: d => `${d?.list?.timeFrom}`,
     },
     width: '150px',
     action: 'dateDbl',
   },
+
+  dateColumn,
 ];

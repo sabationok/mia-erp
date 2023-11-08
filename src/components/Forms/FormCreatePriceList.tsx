@@ -12,10 +12,10 @@ import FlexBox from '../atoms/FlexBox';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import translate from '../../lang';
-import FormCreateInner from './components/FormCreateInner';
+import ExtraFooterWithButton from '../atoms/ExtraFooterWithButton';
 import * as React from 'react';
 import { useState } from 'react';
-import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 
 export interface FormCreatePriceListProps extends Omit<ModalFormProps<PriceListType>, 'onSubmit' | 'afterSubmit'> {
@@ -37,17 +37,14 @@ const FormCreatePriceList: React.FC<FormCreatePriceListProps> = ({
   edit,
   ...props
 }) => {
-  // const modalService = useModalProvider();
+  const submitOptions = useAfterSubmitOptions();
   const [isSuccess] = useState(false);
+  // const modalService = useModalProvider();
   // const [currentList, setCurrentList] = useState<IPriceList | undefined>();
   // const currentList = usePriceListById();
   const {
     formState: { errors, isValid },
     register,
-    // registerSelect,
-    clearAfterSave,
-    closeAfterSave,
-    toggleAfterSubmitOption,
     setValue,
     handleSubmit,
   } = useAppForm<PriceListDto>({
@@ -62,9 +59,8 @@ const FormCreatePriceList: React.FC<FormCreatePriceListProps> = ({
         _id: defaultData?._id,
       },
       {
-        closeAfterSave,
-        clearAfterSave,
-        onSuccess: data => {},
+        closeAfterSave: submitOptions.state.close,
+        onSuccess: _data => {},
         onError: () => {},
       }
     );
@@ -95,14 +91,8 @@ const FormCreatePriceList: React.FC<FormCreatePriceListProps> = ({
       }}
       extraFooter={
         <FlexBox fxDirection={'column'} fillWidth>
-          {isSuccess && <FormCreateInner buttonText={'Add prices'} onClick={onAddPricesClick} />}
-          <FormAfterSubmitOptions
-            {...{
-              clearAfterSave,
-              closeAfterSave,
-              toggleOption: toggleAfterSubmitOption,
-            }}
-          />
+          {isSuccess && <ExtraFooterWithButton buttonText={'Add prices'} onClick={onAddPricesClick} />}
+          <FormAfterSubmitOptions {...submitOptions} />
         </FlexBox>
       }
     >

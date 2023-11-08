@@ -1,34 +1,52 @@
-import { IBase } from '../global.types';
+import { IBase, OnlyUUID } from '../global.types';
 import { ICompany } from '../companies/companies.types';
 import { IProductInventory } from '../warehouses/warehouses.types';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
 import { AppQueryParams } from '../../api';
-import { IProduct } from './products.types';
+import { IProduct, IProductDimensions } from './products.types';
 import { IPropertyValue } from './properties.types';
 import { IUser } from '../auth/auth.types';
 
-export interface IVariation extends IBase {
-  owner?: ICompany;
-  author?: IUser;
-  editor?: IUser;
+export interface IVariationBase {
+  label?: string;
+  sku?: string;
+  barCode?: string;
 
-  product?: IProduct;
-  inventories?: IProductInventory[];
-  price?: IPriceListItem;
-
-  properties?: IPropertyValue[];
+  dimensions?: IProductDimensions;
 
   timeFrom?: string | number | Date;
   timeTo?: string | number | Date;
 }
 
-export interface IVariationTableData extends IVariation {
-  propertiesMap: VariationPropertiesMap;
-}
-export type VariationPropertiesMap = Record<string, IPropertyValue>;
+export interface IVariation extends IVariationBase, IBase {
+  owner?: ICompany;
+  author?: IUser;
+  editor?: IUser;
 
-export interface VariationDto {
+  product?: IProduct;
+  price?: IPriceListItem;
+  inventories?: IProductInventory[];
+
+  properties?: IPropertyValue[];
+}
+
+export type VariationPropertiesMapInTableData = Record<string, IPropertyValue>;
+
+export type VariationPropertiesMapInFormData = Record<string, string>;
+export interface IVariationTableData extends IVariation {
+  propertiesMap: VariationPropertiesMapInTableData;
+}
+export interface IVariationFormData extends IVariationBase {
+  propertiesMap: VariationPropertiesMapInFormData;
+  product?: OnlyUUID & { label?: string };
+
+  timeFrom?: string | number | Date;
+  timeTo?: string | number | Date;
+}
+
+export interface VariationDto extends IVariationBase {
   properties?: string[];
+  product?: OnlyUUID;
 
   timeFrom?: string | number | Date;
   timeTo?: string | number | Date;

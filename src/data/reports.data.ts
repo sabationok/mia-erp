@@ -1,5 +1,4 @@
-import { IAccordeonOptionProps } from 'components/SideBarContent/AccordeonList';
-import OptionsList from 'components/SideBarContent/OptionsList';
+import { IAccordionOptionProps } from 'components/SideBarContent/AccordeonList';
 import { iconId } from 'img/sprite/iconId.data';
 import ModalForm from 'components/ModalForm';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
@@ -8,7 +7,7 @@ import ReportCategories, { IReportCategoriesProps } from 'components/Raports/Rep
 import ReportCounts, { IReportCountsProps } from 'components/Raports/ReportCounts';
 import ReportContractors, { IReportContractorsProps } from 'components/Raports/ReportContractors';
 import ReportProjects, { IReportProjectsProps } from '../components/Raports/ReportProjects';
-import { categoriesFilterOptions, countsFilterOptions } from './directories.data';
+import { categoriesFilterOptions, countsFilterOptions } from './modalFilterOptions.data';
 
 const categoriesReport: IReportConfigs<IReportCategoriesProps> = {
   title: 'Доходи/Витрати',
@@ -146,7 +145,7 @@ const tagsReport: IReportConfigs = {
   disabled: true,
 };
 
-const financeReports: Partial<IReportConfigs>[] = [
+export const financeReports: Partial<IReportConfigs>[] = [
   categoriesReport,
   countsReport,
   activitiesReport,
@@ -160,25 +159,25 @@ const financeReports: Partial<IReportConfigs>[] = [
   // { title: '', disabled: true },
 ];
 
-export const reports: IAccordeonOptionProps<any, Partial<IReportConfigs>[]>[] = [
-  {
-    title: 'Фінанси',
-    ChildrenComponent: OptionsList,
-    options: financeReports,
-  },
-  {
-    title: 'Продажі',
-    ChildrenComponent: OptionsList,
-    options: financeReports,
-  },
-  {
-    title: 'Склад ',
-    ChildrenComponent: OptionsList,
-    options: financeReports,
-  },
-  {
-    title: 'Інші',
-    ChildrenComponent: OptionsList,
-    options: financeReports,
-  },
+export const reports: IAccordionOptionProps<any, Partial<IReportConfigs>[]>[] = [
+  // {
+  //   title: 'Фінанси',
+  //   ChildrenComponent: OptionsList,
+  //   options: financeReports,
+  // },
+  // {
+  //   title: 'Продажі',
+  //   ChildrenComponent: OptionsList,
+  //   options: financeReports,
+  // },
+  // {
+  //   title: 'Склад ',
+  //   ChildrenComponent: OptionsList,
+  //   options: financeReports,
+  // },
+  // {
+  //   title: 'Інші',
+  //   ChildrenComponent: OptionsList,
+  //   options: financeReports,
+  // },
 ];

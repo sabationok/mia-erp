@@ -1,8 +1,11 @@
 import baseApi from './baseApi';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
-import { IAllOrdersRes, IOrder, IOrderRes, IOrderSlot } from '../redux/orders/orders.types';
-import { AppResponse, OnlyUUID } from '../redux/global.types';
-import { IProduct } from '../redux/products/products.types';
+import {
+  IAllOrdersRes,
+  ICreateOrdersWithSlotsAndGroupByWarehousesReqData,
+  IOrderRes,
+} from '../redux/orders/orders.types';
+import { AppQueryParams } from './index';
 
 export default class OrdersApi {
   private static api = baseApi;
@@ -20,31 +23,44 @@ export default class OrdersApi {
     return this.api.post(this.endpoints.create());
   }
 
-  public static async deleteOne(...args: any[]): Promise<AppResponse<IOrder & { result: boolean }>> {
-    return this.api.delete(this.endpoints.deleteById());
+  public static async createManyOrdersGroupedByWarehouse(
+    data?: ICreateOrdersWithSlotsAndGroupByWarehousesReqData
+  ): Promise<IOrderRes> {
+    return this.api.post(
+      this.endpoints.createManyOrdersGroupedByWarehouse(),
+      { slots: data?.data.slots, ...data?.data.info },
+      { params: data?.params }
+    );
   }
 
-  public static async updateOne(...args: any[]): Promise<IOrderRes> {
-    return this.api.patch(this.endpoints.updateList());
+  public static async createGroupWithSlots(
+    data?: ICreateOrdersWithSlotsAndGroupByWarehousesReqData,
+    params?: AppQueryParams
+  ): Promise<IOrderRes> {
+    return this.api.post(this.endpoints.create(), data, { params });
   }
 
-  public static async getAllSlotsByOrderId(...args: any[]): Promise<AppResponse<IOrderSlot[]>> {
-    return this.api.get(this.endpoints.getAllOrderSlots());
-  }
-  public static async addOrderSlot(...args: any[]): Promise<AppResponse<IOrderSlot>> {
-    return this.api.post(this.endpoints.addSlotToOrder());
-  }
-  public static async softDeleteOrderSlot(...args: any[]): Promise<AppResponse<IOrderSlot & { result: boolean }>> {
-    return this.api.get(this.endpoints.softDeleteSlotFromOrder());
-  }
-  public static async addOrderSlotItem(order: OnlyUUID): Promise<AppResponse<IOrderSlot>> {
-    return this.api.post(this.endpoints.addItemToOrderSlot(order._id));
-  }
-  public static async softDeleteOrderSlotItem(...args: any[]): Promise<AppResponse<IOrderSlot & { result: boolean }>> {
-    return this.api.get(this.endpoints.softDeleteOrderSlotItem());
-  }
-
-  public static async getPreparedDataForNewSlot(product?: OnlyUUID): Promise<AppResponse<IProduct>> {
-    return this.api.get(this.endpoints.getDataForNewOrderSlot(product?._id));
-  }
+  // public static async deleteOne(...args: any[]): Promise<AppResponse<IOrder & { result: boolean }>> {
+  //   return this.api.delete(this.endpoints.deleteById());
+  // }
+  //
+  // public static async updateOne(...args: any[]): Promise<IOrderRes> {
+  //   return this.api.patch(this.endpoints.updateList());
+  // }
+  //
+  // public static async getAllSlotsByOrderId(...args: any[]): Promise<AppResponse<IOrderSlot[]>> {
+  //   return this.api.get(this.endpoints.getAllOrderSlots());
+  // }
+  // private static async addOrderSlot(...args: any[]): Promise<AppResponse<IOrderSlot>> {
+  //   return this.api.post(this.endpoints.addSlotToOrder());
+  // }
+  // private static async softDeleteOrderSlot(...args: any[]): Promise<AppResponse<IOrderSlot & { result: boolean }>> {
+  //   return this.api.get(this.endpoints.softDeleteSlotFromOrder());
+  // }
+  // private static async addOrderSlotItem(order: OnlyUUID): Promise<AppResponse<IOrderSlot>> {
+  //   return this.api.post(this.endpoints.addItemToOrderSlot(order._id));
+  // }
+  // private static async softDeleteOrderSlotItem(...args: any[]): Promise<AppResponse<IOrderSlot & { result: boolean }>> {
+  //   return this.api.get(this.endpoints.softDeleteOrderSlotItem());
+  // }
 }

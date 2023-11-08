@@ -29,5 +29,4 @@ const useTransactionsService = (): TransactionsService => {
   }, [dispatch]);
 };
 
-export type useTrServiceHookType = typeof useTransactionsService;
-export default useTransactionsService as useTrServiceHookType;
+export default useTransactionsService;

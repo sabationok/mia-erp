@@ -11,15 +11,21 @@ import {
   inviteUserThunk,
   logInPermissionThunk,
   logOutPermissionThunk,
-  updateCompanyWithPermissionThunk,
+  updateCurrentCompanyThunk,
   updatePermissionThunk,
 } from '../redux/permissions/permissions.thunk';
-import { IPermission, IPermissionForReq, IPermissionReqData } from '../redux/permissions/permissions.types';
+import {
+  IPermission,
+  IPermissionForReq,
+  IPermissionReqData,
+  IPermissionsState,
+} from '../redux/permissions/permissions.types';
 import { useMemo } from 'react';
 import { ServiceDispatcherAsync } from 'redux/global.types';
 import { clearCurrentPermission } from '../redux/permissions/permissions.action';
 import { defaultThunkPayload } from '../utils/fabrics';
-import { ICompanyForReq, ICompanyReqData } from '../redux/companies/companies.types';
+import { ICompany, ICompanyForReq, ICompanyReqData } from '../redux/companies/companies.types';
+import { IUser } from '../redux/auth/auth.types';
 
 export interface PermissionService {
   getAllByCompanyId: ServiceDispatcherAsync<{ companyId: string; refresh?: boolean }, IPermission[]>;
@@ -28,7 +34,11 @@ export interface PermissionService {
   edit: ServiceDispatcherAsync<IPermissionReqData>;
   create: ServiceDispatcherAsync<IPermissionForReq>;
   getCurrent: ServiceDispatcherAsync<{ id: string }>;
-  permissionLogOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean }>;
+  permissionLogOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean; user: IUser }>;
+  logOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean }>;
+  logIn: ServiceDispatcherAsync<{ _id: string }, IPermission>;
+  clearCurrent: () => void;
+  validatePermission?: (validateBy: ValidatePermissionOptions) => boolean;
 
   createInvitation: ServiceDispatcherAsync<IPermissionForReq, IPermission>;
   updateInvitation?: ServiceDispatcherAsync<IPermissionForReq, IPermission>;
@@ -37,13 +47,9 @@ export interface PermissionService {
   deleteInvitation?: ServiceDispatcherAsync<IPermissionForReq, IPermission>;
 
   createCompany: ServiceDispatcherAsync<ICompanyForReq>;
-  updateCompany: ServiceDispatcherAsync<Required<ICompanyReqData>>;
   deleteCompany: ServiceDispatcherAsync<{ _id: string }>;
 
-  logOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean }>;
-  logIn: ServiceDispatcherAsync<{ _id: string }, IPermission>;
-  clearCurrent: () => void;
-  validatePermission?: (validateBy: ValidatePermissionOptions) => boolean;
+  updateCurrentCompany: ServiceDispatcherAsync<ICompanyReqData, ICompany>;
 }
 
 export interface ValidatePermissionOptions {
@@ -52,7 +58,8 @@ export interface ValidatePermissionOptions {
   userId?: string;
 }
 
-export const usePermissionsSelector = () => useSelector((state: RootState) => state.permissions);
+export const usePermissionsSelector = () =>
+  useSelector<RootState, IPermissionsState>((state: RootState): IPermissionsState => state['permissions']);
 const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOptions = {}): PermissionService => {
   const dispatch: AppDispatch = useAppDispatch();
 
@@ -64,6 +71,7 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
 
       deleteById: args => dispatch(deletePermissionByIdThunk(defaultThunkPayload(args))),
       edit: args => dispatch(updatePermissionThunk(defaultThunkPayload(args))),
+
       create: args => dispatch(createPermissionThunk(defaultThunkPayload(args))),
       getCurrent: args => dispatch(getCurrentPermissionThunk(defaultThunkPayload(args))),
 
@@ -71,14 +79,16 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
       logOut: args => dispatch(logOutPermissionThunk(defaultThunkPayload(args))),
       logIn: args => dispatch(logInPermissionThunk(defaultThunkPayload(args))),
       clearCurrent: () => dispatch(clearCurrentPermission()),
+      // * INVITATIONS
+      createInvitation: args => dispatch(inviteUserThunk(defaultThunkPayload(args))),
 
+      // * COMPANIES
       createCompany: args => dispatch(createCompanyWithPermissionThunk(defaultThunkPayload(args))),
       deleteCompany: args => dispatch(deleteCompanyWithPermissionThunk(defaultThunkPayload(args))),
-      updateCompany: args => dispatch(updateCompanyWithPermissionThunk(defaultThunkPayload(args))),
-
-      createInvitation: args => dispatch(inviteUserThunk(defaultThunkPayload(args))),
+      // * CURRENT COMPANY
+      updateCurrentCompany: args => dispatch(updateCurrentCompanyThunk(defaultThunkPayload(args))),
     };
   }, [dispatch]);
 };
 
-export default usePermissionsService as typeof usePermissionsService;
+export default usePermissionsService;

@@ -56,8 +56,8 @@ const Footer = styled.footer`
   border-bottom-left-radius: 2px;
 
   border-top: 1px solid ${({ theme }) => theme.modalBorderColor};
-  border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
-  border-right: 1px solid ${({ theme }) => theme.modalBorderColor};
+  //border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
+  //border-right: 1px solid ${({ theme }) => theme.modalBorderColor};
   color: ${({ theme }) => theme.fontColorHeader};
   fill: ${({ theme }) => theme.fillColorHeader};
   background-color: ${({ theme }) => theme.modalBackgroundColor};

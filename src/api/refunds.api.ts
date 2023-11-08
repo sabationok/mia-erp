@@ -6,7 +6,7 @@ import { IAllRefundsRes, IRefund, IRefundRes, IRefundSlot } from '../redux/refun
 
 export default class RefundsApi {
   private static api = baseApi;
-  private static endpoints = APP_CONFIGS.endpoints.ordersEndpoints;
+  private static endpoints = APP_CONFIGS.endpoints.refunds;
 
   public static async getAll(...args: any[]): Promise<IAllRefundsRes> {
     return this.api.get(this.endpoints.getAll());
@@ -24,9 +24,9 @@ export default class RefundsApi {
     return this.api.delete(this.endpoints.deleteById());
   }
 
-  public static async updateOne(...args: any[]): Promise<IRefundRes> {
-    return this.api.patch(this.endpoints.updateList());
-  }
+  // public static async updateOne(...args: any[]): Promise<IRefundRes> {
+  //   return this.api.patch(this.endpoints.up());
+  // }
 
   public static async getAllSlotsByRefundId(...args: any[]): Promise<AppResponse<IRefundSlot[]>> {
     return this.api.get(this.endpoints.getAllRefundSlots());

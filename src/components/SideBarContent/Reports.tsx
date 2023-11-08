@@ -1,12 +1,11 @@
 import styled from 'styled-components';
-import AccordeonList, { IAccordeonOptionProps } from './AccordeonList';
+import AccordeonList, { IAccordionOptionProps } from './AccordeonList';
 
 export interface IReportsProps {
-  options: IAccordeonOptionProps[];
+  options: IAccordionOptionProps[];
 }
 
 const Reports: React.FC<IReportsProps> = props => {
-
   return (
     <Container>
       <AccordeonList options={props.options}></AccordeonList>

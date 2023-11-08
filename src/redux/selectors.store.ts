@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { RootState } from './store.store';
 import { useSelector } from 'react-redux';
 import { IAuthState } from './auth/auth.types';
@@ -11,14 +12,30 @@ import { ApiDirType } from './APP_CONFIGS';
 import { IDirItemBase } from '../components/Directories/dir.types';
 import { IDirectoriesState } from './directories/directories.slice';
 import { IOrdersState } from './orders/orders.slice';
-import { useMemo } from 'react';
 import { IRefundsState } from './refunds/refunds.slice';
 import { IWarehouseState } from './warehouses/warehouses.slice';
+import { IPermissionsState } from './permissions/permissions.types';
+import { CustomersState } from './customers/customers.slice';
+import { PaymentsState } from './payments/payments.slice';
+import { InvoicesState } from './invoices/invoices.slice';
+import { ShipmentsState } from './shipments/shipments.slice';
+import { IntegrationsState } from './integrations/integrations.slice';
 
 export const useAuthSelector = () => useSelector<RootState, IAuthState>((state: RootState) => state.auth);
 export const useUsersSelector = () => useSelector<RootState, IUsersState>((state: RootState) => state.users);
 export const useAppSettingsSelector = () =>
   useSelector<RootState, IAppSettings>((state: RootState) => state.appSettings);
+export const useCheckoutPaymentsSelector = () =>
+  useSelector<RootState, PaymentsState>((state: RootState) => state.payments);
+export const useInvoicesSelector = () =>
+  useSelector<RootState, InvoicesState>((state: RootState) => state['invoicing']);
+
+export const useIntegrationsSelector = () =>
+  useSelector<RootState, IntegrationsState>((state: RootState) => state['integrations']);
+export const useShipmentsSelector = () => useSelector<RootState, ShipmentsState>((state: RootState) => state.shipments);
+export const useCustomersSelector = () => useSelector<RootState, CustomersState>((state: RootState) => state.customers);
+export const useCommunicationSelector = () =>
+  useSelector<RootState, CustomersState>((state: RootState) => state['customers']);
 export const useAppPageSettingsSelector = () => useSelector((state: RootState) => state.appPage);
 export const useTransactionsSelector = (): ITransactionsState =>
   useSelector<RootState, ITransactionsState>((state: RootState): ITransactionsState => state.transactions);
@@ -31,8 +48,11 @@ export const usePropertiesSelector = () =>
   );
 export const useOrdersSelector = () =>
   useSelector<RootState, IOrdersState>((state: RootState): IOrdersState => state.orders);
+
+export const usePermissionsSelector = () =>
+  useSelector<RootState, IPermissionsState>((state: RootState): IPermissionsState => state['permissions']);
 export const useRefundsSelector = () =>
-  useSelector<RootState, IRefundsState>((state: RootState): IRefundsState => state.refunds);
+  useSelector<RootState, IRefundsState>((state: RootState): IRefundsState => state['refunds']);
 export const usePriceListsSelector = () =>
   useSelector<RootState, IPriceListsState>((state: RootState): IPriceListsState => state.priceLists);
 export const useWarehousesSelector = () =>

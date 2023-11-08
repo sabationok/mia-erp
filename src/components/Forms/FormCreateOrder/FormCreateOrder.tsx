@@ -1,12 +1,14 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { ICreateOrderFormState, IOrder, IOrderSlot } from '../../../redux/orders/orders.types';
+import { IOrder, IOrderSlot } from '../../../redux/orders/orders.types';
 import { useAppForm } from '../../../hooks';
 import { useCallback, useMemo, useState } from 'react';
-import { FilterOpt } from '../../ModalForm/ModalFilter';
-import FormCreateOrderProductsList from './FormCreateOrderProductsList';
-import FormCreateOrderMainInfo from './FormCreateOrderMainInfo';
+import ModalFilter from '../../ModalForm/ModalFilter';
+import OrderSlotsList from './components/OrderSlotsList';
 import { OnlyUUID } from '../../../redux/global.types';
+import { enumToFilterOptions } from '../../../utils/fabrics';
+import styled from 'styled-components';
+import { createStepsChecker } from '../../../utils';
 
 // const orderValidation = yup.object().shape({
 //   manager: yup.object().shape({ _id: yup.string() } as Record<keyof IUser, any>),
@@ -16,16 +18,24 @@ export interface FormCreateOrderProps extends Omit<ModalFormProps, 'onSubmit' | 
   onSubmit?: AppSubmitHandler<IOrder>;
 }
 
-export const FormCreateOrderTabs: FilterOpt[] = [
-  { label: 'Info', value: 'info' },
-  { label: 'Products', value: 'products' },
-];
+export enum OrderTabsEnum {
+  content = 'content',
+  // availability = 'availability',
+  info = 'info',
+  summary = 'summary',
+  invoices = 'invoices',
+}
+
+export const FormCreateOrderTabs = enumToFilterOptions(OrderTabsEnum);
+
+const checkStep = createStepsChecker(FormCreateOrderTabs);
 
 const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmit, ...props }) => {
   const [currentTab, setCurrentTab] = useState<number>(0);
+
   const [content, setContent] = useState<IOrderSlot[]>([]);
 
-  const form = useAppForm<ICreateOrderFormState>({
+  const form = useAppForm({
     defaultValues: defaultState,
   });
 
@@ -36,29 +46,40 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
     setContent(prev => prev.filter(el => el._id !== slot._id));
   }, []);
 
-  const onValid = (data?: ICreateOrderFormState) => {
+  const onValid = (data?: any) => {
     console.log('FormCreateOrderData =======================================');
     console.log(data);
   };
 
   const renderTab = useMemo(() => {
-    if (currentTab === 0) return <FormCreateOrderMainInfo form={form} />;
-    if (currentTab === 1)
-      return <FormCreateOrderProductsList list={content} onSelect={handleSelect} onRemove={handleRemove} />;
-  }, [currentTab, form, content, handleSelect, handleRemove]);
+    if (checkStep(currentTab)?.content) {
+      return <OrderSlotsList list={content} onSelect={handleSelect} onRemove={handleRemove} />;
+    }
+
+    if (checkStep(currentTab)?.info) {
+      return <></>;
+    }
+    if (checkStep(currentTab)?.summary) {
+    }
+    if (checkStep(currentTab)?.invoices) {
+    }
+  }, [currentTab, content, handleSelect, handleRemove]);
+
+  const renderFilter = useMemo(() => {
+    return <ModalFilter filterOptions={FormCreateOrderTabs} onChangeIndex={setCurrentTab} currentIndex={currentTab} />;
+  }, [currentTab]);
 
   return (
-    <ModalForm
-      fillHeight
-      width={'480px'}
-      {...props}
-      onOptSelect={(_o, _v, index) => setCurrentTab(index)}
-      filterOptions={FormCreateOrderTabs}
-      onSubmit={form.handleSubmit(onValid)}
-    >
+    <StModalForm fitContentH fillHeight {...props} onSubmit={form.handleSubmit(onValid)} extraHeader={renderFilter}>
       {renderTab}
-    </ModalForm>
+    </StModalForm>
   );
 };
+
+const StModalForm = styled(ModalForm)`
+  @media screen and (min-width: 480px) {
+    width: fit-content;
+  }
+`;
 
 export default FormCreateOrder;

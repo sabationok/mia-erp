@@ -5,9 +5,9 @@ import { useAppSelector } from '../../../redux/store.store';
 import { IPermission } from '../../../redux/permissions/permissions.types';
 import { IWarehouse } from '../../../redux/warehouses/warehouses.types';
 import { IPriceList } from '../../../redux/priceManagement/priceManagement.types';
-import { AppPagesEnum } from '../../../redux/APP_CONFIGS';
 import { usePermissionsSelector } from '../../../hooks/usePermissionsService.hook';
 import { useEffect, useMemo } from 'react';
+import { AppPagesEnum } from '../../AppPages';
 
 export interface SubNavMenuProps {
   subMenuKey: AppPagesEnum;

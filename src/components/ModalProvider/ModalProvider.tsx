@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import ModalPortal from './ModalPortal';
 import ModalComponent, { IModalSettings } from './ModalComponent';
 import { nanoid } from '@reduxjs/toolkit';
-import { ModalChildrenMap, ModalChildrenProps, Modals } from './Modals';
+import { ModalChildrenMap, ModalChildrenProps, Modals } from '../Modals';
 import { toast } from 'react-toastify';
 import { ToastService } from '../../services';
 
@@ -178,6 +178,7 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
             totalLength: modalStack.length,
             isLast: idx === modalStack.length - 1,
             onClose: () => onClose(Item.id),
+            settings: Item?.settings,
           }}
           RenderModalComponentChildren={Item.ModalChildren}
           childrenProps={Item.props || Item.modalChildrenProps}

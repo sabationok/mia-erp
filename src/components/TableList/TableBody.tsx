@@ -3,24 +3,25 @@ import { useTable } from './TableList';
 
 import styled from 'styled-components';
 import { forwardRef, useMemo } from 'react';
+import { IBase } from '../../redux/global.types';
 
-const TableBody: React.ForwardRefRenderFunction<any> = (props, ref: React.Ref<any>) => {
-  const { tableData, rowRef, onRowClick, selectedRows } = useTable();
+const TableBody: React.ForwardRefRenderFunction<any, any> = (props, ref) => {
+  const { tableData, rowRef, selectedRow, onRowClick, selectedRows = [] } = useTable();
 
-  function handleOnRowClick(ev: React.MouseEvent<HTMLDivElement>) {
+  const handleOnRowClick = (ev: React.MouseEvent<HTMLDivElement>) => {
     if (!rowRef) return;
     let rowEl: any;
     const { target } = ev;
 
     if (target instanceof HTMLElement && !target.closest('[data-row]')) {
       rowRef?.current && rowRef.current.classList.remove('selected');
-      onRowClick instanceof Function && onRowClick();
+      // onRowClick instanceof Function && onRowClick();
       return;
     }
     rowEl = target instanceof HTMLElement ? target.closest('[data-row]') : null;
 
     if (rowEl && onRowClick instanceof Function) {
-      onRowClick({ _id: rowEl?.id });
+      // onRowClick({ _id: rowEl?.id?.replace('_', '') });
     }
     if (rowEl !== rowRef.current) {
       rowRef.current?.classList.remove('selected');
@@ -31,27 +32,27 @@ const TableBody: React.ForwardRefRenderFunction<any> = (props, ref: React.Ref<an
     if (rowEl === rowRef.current) {
       rowRef.current?.classList.remove('selected');
       rowRef.current = undefined;
-      onRowClick instanceof Function && onRowClick();
+      // onRowClick instanceof Function && onRowClick();
     }
-  }
+  };
 
   const renderRows = useMemo(
     () =>
       tableData?.map((rowData, idx) => {
-        const checked = selectedRows?.length ? selectedRows?.includes(rowData._id) : false;
-
         return (
           <TableRow
             key={idx}
             {...{
               rowData,
               idx,
-              checked,
+              checked: selectedRows?.includes(rowData._id),
+              isActive: (selectedRow as IBase)?._id === rowData?._id,
+              onPress: () => onRowClick && onRowClick({ _id: rowData?._id, rowData }),
             }}
           />
         );
       }),
-    [selectedRows, tableData]
+    [onRowClick, selectedRow, selectedRows, tableData]
   );
 
   return <TBody onClick={handleOnRowClick}>{renderRows}</TBody>;
@@ -66,6 +67,8 @@ const TBody = styled.div`
   min-width: 100%;
 
   position: relative;
+
+  background-color: ${p => p.theme.backgroundColorLight};
 
   & .selected {
     background-color: ${({ theme }) => theme.tableRowBackgroundActive};

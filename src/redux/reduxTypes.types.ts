@@ -1,6 +1,32 @@
 import { AppDispatch, RootState } from './store.store';
 import { AxiosError } from 'axios';
 
+export enum AppModuleName {
+  integrations = 'integrations',
+  auth = 'auth',
+  permissions = 'permissions',
+  appSettings = 'appSettings',
+  appPage = 'appPage',
+  categories = 'categories',
+  counts = 'counts',
+  directories = 'directories',
+  transactions = 'transactions',
+  products = 'products',
+  orders = 'orders',
+  invoices = 'invoices',
+  payments = 'payments',
+  shipments = 'shipments',
+  refunds = 'refunds',
+  warehouses = 'warehouses',
+  customers = 'customers',
+  priceLists = 'priceLists',
+  customRoles = 'customRoles',
+  roles = 'roles',
+  priceManagement = 'priceManagement',
+  companies = 'companies',
+  invoicing = 'invoicing',
+}
+
 export type AsyncThunkConfig = {
   state: RootState;
   dispatch: AppDispatch;

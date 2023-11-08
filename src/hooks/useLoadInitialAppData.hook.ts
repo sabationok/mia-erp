@@ -1,5 +1,4 @@
 import usePermissionsServiceHook, { usePermissionsSelector } from './usePermissionsService.hook';
-import useAppSettings from './useAppSettings.hook';
 import { useEffect } from 'react';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { useAppServiceProvider } from './useAppServices.hook';
@@ -11,13 +10,8 @@ const directoriesForLoading: { dirType: ApiDirType; createTreeData?: boolean }[]
   { dirType: ApiDirType.CATEGORIES_PROD, createTreeData: true },
   { dirType: ApiDirType.ACTIVITIES, createTreeData: true },
   { dirType: ApiDirType.BRANDS, createTreeData: true },
-  { dirType: ApiDirType.PROPERTIES_PRODUCTS, createTreeData: true },
   { dirType: ApiDirType.CONTRACTORS },
   { dirType: ApiDirType.TAGS },
-  { dirType: ApiDirType.METHODS_PAYMENT },
-  { dirType: ApiDirType.METHODS_SHIPMENT },
-  { dirType: ApiDirType.METHODS_COMMUNICATION },
-  { dirType: ApiDirType.VARIATIONS },
 ];
 const useLoadInitialAppDataHook = ({
   onLoading,
@@ -34,18 +28,17 @@ const useLoadInitialAppDataHook = ({
     directories: { getAllByDirType },
     products,
     priceManagement,
-    transactions,
+    // transactions,
     warehouses,
+    payments,
+    integrations,
+    shipments,
+    invoicing,
+    customers,
   } = useAppServiceProvider();
 
-  const { getAppActions } = useAppSettings();
-  // const [_isLoading, setIsLoading] = useState(false);
-  // const [_statuses, setStatuses] = useState<Partial<Record<ApiDirType, boolean>>>();
-  const onSuccessToast = (dirType: ApiDirType) => () => {
-    // setStatuses(prev => ({ ...prev, [dirType]: true }));
-    // toast.success(`Updated data for directory: ${dirType}`);
-  };
   const load = async () => {
+    onLoading && onLoading(true);
     const close = () =>
       setTimeout(
         ToastService.createLoader('Loading app data...').open({
@@ -58,34 +51,40 @@ const useLoadInitialAppDataHook = ({
       // setIsLoading(true);
 
       try {
-        await getAppActions();
         if (company?._id) {
           await prService.getAllByCompanyId({ data: { refresh: true, companyId: company._id } });
         }
 
-        await products.getAll({ data: { refresh: true } });
         await products.getAllProperties({ data: { params: { createTreeData: true } } });
-
-        await priceManagement.getAll({ data: { refresh: true } });
-
-        await transactions.getAll({ data: { refresh: true } });
-
+        await products.getAll({ data: { refresh: true } });
         await warehouses.getAll({ data: { refresh: true } });
+        await priceManagement.getAll({ data: { refresh: true } });
+        //  transactions.getAll({ data: { refresh: true } });
 
-        await Promise.all(
-          directoriesForLoading.map(async ({ dirType, createTreeData }) => {
-            return await getAllByDirType({
+        await integrations.getAllExtServices({
+          onSuccess: () => {
+            invoicing.getAllMethods();
+            payments.getAllMethods();
+            shipments.getAllMethods();
+            customers.getAllMethods();
+          },
+        });
+        await Promise.allSettled([
+          ...directoriesForLoading.map(({ dirType, createTreeData }) => {
+            return getAllByDirType({
               data: { dirType, params: { createTreeData } },
-              onSuccess: onSuccessToast(dirType),
             });
-          })
-        );
+          }),
+        ]);
         onSuccess && onSuccess();
+        onLoading && onLoading(false);
+        close();
         // setIsLoading(false);
       } catch (e) {
-        // setIsLoading(false);
-      } finally {
+        onLoading && onLoading(false);
+        onError && onError(e);
         close();
+        // setIsLoading(false);
       }
     }
   };

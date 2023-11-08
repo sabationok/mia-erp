@@ -1,5 +1,4 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { iconId } from 'data';
 import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import SelectsTreeList from './SelectsTreeList';
@@ -111,7 +110,7 @@ const SelectsTreeListItem: React.FC<
           size="20px"
           iconSize="100%"
           variant="onlyIcon"
-          iconId={isChecked ? iconId.checkBoxOn : iconId.checkBoxOff}
+          icon={isChecked ? 'checkBoxOn' : 'checkBoxOff'}
           aria-checked={isChecked}
           onClick={handleSelect}
         />

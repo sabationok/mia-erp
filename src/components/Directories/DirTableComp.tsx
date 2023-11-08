@@ -1,8 +1,8 @@
 import ModalForm from 'components/ModalForm';
 import TableList, { ITableListProps } from 'components/TableList/TableList';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { ActionsCreatorOptions, DirBaseProps } from './dir.types';
+import { ActionsCreatorOptions, DirBaseProps, DirItemTypeByDirType } from './dir.types';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
 import { ISortParams } from '../../api';
@@ -12,22 +12,21 @@ import { useDirectoriesSelector } from '../../redux/selectors.store';
 
 export interface DirTableCompProps<
   DirType extends ApiDirType = any,
-  ItemType = any,
   CreateDTO = any,
   UpdateDTO = any,
   ItemDataType = any
 > extends DirBaseProps {
   dirType: ApiDirType;
-  type?: ItemType;
+  type?: DirItemTypeByDirType[DirType];
 
   getTableSettings?: (
-    options: ActionsCreatorOptions<DirType, ItemType, CreateDTO, UpdateDTO, ItemDataType> & {
+    options: ActionsCreatorOptions<DirType, CreateDTO, UpdateDTO, ItemDataType> & {
       sortParams?: ISortParams;
       setSortParams?: (params?: ISortParams) => void;
       filterParams?: FilterReturnDataType;
       setFilterParams?: (filterData?: FilterReturnDataType) => void;
     }
-  ) => ITableListProps<ItemType>;
+  ) => ITableListProps<ItemDataType>;
 }
 
 const DirTableComp: React.FC<DirTableCompProps> = ({ type, dirType, getTableSettings, ...props }) => {
@@ -55,18 +54,14 @@ const DirTableComp: React.FC<DirTableCompProps> = ({ type, dirType, getTableSett
     }
     return {};
   }, [service, dirType, filterParams, getTableSettings, modalService, sortParams, type]);
-  // useEffect(() => {
-  //   getAllByDirType({
-  //     data: { dirType, refresh: true, params: { isArchived: false, createTreeData: false, sortParams, filterParams } },
-  //     onLoading: setIsLoading,
-  //     onSuccess: () => {
-  //       toast.success(`Updated data for directory: ${dirType}`);
-  //     },
-  //     onError: () => {
-  //       toast.error(`Error when updating data for directory: ${dirType}`);
-  //     },
-  //   });
-  // }, [dirType, filterParams, getAllByDirType, sortParams]);
+
+  useEffect(() => {
+    if (!tableData.length) {
+      service.getAllByDirType({ data: { dirType } });
+    }
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <StModalForm {...props}>
       <TableList {...tableSettingsMemo} isLoading={isLoading} tableData={tableData} />

@@ -1,10 +1,24 @@
 import React, { memo } from 'react';
 import sprite, { IconIdType } from 'img/sprite';
 import styled, { css, DefaultTheme, FlattenInterpolation, ThemeProps } from 'styled-components';
+import { Property } from 'csstype';
 
 type TextTransform = 'uppercase' | 'lowercase' | 'capitalize' | 'none';
 
-interface ButtonProps {
+interface ButtonIconStyleProps {
+  flex?: Property.Flex;
+  alignItems?: Property.AlignItems;
+  justifyContent?: Property.JustifyContent;
+  gap?: Property.Gap;
+  padding?: Property.Padding;
+  margin?: Property.Margin;
+  // maxWidth?: string;
+  // maxHeight?: string;
+  // width?: Property.Width;
+  // height?: Property.Height;
+  // border?: Property.Border;
+}
+interface ButtonProps extends ButtonIconStyleProps {
   size?: string;
   variant: ButtonIconVariant;
   padding?: string;
@@ -37,7 +51,6 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
   endIconId = '',
   endIconSize = '18px',
   endIconStyles = {},
-  padding,
   onClick = () => {
     console.log('ButtonIcon click');
   },
@@ -93,10 +106,12 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
 };
 
 const StyledButtonIcon = styled.button<ButtonIconProps>`
+  flex: ${p => p?.flex};
+
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  align-items: ${p => p?.alignItems || 'center'};
+  justify-content: ${p => p?.justifyContent || 'center'};
+  gap: ${p => p?.gap || 0};
 
   text-align: center;
   font-size: 12px;
@@ -107,8 +122,6 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
   fill: currentColor;
   text-transform: ${({ textTransform = 'none' }) => textTransform};
 
-  padding: 0;
-
   cursor: pointer;
 
   overflow: hidden;
@@ -118,7 +131,11 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
 
   transition: ${({ theme }) => theme.globals.timingFunctionMain};
 
+  padding: ${p => p?.padding || 0};
+  margin: ${p => p?.margin || 0};
+
   ${({ variant = 'def' }) => getVariant(variant)}
+
   &[disabled] {
     pointer-events: none;
     opacity: 0.6;
@@ -262,22 +279,22 @@ const pointerBottom = css`
   }
 `;
 const extraSmall = css`
-  padding: 4px 12px;
+  padding: 4px 8px;
 
-  //min-width: 115px;
-  //min-height: 28px;
+  min-width: 40px;
+  height: 20px;
 `;
 const small = css`
-  padding: 6px 22px;
+  padding: 6px 12px;
 
-  min-width: 115px;
-  min-height: 28px;
+  min-width: 50px;
+  height: 28px;
 `;
 const large = css`
-  padding: 6px 22px;
+  padding: 6px 16px;
 
-  min-width: 150px;
-  min-height: 36px;
+  min-width: 100px;
+  height: 36px;
 `;
 const icon = css`
   min-width: 26px;
@@ -307,13 +324,17 @@ const outlined = css`
     border-color: ${({ theme }) => theme.field.backgroundColor};
   }
 `;
+const outlinedExtraSmall = css`
+  ${small};
+  ${extraSmall};
+`;
 const outlinedSmall = css`
-  ${small}
-  ${outlined}
+  ${small};
+  ${outlined};
 `;
 const outlinedLarge = css`
-  ${outlined}
-  ${large}
+  ${outlined};
+  ${large};
 `;
 const filled = css`
   color: ${({ theme }) => theme.colorLight};
@@ -400,6 +421,8 @@ const text = css`
 const textExtraSmall = css`
   ${text};
   ${extraSmall};
+
+  height: fit-content;
 `;
 const textSmall = css`
   ${text};
@@ -440,6 +463,7 @@ const variants = {
   outlinedLarge,
   filledLarge,
   outlinedSmall,
+  outlinedExtraSmall,
   filledSmall,
   underlinedText,
   textExtraSmall,

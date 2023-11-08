@@ -6,10 +6,15 @@ import { getDirInTreeActionsCreator } from './directories.data';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { iconId } from '../img/sprite';
 import FormCreateCustomRole from '../components/Forms/FormCreateCustomRole';
-import ModalForm from '../components/ModalForm';
-import DirMethods from '../components/CompanySettings/DirMethods';
-import { Modals } from '../components/ModalProvider/Modals';
+import { Modals } from '../components/Modals';
 import { IDirectoryListItem } from '../components/SideBarContent/Directories';
+import CompanyIntegrationsModal from '../components/CompanySettings/CompanyIntegrationsModal';
+import { t } from '../lang';
+import Forms from '../components/Forms';
+import DirPaymentMethods from '../components/CompanySettings/DirPaymentMethods';
+import DirShipmentsMethods from '../components/CompanySettings/DirDeliveryMethods';
+import DirInvocingMethods from '../components/CompanySettings/DirInvocingMethods';
+import DirCommunicationMethods from '../components/CompanySettings/DirCommunicationMethods';
 
 const UsersProps: DirUsersProps = {
   title: 'Користувачі',
@@ -17,13 +22,13 @@ const UsersProps: DirUsersProps = {
     tableTitles: usersDirColumns,
     actionsCreator: ctx => {
       return [
-        { name: 'rejectUser', icon: 'refund' },
+        { name: 'rejectUser', icon: 'clear' },
         {
           name: 'editUser',
           icon: 'edit',
           disabled: !ctx?.selectedRow?._id,
           onClick: () => {
-            modalService.handleOpenModal({
+            modalService.open({
               Modal: Modals.FormInviteUser,
               props: {
                 title: 'Змінити дані користувача',
@@ -39,7 +44,7 @@ const UsersProps: DirUsersProps = {
           icon: 'plus',
           type: 'onlyIconFilled',
           onClick: () => {
-            modalService.handleOpenModal({
+            modalService.open({
               Modal: Modals.FormInviteUser,
               props: {
                 title: 'Запросити користувача',
@@ -61,28 +66,8 @@ const CustomRolesProps: DirCustomRolesProps = {
   createParentTitle: 'Створити роль',
   fillHeight: true,
   actionsCreator: ({ service, modalService, findById }) => ({
-    onUpdate: (id, dataForUpdate, options) => {
-      const modal = modalService.handleOpenModal({
-        ModalChildren: FormCreateCustomRole,
-        modalChildrenProps: {
-          title: 'Редагувати роль',
-          customRole: dataForUpdate,
-          onSubmit: data => {
-            service.edit &&
-              service
-                .edit({
-                  data,
-                  onSuccess: () => {
-                    modal?.onClose();
-                  },
-                })
-                .then();
-          },
-        },
-      });
-    },
-    onCreateParent: options => {
-      const modal = modalService.handleOpenModal({
+    onCreateParent: _o => {
+      const modal = modalService.open({
         ModalChildren: FormCreateCustomRole,
         modalChildrenProps: {
           title: 'Створити роль',
@@ -99,24 +84,52 @@ const CustomRolesProps: DirCustomRolesProps = {
         },
       });
     },
+    onUpdate: (_id, dataForUpdate, _o) => {
+      const modal = modalService.open({
+        ModalChildren: FormCreateCustomRole,
+        modalChildrenProps: {
+          title: 'Редагувати роль',
+          defaultState: dataForUpdate,
+          customRole: dataForUpdate,
+          onSubmit: data => {
+            service?.edit &&
+              service
+                ?.edit({
+                  data,
+                  onSuccess: (data, meta) => {
+                    console.log('onUpdate role', data, meta);
+
+                    modal?.onClose();
+                  },
+                })
+                .then();
+          },
+        },
+      });
+    },
     onChangeArchiveStatus: () => {},
     onChangeDisableStatus: () => {},
   }),
 };
-const subCompanies = {
-  title: 'Дочірні компанії',
-  disabled: true,
-  ModalChildren: ModalForm,
+const integrations = {
+  title: 'Інтеграції',
+  disabled: false,
+  ModalChildren: CompanyIntegrationsModal,
   iconId: iconId.bank,
   modalChildrenProps: {
-    title: 'Дочірні компанії',
+    title: 'Інтеграції',
     fillHeight: true,
     fillWidth: true,
   },
 };
-export const comapnySettings: IDirectoryListItem[] = [
-  subCompanies,
+const warehousingSettings = {
+  title: t('Warehousing settings'),
+  disabled: false,
+  ModalChildren: Forms.WarehousingSettings,
+  iconId: iconId.bank,
+};
 
+export const companySettings: IDirectoryListItem[] = [
   {
     title: UsersProps.title,
     iconId: iconId.persons,
@@ -132,34 +145,57 @@ export const comapnySettings: IDirectoryListItem[] = [
     modalChildrenProps: CustomRolesProps,
     disabled: true,
   },
+
+  integrations,
+
   {
-    title: 'Способи оплати',
-    iconId: iconId.persons,
-    ModalChildren: DirMethods,
+    title: t('Invoicing methods'),
+    iconId: iconId.assignment,
+    ModalChildren: DirInvocingMethods,
     modalChildrenProps: {
-      title: 'Способи оплати',
-      dirType: ApiDirType.METHODS_PAYMENT,
-      createParentTitle: 'Додати спосіб оплати',
+      title: t('Invoicing methods'),
+      dirType: ApiDirType.METHODS_INVOICING,
+      createParentTitle: t('Add invoicing method'),
       changeDisableStatus: true,
       availableLevels: 1,
-      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {}),
+      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {
+        createParentTitle: t('Add invoicing method'),
+        updateItemTitle: t('Update invoicing method'),
+      }),
     },
     disabled: true,
   },
   {
-    title: 'Способи відвантаження',
+    title: t('Payment methods'),
     iconId: iconId.persons,
-    ModalChildren: DirMethods,
+    ModalChildren: DirPaymentMethods,
     modalChildrenProps: {
-      title: 'Способи відвантаження',
+      title: t('Payment methods'),
+      dirType: ApiDirType.METHODS_PAYMENT,
+      createParentTitle: t('Add payment method'),
+      changeDisableStatus: true,
+      availableLevels: 1,
+      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {
+        createParentTitle: t('Add payment method'),
+        updateItemTitle: t('Update payment method'),
+      }),
+    },
+    disabled: true,
+  },
+  {
+    title: t('Shipment methods'),
+    iconId: iconId.persons,
+    ModalChildren: DirShipmentsMethods,
+    modalChildrenProps: {
+      title: t('Shipment methods'),
       dirType: ApiDirType.METHODS_SHIPMENT,
-      createParentTitle: 'Додати спосіб відвантаження',
+      createParentTitle: t('Add shipment method'),
       changeDisableStatus: true,
       creatingParent: false,
       availableLevels: 1,
       actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {
-        createParentTitle: 'Створити спосіб відвантаження',
-        updateItemTitle: 'Редагувати спосіб відвантаження',
+        createParentTitle: t('Add shipment method'),
+        updateItemTitle: t('Update shipment method'),
       }),
     },
     disabled: true,
@@ -167,7 +203,7 @@ export const comapnySettings: IDirectoryListItem[] = [
   {
     title: "Способи зв'язку",
     iconId: iconId.persons,
-    ModalChildren: DirMethods,
+    ModalChildren: DirCommunicationMethods,
     modalChildrenProps: {
       title: "Способи зв'язку",
       dirType: ApiDirType.METHODS_COMMUNICATION,
@@ -182,4 +218,6 @@ export const comapnySettings: IDirectoryListItem[] = [
     },
     disabled: true,
   },
+
+  warehousingSettings,
 ];

@@ -6,84 +6,57 @@ import { useDirService } from './index';
 import usePriceManagementServiceHook, { PriceManagementService } from './usePriceManagementService.hook';
 import useAppSettingsHook, { AppSettingsService } from './useAppSettings.hook';
 import useCompaniesService, { CompaniesService } from './useCompaniesService.hook';
-import { createContext, useContext, useEffect } from 'react';
+import { createContext, useContext } from 'react';
 import useWarehousesServiceHook, { WarehousesService } from './useWarehousesService.hook';
 import useAppAuthHook, { AuthService } from './useAppAuth.hook';
-import { ConfigService } from '../services';
+import useOrdersServiceHook, { OrdersService } from './useOrdersService.hook';
+import useCustomersService, { CustomersService } from './useCustomersService';
+import usePaymentsServiceHook, { UsePaymentsService } from './usePaymentsService.hook';
+import useShipmentsService, { UseShipmentsService } from './useShipmentsService.hook';
+import useCustomRolesServiceHook, { CustomRolesService } from './useCustomRolesService.hook';
+import useInvoicingService, { UseInvoicingService } from './useInvoicingService.hook';
+import { AppModuleName } from '../redux/reduxTypes.types';
+import useIntegrationsService, { UseIntegrationsService } from './useIntegrationsService.hook';
 
-export enum ServiceName {
-  permissions = 'permissions',
-  transactions = 'transactions',
-  products = 'products',
-  customRoles = 'customRoles',
-  storage = 'storage',
-  directories = 'directories',
-  auth = 'auth',
-  orders = 'orders',
-  priceManagement = 'priceManagement',
-  appSettings = 'appSettings',
-  companies = 'companies',
-  warehouses = 'warehouses',
-}
-
+export { AppModuleName as ServiceName } from '../redux/reduxTypes.types';
 export interface AppService {
-  [ServiceName.permissions]: PermissionService;
-  [ServiceName.products]: ProductsService;
-  [ServiceName.transactions]: TransactionsService;
-  [ServiceName.directories]: DirectoriesService;
-  [ServiceName.priceManagement]: PriceManagementService;
-  [ServiceName.appSettings]: AppSettingsService;
-  [ServiceName.companies]: CompaniesService;
-  [ServiceName.warehouses]: WarehousesService;
-  [ServiceName.auth]: AuthService;
+  [AppModuleName.permissions]: PermissionService;
+  [AppModuleName.products]: ProductsService;
+  [AppModuleName.transactions]: TransactionsService;
+  [AppModuleName.directories]: DirectoriesService;
+  [AppModuleName.priceManagement]: PriceManagementService;
+  [AppModuleName.appSettings]: AppSettingsService;
+  [AppModuleName.companies]: CompaniesService;
+  [AppModuleName.warehouses]: WarehousesService;
+  [AppModuleName.auth]: AuthService;
+  [AppModuleName.orders]: OrdersService;
+  [AppModuleName.customers]: CustomersService;
+  [AppModuleName.payments]: UsePaymentsService;
+  [AppModuleName.invoicing]: UseInvoicingService;
+  [AppModuleName.shipments]: UseShipmentsService;
+  [AppModuleName.roles]: CustomRolesService;
+  [AppModuleName.integrations]: UseIntegrationsService;
 }
-const isDevMode = ConfigService.isDevMode();
+
+// const isDevMode = ConfigService.isDevMode();
 const useAppService = (): AppService => {
-  const auth = useAppAuthHook();
-  const permissions = usePermissionsServiceHook();
-  const products = useProductsServiceHook();
-  const transactions = useTransactionsServiceHook();
-  const directories = useDirService();
-  const priceManagement = usePriceManagementServiceHook();
-  const appSettings = useAppSettingsHook();
-  const companies = useCompaniesService();
-  const warehouses = useWarehousesServiceHook();
-
-  useEffect(() => {
-    isDevMode && console.log('Apply useAppService | permissions');
-  }, [permissions]);
-  useEffect(() => {
-    isDevMode && console.log('Apply useAppService | products');
-  }, [products]);
-  useEffect(() => {
-    isDevMode && console.log('Apply useAppService | transactions');
-  }, [transactions]);
-  useEffect(() => {
-    isDevMode && console.log('Apply useAppService | directories');
-  }, [directories]);
-  useEffect(() => {
-    isDevMode && console.log('Apply useAppService | priceManagement');
-  }, [priceManagement]);
-  useEffect(() => {
-    isDevMode && console.log('Apply useAppService | appSettings');
-  }, [appSettings]);
-  useEffect(() => {
-    isDevMode && console.log('Apply useAppService | companies');
-  }, [companies]);
-  useEffect(() => {
-    isDevMode && console.log('Apply useAppService | warehouses');
-  }, [warehouses]);
-
   return {
-    permissions,
-    transactions,
-    products,
-    priceManagement,
-    directories,
-    appSettings,
-    companies,
-    warehouses,
-    auth,
+    auth: useAppAuthHook(),
+    permissions: usePermissionsServiceHook(),
+    integrations: useIntegrationsService(),
+    products: useProductsServiceHook(),
+    transactions: useTransactionsServiceHook(),
+    directories: useDirService(),
+    priceManagement: usePriceManagementServiceHook(),
+    appSettings: useAppSettingsHook(),
+    companies: useCompaniesService(),
+    warehouses: useWarehousesServiceHook(),
+    orders: useOrdersServiceHook(),
+    customers: useCustomersService(),
+    payments: usePaymentsServiceHook(),
+    invoicing: useInvoicingService(),
+    shipments: useShipmentsService(),
+    roles: useCustomRolesServiceHook(),
   };
 };
 export const AppServiceCTX = createContext<AppService>({} as AppService);
@@ -96,3 +69,28 @@ export const AppServiceProvider = ({ children }: { children?: React.ReactNode; i
   return <AppServiceCTX.Provider value={appService}>{children}</AppServiceCTX.Provider>;
 };
 export default AppServiceProvider;
+
+// useEffect(() => {
+//   isDevMode && console.log('Apply useAppService | permissions');
+// }, [permissions]);
+// useEffect(() => {
+//   isDevMode && console.log('Apply useAppService | products');
+// }, [products]);
+// useEffect(() => {
+//   isDevMode && console.log('Apply useAppService | transactions');
+// }, [transactions]);
+// useEffect(() => {
+//   isDevMode && console.log('Apply useAppService | directories');
+// }, [directories]);
+// useEffect(() => {
+//   isDevMode && console.log('Apply useAppService | priceManagement');
+// }, [priceManagement]);
+// useEffect(() => {
+//   isDevMode && console.log('Apply useAppService | appSettings');
+// }, [appSettings]);
+// useEffect(() => {
+//   isDevMode && console.log('Apply useAppService | companies');
+// }, [companies]);
+// useEffect(() => {
+//   isDevMode && console.log('Apply useAppService | warehouses');
+// }, [warehouses]);

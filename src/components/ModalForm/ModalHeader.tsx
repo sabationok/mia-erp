@@ -1,14 +1,15 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { iconId } from 'data';
 import styled from 'styled-components';
 
 export interface ModalFormHeaderProps {
   title: string;
 }
 
-const ModalHeader: React.FC<
-  ModalFormHeaderProps & React.ImgHTMLAttributes<HTMLDivElement>
-> = ({ title = 'default header titile', children, ...props }) => {
+const ModalHeader: React.FC<ModalFormHeaderProps & React.ImgHTMLAttributes<HTMLDivElement>> = ({
+  title = 'default header titile',
+  children,
+  ...props
+}) => {
   return (
     <HeaderContainer {...props} className="header">
       <Header>
@@ -16,13 +17,7 @@ const ModalHeader: React.FC<
           {title}
         </Title>
 
-        <ButtonIcon
-          type="reset"
-          size="28px"
-          iconSize={'90%'}
-          iconId={iconId.close}
-          variant="onlyIconNoEffects"
-        />
+        <ButtonIcon type="reset" size="28px" iconSize={'90%'} icon={'close'} variant="onlyIconNoEffects" />
       </Header>
 
       {children && <ExtraHeader>{children}</ExtraHeader>}
@@ -52,10 +47,10 @@ const HeaderContainer = styled.header`
   border-top-left-radius: 2px;
 
   color: ${({ theme }) => theme.fontColorHeader};
-  background-color: ${({ theme }) => theme.backgroundColorMain};
+  background-color: ${({ theme }) => theme.modalBackgroundColor};
 `;
 const Title = styled.p`
-  color: #efefef;
+  //color: #efefef;
   text-transform: uppercase;
 
   text-overflow: ellipsis;
@@ -86,6 +81,8 @@ const Header = styled.div`
 
   width: 100%;
   min-height: 28px;
+
+  border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;
 const ExtraHeader = styled.div`
   width: 100%;

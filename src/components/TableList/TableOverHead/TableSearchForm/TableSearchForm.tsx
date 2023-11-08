@@ -1,6 +1,5 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { SelectItem } from 'components/TableList/TableList';
-import { iconId } from 'data';
 import React from 'react';
 import styled from 'styled-components';
 import SearchParamInput from './SearchParamInput';
@@ -10,26 +9,26 @@ import * as yup from 'yup';
 
 export interface TableSearchProps {
   tableSearchParams?: SelectItem[];
+  onSubmit?: (data: TableSearchFormState) => void;
 }
 
-interface FormState {
+export interface TableSearchFormState {
   search: string;
   searchParam: SelectItem | undefined;
 }
 
-const validation = yup.object<FormState>().shape({
+const validation = yup.object<TableSearchFormState>().shape({
   search: yup.string().required(),
   searchParam: yup.object<SelectItem>().shape<SelectItem>({}),
 });
 
-const TableSearchForm: React.FC<TableSearchProps> = ({ tableSearchParams }) => {
+const TableSearchForm: React.FC<TableSearchProps> = ({ onSubmit, tableSearchParams }) => {
   const {
     // formState: { errors },
     register,
     watch,
-    handleSubmit,
     setValue,
-  } = useForm<FormState>({
+  } = useForm<TableSearchFormState>({
     defaultValues: { search: '' },
     reValidateMode: 'onChange',
     resolver: yupResolver(validation),
@@ -40,28 +39,35 @@ const TableSearchForm: React.FC<TableSearchProps> = ({ tableSearchParams }) => {
     setValue('searchParam', item);
   }
 
-  function onSubmit(ev: any) {
-    handleSubmit(data => {
-      console.log(data);
-    });
+  function handleSubmitSearch() {
+    onSubmit && onSubmit({ search, searchParam });
+  }
+
+  function handleClearForm() {
+    setValue('search', '');
+    setValue('searchParam', undefined);
+
+    onSubmit && onSubmit({ search: '', searchParam: undefined });
   }
 
   return (
     <SearchForm>
-      <StyledLabel>
+      <StyledLabel isActive={!!search}>
         <SearchInput
           placeholder={searchParam?.label ? `Пошук за: "${searchParam?.label}"` : 'Оберіть параметр пошуку'}
           {...register('search')}
         />
+
+        {search && <ClearButton variant={'onlyIconNoEffects'} icon={'close'} onClick={handleClearForm} />}
       </StyledLabel>
 
       <ButtonIcon
-        iconId={iconId.search}
-        size="28px"
+        icon={'search'}
+        size={'28px'}
         iconSize={'90%'}
-        variant="onlyIconNoEffects"
+        variant={'onlyIconNoEffects'}
         disabled={!searchParam || !search}
-        onClick={onSubmit}
+        onClick={handleSubmitSearch}
       />
 
       <SearchParamInput
@@ -87,7 +93,10 @@ const SearchForm = styled.div`
   position: relative;
 `;
 
-const StyledLabel = styled.label`
+const StyledLabel = styled.label<{ isActive?: boolean }>`
+  display: flex;
+  align-items: center;
+
   position: relative;
 
   border-style: none;
@@ -101,7 +110,7 @@ const StyledLabel = styled.label`
     bottom: 0;
     left: 50%;
     height: 2px;
-    width: 0;
+    width: ${({ isActive }) => (isActive ? '100%' : 0)};
     transition: all ${({ theme }) => theme.globals.timingFnMui};
     transform: translate(-50%);
     background-color: ${({ theme }) => theme.accentColor.base};
@@ -116,7 +125,7 @@ const StyledLabel = styled.label`
 const SearchInput = styled.input`
   height: 100%;
   width: 100%;
-  padding: 4px 8px;
+  padding: 4px 40px 4px 8px;
 
   font-size: 12px;
   font-family: inherit;
@@ -130,12 +139,21 @@ const SearchInput = styled.input`
 
   border-style: none;
   border-radius: 0;
-  border-bottom: 1px solid ${({ theme }) => theme.globals.inputBorder};
+  border-bottom: 1px solid ${({ theme }) => theme.sideBarBorderColor};
 
   &:hover,
   &:focus {
     /* border-bottom-color: ${({ theme }) => theme.accentColor.hover}; */
     outline-style: none;
   }
+`;
+
+const ClearButton = styled(ButtonIcon)`
+  position: absolute;
+  right: 0;
+  top: 50%;
+  z-index: 5;
+
+  transform: translateY(-50%);
 `;
 export default TableSearchForm;

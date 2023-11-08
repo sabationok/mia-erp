@@ -17,7 +17,7 @@ import translate from '../../lang';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useAppForm } from '../../hooks';
 import { yupResolver } from '@hookform/resolvers/yup';
-import FormAfterSubmitOptions from './components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
 import { UseAppFormSubmitOptions } from '../../hooks/useAppForm.hook';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
@@ -81,14 +81,13 @@ const FormCreateTransaction: React.FC<FormCreateTransactionProps> = ({
     setValue,
     registerSelect,
     handleSubmit,
-    toggleAfterSubmitOption,
-    closeAfterSave,
-    clearAfterSave,
   } = useAppForm<ITransaction>({
     defaultValues: { currency: 'UAH', ...defaultState, eventDate: formatDateForInputValue(defaultState?.eventDate) },
     resolver: yupResolver(getValidation(currentType)),
     reValidateMode: 'onSubmit',
   });
+
+  const submitOptions = useAfterSubmitOptions();
 
   function onValidSubmit(submitData: ITransaction) {
     const omitPathArr: (keyof ITransaction)[] =
@@ -98,7 +97,7 @@ const FormCreateTransaction: React.FC<FormCreateTransactionProps> = ({
 
     const trReqData = createTransactionForReq(submitData, omitPathArr, '', 'amount');
 
-    onSubmit && onSubmit({ _id: '', data: trReqData }, { closeAfterSave, clearAfterSave });
+    onSubmit && onSubmit({ _id: '', data: trReqData }, { ...submitOptions.state });
   }
 
   const renderInputsCountIn = useMemo(() => {
@@ -203,21 +202,19 @@ const FormCreateTransaction: React.FC<FormCreateTransactionProps> = ({
         }
       }}
       {...props}
-      extraFooter={
-        <FormAfterSubmitOptions
-          toggleOption={toggleAfterSubmitOption}
-          closeAfterSave={closeAfterSave}
-          clearAfterSave={clearAfterSave}
-        />
-      }
+      extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
-      <FlexBox className={'inputs'} flex={'1'} fillWidth maxHeight={'100%'} padding={'12px'} overflow={'auto'}>
+      <FlexBox className={'inputs'} flex={'1'} fillWidth maxHeight={'100%'} padding={'0 8px 8px'} overflow={'auto'}>
         <InputLabel label={translate('dateAndTime')} direction={'vertical'}>
           <InputText placeholder={translate('dateAndTime')} type="datetime-local" {...register('eventDate')} />
         </InputLabel>
         <GridWrapper>
           <InputLabel label={translate('amount')} direction={'vertical'}>
-            <InputText placeholder={translate('amount')} type={'number'} {...register('amount')} />
+            <InputText
+              placeholder={translate('amount')}
+              type={'number'}
+              {...register('amount', { valueAsNumber: true })}
+            />
           </InputLabel>
 
           <InputLabel label={translate('currency')} direction={'vertical'}>
@@ -248,7 +245,7 @@ const FormCreateTransaction: React.FC<FormCreateTransactionProps> = ({
 const GridWrapper = styled.div<{ gridTemplateColumns?: string }>`
   display: grid;
   grid-template-columns: ${({ gridTemplateColumns }) => gridTemplateColumns || '1fr 120px'};
-  gap: 12px;
+  gap: 8px;
 `;
 
 export default FormCreateTransaction;

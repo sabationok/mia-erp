@@ -7,7 +7,7 @@ import { ITransaction } from '../redux/transactions/transactions.types';
 
 import { useTransactionsSelector } from '../redux/selectors.store';
 import { toast } from 'react-toastify';
-import { Modals } from '../components/ModalProvider/Modals';
+import { Modals } from '../components/Modals';
 import { ITransactionsState } from '../redux/transactions/transactions.slice';
 
 export interface TransactionsTablesActionProps {

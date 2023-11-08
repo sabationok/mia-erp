@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import ModalForm from 'components/ModalForm';
 import styled from 'styled-components';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
-import useCustomRolesService, { CustomRolesService } from 'hooks/useCustomRolesServise.hook';
+import useCustomRolesService, { CustomRolesService } from 'hooks/useCustomRolesService.hook';
 import FlexBox from '../atoms/FlexBox';
 import { useCustomRolesSelector } from '../../redux/selectors.store';
 
@@ -10,12 +10,17 @@ import { IDirInTreeProps } from '../Directories/dir.types';
 import { ICustomRole } from '../../redux/customRoles/customRoles.types';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import DirListItem from '../Directories/DirList/DirListItem';
+import ExtraFooterWithButton from '../atoms/ExtraFooterWithButton';
+import { t } from '../../lang';
 
 export interface DirCustomRolesProps
   extends IDirInTreeProps<any, ICustomRole, ICustomRole, ICustomRole, CustomRolesService> {}
 
 const DirCustomRoles: React.FC<DirCustomRolesProps> = ({ createParentTitle, actionsCreator, ...props }) => {
-  const { customRoles } = useCustomRolesSelector();
+  const { customRoles, modules } = useCustomRolesSelector();
+  useEffect(() => {
+    console.log('DirCustomRoles', modules);
+  }, [modules]);
   const service = useCustomRolesService();
   const modalService = useModalProvider();
 
@@ -28,7 +33,7 @@ const DirCustomRoles: React.FC<DirCustomRolesProps> = ({ createParentTitle, acti
         })
       : {};
   }, [actionsCreator, modalService, service]);
-
+  // !!! REFACTORING ACTIONS
   const renderList = useMemo(
     () =>
       customRoles?.map((item, idx) => (
@@ -36,18 +41,21 @@ const DirCustomRoles: React.FC<DirCustomRolesProps> = ({ createParentTitle, acti
           key={`treeItem_${item?._id || idx}`}
           {...item}
           {...props}
-          {...actions}
           item={item}
           availableLevels={1}
           currentLevel={0}
+          {...(actions as object)}
         />
       )),
     [actions, customRoles, props]
   );
 
   return (
-    <StModalForm {...props}>
-      <FlexBox fillWidth flex={'1'} gap={8} padding={'12px'} maxHeight={'100%'} overflow={'auto'}>
+    <StModalForm
+      {...props}
+      extraFooter={<ExtraFooterWithButton buttonText={t('Create new role')} onClick={actions?.onCreateParent} />}
+    >
+      <FlexBox fillWidth flex={'1'} gap={8} padding={'12px'}>
         {renderList}
       </FlexBox>
     </StModalForm>

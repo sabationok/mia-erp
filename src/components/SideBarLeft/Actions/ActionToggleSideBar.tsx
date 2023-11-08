@@ -1,6 +1,5 @@
 import React from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { iconId } from 'data';
 import { useSideBar } from '../SideBarProvider';
 import styled from 'styled-components';
 
@@ -8,12 +7,7 @@ const ActionToggleSideBar: React.FC = () => {
   const { isOpen, onTogglerClick } = useSideBar();
 
   return (
-    <StButton
-      iconId={isOpen ? iconId.burgerOpen : iconId.burger}
-      iconSize="28px"
-      variant="defNoEffects"
-      onClick={onTogglerClick}
-    />
+    <StButton icon={isOpen ? 'burgerOpen' : 'burger'} iconSize="28px" variant="defNoEffects" onClick={onTogglerClick} />
   );
 };
 const StButton = styled(ButtonIcon)`

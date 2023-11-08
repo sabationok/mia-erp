@@ -1,11 +1,10 @@
-import React, { createContext, memo, useCallback, useContext, useMemo, useRef, useState } from 'react';
+import React, { createContext, memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import TableHead from './TableHead';
 import TableBody from './TableBody';
-import AppLoader from 'components/atoms/AppLoader';
 import QuickActions from './QuickActions';
 import TableOverHead from './TableOverHead/TableOverHead';
 import TableFooter from './TableFooter/TableFooter';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { MaxToTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 import { CustomCheckboxEvent } from './TebleCells/CellComponents/CheckBox';
 import {
@@ -17,6 +16,10 @@ import {
 } from './tableTypes.types';
 import { FilterReturnDataType } from '../Filter/AppFilter';
 import { IBase } from '../../redux/global.types';
+import FlexBox from '../atoms/FlexBox';
+import { Oval } from 'react-loader-spinner';
+import { Text } from '../atoms/Text';
+import { t } from '../../lang';
 
 export type { ITableListContext, ITableListProps, OnCheckBoxChangeHandlerEvent, UseTableHookType, SelectItem };
 export const TableCTX = createContext({});
@@ -36,11 +39,14 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
   onFilterSubmit,
   filterTitle,
   filterDefaultValues,
+  scrollBarWidth,
+  onSubmitSearch,
   ...props
 }) => {
+  // const tBodyRef = useRef<HTMLElement>(null);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const rowRef = useRef<HTMLElement>();
-  const [selectedRow, setSelectedRow] = useState<any | undefined>();
+  const [selectedRow, setSelectedRow] = useState<any | undefined>(props?.selectedRow);
   const setFilterData = useState<FilterReturnDataType>()[1];
 
   const rowGrid = useMemo(
@@ -102,6 +108,7 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
       onRowClick: onRowClickWrapper,
       onCheckboxChange: onCheckboxChangeWrapper,
       onHeadCheckboxChange: onHeadCheckboxChange,
+      onSubmitSearch,
       ...props,
     }),
     [
@@ -115,6 +122,7 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
       onFilterSubmitWrapper,
       onHeadCheckboxChange,
       onRowClickWrapper,
+      onSubmitSearch,
       props,
       rowGrid,
       selectedRow,
@@ -125,19 +133,24 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
     ]
   );
 
+  useEffect(() => {
+    if (props?.selectedRow) {
+      setSelectedRow(props?.selectedRow);
+    }
+  }, [props?.selectedRow]);
   return (
     <Table {...props}>
       <TableCTX.Provider value={CTX}>
-        <AppLoader isLoading={isLoading} comment={'Waiting for new data...'} />
-
         <TableOverHead />
 
-        <TableScroll className="TableScroll">
+        <TableScroll className={'TableScroll'} scrollBarWidth={scrollBarWidth}>
           <TableHead />
 
           {tableData?.length !== 0 ? <TableBody ref={rowRef} /> : <NoData>Дані відсутні</NoData>}
 
           <MaxToTabletXl>{actionsCreator ? <QuickActions /> : null}</MaxToTabletXl>
+
+          <TableLoader isLoading={isLoading} />
         </TableScroll>
 
         {footer && <TableFooter />}
@@ -163,9 +176,9 @@ const Table = styled.div`
   width: 100%;
   overflow: hidden;
 
-  background-color: ${({ theme }) => theme.tableBackgroundColor};
+  //background-color: ${({ theme }) => theme.tableBackgroundColor};
 `;
-const TableScroll = styled.div`
+const TableScroll = styled.div<{ scrollBarWidth?: number }>`
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 40px 1fr min-content;
@@ -173,6 +186,60 @@ const TableScroll = styled.div`
   height: 100%;
   width: 100%;
   overflow: auto;
+
+  &::-webkit-scrollbar {
+    width: ${({ scrollBarWidth = 6 }) => scrollBarWidth}px;
+    height: ${({ scrollBarWidth = 6 }) => scrollBarWidth}px;
+  }
+`;
+
+const TableLoader = ({ isLoading, text = t('Loading content...') }: { isLoading?: boolean; text?: string }) => {
+  const theme = useTheme();
+  return (
+    <TableLoaderBox isLoading={isLoading}>
+      <Loader gap={16} fxDirection={'row'} alignItems={'center'} padding={'8px'}>
+        <Oval
+          height="28"
+          width="28"
+          color={theme.accentColor.base}
+          ariaLabel="tail-spin-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+          secondaryColor={theme.accentColor.light}
+          strokeWidth={3}
+          strokeWidthSecondary={3}
+        />
+        {text && (
+          <Text $weight={500} $size={12}>
+            {text}
+          </Text>
+        )}
+      </Loader>
+    </TableLoaderBox>
+  );
+};
+const TableLoaderBox = styled(FlexBox)<{ isLoading?: boolean }>`
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  z-index: 50;
+
+  padding: 8px 8px 24px;
+
+  transform: ${p => (p.isLoading ? 'translate(-50%, -100%)' : 'translate(-50%, 0)')};
+
+  max-width: 90%;
+  transition: ${p => p.theme.globals.timingFnMain};
+`;
+const Loader = styled(FlexBox)`
+  min-height: 60px;
+  width: 320px;
+  max-width: 100%;
+  border-radius: 2px;
+
+  background-color: ${p => p.theme.modalBackgroundColor};
+  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1), 0 2px 15px 0 rgba(0, 0, 0, 0.05);
 `;
 
 export default memo(TableList);

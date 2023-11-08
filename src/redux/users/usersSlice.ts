@@ -2,6 +2,7 @@ import { AnyAction, createSlice, Draft, PayloadAction } from '@reduxjs/toolkit';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 // import { actionLogInUser, actionLogOutUser, actionSetCurrentUser } from './authActions';
 import { getAllUsersThunk } from './usersThunks';
+import { checks } from '../../utils';
 
 export interface IUsersState {
   users: any[];
@@ -40,16 +41,25 @@ export const usersSlice = createSlice({
       .addMatcher(inError, (state, action: PayloadAction<AuthErrorType>) => {
         state.isLoading = false;
         state.error = action.payload;
+      })
+      .addMatcher(inFulfilled, (state, action: PayloadAction<AuthErrorType>) => {
+        state.isLoading = false;
+        state.error = null;
       });
   },
 });
 
-function inPending(action: AnyAction) {
-  return action.type.endsWith('pending');
+function isUsersCase(type: string) {
+  return checks.isStr(type) && type.startsWith('users');
 }
-
-function inError(action: AnyAction) {
-  return action.type.endsWith('rejected');
+function inPending(a: AnyAction) {
+  return isUsersCase(a.type) && a.type.endsWith('pending');
+}
+function inFulfilled(a: AnyAction) {
+  return isUsersCase(a.type) && a.type.endsWith('fulfilled');
+}
+function inError(a: AnyAction) {
+  return isUsersCase(a.type) && a.type.endsWith('rejected');
 }
 
 export const usersReducer = usersSlice.reducer;
