@@ -13,7 +13,7 @@ import { useAppForm } from '../../hooks';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
-import ButtonGroup from '../atoms/ButtonGroup';
+import ButtonsGroup from '../atoms/ButtonsGroup';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useDirectoriesSelector } from '../../redux/selectors.store';
 import { BusinessSubjectTypeEnum } from '../../redux/companies/companies.types';
@@ -134,7 +134,7 @@ const FormCreateCounterparty: React.FC<FormCreateContractorProps> = ({
     >
       <FormInputs>
         <InputLabel label={t('businessSubjectType')} error={errors.label} required>
-          <ButtonGroup
+          <ButtonsGroup
             options={businessSubjectTypeFilterOptions}
             borderRadius={'4px'}
             onSelect={({ option, value, index }) => {

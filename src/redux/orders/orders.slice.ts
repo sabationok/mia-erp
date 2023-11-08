@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ICreateOrdersGroupFormState, IOrder, IOrderTempSlot } from './orders.types';
+import { ICreateOrdersGroupFormState, IOrder } from './orders.types';
 
 import {
   AddSlotToGroupAction,
@@ -47,17 +47,17 @@ const compareIdsByKey = <Key extends string = any>(
   return false;
 };
 
-function findSlotByIdKeys(
-  slots: IOrderTempSlot[],
-  slot: IOrderTempSlot,
-  keys = ['product', 'inventory', 'warehouse', 'price', 'variation']
-) {
-  return slots?.find(sl => {
-    return keys.some(k => {
-      return compareIdsByKey(sl, slot, k);
-    });
-  });
-}
+// function findSlotByIdKeys(
+//   slots: IOrderTempSlot[],
+//   slot: IOrderTempSlot,
+//   keys = ['product', 'inventory', 'warehouse', 'price', 'variation']
+// ) {
+//   return slots?.find(sl => {
+//     return keys.some(k => {
+//       return compareIdsByKey(sl, slot, k);
+//     });
+//   });
+// }
 
 export const ordersSlice = createSlice({
   name: 'orders',

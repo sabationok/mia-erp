@@ -431,7 +431,6 @@ export const StaticProperties: RenderOverviewCellComponent<IProduct> = ({ cell, 
     });
 
     return Object.values(unicValuesMap).map(value => {
-      console.log(value);
       return <FlexBox></FlexBox>;
     });
   }, [data?.variations]);

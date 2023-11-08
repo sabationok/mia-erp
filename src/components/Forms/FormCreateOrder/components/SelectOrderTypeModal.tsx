@@ -5,7 +5,7 @@ import { enumToFilterOptions } from '../../../../utils/fabrics';
 import { CreatedModal } from '../../../ModalProvider/ModalProvider';
 import styled from 'styled-components';
 import { ModalHeader, OverlayFooter } from '../../../atoms';
-import ButtonGroup from '../../../atoms/ButtonGroup';
+import ButtonsGroup from '../../../atoms/ButtonsGroup';
 import FlexBox from '../../../atoms/FlexBox';
 import { FormEventHandler, useEffect, useState } from 'react';
 
@@ -34,7 +34,7 @@ const SelectOrderTypeModal: React.FC<SelectOrderTypeModalProps> = ({ onClose, on
       <ModalHeader title={t('Select order type')} onClose={onClose} />
 
       <Content padding={'8px'} gap={8}>
-        <ButtonGroup
+        <ButtonsGroup
           options={options}
           onSelect={info => {
             setCurrent(info.index);

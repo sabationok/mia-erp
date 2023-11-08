@@ -164,20 +164,20 @@ const createProductFormDataOmitPaths: (keyof IProduct | string)[] = [
   'warehouses',
   'inventories',
 ];
-const createArrayOfObjUUID = (arr: string[]): ArrayOfObjUUID => {
+export const createArrayOfObjUUID = (arr: string[]): ArrayOfObjUUID => {
   return arr.map(_id => ({ _id }));
 };
-const createArrayStringUUID = (arr: OnlyUUID[]): ArrayUUID => {
+export const createArrayStringUUID = (arr: OnlyUUID[]): ArrayUUID => {
   return arr.map(obj => obj._id);
 };
-const getFormValuePickPaths = (data?: any) => {
+export const getFormValuePickPaths = (data?: any) => {
   return data ? ['_id', 'label', 'email', 'dirType', 'parent', 'name', 'secondName'].filter(key => key in data) : [];
 };
-const idsArrToObjIdArrPaths = <T extends keyof IProduct | string = any>(key: T) => {
+export const idsArrToObjIdArrPaths = <T extends keyof IProduct | string = any>(key: T) => {
   return ['properties', 'categories', 'recommends'].includes(key);
 };
 export function createProductDto(input: IProductFullFormData): IProductFullDto {
-  const arrPaths = ['properties', 'categories', 'recommends'];
+  // const arrPaths = ['properties', 'categories', 'recommends'];
   return input;
 }
 

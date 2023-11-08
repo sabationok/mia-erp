@@ -10,7 +10,6 @@ import {
   IPriceListReqData,
   IUpdatePriceReqData,
 } from '../redux/priceManagement/priceManagement.types';
-import { PriceManagementApi } from '../api/priceManagement.api';
 import * as thunks from '../redux/priceManagement/priceManagement.thunks';
 import { IPricesThunksData } from '../redux/priceManagement/priceManagement.thunks';
 
@@ -38,7 +37,6 @@ const usePriceManagementService = (): PriceManagementService => {
   const dispatch: AppDispatch = useAppDispatch();
 
   return useMemo((): PriceManagementService => {
-    const { getAllPrices } = PriceManagementApi;
     return {
       createList: arg => dispatch(thunks.createPriceListThunk(defaultThunkPayload(arg))),
       getAll: arg => dispatch(thunks.getAllPriceListsThunk(defaultThunkPayload(arg))),

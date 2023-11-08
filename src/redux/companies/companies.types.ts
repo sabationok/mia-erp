@@ -22,6 +22,10 @@ export enum BusinessSubjectTypeEnum {
   entrepreneur = 'entrepreneur',
   person = 'person',
 }
+export interface TaxCodeDto {
+  personal?: string;
+  corp?: string;
+}
 
 export interface ICompanyBase extends IBase {
   name?: string;
@@ -30,7 +34,7 @@ export interface ICompanyBase extends IBase {
   fullName?: string;
   label?: string;
   fullLabel?: string;
-  ownershipType?: string;
+  ownershipType?: OwnershipTypeEnum;
   businessSubjectType?: BusinessSubjectTypeEnum;
   phone?: string;
   taxCode?: string;

@@ -6,7 +6,7 @@ import FlexBox from '../../atoms/FlexBox';
 import SvgIcon from '../../atoms/SvgIcon/SvgIcon';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
-import ButtonGroup from '../../atoms/ButtonGroup';
+import ButtonsGroup from '../../atoms/ButtonsGroup';
 import styled from 'styled-components';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 
@@ -99,7 +99,7 @@ const FormAddImageSet = ({
         )}
 
         <FlexBox padding={'8px 0'}>
-          <ButtonGroup
+          <ButtonsGroup
             options={formAddImageSetTabs}
             defaultIndex={type ? formAddImageSetTabs.findIndex(el => el.value === type) : 0}
             onSelect={info => {

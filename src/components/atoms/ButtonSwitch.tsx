@@ -1,7 +1,7 @@
 import { memo, useMemo, useState } from 'react';
 import _ from 'lodash';
 import { t } from '../../lang';
-import ButtonGroup from './ButtonGroup';
+import ButtonsGroup from './ButtonsGroup';
 
 interface ButtonSwitchProps {
   acceptLabel?: string;
@@ -30,7 +30,7 @@ const ButtonSwitch = ({ onChange, value, acceptLabel, rejectLabel }: ButtonSwitc
     [acceptLabel, rejectLabel]
   );
 
-  return <ButtonGroup options={options} defaultIndex={defIndex} onChangeIndex={handleChange} />;
+  return <ButtonsGroup options={options} defaultIndex={defIndex} onChangeIndex={handleChange} />;
 };
 
 export default memo(ButtonSwitch);

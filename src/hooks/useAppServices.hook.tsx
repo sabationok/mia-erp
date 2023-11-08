@@ -43,6 +43,7 @@ const useAppService = (): AppService => {
   return {
     auth: useAppAuthHook(),
     permissions: usePermissionsServiceHook(),
+    integrations: useIntegrationsService(),
     products: useProductsServiceHook(),
     transactions: useTransactionsServiceHook(),
     directories: useDirService(),
@@ -56,7 +57,6 @@ const useAppService = (): AppService => {
     invoicing: useInvoicingService(),
     shipments: useShipmentsService(),
     roles: useCustomRolesServiceHook(),
-    integrations: useIntegrationsService(),
   };
 };
 export const AppServiceCTX = createContext<AppService>({} as AppService);

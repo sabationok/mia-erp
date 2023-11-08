@@ -4,6 +4,7 @@ import { ApiDirType } from '../redux/APP_CONFIGS';
 import { FilterReturnDataType } from '../components/Filter/AppFilter';
 import { OnlyUUID, UUID } from '../redux/global.types';
 
+export { default as BaseApi } from './base.api';
 export { default as TransactionsApi } from './transactions.api';
 export { default as CompaniesApi } from './companies.api';
 export { default as PermissionsApi } from './permissions.api';

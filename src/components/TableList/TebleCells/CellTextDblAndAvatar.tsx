@@ -36,7 +36,7 @@ const CellTextDblAndAvatar: React.FC<CellTextDblAndAvatarProps & React.HTMLAttri
       imgUrl: imgPreview,
       imgPreviewIcon,
     }),
-    [bottom, imgPreview, rowData, titleInfo, top, width]
+    [bottom, imgPreview, imgPreviewIcon, rowData, titleInfo, top, width]
   );
 
   return <Cell.DoubleWithAvatar {...cellConfig} />;

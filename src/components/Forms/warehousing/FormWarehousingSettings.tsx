@@ -1,6 +1,6 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useAppForm } from '../../../hooks';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { usePermissionsSelector, useWarehousesSelector } from '../../../redux/selectors.store';
@@ -14,6 +14,7 @@ import { Text } from '../../atoms/Text';
 import Switch from '../../atoms/Switch';
 import { getIdRef } from '../../../utils/dataTransform';
 import { useMemo } from 'react';
+import { AppModuleName } from '../../../redux/reduxTypes.types';
 
 export interface FormWarehousingSettingsProps
   extends Omit<ModalFormProps<any, any, ICompany>, 'onSubmit' | 'onSelect'> {
@@ -43,7 +44,7 @@ export const FormWarehousingSettings: React.FC<FormWarehousingSettingsProps> = (
   onClose,
   ...p
 }) => {
-  const prServ = useAppServiceProvider()[ServiceName.permissions];
+  const prServ = useAppServiceProvider()[AppModuleName.permissions];
   const currentPermission = usePermissionsSelector()?.permission;
   const warehousesSelectOptions = useWarehousesAsSelectOptions();
 

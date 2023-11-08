@@ -8,7 +8,7 @@ import InputText from '../atoms/Inputs/InputText';
 import { useAppForm } from '../../hooks';
 import { IProperty, IPropertyBase, IPropertyDto } from '../../redux/products/properties.types';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
-import ButtonGroup, { ButtonGroupSelectHandler } from '../atoms/ButtonGroup';
+import ButtonsGroup, { ButtonGroupSelectHandler } from '../atoms/ButtonsGroup';
 import { enumToFilterOptions } from '../../utils/fabrics';
 
 export interface FormCreatePropertyProps extends Omit<ModalFormProps<ProductTypeEnum, any, IPropertyBase>, 'onSubmit'> {
@@ -87,7 +87,7 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
 
         {isProperty && (
           <InputLabel label={'Доступно для формування варіацій'}>
-            <ButtonGroup
+            <ButtonsGroup
               options={filterOptions}
               onSelect={handleIsSelectableByUser}
               defaultIndex={defaultState?.isSelectable ? 1 : 0}

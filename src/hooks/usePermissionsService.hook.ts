@@ -71,6 +71,7 @@ const usePermissionsService = ({ companyId, permissionId }: ValidatePermissionOp
 
       deleteById: args => dispatch(deletePermissionByIdThunk(defaultThunkPayload(args))),
       edit: args => dispatch(updatePermissionThunk(defaultThunkPayload(args))),
+
       create: args => dispatch(createPermissionThunk(defaultThunkPayload(args))),
       getCurrent: args => dispatch(getCurrentPermissionThunk(defaultThunkPayload(args))),
 

@@ -145,7 +145,7 @@ const tagsReport: IReportConfigs = {
   disabled: true,
 };
 
-const financeReports: Partial<IReportConfigs>[] = [
+export const financeReports: Partial<IReportConfigs>[] = [
   categoriesReport,
   countsReport,
   activitiesReport,

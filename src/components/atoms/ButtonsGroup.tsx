@@ -4,53 +4,40 @@ import ButtonIcon from './ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import { FilterOption } from '../ModalForm/ModalFilter';
 import { isUndefined } from 'lodash';
-import { checks } from '../../utils';
 
-export type ButtonGroupOption<V = any> = FilterOption<V>;
-export interface ButtonGroupProps<V = any> {
-  options?: ButtonGroupOption<V>[];
+export type ButtonsGroupOption<V = any> = FilterOption<V>;
+export interface ButtonsGroupProps<V = any> {
+  options?: ButtonsGroupOption<V>[];
   defaultIndex?: number;
   onSelect?: ButtonGroupSelectHandler<V>;
   backgroundColor?: string;
   borderRadius?: string;
-  currentOption?: ButtonGroupOption<V>;
+  currentOption?: ButtonsGroupOption<V>;
   onChangeIndex?: (index: number) => void;
 }
 export type ButtonGroupSelectHandler<V = any> = (info: {
-  option: ButtonGroupOption<V>;
+  option: ButtonsGroupOption<V>;
   value: V;
   index: number;
 }) => void;
-const ButtonGroup = <V = any,>({
+const ButtonsGroup = <V = any,>({
   options,
   borderRadius,
   onSelect,
-  defaultIndex,
+  defaultIndex = 0,
   onChangeIndex,
   currentOption,
-}: ButtonGroupProps<V>) => {
+}: ButtonsGroupProps<V>) => {
   const [current, setCurrent] = useState(0);
 
   const handleSelect = useCallback(
-    (option: ButtonGroupOption, index: number) => () => {
+    (option: ButtonsGroupOption, index: number) => () => {
       setCurrent(index);
       onSelect && options && onSelect({ option, value: option?.value, index });
       onChangeIndex && onChangeIndex(index);
     },
     [onChangeIndex, onSelect, options]
   );
-
-  useEffect(() => {
-    if (!isUndefined(defaultIndex)) {
-      setCurrent(defaultIndex);
-
-      onSelect &&
-        options &&
-        onSelect({ option: options[defaultIndex], value: options[defaultIndex]?.value, index: defaultIndex });
-    }
-
-    // eslint-disable-next-line
-  }, []);
 
   const renderButtons = useMemo(() => {
     return options?.map((opt, idx) => (
@@ -67,7 +54,19 @@ const ButtonGroup = <V = any,>({
   }, [current, handleSelect, options]);
 
   useEffect(() => {
-    if (!checks.isUnd(currentOption) && !checks.isUnd(options)) {
+    if (!isUndefined(defaultIndex)) {
+      setCurrent(defaultIndex);
+
+      onSelect &&
+        options &&
+        onSelect({ option: options[defaultIndex], value: options[defaultIndex]?.value, index: defaultIndex });
+    }
+
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    if (!isUndefined(currentOption) && !isUndefined(options)) {
       setCurrent(
         options.findIndex(o => (o?.value ? o?.value === currentOption?.value : o?._id === currentOption?._id))
       );
@@ -81,7 +80,7 @@ const ButtonGroup = <V = any,>({
   );
 };
 
-const Buttons = styled(FlexBox)<ButtonGroupProps>`
+const Buttons = styled(FlexBox)<ButtonsGroupProps>`
   background-color: ${({ backgroundColor, theme }) => backgroundColor ?? theme.fieldBackgroundColor};
 `;
 const OptionButton = styled(ButtonIcon)`
@@ -104,4 +103,4 @@ const OptionButton = styled(ButtonIcon)`
     font-size: 12px;
   }
 `;
-export default ButtonGroup;
+export default ButtonsGroup;

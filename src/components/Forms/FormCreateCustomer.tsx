@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import FlexBox from '../atoms/FlexBox';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
-import ButtonGroup from '../atoms/ButtonGroup';
+import ButtonsGroup from '../atoms/ButtonsGroup';
 import { businessSubjectTypeFilterOptions } from '../../data/companies.data';
 import { useForm } from 'react-hook-form';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
@@ -47,7 +47,7 @@ const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({
     <ModalForm {...p} title={p.title ? p.title : t('Create customer')} onSubmit={handleSubmit(onValid)}>
       <Inputs padding={'0 8px 8px'}>
         <InputLabel label={t('type')} required>
-          <ButtonGroup
+          <ButtonsGroup
             options={businessSubjectTypeFilterOptions}
             onSelect={info => {
               setValue('businessType', info?.value);

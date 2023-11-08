@@ -13,7 +13,7 @@ import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import { t } from '../../lang';
 import { enumToFilterOptions } from '../../utils/fabrics';
-import ButtonGroup from '../atoms/ButtonGroup';
+import ButtonsGroup from '../atoms/ButtonsGroup';
 import { createTableTitlesFromTemplate } from '../../utils';
 import { transformVariationTableData } from '../../utils/tables';
 import { createApiCall, PriceManagementApi } from '../../api';
@@ -154,7 +154,7 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
         </Inputs>
 
         <InputLabel label={t('Reservation anable')}>
-          <ButtonGroup options={reservationOptions} />
+          <ButtonsGroup options={reservationOptions} />
         </InputLabel>
       </FlexBox>
     </Form>

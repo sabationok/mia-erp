@@ -1,27 +1,31 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
-import { BusinessSubjectTypeEnum, ICompanyFormData } from '../../redux/companies/companies.types';
+import { BusinessSubjectTypeEnum, ICompanyFormData, OwnershipTypeEnum } from '../../redux/companies/companies.types';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
-import ButtonGroup from '../atoms/ButtonGroup';
+import ButtonsGroup from '../atoms/ButtonsGroup';
 import { t } from '../../lang';
 import { useAppForm } from '../../hooks';
 import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
 import { businessSubjectTypeFilterOptions, ownershipTypeFilterOptions } from '../../data/companies.data';
 import { ContractorsTypesEnum } from '../../redux/directories/contractors.types';
 import { FormInputs } from './components/atoms';
+import { AppModuleName } from '../../redux/reduxTypes.types';
 
-const validFormData = yup.object().shape({
+const createCompanyFormSchema = yup.object().shape({
   name: yup.string(),
   fullName: yup.string(),
-  email: yup.string(),
-  businessSubjectType: yup.string().oneOf(Object.values(BusinessSubjectTypeEnum), 'Недопустима роль'),
-  ownershipType: yup.string(),
+  email: yup.string().required(),
+  businessSubjectType: yup.string().oneOf(Object.values(BusinessSubjectTypeEnum), 'Недопустиме значення').required(),
+  ownershipType: yup.object().shape({
+    label: yup.string(),
+    value: yup.string().oneOf(Object.values(OwnershipTypeEnum), 'Недопустиме значення'),
+  }),
   taxCode: yup.string(),
   label: yup.string(),
   fullLabel: yup.string(),
@@ -30,21 +34,26 @@ const validFormData = yup.object().shape({
 
 export interface FormCreateCompanyProps extends Omit<ModalFormProps<any, any, ICompanyFormData>, 'onSubmit'> {}
 const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...props }) => {
-  const { permissions } = useAppServiceProvider();
+  const pServ = useAppServiceProvider()[AppModuleName.permissions];
 
   const {
     register,
+    unregister,
     formState: { errors, isValid },
     handleSubmit,
-    formValues: { businessSubjectType, type: currentType },
+    formValues: { businessSubjectType, type: currentType, ...fv },
     registerSelect,
     setValue,
   } = useAppForm<ICompanyFormData>({
     defaultValues: { businessSubjectType: BusinessSubjectTypeEnum.company, ...defaultState },
     reValidateMode: 'onChange',
-    resolver: yupResolver(validFormData),
+    resolver: yupResolver(createCompanyFormSchema),
     shouldUnregister: true,
   });
+
+  useEffect(() => {
+    console.debug(fv);
+  }, [fv]);
 
   const formRenderConfig = useMemo(
     () => ({
@@ -65,8 +74,9 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
     }),
     [currentType, businessSubjectType]
   );
-  function onFormSubmit(data: ICompanyFormData) {
-    permissions
+
+  function onValid(data: ICompanyFormData) {
+    pServ
       .createCompany({
         data,
         onSuccess(data) {
@@ -87,16 +97,20 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
       fillHeight
       width={'480px'}
       {...props}
-      onSubmit={handleSubmit(onFormSubmit, errors => {
-        console.log(errors);
+      onSubmit={handleSubmit(onValid, errors => {
+        console.error('FormCreateCompany', errors);
       })}
     >
       <FormInputs flex={1} fillWidth padding={'8px 4px'} overflow={'auto'}>
         <InputLabel label={t('businessSubjectType')} error={errors.businessSubjectType} required>
-          <ButtonGroup
+          <ButtonsGroup
             options={businessSubjectTypeFilterOptions}
+            currentOption={{ value: businessSubjectType }}
             onSelect={({ value }) => {
               setValue('businessSubjectType', value);
+              if (value !== BusinessSubjectTypeEnum.company) {
+                unregister('ownershipType');
+              }
             }}
           />
         </InputLabel>
@@ -138,8 +152,9 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
                 autoFocus={!formRenderConfig.renderNamesInputs}
               />
             </InputLabel>
-            <InputLabel label={'Повна назва'} error={errors.fullName}>
-              <InputText placeholder={'Ввведіть повну назву'} {...register('fullName')} />
+
+            <InputLabel label={t('Print name')} error={errors.fullName}>
+              <InputText placeholder={t('Enter print name')} {...register('fullName')} />
             </InputLabel>
           </>
         )}
@@ -147,6 +162,7 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
         <InputLabel label={'Емейл (основний)'} error={errors.email} required>
           <InputText placeholder={'Введіть основний емейл'} {...register('email')} type={'email'} required />
         </InputLabel>
+
         <InputLabel label={'Телефон (основний)'} error={errors.phone}>
           <InputText placeholder={'Введіть осний контактний номер'} {...register('phone')} />
         </InputLabel>

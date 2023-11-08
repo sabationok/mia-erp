@@ -5,10 +5,13 @@ import { t } from '../../../lang';
 import { useModalService } from '../../ModalProvider/ModalProvider';
 import FormCreateOutputIntegration from '../../Forms/integrations/FormCreateOutputIntegration';
 import { useEffect, useMemo, useState } from 'react';
-import { CreateOutputIntegrationFormData } from '../../../redux/integrations/integrations.types';
+import { OutputIntegrationBase } from '../../../redux/integrations/integrations.types';
 import AccordeonList, { IAccordionOptionProps } from '../../SideBarContent/AccordeonList';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
+import { Text } from '../../atoms/Text';
+import { formatDate } from '../../../utils/dateTime.utils';
+import { isNumber } from 'lodash';
 
 export interface OutputIntegrationsTabProps {}
 
@@ -17,7 +20,7 @@ const OutputIntegrationsTab: React.FC<OutputIntegrationsTabProps> = ({}) => {
   const service = useAppServiceProvider()[AppModuleName.integrations];
 
   // const [extServices, setExtServices] = useState<any[]>([]);
-  const [integrationsList, setIntegrationsList] = useState<CreateOutputIntegrationFormData[]>([]);
+  const [integrationsList, setIntegrationsList] = useState<OutputIntegrationBase[]>([]);
 
   const handleCreateOne = () => {
     modalS.open({
@@ -34,6 +37,15 @@ const OutputIntegrationsTab: React.FC<OutputIntegrationsTabProps> = ({}) => {
     return integrationsList.map((opt): IAccordionOptionProps => {
       return {
         title: opt.label,
+        ChildrenComponent: () => (
+          <FlexBox fillWidth padding={'8px 2px'} gap={8}>
+            <Text>{opt.apiKey}</Text>
+            {opt.expiredAt && (
+              <Text>{formatDate(isNumber(opt.expiredAt) ? opt.expiredAt : new Date(opt.expiredAt))}</Text>
+            )}
+            <Text>{opt.description}</Text>
+          </FlexBox>
+        ),
       };
     });
   }, [integrationsList]);
