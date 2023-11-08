@@ -423,7 +423,7 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
                 data: { data, params: { createTreeData: true } },
                 onSuccess: rd => {
                   options?.onSuccess && options?.onSuccess(rd);
-                  o?.closeAfterSave && modal?.onClose();
+                  o?.close && modal?.onClose();
                   toast.success(`Created: ${data.label}`);
                 },
               })
@@ -447,7 +447,7 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
                 data: { data: { ...data, parent }, params: { createTreeData: true } },
                 onSuccess: rd => {
                   options?.onSuccess && options?.onSuccess(rd);
-                  o?.closeAfterSave && modal?.onClose();
+                  o?.close && modal?.onClose();
                   toast.success(`Created: ${data.label}`);
                 },
               })
@@ -472,7 +472,7 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
                 onSuccess: rd => {
                   options?.onSuccess && options?.onSuccess(rd);
 
-                  o?.closeAfterSave && modal?.onClose();
+                  o?.close && modal?.onClose();
                   toast.success(`Created: ${data.label}`);
                 },
               })
@@ -498,7 +498,7 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
                 onSuccess: rd => {
                   options?.onSuccess && options?.onSuccess(rd);
 
-                  o?.closeAfterSave && modal?.onClose();
+                  o?.close && modal?.onClose();
                   toast.success(`Updated: ${data.label}`);
                 },
               })

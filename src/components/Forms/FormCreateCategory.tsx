@@ -40,7 +40,7 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
   } = useAppForm<ICategoryFormData>({
     defaultValues: defaultState,
     resolver: yupResolver(validation),
-    reValidateMode: 'onSubmit',
+    reValidateMode: 'onChange',
   });
 
   const onValid = (data: ICategoryFormData) => {

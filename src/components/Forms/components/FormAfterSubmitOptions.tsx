@@ -40,7 +40,7 @@ export const useAfterSubmitOptions = () => {
   };
 };
 
-const FormAfterSubmitOptions: React.FC<FormAfterSubmitOptionsProps> = ({ control, toggleOption, state }) => {
+const FormAfterSubmitOptions: React.FC<FormAfterSubmitOptionsProps> = ({ control, state }) => {
   const [{ close, clear }, setAfterSubmitOptions] = useState<FormAfterSubmitOptionsProps>(initialOptions);
   const toggleStateOption = (option: keyof UseFormSubmitOptions) => {
     if (control) {
@@ -73,16 +73,11 @@ const FormAfterSubmitOptions: React.FC<FormAfterSubmitOptionsProps> = ({ control
             toggleStateOption('clear');
           }}
         >
-          <CheckBox
-            size={'12px'}
-            checked={clear}
-            name={'clear'}
-            onChange={() => {
-              toggleStateOption('clear');
-            }}
-          />
+          <CheckBox size={'12px'} checked={clear} name={'clear'} />
 
-          <div>{t('clear')}</div>
+          <Text $size={12} $weight={500}>
+            {t('clear')}
+          </Text>
         </Label>
         <Label
           gap={8}
@@ -91,20 +86,13 @@ const FormAfterSubmitOptions: React.FC<FormAfterSubmitOptionsProps> = ({ control
           justifyContent={'center'}
           onClick={() => {
             toggleStateOption('close');
-            toggleStateOption('closeAfterSave');
           }}
         >
-          <CheckBox
-            size={'12px'}
-            checked={close}
-            name={'close'}
-            onChange={() => {
-              toggleStateOption('close');
-              toggleStateOption('closeAfterSave');
-            }}
-          />
+          <CheckBox size={'12px'} checked={close} name={'close'} />
 
-          <div>{t('close')}</div>
+          <Text $size={12} $weight={500}>
+            {t('close')}
+          </Text>
         </Label>
       </FlexBox>
     </Container>

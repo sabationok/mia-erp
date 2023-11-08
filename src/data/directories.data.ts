@@ -16,7 +16,6 @@ import {
 import { t } from '../lang';
 import DirTreeComp from '../components/Directories/DirTreeComp';
 import { ApiDirType } from '../redux/APP_CONFIGS';
-import { toast } from 'react-toastify';
 import DirTableComp, { DirTableCompProps } from '../components/Directories/DirTableComp';
 import FormCreateCounterparty from '../components/Forms/FormCreateCounterparty';
 import { createDataForReq } from '../utils/dataTransform';
@@ -37,6 +36,7 @@ import {
   productsFilterOptions,
   tagsFilterOptions,
 } from './modalFilterOptions.data';
+import { ToastService } from '../services';
 
 export const getDirInTreeActionsCreator = (
   Modal: Modals = Modals.FormCreateDirTreeComp,
@@ -45,7 +45,7 @@ export const getDirInTreeActionsCreator = (
   return ({ modalService, service, type, dirType, findById }) => {
     return {
       onCreateParent: () => {
-        const modal = modalService.handleOpenModal({
+        const modal = modalService.open({
           Modal: Modal,
           props: {
             title: createParentTitle || t('createDirParentItem'),
@@ -55,13 +55,16 @@ export const getDirInTreeActionsCreator = (
             defaultState: { dirType, type },
             onSubmit: (data, o) => {
               console.log('onCreateParent', data);
+
               dirType &&
                 service
                   .create({
                     data: { dirType, data },
-                    onSuccess: rd => {
-                      o?.closeAfterSave && modal?.onClose();
-                      toast.success(`Created: ${data.label}`);
+                    onSuccess: _rd => {
+                      console.debug('Created', dirType, _rd);
+
+                      o?.close && modal?.onClose();
+                      ToastService.success(`Created: ${data.label}`);
                     },
                   })
                   .then();
@@ -70,7 +73,7 @@ export const getDirInTreeActionsCreator = (
         });
       },
       onCreateChild: (_, parent) => {
-        const modal = modalService.handleOpenModal({
+        const modal = modalService.open({
           Modal,
           props: {
             title: createChildTitle || t('createDirChildItem'),
@@ -83,9 +86,9 @@ export const getDirInTreeActionsCreator = (
               service
                 .create({
                   data: { dirType, data },
-                  onSuccess: rd => {
-                    o?.closeAfterSave && modal?.onClose();
-                    toast.success(`Created: ${data.label}`);
+                  onSuccess: _rd => {
+                    o?.close && modal?.onClose();
+                    ToastService.success(`Created: ${data.label}`);
                   },
                 })
                 .then();
@@ -94,7 +97,7 @@ export const getDirInTreeActionsCreator = (
         });
       },
       onUpdate: (_id, dataForUpdate) => {
-        const modal = modalService.handleOpenModal({
+        const modal = modalService.open({
           Modal,
           props: {
             title: updateItemTitle || t('update'),
@@ -107,9 +110,9 @@ export const getDirInTreeActionsCreator = (
               service
                 ?.update({
                   data: { dirType, _id, data },
-                  onSuccess: rd => {
-                    o?.closeAfterSave && modal?.onClose();
-                    toast.success(`Updated: ${data.label}`);
+                  onSuccess: _rd => {
+                    o?.close && modal?.onClose();
+                    ToastService.success(`Updated: ${data.label}`);
                   },
                 })
                 .then();
@@ -121,16 +124,16 @@ export const getDirInTreeActionsCreator = (
         service
           .changeArchiveStatus({
             data: { dirType, _id, data: { isArchived: status } },
-            onSuccess: (rd, meta) => {
+            onSuccess: (rd, _meta) => {
               console.log(rd);
-              // toast.success(`${dataForUpdate.label} => ${status ? 'archived' : 'unarchived'}`);
+              ToastService.success(`Status => ${status ? 'archived' : 'unarchived'}`);
             },
           })
           .then();
       },
       onChangeDisableStatus: (_id, status) => {
         service
-          .changeDisabledStatus({ data: { dirType, _id, data: { disabled: status } }, onSuccess: (rd, meta) => {} })
+          .changeDisabledStatus({ data: { dirType, _id, data: { disabled: status } }, onSuccess: (_rd, meta) => {} })
           .then();
       },
     };
@@ -158,7 +161,7 @@ const CountsProps: DirCountsProps = {
   filterSearchPath: 'type',
   filterOptions: countsFilterOptions,
   filterDefaultValue: CountsTypesEnum.ACTIVE,
-  actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCount),
+  actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCount, { createParentTitle: t('Create count') }),
 };
 
 const countsDir: IDirectoryListItem<any, DirCountsProps> = {
@@ -177,12 +180,12 @@ const CategoriesProps: DirCategoriesProps = {
   creatingChild: true,
   creatingParent: true,
   archiving: true,
-  createParentTitle: t('createParentCategory'),
+  createParentTitle: t('Create category'),
   dirType: ApiDirType.CATEGORIES_TR,
   availableLevels: 2,
   filterSearchPath: 'type',
   filterDefaultValue: CategoryTrTypeEnum.INCOME,
-  actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCategory),
+  actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCategory, { createParentTitle: t('Create category') }),
 };
 const trCategoriesDir: IDirectoryListItem<any, DirCategoriesProps> = {
   title: CategoriesProps.title,
@@ -194,9 +197,8 @@ const trCategoriesDir: IDirectoryListItem<any, DirCategoriesProps> = {
 const ProductCategoriesProps: DirProductCategoriesProps = {
   title: t('productCategories'),
   fillHeight: true,
-  createParentTitle: t('createParentCategory'),
+  createParentTitle: t('Create category'),
   dirType: ApiDirType.CATEGORIES_PROD,
-  actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCategory),
   filterOptions: productsFilterOptions,
   editing: true,
   creatingChild: true,
@@ -205,6 +207,7 @@ const ProductCategoriesProps: DirProductCategoriesProps = {
   filterSearchPath: 'type',
   filterDefaultValue: ProductTypeEnum.GOODS,
   availableLevels: 5,
+  actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCategory, { createParentTitle: t('Create category') }),
 };
 const prodCategoriesDir: IDirectoryListItem<any, DirProductCategoriesProps> = {
   title: ProductCategoriesProps.title,
@@ -232,7 +235,7 @@ const ContractorsProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
         type: 'onlyIconFilled',
         icon: 'plus',
         onClick: async () => {
-          const modal = modalService.handleOpenModal({
+          const modal = modalService.open({
             ModalChildren: FormCreateCounterparty,
             modalChildrenProps: {
               title: t('Create counterparty'),
@@ -242,7 +245,7 @@ const ContractorsProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
                   data: { dirType, data: createDataForReq(data) },
                   onSuccess: rd => {
                     console.log(t('Create counterparty rd'), rd);
-                    toast.success(`Created: ${data.label || data.name}`);
+                    ToastService.success(`Created: ${data.label || data.name}`);
                     modal?.onClose();
                   },
                   onError: e => {},
@@ -325,7 +328,7 @@ const activitiesDir: IDirectoryListItem<any, DirActivitiesProps> = {
 };
 const brandsProps: DirBrandsProps = {
   title: t(ApiDirType.BRANDS),
-  createParentTitle: t('createDirParentItem'),
+  createParentTitle: t('Create brand'),
   dirType: ApiDirType.BRANDS,
   fillHeight: true,
   availableLevels: 1,
@@ -341,7 +344,7 @@ const brandsDir: IDirectoryListItem<any, DirBrandsProps> = {
 
 const prodPropertiesProps: DirPropertiesProps = {
   title: t(ApiDirType.PROPERTIES_PRODUCTS),
-  createParentTitle: 'Create properties group',
+  createParentTitle: t('Create properties group'),
   dirType: ApiDirType.PROPERTIES_PRODUCTS,
   fillHeight: true,
   filterOptions: productsFilterOptions,
