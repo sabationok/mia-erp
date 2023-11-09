@@ -9,7 +9,7 @@ import TableList from '../../../TableList/TableList';
 import { useCustomersSelector } from '../../../../redux/selectors.store';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
-import FormCreateCustomer from '../../FormCreateCustomer';
+import FormCreateCustomer from '../../crm/FormCreateCustomer';
 import { createDataForReq } from '../../../../utils/dataTransform';
 
 export interface SelectCustomerModalProps extends Omit<ModalFormProps, 'onSelect' | 'onSubmit'> {

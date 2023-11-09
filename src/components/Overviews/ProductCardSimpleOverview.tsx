@@ -140,7 +140,7 @@ const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
 
   position: relative;
 
-  padding: 8px;
+  padding: 8px 0;
   //border-bottom: 2px solid ${({ theme }) => theme.fieldBackgroundColor};
 
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};

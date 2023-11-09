@@ -14,7 +14,7 @@ export const CreateCategory = lazy(() => import('./FormCreateCategory'));
 export const CreateTag = lazy(() => import('./FormCreateTag'));
 // * PRICING
 export const CreatePrice = lazy(() => import('./FormCreatePrice/FormCreatePrice'));
-export const CreatePriceList = lazy(() => import('./FormCreatePriceList'));
+export const CreatePriceList = lazy(() => import('./pricing/FormCreatePriceList'));
 // * COMPANY
 export const InviteUser = lazy(() => import('./FormInviteUser'));
 export const CreateCustomRole = lazy(() => import('./FormCreateCustomRole'));
@@ -24,7 +24,7 @@ export const CreateMethod = lazy(() => import('./FormCreateMethod'));
 // * WAREHOUSING
 export const CreateWarehouseDocument = lazy(() => import('./warehousing/FormCreateWarehouseDocument'));
 export const CreateWarehouse = lazy(() => import('./warehousing/FormCreateWarehouse'));
-export const CreateProductInventory = lazy(() => import('./FormCreateProductInventory'));
+export const CreateProductInventory = lazy(() => import('./warehousing/FormCreateProductInventory'));
 export const WarehousingSettings = lazy(() => import('./warehousing/FormWarehousingSettings'));
 // * PRODUCTS
 export const CreateProduct = lazy(() => import('./FormProduct/FormCreateProduct'));

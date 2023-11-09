@@ -111,9 +111,9 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
   }, [currentProduct?.variations, loadData, modalS, onSelect, page.currentProduct, variationsTableTitles, withActions]);
 
   useEffect(() => {
-    if ((!currentProduct?.variations || currentProduct?.variations?.length === 0) && currentProduct?._id) {
-      loadData({ refresh: true });
-    }
+    loadData({ refresh: true });
+    // if ((!currentProduct?.variations || currentProduct?.variations?.length === 0) && currentProduct?._id) {
+    // }
     // eslint-disable-next-line
   }, []);
 

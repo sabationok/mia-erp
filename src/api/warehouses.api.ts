@@ -14,7 +14,7 @@ export class WarehousesApi {
   private static endpoints = APP_CONFIGS.endpoints.warehousesEndpoints;
 
   public static async createWarehouse(data?: IWarehouseReqData): Promise<AppResponse<IWarehouse>> {
-    return this.api.post(this.endpoints.create(), data?.data);
+    return this.api.post(this.endpoints.create(), data?.data, { params: data?.params });
   }
 
   public static async updateWarehouse(data?: IWarehouseReqData): Promise<AppResponse<IWarehouse>> {

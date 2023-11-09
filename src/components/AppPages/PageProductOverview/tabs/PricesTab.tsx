@@ -16,7 +16,7 @@ export interface PricesTabProps {
 }
 const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions = true }) => {
   const currentProduct = useProductsSelector().currentProduct;
-  // const pricesS = useAppServiceProvider()[ServiceName.priceManagement];
+  const pricesS = useAppServiceProvider()[ServiceName.priceManagement];
   const modalS = useModalProvider();
   const productsS = useAppServiceProvider()[ServiceName.products];
   const [loading, setLoading] = useState(false);
@@ -64,12 +64,18 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
                 icon: 'plus',
                 type: 'onlyIconFilled',
                 onClick: () => {
-                  modalS.open({
+                  const m = modalS.open({
                     ModalChildren: FormCreatePrice,
                     modalChildrenProps: {
                       product: currentProduct,
-                      onSubmit: d => {
+                      onSubmit: (d, o) => {
                         console.log('FormCreatePrice submit pr overview', d);
+                        pricesS.addPriceToList({
+                          data: { updateCurrent: true, data: { data: d } },
+                          onSuccess: () => {
+                            o?.close && m?.onClose();
+                          },
+                        });
                       },
                     },
                   });
@@ -78,12 +84,12 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
             ];
           },
     };
-  }, [withActions, currentProduct, loadData, modalS, onSelect]);
+  }, [currentProduct, withActions, onSelect, loadData, modalS, pricesS]);
 
   useEffect(() => {
-    if ((!currentProduct?.prices || currentProduct?.prices?.length === 0) && currentProduct?._id) {
-      loadData({ refresh: true });
-    }
+    // if ((!currentProduct?.prices || currentProduct?.prices?.length === 0) && currentProduct?._id) {
+    loadData({ refresh: true });
+    // }
     // eslint-disable-next-line
   }, []);
 

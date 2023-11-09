@@ -15,11 +15,13 @@ import { FormInputs } from '../components/atoms';
 import { Text } from '../../atoms/Text';
 import Switch from '../../atoms/Switch';
 
-export interface FormCreateWarehouseProps extends Omit<ModalFormProps<any, any, IWarehouseFormData>, 'onSubmit' | ''> {
-  onSubmit?: AppSubmitHandler<IWarehouseFormData, { isDefault: boolean }>;
+export interface FormCreateWarehouseProps extends Omit<ModalFormProps<any, any, IWarehouseFormData>, 'onSubmit'> {
+  onSubmit?: AppSubmitHandler<IWarehouseFormData>;
   update?: string;
 }
-export interface IWarehouseFormData extends IWarehouseDto {}
+export interface IWarehouseFormData extends IWarehouseDto {
+  asDefault?: boolean;
+}
 
 export const warehouseTypeFilterOptions = enumToFilterOptions(WarehouseTypeEnum);
 
@@ -53,14 +55,9 @@ const FormCreateWarehouse: React.FC<FormCreateWarehouseProps> = ({ defaultState,
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
-  const [isDefault, setAsDefault] = useState(false);
+  const [asDefault, setAsDefault] = useState(false);
   const onValid = (data: IWarehouseFormData) => {
-    onSubmit &&
-      onSubmit(data, {
-        closeAfterSave: submitOptions.state.close,
-        clearAfterSave: submitOptions.state.clear,
-        isDefault,
-      });
+    onSubmit && onSubmit({ ...data, asDefault }, { ...submitOptions.state });
   };
 
   return (
@@ -119,7 +116,7 @@ const FormCreateWarehouse: React.FC<FormCreateWarehouseProps> = ({ defaultState,
 
           <Switch
             size={'32px'}
-            checked={isDefault}
+            checked={asDefault}
             onChange={e => {
               setAsDefault(e.checked);
             }}

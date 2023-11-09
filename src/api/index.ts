@@ -40,13 +40,15 @@ export interface AppQueryParams<Type = any> extends Record<string, any> {
   dirType?: ApiDirType;
   isArchived?: boolean;
   deleted?: boolean;
-  isDefault?: boolean;
   disabled?: boolean;
   createTreeData?: boolean;
   sortParams?: ISortParams;
   search?: string;
   searchBy?: string;
   disabledForClient?: boolean;
+
+  isDefault?: boolean;
+  asDefault?: boolean;
 
   fullInfo?: boolean;
 

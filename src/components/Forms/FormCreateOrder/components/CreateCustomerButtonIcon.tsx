@@ -2,7 +2,7 @@ import { ICustomer } from '../../../../redux/customers/customers.types';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
-import FormCreateCustomer from '../../FormCreateCustomer';
+import FormCreateCustomer from '../../crm/FormCreateCustomer';
 import { t } from '../../../../lang';
 import { createDataForReq } from '../../../../utils/dataTransform';
 import * as React from 'react';

@@ -7,13 +7,13 @@ import {
   IPriceListItemReqData,
   PriceListTypeEnum,
 } from '../redux/priceManagement/priceManagement.types';
-import FormCreatePriceList from '../components/Forms/FormCreatePriceList';
-import { toast } from 'react-toastify';
+import FormCreatePriceList from '../components/Forms/pricing/FormCreatePriceList';
 import { omit } from 'lodash';
 import { getIdRef } from '../utils/dataTransform';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { useNavigate } from 'react-router-dom';
 import { enumToFilterOptions } from '../utils/fabrics';
+import { ToastService } from '../services';
 
 export type PriceManagementActionsCreator = TableActionCreator<IPriceList>;
 
@@ -82,7 +82,7 @@ const usePriceManagementActionsCreator = (): PriceManagementActionsCreator => {
           iconSize: '90%',
           type: 'onlyIconFilled',
           disabled: false,
-          onClick: async () => {
+          onClick: () => {
             const modal = modals.handleOpenModal({
               ModalChildren: FormCreatePriceList,
               modalChildrenProps: {
@@ -93,8 +93,8 @@ const usePriceManagementActionsCreator = (): PriceManagementActionsCreator => {
                     data,
                     onSuccess: data => {
                       o?.onSuccess && o?.onSuccess(data);
-                      o?.closeAfterSave && modal?.onClose();
-                      toast.success(`Created price list: ${data.label}`);
+                      o?.close && modal?.onClose();
+                      ToastService.success(`Created price list: ${data.label}`);
                     },
                   });
                 },

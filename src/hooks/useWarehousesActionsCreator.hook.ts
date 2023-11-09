@@ -10,6 +10,7 @@ import { NavigateFunction } from 'react-router/dist/lib/hooks';
 import { ToastService } from '../services';
 import { checks } from '../utils';
 import { getIdRef } from '../utils/dataTransform';
+import _ from 'lodash';
 
 export type WarehouseActionCreatorOptions = {
   ctx: ITableListContext<IWarehouse>;
@@ -17,40 +18,31 @@ export type WarehouseActionCreatorOptions = {
   modalService: IModalProviderContext;
   navigate: NavigateFunction;
 };
-const createWarehouseReqData = (
-  input: IWarehouseFormData,
-  _id?: string,
-  omit?: (keyof IWarehouseFormData)[]
-): IWarehouseReqData => {
-  const dto = {} as IWarehouseDto;
+const createWarehouseReqData = (input: IWarehouseFormData, _id?: string): IWarehouseReqData => {
+  let dto = {} as IWarehouseDto;
 
-  const keys = Object.keys(input).filter(
-    k => !omit?.includes(k as keyof IWarehouseFormData)
-  ) as (keyof IWarehouseFormData)[];
-
-  keys.map(k => {
+  (Object.keys(input) as (keyof IWarehouseFormData)[]).forEach(k => {
     const v = input[k] as IWarehouseFormData[typeof k];
 
     if (!v) {
-      return '';
+      return;
     }
     if (checks.isStr(v)) {
-      dto[k] = v as never;
-
-      return k;
+      dto = { ...dto, [k]: v };
+      return;
     }
     if (!checks.isEmptyObj(v)) {
       if (checks.hasUUID(v)) {
-        dto[k] = getIdRef(v) as never;
-        return '';
+        dto = { ...dto, [k]: getIdRef(v) };
+        return;
       }
       console.log('!checks.isEmptyObj(v)', k, !checks.isEmptyObj(v));
-      dto[k] = v as never;
+      dto = { ...dto, [k]: v };
       return k;
     }
     if (v) {
-      dto[k] = v as never;
-      return '';
+      dto = { ...dto, [k]: v };
+      return;
     }
 
     return k;
@@ -58,11 +50,19 @@ const createWarehouseReqData = (
 
   if (_id) {
     return {
-      data: dto,
       _id,
+      data: dto,
+      params: {
+        setAsDefault: input?.asDefault,
+      },
     };
   }
-  return { data: dto };
+  return {
+    data: dto,
+    params: {
+      setAsDefault: input?.asDefault,
+    },
+  };
 };
 
 export type WarehouseActionGenerator = (options: WarehouseActionCreatorOptions) => ITableAction;
@@ -79,14 +79,14 @@ const createNewWarehouseAction: WarehouseActionGenerator = ({ service, modalServ
           title: 'Створити склад',
           onSubmit: (data, o) => {
             service.create({
-              data: createWarehouseReqData(data, ctx?.selectedRow?._id, ['manager']),
+              data: createWarehouseReqData(_.omit(data, ['manager']), ctx?.selectedRow?._id),
               onLoading: ctx.onRefresh,
               onSuccess: () => {
-                if (o?.isDefault) {
+                if (data?.asDefault) {
                   ToastService.info('Warehouse wil be set as default');
                 }
 
-                if (o?.closeAfterSave && modal?.onClose) {
+                if (o?.close && modal?.onClose) {
                   modal?.onClose();
                 }
               },
@@ -108,10 +108,10 @@ const editWarehouseAction: WarehouseActionGenerator = ({ service, modalService, 
           title: 'Оновити дані складу',
           onSubmit: (data, o) => {
             service.create({
-              data: createWarehouseReqData(data, ctx?.selectedRow?._id, ['manager']),
+              data: createWarehouseReqData(_.omit(data, ['manager']), ctx?.selectedRow?._id),
               onLoading: ctx.onRefresh,
               onSuccess: () => {
-                if (o?.closeAfterSave && m?.onClose) {
+                if (o?.close && m?.onClose) {
                   m?.onClose();
                 }
               },
@@ -122,11 +122,11 @@ const editWarehouseAction: WarehouseActionGenerator = ({ service, modalService, 
     },
   };
 };
-const refreshWarehousesDataAction: WarehouseActionGenerator = ({ service, modalService, ctx }) => {
+const refreshWarehousesDataAction: WarehouseActionGenerator = arg => {
   return {
     icon: 'refresh',
     onClick: () => {
-      service.getAll({ data: { refresh: true } }).then();
+      arg.service.getAll({ data: { refresh: true } }).then();
     },
   };
 };

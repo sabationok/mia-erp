@@ -13,7 +13,7 @@ import { BaseAppPageProps } from '../index';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useCustomersSelector } from '../../../redux/selectors.store';
 import { useModalService } from '../../ModalProvider/ModalProvider';
-import FormCreateCustomer from '../../Forms/FormCreateCustomer';
+import FormCreateCustomer from '../../Forms/crm/FormCreateCustomer';
 import _ from 'lodash';
 import { createDataForReq } from '../../../utils/dataTransform';
 import { ToastService } from '../../../services';
