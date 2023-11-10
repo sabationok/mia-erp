@@ -5,7 +5,7 @@ import FlexBox from '../atoms/FlexBox';
 
 import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../Directories/dir.types';
 import DirListItem from '../Directories/DirList/DirListItem';
-import { useTranslatedListData } from '../../hooks/useTranslatedMethods.hook';
+import { useTranslatedMethodsList } from '../../hooks/useTranslatedMethodsList.hook';
 import { useCustomersSelector } from '../../redux/selectors.store';
 import { ICommunicationMethod } from '../../redux/integrations/integrations.types';
 import useCustomersService, { CustomersService } from '../../hooks/useCustomersService';
@@ -34,7 +34,7 @@ const DirCommunicationMethods: React.FC<DirCommunicationMethodsProps> = ({
 }) => {
   const service = useCustomersService();
   const modalService = useModalProvider();
-  const methods = useTranslatedListData(useCustomersSelector().methods);
+  const methods = useTranslatedMethodsList(useCustomersSelector().methods);
 
   const actions = actionsCreatorForDirCommunicationMethods({
     service,

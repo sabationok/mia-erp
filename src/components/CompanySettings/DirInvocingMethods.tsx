@@ -6,9 +6,10 @@ import FlexBox from '../atoms/FlexBox';
 
 import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../Directories/dir.types';
 import DirListItem from '../Directories/DirList/DirListItem';
-import { useTranslatedInvoicingMethods } from '../../hooks/useTranslatedMethods.hook';
+import { useTranslatedMethodsList } from '../../hooks/useTranslatedMethodsList.hook';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { IInvoicingMethod } from '../../redux/integrations/integrations.types';
+import { useInvoicesSelector } from '../../redux/selectors.store';
 
 export interface DirInvoicingMethodsProps
   extends IDirInTreeProps<MethodDirType, IInvoicingMethod, IInvoicingMethod, IInvoicingMethod> {
@@ -30,7 +31,7 @@ const DirInvoicingMethods: React.FC<DirInvoicingMethodsProps> = ({
   ...props
 }) => {
   const service = useAppServiceProvider()[ServiceName.invoicing];
-  const methods = useTranslatedInvoicingMethods();
+  const methods = useTranslatedMethodsList(useInvoicesSelector().methods, { withFullLabel: true });
 
   const modalService = useModalProvider();
 
@@ -70,7 +71,7 @@ const DirInvoicingMethods: React.FC<DirInvoicingMethodsProps> = ({
           disabling
           {...props}
           {...actions}
-          item={{ ...item, label: item?.fullLabel }}
+          item={{ ...item }}
           creatingChild={false}
           availableLevels={1}
           currentLevel={0}

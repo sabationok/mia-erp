@@ -14,43 +14,44 @@ import TagButtonsFilter from 'components/atoms/TagButtonsFilter';
 import SelectManagerModal from '../components/SelectManagerModal';
 import { FormOrderStepBaseProps } from '../formOrder.types';
 import CheckboxesListSelector from 'components/atoms/CheckboxesListSelector';
-import { useTranslatedListData } from 'hooks/useTranslatedMethods.hook';
+import { useTranslatedMethodsList } from 'hooks/useTranslatedMethodsList.hook';
 import ButtonSwitch from '../../../atoms/ButtonSwitch';
 import InputText from '../../../atoms/Inputs/InputText';
 import { Path, useFormContext, UseFormSetValue } from 'react-hook-form';
 import CreateCustomerButtonIcon from '../components/CreateCustomerButtonIcon';
 import CustomerInfoComponent from '../components/CustomerInfoComponent';
 import { destinationAddressInputsProps } from '../components/DestinationInputs';
-import { UseFormReturn } from 'react-hook-form/dist/types';
 import { throttleCallback } from '../../../../utils/lodash.utils';
 import { useCommunicationSelector, useInvoicesSelector, useShipmentsSelector } from '../../../../redux/selectors.store';
+import { formatDateForInputValue } from '../../../../utils';
+import * as fns from 'date-fns';
 
 export interface OrderInfoStepProps extends FormOrderStepBaseProps {
   isGroup?: boolean;
-  defaultValues?: ICreateOrderInfoFormState;
-  getFormMethods?: () => UseFormReturn<ICreateOrderInfoFormState>;
 }
 
 const useOrderInfoForm = () => useFormContext<ICreateOrderInfoFormState>();
 
-type ConfirmsStateKay = 'hasDeliveryInvoice' | 'holdDeliveryPayment' | 'holdOrderPayment' | 'hasReceiverInfo';
+type ConfirmsStateKay =
+  | 'hasDelivery'
+  | 'hasDeliveryInvoice'
+  | 'holdDeliveryPayment'
+  | 'holdOrderPayment'
+  | 'hasReceiverInfo'
+  | 'hasExecuteDate';
+
 type FormFieldPaths = Path<ICreateOrderInfoFormState>;
-const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeValidStatus }) => {
-  const [touchedFields, setTouchedFields] = useState<Record<FormFieldPaths | string, boolean>>({});
+const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) => {
   const modalS = useModalService();
   const [confirms, setConfirms] = useState<Record<ConfirmsStateKay | string, boolean>>({});
-  // TODO refactoring
-  useEffect(() => {
-    console.debug('OrderInfoStep', { touchedFields });
-  }, [touchedFields]);
 
-  const shipmentMethodsList = useTranslatedListData(useShipmentsSelector().methods, { withFullLabel: true });
-  const communicationMethodsList = useTranslatedListData(useCommunicationSelector().methods, { withFullLabel: true });
-  const invoicingMethods = useTranslatedListData(useInvoicesSelector().methods, { withFullLabel: true });
+  const shipmentMethodsList = useTranslatedMethodsList(useShipmentsSelector().methods, { withFullLabel: true });
+  const communicationMethodsList = useTranslatedMethodsList(useCommunicationSelector().methods, {
+    withFullLabel: true,
+  });
+  const invoicingMethods = useTranslatedMethodsList(useInvoicesSelector().methods, { withFullLabel: true });
 
-  const setTouchedField = (path: FormFieldPaths) => {
-    setTouchedFields(p => ({ ...p, [path]: true }));
-  };
+  const setTouchedField = (path: FormFieldPaths) => {};
 
   const {
     formState: { isValid, errors },
@@ -83,12 +84,22 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
   const registerConfirmSelectHandler = (name: ConfirmsStateKay) => {
     return (value: boolean) => {
       setConfirms(p => ({ ...p, [name]: value }));
+
+      if (value) {
+        if (name === 'hasDeliveryInvoice') {
+          return setValue('deliveryInfo.invoiceInfo.expiredAt', formatDateForInputValue(fns.addDays(new Date(), 1)));
+        }
+      }
+
       if (!value) {
+        if (name === 'hasReceiverInfo') {
+          return unregister('receiver');
+        }
         if (name === 'hasDeliveryInvoice') {
           return unregister('deliveryInfo.invoiceInfo');
         }
-        if (name === 'hasReceiverInfo') {
-          return unregister('receiver');
+        if (name === 'hasDelivery') {
+          return unregister('deliveryInfo');
         }
       }
     };
@@ -148,7 +159,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
                     numColumns={2}
                     values={formValues?.communication?.customer}
                     resetButtonLabel={t('Not needed')}
-                    options={communicationMethodsList.map(mtd => ({ ...mtd, value: mtd._id }))}
+                    options={communicationMethodsList}
                     resetButtonPosition={'start'}
                     onChange={value => {
                       handleOnChangeValue('communication.customer', value);
@@ -196,7 +207,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
             </InputLabel>
           </BorderedBox>
 
-          {(confirms?.hasReceiverInfo || formValues?.receiver) && (
+          {confirms?.hasReceiverInfo && formValues?.receiver && (
             <>
               <InputLabel label={t('Receiver information')}>
                 <CustomerInfoComponent info={formValues?.receiver} />{' '}
@@ -282,68 +293,120 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ getFormMethods, onChangeV
         <StAccordionItem
           contentContainerStyle={{ padding: '0 2px' }}
           open
-          renderHeader={
-            <Text $padding={'0 6px'} $ellipsisMode={true} $size={16} $weight={500}>
-              {`${t('Shipment')} | ${t('Delivery')}`}
-            </Text>
-          }
+          renderHeader={<AccordionItemTitle title={t('Shipment')} />}
         >
-          <BorderedBox fillWidth gap={8}>
-            <InputLabel label={t('Delivery method')} required>
-              <CheckboxesListSelector
-                options={shipmentMethodsList}
-                currentOption={formValues?.deliveryInfo?.method}
-                onChangeIndex={i => {
-                  handleOnChangeValue('deliveryInfo.method', shipmentMethodsList[i]);
-                }}
-              />
-            </InputLabel>
-          </BorderedBox>
-
-          <BorderedBox fillWidth style={{ columnGap: 8, display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
-            {destinationAddressInputsProps.map(({ name, label, required }) => {
-              return (
-                <InputLabel
-                  key={`dest-addr-${label}`}
-                  label={label}
-                  error={errors?.deliveryInfo?.destination ? errors?.deliveryInfo?.destination[name] : undefined}
-                  required={required}
-                >
-                  <InputText
-                    required={required}
-                    placeholder={label}
-                    {...register(`deliveryInfo.destination.${name}`, { required })}
-                  />
-                </InputLabel>
-              );
-            })}
-          </BorderedBox>
-
-          <BorderedBox fillWidth gap={8}>
-            <InputLabel label={t('Has payment')} required>
+          <BorderedBox fillWidth gap={4}>
+            <InputLabel label={t('Another execute date')}>
               <ButtonSwitch
-                onChange={registerConfirmSelectHandler('hasDeliveryInvoice')}
-                value={confirms?.hasDeliveryInvoice || !!formValues?.deliveryInfo?.invoiceInfo}
+                onChange={registerConfirmSelectHandler('hasExecuteDate')}
+                value={confirms?.hasExecuteDate}
               />
             </InputLabel>
           </BorderedBox>
 
-          <BorderedBox fillWidth gap={8}>
-            {(confirms?.hasDeliveryInvoice || !!formValues?.deliveryInfo?.invoiceInfo?.method) && (
-              <InputLabel label={t('Payment method')} required>
+          {confirms?.hasExecuteDate && (
+            <InputLabel label={t('Execute at')} required={confirms?.hasExecuteDate}>
+              <InputText
+                placeholder={t('Execute at')}
+                type={'date'}
+                required={confirms?.hasExecuteDate}
+                {...register('shipmentInfo.executeAt', { required: confirms?.hasExecuteDate })}
+              />
+            </InputLabel>
+          )}
+
+          <BorderedBox fillWidth gap={4}>
+            <InputLabel label={t('Delivery')}>
+              <ButtonSwitch
+                onChange={registerConfirmSelectHandler('hasDelivery')}
+                value={confirms?.hasDelivery || !!formValues?.deliveryInfo}
+              />
+            </InputLabel>
+          </BorderedBox>
+        </StAccordionItem>
+
+        {(confirms?.hasDelivery || !!formValues?.deliveryInfo) && (
+          <StAccordionItem
+            contentContainerStyle={{ padding: '0 2px' }}
+            open
+            renderHeader={
+              <Text $padding={'0 6px'} $ellipsisMode={true} $size={16} $weight={500}>
+                {t('Delivery')}
+              </Text>
+            }
+          >
+            <BorderedBox fillWidth gap={8}>
+              <InputLabel label={t('Delivery method')} required>
                 <CheckboxesListSelector
-                  options={invoicingMethods}
-                  currentOption={formValues?.deliveryInfo?.invoiceInfo?.method}
+                  options={shipmentMethodsList}
+                  currentOption={formValues?.deliveryInfo?.method}
                   onChangeIndex={i => {
-                    handleOnChangeValue('deliveryInfo.invoiceInfo.method', invoicingMethods[i]);
+                    handleOnChangeValue('deliveryInfo.method', shipmentMethodsList[i]);
                   }}
                 />
               </InputLabel>
-            )}
-          </BorderedBox>
-        </StAccordionItem>
+            </BorderedBox>
+            <BorderedBox fillWidth style={{ columnGap: 8, display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+              {destinationAddressInputsProps.map(({ name, label, required }) => {
+                return (
+                  <InputLabel
+                    key={`dest-addr-${label}`}
+                    label={label}
+                    error={errors?.deliveryInfo?.destination ? errors?.deliveryInfo?.destination[name] : undefined}
+                    required={required}
+                  >
+                    <InputText
+                      required={required}
+                      placeholder={label}
+                      {...register(`deliveryInfo.destination.${name}`, { required })}
+                    />
+                  </InputLabel>
+                );
+              })}
+            </BorderedBox>
+            <BorderedBox fillWidth gap={8}>
+              <InputLabel label={t('Has payment')} required>
+                <ButtonSwitch
+                  onChange={registerConfirmSelectHandler('hasDeliveryInvoice')}
+                  value={confirms?.hasDeliveryInvoice || !!formValues?.deliveryInfo?.invoiceInfo}
+                />
+              </InputLabel>
+            </BorderedBox>
+            <BorderedBox fillWidth gap={8}>
+              {(confirms?.hasDeliveryInvoice || !!formValues?.deliveryInfo?.invoiceInfo?.method) && (
+                <>
+                  <InputLabel label={t('Payment method')} required>
+                    <CheckboxesListSelector
+                      options={invoicingMethods}
+                      currentOption={formValues?.deliveryInfo?.invoiceInfo?.method}
+                      onChangeIndex={i => {
+                        handleOnChangeValue('deliveryInfo.invoiceInfo.method', invoicingMethods[i]);
+                      }}
+                    />
+                  </InputLabel>
+
+                  <InputLabel label={t('Expired at')} required>
+                    <InputText
+                      placeholder={t('Expired at')}
+                      type={'datetime-local'}
+                      required
+                      {...register('deliveryInfo.invoiceInfo.expiredAt', { required: true })}
+                    />
+                  </InputLabel>
+                </>
+              )}
+            </BorderedBox>
+          </StAccordionItem>
+        )}
       </FlexBox>
     </Inputs>
+  );
+};
+const AccordionItemTitle = ({ title }: { title: string }) => {
+  return (
+    <Text $padding={'0 6px'} $ellipsisMode={true} $size={16} $weight={500}>
+      {title}
+    </Text>
   );
 };
 const Inputs = styled(FlexBox)``;

@@ -67,6 +67,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
   // const [prices, setPrices] = useState<IPriceListItem[]>([]);
   const [inventories, setInventories] = useState<IProductInventory[]>([]);
   const [formData, setFormData] = useState<FormCreateOrderSlotFormData>({});
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const setFormValue = useCallback(<Key extends FormKey = any>(key: Key, value: FormCreateOrderSlotFormData[Key]) => {
     setFormData(prev => ({ ...prev, [key]: value }));
@@ -194,6 +195,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
         {
           data: { search, searchBy },
           onSuccess: setProducts,
+          onLoading: setIsLoading,
         },
         ProductsApi.getAll,
         ProductsApi
@@ -204,9 +206,9 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
         {
           data: { product: getIdRef(product) },
           onSuccess: d => {
-            const transformed = d.map(v => transformVariationTableData(v));
-            setVariations(transformed);
+            setVariations(d.map(v => transformVariationTableData(v)));
           },
+          onLoading: setIsLoading,
         },
         VariationsApi.getAllByProductId,
         VariationsApi
@@ -221,6 +223,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
             warehouse: params?.warehouse ? getIdRef(params?.warehouse) : undefined,
           },
           onSuccess: setInventories,
+          onLoading: setIsLoading,
         },
         WarehousesApi.getAllInventories,
         WarehousesApi
@@ -260,7 +263,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
       <Content fillWidth flex={1} overflow={'hidden'}>
         <ModalFilter filterOptions={stepsLong} asStepper currentIndex={stepIdx} />
 
-        <TableList {...tableConfig} />
+        <TableList {...tableConfig} isLoading={isLoading} />
       </Content>
 
       <Footer padding={'8px'}>

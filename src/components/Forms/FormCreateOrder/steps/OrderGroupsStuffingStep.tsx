@@ -1,23 +1,20 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { IOrderTempSlot } from '../../../../redux/orders/orders.types';
+import { IOrderTempSlot } from 'redux/orders/orders.types';
 import FlexBox from '../../../atoms/FlexBox';
 import styled from 'styled-components';
 import { IWarehouse } from '../../../../redux/warehouses/warehouses.types';
 import { useOrdersSelector } from '../../../../redux/selectors.store';
-import { useDispatch } from 'react-redux';
-import {
-  AddSlotToGroupAction,
-  RemoveSlotFromGroupAction,
-  UpdateSlotInGroupAction,
-} from '../../../../redux/orders/orders.actions';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
-import { ToastService } from '../../../../services';
-import { t } from '../../../../lang';
+import { ToastService } from 'services';
+import { t } from 'lang';
 import { Modals } from '../../../Modals';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import OrderGroupItem from '../components/OrderGroupItem';
-import { getIdRef } from '../../../../utils/dataTransform';
+import { getIdRef } from 'utils/dataTransform';
 import { FormOrderStepBaseProps } from '../formOrder.types';
+import { useMediaQuery } from 'react-responsive';
+import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
+import { AppModuleName } from '../../../../redux/reduxTypes.types';
 
 export interface OrderGroupsStuffingStepProps extends FormOrderStepBaseProps {
   slots?: IOrderTempSlot[];
@@ -26,28 +23,28 @@ export interface OrderGroupsStuffingStepProps extends FormOrderStepBaseProps {
 }
 
 const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onChangeValidStatus }) => {
-  const { slots } = useOrdersSelector().ordersGroupFormData;
-
   const modalS = useModalService();
-  const dispatch = useDispatch();
+  const service = useAppServiceProvider()[AppModuleName.orders];
+  const { slots } = useOrdersSelector().ordersGroupFormData;
+  const isMobile = useMediaQuery({ maxWidth: 480 });
 
   const handelAddSlot = useCallback(
     (slot: IOrderTempSlot) => {
-      dispatch(AddSlotToGroupAction(slot));
+      service.addTempSlot(slot);
     },
-    [dispatch]
+    [service]
   );
   const handelRemoveSlot = useCallback(
     (id: string) => {
-      dispatch(RemoveSlotFromGroupAction(id));
+      service.removeTempSlot(id);
     },
-    [dispatch]
+    [service]
   );
   const handelUpdateSlot = useCallback(
     (slot: IOrderTempSlot) => {
-      dispatch(UpdateSlotInGroupAction(slot));
+      service.updateTempSlot(slot);
     },
-    [dispatch]
+    [service]
   );
 
   const groupedData = useMemo(() => {
@@ -140,7 +137,7 @@ const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onCha
             });
           }}
         >
-          {t('Add position to group')}
+          {t(isMobile ? 'Add' : 'Add position to group')}
         </ButtonIcon>
       </Buttons>
     </Container>

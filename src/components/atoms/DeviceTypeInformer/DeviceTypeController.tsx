@@ -1,5 +1,6 @@
 import { useMediaQuery } from 'react-responsive';
 import { Navigate, Outlet } from 'react-router-dom';
+
 const LITTLE_MOBILE = 279;
 const MOBILE_END = 479;
 const TABLET_START = 480;
@@ -78,7 +79,7 @@ export const MinDesktopRoute: React.FC<{ redirectTo?: string | any }> = ({ redir
   return isTabletXl ? <Outlet /> : <Navigate to={redirectTo} />;
 };
 
-const DeviceConrol = {
+const DeviceControl = {
   MinDesktop,
   Tablet,
   TabletXL,
@@ -95,4 +96,4 @@ const DeviceConrol = {
   MinTabletXlRoute,
   MinDesktopRoute,
 };
-export default DeviceConrol;
+export default DeviceControl;

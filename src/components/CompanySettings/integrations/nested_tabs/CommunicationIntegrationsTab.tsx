@@ -2,35 +2,32 @@ import FlexBox from '../../../atoms/FlexBox';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import { useEffect, useMemo, useState } from 'react';
 import { Text } from '../../../atoms/Text';
-import { t } from '../../../../lang';
+import { t } from 'lang';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import FormCreateInputIntegration from '../../../Forms/integrations/FormCreateInputIntegration';
-import { InputIntegrationBase } from '../../../../redux/integrations/integrations.types';
-import { useTranslatedCommunicationMethods } from '../../../../hooks/useTranslatedMethods.hook';
-import { getIdRef, transformQueriesForReq } from '../../../../utils/dataTransform';
+import { InputIntegrationBase } from 'redux/integrations/integrations.types';
+import { useTranslatedMethodsList } from 'hooks/useTranslatedMethodsList.hook';
+import { getIdRef, transformQueriesForReq } from 'utils/dataTransform';
 import styled from 'styled-components';
 import ExtraFooterWithButton from '../../../atoms/ExtraFooterWithButton';
 import IntegrationOverview from '../../components/IntegrationOverview';
 import { IntegrationTabProps } from '../InputIntegrationsTab';
-import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
-import { AppModuleName } from '../../../../redux/reduxTypes.types';
+import { useAppServiceProvider } from 'hooks/useAppServices.hook';
+import { AppModuleName } from 'redux/reduxTypes.types';
+import { useCustomersSelector } from 'redux/selectors.store';
 
 export interface CommunicationIntegrationsTabProps extends IntegrationTabProps {}
 
 const CommunicationIntegrationsTab: React.FC<CommunicationIntegrationsTabProps> = ({
-  providers,
-  onClose,
-  compId,
   infoVisible,
   currentService: currentServiceData,
-  ...props
 }) => {
   const service = useAppServiceProvider()[AppModuleName.integrations];
   const [integrationsList, setIntegrationsList] = useState<InputIntegrationBase[]>([]);
   const modalS = useModalService();
   const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);
   const handleToggleListVisibility = () => setIsListVisible(p => !p);
-  const translatedCommunicationMethods = useTranslatedCommunicationMethods();
+  const trCommunicationMethods = useTranslatedMethodsList(useCustomersSelector().methods);
 
   const onOpenModalPress = () => {
     currentServiceData &&
@@ -55,7 +52,7 @@ const CommunicationIntegrationsTab: React.FC<CommunicationIntegrationsTabProps> 
   }, [currentServiceData, service]);
 
   const renderCommunicationMethods = useMemo(() => {
-    const methods = translatedCommunicationMethods.filter(m => {
+    const methods = trCommunicationMethods.filter(m => {
       return m.service?._id === currentServiceData?._id;
     });
 
@@ -68,7 +65,7 @@ const CommunicationIntegrationsTab: React.FC<CommunicationIntegrationsTabProps> 
             </FlexBox>
           );
         });
-  }, [currentServiceData?._id, translatedCommunicationMethods]);
+  }, [currentServiceData?._id, trCommunicationMethods]);
 
   const renderIntegrations = useMemo(() => {
     return integrationsList.map(int => {

@@ -24,14 +24,14 @@ const CreateCustomerButtonIcon = ({
       iconSize={'100%'}
       size={'30px'}
       onClick={() => {
-        modalS.open({
+        const m = modalS.open({
           ModalChildren: FormCreateCustomer,
           modalChildrenProps: {
             title: isReceiver ? t('Create receiver') : undefined,
             onSubmit: d => {
               customerS.create({
                 data: createDataForReq(d) as never,
-                onSuccess: onSuccess,
+                onSuccess: m?.onClose,
               });
             },
           },

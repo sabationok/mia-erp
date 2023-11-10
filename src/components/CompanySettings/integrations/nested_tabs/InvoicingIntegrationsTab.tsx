@@ -7,7 +7,7 @@ import { t } from '../../../../lang';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import FormCreateInputIntegration from '../../../Forms/integrations/FormCreateInputIntegration';
 import { InputIntegrationBase } from '../../../../redux/integrations/integrations.types';
-import { useTranslatedListData } from '../../../../hooks/useTranslatedMethods.hook';
+import { useTranslatedMethodsList } from '../../../../hooks/useTranslatedMethodsList.hook';
 import { getIdRef, transformQueriesForReq } from '../../../../utils/dataTransform';
 import styled from 'styled-components';
 import ExtraFooterWithButton from '../../../atoms/ExtraFooterWithButton';
@@ -30,8 +30,8 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
   const [integrationsList, setIntegrationsList] = useState<InputIntegrationBase[]>([]);
   const modalS = useModalService();
   const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);
-  const checkoutMethods = useTranslatedListData(useCheckoutPaymentsSelector().methods);
-  const invoicingMethods = useTranslatedListData(useInvoicesSelector().methods);
+  const checkoutMethods = useTranslatedMethodsList(useCheckoutPaymentsSelector().methods);
+  const invoicingMethods = useTranslatedMethodsList(useInvoicesSelector().methods);
   const handleToggleListVisibility = () => setIsListVisible(p => !p);
 
   const onOpenModalPress = () => {

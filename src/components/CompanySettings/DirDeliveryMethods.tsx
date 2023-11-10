@@ -5,7 +5,7 @@ import FlexBox from '../atoms/FlexBox';
 
 import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../Directories/dir.types';
 import DirListItem from '../Directories/DirList/DirListItem';
-import { useTranslatedListData } from '../../hooks/useTranslatedMethods.hook';
+import { useTranslatedMethodsList } from '../../hooks/useTranslatedMethodsList.hook';
 import { IDeliveryMethod } from '../../redux/integrations/integrations.types';
 import { useShipmentsSelector } from '../../redux/selectors.store';
 import useShipmentsService, { UseShipmentsService } from '../../hooks/useShipmentsService.hook';
@@ -33,7 +33,7 @@ const DirDeliveryMethods: React.FC<DirDeliveryMethodsProps> = ({
 }) => {
   const service = useShipmentsService();
   const modalService = useModalProvider();
-  const methods = useTranslatedListData(useShipmentsSelector().methods);
+  const methods = useTranslatedMethodsList(useShipmentsSelector().methods);
   const actions = actionsCreatorForDirShipmentsMethods({ service, modalService, dirType: ApiDirType.METHODS_SHIPMENT });
   const renderList = useMemo(
     () =>

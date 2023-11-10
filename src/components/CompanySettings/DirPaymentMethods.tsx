@@ -8,7 +8,8 @@ import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../
 import DirListItem from '../Directories/DirList/DirListItem';
 import { ICheckoutPaymentMethod } from '../../redux/payments/payments.types';
 import usePaymentsServiceHook from '../../hooks/usePaymentsService.hook';
-import { useTranslatedPaymentMethods } from '../../hooks/useTranslatedMethods.hook';
+import { useTranslatedMethodsList } from '../../hooks/useTranslatedMethodsList.hook';
+import { useCheckoutPaymentsSelector } from '../../redux/selectors.store';
 
 export interface DirPaymentMethodsProps
   extends IDirInTreeProps<MethodDirType, ICheckoutPaymentMethod, ICheckoutPaymentMethod, ICheckoutPaymentMethod> {
@@ -31,7 +32,7 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
 }) => {
   const service = usePaymentsServiceHook();
   const modalService = useModalProvider();
-  const methods = useTranslatedPaymentMethods();
+  const methods = useTranslatedMethodsList(useCheckoutPaymentsSelector().methods, { withFullLabel: true });
 
   const actions = useMemo(
     () =>

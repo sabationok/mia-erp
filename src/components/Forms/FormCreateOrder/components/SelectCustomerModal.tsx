@@ -33,13 +33,11 @@ const SelectCustomerModal: React.FC<SelectCustomerModalProps> = ({ onSelect, onS
           {
             icon: 'plus',
             onClick: () => {
-              modalS.open({
+              const m = modalS.open({
                 ModalChildren: FormCreateCustomer,
                 modalChildrenProps: {
                   onSubmit: d => {
-                    console.log('createDataForReq(d) ModalChildren: FormCreateCustomer', createDataForReq(d));
-
-                    service.create({ data: createDataForReq(d) as never });
+                    service.create({ data: createDataForReq(d) as never, onSuccess: m?.onClose });
                   },
                 },
               });
@@ -48,9 +46,10 @@ const SelectCustomerModal: React.FC<SelectCustomerModalProps> = ({ onSelect, onS
         ];
       },
       onRowClick: data => {
-        data?.rowData && onSelect && onSelect(data.rowData);
-
-        onClose && onClose();
+        if (data?.rowData && onSelect) {
+          onSelect(data.rowData);
+          onClose && onClose();
+        }
       },
     };
   }, [service, customers, onClose, modalS, onSelect]);

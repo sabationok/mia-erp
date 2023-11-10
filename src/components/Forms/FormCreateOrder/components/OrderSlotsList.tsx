@@ -30,7 +30,7 @@ const OrderSlotsList: React.FC<FormCreateOrderProductsListProps> = ({ onSelect, 
     setData(prev => prev.filter(el => el.tempId !== id));
   }, []);
 
-  const renderProducts = useMemo(() => {
+  const renderSlots = useMemo(() => {
     return data?.map((p, idx) => (
       <OrderSlotOverview key={idx.toString()} index={idx} slot={p} onRemove={() => handleRemove(p?.tempId)} />
     ));
@@ -39,7 +39,7 @@ const OrderSlotsList: React.FC<FormCreateOrderProductsListProps> = ({ onSelect, 
   return (
     <Container flex={1}>
       <FlexBox flex={1} overflow={'auto'}>
-        <FlexBox>{renderProducts}</FlexBox>
+        <FlexBox>{renderSlots}</FlexBox>
       </FlexBox>
 
       <AddOrderSlot onSelect={handleSelect} />

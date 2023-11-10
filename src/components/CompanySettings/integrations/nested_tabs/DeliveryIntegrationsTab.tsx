@@ -7,13 +7,14 @@ import { t } from '../../../../lang';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import FormCreateInputIntegration from '../../../Forms/integrations/FormCreateInputIntegration';
 import { InputIntegrationBase } from '../../../../redux/integrations/integrations.types';
-import { useTranslatedDeliveryMethods } from '../../../../hooks/useTranslatedMethods.hook';
+import { useTranslatedMethodsList } from '../../../../hooks/useTranslatedMethodsList.hook';
 import { getIdRef, transformQueriesForReq } from '../../../../utils/dataTransform';
 import styled from 'styled-components';
 import ExtraFooterWithButton from '../../../atoms/ExtraFooterWithButton';
 import IntegrationOverview from '../../components/IntegrationOverview';
 import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../../redux/reduxTypes.types';
+import { useShipmentsSelector } from '../../../../redux/selectors.store';
 
 export interface DeliveryIntegrationsTabProps extends IntegrationTabProps {}
 
@@ -29,14 +30,14 @@ const DeliveryIntegrationsTab: React.FC<DeliveryIntegrationsTabProps> = ({
   const [integrationsList, setIntegrationsList] = useState<InputIntegrationBase[]>([]);
   const modalS = useModalService();
   const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);
-  const deliveryMethods = useTranslatedDeliveryMethods();
+  const trDeliveryMethods = useTranslatedMethodsList(useShipmentsSelector().methods);
   const handleToggleListVisibility = () => setIsListVisible(p => !p);
 
   const currentServiceMethods = useMemo(() => {
-    return deliveryMethods.filter(m => {
+    return trDeliveryMethods.filter(m => {
       return m.service?._id === currentServiceData?._id;
     });
-  }, [currentServiceData?._id, deliveryMethods]);
+  }, [currentServiceData?._id, trDeliveryMethods]);
 
   const onOpenModalPress = () => {
     currentServiceData &&

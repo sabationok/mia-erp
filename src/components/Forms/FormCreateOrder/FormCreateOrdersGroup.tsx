@@ -3,7 +3,7 @@ import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import ModalFilter from '../../ModalForm/ModalFilter';
 import { useStepsHandler } from '../../../utils/createStepChecker';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import { ModalHeader } from '../../atoms';
@@ -73,20 +73,14 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
   });
   const orderInfoFormValues = formOrderInfo.watch();
 
-  useEffect(() => {
-    console.log(orderInfoFormValues);
-  }, [orderInfoFormValues]);
-
   const renderStep = useMemo(() => {
     if (stepsMap?.Stuffing) {
       return <OrderGroupsStuffingStep onChangeValidStatus={handleValidStatus('Stuffing')} />;
     }
     if (stepsMap?.Info) {
-      return (
-        <OrderInfoStep isGroup getFormMethods={() => formOrderInfo} onChangeValidStatus={handleValidStatus('Info')} />
-      );
+      return <OrderInfoStep onChangeValidStatus={handleValidStatus('Info')} isGroup />;
     }
-  }, [formOrderInfo, stepsMap?.Info, stepsMap?.Stuffing]);
+  }, [stepsMap?.Info, stepsMap?.Stuffing]);
 
   const canGoNext = useMemo(() => {
     return isStepFinished[getCurrentStep().value];
@@ -125,23 +119,6 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
       ToastService.error('Form is not valid');
       return;
     }
-    // if (stepsMap.Info) {
-    //   modalS.open({
-    //     ModalChildren: (p: { onClose?: () => void; compId?: string }) => {
-    //       return (
-    //         <ModalForm
-    //           {...p}
-    //           title={t('Accept orders?')}
-    //           onSubmit={() => {
-    //             window.confirm('You accept?') && p?.onClose && p?.onClose();
-    //           }}
-    //         >
-    //           <FlexBox fillWidth></FlexBox>
-    //         </ModalForm>
-    //       );
-    //     },
-    //   });
-    // }
 
     createApiCall(
       {
@@ -157,9 +134,6 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
       OrdersApi.createManyOrdersGroupedByWarehouse,
       OrdersApi
     );
-
-    console.log(getCurrentStep());
-    console.log(currentGroupFormState);
   };
 
   return (

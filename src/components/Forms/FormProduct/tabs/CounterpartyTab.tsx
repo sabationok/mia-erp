@@ -1,7 +1,7 @@
 import { OnlyUUID } from '../../../../redux/global.types';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { useDirectoriesSelector } from '../../../../redux/selectors.store';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { getIdRef } from '../../../../utils/dataTransform';
 import { counterpartyColumns } from '../../../../data/contractors.data';
 import { CounterpartyTypesEnum, SupplierType } from '../../../../redux/directories/counterparties.types';
@@ -17,7 +17,7 @@ const CounterpartyTab: React.FC<CounterpartyTabProps> = ({ onSelect, withActions
   // const currentProduct = useProductsSelector().currentProduct;
   // const modalS = useModalProvider();
   // const productsS = useAppServiceProvider()[ServiceName.products];
-  // const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
 
   const counterparties = useDirectoriesSelector(ApiDirType.CONTRACTORS).directory;
 
@@ -68,7 +68,7 @@ const CounterpartyTab: React.FC<CounterpartyTabProps> = ({ onSelect, withActions
     };
   }, [filteredData, onSelect, withActions]);
 
-  return <TableList isSearch={false} {...tableConfigs} />;
+  return <TableList isSearch={false} isLoading={loading} {...tableConfigs} />;
 };
 
 export default CounterpartyTab;

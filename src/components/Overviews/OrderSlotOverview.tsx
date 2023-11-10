@@ -74,23 +74,19 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
 
   const renderPriceInfo = useMemo(() => {
     return overviewInputs.map(info => {
-      return info.name === 'quantity' ? null : (
+      return (
         <FlexBox key={info.name} justifyContent={'flex-start'} fillWidth padding={'4px'} gap={4}>
           <CardText colorType={'secondary'} $size={10}>
             {info.label}
           </CardText>
 
-          {info.name === 'quantity' && editable ? (
-            <CountSelectorBase onChangeValue={handleUpdateQuantity} value={formData?.quantity} />
-          ) : (
-            <CardText $size={12} $align={'right'} $weight={500}>
-              {numberWithSpaces((formData && info.name && formData[info.name as never]) || 0)}
-            </CardText>
-          )}
+          <CardText $size={12} $align={'right'} $weight={500}>
+            {numberWithSpaces((formData && info.name && formData[info.name as never]) || 0)}
+          </CardText>
         </FlexBox>
       );
     });
-  }, [editable, formData, handleUpdateQuantity]);
+  }, [formData]);
 
   const renderProperties = useMemo(() => {
     return slot?.variation?.properties?.map(prop => {
@@ -274,34 +270,9 @@ const overviewInputs: {
   value?: React.ReactNode;
   borderBottom?: boolean;
 }[] = [
-  {
-    label: 'Кількість',
-    // value: numberWithSpaces(slot?.quantity || 0),
-    name: 'quantity',
-  },
-  {
-    label: 'Ціна',
-    // value: numberWithSpaces(Number(slot?.price || 0)),
-    name: 'price',
-  },
-  {
-    label: 'Бонус',
-    // value: numberWithSpaces(slot?.bonusAmount || 0),
-    name: 'bonus',
-  },
-  {
-    label: 'Кешбек',
-    // value: numberWithSpaces(slot?.cashbackAmount || 0),
-    name: 'cashback',
-  },
-  {
-    label: 'Знижка',
-    // value: numberWithSpaces(slot?.discountAmount || 0),
-    name: 'discount',
-  },
-  {
-    label: 'Сума',
-    // value: numberWithSpaces(slot?.total || 0),
-    name: 'total',
-  },
+  { label: 'Ціна', name: 'in' },
+  { label: 'Бонус', name: 'bonus' },
+  { label: 'Кешбек', name: 'cashback' },
+  { label: 'Знижка', name: 'discount' },
+  { label: 'Сума', name: 'total' },
 ];

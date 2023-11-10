@@ -1,9 +1,15 @@
 import { useMemo } from 'react';
 import { useAppDispatch } from '../redux/store.store';
 import { OnlyUUID, ServiceDispatcher, ServiceDispatcherAsync } from '../redux/global.types';
-import { ICreateOrderInfoFormState, IOrder, IOrderReqData } from '../redux/orders/orders.types';
+import { ICreateOrderInfoFormState, IOrder, IOrderReqData, IOrderTempSlot } from '../redux/orders/orders.types';
 import { AppQueryParams } from '../api';
-import { ClearCurrentGroupFormDataAction, UpdateCurrentGroupFormInfoDataAction } from '../redux/orders/orders.actions';
+import {
+  AddSlotToGroupAction,
+  ClearCurrentGroupFormDataAction,
+  RemoveSlotFromGroupAction,
+  UpdateCurrentGroupFormInfoDataAction,
+  UpdateSlotInGroupAction,
+} from '../redux/orders/orders.actions';
 
 type EmptyFn = (...args: any[]) => Promise<any>;
 
@@ -20,6 +26,10 @@ export interface OrdersService {
 
   updateCurrentGroupFormInfoData: ServiceDispatcher<ICreateOrderInfoFormState>;
   clearCurrentGroupFormData: ServiceDispatcher;
+
+  addTempSlot: ServiceDispatcher<IOrderTempSlot>;
+  removeTempSlot: ServiceDispatcher<string>;
+  updateTempSlot: ServiceDispatcher<IOrderTempSlot>;
 }
 
 const useOrdersServiceHook = (): OrdersService => {
@@ -37,6 +47,10 @@ const useOrdersServiceHook = (): OrdersService => {
       getShipmentsByOrderId: async () => dispatch(() => {}),
       getPaymentsByOrderId: async () => dispatch(() => {}),
       getInvoicesByOrderId: async () => dispatch(() => {}),
+
+      addTempSlot: args => dispatch(AddSlotToGroupAction(args)),
+      removeTempSlot: args => dispatch(RemoveSlotFromGroupAction(args)),
+      updateTempSlot: args => dispatch(UpdateSlotInGroupAction(args)),
 
       updateCurrentGroupFormInfoData: args => dispatch(UpdateCurrentGroupFormInfoDataAction(args)),
       clearCurrentGroupFormData: () => dispatch(ClearCurrentGroupFormDataAction({})),
