@@ -10,6 +10,8 @@ import {
   UpdateCurrentGroupFormInfoDataAction,
   UpdateSlotInGroupAction,
 } from '../redux/orders/orders.actions';
+import { getAllOrdersThunk } from '../redux/orders/orders.thunks';
+import { defaultThunkPayload } from '../utils/fabrics';
 
 type EmptyFn = (...args: any[]) => Promise<any>;
 
@@ -18,7 +20,7 @@ export interface OrdersService {
   deleteOne: EmptyFn | ServiceDispatcherAsync;
   updateOne: EmptyFn | ServiceDispatcherAsync;
   getById: EmptyFn | ServiceDispatcherAsync<OnlyUUID, IOrder>;
-  getAll: EmptyFn | ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IOrder[]>;
+  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IOrder[]>;
   getSlotsByOrderId: EmptyFn | ServiceDispatcherAsync<OnlyUUID>;
   getShipmentsByOrderId: EmptyFn | ServiceDispatcherAsync<OnlyUUID>;
   getPaymentsByOrderId: EmptyFn | ServiceDispatcherAsync<OnlyUUID>;
@@ -39,7 +41,7 @@ const useOrdersServiceHook = (): OrdersService => {
     (): OrdersService => ({
       createOne: async () => dispatch(() => {}),
       getById: async () => dispatch(() => {}),
-      getAll: async () => dispatch(() => {}),
+      getAll: args => dispatch(getAllOrdersThunk(defaultThunkPayload(args))),
       deleteOne: async () => dispatch(() => {}),
       updateOne: async () => dispatch(() => {}),
 

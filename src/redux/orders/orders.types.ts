@@ -85,7 +85,7 @@ export interface IOrder extends IBase {
 
 export interface ICreateOrderInfoFormState {
   manager?: {
-    _id?: string;
+    _id: string;
     user?: Partial<IUserBase>;
   };
   customer?: ICustomerBase;
@@ -94,13 +94,11 @@ export interface ICreateOrderInfoFormState {
     customer?: string[];
     receiver?: string[];
   };
-  status?: OrderStatusEnum;
+
   invoiceInfo?: {
     method?: IFormDataValueWithUUID;
     expiredAt?: string | number | Date;
   };
-  executeAt?: string | number | Date;
-  executeNow?: boolean;
   shipmentInfo?: {
     executeAt?: Date | number | string;
     executeNow?: boolean;
@@ -132,10 +130,36 @@ export interface IOrderReqData {
   data: IOrderBaseDto;
   params?: AppQueryParams;
 }
+export interface ICreateOrderInfoDto {
+  manager?: OnlyUUID;
+  customer?: OnlyUUID;
+  receiver?: OnlyUUID;
+  communication?: {
+    customer?: string[];
+    receiver?: string[];
+  };
 
+  invoiceInfo?: {
+    method?: OnlyUUID;
+    expiredAt?: string | number | Date;
+  };
+  shipmentInfo?: {
+    executeAt?: Date | number | string;
+    executeNow?: boolean;
+  };
+  deliveryInfo?: {
+    method?: OnlyUUID;
+    destination?: AddressDto;
+
+    invoiceInfo?: {
+      method?: OnlyUUID;
+      expiredAt?: string | number | Date;
+    };
+  };
+}
 export interface ICreateOrdersGroupDto {
   slots?: IOrderTempSlot[];
-  info?: ICreateOrderInfoFormState;
+  info?: ICreateOrderInfoDto;
 }
 export interface ICreateOrdersWithSlotsAndGroupByWarehousesReqData {
   data: ICreateOrdersGroupDto;

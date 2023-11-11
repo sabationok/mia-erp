@@ -25,13 +25,7 @@ export interface FormCreateCustomerProps extends Omit<ModalFormProps<any, any, I
 }
 
 const engagementSourceOptions = enumToFilterOptions(EngagementSource);
-const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({
-  defaultState,
-  withReferer,
-  onSubmit,
-  onClose,
-  ...p
-}) => {
+const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({ defaultState, withReferer, onSubmit, ...p }) => {
   const { register, setValue, handleSubmit, watch } = useForm<ICustomerFormData>({
     defaultValues: { ...defaultState, businessType: BusinessSubjectTypeEnum.company },
   });

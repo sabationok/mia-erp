@@ -274,6 +274,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
           onCancelPress={stepIdx === 0 ? onClose : undefined}
           canGoNext={canGoNext}
           canSubmit={canSubmit}
+          submitButton
           currentIndex={stepIdx}
         />
       </Footer>

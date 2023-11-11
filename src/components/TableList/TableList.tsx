@@ -4,7 +4,7 @@ import TableBody from './TableBody';
 import QuickActions from './QuickActions';
 import TableOverHead from './TableOverHead/TableOverHead';
 import TableFooter from './TableFooter/TableFooter';
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 import { MaxToTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 import { CustomCheckboxEvent } from './TebleCells/CellComponents/CheckBox';
 import {
@@ -16,10 +16,7 @@ import {
 } from './tableTypes.types';
 import { FilterReturnDataType } from '../Filter/AppFilter';
 import { IBase } from '../../redux/global.types';
-import FlexBox from '../atoms/FlexBox';
-import { Oval } from 'react-loader-spinner';
-import { Text } from '../atoms/Text';
-import { t } from '../../lang';
+import TableLoader from './TableLoader';
 
 export type { ITableListContext, ITableListProps, OnCheckBoxChangeHandlerEvent, UseTableHookType, SelectItem };
 export const TableCTX = createContext({});
@@ -48,6 +45,7 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
   const rowRef = useRef<HTMLElement>();
   const [selectedRow, setSelectedRow] = useState<any | undefined>(props?.selectedRow);
   const setFilterData = useState<FilterReturnDataType>()[1];
+  const [loading, setLoading] = useState(isLoading);
 
   const rowGrid = useMemo(
     () => ({
@@ -109,6 +107,7 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
       onCheckboxChange: onCheckboxChangeWrapper,
       onHeadCheckboxChange: onHeadCheckboxChange,
       onSubmitSearch,
+      onRefresh: setLoading,
       ...props,
     }),
     [
@@ -146,12 +145,18 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
         <TableScroll className={'TableScroll'} scrollBarWidth={scrollBarWidth}>
           <TableHead />
 
-          {tableData?.length !== 0 ? <TableBody ref={rowRef} /> : <NoData>Дані відсутні</NoData>}
+          {tableData?.length !== 0 && <TableBody ref={rowRef} />}
 
-          <MaxToTabletXl>{actionsCreator ? <QuickActions /> : null}</MaxToTabletXl>
+          {actionsCreator && (
+            <MaxToTabletXl>
+              <QuickActions />
+            </MaxToTabletXl>
+          )}
 
-          <TableLoader isLoading={isLoading} />
+          <TableLoader isLoading={isLoading || loading} />
         </TableScroll>
+
+        {tableData?.length === 0 && <NoData>Дані відсутні</NoData>}
 
         {footer && <TableFooter />}
       </TableCTX.Provider>
@@ -164,6 +169,10 @@ const NoData = styled.div`
   align-items: center;
   justify-content: center;
   max-width: 100%;
+
+  padding: 12px;
+
+  border-top: 1px solid ${p => p.theme.trBorderClr};
 `;
 const Table = styled.div`
   display: grid;
@@ -191,55 +200,6 @@ const TableScroll = styled.div<{ scrollBarWidth?: number }>`
     width: ${({ scrollBarWidth = 6 }) => scrollBarWidth}px;
     height: ${({ scrollBarWidth = 6 }) => scrollBarWidth}px;
   }
-`;
-
-const TableLoader = ({ isLoading, text = t('Loading content...') }: { isLoading?: boolean; text?: string }) => {
-  const theme = useTheme();
-  return (
-    <TableLoaderBox isLoading={isLoading}>
-      <Loader gap={16} fxDirection={'row'} alignItems={'center'} padding={'8px'}>
-        <Oval
-          height="28"
-          width="28"
-          color={theme.accentColor.base}
-          ariaLabel="tail-spin-loading"
-          wrapperStyle={{}}
-          wrapperClass=""
-          visible={true}
-          secondaryColor={theme.accentColor.light}
-          strokeWidth={3}
-          strokeWidthSecondary={3}
-        />
-        {text && (
-          <Text $weight={500} $size={12}>
-            {text}
-          </Text>
-        )}
-      </Loader>
-    </TableLoaderBox>
-  );
-};
-const TableLoaderBox = styled(FlexBox)<{ isLoading?: boolean }>`
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  z-index: 50;
-
-  padding: 8px 8px 24px;
-
-  transform: ${p => (p.isLoading ? 'translate(-50%, -100%)' : 'translate(-50%, 0)')};
-
-  max-width: 90%;
-  transition: ${p => p.theme.globals.timingFnMain};
-`;
-const Loader = styled(FlexBox)`
-  min-height: 60px;
-  width: 320px;
-  max-width: 100%;
-  border-radius: 2px;
-
-  background-color: ${p => p.theme.modalBackgroundColor};
-  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1), 0 2px 15px 0 rgba(0, 0, 0, 0.05);
 `;
 
 export default memo(TableList);

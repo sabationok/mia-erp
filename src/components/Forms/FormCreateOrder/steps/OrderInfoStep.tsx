@@ -23,8 +23,8 @@ import CustomerInfoComponent from '../components/CustomerInfoComponent';
 import { destinationAddressInputsProps } from '../components/DestinationInputs';
 import { throttleCallback } from '../../../../utils/lodash.utils';
 import { useCommunicationSelector, useInvoicesSelector, useShipmentsSelector } from '../../../../redux/selectors.store';
-import { formatDateForInputValue } from '../../../../utils';
 import * as fns from 'date-fns';
+import { formatDateForInputValue } from '../../../../utils';
 
 export interface OrderInfoStepProps extends FormOrderStepBaseProps {
   isGroup?: boolean;
@@ -35,24 +35,14 @@ const useOrderInfoForm = () => useFormContext<ICreateOrderInfoFormState>();
 type ConfirmsStateKay =
   | 'hasDelivery'
   | 'hasDeliveryInvoice'
-  | 'holdDeliveryPayment'
-  | 'holdOrderPayment'
   | 'hasReceiverInfo'
-  | 'hasExecuteDate';
+  | 'hasExecuteDate'
+  | 'holdDeliveryPayment'
+  | 'holdOrderPayment';
 
 type FormFieldPaths = Path<ICreateOrderInfoFormState>;
 const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) => {
   const modalS = useModalService();
-  const [confirms, setConfirms] = useState<Record<ConfirmsStateKay | string, boolean>>({});
-
-  const shipmentMethodsList = useTranslatedMethodsList(useShipmentsSelector().methods, { withFullLabel: true });
-  const communicationMethodsList = useTranslatedMethodsList(useCommunicationSelector().methods, {
-    withFullLabel: true,
-  });
-  const invoicingMethods = useTranslatedMethodsList(useInvoicesSelector().methods, { withFullLabel: true });
-
-  const setTouchedField = (path: FormFieldPaths) => {};
-
   const {
     formState: { isValid, errors },
     register,
@@ -63,6 +53,21 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
   } = useOrderInfoForm();
 
   const formValues = watch();
+
+  const shipmentMethodsList = useTranslatedMethodsList(useShipmentsSelector().methods, { withFullLabel: true });
+  const communicationMethodsList = useTranslatedMethodsList(useCommunicationSelector().methods, {
+    withFullLabel: true,
+  });
+  const invoicingMethods = useTranslatedMethodsList(useInvoicesSelector().methods, { withFullLabel: true });
+
+  const setTouchedField = (path: FormFieldPaths) => {};
+
+  const [confirms, setConfirms] = useState<Record<ConfirmsStateKay | string, boolean>>({
+    hasDelivery: !!formValues.deliveryInfo,
+    hasDeliveryInvoice: !!formValues.deliveryInfo?.invoiceInfo,
+    hasReceiverInfo: !!formValues.receiver,
+    hasExecuteDate: !!formValues.shipmentInfo?.executeAt,
+  });
 
   const handleOnChangeValue: UseFormSetValue<ICreateOrderInfoFormState> = (path, value) => {
     try {
@@ -86,12 +91,13 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
       setConfirms(p => ({ ...p, [name]: value }));
 
       if (value) {
+        if (name === 'hasExecuteDate') {
+          return setValue('shipmentInfo.executeAt', fns.format(fns.addDays(new Date(), 1), 'yyyy-MM-dd'));
+        }
         if (name === 'hasDeliveryInvoice') {
           return setValue('deliveryInfo.invoiceInfo.expiredAt', formatDateForInputValue(fns.addDays(new Date(), 1)));
         }
-      }
-
-      if (!value) {
+      } else if (!value) {
         if (name === 'hasReceiverInfo') {
           return unregister('receiver');
         }
@@ -104,10 +110,25 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
       }
     };
   };
+  const registerSwitch = (name: ConfirmsStateKay) => {
+    return { name, onChange: registerConfirmSelectHandler(name), value: confirms[name] };
+  };
 
   useEffect(() => {
     if (onChangeValidStatus) onChangeValidStatus(isValid);
   }, [isValid, onChangeValidStatus]);
+
+  useEffect(() => {
+    // const initData = {
+    //   hasDelivery: !!formValues.deliveryInfo,
+    //   hasDeliveryInvoice: !!formValues.deliveryInfo?.invoiceInfo,
+    //   hasReceiverInfo: !!formValues.receiver,
+    //   hasExecuteDate: !!formValues.shipmentInfo?.executeAt,
+    // };
+    console.debug('CURRENT CONFIRMS', confirms);
+    // setConfirms(initData);
+    // eslint-disable-next-line
+  }, [confirms]);
 
   return (
     <Inputs flex={1} overflow={'auto'}>
@@ -140,11 +161,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
         <StAccordionItem
           contentContainerStyle={{ padding: '8px 0', gap: 8 }}
           open
-          renderHeader={
-            <Text $padding={'0 6px'} $ellipsisMode={true} $size={16} $weight={500}>{`${t('Customer')} | ${t(
-              'Receiver'
-            )}`}</Text>
-          }
+          renderHeader={<AccordionItemTitle title={t('Customer')} />}
         >
           {formValues?.customer && (
             <>
@@ -199,39 +216,44 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
           <BorderedBox fillWidth gap={4}>
             <InputLabel label={t('Receiver')}>
               <ButtonSwitch
-                onChange={registerConfirmSelectHandler('hasReceiverInfo')}
-                value={confirms?.hasReceiverInfo || !!formValues?.receiver}
-                rejectLabel={'The same'}
-                acceptLabel={'Another'}
+                {...registerSwitch('hasReceiverInfo')}
+                rejectLabel={t('The same')}
+                acceptLabel={t('Another')}
               />
             </InputLabel>
           </BorderedBox>
+        </StAccordionItem>
 
-          {confirms?.hasReceiverInfo && formValues?.receiver && (
-            <>
-              <InputLabel label={t('Receiver information')}>
-                <CustomerInfoComponent info={formValues?.receiver} />{' '}
-              </InputLabel>
-
-              <BorderedBox fillWidth>
-                <InputLabel label={t('Communication methods')}>
-                  <TagButtonsFilter
-                    multiple
-                    numColumns={2}
-                    values={formValues?.communication?.receiver}
-                    resetButtonLabel={t('Without')}
-                    options={communicationMethodsList.map(mtd => ({ ...mtd, value: mtd._id }))}
-                    resetButtonPosition={'start'}
-                    onChange={value => {
-                      handleOnChangeValue('communication.receiver', value);
-                    }}
-                  />
+        {confirms?.hasReceiverInfo && (
+          <StAccordionItem
+            contentContainerStyle={{ padding: '8px 0', gap: 8 }}
+            open
+            renderHeader={<AccordionItemTitle title={t('Receiver')} />}
+          >
+            {formValues?.receiver && (
+              <>
+                <InputLabel label={t('Receiver information')}>
+                  <CustomerInfoComponent info={formValues?.receiver} />{' '}
                 </InputLabel>
-              </BorderedBox>
-            </>
-          )}
 
-          {confirms?.hasReceiverInfo && (
+                <BorderedBox fillWidth>
+                  <InputLabel label={t('Communication methods')}>
+                    <TagButtonsFilter
+                      multiple
+                      numColumns={2}
+                      values={formValues?.communication?.receiver}
+                      resetButtonLabel={t('Without')}
+                      options={communicationMethodsList.map(mtd => ({ ...mtd, value: mtd._id }))}
+                      resetButtonPosition={'start'}
+                      onChange={value => {
+                        handleOnChangeValue('communication.receiver', value);
+                      }}
+                    />
+                  </InputLabel>
+                </BorderedBox>
+              </>
+            )}
+
             <FlexBox fxDirection={'row'} gap={8} fillWidth alignItems={'center'}>
               <CreateCustomerButtonIcon
                 isReceiver
@@ -258,17 +280,13 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
                 {t(!formValues?.receiver ? 'Select receiver' : 'Change receiver')}
               </ButtonIcon>
             </FlexBox>
-          )}
-        </StAccordionItem>
+          </StAccordionItem>
+        )}
 
         <StAccordionItem
           contentContainerStyle={{ padding: '8px 2px' }}
           open
-          renderHeader={
-            <Text $padding={'0 6px'} $ellipsisMode={true} $size={16} $weight={500}>
-              {t('Invoicing')}
-            </Text>
-          }
+          renderHeader={<AccordionItemTitle title={t('Invoicing')} />}
         >
           <InputLabel label={t('Payment method')} required>
             <CheckboxesListSelector
@@ -297,43 +315,33 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
         >
           <BorderedBox fillWidth gap={4}>
             <InputLabel label={t('Another execute date')}>
-              <ButtonSwitch
-                onChange={registerConfirmSelectHandler('hasExecuteDate')}
-                value={confirms?.hasExecuteDate}
-              />
+              <ButtonSwitch {...registerSwitch('hasReceiverInfo')} />
             </InputLabel>
-          </BorderedBox>
 
-          {confirms?.hasExecuteDate && (
-            <InputLabel label={t('Execute at')} required={confirms?.hasExecuteDate}>
-              <InputText
-                placeholder={t('Execute at')}
-                type={'date'}
-                required={confirms?.hasExecuteDate}
-                {...register('shipmentInfo.executeAt', { required: confirms?.hasExecuteDate })}
-              />
-            </InputLabel>
-          )}
+            {confirms?.hasExecuteDate && (
+              <InputLabel label={t('Execute at')} required={confirms?.hasExecuteDate}>
+                <InputText
+                  placeholder={t('Execute at')}
+                  type={'date'}
+                  required={confirms?.hasExecuteDate}
+                  {...register('shipmentInfo.executeAt', { required: confirms?.hasExecuteDate })}
+                />
+              </InputLabel>
+            )}
+          </BorderedBox>
 
           <BorderedBox fillWidth gap={4}>
             <InputLabel label={t('Delivery')}>
-              <ButtonSwitch
-                onChange={registerConfirmSelectHandler('hasDelivery')}
-                value={confirms?.hasDelivery || !!formValues?.deliveryInfo}
-              />
+              <ButtonSwitch {...registerSwitch('hasDelivery')} />
             </InputLabel>
           </BorderedBox>
         </StAccordionItem>
 
-        {(confirms?.hasDelivery || !!formValues?.deliveryInfo) && (
+        {confirms?.hasDelivery && (
           <StAccordionItem
             contentContainerStyle={{ padding: '0 2px' }}
             open
-            renderHeader={
-              <Text $padding={'0 6px'} $ellipsisMode={true} $size={16} $weight={500}>
-                {t('Delivery')}
-              </Text>
-            }
+            renderHeader={<AccordionItemTitle title={t('Delivery')} />}
           >
             <BorderedBox fillWidth gap={8}>
               <InputLabel label={t('Delivery method')} required>
@@ -346,6 +354,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
                 />
               </InputLabel>
             </BorderedBox>
+
             <BorderedBox fillWidth style={{ columnGap: 8, display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
               {destinationAddressInputsProps.map(({ name, label, required }) => {
                 return (
@@ -364,16 +373,15 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
                 );
               })}
             </BorderedBox>
+
             <BorderedBox fillWidth gap={8}>
               <InputLabel label={t('Has payment')} required>
-                <ButtonSwitch
-                  onChange={registerConfirmSelectHandler('hasDeliveryInvoice')}
-                  value={confirms?.hasDeliveryInvoice || !!formValues?.deliveryInfo?.invoiceInfo}
-                />
+                <ButtonSwitch {...registerSwitch('hasDeliveryInvoice')} />
               </InputLabel>
             </BorderedBox>
+
             <BorderedBox fillWidth gap={8}>
-              {(confirms?.hasDeliveryInvoice || !!formValues?.deliveryInfo?.invoiceInfo?.method) && (
+              {confirms?.hasDeliveryInvoice && (
                 <>
                   <InputLabel label={t('Payment method')} required>
                     <CheckboxesListSelector

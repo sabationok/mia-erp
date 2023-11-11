@@ -11,7 +11,12 @@ import { t } from '../../../lang';
 import StepsController from '../components/StepsController';
 import OrderGroupsStuffingStep from './steps/OrderGroupsStuffingStep';
 import OrderInfoStep from './steps/OrderInfoStep';
-import { ICreateOrderInfoFormState, IOrder, IOrderTempSlot } from '../../../redux/orders/orders.types';
+import {
+  ICreateOrderInfoDto,
+  ICreateOrderInfoFormState,
+  IOrder,
+  IOrderTempSlot,
+} from '../../../redux/orders/orders.types';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { ToastService } from '../../../services';
 import _ from 'lodash';
@@ -23,6 +28,8 @@ import { createApiCall, OrdersApi } from '../../../api';
 import { formatDateForInputValue } from '../../../utils';
 
 import * as fns from 'date-fns';
+import { getIdRef } from '../../../utils/dataTransform';
+import { FieldErrors } from 'react-hook-form/dist/types/errors';
 
 export interface FormCreateOrdersGroupProps
   extends Omit<ModalFormProps<any, any, FormCreateOrdersGroupStepsData>, 'onSubmit'> {
@@ -46,8 +53,6 @@ const steps = enumToFilterOptions(FormCreateOrdersGroupStepsEnum);
 const stepsProcessInitialState: Record<FormCreateOrdersGroupStepsEnum | string, boolean> = {
   [FormCreateOrdersGroupStepsEnum.Stuffing]: true,
   [FormCreateOrdersGroupStepsEnum.Info]: false,
-  // [FormCreateOrdersGroupStepsEnum.Confirmation]: false,
-  // [FormCreateOrdersGroupStepsEnum.Invoices]: false,
 };
 const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit, onClose }) => {
   const service = useAppServiceProvider()[ServiceName.orders];
@@ -64,14 +69,17 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
     defaultValues: {
       ...currentGroupFormState.info,
       invoiceInfo: {
-        expiredAt: formatDateForInputValue(fns.addDays(new Date(), 1)),
         ...currentGroupFormState.info?.invoiceInfo,
+        expiredAt: formatDateForInputValue(
+          fns.addDays(new Date(currentGroupFormState.info?.invoiceInfo?.expiredAt ?? ''), 1)
+        ),
       },
     },
     resolver: yupResolver(orderInfoBaseSchema),
     reValidateMode: 'onChange',
   });
-  const orderInfoFormValues = formOrderInfo.watch();
+  const { watch, handleSubmit } = formOrderInfo;
+  const orderInfoFormValues = watch();
 
   const renderStep = useMemo(() => {
     if (stepsMap?.Stuffing) {
@@ -103,26 +111,21 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
       ToastService.error(`${t('Step is not finished')}: "${getCurrentStep().value.toUpperCase()}"`);
     }
   };
-  const canAccept = useMemo(() => {
-    if (stepsMap.Stuffing) {
-      return isStepFinished.Stuffing;
-    }
-    if (stepsMap.Info) {
-      return isStepFinished.Info;
-    }
 
-    return false;
-  }, [isStepFinished.Info, isStepFinished.Stuffing, stepsMap.Info, stepsMap.Stuffing]);
-
-  const handleAcceptPress = () => {
-    if (!canAccept) {
+  const onValidSubmit = (data: ICreateOrderInfoFormState) => {
+    if (!isLast) {
       ToastService.error('Form is not valid');
       return;
     }
 
+    console.debug('onValidSubmit data');
+    console.log(data);
+    console.debug('onValidSubmit orderInfoFormValues');
+    console.log(orderInfoFormValues);
+
     createApiCall(
       {
-        data: { data: { info: orderInfoFormValues, slots: currentGroupFormState.slots } },
+        data: { data: { info: transformOrderInfoForReq(orderInfoFormValues), slots: currentGroupFormState.slots } },
         onSuccess: data => {
           console.log(data);
         },
@@ -135,10 +138,13 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
       OrdersApi
     );
   };
+  const onErrorSubmit = (errors: FieldErrors<ICreateOrderInfoFormState>) => {
+    console.debug(onErrorSubmit.name, errors);
+  };
 
   return (
     <FormProvider {...formOrderInfo}>
-      <Form>
+      <Form onSubmit={handleSubmit(onValidSubmit, onErrorSubmit)}>
         <ModalHeader title={t('Create orders group by warehouse')} onBackPress={onClose} />
 
         <Content fillWidth flex={1} overflow={'hidden'}>
@@ -154,8 +160,8 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
             onPrevPress={handlePrevPress}
             currentIndex={stepIdx}
             canGoNext={true}
-            canAccept={isLast}
-            onAcceptPress={handleAcceptPress}
+            canSubmit={isLast}
+            submitButton
             onCancelPress={stepIdx === 0 ? onClose : undefined}
           />
         </Footer>
@@ -163,7 +169,7 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
     </FormProvider>
   );
 };
-const Form = styled.div`
+const Form = styled.form`
   color: ${p => p.theme.fontColorSidebar};
 
   display: flex;
@@ -183,3 +189,50 @@ const Content = styled(FlexBox)`
 
 const Footer = styled(FlexBox)``;
 export default FormCreateOrdersGroup;
+
+function transformOrderInfoForReq(input: ICreateOrderInfoFormState): ICreateOrderInfoDto {
+  const output: ICreateOrderInfoDto = {};
+
+  if (input?.manager) {
+    output.manager = getIdRef(input?.manager);
+  }
+  if (input?.customer) {
+    output.customer = getIdRef(input?.customer);
+  }
+  if (input?.receiver) {
+    output.receiver = getIdRef(input?.receiver);
+  }
+  if (input?.communication) {
+    output.communication = input?.communication;
+  }
+  if (input?.invoiceInfo) {
+    if (input.invoiceInfo) {
+      let invoiceInfo: ICreateOrderInfoDto['invoiceInfo'] = {};
+
+      if (input.invoiceInfo?.method) {
+        invoiceInfo = {
+          method: getIdRef(input.invoiceInfo.method),
+          expiredAt: input.invoiceInfo?.expiredAt,
+        };
+        output.invoiceInfo = invoiceInfo;
+      }
+    }
+  }
+  if (input?.deliveryInfo) {
+    if (input.deliveryInfo.invoiceInfo) {
+      const deliveryInfo: ICreateOrderInfoDto['deliveryInfo'] = {};
+
+      if (input.deliveryInfo.invoiceInfo.method) {
+        deliveryInfo.invoiceInfo = {
+          method: getIdRef(input.deliveryInfo.invoiceInfo.method),
+          expiredAt: input.deliveryInfo.invoiceInfo?.expiredAt,
+        };
+        output.deliveryInfo = deliveryInfo;
+      }
+    }
+  }
+  console.debug('Transform Order Info For Req'.toUpperCase());
+  console.log({ input });
+  console.log({ output });
+  return output;
+}

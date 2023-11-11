@@ -7,8 +7,7 @@ import AppGridPage from '../AppGridPage';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { ISortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
-import { mockOrdersData, ordersSearchParams, ordersTableColumns } from '../../../data/orders.data';
-import useOrdersServiceHook from '../../../hooks/useOrdersService.hook';
+import { ordersSearchParams, ordersTableColumns } from '../../../data/orders.data';
 import { IOrder, OrderStatusEnum } from '../../../redux/orders/orders.types';
 import useOrdersActionsCreatorHook from '../../../hooks/useOrdersActionsCreator.hook';
 import { BaseAppPageProps } from '../index';
@@ -16,6 +15,8 @@ import { enumToFilterOptions } from '../../../utils/fabrics';
 import ModalFilter from '../../ModalForm/ModalFilter';
 import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
+import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import { AppModuleName } from '../../../redux/reduxTypes.types';
 
 interface Props extends BaseAppPageProps {}
 
@@ -70,7 +71,7 @@ const PageOrders: React.FC<any> = (props: Props) => {
         />
 
         <FlexBox fillWidth flex={1}>
-          <TableList {...tableConfig} tableData={mockOrdersData} isLoading={isLoading} />
+          <TableList {...tableConfig} isLoading={isLoading} />
         </FlexBox>
       </Page>
     </AppGridPage>
@@ -84,9 +85,8 @@ const Page = styled(FlexBox)`
 export default PageOrders;
 
 export const useOrderTableConfigs = () => {
-  const service = useOrdersServiceHook();
+  const { getAll } = useAppServiceProvider()[AppModuleName.orders];
   const state = useOrdersSelector();
-  const { getAll } = service;
   const actionsCreator = useOrdersActionsCreatorHook();
   // const filterSelectors = useProductsFilterSelectorsHook();
   const [isLoading, setIsLoading] = useState(false);
@@ -123,15 +123,13 @@ export const useOrderTableConfigs = () => {
       return;
     }
 
-    if (!sortParams && !filterParams) {
-      if (state.orders.length === 0) {
-        getAll({
-          data: { refresh: true },
-          onLoading: setIsLoading,
-        });
-      }
-    }
-  }, [filterParams, getAll, isLoading, sortParams, state.orders.length, tableConfig]);
+    getAll({
+      data: { refresh: true },
+      onLoading: setIsLoading,
+    });
+
+    // eslint-disable-next-line
+  }, []);
 
   return {
     tableConfig,

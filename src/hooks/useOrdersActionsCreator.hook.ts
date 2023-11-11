@@ -6,11 +6,14 @@ import { Modals } from '../components/Modals';
 import { useNavigate } from 'react-router-dom';
 import { ExtractIdString } from '../utils/dataTransform';
 import { t } from '../lang';
+import { useAppServiceProvider } from './useAppServices.hook';
+import { AppModuleName } from '../redux/reduxTypes.types';
 
 export type OrdersActionsCreator = TableActionCreator<IOrder>;
 const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
   const modalS = useModalProvider();
   const navigate = useNavigate();
+  const { getAll } = useAppServiceProvider()[AppModuleName.orders];
   // const { orders } = useAppServiceProvider();
 
   return useCallback(
@@ -19,6 +22,16 @@ const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
       const selectedId = selected ? ExtractIdString(selected) : '';
 
       return [
+        {
+          icon: 'refresh',
+          onClick: () => {
+            getAll({
+              data: { refresh: true },
+              onLoading: ctx.onRefresh,
+            });
+          },
+        },
+        { separator: true },
         {
           name: 'openOrderOverview',
           icon: 'openInNew',

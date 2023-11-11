@@ -1,4 +1,4 @@
-import { memo, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import _ from 'lodash';
 import { t } from '../../lang';
 import ButtonsGroup from './ButtonsGroup';
@@ -8,10 +8,11 @@ interface ButtonSwitchProps {
   rejectLabel?: string;
   onChange?: (res: boolean) => void;
   value?: boolean;
+  name?: string;
 }
 
-const ButtonSwitch = ({ onChange, value, acceptLabel, rejectLabel }: ButtonSwitchProps) => {
-  const [current, setCurrent] = useState(false);
+const ButtonSwitch = ({ name = '', onChange, value = false, acceptLabel, rejectLabel }: ButtonSwitchProps) => {
+  const [current, setCurrent] = useState(value);
   const handleChange = (index: number) => {
     if (onChange) {
       onChange(!!index);
@@ -20,8 +21,6 @@ const ButtonSwitch = ({ onChange, value, acceptLabel, rejectLabel }: ButtonSwitc
     }
   };
 
-  const defIndex = useMemo(() => ((_.isUndefined(value) ? current : value) ? 1 : 0), [current, value]);
-
   const options = useMemo(
     () => [
       { value: false, label: t(rejectLabel || 'No') },
@@ -29,8 +28,12 @@ const ButtonSwitch = ({ onChange, value, acceptLabel, rejectLabel }: ButtonSwitc
     ],
     [acceptLabel, rejectLabel]
   );
-
-  return <ButtonsGroup options={options} defaultIndex={defIndex} onChangeIndex={handleChange} />;
+  useEffect(() => {
+    if (!_.isUndefined(value)) {
+      setCurrent(value);
+    }
+  }, [value]);
+  return <ButtonsGroup options={options} defaultIndex={current ? 1 : 0} onChangeIndex={handleChange} />;
 };
 
-export default memo(ButtonSwitch);
+export default ButtonSwitch;
