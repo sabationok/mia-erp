@@ -235,9 +235,19 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
     e.preventDefault();
 
     const slot: IOrderTempSlot = {
-      ..._.omit(formData?.inventory?.price, ['author', 'owner', 'list', 'product', 'variation']),
+      ..._.omit(formData?.inventory?.price, [
+        '_id',
+        'createdAt',
+        'updatedAt',
+        'deletedAt',
+        'author',
+        'owner',
+        'list',
+        'product',
+        'variation',
+      ]),
       ..._.omit(formData, ['price']),
-      origin: _.pick(formData?.inventory?.price, ['_id']),
+      origin: formData?.inventory?.price,
       tempId: nanoid(8),
       quantity: 1,
     };

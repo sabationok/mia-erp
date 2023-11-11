@@ -38,7 +38,7 @@ export interface IOrderSlotBase extends IPriceBase {
 
   product?: IProduct;
   variation?: IVariation;
-  origin?: Partial<IPriceListItem>;
+  origin?: IPriceListItem;
   inventory?: IProductInventory;
   warehouse?: IWarehouse;
 }
@@ -48,6 +48,16 @@ export interface IOrderSlot extends IBase, IOrderSlotBase {
   order?: OnlyUUID;
 
   shipment?: IShipment;
+}
+
+export interface IOrderSlotDto {
+  quantity?: number;
+
+  product?: OnlyUUID;
+  variation?: OnlyUUID;
+  origin?: OnlyUUID;
+  inventory?: OnlyUUID;
+  warehouse?: OnlyUUID;
 }
 
 export interface IOrderTempSlot extends IOrderSlotBase {
@@ -62,6 +72,7 @@ export interface IOrder extends IBase {
   manager?: IManager;
   barCode?: string;
   code?: string;
+
   externalRef?: string;
 
   customer?: ICustomerBase;
@@ -158,7 +169,7 @@ export interface ICreateOrderInfoDto {
   };
 }
 export interface ICreateOrdersGroupDto {
-  slots?: IOrderTempSlot[];
+  slots?: IOrderSlotDto[];
   info?: ICreateOrderInfoDto;
 }
 export interface ICreateOrdersWithSlotsAndGroupByWarehousesReqData {

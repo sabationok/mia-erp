@@ -14,6 +14,7 @@ import OrderInfoStep from './steps/OrderInfoStep';
 import {
   ICreateOrderInfoDto,
   ICreateOrderInfoFormState,
+  ICreateOrdersGroupDto,
   IOrder,
   IOrderTempSlot,
 } from '../../../redux/orders/orders.types';
@@ -125,7 +126,12 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
 
     createApiCall(
       {
-        data: { data: { info: transformOrderInfoForReq(orderInfoFormValues), slots: currentGroupFormState.slots } },
+        data: {
+          data: {
+            info: transformOrderInfoForReq(orderInfoFormValues),
+            slots: transformOrderSlotsFroReq(currentGroupFormState.slots),
+          },
+        },
         onSuccess: data => {
           console.log(data);
         },
@@ -190,21 +196,18 @@ const Content = styled(FlexBox)`
 const Footer = styled(FlexBox)``;
 export default FormCreateOrdersGroup;
 
-function transformOrderInfoForReq(input: ICreateOrderInfoFormState): ICreateOrderInfoDto {
-  const output: ICreateOrderInfoDto = {};
+function transformOrderInfoForReq(input: ICreateOrderInfoFormState): ICreateOrdersGroupDto['info'] {
+  const output: ICreateOrdersGroupDto['info'] = {};
 
-  if (input?.manager) {
-    output.manager = getIdRef(input?.manager);
-  }
-  if (input?.customer) {
-    output.customer = getIdRef(input?.customer);
-  }
-  if (input?.receiver) {
-    output.receiver = getIdRef(input?.receiver);
-  }
-  if (input?.communication) {
-    output.communication = input?.communication;
-  }
+  const objectsArr = Object.keys(input).map(key => {
+    const value = input[key as keyof typeof input];
+    if (value && typeof value === 'object' && value.hasOwnProperty('_id') && '_id' in value) {
+      return { [key]: getIdRef(value) };
+    }
+    return { [key]: value };
+  });
+  Object.assign(output, ...objectsArr);
+
   if (input?.invoiceInfo) {
     if (input.invoiceInfo) {
       let invoiceInfo: ICreateOrderInfoDto['invoiceInfo'] = {};
@@ -231,8 +234,70 @@ function transformOrderInfoForReq(input: ICreateOrderInfoFormState): ICreateOrde
       }
     }
   }
+
   console.debug('Transform Order Info For Req'.toUpperCase());
   console.log({ input });
   console.log({ output });
   return output;
 }
+function _transformOrderInfoForReq(input: ICreateOrderInfoFormState): ICreateOrdersGroupDto['info'] {
+  console.debug('Transform Order Info For Req'.toUpperCase());
+  console.log({ input });
+
+  function transformObject(obj: any) {
+    const result: any = {};
+
+    for (const key in obj) {
+      if (obj[key] instanceof Object) {
+        result[key] = transformObject(obj[key]);
+      } else if (key === 'method') {
+        result.method = getIdRef(obj.method);
+        result.expiredAt = obj.expiredAt;
+      } else {
+        result[key] = obj[key];
+      }
+    }
+
+    return result;
+  }
+
+  const output: ICreateOrdersGroupDto = {
+    info: transformObject(input),
+  };
+
+  console.log({ output });
+  return output.info;
+}
+
+function transformOrderSlotsFroReq(slots: IOrderTempSlot[]): ICreateOrdersGroupDto['slots'] {
+  const output = slots.map(slot => {
+    const sl = _.omit(slot, ['tempId']);
+
+    const objectsArr = Object.keys(sl).map(key => {
+      const value = sl[key as keyof typeof sl];
+      if (value && typeof value === 'object' && value.hasOwnProperty('_id') && '_id' in value) {
+        return { [key]: getIdRef(value) };
+      }
+      return { [key]: value };
+    });
+    console.log({ objectsArr });
+    Object.assign(sl, ...objectsArr);
+
+    return sl;
+  });
+  console.debug(transformOrderSlotsFroReq.name);
+  console.log(output);
+  return output;
+}
+// if (input?.manager) {
+//   output.manager = getIdRef(input?.manager);
+// }
+// if (input?.customer) {
+//   output.customer = getIdRef(input?.customer);
+// }
+// if (input?.receiver) {
+//   output.receiver = getIdRef(input?.receiver);
+// }
+// if (input?.communication) {
+//   output.communication = input?.communication;
+// }
