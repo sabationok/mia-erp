@@ -71,9 +71,8 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
       ...currentGroupFormState.info,
       invoiceInfo: {
         ...currentGroupFormState.info?.invoiceInfo,
-        expiredAt: formatDateForInputValue(
-          fns.addDays(new Date(currentGroupFormState.info?.invoiceInfo?.expiredAt ?? ''), 1)
-        ),
+        expiredAt:
+          currentGroupFormState.info?.invoiceInfo?.expiredAt ?? formatDateForInputValue(fns.addDays(new Date(), 1)),
       },
     },
     resolver: yupResolver(orderInfoBaseSchema),
@@ -129,7 +128,7 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
         data: {
           data: {
             info: transformOrderInfoForReq(orderInfoFormValues),
-            slots: transformOrderSlotsFroReq(currentGroupFormState.slots),
+            slots: transformOrderSlotsForReq(currentGroupFormState.slots),
           },
         },
         onSuccess: data => {
@@ -269,7 +268,7 @@ function _transformOrderInfoForReq(input: ICreateOrderInfoFormState): ICreateOrd
   return output.info;
 }
 
-function transformOrderSlotsFroReq(slots: IOrderTempSlot[]): ICreateOrdersGroupDto['slots'] {
+function transformOrderSlotsForReq(slots: IOrderTempSlot[]): ICreateOrdersGroupDto['slots'] {
   const output = slots.map(slot => {
     const sl = _.omit(slot, ['tempId']);
 
@@ -285,7 +284,7 @@ function transformOrderSlotsFroReq(slots: IOrderTempSlot[]): ICreateOrdersGroupD
 
     return sl;
   });
-  console.debug(transformOrderSlotsFroReq.name);
+  console.debug(transformOrderSlotsForReq.name);
   console.log(output);
   return output;
 }

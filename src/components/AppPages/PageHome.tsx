@@ -36,7 +36,7 @@ const PageHome: React.FC<any> = ({ path }: Props) => {
   const state = usePermissionsSelector();
   const permissionsService = usePermissionsService();
   const actionsCreator = usePermissionsActionsCreator(permissionsService, companyType?.param || 'own');
-
+  const [loading, setLoading] = useState(false);
   const permissionsData = useMemo(() => {
     return state.permissions?.filter(pr => {
       if (companyType?.param === 'invited') return pr.status === PermissionStatus.ACCEPTED;
@@ -91,7 +91,7 @@ const PageHome: React.FC<any> = ({ path }: Props) => {
   }, []);
 
   useEffect(() => {
-    user._id && permissionsService.getAllByUserId({ data: { userId: user._id } });
+    user._id && permissionsService.getAllByUserId({ data: { userId: user._id }, onLoading: setLoading });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user._id]);
 
@@ -108,7 +108,7 @@ const PageHome: React.FC<any> = ({ path }: Props) => {
       </Top>
 
       <Bottom>
-        <TableList {...tableConfig} />
+        <TableList {...tableConfig} isLoading={loading} />
       </Bottom>
     </Page>
   );

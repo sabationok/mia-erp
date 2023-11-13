@@ -31,7 +31,11 @@ const CreateCustomerButtonIcon = ({
             onSubmit: d => {
               customerS.create({
                 data: createDataForReq(d) as never,
-                onSuccess: m?.onClose,
+                onSuccess: d => {
+                  onSuccess && onSuccess(d);
+
+                  m?.onClose();
+                },
               });
             },
           },

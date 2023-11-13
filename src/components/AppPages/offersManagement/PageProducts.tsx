@@ -57,14 +57,15 @@ const PageProducts: React.FC<any> = (props: Props) => {
     }
 
     if (!sortParams && !filterParams) {
-      if (state.products.length === 0) {
-        getAll({
-          data: { refresh: true },
-          onLoading: setIsLoading,
-        });
-      }
+      getAll({
+        data: { refresh: true },
+        onLoading: setIsLoading,
+      });
+      // if (state.products.length === 0) {
+      // }
     }
-  }, [filterParams, getAll, sortParams, state.products.length]);
+    // eslint-disable-next-line
+  }, []);
   return (
     <AppGridPage path={props.path}>
       <Page>

@@ -315,7 +315,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
         >
           <BorderedBox fillWidth gap={4}>
             <InputLabel label={t('Another execute date')}>
-              <ButtonSwitch {...registerSwitch('hasReceiverInfo')} />
+              <ButtonSwitch {...registerSwitch('hasExecuteDate')} />
             </InputLabel>
 
             {confirms?.hasExecuteDate && (
