@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { ServiceApiCaller, ServiceDispatcherAsync } from '../redux/global.types';
 import { defaultApiCallPayload, defaultThunkPayload } from '../utils/fabrics';
 import {
+  ExternalServiceTypeEnum,
   ExtServiceBase,
   InputIntegrationBase,
   InputIntegrationDto,
@@ -14,7 +15,7 @@ import { createApiCall, IntegrationsApi } from '../api';
 import { GetAllIntegrationsQueries } from '../api/integrations.api';
 
 export interface UseIntegrationsService {
-  getAllExtServices: ServiceDispatcherAsync<{ params?: {} }, ExtServiceBase[]>;
+  getAllExtServices: ServiceDispatcherAsync<{ params?: { type?: ExternalServiceTypeEnum } }, ExtServiceBase[]>;
   getAll: ServiceApiCaller<GetAllIntegrationsQueries, (OutputIntegrationBase | InputIntegrationBase)[]>;
   createInput: ServiceApiCaller<{ data: InputIntegrationDto }, InputIntegrationBase>;
   createOutput: ServiceApiCaller<{ data: OutputIntegrationDto }, OutputIntegrationBase>;

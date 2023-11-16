@@ -12,7 +12,7 @@ import CompanyIntegrationsModal from '../components/CompanySettings/CompanyInteg
 import { t } from '../lang';
 import Forms from '../components/Forms';
 import DirPaymentMethods from '../components/CompanySettings/DirPaymentMethods';
-import DirShipmentsMethods from '../components/CompanySettings/DirDeliveryMethods';
+import DirDeliveryMethods from '../components/CompanySettings/DirDeliveryMethods';
 import DirInvocingMethods from '../components/CompanySettings/DirInvocingMethods';
 import DirCommunicationMethods from '../components/CompanySettings/DirCommunicationMethods';
 
@@ -112,12 +112,12 @@ const CustomRolesProps: DirCustomRolesProps = {
   }),
 };
 const integrations = {
-  title: 'Інтеграції',
+  title: t('Integrations'),
   disabled: false,
   ModalChildren: CompanyIntegrationsModal,
   iconId: iconId.bank,
   modalChildrenProps: {
-    title: 'Інтеграції',
+    title: t('Integrations'),
     fillHeight: true,
     fillWidth: true,
   },
@@ -183,37 +183,37 @@ export const companySettings: IDirectoryListItem[] = [
     disabled: true,
   },
   {
-    title: t('Shipment methods'),
+    title: t('Delivery methods'),
     iconId: iconId.persons,
-    ModalChildren: DirShipmentsMethods,
+    ModalChildren: DirDeliveryMethods,
     modalChildrenProps: {
-      title: t('Shipment methods'),
+      title: t('Delivery methods'),
       dirType: ApiDirType.METHODS_SHIPMENT,
-      createParentTitle: t('Add shipment method'),
+      createParentTitle: t('Add delivery method'),
       changeDisableStatus: true,
       creatingParent: false,
       availableLevels: 1,
       actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {
-        createParentTitle: t('Add shipment method'),
-        updateItemTitle: t('Update shipment method'),
+        createParentTitle: t('Add delivery method'),
+        updateItemTitle: t('Update delivery method'),
       }),
     },
     disabled: true,
   },
   {
-    title: "Способи зв'язку",
+    title: t('Communication methods'),
     iconId: iconId.persons,
     ModalChildren: DirCommunicationMethods,
     modalChildrenProps: {
-      title: "Способи зв'язку",
+      title: t('Communication methods'),
       dirType: ApiDirType.METHODS_COMMUNICATION,
-      createParentTitle: 'Додати спосіб комунікації',
+      createParentTitle: t('Add communication method'),
       availableLevels: 1,
       changeDisableStatus: true,
       creatingParent: false,
       actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {
-        createParentTitle: 'Додати спосіб комунікації',
-        updateItemTitle: 'Редагувати спосіб комунікації',
+        createParentTitle: t('Add communication method'),
+        updateItemTitle: t('Update communication method'),
       }),
     },
     disabled: true,

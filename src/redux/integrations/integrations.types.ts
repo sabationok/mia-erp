@@ -1,19 +1,39 @@
 import { IBase, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
 import { LangPack } from '../../lang';
 import { ICompany } from '../companies/companies.types';
-import { ICheckoutPaymentMethod } from '../payments/payments.types';
 import { AppQueryParams } from '../../api';
 
 export enum IntegrationTypeEnum {
   input = 'input',
   output = 'output',
 }
-export enum ExtIntegrationServiceTypeEnum {
+export enum ExternalServiceTypeEnum {
   payment = 'payment',
   shipment = 'shipment',
   delivery = 'delivery',
   invoicing = 'invoicing',
   communication = 'communication',
+  payments = 'payments',
+  shipments = 'shipments',
+  checkout = 'checkout',
+  invoices = 'invoices',
+  banking = 'banking',
+}
+
+export enum ExternalServiceProvidersEnum {
+  monobank = 'monobank',
+  liqPay = 'liqPay',
+  wayForPay = 'wayForPay',
+  novapay = 'novapay',
+  privat24 = 'privat24',
+  ukrpost = 'ukrpost',
+  novapost = 'novapost',
+  telegram = 'telegram',
+  google = 'google',
+  ukrnet = 'ukrnet',
+  viber = 'viber',
+  instagram = 'instagram',
+  facebook = 'facebook',
 }
 export enum PaymentProviderName {
   mono = 'mono',
@@ -52,7 +72,7 @@ export interface ExtServiceBase extends IBase {
   originServices?: ExtSubServicesEntity;
 }
 
-export interface ExtSubServicesEntity extends Record<ExtIntegrationServiceTypeEnum | string, string[]> {}
+export interface ExtSubServicesEntity extends Record<ExternalServiceTypeEnum | string, string[]> {}
 
 export interface InputIntegrationBase extends IBase {
   owner?: ICompany;
@@ -64,7 +84,7 @@ export interface InputIntegrationBase extends IBase {
   expiredAt?: string | Date;
   login?: string;
 
-  type?: ExtIntegrationServiceTypeEnum;
+  type?: ExternalServiceTypeEnum;
   label?: string;
   description?: string;
 }
@@ -139,6 +159,9 @@ export interface IInvoicingMethod extends ExtServiceMethodBase<string, ExtInvoic
 export interface IInvoicingMethodReqData extends IMethodReqData<IInvoicingMethod> {}
 export interface IDeliveryMethod extends ExtServiceMethodBase<string, ExtDeliveryService> {}
 export interface IDeliveryMethodReqData extends IMethodReqData<IDeliveryMethod> {}
+export interface ICheckoutPaymentMethod
+  extends ExtServiceMethodBase<string | MonoCheckoutMethod | LiqPayCheckoutMethodEnum, ExtDeliveryService> {}
+export interface IPaymentMethodReqData extends IMethodReqData<ICheckoutPaymentMethod> {}
 
 export enum PaymentCheckoutEnum {
   // * liqpay

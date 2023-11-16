@@ -8,11 +8,10 @@ import { AppQueries, AppQueryParams } from '../api';
 
 export const transformQueriesForReq = (queries: Partial<AppQueryParams>): Partial<AppQueries> => {
   let output: Partial<AppQueries> = {};
-  Object.entries(queries).map(([k, v]) => {
+  Object.entries(queries).forEach(([k, v]) => {
     const newKey = `${k}Id`;
 
     output[newKey] = v?._id ? `${v?._id}` : v;
-    return '';
   });
 
   return output;

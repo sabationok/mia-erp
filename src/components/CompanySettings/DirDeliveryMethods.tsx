@@ -7,10 +7,12 @@ import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../
 import DirListItem from '../Directories/DirList/DirListItem';
 import { useTranslatedMethodsList } from '../../hooks/useTranslatedMethodsList.hook';
 import { IDeliveryMethod } from '../../redux/integrations/integrations.types';
-import { useShipmentsSelector } from '../../redux/selectors.store';
-import useShipmentsService, { UseShipmentsService } from '../../hooks/useShipmentsService.hook';
+import { useDeliveriesSelector } from '../../redux/selectors.store';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
+import { UseDeliveriesService } from '../../hooks/useDeliveriesService.hook';
+import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import { AppModuleName } from '../../redux/reduxTypes.types';
 
 export interface DirDeliveryMethodsProps
   extends IDirInTreeProps<MethodDirType, IDeliveryMethod, IDeliveryMethod, IDeliveryMethod> {
@@ -31,10 +33,11 @@ const DirDeliveryMethods: React.FC<DirDeliveryMethodsProps> = ({
   creating,
   ...props
 }) => {
-  const service = useShipmentsService();
+  const service = useAppServiceProvider()[AppModuleName.deliveries];
   const modalService = useModalProvider();
-  const methods = useTranslatedMethodsList(useShipmentsSelector().methods);
-  const actions = actionsCreatorForDirShipmentsMethods({ service, modalService, dirType: ApiDirType.METHODS_SHIPMENT });
+  const methods = useTranslatedMethodsList(useDeliveriesSelector().methods, { withFullLabel: true });
+  console.log(methods);
+  const actions = actionsCreatorForDeliveryMethods({ service, modalService, dirType: ApiDirType.METHODS_SHIPMENT });
   const renderList = useMemo(
     () =>
       methods?.map((item, idx) => (
@@ -71,10 +74,10 @@ const StModalForm = styled(ModalForm)``;
 
 export default memo(DirDeliveryMethods);
 
-const actionsCreatorForDirShipmentsMethods: DirInTreeActionsCreatorType<
+const actionsCreatorForDeliveryMethods: DirInTreeActionsCreatorType<
   MethodDirType,
   IDeliveryMethod,
-  UseShipmentsService,
+  UseDeliveriesService,
   IDeliveryMethod
 > = () => {
   return {

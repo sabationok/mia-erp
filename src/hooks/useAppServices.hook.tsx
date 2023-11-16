@@ -17,6 +17,7 @@ import useCustomRolesServiceHook, { CustomRolesService } from './useCustomRolesS
 import useInvoicingService, { UseInvoicingService } from './useInvoicingService.hook';
 import { AppModuleName } from '../redux/reduxTypes.types';
 import useIntegrationsService, { UseIntegrationsService } from './useIntegrationsService.hook';
+import UseDeliveriesServiceHook, { UseDeliveriesService } from './useDeliveriesService.hook';
 
 export { AppModuleName as ServiceName } from '../redux/reduxTypes.types';
 export interface AppService {
@@ -36,6 +37,7 @@ export interface AppService {
   [AppModuleName.shipments]: UseShipmentsService;
   [AppModuleName.roles]: CustomRolesService;
   [AppModuleName.integrations]: UseIntegrationsService;
+  [AppModuleName.deliveries]: UseDeliveriesService;
 }
 
 // const isDevMode = ConfigService.isDevMode();
@@ -57,6 +59,7 @@ const useAppService = (): AppService => {
     invoicing: useInvoicingService(),
     shipments: useShipmentsService(),
     roles: useCustomRolesServiceHook(),
+    deliveries: UseDeliveriesServiceHook(),
   };
 };
 export const AppServiceCTX = createContext<AppService>({} as AppService);

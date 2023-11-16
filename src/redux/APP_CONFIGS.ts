@@ -18,6 +18,7 @@ export enum API_BASE_ROUTES {
   PAYMENTS = '/payments',
   INVOICES = '/invoices',
   SHIPMENTS = '/shipments',
+  DELIVERY = '/delivery',
   CUSTOMERS = '/customers',
   COMMUNICATION = '/communications',
   COUNTERPARTIES = '/counterparties',
@@ -293,6 +294,13 @@ const shipments = {
   getAllMethods: () => `${API_BASE_ROUTES.SHIPMENTS}/${Endpoints.methods}/getAll`,
   updateMethod: (id?: string) => `${API_BASE_ROUTES.SHIPMENTS}/${Endpoints.methods}/update/${id}`,
 };
+const deliveries = {
+  create: () => `${API_BASE_ROUTES.DELIVERY}/create`,
+  getAll: () => `${API_BASE_ROUTES.DELIVERY}/getAll`,
+  getById: (id?: string) => `${API_BASE_ROUTES.DELIVERY}/getById/${id}`,
+  getAllMethods: () => `${API_BASE_ROUTES.DELIVERY}/${Endpoints.methods}/getAll`,
+  updateMethod: (id?: string) => `${API_BASE_ROUTES.DELIVERY}/${Endpoints.methods}/update/${id}`,
+};
 const customers = {
   create: () => `${API_BASE_ROUTES.CUSTOMERS}/create`,
   update: (id?: string) => `${API_BASE_ROUTES.CUSTOMERS}/update/${id}`,
@@ -343,6 +351,7 @@ const APP_CONFIGS = {
     invoices,
     customers,
     shipments,
+    deliveries,
     extServices,
     communications,
     refunds,

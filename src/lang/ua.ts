@@ -75,6 +75,36 @@ export const langUa = {
   [OwnershipTypeEnum.UA_FRANCHISING_COMPANY]: 'Франчайзингова компанія',
   [OwnershipTypeEnum.UA_COLLECTIVE_ENTERPRISE]: 'Колективне підприємство',
 
+  'Delivery method': 'Спосіб доставки',
+  'Delivery methods': 'Способи доставки',
+  'Add delivery method': 'Додати спосіб доставки',
+  'Update delivery method': 'Оновити спосіб доставки',
+
+  'Invoicing method': 'Тип інвойсу',
+  'Invoicing methods': 'Типи інвойсів',
+  'Add invoicing method': 'Додати тип інвойсу',
+  'Update invoicing method': 'Оновити тип інвойсу',
+
+  'Payment method': 'Спосіб оплати',
+  'Payment methods': 'Способи оплати',
+  'Add payment method': 'Додати тип оплати',
+  'Update payment method': 'Оновити тип оплати',
+
+  'Checkout method': 'Спосіб оплати',
+  'Checkout methods': 'Способи оплати',
+  'Add checkout method': 'Додати тип оплати',
+  'Update checkout method': 'Оновити тип оплати',
+
+  'Communication method': "Спосіб звя'зку",
+  'Communication methods': "Способи звя'зку",
+  'Add communication method': "Додати спосіб звя'зку",
+  'Update communication method': "Оновити спосіб звя'зку",
+
+  'Shipment method': 'Спосіб відвантаження',
+  'Shipment methods': 'Способи відвантаження',
+  'Add shipment method': 'Додати спосіб відвантаження',
+  'Update shipment method': 'Оновити спосіб відвантаження',
+
   priceLists: 'Прайс листи',
   documentsFlow: 'Документи',
   companies: 'Компанії',
@@ -200,18 +230,10 @@ export const langUa = {
 
   Payments: 'Оплати',
   Payment: 'Оплата',
-  'Payment method': 'Спосіб оплати',
-  'Payment methods': 'Способи оплати',
-  'Invoicing methods': 'Типи інвойсів',
-  'Add payment method': 'Додати спосіб оплати',
-  'Update payment method': 'Оновити спосіб оплати',
 
   Shipments: 'Відвантаження',
   Shipment: 'Відвантаження',
-  'Shipment method': 'Спосіб відвантаження',
-  'Shipment methods': 'Способи відвантаження',
-  'Add shipment method': 'Додати спосіб відвантаження',
-  'Update shipment method': 'Оновити спосіб відвантаження',
+
   Destination: 'Місце призначенн',
   'Enter destination address': 'Введіть адресу призначення',
   'Has payment': 'Підлягає оплаті',
@@ -418,7 +440,6 @@ export const langUa = {
   'Change receiver': 'Змінити отримувача',
   'Receiver information': 'Інформація про отримувача',
 
-  'Communication methods': 'Способи комунікацій',
   'Not needed': 'Не потрібно',
   'Permission check, please wait': 'Перевірка дозволу, будь ласка зачекайте',
   'Please wait while minions do their work...': 'Будь ласка зачекайте поки міньйони роблять свою роботу...',

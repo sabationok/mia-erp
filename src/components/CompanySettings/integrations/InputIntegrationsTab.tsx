@@ -2,7 +2,7 @@ import { ReactElement, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
 import { enumToFilterOptions } from '../../../utils/fabrics';
-import { ExtIntegrationServiceTypeEnum, ExtServiceBase } from '../../../redux/integrations/integrations.types';
+import { ExternalServiceTypeEnum, ExtServiceBase } from '../../../redux/integrations/integrations.types';
 import InvoicingIntegrationsTab from './nested_tabs/InvoicingIntegrationsTab';
 import DeliveryIntegrationsTab from './nested_tabs/DeliveryIntegrationsTab';
 import CommunicationIntegrationsTab from './nested_tabs/CommunicationIntegrationsTab';
@@ -20,11 +20,11 @@ export interface IntegrationTabProps {
   infoVisible?: boolean;
 }
 
-const ExtServiceTabs = _.pick(ExtIntegrationServiceTypeEnum, ['invoicing', 'delivery', 'communication']);
+const ExtServiceTabs = _.pick(ExternalServiceTypeEnum, ['invoicing', 'delivery', 'communication']);
 const tabs = enumToFilterOptions(ExtServiceTabs);
 
 const tabsMap: Record<
-  ExtIntegrationServiceTypeEnum | string,
+  ExternalServiceTypeEnum | string,
   <P = any>(props: IntegrationTabProps & P) => ReactElement<P> | null
 > = {
   [ExtServiceTabs.invoicing]: InvoicingIntegrationsTab,
@@ -49,9 +49,15 @@ const InputIntegrationsTab: React.FC<InputIntegrationsTabProps> = ({ ...props })
   const TabComponent = useMemo(() => tabsMap[currentType], [currentType]);
 
   useEffect(() => {
-    if (extServProviders.length === 0) {
-      loadExtServices({ params: { type: 'input' } }).then(d => {});
-    }
+    loadExtServices();
+    // if (extServProviders.length === 0) {
+    // }
+    // service.getAll({
+    //   data: { type: 'input' },
+    //   onSuccess: data => {
+    //     setIntegrationsList(data);
+    //   },
+    // });
     // eslint-disable-next-line
   }, []);
 

@@ -17,6 +17,7 @@ export { default as WarehousesApi } from './warehouses.api';
 export { default as PaymentsApi } from './payments.api';
 export { default as InvoicesApi } from './invoices.api';
 export { default as ShipmentsApi } from './shipments.api';
+export { default as DeliveriesApi } from './deliveries.api';
 export { default as CustomersApi } from './customers.api';
 export { default as CommunicationApi } from './communication.api';
 export { default as ExtServicesApi } from './ext-services.api';

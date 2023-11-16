@@ -55,13 +55,13 @@ const useLoadInitialAppDataHook = ({
           await prService.getAllByCompanyId({ data: { refresh: true, companyId: company._id } });
         }
 
-        await products.getAllProperties({ data: { params: { createTreeData: true } } });
-        await products.getAll({ data: { refresh: true } });
-        await warehouses.getAll({ data: { refresh: true } });
-        await priceManagement.getAll({ data: { refresh: true } });
+        products.getAllProperties({ data: { params: { createTreeData: true } } });
+        products.getAll({ data: { refresh: true } });
+        warehouses.getAll({ data: { refresh: true } });
+        priceManagement.getAll({ data: { refresh: true } });
         //  transactions.getAll({ data: { refresh: true } });
 
-        await integrations.getAllExtServices({
+        integrations.getAllExtServices({
           onSuccess: () => {
             invoicing.getAllMethods();
             payments.getAllMethods();
@@ -69,13 +69,18 @@ const useLoadInitialAppDataHook = ({
             customers.getAllMethods();
           },
         });
-        await Promise.allSettled([
-          ...directoriesForLoading.map(({ dirType, createTreeData }) => {
-            return getAllByDirType({
-              data: { dirType, params: { createTreeData } },
-            });
-          }),
-        ]);
+        directoriesForLoading.map(({ dirType, createTreeData }) => {
+          return getAllByDirType({
+            data: { dirType, params: { createTreeData } },
+          });
+        });
+        // await Promise.allSettled([
+        //   ...directoriesForLoading.map(({ dirType, createTreeData }) => {
+        //     return getAllByDirType({
+        //       data: { dirType, params: { createTreeData } },
+        //     });
+        //   }),
+        // ]);
         onSuccess && onSuccess();
         onLoading && onLoading(false);
         close();

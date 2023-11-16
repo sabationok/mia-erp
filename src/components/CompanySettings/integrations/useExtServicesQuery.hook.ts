@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ExtServiceBase, IntegrationTypeEnum } from '../../../redux/integrations/integrations.types';
+import { ExternalServiceTypeEnum, ExtServiceBase } from '../../../redux/integrations/integrations.types';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppQueryParams } from '../../../api';
 
@@ -10,7 +10,7 @@ export function useExtServicesQuery() {
     integrations: { getAllExtServices },
   } = useAppServiceProvider();
 
-  const loadExtServices = ({ params }: { params?: AppQueryParams<keyof typeof IntegrationTypeEnum> } = {}) => {
+  const loadExtServices = ({ params }: { params?: AppQueryParams<ExternalServiceTypeEnum> } = {}) => {
     return getAllExtServices({
       data: { params },
       onSuccess: setExtServProviders,
@@ -31,7 +31,7 @@ export function useInputIntegrationsQuery() {
     integrations: { getAllExtServices },
   } = useAppServiceProvider();
 
-  const loadExtServices = ({ params }: { params?: AppQueryParams<keyof typeof IntegrationTypeEnum> } = {}) => {
+  const loadExtServices = ({ params }: { params?: AppQueryParams } = {}) => {
     return getAllExtServices({
       data: { params },
       onSuccess: setExtServProviders,

@@ -75,7 +75,12 @@ export const persistorConfigs: Record<
   shipments: {
     key: 'shipments',
     storage: storageSession,
-    whitelist: ['shipments', 'currentShipment'],
+    whitelist: ['shipments', 'methods', 'currentShipment'],
+  },
+  deliveries: {
+    key: 'deliveries',
+    storage: storageSession,
+    whitelist: ['deliveries', 'methods'],
   },
   refunds: {
     key: 'refunds',

@@ -16,6 +16,7 @@ export enum AppModuleName {
   invoices = 'invoices',
   payments = 'payments',
   shipments = 'shipments',
+  deliveries = 'deliveries',
   refunds = 'refunds',
   warehouses = 'warehouses',
   customers = 'customers',
