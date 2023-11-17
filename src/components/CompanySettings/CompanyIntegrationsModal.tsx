@@ -32,7 +32,9 @@ const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose,
 
       <ModalFilter filterOptions={integrationTypeTabs} onOptSelect={info => setIntegrationType(info?.value)} />
 
-      {renderModalContent}
+      <FlexBox overflow={'auto'} flex={1} fillWidth>
+        {renderModalContent}
+      </FlexBox>
 
       <ModalFooter onClick={onClose}></ModalFooter>
     </Container>

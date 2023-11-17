@@ -1,4 +1,4 @@
-import { IAccordionOptionProps } from 'components/SideBarContent/AccordeonList';
+import { IAccordionOptionProps } from 'components/SideBarContent/AccordionList';
 import { iconId } from 'img/sprite/iconId.data';
 import ModalForm from 'components/ModalForm';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';

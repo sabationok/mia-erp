@@ -11,10 +11,10 @@ import { useTranslatedMethodsList } from '../../../../hooks/useTranslatedMethods
 import { getIdRef, transformQueriesForReq } from '../../../../utils/dataTransform';
 import styled from 'styled-components';
 import ExtraFooterWithButton from '../../../atoms/ExtraFooterWithButton';
-import IntegrationOverview from '../../components/IntegrationOverview';
 import { useCheckoutPaymentsSelector, useInvoicesSelector } from '../../../../redux/selectors.store';
 import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../../redux/reduxTypes.types';
+import InputIntegrationsList from '../../components/InputIntegrationsList';
 
 export interface InvoicingIntegrationsTabProps extends IntegrationTabProps {}
 
@@ -86,18 +86,6 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
     });
   }, [currentServiceData?._id, checkoutMethods]);
 
-  const renderIntegrations = useMemo(() => {
-    return integrationsList.map(int => {
-      return (
-        <IntegrationOverview
-          key={int?._id}
-          info={int}
-          isDefault={currentServiceData?.defIntegration?._id === int._id}
-        />
-      );
-    });
-  }, [currentServiceData?.defIntegration?._id, integrationsList]);
-
   // useEffect(() => {
   //   if (!provider && providers) {
   //     providers[0] && setProvider(providers[0]?.value);
@@ -106,51 +94,57 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
 
   return (
     <FlexBox fillWidth flex={1} overflow={'hidden'}>
-      <FlexBox fillWidth flex={1} padding={'8px 4px 0'} overflow={'hidden'}>
-        <List overflow={'auto'} isVisible={isListVisible} fillWidth>
-          <Text $size={11} $weight={600} $margin={'4px 8px'}>
-            {t('Invoicing methods')}
-          </Text>
+      <List overflow={'hidden'} isVisible={isListVisible} fillWidth>
+        <Text $size={11} $weight={600} $margin={'4px 8px'}>
+          {t('Invoicing methods')}
+        </Text>
 
-          <FlexBox fxDirection={'row'} padding={'4px 2px'} flexWrap={'wrap'} gap={4} fillWidth>
-            {renderInvoicingMethods}
-          </FlexBox>
-
-          <Text $size={11} $weight={600} $margin={'4px 8px'}>
-            {t('Payment checkout services')}
-          </Text>
-
-          <FlexBox fxDirection={'row'} padding={'4px 2px'} flexWrap={'wrap'} gap={4} fillWidth>
-            {renderCheckoutMethods}
-          </FlexBox>
-
-          {/*<Text $size={11} $weight={600} $margin={'4px 8px'}>*/}
-          {/*  {t('Support')}*/}
-          {/*</Text>*/}
-
-          {/*<Text $size={16}>{t('+380 5632 55623')}</Text>*/}
-
-          {/*<Text $size={11} $weight={600} $margin={'4px 8px'}>*/}
-          {/*  {t('Url')}*/}
-          {/*</Text>*/}
-
-          {/*<Text $size={16}>{t('www.monobank.ua/contacts')}</Text>*/}
-        </List>
-
-        <ButtonIcon
-          variant={'textExtraSmall'}
-          icon={isListVisible ? 'SmallArrowUp' : 'SmallArrowDown'}
-          onClick={handleToggleListVisibility}
-        >
-          {t(isListVisible ? 'Hide' : 'More')}
-        </ButtonIcon>
-
-        <FlexBox fillWidth gap={8} flex={1} padding={'8px 2px'} overflow={'auto'}>
-          {renderIntegrations}
+        <FlexBox fxDirection={'row'} padding={'4px 2px'} flexWrap={'wrap'} gap={4} fillWidth>
+          {renderInvoicingMethods}
         </FlexBox>
 
-        <ExtraFooterWithButton onClick={onOpenModalPress} buttonText={t('Add new')} />
+        <Text $size={11} $weight={600} $margin={'4px 8px'}>
+          {t('Payment checkout services')}
+        </Text>
+
+        <FlexBox fxDirection={'row'} padding={'4px 2px'} flexWrap={'wrap'} gap={4} fillWidth>
+          {renderCheckoutMethods}
+        </FlexBox>
+
+        {/*<Text $size={11} $weight={600} $margin={'4px 8px'}>*/}
+        {/*  {t('Support')}*/}
+        {/*</Text>*/}
+
+        {/*<Text $size={16}>{t('+380 5632 55623')}</Text>*/}
+
+        {/*<Text $size={11} $weight={600} $margin={'4px 8px'}>*/}
+        {/*  {t('Url')}*/}
+        {/*</Text>*/}
+
+        {/*<Text $size={16}>{t('www.monobank.ua/contacts')}</Text>*/}
+      </List>
+
+      <ButtonIcon
+        variant={'textExtraSmall'}
+        icon={isListVisible ? 'SmallArrowUp' : 'SmallArrowDown'}
+        onClick={handleToggleListVisibility}
+      >
+        {t(isListVisible ? 'Hide' : 'More')}
+      </ButtonIcon>
+
+      <FlexBox fillWidth gap={8} flex={1} padding={'8px 2px'} overflow={'hidden'}>
+        {/*{renderIntegrations}*/}
+
+        <InputIntegrationsList
+          list={integrationsList}
+          onEdit={() => {}}
+          onSetAsDefault={() => {}}
+          onDelete={() => {}}
+          active={currentServiceData?.defIntegration}
+        />
       </FlexBox>
+
+      <ExtraFooterWithButton onClick={onOpenModalPress} buttonText={t('Add new')} />
     </FlexBox>
   );
 };

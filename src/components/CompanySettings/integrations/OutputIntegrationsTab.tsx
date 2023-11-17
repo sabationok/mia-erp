@@ -6,7 +6,7 @@ import { useModalService } from '../../ModalProvider/ModalProvider';
 import FormCreateOutputIntegration from '../../Forms/integrations/FormCreateOutputIntegration';
 import { useEffect, useMemo, useState } from 'react';
 import { OutputIntegrationBase } from '../../../redux/integrations/integrations.types';
-import AccordeonList, { IAccordionOptionProps } from '../../SideBarContent/AccordeonList';
+import AccordionList, { IAccordionOptionProps } from '../../SideBarContent/AccordionList';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { Text } from '../../atoms/Text';
@@ -81,10 +81,8 @@ const OutputIntegrationsTab: React.FC<OutputIntegrationsTabProps> = () => {
   }, []);
 
   return (
-    <Container flex={1} fillWidth>
-      <FlexBox flex={1} fillWidth>
-        <AccordeonList options={preparedList} />
-      </FlexBox>
+    <Container flex={1} fillWidth overflow={'hidden'}>
+      <AccordionList options={preparedList} />
 
       <ExtraFooterWithButton buttonText={t('Add one')} onClick={handleCreateOne} />
     </Container>

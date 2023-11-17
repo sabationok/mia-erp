@@ -68,21 +68,19 @@ const InputIntegrationsTab: React.FC<InputIntegrationsTabProps> = ({ ...props })
   }, [providerType, providers]);
 
   return (
-    <Container flex={1} fillWidth>
+    <>
       <ModalFilter filterOptions={tabs} onOptSelect={info => setCurrentType(info?.value)} />
 
       <ModalFilter filterOptions={providers} onFilterValueSelect={info => setProviderType(info.value)} />
 
-      <FlexBox flex={1} fillWidth overflow={'auto'}>
+      <Container flex={1} fillWidth overflow={'hidden'}>
         <TabComponent compId={currentType} providers={providers} currentService={currentServiceData} infoVisible />
-      </FlexBox>
-    </Container>
+      </Container>
+    </>
   );
 };
 
 const Container = styled(FlexBox)`
-  padding: 0 8px;
-
   max-width: 100%;
   width: 480px;
 

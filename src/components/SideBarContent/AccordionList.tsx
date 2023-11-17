@@ -1,10 +1,12 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
+import FlexBox from '../atoms/FlexBox';
 
 export interface IAccordionOptionProps<Props = any, Opt = any> extends React.HTMLAttributes<HTMLLIElement> {
   title?: string;
   options?: Opt[];
+  isActive?: boolean;
   disabled?: boolean;
   ChildrenComponent?: React.FC<Props>;
   childrenComponentProps?: Props;
@@ -15,7 +17,7 @@ export interface IAccordionListProps extends React.HTMLAttributes<HTMLUListEleme
   options: IAccordionOptionProps[];
 }
 
-const AccordeonList: React.FC<IAccordionListProps> = ({ options, children }) => {
+const AccordionList: React.FC<IAccordionListProps> = ({ options, children }) => {
   const [current, setCurrent] = useState<number | null>(0);
 
   function onCurrentClick(idx: number) {
@@ -25,23 +27,28 @@ const AccordeonList: React.FC<IAccordionListProps> = ({ options, children }) => 
   const renderOptions = useMemo(
     () =>
       options?.length > 0 &&
-      options.map(({ title, options, renderChildren, ChildrenComponent, childrenComponentProps, disabled }, idx) => (
-        <AccordeonItem key={`AccordionListItem-${title || idx}`} isOpen={current === idx}>
-          <OpenButton
-            variant="def"
-            endIconId="SmallArrowDown"
-            isOpen={current === idx}
-            disabled={disabled}
-            onClick={onCurrentClick(idx)}
-          >
-            {title}
-          </OpenButton>
+      options.map(
+        ({ title, options, isActive, renderChildren, ChildrenComponent, childrenComponentProps, disabled }, idx) => (
+          <AccordeonItem key={`AccordionListItem-${title || idx}`} isOpen={current === idx}>
+            <Header>
+              <OpenButton
+                variant="def"
+                endIconId="SmallArrowDown"
+                isOpen={current === idx}
+                disabled={disabled}
+                onClick={onCurrentClick(idx)}
+                isActive={isActive}
+              >
+                {title}
+              </OpenButton>
+            </Header>
 
-          <ChildrenBox isOpen={current === idx}>
-            {renderChildren || (ChildrenComponent ? <ChildrenComponent options={options} /> : null)}
-          </ChildrenBox>
-        </AccordeonItem>
-      )),
+            <ChildrenBox isOpen={current === idx}>
+              {renderChildren || (ChildrenComponent ? <ChildrenComponent options={options} /> : null)}
+            </ChildrenBox>
+          </AccordeonItem>
+        )
+      ),
     [current, options]
   );
   return <AccoredeonListBox>{renderOptions}</AccoredeonListBox>;
@@ -49,6 +56,8 @@ const AccordeonList: React.FC<IAccordionListProps> = ({ options, children }) => 
 const AccoredeonListBox = styled.ul`
   display: flex;
   flex-direction: column;
+
+  overflow: auto;
 `;
 const AccordeonItem = styled.li<{ isOpen?: boolean }>`
   display: flex;
@@ -64,6 +73,15 @@ const ChildrenBox = styled.div<{ isOpen?: boolean }>`
 
   transition: all ${({ theme }) => theme.globals.timingFnLong};
 `;
+const Header = styled(FlexBox)`
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 20;
+
+  background-color: ${p => p.theme.modalBackgroundColor};
+  border-bottom: 1px solid ${({ theme }) => theme.sideBarBorderColor};
+`;
 const OpenButton = styled(ButtonIcon)<{ isOpen?: boolean }>`
   justify-content: space-between;
 
@@ -76,10 +94,9 @@ const OpenButton = styled(ButtonIcon)<{ isOpen?: boolean }>`
 
   border: 0;
   border-radius: 0;
-  border-bottom: 1px solid ${({ theme }) => theme.sideBarBorderColor};
 
-  color: ${({ isOpen, theme }) => (isOpen ? theme.accentColor.base : '')};
-  fill: ${({ isOpen, theme }) => (isOpen ? theme.accentColor.base : '')};
+  color: ${({ isOpen, isActive, theme }) => (isActive || isOpen ? theme.accentColor.base : '')};
+  fill: ${({ isOpen, isActive, theme }) => (isActive || isOpen ? theme.accentColor.base : '')};
 
   & .endIcon {
     transform: ${({ isOpen }) => `rotate(${isOpen ? 180 : 0}deg)`};
@@ -90,4 +107,4 @@ const OpenButton = styled(ButtonIcon)<{ isOpen?: boolean }>`
   }
 `;
 
-export default AccordeonList;
+export default AccordionList;

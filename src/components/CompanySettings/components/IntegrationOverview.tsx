@@ -35,35 +35,45 @@ const IntegrationOverview = ({
   ];
 
   return (
-    <Card fxDirection={'row'} padding={'4px'} borderRadius={'4px'} fillWidth>
-      <FlexBox flex={1} padding={'4px'} gap={8}>
+    <Card fillWidth>
+      <FlexBox flex={1} padding={'4px 0'} gap={8}>
         {rows.map(
           info =>
             info?.value && (
               <FlexBox key={info.title}>
-                <Text $size={12} $weight={600}>
-                  {info.title}
-                </Text>
+                <Text $size={10}>{info.title}</Text>
 
-                <Text>{info?.value}</Text>
+                <Text $size={12} $weight={500}>
+                  {info?.value}
+                </Text>
               </FlexBox>
             )
         )}
       </FlexBox>
 
-      <FlexBox gap={6}>
+      <FlexBox
+        gap={6}
+        fillWidth
+        alignItems={'center'}
+        fxDirection={'row'}
+        padding={'8px 0'}
+        justifyContent={'space-between'}
+        xsStyles={{ fxDirection: 'column' }}
+      >
         <ButtonIcon
-          variant={'textExtraSmall'}
+          variant={'outlinedSmall'}
           onClick={onSetAsDefaultPress}
           disabled={isDefault || !onSetAsDefaultPress}
         >
           {t('Activate')}
         </ButtonIcon>
-        <ButtonIcon variant={'textExtraSmall'} onClick={onDeletePress} disabled={!onDeletePress}>
-          {t('Delete')}
-        </ButtonIcon>
-        <ButtonIcon variant={'textExtraSmall'} onClick={onEditPress} disabled={!onEditPress}>
+
+        <ButtonIcon variant={'textSmall'} onClick={onEditPress} disabled={!onEditPress}>
           {t('Edit')}
+        </ButtonIcon>
+
+        <ButtonIcon variant={'filledSmall'} onClick={onDeletePress} disabled={!onDeletePress}>
+          {t('Delete')}
         </ButtonIcon>
       </FlexBox>
     </Card>
@@ -71,8 +81,8 @@ const IntegrationOverview = ({
 };
 
 const Card = styled(FlexBox)`
-  border: 1px solid ${p => (p.isActive ? p.theme.accentColor.base : p.theme.modalBorderColor)};
-  border-left-width: 3px;
+  // border: 1px solid ${p => (p.isActive ? p.theme.accentColor.base : p.theme.modalBorderColor)};
+  // border-left-width: 3px;
 `;
 
 export default IntegrationOverview;

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import AccordeonList, { IAccordionOptionProps } from './AccordeonList';
+import AccordionList, { IAccordionOptionProps } from './AccordionList';
 
 export interface IReportsProps {
   options: IAccordionOptionProps[];
@@ -8,7 +8,7 @@ export interface IReportsProps {
 const Reports: React.FC<IReportsProps> = props => {
   return (
     <Container>
-      <AccordeonList options={props.options}></AccordeonList>
+      <AccordionList options={props.options}></AccordionList>
     </Container>
   );
 };
