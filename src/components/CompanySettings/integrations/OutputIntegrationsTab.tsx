@@ -34,16 +34,36 @@ const OutputIntegrationsTab: React.FC<OutputIntegrationsTabProps> = () => {
   };
 
   const preparedList = useMemo((): IAccordionOptionProps[] => {
-    return integrationsList.map((opt): IAccordionOptionProps => {
+    return integrationsList.map((opt: OutputIntegrationBase): IAccordionOptionProps => {
       return {
         title: opt.label,
         ChildrenComponent: () => (
           <FlexBox fillWidth padding={'8px 2px'} gap={8}>
+            <Text $size={12} $weight={600}>
+              {t('Public key')}
+            </Text>
             <Text>{opt.apiKey}</Text>
+            <Text $size={12} $weight={600}>
+              {t('Redirect base url')}
+            </Text>
+            <Text>{opt?.redirectBaseUrl}</Text>
             {opt.expiredAt && (
-              <Text>{formatDate(isNumber(opt.expiredAt) ? opt.expiredAt : new Date(opt.expiredAt))}</Text>
+              <>
+                <Text $size={12} $weight={600}>
+                  {t('Expire at ')}
+                </Text>
+                <Text>{formatDate(isNumber(opt.expiredAt) ? opt.expiredAt : new Date(opt.expiredAt))}</Text>
+              </>
             )}
-            <Text>{opt.description}</Text>
+            {opt.description && (
+              <>
+                <Text $size={12} $weight={600}>
+                  {t('Description')}
+                </Text>
+
+                <Text>{opt.description}</Text>
+              </>
+            )}
           </FlexBox>
         ),
       };

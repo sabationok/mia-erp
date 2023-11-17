@@ -69,8 +69,12 @@ const FormCreateOutputIntegration: React.FC<FormCreateOutputIntegrationProps> = 
           <InputText placeholder={t('Expired at')} type={'datetime-local'} {...form.register('expiredAt')} />
         </InputLabel>
 
-        <InputLabel label={t('Description')}>
-          <InputText placeholder={t('Description')} {...form.register('description')} />
+        <InputLabel label={t('Redirect base url')}>
+          <InputText placeholder={t('https://')} {...form.register('redirectBaseUrl')} />
+        </InputLabel>
+
+        <InputLabel label={t('Comment')}>
+          <InputText placeholder={t('Comment')} {...form.register('description')} />
         </InputLabel>
       </FlexBox>
     </ModalForm>

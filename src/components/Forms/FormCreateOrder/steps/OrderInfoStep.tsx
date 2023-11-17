@@ -22,7 +22,11 @@ import CreateCustomerButtonIcon from '../components/CreateCustomerButtonIcon';
 import CustomerInfoComponent from '../components/CustomerInfoComponent';
 import { destinationAddressInputsProps } from '../components/DestinationInputs';
 import { throttleCallback } from '../../../../utils/lodash.utils';
-import { useCommunicationSelector, useInvoicesSelector, useShipmentsSelector } from '../../../../redux/selectors.store';
+import {
+  useCommunicationSelector,
+  useDeliveriesSelector,
+  useInvoicesSelector,
+} from '../../../../redux/selectors.store';
 import * as fns from 'date-fns';
 import { formatDateForInputValue } from '../../../../utils';
 
@@ -54,13 +58,13 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
 
   const formValues = watch();
 
-  const shipmentMethodsList = useTranslatedMethodsList(useShipmentsSelector().methods, { withFullLabel: true });
+  const deliveryMethodsList = useTranslatedMethodsList(useDeliveriesSelector().methods, { withFullLabel: true });
   const communicationMethodsList = useTranslatedMethodsList(useCommunicationSelector().methods, {
     withFullLabel: true,
   });
   const invoicingMethods = useTranslatedMethodsList(useInvoicesSelector().methods, { withFullLabel: true });
 
-  const setTouchedField = (path: FormFieldPaths) => {};
+  const setTouchedField = (_path: FormFieldPaths) => {};
 
   const [confirms, setConfirms] = useState<Record<ConfirmsStateKay | string, boolean>>({
     hasDelivery: !!formValues.deliveryInfo,
@@ -346,10 +350,10 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
             <BorderedBox fillWidth gap={8}>
               <InputLabel label={t('Delivery method')} required>
                 <CheckboxesListSelector
-                  options={shipmentMethodsList}
+                  options={deliveryMethodsList}
                   currentOption={formValues?.deliveryInfo?.method}
                   onChangeIndex={i => {
-                    handleOnChangeValue('deliveryInfo.method', shipmentMethodsList[i]);
+                    handleOnChangeValue('deliveryInfo.method', deliveryMethodsList[i]);
                   }}
                 />
               </InputLabel>

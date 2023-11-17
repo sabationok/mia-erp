@@ -1,6 +1,8 @@
 export enum ENV_KEYS {
   ERP_API_KEY = 'ERP_API_KEY',
 
+  PROVIDER = 'PROVIDER',
+
   FRB_apiKey = 'FRB_apiKey',
   FRB_authDomain = 'FRB_authDomain',
   FRB_databaseURL = 'FRB_databaseURL',
@@ -27,6 +29,13 @@ export default class ConfigService {
   }
   public static get(name: keyof typeof ENV_KEYS) {
     return process.env[name];
+  }
+  public static get baseApiProvider() {
+    console.log(this.get(ENV_KEYS.PROVIDER));
+    return {
+      isRailway: this.get(ENV_KEYS.PROVIDER) === 'railway',
+      isLocalhost: this.get(ENV_KEYS.PROVIDER) === 'localhost',
+    };
   }
 
   public static getFireBaseConfig() {

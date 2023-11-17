@@ -63,10 +63,12 @@ export interface IOrderSlotDto {
 export interface IOrderTempSlot extends IOrderSlotBase {
   tempId?: string;
 }
+
 export interface OrderTotals {
   items?: number;
   amount?: number;
 }
+
 export interface IOrder extends IBase {
   owner?: ICompany;
   manager?: IManager;
@@ -94,6 +96,20 @@ export interface IOrder extends IBase {
   payments?: IPayment[];
 }
 
+export interface FormDataLocationRef {
+  ref: string;
+  label: string;
+}
+
+export type FormDataLocationRefs = Record<keyof LocationRefsDto, FormDataLocationRef>;
+
+export interface LocationRefsDto {
+  country?: string;
+  area?: string;
+  city?: string;
+  street?: string;
+}
+
 export interface ICreateOrderInfoFormState {
   manager?: {
     _id: string;
@@ -116,6 +132,7 @@ export interface ICreateOrderInfoFormState {
   };
   deliveryInfo?: {
     method?: IFormDataValueWithUUID;
+    locationRefs?: FormDataLocationRefs;
     destination?: AddressDto;
 
     invoiceInfo?: {
@@ -141,6 +158,7 @@ export interface IOrderReqData {
   data: IOrderBaseDto;
   params?: AppQueryParams;
 }
+
 export interface ICreateOrderInfoDto {
   manager?: OnlyUUID;
   customer?: OnlyUUID;
@@ -160,6 +178,7 @@ export interface ICreateOrderInfoDto {
   };
   deliveryInfo?: {
     method?: OnlyUUID;
+    locationRefs?: LocationRefsDto;
     destination?: AddressDto;
 
     invoiceInfo?: {
@@ -168,10 +187,12 @@ export interface ICreateOrderInfoDto {
     };
   };
 }
+
 export interface ICreateOrdersGroupDto {
   slots?: IOrderSlotDto[];
   info?: ICreateOrderInfoDto;
 }
+
 export interface ICreateOrdersWithSlotsAndGroupByWarehousesReqData {
   data: ICreateOrdersGroupDto;
   params?: AppQueryParams;

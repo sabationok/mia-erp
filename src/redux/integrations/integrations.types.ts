@@ -88,7 +88,9 @@ export interface InputIntegrationBase extends IBase {
   label?: string;
   description?: string;
 }
-export interface OutputIntegrationBase extends InputIntegrationBase {}
+export interface OutputIntegrationBase extends InputIntegrationBase {
+  redirectBaseUrl?: string;
+}
 
 export interface IntegrationBaseDto {
   expiredAt?: string | Date | number;
@@ -118,6 +120,7 @@ export interface InputIntegrationDto extends IntegrationBaseDto {
 export interface CreateOutputIntegrationFormData
   extends Partial<Pick<IntegrationBaseDto, 'description' | 'expiredAt' | 'label'>> {
   role?: IFormDataValueWithUUID;
+  redirectBaseUrl?: string;
 }
 export interface OutputIntegrationDto extends IntegrationBaseDto {
   role?: OnlyUUID;
