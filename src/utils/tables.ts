@@ -5,6 +5,35 @@ import { IVariation, IVariationTableData, VariationPropertiesMapInTableData } fr
 import { AmountAndPercentage, PriceAmountAndPercentageFields } from '../redux/priceManagement/priceManagement.types';
 import { IProductInventory } from '../redux/warehouses/warehouses.types';
 import numberWithSpaces from './numbers';
+import { ITableAction, ITableListContext } from '../components/TableList/tableTypes.types';
+import { NavigateFunction } from 'react-router/dist/lib/hooks';
+import { IModalProviderContext } from '../components/ModalProvider/ModalProvider';
+
+export interface TableActionsBuilderControls<Service = any, Extra = any> {
+  // ctx: ITableListContext<TData>;
+  navigate?: NavigateFunction;
+  service: Service;
+  modalService: IModalProviderContext;
+  extra?: Extra;
+}
+export type TableActionCreator<Service = any, TData = any, Extra = any, Name extends string = any> = (
+  params: TableActionsBuilderControls<Service, Extra> & { ctx: ITableListContext<TData> }
+) => ITableAction<Name>;
+export class TableActionsBuilder<Service = any, TData = any, Extra = any, Name extends string = any> {
+  private map: Map<Name, TableActionCreator<Service, TData, Extra, Name>> = new Map([]);
+
+  // constructor(private readonly controls: TableActionsBuilderControls<Service, TData, Extra>) {}
+  add(name: Name, creator: TableActionCreator<Service, TData, Extra, Name>) {
+    this.map.set(name, creator);
+    return this;
+  }
+  activate(controls: TableActionsBuilderControls<Service, Extra>) {
+    return (ctx: ITableListContext<TData>) => this.build(ctx, controls);
+  }
+  private build(ctx: ITableListContext<TData>, controls: TableActionsBuilderControls<Service, Extra>) {
+    return Array.from(this.map.values()).map(creator => creator({ ctx, ...controls }));
+  }
+}
 
 export const transformVariationTableData = (variation: IVariation): IVariationTableData => {
   let propertiesMap: VariationPropertiesMapInTableData = {};

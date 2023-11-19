@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ICreateOrdersGroupFormState, IOrder } from './orders.types';
+import { ICreateOrdersGroupFormState, IOrder, IOrdersGroup } from './orders.types';
 
 import {
   AddSlotToGroupAction,
@@ -10,16 +10,13 @@ import {
 } from './orders.actions';
 
 export interface IOrdersState {
-  orders: any[];
+  orders: IOrder[];
+  orderGroups?: IOrdersGroup[];
   currentOrder?: IOrder;
   ordersGroupFormData: ICreateOrdersGroupFormState;
   filteredOrders?: [];
   isLoading: boolean;
   error: any;
-}
-
-export interface IOrdersGroupBase {
-  orders: IOrder[];
 }
 
 const initialOrdersGroupFormData: ICreateOrdersGroupFormState = {
@@ -29,7 +26,7 @@ const initialOrdersGroupFormData: ICreateOrdersGroupFormState = {
 };
 const initialOrdersState: IOrdersState = {
   orders: [],
-  currentOrder: { _id: '' },
+  currentOrder: { _id: '', magicLink: '' },
   ordersGroupFormData: initialOrdersGroupFormData,
   isLoading: false,
   error: null,

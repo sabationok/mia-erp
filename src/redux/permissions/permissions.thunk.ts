@@ -6,6 +6,7 @@ import { CompaniesApi, PermissionsApi } from '../../api';
 import { ICompanyForReq } from '../companies/companies.types';
 import { createUpdateCompanyThunk } from '../companies/companies.thunks';
 import { IUser } from '../auth/auth.types';
+import { CompanyQueryType } from '../global.types';
 
 enum PermissionsThunkType {
   getAllPermissionsByUserId = 'permissions/getAllPermissionsByUserIdThunk',
@@ -27,10 +28,11 @@ export const getAllPermissionsByUserIdThunk = createAsyncThunk<
   IPermission[],
   ThunkPayload<{
     userId: string;
+    query?: { type?: CompanyQueryType };
   }>
 >(PermissionsThunkType.getAllPermissionsByUserId, async ({ data, onSuccess, onError }, thunkAPI) => {
   try {
-    const response = await PermissionsApi.getAllByUserId(data?.userId as string);
+    const response = await PermissionsApi.getAllByUserId(data);
     if (response) {
       onSuccess && onSuccess(response.data.data);
     }

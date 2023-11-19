@@ -1,31 +1,20 @@
-import { IBase, IFormDataValueWithUUID } from '../global.types';
+import { IBase, IFormDataValueWithUUID, MagicLinkRef } from '../global.types';
 import { IOrder, IOrderSlot } from '../orders/orders.types';
 import { IPayment } from '../payments/payments.types';
-import { IShipment } from '../shipments/shipments.types';
 import { IInvoicingMethod } from '../integrations/integrations.types';
-import { AppQueryParams } from '../../api';
+import { IDelivery } from '../deliveries/deliveries.types';
 
-export enum InvoicingTypeEnum {
-  hold = 'hold',
-  debit = 'debit',
-  pay = 'pay',
-
-  bankTransfer = 'bankTransfer',
-  afterPay = 'afterPay',
-  courier = 'courier',
-}
-
-export interface IInvoice extends IBase {
+export interface IInvoice extends IBase, MagicLinkRef {
   order?: IOrder;
-  slots?: IOrderSlot[];
-
-  shipment?: IShipment;
-
-  type: InvoicingTypeEnum;
-
-  payments?: IPayment[];
+  delivery?: IDelivery;
 
   amount?: number;
+  expiredAt?: Date | string | number;
+  validity?: number;
+
+  slots?: IOrderSlot[];
+
+  payments?: IPayment[];
 
   method?: IInvoicingMethod;
 }
@@ -40,21 +29,5 @@ export interface IInvoiceBaseFormData {
   order?: IFormDataValueWithUUID;
   slots?: IFormDataValueWithUUID[];
 
-  shipment?: IFormDataValueWithUUID;
-}
-
-// export interface IInvoicingMethod extends IBase {
-//   label?: string;
-//   labels?: LangPack;
-//   disabled?: boolean;
-//   isDefault?: boolean;
-//   lang?: LangPack;
-//   type?: string;
-//   service?: ExtInvoicingService | null;
-//   extService?: ExtInvoicingService | null;
-// }
-export interface IInvoicingMethodReqData {
-  _id?: string;
-  data?: Partial<IInvoicingMethod>;
-  params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>;
+  delivery?: IFormDataValueWithUUID;
 }

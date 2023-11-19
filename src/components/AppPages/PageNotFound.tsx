@@ -39,6 +39,16 @@ export const errors: IErrors = {
 const PageNotFound: React.FC<IErrorPageProps> = ({ errName = 'notFoundPage' }) => {
   return (
     <Page className={'PageNotFound'}>
+      {/*<form method="POST" action="https://www.liqpay.ua/api/3/checkout" accept-charset="utf-8">*/}
+      {/*  <input*/}
+      {/*    type="hidden"*/}
+      {/*    name="data"*/}
+      {/*    value="eyJwdWJsaWNfa2V5IjoiaTAwMDAwMDAwIiwidmVyc2lvbiI6IjMiLCJhY3Rpb24iOiJwYXkiLCJhbW91bnQiOiIzIiwiY3VycmVuY3kiOiJVQUgiLCJkZXNjcmlwdGlvbiI6InRlc3QiLCJvcmRlcl9pZCI6IjAwMDAwMSJ9"*/}
+      {/*  />*/}
+      {/*  <input type="hidden" name="signature" value="wR+UZDC4jjeL/qUOvIsofIWpZh8=" />*/}
+      {/*  <input type="image" src="//static.liqpay.ua/buttons/p1ru.radius.png" />*/}
+      {/*</form>*/}
+
       <ErrorNotification>
         <ErrorCode>{errors[errName]?.status}</ErrorCode>
 

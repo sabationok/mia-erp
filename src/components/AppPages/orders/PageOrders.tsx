@@ -1,7 +1,7 @@
 import TableList from 'components/TableList/TableList';
 import { takeFullGridArea } from '../pagesStyles';
 import styled from 'styled-components';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ITableListProps } from '../../TableList/tableTypes.types';
 import AppGridPage from '../AppGridPage';
 import { useOrdersSelector } from '../../../redux/selectors.store';
@@ -12,7 +12,7 @@ import { IOrder, OrderStatusEnum } from '../../../redux/orders/orders.types';
 import useOrdersActionsCreatorHook from '../../../hooks/useOrdersActionsCreator.hook';
 import { BaseAppPageProps } from '../index';
 import { enumToFilterOptions } from '../../../utils/fabrics';
-import ModalFilter from '../../ModalForm/ModalFilter';
+import ModalFilter, { FilterOption } from '../../ModalForm/ModalFilter';
 import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
@@ -40,35 +40,34 @@ const ordersFilterOptions = enumToFilterOptions(OrderStatusEnum);
 const PageOrders: React.FC<any> = (props: Props) => {
   const { tableConfig, isLoading } = useOrderTableConfigs();
   const [filterButtonResults] = useState<Record<OrderStatusEnum | string, number | string>>({});
+  const renderLabel = useCallback(
+    (info: { option?: FilterOption<OrderStatusEnum>; index: number; isActive: boolean }) => {
+      return (
+        <FlexBox
+          justifyContent={'space-between'}
+          fillHeight
+          fillWidth
+          overflow={'hidden'}
+          padding={'2px 4px'}
+          gap={6}
+          style={{ cursor: 'inherit' }}
+        >
+          <Text $size={11} $weight={500} $textTransform={'none'}>
+            {info?.option?.label ?? null}
+          </Text>
 
+          <Text $size={10} $ellipsisMode>
+            {info?.option?.value ? filterButtonResults[info?.option?.value] : 0}
+          </Text>
+        </FlexBox>
+      );
+    },
+    [filterButtonResults]
+  );
   return (
     <AppGridPage path={props.path}>
       <Page>
-        <ModalFilter
-          style={{ height: 44 }}
-          filterOptions={ordersFilterOptions}
-          renderLabel={info => {
-            return (
-              <FlexBox
-                justifyContent={'space-between'}
-                fillHeight
-                fillWidth
-                overflow={'hidden'}
-                padding={'2px 4px'}
-                gap={6}
-                style={{ cursor: 'inherit' }}
-              >
-                <Text $size={12} $weight={600} $textTransform={'none'}>
-                  {info?.option?.label ?? null}
-                </Text>
-
-                <Text $size={10} $weight={500} $ellipsisMode>
-                  {info?.option?.value ? filterButtonResults[info?.option?.value] : 0}
-                </Text>
-              </FlexBox>
-            );
-          }}
-        />
+        <ModalFilter style={{ height: 44 }} filterOptions={ordersFilterOptions} renderLabel={renderLabel} />
 
         <FlexBox fillWidth flex={1}>
           <TableList {...tableConfig} isLoading={isLoading} />

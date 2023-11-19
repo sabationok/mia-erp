@@ -155,10 +155,18 @@ export interface IMethodReqData<Method = any> {
   data?: Omit<Method, '_id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDefault'>;
   params?: Pick<AppQueryParams, 'disabled' | 'isDefault' | 'disabledForClient'>;
 }
+export enum InvoicingTypeEnum {
+  hold = 'hold',
+  debit = 'debit',
+  pay = 'pay',
 
+  bankTransfer = 'bankTransfer',
+  afterPay = 'afterPay',
+  cash = 'cash',
+}
 export interface ICommunicationMethod extends ExtServiceMethodBase<string, ExtCommunicationService> {}
 export interface ICommunicationMethodReqData extends IMethodReqData<ICommunicationMethod> {}
-export interface IInvoicingMethod extends ExtServiceMethodBase<string, ExtInvoicingService> {}
+export interface IInvoicingMethod extends ExtServiceMethodBase<InvoicingTypeEnum, ExtInvoicingService> {}
 export interface IInvoicingMethodReqData extends IMethodReqData<IInvoicingMethod> {}
 export interface IDeliveryMethod extends ExtServiceMethodBase<string, ExtDeliveryService> {}
 export interface IDeliveryMethodReqData extends IMethodReqData<IDeliveryMethod> {}

@@ -4,8 +4,12 @@ import { ApiCallerPayload } from '../api/createApiCall.api';
 import { ApiDirType } from './APP_CONFIGS';
 
 export type UUID = string;
+export type MagicLink = string;
 export interface OnlyUUID {
   _id: UUID;
+}
+export interface MagicLinkRef {
+  magicLink: MagicLink;
 }
 
 export type ArrayUUID = Array<string>;

@@ -1,4 +1,4 @@
-import { AddressDto, AppResponse, IBase, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
+import { AddressDto, AppResponse, IBase, IFormDataValueWithUUID, MagicLinkRef, OnlyUUID } from '../global.types';
 import { IPriceBase, IPriceListItem } from '../priceManagement/priceManagement.types';
 import { ICompany } from '../companies/companies.types';
 import { IManager, IUserBase } from '../auth/auth.types';
@@ -68,12 +68,17 @@ export interface OrderTotals {
   items?: number;
   amount?: number;
 }
+export interface IOrdersGroup extends IBase, MagicLinkRef {
+  orders?: IOrder[];
+}
 
-export interface IOrder extends IBase {
+export interface IOrder extends IBase, MagicLinkRef {
   owner?: ICompany;
   manager?: IManager;
   barCode?: string;
   code?: string;
+  group?: IOrdersGroup;
+  extRef?: string;
 
   externalRef?: string;
 
@@ -87,8 +92,9 @@ export interface IOrder extends IBase {
 
   executeAt?: string | number | Date;
   executeNow?: boolean;
+
   status?: OrderStatusEnum;
-  totals?: OrderTotals;
+  total?: OrderTotals;
   slots?: IOrderSlot[];
   invoices?: IInvoice[];
   shipments?: IShipment[];
@@ -126,13 +132,17 @@ export interface ICreateOrderInfoFormState {
     method?: IFormDataValueWithUUID;
     expiredAt?: string | number | Date;
   };
+
+  executeAt?: Date | number | string;
+  executeNow?: boolean;
+
   shipmentInfo?: {
     executeAt?: Date | number | string;
     executeNow?: boolean;
   };
   deliveryInfo?: {
     method?: IFormDataValueWithUUID;
-    locationRefs?: FormDataLocationRefs;
+    destinationRefs?: FormDataLocationRefs;
     destination?: AddressDto;
 
     invoiceInfo?: {

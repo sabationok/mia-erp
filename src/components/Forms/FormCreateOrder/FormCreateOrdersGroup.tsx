@@ -221,17 +221,21 @@ function transformOrderInfoForReq(input: ICreateOrderInfoFormState): ICreateOrde
     }
   }
   if (input?.deliveryInfo) {
-    if (input.deliveryInfo.invoiceInfo) {
-      const deliveryInfo: ICreateOrderInfoDto['deliveryInfo'] = {};
+    const deliveryInfo: ICreateOrderInfoDto['deliveryInfo'] = {};
+    if (input.deliveryInfo.method) {
+      deliveryInfo.method = getIdRef(input.deliveryInfo.method);
+    }
 
-      if (input.deliveryInfo.invoiceInfo.method) {
+    if (input?.deliveryInfo?.invoiceInfo) {
+      if (input?.deliveryInfo?.invoiceInfo?.method) {
         deliveryInfo.invoiceInfo = {
           method: getIdRef(input.deliveryInfo.invoiceInfo.method),
           expiredAt: input.deliveryInfo.invoiceInfo?.expiredAt,
         };
-        output.deliveryInfo = deliveryInfo;
       }
     }
+
+    output.deliveryInfo = deliveryInfo;
   }
 
   console.debug('Transform Order Info For Req'.toUpperCase());

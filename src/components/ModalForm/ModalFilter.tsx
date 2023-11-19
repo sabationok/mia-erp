@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { checks } from '../../utils';
 
 export interface ModalFormFilterProps<V = any, D = any> {
-  getDefaultValue?: (opt: FilterOpt<V, D>) => number;
+  getDefaultValue?: (opt: FilterOption<V, D>) => number;
   preventFilter?: boolean;
   filterOptions?: FilterOption<V, D>[];
 
@@ -13,10 +13,10 @@ export interface ModalFormFilterProps<V = any, D = any> {
   onChangeIndex?: (index: number) => void;
 
   name?: any;
-  defaultOption?: number | FilterOpt<V, D> | V;
+  defaultOption?: number | FilterOption<V, D> | V;
   currentIndex?: number;
   defaultFilterValue?: string;
-  renderLabel?: (info: { option?: FilterOpt<V, D>; index: number; isActive: boolean }) => React.ReactNode;
+  renderLabel?: (info: { option?: FilterOption<V, D>; index: number; isActive: boolean }) => React.ReactNode;
 
   asStepper?: boolean;
 
@@ -40,7 +40,7 @@ export interface DynamicFilterOption<V = any> extends FilterOption<V> {
   onPress?: () => void;
   onSelect?: (option: FilterOption<V>) => void;
 }
-// export type FilterOptionSelectHandler<V = any, D = any> = (option: FilterOpt<V, D>, value: V, index: number) => void;
+// export type FilterOptionSelectHandler<V = any, D = any> = (option: FilterOption<V, D>, value: V, index: number) => void;
 
 export type FilterSelectHandler<V = any, D = any> = (
   option: FilterOption<V, D>,

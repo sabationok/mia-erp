@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { takeFullGridArea, takeFullPlace } from './pagesStyles';
 import { useAuthSelector } from 'redux/selectors.store';
 import ProfileCard from 'components/atoms/ProfileCard/ProfileCard';
-import usePermissionsService, { usePermissionsSelector } from 'hooks/usePermissionsService.hook';
+import { usePermissionsSelector } from 'hooks/usePermissionsService.hook';
 import { IPermission } from '../../redux/permissions/permissions.types';
 import { ITableListProps } from '../TableList/tableTypes.types';
 import usePermissionsActionsCreator from '../../hooks/usePermissonsActionsCreator';
@@ -14,6 +14,8 @@ import { CompanyQueryType } from '../../redux/global.types';
 import { PermissionStatus } from 'redux/permissions/permissions.types';
 import { permissionsTableColumns } from '../../data/permissions.data';
 import { permissionsSearchParams } from '../../data/companies.data';
+import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import { AppModuleName } from '../../redux/reduxTypes.types';
 
 export type CompanyTypeItem = { title: string; param: CompanyQueryType };
 
@@ -34,8 +36,8 @@ const PageHome: React.FC<any> = ({ path }: Props) => {
     companyType: companyTypes[0].param,
   })[1];
   const state = usePermissionsSelector();
-  const permissionsService = usePermissionsService();
-  const actionsCreator = usePermissionsActionsCreator(permissionsService, companyType?.param || 'own');
+  const permissionsService = useAppServiceProvider()[AppModuleName.permissions];
+  const actionsCreator = usePermissionsActionsCreator(companyType?.param || 'own');
   const [loading, setLoading] = useState(false);
   const permissionsData = useMemo(() => {
     return state.permissions?.filter(pr => {

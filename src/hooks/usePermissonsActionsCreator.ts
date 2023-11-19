@@ -1,12 +1,17 @@
 import { ITableAction, ITableListContext, TableActionCreator } from '../components/TableList/tableTypes.types';
 import { IPermission } from '../redux/permissions/permissions.types';
 import { PermissionService } from './usePermissionsService.hook';
-import { IModalProviderContext, useModalProvider } from '../components/ModalProvider/ModalProvider';
+import { IModalProviderContext, useModalService } from '../components/ModalProvider/ModalProvider';
 import { useNavigate } from 'react-router-dom';
 import { CompanyQueryType } from '../redux/global.types';
 import { toast } from 'react-toastify';
 import { NavigateFunction } from 'react-router/dist/lib/hooks';
 import { Modals } from '../components/Modals';
+import { useAppServiceProvider } from './useAppServices.hook';
+import { AppModuleName } from '../redux/reduxTypes.types';
+import { TableActionsBuilder } from '../utils/tables';
+import { t } from '../lang';
+import { useAuthSelector } from '../redux/selectors.store';
 
 export type PermissionsActionsCreator = TableActionCreator<IPermission>;
 
@@ -24,6 +29,7 @@ export type PermissionsActionsType =
 export const isMyCompany = ({ owner, user }: IPermission) => {
   return user?._id === owner?._id;
 };
+
 export interface PermissionsTablesActionProps {
   ctx: ITableListContext<IPermission>;
   navigate: NavigateFunction;
@@ -31,6 +37,7 @@ export interface PermissionsTablesActionProps {
   companyType: CompanyQueryType;
   modalService: IModalProviderContext;
 }
+
 export type IPermissionsTableAction = ITableAction<PermissionsActionsType>;
 export type PermissionsActionCreator = (options: PermissionsTablesActionProps) => IPermissionsTableAction;
 const createEnterCompanyAction = ({
@@ -94,6 +101,7 @@ const createDeleteCompanyAction = ({ companyType, ctx }: PermissionsTablesAction
     console.log('selPermission', ctx.selectedRow?._id);
   },
 });
+
 const createLogOutCompanyAction = ({ companyType, ctx }: PermissionsTablesActionProps): IPermissionsTableAction => ({
   name: 'leaveCompany',
   title: 'Покинути',
@@ -143,31 +151,84 @@ const createAddNewCompanyAction = ({ modalService }: PermissionsTablesActionProp
     });
   },
 });
-const usePermissionsActionsCreator = (
-  service: PermissionService,
-  companyType: CompanyQueryType
-): PermissionsActionsCreator => {
-  const modal = useModalProvider();
+const builder = new TableActionsBuilder<
+  PermissionService,
+  IPermission,
+  { query: { type: CompanyQueryType }; userId?: string }
+>();
+builder.add('refresh', ({ ctx, service, extra }) => {
+  return {
+    name: 'refresh',
+    title: t('Refresh'),
+    icon: 'refresh',
+    iconSize: '100%',
+    type: 'onlyIcon',
+    disabled: !extra?.userId,
+    onClick: () => {
+      if (extra?.userId) {
+        service.getAllByUserId({
+          onLoading: ctx.onRefresh,
+          data: { userId: extra?.userId, query: extra?.query },
+        });
+      }
+    },
+  };
+});
+
+const usePermissionsActionsCreator = (companyType: CompanyQueryType): PermissionsActionsCreator => {
+  const service = useAppServiceProvider()[AppModuleName.permissions];
+  const modalService = useModalService();
+  const userId = useAuthSelector()?.user?._id;
+
   const navigate = useNavigate();
 
   return (ctx): ITableAction<PermissionsActionsType>[] => {
-    const actionParams = {
+    // const builder = new TableActionsBuilder({
+    //   service,
+    //   modalService,
+    // })
+    //   .add('d', () => {
+    //     return { separator: true };
+    //   })
+    //   .add('a', () => {
+    //     return { separator: true };
+    //   })
+    //   .add('g', () => {
+    //     return { separator: true };
+    //   })
+    //   .add('f', () => {
+    //     return { separator: true };
+    //   });
+    // console.log({ builder });
+
+    const controls = {
       ctx,
       navigate,
       service,
-      modalService: modal,
+      modalService,
       companyType,
     };
-
+    const build = builder.activate({
+      navigate,
+      service,
+      modalService,
+      extra: {
+        userId,
+        query: { type: companyType },
+      },
+    });
     return [
-      createEnterCompanyAction(actionParams),
-      createEditCompanyAction(actionParams),
-      createDeleteCompanyAction(actionParams),
-      createLogOutCompanyAction(actionParams),
+      createEnterCompanyAction(controls),
+      createLogOutCompanyAction(controls),
       { separator: true },
-      createRejectPermission(actionParams),
-      createAcceptPermissionAction(actionParams),
-      createAddNewCompanyAction(actionParams),
+      ...build(ctx),
+      { separator: true },
+      createEditCompanyAction(controls),
+      createDeleteCompanyAction(controls),
+      { separator: true },
+      createRejectPermission(controls),
+      createAcceptPermissionAction(controls),
+      createAddNewCompanyAction(controls),
     ];
   };
 };

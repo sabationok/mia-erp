@@ -7,7 +7,7 @@ import AppGridPage from '../AppGridPage';
 import { useRefundsSelector } from '../../../redux/selectors.store';
 import { ISortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
-import { mockOrdersData, ordersTableColumns } from '../../../data/orders.data';
+import { ordersTableColumns } from '../../../data/orders.data';
 import { IRefund } from '../../../redux/refunds/refunds.types';
 import useOrdersServiceHook from '../../../hooks/useOrdersService.hook';
 import { BaseAppPageProps } from '../index';
@@ -77,7 +77,7 @@ const PageRefunds: React.FC<any> = (props: Props) => {
   return (
     <AppGridPage path={props.path}>
       <Page>
-        <TableList {...tableConfig} tableData={mockOrdersData} isLoading={isLoading} />
+        <TableList {...tableConfig} isLoading={isLoading} />
       </Page>
     </AppGridPage>
   );

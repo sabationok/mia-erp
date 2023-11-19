@@ -21,7 +21,7 @@ import {
   IPermissionsState,
 } from '../redux/permissions/permissions.types';
 import { useMemo } from 'react';
-import { ServiceDispatcherAsync } from 'redux/global.types';
+import { CompanyQueryType, ServiceDispatcherAsync } from 'redux/global.types';
 import { clearCurrentPermission } from '../redux/permissions/permissions.action';
 import { defaultThunkPayload } from '../utils/fabrics';
 import { ICompany, ICompanyForReq, ICompanyReqData } from '../redux/companies/companies.types';
@@ -29,7 +29,7 @@ import { IUser } from '../redux/auth/auth.types';
 
 export interface PermissionService {
   getAllByCompanyId: ServiceDispatcherAsync<{ companyId: string; refresh?: boolean }, IPermission[]>;
-  getAllByUserId: ServiceDispatcherAsync<{ userId: string }, IPermission[]>;
+  getAllByUserId: ServiceDispatcherAsync<{ userId: string; query?: { type?: CompanyQueryType } }, IPermission[]>;
   deleteById: ServiceDispatcherAsync<{ id: string }>;
   edit: ServiceDispatcherAsync<IPermissionReqData>;
   create: ServiceDispatcherAsync<IPermissionForReq>;

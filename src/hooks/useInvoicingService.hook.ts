@@ -3,8 +3,7 @@ import { useMemo } from 'react';
 import { ServiceDispatcherAsync } from '../redux/global.types';
 import { defaultThunkPayload } from '../utils/fabrics';
 import { getAllInvoiceMethodsThunk } from '../redux/invoices/invoicing.thunks';
-import { IInvoicingMethodReqData } from '../redux/invoices/invoices.types';
-import { IInvoicingMethod } from '../redux/integrations/integrations.types';
+import { IInvoicingMethod, IInvoicingMethodReqData } from '../redux/integrations/integrations.types';
 
 export interface UseInvoicingService {
   getAllMethods: ServiceDispatcherAsync<IInvoicingMethodReqData, IInvoicingMethod[]>;

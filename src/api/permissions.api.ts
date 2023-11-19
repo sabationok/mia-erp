@@ -7,7 +7,7 @@ import {
   IPermissionsResData,
   PermissionStatus,
 } from '../redux/permissions/permissions.types';
-import { AppResponse } from '../redux/global.types';
+import { AppResponse, CompanyQueryType } from '../redux/global.types';
 import { IUser } from '../redux/auth/auth.types';
 
 export default class PermissionsApi {
@@ -60,8 +60,11 @@ export default class PermissionsApi {
     return this.api.post(this.endpoints.updateById(id), data);
   }
 
-  public static getAllByUserId(id: string): Promise<IPermissionsResData> {
-    return this.api.get(this.endpoints[Endpoints.getAllByUserId](id));
+  public static getAllByUserId(params?: {
+    userId?: string;
+    query?: { type?: CompanyQueryType };
+  }): Promise<IPermissionsResData> {
+    return this.api.get(this.endpoints[Endpoints.getAllByUserId](params?.userId), { params: params?.query });
   }
 
   public static getAllByCompanyId(id: string): Promise<IPermissionsResData> {

@@ -212,5 +212,3 @@ export const orderSlotTableColumns: CellTittleProps<IOrderSlot>[] = [
   { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
   { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
 ];
-
-export const mockOrdersData: IOrder[] = [{ _id: '51651651', owner: { _id: '4515135135131' } as any }];
