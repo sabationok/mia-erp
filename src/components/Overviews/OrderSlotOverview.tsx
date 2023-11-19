@@ -1,14 +1,14 @@
-import { IOrderSlot, IOrderTempSlot } from '../../redux/orders/orders.types';
+import { IOrderTempSlot } from '../../redux/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import styled, { useTheme } from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { useCallback, useMemo, useState } from 'react';
 import { IProductImage } from '../../redux/products/products.types';
 import { Text } from '../atoms/Text';
-import numberWithSpaces from '../../utils/numbers';
 import { t } from '../../lang';
 import CountSelectorBase from '../atoms/CountSelectorBase';
 import InputLabel from '../atoms/Inputs/InputLabel';
+import numberWithSpaces from '../../utils/numbers';
 
 export interface OrderSlotOverviewProps {
   slot?: IOrderTempSlot;
@@ -74,6 +74,10 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
 
   const renderPriceInfo = useMemo(() => {
     return overviewInputs.map(info => {
+      const value = formData && info.name && formData[info.name];
+
+      const v = typeof value === 'object' && 'amount' in value ? value.amount : value;
+
       return (
         <FlexBox key={info.name} justifyContent={'flex-start'} fillWidth padding={'4px'} gap={4}>
           <CardText colorType={'secondary'} $size={10}>
@@ -81,7 +85,7 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
           </CardText>
 
           <CardText $size={12} $align={'right'} $weight={500}>
-            {numberWithSpaces((formData && info.name && formData[info.name as never]) || 0)}
+            {numberWithSpaces(v || 0)}
           </CardText>
         </FlexBox>
       );
@@ -168,18 +172,18 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
           </FlexBox>
 
           <Text $size={12} $weight={600}>
-            {t('Price')}
-          </Text>
-          <CardGridArea fillWidth alignItems={'flex-start'} justifyContent={'space-between'}>
-            {renderPriceInfo}
-          </CardGridArea>
-
-          <Text $size={12} $weight={600}>
             {t('Properties')}
           </Text>
           <Properties fillWidth alignItems={'flex-start'}>
             {renderProperties}
           </Properties>
+
+          <Text $size={12} $weight={600}>
+            {t('Summary')}
+          </Text>
+          <CardGridArea fillWidth alignItems={'flex-start'} justifyContent={'space-between'}>
+            {renderPriceInfo}
+          </CardGridArea>
         </FlexBox>
       </FlexBox>
     </Card>
@@ -265,14 +269,14 @@ const Buttons = styled(FlexBox)`
 export default OrderSlotOverview;
 
 const overviewInputs: {
-  name?: keyof IOrderSlot | string;
+  name?: keyof IOrderTempSlot;
   label?: string;
   value?: React.ReactNode;
   borderBottom?: boolean;
 }[] = [
-  { label: 'Ціна', name: 'in' },
-  { label: 'Бонус', name: 'bonus' },
-  { label: 'Кешбек', name: 'cashback' },
-  { label: 'Знижка', name: 'discount' },
-  { label: 'Сума', name: 'total' },
+  { label: t('Price'), name: 'out' },
+  { label: t('Bonus'), name: 'bonus' },
+  { label: t('Cashback'), name: 'cashback' },
+  { label: t('Discount'), name: 'discount' },
+  { label: t('Total amount'), name: 'total' },
 ];

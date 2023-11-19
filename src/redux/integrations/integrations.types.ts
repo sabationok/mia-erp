@@ -74,6 +74,9 @@ export interface ExtServiceBase extends IBase {
 
 export interface ExtSubServicesEntity extends Record<ExternalServiceTypeEnum | string, string[]> {}
 
+export interface ChatIds {
+  telegram?: (string | number)[];
+}
 export interface InputIntegrationBase extends IBase {
   owner?: ICompany;
   service: ExtServiceBase;
@@ -90,6 +93,7 @@ export interface InputIntegrationBase extends IBase {
 }
 export interface OutputIntegrationBase extends InputIntegrationBase {
   redirectBaseUrl?: string;
+  chatIds?: ChatIds;
 }
 
 export interface IntegrationBaseDto {
@@ -117,14 +121,17 @@ export interface InputIntegrationDto extends IntegrationBaseDto {
   warehouse?: OnlyUUID;
   finCount?: OnlyUUID;
 }
+
 export interface CreateOutputIntegrationFormData
   extends Partial<Pick<IntegrationBaseDto, 'description' | 'expiredAt' | 'label'>> {
   role?: IFormDataValueWithUUID;
   redirectBaseUrl?: string;
+  chatIds?: ChatIds;
 }
 export interface OutputIntegrationDto extends IntegrationBaseDto {
   role?: OnlyUUID;
   service?: OnlyUUID;
+  chatIds?: ChatIds;
 }
 
 export interface ExtPaymentService extends ExtServiceBase {
