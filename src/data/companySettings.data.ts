@@ -18,6 +18,7 @@ import DirCommunicationMethods from '../components/CompanySettings/DirCommunicat
 
 const UsersProps: DirUsersProps = {
   title: 'Користувачі',
+  fillWidth: true,
   getTableSettings: ({ modalService, service }) => ({
     tableTitles: usersDirColumns,
     actionsCreator: ctx => {

@@ -8,8 +8,8 @@ import usePermissionsServiceHook, {
   usePermissionsSelector,
 } from '../../hooks/usePermissionsService.hook';
 import { IPermission } from '../../redux/permissions/permissions.types';
-import AppLoader from '../atoms/AppLoader';
 import { IModalProviderContext, useModalProvider } from '../ModalProvider/ModalProvider';
+import { ToastService } from '../../services';
 
 export interface DirUsersProps extends DirBaseProps {
   getTableSettings: (options: {
@@ -31,23 +31,19 @@ const DirUsers: React.FC<DirUsersProps> = ({ getTableSettings, ...props }) => {
   );
 
   useEffect(() => {
-    (async () => {
-      await getAllByCompanyId({
-        onLoading: setIsLoading,
-        onSuccess: data => {},
-        onError: () => {},
-      });
-    })();
+    getAllByCompanyId({
+      onLoading: setIsLoading,
+      onSuccess: data => {
+        ToastService.info(`Found users: ${data.length}`);
+      },
+      onError: () => {},
+    });
   }, [getAllByCompanyId]);
 
   return (
-    <>
-      <StModalForm fitContentH fillHeight footer={false} {...props}>
-        <TableList {...tableSettingsMemo} tableData={tableData} isLoading={isLoading} />
-      </StModalForm>
-
-      <AppLoader isLoading={isLoading} />
-    </>
+    <StModalForm fitContentH fillHeight footer={false} {...props}>
+      <TableList {...tableSettingsMemo} tableData={tableData} isLoading={isLoading} />
+    </StModalForm>
   );
 };
 const StModalForm = styled(ModalForm)`

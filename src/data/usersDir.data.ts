@@ -2,6 +2,7 @@ import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { ISystemRole, IUser } from 'redux/auth/auth.types';
 import { karina_avatar } from '../img';
 import { IPermission } from '../redux/permissions/permissions.types';
+import { t } from '../lang';
 
 export const testUserKarinaSystemRole: ISystemRole = {
   _id: 'sd6f51b6sd5f1b6sd5fgb16sd5',
@@ -18,14 +19,18 @@ export const testUserKarina: IUser = {
 };
 export const usersDirColumns: CellTittleProps<IPermission>[] = [
   {
-    top: { name: 'ПІП', getData: d => (d?.user?.name ? `${d.user.name} ${d.user?.secondName}` : '--- ---') },
-    bottom: { name: 'Статус', path: 'status' },
+    top: {
+      name: `${t('ПІП')}/${t('Label')}`,
+      getData: d =>
+        d?.user?.name ? `${d.user.name} ${d.user?.secondName}` : d.integration ? d.integration.label : '--- ---',
+    },
+    bottom: { name: 'Тип', getData: rd => (rd.user && t('User')) || (rd.integration && t('Integration')) || 'unknown' },
     width: '250px',
     action: 'valueByPath',
   },
   {
     top: { name: 'Роль', path: 'role.label', uppercase: false },
-    bottom: { name: 'Коментар', path: 'role.description' },
+    bottom: { name: 'Статус', path: 'status' },
     width: '210px',
     action: 'valueByPath',
   },

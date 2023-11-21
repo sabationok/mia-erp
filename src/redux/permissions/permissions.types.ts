@@ -3,6 +3,7 @@ import { AppResponse, IBase, OnlyUUID } from '../global.types';
 import { ICompanyBase } from '../companies/companies.types';
 import { IUserBase } from '../auth/auth.types';
 import { StateErrorType } from '../reduxTypes.types';
+import { OutputIntegrationBase } from '../integrations/integrations.types';
 
 export enum PermissionStatus {
   PENDING = 'PENDING',
@@ -14,6 +15,7 @@ export enum PermissionStatus {
 export interface IPermission extends IBase {
   company?: Partial<ICompanyBase>;
   user?: Partial<IUserBase>;
+  integration?: Partial<OutputIntegrationBase>;
   owner?: Partial<IUserBase>;
   role?: Partial<ICustomRole>;
   email?: string;

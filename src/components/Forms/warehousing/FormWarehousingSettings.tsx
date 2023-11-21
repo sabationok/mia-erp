@@ -15,6 +15,7 @@ import Switch from '../../atoms/Switch';
 import { getIdRef } from '../../../utils/dataTransform';
 import { useMemo } from 'react';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
+import { ToastService } from '../../../services';
 
 export interface FormWarehousingSettingsProps
   extends Omit<ModalFormProps<any, any, ICompany>, 'onSubmit' | 'onSelect'> {
@@ -60,7 +61,14 @@ export const FormWarehousingSettings: React.FC<FormWarehousingSettingsProps> = (
   const onValid = (fData: WarehousingSettingsFormData) => {
     const reqData = createWarehousingSettingsReqData(fData);
 
-    reqData && prServ.updateCurrentCompany({ data: { _id: currenCompanyData?._id, data: reqData } });
+    reqData &&
+      prServ.updateCurrentCompany({
+        data: { _id: currenCompanyData?._id, data: reqData },
+        onSuccess: () => {
+          ToastService.success('Updated');
+          onClose && onClose();
+        },
+      });
   };
 
   return (

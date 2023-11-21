@@ -15,9 +15,10 @@ export interface FormProductImagesOverlayProps extends OverlayHandlerReturn {
 const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onClose }) => {
   const currentProduct = useProductsSelector().currentProduct;
   const service = useAppServiceProvider()[ServiceName.products];
-  const theme = useTheme();
-
   const [state, setState] = useState<Partial<IProductImage>[]>(currentProduct?.images || []);
+  const [loading, setLoading] = useState(false);
+
+  const theme = useTheme();
 
   const handleFormSubmit: FormEventHandler = ev => {
     ev.preventDefault();
@@ -25,9 +26,10 @@ const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onC
     currentProduct &&
       service.updateById({
         data: { ...getIdRef(currentProduct), data: { images: state as IProductImage[] }, refreshCurrent: true },
-        onSuccess: (data, meta) => {
+        onSuccess: () => {
           onClose && onClose();
         },
+        onLoading: setLoading,
       });
   };
 
@@ -42,9 +44,13 @@ const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onC
           borderTop: `1px solid ${theme.sideBarBorderColor}`,
           borderBottom: `1px solid ${theme.sideBarBorderColor}`,
         }}
-        renderHeader={<OverlayHeader title={'Зображення'} onClose={onClose} showSubmitButton />}
+        renderHeader={
+          <OverlayHeader title={'Зображення'} onClose={onClose} showSubmitButton canSubmit={state.length > 0} />
+        }
         FooterComponent={props => {
-          return <OverlayFooter onCreatePress={props.onAddNewImageSetPress} />;
+          return (
+            <OverlayFooter onCreatePress={props.onAddNewImageSetPress} loading={loading} canSubmit={state.length > 0} />
+          );
         }}
       />
     </Form>

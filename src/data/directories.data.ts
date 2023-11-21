@@ -217,15 +217,16 @@ const prodCategoriesDir: IDirectoryListItem<any, DirProductCategoriesProps> = {
   disabled: false,
 };
 
-const ContractorsProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
-  title: t('contractors'),
+const CounterpartiesProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
+  title: t('Counterparties'),
   fillHeight: true,
+  fillWidth: true,
   dirType: ApiDirType.CONTRACTORS,
   filterOptions: counterpartyFilterOptions,
   getTableSettings: ({ service, modalService, type, dirType }) => ({
     tableTitles: contractorsColumns,
     tableSearchParams: contractorsSearchParams,
-    actionsCreator: p => [
+    actionsCreator: _ctx => [
       { icon: 'openInNew' },
       { icon: 'edit' },
       { icon: 'copy' },
@@ -258,11 +259,11 @@ const ContractorsProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
     ],
   }),
 };
-const contractorsDir: IDirectoryListItem<any, DirTableCompProps> = {
-  title: ContractorsProps.title,
+const counterpartiesDir: IDirectoryListItem<any, DirTableCompProps> = {
+  title: CounterpartiesProps.title,
   iconId: iconId.partners,
   ModalChildren: DirTableComp,
-  modalChildrenProps: ContractorsProps,
+  modalChildrenProps: CounterpartiesProps,
   disabled: false,
 };
 const ProjectsProps: DirProjectsProps = {
@@ -270,7 +271,7 @@ const ProjectsProps: DirProjectsProps = {
   dirType: ApiDirType.PROJECTS,
   fillWidth: true,
   fillHeight: true,
-  getTableSettings: ContractorsProps.getTableSettings,
+  getTableSettings: CounterpartiesProps.getTableSettings,
 };
 const projectsDir: IDirectoryListItem<any, DirProjectsProps> = {
   title: ProjectsProps.title,
@@ -367,7 +368,7 @@ const directories: Partial<IDirectoryListItem>[] = [
   prodCategoriesDir,
   prodPropertiesDir,
   activitiesDir,
-  contractorsDir,
+  counterpartiesDir,
   projectsDir,
   marksDir,
   brandsDir,
