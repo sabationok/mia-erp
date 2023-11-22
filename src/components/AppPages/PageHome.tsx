@@ -73,6 +73,10 @@ const PageHome: React.FC<any> = ({ path }: Props) => {
     [companyType?.param]
   );
 
+  useEffect(() => {
+    console.log('permissions loadind', loading);
+  }, [loading]);
+
   const renderFilterButtons = useMemo(() => {
     return companyTypes.map(item => (
       <StButtonIcon

@@ -7,6 +7,7 @@ export enum API_BASE_ROUTES {
   COMPANIES = '/companies',
   DIRECTORIES = '/directories',
   TRANSACTIONS = `/transactions`,
+  FINANCE_TRANSACTIONS = '/finance/transactions',
   CUSTOM_ROLES = '/roles',
   PRODUCTS = '/products',
   PROPERTIES = '/products/properties',
@@ -127,12 +128,14 @@ export enum ApiDefaultDirType {
   COMMUNICATION_TYPES = 'communicationss',
 }
 
-const transactionsApiEndpoints: ApiEndpointsMap = {
-  [Endpoints.getAll]: (): string => `${API_BASE_ROUTES.TRANSACTIONS}/getAll`,
-  [Endpoints.create]: (): string => `${API_BASE_ROUTES.TRANSACTIONS}/create`,
-  [Endpoints.deleteById]: (id?: string): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.deleteById}/${id}`,
-  [Endpoints.updateById]: (id?: string): string => `${API_BASE_ROUTES.TRANSACTIONS}/${Endpoints.updateById}/${id}`,
-  [Endpoints.getById]: (id?: string): string => `${API_BASE_ROUTES.TRANSACTIONS}/getById/${id}`,
+const finTransactions = {
+  [Endpoints.getAll]: (): string => `${API_BASE_ROUTES.FINANCE_TRANSACTIONS}/getAll`,
+  [Endpoints.create]: (): string => `${API_BASE_ROUTES.FINANCE_TRANSACTIONS}/create`,
+  [Endpoints.deleteById]: (id?: string): string =>
+    `${API_BASE_ROUTES.FINANCE_TRANSACTIONS}/${Endpoints.deleteById}/${id}`,
+  [Endpoints.updateById]: (id?: string): string =>
+    `${API_BASE_ROUTES.FINANCE_TRANSACTIONS}/${Endpoints.updateById}/${id}`,
+  [Endpoints.getById]: (id?: string): string => `${API_BASE_ROUTES.FINANCE_TRANSACTIONS}/getById/${id}`,
 };
 
 const productsApiEndpoints = {
@@ -340,7 +343,7 @@ const APP_CONFIGS = {
     auth: authApiEndpoints,
     directories: directoriesApiEndpoints,
     customRoles: customRoles,
-    transactions: transactionsApiEndpoints,
+    finTransactions,
     products: productsApiEndpoints,
     propertiesApiEndpoints,
     variationsApiEndpoints,

@@ -10,7 +10,7 @@ import { AppQueryParams } from './index';
 
 export default class TransactionsApi {
   private static api = baseApi;
-  private static endpoints = APP_CONFIGS.endpoints.transactions;
+  private static endpoints = APP_CONFIGS.endpoints.finTransactions;
 
   public static async getAll(params?: AppQueryParams): Promise<IAllTransactionsRes> {
     return this.api.get(this.endpoints.getAll(), {
