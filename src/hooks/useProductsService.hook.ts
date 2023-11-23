@@ -15,14 +15,14 @@ import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
 import { AppQueryParams, createApiCall } from 'api';
 import ProductsApi from '../api/products.api';
 import PropertiesApi from '../api/properties.api';
-import { IProperty, IPropertyReqData } from '../redux/products/properties.types';
-import { createPropertyThunk, getAllPropertiesThunk } from '../redux/products/properties.thunks';
+import { IProperty, IPropertyReqData } from '../redux/products/properties/properties.types';
+import { createPropertyThunk, getAllPropertiesThunk } from '../redux/products/properties/properties.thunks';
 import {
   createVariationThunk,
   getAllVariationsByProductIdThunk,
   updateVariationThunk,
-} from '../redux/products/variations.thunks';
-import { IVariation, IVariationReqData } from '../redux/products/variations.types';
+} from '../redux/products/variations/variations.thunks';
+import { IVariation, IVariationReqData } from '../redux/products/variations/variations.types';
 import { clearCurrentProductAction } from '../redux/products/products.actions';
 import { IPriceListItem } from '../redux/priceManagement/priceManagement.types';
 import { IProductInventory } from '../redux/warehouses/warehouses.types';

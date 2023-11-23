@@ -1,7 +1,7 @@
 import FlexBox from '../../atoms/FlexBox';
 import React, { useEffect, useMemo, useState } from 'react';
 import FormCreateVariation from '../../Forms/FormProduct/FormCreateVariationOverlay';
-import { IProperty, IPropertyValue } from '../../../redux/products/properties.types';
+import { IProperty, IPropertyValue } from '../../../redux/products/properties/properties.types';
 import styled, { useTheme } from 'styled-components';
 import { Text } from '../../atoms/Text';
 import { useDirectoriesSelector, useProductsSelector } from '../../../redux/selectors.store';

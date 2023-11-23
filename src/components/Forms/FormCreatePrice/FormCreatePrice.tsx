@@ -23,7 +23,7 @@ import { priceListColumns } from '../../../data/priceManagement.data';
 import { UUIDRefSchema } from '../validation';
 import _ from 'lodash';
 import { AnyFn } from '../../../utils/types';
-import { IVariation } from '../../../redux/products/variations.types';
+import { IVariation } from '../../../redux/products/variations/variations.types';
 import { ToastService } from '../../../services';
 
 const throttleCallback = _.throttle(<T extends AnyFn>(fn: T) => {

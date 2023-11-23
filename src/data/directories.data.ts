@@ -19,15 +19,12 @@ import { ApiDirType } from '../redux/APP_CONFIGS';
 import DirTableComp, { DirTableCompProps } from '../components/Directories/DirTableComp';
 import FormCreateCounterparty from '../components/Forms/FormCreateCounterparty';
 import { createDataForReq } from '../utils/dataTransform';
-import { ProductTypeEnum } from '../redux/products/products.types';
+import { OfferTypeEnum } from '../redux/products/products.types';
 import { ModalChildrenProps, Modals } from '../components/Modals';
 import { CountsTypesEnum } from '../redux/directories/counts.types';
 import { CategoryTrTypeEnum } from '../redux/directories/directories.types';
 import { DirectoriesService } from '../hooks/useDirService.hook';
-import DirProperties, {
-  dirPropertiesActionsCreator,
-  DirPropertiesProps,
-} from '../components/Directories/DirProperties';
+import DirProperties, { DirPropertiesProps } from '../components/Directories/DirProperties/DirProperties';
 import { IDirectoryListItem } from '../components/SideBarContent/Directories';
 import {
   categoriesFilterOptions,
@@ -37,6 +34,7 @@ import {
   tagsFilterOptions,
 } from './modalFilterOptions.data';
 import { ToastService } from '../services';
+import { dirPropertiesActionsCreator } from '../components/Directories/DirProperties/dirPropertiesActionsCreator';
 
 export const getDirInTreeActionsCreator = (
   Modal: Modals = Modals.FormCreateDirTreeComp,
@@ -205,7 +203,7 @@ const ProductCategoriesProps: DirProductCategoriesProps = {
   creatingParent: true,
   archiving: true,
   filterSearchPath: 'type',
-  filterDefaultValue: ProductTypeEnum.GOODS,
+  filterDefaultValue: OfferTypeEnum.GOODS,
   availableLevels: 5,
   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCategory, { createParentTitle: t('Create category') }),
 };

@@ -81,8 +81,10 @@ const OutputIntegrationsTab: React.FC<OutputIntegrationsTabProps> = () => {
   }, []);
 
   return (
-    <Container flex={1} fillWidth overflow={'hidden'}>
-      <AccordionList options={preparedList} />
+    <Container flex={1} fillWidth>
+      <FlexBox fillWidth flex={1} overflow={'hidden'} style={{ position: 'relative' }}>
+        <AccordionList options={preparedList} />
+      </FlexBox>
 
       <ExtraFooterWithButton buttonText={t('Add one')} onClick={handleCreateOne} />
     </Container>
@@ -90,8 +92,6 @@ const OutputIntegrationsTab: React.FC<OutputIntegrationsTabProps> = () => {
 };
 const Container = styled(FlexBox)`
   position: relative;
-
-  padding: 0 8px;
 
   max-width: 100%;
   width: 480px;

@@ -18,6 +18,7 @@ export interface ModalFormBaseProps<T = any>
   afterClose?: () => void;
   closeAfterSubmit?: boolean;
   isValid?: boolean;
+  isLoading?: boolean;
 }
 
 export interface ModalFormAddsProps {
@@ -49,6 +50,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
   extraFooter,
   extraHeader,
   isValid = true,
+  isLoading = false,
   onClose,
   onFilterValueSelect,
   filterName,
@@ -88,7 +90,9 @@ const ModalForm: React.FC<ModalFormProps> = ({
         {children}
       </ModalMain>
 
-      {footer && <ModalFooter onSubmitPassed={!!onSubmit} extraFooter={extraFooter} isValid={isValid} />}
+      {footer && (
+        <ModalFooter onSubmitPassed={!!onSubmit} extraFooter={extraFooter} isValid={isValid} isLoading={isLoading} />
+      )}
     </ModalFormContainer>
   );
 };
@@ -110,7 +114,7 @@ const ModalFormContainer = styled.form<
   width: ${({ width = '480px', fillWidth, fitContentH }) =>
     (fillWidth && '100vw') || (fitContentH && 'max-content') || width};
   height: ${({ height = '', fillHeight, fitContentV }) =>
-    (fillHeight && '100vh') || (fitContentV && 'max-content') || height};
+    (fillHeight && '90vh') || (fitContentV && 'max-content') || height};
 
   min-width: 250px;
   max-width: 100%;

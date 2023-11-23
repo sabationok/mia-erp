@@ -14,14 +14,14 @@ import { IModalProviderContext, ModalService } from '../ModalProvider/ModalProvi
 import { DirectoriesService } from '../../hooks/useDirService.hook';
 import { AppSubmitHandler, UseAppFormSubmitOptions } from '../../hooks/useAppForm.hook';
 import { ContractorsTypesEnum } from '../../redux/directories/contractors.types';
-import { ProductTypeEnum } from '../../redux/products/products.types';
+import { OfferTypeEnum } from '../../redux/products/products.types';
 import { CounterpartyTypesEnum } from '../../redux/directories/counterparties.types';
 
 export interface DirItemTypeByDirType extends Record<ApiDirType, any> {
   [ApiDirType.COUNTS]: CountsTypesEnum;
   [ApiDirType.CATEGORIES_TR]: CategoryTrTypeEnum;
-  [ApiDirType.CATEGORIES_PROD]: ProductTypeEnum;
-  [ApiDirType.PROPERTIES_PRODUCTS]: ProductTypeEnum;
+  [ApiDirType.CATEGORIES_PROD]: OfferTypeEnum;
+  [ApiDirType.PROPERTIES_PRODUCTS]: OfferTypeEnum;
   [ApiDirType.CONTRACTORS]: ContractorsTypesEnum | CounterpartyTypesEnum;
   [ApiDirType.COUNTERPARTIES]: ContractorsTypesEnum | CounterpartyTypesEnum;
   [ApiDirType.TAGS]: ContractorsTypesEnum;

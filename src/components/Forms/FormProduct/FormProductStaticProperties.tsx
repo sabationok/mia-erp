@@ -1,4 +1,4 @@
-import { IPropertyValue, IVariationTemplate } from '../../../redux/products/properties.types';
+import { IPropertyValue, IVariationTemplate } from '../../../redux/products/properties/properties.types';
 import { IFormDataValueWithUUID } from '../../../redux/global.types';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import FlexBox from '../../atoms/FlexBox';

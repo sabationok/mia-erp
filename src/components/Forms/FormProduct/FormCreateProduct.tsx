@@ -19,7 +19,7 @@ import {
 import { createDataForReq } from '../../../utils/dataTransform';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { IVariationTemplate } from '../../../redux/products/properties.types';
+import { IVariationTemplate } from '../../../redux/products/properties/properties.types';
 import FormProductStaticProperties from './FormProductStaticProperties';
 import FormProductImagesComponent from './FormProductImagesComponent';
 import FormProductCategories from './FormProductCategories';

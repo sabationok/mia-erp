@@ -13,7 +13,7 @@ const BASE_URL_RAILWAY = `https://crm-nest-api-production.up.railway.app/api/`;
 const isDevMode = ConfigService.isDevMode();
 
 const baseApi = axios.create({
-  baseURL: !isDevMode ? BASE_URL_LOCALHOST : BASE_URL_RAILWAY,
+  baseURL: isDevMode ? BASE_URL_LOCALHOST : BASE_URL_RAILWAY,
 });
 
 export const token = {

@@ -1,11 +1,11 @@
-import { IBase, OnlyUUID } from '../global.types';
-import { ICompany } from '../companies/companies.types';
-import { IProductInventory } from '../warehouses/warehouses.types';
-import { IPriceListItem } from '../priceManagement/priceManagement.types';
-import { AppQueryParams } from '../../api';
-import { IProduct, IProductDimensions } from './products.types';
-import { IPropertyValue } from './properties.types';
-import { IUser } from '../auth/auth.types';
+import { IBase, OnlyUUID } from '../../global.types';
+import { ICompany } from '../../companies/companies.types';
+import { IProductInventory } from '../../warehouses/warehouses.types';
+import { IPriceListItem } from '../../priceManagement/priceManagement.types';
+import { AppQueryParams } from '../../../api';
+import { IProduct, IProductDimensions } from '../products.types';
+import { IPropertyValue } from '../properties/properties.types';
+import { IUser } from '../../auth/auth.types';
 
 export interface IVariationBase {
   label?: string;

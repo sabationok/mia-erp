@@ -1,17 +1,20 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import FlexBox from '../atoms/FlexBox';
+import { t } from '../../lang';
 
 export interface IModalFooterProps {
   onSubmitPassed?: boolean;
   extraFooter?: React.ReactNode;
   isValid?: boolean;
+  isLoading?: boolean;
 }
 
 const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElement>> = ({
   onSubmitPassed,
   extraFooter,
   isValid = true,
+  isLoading = false,
   ...props
 }) => {
   return (
@@ -25,12 +28,12 @@ const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElem
       <FlexBox fillWidth gap={8} fxDirection={'row'} justifyContent={'flex-end'} padding={'8px'}>
         {onSubmitPassed && (
           <ButtonIcon type="reset" variant="defOutlinedSmall">
-            {'Закрити'}
+            {t('Close')}
           </ButtonIcon>
         )}
 
-        <ButtonIcon type={onSubmitPassed ? 'submit' : 'reset'} variant="filledSmall" disabled={!isValid}>
-          {onSubmitPassed ? 'Зберегти' : 'Закрити'}
+        <ButtonIcon type={onSubmitPassed ? 'submit' : 'reset'} variant="filledSmall" disabled={isLoading || !isValid}>
+          {onSubmitPassed ? (isLoading ? t('Loading...') : t('Save')) : t('Close')}
         </ButtonIcon>
       </FlexBox>
     </Footer>
@@ -67,6 +70,6 @@ const ExtraFooter = styled(FlexBox)`
   color: ${({ theme }) => theme.fontColorHeader};
   fill: ${({ theme }) => theme.fillColorHeader};
   background-color: ${({ theme }) => theme.modalBackgroundColor};
-  border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
+  //border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;
 export default ModalFooter;

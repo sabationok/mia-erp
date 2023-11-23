@@ -11,6 +11,7 @@ import InputText from '../atoms/Inputs/InputText';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
+import SecurityInputControlHOC from '../atoms/Inputs/SecurityInputControlHOC';
 
 export interface Props {
   helloTitle?: string;
@@ -122,11 +123,17 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
             </AuthInputLabel>
 
             <AuthInputLabel icon="lock_O" error={errors.password}>
-              <InputText placeholder="Пароль" type="password" {...register('password')} />
+              <SecurityInputControlHOC
+                renderInput={props => <InputText {...props} placeholder="Пароль" {...register('password')} />}
+              />
             </AuthInputLabel>
 
             <AuthInputLabel icon="lock_O" error={errors.approvePassword}>
-              <InputText placeholder="Повторіть пароль" type="password" {...register('approvePassword')} />
+              <SecurityInputControlHOC
+                renderInput={props => (
+                  <InputText {...props} placeholder="Повторіть пароль" {...register('approvePassword')} />
+                )}
+              />
             </AuthInputLabel>
           </>
         )}
@@ -136,8 +143,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
             <AuthInputLabel icon="email">
               <InputText placeholder="Електронна адреса" {...register('email')} />
             </AuthInputLabel>
-            <AuthInputLabel icon="lock_O">
-              <InputText placeholder="Пароль" type="password" {...register('password')} />
+
+            <AuthInputLabel icon="lock_O" error={errors.password}>
+              <SecurityInputControlHOC
+                renderInput={props => <InputText {...props} placeholder="Пароль" {...register('password')} />}
+              />
             </AuthInputLabel>
           </>
         )}

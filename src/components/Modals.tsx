@@ -5,7 +5,7 @@ import OrderOverview, { OrderOverviewProps } from './Overviews/OrderOverview';
 import SelectProductModal, { SelectProductModalProps } from './Modals/SelectProductModal';
 import AppFilter, { AppFilterProps } from './Filter/AppFilter';
 import DirVariationsTemplate, { DirVariationsTemplateProps } from './Directories/DirVariationsTemplate';
-import DirPoperties, { DirPropertiesProps } from './Directories/DirProperties';
+import DirPoperties, { DirPropertiesProps } from './Directories/DirProperties/DirProperties';
 import Forms, { FormPropTypes } from './Forms';
 
 export enum Modals {

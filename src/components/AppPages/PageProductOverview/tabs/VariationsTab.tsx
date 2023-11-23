@@ -5,7 +5,7 @@ import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createTableTitlesFromTemplate, transformVariationTableData } from '../../../../utils/tables';
 import FormCreateVariation from '../../../Forms/FormProduct/FormCreateVariationOverlay';
-import { IVariationTableData } from '../../../../redux/products/variations.types';
+import { IVariationTableData } from '../../../../redux/products/variations/variations.types';
 import { useProductsSelector, usePropertiesSelector } from '../../../../redux/selectors.store';
 import { getIdRef } from '../../../../utils/dataTransform';
 import { OnlyUUID } from '../../../../redux/global.types';

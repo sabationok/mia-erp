@@ -1,7 +1,7 @@
 import { IBase, IDataWithPeriod, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
 import { IProduct } from '../products/products.types';
-import { IVariation } from '../products/variations.types';
+import { IVariation } from '../products/variations/variations.types';
 import { AppQueryParams } from '../../api';
 import { ICompanyBase } from '../companies/companies.types';
 import { IUserBase } from '../auth/auth.types';

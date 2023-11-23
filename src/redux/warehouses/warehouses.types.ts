@@ -2,7 +2,7 @@ import { IBase, IBaseWithPeriod, IDataWithPeriod, IFormDataValueWithUUID, OnlyUU
 import { IProduct } from '../products/products.types';
 import { ICompany } from '../companies/companies.types';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
-import { IVariation } from '../products/variations.types';
+import { IVariation } from '../products/variations/variations.types';
 import { AppQueryParams } from '../../api';
 import { IUser } from '../auth/auth.types';
 import { GeolocationPoint } from '../../services/Geolocation.service';

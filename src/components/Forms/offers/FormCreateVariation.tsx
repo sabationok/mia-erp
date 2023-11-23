@@ -1,4 +1,4 @@
-import ModalForm, { ModalFormProps } from '../ModalForm';
+import ModalForm, { ModalFormProps } from '../../ModalForm';
 
 export interface FormCreateVariationProps extends Omit<ModalFormProps, 'onSubmit'> {}
 const FormCreateVariation: React.FC<FormCreateVariationProps> = ({ ...props }) => {

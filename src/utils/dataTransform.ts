@@ -1,7 +1,7 @@
 import { ITransaction, ITransactionForReq } from '../redux/transactions/transactions.types';
 import _, { isObject, pick } from 'lodash';
 import { ArrayOfObjUUID, ArrayUUID, IdKeyVersion, ObjUUID, OnlyUUID } from '../redux/global.types';
-import { IVariation, IVariationFormData, IVariationReqData } from '../redux/products/variations.types';
+import { IVariation, IVariationFormData, IVariationReqData } from '../redux/products/variations/variations.types';
 import { IProduct, IProductFullDto, IProductFullFormData } from '../redux/products/products.types';
 import { nanoid } from '@reduxjs/toolkit';
 import { AppQueries, AppQueryParams } from '../api';

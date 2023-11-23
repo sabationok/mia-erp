@@ -8,7 +8,7 @@ import { AppQueryParams, createApiCall, ProductsApi, WarehousesApi } from '../..
 import { t } from '../../../../lang';
 import { enumToFilterOptions } from '../../../../utils/fabrics';
 import ModalFilter from '../../../ModalForm/ModalFilter';
-import { IVariationTableData } from '../../../../redux/products/variations.types';
+import { IVariationTableData } from '../../../../redux/products/variations/variations.types';
 import { IPriceListItem } from '../../../../redux/priceManagement/priceManagement.types';
 import styled from 'styled-components';
 import { ModalHeader } from '../../../atoms';

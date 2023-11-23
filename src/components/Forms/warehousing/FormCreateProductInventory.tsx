@@ -6,7 +6,7 @@ import TableList from '../../TableList/TableList';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
 import { IProductInventoryFormData } from '../../../redux/warehouses/warehouses.types';
 import { IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
-import { IVariation } from '../../../redux/products/variations.types';
+import { IVariation } from '../../../redux/products/variations/variations.types';
 import styled from 'styled-components';
 import { useProductsSelector, usePropertiesSelector } from '../../../redux/selectors.store';
 import InputLabel from '../../atoms/Inputs/InputLabel';

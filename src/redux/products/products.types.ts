@@ -7,8 +7,8 @@ import { IProductInventory, IWarehouse } from '../warehouses/warehouses.types';
 import { IBrand } from '../directories/brands.types';
 import { IUser } from '../auth/auth.types';
 import { AppQueryParams } from '../../api';
-import { IVariation } from './variations.types';
-import { IPropertyValue, IVariationTemplate } from './properties.types';
+import { IVariation } from './variations/variations.types';
+import { IPropertyValue, IVariationTemplate } from './properties/properties.types';
 
 export enum ProductStatusEnum {
   pending = 'pending',
@@ -37,12 +37,12 @@ export enum MeasurementUnit {
   Other = 'Other', // Інше (Other)
 }
 
-export enum ProductTypeEnum {
+export enum OfferTypeEnum {
   GOODS = 'GOODS',
   SERVICE = 'SERVICE',
 }
 
-export type ProductFilterOpt = FilterOption<ProductTypeEnum>;
+export type ProductFilterOpt = FilterOption<OfferTypeEnum>;
 
 export interface IProductBase extends IBase {
   label?: string;
@@ -52,7 +52,7 @@ export interface IProductBase extends IBase {
   measurement?: IProductMeasurement;
   dimensions?: IProductDimensions;
   hasVariations?: boolean;
-  type?: ProductTypeEnum;
+  type?: OfferTypeEnum;
   status?: ProductStatusEnum;
   approved?: ProductStatusEnum;
   archived?: boolean;

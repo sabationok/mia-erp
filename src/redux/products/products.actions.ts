@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { IVariation } from './variations.types';
+import { IVariation } from './variations/variations.types';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
 import { IProductInventory } from '../warehouses/warehouses.types';
 

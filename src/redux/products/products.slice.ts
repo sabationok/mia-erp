@@ -10,9 +10,13 @@ import {
   updateProductDefaultsThunk,
   updateProductThunk,
 } from './products.thunks';
-import { createVariationThunk, getAllVariationsByProductIdThunk, updateVariationThunk } from './variations.thunks';
-import { IVariationTemplate } from './properties.types';
-import { createPropertyThunk, getAllPropertiesThunk } from './properties.thunks';
+import {
+  createVariationThunk,
+  getAllVariationsByProductIdThunk,
+  updateVariationThunk,
+} from './variations/variations.thunks';
+import { IVariationTemplate } from './properties/properties.types';
+import { createPropertyThunk, getAllPropertiesThunk } from './properties/properties.thunks';
 import {
   clearCurrentProductAction,
   setCurrentProductInventoriesAction,

@@ -4,7 +4,7 @@ import { ICompany } from '../companies/companies.types';
 import { IManager, IUserBase } from '../auth/auth.types';
 import { IProductInventory, IWarehouse } from '../warehouses/warehouses.types';
 import { IProduct } from '../products/products.types';
-import { IVariation } from '../products/variations.types';
+import { IVariation } from '../products/variations/variations.types';
 import { ICustomerBase } from '../customers/customers.types';
 import { IShipment } from '../shipments/shipments.types';
 import { IPayment } from '../payments/payments.types';

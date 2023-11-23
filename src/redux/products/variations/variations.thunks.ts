@@ -1,10 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { IVariation, IVariationReqData } from './variations.types';
-import { ThunkPayload } from '../store.store';
-import VariationsApi from '../../api/variations.api';
+import { ThunkPayload } from '../../store.store';
+import VariationsApi from '../../../api/variations.api';
 import { isAxiosError } from 'axios';
-import { OnlyUUID } from '../global.types';
-import { AppQueryParams } from '../../api';
+import { OnlyUUID } from '../../global.types';
+import { AppQueryParams } from '../../../api';
 
 export const createVariationThunk = createAsyncThunk<
   IVariation | undefined,

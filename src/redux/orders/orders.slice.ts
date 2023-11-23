@@ -8,6 +8,7 @@ import {
   UpdateCurrentGroupFormInfoDataAction,
   UpdateSlotInGroupAction,
 } from './orders.actions';
+import { getAllOrdersThunk } from './orders.thunks';
 
 export interface IOrdersState {
   orders: IOrder[];
@@ -61,16 +62,15 @@ export const ordersSlice = createSlice({
   reducers: {},
   extraReducers: builder =>
     builder
-      // .addCase('getAllOrdersThunk.fulfilled', (s, a) => {
-      //   // s.isLoading = false;
-      //   // if (Array.isArray(a.payload.data)) {
-      //   //   if (a.payload.refresh) {
-      //   //     s.orders = a.payload.data;
-      //   //     return;
-      //   //   }
-      //   //   s.orders = [...a.payload.data, ...s.orders];
-      //   // }
-      // })
+      .addCase(getAllOrdersThunk.fulfilled, (s, a) => {
+        if (Array.isArray(a.payload.data)) {
+          if (a.payload.refresh) {
+            s.orders = a.payload.data;
+            return;
+          }
+          s.orders = [...a.payload.data, ...s.orders];
+        }
+      })
       .addCase(AddSlotToGroupAction, (s, a) => {
         s.ordersGroupFormData.slots?.push(a.payload);
       })

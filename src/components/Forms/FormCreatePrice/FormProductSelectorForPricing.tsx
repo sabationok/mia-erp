@@ -6,7 +6,7 @@ import ProductCardSimpleOverview from '../../Overviews/ProductCardSimpleOverview
 import { Modals } from '../../Modals';
 import TableList from '../../TableList/TableList';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { IVariation } from '../../../redux/products/variations.types';
+import { IVariation } from '../../../redux/products/variations/variations.types';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import { getIdRef } from '../../../utils/dataTransform';
 import { createTableTitlesFromTemplate } from '../../../utils';

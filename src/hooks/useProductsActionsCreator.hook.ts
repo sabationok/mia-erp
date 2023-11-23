@@ -1,7 +1,7 @@
 import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
-import { IProduct, ProductTypeEnum } from '../redux/products/products.types';
+import { IProduct, OfferTypeEnum } from '../redux/products/products.types';
 import FormCreateProduct from '../components/Forms/FormProduct/FormCreateProduct';
 import { productsFilterOptions } from '../data/modalFilterOptions.data';
 import { useNavigate } from 'react-router-dom';
@@ -9,17 +9,28 @@ import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { ToastService } from '../services';
 import { createProductFormData } from '../utils/dataTransform';
 import { createApiCall, ProductsApi } from '../api';
+import { t } from '../lang';
 
 export type ProductsActionsCreator = TableActionCreator<IProduct>;
 
 const useProductsActionsCreator = (): ProductsActionsCreator => {
   const service = useAppServiceProvider()[ServiceName.products];
   const navigate = useNavigate();
-  // const state = useProductsSelector();
   const modals = useModalProvider();
 
   return useCallback(
     ctx => [
+      {
+        name: 'refreshData',
+        title: t('Refresh data'),
+        icon: 'refresh',
+        type: 'onlyIcon',
+        onClick: () => {
+          service.getAll({ data: { refresh: true }, onLoading: ctx.onRefresh });
+        },
+      },
+      { separator: true },
+
       {
         name: 'reviewProduct',
         title: 'Перегляд продукту',
@@ -30,6 +41,7 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
           ctx.selectedRow?._id && navigate(ctx.selectedRow?._id);
         },
       },
+
       {
         name: 'editProduct',
         title: 'Змінити',
@@ -125,7 +137,7 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
             modalChildrenProps: {
               title: 'Створити',
               filterOptions: productsFilterOptions,
-              defaultState: { type: ProductTypeEnum.GOODS },
+              defaultState: { type: OfferTypeEnum.GOODS },
               onSubmit: (data, o) => {
                 service.create({
                   data,

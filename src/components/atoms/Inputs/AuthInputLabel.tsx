@@ -22,7 +22,8 @@ const AuthInputLabel: React.FC<AuthInputLabelProps & Omit<InputLabelProps, 'succ
   return (
     <InputBox>
       <Wrapper>
-        <SvgIcon size="26px" iconId={icon} />
+        <SvgIcon size="30px" iconId={icon} />
+
         {children}
 
         <StIcon size="26px" iconId={!error ? 'success' : 'error'} isError={!!error} isSuccess={!!success} />
@@ -45,7 +46,7 @@ const InputBox = styled.div`
 
 const Wrapper = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 4px;
 `;
 const HelperText = styled.span<{ isError?: boolean; isSuccess?: boolean }>`

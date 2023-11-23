@@ -9,7 +9,7 @@ import ProductsApi from '../../api/products.api';
 import { OnlyUUID } from '../global.types';
 import { IPriceListItem } from '../priceManagement/priceManagement.types';
 import { IProductInventory } from '../warehouses/warehouses.types';
-import { IVariation } from './variations.types';
+import { IVariation } from './variations/variations.types';
 import _ from 'lodash';
 
 enum ProductsThunkType {
@@ -18,9 +18,13 @@ enum ProductsThunkType {
   createProductThunk = 'products/createProductThunk',
   updateProductThunk = 'products/updateProductThunk',
   deleteProductThunk = 'products/deleteProductThunk',
+
   getAllVariations = 'products/getAllVariations',
+
   getAllPrices = 'products/getAllPrices',
+
   getAllInventories = 'products/getAllInventories',
+
   updateDefaultsById = 'products/updateDefaultsByIdThunk',
 }
 type ActionWithCurrent = { refreshCurrent?: boolean; updateCurrent?: boolean };

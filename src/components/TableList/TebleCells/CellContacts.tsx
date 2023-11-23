@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { useRow } from '../TableRows/TableRow';
 import { CellTitleContent, CellTittleProps } from './CellTitle';
 import SvgIcon from '../../atoms/SvgIcon/SvgIcon';
-import { iconId } from '../../../img/sprite';
 import getValueByPath from '../../../utils/getValueByPath';
+import FlexBox from '../../atoms/FlexBox';
 
 // import { formatPhoneNumber } from '../../../utils';
 
@@ -42,19 +42,19 @@ const CellContactsDbl: React.FC<CellContactsDblProps & React.HTMLAttributes<HTML
   return (
     <CellBase style={{ width }} {...props}>
       <Top align={top.align} uppercase={top.uppercase}>
-        <StIcon iconId={iconId.mailOutlined} size="12px" />
+        <StIcon icon={'mailOutlined'} size={'12px'} />
 
-        <div title={contentTop} className="inner">
+        <FlexBox justifyContent={'center'} title={contentTop} className="inner">
           {contentTop ? <a href={`mailto:${contentTop}`}>{contentTop}</a> : '---'}
-        </div>
+        </FlexBox>
       </Top>
 
       <Bottom align={bottom?.align} uppercase={bottom?.uppercase}>
-        <StIcon iconId={iconId.phoneOutlined} size="12px" />
+        <StIcon icon={'phoneOutlined'} size={'12px'} />
 
-        <div title={contentBottom} className="inner">
+        <FlexBox justifyContent={'center'} title={contentBottom} className="inner">
           {contentBottom ? <a href={`tel:${contentBottom}`}>{contentBottom}</a> : '---'}
-        </div>
+        </FlexBox>
       </Bottom>
     </CellBase>
   );
@@ -86,6 +86,7 @@ const Content = styled.div<Omit<CellTitleContent, 'name'>>`
   justify-content: ${({ align }) => (align === 'center' ? 'center' : `flex-${align}`)};
 
   & .inner {
+    height: 100%;
     width: fit-content;
     /* display: -webkit-box;
     -webkit-box-orient: vertical;
