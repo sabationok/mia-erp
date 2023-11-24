@@ -70,6 +70,6 @@ const ExtraFooter = styled(FlexBox)`
   color: ${({ theme }) => theme.fontColorHeader};
   fill: ${({ theme }) => theme.fillColorHeader};
   background-color: ${({ theme }) => theme.modalBackgroundColor};
-  //border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
+  border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;
 export default ModalFooter;

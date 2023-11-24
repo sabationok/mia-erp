@@ -29,10 +29,11 @@ const useLoadInitialAppDataHook = ({
     products,
     priceManagement,
     // transactions,
+    deliveries,
     warehouses,
     payments,
     integrations,
-    shipments,
+    // shipments,
     invoicing,
     customers,
   } = useAppServiceProvider();
@@ -65,7 +66,7 @@ const useLoadInitialAppDataHook = ({
           onSuccess: () => {
             invoicing.getAllMethods();
             payments.getAllMethods();
-            shipments.getAllMethods();
+            deliveries.getAllMethods();
             customers.getAllMethods();
           },
         });

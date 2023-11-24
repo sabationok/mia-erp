@@ -18,6 +18,7 @@ import { IProperty, IPropertyDto } from '../../../redux/products/properties/prop
 import { ToastService } from '../../../services';
 import { DirPropertiesCTX, DirPropertiesCTXValue } from './DirPropertiesCTX';
 import PropertiesGroupItem from './components/PropertiesGroupItem';
+import { DirPropertiesActionsBuilder } from './dirPropertiesActionsCreator';
 
 export type PropertiesLevelType = { isGroup?: boolean; isProperty?: boolean; isValue?: boolean };
 
@@ -60,6 +61,11 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
     searchQuery: current,
     data: properties,
   });
+
+  useEffect(() => {
+    const _actions = DirPropertiesActionsBuilder.buildNamedCallbacksMap({ service, modalService });
+    console.log({ _actions });
+  }, [modalService, service]);
 
   useEffect(() => {
     const close = () => setTimeout(ToastService.createToastLoader('Loading properties...'), 1000);

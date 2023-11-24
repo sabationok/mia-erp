@@ -112,45 +112,44 @@ export function createDataForReq<IncomeDataType extends Record<string, any> = an
     ignorePaths?: (keyof IncomeDataType)[];
   }
 ): Partial<IncomeDataType> {
-  let outData: Partial<IncomeDataType> = {};
+  let outData: Record<string, any> = incomeData;
 
-  const keys = Object.keys(incomeData) as (keyof IncomeDataType)[];
-
-  keys.map(key => {
+  Object.entries(outData).forEach(([key, value]) => {
     if (['_id', 'createdAt', 'updatedAt', ...(options?.omitPathArr || [])]?.includes(key)) return '';
-    const value = incomeData[key];
 
     if (options?.ignorePaths && options.ignorePaths.includes(key)) {
       outData[key] = value;
-      return '';
+      return;
     }
-    if (!value) return '';
+    if (!value) return;
 
     if (options?.dateToNumberPath && key === options?.dateToNumberPath) {
       outData[key] = new Date(value).valueOf() as any;
-      return '';
+      return;
     }
     if (options?.amountToNumberPath && key === options?.amountToNumberPath) {
       outData[key] = (Number(value) || 0) as any;
-      return '';
+      return;
     }
     if (value && typeof value === 'object') {
-      if ('_id' in value) return (outData[key] = { _id: value?._id } as any);
+      if ('_id' in value) return (outData[key] = { _id: value?._id } as OnlyUUID);
       if ('value' in value) return (outData[key] = value?.value);
-      if (Array.isArray(value) && value.length > 0) {
-        console.log('createDataForReq isArray', { key, value });
-        outData[key] = value as any;
-        return '';
-      }
-      return '';
-    }
 
-    outData[key] = value as any;
-    return value;
+      if (Array.isArray(value)) {
+        outData[key] = value as IncomeDataType[typeof key];
+        return;
+      }
+
+      outData[key] = createDataForReq(value);
+      return;
+    }
+    if (value) {
+      outData[key] = value as any;
+    }
+    return;
   });
 
-  console.log('outData', outData);
-  return outData;
+  return outData as Partial<IncomeDataType>;
 }
 
 // const createProductFormDataOmitPaths: (keyof IProduct | string)[] = [

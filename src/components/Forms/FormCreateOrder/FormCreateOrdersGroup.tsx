@@ -243,7 +243,7 @@ function transformOrderInfoForReq(input: ICreateOrderInfoFormState): ICreateOrde
   console.log({ output });
   return output;
 }
-function _transformOrderInfoForReq(input: ICreateOrderInfoFormState): ICreateOrdersGroupDto['info'] {
+export function _transformOrderInfoForReq(input: ICreateOrderInfoFormState): ICreateOrdersGroupDto['info'] {
   console.debug('Transform Order Info For Req'.toUpperCase());
   console.log({ input });
 

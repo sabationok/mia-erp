@@ -50,9 +50,5 @@ const StModalForm = styled(ModalForm)`
   & .modalFooter {
     padding: 8px;
   }
-
-  & .tOverHead {
-    padding: 8px;
-  }
 `;
 export default DirUsers;

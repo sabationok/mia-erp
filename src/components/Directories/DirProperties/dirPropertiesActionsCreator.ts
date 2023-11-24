@@ -1,15 +1,21 @@
 import { DirInTreeActionsCreatorType } from '../dir.types';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
-import { IProperty, IPropertyDto } from '../../../redux/products/properties/properties.types';
+import {
+  IProperty,
+  IPropertyDto,
+  IPropertyValue,
+  IVariationTemplate,
+} from '../../../redux/products/properties/properties.types';
 import { ProductsService } from '../../../hooks/useProductsService.hook';
 import { Modals } from '../../Modals';
 import { t } from '../../../lang';
-import { toast } from 'react-toastify';
 import { productsFilterOptions } from '../../../data/modalFilterOptions.data';
 import { PropertiesLevelType } from './DirProperties';
 import { NavigateFunction } from 'react-router/dist/lib/hooks';
 import { IModalProviderContext } from '../../ModalProvider/ModalProvider';
-import { ITableListContext } from '../../TableList/tableTypes.types';
+import { OfferTypeEnum } from '../../../redux/products/products.types';
+import { createDataForReq } from '../../../utils/dataTransform';
+import { ToastService } from '../../../services';
 
 export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
   ApiDirType.PROPERTIES_PRODUCTS,
@@ -34,7 +40,7 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
                 onSuccess: rd => {
                   options?.onSuccess && options?.onSuccess(rd);
                   o?.close && modal?.onClose();
-                  toast.success(`Created: ${data.label}`);
+                  ToastService.success(`Created: ${data.label}`);
                 },
               })
               .then();
@@ -54,11 +60,11 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
           onSubmit: (data, o) => {
             service
               .createProperty({
-                data: { data: { ...data, parent }, params: { createTreeData: true } },
+                data: { data: createDataForReq({ ...data, parent }), params: { createTreeData: true } },
                 onSuccess: rd => {
                   options?.onSuccess && options?.onSuccess(rd);
                   o?.close && modal?.onClose();
-                  toast.success(`Created: ${data.label}`);
+                  ToastService.success(`Created: ${data.label}`);
                 },
               })
               .then();
@@ -78,12 +84,12 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
           onSubmit: (data, o) => {
             service
               .createProperty({
-                data: { data: { ...data, parent }, params: { createTreeData: true } },
+                data: { data: createDataForReq({ ...data, parent }), params: { createTreeData: true } },
                 onSuccess: rd => {
                   options?.onSuccess && options?.onSuccess(rd);
 
                   o?.close && modal?.onClose();
-                  toast.success(`Created: ${data.label}`);
+                  ToastService.success(`Created: ${data.label}`);
                 },
               })
               .then();
@@ -109,7 +115,7 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
                   options?.onSuccess && options?.onSuccess(rd);
 
                   o?.close && modal?.onClose();
-                  toast.success(`Updated: ${data.label}`);
+                  ToastService.success(`Updated: ${data.label}`);
                 },
               })
               .then();
@@ -131,7 +137,7 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
     //       data: { _id, data: { isArchived: status } },
     //       onSuccess: (rd, meta) => {
     //         console.log(rd);
-    //         // toast.success(`${dataForUpdate.label} => ${status ? 'archived' : 'unarchived'}`);
+    //         // ToastService.success(`${dataForUpdate.label} => ${status ? 'archived' : 'unarchived'}`);
     //       },
     //     })
     //     .then();
@@ -146,24 +152,138 @@ export interface DirInTreeActionsBuilderControls<Service = any, Extra = any> {
   modalService: IModalProviderContext;
   extra?: Extra;
 }
-export type DirInTreeBaseActionType = {
-  name: string;
-};
-export type DirInTreeActionCreator<Service = any, TData = any, Extra = any, Action = any> = (
-  params: DirInTreeActionsBuilderControls<Service, Extra> & { ctx: ITableListContext<TData> }
-) => Action;
-export class DirInTreeActionsBuilder<Service = any, TData = any, Extra = any, Name extends string = any> {
-  private map: Map<Name, DirInTreeActionCreator<Service, TData, Extra, Name>> = new Map([]);
 
-  // constructor(private readonly controls: TableActionsBuilderControls<Service, TData, Extra>) {}
-  add(name: Name, creator: DirInTreeActionCreator<Service, TData, Extra, Name>) {
+export enum DirPropertiesActionsEnum {
+  onUpdate = 'onUpdate',
+  onCreateValue = 'onCreateValue',
+  onCreateChild = 'onCreateChild',
+  onChangeSelectableStatus = 'onChangeSelectableStatus',
+}
+
+export type DirPropertiesActionName = keyof typeof DirPropertiesActionsEnum;
+
+enum DirPropertyType {
+  group = 'group',
+  prop = 'prop',
+  value = 'value',
+}
+
+type DirPropertyItemByType = {
+  [DirPropertyType.group]: IVariationTemplate;
+  [DirPropertyType.prop]: IProperty;
+  [DirPropertyType.value]: IPropertyValue;
+};
+type DirPropertyParentItemByType = {
+  [DirPropertyType.group]: null;
+  [DirPropertyType.prop]: IVariationTemplate;
+  [DirPropertyType.value]: IProperty;
+};
+
+type DirPropertiesActionType<Name extends string = any> = {
+  name: Name;
+  label: string;
+  for: DirPropertyType[];
+  onPress: <PropType extends DirPropertyType = any>(info: {
+    item: DirPropertyItemByType[PropType];
+    type: OfferTypeEnum;
+    propType?: PropType;
+    parent?: DirPropertyParentItemByType[PropType];
+    index: number;
+  }) => void;
+};
+export type DirInTreeBaseActionType<Name extends DirInTreeActionCreatorNameType = any> = {
+  name: Name;
+  onPress: (...args: any[]) => void;
+};
+export type DirInTreeActionCreatorNameType = string | number | symbol;
+
+export type DirInTreeActionsMap<Name extends DirInTreeActionCreatorNameType = any, ActionPattern = any> = Pick<
+  Map<Name, ActionPattern>,
+  'get'
+>;
+
+export type DirInTreeActionCreator<
+  Name extends DirInTreeActionCreatorNameType = any,
+  Service = any,
+  ActionPattern extends DirInTreeBaseActionType<Name> = any,
+  Extra = any
+> = (params: DirInTreeActionsBuilderControls<Service, Extra> & { name: Name }) => ActionPattern;
+
+// <Name extends DirInTreeActionCreatorNameType = any>
+export class DirInTreeActionsBuilder<
+  Name extends string = any,
+  ActionPattern extends DirInTreeBaseActionType<Name> = any,
+  Service = any,
+  Extra = any
+> {
+  private map: Map<Name, DirInTreeActionCreator<Name, Service, ActionPattern, Extra>> = new Map([]);
+
+  // constructor(private readonly controls: TableActionsBuilderControls<Service, Extra>) {}
+  add(name: Name, creator: DirInTreeActionCreator<Name, Service, ActionPattern, Extra>) {
     this.map.set(name, creator);
     return this;
   }
-  activate(controls: DirInTreeActionsBuilderControls<Service, Extra>) {
-    return (ctx: ITableListContext<TData>) => this.build(ctx, controls);
+  private get arrFromMapEntries() {
+    return Array.from(this.map.entries());
   }
-  private build(ctx: ITableListContext<TData>, controls: DirInTreeActionsBuilderControls<Service, Extra>) {
-    return Array.from(this.map.values()).map(creator => creator({ ctx, ...controls }));
+
+  buildMap(
+    controls: DirInTreeActionsBuilderControls<Service, Extra>
+  ): DirInTreeActionsMap<Name, ActionPattern & { name: Name }> {
+    return new Map(
+      this.arrFromMapEntries.map(([name, creator]) => [name, { ...creator({ ...controls, name }), name }])
+    );
+  }
+
+  buildArray(controls: DirInTreeActionsBuilderControls<Service, Extra>) {
+    return this.arrFromMapEntries.map(([name, creator]) => [name, { ...creator({ ...controls, name }), name }]);
+  }
+
+  buildNamedMap(
+    controls: DirInTreeActionsBuilderControls<Service, Extra>
+  ): Record<Name, ActionPattern & { name: Name }> {
+    return Object.assign(
+      {},
+      ...this.arrFromMapEntries.map(([name, creator]) => ({
+        [name as Name]: { ...creator({ ...controls, name }), name },
+      }))
+    );
+  }
+
+  buildNamedCallbacksMap(
+    controls: DirInTreeActionsBuilderControls<Service, Extra>
+  ): Record<Name, ActionPattern['onPress']> {
+    return Object.assign(
+      {},
+      ...this.arrFromMapEntries.map(([name, creator]) => ({
+        [name as Name]: creator({ ...controls, name }).onPress,
+      }))
+    );
   }
 }
+
+export const DirPropertiesActionsBuilder = new DirInTreeActionsBuilder<
+  DirPropertiesActionName,
+  DirPropertiesActionType,
+  ProductsService,
+  { offerType: OfferTypeEnum }
+>()
+  .add('onCreateValue', ({ name, navigate, service }) => {
+    return {
+      name,
+      for: [DirPropertyType.prop, DirPropertyType.group],
+      label: t(name),
+      onPress: ({ item, parent }) => {
+        if ('parent' in item) {
+        }
+      },
+    };
+  })
+  .add('onUpdate', ({ name }) => {
+    return {
+      name,
+      for: [DirPropertyType.prop, DirPropertyType.group],
+      label: t(name),
+      onPress: info => {},
+    };
+  });

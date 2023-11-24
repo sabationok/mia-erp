@@ -10,7 +10,9 @@ export enum DeliveryProviderEnum {
   ukrposhta = 'ukrposhta',
   novaposhta = 'novaposhta',
 }
-enum DeliveryStatusTypeEnum {}
+export enum DeliveryStatusTypeEnum {
+  pending = 'pending',
+}
 
 export interface IDelivery extends IBase {
   order?: IOrder;

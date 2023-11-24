@@ -109,7 +109,7 @@ const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
         },
       ];
     },
-    [modalS, navigate]
+    [getAll, modalS, navigate]
   );
 };
 export default useOrdersActionsCreatorHook;

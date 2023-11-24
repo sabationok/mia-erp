@@ -13,11 +13,12 @@ import {
   PropertyTypeEnum,
 } from '../../../redux/products/properties/properties.types';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
-import ButtonsGroup, { ButtonGroupSelectHandler } from '../../atoms/ButtonsGroup';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import { Text } from '../../atoms/Text';
 import styled from 'styled-components';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import ButtonSwitch from '../../atoms/ButtonSwitch';
+import { useEffect } from 'react';
 
 const propCmsTypeFilterOptions = enumToFilterOptions(PropertyTypeEnum);
 export interface FormCreatePropertyProps extends Omit<ModalFormProps<OfferTypeEnum, any, IPropertyBase>, 'onSubmit'> {
@@ -31,11 +32,6 @@ export interface FormCreatePropertyProps extends Omit<ModalFormProps<OfferTypeEn
   isProperty?: boolean;
   isValue?: boolean;
 }
-export enum IsSelectableEnum {
-  No = 'No',
-  Yes = 'Yes',
-}
-const filterOptions = enumToFilterOptions(IsSelectableEnum);
 
 export interface IPropertyFormData extends IPropertyDto {}
 
@@ -60,19 +56,22 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
     defaultValues: { ...defaultState, type },
   });
 
+  console.log(errors);
+
   const onValid = (data: IPropertyFormData) => {
-    onSubmit && onSubmit(data, { ...submitOptions.state });
+    onSubmit && onSubmit(data, { ...submitOptions.state, isGroup, isProperty, isValue });
   };
-  const handleIsSelectableByUser: ButtonGroupSelectHandler<IsSelectableEnum> = info => {
-    setValue('isSelectable', info?.option?.value === 'Yes');
-  };
+
+  useEffect(() => {
+    console.log('parent', defaultState?.parent);
+  }, [defaultState?.parent]);
 
   return (
     <ModalForm
       onSubmit={handleSubmit(onValid)}
       fillHeight
       {...props}
-      onOptSelect={(option, value, index) => {
+      onOptSelect={(_o, value, _i) => {
         setValue('type', value);
       }}
       extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
@@ -98,18 +97,14 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
 
         {isProperty && (
           <InputLabel label={'Доступно для формування варіацій'}>
-            <ButtonsGroup
-              options={filterOptions}
-              onSelect={handleIsSelectableByUser}
-              defaultIndex={defaultState?.isSelectable ? 1 : 0}
+            <ButtonSwitch
+              name={'isSelectable'}
+              value={defaultState?.isSelectable}
+              onChange={res => {
+                setValue('isSelectable', res);
+              }}
             />
           </InputLabel>
-        )}
-
-        {isValue && (
-          <>
-            <Text>{'Is value'}</Text>
-          </>
         )}
 
         <CmsConfigs margin={'8px 0 0'} fillWidth>
@@ -119,7 +114,7 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
             </Text>
           </CmsConfigsHeader>
 
-          <InputLabel label={t('Configs key')}>
+          <InputLabel label={t('Cms key')}>
             <InputText placeholder={t('Key')} {...register('cmsConfigs.key')} />
           </InputLabel>
 
@@ -129,7 +124,13 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
             </InputLabel>
           )}
 
-          {isGroup && (
+          {isValue && defaultState?.parent?.cmsConfigs?.type === 'color' && (
+            <InputLabel label={t('Colors')}>
+              <InputText placeholder={t('description')} type={'color'} {...register('cmsConfigs.description')} />
+            </InputLabel>
+          )}
+
+          {isProperty && (
             <InputLabel label={t('Cms type')}>
               <CustomSelect
                 {...registerSelect('cmsConfigs.type', {
