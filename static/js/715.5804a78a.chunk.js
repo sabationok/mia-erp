@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkcounter_app_ts=self.webpackChunkcounter_app_ts||[]).push([[715],{5715:function(t,e,a){a.r(e);var n=a(1413),r=a(6459),s=a(9656),u=a(3329);e.default=function(t){var e=Object.assign({},((0,r.Z)(t),t));return(0,u.jsx)(s.Z,(0,n.Z)({width:"480px",title:"FormCreateVariation"},e))}}}]);
+//# sourceMappingURL=715.5804a78a.chunk.js.map
