@@ -160,8 +160,8 @@ export const priceAmountAndPercentageFieldsLabels: Record<
     percentage: t('Markup, %'),
   },
   commission: {
-    amount: t('Markup, amount'),
-    percentage: t('Markup, %'),
+    amount: t('Commission, amount'),
+    percentage: t('Commission, %'),
   },
   bonus: {
     amount: t('Bonus, amount'),

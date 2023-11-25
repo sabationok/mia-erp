@@ -42,15 +42,17 @@ export interface AmountAndPercentage {
   amount?: number;
   percentage?: number;
 }
+export enum PriceAmountAndPercentageFieldsEnum {
+  commission = 'commission',
+  markup = 'markup',
+  discount = 'discount',
+  cashback = 'cashback',
+  bonus = 'bonus',
+  tax = 'tax',
+  vat = 'vat',
+}
 
-export type PriceAmountAndPercentageFieldsKey =
-  | 'discount'
-  | 'cashback'
-  | 'bonus'
-  | 'markup'
-  | 'commission'
-  | 'tax'
-  | 'vat';
+export type PriceAmountAndPercentageFieldsKey = keyof typeof PriceAmountAndPercentageFieldsEnum;
 
 export interface PriceAmountAndPercentageFields
   extends Record<PriceAmountAndPercentageFieldsKey, AmountAndPercentage> {}

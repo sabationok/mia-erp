@@ -1,30 +1,29 @@
-import ModalForm, { ModalFormProps } from '../../ModalForm';
-import FlexBox from '../../atoms/FlexBox';
-import { IPriceFormData } from '../../../redux/priceManagement/priceManagement.types';
-import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { useAppForm } from '../../../hooks';
+import ModalForm, { ModalFormProps } from '../../../ModalForm';
+import FlexBox from '../../../atoms/FlexBox';
+import { IPriceFormData } from '../../../../redux/priceManagement/priceManagement.types';
+import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
+import { useAppForm } from '../../../../hooks';
 import FormProductSelectorForPricing from './FormProductSelectorForPricing';
-import InputLabel from '../../atoms/Inputs/InputLabel';
-import InputText from '../../atoms/Inputs/InputText';
-import { useCallback, useEffect, useMemo } from 'react';
-import { IProduct } from '../../../redux/products/products.types';
-import { usePriceListsSelector, useProductsSelector } from '../../../redux/selectors.store';
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
-import { t } from '../../../lang';
+import InputLabel from '../../../atoms/Inputs/InputLabel';
+import { useCallback, useMemo } from 'react';
+import { IProduct } from '../../../../redux/products/products.types';
+import { usePriceListsSelector, useProductsSelector } from '../../../../redux/selectors.store';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../components/FormAfterSubmitOptions';
+import { t } from '../../../../lang';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import styled from 'styled-components';
+import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { Path } from 'react-hook-form';
-import { toReqData } from '../../../utils/data-transform';
-import { OnRowClickHandler } from '../../TableList/tableTypes.types';
-import TableList from '../../TableList/TableList';
-import { priceListColumns } from '../../../data/priceManagement.data';
-import { UUIDRefSchema } from '../validation';
+import { toReqData } from '../../../../utils/data-transform';
+import { OnRowClickHandler } from '../../../TableList/tableTypes.types';
+import TableList from '../../../TableList/TableList';
+import { priceListColumns } from '../../../../data/priceManagement.data';
+import { UUIDRefSchema } from '../../validation';
 import _ from 'lodash';
-import { AnyFn } from '../../../utils/types';
-import { IVariation } from '../../../redux/products/variations/variations.types';
-import { ToastService } from '../../../services';
+import { AnyFn } from '../../../../utils/types';
+import { IVariation } from '../../../../redux/products/variations/variations.types';
+import { ToastService } from '../../../../services';
+import FormPriceInputs from './FormPriceInputs';
 
 const throttleCallback = _.throttle(<T extends AnyFn>(fn: T) => {
   fn();
@@ -46,6 +45,7 @@ export interface FormCreatePriceProps
   update?: string;
 }
 export type PriceFormDataPath = Path<IPriceFormData>;
+
 const inputsFormCreatePrice: {
   name: PriceFormDataPath;
   disabled?: boolean;
@@ -56,18 +56,18 @@ const inputsFormCreatePrice: {
 }[] = [
   { label: t('Price IN'), placeholder: t('Price IN'), required: true, autoFocus: true, name: 'in' },
   { label: t('Price OUT'), placeholder: t('Price OUT'), required: true, name: 'out' },
-  {
-    label: t('Commission, amount'),
-    placeholder: t('Enter commission amount'),
-    disabled: true,
-    name: 'cashback.amount',
-  },
-  {
-    label: t('Commission, %'),
-    placeholder: t('Enter commission percentage'),
-    disabled: true,
-    name: 'cashback.percentage',
-  },
+  // {
+  //   label: t('Commission, amount'),
+  //   placeholder: t('Enter commission amount'),
+  //   disabled: true,
+  //   name: 'commission.amount',
+  // },
+  // {
+  //   label: t('Commission, %'),
+  //   placeholder: t('Enter commission percentage'),
+  //   disabled: true,
+  //   name: 'commission.percentage',
+  // },
 ];
 
 const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update, product, onSubmit, ...props }) => {
@@ -93,11 +93,10 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
     reValidateMode: 'onSubmit',
   });
   const {
+    formState: { errors },
     formValues,
-    register,
     setValue,
     handleSubmit,
-    formState: { errors },
   } = priceForm;
 
   const { in: cost, out: price } = formValues;
@@ -111,9 +110,9 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
     const calculatedCommissionAmount = priceNum - costNum;
     const calculatedCommissionPercentage = (calculatedCommissionAmount / priceNum) * 100;
 
-    setValue('cashback.amount', calculatedCommissionAmount ? Number(calculatedCommissionAmount.toFixed(2)) : 0);
+    setValue('commission.amount', calculatedCommissionAmount ? Number(calculatedCommissionAmount.toFixed(2)) : 0);
     setValue(
-      'cashback.percentage',
+      'commission.percentage',
       calculatedCommissionPercentage ? Number(calculatedCommissionPercentage.toFixed(2)) : 0
     );
   }, [cost, price, setValue]);
@@ -154,10 +153,10 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
     //   });
   };
 
-  useEffect(() => {
-    // const throttledCallback=_.throttle(recalculateValues)
-    throttleCallback(recalculateValues);
-  }, [cost, price, recalculateValues]);
+  // useEffect(() => {
+  //   // const throttledCallback=_.throttle(recalculateValues)
+  //   throttleCallback(recalculateValues);
+  // }, [cost, price, recalculateValues]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
 
   return (
@@ -194,42 +193,28 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
           </FlexBox>
         </InputLabel>
 
-        <Inputs>
-          {inputsFormCreatePrice.map(info => {
-            return (
-              <InputLabel
-                key={`input_${info.name}`}
-                label={info?.label}
-                required={info?.required}
-                disabled={info?.disabled}
-                error={errors[info.name as never]}
-              >
-                <InputText
-                  align={'right'}
-                  {...register(info?.name, { valueAsNumber: true })}
-                  placeholder={info?.placeholder}
-                  required={info?.required}
-                  autoFocus={info?.autoFocus}
-                  disabled={info?.disabled}
-                  type={'number'}
-                  style={{ textAlign: 'center' }}
-                />
-              </InputLabel>
-            );
-          })}
-        </Inputs>
+        <FormPriceInputs
+          form={priceForm}
+          handleBlur={(name, callback) => {
+            return ev => {
+              console.log({ name }, { ev });
+              callback && callback(ev);
+              recalculateValues();
+            };
+          }}
+        />
       </FlexBox>
     </ModalForm>
   );
 };
-const Inputs = styled.div`
-  display: grid;
-  grid-template-columns: 2fr 2fr;
-
-  gap: 8px;
-
-  padding: 0 8px;
-`;
+// const Inputs = styled.div`
+//   display: grid;
+//   grid-template-columns: 2fr 2fr;
+//
+//   gap: 8px;
+//
+//   padding: 0 8px;
+// `;
 export default FormCreatePrice;
 // if (!canCount) {
 //   setValue('markupAmount', 0);

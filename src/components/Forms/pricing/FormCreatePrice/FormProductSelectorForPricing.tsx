@@ -1,20 +1,19 @@
-import FlexBox from '../../atoms/FlexBox';
+import FlexBox from '../../../atoms/FlexBox';
 import { useEffect, useMemo, useState } from 'react';
-import { useModalProvider } from '../../ModalProvider/ModalProvider';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import ProductCardSimpleOverview from '../../Overviews/ProductCardSimpleOverview';
-import { Modals } from '../../Modals';
-import TableList from '../../TableList/TableList';
-import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { IVariation } from '../../../redux/products/variations/variations.types';
-import { useProductsSelector } from '../../../redux/selectors.store';
-import { getIdRef } from '../../../utils/data-transform';
-import { createTableTitlesFromTemplate } from '../../../utils';
-import { transformVariationTableData } from '../../../utils/tables';
-import { OnRowClickHandler } from '../../TableList/tableTypes.types';
-import { OnlyUUID } from '../../../redux/global.types';
-import { IProduct } from '../../../redux/products/products.types';
-import InputLabel from '../../atoms/Inputs/InputLabel';
+import { useModalProvider } from '../../../ModalProvider/ModalProvider';
+import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import ProductCardSimpleOverview from '../../../Overviews/ProductCardSimpleOverview';
+import { Modals } from '../../../Modals';
+import TableList from '../../../TableList/TableList';
+import { ServiceName, useAppServiceProvider } from 'hooks/useAppServices.hook';
+import { IVariation } from 'redux/products/variations/variations.types';
+import { useProductsSelector } from 'redux/selectors.store';
+import { createTableTitlesFromTemplate, getIdRef } from 'utils';
+import { transformVariationTableData } from 'utils/tables';
+import { OnRowClickHandler } from '../../../TableList/tableTypes.types';
+import { OnlyUUID } from 'redux/global.types';
+import { IProduct } from 'redux/products/products.types';
+import InputLabel from '../../../atoms/Inputs/InputLabel';
 import styled from 'styled-components';
 
 export interface FormProductSelectorForPricingProps {

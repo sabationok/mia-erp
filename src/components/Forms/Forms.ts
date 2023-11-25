@@ -13,7 +13,7 @@ export const CreateContractor = lazy(() => import('./FormCreateCounterparty'));
 export const CreateCategory = lazy(() => import('./FormCreateCategory'));
 export const CreateTag = lazy(() => import('./FormCreateTag'));
 // * PRICING
-export const CreatePrice = lazy(() => import('./FormCreatePrice/FormCreatePrice'));
+export const CreatePrice = lazy(() => import('./pricing/FormCreatePrice/FormCreatePrice'));
 export const CreatePriceList = lazy(() => import('./pricing/FormCreatePriceList'));
 // * COMPANY
 export const InviteUser = lazy(() => import('./FormInviteUser'));

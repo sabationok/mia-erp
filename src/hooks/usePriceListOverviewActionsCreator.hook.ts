@@ -3,7 +3,7 @@ import { IPriceListItem } from '../redux/priceManagement/priceManagement.types';
 import { useModalService } from '../components/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { OnlyUUID } from '../redux/global.types';
-import FormCreatePrice from '../components/Forms/FormCreatePrice/FormCreatePrice';
+import FormCreatePrice from '../components/Forms/pricing/FormCreatePrice/FormCreatePrice';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { ToastService } from '../services';
 

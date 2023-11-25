@@ -4,7 +4,7 @@ export type { FormCreateContractorProps } from './FormCreateCounterparty';
 export type { FormCreateTransactionProps } from './FormCreateTransaction';
 export type { FormCreateCategoryProps } from './FormCreateCategory';
 export type { FormCreatePriceListProps } from './pricing/FormCreatePriceList';
-export type { FormCreatePriceProps } from './FormCreatePrice/FormCreatePrice';
+export type { FormCreatePriceProps } from './pricing/FormCreatePrice/FormCreatePrice';
 export type { FormCreateCustomRoleProps } from './FormCreateCustomRole';
 export type { FormCreateCountProps } from './FormCreateCount';
 export type { FormCreateCompanyProps } from './FormCreateCompany';
