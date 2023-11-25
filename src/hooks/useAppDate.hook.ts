@@ -1,22 +1,28 @@
+import { parseISO } from 'date-fns';
 import { useMemo } from 'react';
-import { format, parseISO } from 'date-fns';
+import { toAppDateFormat } from '../utils';
 
 const useAppDate = (
   date: string | number | Date
 ): {
   formattedDate: string;
   formattedTime: string;
-} =>
-  useMemo(() => {
-    let formattedDate = '-',
-      formattedTime = '-';
+} => {
+  let formattedDate = '--.--.----',
+    formattedTime = '--:--:--';
+
+  try {
     if (date) {
       const parsedDate = typeof date === 'string' ? parseISO(date) : parseISO(new Date(date).toString());
 
-      formattedDate = format(parsedDate, 'dd.MM.yyyy');
-      formattedTime = format(parsedDate, '(HH:mm:ss)');
+      formattedDate = toAppDateFormat(parsedDate, 'dd.MM.yyyy');
+      formattedTime = toAppDateFormat(parsedDate, '(HH:mm:ss)');
     }
-    return { formattedDate, formattedTime };
-  }, [date]);
+  } catch (e) {
+    console.error('useAppDate | wrong date format passed', { date });
+  }
+
+  return useMemo(() => ({ formattedDate, formattedTime }), [formattedDate, formattedTime]);
+};
 
 export default useAppDate;

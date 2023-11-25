@@ -101,21 +101,28 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
 
   const { in: cost, out: price } = formValues;
 
-  const recalculateValues = useCallback(() => {
-    const parseFloatFromValue = (v?: number) => parseFloat(v?.toString() ?? '0');
-    const costNum = parseFloatFromValue(cost);
+  const recalculateValues = useCallback(
+    (name?: PriceFormDataPath) => {
+      const parseFloatFromValue = (v?: number) => parseFloat(v?.toString() ?? '0');
+      const costNum = parseFloatFromValue(cost);
 
-    const priceNum = parseFloatFromValue(price);
+      const priceNum = parseFloatFromValue(price);
 
-    const calculatedCommissionAmount = priceNum - costNum;
-    const calculatedCommissionPercentage = (calculatedCommissionAmount / priceNum) * 100;
+      const calculatedCommissionAmount = priceNum - costNum;
+      const calculatedCommissionPercentage = (calculatedCommissionAmount / priceNum) * 100;
 
-    setValue('commission.amount', calculatedCommissionAmount ? Number(calculatedCommissionAmount.toFixed(2)) : 0);
-    setValue(
-      'commission.percentage',
-      calculatedCommissionPercentage ? Number(calculatedCommissionPercentage.toFixed(2)) : 0
-    );
-  }, [cost, price, setValue]);
+      setValue('commission', {
+        amount: calculatedCommissionAmount ? Number(calculatedCommissionAmount.toFixed(2)) : 0,
+        percentage: calculatedCommissionPercentage ? Number(calculatedCommissionPercentage.toFixed(2)) : 0,
+      });
+
+      setValue('markup', {
+        amount: calculatedCommissionAmount ? Number(calculatedCommissionAmount.toFixed(2)) : 0,
+        percentage: calculatedCommissionPercentage ? Number(calculatedCommissionPercentage.toFixed(2)) : 0,
+      });
+    },
+    [cost, price, setValue]
+  );
 
   const handleSelectPriceList: OnRowClickHandler = useCallback(
     data => {

@@ -431,7 +431,7 @@ export const StaticProperties: RenderOverviewCellComponent<IProduct> = ({ cell, 
     });
 
     return Object.values(unicValuesMap).map(el => {
-      return <FlexBox>{el.label}</FlexBox>;
+      return <FlexBox key={`prop_value_${el._id}`}>{el.label}</FlexBox>;
     });
   }, [data?.variations]);
 

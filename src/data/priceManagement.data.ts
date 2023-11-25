@@ -171,12 +171,12 @@ export const pricesColumnsForProductReview: CellTittleProps<IPriceListItem>[] = 
     top: {
       name: t('timeTo'),
       align: 'center',
-      getData: d => `${d?.list?.timeTo}`,
+      getData: d => d?.list?.timeTo,
     },
     bottom: {
       name: t('timeFrom'),
       align: 'center',
-      getData: d => `${d?.list?.timeFrom}`,
+      getData: d => d?.list?.timeFrom,
     },
     width: '150px',
     action: 'dateDbl',
