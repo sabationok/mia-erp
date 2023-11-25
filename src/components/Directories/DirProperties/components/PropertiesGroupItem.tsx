@@ -5,10 +5,11 @@ import { Text } from '../../../atoms/Text';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import { DiPropertiesRenderItemProps } from '../DirProperties';
 import PropertyItem from './PropertyItem';
+import { t } from '../../../../lang';
+import { IVariationTemplate } from '../../../../redux/products/properties/properties.types';
 
-const PropertyGroupItem: React.FC<DiPropertiesRenderItemProps> = ({
+const PropertyGroupItem: React.FC<DiPropertiesRenderItemProps<IVariationTemplate>> = ({
   item,
-
   onUpdate,
   onCreateChild,
   onDelete,
@@ -22,7 +23,7 @@ const PropertyGroupItem: React.FC<DiPropertiesRenderItemProps> = ({
     return !item.childrenList || item.childrenList.length === 0 ? (
       <FlexBox justifyContent={'stretch'}>
         <Text $weight={500} $size={16} $align={'center'}>
-          {'Характеристики відсутні'}
+          {t('Not found any properties')}
         </Text>
       </FlexBox>
     ) : (
@@ -48,7 +49,13 @@ const PropertyGroupItem: React.FC<DiPropertiesRenderItemProps> = ({
           borderBottom: isOpen ? `1px solid ${theme.sideBarBorderColor}` : '',
         }}
       >
-        <FlexBox gap={6} fillHeight alignItems={'center'} fxDirection={'row'}>
+        <FlexBox
+          gap={6}
+          fillHeight
+          alignItems={'center'}
+          fxDirection={'row'}
+          style={{ position: 'sticky', top: 0, left: 0 }}
+        >
           <ButtonIcon
             variant={'onlyIcon'}
             icon={'plus'}
@@ -68,7 +75,6 @@ const PropertyGroupItem: React.FC<DiPropertiesRenderItemProps> = ({
               onUpdate && onUpdate({ _id: item._id, data: item }, { isGroup: true });
             }}
           />
-          <ButtonIcon variant={'onlyIcon'} icon={'archive'} size={'26px'} iconSize={'24px'} />
         </FlexBox>
 
         <ButtonIcon
@@ -81,7 +87,12 @@ const PropertyGroupItem: React.FC<DiPropertiesRenderItemProps> = ({
         >
           <Text $weight={600} $size={16} $align={'left'}>
             {item.label}
-            {` (${item.childrenList?.length || 0})`}
+
+            {item.childrenList?.length !== 0 && (
+              <Text $size={12} $align={'left'}>
+                {` (${item.childrenList?.length})`}
+              </Text>
+            )}
           </Text>
         </ButtonIcon>
       </FlexBox>

@@ -10,15 +10,14 @@ import styled from 'styled-components';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { ProductsService } from '../../../hooks/useProductsService.hook';
 import FlexBox from '../../atoms/FlexBox';
-import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { OnlyUUID } from '../../../redux/global.types';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import { IProperty, IPropertyDto } from '../../../redux/products/properties/properties.types';
 import { ToastService } from '../../../services';
 import { DirPropertiesCTX, DirPropertiesCTXValue } from './DirPropertiesCTX';
 import PropertiesGroupItem from './components/PropertiesGroupItem';
-import { DirPropertiesActionsBuilder } from './dirPropertiesActionsCreator';
+import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
+import { OnlyUUID } from '../../../redux/global.types';
 
 export type PropertiesLevelType = { isGroup?: boolean; isProperty?: boolean; isValue?: boolean };
 
@@ -31,6 +30,18 @@ export interface DirPropertiesProps
     ProductsService,
     PropertiesLevelType & { onSuccess?: (data: IProperty[]) => void }
   > {}
+
+export interface DiPropertiesRenderItemProps<Item extends IProperty = any, ParentItem extends IProperty = any> {
+  item: Item;
+  parent?: ParentItem;
+  index: number;
+  onCreateValue?: AppSubmitHandler<{ parent: ParentItem }, PropertiesLevelType>;
+  onCreateChild?: AppSubmitHandler<{ parent: ParentItem }, PropertiesLevelType>;
+  onUpdate?: AppSubmitHandler<{ _id: string; data: ParentItem }, PropertiesLevelType>;
+  onDelete?: AppSubmitHandler<OnlyUUID>;
+  onChangeSelectableStatus?: (_id: string, status: boolean) => void;
+}
+
 const DirProperties: React.FC<DirPropertiesProps> = ({
   createParentTitle,
   dirType,
@@ -61,11 +72,6 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
     searchQuery: current,
     data: properties,
   });
-
-  useEffect(() => {
-    const _actions = DirPropertiesActionsBuilder.buildNamedCallbacksMap({ service, modalService });
-    console.log({ _actions });
-  }, [modalService, service]);
 
   useEffect(() => {
     const close = () => setTimeout(ToastService.createToastLoader('Loading properties...'), 1000);
@@ -121,23 +127,13 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
       }
     >
       <DirPropertiesCTX.Provider value={CTXValue}>
-        <FlexBox flex={1} overflow={'auto'} justifyContent={'flex-start'}>
+        <FlexBox flex={1} justifyContent={'flex-start'} style={{ position: 'relative' }}>
           {renderGroups}
         </FlexBox>
       </DirPropertiesCTX.Provider>
     </ModalForm>
   );
 };
-
-export interface DiPropertiesRenderItemProps {
-  item: IProperty;
-  index: number;
-  onCreateValue?: AppSubmitHandler<{ parent: IProperty }, PropertiesLevelType>;
-  onCreateChild?: AppSubmitHandler<{ parent: IProperty }, PropertiesLevelType>;
-  onUpdate?: AppSubmitHandler<{ _id: string; data: IProperty }, PropertiesLevelType>;
-  onDelete?: AppSubmitHandler<OnlyUUID>;
-  onChangeSelectableStatus?: (_id: string, status: boolean) => void;
-}
 
 const CreateParent = styled.div`
   display: flex;

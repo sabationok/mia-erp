@@ -4,8 +4,14 @@ import React from 'react';
 import { DiPropertiesRenderItemProps } from '../DirProperties';
 import { Text } from '../../../atoms/Text';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import { IPropertyValue } from '../../../../redux/products/properties/properties.types';
 
-const PropertyValueItem: React.FC<DiPropertiesRenderItemProps> = ({ item, index, onUpdate, onDelete }) => {
+const PropertyValueItem: React.FC<DiPropertiesRenderItemProps<IPropertyValue>> = ({
+  item,
+  index,
+  onUpdate,
+  onDelete,
+}) => {
   const theme = useTheme();
 
   return (
@@ -16,8 +22,8 @@ const PropertyValueItem: React.FC<DiPropertiesRenderItemProps> = ({ item, index,
       alignItems={'stretch'}
       style={{ borderRadius: 4, backgroundColor: theme.accentColor.light }}
     >
-      <FlexBox flex={1} fillHeight padding={'4px 8px'} fxDirection={'row'} alignItems={'center'}>
-        <Text $size={12} $weight={600}>
+      <FlexBox flex={1} fillHeight padding={'4px 8px'} fxDirection={'row'} alignItems={'center'} overflow={'hidden'}>
+        <Text $size={12} $weight={600} $ellipsisMode={true}>
           {item?.label}
         </Text>
       </FlexBox>
@@ -25,7 +31,7 @@ const PropertyValueItem: React.FC<DiPropertiesRenderItemProps> = ({ item, index,
       <DirPropertyValueActions
         className={'actions'}
         fillHeight
-        padding={'0 8px'}
+        padding={'0 3px'}
         fxDirection={'row'}
         gap={4}
         alignItems={'center'}
@@ -38,9 +44,7 @@ const PropertyValueItem: React.FC<DiPropertiesRenderItemProps> = ({ item, index,
           onClick={() => {
             onUpdate && onUpdate({ _id: item._id, data: item }, { isValue: true });
           }}
-        ></ButtonIcon>
-
-        <ButtonIcon variant={'onlyIconNoEffects'} icon={'archive'} size={'26px'} iconSize={'24px'} disabled />
+        />
       </DirPropertyValueActions>
     </DirPropertyValueBox>
   );
