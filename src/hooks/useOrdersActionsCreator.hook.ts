@@ -4,7 +4,7 @@ import { ITableListContext, TableActionCreator } from '../components/TableList/t
 import { IOrder } from '../redux/orders/orders.types';
 import { Modals } from '../components/Modals';
 import { useNavigate } from 'react-router-dom';
-import { ExtractIdString } from '../utils/dataTransform';
+import { ExtractIdString } from '../utils/data-transform';
 import { t } from '../lang';
 import { useAppServiceProvider } from './useAppServices.hook';
 import { AppModuleName } from '../redux/reduxTypes.types';

@@ -7,7 +7,7 @@ import { useModalService } from '../../../ModalProvider/ModalProvider';
 import FormCreateInputIntegration from '../../../Forms/integrations/FormCreateInputIntegration';
 import { InputIntegrationBase } from 'redux/integrations/integrations.types';
 import { useTranslatedMethodsList } from 'hooks/useTranslatedMethodsList.hook';
-import { getIdRef, transformQueriesForReq } from 'utils/dataTransform';
+import { getIdRef, toQueriesFirReq } from 'utils/data-transform';
 import styled from 'styled-components';
 import ExtraFooterWithButton from '../../../atoms/ExtraFooterWithButton';
 import IntegrationOverview from '../../components/IntegrationOverview';
@@ -44,7 +44,7 @@ const CommunicationIntegrationsTab: React.FC<CommunicationIntegrationsTabProps> 
   useEffect(() => {
     currentServiceData &&
       service.getAll({
-        data: { type: 'input', ...transformQueriesForReq({ service: getIdRef(currentServiceData) }) },
+        data: { type: 'input', ...toQueriesFirReq({ service: getIdRef(currentServiceData) }) },
         onSuccess: data => {
           setIntegrationsList(data);
         },

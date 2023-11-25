@@ -28,7 +28,7 @@ import {
   useInvoicesSelector,
 } from '../../../../redux/selectors.store';
 import * as fns from 'date-fns';
-import { formatDateForInputValue } from '../../../../utils';
+import { toInputValueDate } from '../../../../utils';
 
 export interface OrderInfoStepProps extends FormOrderStepBaseProps {
   isGroup?: boolean;
@@ -99,7 +99,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
           return setValue('shipmentInfo.executeAt', fns.format(fns.addDays(new Date(), 1), 'yyyy-MM-dd'));
         }
         if (name === 'hasDeliveryInvoice') {
-          return setValue('deliveryInfo.invoiceInfo.expiredAt', formatDateForInputValue(fns.addDays(new Date(), 1)));
+          return setValue('deliveryInfo.invoiceInfo.expiredAt', toInputValueDate(fns.addDays(new Date(), 1)));
         }
       } else if (!value) {
         if (name === 'hasReceiverInfo') {

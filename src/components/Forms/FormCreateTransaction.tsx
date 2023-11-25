@@ -10,7 +10,7 @@ import * as yup from 'yup';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import { FilterOpt } from '../ModalForm/ModalFilter';
 import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
-import { createTransactionForReq, formatDateForInputValue } from '../../utils';
+import { toInputValueDate, toTrReqData } from '../../utils';
 import { useAppSelector } from '../../redux/store.store';
 import FlexBox from '../atoms/FlexBox';
 import translate from '../../lang';
@@ -82,7 +82,7 @@ const FormCreateTransaction: React.FC<FormCreateTransactionProps> = ({
     registerSelect,
     handleSubmit,
   } = useAppForm<ITransaction>({
-    defaultValues: { currency: 'UAH', ...defaultState, eventDate: formatDateForInputValue(defaultState?.eventDate) },
+    defaultValues: { currency: 'UAH', ...defaultState, eventDate: toInputValueDate(defaultState?.eventDate) },
     resolver: yupResolver(getValidation(currentType)),
     reValidateMode: 'onSubmit',
   });
@@ -95,7 +95,7 @@ const FormCreateTransaction: React.FC<FormCreateTransactionProps> = ({
       (formValues.type === 'EXPENSE' && ['countIn', 'subCountIn']) ||
       [];
 
-    const trReqData = createTransactionForReq(submitData, omitPathArr, '', 'amount');
+    const trReqData = toTrReqData(submitData, omitPathArr, '', 'amount');
 
     onSubmit && onSubmit({ _id: '', data: trReqData }, { ...submitOptions.state });
   }

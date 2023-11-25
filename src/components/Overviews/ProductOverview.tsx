@@ -8,7 +8,7 @@ import { pricesColumnsForProductReview } from '../../data/priceManagement.data';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { useEffect, useState } from 'react';
 import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
-import { getIdRef } from '../../utils/dataTransform';
+import { getIdRef } from '../../utils/data-transform';
 
 export interface ProductOverviewProps extends Omit<ModalFormProps, 'onSelect' | 'onSubmit'> {
   product?: IProduct;

@@ -19,7 +19,7 @@ import { createTableTitlesFromTemplate } from '../../../../utils';
 import { usePropertiesSelector } from '../../../../redux/selectors.store';
 import VariationsApi from '../../../../api/variations.api';
 import { transformVariationTableData } from '../../../../utils/tables';
-import { getIdRef } from '../../../../utils/dataTransform';
+import { getIdRef } from '../../../../utils/data-transform';
 import { IOrderTempSlot } from '../../../../redux/orders/orders.types';
 import { IProductInventory, IWarehouse } from '../../../../redux/warehouses/warehouses.types';
 import { warehouseBatchColumns } from '../../../../data/warehauses.data';

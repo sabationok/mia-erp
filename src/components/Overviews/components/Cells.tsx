@@ -14,7 +14,7 @@ import { IProductCategoryDirItem } from '../../Directories/dir.types';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import FormProductCategoriesOverlay from '../../Forms/FormProduct/FormSelectCategoriesOverlay';
 import { OverlayHandler } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
-import numberWithSpaces from '../../../utils/numbers';
+import { numberWithSpaces } from '../../../utils/numbers';
 import { t } from '../../../lang';
 import { checks } from '../../../utils';
 import FormProductDefaultsOverlay from '../../Forms/FormProduct/FormProductDefaultsOverlay';
@@ -435,7 +435,6 @@ export const StaticProperties: RenderOverviewCellComponent<IProduct> = ({ cell, 
     });
   }, [data?.variations]);
 
-  console.log('renderPropertiesFromVariations', renderPropertiesFromVariations);
   return (
     <Cell
       padding={'4px 4px 8px'}

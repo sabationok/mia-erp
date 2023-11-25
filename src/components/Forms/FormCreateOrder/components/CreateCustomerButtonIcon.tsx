@@ -4,7 +4,7 @@ import { useModalService } from '../../../ModalProvider/ModalProvider';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import FormCreateCustomer from '../../crm/FormCreateCustomer';
 import { t } from '../../../../lang';
-import { createDataForReq } from '../../../../utils/dataTransform';
+import { toReqData } from '../../../../utils/data-transform';
 import * as React from 'react';
 
 const CreateCustomerButtonIcon = ({
@@ -30,7 +30,7 @@ const CreateCustomerButtonIcon = ({
             title: isReceiver ? t('Create receiver') : undefined,
             onSubmit: d => {
               customerS.create({
-                data: createDataForReq(d) as never,
+                data: toReqData(d) as never,
                 onSuccess: d => {
                   onSuccess && onSuccess(d);
 

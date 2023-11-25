@@ -8,7 +8,7 @@ import {
 } from '../redux/products/variations/variations.types';
 import { AmountAndPercentage, PriceAmountAndPercentageFields } from '../redux/priceManagement/priceManagement.types';
 import { IProductInventory } from '../redux/warehouses/warehouses.types';
-import numberWithSpaces from './numbers';
+import { numberWithSpaces } from './numbers';
 import { ITableAction, ITableListContext } from '../components/TableList/tableTypes.types';
 import { NavigateFunction } from 'react-router/dist/lib/hooks';
 import { IModalProviderContext } from '../components/ModalProvider/ModalProvider';

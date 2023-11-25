@@ -17,7 +17,7 @@ import ButtonsGroup from '../../atoms/ButtonsGroup';
 import { createTableTitlesFromTemplate } from '../../../utils';
 import { transformVariationTableData } from '../../../utils/tables';
 import { createApiCall, PriceManagementApi } from '../../../api';
-import { getIdRef } from '../../../utils/dataTransform';
+import { getIdRef } from '../../../utils/data-transform';
 import { OnRowClickHandler } from '../../TableList/tableTypes.types';
 import { useForm } from 'react-hook-form';
 import { OnlyUUID } from '../../../redux/global.types';

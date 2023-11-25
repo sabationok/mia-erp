@@ -2,7 +2,7 @@ import { OnlyUUID } from '../../../../redux/global.types';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { useDirectoriesSelector } from '../../../../redux/selectors.store';
 import { useMemo, useState } from 'react';
-import { getIdRef } from '../../../../utils/dataTransform';
+import { getIdRef } from '../../../../utils/data-transform';
 import { counterpartyColumns } from '../../../../data/contractors.data';
 import { CounterpartyTypesEnum, SupplierType } from '../../../../redux/directories/counterparties.types';
 import { ApiDirType } from '../../../../redux/APP_CONFIGS';

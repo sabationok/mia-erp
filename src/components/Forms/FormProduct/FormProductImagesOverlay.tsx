@@ -5,7 +5,7 @@ import { IProduct, IProductImage } from '../../../redux/products/products.types'
 import styled, { useTheme } from 'styled-components';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { getIdRef } from '../../../utils/dataTransform';
+import { getIdRef } from '../../../utils/data-transform';
 import { OverlayFooter, OverlayHeader } from './components';
 
 export interface FormProductImagesOverlayProps extends OverlayHandlerReturn {

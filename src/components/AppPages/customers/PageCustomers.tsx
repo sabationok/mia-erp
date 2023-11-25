@@ -15,7 +15,7 @@ import { useCustomersSelector } from '../../../redux/selectors.store';
 import { useModalService } from '../../ModalProvider/ModalProvider';
 import FormCreateCustomer from '../../Forms/crm/FormCreateCustomer';
 import _ from 'lodash';
-import { createDataForReq } from '../../../utils/dataTransform';
+import { toReqData } from '../../../utils/data-transform';
 import { ToastService } from '../../../services';
 
 interface Props extends BaseAppPageProps {}
@@ -64,7 +64,7 @@ const PageCustomers: React.FC<Props> = (props: Props) => {
 
                   onSubmit: d => {
                     service.update({
-                      data: { data: { data: createDataForReq(d), _id: selected?._id }, refresh: true },
+                      data: { data: { data: toReqData(d), _id: selected?._id }, refresh: true },
                       onSuccess: (data, meta) => {
                         console.log('edit customer P', data);
                         m?.onClose && m?.onClose();
@@ -87,7 +87,7 @@ const PageCustomers: React.FC<Props> = (props: Props) => {
                   onSubmit: d => {
                     service.create({
                       data: {
-                        data: d?.referrer?._id ? createDataForReq(d) : createDataForReq(_.omit(d, ['referrer'])),
+                        data: d?.referrer?._id ? toReqData(d) : toReqData(_.omit(d, ['referrer'])),
                       },
                       onSuccess: data => {
                         ToastService.success(`New user created: ${data?.email}`);

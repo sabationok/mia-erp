@@ -8,7 +8,7 @@ import { Text } from '../atoms/Text';
 import { t } from '../../lang';
 import CountSelectorBase from '../atoms/CountSelectorBase';
 import InputLabel from '../atoms/Inputs/InputLabel';
-import numberWithSpaces from '../../utils/numbers';
+import { numberWithSpaces } from '../../utils/numbers';
 
 export interface OrderSlotOverviewProps {
   slot?: IOrderTempSlot;

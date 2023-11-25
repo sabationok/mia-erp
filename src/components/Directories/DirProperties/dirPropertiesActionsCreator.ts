@@ -14,7 +14,7 @@ import { PropertiesLevelType } from './DirProperties';
 import { NavigateFunction } from 'react-router/dist/lib/hooks';
 import { IModalProviderContext } from '../../ModalProvider/ModalProvider';
 import { OfferTypeEnum } from '../../../redux/products/products.types';
-import { createDataForReq } from '../../../utils/dataTransform';
+import { toReqData } from '../../../utils/data-transform';
 import { ToastService } from '../../../services';
 
 export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
@@ -60,7 +60,7 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
           onSubmit: (data, o) => {
             service
               .createProperty({
-                data: { data: createDataForReq({ ...data, parent }), params: { createTreeData: true } },
+                data: { data: toReqData({ ...data, parent }), params: { createTreeData: true } },
                 onSuccess: rd => {
                   options?.onSuccess && options?.onSuccess(rd);
                   o?.close && modal?.onClose();
@@ -84,7 +84,7 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
           onSubmit: (data, o) => {
             service
               .createProperty({
-                data: { data: createDataForReq({ ...data, parent }), params: { createTreeData: true } },
+                data: { data: toReqData({ ...data, parent }), params: { createTreeData: true } },
                 onSuccess: rd => {
                   options?.onSuccess && options?.onSuccess(rd);
 

@@ -7,7 +7,7 @@ import FlexBox from '../../atoms/FlexBox';
 import React, { MouseEventHandler, useCallback, useMemo, useState } from 'react';
 import { Modals } from '../../Modals';
 import { ToastService } from '../../../services';
-import { createProductFormData } from '../../../utils/dataTransform';
+import { toOfferFormData } from '../../../utils/data-transform';
 
 export interface PageProductOverviewLeftSideProps {
   toggleRightSideVisibility?: () => void;
@@ -67,7 +67,7 @@ const PageProductOverviewLeftSide: React.FC<PageProductOverviewLeftSideProps> = 
                   if (!page.currentProduct) {
                     return;
                   }
-                  const formData = createProductFormData(page?.currentProduct);
+                  const formData = toOfferFormData(page?.currentProduct);
 
                   console.log('PageProductOverviewLeftSide', formData);
 

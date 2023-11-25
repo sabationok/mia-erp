@@ -26,10 +26,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { orderInfoBaseSchema } from '../validation';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { createApiCall, OrdersApi } from '../../../api';
-import { formatDateForInputValue } from '../../../utils';
+import { toInputValueDate } from '../../../utils';
 
 import * as fns from 'date-fns';
-import { getIdRef } from '../../../utils/dataTransform';
+import { getIdRef } from '../../../utils/data-transform';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 
 export interface FormCreateOrdersGroupProps
@@ -71,8 +71,7 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
       ...currentGroupFormState.info,
       invoiceInfo: {
         ...currentGroupFormState.info?.invoiceInfo,
-        expiredAt:
-          currentGroupFormState.info?.invoiceInfo?.expiredAt ?? formatDateForInputValue(fns.addDays(new Date(), 1)),
+        expiredAt: currentGroupFormState.info?.invoiceInfo?.expiredAt ?? toInputValueDate(fns.addDays(new Date(), 1)),
       },
     },
     resolver: yupResolver(orderInfoBaseSchema),

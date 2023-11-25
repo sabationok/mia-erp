@@ -5,7 +5,7 @@ import {
   IPriceListItem,
   PriceAmountAndPercentageFieldsKey,
 } from '../redux/priceManagement/priceManagement.types';
-import numberWithSpaces from '../utils/numbers';
+import { numberWithSpaces } from '../utils/numbers';
 import { priceAmountAndPercentageFieldsLabels } from '../utils/tables';
 
 const dateColumn: CellTittleProps = {

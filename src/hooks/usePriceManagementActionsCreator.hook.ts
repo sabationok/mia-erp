@@ -9,7 +9,7 @@ import {
 } from '../redux/priceManagement/priceManagement.types';
 import FormCreatePriceList from '../components/Forms/pricing/FormCreatePriceList';
 import { omit } from 'lodash';
-import { getIdRef } from '../utils/dataTransform';
+import { getIdRef } from '../utils/data-transform';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { useNavigate } from 'react-router-dom';
 import { enumToFilterOptions } from '../utils/fabrics';

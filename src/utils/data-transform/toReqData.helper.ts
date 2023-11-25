@@ -1,0 +1,80 @@
+import { omit } from 'lodash';
+import { OnlyUUID } from '../../redux/global.types';
+
+export function toReqData<IncomeDataType extends Record<string, any> = any>(
+  incomeData: IncomeDataType,
+  options?: {
+    omitPathArr?: (keyof IncomeDataType)[];
+    dateToNumberPath?: keyof IncomeDataType | string;
+    amountToNumberPath?: keyof IncomeDataType | string;
+    checkArrayPath?: keyof IncomeDataType | string;
+    ignorePaths?: (keyof IncomeDataType)[];
+  }
+): Partial<IncomeDataType> {
+  const inputCopy = omit(incomeData, ['_id', 'createdAt', 'updatedAt', ...(options?.omitPathArr || [])]);
+
+  let outData: Record<string, any> = {};
+  console.log({ inputCopy }, { outData });
+  try {
+    Object.entries(inputCopy).forEach(([key, value]) => {
+      if (options?.ignorePaths?.includes(key)) {
+        console.log('ignorePaths', { key }, { value });
+        outData[key] = value;
+        return;
+      }
+      if (!value) {
+        console.log('!value', { key }, { value });
+        console.log('!value', { value });
+        return;
+      }
+
+      if (options?.dateToNumberPath && key === options?.dateToNumberPath) {
+        console.log('dateToNumberPath', { key }, { value });
+        outData[key] = new Date(value as never).valueOf() as any;
+        return;
+      }
+      if (options?.amountToNumberPath && key === options?.amountToNumberPath) {
+        console.log('amountToNumberPath', { key }, { value });
+        outData[key] = (Number(value) || 0) as any;
+        return;
+      }
+      if (value && typeof value === 'object') {
+        if (Object.keys(value).length === 0) {
+          console.log('ignored object', { key }, { value });
+          return;
+        }
+
+        if ('_id' in value) {
+          console.log("'_id' in value", { key }, { value });
+          return (outData[key] = { _id: value?._id } as OnlyUUID);
+        }
+        if ('value' in value) {
+          console.log("'value' in value", { key }, { value });
+          return (outData[key] = value?.value);
+        }
+
+        if (Array.isArray(value)) {
+          console.log('type === Array', { key }, { value });
+          return (outData[key] = value as IncomeDataType[typeof key]);
+        }
+
+        const recursiveRes = toReqData(value);
+        console.log('recursive call', { key }, { value }, { recursiveRes });
+
+        if (Object.keys(recursiveRes).length > 0) {
+          console.log('recursive call | keys.length>0', { key }, { value });
+          return (outData[key] = recursiveRes);
+        }
+      }
+      if (value) {
+        console.log('value exist', { key }, { value });
+        return (outData[key] = value as any);
+      }
+      return;
+    });
+  } catch (e) {
+    console.error(e);
+  }
+  console.log('after', { inputCopy }, { outData });
+  return outData as Partial<IncomeDataType>;
+}

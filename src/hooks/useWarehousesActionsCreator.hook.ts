@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { NavigateFunction } from 'react-router/dist/lib/hooks';
 import { ToastService } from '../services';
 import { checks } from '../utils';
-import { getIdRef } from '../utils/dataTransform';
+import { getIdRef } from '../utils/data-transform';
 import _ from 'lodash';
 
 export type WarehouseActionCreatorOptions = {

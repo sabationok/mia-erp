@@ -1,7 +1,7 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { IProductInventory, IWarehouse } from '../redux/warehouses/warehouses.types';
 import { t } from '../lang';
-import numberWithSpaces from '../utils/numbers';
+import { numberWithSpaces } from '../utils';
 
 export const warehousesTableColumns: CellTittleProps<IWarehouse>[] = [
   {

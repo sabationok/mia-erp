@@ -10,7 +10,7 @@ import AccordionList, { IAccordionOptionProps } from '../../SideBarContent/Accor
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { Text } from '../../atoms/Text';
-import { formatDate } from '../../../utils/dateTime.utils';
+import { toAppDateFormat } from '../../../utils/data-time';
 import { isNumber } from 'lodash';
 
 export interface OutputIntegrationsTabProps {}
@@ -52,7 +52,7 @@ const OutputIntegrationsTab: React.FC<OutputIntegrationsTabProps> = () => {
                 <Text $size={12} $weight={600}>
                   {t('Expire at ')}
                 </Text>
-                <Text>{formatDate(isNumber(opt.expiredAt) ? opt.expiredAt : new Date(opt.expiredAt))}</Text>
+                <Text>{toAppDateFormat(isNumber(opt.expiredAt) ? opt.expiredAt : new Date(opt.expiredAt))}</Text>
               </>
             )}
             {opt.description && (

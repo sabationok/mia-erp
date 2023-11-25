@@ -2,7 +2,7 @@ import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { OnlyUUID } from '../../../../redux/global.types';
 import { useWarehousesSelector } from '../../../../redux/selectors.store';
 import { useMemo } from 'react';
-import { getIdRef } from '../../../../utils/dataTransform';
+import { getIdRef } from '../../../../utils/data-transform';
 import { IWarehouse } from '../../../../redux/warehouses/warehouses.types';
 import { warehousesTableColumns } from '../../../../data/warehauses.data';
 

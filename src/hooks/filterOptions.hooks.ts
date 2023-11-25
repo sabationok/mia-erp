@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { FilterOption } from '../components/ModalForm/ModalFilter';
 import { IWarehouse } from '../redux/warehouses/warehouses.types';
 import { OnlyUUID } from '../redux/global.types';
-import { getIdRef } from '../utils/dataTransform';
+import { getIdRef } from '../utils/data-transform';
 import { usePermissionsSelector } from './usePermissionsService.hook';
 import { IPermission, PermissionStatus } from '../redux/permissions/permissions.types';
 

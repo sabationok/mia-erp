@@ -19,7 +19,7 @@ import WarehousesTab from './tabs/WarehousesTab';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import { OnlyUUID } from '../../../redux/global.types';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { createDataForReq } from '../../../utils/dataTransform';
+import { toReqData } from '../../../utils/data-transform';
 
 export interface FormProductDefaultsOverlayProps extends OverlayHandlerReturn {
   onSubmit?: AppSubmitHandler<IProductDefaultsFormData>;
@@ -51,7 +51,7 @@ const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({
 
   const onValid = (fData: IProductDefaultsFormData) => {
     productsS.setDefaults({
-      data: { data: { defaults: createDataForReq(fData) as never }, _id: currentProduct?._id, updateCurrent: true },
+      data: { data: { defaults: toReqData(fData) as never }, _id: currentProduct?._id, updateCurrent: true },
       onSuccess: (data, meta) => {
         console.log(data, meta);
       },

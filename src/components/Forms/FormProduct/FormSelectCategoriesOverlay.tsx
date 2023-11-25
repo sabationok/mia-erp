@@ -4,7 +4,7 @@ import FlexBox from '../../atoms/FlexBox';
 import { useDirectoriesSelector, useProductsSelector } from '../../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { FormEventHandler, useEffect, useMemo, useState } from 'react';
-import { getIdRef } from '../../../utils/dataTransform';
+import { getIdRef } from '../../../utils/data-transform';
 import FormProductCategories from './FormProductCategories';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { OverlayFooter, OverlayForm, OverlayHeader } from './components';

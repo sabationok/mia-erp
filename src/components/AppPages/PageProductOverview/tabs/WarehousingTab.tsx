@@ -6,7 +6,7 @@ import { IProductInventory } from '../../../../redux/warehouses/warehouses.types
 import { useModalProvider } from '../../../ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useProductsSelector } from '../../../../redux/selectors.store';
-import { getIdRef } from '../../../../utils/dataTransform';
+import { getIdRef } from '../../../../utils/data-transform';
 import { OnlyUUID } from '../../../../redux/global.types';
 
 export interface WarehousingTabProps {

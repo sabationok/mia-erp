@@ -1,7 +1,7 @@
 import { InputIntegrationBase } from '../../../redux/integrations/integrations.types';
 import { t } from '../../../lang';
 import { checks } from '../../../utils';
-import { formatDate } from '../../../utils/dateTime.utils';
+import { toAppDateFormat } from '../../../utils/data-time';
 import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
@@ -30,7 +30,7 @@ const IntegrationOverview = ({
     { title: t('Description'), value: info?.description },
     {
       title: t('Expired at'),
-      value: checks.isStr(info?.expiredAt) ? formatDate(new Date(info?.expiredAt).valueOf()) : null,
+      value: checks.isStr(info?.expiredAt) ? toAppDateFormat(new Date(info?.expiredAt).valueOf()) : null,
     },
   ];
 

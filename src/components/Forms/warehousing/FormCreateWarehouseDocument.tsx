@@ -21,7 +21,7 @@ import { IProduct } from '../../../redux/products/products.types';
 import FlexBox from '../../atoms/FlexBox';
 import TableList from '../../TableList/TableList';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
-import { getIdRef } from '../../../utils/dataTransform';
+import { getIdRef } from '../../../utils/data-transform';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';

@@ -11,7 +11,7 @@ import {
   ExtServiceBase,
   InputIntegrationBase,
 } from '../../../redux/integrations/integrations.types';
-import { getIdRef } from '../../../utils/dataTransform';
+import { getIdRef } from '../../../utils/data-transform';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 

@@ -3,7 +3,7 @@ import { useRow } from '../TableRows/TableRow';
 import { CellTittleProps } from './CellTitle';
 import getValueByPath from '../../../utils/getValueByPath';
 import Cell, { IDataCellProps } from './Cells';
-import numberWithSpaces from '../../../utils/numbers';
+import { numberWithSpaces } from '../../../utils/numbers';
 
 export interface CellNumberWithSpacesProps {
   titleInfo: CellTittleProps;

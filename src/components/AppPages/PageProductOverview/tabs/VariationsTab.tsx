@@ -7,7 +7,7 @@ import { createTableTitlesFromTemplate, transformVariationTableData } from '../.
 import FormCreateVariation from '../../../Forms/FormProduct/FormCreateVariationOverlay';
 import { IVariationTableData } from '../../../../redux/products/variations/variations.types';
 import { useProductsSelector, usePropertiesSelector } from '../../../../redux/selectors.store';
-import { getIdRef } from '../../../../utils/dataTransform';
+import { getIdRef } from '../../../../utils/data-transform';
 import { OnlyUUID } from '../../../../redux/global.types';
 
 export interface VariationsTabProps {

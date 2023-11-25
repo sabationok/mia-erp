@@ -8,7 +8,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Text } from '../../atoms/Text';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { OverlayHandlerReturn } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
-import { createVariationFormData, createVariationReqData } from '../../../utils/dataTransform';
+import { toVariationFormData, toVariationReqData } from '../../../utils/data-transform';
 import { IVariation, IVariationFormData } from '../../../redux/products/variations/variations.types';
 import { OnlyUUID } from '../../../redux/global.types';
 import { ToastService } from '../../../services';
@@ -82,7 +82,7 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
     formState: { errors },
     formValues,
   } = useAppForm<IVariationFormData>({
-    defaultValues: createVariationFormData(
+    defaultValues: toVariationFormData(
       defaultState ? { ...defaultState, product: currentProduct } : { product: currentProduct }
     ),
     resolver: yupResolver(validation),
@@ -126,7 +126,7 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
       if (update) {
         service
           .updateVariationById({
-            data: createVariationReqData(data, update),
+            data: toVariationReqData(data, update),
             onSuccess: data => {
               console.log('updateVariationById onSuccess', data);
 
@@ -139,7 +139,7 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
       } else {
         service
           .createVariation({
-            data: createVariationReqData(data),
+            data: toVariationReqData(data),
             onSuccess: data => {
               submitOptions.state.close && onClose && onClose();
             },

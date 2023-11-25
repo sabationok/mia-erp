@@ -6,7 +6,7 @@ import FormCreatePrice from '../../../Forms/FormCreatePrice/FormCreatePrice';
 import { IPriceListItem } from 'redux/priceManagement/priceManagement.types';
 import { useProductsSelector } from 'redux/selectors.store';
 import { useModalProvider } from '../../../ModalProvider/ModalProvider';
-import { getIdRef } from 'utils/dataTransform';
+import { getIdRef } from 'utils/data-transform';
 import { OnlyUUID } from 'redux/global.types';
 
 export interface PricesTabProps {

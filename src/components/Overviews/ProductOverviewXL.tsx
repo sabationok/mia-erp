@@ -10,7 +10,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import * as Cells from './components/Cells';
 import { OverviewCellProps } from './components/Cells';
 import { OverlayHeader } from '../Forms/FormProduct/components';
-import { formatDate } from '../../utils/dateTime.utils';
+import { toAppDateFormat } from '../../utils/data-time';
 import { checks } from '../../utils';
 import { useAppParams } from '../../hooks';
 
@@ -241,7 +241,9 @@ const productOverviewCells: OverviewCellProps<IProduct>[] = [
     getValue: product =>
       product?.author
         ? `${product?.author?.email} / ${
-            product?.createdAt && checks.isStr(product?.createdAt) ? formatDate(Date.parse(product?.createdAt)) : ''
+            product?.createdAt && checks.isStr(product?.createdAt)
+              ? toAppDateFormat(Date.parse(product?.createdAt))
+              : ''
           }`
         : null,
     gridArea: 'created',
@@ -252,7 +254,9 @@ const productOverviewCells: OverviewCellProps<IProduct>[] = [
     getValue: product =>
       product?.editor
         ? `${product?.editor?.email} / ${
-            product?.updatedAt && checks.isStr(product?.updatedAt) ? formatDate(Date.parse(product?.updatedAt)) : ''
+            product?.updatedAt && checks.isStr(product?.updatedAt)
+              ? toAppDateFormat(Date.parse(product?.updatedAt))
+              : ''
           }`
         : null,
     gridArea: 'updated',

@@ -7,7 +7,7 @@ import { productsFilterOptions } from '../data/modalFilterOptions.data';
 import { useNavigate } from 'react-router-dom';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { ToastService } from '../services';
-import { createProductFormData } from '../utils/dataTransform';
+import { toOfferFormData } from '../utils/data-transform';
 import { createApiCall, ProductsApi } from '../api';
 import { t } from '../lang';
 
@@ -55,7 +55,7 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
             return;
           }
           console.log(res?.data.data);
-          const formData = createProductFormData(res?.data.data);
+          const formData = toOfferFormData(res?.data.data);
 
           const modal = modals.handleOpenModal({
             ModalChildren: FormCreateProduct,
@@ -93,7 +93,7 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
           if (!res?.data.data) {
             return;
           }
-          const formData = createProductFormData(res?.data.data);
+          const formData = toOfferFormData(res?.data.data);
 
           const modal = modals.handleOpenModal({
             ModalChildren: FormCreateProduct,

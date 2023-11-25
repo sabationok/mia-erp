@@ -8,7 +8,7 @@ import TableList from '../../TableList/TableList';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { IVariation } from '../../../redux/products/variations/variations.types';
 import { useProductsSelector } from '../../../redux/selectors.store';
-import { getIdRef } from '../../../utils/dataTransform';
+import { getIdRef } from '../../../utils/data-transform';
 import { createTableTitlesFromTemplate } from '../../../utils';
 import { transformVariationTableData } from '../../../utils/tables';
 import { OnRowClickHandler } from '../../TableList/tableTypes.types';

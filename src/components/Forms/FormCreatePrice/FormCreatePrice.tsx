@@ -16,7 +16,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import styled from 'styled-components';
 import { Path } from 'react-hook-form';
-import { createDataForReq } from '../../../utils/dataTransform';
+import { toReqData } from '../../../utils/data-transform';
 import { OnRowClickHandler } from '../../TableList/tableTypes.types';
 import TableList from '../../TableList/TableList';
 import { priceListColumns } from '../../../data/priceManagement.data';
@@ -126,7 +126,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
   );
 
   const onValid = (formData: IPriceFormData) => {
-    const dataForReq = createDataForReq(formData);
+    const dataForReq = toReqData(formData);
 
     if (update) {
       service.updatePriceById({

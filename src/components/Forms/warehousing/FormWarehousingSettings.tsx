@@ -12,7 +12,7 @@ import { t } from 'lang';
 import { ICompany, ICompanyDto, ICompanyForReq, ICompanyWithConfigs } from 'redux/companies/companies.types';
 import { Text } from '../../atoms/Text';
 import Switch from '../../atoms/Switch';
-import { getIdRef } from '../../../utils/dataTransform';
+import { getIdRef } from '../../../utils/data-transform';
 import { useMemo } from 'react';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { ToastService } from '../../../services';

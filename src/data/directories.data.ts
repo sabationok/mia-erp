@@ -18,7 +18,7 @@ import DirTreeComp from '../components/Directories/DirTreeComp';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import DirTableComp, { DirTableCompProps } from '../components/Directories/DirTableComp';
 import FormCreateCounterparty from '../components/Forms/FormCreateCounterparty';
-import { createDataForReq } from '../utils/dataTransform';
+import { toReqData } from '../utils';
 import { OfferTypeEnum } from '../redux/products/products.types';
 import { ModalChildrenProps, Modals } from '../components/Modals';
 import { CountsTypesEnum } from '../redux/directories/counts.types';
@@ -241,7 +241,7 @@ const CounterpartiesProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
               fillHeight: true,
               onSubmit: async data => {
                 service.create({
-                  data: { dirType, data: createDataForReq(data) },
+                  data: { dirType, data: toReqData(data) },
                   onSuccess: rd => {
                     console.log(t('Create counterparty rd'), rd);
                     ToastService.success(`Created: ${data.label || data.name}`);

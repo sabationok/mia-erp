@@ -16,7 +16,7 @@ import {
   ProductFilterOpt,
   ProductStatusEnum,
 } from '../../../redux/products/products.types';
-import { createDataForReq } from '../../../utils/dataTransform';
+import { toReqData } from '../../../utils/data-transform';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { IVariationTemplate } from '../../../redux/products/properties/properties.types';
@@ -76,7 +76,7 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
 
   // TODO eventDate: formatDateForInputValue(defaultState?.eventDate)
   function onValidSubmit(submitData: IProductFormData) {
-    const productForSubmit = createDataForReq(submitData, { ignorePaths: ['measurement'] });
+    const productForSubmit = toReqData(submitData, { ignorePaths: ['measurement'] });
 
     onSubmit &&
       onSubmit(
