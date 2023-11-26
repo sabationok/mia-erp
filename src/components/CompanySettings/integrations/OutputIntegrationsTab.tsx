@@ -5,7 +5,7 @@ import { t } from '../../../lang';
 import { useModalService } from '../../ModalProvider/ModalProvider';
 import FormCreateOutputIntegration from '../../Forms/integrations/FormCreateOutputIntegration';
 import { useEffect, useMemo, useState } from 'react';
-import { OutputIntegrationBase } from '../../../redux/integrations/integrations.types';
+import { OutputIntegrationBase } from '../../../types/integrations.types';
 import AccordionList, { IAccordionOptionProps } from '../../SideBarContent/AccordionList';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';

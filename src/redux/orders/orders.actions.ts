@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { ICreateOrderInfoFormState, IOrderTempSlot } from './orders.types';
+import { ICreateOrderInfoFormState, IOrderTempSlot } from '../../types/orders.types';
 
 enum OrdersActionTypeEnum {
   addSlotToOrder = 'orders/addSlotToOrderAction',

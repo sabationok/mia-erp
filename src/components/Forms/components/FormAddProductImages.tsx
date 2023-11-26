@@ -1,5 +1,5 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
-import { IProductImage } from '../../../redux/products/products.types';
+import { IProductImage } from '../../../types/products.types';
 
 export interface FormAddProductImagesProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   defaultState?: IProductImage[];

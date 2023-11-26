@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useMemo } from 'react';
 import { useOrdersSelector } from '../../../redux/selectors.store';
-import { IOrder } from '../../../redux/orders/orders.types';
+import { IOrder } from '../../../types/orders.types';
 
 export interface PageCurrentOrderProviderProps {
   children?: React.ReactNode;

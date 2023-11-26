@@ -1,4 +1,4 @@
-import { IProduct, IProductMeasurement } from '../../redux/products/products.types';
+import { IProduct } from '../../types/products.types';
 import FlexBox from '../atoms/FlexBox';
 import React, { useMemo } from 'react';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
@@ -13,6 +13,7 @@ import { OverlayHeader } from '../Forms/FormProduct/components';
 import { toAppDateFormat } from '../../utils/data-time';
 import { checks } from '../../utils';
 import { useAppParams } from '../../hooks';
+import { IMeasurement } from '../../types/utils.types';
 
 export interface ProductOverviewXLProps {
   product?: IProduct;
@@ -199,7 +200,7 @@ const productOverviewCells: OverviewCellProps<IProduct>[] = [
     CellComponent: Cells.OverviewTextCell,
     getValue: product => {
       try {
-        const data: IProductMeasurement = product?.measurement ? JSON.parse(product?.measurement as string) : {};
+        const data: IMeasurement = product?.measurement ? JSON.parse(product?.measurement as string) : {};
         const arr = [
           `${t('unit')}: ${data?.unit || 0}`,
           `${t('min')}: ${data?.min || 0}`,

@@ -1,13 +1,9 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { IVariationTemplate } from '../redux/products/properties/properties.types';
+import { IVariationTemplate } from '../types/properties.types';
 import { t } from '../lang';
-import {
-  IVariation,
-  IVariationTableData,
-  VariationPropertiesMapInTableData,
-} from '../redux/products/variations/variations.types';
-import { AmountAndPercentage, PriceAmountAndPercentageFields } from '../redux/priceManagement/priceManagement.types';
-import { IProductInventory } from '../redux/warehouses/warehouses.types';
+import { IVariation, IVariationTableData, VariationPropertiesMapInTableData } from '../types/variations.types';
+import { AmountAndPercentage, PriceAmountAndPercentageFields } from '../types/priceManagement.types';
+import { IProductInventory } from '../types/warehouses.types';
 import { numberWithSpaces } from './numbers';
 import { ITableAction, ITableListContext } from '../components/TableList/tableTypes.types';
 import { NavigateFunction } from 'react-router/dist/lib/hooks';

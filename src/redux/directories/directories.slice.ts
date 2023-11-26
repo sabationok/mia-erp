@@ -7,8 +7,8 @@ import {
   getAllDirectoryItemsThunk,
   updateDirectoryItemThunk,
 } from './directories.thunk';
-import { IDirItemBase } from '../../components/Directories/dir.types';
-import { DefaultDirectoryType } from './directories.types';
+import { IDirItemBase } from '../../types/dir.types';
+import { DefaultDirectoryType } from '../../types/directories.types';
 import { checks, enumToArray } from '../../utils';
 
 export interface IDirectoriesState extends Record<string, any> {

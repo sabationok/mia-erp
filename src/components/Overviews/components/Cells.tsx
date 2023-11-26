@@ -1,22 +1,21 @@
 import FlexBox from '../../atoms/FlexBox';
 import React, { useEffect, useMemo, useState } from 'react';
 import FormCreateVariation from '../../Forms/FormProduct/FormCreateVariationOverlay';
-import { IProperty } from '../../../redux/products/properties/properties.types';
+import { IProperty } from '../../../types/properties.types';
 import styled, { useTheme } from 'styled-components';
 import { Text } from '../../atoms/Text';
 import { useDirectoriesSelector, useProductsSelector } from '../../../redux/selectors.store';
 import FormSelectPropertiesOverlay from '../../Forms/FormProduct/FormSelectPropertiesOverlay';
-import { IProduct, ProductStatusEnum } from '../../../redux/products/products.types';
+import { IProduct, ProductStatusEnum } from '../../../types/products.types';
 import { formAddImageSetTabs } from '../../Forms/FormProduct/FormAddImageSet';
 import FormProductImages from '../../Forms/FormProduct/FormProductImagesOverlay';
 import ImagePreviewSmall from '../../atoms/ImagePreviewSmall';
-import { IProductCategoryDirItem } from '../../Directories/dir.types';
+import { IProductCategoryDirItem } from '../../../types/dir.types';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import FormProductCategoriesOverlay from '../../Forms/FormProduct/FormSelectCategoriesOverlay';
 import { OverlayHandler } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
-import { numberWithSpaces } from '../../../utils/numbers';
+import { checks, numberWithSpaces } from '../../../utils';
 import { t } from '../../../lang';
-import { checks } from '../../../utils';
 import FormProductDefaultsOverlay from '../../Forms/FormProduct/FormProductDefaultsOverlay';
 import Changer from '../../atoms/Changer';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
@@ -24,7 +23,7 @@ import { productStatusesData } from '../../../data/products.data';
 import { getStatusData } from '../../../data/statuses.data';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { ToastService } from '../../../services';
-import { IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
+import { IPriceListItem } from '../../../types/priceManagement.types';
 
 export type RenderOverviewCellComponent<Data = any> = React.FC<{
   cell: OverviewCellProps<Data>;
@@ -326,7 +325,7 @@ const NotActiveTreeDataItem: React.FC<{
   lvl?: number;
   index?: number;
   selectedIds: string[];
-}> = ({ item, index = 0, lvl = 0, selectedIds }) => {
+}> = ({ item, lvl = 0, selectedIds }) => {
   const renderChildren = useMemo(() => {
     return item?.childrenList?.map((item, index) => {
       return (
@@ -648,15 +647,15 @@ const ImagesSetBox = styled(FlexBox)`
   }
 `;
 
-const DefaultTag = styled(FlexBox)`
-  justify-content: center;
-
-  border-radius: 2px;
-  padding: 4px 12px;
-  height: 28px;
-
-  background-color: ${p => p.theme.fieldBackgroundColor};
-`;
+// const DefaultTag = styled(FlexBox)`
+//   justify-content: center;
+//
+//   border-radius: 2px;
+//   padding: 4px 12px;
+//   height: 28px;
+//
+//   background-color: ${p => p.theme.fieldBackgroundColor};
+// `;
 const CategoryItem = styled(FlexBox)`
   align-items: center;
   justify-content: center;

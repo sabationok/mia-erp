@@ -1,5 +1,5 @@
 import FlexBox from '../atoms/FlexBox';
-import { IOrderSlot } from '../../redux/orders/orders.types';
+import { IOrderSlot } from '../../types/orders.types';
 import styled from 'styled-components';
 import { useMemo } from 'react';
 import { t } from '../../lang';

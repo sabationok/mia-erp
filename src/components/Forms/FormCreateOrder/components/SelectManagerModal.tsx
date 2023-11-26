@@ -1,5 +1,5 @@
 import ModalForm, { ModalFormProps } from '../../../ModalForm';
-import { IPermission } from '../../../../redux/permissions/permissions.types';
+import { IPermission } from '../../../../types/permissions.types';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { usersDirColumns } from '../../../../data/usersDir.data';

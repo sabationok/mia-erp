@@ -2,7 +2,7 @@ import ModalForm from 'components/ModalForm';
 import TableList, { ITableListProps } from 'components/TableList/TableList';
 import React from 'react';
 import styled from 'styled-components';
-import { DirBaseProps } from './dir.types';
+import { DirBaseProps } from '../../types/dir.types';
 
 export interface DirDocumentsProps extends DirBaseProps {
   tableSettings?: ITableListProps;

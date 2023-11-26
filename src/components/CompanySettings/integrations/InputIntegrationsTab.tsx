@@ -2,7 +2,7 @@ import { ReactElement, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
 import { enumToFilterOptions } from '../../../utils/fabrics';
-import { ExternalServiceTypeEnum, ExtServiceBase } from '../../../redux/integrations/integrations.types';
+import { ExternalServiceTypeEnum, ExtServiceBase } from '../../../types/integrations.types';
 import InvoicingIntegrationsTab from './nested_tabs/InvoicingIntegrationsTab';
 import DeliveryIntegrationsTab from './nested_tabs/DeliveryIntegrationsTab';
 import CommunicationIntegrationsTab from './nested_tabs/CommunicationIntegrationsTab';

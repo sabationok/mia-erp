@@ -1,11 +1,11 @@
 import { useWarehousesSelector } from '../redux/selectors.store';
 import { useMemo } from 'react';
 import { FilterOption } from '../components/ModalForm/ModalFilter';
-import { IWarehouse } from '../redux/warehouses/warehouses.types';
+import { IWarehouse } from '../types/warehouses.types';
 import { OnlyUUID } from '../redux/global.types';
 import { getIdRef } from '../utils/data-transform';
 import { usePermissionsSelector } from './usePermissionsService.hook';
-import { IPermission, PermissionStatus } from '../redux/permissions/permissions.types';
+import { IPermission, PermissionStatus } from '../types/permissions.types';
 
 export function useWarehousesAsFilterOptions(): FilterOption<OnlyUUID, IWarehouse>[] {
   const warehouses = useWarehousesSelector().warehouses;

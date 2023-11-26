@@ -1,6 +1,6 @@
 import { pick } from 'lodash';
 import { ArrayOfObjUUID, ArrayUUID, IdKeyVersion, ObjUUID, OnlyUUID } from '../../redux/global.types';
-import { IProduct, IProductFullDto, IProductFullFormData } from '../../redux/products/products.types';
+import { IProduct, IProductFullDto, IProductFullFormData } from '../../types/products.types';
 
 export * from './toReqData.helper';
 export * from './toQueriesForReq.helper';

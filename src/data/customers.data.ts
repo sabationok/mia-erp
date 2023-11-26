@@ -1,5 +1,5 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { ICustomer } from '../redux/customers/customers.types';
+import { ICustomer } from '../types/customers.types';
 import { t } from '../lang';
 
 export const customersColumns: CellTittleProps<ICustomer>[] = [

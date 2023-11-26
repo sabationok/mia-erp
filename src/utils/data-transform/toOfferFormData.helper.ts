@@ -1,4 +1,4 @@
-import { IProduct, IProductFullFormData } from '../../redux/products/products.types';
+import { IProduct, IProductFullFormData } from '../../types/products.types';
 import _, { isObject, pick } from 'lodash';
 
 export function toOfferFormData(input: IProduct): IProductFullFormData {

@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FlexBox from '../atoms/FlexBox';
 
-import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../Directories/dir.types';
+import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../../types/dir.types';
 import DirListItem from '../Directories/DirList/DirListItem';
-import { ICheckoutPaymentMethod } from '../../redux/payments/payments.types';
+import { ICheckoutPaymentMethod } from '../../types/payments.types';
 import usePaymentsServiceHook from '../../hooks/usePaymentsService.hook';
 import { useTranslatedMethodsList } from '../../hooks/useTranslatedMethodsList.hook';
 import { useCheckoutPaymentsSelector } from '../../redux/selectors.store';
@@ -65,7 +65,7 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
       methods?.map((item, idx) => (
         <DirListItem
           key={`treeItem_${item?._id || idx}`}
-          {...item}
+          {...(item as any)}
           editing
           disabling
           {...props}

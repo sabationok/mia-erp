@@ -3,11 +3,11 @@ import ModalForm from 'components/ModalForm';
 import styled from 'styled-components';
 import FlexBox from '../atoms/FlexBox';
 
-import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../Directories/dir.types';
+import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../../types/dir.types';
 import DirListItem from '../Directories/DirList/DirListItem';
 import { useTranslatedMethodsList } from '../../hooks/useTranslatedMethodsList.hook';
 import { useCustomersSelector } from '../../redux/selectors.store';
-import { ICommunicationMethod } from '../../redux/integrations/integrations.types';
+import { ICommunicationMethod } from '../../types/integrations.types';
 import useCustomersService, { CustomersService } from '../../hooks/useCustomersService';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
 import { ApiDirType } from '../../redux/APP_CONFIGS';

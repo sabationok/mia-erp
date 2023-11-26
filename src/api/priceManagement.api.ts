@@ -7,7 +7,7 @@ import {
   IPriceListItem,
   IPriceListReqData,
   IUpdatePriceReqData,
-} from '../redux/priceManagement/priceManagement.types';
+} from '../types/priceManagement.types';
 import { AppQueryParams } from './index';
 
 export class PriceManagementApi {

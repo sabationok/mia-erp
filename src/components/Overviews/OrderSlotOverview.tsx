@@ -1,9 +1,9 @@
-import { IOrderTempSlot } from '../../redux/orders/orders.types';
+import { IOrderTempSlot } from '../../types/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import styled, { useTheme } from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { useCallback, useMemo, useState } from 'react';
-import { IProductImage } from '../../redux/products/products.types';
+import { IProductImage } from '../../types/products.types';
 import { Text } from '../atoms/Text';
 import { t } from '../../lang';
 import CountSelectorBase from '../atoms/CountSelectorBase';
@@ -76,7 +76,7 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
     return overviewInputs.map(info => {
       const value = formData && info.name && formData[info.name];
 
-      const v = typeof value === 'object' && 'amount' in value ? value.amount : value;
+      const v = value && typeof value === 'object' && 'amount' in value ? value.amount : value;
 
       return (
         <FlexBox key={info.name} justifyContent={'flex-start'} fillWidth padding={'4px'} gap={4}>

@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from '../../utils';
 import { PaymentsApi } from '../../api';
-import { ICheckoutPaymentMethod, IPaymentMethodReqData } from './payments.types';
+import { ICheckoutPaymentMethod, IPaymentMethodReqData } from '../../types/payments.types';
 import { ThunkPayload } from '../store.store';
 
 enum PaymentsThunkTypeEnum {

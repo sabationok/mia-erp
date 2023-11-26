@@ -7,9 +7,9 @@ import { usePermissionsSelector, useWarehousesSelector } from '../../../redux/se
 import { FilterOption } from '../../ModalForm/ModalFilter';
 import FlexBox from '../../atoms/FlexBox';
 import styled from 'styled-components';
-import { IWarehouse, WarehousingSettingsFormData } from '../../../redux/warehouses/warehouses.types';
+import { IWarehouse, WarehousingSettingsFormData } from '../../../types/warehouses.types';
 import { t } from 'lang';
-import { ICompany, ICompanyDto, ICompanyForReq, ICompanyWithConfigs } from 'redux/companies/companies.types';
+import { ICompany, ICompanyDto, ICompanyForReq, ICompanyWithConfigs } from 'types/companies.types';
 import { Text } from '../../atoms/Text';
 import Switch from '../../atoms/Switch';
 import { getIdRef } from '../../../utils/data-transform';

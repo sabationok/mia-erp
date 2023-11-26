@@ -1,7 +1,7 @@
 import FormProductImagesComponent from './FormProductImagesComponent';
 import { FormEventHandler, useState } from 'react';
 import { OverlayHandlerReturn } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
-import { IProduct, IProductImage } from '../../../redux/products/products.types';
+import { IProduct, IProductImage } from '../../../types/products.types';
 import styled, { useTheme } from 'styled-components';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';

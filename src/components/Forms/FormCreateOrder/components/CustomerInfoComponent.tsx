@@ -1,4 +1,4 @@
-import { ICustomer } from '../../../../redux/customers/customers.types';
+import { ICustomer } from '../../../../types/customers.types';
 import { useTheme } from 'styled-components';
 import * as React from 'react';
 import { useMemo } from 'react';

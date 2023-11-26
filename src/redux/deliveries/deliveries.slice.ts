@@ -2,8 +2,8 @@ import { StateErrorType } from '../reduxTypes.types';
 
 import { createSlice } from '@reduxjs/toolkit';
 import { getAllDeliveryMethodsThunk, updateDeliveryMethodThunk } from './deliveries.thunks';
-import { IDeliveryMethod } from '../integrations/integrations.types';
-import { IDelivery } from './deliveries.types';
+import { IDeliveryMethod } from '../../types/integrations.types';
+import { IDelivery } from '../../types/deliveries.types';
 
 export interface DeliveriesState {
   shipments: IDelivery[];

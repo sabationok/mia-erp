@@ -1,22 +1,42 @@
-import { AddressDto, AppResponse, IBase, IFormDataValueWithUUID, MagicLinkRef, OnlyUUID } from '../global.types';
-import { IPriceBase, IPriceListItem } from '../priceManagement/priceManagement.types';
-import { ICompany } from '../companies/companies.types';
-import { IManager, IUserBase } from '../auth/auth.types';
-import { IProductInventory, IWarehouse } from '../warehouses/warehouses.types';
-import { IProduct } from '../products/products.types';
-import { IVariation } from '../products/variations/variations.types';
-import { ICustomerBase } from '../customers/customers.types';
-import { IShipment } from '../shipments/shipments.types';
-import { IPayment } from '../payments/payments.types';
-import { IInvoice } from '../invoices/invoices.types';
-import { AppQueryParams } from '../../api';
-import { ICommunicationMethod } from '../integrations/integrations.types';
+import { AddressDto, AppResponse, IBase, IFormDataValueWithID, MagicLinkRef, OnlyUUID } from '../redux/global.types';
+import { IPriceBase, IPriceListItem } from './priceManagement.types';
+import { IUserBase } from './auth.types';
+import { ICustomerBase } from './customers.types';
+import { AppQueryParams } from '../api';
+import { ICommunicationMethod } from './integrations.types';
+import {
+  AppDate,
+  FormDataLocationRefs,
+  HasExtRef,
+  HasMagicLink,
+  HasManager,
+  HasOwnerAsCompany,
+  HasQuantity,
+  HasStatus,
+  HasTotal,
+  LocationRefsDto,
+  MaybeNull,
+} from './utils.types';
+import { IProduct } from './products.types';
+import { IProductInventory, IWarehouse } from './warehouses.types';
+import { IInvoice } from './invoices.types';
+import { IDelivery } from './deliveries.types';
+import { IPayment } from './payments.types';
+import { IVariation } from './variations.types';
 
 export enum OrderTypeEnum {
   Order = 'Order',
   Group = 'Group',
 }
-
+export interface HasOrdersGroup {
+  group?: MaybeNull<IOrdersGroup>;
+}
+export interface HasOrder {
+  order?: MaybeNull<IOrder>;
+}
+export interface HasOrdersList {
+  orders?: MaybeNull<IOrder[]>;
+}
 export enum OrderStatusEnum {
   new = 'order_new',
   inWork = 'order_inWork',
@@ -31,28 +51,21 @@ export enum OrderStatusEnum {
 
 // export type OrderStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
-export interface IOrderSlotBase extends IPriceBase {
-  quantity?: number;
-  total?: number;
-  status?: OrderStatusEnum;
-
+export interface IOrderSlotBase extends IPriceBase, HasStatus<OrderStatusEnum>, HasQuantity, HasTotal {
   product?: IProduct;
-  variation?: IVariation;
+  warehouse?: IWarehouse;
   origin?: IPriceListItem;
   inventory?: IProductInventory;
-  warehouse?: IWarehouse;
+  variation?: IVariation;
 }
 
-export interface IOrderSlot extends IBase, IOrderSlotBase {
-  owner?: ICompany;
+export interface IOrderSlot extends IBase, IOrderSlotBase, HasOwnerAsCompany {
+  delivery?: OnlyUUID;
+  invoice?: OnlyUUID;
   order?: OnlyUUID;
-
-  shipment?: IShipment;
 }
 
-export interface IOrderSlotDto {
-  quantity?: number;
-
+export interface IOrderSlotDto extends HasQuantity {
   product?: OnlyUUID;
   variation?: OnlyUUID;
   origin?: OnlyUUID;
@@ -68,86 +81,75 @@ export interface OrderTotals {
   items?: number;
   amount?: number;
 }
-export interface IOrdersGroup extends IBase, MagicLinkRef {
+export interface IOrdersGroup extends IBase, HasMagicLink {
   orders?: IOrder[];
 }
 
-export interface IOrder extends IBase, MagicLinkRef {
-  owner?: ICompany;
-  manager?: IManager;
+export interface IOrder
+  extends IBase,
+    HasOwnerAsCompany,
+    MagicLinkRef,
+    HasManager,
+    HasExtRef,
+    HasStatus<OrderStatusEnum> {
+  group?: IOrdersGroup;
+
+  receiver?: ICustomerBase;
+  customer?: ICustomerBase;
+
   barCode?: string;
   code?: string;
-  group?: IOrdersGroup;
-  extRef?: string;
-
-  externalRef?: string;
-
-  customer?: ICustomerBase;
-  receiver?: ICustomerBase;
 
   communication?: {
     customer?: ICommunicationMethod[];
     receiver?: ICommunicationMethod[];
   };
 
-  executeAt?: string | number | Date;
+  total?: OrderTotals;
+  executeAt?: AppDate;
   executeNow?: boolean;
 
-  status?: OrderStatusEnum;
-  total?: OrderTotals;
-  slots?: IOrderSlot[];
-  invoices?: IInvoice[];
-  shipments?: IShipment[];
-  deliveries?: IShipment[];
   payments?: IPayment[];
-}
+  invoices?: IInvoice[];
+  deliveries?: IDelivery[];
 
-export interface FormDataLocationRef {
-  ref: string;
-  label: string;
-}
-
-export type FormDataLocationRefs = Record<keyof LocationRefsDto, FormDataLocationRef>;
-
-export interface LocationRefsDto {
-  country?: string;
-  area?: string;
-  city?: string;
-  street?: string;
+  slots?: IOrderSlot[];
 }
 
 export interface ICreateOrderInfoFormState {
+  customer?: ICustomerBase;
+  receiver?: ICustomerBase;
+
   manager?: {
     _id: string;
     user?: Partial<IUserBase>;
   };
-  customer?: ICustomerBase;
-  receiver?: ICustomerBase;
+
   communication?: {
     customer?: string[];
     receiver?: string[];
   };
 
   invoiceInfo?: {
-    method?: IFormDataValueWithUUID;
-    expiredAt?: string | number | Date;
+    method?: IFormDataValueWithID;
+    expiredAt?: AppDate;
   };
 
-  executeAt?: Date | number | string;
+  executeAt?: AppDate;
   executeNow?: boolean;
 
   shipmentInfo?: {
-    executeAt?: Date | number | string;
+    executeAt?: AppDate;
     executeNow?: boolean;
   };
   deliveryInfo?: {
-    method?: IFormDataValueWithUUID;
+    method?: IFormDataValueWithID;
     destinationRefs?: FormDataLocationRefs;
     destination?: AddressDto;
 
     invoiceInfo?: {
-      method?: IFormDataValueWithUUID;
-      expiredAt?: string | number | Date;
+      method?: IFormDataValueWithID;
+      expiredAt?: AppDate;
     };
   };
 }
@@ -180,10 +182,10 @@ export interface ICreateOrderInfoDto {
 
   invoiceInfo?: {
     method?: OnlyUUID;
-    expiredAt?: string | number | Date;
+    expiredAt?: AppDate;
   };
   shipmentInfo?: {
-    executeAt?: Date | number | string;
+    executeAt?: AppDate;
     executeNow?: boolean;
   };
   deliveryInfo?: {
@@ -193,7 +195,7 @@ export interface ICreateOrderInfoDto {
 
     invoiceInfo?: {
       method?: OnlyUUID;
-      expiredAt?: string | number | Date;
+      expiredAt?: AppDate;
     };
   };
 }
@@ -219,12 +221,12 @@ export interface IOrderBaseDto {
   status?: OrderStatusEnum;
   invoiceInfo?: {
     method?: OnlyUUID;
-    expiredAt?: string | number | Date;
+    expiredAt?: AppDate;
   };
-  executeAt?: string | number | Date;
+  executeAt?: AppDate;
   executeNow?: boolean;
   shipmentInfo?: {
-    executeAt?: string | number | Date;
+    executeAt?: AppDate;
     executeNow?: boolean;
   };
   deliveryInfo?: {
@@ -233,7 +235,7 @@ export interface IOrderBaseDto {
 
     invoiceInfo?: {
       method?: OnlyUUID;
-      expiredAt?: string | number | Date;
+      expiredAt?: AppDate;
     };
   };
 }

@@ -6,7 +6,7 @@ import { t } from 'lang';
 import { Text } from 'components/atoms/Text';
 import FormAccordionItem from '../../components/FormAccordionItem';
 import InputLabel from 'components/atoms/Inputs/InputLabel';
-import { ICreateOrderInfoFormState } from 'redux/orders/orders.types';
+import { ICreateOrderInfoFormState } from 'types/orders.types';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import SelectCustomerModal from '../components/SelectCustomerModal';

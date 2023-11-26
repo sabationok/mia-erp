@@ -6,7 +6,7 @@ import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import { DiPropertiesRenderItemProps } from '../DirProperties';
 import PropertyItem from './PropertyItem';
 import { t } from '../../../../lang';
-import { IVariationTemplate } from '../../../../redux/products/properties/properties.types';
+import { IVariationTemplate } from '../../../../types/properties.types';
 
 const PropertyGroupItem: React.FC<DiPropertiesRenderItemProps<IVariationTemplate>> = ({
   item,

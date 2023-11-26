@@ -1,5 +1,5 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IPermissionsState } from './permissions.types';
+import { IPermissionsState } from '../../types/permissions.types';
 import {
   createCompanyWithPermissionThunk,
   createPermissionThunk,

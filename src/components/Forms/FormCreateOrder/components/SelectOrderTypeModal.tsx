@@ -1,5 +1,5 @@
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
-import { OrderTypeEnum } from '../../../../redux/orders/orders.types';
+import { OrderTypeEnum } from '../../../../types/orders.types';
 import { t } from '../../../../lang';
 import { enumToFilterOptions } from '../../../../utils/fabrics';
 import { CreatedModal } from '../../../ModalProvider/ModalProvider';

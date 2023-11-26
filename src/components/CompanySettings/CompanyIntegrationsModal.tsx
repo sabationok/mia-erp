@@ -7,7 +7,7 @@ import { ModalHeader } from '../atoms';
 import ModalFilter from '../ModalForm/ModalFilter';
 import ModalFooter from '../ModalForm/ModalFooter';
 import InputIntegrationsTab from './integrations/InputIntegrationsTab';
-import { IntegrationTypeEnum } from '../../redux/integrations/integrations.types';
+import { IntegrationTypeEnum } from '../../types/integrations.types';
 import OutputIntegrationsTab from './integrations/OutputIntegrationsTab';
 
 export interface CompanyIntegrationsProps extends Omit<ModalFormProps, 'onSubmit'> {}

@@ -9,7 +9,7 @@ import { ISortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import { warehouseOverviewTableColumns } from '../../../data/warehauses.data';
 import { useAppParams } from '../../../hooks';
-import { IProductInventory } from '../../../redux/warehouses/warehouses.types';
+import { IProductInventory } from '../../../types/warehouses.types';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useModalProvider } from '../../ModalProvider/ModalProvider';
 import { Modals } from '../../Modals';

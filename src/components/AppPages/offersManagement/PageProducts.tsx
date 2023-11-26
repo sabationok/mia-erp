@@ -7,7 +7,7 @@ import AppGridPage from '../AppGridPage';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import { ISortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
-import { IProduct } from '../../../redux/products/products.types';
+import { IProduct } from '../../../types/products.types';
 import useStorageServiceHook from '../../../hooks/useProductsService.hook';
 import useProductsFilterSelectorsHook from '../../../hooks/useProductsFilterSelectors.hook';
 import useProductsActionsCreator from '../../../hooks/useProductsActionsCreator.hook';

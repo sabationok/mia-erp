@@ -1,4 +1,4 @@
-import { IOrderTempSlot } from '../../../../redux/orders/orders.types';
+import { IOrderTempSlot } from '../../../../types/orders.types';
 import { useMemo } from 'react';
 import OrderSlotOverview from '../../../Overviews/OrderSlotOverview';
 import FormAccordionItem from '../../components/FormAccordionItem';

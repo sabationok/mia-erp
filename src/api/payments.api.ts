@@ -2,7 +2,7 @@ import baseApi from './baseApi';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import { AppResponse } from '../redux/global.types';
-import { ICheckoutPaymentMethod, IPayment, IPaymentMethodReqData } from '../redux/payments/payments.types';
+import { ICheckoutPaymentMethod, IPayment, IPaymentMethodReqData } from '../types/payments.types';
 
 export default class PaymentsApi {
   private static api = baseApi;

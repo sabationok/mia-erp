@@ -2,12 +2,12 @@ import ModalForm from 'components/ModalForm';
 import TableList, { ITableListProps } from 'components/TableList/TableList';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { DirBaseProps } from '../Directories/dir.types';
+import { DirBaseProps } from '../../types/dir.types';
 import usePermissionsServiceHook, {
   PermissionService,
   usePermissionsSelector,
 } from '../../hooks/usePermissionsService.hook';
-import { IPermission } from '../../redux/permissions/permissions.types';
+import { IPermission } from '../../types/permissions.types';
 import { IModalProviderContext, useModalProvider } from '../ModalProvider/ModalProvider';
 import { ToastService } from '../../services';
 

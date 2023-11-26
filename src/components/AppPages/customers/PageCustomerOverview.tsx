@@ -7,7 +7,7 @@ import AppGridPage from '../AppGridPage';
 import { ISortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import { Path } from 'react-hook-form';
-import { ICustomerBase } from '../../../redux/customers/customers.types';
+import { ICustomerBase } from '../../../types/customers.types';
 import { customersColumns } from '../../../data/customers.data';
 import { BaseAppPageProps } from '../index';
 

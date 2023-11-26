@@ -1,8 +1,8 @@
-import { AddressDto, AppResponse, ContactsDto, IBase, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
-import { IPermission } from '../permissions/permissions.types';
-import { IUserBase } from '../auth/auth.types';
-import { StateErrorType } from '../reduxTypes.types';
-import { IWarehouse } from '../warehouses/warehouses.types';
+import { AddressDto, AppResponse, ContactsDto, IBase, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
+import { IPermission } from './permissions.types';
+import { IUserBase } from './auth.types';
+import { StateErrorType } from '../redux/reduxTypes.types';
+import { IWarehouse } from './warehouses.types';
 
 export enum OwnershipTypeEnum {
   UA_TOV = 'ua_tov',
@@ -59,9 +59,9 @@ export interface ICompaniesState {
 }
 
 export interface ICompanyFormData extends ICompanyBase {
-  warehouse?: IFormDataValueWithUUID;
-  suppliers?: IFormDataValueWithUUID;
-  manager?: IFormDataValueWithUUID & { user?: IUserBase };
+  warehouse?: IFormDataValueWithID;
+  suppliers?: IFormDataValueWithID;
+  manager?: IFormDataValueWithID & { user?: IUserBase };
 }
 
 export interface ICompanyDto extends Omit<ICompanyBase, '_id' | 'createdAt' | 'updatedAt' | 'deletedAt'> {
@@ -84,7 +84,7 @@ export interface ICompanyReqData {
 // }
 export interface ICompanyConfigs {
   warehouse?: IWarehouse;
-  supplier?: IFormDataValueWithUUID;
+  supplier?: IFormDataValueWithID;
   manager?: any;
 }
 export interface ICompanyWithConfigs extends ICompanyBase, ICompanyConfigs {}
@@ -94,9 +94,9 @@ export interface ICompanyConfigsDto {
   manager?: OnlyUUID;
 }
 export interface ICompanyConfigsFormData extends ICompanyConfigsDto {
-  warehouse?: IFormDataValueWithUUID;
-  supplier?: IFormDataValueWithUUID;
-  manager?: IFormDataValueWithUUID;
+  warehouse?: IFormDataValueWithID;
+  supplier?: IFormDataValueWithID;
+  manager?: IFormDataValueWithID;
 }
 
 export interface IGetAllCompaniesRes extends AppResponse<ICompany[]> {}

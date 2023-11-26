@@ -1,7 +1,7 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { SelectItem } from '../components/TableList/TableList';
 import { t } from '../lang';
-import { BusinessSubjectTypeEnum, ICompany, OwnershipTypeEnum } from '../redux/companies/companies.types';
+import { BusinessSubjectTypeEnum, ICompany, OwnershipTypeEnum } from '../types/companies.types';
 import { enumToFilterOptions } from '../utils/fabrics';
 
 export const ownershipTypeFilterOptions = enumToFilterOptions(OwnershipTypeEnum);

@@ -1,5 +1,5 @@
 import { ITableAction, ITableListContext, TableActionCreator } from '../components/TableList/tableTypes.types';
-import { IPermission } from '../redux/permissions/permissions.types';
+import { IPermission } from '../types/permissions.types';
 import { PermissionService } from './usePermissionsService.hook';
 import { IModalProviderContext, useModalService } from '../components/ModalProvider/ModalProvider';
 import { useNavigate } from 'react-router-dom';

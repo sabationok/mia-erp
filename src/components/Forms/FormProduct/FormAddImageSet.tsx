@@ -1,4 +1,4 @@
-import { IProductImage } from '../../../redux/products/products.types';
+import { IProductImage } from '../../../types/products.types';
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { ChangeEventHandler, useRef, useState } from 'react';
 import { FilterOption } from '../../ModalForm/ModalFilter';

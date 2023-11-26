@@ -2,7 +2,7 @@ import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { warehouseOverviewTableColumns } from '../../../../data/warehauses.data';
 import Forms from '../../../Forms';
-import { IProductInventory } from '../../../../redux/warehouses/warehouses.types';
+import { IProductInventory } from '../../../../types/warehouses.types';
 import { useModalProvider } from '../../../ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useProductsSelector } from '../../../../redux/selectors.store';

@@ -11,7 +11,7 @@ import {
   UpdateDirItemThunkSubmitData,
 } from '../redux/directories/directories.thunk';
 import { defaultThunkPayload } from '../utils/fabrics';
-import { IDirItemBase } from '../components/Directories/dir.types';
+import { IDirItemBase } from '../types/dir.types';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 
 export interface DirectoriesService<

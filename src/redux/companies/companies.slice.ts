@@ -1,4 +1,4 @@
-import { ICompaniesState, ICompany } from './companies.types';
+import { ICompaniesState, ICompany } from '../../types/companies.types';
 import { createSlice } from '@reduxjs/toolkit';
 import { testUserKarina } from '../../data/usersDir.data';
 

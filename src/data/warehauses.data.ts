@@ -1,5 +1,5 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { IProductInventory, IWarehouse } from '../redux/warehouses/warehouses.types';
+import { IProductInventory, IWarehouse } from '../types/warehouses.types';
 import { t } from '../lang';
 import { numberWithSpaces } from '../utils';
 

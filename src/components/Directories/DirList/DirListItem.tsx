@@ -1,7 +1,7 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { IDirItemBase } from '../dir.types';
+import { IDirItemBase } from '../../../types/dir.types';
 import { isUndefined } from 'lodash';
 import FlexBox from '../../atoms/FlexBox';
 

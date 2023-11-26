@@ -1,7 +1,7 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 // import { createTransactionThunk, getAllTransactionsThunk } from 'redux/transactions/transactions.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
-import { IPriceList } from './priceManagement.types';
+import { IPriceList } from '../../types/priceManagement.types';
 import * as thunks from './priceManagement.thunks';
 import { checks } from '../../utils';
 

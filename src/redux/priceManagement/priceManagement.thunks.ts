@@ -5,7 +5,7 @@ import {
   IPriceListItem,
   IPriceListReqData,
   IUpdatePriceReqData,
-} from './priceManagement.types';
+} from '../../types/priceManagement.types';
 import { ThunkPayload } from '../store.store';
 import { AppQueryParams, createApiCall, PriceManagementApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';

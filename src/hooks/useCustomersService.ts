@@ -1,5 +1,5 @@
 import { ServiceDispatcherAsync } from '../redux/global.types';
-import { ICustomer, ICustomerReqDta } from '../redux/customers/customers.types';
+import { ICustomer, ICustomerReqDta } from '../types/customers.types';
 import { useMemo } from 'react';
 import { useAppDispatch } from '../redux/store.store';
 import {
@@ -11,7 +11,7 @@ import {
 } from '../redux/customers/customers.thunks';
 import { defaultThunkPayload } from '../utils/fabrics';
 import { AppQueryParams } from '../api';
-import { ICommunicationMethod, ICommunicationMethodReqData } from '../redux/integrations/integrations.types';
+import { ICommunicationMethod, ICommunicationMethodReqData } from '../types/integrations.types';
 
 export interface CustomersService {
   create: ServiceDispatcherAsync<ICustomerReqDta, ICustomer>;

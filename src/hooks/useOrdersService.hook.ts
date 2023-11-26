@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useAppDispatch } from '../redux/store.store';
 import { OnlyUUID, ServiceDispatcher, ServiceDispatcherAsync } from '../redux/global.types';
-import { ICreateOrderInfoFormState, IOrder, IOrderReqData, IOrderTempSlot } from '../redux/orders/orders.types';
+import { ICreateOrderInfoFormState, IOrder, IOrderReqData, IOrderTempSlot } from '../types/orders.types';
 import { AppQueryParams } from '../api';
 import {
   AddSlotToGroupAction,

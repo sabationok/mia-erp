@@ -1,11 +1,11 @@
-import { IBase, IBaseWithPeriod, IDataWithPeriod, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
-import { IProduct } from '../products/products.types';
-import { ICompany } from '../companies/companies.types';
-import { IPriceListItem } from '../priceManagement/priceManagement.types';
-import { IVariation } from '../products/variations/variations.types';
-import { AppQueryParams } from '../../api';
-import { IUser } from '../auth/auth.types';
-import { GeolocationPoint } from '../../services/Geolocation.service';
+import { IBase, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
+import { IProduct } from './products.types';
+import { ICompany } from './companies.types';
+import { IPriceListItem } from './priceManagement.types';
+import { IVariation } from './variations.types';
+import { AppQueryParams } from '../api';
+import { GeolocationPoint } from '../services/Geolocation.service';
+import { HasAuthor, HasOwnerAsCompany, HasStatus, HasStatusRef, HasType, MaybeNull, WithPeriod } from './utils.types';
 
 export enum WarehouseTypeEnum {
   WAREHOUSE = 'warehouse',
@@ -33,7 +33,7 @@ export interface IWarehouse extends IBase {
   location?: GeolocationPoint;
   address?: string;
 
-  inventories?: IProductInventory[];
+  inventories?: OnlyUUID[];
 
   novaposhtaApiKey?: string;
   ukrposhtaApiKey?: string;
@@ -45,7 +45,7 @@ export interface IWarehouseDto {
   email?: string;
   phone?: string;
   type?: WarehouseTypeEnum;
-  manager?: IFormDataValueWithUUID;
+  manager?: IFormDataValueWithID;
   location?: GeolocationPoint;
 }
 export interface IWarehouseReqData {
@@ -58,7 +58,7 @@ export interface IWarehouseReqData {
 
 export type ProductInventoryStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
-export interface IProductInventory extends IBaseWithPeriod {
+export interface IProductInventory extends IBase, WithPeriod {
   owner?: ICompany;
   warehouse?: IWarehouse;
   product?: IProduct;
@@ -71,7 +71,7 @@ export interface IProductInventory extends IBaseWithPeriod {
   lost?: number;
 }
 
-export interface IProductInventoryFormData {
+export interface IProductInventoryFormData extends WithPeriod, HasStatus<ProductInventoryStatus> {
   product?: Omit<IProduct, 'categories' | 'inventories' | 'category' | 'properties'>;
   variation?: Omit<IVariation, 'properties'>;
   price?: Omit<IPriceListItem, 'list' | 'product'>;
@@ -83,19 +83,14 @@ export interface IProductInventoryFormData {
   lost?: number;
   reservation?: boolean;
 
-  status?: ProductInventoryStatus;
   customerTags?: string[];
   supplierTags?: string[];
-  timeFrom?: string;
-  timeTo?: string;
 }
-export interface IProductInventoryDto extends IDataWithPeriod {
+export interface IProductInventoryDto extends WithPeriod, HasStatusRef {
   warehouse?: OnlyUUID;
   product?: OnlyUUID;
   variation?: OnlyUUID;
   price?: OnlyUUID;
-
-  status?: OnlyUUID;
 
   stock?: number;
   reserved?: number;
@@ -112,6 +107,12 @@ export interface IProductInventoryReqData {
   data: IProductInventoryDto;
   params?: AppQueryParams;
 }
+export interface HasWarehouse {
+  warehouse?: MaybeNull<IWarehouse>;
+}
+export interface HasWarehouseInventory {
+  inventory?: MaybeNull<IProductInventory>;
+}
 
 // * WAREHOUSE SETTINGS
 export interface WarehouseSettingsDto {
@@ -119,15 +120,13 @@ export interface WarehouseSettingsDto {
   isReservationAvailable?: boolean;
 }
 export interface WarehousingSettingsFormData {
-  warehouse?: IFormDataValueWithUUID;
+  warehouse?: IFormDataValueWithID;
   isReservationAvailable?: boolean;
 }
 
 // * WAREHOUSE DOCUMENTS
 
-export interface IWarehouseDoc extends IBaseWithPeriod {
-  owner?: ICompany;
-  author?: IUser;
+export interface IWarehouseDoc extends WithPeriod, HasType<WarehouseDocumentType>, HasOwnerAsCompany, HasAuthor {
   warehouse?: IWarehouse;
   product?: IProduct;
   variation?: IVariation;
@@ -135,16 +134,15 @@ export interface IWarehouseDoc extends IBaseWithPeriod {
 
   amount?: number;
   batch?: string;
-  type?: WarehouseDocumentType;
 }
 
 export interface IWarehouseDocFormData {
-  owner?: IFormDataValueWithUUID;
-  author?: IFormDataValueWithUUID;
-  warehouse?: IFormDataValueWithUUID;
-  product?: IFormDataValueWithUUID;
-  variation?: IFormDataValueWithUUID;
-  price?: IFormDataValueWithUUID;
+  owner?: IFormDataValueWithID;
+  author?: IFormDataValueWithID;
+  warehouse?: IFormDataValueWithID;
+  product?: IFormDataValueWithID;
+  variation?: IFormDataValueWithID;
+  price?: IFormDataValueWithID;
 
   batch?: string;
   amount?: number;

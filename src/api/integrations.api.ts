@@ -6,7 +6,7 @@ import {
   InputIntegrationDto,
   OutputIntegrationBase,
   OutputIntegrationDto,
-} from '../redux/integrations/integrations.types';
+} from '../types/integrations.types';
 import { AppResponse } from '../redux/global.types';
 
 export interface GetAllIntegrationsQueries extends Pick<AppQueries, 'warehouseId' | 'serviceId'> {

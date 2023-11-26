@@ -1,5 +1,5 @@
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { EngagementSource, ICustomerFormData } from '../../../redux/customers/customers.types';
+import { EngagementSource, ICustomerFormData } from '../../../types/customers.types';
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { t } from '../../../lang';
 import styled from 'styled-components';
@@ -14,7 +14,7 @@ import CheckboxesListSelector from '../../atoms/CheckboxesListSelector';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import { useMemo } from 'react';
 import { ConfigService } from '../../../services';
-import { BusinessSubjectTypeEnum } from '../../../redux/companies/companies.types';
+import { BusinessSubjectTypeEnum } from '../../../types/companies.types';
 import _ from 'lodash';
 
 const isDevMode = ConfigService.isDevMode();

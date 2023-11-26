@@ -3,7 +3,7 @@ import { OnlyUUID } from '../../../../redux/global.types';
 import { useWarehousesSelector } from '../../../../redux/selectors.store';
 import { useMemo } from 'react';
 import { getIdRef } from '../../../../utils/data-transform';
-import { IWarehouse } from '../../../../redux/warehouses/warehouses.types';
+import { IWarehouse } from '../../../../types/warehouses.types';
 import { warehousesTableColumns } from '../../../../data/warehauses.data';
 
 export interface WarehousesTabProps {

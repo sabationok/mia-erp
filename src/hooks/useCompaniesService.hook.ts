@@ -1,5 +1,5 @@
-import { ICompanyReqData } from '../redux/companies/companies.types';
-import { IPermission } from '../redux/permissions/permissions.types';
+import { ICompanyReqData } from '../types/companies.types';
+import { IPermission } from '../types/permissions.types';
 import { useMemo } from 'react';
 import { CompaniesApi, createApiCall } from '../api';
 import { defaultApiCallPayload } from '../utils/fabrics';

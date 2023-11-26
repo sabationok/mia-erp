@@ -1,12 +1,7 @@
 import baseApi from './baseApi';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
-import {
-  IProductInventory,
-  IWarehouse,
-  IWarehouseDocReqData,
-  IWarehouseReqData,
-} from '../redux/warehouses/warehouses.types';
+import { IProductInventory, IWarehouse, IWarehouseDocReqData, IWarehouseReqData } from '../types/warehouses.types';
 import { AppResponse, OnlyUUID } from '../redux/global.types';
 
 export class WarehousesApi {

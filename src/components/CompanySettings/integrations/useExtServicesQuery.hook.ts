@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ExternalServiceTypeEnum, ExtServiceBase } from '../../../redux/integrations/integrations.types';
+import { ExternalServiceTypeEnum, ExtServiceBase } from '../../../types/integrations.types';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppQueryParams } from '../../../api';
 

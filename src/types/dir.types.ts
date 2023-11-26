@@ -1,21 +1,16 @@
-import { ModalFormProps } from '../ModalForm';
-import {
-  CategoryTrTypeEnum,
-  CategoryTypes,
-  ICategory,
-  ICategoryFormData,
-} from '../../redux/directories/directories.types';
-import { CountsTypesEnum, CountType, ICount, ICountFormData } from '../../redux/directories/counts.types';
-import { FilterOpt } from '../ModalForm/ModalFilter';
-import { IBase, OnlyUUID } from '../../redux/global.types';
-import { ICompany } from '../../redux/companies/companies.types';
-import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { IModalProviderContext, ModalService } from '../ModalProvider/ModalProvider';
-import { DirectoriesService } from '../../hooks/useDirService.hook';
-import { AppSubmitHandler, UseAppFormSubmitOptions } from '../../hooks/useAppForm.hook';
-import { ContractorsTypesEnum } from '../../redux/directories/contractors.types';
-import { OfferTypeEnum } from '../../redux/products/products.types';
-import { CounterpartyTypesEnum } from '../../redux/directories/counterparties.types';
+import { ModalFormProps } from '../components/ModalForm';
+import { CategoryTrTypeEnum, ICategory, ICategoryFormData } from './directories.types';
+import { CountsTypesEnum, ICount, ICountFormData } from '../redux/directories/counts.types';
+import { FilterOpt } from '../components/ModalForm/ModalFilter';
+import { IBase, OnlyUUID } from '../redux/global.types';
+import { ICompany } from './companies.types';
+import { ApiDirType } from '../redux/APP_CONFIGS';
+import { IModalProviderContext, ModalService } from '../components/ModalProvider/ModalProvider';
+import { DirectoriesService } from '../hooks/useDirService.hook';
+import { AppSubmitHandler, UseAppFormSubmitOptions } from '../hooks/useAppForm.hook';
+import { ContractorsTypesEnum } from '../redux/directories/contractors.types';
+import { OfferTypeEnum } from './products.types';
+import { CounterpartyTypesEnum } from '../redux/directories/counterparties.types';
 
 export interface DirItemTypeByDirType extends Record<ApiDirType, any> {
   [ApiDirType.COUNTS]: CountsTypesEnum;
@@ -25,9 +20,6 @@ export interface DirItemTypeByDirType extends Record<ApiDirType, any> {
   [ApiDirType.CONTRACTORS]: ContractorsTypesEnum | CounterpartyTypesEnum;
   [ApiDirType.COUNTERPARTIES]: ContractorsTypesEnum | CounterpartyTypesEnum;
   [ApiDirType.TAGS]: ContractorsTypesEnum;
-  [ApiDirType.METHODS_SHIPMENT]: IShipmentDirItem;
-  [ApiDirType.METHODS_COMMUNICATION]: ICommunicationDirItem;
-  [ApiDirType.METHODS_PAYMENT]: IPaymentDirItem;
 }
 
 export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> extends IBase {
@@ -61,10 +53,12 @@ export interface IDirItemBase<DirType extends ApiDirType = any> extends IBase {
   childrenList?: IDirItemBase<DirType>[];
   name?: string;
   secondName?: string;
+
   label?: string;
   // status?: 'ARCHIVED' | 'DELETED' | 'ACTIVE';
   taxCode?: string | number;
   personalTaxCode?: string | number;
+
   description?: string;
   manufacturer?: string;
   email?: string;
@@ -190,10 +184,6 @@ export interface IBrandFormData extends Omit<IBrand, '_id' | 'createdAt' | 'upda
 export interface DirBrandsProps extends IDirInTreeProps<ApiDirType.BRANDS, IBrandFormData, IBrandFormData, IBrand> {}
 
 // ? PRODUCTS PROPERTIES
-export interface IPropertyDirItem extends IDirItemBase {}
-export interface IPropertyFormData extends Omit<IPropertyDirItem, '_id' | 'createdAt' | 'updatedAt' | 'childrenList'> {}
-export interface DirPropertiesProps
-  extends IDirInTreeProps<ApiDirType.PROPERTIES_PRODUCTS, IPropertyFormData, IPropertyFormData, IPropertyDirItem> {}
 
 export interface DirMarksProps extends IDirInTreeProps<ApiDirType.MARKS> {}
 
@@ -201,39 +191,11 @@ export interface ITagDirItem extends IDirItemBase<ApiDirType.TAGS> {}
 export interface DirTagsProps extends IDirInTreeProps<ApiDirType.TAGS> {}
 
 export interface ISupplierDirItem extends IDirItemBase<ApiDirType.CONTRACTORS> {}
-export interface ICustomerDirItem extends IDirItemBase<ApiDirType.CONTRACTORS> {
-  secondName?: string;
-}
 
 // ? ======== METHODS
 export interface IShipmentDirItem extends IDirItemBase<ApiDirType.METHODS_SHIPMENT> {}
-export interface ICommunicationDirItem extends IDirItemBase<ApiDirType.METHODS_COMMUNICATION> {}
 export interface IPaymentDirItem extends IDirItemBase<ApiDirType.METHODS_PAYMENT> {}
 
 export type MethodDirType = ApiDirType.METHODS_SHIPMENT | ApiDirType.METHODS_COMMUNICATION | ApiDirType.METHODS_PAYMENT;
 
-export type IMethodDirItem = IShipmentDirItem | ICommunicationDirItem | IPaymentDirItem;
-
-// ? ============== WAREHOUSES
-// export interface IWarehouse extends IDirItemBase<ApiDirType.WAREHOUSES> {}
-// export interface IWarehouseFormData extends Omit<IWarehouse, '_id' | 'createdAt' | 'updatedAt'> {}
-// export interface DirWarehousesProps
-//   extends IDirInTreeProps<ApiDirType.WAREHOUSES, IWarehouseFormData, IWarehouseFormData, IWarehouse> {}
-// export interface IWarehouseDirItem extends IDirItemBase<ApiDirType.WAREHOUSES> {
-//   code?: string | number;
-// }
-
-// export interface DirStatusOrderProps extends IDirInTreeProps<ApiDirType.STATUSES_ORDER> {}
-
-// export interface DirStatusRefundProps extends IDirInTreeProps<ApiDirType.STATUSES_REFUND> {}
-
-// export interface DirStatusDeliveryProps extends IDirInTreeProps<ApiDirType.STATUSES_SHIPMENT> {}
-
-// export interface DirProjectsProps extends DirTableCompProps<ApiDirType.PROJECTS> {}
-
-// export type ActivityType = 'BASE' | 'ADDS';
-
-export type CategoryFilterOpt<D = any> = FilterOpt<CategoryTypes, D>;
-
-export type CountFilterOpt<D = any> = FilterOpt<CountType, D>;
-// export type ActivityFilterOpt<D = any> = FilterOpt<ActivityType, D>;
+export type IMethodDirItem = IShipmentDirItem | IPaymentDirItem;

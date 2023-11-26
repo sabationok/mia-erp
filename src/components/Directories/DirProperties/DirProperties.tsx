@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import ModalForm from 'components/ModalForm';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
-import { IDirInTreeProps, IDirItemBase } from '../dir.types';
+import { IDirInTreeProps, IDirItemBase } from '../../../types/dir.types';
 import { useFilteredLisData } from 'hooks';
 
 import { FilterOpt } from '../../ModalForm/ModalFilter';
@@ -12,7 +12,7 @@ import { ProductsService } from '../../../hooks/useProductsService.hook';
 import FlexBox from '../../atoms/FlexBox';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { useProductsSelector } from '../../../redux/selectors.store';
-import { IProperty, IPropertyBase, IPropertyDto } from '../../../redux/products/properties/properties.types';
+import { IProperty, IPropertyBase, IPropertyDto } from '../../../types/properties.types';
 import { ToastService } from '../../../services';
 import { DirPropertiesCTX, DirPropertiesCTXValue } from './DirPropertiesCTX';
 import PropertiesGroupItem from './components/PropertiesGroupItem';

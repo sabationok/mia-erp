@@ -2,7 +2,7 @@ import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import baseApi from './baseApi';
 import { AppResponse } from '../redux/global.types';
-import { IDeliveryMethod, IDeliveryMethodReqData } from '../redux/integrations/integrations.types';
+import { IDeliveryMethod, IDeliveryMethodReqData } from '../types/integrations.types';
 
 export default class DeliveriesApi {
   private static api = baseApi;

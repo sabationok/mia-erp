@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { CellActionsName } from '../TebleCells';
 import { IconIdType } from '../../../img/sprite/iconId.data';
 import { IBase } from '../../../redux/global.types';
+import { MaybeNull } from '../../../types/utils.types';
 
 export type CellTitleContent<DataType = any, DataPath extends string = any> = {
   _id?: string;
@@ -20,7 +21,7 @@ export type CellTitleContent<DataType = any, DataPath extends string = any> = {
   getData?: (
     rowData: DataType,
     titleProps: CellTittleProps<DataType, DataPath>
-  ) => string | string[] | number | number[] | Date | undefined;
+  ) => MaybeNull<string | string[] | number | number[] | Date | undefined>;
 };
 
 export type CellTittleProps<DataType = any, DataPath extends string = any> = {

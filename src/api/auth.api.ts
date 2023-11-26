@@ -1,6 +1,6 @@
 import baseApi, { baseURL } from './baseApi';
 import APP_CONFIGS, { Endpoints } from '../redux/APP_CONFIGS';
-import { ILoggedUserInfoRes, ILoginUserData, IRegisteredUserInfoRes } from '../redux/auth/auth.types';
+import { ILoggedUserInfoRes, ILoginUserData, IRegisteredUserInfoRes } from '../types/auth.types';
 
 export default class AuthApi {
   private static api = baseApi;

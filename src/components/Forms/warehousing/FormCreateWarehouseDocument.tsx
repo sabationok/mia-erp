@@ -8,7 +8,7 @@ import {
   IWarehouseDoc,
   IWarehouseDocFormData,
   WarehouseDocumentType,
-} from '../../../redux/warehouses/warehouses.types';
+} from '../../../types/warehouses.types';
 import { t } from '../../../lang';
 import { useAppForm } from '../../../hooks';
 import { useProductsSelector, useWarehousesSelector } from '../../../redux/selectors.store';
@@ -17,7 +17,7 @@ import { HTMLInputTypeAttribute, useCallback, useEffect, useMemo } from 'react';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { transformVariationTableData } from '../../../utils/tables';
 import { OnRowClickHandler } from '../../TableList/tableTypes.types';
-import { IProduct } from '../../../redux/products/products.types';
+import { IProduct } from '../../../types/products.types';
 import FlexBox from '../../atoms/FlexBox';
 import TableList from '../../TableList/TableList';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';

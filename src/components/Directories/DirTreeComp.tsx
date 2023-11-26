@@ -7,7 +7,7 @@ import { FilterOpt } from '../ModalForm/ModalFilter';
 import DirListItem from './DirList/DirListItem';
 import FlexBox from '../atoms/FlexBox';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { DirInTreeActionsCreatorType, IDirItemBase } from './dir.types';
+import { DirInTreeActionsCreatorType, IDirItemBase } from '../../types/dir.types';
 import { RenderModalComponentChildrenProps } from '../ModalProvider/ModalComponent';
 import ExtraFooterWithButton from '../atoms/ExtraFooterWithButton';
 

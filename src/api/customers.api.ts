@@ -2,7 +2,7 @@ import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import { AppResponse, OnlyUUID } from '../redux/global.types';
 import baseApi from './baseApi';
-import { ICustomer, ICustomerReqDta } from '../redux/customers/customers.types';
+import { ICustomer, ICustomerReqDta } from '../types/customers.types';
 
 export default class CustomersApi {
   private static api = baseApi;

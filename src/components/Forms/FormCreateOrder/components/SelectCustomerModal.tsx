@@ -1,4 +1,4 @@
-import { ICustomer } from '../../../../redux/customers/customers.types';
+import { ICustomer } from '../../../../types/customers.types';
 import ModalForm, { ModalFormProps } from '../../../ModalForm';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import { useEffect, useMemo } from 'react';

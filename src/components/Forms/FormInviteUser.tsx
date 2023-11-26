@@ -6,7 +6,7 @@ import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { useCustomRolesSelector } from '../../redux/selectors.store';
 import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
 import InputText from '../atoms/Inputs/InputText';
-import { IPermission } from '../../redux/permissions/permissions.types';
+import { IPermission } from '../../types/permissions.types';
 import { FormInputs } from './components/atoms';
 
 export interface FormInviteUserProps extends Omit<ModalFormProps<any, any, IPermission>, 'onSubmit'> {

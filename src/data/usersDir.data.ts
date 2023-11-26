@@ -1,7 +1,7 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
-import { ISystemRole, IUser } from 'redux/auth/auth.types';
+import { ISystemRole, IUser } from 'types/auth.types';
 import { karina_avatar } from '../img';
-import { IPermission } from '../redux/permissions/permissions.types';
+import { IPermission } from '../types/permissions.types';
 import { t } from '../lang';
 
 export const testUserKarinaSystemRole: ISystemRole = {

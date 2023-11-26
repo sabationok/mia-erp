@@ -1,7 +1,7 @@
 import { enumToFilterOptions } from '../utils/fabrics';
-import { CategoryTrTypeEnum } from '../redux/directories/directories.types';
+import { CategoryTrTypeEnum } from '../types/directories.types';
 import { CountsTypesEnum } from '../redux/directories/counts.types';
-import { OfferTypeEnum } from '../redux/products/products.types';
+import { OfferTypeEnum } from '../types/products.types';
 import { ContractorsTypesEnum } from '../redux/directories/contractors.types';
 
 export const categoriesFilterOptions = enumToFilterOptions(CategoryTrTypeEnum);

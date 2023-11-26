@@ -1,18 +1,18 @@
 import { Path } from 'react-hook-form';
-import { IProductMeasurement, MeasurementUnit } from '../../../../redux/products/products.types';
+import { MeasurementUnit } from 'types/products.types';
 import { FilterOption } from '../../../ModalForm/ModalFilter';
-import { enumToFilterOptions } from '../../../../utils/fabrics';
+import { enumToFilterOptions } from 'utils/fabrics';
 import CustomSelect from '../../../atoms/Inputs/CustomSelect/CustomSelect';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
 import InputText from '../../../atoms/Inputs/InputText';
 import FlexBox from '../../../atoms/FlexBox';
 import * as React from 'react';
-import { UseAppFormReturn } from '../../../../hooks/useAppForm.hook';
-import { t } from '../../../../lang';
+import { UseAppFormReturn } from 'hooks/useAppForm.hook';
+import { t } from 'lang';
+import { HasMeasurement } from 'types/utils.types';
 
-export interface MeasurementInputsFormData {
-  measurement?: IProductMeasurement;
-}
+export interface MeasurementInputsFormData extends HasMeasurement {}
+
 const productsMeasurementUnitOptions = enumToFilterOptions(MeasurementUnit);
 
 const measurementInputs: {

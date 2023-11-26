@@ -1,12 +1,12 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import FlexBox from '../../atoms/FlexBox';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { IProduct } from '../../../redux/products/products.types';
+import { IProduct } from '../../../types/products.types';
 import TableList from '../../TableList/TableList';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
-import { IProductInventoryFormData } from '../../../redux/warehouses/warehouses.types';
-import { IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
-import { IVariation } from '../../../redux/products/variations/variations.types';
+import { IProductInventoryFormData } from '../../../types/warehouses.types';
+import { IPriceListItem } from '../../../types/priceManagement.types';
+import { IVariation } from '../../../types/variations.types';
 import styled from 'styled-components';
 import { useProductsSelector, usePropertiesSelector } from '../../../redux/selectors.store';
 import InputLabel from '../../atoms/Inputs/InputLabel';

@@ -1,11 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { IPermission, IPermissionForReq, IPermissionReqData } from './permissions.types';
+import { IPermission, IPermissionForReq, IPermissionReqData } from '../../types/permissions.types';
 import { ThunkPayload } from '../store.store';
 import { axiosErrorCheck } from 'utils';
 import { CompaniesApi, PermissionsApi } from '../../api';
-import { ICompanyForReq } from '../companies/companies.types';
+import { ICompanyForReq } from '../../types/companies.types';
 import { createUpdateCompanyThunk } from '../companies/companies.thunks';
-import { IUser } from '../auth/auth.types';
+import { IUser } from '../../types/auth.types';
 import { CompanyQueryType } from '../global.types';
 
 enum PermissionsThunkType {

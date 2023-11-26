@@ -1,7 +1,7 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import TableList, { ITableListProps } from '../../TableList/TableList';
 import { useEffect, useMemo, useState } from 'react';
-import { IPriceList, IPriceListItem } from '../../../redux/priceManagement/priceManagement.types';
+import { IPriceList, IPriceListItem } from '../../../types/priceManagement.types';
 import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
 import { usePriceListOverviewActionsCreator } from '../../../hooks/usePriceListOverviewActionsCreator.hook';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';

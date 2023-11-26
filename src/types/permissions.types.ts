@@ -1,9 +1,9 @@
-import { ICustomRole } from '../customRoles/customRoles.types';
-import { AppResponse, IBase, OnlyUUID } from '../global.types';
-import { ICompanyBase } from '../companies/companies.types';
-import { IUserBase } from '../auth/auth.types';
-import { StateErrorType } from '../reduxTypes.types';
-import { OutputIntegrationBase } from '../integrations/integrations.types';
+import { ICustomRole } from '../redux/customRoles/customRoles.types';
+import { AppResponse, IBase, OnlyUUID } from '../redux/global.types';
+import { ICompanyBase } from './companies.types';
+import { IUserBase } from './auth.types';
+import { StateErrorType } from '../redux/reduxTypes.types';
+import { OutputIntegrationBase } from './integrations.types';
 
 export enum PermissionStatus {
   PENDING = 'PENDING',

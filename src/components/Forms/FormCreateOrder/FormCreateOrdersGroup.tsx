@@ -17,7 +17,7 @@ import {
   ICreateOrdersGroupDto,
   IOrder,
   IOrderTempSlot,
-} from '../../../redux/orders/orders.types';
+} from '../../../types/orders.types';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { ToastService } from '../../../services';
 import _ from 'lodash';

@@ -2,7 +2,7 @@ import baseApi from './baseApi';
 
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
-import { IProduct, IProductReqData } from '../redux/products/products.types';
+import { IProduct, IProductReqData } from '../types/products.types';
 import { AppResponse } from '../redux/global.types';
 
 export default class ProductsApi {

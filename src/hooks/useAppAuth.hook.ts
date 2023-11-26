@@ -1,5 +1,5 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
-import { ILoginUserData, IRegistrationData } from '../redux/auth/auth.types';
+import { ILoginUserData, IRegistrationData } from '../types/auth.types';
 import { logInUserThunk, logOutUserThunk, registerUserThunk } from '../redux/auth/auth.thunks';
 import { ServiceDispatcher, ServiceDispatcherAsync } from '../redux/global.types';
 import { useMemo } from 'react';

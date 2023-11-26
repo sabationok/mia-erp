@@ -1,6 +1,6 @@
 import { StateErrorType } from '../reduxTypes.types';
 import { createSlice } from '@reduxjs/toolkit';
-import { ICheckoutPaymentMethod, IPayment } from './payments.types';
+import { ICheckoutPaymentMethod, IPayment } from '../../types/payments.types';
 import { getAllPaymentMethodsThunk, updatePaymentMethodThunk } from './payments.thunks';
 
 export interface PaymentsState {

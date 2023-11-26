@@ -1,6 +1,6 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { StateErrorType } from 'redux/reduxTypes.types';
-import { IProduct } from './products.types';
+import { IProduct } from '../../types/products.types';
 import {
   createProductThunk,
   getAllInventoriesByProductIdThunk,
@@ -15,7 +15,7 @@ import {
   getAllVariationsByProductIdThunk,
   updateVariationThunk,
 } from './variations/variations.thunks';
-import { IVariationTemplate } from './properties/properties.types';
+import { IVariationTemplate } from '../../types/properties.types';
 import { createPropertyThunk, getAllPropertiesThunk } from './properties/properties.thunks';
 import {
   clearCurrentProductAction,

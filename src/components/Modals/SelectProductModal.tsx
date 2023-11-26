@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { IProduct } from '../../redux/products/products.types';
+import { IProduct } from '../../types/products.types';
 import ProductCardSimpleOverview from '../Overviews/ProductCardSimpleOverview';
 import { AppQueryParams, createApiCall } from '../../api';
 import ProductsApi from '../../api/products.api';

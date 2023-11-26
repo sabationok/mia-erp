@@ -1,4 +1,4 @@
-import { ICustomer } from '../../../../redux/customers/customers.types';
+import { ICustomer } from '../../../../types/customers.types';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';

@@ -2,7 +2,7 @@ import baseApi from './baseApi';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import { AppResponse, OnlyUUID } from '../redux/global.types';
-import { IVariation, IVariationReqData } from 'redux/products/variations/variations.types';
+import { IVariation, IVariationReqData } from 'types/variations.types';
 
 export default class VariationsApi {
   private static api = baseApi;

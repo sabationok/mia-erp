@@ -2,7 +2,7 @@ import { ITableAction, ITableListContext } from '../components/TableList/tableTy
 import { IModalProviderContext, useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { WarehousesService } from './useWarehousesService.hook';
-import { IWarehouse, IWarehouseDto, IWarehouseReqData } from '../redux/warehouses/warehouses.types';
+import { IWarehouse, IWarehouseDto, IWarehouseReqData } from '../types/warehouses.types';
 import { Modals } from '../components/Modals';
 import { IWarehouseFormData } from '../components/Forms/warehousing/FormCreateWarehouse';
 import { useNavigate } from 'react-router-dom';

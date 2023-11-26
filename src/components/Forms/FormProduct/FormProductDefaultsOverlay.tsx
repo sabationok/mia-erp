@@ -1,5 +1,5 @@
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { IProductDefaultsFormData } from '../../../redux/products/products.types';
+import { IProductDefaultsFormData } from '../../../types/products.types';
 import styled from 'styled-components';
 import { OverlayHandlerReturn } from '../../atoms/PageOverlayProvider';
 import { ModalHeader, OverlayFooter } from '../../atoms';

@@ -1,4 +1,4 @@
-import { DirectoriesFormProps } from '../Directories/dir.types';
+import { DirectoriesFormProps } from '../../types/dir.types';
 import { ContractorsTypesEnum, IContractor, IContractorFormData } from 'redux/directories/contractors.types';
 import ModalForm from '../ModalForm';
 
@@ -16,7 +16,7 @@ import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
 import ButtonsGroup from '../atoms/ButtonsGroup';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useDirectoriesSelector } from '../../redux/selectors.store';
-import { BusinessSubjectTypeEnum } from '../../redux/companies/companies.types';
+import { BusinessSubjectTypeEnum } from '../../types/companies.types';
 import { businessSubjectTypeFilterOptions } from '../../data/companies.data';
 import { FormInputs } from './components/atoms';
 import { counterpartyFilterOptions } from '../../data/modalFilterOptions.data';

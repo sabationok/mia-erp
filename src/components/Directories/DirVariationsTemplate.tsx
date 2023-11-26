@@ -1,6 +1,6 @@
 import ModalForm from '../ModalForm';
 import FlexBox from '../atoms/FlexBox';
-import { IDirInTreeProps } from '../Directories/dir.types';
+import { IDirInTreeProps } from '../../types/dir.types';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 
 export interface DirVariationsTemplateProps extends IDirInTreeProps<ApiDirType.VARIATIONS> {}

@@ -1,5 +1,5 @@
 import FlexBox from '../../atoms/FlexBox';
-import { IProductImage } from '../../../redux/products/products.types';
+import { IProductImage } from '../../../types/products.types';
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';

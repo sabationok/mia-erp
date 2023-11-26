@@ -1,12 +1,7 @@
 import { useMemo } from 'react';
 import { OnlyUUID, ServiceApiCaller, ServiceDispatcherAsync } from '../redux/global.types';
 import { AppQueryParams } from '../api';
-import {
-  IProductInventory,
-  IProductInventoryReqData,
-  IWarehouse,
-  IWarehouseReqData,
-} from '../redux/warehouses/warehouses.types';
+import { IProductInventory, IProductInventoryReqData, IWarehouse, IWarehouseReqData } from '../types/warehouses.types';
 import {
   createWarehouseThunk,
   getAllWarehousesThunk,

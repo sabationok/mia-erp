@@ -1,20 +1,18 @@
-import { IProductDimensions } from '../../../../redux/products/products.types';
-import { t } from '../../../../lang';
+import { t } from 'lang';
 import * as React from 'react';
 import FlexBox from '../../../atoms/FlexBox';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
 import InputText from '../../../atoms/Inputs/InputText';
 import styled from 'styled-components';
 import { UseFormReturn } from 'react-hook-form/dist/types';
+import { DimensionsKeyType, HasDimensions } from 'types/utils.types';
 
-export interface DimensionsFormData {
-  dimensions?: IProductDimensions;
-}
+export interface DimensionsFormData extends HasDimensions {}
 
 export const dimensionsInputsProps: {
   label?: string;
   placeholder?: string;
-  name: keyof IProductDimensions;
+  name: DimensionsKeyType;
 }[] = [
   { name: 'height', label: t('Height'), placeholder: t('Sm') },
   { name: 'width', label: t('Width'), placeholder: t('Sm') },

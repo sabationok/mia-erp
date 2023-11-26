@@ -1,7 +1,7 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AuthErrorType } from 'redux/reduxTypes.types';
 import { getCurrentUserThunk, logInUserThunk, logOutUserThunk, registerUserThunk } from './auth.thunks';
-import { IAuthState } from './auth.types';
+import { IAuthState } from '../../types/auth.types';
 import { karina_avatar } from '../../img';
 import { checks } from '../../utils';
 import { SetLoggedUserAction } from './auth.actions';

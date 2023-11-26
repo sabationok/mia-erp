@@ -6,9 +6,9 @@ import {
   IPermissionReqData,
   IPermissionsResData,
   PermissionStatus,
-} from '../redux/permissions/permissions.types';
+} from '../types/permissions.types';
 import { AppResponse, CompanyQueryType } from '../redux/global.types';
-import { IUser } from '../redux/auth/auth.types';
+import { IUser } from '../types/auth.types';
 
 export default class PermissionsApi {
   private static api = baseApi;

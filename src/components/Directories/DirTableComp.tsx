@@ -2,7 +2,7 @@ import ModalForm from 'components/ModalForm';
 import TableList, { ITableListProps } from 'components/TableList/TableList';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { ActionsCreatorOptions, DirBaseProps, DirItemTypeByDirType } from './dir.types';
+import { ActionsCreatorOptions, DirBaseProps, DirItemTypeByDirType } from '../../types/dir.types';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
 import { ISortParams } from '../../api';

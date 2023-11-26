@@ -1,5 +1,5 @@
 import ModalForm from 'components/ModalForm';
-import { ICategory, ICategoryFormData } from 'redux/directories/directories.types';
+import { ICategory, ICategoryFormData } from 'types/directories.types';
 import React from 'react';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -7,7 +7,7 @@ import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import { t } from '../../lang';
-import { DirectoriesFormProps } from '../Directories/dir.types';
+import { DirectoriesFormProps } from '../../types/dir.types';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
 import { useAppForm } from '../../hooks';
 import { ApiDirType } from '../../redux/APP_CONFIGS';

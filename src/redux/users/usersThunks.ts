@@ -1,5 +1,5 @@
 import baseApi from 'api/baseApi';
-import { IRegisteredUser, IRegisteredUserInfoRes, IRegistrationData, IUser } from 'redux/auth/auth.types';
+import { IRegisteredUser, IRegisteredUserInfoRes, IRegistrationData, IUser } from 'types/auth.types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import { AsyncThunkConfig } from 'redux/reduxTypes.types';

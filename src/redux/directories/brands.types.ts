@@ -1,4 +1,4 @@
-import { IBaseDirItem } from '../../components/Directories/dir.types';
+import { IBaseDirItem } from '../../types/dir.types';
 import { ApiDirType } from '../APP_CONFIGS';
 
 export enum BrandTypesEnum {

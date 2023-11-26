@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from '../../utils';
 import { InvoicesApi } from '../../api';
 import { ThunkPayload } from '../store.store';
-import { IInvoicingMethod, IInvoicingMethodReqData } from '../integrations/integrations.types';
+import { IInvoicingMethod, IInvoicingMethodReqData } from '../../types/integrations.types';
 
 enum InvoicesThunkTypeEnum {
   getAllInvoices = 'invoicing/getAllInvoicesThunk',

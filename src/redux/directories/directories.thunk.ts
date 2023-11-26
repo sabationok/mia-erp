@@ -5,7 +5,7 @@ import { ThunkPayload } from '../store.store';
 import { AppQueryParams, DirectoriesApi } from '../../api';
 import { ApiDirType } from '../APP_CONFIGS';
 import { GetAllByDirTypeOptions } from '../../api/directories.api';
-import { IDirItemBase } from '../../components/Directories/dir.types';
+import { IDirItemBase } from '../../types/dir.types';
 
 enum DirThunkTypePrefix {
   create = 'directories/createDirectoryItemThunk',

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import AccordionList, { IAccordionOptionProps } from '../../SideBarContent/AccordionList';
-import { InputIntegrationBase } from '../../../redux/integrations/integrations.types';
+import { InputIntegrationBase } from '../../../types/integrations.types';
 import IntegrationOverview from './IntegrationOverview';
 import FlexBox from '../../atoms/FlexBox';
 

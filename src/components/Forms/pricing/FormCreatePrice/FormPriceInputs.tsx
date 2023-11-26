@@ -3,14 +3,13 @@ import {
   IPriceBase,
   PriceAmountAndPercentageFieldsEnum,
   PriceAmountAndPercentageFieldsKey,
-} from '../../../../redux/priceManagement/priceManagement.types';
+} from '../../../../types/priceManagement.types';
 import FlexBox from '../../../atoms/FlexBox';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
 import InputText from '../../../atoms/Inputs/InputText';
 import { t } from '../../../../lang';
 import styled from 'styled-components';
 import { UseFormReturn } from 'react-hook-form/dist/types';
-import { priceAmountAndPercentageFieldsLabels } from '../../../../utils/tables';
 import { enumToArray } from '../../../../utils';
 import { ChangeHandler } from 'react-hook-form/dist/types/form';
 import { Text } from '../../../atoms/Text';
@@ -23,74 +22,8 @@ export interface FormPriceInputsProps {
   handleBlur: HandleUseFormBlur<PriceFormDataPath>;
 }
 
-const getPriceAmountAndPercentageInputsPropsByKey = <Key extends PriceAmountAndPercentageFieldsKey = any>(
-  key: Key
-): Record<
-  `${Key}.amount` | `${Key}.percentage`,
-  {
-    name?: string;
-    label?: string;
-    placeholder?: string;
-  }
-> => {
-  return {
-    [`${key}.amount`]: {
-      name: `${key}.amount`,
-      label: priceAmountAndPercentageFieldsLabels[key].amount,
-      placeholder: priceAmountAndPercentageFieldsLabels[key].amount,
-    },
-    [`${key}.amount`]: {
-      name: `${key}.percentage`,
-      label: priceAmountAndPercentageFieldsLabels[key].percentage,
-      placeholder: priceAmountAndPercentageFieldsLabels[key].percentage,
-    },
-  } as Record<
-    `${Key}.amount` | `${Key}.percentage`,
-    {
-      name?: string;
-      label?: string;
-      placeholder?: string;
-    }
-  >;
-};
 const PriceAmountAndPercentageInputsNames = enumToArray(PriceAmountAndPercentageFieldsEnum);
 const PriceBaseInputsNames: (keyof Pick<IPriceBase, 'in' | 'out'>)[] = ['in', 'out'];
-const PriceLabelsInputsNames: (keyof Pick<IPriceBase, 'cashbackLabel' | 'discountLabel'>)[] = [
-  'cashbackLabel',
-  'discountLabel',
-];
-
-// export const getPriceAmountAndPercentageInputsProps = (
-//   form: UseFormReturn<IPriceBase>
-// ): ({ name: BasePriceInfoPath } | Record<string, any>)[] => {
-//   const names = enumToArray(PriceAmountAndPercentageFieldsEnum);
-//
-//   const props: ({ name: BasePriceInfoPath } | Record<string, any>)[][] = [];
-//
-//   names.forEach(key => props.push(getPriceAmountAndPercentageInputsPropsByKey(key)));
-//
-//   return props;
-// };
-
-// const priceInputsProps: ({
-//   name: BasePriceInfoPath;
-//   label?: string;
-// } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>)[] = [
-//   { name: 'in', label: t(''), placeholder: t('') },
-//   { name: 'out', label: t(''), placeholder: t('') },
-//
-//   { name: 'discount', label: t(''), placeholder: t('') },
-//   { name: 'discount.percentage', label: t(''), placeholder: t('') },
-//
-//   { name: 'cashback', label: t(''), placeholder: t('') },
-//   { name: 'cashback.percentage', label: t(''), placeholder: t('') },
-//
-//   { name: 'bonus.amount', label: t(''), placeholder: t('') },
-//   { name: 'bonus.percentage', label: t(''), placeholder: t('') },
-//
-//   { name: 'discountLabel', label: t(''), placeholder: t('') },
-//   { name: 'cashbackLabel', label: t(''), placeholder: t('') },
-// ];
 
 const priceInputsPropsMap = new Map<
   PriceFormDataPath,
@@ -202,7 +135,7 @@ const FormPriceAmountAndPercentageInputs = ({
   form: UseFormReturn<IPriceBase>;
   handleBlur: HandleUseFormBlur<BasePriceInfoPath>;
 }) => {
-  const { register } = form;
+  // const { register } = form;
 
   return (
     <>
@@ -292,3 +225,71 @@ const HeaderBox = styled(FlexBox)`
 `;
 
 export default FormPriceInputs;
+
+// const getPriceAmountAndPercentageInputsPropsByKey = <Key extends PriceAmountAndPercentageFieldsKey = any>(
+//   key: Key
+// ): Record<
+//   `${Key}.amount` | `${Key}.percentage`,
+//   {
+//     name?: string;
+//     label?: string;
+//     placeholder?: string;
+//   }
+// > => {
+//   return {
+//     [`${key}.amount`]: {
+//       name: `${key}.amount`,
+//       label: priceAmountAndPercentageFieldsLabels[key].amount,
+//       placeholder: priceAmountAndPercentageFieldsLabels[key].amount,
+//     },
+//     [`${key}.amount`]: {
+//       name: `${key}.percentage`,
+//       label: priceAmountAndPercentageFieldsLabels[key].percentage,
+//       placeholder: priceAmountAndPercentageFieldsLabels[key].percentage,
+//     },
+//   } as Record<
+//     `${Key}.amount` | `${Key}.percentage`,
+//     {
+//       name?: string;
+//       label?: string;
+//       placeholder?: string;
+//     }
+//   >;
+// };
+
+// const PriceLabelsInputsNames: (keyof Pick<IPriceBase, 'cashbackLabel' | 'discountLabel'>)[] = [
+//   'cashbackLabel',
+//   'discountLabel',
+// ];
+
+// export const getPriceAmountAndPercentageInputsProps = (
+//   form: UseFormReturn<IPriceBase>
+// ): ({ name: BasePriceInfoPath } | Record<string, any>)[] => {
+//   const names = enumToArray(PriceAmountAndPercentageFieldsEnum);
+//
+//   const props: ({ name: BasePriceInfoPath } | Record<string, any>)[][] = [];
+//
+//   names.forEach(key => props.push(getPriceAmountAndPercentageInputsPropsByKey(key)));
+//
+//   return props;
+// };
+
+// const priceInputsProps: ({
+//   name: BasePriceInfoPath;
+//   label?: string;
+// } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>)[] = [
+//   { name: 'in', label: t(''), placeholder: t('') },
+//   { name: 'out', label: t(''), placeholder: t('') },
+//
+//   { name: 'discount', label: t(''), placeholder: t('') },
+//   { name: 'discount.percentage', label: t(''), placeholder: t('') },
+//
+//   { name: 'cashback', label: t(''), placeholder: t('') },
+//   { name: 'cashback.percentage', label: t(''), placeholder: t('') },
+//
+//   { name: 'bonus.amount', label: t(''), placeholder: t('') },
+//   { name: 'bonus.percentage', label: t(''), placeholder: t('') },
+//
+//   { name: 'discountLabel', label: t(''), placeholder: t('') },
+//   { name: 'cashbackLabel', label: t(''), placeholder: t('') },
+// ];

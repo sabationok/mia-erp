@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../utils/fabrics';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { useAppForm } from '../../hooks';
-import { ICompanyConfigsFormData } from '../../redux/companies/companies.types';
+import { ICompanyConfigsFormData } from '../../types/companies.types';
 import { useWarehousesSelector } from '../../redux/selectors.store';
 import { FilterOption } from '../ModalForm/ModalFilter';
 import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';

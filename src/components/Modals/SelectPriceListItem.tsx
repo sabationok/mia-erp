@@ -9,7 +9,7 @@ import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import { FilterOpt } from '../ModalForm/ModalFilter';
-import { IPriceListItem } from '../../redux/priceManagement/priceManagement.types';
+import { IPriceListItem } from '../../types/priceManagement.types';
 
 export interface SelectPriceListItemProps
   extends Omit<ModalFormProps<any, any, IPriceListItem>, 'onSubmit' | 'onSelect'> {

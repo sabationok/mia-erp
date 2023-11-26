@@ -10,7 +10,7 @@ import {
   CreateOutputIntegrationFormData,
   ExtServiceBase,
   OutputIntegrationBase,
-} from '../../../redux/integrations/integrations.types';
+} from '../../../types/integrations.types';
 import FlexBox from '../../atoms/FlexBox';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';

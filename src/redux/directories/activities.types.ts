@@ -1,4 +1,4 @@
-import { IBaseDirItem } from '../../components/Directories/dir.types';
+import { IBaseDirItem } from '../../types/dir.types';
 
 export interface IActivity extends IBaseDirItem {}
 

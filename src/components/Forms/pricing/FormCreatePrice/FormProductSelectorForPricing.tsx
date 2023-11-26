@@ -6,13 +6,13 @@ import ProductCardSimpleOverview from '../../../Overviews/ProductCardSimpleOverv
 import { Modals } from '../../../Modals';
 import TableList from '../../../TableList/TableList';
 import { ServiceName, useAppServiceProvider } from 'hooks/useAppServices.hook';
-import { IVariation } from 'redux/products/variations/variations.types';
+import { IVariation } from 'types/variations.types';
 import { useProductsSelector } from 'redux/selectors.store';
 import { createTableTitlesFromTemplate, getIdRef } from 'utils';
 import { transformVariationTableData } from 'utils/tables';
 import { OnRowClickHandler } from '../../../TableList/tableTypes.types';
 import { OnlyUUID } from 'redux/global.types';
-import { IProduct } from 'redux/products/products.types';
+import { IProduct } from 'types/products.types';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
 import styled from 'styled-components';
 

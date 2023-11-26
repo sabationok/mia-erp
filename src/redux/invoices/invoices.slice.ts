@@ -1,8 +1,8 @@
 import { StateErrorType } from '../reduxTypes.types';
 import { createSlice } from '@reduxjs/toolkit';
-import { IInvoice } from './invoices.types';
+import { IInvoice } from '../../types/invoices.types';
 import { getAllInvoiceMethodsThunk, updateInvoicingMethodThunk } from './invoicing.thunks';
-import { IInvoicingMethod } from '../integrations/integrations.types';
+import { IInvoicingMethod } from '../../types/integrations.types';
 
 export interface InvoicesState {
   invoices: IInvoice[];

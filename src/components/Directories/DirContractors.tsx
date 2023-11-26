@@ -2,7 +2,7 @@ import ModalForm from 'components/ModalForm';
 import TableList, { ITableListProps } from 'components/TableList/TableList';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { DirBaseProps } from './dir.types';
+import { DirBaseProps } from '../../types/dir.types';
 import { IContractor } from '../../redux/directories/contractors.types';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';

@@ -1,12 +1,12 @@
 import ModalForm, { ModalFormProps } from '../../../ModalForm';
 import FlexBox from '../../../atoms/FlexBox';
-import { IPriceFormData } from '../../../../redux/priceManagement/priceManagement.types';
+import { IPriceFormData } from '../../../../types/priceManagement.types';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import { useAppForm } from '../../../../hooks';
 import FormProductSelectorForPricing from './FormProductSelectorForPricing';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
 import { useCallback, useMemo } from 'react';
-import { IProduct } from '../../../../redux/products/products.types';
+import { IProduct } from '../../../../types/products.types';
 import { usePriceListsSelector, useProductsSelector } from '../../../../redux/selectors.store';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../components/FormAfterSubmitOptions';
 import { t } from '../../../../lang';
@@ -19,15 +19,9 @@ import { OnRowClickHandler } from '../../../TableList/tableTypes.types';
 import TableList from '../../../TableList/TableList';
 import { priceListColumns } from '../../../../data/priceManagement.data';
 import { UUIDRefSchema } from '../../validation';
-import _ from 'lodash';
-import { AnyFn } from '../../../../utils/types';
-import { IVariation } from '../../../../redux/products/variations/variations.types';
+import { IVariation } from '../../../../types/variations.types';
 import { ToastService } from '../../../../services';
 import FormPriceInputs from './FormPriceInputs';
-
-const throttleCallback = _.throttle(<T extends AnyFn>(fn: T) => {
-  fn();
-}, 1500);
 
 const validation = yup.object().shape({
   in: yup.number(),
@@ -45,30 +39,6 @@ export interface FormCreatePriceProps
   update?: string;
 }
 export type PriceFormDataPath = Path<IPriceFormData>;
-
-const inputsFormCreatePrice: {
-  name: PriceFormDataPath;
-  disabled?: boolean;
-  label?: string;
-  placeholder?: string;
-  required?: boolean;
-  autoFocus?: boolean;
-}[] = [
-  { label: t('Price IN'), placeholder: t('Price IN'), required: true, autoFocus: true, name: 'in' },
-  { label: t('Price OUT'), placeholder: t('Price OUT'), required: true, name: 'out' },
-  // {
-  //   label: t('Commission, amount'),
-  //   placeholder: t('Enter commission amount'),
-  //   disabled: true,
-  //   name: 'commission.amount',
-  // },
-  // {
-  //   label: t('Commission, %'),
-  //   placeholder: t('Enter commission percentage'),
-  //   disabled: true,
-  //   name: 'commission.percentage',
-  // },
-];
 
 const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update, product, onSubmit, ...props }) => {
   const productInState = useProductsSelector().currentProduct;

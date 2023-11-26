@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { IPermission } from './permissions.types';
+import { IPermission } from '../../types/permissions.types';
 
 export const clearCurrentPermission = createAction('permissions/clearCurrent');
 export const updatePermissionsWithNew = createAction<IPermission>('permissions/updatePermissionsWithNew');

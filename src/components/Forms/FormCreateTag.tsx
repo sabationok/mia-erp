@@ -1,4 +1,4 @@
-import { DirectoriesFormProps, ITagDirItem } from '../Directories/dir.types';
+import { DirectoriesFormProps, ITagDirItem } from '../../types/dir.types';
 import ModalForm from '../ModalForm';
 
 import * as yup from 'yup';

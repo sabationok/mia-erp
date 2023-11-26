@@ -1,7 +1,7 @@
 import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
-import { IProduct, OfferTypeEnum } from '../redux/products/products.types';
+import { IProduct, OfferTypeEnum } from '../types/products.types';
 import FormCreateProduct from '../components/Forms/FormProduct/FormCreateProduct';
 import { productsFilterOptions } from '../data/modalFilterOptions.data';
 import { useNavigate } from 'react-router-dom';

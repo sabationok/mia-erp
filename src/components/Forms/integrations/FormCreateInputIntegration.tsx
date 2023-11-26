@@ -6,11 +6,7 @@ import { t } from '../../../lang';
 import InputText from '../../atoms/Inputs/InputText';
 import FlexBox from '../../atoms/FlexBox';
 import InputSecurityControlHOC from '../../atoms/Inputs/SecurityInputControlHOC';
-import {
-  CreateIntegrationFormData,
-  ExtServiceBase,
-  InputIntegrationBase,
-} from '../../../redux/integrations/integrations.types';
+import { CreateIntegrationFormData, ExtServiceBase, InputIntegrationBase } from '../../../types/integrations.types';
 import { getIdRef } from '../../../utils/data-transform';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';

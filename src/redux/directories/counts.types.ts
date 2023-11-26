@@ -1,5 +1,5 @@
 import { AppResponse } from '../global.types';
-import { IDirItemBase } from '../../components/Directories/dir.types';
+import { IDirItemBase } from '../../types/dir.types';
 import { ApiDirType } from '../APP_CONFIGS';
 
 export interface ICount extends IDirItemBase<ApiDirType.COUNTS> {

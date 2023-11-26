@@ -5,7 +5,7 @@ import ModalForm from '../ModalForm';
 import { IReportBaseProps } from './report.types';
 import FlexBox from 'components/atoms/FlexBox';
 import { FilterOpt } from '../ModalForm/ModalFilter';
-import { CategoryTrTypeEnum, CategoryTypes } from '../../redux/directories/directories.types';
+import { CategoryTrTypeEnum, CategoryTypes } from '../../types/directories.types';
 import styled from 'styled-components';
 import { enumToArray, founder, numberWithSpaces } from '../../utils';
 import { categoriesFilterOptions } from '../../data/modalFilterOptions.data';

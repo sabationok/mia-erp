@@ -1,9 +1,9 @@
 import { AsyncThunkPayloadCreator, createAsyncThunk } from '@reduxjs/toolkit';
-import { ICustomer, ICustomerReqDta } from './customers.types';
+import { ICustomer, ICustomerReqDta } from '../../types/customers.types';
 import { ThunkPayload } from '../store.store';
 import { AppQueryParams, CommunicationApi, CustomersApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
-import { ICommunicationMethod, ICommunicationMethodReqData } from '../integrations/integrations.types';
+import { ICommunicationMethod, ICommunicationMethodReqData } from '../../types/integrations.types';
 import { AxiosResponse } from 'axios';
 import { AppResponseType } from '../global.types';
 

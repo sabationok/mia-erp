@@ -1,10 +1,6 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { t } from '../lang';
-import {
-  IPriceList,
-  IPriceListItem,
-  PriceAmountAndPercentageFieldsKey,
-} from '../redux/priceManagement/priceManagement.types';
+import { IPriceList, IPriceListItem, PriceAmountAndPercentageFieldsKey } from '../types/priceManagement.types';
 import { numberWithSpaces } from '../utils/numbers';
 import { priceAmountAndPercentageFieldsLabels } from '../utils/tables';
 

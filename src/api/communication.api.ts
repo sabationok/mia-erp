@@ -1,7 +1,7 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppResponse } from '../redux/global.types';
 import baseApi from './baseApi';
-import { ICommunicationMethod, ICommunicationMethodReqData } from '../redux/integrations/integrations.types';
+import { ICommunicationMethod, ICommunicationMethodReqData } from '../types/integrations.types';
 
 export default class CommunicationApi {
   private static api = baseApi;

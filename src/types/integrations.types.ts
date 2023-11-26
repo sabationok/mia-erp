@@ -1,8 +1,9 @@
-import { IBase, IBaseKeys, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
-import { LangPack } from '../../lang';
-import { ICompany } from '../companies/companies.types';
-import { AppQueryParams } from '../../api';
-import { CmsBaseConfigsDto } from '../cms/cms.types';
+import { IBase, IBaseKeys, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
+import { LangPack } from '../lang';
+import { ICompany } from './companies.types';
+import { AppQueryParams } from '../api';
+import { CmsBaseConfigsDto } from '../redux/cms/cms.types';
+import { MaybeNull } from './utils.types';
 
 export enum IntegrationTypeEnum {
   input = 'input',
@@ -108,9 +109,9 @@ export interface CreateIntegrationFormData extends Partial<Omit<IntegrationBaseD
   secret?: string;
   login?: string;
 
-  service?: IFormDataValueWithUUID;
-  warehouse?: IFormDataValueWithUUID;
-  finCount?: IFormDataValueWithUUID;
+  service?: IFormDataValueWithID;
+  warehouse?: IFormDataValueWithID;
+  finCount?: IFormDataValueWithID;
 }
 
 export interface InputIntegrationDto extends IntegrationBaseDto {
@@ -125,7 +126,7 @@ export interface InputIntegrationDto extends IntegrationBaseDto {
 
 export interface CreateOutputIntegrationFormData
   extends Partial<Pick<IntegrationBaseDto, 'description' | 'expiredAt' | 'label'>> {
-  role?: IFormDataValueWithUUID;
+  role?: IFormDataValueWithID;
   redirectBaseUrl?: string;
   chatIds?: ChatIds;
 }
@@ -147,7 +148,7 @@ export interface ExtCommunicationService extends ExtServiceBase {
 export interface ExtDeliveryService extends ExtServiceBase {
   methods?: IDeliveryMethod[];
 }
-export interface ExtServiceMethodBase<Type = any, Service = any> extends IBase {
+export interface ServiceMethodBase<Type = any, Service = any> extends IBase {
   label?: string;
   labels?: LangPack;
   isDefault?: boolean;
@@ -155,8 +156,8 @@ export interface ExtServiceMethodBase<Type = any, Service = any> extends IBase {
   disabledForClient?: boolean;
 
   type?: Type;
-  service?: Service | null;
-  extService?: Service | null;
+  service?: MaybeNull<Service>;
+  extService?: MaybeNull<Service>;
 
   cmsConfigs?: CmsBaseConfigsDto;
 }
@@ -174,16 +175,16 @@ export enum InvoicingTypeEnum {
   afterPay = 'afterPay',
   cash = 'cash',
 }
-export interface ICommunicationMethod extends ExtServiceMethodBase<string, ExtCommunicationService> {}
+export interface ICommunicationMethod extends ServiceMethodBase<string, ExtCommunicationService> {}
 export interface ICommunicationMethodReqData extends IMethodReqData<ICommunicationMethod> {}
-export interface IInvoicingMethod extends ExtServiceMethodBase<InvoicingTypeEnum, ExtInvoicingService> {}
+export interface IInvoicingMethod extends ServiceMethodBase<InvoicingTypeEnum, ExtInvoicingService> {}
 export interface IInvoicingMethodReqData extends IMethodReqData<IInvoicingMethod> {}
 
 export interface IDeliveryMethodInvoicingInfo {
   method?: IInvoicingMethod;
   minCost?: { delivery?: number; return?: number };
 }
-export interface IDeliveryMethod extends ExtServiceMethodBase<string, ExtDeliveryService> {
+export interface IDeliveryMethod extends ServiceMethodBase<string, ExtDeliveryService> {
   invoicing?: IDeliveryMethodInvoicingInfo;
 }
 
@@ -199,7 +200,7 @@ export interface IDeliveryMethodDto
 // }
 export interface IDeliveryMethodReqData extends IMethodReqData<IDeliveryMethodDto> {}
 export interface ICheckoutPaymentMethod
-  extends ExtServiceMethodBase<string | MonoCheckoutMethod | LiqPayCheckoutMethodEnum, ExtDeliveryService> {}
+  extends ServiceMethodBase<string | MonoCheckoutMethod | LiqPayCheckoutMethodEnum, ExtDeliveryService> {}
 export interface IPaymentMethodReqData extends IMethodReqData<ICheckoutPaymentMethod> {}
 
 export enum PaymentCheckoutEnum {

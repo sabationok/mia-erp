@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { ICompany } from '../redux/companies/companies.types';
+import { ICompany } from '../types/companies.types';
 
 export interface IBaseFields<T = any> {
   _id?: string;

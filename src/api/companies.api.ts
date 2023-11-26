@@ -5,10 +5,10 @@ import {
   ICompanyReqData,
   ICompanyUpdatingRes,
   IGetAllCompaniesRes,
-} from '../redux/companies/companies.types';
+} from '../types/companies.types';
 import APP_CONFIGS from 'redux/APP_CONFIGS';
 import { AppResponse } from '../redux/global.types';
-import { IPermission } from '../redux/permissions/permissions.types';
+import { IPermission } from '../types/permissions.types';
 
 export default class CompaniesApi {
   private static api = baseApi;

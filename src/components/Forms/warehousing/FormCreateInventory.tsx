@@ -1,6 +1,6 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { IProductInventoryFormData } from '../../../redux/warehouses/warehouses.types';
+import { IProductInventoryFormData } from '../../../types/warehouses.types';
 
 export interface FormCreateInventoryProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<IProductInventoryFormData>;

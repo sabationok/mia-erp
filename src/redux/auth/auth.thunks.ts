@@ -10,7 +10,7 @@ import {
   IRegisteredUser,
   IRegisteredUserInfoRes,
   IRegistrationData,
-} from './auth.types';
+} from '../../types/auth.types';
 import { AxiosResponse } from 'axios';
 import { ThunkPayload } from '../store.store';
 import AuthApi from '../../api/auth.api';

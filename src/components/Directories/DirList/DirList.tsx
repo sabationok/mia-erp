@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import DirListItem from './DirListItem';
 import styled from 'styled-components';
-import { IDirItemBase } from '../dir.types';
+import { IDirItemBase } from '../../../types/dir.types';
 
 export interface DirListProps {
   list: IDirItemBase[];

@@ -2,6 +2,7 @@ import { ThunkPayload } from './store.store';
 import { AxiosResponse } from 'axios';
 import { ApiCallerPayload } from '../api/createApiCall.api';
 import { ApiDirType } from './APP_CONFIGS';
+import { AppDate, MaybeNull } from '../types/utils.types';
 
 export type UUID = string;
 export type MagicLink = string;
@@ -19,26 +20,22 @@ export type IdKeyVersion = '_id' | 'id';
 export type ObjUUID<K extends IdKeyVersion = '_id'> = Record<K, string>;
 
 export interface IBase extends OnlyUUID {
-  createdAt?: Date | string;
-  updatedAt?: Date | string;
-  deletedAt?: Date | string;
+  createdAt?: MaybeNull<Date | string>;
+  updatedAt?: MaybeNull<Date | string>;
+  deletedAt?: MaybeNull<Date | string>;
 }
+
 export type IBaseKeys = keyof IBase;
-export interface IFormDataValueWithUUID<DirType extends ApiDirType = any> extends OnlyUUID {
+export interface IFormDataValueWithID<DirType extends ApiDirType = any> extends OnlyUUID {
   label?: string;
   name?: string;
   secondName?: string;
   dirType?: DirType;
   email?: string;
-  parent?: Omit<IFormDataValueWithUUID<DirType>, 'parent'>;
+  parent?: Omit<IFormDataValueWithID<DirType>, 'parent'>;
 }
-export interface IDataWithPeriod {
-  timeFrom?: string | number | Date | null;
-  timeTo?: string | number | Date | null;
-}
-export interface IBaseWithPeriod extends IBase, IDataWithPeriod {}
 
-export type IFormDataValue = IFormDataValueWithUUID | string | number | boolean | Date | null;
+export type IFormDataValue = IFormDataValueWithID | string | number | boolean | AppDate | null;
 
 export interface RoleActionType extends OnlyUUID {
   label?: string;

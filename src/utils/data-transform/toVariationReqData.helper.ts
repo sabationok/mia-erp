@@ -1,4 +1,4 @@
-import { IVariationFormData, IVariationReqData } from '../../redux/products/variations/variations.types';
+import { IVariationFormData, IVariationReqData } from '../../types/variations.types';
 import { pick } from 'lodash';
 import { getIdRef } from './index';
 

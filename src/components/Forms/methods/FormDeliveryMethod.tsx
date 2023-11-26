@@ -9,11 +9,7 @@ import { useAppForm } from '../../../hooks';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import FlexBox from '../../atoms/FlexBox';
-import {
-  ExtServiceMethodBase,
-  IDeliveryMethod,
-  IInvoicingMethod,
-} from '../../../redux/integrations/integrations.types';
+import { IDeliveryMethod, IInvoicingMethod, ServiceMethodBase } from '../../../types/integrations.types';
 import ButtonSwitch from '../../atoms/ButtonSwitch';
 import { useTranslatedMethodsList } from '../../../hooks/useTranslatedMethodsList.hook';
 import { useInvoicesSelector } from '../../../redux/selectors.store';
@@ -46,7 +42,7 @@ const validation = yup.object().shape({
   // label: yup.string().max(100),
   disabledForClient: yup.boolean().optional(),
   description: yup.string().max(250).optional(),
-} as Record<keyof ExtServiceMethodBase | string, any>);
+} as Record<keyof ServiceMethodBase | string, any>);
 
 const LangButtonsGroup = ({ onChange }: { onChange?: (value: LangKeyEnum) => void }) => {
   return (
@@ -74,7 +70,6 @@ const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defau
     registerSelect,
     register,
     reset,
-    formValues,
   } = formMethods;
 
   // useEffect(() => {

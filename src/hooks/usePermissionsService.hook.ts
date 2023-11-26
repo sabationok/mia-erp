@@ -14,18 +14,13 @@ import {
   updateCurrentCompanyThunk,
   updatePermissionThunk,
 } from '../redux/permissions/permissions.thunk';
-import {
-  IPermission,
-  IPermissionForReq,
-  IPermissionReqData,
-  IPermissionsState,
-} from '../redux/permissions/permissions.types';
+import { IPermission, IPermissionForReq, IPermissionReqData, IPermissionsState } from '../types/permissions.types';
 import { useMemo } from 'react';
 import { CompanyQueryType, ServiceDispatcherAsync } from 'redux/global.types';
 import { clearCurrentPermission } from '../redux/permissions/permissions.action';
 import { defaultThunkPayload } from '../utils/fabrics';
-import { ICompany, ICompanyForReq, ICompanyReqData } from '../redux/companies/companies.types';
-import { IUser } from '../redux/auth/auth.types';
+import { ICompany, ICompanyForReq, ICompanyReqData } from '../types/companies.types';
+import { IUser } from '../types/auth.types';
 
 export interface PermissionService {
   getAllByCompanyId: ServiceDispatcherAsync<{ companyId: string; refresh?: boolean }, IPermission[]>;

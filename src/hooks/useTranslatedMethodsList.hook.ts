@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { getTranslatedString, LangKey } from '../lang';
-import { ExtServiceBase, ExtServiceMethodBase } from '../redux/integrations/integrations.types';
+import { ExtServiceBase, ServiceMethodBase } from '../types/integrations.types';
 
-interface UseTranslatedListDataOptions<M extends ExtServiceMethodBase = any> {
+interface UseTranslatedListDataOptions<M extends ServiceMethodBase = any> {
   langKey?: LangKey;
   withFullLabel?: boolean;
   getLabel?: (
@@ -13,10 +13,10 @@ interface UseTranslatedListDataOptions<M extends ExtServiceMethodBase = any> {
   ) => React.ReactNode;
 }
 
-export type TranslatedMethod<M extends ExtServiceMethodBase = any> = M & {
+export type TranslatedMethod<M extends ServiceMethodBase = any> = M & {
   value: any;
 };
-export const useTranslatedMethodsList = <T extends ExtServiceMethodBase = any>(
+export const useTranslatedMethodsList = <T extends ServiceMethodBase = any>(
   data: T[] = [],
   options?: UseTranslatedListDataOptions<T>
 ): TranslatedMethod<T>[] => {

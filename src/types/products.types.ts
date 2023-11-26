@@ -1,14 +1,15 @@
-import { ArrayUUID, IBase, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
-import { IProductCategoryDirItem, ISupplierDirItem } from '../../components/Directories/dir.types';
-import { FilterOption } from '../../components/ModalForm/ModalFilter';
-import { IPriceListItem } from '../priceManagement/priceManagement.types';
-import { ICompany } from '../companies/companies.types';
-import { IProductInventory, IWarehouse } from '../warehouses/warehouses.types';
-import { IBrand } from '../directories/brands.types';
-import { IUser } from '../auth/auth.types';
-import { AppQueryParams } from '../../api';
-import { IVariation } from './variations/variations.types';
-import { IPropertyValue, IVariationTemplate } from './properties/properties.types';
+import { ArrayUUID, IBase, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
+import { IProductCategoryDirItem, ISupplierDirItem } from './dir.types';
+import { FilterOption } from '../components/ModalForm/ModalFilter';
+import { IPriceListItem } from './priceManagement.types';
+import { ICompany } from './companies.types';
+import { IProductInventory, IWarehouse } from './warehouses.types';
+import { IBrand } from '../redux/directories/brands.types';
+import { IUser } from './auth.types';
+import { AppQueryParams } from '../api';
+import { IVariation } from './variations.types';
+import { IPropertyValue, IVariationTemplate } from './properties.types';
+import { HasDescription, HasDimensions, HasMeasurement, HasStatus, HasType, MaybeNull } from './utils.types';
 
 export enum ProductStatusEnum {
   pending = 'pending',
@@ -44,20 +45,22 @@ export enum OfferTypeEnum {
 
 export type ProductFilterOpt = FilterOption<OfferTypeEnum>;
 
-export interface IProductBase extends IBase {
+export interface IProductBase
+  extends IBase,
+    HasMeasurement,
+    HasDimensions,
+    HasDescription,
+    HasType<OfferTypeEnum>,
+    HasStatus<ProductStatusEnum> {
   label?: string;
   sku?: string;
   barCode?: string;
   qrCode?: string;
-  measurement?: IProductMeasurement;
-  dimensions?: IProductDimensions;
-  hasVariations?: boolean;
-  type?: OfferTypeEnum;
-  status?: ProductStatusEnum;
+
   approved?: ProductStatusEnum;
   archived?: boolean;
   visible?: boolean;
-  description?: string;
+
   tags?: string[];
   images?: IProductImage[];
 }
@@ -104,23 +107,10 @@ export interface IProductImage extends Partial<IBase> {
   order: number;
 }
 
-export interface IProductMeasurement {
-  min?: number;
-  max?: number;
-  step?: number;
-  unit?: MeasurementUnit;
-}
-export interface IProductDimensions {
-  width?: number;
-  height?: number;
-  length?: number;
-  weight?: number;
-}
-
 // * >>>>>>> FORM DATA <<<<<<<
 export interface IProductBaseFormData extends IProductBaseDto {}
 
-export interface IProductDefaultsFormData extends Record<keyof IProductDefaults, IFormDataValueWithUUID> {}
+export interface IProductDefaultsFormData extends Record<keyof IProductDefaults, IFormDataValueWithID> {}
 
 export interface IProductWithAddsFieldsFormData extends IProductBaseFormData {}
 
@@ -163,4 +153,7 @@ export interface IProductReqData {
   params?: AppQueryParams;
 }
 
+export interface HasProduct {
+  product?: MaybeNull<IWarehouse>;
+}
 // ? PROPERTIES ================================================

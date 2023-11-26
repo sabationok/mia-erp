@@ -1,8 +1,8 @@
 import ModalForm, { ModalFormProps } from '../../../ModalForm';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
-import { IVariation, IVariationFormData } from '../../../../redux/products/variations/variations.types';
+import { IVariation, IVariationFormData } from '../../../../types/variations.types';
 import { t } from '../../../../lang';
-import { IProduct } from '../../../../redux/products/products.types';
+import { IProduct } from '../../../../types/products.types';
 
 export interface SelectVariationModalProps
   extends Omit<ModalFormProps<any, any, IVariationFormData>, 'onSubmit' | 'onSelect'> {

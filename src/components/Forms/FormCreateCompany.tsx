@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
-import { BusinessSubjectTypeEnum, ICompanyFormData, OwnershipTypeEnum } from '../../redux/companies/companies.types';
+import { BusinessSubjectTypeEnum, ICompanyFormData, OwnershipTypeEnum } from '../../types/companies.types';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';

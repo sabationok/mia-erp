@@ -2,7 +2,7 @@ import baseApi from './baseApi';
 
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppResponse } from '../redux/global.types';
-import { IProperty, IPropertyReqData } from 'redux/products/properties/properties.types';
+import { IProperty, IPropertyReqData } from 'types/properties.types';
 
 export default class PropertiesApi {
   private static api = baseApi;

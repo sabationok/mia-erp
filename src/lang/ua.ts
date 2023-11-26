@@ -1,9 +1,9 @@
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { ContractorsTypesEnum } from '../redux/directories/contractors.types';
-import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../redux/companies/companies.types';
-import { WarehouseDocumentType } from '../redux/warehouses/warehouses.types';
-import { MeasurementUnit } from '../redux/products/products.types';
-import { OrderStatusEnum } from '../redux/orders/orders.types';
+import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../types/companies.types';
+import { WarehouseDocumentType } from '../types/warehouses.types';
+import { MeasurementUnit } from '../types/products.types';
+import { OrderStatusEnum } from '../types/orders.types';
 
 export const langUa = {
   // DIRECTORIES

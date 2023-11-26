@@ -1,5 +1,5 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
-import { IProduct, IProductReqData } from '../redux/products/products.types';
+import { IProduct, IProductReqData } from '../types/products.types';
 import { OnlyUUID, ServiceApiCaller, ServiceDispatcher, ServiceDispatcherAsync } from 'redux/global.types';
 import {
   createProductThunk,
@@ -15,17 +15,17 @@ import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
 import { AppQueryParams, createApiCall } from 'api';
 import ProductsApi from '../api/products.api';
 import PropertiesApi from '../api/properties.api';
-import { IProperty, IPropertyReqData } from '../redux/products/properties/properties.types';
+import { IProperty, IPropertyReqData } from '../types/properties.types';
 import { createPropertyThunk, getAllPropertiesThunk } from '../redux/products/properties/properties.thunks';
 import {
   createVariationThunk,
   getAllVariationsByProductIdThunk,
   updateVariationThunk,
 } from '../redux/products/variations/variations.thunks';
-import { IVariation, IVariationReqData } from '../redux/products/variations/variations.types';
+import { IVariation, IVariationReqData } from '../types/variations.types';
 import { clearCurrentProductAction } from '../redux/products/products.actions';
-import { IPriceListItem } from '../redux/priceManagement/priceManagement.types';
-import { IProductInventory } from '../redux/warehouses/warehouses.types';
+import { IPriceListItem } from '../types/priceManagement.types';
+import { IProductInventory } from '../types/warehouses.types';
 
 export interface ProductsService {
   create: ServiceDispatcherAsync<IProductReqData, IProduct>;

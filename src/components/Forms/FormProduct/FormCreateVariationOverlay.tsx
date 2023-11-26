@@ -9,7 +9,7 @@ import { Text } from '../../atoms/Text';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { OverlayHandlerReturn } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
 import { toVariationFormData, toVariationReqData } from '../../../utils/data-transform';
-import { IVariation, IVariationFormData } from '../../../redux/products/variations/variations.types';
+import { IVariation, IVariationFormData } from '../../../types/variations.types';
 import { OnlyUUID } from '../../../redux/global.types';
 import { ToastService } from '../../../services';
 import { ModalFormProps } from '../../ModalForm';
@@ -17,7 +17,7 @@ import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/For
 import { OverlayFooter, OverlayHeader } from './components';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { IProperty, IPropertyValue } from '../../../redux/products/properties/properties.types';
+import { IProperty, IPropertyValue } from '../../../types/properties.types';
 import { useAppForm } from '../../../hooks';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';

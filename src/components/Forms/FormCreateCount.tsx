@@ -7,7 +7,7 @@ import InputText from '../atoms/Inputs/InputText';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { DirectoriesFormProps } from '../Directories/dir.types';
+import { DirectoriesFormProps } from '../../types/dir.types';
 import { useAppForm } from '../../hooks';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { pick } from 'lodash';

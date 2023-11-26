@@ -5,7 +5,7 @@ import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FlexBox from '../atoms/FlexBox';
 import { useDirectoriesSelector } from '../../redux/selectors.store';
 
-import { IDirInTreeProps, IMethodDirItem, MethodDirType } from '../Directories/dir.types';
+import { IDirInTreeProps, IMethodDirItem, MethodDirType } from '../../types/dir.types';
 import useDirServiceHook from '../../hooks/useDirService.hook';
 import DirListItem from '../Directories/DirList/DirListItem';
 

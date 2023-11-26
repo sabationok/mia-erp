@@ -5,7 +5,7 @@ import { Text } from '../../../atoms/Text';
 import { t } from 'lang';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import FormCreateInputIntegration from '../../../Forms/integrations/FormCreateInputIntegration';
-import { InputIntegrationBase } from 'redux/integrations/integrations.types';
+import { InputIntegrationBase } from 'types/integrations.types';
 import { useTranslatedMethodsList } from 'hooks/useTranslatedMethodsList.hook';
 import { getIdRef, toQueriesFirReq } from 'utils/data-transform';
 import styled from 'styled-components';

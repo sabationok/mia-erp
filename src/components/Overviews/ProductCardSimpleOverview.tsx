@@ -2,8 +2,9 @@ import styled from 'styled-components';
 import FlexBox from '../atoms/FlexBox';
 import { useMemo } from 'react';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { IProduct } from '../../redux/products/products.types';
+import { IProduct } from '../../types/products.types';
 import { t } from '../../lang';
+import { MaybeNull } from '../../types/utils.types';
 
 export interface ProductCardForSelectorProps {
   product: IProduct;
@@ -21,9 +22,9 @@ const ProductCardSimpleOverview: React.FC<ProductCardForSelectorProps> = ({
   onRemove,
 }) => {
   const cells = useMemo(
-    (): { value?: string; title?: string; gridArea: string; isLastInRow?: boolean }[] => [
+    (): { value?: MaybeNull<string>; title?: string; gridArea: string; isLastInRow?: boolean }[] => [
       {
-        title: 'Назва',
+        title: t('Label'),
         value: product.label,
         gridArea: '1/1/1/9',
       },
@@ -34,30 +35,29 @@ const ProductCardSimpleOverview: React.FC<ProductCardForSelectorProps> = ({
         isLastInRow: true,
       },
       {
-        title: 'Категорія',
-        value: product.category?.label,
+        title: t('Bar-code'),
+        value: product.barCode,
         gridArea: '2/1/2/5',
       },
       {
-        title: 'Бренд',
+        title: t('Label'),
         value: product.brand?.label,
         gridArea: '2/5/2/9',
       },
       {
-        title: 'Тип',
+        title: t('Type'),
         value: product.type,
         gridArea: '2/9/2/13',
-
         isLastInRow: true,
       },
       {
-        title: 'Опис',
-        value: product.brand?.label,
+        title: t('Description'),
+        value: product.description,
         gridArea: '3/1/3/13',
         isLastInRow: true,
       },
     ],
-    [product.brand?.label, product.category?.label, product.label, product.sku, product.type]
+    [product.barCode, product.brand?.label, product.description, product.label, product.sku, product.type]
   );
 
   return (

@@ -1,4 +1,4 @@
-import { ExtServiceBase } from './integrations.types';
+import { ExtServiceBase } from '../../types/integrations.types';
 import { AppModuleName, StateErrorType } from '../reduxTypes.types';
 import { createSlice } from '@reduxjs/toolkit';
 import { getAllExtIntegrationServicesThunk } from './integrations.thunk';

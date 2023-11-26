@@ -1,4 +1,4 @@
-import { InputIntegrationBase } from '../../../redux/integrations/integrations.types';
+import { InputIntegrationBase } from '../../../types/integrations.types';
 import { t } from '../../../lang';
 import { checks } from '../../../utils';
 import { toAppDateFormat } from '../../../utils/data-time';

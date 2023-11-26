@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ICustomerBase } from './customers.types';
+import { ICustomerBase } from '../../types/customers.types';
 import { StateErrorType } from '../reduxTypes.types';
 import {
   createCustomerThunk,
@@ -8,7 +8,7 @@ import {
   updateCommunicationMethodThunk,
   updateCustomerThunk,
 } from './customers.thunks';
-import { ICommunicationMethod } from '../integrations/integrations.types';
+import { ICommunicationMethod } from '../../types/integrations.types';
 
 export interface CustomersState {
   customers: ICustomerBase[];

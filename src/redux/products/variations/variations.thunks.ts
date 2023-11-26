@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { IVariation, IVariationReqData } from './variations.types';
+import { IVariation, IVariationReqData } from '../../../types/variations.types';
 import { ThunkPayload } from '../../store.store';
 import VariationsApi from '../../../api/variations.api';
 import { isAxiosError } from 'axios';

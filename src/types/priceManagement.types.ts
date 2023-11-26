@@ -1,15 +1,20 @@
-import { IBase, IDataWithPeriod, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
-import { FilterOpt } from '../../components/ModalForm/ModalFilter';
-import { IProduct } from '../products/products.types';
-import { IVariation } from '../products/variations/variations.types';
-import { AppQueryParams } from '../../api';
-import { ICompanyBase } from '../companies/companies.types';
-import { IUserBase } from '../auth/auth.types';
-import { Path } from 'react-hook-form';
+import { IBase, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
+import { FilterOpt } from '../components/ModalForm/ModalFilter';
+import { IProduct } from './products.types';
+import { IVariation } from './variations.types';
+import { AppQueryParams } from '../api';
+import { ICompanyBase } from './companies.types';
+import { IUserBase } from './auth.types';
+
+import { EntityPath, HasDescription, HasLabel, HasStatus, HasType, MaybeNull, WithPeriod } from './utils.types';
 
 export enum PriceListTypeEnum {
   PURCHASES = 'purchases',
   SALES = 'sales',
+}
+
+export interface HasPrice {
+  price?: MaybeNull<IPriceListItem>;
 }
 
 export type PriceListStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
@@ -18,13 +23,14 @@ export type PriceListType = 'purchases' | 'sales';
 
 export type PriceListFilterOption = FilterOpt<PriceListType>;
 
-export interface PriceListDto extends IDataWithPeriod {
-  label: string;
-  status?: PriceListStatus;
-  type?: PriceListType;
+export interface PriceListDto
+  extends WithPeriod,
+    HasLabel,
+    HasDescription,
+    HasStatus<PriceListStatus>,
+    HasType<PriceListType> {
   customerTags?: string[];
   supplierTags?: string[];
-  description?: string;
 }
 
 export interface IPriceList extends IBase {
@@ -67,9 +73,9 @@ export interface IPriceBase extends PriceAmountAndPercentageFields {
   cashbackLabel?: string;
 }
 
-export type BasePriceInfoPath = Path<IPriceBase>;
+export type BasePriceInfoPath = EntityPath<IPriceBase>;
 
-export interface IPriceDto extends IPriceBase, IDataWithPeriod {
+export interface IPriceDto extends IPriceBase, WithPeriod {
   list?: OnlyUUID;
   product?: OnlyUUID;
   variation?: OnlyUUID;
@@ -88,9 +94,9 @@ export interface IPriceListItem extends IBase, IPriceBase {
 }
 
 export interface IPriceFormData extends Omit<IPriceDto, 'product' | 'variation' | 'list'> {
-  product?: IFormDataValueWithUUID;
-  variation?: IFormDataValueWithUUID;
-  list?: IFormDataValueWithUUID;
+  product?: IFormDataValueWithID;
+  variation?: IFormDataValueWithID;
+  list?: IFormDataValueWithID;
 }
 
 export interface IPriceListReqData {

@@ -2,14 +2,14 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import { ThunkPayload } from '../store.store';
 import { isAxiosError } from 'axios';
-import { IProduct, IProductReqData } from './products.types';
+import { IProduct, IProductReqData } from '../../types/products.types';
 import { AppQueryParams, PriceManagementApi, WarehousesApi } from '../../api';
 import { createThunkPayloadCreator } from '../../api/createApiCall.api';
 import ProductsApi from '../../api/products.api';
 import { OnlyUUID } from '../global.types';
-import { IPriceListItem } from '../priceManagement/priceManagement.types';
-import { IProductInventory } from '../warehouses/warehouses.types';
-import { IVariation } from './variations/variations.types';
+import { IPriceListItem } from '../../types/priceManagement.types';
+import { IProductInventory } from '../../types/warehouses.types';
+import { IVariation } from '../../types/variations.types';
 import _ from 'lodash';
 
 enum ProductsThunkType {

@@ -1,6 +1,6 @@
-import { AppResponse, IBase } from '../global.types';
-import { AuthErrorType } from '../reduxTypes.types';
-import { IPermission } from '../permissions/permissions.types';
+import { AppResponse, IBase } from '../redux/global.types';
+import { AuthErrorType } from '../redux/reduxTypes.types';
+import { IPermission } from './permissions.types';
 
 export interface ISystemRole extends IBase {
   name?: string;
@@ -17,7 +17,6 @@ export interface IUserBase extends IBase {
 }
 
 export interface IUser extends IUserBase {
-
   permissions?: Partial<IPermission>[];
 }
 

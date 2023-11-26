@@ -1,4 +1,4 @@
-import { IVariation, IVariationFormData } from '../../redux/products/variations/variations.types';
+import { IVariation, IVariationFormData } from '../../types/variations.types';
 import { nanoid } from '@reduxjs/toolkit';
 import { getIdRef } from './index';
 

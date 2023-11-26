@@ -9,18 +9,13 @@
 //
 
 import { AppResponse, IBase, OnlyUUID } from '../global.types';
-import { IPriceListItem } from '../priceManagement/priceManagement.types';
-import { ICompany } from '../companies/companies.types';
-import { IManager } from '../auth/auth.types';
-import {
-  ICommunicationDirItem,
-  ICustomerDirItem,
-  IPaymentDirItem,
-  IShipmentDirItem,
-  ISupplierDirItem,
-} from '../../components/Directories/dir.types';
+import { IPriceListItem } from '../../types/priceManagement.types';
+import { ICompany } from '../../types/companies.types';
+import { IManager } from '../../types/auth.types';
+import { ISupplierDirItem } from '../../types/dir.types';
 import { FilterOpt } from '../../components/ModalForm/ModalFilter';
-import { IWarehouse } from '../warehouses/warehouses.types';
+import { IWarehouse } from '../../types/warehouses.types';
+import { ICustomerBase } from '../../types/customers.types';
 
 export type RefundTypeFilterOption = FilterOpt;
 export enum RefundTypeEnum {
@@ -53,30 +48,19 @@ export interface IRefund extends IBase {
   barCode?: string;
   code?: string;
 
-  customer?: ICustomerDirItem;
-  customerCommunicationMethod?: ICommunicationDirItem;
-
-  receiver?: ICustomerDirItem;
-  receiverCommunicationMethod?: ICommunicationDirItem;
+  customer?: ICustomerBase;
+  receiver?: ICustomerBase;
 
   status?: RefundStatus;
   payments?: OnlyUUID[];
 
-  // content?: IRefundSlotItem[];
   slots?: IRefundSlot[];
   destination?: string;
-  shipmentMethod?: IShipmentDirItem;
-  paymentMethod?: IPaymentDirItem;
 
   comment?: string;
   innerComment?: string;
 }
 
-export interface IAllRefundSlotItemsRes extends AppResponse<IRefundSlotItem[]> {}
-export interface IRefundSlotItemRes extends AppResponse<IRefundSlotItem> {}
-
-export interface IAllRefundSlotsRes extends AppResponse<IRefundSlot[]> {}
-export interface IRefundSlotRes extends AppResponse<IRefundSlot> {}
 export interface IAllRefundsRes extends AppResponse<IRefund[]> {}
 export interface IRefundRes extends AppResponse<IRefund> {}
 

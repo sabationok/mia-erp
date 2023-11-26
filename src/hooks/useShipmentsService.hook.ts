@@ -3,7 +3,7 @@ import { useAppDispatch } from '../redux/store.store';
 import { getAllDeliveryMethodsThunk } from '../redux/shipments/shipments.thunks';
 import { defaultThunkPayload } from '../utils/fabrics';
 import { useMemo } from 'react';
-import { IDeliveryMethod } from '../redux/integrations/integrations.types';
+import { IDeliveryMethod } from '../types/integrations.types';
 
 export interface UseShipmentsService {
   getAllMethods: ServiceDispatcherAsync<any, IDeliveryMethod[]>;

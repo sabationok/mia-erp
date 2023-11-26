@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { usePermissionsSelector } from './usePermissionsService.hook';
-import { PermissionStatus } from '../redux/permissions/permissions.types';
+import { PermissionStatus } from '../types/permissions.types';
 
 const usePermissionsAsDirItemOptions = () => {
   const users = usePermissionsSelector().users;

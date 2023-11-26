@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import FlexBox from '../../atoms/FlexBox';
 import translate from '../../../lang';
-import { IDirItemBase, IProductCategoryDirItem } from '../../Directories/dir.types';
+import { IDirItemBase, IProductCategoryDirItem } from '../../../types/dir.types';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import styled from 'styled-components';

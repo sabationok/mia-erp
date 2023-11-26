@@ -9,7 +9,7 @@ import { useAppForm } from '../../hooks';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import FlexBox from '../atoms/FlexBox';
-import { ExtServiceMethodBase } from '../../redux/integrations/integrations.types';
+import { ServiceMethodBase } from '../../types/integrations.types';
 import ButtonSwitch from '../atoms/ButtonSwitch';
 import { AnyFn } from '../../utils/types';
 
@@ -25,7 +25,7 @@ export interface FormCreateMethodProps extends Omit<ModalFormProps<IMethodFormDa
 
 export interface IMethodFormData
   extends Omit<
-    ExtServiceMethodBase,
+    ServiceMethodBase,
     '_id' | 'createdAt' | 'deletedAt' | 'updatedAt' | 'service' | 'extService' | 'type'
   > {}
 
@@ -33,7 +33,7 @@ const validation = yup.object().shape({
   // label: yup.string().max(100),
   disabledForClient: yup.boolean().optional(),
   description: yup.string().max(250).optional(),
-} as Record<keyof ExtServiceMethodBase | string, any>);
+} as Record<keyof ServiceMethodBase | string, any>);
 
 const FormCreateMethod: React.FC<FormCreateMethodProps> = ({ onSubmit, defaultState, ...props }) => {
   const submitOptions = useAfterSubmitOptions();

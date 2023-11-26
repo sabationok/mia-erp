@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AppModuleName } from '../reduxTypes.types';
-import { ExternalServiceTypeEnum, ExtServiceBase } from './integrations.types';
+import { ExternalServiceTypeEnum, ExtServiceBase } from '../../types/integrations.types';
 import { ThunkPayload } from '../store.store';
 import { axiosErrorCheck } from '../../utils';
 import { ExtServicesApi } from '../../api';

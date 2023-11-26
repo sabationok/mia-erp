@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from '../../utils';
 import { ThunkPayload } from '../store.store';
-import { ICompany, ICompanyReqData } from './companies.types';
+import { ICompany, ICompanyReqData } from '../../types/companies.types';
 import { CompaniesApi } from '../../api';
 
 export enum CompanyThunkType {

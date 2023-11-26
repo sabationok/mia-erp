@@ -1,12 +1,12 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { OfferTypeEnum } from '../../../redux/products/products.types';
+import { OfferTypeEnum } from '../../../types/products.types';
 import FlexBox from '../../atoms/FlexBox';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import { t } from '../../../lang';
 import InputText from '../../atoms/Inputs/InputText';
 import { useAppForm } from '../../../hooks';
-import { IProperty, IPropertyBase, IPropertyDto } from '../../../redux/products/properties/properties.types';
+import { IProperty, IPropertyBase, IPropertyDto } from '../../../types/properties.types';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
 import { Text } from '../../atoms/Text';
 import styled from 'styled-components';
@@ -43,7 +43,6 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
     register,
     handleSubmit,
     setValue,
-    registerSelect,
   } = useAppForm<IPropertyFormData>({
     defaultValues: { ...defaultState, type },
   });

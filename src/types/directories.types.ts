@@ -1,6 +1,6 @@
-import { IBaseDirItem } from '../../components/Directories/dir.types';
-import { ApiDirType } from '../APP_CONFIGS';
-import { IBase } from '../global.types';
+import { IBaseDirItem } from './dir.types';
+import { ApiDirType } from '../redux/APP_CONFIGS';
+import { IBase } from '../redux/global.types';
 
 export interface DefaultDirectoryType extends IBase {
   _id: string;

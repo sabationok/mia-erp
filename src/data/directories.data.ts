@@ -12,17 +12,17 @@ import {
   DirTagsProps,
   GetDirInTreeActionsCreatorOptions,
   IDirItemBase,
-} from '../components/Directories/dir.types';
+} from '../types/dir.types';
 import { t } from '../lang';
 import DirTreeComp from '../components/Directories/DirTreeComp';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import DirTableComp, { DirTableCompProps } from '../components/Directories/DirTableComp';
 import FormCreateCounterparty from '../components/Forms/FormCreateCounterparty';
 import { toReqData } from '../utils';
-import { OfferTypeEnum } from '../redux/products/products.types';
+import { OfferTypeEnum } from '../types/products.types';
 import { ModalChildrenProps, Modals } from '../components/Modals';
 import { CountsTypesEnum } from '../redux/directories/counts.types';
-import { CategoryTrTypeEnum } from '../redux/directories/directories.types';
+import { CategoryTrTypeEnum } from '../types/directories.types';
 import { DirectoriesService } from '../hooks/useDirService.hook';
 import DirProperties, { DirPropertiesProps } from '../components/Directories/DirProperties/DirProperties';
 import { IDirectoryListItem } from '../components/SideBarContent/Directories';

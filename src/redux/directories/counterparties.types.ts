@@ -1,6 +1,6 @@
 import { ApiDirType } from '../APP_CONFIGS';
-import { IDirItemBase } from '../../components/Directories/dir.types';
-import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../companies/companies.types';
+import { IDirItemBase } from '../../types/dir.types';
+import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../../types/companies.types';
 
 export interface ICounterpartyBase {
   name?: string;

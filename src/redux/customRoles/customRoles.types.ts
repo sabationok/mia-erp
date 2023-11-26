@@ -1,5 +1,5 @@
 import { IBase } from '../global.types';
-import { ICompanyBase } from '../companies/companies.types';
+import { ICompanyBase } from '../../types/companies.types';
 import { LangPack } from '../../lang';
 
 export enum ModuleName {

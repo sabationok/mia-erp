@@ -9,7 +9,7 @@ import {
   InputIntegrationDto,
   OutputIntegrationBase,
   OutputIntegrationDto,
-} from '../redux/integrations/integrations.types';
+} from '../types/integrations.types';
 import { getAllExtIntegrationServicesThunk } from '../redux/integrations/integrations.thunk';
 import { createApiCall, IntegrationsApi } from '../api';
 import { GetAllIntegrationsQueries } from '../api/integrations.api';

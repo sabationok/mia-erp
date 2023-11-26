@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import { useProductsSelector } from '../../../redux/selectors.store';
-import { IProduct } from '../../../redux/products/products.types';
+import { IProduct } from '../../../types/products.types';
 import { nanoid } from '@reduxjs/toolkit';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 

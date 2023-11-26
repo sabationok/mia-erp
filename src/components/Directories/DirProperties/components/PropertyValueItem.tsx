@@ -4,7 +4,7 @@ import React from 'react';
 import { DiPropertiesRenderItemProps } from '../DirProperties';
 import { Text } from '../../../atoms/Text';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
-import { IProperty, IPropertyValue } from '../../../../redux/products/properties/properties.types';
+import { IProperty, IPropertyValue } from '../../../../types/properties.types';
 
 const PropertyValueItem: React.FC<DiPropertiesRenderItemProps<IPropertyValue, IProperty>> = ({
   item,

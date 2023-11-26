@@ -1,6 +1,6 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { SelectItem } from '../components/TableList/TableList';
-import { IPermission, PermissionStatus } from '../redux/permissions/permissions.types';
+import { IPermission, PermissionStatus } from '../types/permissions.types';
 import { initialCompany } from '../redux/companies/companies.slice';
 import { testUserKarina } from './usersDir.data';
 import { initialCustomRole } from './customRoles.data';

@@ -6,7 +6,7 @@ import useCustomRolesService, { CustomRolesService } from 'hooks/useCustomRolesS
 import FlexBox from '../atoms/FlexBox';
 import { useCustomRolesSelector } from '../../redux/selectors.store';
 
-import { IDirInTreeProps } from '../Directories/dir.types';
+import { IDirInTreeProps } from '../../types/dir.types';
 import { ICustomRole } from '../../redux/customRoles/customRoles.types';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import DirListItem from '../Directories/DirList/DirListItem';

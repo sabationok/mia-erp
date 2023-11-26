@@ -1,4 +1,4 @@
-import { IntegrationTypeEnum } from './integrations/integrations.types';
+import { IntegrationTypeEnum } from '../types/integrations.types';
 
 export enum API_BASE_ROUTES {
   APP = 'APP',

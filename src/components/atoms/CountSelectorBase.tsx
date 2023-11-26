@@ -4,6 +4,7 @@ import ButtonIcon from './ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import InputText from './Inputs/InputText';
 import { checks } from '../../utils';
+import { MaybeNull } from '../../types/utils.types';
 
 const CountSelectorBase = ({
   value = 0,
@@ -14,7 +15,7 @@ const CountSelectorBase = ({
   className,
   autoFocus,
 }: {
-  value?: number;
+  value?: MaybeNull<number>;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   onChangeValue?: (number: number) => void;
   height?: string;
@@ -23,7 +24,7 @@ const CountSelectorBase = ({
   className?: string;
   autoFocus?: boolean;
 }) => {
-  const [count, setCount] = useState(value);
+  const [count, setCount] = useState(value ?? 0);
   const inputRef = useRef<HTMLInputElement>(null);
   const handleIncrementChange = (increment: number) => () => {
     onChangeValue

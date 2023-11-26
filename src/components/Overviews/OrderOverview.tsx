@@ -1,5 +1,5 @@
 import ModalForm, { ModalFormProps } from '../ModalForm';
-import { IOrder } from '../../redux/orders/orders.types';
+import { IOrder } from '../../types/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
 import FormAccordionItem from '../Forms/components/FormAccordionItem';
@@ -101,11 +101,12 @@ const InfoBoxContent = styled(FlexBox)`
 `;
 
 export default OrderOverview;
+
 const mainOrderInfo: OrderInfoBoxProps[] = [
   { label: 'ID', getData: o => o._id },
   { label: 'Статус', getData: o => o.status },
   { label: 'Тип', getData: o => '' },
-  { label: 'Менеджер', getData: o => o.manager?.name },
+  { label: 'Менеджер', getData: o => o.manager?.user?.name },
   { label: 'Створив / Дата', getData: o => new Date(o.createdAt || '').getDate() },
   { label: 'Оновив / Дата', getData: o => new Date(o.deletedAt || '').getDate() },
 ];

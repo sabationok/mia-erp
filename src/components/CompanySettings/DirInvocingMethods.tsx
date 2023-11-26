@@ -4,11 +4,11 @@ import styled from 'styled-components';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FlexBox from '../atoms/FlexBox';
 
-import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../Directories/dir.types';
+import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../../types/dir.types';
 import DirListItem from '../Directories/DirList/DirListItem';
 import { useTranslatedMethodsList } from '../../hooks/useTranslatedMethodsList.hook';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
-import { IInvoicingMethod } from '../../redux/integrations/integrations.types';
+import { IInvoicingMethod } from '../../types/integrations.types';
 import { useInvoicesSelector } from '../../redux/selectors.store';
 
 export interface DirInvoicingMethodsProps
