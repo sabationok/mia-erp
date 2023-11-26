@@ -23,7 +23,7 @@ export interface IBase extends OnlyUUID {
   updatedAt?: Date | string;
   deletedAt?: Date | string;
 }
-
+export type IBaseKeys = keyof IBase;
 export interface IFormDataValueWithUUID<DirType extends ApiDirType = any> extends OnlyUUID {
   label?: string;
   name?: string;

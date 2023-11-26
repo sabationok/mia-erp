@@ -8,7 +8,6 @@ import { Text } from '../../atoms/Text';
 import _ from 'lodash';
 
 export interface UseFormSubmitOptions {
-  closeAfterSave?: boolean;
   close?: boolean;
   clear?: boolean;
 }

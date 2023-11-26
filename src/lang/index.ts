@@ -2,7 +2,13 @@ import { langUa } from './ua';
 import { checks } from '../utils';
 
 export type LangTextKey = keyof typeof langUa | string;
-export type LangKey = 'ua' | 'en' | 'de' | 'pl';
+export enum LangKeyEnum {
+  ua = 'ua',
+  en = 'en',
+  de = 'de',
+  pl = 'pl',
+}
+export type LangKey = keyof typeof LangKeyEnum;
 export interface LangPack extends Record<LangKey, string> {}
 export interface LangDir extends Record<LangTextKey, string> {}
 

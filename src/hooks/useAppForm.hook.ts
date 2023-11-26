@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { UseFormHandleSubmit } from 'react-hook-form/dist/types/form';
 import { InputLabelProps } from '../components/atoms/Inputs/InputLabel';
 import { CustomSelectBaseProps } from '../components/atoms/Inputs/CustomSelect/CustomSelect';
+import { AnyFn } from '../utils/types';
 
 export type CustomSelectProps = CustomSelectBaseProps &
   Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'> &
@@ -29,14 +30,15 @@ export interface UseAppFormReturn<TFieldValues extends FieldValues = FieldValues
 }
 
 export interface UseAppFormSubmitOptions {
-  closeAfterSave?: boolean;
-  clearAfterSave?: boolean;
+  onLoading?: (l: boolean) => void;
+  onSuccess?: AnyFn;
+  onError?: AnyFn;
   close?: boolean;
   clear?: boolean;
   // onOptionsChange?: (options: UseAppFormSubmitOptions) => void;
 }
 
-export type AppSubmitHandler<D = any, O = any> = (data: D, options?: UseAppFormSubmitOptions & O) => void;
+export type AppSubmitHandler<D = any, O = any> = (data: D, options?: O & UseAppFormSubmitOptions) => void;
 
 export type AppErrorSubmitHandler<E = any, O = any> = (errors: E, options?: UseAppFormSubmitOptions & O) => void;
 const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = any>(

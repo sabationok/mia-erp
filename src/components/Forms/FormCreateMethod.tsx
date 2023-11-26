@@ -4,19 +4,23 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import styled from 'styled-components';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import { t } from '../../lang';
-import React from 'react';
+import React, { useState } from 'react';
 import { useAppForm } from '../../hooks';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import FlexBox from '../atoms/FlexBox';
 import { ExtServiceMethodBase } from '../../redux/integrations/integrations.types';
 import ButtonSwitch from '../atoms/ButtonSwitch';
+import { AnyFn } from '../../utils/types';
 
 export interface FormCreateMethodProps extends Omit<ModalFormProps<IMethodFormData>, 'onSubmit'> {
   _id?: string;
   create?: boolean;
   edit?: boolean;
-  onSubmit?: AppSubmitHandler<IMethodFormData, { logAfterSubmit?: boolean }>;
+  onSubmit?: AppSubmitHandler<
+    IMethodFormData,
+    { logAfterSubmit?: boolean; onLoading: (l: boolean) => void; onSuccess?: AnyFn; onError?: AnyFn }
+  >;
 }
 
 export interface IMethodFormData
@@ -33,27 +37,37 @@ const validation = yup.object().shape({
 
 const FormCreateMethod: React.FC<FormCreateMethodProps> = ({ onSubmit, defaultState, ...props }) => {
   const submitOptions = useAfterSubmitOptions();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const formMethods = useAppForm<IMethodFormData>({
+    defaultValues: { ...defaultState },
+    resolver: yupResolver(validation),
+    reValidateMode: 'onSubmit',
+  });
   const {
     formState: { errors, isValid },
     handleSubmit,
-  } = useAppForm<IMethodFormData>({
-    defaultValues: { ...defaultState },
-    resolver: yupResolver(validation),
-    reValidateMode: 'onChange',
-  });
+    reset,
+  } = formMethods;
 
-  function formEventWrapper(evHandler?: AppSubmitHandler<IMethodFormData>) {
-    if (evHandler) {
-      return handleSubmit(data => {
-        evHandler(data, { ...submitOptions.state });
+  const onValid = (fData: IMethodFormData) => {
+    onSubmit &&
+      onSubmit(fData, {
+        ...submitOptions.state,
+        onLoading: setIsLoading,
+        onSuccess: () => {
+          if (submitOptions.state.clear) {
+            reset();
+          }
+        },
       });
-    }
-  }
+  };
 
   return (
     <ModalForm
       {...props}
-      onSubmit={formEventWrapper(onSubmit)}
+      isLoading={isLoading}
+      onSubmit={handleSubmit(onValid)}
       isValid={isValid}
       extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
@@ -61,6 +75,7 @@ const FormCreateMethod: React.FC<FormCreateMethodProps> = ({ onSubmit, defaultSt
         {/*<InputLabel label={t('label')} direction={'vertical'} error={errors.label} required>*/}
         {/*  <InputText placeholder={t('insertLabel')} {...register('label')} required autoFocus />*/}
         {/*</InputLabel>*/}
+
         <InputLabel label={t('Disabled')} direction={'vertical'} error={errors.disabled}>
           <ButtonSwitch />
         </InputLabel>

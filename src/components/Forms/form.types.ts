@@ -23,3 +23,4 @@ export type { FormWarehousingSettingsProps } from './warehousing/FormWarehousing
 export type { FormCreateOrdersGroupProps } from './FormCreateOrder/FormCreateOrdersGroup';
 export type { SelectOrderTypeModalProps } from './FormCreateOrder/components/SelectOrderTypeModal';
 export type { FormCreateOrderSlotProps } from './FormCreateOrder/components/FormCreateOrderSlot';
+export type { FormDeliveryMethodProps } from './methods/FormDeliveryMethod';

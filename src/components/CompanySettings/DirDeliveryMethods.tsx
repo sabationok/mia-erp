@@ -13,6 +13,9 @@ import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { UseDeliveriesService } from '../../hooks/useDeliveriesService.hook';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../redux/reduxTypes.types';
+import { toReqData } from '../../utils';
+import Forms from '../Forms';
+import { IDeliveryMethodFormData } from '../Forms/methods/FormDeliveryMethod';
 
 export interface DirDeliveryMethodsProps
   extends IDirInTreeProps<MethodDirType, IDeliveryMethod, IDeliveryMethod, IDeliveryMethod> {
@@ -36,14 +39,13 @@ const DirDeliveryMethods: React.FC<DirDeliveryMethodsProps> = ({
   const service = useAppServiceProvider()[AppModuleName.deliveries];
   const modalService = useModalProvider();
   const methods = useTranslatedMethodsList(useDeliveriesSelector().methods, { withFullLabel: true });
-  console.log(methods);
   const actions = actionsCreatorForDeliveryMethods({ service, modalService, dirType: ApiDirType.METHODS_SHIPMENT });
+
   const renderList = useMemo(
     () =>
       methods?.map((item, idx) => (
         <DirListItem
           key={`treeItem_${item?._id || idx}`}
-          {...item}
           {...props}
           item={item}
           availableLevels={1}
@@ -79,8 +81,34 @@ const actionsCreatorForDeliveryMethods: DirInTreeActionsCreatorType<
   IDeliveryMethod,
   UseDeliveriesService,
   IDeliveryMethod
-> = () => {
+> = ({ modalService, service }) => {
   return {
-    onCreateChild: (parentId, parent, options) => {},
+    onCreateParent: options => {},
+    onUpdate: (_id, data) => {
+      const m = modalService.open({
+        ModalChildren: Forms.DeliveryMethod,
+        modalChildrenProps: {
+          defaultState: data,
+          title: `Edit ${data.label}`,
+          onSubmit: (data, options) => {
+            const omitPaths = data.isDefault
+              ? (['label', 'labels', 'type'] as (keyof IDeliveryMethodFormData | string)[])
+              : ['isDefault', 'service', 'extService', 'value', 'parent'];
+            console.log('Form data', data);
+            console.log('Req Method data', toReqData(data, { omitPathArr: omitPaths }));
+
+            service.update({
+              data: { _id, data: toReqData(data, { omitPathArr: omitPaths }) },
+              onLoading: options?.onLoading,
+              onSuccess: () => {
+                options?.onSuccess && options?.onSuccess();
+                m?.onClose();
+              },
+              onError: options?.onSuccess,
+            });
+          },
+        },
+      });
+    },
   };
 };

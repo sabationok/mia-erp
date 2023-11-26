@@ -2,8 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from '../../utils';
 import { DeliveriesApi } from '../../api';
 import { ThunkPayload } from '../store.store';
-import { IDeliveryMethodReqData } from './deliveries.types';
-import { IDeliveryMethod } from '../integrations/integrations.types';
+import { IDeliveryMethod, IDeliveryMethodReqData } from '../integrations/integrations.types';
 
 enum DeliveriesThunkTypeEnum {
   getAll = 'deliveries/getAllThunk',
@@ -36,7 +35,7 @@ export const updateDeliveryMethodThunk = createAsyncThunk<
 >(DeliveriesThunkTypeEnum.updateMethod, async (args, thunkAPI) => {
   args?.onLoading && args?.onLoading(true);
   try {
-    const res = await DeliveriesApi.updateMethod(args?.data || {});
+    const res = await DeliveriesApi.updateMethod(args?.data);
     res && args?.onSuccess && args?.onSuccess(res?.data?.data);
 
     args?.onLoading && args?.onLoading(false);

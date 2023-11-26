@@ -1,7 +1,8 @@
-import { IBase, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
+import { IBase, IBaseKeys, IFormDataValueWithUUID, OnlyUUID } from '../global.types';
 import { LangPack } from '../../lang';
 import { ICompany } from '../companies/companies.types';
 import { AppQueryParams } from '../../api';
+import { CmsBaseConfigsDto } from '../cms/cms.types';
 
 export enum IntegrationTypeEnum {
   input = 'input',
@@ -156,10 +157,12 @@ export interface ExtServiceMethodBase<Type = any, Service = any> extends IBase {
   type?: Type;
   service?: Service | null;
   extService?: Service | null;
+
+  cmsConfigs?: CmsBaseConfigsDto;
 }
-export interface IMethodReqData<Method = any> {
+export interface IMethodReqData<DtoLike = any> {
   _id?: string;
-  data?: Omit<Method, '_id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'isDefault'>;
+  data?: Omit<DtoLike, IBaseKeys | 'isDefault' | 'service' | 'extService'>;
   params?: Pick<AppQueryParams, 'disabled' | 'isDefault' | 'disabledForClient'>;
 }
 export enum InvoicingTypeEnum {
@@ -175,8 +178,26 @@ export interface ICommunicationMethod extends ExtServiceMethodBase<string, ExtCo
 export interface ICommunicationMethodReqData extends IMethodReqData<ICommunicationMethod> {}
 export interface IInvoicingMethod extends ExtServiceMethodBase<InvoicingTypeEnum, ExtInvoicingService> {}
 export interface IInvoicingMethodReqData extends IMethodReqData<IInvoicingMethod> {}
-export interface IDeliveryMethod extends ExtServiceMethodBase<string, ExtDeliveryService> {}
-export interface IDeliveryMethodReqData extends IMethodReqData<IDeliveryMethod> {}
+
+export interface IDeliveryMethodInvoicingInfo {
+  method?: IInvoicingMethod;
+  minCost?: { delivery?: number; return?: number };
+}
+export interface IDeliveryMethod extends ExtServiceMethodBase<string, ExtDeliveryService> {
+  invoicing?: IDeliveryMethodInvoicingInfo;
+}
+
+export interface IDeliveryMethodDto
+  extends Partial<Omit<IDeliveryMethod, IBaseKeys | 'isDefault' | 'invoicing' | 'service' | 'extService'>> {
+  invoicing?: Pick<IDeliveryMethodInvoicingInfo, 'minCost'> & { method?: OnlyUUID };
+}
+
+// export interface IDeliveryMethodReqData {
+//   _id?: string;
+//   data?: IDeliveryMethodDto;
+//   params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>;
+// }
+export interface IDeliveryMethodReqData extends IMethodReqData<IDeliveryMethodDto> {}
 export interface ICheckoutPaymentMethod
   extends ExtServiceMethodBase<string | MonoCheckoutMethod | LiqPayCheckoutMethodEnum, ExtDeliveryService> {}
 export interface IPaymentMethodReqData extends IMethodReqData<ICheckoutPaymentMethod> {}

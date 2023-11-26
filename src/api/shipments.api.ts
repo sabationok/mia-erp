@@ -2,7 +2,6 @@ import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import baseApi from './baseApi';
 import { AppResponse } from '../redux/global.types';
-import { IDeliveryMethodReqData } from '../redux/shipments/shipments.types';
 import { IDeliveryMethod } from '../redux/integrations/integrations.types';
 
 export default class ShipmentsApi {
@@ -24,7 +23,7 @@ export default class ShipmentsApi {
   ): Promise<AppResponse<IDeliveryMethod[]>> {
     return this.api.get(this.endpoints.getAllMethods(), { params });
   }
-  public static updateMethod(args: IDeliveryMethodReqData): Promise<AppResponse<IDeliveryMethod>> {
+  public static updateMethod(args: any): Promise<AppResponse<IDeliveryMethod>> {
     return this.api.patch(this.endpoints.updateMethod(args._id), args.data, { params: args?.params });
   }
 }

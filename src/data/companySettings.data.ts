@@ -1,10 +1,8 @@
 import DirUsers, { DirUsersProps } from '../components/CompanySettings/DirUsers';
 import { usersDirColumns } from './usersDir.data';
-
 import DirCustomRoles, { DirCustomRolesProps } from '../components/CompanySettings/DirCustomRoles';
 import { getDirInTreeActionsCreator } from './directories.data';
 import { ApiDirType } from '../redux/APP_CONFIGS';
-import { iconId } from '../img/sprite';
 import FormCreateCustomRole from '../components/Forms/FormCreateCustomRole';
 import { Modals } from '../components/Modals';
 import { IDirectoryListItem } from '../components/SideBarContent/Directories';
@@ -13,7 +11,7 @@ import { t } from '../lang';
 import Forms from '../components/Forms';
 import DirPaymentMethods from '../components/CompanySettings/DirPaymentMethods';
 import DirDeliveryMethods from '../components/CompanySettings/DirDeliveryMethods';
-import DirInvocingMethods from '../components/CompanySettings/DirInvocingMethods';
+import DirInvoicingMethods from '../components/CompanySettings/DirInvocingMethods';
 import DirCommunicationMethods from '../components/CompanySettings/DirCommunicationMethods';
 
 const UsersProps: DirUsersProps = {
@@ -116,7 +114,6 @@ const integrations = {
   title: t('Integrations'),
   disabled: false,
   ModalChildren: CompanyIntegrationsModal,
-  iconId: iconId.bank,
   modalChildrenProps: {
     title: t('Integrations'),
     fillHeight: true,
@@ -127,13 +124,11 @@ const warehousingSettings = {
   title: t('Warehousing settings'),
   disabled: false,
   ModalChildren: Forms.WarehousingSettings,
-  iconId: iconId.bank,
 };
 
 export const companySettings: IDirectoryListItem[] = [
   {
     title: UsersProps.title,
-    iconId: iconId.persons,
     ModalChildren: DirUsers,
     modalChildrenProps: UsersProps,
     disabled: true,
@@ -141,7 +136,6 @@ export const companySettings: IDirectoryListItem[] = [
 
   {
     title: CustomRolesProps.title,
-    iconId: iconId.lockPerson,
     ModalChildren: DirCustomRoles,
     modalChildrenProps: CustomRolesProps,
     disabled: true,
@@ -151,13 +145,13 @@ export const companySettings: IDirectoryListItem[] = [
 
   {
     title: t('Invoicing methods'),
-    iconId: iconId.assignment,
-    ModalChildren: DirInvocingMethods,
+    ModalChildren: DirInvoicingMethods,
     modalChildrenProps: {
       title: t('Invoicing methods'),
       dirType: ApiDirType.METHODS_INVOICING,
       createParentTitle: t('Add invoicing method'),
       changeDisableStatus: true,
+      creatingParent: true,
       availableLevels: 1,
       actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {
         createParentTitle: t('Add invoicing method'),
@@ -168,7 +162,6 @@ export const companySettings: IDirectoryListItem[] = [
   },
   {
     title: t('Payment methods'),
-    iconId: iconId.persons,
     ModalChildren: DirPaymentMethods,
     modalChildrenProps: {
       title: t('Payment methods'),
@@ -185,14 +178,14 @@ export const companySettings: IDirectoryListItem[] = [
   },
   {
     title: t('Delivery methods'),
-    iconId: iconId.persons,
     ModalChildren: DirDeliveryMethods,
     modalChildrenProps: {
       title: t('Delivery methods'),
       dirType: ApiDirType.METHODS_SHIPMENT,
       createParentTitle: t('Add delivery method'),
       changeDisableStatus: true,
-      creatingParent: false,
+      creatingParent: true,
+      editing: true,
       availableLevels: 1,
       actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {
         createParentTitle: t('Add delivery method'),
@@ -203,7 +196,6 @@ export const companySettings: IDirectoryListItem[] = [
   },
   {
     title: t('Communication methods'),
-    iconId: iconId.persons,
     ModalChildren: DirCommunicationMethods,
     modalChildrenProps: {
       title: t('Communication methods'),

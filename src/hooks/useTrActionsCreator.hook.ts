@@ -46,7 +46,7 @@ const createEditTransactionAction = ({
           service.updateById({
             data,
             onSuccess(d) {
-              o?.closeAfterSave && modal?.onClose();
+              o?.close && modal?.onClose();
             },
           });
         },
@@ -81,7 +81,7 @@ const createCopyTransactionAction = ({
             data,
             onSuccess(d) {
               toast.success(`Транзакцію створено`);
-              o?.closeAfterSave && modal?.onClose();
+              o?.close && modal?.onClose();
             },
           });
         },
@@ -132,7 +132,7 @@ const createAddIncomeTransactionAction = ({
           service.create({
             data,
             onSuccess(d) {
-              o?.closeAfterSave && modal?.onClose();
+              o?.close && modal?.onClose();
             },
           });
         },
@@ -165,7 +165,7 @@ const createAddTransferTransactionAction = ({
           service.create({
             data,
             onSuccess(d) {
-              o?.closeAfterSave && modal?.onClose();
+              o?.close && modal?.onClose();
             },
           });
         },
@@ -197,7 +197,7 @@ const createAddExpenseTransactionAction = ({
           service.create({
             data,
             onSuccess(d) {
-              o?.closeAfterSave && modal?.onClose();
+              o?.close && modal?.onClose();
             },
           });
         },

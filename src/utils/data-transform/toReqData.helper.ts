@@ -1,10 +1,10 @@
-import { omit } from 'lodash';
+import _, { omit } from 'lodash';
 import { OnlyUUID } from '../../redux/global.types';
 
 export function toReqData<IncomeDataType extends Record<string, any> = any>(
   incomeData: IncomeDataType,
   options?: {
-    omitPathArr?: (keyof IncomeDataType)[];
+    omitPathArr?: (keyof IncomeDataType | string)[];
     dateToNumberPath?: keyof IncomeDataType | string;
     amountToNumberPath?: keyof IncomeDataType | string;
     checkArrayPath?: keyof IncomeDataType | string;
@@ -22,8 +22,8 @@ export function toReqData<IncomeDataType extends Record<string, any> = any>(
         outData[key] = value;
         return;
       }
-      if (!value) {
-        console.log('!value', { key }, { value });
+      if (_.isUndefined(value) || _.isNull(value)) {
+        // console.log('isUndefined', { key }, { value });
         return;
       }
 
@@ -74,7 +74,7 @@ export function toReqData<IncomeDataType extends Record<string, any> = any>(
         }
         return;
       }
-      if (value) {
+      if (!(_.isUndefined(value) || _.isNull(value))) {
         // console.log('value exist', { key }, { value });
         return (outData[key] = value as any);
       }
@@ -83,6 +83,6 @@ export function toReqData<IncomeDataType extends Record<string, any> = any>(
   } catch (e) {
     console.error(e);
   }
-  // console.log('after', { inputCopy }, { outData });
+  // console.log('after', outData);
   return outData as Partial<IncomeDataType>;
 }

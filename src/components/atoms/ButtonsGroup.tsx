@@ -14,6 +14,7 @@ export interface ButtonsGroupProps<V = any> {
   borderRadius?: string;
   currentOption?: ButtonsGroupOption<V>;
   onChangeIndex?: (index: number) => void;
+  disabled?: boolean;
 }
 export type ButtonGroupSelectHandler<V = any> = (info: {
   option: ButtonsGroupOption<V>;
@@ -27,6 +28,7 @@ const ButtonsGroup = <V = any,>({
   defaultIndex = 0,
   onChangeIndex,
   currentOption,
+  disabled,
 }: ButtonsGroupProps<V>) => {
   const [current, setCurrent] = useState(0);
 
@@ -45,13 +47,13 @@ const ButtonsGroup = <V = any,>({
         key={`group-option-${opt?.label || idx}`}
         variant={current === idx ? 'filledSmall' : 'defOutlinedSmall'}
         onClick={handleSelect(opt, idx)}
-        disabled={opt?.disabled}
+        disabled={disabled ?? opt?.disabled}
       >
         {opt.label && <div className={'inner'}>{opt.label}</div>}
         {opt?.extraLabel}
       </OptionButton>
     ));
-  }, [current, handleSelect, options]);
+  }, [current, disabled, handleSelect, options]);
 
   useEffect(() => {
     if (!isUndefined(defaultIndex)) {

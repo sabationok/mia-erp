@@ -2,7 +2,6 @@ import { AddressDto, IBase, IFormDataValueWithUUID, OnlyUUID } from '../global.t
 import { IOrder, IOrderSlot } from '../orders/orders.types';
 import { IPayment } from '../payments/payments.types';
 import { IInvoice } from '../invoices/invoices.types';
-import { AppQueryParams } from '../../api';
 import { IProductDimensions } from '../products/products.types';
 import { IDeliveryMethod } from '../integrations/integrations.types';
 
@@ -113,11 +112,4 @@ export interface IShipmentServiceFormData {
   dimensions?: IProductDimensions;
 
   paymentMethod?: IFormDataValueWithUUID;
-}
-
-// * Method
-export interface IDeliveryMethodReqData {
-  _id?: string;
-  data?: IDeliveryMethod;
-  params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>;
 }

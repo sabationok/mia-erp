@@ -4,10 +4,11 @@ import { useModalService } from 'components/ModalProvider/ModalProvider';
 import { useMemo } from 'react';
 import { ModalChildrenProps, Modals } from '../Modals';
 import { Text } from '../atoms/Text';
+import { IconIdType } from '../../img/sprite';
 
 export interface IDirectoryListItem<M extends Modals = any, P = any> {
   title: string;
-  iconId?: string;
+  iconId?: string | IconIdType;
   Modal?: M;
   props?: ModalChildrenProps[M];
   ModalChildren?: React.FC<P>;
