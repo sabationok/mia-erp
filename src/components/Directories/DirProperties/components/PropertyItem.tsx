@@ -6,9 +6,13 @@ import styled from 'styled-components';
 import { DiPropertiesRenderItemProps } from '../DirProperties';
 import PropertyValueItem from './PropertyValueItem';
 import { t } from '../../../../lang';
-import { IProperty, PropertyTypeEnum } from '../../../../redux/products/properties/properties.types';
+import {
+  IProperty,
+  IVariationTemplate,
+  PropertyTypeEnum,
+} from '../../../../redux/products/properties/properties.types';
 
-const PropertyItem: React.FC<DiPropertiesRenderItemProps<IProperty>> = ({
+const PropertyItem: React.FC<DiPropertiesRenderItemProps<IProperty, IVariationTemplate>> = ({
   item,
   onChangeSelectableStatus,
   onUpdate,

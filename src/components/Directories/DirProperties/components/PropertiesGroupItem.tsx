@@ -20,23 +20,24 @@ const PropertyGroupItem: React.FC<DiPropertiesRenderItemProps<IVariationTemplate
   const theme = useTheme();
 
   const renderChildren = useMemo(() => {
-    return !item.childrenList || item.childrenList.length === 0 ? (
+    return !item.childrenList?.length ? (
       <FlexBox justifyContent={'stretch'}>
         <Text $weight={500} $size={16} $align={'center'}>
           {t('Not found any properties')}
         </Text>
       </FlexBox>
     ) : (
-      item.childrenList?.map((el, index) => (
+      item?.childrenList?.map((el, index) => (
         <PropertyItem
           key={`property_${el?._id}`}
           item={el}
+          parent={item}
           index={index}
           {...{ onUpdate, onCreateChild, onDelete, onCreateValue, onChangeSelectableStatus }}
         />
       ))
     );
-  }, [item.childrenList, onChangeSelectableStatus, onCreateChild, onCreateValue, onDelete, onUpdate]);
+  }, [item, onChangeSelectableStatus, onCreateChild, onCreateValue, onDelete, onUpdate]);
 
   return (
     <FlexBox>

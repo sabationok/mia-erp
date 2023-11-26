@@ -13,7 +13,7 @@ export type { FormCreateTagProps } from './FormCreateTag';
 export type { FormCreateMethodProps } from './FormCreateMethod';
 export type { FormInviteUserProps } from './FormInviteUser';
 export type { FormCreatePropertyProps } from './offers/FormCreateProperty';
-export type { FormCreateVariationProps } from './offers/FormCreateVariation';
+export type { FormCreateVariationProps } from './offers/_FormCreateVariation';
 export type { FormCreateWarehouseProps } from './warehousing/FormCreateWarehouse';
 export type { FormCreateProductInventoryProps } from './warehousing/FormCreateProductInventory';
 export type { FormCreateProductProps } from './FormProduct/FormCreateProduct';

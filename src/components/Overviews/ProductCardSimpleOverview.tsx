@@ -64,13 +64,9 @@ const ProductCardSimpleOverview: React.FC<ProductCardForSelectorProps> = ({
     <Card fillWidth gap={8} isSelected={isSelected} disabled={disabled}>
       <ImageBox>
         <img
-          src={
-            product?.images
-              ? product?.images[0]?.img_preview
-              : 'https://gymbeam.ua/media/catalog/product/cache/bf5a31e851f50f3ed6850cbbf183db11/w/-/w-gymbeam-sweatpants-joggers-trn-olive-1.jpg'
-          }
+          src={product?.images ? product?.images[0]?.img_preview : ''}
           style={{ objectFit: 'contain' }}
-          alt={''}
+          alt={product?.label}
           width={'100%'}
           height={'100%'}
         />
@@ -164,11 +160,11 @@ const Card = styled(FlexBox)<{ isSelected?: boolean; disabled?: boolean }>`
     background-color: ${({ theme, isSelected }) => (isSelected ? theme.accentColor.base : 'transparent')};
   }
 
-  @media screen and (max-width: 480px) {
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr max-content min-content;
-    max-height: 100%;
-  }
+  //@media screen and (max-width: 480px) {
+  //  grid-template-columns: 1fr;
+  //  grid-template-rows: 1fr max-content min-content;
+  //  max-height: 100%;
+  //}
 
   //border: 1px solid tomato;
 `;

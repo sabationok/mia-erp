@@ -154,15 +154,6 @@ export const ProductStatusChangerCell: RenderOverviewCellComponent<IProduct> = (
   );
 };
 
-const DefaultTag = styled(FlexBox)`
-  justify-content: center;
-
-  border-radius: 2px;
-  padding: 4px 12px;
-  height: 28px;
-
-  background-color: ${p => p.theme.fieldBackgroundColor};
-`;
 export const ProductDefaultsCell: RenderOverviewCellComponent<IProduct> = ({ data, cell, setOverlayContent }) => {
   const theme = useTheme();
   const warehouse = data?.warehouse;
@@ -177,14 +168,27 @@ export const ProductDefaultsCell: RenderOverviewCellComponent<IProduct> = ({ dat
         title: t('SKU'),
         value: variation?.sku,
       },
+      {
+        title: t('Props q-ty'),
+        value: variation?.properties?.length,
+      },
     ];
 
     return tagsData.map((item, index) => {
       return (
-        <DefaultTag key={item?.title}>
-          {`${item?.title}: `}
-          {item?.value || '---'}
-        </DefaultTag>
+        <FlexBox
+          key={item?.title}
+          fxDirection={'row'}
+          justifyContent={'space-between'}
+          padding={'4px 6px'}
+          gap={6}
+          fillWidth
+        >
+          <Text $size={11}>{`${item?.title}: `}</Text>
+          <Text $size={12} $weight={600} $align={'right'}>
+            {item?.value ?? '---'}
+          </Text>
+        </FlexBox>
       );
     });
   }, [data?.variation]);
@@ -194,11 +198,20 @@ export const ProductDefaultsCell: RenderOverviewCellComponent<IProduct> = ({ dat
   const renderPriceInfo = useMemo(() => {
     return priceInfoCellsData.map((item, index) => {
       return (
-        <DefaultTag key={item?.title}>
-          {`${item?.title}: `}
-          {numberWithSpaces(item?.amount || 0)}
-          {checks.isNum(item?.percentage) && ` | ${numberWithSpaces(item?.percentage)}%`}
-        </DefaultTag>
+        <FlexBox
+          key={item?.title}
+          fxDirection={'row'}
+          justifyContent={'space-between'}
+          padding={'4px 6px'}
+          gap={6}
+          fillWidth
+        >
+          <Text $size={11}>{`${item?.title}: `}</Text>
+          <Text $size={12} $weight={600}>
+            {numberWithSpaces(item?.amount || 0)}
+            {checks.isNum(item?.percentage) && ` | ${numberWithSpaces(item?.percentage)}%`}
+          </Text>
+        </FlexBox>
       );
     });
   }, [priceInfoCellsData]);
@@ -214,45 +227,57 @@ export const ProductDefaultsCell: RenderOverviewCellComponent<IProduct> = ({ dat
         }}
       />
 
-      <FlexBox fillWidth gap={6}>
-        <CellText $isTitle $weight={500} style={{ color: theme?.fontColorHeader, marginInline: 8 }}>
+      <FlexBox fillWidth>
+        <CellText $size={13} $weight={600} style={{ color: theme?.fontColorHeader }}>
           {t('warehouse')}
         </CellText>
 
-        <FlexBox fillWidth flexWrap={'wrap'} fxDirection={'row'} gap={8}>
-          <DefaultTag>{`${t('Label')}: ${warehouse?.label || '---'}`}</DefaultTag>
-          <DefaultTag>{`${t('Code')}: ${warehouse?.code || '---'}`}</DefaultTag>
+        <FlexBox fillWidth flexWrap={'wrap'} fxDirection={'row'}>
+          {[
+            { label: t('Label'), value: warehouse?.label },
+            { label: t('Code'), value: warehouse?.code },
+          ].map(info => (
+            <FlexBox fxDirection={'row'} justifyContent={'space-between'} padding={'4px 6px'} gap={6} fillWidth>
+              <Text $size={11}>{`${info.label}`}</Text>
+              <Text $size={12} $weight={600}>
+                {info?.value || '---'}
+              </Text>
+            </FlexBox>
+          ))}
         </FlexBox>
       </FlexBox>
 
-      <FlexBox fillWidth gap={6}>
-        <CellText $isTitle $weight={500} style={{ color: theme?.fontColorHeader, marginInline: 8 }}>
+      <FlexBox fillWidth>
+        <CellText $size={13} $weight={600} style={{ color: theme?.fontColorHeader }}>
           {t('supplier')}
         </CellText>
 
-        <FlexBox fillWidth flexWrap={'wrap'} fxDirection={'row'} gap={8}>
-          <DefaultTag>{`${t('Label')}: ${supplier?.label || '---'}`}</DefaultTag>
-          <DefaultTag>{`${t('Code')}: ${supplier?.code || '---'}`}</DefaultTag>
-        </FlexBox>
+        {[
+          { label: t('Label'), value: supplier?.label },
+          { label: t('Code'), value: supplier?.code },
+        ].map(info => (
+          <FlexBox fxDirection={'row'} justifyContent={'space-between'} padding={'4px 6px'} gap={6} fillWidth>
+            <Text $size={11}>{`${info.label}`}</Text>
+            <Text $size={12} $weight={600}>
+              {info?.value || '---'}
+            </Text>
+          </FlexBox>
+        ))}
       </FlexBox>
 
       <FlexBox fillWidth gap={6}>
-        <CellText $weight={500} style={{ color: theme?.fontColorHeader, marginInline: 8 }}>
+        <CellText $size={13} $weight={600} style={{ color: theme?.fontColorHeader }}>
           {t('variation')}
         </CellText>
 
-        <FlexBox fillWidth flexWrap={'wrap'} fxDirection={'row'} gap={8}>
-          {renderVariationTags}
-        </FlexBox>
+        <FlexBox fillWidth>{renderVariationTags}</FlexBox>
       </FlexBox>
 
       <FlexBox fillWidth gap={6}>
-        <CellText $isTitle $weight={500} style={{ color: theme?.fontColorHeader, marginInline: 8 }}>
+        <CellText $size={13} $weight={600} style={{ color: theme?.fontColorHeader }}>
           {t('price')}
         </CellText>
-        <FlexBox fillWidth flexWrap={'wrap'} fxDirection={'row'} gap={8}>
-          {renderPriceInfo}
-        </FlexBox>
+        <FlexBox fillWidth>{renderPriceInfo}</FlexBox>
       </FlexBox>
     </Cell>
   );
@@ -622,6 +647,16 @@ const ImagesSetBox = styled(FlexBox)`
     width: 0;
     height: 0;
   }
+`;
+
+const DefaultTag = styled(FlexBox)`
+  justify-content: center;
+
+  border-radius: 2px;
+  padding: 4px 12px;
+  height: 28px;
+
+  background-color: ${p => p.theme.fieldBackgroundColor};
 `;
 const CategoryItem = styled(FlexBox)`
   align-items: center;

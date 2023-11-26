@@ -6,21 +6,13 @@ import InputLabel from '../../atoms/Inputs/InputLabel';
 import { t } from '../../../lang';
 import InputText from '../../atoms/Inputs/InputText';
 import { useAppForm } from '../../../hooks';
-import {
-  IProperty,
-  IPropertyBase,
-  IPropertyDto,
-  PropertyTypeEnum,
-} from '../../../redux/products/properties/properties.types';
+import { IProperty, IPropertyBase, IPropertyDto } from '../../../redux/products/properties/properties.types';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
-import { enumToFilterOptions } from '../../../utils/fabrics';
 import { Text } from '../../atoms/Text';
 import styled from 'styled-components';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import ButtonSwitch from '../../atoms/ButtonSwitch';
 import { useEffect } from 'react';
 
-const propCmsTypeFilterOptions = enumToFilterOptions(PropertyTypeEnum);
 export interface FormCreatePropertyProps extends Omit<ModalFormProps<OfferTypeEnum, any, IPropertyBase>, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<IPropertyDto, { isGroup?: boolean; isProperty?: boolean; isValue?: boolean }>;
   type?: OfferTypeEnum;
@@ -130,16 +122,16 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
             </InputLabel>
           )}
 
-          {isProperty && (
-            <InputLabel label={t('Cms type')}>
-              <CustomSelect
-                {...registerSelect('cmsConfigs.type', {
-                  options: propCmsTypeFilterOptions,
-                  placeholder: t('Select cms type'),
-                })}
-              />
-            </InputLabel>
-          )}
+          {/*{isProperty && (*/}
+          {/*  <InputLabel label={t('Cms type')}>*/}
+          {/*    <CustomSelect*/}
+          {/*      {...registerSelect('cmsConfigs.type', {*/}
+          {/*        options: propCmsTypeFilterOptions,*/}
+          {/*        placeholder: t('Select cms type'),*/}
+          {/*      })}*/}
+          {/*    />*/}
+          {/*  </InputLabel>*/}
+          {/*)}*/}
         </CmsConfigs>
       </FlexBox>
     </ModalForm>

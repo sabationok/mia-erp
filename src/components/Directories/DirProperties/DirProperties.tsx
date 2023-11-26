@@ -12,7 +12,7 @@ import { ProductsService } from '../../../hooks/useProductsService.hook';
 import FlexBox from '../../atoms/FlexBox';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { useProductsSelector } from '../../../redux/selectors.store';
-import { IProperty, IPropertyDto } from '../../../redux/products/properties/properties.types';
+import { IProperty, IPropertyBase, IPropertyDto } from '../../../redux/products/properties/properties.types';
 import { ToastService } from '../../../services';
 import { DirPropertiesCTX, DirPropertiesCTXValue } from './DirPropertiesCTX';
 import PropertiesGroupItem from './components/PropertiesGroupItem';
@@ -31,16 +31,20 @@ export interface DirPropertiesProps
     PropertiesLevelType & { onSuccess?: (data: IProperty[]) => void }
   > {}
 
-export interface DiPropertiesRenderItemProps<Item extends IProperty = any, ParentItem extends IProperty = any> {
+export interface DiPropertiesRenderItemProps<
+  Item extends IPropertyBase = IPropertyBase,
+  ParentItem extends IPropertyBase = IPropertyBase
+> {
   item: Item;
   parent?: ParentItem;
   index: number;
   onCreateValue?: AppSubmitHandler<{ parent: ParentItem }, PropertiesLevelType>;
   onCreateChild?: AppSubmitHandler<{ parent: ParentItem }, PropertiesLevelType>;
-  onUpdate?: AppSubmitHandler<{ _id: string; data: ParentItem }, PropertiesLevelType>;
+  onUpdate?: AppSubmitHandler<{ _id: string; data: Item }, PropertiesLevelType>;
   onDelete?: AppSubmitHandler<OnlyUUID>;
   onChangeSelectableStatus?: (_id: string, status: boolean) => void;
 }
+const loader = ToastService.createLoader('Loading properties...');
 
 const DirProperties: React.FC<DirPropertiesProps> = ({
   createParentTitle,
@@ -74,14 +78,19 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   });
 
   useEffect(() => {
-    const close = () => setTimeout(ToastService.createToastLoader('Loading properties...'), 1000);
+    const control = loader.open();
+
     service
       .getAllProperties({
         data: { params: { createTreeData: true } },
         // onSuccess: setLoadedData,
         onLoading: setLoading,
       })
-      .finally(close);
+      .finally(control.close);
+
+    return () => {
+      control.close();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
