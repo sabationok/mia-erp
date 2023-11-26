@@ -1,7 +1,7 @@
 import FlexBox from '../../atoms/FlexBox';
 import React, { useEffect, useMemo, useState } from 'react';
 import FormCreateVariation from '../../Forms/FormProduct/FormCreateVariationOverlay';
-import { IProperty, IPropertyValue } from '../../../redux/products/properties/properties.types';
+import { IProperty } from '../../../redux/products/properties/properties.types';
 import styled, { useTheme } from 'styled-components';
 import { Text } from '../../atoms/Text';
 import { useDirectoriesSelector, useProductsSelector } from '../../../redux/selectors.store';
@@ -440,25 +440,24 @@ export const StaticProperties: RenderOverviewCellComponent<IProduct> = ({ cell, 
         <OverviewPropertyComponent
           key={`prop-${prop?._id}`}
           {...{ index, setOverlayContent, item: prop, selectedItems }}
-        ></OverviewPropertyComponent>
+        />
       );
     });
   }, [availableProperties, setOverlayContent, selectedItems]);
 
-  const renderPropertiesFromVariations = useMemo(() => {
-    const propsFromVariations = data?.variations?.map(vr => vr.properties)?.flat(1);
-    const unicValuesMap: Record<string, IPropertyValue> = {};
-
-    propsFromVariations?.forEach(propVal => {
-      if (propVal?._id) {
-        unicValuesMap[propVal?._id] = propVal;
-      }
-    });
-
-    return Object.values(unicValuesMap).map(el => {
-      return <FlexBox key={`prop_value_${el._id}`}>{el.label}</FlexBox>;
-    });
-  }, [data?.variations]);
+  // const renderPropertiesFromVariations = useMemo(() => {
+  //   const propsFromVariations = data?.variations?.map(vr => vr.properties)?.flat(1);
+  //
+  //
+  //   const valuesSet: Record<string, IPropertyValue> = Object.assign(
+  //     {},
+  //     ...(propsFromVariations?.map(value => (value ? { [value?._id]: value } : null)) ?? [])
+  //   );
+  //
+  //   return Object.values(valuesSet).map(el => {
+  //     return <FlexBox key={`prop_value_${el._id}`}>{el.label}</FlexBox>;
+  //   });
+  // }, [data?.variations]);
 
   return (
     <Cell
@@ -485,7 +484,7 @@ export const StaticProperties: RenderOverviewCellComponent<IProduct> = ({ cell, 
           <CellText $weight={500}>{t('undefined')}</CellText>
         )}
 
-        {renderPropertiesFromVariations}
+        {/*{renderPropertiesFromVariations}*/}
       </FlexBox>
     </Cell>
   );
@@ -507,12 +506,12 @@ const OverviewPropertyComponent: React.FC<OverviewPropertyComponentProps> = ({ i
   return (
     <FlexBox className={'PROPERTY'} gap={8} alignItems={'flex-end'}>
       <FlexBox alignItems={'center'} fxDirection={'row'} fillWidth gap={8}>
-        <CellText $size={14} $weight={600}>
+        <CellText $size={13} $weight={600}>
           {item?.label}
         </CellText>
       </FlexBox>
 
-      <FlexBox fxDirection={'row-reverse'} flexWrap={'wrap'} fillWidth gap={8}>
+      <FlexBox fxDirection={'row'} flexWrap={'wrap'} fillWidth gap={6}>
         {renderValues && renderValues?.length > 0 ? renderValues : <Text $size={12}>{'---'}</Text>}
       </FlexBox>
     </FlexBox>
@@ -664,7 +663,7 @@ const CategoryItem = styled(FlexBox)`
 
   flex-direction: row;
 
-  padding: 4px 12px;
+  padding: 4px;
 
   font-weight: 500;
   font-size: 12px;
@@ -673,16 +672,16 @@ const CategoryItem = styled(FlexBox)`
   min-height: 28px;
 
   border-radius: 2px;
-  background-color: ${p => p.theme.field.backgroundColor};
-  //border: 1px solid ${p => p.theme.accentColor.base};
+  //background-color: ${p => p.theme.field.backgroundColor};
+  border: 1px solid ${p => p.theme.accentColor.base};
 `;
 
 export function createPriceOverviewTagsData(
   price?: IPriceListItem
 ): { title: string; amount?: number; percentage?: number }[] {
   return [
-    { title: t('Price'), amount: price?.in },
-    { title: t('Cost'), amount: price?.out },
+    { title: t('Input'), amount: price?.in },
+    { title: t('Output'), amount: price?.out },
     {
       title: t('Commission'),
       ...price?.commission,
