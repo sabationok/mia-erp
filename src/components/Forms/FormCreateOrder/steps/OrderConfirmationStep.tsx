@@ -3,7 +3,7 @@ import FlexBox from '../../../atoms/FlexBox';
 import { useOrdersSelector } from 'redux/selectors.store';
 import { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
-import { IOrderTempSlot } from 'types/orders.types';
+import { IOrderTempSlot } from 'types/orders/orders.types';
 import { IWarehouse } from '../../../../types/warehouses.types';
 import OrderGroupItem from '../components/OrderGroupItem';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';

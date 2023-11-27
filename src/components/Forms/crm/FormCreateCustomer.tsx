@@ -16,6 +16,8 @@ import { useMemo } from 'react';
 import { ConfigService } from '../../../services';
 import { BusinessSubjectTypeEnum } from '../../../types/companies.types';
 import _ from 'lodash';
+import { UseFormReturn } from 'react-hook-form/dist/types';
+import { IEmbeddedLabel, IEmbeddedName } from '../../../types/utils.types';
 
 const isDevMode = ConfigService.isDevMode();
 
@@ -26,7 +28,7 @@ export interface FormCreateCustomerProps extends Omit<ModalFormProps<any, any, I
 
 const engagementSourceOptions = enumToFilterOptions(EngagementSource);
 const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({ defaultState, withReferer, onSubmit, ...p }) => {
-  const { register, setValue, handleSubmit, watch } = useForm<ICustomerFormData>({
+  const { register, setValue, handleSubmit, watch, ...form } = useForm<ICustomerFormData>({
     defaultValues: { ...defaultState, businessType: BusinessSubjectTypeEnum.company },
   });
   const formValues = watch();
@@ -38,7 +40,7 @@ const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({ defaultState, w
   };
 
   return (
-    <ModalForm {...p} title={p.title ? p.title : t('Create customer')} onSubmit={handleSubmit(onValid)}>
+    <ModalForm fillHeight {...p} title={p.title ? p.title : t('Create customer')} onSubmit={handleSubmit(onValid)}>
       <Inputs padding={'0 8px 8px'}>
         <InputLabel label={t('type')} required>
           <ButtonsGroup
@@ -49,13 +51,13 @@ const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({ defaultState, w
           />
         </InputLabel>
 
-        <InputLabel label={t('name')} required>
-          <InputText placeholder={t('name')} {...register('name')} required />
-        </InputLabel>
+        {formValues.businessType !== BusinessSubjectTypeEnum.person && (
+          <FormCustomerLabelInputs form={{ register, setValue, handleSubmit, watch, ...form }} />
+        )}
 
-        <InputLabel label={t('secondName')}>
-          <InputText placeholder={t('secondName')} {...register('secondName')} />
-        </InputLabel>
+        {formValues.businessType !== BusinessSubjectTypeEnum.company && (
+          <FormCustomerNameInputs form={{ register, setValue, handleSubmit, watch, ...form }} />
+        )}
 
         <InputLabel label={t('email')} disabled={isEditMode} required>
           <InputText
@@ -71,9 +73,11 @@ const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({ defaultState, w
           <InputText placeholder={t('phone')} {...register('phone')} />
         </InputLabel>
 
-        <InputLabel label={t('Birth date')}>
-          <InputText placeholder={t('Birth date')} {...register('birthDate')} type={'datetime-local'} />
-        </InputLabel>
+        {formValues.businessType !== BusinessSubjectTypeEnum.company && (
+          <InputLabel label={t('Birth date')}>
+            <InputText placeholder={t('Birth date')} {...register('birthDate')} type={'datetime-local'} />
+          </InputLabel>
+        )}
 
         {withReferer && isDevMode && (
           <InputLabel label={t('Referrer id')}>
@@ -111,4 +115,43 @@ const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({ defaultState, w
   );
 };
 const Inputs = styled(FlexBox)``;
+
+const FormCustomerNameInputs: React.FC<{ form: UseFormReturn<ICustomerFormData> }> = ({ form }) => {
+  const inputs: { name: keyof IEmbeddedName; label: string; required?: boolean }[] = [
+    { name: 'first', label: t('First name'), required: true },
+    { name: 'second', label: t('Second name') },
+    { name: 'middle', label: t('Middle name') },
+  ];
+
+  return (
+    <>
+      {inputs.map(({ name, label, required }) => {
+        return (
+          <InputLabel key={`name_${name}`} label={label} required={required}>
+            <InputText placeholder={label} {...form.register(`name.${name}`, { required })} required={required} />
+          </InputLabel>
+        );
+      })}
+    </>
+  );
+};
+
+const FormCustomerLabelInputs: React.FC<{ form: UseFormReturn<ICustomerFormData> }> = ({ form }) => {
+  const inputs: { name: keyof IEmbeddedLabel; label: string; required?: boolean }[] = [
+    { name: 'base', label: t('Label'), required: true },
+    { name: 'print', label: t('Print label') },
+  ];
+
+  return (
+    <>
+      {inputs.map(({ name, label, required }) => {
+        return (
+          <InputLabel key={`name_${name}`} label={label} required={required}>
+            <InputText placeholder={label} {...form.register(`label.${name}`, { required })} required={required} />
+          </InputLabel>
+        );
+      })}
+    </>
+  );
+};
 export default FormCreateCustomer;

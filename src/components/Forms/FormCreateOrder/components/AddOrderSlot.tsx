@@ -1,6 +1,6 @@
 import ExtraFooterWithButton from '../../../atoms/ExtraFooterWithButton';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
-import { IOrderTempSlot } from '../../../../types/orders.types';
+import { IOrderTempSlot } from '../../../../types/orders/orders.types';
 import { t } from '../../../../lang';
 import { Modals } from '../../../Modals';
 

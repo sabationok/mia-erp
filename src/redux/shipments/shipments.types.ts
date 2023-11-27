@@ -1,5 +1,5 @@
 import { AddressDto, IBase, IFormDataValueWithID, OnlyUUID } from '../global.types';
-import { IOrder, IOrderSlot } from '../../types/orders.types';
+import { IOrder, IOrderSlot } from '../../types/orders/orders.types';
 import { IPayment } from '../../types/payments.types';
 import { IInvoice } from '../../types/invoices.types';
 import { IDelivery } from '../../types/deliveries.types';

@@ -32,8 +32,13 @@ const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElem
           </ButtonIcon>
         )}
 
-        <ButtonIcon type={onSubmitPassed ? 'submit' : 'reset'} variant="filledSmall" disabled={isLoading || !isValid}>
-          {onSubmitPassed ? (isLoading ? t('Loading...') : t('Save')) : t('Close')}
+        <ButtonIcon
+          type={onSubmitPassed ? 'submit' : 'reset'}
+          variant={'filledSmall'}
+          isLoading={isLoading}
+          disabled={!isValid}
+        >
+          {isLoading ? t('Loading...') : onSubmitPassed ? t('Save') : t('Close')}
         </ButtonIcon>
       </FlexBox>
     </Footer>

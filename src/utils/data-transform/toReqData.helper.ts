@@ -1,16 +1,18 @@
 import _, { omit } from 'lodash';
 import { OnlyUUID } from '../../redux/global.types';
 
-export function toReqData<IncomeDataType extends Record<string, any> = any>(
+export function toReqData<IncomeDataType extends Record<string, any> = any, OmitPath extends string = string>(
   incomeData: IncomeDataType,
   options?: {
-    omitPathArr?: (keyof IncomeDataType | string)[];
-    dateToNumberPath?: keyof IncomeDataType | string;
-    amountToNumberPath?: keyof IncomeDataType | string;
-    checkArrayPath?: keyof IncomeDataType | string;
-    ignorePaths?: (keyof IncomeDataType)[];
+    omitPathArr?: OmitPath[];
+    dateToNumberPath?: string;
+    amountToNumberPath?: string;
+    checkArrayPath?: string;
+    ignorePaths?: string[];
   }
 ): Partial<IncomeDataType> {
+  console.log(options?.omitPathArr);
+
   const inputCopy = omit(incomeData, ['_id', 'createdAt', 'updatedAt', ...(options?.omitPathArr || [])]);
 
   let outData: Record<string, any> = {};
@@ -65,7 +67,12 @@ export function toReqData<IncomeDataType extends Record<string, any> = any>(
           })
         ) {
         }
-        const recursiveRes = toReqData(value);
+        const recursiveRes = toReqData(value, {
+          ...options,
+          omitPathArr: options?.omitPathArr
+            ?.filter(omiPath => omiPath.startsWith(key))
+            .map(omiPath => omiPath.replace(`${key}.`, '')) as never,
+        });
         // console.log('recursive call', { key }, { value }, { recursiveRes });
 
         if (Object.keys(recursiveRes).length > 0) {

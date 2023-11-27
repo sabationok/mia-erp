@@ -8,9 +8,17 @@ import {
   IFormDataValueWithID,
   OnlyUUID,
 } from '../redux/global.types';
-import { IOrder } from './orders.types';
+import { IOrder } from './orders/orders.types';
 import { BusinessSubjectTypeEnum } from './companies.types';
-import { MaybeNull } from './utils.types';
+import {
+  AppDate,
+  HasCompany,
+  HasEmbeddedLabel,
+  HasEmbeddedName,
+  HasMagicLink,
+  HasTaxCode,
+  MaybeNull,
+} from './utils.types';
 
 export enum CustomerTypeEnum {
   active = 'active',
@@ -31,25 +39,21 @@ export interface HasReceiver {
   receiver?: MaybeNull<ICustomer>;
 }
 
-export interface ICustomerBase extends IBase {
-  label?: string;
-  name?: string;
-  secondName?: string;
+export interface ICustomerBase extends IBase, HasEmbeddedLabel, HasEmbeddedName, HasTaxCode {
   email?: string;
   phone?: string;
   age?: string;
-  taxCode?: string;
-  personalTaxCode?: string;
-  type?: CustomerTypeEnum;
-  businessType?: BusinessSubjectTypeEnum;
 
-  birthDate?: string | number | Date;
+  birthDate?: AppDate;
+
   avatarURL?: string;
   tags?: string[];
 
+  type?: CustomerTypeEnum;
+  businessType?: BusinessSubjectTypeEnum;
   engagementSource?: EngagementSource;
 }
-export interface ICustomer extends ICustomerBase {
+export interface ICustomer extends ICustomerBase, HasMagicLink, HasCompany {
   orders?: IOrder[];
 
   referer?: ICustomer;

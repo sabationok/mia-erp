@@ -6,14 +6,22 @@ export const customersColumns: CellTittleProps<ICustomer>[] = [
   {
     top: {
       name: `${t('label')}/${t('name')}`,
-      getData: d => d?.label || `${d?.name || '---'} ${d?.secondName || '---'}`,
+      getData: d => {
+        const entry = d.label ?? d.name;
+
+        return entry
+          ? Object.values(entry)
+              .map(value => value ?? '')
+              .join(' ')
+          : '---';
+      },
     },
-    bottom: { name: 'ІПН/ЄДРПОУ', getData: d => (d.personalTaxCode || '---') + '/' + (d.taxCode || '---') },
+    bottom: { name: 'ІПН/ЄДРПОУ', getData: d => (d.taxCode?.personal || '---') + '/' + (d.taxCode?.corp || '---') },
     width: '240px',
     action: 'doubleDataWithAvatar',
   },
   {
-    top: { name: 'Тип', path: 'type', getData: d => d?.type },
+    top: { name: 'Тип', getData: d => d?.type },
     bottom: { name: 'Статус', path: 'status' },
     width: '120px',
     action: 'valueByPath',

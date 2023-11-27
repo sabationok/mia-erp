@@ -1,4 +1,4 @@
-import { IOrder } from '../../types/orders.types';
+import { IOrder } from '../../types/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import { ModalHeader } from '../atoms';
 import React, { useMemo, useState } from 'react';

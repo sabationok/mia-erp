@@ -1,4 +1,4 @@
-import { IOrderTempSlot } from '../../types/orders.types';
+import { IOrderTempSlot } from '../../types/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import styled, { useTheme } from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';

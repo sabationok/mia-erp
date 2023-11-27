@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ICreateOrdersGroupFormState, IOrder, IOrdersGroup } from '../../types/orders.types';
+import { ICreateOrdersGroupFormState, IOrder, IOrdersGroup } from '../../types/orders/orders.types';
 
 import {
   AddSlotToGroupAction,

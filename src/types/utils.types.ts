@@ -100,21 +100,27 @@ export interface HasMethod<Method extends ServiceMethodBase = any> {
   method?: MaybeNull<Method>;
 }
 
+export interface HasName {
+  name?: MaybeNull<string>;
+}
 export interface IEmbeddedName {
   first?: MaybeNull<string>;
   second?: MaybeNull<string>;
   middle?: MaybeNull<string>;
 }
 
-export interface HasName<T extends string | IEmbeddedName = string> {
-  name?: MaybeNull<T>;
+export interface HasEmbeddedName {
+  name?: MaybeNull<IEmbeddedName>;
 }
 
+// ? LABEL
+export interface HasLabel {
+  label?: MaybeNull<string>;
+}
 export interface IEmbeddedLabel {
   base?: MaybeNull<string>;
   print?: MaybeNull<string>;
 }
-
 export interface HasEmbeddedLabel {
   label?: MaybeNull<IEmbeddedLabel>;
 }
@@ -122,13 +128,11 @@ export interface HasEmbeddedLabel {
 export interface HasLabelsLangPack {
   labels?: MaybeNull<LangPack>;
 }
-
+export interface HasTaxCode {
+  taxCode?: MaybeNull<{ corp?: MaybeNull<string>; personal?: MaybeNull<string> }>;
+}
 export interface HasMagicLink {
   magicLink?: MaybeNull<string>;
-}
-
-export interface HasLabel<T extends string | IEmbeddedLabel = string> {
-  label?: MaybeNull<T>;
 }
 
 export interface HasDescription {

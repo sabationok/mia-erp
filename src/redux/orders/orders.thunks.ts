@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { IOrder, IOrderReqData } from '../../types/orders.types';
+import { IOrder, IOrderReqData } from '../../types/orders/orders.types';
 import { ThunkPayload } from '../store.store';
 import { AppQueryParams, createApiCall, OrdersApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';

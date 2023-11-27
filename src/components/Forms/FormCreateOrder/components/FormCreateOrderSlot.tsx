@@ -20,7 +20,7 @@ import { usePropertiesSelector } from '../../../../redux/selectors.store';
 import VariationsApi from '../../../../api/variations.api';
 import { transformVariationTableData } from '../../../../utils/tables';
 import { getIdRef } from '../../../../utils/data-transform';
-import { IOrderTempSlot } from '../../../../types/orders.types';
+import { IOrderTempSlot } from '../../../../types/orders/orders.types';
 import { IProductInventory, IWarehouse } from '../../../../types/warehouses.types';
 import { warehouseBatchColumns } from '../../../../data/warehauses.data';
 import { useStepsHandler } from '../../../../utils/createStepChecker';

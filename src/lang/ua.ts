@@ -3,7 +3,7 @@ import { ContractorsTypesEnum } from '../redux/directories/contractors.types';
 import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../types/companies.types';
 import { WarehouseDocumentType } from '../types/warehouses.types';
 import { MeasurementUnit } from '../types/products.types';
-import { OrderStatusEnum } from '../types/orders.types';
+import { OrderStatusEnum } from '../types/orders/orders.types';
 
 export const langUa = {
   // DIRECTORIES

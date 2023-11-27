@@ -24,14 +24,16 @@ const CustomerInfoComponent = ({
         visible && (
           <FlexBox
             key={label}
-            gap={4}
+            gap={2}
             padding={'4px'}
             flex={'1 1 50%'}
             maxWidth={'50%'}
             border={`1px solid ${theme.modalBorderColor}`}
           >
-            <Text $size={12}>{label}</Text>
-            <Text $align={'right'}>{getValue(info)}</Text>
+            <Text $size={10}>{label}</Text>
+            <Text $align={'right'} $size={12} $weight={600}>
+              {getValue(info)}
+            </Text>
           </FlexBox>
         )
       );
@@ -48,14 +50,15 @@ const CustomerInfoComponent = ({
 export default CustomerInfoComponent;
 function getCustomerInfoComponentCells({ isManager }: { info?: ICustomer; isReceiver?: boolean; isManager?: boolean }) {
   return [
-    { label: t('label'), getValue: (info?: ICustomer) => info?.label || '---', visible: !isManager },
-    { label: t('name'), getValue: (info?: ICustomer) => info?.name || '---', visible: true },
-    { label: t('secondName'), getValue: (info?: ICustomer) => info?.secondName || '---', visible: true },
+    { label: t('label'), getValue: (info?: ICustomer) => info?.label?.base || '---', visible: !isManager },
+    { label: t('name'), getValue: (info?: ICustomer) => info?.name?.first || '---', visible: true },
+    { label: t('Middle name'), getValue: (info?: ICustomer) => info?.name?.middle || '---', visible: true },
+    { label: t('secondName'), getValue: (info?: ICustomer) => info?.name?.second || '---', visible: true },
     { label: t('email'), getValue: (info?: ICustomer) => info?.email || '---', visible: true },
-    { label: t('taxCode'), getValue: (info?: ICustomer) => info?.taxCode || '---', visible: !isManager },
+    { label: t('taxCode'), getValue: (info?: ICustomer) => info?.taxCode?.corp || '---', visible: !isManager },
     {
       label: t('personalTaxCode'),
-      getValue: (info?: ICustomer) => info?.personalTaxCode || '---',
+      getValue: (info?: ICustomer) => info?.taxCode?.personal || '---',
       visible: !isManager,
     },
     { label: t('tags'), getValue: (info?: ICustomer) => info?.tags?.join(', ') || '---', visible: !isManager },

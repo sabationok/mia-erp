@@ -1,10 +1,12 @@
 import ModalForm, { ModalFormProps } from '../ModalForm';
-import { IOrder } from '../../types/orders.types';
+import { IOrder } from '../../types/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
 import FormAccordionItem from '../Forms/components/FormAccordionItem';
 import { FormCreateOrderTabs } from '../Forms/FormCreateOrder/FormCreateOrder';
 import { useState } from 'react';
+import { t } from '../../lang';
+import { getCustomerFullNameOrLabel } from '../../utils';
 
 export interface OrderOverviewProps extends Omit<ModalFormProps, 'onSubmit'> {
   order?: IOrder;
@@ -110,29 +112,45 @@ const mainOrderInfo: OrderInfoBoxProps[] = [
   { label: 'Створив / Дата', getData: o => new Date(o.createdAt || '').getDate() },
   { label: 'Оновив / Дата', getData: o => new Date(o.deletedAt || '').getDate() },
 ];
+
 const orderCustomerInfo: OrderInfoBoxProps[] = [
   { label: 'ID', getData: o => o.customer?._id },
   {
-    label: 'ПІП',
-    getData: o =>
-      !o.customer?.label ? `${o.customer?.name || ''} ${o.customer?.secondName || ''}` : `${o.customer?.label || ''}`,
+    label: `${t('Name')}/${t('Label')}`,
+    getData: o => (o?.customer ? getCustomerFullNameOrLabel(o?.customer) : '---'),
   },
   // { label: 'Статус', getData: o => o.customer?.status },
   { label: 'Телефон', getData: o => o.customer?.phone },
   { label: 'Емейл', getData: o => o.customer?.email },
-  { label: 'Способи комунікації', getData: o => o?.communication?.customer?.map(m => m).join(', ') },
+  { label: 'Способи комунікації', getData: o => o?.communication?.customer?.map(m => m?.label ?? '').join(', ') },
 ];
+
+// function getCustomerInfoColumns(info: ICustomer, communication?: ICommunicationMethod[]) {
+//   const arr: OrderInfoBoxProps[] = [
+//     { label: 'Ref ID', getData: o => info?._id },
+//     {
+//       label: `${t('Name')}/${t('Label')}`,
+//       getData: o => (info ? getCustomerFullNameOrLabel(o?.customer) : '---'),
+//     },
+//     // { label: 'Статус', getData: o => info?.status },
+//     { label: 'Телефон', getData: o => info?.phone },
+//     { label: 'Емейл', getData: o => info?.email },
+//     { label: 'Способи комунікації', getData: o => communication?.map(m => m?.label ?? '').join(', ') },
+//   ];
+//
+//   return arr;
+// }
+
 const orderReceiverInfo: OrderInfoBoxProps[] = [
   { label: 'ID', getData: o => o.receiver?._id },
   {
     label: 'ПІП',
-    getData: o =>
-      !o.receiver?.label ? `${o.receiver?.name || ''} ${o.receiver?.secondName || ''}` : `${o.receiver?.label || ''}`,
+    getData: o => (o?.receiver ? getCustomerFullNameOrLabel(o?.receiver) : '---'),
   },
   // { label: 'Статус', getData: o => o.receiver?.status },
   { label: 'Телефон', getData: o => o.receiver?.phone },
   { label: 'Емейл', getData: o => o.receiver?.email },
-  { label: 'Способи комунікації', getData: o => o?.communication?.receiver?.map(m => m).join(', ') },
+  { label: 'Способи комунікації', getData: o => o?.communication?.receiver?.map(m => m?.label ?? '').join(', ') },
 ];
 // const orderAdditionalInfo: OrderInfoBoxProps[] = [
 //   { label: 'Коментар', getData: o => o.comment },

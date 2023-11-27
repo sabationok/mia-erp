@@ -88,6 +88,38 @@ const DoubleDataWithAvatarCell: React.FC<IDataCellProps> = ({ width, content, su
   );
 };
 
+const DataWithAvatarCell: React.FC<Omit<IDataCellProps, 'subContent'>> = ({
+  width,
+  content,
+  imgUrl,
+  imgPreviewIcon,
+}) => {
+  return (
+    <CellDoubleDataWithAvatar style={{ width }}>
+      <AvatarBox>
+        <Avatar
+          src={imgUrl}
+          shape={'square'}
+          style={{ borderRadius: '2px' }}
+          icon={
+            <FlexBox fillWidth fillHeight alignItems={'center'} justifyContent={'center'}>
+              <SvgIcon icon={imgPreviewIcon || 'gallery'} size={'80%'} fill={'#fff'} />
+            </FlexBox>
+          }
+        />
+      </AvatarBox>
+
+      <CellBase>
+        <Content align={content?.align} uppercase={content?.uppercase} fontWeight={500} fontSize={'12px'}>
+          <div title={content?.data || ''} className="inner">
+            {content?.data}
+          </div>
+        </Content>
+      </CellBase>
+    </CellDoubleDataWithAvatar>
+  );
+};
+
 const DoubleStatusCell: React.FC<IDataCellProps<StatusNames>> = ({ width, content, subContent }) => {
   return (
     <CellDoubleData style={{ width }}>
@@ -169,6 +201,7 @@ const Cell = {
   Simple: SimpleDataCell,
   Double: DoubleDataCell,
   DoubleWithAvatar: DoubleDataWithAvatarCell,
+  DataWithAvatar: DataWithAvatarCell,
   DoubleStatus: DoubleStatusCell,
 };
 

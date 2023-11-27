@@ -13,7 +13,7 @@ import {
 } from './utils.types';
 
 import { IInvoice } from './invoices.types';
-import { IOrder } from './orders.types';
+import { IOrder } from './orders/orders.types';
 import { ICustomerBase } from './customers.types';
 
 export enum DeliveryStatusTypeEnum {

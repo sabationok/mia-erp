@@ -1,7 +1,7 @@
 import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { ITableListContext, TableActionCreator } from '../components/TableList/tableTypes.types';
-import { IOrder } from '../types/orders.types';
+import { IOrder } from '../types/orders/orders.types';
 import { Modals } from '../components/Modals';
 import { useNavigate } from 'react-router-dom';
 import { ExtractIdString } from '../utils/data-transform';

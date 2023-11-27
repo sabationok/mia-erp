@@ -1,6 +1,10 @@
 import baseApi from './baseApi';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
-import { IAllOrdersRes, ICreateOrdersWithSlotsAndGroupByWarehousesReqData, IOrderRes } from '../types/orders.types';
+import {
+  IAllOrdersRes,
+  ICreateOrdersWithSlotsAndGroupByWarehousesReqData,
+  IOrderRes,
+} from '../types/orders/orders.types';
 import { AppQueryParams } from './index';
 
 export default class OrdersApi {

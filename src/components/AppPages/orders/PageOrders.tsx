@@ -8,7 +8,7 @@ import { useOrdersSelector } from '../../../redux/selectors.store';
 import { ISortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import { ordersSearchParams, ordersTableColumns } from '../../../data/orders.data';
-import { IOrder, OrderStatusEnum } from '../../../types/orders.types';
+import { IOrder, OrderStatusEnum } from '../../../types/orders/orders.types';
 import useOrdersActionsCreatorHook from '../../../hooks/useOrdersActionsCreator.hook';
 import { BaseAppPageProps } from '../index';
 import { enumToFilterOptions } from '../../../utils/fabrics';

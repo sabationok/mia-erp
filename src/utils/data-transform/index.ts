@@ -10,6 +10,9 @@ export * from './toTrReqData.helper';
 export * from './toVariationFormData.helper';
 export * from './toVariationReqData.helper';
 export * from './toOfferFormData.helper';
+export * from './toOrderSlotForReq.helper';
+export * from './toOrderInfoReqData.helper';
+export * from './getCustomerFullNameOrLabel.helper';
 
 // const isDevMode = ConfigService.isDevMode();
 

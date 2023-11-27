@@ -1,6 +1,6 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { IOrder, IOrderSlot } from '../../../types/orders.types';
+import { IOrder, IOrderSlot } from '../../../types/orders/orders.types';
 import { useAppForm } from '../../../hooks';
 import { useCallback, useMemo, useState } from 'react';
 import ModalFilter from '../../ModalForm/ModalFilter';

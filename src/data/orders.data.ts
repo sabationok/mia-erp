@@ -1,5 +1,5 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { IOrder, IOrderSlot, OrderStatusEnum } from '../types/orders.types';
+import { IOrder, IOrderSlot, OrderStatusEnum } from '../types/orders/orders.types';
 import { t } from '../lang';
 import { SelectItem } from '../components/TableList/tableTypes.types';
 import { FilterOption } from '../components/ModalForm/ModalFilter';

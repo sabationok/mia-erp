@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import sprite, { IconIdType } from 'img/sprite';
 import styled, { css, DefaultTheme, FlattenInterpolation, ThemeProps } from 'styled-components';
 import { Property } from 'csstype';
+import { AppLoaderSpiner } from '../AppLoaderSpiner';
 
 type TextTransform = 'uppercase' | 'lowercase' | 'capitalize' | 'none';
 
@@ -33,6 +34,7 @@ interface ButtonProps extends ButtonIconStyleProps {
   endIconStyles?: {};
   textTransform?: TextTransform;
   fontWeight?: 400 | 500 | 600 | 700 | 900;
+  isLoading?: boolean;
 }
 
 export type ButtonIconProps = ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
@@ -51,6 +53,7 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
   endIconId = '',
   endIconSize = '18px',
   endIconStyles = {},
+  isLoading,
   onClick = () => {
     console.log('ButtonIcon click');
   },
@@ -86,6 +89,7 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
         onClick,
         className: 'buttonIcon',
         ...props,
+        disabled: isLoading ?? undefined,
       }}
     >
       {(iconId || icon) && (
@@ -94,7 +98,7 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
         </SvgIcon>
       )}
 
-      {variant && !variant.includes('Icon') && children}
+      {isLoading ? <AppLoaderSpiner strokeWidth={3} size={18} /> : variant && !variant.includes('Icon') && children}
 
       {(endIconId || endIcon) && (
         <SvgIcon className="endIcon" style={endIconStyle}>
@@ -138,10 +142,10 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
 
   &[disabled] {
     pointer-events: none;
-    opacity: 0.6;
     cursor: default;
-    //fill: ${({ theme }) => theme.field.backgroundColor};
-    //color: ${({ theme }) => theme.modalBorderColor};
+    opacity: 0.75;
+    fill: ${({ theme }) => theme.field.backgroundColor};
+    color: ${({ theme }) => theme.fontColor};
   }
   padding: ${p => p.padding};
 

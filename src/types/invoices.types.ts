@@ -1,5 +1,5 @@
 import { IBase, IFormDataValueWithID } from '../redux/global.types';
-import { IOrder, IOrderSlot } from './orders.types';
+import { IOrder, IOrderSlot } from './orders/orders.types';
 import { IInvoicingMethod } from './integrations.types';
 import { HasAmount, HasExpireDate, HasMagicLink, HasMethod, MaybeNull } from './utils.types';
 import { IDelivery } from './deliveries.types';

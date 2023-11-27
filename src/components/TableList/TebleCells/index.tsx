@@ -7,6 +7,7 @@ import CellTags from './CellTags';
 import CellValueByPath from './CellValueByPath';
 import CellTextDblAndAvatar from './CellTextDblAndAvatar';
 import CellNumberWithSpaces from './CellNumberWithSpaces';
+import CellTextAndAvatar from './CellTextAndAvatar';
 
 export const CellsMap = {
   cell: Cell,
@@ -18,6 +19,7 @@ export const CellsMap = {
   tags: CellTags,
   valueByPath: CellValueByPath,
   doubleDataWithAvatar: CellTextDblAndAvatar,
+  dataWithAvatar: CellTextAndAvatar,
   numberWithSpaces: CellNumberWithSpaces,
 };
 
