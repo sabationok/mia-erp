@@ -4,6 +4,7 @@ import { ICompanyBase } from './companies.types';
 import { IUserBase } from './auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';
 import { OutputIntegrationBase } from './integrations.types';
+import { HasExpireDate, HasStatus } from './utils.types';
 
 export enum PermissionStatus {
   PENDING = 'PENDING',
@@ -12,17 +13,20 @@ export enum PermissionStatus {
   BANED = 'BANED',
 }
 
-export interface IPermission extends IBase {
+export interface IPermission extends IBase, HasStatus<PermissionStatus>, HasExpireDate {
   company?: Partial<ICompanyBase>;
+
   user?: Partial<IUserBase>;
   integration?: Partial<OutputIntegrationBase>;
+
   owner?: Partial<IUserBase>;
+
   role?: Partial<ICustomRole>;
+
   email?: string;
-  status?: PermissionStatus;
   code?: string | number;
-  expireAt?: number | Date;
   permission_token?: string;
+  access_token?: string;
 }
 
 export interface IPermissionForReq {

@@ -1,12 +1,11 @@
-import { AddressDto, AppResponse, IBase, IFormDataValueWithID, MagicLinkRef, OnlyUUID } from '../redux/global.types';
+import { AppResponse, IBase, OnlyUUID } from '../redux/global.types';
 import { IPriceBase, IPriceListItem } from './priceManagement.types';
-import { IUserBase } from './auth.types';
-import { ICustomerBase } from './customers.types';
+import { HasCustomer, HasReceiver } from './customers.types';
 import { AppQueryParams } from '../api';
 import { ICommunicationMethod } from './integrations.types';
 import {
-  AppDate,
-  FormDataLocationRefs,
+  HasCompany,
+  HasExecuteDate,
   HasExtRef,
   HasMagicLink,
   HasManager,
@@ -14,7 +13,6 @@ import {
   HasQuantity,
   HasStatus,
   HasTotal,
-  LocationRefsDto,
   MaybeNull,
 } from './utils.types';
 import { IProduct } from './products.types';
@@ -23,20 +21,26 @@ import { IInvoice } from './invoices.types';
 import { IDelivery } from './deliveries.types';
 import { IPayment } from './payments.types';
 import { IVariation } from './variations.types';
+import { ICreateOrderInfoFormState } from './orders/createOrderInfoFormState.types';
+import { ICreateOrderInfoDto } from './orders/createOrderInfoDto.types';
 
 export enum OrderTypeEnum {
   Order = 'Order',
   Group = 'Group',
 }
+
 export interface HasOrdersGroup {
   group?: MaybeNull<IOrdersGroup>;
 }
+
 export interface HasOrder {
   order?: MaybeNull<IOrder>;
 }
+
 export interface HasOrdersList {
   orders?: MaybeNull<IOrder[]>;
 }
+
 export enum OrderStatusEnum {
   new = 'order_new',
   inWork = 'order_inWork',
@@ -81,78 +85,38 @@ export interface OrderTotals {
   items?: number;
   amount?: number;
 }
-export interface IOrdersGroup extends IBase, HasMagicLink {
-  orders?: IOrder[];
-}
 
-export interface IOrder
-  extends IBase,
-    HasOwnerAsCompany,
-    MagicLinkRef,
-    HasManager,
-    HasExtRef,
-    HasStatus<OrderStatusEnum> {
-  group?: IOrdersGroup;
+export interface IOrdersGroup extends IBase, HasMagicLink, HasOrdersList {}
 
-  receiver?: ICustomerBase;
-  customer?: ICustomerBase;
+// HasInvoicesList,
+// HasDeliveriesList,
+// HasOrdersGroup,
+// HasPaymentsList,
+// HasSlotsList<IOrderSlot>
+export type IOrder = IBase &
+  HasOwnerAsCompany &
+  HasMagicLink &
+  HasManager &
+  HasExtRef &
+  HasExecuteDate &
+  HasStatus<OrderStatusEnum> &
+  HasCompany &
+  HasCustomer &
+  HasReceiver & {
+    group?: IOrdersGroup;
+    payments?: IPayment[];
+    slots?: IOrderSlot[];
+    deliveries?: IDelivery[];
+    invoices?: IInvoice[];
 
-  barCode?: string;
-  code?: string;
-
-  communication?: {
-    customer?: ICommunicationMethod[];
-    receiver?: ICommunicationMethod[];
-  };
-
-  total?: OrderTotals;
-  executeAt?: AppDate;
-  executeNow?: boolean;
-
-  payments?: IPayment[];
-  invoices?: IInvoice[];
-  deliveries?: IDelivery[];
-
-  slots?: IOrderSlot[];
-}
-
-export interface ICreateOrderInfoFormState {
-  customer?: ICustomerBase;
-  receiver?: ICustomerBase;
-
-  manager?: {
-    _id: string;
-    user?: Partial<IUserBase>;
-  };
-
-  communication?: {
-    customer?: string[];
-    receiver?: string[];
-  };
-
-  invoiceInfo?: {
-    method?: IFormDataValueWithID;
-    expiredAt?: AppDate;
-  };
-
-  executeAt?: AppDate;
-  executeNow?: boolean;
-
-  shipmentInfo?: {
-    executeAt?: AppDate;
-    executeNow?: boolean;
-  };
-  deliveryInfo?: {
-    method?: IFormDataValueWithID;
-    destinationRefs?: FormDataLocationRefs;
-    destination?: AddressDto;
-
-    invoiceInfo?: {
-      method?: IFormDataValueWithID;
-      expiredAt?: AppDate;
+    barCode?: string;
+    code?: string;
+    communication?: {
+      customer?: ICommunicationMethod[];
+      receiver?: ICommunicationMethod[];
     };
+    total?: OrderTotals;
   };
-}
 
 export interface ICreateOrdersGroupFormState {
   slots: IOrderTempSlot[];
@@ -167,37 +131,8 @@ export interface IOrderRes extends AppResponse<IOrder> {}
 
 export interface IOrderReqData {
   _id?: string;
-  data: IOrderBaseDto;
+  data: ICreateOrderInfoDto;
   params?: AppQueryParams;
-}
-
-export interface ICreateOrderInfoDto {
-  manager?: OnlyUUID;
-  customer?: OnlyUUID;
-  receiver?: OnlyUUID;
-  communication?: {
-    customer?: string[];
-    receiver?: string[];
-  };
-
-  invoiceInfo?: {
-    method?: OnlyUUID;
-    expiredAt?: AppDate;
-  };
-  shipmentInfo?: {
-    executeAt?: AppDate;
-    executeNow?: boolean;
-  };
-  deliveryInfo?: {
-    method?: OnlyUUID;
-    locationRefs?: LocationRefsDto;
-    destination?: AddressDto;
-
-    invoiceInfo?: {
-      method?: OnlyUUID;
-      expiredAt?: AppDate;
-    };
-  };
 }
 
 export interface ICreateOrdersGroupDto {
@@ -208,34 +143,4 @@ export interface ICreateOrdersGroupDto {
 export interface ICreateOrdersWithSlotsAndGroupByWarehousesReqData {
   data: ICreateOrdersGroupDto;
   params?: AppQueryParams;
-}
-
-export interface IOrderBaseDto {
-  manager?: OnlyUUID;
-  customer?: ICustomerBase | OnlyUUID;
-  receiver?: ICustomerBase | OnlyUUID;
-  communication?: {
-    customer?: string[];
-    receiver?: string[];
-  };
-  status?: OrderStatusEnum;
-  invoiceInfo?: {
-    method?: OnlyUUID;
-    expiredAt?: AppDate;
-  };
-  executeAt?: AppDate;
-  executeNow?: boolean;
-  shipmentInfo?: {
-    executeAt?: AppDate;
-    executeNow?: boolean;
-  };
-  deliveryInfo?: {
-    method?: OnlyUUID;
-    destination?: AddressDto | string;
-
-    invoiceInfo?: {
-      method?: OnlyUUID;
-      expiredAt?: AppDate;
-    };
-  };
 }

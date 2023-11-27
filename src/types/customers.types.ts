@@ -24,7 +24,7 @@ export enum EngagementSource {
 }
 
 export interface HasCustomer {
-  receiver?: MaybeNull<ICustomer>;
+  customer?: MaybeNull<ICustomer>;
 }
 
 export interface HasReceiver {

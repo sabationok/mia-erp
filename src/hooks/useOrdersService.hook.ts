@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useAppDispatch } from '../redux/store.store';
 import { OnlyUUID, ServiceDispatcher, ServiceDispatcherAsync } from '../redux/global.types';
-import { ICreateOrderInfoFormState, IOrder, IOrderReqData, IOrderTempSlot } from '../types/orders.types';
+import { IOrder, IOrderReqData, IOrderTempSlot } from '../types/orders.types';
 import { AppQueryParams } from '../api';
 import {
   AddSlotToGroupAction,
@@ -12,6 +12,7 @@ import {
 } from '../redux/orders/orders.actions';
 import { getAllOrdersThunk } from '../redux/orders/orders.thunks';
 import { defaultThunkPayload } from '../utils/fabrics';
+import { ICreateOrderInfoFormState } from '../types/orders/createOrderInfoFormState.types';
 
 type EmptyFn = (...args: any[]) => Promise<any>;
 

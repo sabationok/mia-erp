@@ -142,6 +142,9 @@ export interface HasSortOrder {
 export interface HasExpireDate {
   expireAt?: AppDate;
 }
+export interface HasExecuteDate {
+  executeAt?: MaybeNull<AppDate>;
+}
 
 export interface HasSlotsList<Slot = any> {
   slots?: MaybeNull<Slot[]>;

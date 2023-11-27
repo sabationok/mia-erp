@@ -6,7 +6,6 @@ import { t } from 'lang';
 import { Text } from 'components/atoms/Text';
 import FormAccordionItem from '../../components/FormAccordionItem';
 import InputLabel from 'components/atoms/Inputs/InputLabel';
-import { ICreateOrderInfoFormState } from 'types/orders.types';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import SelectCustomerModal from '../components/SelectCustomerModal';
@@ -29,6 +28,7 @@ import {
 } from '../../../../redux/selectors.store';
 import * as fns from 'date-fns';
 import { toInputValueDate } from '../../../../utils';
+import { ICreateOrderInfoFormState } from '../../../../types/orders/createOrderInfoFormState.types';
 
 export interface OrderInfoStepProps extends FormOrderStepBaseProps {
   isGroup?: boolean;
@@ -99,7 +99,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
           return setValue('shipmentInfo.executeAt', fns.format(fns.addDays(new Date(), 1), 'yyyy-MM-dd'));
         }
         if (name === 'hasDeliveryInvoice') {
-          return setValue('deliveryInfo.invoiceInfo.expiredAt', toInputValueDate(fns.addDays(new Date(), 1)));
+          return setValue('deliveryInfo.invoiceInfo.expireAt', toInputValueDate(fns.addDays(new Date(), 1)));
         }
       } else if (!value) {
         if (name === 'hasReceiverInfo') {
@@ -121,18 +121,6 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
   useEffect(() => {
     if (onChangeValidStatus) onChangeValidStatus(isValid);
   }, [isValid, onChangeValidStatus]);
-
-  useEffect(() => {
-    // const initData = {
-    //   hasDelivery: !!formValues.deliveryInfo,
-    //   hasDeliveryInvoice: !!formValues.deliveryInfo?.invoiceInfo,
-    //   hasReceiverInfo: !!formValues.receiver,
-    //   hasExecuteDate: !!formValues.shipmentInfo?.executeAt,
-    // };
-    console.debug('CURRENT CONFIRMS', confirms);
-    // setConfirms(initData);
-    // eslint-disable-next-line
-  }, [confirms]);
 
   return (
     <Inputs flex={1} overflow={'auto'}>

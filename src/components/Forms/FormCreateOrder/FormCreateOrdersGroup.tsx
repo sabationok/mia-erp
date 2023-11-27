@@ -11,13 +11,7 @@ import { t } from '../../../lang';
 import StepsController from '../components/StepsController';
 import OrderGroupsStuffingStep from './steps/OrderGroupsStuffingStep';
 import OrderInfoStep from './steps/OrderInfoStep';
-import {
-  ICreateOrderInfoDto,
-  ICreateOrderInfoFormState,
-  ICreateOrdersGroupDto,
-  IOrder,
-  IOrderTempSlot,
-} from '../../../types/orders.types';
+import { ICreateOrderInfoFormState, IOrder, IOrderTempSlot } from '../../../types/orders.types';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { ToastService } from '../../../services';
 import _ from 'lodash';
@@ -26,7 +20,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { orderInfoBaseSchema } from '../validation';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { createApiCall, OrdersApi } from '../../../api';
-import { getIdRef, toInputValueDate } from '../../../utils';
+import { toInputValueDate, transformOrderInfoForReq, transformOrderSlotsForReq } from '../../../utils';
 
 import * as fns from 'date-fns';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
@@ -44,8 +38,6 @@ export interface FormCreateOrdersGroupStepsData {
 export enum FormCreateOrdersGroupStepsEnum {
   Stuffing = 'Stuffing',
   Info = 'Info',
-  // Confirmation = 'Confirmation',
-  // Invoices = 'Invoices',
 }
 
 const steps = enumToFilterOptions(FormCreateOrdersGroupStepsEnum);
@@ -70,7 +62,7 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onSubmit,
       ...currentGroupFormState.info,
       invoiceInfo: {
         ...currentGroupFormState.info?.invoiceInfo,
-        expiredAt: currentGroupFormState.info?.invoiceInfo?.expiredAt ?? toInputValueDate(fns.addDays(new Date(), 1)),
+        expireAt: currentGroupFormState.info?.invoiceInfo?.expireAt ?? toInputValueDate(fns.addDays(new Date(), 1)),
       },
     },
     resolver: yupResolver(orderInfoBaseSchema),
@@ -193,103 +185,6 @@ const Content = styled(FlexBox)`
 const Footer = styled(FlexBox)``;
 export default FormCreateOrdersGroup;
 
-function transformOrderInfoForReq(input: ICreateOrderInfoFormState): ICreateOrdersGroupDto['info'] {
-  const output: ICreateOrdersGroupDto['info'] = {};
-
-  const objectsArr = Object.keys(input).map(key => {
-    const value = input[key as keyof typeof input];
-    if (value && typeof value === 'object' && value.hasOwnProperty('_id') && '_id' in value) {
-      return { [key]: getIdRef(value) };
-    }
-    return { [key]: value };
-  });
-  Object.assign(output, ...objectsArr);
-
-  if (input?.invoiceInfo) {
-    if (input.invoiceInfo) {
-      let invoiceInfo: ICreateOrderInfoDto['invoiceInfo'] = {};
-
-      if (input.invoiceInfo?.method) {
-        invoiceInfo = {
-          method: getIdRef(input.invoiceInfo.method),
-          expiredAt: input.invoiceInfo?.expiredAt,
-        };
-        output.invoiceInfo = invoiceInfo;
-      }
-    }
-  }
-  if (input?.deliveryInfo) {
-    const deliveryInfo: ICreateOrderInfoDto['deliveryInfo'] = {};
-    if (input.deliveryInfo.method) {
-      deliveryInfo.method = getIdRef(input.deliveryInfo.method);
-    }
-
-    if (input?.deliveryInfo?.invoiceInfo) {
-      if (input?.deliveryInfo?.invoiceInfo?.method) {
-        deliveryInfo.invoiceInfo = {
-          method: getIdRef(input.deliveryInfo.invoiceInfo.method),
-          expiredAt: input.deliveryInfo.invoiceInfo?.expiredAt,
-        };
-      }
-    }
-
-    output.deliveryInfo = deliveryInfo;
-  }
-
-  console.debug('Transform Order Info For Req'.toUpperCase());
-  console.log({ input });
-  console.log({ output });
-  return output;
-}
-export function _transformOrderInfoForReq(input: ICreateOrderInfoFormState): ICreateOrdersGroupDto['info'] {
-  console.debug('Transform Order Info For Req'.toUpperCase());
-  console.log({ input });
-
-  function transformObject(obj: any) {
-    const result: any = {};
-
-    for (const key in obj) {
-      if (obj[key] instanceof Object) {
-        result[key] = transformObject(obj[key]);
-      } else if (key === 'method') {
-        result.method = getIdRef(obj.method);
-        result.expiredAt = obj.expiredAt;
-      } else {
-        result[key] = obj[key];
-      }
-    }
-
-    return result;
-  }
-
-  const output: ICreateOrdersGroupDto = {
-    info: transformObject(input),
-  };
-
-  console.log({ output });
-  return output.info;
-}
-
-function transformOrderSlotsForReq(slots: IOrderTempSlot[]): ICreateOrdersGroupDto['slots'] {
-  const output = slots.map(slot => {
-    const sl = _.omit(slot, ['tempId']);
-
-    const objectsArr = Object.keys(sl).map(key => {
-      const value = sl[key as keyof typeof sl];
-      if (value && typeof value === 'object' && value.hasOwnProperty('_id') && '_id' in value) {
-        return { [key]: getIdRef(value) };
-      }
-      return { [key]: value };
-    });
-    console.log({ objectsArr });
-    Object.assign(sl, ...objectsArr);
-
-    return sl;
-  });
-  console.debug(transformOrderSlotsForReq.name);
-  console.log(output);
-  return output;
-}
 // if (input?.manager) {
 //   output.manager = getIdRef(input?.manager);
 // }
