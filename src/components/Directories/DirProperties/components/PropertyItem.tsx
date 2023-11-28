@@ -128,7 +128,10 @@ const StPropertyItem = styled(FlexBox)`
   overflow: hidden;
 `;
 
-const StylesByCmsConfigs: Record<string, { numColumns?: number }> = {
+export interface PropertyItemStylesByCmsKeyProps {
+  numColumns?: number;
+}
+export const PropertyItemStylesByCmsKey: Record<string, { numColumns?: number }> = {
   [PropertyTypeEnum.size]: {
     numColumns: 4,
   },
@@ -139,7 +142,7 @@ const StylesByCmsConfigs: Record<string, { numColumns?: number }> = {
 const ChildrenBox = styled(FlexBox)<{ cmsConfigsKey?: string }>`
   display: grid;
   grid-template-columns: repeat(
-    ${p => (p.cmsConfigsKey ? StylesByCmsConfigs[p.cmsConfigsKey]?.numColumns ?? 2 : 2)},
+    ${p => (p.cmsConfigsKey ? PropertyItemStylesByCmsKey[p.cmsConfigsKey]?.numColumns ?? 2 : 2)},
     1fr
   );
 `;

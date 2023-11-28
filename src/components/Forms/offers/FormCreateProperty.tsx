@@ -11,7 +11,8 @@ import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/For
 import { Text } from '../../atoms/Text';
 import styled from 'styled-components';
 import ButtonSwitch from '../../atoms/ButtonSwitch';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+import LangButtonsGroup from '../../atoms/LangButtonsGroup';
 
 export interface FormCreatePropertyProps extends Omit<ModalFormProps<OfferTypeEnum, any, IPropertyBase>, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<IPropertyDto, { isGroup?: boolean; isProperty?: boolean; isValue?: boolean }>;
@@ -109,6 +110,18 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
             <InputText placeholder={t('Key')} {...register('cmsConfigs.key')} />
           </InputLabel>
 
+          <InputLabel label={t('Cms key')} error={errors?.cmsConfigs?.key}>
+            <InputText placeholder={'Key'} {...register('cmsConfigs.key')} />
+          </InputLabel>
+
+          <InputLabel label={t('Language key')} error={errors?.cmsConfigs?.key}>
+            <LangButtonsGroup />
+          </InputLabel>
+
+          <InputLabel label={t('Label by lang key')} error={errors?.cmsConfigs?.labels?.ua}>
+            <InputText placeholder={'Label'} {...register('cmsConfigs.labels.ua')} />
+          </InputLabel>
+
           {isGroup && (
             <InputLabel label={t('Description')}>
               <InputText placeholder={t('description')} {...register('cmsConfigs.description')} />
@@ -117,7 +130,7 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
 
           {isValue && defaultState?.parent?.cmsConfigs?.type === 'color' && (
             <InputLabel label={t('Colors')}>
-              <InputText placeholder={t('description')} type={'color'} {...register('cmsConfigs.description')} />
+              <InputText placeholder={t('Colors')} type={'color'} {...register('cmsConfigs.description')} />
             </InputLabel>
           )}
 

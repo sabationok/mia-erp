@@ -8,13 +8,13 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Text } from '../../atoms/Text';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { OverlayHandlerReturn } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
-import { toVariationFormData, toVariationReqData } from '../../../utils/data-transform';
+import { checks, toVariationFormData, toVariationReqData } from '../../../utils';
 import { IVariation, IVariationFormData } from '../../../types/variations.types';
 import { OnlyUUID } from '../../../redux/global.types';
 import { ToastService } from '../../../services';
 import { ModalFormProps } from '../../ModalForm';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
-import { OverlayFooter, OverlayHeader } from './components';
+import { OverlayFooter, OverlayHeader } from '../FormProduct/components';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { IProperty, IPropertyValue } from '../../../types/properties.types';
@@ -22,19 +22,20 @@ import { useAppForm } from '../../../hooks';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import { t } from '../../../lang';
-import { checks } from '../../../utils';
-import { Path } from 'react-hook-form';
+import DimensionsInputs from '../FormProduct/components/DimensionsInputs';
+import LangButtonsGroup from '../../atoms/LangButtonsGroup';
+import { PropertyItemStylesByCmsKey } from '../../Directories/DirProperties/components/PropertyItem';
 
-const dimensionsInputs: {
-  label?: string;
-  placeholder?: string;
-  name: Path<IVariationFormData>;
-}[] = [
-  { name: 'dimensions.height', label: t('Height'), placeholder: t('Sm') },
-  { name: 'dimensions.width', label: t('Width'), placeholder: t('Sm') },
-  { name: 'dimensions.length', label: t('Length'), placeholder: t('Sm') },
-  { name: 'dimensions.weight', label: t('Weight'), placeholder: t('Kg') },
-];
+// const dimensionsInputs: {
+//   label?: string;
+//   placeholder?: string;
+//   name: Path<IVariationFormData>;
+// }[] = [
+//   { name: 'dimensions.height', label: t('Height'), placeholder: t('Sm') },
+//   { name: 'dimensions.width', label: t('Width'), placeholder: t('Sm') },
+//   { name: 'dimensions.length', label: t('Length'), placeholder: t('Sm') },
+//   { name: 'dimensions.weight', label: t('Weight'), placeholder: t('Kg') },
+// ];
 export interface FormVariationProps
   extends OverlayHandlerReturn,
     Omit<ModalFormProps<any, any, IVariation>, 'onSubmit' | 'defaultState'> {
@@ -75,42 +76,34 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
   const service = useAppServiceProvider()[ServiceName.products];
   const templates = usePropertiesSelector();
   const [loading, setLoading] = useState(false);
-  const {
-    setValue,
-    handleSubmit,
-    register,
-    formState: { errors },
-    formValues,
-  } = useAppForm<IVariationFormData>({
+  const formMethods = useAppForm<IVariationFormData>({
     defaultValues: toVariationFormData(
       defaultState ? { ...defaultState, product: currentProduct } : { product: currentProduct }
     ),
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
+  const {
+    setValue,
+    handleSubmit,
+    register,
+    formState: { errors },
+    formValues,
+  } = formMethods;
 
   const [propLabelsByParentId, setPropLabelsByParentId] = useState<Record<string, string>>({});
 
-  useEffect(() => {
-    if (update) return;
-
-    let newLabel = '';
-    console.log(propLabelsByParentId);
-    const labels = Object.values(propLabelsByParentId);
-
-    if (labels.length === 0) {
-      newLabel = `${currentProduct?.label}. {{VARIATION_LABEL}}`;
-      return;
-    } else {
-      const propLabelsString = labels.join('. ');
-      newLabel = currentProduct?.label ? `${currentProduct?.label}. ${propLabelsString}` : propLabelsString;
-    }
-    setValue('label', newLabel);
-  }, [currentProduct?.label, propLabelsByParentId, setValue, update]);
+  // const [labelsSet, setLabelSet] = useState<Record<string, string>>({});
+  // const [propertiesSet, setPropertiesSet] = useState<Record<string, string>[]>([]);
 
   const template = useMemo(() => {
     return templates.find(t => t._id === currentProduct?.template?._id);
   }, [currentProduct, templates]);
+
+  const preparedTemplate = useMemo(
+    () => template?.childrenList?.filter(el => el?.isSelectable),
+    [template?.childrenList]
+  );
 
   const selectedIds = useMemo(() => {
     return formValues?.propertiesMap ? Object.values(formValues?.propertiesMap) : [];
@@ -120,6 +113,34 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
   const canSubmit = useMemo(() => {
     return selectedIds.length > 0;
   }, [selectedIds.length]);
+
+  // useEffect(() => {
+  //   if (!preparedTemplate) return;
+  //   setLabelSet(
+  //     Object.assign(
+  //       {},
+  //       ...preparedTemplate?.map((el, index) => {
+  //         return { [index]: '' };
+  //       })
+  //     )
+  //   );
+  //
+  //   console.log('preparedTemplate labels set init');
+  // }, []);
+
+  useEffect(() => {
+    let newLabel = '';
+    const propLabelsSet = Object.values(propLabelsByParentId);
+
+    if (propLabelsSet.join('').length === 0) {
+      newLabel = `${currentProduct?.label}. {{VARIATION_LABEL}}`;
+    } else {
+      const propLabelsString = propLabelsSet.join('. ');
+      newLabel = currentProduct?.label ? `${currentProduct?.label}. ${propLabelsString}` : propLabelsString;
+    }
+
+    setValue('label', newLabel);
+  }, [currentProduct?.label, propLabelsByParentId, setValue, update]);
 
   const onValid = useCallback(
     (data: IVariationFormData) => {
@@ -167,11 +188,6 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
     setPropLabelsByParentId({});
   }, [setValue]);
 
-  const preparedTemplate = useMemo(
-    () => template?.childrenList?.filter(el => el?.isSelectable),
-    [template?.childrenList]
-  );
-
   const renderTemplate = useMemo(() => {
     return preparedTemplate?.map(prop => {
       return (
@@ -190,7 +206,7 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
       <OverlayHeader onClose={onClose} title={title || template?.label} canSubmit={canSubmit} showSubmitButton />
 
       <Content flex={1} fillWidth overflow={'auto'}>
-        <Inputs padding={'0 8px'}>
+        <Inputs>
           <InputLabel label={t('label')} error={errors.label}>
             <InputText {...register('label', { required: true })} placeholder={t('label')} required />
           </InputLabel>
@@ -205,28 +221,50 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
             </InputLabel>
           </FlexBox>
 
-          <FlexBox gap={8} fillWidth style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
-            {dimensionsInputs.map(input => {
-              return (
-                <InputLabel key={input.name} label={input.label} error={errors[input.name as never]}>
-                  <InputText
-                    placeholder={input.placeholder}
-                    min={1}
-                    type={'number'}
-                    {...register(input.name, {
-                      valueAsNumber: true,
-                      min: 1,
-                    })}
-                  />
-                </InputLabel>
-              );
-            })}
-          </FlexBox>
+          {/*<FlexBox gap={8} fillWidth style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>*/}
+          {/*  /!*{dimensionsInputs.map(input => {*!/*/}
+          {/*  /!*  return (*!/*/}
+          {/*  /!*    <InputLabel key={input.name} label={input.label} error={errors[input.name as never]}>*!/*/}
+          {/*  /!*      <InputText*!/*/}
+          {/*  /!*        placeholder={input.placeholder}*!/*/}
+          {/*  /!*        min={1}*!/*/}
+          {/*  /!*        type={'number'}*!/*/}
+          {/*  /!*        {...register(input.name, {*!/*/}
+          {/*  /!*          valueAsNumber: true,*!/*/}
+          {/*  /!*          min: 1,*!/*/}
+          {/*  /!*        })}*!/*/}
+          {/*  /!*      />*!/*/}
+          {/*  /!*    </InputLabel>*!/*/}
+          {/*  /!*  );*!/*/}
+          {/*  /!*})}*!/*/}
+
+          {/*</FlexBox>*/}
+          <DimensionsInputs form={formMethods} />
         </Inputs>
 
         <TemplateBox padding={'0 0 8px'} margin={'8px 0 0'}>
           {renderTemplate}
         </TemplateBox>
+
+        {!currentProduct && (
+          <CmsConfigs padding={'8px 0'} fillWidth>
+            <CmsConfigsHeader padding={'8px'} justifyContent={'flex-end'} fxDirection={'row'} fillWidth>
+              <Text $size={13} $weight={500}>
+                {t('Cms configs')}
+              </Text>
+            </CmsConfigsHeader>
+
+            <Inputs>
+              <InputLabel label={t('Language key')} error={errors?.cmsConfigs?.key}>
+                <LangButtonsGroup disabled />
+              </InputLabel>
+
+              <InputLabel label={t('Label by lang key')} error={errors?.cmsConfigs?.labels?.ua}>
+                <InputText placeholder={'Label'} {...register('cmsConfigs.labels.ua')} />
+              </InputLabel>
+            </Inputs>
+          </CmsConfigs>
+        )}
       </Content>
 
       <OverlayFooter
@@ -275,12 +313,7 @@ export const RenderVariationProperty = ({
         {item.label}
       </Text>
 
-      <PropertyValuesBox
-        fillWidth
-        padding={'8px 0'}
-        gap={6}
-        numColumns={item.label && ['розмір'].includes(item.label.toLowerCase()) ? 4 : 3}
-      >
+      <PropertyValuesBox fillWidth padding={'8px 0'} gap={6} cmsKey={item.cmsConfigs?.key}>
         {renderChildren}
       </PropertyValuesBox>
     </PropertyBox>
@@ -316,12 +349,15 @@ const PropertyBox = styled(FlexBox)`
   }
 `;
 
-const PropertyValuesBox = styled(FlexBox)<{ numColumns?: number }>`
+const PropertyValuesBox = styled(FlexBox)<{ cmsKey?: string }>`
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(${({ numColumns = 2 }) => numColumns}, 1fr);
+
+  grid-template-columns: repeat(${p => (p.cmsKey ? PropertyItemStylesByCmsKey[p.cmsKey]?.numColumns ?? 2 : 2)}, 1fr);
 `;
-const Inputs = styled(FlexBox)``;
+const Inputs = styled(FlexBox)`
+  padding: 0 4px;
+`;
 
 const ExtraFooterBox = styled(FlexBox)`
   border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
@@ -363,5 +399,12 @@ const RenderPropertyValue = ({
     </ValueTag>
   );
 };
+
+const CmsConfigs = styled(FlexBox)``;
+
+const CmsConfigsHeader = styled(FlexBox)`
+  border-top: 1px solid ${p => p.theme.modalBorderColor};
+  border-bottom: 1px solid ${p => p.theme.modalBorderColor};
+`;
 
 export default FormCreateVariationOverlay;

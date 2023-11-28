@@ -3,7 +3,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import styled from 'styled-components';
 import InputLabel from '../../atoms/Inputs/InputLabel';
-import { LangKeyEnum, t } from '../../../lang';
+import { t } from '../../../lang';
 import React, { useState } from 'react';
 import { useAppForm } from '../../../hooks';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
@@ -17,8 +17,7 @@ import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { Text } from '../../atoms/Text';
 import InputText from '../../atoms/Inputs/InputText';
 import { IBaseKeys } from '../../../redux/global.types';
-import ButtonsGroup from '../../atoms/ButtonsGroup';
-import { enumToFilterOptions } from '../../../utils/fabrics';
+import LangButtonsGroup from '../../atoms/LangButtonsGroup';
 
 export interface FormDeliveryMethodProps extends Omit<ModalFormProps<any, any, IDeliveryMethod>, 'onSubmit'> {
   _id?: string;
@@ -43,16 +42,6 @@ const validation = yup.object().shape({
   disabledForClient: yup.boolean().optional(),
   description: yup.string().max(250).optional(),
 } as Record<keyof ServiceMethodBase | string, any>);
-
-const LangButtonsGroup = ({ onChange }: { onChange?: (value: LangKeyEnum) => void }) => {
-  return (
-    <ButtonsGroup
-      disabled
-      options={enumToFilterOptions(LangKeyEnum)}
-      onSelect={info => onChange && onChange(info.value)}
-    />
-  );
-};
 
 const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defaultState, ...props }) => {
   const submitOptions = useAfterSubmitOptions();

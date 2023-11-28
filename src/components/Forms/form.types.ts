@@ -17,7 +17,7 @@ export type { FormCreateVariationProps } from './offers/_FormCreateVariation';
 export type { FormCreateWarehouseProps } from './warehousing/FormCreateWarehouse';
 export type { FormCreateProductInventoryProps } from './warehousing/FormCreateProductInventory';
 export type { FormCreateProductProps } from './FormProduct/FormCreateProduct';
-export type { FormVariationProps } from './FormProduct/FormCreateVariationOverlay';
+export type { FormVariationProps } from './offers/FormCreateVariationOverlay';
 export type { FormCreateWarehouseDocumentProps } from './warehousing/FormCreateWarehouseDocument';
 export type { FormWarehousingSettingsProps } from './warehousing/FormWarehousingSettings';
 export type { FormCreateOrdersGroupProps } from './FormCreateOrder/FormCreateOrdersGroup';

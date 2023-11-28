@@ -31,6 +31,6 @@ export const WarehousingSettings = lazy(() => import('./warehousing/FormWarehous
 // * PRODUCTS
 export const CreateProduct = lazy(() => import('./FormProduct/FormCreateProduct'));
 export const CreateVariation = lazy(() => import('./offers/_FormCreateVariation'));
-export const Variation = lazy(() => import('./FormProduct/FormCreateVariationOverlay'));
+export const Variation = lazy(() => import('./offers/FormCreateVariationOverlay'));
 export const CreateProperty = lazy(() => import('./offers/FormCreateProperty'));
 export const SelectProperties = lazy(() => import('./FormProduct/FormSelectPropertiesOverlay'));

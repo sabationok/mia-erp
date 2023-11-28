@@ -4,6 +4,7 @@ import ButtonIcon from './ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import { FilterOption } from '../ModalForm/ModalFilter';
 import { isUndefined } from 'lodash';
+import { Text } from './Text';
 
 export type ButtonsGroupOption<V = any> = FilterOption<V>;
 export interface ButtonsGroupProps<V = any> {
@@ -49,7 +50,11 @@ const ButtonsGroup = <V = any,>({
         onClick={handleSelect(opt, idx)}
         disabled={disabled ?? opt?.disabled}
       >
-        {opt.label && <div className={'inner'}>{opt.label}</div>}
+        {opt.label && (
+          <Text $weight={500} className={'inner'}>
+            {opt.label}
+          </Text>
+        )}
         {opt?.extraLabel}
       </OptionButton>
     ));

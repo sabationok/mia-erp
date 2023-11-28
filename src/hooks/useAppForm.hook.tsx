@@ -1,6 +1,6 @@
 import { Path, SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form';
 import { FieldValues, UseFormProps, UseFormReturn } from 'react-hook-form/dist/types';
-import { useCallback } from 'react';
+import { createContext, useCallback, useContext } from 'react';
 import { UseFormHandleSubmit } from 'react-hook-form/dist/types/form';
 import { InputLabelProps } from '../components/atoms/Inputs/InputLabel';
 import { CustomSelectBaseProps } from '../components/atoms/Inputs/CustomSelect/CustomSelect';
@@ -41,6 +41,22 @@ export interface UseAppFormSubmitOptions {
 export type AppSubmitHandler<D = any, O = any> = (data: D, options?: O & UseAppFormSubmitOptions) => void;
 
 export type AppErrorSubmitHandler<E = any, O = any> = (errors: E, options?: UseAppFormSubmitOptions & O) => void;
+
+export const AppFormCTX = createContext<UseAppFormReturn<any>>({} as UseAppFormReturn<any>);
+
+export const useAppFormProvider = <TFieldValues extends FieldValues = FieldValues, TContext = any>() =>
+  useContext<UseAppFormReturn<TFieldValues, TContext>>(AppFormCTX);
+
+export const AppFormProvider = <TFieldValues extends FieldValues = FieldValues, TContext = any>({
+  children,
+  value,
+}: {
+  children?: React.ReactNode;
+  value: UseAppFormReturn<TFieldValues, TContext>;
+}) => {
+  return <AppFormCTX.Provider value={value}>{children}</AppFormCTX.Provider>;
+};
+
 const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = any>(
   formProps?: UseFormProps<TFieldValues, TContext>
 ): UseAppFormReturn<TFieldValues, TContext> => {

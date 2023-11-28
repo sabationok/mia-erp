@@ -20,7 +20,11 @@ export const dimensionsInputsProps: {
   { name: 'weight', label: t('Weight'), placeholder: t('Kg') },
 ];
 
-const DimensionsInputs = ({ form }: { form: UseFormReturn<DimensionsFormData> }) => {
+const DimensionsInputs = <TFieldValues extends DimensionsFormData = DimensionsFormData, TContext = any>({
+  form,
+}: {
+  form: UseFormReturn<DimensionsFormData | TFieldValues, TContext>;
+}) => {
   return (
     <Box fillWidth>
       {dimensionsInputsProps.map(input => {
@@ -47,7 +51,7 @@ const Box = styled(FlexBox)`
   grid-template-columns: repeat(2, 1fr);
   column-gap: 8px;
 
-  @media screen and (min-width: 480px) and (max-width: 768px) {
+  @media screen and (min-width: 480px) {
     grid-template-columns: repeat(4, 1fr);
   }
 `;

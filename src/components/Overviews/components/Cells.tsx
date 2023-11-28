@@ -1,6 +1,6 @@
 import FlexBox from '../../atoms/FlexBox';
 import React, { useEffect, useMemo, useState } from 'react';
-import FormCreateVariation from '../../Forms/FormProduct/FormCreateVariationOverlay';
+import FormCreateVariation from '../../Forms/offers/FormCreateVariationOverlay';
 import { IProperty } from '../../../types/properties.types';
 import styled, { useTheme } from 'styled-components';
 import { Text } from '../../atoms/Text';

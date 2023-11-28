@@ -2,7 +2,7 @@ import { IBase, IBaseKeys, IFormDataValueWithID, OnlyUUID } from '../redux/globa
 import { LangPack } from '../lang';
 import { ICompany } from './companies.types';
 import { AppQueryParams } from '../api';
-import { CmsBaseConfigsDto } from '../redux/cms/cms.types';
+import { CmsBaseConfigsDto } from './cms.types';
 import { MaybeNull } from './utils.types';
 
 export enum IntegrationTypeEnum {

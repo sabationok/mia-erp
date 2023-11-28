@@ -1,7 +1,7 @@
 import { IBase, OnlyUUID } from '../redux/global.types';
 import { AppQueryParams } from '../api';
 import { OfferTypeEnum } from './products.types';
-import { CmsBaseConfigsDto, ICmsBaseConfigs } from '../redux/cms/cms.types';
+import { CmsBaseConfigsDto, ICmsBaseConfigs } from './cms.types';
 
 export interface IPropertyBase extends IBase {
   label?: string;
