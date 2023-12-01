@@ -128,7 +128,7 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
 
   return (
     <OverlayForm onSubmit={handleSubmit} {...props}>
-      <OverlayHeader onClose={onClose} canSubmit={canSubmit} title={title || templateData?.label} showSubmitButton />
+      <OverlayHeader onBackPress={onClose} canSubmit={canSubmit} title={title || templateData?.label} okButton />
 
       <TemplateBox flex={1} overflow={'auto'}>
         {renderTemplate}

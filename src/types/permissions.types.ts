@@ -1,6 +1,6 @@
 import { ICustomRole } from '../redux/customRoles/customRoles.types';
 import { AppResponse, IBase, OnlyUUID } from '../redux/global.types';
-import { ICompanyBase } from './companies.types';
+import { ICompany } from './companies.types';
 import { IUserBase } from './auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';
 import { OutputIntegrationBase } from './integrations.types';
@@ -13,7 +13,7 @@ export enum PermissionStatus {
 }
 
 export interface IPermission extends IBase {
-  company?: Partial<ICompanyBase>;
+  company?: Partial<ICompany>;
   user?: Partial<IUserBase>;
   integration?: Partial<OutputIntegrationBase>;
   owner?: Partial<IUserBase>;

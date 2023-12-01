@@ -45,7 +45,7 @@ const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onC
           borderBottom: `1px solid ${theme.sideBarBorderColor}`,
         }}
         renderHeader={
-          <OverlayHeader title={'Зображення'} onClose={onClose} showSubmitButton canSubmit={state.length > 0} />
+          <OverlayHeader title={'Зображення'} onBackPress={onClose} okButton canSubmit={state.length > 0} />
         }
         FooterComponent={props => {
           return (

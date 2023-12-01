@@ -203,7 +203,7 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
 
   return (
     <FormContainer onSubmit={handleSubmit(onValid)} onReset={handleClearMap} {...props}>
-      <OverlayHeader onClose={onClose} title={title || template?.label} canSubmit={canSubmit} showSubmitButton />
+      <OverlayHeader onBackPress={onClose} title={title || template?.label} canSubmit={canSubmit} okButton />
 
       <Content flex={1} fillWidth overflow={'auto'}>
         <Inputs>

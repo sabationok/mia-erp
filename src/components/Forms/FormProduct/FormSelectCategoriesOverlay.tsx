@@ -44,7 +44,7 @@ const FormProductCategoriesOverlay = ({ onClose }: FormSelectCategoriesOverlayPr
 
   return (
     <OverlayForm onSubmit={handleFormSubmit}>
-      <OverlayHeader title={'Категорії'} onClose={onClose} canSubmit={canSubmit} showSubmitButton />
+      <OverlayHeader title={'Категорії'} onBackPress={onClose} canSubmit={canSubmit} okButton />
 
       <Content padding={'0 0 8px 0'} flex={1}>
         <FormProductCategories onChange={setState} options={directory} defaultData={state} />

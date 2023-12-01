@@ -1,4 +1,4 @@
-import ModalForm, { ModalFormProps } from '../ModalForm';
+import { ModalFormProps } from '../ModalForm';
 import { useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../utils/fabrics';
 import ModalFilter from '../ModalForm/ModalFilter';
@@ -6,14 +6,16 @@ import { CompanySettingsTabBaseProps } from './settings-tabs/companySettingsTabs
 import DeliveryPolicyTab from './settings-tabs/DeliveryPolicyTab';
 import InvoicingPolicyTab from './settings-tabs/InvoicingPolicyTab';
 import WarehousingPolicyTab from './settings-tabs/WarehousingPolicyTab';
-import SupplementPolicyTab from './settings-tabs/SupplementPolicyTab';
+import FlexBox from '../atoms/FlexBox';
+import styled from 'styled-components';
+import { OverlayHeader } from '../Forms/FormProduct/components';
 
 export interface CompanySettingsProps extends Omit<ModalFormProps, 'onSubmit'> {}
 enum CompanySettingsTabs {
   Invoicing = 'Invoicing',
   Delivery = 'Delivery',
   Warehousing = 'Warehousing',
-  Supplement = 'Supplement',
+  // Supplement = 'Supplement',
 }
 
 const tabs = enumToFilterOptions(CompanySettingsTabs);
@@ -22,29 +24,47 @@ const RenderTabComponent: Record<CompanySettingsTabs, React.FC<CompanySettingsTa
   [CompanySettingsTabs.Delivery]: DeliveryPolicyTab,
   [CompanySettingsTabs.Invoicing]: InvoicingPolicyTab,
   [CompanySettingsTabs.Warehousing]: WarehousingPolicyTab,
-  [CompanySettingsTabs.Supplement]: SupplementPolicyTab,
+  // [CompanySettingsTabs.Supplement]: SupplementPolicyTab,
 };
 
 const CompanySettingsModal: React.FC<CompanySettingsProps> = ({ onClose, ...props }) => {
-  const [current, setCurrent] = useState<CompanySettingsTabs>(tabs[0]?.value);
+  const [current, setCurrent] = useState<CompanySettingsTabs>(CompanySettingsTabs.Warehousing);
 
   const RenderTab = useMemo(() => {
     return RenderTabComponent[current] || RenderTabComponent.Invoicing;
   }, [current]);
 
   return (
-    <ModalForm title={'Company settings'} {...props} onClose={onClose} fillHeight fillWidth={false} footer={false}>
+    <ModalBox>
+      <OverlayHeader title={'Company settings'} onClosePress={onClose} />
+
       <ModalFilter
         filterOptions={tabs}
-        defaultFilterValue={current}
+        preventFilter={true}
         onOptSelect={(_, v) => {
           setCurrent(v);
         }}
       />
 
       <RenderTab onClose={onClose} compId={current} />
-    </ModalForm>
+    </ModalBox>
   );
 };
+
+const ModalBox = styled(FlexBox)`
+  width: 450px;
+  max-width: 100%;
+
+  height: 100vh;
+
+  max-height: 90vh;
+  min-height: 280px;
+
+  padding: 0 8px;
+
+  background: ${p => p.theme.modalBackgroundColor};
+
+  overflow: hidden;
+`;
 
 export default CompanySettingsModal;

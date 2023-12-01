@@ -5,60 +5,82 @@ import styled from 'styled-components';
 import * as React from 'react';
 
 export const OverlayHeader = ({
-  onClose,
+  onBackPress,
+  onClosePress,
   title,
-  showSubmitButton,
+  okButton,
   canSubmit,
 }: {
   canSubmit?: boolean;
-  onClose?: () => void;
+  onBackPress?: () => void;
+  onClosePress?: () => void;
   title?: string;
-  showSubmitButton?: boolean;
+  okButton?: boolean;
 }) => {
   return (
-    <Header padding={'4px 0'}>
-      <FlexBox fillWidth fxDirection={'row'} justifyContent={'space-between'} alignItems={'stretch'} height={'32px'}>
+    <Header
+      alignItems={'center'}
+      fillWidth
+      fxDirection={'row'}
+      justifyContent={'space-between'}
+      height={'32px'}
+      gap={8}
+      padding={'2px 0'}
+    >
+      {onBackPress && (
         <ButtonIcon
           variant={'textExtraSmall'}
           icon={'SmallArrowLeft'}
           iconSize={'22px'}
-          padding={'0 6px'}
+          padding={'0'}
           style={{ minWidth: 'max-content', minHeight: '100%' }}
-          onClick={onClose}
+          onClick={onBackPress}
         >
           {'Back'}
         </ButtonIcon>
+      )}
 
-        <FlexBox justifyContent={'center'} overflow={'hidden'}>
-          <Text
-            $weight={600}
-            $size={14}
-            style={{ textTransform: 'uppercase', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}
-          >
-            {title}
-          </Text>
-        </FlexBox>
-
-        {showSubmitButton && (
-          <ButtonIcon
-            variant={'textExtraSmall'}
-            gap={'6px'}
-            type={'submit'}
-            padding={'0 6px'}
-            endIcon={'done'}
-            endIconSize={'22px'}
-            style={{ minWidth: 'max-content', minHeight: '100%' }}
-            disabled={!canSubmit}
-          >
-            {'Ok'}
-          </ButtonIcon>
-        )}
+      <FlexBox justifyContent={'center'} overflow={'hidden'} padding={'0 8px'}>
+        <Text
+          $weight={600}
+          $size={14}
+          style={{ textTransform: 'uppercase', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}
+        >
+          {title}
+        </Text>
       </FlexBox>
+
+      {okButton && (
+        <ButtonIcon
+          variant={'textExtraSmall'}
+          gap={'6px'}
+          type={'submit'}
+          padding={'0 6px'}
+          endIcon={'done'}
+          endIconSize={'22px'}
+          style={{ minWidth: 'max-content', minHeight: '100%' }}
+          disabled={!canSubmit}
+        >
+          {'Ok'}
+        </ButtonIcon>
+      )}
+
+      {onClosePress && (
+        <ButtonIcon
+          variant={'onlyIcon'}
+          icon={'close'}
+          iconSize={'22px'}
+          style={{ minWidth: 'max-content' }}
+          onClick={onClosePress}
+        />
+      )}
     </Header>
   );
 };
 const Header = styled(FlexBox)`
   height: 32px;
+
+  border-bottom: 1px solid ${p => p.theme.modalBorderColor};
 `;
 
 export const OverlayFooter = ({
