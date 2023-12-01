@@ -1,7 +1,14 @@
 import { useMemo } from 'react';
 import { useAppDispatch } from '../redux/store.store';
 import { OnlyUUID, ServiceDispatcher, ServiceDispatcherAsync } from '../redux/global.types';
-import { ICreateOrderInfoFormState, IOrder, IOrderReqData, IOrderTempSlot } from '../types/orders/orders.types';
+import {
+  ICreateOrderInfoDto,
+  ICreateOrderInfoFormState,
+  IOrder,
+  IOrderReqData,
+  IOrderSlotDto,
+  IOrderTempSlot,
+} from '../types/orders/orders.types';
 import { AppQueryParams } from '../api';
 import {
   AddSlotToGroupAction,
@@ -12,6 +19,8 @@ import {
 } from '../redux/orders/orders.actions';
 import { getAllOrdersThunk } from '../redux/orders/orders.thunks';
 import { defaultThunkPayload } from '../utils/fabrics';
+import { toOrderSlotsReqData, toOrderSlotsRequestDataOptions, toReqData, ToRequestDataOptions } from '../utils';
+import { EntityPath } from '../types/utils.types';
 
 type EmptyFn = (...args: any[]) => Promise<any>;
 
@@ -32,6 +41,16 @@ export interface OrdersService {
   addTempSlot: ServiceDispatcher<IOrderTempSlot>;
   removeTempSlot: ServiceDispatcher<string>;
   updateTempSlot: ServiceDispatcher<IOrderTempSlot>;
+
+  toOrderInfoReqData: (
+    data: ICreateOrderInfoFormState,
+    options: ToRequestDataOptions<EntityPath<ICreateOrderInfoFormState>>
+  ) => ICreateOrderInfoDto;
+
+  toOrderSlotsReqData: (
+    slots: IOrderTempSlot[],
+    options?: toOrderSlotsRequestDataOptions
+  ) => IOrderSlotDto[] | undefined;
 }
 
 const useOrdersServiceHook = (): OrdersService => {
@@ -56,6 +75,12 @@ const useOrdersServiceHook = (): OrdersService => {
 
       updateCurrentGroupFormInfoData: args => dispatch(UpdateCurrentGroupFormInfoDataAction(args)),
       clearCurrentGroupFormData: () => dispatch(ClearCurrentGroupFormDataAction({})),
+
+      toOrderInfoReqData: (
+        data: ICreateOrderInfoFormState,
+        options: ToRequestDataOptions<EntityPath<ICreateOrderInfoFormState>>
+      ) => toReqData(data, options),
+      toOrderSlotsReqData: toOrderSlotsReqData,
     }),
     [dispatch]
   );

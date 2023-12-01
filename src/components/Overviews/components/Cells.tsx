@@ -31,12 +31,13 @@ export type RenderOverviewCellComponent<Data = any> = React.FC<{
   data?: Data;
 }>;
 
-export interface OverviewCellProps<Data = any> {
+export interface OverviewCellProps<Data = any, Tab = any> {
   value?: string | number;
   title?: string;
   gridArea?: keyof Data | string;
   CellComponent?: RenderOverviewCellComponent<Data>;
   getValue?: (data: Data) => React.ReactNode | undefined | null;
+  tab?: Tab;
 }
 
 export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) => {
@@ -236,7 +237,14 @@ export const ProductDefaultsCell: RenderOverviewCellComponent<IProduct> = ({ dat
             { label: t('Label'), value: warehouse?.label },
             { label: t('Code'), value: warehouse?.code },
           ].map(info => (
-            <FlexBox fxDirection={'row'} justifyContent={'space-between'} padding={'4px 6px'} gap={6} fillWidth>
+            <FlexBox
+              key={info.label}
+              fxDirection={'row'}
+              justifyContent={'space-between'}
+              padding={'4px 6px'}
+              gap={6}
+              fillWidth
+            >
               <Text $size={11}>{`${info.label}`}</Text>
               <Text $size={12} $weight={600}>
                 {info?.value || '---'}
@@ -255,7 +263,14 @@ export const ProductDefaultsCell: RenderOverviewCellComponent<IProduct> = ({ dat
           { label: t('Label'), value: supplier?.label },
           { label: t('Code'), value: supplier?.code },
         ].map(info => (
-          <FlexBox fxDirection={'row'} justifyContent={'space-between'} padding={'4px 6px'} gap={6} fillWidth>
+          <FlexBox
+            key={info.label}
+            fxDirection={'row'}
+            justifyContent={'space-between'}
+            padding={'4px 6px'}
+            gap={6}
+            fillWidth
+          >
             <Text $size={11}>{`${info.label}`}</Text>
             <Text $size={12} $weight={600}>
               {info?.value || '---'}

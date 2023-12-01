@@ -24,12 +24,11 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { orderInfoBaseSchema } from '../validation';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { getIdRef, toInputValueDate, toOrderSlotsReqData, toReqData } from '../../../utils';
+import { getIdRef, toInputValueDate } from '../../../utils';
 
 import * as fns from 'date-fns';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { createApiCall, OrdersApi } from '../../../api';
-import { EntityPath } from '../../../types/utils.types';
 
 export interface FormCreateOrdersGroupProps
   extends Omit<ModalFormProps<any, any, FormCreateOrdersGroupStepsData>, 'onSubmit'> {
@@ -118,10 +117,10 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onClose }
       {
         data: {
           data: {
-            info: toReqData<typeof orderInfoFormValues, EntityPath<typeof orderInfoFormValues>>(orderInfoFormValues, {
+            info: service.toOrderInfoReqData(orderInfoFormValues, {
               omitPathArr: ['deliveryInfo.destination'],
             }),
-            slots: toOrderSlotsReqData(currentGroupFormState.slots),
+            slots: service.toOrderSlotsReqData(currentGroupFormState.slots),
           },
         },
         onSuccess: data => {

@@ -88,6 +88,8 @@ const ButtonsGroup = <V = any,>({
 };
 
 const Buttons = styled(FlexBox)<ButtonsGroupProps>`
+  height: fit-content;
+
   background-color: ${({ backgroundColor, theme }) => backgroundColor ?? theme.fieldBackgroundColor};
 `;
 const OptionButton = styled(ButtonIcon)`

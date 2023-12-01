@@ -114,19 +114,11 @@ function enumToArray<T extends object = any>(enumObj: T): Array<T[keyof T]> {
 function enumToFilterOptions<T extends Record<string, any> = any>(enumObj: T): FilterOption<T[keyof T]>[] {
   return enumToArray(enumObj).map(el => ({ label: t(el as string), value: el }));
 }
-
-function enumToObjectsArray<T extends object = any>(enumObj: T): Array<Record<string, T[keyof T]>> {
-  return Object.entries(enumObj).map(([k, v]) => ({ [k]: v }));
+export function enumToTabs<T extends Record<string, any> = any>(
+  enumObj: T,
+  labels?: Record<T[keyof T], string>
+): FilterOption<T[keyof T]>[] {
+  return enumToArray(enumObj).map(el => ({ label: t(labels ? labels[el] : el), value: el }));
 }
-// function enumToEntriesArray<T extends object = any>(enumObj: T): Array<(string | keyof typeof T)[]> {
-//   return Object.entries(enumObj);
-// }
 
-export {
-  defaultThunkPayload,
-  defaultApiCallPayload,
-  createThunkPayload,
-  enumToArray,
-  enumToObjectsArray,
-  enumToFilterOptions,
-};
+export { defaultThunkPayload, defaultApiCallPayload, createThunkPayload, enumToArray, enumToFilterOptions };

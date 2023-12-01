@@ -11,6 +11,10 @@ import { enumToArray } from './fabrics';
 import { createTableTitlesFromTemplate } from './tables';
 import * as checks from './check';
 
+export * from './fabrics';
+export * from './founder';
+export * from './createStepChecker';
+
 export * from './data-transform';
 export * from './data-time';
 

@@ -13,6 +13,7 @@ import DirPaymentMethods from '../components/CompanySettings/DirPaymentMethods';
 import DirDeliveryMethods from '../components/CompanySettings/DirDeliveryMethods';
 import DirInvoicingMethods from '../components/CompanySettings/DirInvocingMethods';
 import DirCommunicationMethods from '../components/CompanySettings/DirCommunicationMethods';
+import CompanySettingsModal from '../components/CompanySettings/CompanySettingsModal';
 
 const UsersProps: DirUsersProps = {
   title: 'Користувачі',
@@ -126,6 +127,12 @@ const warehousingSettings = {
   ModalChildren: Forms.WarehousingSettings,
 };
 
+const policiesSettings = {
+  title: t('Settings'),
+  disabled: false,
+  ModalChildren: CompanySettingsModal,
+};
+
 export const companySettings: IDirectoryListItem[] = [
   {
     title: UsersProps.title,
@@ -213,4 +220,5 @@ export const companySettings: IDirectoryListItem[] = [
   },
 
   warehousingSettings,
+  policiesSettings,
 ];

@@ -155,6 +155,10 @@ export interface HasAmount {
   amount?: MaybeNull<number>;
 }
 
+export interface HasIsValidFlag {
+  isValid?: MaybeNull<boolean>;
+}
+
 export interface FormDataLocationRef {
   ref: string;
   label: string;

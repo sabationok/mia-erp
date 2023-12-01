@@ -9,7 +9,7 @@ import { IUser } from './auth.types';
 import { AppQueryParams } from '../api';
 import { IVariation } from './variations.types';
 import { IPropertyValue, IVariationTemplate } from './properties.types';
-import { HasDescription, HasDimensions, HasMeasurement, HasStatus, HasType, MaybeNull } from './utils.types';
+import { AppDate, HasDescription, HasDimensions, HasMeasurement, HasStatus, HasType, MaybeNull } from './utils.types';
 
 export enum ProductStatusEnum {
   pending = 'pending',
@@ -22,6 +22,26 @@ export enum ProductStatusEnum {
 }
 
 // export type ProductStatus = keyof ProductStatusEnum | ProductStatusEnum;
+export interface OfferOrderingInfo {
+  isAvailable?: MaybeNull<boolean>;
+  time?: MaybeNull<AppDate>;
+}
+export type OfferFutures = {
+  isPromo?: MaybeNull<boolean>;
+  negativeSale?: MaybeNull<boolean>;
+  // reservation?: MaybeNull<OfferOrderingInfo>;
+  // availability?: MaybeNull<OfferOrderingInfo>;
+  // customOrder?: MaybeNull<OfferOrderingInfo>;
+  // preOrder?: MaybeNull<OfferOrderingInfo>;
+  // customProduction?: MaybeNull<OfferOrderingInfo>;
+  // rent?: MaybeNull<OfferOrderingInfo>;
+} & HasStatus<string> &
+  Partial<
+    Record<
+      'reservation' | 'availability' | 'customOrder' | 'preOrder' | 'customProduction' | 'rent',
+      MaybeNull<OfferOrderingInfo>
+    >
+  >;
 
 export enum MeasurementUnit {
   Pc = 'Pc', // Штука (Piece)
@@ -60,6 +80,8 @@ export interface IProductBase
   approved?: ProductStatusEnum;
   archived?: boolean;
   visible?: boolean;
+
+  futures?: MaybeNull<OfferFutures>;
 
   tags?: string[];
   images?: IProductImage[];

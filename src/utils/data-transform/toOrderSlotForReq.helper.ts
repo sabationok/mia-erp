@@ -2,12 +2,13 @@ import { ICreateOrdersGroupDto, IOrderTempSlot } from '../../types/orders/orders
 import _ from 'lodash';
 import { getIdRef } from './index';
 
+export interface toOrderSlotsRequestDataOptions {
+  convertToCents?: boolean;
+  omitKeys?: (keyof IOrderTempSlot)[];
+}
 export function toOrderSlotsReqData(
   slots: IOrderTempSlot[],
-  options?: {
-    convertToCents?: boolean;
-    omitKeys?: (keyof IOrderTempSlot)[];
-  }
+  options?: toOrderSlotsRequestDataOptions
 ): ICreateOrdersGroupDto['slots'] {
   const output = slots.map(slot => {
     return Object.assign(
@@ -25,6 +26,6 @@ export function toOrderSlotsReqData(
       })
     );
   });
-  console.debug(toOrderSlotsReqData.name, output);
+  // console.debug(toOrderSlotsReqData.name, output);
   return output;
 }

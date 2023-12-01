@@ -3,19 +3,25 @@ import _ from 'lodash';
 import { t } from '../../lang';
 import ButtonsGroup from './ButtonsGroup';
 
-interface ButtonSwitchProps {
+interface ButtonSwitchProps<Name extends string | number | symbol = string> {
   acceptLabel?: string;
   rejectLabel?: string;
-  onChange?: (res: boolean) => void;
+  onChange?: (res: boolean, name?: Name) => void;
   value?: boolean;
-  name?: string;
+  name?: Name;
 }
 
-const ButtonSwitch = ({ name = '', onChange, value = false, acceptLabel, rejectLabel }: ButtonSwitchProps) => {
+const ButtonSwitch = <Name extends string | number | symbol = string>({
+  name,
+  onChange,
+  value = false,
+  acceptLabel,
+  rejectLabel,
+}: ButtonSwitchProps<Name>) => {
   const [current, setCurrent] = useState(value);
   const handleChange = (index: number) => {
     if (onChange) {
-      onChange(!!index);
+      onChange(!!index, name);
     } else {
       setCurrent(!!index);
     }

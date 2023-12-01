@@ -3,6 +3,15 @@ import { IPermission } from './permissions.types';
 import { IUserBase } from './auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';
 import { IWarehouse } from './warehouses.types';
+import {
+  ExtServiceBase,
+  IDeliveryMethod,
+  IInvoicingMethod,
+  InputIntegrationBase,
+  OutputIntegrationBase,
+} from './integrations.types';
+import { MaybeNull } from './utils.types';
+import { ISupplierDirItem } from './dir.types';
 
 export enum OwnershipTypeEnum {
   UA_TOV = 'ua_tov',
@@ -26,6 +35,33 @@ export interface TaxCodeDto {
   personal?: string;
   corp?: string;
 }
+export interface HasDeliveryPolicy {
+  deliveryPolicy?: MaybeNull<{
+    method?: MaybeNull<IDeliveryMethod>;
+    selectByClient?: MaybeNull<boolean>;
+    autoCreate?: MaybeNull<boolean>;
+    autoPublish?: MaybeNull<boolean>;
+  }>;
+}
+
+export interface HasInvoicingPolicy {
+  invoicingPolicy?: MaybeNull<{
+    method?: MaybeNull<IInvoicingMethod>;
+    selectByClient?: MaybeNull<boolean>;
+    autoCreate?: MaybeNull<boolean>;
+    autoPublish?: MaybeNull<boolean>;
+  }>;
+}
+export interface HasWarehousingPolicy {
+  warehousingPolicy?: MaybeNull<{
+    warehouse?: MaybeNull<IWarehouse>;
+  }>;
+}
+export interface HasSupplementPolicy {
+  supplementPolicy?: MaybeNull<{
+    supplier?: MaybeNull<ISupplierDirItem>;
+  }>;
+}
 
 export interface ICompanyBase extends IBase {
   name?: string;
@@ -47,9 +83,19 @@ export interface ICompanyBase extends IBase {
   locations?: AddressDto;
 }
 
-export interface ICompany extends ICompanyBase {
+export interface ICompany
+  extends ICompanyBase,
+    HasInvoicingPolicy,
+    HasDeliveryPolicy,
+    HasWarehousingPolicy,
+    HasSupplementPolicy {
   owner?: Pick<IUserBase, '_id' | 'name' | 'email'>;
   permissions?: Partial<IPermission>[];
+  warehouses?: MaybeNull<IWarehouse[]>;
+  externalServices?: MaybeNull<ExtServiceBase[]>;
+
+  inputs?: MaybeNull<InputIntegrationBase[]>;
+  outputs?: MaybeNull<OutputIntegrationBase[]>;
 }
 
 export interface ICompaniesState {
@@ -58,16 +104,58 @@ export interface ICompaniesState {
   error: StateErrorType;
 }
 
+export interface ICompanyDeliveryPolicyFormData {
+  method?: IFormDataValueWithID;
+  selectByClient?: boolean;
+  autoCreate?: boolean;
+  autoPublish?: boolean;
+}
+export interface ICompanyInvoicingPolicyFormData {
+  method?: IFormDataValueWithID;
+  selectByClient?: boolean;
+  autoCreate?: boolean;
+  autoPublish?: boolean;
+}
+export interface ICompanyWarehousingPolicyFormData {
+  warehouse?: IFormDataValueWithID;
+}
+export interface ICompanySupplementPolicyFormData {
+  supplier?: IFormDataValueWithID;
+}
 export interface ICompanyFormData extends ICompanyBase {
   warehouse?: IFormDataValueWithID;
   suppliers?: IFormDataValueWithID;
   manager?: IFormDataValueWithID & { user?: IUserBase };
+
+  deliveryPolicy?: ICompanyDeliveryPolicyFormData;
+  invoicingPolicy?: ICompanyInvoicingPolicyFormData;
+  warehousingPolicy?: ICompanyWarehousingPolicyFormData;
+  supplementPolicy?: ICompanySupplementPolicyFormData;
 }
 
 export interface ICompanyDto extends Omit<ICompanyBase, '_id' | 'createdAt' | 'updatedAt' | 'deletedAt'> {
   warehouse?: OnlyUUID;
   supplier?: OnlyUUID;
   manager?: OnlyUUID;
+
+  deliveryPolicy?: {
+    method?: OnlyUUID;
+    selectByClient?: boolean;
+    autoCreate?: boolean;
+    autoPublish?: boolean;
+  };
+  invoicingPolicy?: {
+    method?: OnlyUUID;
+    selectByClient?: boolean;
+    autoCreate?: boolean;
+    autoPublish?: boolean;
+  };
+  warehousingPolicy?: {
+    warehouse?: OnlyUUID;
+  };
+  supplementPolicy?: {
+    supplier?: OnlyUUID;
+  };
 }
 export interface ICompanyForReq extends ICompanyDto {}
 

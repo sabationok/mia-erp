@@ -1,6 +1,7 @@
 import React, { CSSProperties, forwardRef } from 'react';
 import styled, { css } from 'styled-components';
 import { FieldError, FieldErrorsImpl, Merge } from 'react-hook-form';
+import FlexBox from '../FlexBox';
 
 export interface InputLabelProps extends React.HTMLAttributes<HTMLDivElement> {
   label?: string;
@@ -35,12 +36,12 @@ const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = (
   ref: React.ForwardedRef<HTMLDivElement>
 ) => {
   return (
-    <Label className={className} disabled={disabled} {...props} ref={ref}>
+    <Box className={className} disabled={disabled} {...props} ref={ref}>
       <Wrapper isLabel={!!label} direction={direction}>
         {label && (
-          <LabelText htmlFor={id} uppercase={uppercase} align={align} direction={direction} className="label">
+          <Label htmlFor={id} uppercase={uppercase} align={align} direction={direction} className="label">
             {`${label}${required ? ' *' : ''}`}
-          </LabelText>
+          </Label>
         )}
         <InputBox>{children}</InputBox>
       </Wrapper>
@@ -50,11 +51,11 @@ const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = (
           {(typeof error?.message === 'string' && error?.message) || success || (loading && 'Loading...') || helperText}
         </HelperText>
       )}
-    </Label>
+    </Box>
   );
 };
 
-const Label = styled.div<{
+const Box = styled.div<{
   disabled?: boolean;
   error?: boolean;
   success?: boolean;
@@ -66,10 +67,10 @@ const Label = styled.div<{
 
   width: 100%;
 
-  opacity: ${({ disabled }) => (disabled ? 0.5 : '')};
+  opacity: ${({ disabled }) => (disabled ? 0.75 : 1)};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'all')};
 `;
-const LabelText = styled.label<Pick<InputLabelProps, 'align' | 'direction' | 'uppercase'>>`
+const Label = styled.label<Pick<InputLabelProps, 'align' | 'direction' | 'uppercase'>>`
   display: flex;
   align-items: ${({ align = 'center' }) => align};
 
@@ -84,18 +85,19 @@ const LabelText = styled.label<Pick<InputLabelProps, 'align' | 'direction' | 'up
   max-width: ${({ direction = 'horizontal' }) => (direction === 'horizontal' ? '100px' : '100%')};
 `;
 
-const Wrapper = styled.div<{
+const Wrapper = styled(FlexBox)<{
   isLabel: boolean;
   direction?: 'horizontal' | 'vertical';
 }>`
-  display: flex;
-
   ${({ direction }) =>
-    direction === 'vertical' &&
-    css`
-      flex-direction: column;
-      align-items: flex-start;
-    `};
+    direction === 'vertical'
+      ? css`
+          flex-direction: column;
+        `
+      : css`
+          flex-direction: row;
+          align-items: center;
+        `};
 
   width: 100%;
 `;
@@ -112,9 +114,10 @@ const HelperText = styled.div<{
   success?: boolean;
   loading?: boolean;
 }>`
+  padding: 2px;
   min-height: 12px;
 
-  font-size: 8px;
+  font-size: 9px;
   line-height: 1.5;
 
   color: ${({ error, success, theme }) => (error && 'tomato') || (success && 'lightgreen') || 'inherit'};

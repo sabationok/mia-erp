@@ -1,17 +1,19 @@
 import _, { omit } from 'lodash';
 import { OnlyUUID } from '../../redux/global.types';
 
+export interface ToRequestDataOptions<OmitPath extends string = string> {
+  omitPathArr?: OmitPath[];
+  dateToNumberPath?: string;
+  amountToNumberPath?: string;
+  checkArrayPath?: string;
+  ignorePaths?: string[];
+}
+
 export function toReqData<IncomeDataType extends Record<string, any> = any, OmitPath extends string = string>(
   incomeData: IncomeDataType,
-  options?: {
-    omitPathArr?: OmitPath[];
-    dateToNumberPath?: string;
-    amountToNumberPath?: string;
-    checkArrayPath?: string;
-    ignorePaths?: string[];
-  }
+  options?: ToRequestDataOptions<OmitPath>
 ): Partial<IncomeDataType> {
-  console.log(options?.omitPathArr);
+  // console.log(options?.omitPathArr);
 
   const inputCopy = omit(incomeData, ['_id', 'createdAt', 'updatedAt', ...(options?.omitPathArr || [])]);
 
