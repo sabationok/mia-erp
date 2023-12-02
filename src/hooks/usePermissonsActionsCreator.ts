@@ -52,6 +52,8 @@ const createEnterCompanyAction = ({
   iconSize: '100%',
   type: 'onlyIcon',
   onClick: () => {
+    console.log(ctx.selectedRow);
+
     if (ctx.selectedRow?._id) {
       service.logIn({
         data: { _id: ctx.selectedRow?._id },

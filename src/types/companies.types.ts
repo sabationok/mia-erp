@@ -3,13 +3,7 @@ import { IPermission } from './permissions.types';
 import { IUserBase } from './auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';
 import { IWarehouse } from './warehouses.types';
-import {
-  ExtServiceBase,
-  IDeliveryMethod,
-  IInvoicingMethod,
-  InputIntegrationBase,
-  OutputIntegrationBase,
-} from './integrations.types';
+import { ExtServiceBase, InputIntegrationBase, OutputIntegrationBase } from './integrations.types';
 import { MaybeNull } from './utils.types';
 import { ISupplierDirItem } from './dir.types';
 
@@ -37,19 +31,14 @@ export interface TaxCodeDto {
 }
 export interface HasDeliveryPolicy {
   deliveryPolicy?: MaybeNull<{
-    method?: MaybeNull<IDeliveryMethod>;
-    selectByClient?: MaybeNull<boolean>;
-    autoCreate?: MaybeNull<boolean>;
-    autoPublish?: MaybeNull<boolean>;
+    sales?: DeliveryPolicyJsonData;
   }>;
 }
 
 export interface HasInvoicingPolicy {
   invoicingPolicy?: MaybeNull<{
-    method?: MaybeNull<IInvoicingMethod>;
-    selectByClient?: MaybeNull<boolean>;
-    autoCreate?: MaybeNull<boolean>;
-    autoPublish?: MaybeNull<boolean>;
+    sales?: InvoicingPolicyJsonData;
+    delivery?: InvoicingPolicyJsonData;
   }>;
 }
 export interface HasWarehousingPolicy {
@@ -104,17 +93,25 @@ export interface ICompaniesState {
   error: StateErrorType;
 }
 
-export interface ICompanyDeliveryPolicyFormData {
-  method?: IFormDataValueWithID;
+export interface InvoicingPolicyJsonData {
+  method?: string;
   selectByClient?: boolean;
   autoCreate?: boolean;
   autoPublish?: boolean;
 }
 export interface ICompanyInvoicingPolicyFormData {
-  method?: IFormDataValueWithID;
+  sales?: InvoicingPolicyJsonData;
+  delivery?: InvoicingPolicyJsonData;
+}
+export interface DeliveryPolicyJsonData {
+  method?: string;
   selectByClient?: boolean;
   autoCreate?: boolean;
   autoPublish?: boolean;
+}
+export interface ICompanyDeliveryPolicyFormData {
+  sales?: DeliveryPolicyJsonData;
+  returns?: DeliveryPolicyJsonData;
 }
 export interface ICompanyWarehousingPolicyFormData {
   warehouse?: IFormDataValueWithID;
@@ -139,16 +136,11 @@ export interface ICompanyDto extends Omit<ICompanyBase, '_id' | 'createdAt' | 'u
   manager?: OnlyUUID;
 
   deliveryPolicy?: {
-    method?: OnlyUUID;
-    selectByClient?: boolean;
-    autoCreate?: boolean;
-    autoPublish?: boolean;
+    sales?: DeliveryPolicyJsonData;
   };
   invoicingPolicy?: {
-    method?: OnlyUUID;
-    selectByClient?: boolean;
-    autoCreate?: boolean;
-    autoPublish?: boolean;
+    sales?: InvoicingPolicyJsonData;
+    delivery?: InvoicingPolicyJsonData;
   };
   warehousingPolicy?: {
     warehouse?: OnlyUUID;
