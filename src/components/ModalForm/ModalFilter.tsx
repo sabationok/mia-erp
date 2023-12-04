@@ -2,6 +2,7 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { checks } from '../../utils';
+import { t } from '../../lang';
 
 export interface ModalFormFilterProps<V = any, D = any> {
   getDefaultValue?: (opt: FilterOption<V, D>) => number;
@@ -19,6 +20,7 @@ export interface ModalFormFilterProps<V = any, D = any> {
   renderLabel?: (info: { option?: FilterOption<V, D>; index: number; isActive: boolean }) => React.ReactNode;
 
   asStepper?: boolean;
+  onReset?: () => void;
 
   optionProps?: { fitContentH?: boolean };
 }
@@ -67,6 +69,7 @@ const ModalFilter = <V = any, D = any>({
   onChangeIndex,
   optionProps,
   renderLabel,
+  onReset,
   ...props
 }: ModalFormFilterProps<V, D> & React.HTMLAttributes<HTMLDivElement>) => {
   const [current, setCurrent] = useState<number>(currentIndex);
@@ -84,6 +87,13 @@ const ModalFilter = <V = any, D = any>({
     },
     [name, onFilterValueSelect, onOptSelect, onChangeIndex]
   );
+
+  const handleReset = () => {
+    if (onReset) {
+      setCurrent(-1);
+      onReset();
+    }
+  };
 
   useEffect(() => {
     if (checks.isNotUnd(currentIndex)) {
@@ -108,39 +118,46 @@ const ModalFilter = <V = any, D = any>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const renderOptions = useMemo(
-    () =>
-      filterOptions?.map((opt, idx) => (
-        <StButtonIcon
-          key={idx}
-          id={`filter-opt_${opt?.value || idx}`}
-          variant="def"
-          disabled={asStepper || opt?.disabled}
-          onClick={handleSelectOpt(idx, opt)}
-          asStep={asStepper}
-          isActive={asStepper ? idx <= current : current === idx}
-          customLabel={!!renderLabel}
-        >
-          {renderLabel ? (
-            renderLabel({ option: opt, index: idx, isActive: asStepper ? idx <= current : current === idx })
-          ) : (
-            <>
-              <span className={'inner'}>{opt?.label}</span>
-              {opt.extraLabel || null}
-            </>
-          )}
-        </StButtonIcon>
-      )),
-    [asStepper, current, filterOptions, handleSelectOpt, renderLabel]
-  );
+  const renderOptions = useMemo(() => {
+    return filterOptions?.map((opt, idx) => (
+      <StButtonIcon
+        key={idx}
+        id={`filter-opt_${opt?.value || idx}`}
+        variant="def"
+        disabled={asStepper || opt?.disabled}
+        onClick={handleSelectOpt(idx, opt)}
+        asStep={asStepper}
+        isActive={asStepper ? idx <= current : current === idx}
+        customLabel={!!renderLabel}
+      >
+        {renderLabel ? (
+          renderLabel({ option: opt, index: idx, isActive: asStepper ? idx <= current : current === idx })
+        ) : (
+          <>
+            <span className={'inner'}>{opt?.label}</span>
+            {opt.extraLabel || null}
+          </>
+        )}
+      </StButtonIcon>
+    ));
+  }, [asStepper, current, filterOptions, handleSelectOpt, renderLabel]);
 
   return filterOptions?.length && filterOptions?.length > 0 ? (
-    <Filter className="filter" gridRepeat={filterOptions?.length} optionProps={optionProps} {...props}>
+    <Filter
+      className="filter"
+      gridRepeat={(filterOptions?.length ?? 0) + (onReset ? 1 : 0)}
+      optionProps={optionProps}
+      {...props}
+    >
+      {onReset && (
+        <StButtonIcon variant="def" onClick={handleReset} isActive={current === -1}>
+          <span className={'inner'}>{t('All')}</span>
+        </StButtonIcon>
+      )}
+
       {renderOptions}
     </Filter>
-  ) : (
-    <></>
-  );
+  ) : null;
 };
 
 const Filter = styled.div<{ gridRepeat?: number; optionProps?: { fitContentH?: boolean } }>`

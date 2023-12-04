@@ -2,7 +2,7 @@ import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { SelectItem } from '../components/TableList/TableList';
 import { t } from '../lang';
 import { BusinessSubjectTypeEnum, ICompany, OwnershipTypeEnum } from '../types/companies.types';
-import { enumToFilterOptions } from '../utils/fabrics';
+import { enumToFilterOptions } from '../utils';
 
 export const ownershipTypeFilterOptions = enumToFilterOptions(OwnershipTypeEnum);
 export const businessSubjectTypeFilterOptions = enumToFilterOptions(BusinessSubjectTypeEnum);
@@ -10,7 +10,7 @@ export const companiesTableColumns: CellTittleProps<ICompany>[] = [
   {
     top: {
       name: 'Назва',
-      getData: rd => (rd.name ? `${rd.name} ${rd.fullName || ''}` : `${rd.fullLabel}`),
+      // getData: rd => (rd.name ? `${rd.name} ${rd.fullName || ''}` : `${rd.fullLabel}`),
     },
     bottom: {
       name: 'Тип',

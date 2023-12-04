@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { ICreateOrderInfoFormState, IOrderTempSlot } from '../../types/orders/orders.types';
+import { ICreateOrderInfoFormState, IOrder, IOrderTempSlot } from '../../types/orders/orders.types';
 
 enum OrdersActionTypeEnum {
   addSlotToOrder = 'orders/addSlotToOrderAction',
@@ -35,3 +35,25 @@ export const UpdateCurrentGroupFormInfoDataAction = createAction<
 export const ClearCurrentGroupFormDataAction = createAction<any, OrdersActionTypeEnum.clearGroupFormData>(
   OrdersActionTypeEnum.clearGroupFormData
 );
+
+export type OrderListDataKey = keyof Pick<IOrder, 'slots' | 'deliveries' | 'invoices' | 'payments'>;
+
+export const UpdateCurrentOrderInfoAction = createAction<
+  { key: OrderListDataKey; data: IOrder[OrderListDataKey] } & { update?: boolean; refresh?: boolean }
+>(`orders/updateCurrentOrderInfoAction`);
+
+export const UpdateCurrentOrderInfoByKeyAction = <Key extends OrderListDataKey>(
+  key: Key,
+  data: IOrder[Key],
+  options?: { update?: boolean; refresh?: boolean }
+) => {
+  const action = createAction<
+    { key: OrderListDataKey; data: IOrder[OrderListDataKey] } & { update?: boolean; refresh?: boolean }
+  >(`orders/updateCurrentOrderInfoAction/key_${key}`);
+
+  return action({ key, data, ...options });
+};
+export const isUpdateCurrentOrderInfoByKeyAction = (type: string) => {
+  const keys: OrderListDataKey[] = ['deliveries', 'slots', 'invoices', 'payments'];
+  return type.startsWith('orders') && keys.some(k => type.endsWith(`key_${k}`));
+};

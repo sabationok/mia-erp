@@ -1,6 +1,7 @@
 import { AppResponse, IBase } from '../redux/global.types';
 import { AuthErrorType } from '../redux/reduxTypes.types';
 import { IPermission } from './permissions.types';
+import { IEmbeddedName, MaybeNull } from './utils.types';
 
 export interface ISystemRole extends IBase {
   name?: string;
@@ -9,7 +10,7 @@ export interface ISystemRole extends IBase {
 }
 
 export interface IUserBase extends IBase {
-  name?: string;
+  name?: MaybeNull<string | IEmbeddedName>;
   secondName?: string;
   email?: string;
   avatarURL?: string;

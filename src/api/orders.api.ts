@@ -1,27 +1,33 @@
 import baseApi from './baseApi';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import {
-  IAllOrdersRes,
   ICreateOrdersWithSlotsAndGroupByWarehousesReqData,
+  IOrder,
   IOrderRes,
+  IOrderSlot,
 } from '../types/orders/orders.types';
+import { AppResponse, OnlyUUID } from '../redux/global.types';
 import { AppQueryParams } from './index';
 
 export default class OrdersApi {
   private static api = baseApi;
   private static endpoints = APP_CONFIGS.endpoints.ordersEndpoints;
 
-  public static getAll(...args: any[]): Promise<IAllOrdersRes> {
+  public static getAll(...args: any[]): Promise<AppResponse<IOrder[]>> {
     return this.api.get(this.endpoints.getAll());
   }
 
-  public static getById(...args: any[]): Promise<IOrderRes> {
-    return this.api.get(this.endpoints.getById());
+  public static getById(data?: OnlyUUID & { params?: { fullInfo?: boolean } }): Promise<AppResponse<IOrder>> {
+    return this.api.get(this.endpoints.getOrderById(data?._id), { params: data?.params });
   }
 
-  public static createOne(...args: any[]): Promise<IOrderRes> {
+  public static createOne(...args: any[]): Promise<AppResponse<IOrder>> {
     return this.api.post(this.endpoints.create());
   }
+
+  public static getSlots = (query?: AppQueryParams): Promise<AppResponse<IOrderSlot[]>> => {
+    return this.api.get(this.endpoints.getSlots(), { params: query });
+  };
 
   public static createManyOrdersGroupedByWarehouse = (
     data?: ICreateOrdersWithSlotsAndGroupByWarehousesReqData
@@ -31,13 +37,6 @@ export default class OrdersApi {
       { slots: data?.data.slots, ...data?.data.info },
       { params: data?.params }
     );
-  };
-
-  public static createGroupWithSlots = (
-    data?: ICreateOrdersWithSlotsAndGroupByWarehousesReqData,
-    params?: AppQueryParams
-  ): Promise<IOrderRes> => {
-    return this.api.post(this.endpoints.create(), data, { params });
   };
 
   // public static  deleteOne(...args: any[]): Promise<AppResponse<IOrder & { result: boolean }>> {

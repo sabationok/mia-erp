@@ -87,7 +87,7 @@ const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = a
           // if (childControl?.childName) clearChild(childControl?.childName);
         },
         name,
-        selectValue: formValues[name],
+        selectedOption: formValues[name],
         onClear: () => {
           if (!formValues[name]) return;
 

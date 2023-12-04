@@ -1,14 +1,13 @@
 import { CompanySettingsTabBaseProps } from './companySettingsTabs.types';
 import { useAppForm } from '../../../hooks';
-import { ICompanyFormData } from '../../../types/companies.types';
+import { ICompanyWarehousingPolicyFormData } from '../../../types/companies.types';
 import { usePermissionsSelector, useWarehousesSelector } from '../../../redux/selectors.store';
 import { useMemo } from 'react';
 import { FilterOption } from '../../ModalForm/ModalFilter';
-import FlexBox from '../../atoms/FlexBox';
+import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { t } from '../../../lang';
 import { toReqData } from '../../../utils';
-import { SettingsStyles } from '../components/styles';
 import ModalFooter from '../../ModalForm/ModalFooter';
 
 export interface WarehousingPolicyTabProps extends CompanySettingsTabBaseProps {}
@@ -21,7 +20,7 @@ const WarehousingPolicyTab = ({ onClose }: WarehousingPolicyTabProps) => {
     (): FilterOption<string>[] => warehouses.map(w => ({ ...w, value: w._id })),
     [warehouses]
   );
-  const form = useAppForm<ICompanyFormData>({ defaultValues: company as never });
+  const form = useAppForm<ICompanyWarehousingPolicyFormData>({ defaultValues: company as never });
   const formValues = form.watch();
 
   // const registerSwitch = (name: keyof Omit<ICompanyDeliveryPolicyFormData, 'method'>) => {
@@ -34,25 +33,28 @@ const WarehousingPolicyTab = ({ onClose }: WarehousingPolicyTabProps) => {
   //   };
   // };
 
-  const onValid = (fData: ICompanyFormData) => {
+  const onValid = (fData: ICompanyWarehousingPolicyFormData) => {
     console.log(toReqData(fData));
   };
   // const onValid = (data: ICompanyConfigsFormData) => {};
 
   return (
-    <SettingsStyles.Form>
+    <FlexForm flex={1} overflow={'hidden'} onSubmit={form.handleSubmit(onValid)}>
       <FlexBox overflow={'auto'} flex={1} fillWidth padding={'0 8px 8px'}>
         <CustomSelect
-          {...form.registerSelect('warehousingPolicy.warehouse', {
-            options: warehousesSelectOptions,
+          onSelect={option => {
+            form.setValue('warehouse', option);
+          }}
+          {...{
+            options: warehouses,
             label: t('Default warehouse'),
             placeholder: t('Select default warehouse'),
-          })}
+          }}
         />
       </FlexBox>
 
-      <ModalFooter onClick={onClose} onSubmitPassed isLoading={false}></ModalFooter>
-    </SettingsStyles.Form>
+      <ModalFooter onSubmitPassed isLoading={false}></ModalFooter>
+    </FlexForm>
   );
 };
 

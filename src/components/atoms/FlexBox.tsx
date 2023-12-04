@@ -77,8 +77,7 @@ const XlStyles = css<FlexBoxProps>`
     overflow: ${({ xlStyles, overflow = '' }) => xlStyles?.overflow || overflow};
   }
 `;
-
-const FlexBox = styled.div<FlexBoxProps>`
+export const FlexBoxCss = css<FlexBoxProps>`
   display: flex;
 
   flex-direction: ${({ fxDirection = 'column' }) => fxDirection};
@@ -108,6 +107,13 @@ const FlexBox = styled.div<FlexBoxProps>`
   ${({ xlStyles }) => {
     if (xlStyles) return XlStyles;
   }};
+`;
+const FlexBox = styled.div<FlexBoxProps>`
+  ${FlexBoxCss}
+`;
+
+export const FlexForm = styled.form<FlexBoxProps>`
+  ${FlexBoxCss}
 `;
 
 export const PrimaryBox = styled(FlexBox)`

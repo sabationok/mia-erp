@@ -1,7 +1,7 @@
 import { StateErrorType } from '../reduxTypes.types';
 import { createSlice } from '@reduxjs/toolkit';
 import { ICheckoutPaymentMethod, IPayment } from '../../types/payments.types';
-import { getAllPaymentMethodsThunk, updatePaymentMethodThunk } from './payments.thunks';
+import { getAllPaymentMethodsThunk, getAllPaymentsThunk, updatePaymentMethodThunk } from './payments.thunks';
 
 export interface PaymentsState {
   payments: IPayment[];
@@ -27,5 +27,12 @@ export const paymentsSlice = createSlice({
       })
       .addCase(updatePaymentMethodThunk.fulfilled, (s, a) => {
         s.methods = s.methods.map(mtd => (mtd._id === a.payload._id ? a.payload : mtd));
+      })
+      .addCase(getAllPaymentsThunk.fulfilled, (s, a) => {
+        if (a.payload.update) {
+          s.payments.concat(a.payload.data);
+        } else {
+          s.payments = a.payload.data;
+        }
       }),
 });

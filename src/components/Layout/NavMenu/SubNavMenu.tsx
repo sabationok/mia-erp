@@ -8,12 +8,16 @@ import { IPriceList } from '../../../types/priceManagement.types';
 import { usePermissionsSelector } from '../../../hooks/usePermissionsService.hook';
 import { useEffect, useMemo } from 'react';
 import { AppPagesEnum } from '../../AppPages';
+import { MaybeNull } from '../../../types/utils.types';
 
 export interface SubNavMenuProps {
   subMenuKey: AppPagesEnum;
   onActive?: (key: AppPagesEnum) => void;
 }
-const getLinkDataMap: Record<AppPagesEnum | string, ((option: any) => { id?: string; label?: string }) | undefined> = {
+const getLinkDataMap: Record<
+  AppPagesEnum | string,
+  ((option: any) => { id?: string; label?: MaybeNull<string> }) | undefined
+> = {
   [AppPagesEnum.warehouses]: (warehouse: IWarehouse) => ({
     id: warehouse._id,
     label: `${warehouse?.label} | ${warehouse?.code}`,
@@ -21,7 +25,7 @@ const getLinkDataMap: Record<AppPagesEnum | string, ((option: any) => { id?: str
   [AppPagesEnum.priceLists]: (priceList: IPriceList) => ({ id: priceList._id, label: priceList?.label }),
   [AppPagesEnum.companies]: (permission: IPermission) => ({
     id: permission?.company?._id,
-    label: permission?.company?.label,
+    label: permission?.company?.label?.base,
   }),
 };
 const SubNavMenu: React.FC<SubNavMenuProps> = ({ subMenuKey, onActive }) => {

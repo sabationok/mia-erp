@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
-import React, { MouseEventHandler, useCallback, useMemo } from 'react';
+import React, { MouseEventHandler, useCallback, useMemo, useState } from 'react';
 import { usePageOverlayService } from '../../atoms/PageOverlayProvider';
 import OrderOverviewXL from '../../Overviews/OrderOverviewXL';
 import { useOrdersSelector } from '../../../redux/selectors.store';
+import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 
 export interface PageOrderOverviewLeftSideProps {
   toggleRightSideVisibility?: () => void;
@@ -12,8 +13,8 @@ const PageOrderOverviewLeftSide: React.FC<PageOrderOverviewLeftSideProps> = ({ t
   const { currentOrder } = useOrdersSelector();
   const overlayService = usePageOverlayService();
   // const modalS = useModalProvider();
-  // const [loading, setLoading] = useState(false);
-  // const { products: productsS } = useAppServiceProvider();
+  const [loading, setLoading] = useState(false);
+  const { orders: ordersServ } = useAppServiceProvider();
 
   const onOverlayBackdropClick = useCallback(
     (id: string): MouseEventHandler<HTMLDivElement> =>
@@ -87,13 +88,13 @@ const PageOrderOverviewLeftSide: React.FC<PageOrderOverviewLeftSideProps> = ({ t
                 }
               : undefined
           }
-          // onRefresh={
-          //   loading
-          //     ? undefined
-          //     : () => {
-          //         // const handler = ToastService.createLoader('Refreshing...').open;
-          //       }
-          // }
+          onRefresh={() => {
+            currentOrder?._id &&
+              ordersServ.getById({
+                data: { _id: currentOrder?._id, options: { refreshCurrent: true } },
+                onLoading: setLoading,
+              });
+          }}
           onOpenRightSide={toggleRightSideVisibility}
         />
 

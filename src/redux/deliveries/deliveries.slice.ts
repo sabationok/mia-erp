@@ -1,19 +1,19 @@
 import { StateErrorType } from '../reduxTypes.types';
 
 import { createSlice } from '@reduxjs/toolkit';
-import { getAllDeliveryMethodsThunk, updateDeliveryMethodThunk } from './deliveries.thunks';
+import { getAllDeliveriesThunk, getAllDeliveryMethodsThunk, updateDeliveryMethodThunk } from './deliveries.thunks';
 import { IDeliveryMethod } from '../../types/integrations.types';
 import { IDelivery } from '../../types/deliveries.types';
 
 export interface DeliveriesState {
-  shipments: IDelivery[];
+  deliveries: IDelivery[];
   methods: IDeliveryMethod[];
   error: StateErrorType | null;
   isLoading: boolean;
 }
 
 const state: DeliveriesState = {
-  shipments: [],
+  deliveries: [],
   methods: [],
   error: null,
   isLoading: false,
@@ -29,5 +29,12 @@ export const deliveriesSlice = createSlice({
       })
       .addCase(updateDeliveryMethodThunk.fulfilled, (s, a) => {
         s.methods = s.methods.map(mtd => (mtd._id === a.payload._id ? a.payload : mtd));
+      })
+      .addCase(getAllDeliveriesThunk.fulfilled, (s, a) => {
+        if (a.payload?.update) {
+          s.deliveries.concat(a.payload.data ?? []);
+        } else {
+          s.deliveries = a.payload?.data;
+        }
       }),
 });

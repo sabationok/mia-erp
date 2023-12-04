@@ -29,16 +29,18 @@ const ButtonSwitch = <Name extends string | number | symbol = string>({
 
   const options = useMemo(
     () => [
-      { value: false, label: t(rejectLabel || 'No') },
-      { value: true, label: t(acceptLabel || 'Yes') },
+      { value: false, label: t(rejectLabel ?? 'No') },
+      { value: true, label: t(acceptLabel ?? 'Yes') },
     ],
     [acceptLabel, rejectLabel]
   );
+
   useEffect(() => {
     if (!_.isUndefined(value)) {
       setCurrent(value);
     }
   }, [value]);
+
   return <ButtonsGroup options={options} defaultIndex={current ? 1 : 0} onChangeIndex={handleChange} />;
 };
 

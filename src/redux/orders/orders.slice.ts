@@ -8,7 +8,14 @@ import {
   UpdateCurrentGroupFormInfoDataAction,
   UpdateSlotInGroupAction,
 } from './orders.actions';
-import { getAllOrdersThunk } from './orders.thunks';
+import {
+  getAllDeliveriesByOrderThunk,
+  getAllInvoicesByOrderThunk,
+  getAllOrdersThunk,
+  getAllPaymentsByOrderThunk,
+  getOrderByIdThunk,
+  getOrderSlotsThunk,
+} from './orders.thunks';
 
 export interface IOrdersState {
   orders: IOrder[];
@@ -91,5 +98,46 @@ export const ordersSlice = createSlice({
       })
       .addCase(ClearCurrentGroupFormDataAction, (s, a) => {
         s.ordersGroupFormData = { ...initialOrdersGroupFormData };
+      })
+      .addCase(getOrderByIdThunk.fulfilled, (S, A) => {
+        if (A.payload.refreshCurrent) {
+          S.currentOrder = A.payload.data;
+        }
+      })
+      .addCase(getOrderSlotsThunk.fulfilled, (s, a) => {
+        if (!s.currentOrder) return;
+
+        if (a.payload.update) {
+          s.currentOrder.slots?.concat(a.payload.data);
+        } else {
+          s.currentOrder.slots = a.payload.data;
+        }
+      })
+      .addCase(getAllInvoicesByOrderThunk.fulfilled, (s, a) => {
+        if (!s.currentOrder) return;
+
+        if (a.payload.update) {
+          s.currentOrder.invoices?.concat(a.payload.data);
+        } else {
+          s.currentOrder.invoices = a.payload.data;
+        }
+      })
+      .addCase(getAllDeliveriesByOrderThunk.fulfilled, (s, a) => {
+        if (!s.currentOrder) return;
+
+        if (a.payload.update) {
+          s.currentOrder.deliveries?.concat(a.payload.data);
+        } else {
+          s.currentOrder.deliveries = a.payload.data;
+        }
+      })
+      .addCase(getAllPaymentsByOrderThunk.fulfilled, (s, a) => {
+        if (!s.currentOrder) return;
+
+        if (a.payload.update) {
+          s.currentOrder.payments?.concat(a.payload.data);
+        } else {
+          s.currentOrder.payments = a.payload.data;
+        }
       }),
 });

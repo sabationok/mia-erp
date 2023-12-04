@@ -6,7 +6,7 @@ import { AppResponse, OnlyUUID } from '../redux/global.types';
 
 export class WarehousesApi {
   private static api = baseApi;
-  private static endpoints = APP_CONFIGS.endpoints.warehousesEndpoints;
+  private static endpoints = APP_CONFIGS.endpoints.warehousing;
 
   public static async createWarehouse(data?: IWarehouseReqData): Promise<AppResponse<IWarehouse>> {
     return this.api.post(this.endpoints.create(), data?.data, { params: data?.params });

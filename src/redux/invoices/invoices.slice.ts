@@ -1,7 +1,7 @@
 import { StateErrorType } from '../reduxTypes.types';
 import { createSlice } from '@reduxjs/toolkit';
 import { IInvoice } from '../../types/invoices.types';
-import { getAllInvoiceMethodsThunk, updateInvoicingMethodThunk } from './invoicing.thunks';
+import { getAllInvoiceMethodsThunk, getAllInvoicesThunk, updateInvoicingMethodThunk } from './invoicing.thunks';
 import { IInvoicingMethod } from '../../types/integrations.types';
 
 export interface InvoicesState {
@@ -28,5 +28,12 @@ export const invoicesSlice = createSlice({
       })
       .addCase(updateInvoicingMethodThunk.fulfilled, (s, a) => {
         s.methods = s.methods.map(mtd => (mtd._id === a.payload._id ? a.payload : mtd));
+      })
+      .addCase(getAllInvoicesThunk.fulfilled, (s, a) => {
+        if (a.payload.update) {
+          s.invoices.concat(a.payload.data);
+        } else {
+          s.invoices = a.payload.data;
+        }
       }),
 });

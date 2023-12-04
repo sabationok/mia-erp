@@ -6,6 +6,7 @@ import {
   ICreateOrderInfoFormState,
   IOrder,
   IOrderReqData,
+  IOrderSlot,
   IOrderSlotDto,
   IOrderTempSlot,
 } from '../types/orders/orders.types';
@@ -17,10 +18,25 @@ import {
   UpdateCurrentGroupFormInfoDataAction,
   UpdateSlotInGroupAction,
 } from '../redux/orders/orders.actions';
-import { getAllOrdersThunk } from '../redux/orders/orders.thunks';
-import { defaultThunkPayload } from '../utils/fabrics';
-import { toOrderSlotsReqData, toOrderSlotsRequestDataOptions, toReqData, ToRequestDataOptions } from '../utils';
+import {
+  getAllDeliveriesByOrderThunk,
+  getAllInvoicesByOrderThunk,
+  getAllOrdersThunk,
+  getAllPaymentsByOrderThunk,
+  getOrderByIdThunk,
+  getOrderSlotsThunk,
+} from '../redux/orders/orders.thunks';
+import {
+  defaultThunkPayload,
+  toOrderSlotsReqData,
+  toOrderSlotsRequestDataOptions,
+  toReqData,
+  ToRequestDataOptions,
+} from '../utils';
 import { EntityPath } from '../types/utils.types';
+import { IInvoice } from '../types/invoices.types';
+import { IDelivery } from '../types/deliveries.types';
+import { IPayment } from '../types/payments.types';
 
 type EmptyFn = (...args: any[]) => Promise<any>;
 
@@ -28,12 +44,31 @@ export interface OrdersService {
   createOne: EmptyFn | ServiceDispatcherAsync<IOrderReqData, IOrder>;
   deleteOne: EmptyFn | ServiceDispatcherAsync;
   updateOne: EmptyFn | ServiceDispatcherAsync;
-  getById: EmptyFn | ServiceDispatcherAsync<OnlyUUID, IOrder>;
+  getById: ServiceDispatcherAsync<
+    OnlyUUID & { params?: { fullInfo?: boolean }; options?: { refreshCurrent?: boolean } },
+    IOrder
+  >;
   getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IOrder[]>;
-  getSlotsByOrderId: EmptyFn | ServiceDispatcherAsync<OnlyUUID>;
+  getSlots: ServiceDispatcherAsync<
+    { params?: Pick<AppQueryParams<any>, 'group' | 'order'>; update?: boolean },
+    IOrderSlot[]
+  >;
+
+  getPaymentsByOrderId: ServiceDispatcherAsync<
+    { params?: Pick<AppQueryParams<any>, 'customer' | 'manager' | 'group' | 'status' | 'order'>; update?: boolean },
+    IPayment[]
+  >;
+
+  getInvoicesByOrderId: ServiceDispatcherAsync<
+    { params?: Pick<AppQueryParams<any>, 'customer' | 'manager' | 'group' | 'status' | 'order'>; update?: boolean },
+    IInvoice[]
+  >;
+  getDeliveriesByOrderId: ServiceDispatcherAsync<
+    { params?: Pick<AppQueryParams<any>, 'customer' | 'manager' | 'group' | 'status' | 'order'>; update?: boolean },
+    IDelivery[]
+  >;
+
   getShipmentsByOrderId: EmptyFn | ServiceDispatcherAsync<OnlyUUID>;
-  getPaymentsByOrderId: EmptyFn | ServiceDispatcherAsync<OnlyUUID>;
-  getInvoicesByOrderId: EmptyFn | ServiceDispatcherAsync<OnlyUUID>;
 
   updateCurrentGroupFormInfoData: ServiceDispatcher<ICreateOrderInfoFormState>;
   clearCurrentGroupFormData: ServiceDispatcher;
@@ -59,16 +94,19 @@ const useOrdersServiceHook = (): OrdersService => {
   return useMemo(
     (): OrdersService => ({
       createOne: async () => dispatch(() => {}),
-      getById: async () => dispatch(() => {}),
+      getById: args => dispatch(getOrderByIdThunk(defaultThunkPayload(args))),
       getAll: args => dispatch(getAllOrdersThunk(defaultThunkPayload(args))),
+
       deleteOne: async () => dispatch(() => {}),
       updateOne: async () => dispatch(() => {}),
 
-      getSlotsByOrderId: async () => dispatch(() => {}),
-      getShipmentsByOrderId: async () => dispatch(() => {}),
-      getPaymentsByOrderId: async () => dispatch(() => {}),
-      getInvoicesByOrderId: async () => dispatch(() => {}),
+      getSlots: args => dispatch(getOrderSlotsThunk(defaultThunkPayload(args))),
 
+      getPaymentsByOrderId: args => dispatch(getAllPaymentsByOrderThunk(defaultThunkPayload(args))),
+      getInvoicesByOrderId: args => dispatch(getAllInvoicesByOrderThunk(defaultThunkPayload(args))),
+      getDeliveriesByOrderId: args => dispatch(getAllDeliveriesByOrderThunk(defaultThunkPayload(args))),
+
+      getShipmentsByOrderId: async () => dispatch(() => {}),
       addTempSlot: args => dispatch(AddSlotToGroupAction(args)),
       removeTempSlot: args => dispatch(RemoveSlotFromGroupAction(args)),
       updateTempSlot: args => dispatch(UpdateSlotInGroupAction(args)),

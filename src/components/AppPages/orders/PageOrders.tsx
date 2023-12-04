@@ -11,7 +11,7 @@ import { ordersSearchParams, ordersTableColumns } from '../../../data/orders.dat
 import { IOrder, OrderStatusEnum } from '../../../types/orders/orders.types';
 import useOrdersActionsCreatorHook from '../../../hooks/useOrdersActionsCreator.hook';
 import { BaseAppPageProps } from '../index';
-import { enumToFilterOptions } from '../../../utils/fabrics';
+import { enumToFilterOptions } from '../../../utils';
 import ModalFilter, { FilterOption } from '../../ModalForm/ModalFilter';
 import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';

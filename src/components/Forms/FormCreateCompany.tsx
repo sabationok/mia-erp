@@ -18,8 +18,15 @@ import { FormInputs } from './components/atoms';
 import { AppModuleName } from '../../redux/reduxTypes.types';
 
 const createCompanyFormSchema = yup.object().shape({
-  name: yup.string(),
-  fullName: yup.string(),
+  name: {
+    first: yup.string(),
+    second: yup.string(),
+    middle: yup.string(),
+  },
+  label: {
+    base: yup.string(),
+    print: yup.string(),
+  },
   email: yup.string().required(),
   businessSubjectType: yup.string().oneOf(Object.values(BusinessSubjectTypeEnum), 'Недопустиме значення').required(),
   ownershipType: yup.object().shape({
@@ -27,8 +34,6 @@ const createCompanyFormSchema = yup.object().shape({
     value: yup.string().oneOf(Object.values(OwnershipTypeEnum), 'Недопустиме значення'),
   }),
   taxCode: yup.string(),
-  label: yup.string(),
-  fullLabel: yup.string(),
   phone: yup.string(),
 } as Record<keyof ICompanyFormData, any>);
 
@@ -127,34 +132,38 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
 
         {formRenderConfig.renderNamesInputs && (
           <>
-            <InputLabel label={t('name')} error={errors.name} required>
+            <InputLabel label={t('name')} error={errors.name?.first} required>
               <InputText
-                placeholder={t('insertLabel')}
-                {...register('name')}
+                placeholder={t('Insert first name')}
+                {...register('name.first')}
                 required
                 autoFocus={formRenderConfig.renderNamesInputs}
               />
             </InputLabel>
 
-            <InputLabel label={t('secondName')} error={errors.secondName} required>
-              <InputText placeholder={t('insertSecondName')} {...register('secondName')} required />
+            <InputLabel label={t('secondName')} error={errors?.name?.second} required>
+              <InputText placeholder={t('insertSecondName')} {...register('name.second')} required />
+            </InputLabel>
+
+            <InputLabel label={t('Middle name')} error={errors?.name?.middle} required>
+              <InputText placeholder={t('Insert middle name')} {...register('name.middle')} required />
             </InputLabel>
           </>
         )}
 
         {formRenderConfig.renderLabelInput && (
           <>
-            <InputLabel label={t('label')} error={errors.label} required={!formRenderConfig.renderNamesInputs}>
+            <InputLabel label={t('Label')} error={errors.label?.base} required={!formRenderConfig.renderNamesInputs}>
               <InputText
                 placeholder={t('insertLabel')}
-                {...register('label')}
+                {...register('label.base')}
                 required={!formRenderConfig.renderNamesInputs}
                 autoFocus={!formRenderConfig.renderNamesInputs}
               />
             </InputLabel>
 
-            <InputLabel label={t('Print name')} error={errors.fullName}>
-              <InputText placeholder={t('Enter print name')} {...register('fullName')} />
+            <InputLabel label={t('Print label')} error={errors.label?.print}>
+              <InputText placeholder={t('Enter print label')} {...register('label.print')} />
             </InputLabel>
           </>
         )}

@@ -12,9 +12,23 @@ export const permissionsTableColumns: CellTittleProps<IPermission>[] = [
       name: t('label'),
       align: 'start',
       path: 'company.name',
-      getData: rd => rd.company?.name || rd.company?.label,
+      getData: rd => {
+        if (rd.company?.name) {
+          return [rd.company?.name?.first, rd.company?.name?.middle, rd.company?.name?.second]
+            .filter(el => el)
+            .join(' ');
+        } else {
+          return rd.company?.label?.base ?? t('Undefined label');
+        }
+      },
     },
-    bottom: { name: 'ІПН/ЄДРПОУ', align: 'start', path: 'company.taxCode' },
+    bottom: {
+      name: 'ІПН/ЄДРПОУ',
+      align: 'start',
+      getData(rd) {
+        return rd.company?.taxCode?.corp ?? '---' + ', ' + rd.company?.taxCode?.personal ?? '---';
+      },
+    },
 
     width: '250px',
     action: 'doubleDataWithAvatar',
@@ -118,27 +132,27 @@ export const testPermissions: IPermission[] = [
   {
     ...initialPermission,
     _id: 'dfbscfbvfgnbd13f5g13bdg1',
-    company: { ...initialCompany, _id: 'dfbscxvfgnbd13f5g13bdg1', name: 'Roga & Copyta' },
+    company: { ...initialCompany, _id: 'dfbscxvfgnbd13f5g13bdg1', name: { first: 'Roga & Copyta' } },
     role: { ...initialPermission.role, label: 'Менеджер' },
   },
   {
     ...initialPermission,
     _id: 'dfbscfbvsvxfgnbd13f5g13bdg1',
-    company: { ...initialCompany, _id: 'dfbscxvfgnbd13f5g13bdg1', name: 'Roga & Copyta' },
+    company: { ...initialCompany, _id: 'dfbscxvfgnbd13f5g13bdg1', name: { first: 'Roga & Copyta' } },
     role: { ...initialPermission.role, label: 'Менеджер' },
   },
   {
     ...initialPermission,
     _id: 'dfbscxvcxgnbd13f5g13bdg1',
     status: PermissionStatus.PENDING,
-    company: { ...initialCompany, _id: 'dfbsdfsdf13f5g13bdg1', name: 'Roga & Copyta 3' },
+    company: { ...initialCompany, _id: 'dfbsdfsdf13f5g13bdg1', name: { first: 'Roga & Copyta 3' } },
     role: { ...initialPermission.role, label: 'Помічник' },
   },
   {
     ...initialPermission,
     _id: 'dfbscxvsdfbvsd13f5g13bdg1',
     status: PermissionStatus.ACCEPTED,
-    company: { ...initialCompany, _id: 'dfbsxcvgbd13f5g13bdg1', name: 'Roga & Copyta 4' },
+    company: { ...initialCompany, _id: 'dfbsxcvgbd13f5g13bdg1', name: { first: 'Roga & Copyta 4' } },
     role: { ...initialPermission.role, label: 'Аудитор' },
     owner: testUserKarina,
   },

@@ -47,12 +47,15 @@ export interface AppQueryParams<Type = any> extends Record<string, any> {
   search?: string;
   searchBy?: string;
   disabledForClient?: boolean;
+  status?: string | { internal?: string; external?: string };
 
   isDefault?: boolean;
   asDefault?: boolean;
-
   fullInfo?: boolean;
 
+  group?: OnlyUUID;
+  manager?: OnlyUUID;
+  customer?: OnlyUUID;
   owner?: OnlyUUID;
   parent?: OnlyUUID;
   product?: OnlyUUID;

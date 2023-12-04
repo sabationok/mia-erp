@@ -1,12 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from '../../utils';
-import { PaymentsApi } from '../../api';
-import { ICheckoutPaymentMethod, IPaymentMethodReqData } from '../../types/payments.types';
+import { AppQueryParams, PaymentsApi } from '../../api';
+import { ICheckoutPaymentMethod, IPayment, IPaymentMethodReqData } from '../../types/payments.types';
 import { ThunkPayload } from '../store.store';
 
 enum PaymentsThunkTypeEnum {
-  getAllPayments = 'payments/getAllPaymentsThunk',
-
+  getAll = 'payments/getAllPaymentsThunk',
   getAllMethods = 'payments/getAllMethodsThunk',
   updateMethod = 'payments/updateMethodThunk',
 }
@@ -47,3 +46,28 @@ export const updatePaymentMethodThunk = createAsyncThunk<
     return thunkAPI.rejectWithValue(axiosErrorCheck(e));
   }
 });
+
+export const getAllPaymentsThunk = buildGetAllPaymentsThunk(PaymentsThunkTypeEnum.getAll);
+export function buildGetAllPaymentsThunk(type: string) {
+  return createAsyncThunk<
+    { refresh?: boolean; update?: boolean; data: IPayment[] },
+    ThunkPayload<
+      { refresh?: boolean; params?: Pick<AppQueryParams, 'group' | 'order' | 'manager' | 'customer'> },
+      IPayment[]
+    >
+  >(type, async (args, thunkApi) => {
+    try {
+      const res = await PaymentsApi.getAllByQueries(args?.data?.params);
+      if (res) {
+        args?.onSuccess && args?.onSuccess(res?.data.data);
+      }
+
+      return { ...res?.data, ...args?.data };
+    } catch (error) {
+      args?.onError && args?.onError(error);
+      return thunkApi.rejectWithValue(axiosErrorCheck(error));
+    } finally {
+      args?.onLoading && args?.onLoading(false);
+    }
+  });
+}

@@ -27,7 +27,7 @@ const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElem
 
       <FlexBox fillWidth gap={8} fxDirection={'row'} justifyContent={'flex-end'} padding={'8px'}>
         {onSubmitPassed && (
-          <ButtonIcon type="reset" variant="defOutlinedSmall">
+          <ButtonIcon type="reset" variant={'defOutlinedSmall'}>
             {t('Close')}
           </ButtonIcon>
         )}

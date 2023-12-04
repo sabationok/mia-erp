@@ -19,13 +19,15 @@ const OrderContentTab: React.FC<OrderContentTabProps> = p => {
 
   return (
     <FlexBox fillWidth overflow={'hidden'} flex={1}>
-      <ModalFilter
-        filterOptions={productsFilterOptions}
-        currentIndex={currentTab}
-        onOptSelect={(_o, _v, i) => {
-          setCurrentTab(i);
-        }}
-      />
+      <FlexBox fillWidth>
+        <ModalFilter
+          filterOptions={productsFilterOptions}
+          currentIndex={currentTab}
+          onOptSelect={(_o, _v, i) => {
+            setCurrentTab(i);
+          }}
+        />
+      </FlexBox>
 
       <TableList isSearch={false} isFilter={false} tableData={tableData} tableTitles={orderSlotTableColumns} />
     </FlexBox>

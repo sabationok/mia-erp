@@ -1,5 +1,5 @@
 import { ModalFormProps } from '../ModalForm';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../utils/fabrics';
 import ModalFilter from '../ModalForm/ModalFilter';
 import { CompanySettingsTabBaseProps } from './settings-tabs/companySettingsTabs.types';
@@ -9,6 +9,10 @@ import WarehousingPolicyTab from './settings-tabs/WarehousingPolicyTab';
 import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
 import { OverlayHeader } from '../Forms/FormProduct/components';
+import { ICompany } from '../../types/companies.types';
+import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import { AppModuleName } from '../../redux/reduxTypes.types';
+import { usePermissionsSelector } from '../../redux/selectors.store';
 
 export interface CompanySettingsProps extends Omit<ModalFormProps, 'onSubmit'> {}
 enum CompanySettingsTabs {
@@ -28,7 +32,19 @@ const RenderTabComponent: Record<CompanySettingsTabs, React.FC<CompanySettingsTa
 };
 
 const CompanySettingsModal: React.FC<CompanySettingsProps> = ({ onClose, ...props }) => {
-  const [current, setCurrent] = useState<CompanySettingsTabs>(CompanySettingsTabs.Warehousing);
+  const service = useAppServiceProvider()[AppModuleName.companies];
+  const permission = usePermissionsSelector().permission;
+  const [current, setCurrent] = useState<CompanySettingsTabs>(tabs[0].value);
+  const [currentCompany, setCurrentCompany] = useState<ICompany>();
+
+  useEffect(() => {
+    service.getById({
+      data: { _id: permission.company?._id },
+      onSuccess: data => {
+        setCurrentCompany(data);
+      },
+    });
+  }, [permission.company?._id, service]);
 
   const RenderTab = useMemo(() => {
     return RenderTabComponent[current] || RenderTabComponent.Invoicing;
@@ -46,7 +62,7 @@ const CompanySettingsModal: React.FC<CompanySettingsProps> = ({ onClose, ...prop
         }}
       />
 
-      <RenderTab onClose={onClose} compId={current} />
+      <RenderTab onClose={onClose} compId={current} company={currentCompany} />
     </ModalBox>
   );
 };

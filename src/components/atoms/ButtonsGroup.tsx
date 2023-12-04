@@ -35,9 +35,13 @@ const ButtonsGroup = <V = any,>({
 
   const handleSelect = useCallback(
     (option: ButtonsGroupOption, index: number) => () => {
-      setCurrent(index);
-      onSelect && options && onSelect({ option, value: option?.value, index });
-      onChangeIndex && onChangeIndex(index);
+      if (onSelect) {
+        options && onSelect({ option, value: option?.value, index });
+      } else if (onChangeIndex) {
+        onChangeIndex(index);
+      } else {
+        setCurrent(index);
+      }
     },
     [onChangeIndex, onSelect, options]
   );
@@ -64,13 +68,11 @@ const ButtonsGroup = <V = any,>({
     if (!isUndefined(defaultIndex)) {
       setCurrent(defaultIndex);
 
-      onSelect &&
-        options &&
-        onSelect({ option: options[defaultIndex], value: options[defaultIndex]?.value, index: defaultIndex });
+      // onSelect &&
+      //   options &&
+      //   onSelect({ option: options[defaultIndex], value: options[defaultIndex]?.value, index: defaultIndex });
     }
-
-    // eslint-disable-next-line
-  }, []);
+  }, [defaultIndex]);
 
   useEffect(() => {
     if (!isUndefined(currentOption) && !isUndefined(options)) {

@@ -224,8 +224,8 @@ export const updatePriceInListThunk = createAsyncThunk<
   }
 });
 
-export const getAllPricesThunk = createGetAllPricesThunk(PriceManagementThunkType.getAllPrices);
-function createGetAllPricesThunk(type: string) {
+export const getAllPricesThunk = buildGetAllPricesThunk(PriceManagementThunkType.getAllPrices);
+function buildGetAllPricesThunk(type: string) {
   return createAsyncThunk<
     { refreshCurrent?: boolean; data: IPriceListItem[] },
     ThunkPayload<

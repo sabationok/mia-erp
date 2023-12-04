@@ -1,12 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from '../../utils';
-import { DeliveriesApi } from '../../api';
+import { AppQueryParams, DeliveriesApi } from '../../api';
 import { ThunkPayload } from '../store.store';
 import { IDeliveryMethod, IDeliveryMethodReqData } from '../../types/integrations.types';
+import { isAxiosError } from 'axios';
+import { IDelivery } from '../../types/deliveries.types';
 
 enum DeliveriesThunkTypeEnum {
-  getAll = 'deliveries/getAllThunk',
-
+  getAll = 'deliveries/getAllDeliveriesThunk',
   getAllMethods = 'deliveries/getAllMethodsThunk',
   updateMethod = 'deliveries/updateMethodThunk',
 }
@@ -47,3 +48,28 @@ export const updateDeliveryMethodThunk = createAsyncThunk<
     return thunkAPI.rejectWithValue(axiosErrorCheck(e));
   }
 });
+
+export const getAllDeliveriesThunk = buildGetAllDeliveriesThunk(DeliveriesThunkTypeEnum.getAll);
+export function buildGetAllDeliveriesThunk(type: string) {
+  return createAsyncThunk<
+    { refresh?: boolean; update?: boolean; data: IDelivery[] },
+    ThunkPayload<
+      { refreshCurrent?: boolean; params?: Pick<AppQueryParams, 'group' | 'order' | 'manager'> },
+      IDelivery[]
+    >
+  >(type, async (args, thunkApi) => {
+    try {
+      const res = await DeliveriesApi.getAllByQueries(args?.data?.params);
+      if (res) {
+        args?.onSuccess && args?.onSuccess(res?.data.data);
+      }
+
+      return { data: res?.data.data, refresh: args?.data?.refreshCurrent };
+    } catch (error) {
+      args?.onError && args?.onError(error);
+      return thunkApi.rejectWithValue(isAxiosError(error));
+    } finally {
+      args?.onLoading && args?.onLoading(false);
+    }
+  });
+}

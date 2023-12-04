@@ -179,15 +179,11 @@ const permissionsApiEndpoints: ApiEndpointsMap = {
   [Endpoints.inviteUser]: () => `${API_BASE_ROUTES.PERMISSIONS}/${Endpoints.inviteUser}`,
 };
 
-const companiesApiEndpoints = {
-  [Endpoints.deleteById]: (permissionId?: string) =>
-    `${API_BASE_ROUTES.COMPANIES}/${Endpoints.deleteById}/${permissionId}`,
-  [Endpoints.create]: () => `${API_BASE_ROUTES.COMPANIES}/create`,
-  [Endpoints.getById]: (id?: string) => `${API_BASE_ROUTES.COMPANIES}/getById/${id}`,
-  [Endpoints.getAllByOwnerId]: (ownerId?: string) =>
-    `${API_BASE_ROUTES.COMPANIES}/${Endpoints.getAllByOwnerId}/${ownerId}`,
-  setConfigs: () => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.configs}`,
-  getConfigs: () => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.configs}`,
+const companies = {
+  deleteById: (permissionId?: string) => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.deleteById}/${permissionId}`,
+  create: () => `${API_BASE_ROUTES.COMPANIES}/create`,
+  getById: (id?: string) => `${API_BASE_ROUTES.COMPANIES}/getById/${id}`,
+  getAllByOwnerId: (ownerId?: string) => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.getAllByOwnerId}/${ownerId}`,
   updateById: (id?: string) => `${API_BASE_ROUTES.COMPANIES}/${Endpoints.updateById}/${id || ''}`,
 };
 
@@ -236,8 +232,10 @@ const priceManagementEndpoints: ApiEndpointsMap = {
 
 const ordersEndpoints = {
   getAll: () => `${API_BASE_ROUTES.ORDERS}/getAll`,
-  getById: (orderId?: string) => `${API_BASE_ROUTES.ORDERS}/getById/${orderId}`,
+  getOrderById: (orderId?: string) => `${API_BASE_ROUTES.ORDERS}/order/${orderId}`,
+  getGroupById: (groupId?: string) => `${API_BASE_ROUTES.ORDERS}/group/${groupId}`,
   create: () => `${API_BASE_ROUTES.ORDERS}/create`,
+  getSlots: () => `${API_BASE_ROUTES.ORDERS}/slots`,
   addItemToOrderSlot: (orderId: string) => `${API_BASE_ROUTES.ORDERS}/${Endpoints.addItemToOrderSlot}/${orderId}`,
   softDeleteOrderSlot: (orderId: string, orderSlotId: string) =>
     `${API_BASE_ROUTES.ORDERS}/${Endpoints.softDeleteOrderSlot}/${orderId}/${orderSlotId}`,
@@ -265,7 +263,7 @@ const refunds = {
   getDataForNewRefundSlot: (...args: any[]) => `${API_BASE_ROUTES.REFUNDS}/`,
 };
 
-const warehousesEndpoints = {
+const warehousing = {
   [Endpoints.create]: () => `${API_BASE_ROUTES.WAREHOUSES}/create`,
   [Endpoints.delete]: (id?: string) => `${API_BASE_ROUTES.WAREHOUSES}/delete/${id}`,
   [Endpoints.update]: (id?: string) => `${API_BASE_ROUTES.WAREHOUSES}/update/${id}`,
@@ -339,7 +337,7 @@ const APP_CONFIGS = {
   endpoints: {
     appSettings,
     permissions: permissionsApiEndpoints,
-    companies: companiesApiEndpoints,
+    companies,
     auth: authApiEndpoints,
     directories: directoriesApiEndpoints,
     customRoles: customRoles,
@@ -347,7 +345,7 @@ const APP_CONFIGS = {
     products: productsApiEndpoints,
     propertiesApiEndpoints,
     variationsApiEndpoints,
-    warehousesEndpoints,
+    warehousing,
     priceManagementEndpoints,
     ordersEndpoints,
     payments,

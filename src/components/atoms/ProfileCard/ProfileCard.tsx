@@ -14,7 +14,7 @@ export interface ProfileCardProps extends Omit<IUser, '_id'> {
 
 const ProfileCard: React.FC<ProfileCardProps & React.HTMLAttributes<HTMLDivElement>> = ({
   avatarURL = '',
-  name = 'name',
+  name,
   email = 'email',
   emailFontSize,
   nameFontSize,
@@ -31,7 +31,7 @@ const ProfileCard: React.FC<ProfileCardProps & React.HTMLAttributes<HTMLDivEleme
 
       <Wrapper>
         <ProfileName fontSize={nameFontSize} {...nameProps}>
-          {name}
+          {typeof name === 'string' ? name : name?.first}
         </ProfileName>
 
         <ProfileEmail fontSize={emailFontSize} {...emailProps}>

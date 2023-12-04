@@ -19,6 +19,7 @@ export interface OrderOverviewXLProps {
   onArchive?: () => void;
   onHide?: () => void;
   onRefresh?: () => void;
+  isRefresh?: boolean;
   onCreateVariation?: (data: Record<string, string>, onSuccess?: () => void) => void;
   onOpenRightSide?: () => void;
   className?: string;
@@ -103,6 +104,7 @@ const OrderOverviewXL: React.FC<OrderOverviewXLProps> = p => {
             variant={'onlyIcon'}
             iconSize={'85%'}
             icon={'refresh'}
+            isLoading={p?.isRefresh}
             disabled={!p?.onRefresh}
             onClick={p?.onRefresh}
           />

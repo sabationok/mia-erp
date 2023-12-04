@@ -19,7 +19,8 @@ export interface CustomSelectBaseProps<Option = CustomSelectOptionBase> {
   handleOpenState?: (prevState: boolean) => boolean;
   open?: boolean;
   ref?: RefCallBack;
-  selectValue?: CustomSelectOption<Option>;
+  selectedOption?: CustomSelectOption<Option>;
+  selectedValue?: string | number;
   keepOpen?: boolean;
   inputProps?: Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'>;
   labelProps?: Omit<InputLabelProps, 'onSelect'>;
@@ -127,7 +128,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
     InputComponent,
     inputProps = {},
     labelProps = {},
-    selectValue,
+    selectedOption,
     keepOpen,
     valueKey,
     id,
@@ -146,7 +147,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
   },
   _ref
 ) => {
-  const [currentOption, setCurrentOption] = useState<CustomSelectOption | undefined>(selectValue);
+  const [currentOption, setCurrentOption] = useState<CustomSelectOption | undefined>(selectedOption);
   const [isOpen, setIsOpen] = useState<boolean>(keepOpen || open);
   const labelRef = useRef<HTMLLabelElement>(null);
 
@@ -204,9 +205,11 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
   );
 
   useEffect(() => {
-    if (selectValue) return setCurrentOption(selectValue);
-    if (!selectValue) return setCurrentOption(undefined);
-  }, [selectValue]);
+    if (selectedOption) return setCurrentOption(selectedOption);
+    if (!selectedOption) return setCurrentOption(undefined);
+  }, [selectedOption]);
+
+  useEffect(() => {}, []);
 
   return (
     <FlexBox className={'select-box'} fillWidth style={{ position: 'relative' }} data-select={selectId}>

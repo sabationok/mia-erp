@@ -4,10 +4,10 @@ import { testUserKarina } from '../../data/usersDir.data';
 
 export const initialCompany: ICompany = {
   _id: 'companyId',
-  name: 'Initial Comp',
-  fullName: 'Initial Comp LTD',
+  name: { first: 'Initial Comp' },
+  label: { print: 'Initial Comp LTD' },
   email: 'company@mail.com',
-  taxCode: '51651348435',
+  taxCode: { corp: '51651348435' },
   owner: testUserKarina,
 };
 

@@ -4,7 +4,7 @@ import { IUserBase } from './auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';
 import { IWarehouse } from './warehouses.types';
 import { ExtServiceBase, InputIntegrationBase, OutputIntegrationBase } from './integrations.types';
-import { MaybeNull } from './utils.types';
+import { HasEmbeddedLabel, HasEmbeddedName, HasTaxCode, MaybeNull } from './utils.types';
 import { ISupplierDirItem } from './dir.types';
 
 export enum OwnershipTypeEnum {
@@ -32,6 +32,7 @@ export interface TaxCodeDto {
 export interface HasDeliveryPolicy {
   deliveryPolicy?: MaybeNull<{
     sales?: DeliveryPolicyJsonData;
+    returns?: DeliveryPolicyJsonData;
   }>;
 }
 
@@ -52,17 +53,11 @@ export interface HasSupplementPolicy {
   }>;
 }
 
-export interface ICompanyBase extends IBase {
-  name?: string;
-  secondName?: string;
+export interface ICompanyBase extends IBase, HasEmbeddedLabel, HasEmbeddedName, HasTaxCode {
   email?: string;
-  fullName?: string;
-  label?: string;
-  fullLabel?: string;
   ownershipType?: OwnershipTypeEnum;
   businessSubjectType?: BusinessSubjectTypeEnum;
   phone?: string;
-  taxCode?: string;
   personalTaxCode?: string;
   type?: string;
   holders?: string[];
@@ -99,9 +94,17 @@ export interface InvoicingPolicyJsonData {
   autoCreate?: boolean;
   autoPublish?: boolean;
 }
+
+export enum InvoicingPolicyTypeEnum {
+  sales = 'sales',
+  purchases = 'purchases',
+  delivery = 'delivery',
+  // returns = 'returns',
+}
 export interface ICompanyInvoicingPolicyFormData {
   sales?: InvoicingPolicyJsonData;
   delivery?: InvoicingPolicyJsonData;
+  purchases?: InvoicingPolicyJsonData;
 }
 export interface DeliveryPolicyJsonData {
   method?: string;
