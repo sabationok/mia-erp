@@ -43,6 +43,10 @@ export interface HasStatus<Status extends string | number = string> {
   status?: MaybeNull<Status>;
 }
 
+export interface HasEmbeddedStatus<Status extends object = object> {
+  status?: MaybeNull<Status>;
+}
+
 export interface HasStatusRef {
   status: MaybeNull<OnlyUUID>;
 }

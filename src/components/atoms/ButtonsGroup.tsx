@@ -55,7 +55,7 @@ const ButtonsGroup = <V = any,>({
         disabled={disabled ?? opt?.disabled}
       >
         {opt.label && (
-          <Text $weight={500} className={'inner'}>
+          <Text $size={11} $weight={600} $align={'center'} className={'inner'}>
             {opt.label}
           </Text>
         )}
@@ -96,7 +96,7 @@ const Buttons = styled(FlexBox)<ButtonsGroupProps>`
 `;
 const OptionButton = styled(ButtonIcon)`
   flex: 1;
-  padding: 4px 8px;
+  padding: 0 8px;
   min-width: 50px;
 
   overflow: hidden;

@@ -4,6 +4,7 @@ import { t } from '../lang';
 import { SelectItem } from '../components/TableList/tableTypes.types';
 import { FilterOption } from '../components/ModalForm/ModalFilter';
 import { getStatusesByEnum } from './statuses.data';
+import { numberWithSpaces } from '../utils';
 
 export const orderStatusesData = getStatusesByEnum(OrderStatusEnum);
 export const orderStatuses: FilterOption<OrderStatusEnum>[] = [
@@ -73,26 +74,25 @@ export type DataPath =
   | 'transporters';
 export const ordersTableColumns: CellTittleProps<IOrder, DataPath>[] = [
   {
-    top: { name: t('date'), align: 'center', path: 'eventDate' },
-    bottom: { name: t('time'), align: 'center' },
-    width: '90px',
-    action: 'dateSimple',
-  },
-  {
-    top: { name: t('status'), path: 'status' },
-    bottom: { name: t('type'), path: 'type' },
-    width: '100px',
+    top: {
+      name: `${t('Status')}/${t('Internal')}`,
+      getData: rd => rd.status?.internal,
+    },
+    bottom: {
+      name: `${t('Status')}/${t('External')}`,
+      getData: rd => rd.status?.external,
+    },
+    width: '150px',
     action: 'status',
   },
+
   {
-    top: { name: t('Priority') },
-    // bottom: { name: t('type'), path: 'type' },
-    width: '100px',
-    action: 'status',
-  },
-  {
-    top: { name: t('Total amount'), align: 'end', path: 'total' },
-    bottom: { name: t('Total q-ty'), align: 'end' },
+    top: {
+      name: t('Total amount'),
+      align: 'end',
+      getData: rd => numberWithSpaces(rd.total?.amount ?? 0),
+    },
+    bottom: { name: t('Slots q-ty'), align: 'end', getData: rd => rd.total?.items },
     width: '120px',
     action: 'numberWithSpaces',
   },
@@ -103,13 +103,25 @@ export const ordersTableColumns: CellTittleProps<IOrder, DataPath>[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Замовник', path: 'customer.name' },
+    top: {
+      name: 'Замовник',
+      getData: rd =>
+        (rd.receiver?.name && rd.receiver?.name?.first + ' ' + rd.receiver?.name?.second) ||
+        (rd.receiver?.label && rd.receiver?.label.base) ||
+        '--- ---',
+    },
     bottom: { name: 'Телефон', path: 'customer.phone' },
     width: '180px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Отримувач', path: 'receiver.name' },
+    top: {
+      name: 'Отримувач',
+      getData: rd =>
+        (rd.receiver?.name && rd.receiver?.name?.first + ' ' + rd.receiver?.name?.second) ||
+        (rd.receiver?.label && rd.receiver?.label.base) ||
+        '--- ---',
+    },
     bottom: { name: 'Телефон', path: 'receiver.phone' },
     width: '180px',
     action: 'valueByPath',
@@ -129,7 +141,7 @@ export const ordersTableColumns: CellTittleProps<IOrder, DataPath>[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: t('Shipments') },
+    top: { name: t('Deliveries') },
     width: '200px',
     action: 'valueByPath',
   },
@@ -142,6 +154,12 @@ export const ordersTableColumns: CellTittleProps<IOrder, DataPath>[] = [
     top: { name: t('Refunds') },
     width: '200px',
     action: 'valueByPath',
+  },
+  {
+    top: { name: t('Priority') },
+    // bottom: { name: t('type'), path: 'type' },
+    width: '100px',
+    action: 'status',
   },
   {
     top: { name: t('manager'), path: 'manager.name' },

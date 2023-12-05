@@ -28,14 +28,14 @@ export const ModalHeader = ({
   renderTitle?: React.ReactNode;
 }) => {
   return (
-    <Header padding={'4px 0'} {...props}>
+    <Header padding={'4px 0'} {...props} gap={8}>
       <FlexBox fillWidth fxDirection={'row'} justifyContent={'space-between'} alignItems={'stretch'} height={'32px'}>
         {onBackPress && (
           <ButtonIcon
             variant={'textExtraSmall'}
             icon={'SmallArrowLeft'}
             iconSize={'22px'}
-            padding={'0 6px'}
+            padding={'0'}
             style={{ minWidth: 'max-content', minHeight: '100%' }}
             onClick={onBackPress || onClose}
           >

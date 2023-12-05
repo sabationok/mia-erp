@@ -19,7 +19,7 @@ export default class PaymentsApi {
   ): Promise<AppResponse<ICheckoutPaymentMethod[]>> {
     return this.api.get(this.endpoints.getAllMethods(), { params });
   }
-  public static updateMethod(args: IPaymentMethodReqData): Promise<AppResponse<ICheckoutPaymentMethod>> {
-    return this.api.patch(this.endpoints.updateMethod(args._id), args.data, { params: args?.params });
+  public static updateMethod(args?: IPaymentMethodReqData): Promise<AppResponse<ICheckoutPaymentMethod>> {
+    return this.api.patch(this.endpoints.updateMethod(args?._id), args?.data, { params: args?.params });
   }
 }

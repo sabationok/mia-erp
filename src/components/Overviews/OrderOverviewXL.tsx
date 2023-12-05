@@ -10,7 +10,7 @@ import { t } from '../../lang';
 import { useAppParams } from '../../hooks';
 import { enumToFilterOptions } from '../../utils/fabrics';
 import ModalFilter from '../ModalForm/ModalFilter';
-import OrderOverviewInfoTab from './components/OrderOverviewInfoTab';
+import OrderOverviewInfoTab from './tabs/OrderOverviewInfoTab';
 
 export interface OrderOverviewXLProps {
   order?: IOrder;

@@ -106,7 +106,7 @@ export default OrderOverview;
 
 const mainOrderInfo: OrderInfoBoxProps[] = [
   { label: 'ID', getData: o => o._id },
-  { label: 'Статус', getData: o => o.status },
+  { label: 'Статус', getData: o => o.status?.internal },
   { label: 'Тип', getData: o => '' },
   { label: 'Менеджер', getData: o => o.manager?.user?.name },
   { label: 'Створив / Дата', getData: o => new Date(o.createdAt || '').getDate() },

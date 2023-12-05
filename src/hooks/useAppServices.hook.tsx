@@ -17,7 +17,7 @@ import useCustomRolesServiceHook, { CustomRolesService } from './useCustomRolesS
 import useInvoicingService, { UseInvoicingService } from './useInvoicingService.hook';
 import { AppModuleName } from '../redux/reduxTypes.types';
 import useIntegrationsService, { UseIntegrationsService } from './useIntegrationsService.hook';
-import UseDeliveriesServiceHook, { UseDeliveriesService } from './useDeliveriesService.hook';
+import UseDeliveriesServiceHook, { UseDeliveriesService } from './services/useDeliveriesService.hook';
 
 export { AppModuleName as ServiceName } from '../redux/reduxTypes.types';
 export interface AppService {

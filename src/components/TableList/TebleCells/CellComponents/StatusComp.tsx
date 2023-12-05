@@ -2,7 +2,6 @@ import React, { CSSProperties, memo, useMemo } from 'react';
 
 import styled, { css } from 'styled-components';
 import { getStatusData, StatusData, StatusNames } from 'data/statuses.data';
-import SvgIcon from '../../../atoms/SvgIcon/SvgIcon';
 
 export type StatusCompVariants = 'outlined' | 'filled' | 'text';
 
@@ -31,7 +30,7 @@ const StatusComp: React.FC<StatusCompProps> = ({
       backgroundColor={statusData?.backgroundColor}
       fillWidth={fillWidth}
     >
-      {statusData?.iconId && <SvgIcon icon={statusData?.iconId} size="20px" />}
+      {/*{statusData?.iconId && <SvgIcon icon={statusData?.iconId} size="20px" />}*/}
 
       <Label className={'inner'} fontSize={fontSize} fontWeight={statusData?.label || fontWeight ? fontWeight : 400}>
         {statusData?.label || status}

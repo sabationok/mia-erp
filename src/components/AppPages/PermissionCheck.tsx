@@ -4,12 +4,12 @@ import { memo, useEffect, useMemo, useState } from 'react';
 import useAppParams from '../../hooks/useAppParams.hook';
 import baseApi, { permissionToken } from '../../api/baseApi';
 import { AxiosError } from 'axios';
-import { toast } from 'react-toastify';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import AppLoader from '../atoms/AppLoader';
 import { isUndefined } from 'lodash';
 import useLoadInitialAppDataHook from '../../hooks/useLoadInitialAppData.hook';
 import { t } from '../../lang';
+import { ToastService } from '../../services';
 
 type Props = {
   redirectTo?: string;
@@ -67,12 +67,12 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
         async (e: AxiosError) => {
           if (e.status === 409) {
             console.log(e);
-            toast.error('Forbidden company action');
+            ToastService.error('Forbidden company action');
             clearCurrent();
           }
           if (e.status === 401) {
             console.log(e);
-            toast.error('Auth failed');
+            ToastService.error('Auth failed');
             logOutUser();
           }
           throw e;

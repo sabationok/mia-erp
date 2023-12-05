@@ -16,6 +16,7 @@ import { permissionsTableColumns } from '../../data/permissions.data';
 import { permissionsSearchParams } from '../../data/companies.data';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../redux/reduxTypes.types';
+import { BaseAppPageProps } from './index';
 
 export type CompanyTypeItem = { title: string; param: CompanyQueryType };
 
@@ -26,10 +27,8 @@ const companyTypes: CompanyTypeItem[] = [
   { title: 'Усі', param: 'all' },
 ];
 
-type Props = {
-  path?: string;
-};
-const PageHome: React.FC<any> = ({ path }: Props) => {
+interface Props extends Partial<BaseAppPageProps> {}
+const PageHome: React.FC<Props> = ({ path }) => {
   const { user } = useAuthSelector();
   const [companyType, setCompanyType] = useState<CompanyTypeItem>();
   const setSearchParams = useSearchParams({

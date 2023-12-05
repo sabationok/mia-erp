@@ -1,9 +1,9 @@
-import { ServiceDispatcherAsync } from '../redux/global.types';
-import { useAppDispatch } from '../redux/store.store';
-import { defaultThunkPayload } from '../utils/fabrics';
+import { ServiceDispatcherAsync } from '../../redux/global.types';
+import { useAppDispatch } from '../../redux/store.store';
+import { defaultThunkPayload } from '../../utils/fabrics';
 import { useMemo } from 'react';
-import { IDeliveryMethod, IDeliveryMethodReqData } from '../types/integrations.types';
-import { getAllDeliveryMethodsThunk, updateDeliveryMethodThunk } from '../redux/deliveries/deliveries.thunks';
+import { IDeliveryMethod, IDeliveryMethodReqData } from '../../types/integrations.types';
+import { getAllDeliveryMethodsThunk, updateDeliveryMethodThunk } from '../../redux/deliveries/deliveries.thunks';
 
 export interface UseDeliveriesService {
   getAllMethods: ServiceDispatcherAsync<IDeliveryMethodReqData, IDeliveryMethod[]>;

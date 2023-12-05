@@ -12,6 +12,7 @@ export interface CellNumberWithSpacesProps {
 
 const CellNumberWithSpaces: React.FC<CellNumberWithSpacesProps & React.HTMLAttributes<HTMLDivElement>> = ({
   titleInfo: { top, bottom, width = '100px' },
+  titleInfo,
   idx,
   ...props
 }) => {
@@ -20,28 +21,32 @@ const CellNumberWithSpaces: React.FC<CellNumberWithSpacesProps & React.HTMLAttri
   const cellConfig = useMemo(
     (): IDataCellProps => ({
       content: {
-        data: numberWithSpaces(
-          getValueByPath({
-            data: rowData,
-            ...top,
-          })
-        ),
+        data: top?.getData
+          ? top?.getData(rowData, titleInfo)
+          : numberWithSpaces(
+              getValueByPath({
+                data: rowData,
+                ...top,
+              })
+            ),
         align: top.align,
         uppercase: top.uppercase,
       },
       subContent: {
-        data: numberWithSpaces(
-          getValueByPath({
-            data: rowData,
-            ...bottom,
-          })
-        ),
+        data: bottom?.getData
+          ? bottom?.getData(rowData, titleInfo)
+          : numberWithSpaces(
+              getValueByPath({
+                data: rowData,
+                ...bottom,
+              })
+            ),
         align: bottom?.align,
         uppercase: bottom?.uppercase,
       },
       width,
     }),
-    [bottom, rowData, top, width]
+    [bottom, rowData, titleInfo, top, width]
   );
 
   return <Cell.Double {...cellConfig} {...props} />;

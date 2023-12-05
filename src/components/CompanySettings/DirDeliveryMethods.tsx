@@ -10,7 +10,7 @@ import { IDeliveryMethod } from '../../types/integrations.types';
 import { useDeliveriesSelector } from '../../redux/selectors.store';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { UseDeliveriesService } from '../../hooks/useDeliveriesService.hook';
+import { UseDeliveriesService } from '../../hooks/services/useDeliveriesService.hook';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../redux/reduxTypes.types';
 import { toReqData } from '../../utils';

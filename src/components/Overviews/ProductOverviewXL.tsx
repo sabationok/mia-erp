@@ -7,14 +7,13 @@ import { t } from '../../lang';
 import { usePageCurrentProduct } from '../AppPages/PageProductOverview/PageCurrentProductProvider';
 import { useProductsSelector } from '../../redux/selectors.store';
 import { useLocation, useNavigate } from 'react-router-dom';
-import * as Cells from './components/Cells';
-import { OverviewCellProps } from './components/Cells';
 import { OverlayHeader } from '../Forms/FormProduct/components';
-import { checks, toAppDateFormat } from '../../utils';
+import { checks, enumToFilterOptions, toAppDateFormat } from '../../utils';
 import { useAppParams } from '../../hooks';
 import { IMeasurement } from '../../types/utils.types';
-import { enumToFilterOptions } from '../../utils/fabrics';
 import ModalFilter from '../ModalForm/ModalFilter';
+import { OverviewCellProps } from './components/overview-types';
+import { OverviewCells } from './components/Cells';
 
 export interface ProductOverviewXLProps {
   product?: IProduct;
@@ -34,6 +33,7 @@ export enum ProductOverviewTabsEnum {
   Properties = 'Properties',
   Defaults = 'Defaults',
   Images = 'Images',
+  Cms = 'Cms',
 }
 export const ProductOverviewTabsList = enumToFilterOptions(ProductOverviewTabsEnum);
 const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }) => {
@@ -60,7 +60,7 @@ const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }
             );
           }
           return (
-            <Cells.OverviewTextCell
+            <OverviewCells.Text
               key={cell.title}
               setOverlayContent={page.createOverlayComponent}
               cell={cell}
@@ -85,6 +85,7 @@ const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }
       />
 
       <ModalFilter
+        optionProps={{ fitContentH: true }}
         filterOptions={ProductOverviewTabsList}
         onOptSelect={option => {
           setCurrentTab(option?.value);
@@ -173,35 +174,35 @@ export default ProductOverviewXL;
 const productOverviewCells: OverviewCellProps<IProduct, ProductOverviewTabsEnum>[] = [
   {
     title: t('Label'),
-    CellComponent: Cells.OverviewTextCell,
+    CellComponent: OverviewCells.Text,
     getValue: product => product?.label,
     gridArea: 'label',
     tab: ProductOverviewTabsEnum.General,
   },
   {
     title: t('status'),
-    CellComponent: Cells.ProductStatusChangerCell,
+    CellComponent: OverviewCells.OfferStatusChanger,
     getValue: product => product?.approved as string | null | undefined,
     gridArea: 'approved',
     tab: ProductOverviewTabsEnum.General,
   },
   {
     title: t('Type'),
-    CellComponent: Cells.OverviewTextCell,
+    CellComponent: OverviewCells.Text,
     getValue: product => product?.type,
     gridArea: 'type',
     tab: ProductOverviewTabsEnum.General,
   },
   {
     title: t('SKU'),
-    CellComponent: Cells.OverviewTextCell,
+    CellComponent: OverviewCells.Text,
     getValue: product => product?.sku,
     gridArea: 'sku',
     tab: ProductOverviewTabsEnum.General,
   },
   {
     title: t('Bar-code'),
-    CellComponent: Cells.OverviewTextCell,
+    CellComponent: OverviewCells.Text,
     getValue: product => product?.barCode,
     gridArea: 'barCode',
     tab: ProductOverviewTabsEnum.General,
@@ -209,21 +210,21 @@ const productOverviewCells: OverviewCellProps<IProduct, ProductOverviewTabsEnum>
 
   {
     title: t('Categories'),
-    CellComponent: Cells.CategoriesCell,
+    CellComponent: OverviewCells.OfferCategories,
     gridArea: 'categories',
     tab: ProductOverviewTabsEnum.General,
   },
 
   {
     title: t('Brand'),
-    CellComponent: Cells.OverviewTextCell,
+    CellComponent: OverviewCells.Text,
     getValue: product => product?.brand?.label,
     gridArea: 'brand',
     tab: ProductOverviewTabsEnum.General,
   },
   {
     title: t('Measurement'),
-    CellComponent: Cells.OverviewTextCell,
+    CellComponent: OverviewCells.Text,
     gridArea: 'measurement',
     getValue: product => {
       try {
@@ -244,7 +245,7 @@ const productOverviewCells: OverviewCellProps<IProduct, ProductOverviewTabsEnum>
   },
   {
     title: t('Description'),
-    CellComponent: Cells.OverviewTextCell,
+    CellComponent: OverviewCells.Text,
     getValue: product => product?.description,
     gridArea: 'description',
     tab: ProductOverviewTabsEnum.General,
@@ -254,7 +255,7 @@ const productOverviewCells: OverviewCellProps<IProduct, ProductOverviewTabsEnum>
 
   {
     title: t('Negative sales'),
-    CellComponent: Cells.OverviewTextCell,
+    CellComponent: OverviewCells.Text,
     getValue: product => (product?.futures?.negativeSale ? 'Yes' : 'No'),
     gridArea: 'reservation',
     tab: ProductOverviewTabsEnum.Futures,
@@ -262,7 +263,7 @@ const productOverviewCells: OverviewCellProps<IProduct, ProductOverviewTabsEnum>
 
   {
     title: t('Reservation'),
-    CellComponent: Cells.OverviewTextCell,
+    CellComponent: OverviewCells.Text,
     getValue: product => (product?.futures?.reservation?.isAvailable ? 'Yes' : 'No'),
     gridArea: 'reservation',
     tab: ProductOverviewTabsEnum.Futures,
@@ -270,7 +271,7 @@ const productOverviewCells: OverviewCellProps<IProduct, ProductOverviewTabsEnum>
 
   {
     title: t('Custom production'),
-    CellComponent: Cells.OverviewTextCell,
+    CellComponent: OverviewCells.Text,
     getValue: product => (product?.futures?.customProduction?.isAvailable ? 'Yes' : 'No'),
     gridArea: 'customProduction',
     tab: ProductOverviewTabsEnum.Futures,
@@ -278,7 +279,7 @@ const productOverviewCells: OverviewCellProps<IProduct, ProductOverviewTabsEnum>
 
   {
     title: t('Custom order'),
-    CellComponent: Cells.OverviewTextCell,
+    CellComponent: OverviewCells.Text,
     getValue: product => (product?.futures?.customOrder?.isAvailable ? 'Yes' : 'No'),
     gridArea: 'customOrder',
     tab: ProductOverviewTabsEnum.Futures,
@@ -286,7 +287,7 @@ const productOverviewCells: OverviewCellProps<IProduct, ProductOverviewTabsEnum>
 
   {
     title: t('Pre-order'),
-    CellComponent: Cells.OverviewTextCell,
+    CellComponent: OverviewCells.Text,
     getValue: product => (product?.futures?.preOrder?.isAvailable ? 'Yes' : 'No'),
     gridArea: 'preOrder',
     tab: ProductOverviewTabsEnum.Futures,
@@ -294,7 +295,7 @@ const productOverviewCells: OverviewCellProps<IProduct, ProductOverviewTabsEnum>
 
   {
     title: t('Is promo'),
-    CellComponent: Cells.OverviewTextCell,
+    CellComponent: OverviewCells.Text,
     getValue: product => product?.futures?.isPromo,
     gridArea: 'isPromo',
     tab: ProductOverviewTabsEnum.Futures,
@@ -303,13 +304,13 @@ const productOverviewCells: OverviewCellProps<IProduct, ProductOverviewTabsEnum>
   // * PROPERTIES
   {
     title: t('Variations template'),
-    CellComponent: Cells.VariationsTemplateCell,
+    CellComponent: OverviewCells.OfferVariationsTemplate,
     gridArea: 'template',
     tab: ProductOverviewTabsEnum.Properties,
   },
   {
     title: t('Properties'),
-    CellComponent: Cells.StaticProperties,
+    CellComponent: OverviewCells.OfferStaticProperties,
     gridArea: 'properties',
     tab: ProductOverviewTabsEnum.Properties,
   },
@@ -317,14 +318,14 @@ const productOverviewCells: OverviewCellProps<IProduct, ProductOverviewTabsEnum>
   // * DEFAULTS
   {
     title: t('Default values'),
-    CellComponent: Cells.ProductDefaultsCell,
+    CellComponent: OverviewCells.OfferDefaults,
     gridArea: 'defaults',
     tab: ProductOverviewTabsEnum.Defaults,
   },
 
   {
     title: t('Created by / Date / Time'),
-    CellComponent: Cells.OverviewTextCell,
+    CellComponent: OverviewCells.Text,
     getValue: product =>
       product?.author
         ? `${product?.author?.email} / ${
@@ -338,7 +339,7 @@ const productOverviewCells: OverviewCellProps<IProduct, ProductOverviewTabsEnum>
   },
   {
     title: t('Updated by / Date / Time'),
-    CellComponent: Cells.OverviewTextCell,
+    CellComponent: OverviewCells.Text,
     getValue: product =>
       product?.editor
         ? `${product?.editor?.email} / ${
@@ -353,7 +354,7 @@ const productOverviewCells: OverviewCellProps<IProduct, ProductOverviewTabsEnum>
 
   {
     title: t('Images'),
-    CellComponent: Cells.ImagesCell,
+    CellComponent: OverviewCells.OfferImages,
     gridArea: 'images',
     tab: ProductOverviewTabsEnum.Images,
   },
