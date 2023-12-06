@@ -4,6 +4,7 @@ import { ICompany } from './companies.types';
 import { AppQueryParams } from '../api';
 import { CmsBaseConfigsDto } from './cms.types';
 import { MaybeNull } from './utils.types';
+import { IBankAccount } from './finances/bank-accounts.types';
 
 export enum IntegrationTypeEnum {
   input = 'input',
@@ -177,20 +178,22 @@ export enum InvoicingTypeEnum {
 }
 export interface ICommunicationMethod extends ServiceMethodBase<string, ExtCommunicationService> {}
 export interface ICommunicationMethodReqData extends IMethodReqData<ICommunicationMethod> {}
-export interface IInvoicingMethod extends ServiceMethodBase<InvoicingTypeEnum, ExtInvoicingService> {}
+export interface IInvoicingMethod extends ServiceMethodBase<InvoicingTypeEnum, ExtInvoicingService> {
+  bankAccount?: MaybeNull<IBankAccount>;
+}
 export interface IInvoicingMethodReqData extends IMethodReqData<IInvoicingMethod> {}
 
-export interface IDeliveryMethodInvoicingInfo {
+export interface IDeliveryMethodInvoicingPolicy {
   method?: IInvoicingMethod;
   minCost?: { delivery?: number; return?: number };
 }
 export interface IDeliveryMethod extends ServiceMethodBase<string, ExtDeliveryService> {
-  invoicing?: IDeliveryMethodInvoicingInfo;
+  invoicing?: IDeliveryMethodInvoicingPolicy;
 }
 
 export interface IDeliveryMethodDto
   extends Partial<Omit<IDeliveryMethod, IBaseKeys | 'isDefault' | 'invoicing' | 'service' | 'extService'>> {
-  invoicing?: Pick<IDeliveryMethodInvoicingInfo, 'minCost'> & { method?: OnlyUUID };
+  invoicing?: Pick<IDeliveryMethodInvoicingPolicy, 'minCost'> & { method?: OnlyUUID };
 }
 
 // export interface IDeliveryMethodReqData {

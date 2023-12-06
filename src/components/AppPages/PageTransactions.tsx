@@ -1,10 +1,9 @@
 import TableList from 'components/TableList/TableList';
 import { takeFullGridArea } from './pagesStyles';
 import styled from 'styled-components';
-import useTransactionsService from 'hooks/useTransactionsService.hook';
 import { useEffect, useMemo, useState } from 'react';
 import useTrFilterSelectors from 'hooks/useTrFilterSelectors.hook';
-import { ITransaction } from '../../redux/transactions/transactions.types';
+import { ITransaction } from '../../types/finances/transactions.types';
 import { useTrActionsCreator } from '../../hooks/useTrActionsCreator.hook';
 import { ITableListProps } from '../TableList/tableTypes.types';
 import AppGridPage from './AppGridPage';
@@ -13,11 +12,13 @@ import { ISortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
 import { BaseAppPageProps } from './index';
 import { transactionsColumns, transactionsSearchParams } from '../../data/transactions.data';
+import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import { AppModuleName } from '../../redux/reduxTypes.types';
 
 interface Props extends BaseAppPageProps {}
 
 const PageTransactions: React.FC<any> = (props: Props) => {
-  const service = useTransactionsService();
+  const service = useAppServiceProvider()[AppModuleName.finances];
   const state = useTransactionsSelector();
   const { getAll } = service;
   const filterSelectors = useTrFilterSelectors();

@@ -1,24 +1,31 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { createTransactionThunk, getAllTransactionsThunk } from 'redux/transactions/transactions.thunks';
+import { createTransactionThunk, getAllTransactionsThunk } from 'redux/finances/transactions.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
-import { ITransaction } from 'redux/transactions/transactions.types';
+import { ITransaction } from 'types/finances/transactions.types';
 import { checks } from '../../utils';
+import { ICount } from '../directories/counts.types';
+import { IBankAccount } from '../../types/finances/bank-accounts.types';
+import { createBankAccountThunk, getBankAccountsListThunk } from './bank-accounts/bank-accounts.thunks';
 
-export interface ITransactionsState {
+export interface IFinTransactionsState {
   transactions: ITransaction[];
   filteredTransactions?: ITransaction[];
+  bankAccounts: IBankAccount[];
+  finCounts: ICount[];
   isLoading: boolean;
   error: StateErrorType;
 }
 
-const initialState: ITransactionsState = {
+const initialState: IFinTransactionsState = {
   isLoading: false,
   error: null,
   transactions: [],
   filteredTransactions: [],
+  bankAccounts: [],
+  finCounts: [],
 };
 
-export const transactionsSlice = createSlice({
+export const financesSlice = createSlice({
   name: 'transactions',
   initialState,
   reducers: {},
@@ -38,6 +45,16 @@ export const transactionsSlice = createSlice({
         s.isLoading = false;
 
         s.transactions = a.payload ? [a.payload, ...s.transactions] : s.transactions;
+      })
+      .addCase(createBankAccountThunk.fulfilled, (s, a) => {
+        s.bankAccounts.push(a.payload);
+      })
+      .addCase(getBankAccountsListThunk.fulfilled, (s, a) => {
+        if (a.payload.update && a.payload.data) {
+          s.bankAccounts.concat(a.payload.data);
+        } else {
+          s.bankAccounts = a.payload.data ?? [];
+        }
       })
       .addMatcher(inPending, s => {
         s.isLoading = true;
@@ -65,4 +82,4 @@ function inError(a: AnyAction) {
   return isTransactionsCase(a.type) && a.type.endsWith('rejected');
 }
 
-export const transactionsReducer = transactionsSlice.reducer;
+export const transactionsReducer = financesSlice.reducer;

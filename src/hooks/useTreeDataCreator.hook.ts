@@ -1,5 +1,5 @@
 import { createTreeDataMapById, IBaseFields, TreeOptions } from '../utils/createTreeData';
-import { ICategory } from '../types/directories.types';
+import { ITrCategory } from '../types/directories.types';
 import { ICount } from '../redux/directories/counts.types';
 import { useMemo, useState } from 'react';
 
@@ -10,12 +10,12 @@ export interface TreeDataCreatorState<T = any> {
   error: string | null;
 }
 
-export interface TreeDataCreatorOptions<T = ICategory | ICount> {
+export interface TreeDataCreatorOptions<T = ITrCategory | ICount> {
   dataList: (T & IBaseFields<T>)[];
   rootDataValidator?: (item: T) => boolean;
 }
 
-const useTreeDataCreator = <T = ICategory | ICount>({
+const useTreeDataCreator = <T = ITrCategory | ICount>({
   dataList,
   rootDataValidator,
 }: TreeDataCreatorOptions<T>): TreeDataCreatorState<T> => {

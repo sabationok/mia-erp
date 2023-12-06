@@ -1,6 +1,6 @@
 import usePermissionsServiceHook, { PermissionService } from './usePermissionsService.hook';
 import useProductsServiceHook, { ProductsService } from './useProductsService.hook';
-import useTransactionsServiceHook, { TransactionsService } from './useTransactionsService.hook';
+import useTransactionsServiceHook, { UseFinancesService } from './useTransactionsService.hook';
 import { DirectoriesService } from './useDirService.hook';
 import { useDirService } from './index';
 import usePriceManagementServiceHook, { PriceManagementService } from './usePriceManagementService.hook';
@@ -23,7 +23,7 @@ export { AppModuleName as ServiceName } from '../redux/reduxTypes.types';
 export interface AppService {
   [AppModuleName.permissions]: PermissionService;
   [AppModuleName.products]: ProductsService;
-  [AppModuleName.transactions]: TransactionsService;
+  [AppModuleName.finances]: UseFinancesService;
   [AppModuleName.directories]: DirectoriesService;
   [AppModuleName.priceManagement]: PriceManagementService;
   [AppModuleName.appSettings]: AppSettingsService;
@@ -47,7 +47,7 @@ const useAppService = (): AppService => {
     permissions: usePermissionsServiceHook(),
     integrations: useIntegrationsService(),
     products: useProductsServiceHook(),
-    transactions: useTransactionsServiceHook(),
+    finances: useTransactionsServiceHook(),
     directories: useDirService(),
     priceManagement: usePriceManagementServiceHook(),
     appSettings: useAppSettingsHook(),

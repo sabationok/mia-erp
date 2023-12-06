@@ -47,8 +47,8 @@ export const persistorConfigs: Record<
     storage: storageSession,
     whitelist: ['directories'],
   },
-  transactions: {
-    key: 'transactions',
+  finances: {
+    key: 'finances',
     storage: storageSession,
     whitelist: ['transactions'],
   },

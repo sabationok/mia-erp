@@ -54,6 +54,9 @@ export interface HasStatusRef {
 export interface HasType<Type extends string | number = string> {
   type?: MaybeNull<Type>;
 }
+export interface HasEmbeddedType<Internal extends string = string, External extends string = string> {
+  type?: MaybeNull<{ internal?: MaybeNull<Internal>; external?: MaybeNull<External> }>;
+}
 
 export interface IMeasurement {
   min?: MaybeNull<number>;

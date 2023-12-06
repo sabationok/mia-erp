@@ -1,5 +1,5 @@
 import { ModalFormProps } from '../components/ModalForm';
-import { CategoryTrTypeEnum, ICategory, ICategoryFormData } from './directories.types';
+import { ITrCategory, ITrCategoryFormData, TrCategoryTypeEnum } from './directories.types';
 import { CountsTypesEnum, ICount, ICountFormData } from '../redux/directories/counts.types';
 import { FilterOpt } from '../components/ModalForm/ModalFilter';
 import { IBase, OnlyUUID } from '../redux/global.types';
@@ -14,7 +14,7 @@ import { CounterpartyTypesEnum } from '../redux/directories/counterparties.types
 
 export interface DirItemTypeByDirType extends Record<ApiDirType, any> {
   [ApiDirType.COUNTS]: CountsTypesEnum;
-  [ApiDirType.CATEGORIES_TR]: CategoryTrTypeEnum;
+  [ApiDirType.CATEGORIES_TR]: TrCategoryTypeEnum;
   [ApiDirType.CATEGORIES_PROD]: OfferTypeEnum;
   [ApiDirType.PROPERTIES_PRODUCTS]: OfferTypeEnum;
   [ApiDirType.CONTRACTORS]: ContractorsTypesEnum | CounterpartyTypesEnum;
@@ -159,10 +159,10 @@ export type DirInTreeActionsCreatorType<
 };
 
 export interface DirCategoriesProps
-  extends IDirInTreeProps<ApiDirType.CATEGORIES_TR, ICategoryFormData, ICategoryFormData, ICategory> {}
+  extends IDirInTreeProps<ApiDirType.CATEGORIES_TR, ITrCategoryFormData, ITrCategoryFormData, ITrCategory> {}
 
 export interface DirProductCategoriesProps
-  extends IDirInTreeProps<ApiDirType.CATEGORIES_PROD, ICategoryFormData, ICategoryFormData, ICategory> {}
+  extends IDirInTreeProps<ApiDirType.CATEGORIES_PROD, ITrCategoryFormData, ITrCategoryFormData, ITrCategory> {}
 
 // export interface DirBrandsProps
 //   extends IDirInTreeProps<ApiDirType.BRANDS, any, ICategoryFormData, ICategoryFormData, ICategory> {}

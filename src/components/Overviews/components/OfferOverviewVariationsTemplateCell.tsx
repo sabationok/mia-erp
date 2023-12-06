@@ -1,6 +1,6 @@
 import { RenderOverviewCellComponent } from './overview-types';
 import { CellStyledComp } from './CellStyles';
-import { CellHeader } from './OverviewCellHeader';
+import { OverviewCellHeader } from './OverviewCellHeader';
 import FormCreateVariation from '../../Forms/offers/FormCreateVariationOverlay';
 import FlexBox from '../../atoms/FlexBox';
 import React from 'react';
@@ -8,7 +8,7 @@ import React from 'react';
 export const OfferOverviewVariationsTemplateCell: RenderOverviewCellComponent = ({ cell, setOverlayContent, data }) => {
   return (
     <CellStyledComp.Cell padding={'4px'}>
-      <CellHeader
+      <OverviewCellHeader
         title={cell.title}
         openOverlayButtonTitle={'Перегляд'}
         onOpenOverlayPress={() => {

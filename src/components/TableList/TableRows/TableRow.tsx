@@ -3,16 +3,16 @@ import { OnCheckBoxChangeHandlerEvent, useTable } from '../TableList';
 
 import styled from 'styled-components';
 import { ThRow, ThRowData, ThRowStickyEl } from './TableHeadRow';
-import { IDocument, ITransaction } from '../../../redux/transactions/transactions.types';
+import { IDocument, ITransaction } from '../../../types/finances/transactions.types';
 import { ICount } from '../../../redux/directories/counts.types';
 import { IContractor } from '../../../redux/directories/contractors.types';
-import { ICategory } from '../../../types/directories.types';
+import { ITrCategory } from '../../../types/directories.types';
 import CellCheckBox from '../TebleCells/CellCheckBox';
 import { CellsMap } from '../TebleCells';
 import CellTextDbl from '../TebleCells/CellTextDbl';
 import { OnCheckBoxChangeHandler } from '../tableTypes.types';
 
-export type TRowDataType = ITransaction | ICount | IContractor | ICategory | IDocument;
+export type TRowDataType = ITransaction | ICount | IContractor | ITrCategory | IDocument;
 
 export interface TableRowProps {
   rowData: TRowDataType;

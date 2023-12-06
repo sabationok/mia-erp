@@ -24,3 +24,4 @@ export type { FormCreateOrdersGroupProps } from './FormCreateOrder/FormCreateOrd
 export type { SelectOrderTypeModalProps } from './FormCreateOrder/components/SelectOrderTypeModal';
 export type { FormCreateOrderSlotProps } from './FormCreateOrder/components/FormCreateOrderSlot';
 export type { FormDeliveryMethodProps } from './methods/FormDeliveryMethod';
+export type { FormCreateBankAccountProps } from './finances/FormCreateBankAccount';

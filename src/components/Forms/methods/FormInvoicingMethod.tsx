@@ -1,41 +1,33 @@
-import ModalForm, { ModalFormProps } from '../../ModalForm';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import styled from 'styled-components';
-import InputLabel from '../../atoms/Inputs/InputLabel';
-import { t } from '../../../lang';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
 import React, { useState } from 'react';
 import { useAppForm } from '../../../hooks';
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
-import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import FlexBox from '../../atoms/FlexBox';
-import { IDeliveryMethod, IInvoicingMethod, ServiceMethodBase } from '../../../types/integrations.types';
-import ButtonSwitch from '../../atoms/ButtonSwitch';
-import { useTranslatedMethodsList } from '../../../hooks/useTranslatedMethodsList.hook';
-import { useInvoicesSelector } from '../../../redux/selectors.store';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
-import { Text } from '../../atoms/Text';
+import { yupResolver } from '@hookform/resolvers/yup';
+import ModalForm, { ModalFormProps } from '../../ModalForm';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import { t } from '../../../lang';
 import InputText from '../../atoms/Inputs/InputText';
-import { IBaseKeys } from '../../../redux/global.types';
+import ButtonSwitch from '../../atoms/ButtonSwitch';
+import { Text } from '../../atoms/Text';
+import FlexBox from '../../atoms/FlexBox';
 import LangButtonsGroup from '../../atoms/LangButtonsGroup';
+import { IInvoicingMethod, ServiceMethodBase } from '../../../types/integrations.types';
+import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
+import { IBaseKeys } from '../../../redux/global.types';
+import * as yup from 'yup';
+import styled from 'styled-components';
+import { useTransactionsSelector } from '../../../redux/selectors.store';
+import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 
-export interface FormDeliveryMethodProps extends Omit<ModalFormProps<any, any, IDeliveryMethod>, 'onSubmit'> {
+export interface FormInvoicingMethodProps {}
+
+export interface FormInvoicingMethodProps extends Omit<ModalFormProps<any, any, IInvoicingMethod>, 'onSubmit'> {
   _id?: string;
   create?: boolean;
   edit?: boolean;
-  onSubmit?: AppSubmitHandler<IDeliveryMethodFormData, { logAfterSubmit?: boolean }>;
+  onSubmit?: AppSubmitHandler<IInvoicingMethodFormData, { logAfterSubmit?: boolean }>;
 }
 
-export interface IDeliveryMethodFormData
-  extends Omit<IDeliveryMethod, IBaseKeys | 'service' | 'extService' | 'invoicing'> {
-  invoicing?: {
-    method: Pick<IInvoicingMethod, '_id' | 'type' | 'label'>;
-    minCost?: {
-      delivery?: number;
-      return?: number;
-    };
-  };
-}
+export interface IInvoicingMethodFormData extends Omit<IInvoicingMethod, IBaseKeys | 'service' | 'extService'> {}
 
 const validation = yup.object().shape({
   // label: yup.string().max(100),
@@ -43,12 +35,12 @@ const validation = yup.object().shape({
   description: yup.string().max(250).optional(),
 } as Record<keyof ServiceMethodBase | string, any>);
 
-const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defaultState, ...props }) => {
+const FormInvoicingMethod: React.FC<FormInvoicingMethodProps> = ({ onSubmit, defaultState, ...props }) => {
   const submitOptions = useAfterSubmitOptions();
+  const bankAccounts = useTransactionsSelector().bankAccounts;
   const [isLoading, setIsLoading] = useState(false);
-  const invMethods = useTranslatedMethodsList(useInvoicesSelector().methods, { withFullLabel: true });
 
-  const formMethods = useAppForm<IDeliveryMethodFormData>({
+  const formMethods = useAppForm<IInvoicingMethodFormData>({
     defaultValues: { ...defaultState },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
@@ -56,22 +48,22 @@ const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defau
   const {
     formState: { errors, isValid },
     handleSubmit,
-    registerSelect,
     register,
+    registerSelect,
     reset,
   } = formMethods;
 
   // useEffect(() => {
   //   console.log(formValues);
   // }, [formValues]);
-  const onValid = (fData: IDeliveryMethodFormData) => {
+  const onValid = (fData: IInvoicingMethodFormData) => {
     onSubmit &&
       onSubmit(fData, {
         ...submitOptions.state,
         onLoading: setIsLoading,
-        onError: () => {
-          reset();
+        onSuccess: () => {
           if (submitOptions.state.clear) {
+            reset({});
           }
         },
       });
@@ -79,6 +71,7 @@ const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defau
 
   return (
     <ModalForm
+      title={defaultState?._id ? t('Update invoicing method') : t('Create invoicing method')}
       {...props}
       fillHeight
       isLoading={isLoading}
@@ -87,7 +80,7 @@ const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defau
       extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
       <Inputs>
-        {defaultState?.isDefault && (
+        {!defaultState?.isDefault && (
           <>
             <InputLabel label={t('label')} error={errors.label} required>
               <InputText placeholder={t('insertLabel')} {...register('label')} required autoFocus />
@@ -109,36 +102,36 @@ const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defau
 
         <BorderedBox>
           <Text $size={13} $weight={600}>
-            {t('Invoicing configs')}
+            {t('Invoicing policy')}
           </Text>
         </BorderedBox>
 
         <CustomSelect
-          {...registerSelect('invoicing.method', {
-            options: invMethods,
-            placeholder: t('Select method'),
-            label: t('Invoicing method'),
+          {...registerSelect('bankAccount', {
+            label: t('Recipient bank account'),
+            placeholder: t('Select recipient bank account'),
           })}
+          options={bankAccounts}
         />
 
         <FlexBox fxDirection={'row'} gap={8}>
-          <InputLabel label={t('Min cost for delivery')} error={errors?.invoicing?.minCost?.delivery}>
-            <InputText
-              placeholder={'Min cost'}
-              type={'number'}
-              align={'center'}
-              {...register('invoicing.minCost.delivery', { valueAsNumber: true })}
-            />
-          </InputLabel>
+          {/*<InputLabel label={t('Min cost for delivery')} error={errors?.invoicing?.minCost?.delivery}>*/}
+          {/*  <InputText*/}
+          {/*    placeholder={'Min cost'}*/}
+          {/*    type={'number'}*/}
+          {/*    align={'center'}*/}
+          {/*    {...register('invoicing.minCost.delivery', { valueAsNumber: true })}*/}
+          {/*  />*/}
+          {/*</InputLabel>*/}
 
-          <InputLabel label={t('Min cost for return')} error={errors?.invoicing?.minCost?.return}>
-            <InputText
-              placeholder={'Min cost'}
-              type={'number'}
-              align={'center'}
-              {...register('invoicing.minCost.return', { valueAsNumber: true })}
-            />
-          </InputLabel>
+          {/*<InputLabel label={t('Min cost for return')} error={errors?.invoicing?.minCost?.return}>*/}
+          {/*  <InputText*/}
+          {/*    placeholder={'Min cost'}*/}
+          {/*    type={'number'}*/}
+          {/*    align={'center'}*/}
+          {/*    {...register('invoicing.minCost.return', { valueAsNumber: true })}*/}
+          {/*  />*/}
+          {/*</InputLabel>*/}
         </FlexBox>
 
         <BorderedBox>
@@ -175,4 +168,4 @@ const BorderedBox = styled(FlexBox)`
   border-bottom: 1px solid ${p => p.theme.modalBorderColor};
   border-top: 1px solid ${p => p.theme.modalBorderColor};
 `;
-export default FormDeliveryMethod;
+export default FormInvoicingMethod;

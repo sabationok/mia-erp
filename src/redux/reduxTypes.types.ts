@@ -10,7 +10,7 @@ export enum AppModuleName {
   categories = 'categories',
   counts = 'counts',
   directories = 'directories',
-  transactions = 'transactions',
+  finances = 'finances',
   products = 'products',
   orders = 'orders',
   invoices = 'invoices',

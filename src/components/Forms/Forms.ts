@@ -7,6 +7,8 @@ export const CreateOrderSlot = lazy(() => import('./FormCreateOrder/components/F
 // * TRANSACTIONS
 export const CreateTransaction = lazy(() => import('./FormCreateTransaction'));
 export const CreateCount = lazy(() => import('./FormCreateCount'));
+
+export const CreateBankAccount = lazy(() => import('./finances/FormCreateBankAccount'));
 // * OTHER DIRECTORIES
 export const CreateDirTreeComp = lazy(() => import('./FormCreateDirTreeComp'));
 export const CreateContractor = lazy(() => import('./FormCreateCounterparty'));
@@ -23,6 +25,7 @@ export const CreateActivity = lazy(() => import('./FormCreateActivity'));
 // * METHODS
 export const CreateMethod = lazy(() => import('./FormCreateMethod'));
 export const DeliveryMethod = lazy(() => import('./methods/FormDeliveryMethod'));
+export const InvoicingMethod = lazy(() => import('./methods/FormInvoicingMethod'));
 // * WAREHOUSING
 export const CreateWarehouseDocument = lazy(() => import('./warehousing/FormCreateWarehouseDocument'));
 export const CreateWarehouse = lazy(() => import('./warehousing/FormCreateWarehouse'));

@@ -14,10 +14,12 @@ export interface OrderOverviewInfoTabProps {}
 
 enum OrderOverviewInfoTabsEnum {
   General = 'General',
+  Customer = 'Customer',
   Invoicing = 'Invoicing',
   Delivery = 'Delivery',
   Additional = 'Additional',
 }
+
 const tabs = enumToTabs(OrderOverviewInfoTabsEnum);
 
 const OrderOverviewInfoTab: React.FC<OrderOverviewInfoTabProps> = _p => {
@@ -76,13 +78,38 @@ const orderOverviewCells: OverviewCellProps<IOrder>[] = [
     getValue: data => data?.manager?.user?.email,
     tab: OrderOverviewInfoTabsEnum.General,
   },
-  { title: t('Group'), tab: OrderOverviewInfoTabsEnum.General },
-  { title: t('Status'), tab: OrderOverviewInfoTabsEnum.General },
-  { title: t('Client'), tab: OrderOverviewInfoTabsEnum.General },
-  { title: t('Receiver'), tab: OrderOverviewInfoTabsEnum.General },
-  { title: t('Invoicing'), tab: OrderOverviewInfoTabsEnum.Invoicing },
-  { title: t('Delivery'), tab: OrderOverviewInfoTabsEnum.Delivery },
+  {
+    title: t('Reference'),
+    CellComponent: OverviewCells.Text,
+    getValue: data => data?.magicLink,
+    tab: OrderOverviewInfoTabsEnum.General,
+  },
+  {
+    title: t('Group reference'),
+    CellComponent: OverviewCells.Text,
+    getValue: data => data?.group?.magicLink,
+    tab: OrderOverviewInfoTabsEnum.General,
+  },
+  {
+    title: t('Status'),
+    CellComponent: OverviewCells.Text,
+    getValue: data => data?.status,
+    tab: OrderOverviewInfoTabsEnum.General,
+  },
+  {
+    CellComponent: OverviewCells.OrderCustomerInfo,
+    tab: OrderOverviewInfoTabsEnum.Customer,
+  },
+  {
+    title: t('Invoicing'),
+    CellComponent: OverviewCells.OrderInvoicing,
+    tab: OrderOverviewInfoTabsEnum.Invoicing,
+  },
+  { title: t('Delivery'), CellComponent: OverviewCells.OrderDelivery, tab: OrderOverviewInfoTabsEnum.Delivery },
+  {
+    title: t('Receiver'),
+    CellComponent: OverviewCells.OrderCustomerInfo,
+    tab: OrderOverviewInfoTabsEnum.Delivery,
+  },
   { title: t('Additional'), tab: OrderOverviewInfoTabsEnum.Additional },
-  // { title: t('Code _') },
-  // { title: t('Code __') },
 ];

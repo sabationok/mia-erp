@@ -75,13 +75,13 @@ export type DataPath =
 export const ordersTableColumns: CellTittleProps<IOrder, DataPath>[] = [
   {
     top: {
-      name: `${t('Status')}/${t('Internal')}`,
-      getData: rd => rd.status?.internal,
+      name: `${t('Status')}`,
+      getData: rd => rd.status,
     },
-    bottom: {
-      name: `${t('Status')}/${t('External')}`,
-      getData: rd => rd.status?.external,
-    },
+    // bottom: {
+    //   name: `${t('Status')}/${t('External')}`,
+    //   getData: rd => rd.status?.external,
+    // },
     width: '150px',
     action: 'status',
   },

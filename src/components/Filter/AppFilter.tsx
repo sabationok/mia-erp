@@ -5,9 +5,9 @@ import { SubmitHandler } from 'react-hook-form';
 import styled from 'styled-components';
 import SelectorContent from './SelectorContent/SelectorContent';
 import { ICount } from 'redux/directories/counts.types';
-import { ICategory } from 'types/directories.types';
+import { ITrCategory } from 'types/directories.types';
 import { IContractor } from 'redux/directories/contractors.types';
-import { IProject } from 'redux/transactions/transactions.types';
+import { IProject } from 'types/finances/transactions.types';
 import { ApiDirType } from 'redux/APP_CONFIGS';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
@@ -15,7 +15,7 @@ import { useAppForm } from '../../hooks';
 import { FilterOption } from '../ModalForm/ModalFilter';
 import FlexBox from '../atoms/FlexBox';
 
-export type FilterSelectorDataType = ICount | ICategory | IContractor | IProject | FilterOption;
+export type FilterSelectorDataType = ICount | ITrCategory | IContractor | IProject | FilterOption;
 export type FilterSelectorType<Key = any> = {
   selectorName?: Key;
   dirType?: ApiDirType;

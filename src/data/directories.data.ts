@@ -22,7 +22,7 @@ import { toReqData } from '../utils';
 import { OfferTypeEnum } from '../types/products.types';
 import { ModalChildrenProps, Modals } from '../components/Modals';
 import { CountsTypesEnum } from '../redux/directories/counts.types';
-import { CategoryTrTypeEnum } from '../types/directories.types';
+import { TrCategoryTypeEnum } from '../types/directories.types';
 import { DirectoriesService } from '../hooks/useDirService.hook';
 import DirProperties, { DirPropertiesProps } from '../components/Directories/DirProperties/DirProperties';
 import { IDirectoryListItem } from '../components/SideBarContent/Directories';
@@ -35,6 +35,8 @@ import {
 } from './modalFilterOptions.data';
 import { ToastService } from '../services';
 import { dirPropertiesActionsCreator } from '../components/Directories/DirProperties/dirPropertiesActionsCreator';
+import { BankAccountTypeFilterOptions } from '../components/Forms/finances/FormCreateBankAccount';
+import DirBankAccountsComp from '../components/Directories/DirBankAccounts';
 
 export const getDirInTreeActionsCreator = (
   Modal: Modals = Modals.FormCreateDirTreeComp,
@@ -182,7 +184,7 @@ const CategoriesProps: DirCategoriesProps = {
   dirType: ApiDirType.CATEGORIES_TR,
   availableLevels: 2,
   filterSearchPath: 'type',
-  filterDefaultValue: CategoryTrTypeEnum.INCOME,
+  filterDefaultValue: TrCategoryTypeEnum.INCOME,
   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCategory, { createParentTitle: t('Create category') }),
 };
 const trCategoriesDir: IDirectoryListItem<any, DirCategoriesProps> = {
@@ -373,10 +375,20 @@ const directories: Partial<IDirectoryListItem>[] = [
   tagsDir,
 
   {
-    title: t('Bank counts'),
-    disabled: true,
+    title: t('Bank accounts'),
+    ModalChildren: DirBankAccountsComp,
     modalChildrenProps: {
       dirType: ApiDirType.BANK_ACCOUNTS,
+      title: t('Bank accounts'),
+      createParentTitle: t('Create bank account'),
+      fillHeight: true,
+      filterOptions: BankAccountTypeFilterOptions,
+      filterSearchPath: 'type',
+      availableLevels: 1,
+
+      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateBankAccount, {
+        createParentTitle: t('Create bank account'),
+      }),
     },
   },
   {

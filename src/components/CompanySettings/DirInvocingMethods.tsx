@@ -10,6 +10,9 @@ import { useTranslatedMethodsList } from '../../hooks/useTranslatedMethodsList.h
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { IInvoicingMethod } from '../../types/integrations.types';
 import { useInvoicesSelector } from '../../redux/selectors.store';
+import { UseInvoicingService } from '../../hooks/useInvoicingService.hook';
+import Forms from '../Forms';
+import ExtraFooterWithButton from '../atoms/ExtraFooterWithButton';
 
 export interface DirInvoicingMethodsProps
   extends IDirInTreeProps<MethodDirType, IInvoicingMethod, IInvoicingMethod, IInvoicingMethod> {
@@ -71,7 +74,7 @@ const DirInvoicingMethods: React.FC<DirInvoicingMethodsProps> = ({
           disabling
           {...props}
           {...actions}
-          item={{ ...item }}
+          item={item}
           creatingChild={false}
           availableLevels={1}
           currentLevel={0}
@@ -86,7 +89,15 @@ const DirInvoicingMethods: React.FC<DirInvoicingMethodsProps> = ({
   }, []);
 
   return (
-    <StModalForm style={{ maxWidth: 480 }} {...props}>
+    <StModalForm
+      style={{ maxWidth: 480 }}
+      {...props}
+      extraFooter={
+        actions?.onCreateParent && (
+          <ExtraFooterWithButton buttonText={createParentTitle || 'Create parent'} onClick={actions?.onCreateParent} />
+        )
+      }
+    >
       <FlexBox fillWidth flex={'1'} gap={8} padding={'8px 4px'}>
         {renderList}
       </FlexBox>
@@ -101,15 +112,23 @@ export default memo(DirInvoicingMethods);
 const actionsCreatorForDirInvoicingMethods: DirInTreeActionsCreatorType<
   MethodDirType,
   IInvoicingMethod,
-  any,
+  UseInvoicingService,
   IInvoicingMethod
-> = () => {
+> = ({ modalService }) => {
   return {
     onUpdate: (id, data, options) => {
+      modalService.open({
+        ModalChildren: Forms.InvoicingMethod,
+        modalChildrenProps: { defaultState: data },
+      });
+
       console.log('IInvoc onUpdate', data);
     },
     onChangeDisableStatus: (id, status, options) => {
       console.log('IInvoc onChangeDisableStatus', id, status);
+    },
+    onCreateParent: () => {
+      modalService.open({ ModalChildren: Forms.InvoicingMethod, modalChildrenProps: { create: true } });
     },
   };
 };

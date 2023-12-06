@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useMemo, useState } from 'react';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import styled from 'styled-components';
-import { ITransaction, ITransactionReqData, TransactionType } from 'redux/transactions/transactions.types';
+import { ITransaction, ITransactionReqData, TransactionType } from 'types/finances/transactions.types';
 import { CategoryTypes } from 'types/directories.types';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';

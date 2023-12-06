@@ -6,8 +6,8 @@ import { isUndefined } from 'lodash';
 import FlexBox from '../../atoms/FlexBox';
 
 export interface DirListItemProps {
-  list?: IDirItemBase[];
   item?: IDirItemBase;
+  list?: IDirItemBase[];
   parent?: IDirItemBase;
   archived?: boolean;
   disabled?: boolean;
@@ -90,8 +90,8 @@ const DirListItem: React.FC<DirListItemProps> = props => {
         <DirListItem
           key={`dirItem_lvl_${currentLevel + 1}_${ch?._id}`}
           {...props}
-          item={ch}
-          list={ch?.childrenList}
+          item={ch as any}
+          list={ch?.childrenList as any}
           parent={item}
           currentLevel={currentLevel + 1}
         />

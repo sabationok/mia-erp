@@ -7,6 +7,7 @@ import { RefCallBack } from 'react-hook-form';
 import ButtonIcon from '../../ButtonIcon/ButtonIcon';
 import { nanoid } from '@reduxjs/toolkit';
 import CheckBox from '../../../TableList/TebleCells/CellComponents/CheckBox';
+import { IEmbeddedName } from '../../../../types/utils.types';
 
 export interface CustomSelectBaseProps<Option = CustomSelectOptionBase> {
   InputComponent?: React.FC<InputHTMLAttributes<HTMLInputElement>>;
@@ -40,8 +41,8 @@ export type CustomSelectHandler<Option = any> = (option?: Option, value?: keyof 
 export type CustomSelectOptionBase = {
   _id?: string;
   id?: string;
-  label?: string;
-  name?: string;
+  label?: string | any;
+  name?: string | IEmbeddedName;
   secondName?: string;
   value?: string | number;
 };
@@ -58,6 +59,7 @@ export interface CustomSelectItemProps extends CustomSelectOption {
   treeMode?: boolean;
   option?: CustomSelectOption<CustomSelectOptionBase>;
   level: number;
+  isActiveOption?: <Data = any>(option: Data) => boolean;
   getLabel?: <Data = any>(option: CustomSelectOption<Data>) => React.ReactNode;
   onClick?: CustomSelectOnClickHandler;
   onSelect?: (index: number, option?: any) => void;
@@ -167,14 +169,16 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
 
   const onSelectOption = useCallback(
     (index: number, option?: any) => {
-      setCurrentOption(option);
       if (onSelect && valueKey && valueKey && option[valueKey]) {
         onSelect(option, option[valueKey], index);
         return;
       }
       if (onSelect) {
         onSelect(option, option?.value, index);
+      } else {
+        setCurrentOption(option);
       }
+
       handleOpenState();
     },
     [handleOpenState, onSelect, valueKey]
@@ -209,7 +213,9 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
     if (!selectedOption) return setCurrentOption(undefined);
   }, [selectedOption]);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    console.log(options);
+  }, [options]);
 
   return (
     <FlexBox className={'select-box'} fillWidth style={{ position: 'relative' }} data-select={selectId}>

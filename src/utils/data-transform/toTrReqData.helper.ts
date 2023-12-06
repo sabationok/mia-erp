@@ -1,4 +1,4 @@
-import { ITransaction, ITransactionForReq } from '../../redux/transactions/transactions.types';
+import { ITransaction, ITransactionForReq } from '../../types/finances/transactions.types';
 
 export function toTrReqData(
   transaction: ITransaction,

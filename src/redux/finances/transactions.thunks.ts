@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import { ThunkPayload } from '../store.store';
 import { isAxiosError } from 'axios';
-import { ITransaction, ITransactionReqData } from './transactions.types';
+import { ITransaction, ITransactionReqData } from '../../types/finances/transactions.types';
 import TransactionsApi from '../../api/transactions.api';
 import { AppQueryParams, createApiCall } from '../../api';
 import { createThunkPayloadCreator } from '../../api/createApiCall.api';

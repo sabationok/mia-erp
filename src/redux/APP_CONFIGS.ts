@@ -7,7 +7,9 @@ export enum API_BASE_ROUTES {
   COMPANIES = '/companies',
   DIRECTORIES = '/directories',
   TRANSACTIONS = `/transactions`,
-  FINANCE_TRANSACTIONS = '/finance/transactions',
+  FINANCES_TRANSACTIONS = '/finances/transactions',
+  FINANCES_BANK_ACCOUNTS = '/finances/bank-accounts',
+  FINANCES_FIN_ACCOUNTS = '/finances/fin-counts',
   CUSTOM_ROLES = '/roles',
   PRODUCTS = '/products',
   PROPERTIES = '/products/properties',
@@ -129,13 +131,17 @@ export enum ApiDefaultDirType {
 }
 
 const finTransactions = {
-  [Endpoints.getAll]: (): string => `${API_BASE_ROUTES.FINANCE_TRANSACTIONS}/getAll`,
-  [Endpoints.create]: (): string => `${API_BASE_ROUTES.FINANCE_TRANSACTIONS}/create`,
-  [Endpoints.deleteById]: (id?: string): string =>
-    `${API_BASE_ROUTES.FINANCE_TRANSACTIONS}/${Endpoints.deleteById}/${id}`,
-  [Endpoints.updateById]: (id?: string): string =>
-    `${API_BASE_ROUTES.FINANCE_TRANSACTIONS}/${Endpoints.updateById}/${id}`,
-  [Endpoints.getById]: (id?: string): string => `${API_BASE_ROUTES.FINANCE_TRANSACTIONS}/getById/${id}`,
+  getAll: (): string => `${API_BASE_ROUTES.FINANCES_TRANSACTIONS}/getAll`,
+  create: (): string => `${API_BASE_ROUTES.FINANCES_TRANSACTIONS}/create`,
+  deleteById: (id?: string): string => `${API_BASE_ROUTES.FINANCES_TRANSACTIONS}/${Endpoints.deleteById}/${id}`,
+  updateById: (id?: string): string => `${API_BASE_ROUTES.FINANCES_TRANSACTIONS}/${Endpoints.updateById}/${id}`,
+  getById: (id?: string): string => `${API_BASE_ROUTES.FINANCES_TRANSACTIONS}/getById/${id}`,
+
+  bankAccounts: {
+    create: () => `${API_BASE_ROUTES.FINANCES_BANK_ACCOUNTS}/create`,
+    update: (id?: string) => `${API_BASE_ROUTES.FINANCES_BANK_ACCOUNTS}/update/${id}`,
+    getList: () => `${API_BASE_ROUTES.FINANCES_BANK_ACCOUNTS}/getAll`,
+  },
 };
 
 const productsApiEndpoints = {

@@ -4,9 +4,11 @@ import {
   ICreateTransactionRes,
   ITransactionReqData,
   ITransactionRes,
-} from 'redux/transactions/transactions.types';
+} from 'types/finances/transactions.types';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
+import { AppResponse } from '../redux/global.types';
+import { BankAccountReqData, IBankAccount } from '../types/finances/bank-accounts.types';
 
 export default class TransactionsApi {
   private static api = baseApi;
@@ -34,4 +36,17 @@ export default class TransactionsApi {
   public static async deleteById(id?: string): Promise<ITransactionRes> {
     return this.api.delete(this.endpoints.deleteById(id));
   }
+
+  public static createBankAccount = async (reqData?: BankAccountReqData): Promise<AppResponse<IBankAccount>> => {
+    return this.api.post(this.endpoints.bankAccounts.create(), reqData?.data, { params: reqData?.params });
+  };
+
+  public static updateBankAccount = async (reqData?: BankAccountReqData): Promise<AppResponse<IBankAccount>> => {
+    return this.api.patch(this.endpoints.bankAccounts.update(reqData?._id), reqData?.data);
+  };
+  public static getBankAccountsList = async (reqData?: {
+    params?: AppQueryParams;
+  }): Promise<AppResponse<IBankAccount[]>> => {
+    return this.api.get(this.endpoints.bankAccounts.getList(), { params: reqData?.params });
+  };
 }

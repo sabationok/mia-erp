@@ -6,7 +6,7 @@ import FormSelectPropertiesOverlay from '../../Forms/FormProduct/FormSelectPrope
 import FlexBox from '../../atoms/FlexBox';
 import { t } from '../../../lang';
 import { CellStyledComp } from './CellStyles';
-import { CellHeader } from './OverviewCellHeader';
+import { OverviewCellHeader } from './OverviewCellHeader';
 import { OverviewPropertyComponent } from './OverviewPropertyComponent';
 
 export const OfferOverviewStaticProperties: RenderOverviewCellComponent<IProduct> = ({
@@ -60,7 +60,7 @@ export const OfferOverviewStaticProperties: RenderOverviewCellComponent<IProduct
       className={'PROPERTIES_LIST_CELL'}
       style={{ minHeight: renderProperties && renderProperties?.length > 0 ? 'max-content' : 50 }}
     >
-      <CellHeader
+      <OverviewCellHeader
         title={cell?.title}
         onOpenOverlayPress={() => {
           if (!template) return;

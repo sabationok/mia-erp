@@ -1,5 +1,5 @@
 import ModalForm from 'components/ModalForm';
-import { ICategory, ICategoryFormData } from 'types/directories.types';
+import { ITrCategory, ITrCategoryFormData } from 'types/directories.types';
 import React from 'react';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -14,7 +14,11 @@ import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { FormInputs } from './components/atoms';
 
 export interface FormCreateCategoryProps
-  extends DirectoriesFormProps<ApiDirType.CATEGORIES_PROD & ApiDirType.CATEGORIES_TR, ICategory, ICategoryFormData> {}
+  extends DirectoriesFormProps<
+    ApiDirType.CATEGORIES_PROD & ApiDirType.CATEGORIES_TR,
+    ITrCategory,
+    ITrCategoryFormData
+  > {}
 
 const validation = yup.object().shape({
   label: yup.string().required(),
@@ -37,13 +41,13 @@ const FormCreateCategory: React.FC<FormCreateCategoryProps> = ({
     formState: { errors, isValid },
     register,
     handleSubmit,
-  } = useAppForm<ICategoryFormData>({
+  } = useAppForm<ITrCategoryFormData>({
     defaultValues: defaultState,
     resolver: yupResolver(validation),
     reValidateMode: 'onChange',
   });
 
-  const onValid = (data: ICategoryFormData) => {
+  const onValid = (data: ITrCategoryFormData) => {
     console.log('FormCreateCategory on valid', { defaultState, data });
 
     onSubmit &&

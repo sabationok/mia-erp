@@ -5,7 +5,7 @@ import ModalForm from '../ModalForm';
 import { IReportBaseProps } from './report.types';
 import FlexBox from 'components/atoms/FlexBox';
 import { FilterOpt } from '../ModalForm/ModalFilter';
-import { CategoryTrTypeEnum, CategoryTypes } from '../../types/directories.types';
+import { CategoryTypes, TrCategoryTypeEnum } from '../../types/directories.types';
 import styled from 'styled-components';
 import { enumToArray, founder, numberWithSpaces } from '../../utils';
 import { categoriesFilterOptions } from '../../data/modalFilterOptions.data';
@@ -55,7 +55,7 @@ const ReportCategories: React.FC<IReportCategoriesProps<CategoryTypes>> = ({
 
     if (!entryList) return data;
 
-    enumToArray(CategoryTrTypeEnum).map(key => {
+    enumToArray(TrCategoryTypeEnum).map(key => {
       data[key] = founder({ searchParam: 'type', searchQuery: key, data: entryList });
       return '';
     });

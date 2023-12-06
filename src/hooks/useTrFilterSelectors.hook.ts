@@ -1,6 +1,6 @@
 import { FilterSelectorType } from 'components/Filter/AppFilter';
 import { ApiDirType } from '../redux/APP_CONFIGS';
-import { ITransaction } from '../redux/transactions/transactions.types';
+import { ITransaction } from '../types/finances/transactions.types';
 import { useDirectoriesSelector } from '../redux/selectors.store';
 
 const useTrFilterSelectors = (): FilterSelectorType<keyof ITransaction>[] => {

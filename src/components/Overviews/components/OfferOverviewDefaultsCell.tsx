@@ -7,7 +7,7 @@ import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
 import { checks, numberWithSpaces } from '../../../utils';
 import { CellStyledComp } from './CellStyles';
-import { CellHeader } from './OverviewCellHeader';
+import { OverviewCellHeader } from './OverviewCellHeader';
 import FormProductDefaultsOverlay from '../../Forms/FormProduct/FormProductDefaultsOverlay';
 
 import { IPriceListItem } from '../../../types/priceManagement.types';
@@ -76,7 +76,7 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<IProduct> = 
 
   return (
     <CellStyledComp.Cell style={{ minHeight: 'max-content' }}>
-      <CellHeader
+      <OverviewCellHeader
         title={cell?.title}
         onOpenOverlayPress={() => {
           setOverlayContent({

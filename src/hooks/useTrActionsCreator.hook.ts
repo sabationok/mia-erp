@@ -1,19 +1,19 @@
 import { IModalProviderContext, useModalProvider } from '../components/ModalProvider/ModalProvider';
-import { TransactionsService } from './useTransactionsService.hook';
+import { UseFinancesService } from './useTransactionsService.hook';
 
 import { filterOptions } from '../data/transactions.data';
 import { ITableAction, ITableListContext, TableActionCreator } from '../components/TableList/tableTypes.types';
-import { ITransaction } from '../redux/transactions/transactions.types';
+import { ITransaction } from '../types/finances/transactions.types';
 
 import { useTransactionsSelector } from '../redux/selectors.store';
 import { toast } from 'react-toastify';
 import { Modals } from '../components/Modals';
-import { ITransactionsState } from '../redux/transactions/transactions.slice';
+import { IFinTransactionsState } from '../redux/finances/finances.slice';
 
 export interface TransactionsTablesActionProps {
   ctx: ITableListContext<ITransaction>;
-  service: TransactionsService;
-  state: ITransactionsState;
+  service: UseFinancesService;
+  state: IFinTransactionsState;
   modalService: IModalProviderContext;
 }
 export type ITransactionsTableAction = ITableAction<string>;
@@ -206,7 +206,7 @@ const createAddExpenseTransactionAction = ({
     });
   },
 });
-const useTrActionsCreator = (service: TransactionsService): TrActionsCreator => {
+const useTrActionsCreator = (service: UseFinancesService): TrActionsCreator => {
   const state = useTransactionsSelector();
   const modalService = useModalProvider();
 

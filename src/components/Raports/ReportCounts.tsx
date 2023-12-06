@@ -7,7 +7,7 @@ import FlexBox from '../atoms/FlexBox';
 import { FilterOpt } from '../ModalForm/ModalFilter';
 import { numberWithSpaces } from 'utils';
 import { CountType } from 'redux/directories/counts.types';
-import { CurrencyCode } from '../../redux/transactions/transactions.types';
+import { CurrencyCode } from '../../types/finances/transactions.types';
 import styled from 'styled-components';
 
 export interface IReportCountsProps<V = any, D = any> extends IReportBaseProps<unknown, V, D> {

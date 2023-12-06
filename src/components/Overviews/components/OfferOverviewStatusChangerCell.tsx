@@ -9,7 +9,7 @@ import FlexBox from '../../atoms/FlexBox';
 import Changer from '../../atoms/Changer';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { t } from '../../../lang';
-import { CellHeader } from './OverviewCellHeader';
+import { OverviewCellHeader } from './OverviewCellHeader';
 import { CellStyledComp } from './CellStyles';
 
 export const OfferOverviewStatusChangerCell: RenderOverviewCellComponent<IProduct> = ({ cell, data }) => {
@@ -47,7 +47,7 @@ export const OfferOverviewStatusChangerCell: RenderOverviewCellComponent<IProduc
 
   return (
     <CellStyledComp.Cell style={{ minHeight: 'max-content' }}>
-      <CellHeader
+      <OverviewCellHeader
         title={cell?.title}
         onCancelPress={handleCancelPress}
         onEditPress={() => setCanEdit(true)}

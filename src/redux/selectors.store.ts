@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { RootState } from './store.store';
 import { useSelector } from 'react-redux';
 import { IAuthState } from '../types/auth.types';
-import { ITransactionsState } from './transactions/transactions.slice';
+import { IFinTransactionsState } from './finances/finances.slice';
 import { ICustomRolesState } from './customRoles/customRoles.slice';
 import { IUsersState } from './users/users.types';
 import { IAppSettings } from './appSettings/appSettings.slice';
@@ -40,8 +40,11 @@ export const useCustomersSelector = () => useSelector<RootState, CustomersState>
 export const useCommunicationSelector = () =>
   useSelector<RootState, CustomersState>((state: RootState) => state['customers']);
 export const useAppPageSettingsSelector = () => useSelector((state: RootState) => state.appPage);
-export const useTransactionsSelector = (): ITransactionsState =>
-  useSelector<RootState, ITransactionsState>((state: RootState): ITransactionsState => state.transactions);
+export const useTransactionsSelector = (): IFinTransactionsState =>
+  useSelector<RootState, IFinTransactionsState>((state: RootState): IFinTransactionsState => state.transactions);
+
+export const useFinancesSelector = (): IFinTransactionsState =>
+  useSelector<RootState, IFinTransactionsState>((state: RootState): IFinTransactionsState => state.transactions);
 
 export const useProductsSelector = () =>
   useSelector<RootState, IProductsState>((state: RootState): IProductsState => state.products);

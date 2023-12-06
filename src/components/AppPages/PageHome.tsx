@@ -72,10 +72,6 @@ const PageHome: React.FC<Props> = ({ path }) => {
     [companyType?.param]
   );
 
-  useEffect(() => {
-    console.log('permissions loadind', loading);
-  }, [loading]);
-
   const renderFilterButtons = useMemo(() => {
     return companyTypes.map(item => (
       <StButtonIcon
@@ -208,9 +204,7 @@ const StButtonIcon = styled(ButtonIcon)`
     position: absolute;
     bottom: 0;
     left: 50%;
-    //height: 1px;
-    //width: 100%;
-    height: 3px;
+    height: 2px;
     width: 0;
     transition: all ${({ theme }) => theme.globals.timingFnMui};
     transform: translate(-50%);
@@ -219,6 +213,7 @@ const StButtonIcon = styled(ButtonIcon)`
 
   &.active {
     &::after {
+      height: 3px;
       width: 80%;
     }
   }
@@ -228,6 +223,8 @@ const StButtonIcon = styled(ButtonIcon)`
     outline-style: none;
 
     &::after {
+      height: 3px;
+
       width: 100%;
     }
   }

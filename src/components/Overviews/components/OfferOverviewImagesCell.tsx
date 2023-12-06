@@ -6,7 +6,7 @@ import ImagePreviewSmall from '../../atoms/ImagePreviewSmall';
 import FormProductImages from '../../Forms/FormProduct/FormProductImagesOverlay';
 import FlexBox from '../../atoms/FlexBox';
 import { CellStyledComp } from './CellStyles';
-import { CellHeader } from './OverviewCellHeader';
+import { OverviewCellHeader } from './OverviewCellHeader';
 
 export const OfferOverviewImagesCell: RenderOverviewCellComponent<IProduct> = ({ data, cell, setOverlayContent }) => {
   const renderImageSets = useMemo(() => {
@@ -23,7 +23,7 @@ export const OfferOverviewImagesCell: RenderOverviewCellComponent<IProduct> = ({
 
   return (
     <CellStyledComp.Cell style={{ minHeight: 'max-content', padding: '4px 0' }}>
-      <CellHeader
+      <OverviewCellHeader
         title={cell?.title}
         onOpenOverlayPress={() => {
           setOverlayContent({ RenderComponent: FormProductImages });

@@ -1,8 +1,8 @@
-import { AppResponse, IBase } from '../global.types';
-import { IContractor } from '../directories/contractors.types';
-import { IActivity } from '../directories/activities.types';
-import { ICount } from '../directories/counts.types';
-import { ICategory } from '../../types/directories.types';
+import { AppResponse, IBase } from '../../redux/global.types';
+import { IContractor } from '../../redux/directories/contractors.types';
+import { IActivity } from '../../redux/directories/activities.types';
+import { ICount } from '../../redux/directories/counts.types';
+import { ITrCategory } from '../directories.types';
 
 export type CurrencyCode = 'UAH';
 export type TransactionType = 'EXPENSE' | 'TRANSFER' | 'INCOME';
@@ -29,8 +29,8 @@ export interface ITransaction extends ITransactionBase {
   subCountIn?: ICount;
   countOut?: ICount;
   subCountOut?: ICount;
-  category?: ICategory;
-  subCategory?: ICategory;
+  category?: ITrCategory;
+  subCategory?: ITrCategory;
   contractor?: IContractor;
   project?: IProject;
   document?: IDocument;

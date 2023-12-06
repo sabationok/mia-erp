@@ -1,8 +1,7 @@
 import { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { enumToFilterOptions } from '../../../utils/fabrics';
+import { enumToFilterOptions, toInputValueDate, useStepsHandler } from '../../../utils';
 import ModalFilter from '../../ModalForm/ModalFilter';
-import { useStepsHandler } from '../../../utils/createStepChecker';
 import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
@@ -11,12 +10,7 @@ import { t } from '../../../lang';
 import StepsController from '../components/StepsController';
 import OrderGroupsStuffingStep from './steps/OrderGroupsStuffingStep';
 import OrderInfoStep from './steps/OrderInfoStep';
-import {
-  ICreateOrderInfoFormState,
-  ICreateOrdersGroupDto,
-  IOrder,
-  IOrderTempSlot,
-} from '../../../types/orders/orders.types';
+import { ICreateOrderInfoFormState, IOrder, IOrderTempSlot } from '../../../types/orders/orders.types';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { ToastService } from '../../../services';
 import _ from 'lodash';
@@ -24,8 +18,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { orderInfoBaseSchema } from '../validation';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { getIdRef, toInputValueDate } from '../../../utils';
-
 import * as fns from 'date-fns';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
 import { createApiCall, OrdersApi } from '../../../api';
@@ -34,12 +26,14 @@ export interface FormCreateOrdersGroupProps
   extends Omit<ModalFormProps<any, any, FormCreateOrdersGroupStepsData>, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<FormCreateOrdersGroupStepsData>;
 }
+
 export interface FormCreateOrdersGroupStepsData {
   slots?: IOrderTempSlot[];
   info?: ICreateOrderInfoFormState;
 
   orders?: IOrder[];
 }
+
 export enum FormCreateOrdersGroupStepsEnum {
   Stuffing = 'Stuffing',
   Info = 'Info',
@@ -54,6 +48,7 @@ const stepsProcessInitialState: Record<FormCreateOrdersGroupStepsEnum | string, 
 const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onClose }) => {
   const service = useAppServiceProvider()[ServiceName.orders];
   const currentGroupFormState = useOrdersSelector().ordersGroupFormData;
+
   const { stepsMap, stepIdx, setNextStep, setPrevStep, getCurrentStep, isLast } = useStepsHandler(steps);
   const [isStepFinished, setIsStepFinished] =
     useState<Record<FormCreateOrdersGroupStepsEnum | string, boolean>>(stepsProcessInitialState);
@@ -185,45 +180,3 @@ const Content = styled(FlexBox)`
 
 const Footer = styled(FlexBox)``;
 export default FormCreateOrdersGroup;
-
-export function _transformOrderInfoForReq(input: ICreateOrderInfoFormState): ICreateOrdersGroupDto['info'] {
-  console.debug('Transform Order Info For Req'.toUpperCase());
-  console.log({ input });
-
-  function transformObject(obj: any) {
-    const result: any = {};
-
-    for (const key in obj) {
-      if (obj[key] instanceof Object) {
-        result[key] = transformObject(obj[key]);
-      } else if (key === 'method') {
-        result.method = getIdRef(obj.method);
-        result.expiredAt = obj.expiredAt;
-      } else {
-        result[key] = obj[key];
-      }
-    }
-
-    return result;
-  }
-
-  const output: ICreateOrdersGroupDto = {
-    info: transformObject(input),
-  };
-
-  console.log({ output });
-  return output.info;
-}
-
-// if (input?.manager) {
-//   output.manager = getIdRef(input?.manager);
-// }
-// if (input?.customer) {
-//   output.customer = getIdRef(input?.customer);
-// }
-// if (input?.receiver) {
-//   output.receiver = getIdRef(input?.receiver);
-// }
-// if (input?.communication) {
-//   output.communication = input?.communication;
-// }

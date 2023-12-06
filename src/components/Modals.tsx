@@ -1,12 +1,12 @@
 import ModalForm, { ModalFormProps } from './ModalForm';
 import PriceListOverview, { PriceListOverviewProps } from './Modals/Overviews/PriceListOverview';
 import ProductOverview, { ProductOverviewProps } from './Overviews/ProductOverview';
-import OrderOverview, { OrderOverviewProps } from './Overviews/OrderOverview';
 import SelectProductModal, { SelectProductModalProps } from './Modals/SelectProductModal';
 import AppFilter, { AppFilterProps } from './Filter/AppFilter';
 import DirVariationsTemplate, { DirVariationsTemplateProps } from './Directories/DirVariationsTemplate';
 import DirPoperties, { DirPropertiesProps } from './Directories/DirProperties/DirProperties';
 import Forms, { FormPropTypes } from './Forms';
+import { FormCreateBankAccountProps } from './Forms/finances/FormCreateBankAccount';
 
 export enum Modals {
   ModalForm = 'ModalForm',
@@ -40,9 +40,11 @@ export enum Modals {
   DirProperties = 'DirProperties',
   // DirTreeComponent = 'DirTreeComponent',
 
+  // * FINANCES
+  FormCreateBankAccount = 'FormCreateBankAccount',
+
   PriceListOverview = 'PriceListOverview',
   ProductOverview = 'ProductOverview',
-  OrderOverview = 'OrderOverview',
   SelectProductModal = 'SelectProductModal',
   AppFilter = 'AppFilter',
 }
@@ -77,12 +79,13 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   [Modals.FormCreateOrdersGroup]: Forms.CreateOrdersGroup,
   [Modals.FormCreateOrderSlot]: Forms.CreateOrderSlot,
   [Modals.SelectOrderType]: Forms.SelectOrderType,
+  // * FINANCES
+  [Modals.FormCreateBankAccount]: Forms.CreateBankAccount,
   // * DIRECTORIES
   [Modals.DirVariationsTemplate]: DirVariationsTemplate,
   [Modals.DirProperties]: DirPoperties,
   // [Modals.DirTreeComponent]: DirTreeComp,
   // * Modals props
-  [Modals.OrderOverview]: OrderOverview,
   [Modals.PriceListOverview]: PriceListOverview,
   [Modals.ProductOverview]: ProductOverview,
   [Modals.SelectProductModal]: SelectProductModal,
@@ -127,9 +130,11 @@ export interface ModalChildrenProps extends Record<Modals, any> {
   // [Modals.DirTreeComponent]: IDirInTreeProps;
   // * Modals props
 
-  [Modals.OrderOverview]: OrderOverviewProps;
   [Modals.PriceListOverview]: PriceListOverviewProps;
   [Modals.ProductOverview]: ProductOverviewProps;
   [Modals.SelectProductModal]: SelectProductModalProps;
   [Modals.AppFilter]: AppFilterProps;
+
+  // * FINANCES
+  [Modals.FormCreateBankAccount]: FormCreateBankAccountProps;
 }

@@ -42,8 +42,8 @@ export interface HasReceiver {
 export interface ICustomerBase extends IBase, HasEmbeddedLabel, HasEmbeddedName, HasTaxCode {
   email?: string;
   phone?: string;
-  age?: string;
 
+  age?: string;
   birthDate?: AppDate;
 
   avatarURL?: string;

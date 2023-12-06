@@ -2,7 +2,7 @@ import React from 'react';
 import { OverlayHandler } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
 
 export type RenderOverviewCellComponent<Data = any> = React.FC<{
-  cell: OverviewCellProps<Data>;
+  cell: Omit<OverviewCellProps<Data>, 'CellComponent'>;
   setOverlayContent: OverlayHandler;
   data?: Data;
 }>;
@@ -12,6 +12,6 @@ export interface OverviewCellProps<Data = any, Tab = any> {
   title?: string;
   gridArea?: keyof Data | string;
   CellComponent?: RenderOverviewCellComponent<Data>;
-  getValue?: (data: Data) => React.ReactNode | undefined | null;
+  getValue?: (data: Data) => React.ReactNode;
   tab?: Tab;
 }

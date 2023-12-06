@@ -4,7 +4,7 @@ import { useDirectoriesSelector } from '../../../redux/selectors.store';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import React, { useMemo } from 'react';
 import { CellStyledComp } from './CellStyles';
-import { CellHeader } from './OverviewCellHeader';
+import { OverviewCellHeader } from './OverviewCellHeader';
 import FormProductCategoriesOverlay from '../../Forms/FormProduct/FormSelectCategoriesOverlay';
 import FlexBox from '../../atoms/FlexBox';
 import { IProductCategoryDirItem } from '../../../types/dir.types';
@@ -27,7 +27,7 @@ export const OfferOverviewCategoriesCell: RenderOverviewCellComponent<IProduct> 
 
   return (
     <CellStyledComp.Cell style={{ minHeight: 'max-content' }}>
-      <CellHeader
+      <OverviewCellHeader
         title={cell?.title}
         openOverlayButtonTitle={'Змінити'}
         onOpenOverlayPress={() => {

@@ -5,7 +5,6 @@ import { AppQueryParams } from '../../api';
 import { ICommunicationMethod } from '../integrations.types';
 import {
   AppDate,
-  HasEmbeddedStatus,
   HasExtRef,
   HasMagicLink,
   HasManager,
@@ -94,7 +93,7 @@ export interface IOrder
     MagicLinkRef,
     HasManager,
     HasExtRef,
-    HasEmbeddedStatus<{ internal?: MaybeNull<OrderStatusEnum>; external?: MaybeNull<string> }> {
+    HasStatus<OrderStatusEnum> {
   group?: IOrdersGroup;
 
   receiver?: ICustomerBase;

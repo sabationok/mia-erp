@@ -8,14 +8,17 @@ export interface DefaultDirectoryType extends IBase {
   disabled?: boolean;
 }
 
-export interface ICategory extends IBaseDirItem<CategoryTypes, ApiDirType.CATEGORIES_TR> {}
+export interface ITrCategory extends IBaseDirItem<CategoryTypes, ApiDirType.CATEGORIES_TR> {}
 
-export interface ICategoryFormData extends Omit<ICategory, '_id' | 'createdAt' | 'updatedAt'> {}
+export interface ITrCategoryFormData
+  extends Omit<ITrCategory, '_id' | 'createdAt' | 'updatedAt' | 'childrenList' | 'parent'> {
+  parent?: Omit<ITrCategory, '_id' | 'createdAt' | 'updatedAt' | 'childrenList' | 'parent'>;
+}
 
-export enum CategoryTrTypeEnum {
+export enum TrCategoryTypeEnum {
   INCOME = 'INCOME',
   TRANSFER = 'TRANSFER',
   EXPENSE = 'EXPENSE',
 }
 
-export type CategoryTypes = keyof typeof CategoryTrTypeEnum;
+export type CategoryTypes = keyof typeof TrCategoryTypeEnum;
