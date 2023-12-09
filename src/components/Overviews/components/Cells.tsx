@@ -9,6 +9,7 @@ import { OrderOverviewGroupInfo } from './OrderOverviewGroupInfo';
 import { OrderOverviewInvoicing } from './OrderOverviewInvoicing';
 import { OrderOverviewDelivery } from './OrderOverviewDelivery';
 import { OrderOverviewCustomerInfo } from './OrderOverviewCustomerInfo';
+import { OrderOverviewTotals } from './OrderOverviewTotals';
 
 export const OverviewCells = {
   Text: OverviewTextCell,
@@ -22,4 +23,5 @@ export const OverviewCells = {
   OrderCustomerInfo: OrderOverviewCustomerInfo,
   OrderInvoicing: OrderOverviewInvoicing,
   OrderDelivery: OrderOverviewDelivery,
+  OrderTotals: OrderOverviewTotals,
 };

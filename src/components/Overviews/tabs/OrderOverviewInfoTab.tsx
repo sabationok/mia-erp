@@ -79,6 +79,11 @@ const orderOverviewCells: OverviewCellProps<IOrder>[] = [
     tab: OrderOverviewInfoTabsEnum.General,
   },
   {
+    title: t('Totals'),
+    CellComponent: OverviewCells.OrderTotals,
+    tab: OrderOverviewInfoTabsEnum.General,
+  },
+  {
     title: t('Reference'),
     CellComponent: OverviewCells.Text,
     getValue: data => data?.magicLink,

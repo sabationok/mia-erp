@@ -7,7 +7,7 @@ import { AppResponse } from '../redux/global.types';
 
 export default class ProductsApi {
   private static api = baseApi;
-  private static endpoints = APP_CONFIGS.endpoints.products;
+  private static endpoints = APP_CONFIGS.endpoints.offers;
 
   public static async getAll(params?: AppQueryParams): Promise<AppResponse<IProduct[]>> {
     return this.api.get(this.endpoints.getAll(), {

@@ -1,7 +1,7 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { t } from '../lang';
 import { IPriceList, IPriceListItem, PriceAmountAndPercentageFieldsKey } from '../types/priceManagement.types';
-import { numberWithSpaces } from '../utils/numbers';
+import { numberWithSpaces } from '../utils';
 import { priceAmountAndPercentageFieldsLabels } from '../utils/tables';
 
 const dateColumn: CellTittleProps = {
@@ -58,10 +58,10 @@ export const priceListColumns: CellTittleProps<IPriceList>[] = [
   dateColumn,
 ];
 
-export function createColumnForPriceEntity(
+export function createColumnForPriceEntity<Type extends IPriceListItem = any>(
   name: PriceAmountAndPercentageFieldsKey,
   width?: string
-): CellTittleProps<IPriceListItem> {
+): CellTittleProps<Type> {
   const topLabel = priceAmountAndPercentageFieldsLabels[name]?.amount;
   const countedWidth = width || `${topLabel?.length * 12}px`;
 
@@ -90,7 +90,7 @@ const keys: PriceAmountAndPercentageFieldsKey[] = [
   'vat',
 ];
 
-const basePriceColumns: CellTittleProps<IPriceListItem>[] = [
+export const basePriceColumns: CellTittleProps<IPriceListItem>[] = [
   {
     top: {
       name: t('Price OUT'),
@@ -108,6 +108,27 @@ const basePriceColumns: CellTittleProps<IPriceListItem>[] = [
     action: 'valueByPath',
   },
 ];
+
+export function getBasePriceColumns<Type extends IPriceListItem = any>(): CellTittleProps<Type>[] {
+  return [
+    {
+      top: {
+        name: t('Price OUT'),
+        align: 'end',
+        getData: d => numberWithSpaces(d?.out),
+      },
+      bottom: { name: t('Price IN'), align: 'end', getData: d => numberWithSpaces(null) },
+      width: '170px',
+      action: 'valueByPath',
+    },
+    ...keys.map(k => createColumnForPriceEntity(k)),
+    {
+      top: { name: t('description'), path: 'description' },
+      width: '150px',
+      action: 'valueByPath',
+    },
+  ];
+}
 
 export const priceListContentColumns: CellTittleProps<IPriceListItem>[] = [
   {

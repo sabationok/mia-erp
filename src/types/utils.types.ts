@@ -47,6 +47,14 @@ export interface HasEmbeddedStatus<Status extends object = object> {
   status?: MaybeNull<Status>;
 }
 
+export interface HasError<Error extends string | number = string> {
+  status?: MaybeNull<Error>;
+}
+
+export interface HasEmbeddedError<Error extends object = object> {
+  status?: MaybeNull<Error>;
+}
+
 export interface HasStatusRef {
   status: MaybeNull<OnlyUUID>;
 }

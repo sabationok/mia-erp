@@ -33,36 +33,48 @@ export const OrderOverviewCustomerInfo: RenderOverviewCellComponent<IOrder> = ({
       },
       { label: t('Print'), value: data?.customer?.name?.second, visible: data?.customer?.businessType !== 'person' },
 
-      { label: t('Email'), value: data?.customer?.email },
-      { label: t('Phone'), value: data?.customer?.phone },
+      { label: t('Email'), value: data?.customer?.email, visible: true },
+      { label: t('Phone'), value: data?.customer?.phone, visible: true },
 
-      { label: t('Tags'), value: null },
+      { label: t('Business type'), value: data?.customer?.businessType, visible: true },
+      { label: t('Sex type'), value: data?.customer?.sexType, visible: true },
+
+      { label: t('Engagement type'), value: data?.customer?.engagementSource, visible: true },
+
+      { label: t('Age'), value: data?.customer?.age, visible: true },
+
+      { label: t('Tags'), value: null, visible: true },
     ];
 
     return cells.map(cell => {
       return (
-        <FlexBox
-          key={cell.label}
-          fxDirection={'row'}
-          padding={'6px'}
-          gap={8}
-          alignItems={'center'}
-          justifyContent={'space-between'}
-        >
-          <Text $size={11}>{cell?.label}</Text>
-          <Text $size={13} $weight={500}>
-            {cell?.value ?? t('undefined')}
-          </Text>
-        </FlexBox>
+        cell.visible && (
+          <FlexBox
+            key={cell.label}
+            fxDirection={'row'}
+            padding={'6px'}
+            gap={8}
+            alignItems={'center'}
+            justifyContent={'space-between'}
+          >
+            <Text $size={11}>{cell?.label}</Text>
+            <Text $size={13} $weight={500}>
+              {cell?.value ?? t('undefined')}
+            </Text>
+          </FlexBox>
+        )
       );
     });
   }, [
+    data?.customer?.age,
     data?.customer?.businessType,
     data?.customer?.email,
+    data?.customer?.engagementSource,
     data?.customer?.name?.first,
     data?.customer?.name?.middle,
     data?.customer?.name?.second,
     data?.customer?.phone,
+    data?.customer?.sexType,
   ]);
 
   return (

@@ -15,15 +15,15 @@ export default class DeliveriesApi {
     return this.api.get(this.endpoints.getAll(), { params });
   }
   public static getById(id?: string, params?: AppQueryParams) {
-    return this.api.get(this.endpoints.getAll(), { params });
+    return this.api.get(this.endpoints.getById(id), { params });
   }
 
   public static getAllMethods(
     params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>
   ): Promise<AppResponse<IDeliveryMethod[]>> {
-    return this.api.get(this.endpoints.getAllMethods(), { params });
+    return this.api.get(this.endpoints.methods.getAll(), { params });
   }
   public static updateMethod(args?: IDeliveryMethodReqData): Promise<AppResponse<IDeliveryMethod>> {
-    return this.api.patch(this.endpoints.updateMethod(args?._id), args?.data, { params: args?.params });
+    return this.api.patch(this.endpoints.methods.update(args?._id), args?.data, { params: args?.params });
   }
 }

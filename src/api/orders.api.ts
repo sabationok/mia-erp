@@ -25,8 +25,8 @@ export default class OrdersApi {
     return this.api.post(this.endpoints.create());
   }
 
-  public static getSlots = (query?: AppQueryParams): Promise<AppResponse<IOrderSlot[]>> => {
-    return this.api.get(this.endpoints.getSlots(), { params: query });
+  public static getSlots = ({ params }: { params?: AppQueryParams } = {}): Promise<AppResponse<IOrderSlot[]>> => {
+    return this.api.get(this.endpoints.slots.getList(), { params });
   };
 
   public static createManyOrdersGroupedByWarehouse = (

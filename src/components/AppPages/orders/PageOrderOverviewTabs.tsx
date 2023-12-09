@@ -4,7 +4,7 @@ import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { Text } from '../../atoms/Text';
 import ModalFilter, { FilterSelectHandler } from '../../ModalForm/ModalFilter';
 import { useMemo, useState } from 'react';
-import { enumToFilterOptions } from '../../../utils/fabrics';
+import { enumToFilterOptions } from '../../../utils';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { useAppParams } from '../../../hooks';
 import OrderContentTab from './tabs/OrderContentTab';

@@ -49,6 +49,8 @@ export interface ICustomerBase extends IBase, HasEmbeddedLabel, HasEmbeddedName,
   avatarURL?: string;
   tags?: string[];
 
+  sexType?: MaybeNull<string>;
+
   type?: CustomerTypeEnum;
   businessType?: BusinessSubjectTypeEnum;
   engagementSource?: EngagementSource;

@@ -48,7 +48,7 @@ const ToggleButton = styled(ButtonIcon)<{ isShown: boolean }>`
   border-radius: 50%;
   fill: ${({ theme }) => theme.accentColor.base};
 
-  box-shadow: ${({ isShown }) => (isShown ? 'var(--header-shadow)' : '')};
+  box-shadow: ${({ isShown, theme }) => (isShown ? theme.globals.shadowMain : '')};
   background-color: ${({ theme, isShown }) => (isShown ? theme.backgroundColorMain : theme.backgroundColorSecondary)};
   transition: ${({ theme }) => theme.globals.timingFunctionMain};
 

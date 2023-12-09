@@ -5,6 +5,14 @@ import { SelectItem } from '../components/TableList/tableTypes.types';
 import { FilterOption } from '../components/ModalForm/ModalFilter';
 import { getStatusesByEnum } from './statuses.data';
 import { numberWithSpaces } from '../utils';
+import { getBasePriceColumns } from './priceManagement.data';
+
+const createdDateColumn: CellTittleProps = {
+  top: { name: t('updated'), align: 'center', path: 'updatedAt' },
+  bottom: { name: t('created'), align: 'center', path: 'createdAt' },
+  width: '150px',
+  action: 'dateDbl',
+};
 
 export const orderStatusesData = getStatusesByEnum(OrderStatusEnum);
 export const orderStatuses: FilterOption<OrderStatusEnum>[] = [
@@ -167,12 +175,7 @@ export const ordersTableColumns: CellTittleProps<IOrder, DataPath>[] = [
     width: '180px',
     action: 'valueByPath',
   },
-  {
-    top: { name: t('updated'), align: 'center', path: 'updatedAt' },
-    bottom: { name: t('created'), align: 'center', path: 'createdAt' },
-    width: '150px',
-    action: 'dateDbl',
-  },
+  createdDateColumn,
 ];
 
 export const ordersSearchParams: SelectItem[] = [
@@ -221,12 +224,34 @@ export const ordersSearchParams: SelectItem[] = [
   },
 ];
 
-export const orderSlotTableColumns: CellTittleProps<IOrderSlot>[] = [
-  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
-  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
-  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
-  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
-  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
-  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
-  { top: { name: '' }, bottom: { name: '' }, action: 'valueByPath', width: '125px' },
+export const orderSlotsTableColumns: CellTittleProps<IOrderSlot>[] = [
+  {
+    top: { name: t('Product label'), getData: rd => rd.product?.label },
+    bottom: { name: t('Variation label'), getData: rd => rd.variation?.label },
+    action: 'valueByPath',
+    width: '210px',
+  },
+  {
+    top: { name: t('Product sku'), getData: rd => rd.product?.sku },
+    bottom: { name: t('Variation sku'), getData: rd => rd.variation?.sku },
+    action: 'valueByPath',
+    width: '150px',
+  },
+  {
+    top: { name: t('Product bar-code'), getData: rd => rd.product?.barCode },
+    bottom: { name: t('Variation bar-code'), getData: rd => rd.variation?.barCode },
+    action: 'valueByPath',
+    width: '150px',
+  },
+  {
+    top: { name: t('Total amount'), getData: rd => rd.total },
+    bottom: { name: t('Total q-ty'), getData: rd => rd.quantity },
+    action: 'valueByPath',
+    width: '125px',
+  },
+  ...getBasePriceColumns(),
+  { top: { name: t('') }, bottom: { name: t('') }, action: 'valueByPath', width: '125px' },
+  { top: { name: t('') }, bottom: { name: t('') }, action: 'valueByPath', width: '125px' },
+  { top: { name: t('') }, bottom: { name: t('') }, action: 'valueByPath', width: '125px' },
+  createdDateColumn,
 ];

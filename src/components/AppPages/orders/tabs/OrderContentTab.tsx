@@ -1,14 +1,22 @@
 import FlexBox from '../../../atoms/FlexBox';
 import ModalFilter from '../../../ModalForm/ModalFilter';
-import TableList from '../../../TableList/TableList';
+import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { useOrdersSelector } from '../../../../redux/selectors.store';
-import { useMemo, useState } from 'react';
-import { orderSlotTableColumns } from '../../../../data/orders.data';
+import { useEffect, useMemo, useState } from 'react';
+import { orderSlotsTableColumns } from '../../../../data/orders.data';
 import { productsFilterOptions } from '../../../../data/modalFilterOptions.data';
+import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
+import { AppModuleName } from '../../../../redux/reduxTypes.types';
+import { getIdRef } from '../../../../utils';
+import { useModalService } from '../../../ModalProvider/ModalProvider';
+import { IOrderSlot } from '../../../../types/orders/orders.types';
 
 export interface OrderContentTabProps {}
 
 const OrderContentTab: React.FC<OrderContentTabProps> = p => {
+  const service = useAppServiceProvider()[AppModuleName.orders];
+  const modalService = useModalService();
+  const [isLoading, setIsLoading] = useState(false);
   const [currentTab, setCurrentTab] = useState<number>(0);
 
   const { currentOrder } = useOrdersSelector();
@@ -16,6 +24,31 @@ const OrderContentTab: React.FC<OrderContentTabProps> = p => {
   const tableData = useMemo(() => {
     return currentOrder?.slots?.filter(el => el.product?.type === productsFilterOptions[currentTab]?.value);
   }, [currentOrder?.slots, currentTab]);
+
+  const tableConfigs = useMemo((): ITableListProps<IOrderSlot> => {
+    return {
+      actionsCreator: ctx => {
+        return [
+          {
+            icon: 'refresh',
+            name: 'refresh',
+            onClick: () => {
+              if (currentOrder?._id) {
+                service.getSlots({ data: { params: { order: getIdRef(currentOrder) } }, onLoading: setIsLoading });
+              }
+            },
+          },
+        ];
+      },
+    };
+  }, [currentOrder, service]);
+
+  useEffect(() => {
+    if (currentOrder?._id) {
+      service.getSlots({ data: { params: { order: getIdRef(currentOrder) } } });
+    }
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <FlexBox fillWidth overflow={'hidden'} flex={1}>
@@ -29,7 +62,14 @@ const OrderContentTab: React.FC<OrderContentTabProps> = p => {
         />
       </FlexBox>
 
-      <TableList isSearch={false} isFilter={false} tableData={tableData} tableTitles={orderSlotTableColumns} />
+      <TableList
+        isSearch={false}
+        isFilter={false}
+        {...tableConfigs}
+        tableData={tableData}
+        isLoading={isLoading}
+        tableTitles={orderSlotsTableColumns}
+      />
     </FlexBox>
   );
 };

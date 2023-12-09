@@ -24,6 +24,7 @@ export interface SelectItemBase extends Record<string, any> {
 export interface SelectItem extends SelectItemBase {}
 
 export interface TableActionProps<TDataType = any> {
+  name?: string;
   separator?: boolean;
   iconId?: string;
   onClick?: () => void;
