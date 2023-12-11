@@ -20,10 +20,12 @@ import { shipmentsSlice } from './shipments/shipments.slice';
 import { paymentsSlice } from './payments/payments.slice';
 import { integrationsSlice } from './integrations/integrations.slice';
 import { deliveriesSlice } from './deliveries/deliveries.slice';
+import { companiesSlice } from './companies/companies.slice';
 
 const rootReducer = combineReducers({
   [authSlice.name]: persistReducer(persistorConfigs.auth, authSlice.reducer),
   [usersSlice.name]: usersSlice.reducer,
+  [companiesSlice.name]: companiesSlice.reducer,
   [directoriesSlice.name]: persistReducer(persistorConfigs.directories, directoriesSlice.reducer),
   [appSettingsSlice.name]: persistReducer(persistorConfigs.appSettings, appSettingsSlice.reducer),
   [permissionsSlice.name]: persistReducer(persistorConfigs.permissions, permissionsSlice.reducer),

@@ -3,7 +3,7 @@ import { LangPack } from '../lang';
 import { ICompany } from './companies.types';
 import { AppQueryParams } from '../api';
 import { HasBaseCmsConfigs } from './cms.types';
-import { HasDisabledAttributes, HasLabel, HasType, MaybeNull } from './utils.types';
+import { HasCategory, HasDisabledAttributes, HasLabel, HasType, MaybeNull } from './utils.types';
 import { IBankAccount } from './finances/bank-accounts.types';
 
 export enum IntegrationTypeEnum {
@@ -149,11 +149,15 @@ export interface ExtCommunicationService extends ExtServiceBase {
 export interface ExtDeliveryService extends ExtServiceBase {
   methods?: IDeliveryMethod[];
 }
-export interface ServiceMethodBase<Type extends string | number = any, Service = any>
-  extends IBase,
+export interface ServiceMethodBase<
+  Type extends string | number = any,
+  Category extends string | number = any,
+  Service = any
+> extends IBase,
     HasBaseCmsConfigs,
     HasLabel,
     HasType<Type>,
+    HasCategory<Category>,
     HasDisabledAttributes {
   labels?: LangPack;
   isDefault?: boolean;
@@ -176,17 +180,25 @@ export enum InvoicingMethodTypeEnum {
   bankTransfer = 'bankTransfer',
   afterPay = 'afterPay',
   cash = 'cash',
+
+  bonuses_cash = 'bonuses_cash',
+  bonuses_afterPay = 'bonuses_afterPay',
+  bonuses_bankTransfer = 'bonuses_bankTransfer',
 }
 
 export enum InvoicingMethodCategoryEnum {
   external = 'external',
   internal = 'internal',
 }
-export interface ICommunicationMethod extends ServiceMethodBase<string, ExtCommunicationService> {}
+export enum DeliveryMethodCategoryEnum {
+  external = 'external',
+  internal = 'internal',
+}
+export interface ICommunicationMethod extends ServiceMethodBase<string, never, ExtCommunicationService> {}
 export interface ICommunicationMethodReqData extends IMethodReqData<ICommunicationMethod> {}
-export interface IInvoicingMethod extends ServiceMethodBase<InvoicingMethodTypeEnum, ExtInvoicingService> {
+export interface IInvoicingMethod
+  extends ServiceMethodBase<InvoicingMethodTypeEnum, InvoicingMethodCategoryEnum, ExtInvoicingService> {
   bankAccount?: MaybeNull<IBankAccount>;
-  category?: MaybeNull<InvoicingMethodCategoryEnum>;
 }
 export interface IInvoicingMethodReqData extends IMethodReqData<IInvoicingMethod> {}
 
@@ -194,7 +206,7 @@ export interface IDeliveryMethodInvoicingPolicy {
   method?: IInvoicingMethod;
   minCost?: { delivery?: number; return?: number };
 }
-export interface IDeliveryMethod extends ServiceMethodBase<string, ExtDeliveryService> {
+export interface IDeliveryMethod extends ServiceMethodBase<string, never, ExtDeliveryService> {
   invoicing?: IDeliveryMethodInvoicingPolicy;
 }
 
@@ -203,14 +215,9 @@ export interface IDeliveryMethodDto
   invoicing?: Pick<IDeliveryMethodInvoicingPolicy, 'minCost'> & { method?: OnlyUUID };
 }
 
-// export interface IDeliveryMethodReqData {
-//   _id?: string;
-//   data?: IDeliveryMethodDto;
-//   params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>;
-// }
 export interface IDeliveryMethodReqData extends IMethodReqData<IDeliveryMethodDto> {}
 export interface ICheckoutPaymentMethod
-  extends ServiceMethodBase<string | MonoCheckoutMethod | LiqPayCheckoutMethodEnum, ExtDeliveryService> {}
+  extends ServiceMethodBase<string | MonoCheckoutMethod | LiqPayCheckoutMethodEnum, never, ExtDeliveryService> {}
 export interface IPaymentMethodReqData extends IMethodReqData<ICheckoutPaymentMethod> {}
 
 export enum PaymentCheckoutEnum {

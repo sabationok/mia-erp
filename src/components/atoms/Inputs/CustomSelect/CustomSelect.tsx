@@ -1,6 +1,6 @@
 import InputLabel, { InputLabelProps } from '../InputLabel';
 import { forwardRef, InputHTMLAttributes, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { omit, pick } from 'lodash';
+import { isUndefined, omit, pick } from 'lodash';
 import styled, { css } from 'styled-components';
 import FlexBox, { FieldBox } from '../../FlexBox';
 import { RefCallBack } from 'react-hook-form';
@@ -149,6 +149,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
     onCreatePress,
     dropDownIsAbsolute = true,
     treeMode,
+    selectedValue,
     ...props
   },
   _ref
@@ -218,8 +219,14 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
   }, [selectedOption]);
 
   useEffect(() => {
-    console.log(options);
-  }, [options]);
+    if (!isUndefined(selectedValue)) {
+      setCurrentOption(
+        options?.find((el: CustomSelectOptionBase) =>
+          el.value ? el.value === selectedValue : el?._id === selectedValue
+        )
+      );
+    }
+  }, [options, selectedValue]);
 
   return (
     <FlexBox className={'select-box'} fillWidth style={{ position: 'relative' }} data-select={selectId}>

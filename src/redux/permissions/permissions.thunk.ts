@@ -9,7 +9,7 @@ import { ThunkPayload } from '../store.store';
 import { axiosErrorCheck } from 'utils';
 import { CompaniesApi, PermissionsApi } from '../../api';
 import { ICompanyForReq } from '../../types/companies.types';
-import { createUpdateCompanyThunk } from '../companies/companies.thunks';
+import { buildUpdateCompanyThunk } from '../companies/companies.thunks';
 import { IUser } from '../../types/auth.types';
 import { CompanyQueryType } from '../global.types';
 
@@ -283,4 +283,4 @@ export const deletePermissionByIdThunk = createAsyncThunk<
   }
 });
 
-export const updateCurrentCompanyThunk = createUpdateCompanyThunk(PermissionsThunkType.updateCurrentCompanyThunk);
+export const updateCurrentCompanyThunk = buildUpdateCompanyThunk(PermissionsThunkType.updateCurrentCompanyThunk);

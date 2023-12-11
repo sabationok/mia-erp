@@ -60,6 +60,9 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
     watch,
     trigger,
   } = useOrderInfoForm();
+  const [invMethodCategory, setInvMethodCategory] = useState<InvoicingMethodCategoryEnum>(
+    InvoicingMethodCategoryEnum.external
+  );
 
   const formValues = watch();
 
@@ -69,7 +72,6 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
   });
   const invoicingMethods = useTranslatedMethodsList(useInvoicesSelector().methods, { withFullLabel: true });
 
-  const [invMethodCategory, setInvMethodCategory] = useState<InvoicingMethodCategoryEnum>();
   const filteredInvMethods = useFilteredLisData({
     data: invoicingMethods,
     searchQuery: invMethodCategory,

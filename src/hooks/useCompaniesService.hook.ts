@@ -2,27 +2,29 @@ import { ICompany, ICompanyReqData } from '../types/companies.types';
 import { IPermission } from '../types/permissions.types';
 import { useMemo } from 'react';
 import { CompaniesApi, createApiCall } from '../api';
-import { defaultApiCallPayload } from '../utils';
-import { ServiceApiCaller } from '../redux/global.types';
+import { defaultApiCallPayload, defaultThunkPayload } from '../utils';
+import { ServiceApiCaller, ServiceDispatcherAsync } from '../redux/global.types';
+import { useAppDispatch } from '../redux/store.store';
+import { getCompanyByIdThunk, updateCompanyByIdThunk } from '../redux/companies/companies.thunks';
 
 export interface CompaniesService {
   delete: ServiceApiCaller<string, Partial<IPermission>>;
-  getById: ServiceApiCaller<{ _id?: string; params?: { fullInfo?: boolean; configs?: boolean } }, ICompany>;
+  getById: ServiceDispatcherAsync<{ _id?: string; params?: { fullInfo?: boolean; configs?: boolean } }, ICompany>;
   create: ServiceApiCaller<ICompanyReqData, IPermission>;
-  update: ServiceApiCaller<Required<ICompanyReqData>, IPermission>;
+  update: ServiceDispatcherAsync<ICompanyReqData, IPermission>;
 }
-const { create, updateById, deleteById, getById } = CompaniesApi;
+const { create, deleteById } = CompaniesApi;
 const useCompaniesServiceHook = (): CompaniesService => {
-  // const dispatch: AppDispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   return useMemo((): CompaniesService => {
     return {
       create: args => createApiCall(defaultApiCallPayload(args), create),
-      update: args => createApiCall(defaultApiCallPayload(args), updateById),
+      update: args => dispatch(updateCompanyByIdThunk(defaultThunkPayload(args))),
       delete: args => createApiCall(defaultApiCallPayload(args), deleteById),
-      getById: args => createApiCall(defaultApiCallPayload(args), getById),
+      getById: args => dispatch(getCompanyByIdThunk(defaultThunkPayload(args))),
     };
-  }, []);
+  }, [dispatch]);
 };
 
 export default useCompaniesServiceHook;

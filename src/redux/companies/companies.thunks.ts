@@ -8,6 +8,7 @@ export enum CompanyThunkType {
   setConfigs = 'companies/setConfigsThunk',
   getConfigs = 'companies/getConfigsThunk',
   updateById = 'companies/updateCompanyByIdThunk',
+  getById = 'companies/getCompanyByIdThunk',
 }
 
 // export const createSetCompanyConfigsThunk = (type: string) =>
@@ -63,12 +64,38 @@ export enum CompanyThunkType {
 //       return thunkAPI.rejectWithValue(axiosErrorCheck(e));
 //     }
 //   });
-export const createUpdateCompanyThunk = (type: string) =>
-  createAsyncThunk<ICompany, ThunkPayload<ICompanyReqData, ICompany>>(
+export function buildGetCompanyByIdThunk(type: string) {
+  return createAsyncThunk<
+    ICompany,
+    ThunkPayload<
+      {
+        _id?: string;
+        params?: { fullInfo?: boolean; configs?: boolean };
+      },
+      ICompany
+    >
+  >(type, async ({ data, onSuccess, onError }, thunkAPI) => {
+    try {
+      const response = await CompaniesApi.getById(data);
+
+      if (response) {
+        onSuccess && onSuccess(response.data.data);
+      }
+      return response.data.data;
+    } catch (error) {
+      onError && onError(error);
+      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+    }
+  });
+}
+
+export const getCompanyByIdThunk = buildGetCompanyByIdThunk(CompanyThunkType.getById);
+export function buildUpdateCompanyThunk(type: string) {
+  return createAsyncThunk<ICompany, ThunkPayload<ICompanyReqData, ICompany>>(
     type,
     async ({ data, onSuccess, onError }, thunkAPI) => {
       try {
-        const response = await CompaniesApi.updateById(data as ICompanyReqData);
+        const response = await CompaniesApi.updateById(data);
 
         if (response) {
           onSuccess && onSuccess(response.data.data);
@@ -80,3 +107,5 @@ export const createUpdateCompanyThunk = (type: string) =>
       }
     }
   );
+}
+export const updateCompanyByIdThunk = buildUpdateCompanyThunk(CompanyThunkType.updateById);

@@ -84,6 +84,7 @@ export interface ICompany
 
 export interface ICompaniesState {
   companies: ICompany[];
+  current?: ICompany;
   isLoading: boolean;
   error: StateErrorType;
 }
@@ -156,7 +157,6 @@ export interface ICompanyForReq extends ICompanyDto {}
 
 export interface ICompanyReqData {
   _id?: string;
-  id?: string;
   data: ICompanyDto;
 }
 

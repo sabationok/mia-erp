@@ -1,6 +1,6 @@
 import { CompanySettingsTabBaseProps } from './companySettingsTabs.types';
 import { DeliveryPolicyJsonData, ICompanyDeliveryPolicyFormData } from '../../../types/companies.types';
-import { useDeliveriesSelector, usePermissionsSelector } from '../../../redux/selectors.store';
+import { useCompaniesSelector, useDeliveriesSelector } from '../../../redux/selectors.store';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { t } from '../../../lang';
 import ButtonSwitch from '../../atoms/ButtonSwitch';
@@ -29,15 +29,15 @@ export enum DeliveryPolicyTabs {
 }
 
 const tabs = enumToTabs(DeliveryPolicyTabs);
-const DeliveryPolicyTab = ({ onClose, onSubmit, company }: DeliveryPolicyTabProps) => {
+const DeliveryPolicyTab = ({ onClose, onSubmit }: DeliveryPolicyTabProps) => {
   const service = useAppServiceProvider()[AppModuleName.companies];
-  const permission = usePermissionsSelector().permission;
+  const company = useCompaniesSelector().current;
   const methods = useTranslatedMethodsList(useDeliveriesSelector().methods, { withFullLabel: true });
   const [current, setCurrent] = useState<DeliveryPolicyTabs>(DeliveryPolicyTabs.sales);
   const [loading, setLoading] = useState<boolean>(false);
 
   const form = useAppForm<ICompanyDeliveryPolicyFormData>({
-    defaultValues: (company?.deliveryPolicy ?? permission?.company?.deliveryPolicy) as ICompanyDeliveryPolicyFormData,
+    defaultValues: company?.deliveryPolicy as ICompanyDeliveryPolicyFormData,
     shouldUnregister: true,
   });
 
@@ -59,9 +59,11 @@ const DeliveryPolicyTab = ({ onClose, onSubmit, company }: DeliveryPolicyTabProp
 
     if (company?._id) {
       service.update({
-        data: { _id: company?._id, id: company?._id, data: { deliveryPolicy: { [current]: fData[current] } } },
-        logRes: true,
+        data: { _id: company?._id, data: { deliveryPolicy: { [current]: fData[current] } } },
         onLoading: setLoading,
+        onSuccess: () => {
+          onClose && onClose();
+        },
       });
     }
   };

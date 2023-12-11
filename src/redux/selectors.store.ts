@@ -21,6 +21,7 @@ import { InvoicesState } from './invoices/invoices.slice';
 import { ShipmentsState } from './shipments/shipments.slice';
 import { IntegrationsState } from './integrations/integrations.slice';
 import { DeliveriesState } from './deliveries/deliveries.slice';
+import { ICompaniesState } from '../types/companies.types';
 
 export const useAuthSelector = () => useSelector<RootState, IAuthState>((state: RootState) => state.auth);
 export const useUsersSelector = () => useSelector<RootState, IUsersState>((state: RootState) => state.users);
@@ -57,6 +58,8 @@ export const useOrdersSelector = () =>
 
 export const usePermissionsSelector = () =>
   useSelector<RootState, IPermissionsState>((state: RootState): IPermissionsState => state['permissions']);
+export const useCompaniesSelector = () =>
+  useSelector<RootState, ICompaniesState>((state: RootState): ICompaniesState => state['companies']);
 export const useRefundsSelector = () =>
   useSelector<RootState, IRefundsState>((state: RootState): IRefundsState => state['refunds']);
 export const usePriceListsSelector = () =>
