@@ -1,5 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { IPermission, IPermissionForReq, IPermissionReqData } from '../../types/permissions.types';
+import {
+  IPermission,
+  IPermissionForReq,
+  IPermissionReqData,
+  PermissionRecipientEnum,
+} from '../../types/permissions.types';
 import { ThunkPayload } from '../store.store';
 import { axiosErrorCheck } from 'utils';
 import { CompaniesApi, PermissionsApi } from '../../api';
@@ -52,13 +57,11 @@ export const getAllPermissionsByUserIdThunk = createAsyncThunk<
 
 export const getAllPermissionsByCompanyIdThunk = createAsyncThunk<
   IPermission[],
-  ThunkPayload<{
-    companyId: string;
-  }>
+  ThunkPayload<{ _id: string; params?: { recipient?: PermissionRecipientEnum } }>
 >('permissions/getAllPermissionsByCompanyIdThunk', async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
   onLoading && onLoading(true);
   try {
-    const response = await PermissionsApi.getAllByCompanyId(data?.companyId as string);
+    const response = await PermissionsApi.getAllByCompanyId(data);
     if (response) {
       onSuccess && onSuccess(response.data.data);
     }

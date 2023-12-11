@@ -11,6 +11,7 @@ import { OverviewCellHeader } from './OverviewCellHeader';
 import FormProductDefaultsOverlay from '../../Forms/FormProduct/FormProductDefaultsOverlay';
 
 import { IPriceListItem } from '../../../types/priceManagement.types';
+import { MaybeNull } from '../../../types/utils.types';
 
 export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<IProduct> = ({ data, cell, setOverlayContent }) => {
   const theme = useTheme();
@@ -19,7 +20,7 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<IProduct> = 
 
   const renderVariationTags = useMemo(() => {
     const variation = data?.variation;
-    const tagsData: { title: string; value?: number | string }[] = [
+    const tagsData: { title: string; value?: MaybeNull<number | string> }[] = [
       { title: t('Label'), value: variation?.label },
       { title: t('Bar-code'), value: variation?.barCode },
       {

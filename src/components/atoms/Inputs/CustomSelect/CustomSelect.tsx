@@ -7,7 +7,7 @@ import { RefCallBack } from 'react-hook-form';
 import ButtonIcon from '../../ButtonIcon/ButtonIcon';
 import { nanoid } from '@reduxjs/toolkit';
 import CheckBox from '../../../TableList/TebleCells/CellComponents/CheckBox';
-import { IEmbeddedName } from '../../../../types/utils.types';
+import { IEmbeddedName, MaybeNull } from '../../../../types/utils.types';
 
 export interface CustomSelectBaseProps<Option = CustomSelectOptionBase> {
   InputComponent?: React.FC<InputHTMLAttributes<HTMLInputElement>>;
@@ -41,14 +41,14 @@ export type CustomSelectHandler<Option = any> = (option?: Option, value?: keyof 
 export type CustomSelectOptionBase = {
   _id?: string;
   id?: string;
-  label?: string | any;
-  name?: string | IEmbeddedName;
+  label?: MaybeNull<string | any>;
+  name?: MaybeNull<string | IEmbeddedName>;
   secondName?: string;
   value?: string | number;
 };
 export type CustomSelectOption<Data = any> = {
-  parent?: CustomSelectOption<Data>;
-  childrenList?: CustomSelectOption<Data>[];
+  parent?: MaybeNull<CustomSelectOption<Data>>;
+  childrenList?: MaybeNull<CustomSelectOption<Data>[]>;
 } & CustomSelectOptionBase &
   Data;
 export interface CustomSelectItemProps extends CustomSelectOption {
@@ -99,6 +99,10 @@ const CustomSelectOptionComponent: React.FC<CustomSelectItemProps> = ({
     ));
   }, [currentOptionId, currentOptionValue, level, onSelect, option?.childrenList, treeMode, getLabel]);
 
+  const renderLabel = useMemo((): undefined | string | number | null => {
+    return getLabel && option ? getLabel(option) : option?.label || option?.name;
+  }, [getLabel, option]);
+
   return (
     <>
       <Option
@@ -113,7 +117,7 @@ const CustomSelectOptionComponent: React.FC<CustomSelectItemProps> = ({
       >
         {treeMode && <CheckBox size={'16px'} checked={isActiveMemorized} />}
 
-        <span className={'inner'}>{getLabel && option ? getLabel(option) : option?.label || option?.name}</span>
+        <span className={'inner'}>{renderLabel}</span>
       </Option>
 
       {treeMode && <FlexBox padding={'0 0 0 8px'}>{renderChildrenList}</FlexBox>}

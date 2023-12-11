@@ -4,11 +4,10 @@ import { IPriceListItem } from './priceManagement.types';
 import { AppQueryParams } from '../api';
 import { IProduct } from './products.types';
 import { IPropertyValue } from './properties.types';
-import { HasCompany, HasDimensions, MaybeNull, WithPeriod } from './utils.types';
+import { HasCompany, HasDimensions, HasLabel, MaybeNull, WithPeriod } from './utils.types';
 import { HasBaseCmsConfigs, HasBaseCmsConfigsDto } from './cms.types';
 
-export interface IVariationBase extends HasDimensions, WithPeriod {
-  label?: string;
+export interface IVariationBase extends HasDimensions, WithPeriod, HasLabel {
   sku?: string;
   barCode?: string;
 }

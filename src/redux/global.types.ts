@@ -27,7 +27,7 @@ export interface IBase extends OnlyUUID {
 
 export type IBaseKeys = keyof IBase;
 export interface IFormDataValueWithID<DirType extends ApiDirType = any> extends OnlyUUID {
-  label?: string;
+  label?: MaybeNull<string>;
   name?: string;
   secondName?: string;
   dirType?: DirType;

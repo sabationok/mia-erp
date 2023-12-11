@@ -5,6 +5,7 @@ import {
   IPermissionForReq,
   IPermissionReqData,
   IPermissionsResData,
+  PermissionRecipientEnum,
   PermissionStatus,
 } from '../types/permissions.types';
 import { AppResponse, CompanyQueryType } from '../redux/global.types';
@@ -62,12 +63,15 @@ export default class PermissionsApi {
 
   public static getAllByUserId(params?: {
     userId?: string;
-    query?: { type?: CompanyQueryType };
+    query?: { type?: CompanyQueryType; recipient?: PermissionRecipientEnum };
   }): Promise<IPermissionsResData> {
     return this.api.get(this.endpoints[Endpoints.getAllByUserId](params?.userId), { params: params?.query });
   }
 
-  public static getAllByCompanyId(id: string): Promise<IPermissionsResData> {
-    return this.api.get(this.endpoints[Endpoints.getAllByCompanyId](id));
+  public static getAllByCompanyId(data?: {
+    _id: string;
+    params?: { recipient?: PermissionRecipientEnum };
+  }): Promise<IPermissionsResData> {
+    return this.api.get(this.endpoints[Endpoints.getAllByCompanyId](data?._id), { params: data?.params });
   }
 }

@@ -9,7 +9,16 @@ import { IUser } from './auth.types';
 import { AppQueryParams } from '../api';
 import { IVariation } from './variations.types';
 import { IPropertyValue, IVariationTemplate } from './properties.types';
-import { AppDate, HasDescription, HasDimensions, HasMeasurement, HasStatus, HasType, MaybeNull } from './utils.types';
+import {
+  AppDate,
+  HasDescription,
+  HasDimensions,
+  HasLabel,
+  HasMeasurement,
+  HasStatus,
+  HasType,
+  MaybeNull,
+} from './utils.types';
 
 export enum ProductStatusEnum {
   pending = 'pending',
@@ -67,12 +76,12 @@ export type ProductFilterOpt = FilterOption<OfferTypeEnum>;
 
 export interface IProductBase
   extends IBase,
+    HasLabel,
     HasMeasurement,
     HasDimensions,
     HasDescription,
     HasType<OfferTypeEnum>,
     HasStatus<ProductStatusEnum> {
-  label?: string;
   sku?: string;
   barCode?: string;
   qrCode?: string;

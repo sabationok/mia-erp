@@ -28,7 +28,10 @@ import {
   useInvoicesSelector,
 } from '../../../../redux/selectors.store';
 import * as fns from 'date-fns';
-import { toInputValueDate } from '../../../../utils';
+import { enumToFilterOptions, toInputValueDate } from '../../../../utils';
+import { InvoicingMethodCategoryEnum } from '../../../../types/integrations.types';
+import { useFilteredLisData } from '../../../../hooks';
+import ButtonsGroup from '../../../atoms/ButtonsGroup';
 
 export interface OrderInfoStepProps extends FormOrderStepBaseProps {
   isGroup?: boolean;
@@ -45,6 +48,8 @@ type ConfirmsStateKay =
   | 'holdOrderPayment';
 
 type FormFieldPaths = Path<ICreateOrderInfoFormState>;
+
+const invMethodCategoryFilterOptions = enumToFilterOptions(InvoicingMethodCategoryEnum);
 const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) => {
   const modalS = useModalService();
   const {
@@ -64,7 +69,12 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
   });
   const invoicingMethods = useTranslatedMethodsList(useInvoicesSelector().methods, { withFullLabel: true });
 
-  const setTouchedField = (_path: FormFieldPaths) => {};
+  const [invMethodCategory, setInvMethodCategory] = useState<InvoicingMethodCategoryEnum>();
+  const filteredInvMethods = useFilteredLisData({
+    data: invoicingMethods,
+    searchQuery: invMethodCategory,
+    searchParam: 'category',
+  });
 
   const [confirms, setConfirms] = useState<Record<ConfirmsStateKay | string, boolean>>({
     hasDelivery: !!formValues.deliveryInfo,
@@ -75,7 +85,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
 
   const handleOnChangeValue: UseFormSetValue<ICreateOrderInfoFormState> = (path, value) => {
     try {
-      setValue(path, value as never);
+      setValue(path, value as never, { shouldTouch: true });
       throttleCallback(() =>
         trigger()
           .then(isValid => {
@@ -85,7 +95,6 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
             console.error('handleOnChangeValue trigger error', e);
           })
       );
-      setTouchedField(path);
     } catch (e) {
       console.error('handleOnChangeValue: ', e);
     }
@@ -121,18 +130,6 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
   useEffect(() => {
     if (onChangeValidStatus) onChangeValidStatus(isValid);
   }, [isValid, onChangeValidStatus]);
-
-  useEffect(() => {
-    // const initData = {
-    //   hasDelivery: !!formValues.deliveryInfo,
-    //   hasDeliveryInvoice: !!formValues.deliveryInfo?.invoiceInfo,
-    //   hasReceiverInfo: !!formValues.receiver,
-    //   hasExecuteDate: !!formValues.shipmentInfo?.executeAt,
-    // };
-    console.debug('CURRENT CONFIRMS', confirms);
-    // setConfirms(initData);
-    // eslint-disable-next-line
-  }, [confirms]);
 
   return (
     <Inputs flex={1} overflow={'auto'}>
@@ -292,9 +289,15 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
           open
           renderHeader={<AccordionItemTitle title={t('Invoicing')} />}
         >
-          <InputLabel label={t('Payment method')} required>
+          <ButtonsGroup
+            options={invMethodCategoryFilterOptions}
+            currentOption={{ value: invMethodCategory }}
+            onChangeIndex={i => setInvMethodCategory(invMethodCategoryFilterOptions[i].value)}
+          />
+
+          <InputLabel label={t('Method')} required>
             <CheckboxesListSelector
-              options={invoicingMethods}
+              options={filteredInvMethods}
               currentOption={formValues?.invoiceInfo?.method}
               onChangeIndex={i => {
                 handleOnChangeValue('invoiceInfo.method', invoicingMethods[i]);

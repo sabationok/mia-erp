@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { checks } from '../../utils';
 import { t } from '../../lang';
+import { MaybeNull } from '../../types/utils.types';
 
 export interface ModalFormFilterProps<V = any, D = any> {
   getDefaultValue?: (opt: FilterOption<V, D>) => number;
@@ -27,7 +28,7 @@ export interface ModalFormFilterProps<V = any, D = any> {
 
 export interface FilterOption<V = any, D = any> extends Record<string, any> {
   _id?: string;
-  label?: string;
+  label?: MaybeNull<string>;
   name?: string;
   value: V;
   data?: D;

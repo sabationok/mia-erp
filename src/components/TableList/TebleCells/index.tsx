@@ -8,16 +8,18 @@ import CellValueByPath from './CellValueByPath';
 import CellTextDblAndAvatar from './CellTextDblAndAvatar';
 import CellNumberWithSpaces from './CellNumberWithSpaces';
 import CellTextAndAvatar from './CellTextAndAvatar';
+import CellText from './CellText';
 
 export const CellsMap = {
   cell: Cell,
+  text: CellText,
+  valueByPath: CellValueByPath,
   cellDbl: CellTextDbl,
-  dateSimple: CellDateSimple,
   status: CellStatus,
+  dateSimple: CellDateSimple,
   dateDbl: CellDateSimple,
   contacts: CellContactsDbl,
   tags: CellTags,
-  valueByPath: CellValueByPath,
   doubleDataWithAvatar: CellTextDblAndAvatar,
   dataWithAvatar: CellTextAndAvatar,
   numberWithSpaces: CellNumberWithSpaces,

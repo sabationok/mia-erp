@@ -25,6 +25,7 @@ import { t } from '../../../lang';
 import DimensionsInputs from '../FormProduct/components/DimensionsInputs';
 import LangButtonsGroup from '../../atoms/LangButtonsGroup';
 import { PropertyItemStylesByCmsKey } from '../../Directories/DirProperties/components/PropertyItem';
+import { MaybeNull } from '../../../types/utils.types';
 
 // const dimensionsInputs: {
 //   label?: string;
@@ -176,7 +177,7 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
   );
 
   const handleSelect = useCallback(
-    (parentId: string, id: string, label?: string) => {
+    (parentId: string, id: string, label?: MaybeNull<string>) => {
       setValue(`propertiesMap.${parentId}`, id);
       label && setPropLabelsByParentId(p => ({ ...p, [parentId]: label }));
     },
@@ -203,7 +204,7 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
 
   return (
     <FormContainer onSubmit={handleSubmit(onValid)} onReset={handleClearMap} {...props}>
-      <OverlayHeader onBackPress={onClose} title={title || template?.label} canSubmit={canSubmit} okButton />
+      <OverlayHeader onBackPress={onClose} title={(title || template?.label) ?? ''} canSubmit={canSubmit} okButton />
 
       <Content flex={1} fillWidth overflow={'auto'}>
         <Inputs>
@@ -290,7 +291,7 @@ export const RenderVariationProperty = ({
   item: IProperty;
   selectedValue?: string;
   selectedIds?: string[];
-  onSelect?: (propId: string, valueId: string, label?: string) => void;
+  onSelect?: (propId: string, valueId: string, label?: MaybeNull<string>) => void;
 }) => {
   const renderChildren = useMemo(() => {
     return item.childrenList?.map(value => {
@@ -349,7 +350,7 @@ const PropertyBox = styled(FlexBox)`
   }
 `;
 
-const PropertyValuesBox = styled(FlexBox)<{ cmsKey?: string }>`
+const PropertyValuesBox = styled(FlexBox)<{ cmsKey?: MaybeNull<string> }>`
   width: 100%;
   display: grid;
 

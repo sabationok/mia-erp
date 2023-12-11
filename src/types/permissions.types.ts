@@ -11,7 +11,10 @@ export enum PermissionStatus {
   ACCEPTED = 'ACCEPTED',
   BANED = 'BANED',
 }
-
+export enum PermissionRecipientEnum {
+  user = 'user',
+  integration = 'integration',
+}
 export interface IPermission extends IBase {
   company?: Partial<ICompany>;
   user?: Partial<IUserBase>;

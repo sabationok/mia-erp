@@ -7,6 +7,7 @@ import FlexBox from '../../atoms/FlexBox';
 import StatusComp from './CellComponents/StatusComp';
 import { StatusNames } from '../../../data/statuses.data';
 import { IconIdType } from '../../../img/sprite';
+import { Text } from '../../atoms/Text';
 
 interface IDataCellSectionProps<T = string | null> {
   data?: T;
@@ -44,10 +45,17 @@ const DoubleDataCell: React.FC<IDataCellProps> = ({ width, content, subContent }
 const SimpleDataCell: React.FC<Omit<IDataCellProps, 'subContent'>> = ({ width, content }) => {
   return (
     <CellBase style={{ width }}>
-      <Content align={content?.align} uppercase={content?.uppercase} fontWeight={500} fontSize={'12px'}>
-        <div title={content?.data || ''} className="inner">
+      <Content align={content?.align} uppercase={content?.uppercase} style={{ maxHeight: '100%' }}>
+        <Text
+          $size={12}
+          $weight={500}
+          $ellipsisMode={true}
+          $lines={2}
+          title={content?.data || ''}
+          style={{ maxHeight: '100%' }}
+        >
           {content?.data}
-        </div>
+        </Text>
       </Content>
     </CellBase>
   );

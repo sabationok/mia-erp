@@ -226,9 +226,9 @@ export const ordersSearchParams: SelectItem[] = [
 
 export const orderSlotsTableColumns: CellTittleProps<IOrderSlot>[] = [
   {
-    top: { name: t('Product label'), getData: rd => rd.product?.label },
-    bottom: { name: t('Variation label'), getData: rd => rd.variation?.label },
-    action: 'valueByPath',
+    // top: { name: t('Product label'), getData: rd => rd.product?.label },
+    top: { name: t('Variation label'), getData: rd => rd.variation?.label },
+    action: 'text',
     width: '210px',
   },
   {

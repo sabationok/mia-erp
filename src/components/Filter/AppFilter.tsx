@@ -16,12 +16,13 @@ import { FilterOption } from '../ModalForm/ModalFilter';
 import FlexBox from '../atoms/FlexBox';
 
 export type FilterSelectorDataType = ICount | ITrCategory | IContractor | IProject | FilterOption;
-export type FilterSelectorType<Key = any> = {
+
+export type FilterSelectorType<Key = any, DataType = any> = {
   selectorName?: Key;
   dirType?: ApiDirType;
   queryName?: string;
   label: string;
-  data: FilterSelectorDataType[];
+  data: DataType[];
 };
 
 // {

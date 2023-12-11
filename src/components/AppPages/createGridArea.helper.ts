@@ -1,8 +1,8 @@
 import { FieldValues } from 'react-hook-form/dist/types';
-import { Path } from 'react-hook-form';
+import { EntityPath } from '../../types/utils.types';
 
 export const createGridAreaFromKeyArrays = <T extends FieldValues = any>(
-  areasArrays: (Path<T> | string)[][] = [[]]
+  areasArrays: (EntityPath<T> | string)[][] = [[]]
 ): string => {
   const getIsEqual = () => areasArrays?.map(rowArr => rowArr.length).every((el, _i, arr) => el === arr[0]);
   const isEqual = getIsEqual();

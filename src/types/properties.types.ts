@@ -1,17 +1,18 @@
-import { IBase, OnlyUUID } from '../redux/global.types';
+import { IBase, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
 import { AppQueryParams } from '../api';
 import { OfferTypeEnum } from './products.types';
-import { CmsBaseConfigsDto, ICmsBaseConfigs } from './cms.types';
+import { ICmsBaseConfigs } from './cms.types';
+import { MaybeNull } from './utils.types';
 
 export interface IPropertyBase extends IBase {
-  label?: string;
+  label?: MaybeNull<string>;
   type?: OfferTypeEnum;
-  isSelectable?: boolean;
+  isSelectable?: MaybeNull<boolean>;
 
   parent?: IPropertyBase;
   childrenList?: IPropertyBase[];
 
-  cmsConfigs?: ICmsPropertyConfigs;
+  cmsConfigs?: MaybeNull<ICmsPropertyConfigs>;
 }
 
 export interface IVariationTemplate extends Omit<IPropertyBase, 'parent'> {
@@ -49,20 +50,27 @@ export interface ICmsPropertyConfigs extends ICmsBaseConfigs {
   description?: string;
 }
 
-export interface CmsPropertyConfigsDto extends CmsBaseConfigsDto {
+export interface CmsPropertyConfigsDto extends ICmsBaseConfigs {
   colors?: string[];
   type?: PropertyTypeEnum;
   description?: string;
 }
+export interface PropertyFormData {
+  parent?: IFormDataValueWithID;
+  label?: string;
+  type?: OfferTypeEnum;
+  isSelectable?: boolean;
 
+  cmsConfigs?: MaybeNull<CmsPropertyConfigsDto>;
+}
 export interface IPropertyDto {
-  parent?: OnlyUUID;
+  parent?: MaybeNull<OnlyUUID>;
 
   label?: string;
   type?: OfferTypeEnum;
   isSelectable?: boolean;
 
-  cmsConfigs?: CmsPropertyConfigsDto;
+  cmsConfigs?: MaybeNull<CmsPropertyConfigsDto>;
 }
 
 export interface IPropertyReqData {

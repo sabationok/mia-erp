@@ -38,7 +38,7 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
     register,
     handleSubmit,
   } = useAppForm<ICountFormData>({
-    defaultValues: parent?._id
+    defaultValues: (parent?._id
       ? {
           ...data,
           type,
@@ -47,7 +47,7 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
       : {
           ...data,
           type,
-        },
+        }) as ICountFormData,
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
@@ -75,7 +75,7 @@ const FormCreateCount: React.FC<FormCreateCountProps> = ({
 
         {parent && (
           <InputLabel label={t('parentItem')} direction={'vertical'} disabled>
-            <InputText placeholder={parent?.label} disabled />
+            <InputText placeholder={parent?.label ?? ''} disabled />
           </InputLabel>
         )}
 

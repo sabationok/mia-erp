@@ -332,7 +332,7 @@ const extServices = {
     `${API_BASE_ROUTES.EXT_SERVICES}/${Endpoints.integrations}/getAll`,
   getById: (id?: string) => `${API_BASE_ROUTES.EXT_SERVICES}/service/getById/${id}`,
   updateService: () => `${API_BASE_ROUTES.EXT_SERVICES}/service/update`,
-  getAll: () => `${API_BASE_ROUTES.EXT_SERVICES}/getAll`,
+  getList: () => `${API_BASE_ROUTES.EXT_SERVICES}/getAll`,
 
   createInputInt: () => `${API_BASE_ROUTES.EXT_SERVICES}/${Endpoints.integrations}/input/create`,
   createOutputInt: () => `${API_BASE_ROUTES.EXT_SERVICES}/${Endpoints.integrations}/output/create`,

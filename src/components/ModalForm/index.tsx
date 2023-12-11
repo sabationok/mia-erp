@@ -4,6 +4,7 @@ import ModalFooter from './ModalFooter';
 
 import styled from 'styled-components';
 import { FormEvent, memo } from 'react';
+import { MaybeNull } from '../../types/utils.types';
 
 export interface ModalFormBaseProps<T = any>
   extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit' | 'onReset'> {
@@ -11,7 +12,7 @@ export interface ModalFormBaseProps<T = any>
   onReset?: (args?: any) => void;
   footer?: boolean;
   onClose?: () => void;
-  defaultState?: Partial<T>;
+  defaultState?: MaybeNull<Partial<T>>;
   beforeSubmit?: () => void;
   afterSubmit?: () => void;
   beforeClose?: () => void;

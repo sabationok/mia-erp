@@ -6,7 +6,7 @@ import InputLabel from '../../atoms/Inputs/InputLabel';
 import { t } from '../../../lang';
 import InputText from '../../atoms/Inputs/InputText';
 import { useAppForm } from '../../../hooks';
-import { IProperty, IPropertyBase, IPropertyDto } from '../../../types/properties.types';
+import { IProperty, IPropertyBase, IPropertyDto, PropertyFormData } from '../../../types/properties.types';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
 import { Text } from '../../atoms/Text';
 import styled from 'styled-components';
@@ -26,7 +26,7 @@ export interface FormCreatePropertyProps extends Omit<ModalFormProps<OfferTypeEn
   isValue?: boolean;
 }
 
-export interface IPropertyFormData extends IPropertyDto {}
+export interface IPropertyFormData extends PropertyFormData {}
 
 const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
   onSubmit,
@@ -45,7 +45,7 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
     handleSubmit,
     setValue,
   } = useAppForm<IPropertyFormData>({
-    defaultValues: { ...defaultState, type },
+    defaultValues: { ...defaultState, type } as IPropertyFormData,
   });
 
   console.log(errors);
@@ -77,7 +77,7 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
           <InputLabel label={t(isProperty ? 'group' : 'property')} disabled>
             <InputText
               placeholder={t(isProperty ? 'group' : 'property')}
-              defaultValue={defaultState?.parent?.label || defaultState?.parent?.label}
+              defaultValue={defaultState?.parent?.label ?? ''}
               disabled
             />
           </InputLabel>
@@ -91,7 +91,7 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
           <InputLabel label={'Доступно для формування варіацій'}>
             <ButtonSwitch
               name={'isSelectable'}
-              value={defaultState?.isSelectable}
+              value={!!defaultState?.isSelectable}
               onChange={res => {
                 setValue('isSelectable', res);
               }}

@@ -66,7 +66,7 @@ const ProductCardSimpleOverview: React.FC<ProductCardForSelectorProps> = ({
         <img
           src={product?.images ? product?.images[0]?.img_preview : ''}
           style={{ objectFit: 'contain' }}
-          alt={product?.label}
+          alt={product?.label ?? 'product_img'}
           width={'100%'}
           height={'100%'}
         />

@@ -18,6 +18,7 @@ import { DirPropertiesCTX, DirPropertiesCTXValue } from './DirPropertiesCTX';
 import PropertiesGroupItem from './components/PropertiesGroupItem';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { OnlyUUID } from '../../../redux/global.types';
+import { MaybeNull } from '../../../types/utils.types';
 
 export type PropertiesLevelType = { isGroup?: boolean; isProperty?: boolean; isValue?: boolean };
 
@@ -36,10 +37,10 @@ export interface DiPropertiesRenderItemProps<
   ParentItem extends IPropertyBase = IPropertyBase
 > {
   item: Item;
-  parent?: ParentItem;
+  parent?: MaybeNull<ParentItem>;
   index: number;
-  onCreateValue?: AppSubmitHandler<{ parent: ParentItem }, PropertiesLevelType>;
-  onCreateChild?: AppSubmitHandler<{ parent: ParentItem }, PropertiesLevelType>;
+  onCreateValue?: AppSubmitHandler<{ parent: MaybeNull<ParentItem> }, PropertiesLevelType>;
+  onCreateChild?: AppSubmitHandler<{ parent: MaybeNull<ParentItem> }, PropertiesLevelType>;
   onUpdate?: AppSubmitHandler<{ _id: string; data: Item }, PropertiesLevelType>;
   onDelete?: AppSubmitHandler<OnlyUUID>;
   onChangeSelectableStatus?: (_id: string, status: boolean) => void;
@@ -98,16 +99,20 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
     return fList.map((item, index) => (
       <PropertiesGroupItem
         key={`group_${item._id}`}
-        item={item}
+        item={item as never}
         index={index}
         onUpdate={(data, o) => {
           actions.onUpdate && actions.onUpdate(data._id, data.data, { ...o });
         }}
         onCreateValue={(data, o) => {
-          actions?.onCreateValue && actions?.onCreateValue(data.parent._id, data?.parent, { ...o });
+          data.parent?._id &&
+            actions?.onCreateValue &&
+            actions?.onCreateValue(data.parent?._id, data?.parent as never, { ...o });
         }}
         onCreateChild={(data, o) => {
-          actions?.onCreateChild && actions?.onCreateChild(data.parent._id, data?.parent, { ...o });
+          data.parent?._id &&
+            actions?.onCreateChild &&
+            actions?.onCreateChild(data.parent?._id, data?.parent as never, { ...o });
         }}
         onChangeSelectableStatus={(_id, status) => {
           actions?.onChangeDisableStatus && actions?.onChangeDisableStatus(_id, status);

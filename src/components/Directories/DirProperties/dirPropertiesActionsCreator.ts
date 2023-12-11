@@ -9,7 +9,7 @@ import { PropertiesLevelType } from './DirProperties';
 import { NavigateFunction } from 'react-router/dist/lib/hooks';
 import { IModalProviderContext } from '../../ModalProvider/ModalProvider';
 import { OfferTypeEnum } from '../../../types/products.types';
-import { toReqData } from '../../../utils/data-transform';
+import { toReqData } from '../../../utils';
 import { ToastService } from '../../../services';
 
 export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
@@ -49,7 +49,7 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
         props: {
           title: t('createProperty'),
           type,
-          defaultState: { parent },
+          defaultState: { parent } as never,
           create: true,
           isProperty: true,
           onSubmit: (data, o) => {
@@ -68,12 +68,12 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
       });
     },
     onCreateValue: (_, parent, options) => {
-      const modal = modalService.handleOpenModal({
+      const modal = modalService.open({
         Modal: Modals.FormCreateProperty,
         props: {
           title: t('createPropertyValue'),
           type,
-          defaultState: { parent },
+          defaultState: { parent } as never,
           create: true,
           isValue: true,
           onSubmit: (data, o) => {

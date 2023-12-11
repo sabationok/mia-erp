@@ -1,13 +1,12 @@
 import { ApiDirType } from '../APP_CONFIGS';
 import { IDirItemBase } from '../../types/dir.types';
 import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../../types/companies.types';
+import { HasLabel, HasName } from '../../types/utils.types';
 
-export interface ICounterpartyBase {
-  name?: string;
+export interface ICounterpartyBase extends HasLabel, HasName {
   fullName?: string;
   secondName?: string;
   businessSubjectType?: BusinessSubjectTypeEnum;
-  label?: string;
   email?: string;
   phone?: string;
   ownershipType?: OwnershipTypeEnum;

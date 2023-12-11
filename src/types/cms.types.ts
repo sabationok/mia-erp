@@ -1,9 +1,10 @@
 import { IBase } from '../redux/global.types';
 import { LangPack } from '../lang';
+import { MaybeNull } from './utils.types';
 
 export interface ICmsBaseConfigs extends Partial<IBase> {
-  key: string;
-  labels?: LangPack;
+  key: MaybeNull<string>;
+  labels?: MaybeNull<LangPack>;
 }
 export interface CmsBaseConfigsDto {
   key: string;

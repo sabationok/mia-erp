@@ -9,9 +9,11 @@ export interface CellTextDblProps {
   idx?: number;
 }
 
-const CellTextDbl: React.FC<
-  CellTextDblProps & React.HTMLAttributes<HTMLDivElement>
-> = ({ titleInfo, idx, ...props }) => {
+const CellTextDbl: React.FC<CellTextDblProps & React.HTMLAttributes<HTMLDivElement>> = ({
+  titleInfo,
+  idx,
+  ...props
+}) => {
   const { rowData } = useRow();
   const { top, bottom, width = '100px' } = titleInfo;
 
@@ -81,16 +83,14 @@ const Top = styled(Content)`
   font-weight: 500;
   text-transform: ${({ uppercase = true }) => (uppercase ? 'uppercase' : '')};
 
-  justify-content: ${({ align }) =>
-    align === 'center' ? 'center' : `flex-${align}`};
+  justify-content: ${({ align }) => (align === 'center' ? 'center' : `flex-${align}`)};
 `;
 
 const Bottom = styled(Content)`
   font-size: 11px;
   font-weight: 400;
 
-  justify-content: ${({ align }) =>
-    align === 'center' ? 'center' : `flex-${align}`};
+  justify-content: ${({ align }) => (align === 'center' ? 'center' : `flex-${align}`)};
 `;
 
 export default CellTextDbl;

@@ -35,9 +35,7 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
 
   const [content, setContent] = useState<IOrderSlot[]>([]);
 
-  const form = useAppForm({
-    defaultValues: defaultState,
-  });
+  const form = useAppForm({});
 
   const handleSelect = useCallback((slot: IOrderSlot) => {
     setContent(prev => [...prev, slot]);

@@ -2,7 +2,7 @@ import { ModalFormProps } from '../components/ModalForm';
 import { ITrCategory, ITrCategoryFormData, TrCategoryTypeEnum } from './directories.types';
 import { CountsTypesEnum, ICount, ICountFormData } from '../redux/directories/counts.types';
 import { FilterOpt } from '../components/ModalForm/ModalFilter';
-import { IBase, OnlyUUID } from '../redux/global.types';
+import { IBase } from '../redux/global.types';
 import { ICompany } from './companies.types';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { IModalProviderContext, ModalService } from '../components/ModalProvider/ModalProvider';
@@ -11,6 +11,7 @@ import { AppSubmitHandler, UseAppFormSubmitOptions } from '../hooks/useAppForm.h
 import { ContractorsTypesEnum } from '../redux/directories/contractors.types';
 import { OfferTypeEnum } from './products.types';
 import { CounterpartyTypesEnum } from '../redux/directories/counterparties.types';
+import { MaybeNull } from './utils.types';
 
 export interface DirItemTypeByDirType extends Record<ApiDirType, any> {
   [ApiDirType.COUNTS]: CountsTypesEnum;
@@ -47,14 +48,14 @@ export interface IDirItemBase<DirType extends ApiDirType = any> extends IBase {
   type?: DirItemTypeByDirType[DirType];
   dirType?: DirType;
   owner?: Pick<ICompany, '_id' | 'name' | 'email'>;
-  products?: OnlyUUID[];
-  orders?: OnlyUUID[];
-  parent?: IDirItemBase<DirType>;
-  childrenList?: IDirItemBase<DirType>[];
-  name?: string;
+  // products?: OnlyUUID[];
+  // orders?: OnlyUUID[];
+  parent?: MaybeNull<IDirItemBase<DirType>>;
+  childrenList?: MaybeNull<IDirItemBase<DirType>[]>;
+  name?: MaybeNull<string>;
   secondName?: string;
 
-  label?: string;
+  label?: MaybeNull<string>;
   // status?: 'ARCHIVED' | 'DELETED' | 'ACTIVE';
   taxCode?: string | number;
   personalTaxCode?: string | number;
@@ -148,10 +149,18 @@ export type DirInTreeActionsCreatorType<
   SubmitOptions = any
 > = (options: DirInTreeActionsCreatorOptions<DirType, ItemDataType, Service>) => {
   onCreateParent?: (options?: UseAppFormSubmitOptions & SubmitOptions) => void;
-  onCreateChild?: (parentId: string, parent: IBaseDirItem, options?: UseAppFormSubmitOptions & SubmitOptions) => void;
-  onCreateValue?: (parentId: string, parent: IBaseDirItem, options?: UseAppFormSubmitOptions & SubmitOptions) => void;
+  onCreateChild?: (
+    parentId: string,
+    parent: MaybeNull<IBaseDirItem>,
+    options?: UseAppFormSubmitOptions & SubmitOptions
+  ) => void;
+  onCreateValue?: (
+    parentId: string,
+    parent: MaybeNull<IBaseDirItem>,
+    options?: UseAppFormSubmitOptions & SubmitOptions
+  ) => void;
 
-  onUpdate?: (id: string, data: ItemDto, options?: UseAppFormSubmitOptions & SubmitOptions) => void;
+  onUpdate?: (id: string, data: ItemDataType, options?: UseAppFormSubmitOptions & SubmitOptions) => void;
   onDelete?: (id: string, options?: UseAppFormSubmitOptions & SubmitOptions) => void;
 
   onChangeArchiveStatus?: (id: string, status: boolean, options?: UseAppFormSubmitOptions & SubmitOptions) => void;

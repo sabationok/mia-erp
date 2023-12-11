@@ -9,39 +9,41 @@ import { OverviewCellHeader } from './OverviewCellHeader';
 
 export const OrderOverviewCustomerInfo: RenderOverviewCellComponent<IOrder> = ({ cell, data }) => {
   const renderCells = useMemo(() => {
+    const customer = data?.customer;
+
     const cells: { label: string; value?: React.ReactNode; visible?: boolean }[] = [
       {
         label: t('First name'),
-        value: data?.customer?.name?.first,
-        visible: data?.customer?.businessType !== 'company',
+        value: customer?.name?.first,
+        visible: customer?.businessType !== 'company',
       },
       {
         label: t('Second name'),
-        value: data?.customer?.name?.second,
-        visible: data?.customer?.businessType !== 'company',
+        value: customer?.name?.second,
+        visible: customer?.businessType !== 'company',
       },
       {
         label: t('Middle name'),
-        value: data?.customer?.name?.middle,
-        visible: data?.customer?.businessType !== 'company',
+        value: customer?.name?.middle,
+        visible: customer?.businessType !== 'company',
       },
 
       {
         label: t('Base label'),
-        value: data?.customer?.name?.first,
-        visible: data?.customer?.businessType !== 'person',
+        value: customer?.name?.first,
+        visible: customer?.businessType !== 'person',
       },
-      { label: t('Print'), value: data?.customer?.name?.second, visible: data?.customer?.businessType !== 'person' },
+      { label: t('Print'), value: customer?.name?.second, visible: customer?.businessType !== 'person' },
 
-      { label: t('Email'), value: data?.customer?.email, visible: true },
-      { label: t('Phone'), value: data?.customer?.phone, visible: true },
+      { label: t('Email'), value: customer?.email, visible: true },
+      { label: t('Phone'), value: customer?.phone, visible: true },
 
-      { label: t('Business type'), value: data?.customer?.businessType, visible: true },
-      { label: t('Sex type'), value: data?.customer?.sexType, visible: true },
+      { label: t('Business type'), value: customer?.businessType, visible: true },
+      { label: t('Sex type'), value: customer?.sexType, visible: true },
 
-      { label: t('Engagement type'), value: data?.customer?.engagementSource, visible: true },
+      { label: t('Engagement type'), value: customer?.engagementSource, visible: true },
 
-      { label: t('Age'), value: data?.customer?.age, visible: true },
+      { label: t('Age'), value: customer?.age, visible: true },
 
       { label: t('Tags'), value: null, visible: true },
     ];
@@ -65,17 +67,7 @@ export const OrderOverviewCustomerInfo: RenderOverviewCellComponent<IOrder> = ({
         )
       );
     });
-  }, [
-    data?.customer?.age,
-    data?.customer?.businessType,
-    data?.customer?.email,
-    data?.customer?.engagementSource,
-    data?.customer?.name?.first,
-    data?.customer?.name?.middle,
-    data?.customer?.name?.second,
-    data?.customer?.phone,
-    data?.customer?.sexType,
-  ]);
+  }, [data?.customer]);
 
   return (
     <CellStyledComp.Cell>

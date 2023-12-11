@@ -7,6 +7,7 @@ import { DiPropertiesRenderItemProps } from '../DirProperties';
 import PropertyValueItem from './PropertyValueItem';
 import { t } from '../../../../lang';
 import { IProperty, IVariationTemplate, PropertyTypeEnum } from '../../../../types/properties.types';
+import { MaybeNull } from '../../../../types/utils.types';
 
 const PropertyItem: React.FC<DiPropertiesRenderItemProps<IProperty, IVariationTemplate>> = ({
   item,
@@ -139,7 +140,7 @@ export const PropertyItemStylesByCmsKey: Record<string, { numColumns?: number }>
     numColumns: 2,
   },
 };
-const ChildrenBox = styled(FlexBox)<{ cmsConfigsKey?: string }>`
+const ChildrenBox = styled(FlexBox)<{ cmsConfigsKey?: MaybeNull<string> }>`
   display: grid;
   grid-template-columns: repeat(
     ${p => (p.cmsConfigsKey ? PropertyItemStylesByCmsKey[p.cmsConfigsKey]?.numColumns ?? 2 : 2)},

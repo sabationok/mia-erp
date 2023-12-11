@@ -15,7 +15,7 @@ export const getAllExtIntegrationServicesThunk = createAsyncThunk<
 >(IntegrationsThunkType.getAllExtServices, async (arg, thunkAPI) => {
   arg?.onLoading && arg?.onLoading(true);
   try {
-    const res = await ExtServicesApi.getAllExtServices(arg.data?.params);
+    const res = await ExtServicesApi.getExtServicesList(arg.data?.params);
     if (res) {
       arg.onSuccess && arg.onSuccess(res.data?.data);
     }

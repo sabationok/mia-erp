@@ -9,7 +9,7 @@ import InputText from '../atoms/Inputs/InputText';
 import { IPermission } from '../../types/permissions.types';
 import { FormInputs } from './components/atoms';
 
-export interface FormInviteUserProps extends Omit<ModalFormProps<any, any, IPermission>, 'onSubmit'> {
+export interface FormInviteUserProps extends Omit<ModalFormProps<any, any, undefined>, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<FormInviteUserData, { onSuccess?: (d: IPermission) => void }>;
 }
 
@@ -17,14 +17,14 @@ export interface FormInviteUserData {
   email: string;
   role?: ICustomRole;
 }
-const FormInviteUser: React.FC<FormInviteUserProps> = ({ defaultState, onSubmit, ...props }) => {
+const FormInviteUser: React.FC<FormInviteUserProps> = ({ onSubmit, ...props }) => {
   const roles = useCustomRolesSelector().customRoles;
   const {
     registerSelect,
     register,
     handleSubmit,
     formState: { errors, isValid },
-  } = useAppForm<FormInviteUserData>({ defaultValues: defaultState });
+  } = useAppForm<FormInviteUserData>();
 
   const onValidSubmit = (d: FormInviteUserData) => {
     onSubmit && onSubmit(d);

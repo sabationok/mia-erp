@@ -13,6 +13,15 @@ export type MaybeNull<T = any> = T | null;
 
 export type MaybeArr<T = any> = T extends (infer U)[] ? U[] : T;
 
+export interface DisabledStates {
+  all?: MaybeNull<boolean>;
+  client?: MaybeNull<boolean>;
+  company?: MaybeNull<boolean>;
+}
+export interface HasDisabledAttributes {
+  disabledFor?: MaybeNull<DisabledStates>;
+}
+
 export interface HasOwnerAsCompany {
   owner?: MaybeNull<ICompany>;
 }

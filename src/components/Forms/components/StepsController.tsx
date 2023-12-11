@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { checks } from '../../../utils';
 import { t } from '../../../lang';
 import { useMediaQuery } from 'react-responsive';
+import { MaybeNull } from '../../../types/utils.types';
 
 export type StepChangeEvent<V = any, D = any> = {
   option: FilterOption<V, D>;
@@ -52,11 +53,11 @@ const StepsController = <V = any,>({
   const isMobile = useMediaQuery({ query: '(max-width: 480px)' });
   const [current, setCurrent] = useState<number>(currentIndex);
 
-  const prevData = useMemo((): { label?: string; value: V } | null => {
+  const prevData = useMemo((): { label?: MaybeNull<string>; value: V } | null => {
     if (!steps) return null;
     return steps[current - 1] ? { label: steps[current - 1]?.label, value: steps[current - 1]?.value } : null;
   }, [current, steps]);
-  const nextData = useMemo((): { label?: string; value: V } | null => {
+  const nextData = useMemo((): { label?: MaybeNull<string>; value: V } | null => {
     if (!steps) return null;
 
     return steps[current + 1] ? { label: steps[current + 1]?.label, value: steps[current + 1]?.value } : null;

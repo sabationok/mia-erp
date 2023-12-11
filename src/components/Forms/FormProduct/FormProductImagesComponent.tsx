@@ -131,7 +131,7 @@ const FormProductImagesComponent: React.FC<FormProductImagesComponentProps> = ({
           <ImagePreviewSmall
             key={`small-prev_${el.value}`}
             src={set[el.value as never]}
-            title={el.label}
+            title={el.label ?? ''}
             onEditPress={() => {
               modalS.open({
                 ModalChildren: FormAddImageSet,

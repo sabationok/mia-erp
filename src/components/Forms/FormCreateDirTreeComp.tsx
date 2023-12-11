@@ -38,7 +38,7 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
     defaultValues: {
       ...defaultState,
       type,
-    },
+    } as IBaseDirItem,
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
@@ -63,7 +63,7 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
 
         {defaultState?.parent?._id && (
           <InputLabel label={t('parentItem')} error={errors.type} disabled>
-            <InputText defaultValue={defaultState?.parent?.label} disabled />
+            <InputText defaultValue={defaultState?.parent?.label ?? ''} disabled />
           </InputLabel>
         )}
 

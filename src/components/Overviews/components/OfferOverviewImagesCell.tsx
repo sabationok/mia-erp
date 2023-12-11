@@ -14,7 +14,7 @@ export const OfferOverviewImagesCell: RenderOverviewCellComponent<IProduct> = ({
       return (
         <CellStyledComp.ImagesSetBox key={`set_${set?._id || index}`} fxDirection={'row'} gap={2} overflow={'auto'}>
           {formAddImageSetTabs.map(el => (
-            <ImagePreviewSmall key={`img_${el.value}`} src={set[el.value] || ''} title={el.label} disabled />
+            <ImagePreviewSmall key={`img_${el.value}`} src={set[el.value] || ''} disabled />
           ))}
         </CellStyledComp.ImagesSetBox>
       );

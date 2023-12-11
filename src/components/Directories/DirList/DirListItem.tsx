@@ -1,14 +1,16 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { IDirItemBase } from '../../../types/dir.types';
+import { IBaseDirItem, IDirItemBase } from '../../../types/dir.types';
 import { isUndefined } from 'lodash';
 import FlexBox from '../../atoms/FlexBox';
+import { MaybeNull } from '../../../types/utils.types';
+import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
 
 export interface DirListItemProps {
   item?: IDirItemBase;
-  list?: IDirItemBase[];
-  parent?: IDirItemBase;
+  list?: MaybeNull<IDirItemBase[]>;
+  parent?: MaybeNull<IDirItemBase>;
   archived?: boolean;
   disabled?: boolean;
   deleted?: boolean;
@@ -16,7 +18,8 @@ export interface DirListItemProps {
   onDelete?: (id: string) => void;
   onChangeDisableStatus?: (id: string, status: boolean) => void;
   onChangeArchiveStatus?: (id: string, status: boolean) => void;
-  onCreateChild?: (parentId: string, parent: IDirItemBase) => void;
+  onCreateChild?: (parentId: string, parent: MaybeNull<IBaseDirItem>, options?: UseAppFormSubmitOptions) => void;
+
   currentLevel?: number;
   availableLevels?: number;
 

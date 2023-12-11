@@ -2,8 +2,8 @@ import { IBase, IBaseKeys, IFormDataValueWithID, OnlyUUID } from '../redux/globa
 import { LangPack } from '../lang';
 import { ICompany } from './companies.types';
 import { AppQueryParams } from '../api';
-import { CmsBaseConfigsDto } from './cms.types';
-import { MaybeNull } from './utils.types';
+import { HasBaseCmsConfigs } from './cms.types';
+import { HasDisabledAttributes, HasLabel, HasType, MaybeNull } from './utils.types';
 import { IBankAccount } from './finances/bank-accounts.types';
 
 export enum IntegrationTypeEnum {
@@ -149,25 +149,26 @@ export interface ExtCommunicationService extends ExtServiceBase {
 export interface ExtDeliveryService extends ExtServiceBase {
   methods?: IDeliveryMethod[];
 }
-export interface ServiceMethodBase<Type = any, Service = any> extends IBase {
-  label?: string;
+export interface ServiceMethodBase<Type extends string | number = any, Service = any>
+  extends IBase,
+    HasBaseCmsConfigs,
+    HasLabel,
+    HasType<Type>,
+    HasDisabledAttributes {
   labels?: LangPack;
   isDefault?: boolean;
   disabled?: boolean;
   disabledForClient?: boolean;
 
-  type?: Type;
   service?: MaybeNull<Service>;
   extService?: MaybeNull<Service>;
-
-  cmsConfigs?: CmsBaseConfigsDto;
 }
 export interface IMethodReqData<DtoLike = any> {
   _id?: string;
   data?: Omit<DtoLike, IBaseKeys | 'isDefault' | 'service' | 'extService'>;
   params?: Pick<AppQueryParams, 'disabled' | 'isDefault' | 'disabledForClient'>;
 }
-export enum InvoicingTypeEnum {
+export enum InvoicingMethodTypeEnum {
   hold = 'hold',
   debit = 'debit',
   pay = 'pay',
@@ -176,10 +177,16 @@ export enum InvoicingTypeEnum {
   afterPay = 'afterPay',
   cash = 'cash',
 }
+
+export enum InvoicingMethodCategoryEnum {
+  external = 'external',
+  internal = 'internal',
+}
 export interface ICommunicationMethod extends ServiceMethodBase<string, ExtCommunicationService> {}
 export interface ICommunicationMethodReqData extends IMethodReqData<ICommunicationMethod> {}
-export interface IInvoicingMethod extends ServiceMethodBase<InvoicingTypeEnum, ExtInvoicingService> {
+export interface IInvoicingMethod extends ServiceMethodBase<InvoicingMethodTypeEnum, ExtInvoicingService> {
   bankAccount?: MaybeNull<IBankAccount>;
+  category?: MaybeNull<InvoicingMethodCategoryEnum>;
 }
 export interface IInvoicingMethodReqData extends IMethodReqData<IInvoicingMethod> {}
 
