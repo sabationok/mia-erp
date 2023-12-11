@@ -17,7 +17,7 @@ import CheckboxesListSelector from 'components/atoms/CheckboxesListSelector';
 import { useTranslatedMethodsList } from 'hooks/useTranslatedMethodsList.hook';
 import ButtonSwitch from '../../../atoms/ButtonSwitch';
 import InputText from '../../../atoms/Inputs/InputText';
-import { Path, useFormContext, UseFormSetValue } from 'react-hook-form';
+import { useFormContext, UseFormSetValue } from 'react-hook-form';
 import CreateCustomerButtonIcon from '../components/CreateCustomerButtonIcon';
 import CustomerInfoComponent from '../components/CustomerInfoComponent';
 import { destinationAddressInputsProps } from '../components/DestinationInputs';
@@ -47,7 +47,7 @@ type ConfirmsStateKay =
   | 'holdDeliveryPayment'
   | 'holdOrderPayment';
 
-type FormFieldPaths = Path<ICreateOrderInfoFormState>;
+// type FormFieldPaths = Path<ICreateOrderInfoFormState>;
 
 const invMethodCategoryFilterOptions = enumToFilterOptions(InvoicingMethodCategoryEnum);
 const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) => {
