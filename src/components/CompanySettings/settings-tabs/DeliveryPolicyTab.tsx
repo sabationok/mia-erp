@@ -38,7 +38,6 @@ const DeliveryPolicyTab = ({ onClose, onSubmit }: DeliveryPolicyTabProps) => {
 
   const form = useAppForm<ICompanyDeliveryPolicyFormData>({
     defaultValues: company?.deliveryPolicy as ICompanyDeliveryPolicyFormData,
-    shouldUnregister: true,
   });
 
   const formValues = form.watch();
@@ -97,7 +96,7 @@ const DeliveryPolicyTab = ({ onClose, onSubmit }: DeliveryPolicyTabProps) => {
           </InputLabel>
         </FlexBox>
 
-        <ModalFooter onSubmitPassed isLoading={loading}></ModalFooter>
+        <ModalFooter onSubmitPassed isLoading={loading} />
       </FlexForm>
     </>
   );

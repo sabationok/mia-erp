@@ -96,6 +96,28 @@ export interface InvoicingPolicyJsonData {
   autoPublish?: boolean;
 }
 
+export interface FiscalizationPolicyJsonData {
+  autoCreate: boolean;
+  selectByRoles: string[];
+  autoPublish: {
+    integrations: boolean;
+  };
+  method: null | string;
+}
+export enum FiscalizationPolicyTypeEnum {
+  sales = 'sales',
+  purchases = 'purchases',
+  delivery = 'delivery',
+  refunds = 'refunds',
+}
+
+export interface ICompanyFiscalizationPolicyFormData {
+  sales?: FiscalizationPolicyJsonData;
+  delivery?: FiscalizationPolicyJsonData;
+  purchases?: FiscalizationPolicyJsonData;
+  refunds?: FiscalizationPolicyJsonData;
+}
+
 export enum InvoicingPolicyTypeEnum {
   sales = 'sales',
   purchases = 'purchases',
@@ -132,6 +154,7 @@ export interface ICompanyFormData extends ICompanyBase {
   invoicingPolicy?: ICompanyInvoicingPolicyFormData;
   warehousingPolicy?: ICompanyWarehousingPolicyFormData;
   supplementPolicy?: ICompanySupplementPolicyFormData;
+  fiscalizationPolicy?: ICompanyFiscalizationPolicyFormData;
 }
 
 export interface ICompanyDto extends Omit<ICompanyBase, '_id' | 'createdAt' | 'updatedAt' | 'deletedAt'> {

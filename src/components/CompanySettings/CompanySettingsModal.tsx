@@ -13,12 +13,14 @@ import { ICompany } from '../../types/companies.types';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../redux/reduxTypes.types';
 import { usePermissionsSelector } from '../../redux/selectors.store';
+import FiscalizationPolicyTab from './settings-tabs/FiscalizationPolicyTab';
 
 export interface CompanySettingsProps extends Omit<ModalFormProps, 'onSubmit'> {}
 enum CompanySettingsTabs {
   Invoicing = 'Invoicing',
   Delivery = 'Delivery',
   Warehousing = 'Warehousing',
+  Fiscalization = 'Fiscalization',
   // Supplement = 'Supplement',
 }
 
@@ -28,6 +30,8 @@ const RenderTabComponent: Record<CompanySettingsTabs, React.FC<CompanySettingsTa
   [CompanySettingsTabs.Delivery]: DeliveryPolicyTab,
   [CompanySettingsTabs.Invoicing]: InvoicingPolicyTab,
   [CompanySettingsTabs.Warehousing]: WarehousingPolicyTab,
+  [CompanySettingsTabs.Fiscalization]: FiscalizationPolicyTab,
+
   // [CompanySettingsTabs.Supplement]: SupplementPolicyTab,
 };
 

@@ -89,7 +89,7 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
         onClick,
         className: 'buttonIcon',
         ...props,
-        disabled: isLoading ?? undefined,
+        disabled: isLoading || props?.disabled,
       }}
     >
       {(iconId || icon) && (
