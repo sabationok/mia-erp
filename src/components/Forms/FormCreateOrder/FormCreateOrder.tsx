@@ -6,9 +6,8 @@ import { useCallback, useMemo, useState } from 'react';
 import ModalFilter from '../../ModalForm/ModalFilter';
 import OrderSlotsList from './components/OrderSlotsList';
 import { OnlyUUID } from '../../../redux/global.types';
-import { enumToFilterOptions } from '../../../utils/fabrics';
+import { createStepsChecker, enumToFilterOptions } from '../../../utils';
 import styled from 'styled-components';
-import { createStepsChecker } from '../../../utils';
 
 // const orderValidation = yup.object().shape({
 //   manager: yup.object().shape({ _id: yup.string() } as Record<keyof IUser, any>),

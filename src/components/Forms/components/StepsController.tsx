@@ -28,6 +28,8 @@ export interface StepsControllerProps<V = any> {
   canAccept?: boolean;
   canSubmit?: boolean;
 
+  isLoading?: boolean;
+
   cancelButton?: boolean;
   submitButton?: boolean;
   acceptButton?: boolean;
@@ -48,6 +50,7 @@ const StepsController = <V = any,>({
   submitButton = false,
   acceptButton,
   arrowButtons = true,
+  isLoading,
 }: StepsControllerProps<V>) => {
   const isTablet = useMediaQuery({ query: '(max-width: 768px)' });
   const isMobile = useMediaQuery({ query: '(max-width: 480px)' });
@@ -111,7 +114,7 @@ const StepsController = <V = any,>({
   return (
     <Container fxDirection={'row'} gap={8} fillWidth>
       {cancelButton && !isTablet && (
-        <ActionButton variant={'defOutlinedSmall'} onClick={onCancelPress}>
+        <ActionButton variant={'defOutlinedSmall'} isLoading={isLoading} onClick={onCancelPress}>
           {t('Cancel')}
         </ActionButton>
       )}
@@ -121,7 +124,7 @@ const StepsController = <V = any,>({
           variant={isMobile ? 'onlyIconFilled' : 'filledSmall'}
           icon={'SmallArrowLeft'}
           onClick={handlePrevPress}
-          disabled={!prevData}
+          disabled={isLoading ?? !prevData}
         >
           {prevData?.label}
         </ArrowButton>
@@ -132,7 +135,7 @@ const StepsController = <V = any,>({
           variant={isMobile ? 'onlyIconFilled' : 'filledSmall'}
           endIcon={'SmallArrowRight'}
           onClick={handleNextPress}
-          disabled={!canGoNext || !nextData}
+          disabled={isLoading ?? (!canGoNext || !nextData)}
         >
           {nextData?.label}
         </ArrowButton>
@@ -143,6 +146,7 @@ const StepsController = <V = any,>({
           variant={'filledSmall'}
           type={canSubmit && submitButton ? 'submit' : 'button'}
           onClick={onAcceptPress}
+          isLoading={isLoading}
           disabled={canSubmit && submitButton ? !canSubmit : !canAccept}
         >
           {t('Accept')}
@@ -158,7 +162,11 @@ const Container = styled(FlexBox)`
   // border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;
 const ActionButton = styled(ButtonIcon)`
+  padding-top: 0;
+  padding-bottom: 0;
+
   flex: 1;
+
   min-width: min-content;
   height: 100%;
 `;

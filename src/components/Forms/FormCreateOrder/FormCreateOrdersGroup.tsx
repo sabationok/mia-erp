@@ -48,7 +48,7 @@ const stepsProcessInitialState: Record<FormCreateOrdersGroupStepsEnum | string, 
 const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onClose }) => {
   const service = useAppServiceProvider()[ServiceName.orders];
   const currentGroupFormState = useOrdersSelector().ordersGroupFormData;
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { stepsMap, stepIdx, setNextStep, setPrevStep, getCurrentStep, isLast } = useStepsHandler(steps);
   const [isStepFinished, setIsStepFinished] =
     useState<Record<FormCreateOrdersGroupStepsEnum | string, boolean>>(stepsProcessInitialState);
@@ -124,7 +124,7 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onClose }
         onError: error => {
           console.log(error);
         },
-        onLoading: loading => {},
+        onLoading: setIsSubmitting,
       },
       OrdersApi.createManyOrdersGroupedByWarehouse
     );
@@ -153,6 +153,7 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onClose }
             canGoNext={true}
             canSubmit={isLast}
             submitButton
+            isLoading={isSubmitting}
             onCancelPress={stepIdx === 0 ? onClose : undefined}
           />
         </Footer>
