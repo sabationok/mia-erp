@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
 import { useFilteredLisData } from '../../hooks';
 import { useFinancesSelector } from '../../redux/selectors.store';
-import ModalFilter, { FilterOpt, FilterOption } from '../ModalForm/ModalFilter';
+import ModalFilter, { FilterOpt, FilterOption } from '../atoms/ModalFilter';
 import DirListItem from './DirList/DirListItem';
 import FlexBox from '../atoms/FlexBox';
 import { ApiDirType } from '../../redux/APP_CONFIGS';

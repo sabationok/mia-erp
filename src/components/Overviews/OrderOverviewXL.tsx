@@ -9,7 +9,7 @@ import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { t } from '../../lang';
 import { useAppParams } from '../../hooks';
 import { enumToFilterOptions } from '../../utils/fabrics';
-import ModalFilter from '../ModalForm/ModalFilter';
+import ModalFilter from '../atoms/ModalFilter';
 import OrderOverviewInfoTab from './tabs/OrderOverviewInfoTab';
 
 export interface OrderOverviewXLProps {

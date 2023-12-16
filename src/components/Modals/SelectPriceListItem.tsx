@@ -8,7 +8,7 @@ import InputText from '../atoms/Inputs/InputText';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import ModalForm, { ModalFormProps } from '../ModalForm';
-import { FilterOpt } from '../ModalForm/ModalFilter';
+import { FilterOpt } from '../atoms/ModalFilter';
 import { IPriceListItem } from '../../types/priceManagement.types';
 
 export interface SelectPriceListItemProps

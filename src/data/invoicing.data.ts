@@ -1,7 +1,10 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { IInvoice } from '../types/invoices.types';
 import { t } from '../lang';
-import { numberWithSpaces } from '../utils';
+import { enumToFilterOptions, numberWithSpaces } from '../utils';
+import { InvoicingMethodCategoryEnum } from '../types/integrations.types';
+
+export const invMethodCategoryFilterOptions = enumToFilterOptions(InvoicingMethodCategoryEnum);
 
 const dateColumn: CellTittleProps = {
   top: { name: t('Updated'), align: 'center', getData: d => d?.createdAt },

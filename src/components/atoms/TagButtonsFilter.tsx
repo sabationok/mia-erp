@@ -1,9 +1,4 @@
-import {
-  FilterChangeHandler,
-  FilterOption,
-  FilterSelectHandler,
-  FilterSelectValueHandler,
-} from '../ModalForm/ModalFilter';
+import { FilterChangeHandler, FilterOption, FilterSelectHandler, FilterSelectValueHandler } from './ModalFilter';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ButtonIcon from './ButtonIcon/ButtonIcon';
 import { checks } from '../../utils';

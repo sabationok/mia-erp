@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { Text } from '../../atoms/Text';
-import ModalFilter, { FilterSelectHandler } from '../../ModalForm/ModalFilter';
+import ModalFilter, { FilterSelectHandler } from '../../atoms/ModalFilter';
 import { useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../../utils';
 import { useOrdersSelector } from '../../../redux/selectors.store';

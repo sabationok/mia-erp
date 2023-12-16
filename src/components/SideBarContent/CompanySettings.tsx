@@ -1,8 +1,8 @@
 import * as React from 'react';
-import styled from 'styled-components';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
 import { IDirectoryListItem } from './Directories';
+import { Text } from '../atoms/Text';
+import { Container, ListItem, Trigger } from './styles';
 
 export interface IDirectoriesProps {
   options: IDirectoryListItem[];
@@ -18,37 +18,20 @@ const CompanySettings: React.FC<Props> = ({ options }) => {
     <Container>
       {[...options].map(({ title, iconId, ModalChildren, modalChildrenProps, disabled }, idx) => (
         <ListItem key={title}>
-          <StButtonIcon
+          <Trigger
             variant="def"
             onClick={() => {
               modal.open({ ModalChildren, modalChildrenProps });
             }}
           >
-            {title}
-          </StButtonIcon>
+            <Text $align={'left'} $weight={500} $size={13}>
+              {title}
+            </Text>
+          </Trigger>
         </ListItem>
       ))}
     </Container>
   );
 };
 
-const Container = styled.ul`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-auto-rows: 32px;
-  width: 100%;
-  max-width: 100%;
-  /* padding: 8px; */
-
-  /* background-color: ${({ theme }) => theme.backgroundColorSecondary}; */
-`;
-const ListItem = styled.li``;
-const StButtonIcon = styled(ButtonIcon)`
-  justify-content: start;
-
-  width: 100%;
-  height: 100%;
-
-  padding: 4px 12px;
-`;
 export default CompanySettings;

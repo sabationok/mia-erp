@@ -4,7 +4,7 @@ import ReportList, { ReportListItemProps } from './ReportList';
 import ModalForm from '../ModalForm';
 import { IReportBaseProps } from './report.types';
 import FlexBox from '../atoms/FlexBox';
-import { FilterOpt } from '../ModalForm/ModalFilter';
+import { FilterOpt } from '../atoms/ModalFilter';
 import { numberWithSpaces } from 'utils';
 import { CountType } from 'redux/directories/counts.types';
 import { CurrencyCode } from '../../types/finances/transactions.types';

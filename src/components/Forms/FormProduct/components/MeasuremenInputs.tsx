@@ -1,6 +1,6 @@
 import { Path } from 'react-hook-form';
 import { MeasurementUnit } from 'types/products.types';
-import { FilterOption } from '../../../ModalForm/ModalFilter';
+import { FilterOption } from '../../../atoms/ModalFilter';
 import { enumToFilterOptions } from 'utils/fabrics';
 import CustomSelect from '../../../atoms/Inputs/CustomSelect/CustomSelect';
 import InputLabel from '../../../atoms/Inputs/InputLabel';

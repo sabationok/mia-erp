@@ -3,7 +3,7 @@ import { useAppForm } from '../../../hooks';
 import { ICompanyConfigsFormData } from '../../../types/companies.types';
 import { useWarehousesSelector } from '../../../redux/selectors.store';
 import { useMemo } from 'react';
-import { FilterOption } from '../../ModalForm/ModalFilter';
+import { FilterOption } from '../../atoms/ModalFilter';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { t } from '../../../lang';

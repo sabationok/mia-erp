@@ -28,10 +28,11 @@ import {
   useInvoicesSelector,
 } from '../../../../redux/selectors.store';
 import * as fns from 'date-fns';
-import { enumToFilterOptions, toInputValueDate } from '../../../../utils';
+import { toInputValueDate } from '../../../../utils';
 import { InvoicingMethodCategoryEnum } from '../../../../types/integrations.types';
 import { useFilteredLisData } from '../../../../hooks';
 import ButtonsGroup from '../../../atoms/ButtonsGroup';
+import { invMethodCategoryFilterOptions } from '../../../../data/invoicing.data';
 
 export interface OrderInfoStepProps extends FormOrderStepBaseProps {
   isGroup?: boolean;
@@ -49,7 +50,6 @@ type ConfirmsStateKay =
 
 // type FormFieldPaths = Path<ICreateOrderInfoFormState>;
 
-const invMethodCategoryFilterOptions = enumToFilterOptions(InvoicingMethodCategoryEnum);
 const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) => {
   const modalS = useModalService();
   const {
@@ -61,7 +61,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
     trigger,
   } = useOrderInfoForm();
   const [invMethodCategory, setInvMethodCategory] = useState<InvoicingMethodCategoryEnum>(
-    InvoicingMethodCategoryEnum.external
+    InvoicingMethodCategoryEnum.paymentService
   );
 
   const formValues = watch();
@@ -304,6 +304,30 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
               onChangeIndex={i => {
                 handleOnChangeValue('invoiceInfo.method', invoicingMethods[i]);
               }}
+              renderLabel={
+                invMethodCategory === InvoicingMethodCategoryEnum.bankTransfer
+                  ? info => {
+                      return (
+                        <FlexBox gap={4}>
+                          <Text $size={11} $weight={600}>
+                            {t('IBAN')}
+                          </Text>
+                          <Text $size={13}>{info.option?.bankAccount?.iban}</Text>
+
+                          <Text $size={11} $weight={600}>
+                            {t('Tax code')}
+                          </Text>
+                          <Text $size={13}>{info.option?.bankAccount?.taxId ?? '---'}</Text>
+
+                          <Text $size={11} $weight={600}>
+                            {t('Bank')}
+                          </Text>
+                          <Text $size={13}>{info.option?.bankAccount?.bank?.label ?? '---'}</Text>
+                        </FlexBox>
+                      );
+                    }
+                  : null
+              }
             />
           </InputLabel>
 

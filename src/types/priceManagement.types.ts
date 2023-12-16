@@ -1,5 +1,5 @@
 import { IBase, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
-import { FilterOpt } from '../components/ModalForm/ModalFilter';
+import { FilterOpt } from '../components/atoms/ModalFilter';
 import { IProduct } from './products.types';
 import { IVariation } from './variations.types';
 import { AppQueryParams } from '../api';

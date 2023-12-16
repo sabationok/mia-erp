@@ -187,7 +187,7 @@ export enum InvoicingMethodTypeEnum {
 }
 
 export enum InvoicingMethodCategoryEnum {
-  external = 'external',
+  paymentService = 'paymentService',
   bankTransfer = 'bankTransfer',
   postTransfer = 'postTransfer',
 }

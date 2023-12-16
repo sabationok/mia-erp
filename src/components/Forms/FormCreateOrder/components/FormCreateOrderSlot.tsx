@@ -7,7 +7,7 @@ import TableList from '../../../TableList/TableList';
 import { AppQueryParams, createApiCall, ProductsApi, WarehousesApi } from '../../../../api';
 import { t } from '../../../../lang';
 import { enumToFilterOptions } from '../../../../utils/fabrics';
-import ModalFilter from '../../../ModalForm/ModalFilter';
+import ModalFilter from '../../../atoms/ModalFilter';
 import { IVariationTableData } from '../../../../types/variations.types';
 import { IPriceListItem } from '../../../../types/priceManagement.types';
 import styled from 'styled-components';

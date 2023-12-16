@@ -4,7 +4,7 @@ import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import { IDirInTreeProps, IDirItemBase } from '../../../types/dir.types';
 import { useFilteredLisData } from 'hooks';
 
-import { FilterOpt } from '../../ModalForm/ModalFilter';
+import { FilterOpt } from '../../atoms/ModalFilter';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';

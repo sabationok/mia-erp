@@ -17,7 +17,7 @@ import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { useCallback, useState } from 'react';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import ModalFilter from '../../ModalForm/ModalFilter';
+import ModalFilter from '../../atoms/ModalFilter';
 import { useForm } from 'react-hook-form';
 
 export interface InvoicingPolicyTabProps extends CompanySettingsTabBaseProps {

@@ -8,7 +8,7 @@ import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import * as yup from 'yup';
 import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
-import { FilterOpt } from '../ModalForm/ModalFilter';
+import { FilterOpt } from '../atoms/ModalFilter';
 import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
 import { toInputValueDate, toTrReqData } from '../../utils';
 import { useAppSelector } from '../../redux/store.store';

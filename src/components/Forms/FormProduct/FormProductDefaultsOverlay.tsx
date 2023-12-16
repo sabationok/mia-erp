@@ -6,7 +6,7 @@ import { ModalHeader, OverlayFooter } from '../../atoms';
 import FlexBox from '../../atoms/FlexBox';
 import { useAppForm } from '../../../hooks';
 import { enumToFilterOptions } from '../../../utils/fabrics';
-import ModalFilter from '../../ModalForm/ModalFilter';
+import ModalFilter from '../../atoms/ModalFilter';
 import { useCallback, useMemo, useState } from 'react';
 
 import PricesTab from '../../AppPages/PageProductOverview/tabs/PricesTab';

@@ -6,7 +6,7 @@ import { ExternalServiceTypeEnum, ExtServiceBase } from '../../../types/integrat
 import InvoicingIntegrationsTab from './nested_tabs/InvoicingIntegrationsTab';
 import DeliveryIntegrationsTab from './nested_tabs/DeliveryIntegrationsTab';
 import CommunicationIntegrationsTab from './nested_tabs/CommunicationIntegrationsTab';
-import ModalFilter from '../../ModalForm/ModalFilter';
+import ModalFilter from '../../atoms/ModalFilter';
 import FlexBox from '../../atoms/FlexBox';
 import { useExtServicesQuery } from './useExtServicesQuery.hook';
 

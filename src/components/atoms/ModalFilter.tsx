@@ -187,8 +187,8 @@ const StButtonIcon = styled(ButtonIcon)<{ asStep?: boolean; customLabel?: boolea
   justify-content: space-around;
   gap: 0;
 
-  font-weight: 700;
-  font-size: 12px;
+  font-weight: 600;
+  font-size: 11px;
   text-transform: uppercase;
   text-align: center;
 
@@ -207,7 +207,7 @@ const StButtonIcon = styled(ButtonIcon)<{ asStep?: boolean; customLabel?: boolea
     text-align: center;
     width: 100%;
     overflow: hidden;
-    white-space: pre-wrap;
+    white-space: nowrap;
     text-overflow: ellipsis;
   }
 

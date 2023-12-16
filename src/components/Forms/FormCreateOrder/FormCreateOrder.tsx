@@ -3,7 +3,7 @@ import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { IOrder, IOrderSlot } from '../../../types/orders/orders.types';
 import { useAppForm } from '../../../hooks';
 import { useCallback, useMemo, useState } from 'react';
-import ModalFilter from '../../ModalForm/ModalFilter';
+import ModalFilter from '../../atoms/ModalFilter';
 import OrderSlotsList from './components/OrderSlotsList';
 import { OnlyUUID } from '../../../redux/global.types';
 import { createStepsChecker, enumToFilterOptions } from '../../../utils';

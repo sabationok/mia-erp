@@ -1,7 +1,7 @@
 import { ModalFormProps } from '../ModalForm';
 import { useEffect, useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../utils/fabrics';
-import ModalFilter from '../ModalForm/ModalFilter';
+import ModalFilter from '../atoms/ModalFilter';
 import { CompanySettingsTabBaseProps } from './settings-tabs/companySettingsTabs.types';
 import DeliveryPolicyTab from './settings-tabs/DeliveryPolicyTab';
 import InvoicingPolicyTab from './settings-tabs/InvoicingPolicyTab';

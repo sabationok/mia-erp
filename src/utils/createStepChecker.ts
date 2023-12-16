@@ -1,4 +1,4 @@
-import { FilterOption } from '../components/ModalForm/ModalFilter';
+import { FilterOption } from '../components/atoms/ModalFilter';
 import { useCallback, useMemo, useState } from 'react';
 
 export default function createStepsChecker<V extends string | number | symbol = any>(steps: FilterOption<V>[]) {

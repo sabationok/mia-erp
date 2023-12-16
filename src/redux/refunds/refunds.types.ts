@@ -13,7 +13,7 @@ import { IPriceListItem } from '../../types/priceManagement.types';
 import { ICompany } from '../../types/companies.types';
 import { IManager } from '../../types/auth.types';
 import { ISupplierDirItem } from '../../types/dir.types';
-import { FilterOpt } from '../../components/ModalForm/ModalFilter';
+import { FilterOpt } from '../../components/atoms/ModalFilter';
 import { IWarehouse } from '../../types/warehouses.types';
 import { ICustomerBase } from '../../types/customers.types';
 

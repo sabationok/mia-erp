@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
 import { useDirService, useFilteredLisData } from '../../hooks';
 import { useDirectoriesSelector } from '../../redux/selectors.store';
-import { FilterOpt } from '../ModalForm/ModalFilter';
+import { FilterOpt } from '../atoms/ModalFilter';
 import DirListItem from './DirList/DirListItem';
 import FlexBox from '../atoms/FlexBox';
 import { ApiDirType } from '../../redux/APP_CONFIGS';

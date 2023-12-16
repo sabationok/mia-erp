@@ -71,7 +71,6 @@ const DirInvoicingMethods: React.FC<DirInvoicingMethodsProps> = ({
           key={`treeItem_${item?._id || idx}`}
           {...item}
           editing
-          disabling
           {...props}
           {...actions}
           item={item}
@@ -98,7 +97,7 @@ const DirInvoicingMethods: React.FC<DirInvoicingMethodsProps> = ({
         )
       }
     >
-      <FlexBox fillWidth flex={'1'} gap={8} padding={'8px 4px'}>
+      <FlexBox fillWidth flex={1} gap={8} padding={'8px 4px'}>
         {renderList}
       </FlexBox>
     </StModalForm>
@@ -122,11 +121,11 @@ const actionsCreatorForDirInvoicingMethods: DirInTreeActionsCreatorType<
         modalChildrenProps: { defaultState: data },
       });
 
-      console.log('IInvoc onUpdate', data);
+      console.log('Invoice mtd onUpdate', data);
     },
-    onChangeDisableStatus: (id, status, options) => {
-      console.log('IInvoc onChangeDisableStatus', id, status);
-    },
+    // onChangeDisableStatus: (id, status, options) => {
+    //   console.log('IInvoc onChangeDisableStatus', id, status);
+    // },
     onCreateParent: () => {
       modalService.open({ ModalChildren: Forms.InvoicingMethod, modalChildrenProps: { create: true } });
     },

@@ -12,7 +12,7 @@ import { ApiDirType } from 'redux/APP_CONFIGS';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import { useAppForm } from '../../hooks';
-import { FilterOption } from '../ModalForm/ModalFilter';
+import { FilterOption } from '../atoms/ModalFilter';
 import FlexBox from '../atoms/FlexBox';
 
 export type FilterSelectorDataType = ICount | ITrCategory | IContractor | IProject | FilterOption;

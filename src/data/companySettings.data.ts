@@ -14,6 +14,7 @@ import DirDeliveryMethods from '../components/CompanySettings/DirDeliveryMethods
 import DirInvoicingMethods from '../components/CompanySettings/DirInvocingMethods';
 import DirCommunicationMethods from '../components/CompanySettings/DirCommunicationMethods';
 import CompanySettingsModal from '../components/CompanySettings/CompanySettingsModal';
+import { invMethodCategoryFilterOptions } from './invoicing.data';
 
 const UsersProps: DirUsersProps = {
   title: 'Користувачі',
@@ -156,16 +157,13 @@ export const companySettings: IDirectoryListItem[] = [
     modalChildrenProps: {
       title: t('Invoicing methods'),
       dirType: ApiDirType.METHODS_INVOICING,
+      filterOptions: invMethodCategoryFilterOptions,
+      filterSearchPath: 'category',
+      fillHeight: true,
       createParentTitle: t('Add invoicing method'),
-      changeDisableStatus: true,
       creatingParent: true,
       availableLevels: 1,
-      actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {
-        createParentTitle: t('Add invoicing method'),
-        updateItemTitle: t('Update invoicing method'),
-      }),
     },
-    disabled: true,
   },
   {
     title: t('Payment methods'),
@@ -174,14 +172,12 @@ export const companySettings: IDirectoryListItem[] = [
       title: t('Payment methods'),
       dirType: ApiDirType.METHODS_PAYMENT,
       createParentTitle: t('Add payment method'),
-      changeDisableStatus: true,
       availableLevels: 1,
       actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {
         createParentTitle: t('Add payment method'),
         updateItemTitle: t('Update payment method'),
       }),
     },
-    disabled: true,
   },
   {
     title: t('Delivery methods'),
@@ -190,8 +186,8 @@ export const companySettings: IDirectoryListItem[] = [
       title: t('Delivery methods'),
       dirType: ApiDirType.METHODS_SHIPMENT,
       createParentTitle: t('Add delivery method'),
-      changeDisableStatus: true,
       creatingParent: true,
+      fillHeight: true,
       editing: true,
       availableLevels: 1,
       actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {
@@ -199,7 +195,6 @@ export const companySettings: IDirectoryListItem[] = [
         updateItemTitle: t('Update delivery method'),
       }),
     },
-    disabled: true,
   },
   {
     title: t('Communication methods'),
@@ -209,14 +204,13 @@ export const companySettings: IDirectoryListItem[] = [
       dirType: ApiDirType.METHODS_COMMUNICATION,
       createParentTitle: t('Add communication method'),
       availableLevels: 1,
-      changeDisableStatus: true,
       creatingParent: false,
+      fillHeight: true,
       actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {
         createParentTitle: t('Add communication method'),
         updateItemTitle: t('Update communication method'),
       }),
     },
-    disabled: true,
   },
 
   warehousingSettings,

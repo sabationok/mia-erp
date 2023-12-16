@@ -1,7 +1,7 @@
 import { IProductImage } from '../../../types/products.types';
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { ChangeEventHandler, useRef, useState } from 'react';
-import { FilterOption } from '../../ModalForm/ModalFilter';
+import { FilterOption } from '../../atoms/ModalFilter';
 import FlexBox from '../../atoms/FlexBox';
 import SvgIcon from '../../atoms/SvgIcon/SvgIcon';
 import InputLabel from '../../atoms/Inputs/InputLabel';

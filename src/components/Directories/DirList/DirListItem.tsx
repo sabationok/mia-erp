@@ -1,5 +1,5 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { IBaseDirItem, IDirItemBase } from '../../../types/dir.types';
 import { isUndefined } from 'lodash';
@@ -45,13 +45,21 @@ const DirListItem: React.FC<DirListItemProps> = props => {
     deleted = false,
     disabled = false,
     onChangeDisableStatus,
-    disabling,
+    disabling = false,
     archived = false,
     onChangeArchiveStatus,
     archiving,
     editing,
     creatingChild,
   } = props;
+
+  useEffect(() => {
+    console.log({
+      onChangeDisableStatus,
+      disabling,
+    });
+    // eslint-disable-next-line
+  }, []);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [state, setState] = useState<DirListItemState>({ archived, deleted, disabled });
@@ -157,17 +165,17 @@ const DirListItem: React.FC<DirListItemProps> = props => {
               />
             )}
 
-            {disabling && (
-              <ActionButton
-                variant="onlyIcon"
-                iconSize="22px"
-                icon={state?.disabled ? 'lightMode' : 'darkMode'}
-                onClick={() => {
-                  handleState('disabled');
-                  onChangeDisableStatus && item?._id && onChangeDisableStatus(item?._id, !!state?.disabled);
-                }}
-              />
-            )}
+            {/*{disabling && (*/}
+            {/*  <ActionButton*/}
+            {/*    variant="onlyIcon"*/}
+            {/*    iconSize="22px"*/}
+            {/*    icon={state?.disabled ? 'lightMode' : 'darkMode'}*/}
+            {/*    onClick={() => {*/}
+            {/*      handleState('disabled');*/}
+            {/*      onChangeDisableStatus && item?._id && onChangeDisableStatus(item?._id, !!state?.disabled);*/}
+            {/*    }}*/}
+            {/*  />*/}
+            {/*)}*/}
 
             {/*{onChangeDisableStatus && <Toggler {...registerStateAction('disabled', 'onChange')} />}*/}
           </Actions>

@@ -2,7 +2,7 @@ import { usePageCurrentProduct } from './PageCurrentProductProvider';
 import { useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import { Text } from '../../atoms/Text';
-import ModalFilter, { FilterSelectHandler } from '../../ModalForm/ModalFilter';
+import ModalFilter, { FilterSelectHandler } from '../../atoms/ModalFilter';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import VariationsTab from './tabs/VariationsTab';

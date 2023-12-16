@@ -1,5 +1,5 @@
 import ModalHeader from './ModalHeader';
-import ModalFilter, { ModalFormFilterProps } from './ModalFilter';
+import ModalFilter, { ModalFormFilterProps } from '../atoms/ModalFilter';
 import ModalFooter from './ModalFooter';
 
 import styled from 'styled-components';
@@ -82,6 +82,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
             defaultOption={defaultOption}
             onFilterValueSelect={onFilterValueSelect}
             name={filterName}
+            optionProps={{ fitContentH: true }}
           />
         )}
         {extraHeader}

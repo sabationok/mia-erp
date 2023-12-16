@@ -2,7 +2,7 @@ import { SelectItem } from 'components/TableList/TableList';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { ITransaction } from '../types/finances/transactions.types';
 import { t } from '../lang';
-import { FilterOpt } from '../components/ModalForm/ModalFilter';
+import { FilterOpt } from '../components/atoms/ModalFilter';
 import { CategoryTypes } from '../types/directories.types';
 
 export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;

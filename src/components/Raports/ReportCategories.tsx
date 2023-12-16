@@ -4,7 +4,7 @@ import ReportList, { ReportListItemProps } from './ReportList';
 import ModalForm from '../ModalForm';
 import { IReportBaseProps } from './report.types';
 import FlexBox from 'components/atoms/FlexBox';
-import { FilterOpt } from '../ModalForm/ModalFilter';
+import { FilterOpt } from '../atoms/ModalFilter';
 import { CategoryTypes, TrCategoryTypeEnum } from '../../types/directories.types';
 import styled from 'styled-components';
 import { enumToArray, founder, numberWithSpaces } from '../../utils';

@@ -67,7 +67,6 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
           key={`treeItem_${item?._id || idx}`}
           {...(item as any)}
           editing
-          disabling
           {...props}
           {...actions}
           item={item}
@@ -106,8 +105,8 @@ const actionsCreatorForDirPaymentMethods: DirInTreeActionsCreatorType<
     onUpdate: (id, data, options) => {
       console.log('IPaymentMethod onUpdate', data);
     },
-    onChangeDisableStatus: (id, status, options) => {
-      console.log('IPaymentMethod onChangeDisableStatus', id, status);
-    },
+    // onChangeDisableStatus: (id, status, options) => {
+    //   console.log('IPaymentMethod onChangeDisableStatus', id, status);
+    // },
   };
 };

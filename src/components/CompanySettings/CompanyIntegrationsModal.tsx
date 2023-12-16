@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../utils/fabrics';
 import styled from 'styled-components';
 import { ModalHeader } from '../atoms';
-import ModalFilter from '../ModalForm/ModalFilter';
+import ModalFilter from '../atoms/ModalFilter';
 import ModalFooter from '../ModalForm/ModalFooter';
 import InputIntegrationsTab from './integrations/InputIntegrationsTab';
 import { IntegrationTypeEnum } from '../../types/integrations.types';

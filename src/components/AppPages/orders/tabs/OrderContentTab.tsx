@@ -1,5 +1,5 @@
 import FlexBox from '../../../atoms/FlexBox';
-import ModalFilter from '../../../ModalForm/ModalFilter';
+import ModalFilter from '../../../atoms/ModalFilter';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { useOrdersSelector } from '../../../../redux/selectors.store';
 import { useEffect, useMemo, useState } from 'react';

@@ -1,7 +1,7 @@
 import { ModalFormProps } from '../components/ModalForm';
 import { ITrCategory, ITrCategoryFormData, TrCategoryTypeEnum } from './directories.types';
 import { CountsTypesEnum, ICount, ICountFormData } from '../redux/directories/counts.types';
-import { FilterOpt } from '../components/ModalForm/ModalFilter';
+import { FilterOpt } from '../components/atoms/ModalFilter';
 import { IBase } from '../redux/global.types';
 import { ICompany } from './companies.types';
 import { ApiDirType } from '../redux/APP_CONFIGS';

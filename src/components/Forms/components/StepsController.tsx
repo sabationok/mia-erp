@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
-import { FilterOption } from '../../ModalForm/ModalFilter';
+import { FilterOption } from '../../atoms/ModalFilter';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { checks } from '../../../utils';
@@ -124,7 +124,7 @@ const StepsController = <V = any,>({
           variant={isMobile ? 'onlyIconFilled' : 'filledSmall'}
           icon={'SmallArrowLeft'}
           onClick={handlePrevPress}
-          disabled={isLoading ?? !prevData}
+          disabled={isLoading || !prevData}
         >
           {prevData?.label}
         </ArrowButton>
@@ -135,7 +135,7 @@ const StepsController = <V = any,>({
           variant={isMobile ? 'onlyIconFilled' : 'filledSmall'}
           endIcon={'SmallArrowRight'}
           onClick={handleNextPress}
-          disabled={isLoading ?? (!canGoNext || !nextData)}
+          disabled={isLoading || !canGoNext || !nextData}
         >
           {nextData?.label}
         </ArrowButton>

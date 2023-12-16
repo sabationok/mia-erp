@@ -27,7 +27,7 @@ export const invoicesSlice = createSlice({
         s.methods = a.payload.map(md => ({
           ...md,
           category:
-            (!!md.service && InvoicingMethodCategoryEnum.external) ||
+            (!!md.service && InvoicingMethodCategoryEnum.paymentService) ||
             (!!md.bankAccount && InvoicingMethodCategoryEnum.bankTransfer) ||
             (md.type?.includes(InvoicingMethodCategoryEnum.postTransfer) && InvoicingMethodCategoryEnum.postTransfer) ||
             null,

@@ -11,7 +11,7 @@ import { OverlayHeader } from '../Forms/FormProduct/components';
 import { checks, enumToFilterOptions, toAppDateFormat } from '../../utils';
 import { useAppParams } from '../../hooks';
 import { IMeasurement } from '../../types/utils.types';
-import ModalFilter from '../ModalForm/ModalFilter';
+import ModalFilter from '../atoms/ModalFilter';
 import { OverviewCellProps } from './components/overview-types';
 import { OverviewCells } from './components/Cells';
 

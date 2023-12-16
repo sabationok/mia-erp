@@ -1,7 +1,7 @@
 import { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { enumToFilterOptions, toInputValueDate, useStepsHandler } from '../../../utils';
-import ModalFilter from '../../ModalForm/ModalFilter';
+import ModalFilter from '../../atoms/ModalFilter';
 import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';

@@ -10,7 +10,7 @@ import { useState } from 'react';
 import ModalFooter from '../../ModalForm/ModalFooter';
 import { enumToTabs } from '../../../utils';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
-import ModalFilter from '../../ModalForm/ModalFilter';
+import ModalFilter from '../../atoms/ModalFilter';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';

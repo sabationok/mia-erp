@@ -1,6 +1,6 @@
 import { ArrayUUID, IBase, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
 import { IProductCategoryDirItem, ISupplierDirItem } from './dir.types';
-import { FilterOption } from '../components/ModalForm/ModalFilter';
+import { FilterOption } from '../components/atoms/ModalFilter';
 import { IPriceListItem } from './priceManagement.types';
 import { ICompany } from './companies.types';
 import { IProductInventory, IWarehouse } from './warehouses.types';

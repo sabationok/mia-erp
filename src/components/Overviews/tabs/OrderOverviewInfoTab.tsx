@@ -6,7 +6,7 @@ import { usePageOverlayService } from '../../atoms/PageOverlayProvider';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { t } from '../../../lang';
 import { OverviewCellProps } from '../components/overview-types';
-import ModalFilter from '../../ModalForm/ModalFilter';
+import ModalFilter from '../../atoms/ModalFilter';
 import { enumToTabs } from '../../../utils';
 import { OverviewCells } from '../components/Cells';
 
