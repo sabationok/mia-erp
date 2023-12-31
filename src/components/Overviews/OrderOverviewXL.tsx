@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { t } from '../../lang';
 import { useAppParams } from '../../hooks';
-import { enumToFilterOptions } from '../../utils/fabrics';
+import { enumToFilterOptions } from '../../utils';
 import ModalFilter from '../atoms/ModalFilter';
 import OrderOverviewInfoTab from './tabs/OrderOverviewInfoTab';
 

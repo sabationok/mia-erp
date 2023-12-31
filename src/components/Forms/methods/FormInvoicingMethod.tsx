@@ -17,6 +17,7 @@ import * as yup from 'yup';
 import styled from 'styled-components';
 import { useTransactionsSelector } from '../../../redux/selectors.store';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import { DisabledStates } from '../../../types/utils.types';
 
 export interface FormInvoicingMethodProps {}
 
@@ -51,11 +52,20 @@ const FormInvoicingMethod: React.FC<FormInvoicingMethodProps> = ({ onSubmit, def
     register,
     registerSelect,
     reset,
+    formValues,
+    setValue,
   } = formMethods;
 
-  // useEffect(() => {
-  //   console.log(formValues);
-  // }, [formValues]);
+  const registerSwitch = (name: keyof DisabledStates) => {
+    return {
+      name,
+      value: formValues?.disabledFor ? !!formValues?.disabledFor[name] : undefined,
+      onchange: (v: boolean) => {
+        // setValue(`disabledFor.${name}` as never, v, { shouldTouch: true });
+      },
+    };
+  };
+
   const onValid = (fData: IInvoicingMethodFormData) => {
     onSubmit &&
       onSubmit(fData, {
@@ -82,22 +92,43 @@ const FormInvoicingMethod: React.FC<FormInvoicingMethodProps> = ({ onSubmit, def
       <Inputs>
         {!defaultState?.isDefault && (
           <>
-            <InputLabel label={t('label')} error={errors.label} required>
-              <InputText placeholder={t('insertLabel')} {...register('label')} required autoFocus />
+            <InputLabel
+              label={t('label')}
+              error={errors.label}
+              disabled={formValues.isDefault}
+              required={!formValues.isDefault}
+            >
+              <InputText
+                placeholder={t('insertLabel')}
+                {...register('label')}
+                disabled={formValues.isDefault}
+                required={!formValues.isDefault}
+                autoFocus={!formValues.isDefault}
+              />
             </InputLabel>
 
-            <InputLabel label={t('Type')} error={errors.label} required>
-              <InputText placeholder={t('Type')} {...register('type')} required />
+            <InputLabel
+              label={t('Type')}
+              error={errors.label}
+              disabled={formValues.isDefault}
+              required={!formValues.isDefault}
+            >
+              <InputText
+                placeholder={t('Type')}
+                {...register('type')}
+                disabled={formValues.isDefault}
+                required={!formValues.isDefault}
+              />
             </InputLabel>
           </>
         )}
 
         <InputLabel label={t('Disabled')} error={errors.disabled}>
-          <ButtonSwitch />
+          <ButtonSwitch {...registerSwitch('all')} />
         </InputLabel>
 
-        <InputLabel label={t('Disabled for client')} error={errors.disabledForClient}>
-          <ButtonSwitch />
+        <InputLabel label={t('Disabled for customer')} error={errors.disabledForClient}>
+          <ButtonSwitch {...registerSwitch('customer')} />
         </InputLabel>
 
         <BorderedBox>

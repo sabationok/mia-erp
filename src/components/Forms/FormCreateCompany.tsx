@@ -1,8 +1,6 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { toast } from 'react-toastify';
 import { BusinessSubjectTypeEnum, ICompanyFormData, OwnershipTypeEnum } from '../../types/companies.types';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import InputLabel from '../atoms/Inputs/InputLabel';
@@ -16,6 +14,8 @@ import { businessSubjectTypeFilterOptions, ownershipTypeFilterOptions } from '..
 import { ContractorsTypesEnum } from '../../redux/directories/contractors.types';
 import { FormInputs } from './components/atoms';
 import { AppModuleName } from '../../redux/reduxTypes.types';
+import { toReqData } from '../../utils';
+import { ToastService } from '../../services';
 
 const createCompanyFormSchema = yup.object().shape({
   name: {
@@ -40,25 +40,21 @@ const createCompanyFormSchema = yup.object().shape({
 export interface FormCreateCompanyProps extends Omit<ModalFormProps<any, any, ICompanyFormData>, 'onSubmit'> {}
 const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...props }) => {
   const pServ = useAppServiceProvider()[AppModuleName.permissions];
-
+  const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     unregister,
     formState: { errors },
     handleSubmit,
-    formValues: { businessSubjectType, type: currentType, ...fv },
+    formValues: { businessSubjectType, type: currentType, ...formValues },
     registerSelect,
     setValue,
   } = useAppForm<ICompanyFormData>({
     defaultValues: { businessSubjectType: BusinessSubjectTypeEnum.company, ...defaultState },
-    reValidateMode: 'onChange',
-    resolver: yupResolver(createCompanyFormSchema),
+    // reValidateMode: 'onSubmit',
+    // resolver: yupResolver(createCompanyFormSchema),
     shouldUnregister: true,
   });
-
-  useEffect(() => {
-    console.debug(fv);
-  }, [fv]);
 
   const formRenderConfig = useMemo(
     () => ({
@@ -80,19 +76,21 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
     [currentType, businessSubjectType]
   );
 
-  function onValid(data: ICompanyFormData) {
+  function onValid(fData: ICompanyFormData) {
+    console.log({ formValues });
+
     pServ
       .createCompany({
-        data,
+        data: toReqData(fData),
         onSuccess(data) {
           console.log('Company created', data);
-          toast.success(`Company created: ${data?.name || data?.label}`);
+          ToastService.success(`Company created: ${data?.name || data?.label}`);
           props?.onClose && props?.onClose();
         },
         onError() {
-          toast.error('Error');
+          ToastService.error('Error');
         },
-        onLoading() {},
+        onLoading: setIsLoading,
       })
       .then();
   }
@@ -102,6 +100,7 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
       fillHeight
       width={'480px'}
       {...props}
+      isLoading={isLoading}
       onSubmit={handleSubmit(onValid, errors => {
         console.error('FormCreateCompany', errors);
       })}
@@ -141,12 +140,12 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
               />
             </InputLabel>
 
-            <InputLabel label={t('secondName')} error={errors?.name?.second} required>
-              <InputText placeholder={t('insertSecondName')} {...register('name.second')} required />
+            <InputLabel label={t('secondName')} error={errors?.name?.second}>
+              <InputText placeholder={t('insertSecondName')} {...register('name.second')} />
             </InputLabel>
 
-            <InputLabel label={t('Middle name')} error={errors?.name?.middle} required>
-              <InputText placeholder={t('Insert middle name')} {...register('name.middle')} required />
+            <InputLabel label={t('Middle name')} error={errors?.name?.middle}>
+              <InputText placeholder={t('Insert middle name')} {...register('name.middle')} />
             </InputLabel>
           </>
         )}

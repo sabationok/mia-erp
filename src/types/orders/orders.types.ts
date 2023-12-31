@@ -4,8 +4,10 @@ import { ICustomerBase } from '../customers.types';
 import { AppQueryParams } from '../../api';
 import { ICommunicationMethod } from '../integrations.types';
 import {
-  AppDate,
-  HasExtRef,
+  HasEmbeddedReference,
+  HasEmbeddedReferences,
+  HasExecuteDate,
+  HasExpireDate,
   HasMagicLink,
   HasManager,
   HasOwnerAsCompany,
@@ -83,8 +85,9 @@ export interface OrderTotals {
   items?: number;
   amount?: number;
 }
-export interface IOrdersGroup extends IBase, HasMagicLink {
-  orders?: IOrder[];
+export interface IOrdersGroup extends IBase, HasMagicLink, HasEmbeddedReferences<string, string> {
+  orders?: MaybeNull<IOrder[]>;
+  strategy?: MaybeNull<string>;
 }
 
 export interface IOrder
@@ -92,9 +95,14 @@ export interface IOrder
     HasOwnerAsCompany,
     MagicLinkRef,
     HasManager,
-    HasExtRef,
-    HasStatus<OrderStatusEnum> {
+    HasExpireDate,
+    HasEmbeddedReference,
+    HasExecuteDate,
+    HasStatus<OrderStatusEnum>,
+    HasEmbeddedReferences<string, string> {
   group?: IOrdersGroup;
+
+  number?: MaybeNull<number>;
 
   receiver?: ICustomerBase;
   customer?: ICustomerBase;
@@ -108,11 +116,11 @@ export interface IOrder
   };
 
   total?: OrderTotals;
-  executeAt?: AppDate;
-  executeNow?: boolean;
 
   payments?: IPayment[];
+
   invoices?: IInvoice[];
+
   deliveries?: IDelivery[];
 
   slots?: IOrderSlot[];

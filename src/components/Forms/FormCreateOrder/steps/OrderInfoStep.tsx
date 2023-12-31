@@ -1,7 +1,7 @@
 import FlexBox from 'components/atoms/FlexBox';
 import styled from 'styled-components';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { t } from 'lang';
 import { Text } from 'components/atoms/Text';
 import FormAccordionItem from '../../components/FormAccordionItem';
@@ -29,10 +29,9 @@ import {
 } from '../../../../redux/selectors.store';
 import * as fns from 'date-fns';
 import { toInputValueDate } from '../../../../utils';
-import { InvoicingMethodCategoryEnum } from '../../../../types/integrations.types';
-import { useFilteredLisData } from '../../../../hooks';
 import ButtonsGroup from '../../../atoms/ButtonsGroup';
 import { invMethodCategoryFilterOptions } from '../../../../data/invoicing.data';
+import { InvoicingInternalTypeEnum } from '../../../../types/integrations.types';
 
 export interface OrderInfoStepProps extends FormOrderStepBaseProps {
   isGroup?: boolean;
@@ -46,7 +45,8 @@ type ConfirmsStateKay =
   | 'hasReceiverInfo'
   | 'hasExecuteDate'
   | 'holdDeliveryPayment'
-  | 'holdOrderPayment';
+  | 'holdOrderPayment'
+  | 'hasImposedPayment';
 
 // type FormFieldPaths = Path<ICreateOrderInfoFormState>;
 
@@ -60,8 +60,8 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
     watch,
     trigger,
   } = useOrderInfoForm();
-  const [invMethodCategory, setInvMethodCategory] = useState<InvoicingMethodCategoryEnum>(
-    InvoicingMethodCategoryEnum.paymentService
+  const [intMethodType, setIntMethodType] = useState<InvoicingInternalTypeEnum>(
+    InvoicingInternalTypeEnum.externalService
   );
 
   const formValues = watch();
@@ -72,11 +72,9 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
   });
   const invoicingMethods = useTranslatedMethodsList(useInvoicesSelector().methods, { withFullLabel: true });
 
-  const filteredInvMethods = useFilteredLisData({
-    data: invoicingMethods,
-    searchQuery: invMethodCategory,
-    searchParam: 'category',
-  });
+  const filteredInvMethods = useMemo(() => {
+    return invoicingMethods.filter(m => m.type?.internal === intMethodType);
+  }, [intMethodType, invoicingMethods]);
 
   const [confirms, setConfirms] = useState<Record<ConfirmsStateKay | string, boolean>>({
     hasDelivery: !!formValues.deliveryInfo,
@@ -84,6 +82,15 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
     hasReceiverInfo: !!formValues.receiver,
     hasExecuteDate: !!formValues.shipmentInfo?.executeAt,
   });
+
+  const hasImposedPayment = useMemo(() => {
+    return (
+      formValues.invoiceInfo?.method?.type?.internal &&
+      [InvoicingInternalTypeEnum.imposedPayment, InvoicingInternalTypeEnum.bonuses_imposedPayment].includes(
+        formValues.invoiceInfo?.method?.type?.internal
+      )
+    );
+  }, [formValues.invoiceInfo?.method?.type?.internal]);
 
   const handleOnChangeValue: UseFormSetValue<ICreateOrderInfoFormState> = (path, value) => {
     try {
@@ -110,7 +117,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
           return setValue('shipmentInfo.executeAt', fns.format(fns.addDays(new Date(), 1), 'yyyy-MM-dd'));
         }
         if (name === 'hasDeliveryInvoice') {
-          return setValue('deliveryInfo.invoiceInfo.expiredAt', toInputValueDate(fns.addDays(new Date(), 1)));
+          return setValue('deliveryInfo.invoiceInfo.expireAt', toInputValueDate(fns.addDays(new Date(), 1)));
         }
       } else if (!value) {
         if (name === 'hasReceiverInfo') {
@@ -287,61 +294,6 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
         )}
 
         <StAccordionItem
-          contentContainerStyle={{ padding: '8px 2px' }}
-          open
-          renderHeader={<AccordionItemTitle title={t('Invoicing')} />}
-        >
-          <ButtonsGroup
-            options={invMethodCategoryFilterOptions}
-            currentOption={{ value: invMethodCategory }}
-            onChangeIndex={i => setInvMethodCategory(invMethodCategoryFilterOptions[i].value)}
-          />
-
-          <InputLabel label={t('Method')} required>
-            <CheckboxesListSelector
-              options={filteredInvMethods}
-              currentOption={formValues?.invoiceInfo?.method}
-              onChangeIndex={i => {
-                handleOnChangeValue('invoiceInfo.method', invoicingMethods[i]);
-              }}
-              renderLabel={
-                invMethodCategory === InvoicingMethodCategoryEnum.bankTransfer
-                  ? info => {
-                      return (
-                        <FlexBox gap={4}>
-                          <Text $size={11} $weight={600}>
-                            {t('IBAN')}
-                          </Text>
-                          <Text $size={13}>{info.option?.bankAccount?.iban}</Text>
-
-                          <Text $size={11} $weight={600}>
-                            {t('Tax code')}
-                          </Text>
-                          <Text $size={13}>{info.option?.bankAccount?.taxId ?? '---'}</Text>
-
-                          <Text $size={11} $weight={600}>
-                            {t('Bank')}
-                          </Text>
-                          <Text $size={13}>{info.option?.bankAccount?.bank?.label ?? '---'}</Text>
-                        </FlexBox>
-                      );
-                    }
-                  : null
-              }
-            />
-          </InputLabel>
-
-          <InputLabel label={t('Expired at')} required>
-            <InputText
-              placeholder={t('Expired at')}
-              type={'datetime-local'}
-              required
-              {...register('invoiceInfo.expiredAt', { required: true })}
-            />
-          </InputLabel>
-        </StAccordionItem>
-
-        <StAccordionItem
           contentContainerStyle={{ padding: '0 2px' }}
           open
           renderHeader={<AccordionItemTitle title={t('Shipment')} />}
@@ -431,7 +383,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
                       placeholder={t('Expired at')}
                       type={'datetime-local'}
                       required
-                      {...register('deliveryInfo.invoiceInfo.expiredAt', { required: true })}
+                      {...register('deliveryInfo.invoiceInfo.expireAt', { required: true })}
                     />
                   </InputLabel>
                 </>
@@ -439,6 +391,61 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
             </BorderedBox>
           </StAccordionItem>
         )}
+
+        <StAccordionItem
+          contentContainerStyle={{ padding: '8px 2px' }}
+          open
+          renderHeader={<AccordionItemTitle title={t('Invoicing')} />}
+        >
+          <ButtonsGroup
+            options={invMethodCategoryFilterOptions}
+            currentOption={{ value: intMethodType }}
+            onChangeIndex={i => setIntMethodType(invMethodCategoryFilterOptions[i].value)}
+          />
+
+          <InputLabel label={t('Method')} required>
+            <CheckboxesListSelector
+              options={filteredInvMethods}
+              currentOption={formValues?.invoiceInfo?.method}
+              onChangeIndex={i => {
+                handleOnChangeValue('invoiceInfo.method', invoicingMethods[i]);
+              }}
+              renderLabel={
+                intMethodType === InvoicingInternalTypeEnum.bankTransfer
+                  ? info => {
+                      return (
+                        <FlexBox gap={4}>
+                          <Text $size={11} $weight={600}>
+                            {t('IBAN')}
+                          </Text>
+                          <Text $size={13}>{info.option?.bankAccount?.iban}</Text>
+
+                          <Text $size={11} $weight={600}>
+                            {t('Tax code')}
+                          </Text>
+                          <Text $size={13}>{info.option?.bankAccount?.taxId ?? '---'}</Text>
+
+                          <Text $size={11} $weight={600}>
+                            {t('Bank')}
+                          </Text>
+                          <Text $size={13}>{info.option?.bankAccount?.bank?.label ?? '---'}</Text>
+                        </FlexBox>
+                      );
+                    }
+                  : null
+              }
+            />
+          </InputLabel>
+
+          <InputLabel label={t('Expired at')} required>
+            <InputText
+              placeholder={t('Expired at')}
+              type={'datetime-local'}
+              required
+              {...register('invoiceInfo.expireAt', { required: true })}
+            />
+          </InputLabel>
+        </StAccordionItem>
       </FlexBox>
     </Inputs>
   );

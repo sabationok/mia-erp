@@ -30,7 +30,6 @@ const FormCreateOutputIntegration: React.FC<FormCreateOutputIntegrationProps> = 
   service,
   onSuccess,
   onClose,
-
   ...p
 }) => {
   const form = useForm<CreateOutputIntegrationFormData>();
@@ -113,7 +112,7 @@ const FormCreateOutputIntegration: React.FC<FormCreateOutputIntegrationProps> = 
         <CustomSelect label={t('Select role')} placeholder={'Select role'} />
 
         <InputLabel label={t('Expired at')}>
-          <InputText placeholder={t('Expired at')} type={'datetime-local'} {...form.register('expiredAt')} />
+          <InputText placeholder={t('Expired at')} type={'datetime-local'} {...form.register('expireAt')} />
         </InputLabel>
 
         <InputLabel label={t('Redirect base url')}>

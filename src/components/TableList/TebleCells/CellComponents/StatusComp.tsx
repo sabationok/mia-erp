@@ -27,7 +27,7 @@ const StatusComp: React.FC<StatusCompProps> = ({
       variant={variant}
       title={statusData?.description}
       color={statusData?.color}
-      backgroundColor={statusData?.backgroundColor}
+      backgroundColor={statusData?.colorSecondary}
       fillWidth={fillWidth}
     >
       {/*{statusData?.iconId && <SvgIcon icon={statusData?.iconId} size="20px" />}*/}

@@ -105,8 +105,14 @@ export const ordersTableColumns: CellTittleProps<IOrder, DataPath>[] = [
     action: 'numberWithSpaces',
   },
   {
-    top: { name: t('Group') },
-    bottom: { name: t('Number'), path: 'manager.email' },
+    top: { name: t('Reference / Internal'), getData: rd => rd?.reference?.internal },
+    bottom: { name: t('Reference / External'), getData: rd => rd?.reference?.external },
+    width: '190px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: t('Group'), getData: rd => rd?.group?.reference?.internal },
+    bottom: { name: t('Strategy'), getData: rd => rd?.group?.strategy },
     width: '180px',
     action: 'valueByPath',
   },
@@ -165,9 +171,9 @@ export const ordersTableColumns: CellTittleProps<IOrder, DataPath>[] = [
   },
   {
     top: { name: t('Priority') },
-    // bottom: { name: t('type'), path: 'type' },
-    width: '100px',
-    action: 'status',
+    bottom: { name: t('Number'), getData: rd => rd?.number },
+    width: '150px',
+    action: 'valueByPath',
   },
   {
     top: { name: t('manager'), path: 'manager.name' },

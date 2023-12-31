@@ -3,12 +3,17 @@ import _ from 'lodash';
 import { t } from '../../lang';
 import ButtonsGroup from './ButtonsGroup';
 
+export type ButtonSwitchChangeHandler<Name extends string | number | symbol = string> = (
+  res: boolean,
+  name?: Name
+) => void;
 interface ButtonSwitchProps<Name extends string | number | symbol = string> {
   acceptLabel?: string;
   rejectLabel?: string;
-  onChange?: (res: boolean, name?: Name) => void;
+  onChange?: ButtonSwitchChangeHandler<Name>;
   value?: boolean;
   name?: Name;
+  disabled?: boolean;
 }
 
 const ButtonSwitch = <Name extends string | number | symbol = string>({
@@ -17,6 +22,7 @@ const ButtonSwitch = <Name extends string | number | symbol = string>({
   value = false,
   acceptLabel,
   rejectLabel,
+  disabled,
 }: ButtonSwitchProps<Name>) => {
   const [current, setCurrent] = useState(value);
   const handleChange = (index: number) => {
@@ -41,7 +47,9 @@ const ButtonSwitch = <Name extends string | number | symbol = string>({
     }
   }, [value]);
 
-  return <ButtonsGroup options={options} defaultIndex={current ? 1 : 0} onChangeIndex={handleChange} />;
+  return (
+    <ButtonsGroup options={options} disabled={disabled} defaultIndex={current ? 1 : 0} onChangeIndex={handleChange} />
+  );
 };
 
 export default ButtonSwitch;

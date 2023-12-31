@@ -2,9 +2,12 @@ import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { IInvoice } from '../types/invoices.types';
 import { t } from '../lang';
 import { enumToFilterOptions, numberWithSpaces } from '../utils';
-import { InvoicingMethodCategoryEnum } from '../types/integrations.types';
+import { InvoicingInternalTypeEnum } from '../types/integrations.types';
+import { pick } from 'lodash';
 
-export const invMethodCategoryFilterOptions = enumToFilterOptions(InvoicingMethodCategoryEnum);
+export const invMethodCategoryFilterOptions = enumToFilterOptions(
+  pick(InvoicingInternalTypeEnum, ['externalService', 'bankTransfer', 'imposedPayment'])
+);
 
 const dateColumn: CellTittleProps = {
   top: { name: t('Updated'), align: 'center', getData: d => d?.createdAt },

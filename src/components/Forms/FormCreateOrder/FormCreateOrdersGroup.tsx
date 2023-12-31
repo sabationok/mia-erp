@@ -62,7 +62,7 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onClose }
       ...currentGroupFormState.info,
       invoiceInfo: {
         ...currentGroupFormState.info?.invoiceInfo,
-        expiredAt: currentGroupFormState.info?.invoiceInfo?.expiredAt ?? toInputValueDate(fns.addDays(new Date(), 1)),
+        expireAt: currentGroupFormState.info?.invoiceInfo?.expireAt ?? toInputValueDate(fns.addDays(new Date(), 1)),
       },
     },
     resolver: yupResolver(orderInfoBaseSchema),
@@ -113,7 +113,7 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onClose }
         data: {
           data: {
             info: service.toOrderInfoReqData(orderInfoFormValues, {
-              omitPathArr: ['deliveryInfo.destination'],
+              omitPathArr: [],
             }),
             slots: service.toOrderSlotsReqData(currentGroupFormState.slots),
           },
@@ -130,7 +130,7 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onClose }
     );
   };
   const onErrorSubmit = (errors: FieldErrors<ICreateOrderInfoFormState>) => {
-    console.debug(onErrorSubmit.name, errors);
+    console.log(onErrorSubmit.name, errors);
   };
 
   return (

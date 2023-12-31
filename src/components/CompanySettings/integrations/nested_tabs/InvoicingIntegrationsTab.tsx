@@ -8,7 +8,7 @@ import { useModalService } from '../../../ModalProvider/ModalProvider';
 import FormCreateInputIntegration from '../../../Forms/integrations/FormCreateInputIntegration';
 import { InputIntegrationBase } from '../../../../types/integrations.types';
 import { useTranslatedMethodsList } from '../../../../hooks/useTranslatedMethodsList.hook';
-import { getIdRef, toQueriesFirReq } from '../../../../utils/data-transform';
+import { getIdRef, toQueriesForReq } from '../../../../utils/data-transform';
 import styled from 'styled-components';
 import ExtraFooterWithButton from '../../../atoms/ExtraFooterWithButton';
 import { useCheckoutPaymentsSelector, useInvoicesSelector } from '../../../../redux/selectors.store';
@@ -46,16 +46,6 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
       });
   };
 
-  useEffect(() => {
-    currentServiceData &&
-      service.getAll({
-        data: { type: 'input', ...toQueriesFirReq({ service: getIdRef(currentServiceData) }) },
-        onSuccess: data => {
-          setIntegrationsList(data);
-        },
-      });
-  }, [currentServiceData, service]);
-
   const renderInvoicingMethods = useMemo(() => {
     const methods = invoicingMethods.filter(m => {
       return m.service?._id === currentServiceData?._id;
@@ -86,11 +76,15 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
     });
   }, [currentServiceData?._id, checkoutMethods]);
 
-  // useEffect(() => {
-  //   if (!provider && providers) {
-  //     providers[0] && setProvider(providers[0]?.value);
-  //   }
-  // }, [provider, providers]);
+  useEffect(() => {
+    currentServiceData &&
+      service.getAll({
+        data: { type: 'input', ...toQueriesForReq({ service: getIdRef(currentServiceData) }) },
+        onSuccess: data => {
+          setIntegrationsList(data);
+        },
+      });
+  }, [currentServiceData, service]);
 
   return (
     <FlexBox fillWidth flex={1} overflow={'hidden'}>

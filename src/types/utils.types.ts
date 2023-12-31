@@ -13,9 +13,18 @@ export type MaybeNull<T = any> = T | null;
 
 export type MaybeArr<T = any> = T extends (infer U)[] ? U[] : T;
 
+export interface EmbeddedReference {
+  internal?: MaybeNull<string>;
+  external?: MaybeNull<string>;
+}
+
+export interface HasEmbeddedReference {
+  reference?: MaybeNull<EmbeddedReference>;
+}
+
 export interface DisabledStates {
   all?: MaybeNull<boolean>;
-  client?: MaybeNull<boolean>;
+  customer?: MaybeNull<boolean>;
   company?: MaybeNull<boolean>;
 }
 export interface HasDisabledAttributes {
@@ -75,6 +84,11 @@ export interface HasType<Type extends string | number = string> {
 export interface HasCategory<Type extends string | number = string> {
   category?: MaybeNull<Type>;
 }
+
+export type EmbeddedType<Internal extends string = string, External extends string = string> = {
+  internal?: MaybeNull<Internal>;
+  external?: MaybeNull<External>;
+};
 export interface HasEmbeddedType<Internal extends string = string, External extends string = string> {
   type?: MaybeNull<{ internal?: MaybeNull<Internal>; external?: MaybeNull<External> }>;
 }
@@ -116,6 +130,17 @@ export interface WithPeriod {
   timeTo?: MaybeNull<AppDate>;
 }
 
+export interface HasExpireDate {
+  expireAt?: MaybeNull<AppDate>;
+}
+
+export interface HasExpireTime {
+  expiresIn?: MaybeNull<AppDate>;
+}
+
+export interface HasExecuteDate {
+  executeAt?: MaybeNull<AppDate>;
+}
 export interface HasOrigin<Type = any> {
   origin?: MaybeNull<Type>;
 }
@@ -162,6 +187,13 @@ export interface HasTaxCode {
 export interface HasMagicLink {
   magicLink?: MaybeNull<string>;
 }
+export interface References<Internal = any, External = any> {
+  internal?: MaybeNull<Internal>;
+  external?: MaybeNull<External>;
+}
+export interface HasEmbeddedReferences<Internal = any, External = any> {
+  reference?: MaybeNull<References<Internal, External>>;
+}
 
 export interface HasDescription {
   description?: MaybeNull<string>;
@@ -169,10 +201,6 @@ export interface HasDescription {
 
 export interface HasSortOrder {
   sortOrder?: number;
-}
-
-export interface HasExpireDate {
-  expireAt?: AppDate;
 }
 
 export interface HasSlotsList<Slot = any> {

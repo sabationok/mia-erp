@@ -100,7 +100,7 @@ const colors = {
 export interface StatusData<Name extends string | number | symbol = any> {
   name: Name;
   color?: string;
-  backgroundColor?: string;
+  colorSecondary?: string;
   label: string;
   iconId?: IconIdType;
   description?: string;
@@ -128,14 +128,14 @@ export const statusDataMap: Record<StatusNameEnum, StatusData> = {
     color: 'inherit',
     iconId: 'info',
     label: t('undefined'),
-    backgroundColor: colors.defaultLight,
+    colorSecondary: colors.defaultLight,
   },
   error: {
     name: 'error',
     color: 'inherit',
     iconId: 'error',
     label: t('error'),
-    backgroundColor: colors.clrErrorLight,
+    colorSecondary: colors.clrErrorLight,
     description: 'error',
   },
   success: {
@@ -143,69 +143,69 @@ export const statusDataMap: Record<StatusNameEnum, StatusData> = {
     color: 'inherit',
     iconId: 'success',
     label: t('success'),
-    backgroundColor: colors.clrSuccessLight,
+    colorSecondary: colors.clrSuccessLight,
   },
   info: {
     name: 'info',
     color: 'inherit',
     iconId: 'info',
     label: t('info'),
-    backgroundColor: colors.clrInfoLight,
+    colorSecondary: colors.clrInfoLight,
   },
   warning: {
     name: 'warning',
     color: 'inherit',
     iconId: 'warning',
     label: t('warning'),
-    backgroundColor: colors.clrWarningLight,
+    colorSecondary: colors.clrWarningLight,
   },
   INCOME: {
     name: 'INCOME',
-    color: colors.clrSuccess,
     label: t('INCOME'),
-    backgroundColor: colors.clrSuccess,
+    color: colors.clrSuccess,
+    colorSecondary: colors.clrSuccessLight,
   },
   EXPENSE: {
     name: 'EXPENSE',
-    color: colors.clrError,
     label: t('EXPENSE'),
-    backgroundColor: colors.clrError,
+    color: colors.clrError,
+    colorSecondary: colors.clrErrorLight,
   },
   TRANSFER: {
     name: 'TRANSFER',
-    color: colors.clrInfo,
     label: t('TRANSFER'),
-    backgroundColor: colors.clrInfo,
+    color: colors.clrInfo,
+    colorSecondary: colors.clrInfoLight,
   },
   pending: {
     name: 'pending',
     label: t('pending'),
-    color: colors.clrLight,
-    backgroundColor: colors.clrInfo,
+    color: colors.clrInfo,
+    colorSecondary: colors.clrInfoLight,
   },
   fulfilled: {
     name: 'fulfilled',
     label: t('fulfilled'),
-    color: colors.clrLight,
-    backgroundColor: colors.clrSuccess,
+    color: colors.clrSuccess,
+    colorSecondary: colors.clrSuccessLight,
   },
   rejected: {
     name: 'rejected',
     label: t('rejected'),
     color: colors.clrLight,
-    backgroundColor: colors.clrError,
+    colorSecondary: colors.clrError,
   },
   GOODS: {
     name: 'rejected',
     label: t('GOODS'),
-    color: colors.default,
-    backgroundColor: colors.clrError,
+    color: colors.clrError,
+    colorSecondary: colors.clrErrorLight,
   },
   SERVICES: {
     name: 'rejected',
     label: t('SERVICES'),
-    color: colors.default,
-    backgroundColor: colors.clrError,
+    color: colors.clrError,
+    colorSecondary: colors.clrErrorLight,
   },
 };
 

@@ -33,6 +33,7 @@ export interface IAccentColor {
   disabled: string;
   focus: string;
   light: string;
+  extraLight: string;
 }
 
 export function getAccentColor(name: AccentColorName): IAccentColor {
@@ -45,6 +46,7 @@ export function getAccentColor(name: AccentColorName): IAccentColor {
     disabled: colors[0],
     focus: colors[6],
     light: colors[2],
+    extraLight: colors[0],
   };
 }
 

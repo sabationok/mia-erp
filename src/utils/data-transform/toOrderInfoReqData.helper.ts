@@ -21,7 +21,7 @@ export function toOrderInfoReqData(input: ICreateOrderInfoFormState): ICreateOrd
       if (input.invoiceInfo?.method) {
         invoiceInfo = {
           method: getIdRef(input.invoiceInfo.method),
-          expiredAt: input.invoiceInfo?.expiredAt,
+          expiredAt: input.invoiceInfo?.expireAt,
         };
         output.invoiceInfo = invoiceInfo;
       }
@@ -37,7 +37,7 @@ export function toOrderInfoReqData(input: ICreateOrderInfoFormState): ICreateOrd
       if (input?.deliveryInfo?.invoiceInfo?.method) {
         deliveryInfo.invoiceInfo = {
           method: getIdRef(input.deliveryInfo.invoiceInfo.method),
-          expiredAt: input.deliveryInfo.invoiceInfo?.expiredAt,
+          expiredAt: input.deliveryInfo.invoiceInfo?.expireAt,
         };
       }
     }

@@ -16,7 +16,7 @@ const InputIntegrationsList = ({ list, onSetAsDefault, onDelete, onEdit, active 
   const preparedList = useMemo((): IAccordionOptionProps[] => {
     return list.map((opt: InputIntegrationBase): IAccordionOptionProps => {
       return {
-        title: opt.label,
+        title: opt.label ?? '',
         isActive: active ? active._id === opt._id : false,
         ChildrenComponent: () => (
           <IntegrationOverview

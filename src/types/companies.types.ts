@@ -134,7 +134,18 @@ export interface DeliveryPolicyJsonData {
   selectByClient?: boolean;
   autoCreate?: boolean;
   autoPublish?: boolean;
+
+  hasInsurance?: boolean;
+  insurancePercentage?: number;
+  minInsuranceAmount?: number;
 }
+// export interface DeliverySalesPolicyJsonData extends DeliveryPolicyJsonData {
+//   hasImposedPayment?: boolean;
+//   hasInsurance?: boolean;
+//   insurancePercentage?: number;
+//   minInsuranceAmount?: number;
+// }
+
 export interface ICompanyDeliveryPolicyFormData {
   sales?: DeliveryPolicyJsonData;
   returns?: DeliveryPolicyJsonData;

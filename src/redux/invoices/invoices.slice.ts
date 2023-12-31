@@ -2,7 +2,7 @@ import { StateErrorType } from '../reduxTypes.types';
 import { createSlice } from '@reduxjs/toolkit';
 import { IInvoice } from '../../types/invoices.types';
 import { getAllInvoiceMethodsThunk, getAllInvoicesThunk, updateInvoicingMethodThunk } from './invoicing.thunks';
-import { IInvoicingMethod, InvoicingMethodCategoryEnum } from '../../types/integrations.types';
+import { IInvoicingMethod } from '../../types/integrations.types';
 
 export interface InvoicesState {
   invoices: IInvoice[];
@@ -24,14 +24,7 @@ export const invoicesSlice = createSlice({
   extraReducers: builder =>
     builder
       .addCase(getAllInvoiceMethodsThunk.fulfilled, (s, a) => {
-        s.methods = a.payload.map(md => ({
-          ...md,
-          category:
-            (!!md.service && InvoicingMethodCategoryEnum.paymentService) ||
-            (!!md.bankAccount && InvoicingMethodCategoryEnum.bankTransfer) ||
-            (md.type?.includes(InvoicingMethodCategoryEnum.postTransfer) && InvoicingMethodCategoryEnum.postTransfer) ||
-            null,
-        }));
+        s.methods = a.payload;
       })
       .addCase(updateInvoicingMethodThunk.fulfilled, (s, a) => {
         s.methods = s.methods.map(mtd => (mtd._id === a.payload._id ? a.payload : mtd));

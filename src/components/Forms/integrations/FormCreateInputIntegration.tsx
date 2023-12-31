@@ -11,6 +11,7 @@ import { getIdRef } from '../../../utils/data-transform';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { useState } from 'react';
+import ButtonSwitch from '../../atoms/ButtonSwitch';
 
 export interface FormCreateInputIntegrationProps extends Omit<ModalFormProps, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<CreateIntegrationFormData>;
@@ -32,7 +33,6 @@ const FormCreateInputIntegration: React.FC<FormCreateInputIntegrationProps> = ({
   const onValid = (data: CreateIntegrationFormData) => {
     intServ.createInput({
       onSuccess: data => {
-        console.log('FormCreateIntegration createInputIntegration', data);
         onSuccess && onSuccess({ data });
         onClose && onClose();
       },
@@ -68,12 +68,16 @@ const FormCreateInputIntegration: React.FC<FormCreateInputIntegrationProps> = ({
           />
         </InputLabel>
 
-        <InputLabel label={t('Expired at')}>
-          <InputText placeholder={t('Expired at')} type={'date'} {...form.register('expiredAt')} />
+        <InputLabel label={t('Expire at')}>
+          <InputText placeholder={t('Expired at')} type={'date'} {...form.register('expireAt')} />
         </InputLabel>
 
         <InputLabel label={t('Description')}>
           <InputText placeholder={t('Description')} {...form.register('description')} />
+        </InputLabel>
+
+        <InputLabel label={t('Set as default')} disabled>
+          <ButtonSwitch disabled />
         </InputLabel>
       </FlexBox>
     </ModalForm>

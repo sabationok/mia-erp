@@ -110,7 +110,7 @@ const ModalFormContainer = styled.form<
   padding: 0 8px;
 
   min-height: 200px;
-  max-height: 100%;
+  max-height: 90vh;
 
   color: ${p => p.theme.fontColorSidebar};
   width: ${({ width = '480px', fillWidth, fitContentH }) =>

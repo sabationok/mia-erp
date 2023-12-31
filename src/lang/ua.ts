@@ -4,7 +4,7 @@ import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../types/companies.t
 import { WarehouseDocumentType } from '../types/warehouses.types';
 import { MeasurementUnit } from '../types/products.types';
 import { OrderStatusEnum } from '../types/orders/orders.types';
-import { InvoicingMethodCategoryEnum } from '../types/integrations.types';
+import { InvoicingInternalTypeEnum } from '../types/integrations.types';
 
 export const langUa = {
   // DIRECTORIES
@@ -28,9 +28,11 @@ export const langUa = {
   [OrderStatusEnum.archived]: 'Архів',
   [OrderStatusEnum.expired]: 'Протерміновано',
 
-  [InvoicingMethodCategoryEnum.bankTransfer]: 'Банківський переказ',
-  [InvoicingMethodCategoryEnum.postTransfer]: 'Поштовий переказ',
-  [InvoicingMethodCategoryEnum.paymentService]: 'Платіжний сервіс',
+  [InvoicingInternalTypeEnum.postTransfer]: 'Поштовий переказ',
+  [InvoicingInternalTypeEnum.bankTransfer]: 'Банківський переказ',
+  [InvoicingInternalTypeEnum.imposedPayment]: 'Наладений платіж',
+
+  externalService: 'Зовнішній сервіс',
 
   variationsTemplate: 'Шаблон для варіацій',
   variationsTemplates: 'Шаблони для варіацій',

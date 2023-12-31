@@ -3,7 +3,7 @@ import { LangPack } from '../lang';
 import { ICompany } from './companies.types';
 import { AppQueryParams } from '../api';
 import { HasBaseCmsConfigs } from './cms.types';
-import { HasCategory, HasDisabledAttributes, HasLabel, HasType, MaybeNull } from './utils.types';
+import { HasCompany, HasDisabledAttributes, HasEmbeddedType, HasLabel, HasType, MaybeNull } from './utils.types';
 import { IBankAccount } from './finances/bank-accounts.types';
 
 export enum IntegrationTypeEnum {
@@ -21,6 +21,7 @@ export enum ExternalServiceTypeEnum {
   checkout = 'checkout',
   invoices = 'invoices',
   banking = 'banking',
+  fiscalization = 'fiscalization',
 }
 
 export enum ExternalServiceProvidersEnum {
@@ -53,6 +54,11 @@ export enum MonoCheckoutMethod {
   wallet = 'wallet',
 }
 
+export enum MonoInvoicingTypeEnum {
+  debit = 'debit',
+  hold = 'hold',
+}
+
 export enum LiqPayCheckoutMethodEnum {
   apay = 'apay',
   gpay = 'gpay',
@@ -65,14 +71,20 @@ export enum LiqPayCheckoutMethodEnum {
   qr = 'qr',
 }
 
+export enum LiqPayInvoicingTypeEnum {
+  pay = 'pay',
+  hold = 'hold',
+}
+
 export interface ExtServiceBase extends IBase {
   owner: ICompany;
   label: string;
-  value: string;
+  provider: ExternalServiceProvidersEnum;
   lang?: LangPack;
   defIntegration?: InputIntegrationBase;
   disabled?: boolean;
-  originServices?: ExtSubServicesEntity;
+  // originServices?: ExtSubServicesEntity;
+  services?: ExternalServiceTypeEnum[];
 }
 
 export interface ExtSubServicesEntity extends Record<ExternalServiceTypeEnum | string, string[]> {}
@@ -80,18 +92,15 @@ export interface ExtSubServicesEntity extends Record<ExternalServiceTypeEnum | s
 export interface ChatIds {
   telegram?: (string | number)[];
 }
-export interface InputIntegrationBase extends IBase {
-  owner?: ICompany;
+export interface InputIntegrationBase extends IBase, HasLabel, HasCompany, HasType<ExternalServiceTypeEnum> {
   service: ExtServiceBase;
 
   apiKey?: string; // !
   secret?: string; // !
   hasSecret?: boolean;
-  expiredAt?: string | Date;
+  expireAt?: string | Date;
   login?: string;
 
-  type?: ExternalServiceTypeEnum;
-  label?: string;
   description?: string;
 }
 export interface OutputIntegrationBase extends InputIntegrationBase {
@@ -100,7 +109,7 @@ export interface OutputIntegrationBase extends InputIntegrationBase {
 }
 
 export interface IntegrationBaseDto {
-  expiredAt?: string | Date | number;
+  expireAt?: string | Date | number;
   label?: string;
   description?: string;
 }
@@ -126,7 +135,7 @@ export interface InputIntegrationDto extends IntegrationBaseDto {
 }
 
 export interface CreateOutputIntegrationFormData
-  extends Partial<Pick<IntegrationBaseDto, 'description' | 'expiredAt' | 'label'>> {
+  extends Partial<Pick<IntegrationBaseDto, 'description' | 'expireAt' | 'label'>> {
   role?: IFormDataValueWithID;
   redirectBaseUrl?: string;
   chatIds?: ChatIds;
@@ -150,14 +159,13 @@ export interface ExtDeliveryService extends ExtServiceBase {
   methods?: IDeliveryMethod[];
 }
 export interface ServiceMethodBase<
-  Type extends string | number = any,
-  Category extends string | number = any,
-  Service = any
+  InternalType extends string = any,
+  ExternalType extends string = any,
+  Service extends ExtServiceBase = any
 > extends IBase,
     HasBaseCmsConfigs,
     HasLabel,
-    HasType<Type>,
-    HasCategory<Category>,
+    HasEmbeddedType<InternalType, ExternalType>,
     HasDisabledAttributes {
   labels?: LangPack;
   isDefault?: boolean;
@@ -172,42 +180,52 @@ export interface IMethodReqData<DtoLike = any> {
   data?: Omit<DtoLike, IBaseKeys | 'isDefault' | 'service' | 'extService'>;
   params?: Pick<AppQueryParams, 'disabled' | 'isDefault' | 'disabledForClient'>;
 }
-export enum InvoicingMethodTypeEnum {
-  hold = 'hold',
-  debit = 'debit',
-  pay = 'pay',
+export enum InvoicingInternalTypeEnum {
+  // hold = 'hold',
+  // debit = 'debit',
+  // pay = 'pay',
+
+  postTransfer = 'postTransfer',
 
   bankTransfer = 'bankTransfer',
+  externalService = 'externalService',
+  imposedPayment = 'imposedPayment',
+
   afterPay = 'afterPay',
   cash = 'cash',
 
+  bonuses_imposedPayment = 'bonuses_imposedPayment',
   bonuses_cash = 'bonuses_cash',
   bonuses_afterPay = 'bonuses_afterPay',
   bonuses_bankTransfer = 'bonuses_bankTransfer',
+  bonuses_postTransfer = 'bonuses_postTransfer',
 }
 
-export enum InvoicingMethodCategoryEnum {
-  paymentService = 'paymentService',
-  bankTransfer = 'bankTransfer',
-  postTransfer = 'postTransfer',
-}
 export enum DeliveryMethodCategoryEnum {
   external = 'external',
   internal = 'internal',
 }
-export interface ICommunicationMethod extends ServiceMethodBase<string, never, ExtCommunicationService> {}
+
+// * COMMUNICATION
+export interface ICommunicationMethod extends ServiceMethodBase<string, string, ExtCommunicationService> {}
 export interface ICommunicationMethodReqData extends IMethodReqData<ICommunicationMethod> {}
+
+// * INVOICING
 export interface IInvoicingMethod
-  extends ServiceMethodBase<InvoicingMethodTypeEnum, InvoicingMethodCategoryEnum, ExtInvoicingService> {
+  extends ServiceMethodBase<
+    InvoicingInternalTypeEnum,
+    MonoInvoicingTypeEnum | LiqPayInvoicingTypeEnum,
+    ExtInvoicingService
+  > {
   bankAccount?: MaybeNull<IBankAccount>;
 }
 export interface IInvoicingMethodReqData extends IMethodReqData<IInvoicingMethod> {}
-
+// * DELIVERY
 export interface IDeliveryMethodInvoicingPolicy {
   method?: IInvoicingMethod;
   minCost?: { delivery?: number; return?: number };
 }
-export interface IDeliveryMethod extends ServiceMethodBase<string, never, ExtDeliveryService> {
+export interface IDeliveryMethod extends ServiceMethodBase<string, string, ExtDeliveryService> {
   invoicing?: IDeliveryMethodInvoicingPolicy;
 }
 
@@ -217,8 +235,10 @@ export interface IDeliveryMethodDto
 }
 
 export interface IDeliveryMethodReqData extends IMethodReqData<IDeliveryMethodDto> {}
+
+// * PAYMENT CHECKOUT
 export interface ICheckoutPaymentMethod
-  extends ServiceMethodBase<string | MonoCheckoutMethod | LiqPayCheckoutMethodEnum, never, ExtDeliveryService> {}
+  extends ServiceMethodBase<string, string | MonoCheckoutMethod | LiqPayCheckoutMethodEnum, ExtDeliveryService> {}
 export interface IPaymentMethodReqData extends IMethodReqData<ICheckoutPaymentMethod> {}
 
 export enum PaymentCheckoutEnum {

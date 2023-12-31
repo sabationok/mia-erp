@@ -15,6 +15,7 @@ import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { useAppForm } from '../../../hooks';
+import InputText from '../../atoms/Inputs/InputText';
 
 export interface DeliveryPolicyTabProps extends CompanySettingsTabBaseProps {
   onSubmit?: AppSubmitHandler<{
@@ -22,6 +23,10 @@ export interface DeliveryPolicyTabProps extends CompanySettingsTabBaseProps {
     tab: keyof ICompanyDeliveryPolicyFormData;
   }>;
 }
+export type DeliverySalesPolicyBooleanFieldKeys = keyof Omit<
+  DeliveryPolicyJsonData,
+  'method' | 'minInsuranceAmount' | 'insurancePercentage'
+>;
 
 export enum DeliveryPolicyTabs {
   sales = 'sales',
@@ -42,7 +47,7 @@ const DeliveryPolicyTab = ({ onClose, onSubmit }: DeliveryPolicyTabProps) => {
 
   const formValues = form.watch();
 
-  const registerSwitch = (name: keyof Omit<DeliveryPolicyJsonData, 'method'>) => {
+  const registerSwitch = (name: DeliverySalesPolicyBooleanFieldKeys) => {
     const value = formValues[current];
     return {
       name: name,
@@ -91,9 +96,25 @@ const DeliveryPolicyTab = ({ onClose, onSubmit }: DeliveryPolicyTabProps) => {
             <ButtonSwitch {...registerSwitch('selectByClient')} />
           </InputLabel>
 
-          <InputLabel label={t(`Auto publishing delivery for ${current.toUpperCase()}`)}>
+          <InputLabel label={t(`Auto publishing delivery for ${current.toUpperCase()}, to external service`)}>
             <ButtonSwitch {...registerSwitch('autoPublish')} />
           </InputLabel>
+
+          <InputLabel label={t(`Has insurance amount`)}>
+            <ButtonSwitch {...registerSwitch('hasInsurance')} />
+          </InputLabel>
+
+          {formValues?.sales?.hasInsurance && (
+            <FlexBox fxDirection={'row'} gap={8}>
+              <InputLabel label={t(`Minimum insurance amount`)}>
+                <InputText {...form.register('sales.minInsuranceAmount')} />
+              </InputLabel>
+
+              <InputLabel label={t(`Insurance percentage total amount`)}>
+                <InputText {...form.register('sales.insurancePercentage')} />
+              </InputLabel>
+            </FlexBox>
+          )}
         </FlexBox>
 
         <ModalFooter onSubmitPassed isLoading={loading} />

@@ -18,13 +18,11 @@ export const orderInfoBaseSchema = yup.object().shape({
 
   invoiceInfo: yup.object().shape({
     method: UUIDRefSchema,
-    expiredAt: yup.date().required('Is required field'),
-    createForOrders: yup.boolean(),
+    expireAt: yup.date(),
   }),
 
-  shipmentInfo: yup.object().shape({
+  deliveryInfo: yup.object().shape({
     method: UUIDRefSchema,
-    paymentMethod: UUIDRefSchema,
     destination: yup.object().shape({
       country: yup.string(),
       region: yup.string(),
@@ -35,5 +33,14 @@ export const orderInfoBaseSchema = yup.object().shape({
       office: yup.string(),
       district: yup.string(),
     } as Record<keyof AddressDto, any>),
+
+    invoiceInfo: yup.object().shape({
+      method: UUIDRefSchema,
+      expireAt: yup.date(),
+    }),
+  }),
+
+  shipmentInfo: yup.object().shape({
+    executeAt: yup.date(),
   }),
 });

@@ -79,22 +79,31 @@ const orderOverviewCells: OverviewCellProps<IOrder>[] = [
     tab: OrderOverviewInfoTabsEnum.General,
   },
   {
+    title: t('Reference'),
+    CellComponent: OverviewCells.Text,
+    getValue: data => data?.reference?.internal,
+    tab: OrderOverviewInfoTabsEnum.General,
+  },
+
+  {
+    title: t('Group reference'),
+    CellComponent: OverviewCells.Text,
+    getValue: data => data?.group?.reference?.internal,
+    tab: OrderOverviewInfoTabsEnum.General,
+  },
+  {
+    title: t('Group strategy'),
+    CellComponent: OverviewCells.Text,
+    getValue: data => data?.group?.strategy,
+    tab: OrderOverviewInfoTabsEnum.General,
+  },
+
+  {
     title: t('Totals'),
     CellComponent: OverviewCells.OrderTotals,
     tab: OrderOverviewInfoTabsEnum.General,
   },
-  {
-    title: t('Reference'),
-    CellComponent: OverviewCells.Text,
-    getValue: data => data?.magicLink,
-    tab: OrderOverviewInfoTabsEnum.General,
-  },
-  {
-    title: t('Group reference'),
-    CellComponent: OverviewCells.Text,
-    getValue: data => data?.group?.magicLink,
-    tab: OrderOverviewInfoTabsEnum.General,
-  },
+
   {
     title: t('Status'),
     CellComponent: OverviewCells.Text,

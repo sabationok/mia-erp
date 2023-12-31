@@ -1,6 +1,6 @@
 import { AppQueries, AppQueryParams } from '../../api';
 
-export const toQueriesFirReq = (queries: Partial<AppQueryParams>): Partial<AppQueries> => {
+export const toQueriesForReq = (queries: Partial<AppQueryParams>): Partial<AppQueries> => {
   let output: Partial<AppQueries> = {};
   Object.entries(queries).forEach(([k, v]) => {
     const newKey = `${k}Id`;

@@ -14,11 +14,8 @@ export interface IPayment extends IBase, HasMethod<ICheckoutPaymentMethod>, HasS
   invoice?: OnlyUUID;
 }
 
-export interface ICheckoutPaymentMethod extends ServiceMethodBase {
-  type?: string | MonoCheckoutMethod | LiqPayCheckoutMethodEnum;
-  service?: ExtPaymentService | null;
-  extService?: ExtPaymentService | null;
-}
+export interface ICheckoutPaymentMethod
+  extends ServiceMethodBase<string, string | MonoCheckoutMethod | LiqPayCheckoutMethodEnum, ExtPaymentService> {}
 export interface IPaymentMethodReqData {
   _id?: string;
   data?: Partial<ICheckoutPaymentMethod>;

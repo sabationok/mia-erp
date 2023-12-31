@@ -3,18 +3,18 @@ import { IntegrationTabProps } from '../InputIntegrationsTab';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import { useEffect, useMemo, useState } from 'react';
 import { Text } from '../../../atoms/Text';
-import { t } from '../../../../lang';
+import { t } from 'lang';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import FormCreateInputIntegration from '../../../Forms/integrations/FormCreateInputIntegration';
-import { InputIntegrationBase } from '../../../../types/integrations.types';
-import { useTranslatedMethodsList } from '../../../../hooks/useTranslatedMethodsList.hook';
-import { getIdRef, toQueriesFirReq } from '../../../../utils/data-transform';
+import { InputIntegrationBase } from 'types/integrations.types';
+import { useTranslatedMethodsList } from 'hooks/useTranslatedMethodsList.hook';
+import { getIdRef, toQueriesForReq } from 'utils';
 import styled from 'styled-components';
 import ExtraFooterWithButton from '../../../atoms/ExtraFooterWithButton';
 import IntegrationOverview from '../../components/IntegrationOverview';
-import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
-import { AppModuleName } from '../../../../redux/reduxTypes.types';
-import { useShipmentsSelector } from '../../../../redux/selectors.store';
+import { useAppServiceProvider } from 'hooks/useAppServices.hook';
+import { AppModuleName } from 'redux/reduxTypes.types';
+import { useShipmentsSelector } from 'redux/selectors.store';
 
 export interface DeliveryIntegrationsTabProps extends IntegrationTabProps {}
 
@@ -78,7 +78,7 @@ const DeliveryIntegrationsTab: React.FC<DeliveryIntegrationsTabProps> = ({
   useEffect(() => {
     currentServiceData &&
       service.getAll({
-        data: { type: 'input', ...toQueriesFirReq({ service: getIdRef(currentServiceData) }) },
+        data: { type: 'input', ...toQueriesForReq({ service: getIdRef(currentServiceData) }) },
         onSuccess: data => {
           setIntegrationsList(data);
         },

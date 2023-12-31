@@ -1,5 +1,5 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { IBaseDirItem, IDirItemBase } from '../../../types/dir.types';
 import { isUndefined } from 'lodash';
@@ -44,22 +44,12 @@ const DirListItem: React.FC<DirListItemProps> = props => {
     onCreateChild,
     deleted = false,
     disabled = false,
-    onChangeDisableStatus,
-    disabling = false,
     archived = false,
     onChangeArchiveStatus,
     archiving,
     editing,
     creatingChild,
   } = props;
-
-  useEffect(() => {
-    console.log({
-      onChangeDisableStatus,
-      disabling,
-    });
-    // eslint-disable-next-line
-  }, []);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [state, setState] = useState<DirListItemState>({ archived, deleted, disabled });

@@ -63,6 +63,8 @@ const Footer = styled.footer`
   border-bottom-right-radius: 2px;
   border-bottom-left-radius: 2px;
 
+  //box-shadow: 0px -3px 32.70000076293945px 0px rgba(0, 0, 0, 0.2);
+
   border-top: 1px solid ${({ theme }) => theme.modalBorderColor};
   //border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
   //border-right: 1px solid ${({ theme }) => theme.modalBorderColor};

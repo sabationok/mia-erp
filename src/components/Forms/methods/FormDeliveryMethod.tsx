@@ -18,6 +18,7 @@ import { Text } from '../../atoms/Text';
 import InputText from '../../atoms/Inputs/InputText';
 import { IBaseKeys } from '../../../redux/global.types';
 import LangButtonsGroup from '../../atoms/LangButtonsGroup';
+import { DisabledStates } from '../../../types/utils.types';
 
 export interface FormDeliveryMethodProps extends Omit<ModalFormProps<any, any, IDeliveryMethod>, 'onSubmit'> {
   _id?: string;
@@ -59,7 +60,19 @@ const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defau
     registerSelect,
     register,
     reset,
+    formValues,
+    setValue,
   } = formMethods;
+
+  const registerSwitch = (name: keyof DisabledStates) => {
+    return {
+      name,
+      value: formValues?.disabledFor ? !!formValues?.disabledFor[name] : undefined,
+      onchange: (v: boolean) => {
+        setValue(`disabledFor.${name}`, v, { shouldTouch: true });
+      },
+    };
+  };
 
   // useEffect(() => {
   //   console.log(formValues);
@@ -71,8 +84,6 @@ const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defau
         onLoading: setIsLoading,
         onError: () => {
           reset();
-          if (submitOptions.state.clear) {
-          }
         },
       });
   };
@@ -89,22 +100,43 @@ const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defau
       <Inputs>
         {defaultState?.isDefault && (
           <>
-            <InputLabel label={t('label')} error={errors.label} required>
-              <InputText placeholder={t('insertLabel')} {...register('label')} required autoFocus />
+            <InputLabel
+              label={t('label')}
+              error={errors.label}
+              disabled={formValues.isDefault}
+              required={!formValues.isDefault}
+            >
+              <InputText
+                placeholder={t('insertLabel')}
+                {...register('label')}
+                disabled={formValues.isDefault}
+                required={!formValues.isDefault}
+                autoFocus={!formValues.isDefault}
+              />
             </InputLabel>
 
-            <InputLabel label={t('Type')} error={errors.label} required>
-              <InputText placeholder={t('Type')} {...register('type')} required />
+            <InputLabel
+              label={t('Type')}
+              error={errors.label}
+              disabled={formValues.isDefault}
+              required={!formValues.isDefault}
+            >
+              <InputText
+                placeholder={t('Type')}
+                {...register('type.internal')}
+                disabled={formValues.isDefault}
+                required={!formValues.isDefault}
+              />
             </InputLabel>
           </>
         )}
 
-        <InputLabel label={t('Disabled')} error={errors.disabled}>
-          <ButtonSwitch />
+        <InputLabel label={t('Disabled for all')} error={errors.disabled}>
+          <ButtonSwitch {...registerSwitch('all')} />
         </InputLabel>
 
-        <InputLabel label={t('Disabled for client')} error={errors.disabledForClient}>
-          <ButtonSwitch />
+        <InputLabel label={t('Disabled for customer')} error={errors.disabledForClient}>
+          <ButtonSwitch {...registerSwitch('customer')} />
         </InputLabel>
 
         <BorderedBox>

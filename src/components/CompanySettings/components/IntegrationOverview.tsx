@@ -30,7 +30,7 @@ const IntegrationOverview = ({
     { title: t('Description'), value: info?.description },
     {
       title: t('Expired at'),
-      value: checks.isStr(info?.expiredAt) ? toAppDateFormat(new Date(info?.expiredAt).valueOf()) : null,
+      value: checks.isStr(info?.expireAt) ? toAppDateFormat(new Date(info?.expireAt).valueOf()) : null,
     },
   ];
 

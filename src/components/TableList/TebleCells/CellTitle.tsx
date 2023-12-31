@@ -112,13 +112,16 @@ const Content = styled.div<Omit<CellTitleContent, 'name'>>`
 `;
 
 const Top = styled(Content)<Omit<CellTitleContent, 'name'>>`
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 600;
   text-transform: uppercase;
+
+  color: ${({ theme }) => theme.accentColor.base};
 `;
 const Bottom = styled(Content)<Omit<CellTitleContent, 'name'>>`
-  font-size: 11px;
-  font-weight: 400;
+  font-size: 10px;
+
+  color: ${({ theme }) => theme.accentColor.base};
 `;
 
 const WidthChanger = styled.button`

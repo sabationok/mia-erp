@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import ModalForm from 'components/ModalForm';
 import styled from 'styled-components';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
@@ -8,7 +8,7 @@ import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../
 import DirListItem from '../Directories/DirList/DirListItem';
 import { useTranslatedMethodsList } from '../../hooks/useTranslatedMethodsList.hook';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
-import { IInvoicingMethod } from '../../types/integrations.types';
+import { IInvoicingMethod, InvoicingInternalTypeEnum } from '../../types/integrations.types';
 import { useInvoicesSelector } from '../../redux/selectors.store';
 import { UseInvoicingService } from '../../hooks/useInvoicingService.hook';
 import Forms from '../Forms';
@@ -35,8 +35,12 @@ const DirInvoicingMethods: React.FC<DirInvoicingMethodsProps> = ({
 }) => {
   const service = useAppServiceProvider()[ServiceName.invoicing];
   const methods = useTranslatedMethodsList(useInvoicesSelector().methods, { withFullLabel: true });
-
+  const [current, setCurrent] = useState<InvoicingInternalTypeEnum>();
   const modalService = useModalProvider();
+
+  const fData = useMemo(() => {
+    return methods.filter(m => m.type?.internal === current);
+  }, [current, methods]);
 
   const actions = useMemo(
     () =>
@@ -66,7 +70,7 @@ const DirInvoicingMethods: React.FC<DirInvoicingMethodsProps> = ({
 
   const renderList = useMemo(
     () =>
-      methods?.map((item, idx) => (
+      fData?.map((item, idx) => (
         <DirListItem
           key={`treeItem_${item?._id || idx}`}
           {...item}
@@ -79,7 +83,7 @@ const DirInvoicingMethods: React.FC<DirInvoicingMethodsProps> = ({
           currentLevel={0}
         />
       )),
-    [actions, methods, props]
+    [actions, fData, props]
   );
 
   useEffect(() => {
@@ -89,6 +93,7 @@ const DirInvoicingMethods: React.FC<DirInvoicingMethodsProps> = ({
 
   return (
     <StModalForm
+      fillHeight
       style={{ maxWidth: 480 }}
       {...props}
       extraFooter={
@@ -96,6 +101,7 @@ const DirInvoicingMethods: React.FC<DirInvoicingMethodsProps> = ({
           <ExtraFooterWithButton buttonText={createParentTitle || 'Create parent'} onClick={actions?.onCreateParent} />
         )
       }
+      onOptSelect={option => setCurrent(option.value)}
     >
       <FlexBox fillWidth flex={1} gap={8} padding={'8px 4px'}>
         {renderList}

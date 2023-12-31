@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 import TableHeadRow from './TableRows/TableHeadRow';
 
-export interface TableHeadProps {
-}
+export interface TableHeadProps {}
 
 const TableHead: React.FC<TableHeadProps> = () => {
   return (
@@ -17,7 +16,9 @@ const THead = styled.div`
   left: 0;
   z-index: 20;
 
-  background-color: ${({ theme }) => theme.tableHeaderBackground};
+  //background-color: ${({ theme }) => theme.tableHeaderBackground};
+
+  background-color: ${({ theme }) => theme.accentColor.extraLight};
 `;
 
 export default TableHead;

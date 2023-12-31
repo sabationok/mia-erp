@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import LogoSvg from 'components/Layout/LogoSvg';
@@ -10,8 +10,8 @@ import { useForm } from 'react-hook-form';
 import InputText from '../atoms/Inputs/InputText';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { toast } from 'react-toastify';
 import SecurityInputControlHOC from '../atoms/Inputs/SecurityInputControlHOC';
+import { ToastService } from '../../services';
 
 export interface Props {
   helloTitle?: string;
@@ -48,6 +48,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
   const authService = useAuthService();
   const navigate = useNavigate();
 
+  const [isLogging, setIsLogging] = useState(false);
+
   const {
     register,
     formState: { errors, isValid },
@@ -70,24 +72,24 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
       authService.loginUser({
         data,
         onSuccess() {
-          toast.success('Login success');
+          ToastService.success('Login success');
         },
         onError() {
-          toast.error('Login error');
+          ToastService.error('Login error');
         },
-        onLoading() {},
+        onLoading: setIsLogging,
       });
     registration &&
       authService.registerUser({
         data,
         onSuccess() {
           navigate('/auth/logIn');
-          toast.success('Registration success');
+          ToastService.success('Registration success');
         },
         onError() {
-          toast.error('Registration error');
+          ToastService.error('Registration error');
         },
-        onLoading() {},
+        onLoading: setIsLogging,
       });
   }
 
@@ -154,7 +156,13 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
       </Inputs>
 
       <Buttons>
-        <StButtonIcon type="submit" textTransform="uppercase" variant="filledSmall" disabled={disableSubmit}>
+        <StButtonIcon
+          type="submit"
+          textTransform="uppercase"
+          variant="filledSmall"
+          disabled={disableSubmit}
+          isLoading={isLogging}
+        >
           {registration ? 'Зареєструватись' : 'Увійти'}
         </StButtonIcon>
 

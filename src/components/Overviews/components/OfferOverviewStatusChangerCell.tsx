@@ -86,8 +86,8 @@ export const OfferOverviewStatusChangerCell: RenderOverviewCellComponent<IProduc
           <CellStyledComp.Tag
             style={{
               alignSelf: 'flex-end',
-              borderColor: currentStatusData?.backgroundColor,
-              backgroundColor: currentStatusData?.backgroundColor,
+              borderColor: currentStatusData?.colorSecondary,
+              backgroundColor: currentStatusData?.colorSecondary,
             }}
           >
             <CellStyledComp.CellText $isTitle={!current} $weight={600} $align={'right'}>

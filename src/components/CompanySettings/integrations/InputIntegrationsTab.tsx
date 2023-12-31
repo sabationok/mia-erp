@@ -9,6 +9,7 @@ import CommunicationIntegrationsTab from './nested_tabs/CommunicationIntegration
 import ModalFilter from '../../atoms/ModalFilter';
 import FlexBox from '../../atoms/FlexBox';
 import { useExtServicesQuery } from './useExtServicesQuery.hook';
+import FiscalizationIntegrationsTab from './nested_tabs/FiscalizationIntegrationsTab';
 
 export interface InputIntegrationsTabProps {}
 
@@ -20,7 +21,7 @@ export interface IntegrationTabProps {
   infoVisible?: boolean;
 }
 
-const ExtServiceTabs = _.pick(ExternalServiceTypeEnum, ['invoicing', 'delivery', 'communication']);
+const ExtServiceTabs = _.pick(ExternalServiceTypeEnum, ['invoicing', 'delivery', 'communication', 'fiscalization']);
 const tabs = enumToFilterOptions(ExtServiceTabs);
 
 const tabsMap: Record<
@@ -30,6 +31,7 @@ const tabsMap: Record<
   [ExtServiceTabs.invoicing]: InvoicingIntegrationsTab,
   [ExtServiceTabs.delivery]: DeliveryIntegrationsTab,
   [ExtServiceTabs.communication]: CommunicationIntegrationsTab,
+  [ExtServiceTabs.fiscalization]: FiscalizationIntegrationsTab,
 };
 
 const InputIntegrationsTab: React.FC<InputIntegrationsTabProps> = ({ ...props }) => {
@@ -39,11 +41,11 @@ const InputIntegrationsTab: React.FC<InputIntegrationsTabProps> = ({ ...props })
   const { loadExtServices, extServProviders } = useExtServicesQuery();
 
   const providers = useMemo(() => {
-    return extServProviders.filter(prov => prov?.originServices && prov?.originServices[currentType]);
+    return extServProviders.filter(prov => prov?.services && prov.services.includes(currentType));
   }, [currentType, extServProviders]);
 
   const currentServiceData = useMemo(() => {
-    return providers?.find(pr => pr.value === providerType);
+    return providers?.find(pr => pr.provider === providerType);
   }, [providerType, providers]);
 
   const TabComponent = useMemo(() => tabsMap[currentType], [currentType]);
@@ -63,15 +65,23 @@ const InputIntegrationsTab: React.FC<InputIntegrationsTabProps> = ({ ...props })
 
   useEffect(() => {
     if (!providerType && providers) {
-      providers[0] && setProviderType(providers[0]?.value);
+      providers[0] && setProviderType(providers[0]?.provider);
     }
   }, [providerType, providers]);
 
   return (
     <>
-      <ModalFilter filterOptions={tabs} onOptSelect={info => setCurrentType(info?.value)} />
+      <ModalFilter
+        filterOptions={tabs}
+        onOptSelect={info => setCurrentType(info?.value)}
+        optionProps={{ fitContentH: true }}
+      />
 
-      <ModalFilter filterOptions={providers} onFilterValueSelect={info => setProviderType(info.value)} />
+      <ModalFilter
+        filterOptions={providers.map(el => ({ ...el, value: el.provider }))}
+        onFilterValueSelect={info => setProviderType(info.value)}
+        optionProps={{ fitContentH: true }}
+      />
 
       <Container flex={1} fillWidth overflow={'hidden'}>
         <TabComponent compId={currentType} providers={providers} currentService={currentServiceData} infoVisible />
