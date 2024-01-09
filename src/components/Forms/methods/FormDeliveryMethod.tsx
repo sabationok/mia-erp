@@ -131,11 +131,11 @@ const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defau
           </>
         )}
 
-        <InputLabel label={t('Disabled for all')} error={errors.disabled}>
+        <InputLabel label={t('Disabled for all')} error={errors?.disabledFor?.all}>
           <ButtonSwitch {...registerSwitch('all')} />
         </InputLabel>
 
-        <InputLabel label={t('Disabled for customer')} error={errors.disabledForClient}>
+        <InputLabel label={t('Disabled for customer')} error={errors?.disabledFor?.customer}>
           <ButtonSwitch {...registerSwitch('customer')} />
         </InputLabel>
 

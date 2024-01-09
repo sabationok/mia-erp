@@ -29,9 +29,7 @@ import {
 } from '../../../../redux/selectors.store';
 import * as fns from 'date-fns';
 import { toInputValueDate } from '../../../../utils';
-import ButtonsGroup from '../../../atoms/ButtonsGroup';
-import { invMethodCategoryFilterOptions } from '../../../../data/invoicing.data';
-import { InvoicingInternalTypeEnum } from '../../../../types/integrations.types';
+import { PaymentInternalTypeEnum } from '../../../../types/integrations.types';
 
 export interface OrderInfoStepProps extends FormOrderStepBaseProps {
   isGroup?: boolean;
@@ -60,9 +58,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
     watch,
     trigger,
   } = useOrderInfoForm();
-  const [intMethodType, setIntMethodType] = useState<InvoicingInternalTypeEnum>(
-    InvoicingInternalTypeEnum.externalService
-  );
+  const [intMethodType, setIntMethodType] = useState<PaymentInternalTypeEnum>(PaymentInternalTypeEnum.externalService);
 
   const formValues = watch();
 
@@ -86,7 +82,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
   const hasImposedPayment = useMemo(() => {
     return (
       formValues.invoiceInfo?.method?.type?.internal &&
-      [InvoicingInternalTypeEnum.imposedPayment, InvoicingInternalTypeEnum.bonuses_imposedPayment].includes(
+      [PaymentInternalTypeEnum.imposedPayment, PaymentInternalTypeEnum.bonuses_imposedPayment].includes(
         formValues.invoiceInfo?.method?.type?.internal
       )
     );
@@ -182,14 +178,13 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
               <BorderedBox fillWidth overflow={'hidden'}>
                 <InputLabel label={t('Communication methods')}>
                   <TagButtonsFilter
-                    multiple
                     numColumns={2}
-                    values={formValues?.communication?.customer}
+                    values={[formValues?.communication?.customer?._id ?? '']}
                     resetButtonLabel={t('Not needed')}
                     options={communicationMethodsList}
                     resetButtonPosition={'start'}
-                    onChange={value => {
-                      handleOnChangeValue('communication.customer', value);
+                    onSelectValue={({ value }) => {
+                      handleOnChangeValue('communication.customer', { _id: value });
                     }}
                   />
                 </InputLabel>
@@ -249,14 +244,13 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
                 <BorderedBox fillWidth>
                   <InputLabel label={t('Communication methods')}>
                     <TagButtonsFilter
-                      multiple
                       numColumns={2}
-                      values={formValues?.communication?.receiver}
+                      values={[formValues?.communication?.receiver?._id ?? '']}
                       resetButtonLabel={t('Without')}
                       options={communicationMethodsList.map(mtd => ({ ...mtd, value: mtd._id }))}
                       resetButtonPosition={'start'}
-                      onChange={value => {
-                        handleOnChangeValue('communication.receiver', value);
+                      onSelectValue={({ value }) => {
+                        handleOnChangeValue('communication.receiver', { _id: value });
                       }}
                     />
                   </InputLabel>
@@ -397,45 +391,45 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
           open
           renderHeader={<AccordionItemTitle title={t('Invoicing')} />}
         >
-          <ButtonsGroup
-            options={invMethodCategoryFilterOptions}
-            currentOption={{ value: intMethodType }}
-            onChangeIndex={i => setIntMethodType(invMethodCategoryFilterOptions[i].value)}
-          />
+          {/*<ButtonsGroup*/}
+          {/*  options={invMethodCategoryFilterOptions}*/}
+          {/*  currentOption={{ value: intMethodType }}*/}
+          {/*  onChangeIndex={i => setIntMethodType(invMethodCategoryFilterOptions[i].value)}*/}
+          {/*/>*/}
 
-          <InputLabel label={t('Method')} required>
-            <CheckboxesListSelector
-              options={filteredInvMethods}
-              currentOption={formValues?.invoiceInfo?.method}
-              onChangeIndex={i => {
-                handleOnChangeValue('invoiceInfo.method', invoicingMethods[i]);
-              }}
-              renderLabel={
-                intMethodType === InvoicingInternalTypeEnum.bankTransfer
-                  ? info => {
-                      return (
-                        <FlexBox gap={4}>
-                          <Text $size={11} $weight={600}>
-                            {t('IBAN')}
-                          </Text>
-                          <Text $size={13}>{info.option?.bankAccount?.iban}</Text>
+          {/*<InputLabel label={t('Method')} required>*/}
+          {/*  <CheckboxesListSelector*/}
+          {/*    options={filteredInvMethods}*/}
+          {/*    currentOption={formValues?.invoiceInfo?.method}*/}
+          {/*    onChangeIndex={i => {*/}
+          {/*      handleOnChangeValue('invoiceInfo.method', invoicingMethods[i]);*/}
+          {/*    }}*/}
+          {/*    renderLabel={*/}
+          {/*      intMethodType === PaymentInternalTypeEnum.bankTransfer*/}
+          {/*        ? info => {*/}
+          {/*            return (*/}
+          {/*              <FlexBox gap={4}>*/}
+          {/*                <Text $size={11} $weight={600}>*/}
+          {/*                  {t('IBAN')}*/}
+          {/*                </Text>*/}
+          {/*                <Text $size={13}>{info.option?.bankAccount?.iban}</Text>*/}
 
-                          <Text $size={11} $weight={600}>
-                            {t('Tax code')}
-                          </Text>
-                          <Text $size={13}>{info.option?.bankAccount?.taxId ?? '---'}</Text>
+          {/*                <Text $size={11} $weight={600}>*/}
+          {/*                  {t('Tax code')}*/}
+          {/*                </Text>*/}
+          {/*                <Text $size={13}>{info.option?.bankAccount?.taxId ?? '---'}</Text>*/}
 
-                          <Text $size={11} $weight={600}>
-                            {t('Bank')}
-                          </Text>
-                          <Text $size={13}>{info.option?.bankAccount?.bank?.label ?? '---'}</Text>
-                        </FlexBox>
-                      );
-                    }
-                  : null
-              }
-            />
-          </InputLabel>
+          {/*                <Text $size={11} $weight={600}>*/}
+          {/*                  {t('Bank')}*/}
+          {/*                </Text>*/}
+          {/*                <Text $size={13}>{info.option?.bankAccount?.bank?.label ?? '---'}</Text>*/}
+          {/*              </FlexBox>*/}
+          {/*            );*/}
+          {/*          }*/}
+          {/*        : null*/}
+          {/*    }*/}
+          {/*  />*/}
+          {/*</InputLabel>*/}
 
           <InputLabel label={t('Expired at')} required>
             <InputText

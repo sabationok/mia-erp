@@ -16,7 +16,6 @@ import { IBaseKeys } from '../../../redux/global.types';
 import * as yup from 'yup';
 import styled from 'styled-components';
 import { useTransactionsSelector } from '../../../redux/selectors.store';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { DisabledStates } from '../../../types/utils.types';
 
 export interface FormInvoicingMethodProps {}
@@ -123,11 +122,11 @@ const FormInvoicingMethod: React.FC<FormInvoicingMethodProps> = ({ onSubmit, def
           </>
         )}
 
-        <InputLabel label={t('Disabled')} error={errors.disabled}>
+        <InputLabel label={t('Disabled')} error={errors?.disabledFor?.all}>
           <ButtonSwitch {...registerSwitch('all')} />
         </InputLabel>
 
-        <InputLabel label={t('Disabled for customer')} error={errors.disabledForClient}>
+        <InputLabel label={t('Disabled for customer')} error={errors?.disabledFor?.customer}>
           <ButtonSwitch {...registerSwitch('customer')} />
         </InputLabel>
 
@@ -137,13 +136,13 @@ const FormInvoicingMethod: React.FC<FormInvoicingMethodProps> = ({ onSubmit, def
           </Text>
         </BorderedBox>
 
-        <CustomSelect
-          {...registerSelect('bankAccount', {
-            label: t('Recipient bank account'),
-            placeholder: t('Select recipient bank account'),
-          })}
-          options={bankAccounts}
-        />
+        {/*<CustomSelect*/}
+        {/*  {...registerSelect('bankAccount', {*/}
+        {/*    label: t('Recipient bank account'),*/}
+        {/*    placeholder: t('Select recipient bank account'),*/}
+        {/*  })}*/}
+        {/*  options={bankAccounts}*/}
+        {/*/>*/}
 
         <FlexBox fxDirection={'row'} gap={8}>
           {/*<InputLabel label={t('Min cost for delivery')} error={errors?.invoicing?.minCost?.delivery}>*/}

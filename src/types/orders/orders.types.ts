@@ -100,30 +100,27 @@ export interface IOrder
     HasExecuteDate,
     HasStatus<OrderStatusEnum>,
     HasEmbeddedReferences<string, string> {
-  group?: IOrdersGroup;
+  group?: MaybeNull<IOrdersGroup>;
 
   number?: MaybeNull<number>;
 
-  receiver?: ICustomerBase;
-  customer?: ICustomerBase;
+  receiver?: MaybeNull<ICustomerBase>;
+  customer?: MaybeNull<ICustomerBase>;
 
-  barCode?: string;
-  code?: string;
+  barCode?: MaybeNull<string>;
+  code?: MaybeNull<string>;
 
   communication?: {
-    customer?: ICommunicationMethod[];
-    receiver?: ICommunicationMethod[];
+    customer?: MaybeNull<ICommunicationMethod>;
+    receiver?: MaybeNull<ICommunicationMethod>;
   };
 
-  total?: OrderTotals;
-
-  payments?: IPayment[];
-
-  invoices?: IInvoice[];
-
-  deliveries?: IDelivery[];
+  total?: MaybeNull<OrderTotals>;
 
   slots?: IOrderSlot[];
+  invoices?: IInvoice[];
+  payments?: IPayment[];
+  deliveries?: IDelivery[];
 }
 
 export interface ICreateOrdersGroupFormState {

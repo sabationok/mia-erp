@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import _ from 'lodash';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import { ExternalServiceTypeEnum, ExtServiceBase } from '../../../types/integrations.types';
-import InvoicingIntegrationsTab from './nested_tabs/InvoicingIntegrationsTab';
+import PaymentIntegrationsTab from './nested_tabs/PaymentIntegrationsTab';
 import DeliveryIntegrationsTab from './nested_tabs/DeliveryIntegrationsTab';
 import CommunicationIntegrationsTab from './nested_tabs/CommunicationIntegrationsTab';
 import ModalFilter from '../../atoms/ModalFilter';
@@ -21,14 +21,14 @@ export interface IntegrationTabProps {
   infoVisible?: boolean;
 }
 
-const ExtServiceTabs = _.pick(ExternalServiceTypeEnum, ['invoicing', 'delivery', 'communication', 'fiscalization']);
+const ExtServiceTabs = _.pick(ExternalServiceTypeEnum, ['payment', 'delivery', 'communication', 'fiscalization']);
 const tabs = enumToFilterOptions(ExtServiceTabs);
 
 const tabsMap: Record<
   ExternalServiceTypeEnum | string,
   <P = any>(props: IntegrationTabProps & P) => ReactElement<P> | null
 > = {
-  [ExtServiceTabs.invoicing]: InvoicingIntegrationsTab,
+  [ExtServiceTabs.payment]: PaymentIntegrationsTab,
   [ExtServiceTabs.delivery]: DeliveryIntegrationsTab,
   [ExtServiceTabs.communication]: CommunicationIntegrationsTab,
   [ExtServiceTabs.fiscalization]: FiscalizationIntegrationsTab,
@@ -63,24 +63,27 @@ const InputIntegrationsTab: React.FC<InputIntegrationsTabProps> = ({ ...props })
     // eslint-disable-next-line
   }, []);
 
+  const filteredProviders = useMemo(() => providers.map(el => ({ ...el, value: el.provider })), [providers]);
+
   useEffect(() => {
     if (!providerType && providers) {
       providers[0] && setProviderType(providers[0]?.provider);
     }
-  }, [providerType, providers]);
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <>
       <ModalFilter
+        optionProps={{ fitContentH: true }}
         filterOptions={tabs}
         onOptSelect={info => setCurrentType(info?.value)}
-        optionProps={{ fitContentH: true }}
       />
 
       <ModalFilter
-        filterOptions={providers.map(el => ({ ...el, value: el.provider }))}
-        onFilterValueSelect={info => setProviderType(info.value)}
         optionProps={{ fitContentH: true }}
+        filterOptions={filteredProviders}
+        onOptSelect={info => setProviderType(info?.value)}
       />
 
       <Container flex={1} fillWidth overflow={'hidden'}>

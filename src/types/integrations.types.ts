@@ -147,7 +147,7 @@ export interface OutputIntegrationDto extends IntegrationBaseDto {
 }
 
 export interface ExtPaymentService extends ExtServiceBase {
-  methods?: ICheckoutPaymentMethod[];
+  methods?: IPaymentMethod[];
 }
 export interface ExtInvoicingService extends ExtServiceBase {
   methods?: IInvoicingMethod[];
@@ -163,14 +163,11 @@ export interface ServiceMethodBase<
   ExternalType extends string = any,
   Service extends ExtServiceBase = any
 > extends IBase,
-    HasBaseCmsConfigs,
     HasLabel,
     HasEmbeddedType<InternalType, ExternalType>,
-    HasDisabledAttributes {
-  labels?: LangPack;
+    HasDisabledAttributes,
+    HasBaseCmsConfigs {
   isDefault?: boolean;
-  disabled?: boolean;
-  disabledForClient?: boolean;
 
   service?: MaybeNull<Service>;
   extService?: MaybeNull<Service>;
@@ -180,15 +177,14 @@ export interface IMethodReqData<DtoLike = any> {
   data?: Omit<DtoLike, IBaseKeys | 'isDefault' | 'service' | 'extService'>;
   params?: Pick<AppQueryParams, 'disabled' | 'isDefault' | 'disabledForClient'>;
 }
-export enum InvoicingInternalTypeEnum {
-  // hold = 'hold',
-  // debit = 'debit',
-  // pay = 'pay',
-
+export enum PaymentInternalTypeEnum {
   postTransfer = 'postTransfer',
 
   bankTransfer = 'bankTransfer',
   externalService = 'externalService',
+  paymentService = 'paymentService',
+  cashbackService = 'cashbackService',
+  bonusesService = 'bonusesService',
   imposedPayment = 'imposedPayment',
 
   afterPay = 'afterPay',
@@ -213,12 +209,10 @@ export interface ICommunicationMethodReqData extends IMethodReqData<ICommunicati
 // * INVOICING
 export interface IInvoicingMethod
   extends ServiceMethodBase<
-    InvoicingInternalTypeEnum,
+    PaymentInternalTypeEnum,
     MonoInvoicingTypeEnum | LiqPayInvoicingTypeEnum,
     ExtInvoicingService
-  > {
-  bankAccount?: MaybeNull<IBankAccount>;
-}
+  > {}
 export interface IInvoicingMethodReqData extends IMethodReqData<IInvoicingMethod> {}
 // * DELIVERY
 export interface IDeliveryMethodInvoicingPolicy {
@@ -226,20 +220,38 @@ export interface IDeliveryMethodInvoicingPolicy {
   minCost?: { delivery?: number; return?: number };
 }
 export interface IDeliveryMethod extends ServiceMethodBase<string, string, ExtDeliveryService> {
-  invoicing?: IDeliveryMethodInvoicingPolicy;
+  // invoicing?: IDeliveryMethodInvoicingPolicy;
 }
 
+export interface IDeliveryMethodPaymentPolicy {
+  minCost?: MaybeNull<{
+    delivery: MaybeNull<number>;
+
+    return: MaybeNull<number>;
+  }>;
+}
 export interface IDeliveryMethodDto
   extends Partial<Omit<IDeliveryMethod, IBaseKeys | 'isDefault' | 'invoicing' | 'service' | 'extService'>> {
-  invoicing?: Pick<IDeliveryMethodInvoicingPolicy, 'minCost'> & { method?: OnlyUUID };
+  // invoicing?: Pick<IDeliveryMethodInvoicingPolicy, 'minCost'> & { method?: OnlyUUID };
+  duration?: MaybeNull<number>;
+  paymentPolicy?: IDeliveryMethodPaymentPolicy;
+  commissionSender?: MaybeNull<number>;
+  commissionReceiver?: MaybeNull<number>;
 }
 
 export interface IDeliveryMethodReqData extends IMethodReqData<IDeliveryMethodDto> {}
 
 // * PAYMENT CHECKOUT
-export interface ICheckoutPaymentMethod
-  extends ServiceMethodBase<string, string | MonoCheckoutMethod | LiqPayCheckoutMethodEnum, ExtDeliveryService> {}
-export interface IPaymentMethodReqData extends IMethodReqData<ICheckoutPaymentMethod> {}
+export interface IPaymentMethod
+  extends ServiceMethodBase<
+    PaymentInternalTypeEnum,
+    string | MonoCheckoutMethod | LiqPayCheckoutMethodEnum,
+    ExtDeliveryService
+  > {
+  bankAccount?: MaybeNull<IBankAccount>;
+  card?: MaybeNull<{ holder?: string; mask?: string }>;
+}
+export interface IPaymentMethodReqData extends IMethodReqData<IPaymentMethod> {}
 
 export enum PaymentCheckoutEnum {
   // * liqpay

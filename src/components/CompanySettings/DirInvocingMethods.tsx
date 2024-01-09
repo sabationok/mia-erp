@@ -8,7 +8,7 @@ import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../
 import DirListItem from '../Directories/DirList/DirListItem';
 import { useTranslatedMethodsList } from '../../hooks/useTranslatedMethodsList.hook';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
-import { IInvoicingMethod, InvoicingInternalTypeEnum } from '../../types/integrations.types';
+import { IInvoicingMethod, PaymentInternalTypeEnum } from '../../types/integrations.types';
 import { useInvoicesSelector } from '../../redux/selectors.store';
 import { UseInvoicingService } from '../../hooks/useInvoicingService.hook';
 import Forms from '../Forms';
@@ -35,8 +35,8 @@ const DirInvoicingMethods: React.FC<DirInvoicingMethodsProps> = ({
 }) => {
   const service = useAppServiceProvider()[ServiceName.invoicing];
   const methods = useTranslatedMethodsList(useInvoicesSelector().methods, { withFullLabel: true });
-  const [current, setCurrent] = useState<InvoicingInternalTypeEnum>();
   const modalService = useModalProvider();
+  const [current, setCurrent] = useState<PaymentInternalTypeEnum>();
 
   const fData = useMemo(() => {
     return methods.filter(m => m.type?.internal === current);

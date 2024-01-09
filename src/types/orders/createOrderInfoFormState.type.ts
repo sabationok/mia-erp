@@ -1,8 +1,8 @@
 import { ICustomerBase } from '../customers.types';
 import { IUserBase } from '../auth.types';
-import { AddressDto, IFormDataValueWithID } from '../../redux/global.types';
+import { AddressDto, IFormDataValueWithID, OnlyUUID } from '../../redux/global.types';
 import { AppDate, FormDataLocationRefs, HasEmbeddedType } from '../utils.types';
-import { InvoicingInternalTypeEnum } from '../integrations.types';
+import { PaymentInternalTypeEnum } from '../integrations.types';
 
 export interface ICreateOrderInfoFormState {
   customer?: ICustomerBase;
@@ -14,12 +14,12 @@ export interface ICreateOrderInfoFormState {
   };
 
   communication?: {
-    customer?: string[];
-    receiver?: string[];
+    customer?: OnlyUUID;
+    receiver?: OnlyUUID;
   };
 
   invoiceInfo?: {
-    method?: IFormDataValueWithID & HasEmbeddedType<InvoicingInternalTypeEnum>;
+    method?: IFormDataValueWithID & HasEmbeddedType<PaymentInternalTypeEnum>;
     expireAt?: AppDate;
   };
 
@@ -47,7 +47,7 @@ export interface ICreateOrderInfoFormState {
     };
 
     invoiceInfo?: {
-      method?: IFormDataValueWithID & HasEmbeddedType<InvoicingInternalTypeEnum>;
+      method?: IFormDataValueWithID & HasEmbeddedType<PaymentInternalTypeEnum>;
       expireAt?: AppDate;
     };
   };

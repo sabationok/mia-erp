@@ -1,12 +1,12 @@
 import { useAppDispatch } from '../redux/store.store';
 import { useMemo } from 'react';
 import { ServiceDispatcherAsync } from '../redux/global.types';
-import { ICheckoutPaymentMethod, IPaymentMethodReqData } from '../types/payments.types';
 import { getAllPaymentMethodsThunk } from '../redux/payments/payments.thunks';
-import { defaultThunkPayload } from '../utils/fabrics';
+import { defaultThunkPayload } from '../utils';
+import { IPaymentMethod, IPaymentMethodReqData } from '../types/integrations.types';
 
 export interface UsePaymentsService {
-  getAllMethods: ServiceDispatcherAsync<IPaymentMethodReqData, ICheckoutPaymentMethod[]>;
+  getAllMethods: ServiceDispatcherAsync<IPaymentMethodReqData, IPaymentMethod[]>;
 }
 const usePaymentsServiceHook = () => {
   const dispatch = useAppDispatch();

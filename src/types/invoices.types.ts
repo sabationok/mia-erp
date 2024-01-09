@@ -5,6 +5,7 @@ import {
   AppDate,
   HasAmount,
   HasEmbeddedError,
+  HasEmbeddedReferences,
   HasEmbeddedStatus,
   HasExpireDate,
   HasIsValidFlag,
@@ -77,9 +78,9 @@ export interface IInvoice
     HasAmount,
     HasMethod<IInvoicingMethod>,
     HasExpireDate,
+    HasEmbeddedReferences,
     HasInvoiceSummary,
     HasInvoiceDateInfo,
-    HasInvoiceStatusInfo,
     HasIsValidFlag,
     HasEmbeddedStatus<InvoiceStatusInfo>,
     HasEmbeddedError<InvoiceErrorInfo> {

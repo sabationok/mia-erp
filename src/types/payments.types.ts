@@ -1,25 +1,59 @@
 import { IBase, OnlyUUID } from '../redux/global.types';
-import { AppQueryParams } from '../api';
+import { IPaymentMethod } from './integrations.types';
 import {
-  ExtPaymentService,
-  LiqPayCheckoutMethodEnum,
-  MonoCheckoutMethod,
-  ServiceMethodBase,
-} from './integrations.types';
-import { HasMethod, HasStatus, MaybeNull } from './utils.types';
+  HasEmbeddedError,
+  HasEmbeddedReferences,
+  HasEmbeddedStatus,
+  HasExpireDate,
+  HasMethod,
+  MaybeNull,
+} from './utils.types';
+import { CurrencyCode } from './finances/transactions.types';
 
-export interface IPayment extends IBase, HasMethod<ICheckoutPaymentMethod>, HasStatus {
-  amount?: number;
-
-  invoice?: OnlyUUID;
+export enum PaymentInternalStatusEnum {
+  created = 'created',
+  confirmed = 'confirmed',
+  in_hold = 'in_hold',
+  awaiting_manager_confirmation = 'awaiting_manager_confirmation',
+  awaiting_bank_confirmation = 'awaiting_bank_confirmation',
+}
+export interface PaymentStatusInfo {
+  internal?: MaybeNull<PaymentInternalStatusEnum>;
+  external?: MaybeNull<string>;
 }
 
-export interface ICheckoutPaymentMethod
-  extends ServiceMethodBase<string, string | MonoCheckoutMethod | LiqPayCheckoutMethodEnum, ExtPaymentService> {}
-export interface IPaymentMethodReqData {
-  _id?: string;
-  data?: Partial<ICheckoutPaymentMethod>;
-  params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>;
+export interface PaymentErrorInfo {
+  internal?: MaybeNull<string>;
+  external?: MaybeNull<string>;
+}
+
+export interface PaymentCommissionInfo {
+  agent?: MaybeNull<number>;
+  recipient?: MaybeNull<number>;
+}
+
+export interface IPayment
+  extends IBase,
+    HasMethod<IPaymentMethod>,
+    HasExpireDate,
+    HasEmbeddedReferences,
+    HasEmbeddedStatus<PaymentStatusInfo>,
+    HasEmbeddedError<PaymentErrorInfo> {
+  amountStart?: MaybeNull<number>;
+  amountEnd?: MaybeNull<number>;
+
+  commission?: MaybeNull<PaymentCommissionInfo>;
+  card?: MaybeNull<any>;
+  currency?: MaybeNull<CurrencyCode>;
+
+  invoice?: OnlyUUID;
+
+  x_url?: MaybeNull<{
+    payment?: MaybeNull<string>;
+    redirect?: MaybeNull<string>;
+    webHook?: MaybeNull<string>;
+    taxRecipe?: MaybeNull<string>;
+  }>;
 }
 
 export interface HasPayment {

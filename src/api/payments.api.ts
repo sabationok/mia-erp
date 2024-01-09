@@ -2,7 +2,8 @@ import baseApi from './baseApi';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import { AppResponse } from '../redux/global.types';
-import { ICheckoutPaymentMethod, IPayment, IPaymentMethodReqData } from '../types/payments.types';
+import { IPayment } from '../types/payments.types';
+import { IPaymentMethod, IPaymentMethodReqData } from '../types/integrations.types';
 
 export default class PaymentsApi {
   private static api = baseApi;
@@ -16,10 +17,10 @@ export default class PaymentsApi {
   }
   public static getAllMethods(
     params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>
-  ): Promise<AppResponse<ICheckoutPaymentMethod[]>> {
+  ): Promise<AppResponse<IPaymentMethod[]>> {
     return this.api.get(this.endpoints.getAllMethods(), { params });
   }
-  public static updateMethod(args?: IPaymentMethodReqData): Promise<AppResponse<ICheckoutPaymentMethod>> {
+  public static updateMethod(args?: IPaymentMethodReqData): Promise<AppResponse<IPaymentMethod>> {
     return this.api.patch(this.endpoints.updateMethod(args?._id), args?.data, { params: args?.params });
   }
 }

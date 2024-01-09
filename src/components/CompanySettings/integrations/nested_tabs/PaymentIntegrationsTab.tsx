@@ -3,22 +3,22 @@ import { IntegrationTabProps } from '../InputIntegrationsTab';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import { useEffect, useMemo, useState } from 'react';
 import { Text } from '../../../atoms/Text';
-import { t } from '../../../../lang';
+import { t } from 'lang';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import FormCreateInputIntegration from '../../../Forms/integrations/FormCreateInputIntegration';
-import { InputIntegrationBase } from '../../../../types/integrations.types';
-import { useTranslatedMethodsList } from '../../../../hooks/useTranslatedMethodsList.hook';
-import { getIdRef, toQueriesForReq } from '../../../../utils/data-transform';
+import { InputIntegrationBase } from 'types/integrations.types';
+import { useTranslatedMethodsList } from 'hooks/useTranslatedMethodsList.hook';
+import { getIdRef, toQueriesForReq } from 'utils';
 import styled from 'styled-components';
 import ExtraFooterWithButton from '../../../atoms/ExtraFooterWithButton';
-import { useCheckoutPaymentsSelector, useInvoicesSelector } from '../../../../redux/selectors.store';
-import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
-import { AppModuleName } from '../../../../redux/reduxTypes.types';
+import { usePaymentsSelector } from 'redux/selectors.store';
+import { useAppServiceProvider } from 'hooks/useAppServices.hook';
+import { AppModuleName } from 'redux/reduxTypes.types';
 import InputIntegrationsList from '../../components/InputIntegrationsList';
 
-export interface InvoicingIntegrationsTabProps extends IntegrationTabProps {}
+export interface PaymentIntegrationsTabProps extends IntegrationTabProps {}
 
-const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
+const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
   providers,
   onClose,
   compId,
@@ -30,8 +30,7 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
   const [integrationsList, setIntegrationsList] = useState<InputIntegrationBase[]>([]);
   const modalS = useModalService();
   const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);
-  const checkoutMethods = useTranslatedMethodsList(useCheckoutPaymentsSelector().methods);
-  const invoicingMethods = useTranslatedMethodsList(useInvoicesSelector().methods);
+  const checkoutMethods = useTranslatedMethodsList(usePaymentsSelector().methods);
   const handleToggleListVisibility = () => setIsListVisible(p => !p);
 
   const onOpenModalPress = () => {
@@ -46,23 +45,7 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
       });
   };
 
-  const renderInvoicingMethods = useMemo(() => {
-    const methods = invoicingMethods.filter(m => {
-      return m.service?._id === currentServiceData?._id;
-    });
-
-    return methods.length === 0
-      ? null
-      : methods.map(m => {
-          return (
-            <FlexBox key={m._id} border={'1px solid lightgrey'} padding={'4px 6px'} borderRadius={'4px'}>
-              <Text $size={10}>{m.label}</Text>
-            </FlexBox>
-          );
-        });
-  }, [currentServiceData?._id, invoicingMethods]);
-
-  const renderCheckoutMethods = useMemo(() => {
+  const renderPaymentMethods = useMemo(() => {
     const methods = checkoutMethods.filter(m => {
       return m.service?._id === currentServiceData?._id;
     });
@@ -90,19 +73,11 @@ const InvoicingIntegrationsTab: React.FC<InvoicingIntegrationsTabProps> = ({
     <FlexBox fillWidth flex={1} overflow={'hidden'}>
       <List overflow={'hidden'} isVisible={isListVisible} fillWidth>
         <Text $size={11} $weight={600} $margin={'4px 8px'}>
-          {t('Invoicing methods')}
+          {t('Payment methods')}
         </Text>
 
         <FlexBox fxDirection={'row'} padding={'4px 2px'} flexWrap={'wrap'} gap={4} fillWidth>
-          {renderInvoicingMethods}
-        </FlexBox>
-
-        <Text $size={11} $weight={600} $margin={'4px 8px'}>
-          {t('Payment checkout services')}
-        </Text>
-
-        <FlexBox fxDirection={'row'} padding={'4px 2px'} flexWrap={'wrap'} gap={4} fillWidth>
-          {renderCheckoutMethods}
+          {renderPaymentMethods}
         </FlexBox>
 
         {/*<Text $size={11} $weight={600} $margin={'4px 8px'}>*/}
@@ -149,4 +124,4 @@ const List = styled(FlexBox)<{ isVisible?: boolean }>`
   transition: all ${p => p.theme.globals.timingFnLong};
 `;
 
-export default InvoicingIntegrationsTab;
+export default PaymentIntegrationsTab;

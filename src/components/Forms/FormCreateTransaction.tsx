@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useMemo, useState } from 'react';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import styled from 'styled-components';
-import { ITransaction, ITransactionReqData, TransactionType } from 'types/finances/transactions.types';
+import { CurrencyCode, ITransaction, ITransactionReqData, TransactionType } from 'types/finances/transactions.types';
 import { CategoryTypes } from 'types/directories.types';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
@@ -82,7 +82,11 @@ const FormCreateTransaction: React.FC<FormCreateTransactionProps> = ({
     registerSelect,
     handleSubmit,
   } = useAppForm<ITransaction>({
-    defaultValues: { currency: 'UAH', ...defaultState, eventDate: toInputValueDate(defaultState?.eventDate) },
+    defaultValues: {
+      currency: CurrencyCode.UAH,
+      ...defaultState,
+      eventDate: toInputValueDate(defaultState?.eventDate),
+    },
     resolver: yupResolver(getValidation(currentType)),
     reValidateMode: 'onSubmit',
   });

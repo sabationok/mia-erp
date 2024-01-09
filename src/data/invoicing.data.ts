@@ -2,11 +2,11 @@ import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { IInvoice } from '../types/invoices.types';
 import { t } from '../lang';
 import { enumToFilterOptions, numberWithSpaces } from '../utils';
-import { InvoicingInternalTypeEnum } from '../types/integrations.types';
+import { PaymentInternalTypeEnum } from '../types/integrations.types';
 import { pick } from 'lodash';
 
 export const invMethodCategoryFilterOptions = enumToFilterOptions(
-  pick(InvoicingInternalTypeEnum, ['externalService', 'bankTransfer', 'imposedPayment'])
+  pick(PaymentInternalTypeEnum, ['externalService', 'bankTransfer', 'imposedPayment'])
 );
 
 const dateColumn: CellTittleProps = {
@@ -42,31 +42,31 @@ export const invoicesTableColumns: CellTittleProps<IInvoice>[] = [
     action: 'valueByPath',
     width: '150px',
   },
-
   {
-    top: {
-      name: t('Bonus used'),
-      align: 'end',
-      getData: rd => numberWithSpaces(Number(rd?.totals?.bonusUsed ?? 0)) + ' ' + rd?.totals?.currency,
-    },
-    bottom: {
-      name: t('Bonus accrued'),
-      align: 'end',
-      getData: rd => numberWithSpaces(Number(rd?.totals?.bonusAccrued ?? 0)) + ' ' + rd?.totals?.currency,
-    },
-    action: 'valueByPath',
-    width: '150px',
-  },
-  {
-    top: { name: t(''), getData: () => `` },
+    top: { name: t('Payed'), getData: () => `` },
     bottom: { name: t(''), getData: () => `` },
     action: 'valueByPath',
     width: '150px',
   },
 
   {
-    top: { name: t('Payment reference'), getData: rd => rd.magicLink },
-    bottom: { name: t('') },
+    top: {
+      name: t('Bonus used'),
+      align: 'end',
+      getData: rd => numberWithSpaces(Number(rd?.totals?.bonusUsed ?? 0)) + ' ' + rd?.totals?.bonusUsed,
+    },
+    bottom: {
+      name: t('Bonus accrued'),
+      align: 'end',
+      getData: rd => numberWithSpaces(Number(rd?.totals?.bonusAccrued ?? 0)) + ' ' + rd?.totals?.bonusAccrued,
+    },
+    action: 'valueByPath',
+    width: '150px',
+  },
+
+  {
+    top: { name: t('Reference') + '/' + t('Internal'), getData: rd => rd?.reference?.internal },
+    bottom: { name: t('Reference') + '/' + t('External'), getData: rd => rd?.reference?.external },
     action: 'valueByPath',
     width: '210px',
   },

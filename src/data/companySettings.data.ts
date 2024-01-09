@@ -15,6 +15,7 @@ import DirInvoicingMethods from '../components/CompanySettings/DirInvocingMethod
 import DirCommunicationMethods from '../components/CompanySettings/DirCommunicationMethods';
 import CompanySettingsModal from '../components/CompanySettings/CompanySettingsModal';
 import { invMethodCategoryFilterOptions } from './invoicing.data';
+import { paymentMethodCategoryFilterOptions } from './payments.data';
 
 const UsersProps: DirUsersProps = {
   title: 'Користувачі',
@@ -171,6 +172,8 @@ export const companySettings: IDirectoryListItem[] = [
     modalChildrenProps: {
       title: t('Payment methods'),
       dirType: ApiDirType.METHODS_PAYMENT,
+      filterOptions: paymentMethodCategoryFilterOptions,
+      fillHeight: true,
       createParentTitle: t('Add payment method'),
       availableLevels: 1,
       actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateMethod, {

@@ -1,11 +1,12 @@
 import { StateErrorType } from '../reduxTypes.types';
 import { createSlice } from '@reduxjs/toolkit';
-import { ICheckoutPaymentMethod, IPayment } from '../../types/payments.types';
+import { IPayment } from '../../types/payments.types';
 import { getAllPaymentMethodsThunk, getAllPaymentsThunk, updatePaymentMethodThunk } from './payments.thunks';
+import { IPaymentMethod } from '../../types/integrations.types';
 
 export interface PaymentsState {
   payments: IPayment[];
-  methods: ICheckoutPaymentMethod[];
+  methods: IPaymentMethod[];
   error: StateErrorType | null;
   isLoading: boolean;
 }

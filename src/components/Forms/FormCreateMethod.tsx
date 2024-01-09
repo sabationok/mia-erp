@@ -76,11 +76,11 @@ const FormCreateMethod: React.FC<FormCreateMethodProps> = ({ onSubmit, defaultSt
         {/*  <InputText placeholder={t('insertLabel')} {...register('label')} required autoFocus />*/}
         {/*</InputLabel>*/}
 
-        <InputLabel label={t('Disabled')} direction={'vertical'} error={errors.disabled}>
+        <InputLabel label={t('Disabled')} direction={'vertical'} error={errors?.disabledFor?.all}>
           <ButtonSwitch />
         </InputLabel>
 
-        <InputLabel label={t('Disabled for client')} direction={'vertical'} error={errors.disabledForClient}>
+        <InputLabel label={t('Disabled for client')} direction={'vertical'} error={errors.disabledFor?.customer}>
           <ButtonSwitch />
         </InputLabel>
       </Inputs>

@@ -22,7 +22,9 @@ export const useTranslatedMethodsList = <T extends ServiceMethodBase = any>(
 ): TranslatedMethod<T>[] => {
   return useMemo((): TranslatedMethod<T>[] => {
     const trList = data.map(el => {
-      const label = el.labels ? getTranslatedString(el.labels, options?.langKey) : el.label ?? el?.type;
+      const label = el.cmsConfigs?.labels
+        ? getTranslatedString(el.cmsConfigs?.labels, options?.langKey)
+        : el.label ?? el?.type;
 
       const parent = !el?.service
         ? undefined

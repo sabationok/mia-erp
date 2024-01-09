@@ -6,8 +6,8 @@ export interface ICreateOrderInfoDto {
   customer?: OnlyUUID;
   receiver?: OnlyUUID;
   communication?: {
-    customer?: string[];
-    receiver?: string[];
+    customer?: OnlyUUID;
+    receiver?: OnlyUUID;
   };
 
   invoiceInfo?: {

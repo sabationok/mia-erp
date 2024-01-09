@@ -1,18 +1,17 @@
-import React, { memo, useEffect, useMemo } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import ModalForm from 'components/ModalForm';
 import styled from 'styled-components';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FlexBox from '../atoms/FlexBox';
-
 import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../../types/dir.types';
 import DirListItem from '../Directories/DirList/DirListItem';
-import { ICheckoutPaymentMethod } from '../../types/payments.types';
 import usePaymentsServiceHook from '../../hooks/usePaymentsService.hook';
 import { useTranslatedMethodsList } from '../../hooks/useTranslatedMethodsList.hook';
-import { useCheckoutPaymentsSelector } from '../../redux/selectors.store';
+import { usePaymentsSelector } from '../../redux/selectors.store';
+import { IPaymentMethod, PaymentInternalTypeEnum } from '../../types/integrations.types';
 
 export interface DirPaymentMethodsProps
-  extends IDirInTreeProps<MethodDirType, ICheckoutPaymentMethod, ICheckoutPaymentMethod, ICheckoutPaymentMethod> {
+  extends IDirInTreeProps<MethodDirType, IPaymentMethod, IPaymentMethod, IPaymentMethod> {
   updating?: boolean;
   disabling?: boolean;
   archiving?: boolean;
@@ -32,7 +31,13 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
 }) => {
   const service = usePaymentsServiceHook();
   const modalService = useModalProvider();
-  const methods = useTranslatedMethodsList(useCheckoutPaymentsSelector().methods, { withFullLabel: true });
+  const methods = useTranslatedMethodsList(usePaymentsSelector().methods, { withFullLabel: true });
+
+  const [current, setCurrent] = useState<PaymentInternalTypeEnum>();
+
+  const fData = useMemo(() => {
+    return methods.filter(m => m.type?.internal === current);
+  }, [current, methods]);
 
   const actions = useMemo(
     () =>
@@ -62,7 +67,7 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
 
   const renderList = useMemo(
     () =>
-      methods?.map((item, idx) => (
+      fData?.map((item, idx) => (
         <DirListItem
           key={`treeItem_${item?._id || idx}`}
           {...(item as any)}
@@ -75,7 +80,7 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
           currentLevel={0}
         />
       )),
-    [actions, methods, props]
+    [actions, fData, props]
   );
 
   useEffect(() => {
@@ -83,7 +88,7 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
     // eslint-disable-next-line
   }, []);
   return (
-    <StModalForm style={{ maxWidth: 480 }} {...props}>
+    <StModalForm style={{ maxWidth: 480 }} {...props} onOptSelect={option => setCurrent(option.value)}>
       <FlexBox fillWidth flex={'1'} gap={8} padding={'8px 4px'}>
         {renderList}
       </FlexBox>
@@ -97,9 +102,9 @@ export default memo(DirPaymentMethods);
 
 const actionsCreatorForDirPaymentMethods: DirInTreeActionsCreatorType<
   MethodDirType,
-  ICheckoutPaymentMethod,
+  IPaymentMethod,
   any,
-  ICheckoutPaymentMethod
+  IPaymentMethod
 > = () => {
   return {
     onUpdate: (id, data, options) => {

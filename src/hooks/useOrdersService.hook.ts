@@ -118,6 +118,7 @@ const useOrdersServiceHook = (): OrdersService => {
         data: ICreateOrderInfoFormState,
         options: ToRequestDataOptions<EntityPath<ICreateOrderInfoFormState>>
       ) => toReqData(data, options),
+
       toOrderSlotsReqData: toOrderSlotsReqData,
     }),
     [dispatch]

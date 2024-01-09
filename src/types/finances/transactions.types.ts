@@ -4,7 +4,11 @@ import { IActivity } from '../../redux/directories/activities.types';
 import { ICount } from '../../redux/directories/counts.types';
 import { ITrCategory } from '../directories.types';
 
-export type CurrencyCode = 'UAH';
+export enum CurrencyCode {
+  UAH = 'UAH',
+  EUR = 'EUR',
+  USD = 'USD',
+}
 export type TransactionType = 'EXPENSE' | 'TRANSFER' | 'INCOME';
 
 export interface IProject extends IBase {

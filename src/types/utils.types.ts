@@ -5,6 +5,12 @@ import { ICompany } from './companies.types';
 import { LangPack } from '../lang';
 import { Path } from 'react-hook-form';
 
+export enum CurrencyCode {
+  UAH = 'UAH',
+  EUR = 'EUR',
+  USD = 'USD',
+}
+
 export type EntityPath<Entity> = Path<Entity>;
 
 export type AppDate = string | number | Date;
@@ -13,6 +19,9 @@ export type MaybeNull<T = any> = T | null;
 
 export type MaybeArr<T = any> = T extends (infer U)[] ? U[] : T;
 
+export interface HasCurrencyCode {
+  currency?: MaybeNull<CurrencyCode>;
+}
 export interface EmbeddedReference {
   internal?: MaybeNull<string>;
   external?: MaybeNull<string>;
@@ -70,7 +79,7 @@ export interface HasError<Error extends string | number = string> {
 }
 
 export interface HasEmbeddedError<Error extends object = object> {
-  status?: MaybeNull<Error>;
+  error?: MaybeNull<Error>;
 }
 
 export interface HasStatusRef {
