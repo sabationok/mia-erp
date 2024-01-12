@@ -4,6 +4,7 @@ import { ICustomerBase } from '../customers.types';
 import { AppQueryParams } from '../../api';
 import { ICommunicationMethod } from '../integrations.types';
 import {
+  CurrencyCode,
   HasEmbeddedReference,
   HasEmbeddedReferences,
   HasExecuteDate,
@@ -13,6 +14,7 @@ import {
   HasOwnerAsCompany,
   HasQuantity,
   HasStatus,
+  HasSummary,
   HasTotal,
   MaybeNull,
 } from '../utils.types';
@@ -32,15 +34,19 @@ export enum OrderTypeEnum {
   Order = 'Order',
   Group = 'Group',
 }
+
 export interface HasOrdersGroup {
   group?: MaybeNull<IOrdersGroup>;
 }
+
 export interface HasOrder {
   order?: MaybeNull<IOrder>;
 }
+
 export interface HasOrdersList {
   orders?: MaybeNull<IOrder[]>;
 }
+
 export enum OrderStatusEnum {
   new = 'order_new',
   inWork = 'order_inWork',
@@ -81,10 +87,24 @@ export interface IOrderTempSlot extends IOrderSlotBase {
   tempId?: string;
 }
 
+export interface OrderSummaryInfo {
+  items: number;
+  amount: number;
+  bonus: number;
+  discount: number;
+  cashback: number;
+  received: number;
+  discounts: any[];
+  bonuses: any[];
+  taxes: any[];
+  currency: CurrencyCode;
+}
+
 export interface OrderTotals {
   items?: number;
   amount?: number;
 }
+
 export interface IOrdersGroup extends IBase, HasMagicLink, HasEmbeddedReferences<string, string> {
   orders?: MaybeNull<IOrder[]>;
   strategy?: MaybeNull<string>;
@@ -99,6 +119,7 @@ export interface IOrder
     HasEmbeddedReference,
     HasExecuteDate,
     HasStatus<OrderStatusEnum>,
+    HasSummary<OrderSummaryInfo>,
     HasEmbeddedReferences<string, string> {
   group?: MaybeNull<IOrdersGroup>;
 

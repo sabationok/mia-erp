@@ -63,8 +63,8 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
       baseApi.interceptors.response.clear();
     } else {
       baseApi.interceptors.response.use(
-        async value => value,
-        async (e: AxiosError) => {
+        value => value,
+        (e: AxiosError) => {
           if (e.status === 409) {
             console.log(e);
             ToastService.error('Forbidden company action');

@@ -130,6 +130,11 @@ export interface HasDimensions {
 export interface HasTotal {
   total?: MaybeNull<number>;
 }
+
+export interface HasSummary<T extends object> {
+  summary?: MaybeNull<T>;
+}
+
 export interface HasQuantity {
   quantity?: MaybeNull<number>;
 }
