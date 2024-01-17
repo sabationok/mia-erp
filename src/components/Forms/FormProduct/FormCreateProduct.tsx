@@ -11,14 +11,13 @@ import { t } from '../../../lang';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { useAppForm } from '../../../hooks';
 import { IProductFormData, IProductReqData, ProductFilterOpt, ProductStatusEnum } from '../../../types/products.types';
-import { toReqData } from '../../../utils';
+import { enumToFilterOptions, toReqData } from '../../../utils';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { IVariationTemplate } from '../../../types/properties.types';
 import FormProductStaticProperties from './FormProductStaticProperties';
 import FormProductImagesComponent from './FormProductImagesComponent';
 import FormProductCategories from './FormProductCategories';
-import { enumToFilterOptions } from '../../../utils/fabrics';
 import DimensionsInputs from './components/DimensionsInputs';
 import MeasurementInputs from './components/MeasuremenInputs';
 

@@ -107,7 +107,7 @@ const Row = styled(ThRow)<{ checked?: boolean; isActive?: boolean }>`
   grid-template-columns: min-content 1fr;
   grid-template-rows: 1fr;
 
-  height: 44px;
+  height: 50px;
   min-width: 100%;
 
   position: relative;
@@ -135,15 +135,15 @@ const Row = styled(ThRow)<{ checked?: boolean; isActive?: boolean }>`
 `;
 
 const RowStickyEl = styled(ThRowStickyEl)`
-  height: 42px;
+  height: 48px;
 `;
 
 const RowData = styled(ThRowData)<{ gridRepeat: number }>`
   display: grid;
   grid-template-columns: ${({ gridRepeat }) => `repeat(${gridRepeat} min-content)`};
-  grid-template-rows: 42px;
+  grid-template-rows: 50px;
 
-  height: 44px;
+  height: 50px;
 `;
 
 export default memo(TableRow);

@@ -12,7 +12,7 @@ export const productsColumns: CellTittleProps<IProduct>[] = [
     // bottom: { name: t('sku'), align: 'start', getData: rd => rd?.sku },
     getImgPreview: pr => (pr.images ? pr.images[0]?.img_preview : undefined),
     width: '270px',
-    action: 'doubleDataWithAvatar',
+    action: 'dataWithAvatar',
   },
   {
     top: { name: t('sku'), align: 'start', getData: rd => rd?.sku },

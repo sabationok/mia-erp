@@ -64,7 +64,7 @@ const SimpleDataCell: React.FC<Omit<IDataCellProps, 'subContent'>> = ({ width, c
 const DoubleDataWithAvatarCell: React.FC<IDataCellProps> = ({ width, content, subContent, imgUrl, imgPreviewIcon }) => {
   return (
     <CellDoubleDataWithAvatar style={{ width }}>
-      <AvatarBox>
+      <FlexBox padding={'2px'}>
         <Avatar
           src={imgUrl}
           shape={'square'}
@@ -75,7 +75,7 @@ const DoubleDataWithAvatarCell: React.FC<IDataCellProps> = ({ width, content, su
             </FlexBox>
           }
         />
-      </AvatarBox>
+      </FlexBox>
 
       <CellDoubleData>
         <Content align={content?.align} uppercase={content?.uppercase} fontWeight={500} fontSize={'12px'}>
@@ -104,18 +104,14 @@ const DataWithAvatarCell: React.FC<Omit<IDataCellProps, 'subContent'>> = ({
 }) => {
   return (
     <CellDoubleDataWithAvatar style={{ width }}>
-      <AvatarBox>
+      <FlexBox padding={'0px'} alignItems={'center'} justifyContent={'center'} width={'40px'} height={'40px'}>
         <Avatar
           src={imgUrl}
           shape={'square'}
-          style={{ borderRadius: '2px' }}
-          icon={
-            <FlexBox fillWidth fillHeight alignItems={'center'} justifyContent={'center'}>
-              <SvgIcon icon={imgPreviewIcon || 'gallery'} size={'80%'} fill={'#fff'} />
-            </FlexBox>
-          }
+          style={{ borderRadius: '2px', width: '100%', height: '100%' }}
+          icon={<SvgIcon icon={imgPreviewIcon || 'gallery'} size={'90%'} fill={'#fff'} />}
         />
-      </AvatarBox>
+      </FlexBox>
 
       <CellBase>
         <Content align={content?.align} uppercase={content?.uppercase} fontWeight={500} fontSize={'12px'}>
@@ -151,6 +147,8 @@ const CellBase = styled.div`
   max-height: 100%;
   padding: 4px 10px;
 
+  align-items: center;
+
   overflow: hidden;
 `;
 const CellDoubleData = styled(CellBase)`
@@ -158,6 +156,7 @@ const CellDoubleData = styled(CellBase)`
 `;
 const CellDoubleDataWithAvatar = styled(CellBase)`
   grid-template-columns: min-content 1fr;
+
   //gap: 8px;
 
   padding: 0;
