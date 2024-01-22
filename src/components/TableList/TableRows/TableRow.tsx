@@ -107,7 +107,7 @@ const Row = styled(ThRow)<{ checked?: boolean; isActive?: boolean }>`
   grid-template-columns: min-content 1fr;
   grid-template-rows: 1fr;
 
-  height: 50px;
+  height: 52px;
   min-width: 100%;
 
   position: relative;
@@ -135,7 +135,7 @@ const Row = styled(ThRow)<{ checked?: boolean; isActive?: boolean }>`
 `;
 
 const RowStickyEl = styled(ThRowStickyEl)`
-  height: 48px;
+  height: 50px;
 `;
 
 const RowData = styled(ThRowData)<{ gridRepeat: number }>`

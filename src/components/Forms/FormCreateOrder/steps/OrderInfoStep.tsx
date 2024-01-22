@@ -140,7 +140,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
     <Inputs flex={1} overflow={'auto'}>
       <FlexBox fillWidth gap={8} padding={'8px 2px'} style={{ maxWidth: 480, width: '100%', margin: '0 auto' }}>
         {formValues?.manager && (
-          <InputLabel label={t('manager')}>
+          <InputLabel label={t('Manager')}>
             <CustomerInfoComponent info={formValues?.manager?.user as never} isManager />
           </InputLabel>
         )}

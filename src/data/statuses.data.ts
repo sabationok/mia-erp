@@ -116,10 +116,11 @@ export enum StatusNameEnum {
   EXPENSE = 'EXPENSE',
   TRANSFER = 'TRANSFER',
   pending = 'pending',
+  approved = 'approved',
   fulfilled = 'fulfilled',
   rejected = 'rejected',
   GOODS = 'GOODS',
-  SERVICES = 'SERVICES',
+  SERVICE = 'SERVICE',
 }
 
 export const statusDataMap: Record<StatusNameEnum, StatusData> = {
@@ -196,16 +197,22 @@ export const statusDataMap: Record<StatusNameEnum, StatusData> = {
     colorSecondary: colors.clrError,
   },
   GOODS: {
-    name: 'rejected',
+    name: 'goods',
     label: t('GOODS'),
+    color: colors.clrInfo,
+    colorSecondary: colors.clrInfoLight,
+  },
+  SERVICE: {
+    name: 'service',
+    label: t('SERVICE'),
     color: colors.clrError,
     colorSecondary: colors.clrErrorLight,
   },
-  SERVICES: {
-    name: 'rejected',
-    label: t('SERVICES'),
-    color: colors.clrError,
-    colorSecondary: colors.clrErrorLight,
+  approved: {
+    name: 'approved',
+    label: t('approved'),
+    color: colors.clrSuccess,
+    colorSecondary: colors.clrSuccessLight,
   },
 };
 

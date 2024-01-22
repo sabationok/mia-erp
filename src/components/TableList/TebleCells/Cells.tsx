@@ -147,7 +147,7 @@ const CellBase = styled.div`
   max-height: 100%;
   padding: 4px 10px;
 
-  align-items: center;
+  align-content: center;
 
   overflow: hidden;
 `;
@@ -168,6 +168,7 @@ const Content = styled.div<
     fontSize?: string;
   }
 >`
+  //border: 1px solid tomato;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -176,7 +177,7 @@ const Content = styled.div<
   font-weight: ${({ fontWeight = 400 }) => fontWeight};
 
   width: 100%;
-  max-height: 16px;
+  //max-height: 16px;
   overflow: hidden;
 
   text-transform: ${({ uppercase }) => (uppercase ? 'uppercase' : '')};

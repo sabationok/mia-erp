@@ -39,6 +39,7 @@ const ordersFilterOptions = enumToFilterOptions(OrderStatusEnum);
 
 const PageOrders: React.FC<any> = (props: Props) => {
   const { tableConfig, isLoading } = useOrderTableConfigs();
+
   const [filterButtonResults] = useState<Record<OrderStatusEnum | string, number | string>>({});
   const renderLabel = useCallback(
     (info: { option?: FilterOption<OrderStatusEnum>; index: number; isActive: boolean }) => {
@@ -67,9 +68,14 @@ const PageOrders: React.FC<any> = (props: Props) => {
   return (
     <AppGridPage path={props.path}>
       <Page>
-        <ModalFilter style={{ height: 44 }} filterOptions={ordersFilterOptions} renderLabel={renderLabel} />
+        <ModalFilter
+          style={{ height: 52 }}
+          filterOptions={ordersFilterOptions}
+          renderLabel={renderLabel}
+          optionProps={{ fitContentH: true }}
+        />
 
-        <FlexBox fillWidth flex={1}>
+        <FlexBox fillWidth flex={1} overflow={'hidden'}>
           <TableList {...tableConfig} isLoading={isLoading} />
         </FlexBox>
       </Page>

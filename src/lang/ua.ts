@@ -82,6 +82,9 @@ export const langUa = {
   [OwnershipTypeEnum.UA_FRANCHISING_COMPANY]: 'Франчайзингова компанія',
   [OwnershipTypeEnum.UA_COLLECTIVE_ENTERPRISE]: 'Колективне підприємство',
 
+  GOODS: 'Товари',
+  SERVICES: 'Послуги',
+
   'Delivery method': 'Спосіб доставки',
   'Delivery methods': 'Способи доставки',
   'Add delivery method': 'Додати спосіб доставки',
@@ -122,7 +125,7 @@ export const langUa = {
   supplement: 'Постачання',
   storage: 'Склад',
   products: 'Продукти',
-  manager: 'Менеджер',
+  Manager: 'Менеджер',
 
   [MeasurementUnit.Pc]: 'шт.', // Штука (Piece)
   [MeasurementUnit.G]: 'г.', // Грам (Gram)
@@ -272,6 +275,11 @@ export const langUa = {
   Number: 'Номер',
   Group: 'Група',
 
+  'Reference / Internal': 'Номер / Внутрішній',
+  'Reference / External': 'Номер / Зовнішній',
+  'Slots count': 'Кількість позицій',
+  Status: 'Статус',
+
   Accept: 'Прийняти',
   Invoicing: 'Інвойсинг',
 
@@ -361,7 +369,6 @@ export const langUa = {
   rejected: 'Відхилено',
   approved: 'Прийнято',
   warning: 'Увага',
-
   logOutUser: 'Вийти з профілю',
   logOutPermission: 'Вийти з компанії',
 

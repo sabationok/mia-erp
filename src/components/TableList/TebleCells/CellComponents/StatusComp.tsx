@@ -50,14 +50,19 @@ type VariantProps = {
 };
 const variantsMap: VariansMapType = {
   outlined: css<VariantProps>`
-    padding: 0 4px;
+    //padding: 4px 4px;
+    border-radius: 2px;
     color: ${({ color }) => (color ? color : '')};
     fill: ${({ color }) => (color ? color : '')};
     border: 2px solid ${({ color, theme }) => (color ? color : theme.borderColor)};
   `,
   filled: css<VariantProps>`
-    padding: 0 4px;
-    color: ${({ color }) => (color ? color : '')};
+    //padding: 4px 4px;
+    height: 100%;
+    padding: 0 8px;
+    border-radius: 4px;
+    //color: ${({ color }) => (color ? color : '')};
+    color: #fff;
     fill: #fff;
     background-color: ${({ backgroundColor }) => (backgroundColor ? backgroundColor : '')};
   `,

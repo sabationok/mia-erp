@@ -86,6 +86,8 @@ export const ordersTableColumns: CellTittleProps<IOrder, DataPath>[] = [
       name: `${t('Status')}`,
       getData: rd => rd.status,
     },
+    bottom: { name: t('Priority'), getData: _rd => t('undefined') },
+
     // bottom: {
     //   name: `${t('Status')}/${t('External')}`,
     //   getData: rd => rd.status?.external,
@@ -100,7 +102,7 @@ export const ordersTableColumns: CellTittleProps<IOrder, DataPath>[] = [
       align: 'end',
       getData: rd => numberWithSpaces(rd.total?.amount ?? 0),
     },
-    bottom: { name: t('Slots q-ty'), align: 'end', getData: rd => rd.total?.items },
+    bottom: { name: t('Slots count'), align: 'end', getData: rd => rd.total?.items },
     width: '120px',
     action: 'numberWithSpaces',
   },
@@ -118,25 +120,25 @@ export const ordersTableColumns: CellTittleProps<IOrder, DataPath>[] = [
   },
   {
     top: {
-      name: 'Замовник',
+      name: t('Customer'),
       getData: rd =>
-        (rd.receiver?.name && rd.receiver?.name?.first + ' ' + rd.receiver?.name?.second) ||
-        (rd.receiver?.label && rd.receiver?.label.base) ||
+        (rd.customer?.name && rd.customer?.name?.first + ' ' + rd.customer?.name?.second) ||
+        (rd.customer?.label && rd.customer?.label.base) ||
         '--- ---',
     },
-    bottom: { name: 'Телефон', path: 'customer.phone' },
+    bottom: { name: t('Phone'), path: 'customer.phone' },
     width: '180px',
     action: 'valueByPath',
   },
   {
     top: {
-      name: 'Отримувач',
+      name: t('Receiver'),
       getData: rd =>
         (rd.receiver?.name && rd.receiver?.name?.first + ' ' + rd.receiver?.name?.second) ||
         (rd.receiver?.label && rd.receiver?.label.base) ||
         '--- ---',
     },
-    bottom: { name: 'Телефон', path: 'receiver.phone' },
+    bottom: { name: t('Phone'), path: 'receiver.phone' },
     width: '180px',
     action: 'valueByPath',
   },
@@ -169,14 +171,9 @@ export const ordersTableColumns: CellTittleProps<IOrder, DataPath>[] = [
     width: '200px',
     action: 'valueByPath',
   },
+
   {
-    top: { name: t('Priority') },
-    bottom: { name: t('Number'), getData: rd => rd?.number },
-    width: '150px',
-    action: 'valueByPath',
-  },
-  {
-    top: { name: t('manager'), path: 'manager.name' },
+    top: { name: t('Manager'), path: 'manager.name' },
     bottom: { name: t('email'), path: 'manager.email' },
     width: '180px',
     action: 'valueByPath',

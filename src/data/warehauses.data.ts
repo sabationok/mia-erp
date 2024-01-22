@@ -32,7 +32,7 @@ export const warehousesTableColumns: CellTittleProps<IWarehouse>[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: t('manager'), getData: rd => `${rd.manager?.user?.name || '---'}` },
+    top: { name: t('Manager'), getData: rd => `${rd.manager?.user?.name || '---'}` },
     bottom: { name: t('email'), getData: rd => `${rd.manager?.user?.email || '---'}` },
     width: '150px',
     action: 'valueByPath',
