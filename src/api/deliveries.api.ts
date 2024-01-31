@@ -18,6 +18,10 @@ export default class DeliveriesApi {
     return this.api.get(this.endpoints.getById(id), { params });
   }
 
+  public static getByOrderId(id?: string, params?: AppQueryParams) {
+    return this.api.get(this.endpoints.getByOrderId(id), { params });
+  }
+
   public static getAllMethods(
     params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>
   ): Promise<AppResponse<IDeliveryMethod[]>> {

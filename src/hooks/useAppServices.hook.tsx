@@ -38,11 +38,14 @@ export interface AppService {
   [AppModuleName.roles]: CustomRolesService;
   [AppModuleName.integrations]: UseIntegrationsService;
   [AppModuleName.deliveries]: UseDeliveriesService;
+  get<T extends AppServiceKey = any>(module: T): AppService[T];
 }
+
+type AppServiceKey = keyof Omit<AppService, 'get'>;
 
 // const isDevMode = ConfigService.isDevMode();
 const useAppService = (): AppService => {
-  return {
+  const services: Omit<Record<AppServiceKey, any>, 'get'> = {
     auth: useAppAuthHook(),
     permissions: usePermissionsServiceHook(),
     integrations: useIntegrationsService(),
@@ -61,6 +64,12 @@ const useAppService = (): AppService => {
     roles: useCustomRolesServiceHook(),
     deliveries: UseDeliveriesServiceHook(),
   };
+
+  return Object.assign(services, {
+    get(module: AppServiceKey) {
+      return services[module];
+    },
+  });
 };
 export const AppServiceCTX = createContext<AppService>({} as AppService);
 

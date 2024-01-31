@@ -20,16 +20,14 @@ export const dimensionsInputsProps: {
   { name: 'weight', label: t('Weight'), placeholder: t('Kg') },
 ];
 
-const DimensionsInputs = <TFieldValues extends DimensionsFormData = DimensionsFormData, TContext = any>({
-  form,
-}: {
-  form: UseFormReturn<DimensionsFormData | TFieldValues, TContext>;
-}) => {
+const DimensionsInputs = <TContext = any,>({ form }: { form: UseFormReturn<DimensionsFormData, TContext> }) => {
+  const errors = form?.formState?.errors?.dimensions;
+
   return (
     <Box fillWidth>
       {dimensionsInputsProps.map(input => {
         return (
-          <InputLabel key={input.name} label={input.label}>
+          <InputLabel key={input.name} label={input.label} error={errors && errors[input.name]}>
             <InputText
               placeholder={input.placeholder}
               min={1}

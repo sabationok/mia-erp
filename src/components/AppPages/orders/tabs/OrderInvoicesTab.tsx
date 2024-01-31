@@ -2,17 +2,20 @@ import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { invoicesTableColumns } from '../../../../data/invoicing.data';
 import { useOrdersSelector } from '../../../../redux/selectors.store';
 import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
-import { AppModuleName } from '../../../../redux/reduxTypes.types';
 import { useEffect, useMemo, useState } from 'react';
 import { getIdRef } from '../../../../utils';
 import { IInvoice } from '../../../../types/invoices.types';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
+import { OrderTabProps } from './orderTabs.types';
+import { AppModuleName } from '../../../../redux/reduxTypes.types';
 
-export interface OrderInvoicesTabProps {}
+export interface OrderInvoicesTabProps extends OrderTabProps {}
 
-const OrderInvoicesTab: React.FC<OrderInvoicesTabProps> = () => {
-  const currentOrder = useOrdersSelector().currentOrder;
-  const service = useAppServiceProvider()[AppModuleName.orders];
+const OrderInvoicesTab: React.FC<OrderInvoicesTabProps> = ({ order }) => {
+  const state = useOrdersSelector();
+  const currentOrder = order ?? state?.currentOrder;
+  const service = useAppServiceProvider().get(AppModuleName.orders);
+
   const modalService = useModalService();
 
   const [isLoading, setIsLoading] = useState(false);

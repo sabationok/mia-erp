@@ -312,6 +312,7 @@ const deliveries = {
   create: () => `${API_BASE_ROUTES.DELIVERY}/create`,
   getAll: () => `${API_BASE_ROUTES.DELIVERY}/getAll`,
   getById: (id?: string) => `${API_BASE_ROUTES.DELIVERY}/getById/${id}`,
+  getByOrderId: (id?: string) => `${API_BASE_ROUTES.DELIVERY}/getByOrderId/${id}`,
   getAllMethods: () => `${API_BASE_ROUTES.DELIVERY}/${Endpoints.methods}/getAll`,
   updateMethod: (id?: string) => `${API_BASE_ROUTES.DELIVERY}/${Endpoints.methods}/update/${id}`,
   methods: createMethodsEndpoints(API_BASE_ROUTES.DELIVERY),
