@@ -142,8 +142,11 @@ const ModalFilter = <V = any, D = any>({
       </StButtonIcon>
     ));
   }, [asStepper, current, filterOptions, handleSelectOpt, renderLabel]);
+  useEffect(() => {
+    console.log(filterOptions);
+  }, [filterOptions]);
 
-  return filterOptions?.length && filterOptions?.length > 0 ? (
+  return (
     <Filter
       className="filter"
       gridRepeat={(filterOptions?.length ?? 0) + (onReset ? 1 : 0)}
@@ -158,7 +161,7 @@ const ModalFilter = <V = any, D = any>({
 
       {renderOptions}
     </Filter>
-  ) : null;
+  );
 };
 
 const Filter = styled.div<{ gridRepeat?: number; optionProps?: { fitContentH?: boolean } }>`
@@ -168,6 +171,7 @@ const Filter = styled.div<{ gridRepeat?: number; optionProps?: { fitContentH?: b
     `repeat(${gridRepeat || 1}, minmax(${(optionProps?.fitContentH && 'min-content') || '150px'} ,1fr))`};
 
   height: 32px;
+  min-height: 32px;
   overflow: auto;
 
   background-color: ${({ theme }) => theme.modalBackgroundColor};
@@ -203,6 +207,12 @@ const StButtonIcon = styled(ButtonIcon)<{ asStep?: boolean; customLabel?: boolea
 
   color: ${({ theme }) => theme.fontColorHeader};
 
+  &:hover {
+    color: ${({ theme }) => theme.accentColor.base};
+    &::after {
+      width: 100%;
+    }
+  }
   & .inner {
     text-align: center;
     width: 100%;

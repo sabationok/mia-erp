@@ -72,7 +72,7 @@ const PageOrders: React.FC<any> = (props: Props) => {
           style={{ height: 52 }}
           filterOptions={ordersFilterOptions}
           renderLabel={renderLabel}
-          optionProps={{ fitContentH: true }}
+          optionProps={{ fitContentH: false }}
         />
 
         <FlexBox fillWidth flex={1} overflow={'hidden'}>

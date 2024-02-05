@@ -24,7 +24,7 @@ export const ModalHeader = ({
   ...props
 }: ModalHeaderProps) => {
   return (
-    <Header {...props} padding={'4px 0'} gap={8}>
+    <Header {...props} padding={'4px 0'}>
       <FlexBox fillWidth fxDirection={'row'} justifyContent={'space-between'} alignItems={'stretch'} height={'32px'}>
         {onBackPress && (
           <ButtonIcon
@@ -83,7 +83,7 @@ export const ModalHeader = ({
   );
 };
 const Header = styled(FlexBox)`
-  height: 32px;
+  min-height: 32px;
 `;
 const ExtraHeader = styled.div`
   width: 100%;

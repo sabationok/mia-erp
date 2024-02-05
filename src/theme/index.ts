@@ -12,6 +12,7 @@ export const globals = {
   timingFunctionMain: '250ms cubic-bezier(0.4, 0, 0.2, 1)',
   timingFunctionLong: '500ms cubic-bezier(0.4, 0, 0.2, 1)',
   timingFnMui: '200ms cubic-bezier(0, 0, 0.2, 1) 0ms',
+  timingFnMuiLong: '400ms cubic-bezier(0, 0, 0.2, 1) 0ms',
   timingFnNull: '0ms cubic-bezier(0, 0, 0.2, 1) 0ms',
   timingFnMain: '250ms cubic-bezier(0.4, 0, 0.2, 1)',
   timingFnLong: '500ms cubic-bezier(0.4, 0, 0.2, 1)',
