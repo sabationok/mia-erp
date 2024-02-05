@@ -4,9 +4,9 @@ import { Oval } from 'react-loader-spinner';
 export const AppLoaderSpiner = ({
   size = 60,
   visible = true,
-  strokeWidth = 3,
+  strokeWidth = 4,
 }: {
-  strokeWidth: number;
+  strokeWidth?: number;
   visible?: boolean;
   size: number;
 }) => {

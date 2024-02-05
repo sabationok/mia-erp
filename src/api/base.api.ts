@@ -1,8 +1,10 @@
 import axios, { AxiosInstance } from 'axios';
 import { baseApi } from './index';
+import { ConfigService } from '../services';
 
 export default class BaseApi {
-  private static BASE_URL_LOCALHOST = `http://localhost:5000/api/`;
+  private static LOCALHOST_API_PORT = ConfigService.get('LOCALHOST_API_PORT') || 5000;
+  private static BASE_URL_LOCALHOST = `http://localhost:${this.LOCALHOST_API_PORT}/api/`;
   private static BASE_URL_RAILWAY = `https://crm-nest-api-production.up.railway.app/api/`;
 
   private static _client = axios.create({

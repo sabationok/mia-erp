@@ -28,7 +28,13 @@ const measurementInputs: {
   // { name: 'measurement.step', label: t('step'), placeholder: t('step'), type: 'number' },
 ];
 
-const MeasurementInputs = ({ appForm }: { appForm: UseAppFormReturn<MeasurementInputsFormData> }) => {
+const MeasurementInputs = ({
+  appForm,
+  disabled,
+}: {
+  disabled?: boolean;
+  appForm: UseAppFormReturn<MeasurementInputsFormData>;
+}) => {
   return (
     <FlexBox fillWidth style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', columnGap: 8 }}>
       {measurementInputs.map(input => {
@@ -42,6 +48,7 @@ const MeasurementInputs = ({ appForm }: { appForm: UseAppFormReturn<MeasurementI
               dropDownIsAbsolute: true,
               onlyValue: true,
             })}
+            disabled={disabled}
           />
         ) : (
           <InputLabel key={input.name} label={input.label} error={appForm?.formState?.errors[input.name as never]}>
@@ -53,6 +60,7 @@ const MeasurementInputs = ({ appForm }: { appForm: UseAppFormReturn<MeasurementI
                 valueAsNumber: input?.type === 'number',
                 min: input?.type === 'number' ? 1 : undefined,
               })}
+              disabled={disabled}
             />
           </InputLabel>
         );

@@ -7,9 +7,11 @@ import { ConfigService } from '../services';
 // const mockApi = axios.create({
 //   baseURL: 'https://635ec7b303d2d4d47af5fbcd.mockapi.io/',
 // });
-const BASE_URL_LOCALHOST = `http://localhost:5000/api/`;
-const BASE_URL_RAILWAY = `https://crm-nest-api-production.up.railway.app/api/`;
 
+const LOCALHOST_API_PORT = ConfigService.get('LOCALHOST_API_PORT') || 5000;
+const BASE_URL_LOCALHOST = `http://localhost:${LOCALHOST_API_PORT}/api/`;
+
+const BASE_URL_RAILWAY = `https://crm-nest-api-production.up.railway.app/api/`;
 const isDevMode = ConfigService.isDevMode();
 
 const baseApi = axios.create({

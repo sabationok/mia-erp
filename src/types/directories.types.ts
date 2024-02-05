@@ -21,4 +21,17 @@ export enum TrCategoryTypeEnum {
   EXPENSE = 'EXPENSE',
 }
 
+export enum TagTypeEnum {
+  CUSTOMER = 'CUSTOMER',
+  SUPPLIER = 'SUPPLIER',
+  WORKER = 'WORKER',
+  OFFER = 'OFFER',
+  COUNTERPARTY = 'COUNTERPARTY',
+  CONTRACTOR = 'CONTRACTOR',
+  SUB_CONTRACTOR = 'SUB_CONTRACTOR',
+  COMMISSION_AGENT = 'COMMISSION_AGENT',
+  CONSIGNOR = 'CONSIGNOR',
+  TRANSPORTER = 'TRANSPORTER',
+}
+
 export type CategoryTypes = keyof typeof TrCategoryTypeEnum;

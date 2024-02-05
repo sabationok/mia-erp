@@ -11,10 +11,10 @@ import { useAppForm } from '../../hooks';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { ContractorsTypesEnum } from '../../redux/directories/contractors.types';
 import { FormInputs } from './components/atoms';
 import TagButtonsFilter from 'components/atoms/TagButtonsFilter';
 import { tagsFilterOptions } from '../../data/modalFilterOptions.data';
+import { TagTypeEnum } from '../../types/directories.types';
 
 export interface FormCreateTagProps extends DirectoriesFormProps<ApiDirType.TAGS, ITagDirItem, ITagDirItem> {}
 
@@ -72,7 +72,7 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({
       extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
       <FormInputs>
-        <TagButtonsFilter<ContractorsTypesEnum>
+        <TagButtonsFilter<TagTypeEnum>
           options={filterOptions}
           name={'type'}
           onSelectValue={({ name, value }) => setValue(name, value)}

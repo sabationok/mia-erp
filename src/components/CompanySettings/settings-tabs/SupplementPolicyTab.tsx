@@ -7,7 +7,7 @@ import { FilterOption } from '../../atoms/ModalFilter';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { t } from '../../../lang';
-import ModalFooter from '../../ModalForm/ModalFooter';
+import ModalFooter from '../../Modal/ModalFooter';
 
 export interface SupplementPolicyTabProps extends CompanySettingsTabBaseProps {}
 

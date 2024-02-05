@@ -8,7 +8,7 @@ import {
 import { useTranslatedMethodsList } from '../../../hooks/useTranslatedMethodsList.hook';
 import { useCompaniesSelector, useInvoicesSelector } from '../../../redux/selectors.store';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
-import ModalFooter from '../../ModalForm/ModalFooter';
+import ModalFooter from '../../Modal/ModalFooter';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { useState } from 'react';

@@ -1,5 +1,5 @@
 import { ModalFormProps } from '../components/ModalForm';
-import { ITrCategory, ITrCategoryFormData, TrCategoryTypeEnum } from './directories.types';
+import { ITrCategory, ITrCategoryFormData, TagTypeEnum, TrCategoryTypeEnum } from './directories.types';
 import { CountsTypesEnum, ICount, ICountFormData } from '../redux/directories/counts.types';
 import { FilterOpt } from '../components/atoms/ModalFilter';
 import { IBase } from '../redux/global.types';
@@ -20,7 +20,7 @@ export interface DirItemTypeByDirType extends Record<ApiDirType, any> {
   [ApiDirType.PROPERTIES_PRODUCTS]: OfferTypeEnum;
   [ApiDirType.CONTRACTORS]: ContractorsTypesEnum | CounterpartyTypesEnum;
   [ApiDirType.COUNTERPARTIES]: ContractorsTypesEnum | CounterpartyTypesEnum;
-  [ApiDirType.TAGS]: ContractorsTypesEnum;
+  [ApiDirType.TAGS]: TagTypeEnum;
 }
 
 export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> extends IBase {

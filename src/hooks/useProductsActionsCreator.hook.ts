@@ -1,15 +1,16 @@
 import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
-import { IProduct, OfferTypeEnum } from '../types/products.types';
+import { IProduct } from '../types/products.types';
 import FormCreateProduct from '../components/Forms/FormProduct/FormCreateProduct';
 import { productsFilterOptions } from '../data/modalFilterOptions.data';
 import { useNavigate } from 'react-router-dom';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
-import { ToastService } from '../services';
-import { toOfferFormData } from '../utils/data-transform';
+import { toOfferFormData } from '../utils';
 import { createApiCall, ProductsApi } from '../api';
 import { t } from '../lang';
+import EditOfferModal from '../components/Modal/EditOfferModal';
+import CreateOfferModal from '../components/Modal/CreateOfferModal';
 
 export type ProductsActionsCreator = TableActionCreator<IProduct>;
 
@@ -49,36 +50,30 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
         iconSize: '90%',
         type: 'onlyIcon',
         disabled: !ctx?.selectedRow?._id,
-        onClick: async () => {
-          const res = await createApiCall({ data: ctx?.selectedRow?._id }, ProductsApi.getFullInfoById, ProductsApi);
-          if (!res?.data.data) {
-            return;
-          }
-          console.log(res?.data.data);
-          const formData = toOfferFormData(res?.data.data);
+        onClick: () => {
+          ctx?.selectedRow?._id &&
+            modals.handleOpenModal({
+              ModalChildren: EditOfferModal,
+              modalChildrenProps: {
+                title: 'Змінити',
+                _id: ctx?.selectedRow?._id,
 
-          const modal = modals.handleOpenModal({
-            ModalChildren: FormCreateProduct,
-            modalChildrenProps: {
-              title: 'Змінити',
-              _id: ctx?.selectedRow?._id,
-              filterOptions: productsFilterOptions,
-              defaultState: formData,
-              onSubmit: (data, o) => {
-                service.updateById({
-                  data,
-                  onSuccess(d) {
-                    o?.closeAfterSave && modal?.onClose();
-                    ToastService.success(`Product updated`);
-                  },
-                  onError: e => {
-                    console.error('Product apdate action', e);
-                  },
-                });
+                // defaultState: formData,
+                // onSubmit: (data, o) => {
+                //   service.updateById({
+                //     data,
+                //     onSuccess(d) {
+                //       o?.closeAfterSave && modal?.onClose();
+                //       ToastService.success(`Product updated`);
+                //     },
+                //     onError: e => {
+                //       console.error('Product apdate action', e);
+                //     },
+                //   });
+                // },
+                fillHeight: true,
               },
-              fillHeight: true,
-            },
-          });
+            });
         },
       },
       {
@@ -132,23 +127,17 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
         type: 'onlyIconFilled',
         disabled: false,
         onClick: () => {
-          const modal = modals.handleOpenModal({
-            ModalChildren: FormCreateProduct,
-            modalChildrenProps: {
-              title: 'Створити',
-              filterOptions: productsFilterOptions,
-              defaultState: { type: OfferTypeEnum.GOODS },
-              onSubmit: (data, o) => {
-                service.create({
-                  data,
-                  onSuccess(d) {
-                    (o?.closeAfterSave || o?.close) && modal?.onClose();
-                  },
-                });
-              },
-              fillHeight: true,
-            },
+          const modal = modals.open({
+            ModalChildren: CreateOfferModal,
           });
+
+          // const _modal = modals.open({
+          //   ModalChildren: FormCreateOffer,
+          //   modalChildrenProps: {
+          //     defaultState: { type: OfferTypeEnum.GOODS },
+          //     title: t('Create offer'),
+          //   },
+          // });
         },
       },
     ],

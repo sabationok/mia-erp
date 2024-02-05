@@ -4,7 +4,7 @@ import { t } from '../../lang';
 import { Text } from '../atoms/Text';
 import styled from 'styled-components';
 
-export interface ModalHeaderProps {
+export interface ModalFormHeaderProps {
   canSubmit?: boolean;
   onBackPress?: () => void;
   onClose?: () => void;
@@ -13,7 +13,7 @@ export interface ModalHeaderProps {
   renderTitle?: React.ReactNode;
   children?: React.ReactNode;
 }
-export const ModalHeader = ({
+export const ModalFormHeader = ({
   onClose,
   onBackPress,
   title,
@@ -22,7 +22,7 @@ export const ModalHeader = ({
   renderTitle,
   children,
   ...props
-}: ModalHeaderProps) => {
+}: ModalFormHeaderProps) => {
   return (
     <Header {...props} padding={'4px 0'} gap={8}>
       <FlexBox fillWidth fxDirection={'row'} justifyContent={'space-between'} alignItems={'stretch'} height={'32px'}>

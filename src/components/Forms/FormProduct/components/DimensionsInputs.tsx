@@ -20,7 +20,13 @@ export const dimensionsInputsProps: {
   { name: 'weight', label: t('Weight'), placeholder: t('Kg') },
 ];
 
-const DimensionsInputs = <TContext = any,>({ form }: { form: UseFormReturn<DimensionsFormData, TContext> }) => {
+const DimensionsInputs = <TContext = any,>({
+  form,
+  disabled,
+}: {
+  disabled?: boolean;
+  form: UseFormReturn<DimensionsFormData, TContext>;
+}) => {
   const errors = form?.formState?.errors?.dimensions;
 
   return (
@@ -36,6 +42,7 @@ const DimensionsInputs = <TContext = any,>({ form }: { form: UseFormReturn<Dimen
                 valueAsNumber: true,
                 min: 1,
               })}
+              disabled={disabled}
             />
           </InputLabel>
         );

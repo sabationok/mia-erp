@@ -269,6 +269,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
                   icon={'close'}
                   size={'20px'}
                   onClick={handleOnClear}
+                  disabled={props.disabled}
                 />
               )}
 
@@ -279,6 +280,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
                 size={'24px'}
                 iconSize={'100%'}
                 onClick={handleOpenState}
+                disabled={props.disabled}
               />
             </IconsBox>
           </LabelInner>

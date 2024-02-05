@@ -1,6 +1,6 @@
 import ModalHeader from './ModalHeader';
 import ModalFilter, { ModalFormFilterProps } from '../atoms/ModalFilter';
-import ModalFooter from './ModalFooter';
+import ModalFooter from '../Modal/ModalFooter';
 
 import styled from 'styled-components';
 import { FormEvent, memo } from 'react';

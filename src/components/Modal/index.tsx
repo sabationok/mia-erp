@@ -29,17 +29,17 @@ const ModalBase: React.FC<ModalBaseProps> = ({
   ...props
 }) => {
   return (
-    <ModalFormContainer className="modal_base" {...props}>
+    <ModalContainer className="modal_base" {...props}>
       <ModalHeader title={title} onClose={onClose} onBackPress={onBackPress}>
         {extraHeader}
       </ModalHeader>
 
       <ModalMain className="main">{children}</ModalMain>
-    </ModalFormContainer>
+    </ModalContainer>
   );
 };
 
-const ModalFormContainer = styled.div<
+const ModalContainer = styled.div<
   Pick<ModalBaseProps, 'fillHeight' | 'fillWidth' | 'fitContentH' | 'fitContentV' | 'width' | 'height'>
 >`
   display: grid;

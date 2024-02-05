@@ -5,7 +5,7 @@ import { enumToFilterOptions } from '../../utils/fabrics';
 import styled from 'styled-components';
 import { ModalHeader } from '../atoms';
 import ModalFilter from '../atoms/ModalFilter';
-import ModalFooter from '../ModalForm/ModalFooter';
+import ModalFooter from '../Modal/ModalFooter';
 import InputIntegrationsTab from './integrations/InputIntegrationsTab';
 import { IntegrationTypeEnum } from '../../types/integrations.types';
 import OutputIntegrationsTab from './integrations/OutputIntegrationsTab';

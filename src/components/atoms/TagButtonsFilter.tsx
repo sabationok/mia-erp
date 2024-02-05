@@ -24,7 +24,7 @@ const TagButtonsFilter = <Value extends string | number = any>({
   resetButtonPosition,
   resetButtonLabel,
 }: {
-  options?: TagButtonsFilterOption[];
+  options?: TagButtonsFilterOption<Value>[];
   values?: Value[];
   onSelect?: TagButtonsFilterOnSelect<Value>;
   onChange?: TagButtonsFilterOnChange<Value>;

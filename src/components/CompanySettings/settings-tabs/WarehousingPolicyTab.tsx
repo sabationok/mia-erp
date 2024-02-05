@@ -8,7 +8,7 @@ import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { t } from '../../../lang';
 import { toReqData } from '../../../utils';
-import ModalFooter from '../../ModalForm/ModalFooter';
+import ModalFooter from '../../Modal/ModalFooter';
 
 export interface WarehousingPolicyTabProps extends CompanySettingsTabBaseProps {}
 

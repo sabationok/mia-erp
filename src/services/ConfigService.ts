@@ -2,6 +2,7 @@ export enum ENV_KEYS {
   ERP_API_KEY = 'ERP_API_KEY',
 
   PROVIDER = 'PROVIDER',
+  LOCALHOST_API_PORT = 'LOCALHOST_API_PORT',
 
   FRB_apiKey = 'FRB_apiKey',
   FRB_authDomain = 'FRB_authDomain',
@@ -28,10 +29,12 @@ export default class ConfigService {
     return this.IS_DEV_MODE;
   }
   public static get(name: keyof typeof ENV_KEYS) {
+    if (Object.keys(ENV_KEYS).includes(name)) {
+      return process.env['REACT_APP_' + name];
+    }
     return process.env[name];
   }
   public static get baseApiProvider() {
-    console.log(this.get(ENV_KEYS.PROVIDER));
     return {
       isRailway: this.get(ENV_KEYS.PROVIDER) === 'railway',
       isLocalhost: this.get(ENV_KEYS.PROVIDER) === 'localhost',
