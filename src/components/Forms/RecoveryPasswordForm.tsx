@@ -53,7 +53,7 @@ const RecoveryPasswordForm: React.FC<RecoveryPasswordFormProps & React.HTMLAttri
     formState: { errors },
   } = useForm<Partial<IRecoveryPasswordFormData>>({
     defaultValues: recovery ? recoveryPasswordInitialFormData : sendRecoveryPasswordEmailFromData,
-    resolver: yupResolver(recovery ? validationNewPasswords : validationEmail),
+    resolver: yupResolver((recovery ? validationNewPasswords : validationEmail) as never),
     reValidateMode: 'onSubmit',
   });
 
