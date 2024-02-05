@@ -2,12 +2,8 @@ import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
 import { IProduct } from '../types/products.types';
-import FormCreateProduct from '../components/Forms/FormProduct/FormCreateProduct';
-import { productsFilterOptions } from '../data/modalFilterOptions.data';
 import { useNavigate } from 'react-router-dom';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
-import { toOfferFormData } from '../utils';
-import { createApiCall, ProductsApi } from '../api';
 import { t } from '../lang';
 import EditOfferModal from '../components/Modal/EditOfferModal';
 import CreateOfferModal from '../components/Modal/CreateOfferModal';
@@ -83,31 +79,15 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
         iconSize: '90%',
         type: 'onlyIcon',
         disabled: !ctx?.selectedRow?._id,
-        onClick: async () => {
-          const res = await createApiCall({ data: ctx?.selectedRow?._id }, ProductsApi.getFullInfoById, ProductsApi);
-          if (!res?.data.data) {
-            return;
-          }
-          const formData = toOfferFormData(res?.data.data);
-
-          const modal = modals.handleOpenModal({
-            ModalChildren: FormCreateProduct,
-            modalChildrenProps: {
-              title: 'Змінити',
-              filterOptions: productsFilterOptions,
-              defaultState: formData,
-
-              onSubmit: (data, o) => {
-                service.create({
-                  data,
-                  onSuccess(d) {
-                    o?.closeAfterSave && modal?.onClose();
-                  },
-                });
+        onClick: () => {
+          ctx?.selectedRow?._id &&
+            modals.handleOpenModal({
+              ModalChildren: EditOfferModal,
+              modalChildrenProps: {
+                _id: ctx?.selectedRow?._id,
+                copy: true,
               },
-              fillHeight: true,
-            },
-          });
+            });
         },
       },
       {
@@ -127,17 +107,9 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
         type: 'onlyIconFilled',
         disabled: false,
         onClick: () => {
-          const modal = modals.open({
+          modals.open({
             ModalChildren: CreateOfferModal,
           });
-
-          // const _modal = modals.open({
-          //   ModalChildren: FormCreateOffer,
-          //   modalChildrenProps: {
-          //     defaultState: { type: OfferTypeEnum.GOODS },
-          //     title: t('Create offer'),
-          //   },
-          // });
         },
       },
     ],

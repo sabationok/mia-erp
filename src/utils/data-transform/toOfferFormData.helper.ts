@@ -48,6 +48,6 @@ export function toOfferFormData(input: IProduct): IProductFullFormData {
 
   // console.log({ dataInArray });
 
-  console.log('createProductFormData output', output);
+  // console.log('createProductFormData output', output);
   return output;
 }

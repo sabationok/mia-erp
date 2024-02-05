@@ -14,16 +14,21 @@ import { Text } from '../atoms/Text';
 
 export interface UpdateOfferModalProps extends ModalFormProps {
   _id: string;
+  copy?: boolean;
 }
 
-const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id }) => {
-  const [current, setCurrent] = useState<IProductFullFormData>();
+const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id, copy }) => {
+  const [current, setCurrent] = useState<IProductFullFormData & { _id?: string }>();
   const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     createApiCall(
       {
         data: _id,
         onSuccess: data => {
+          if (copy) {
+            data._id = '';
+          }
           setCurrent(toOfferFormData(data));
         },
         onLoading: setIsLoading,
@@ -31,10 +36,16 @@ const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id }) => {
       ProductsApi.getFullInfoById,
       ProductsApi
     );
-  }, [_id]);
+  }, [_id, copy]);
+
+  useEffect(() => {
+    if (current?._id) {
+      console.log(current);
+    }
+  }, [current]);
 
   return (
-    <ModalBase fillHeight title={t('Update offer')} onClose={onClose}>
+    <ModalBase fillHeight title={!copy ? t('Update offer') : t('Copy offer')} onClose={onClose}>
       {isLoading ? (
         <FlexBox fillWidth padding={'24px'} alignItems={'center'} gap={16}>
           <AppLoaderSpiner size={52} />
@@ -45,16 +56,24 @@ const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id }) => {
         <FlexBox padding={'0 8px 16px'}>
           <OfferBaseInfoFormSection
             _id={_id}
-            edit
+            edit={!copy}
             type={current?.type}
             defaultValues={current}
             onSuccess={data => {
-              setCurrent(toOfferFormData(data));
+              setCurrent(copy ? { ...toOfferFormData(data), _id: data._id } : toOfferFormData(data));
             }}
           />
 
-          <OfferDimensionsFormSection defaultValues={current?.dimensions} disabled={!current || !_id} _id={_id} />
-          <OfferMeasurementForm defaultValues={current?.measurement} disabled={!current || !_id} _id={_id} />
+          <OfferDimensionsFormSection
+            defaultValues={current?.dimensions}
+            disabled={copy ? !(current?._id && current) : !_id}
+            _id={copy ? current?._id : _id}
+          />
+          <OfferMeasurementForm
+            defaultValues={current?.measurement}
+            disabled={copy ? !(current?._id && current) : !_id}
+            _id={copy ? current?._id : _id}
+          />
         </FlexBox>
       )}
     </ModalBase>
