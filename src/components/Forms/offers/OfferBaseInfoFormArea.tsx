@@ -1,5 +1,5 @@
-import { FormSection } from '../FormSection';
-import { OfferFormSectionProps } from './types';
+import { FormArea } from '../FormArea/FormArea';
+import { OfferFormAreaProps } from './types';
 import {
   IProduct,
   IProductFormData,
@@ -22,21 +22,14 @@ import useProductsService from '../../../hooks/useProductsService.hook';
 import { useAppSelector } from '../../../redux/store.store';
 import { MaybeNull } from '../../../types/utils.types';
 
-export interface OfferBaseInfoFormSectionProps extends OfferFormSectionProps<IProductFullFormData> {
+export interface OfferBaseInfoFormAreaProps extends OfferFormAreaProps<IProductFullFormData> {
   type?: MaybeNull<OfferTypeEnum>;
   onSuccess?: (data: IProduct) => void;
   edit?: boolean;
 }
 const productsStatusOption = enumToFilterOptions(ProductStatusEnum);
 
-export const OfferBaseInfoFormSection = ({
-  defaultValues,
-  edit,
-  type,
-  onSuccess,
-  onSubmit,
-  _id,
-}: OfferBaseInfoFormSectionProps) => {
+export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _id }: OfferBaseInfoFormAreaProps) => {
   const service = useProductsService();
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -50,7 +43,7 @@ export const OfferBaseInfoFormSection = ({
 
   const {
     directories: { directories },
-    products: { properties },
+    // products: { properties },
   } = useAppSelector();
 
   function onValid(sData: IProductFormData) {
@@ -70,7 +63,7 @@ export const OfferBaseInfoFormSection = ({
   }
 
   return (
-    <FormSection title={t('Base info')} onSubmit={appForm.handleSubmit(onValid)} isLoading={isLoading}>
+    <FormArea title={t('Base info')} onSubmit={appForm.handleSubmit(onValid)} isLoading={isLoading}>
       <InputLabel label={t('label')} error={errors.label} required>
         <InputText placeholder={t('label')} {...register('label')} required autoFocus />
       </InputLabel>
@@ -105,6 +98,6 @@ export const OfferBaseInfoFormSection = ({
       <InputLabel label={t('description')} error={errors.description}>
         <TextareaPrimary placeholder={t('description')} {...register('description')} />
       </InputLabel>
-    </FormSection>
+    </FormArea>
   );
 };

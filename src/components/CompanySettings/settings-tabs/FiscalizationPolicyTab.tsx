@@ -5,8 +5,7 @@ import {
   ICompanyInvoicingPolicyFormData,
   InvoicingPolicyTypeEnum,
 } from '../../../types/companies.types';
-import { useTranslatedMethodsList } from '../../../hooks/useTranslatedMethodsList.hook';
-import { useCompaniesSelector, useInvoicesSelector } from '../../../redux/selectors.store';
+import { useCompaniesSelector } from '../../../redux/selectors.store';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import ModalFooter from '../../Modal/ModalFooter';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
@@ -28,16 +27,16 @@ const FiscalizationPolicyTab = ({ onClose, onSubmit }: FiscalizationPolicyTabPro
   const company = useCompaniesSelector().current;
   const service = useAppServiceProvider()[AppModuleName.companies];
 
-  const methods = useTranslatedMethodsList(useInvoicesSelector().methods, { withFullLabel: true });
+  // const methods = useTranslatedMethodsList(useInvoicesSelector().methods, { withFullLabel: true });
 
-  const [current, setCurrent] = useState<FiscalizationPolicyTypeEnum>(FiscalizationPolicyTypeEnum.sales);
+  const [current] = useState<FiscalizationPolicyTypeEnum>(FiscalizationPolicyTypeEnum.sales);
   const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<ICompanyFiscalizationPolicyFormData>({
     defaultValues: company?.invoicingPolicy as ICompanyFiscalizationPolicyFormData,
   });
 
-  const formValues = form.watch();
+  // const formValues = form.watch();
 
   // const registerSwitch = useCallback(
   //   (name: keyof Pick<FiscalizationPolicyJsonData, 'autoPublish'>) => {

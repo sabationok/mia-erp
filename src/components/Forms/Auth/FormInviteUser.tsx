@@ -1,13 +1,13 @@
-import ModalForm, { ModalFormProps } from '../ModalForm';
-import InputLabel from '../atoms/Inputs/InputLabel';
-import { useAppForm } from '../../hooks';
-import { ICustomRole } from '../../redux/customRoles/customRoles.types';
-import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import { useCustomRolesSelector } from '../../redux/selectors.store';
-import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
-import InputText from '../atoms/Inputs/InputText';
-import { IPermission } from '../../types/permissions.types';
-import { FormInputs } from './components/atoms';
+import ModalForm, { ModalFormProps } from '../../ModalForm';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import { useAppForm } from '../../../hooks';
+import { ICustomRole } from '../../../redux/customRoles/customRoles.types';
+import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
+import { useCustomRolesSelector } from '../../../redux/selectors.store';
+import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import InputText from '../../atoms/Inputs/InputText';
+import { IPermission } from '../../../types/permissions.types';
+import { FormInputs } from '../components/atoms';
 
 export interface FormInviteUserProps extends Omit<ModalFormProps<any, any, undefined>, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<FormInviteUserData, { onSuccess?: (d: IPermission) => void }>;

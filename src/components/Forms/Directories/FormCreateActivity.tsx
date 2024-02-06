@@ -4,14 +4,14 @@ import styled from 'styled-components';
 import { IActivity, IActivityFormData } from 'redux/directories/activities.types';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import InputLabel from '../atoms/Inputs/InputLabel';
-import InputText from '../atoms/Inputs/InputText';
-import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
-import { DirectoriesFormProps } from '../../types/dir.types';
-import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
-import { useAppForm } from '../../hooks';
-import { ApiDirType } from '../../redux/APP_CONFIGS';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import InputText from '../../atoms/Inputs/InputText';
+import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
+import { DirectoriesFormProps } from '../../../types/dir.types';
+import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
+import { useAppForm } from '../../../hooks';
+import { ApiDirType } from '../../../redux/APP_CONFIGS';
 
 const validation = yup.object().shape({});
 

@@ -16,7 +16,7 @@ import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/For
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { IVariationTemplate } from '../../../types/properties.types';
 import FormProductStaticProperties from './FormProductStaticProperties';
-import FormProductImagesComponent from './FormProductImagesComponent';
+import FormProductImagesComponent from './components/FormProductImagesComponent';
 import FormProductCategories from './FormProductCategories';
 import DimensionsInputs from './components/DimensionsInputs';
 import MeasurementInputs from './components/MeasuremenInputs';

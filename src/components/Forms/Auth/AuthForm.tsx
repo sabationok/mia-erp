@@ -2,16 +2,16 @@ import React, { useMemo, useState } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import LogoSvg from 'components/Layout/LogoSvg';
-import AuthInputLabel from '../atoms/Inputs/AuthInputLabel';
+import AuthInputLabel from '../../atoms/Inputs/AuthInputLabel';
 import NavLinkIcon from 'components/atoms/LinkIcon/NavLinkIcon';
 import { Link, useNavigate } from 'react-router-dom';
-import useAuthService from '../../hooks/useAppAuth.hook';
+import useAuthService from '../../../hooks/useAppAuth.hook';
 import { useForm } from 'react-hook-form';
-import InputText from '../atoms/Inputs/InputText';
+import InputText from '../../atoms/Inputs/InputText';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import SecurityInputControlHOC from '../atoms/Inputs/SecurityInputControlHOC';
-import { ToastService } from '../../services';
+import SecurityInputControlHOC from '../../atoms/Inputs/SecurityInputControlHOC';
+import { ToastService } from '../../../services';
 
 export interface Props {
   helloTitle?: string;

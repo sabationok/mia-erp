@@ -1,9 +1,9 @@
-import FlexBox, { FlexForm } from '../atoms/FlexBox';
-import { Text } from '../atoms/Text';
-import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import FormSectionFooter from './FormSectionFooter';
+import FlexBox, { FlexForm } from '../../atoms/FlexBox';
+import { Text } from '../../atoms/Text';
+import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
+import FormAreaFooter from './FormAreaFooter';
 
-export interface FormSectionProps {
+export interface FormAreaProps {
   title?: string;
   children?: React.ReactNode;
   onSubmit?: AppSubmitHandler;
@@ -13,15 +13,15 @@ export interface FormSectionProps {
   disabled?: boolean;
 }
 
-export const FormSection = ({
+export const FormArea = ({
   children,
   renderFooter,
   renderTitle,
   disabled,
-  title = 'Section',
+  title = 'From area',
   onSubmit,
   isLoading,
-}: FormSectionProps) => {
+}: FormAreaProps) => {
   return (
     <FlexForm fillWidth onSubmit={onSubmit}>
       <FlexBox padding={'8px 6px'} overflow={'hidden'}>
@@ -33,7 +33,7 @@ export const FormSection = ({
       </FlexBox>
       {children}
 
-      {renderFooter || <FormSectionFooter onSubmitPassed={!!onSubmit} isLoading={isLoading} disabled={disabled} />}
+      {renderFooter || <FormAreaFooter onSubmitPassed={!!onSubmit} isLoading={isLoading} disabled={disabled} />}
     </FlexForm>
   );
 };

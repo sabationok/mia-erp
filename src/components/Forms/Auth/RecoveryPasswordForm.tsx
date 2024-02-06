@@ -2,16 +2,16 @@ import React from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import LogoSvg from 'components/Layout/LogoSvg';
-import AuthInputLabel from '../atoms/Inputs/AuthInputLabel';
+import AuthInputLabel from '../../atoms/Inputs/AuthInputLabel';
 import LinkIcon from 'components/atoms/LinkIcon/LinkIcon';
 
 import { FieldErrors, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import useAuthService from '../../hooks/useAppAuth.hook';
-import InputText from '../atoms/Inputs/InputText';
-import { createThunkPayload } from '../../utils/fabrics';
-import { FormInputs } from './components/atoms';
+import useAuthService from '../../../hooks/useAppAuth.hook';
+import InputText from '../../atoms/Inputs/InputText';
+import { createThunkPayload } from '../../../utils/fabrics';
+import { FormInputs } from '../components/atoms';
 
 export interface RecoveryPasswordFormProps {
   helloTitle?: string;

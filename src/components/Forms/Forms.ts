@@ -5,25 +5,25 @@ export const CreateOrdersGroup = lazy(() => import('./FormCreateOrder/FormCreate
 export const SelectOrderType = lazy(() => import('./FormCreateOrder/components/SelectOrderTypeModal'));
 export const CreateOrderSlot = lazy(() => import('./FormCreateOrder/components/FormCreateOrderSlot'));
 // * TRANSACTIONS
-export const CreateTransaction = lazy(() => import('./FormCreateTransaction'));
-export const CreateCount = lazy(() => import('./FormCreateCount'));
+export const CreateTransaction = lazy(() => import('./finances/FormCreateTransaction'));
+export const CreateCount = lazy(() => import('./finances/FormCreateCount'));
 
 export const CreateBankAccount = lazy(() => import('./finances/FormCreateBankAccount'));
 // * OTHER DIRECTORIES
-export const CreateDirTreeComp = lazy(() => import('./FormCreateDirTreeComp'));
-export const CreateContractor = lazy(() => import('./FormCreateCounterparty'));
-export const CreateCategory = lazy(() => import('./FormCreateCategory'));
-export const CreateTag = lazy(() => import('./FormCreateTag'));
+export const CreateDirTreeComp = lazy(() => import('./Directories/FormCreateDirTreeComp'));
+export const CreateContractor = lazy(() => import('./Directories/FormCreateCounterparty'));
+export const CreateCategory = lazy(() => import('./Directories/FormCreateCategory'));
+export const CreateTag = lazy(() => import('./Directories/FormCreateTag'));
 // * PRICING
 export const CreatePrice = lazy(() => import('./pricing/FormCreatePrice/FormCreatePrice'));
 export const CreatePriceList = lazy(() => import('./pricing/FormCreatePriceList'));
 // * COMPANY
-export const InviteUser = lazy(() => import('./FormInviteUser'));
-export const CreateCustomRole = lazy(() => import('./FormCreateCustomRole'));
-export const CreateCompany = lazy(() => import('./FormCreateCompany'));
-export const CreateActivity = lazy(() => import('./FormCreateActivity'));
+export const InviteUser = lazy(() => import('./Auth/FormInviteUser'));
+export const CreateCustomRole = lazy(() => import('./Company/FormCreateCustomRole'));
+export const CreateCompany = lazy(() => import('./Company/FormCreateCompany'));
+export const CreateActivity = lazy(() => import('./Directories/FormCreateActivity'));
 // * METHODS
-export const CreateMethod = lazy(() => import('./FormCreateMethod'));
+export const CreateMethod = lazy(() => import('./Directories/FormCreateMethod'));
 export const DeliveryMethod = lazy(() => import('./methods/FormDeliveryMethod'));
 export const InvoicingMethod = lazy(() => import('./methods/FormInvoicingMethod'));
 // * WAREHOUSING
@@ -34,6 +34,6 @@ export const WarehousingSettings = lazy(() => import('./warehousing/FormWarehous
 // * PRODUCTS
 export const CreateProduct = lazy(() => import('./FormProduct/FormCreateProduct'));
 export const CreateVariation = lazy(() => import('./offers/_FormCreateVariation'));
-export const Variation = lazy(() => import('./offers/FormCreateVariationOverlay'));
+export const Variation = lazy(() => import('./offers/FormOfferVariation/FormCreateVariationOverlay'));
 export const CreateProperty = lazy(() => import('./offers/FormCreateProperty'));
 export const SelectProperties = lazy(() => import('./FormProduct/FormSelectPropertiesOverlay'));

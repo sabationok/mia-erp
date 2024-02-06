@@ -6,7 +6,6 @@ import { useModalService } from '../../../ModalProvider/ModalProvider';
 import FormCreateInputIntegration from '../../../Forms/integrations/FormCreateInputIntegration';
 import { InputIntegrationBase } from 'types/integrations.types';
 import { getIdRef, toQueriesForReq } from 'utils';
-import styled from 'styled-components';
 import ExtraFooterWithButton from '../../../atoms/ExtraFooterWithButton';
 import { useAppServiceProvider } from 'hooks/useAppServices.hook';
 import { AppModuleName } from 'redux/reduxTypes.types';
@@ -25,9 +24,9 @@ const FiscalizationIntegrationsTab: React.FC<FiscalizationIntegrationsTabProps> 
   const service = useAppServiceProvider()[AppModuleName.integrations];
   const [integrationsList, setIntegrationsList] = useState<InputIntegrationBase[]>([]);
   const modalS = useModalService();
-  const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);
+  // const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);
 
-  const handleToggleListVisibility = () => setIsListVisible(p => !p);
+  // const handleToggleListVisibility = () => setIsListVisible(p => !p);
 
   const onOpenModalPress = () => {
     currentServiceData &&
@@ -90,10 +89,10 @@ const FiscalizationIntegrationsTab: React.FC<FiscalizationIntegrationsTabProps> 
   );
 };
 
-const List = styled(FlexBox)<{ isVisible?: boolean }>`
-  max-height: ${p => (p.isVisible ? '100%' : 0)};
-
-  transition: all ${p => p.theme.globals.timingFnLong};
-`;
+// const List = styled(FlexBox)<{ isVisible?: boolean }>`
+//   max-height: ${p => (p.isVisible ? '100%' : 0)};
+//
+//   transition: all ${p => p.theme.globals.timingFnLong};
+// `;
 
 export default FiscalizationIntegrationsTab;

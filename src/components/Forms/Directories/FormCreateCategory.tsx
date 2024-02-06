@@ -3,15 +3,15 @@ import { ITrCategory, ITrCategoryFormData } from 'types/directories.types';
 import React from 'react';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import InputLabel from '../atoms/Inputs/InputLabel';
-import InputText from '../atoms/Inputs/InputText';
-import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
-import { t } from '../../lang';
-import { DirectoriesFormProps } from '../../types/dir.types';
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
-import { useAppForm } from '../../hooks';
-import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { FormInputs } from './components/atoms';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import InputText from '../../atoms/Inputs/InputText';
+import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
+import { t } from '../../../lang';
+import { DirectoriesFormProps } from '../../../types/dir.types';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
+import { useAppForm } from '../../../hooks';
+import { ApiDirType } from '../../../redux/APP_CONFIGS';
+import { FormInputs } from '../components/atoms';
 
 export interface FormCreateCategoryProps
   extends DirectoriesFormProps<

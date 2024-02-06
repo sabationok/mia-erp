@@ -1,6 +1,6 @@
 import { useModalProvider } from '../../components/ModalProvider/ModalProvider';
 import useDirServiceHook from '../useDirService.hook';
-import { FormCreateContractorProps } from '../../components/Forms/FormCreateCounterparty';
+import { FormCreateContractorProps } from '../../components/Forms/Directories/FormCreateCounterparty';
 import { Modals } from '../../components/Modals';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 

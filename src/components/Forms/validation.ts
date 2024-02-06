@@ -2,6 +2,7 @@ import * as yup from 'yup';
 import { AddressDto } from '../../redux/global.types';
 
 export const UUIDSchema = yup.string().uuid();
+
 export const UUIDRefSchema = yup.object().shape({
   _id: UUIDSchema,
 });
@@ -44,3 +45,23 @@ export const orderInfoBaseSchema = yup.object().shape({
     executeAt: yup.date(),
   }),
 });
+
+// export const createCompanyFormSchema = yup.object().shape({
+//   name: {
+//     first: yup.string(),
+//     second: yup.string(),
+//     middle: yup.string(),
+//   },
+//   label: {
+//     base: yup.string(),
+//     print: yup.string(),
+//   },
+//   email: yup.string().email().required(),
+//   businessSubjectType: yup.string().oneOf(Object.values(BusinessSubjectTypeEnum), 'Недопустиме значення').required(),
+//   ownershipType: yup.object().shape({
+//     label: yup.string(),
+//     value: yup.string().oneOf(Object.values(OwnershipTypeEnum), 'Недопустиме значення'),
+//   }),
+//   taxCode: yup.string(),
+//   phone: yup.string(),
+// });

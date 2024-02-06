@@ -1,7 +1,7 @@
 import { MaybeNull } from '../../../types/utils.types';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 
-export interface OfferFormSectionProps<DefaultValues = any> {
+export interface OfferFormAreaProps<DefaultValues = any> {
   _id?: string;
   disabled?: boolean;
   defaultValues?: MaybeNull<DefaultValues>;

@@ -1,19 +1,19 @@
 import ModalForm from 'components/ModalForm';
 import { ICount, ICountFormData } from 'redux/directories/counts.types';
 import React from 'react';
-import translate, { t } from '../../lang';
-import InputLabel from '../atoms/Inputs/InputLabel';
-import InputText from '../atoms/Inputs/InputText';
-import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
+import translate, { t } from '../../../lang';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import InputText from '../../atoms/Inputs/InputText';
+import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { DirectoriesFormProps } from '../../types/dir.types';
-import { useAppForm } from '../../hooks';
-import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
+import { DirectoriesFormProps } from '../../../types/dir.types';
+import { useAppForm } from '../../../hooks';
+import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { pick } from 'lodash';
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
-import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { FormInputs } from './components/atoms';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
+import { ApiDirType } from '../../../redux/APP_CONFIGS';
+import { FormInputs } from '../components/atoms';
 
 export interface FormCreateCountProps extends DirectoriesFormProps<ApiDirType.COUNTS, ICount, ICountFormData> {}
 

@@ -6,7 +6,7 @@ import createTreeData from './createTreeData';
 import * as numbers from './numbers';
 import { countPercentage, numberWithSpaces } from './numbers';
 import founderByDataPath from './founderByDataPath';
-import { toInputValueDate } from './data-time';
+import { toInputValueDate } from './date-time';
 import { enumToArray } from './fabrics';
 import { createTableTitlesFromTemplate } from './tables';
 import * as checks from './check';
@@ -16,7 +16,7 @@ export * from './founder';
 export * from './createStepChecker';
 
 export * from './data-transform';
-export * from './data-time';
+export * from './date-time';
 
 export { default as createStepsChecker } from './createStepChecker';
 

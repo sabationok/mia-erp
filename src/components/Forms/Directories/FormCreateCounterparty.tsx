@@ -1,25 +1,25 @@
-import { DirectoriesFormProps } from '../../types/dir.types';
+import { DirectoriesFormProps } from '../../../types/dir.types';
 import { ContractorsTypesEnum, IContractor, IContractorFormData } from 'redux/directories/contractors.types';
-import ModalForm from '../ModalForm';
+import ModalForm from '../../ModalForm';
 
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import InputLabel from '../atoms/Inputs/InputLabel';
-import { t } from '../../lang';
-import InputText from '../atoms/Inputs/InputText';
-import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import { t } from '../../../lang';
+import InputText from '../../atoms/Inputs/InputText';
+import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
 import React, { useMemo } from 'react';
-import { useAppForm } from '../../hooks';
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
-import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
-import ButtonsGroup from '../atoms/ButtonsGroup';
-import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { useDirectoriesSelector } from '../../redux/selectors.store';
-import { BusinessSubjectTypeEnum } from '../../types/companies.types';
-import { businessSubjectTypeFilterOptions } from '../../data/companies.data';
-import { FormInputs } from './components/atoms';
-import { counterpartyFilterOptions } from '../../data/modalFilterOptions.data';
+import { useAppForm } from '../../../hooks';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
+import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
+import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import ButtonsGroup from '../../atoms/ButtonsGroup';
+import { ApiDirType } from '../../../redux/APP_CONFIGS';
+import { useDirectoriesSelector } from '../../../redux/selectors.store';
+import { BusinessSubjectTypeEnum } from '../../../types/companies.types';
+import { businessSubjectTypeFilterOptions } from '../../../data/companies.data';
+import { FormInputs } from '../components/atoms';
+import { counterpartyFilterOptions } from '../../../data/modalFilterOptions.data';
 
 export interface FormCreateContractorProps
   extends DirectoriesFormProps<ApiDirType.CONTRACTORS, IContractor, IContractorFormData> {

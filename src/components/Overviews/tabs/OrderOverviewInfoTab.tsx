@@ -7,7 +7,7 @@ import { useOrdersSelector } from '../../../redux/selectors.store';
 import { t } from '../../../lang';
 import { OverviewCellProps } from '../components/overview-types';
 import ModalFilter from '../../atoms/ModalFilter';
-import { enumToTabs } from '../../../utils';
+import { _enumToTabs } from '../../../utils';
 import { OverviewCells } from '../components/Cells';
 
 export interface OrderOverviewInfoTabProps {}
@@ -20,7 +20,7 @@ enum OrderOverviewInfoTabsEnum {
   Additional = 'Additional',
 }
 
-const tabs = enumToTabs(OrderOverviewInfoTabsEnum);
+const tabs = _enumToTabs(OrderOverviewInfoTabsEnum);
 
 const OrderOverviewInfoTab: React.FC<OrderOverviewInfoTabProps> = _p => {
   const overlayS = usePageOverlayService();

@@ -1,5 +1,5 @@
-import AuthForm from 'components/Forms/AuthForm';
-import RecoveryPasswordForm from 'components/Forms/RecoveryPasswordForm';
+import AuthForm from 'components/Forms/Auth/AuthForm';
+import RecoveryPasswordForm from 'components/Forms/Auth/RecoveryPasswordForm';
 import styled from 'styled-components';
 
 export interface PageAuthProps {

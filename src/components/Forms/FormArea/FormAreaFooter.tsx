@@ -1,9 +1,9 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
-import FlexBox from '../atoms/FlexBox';
-import { t } from '../../lang';
+import FlexBox from '../../atoms/FlexBox';
+import { t } from '../../../lang';
 
-export interface FormSectionFooterProps {
+export interface FormAreaFooterProps {
   onSubmitPassed?: boolean;
   extraFooter?: React.ReactNode;
   canSubmit?: boolean;
@@ -11,7 +11,7 @@ export interface FormSectionFooterProps {
   disabled?: boolean;
 }
 
-const FormSectionFooter: React.FC<FormSectionFooterProps & React.HTMLAttributes<HTMLDivElement>> = ({
+const FormAreaFooter: React.FC<FormAreaFooterProps & React.HTMLAttributes<HTMLDivElement>> = ({
   onSubmitPassed,
   extraFooter,
   isLoading = false,
@@ -80,4 +80,4 @@ const ExtraFooter = styled(FlexBox)`
   background-color: ${({ theme }) => theme.modalBackgroundColor};
   border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
 `;
-export default FormSectionFooter;
+export default FormAreaFooter;

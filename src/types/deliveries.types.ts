@@ -1,4 +1,4 @@
-import { AddressDto, IBase, OnlyUUID } from '../redux/global.types';
+import { AddressDto, OnlyUUID } from '../redux/global.types';
 import { IDeliveryMethod } from './integrations.types';
 import {
   HasCompany,
@@ -6,7 +6,6 @@ import {
   HasDestination,
   HasDestinationRefs,
   HasDimensions,
-  HasLabel,
   HasMethod,
   HasStatus,
   MaybeNull,
@@ -43,8 +42,6 @@ export interface IDeliveryContentTotals {
   amount?: MaybeNull<number>;
   quantity?: MaybeNull<number>;
 }
-
-interface IDeliverySlot extends IBase, HasLabel, HasDimensions {}
 
 export interface IDeliveryBaseDto {
   order?: OnlyUUID;

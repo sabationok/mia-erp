@@ -1,20 +1,20 @@
-import { DirectoriesFormProps, ITagDirItem } from '../../types/dir.types';
-import ModalForm from '../ModalForm';
+import { DirectoriesFormProps, ITagDirItem } from '../../../types/dir.types';
+import ModalForm from '../../ModalForm';
 
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import InputLabel from '../atoms/Inputs/InputLabel';
-import { t } from '../../lang';
-import InputText from '../atoms/Inputs/InputText';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import { t } from '../../../lang';
+import InputText from '../../atoms/Inputs/InputText';
 import React from 'react';
-import { useAppForm } from '../../hooks';
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
-import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { FormInputs } from './components/atoms';
+import { useAppForm } from '../../../hooks';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
+import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
+import { ApiDirType } from '../../../redux/APP_CONFIGS';
+import { FormInputs } from '../components/atoms';
 import TagButtonsFilter from 'components/atoms/TagButtonsFilter';
-import { tagsFilterOptions } from '../../data/modalFilterOptions.data';
-import { TagTypeEnum } from '../../types/directories.types';
+import { tagsFilterOptions } from '../../../data/modalFilterOptions.data';
+import { TagTypeEnum } from '../../../types/directories.types';
 
 export interface FormCreateTagProps extends DirectoriesFormProps<ApiDirType.TAGS, ITagDirItem, ITagDirItem> {}
 

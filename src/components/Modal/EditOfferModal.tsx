@@ -1,13 +1,13 @@
 import { ModalFormProps } from '../ModalForm';
-import { OfferDimensionsFormSection } from '../Forms/offers/OfferDimensionsFormSection';
+import { OfferDimensionsFormArea } from '../Forms/offers/OfferDimensionsFormArea';
 import ModalBase from './index';
 import { t } from '../../lang';
 import { createApiCall, ProductsApi } from '../../api';
 import { toOfferFormData } from '../../utils';
 import { useEffect, useState } from 'react';
 import { IProductFullFormData, OfferTypeEnum } from '../../types/products.types';
-import { OfferMeasurementForm } from 'components/Forms/offers/OfferMeasurementFormSection';
-import { OfferBaseInfoFormSection } from '../Forms/offers/OfferBaseInfoFormSection';
+import { OfferMeasurementFormArea } from 'components/Forms/offers/OfferMeasurementFormArea';
+import { OfferBaseInfoFormArea } from '../Forms/offers/OfferBaseInfoFormArea';
 import FlexBox from '../atoms/FlexBox';
 import { AppLoaderSpiner } from '../atoms/AppLoaderSpiner';
 import { Text } from '../atoms/Text';
@@ -67,7 +67,7 @@ const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id, copy })
         </FlexBox>
       ) : (
         <FlexBox padding={'0 8px 16px'}>
-          <OfferBaseInfoFormSection
+          <OfferBaseInfoFormArea
             _id={_id}
             edit={!copy}
             type={current?.type}
@@ -77,12 +77,12 @@ const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id, copy })
             }}
           />
 
-          <OfferDimensionsFormSection
+          <OfferDimensionsFormArea
             defaultValues={current?.dimensions}
             disabled={copy ? !(current?._id && current) : !_id}
             _id={copy ? current?._id : _id}
           />
-          <OfferMeasurementForm
+          <OfferMeasurementFormArea
             defaultValues={current?.measurement}
             disabled={copy ? !(current?._id && current) : !_id}
             _id={copy ? current?._id : _id}

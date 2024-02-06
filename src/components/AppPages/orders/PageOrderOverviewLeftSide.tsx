@@ -5,7 +5,6 @@ import { usePageOverlayService } from '../../atoms/PageOverlayProvider';
 import OrderOverviewXL from '../../Overviews/OrderOverviewXL';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { useModalProvider } from '../../ModalProvider/ModalProvider';
 
 export interface PageOrderOverviewLeftSideProps {
   toggleRightSideVisibility?: () => void;
@@ -13,8 +12,7 @@ export interface PageOrderOverviewLeftSideProps {
 const PageOrderOverviewLeftSide: React.FC<PageOrderOverviewLeftSideProps> = ({ toggleRightSideVisibility }) => {
   const { currentOrder } = useOrdersSelector();
   const overlayService = usePageOverlayService();
-  const modalS = useModalProvider();
-  const [loading, setLoading] = useState(false);
+  const setLoading = useState(false)[1];
   const { orders: ordersServ } = useAppServiceProvider();
 
   const onOverlayBackdropClick = useCallback(

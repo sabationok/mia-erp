@@ -8,14 +8,12 @@ import { productsFilterOptions } from '../../../../data/modalFilterOptions.data'
 import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../../redux/reduxTypes.types';
 import { getIdRef } from '../../../../utils';
-import { useModalService } from '../../../ModalProvider/ModalProvider';
 import { IOrderSlot } from '../../../../types/orders/orders.types';
 
 export interface OrderContentTabProps {}
 
 const OrderContentTab: React.FC<OrderContentTabProps> = p => {
   const service = useAppServiceProvider()[AppModuleName.orders];
-  const modalService = useModalService();
   const [isLoading, setIsLoading] = useState(false);
   const [currentTab, setCurrentTab] = useState<number>(0);
 

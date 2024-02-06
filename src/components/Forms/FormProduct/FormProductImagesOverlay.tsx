@@ -1,4 +1,4 @@
-import FormProductImagesComponent from './FormProductImagesComponent';
+import FormProductImagesComponent from './components/FormProductImagesComponent';
 import { FormEventHandler, useState } from 'react';
 import { OverlayHandlerReturn } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
 import { IProduct, IProductImage } from '../../../types/products.types';

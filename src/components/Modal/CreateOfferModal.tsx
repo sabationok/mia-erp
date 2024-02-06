@@ -1,12 +1,12 @@
 import { ModalFormProps } from '../ModalForm';
-import { OfferDimensionsFormSection } from '../Forms/offers/OfferDimensionsFormSection';
+import { OfferDimensionsFormArea } from '../Forms/offers/OfferDimensionsFormArea';
 import ModalBase from './index';
 import { t } from '../../lang';
 import { toOfferFormData } from '../../utils';
 import { useState } from 'react';
 import { IProductFullFormData, OfferTypeEnum } from '../../types/products.types';
-import { OfferMeasurementForm } from 'components/Forms/offers/OfferMeasurementFormSection';
-import { OfferBaseInfoFormSection } from '../Forms/offers/OfferBaseInfoFormSection';
+import { OfferMeasurementFormArea } from 'components/Forms/offers/OfferMeasurementFormArea';
+import { OfferBaseInfoFormArea } from '../Forms/offers/OfferBaseInfoFormArea';
 import FlexBox from '../atoms/FlexBox';
 import ModalFilter from '../atoms/ModalFilter';
 import { productsFilterOptions } from '../../data/modalFilterOptions.data';
@@ -31,15 +31,15 @@ const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id }) => {
       }
     >
       <FlexBox padding={'0 8px 16px'}>
-        <OfferBaseInfoFormSection
+        <OfferBaseInfoFormArea
           defaultValues={current}
           onSuccess={data => {
             setCurrent(toOfferFormData(data));
           }}
           type={current?.type}
         />
-        <OfferDimensionsFormSection defaultValues={current?.dimensions} disabled={!current} />
-        <OfferMeasurementForm defaultValues={current?.measurement} disabled={!current} />
+        <OfferDimensionsFormArea defaultValues={current?.dimensions} disabled={!current} />
+        <OfferMeasurementFormArea defaultValues={current?.measurement} disabled={!current} />
       </FlexBox>
     </ModalBase>
   );

@@ -26,7 +26,7 @@ export const permissionsTableColumns: CellTittleProps<IPermission>[] = [
       name: 'ІПН/ЄДРПОУ',
       align: 'start',
       getData(rd) {
-        return rd.company?.taxCode?.corp ?? '---' + ', ' + rd.company?.taxCode?.personal ?? '---';
+        return rd.company?.taxCode?.corp ?? '---, ' + rd.company?.taxCode?.personal ?? '---';
       },
     },
 

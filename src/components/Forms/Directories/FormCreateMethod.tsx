@@ -1,17 +1,17 @@
-import ModalForm, { ModalFormProps } from '../ModalForm';
+import ModalForm, { ModalFormProps } from '../../ModalForm';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import styled from 'styled-components';
-import InputLabel from '../atoms/Inputs/InputLabel';
-import { t } from '../../lang';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import { t } from '../../../lang';
 import React, { useState } from 'react';
-import { useAppForm } from '../../hooks';
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
-import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import FlexBox from '../atoms/FlexBox';
-import { ServiceMethodBase } from '../../types/integrations.types';
-import ButtonSwitch from '../atoms/ButtonSwitch';
-import { AnyFn } from '../../utils/types';
+import { useAppForm } from '../../../hooks';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
+import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
+import FlexBox from '../../atoms/FlexBox';
+import { ServiceMethodBase } from '../../../types/integrations.types';
+import ButtonSwitch from '../../atoms/ButtonSwitch';
+import { AnyFn } from '../../../utils/types';
 
 export interface FormCreateMethodProps extends Omit<ModalFormProps<IMethodFormData>, 'onSubmit'> {
   _id?: string;

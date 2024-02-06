@@ -8,7 +8,7 @@ import InputLabel from '../../atoms/Inputs/InputLabel';
 import { useTranslatedMethodsList } from '../../../hooks/useTranslatedMethodsList.hook';
 import { useState } from 'react';
 import ModalFooter from '../../Modal/ModalFooter';
-import { enumToTabs } from '../../../utils';
+import { _enumToTabs } from '../../../utils';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import ModalFilter from '../../atoms/ModalFilter';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
@@ -33,7 +33,7 @@ export enum DeliveryPolicyTabs {
   returns = 'returns',
 }
 
-const tabs = enumToTabs(DeliveryPolicyTabs);
+const tabs = _enumToTabs(DeliveryPolicyTabs);
 const DeliveryPolicyTab = ({ onClose, onSubmit }: DeliveryPolicyTabProps) => {
   const service = useAppServiceProvider()[AppModuleName.companies];
   const company = useCompaniesSelector().current;

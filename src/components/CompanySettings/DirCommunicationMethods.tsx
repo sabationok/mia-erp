@@ -11,7 +11,7 @@ import { ICommunicationMethod } from '../../types/integrations.types';
 import useCustomersService, { CustomersService } from '../../hooks/useCustomersService';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
-import FormCreateMethod from '../Forms/FormCreateMethod';
+import FormCreateMethod from '../Forms/Directories/FormCreateMethod';
 
 export interface DirCommunicationMethodsProps
   extends IDirInTreeProps<MethodDirType, ICommunicationMethod, ICommunicationMethod, ICommunicationMethod> {

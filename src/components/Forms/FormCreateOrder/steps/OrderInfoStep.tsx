@@ -1,7 +1,7 @@
 import FlexBox from 'components/atoms/FlexBox';
 import styled from 'styled-components';
 import * as React from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { t } from 'lang';
 import { Text } from 'components/atoms/Text';
 import FormAccordionItem from '../../components/FormAccordionItem';
@@ -58,7 +58,8 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
     watch,
     trigger,
   } = useOrderInfoForm();
-  const [intMethodType, setIntMethodType] = useState<PaymentInternalTypeEnum>(PaymentInternalTypeEnum.externalService);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [intMethodType, _setIntMethodType] = useState<PaymentInternalTypeEnum>(PaymentInternalTypeEnum.externalService);
 
   const formValues = watch();
 
@@ -68,9 +69,9 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
   });
   const invoicingMethods = useTranslatedMethodsList(useInvoicesSelector().methods, { withFullLabel: true });
 
-  const filteredInvMethods = useMemo(() => {
-    return invoicingMethods.filter(m => m.type?.internal === intMethodType);
-  }, [intMethodType, invoicingMethods]);
+  // const filteredInvMethods = useMemo(() => {
+  //   return invoicingMethods.filter(m => m.type?.internal === intMethodType);
+  // }, [intMethodType, invoicingMethods]);
 
   const [confirms, setConfirms] = useState<Record<ConfirmsStateKay | string, boolean>>({
     hasDelivery: !!formValues.deliveryInfo,
@@ -79,14 +80,14 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
     hasExecuteDate: !!formValues.shipmentInfo?.executeAt,
   });
 
-  const hasImposedPayment = useMemo(() => {
-    return (
-      formValues.invoiceInfo?.method?.type?.internal &&
-      [PaymentInternalTypeEnum.imposedPayment, PaymentInternalTypeEnum.bonuses_imposedPayment].includes(
-        formValues.invoiceInfo?.method?.type?.internal
-      )
-    );
-  }, [formValues.invoiceInfo?.method?.type?.internal]);
+  // const hasImposedPayment = useMemo(() => {
+  //   return (
+  //     formValues.invoiceInfo?.method?.type?.internal &&
+  //     [PaymentInternalTypeEnum.imposedPayment, PaymentInternalTypeEnum.bonuses_imposedPayment].includes(
+  //       formValues.invoiceInfo?.method?.type?.internal
+  //     )
+  //   );
+  // }, [formValues.invoiceInfo?.method?.type?.internal]);
 
   const handleOnChangeValue: UseFormSetValue<ICreateOrderInfoFormState> = (path, value) => {
     try {

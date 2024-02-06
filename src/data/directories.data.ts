@@ -17,7 +17,7 @@ import { t } from '../lang';
 import DirTreeComp from '../components/Directories/DirTreeComp';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import DirTableComp, { DirTableCompProps } from '../components/Directories/DirTableComp';
-import FormCreateCounterparty from '../components/Forms/FormCreateCounterparty';
+import FormCreateCounterparty from '../components/Forms/Directories/FormCreateCounterparty';
 import { toReqData } from '../utils';
 import { OfferTypeEnum } from '../types/products.types';
 import { ModalChildrenProps, Modals } from '../components/Modals';

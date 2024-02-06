@@ -1,14 +1,14 @@
-import FlexBox from '../../atoms/FlexBox';
-import { IProductImage } from '../../../types/products.types';
+import FlexBox from '../../../atoms/FlexBox';
+import { IProductImage } from '../../../../types/products.types';
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { Text } from '../../atoms/Text';
-import { useModalService } from '../../ModalProvider/ModalProvider';
-import FormAddImageSet, { FormAddImageSetData, formAddImageSetTabs, ImageSetSrcType } from './FormAddImageSet';
-import ImagePreviewSmall from '../../atoms/ImagePreviewSmall';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import { checks as check } from '../../../utils';
+import { Text } from '../../../atoms/Text';
+import { useModalService } from '../../../ModalProvider/ModalProvider';
+import FormAddImageSet, { FormAddImageSetData, formAddImageSetTabs, ImageSetSrcType } from '../FormAddImageSet';
+import ImagePreviewSmall from '../../../atoms/ImagePreviewSmall';
+import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import { checks as check } from '../../../../utils';
 
 export interface FormProductImagesComponentProps {
   onChangeState?: (state: IProductImage[]) => void;

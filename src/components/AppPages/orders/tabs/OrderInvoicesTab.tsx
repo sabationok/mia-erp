@@ -5,7 +5,6 @@ import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useEffect, useMemo, useState } from 'react';
 import { getIdRef } from '../../../../utils';
 import { IInvoice } from '../../../../types/invoices.types';
-import { useModalService } from '../../../ModalProvider/ModalProvider';
 import { OrderTabProps } from './orderTabs.types';
 import { AppModuleName } from '../../../../redux/reduxTypes.types';
 
@@ -16,7 +15,7 @@ const OrderInvoicesTab: React.FC<OrderInvoicesTabProps> = ({ order }) => {
   const currentOrder = order ?? state?.currentOrder;
   const service = useAppServiceProvider().get(AppModuleName.orders);
 
-  const modalService = useModalService();
+  // const modalService = useModalService();
 
   const [isLoading, setIsLoading] = useState(false);
 

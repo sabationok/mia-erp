@@ -15,7 +15,6 @@ import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { IBaseKeys } from '../../../redux/global.types';
 import * as yup from 'yup';
 import styled from 'styled-components';
-import { useTransactionsSelector } from '../../../redux/selectors.store';
 import { DisabledStates } from '../../../types/utils.types';
 
 export interface FormInvoicingMethodProps {}
@@ -37,7 +36,7 @@ const validation = yup.object().shape({
 
 const FormInvoicingMethod: React.FC<FormInvoicingMethodProps> = ({ onSubmit, defaultState, ...props }) => {
   const submitOptions = useAfterSubmitOptions();
-  const bankAccounts = useTransactionsSelector().bankAccounts;
+  // const bankAccounts = useTransactionsSelector().bankAccounts;
   const [isLoading, setIsLoading] = useState(false);
 
   const formMethods = useAppForm<IInvoicingMethodFormData>({
@@ -49,10 +48,8 @@ const FormInvoicingMethod: React.FC<FormInvoicingMethodProps> = ({ onSubmit, def
     formState: { errors, isValid },
     handleSubmit,
     register,
-    registerSelect,
     reset,
     formValues,
-    setValue,
   } = formMethods;
 
   const registerSwitch = (name: keyof DisabledStates) => {

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useMemo } from 'react';
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
@@ -14,7 +13,6 @@ import { IProductFormData, IProductReqData, ProductFilterOpt, ProductStatusEnum 
 import { enumToFilterOptions, toReqData } from '../../../utils';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { IVariationTemplate } from '../../../types/properties.types';
 import useProductsService from '../../../hooks/useProductsService.hook';
 
 export interface FormCreateOfferProps extends Omit<ModalFormProps<any, any, IProductFormData>, 'onSubmit'> {
@@ -30,7 +28,7 @@ export interface FormCreateOfferProps extends Omit<ModalFormProps<any, any, IPro
 
 const productsStatusOption = enumToFilterOptions(ProductStatusEnum);
 
-const FormCreateOffer: React.FC<FormCreateOfferProps> = ({
+const _FormCreateOffer: React.FC<FormCreateOfferProps> = ({
   edit,
   _id,
   onSubmit,
@@ -44,27 +42,25 @@ const FormCreateOffer: React.FC<FormCreateOfferProps> = ({
   const submitOptions = useAfterSubmitOptions();
   const {
     directories: { directories },
-    products: { properties },
   } = useAppSelector();
   const form = useAppForm<IProductFormData>({
     defaultValues: defaultState,
   });
   const {
     formState: { errors },
-    formValues,
     register,
     setValue,
     registerSelect,
     handleSubmit,
   } = form;
 
-  const categories = useMemo(() => {
-    return directories[ApiDirType.CATEGORIES_PROD].filter(el => el.type === formValues.type);
-  }, [directories, formValues.type]);
-
-  const currentTemplate = useMemo((): IVariationTemplate | undefined => {
-    return properties.find(t => t._id === formValues?.template?._id);
-  }, [formValues?.template?._id, properties]);
+  // const categories = useMemo(() => {
+  //   return directories[ApiDirType.CATEGORIES_PROD].filter(el => el.type === formValues.type);
+  // }, [directories, formValues.type]);
+  //
+  // const currentTemplate = useMemo((): IVariationTemplate | undefined => {
+  //   return properties.find(t => t._id === formValues?.template?._id);
+  // }, [formValues?.template?._id, properties]);
 
   // TODO eventDate: formatDateForInputValue(defaultState?.eventDate)
   function onValidSubmit(sData: IProductFormData) {
@@ -79,7 +75,7 @@ const FormCreateOffer: React.FC<FormCreateOfferProps> = ({
         )
       : service.create({
           data: { data: sData },
-          onSuccess(d) {
+          onSuccess(_d) {
             submitOptions?.state?.close && onClose && onClose();
           },
         });
@@ -108,14 +104,6 @@ const FormCreateOffer: React.FC<FormCreateOfferProps> = ({
           </InputLabel>
         </FlexBox>
 
-        {/*<FormProductCategories*/}
-        {/*  options={categories}*/}
-        {/*  defaultData={formValues?.categories}*/}
-        {/*  onChange={data => {*/}
-        {/*    setValue('categories', data);*/}
-        {/*  }}*/}
-        {/*/>*/}
-
         <CustomSelect
           {...registerSelect('brand', {
             options: directories[ApiDirType.BRANDS],
@@ -133,67 +121,12 @@ const FormCreateOffer: React.FC<FormCreateOfferProps> = ({
           })}
         />
 
-        {/*<MeasurementInputs appForm={form} />*/}
-
-        {/*<DimensionsInputs form={form} />*/}
-
         <InputLabel label={t('description')} error={errors.description}>
           <TextareaPrimary placeholder={t('description')} {...register('description')} />
         </InputLabel>
-
-        {/*<FormProductStaticProperties*/}
-        {/*  template={currentTemplate}*/}
-        {/*  defaultData={formValues?.properties}*/}
-        {/*  onChange={ids => {*/}
-        {/*    setValue('properties', ids);*/}
-        {/*  }}*/}
-        {/*>*/}
-        {/*  <CustomSelect*/}
-        {/*    {...registerSelect('template', {*/}
-        {/*      options: properties,*/}
-        {/*      dropDownIsAbsolute: true,*/}
-        {/*      label: t('variationsTemplate'),*/}
-        {/*      placeholder: t('selectVariationsTemplate'),*/}
-        {/*    })}*/}
-        {/*  />*/}
-        {/*</FormProductStaticProperties>*/}
-
-        {/*<FormProductImagesComponent*/}
-        {/*  initialData={formValues?.images}*/}
-        {/*  onChangeState={data => {*/}
-        {/*    setValue('images', data);*/}
-        {/*  }}*/}
-        {/*/>*/}
       </FlexBox>
     </ModalForm>
   );
 };
 
-// const GridWrapper = styled.div<{ gridTemplateColumns?: string }>`
-//   display: grid;
-//   grid-template-columns: ${({ gridTemplateColumns }) => gridTemplateColumns || '1fr 120px'};
-//   gap: 12px;
-// `;
-
-export default FormCreateOffer;
-
-// const optionalSelectItem = yup
-//   .object()
-//   .shape({
-//     _id: yup.string(),
-//     label: yup.string(),
-//   })
-//   .nullable()
-//   .optional();
-// const requiredSelectItem = yup
-//   .object()
-//   .shape({
-//     _id: yup.string(),
-//     label: yup.string(),
-//   })
-//   .required();
-//
-// const getValidation = (type: TransactionType) =>
-//   yup.object().shape({
-//     category: requiredSelectItem,
-//   });
+export default _FormCreateOffer;

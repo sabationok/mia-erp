@@ -1,41 +1,20 @@
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import * as yup from 'yup';
-import { BusinessSubjectTypeEnum, ICompanyFormData, OwnershipTypeEnum } from '../../types/companies.types';
-import ModalForm, { ModalFormProps } from '../ModalForm';
-import InputLabel from '../atoms/Inputs/InputLabel';
-import InputText from '../atoms/Inputs/InputText';
-import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
-import ButtonsGroup from '../atoms/ButtonsGroup';
-import { t } from '../../lang';
-import { useAppForm } from '../../hooks';
-import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
-import { businessSubjectTypeFilterOptions, ownershipTypeFilterOptions } from '../../data/companies.data';
-import { ContractorsTypesEnum } from '../../redux/directories/contractors.types';
-import { FormInputs } from './components/atoms';
-import { AppModuleName } from '../../redux/reduxTypes.types';
-import { toReqData } from '../../utils';
-import { ToastService } from '../../services';
-
-const createCompanyFormSchema = yup.object().shape({
-  name: {
-    first: yup.string(),
-    second: yup.string(),
-    middle: yup.string(),
-  },
-  label: {
-    base: yup.string(),
-    print: yup.string(),
-  },
-  email: yup.string().required(),
-  businessSubjectType: yup.string().oneOf(Object.values(BusinessSubjectTypeEnum), 'Недопустиме значення').required(),
-  ownershipType: yup.object().shape({
-    label: yup.string(),
-    value: yup.string().oneOf(Object.values(OwnershipTypeEnum), 'Недопустиме значення'),
-  }),
-  taxCode: yup.string(),
-  phone: yup.string(),
-} as Record<keyof ICompanyFormData, any>);
+import { BusinessSubjectTypeEnum, ICompanyFormData } from '../../../types/companies.types';
+import ModalForm, { ModalFormProps } from '../../ModalForm';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import InputText from '../../atoms/Inputs/InputText';
+import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import ButtonsGroup from '../../atoms/ButtonsGroup';
+import { t } from '../../../lang';
+import { useAppForm } from '../../../hooks';
+import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import { businessSubjectTypeFilterOptions, ownershipTypeFilterOptions } from '../../../data/companies.data';
+import { ContractorsTypesEnum } from '../../../redux/directories/contractors.types';
+import { FormInputs } from '../components/atoms';
+import { AppModuleName } from '../../../redux/reduxTypes.types';
+import { toReqData } from '../../../utils';
+import { ToastService } from '../../../services';
 
 export interface FormCreateCompanyProps extends Omit<ModalFormProps<any, any, ICompanyFormData>, 'onSubmit'> {}
 const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...props }) => {
@@ -51,7 +30,7 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
     setValue,
   } = useAppForm<ICompanyFormData>({
     defaultValues: { businessSubjectType: BusinessSubjectTypeEnum.company, ...defaultState },
-    // reValidateMode: 'onSubmit',
+    reValidateMode: 'onBlur',
     // resolver: yupResolver(createCompanyFormSchema),
     shouldUnregister: true,
   });

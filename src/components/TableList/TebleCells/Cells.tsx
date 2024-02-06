@@ -197,13 +197,6 @@ const Content = styled.div<
     text-overflow: ellipsis;
   }
 `;
-const AvatarBox = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 4px;
-`;
 
 const Cell = {
   Simple: SimpleDataCell,

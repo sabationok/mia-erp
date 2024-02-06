@@ -1,7 +1,7 @@
 import { RenderOverviewCellComponent } from './overview-types';
 import { CellStyledComp } from './CellStyles';
 import { OverviewCellHeader } from './OverviewCellHeader';
-import FormCreateVariation from '../../Forms/offers/FormCreateVariationOverlay';
+import FormCreateVariation from '../../Forms/offers/FormOfferVariation/FormCreateVariationOverlay';
 import FlexBox from '../../atoms/FlexBox';
 import React from 'react';
 

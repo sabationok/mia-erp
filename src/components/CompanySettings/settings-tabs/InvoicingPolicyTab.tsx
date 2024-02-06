@@ -12,7 +12,7 @@ import { t } from '../../../lang';
 import ButtonSwitch from '../../atoms/ButtonSwitch';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import ModalFooter from '../../Modal/ModalFooter';
-import { enumToTabs } from '../../../utils';
+import { _enumToTabs } from '../../../utils';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { useCallback, useState } from 'react';
@@ -27,7 +27,7 @@ export interface InvoicingPolicyTabProps extends CompanySettingsTabBaseProps {
   }>;
 }
 
-const tabs = enumToTabs(InvoicingPolicyTypeEnum);
+const tabs = _enumToTabs(InvoicingPolicyTypeEnum);
 
 const InvoicingPolicyTab = ({ onClose, onSubmit }: InvoicingPolicyTabProps) => {
   const company = useCompaniesSelector().current;

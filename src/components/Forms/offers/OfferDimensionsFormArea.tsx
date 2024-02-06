@@ -1,16 +1,16 @@
 import DimensionsInputs, { DimensionsFormData } from '../FormProduct/components/DimensionsInputs';
 import { useAppForm } from '../../../hooks';
-import { FormSection } from '../FormSection';
+import { FormArea } from '../FormArea/FormArea';
 import useProductsService from '../../../hooks/useProductsService.hook';
 import { ToastService } from '../../../services';
 import { IDimensions } from '../../../types/utils.types';
 import { useState } from 'react';
-import { OfferFormSectionProps } from './types';
+import { OfferFormAreaProps } from './types';
 import { t } from '../../../lang';
 
-export interface OfferDimensionsFormSectionProps extends OfferFormSectionProps<IDimensions> {}
+export interface OfferDimensionsFormSectionProps extends OfferFormAreaProps<IDimensions> {}
 
-export const OfferDimensionsFormSection = ({ defaultValues, _id, ...props }: OfferDimensionsFormSectionProps) => {
+export const OfferDimensionsFormArea = ({ defaultValues, _id, ...props }: OfferDimensionsFormSectionProps) => {
   const service = useProductsService();
   const [isLoading, setIsLoading] = useState(false);
   const form = useAppForm<DimensionsFormData>({
@@ -31,8 +31,8 @@ export const OfferDimensionsFormSection = ({ defaultValues, _id, ...props }: Off
   };
 
   return (
-    <FormSection onSubmit={form.handleSubmit(onValid)} title={t('Package size')} isLoading={isLoading} {...props}>
+    <FormArea onSubmit={form.handleSubmit(onValid)} title={t('Package size')} isLoading={isLoading} {...props}>
       <DimensionsInputs form={form} disabled={props.disabled} />
-    </FormSection>
+    </FormArea>
   );
 };

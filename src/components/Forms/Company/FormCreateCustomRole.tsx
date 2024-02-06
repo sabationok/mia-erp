@@ -1,23 +1,23 @@
 import ModalForm, { ModalFormProps } from 'components/ModalForm';
 import { ICustomRole } from 'redux/customRoles/customRoles.types';
 import styled from 'styled-components';
-import InputLabel from '../atoms/Inputs/InputLabel';
-import InputText from '../atoms/Inputs/InputText';
-import TextareaPrimary from '../atoms/Inputs/TextareaPrimary';
-import FlexBox from '../atoms/FlexBox';
-import { useAppForm } from '../../hooks';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import InputText from '../../atoms/Inputs/InputText';
+import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
+import FlexBox from '../../atoms/FlexBox';
+import { useAppForm } from '../../../hooks';
 import { SubmitErrorHandler, SubmitHandler } from 'react-hook-form';
-import { useCustomRolesSelector } from '../../redux/selectors.store';
+import { useCustomRolesSelector } from '../../../redux/selectors.store';
 import { useCallback, useEffect, useMemo } from 'react';
-import CheckBox from '../TableList/TebleCells/CellComponents/CheckBox';
+import CheckBox from '../../TableList/TebleCells/CellComponents/CheckBox';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import translate, { getTranslatedString } from '../../lang';
+import translate, { getTranslatedString } from '../../../lang';
 import { FieldValues } from 'react-hook-form/dist/types';
-import { AppErrorSubmitHandler, AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from './components/FormAfterSubmitOptions';
-import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
-import { Text } from '../atoms/Text';
+import { AppErrorSubmitHandler, AppSubmitHandler } from '../../../hooks/useAppForm.hook';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
+import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import { Text } from '../../atoms/Text';
 
 export interface FormCreateCustomRoleProps extends Omit<ModalFormProps, 'onSubmit'> {
   _id?: string;

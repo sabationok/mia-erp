@@ -42,7 +42,7 @@ const SelectManagerModal: React.FC<SelectManagerModalProps> = ({ onSubmit, onSel
         ];
       },
     };
-  }, [onSelect, users]);
+  }, [onSelect, permission.company?._id, service, users]);
 
   return (
     <ModalForm fillWidth fillHeight onClose={onClose} title={t('Select manager')}>

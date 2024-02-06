@@ -2,8 +2,6 @@ import { CompanySettingsTabBaseProps } from './companySettingsTabs.types';
 import { useAppForm } from '../../../hooks';
 import { ICompanyWarehousingPolicyFormData } from '../../../types/companies.types';
 import { usePermissionsSelector, useWarehousesSelector } from '../../../redux/selectors.store';
-import { useMemo } from 'react';
-import { FilterOption } from '../../atoms/ModalFilter';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { t } from '../../../lang';
@@ -12,16 +10,15 @@ import ModalFooter from '../../Modal/ModalFooter';
 
 export interface WarehousingPolicyTabProps extends CompanySettingsTabBaseProps {}
 
-const WarehousingPolicyTab = ({ onClose }: WarehousingPolicyTabProps) => {
+const WarehousingPolicyTab: React.FC<WarehousingPolicyTabProps> = () => {
   const company = usePermissionsSelector().permission.company;
 
   const warehouses = useWarehousesSelector().warehouses;
-  const warehousesSelectOptions = useMemo(
-    (): FilterOption<string>[] => warehouses.map(w => ({ ...w, value: w._id })),
-    [warehouses]
-  );
+  // const warehousesSelectOptions = useMemo(
+  //   (): FilterOption<string>[] => warehouses.map(w => ({ ...w, value: w._id })),
+  //   [warehouses]
+  // );
   const form = useAppForm<ICompanyWarehousingPolicyFormData>({ defaultValues: company as never });
-  const formValues = form.watch();
 
   // const registerSwitch = (name: keyof Omit<ICompanyDeliveryPolicyFormData, 'method'>) => {
   //   return {

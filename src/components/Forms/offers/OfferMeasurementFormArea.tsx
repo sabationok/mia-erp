@@ -1,16 +1,16 @@
 import MeasurementInputs, { MeasurementInputsFormData } from '../FormProduct/components/MeasuremenInputs';
 import { useAppForm } from '../../../hooks';
-import { FormSection } from '../FormSection';
+import { FormArea } from '../FormArea/FormArea';
 import useProductsService from '../../../hooks/useProductsService.hook';
 import { ToastService } from '../../../services';
 import { IMeasurement } from '../../../types/utils.types';
 import { useState } from 'react';
-import { OfferFormSectionProps } from './types';
+import { OfferFormAreaProps } from './types';
 import { t } from '../../../lang';
 
-export interface OfferMeasurementFormProps extends OfferFormSectionProps<IMeasurement> {}
+export interface OfferMeasurementFormProps extends OfferFormAreaProps<IMeasurement> {}
 
-export const OfferMeasurementForm = ({ defaultValues, _id, ...props }: OfferMeasurementFormProps) => {
+export const OfferMeasurementFormArea = ({ defaultValues, _id, ...props }: OfferMeasurementFormProps) => {
   const service = useProductsService();
   const [isLoading, setIsLoading] = useState(false);
   const form = useAppForm<MeasurementInputsFormData>({ defaultValues: { measurement: defaultValues } });
@@ -29,8 +29,8 @@ export const OfferMeasurementForm = ({ defaultValues, _id, ...props }: OfferMeas
   };
 
   return (
-    <FormSection onSubmit={form.handleSubmit(onValid)} title={t('Measurement info')} isLoading={isLoading} {...props}>
+    <FormArea onSubmit={form.handleSubmit(onValid)} title={t('Measurement info')} isLoading={isLoading} {...props}>
       <MeasurementInputs appForm={form} disabled={props.disabled} />
-    </FormSection>
+    </FormArea>
   );
 };

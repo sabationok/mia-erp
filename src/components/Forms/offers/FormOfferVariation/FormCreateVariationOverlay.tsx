@@ -1,31 +1,29 @@
 import styled from 'styled-components';
-import FlexBox from '../../atoms/FlexBox';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import { useProductsSelector, usePropertiesSelector } from '../../../redux/selectors.store';
-import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import FlexBox from '../../../atoms/FlexBox';
+import { useProductsSelector, usePropertiesSelector } from '../../../../redux/selectors.store';
+import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Text } from '../../atoms/Text';
-import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { OverlayHandlerReturn } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
-import { checks, toVariationFormData, toVariationReqData } from '../../../utils';
-import { IVariation, IVariationFormData } from '../../../types/variations.types';
-import { OnlyUUID } from '../../../redux/global.types';
-import { ToastService } from '../../../services';
-import { ModalFormProps } from '../../ModalForm';
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
-import { OverlayFooter, OverlayHeader } from '../FormProduct/components';
+import { Text } from '../../../atoms/Text';
+import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
+import { OverlayHandlerReturn } from '../../../AppPages/PageProductOverview/PageCurrentProductProvider';
+import { toVariationFormData, toVariationReqData } from '../../../../utils';
+import { IVariation, IVariationFormData } from '../../../../types/variations.types';
+import { OnlyUUID } from '../../../../redux/global.types';
+import { ToastService } from '../../../../services';
+import { ModalFormProps } from '../../../ModalForm';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../components/FormAfterSubmitOptions';
+import { OverlayFooter, OverlayHeader } from '../../FormProduct/components';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { IProperty, IPropertyValue } from '../../../types/properties.types';
-import { useAppForm } from '../../../hooks';
-import InputLabel from '../../atoms/Inputs/InputLabel';
-import InputText from '../../atoms/Inputs/InputText';
-import { t } from '../../../lang';
-import DimensionsInputs from '../FormProduct/components/DimensionsInputs';
-import LangButtonsGroup from '../../atoms/LangButtonsGroup';
-import { PropertyItemStylesByCmsKey } from '../../Directories/DirProperties/components/PropertyItem';
-import { MaybeNull } from '../../../types/utils.types';
+import { useAppForm } from '../../../../hooks';
+import InputLabel from '../../../atoms/Inputs/InputLabel';
+import InputText from '../../../atoms/Inputs/InputText';
+import { t } from '../../../../lang';
+import DimensionsInputs from '../../FormProduct/components/DimensionsInputs';
+import LangButtonsGroup from '../../../atoms/LangButtonsGroup';
+import { MaybeNull } from '../../../../types/utils.types';
+import OfferVariationPropertySelector from './OfferVariationPropertySelector';
 
 // const dimensionsInputs: {
 //   label?: string;
@@ -192,7 +190,7 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
   const renderTemplate = useMemo(() => {
     return preparedTemplate?.map(prop => {
       return (
-        <RenderVariationProperty
+        <OfferVariationPropertySelector
           key={`prop_${prop._id}`}
           item={prop}
           selectedIds={selectedIds}
@@ -222,24 +220,6 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
             </InputLabel>
           </FlexBox>
 
-          {/*<FlexBox gap={8} fillWidth style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>*/}
-          {/*  /!*{dimensionsInputs.map(input => {*!/*/}
-          {/*  /!*  return (*!/*/}
-          {/*  /!*    <InputLabel key={input.name} label={input.label} error={errors[input.name as never]}>*!/*/}
-          {/*  /!*      <InputText*!/*/}
-          {/*  /!*        placeholder={input.placeholder}*!/*/}
-          {/*  /!*        min={1}*!/*/}
-          {/*  /!*        type={'number'}*!/*/}
-          {/*  /!*        {...register(input.name, {*!/*/}
-          {/*  /!*          valueAsNumber: true,*!/*/}
-          {/*  /!*          min: 1,*!/*/}
-          {/*  /!*        })}*!/*/}
-          {/*  /!*      />*!/*/}
-          {/*  /!*    </InputLabel>*!/*/}
-          {/*  /!*  );*!/*/}
-          {/*  /!*})}*!/*/}
-
-          {/*</FlexBox>*/}
           <DimensionsInputs form={formMethods} />
         </Inputs>
 
@@ -283,44 +263,6 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
   );
 };
 
-export const RenderVariationProperty = ({
-  item,
-  selectedIds = [],
-  onSelect,
-}: {
-  item: IProperty;
-  selectedValue?: string;
-  selectedIds?: string[];
-  onSelect?: (propId: string, valueId: string, label?: MaybeNull<string>) => void;
-}) => {
-  const renderChildren = useMemo(() => {
-    return item.childrenList?.map(value => {
-      const isSelected = selectedIds.includes(value._id);
-
-      return (
-        <RenderPropertyValue
-          key={`prop-value-${value._id}`}
-          item={value}
-          isSelected={isSelected}
-          onSelect={id => onSelect && onSelect(item._id, id, value?.label)}
-        />
-      );
-    });
-  }, [item._id, item.childrenList, onSelect, selectedIds]);
-
-  return (
-    <PropertyBox key={`property-box-${item._id}`} gap={8} fillWidth padding={'8px 0 0'}>
-      <Text style={{ flex: 1, paddingLeft: 12 }} $weight={500}>
-        {item.label}
-      </Text>
-
-      <PropertyValuesBox fillWidth padding={'8px 0'} gap={6} cmsKey={item.cmsConfigs?.key}>
-        {renderChildren}
-      </PropertyValuesBox>
-    </PropertyBox>
-  );
-};
-
 const FormContainer = styled.form`
   flex: 1;
 
@@ -343,19 +285,6 @@ const TemplateBox = styled(FlexBox)`
   padding-bottom: 8px;
 `;
 
-const PropertyBox = styled(FlexBox)`
-  border-top: 1px solid ${p => p.theme.sideBarBorderColor};
-  &:last-child {
-    border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
-  }
-`;
-
-const PropertyValuesBox = styled(FlexBox)<{ cmsKey?: MaybeNull<string> }>`
-  width: 100%;
-  display: grid;
-
-  grid-template-columns: repeat(${p => (p.cmsKey ? PropertyItemStylesByCmsKey[p.cmsKey]?.numColumns ?? 2 : 2)}, 1fr);
-`;
 const Inputs = styled(FlexBox)`
   padding: 0 4px;
 `;
@@ -363,43 +292,6 @@ const Inputs = styled(FlexBox)`
 const ExtraFooterBox = styled(FlexBox)`
   border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
 `;
-
-const ValueTag = styled(ButtonIcon)`
-  width: 100%;
-  max-width: 100%;
-  min-width: 50px;
-`;
-
-const RenderPropertyValue = ({
-  item,
-  isSelected,
-  onSelect,
-}: {
-  item: IPropertyValue;
-  isSelected?: boolean;
-  onSelect: (id: string) => void;
-}) => {
-  const [isActive, setIsActive] = useState(false);
-
-  useEffect(() => {
-    if (!checks.isUnd(isSelected)) {
-      setIsActive(isSelected);
-    }
-  }, [isSelected]);
-
-  return (
-    <ValueTag
-      variant={isActive ? 'filledSmall' : 'outlinedSmall'}
-      padding={'6px 8px'}
-      fontWeight={500}
-      onClick={() => {
-        onSelect && onSelect(item._id);
-      }}
-    >
-      {item.label}
-    </ValueTag>
-  );
-};
 
 const CmsConfigs = styled(FlexBox)``;
 
