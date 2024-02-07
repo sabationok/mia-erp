@@ -10,6 +10,7 @@ import { OfferBaseInfoFormArea } from '../Forms/offers/OfferBaseInfoFormArea';
 import FlexBox from '../atoms/FlexBox';
 import ModalFilter from '../atoms/ModalFilter';
 import { productsFilterOptions } from '../../data/modalFilterOptions.data';
+import { OfferFormPropertiesArea } from '../Forms/offers/OfferFormPropertiesArea';
 
 export interface UpdateOfferModalProps extends ModalFormProps {
   _id: string;
@@ -38,6 +39,9 @@ const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id }) => {
           }}
           type={current?.type}
         />
+
+        <OfferFormPropertiesArea />
+
         <OfferDimensionsFormArea defaultValues={current?.dimensions} disabled={!current} />
         <OfferMeasurementFormArea defaultValues={current?.measurement} disabled={!current} />
       </FlexBox>
