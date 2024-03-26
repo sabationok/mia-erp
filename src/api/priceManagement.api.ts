@@ -1,4 +1,4 @@
-import baseApi from './baseApi';
+import { ClientApi } from './client.api';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppResponse, OnlyUUID } from '../redux/global.types';
 import {
@@ -11,7 +11,7 @@ import {
 import { AppQueryParams } from './index';
 
 export class PriceManagementApi {
-  private static api = baseApi;
+  private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.priceManagementEndpoints;
 
   public static async createPriceList(data?: IPriceListReqData): Promise<AppResponse<IPriceList>> {

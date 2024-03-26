@@ -1,6 +1,5 @@
 import APP_CONFIGS, { IntegrationType } from '../redux/APP_CONFIGS';
 import { AppQueries } from './index';
-import baseApi from './baseApi';
 import {
   InputIntegrationBase,
   InputIntegrationDto,
@@ -8,12 +7,13 @@ import {
   OutputIntegrationDto,
 } from '../types/integrations.types';
 import { AppResponse } from '../redux/global.types';
+import { ClientApi } from './client.api';
 
 export interface GetAllIntegrationsQueries extends Pick<AppQueries, 'warehouseId' | 'serviceId'> {
   type: IntegrationType;
 }
 export default class ExtServicesApi {
-  private static api = baseApi;
+  private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.integrations;
 
   public static createInputIntegration(data?: {

@@ -1,4 +1,4 @@
-import { Storage, WebStorage } from 'redux-persist';
+import { PersistConfig, Storage, WebStorage } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import storageSession from 'redux-persist/lib/storage/session';
 import { AppModuleName } from './reduxTypes.types';
@@ -9,8 +9,7 @@ export const persistorConfigs: Record<
   {
     key: Key;
     storage: Storage | WebStorage;
-    whitelist: string[];
-  }
+  } & PersistConfig<any>
 > = {
   auth: {
     key: 'auth',

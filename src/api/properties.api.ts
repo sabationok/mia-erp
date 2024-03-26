@@ -1,11 +1,10 @@
-import baseApi from './baseApi';
-
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppResponse } from '../redux/global.types';
 import { IProperty, IPropertyReqData } from 'types/properties.types';
+import { ClientApi } from './client.api';
 
 export default class PropertiesApi {
-  private static api = baseApi;
+  private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.propertiesApiEndpoints;
 
   public static async getAll({ data }: { data?: IPropertyReqData }): Promise<AppResponse<IProperty[]>> {

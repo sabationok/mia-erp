@@ -1,10 +1,10 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppResponse } from '../redux/global.types';
-import baseApi from './baseApi';
 import { ICommunicationMethod, ICommunicationMethodReqData } from '../types/integrations.types';
+import { ClientApi } from './client.api';
 
 export default class CommunicationApi {
-  private static api = baseApi;
+  private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.communications;
 
   public static getAllMethods(): Promise<AppResponse<ICommunicationMethod[]>> {

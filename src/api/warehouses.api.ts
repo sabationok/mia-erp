@@ -1,11 +1,11 @@
-import baseApi from './baseApi';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import { IProductInventory, IWarehouse, IWarehouseDocReqData, IWarehouseReqData } from '../types/warehouses.types';
 import { AppResponse, OnlyUUID } from '../redux/global.types';
+import { ClientApi } from './client.api';
 
 export class WarehousesApi {
-  private static api = baseApi;
+  private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.warehousing;
 
   public static async createWarehouse(data?: IWarehouseReqData): Promise<AppResponse<IWarehouse>> {

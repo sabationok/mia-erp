@@ -1,12 +1,11 @@
-import baseApi from './baseApi';
-
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import { IProduct, IProductReqData } from '../types/products.types';
 import { AppResponse } from '../redux/global.types';
+import { ClientApi } from './client.api';
 
 export default class ProductsApi {
-  private static api = baseApi;
+  private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.offers;
 
   public static async getAll(params?: AppQueryParams): Promise<AppResponse<IProduct[]>> {

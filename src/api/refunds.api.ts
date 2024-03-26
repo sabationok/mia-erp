@@ -1,11 +1,11 @@
-import baseApi from './baseApi';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppResponse, OnlyUUID } from '../redux/global.types';
 import { IProduct } from '../types/products.types';
 import { IAllRefundsRes, IRefund, IRefundRes, IRefundSlot } from '../redux/refunds/refunds.types';
+import { ClientApi } from './client.api';
 
 export default class RefundsApi {
-  private static api = baseApi;
+  private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.refunds;
 
   public static async getAll(...args: any[]): Promise<IAllRefundsRes> {

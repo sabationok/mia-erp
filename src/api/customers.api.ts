@@ -1,11 +1,11 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import { AppResponse, OnlyUUID } from '../redux/global.types';
-import baseApi from './baseApi';
 import { ICustomer, ICustomerReqDta } from '../types/customers.types';
+import { ClientApi } from './client.api';
 
 export default class CustomersApi {
-  private static api = baseApi;
+  private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.customers;
 
   public static create(info?: ICustomerReqDta): Promise<AppResponse<ICustomer>> {

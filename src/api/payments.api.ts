@@ -1,12 +1,12 @@
-import baseApi from './baseApi';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import { AppResponse } from '../redux/global.types';
 import { IPayment } from '../types/payments.types';
 import { IPaymentMethod, IPaymentMethodReqData } from '../types/integrations.types';
+import { ClientApi } from './client.api';
 
 export default class PaymentsApi {
-  private static api = baseApi;
+  private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.payments;
 
   public static createForOrder(): Promise<AppResponse<IPayment>> {

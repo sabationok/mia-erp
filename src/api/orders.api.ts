@@ -1,4 +1,3 @@
-import baseApi from './baseApi';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import {
   ICreateOrdersWithSlotsAndGroupByWarehousesReqData,
@@ -8,9 +7,10 @@ import {
 } from '../types/orders/orders.types';
 import { AppResponse, OnlyUUID } from '../redux/global.types';
 import { AppQueryParams } from './index';
+import { ClientApi } from './client.api';
 
 export default class OrdersApi {
-  private static api = baseApi;
+  private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.ordersEndpoints;
 
   public static getAll(...args: any[]): Promise<AppResponse<IOrder[]>> {

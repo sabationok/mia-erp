@@ -1,11 +1,11 @@
-import baseApi from './baseApi';
 import { ICompany, ICompanyDeletingRes, ICompanyReqData, ICompanyUpdatingRes } from '../types/companies.types';
 import APP_CONFIGS from 'redux/APP_CONFIGS';
 import { AppResponse } from '../redux/global.types';
 import { IPermission } from '../types/permissions.types';
+import { ClientApi } from './client.api';
 
-export default class CompaniesApi {
-  private static api = baseApi;
+export class CompaniesApi {
+  private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.companies;
 
   public static readonly getById = async ({
@@ -39,3 +39,5 @@ export default class CompaniesApi {
   //   return this.api.get(this.endpoints.getConfigs());
   // }
 }
+
+export default CompaniesApi;

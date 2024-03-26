@@ -1,8 +1,8 @@
-import baseApi from './baseApi';
 import APP_CONFIGS, { Endpoints } from '../redux/APP_CONFIGS';
 import { AppResponse } from '../redux/global.types';
 import { IBaseDirItem } from '../types/dir.types';
 import { AppQueryParams } from './index';
+import { ClientApi } from './client.api';
 
 export type GetAllByDirTypeOptions = Required<Pick<AppQueryParams, 'dirType'>> & {
   params?: Pick<AppQueryParams, 'isArchived' | 'createTreeData'>;
@@ -11,7 +11,7 @@ export type GetAllByDirTypeOptions = Required<Pick<AppQueryParams, 'dirType'>> &
 export interface IDirRes<RD = any> extends AppResponse<RD> {}
 
 export default class DirectoriesApi {
-  private static api = baseApi;
+  private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.directories;
 
   public static async create<DTO = any, RD = IBaseDirItem>({

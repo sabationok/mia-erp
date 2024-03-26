@@ -1,11 +1,11 @@
-import baseApi from './baseApi';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import { AppResponse, OnlyUUID } from '../redux/global.types';
 import { IVariation, IVariationReqData } from 'types/variations.types';
+import { ClientApi } from './client.api';
 
 export default class VariationsApi {
-  private static api = baseApi;
+  private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.variationsApiEndpoints;
 
   public static async getAll(params?: AppQueryParams): Promise<AppResponse<IVariation[]>> {

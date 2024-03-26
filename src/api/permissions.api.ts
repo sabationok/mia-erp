@@ -1,4 +1,3 @@
-import { baseApi } from './index';
 import APP_CONFIGS, { Endpoints } from '../redux/APP_CONFIGS';
 import {
   IPermission,
@@ -10,9 +9,10 @@ import {
 } from '../types/permissions.types';
 import { AppResponse, CompanyQueryType } from '../redux/global.types';
 import { IUser } from '../types/auth.types';
+import { ClientApi } from './client.api';
 
 export default class PermissionsApi {
-  private static api = baseApi;
+  private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.permissions;
 
   public static create(data: IPermissionForReq): Promise<AppResponse<IPermission>> {

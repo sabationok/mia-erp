@@ -2,16 +2,16 @@ import axios, { AxiosInstance } from 'axios';
 import { baseApi } from './index';
 import { ConfigService } from '../services';
 
-export default class BaseApi {
-  private static LOCALHOST_API_PORT = ConfigService.get('LOCALHOST_API_PORT') || 5000;
+export class ClientApi {
+  private static LOCALHOST_API_PORT = ConfigService.get('LOCALHOST_API_PORT') || 4500;
   private static BASE_URL_LOCALHOST = `http://localhost:${this.LOCALHOST_API_PORT}/api/`;
-  private static BASE_URL_RAILWAY = `https://crm-nest-api-production.up.railway.app/api/`;
+  private static BASE_URL_RAILWAY = `https://mia-erp-dev.up.railway.app/api/`;
 
-  private static _client = axios.create({
-    baseURL: this.BASE_URL_LOCALHOST,
+  private static _clientRef = axios.create({
+    baseURL: !ConfigService.IS_DEV_MODE ? this.BASE_URL_LOCALHOST : this.BASE_URL_RAILWAY,
   });
-  static get client(): AxiosInstance {
-    return this._client;
+  static get clientRef(): AxiosInstance {
+    return this._clientRef;
   }
   public static token = {
     set(token: string) {

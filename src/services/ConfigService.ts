@@ -23,7 +23,7 @@ export const firebaseConfig = {
   appId: '1:304210435678:web:1e1cfad321443f40101ecf',
 };
 export default class ConfigService {
-  private static IS_DEV_MODE = process.env.NODE_ENV === 'development';
+  public static IS_DEV_MODE = process.env.NODE_ENV === 'development';
 
   public static isDevMode() {
     return this.IS_DEV_MODE;

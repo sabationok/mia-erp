@@ -1,11 +1,11 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
-import baseApi from './baseApi';
 import { AppResponse } from '../redux/global.types';
 import { IDeliveryMethod, IDeliveryMethodReqData } from '../types/integrations.types';
+import { ClientApi } from './client.api';
 
 export default class DeliveriesApi {
-  private static api = baseApi;
+  private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.deliveries;
 
   public static createOne(args?: any, params?: AppQueryParams) {
