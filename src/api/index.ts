@@ -1,5 +1,3 @@
-import baseApi, { baseURL, token } from './baseApi';
-import { createApiCall } from './createApiCall.api';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { FilterReturnDataType } from '../components/Filter/AppFilter';
 import { OnlyUUID, UUID } from '../redux/global.types';
@@ -22,6 +20,8 @@ export { default as CustomersApi } from './customers.api';
 export { default as CommunicationApi } from './communication.api';
 export { default as ExtServicesApi } from './ext-services.api';
 export { default as IntegrationsApi } from './integrations.api';
+
+export * from './createApiCall.api';
 
 export enum AppQueryKey {
   dirType = 'dirType',
@@ -105,5 +105,3 @@ export interface ISortParams<DataPath = any> {
   sortOrder?: SortOrder;
   dataPath?: DataPath | string;
 }
-
-export { baseApi, token, baseURL, createApiCall };

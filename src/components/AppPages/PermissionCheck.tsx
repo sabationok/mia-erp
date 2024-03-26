@@ -2,7 +2,6 @@ import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
 import { memo, useEffect, useMemo, useState } from 'react';
 import useAppParams from '../../hooks/useAppParams.hook';
-import baseApi, { permissionToken } from '../../api/baseApi';
 import { AxiosError } from 'axios';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import AppLoader from '../atoms/AppLoader';
@@ -10,6 +9,7 @@ import { isUndefined } from 'lodash';
 import useLoadInitialAppDataHook from '../../hooks/useLoadInitialAppData.hook';
 import { t } from '../../lang';
 import { ToastService } from '../../services';
+import { ClientApi } from '../../api';
 
 type Props = {
   redirectTo?: string;
@@ -32,15 +32,15 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
   const isValidPermissionId = useMemo(() => {
     const isValid = !isUndefined(permissionId) && state?.permission?._id === permissionId;
     if (isValid) {
-      permissionToken.set(permissionId);
+      ClientApi.setP_Token(permissionId);
     } else {
       console.warn(
         'PermissionCheck ACCESS DENIED',
-        baseApi?.defaults?.headers?.Permission || baseApi?.defaults?.headers
+        ClientApi.clientRef?.defaults?.headers?.Permission || ClientApi.clientRef?.defaults?.headers
       );
-      permissionToken.unset();
+      ClientApi.unSetP_Token();
     }
-    return baseApi.defaults?.headers?.Permission === permissionId;
+    return ClientApi.clientRef.defaults?.headers?.Permission === permissionId;
   }, [permissionId, state.permission._id]);
 
   const hasPermission = useMemo(() => !!state.permission._id, [state.permission._id]);
@@ -60,9 +60,9 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
 
   useEffect(() => {
     if (!hasPermission) {
-      baseApi.interceptors.response.clear();
+      ClientApi.clientRef.interceptors.response.clear();
     } else {
-      baseApi.interceptors.response.use(
+      ClientApi.clientRef.interceptors.response.use(
         value => value,
         (e: AxiosError) => {
           if (e.status === 409) {
@@ -82,7 +82,7 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
     }
 
     return () => {
-      baseApi.interceptors.response.clear();
+      ClientApi.clientRef.interceptors.response.clear();
       // clearCurrent();
     };
   }, [clearCurrent, hasPermission, logOutUser, permissionId]);

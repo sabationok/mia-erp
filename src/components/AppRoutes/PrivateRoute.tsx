@@ -1,10 +1,10 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuthSelector } from 'redux/selectors.store';
-import { toast } from 'react-toastify';
 import { useEffect, useMemo } from 'react';
-import baseApi, { token } from '../../api/baseApi';
 import { AxiosError } from 'axios';
 import useAppAuthHook from '../../hooks/useAppAuth.hook';
+import { ToastService } from '../../services';
+import { ClientApi } from '../../api';
 
 const PrivateRoute: React.FC<{ redirectTo: string }> = ({ redirectTo }) => {
   const { logOutUser } = useAppAuthHook();
@@ -12,9 +12,9 @@ const PrivateRoute: React.FC<{ redirectTo: string }> = ({ redirectTo }) => {
 
   const hasAccess = useMemo(() => {
     if (access_token) {
-      token.set(access_token);
+      ClientApi.setToken(access_token);
     } else {
-      token.unset();
+      ClientApi.unsetToken();
     }
 
     return !!access_token;
@@ -22,19 +22,19 @@ const PrivateRoute: React.FC<{ redirectTo: string }> = ({ redirectTo }) => {
 
   useEffect(() => {
     if (!hasAccess) {
-      baseApi.interceptors.response.clear();
-      toast.error('Unauthorized');
+      ClientApi.clientRef.interceptors.response.clear();
+      ToastService.error('Unauthorized');
     }
     if (hasAccess) {
       return;
     }
-    baseApi.interceptors.response.use(
+    ClientApi.clientRef.interceptors.response.use(
       async value => value,
       async (e: AxiosError) => {
         console.log(e);
         if (e.status === 401) {
           console.error('PrivateRoute | access denied');
-          toast.error('PrivateRoute | access denied');
+          ToastService.error('PrivateRoute | access denied');
           logOutUser().finally();
         }
       },
@@ -42,7 +42,7 @@ const PrivateRoute: React.FC<{ redirectTo: string }> = ({ redirectTo }) => {
     );
 
     return () => {
-      baseApi.interceptors.response.clear();
+      ClientApi.clientRef.interceptors.response.clear();
     };
   }, [hasAccess, logOutUser]);
 

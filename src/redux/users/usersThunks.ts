@@ -1,10 +1,10 @@
-import baseApi from 'api/baseApi';
 import { IRegisteredUser, IRegisteredUserInfoRes, IRegistrationData, IUser } from 'types/auth.types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import { AsyncThunkConfig } from 'redux/reduxTypes.types';
 import { ThunkPayload } from '../store.store';
 import { AppResponse } from '../global.types';
+import { ClientApi } from '../../api';
 
 const USERS_API_BASENAME = '/users';
 export const usersApiRoutes = {
@@ -23,7 +23,7 @@ export const getAllUsersThunk = createAsyncThunk<IUser[], ThunkPayload, AsyncThu
     try {
       const {
         data: { data },
-      }: IGetAllUsersRes = await baseApi.get(usersApiRoutes.getAll);
+      }: IGetAllUsersRes = await ClientApi.clientRef.get(usersApiRoutes.getAll);
 
       onSuccess && onSuccess(data);
       return data;
@@ -38,7 +38,7 @@ export const getUserById = createAsyncThunk<IUser, ThunkPayload<{ userId: string
   'auth/getUserById',
   async ({ onSuccess, onError, data }, thunkAPI) => {
     try {
-      const res: IGetUserByIdRes = await baseApi.get(usersApiRoutes.getById(data?.userId));
+      const res: IGetUserByIdRes = await ClientApi.clientRef.get(usersApiRoutes.getById(data?.userId));
 
       onSuccess && onSuccess(res.data.data);
 
@@ -59,7 +59,7 @@ export const createUserByAdminThunk = createAsyncThunk<
   try {
     const {
       data: { data },
-    }: IRegisteredUserInfoRes = await baseApi.post(usersApiRoutes.createByAdmin, {});
+    }: IRegisteredUserInfoRes = await ClientApi.clientRef.post(usersApiRoutes.createByAdmin, {});
 
     onSuccess && onSuccess(data);
 

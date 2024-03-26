@@ -138,7 +138,7 @@ export enum ApiDirType {
   DEFAULT = 'DEFAULT',
 }
 
-const auth: ApiEndpointsMap = {
+const auth = {
   register: () => `${API_BASE_ROUTES.AUTH}/${Endpoints.register}`,
   logIn: () => `${API_BASE_ROUTES.AUTH}/${Endpoints.logIn}`,
   logOut: () => `${API_BASE_ROUTES.AUTH}/${Endpoints.logOut}`,

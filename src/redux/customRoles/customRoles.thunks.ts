@@ -1,14 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosResponse } from 'axios';
 import { ICustomRole, ModuleWithActions } from 'redux/customRoles/customRoles.types';
-// import { any } from 'data/counts.types';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { axiosErrorCheck } from 'utils';
-
-import baseApi from '../../api/baseApi';
 import { ThunkPayload } from '../store.store';
 import { AppResponse } from '../global.types';
 import CustomRolesApi from '../../api/customRoles.api';
+import { ClientApi } from '../../api';
 // import { token } from '../../services/baseApi';
 const CUSTOM_ROLES_API_BASENAME = '/directories/customRoles';
 export const rolesApiRoutes = {
@@ -58,7 +56,7 @@ export const getAllRolesThunk = createAsyncThunk<IAllCustomRoles, IPayloadGetAll
   RolesThunkTypeEnum.getAllRoles,
   async (payload, thunkAPI) => {
     try {
-      const response: AxiosResponse<IAllCustomRoles> = await baseApi.get(rolesApiRoutes.getAll());
+      const response: AxiosResponse<IAllCustomRoles> = await ClientApi.clientRef.get(rolesApiRoutes.getAll());
 
       payload?.onSuccess(response.data.data);
 
@@ -74,7 +72,7 @@ export const createCustomRoleThunk = createAsyncThunk<ICustomRole, ThunkPayload<
   RolesThunkTypeEnum.create,
   async ({ onSuccess, onError, data }, thunkAPI) => {
     try {
-      const response: AppResponse<ICustomRole> = await baseApi.post(rolesApiRoutes.create(), data);
+      const response: AppResponse<ICustomRole> = await ClientApi.clientRef.post(rolesApiRoutes.create(), data);
 
       onSuccess && onSuccess(response.data.data);
 

@@ -1,4 +1,3 @@
-import baseApi from 'api/baseApi';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import {
@@ -11,26 +10,14 @@ import {
   IRegisteredUserInfoRes,
   IRegistrationData,
 } from '../../types/auth.types';
-import { AxiosResponse } from 'axios';
 import { ThunkPayload } from '../store.store';
 import AuthApi from '../../api/auth.api';
-
-const AUTH_API_BASENAME = '/auth';
-export const authApiRoutes = {
-  getAll: `${AUTH_API_BASENAME}/getAll`,
-  getById: (id: string) => `${AUTH_API_BASENAME}/getById/${id}`,
-  signUp: `${AUTH_API_BASENAME}/signUp`,
-  signIn: `${AUTH_API_BASENAME}/signIn`,
-  signOut: `${AUTH_API_BASENAME}/signOut`,
-  getCurrentUser: (id: string) => `${AUTH_API_BASENAME}/getCurrentUser/${id}`,
-  getCurrentUserInfo: (id: string) => `${AUTH_API_BASENAME}/getCurrentUserInfo/${id}`,
-};
 
 export const registerUserThunk = createAsyncThunk<IRegisteredUser, ThunkPayload<IRegistrationData>>(
   'auth/registerUserThunk',
   async ({ data, onSuccess, onError }, thunkAPI) => {
     try {
-      const response: IRegisteredUserInfoRes = await baseApi.post(authApiRoutes.signUp, data);
+      const response: IRegisteredUserInfoRes = await AuthApi.registerUser(data);
 
       onSuccess && onSuccess(response.data.data);
 
@@ -66,7 +53,7 @@ export const logOutUserThunk = createAsyncThunk<any, ThunkPayload>(
   'auth/logOutUserThunk',
   async ({ data, onSuccess, onError }, thunkAPI) => {
     try {
-      const response: AxiosResponse<any> = await baseApi.post(authApiRoutes.signOut);
+      const response = await AuthApi.logOutUser();
       onSuccess && onSuccess(response);
     } catch (error) {
       onError && onError(error);
@@ -85,7 +72,7 @@ export const getCurrentUserThunk = createAsyncThunk<
   >
 >('auth/getCurrentUserThunk', async ({ onSuccess, onError, onLoading, data }, thunkAPI) => {
   try {
-    const response: ICurrentUserInfoRes = await baseApi.get(authApiRoutes.getCurrentUser(data?.permissionId || ''));
+    const response = await AuthApi.getCurrentUser();
 
     onSuccess && onSuccess(response);
 
