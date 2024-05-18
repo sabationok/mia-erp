@@ -1,4 +1,4 @@
-import { IProductImage } from '../../../types/products.types';
+import { OfferImageSlotEntity } from '../../../types/offers/offers.types';
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { ChangeEventHandler, useRef, useState } from 'react';
 import { FilterOption } from '../../atoms/ModalFilter';
@@ -24,7 +24,7 @@ export const formAddImageSetTabs: FilterOption<ImageSetSrcType>[] = [
   { label: 'Webp', value: ImageSetSrcType.webp },
 ];
 
-export interface FormAddImageSetData extends Partial<Omit<IProductImage, '_id' | 'createdAt' | 'updatedAt'>> {}
+export interface FormAddImageSetData extends Partial<Omit<OfferImageSlotEntity, '_id' | 'createdAt' | 'updatedAt'>> {}
 
 export interface FormAddImageProps extends Omit<ModalFormProps<any, any, FormAddImageSetData>, 'onSubmit'> {
   onSubmit?: (data: Partial<FormAddImageSetData>, setId?: string, setIndex?: number) => void;

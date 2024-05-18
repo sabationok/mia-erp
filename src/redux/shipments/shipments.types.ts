@@ -1,5 +1,5 @@
 import { AddressDto, IBase, IFormDataValueWithID, OnlyUUID } from '../global.types';
-import { IOrder, IOrderSlot } from '../../types/orders/orders.types';
+import { OrderEntity, IOrderSlot } from '../../types/orders/orders.types';
 import { IPayment } from '../../types/payments.types';
 import { IInvoice } from '../../types/invoices.types';
 import { IDelivery } from '../../types/deliveries.types';
@@ -12,7 +12,7 @@ export enum ShipmentProviderEnum {
 enum ShipmentStatusTypeEnum {}
 
 export interface IShipment extends IBase {
-  order?: IOrder;
+  order?: OrderEntity;
   slots?: IOrderSlot[];
 
   payment?: IPayment;

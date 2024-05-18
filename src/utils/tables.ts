@@ -1,9 +1,13 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { IVariationTemplate } from '../types/properties.types';
+import { IVariationTemplate } from '../types/offers/properties.types';
 import { t } from '../lang';
-import { IVariation, IVariationTableData, VariationPropertiesMapInTableData } from '../types/variations.types';
-import { AmountAndPercentage, PriceAmountAndPercentageFields } from '../types/priceManagement.types';
-import { IProductInventory } from '../types/warehouses.types';
+import {
+  VariationEntity,
+  IVariationTableData,
+  VariationPropertiesMapInTableData,
+} from '../types/offers/variations.types';
+import { AmountAndPercentage, PriceAmountAndPercentageFields } from '../types/price-management/priceManagement.types';
+import { WarehouseItemEntity } from '../types/warehouses.types';
 import { numberWithSpaces } from './numbers';
 import { ITableAction, ITableListContext } from '../components/TableList/tableTypes.types';
 import { NavigateFunction } from 'react-router/dist/lib/hooks';
@@ -35,7 +39,7 @@ export class TableActionsBuilder<Service = any, TData = any, Extra = any, Name e
   }
 }
 
-export const transformVariationTableData = (variation: IVariation): IVariationTableData => {
+export const transformVariationTableData = (variation: VariationEntity): IVariationTableData => {
   let propertiesMap: VariationPropertiesMapInTableData = {};
 
   variation.properties?.map(value => {
@@ -81,7 +85,7 @@ export function createTableTitlesFromTemplate(
         align: 'start',
         getData: d => d?.label,
       },
-      getImgPreview: rd => (rd.product?.images ? rd.product?.images[0]?.img_preview : ''),
+      getImgPreview: rd => (rd.offer?.images ? rd.offer?.images[0]?.img_preview : ''),
       width: '270px',
       action: 'doubleDataWithAvatar',
     },
@@ -176,7 +180,7 @@ export const priceAmountAndPercentageFieldsLabels: Record<
 export function createPriceColumnForBatch(
   name: keyof PriceAmountAndPercentageFields,
   width?: string
-): CellTittleProps<IProductInventory> {
+): CellTittleProps<WarehouseItemEntity> {
   return {
     top: {
       name: priceAmountAndPercentageFieldsLabels[name]?.amount,

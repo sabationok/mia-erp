@@ -9,7 +9,7 @@ import { ISortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import { warehouseOverviewTableColumns } from '../../../data/warehauses.data';
 import { useAppParams } from '../../../hooks';
-import { IProductInventory } from '../../../types/warehouses.types';
+import { WarehouseItemEntity } from '../../../types/warehouses.types';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useModalProvider } from '../../ModalProvider/ModalProvider';
 import { Modals } from '../../Modals';
@@ -27,7 +27,7 @@ const PageWarehouseOverview: React.FC<any> = (props: Props) => {
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   const tableConfig = useMemo(
-    (): ITableListProps<IProductInventory> => ({
+    (): ITableListProps<WarehouseItemEntity> => ({
       tableData: state.current?.inventories,
       isFilter: false,
       isSearch: true,
@@ -70,13 +70,13 @@ const Page = styled.div`
   ${takeFullGridArea}
 `;
 
-type WarehouseTableActionsCreator = TableActionCreator<IProductInventory>;
+type WarehouseTableActionsCreator = TableActionCreator<WarehouseItemEntity>;
 
 const useWarehouseOverviewActionsCreator = (): WarehouseTableActionsCreator => {
   // const service = useAppServiceProvider().warehouses;
   const modalS = useModalProvider();
 
-  return (ctx: ITableListContext<IProductInventory>) => {
+  return (ctx: ITableListContext<WarehouseItemEntity>) => {
     const current = ctx.selectedRow;
 
     return [

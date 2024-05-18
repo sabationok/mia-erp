@@ -1,6 +1,6 @@
-import { IOrder } from '../../../../types/orders/orders.types';
+import { OrderEntity } from '../../../../types/orders/orders.types';
 
 export interface OrderTabProps {
-  order?: IOrder;
+  order?: OrderEntity;
   onClose?: () => void;
 }

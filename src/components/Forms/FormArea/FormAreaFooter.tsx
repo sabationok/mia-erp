@@ -12,10 +12,10 @@ export interface FormAreaFooterProps {
 }
 
 const FormAreaFooter: React.FC<FormAreaFooterProps & React.HTMLAttributes<HTMLDivElement>> = ({
-  onSubmitPassed,
   extraFooter,
   isLoading = false,
   disabled,
+  onSubmitPassed = false,
   ...props
 }) => {
   return (
@@ -33,13 +33,12 @@ const FormAreaFooter: React.FC<FormAreaFooterProps & React.HTMLAttributes<HTMLDi
         {/*  </ButtonIcon>*/}
         {/*)}*/}
 
-        <ButtonIcon
-          type={onSubmitPassed ? 'submit' : 'reset'}
-          variant={'filledSmall'}
-          isLoading={isLoading}
-          disabled={disabled}
-        >
-          {isLoading ? t('Loading...') : onSubmitPassed ? t('Save') : t('Close')}
+        <ButtonIcon type={'reset'} variant={'outlinedSmall'} isLoading={isLoading} disabled={disabled}>
+          {isLoading ? t('Loading...') : t('Clear')}
+        </ButtonIcon>
+
+        <ButtonIcon type={'submit'} variant={'filledSmall'} isLoading={isLoading} disabled={disabled}>
+          {isLoading ? t('Loading...') : t('Save')}
         </ButtonIcon>
       </FlexBox>
     </Footer>

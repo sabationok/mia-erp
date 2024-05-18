@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import { useProductsSelector } from '../../../redux/selectors.store';
-import { IProduct } from '../../../types/products.types';
+import { OfferEntity } from '../../../types/offers/offers.types';
 import { nanoid } from '@reduxjs/toolkit';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 
@@ -9,7 +9,7 @@ export interface PageCurrentProductProviderProps {
 }
 
 export interface PageCurrentProductProviderValue {
-  currentProduct?: IProduct;
+  currentOffer?: OfferEntity;
   clearCurrent: () => void;
   getOverlayStack: () => OverlayStackItemData[];
   overlayStack: OverlayStackItemData[];
@@ -46,7 +46,7 @@ export const PageCurrentProductCTX = createContext({});
 export const usePageCurrentProduct = () => useContext(PageCurrentProductCTX) as PageCurrentProductProviderValue;
 
 const PageCurrentProductProvider: React.FC<PageCurrentProductProviderProps> = ({ children }) => {
-  const { currentProduct } = useProductsSelector();
+  const { currentOffer } = useProductsSelector();
   const service = useAppServiceProvider()[ServiceName.products];
   const [overlayStack, setOverlayStack] = useState<OverlayStackItemData[]>([]);
 
@@ -105,7 +105,7 @@ const PageCurrentProductProvider: React.FC<PageCurrentProductProviderProps> = ({
 
   const CTX = useMemo(
     (): PageCurrentProductProviderValue => ({
-      currentProduct,
+      currentOffer,
       createOverlayComponent,
       overlayStack,
       removeStackItem,
@@ -113,7 +113,7 @@ const PageCurrentProductProvider: React.FC<PageCurrentProductProviderProps> = ({
       clearStack,
       clearCurrent,
     }),
-    [currentProduct, createOverlayComponent, overlayStack, removeStackItem, getOverlayStack, clearStack, clearCurrent]
+    [currentOffer, createOverlayComponent, overlayStack, removeStackItem, getOverlayStack, clearStack, clearCurrent]
   );
 
   return <PageCurrentProductCTX.Provider value={CTX}>{children}</PageCurrentProductCTX.Provider>;

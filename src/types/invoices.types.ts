@@ -1,5 +1,5 @@
 import { IBase, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
-import { IOrder, IOrderSlot } from './orders/orders.types';
+import { OrderEntity, IOrderSlot } from './orders/orders.types';
 import { IInvoicingMethod } from './integrations.types';
 import {
   AppDate,
@@ -84,7 +84,7 @@ export interface IInvoice
     HasIsValidFlag,
     HasEmbeddedStatus<InvoiceStatusInfo>,
     HasEmbeddedError<InvoiceErrorInfo> {
-  order?: IOrder;
+  order?: OrderEntity;
   delivery?: IDelivery;
   slots?: IOrderSlot[];
   payments?: IPayment[];

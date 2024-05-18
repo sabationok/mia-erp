@@ -2,10 +2,9 @@ import { ModalFormProps } from '../ModalForm';
 import { OfferDimensionsFormArea } from '../Forms/offers/OfferDimensionsFormArea';
 import ModalBase from './index';
 import { t } from '../../lang';
-import { createApiCall, ProductsApi } from '../../api';
 import { toOfferFormData } from '../../utils';
-import { useEffect, useState } from 'react';
-import { IProductFullFormData, OfferTypeEnum } from '../../types/products.types';
+import { useEffect } from 'react';
+import { OfferTypeEnum } from '../../types/offers/offers.types';
 import { OfferMeasurementFormArea } from 'components/Forms/offers/OfferMeasurementFormArea';
 import { OfferBaseInfoFormArea } from '../Forms/offers/OfferBaseInfoFormArea';
 import FlexBox from '../atoms/FlexBox';
@@ -13,6 +12,13 @@ import { AppLoaderSpiner } from '../atoms/AppLoaderSpiner';
 import { Text } from '../atoms/Text';
 import ModalFilter from '../atoms/ModalFilter';
 import { productsFilterOptions } from '../../data/modalFilterOptions.data';
+import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
+import { OfferLoadersData, OfferLoadersKey } from './CreateOfferModal';
+import { LoadersProvider } from 'Providers/Loaders/LoaderProvider';
+import { OfferFormPropertiesArea } from '../Forms/offers/OfferFormPropertiesArea';
+import useProductsService from '../../hooks/useProductsService.hook';
+import { OfferFormImagesArea } from '../Forms/offers/OfferFormImagesArea';
+import { useAppRouter, useCurrentOffer } from '../../hooks';
 
 export interface UpdateOfferModalProps extends ModalFormProps {
   _id: string;
@@ -20,31 +26,30 @@ export interface UpdateOfferModalProps extends ModalFormProps {
 }
 
 const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id, copy }) => {
-  const [current, setCurrent] = useState<IProductFullFormData & { _id?: string }>();
-  const [isLoading, setIsLoading] = useState(false);
+  const { setData, state, ...loaders } = useLoaders<OfferLoadersKey, OfferLoadersData>();
+  const service = useProductsService();
+  const router = useAppRouter();
+  const currentOffer = useCurrentOffer({ id: _id });
 
   useEffect(() => {
-    createApiCall(
-      {
-        data: _id,
-        onSuccess: data => {
-          if (copy) {
-            data._id = '';
-          }
-          setCurrent(toOfferFormData(data));
-        },
-        onLoading: setIsLoading,
-      },
-      ProductsApi.getFullInfoById,
-      ProductsApi
-    );
+    service.getProductFullInfo({
+      data: { _id },
+      onSuccess: loaders.onSuccess('offer', data => {
+        if (copy) {
+          data._id = '';
+        }
+        setData('formData', toOfferFormData(data));
+        router.push({ query: { offerId: _id } });
+      }),
+      onLoading: loaders.onLoading('offer'),
+    });
+
+    // eslint-disable-next-line
   }, [_id, copy]);
 
   useEffect(() => {
-    if (current?._id) {
-      console.log(current);
-    }
-  }, [current]);
+    console.log({ currentOffer });
+  }, [currentOffer]);
 
   return (
     <ModalBase
@@ -54,41 +59,61 @@ const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id, copy })
       extraHeader={
         <ModalFilter
           filterOptions={productsFilterOptions}
-          defaultValue={current?.type ?? OfferTypeEnum.GOODS}
-          onOptSelect={o => setCurrent(prev => ({ ...prev, type: o.value }))}
+          defaultValue={state?.formData?.type ?? OfferTypeEnum.GOODS}
+          onOptSelect={o => {
+            setData('formData', p => ({ ...p, type: o.value }));
+          }}
         />
       }
     >
-      {isLoading ? (
-        <FlexBox fillWidth padding={'24px'} alignItems={'center'} gap={16}>
-          <AppLoaderSpiner size={52} />
+      <LoadersProvider value={{ setData, state, ...loaders }}>
+        {loaders.isLoading?.offer ? (
+          <FlexBox fillWidth padding={'24px'} alignItems={'center'} gap={16}>
+            <AppLoaderSpiner size={52} />
 
-          <Text>{t('Loading info about offer...')}</Text>
-        </FlexBox>
-      ) : (
-        <FlexBox padding={'0 8px 16px'}>
-          <OfferBaseInfoFormArea
-            _id={_id}
-            edit={!copy}
-            type={current?.type}
-            defaultValues={current}
-            onSuccess={data => {
-              setCurrent(copy ? { ...toOfferFormData(data), _id: data._id } : toOfferFormData(data));
-            }}
-          />
+            <Text>{t('Loading info about offer...')}</Text>
+          </FlexBox>
+        ) : (
+          <FlexBox padding={'0 8px 16px'}>
+            <OfferBaseInfoFormArea
+              _id={_id}
+              edit={!copy}
+              type={state.formData?.type}
+              defaultValues={state.formData}
+              onSuccess={data => {
+                setData('formData', copy ? { ...toOfferFormData(data), _id: data._id } : toOfferFormData(data));
+              }}
+            />
 
-          <OfferDimensionsFormArea
-            defaultValues={current?.dimensions}
-            disabled={copy ? !(current?._id && current) : !_id}
-            _id={copy ? current?._id : _id}
-          />
-          <OfferMeasurementFormArea
-            defaultValues={current?.measurement}
-            disabled={copy ? !(current?._id && current) : !_id}
-            _id={copy ? current?._id : _id}
-          />
-        </FlexBox>
-      )}
+            <OfferFormPropertiesArea
+              offer={currentOffer}
+              defaultValues={state.formData?.properties}
+              disabled={!state.formData}
+              _id={copy ? state.formData?._id : _id}
+            />
+
+            <OfferDimensionsFormArea
+              offer={currentOffer}
+              defaultValues={state.formData?.dimensions}
+              disabled={copy ? !(state.formData?._id && state.formData) : !_id}
+              _id={copy ? state.formData?._id : _id}
+            />
+            <OfferMeasurementFormArea
+              offer={currentOffer}
+              defaultValues={state.formData?.measurement}
+              disabled={copy ? !(state.formData?._id && state.formData) : !_id}
+              _id={copy ? state.formData?._id : _id}
+            />
+
+            <OfferFormImagesArea
+              offer={currentOffer}
+              defaultValues={state?.formData?.images}
+              disabled={!state?.formData}
+              _id={copy ? state?.formData?._id : _id}
+            />
+          </FlexBox>
+        )}
+      </LoadersProvider>
     </ModalBase>
   );
 };

@@ -1,6 +1,6 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppResponse } from '../redux/global.types';
-import { IProperty, IPropertyReqData } from 'types/properties.types';
+import { IProperty, IPropertyReqData } from 'types/offers/properties.types';
 import { ClientApi } from './client.api';
 
 export default class PropertiesApi {

@@ -4,55 +4,69 @@ import { FormArea } from '../FormArea/FormArea';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { useProductsSelector, usePropertiesSelector } from '../../../redux/selectors.store';
+import { usePropertiesSelector } from '../../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { OnlyUUID } from '../../../redux/global.types';
+import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import { OfferFormAreaProps } from './types';
+import { useOfferLoadersProvider } from '../../Modal/CreateOfferModal';
+import { ArrayUUID } from '../../../redux/global.types';
+import { t } from '../../../lang';
+import { OfferEntity } from '../../../types/offers/offers.types';
 
-export interface OfferFormPropertiesAreaProps {
+export interface OfferFormPropertiesAreaProps extends OfferFormAreaProps<ArrayUUID> {
   onSubmit?: AppSubmitHandler<string[]>;
   onSelect?: (id: string) => void;
   onChange?: (ids: string[]) => void;
-  offerRef?: OnlyUUID;
-  templateRef?: OnlyUUID;
+  onSuccess?: (data: OfferEntity) => void;
   update?: string;
 }
 
-export const OfferFormPropertiesArea = ({
-  onSubmit,
-  onSelect,
-  onChange,
-  offerRef,
-  templateRef,
-  update,
-}: OfferFormPropertiesAreaProps) => {
-  const currentProduct = useProductsSelector().currentProduct;
-  const service = useAppServiceProvider()[ServiceName.products];
+export const OfferFormPropertiesArea = ({ onSubmit, onSuccess, disabled, offer }: OfferFormPropertiesAreaProps) => {
+  const loaders = useOfferLoadersProvider();
   const templates = usePropertiesSelector();
-  const [loading, setLoading] = useState(false);
+  const service = useAppServiceProvider()[ServiceName.products];
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [templateId, setTemplateId] = useState<string>(templates[0]?._id);
+
+  const handleSubmit = (ev: React.FormEvent) => {
+    ev.preventDefault();
+
+    if (onSubmit) {
+      onSubmit(selectedIds);
+    } else if (offer) {
+      service.updateById({
+        data: { _id: offer?._id, updateCurrent: true, data: { properties: selectedIds } },
+        onLoading: loaders.onLoading('properties'),
+        onSuccess: onSuccess,
+      });
+    }
+  };
 
   const templateData = useMemo(() => {
-    return templates.find(t => t._id === (templateRef?._id || currentProduct?.template?._id));
-  }, [currentProduct?.template?._id, templateRef?._id, templates]);
+    return templates.find(t => t._id === templateId);
+  }, [templateId, templates]);
 
   const canSubmit = useMemo(() => {
-    return currentProduct?.properties?.map(p => p._id).join(',') !== selectedIds.join(',');
-  }, [currentProduct?.properties, selectedIds]);
+    if (disabled) return false;
+    if (offer?.properties?.length) {
+      return (
+        offer?.properties
+          ?.map(p => p._id)
+          .sort((a, b) => a.localeCompare(b))
+          .join(',') !== selectedIds.sort((a, b) => a.localeCompare(b)).join(',')
+      );
+    }
+    return !!selectedIds.length;
+  }, [offer?.properties, disabled, selectedIds]);
 
-  const handleSelect = useCallback(
-    (id: string, parentId?: string) => {
-      setSelectedIds(prev => {
-        const newData = prev.includes(id) ? prev.filter(el => el !== id) : [...prev, id];
+  const handleSelect = useCallback((id: string, _parentId?: string) => {
+    setSelectedIds(prev => {
+      const newData = prev.includes(id) ? prev.filter(el => el !== id) : [...prev, id];
 
-        onChange && onChange(newData);
-        onSelect && onSelect(id);
-
-        return newData;
-      });
-    },
-    [onChange, onSelect]
-  );
+      return newData;
+    });
+  }, []);
 
   const renderTemplate = useMemo(() => {
     return templateData?.childrenList
@@ -87,13 +101,27 @@ export const OfferFormPropertiesArea = ({
   }, [handleSelect, selectedIds, templateData?.childrenList]);
 
   useEffect(() => {
-    if (currentProduct?.properties) {
-      setSelectedIds(currentProduct?.properties.map(p => p._id));
+    if (offer?.properties) {
+      setSelectedIds(offer?.properties.map(p => p._id));
     }
-  }, [currentProduct?.properties]);
+  }, [offer?.properties]);
 
   return (
-    <FormArea>
+    <FormArea
+      label={t('Properties')}
+      onSubmit={handleSubmit}
+      isLoading={loaders.isLoading?.properties}
+      disabled={!canSubmit}
+    >
+      <CustomSelect
+        label={t('Available templates')}
+        options={templates}
+        selectedValue={templateId}
+        onSelect={option => {
+          setTemplateId(option?._id);
+        }}
+      />
+
       <TemplateBox flex={1} overflow={'auto'}>
         {renderTemplate}
       </TemplateBox>

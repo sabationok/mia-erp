@@ -60,22 +60,22 @@ const PageProductOverviewLeftSide: React.FC<PageProductOverviewLeftSideProps> = 
     <>
       <LeftSide>
         <ProductOverviewXL
-          product={page?.currentProduct}
+          product={page?.currentOffer}
           onEdit={
-            page.currentProduct
+            page.currentOffer
               ? () => {
-                  if (!page.currentProduct) {
+                  if (!page.currentOffer) {
                     return;
                   }
-                  const formData = toOfferFormData(page?.currentProduct);
+                  const formData = toOfferFormData(page?.currentOffer);
 
                   console.log('PageProductOverviewLeftSide', formData);
 
                   const m = modalS.handleOpenModal({
-                    Modal: Modals.FormCreateProduct,
+                    Modal: Modals.FormCreateOffer,
                     props: {
                       edit: true,
-                      _id: page?.currentProduct?._id,
+                      _id: page?.currentOffer?._id,
                       defaultState: formData,
                       onSubmit: (d, o) => {
                         productsS
@@ -98,10 +98,10 @@ const PageProductOverviewLeftSide: React.FC<PageProductOverviewLeftSideProps> = 
               ? undefined
               : () => {
                   const handler = ToastService.createLoader('Refreshing...').open();
-                  page.currentProduct?._id &&
+                  page.currentOffer?._id &&
                     productsS
                       .getProductFullInfo({
-                        data: { _id: page.currentProduct?._id },
+                        data: { _id: page.currentOffer?._id },
                         onSuccess: () => {
                           handler.close();
                           ToastService.success(`Data refreshed`);

@@ -2,7 +2,7 @@ import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { warehouseOverviewTableColumns } from '../../../../data/warehauses.data';
 import Forms from '../../../Forms';
-import { IProductInventory } from '../../../../types/warehouses.types';
+import { WarehouseItemEntity } from '../../../../types/warehouses.types';
 import { useModalProvider } from '../../../ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useProductsSelector } from '../../../../redux/selectors.store';
@@ -16,7 +16,7 @@ export interface WarehousingTabProps {
 }
 
 const WarehousingTab = ({ onSelect, selected, withActions }: WarehousingTabProps) => {
-  const currentProduct = useProductsSelector().currentProduct;
+  const currentProduct = useProductsSelector().currentOffer;
   const modalS = useModalProvider();
   const productsS = useAppServiceProvider()[ServiceName.products];
   const [loading, setLoading] = useState(false);
@@ -33,7 +33,7 @@ const WarehousingTab = ({ onSelect, selected, withActions }: WarehousingTabProps
     [currentProduct, productsS]
   );
 
-  const tableConfigs = useMemo((): ITableListProps<IProductInventory> => {
+  const tableConfigs = useMemo((): ITableListProps<WarehouseItemEntity> => {
     return {
       tableData: currentProduct?.inventories,
       tableTitles: warehouseOverviewTableColumns,

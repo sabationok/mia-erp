@@ -1,6 +1,6 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { IOrder, IOrderSlot } from '../../../types/orders/orders.types';
+import { OrderEntity, IOrderSlot } from '../../../types/orders/orders.types';
 import { useAppForm } from '../../../hooks';
 import { useCallback, useMemo, useState } from 'react';
 import ModalFilter from '../../atoms/ModalFilter';
@@ -14,7 +14,7 @@ import styled from 'styled-components';
 // } as Record<keyof IOrder, any>);
 
 export interface FormCreateOrderProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect' | 'filterOptions'> {
-  onSubmit?: AppSubmitHandler<IOrder>;
+  onSubmit?: AppSubmitHandler<OrderEntity>;
 }
 
 export enum OrderTabsEnum {

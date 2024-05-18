@@ -142,9 +142,6 @@ const ModalFilter = <V = any, D = any>({
       </StButtonIcon>
     ));
   }, [asStepper, current, filterOptions, handleSelectOpt, renderLabel]);
-  useEffect(() => {
-    console.log(filterOptions);
-  }, [filterOptions]);
 
   return (
     <Filter
@@ -205,13 +202,13 @@ const StButtonIcon = styled(ButtonIcon)<{ asStep?: boolean; customLabel?: boolea
 
   padding: ${p => (p.customLabel ? '2px 4px' : '6px 12px')};
 
-  color: ${({ theme }) => theme.fontColorHeader};
+  color: ${({ theme, ...p }) => (p.isActive ? theme.accentColor.base : theme.fontColorHeader)};
 
   &:hover {
-    color: ${({ theme }) => theme.accentColor.base};
-    &::after {
-      width: 100%;
-    }
+    color: ${({ theme, ...p }) => theme.accentColor.base};
+    //&::after {
+    //  width: 100%;
+    //}
   }
   & .inner {
     text-align: center;

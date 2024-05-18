@@ -10,7 +10,7 @@ import { t } from '../../../lang';
 import StepsController from '../components/StepsController';
 import OrderGroupsStuffingStep from './steps/OrderGroupsStuffingStep';
 import OrderInfoStep from './steps/OrderInfoStep';
-import { ICreateOrderInfoFormState, IOrder, IOrderTempSlot } from '../../../types/orders/orders.types';
+import { ICreateOrderInfoFormState, OrderEntity, IOrderTempSlot } from '../../../types/orders/orders.types';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { ToastService } from '../../../services';
 import _ from 'lodash';
@@ -31,7 +31,7 @@ export interface FormCreateOrdersGroupStepsData {
   slots?: IOrderTempSlot[];
   info?: ICreateOrderInfoFormState;
 
-  orders?: IOrder[];
+  orders?: OrderEntity[];
 }
 
 export enum FormCreateOrdersGroupStepsEnum {

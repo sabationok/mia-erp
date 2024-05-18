@@ -1,7 +1,7 @@
-import FormProductImagesComponent from './components/FormProductImagesComponent';
+import FormOfferImagesComponent from './components/FormOfferImagesComponent';
 import { FormEventHandler, useState } from 'react';
 import { OverlayHandlerReturn } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
-import { IProduct, IProductImage } from '../../../types/products.types';
+import { OfferEntity, OfferImageSlotEntity } from '../../../types/offers/offers.types';
 import styled, { useTheme } from 'styled-components';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
@@ -9,13 +9,13 @@ import { getIdRef } from '../../../utils/data-transform';
 import { OverlayFooter, OverlayHeader } from './components';
 
 export interface FormProductImagesOverlayProps extends OverlayHandlerReturn {
-  product?: IProduct;
+  product?: OfferEntity;
 }
 
 const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onClose }) => {
-  const currentProduct = useProductsSelector().currentProduct;
+  const currentProduct = useProductsSelector().currentOffer;
   const service = useAppServiceProvider()[ServiceName.products];
-  const [state, setState] = useState<Partial<IProductImage>[]>(currentProduct?.images || []);
+  const [state, setState] = useState<Partial<OfferImageSlotEntity>[]>(currentProduct?.images || []);
   const [loading, setLoading] = useState(false);
 
   const theme = useTheme();
@@ -25,7 +25,7 @@ const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onC
 
     currentProduct &&
       service.updateById({
-        data: { ...getIdRef(currentProduct), data: { images: state as IProductImage[] }, refreshCurrent: true },
+        data: { ...getIdRef(currentProduct), data: { images: state as OfferImageSlotEntity[] }, refreshCurrent: true },
         onSuccess: () => {
           onClose && onClose();
         },
@@ -35,7 +35,7 @@ const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onC
 
   return (
     <Form onSubmit={handleFormSubmit}>
-      <FormProductImagesComponent
+      <FormOfferImagesComponent
         initialData={state}
         onClose={onClose}
         onChangeState={setState}

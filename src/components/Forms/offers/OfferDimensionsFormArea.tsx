@@ -10,11 +10,16 @@ import { t } from '../../../lang';
 
 export interface OfferDimensionsFormSectionProps extends OfferFormAreaProps<IDimensions> {}
 
-export const OfferDimensionsFormArea = ({ defaultValues, _id, ...props }: OfferDimensionsFormSectionProps) => {
+export const OfferDimensionsFormArea = ({
+  defaultValues,
+  _id,
+  disabled,
+  ...props
+}: OfferDimensionsFormSectionProps) => {
   const service = useProductsService();
   const [isLoading, setIsLoading] = useState(false);
   const form = useAppForm<DimensionsFormData>({
-    defaultValues: { dimensions: defaultValues },
+    defaultValues: { dimensions: defaultValues ?? {} },
   });
 
   const onValid = (sData: DimensionsFormData) => {
@@ -30,9 +35,19 @@ export const OfferDimensionsFormArea = ({ defaultValues, _id, ...props }: OfferD
     });
   };
 
+  const canSubmit = form.formState.touchedFields?.dimensions
+    ? Object.values(form.formState.touchedFields?.dimensions)?.some(fd => fd)
+    : false;
+
   return (
-    <FormArea onSubmit={form.handleSubmit(onValid)} title={t('Package size')} isLoading={isLoading} {...props}>
-      <DimensionsInputs form={form} disabled={props.disabled} />
+    <FormArea
+      onSubmit={form.handleSubmit(onValid)}
+      label={t('Package size')}
+      isLoading={isLoading}
+      {...props}
+      disabled={!canSubmit || disabled}
+    >
+      <DimensionsInputs form={form} disabled={disabled} />
     </FormArea>
   );
 };

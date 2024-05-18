@@ -9,6 +9,8 @@ type ToastLoaderHandler = {
   }) => { close: ToastLoaderRemover; toastId: string | number };
 };
 export default class ToastService {
+  public static loading = toast.loading;
+  public static remove = toast.dismiss;
   public static createToastLoader(content?: ToastContent, options?: ToastOptions): ToastLoaderRemover {
     const toastId = toast.loading(content, options);
     return () => toast.dismiss(toastId);

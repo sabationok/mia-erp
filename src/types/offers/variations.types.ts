@@ -1,21 +1,21 @@
-import { IBase, OnlyUUID } from '../redux/global.types';
-import { IProductInventory } from './warehouses.types';
-import { IPriceListItem } from './priceManagement.types';
-import { AppQueryParams } from '../api';
-import { IProduct } from './products.types';
+import { IBase, OnlyUUID } from '../../redux/global.types';
+import { WarehouseItemEntity } from '../warehouses.types';
+import { OfferPriceEntity } from '../price-management/priceManagement.types';
+import { AppQueryParams } from '../../api';
+import { OfferEntity } from './offers.types';
 import { IPropertyValue } from './properties.types';
-import { HasCompany, HasDimensions, HasLabel, MaybeNull, WithPeriod } from './utils.types';
-import { HasBaseCmsConfigs, HasBaseCmsConfigsDto } from './cms.types';
+import { HasCompany, HasDimensions, HasLabel, MaybeNull, WithPeriod } from '../utils.types';
+import { HasBaseCmsConfigs, HasBaseCmsConfigsDto } from '../cms.types';
 
 export interface IVariationBase extends HasDimensions, WithPeriod, HasLabel {
   sku?: string;
   barCode?: string;
 }
 
-export interface IVariation extends IVariationBase, IBase, HasCompany, HasBaseCmsConfigs {
-  product?: IProduct;
-  price?: IPriceListItem;
-  inventories?: IProductInventory[];
+export interface VariationEntity extends IVariationBase, IBase, HasCompany, HasBaseCmsConfigs {
+  offer?: OfferEntity;
+  price?: OfferPriceEntity;
+  inventories?: WarehouseItemEntity[];
 
   properties?: IPropertyValue[];
 }
@@ -23,7 +23,7 @@ export interface IVariation extends IVariationBase, IBase, HasCompany, HasBaseCm
 export type VariationPropertiesMapInTableData = Record<string, IPropertyValue>;
 
 export type VariationPropertiesMapInFormData = Record<string, string>;
-export interface IVariationTableData extends IVariation {
+export interface IVariationTableData extends VariationEntity {
   propertiesMap: VariationPropertiesMapInTableData;
 }
 export interface IVariationFormData extends IVariationBase, HasBaseCmsConfigsDto {
@@ -32,7 +32,7 @@ export interface IVariationFormData extends IVariationBase, HasBaseCmsConfigsDto
 }
 
 export interface HasVariation {
-  variation?: MaybeNull<IVariation>;
+  variation?: MaybeNull<VariationEntity>;
 }
 
 export interface VariationDto extends IVariationBase, HasBaseCmsConfigsDto {

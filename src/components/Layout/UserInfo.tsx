@@ -26,12 +26,12 @@ const UserInfo: React.FC<IUserInfoProps> = ({ isOpen, onClose }) => {
   }
 
   const isPermission = useMemo(() => !!permission || !!permission_token, [permission, permission_token]);
-
+  console.log({ user });
   return (
     <Backdrop isOpen={isOpen} transitionDelay={isOpen ? '' : '250ms'} onClick={onBackdropClick}>
       <MainList>
         <MainListItem isOpen={isOpen} transitionDelay={isOpen ? '' : '150ms'}>
-          <ProfileCard {...user} nameFontSize="16px" emailFontSize="16px" />
+          <ProfileCard profile={user} nameFontSize="16px" emailFontSize="16px" />
 
           <FlexBox fxDirection={'row'} gap={12} fillWidth justifyContent={'flex-end'} alignItems={'center'}>
             <ButtonIcon
@@ -55,7 +55,7 @@ const UserInfo: React.FC<IUserInfoProps> = ({ isOpen, onClose }) => {
 
         {isPermission && (
           <MainListItem isOpen={isOpen} transitionDelay={isOpen ? '150ms' : ''}>
-            <ProfileCard {...permission?.company} nameFontSize="16px" emailFontSize="16px" />
+            <ProfileCard profile={permission?.company} nameFontSize="16px" emailFontSize="16px" />
 
             <FlexBox fxDirection={'row'} gap={12} fillWidth justifyContent={'flex-end'} alignItems={'center'}>
               <ButtonIcon

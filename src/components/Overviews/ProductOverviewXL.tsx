@@ -1,4 +1,4 @@
-import { IProduct } from '../../types/products.types';
+import { OfferEntity } from '../../types/offers/offers.types';
 import FlexBox from '../atoms/FlexBox';
 import React, { useMemo, useState } from 'react';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
@@ -16,7 +16,7 @@ import { OverviewCellProps } from './components/overview-types';
 import { OverviewCells } from './components/Cells';
 
 export interface ProductOverviewXLProps {
-  product?: IProduct;
+  product?: OfferEntity;
   onEdit?: () => void;
   onDelete?: () => void;
   onArchive?: () => void;
@@ -37,7 +37,7 @@ export enum ProductOverviewTabsEnum {
 }
 export const ProductOverviewTabsList = enumToFilterOptions(ProductOverviewTabsEnum);
 const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }) => {
-  const product = useProductsSelector().currentProduct;
+  const product = useProductsSelector().currentOffer;
   const page = usePageCurrentProduct();
   const productId = useAppParams()?.productId;
   const navigate = useNavigate();
@@ -171,7 +171,7 @@ const OpenBtn = styled(ButtonIcon)`
 
 export default ProductOverviewXL;
 
-const productOverviewCells: OverviewCellProps<IProduct, ProductOverviewTabsEnum>[] = [
+const productOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEnum>[] = [
   {
     title: t('Label'),
     CellComponent: OverviewCells.Text,

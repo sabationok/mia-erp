@@ -1,4 +1,4 @@
-import { IProperty, IPropertyValue } from '../../../../types/properties.types';
+import { IProperty, IPropertyValue } from '../../../../types/offers/properties.types';
 import { MaybeNull } from '../../../../types/utils.types';
 import * as React from 'react';
 import { useMemo } from 'react';

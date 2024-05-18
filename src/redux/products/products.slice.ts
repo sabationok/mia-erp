@@ -1,6 +1,6 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { StateErrorType } from 'redux/reduxTypes.types';
-import { IProduct } from '../../types/products.types';
+import { OfferEntity } from '../../types/offers/offers.types';
 import {
   createProductThunk,
   getAllInventoriesByProductIdThunk,
@@ -15,7 +15,7 @@ import {
   getAllVariationsByProductIdThunk,
   updateVariationThunk,
 } from './variations/variations.thunks';
-import { IVariationTemplate } from '../../types/properties.types';
+import { IVariationTemplate } from '../../types/offers/properties.types';
 import { createPropertyThunk, getAllPropertiesThunk } from './properties/properties.thunks';
 import {
   clearCurrentProductAction,
@@ -24,23 +24,39 @@ import {
   setCurrentProductVariationsAction,
 } from './products.actions';
 import { checks } from '../../utils';
+import { PartialRecord } from '../../types/utils.types';
+import { VariationEntity } from '../../types/offers/variations.types';
 
-export interface IProductsState {
-  products: IProduct[];
-  currentProduct?: IProduct;
-  filteredProducts?: IProduct[];
+type SKU = string;
+type UUID = string;
+
+export interface OffersState {
+  products: OfferEntity[];
+  currentOffer?: OfferEntity;
+  filteredProducts?: OfferEntity[];
   properties: IVariationTemplate[];
   isLoading: boolean;
   error: StateErrorType;
+
+  skuKeysMap: PartialRecord<SKU, UUID>;
+  dataMap: PartialRecord<UUID, OfferEntity>;
+
+  variationsKeysMap: PartialRecord<UUID, UUID[]>;
+  variationsMap: PartialRecord<UUID, VariationEntity>;
 }
 
-const initialState: IProductsState = {
+const initialState: OffersState = {
   isLoading: false,
   error: null,
   products: [],
-  currentProduct: undefined,
+  currentOffer: undefined,
   filteredProducts: [],
   properties: [],
+
+  dataMap: {},
+  skuKeysMap: {},
+  variationsKeysMap: {},
+  variationsMap: {},
 };
 
 export const productsSlice = createSlice({
@@ -60,19 +76,26 @@ export const productsSlice = createSlice({
         }
       })
       .addCase(createProductThunk.fulfilled, (s, a) => {
-        s.products = a.payload?.data ? [a.payload.data, ...s.products] : s.products;
+        if (a.payload?.data) {
+          s.products = [a.payload.data, ...s.products];
+          ManageOffersStateMap(s, a.payload);
+        }
       })
       .addCase(updateProductThunk.fulfilled, (s, a) => {
         if (a.payload?.refreshCurrent) {
-          s.currentProduct = { ...(s.currentProduct as IProduct), ...a.payload.data };
+          s.currentOffer = { ...(s.currentOffer as OfferEntity), ...a.payload.data };
+        }
+        if (a.payload) {
+          ManageOffersStateMap(s, a.payload);
         }
       })
       .addCase(getProductFullInfoThunk.fulfilled, (s, a) => {
         if (a.payload.refreshCurrent) {
-          s.currentProduct = a.payload?.data;
+          s.currentOffer = a.payload?.data;
         } else {
-          s.currentProduct = { ...(s.currentProduct as IProduct), ...a.payload?.data };
+          s.currentOffer = { ...(s.currentOffer as OfferEntity), ...a.payload?.data };
         }
+        ManageOffersStateMap(s, a.payload, { refresh: a.payload.refreshCurrent });
       })
       .addCase(getAllPropertiesThunk.fulfilled, (s, a) => {
         if (a.payload) {
@@ -88,70 +111,70 @@ export const productsSlice = createSlice({
         if (!a.payload) {
           return;
         } else {
-          s?.currentProduct?.variations?.unshift(a.payload);
+          s?.currentOffer?.variations?.unshift(a.payload);
         }
       })
       .addCase(updateProductDefaultsThunk.fulfilled, (s, a) => {
-        if (a.payload?.updateCurrent && s.currentProduct) {
-          s.currentProduct.defaults = a.payload.data?.defaults;
-        } else if (a.payload?.refreshCurrent && s.currentProduct) {
-          s.currentProduct = { ...s.currentProduct, ...a.payload?.data };
+        if (a.payload?.updateCurrent && s.currentOffer) {
+          s.currentOffer.defaults = a.payload.data?.defaults;
+        } else if (a.payload?.refreshCurrent && s.currentOffer) {
+          s.currentOffer = { ...s.currentOffer, ...a.payload?.data };
         }
       })
       .addCase(updateVariationThunk.fulfilled, (s, a) => {
         if (!a.payload) {
           return;
-        } else if (s.currentProduct) {
-          s.currentProduct.variations = s?.currentProduct?.variations?.map(vrn =>
+        } else if (s.currentOffer) {
+          s.currentOffer.variations = s?.currentOffer?.variations?.map(vrn =>
             vrn._id === a.payload?._id ? a.payload : vrn
           );
         }
       })
       .addCase(getAllVariationsByProductIdThunk.fulfilled, (s, a) => {
         if (a.payload?.refreshCurrent) {
-          s.currentProduct = { ...(s.currentProduct as IProduct), variations: a.payload.data };
+          s.currentOffer = { ...(s.currentOffer as OfferEntity), variations: a.payload.data };
         }
       })
       .addCase(getAllPricesByProductIdThunk.fulfilled, (s, a) => {
         if (a.payload?.refreshCurrent) {
-          s.currentProduct = { ...(s.currentProduct as IProduct), prices: a.payload.data };
+          s.currentOffer = { ...(s.currentOffer as OfferEntity), prices: a.payload.data };
         }
       })
       .addCase(getAllInventoriesByProductIdThunk.fulfilled, (s, a) => {
         if (a.payload?.refreshCurrent) {
-          s.currentProduct = { ...(s.currentProduct as IProduct), inventories: a.payload.data };
+          s.currentOffer = { ...(s.currentOffer as OfferEntity), inventories: a.payload.data };
         }
       })
       .addCase(clearCurrentProductAction, s => {
-        s.currentProduct = { _id: '' };
+        s.currentOffer = { _id: '' };
       })
       .addCase(setCurrentProductPricesAction, (s, a) => {
-        s.currentProduct = {
-          ...(s.currentProduct as IProduct),
+        s.currentOffer = {
+          ...(s.currentOffer as OfferEntity),
           prices: a.payload.refresh
             ? a.payload?.data
-            : s.currentProduct?.prices
-            ? [...a.payload.data, ...s.currentProduct?.prices]
+            : s.currentOffer?.prices
+            ? [...a.payload.data, ...s.currentOffer?.prices]
             : a.payload.data,
         };
       })
       .addCase(setCurrentProductVariationsAction, (s, a) => {
-        s.currentProduct = {
-          ...(s.currentProduct as IProduct),
+        s.currentOffer = {
+          ...(s.currentOffer as OfferEntity),
           variations: a.payload.refresh
             ? a.payload?.data
-            : s.currentProduct?.variations
-            ? [...a.payload.data, ...s.currentProduct?.variations]
+            : s.currentOffer?.variations
+            ? [...a.payload.data, ...s.currentOffer?.variations]
             : a.payload.data,
         };
       })
       .addCase(setCurrentProductInventoriesAction, (s, a) => {
-        s.currentProduct = {
-          ...(s.currentProduct as IProduct),
+        s.currentOffer = {
+          ...(s.currentOffer as OfferEntity),
           inventories: a.payload.refresh
             ? a.payload?.data
-            : s.currentProduct?.inventories
-            ? [...a.payload.data, ...s.currentProduct?.inventories]
+            : s.currentOffer?.inventories
+            ? [...a.payload.data, ...s.currentOffer?.inventories]
             : a.payload.data,
         };
       })
@@ -182,4 +205,52 @@ function inError(a: AnyAction) {
   return isProductsCase(a.type) && a.type.endsWith('rejected');
 }
 
-export const productsReducer = productsSlice.reducer;
+function ManageOffersStateMap(
+  st: OffersState,
+  input: { data?: OfferEntity },
+  options?: { refresh?: boolean; isForList?: boolean }
+) {
+  if (input.data) {
+    const itemId = input.data?._id;
+    const itemSku = input.data?.sku;
+
+    st.dataMap[itemId] = options?.refresh ? input.data : { ...st.dataMap?.[itemId], ...input.data };
+
+    if (itemSku) {
+      st.skuKeysMap[itemSku] = itemId;
+    }
+  }
+}
+
+function ManageVariationsStateMap(
+  st: OffersState,
+  input: { data?: VariationEntity },
+  options?: { refresh?: boolean; isForList?: boolean }
+) {
+  if (input.data) {
+    const itemId = input.data?._id;
+    const offerId = input.data?.offer?._id;
+    const itemSku = input.data?.sku;
+
+    st.variationsMap[itemId] = options?.refresh ? input.data : { ...st.dataMap?.[itemId], ...input.data };
+
+    if (itemSku) {
+      st.skuKeysMap[itemSku] = itemId;
+    }
+
+    if (offerId) {
+      st.variationsKeysMap[itemId] = Array.from(new Set<string>(st.variationsKeysMap?.[itemId] ?? []).add(offerId));
+
+      if (st.dataMap[offerId]) {
+        if (!st.dataMap[offerId]?.variations) {
+          st.dataMap[offerId] = {
+            ...(st.dataMap[offerId] as OfferEntity),
+            variations: [input.data],
+          };
+        } else {
+          st.dataMap[offerId]?.variations?.push(input.data);
+        }
+      }
+    }
+  }
+}

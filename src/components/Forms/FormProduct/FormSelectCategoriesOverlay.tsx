@@ -12,7 +12,7 @@ import { OverlayFooter, OverlayForm, OverlayHeader } from './components';
 export interface FormSelectCategoriesOverlayProps extends OverlayHandlerReturn {}
 
 const FormProductCategoriesOverlay = ({ onClose }: FormSelectCategoriesOverlayProps) => {
-  const { currentProduct } = useProductsSelector();
+  const { currentOffer } = useProductsSelector();
   const { directory } = useDirectoriesSelector(ApiDirType.CATEGORIES_PROD);
   const service = useAppServiceProvider()[ServiceName.products];
   const [state, setState] = useState<string[]>([]);
@@ -20,9 +20,9 @@ const FormProductCategoriesOverlay = ({ onClose }: FormSelectCategoriesOverlayPr
   const handleFormSubmit: FormEventHandler = ev => {
     ev.preventDefault();
 
-    currentProduct &&
+    currentOffer &&
       service.updateById({
-        data: { ...getIdRef(currentProduct), data: { categories: state }, refreshCurrent: true },
+        data: { ...getIdRef(currentOffer), data: { categories: state }, refreshCurrent: true },
         onSuccess: (data, meta) => {
           onClose && onClose();
         },
@@ -30,17 +30,17 @@ const FormProductCategoriesOverlay = ({ onClose }: FormSelectCategoriesOverlayPr
   };
 
   const canSubmit = useMemo(() => {
-    const initialString = currentProduct?.categories?.map(c => c._id)?.toString();
+    const initialString = currentOffer?.categories?.map(c => c._id)?.toString();
     const currentString = state.toString();
 
     return initialString !== currentString;
-  }, [currentProduct?.categories, state]);
+  }, [currentOffer?.categories, state]);
 
   useEffect(() => {
-    if (currentProduct?.categories) {
-      setState(currentProduct?.categories.map(c => c._id));
+    if (currentOffer?.categories) {
+      setState(currentOffer?.categories.map(c => c._id));
     }
-  }, [currentProduct?.categories]);
+  }, [currentOffer?.categories]);
 
   return (
     <OverlayForm onSubmit={handleFormSubmit}>

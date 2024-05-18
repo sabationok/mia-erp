@@ -1,10 +1,10 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
-import { IProductImage } from '../../../types/products.types';
+import { OfferImageSlotEntity } from '../../../types/offers/offers.types';
 
 export interface FormAddProductImagesProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
-  defaultState?: IProductImage[];
-  onSubmit?: (imageData: IProductImage) => void;
-  onSelect?: (imageData: IProductImage) => void;
+  defaultState?: OfferImageSlotEntity[];
+  onSubmit?: (imageData: OfferImageSlotEntity) => void;
+  onSelect?: (imageData: OfferImageSlotEntity) => void;
 }
 
 const FormAddProductImages: React.FC<FormAddProductImagesProps> = ({ defaultState }) => {

@@ -8,7 +8,7 @@ export { default as CompaniesApi } from './companies.api';
 export { default as PermissionsApi } from './permissions.api';
 export { default as DirectoriesApi } from './directories.api';
 export { default as PriceManagementApi } from './priceManagement.api';
-export { default as ProductsApi } from './products.api';
+export { default as OffersApi } from './offersApi';
 export { default as OrdersApi } from './orders.api';
 export { default as RefundsApi } from './refunds.api';
 export { default as WarehousesApi } from './warehouses.api';

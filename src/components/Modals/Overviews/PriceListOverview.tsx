@@ -1,7 +1,7 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import TableList, { ITableListProps } from '../../TableList/TableList';
 import { useEffect, useMemo, useState } from 'react';
-import { IPriceList, IPriceListItem } from '../../../types/priceManagement.types';
+import { IPriceList, OfferPriceEntity } from '../../../types/price-management/priceManagement.types';
 import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
 import { usePriceListOverviewActionsCreator } from '../../../hooks/usePriceListOverviewActionsCreator.hook';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
@@ -12,10 +12,10 @@ import { priceListContentColumns } from '../../../data/priceManagement.data';
 export interface PriceListOverviewProps extends Omit<ModalFormProps, 'onSubmit' | 'afterSubmit'> {
   createFormProps?: FormCreatePriceProps;
   priceList?: IPriceList;
-  getTableSetting: (data?: IPriceListItem[]) => ITableListProps<IPriceListItem>;
+  getTableSetting: (data?: OfferPriceEntity[]) => ITableListProps<OfferPriceEntity>;
   listId?: string;
   onSubmit?: (
-    data: IPriceListItem | IPriceListItem[],
+    data: OfferPriceEntity | OfferPriceEntity[],
     options: UseAppFormSubmitOptions & {
       onSuccess: (newData: IPriceList) => void;
       onLoading: (l: boolean) => void;
@@ -33,12 +33,12 @@ const PriceListOverview: React.FC<PriceListOverviewProps> = ({
   const { lists } = usePriceListsSelector();
   const actionsCreator = usePriceListOverviewActionsCreator(listId);
   const { priceManagement } = useAppServiceProvider();
-  const [tableData, setTableData] = useState<IPriceListItem[]>([]);
+  const [tableData, setTableData] = useState<OfferPriceEntity[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const listInfo = useMemo(() => lists.find(l => l._id === listId), [listId, lists]);
   const tableSettings = useMemo(
-    (): ITableListProps<IPriceListItem> => getTableSetting(tableData),
+    (): ITableListProps<OfferPriceEntity> => getTableSetting(tableData),
     [tableData, getTableSetting]
   );
 

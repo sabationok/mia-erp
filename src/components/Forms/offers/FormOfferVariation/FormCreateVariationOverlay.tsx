@@ -8,7 +8,7 @@ import { Text } from '../../../atoms/Text';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import { OverlayHandlerReturn } from '../../../AppPages/PageProductOverview/PageCurrentProductProvider';
 import { toVariationFormData, toVariationReqData } from '../../../../utils';
-import { IVariation, IVariationFormData } from '../../../../types/variations.types';
+import { IVariationFormData, VariationEntity } from '../../../../types/offers/variations.types';
 import { OnlyUUID } from '../../../../redux/global.types';
 import { ToastService } from '../../../../services';
 import { ModalFormProps } from '../../../ModalForm';
@@ -37,14 +37,14 @@ import OfferVariationPropertySelector from './OfferVariationPropertySelector';
 // ];
 export interface FormVariationProps
   extends OverlayHandlerReturn,
-    Omit<ModalFormProps<any, any, IVariation>, 'onSubmit' | 'defaultState'> {
+    Omit<ModalFormProps<any, any, VariationEntity>, 'onSubmit' | 'defaultState'> {
   onSubmit?: AppSubmitHandler<IVariationFormData>;
   product?: OnlyUUID;
 
   create?: boolean;
   update?: string;
 
-  defaultState?: IVariation;
+  defaultState?: VariationEntity;
 }
 const validation = yup.object().shape({
   label: yup.string().required().min(5).max(50),
@@ -71,13 +71,13 @@ const FormCreateVariationOverlay: React.FC<FormVariationProps> = ({
   ...props
 }) => {
   const submitOptions = useAfterSubmitOptions();
-  const currentProduct = useProductsSelector().currentProduct;
+  const currentProduct = useProductsSelector().currentOffer;
   const service = useAppServiceProvider()[ServiceName.products];
   const templates = usePropertiesSelector();
   const [loading, setLoading] = useState(false);
   const formMethods = useAppForm<IVariationFormData>({
     defaultValues: toVariationFormData(
-      defaultState ? { ...defaultState, product: currentProduct } : { product: currentProduct }
+      defaultState ? { ...defaultState, offer: currentProduct } : { offer: currentProduct }
     ),
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',

@@ -5,7 +5,7 @@ import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createTableTitlesFromTemplate, transformVariationTableData } from '../../../../utils/tables';
 import FormCreateVariation from '../../../Forms/offers/FormOfferVariation/FormCreateVariationOverlay';
-import { IVariationTableData } from '../../../../types/variations.types';
+import { IVariationTableData } from '../../../../types/offers/variations.types';
 import { useProductsSelector, usePropertiesSelector } from '../../../../redux/selectors.store';
 import { getIdRef } from '../../../../utils/data-transform';
 import { OnlyUUID } from '../../../../redux/global.types';
@@ -19,7 +19,7 @@ export interface VariationsTabProps {
 const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withActions = true }) => {
   const page = usePageCurrentProduct();
   const modalS = useModalProvider();
-  const currentProduct = useProductsSelector().currentProduct;
+  const currentProduct = useProductsSelector().currentOffer;
   const productsS = useAppServiceProvider()[ServiceName.products];
   const templates = usePropertiesSelector();
   const [loading, setLoading] = useState(false);
@@ -101,14 +101,14 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
 
                   modalS.open({
                     ModalChildren: FormCreateVariation,
-                    modalChildrenProps: { product: page.currentProduct },
+                    modalChildrenProps: { product: page.currentOffer },
                   });
                 },
               },
             ];
           },
     } as ITableListProps<IVariationTableData>;
-  }, [currentProduct?.variations, loadData, modalS, onSelect, page.currentProduct, variationsTableTitles, withActions]);
+  }, [currentProduct?.variations, loadData, modalS, onSelect, page.currentOffer, variationsTableTitles, withActions]);
 
   useEffect(() => {
     loadData({ refresh: true });

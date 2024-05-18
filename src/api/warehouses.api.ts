@@ -1,6 +1,6 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
-import { IProductInventory, IWarehouse, IWarehouseDocReqData, IWarehouseReqData } from '../types/warehouses.types';
+import { WarehouseItemEntity, IWarehouse, IWarehouseDocReqData, IWarehouseReqData } from '../types/warehouses.types';
 import { AppResponse, OnlyUUID } from '../redux/global.types';
 import { ClientApi } from './client.api';
 
@@ -23,7 +23,7 @@ export class WarehousesApi {
     return this.api.get(this.endpoints.getAll(), { params: params });
   }
 
-  public static async getAllInventories(params?: AppQueryParams): Promise<AppResponse<IProductInventory[]>> {
+  public static async getAllInventories(params?: AppQueryParams): Promise<AppResponse<WarehouseItemEntity[]>> {
     return this.api.get(this.endpoints.getAllInventories(), { params });
   }
 
@@ -31,7 +31,7 @@ export class WarehousesApi {
   //   return this.api.get(this.endpoints.getById(list?._id), { params: params });
   // }
   //
-  public static async createDocument(input?: IWarehouseDocReqData): Promise<AppResponse<IProductInventory>> {
+  public static async createDocument(input?: IWarehouseDocReqData): Promise<AppResponse<WarehouseItemEntity>> {
     return this.api.post(this.endpoints.createDocument(), input?.data, { params: input?.params });
   }
   //

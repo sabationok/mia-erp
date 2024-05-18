@@ -9,7 +9,7 @@ import { IModalProviderContext, ModalService } from '../components/ModalProvider
 import { DirectoriesService } from '../hooks/useDirService.hook';
 import { AppSubmitHandler, UseAppFormSubmitOptions } from '../hooks/useAppForm.hook';
 import { ContractorsTypesEnum } from '../redux/directories/contractors.types';
-import { OfferTypeEnum } from './products.types';
+import { OfferTypeEnum } from './offers/offers.types';
 import { CounterpartyTypesEnum } from '../redux/directories/counterparties.types';
 import { MaybeNull } from './utils.types';
 

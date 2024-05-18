@@ -1,15 +1,15 @@
 import { ModalFormProps } from '../../../ModalForm';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
-import { IProduct } from '../../../../types/products.types';
+import { OfferEntity } from '../../../../types/offers/offers.types';
 import { FormEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
 import { ITableListProps } from '../../../TableList/tableTypes.types';
 import TableList from '../../../TableList/TableList';
-import { AppQueryParams, createApiCall, ProductsApi, WarehousesApi } from '../../../../api';
+import { AppQueryParams, createApiCall, OffersApi, WarehousesApi } from '../../../../api';
 import { t } from '../../../../lang';
 import { enumToFilterOptions } from '../../../../utils/fabrics';
 import ModalFilter from '../../../atoms/ModalFilter';
-import { IVariationTableData } from '../../../../types/variations.types';
-import { IPriceListItem } from '../../../../types/priceManagement.types';
+import { IVariationTableData } from '../../../../types/offers/variations.types';
+import { OfferPriceEntity } from '../../../../types/price-management/priceManagement.types';
 import styled from 'styled-components';
 import { ModalHeader } from '../../../atoms';
 import FlexBox from '../../../atoms/FlexBox';
@@ -21,12 +21,12 @@ import VariationsApi from '../../../../api/variations.api';
 import { transformVariationTableData } from '../../../../utils/tables';
 import { getIdRef } from '../../../../utils/data-transform';
 import { IOrderTempSlot } from '../../../../types/orders/orders.types';
-import { IProductInventory, IWarehouse } from '../../../../types/warehouses.types';
+import { IWarehouse, WarehouseItemEntity } from '../../../../types/warehouses.types';
 import { warehouseBatchColumns } from '../../../../data/warehauses.data';
 import { useStepsHandler } from '../../../../utils/createStepChecker';
 import _ from 'lodash';
 import { nanoid } from '@reduxjs/toolkit';
-import { productsColumns } from '../../../../data/products.data';
+import { offersTableColumns } from '../../../../data/offers.data';
 
 export interface FormCreateOrderSlotProps
   extends Omit<ModalFormProps<FormCreateOrderSlotSteps, any, FormCreateOrderSlotFormData>, 'onSubmit' | 'onSelect'> {
@@ -46,11 +46,11 @@ const stepsLong = enumToFilterOptions(FormCreateOrderSlotSteps);
 // TODO const stepsShort = enumToFilterOptions(FormCreateOrderSlotSteps).filter(el => el.value !== 'batch');
 
 export interface FormCreateOrderSlotFormData {
-  price?: IPriceListItem;
+  price?: OfferPriceEntity;
   variation?: IVariationTableData;
-  product?: IProduct;
+  product?: OfferEntity;
   warehouse?: IWarehouse;
-  inventory?: IProductInventory;
+  inventory?: WarehouseItemEntity;
 }
 type FormKey = keyof FormCreateOrderSlotFormData;
 
@@ -62,10 +62,10 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
   ...props
 }) => {
   const { stepCheck, stepIdx, setPrevStep, setNextStep } = useStepsHandler(stepsLong);
-  const [products, setProducts] = useState<IProduct[]>([]);
+  const [products, setProducts] = useState<OfferEntity[]>([]);
   const [variations, setVariations] = useState<IVariationTableData[]>([]);
   // const [prices, setPrices] = useState<IPriceListItem[]>([]);
-  const [inventories, setInventories] = useState<IProductInventory[]>([]);
+  const [inventories, setInventories] = useState<WarehouseItemEntity[]>([]);
   const [formData, setFormData] = useState<FormCreateOrderSlotFormData>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -79,8 +79,8 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
   const { search, searchBy } = watch();
 
   const productTableConfig = useMemo(
-    (): ITableListProps<IProduct> => ({
-      tableTitles: productsColumns,
+    (): ITableListProps<OfferEntity> => ({
+      tableTitles: offersTableColumns,
       tableData: products,
       tableSearchParams: [
         { dataPath: 'label', label: t('label') },
@@ -137,7 +137,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
   // );
 
   const warehousingTableConfig = useMemo(
-    (): ITableListProps<IProductInventory> => ({
+    (): ITableListProps<WarehouseItemEntity> => ({
       tableTitles: warehouseBatchColumns,
       tableData: inventories,
       isSearch: false,
@@ -197,14 +197,14 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
           onSuccess: setProducts,
           onLoading: setIsLoading,
         },
-        ProductsApi.getAll,
-        ProductsApi
+        OffersApi.getAll,
+        OffersApi
       );
     }
     if (stepCheck(FormCreateOrderSlotSteps.variation) && product) {
       return createApiCall(
         {
-          data: { product: getIdRef(product) },
+          data: { offerId: getIdRef(product) },
           onSuccess: d => {
             setVariations(d.map(v => transformVariationTableData(v)));
           },
@@ -261,10 +261,10 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
   }, [loadData]);
 
   useEffect(() => {
-    if (formData.variation?.product?._id !== formData.product?._id) {
+    if (formData.variation?.offer?._id !== formData.product?._id) {
       setFormData(prev => ({ product: prev?.product }));
     }
-  }, [formData.product?._id, formData.variation?.product?._id]);
+  }, [formData.product?._id, formData.variation?.offer?._id]);
 
   return (
     <Form fillWidth fillHeight {...props} onSubmit={handleSubmit}>

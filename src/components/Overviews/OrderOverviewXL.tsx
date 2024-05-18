@@ -1,4 +1,4 @@
-import { IOrder } from '../../types/orders/orders.types';
+import { OrderEntity } from '../../types/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import { ModalHeader } from '../atoms';
 import React, { useMemo, useState } from 'react';
@@ -13,7 +13,7 @@ import ModalFilter from '../atoms/ModalFilter';
 import OrderOverviewInfoTab from './tabs/OrderOverviewInfoTab';
 
 export interface OrderOverviewXLProps {
-  order?: IOrder;
+  order?: OrderEntity;
   onEdit?: () => void;
   onDelete?: () => void;
   onArchive?: () => void;

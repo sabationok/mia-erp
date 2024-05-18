@@ -1,12 +1,12 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import FlexBox from '../../atoms/FlexBox';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { IProduct } from '../../../types/products.types';
+import { OfferEntity } from '../../../types/offers/offers.types';
 import TableList from '../../TableList/TableList';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
 import { IProductInventoryFormData } from '../../../types/warehouses.types';
-import { IPriceListItem } from '../../../types/priceManagement.types';
-import { IVariation } from '../../../types/variations.types';
+import { OfferPriceEntity } from '../../../types/price-management/priceManagement.types';
+import { VariationEntity } from '../../../types/offers/variations.types';
 import styled from 'styled-components';
 import { useProductsSelector, usePropertiesSelector } from '../../../redux/selectors.store';
 import InputLabel from '../../atoms/Inputs/InputLabel';
@@ -23,7 +23,7 @@ import { useForm } from 'react-hook-form';
 import { OnlyUUID } from '../../../redux/global.types';
 
 export interface FormCreateProductInventoryProps extends Omit<ModalFormProps<IProductInventoryFormData>, 'onSubmit'> {
-  product?: IProduct;
+  product?: OfferEntity;
 }
 
 const formCreateProductInventoryInputs: {
@@ -43,7 +43,7 @@ enum ReservationOptions {
 const reservationOptions = enumToFilterOptions(ReservationOptions);
 const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({ ...props }) => {
   // const modalS = useModalProvider();
-  const currentProduct = useProductsSelector().currentProduct;
+  const currentProduct = useProductsSelector().currentOffer;
 
   const form = useForm({});
 
@@ -52,9 +52,9 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
   }, [currentProduct, props?.product]);
 
   // const { products: productsS, warehouses: warehousesS } = useAppServiceProvider();
-  const [loadedPrices, setLoadedPrices] = useState<IPriceListItem[]>([]);
-  const [selectedPrice, setSelectedPrice] = useState<IPriceListItem | OnlyUUID | undefined>();
-  const [selectedVariation, setSelectedVariation] = useState<IVariation>();
+  const [loadedPrices, setLoadedPrices] = useState<OfferPriceEntity[]>([]);
+  const [selectedPrice, setSelectedPrice] = useState<OfferPriceEntity | OnlyUUID | undefined>();
+  const [selectedVariation, setSelectedVariation] = useState<VariationEntity>();
 
   useEffect(() => {
     console.log('FormCreateProductInventory selectedPrice', selectedPrice);

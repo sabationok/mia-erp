@@ -9,12 +9,12 @@ import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import { FilterOpt } from '../atoms/ModalFilter';
-import { IPriceListItem } from '../../types/priceManagement.types';
+import { OfferPriceEntity } from '../../types/price-management/priceManagement.types';
 
 export interface SelectPriceListItemProps
-  extends Omit<ModalFormProps<any, any, IPriceListItem>, 'onSubmit' | 'onSelect'> {
-  selected?: IPriceListItem;
-  onSelect?: (product: IPriceListItem) => void;
+  extends Omit<ModalFormProps<any, any, OfferPriceEntity>, 'onSubmit' | 'onSelect'> {
+  selected?: OfferPriceEntity;
+  onSelect?: (product: OfferPriceEntity) => void;
   search?: AppQueryParams['search'];
   searchBy?: AppQueryParams['searchBy'];
 }
@@ -31,14 +31,14 @@ const SelectPriceListItem: React.FC<SelectPriceListItemProps> = ({ selected, onS
       search: '',
     },
   });
-  const [loadedData, setLoadedData] = useState<IPriceListItem[] | null>(null);
-  const [current, setCurrent] = useState<IPriceListItem | undefined>(selected);
+  const [loadedData, setLoadedData] = useState<OfferPriceEntity[] | null>(null);
+  const [current, setCurrent] = useState<OfferPriceEntity | undefined>(selected);
   const [currentTab, setCurrentTab] = useState<number>(0);
 
   const { search, searchBy } = watch();
 
   const onItemSelect = useCallback(
-    (p: IPriceListItem) => {
+    (p: OfferPriceEntity) => {
       setCurrent(p);
       onSelect && onSelect(p);
     },

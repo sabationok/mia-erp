@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { createTableTitlesFromTemplate } from '../utils';
 
 export default function useVariationTableTitlesForCurrentProduct() {
-  const currentProduct = useProductsSelector().currentProduct;
+  const currentProduct = useProductsSelector().currentOffer;
   const templates = usePropertiesSelector();
 
   return useMemo(() => {

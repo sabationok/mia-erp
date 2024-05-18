@@ -1,6 +1,6 @@
 import { DirInTreeActionsCreatorType } from '../../../types/dir.types';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
-import { IProperty, IPropertyDto, IPropertyValue, IVariationTemplate } from '../../../types/properties.types';
+import { IProperty, IPropertyDto, IPropertyValue, IVariationTemplate } from '../../../types/offers/properties.types';
 import { ProductsService } from '../../../hooks/useProductsService.hook';
 import { Modals } from '../../Modals';
 import { t } from '../../../lang';
@@ -8,7 +8,7 @@ import { productsFilterOptions } from '../../../data/modalFilterOptions.data';
 import { PropertiesLevelType } from './DirProperties';
 import { NavigateFunction } from 'react-router/dist/lib/hooks';
 import { IModalProviderContext } from '../../ModalProvider/ModalProvider';
-import { OfferTypeEnum } from '../../../types/products.types';
+import { OfferTypeEnum } from '../../../types/offers/offers.types';
 import { toReqData } from '../../../utils';
 import { ToastService } from '../../../services';
 

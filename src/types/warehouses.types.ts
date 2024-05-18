@@ -1,8 +1,8 @@
 import { IBase, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
-import { IProduct } from './products.types';
+import { OfferEntity } from './offers/offers.types';
 import { ICompany } from './companies.types';
-import { IPriceListItem } from './priceManagement.types';
-import { IVariation } from './variations.types';
+import { OfferPriceEntity } from './price-management/priceManagement.types';
+import { VariationEntity } from './offers/variations.types';
 import { AppQueryParams } from '../api';
 import { GeolocationPoint } from '../services/Geolocation.service';
 import { HasAuthor, HasOwnerAsCompany, HasStatus, HasStatusRef, HasType, MaybeNull, WithPeriod } from './utils.types';
@@ -58,12 +58,12 @@ export interface IWarehouseReqData {
 
 export type ProductInventoryStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
-export interface IProductInventory extends IBase, WithPeriod {
+export interface WarehouseItemEntity extends IBase, WithPeriod {
   owner?: ICompany;
   warehouse?: IWarehouse;
-  product?: IProduct;
-  variation?: IVariation;
-  price?: IPriceListItem;
+  offer?: OfferEntity;
+  variation?: VariationEntity;
+  price?: OfferPriceEntity;
 
   stock?: number;
   reserved?: number;
@@ -72,9 +72,9 @@ export interface IProductInventory extends IBase, WithPeriod {
 }
 
 export interface IProductInventoryFormData extends WithPeriod, HasStatus<ProductInventoryStatus> {
-  product?: Omit<IProduct, 'categories' | 'inventories' | 'category' | 'properties'>;
-  variation?: Omit<IVariation, 'properties'>;
-  price?: Omit<IPriceListItem, 'list' | 'product'>;
+  product?: Omit<OfferEntity, 'categories' | 'inventories' | 'category' | 'properties'>;
+  variation?: Omit<VariationEntity, 'properties'>;
+  price?: Omit<OfferPriceEntity, 'list' | 'product'>;
   warehouse?: IWarehouse;
 
   stock?: number;
@@ -111,7 +111,7 @@ export interface HasWarehouse {
   warehouse?: MaybeNull<IWarehouse>;
 }
 export interface HasWarehouseInventory {
-  inventory?: MaybeNull<IProductInventory>;
+  inventory?: MaybeNull<WarehouseItemEntity>;
 }
 
 // * WAREHOUSE SETTINGS
@@ -128,9 +128,9 @@ export interface WarehousingSettingsFormData {
 
 export interface IWarehouseDoc extends WithPeriod, HasType<WarehouseDocumentType>, HasOwnerAsCompany, HasAuthor {
   warehouse?: IWarehouse;
-  product?: IProduct;
-  variation?: IVariation;
-  price?: IPriceListItem;
+  product?: OfferEntity;
+  variation?: VariationEntity;
+  price?: OfferPriceEntity;
 
   amount?: number;
   batch?: string;

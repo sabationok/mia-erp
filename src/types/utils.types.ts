@@ -1,15 +1,34 @@
-import { MeasurementUnit } from './products.types';
-import { AddressDto, IBase, OnlyUUID } from '../redux/global.types';
+import { MeasurementUnit } from './offers/offers.types';
+import { AddressDto } from '../redux/global.types';
 import { ServiceMethodBase } from './integrations.types';
 import { ICompany } from './companies.types';
 import { LangPack } from '../lang';
 import { Path } from 'react-hook-form';
 
+export type UUID = string;
+export interface OnlyUUID {
+  _id: UUID;
+}
+
+export type ArrayUUID = Array<string>;
+export type ArrayOfObjUUID = Array<OnlyUUID>;
+
+export type IdKeyVersion = '_id' | 'id';
+export type ObjUUID<K extends IdKeyVersion = '_id'> = Record<K, string>;
+
+export interface IBase extends OnlyUUID {
+  createdAt?: MaybeNull<Date | string>;
+  updatedAt?: MaybeNull<Date | string>;
+  deletedAt?: MaybeNull<Date | string>;
+}
+
+export type IBaseKeys = keyof IBase;
 export enum CurrencyCode {
   UAH = 'UAH',
   EUR = 'EUR',
   USD = 'USD',
 }
+export type PartialRecord<K extends keyof any, V = any> = { [key in K]?: V };
 
 export type EntityPath<Entity> = Path<Entity>;
 

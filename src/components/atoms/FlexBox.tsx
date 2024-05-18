@@ -25,6 +25,7 @@ export interface FlexBoxBaseProps {
 
   isActive?: boolean;
 }
+
 export interface FlexBoxProps extends FlexBoxBaseProps {
   xsStyles?: FlexBoxBaseProps;
   xlStyles?: FlexBoxBaseProps;

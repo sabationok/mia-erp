@@ -1,6 +1,6 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppResponse, OnlyUUID } from '../redux/global.types';
-import { IProduct } from '../types/products.types';
+import { OfferEntity } from '../types/offers/offers.types';
 import { IAllRefundsRes, IRefund, IRefundRes, IRefundSlot } from '../redux/refunds/refunds.types';
 import { ClientApi } from './client.api';
 
@@ -46,7 +46,7 @@ export default class RefundsApi {
     return this.api.get(this.endpoints.softDeleteRefundSlotItem());
   }
 
-  public static async getPreparedDataForNewSlot(product?: OnlyUUID): Promise<AppResponse<IProduct>> {
+  public static async getPreparedDataForNewSlot(product?: OnlyUUID): Promise<AppResponse<OfferEntity>> {
     return this.api.get(this.endpoints.getDataForNewRefundSlot(product?._id));
   }
 }

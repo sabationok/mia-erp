@@ -1,4 +1,9 @@
-import { IPriceList, IPriceListReqData, PriceListDto, PriceListType } from '../../../types/priceManagement.types';
+import {
+  IPriceList,
+  IPriceListReqData,
+  PriceListDto,
+  PriceListType,
+} from '../../../types/price-management/priceManagement.types';
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { useAppForm } from '../../../hooks';

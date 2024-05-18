@@ -1,5 +1,5 @@
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
-import { IPriceListItem } from '../types/priceManagement.types';
+import { OfferPriceEntity } from '../types/price-management/priceManagement.types';
 import { useModalService } from '../components/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { OnlyUUID } from '../redux/global.types';
@@ -7,7 +7,7 @@ import FormCreatePrice from '../components/Forms/pricing/FormCreatePrice/FormCre
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { ToastService } from '../services';
 
-export type PriceListOverviewActionsCreatorType = TableActionCreator<IPriceListItem>;
+export type PriceListOverviewActionsCreatorType = TableActionCreator<OfferPriceEntity>;
 
 export const usePricesModal = () => {
   const modalS = useModalService();

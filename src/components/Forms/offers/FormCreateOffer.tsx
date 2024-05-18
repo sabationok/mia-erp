@@ -9,7 +9,12 @@ import FlexBox from '../../atoms/FlexBox';
 import { t } from '../../../lang';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { useAppForm } from '../../../hooks';
-import { IProductFormData, IProductReqData, ProductFilterOpt, ProductStatusEnum } from '../../../types/products.types';
+import {
+  IProductFormData,
+  IProductReqData,
+  OfferStatusEnum,
+  ProductFilterOpt,
+} from '../../../types/offers/offers.types';
 import { enumToFilterOptions, toReqData } from '../../../utils';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
@@ -26,9 +31,9 @@ export interface FormCreateOfferProps extends Omit<ModalFormProps<any, any, IPro
   addInputs?: boolean;
 }
 
-const productsStatusOption = enumToFilterOptions(ProductStatusEnum);
+const productsStatusOption = enumToFilterOptions(OfferStatusEnum);
 
-const _FormCreateOffer: React.FC<FormCreateOfferProps> = ({
+const FormCreateOffer: React.FC<FormCreateOfferProps> = ({
   edit,
   _id,
   onSubmit,
@@ -129,4 +134,4 @@ const _FormCreateOffer: React.FC<FormCreateOfferProps> = ({
   );
 };
 
-export default _FormCreateOffer;
+export default FormCreateOffer;

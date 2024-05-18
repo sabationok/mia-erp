@@ -18,6 +18,7 @@ export interface IUserBase extends IBase {
 }
 
 export interface IUser extends IUserBase {
+  ref?: string;
   permissions?: Partial<IPermission>[];
 }
 

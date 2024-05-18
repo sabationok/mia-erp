@@ -21,7 +21,7 @@ const PageProductOverview: React.FC<Props> = ({ path }) => {
   const { productId } = useAppParams();
   const [loading, setLoading] = useState(false);
 
-  const { currentProduct } = useProductsSelector();
+  const { currentOffer } = useProductsSelector();
 
   const toggleRightSide = useCallback(() => {
     setIsRightSideVisible(p => !p);
@@ -29,7 +29,7 @@ const PageProductOverview: React.FC<Props> = ({ path }) => {
 
   useEffect(() => {
     if (loading) return;
-    if (productId && productId !== currentProduct?._id) {
+    if (productId && productId !== currentOffer?._id) {
       const close = loader.open().close;
       console.log('==========>>>>>>>>>>>>');
       console.log('PageProductOverview get full info');

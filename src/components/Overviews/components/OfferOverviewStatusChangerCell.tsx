@@ -1,9 +1,9 @@
 import { RenderOverviewCellComponent } from './overview-types';
-import { IProduct, ProductStatusEnum } from '../../../types/products.types';
+import { OfferEntity, OfferStatusEnum } from '../../../types/offers/offers.types';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { getStatusData } from '../../../data/statuses.data';
-import { productStatusesData } from '../../../data/products.data';
+import { offerStatusesData } from '../../../data/offers.data';
 import { ToastService } from '../../../services';
 import FlexBox from '../../atoms/FlexBox';
 import Changer from '../../atoms/Changer';
@@ -12,9 +12,9 @@ import { t } from '../../../lang';
 import { OverviewCellHeader } from './OverviewCellHeader';
 import { CellStyledComp } from './CellStyles';
 
-export const OfferOverviewStatusChangerCell: RenderOverviewCellComponent<IProduct> = ({ cell, data }) => {
+export const OfferOverviewStatusChangerCell: RenderOverviewCellComponent<OfferEntity> = ({ cell, data }) => {
   const [canEdit, setCanEdit] = useState(false);
-  const [current, setCurrent] = useState<ProductStatusEnum | undefined>(data?.approved);
+  const [current, setCurrent] = useState<OfferStatusEnum | undefined>(data?.approved);
 
   const service = useAppServiceProvider()[ServiceName.products];
 
@@ -24,7 +24,7 @@ export const OfferOverviewStatusChangerCell: RenderOverviewCellComponent<IProduc
     return current !== data?.approved;
   }, [current, data?.approved]);
   const handleCancelPress = () => {
-    setCurrent(data?.approved ?? (productStatusesData[0].value as never));
+    setCurrent(data?.approved ?? (offerStatusesData[0].value as never));
     setCanEdit(false);
   };
 
@@ -67,7 +67,7 @@ export const OfferOverviewStatusChangerCell: RenderOverviewCellComponent<IProduc
           <>
             <Changer
               disabled={!canEdit}
-              options={productStatusesData}
+              options={offerStatusesData}
               currentOption={{ value: current }}
               onChange={e => setCurrent(e?.value as never)}
             />

@@ -1,5 +1,5 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { IOrder, IOrderSlot, OrderStatusEnum } from '../types/orders/orders.types';
+import { OrderEntity, IOrderSlot, OrderStatusEnum } from '../types/orders/orders.types';
 import { t } from '../lang';
 import { SelectItem } from '../components/TableList/tableTypes.types';
 import { FilterOption } from '../components/atoms/ModalFilter';
@@ -80,7 +80,7 @@ export type DataPath =
   | 'invoices'
   | 'payments'
   | 'transporters';
-export const ordersTableColumns: CellTittleProps<IOrder, DataPath>[] = [
+export const ordersTableColumns: CellTittleProps<OrderEntity, DataPath>[] = [
   {
     top: {
       name: `${t('Status')}`,

@@ -10,7 +10,7 @@ import { t } from '../../../lang';
 
 export interface OfferMeasurementFormProps extends OfferFormAreaProps<IMeasurement> {}
 
-export const OfferMeasurementFormArea = ({ defaultValues, _id, ...props }: OfferMeasurementFormProps) => {
+export const OfferMeasurementFormArea = ({ defaultValues, _id, disabled, ...props }: OfferMeasurementFormProps) => {
   const service = useProductsService();
   const [isLoading, setIsLoading] = useState(false);
   const form = useAppForm<MeasurementInputsFormData>({ defaultValues: { measurement: defaultValues } });
@@ -27,10 +27,18 @@ export const OfferMeasurementFormArea = ({ defaultValues, _id, ...props }: Offer
       onLoading: setIsLoading,
     });
   };
-
+  const canSubmit = form.formState.touchedFields?.measurement
+    ? Object.values(form.formState.touchedFields?.measurement)?.some(fd => fd)
+    : false;
   return (
-    <FormArea onSubmit={form.handleSubmit(onValid)} title={t('Measurement info')} isLoading={isLoading} {...props}>
-      <MeasurementInputs appForm={form} disabled={props.disabled} />
+    <FormArea
+      onSubmit={form.handleSubmit(onValid)}
+      label={t('Measurement info')}
+      isLoading={isLoading}
+      disabled={!canSubmit || disabled}
+      {...props}
+    >
+      <MeasurementInputs appForm={form} disabled={disabled} />
     </FormArea>
   );
 };

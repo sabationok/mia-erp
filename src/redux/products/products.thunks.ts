@@ -2,14 +2,14 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import { ThunkPayload } from '../store.store';
 import { isAxiosError } from 'axios';
-import { IProduct, IProductReqData } from '../../types/products.types';
+import { IProductReqData, OfferEntity } from '../../types/offers/offers.types';
 import { AppQueryParams, PriceManagementApi, WarehousesApi } from '../../api';
 import { createThunkPayloadCreator } from '../../api/createApiCall.api';
-import ProductsApi from '../../api/products.api';
+import OffersApi from '../../api/offersApi';
 import { OnlyUUID } from '../global.types';
-import { IPriceListItem } from '../../types/priceManagement.types';
-import { IProductInventory } from '../../types/warehouses.types';
-import { IVariation } from '../../types/variations.types';
+import { OfferPriceEntity } from '../../types/price-management/priceManagement.types';
+import { WarehouseItemEntity } from '../../types/warehouses.types';
+import { VariationEntity } from '../../types/offers/variations.types';
 import _ from 'lodash';
 
 enum ProductsThunkType {
@@ -36,15 +36,15 @@ export interface ProductThunkPayloadByType {
   [ProductsThunkType.deleteProductThunk]: {};
   [ProductsThunkType.getAllVariations]: ThunkPayload<
     ActionWithCurrent & { params?: Pick<AppQueryParams, 'list' | 'product' | 'variation'> },
-    IVariation[]
+    VariationEntity[]
   >;
   [ProductsThunkType.getAllPrices]: ThunkPayload<
     ActionWithCurrent & { params?: Pick<AppQueryParams, 'list' | 'product' | 'variation'> },
-    IPriceListItem[]
+    OfferPriceEntity[]
   >;
   [ProductsThunkType.getAllInventories]: ThunkPayload<
     ActionWithCurrent & { params?: Pick<AppQueryParams, 'price' | 'product' | 'variation' | 'warehouse'> },
-    IProductInventory[]
+    WarehouseItemEntity[]
   >;
 }
 export interface ProductThunkReturnDataByType {
@@ -53,24 +53,24 @@ export interface ProductThunkReturnDataByType {
   [ProductsThunkType.createProductThunk]: {};
   [ProductsThunkType.updateProductThunk]: {};
   [ProductsThunkType.deleteProductThunk]: {};
-  [ProductsThunkType.getAllVariations]: ActionWithCurrent & { data: IVariation[] };
-  [ProductsThunkType.getAllPrices]: ActionWithCurrent & { data: IPriceListItem[] };
-  [ProductsThunkType.getAllInventories]: ActionWithCurrent & { data: IProductInventory[] };
+  [ProductsThunkType.getAllVariations]: ActionWithCurrent & { data: VariationEntity[] };
+  [ProductsThunkType.getAllPrices]: ActionWithCurrent & { data: OfferPriceEntity[] };
+  [ProductsThunkType.getAllInventories]: ActionWithCurrent & { data: WarehouseItemEntity[] };
 }
 export const getAllProductsThunk = createAsyncThunk<
-  { refresh?: boolean; data?: IProduct[] },
+  { refresh?: boolean; data?: OfferEntity[] },
   ThunkPayload<
     {
       refresh?: boolean;
       query?: AppQueryParams;
     },
-    IProduct[]
+    OfferEntity[]
   >
 >(ProductsThunkType.getAllProductsThunk, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
   onLoading && onLoading(true);
 
   try {
-    const response = await ProductsApi.getAll(data?.query);
+    const response = await OffersApi.getAll(data?.query);
 
     onSuccess && onSuccess(response.data.data);
 
@@ -85,13 +85,13 @@ export const getAllProductsThunk = createAsyncThunk<
 });
 
 export const getProductFullInfoThunk = createAsyncThunk<
-  ActionWithCurrent & { data: IProduct },
-  ThunkPayload<OnlyUUID & ActionWithCurrent & { omit?: [keyof IProduct] }, IProduct>
+  ActionWithCurrent & { data: OfferEntity },
+  ThunkPayload<OnlyUUID & ActionWithCurrent & { omit?: [keyof OfferEntity] }, OfferEntity>
 >(ProductsThunkType.getProductFullInfoThunk, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
   onLoading && onLoading(true);
 
   try {
-    const res = await ProductsApi.getFullInfoById(data?._id);
+    const res = await OffersApi.getFullInfoById(data?._id);
     if (res) {
       onSuccess && onSuccess(res.data.data);
     }
@@ -107,13 +107,13 @@ export const getProductFullInfoThunk = createAsyncThunk<
 });
 
 export const createProductThunk = createAsyncThunk<
-  { data: IProduct } | undefined,
-  ThunkPayload<IProductReqData, IProduct>
+  { data: OfferEntity } | undefined,
+  ThunkPayload<IProductReqData, OfferEntity>
 >(ProductsThunkType.createProductThunk, async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
 
   try {
-    const res = await ProductsApi.create(args?.data);
+    const res = await OffersApi.create(args?.data);
     if (res) {
       args?.onSuccess && args?.onSuccess(res?.data.data);
     }
@@ -128,13 +128,13 @@ export const createProductThunk = createAsyncThunk<
 });
 
 export const updateProductThunk = createAsyncThunk<
-  (ActionWithCurrent & { data?: IProduct }) | undefined,
-  ThunkPayload<IProductReqData & ActionWithCurrent, IProduct>
+  (ActionWithCurrent & { data?: OfferEntity }) | undefined,
+  ThunkPayload<IProductReqData & ActionWithCurrent, OfferEntity>
 >(ProductsThunkType.updateProductThunk, async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
 
   try {
-    const res = await ProductsApi.updateById(args?.data);
+    const res = await OffersApi.updateById(args?.data);
     if (res) {
       args?.onSuccess && args?.onSuccess(res?.data.data);
     }
@@ -148,13 +148,13 @@ export const updateProductThunk = createAsyncThunk<
   }
 });
 export const updateProductDefaultsThunk = createAsyncThunk<
-  (ActionWithCurrent & { data?: IProduct }) | undefined,
-  ThunkPayload<IProductReqData & ActionWithCurrent, IProduct>
+  (ActionWithCurrent & { data?: OfferEntity }) | undefined,
+  ThunkPayload<IProductReqData & ActionWithCurrent, OfferEntity>
 >(ProductsThunkType.updateDefaultsById, async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
 
   try {
-    const res = await ProductsApi.updateDefaultsById(args?.data);
+    const res = await OffersApi.updateDefaultsById(args?.data);
     if (res) {
       args?.onSuccess && args?.onSuccess(res?.data.data);
     }
@@ -169,7 +169,7 @@ export const updateProductDefaultsThunk = createAsyncThunk<
 });
 export const deleteProductThunk = createAsyncThunk(
   ProductsThunkType.deleteProductThunk,
-  createThunkPayloadCreator(ProductsApi.deleteById, ProductsApi)
+  createThunkPayloadCreator(OffersApi.deleteById, OffersApi)
 );
 export const getAllPricesByProductIdThunk = createAsyncThunk<
   ProductThunkReturnDataByType['products/getAllPrices'],

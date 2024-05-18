@@ -1,13 +1,13 @@
 import ModalForm, { ModalFormProps } from '../../../ModalForm';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
-import { IVariation, IVariationFormData } from '../../../../types/variations.types';
+import { VariationEntity, IVariationFormData } from '../../../../types/offers/variations.types';
 import { t } from '../../../../lang';
-import { IProduct } from '../../../../types/products.types';
+import { OfferEntity } from '../../../../types/offers/offers.types';
 
 export interface SelectVariationModalProps
   extends Omit<ModalFormProps<any, any, IVariationFormData>, 'onSubmit' | 'onSelect'> {
-  onSubmit?: AppSubmitHandler<IVariation>;
-  product?: IProduct;
+  onSubmit?: AppSubmitHandler<VariationEntity>;
+  product?: OfferEntity;
 }
 const SelectVariationModal = ({ onSubmit, product, defaultState, ...p }: SelectVariationModalProps) => {
   // const currentProduct = useProductsSelector().currentProduct;

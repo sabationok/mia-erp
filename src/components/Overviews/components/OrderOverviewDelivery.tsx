@@ -1,5 +1,5 @@
 import { RenderOverviewCellComponent } from './overview-types';
-import { IOrder } from '../../../types/orders/orders.types';
+import { OrderEntity } from '../../../types/orders/orders.types';
 import { CellStyledComp } from './CellStyles';
 import { t } from '../../../lang';
 import { useMemo } from 'react';
@@ -7,7 +7,7 @@ import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
 import { OverviewCellHeader } from './OverviewCellHeader';
 
-export const OrderOverviewDelivery: RenderOverviewCellComponent<IOrder> = ({ cell, data }) => {
+export const OrderOverviewDelivery: RenderOverviewCellComponent<OrderEntity> = ({ cell, data }) => {
   const renderCells = useMemo(() => {
     const cells: { label: string; value?: React.ReactNode; visible?: boolean }[] = [
       { label: t('Count'), value: data?.deliveries?.length },

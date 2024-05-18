@@ -8,7 +8,7 @@ import {
   IFormDataValueWithID,
   OnlyUUID,
 } from '../redux/global.types';
-import { IOrder } from './orders/orders.types';
+import { OrderEntity } from './orders/orders.types';
 import { BusinessSubjectTypeEnum } from './companies.types';
 import {
   AppDate,
@@ -56,7 +56,7 @@ export interface ICustomerBase extends IBase, HasEmbeddedLabel, HasEmbeddedName,
   engagementSource?: EngagementSource;
 }
 export interface ICustomer extends ICustomerBase, HasMagicLink, HasCompany {
-  orders?: IOrder[];
+  orders?: OrderEntity[];
 
   referer?: ICustomer;
   referrals?: ICustomer[];

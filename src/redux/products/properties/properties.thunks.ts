@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkPayload } from '../../store.store';
 import PropertiesApi from '../../../api/properties.api';
 import { isAxiosError } from 'axios';
-import { IProperty, IPropertyReqData } from '../../../types/properties.types';
+import { IProperty, IPropertyReqData } from '../../../types/offers/properties.types';
 
 enum PropertiesThunkType {
   getAll = 'products/getAllPropertiesThunk',

@@ -1,7 +1,7 @@
 import FlexBox from '../../atoms/FlexBox';
 import styled from 'styled-components';
 import React, { useMemo, useState } from 'react';
-import { IOrder } from '../../../types/orders/orders.types';
+import { OrderEntity } from '../../../types/orders/orders.types';
 import { usePageOverlayService } from '../../atoms/PageOverlayProvider';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { t } from '../../../lang';
@@ -71,7 +71,7 @@ const OrderOverviewInfoTab: React.FC<OrderOverviewInfoTabProps> = _p => {
 const Box = styled(FlexBox)``;
 export default OrderOverviewInfoTab;
 
-const orderOverviewCells: OverviewCellProps<IOrder>[] = [
+const orderOverviewCells: OverviewCellProps<OrderEntity>[] = [
   {
     title: t('Manager'),
     CellComponent: OverviewCells.Text,

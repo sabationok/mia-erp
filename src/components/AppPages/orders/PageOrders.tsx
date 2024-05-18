@@ -8,7 +8,7 @@ import { useOrdersSelector } from '../../../redux/selectors.store';
 import { ISortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import { ordersSearchParams, ordersTableColumns } from '../../../data/orders.data';
-import { IOrder, OrderStatusEnum } from '../../../types/orders/orders.types';
+import { OrderEntity, OrderStatusEnum } from '../../../types/orders/orders.types';
 import useOrdersActionsCreatorHook from '../../../hooks/useOrdersActionsCreator.hook';
 import { BaseAppPageProps } from '../index';
 import { enumToFilterOptions } from '../../../utils';
@@ -99,7 +99,7 @@ export const useOrderTableConfigs = () => {
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   const tableConfig = useMemo(
-    (): ITableListProps<IOrder> => ({
+    (): ITableListProps<OrderEntity> => ({
       tableData: state.orders,
       tableTitles: ordersTableColumns,
       tableSortParams: ordersSearchParams.filter(el => el.sort),

@@ -1,9 +1,9 @@
 import { useForm } from 'react-hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { IProduct } from '../../types/products.types';
+import { OfferEntity } from '../../types/offers/offers.types';
 import ProductCardSimpleOverview from '../Overviews/ProductCardSimpleOverview';
 import { AppQueryParams, createApiCall } from '../../api';
-import ProductsApi from '../../api/products.api';
+import OffersApi from '../../api/offersApi';
 import FlexBox from '../atoms/FlexBox';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
@@ -12,9 +12,9 @@ import styled from 'styled-components';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import { FilterOpt } from '../atoms/ModalFilter';
 
-export interface SelectProductModalProps extends Omit<ModalFormProps<any, any, IProduct>, 'onSubmit' | 'onSelect'> {
-  selected?: IProduct;
-  onSelect?: (product: IProduct) => void;
+export interface SelectProductModalProps extends Omit<ModalFormProps<any, any, OfferEntity>, 'onSubmit' | 'onSelect'> {
+  selected?: OfferEntity;
+  onSelect?: (product: OfferEntity) => void;
   search?: AppQueryParams['search'];
   searchBy?: AppQueryParams['searchBy'];
 }
@@ -31,14 +31,14 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ selected, onSel
       search: '',
     },
   });
-  const [loadedData, setLoadedData] = useState<IProduct[] | null>(null);
-  const [current, setCurrent] = useState<IProduct | undefined>(selected);
+  const [loadedData, setLoadedData] = useState<OfferEntity[] | null>(null);
+  const [current, setCurrent] = useState<OfferEntity | undefined>(selected);
   const [currentTab, setCurrentTab] = useState<number>(0);
 
   const { search, searchBy } = watch();
 
   const onItemSelect = useCallback(
-    (p: IProduct) => {
+    (p: OfferEntity) => {
       setCurrent(p);
       onSelect && onSelect(p);
     },
@@ -62,8 +62,8 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ selected, onSel
           data: { search, searchBy },
           onSuccess: setLoadedData,
         },
-        ProductsApi.getAll,
-        ProductsApi
+        OffersApi.getAll,
+        OffersApi
       ),
     []
   );

@@ -4,10 +4,10 @@ import { AppResponse, OnlyUUID } from '../redux/global.types';
 import {
   ICreatePriceReqData,
   IPriceList,
-  IPriceListItem,
+  OfferPriceEntity,
   IPriceListReqData,
   IUpdatePriceReqData,
-} from '../types/priceManagement.types';
+} from '../types/price-management/priceManagement.types';
 import { AppQueryParams } from './index';
 
 export class PriceManagementApi {
@@ -30,26 +30,26 @@ export class PriceManagementApi {
     return this.api.get(this.endpoints.getById(list?._id), { params: query });
   }
 
-  public static async createPrice(input?: ICreatePriceReqData): Promise<AppResponse<IPriceListItem>> {
+  public static async createPrice(input?: ICreatePriceReqData): Promise<AppResponse<OfferPriceEntity>> {
     return this.api.post(this.endpoints.createPrice(), input?.data);
   }
-  public static async updatePriceById(input?: IUpdatePriceReqData): Promise<AppResponse<IPriceListItem>> {
+  public static async updatePriceById(input?: IUpdatePriceReqData): Promise<AppResponse<OfferPriceEntity>> {
     return this.api.post(this.endpoints.updatePrice(input?._id), input?.data);
   }
 
   public static async getAllPricesByListId(
     params?: Pick<AppQueryParams, 'list'>
-  ): Promise<AppResponse<IPriceListItem[]>> {
+  ): Promise<AppResponse<OfferPriceEntity[]>> {
     return this.api.get(this.endpoints.getAllPrices(), { params });
   }
   public static async getAllPricesByProductId(
     params?: Pick<AppQueryParams, 'product' | 'list' | 'variation'>
-  ): Promise<AppResponse<IPriceListItem[]>> {
+  ): Promise<AppResponse<OfferPriceEntity[]>> {
     return this.api.get(this.endpoints.getAllPrices(), { params });
   }
   public static async getAllPrices(
     params?: Pick<AppQueryParams, 'product' | 'list' | 'variation'>
-  ): Promise<AppResponse<IPriceListItem[]>> {
+  ): Promise<AppResponse<OfferPriceEntity[]>> {
     return this.api.get(this.endpoints.getAllPrices(), { params });
   }
 
@@ -57,7 +57,7 @@ export class PriceManagementApi {
   public static async getAllForUser(params?: {
     search: string | undefined;
     searchBy: string | undefined;
-  }): Promise<AppResponse<IPriceListItem[]>> {
+  }): Promise<AppResponse<OfferPriceEntity[]>> {
     return this.api.get('', { params });
   }
 }

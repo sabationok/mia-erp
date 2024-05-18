@@ -1,8 +1,8 @@
-import { IBase, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
-import { AppQueryParams } from '../api';
-import { OfferTypeEnum } from './products.types';
-import { ICmsBaseConfigs } from './cms.types';
-import { MaybeNull } from './utils.types';
+import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/global.types';
+import { AppQueryParams } from '../../api';
+import { OfferTypeEnum } from './offers.types';
+import { ICmsBaseConfigs } from '../cms.types';
+import { MaybeNull } from '../utils.types';
 
 export interface IPropertyBase extends IBase {
   label?: MaybeNull<string>;

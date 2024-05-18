@@ -1,7 +1,7 @@
 import { enumToFilterOptions } from '../utils';
 import { TagTypeEnum, TrCategoryTypeEnum } from '../types/directories.types';
 import { CountsTypesEnum } from '../redux/directories/counts.types';
-import { OfferTypeEnum } from '../types/products.types';
+import { OfferTypeEnum } from '../types/offers/offers.types';
 import { ContractorsTypesEnum } from '../redux/directories/contractors.types';
 
 export const categoriesFilterOptions = enumToFilterOptions(TrCategoryTypeEnum);

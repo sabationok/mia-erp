@@ -1,14 +1,14 @@
 import React, { useMemo } from 'react';
 import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
-import { IProperty } from '../../../types/properties.types';
-import { IProduct } from '../../../types/products.types';
+import { IProperty } from '../../../types/offers/properties.types';
+import { OfferEntity } from '../../../types/offers/offers.types';
 import { CellStyledComp } from './CellStyles';
 
 interface OverviewPropertyComponentProps {
   item: IProperty;
   selectedItems?: string[];
-  data?: IProduct;
+  data?: OfferEntity;
   index: number;
 }
 export const OverviewPropertyComponent: React.FC<OverviewPropertyComponentProps> = ({ item, selectedItems }) => {

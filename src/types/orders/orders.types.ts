@@ -1,5 +1,5 @@
-import { AppResponse, IBase, MagicLinkRef, OnlyUUID } from '../../redux/global.types';
-import { IPriceBase, IPriceListItem } from '../priceManagement.types';
+import { AppResponse } from '../../redux/global.types';
+import { IPriceBase, OfferPriceEntity } from '../price-management/priceManagement.types';
 import { ICustomerBase } from '../customers.types';
 import { AppQueryParams } from '../../api';
 import { ICommunicationMethod } from '../integrations.types';
@@ -9,21 +9,22 @@ import {
   HasEmbeddedReferences,
   HasExecuteDate,
   HasExpireDate,
-  HasMagicLink,
   HasManager,
   HasOwnerAsCompany,
   HasQuantity,
   HasStatus,
   HasSummary,
   HasTotal,
+  IBase,
   MaybeNull,
+  OnlyUUID,
 } from '../utils.types';
-import { IProduct } from '../products.types';
-import { IProductInventory, IWarehouse } from '../warehouses.types';
+import { OfferEntity } from '../offers/offers.types';
+import { IWarehouse, WarehouseItemEntity } from '../warehouses.types';
 import { IInvoice } from '../invoices.types';
 import { IDelivery } from '../deliveries.types';
 import { IPayment } from '../payments.types';
-import { IVariation } from '../variations.types';
+import { VariationEntity } from '../offers/variations.types';
 import { ICreateOrderInfoDto } from './createOrderInfo.dto';
 import { ICreateOrderInfoFormState } from './createOrderInfoFormState.type';
 
@@ -40,13 +41,12 @@ export interface HasOrdersGroup {
 }
 
 export interface HasOrder {
-  order?: MaybeNull<IOrder>;
+  order?: MaybeNull<OrderEntity>;
 }
 
 export interface HasOrdersList {
-  orders?: MaybeNull<IOrder[]>;
+  orders?: MaybeNull<OrderEntity[]>;
 }
-
 export enum OrderStatusEnum {
   new = 'order_new',
   inWork = 'order_inWork',
@@ -66,11 +66,17 @@ export interface IOrderSlotBase extends IPriceBase, HasStatus<OrderStatusEnum>, 
   delivery?: OnlyUUID;
   invoice?: OnlyUUID;
 
-  product?: IProduct;
+  product?: OfferEntity;
   warehouse?: IWarehouse;
-  origin?: IPriceListItem;
-  inventory?: IProductInventory;
-  variation?: IVariation;
+  origin?: OfferPriceEntity;
+  inventory?: WarehouseItemEntity;
+  variation?: VariationEntity;
+
+  imgPreview?: string;
+
+  fromRef?: string;
+
+  discounts?: OfferPriceEntity['discounts'];
 }
 
 export interface IOrderSlot extends IBase, IOrderSlotBase, HasOwnerAsCompany {}
@@ -105,15 +111,14 @@ export interface OrderTotals {
   amount?: number;
 }
 
-export interface IOrdersGroup extends IBase, HasMagicLink, HasEmbeddedReferences<string, string> {
-  orders?: MaybeNull<IOrder[]>;
+export interface IOrdersGroup extends Omit<OrderEntity, 'group'> {
+  orders?: MaybeNull<OrderEntity[]>;
   strategy?: MaybeNull<string>;
 }
 
-export interface IOrder
+export interface OrderEntity
   extends IBase,
     HasOwnerAsCompany,
-    MagicLinkRef,
     HasManager,
     HasExpireDate,
     HasEmbeddedReference,
@@ -148,12 +153,12 @@ export interface ICreateOrdersGroupFormState {
   slots: IOrderTempSlot[];
   info?: ICreateOrderInfoFormState;
 
-  orders: IOrder[];
+  orders: OrderEntity[];
 }
 
-export interface IAllOrdersRes extends AppResponse<IOrder[]> {}
+export interface IAllOrdersRes extends AppResponse<OrderEntity[]> {}
 
-export interface IOrderRes extends AppResponse<IOrder> {}
+export interface IOrderRes extends AppResponse<OrderEntity> {}
 
 export interface IOrderReqData {
   _id?: string;

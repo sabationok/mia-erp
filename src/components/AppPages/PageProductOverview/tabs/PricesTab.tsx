@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { pricesColumnsForProductReview } from 'data/priceManagement.data';
 import FormCreatePrice from '../../../Forms/pricing/FormCreatePrice/FormCreatePrice';
-import { IPriceListItem } from 'types/priceManagement.types';
+import { OfferPriceEntity } from 'types/price-management/priceManagement.types';
 import { useProductsSelector } from 'redux/selectors.store';
 import { useModalProvider } from '../../../ModalProvider/ModalProvider';
 import { getIdRef } from 'utils/data-transform';
@@ -15,7 +15,7 @@ export interface PricesTabProps {
   withActions?: boolean;
 }
 const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions = true }) => {
-  const currentProduct = useProductsSelector().currentProduct;
+  const currentProduct = useProductsSelector().currentOffer;
   const pricesS = useAppServiceProvider()[ServiceName.priceManagement];
   const modalS = useModalProvider();
   const productsS = useAppServiceProvider()[ServiceName.products];
@@ -34,7 +34,7 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
     [currentProduct, productsS]
   );
 
-  const tableConfig = useMemo((): ITableListProps<IPriceListItem> => {
+  const tableConfig = useMemo((): ITableListProps<OfferPriceEntity> => {
     return {
       tableData: currentProduct?.prices,
       tableTitles: pricesColumnsForProductReview,

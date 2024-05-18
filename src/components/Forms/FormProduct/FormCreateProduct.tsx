@@ -10,13 +10,16 @@ import FlexBox from '../../atoms/FlexBox';
 import { t } from '../../../lang';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { useAppForm } from '../../../hooks';
-import { IProductFormData, IProductReqData, ProductFilterOpt, ProductStatusEnum } from '../../../types/products.types';
+import {
+  IProductFormData,
+  IProductReqData,
+  OfferStatusEnum,
+  ProductFilterOpt,
+} from '../../../types/offers/offers.types';
 import { enumToFilterOptions, toReqData } from '../../../utils';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { IVariationTemplate } from '../../../types/properties.types';
-import FormProductStaticProperties from './FormProductStaticProperties';
-import FormProductImagesComponent from './components/FormProductImagesComponent';
+import FormOfferImagesComponent from './components/FormOfferImagesComponent';
 import FormProductCategories from './FormProductCategories';
 import DimensionsInputs from './components/DimensionsInputs';
 import MeasurementInputs from './components/MeasuremenInputs';
@@ -32,7 +35,7 @@ export interface FormCreateProductProps extends Omit<ModalFormProps<any, any, IP
   addInputs?: boolean;
 }
 
-const productsStatusOption = enumToFilterOptions(ProductStatusEnum);
+const productsStatusOption = enumToFilterOptions(OfferStatusEnum);
 
 const FormCreateProduct: React.FC<FormCreateProductProps> = ({
   edit,
@@ -46,7 +49,6 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
   const submitOptions = useAfterSubmitOptions();
   const {
     directories: { directories },
-    products: { properties },
   } = useAppSelector();
   const form = useAppForm<IProductFormData>({
     defaultValues: defaultState,
@@ -61,12 +63,12 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
   } = form;
 
   const categories = useMemo(() => {
-    return directories[ApiDirType.CATEGORIES_PROD].filter(el => el.type === formValues.type);
+    return directories[ApiDirType.CATEGORIES_PROD].filter((el: any) => el.type === formValues.type); // ! TODO
   }, [directories, formValues.type]);
 
-  const currentTemplate = useMemo((): IVariationTemplate | undefined => {
-    return properties.find(t => t._id === formValues?.template?._id);
-  }, [formValues?.template?._id, properties]);
+  // const currentTemplate = useMemo((): IVariationTemplate | undefined => {
+  //   return properties.find(t => t._id === formValues?.template?._id);
+  // }, [formValues?.template?._id, properties]);
 
   // TODO eventDate: formatDateForInputValue(defaultState?.eventDate)
   function onValidSubmit(submitData: IProductFormData) {
@@ -136,24 +138,24 @@ const FormCreateProduct: React.FC<FormCreateProductProps> = ({
           <TextareaPrimary placeholder={t('description')} {...register('description')} />
         </InputLabel>
 
-        <FormProductStaticProperties
-          template={currentTemplate}
-          defaultData={formValues?.properties}
-          onChange={ids => {
-            setValue('properties', ids);
-          }}
-        >
-          <CustomSelect
-            {...registerSelect('template', {
-              options: properties,
-              dropDownIsAbsolute: true,
-              label: t('variationsTemplate'),
-              placeholder: t('selectVariationsTemplate'),
-            })}
-          />
-        </FormProductStaticProperties>
+        {/*<FormProductStaticProperties*/}
+        {/*  template={currentTemplate}*/}
+        {/*  defaultData={formValues?.properties}*/}
+        {/*  onChange={ids => {*/}
+        {/*    setValue('properties', ids);*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <CustomSelect*/}
+        {/*    {...registerSelect('template', {*/}
+        {/*      options: properties,*/}
+        {/*      dropDownIsAbsolute: true,*/}
+        {/*      label: t('variationsTemplate'),*/}
+        {/*      placeholder: t('selectVariationsTemplate'),*/}
+        {/*    })}*/}
+        {/*  />*/}
+        {/*</FormProductStaticProperties>*/}
 
-        <FormProductImagesComponent
+        <FormOfferImagesComponent
           initialData={formValues?.images}
           onChangeState={data => {
             setValue('images', data);

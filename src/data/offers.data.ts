@@ -1,12 +1,12 @@
 import { SelectItem } from 'components/TableList/TableList';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { t } from '../lang';
-import { IProduct, ProductStatusEnum } from '../types/products.types';
+import { OfferEntity, OfferStatusEnum } from '../types/offers/offers.types';
 import { getStatusesByEnum } from './statuses.data';
 
-export const productStatusesData = getStatusesByEnum(ProductStatusEnum);
+export const offerStatusesData = getStatusesByEnum(OfferStatusEnum);
 
-export const productsColumns: CellTittleProps<IProduct>[] = [
+export const offersTableColumns: CellTittleProps<OfferEntity>[] = [
   {
     top: { name: t('label'), align: 'start', getData: rd => rd?.label },
     // bottom: { name: t('sku'), align: 'start', getData: rd => rd?.sku },

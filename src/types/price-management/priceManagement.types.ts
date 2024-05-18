@@ -1,12 +1,13 @@
-import { IBase, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
-import { FilterOpt } from '../components/atoms/ModalFilter';
-import { IProduct } from './products.types';
-import { IVariation } from './variations.types';
-import { AppQueryParams } from '../api';
-import { ICompanyBase } from './companies.types';
-import { IUserBase } from './auth.types';
+import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/global.types';
+import { FilterOpt } from '../../components/atoms/ModalFilter';
+import { OfferEntity } from '../offers/offers.types';
+import { VariationEntity } from '../offers/variations.types';
+import { AppQueryParams } from '../../api';
+import { ICompanyBase } from '../companies.types';
+import { IUserBase } from '../auth.types';
 
-import { EntityPath, HasDescription, HasLabel, HasStatus, HasType, MaybeNull, WithPeriod } from './utils.types';
+import { EntityPath, HasDescription, HasLabel, HasStatus, HasType, MaybeNull, WithPeriod } from '../utils.types';
+import { PriceDiscountEntity } from './discounts';
 
 export enum PriceListTypeEnum {
   PURCHASES = 'purchases',
@@ -14,7 +15,7 @@ export enum PriceListTypeEnum {
 }
 
 export interface HasPrice {
-  price?: MaybeNull<IPriceListItem>;
+  price?: MaybeNull<OfferPriceEntity>;
 }
 
 export type PriceListStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
@@ -36,8 +37,8 @@ export interface PriceListDto
 export interface IPriceList extends IBase {
   label: string;
   status?: PriceListStatus;
-  prices?: IPriceListItem[];
-  products?: Partial<IProduct>[];
+  prices?: OfferPriceEntity[];
+  products?: Partial<OfferEntity>[];
   timeFrom?: string;
   timeTo?: string;
   description?: string;
@@ -83,14 +84,16 @@ export interface IPriceDto extends IPriceBase, WithPeriod {
 
 export type UpdatePriceDto = Partial<Omit<IPriceDto, 'list' | 'product' | 'variation'>>;
 
-export interface IPriceListItem extends IBase, IPriceBase {
+export interface OfferPriceEntity extends IBase, IPriceBase {
   owner?: ICompanyBase;
   author?: IUserBase;
   editor?: IUserBase;
 
   list?: IPriceList;
-  product?: IProduct;
-  variation?: IVariation;
+  product?: OfferEntity;
+  variation?: VariationEntity;
+
+  discounts?: PriceDiscountEntity[];
 }
 
 export interface IPriceFormData extends Omit<IPriceDto, 'product' | 'variation' | 'list'> {

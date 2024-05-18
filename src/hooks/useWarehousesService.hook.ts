@@ -1,7 +1,12 @@
 import { useMemo } from 'react';
 import { OnlyUUID, ServiceApiCaller, ServiceDispatcherAsync } from '../redux/global.types';
 import { AppQueryParams } from '../api';
-import { IProductInventory, IProductInventoryReqData, IWarehouse, IWarehouseReqData } from '../types/warehouses.types';
+import {
+  WarehouseItemEntity,
+  IProductInventoryReqData,
+  IWarehouse,
+  IWarehouseReqData,
+} from '../types/warehouses.types';
 import {
   createWarehouseThunk,
   getAllWarehousesThunk,
@@ -18,8 +23,8 @@ export interface WarehousesService {
   update?: ServiceApiCaller<IWarehouseReqData, IWarehouse>;
 
   // ? PRODUCT INVENTORIES
-  addItem?: ServiceApiCaller<IProductInventoryReqData, IProductInventory>;
-  removeItem?: ServiceApiCaller<IProductInventoryReqData, IProductInventory>;
+  addItem?: ServiceApiCaller<IProductInventoryReqData, WarehouseItemEntity>;
+  removeItem?: ServiceApiCaller<IProductInventoryReqData, WarehouseItemEntity>;
 }
 export const useWarehousesService = (): WarehousesService => {
   const dispatch = useAppDispatch();

@@ -1,8 +1,8 @@
-import { IProduct, IProductFullFormData } from '../../types/products.types';
+import { OfferEntity, IProductFullFormData } from '../../types/offers/offers.types';
 import _, { isObject, pick } from 'lodash';
 
-export function toOfferFormData(input: IProduct): IProductFullFormData {
-  const createProductFormDataOmitPaths: (keyof IProduct | string)[] = [
+export function toOfferFormData(input: OfferEntity): IProductFullFormData {
+  const createProductFormDataOmitPaths: (keyof OfferEntity | string)[] = [
     '_id',
     'createdAt',
     'updatedAt',
@@ -15,7 +15,7 @@ export function toOfferFormData(input: IProduct): IProductFullFormData {
   const getFormValuePickPaths = (data?: any) => {
     return data ? ['_id', 'label', 'email', 'dirType', 'parent', 'name', 'secondName'].filter(key => key in data) : [];
   };
-  const isArrayForTransformToIdsArray = <T extends keyof IProduct | string = any>(key: T) => {
+  const isArrayForTransformToIdsArray = <T extends keyof OfferEntity | string = any>(key: T) => {
     return ['properties', 'categories'].includes(key);
   };
   const data = _.cloneDeep(_.omit(input, createProductFormDataOmitPaths));

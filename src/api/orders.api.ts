@@ -1,7 +1,7 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import {
   ICreateOrdersWithSlotsAndGroupByWarehousesReqData,
-  IOrder,
+  OrderEntity,
   IOrderRes,
   IOrderSlot,
 } from '../types/orders/orders.types';
@@ -13,15 +13,15 @@ export default class OrdersApi {
   private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.ordersEndpoints;
 
-  public static getAll(...args: any[]): Promise<AppResponse<IOrder[]>> {
+  public static getAll(...args: any[]): Promise<AppResponse<OrderEntity[]>> {
     return this.api.get(this.endpoints.getAll());
   }
 
-  public static getById(data?: OnlyUUID & { params?: { fullInfo?: boolean } }): Promise<AppResponse<IOrder>> {
+  public static getById(data?: OnlyUUID & { params?: { fullInfo?: boolean } }): Promise<AppResponse<OrderEntity>> {
     return this.api.get(this.endpoints.getOrderById(data?._id), { params: data?.params });
   }
 
-  public static createOne(...args: any[]): Promise<AppResponse<IOrder>> {
+  public static createOne(...args: any[]): Promise<AppResponse<OrderEntity>> {
     return this.api.post(this.endpoints.create());
   }
 

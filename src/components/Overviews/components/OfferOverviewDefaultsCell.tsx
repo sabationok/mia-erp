@@ -1,5 +1,5 @@
 import { RenderOverviewCellComponent } from './overview-types';
-import { IProduct } from '../../../types/products.types';
+import { OfferEntity } from '../../../types/offers/offers.types';
 import { useTheme } from 'styled-components';
 import React, { useMemo } from 'react';
 import { t } from '../../../lang';
@@ -10,10 +10,14 @@ import { CellStyledComp } from './CellStyles';
 import { OverviewCellHeader } from './OverviewCellHeader';
 import FormProductDefaultsOverlay from '../../Forms/FormProduct/FormProductDefaultsOverlay';
 
-import { IPriceListItem } from '../../../types/priceManagement.types';
+import { OfferPriceEntity } from '../../../types/price-management/priceManagement.types';
 import { MaybeNull } from '../../../types/utils.types';
 
-export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<IProduct> = ({ data, cell, setOverlayContent }) => {
+export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity> = ({
+  data,
+  cell,
+  setOverlayContent,
+}) => {
   const theme = useTheme();
   const warehouse = data?.warehouse;
   const supplier = data?.supplier;
@@ -157,7 +161,7 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<IProduct> = 
 };
 
 export function createPriceOverviewTagsData(
-  price?: IPriceListItem
+  price?: OfferPriceEntity
 ): { title: string; amount?: number; percentage?: number }[] {
   return [
     { title: t('Input'), amount: price?.in },

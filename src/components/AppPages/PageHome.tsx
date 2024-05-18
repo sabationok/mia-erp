@@ -5,7 +5,6 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { takeFullGridArea, takeFullPlace } from './pagesStyles';
 import { useAuthSelector } from 'redux/selectors.store';
-import ProfileCard from 'components/atoms/ProfileCard/ProfileCard';
 import { usePermissionsSelector } from 'hooks/usePermissionsService.hook';
 import { IPermission } from '../../types/permissions.types';
 import { ITableListProps } from '../TableList/tableTypes.types';
@@ -99,9 +98,7 @@ const PageHome: React.FC<Props> = ({ path }) => {
   return (
     <Page>
       <Top>
-        <ProfileInfo>
-          <ProfileCard {...user} />
-        </ProfileInfo>
+        <ProfileInfo>{/*<ProfileCard {...user} />*/}</ProfileInfo>
 
         <FilterButtons>
           <ButtonsList>{renderFilterButtons}</ButtonsList>

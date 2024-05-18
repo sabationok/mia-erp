@@ -6,24 +6,24 @@ import ProductCardSimpleOverview from '../../../Overviews/ProductCardSimpleOverv
 import { Modals } from '../../../Modals';
 import TableList from '../../../TableList/TableList';
 import { ServiceName, useAppServiceProvider } from 'hooks/useAppServices.hook';
-import { IVariation } from 'types/variations.types';
+import { VariationEntity } from 'types/offers/variations.types';
 import { useProductsSelector } from 'redux/selectors.store';
 import { createTableTitlesFromTemplate, getIdRef } from 'utils';
 import { transformVariationTableData } from 'utils/tables';
 import { OnRowClickHandler } from '../../../TableList/tableTypes.types';
 import { OnlyUUID } from 'redux/global.types';
-import { IProduct } from 'types/products.types';
+import { OfferEntity } from 'types/offers/offers.types';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
 import styled from 'styled-components';
 
 export interface FormProductSelectorForPricingProps {
   title?: string;
-  onSubmit?: (data?: IProduct) => void;
-  onSelect?: (data?: IProduct) => void;
-  selected?: IProduct;
+  onSubmit?: (data?: OfferEntity) => void;
+  onSelect?: (data?: OfferEntity) => void;
+  selected?: OfferEntity;
   disabled?: boolean;
-  variation?: IVariation;
-  onChange?: (p?: IProduct, v?: IVariation) => void;
+  variation?: VariationEntity;
+  onChange?: (p?: OfferEntity, v?: VariationEntity) => void;
 }
 
 const FormProductSelectorForPricing: React.FC<FormProductSelectorForPricingProps> = ({
@@ -37,21 +37,21 @@ const FormProductSelectorForPricing: React.FC<FormProductSelectorForPricingProps
 }) => {
   const modals = useModalProvider();
   const prService = useAppServiceProvider()[ServiceName.products];
-  const { currentProduct, properties: templates } = useProductsSelector();
-  const setLoadedVariations = useState<IVariation[]>([])[1];
-  const [currentVariation, setCurrentVariation] = useState<OnlyUUID | undefined>(currentProduct?.defaults?.variation);
-  const [selectedProduct, setSelectedProduct] = useState<OnlyUUID | undefined>(currentProduct);
+  const { currentOffer, properties: templates } = useProductsSelector();
+  const setLoadedVariations = useState<VariationEntity[]>([])[1];
+  const [currentVariation, setCurrentVariation] = useState<OnlyUUID | undefined>(currentOffer?.defaults?.variation);
+  const [selectedProduct, setSelectedProduct] = useState<OnlyUUID | undefined>(currentOffer);
 
   const tableTitles = useMemo(() => {
-    const t = templates.find(t => t._id === currentProduct?.template?._id);
+    const t = templates.find(t => t._id === currentOffer?.template?._id);
     return t ? createTableTitlesFromTemplate(t) : undefined;
-  }, [currentProduct?.template?._id, templates]);
+  }, [currentOffer?.template?._id, templates]);
 
   const transformedTableData = useMemo(() => {
-    return currentProduct?.variations ? currentProduct?.variations.map(v => transformVariationTableData(v)) : [];
-  }, [currentProduct?.variations]);
+    return currentOffer?.variations ? currentOffer?.variations.map(v => transformVariationTableData(v)) : [];
+  }, [currentOffer?.variations]);
 
-  const handleTableRowClick: OnRowClickHandler<IVariation> = data => {
+  const handleTableRowClick: OnRowClickHandler<VariationEntity> = data => {
     setCurrentVariation(prev => {
       const newData = data?._id ? { _id: data?._id } : prev;
       onChange && onChange(selectedProduct, newData);
@@ -64,7 +64,7 @@ const FormProductSelectorForPricing: React.FC<FormProductSelectorForPricingProps
       setCurrentVariation(variation);
     }
   }, [variation]);
-  const onSelectProduct = (product: IProduct, onSuccessLoad?: () => void) => {
+  const onSelectProduct = (product: OfferEntity, onSuccessLoad?: () => void) => {
     setSelectedProduct(product);
 
     prService.getProductFullInfo({
@@ -87,7 +87,7 @@ const FormProductSelectorForPricing: React.FC<FormProductSelectorForPricingProps
         onSelect: p => {
           onSelectProduct(p, modal?.onClose);
         },
-        selected: currentProduct,
+        selected: currentOffer,
       },
     });
   };
@@ -103,14 +103,14 @@ const FormProductSelectorForPricing: React.FC<FormProductSelectorForPricingProps
       // overflow={'hidden'}
       // padding={'8px 0 8px'}
     >
-      {currentProduct && (
+      {currentOffer && (
         <FlexBox fillWidth>
-          <ProductCardSimpleOverview product={currentProduct} disabled />
+          <ProductCardSimpleOverview product={currentOffer} disabled />
         </FlexBox>
       )}
 
       <ButtonIcon variant={'outlinedSmall'} disabled={disabled} onClick={onOpenSelectorClick}>
-        {`${currentProduct ? 'Change' : 'Select'} product for pricing`}
+        {`${currentOffer ? 'Change' : 'Select'} product for pricing`}
       </ButtonIcon>
 
       {/*<Text $weight={500}>{'Оберіть варіацію для оцінки'}</Text>*/}

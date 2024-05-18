@@ -1,5 +1,5 @@
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { IProductDefaultsFormData } from '../../../types/products.types';
+import { IProductDefaultsFormData } from '../../../types/offers/offers.types';
 import styled from 'styled-components';
 import { OverlayHandlerReturn } from '../../atoms/PageOverlayProvider';
 import { ModalHeader, OverlayFooter } from '../../atoms';
@@ -35,7 +35,7 @@ export enum FormProductDefaultsTabs {
 
 const tabs = enumToFilterOptions(FormProductDefaultsTabs);
 const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({ onClose, onSubmit }) => {
-  const currentProduct = useProductsSelector()?.currentProduct;
+  const currentProduct = useProductsSelector()?.currentOffer;
   const productsS = useAppServiceProvider()[ServiceName.products];
 
   const [currentTabIdx, setCurrentTabIdx] = useState(0);

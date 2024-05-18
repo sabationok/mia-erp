@@ -1,5 +1,5 @@
 import { RenderOverviewCellComponent } from './overview-types';
-import { IOrder } from '../../../types/orders/orders.types';
+import { OrderEntity } from '../../../types/orders/orders.types';
 import { CellStyledComp } from './CellStyles';
 import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
@@ -7,7 +7,7 @@ import { t } from '../../../lang';
 import { useMemo } from 'react';
 import { OverviewCellHeader } from './OverviewCellHeader';
 
-export const OrderOverviewCustomerInfo: RenderOverviewCellComponent<IOrder> = ({ cell, data }) => {
+export const OrderOverviewCustomerInfo: RenderOverviewCellComponent<OrderEntity> = ({ cell, data }) => {
   const renderCells = useMemo(() => {
     const customer = data?.customer;
 

@@ -23,8 +23,8 @@ export enum Modals {
   FormCreateCompany = 'FormCreateCompany',
   FormCreateMethod = 'FormCreateMethod',
   FormInviteUser = 'FormInviteUser',
-  FormCreateProduct = 'FormCreateProduct',
-  FormCreateProductInventory = 'FormCreateProductInventory',
+  FormCreateOffer = 'FormCreateOffer',
+  FormCreateOfferInventory = 'FormCreateOfferInventory',
   FormCreateProperty = 'FormCreateProperty',
   FormCreateVariation = 'FormCreateVariation',
   FormCreateWarehouse = 'FormCreateWarehouse',
@@ -68,11 +68,11 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   [Modals.FormCreateMethod]: Forms.CreateMethod,
   [Modals.FormInviteUser]: Forms.InviteUser,
 
-  [Modals.FormCreateProductInventory]: Forms.CreateProductInventory,
+  [Modals.FormCreateOfferInventory]: Forms.CreateProductInventory,
   [Modals.FormCreateProperty]: Forms.CreateProperty,
   [Modals.FormCreateVariation]: Forms.CreateVariation,
   [Modals.FormCreateWarehouse]: Forms.CreateWarehouse,
-  [Modals.FormCreateProduct]: Forms.CreateProduct,
+  [Modals.FormCreateOffer]: Forms.CreateOffer,
   [Modals.FormCreateWarehouseDocument]: Forms.CreateWarehouseDocument,
   // * ORDERS
   [Modals.FormCreateOrder]: Forms.CreateOrder,
@@ -111,8 +111,8 @@ export interface ModalChildrenProps extends Record<Modals, any> {
   [Modals.FormCreateMethod]: FormPropTypes.FormCreateMethodProps;
   [Modals.FormInviteUser]: FormPropTypes.FormInviteUserProps;
   [Modals.FormCreateTag]: FormPropTypes.FormCreateTagProps;
-  [Modals.FormCreateProductInventory]: FormPropTypes.FormCreateProductInventoryProps;
-  [Modals.FormCreateProduct]: FormPropTypes.FormCreateProductProps;
+  [Modals.FormCreateOfferInventory]: FormPropTypes.FormCreateProductInventoryProps;
+  [Modals.FormCreateOffer]: FormPropTypes.FormCreateOfferProps;
   [Modals.FormCreateProperty]: FormPropTypes.FormCreatePropertyProps;
   [Modals.FormCreateVariation]: FormPropTypes.FormCreateVariationProps;
   [Modals.FormCreateWarehouse]: FormPropTypes.FormCreateWarehouseProps;

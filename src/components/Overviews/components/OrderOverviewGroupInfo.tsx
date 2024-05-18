@@ -1,11 +1,11 @@
 import { RenderOverviewCellComponent } from './overview-types';
-import { IOrder } from '../../../types/orders/orders.types';
+import { OrderEntity } from '../../../types/orders/orders.types';
 import { CellStyledComp } from './CellStyles';
 import { OverviewCellHeader } from './OverviewCellHeader';
 import { Text } from '../../atoms/Text';
 import { t } from '../../../lang';
 
-export const OrderOverviewGroupInfo: RenderOverviewCellComponent<IOrder> = ({ cell, setOverlayContent, data }) => {
+export const OrderOverviewGroupInfo: RenderOverviewCellComponent<OrderEntity> = ({ cell, setOverlayContent, data }) => {
   return (
     <CellStyledComp.Cell>
       <OverviewCellHeader title={cell?.title} />

@@ -1,5 +1,5 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { IProductInventory, IWarehouse } from '../types/warehouses.types';
+import { WarehouseItemEntity, IWarehouse } from '../types/warehouses.types';
 import { t } from '../lang';
 import { numberWithSpaces } from '../utils';
 
@@ -44,10 +44,10 @@ export const warehousesTableColumns: CellTittleProps<IWarehouse>[] = [
     action: 'dateSimple',
   },
 ];
-export const warehouseOverviewTableColumns: CellTittleProps<IProductInventory>[] = [
+export const warehouseOverviewTableColumns: CellTittleProps<WarehouseItemEntity>[] = [
   {
     top: { name: t('variationLabel'), getData: rd => rd.variation?.label },
-    getImgPreview: d => (d.product?.images ? d.product?.images[0]?.img_preview : ''),
+    getImgPreview: d => (d.offer?.images ? d.offer?.images[0]?.img_preview : ''),
     width: '270px',
     action: 'doubleDataWithAvatar',
   },
@@ -130,7 +130,7 @@ export const warehousesTableColumnsForOrderCreateOrderSlotForm: CellTittleProps[
   },
 ];
 
-const batchPricesColumns: CellTittleProps<IProductInventory>[] = [
+const batchPricesColumns: CellTittleProps<WarehouseItemEntity>[] = [
   {
     top: { name: t('Price OUT'), align: 'end', getData: d => numberWithSpaces(Number(d?.price?.in || 0)) },
     bottom: { name: t('Price IN'), align: 'end', getData: d => numberWithSpaces(Number(d?.price?.out || 0)) },
@@ -214,7 +214,7 @@ const batchPricesColumns: CellTittleProps<IProductInventory>[] = [
   },
 ];
 
-export const warehouseBatchColumns: CellTittleProps<IProductInventory>[] = [
+export const warehouseBatchColumns: CellTittleProps<WarehouseItemEntity>[] = [
   {
     top: { name: t('batch') },
     // bottom: { name: t('code') },

@@ -1,6 +1,10 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { t } from '../lang';
-import { IPriceList, IPriceListItem, PriceAmountAndPercentageFieldsKey } from '../types/priceManagement.types';
+import {
+  IPriceList,
+  OfferPriceEntity,
+  PriceAmountAndPercentageFieldsKey,
+} from '../types/price-management/priceManagement.types';
 import { numberWithSpaces } from '../utils';
 import { priceAmountAndPercentageFieldsLabels } from '../utils/tables';
 
@@ -58,7 +62,7 @@ export const priceListColumns: CellTittleProps<IPriceList>[] = [
   dateColumn,
 ];
 
-export function createColumnForPriceEntity<Type extends IPriceListItem = any>(
+export function createColumnForPriceEntity<Type extends OfferPriceEntity = any>(
   name: PriceAmountAndPercentageFieldsKey,
   width?: string
 ): CellTittleProps<Type> {
@@ -90,7 +94,7 @@ const keys: PriceAmountAndPercentageFieldsKey[] = [
   'vat',
 ];
 
-export const basePriceColumns: CellTittleProps<IPriceListItem>[] = [
+export const basePriceColumns: CellTittleProps<OfferPriceEntity>[] = [
   {
     top: {
       name: t('Price OUT'),
@@ -109,7 +113,7 @@ export const basePriceColumns: CellTittleProps<IPriceListItem>[] = [
   },
 ];
 
-export function getBasePriceColumns<Type extends IPriceListItem = any>(): CellTittleProps<Type>[] {
+export function getBasePriceColumns<Type extends OfferPriceEntity = any>(): CellTittleProps<Type>[] {
   return [
     {
       top: {
@@ -130,7 +134,7 @@ export function getBasePriceColumns<Type extends IPriceListItem = any>(): CellTi
   ];
 }
 
-export const priceListContentColumns: CellTittleProps<IPriceListItem>[] = [
+export const priceListContentColumns: CellTittleProps<OfferPriceEntity>[] = [
   {
     top: { name: t('Product label'), getData: d => d?.product?.label },
     bottom: { name: t('Variation label'), getData: d => d?.variation?.label },
@@ -162,7 +166,7 @@ export const priceListContentColumns: CellTittleProps<IPriceListItem>[] = [
   dateColumn,
 ];
 
-export const pricesColumnsForProductReview: CellTittleProps<IPriceListItem>[] = [
+export const pricesColumnsForProductReview: CellTittleProps<OfferPriceEntity>[] = [
   {
     top: { name: t('Variation label'), getData: d => d?.variation?.label },
     // bottom: { name: '',  getData: d => ''},

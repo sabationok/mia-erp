@@ -1,12 +1,12 @@
 import ModalForm, { ModalFormProps } from '../../../ModalForm';
 import FlexBox from '../../../atoms/FlexBox';
-import { IPriceFormData } from '../../../../types/priceManagement.types';
+import { IPriceFormData } from '../../../../types/price-management/priceManagement.types';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import { useAppForm } from '../../../../hooks';
 import FormProductSelectorForPricing from './FormProductSelectorForPricing';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
 import { useCallback, useMemo } from 'react';
-import { IProduct } from '../../../../types/products.types';
+import { OfferEntity } from '../../../../types/offers/offers.types';
 import { usePriceListsSelector, useProductsSelector } from '../../../../redux/selectors.store';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../components/FormAfterSubmitOptions';
 import { t } from '../../../../lang';
@@ -19,7 +19,7 @@ import { OnRowClickHandler } from '../../../TableList/tableTypes.types';
 import TableList from '../../../TableList/TableList';
 import { priceListColumns } from '../../../../data/priceManagement.data';
 import { UUIDRefSchema } from '../../validation';
-import { IVariation } from '../../../../types/variations.types';
+import { VariationEntity } from '../../../../types/offers/variations.types';
 import { ToastService } from '../../../../services';
 import FormPriceInputs from './FormPriceInputs';
 
@@ -34,14 +34,14 @@ const validation = yup.object().shape({
 export interface FormCreatePriceProps
   extends Omit<ModalFormProps<any, any, IPriceFormData>, 'onSubmit' | 'afterSubmit'> {
   onSubmit: AppSubmitHandler<IPriceFormData>;
-  product?: IProduct;
-  variation?: IVariation;
+  product?: OfferEntity;
+  variation?: VariationEntity;
   update?: string;
 }
 export type PriceFormDataPath = Path<IPriceFormData>;
 
 const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update, product, onSubmit, ...props }) => {
-  const productInState = useProductsSelector().currentProduct;
+  const productInState = useProductsSelector().currentOffer;
   const { lists } = usePriceListsSelector();
 
   const service = useAppServiceProvider()[ServiceName.priceManagement];

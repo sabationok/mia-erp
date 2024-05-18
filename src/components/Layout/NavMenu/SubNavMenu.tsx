@@ -4,7 +4,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../../redux/store.store';
 import { IPermission } from '../../../types/permissions.types';
 import { IWarehouse } from '../../../types/warehouses.types';
-import { IPriceList } from '../../../types/priceManagement.types';
+import { IPriceList } from '../../../types/price-management/priceManagement.types';
 import { usePermissionsSelector } from '../../../hooks/usePermissionsService.hook';
 import { useEffect, useMemo } from 'react';
 import { AppPagesEnum } from '../../AppPages';

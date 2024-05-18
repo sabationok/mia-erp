@@ -1,6 +1,6 @@
 import { pick } from 'lodash';
 import { ArrayOfObjUUID, ArrayUUID, IdKeyVersion, ObjUUID, OnlyUUID } from '../../redux/global.types';
-import { IProduct, IProductFullDto, IProductFullFormData } from '../../types/products.types';
+import { OfferEntity, IProductFullDto, IProductFullFormData } from '../../types/offers/offers.types';
 
 export * from './toReqData.helper';
 export * from './toQueriesForReq.helper';
@@ -62,7 +62,7 @@ export const createArrayStringUUID = (arr: OnlyUUID[]): ArrayUUID => {
 export const getFormValuePickPaths = (data?: any) => {
   return data ? ['_id', 'label', 'email', 'dirType', 'parent', 'name', 'secondName'].filter(key => key in data) : [];
 };
-export const idsArrToObjIdArrPaths = <T extends keyof IProduct | string = any>(key: T) => {
+export const idsArrToObjIdArrPaths = <T extends keyof OfferEntity | string = any>(key: T) => {
   return ['properties', 'categories', 'recommends'].includes(key);
 };
 export function createProductDto(input: IProductFullFormData): IProductFullDto {

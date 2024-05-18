@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 import { IUser } from 'types/auth.types';
+import { ICompany } from '../../../types/companies.types';
 
-export interface ProfileCardProps extends Omit<IUser, '_id'> {
+export interface ProfileCardProps {
+  profile?: Partial<IUser & ICompany>;
   // avatarURL?: string;
   // name?: string;
   // email?: string;
@@ -13,9 +15,7 @@ export interface ProfileCardProps extends Omit<IUser, '_id'> {
 }
 
 const ProfileCard: React.FC<ProfileCardProps & React.HTMLAttributes<HTMLDivElement>> = ({
-  avatarURL = '',
-  name,
-  email = 'email',
+  profile,
   emailFontSize,
   nameFontSize,
   nameProps,
@@ -26,16 +26,16 @@ const ProfileCard: React.FC<ProfileCardProps & React.HTMLAttributes<HTMLDivEleme
   return (
     <Card {...props}>
       <Avatar>
-        <img src={avatarURL} alt="userImage" width={100} height={100} />
+        <img src={profile?.avatarURL} alt="profileImage" width={100} height={100} />
       </Avatar>
 
       <Wrapper>
         <ProfileName fontSize={nameFontSize} {...nameProps}>
-          {typeof name === 'string' ? name : name?.first}
+          {typeof profile?.name === 'string' ? profile?.name : profile?.name?.first}
         </ProfileName>
 
         <ProfileEmail fontSize={emailFontSize} {...emailProps}>
-          {email}
+          {profile?.email}
         </ProfileEmail>
 
         {children}

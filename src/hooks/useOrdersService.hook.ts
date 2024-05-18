@@ -4,7 +4,7 @@ import { OnlyUUID, ServiceDispatcher, ServiceDispatcherAsync } from '../redux/gl
 import {
   ICreateOrderInfoDto,
   ICreateOrderInfoFormState,
-  IOrder,
+  OrderEntity,
   IOrderReqData,
   IOrderSlot,
   IOrderSlotDto,
@@ -41,14 +41,14 @@ import { IPayment } from '../types/payments.types';
 type EmptyFn = (...args: any[]) => Promise<any>;
 
 export interface OrdersService {
-  createOne: EmptyFn | ServiceDispatcherAsync<IOrderReqData, IOrder>;
+  createOne: EmptyFn | ServiceDispatcherAsync<IOrderReqData, OrderEntity>;
   deleteOne: EmptyFn | ServiceDispatcherAsync;
   updateOne: EmptyFn | ServiceDispatcherAsync;
   getById: ServiceDispatcherAsync<
     OnlyUUID & { params?: { fullInfo?: boolean }; options?: { refreshCurrent?: boolean } },
-    IOrder
+    OrderEntity
   >;
-  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IOrder[]>;
+  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, OrderEntity[]>;
   getSlots: ServiceDispatcherAsync<
     { params?: Pick<AppQueryParams<any>, 'group' | 'order'>; update?: boolean },
     IOrderSlot[]

@@ -2,10 +2,10 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   ICreatePriceReqData,
   IPriceList,
-  IPriceListItem,
+  OfferPriceEntity,
   IPriceListReqData,
   IUpdatePriceReqData,
-} from '../../types/priceManagement.types';
+} from '../../types/price-management/priceManagement.types';
 import { ThunkPayload } from '../store.store';
 import { AppQueryParams, createApiCall, PriceManagementApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
@@ -179,8 +179,8 @@ export interface IPricesThunksData<T> {
 }
 
 export const addPriceToListThunk = createAsyncThunk<
-  IPricesThunksData<IPriceListItem>,
-  ThunkPayload<IPricesThunksData<ICreatePriceReqData>, IPriceListItem>
+  IPricesThunksData<OfferPriceEntity>,
+  ThunkPayload<IPricesThunksData<ICreatePriceReqData>, OfferPriceEntity>
 >(PriceManagementThunkType.addPriceToList, async (arg, thunkAPI) => {
   const { data, onLoading, onSuccess, onError } = arg;
 
@@ -202,8 +202,8 @@ export const addPriceToListThunk = createAsyncThunk<
 });
 
 export const updatePriceInListThunk = createAsyncThunk<
-  IPricesThunksData<IPriceListItem>,
-  ThunkPayload<IPricesThunksData<IUpdatePriceReqData>, IPriceListItem>
+  IPricesThunksData<OfferPriceEntity>,
+  ThunkPayload<IPricesThunksData<IUpdatePriceReqData>, OfferPriceEntity>
 >(PriceManagementThunkType.updatePriceInList, async (arg, thunkAPI) => {
   const { data, onLoading, onSuccess, onError } = arg;
 
@@ -227,10 +227,10 @@ export const updatePriceInListThunk = createAsyncThunk<
 export const getAllPricesThunk = buildGetAllPricesThunk(PriceManagementThunkType.getAllPrices);
 function buildGetAllPricesThunk(type: string) {
   return createAsyncThunk<
-    { refreshCurrent?: boolean; data: IPriceListItem[] },
+    { refreshCurrent?: boolean; data: OfferPriceEntity[] },
     ThunkPayload<
       { refreshCurrent?: boolean; params?: Pick<AppQueryParams, 'list' | 'product' | 'variation'> },
-      IPriceListItem[]
+      OfferPriceEntity[]
     >
   >(type, async (args, thunkApi) => {
     try {

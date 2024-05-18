@@ -12,7 +12,7 @@ import { ProductsService } from '../../../hooks/useProductsService.hook';
 import FlexBox from '../../atoms/FlexBox';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { useProductsSelector } from '../../../redux/selectors.store';
-import { IProperty, IPropertyBase, IPropertyDto } from '../../../types/properties.types';
+import { IProperty, IPropertyBase, IPropertyDto } from '../../../types/offers/properties.types';
 import { ToastService } from '../../../services';
 import { DirPropertiesCTX, DirPropertiesCTXValue } from './DirPropertiesCTX';
 import PropertiesGroupItem from './components/PropertiesGroupItem';

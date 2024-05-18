@@ -1,4 +1,4 @@
-import { IVariationFormData, IVariationReqData } from '../../types/variations.types';
+import { IVariationFormData, IVariationReqData } from '../../types/offers/variations.types';
 import { pick } from 'lodash';
 import { getIdRef } from './index';
 

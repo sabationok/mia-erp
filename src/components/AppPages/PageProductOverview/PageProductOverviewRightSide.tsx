@@ -58,10 +58,10 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
           renderTitle={
             <FlexBox padding={'0 8px'} fxDirection={'row'} alignItems={'center'} justifyContent={'center'} gap={8}>
               <Text $weight={600} $size={14}>
-                {page?.currentProduct?.label}
+                {page?.currentOffer?.label}
               </Text>
 
-              <Text $size={14}>{page?.currentProduct?.sku}</Text>
+              <Text $size={14}>{page?.currentOffer?.sku}</Text>
             </FlexBox>
           }
         />

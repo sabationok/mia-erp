@@ -4,20 +4,32 @@ import ModalBase from './index';
 import { t } from '../../lang';
 import { toOfferFormData } from '../../utils';
 import { useState } from 'react';
-import { IProductFullFormData, OfferTypeEnum } from '../../types/products.types';
+import { IProductFullFormData, OfferEntity, OfferTypeEnum } from '../../types/offers/offers.types';
 import { OfferMeasurementFormArea } from 'components/Forms/offers/OfferMeasurementFormArea';
 import { OfferBaseInfoFormArea } from '../Forms/offers/OfferBaseInfoFormArea';
 import FlexBox from '../atoms/FlexBox';
 import ModalFilter from '../atoms/ModalFilter';
 import { productsFilterOptions } from '../../data/modalFilterOptions.data';
 import { OfferFormPropertiesArea } from '../Forms/offers/OfferFormPropertiesArea';
+import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
+import { LoadersProvider, useLoadersProvider } from '../../Providers/Loaders/LoaderProvider';
+import { OfferFormImagesArea } from '../Forms/offers/OfferFormImagesArea';
+import { useAppRouter, useCurrentOffer } from '../../hooks';
 
 export interface UpdateOfferModalProps extends ModalFormProps {
   _id: string;
 }
-
+export type OfferLoadersKey = 'offer' | 'formData' | keyof OfferEntity;
+export type OfferLoadersData = {
+  formData?: IProductFullFormData & { _id?: string };
+  offer?: OfferEntity;
+} & Partial<OfferEntity>;
+export const useOfferLoadersProvider = () => useLoadersProvider<OfferLoadersKey, OfferLoadersData>();
 const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id }) => {
   const [current, setCurrent] = useState<IProductFullFormData>();
+  const loaders = useLoaders<OfferLoadersKey, OfferLoadersData>();
+  const router = useAppRouter();
+  const currenOffer = useCurrentOffer();
 
   return (
     <ModalBase
@@ -31,20 +43,43 @@ const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id }) => {
         />
       }
     >
-      <FlexBox padding={'0 8px 16px'}>
-        <OfferBaseInfoFormArea
-          defaultValues={current}
-          onSuccess={data => {
-            setCurrent(toOfferFormData(data));
-          }}
-          type={current?.type}
-        />
+      <LoadersProvider value={loaders}>
+        <FlexBox padding={'0 8px 16px'}>
+          <OfferBaseInfoFormArea
+            defaultValues={current}
+            onSuccess={data => {
+              setCurrent(toOfferFormData(data));
 
-        <OfferFormPropertiesArea />
+              router.push({ query: { offerId: data?._id } });
+            }}
+            type={current?.type}
+          />
 
-        <OfferDimensionsFormArea defaultValues={current?.dimensions} disabled={!current} />
-        <OfferMeasurementFormArea defaultValues={current?.measurement} disabled={!current} />
-      </FlexBox>
+          {currenOffer && (
+            <>
+              <OfferFormPropertiesArea
+                offer={loaders.state?.offer}
+                defaultValues={current?.properties}
+                disabled={!current}
+              />
+
+              <OfferDimensionsFormArea
+                offer={loaders.state?.offer}
+                defaultValues={current?.dimensions}
+                disabled={!current}
+              />
+
+              <OfferMeasurementFormArea
+                offer={loaders.state?.offer}
+                defaultValues={current?.measurement}
+                disabled={!current}
+              />
+
+              <OfferFormImagesArea offer={loaders.state?.offer} defaultValues={current?.images} disabled={!current} />
+            </>
+          )}
+        </FlexBox>
+      </LoadersProvider>
     </ModalBase>
   );
 };

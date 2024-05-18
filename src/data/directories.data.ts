@@ -19,7 +19,7 @@ import { ApiDirType } from '../redux/APP_CONFIGS';
 import DirTableComp, { DirTableCompProps } from '../components/Directories/DirTableComp';
 import FormCreateCounterparty from '../components/Forms/Directories/FormCreateCounterparty';
 import { toReqData } from '../utils';
-import { OfferTypeEnum } from '../types/products.types';
+import { OfferTypeEnum } from '../types/offers/offers.types';
 import { ModalChildrenProps, Modals } from '../components/Modals';
 import { CountsTypesEnum } from '../redux/directories/counts.types';
 import { TrCategoryTypeEnum } from '../types/directories.types';

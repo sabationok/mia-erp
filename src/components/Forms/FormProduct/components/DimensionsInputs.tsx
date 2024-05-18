@@ -5,9 +5,11 @@ import InputLabel from '../../../atoms/Inputs/InputLabel';
 import InputText from '../../../atoms/Inputs/InputText';
 import styled from 'styled-components';
 import { UseFormReturn } from 'react-hook-form/dist/types';
-import { DimensionsKeyType, HasDimensions } from 'types/utils.types';
+import { DimensionsKeyType, IDimensions } from 'types/utils.types';
 
-export interface DimensionsFormData extends HasDimensions {}
+export interface DimensionsFormData {
+  dimensions?: IDimensions;
+}
 
 export const dimensionsInputsProps: {
   label?: string;

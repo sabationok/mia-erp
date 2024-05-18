@@ -12,7 +12,7 @@ import {
 } from './utils.types';
 
 import { IInvoice } from './invoices.types';
-import { IOrder } from './orders/orders.types';
+import { OrderEntity } from './orders/orders.types';
 import { ICustomerBase } from './customers.types';
 
 export enum DeliveryStatusTypeEnum {
@@ -35,7 +35,7 @@ export interface IDelivery
   customer?: ICustomerBase;
   receiver?: ICustomerBase;
 
-  order?: IOrder;
+  order?: OrderEntity;
   invoice?: IInvoice;
 }
 export interface IDeliveryContentTotals {

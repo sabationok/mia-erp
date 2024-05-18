@@ -37,7 +37,7 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
   onChange,
   ...props
 }) => {
-  const currentProduct = useProductsSelector().currentProduct;
+  const currentProduct = useProductsSelector().currentOffer;
   const service = useAppServiceProvider()[ServiceName.products];
   const templates = usePropertiesSelector();
   const [loading, setLoading] = useState(false);

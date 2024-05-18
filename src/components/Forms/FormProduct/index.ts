@@ -2,7 +2,7 @@ import { lazy } from 'react';
 
 export { default as FormCreateProduct } from './FormCreateProduct';
 export { default as FormAddImageSet } from './FormAddImageSet';
-export { default as FormCreateProductImagesComponent } from './components/FormProductImagesComponent';
+export { default as FormCreateProductImagesComponent } from './components/FormOfferImagesComponent';
 export { default as FormProductStaticProperties } from './FormProductStaticProperties';
 
 export const LazyFormCreateProduct = lazy(() => import('./FormCreateProduct'));

@@ -1,14 +1,14 @@
-import { ArrayUUID, IBase, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
-import { IProductCategoryDirItem, ISupplierDirItem } from './dir.types';
-import { FilterOption } from '../components/atoms/ModalFilter';
-import { IPriceListItem } from './priceManagement.types';
-import { ICompany } from './companies.types';
-import { IProductInventory, IWarehouse } from './warehouses.types';
-import { IBrand } from '../redux/directories/brands.types';
-import { IUser } from './auth.types';
-import { AppQueryParams } from '../api';
-import { IVariation } from './variations.types';
-import { IPropertyValue, IVariationTemplate } from './properties.types';
+import { ArrayUUID, IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/global.types';
+import { IProductCategoryDirItem, ISupplierDirItem } from '../dir.types';
+import { FilterOption } from '../../components/atoms/ModalFilter';
+import { OfferPriceEntity } from '../price-management/priceManagement.types';
+import { ICompany } from '../companies.types';
+import { IWarehouse, WarehouseItemEntity } from '../warehouses.types';
+import { IBrand } from '../../redux/directories/brands.types';
+import { IUser } from '../auth.types';
+import { AppQueryParams } from '../../api';
+import { VariationEntity } from './variations.types';
+import { IPropertyValue } from './properties.types';
 import {
   AppDate,
   HasDescription,
@@ -18,9 +18,9 @@ import {
   HasStatus,
   HasType,
   MaybeNull,
-} from './utils.types';
+} from '../utils.types';
 
-export enum ProductStatusEnum {
+export enum OfferStatusEnum {
   pending = 'pending',
   rejected = 'rejected',
   success = 'success',
@@ -81,19 +81,19 @@ export interface IProductBase
     HasDimensions,
     HasDescription,
     HasType<OfferTypeEnum>,
-    HasStatus<ProductStatusEnum> {
+    HasStatus<OfferStatusEnum> {
   sku?: string;
   barCode?: string;
   qrCode?: string;
 
-  approved?: ProductStatusEnum;
+  approved?: OfferStatusEnum;
   archived?: boolean;
   visible?: boolean;
 
   futures?: MaybeNull<OfferFutures>;
 
   tags?: string[];
-  images?: IProductImage[];
+  images?: OfferImageSlotEntity[];
 }
 
 export interface IProductAddsFields extends IProductBase {
@@ -105,22 +105,22 @@ export interface IProductAddsFields extends IProductBase {
   categories?: IProductCategoryDirItem[];
 
   brand?: IBrand;
-  recommends?: IProduct[];
+  recommends?: OfferEntity[];
 
-  template?: IVariationTemplate;
+  // template?: IVariationTemplate;
   properties?: IPropertyValue[];
 
-  variations?: IVariation[];
-  prices?: IPriceListItem[];
+  variations?: VariationEntity[];
+  prices?: OfferPriceEntity[];
   warehouses?: IWarehouse[];
-  inventories?: IProductInventory[];
+  inventories?: WarehouseItemEntity[];
 }
 
 export interface IProductDefaults {
-  variation?: IVariation;
-  price?: IPriceListItem;
+  variation?: VariationEntity;
+  price?: OfferPriceEntity;
   warehouse?: IWarehouse;
-  inventory?: IProductInventory;
+  inventory?: WarehouseItemEntity;
   supplier?: ISupplierDirItem;
 }
 
@@ -128,9 +128,9 @@ export interface IProductWithDefaults extends IProductAddsFields, IProductDefaul
   defaults?: IProductDefaults;
 }
 
-export interface IProduct extends IProductWithDefaults {}
+export interface OfferEntity extends IProductWithDefaults {}
 
-export interface IProductImage extends Partial<IBase> {
+export interface OfferImageSlotEntity extends Partial<IBase> {
   img_preview?: string;
   img_1x?: string;
   img_2x?: string;
@@ -152,7 +152,7 @@ export interface IProductFullFormData
   properties?: ArrayUUID;
 
   defaults?: IProductDefaultsFormData;
-  images?: IProductImage[];
+  images?: OfferImageSlotEntity[];
 }
 
 export interface IProductFormData extends IProductFullFormData {}

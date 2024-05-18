@@ -6,10 +6,10 @@ import { AppQueryParams } from 'api';
 import {
   ICreatePriceReqData,
   IPriceList,
-  IPriceListItem,
+  OfferPriceEntity,
   IPriceListReqData,
   IUpdatePriceReqData,
-} from '../types/priceManagement.types';
+} from '../types/price-management/priceManagement.types';
 import * as thunks from '../redux/priceManagement/priceManagement.thunks';
 import { IPricesThunksData } from '../redux/priceManagement/priceManagement.thunks';
 
@@ -25,12 +25,12 @@ export interface PriceManagementService {
   // ? PRICES
   getAllPrices: ServiceDispatcherAsync<
     { refreshCurrent?: boolean; params?: Pick<AppQueryParams, 'list' | 'product' | 'variation'> },
-    IPriceListItem[]
+    OfferPriceEntity[]
   >;
 
-  updatePriceById: ServiceDispatcherAsync<IPricesThunksData<IUpdatePriceReqData>, IPriceListItem>;
-  addPriceToList: ServiceDispatcherAsync<IPricesThunksData<ICreatePriceReqData>, IPriceListItem>;
-  deletePriceById?: ServiceApiCaller<OnlyUUID, IPriceListItem>; // !!!!! ===>>> ServiceDispatcher
+  updatePriceById: ServiceDispatcherAsync<IPricesThunksData<IUpdatePriceReqData>, OfferPriceEntity>;
+  addPriceToList: ServiceDispatcherAsync<IPricesThunksData<ICreatePriceReqData>, OfferPriceEntity>;
+  deletePriceById?: ServiceApiCaller<OnlyUUID, OfferPriceEntity>; // !!!!! ===>>> ServiceDispatcher
 }
 
 const usePriceManagementService = (): PriceManagementService => {

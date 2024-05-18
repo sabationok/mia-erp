@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { IOrder, IOrderReqData, IOrderSlot } from '../../types/orders/orders.types';
+import { OrderEntity, IOrderReqData, IOrderSlot } from '../../types/orders/orders.types';
 import { ThunkPayload } from '../store.store';
 import { AppQueryParams, createApiCall, OrdersApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
@@ -17,13 +17,13 @@ enum OrdersThunkTypeEnum {
   getSlots = 'orders/getOrderSlotsThunk',
 }
 export const getAllOrdersThunk = createAsyncThunk<
-  { refresh?: boolean; data?: IOrder[] },
+  { refresh?: boolean; data?: OrderEntity[] },
   ThunkPayload<
     {
       refresh?: boolean;
       query?: AppQueryParams;
     },
-    IOrder[]
+    OrderEntity[]
   >
 >(OrdersThunkTypeEnum.getAll, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
   onLoading && onLoading(true);
@@ -43,7 +43,7 @@ export const getAllOrdersThunk = createAsyncThunk<
   }
 });
 
-export const createOrderThunk = createAsyncThunk<IOrder | undefined, ThunkPayload<IOrderReqData, IOrder>>(
+export const createOrderThunk = createAsyncThunk<OrderEntity | undefined, ThunkPayload<IOrderReqData, OrderEntity>>(
   OrdersThunkTypeEnum.createOne,
   async (args, thunkApi) => {
     try {
@@ -64,8 +64,8 @@ export const createOrderThunk = createAsyncThunk<IOrder | undefined, ThunkPayloa
   }
 );
 export const getOrderByIdThunk = createAsyncThunk<
-  { data: IOrder; refreshCurrent?: boolean },
-  ThunkPayload<OnlyUUID & { params?: { fullInfo?: boolean }; options?: { refreshCurrent?: boolean } }, IOrder>
+  { data: OrderEntity; refreshCurrent?: boolean },
+  ThunkPayload<OnlyUUID & { params?: { fullInfo?: boolean }; options?: { refreshCurrent?: boolean } }, OrderEntity>
 >('orders/getOrderByIdThunk', async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
   try {

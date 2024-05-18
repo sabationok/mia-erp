@@ -1,22 +1,22 @@
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import FlexBox from '../atoms/FlexBox';
-import { IProduct } from '../../types/products.types';
+import { OfferEntity } from '../../types/offers/offers.types';
 import ProductCardSimpleOverview from './ProductCardSimpleOverview';
 import TableList from '../TableList/TableList';
 import styled from 'styled-components';
 import { pricesColumnsForProductReview } from '../../data/priceManagement.data';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { useEffect, useState } from 'react';
-import { IPriceListItem } from '../../types/priceManagement.types';
+import { OfferPriceEntity } from '../../types/price-management/priceManagement.types';
 import { getIdRef } from '../../utils/data-transform';
 
 export interface ProductOverviewProps extends Omit<ModalFormProps, 'onSelect' | 'onSubmit'> {
-  product?: IProduct;
+  product?: OfferEntity;
 }
 
 const ProductOverview: React.FC<ProductOverviewProps> = ({ product, ...props }) => {
   const { priceManagement } = useAppServiceProvider();
-  const [priceList, setPriceList] = useState<IPriceListItem[]>([]);
+  const [priceList, setPriceList] = useState<OfferPriceEntity[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

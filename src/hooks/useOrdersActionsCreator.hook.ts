@@ -1,7 +1,7 @@
 import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { ITableListContext, TableActionCreator } from '../components/TableList/tableTypes.types';
-import { IOrder } from '../types/orders/orders.types';
+import { OrderEntity } from '../types/orders/orders.types';
 import { Modals } from '../components/Modals';
 import { useNavigate } from 'react-router-dom';
 import { ExtractIdString } from '../utils/data-transform';
@@ -9,7 +9,7 @@ import { t } from '../lang';
 import { useAppServiceProvider } from './useAppServices.hook';
 import { AppModuleName } from '../redux/reduxTypes.types';
 
-export type OrdersActionsCreator = TableActionCreator<IOrder>;
+export type OrdersActionsCreator = TableActionCreator<OrderEntity>;
 const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
   const modalS = useModalProvider();
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
   // const { orders } = useAppServiceProvider();
 
   return useCallback(
-    (ctx: ITableListContext<IOrder>) => {
+    (ctx: ITableListContext<OrderEntity>) => {
       const selected = ctx?.selectedRow;
       const selectedId = selected ? ExtractIdString(selected) : '';
 

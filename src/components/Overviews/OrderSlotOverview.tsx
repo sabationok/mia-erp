@@ -3,7 +3,7 @@ import FlexBox from '../atoms/FlexBox';
 import styled, { useTheme } from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { useCallback, useMemo, useState } from 'react';
-import { IProductImage } from '../../types/products.types';
+import { OfferImageSlotEntity } from '../../types/offers/offers.types';
 import { Text } from '../atoms/Text';
 import { t } from '../../lang';
 import CountSelectorBase from '../atoms/CountSelectorBase';
@@ -51,15 +51,15 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
   );
 
   const imgPreview = useMemo(() => {
-    let images: IProductImage[] = [];
+    let images: OfferImageSlotEntity[] = [];
     if (formData?.product?.images) {
       images = formData?.product?.images;
     }
-    if (formData?.variation?.product?.images) {
-      images = formData?.variation?.product?.images;
+    if (formData?.variation?.offer?.images) {
+      images = formData?.variation?.offer?.images;
     }
-    if (formData?.inventory?.product?.images) {
-      images = formData?.inventory?.product?.images;
+    if (formData?.inventory?.offer?.images) {
+      images = formData?.inventory?.offer?.images;
     }
     if (formData?.origin?.product?.images) {
       images = formData?.origin?.product?.images;
@@ -67,9 +67,9 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
     return images[0]?.img_preview || '';
   }, [
     formData?.product?.images,
-    formData?.variation?.product?.images,
+    formData?.variation?.offer?.images,
     formData?.origin?.product?.images,
-    formData?.inventory?.product?.images,
+    formData?.inventory?.offer?.images,
   ]);
 
   const renderPriceInfo = useMemo(() => {

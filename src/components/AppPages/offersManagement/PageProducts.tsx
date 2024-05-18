@@ -7,12 +7,12 @@ import AppGridPage from '../AppGridPage';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import { ISortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
-import { IProduct } from '../../../types/products.types';
+import { OfferEntity } from '../../../types/offers/offers.types';
 import useStorageServiceHook from '../../../hooks/useProductsService.hook';
 import useProductsFilterSelectorsHook from '../../../hooks/useProductsFilterSelectors.hook';
-import useProductsActionsCreator from '../../../hooks/useProductsActionsCreator.hook';
+import useOffersActionsCreator from '../../../hooks/useProductsActionsCreator.hook';
 import { BaseAppPageProps } from '../index';
-import { productsColumns } from '../../../data/products.data';
+import { offersTableColumns } from '../../../data/offers.data';
 import { transactionsSearchParams } from '../../../data/transactions.data';
 
 interface Props extends BaseAppPageProps {}
@@ -21,15 +21,15 @@ const PageProducts: React.FC<any> = (props: Props) => {
   const { getAll } = useStorageServiceHook();
   const state = useProductsSelector();
   const filterSelectors = useProductsFilterSelectorsHook();
-  const actionsCreator = useProductsActionsCreator();
+  const actionsCreator = useOffersActionsCreator();
   const [isLoading, setIsLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   const tableConfig = useMemo(
-    (): ITableListProps<IProduct> => ({
+    (): ITableListProps<OfferEntity> => ({
       tableData: state.products,
-      tableTitles: productsColumns,
+      tableTitles: offersTableColumns,
       filterSelectors,
       isFilter: true,
       isSearch: true,
@@ -86,15 +86,15 @@ export const useProductsTableSettings = () => {
   const state = useProductsSelector();
   const { getAll } = service;
   const filterSelectors = useProductsFilterSelectorsHook();
-  const actionsCreator = useProductsActionsCreator();
+  const actionsCreator = useOffersActionsCreator();
   const [isLoading, setIsLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   const tableConfig = useMemo(
-    (): ITableListProps<IProduct> => ({
+    (): ITableListProps<OfferEntity> => ({
       tableData: state.products,
-      tableTitles: productsColumns,
+      tableTitles: offersTableColumns,
       tableSortParams: transactionsSearchParams.filter(el => el.sort),
       filterSelectors,
       isFilter: true,

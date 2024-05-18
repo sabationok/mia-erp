@@ -1,16 +1,16 @@
 import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
-import { IProduct } from '../types/products.types';
+import { OfferEntity } from '../types/offers/offers.types';
 import { useNavigate } from 'react-router-dom';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { t } from '../lang';
 import EditOfferModal from '../components/Modal/EditOfferModal';
 import CreateOfferModal from '../components/Modal/CreateOfferModal';
 
-export type ProductsActionsCreator = TableActionCreator<IProduct>;
+export type OffersActionsCreator = TableActionCreator<OfferEntity>;
 
-const useProductsActionsCreator = (): ProductsActionsCreator => {
+const useOffersActionsCreator = (): OffersActionsCreator => {
   const service = useAppServiceProvider()[ServiceName.products];
   const navigate = useNavigate();
   const modals = useModalProvider();
@@ -118,7 +118,7 @@ const useProductsActionsCreator = (): ProductsActionsCreator => {
   );
 };
 
-export default useProductsActionsCreator;
+export default useOffersActionsCreator;
 
 // const currentProduct=useProductsSelector().currentProduct
 

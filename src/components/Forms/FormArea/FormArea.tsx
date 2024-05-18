@@ -4,7 +4,7 @@ import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import FormAreaFooter from './FormAreaFooter';
 
 export interface FormAreaProps {
-  title?: string;
+  label?: string;
   children?: React.ReactNode;
   onSubmit?: AppSubmitHandler;
   renderFooter?: React.ReactNode;
@@ -18,7 +18,7 @@ export const FormArea = ({
   renderFooter,
   renderTitle,
   disabled,
-  title = 'From area',
+  label = 'Form area',
   onSubmit,
   isLoading,
 }: FormAreaProps) => {
@@ -27,7 +27,7 @@ export const FormArea = ({
       <FlexBox padding={'8px 6px'} overflow={'hidden'}>
         {renderTitle || (
           <Text $size={14} $weight={600}>
-            {title}
+            {label}
           </Text>
         )}
       </FlexBox>

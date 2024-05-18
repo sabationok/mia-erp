@@ -1,5 +1,5 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
-import { IProduct, IProductReqData } from '../types/products.types';
+import { IProductReqData, OfferEntity } from '../types/offers/offers.types';
 import { OnlyUUID, ServiceApiCaller, ServiceDispatcher, ServiceDispatcherAsync } from 'redux/global.types';
 import {
   createProductThunk,
@@ -13,31 +13,34 @@ import {
 import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
 import { AppQueryParams, createApiCall } from 'api';
-import ProductsApi from '../api/products.api';
+import OffersApi from '../api/offersApi';
 import PropertiesApi from '../api/properties.api';
-import { IProperty, IPropertyReqData } from '../types/properties.types';
+import { IProperty, IPropertyReqData } from '../types/offers/properties.types';
 import { createPropertyThunk, getAllPropertiesThunk } from '../redux/products/properties/properties.thunks';
 import {
   createVariationThunk,
   getAllVariationsByProductIdThunk,
   updateVariationThunk,
 } from '../redux/products/variations/variations.thunks';
-import { IVariation, IVariationReqData } from '../types/variations.types';
+import { IVariationReqData, VariationEntity } from '../types/offers/variations.types';
 import { clearCurrentProductAction } from '../redux/products/products.actions';
-import { IPriceListItem } from '../types/priceManagement.types';
-import { IProductInventory } from '../types/warehouses.types';
+import { OfferPriceEntity } from '../types/price-management/priceManagement.types';
+import { WarehouseItemEntity } from '../types/warehouses.types';
 
 export interface ProductsService {
-  create: ServiceDispatcherAsync<IProductReqData, IProduct>;
-  deleteById: ServiceApiCaller<string, IProduct>; // !!!!! ===>>> ServiceDispatcher
-  updateById: ServiceDispatcherAsync<IProductReqData & { refreshCurrent?: boolean; updateCurrent?: boolean }, IProduct>; // !!!!! ===>>> ServiceDispatcher
-  getById: ServiceApiCaller<string, IProduct>;
-  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IProduct[]>;
-  getProductFullInfo: ServiceDispatcherAsync<OnlyUUID, IProduct>;
+  create: ServiceDispatcherAsync<IProductReqData, OfferEntity>;
+  deleteById: ServiceApiCaller<string, OfferEntity>; // !!!!! ===>>> ServiceDispatcher
+  updateById: ServiceDispatcherAsync<
+    IProductReqData & { refreshCurrent?: boolean; updateCurrent?: boolean },
+    OfferEntity
+  >; // !!!!! ===>>> ServiceDispatcher
+  getById: ServiceApiCaller<string, OfferEntity>;
+  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, OfferEntity[]>;
+  getProductFullInfo: ServiceDispatcherAsync<OnlyUUID, OfferEntity>;
   clearCurrent: ServiceDispatcher<undefined>;
   setDefaults: ServiceDispatcherAsync<
     IProductReqData & { refreshCurrent?: boolean; updateCurrent?: boolean },
-    IProduct
+    OfferEntity
   >;
 
   // * PROPERTIES
@@ -52,11 +55,11 @@ export interface ProductsService {
   >;
 
   // * VARIATIONS
-  createVariation: ServiceDispatcherAsync<IVariationReqData, IVariation>;
-  updateVariationById: ServiceDispatcherAsync<IVariationReqData, IVariation>;
+  createVariation: ServiceDispatcherAsync<IVariationReqData, VariationEntity>;
+  updateVariationById: ServiceDispatcherAsync<IVariationReqData, VariationEntity>;
   getAllVariationsByProductId: ServiceDispatcherAsync<
-    { product: OnlyUUID; params?: AppQueryParams; refreshCurrent?: boolean; updateCurrent?: boolean },
-    IVariation[]
+    { offerId: string; params?: AppQueryParams; refreshCurrent?: boolean; updateCurrent?: boolean },
+    VariationEntity[]
   >;
 
   // * PRICES
@@ -66,7 +69,7 @@ export interface ProductsService {
       updateCurrent?: boolean;
       params: Pick<AppQueryParams, 'product' | 'list' | 'variation'>;
     },
-    IPriceListItem[]
+    OfferPriceEntity[]
   >;
   // * INVENTORIES
   getAllInventoriesByProductId: ServiceDispatcherAsync<
@@ -75,7 +78,7 @@ export interface ProductsService {
       updateCurrent?: boolean;
       params: Pick<AppQueryParams, 'product' | 'warehouse' | 'variation' | 'price'>;
     },
-    IProductInventory[]
+    WarehouseItemEntity[]
   >;
 }
 
@@ -86,8 +89,8 @@ const useProductsService = (): ProductsService => {
     return {
       create: args => dispatch(createProductThunk(defaultThunkPayload(args))),
       updateById: args => dispatch(updateProductThunk(defaultThunkPayload(args))),
-      deleteById: args => createApiCall(defaultApiCallPayload(args), ProductsApi.deleteById, ProductsApi),
-      getById: args => createApiCall(defaultApiCallPayload(args), ProductsApi.getById, ProductsApi),
+      deleteById: args => createApiCall(defaultApiCallPayload(args), OffersApi.deleteById, OffersApi),
+      getById: args => createApiCall(defaultApiCallPayload(args), OffersApi.getById, OffersApi),
       getAll: args => dispatch(getAllProductsThunk(defaultThunkPayload(args))),
       getProductFullInfo: args => dispatch(getProductFullInfoThunk(defaultThunkPayload(args))),
       clearCurrent: () => dispatch(clearCurrentProductAction()),

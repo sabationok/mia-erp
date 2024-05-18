@@ -1,5 +1,5 @@
 import { RenderOverviewCellComponent } from './overview-types';
-import { IOrder } from '../../../types/orders/orders.types';
+import { OrderEntity } from '../../../types/orders/orders.types';
 import { CellStyledComp } from './CellStyles';
 import { OverviewCellHeader } from './OverviewCellHeader';
 import { t } from '../../../lang';
@@ -8,7 +8,7 @@ import FlexBox from '../../atoms/FlexBox';
 import { numberWithSpaces } from '../../../utils';
 import { Text } from '../../atoms/Text';
 
-export const OrderOverviewTotals: RenderOverviewCellComponent<IOrder> = ({ data, cell }) => {
+export const OrderOverviewTotals: RenderOverviewCellComponent<OrderEntity> = ({ data, cell }) => {
   const renderCells = useMemo(() => {
     const cells: { label: string; value?: React.ReactNode; visible?: boolean }[] = [
       { label: t('Amount'), value: numberWithSpaces(data?.total?.amount) },

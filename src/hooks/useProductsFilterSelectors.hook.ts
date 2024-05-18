@@ -1,7 +1,7 @@
 import { FilterSelectorType } from 'components/Filter/AppFilter';
-import { IProduct } from '../types/products.types';
+import { OfferEntity } from '../types/offers/offers.types';
 
-const useStorageFilterSelectors = (): FilterSelectorType<keyof IProduct>[] => {
+const useStorageFilterSelectors = (): FilterSelectorType<keyof OfferEntity>[] => {
   return [
     // {
     //   label: 'Рахунок OUT',

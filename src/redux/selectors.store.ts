@@ -6,7 +6,7 @@ import { IFinTransactionsState } from './finances/finances.slice';
 import { ICustomRolesState } from './customRoles/customRoles.slice';
 import { IUsersState } from './users/users.types';
 import { IAppSettings } from './appSettings/appSettings.slice';
-import { IProductsState } from './products/products.slice';
+import { OffersState } from './products/products.slice';
 import { IPriceListsState } from './priceManagement/priceManagement.slice';
 import { ApiDirType } from './APP_CONFIGS';
 import { IDirItemBase } from '../types/dir.types';
@@ -47,10 +47,10 @@ export const useFinancesSelector = (): IFinTransactionsState =>
   useSelector<RootState, IFinTransactionsState>((state: RootState): IFinTransactionsState => state.transactions);
 
 export const useProductsSelector = () =>
-  useSelector<RootState, IProductsState>((state: RootState): IProductsState => state.products);
+  useSelector<RootState, OffersState>((state: RootState): OffersState => state.products);
 export const usePropertiesSelector = () =>
-  useSelector<RootState, IProductsState['properties']>(
-    (state: RootState): IProductsState['properties'] => state.products.properties
+  useSelector<RootState, OffersState['properties']>(
+    (state: RootState): OffersState['properties'] => state.products.properties
   );
 export const useOrdersSelector = () =>
   useSelector<RootState, IOrdersState>((state: RootState): IOrdersState => state.orders);

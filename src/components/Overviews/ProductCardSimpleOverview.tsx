@@ -2,12 +2,12 @@ import styled from 'styled-components';
 import FlexBox from '../atoms/FlexBox';
 import { useMemo } from 'react';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { IProduct } from '../../types/products.types';
+import { OfferEntity } from '../../types/offers/offers.types';
 import { t } from '../../lang';
 import { MaybeNull } from '../../types/utils.types';
 
 export interface ProductCardForSelectorProps {
-  product: IProduct;
+  product: OfferEntity;
   isSelected?: boolean;
   onSelect?: () => void;
   onRemove?: () => void;

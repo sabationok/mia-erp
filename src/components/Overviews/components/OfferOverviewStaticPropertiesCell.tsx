@@ -1,5 +1,5 @@
 import { RenderOverviewCellComponent } from './overview-types';
-import { IProduct } from '../../../types/products.types';
+import { OfferEntity } from '../../../types/offers/offers.types';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import React, { useMemo } from 'react';
 import FormSelectPropertiesOverlay from '../../Forms/FormProduct/FormSelectPropertiesOverlay';
@@ -9,7 +9,7 @@ import { CellStyledComp } from './CellStyles';
 import { OverviewCellHeader } from './OverviewCellHeader';
 import { OverviewPropertyComponent } from './OverviewPropertyComponent';
 
-export const OfferOverviewStaticProperties: RenderOverviewCellComponent<IProduct> = ({
+export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEntity> = ({
   cell,
   setOverlayContent,
   data,

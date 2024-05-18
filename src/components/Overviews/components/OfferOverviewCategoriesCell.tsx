@@ -1,5 +1,5 @@
 import { RenderOverviewCellComponent } from './overview-types';
-import { IProduct } from '../../../types/products.types';
+import { OfferEntity } from '../../../types/offers/offers.types';
 import { useDirectoriesSelector } from '../../../redux/selectors.store';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import React, { useMemo } from 'react';
@@ -9,7 +9,7 @@ import FormProductCategoriesOverlay from '../../Forms/FormProduct/FormSelectCate
 import FlexBox from '../../atoms/FlexBox';
 import { IProductCategoryDirItem } from '../../../types/dir.types';
 
-export const OfferOverviewCategoriesCell: RenderOverviewCellComponent<IProduct> = ({
+export const OfferOverviewCategoriesCell: RenderOverviewCellComponent<OfferEntity> = ({
   cell,
   setOverlayContent,
   data,

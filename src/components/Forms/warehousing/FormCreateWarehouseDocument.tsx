@@ -17,7 +17,7 @@ import { HTMLInputTypeAttribute, useCallback, useEffect, useMemo } from 'react';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { transformVariationTableData } from '../../../utils/tables';
 import { OnRowClickHandler } from '../../TableList/tableTypes.types';
-import { IProduct } from '../../../types/products.types';
+import { OfferEntity } from '../../../types/offers/offers.types';
 import FlexBox from '../../atoms/FlexBox';
 import TableList from '../../TableList/TableList';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
@@ -58,7 +58,7 @@ const validation = yup.object().shape({
 
 export interface FormCreateWarehouseDocumentProps
   extends Omit<ModalFormProps<any, any, IWarehouseDocFormData>, 'onSubmit'> {
-  product?: IProduct;
+  product?: OfferEntity;
   onSubmit?: AppSubmitHandler<IWarehouseDoc>;
 }
 
@@ -76,7 +76,7 @@ const formCreateWarehouseInputs: {
 
 const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseDocumentProps) => {
   const { products: productsS } = useAppServiceProvider();
-  const currentProduct = useProductsSelector().currentProduct;
+  const currentProduct = useProductsSelector().currentOffer;
   const warehouses = useWarehousesSelector().warehouses;
   // const [availablePrices,setAvailablePrices]=useState()
 

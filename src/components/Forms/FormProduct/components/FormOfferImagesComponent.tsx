@@ -1,5 +1,5 @@
 import FlexBox from '../../../atoms/FlexBox';
-import { IProductImage } from '../../../../types/products.types';
+import { OfferImageSlotEntity } from '../../../../types/offers/offers.types';
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
@@ -10,9 +10,9 @@ import ImagePreviewSmall from '../../../atoms/ImagePreviewSmall';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import { checks as check } from '../../../../utils';
 
-export interface FormProductImagesComponentProps {
-  onChangeState?: (state: IProductImage[]) => void;
-  initialData?: Partial<IProductImage>[];
+export interface FormOfferImagesComponentProps {
+  onChangeState?: (state: Partial<OfferImageSlotEntity>[]) => void;
+  initialData?: Partial<OfferImageSlotEntity>[];
   renderHeader?: React.ReactNode;
   canEditOrder?: boolean;
   onClose?: () => void;
@@ -20,9 +20,8 @@ export interface FormProductImagesComponentProps {
   FooterComponent?: React.FC<{ onAddNewImageSetPress: () => void }>;
   HeaderComponent?: React.FC;
 }
-export interface FormProductImagesRenderComponentProps {}
 
-const FormProductImagesComponent: React.FC<FormProductImagesComponentProps> = ({
+const FormOfferImagesComponent: React.FC<FormOfferImagesComponentProps> = ({
   onChangeState,
   renderHeader,
   initialData,
@@ -32,16 +31,24 @@ const FormProductImagesComponent: React.FC<FormProductImagesComponentProps> = ({
   contentContainerStyle,
 }) => {
   const modalS = useModalService();
-  // const [isEditOrderMode,setIsEditOrderMode]=useState(false)
-  const [formData, setFormData] = useState<(Partial<IProductImage> & { order: number })[]>([]);
 
+  const [formData, setFormData] = useState<Partial<OfferImageSlotEntity>[]>([]);
+  useEffect(() => {
+    if (!initialData) {
+      return;
+    } else {
+      setFormData(initialData);
+    }
+  }, [initialData]);
   const handleAddImageSet = (info: FormAddImageSetData) => {
-    setFormData(prev => {
-      const updatedData = [...prev, { ...info, order: formData.length + 1 }];
-      onChangeState && onChangeState(updatedData);
-
-      return updatedData;
-    });
+    if (onChangeState) {
+      const updatedData = [...(initialData ?? []), { ...info, order: formData.length + 1 }];
+      onChangeState(updatedData);
+    } else {
+      setFormData(prev => {
+        return [...prev, { ...info, order: formData.length + 1 }];
+      });
+    }
   };
   const handleChangeOrder = useCallback(
     (currentSetOrder: number, increment: number) => {
@@ -66,19 +73,28 @@ const FormProductImagesComponent: React.FC<FormProductImagesComponentProps> = ({
   );
 
   const handleAddImageToSet = useCallback(
-    ({ setId, setIndex, type, uri }: { setId?: string; setIndex?: number; uri?: string; type?: ImageSetSrcType }) => {
-      setFormData(prev => {
-        const updatedData = prev.map((set, index) => {
+    ({ setIndex, type, uri }: { setId?: string; setIndex?: number; uri?: string; type?: ImageSetSrcType }) => {
+      if (onChangeState && initialData) {
+        const updatedData = initialData?.map((set, index) => {
           if (setIndex === index) {
             return { ...set, [type as never]: uri };
           }
           return set;
         });
-        onChangeState && onChangeState(updatedData);
-        return updatedData;
-      });
+        onChangeState(updatedData);
+      } else {
+        setFormData(prev => {
+          const updatedData = prev.map((set, index) => {
+            if (setIndex === index) {
+              return { ...set, [type as never]: uri };
+            }
+            return set;
+          });
+          return updatedData;
+        });
+      }
     },
-    [onChangeState]
+    [initialData, onChangeState]
   );
   // TODO need refactoring
   const handleRemoveImageFromSet = useCallback(
@@ -121,33 +137,39 @@ const FormProductImagesComponent: React.FC<FormProductImagesComponentProps> = ({
   const renderImageSets = useMemo(() => {
     let dataForRender = formData;
     try {
-      const sorted = formData.sort((a, b) => a?.order! - b?.order!);
-      dataForRender = sorted;
-    } catch (e) {}
+      dataForRender = [...formData].sort((a, b) => (a?.order ?? 0) - (b?.order ?? 0));
+    } catch (e) {
+      dataForRender = formData;
+    }
 
-    return dataForRender?.map((set, setIndex) => {
-      const renderPreviews = formAddImageSetTabs.map(el => {
+    return dataForRender?.map((slot, slotIndex) => {
+      const renderPreviews = formAddImageSetTabs.map((el, imgIndex) => {
         return (
           <ImagePreviewSmall
-            key={`small-prev_${el.value}`}
-            src={set[el.value as never]}
+            key={`small-prev_${imgIndex}`}
+            src={slot[el?.value as never]}
             title={el.label ?? ''}
             onEditPress={() => {
               modalS.open({
                 ModalChildren: FormAddImageSet,
                 modalChildrenProps: {
-                  defaultState: set,
+                  defaultState: slot,
                   type: el.value,
                   onSubmit: data => {
                     el.value &&
                       data[el.value] &&
-                      handleAddImageToSet({ setId: set?._id, setIndex, uri: data[el.value], type: el.value });
+                      handleAddImageToSet({
+                        setId: slot?._id,
+                        setIndex: slotIndex,
+                        uri: data[el.value],
+                        type: el.value,
+                      });
                   },
                 },
               });
             }}
             onDeletePress={() => {
-              handleRemoveImageFromSet({ setId: '', setIndex, type: el.value });
+              handleRemoveImageFromSet({ setId: '', setIndex: slotIndex, type: el.value });
             }}
           />
         );
@@ -155,7 +177,7 @@ const FormProductImagesComponent: React.FC<FormProductImagesComponentProps> = ({
 
       return (
         <ImagesSetBox
-          key={`images-set_${set?._id || setIndex}`}
+          key={`images-set_${slot?._id || slotIndex}`}
           gap={2}
           fxDirection={'row'}
           fillWidth
@@ -163,14 +185,14 @@ const FormProductImagesComponent: React.FC<FormProductImagesComponentProps> = ({
         >
           {canEditOrder && (
             <SlotOrderChanger
-              currentOrder={set?.order}
-              canMoveUp={set?.order > 1}
+              currentOrder={slot?.order}
+              canMoveUp={(slot?.order ?? 0) > 1}
               onMoveUpPress={() => {
-                check.isNum(set.order) && handleChangeOrder(set.order, -1);
+                check.isNum(slot.order) && handleChangeOrder(slot.order, -1);
               }}
-              canMoveDown={set?.order < formData.length}
+              canMoveDown={(slot?.order ?? 0) < formData.length}
               onMoveDownPress={() => {
-                check.isNum(set.order) && handleChangeOrder(set.order, +1);
+                check.isNum(slot.order) && handleChangeOrder(slot.order, +1);
               }}
             />
           )}
@@ -183,7 +205,7 @@ const FormProductImagesComponent: React.FC<FormProductImagesComponentProps> = ({
 
   useEffect(() => {
     if (initialData) {
-      setFormData(initialData as Required<IProductImage>[]);
+      setFormData(initialData as Required<OfferImageSlotEntity>[]);
     }
     // eslint-disable-next-line
   }, []);
@@ -271,4 +293,4 @@ const SlotOrderChanger = ({
   );
 };
 
-export default FormProductImagesComponent;
+export default FormOfferImagesComponent;

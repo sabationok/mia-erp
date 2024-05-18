@@ -1,12 +1,12 @@
 import { FormArea } from '../FormArea/FormArea';
 import { OfferFormAreaProps } from './types';
 import {
-  IProduct,
   IProductFormData,
   IProductFullFormData,
+  OfferEntity,
+  OfferStatusEnum,
   OfferTypeEnum,
-  ProductStatusEnum,
-} from '../../../types/products.types';
+} from '../../../types/offers/offers.types';
 import { useAppForm } from '../../../hooks';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import { t } from '../../../lang';
@@ -24,10 +24,10 @@ import { MaybeNull } from '../../../types/utils.types';
 
 export interface OfferBaseInfoFormAreaProps extends OfferFormAreaProps<IProductFullFormData> {
   type?: MaybeNull<OfferTypeEnum>;
-  onSuccess?: (data: IProduct) => void;
+  onSuccess?: (data: OfferEntity) => void;
   edit?: boolean;
 }
-const productsStatusOption = enumToFilterOptions(ProductStatusEnum);
+const productsStatusOption = enumToFilterOptions(OfferStatusEnum);
 
 export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _id }: OfferBaseInfoFormAreaProps) => {
   const service = useProductsService();
@@ -63,7 +63,7 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
   }
 
   return (
-    <FormArea title={t('Base info')} onSubmit={appForm.handleSubmit(onValid)} isLoading={isLoading}>
+    <FormArea label={t('Base info')} onSubmit={appForm.handleSubmit(onValid)} isLoading={isLoading}>
       <InputLabel label={t('label')} error={errors.label} required>
         <InputText placeholder={t('label')} {...register('label')} required autoFocus />
       </InputLabel>

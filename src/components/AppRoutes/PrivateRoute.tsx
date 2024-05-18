@@ -28,7 +28,7 @@ const PrivateRoute: React.FC<{ redirectTo: string }> = ({ redirectTo }) => {
     if (hasAccess) {
       return;
     }
-    ClientApi.clientRef.interceptors.response.use(
+    const id = ClientApi.clientRef.interceptors.response.use(
       async value => value,
       async (e: AxiosError) => {
         console.log(e);
@@ -42,7 +42,7 @@ const PrivateRoute: React.FC<{ redirectTo: string }> = ({ redirectTo }) => {
     );
 
     return () => {
-      ClientApi.clientRef.interceptors.response.clear();
+      ClientApi.clientRef.interceptors.response.eject(id);
     };
   }, [hasAccess, logOutUser]);
 
