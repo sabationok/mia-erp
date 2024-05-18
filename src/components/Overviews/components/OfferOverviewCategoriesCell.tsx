@@ -1,6 +1,6 @@
 import { RenderOverviewCellComponent } from './overview-types';
 import { OfferEntity } from '../../../types/offers/offers.types';
-import { useDirectoriesSelector } from '../../../redux/selectors.store';
+import { useDirectorySelector } from '../../../redux/selectors.store';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import React, { useMemo } from 'react';
 import { CellStyledComp } from './CellStyles';
@@ -14,7 +14,7 @@ export const OfferOverviewCategoriesCell: RenderOverviewCellComponent<OfferEntit
   setOverlayContent,
   data,
 }) => {
-  const categories = useDirectoriesSelector(ApiDirType.CATEGORIES_PROD).directory;
+  const categories = useDirectorySelector(ApiDirType.CATEGORIES_PROD).directory;
   const selectedCategoryIds = useMemo(() => {
     return data?.categories?.map(el => el._id) ?? [];
   }, [data?.categories]);

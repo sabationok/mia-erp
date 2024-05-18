@@ -3,7 +3,7 @@ import ModalForm from 'components/ModalForm';
 import styled from 'styled-components';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import FlexBox from '../atoms/FlexBox';
-import { useDirectoriesSelector } from '../../redux/selectors.store';
+import { useDirectorySelector } from '../../redux/selectors.store';
 
 import { IDirInTreeProps, IMethodDirItem, MethodDirType } from '../../types/dir.types';
 import useDirServiceHook from '../../hooks/useDirService.hook';
@@ -28,7 +28,7 @@ const DirMethods: React.FC<DirMethodsProps> = ({
   creating,
   ...props
 }) => {
-  const { directory } = useDirectoriesSelector(dirType);
+  const { directory } = useDirectorySelector(dirType);
 
   const service = useDirServiceHook();
   const modalService = useModalProvider();

@@ -46,17 +46,17 @@ export interface IPriceList extends IBase {
 }
 
 export interface AmountAndPercentage {
-  amount?: number;
-  percentage?: number;
+  amount?: number | string;
+  percentage?: number | string;
 }
 export enum PriceAmountAndPercentageFieldsEnum {
   commission = 'commission',
   markup = 'markup',
-  discount = 'discount',
-  cashback = 'cashback',
-  bonus = 'bonus',
-  tax = 'tax',
-  vat = 'vat',
+  // discount = 'discount',
+  // cashback = 'cashback',
+  // bonus = 'bonus',
+  // tax = 'tax',
+  // vat = 'vat',
 }
 
 export type PriceAmountAndPercentageFieldsKey = keyof typeof PriceAmountAndPercentageFieldsEnum;
@@ -67,11 +67,8 @@ export interface PriceAmountAndPercentageFields
 export interface IPriceBase extends PriceAmountAndPercentageFields {
   label?: string;
 
-  in?: number;
-  out?: number;
-
-  discountLabel?: string;
-  cashbackLabel?: string;
+  in?: number | string;
+  out?: number | string;
 }
 
 export type BasePriceInfoPath = EntityPath<IPriceBase>;
@@ -90,14 +87,14 @@ export interface OfferPriceEntity extends IBase, IPriceBase {
   editor?: IUserBase;
 
   list?: IPriceList;
-  product?: OfferEntity;
+  offer?: OfferEntity;
   variation?: VariationEntity;
 
   discounts?: PriceDiscountEntity[];
 }
 
 export interface IPriceFormData extends Omit<IPriceDto, 'product' | 'variation' | 'list'> {
-  product?: IFormDataValueWithID;
+  offer?: IFormDataValueWithID;
   variation?: IFormDataValueWithID;
   list?: IFormDataValueWithID;
 }

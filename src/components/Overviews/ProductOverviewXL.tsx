@@ -74,7 +74,7 @@ const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }
   return (
     <Container fillWidth flex={1} className={className} padding={'0 8px'}>
       <OverlayHeader
-        title={t('Product overview')}
+        title={t('Offer overview')}
         onBackPress={() => {
           if (location?.pathname) {
             const newPath = location?.pathname?.replace(`/${product?._id || productId}`, '');

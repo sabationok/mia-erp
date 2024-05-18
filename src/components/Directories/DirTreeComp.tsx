@@ -2,7 +2,7 @@ import ModalForm from '../ModalForm';
 import { useEffect, useMemo, useState } from 'react';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
 import { useDirService, useFilteredLisData } from '../../hooks';
-import { useDirectoriesSelector } from '../../redux/selectors.store';
+import { useDirectorySelector } from '../../redux/selectors.store';
 import { FilterOpt } from '../atoms/ModalFilter';
 import DirListItem from './DirList/DirListItem';
 import FlexBox from '../atoms/FlexBox';
@@ -27,7 +27,7 @@ const DirTreeComp = ({
   modalId,
   ...props
 }: DirTreeComponentProps) => {
-  const { directory } = useDirectoriesSelector(dirType);
+  const { directory } = useDirectorySelector(dirType);
   const service = useDirService();
   const modalService = useModalProvider();
   const [current, setCurrent] = useState(filterDefaultValue);

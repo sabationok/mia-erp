@@ -4,7 +4,8 @@ import FlexBox from '../../atoms/FlexBox';
 import { t } from '../../../lang';
 
 export interface FormAreaFooterProps {
-  onSubmitPassed?: boolean;
+  hasOnSubmit?: boolean;
+  hasOnReset?: boolean;
   extraFooter?: React.ReactNode;
   canSubmit?: boolean;
   isLoading?: boolean;
@@ -15,7 +16,8 @@ const FormAreaFooter: React.FC<FormAreaFooterProps & React.HTMLAttributes<HTMLDi
   extraFooter,
   isLoading = false,
   disabled,
-  onSubmitPassed = false,
+  hasOnSubmit = false,
+  hasOnReset,
   ...props
 }) => {
   return (
@@ -27,15 +29,11 @@ const FormAreaFooter: React.FC<FormAreaFooterProps & React.HTMLAttributes<HTMLDi
       )}
 
       <FlexBox fillWidth gap={8} fxDirection={'row'} justifyContent={'flex-end'} padding={'8px 0'}>
-        {/*{onSubmitPassed && (*/}
-        {/*  <ButtonIcon type="reset" variant={'defOutlinedSmall'} disabled={disabled}>*/}
-        {/*    {t('Close')}*/}
-        {/*  </ButtonIcon>*/}
-        {/*)}*/}
-
-        <ButtonIcon type={'reset'} variant={'outlinedSmall'} isLoading={isLoading} disabled={disabled}>
-          {isLoading ? t('Loading...') : t('Clear')}
-        </ButtonIcon>
+        {hasOnReset && (
+          <ButtonIcon type={'reset'} variant={'outlinedSmall'} isLoading={isLoading} disabled={disabled}>
+            {isLoading ? t('Loading...') : t('Clear')}
+          </ButtonIcon>
+        )}
 
         <ButtonIcon type={'submit'} variant={'filledSmall'} isLoading={isLoading} disabled={disabled}>
           {isLoading ? t('Loading...') : t('Save')}

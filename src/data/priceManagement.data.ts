@@ -136,20 +136,20 @@ export function getBasePriceColumns<Type extends OfferPriceEntity = any>(): Cell
 
 export const priceListContentColumns: CellTittleProps<OfferPriceEntity>[] = [
   {
-    top: { name: t('Product label'), getData: d => d?.product?.label },
+    top: { name: t('Product label'), getData: d => d?.offer?.label },
     bottom: { name: t('Variation label'), getData: d => d?.variation?.label },
     width: '270px',
     getImgPreview: ({ product }) => (product?.images ? product?.images[0]?.img_preview : ''),
     action: 'doubleDataWithAvatar',
   },
   {
-    top: { name: t('SKU'), getData: d => d?.product?.sku },
+    top: { name: t('SKU'), getData: d => d?.offer?.sku },
     bottom: { name: t('SKU'), getData: d => d?.variation?.sku },
     width: '150px',
     action: 'valueByPath',
   },
   {
-    top: { name: t('barCode'), getData: d => d?.product?.barCode },
+    top: { name: t('barCode'), getData: d => d?.offer?.barCode },
     bottom: { name: t('barCode'), getData: d => d?.variation?.barCode },
     width: '150px',
     action: 'valueByPath',
@@ -170,7 +170,7 @@ export const pricesColumnsForProductReview: CellTittleProps<OfferPriceEntity>[] 
   {
     top: { name: t('Variation label'), getData: d => d?.variation?.label },
     // bottom: { name: '',  getData: d => ''},
-    getImgPreview: rd => (rd.product?.images ? rd.product?.images[0]?.img_preview : ''),
+    getImgPreview: rd => (rd.offer?.images ? rd.offer?.images[0]?.img_preview : ''),
     width: '170px',
     action: 'doubleDataWithAvatar',
   },

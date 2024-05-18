@@ -63,7 +63,14 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
   }
 
   return (
-    <FormArea label={t('Base info')} onSubmit={appForm.handleSubmit(onValid)} isLoading={isLoading}>
+    <FormArea
+      label={t('Base info')}
+      onSubmit={appForm.handleSubmit(onValid)}
+      isLoading={isLoading}
+      onReset={() => {
+        appForm.reset();
+      }}
+    >
       <InputLabel label={t('label')} error={errors.label} required>
         <InputText placeholder={t('label')} {...register('label')} required autoFocus />
       </InputLabel>

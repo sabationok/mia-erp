@@ -68,7 +68,7 @@ export const useWarehousesSelector = () =>
 export const useCustomRolesSelector = () =>
   useSelector<RootState, ICustomRolesState>((state: RootState) => state.customRoles);
 
-export const useDirectoriesSelector = <DT extends ApiDirType = any>(
+export const useDirectorySelector = <DT extends ApiDirType = any>(
   dirType: DT
 ): {
   directory: IDirItemBase<DT>[];

@@ -15,6 +15,7 @@ import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { LoadersProvider, useLoadersProvider } from '../../Providers/Loaders/LoaderProvider';
 import { OfferFormImagesArea } from '../Forms/offers/OfferFormImagesArea';
 import { useAppRouter, useCurrentOffer } from '../../hooks';
+import { OfferFormCategoriesArea } from '../Forms/offers/OfferFormCategoriesArea';
 
 export interface UpdateOfferModalProps extends ModalFormProps {
   _id: string;
@@ -60,6 +61,12 @@ const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id }) => {
               <OfferFormPropertiesArea
                 offer={loaders.state?.offer}
                 defaultValues={current?.properties}
+                disabled={!current}
+              />
+
+              <OfferFormCategoriesArea
+                offer={loaders.state?.offer}
+                defaultValues={current?.categories}
                 disabled={!current}
               />
 

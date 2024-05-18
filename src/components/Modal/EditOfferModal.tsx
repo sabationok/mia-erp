@@ -19,6 +19,7 @@ import { OfferFormPropertiesArea } from '../Forms/offers/OfferFormPropertiesArea
 import useProductsService from '../../hooks/useProductsService.hook';
 import { OfferFormImagesArea } from '../Forms/offers/OfferFormImagesArea';
 import { useAppRouter, useCurrentOffer } from '../../hooks';
+import { OfferFormCategoriesArea } from '../Forms/offers/OfferFormCategoriesArea';
 
 export interface UpdateOfferModalProps extends ModalFormProps {
   _id: string;
@@ -83,6 +84,13 @@ const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id, copy })
               onSuccess={data => {
                 setData('formData', copy ? { ...toOfferFormData(data), _id: data._id } : toOfferFormData(data));
               }}
+            />
+
+            <OfferFormCategoriesArea
+              _id={_id}
+              offer={currentOffer}
+              defaultValues={state.formData?.categories}
+              disabled={!state.formData}
             />
 
             <OfferFormPropertiesArea

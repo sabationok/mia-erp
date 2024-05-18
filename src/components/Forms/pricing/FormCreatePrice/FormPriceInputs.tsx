@@ -15,12 +15,14 @@ import { ChangeHandler } from 'react-hook-form/dist/types/form';
 import { Text } from '../../../atoms/Text';
 import { PriceFormDataPath } from './FormCreatePrice';
 import { Fragment, useMemo } from 'react';
+import Decimal from 'decimal.js';
 
 export interface FormPriceInputsProps {
   onChange?: (price: IPriceBase) => void;
   form: UseFormReturn<IPriceBase>;
   handleBlur: HandleUseFormBlur<PriceFormDataPath>;
 }
+export const FormPriceDecimal = Decimal.clone({ precision: 2 });
 
 const PriceAmountAndPercentageInputsNames = enumToArray(PriceAmountAndPercentageFieldsEnum);
 const PriceBaseInputsNames: (keyof Pick<IPriceBase, 'in' | 'out'>)[] = ['in', 'out'];
@@ -41,20 +43,20 @@ const priceInputsPropsMap = new Map<
   ['commission.amount', { label: t(''), placeholder: t('') }],
   ['commission.percentage', { label: t(''), placeholder: t('') }],
 
-  ['markup.amount', { label: t(''), placeholder: t('') }],
-  ['markup.percentage', { label: t(''), placeholder: t('') }],
-
-  ['discount.amount', { label: t(''), placeholder: t('') }],
-  ['discount.percentage', { label: t(''), placeholder: t('') }],
-
-  ['cashback.amount', { label: t(''), placeholder: t('') }],
-  ['cashback.percentage', { label: t(''), placeholder: t('') }],
-
-  ['bonus.amount', { label: t(''), placeholder: t('') }],
-  ['bonus.percentage', { label: t(''), placeholder: t('') }],
-
-  ['discountLabel', { label: t(''), placeholder: t('') }],
-  ['cashbackLabel', { label: t(''), placeholder: t('') }],
+  // ['markup.amount', { label: t(''), placeholder: t('') }],
+  // ['markup.percentage', { label: t(''), placeholder: t('') }],
+  //
+  // ['discount.amount', { label: t(''), placeholder: t('') }],
+  // ['discount.percentage', { label: t(''), placeholder: t('') }],
+  //
+  // ['cashback.amount', { label: t(''), placeholder: t('') }],
+  // ['cashback.percentage', { label: t(''), placeholder: t('') }],
+  //
+  // ['bonus.amount', { label: t(''), placeholder: t('') }],
+  // ['bonus.percentage', { label: t(''), placeholder: t('') }],
+  //
+  // ['discountLabel', { label: t(''), placeholder: t('') }],
+  // ['cashbackLabel', { label: t(''), placeholder: t('') }],
 ]);
 const FormBaseInputs = ({
   form,
@@ -73,7 +75,7 @@ const FormBaseInputs = ({
 
       {PriceBaseInputsNames.map(name => {
         const props = priceInputsPropsMap.get(name);
-        const registerProps = register(name, { valueAsNumber: true });
+        const registerProps = register(name, { setValueAs: v => new FormPriceDecimal(v).toFixed(2) });
 
         return (
           <InputLabel key={name} label={props?.label}>
@@ -81,6 +83,7 @@ const FormBaseInputs = ({
               type={'number'}
               align={'center'}
               defaultValue={0}
+              step={0.01}
               {...props}
               {...registerProps}
               onBlur={handleBlur(name, registerProps.onBlur)}
@@ -168,19 +171,6 @@ const FormPriceInputs: React.FC<FormPriceInputsProps> = ({ form, handleBlur }) =
       <TBody fillWidth>
         <FormPriceAmountAndPercentageInputs form={form} handleBlur={handleBlur} />
       </TBody>
-
-      <Header>
-        <Text></Text>
-        <Text></Text>
-        <Text>{t('Cms configs')}</Text>
-      </Header>
-
-      <InputLabel label={t('Discount label')}>
-        <InputText {...form.register('discountLabel')} />
-      </InputLabel>
-      <InputLabel label={t('Cashback label')}>
-        <InputText {...form.register('cashbackLabel')} />
-      </InputLabel>
     </FlexBox>
   );
 };

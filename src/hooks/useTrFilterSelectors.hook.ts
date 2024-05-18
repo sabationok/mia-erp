@@ -1,11 +1,11 @@
 import { FilterSelectorType } from 'components/Filter/AppFilter';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { ITransaction } from '../types/finances/transactions.types';
-import { useDirectoriesSelector } from '../redux/selectors.store';
+import { useDirectorySelector } from '../redux/selectors.store';
 
 const useTrFilterSelectors = (): FilterSelectorType<keyof ITransaction>[] => {
-  const dirCategories = useDirectoriesSelector(ApiDirType.CATEGORIES_TR);
-  const dirCounts = useDirectoriesSelector(ApiDirType.CATEGORIES_TR);
+  const dirCategories = useDirectorySelector(ApiDirType.CATEGORIES_TR);
+  const dirCounts = useDirectorySelector(ApiDirType.CATEGORIES_TR);
 
   // const transactionTypes = [
   //   { _id: 'ds6d5vf6sd5f1v6sd', name: 'INCOME', label: 'ДОХІД' },

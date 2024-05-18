@@ -1,7 +1,7 @@
 import { OverlayHandlerReturn } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
-import { useDirectoriesSelector, useProductsSelector } from '../../../redux/selectors.store';
+import { useDirectorySelector, useProductsSelector } from '../../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { FormEventHandler, useEffect, useMemo, useState } from 'react';
 import { getIdRef } from '../../../utils/data-transform';
@@ -13,7 +13,7 @@ export interface FormSelectCategoriesOverlayProps extends OverlayHandlerReturn {
 
 const FormProductCategoriesOverlay = ({ onClose }: FormSelectCategoriesOverlayProps) => {
   const { currentOffer } = useProductsSelector();
-  const { directory } = useDirectoriesSelector(ApiDirType.CATEGORIES_PROD);
+  const { directory } = useDirectorySelector(ApiDirType.CATEGORIES_PROD);
   const service = useAppServiceProvider()[ServiceName.products];
   const [state, setState] = useState<string[]>([]);
 

@@ -8,7 +8,7 @@ import { useModalProvider } from '../ModalProvider/ModalProvider';
 import { ISortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
 import { useDirService } from '../../hooks';
-import { useDirectoriesSelector } from '../../redux/selectors.store';
+import { useDirectorySelector } from '../../redux/selectors.store';
 
 export interface DirTableCompProps<
   DirType extends ApiDirType = any,
@@ -32,7 +32,7 @@ export interface DirTableCompProps<
 const DirTableComp: React.FC<DirTableCompProps> = ({ type, dirType, getTableSettings, ...props }) => {
   const modalService = useModalProvider();
   const service = useDirService();
-  const tableData = useDirectoriesSelector(dirType).directory;
+  const tableData = useDirectorySelector(dirType).directory;
   const [isLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();

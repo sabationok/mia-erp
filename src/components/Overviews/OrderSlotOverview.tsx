@@ -61,14 +61,14 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
     if (formData?.inventory?.offer?.images) {
       images = formData?.inventory?.offer?.images;
     }
-    if (formData?.origin?.product?.images) {
-      images = formData?.origin?.product?.images;
+    if (formData?.origin?.offer?.images) {
+      images = formData?.origin?.offer?.images;
     }
     return images[0]?.img_preview || '';
   }, [
     formData?.product?.images,
     formData?.variation?.offer?.images,
-    formData?.origin?.product?.images,
+    formData?.origin?.offer?.images,
     formData?.inventory?.offer?.images,
   ]);
 

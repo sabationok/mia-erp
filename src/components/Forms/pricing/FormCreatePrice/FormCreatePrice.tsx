@@ -5,7 +5,7 @@ import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import { useAppForm } from '../../../../hooks';
 import FormProductSelectorForPricing from './FormProductSelectorForPricing';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useState } from 'react';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 import { usePriceListsSelector, useProductsSelector } from '../../../../redux/selectors.store';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../components/FormAfterSubmitOptions';
@@ -14,40 +14,48 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { Path } from 'react-hook-form';
-import { toReqData } from '../../../../utils/data-transform';
+import { toReqData } from '../../../../utils';
 import { OnRowClickHandler } from '../../../TableList/tableTypes.types';
 import TableList from '../../../TableList/TableList';
 import { priceListColumns } from '../../../../data/priceManagement.data';
 import { UUIDRefSchema } from '../../validation';
 import { VariationEntity } from '../../../../types/offers/variations.types';
 import { ToastService } from '../../../../services';
-import FormPriceInputs from './FormPriceInputs';
+import FormPriceInputs, { FormPriceDecimal } from './FormPriceInputs';
+import { Text } from '../../../atoms/Text';
+import Switch from '../../../atoms/Switch';
+import { useLoaders } from '../../../../Providers/Loaders/useLoaders.hook';
+
+const isStringOrNumber = yup
+  .mixed()
+  .test('is-string-or-number', 'Value must be a string or a number', function (value: any) {
+    return typeof value === 'string' || typeof value === 'number';
+  });
 
 const validation = yup.object().shape({
-  in: yup.number(),
-  out: yup.number(),
-  list: UUIDRefSchema.required(),
-  product: UUIDRefSchema.required(),
-  variation: UUIDRefSchema,
+  in: isStringOrNumber,
+  out: isStringOrNumber.required(),
+  list: UUIDRefSchema.optional(),
+  offer: UUIDRefSchema.required(),
+  variation: UUIDRefSchema.optional(),
 });
 
 export interface FormCreatePriceProps
   extends Omit<ModalFormProps<any, any, IPriceFormData>, 'onSubmit' | 'afterSubmit'> {
   onSubmit: AppSubmitHandler<IPriceFormData>;
-  product?: OfferEntity;
+  offer?: OfferEntity;
   variation?: VariationEntity;
   update?: string;
 }
 export type PriceFormDataPath = Path<IPriceFormData>;
-
-const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update, product, onSubmit, ...props }) => {
+const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update, offer, onSubmit, ...props }) => {
   const productInState = useProductsSelector().currentOffer;
+  const currentProduct = offer || productInState;
   const { lists } = usePriceListsSelector();
+  const [showPriceListSelect, setShowPriceListSelect] = useState(false);
+  const loaders = useLoaders<'price'>();
 
   const service = useAppServiceProvider()[ServiceName.priceManagement];
-  const currentProduct = useMemo(() => {
-    return product || productInState;
-  }, [product, productInState]);
 
   const submitOptions = useAfterSubmitOptions();
 
@@ -57,7 +65,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
       out: 0,
       commission: { amount: 0, percentage: 0 },
       ...defaultState,
-      product: currentProduct,
+      offer: currentProduct,
     },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
@@ -72,23 +80,23 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
   const { in: cost, out: price } = formValues;
 
   const recalculateValues = useCallback(
-    (name?: PriceFormDataPath) => {
-      const parseFloatFromValue = (v?: number) => parseFloat(v?.toString() ?? '0');
-      const costNum = parseFloatFromValue(cost);
+    (_name?: PriceFormDataPath) => {
+      const Cost = new FormPriceDecimal(cost ?? 0);
+      const Price = new FormPriceDecimal(price ?? 0);
+      const CommissionAmount = Price.minus(Cost);
+      const CommissionPercentage = CommissionAmount.div(Price).times(100);
 
-      const priceNum = parseFloatFromValue(price);
-
-      const calculatedCommissionAmount = priceNum - costNum;
-      const calculatedCommissionPercentage = (calculatedCommissionAmount / priceNum) * 100;
+      setValue('in', Cost.toFixed(2));
+      setValue('out', Price.toFixed(2));
 
       setValue('commission', {
-        amount: calculatedCommissionAmount ? Number(calculatedCommissionAmount.toFixed(2)) : 0,
-        percentage: calculatedCommissionPercentage ? Number(calculatedCommissionPercentage.toFixed(2)) : 0,
+        amount: CommissionAmount.toFixed(2),
+        percentage: CommissionPercentage.toFixed(2),
       });
 
       setValue('markup', {
-        amount: calculatedCommissionAmount ? Number(calculatedCommissionAmount.toFixed(2)) : 0,
-        percentage: calculatedCommissionPercentage ? Number(calculatedCommissionPercentage.toFixed(2)) : 0,
+        amount: CommissionAmount.toFixed(2),
+        percentage: CommissionPercentage.toFixed(2),
       });
     },
     [cost, price, setValue]
@@ -107,6 +115,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
     if (update) {
       service.updatePriceById({
         data: { data: { _id: update, data: dataForReq }, updateCurrent: true },
+        onLoading: loaders.onLoading('price'),
         onSuccess: (data, meta) => {
           submitOptions.state?.close && props?.onClose && props?.onClose();
           ToastService.success('Price updated');
@@ -116,9 +125,10 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
     } else {
       service.addPriceToList({
         data: { data: { data: dataForReq as never }, updateCurrent: true },
+        onLoading: loaders.onLoading('price'),
         onSuccess: (data, meta) => {
-          submitOptions.state?.close && props?.onClose && props?.onClose();
           ToastService.success('Price created');
+          submitOptions.state?.close && props?.onClose && props?.onClose();
         },
       });
     }
@@ -130,68 +140,71 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
     //   });
   };
 
-  // useEffect(() => {
-  //   // const throttledCallback=_.throttle(recalculateValues)
-  //   throttleCallback(recalculateValues);
-  // }, [cost, price, recalculateValues]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-
   return (
     <ModalForm
+      isLoading={loaders.isLoading?.price}
       onSubmit={handleSubmit(onValid, e => {
         ToastService.warning('Invalid form data');
         console.log(e);
       })}
       fillHeight
-      title={`${update ? 'Edit' : 'Create'} price for: ${formValues?.variation?.label || '---'}`}
+      title={`${update ? 'Edit' : 'Create'} price for: ${
+        formValues?.offer?.label || formValues?.variation?.label || '---'
+      }`}
       extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
       {...props}
     >
       <FlexBox padding={'0 0 8px'} flex={1} overflow={'auto'}>
-        <FormProductSelectorForPricing
-          selected={formValues.product}
-          disabled={!defaultState?.list?._id}
-          title={'Select product for pricing'}
-          variation={formValues.variation}
-          onChange={(p, v) => {
-            setValue('product', p);
-            setValue('variation', v);
-          }}
-        />
-
-        <InputLabel label={t('Select price list')} error={errors.list}>
-          <FlexBox fillWidth style={{ height: 250 }} padding={'0 2px'} overflow={'hidden'}>
-            <TableList
-              tableTitles={priceListColumns}
-              tableData={lists}
-              isSearch={false}
-              onRowClick={handleSelectPriceList}
-            />
-          </FlexBox>
-        </InputLabel>
+        {!currentProduct && (
+          <FormProductSelectorForPricing
+            title={'Select product for pricing'}
+            disabled={!defaultState?.list?._id}
+            selected={formValues?.offer}
+            variation={formValues.variation}
+            onChange={(p, v) => {
+              setValue('offer', p);
+              setValue('variation', v);
+            }}
+          />
+        )}
 
         <FormPriceInputs
           form={priceForm}
-          handleBlur={(name, callback) => {
+          handleBlur={(_name, callback) => {
             return ev => {
-              console.log({ name }, { ev });
               callback && callback(ev);
               recalculateValues();
             };
           }}
         />
+
+        <FlexBox padding={'8px'} fxDirection={'row'} justifyContent={'space-between'} alignItems={'center'}>
+          <Text>{t('Add to price list')}</Text>
+          <Switch
+            size={'34px'}
+            onChange={ev => {
+              setShowPriceListSelect(ev.checked);
+            }}
+          />
+        </FlexBox>
+
+        {showPriceListSelect && (
+          <InputLabel label={t('Select price list')} error={showPriceListSelect && errors.list}>
+            <FlexBox fillWidth style={{ height: 250 }} padding={'0 2px'} overflow={'hidden'}>
+              <TableList
+                tableTitles={priceListColumns}
+                tableData={lists}
+                isSearch={false}
+                onRowClick={handleSelectPriceList}
+              />
+            </FlexBox>
+          </InputLabel>
+        )}
       </FlexBox>
     </ModalForm>
   );
 };
-// const Inputs = styled.div`
-//   display: grid;
-//   grid-template-columns: 2fr 2fr;
-//
-//   gap: 8px;
-//
-//   padding: 0 8px;
-// `;
+
 export default FormCreatePrice;
 // if (!canCount) {
 //   setValue('markupAmount', 0);

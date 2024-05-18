@@ -112,7 +112,9 @@ export const FlexBoxCss = css<FlexBoxProps>`
 const FlexBox = styled.div<FlexBoxProps>`
   ${FlexBoxCss}
 `;
-
+export const FlexLabel = styled.label<FlexBoxProps>`
+  ${FlexBoxCss}
+`;
 export const FlexUl = styled.ul<FlexBoxProps>`
   ${FlexBoxCss}
 `;

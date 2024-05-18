@@ -15,7 +15,7 @@ import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import ButtonsGroup from '../../atoms/ButtonsGroup';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
-import { useDirectoriesSelector } from '../../../redux/selectors.store';
+import { useDirectorySelector } from '../../../redux/selectors.store';
 import { BusinessSubjectTypeEnum } from '../../../types/companies.types';
 import { businessSubjectTypeFilterOptions } from '../../../data/companies.data';
 import { FormInputs } from '../components/atoms';
@@ -93,7 +93,7 @@ const FormCreateCounterparty: React.FC<FormCreateContractorProps> = ({
     resolver: yupResolver(validation),
     reValidateMode: 'onChange',
   });
-  const attractionSourcesList = useDirectoriesSelector(ApiDirType.SOURCE_ATTRACTION).directory;
+  const attractionSourcesList = useDirectorySelector(ApiDirType.SOURCE_ATTRACTION).directory;
 
   function formEventWrapper(evHandler?: AppSubmitHandler<IContractorFormData>) {
     if (evHandler) {

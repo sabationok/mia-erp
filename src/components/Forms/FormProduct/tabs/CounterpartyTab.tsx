@@ -1,6 +1,6 @@
 import { OnlyUUID } from '../../../../redux/global.types';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
-import { useDirectoriesSelector } from '../../../../redux/selectors.store';
+import { useDirectorySelector } from '../../../../redux/selectors.store';
 import { useMemo, useState } from 'react';
 import { getIdRef } from '../../../../utils/data-transform';
 import { counterpartyColumns } from '../../../../data/contractors.data';
@@ -19,7 +19,7 @@ const CounterpartyTab: React.FC<CounterpartyTabProps> = ({ onSelect, withActions
   // const productsS = useAppServiceProvider()[ServiceName.products];
   const [loading] = useState(false);
 
-  const counterparties = useDirectoriesSelector(ApiDirType.CONTRACTORS).directory;
+  const counterparties = useDirectorySelector(ApiDirType.CONTRACTORS).directory;
 
   const filteredData = useMemo(() => {
     return counterparties.filter(c => types && types.includes(c.type as never));

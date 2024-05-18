@@ -3,8 +3,8 @@ import { useCallback } from 'react';
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
 import {
   IPriceList,
-  OfferPriceEntity,
   IPriceListItemReqData,
+  OfferPriceEntity,
   PriceListTypeEnum,
 } from '../types/price-management/priceManagement.types';
 import FormCreatePriceList from '../components/Forms/pricing/FormCreatePriceList';
@@ -24,7 +24,7 @@ export const createPriceDataForReq = (input: Required<OfferPriceEntity>): IPrice
     ...getIdRef(input),
     data: {
       ...omit(input, ['createdAt', 'updatedAt', 'deletedAt', '_id']),
-      product: getIdRef(input?.product),
+      product: getIdRef(input?.offer),
     },
   };
 };

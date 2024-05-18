@@ -7,6 +7,7 @@ export interface FormAreaProps {
   label?: string;
   children?: React.ReactNode;
   onSubmit?: AppSubmitHandler;
+  onReset?: () => void;
   renderFooter?: React.ReactNode;
   renderTitle?: React.ReactNode;
   isLoading?: boolean;
@@ -21,9 +22,10 @@ export const FormArea = ({
   label = 'Form area',
   onSubmit,
   isLoading,
+  onReset,
 }: FormAreaProps) => {
   return (
-    <FlexForm fillWidth onSubmit={onSubmit}>
+    <FlexForm fillWidth onSubmit={onSubmit} onReset={onReset}>
       <FlexBox padding={'8px 6px'} overflow={'hidden'}>
         {renderTitle || (
           <Text $size={14} $weight={600}>
@@ -33,7 +35,9 @@ export const FormArea = ({
       </FlexBox>
       {children}
 
-      {renderFooter || <FormAreaFooter onSubmitPassed={!!onSubmit} isLoading={isLoading} disabled={disabled} />}
+      {renderFooter || (
+        <FormAreaFooter hasOnSubmit={!!onSubmit} hasOnReset={!!onReset} isLoading={isLoading} disabled={disabled} />
+      )}
     </FlexForm>
   );
 };

@@ -74,7 +74,7 @@ export interface WarehouseItemEntity extends IBase, WithPeriod {
 export interface IProductInventoryFormData extends WithPeriod, HasStatus<ProductInventoryStatus> {
   product?: Omit<OfferEntity, 'categories' | 'inventories' | 'category' | 'properties'>;
   variation?: Omit<VariationEntity, 'properties'>;
-  price?: Omit<OfferPriceEntity, 'list' | 'product'>;
+  price?: Omit<OfferPriceEntity, 'list' | 'offer'>;
   warehouse?: IWarehouse;
 
   stock?: number;
