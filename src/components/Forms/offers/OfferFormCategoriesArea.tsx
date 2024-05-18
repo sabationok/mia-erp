@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Text } from '../../atoms/Text';
 import { FormArea } from '../FormArea/FormArea';
 import styled from 'styled-components';
@@ -34,6 +34,7 @@ export const OfferFormCategoriesArea = ({
   const offerCategories = useDirectorySelector(ApiDirType.CATEGORIES_PROD).directory;
   const [parentIdsMap, setParentIdsMap] = useState<Record<string, { selected: boolean; parentIds: string[] }>>({});
   const service = useAppServiceProvider()[ServiceName.products];
+
   const selectedIds = useMemo(
     () =>
       Object.keys(parentIdsMap).filter(idKey => {
@@ -42,51 +43,60 @@ export const OfferFormCategoriesArea = ({
     [parentIdsMap]
   );
 
-  const handleSelect = (id: string, parentIds?: string[]) => {
-    if (parentIds?.length) {
-      const newData = {
-        ...parentIdsMap,
-        [id]: { selected: true, parentIds: parentIdsMap?.[id]?.parentIds || parentIds },
-      };
-      parentIds?.forEach(parentId => {
-        if (newData?.[parentId]) {
-          newData[parentId] = {
-            ...newData[parentId],
-            selected: true,
-          };
-        } else {
-          newData[parentId] = {
-            parentIds: [],
-            selected: true,
-          };
-        }
-      });
-      setParentIdsMap(newData);
-    } else {
-      setParentIdsMap(prev => {
-        return { ...prev, [id]: { selected: true, parentIds: parentIds ?? [] } };
-      });
-    }
-  };
-  const handleRemove = (id: string) => {
-    const getChildIds = () => {
-      return selectedIds.filter(key => parentIdsMap?.[key]?.parentIds?.includes(id));
-    };
-    const childIds = getChildIds();
-    if (childIds?.length) {
-      const newData = { ...parentIdsMap, [id]: { selected: false, parentIds: parentIdsMap?.[id]?.parentIds } };
-
-      childIds.forEach(idKey => {
-        newData[idKey] = {
-          ...newData[idKey],
-          selected: false,
+  const handleSelect = useCallback(
+    (id: string, parentIds?: string[]) => {
+      if (parentIds?.length) {
+        const newData = {
+          ...parentIdsMap,
+          [id]: { selected: true, parentIds: parentIdsMap?.[id]?.parentIds || parentIds },
         };
-      });
+        parentIds?.forEach(parentId => {
+          if (newData?.[parentId]) {
+            newData[parentId] = {
+              ...newData[parentId],
+              selected: true,
+            };
+          } else {
+            newData[parentId] = {
+              parentIds: [],
+              selected: true,
+            };
+          }
+        });
+        setParentIdsMap(newData);
+      } else {
+        setParentIdsMap(prev => {
+          return { ...prev, [id]: { selected: true, parentIds: parentIds ?? [] } };
+        });
+      }
+    },
+    [parentIdsMap]
+  );
+  const handleRemove = useCallback(
+    (id: string) => {
+      const getChildIds = () => {
+        return selectedIds.filter(key => parentIdsMap?.[key]?.parentIds?.includes(id));
+      };
+      const childIds = getChildIds();
+      if (childIds?.length) {
+        const newData = { ...parentIdsMap, [id]: { selected: false, parentIds: parentIdsMap?.[id]?.parentIds } };
 
-      setParentIdsMap(newData);
-    } else {
-      setParentIdsMap(p => ({ ...p, [id]: { selected: false, parentIds: p?.[id]?.parentIds } }));
-    }
+        childIds.forEach(idKey => {
+          newData[idKey] = {
+            ...newData[idKey],
+            selected: false,
+          };
+        });
+
+        setParentIdsMap(newData);
+      } else {
+        setParentIdsMap(p => ({ ...p, [id]: { selected: false, parentIds: p?.[id]?.parentIds } }));
+      }
+    },
+    [parentIdsMap, selectedIds]
+  );
+  const handleReset = () => {
+    setParentIdsMap({});
   };
   const handleSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
@@ -136,17 +146,18 @@ export const OfferFormCategoriesArea = ({
 
   const renderCategories = useMemo(() => {
     return offerCategories.map(parent => {
-      const isActive =
-        selectedIds.includes(parent._id) ||
-        !!selectedIds.find(
-          idKey => parentIdsMap?.[idKey]?.parentIds?.includes(parent._id) && parentIdsMap?.[idKey]?.selected
-        );
+      const getIsActive = (id: string, checkChildren: boolean) =>
+        (checkChildren &&
+          selectedIds.some(
+            idKey => parentIdsMap?.[idKey]?.parentIds?.includes(id) && parentIdsMap?.[idKey]?.selected
+          )) ||
+        parentIdsMap?.[id]?.selected;
 
       return (
         <CategoryBox key={`property-${parent._id}`} gap={8} fillWidth padding={'8px 0 0'}>
           <FlexBox fxDirection={'row'} justifyContent={'space-between'} alignItems={'center'} gap={12}>
             <CheckBox
-              checked={isActive}
+              checked={getIsActive(parent._id, !!parent?.childrenList?.length)}
               onChange={ev => {
                 if (ev.checked) {
                   handleSelect(parent._id);
@@ -167,7 +178,7 @@ export const OfferFormCategoriesArea = ({
                   key={item._id}
                   item={item}
                   parentIds={[parent._id]}
-                  getIsSelected={id => selectedIds.includes(id)}
+                  getIsSelected={getIsActive}
                   onChange={(checked, id, parentIds) => {
                     if (checked) {
                       handleSelect(id, parentIds ?? []);
@@ -182,12 +193,13 @@ export const OfferFormCategoriesArea = ({
         </CategoryBox>
       );
     });
-  }, [handleRemove, offerCategories, selectedIds]);
+  }, [handleRemove, handleSelect, offerCategories, parentIdsMap, selectedIds]);
 
   return (
     <FormArea
       label={t('Categories')}
       onSubmit={handleSubmit}
+      onReset={handleReset}
       isLoading={loaders.isLoading?.properties}
       disabled={!canSubmit}
     >
@@ -207,9 +219,9 @@ const CategoryBox = styled(FlexLi)`
     border-top: 1px solid ${p => p.theme.sideBarBorderColor};
   }
 `;
-const CategoriesList = styled(FlexBox)<{ numColumns?: number }>``;
+const CategoriesList = styled(FlexUl)<{ numColumns?: number }>``;
 
-const CategoryItem = styled(FlexBox)``;
+const CategoryItem = styled(FlexLi)``;
 
 const RenderItem = ({
   item,
@@ -220,11 +232,11 @@ const RenderItem = ({
   parentIds?: string[];
   item: IDirItemBase<ApiDirType.CATEGORIES_PROD>;
   onChange?: (checked: boolean, id: string, parentIds?: string[]) => void;
-  getIsSelected?: (id: string) => boolean;
+  getIsSelected?: (id: string, checkChildren: boolean) => boolean;
 }) => {
-  const isActive = getIsSelected && getIsSelected(item._id);
+  const isActive = getIsSelected && getIsSelected(item._id, !!item?.childrenList?.length);
   return (
-    <CategoryItem key={`cate-value-${item._id}`} padding={'6px 8px'}>
+    <CategoryItem key={`cate-value-${item._id}`} padding={'0 8px 0px 12px'} gap={12}>
       <FlexBox fxDirection={'row'} alignItems={'center'} gap={12}>
         <CheckBox
           checked={isActive}
@@ -238,18 +250,20 @@ const RenderItem = ({
         </Text>
       </FlexBox>
 
-      {!!item.childrenList?.length &&
-        item.childrenList.map(child => {
-          return (
-            <RenderItem
-              key={child._id}
-              item={child}
-              onChange={onChange}
-              getIsSelected={getIsSelected}
-              parentIds={[...(parentIds ?? []), item._id]}
-            />
-          );
-        })}
+      <CategoriesList>
+        {!!item.childrenList?.length &&
+          item.childrenList.map(child => {
+            return (
+              <RenderItem
+                key={child._id}
+                item={child}
+                onChange={onChange}
+                getIsSelected={getIsSelected}
+                parentIds={[...(parentIds ?? []), item._id]}
+              />
+            );
+          })}
+      </CategoriesList>
     </CategoryItem>
   );
 };

@@ -56,17 +56,17 @@ const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id }) => {
             type={current?.type}
           />
 
+          <OfferFormCategoriesArea
+            offer={loaders.state?.offer}
+            defaultValues={current?.categories}
+            disabled={!current}
+          />
+
           {currenOffer && (
             <>
               <OfferFormPropertiesArea
                 offer={loaders.state?.offer}
                 defaultValues={current?.properties}
-                disabled={!current}
-              />
-
-              <OfferFormCategoriesArea
-                offer={loaders.state?.offer}
-                defaultValues={current?.categories}
                 disabled={!current}
               />
 
