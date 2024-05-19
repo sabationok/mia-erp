@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import { useProductsSelector, usePropertiesSelector } from '../../../redux/selectors.store';
+import { usePropertiesSelector } from '../../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { FormEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
 import { Text } from '../../atoms/Text';
@@ -11,6 +11,9 @@ import { OnlyUUID } from '../../../redux/global.types';
 import { ModalFormProps } from '../../ModalForm';
 import { ToastService } from '../../../services';
 import { OverlayFooter, OverlayForm, OverlayHeader } from './components';
+import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import { t } from '../../../lang';
+import { OfferEntity } from '../../../types/offers/offers.types';
 
 export interface FormSelectPropertiesProps
   extends OverlayHandlerReturn,
@@ -19,7 +22,7 @@ export interface FormSelectPropertiesProps
   onSelect?: (id: string) => void;
   onChange?: (ids: string[]) => void;
 
-  product?: OnlyUUID;
+  offer?: OfferEntity;
   template?: OnlyUUID;
 
   update?: string;
@@ -31,31 +34,33 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
   defaultState,
   onSubmit,
   update,
-  product,
+  offer,
   template,
   onSelect,
   onChange,
   ...props
 }) => {
-  const currentProduct = useProductsSelector().currentOffer;
+  const currentOffer = offer;
   const service = useAppServiceProvider()[ServiceName.products];
   const templates = usePropertiesSelector();
+  const [currentId, setCurrentId] = useState<string>(templates[0]?._id);
+
   const [loading, setLoading] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const templateData = useMemo(() => {
-    return templates.find(t => t._id === (template?._id || currentProduct?.template?._id));
-  }, [currentProduct?.template?._id, template?._id, templates]);
+    return templates.find(t => t._id === currentId);
+  }, [currentId, templates]);
 
   const canSubmit = useMemo(() => {
-    return currentProduct?.properties?.map(p => p._id).join(',') !== selectedIds.join(',');
-  }, [currentProduct?.properties, selectedIds]);
+    return currentOffer?.properties?.map(p => p._id).join(',') !== selectedIds.join(',');
+  }, [currentOffer?.properties, selectedIds]);
 
   const handleSubmit: FormEventHandler = useCallback(
     event => {
       event.preventDefault();
 
-      const id = update ?? currentProduct?._id;
+      const id = update ?? currentOffer?._id;
       if (id) {
         service.updateById({
           data: { _id: id, data: { properties: selectedIds } },
@@ -71,7 +76,7 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
 
       onSubmit && onSubmit(selectedIds);
     },
-    [currentProduct?._id, onClose, onSubmit, selectedIds, service, update]
+    [currentOffer?._id, onClose, onSubmit, selectedIds, service, update]
   );
 
   const handleSelect = useCallback(
@@ -121,10 +126,10 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
   }, [handleSelect, selectedIds, templateData?.childrenList]);
 
   useEffect(() => {
-    if (currentProduct?.properties) {
-      setSelectedIds(currentProduct?.properties.map(p => p._id));
+    if (currentOffer?.properties) {
+      setSelectedIds(currentOffer?.properties.map(p => p._id));
     }
-  }, [currentProduct?.properties]);
+  }, [currentOffer?.properties]);
 
   return (
     <OverlayForm onSubmit={handleSubmit} {...props}>
@@ -133,6 +138,15 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
         canSubmit={canSubmit}
         title={(title || templateData?.label) ?? ''}
         okButton
+      />
+
+      <CustomSelect
+        label={t('Available templates')}
+        options={templates}
+        selectedValue={currentId}
+        onSelect={option => {
+          setCurrentId(option?._id);
+        }}
       />
 
       <TemplateBox flex={1} overflow={'auto'}>

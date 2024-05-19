@@ -5,13 +5,13 @@ import React, { useMemo } from 'react';
 import { t } from '../../../lang';
 import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
-import { checks, numberWithSpaces } from '../../../utils';
 import { CellStyledComp } from './CellStyles';
 import { OverviewCellHeader } from './OverviewCellHeader';
 import FormProductDefaultsOverlay from '../../Forms/FormProduct/FormProductDefaultsOverlay';
 
 import { OfferPriceEntity } from '../../../types/price-management/priceManagement.types';
 import { MaybeNull } from '../../../types/utils.types';
+import { toPrice } from '../../../utils/numbers';
 
 export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity> = ({
   data,
@@ -71,8 +71,9 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity>
         >
           <Text $size={11}>{`${item?.title}: `}</Text>
           <Text $size={12} $weight={600}>
-            {numberWithSpaces(item?.amount || 0)}
-            {checks.isNum(item?.percentage) && ` | ${numberWithSpaces(item?.percentage)}%`}
+            {item?.amount}
+
+            {item?.percentage && ` | ${item?.percentage}%`}
           </Text>
         </FlexBox>
       );
@@ -162,29 +163,19 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity>
 
 export function createPriceOverviewTagsData(
   price?: OfferPriceEntity
-): { title: string; amount?: number; percentage?: number }[] {
+): { title: string; amount?: number | string; percentage?: number | string }[] {
   return [
-    { title: t('Input'), amount: price?.in },
-    { title: t('Output'), amount: price?.out },
+    { title: t('Input'), amount: toPrice(price?.in) },
+    { title: t('Output'), amount: toPrice(price?.out) },
     {
       title: t('Commission'),
-      ...price?.commission,
+      amount: toPrice(price?.commission?.amount),
+      percentage: price?.commission?.percentage ? toPrice(price?.commission?.percentage) : undefined,
     },
     {
       title: t('Markup'),
-      ...price?.markup,
-    },
-    {
-      title: t('Discount'),
-      ...price?.discount,
-    },
-    {
-      title: t('Bonus'),
-      ...price?.bonus,
-    },
-    {
-      title: t('Cashback'),
-      ...price?.cashback,
+      amount: toPrice(price?.markup?.amount),
+      percentage: price?.markup?.percentage ? toPrice(price?.markup?.percentage) : undefined,
     },
   ];
 }

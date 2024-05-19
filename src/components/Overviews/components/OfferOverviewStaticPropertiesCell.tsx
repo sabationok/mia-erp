@@ -1,7 +1,7 @@
 import { RenderOverviewCellComponent } from './overview-types';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { useProductsSelector } from '../../../redux/selectors.store';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import FormSelectPropertiesOverlay from '../../Forms/FormProduct/FormSelectPropertiesOverlay';
 import FlexBox from '../../atoms/FlexBox';
 import { t } from '../../../lang';
@@ -15,10 +15,11 @@ export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEnt
   data,
 }) => {
   const templates = useProductsSelector().properties;
+  const [currentId, setCurrentId] = useState<string>(templates[0]?._id);
 
   const template = useMemo(() => {
-    return templates.find(t => t._id === data?.template?._id);
-  }, [data?.template?._id, templates]);
+    return templates.find(t => t._id === currentId);
+  }, [currentId, templates]);
 
   const availableProperties = useMemo(() => {
     return template?.childrenList?.filter(prop => !prop.isSelectable);
@@ -33,25 +34,11 @@ export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEnt
       return (
         <OverviewPropertyComponent
           key={`prop-${prop?._id}`}
-          {...{ index, setOverlayContent, item: prop, selectedItems }}
+          {...{ index, setOverlayContent, item: prop, selectedItems, data }}
         />
       );
     });
-  }, [availableProperties, setOverlayContent, selectedItems]);
-
-  // const renderPropertiesFromVariations = useMemo(() => {
-  //   const propsFromVariations = data?.variations?.map(vr => vr.properties)?.flat(1);
-  //
-  //
-  //   const valuesSet: Record<string, IPropertyValue> = Object.assign(
-  //     {},
-  //     ...(propsFromVariations?.map(value => (value ? { [value?._id]: value } : null)) ?? [])
-  //   );
-  //
-  //   return Object.values(valuesSet).map(el => {
-  //     return <FlexBox key={`prop_value_${el._id}`}>{el.label}</FlexBox>;
-  //   });
-  // }, [data?.variations]);
+  }, [availableProperties, setOverlayContent, selectedItems, data]);
 
   return (
     <CellStyledComp.Cell
@@ -63,10 +50,9 @@ export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEnt
       <OverviewCellHeader
         title={cell?.title}
         onOpenOverlayPress={() => {
-          if (!template) return;
-
           setOverlayContent({
             RenderComponent: FormSelectPropertiesOverlay,
+            props: { offer: data },
           });
         }}
       />

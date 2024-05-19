@@ -24,10 +24,10 @@ const CellHeaderButton = styled.button`
 `;
 
 const Cell = styled(FlexBox)`
-  min-height: 50px;
+  min-height: 70px;
   height: max-content;
 
-  padding: 4px;
+  padding: 12px 8px;
   gap: 4px;
 
   //overflow: hidden;

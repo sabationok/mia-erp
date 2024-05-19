@@ -303,12 +303,6 @@ const productOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEn
 
   // * PROPERTIES
   {
-    title: t('Variations template'),
-    CellComponent: OverviewCells.OfferVariationsTemplate,
-    gridArea: 'template',
-    tab: ProductOverviewTabsEnum.Properties,
-  },
-  {
     title: t('Properties'),
     CellComponent: OverviewCells.OfferStaticProperties,
     gridArea: 'properties',
