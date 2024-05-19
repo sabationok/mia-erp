@@ -1,7 +1,7 @@
 import { ModalFormProps } from '../components/ModalForm';
 import { ITrCategory, ITrCategoryFormData, TagTypeEnum, TrCategoryTypeEnum } from './directories.types';
 import { CountsTypesEnum, ICount, ICountFormData } from '../redux/directories/counts.types';
-import { FilterOpt } from '../components/atoms/ModalFilter';
+import { TabOption } from '../components/atoms/TabSelector';
 import { IBase } from '../redux/global.types';
 import { ICompany } from './companies.types';
 import { ApiDirType } from '../redux/APP_CONFIGS';
@@ -106,7 +106,7 @@ export interface IDirInTreeProps<
   dirType: DirType;
   type?: DirItemTypeByDirType[DirType];
   createParentTitle?: string;
-  filterOptions?: FilterOpt<DirItemTypeByDirType[DirType]>[];
+  filterOptions?: TabOption<DirItemTypeByDirType[DirType]>[];
   filterSearchPath?: keyof IDirItemBase<DirType>;
   filterDefaultValue?: DirItemTypeByDirType[DirType];
   availableLevels?: number;

@@ -54,9 +54,9 @@ export type FilterSelectHandler<V = any, D = any> = (
 export type FilterSelectValueHandler<V = any> = (info: { name: any & string; value: V }) => void;
 
 export type FilterChangeHandler<V = any> = (values: V[], name?: string) => void;
-export interface FilterOpt<V = any, D = any> extends FilterOption<V, D> {}
+export interface TabOption<V = any, D = any> extends FilterOption<V, D> {}
 
-const ModalFilter = <V = any, D = any>({
+const TabSelector = <V = any, D = any>({
   filterOptions = [],
   onOptSelect,
   preventFilter,
@@ -77,7 +77,7 @@ const ModalFilter = <V = any, D = any>({
   // const { listRef } = useScrollTo<HTMLDivElement>(current.toString());
 
   const handleSelectOpt = useCallback(
-    (idx: number, option: FilterOpt) => {
+    (idx: number, option: TabOption) => {
       return () => {
         setCurrent(idx);
 
@@ -246,4 +246,4 @@ const StButtonIcon = styled(ButtonIcon)<{ asStep?: boolean; customLabel?: boolea
   }
 `;
 
-export default ModalFilter;
+export default TabSelector;

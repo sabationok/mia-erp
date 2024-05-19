@@ -1,4 +1,4 @@
-import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { AnyAction, createSlice } from '@reduxjs/toolkit';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { OfferEntity } from '../../types/offers/offers.types';
 import {
@@ -73,6 +73,10 @@ export const productsSlice = createSlice({
           } else {
             s.products = [...a.payload.data, ...s.products];
           }
+
+          a.payload.data.forEach(offer => {
+            ManageOffersStateMap(s, { data: offer });
+          });
         }
       })
       .addCase(createProductThunk.fulfilled, (s, a) => {
@@ -112,6 +116,7 @@ export const productsSlice = createSlice({
           return;
         } else {
           s?.currentOffer?.variations?.unshift(a.payload);
+          ManageVariationsStateMap(s, { data: a.payload });
         }
       })
       .addCase(updateProductDefaultsThunk.fulfilled, (s, a) => {
@@ -128,12 +133,16 @@ export const productsSlice = createSlice({
           s.currentOffer.variations = s?.currentOffer?.variations?.map(vrn =>
             vrn._id === a.payload?._id ? a.payload : vrn
           );
+          ManageVariationsStateMap(s, { data: a.payload });
         }
       })
       .addCase(getAllVariationsByProductIdThunk.fulfilled, (s, a) => {
         if (a.payload?.refreshCurrent) {
           s.currentOffer = { ...(s.currentOffer as OfferEntity), variations: a.payload.data };
         }
+        a.payload?.data.forEach(vr => {
+          ManageVariationsStateMap(s, { data: vr });
+        });
       })
       .addCase(getAllPricesByProductIdThunk.fulfilled, (s, a) => {
         if (a.payload?.refreshCurrent) {
@@ -167,6 +176,9 @@ export const productsSlice = createSlice({
             ? [...a.payload.data, ...s.currentOffer?.variations]
             : a.payload.data,
         };
+        a.payload?.data.forEach(vr => {
+          ManageVariationsStateMap(s, { data: vr });
+        });
       })
       .addCase(setCurrentProductInventoriesAction, (s, a) => {
         s.currentOffer = {
@@ -177,18 +189,6 @@ export const productsSlice = createSlice({
             ? [...a.payload.data, ...s.currentOffer?.inventories]
             : a.payload.data,
         };
-      })
-      .addMatcher(inPending, s => {
-        s.isLoading = true;
-        s.error = null;
-      })
-      .addMatcher(inFulfilled, s => {
-        s.isLoading = false;
-        s.error = null;
-      })
-      .addMatcher(inError, (s, a: PayloadAction<StateErrorType>) => {
-        s.isLoading = false;
-        s.error = a.payload;
       }),
 });
 
@@ -224,12 +224,12 @@ function ManageOffersStateMap(
 
 function ManageVariationsStateMap(
   st: OffersState,
-  input: { data?: VariationEntity },
+  input: { data?: VariationEntity; offerId?: string },
   options?: { refresh?: boolean; isForList?: boolean }
 ) {
   if (input.data) {
     const itemId = input.data?._id;
-    const offerId = input.data?.offer?._id;
+    const offerId = input.data?.offer?._id || input?.offerId;
     const itemSku = input.data?.sku;
 
     st.variationsMap[itemId] = options?.refresh ? input.data : { ...st.dataMap?.[itemId], ...input.data };

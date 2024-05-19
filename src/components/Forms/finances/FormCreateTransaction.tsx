@@ -8,7 +8,7 @@ import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import * as yup from 'yup';
 import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
-import { FilterOpt } from '../../atoms/ModalFilter';
+import { TabOption } from '../../atoms/TabSelector';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { toInputValueDate, toTrReqData } from '../../../utils';
 import { useAppSelector } from '../../../redux/store.store';
@@ -20,7 +20,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
 import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
 
-export type TransactionsFilterOpt = FilterOpt<CategoryTypes>;
+export type TransactionsFilterOpt = TabOption<CategoryTypes>;
 
 export interface FormCreateTransactionProps extends Omit<ModalFormProps, 'onSubmit'> {
   edit?: boolean;

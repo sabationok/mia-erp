@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
-import { FilterOption } from '../../atoms/ModalFilter';
+import { FilterOption } from '../../atoms/TabSelector';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { checks } from '../../../utils';

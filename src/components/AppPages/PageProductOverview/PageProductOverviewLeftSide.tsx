@@ -4,18 +4,22 @@ import { useModalProvider } from '../../ModalProvider/ModalProvider';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
-import React, { MouseEventHandler, useCallback, useMemo, useState } from 'react';
+import React, { MouseEventHandler, useCallback, useMemo } from 'react';
 import { Modals } from '../../Modals';
 import { ToastService } from '../../../services';
 import { toOfferFormData } from '../../../utils/data-transform';
+import { useOfferOverviewLoaders } from './PageProductOverview';
+import { t } from '../../../lang';
 
 export interface PageProductOverviewLeftSideProps {
   toggleRightSideVisibility?: () => void;
 }
 const PageProductOverviewLeftSide: React.FC<PageProductOverviewLeftSideProps> = ({ toggleRightSideVisibility }) => {
   const page = usePageCurrentProduct();
+  const loaders = useOfferOverviewLoaders();
+
   const modalS = useModalProvider();
-  const [loading, setLoading] = useState(false);
+
   const { products: productsS } = useAppServiceProvider();
 
   const onOverlayBackdropClick = useCallback(
@@ -61,56 +65,43 @@ const PageProductOverviewLeftSide: React.FC<PageProductOverviewLeftSideProps> = 
       <LeftSide>
         <ProductOverviewXL
           product={page?.currentOffer}
-          onEdit={
-            page.currentOffer
-              ? () => {
-                  if (!page.currentOffer) {
-                    return;
-                  }
-                  const formData = toOfferFormData(page?.currentOffer);
+          onEdit={() => {
+            if (!page.currentOffer) {
+              return;
+            }
+            const formData = toOfferFormData(page?.currentOffer);
 
-                  console.log('PageProductOverviewLeftSide', formData);
+            console.log('PageProductOverviewLeftSide', formData);
 
-                  const m = modalS.handleOpenModal({
-                    Modal: Modals.FormCreateOffer,
-                    props: {
-                      edit: true,
-                      _id: page?.currentOffer?._id,
-                      defaultState: formData,
-                      onSubmit: (d, o) => {
-                        productsS
-                          .updateById({
-                            data: { ...d, refreshCurrent: true },
-                            onSuccess: () => {
-                              o?.closeAfterSave && m?.onClose();
-                              ToastService.success(`Updated product`);
-                            },
-                          })
-                          .finally();
+            const m = modalS.handleOpenModal({
+              Modal: Modals.FormCreateOffer,
+              props: {
+                edit: true,
+                _id: page?.currentOffer?._id,
+                defaultState: formData,
+                title: t('Edit offer'),
+                onSubmit: (d, o) => {
+                  productsS
+                    .updateById({
+                      data: { ...d, refreshCurrent: true },
+                      onSuccess: () => {
+                        o?.closeAfterSave && m?.onClose();
+                        ToastService.success(`Updated product`);
                       },
-                    },
-                  });
-                }
-              : undefined
-          }
-          onRefresh={
-            loading
-              ? undefined
-              : () => {
-                  const handler = ToastService.createLoader('Refreshing...').open();
-                  page.currentOffer?._id &&
-                    productsS
-                      .getProductFullInfo({
-                        data: { _id: page.currentOffer?._id },
-                        onSuccess: () => {
-                          handler.close();
-                          ToastService.success(`Data refreshed`);
-                        },
-                        onLoading: setLoading,
-                      })
-                      .finally(handler.close);
-                }
-          }
+                    })
+                    .finally();
+                },
+              },
+            });
+          }}
+          onRefresh={() => {
+            if (!page.currentOffer?._id) return;
+
+            productsS.getProductFullInfo({
+              data: { _id: page.currentOffer?._id },
+              onLoading: loaders.onLoading('offer'),
+            });
+          }}
           onOpenRightSide={toggleRightSideVisibility}
         />
 

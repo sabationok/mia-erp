@@ -3,12 +3,12 @@ import { OfferDimensionsFormArea } from '../Forms/offers/OfferDimensionsFormArea
 import ModalBase from './index';
 import { t } from '../../lang';
 import { toOfferFormData } from '../../utils';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IProductFullFormData, OfferEntity, OfferTypeEnum } from '../../types/offers/offers.types';
 import { OfferMeasurementFormArea } from 'components/Forms/offers/OfferMeasurementFormArea';
 import { OfferBaseInfoFormArea } from '../Forms/offers/OfferBaseInfoFormArea';
 import FlexBox from '../atoms/FlexBox';
-import ModalFilter from '../atoms/ModalFilter';
+import TabSelector from '../atoms/TabSelector';
 import { productsFilterOptions } from '../../data/modalFilterOptions.data';
 import { OfferFormPropertiesArea } from '../Forms/offers/OfferFormPropertiesArea';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
@@ -30,14 +30,23 @@ const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id }) => {
   const [current, setCurrent] = useState<IProductFullFormData>();
   const loaders = useLoaders<OfferLoadersKey, OfferLoadersData>();
   const router = useAppRouter();
-  const currenOffer = useCurrentOffer();
+  const currenOffer = useCurrentOffer({ id: router.query?.offerId });
+
+  useEffect(() => {
+    router.push({ query: {} });
+
+    return () => {
+      router.push({ query: {} });
+    };
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <ModalBase
       title={t('Create offer')}
       onClose={onClose}
       extraHeader={
-        <ModalFilter
+        <TabSelector
           defaultValue={current?.type ?? OfferTypeEnum.GOODS}
           filterOptions={productsFilterOptions}
           onOptSelect={o => setCurrent(prev => ({ ...prev, type: o.value }))}
@@ -56,33 +65,17 @@ const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id }) => {
             type={current?.type}
           />
 
-          <OfferFormCategoriesArea
-            offer={loaders.state?.offer}
-            defaultValues={current?.categories}
-            disabled={!current}
-          />
-
           {currenOffer && (
             <>
-              <OfferFormPropertiesArea
-                offer={loaders.state?.offer}
-                defaultValues={current?.properties}
-                disabled={!current}
-              />
+              <OfferFormCategoriesArea offer={currenOffer} defaultValues={current?.categories} disabled={!current} />
 
-              <OfferDimensionsFormArea
-                offer={loaders.state?.offer}
-                defaultValues={current?.dimensions}
-                disabled={!current}
-              />
+              <OfferFormPropertiesArea offer={currenOffer} defaultValues={current?.properties} disabled={!current} />
 
-              <OfferMeasurementFormArea
-                offer={loaders.state?.offer}
-                defaultValues={current?.measurement}
-                disabled={!current}
-              />
+              <OfferDimensionsFormArea offer={currenOffer} defaultValues={current?.dimensions} disabled={!current} />
 
-              <OfferFormImagesArea offer={loaders.state?.offer} defaultValues={current?.images} disabled={!current} />
+              <OfferMeasurementFormArea offer={currenOffer} defaultValues={current?.measurement} disabled={!current} />
+
+              <OfferFormImagesArea offer={currenOffer} defaultValues={current?.images} disabled={!current} />
             </>
           )}
         </FlexBox>

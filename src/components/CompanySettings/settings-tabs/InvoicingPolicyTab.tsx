@@ -17,7 +17,7 @@ import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { useCallback, useState } from 'react';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import ModalFilter from '../../atoms/ModalFilter';
+import TabSelector from '../../atoms/TabSelector';
 import { useForm } from 'react-hook-form';
 
 export interface InvoicingPolicyTabProps extends CompanySettingsTabBaseProps {
@@ -74,7 +74,7 @@ const InvoicingPolicyTab = ({ onClose, onSubmit }: InvoicingPolicyTabProps) => {
 
   return (
     <>
-      <ModalFilter filterOptions={tabs} onChangeIndex={index => setCurrent(tabs[index].value)} />
+      <TabSelector filterOptions={tabs} onChangeIndex={index => setCurrent(tabs[index].value)} />
 
       <FlexForm flex={1} overflow={'hidden'} onSubmit={form.handleSubmit(onValid)}>
         <FlexBox overflow={'auto'} flex={1} fillWidth padding={'0 4px 8px'}>

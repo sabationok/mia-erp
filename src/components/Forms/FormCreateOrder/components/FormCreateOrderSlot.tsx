@@ -7,7 +7,7 @@ import TableList from '../../../TableList/TableList';
 import { AppQueryParams, createApiCall, OffersApi, WarehousesApi } from '../../../../api';
 import { t } from '../../../../lang';
 import { enumToFilterOptions } from '../../../../utils/fabrics';
-import ModalFilter from '../../../atoms/ModalFilter';
+import TabSelector from '../../../atoms/TabSelector';
 import { IVariationTableData } from '../../../../types/offers/variations.types';
 import { OfferPriceEntity } from '../../../../types/price-management/priceManagement.types';
 import styled from 'styled-components';
@@ -271,7 +271,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
       <ModalHeader title={t('Select product')} onBackPress={onClose} />
 
       <Content fillWidth flex={1} overflow={'hidden'}>
-        <ModalFilter filterOptions={stepsLong} asStepper currentIndex={stepIdx} />
+        <TabSelector filterOptions={stepsLong} asStepper currentIndex={stepIdx} />
 
         <TableList {...tableConfig} isLoading={isLoading} />
       </Content>

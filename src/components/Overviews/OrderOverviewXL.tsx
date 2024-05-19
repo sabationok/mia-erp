@@ -9,7 +9,7 @@ import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { t } from '../../lang';
 import { useAppParams } from '../../hooks';
 import { enumToFilterOptions } from '../../utils';
-import ModalFilter from '../atoms/ModalFilter';
+import TabSelector from '../atoms/TabSelector';
 import OrderOverviewInfoTab from './tabs/OrderOverviewInfoTab';
 
 export interface OrderOverviewXLProps {
@@ -70,7 +70,7 @@ const OrderOverviewXL: React.FC<OrderOverviewXLProps> = p => {
       />
 
       <Content flex={1} fillWidth overflow={'auto'}>
-        <ModalFilter
+        <TabSelector
           filterOptions={tabs}
           optionProps={{ fitContentH: true }}
           onOptSelect={(_o, _v, i) => setCurrentTab(i)}

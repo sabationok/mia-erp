@@ -1,7 +1,7 @@
 import { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { enumToFilterOptions, toInputValueDate, useStepsHandler } from '../../../utils';
-import ModalFilter from '../../atoms/ModalFilter';
+import TabSelector from '../../atoms/TabSelector';
 import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
@@ -10,7 +10,7 @@ import { t } from '../../../lang';
 import StepsController from '../components/StepsController';
 import OrderGroupsStuffingStep from './steps/OrderGroupsStuffingStep';
 import OrderInfoStep from './steps/OrderInfoStep';
-import { ICreateOrderInfoFormState, OrderEntity, IOrderTempSlot } from '../../../types/orders/orders.types';
+import { ICreateOrderInfoFormState, IOrderTempSlot, OrderEntity } from '../../../types/orders/orders.types';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { ToastService } from '../../../services';
 import _ from 'lodash';
@@ -139,7 +139,7 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onClose }
         <ModalHeader title={t('Create orders group by warehouse')} onBackPress={onClose} />
 
         <Content fillWidth flex={1} overflow={'hidden'}>
-          <ModalFilter filterOptions={steps} asStepper currentIndex={stepIdx} optionProps={{ fitContentH: true }} />
+          <TabSelector filterOptions={steps} asStepper currentIndex={stepIdx} optionProps={{ fitContentH: true }} />
 
           {renderStep}
         </Content>

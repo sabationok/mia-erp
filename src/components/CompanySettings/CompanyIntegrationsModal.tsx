@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../utils/fabrics';
 import styled from 'styled-components';
 import { ModalHeader } from '../atoms';
-import ModalFilter from '../atoms/ModalFilter';
+import TabSelector from '../atoms/TabSelector';
 import ModalFooter from '../Modal/ModalFooter';
 import InputIntegrationsTab from './integrations/InputIntegrationsTab';
 import { IntegrationTypeEnum } from '../../types/integrations.types';
@@ -30,7 +30,7 @@ const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose,
     <Container overflow={'hidden'} fillWidth>
       <StHeader title={'External services'} onClose={onClose} />
 
-      <ModalFilter filterOptions={integrationTypeTabs} onOptSelect={info => setIntegrationType(info?.value)} />
+      <TabSelector filterOptions={integrationTypeTabs} onOptSelect={info => setIntegrationType(info?.value)} />
 
       <FlexBox overflow={'auto'} flex={1} fillWidth>
         {renderModalContent}

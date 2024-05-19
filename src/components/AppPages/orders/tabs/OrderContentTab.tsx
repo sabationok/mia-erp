@@ -1,5 +1,5 @@
 import FlexBox from '../../../atoms/FlexBox';
-import ModalFilter from '../../../atoms/ModalFilter';
+import TabSelector from '../../../atoms/TabSelector';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { useOrdersSelector } from '../../../../redux/selectors.store';
 import { useEffect, useMemo, useState } from 'react';
@@ -51,7 +51,7 @@ const OrderContentTab: React.FC<OrderContentTabProps> = p => {
   return (
     <FlexBox fillWidth overflow={'hidden'} flex={1}>
       <FlexBox fillWidth>
-        <ModalFilter
+        <TabSelector
           filterOptions={productsFilterOptions}
           currentIndex={currentTab}
           onOptSelect={(_o, _v, i) => {

@@ -1,9 +1,9 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { OrderEntity, IOrderSlot } from '../../../types/orders/orders.types';
+import { IOrderSlot, OrderEntity } from '../../../types/orders/orders.types';
 import { useAppForm } from '../../../hooks';
 import { useCallback, useMemo, useState } from 'react';
-import ModalFilter from '../../atoms/ModalFilter';
+import TabSelector from '../../atoms/TabSelector';
 import OrderSlotsList from './components/OrderSlotsList';
 import { OnlyUUID } from '../../../redux/global.types';
 import { createStepsChecker, enumToFilterOptions } from '../../../utils';
@@ -63,7 +63,7 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
   }, [currentTab, content, handleSelect, handleRemove]);
 
   const renderFilter = useMemo(() => {
-    return <ModalFilter filterOptions={FormCreateOrderTabs} onChangeIndex={setCurrentTab} currentIndex={currentTab} />;
+    return <TabSelector filterOptions={FormCreateOrderTabs} onChangeIndex={setCurrentTab} currentIndex={currentTab} />;
   }, [currentTab]);
 
   return (

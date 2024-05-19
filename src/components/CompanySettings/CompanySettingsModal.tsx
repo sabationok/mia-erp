@@ -1,7 +1,7 @@
 import { ModalFormProps } from '../ModalForm';
 import { useEffect, useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../utils/fabrics';
-import ModalFilter from '../atoms/ModalFilter';
+import TabSelector from '../atoms/TabSelector';
 import { CompanySettingsTabBaseProps } from './settings-tabs/companySettingsTabs.types';
 import DeliveryPolicyTab from './settings-tabs/DeliveryPolicyTab';
 import InvoicingPolicyTab from './settings-tabs/InvoicingPolicyTab';
@@ -58,7 +58,7 @@ const CompanySettingsModal: React.FC<CompanySettingsProps> = ({ onClose, ...prop
     <ModalBox>
       <OverlayHeader title={'Company settings'} onClosePress={onClose} />
 
-      <ModalFilter
+      <TabSelector
         filterOptions={tabs}
         preventFilter={true}
         onOptSelect={(_, v) => {

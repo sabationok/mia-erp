@@ -26,7 +26,6 @@ const UserInfo: React.FC<IUserInfoProps> = ({ isOpen, onClose }) => {
   }
 
   const isPermission = useMemo(() => !!permission || !!permission_token, [permission, permission_token]);
-  console.log({ user });
   return (
     <Backdrop isOpen={isOpen} transitionDelay={isOpen ? '' : '250ms'} onClick={onBackdropClick}>
       <MainList>

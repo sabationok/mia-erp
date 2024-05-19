@@ -8,7 +8,7 @@ import InputText from '../atoms/Inputs/InputText';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import ModalForm, { ModalFormProps } from '../ModalForm';
-import { FilterOpt } from '../atoms/ModalFilter';
+import { TabOption } from '../atoms/TabSelector';
 import { OfferPriceEntity } from '../../types/price-management/priceManagement.types';
 
 export interface SelectPriceListItemProps
@@ -19,7 +19,7 @@ export interface SelectPriceListItemProps
   searchBy?: AppQueryParams['searchBy'];
 }
 
-const productSelectorFilterOptions: (FilterOpt & { placeholder?: string })[] = [
+const productSelectorFilterOptions: (TabOption & { placeholder?: string })[] = [
   { label: 'By label', value: 'label', placeholder: 'Введіть назву продукту' },
   { label: 'By sku', value: 'sku', placeholder: 'Введіть артикул продукту' },
   // { label: 'By warehouse', value: 'warehouse', placeholder: 'Введіть номер складу' },

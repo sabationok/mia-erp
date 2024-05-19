@@ -6,8 +6,6 @@ import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppService
 import PageCurrentProductProvider from './PageCurrentProductProvider';
 import PageProductOverviewRightSide from './PageProductOverviewRightSide';
 import PageProductOverviewLeftSide from './PageProductOverviewLeftSide';
-import { useAppParams } from '../../../hooks';
-import { useProductsSelector } from '../../../redux/selectors.store';
 import { BaseAppPageProps } from '../index';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { LoadersProvider, useLoadersProvider } from '../../../Providers/Loaders/LoaderProvider';
@@ -24,27 +22,10 @@ const PageProductOverview: React.FC<Props> = ({ path }) => {
   const loaders = useLoaders<OfferOverviewLoaderKey>({ offer: { content: t('Loading product info') } });
   const [isRightSideVisible, setIsRightSideVisible] = useState<boolean>(false);
   const productsS = useAppServiceProvider()[ServiceName.products];
-  const { productId } = useAppParams();
-  const { currentOffer } = useProductsSelector();
 
   const toggleRightSide = useCallback(() => {
     setIsRightSideVisible(p => !p);
   }, []);
-
-  useEffect(() => {
-    if (loaders?.isLoading?.offer) return;
-    if (productId && productId !== currentOffer?._id) {
-      const close = loaders.show('offer');
-
-      productsS
-        .getProductFullInfo({
-          data: { _id: productId },
-          onLoading: loaders.onLoading('offer'),
-        })
-        .finally(close);
-    }
-    // eslint-disable-next-line
-  }, [productId]);
 
   useEffect(() => {
     return () => {
@@ -55,17 +36,17 @@ const PageProductOverview: React.FC<Props> = ({ path }) => {
   }, []);
 
   return (
-    <AppGridPage path={path}>
+    <LoadersProvider value={loaders}>
       <PageCurrentProductProvider>
-        <LoadersProvider value={loaders}>
+        <AppGridPage path={path}>
           <Page>
             <PageProductOverviewLeftSide toggleRightSideVisibility={toggleRightSide} />
 
             <PageProductOverviewRightSide isVisible={isRightSideVisible} toggleVisibility={toggleRightSide} />
           </Page>
-        </LoadersProvider>
+        </AppGridPage>
       </PageCurrentProductProvider>
-    </AppGridPage>
+    </LoadersProvider>
   );
 };
 const Page = styled.div`

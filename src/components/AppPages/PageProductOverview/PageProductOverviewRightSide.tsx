@@ -2,7 +2,7 @@ import { usePageCurrentProduct } from './PageCurrentProductProvider';
 import { useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import { Text } from '../../atoms/Text';
-import ModalFilter, { FilterSelectHandler } from '../../atoms/ModalFilter';
+import TabSelector, { FilterSelectHandler } from '../../atoms/TabSelector';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import VariationsTab from './tabs/VariationsTab';
@@ -31,20 +31,20 @@ export interface PageProductOverviewRightSideProps {
 // }
 const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> = ({ isVisible, toggleVisibility }) => {
   const page = usePageCurrentProduct();
+
   const [current, setCurrent] = useState<RightSideOptionEnum>(RightSideOptionEnum.Variations);
 
   const renderTab = useMemo(() => {
-    if (current === RightSideOptionEnum.Variations) {
-      return <VariationsTab withActions />;
+    if (!page.currentOffer) {
+      return null;
     }
-
-    if (current === RightSideOptionEnum.Prices) {
-      return <PricesTab withActions />;
-    }
-    if (current === RightSideOptionEnum.Warehousing) {
-      return <WarehousingTab withActions />;
-    }
-  }, [current]);
+    const tabs: Record<RightSideOptionEnum, React.ReactNode> = {
+      [RightSideOptionEnum.Prices]: <WarehousingTab withActions />,
+      [RightSideOptionEnum.Warehousing]: <PricesTab withActions />,
+      [RightSideOptionEnum.Variations]: <VariationsTab withActions />,
+    };
+    return tabs?.[current] ?? null;
+  }, [current, page.currentOffer]);
 
   const filterHandler: FilterSelectHandler<RightSideOptionEnum> = (_, value, index) => {
     setCurrent(value);
@@ -68,7 +68,7 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
       )}
 
       <TabBox overflow={'hidden'} fillWidth flex={1}>
-        <ModalFilter filterOptions={toggleOptions} defaultValue={current} onOptSelect={filterHandler} preventFilter />
+        <TabSelector filterOptions={toggleOptions} defaultValue={current} onOptSelect={filterHandler} preventFilter />
 
         {renderTab}
       </TabBox>

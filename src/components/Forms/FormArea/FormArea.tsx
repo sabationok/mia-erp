@@ -5,6 +5,8 @@ import FormAreaFooter from './FormAreaFooter';
 
 export interface FormAreaProps {
   label?: string;
+  hideLabel?: boolean;
+
   children?: React.ReactNode;
   onSubmit?: AppSubmitHandler;
   onReset?: () => void;
@@ -23,16 +25,20 @@ export const FormArea = ({
   onSubmit,
   isLoading,
   onReset,
+  hideLabel,
 }: FormAreaProps) => {
   return (
     <FlexForm fillWidth onSubmit={onSubmit} onReset={onReset}>
-      <FlexBox padding={'8px 6px'} overflow={'hidden'}>
-        {renderTitle || (
-          <Text $size={14} $weight={600}>
-            {label}
-          </Text>
-        )}
-      </FlexBox>
+      {!hideLabel && (
+        <FlexBox padding={'8px 6px'} overflow={'hidden'}>
+          {renderTitle || (
+            <Text $size={14} $weight={600}>
+              {label}
+            </Text>
+          )}
+        </FlexBox>
+      )}
+
       {children}
 
       {renderFooter || (

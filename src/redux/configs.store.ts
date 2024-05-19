@@ -54,7 +54,7 @@ export const persistorConfigs: Record<
   products: {
     key: 'products',
     storage: storageSession,
-    whitelist: ['products', 'currentProduct', 'properties'],
+    whitelist: ['products', 'currentProduct', 'properties', 'dataMap'],
   },
   orders: {
     key: 'orders',

@@ -1,8 +1,8 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { OrderEntity, IOrderSlot, OrderStatusEnum } from '../types/orders/orders.types';
+import { IOrderSlot, OrderEntity, OrderStatusEnum } from '../types/orders/orders.types';
 import { t } from '../lang';
 import { SelectItem } from '../components/TableList/tableTypes.types';
-import { FilterOption } from '../components/atoms/ModalFilter';
+import { FilterOption } from '../components/atoms/TabSelector';
 import { getStatusesByEnum } from './statuses.data';
 import { numberWithSpaces } from '../utils';
 import { getBasePriceColumns } from './priceManagement.data';

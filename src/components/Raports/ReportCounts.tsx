@@ -4,7 +4,7 @@ import ReportList, { ReportListItemProps } from './ReportList';
 import ModalForm from '../ModalForm';
 import { IReportBaseProps } from './report.types';
 import FlexBox from '../atoms/FlexBox';
-import { FilterOpt } from '../atoms/ModalFilter';
+import { TabOption } from '../atoms/TabSelector';
 import { numberWithSpaces } from 'utils';
 import { CountType } from 'redux/directories/counts.types';
 import { CurrencyCode } from '../../types/finances/transactions.types';
@@ -16,7 +16,7 @@ export interface IReportCountsProps<V = any, D = any> extends IReportBaseProps<u
 }
 
 const ReportCounts: React.FC<IReportCountsProps<CountType>> = ({ entryList, filterOptions, currency, ...props }) => {
-  const [filterOpt, setFilterOpt] = useState<Partial<FilterOpt<CountType>>>({});
+  const [filterOpt, setFilterOpt] = useState<Partial<TabOption<CountType>>>({});
   const countedTotals = useMemo(() => {
     let totals: Record<CountType, number> = {
       ACTIVE: 0,
@@ -56,7 +56,7 @@ const ReportCounts: React.FC<IReportCountsProps<CountType>> = ({ entryList, filt
   //   return data;
   // }, [entryList]);
 
-  function handleSelect(option: FilterOpt<CountType>, value: CountType) {
+  function handleSelect(option: TabOption<CountType>, value: CountType) {
     setFilterOpt(option);
   }
 

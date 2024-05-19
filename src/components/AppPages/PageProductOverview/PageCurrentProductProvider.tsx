@@ -1,8 +1,9 @@
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
-import { useProductsSelector } from '../../../redux/selectors.store';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { nanoid } from '@reduxjs/toolkit';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import { useAppParams, useCurrentOffer } from '../../../hooks';
+import { useOfferOverviewLoaders } from './PageProductOverview';
 
 export interface PageCurrentProductProviderProps {
   children?: React.ReactNode;
@@ -46,8 +47,29 @@ export const PageCurrentProductCTX = createContext({});
 export const usePageCurrentProduct = () => useContext(PageCurrentProductCTX) as PageCurrentProductProviderValue;
 
 const PageCurrentProductProvider: React.FC<PageCurrentProductProviderProps> = ({ children }) => {
-  const { currentOffer } = useProductsSelector();
   const service = useAppServiceProvider()[ServiceName.products];
+  const offerId = useAppParams()?.productId;
+  const currentOffer = useCurrentOffer({ id: offerId });
+  const productsS = useAppServiceProvider()[ServiceName.products];
+
+  const loaders = useOfferOverviewLoaders();
+  useEffect(() => {
+    if (loaders?.isLoading?.offer) return;
+
+    if (offerId && offerId !== currentOffer?._id) {
+      const close = loaders.show('offer');
+
+      productsS
+        .getProductFullInfo({
+          data: { _id: offerId },
+          onLoading: loaders.onLoading('offer'),
+        })
+        .finally(close);
+    }
+    // eslint-disable-next-line
+  }, [offerId]);
+
+  // const { currentOffer } = useProductsSelector();
   const [overlayStack, setOverlayStack] = useState<OverlayStackItemData[]>([]);
 
   const clearCurrent = useCallback(() => {
@@ -64,7 +86,7 @@ const PageCurrentProductProvider: React.FC<PageCurrentProductProviderProps> = ({
 
   const createOverlayComponent: OverlayHandler = useCallback(
     params => {
-      const id = `${params.RenderComponent.name}_${nanoid(8)}`;
+      const id = `${params.RenderComponent?.name}_${nanoid(8)}`;
 
       if (typeof params.RenderComponent === 'function') {
         setOverlayStack(prev => {
@@ -105,15 +127,15 @@ const PageCurrentProductProvider: React.FC<PageCurrentProductProviderProps> = ({
 
   const CTX = useMemo(
     (): PageCurrentProductProviderValue => ({
-      currentOffer,
       createOverlayComponent,
       overlayStack,
       removeStackItem,
       getOverlayStack,
       clearStack,
       clearCurrent,
+      currentOffer,
     }),
-    [currentOffer, createOverlayComponent, overlayStack, removeStackItem, getOverlayStack, clearStack, clearCurrent]
+    [createOverlayComponent, overlayStack, removeStackItem, getOverlayStack, clearStack, clearCurrent, currentOffer]
   );
 
   return <PageCurrentProductCTX.Provider value={CTX}>{children}</PageCurrentProductCTX.Provider>;

@@ -4,7 +4,7 @@ import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import { IDirInTreeProps, IDirItemBase } from '../../../types/dir.types';
 import { useFilteredLisData } from 'hooks';
 
-import { FilterOpt } from '../../atoms/ModalFilter';
+import { TabOption } from '../../atoms/TabSelector';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
@@ -68,7 +68,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
     return actionsCreator({ modalService, type: current, service, dirType });
   }, [actionsCreator, current, dirType, modalService, service]);
 
-  function handleFilterData({ value }: FilterOpt) {
+  function handleFilterData({ value }: TabOption) {
     value && setCurrent(value);
   }
 

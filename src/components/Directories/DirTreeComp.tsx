@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
 import { useDirService, useFilteredLisData } from '../../hooks';
 import { useDirectorySelector } from '../../redux/selectors.store';
-import { FilterOpt } from '../atoms/ModalFilter';
+import { TabOption } from '../atoms/TabSelector';
 import DirListItem from './DirList/DirListItem';
 import FlexBox from '../atoms/FlexBox';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
@@ -51,7 +51,7 @@ const DirTreeComp = ({
     // eslint-disable-next-line
   }, []);
 
-  function handleFilterData({ value }: FilterOpt) {
+  function handleFilterData({ value }: TabOption) {
     value && setCurrent(value);
   }
 

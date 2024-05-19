@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useModalProvider } from '../ModalProvider/ModalProvider';
 import { useFilteredLisData } from '../../hooks';
 import { useFinancesSelector } from '../../redux/selectors.store';
-import ModalFilter, { FilterOpt, FilterOption } from '../atoms/ModalFilter';
+import TabSelector, { FilterOption, TabOption } from '../atoms/TabSelector';
 import DirListItem from './DirList/DirListItem';
 import FlexBox from '../atoms/FlexBox';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
@@ -56,7 +56,7 @@ const DirBankAccountsComp = ({
     // eslint-disable-next-line
   }, []);
 
-  function handleFilterData({ value }: FilterOpt) {
+  function handleFilterData({ value }: TabOption) {
     value && setCurrent(value);
   }
 
@@ -85,7 +85,7 @@ const DirBankAccountsComp = ({
       }
     >
       <FlexBox>
-        <ModalFilter optionProps={{ fitContentH: true }} onOptSelect={handleFilterData} filterOptions={filterOptions} />
+        <TabSelector optionProps={{ fitContentH: true }} onOptSelect={handleFilterData} filterOptions={filterOptions} />
       </FlexBox>
 
       <FlexBox overflow={'auto'}>

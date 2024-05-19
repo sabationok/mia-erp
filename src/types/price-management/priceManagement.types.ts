@@ -1,5 +1,5 @@
 import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/global.types';
-import { FilterOpt } from '../../components/atoms/ModalFilter';
+import { TabOption } from '../../components/atoms/TabSelector';
 import { OfferEntity } from '../offers/offers.types';
 import { VariationEntity } from '../offers/variations.types';
 import { AppQueryParams } from '../../api';
@@ -22,7 +22,7 @@ export type PriceListStatus = 'rejected' | 'approved' | 'pending' | 'error' | 's
 
 export type PriceListType = 'purchases' | 'sales';
 
-export type PriceListFilterOption = FilterOpt<PriceListType>;
+export type PriceListFilterOption = TabOption<PriceListType>;
 
 export interface PriceListDto
   extends WithPeriod,

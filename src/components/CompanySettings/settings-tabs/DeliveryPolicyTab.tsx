@@ -10,7 +10,7 @@ import { useState } from 'react';
 import ModalFooter from '../../Modal/ModalFooter';
 import { _enumToTabs } from '../../../utils';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
-import ModalFilter from '../../atoms/ModalFilter';
+import TabSelector from '../../atoms/TabSelector';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
@@ -74,7 +74,7 @@ const DeliveryPolicyTab = ({ onClose, onSubmit }: DeliveryPolicyTabProps) => {
 
   return (
     <>
-      <ModalFilter filterOptions={tabs} onChangeIndex={index => setCurrent(tabs[index].value)} />
+      <TabSelector filterOptions={tabs} onChangeIndex={index => setCurrent(tabs[index].value)} />
 
       <FlexForm flex={1} overflow={'hidden'} onSubmit={form.handleSubmit(onValid)}>
         <FlexBox overflow={'auto'} flex={1} fillWidth padding={'0 8px 8px'}>

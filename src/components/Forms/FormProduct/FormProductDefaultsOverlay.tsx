@@ -6,7 +6,7 @@ import { ModalHeader, OverlayFooter } from '../../atoms';
 import FlexBox from '../../atoms/FlexBox';
 import { useAppForm } from '../../../hooks';
 import { enumToFilterOptions } from '../../../utils/fabrics';
-import ModalFilter from '../../atoms/ModalFilter';
+import TabSelector from '../../atoms/TabSelector';
 import { useCallback, useMemo, useState } from 'react';
 
 import PricesTab from '../../AppPages/PageProductOverview/tabs/PricesTab';
@@ -123,7 +123,7 @@ const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({
       <ModalHeader onBackPress={onClose} title={t('Default values')} canSubmit={canSubmit} />
 
       <Content flex={1} fillWidth>
-        <ModalFilter filterOptions={tabs} currentIndex={currentTabIdx} onChangeIndex={setCurrentTabIdx} /> {renderTab}
+        <TabSelector filterOptions={tabs} currentIndex={currentTabIdx} onChangeIndex={setCurrentTabIdx} /> {renderTab}
       </Content>
 
       <OverlayFooter onCreatePress={() => {}} canSubmit={canSubmit} />

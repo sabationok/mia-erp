@@ -4,7 +4,7 @@ import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useAppForm } from '../../../hooks';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { usePermissionsSelector, useWarehousesSelector } from '../../../redux/selectors.store';
-import { FilterOption } from '../../atoms/ModalFilter';
+import { FilterOption } from '../../atoms/TabSelector';
 import FlexBox from '../../atoms/FlexBox';
 import styled from 'styled-components';
 import { IWarehouse, WarehousingSettingsFormData } from '../../../types/warehouses.types';

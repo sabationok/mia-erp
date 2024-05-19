@@ -1,4 +1,4 @@
-import { FilterOption } from './ModalFilter';
+import { FilterOption } from './TabSelector';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { checks } from '../../utils';
 import FlexBox from './FlexBox';

@@ -10,7 +10,7 @@ import { OfferBaseInfoFormArea } from '../Forms/offers/OfferBaseInfoFormArea';
 import FlexBox from '../atoms/FlexBox';
 import { AppLoaderSpiner } from '../atoms/AppLoaderSpiner';
 import { Text } from '../atoms/Text';
-import ModalFilter from '../atoms/ModalFilter';
+import TabSelector from '../atoms/TabSelector';
 import { productsFilterOptions } from '../../data/modalFilterOptions.data';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { OfferLoadersData, OfferLoadersKey } from './CreateOfferModal';
@@ -58,7 +58,7 @@ const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id, copy })
       title={!copy ? t('Update offer') : t('Copy offer')}
       onClose={onClose}
       extraHeader={
-        <ModalFilter
+        <TabSelector
           filterOptions={productsFilterOptions}
           defaultValue={state?.formData?.type ?? OfferTypeEnum.GOODS}
           onOptSelect={o => {

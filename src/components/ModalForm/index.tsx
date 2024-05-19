@@ -1,5 +1,5 @@
 import ModalHeader from './ModalHeader';
-import ModalFilter, { ModalFormFilterProps } from '../atoms/ModalFilter';
+import TabSelector, { ModalFormFilterProps } from '../atoms/TabSelector';
 import ModalFooter from '../Modal/ModalFooter';
 
 import styled from 'styled-components';
@@ -75,7 +75,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
     <ModalFormContainer className="modalForm" onSubmit={handleSubmit} onReset={handleReset} {...props}>
       <ModalHeader title={title}>
         {filterOptions && (
-          <ModalFilter
+          <TabSelector
             onOptSelect={onOptSelect}
             filterOptions={filterOptions}
             preventFilter={preventFilter}

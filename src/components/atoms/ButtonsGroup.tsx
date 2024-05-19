@@ -2,7 +2,7 @@ import FlexBox from './FlexBox';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import ButtonIcon from './ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
-import { FilterOption } from './ModalFilter';
+import { FilterOption } from './TabSelector';
 import { isUndefined } from 'lodash';
 import { Text } from './Text';
 

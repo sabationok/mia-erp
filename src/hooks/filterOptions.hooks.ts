@@ -1,6 +1,6 @@
 import { useWarehousesSelector } from '../redux/selectors.store';
 import { useMemo } from 'react';
-import { FilterOption } from '../components/atoms/ModalFilter';
+import { FilterOption } from '../components/atoms/TabSelector';
 import { IWarehouse } from '../types/warehouses.types';
 import { OnlyUUID } from '../redux/global.types';
 import { getIdRef } from '../utils/data-transform';

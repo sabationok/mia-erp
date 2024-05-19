@@ -6,7 +6,7 @@ import { ExternalServiceTypeEnum, ExtServiceBase } from '../../../types/integrat
 import PaymentIntegrationsTab from './nested_tabs/PaymentIntegrationsTab';
 import DeliveryIntegrationsTab from './nested_tabs/DeliveryIntegrationsTab';
 import CommunicationIntegrationsTab from './nested_tabs/CommunicationIntegrationsTab';
-import ModalFilter from '../../atoms/ModalFilter';
+import TabSelector from '../../atoms/TabSelector';
 import FlexBox from '../../atoms/FlexBox';
 import { useExtServicesQuery } from './useExtServicesQuery.hook';
 import FiscalizationIntegrationsTab from './nested_tabs/FiscalizationIntegrationsTab';
@@ -74,13 +74,13 @@ const InputIntegrationsTab: React.FC<InputIntegrationsTabProps> = ({ ...props })
 
   return (
     <>
-      <ModalFilter
+      <TabSelector
         optionProps={{ fitContentH: true }}
         filterOptions={tabs}
         onOptSelect={info => setCurrentType(info?.value)}
       />
 
-      <ModalFilter
+      <TabSelector
         optionProps={{ fitContentH: true }}
         filterOptions={filteredProviders}
         onOptSelect={info => setProviderType(info?.value)}

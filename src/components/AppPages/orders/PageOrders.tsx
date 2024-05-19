@@ -12,7 +12,7 @@ import { OrderEntity, OrderStatusEnum } from '../../../types/orders/orders.types
 import useOrdersActionsCreatorHook from '../../../hooks/useOrdersActionsCreator.hook';
 import { BaseAppPageProps } from '../index';
 import { enumToFilterOptions } from '../../../utils';
-import ModalFilter, { FilterOption } from '../../atoms/ModalFilter';
+import TabSelector, { FilterOption } from '../../atoms/TabSelector';
 import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
@@ -68,7 +68,7 @@ const PageOrders: React.FC<any> = (props: Props) => {
   return (
     <AppGridPage path={props.path}>
       <Page>
-        <ModalFilter
+        <TabSelector
           style={{ height: 52 }}
           filterOptions={ordersFilterOptions}
           renderLabel={renderLabel}

@@ -11,7 +11,7 @@ import { OverlayHeader } from '../Forms/FormProduct/components';
 import { checks, enumToFilterOptions, toAppDateFormat } from '../../utils';
 import { useAppParams } from '../../hooks';
 import { IMeasurement } from '../../types/utils.types';
-import ModalFilter from '../atoms/ModalFilter';
+import TabSelector from '../atoms/TabSelector';
 import { OverviewCellProps } from './components/overview-types';
 import { OverviewCells } from './components/Cells';
 
@@ -84,7 +84,7 @@ const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }
         }}
       />
 
-      <ModalFilter
+      <TabSelector
         optionProps={{ fitContentH: true }}
         filterOptions={ProductOverviewTabsList}
         onOptSelect={option => {

@@ -3,11 +3,11 @@ import { OfferPriceEntity } from '../../types/price-management/priceManagement.t
 import { ICompany } from '../../types/companies.types';
 import { IManager } from '../../types/auth.types';
 import { ISupplierDirItem } from '../../types/dir.types';
-import { FilterOpt } from '../../components/atoms/ModalFilter';
+import { TabOption } from '../../components/atoms/TabSelector';
 import { IWarehouse } from '../../types/warehouses.types';
 import { ICustomerBase } from '../../types/customers.types';
 
-export type RefundTypeFilterOption = FilterOpt;
+export type RefundTypeFilterOption = TabOption;
 
 export enum RefundTypeEnum {
   SIMPLE = 'SIMPLE',

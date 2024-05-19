@@ -4,7 +4,7 @@ import ReportList, { ReportListItemProps } from './ReportList';
 import ModalForm from '../ModalForm';
 import { IReportBaseProps } from './report.types';
 import FlexBox from 'components/atoms/FlexBox';
-import { FilterOpt } from '../atoms/ModalFilter';
+import { TabOption } from '../atoms/TabSelector';
 import { CategoryTypes, TrCategoryTypeEnum } from '../../types/directories.types';
 import styled from 'styled-components';
 import { enumToArray, founder, numberWithSpaces } from '../../utils';
@@ -20,7 +20,7 @@ const ReportCategories: React.FC<IReportCategoriesProps<CategoryTypes>> = ({
   entryList,
   ...props
 }) => {
-  const [filterOpt, setFilterOpt] = useState<Partial<FilterOpt<CategoryTypes>>>({});
+  const [filterOpt, setFilterOpt] = useState<Partial<TabOption<CategoryTypes>>>({});
   const countedTotals = useMemo(() => {
     let totals: Record<CategoryTypes, number> = {
       INCOME: 0,
@@ -63,7 +63,7 @@ const ReportCategories: React.FC<IReportCategoriesProps<CategoryTypes>> = ({
     return data;
   }, [entryList]);
 
-  function handleSelect(option: FilterOpt<CategoryTypes>, value: CategoryTypes) {
+  function handleSelect(option: TabOption<CategoryTypes>, value: CategoryTypes) {
     setFilterOpt(option);
   }
 

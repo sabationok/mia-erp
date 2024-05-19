@@ -9,6 +9,7 @@ import FormAddImageSet, { FormAddImageSetData, formAddImageSetTabs, ImageSetSrcT
 import ImagePreviewSmall from '../../../atoms/ImagePreviewSmall';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import { checks as check } from '../../../../utils';
+import { t } from '../../../../lang';
 
 export interface FormOfferImagesComponentProps {
   onChangeState?: (state: Partial<OfferImageSlotEntity>[]) => void;
@@ -16,6 +17,7 @@ export interface FormOfferImagesComponentProps {
   renderHeader?: React.ReactNode;
   canEditOrder?: boolean;
   onClose?: () => void;
+  hideLabel?: boolean;
   contentContainerStyle?: React.CSSProperties;
   FooterComponent?: React.FC<{ onAddNewImageSetPress: () => void }>;
   HeaderComponent?: React.FC;
@@ -29,6 +31,7 @@ const FormOfferImagesComponent: React.FC<FormOfferImagesComponentProps> = ({
   onClose,
   FooterComponent,
   contentContainerStyle,
+  hideLabel,
 }) => {
   const modalS = useModalService();
 
@@ -222,11 +225,11 @@ const FormOfferImagesComponent: React.FC<FormOfferImagesComponentProps> = ({
           justifyContent={'space-between'}
         >
           <Text $weight={600} $size={14}>
-            {'Фото'}
+            {!hideLabel && t('Images')}
           </Text>
 
           <AddImageSetButton type={'button'} onClick={onClose || handleAddNewSet}>
-            {onClose ? 'Закрити' : 'Додати'}
+            {onClose ? t('Close') : t('Add')}
           </AddImageSetButton>
         </FlexBox>
       )}

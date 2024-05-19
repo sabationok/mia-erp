@@ -6,7 +6,7 @@ import { usePageOverlayService } from '../../atoms/PageOverlayProvider';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { t } from '../../../lang';
 import { OverviewCellProps } from '../components/overview-types';
-import ModalFilter from '../../atoms/ModalFilter';
+import TabSelector from '../../atoms/TabSelector';
 import { _enumToTabs } from '../../../utils';
 import { OverviewCells } from '../components/Cells';
 
@@ -55,7 +55,7 @@ const OrderOverviewInfoTab: React.FC<OrderOverviewInfoTabProps> = _p => {
   );
   return (
     <Box fillWidth flex={1} overflow={'auto'}>
-      <ModalFilter
+      <TabSelector
         optionProps={{ fitContentH: true }}
         filterOptions={tabs}
         onOptSelect={option => {

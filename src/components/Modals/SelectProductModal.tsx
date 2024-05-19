@@ -10,7 +10,7 @@ import InputText from '../atoms/Inputs/InputText';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import ModalForm, { ModalFormProps } from '../ModalForm';
-import { FilterOpt } from '../atoms/ModalFilter';
+import { TabOption } from '../atoms/TabSelector';
 
 export interface SelectProductModalProps extends Omit<ModalFormProps<any, any, OfferEntity>, 'onSubmit' | 'onSelect'> {
   selected?: OfferEntity;
@@ -19,7 +19,7 @@ export interface SelectProductModalProps extends Omit<ModalFormProps<any, any, O
   searchBy?: AppQueryParams['searchBy'];
 }
 
-const productSelectorFilterOptions: (FilterOpt & { placeholder?: string })[] = [
+const productSelectorFilterOptions: (TabOption & { placeholder?: string })[] = [
   { label: 'By label', value: 'label', placeholder: 'Введіть назву продукту' },
   { label: 'By sku', value: 'sku', placeholder: 'Введіть артикул продукту' },
   // { label: 'By warehouse', value: 'warehouse', placeholder: 'Введіть номер складу' },

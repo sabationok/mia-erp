@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { Text } from '../../atoms/Text';
-import ModalFilter, { FilterSelectHandler } from '../../atoms/ModalFilter';
+import TabSelector, { FilterSelectHandler } from '../../atoms/TabSelector';
 import { useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../../utils';
 import { useOrdersSelector } from '../../../redux/selectors.store';
@@ -71,7 +71,7 @@ const PageOrderOverviewTabs = ({ toggleVisibility, isVisible }: PageOrderOvervie
       </Top>
 
       <FlexBox>
-        <ModalFilter filterOptions={toggleOptions} defaultValue={current} onOptSelect={filterHandler} preventFilter />
+        <TabSelector filterOptions={toggleOptions} defaultValue={current} onOptSelect={filterHandler} preventFilter />
       </FlexBox>
 
       {renderTab}

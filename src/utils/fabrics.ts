@@ -1,6 +1,6 @@
 import { ThunkPayload } from '../redux/store.store';
 import { FieldValues } from 'react-hook-form';
-import { FilterOption } from '../components/atoms/ModalFilter';
+import { FilterOption } from '../components/atoms/TabSelector';
 import { t } from '../lang';
 
 function createThunkPayload<SD extends FieldValues = any, RD = any, E = any>(
