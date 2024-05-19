@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { CompanyQueryType } from '../redux/global.types';
 import { toast } from 'react-toastify';
 import { NavigateFunction } from 'react-router/dist/lib/hooks';
-import { Modals } from '../components/Modals';
+import { Modals } from '../components/Modals/Modals';
 import { useAppServiceProvider } from './useAppServices.hook';
 import { AppModuleName } from '../redux/reduxTypes.types';
 import { TableActionsBuilder } from '../utils/tables';
@@ -83,7 +83,7 @@ const createEditCompanyAction = ({
   iconSize: '100%',
   type: 'onlyIcon',
   onClick: () => {
-    modalService.handleOpenModal({
+    modalService.openModal({
       Modal: Modals.FormCreateCompany,
       modalChildrenProps: {
         fillHeight: true,
@@ -144,7 +144,7 @@ const createAddNewCompanyAction = ({ modalService }: PermissionsTablesActionProp
   iconSize: '100%',
   type: 'onlyIconFilled',
   onClick: () => {
-    modalService.handleOpenModal({
+    modalService.openModal({
       Modal: Modals.FormCreateCompany,
       props: {
         fillHeight: true,

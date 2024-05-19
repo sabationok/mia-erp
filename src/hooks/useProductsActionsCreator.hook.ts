@@ -5,8 +5,8 @@ import { OfferEntity } from '../types/offers/offers.types';
 import { useNavigate } from 'react-router-dom';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { t } from '../lang';
-import EditOfferModal from '../components/Modal/EditOfferModal';
-import CreateOfferModal from '../components/Modal/CreateOfferModal';
+import EditOfferModal from '../components/Modals/EditOfferModal';
+import CreateOfferModal from '../components/Modals/CreateOfferModal';
 
 export type OffersActionsCreator = TableActionCreator<OfferEntity>;
 
@@ -48,7 +48,7 @@ const useOffersActionsCreator = (): OffersActionsCreator => {
         disabled: !ctx?.selectedRow?._id,
         onClick: () => {
           ctx?.selectedRow?._id &&
-            modals.handleOpenModal({
+            modals.openModal({
               ModalChildren: EditOfferModal,
               modalChildrenProps: {
                 title: 'Змінити',
@@ -81,7 +81,7 @@ const useOffersActionsCreator = (): OffersActionsCreator => {
         disabled: !ctx?.selectedRow?._id,
         onClick: () => {
           ctx?.selectedRow?._id &&
-            modals.handleOpenModal({
+            modals.openModal({
               ModalChildren: EditOfferModal,
               modalChildrenProps: {
                 _id: ctx?.selectedRow?._id,

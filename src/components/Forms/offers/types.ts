@@ -10,4 +10,18 @@ export interface OfferFormAreaProps<DefaultValues = any> {
   offer?: OfferEntity;
   onSubmit?: AppSubmitHandler<DefaultValues>;
   formData?: IProductFullFormData & { _id?: string };
+  update?: string;
 }
+
+export type OfferLoadersKey =
+  | 'offer'
+  | 'offer_update'
+  | 'offer_refresh'
+  | 'offer_create'
+  | 'formData'
+  | keyof OfferEntity;
+
+export type OfferLoadersData = {
+  formData?: IProductFullFormData & { _id?: string };
+  offer?: OfferEntity;
+} & Partial<OfferEntity>;

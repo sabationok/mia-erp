@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useModalProvider } from '../../../ModalProvider/ModalProvider';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import ProductCardSimpleOverview from '../../../Overviews/ProductCardSimpleOverview';
-import { Modals } from '../../../Modals';
+import { Modals } from '../../../Modals/Modals';
 import TableList from '../../../TableList/TableList';
 import { ServiceName, useAppServiceProvider } from 'hooks/useAppServices.hook';
 import { VariationEntity } from 'types/offers/variations.types';
@@ -81,7 +81,7 @@ const FormProductSelectorForPricing: React.FC<FormProductSelectorForPricingProps
   };
 
   const onOpenSelectorClick = () => {
-    const modal = modals.handleOpenModal({
+    const modal = modals.openModal({
       Modal: Modals.SelectProductModal,
       props: {
         onSelect: p => {

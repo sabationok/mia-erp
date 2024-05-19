@@ -12,7 +12,7 @@ import { useAppParams } from '../../../hooks';
 import { WarehouseItemEntity } from '../../../types/warehouses.types';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useModalProvider } from '../../ModalProvider/ModalProvider';
-import { Modals } from '../../Modals';
+import { Modals } from '../../Modals/Modals';
 import { BaseAppPageProps } from '../index';
 
 interface Props extends BaseAppPageProps {}

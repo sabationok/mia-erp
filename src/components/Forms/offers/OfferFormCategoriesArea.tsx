@@ -5,22 +5,18 @@ import styled from 'styled-components';
 import FlexBox, { FlexLi, FlexUl } from '../../atoms/FlexBox';
 import { useDirectorySelector } from '../../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { OfferFormAreaProps } from './types';
-import { useOfferLoadersProvider } from '../../Modal/CreateOfferModal';
-import { ArrayUUID } from '../../../redux/global.types';
+import { useOfferLoadersProvider } from '../../Modals/CreateOfferModal';
 import { t } from '../../../lang';
-import { OfferEntity } from '../../../types/offers/offers.types';
+import { IProductFullFormData, OfferEntity } from '../../../types/offers/offers.types';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { IDirItemBase } from '../../../types/dir.types';
 import CheckBox from '../../TableList/TebleCells/CellComponents/CheckBox';
 
-export interface OfferFormCategoriesAreaProps extends OfferFormAreaProps<ArrayUUID> {
-  onSubmit?: AppSubmitHandler<string[]>;
+export interface OfferFormCategoriesAreaProps extends OfferFormAreaProps<IProductFullFormData['categories']> {
   onSelect?: (id: string) => void;
   onChange?: (ids: string[]) => void;
   onSuccess?: (data: OfferEntity) => void;
-  update?: string;
 }
 
 export const OfferFormCategoriesArea = ({

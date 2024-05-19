@@ -4,7 +4,7 @@ import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServ
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { useCallback, useEffect, useMemo } from 'react';
 import { createTableTitlesFromProperties, transformVariationTableData } from '../../../../utils/tables';
-import FormCreateVariation from '../../../Forms/offers/FormOfferVariation/FormCreateVariationOverlay';
+import FormCreateVariation from '../../../Overlays/FormCreateVariationOverlay';
 import { IVariationTableData } from '../../../../types/offers/variations.types';
 import { usePropertiesSelector } from '../../../../redux/selectors.store';
 import { getIdRef } from '../../../../utils/data-transform';

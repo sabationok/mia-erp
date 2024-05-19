@@ -1,12 +1,12 @@
-import ModalForm, { ModalFormProps } from './ModalForm';
-import PriceListOverview, { PriceListOverviewProps } from './Modals/Overviews/PriceListOverview';
-import ProductOverview, { ProductOverviewProps } from './Overviews/ProductOverview';
-import SelectProductModal, { SelectProductModalProps } from './Modals/SelectProductModal';
-import AppFilter, { AppFilterProps } from './Filter/AppFilter';
-import DirVariationsTemplate, { DirVariationsTemplateProps } from './Directories/DirVariationsTemplate';
-import DirPoperties, { DirPropertiesProps } from './Directories/DirProperties/DirProperties';
-import Forms, { FormPropTypes } from './Forms';
-import { FormCreateBankAccountProps } from './Forms/finances/FormCreateBankAccount';
+import ModalForm, { ModalFormProps } from '../ModalForm';
+import PriceListOverview, { PriceListOverviewProps } from './Overviews/PriceListOverview';
+import ProductOverview, { ProductOverviewProps } from '../Overviews/ProductOverview';
+import SelectProductModal, { SelectProductModalProps } from './SelectProductModal';
+import AppFilter, { AppFilterProps } from '../Filter/AppFilter';
+import DirVariationsTemplate, { DirVariationsTemplateProps } from '../Directories/DirVariationsTemplate';
+import DirPoperties, { DirPropertiesProps } from '../Directories/DirProperties/DirProperties';
+import Forms, { FormPropTypes } from '../Forms';
+import { FormCreateBankAccountProps } from '../Forms/finances/FormCreateBankAccount';
 
 export enum Modals {
   ModalForm = 'ModalForm',
@@ -23,7 +23,8 @@ export enum Modals {
   FormCreateCompany = 'FormCreateCompany',
   FormCreateMethod = 'FormCreateMethod',
   FormInviteUser = 'FormInviteUser',
-  FormCreateOffer = 'FormCreateOffer',
+  CreateOffer = 'CreateOffer',
+  EditOffer = 'EditOffer',
   FormCreateOfferInventory = 'FormCreateOfferInventory',
   FormCreateProperty = 'FormCreateProperty',
   FormCreateVariation = 'FormCreateVariation',
@@ -35,12 +36,12 @@ export enum Modals {
   FormCreateOrdersGroup = 'FormCreateOrdersGroup',
   SelectOrderType = 'SelectOrderType',
   FormCreateOrderSlot = 'FormCreateOrderSlot',
-  // * DIRECTORIES
+  // sep DIRECTORIES
   DirVariationsTemplate = 'DirVariationsTemplate',
   DirProperties = 'DirProperties',
   // DirTreeComponent = 'DirTreeComponent',
 
-  // * FINANCES
+  // sep FINANCES
   FormCreateBankAccount = 'FormCreateBankAccount',
 
   PriceListOverview = 'PriceListOverview',
@@ -50,10 +51,10 @@ export enum Modals {
 }
 
 export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
-  // * Base modal
+  // sep Base modal
   [Modals.ModalForm]: ModalForm,
 
-  // * Forms
+  // sep Forms
   [Modals.FormCreateDirTreeComp]: Forms.CreateDirTreeComp,
   [Modals.FormCreateActivity]: Forms.CreateActivity,
   [Modals.FormCreateContractor]: Forms.CreateContractor,
@@ -67,25 +68,28 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   [Modals.FormCreateTag]: Forms.CreateTag,
   [Modals.FormCreateMethod]: Forms.CreateMethod,
   [Modals.FormInviteUser]: Forms.InviteUser,
-
+  // sep WAREHOUSING
   [Modals.FormCreateOfferInventory]: Forms.CreateProductInventory,
-  [Modals.FormCreateProperty]: Forms.CreateProperty,
-  [Modals.FormCreateVariation]: Forms.CreateVariation,
-  [Modals.FormCreateWarehouse]: Forms.CreateWarehouse,
-  [Modals.FormCreateOffer]: Forms.CreateOffer,
   [Modals.FormCreateWarehouseDocument]: Forms.CreateWarehouseDocument,
-  // * ORDERS
+  [Modals.FormCreateWarehouse]: Forms.CreateWarehouse,
+  // sep OFFERS
+  [Modals.CreateOffer]: Forms.CreateOfferModal,
+  [Modals.EditOffer]: Forms.EditOfferModal,
+  [Modals.FormCreateVariation]: Forms.CreateVariation,
+  [Modals.FormCreateProperty]: Forms.CreateProperty,
+
+  // sep ORDERS
   [Modals.FormCreateOrder]: Forms.CreateOrder,
   [Modals.FormCreateOrdersGroup]: Forms.CreateOrdersGroup,
   [Modals.FormCreateOrderSlot]: Forms.CreateOrderSlot,
   [Modals.SelectOrderType]: Forms.SelectOrderType,
-  // * FINANCES
+  // sep FINANCES
   [Modals.FormCreateBankAccount]: Forms.CreateBankAccount,
-  // * DIRECTORIES
+  // sep DIRECTORIES
   [Modals.DirVariationsTemplate]: DirVariationsTemplate,
   [Modals.DirProperties]: DirPoperties,
   // [Modals.DirTreeComponent]: DirTreeComp,
-  // * Modals props
+  // sep Modals props
   [Modals.PriceListOverview]: PriceListOverview,
   [Modals.ProductOverview]: ProductOverview,
   [Modals.SelectProductModal]: SelectProductModal,
@@ -93,10 +97,10 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
 };
 
 export interface ModalChildrenProps extends Record<Modals, any> {
-  // * Base modal props
+  // sep Base modal props
   [Modals.ModalForm]: ModalFormProps;
 
-  // * Form props
+  // sep Form props
   [Modals.FormCreateDirTreeComp]: FormPropTypes.FormCreateDirTreeCompProps;
   [Modals.FormCreateActivity]: FormPropTypes.FormCreateCompanyActivityProps;
   [Modals.FormCreateContractor]: FormPropTypes.FormCreateContractorProps;
@@ -111,30 +115,34 @@ export interface ModalChildrenProps extends Record<Modals, any> {
   [Modals.FormCreateMethod]: FormPropTypes.FormCreateMethodProps;
   [Modals.FormInviteUser]: FormPropTypes.FormInviteUserProps;
   [Modals.FormCreateTag]: FormPropTypes.FormCreateTagProps;
+
   [Modals.FormCreateOfferInventory]: FormPropTypes.FormCreateProductInventoryProps;
-  [Modals.FormCreateOffer]: FormPropTypes.FormCreateOfferProps;
-  [Modals.FormCreateProperty]: FormPropTypes.FormCreatePropertyProps;
-  [Modals.FormCreateVariation]: FormPropTypes.FormCreateVariationProps;
   [Modals.FormCreateWarehouse]: FormPropTypes.FormCreateWarehouseProps;
   [Modals.FormCreateWarehouseDocument]: FormPropTypes.FormCreateWarehouseDocumentProps;
+  // sep OFFERS
+  [Modals.CreateOffer]: FormPropTypes.CreateOfferModalProps;
+  [Modals.EditOffer]: FormPropTypes.EditOfferModalProps;
+  [Modals.FormCreateProperty]: FormPropTypes.FormCreatePropertyProps;
 
-  // * ORDERS
+  [Modals.FormCreateVariation]: FormPropTypes.FormCreateVariationProps;
+
+  // sep ORDERS
   [Modals.FormCreateOrder]: FormPropTypes.FormCreateOrderProps;
   [Modals.FormCreateOrdersGroup]: FormPropTypes.FormCreateOrdersGroupProps;
   [Modals.SelectOrderType]: FormPropTypes.SelectOrderTypeModalProps;
   [Modals.FormCreateOrderSlot]: FormPropTypes.FormCreateOrderSlotProps;
 
-  // * DIRECTORIES
+  // sep DIRECTORIES
   [Modals.DirProperties]: DirPropertiesProps;
   [Modals.DirVariationsTemplate]: DirVariationsTemplateProps;
   // [Modals.DirTreeComponent]: IDirInTreeProps;
-  // * Modals props
+  // sep Modals props
 
   [Modals.PriceListOverview]: PriceListOverviewProps;
   [Modals.ProductOverview]: ProductOverviewProps;
   [Modals.SelectProductModal]: SelectProductModalProps;
   [Modals.AppFilter]: AppFilterProps;
 
-  // * FINANCES
+  // sep FINANCES
   [Modals.FormCreateBankAccount]: FormCreateBankAccountProps;
 }

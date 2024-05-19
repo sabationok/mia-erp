@@ -7,7 +7,7 @@ import { ITransaction } from '../types/finances/transactions.types';
 
 import { useTransactionsSelector } from '../redux/selectors.store';
 import { toast } from 'react-toastify';
-import { Modals } from '../components/Modals';
+import { Modals } from '../components/Modals/Modals';
 import { IFinTransactionsState } from '../redux/finances/finances.slice';
 
 export interface TransactionsTablesActionProps {
@@ -34,7 +34,7 @@ const createEditTransactionAction = ({
   onClick: async () => {
     const tr = state.transactions.find(el => el._id === ctx.selectedRow?._id);
 
-    const modal = modalService.handleOpenModal({
+    const modal = modalService.openModal({
       Modal: Modals.FormCreateTransaction,
       props: {
         title: 'Редагування транзакції',
@@ -68,7 +68,7 @@ const createCopyTransactionAction = ({
   onClick: async () => {
     const tr = state.transactions.find(el => el._id === ctx.selectedRow?._id);
 
-    const modal = modalService.handleOpenModal({
+    const modal = modalService.openModal({
       Modal: Modals.FormCreateTransaction,
       props: {
         title: 'Копіювання транзакції',
@@ -120,7 +120,7 @@ const createAddIncomeTransactionAction = ({
   type: 'onlyIconFilled',
   disabled: false,
   onClick: () => {
-    const modal = modalService.handleOpenModal({
+    const modal = modalService.openModal({
       Modal: Modals.FormCreateTransaction,
       props: {
         title: 'Створити',
@@ -153,7 +153,7 @@ const createAddTransferTransactionAction = ({
   type: 'onlyIconFilled',
   disabled: false,
   onClick: () => {
-    const modal = modalService.handleOpenModal({
+    const modal = modalService.openModal({
       Modal: Modals.FormCreateTransaction,
       props: {
         title: 'Створити нову',
@@ -186,7 +186,7 @@ const createAddExpenseTransactionAction = ({
   type: 'onlyIconFilled',
   disabled: false,
   onClick: () => {
-    const modal = modalService.handleOpenModal({
+    const modal = modalService.openModal({
       Modal: Modals.FormCreateTransaction,
       props: {
         title: 'Створити',

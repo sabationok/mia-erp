@@ -5,9 +5,7 @@ import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import React from 'react';
-import { Modals } from '../../Modals';
-import { ToastService } from '../../../services';
-import { toOfferFormData } from '../../../utils/data-transform';
+import { Modals } from '../../Modals/Modals';
 import { useOfferOverviewLoaders } from './PageOfferOverview';
 import { t } from '../../../lang';
 import { OverlayStack } from '../../../Providers/Overlay/OverlayStack';
@@ -32,27 +30,12 @@ const OfferOverviewPageLeftSide: React.FC<OfferOverviewPageLeftSideProps> = ({ t
           if (!page.currentOffer) {
             return;
           }
-          const formData = toOfferFormData(page?.currentOffer);
 
-          const m = modalS.handleOpenModal({
-            Modal: Modals.FormCreateOffer,
+          modalS.openModal({
+            Modal: Modals.EditOffer,
             props: {
-              edit: true,
               _id: page?.currentOffer?._id,
-              defaultState: formData,
               title: t('Edit offer'),
-              onSubmit: (d, o) => {
-                productsS
-                  .updateById({
-                    data: { ...d, refreshCurrent: true },
-                    onSuccess: () => {
-                      o?.closeAfterSave && m?.onClose();
-                      ToastService.success(`Updated product`);
-                    },
-                    onLoading: loaders.onLoading('offer'),
-                  })
-                  .finally();
-              },
             },
           });
         }}

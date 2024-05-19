@@ -18,30 +18,23 @@ export interface IIOptionsListProps {
 const OptionsList: React.FC<IIOptionsListProps & React.HTMLAttributes<HTMLUListElement>> = ({ options = [] }) => {
   const modal = useModalProvider();
 
-  const renderList = useMemo(() =>
-    options.map(({
-                   title,
-                   iconId,
-                   ModalChildren,
-                   modalChildrenProps,
-                   disabled = true,
-                 }, idx) => (
-      <ListItem key={title || iconId || idx}>
-        <StButtonIcon
-          variant='defNoEffects'
-          onClick={() => modal.handleOpenModal({ ModalChildren, modalChildrenProps })}
-          disabled={disabled}
-        >
-          {title}
-        </StButtonIcon>
-      </ListItem>
-    )), [modal, options]);
-
-  return (
-    <List>
-      {renderList}
-    </List>
+  const renderList = useMemo(
+    () =>
+      options.map(({ title, iconId, ModalChildren, modalChildrenProps, disabled = true }, idx) => (
+        <ListItem key={title || iconId || idx}>
+          <StButtonIcon
+            variant="defNoEffects"
+            onClick={() => modal.openModal({ ModalChildren, modalChildrenProps })}
+            disabled={disabled}
+          >
+            {title}
+          </StButtonIcon>
+        </ListItem>
+      )),
+    [modal, options]
   );
+
+  return <List>{renderList}</List>;
 };
 
 const List = styled.ul`
@@ -62,7 +55,6 @@ const StButtonIcon = styled(ButtonIcon)`
   padding: 4px 12px;
 
   transition: none;
-
 `;
 
 export default OptionsList;

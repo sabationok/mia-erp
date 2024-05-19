@@ -18,7 +18,7 @@ const TableSort: React.FC<TableSortProps> = ({ tableSortParams, onSelect }) => {
   const [current, setCurrent] = useState<SelectItem>();
 
   function onOpenClick() {
-    modals.handleOpenModal({
+    modals.openModal({
       ModalChildren: ModalSort,
     });
   }

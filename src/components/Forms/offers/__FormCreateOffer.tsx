@@ -20,7 +20,7 @@ import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/For
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import useProductsService from '../../../hooks/useProductsService.hook';
 
-export interface FormCreateOfferProps extends Omit<ModalFormProps<any, any, IProductFormData>, 'onSubmit'> {
+export interface __FormCreateOfferProps extends Omit<ModalFormProps<any, any, IProductFormData>, 'onSubmit'> {
   copy?: boolean;
   id?: string;
   edit?: boolean;
@@ -33,7 +33,7 @@ export interface FormCreateOfferProps extends Omit<ModalFormProps<any, any, IPro
 
 const productsStatusOption = enumToFilterOptions(OfferStatusEnum);
 
-const FormCreateOffer: React.FC<FormCreateOfferProps> = ({
+const __FormCreateOffer: React.FC<__FormCreateOfferProps> = ({
   edit,
   _id,
   onSubmit,
@@ -134,4 +134,4 @@ const FormCreateOffer: React.FC<FormCreateOfferProps> = ({
   );
 };
 
-export default FormCreateOffer;
+export default __FormCreateOffer;

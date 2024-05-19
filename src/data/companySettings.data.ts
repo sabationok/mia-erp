@@ -4,7 +4,7 @@ import DirCustomRoles, { DirCustomRolesProps } from '../components/CompanySettin
 import { getDirInTreeActionsCreator } from './directories.data';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import FormCreateCustomRole from '../components/Forms/Company/FormCreateCustomRole';
-import { Modals } from '../components/Modals';
+import { Modals } from '../components/Modals/Modals';
 import { IDirectoryListItem } from '../components/SideBarContent/Directories';
 import CompanyIntegrationsModal from '../components/CompanySettings/CompanyIntegrationsModal';
 import { t } from '../lang';

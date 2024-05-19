@@ -3,7 +3,7 @@ import { IModalProviderContext, useModalProvider } from '../components/ModalProv
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { WarehousesService } from './useWarehousesService.hook';
 import { IWarehouse, IWarehouseDto, IWarehouseReqData } from '../types/warehouses.types';
-import { Modals } from '../components/Modals';
+import { Modals } from '../components/Modals/Modals';
 import { IWarehouseFormData } from '../components/Forms/warehousing/FormCreateWarehouse';
 import { useNavigate } from 'react-router-dom';
 import { NavigateFunction } from 'react-router/dist/lib/hooks';
@@ -73,7 +73,7 @@ const createNewWarehouseAction: WarehouseActionGenerator = ({ service, modalServ
     icon: 'plus',
     type: 'onlyIconFilled',
     onClick: () => {
-      const modal = modalService.handleOpenModal({
+      const modal = modalService.openModal({
         Modal: Modals.FormCreateWarehouse,
         props: {
           title: 'Створити склад',
@@ -101,7 +101,7 @@ const editWarehouseAction: WarehouseActionGenerator = ({ service, modalService, 
   return {
     icon: 'edit',
     onClick: () => {
-      const m = modalService.handleOpenModal({
+      const m = modalService.openModal({
         Modal: Modals.FormCreateWarehouse,
         props: {
           update: ctx.selectedRow?._id,

@@ -1,7 +1,7 @@
 import { OfferFormAreaProps } from './types';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { OfferEntity, OfferImageSlotEntity } from '../../../types/offers/offers.types';
-import { useOfferLoadersProvider } from '../../Modal/CreateOfferModal';
+import { useOfferLoadersProvider } from '../../Modals/CreateOfferModal';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useMemo, useState } from 'react';
 import { FormArea } from '../FormArea/FormArea';

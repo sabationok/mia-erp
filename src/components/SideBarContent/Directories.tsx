@@ -1,6 +1,6 @@
 import { useModalService } from 'components/ModalProvider/ModalProvider';
 import { useMemo } from 'react';
-import { ModalChildrenProps, Modals } from '../Modals';
+import { ModalChildrenProps, Modals } from '../Modals/Modals';
 import { Text } from '../atoms/Text';
 import { IconIdType } from '../../img/sprite';
 import { Container, ListItem, Trigger } from './styles';

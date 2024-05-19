@@ -1,6 +1,6 @@
 import { ModalFormProps } from '../ModalForm';
 import { OfferDimensionsFormArea } from '../Forms/offers/OfferDimensionsFormArea';
-import ModalBase from './index';
+import ModalBase from '../Modal';
 import { t } from '../../lang';
 import { toOfferFormData } from '../../utils';
 import { useEffect } from 'react';
@@ -13,44 +13,51 @@ import { Text } from '../atoms/Text';
 import TabSelector from '../atoms/TabSelector';
 import { productsFilterOptions } from '../../data/modalFilterOptions.data';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
-import { OfferLoadersData, OfferLoadersKey } from './CreateOfferModal';
 import { LoadersProvider } from 'Providers/Loaders/LoaderProvider';
 import { OfferFormPropertiesArea } from '../Forms/offers/OfferFormPropertiesArea';
 import useProductsService from '../../hooks/useProductsService.hook';
 import { OfferFormImagesArea } from '../Forms/offers/OfferFormImagesArea';
 import { useAppRouter, useCurrentOffer } from '../../hooks';
 import { OfferFormCategoriesArea } from '../Forms/offers/OfferFormCategoriesArea';
+import { OfferLoadersData, OfferLoadersKey } from '../Forms/offers/types';
 
-export interface UpdateOfferModalProps extends ModalFormProps {
+export interface EditOfferModalProps extends ModalFormProps {
   _id: string;
   copy?: boolean;
 }
 
-const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id, copy }) => {
-  const { setData, state, ...loaders } = useLoaders<OfferLoadersKey, OfferLoadersData>();
-  const service = useProductsService();
-  const router = useAppRouter();
+const EditOfferModal: React.FC<EditOfferModalProps> = ({ onClose, _id, copy }) => {
   const currentOffer = useCurrentOffer({ id: _id });
+  const service = useProductsService();
+  const loaders = useLoaders<OfferLoadersKey, OfferLoadersData>(
+    { offer_refresh: { content: 'Refreshing...' }, offer_update: { content: 'Updating...' } },
+    {
+      formData: currentOffer ? toOfferFormData(currentOffer) : { type: OfferTypeEnum.GOODS },
+    }
+  );
+
+  const { setData, state, ...lMethods } = loaders;
+
+  const offerId = copy ? state.formData?._id : _id;
+
+  const router = useAppRouter();
 
   useEffect(() => {
     service.getProductFullInfo({
       data: { _id },
-      onSuccess: loaders.onSuccess('offer', data => {
+      onSuccess: loaders.onSuccess('offer_refresh', data => {
         if (copy) {
           data._id = '';
         }
+        // const formData = toOfferFormData(data);
         setData('formData', toOfferFormData(data));
         router.push({ query: { offerId: _id } });
       }),
-      onLoading: loaders.onLoading('offer'),
+      onLoading: loaders.onLoading('offer_refresh'),
     });
 
     // eslint-disable-next-line
   }, [_id, copy]);
-
-  useEffect(() => {
-    console.log({ currentOffer });
-  }, [currentOffer]);
 
   return (
     <ModalBase
@@ -60,14 +67,15 @@ const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id, copy })
       extraHeader={
         <TabSelector
           filterOptions={productsFilterOptions}
-          defaultValue={state?.formData?.type ?? OfferTypeEnum.GOODS}
+          defaultValue={state?.formData?.type ?? undefined}
+          preventFilter
           onOptSelect={o => {
             setData('formData', p => ({ ...p, type: o.value }));
           }}
         />
       }
     >
-      <LoadersProvider value={{ setData, state, ...loaders }}>
+      <LoadersProvider value={loaders}>
         {loaders.isLoading?.offer ? (
           <FlexBox fillWidth padding={'24px'} alignItems={'center'} gap={16}>
             <AppLoaderSpiner size={52} />
@@ -77,40 +85,40 @@ const EditOfferModal: React.FC<UpdateOfferModalProps> = ({ onClose, _id, copy })
         ) : (
           <FlexBox padding={'0 8px 16px'}>
             <OfferBaseInfoFormArea
-              _id={_id}
+              _id={offerId}
               edit={!copy}
               type={state.formData?.type}
-              defaultValues={state.formData}
+              defaultValues={state?.formData}
               onSuccess={data => {
                 setData('formData', copy ? { ...toOfferFormData(data), _id: data._id } : toOfferFormData(data));
               }}
             />
 
             <OfferFormCategoriesArea
-              _id={_id}
+              _id={offerId}
               offer={currentOffer}
               defaultValues={state.formData?.categories}
               disabled={!state.formData}
             />
 
             <OfferFormPropertiesArea
+              _id={offerId}
               offer={currentOffer}
               defaultValues={state.formData?.properties}
               disabled={!state.formData}
-              _id={copy ? state.formData?._id : _id}
             />
 
             <OfferDimensionsFormArea
               offer={currentOffer}
               defaultValues={state.formData?.dimensions}
               disabled={copy ? !(state.formData?._id && state.formData) : !_id}
-              _id={copy ? state.formData?._id : _id}
+              _id={offerId}
             />
             <OfferMeasurementFormArea
               offer={currentOffer}
               defaultValues={state.formData?.measurement}
               disabled={copy ? !(state.formData?._id && state.formData) : !_id}
-              _id={copy ? state.formData?._id : _id}
+              _id={offerId}
             />
 
             <OfferFormImagesArea

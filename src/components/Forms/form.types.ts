@@ -15,10 +15,11 @@ export type { FormDeliveryMethodProps } from './methods/FormDeliveryMethod';
 // sep USERS
 export type { FormInviteUserProps } from './Auth/FormInviteUser';
 // sep OFFERS
-export type { FormCreateOfferProps } from './offers/FormCreateOffer';
-export type { FormCreatePropertyProps } from './offers/FormCreateProperty';
-export type { FormCreateVariationProps } from './offers/_FormCreateVariation';
-export type { FormVariationProps } from './offers/FormOfferVariation/FormCreateVariationOverlay';
+export type { CreateOfferModalProps } from '../Modals/CreateOfferModal';
+export type { EditOfferModalProps } from '../Modals/EditOfferModal';
+export type { FormCreatePropertyProps } from './offers/properties/FormCreateProperty';
+export type { FormCreateVariationProps } from './offers/FormOfferVariation/_FormCreateVariation';
+export type { FormVariationProps } from '../Overlays/FormCreateVariationOverlay';
 // sep WAREHOUSING
 export type { FormCreateWarehouseProps } from './warehousing/FormCreateWarehouse';
 export type { FormCreateProductInventoryProps } from './warehousing/FormCreateProductInventory';

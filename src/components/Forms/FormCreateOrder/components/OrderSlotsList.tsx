@@ -8,7 +8,7 @@ import OrderSlotOverview from '../../../Overviews/OrderSlotOverview';
 import { nanoid } from '@reduxjs/toolkit';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import { t } from '../../../../lang';
-import { Modals } from '../../../Modals';
+import { Modals } from '../../../Modals/Modals';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
 import { ToastService } from '../../../../services';
 

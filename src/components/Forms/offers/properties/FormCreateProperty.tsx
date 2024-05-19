@@ -1,18 +1,18 @@
-import ModalForm, { ModalFormProps } from '../../ModalForm';
-import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { OfferTypeEnum } from '../../../types/offers/offers.types';
-import FlexBox from '../../atoms/FlexBox';
-import InputLabel from '../../atoms/Inputs/InputLabel';
-import { t } from '../../../lang';
-import InputText from '../../atoms/Inputs/InputText';
-import { useAppForm } from '../../../hooks';
-import { IProperty, IPropertyBase, IPropertyDto, PropertyFormData } from '../../../types/offers/properties.types';
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
-import { Text } from '../../atoms/Text';
+import ModalForm, { ModalFormProps } from '../../../ModalForm';
+import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
+import { OfferTypeEnum } from '../../../../types/offers/offers.types';
+import FlexBox from '../../../atoms/FlexBox';
+import InputLabel from '../../../atoms/Inputs/InputLabel';
+import { t } from '../../../../lang';
+import InputText from '../../../atoms/Inputs/InputText';
+import { useAppForm } from '../../../../hooks';
+import { IProperty, IPropertyBase, IPropertyDto, PropertyFormData } from '../../../../types/offers/properties.types';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../components/FormAfterSubmitOptions';
+import { Text } from '../../../atoms/Text';
 import styled from 'styled-components';
-import ButtonSwitch from '../../atoms/ButtonSwitch';
+import ButtonSwitch from '../../../atoms/ButtonSwitch';
 import React, { useEffect } from 'react';
-import LangButtonsGroup from '../../atoms/LangButtonsGroup';
+import LangButtonsGroup from '../../../atoms/LangButtonsGroup';
 
 export interface FormCreatePropertyProps extends Omit<ModalFormProps<OfferTypeEnum, any, IPropertyBase>, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<IPropertyDto, { isGroup?: boolean; isProperty?: boolean; isValue?: boolean }>;

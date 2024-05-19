@@ -20,7 +20,7 @@ import DirTableComp, { DirTableCompProps } from '../components/Directories/DirTa
 import FormCreateCounterparty from '../components/Forms/Directories/FormCreateCounterparty';
 import { toReqData } from '../utils';
 import { OfferTypeEnum } from '../types/offers/offers.types';
-import { ModalChildrenProps, Modals } from '../components/Modals';
+import { ModalChildrenProps, Modals } from '../components/Modals/Modals';
 import { CountsTypesEnum } from '../redux/directories/counts.types';
 import { TrCategoryTypeEnum } from '../types/directories.types';
 import { DirectoriesService } from '../hooks/useDirService.hook';

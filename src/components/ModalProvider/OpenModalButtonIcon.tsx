@@ -19,7 +19,7 @@ const OpenModalButton: React.FC<OpenModalButtonProps> = ({ buttonIconProps, moda
       iconId="info"
       variant="filledLarge"
       onClick={() => {
-        modal.handleOpenModal({
+        modal.openModal({
           ModalChildren: () => <TestModalText>Modal text</TestModalText>,
           ...modalArgs,
         });

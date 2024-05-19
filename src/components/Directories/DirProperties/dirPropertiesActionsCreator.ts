@@ -2,7 +2,7 @@ import { DirInTreeActionsCreatorType } from '../../../types/dir.types';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { IProperty, IPropertyDto, IPropertyValue, IVariationTemplate } from '../../../types/offers/properties.types';
 import { ProductsService } from '../../../hooks/useProductsService.hook';
-import { Modals } from '../../Modals';
+import { Modals } from '../../Modals/Modals';
 import { t } from '../../../lang';
 import { productsFilterOptions } from '../../../data/modalFilterOptions.data';
 import { PropertiesLevelType } from './DirProperties';
@@ -21,7 +21,7 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
 > = ({ modalService, service, type }) => {
   return {
     onCreateParent: options => {
-      const modal = modalService.handleOpenModal({
+      const modal = modalService.openModal({
         Modal: Modals.FormCreateProperty,
         props: {
           title: t('createPropertiesGroup'),
@@ -44,7 +44,7 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
       });
     },
     onCreateChild: (_, parent, options) => {
-      const modal = modalService.handleOpenModal({
+      const modal = modalService.openModal({
         Modal: Modals.FormCreateProperty,
         props: {
           title: t('createProperty'),
@@ -93,7 +93,7 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
       });
     },
     onUpdate: (_id, defaultState, options) => {
-      const modal = modalService.handleOpenModal({
+      const modal = modalService.openModal({
         Modal: Modals.FormCreateProperty,
         props: {
           title: t('update'),

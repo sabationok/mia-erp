@@ -3,8 +3,10 @@ import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { t } from '../lang';
 import { OfferEntity, OfferStatusEnum } from '../types/offers/offers.types';
 import { getStatusesByEnum } from './statuses.data';
+import { enumToFilterOptions } from '../utils';
 
 export const offerStatusesData = getStatusesByEnum(OfferStatusEnum);
+export const OfferStatusFilterOptions = enumToFilterOptions(OfferStatusEnum);
 
 export const offersTableColumns: CellTittleProps<OfferEntity>[] = [
   {
@@ -20,7 +22,6 @@ export const offersTableColumns: CellTittleProps<OfferEntity>[] = [
     width: '200px',
     action: 'valueByPath',
   },
-
   {
     top: { name: t('type'), align: 'start', path: 'type' },
     bottom: { name: t('status'), align: 'start', getData: d => d.approved as never },
@@ -28,20 +29,20 @@ export const offersTableColumns: CellTittleProps<OfferEntity>[] = [
     action: 'status',
   },
 
-  {
-    top: {
-      name: t('category'),
-      align: 'start',
-      getData: rd => rd.category?.label,
-    },
-    bottom: {
-      name: t('parentCategory'),
-      align: 'start',
-      getData: rd => rd.category?.parent?.label,
-    },
-    width: '180px',
-    action: 'valueByPath',
-  },
+  // {
+  //   top: {
+  //     name: t('category'),
+  //     align: 'start',
+  //     getData: rd => rd.category?.label,
+  //   },
+  //   bottom: {
+  //     name: t('parentCategory'),
+  //     align: 'start',
+  //     getData: rd => rd.category?.parent?.label,
+  //   },
+  //   width: '180px',
+  //   action: 'valueByPath',
+  // },
   {
     top: { name: 'Бренд', align: 'start', path: 'brand.label' },
     bottom: { name: 'Виробник', align: 'start', path: 'manufacturer.name' },

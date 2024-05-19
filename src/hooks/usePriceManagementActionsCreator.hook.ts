@@ -83,7 +83,7 @@ const usePriceManagementActionsCreator = (): PriceManagementActionsCreator => {
           type: 'onlyIconFilled',
           disabled: false,
           onClick: () => {
-            const modal = modals.handleOpenModal({
+            const modal = modals.openModal({
               ModalChildren: FormCreatePriceList,
               modalChildrenProps: {
                 filterOptions: PriceManagementItemTypeFilterOptions,

@@ -63,12 +63,13 @@ export const useLoaders = <
   Data extends PartialRecord<Name, any> = PartialRecord<Name, any>,
   Errors extends PartialRecord<Name, any> = PartialRecord<Name, any>
 >(
-  configs?: UseLoadersConfigs<Name>
+  configs?: UseLoadersConfigs<Name>,
+  defaultState?: Data
 ): UseLoadersReturn<Name, Data, Errors> => {
   const loadersRef = useRef<LoadersRef<Name>>({});
   const toastsRef = useRef((configs || {}) as LoaderItems<Name>);
   const [loading, setLoading] = useState<PartialRecord<Name, boolean>>({});
-  const [state, setState] = useState<Partial<Data>>({});
+  const [state, setState] = useState<Partial<Data>>({ ...defaultState });
   const [errors, setErrors] = useState<Partial<Errors>>({});
   const [success, setSuccess] = useState<PartialRecord<Name | string, boolean>>({});
   const namesSetRef = useRef<Set<Name>>(new Set([]));
@@ -101,9 +102,18 @@ export const useLoaders = <
       setData = <N extends Name, D extends Data>(name: N, data: D[N] | ((prev?: D[N]) => D[N])) => {
         namesSetRef.current.add(name);
         if (data instanceof Function) {
-          setState(p => ({ ...p, [name]: data(p[name]) }));
+          setState(p => {
+            console.warn('[data instanceof Function]'.toUpperCase(), name, { ...p, [name]: data(p?.[name]) });
+            console.log({ data, prev: p?.[name] });
+
+            return { ...p, [name]: data(p?.[name]) };
+          });
         } else {
-          setState(p => ({ ...p, [name]: data }));
+          setState(p => {
+            console.log(name, { ...p, [name]: data });
+
+            return { ...p, [name]: data };
+          });
         }
       };
 

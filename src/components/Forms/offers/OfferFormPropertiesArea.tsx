@@ -9,7 +9,7 @@ import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppService
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { OfferFormAreaProps } from './types';
-import { useOfferLoadersProvider } from '../../Modal/CreateOfferModal';
+import { useOfferLoadersProvider } from '../../Modals/CreateOfferModal';
 import { ArrayUUID } from '../../../redux/global.types';
 import { t } from '../../../lang';
 import { OfferEntity } from '../../../types/offers/offers.types';

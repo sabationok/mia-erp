@@ -91,5 +91,6 @@ const Header = styled(FlexBox)`
 const ExpandableBox = styled(FlexBox)`
   overflow: hidden;
   max-height: ${p => (p.isActive ? '100%' : '0')};
+  padding: 0 8px;
   //transition: all ${p => p.theme.globals.timingFunctionMain};
 `;

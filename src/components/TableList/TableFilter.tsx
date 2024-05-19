@@ -1,7 +1,7 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import { useTable } from './TableList';
-import { Modals } from '../Modals';
+import { Modals } from '../Modals/Modals';
 
 const TableFilter = ({ btnSize = 26 }: { btnSize?: number }) => {
   const modal = useModalProvider();
@@ -14,7 +14,7 @@ const TableFilter = ({ btnSize = 26 }: { btnSize?: number }) => {
       iconSize="80%"
       variant="onlyIcon"
       onClick={() => {
-        modal.handleOpenModal({
+        modal.openModal({
           Modal: Modals.AppFilter,
           props: {
             title: filterTitle,
