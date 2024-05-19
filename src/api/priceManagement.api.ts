@@ -10,6 +10,10 @@ import {
 } from '../types/price-management/priceManagement.types';
 import { AppQueryParams } from './index';
 
+export type GetAllPricesQuery = Pick<
+  AppQueryParams,
+  'list' | 'listId' | 'offer' | 'offerId' | 'variation' | 'variationId'
+>;
 export class PriceManagementApi {
   private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.priceManagementEndpoints;
@@ -42,14 +46,7 @@ export class PriceManagementApi {
   ): Promise<AppResponse<OfferPriceEntity[]>> {
     return this.api.get(this.endpoints.getAllPrices(), { params });
   }
-  public static async getAllPricesByProductId(
-    params?: Pick<AppQueryParams, 'offer' | 'list' | 'variation'>
-  ): Promise<AppResponse<OfferPriceEntity[]>> {
-    return this.api.get(this.endpoints.getAllPrices(), { params });
-  }
-  public static async getAllPrices(
-    params?: Pick<AppQueryParams, 'offer' | 'list' | 'variation'>
-  ): Promise<AppResponse<OfferPriceEntity[]>> {
+  public static async getAllPrices(params?: GetAllPricesQuery): Promise<AppResponse<OfferPriceEntity[]>> {
     return this.api.get(this.endpoints.getAllPrices(), { params });
   }
 

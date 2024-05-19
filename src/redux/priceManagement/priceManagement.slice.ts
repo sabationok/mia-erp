@@ -1,24 +1,29 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-// import { createTransactionThunk, getAllTransactionsThunk } from 'redux/transactions/transactions.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
-import { IPriceList } from '../../types/price-management/priceManagement.types';
+import { IPriceList, OfferPriceEntity } from '../../types/price-management/priceManagement.types';
 import * as thunks from './priceManagement.thunks';
 import { checks } from '../../utils';
+import { PartialRecord, UUID } from '../../types/utils.types';
+import { omit } from 'lodash';
 
-export interface IPriceListsState {
+export interface PricesState {
   lists: IPriceList[];
   filteredLists?: IPriceList[];
   current?: IPriceList | null;
   isLoading: boolean;
   error: StateErrorType;
+  dataMap: PartialRecord<UUID, OfferPriceEntity>;
+  keysMap: PartialRecord<UUID, UUID[]>;
 }
 
-const initialState: IPriceListsState = {
+const initialState: PricesState = {
   isLoading: false,
   error: null,
   lists: [],
   current: null,
   filteredLists: [],
+  dataMap: {},
+  keysMap: {},
 };
 
 export const priceManagementSlice = createSlice({
@@ -80,9 +85,17 @@ export const priceManagementSlice = createSlice({
         if (a.payload.refreshCurrent) {
           s.current = { ...(s.current as IPriceList), prices: a.payload?.data };
         }
+
+        a.payload?.data.forEach(price => {
+          ManagePricesStateMap(s, { data: price });
+        });
       })
-      .addCase(thunks.deletePriceFromListThunk.fulfilled, (s, a) => {})
-      .addCase(thunks.updatePriceInListThunk.fulfilled, (s, a) => {})
+      .addCase(thunks.deletePriceFromListThunk.fulfilled, (s, a) => {
+        ManagePricesStateMap(s, { removeId: a.payload?.data?.priceId });
+      })
+      .addCase(thunks.updatePriceInListThunk.fulfilled, (s, a) => {
+        ManagePricesStateMap(s, { data: a.payload.data });
+      })
 
       .addMatcher(inPending, s => {
         s.isLoading = true;
@@ -109,6 +122,46 @@ function inFulfilled(a: AnyAction) {
 }
 function inError(a: AnyAction) {
   return isPriceManagementCase(a.type) && a.type.endsWith('rejected');
+}
+
+function ManagePricesStateMap(
+  st: PricesState,
+  input: { data?: OfferPriceEntity; removeId?: string },
+  options?: { refresh?: boolean; isForList?: boolean }
+) {
+  if (input.data) {
+    const itemId = input.data?._id;
+
+    st.dataMap[itemId] = options?.refresh ? input.data : { ...st.dataMap?.[itemId], ...input.data };
+    const offerId = input?.data?.offer?._id;
+    const variationId = input?.data?.variation?._id;
+
+    if (offerId) {
+      st.keysMap[offerId] = Array.from(new Set(...(st.keysMap[offerId] ?? [])).add(itemId));
+    }
+    if (variationId) {
+      st.keysMap[variationId] = Array.from(new Set(...(st.keysMap[variationId] ?? [])).add(itemId));
+    }
+  } else if (input?.removeId) {
+    const itemId = input?.removeId;
+    const current = st.dataMap?.[itemId];
+
+    st.dataMap = omit(st.dataMap, itemId);
+
+    const offerId = current?.offer?._id;
+    const variationId = current?.variation?._id;
+
+    if (offerId) {
+      const idsSet = new Set(...(st.keysMap[offerId] ?? []));
+      idsSet.delete(itemId);
+      st.keysMap[offerId] = Array.from(idsSet);
+    }
+    if (variationId) {
+      const idsSet = new Set(...(st.keysMap[variationId] ?? []));
+      idsSet.delete(itemId);
+      st.keysMap[variationId] = Array.from(idsSet);
+    }
+  }
 }
 
 // s.current = a.payload;

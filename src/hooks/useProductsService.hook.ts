@@ -4,7 +4,7 @@ import { OnlyUUID, ServiceApiCaller, ServiceDispatcher, ServiceDispatcherAsync }
 import {
   createProductThunk,
   getAllInventoriesByProductIdThunk,
-  getAllPricesByProductIdThunk,
+  getAllOfferPricesThunk,
   getAllProductsThunk,
   getProductFullInfoThunk,
   updateProductDefaultsThunk,
@@ -26,6 +26,7 @@ import { IVariationReqData, VariationEntity } from '../types/offers/variations.t
 import { clearCurrentProductAction } from '../redux/products/products.actions';
 import { OfferPriceEntity } from '../types/price-management/priceManagement.types';
 import { WarehouseItemEntity } from '../types/warehouses.types';
+import { GetAllPricesQuery } from '../api/priceManagement.api';
 
 export interface ProductsService {
   create: ServiceDispatcherAsync<IProductReqData, OfferEntity>;
@@ -63,16 +64,16 @@ export interface ProductsService {
   >;
 
   // * PRICES
-  getAllPricesByProductId: ServiceDispatcherAsync<
+  getAllPrices: ServiceDispatcherAsync<
     {
       refreshCurrent?: boolean;
       updateCurrent?: boolean;
-      params: AppQueryParams;
+      params: GetAllPricesQuery;
     },
     OfferPriceEntity[]
   >;
   // * INVENTORIES
-  getAllInventoriesByProductId: ServiceDispatcherAsync<
+  getAllInventories: ServiceDispatcherAsync<
     {
       refreshCurrent?: boolean;
       updateCurrent?: boolean;
@@ -110,10 +111,10 @@ const useProductsService = (): ProductsService => {
       getAllVariationsByProductId: args => dispatch(getAllVariationsByProductIdThunk(defaultThunkPayload(args))),
 
       // * PRICES
-      getAllPricesByProductId: args => dispatch(getAllPricesByProductIdThunk(defaultThunkPayload(args))),
+      getAllPrices: args => dispatch(getAllOfferPricesThunk(defaultThunkPayload(args))),
 
       // * WAREHOUSING
-      getAllInventoriesByProductId: args => dispatch(getAllInventoriesByProductIdThunk(defaultThunkPayload(args))),
+      getAllInventories: args => dispatch(getAllInventoriesByProductIdThunk(defaultThunkPayload(args))),
     };
   }, [dispatch]);
 };

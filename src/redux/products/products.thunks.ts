@@ -3,7 +3,7 @@ import { axiosErrorCheck } from 'utils';
 import { ThunkPayload } from '../store.store';
 import { isAxiosError } from 'axios';
 import { IProductReqData, OfferEntity } from '../../types/offers/offers.types';
-import { AppQueryParams, PriceManagementApi, WarehousesApi } from '../../api';
+import { AppQueryParams, WarehousesApi } from '../../api';
 import { createThunkPayloadCreator } from '../../api/createApiCall.api';
 import OffersApi from '../../api/offersApi';
 import { OnlyUUID } from '../global.types';
@@ -11,6 +11,8 @@ import { OfferPriceEntity } from '../../types/price-management/priceManagement.t
 import { WarehouseItemEntity } from '../../types/warehouses.types';
 import { VariationEntity } from '../../types/offers/variations.types';
 import _ from 'lodash';
+import { GetAllPricesQuery } from '../../api/priceManagement.api';
+import { buildGetAllPricesThunk } from '../priceManagement/priceManagement.thunks';
 
 enum ProductsThunkType {
   getAllProductsThunk = 'products/getAllProductsThunk',
@@ -28,6 +30,7 @@ enum ProductsThunkType {
   updateDefaultsById = 'products/updateDefaultsByIdThunk',
 }
 type ActionWithCurrent = { refreshCurrent?: boolean; updateCurrent?: boolean };
+
 export interface ProductThunkPayloadByType {
   [ProductsThunkType.getAllProductsThunk]: {};
   [ProductsThunkType.getProductFullInfoThunk]: {};
@@ -35,15 +38,22 @@ export interface ProductThunkPayloadByType {
   [ProductsThunkType.updateProductThunk]: {};
   [ProductsThunkType.deleteProductThunk]: {};
   [ProductsThunkType.getAllVariations]: ThunkPayload<
-    ActionWithCurrent & { params?: Pick<AppQueryParams, 'list' | 'offer' | 'variation'> },
+    ActionWithCurrent & {
+      params?: Pick<AppQueryParams, 'list' | 'listId' | 'offer' | 'offerId' | 'variation' | 'variationId'>;
+    },
     VariationEntity[]
   >;
   [ProductsThunkType.getAllPrices]: ThunkPayload<
-    ActionWithCurrent & { params?: Pick<AppQueryParams, 'list' | 'offer' | 'variation'> },
+    ActionWithCurrent & { params?: GetAllPricesQuery },
     OfferPriceEntity[]
   >;
   [ProductsThunkType.getAllInventories]: ThunkPayload<
-    ActionWithCurrent & { params?: Pick<AppQueryParams, 'price' | 'offer' | 'variation' | 'warehouse'> },
+    ActionWithCurrent & {
+      params?: Pick<
+        AppQueryParams,
+        'price' | 'priceId' | 'offer' | 'offerId' | 'variation' | 'variationId' | 'warehouse' | 'warehouseId'
+      >;
+    },
     WarehouseItemEntity[]
   >;
 }
@@ -171,40 +181,25 @@ export const deleteProductThunk = createAsyncThunk(
   ProductsThunkType.deleteProductThunk,
   createThunkPayloadCreator(OffersApi.deleteById, OffersApi)
 );
-export const getAllPricesByProductIdThunk = createAsyncThunk<
-  ProductThunkReturnDataByType['products/getAllPrices'],
-  ProductThunkPayloadByType['products/getAllPrices']
->(ProductsThunkType.getAllPrices, async (args, thunkApi) => {
-  try {
-    const res = await PriceManagementApi.getAllPrices(args?.data?.params);
-    if (res) {
-      args?.onSuccess && args?.onSuccess(res?.data.data);
-    }
+export const getAllOfferPricesThunk = buildGetAllPricesThunk(ProductsThunkType.getAllPrices);
 
-    args?.onLoading && args?.onLoading(false);
-    return { data: res?.data.data, refreshCurrent: args?.data?.refreshCurrent };
-  } catch (error) {
-    args?.onLoading && args?.onLoading(false);
-    args?.onError && args?.onError(error);
-    return thunkApi.rejectWithValue(isAxiosError(error));
-  }
-});
 export const getAllInventoriesByProductIdThunk = createAsyncThunk<
   ProductThunkReturnDataByType['products/getAllInventories'],
   ProductThunkPayloadByType['products/getAllInventories']
 >(ProductsThunkType.getAllInventories, async (args, thunkApi) => {
+  args?.onLoading && args?.onLoading(true);
   try {
     const res = await WarehousesApi.getAllInventories(args?.data?.params);
     if (res) {
       args?.onSuccess && args?.onSuccess(res?.data.data);
     }
 
-    args?.onLoading && args?.onLoading(false);
     return { data: res?.data.data, refreshCurrent: args?.data?.refreshCurrent };
   } catch (error) {
-    args?.onLoading && args?.onLoading(false);
     args?.onError && args?.onError(error);
     return thunkApi.rejectWithValue(isAxiosError(error));
+  } finally {
+    args?.onLoading && args?.onLoading(false);
   }
 });
 // ??? VARIATIONS

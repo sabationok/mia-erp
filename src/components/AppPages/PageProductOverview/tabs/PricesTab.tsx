@@ -28,7 +28,7 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
   const loadData = useCallback(
     async ({ refresh, update }: { refresh?: boolean; update?: boolean }) => {
       if (!currentOffer) return;
-      productsS.getAllPricesByProductId({
+      productsS.getAllPrices({
         data: { params: { offerId: currentOffer?._id }, refreshCurrent: refresh, updateCurrent: update },
         onLoading: loaders?.onLoading('prices'),
       });

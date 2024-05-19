@@ -4,7 +4,7 @@ import { OfferEntity } from '../../types/offers/offers.types';
 import {
   createProductThunk,
   getAllInventoriesByProductIdThunk,
-  getAllPricesByProductIdThunk,
+  getAllOfferPricesThunk,
   getAllProductsThunk,
   getProductFullInfoThunk,
   updateProductDefaultsThunk,
@@ -144,9 +144,12 @@ export const productsSlice = createSlice({
           ManageVariationsStateMap(s, { data: vr });
         });
       })
-      .addCase(getAllPricesByProductIdThunk.fulfilled, (s, a) => {
+      .addCase(getAllOfferPricesThunk.fulfilled, (s, a) => {
         if (a.payload?.refreshCurrent) {
           s.currentOffer = { ...(s.currentOffer as OfferEntity), prices: a.payload.data };
+        }
+        if (a.payload.params?.offerId) {
+          ManageOffersStateMap(s, { data: { _id: a.payload.params?.offerId, prices: a.payload.data } });
         }
       })
       .addCase(getAllInventoriesByProductIdThunk.fulfilled, (s, a) => {

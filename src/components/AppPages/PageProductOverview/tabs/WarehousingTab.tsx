@@ -25,7 +25,7 @@ const WarehousingTab = ({ onSelect, selected, withActions }: WarehousingTabProps
     ({ refresh, update }: { refresh?: boolean; update?: boolean }) => {
       if (!currentProduct) return;
       const product = getIdRef(currentProduct);
-      productsS.getAllInventoriesByProductId({
+      productsS.getAllInventories({
         data: { refreshCurrent: refresh, params: { offer: product } },
         onLoading: setLoading,
       });

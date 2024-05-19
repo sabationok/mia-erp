@@ -7,7 +7,7 @@ import { ICustomRolesState } from './customRoles/customRoles.slice';
 import { IUsersState } from './users/users.types';
 import { IAppSettings } from './appSettings/appSettings.slice';
 import { OffersState } from './products/products.slice';
-import { IPriceListsState } from './priceManagement/priceManagement.slice';
+import { PricesState } from './priceManagement/priceManagement.slice';
 import { ApiDirType } from './APP_CONFIGS';
 import { IDirItemBase } from '../types/dir.types';
 import { IDirectoriesState } from './directories/directories.slice';
@@ -62,7 +62,7 @@ export const useCompaniesSelector = () =>
 export const useRefundsSelector = () =>
   useSelector<RootState, IRefundsState>((state: RootState): IRefundsState => state['refunds']);
 export const usePriceListsSelector = () =>
-  useSelector<RootState, IPriceListsState>((state: RootState): IPriceListsState => state.priceLists);
+  useSelector<RootState, PricesState>((state: RootState): PricesState => state.priceLists);
 export const useWarehousesSelector = () =>
   useSelector<RootState, IWarehouseState>((state: RootState): IWarehouseState => state.warehouses);
 export const useCustomRolesSelector = () =>
