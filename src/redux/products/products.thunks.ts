@@ -35,15 +35,15 @@ export interface ProductThunkPayloadByType {
   [ProductsThunkType.updateProductThunk]: {};
   [ProductsThunkType.deleteProductThunk]: {};
   [ProductsThunkType.getAllVariations]: ThunkPayload<
-    ActionWithCurrent & { params?: Pick<AppQueryParams, 'list' | 'product' | 'variation'> },
+    ActionWithCurrent & { params?: Pick<AppQueryParams, 'list' | 'offer' | 'variation'> },
     VariationEntity[]
   >;
   [ProductsThunkType.getAllPrices]: ThunkPayload<
-    ActionWithCurrent & { params?: Pick<AppQueryParams, 'list' | 'product' | 'variation'> },
+    ActionWithCurrent & { params?: Pick<AppQueryParams, 'list' | 'offer' | 'variation'> },
     OfferPriceEntity[]
   >;
   [ProductsThunkType.getAllInventories]: ThunkPayload<
-    ActionWithCurrent & { params?: Pick<AppQueryParams, 'price' | 'product' | 'variation' | 'warehouse'> },
+    ActionWithCurrent & { params?: Pick<AppQueryParams, 'price' | 'offer' | 'variation' | 'warehouse'> },
     WarehouseItemEntity[]
   >;
 }

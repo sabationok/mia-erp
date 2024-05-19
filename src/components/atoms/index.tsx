@@ -126,7 +126,8 @@ export const OverlayFooter = ({
           fontWeight={600}
           endIcon={'SmallArrowRight'}
           endIconSize={'24px'}
-          disabled={loading || !canSubmit}
+          disabled={!canSubmit}
+          isLoading={loading}
         >
           {submitButtonText}
         </ButtonIcon>

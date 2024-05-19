@@ -1,10 +1,13 @@
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { OnlyUUID } from '../../../../redux/global.types';
 import { useWarehousesSelector } from '../../../../redux/selectors.store';
-import { useMemo } from 'react';
-import { getIdRef } from '../../../../utils/data-transform';
+import { useCallback, useEffect, useMemo } from 'react';
+import { getIdRef } from '../../../../utils';
 import { IWarehouse } from '../../../../types/warehouses.types';
 import { warehousesTableColumns } from '../../../../data/warehauses.data';
+import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
+import { useLoadersProvider } from '../../../../Providers/Loaders/LoaderProvider';
+import { OfferOverlayLoaderKey } from '../FormProductDefaultsOverlay';
 
 export interface WarehousesTabProps {
   onSelect?: (warehouse: OnlyUUID) => void;
@@ -13,24 +16,18 @@ export interface WarehousesTabProps {
 }
 
 const WarehousesTab: React.FC<WarehousesTabProps> = ({ onSelect, selected, withActions }) => {
-  // const currentProduct = useProductsSelector().currentProduct;
-  // const modalS = useModalProvider();
-  // const productsS = useAppServiceProvider()[ServiceName.products];
-  // const [loading, setLoading] = useState(false);
-
+  const { warehouses: wrhsSrv } = useAppServiceProvider();
+  const loaders = useLoadersProvider<OfferOverlayLoaderKey>();
   const warehouses = useWarehousesSelector().warehouses;
 
-  // const loadData = useCallback(
-  //   ({ refresh, update }: { refresh?: boolean; update?: boolean }) => {
-  //     if (!currentProduct) return;
-  //     const product = ExtractId(currentProduct);
-  //     productsS.getAllInventoriesByProductId({
-  //       data: { refreshCurrent: refresh, params: { product } },
-  //       onLoading: setLoading,
-  //     });
-  //   },
-  //   [currentProduct, productsS]
-  // );
+  const loadData = useCallback(() => {
+    wrhsSrv.getAll({ onLoading: loaders.onLoading('warehouses'), data: { refresh: true } });
+  }, [loaders, wrhsSrv]);
+
+  useEffect(() => {
+    loadData();
+    // eslint-disable-next-line
+  }, []);
 
   const tableConfigs = useMemo((): ITableListProps<IWarehouse> => {
     return {
@@ -46,22 +43,21 @@ const WarehousesTab: React.FC<WarehousesTabProps> = ({ onSelect, selected, withA
           }
         }
       },
-      actionsCreator: !withActions
-        ? undefined
-        : ctx => {
-            // const currentId = ctx.selectedRow?._id;
+      actionsCreator: ctx => {
+        // const currentId = ctx.selectedRow?._id;
 
-            return [
-              // { icon: 'refresh', type: 'onlyIcon', onClick: () => loadData({ refresh: true }) },
-              // { separator: true },
-              // {
-              //   icon: 'plus',
-              //   type: 'onlyIconFilled',
-              // },
-            ];
-          },
+        return [
+          { icon: 'refresh', onClick: loadData },
+          // { icon: 'refresh', type: 'onlyIcon', onClick: () => loadData({ refresh: true }) },
+          // { separator: true },
+          // {
+          //   icon: 'plus',
+          //   type: 'onlyIconFilled',
+          // },
+        ];
+      },
     };
-  }, [onSelect, warehouses, withActions]);
+  }, [loadData, onSelect, warehouses]);
 
   // useEffect(() => {
   //   // if ((!currentProduct?.inventories || currentProduct?.inventories?.length === 0) && currentProduct?._id) {
@@ -70,7 +66,9 @@ const WarehousesTab: React.FC<WarehousesTabProps> = ({ onSelect, selected, withA
   //   // eslint-disable-next-line
   // }, []);
 
-  return <TableList isSearch={false} {...tableConfigs} selectedRow={selected} />;
+  return (
+    <TableList isSearch={false} {...tableConfigs} isLoading={loaders.isLoading?.warehouses} selectedRow={selected} />
+  );
 };
 
 export default WarehousesTab;

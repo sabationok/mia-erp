@@ -23,7 +23,7 @@ const ProductOverview: React.FC<ProductOverviewProps> = ({ product, ...props }) 
     if (product?._id) {
       priceManagement
         .getAllPrices({
-          data: { params: { product: getIdRef(product) } },
+          data: { params: { offer: getIdRef(product) } },
           onSuccess: setPriceList,
           onLoading: setLoading,
         })

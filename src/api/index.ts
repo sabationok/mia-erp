@@ -36,49 +36,6 @@ export enum AppQueryKey {
   filterParams = 'filterParams',
 }
 
-export interface AppQueryParams<Type = any> extends Record<string, any> {
-  type?: Type;
-  dirType?: ApiDirType;
-  isArchived?: boolean;
-  deleted?: boolean;
-  disabled?: boolean;
-  createTreeData?: boolean;
-  sortParams?: ISortParams;
-  search?: string;
-  searchBy?: string;
-  disabledForClient?: boolean;
-  status?: string | { internal?: string; external?: string };
-
-  isDefault?: boolean;
-  asDefault?: boolean;
-  fullInfo?: boolean;
-
-  group?: OnlyUUID;
-  manager?: OnlyUUID;
-  customer?: OnlyUUID;
-  owner?: OnlyUUID;
-  parent?: OnlyUUID;
-  product?: OnlyUUID;
-  inventory?: OnlyUUID;
-  warehouse?: OnlyUUID;
-  variation?: OnlyUUID;
-  list?: OnlyUUID;
-  price?: OnlyUUID;
-  order?: OnlyUUID;
-  slot?: OnlyUUID;
-  category?: OnlyUUID;
-  payment?: OnlyUUID;
-  invoice?: OnlyUUID;
-  shipment?: OnlyUUID;
-  service?: OnlyUUID;
-
-  categories?: string[];
-
-  timeFrom?: string | number | Date;
-  timeTo?: string | number | Date;
-  filterParams?: Partial<FilterReturnDataType>;
-}
-
 export interface AppQueries<Type = any> extends Record<string, any> {
   type?: Type;
 
@@ -97,6 +54,48 @@ export interface AppQueries<Type = any> extends Record<string, any> {
   invoiceId?: UUID;
   shipmentId?: UUID;
   serviceId?: UUID;
+  offerId?: UUID;
+}
+export interface AppQueryParams<Type = any> extends AppQueries<Type> {
+  dirType?: ApiDirType;
+  isArchived?: boolean;
+  deleted?: boolean;
+  disabled?: boolean;
+  createTreeData?: boolean;
+  sortParams?: ISortParams;
+  search?: string;
+  searchBy?: string;
+  disabledForClient?: boolean;
+  status?: string | { internal?: string; external?: string };
+  statusType?: 'internal' | 'external';
+  isDefault?: boolean;
+  asDefault?: boolean;
+  fullInfo?: boolean;
+
+  group?: OnlyUUID;
+  manager?: OnlyUUID;
+  customer?: OnlyUUID;
+  owner?: OnlyUUID;
+  parent?: OnlyUUID;
+  offer?: OnlyUUID;
+  inventory?: OnlyUUID;
+  warehouse?: OnlyUUID;
+  variation?: OnlyUUID;
+  list?: OnlyUUID;
+  price?: OnlyUUID;
+  order?: OnlyUUID;
+  slot?: OnlyUUID;
+  category?: OnlyUUID;
+  payment?: OnlyUUID;
+  invoice?: OnlyUUID;
+  shipment?: OnlyUUID;
+  service?: OnlyUUID;
+
+  categories?: string[];
+
+  timeFrom?: string | number | Date;
+  timeTo?: string | number | Date;
+  filterParams?: Partial<FilterReturnDataType>;
 }
 
 export type SortOrder = 'desc' | 'asc' | 'descending' | 'ascending' | 'DESC' | 'ASC';

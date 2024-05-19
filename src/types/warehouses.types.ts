@@ -164,5 +164,5 @@ export interface IWarehouseDocDto {
 export interface IWarehouseDocReqData {
   _id?: string;
   data?: IWarehouseDocDto;
-  params?: Omit<AppQueryParams, 'warehouse' | 'variation' | 'product' | 'price'>;
+  params?: Omit<AppQueryParams, 'warehouse' | 'variation' | 'offer' | 'price'>;
 }

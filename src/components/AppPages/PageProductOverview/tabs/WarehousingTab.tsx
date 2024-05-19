@@ -26,7 +26,7 @@ const WarehousingTab = ({ onSelect, selected, withActions }: WarehousingTabProps
       if (!currentProduct) return;
       const product = getIdRef(currentProduct);
       productsS.getAllInventoriesByProductId({
-        data: { refreshCurrent: refresh, params: { product } },
+        data: { refreshCurrent: refresh, params: { offer: product } },
         onLoading: setLoading,
       });
     },

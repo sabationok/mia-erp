@@ -4,9 +4,9 @@ import { AppResponse, OnlyUUID } from '../redux/global.types';
 import {
   ICreatePriceReqData,
   IPriceList,
-  OfferPriceEntity,
   IPriceListReqData,
   IUpdatePriceReqData,
+  OfferPriceEntity,
 } from '../types/price-management/priceManagement.types';
 import { AppQueryParams } from './index';
 
@@ -43,12 +43,12 @@ export class PriceManagementApi {
     return this.api.get(this.endpoints.getAllPrices(), { params });
   }
   public static async getAllPricesByProductId(
-    params?: Pick<AppQueryParams, 'product' | 'list' | 'variation'>
+    params?: Pick<AppQueryParams, 'offer' | 'list' | 'variation'>
   ): Promise<AppResponse<OfferPriceEntity[]>> {
     return this.api.get(this.endpoints.getAllPrices(), { params });
   }
   public static async getAllPrices(
-    params?: Pick<AppQueryParams, 'product' | 'list' | 'variation'>
+    params?: Pick<AppQueryParams, 'offer' | 'list' | 'variation'>
   ): Promise<AppResponse<OfferPriceEntity[]>> {
     return this.api.get(this.endpoints.getAllPrices(), { params });
   }

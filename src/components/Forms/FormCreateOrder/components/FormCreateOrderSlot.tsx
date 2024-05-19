@@ -31,7 +31,7 @@ import { offersTableColumns } from '../../../../data/offers.data';
 export interface FormCreateOrderSlotProps
   extends Omit<ModalFormProps<FormCreateOrderSlotSteps, any, FormCreateOrderSlotFormData>, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<IOrderTempSlot>;
-  params?: Pick<AppQueryParams, 'warehouse' | 'product' | 'variation' | 'price' | 'inventory'>;
+  params?: Pick<AppQueryParams, 'warehouse' | 'offer' | 'variation' | 'price' | 'inventory'>;
 }
 
 enum FormCreateOrderSlotSteps {
@@ -218,7 +218,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
       return createApiCall(
         {
           data: {
-            product: getIdRef(product),
+            offer: getIdRef(product),
             variation: variation ? getIdRef(variation) : undefined,
             warehouse: params?.warehouse ? getIdRef(params?.warehouse) : undefined,
           },

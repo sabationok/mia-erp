@@ -6,9 +6,9 @@ import { AppQueryParams } from 'api';
 import {
   ICreatePriceReqData,
   IPriceList,
-  OfferPriceEntity,
   IPriceListReqData,
   IUpdatePriceReqData,
+  OfferPriceEntity,
 } from '../types/price-management/priceManagement.types';
 import * as thunks from '../redux/priceManagement/priceManagement.thunks';
 import { IPricesThunksData } from '../redux/priceManagement/priceManagement.thunks';
@@ -24,7 +24,7 @@ export interface PriceManagementService {
 
   // ? PRICES
   getAllPrices: ServiceDispatcherAsync<
-    { refreshCurrent?: boolean; params?: Pick<AppQueryParams, 'list' | 'product' | 'variation'> },
+    { refreshCurrent?: boolean; params?: Pick<AppQueryParams, 'list' | 'offer' | 'variation'> },
     OfferPriceEntity[]
   >;
 

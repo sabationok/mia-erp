@@ -67,7 +67,7 @@ export interface ProductsService {
     {
       refreshCurrent?: boolean;
       updateCurrent?: boolean;
-      params: Pick<AppQueryParams, 'product' | 'list' | 'variation'>;
+      params: AppQueryParams;
     },
     OfferPriceEntity[]
   >;
@@ -76,7 +76,7 @@ export interface ProductsService {
     {
       refreshCurrent?: boolean;
       updateCurrent?: boolean;
-      params: Pick<AppQueryParams, 'product' | 'warehouse' | 'variation' | 'price'>;
+      params: AppQueryParams;
     },
     WarehouseItemEntity[]
   >;

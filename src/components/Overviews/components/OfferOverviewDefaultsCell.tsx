@@ -47,8 +47,8 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity>
           gap={6}
           fillWidth
         >
-          <Text $size={11}>{`${item?.title}: `}</Text>
-          <Text $size={12} $weight={600} $align={'right'}>
+          <Text $size={14}>{`${item?.title}: `}</Text>
+          <Text $size={14} $weight={600} $align={'right'}>
             {item?.value ?? '---'}
           </Text>
         </FlexBox>
@@ -69,8 +69,8 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity>
           gap={6}
           fillWidth
         >
-          <Text $size={11}>{`${item?.title}: `}</Text>
-          <Text $size={12} $weight={600}>
+          <Text>{`${item?.title}: `}</Text>
+          <Text $weight={600}>
             {item?.amount}
 
             {item?.percentage && ` | ${item?.percentage}%`}
@@ -92,7 +92,7 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity>
       />
 
       <FlexBox fillWidth>
-        <CellStyledComp.CellText $size={13} $weight={600} style={{ color: theme?.fontColorHeader }}>
+        <CellStyledComp.CellText $weight={600} style={{ color: theme?.fontColorHeader }}>
           {t('warehouse')}
         </CellStyledComp.CellText>
 
@@ -109,17 +109,15 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity>
               gap={6}
               fillWidth
             >
-              <Text $size={11}>{`${info.label}`}</Text>
-              <Text $size={12} $weight={600}>
-                {info?.value || '---'}
-              </Text>
+              <Text>{`${info.label}`}</Text>
+              <Text $weight={600}>{info?.value || '---'}</Text>
             </FlexBox>
           ))}
         </FlexBox>
       </FlexBox>
 
       <FlexBox fillWidth>
-        <CellStyledComp.CellText $size={13} $weight={600} style={{ color: theme?.fontColorHeader }}>
+        <CellStyledComp.CellText $weight={600} style={{ color: theme?.fontColorHeader }}>
           {t('supplier')}
         </CellStyledComp.CellText>
 
@@ -135,16 +133,14 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity>
             gap={6}
             fillWidth
           >
-            <Text $size={11}>{`${info.label}`}</Text>
-            <Text $size={12} $weight={600}>
-              {info?.value || '---'}
-            </Text>
+            <Text>{`${info.label}`}</Text>
+            <Text $weight={600}>{info?.value || '---'}</Text>
           </FlexBox>
         ))}
       </FlexBox>
 
       <FlexBox fillWidth gap={6}>
-        <CellStyledComp.CellText $size={13} $weight={600} style={{ color: theme?.fontColorHeader }}>
+        <CellStyledComp.CellText $weight={600} style={{ color: theme?.fontColorHeader }}>
           {t('variation')}
         </CellStyledComp.CellText>
 
@@ -152,9 +148,10 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity>
       </FlexBox>
 
       <FlexBox fillWidth gap={6}>
-        <CellStyledComp.CellText $size={13} $weight={600} style={{ color: theme?.fontColorHeader }}>
+        <CellStyledComp.CellText $weight={600} style={{ color: theme?.fontColorHeader }}>
           {t('price')}
         </CellStyledComp.CellText>
+
         <FlexBox fillWidth>{renderPriceInfo}</FlexBox>
       </FlexBox>
     </CellStyledComp.Cell>

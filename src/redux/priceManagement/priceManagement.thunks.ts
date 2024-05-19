@@ -2,9 +2,9 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   ICreatePriceReqData,
   IPriceList,
-  OfferPriceEntity,
   IPriceListReqData,
   IUpdatePriceReqData,
+  OfferPriceEntity,
 } from '../../types/price-management/priceManagement.types';
 import { ThunkPayload } from '../store.store';
 import { AppQueryParams, createApiCall, PriceManagementApi } from '../../api';
@@ -229,7 +229,7 @@ function buildGetAllPricesThunk(type: string) {
   return createAsyncThunk<
     { refreshCurrent?: boolean; data: OfferPriceEntity[] },
     ThunkPayload<
-      { refreshCurrent?: boolean; params?: Pick<AppQueryParams, 'list' | 'product' | 'variation'> },
+      { refreshCurrent?: boolean; params?: Pick<AppQueryParams, 'list' | 'offer' | 'variation'> },
       OfferPriceEntity[]
     >
   >(type, async (args, thunkApi) => {
