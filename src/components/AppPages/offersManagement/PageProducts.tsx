@@ -14,22 +14,23 @@ import useOffersActionsCreator from '../../../hooks/useProductsActionsCreator.ho
 import { BaseAppPageProps } from '../index';
 import { offersTableColumns } from '../../../data/offers.data';
 import { transactionsSearchParams } from '../../../data/transactions.data';
+import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
 
 interface Props extends BaseAppPageProps {}
 
 const PageProducts: React.FC<any> = (props: Props) => {
+  const loaders = useLoaders<'offers'>();
+  const { onLoading, isLoading } = loaders;
+
   const { getAll } = useStorageServiceHook();
   const state = useProductsSelector();
   const filterSelectors = useProductsFilterSelectorsHook();
   const actionsCreator = useOffersActionsCreator();
-  const [isLoading, setIsLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   const tableConfig = useMemo(
     (): ITableListProps<OfferEntity> => ({
-      tableData: state.products,
-      tableTitles: offersTableColumns,
       filterSelectors,
       isFilter: true,
       isSearch: true,
@@ -38,20 +39,22 @@ const PageProducts: React.FC<any> = (props: Props) => {
       actionsCreator,
       onFilterSubmit: filterParams => {
         setFilterParams(filterParams);
-        getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading }).then();
+        getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: onLoading('offers') }).then();
       },
       handleTableSort: (param, sortOrder) => {
         setSortParams({ dataPath: param.dataPath, sortOrder });
         getAll({
           data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },
-          onLoading: setIsLoading,
+          onLoading: onLoading('offers'),
         }).then();
       },
     }),
-    [actionsCreator, filterParams, filterSelectors, getAll, sortParams, state.products]
+    [actionsCreator, filterParams, filterSelectors, getAll, onLoading, sortParams]
   );
 
   useEffect(() => {
+    if (state.products?.length) return;
+
     if (sortParams || filterParams) {
       return;
     }
@@ -59,17 +62,25 @@ const PageProducts: React.FC<any> = (props: Props) => {
     if (!sortParams && !filterParams) {
       getAll({
         data: { refresh: true },
-        onLoading: setIsLoading,
+        onLoading: onLoading('offers'),
       });
       // if (state.products.length === 0) {
       // }
     }
     // eslint-disable-next-line
   }, []);
+
   return (
     <AppGridPage path={props.path}>
       <Page>
-        <TableList {...tableConfig} isLoading={isLoading} />
+        <TableList
+          {...tableConfig}
+          {...{
+            tableData: state.products,
+            tableTitles: offersTableColumns,
+          }}
+          isLoading={isLoading?.offers}
+        />
       </Page>
     </AppGridPage>
   );
