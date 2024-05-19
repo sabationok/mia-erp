@@ -4,10 +4,18 @@ import { t } from '../lang';
 import { OfferEntity, OfferStatusEnum } from '../types/offers/offers.types';
 import { getStatusesByEnum } from './statuses.data';
 import { enumToFilterOptions } from '../utils';
+import { FilterOption } from '../components/atoms/TabSelector';
+import { ImageSetSrcType } from '../types/offers/offer-images.types';
 
 export const offerStatusesData = getStatusesByEnum(OfferStatusEnum);
 export const OfferStatusFilterOptions = enumToFilterOptions(OfferStatusEnum);
 
+export const formAddImageSetTabs: FilterOption<ImageSetSrcType>[] = [
+  { label: 'Preview', value: ImageSetSrcType.img_preview, required: true },
+  { label: '1x', value: ImageSetSrcType.img_1x },
+  { label: '2x', value: ImageSetSrcType.img_2x },
+  { label: 'Webp', value: ImageSetSrcType.webp },
+];
 export const offersTableColumns: CellTittleProps<OfferEntity>[] = [
   {
     top: { name: t('label'), align: 'start', getData: rd => rd?.label },

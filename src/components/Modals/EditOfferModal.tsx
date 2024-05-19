@@ -1,12 +1,12 @@
 import { ModalFormProps } from '../ModalForm';
-import { OfferDimensionsFormArea } from '../Forms/offers/OfferDimensionsFormArea';
+import { OfferDimensionsFormArea } from '../Forms/offers/components/OfferDimensionsFormArea';
 import ModalBase from '../Modal';
 import { t } from '../../lang';
 import { toOfferFormData } from '../../utils';
 import { useEffect } from 'react';
 import { OfferTypeEnum } from '../../types/offers/offers.types';
-import { OfferMeasurementFormArea } from 'components/Forms/offers/OfferMeasurementFormArea';
-import { OfferBaseInfoFormArea } from '../Forms/offers/OfferBaseInfoFormArea';
+import { OfferMeasurementFormArea } from 'components/Forms/offers/components/OfferMeasurementFormArea';
+import { OfferBaseInfoFormArea } from '../Forms/offers/components/OfferBaseInfoFormArea';
 import FlexBox from '../atoms/FlexBox';
 import { AppLoaderSpiner } from '../atoms/AppLoaderSpiner';
 import { Text } from '../atoms/Text';
@@ -14,11 +14,11 @@ import TabSelector from '../atoms/TabSelector';
 import { productsFilterOptions } from '../../data/modalFilterOptions.data';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { LoadersProvider } from 'Providers/Loaders/LoaderProvider';
-import { OfferFormPropertiesArea } from '../Forms/offers/OfferFormPropertiesArea';
-import useProductsService from '../../hooks/useProductsService.hook';
-import { OfferFormImagesArea } from '../Forms/offers/OfferFormImagesArea';
+import { OfferFormPropertiesArea } from '../Forms/offers/components/OfferFormPropertiesArea';
+import useOffersService from '../../hooks/useProductsService.hook';
+import { OfferFormImagesArea } from '../Forms/offers/components/OfferFormImagesArea';
 import { useAppRouter, useCurrentOffer } from '../../hooks';
-import { OfferFormCategoriesArea } from '../Forms/offers/OfferFormCategoriesArea';
+import { OfferFormCategoriesArea } from '../Forms/offers/components/OfferFormCategoriesArea';
 import { OfferLoadersData, OfferLoadersKey } from '../Forms/offers/types';
 
 export interface EditOfferModalProps extends ModalFormProps {
@@ -28,7 +28,7 @@ export interface EditOfferModalProps extends ModalFormProps {
 
 const EditOfferModal: React.FC<EditOfferModalProps> = ({ onClose, _id, copy }) => {
   const currentOffer = useCurrentOffer({ id: _id });
-  const service = useProductsService();
+  const service = useOffersService();
   const loaders = useLoaders<OfferLoadersKey, OfferLoadersData>(
     { offer_refresh: { content: 'Refreshing...' }, offer_update: { content: 'Updating...' } },
     {

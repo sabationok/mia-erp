@@ -1,10 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   ICreatePriceReqData,
-  IPriceList,
   IPriceListReqData,
   IUpdatePriceReqData,
   OfferPriceEntity,
+  PriceListEntity,
 } from '../../types/price-management/priceManagement.types';
 import { ThunkPayload } from '../store.store';
 import { AppQueryParams, createApiCall, PriceManagementApi } from '../../api';
@@ -29,7 +29,7 @@ export const getAllPriceListsThunk = createAsyncThunk<
   | {
       refresh?: boolean;
       query?: AppQueryParams;
-      data: IPriceList[];
+      data: PriceListEntity[];
     }
   | undefined,
   ThunkPayload<
@@ -37,7 +37,7 @@ export const getAllPriceListsThunk = createAsyncThunk<
       refresh?: boolean;
       query?: AppQueryParams;
     },
-    IPriceList[]
+    PriceListEntity[]
   >
 >(PriceManagementThunkType.getAllPriceLists, async (payload, thunkAPI) => {
   const { data, onLoading, onSuccess, onError } = payload;
@@ -65,8 +65,8 @@ export const getAllPriceListsThunk = createAsyncThunk<
   }
 });
 export const createPriceListThunk = createAsyncThunk<
-  IPriceList | undefined,
-  ThunkPayload<IPriceListReqData, IPriceList>
+  PriceListEntity | undefined,
+  ThunkPayload<IPriceListReqData, PriceListEntity>
 >(PriceManagementThunkType.createPriceList, async (arg, thunkAPI) => {
   const { data, onLoading, onSuccess, onError } = arg;
 
@@ -94,38 +94,38 @@ export const createPriceListThunk = createAsyncThunk<
   }
 });
 
-export const refreshPriceListByIdThunk = createAsyncThunk<IPriceList | undefined, ThunkPayload<OnlyUUID, IPriceList>>(
-  PriceManagementThunkType.refreshPriceListById,
-  async (arg, thunkAPI) => {
-    const { data, onLoading, onSuccess, onError } = arg;
+export const refreshPriceListByIdThunk = createAsyncThunk<
+  PriceListEntity | undefined,
+  ThunkPayload<OnlyUUID, PriceListEntity>
+>(PriceManagementThunkType.refreshPriceListById, async (arg, thunkAPI) => {
+  const { data, onLoading, onSuccess, onError } = arg;
 
-    onLoading && onLoading(true);
+  onLoading && onLoading(true);
 
-    try {
-      const res = await createApiCall(
-        {
-          data,
-          logRes: true,
-          logError: true,
-        },
-        PriceManagementApi.getPriceListById,
-        PriceManagementApi
-      );
-      if (res?.data.data) {
-        onSuccess && onSuccess(res?.data.data);
-      }
-      onLoading && onLoading(false);
-      return res?.data.data;
-    } catch (e) {
-      onLoading && onLoading(false);
-      onError && onError(e);
-      return thunkAPI.rejectWithValue(axiosErrorCheck(e));
+  try {
+    const res = await createApiCall(
+      {
+        data,
+        logRes: true,
+        logError: true,
+      },
+      PriceManagementApi.getPriceListById,
+      PriceManagementApi
+    );
+    if (res?.data.data) {
+      onSuccess && onSuccess(res?.data.data);
     }
+    onLoading && onLoading(false);
+    return res?.data.data;
+  } catch (e) {
+    onLoading && onLoading(false);
+    onError && onError(e);
+    return thunkAPI.rejectWithValue(axiosErrorCheck(e));
   }
-);
+});
 export const updatePriceListByIdThunk = createAsyncThunk<
-  IPriceList | undefined,
-  ThunkPayload<IPriceListReqData, IPriceList>
+  PriceListEntity | undefined,
+  ThunkPayload<IPriceListReqData, PriceListEntity>
 >(PriceManagementThunkType.updatePriceListById, async (arg, thunkAPI) => {
   const { data, onLoading, onSuccess, onError } = arg;
 
@@ -153,8 +153,8 @@ export const updatePriceListByIdThunk = createAsyncThunk<
   }
 });
 export const getPriceListByIdThunk = createAsyncThunk<
-  { data: IPriceList; refreshCurrent?: boolean },
-  ThunkPayload<{ list: OnlyUUID; query?: AppQueryParams; refreshCurrent?: boolean }, IPriceList>
+  { data: PriceListEntity; refreshCurrent?: boolean },
+  ThunkPayload<{ list: OnlyUUID; query?: AppQueryParams; refreshCurrent?: boolean }, PriceListEntity>
 >(PriceManagementThunkType.getPriceListById, async (args, thunkAPI) => {
   const { data, onLoading, onSuccess, onError } = args;
 
@@ -207,21 +207,18 @@ export const updatePriceInListThunk = createAsyncThunk<
   ThunkPayload<IPricesThunksData<IUpdatePriceReqData>, OfferPriceEntity>
 >(PriceManagementThunkType.updatePriceInList, async (arg, thunkAPI) => {
   const { data, onLoading, onSuccess, onError } = arg;
-
   onLoading && onLoading(true);
-
   try {
     const res = await PriceManagementApi.updatePriceById(data?.data);
-
     if (res?.data.data) {
       onSuccess && onSuccess(res?.data.data);
     }
-    onLoading && onLoading(false);
     return { refreshCurrent: data?.refreshCurrent, data: res?.data.data };
   } catch (e) {
-    onLoading && onLoading(false);
     onError && onError(e);
     return thunkAPI.rejectWithValue(axiosErrorCheck(e));
+  } finally {
+    onLoading && onLoading(false);
   }
 });
 

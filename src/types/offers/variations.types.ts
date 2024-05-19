@@ -10,6 +10,7 @@ import { HasBaseCmsConfigs, HasBaseCmsConfigsDto } from '../cms.types';
 export interface IVariationBase extends HasDimensions, WithPeriod, HasLabel {
   sku?: string;
   barCode?: string;
+  imgPreview?: string;
 }
 
 export interface VariationEntity extends IVariationBase, IBase, HasCompany, HasBaseCmsConfigs {

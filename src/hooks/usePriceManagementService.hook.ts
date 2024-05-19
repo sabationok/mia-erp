@@ -5,22 +5,25 @@ import { defaultThunkPayload } from 'utils/fabrics';
 import { AppQueryParams } from 'api';
 import {
   ICreatePriceReqData,
-  IPriceList,
   IPriceListReqData,
   IUpdatePriceReqData,
   OfferPriceEntity,
+  PriceListEntity,
 } from '../types/price-management/priceManagement.types';
 import * as thunks from '../redux/priceManagement/priceManagement.thunks';
 import { IPricesThunksData } from '../redux/priceManagement/priceManagement.thunks';
 
 export interface PriceManagementService {
   // createList?: ServiceDispatcherAsync<IPriceListReqData, IPriceList>;
-  createList: ServiceDispatcherAsync<IPriceListReqData, IPriceList>;
-  deleteById?: ServiceApiCaller<string, IPriceList>; // !!!!! ===>>> ServiceDispatcher
-  updateById?: ServiceApiCaller<IPriceListReqData, IPriceList>; // !!!!! ===>>> ServiceDispatcher
-  getById: ServiceDispatcherAsync<{ list: OnlyUUID; query?: AppQueryParams; refreshCurrent?: boolean }, IPriceList>;
-  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, IPriceList[]>;
-  refreshListById: ServiceDispatcherAsync<OnlyUUID, IPriceList>;
+  createList: ServiceDispatcherAsync<IPriceListReqData, PriceListEntity>;
+  deleteById?: ServiceApiCaller<string, PriceListEntity>; // !!!!! ===>>> ServiceDispatcher
+  updateById?: ServiceApiCaller<IPriceListReqData, PriceListEntity>; // !!!!! ===>>> ServiceDispatcher
+  getById: ServiceDispatcherAsync<
+    { list: OnlyUUID; query?: AppQueryParams; refreshCurrent?: boolean },
+    PriceListEntity
+  >;
+  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, PriceListEntity[]>;
+  refreshListById: ServiceDispatcherAsync<OnlyUUID, PriceListEntity>;
 
   // ? PRICES
   getAllPrices: ServiceDispatcherAsync<

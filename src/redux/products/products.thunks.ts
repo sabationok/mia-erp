@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import { ThunkPayload } from '../store.store';
 import { isAxiosError } from 'axios';
-import { IProductReqData, OfferEntity } from '../../types/offers/offers.types';
+import { IProductDefaultsDto, IProductReqData, OfferEntity } from '../../types/offers/offers.types';
 import { AppQueryParams, WarehousesApi } from '../../api';
 import { createThunkPayloadCreator } from '../../api/createApiCall.api';
 import OffersApi from '../../api/offersApi';
@@ -27,7 +27,7 @@ enum ProductsThunkType {
 
   getAllInventories = 'products/getAllInventories',
 
-  updateDefaultsById = 'products/updateDefaultsByIdThunk',
+  updateDefaults = 'products/updateDefaultsByIdThunk',
 }
 type ActionWithCurrent = { refreshCurrent?: boolean; updateCurrent?: boolean };
 
@@ -159,8 +159,16 @@ export const updateProductThunk = createAsyncThunk<
 });
 export const updateProductDefaultsThunk = createAsyncThunk<
   (ActionWithCurrent & { data?: OfferEntity }) | undefined,
-  ThunkPayload<IProductReqData & ActionWithCurrent, OfferEntity>
->(ProductsThunkType.updateDefaultsById, async (args, thunkApi) => {
+  ThunkPayload<
+    {
+      _id: string;
+      defaults: IProductDefaultsDto;
+      refreshCurrent?: boolean;
+      updateCurrent?: boolean;
+    } & ActionWithCurrent,
+    OfferEntity
+  >
+>(ProductsThunkType.updateDefaults, async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
 
   try {
@@ -169,12 +177,12 @@ export const updateProductDefaultsThunk = createAsyncThunk<
       args?.onSuccess && args?.onSuccess(res?.data.data);
     }
 
-    args?.onLoading && args?.onLoading(false);
     return { data: res?.data.data, refreshCurrent: args?.data?.refreshCurrent };
   } catch (error) {
-    args?.onLoading && args?.onLoading(false);
     args?.onError && args?.onError(error);
     return thunkApi.rejectWithValue(isAxiosError(error));
+  } finally {
+    args?.onLoading && args?.onLoading(false);
   }
 });
 export const deleteProductThunk = createAsyncThunk(

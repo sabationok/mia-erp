@@ -4,7 +4,6 @@ import { IPriceFormData } from '../../../../types/price-management/priceManageme
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import { useAppForm } from '../../../../hooks';
 import FormProductSelectorForPricing from './FormProductSelectorForPricing';
-import InputLabel from '../../../atoms/Inputs/InputLabel';
 import { useCallback, useState } from 'react';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 import { usePriceListsSelector, useProductsSelector } from '../../../../redux/selectors.store';
@@ -25,6 +24,7 @@ import FormPriceInputs, { FormPriceDecimal } from './FormPriceInputs';
 import { Text } from '../../../atoms/Text';
 import Switch from '../../../atoms/Switch';
 import { useLoaders } from '../../../../Providers/Loaders/useLoaders.hook';
+import { UUID } from '../../../../types/utils.types';
 
 const isStringOrNumber = yup
   .mixed()
@@ -42,20 +42,24 @@ const validation = yup.object().shape({
 
 export interface FormCreatePriceProps
   extends Omit<ModalFormProps<any, any, IPriceFormData>, 'onSubmit' | 'afterSubmit'> {
-  onSubmit: AppSubmitHandler<IPriceFormData>;
+  onSubmit?: AppSubmitHandler<IPriceFormData>;
   offer?: OfferEntity;
   variation?: VariationEntity;
   update?: string;
 }
 export type PriceFormDataPath = Path<IPriceFormData>;
 const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update, offer, onSubmit, ...props }) => {
-  const productInState = useProductsSelector().currentOffer;
-  const currentProduct = offer || productInState;
-  const { lists } = usePriceListsSelector();
-  const [showPriceListSelect, setShowPriceListSelect] = useState(false);
-  const loaders = useLoaders<'price'>();
-
   const service = useAppServiceProvider()[ServiceName.priceManagement];
+  const offersSrv = useAppServiceProvider()[ServiceName.products];
+  const productInState = useProductsSelector().currentOffer;
+  const currentOffer = offer || productInState;
+
+  const loaders = useLoaders<'price' | 'set_default'>({
+    price: { content: 'Creating...' },
+    set_default: { content: 'Updating offer...' },
+  });
+  const [showPriceListSelect, setShowPriceListSelect] = useState(false);
+  const [isDefault, setIsDefault] = useState(false);
 
   const submitOptions = useAfterSubmitOptions();
 
@@ -64,8 +68,9 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
       in: 0,
       out: 0,
       commission: { amount: 0, percentage: 0 },
+      markup: { amount: 0, percentage: 0 },
       ...defaultState,
-      offer: currentProduct,
+      offer: currentOffer,
     },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
@@ -102,13 +107,16 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
     [cost, price, setValue]
   );
 
-  const handleSelectPriceList: OnRowClickHandler = useCallback(
-    data => {
-      data?._id && setValue('list._id', data?._id);
-    },
-    [setValue]
-  );
-
+  const onSetAsDefault = (offerId: string, priceId: string) => {
+    offersSrv.setDefaults({
+      data: { _id: offerId, defaults: { price: { _id: priceId } } },
+      onSuccess: () => {
+        setIsDefault(false);
+        submitOptions.state?.close && props?.onClose && props?.onClose();
+      },
+      onLoading: loaders.onLoading('set_default'),
+    });
+  };
   const onValid = (formData: IPriceFormData) => {
     const dataForReq = toReqData(formData);
 
@@ -117,8 +125,13 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
         data: { data: { _id: update, data: dataForReq }, updateCurrent: true },
         onLoading: loaders.onLoading('price'),
         onSuccess: (data, meta) => {
-          submitOptions.state?.close && props?.onClose && props?.onClose();
           ToastService.success('Price updated');
+
+          if (isDefault && formData.offer?._id) {
+            onSetAsDefault(formData.offer?._id, data._id);
+          } else {
+            submitOptions.state?.close && props?.onClose && props?.onClose();
+          }
         },
       });
       return;
@@ -128,7 +141,12 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
         onLoading: loaders.onLoading('price'),
         onSuccess: (data, meta) => {
           ToastService.success('Price created');
-          submitOptions.state?.close && props?.onClose && props?.onClose();
+
+          if (isDefault && formData.offer?._id) {
+            onSetAsDefault(formData.offer?._id, data._id);
+          } else {
+            submitOptions.state?.close && props?.onClose && props?.onClose();
+          }
         },
       });
     }
@@ -142,7 +160,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
 
   return (
     <ModalForm
-      isLoading={loaders.isLoading?.price}
+      isLoading={loaders.hasLoading}
       onSubmit={handleSubmit(onValid, e => {
         ToastService.warning('Invalid form data');
         console.log(e);
@@ -155,7 +173,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
       {...props}
     >
       <FlexBox padding={'0 0 8px'} flex={1} overflow={'auto'}>
-        {!currentProduct && (
+        {!currentOffer && (
           <FormProductSelectorForPricing
             title={'Select product for pricing'}
             disabled={!defaultState?.list?._id}
@@ -179,6 +197,16 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
         />
 
         <FlexBox padding={'8px'} fxDirection={'row'} justifyContent={'space-between'} alignItems={'center'}>
+          <Text>{t('Set as default')}</Text>
+          <Switch
+            size={'34px'}
+            onChange={ev => {
+              setIsDefault(ev.checked);
+            }}
+          />
+        </FlexBox>
+
+        <FlexBox padding={'8px'} fxDirection={'row'} justifyContent={'space-between'} alignItems={'center'}>
           <Text>{t('Add to price list')}</Text>
           <Switch
             size={'34px'}
@@ -189,16 +217,12 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
         </FlexBox>
 
         {showPriceListSelect && (
-          <InputLabel label={t('Select price list')} error={showPriceListSelect && errors.list}>
-            <FlexBox fillWidth style={{ height: 250 }} padding={'0 2px'} overflow={'hidden'}>
-              <TableList
-                tableTitles={priceListColumns}
-                tableData={lists}
-                isSearch={false}
-                onRowClick={handleSelectPriceList}
-              />
-            </FlexBox>
-          </InputLabel>
+          <PriceListSelectArea
+            error={errors?.list?.message}
+            onSelect={info => {
+              setValue('list._id', info);
+            }}
+          />
         )}
       </FlexBox>
     </ModalForm>
@@ -206,19 +230,17 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
 };
 
 export default FormCreatePrice;
-// if (!canCount) {
-//   setValue('markupAmount', 0);
-//   setValue('commissionAmount', 0);
-//   setValue('markupPercentage', 0);
-//   setValue('commissionPercentage', 0);
-//   toast.info(`canCount: ${!canCount}`);
-// }
-// {/*<FlexBox fxDirection={'row'} gap={12}>*/}
-// {/*  <InputLabel label={'Націнка, у %'} direction={'vertical'}>*/}
-// {/*    <InputText placeholder={'Введіть % націнки'} type={'number'} {...register('markupPercentage')} />*/}
-// {/*  </InputLabel>*/}
 
-// {/*  <InputLabel label={'Націнка, фіксована'} direction={'vertical'}>*/}
-// {/*    <InputText placeholder={'Введіть суму націнки'} type={'number'} {...register('markupAmount')} />*/}
-// {/*  </InputLabel>*/}
-// {/*</FlexBox>*/}
+const PriceListSelectArea = ({ onSelect }: { onSelect?: (info: UUID) => void; error?: string }) => {
+  const { lists } = usePriceListsSelector();
+
+  const handleSelectPriceList: OnRowClickHandler = data => {
+    data?._id && onSelect && onSelect(data?._id);
+  };
+
+  return (
+    <FlexBox fillWidth style={{ height: 250 }} padding={'8px 4px'} overflow={'hidden'}>
+      <TableList tableTitles={priceListColumns} tableData={lists} isSearch={false} onRowClick={handleSelectPriceList} />
+    </FlexBox>
+  );
+};

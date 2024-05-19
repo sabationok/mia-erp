@@ -9,31 +9,19 @@ import InputText from '../../atoms/Inputs/InputText';
 import ButtonsGroup from '../../atoms/ButtonsGroup';
 import styled from 'styled-components';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-
-export enum ImageSetSrcType {
-  img_preview = 'img_preview',
-  img_1x = 'img_1x',
-  img_2x = 'img_2x',
-  webp = 'webp',
-}
-
-export const formAddImageSetTabs: FilterOption<ImageSetSrcType>[] = [
-  { label: 'Preview', value: ImageSetSrcType.img_preview, required: true },
-  { label: '1x', value: ImageSetSrcType.img_1x },
-  { label: '2x', value: ImageSetSrcType.img_2x },
-  { label: 'Webp', value: ImageSetSrcType.webp },
-];
+import { ImageSetSrcType } from '../../../types/offers/offer-images.types';
+import { formAddImageSetTabs } from 'data';
 
 export interface FormAddImageSetData extends Partial<Omit<OfferImageSlotEntity, '_id' | 'createdAt' | 'updatedAt'>> {}
 
-export interface FormAddImageProps extends Omit<ModalFormProps<any, any, FormAddImageSetData>, 'onSubmit'> {
+export interface AddImageSetModalProps extends Omit<ModalFormProps<any, any, FormAddImageSetData>, 'onSubmit'> {
   onSubmit?: (data: Partial<FormAddImageSetData>, setId?: string, setIndex?: number) => void;
   setId?: string;
   setIndex?: number;
   type?: ImageSetSrcType;
 }
 
-const FormAddImageSet = ({
+const AddImageSetModal = ({
   title,
   fillHeight = true,
   onSubmit,
@@ -41,7 +29,7 @@ const FormAddImageSet = ({
   defaultState,
   type,
   ...props
-}: FormAddImageProps) => {
+}: AddImageSetModalProps) => {
   const [current, setCurrent] = useState<FilterOption<ImageSetSrcType> | undefined>(formAddImageSetTabs[0]);
   const [formData, setFormData] = useState<FormAddImageSetData>(defaultState || {});
   const inputRef = useRef<HTMLInputElement>(null);
@@ -64,6 +52,7 @@ const FormAddImageSet = ({
       title={title || 'Додати новий сет зображень'}
       fillHeight={fillHeight}
       {...props}
+      width={'360px'}
       onClose={onClose}
       onSubmit={handleSubmitForm}
     >
@@ -104,6 +93,7 @@ const FormAddImageSet = ({
             defaultIndex={type ? formAddImageSetTabs.findIndex(el => el.value === type) : 0}
             onSelect={info => {
               setCurrent(info.option);
+              inputRef.current?.focus({ preventScroll: true });
             }}
           />
         </FlexBox>
@@ -153,4 +143,4 @@ const Image = styled.img`
 
   max-height: 100%;
 `;
-export default FormAddImageSet;
+export default AddImageSetModal;

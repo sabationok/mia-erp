@@ -1,21 +1,21 @@
 import { ModalFormProps } from '../ModalForm';
-import { OfferDimensionsFormArea } from '../Forms/offers/OfferDimensionsFormArea';
+import { OfferDimensionsFormArea } from '../Forms/offers/components/OfferDimensionsFormArea';
 import ModalBase from '../Modal';
 import { t } from '../../lang';
 import { toOfferFormData } from '../../utils';
 import { useEffect } from 'react';
 import { OfferTypeEnum } from '../../types/offers/offers.types';
-import { OfferMeasurementFormArea } from 'components/Forms/offers/OfferMeasurementFormArea';
-import { OfferBaseInfoFormArea } from '../Forms/offers/OfferBaseInfoFormArea';
+import { OfferMeasurementFormArea } from 'components/Forms/offers/components/OfferMeasurementFormArea';
+import { OfferBaseInfoFormArea } from '../Forms/offers/components/OfferBaseInfoFormArea';
 import FlexBox from '../atoms/FlexBox';
 import TabSelector from '../atoms/TabSelector';
 import { productsFilterOptions } from '../../data/modalFilterOptions.data';
-import { OfferFormPropertiesArea } from '../Forms/offers/OfferFormPropertiesArea';
+import { OfferFormPropertiesArea } from '../Forms/offers/components/OfferFormPropertiesArea';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { LoadersProvider, useLoadersProvider } from '../../Providers/Loaders/LoaderProvider';
-import { OfferFormImagesArea } from '../Forms/offers/OfferFormImagesArea';
+import { OfferFormImagesArea } from '../Forms/offers/components/OfferFormImagesArea';
 import { useAppRouter, useCurrentOffer } from '../../hooks';
-import { OfferFormCategoriesArea } from '../Forms/offers/OfferFormCategoriesArea';
+import { OfferFormCategoriesArea } from '../Forms/offers/components/OfferFormCategoriesArea';
 import { OfferLoadersData, OfferLoadersKey } from '../Forms/offers/types';
 
 export interface CreateOfferModalProps extends ModalFormProps {

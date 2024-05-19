@@ -1,7 +1,7 @@
 import { FilterSelectorType } from 'components/Filter/AppFilter';
-import { IPriceList } from '../../types/price-management/priceManagement.types';
+import { PriceListEntity } from '../../types/price-management/priceManagement.types';
 
-const useStorageFilterSelectors = (): FilterSelectorType<keyof IPriceList>[] => {
+const useStorageFilterSelectors = (): FilterSelectorType<keyof PriceListEntity>[] => {
   // const transactionTypes = [
   //   { _id: 'ds6d5vf6sd5f1v6sd', name: 'INCOME', label: 'ДОХІД' },
   //   { _id: 'ds6d5vf6sd6f1v61d', name: 'TRANSFER', label: 'ПЕРЕКАЗ' },

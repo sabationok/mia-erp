@@ -15,7 +15,7 @@ enum RightSideOptionEnum {
   Prices = 'Prices',
   Warehousing = 'Warehousing',
 }
-const toggleOptions = enumToFilterOptions(RightSideOptionEnum);
+const TabsList = enumToFilterOptions(RightSideOptionEnum);
 
 export interface OfferOverviewPageRightSideProps {
   isVisible?: boolean;
@@ -33,8 +33,8 @@ const OfferOverviewPageRightSide: React.FC<OfferOverviewPageRightSideProps> = ({
     }
     const tabs: Record<RightSideOptionEnum, React.ReactNode> = {
       [RightSideOptionEnum.Variations]: <VariationsTab withActions />,
-      [RightSideOptionEnum.Warehousing]: <PricesTab withActions />,
-      [RightSideOptionEnum.Prices]: <WarehousingTab withActions />,
+      [RightSideOptionEnum.Warehousing]: <WarehousingTab withActions />,
+      [RightSideOptionEnum.Prices]: <PricesTab withActions />,
     };
     return tabs?.[currentTab] ?? null;
   }, [currentTab, page.currentOffer]);
@@ -61,12 +61,7 @@ const OfferOverviewPageRightSide: React.FC<OfferOverviewPageRightSideProps> = ({
       )}
 
       <TabBox overflow={'hidden'} fillWidth flex={1}>
-        <TabSelector
-          filterOptions={toggleOptions}
-          defaultValue={currentTab}
-          onOptSelect={filterHandler}
-          preventFilter
-        />
+        <TabSelector filterOptions={TabsList} defaultValue={currentTab} onOptSelect={filterHandler} preventFilter />
 
         {renderTab}
       </TabBox>

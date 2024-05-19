@@ -1,6 +1,6 @@
-import FlexBox from '../../../atoms/FlexBox';
-import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
-import { Text } from '../../../atoms/Text';
+import FlexBox from '../atoms/FlexBox';
+import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import { Text } from '../atoms/Text';
 import styled from 'styled-components';
 import * as React from 'react';
 

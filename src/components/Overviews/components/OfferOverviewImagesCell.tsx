@@ -1,12 +1,12 @@
 import { RenderOverviewCellComponent } from './overview-types';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import React, { useMemo } from 'react';
-import { formAddImageSetTabs } from '../../Forms/FormProduct/FormAddImageSet';
 import ImagePreviewSmall from '../../atoms/ImagePreviewSmall';
 import FormProductImages from '../../Overlays/FormProductImagesOverlay';
 import FlexBox from '../../atoms/FlexBox';
 import { CellStyledComp } from './CellStyles';
 import { OverviewCellHeader } from './OverviewCellHeader';
+import { formAddImageSetTabs } from '../../../data';
 
 export const OfferOverviewImagesCell: RenderOverviewCellComponent<OfferEntity> = ({ data, cell, overlayHandler }) => {
   const renderImageSets = useMemo(() => {

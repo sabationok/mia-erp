@@ -1,5 +1,5 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
-import { IProductReqData, OfferEntity } from '../types/offers/offers.types';
+import { IProductDefaultsDto, IProductReqData, OfferEntity } from '../types/offers/offers.types';
 import { OnlyUUID, ServiceApiCaller, ServiceDispatcher, ServiceDispatcherAsync } from 'redux/global.types';
 import {
   createProductThunk,
@@ -28,7 +28,7 @@ import { OfferPriceEntity } from '../types/price-management/priceManagement.type
 import { WarehouseItemEntity } from '../types/warehouses.types';
 import { GetAllPricesQuery } from '../api/priceManagement.api';
 
-export interface ProductsService {
+export interface OffersService {
   create: ServiceDispatcherAsync<IProductReqData, OfferEntity>;
   deleteById: ServiceApiCaller<string, OfferEntity>; // !!!!! ===>>> ServiceDispatcher
   updateById: ServiceDispatcherAsync<
@@ -40,7 +40,12 @@ export interface ProductsService {
   getProductFullInfo: ServiceDispatcherAsync<OnlyUUID, OfferEntity>;
   clearCurrent: ServiceDispatcher<undefined>;
   setDefaults: ServiceDispatcherAsync<
-    IProductReqData & { refreshCurrent?: boolean; updateCurrent?: boolean },
+    {
+      _id: string;
+      defaults: IProductDefaultsDto;
+      refreshCurrent?: boolean;
+      updateCurrent?: boolean;
+    },
     OfferEntity
   >;
 
@@ -83,10 +88,10 @@ export interface ProductsService {
   >;
 }
 
-const useProductsService = (): ProductsService => {
+const useOffersService = (): OffersService => {
   const dispatch: AppDispatch = useAppDispatch();
 
-  return useMemo((): ProductsService => {
+  return useMemo((): OffersService => {
     return {
       create: args => dispatch(createProductThunk(defaultThunkPayload(args))),
       updateById: args => dispatch(updateProductThunk(defaultThunkPayload(args))),
@@ -119,4 +124,4 @@ const useProductsService = (): ProductsService => {
   }, [dispatch]);
 };
 
-export default useProductsService;
+export default useOffersService;

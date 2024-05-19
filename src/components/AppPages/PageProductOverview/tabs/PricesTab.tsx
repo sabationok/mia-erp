@@ -17,13 +17,15 @@ export interface PricesTabProps {
   withActions?: boolean;
 }
 const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions = true }) => {
+  const modalS = useModalProvider();
+
+  const productsS = useAppServiceProvider()[ServiceName.products];
   const offerId = useAppParams().productId;
   const currentOffer = useCurrentOffer({ id: offerId });
+
   const loaders = useLoadersProvider<OfferOverlayLoaderKey>();
 
-  const pricesS = useAppServiceProvider()[ServiceName.priceManagement];
-  const modalS = useModalProvider();
-  const productsS = useAppServiceProvider()[ServiceName.products];
+  // const pricesS = useAppServiceProvider()[ServiceName.priceManagement];
 
   const loadData = useCallback(
     async ({ refresh, update }: { refresh?: boolean; update?: boolean }) => {
@@ -35,6 +37,8 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
     },
     [currentOffer, loaders, productsS]
   );
+
+  const updateDefaults = ({}: { price?: OnlyUUID }) => {};
 
   const tableConfig = useMemo((): ITableListProps<OfferPriceEntity> => {
     return {
@@ -66,18 +70,20 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
                 icon: 'plus',
                 type: 'onlyIconFilled',
                 onClick: () => {
-                  const m = modalS.open({
+                  modalS.open({
                     ModalChildren: FormCreatePrice,
                     modalChildrenProps: {
                       offer: currentOffer,
-                      onSubmit: (d, o) => {
-                        pricesS.addPriceToList({
-                          data: { updateCurrent: true, data: { data: d } },
-                          onSuccess: () => {
-                            o?.close && m?.onClose();
-                          },
-                        });
-                      },
+                      // onSubmit: (d, o) => {
+                      //   pricesS.addPriceToList({
+                      //     data: { updateCurrent: true, data: { data: d } },
+                      //     onSuccess: data => {
+                      //       updateDefaults({ price: { _id: data._id } });
+                      //
+                      //       o?.close && m?.onClose();
+                      //     },
+                      //   });
+                      // },
                     },
                   });
                 },
@@ -85,7 +91,7 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
             ];
           },
     };
-  }, [currentOffer, withActions, onSelect, loadData, modalS, pricesS]);
+  }, [currentOffer, withActions, onSelect, loadData, modalS]);
 
   useEffect(() => {
     // if ((!currentOffer?.prices || currentOffer?.prices?.length === 0) && currentProduct?._id) {

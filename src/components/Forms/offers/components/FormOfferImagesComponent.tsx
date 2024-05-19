@@ -5,11 +5,13 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Text } from '../../../atoms/Text';
 import { useModalService } from '../../../ModalProvider/ModalProvider';
-import FormAddImageSet, { FormAddImageSetData, formAddImageSetTabs, ImageSetSrcType } from '../FormAddImageSet';
+import AddImageSetModal, { FormAddImageSetData } from '../AddImageSetModal';
 import ImagePreviewSmall from '../../../atoms/ImagePreviewSmall';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import { checks as check } from '../../../../utils';
 import { t } from '../../../../lang';
+import { formAddImageSetTabs } from '../../../../data';
+import { ImageSetSrcType } from '../../../../types/offers/offer-images.types';
 
 export interface FormOfferImagesComponentProps {
   onChangeState?: (state: Partial<OfferImageSlotEntity>[]) => void;
@@ -128,7 +130,7 @@ const FormOfferImagesComponent: React.FC<FormOfferImagesComponentProps> = ({
 
   const handleAddNewSet = () => {
     modalS.open({
-      ModalChildren: FormAddImageSet,
+      ModalChildren: AddImageSetModal,
       modalChildrenProps: {
         onSubmit: data => {
           handleAddImageSet(data);
@@ -154,7 +156,7 @@ const FormOfferImagesComponent: React.FC<FormOfferImagesComponentProps> = ({
             title={el.label ?? ''}
             onEditPress={() => {
               modalS.open({
-                ModalChildren: FormAddImageSet,
+                ModalChildren: AddImageSetModal,
                 modalChildrenProps: {
                   defaultState: slot,
                   type: el.value,

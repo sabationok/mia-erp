@@ -13,7 +13,7 @@ import { FilterReturnDataType } from '../../Filter/AppFilter';
 import TableList from '../../TableList/TableList';
 import { usePriceListsSelector } from '../../../redux/selectors.store';
 import { BaseAppPageProps } from '../index';
-import { priceListContentColumns } from '../../../data/priceManagement.data';
+import { pricesColumns } from '../../../data/priceManagement.data';
 import { getIdRef } from '../../../utils/data-transform';
 
 interface Props extends BaseAppPageProps {}
@@ -77,7 +77,7 @@ const PagePriceListOverview: React.FC<Props> = ({ path }) => {
           isLoading={isLoading}
           actionsCreator={actionsCreator}
           isSearch={false}
-          tableTitles={priceListContentColumns}
+          tableTitles={pricesColumns}
         />
       </Page>
     </AppGridPage>

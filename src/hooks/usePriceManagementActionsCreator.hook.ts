@@ -2,9 +2,9 @@ import { useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
 import {
-  IPriceList,
   IPriceListItemReqData,
   OfferPriceEntity,
+  PriceListEntity,
   PriceListTypeEnum,
 } from '../types/price-management/priceManagement.types';
 import FormCreatePriceList from '../components/Forms/pricing/FormCreatePriceList';
@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { enumToFilterOptions } from '../utils/fabrics';
 import { ToastService } from '../services';
 
-export type PriceManagementActionsCreator = TableActionCreator<IPriceList>;
+export type PriceManagementActionsCreator = TableActionCreator<PriceListEntity>;
 
 export const PriceManagementItemTypeFilterOptions = enumToFilterOptions(PriceListTypeEnum);
 

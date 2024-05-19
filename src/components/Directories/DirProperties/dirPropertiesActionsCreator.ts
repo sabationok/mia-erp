@@ -1,7 +1,7 @@
 import { DirInTreeActionsCreatorType } from '../../../types/dir.types';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { IProperty, IPropertyDto, IPropertyValue, IVariationTemplate } from '../../../types/offers/properties.types';
-import { ProductsService } from '../../../hooks/useProductsService.hook';
+import { OffersService } from '../../../hooks/useProductsService.hook';
 import { Modals } from '../../Modals/Modals';
 import { t } from '../../../lang';
 import { productsFilterOptions } from '../../../data/modalFilterOptions.data';
@@ -15,7 +15,7 @@ import { ToastService } from '../../../services';
 export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
   ApiDirType.PROPERTIES_PRODUCTS,
   IProperty,
-  ProductsService,
+  OffersService,
   IPropertyDto,
   PropertiesLevelType & { onSuccess?: (data: IProperty[]) => void }
 > = ({ modalService, service, type }) => {
@@ -260,7 +260,7 @@ export class DirInTreeActionsBuilder<
 export const DirPropertiesActionsBuilder = new DirInTreeActionsBuilder<
   DirPropertiesActionName,
   DirPropertiesActionType,
-  ProductsService,
+  OffersService,
   { offerType: OfferTypeEnum }
 >()
   .add('onCreateValue', ({ name, navigate, service }) => {

@@ -7,7 +7,7 @@ import { ICompanyBase } from '../companies.types';
 import { IUserBase } from '../auth.types';
 
 import { EntityPath, HasDescription, HasLabel, HasStatus, HasType, MaybeNull, WithPeriod } from '../utils.types';
-import { PriceDiscountEntity } from './discounts';
+import { PriceDiscountEntity, PriceDiscountRecord } from './discounts';
 
 export enum PriceListTypeEnum {
   PURCHASES = 'purchases',
@@ -34,11 +34,12 @@ export interface PriceListDto
   supplierTags?: string[];
 }
 
-export interface IPriceList extends IBase {
+export interface PriceListEntity extends IBase {
   label: string;
   status?: PriceListStatus;
   prices?: OfferPriceEntity[];
-  products?: Partial<OfferEntity>[];
+  // products?: Partial<OfferEntity>[];
+  discounts?: PriceDiscountEntity[];
   timeFrom?: string;
   timeTo?: string;
   description?: string;
@@ -86,7 +87,7 @@ export interface OfferPriceEntity extends IBase, IPriceBase {
   author?: IUserBase;
   editor?: IUserBase;
 
-  list?: IPriceList;
+  list?: PriceListEntity;
   offer?: OfferEntity;
   variation?: VariationEntity;
 
@@ -97,6 +98,8 @@ export interface IPriceFormData extends Omit<IPriceDto, 'product' | 'variation' 
   offer?: IFormDataValueWithID;
   variation?: IFormDataValueWithID;
   list?: IFormDataValueWithID;
+
+  discounts?: (PriceDiscountRecord | PriceDiscountEntity)[];
 }
 
 export interface IPriceListReqData {

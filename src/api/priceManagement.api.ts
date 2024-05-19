@@ -3,10 +3,10 @@ import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppResponse, OnlyUUID } from '../redux/global.types';
 import {
   ICreatePriceReqData,
-  IPriceList,
   IPriceListReqData,
   IUpdatePriceReqData,
   OfferPriceEntity,
+  PriceListEntity,
 } from '../types/price-management/priceManagement.types';
 import { AppQueryParams } from './index';
 
@@ -18,19 +18,19 @@ export class PriceManagementApi {
   private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.priceManagementEndpoints;
 
-  public static async createPriceList(data?: IPriceListReqData): Promise<AppResponse<IPriceList>> {
+  public static async createPriceList(data?: IPriceListReqData): Promise<AppResponse<PriceListEntity>> {
     return this.api.post(this.endpoints.createList(), data?.data);
   }
 
-  public static async updatePriceList(data?: IPriceListReqData): Promise<AppResponse<IPriceList>> {
+  public static async updatePriceList(data?: IPriceListReqData): Promise<AppResponse<PriceListEntity>> {
     return this.api.patch(this.endpoints.updateList(data?._id), data?.data);
   }
 
-  public static async getAllPriceLists(query?: AppQueryParams): Promise<AppResponse<IPriceList[]>> {
+  public static async getAllPriceLists(query?: AppQueryParams): Promise<AppResponse<PriceListEntity[]>> {
     return this.api.get(this.endpoints.getAll(), { params: query });
   }
 
-  public static async getPriceListById(list?: OnlyUUID, query?: AppQueryParams): Promise<AppResponse<IPriceList>> {
+  public static async getPriceListById(list?: OnlyUUID, query?: AppQueryParams): Promise<AppResponse<PriceListEntity>> {
     return this.api.get(this.endpoints.getById(list?._id), { params: query });
   }
 

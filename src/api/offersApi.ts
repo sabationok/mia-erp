@@ -1,6 +1,6 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
-import { IProductReqData, OfferEntity } from '../types/offers/offers.types';
+import { IProductDefaultsDto, IProductReqData, OfferEntity } from '../types/offers/offers.types';
 import { AppResponse } from '../redux/global.types';
 import { ClientApi } from './client.api';
 
@@ -22,8 +22,11 @@ export default class OffersApi {
     return this.api.patch(this.endpoints.updateById(data?._id), data?.data);
   }
 
-  public static async updateDefaultsById(data?: IProductReqData): Promise<AppResponse<OfferEntity>> {
-    return this.api.patch(this.endpoints.updateDefaultsById(data?._id), data?.data?.defaults);
+  public static async updateDefaultsById(data?: {
+    _id: string;
+    defaults: IProductDefaultsDto;
+  }): Promise<AppResponse<OfferEntity>> {
+    return this.api.patch(this.endpoints.updateDefaultsById(data?._id), data?.defaults);
   }
 
   public static async getById(id?: string, params?: AppQueryParams): Promise<AppResponse<OfferEntity>> {

@@ -9,7 +9,7 @@ import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { OnlyUUID } from '../../redux/global.types';
 import { ModalFormProps } from '../ModalForm';
 import { ToastService } from '../../services';
-import { OverlayFooter, OverlayForm, OverlayHeader } from '../Forms/FormProduct/components';
+import { OverlayFooter, OverlayForm, OverlayHeader } from './index';
 import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
 import { t } from '../../lang';
 import { OfferEntity } from '../../types/offers/offers.types';

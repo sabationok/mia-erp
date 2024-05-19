@@ -1,21 +1,26 @@
-import { FormArea } from '../FormArea/FormArea';
-import { OfferFormAreaProps } from './types';
-import { IProductFormData, IProductFullFormData, OfferEntity, OfferTypeEnum } from '../../../types/offers/offers.types';
-import { useAppForm } from '../../../hooks';
-import InputLabel from '../../atoms/Inputs/InputLabel';
-import { t } from '../../../lang';
-import InputText from '../../atoms/Inputs/InputText';
-import FlexBox from '../../atoms/FlexBox';
+import { FormArea } from '../../FormArea/FormArea';
+import { OfferFormAreaProps } from '../types';
+import {
+  IProductFormData,
+  IProductFullFormData,
+  OfferEntity,
+  OfferTypeEnum,
+} from '../../../../types/offers/offers.types';
+import { useAppForm } from '../../../../hooks';
+import InputLabel from '../../../atoms/Inputs/InputLabel';
+import { t } from '../../../../lang';
+import InputText from '../../../atoms/Inputs/InputText';
+import FlexBox from '../../../atoms/FlexBox';
 import * as React from 'react';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
-import { ApiDirType } from '../../../redux/APP_CONFIGS';
-import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
-import { toReqData } from '../../../utils';
-import useOffersService from '../../../hooks/useProductsService.hook';
-import { MaybeNull } from '../../../types/utils.types';
-import { useOfferLoadersProvider } from '../../Modals/CreateOfferModal';
-import { OfferStatusFilterOptions } from '../../../data';
-import { useDirectorySelector } from '../../../redux/selectors.store';
+import CustomSelect from '../../../atoms/Inputs/CustomSelect/CustomSelect';
+import { ApiDirType } from '../../../../redux/APP_CONFIGS';
+import TextareaPrimary from '../../../atoms/Inputs/TextareaPrimary';
+import { toReqData } from '../../../../utils';
+import useOffersService from '../../../../hooks/useProductsService.hook';
+import { MaybeNull } from '../../../../types/utils.types';
+import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
+import { OfferStatusFilterOptions } from '../../../../data';
+import { useDirectorySelector } from '../../../../redux/selectors.store';
 
 export interface OfferBaseInfoFormAreaProps extends OfferFormAreaProps<IProductFullFormData> {
   type?: MaybeNull<OfferTypeEnum>;

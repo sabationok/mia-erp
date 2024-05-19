@@ -8,7 +8,7 @@ import InvoicingPolicyTab from './settings-tabs/InvoicingPolicyTab';
 import WarehousingPolicyTab from './settings-tabs/WarehousingPolicyTab';
 import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
-import { OverlayHeader } from '../Forms/FormProduct/components';
+import { OverlayHeader } from '../Overlays';
 import { ICompany } from '../../types/companies.types';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../redux/reduxTypes.types';

@@ -4,9 +4,9 @@ import { useDirectorySelector, useProductsSelector } from '../../redux/selectors
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { FormEventHandler, useEffect, useMemo, useState } from 'react';
 import { getIdRef } from '../../utils/data-transform';
-import FormProductCategories from '../Forms/FormProduct/FormProductCategories';
+import FormProductCategories from '../Forms/offers/FormProductCategories';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { OverlayFooter, OverlayForm, OverlayHeader } from '../Forms/FormProduct/components';
+import { OverlayFooter, OverlayForm, OverlayHeader } from './index';
 
 export interface FormSelectCategoriesOverlayProps extends OverlayHandlerReturn {}
 

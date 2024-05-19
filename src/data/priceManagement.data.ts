@@ -1,12 +1,12 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { t } from '../lang';
 import {
-  IPriceList,
   OfferPriceEntity,
   PriceAmountAndPercentageFieldsKey,
+  PriceListEntity,
 } from '../types/price-management/priceManagement.types';
-import { numberWithSpaces } from '../utils';
 import { priceAmountAndPercentageFieldsLabels } from '../utils/tables';
+import { toPrice } from '../utils/numbers';
 
 const dateColumn: CellTittleProps = {
   top: { name: t('Updated'), align: 'center', getData: d => d?.createdAt },
@@ -14,7 +14,7 @@ const dateColumn: CellTittleProps = {
   width: '170px',
   action: 'dateDbl',
 };
-export const priceListColumns: CellTittleProps<IPriceList>[] = [
+export const priceListColumns: CellTittleProps<PriceListEntity>[] = [
   {
     top: { name: t('label'), path: 'label' },
     bottom: { name: t('type'), path: 'type' },
@@ -73,12 +73,12 @@ export function createColumnForPriceEntity<Type extends OfferPriceEntity = any>(
     top: {
       name: topLabel,
       align: 'end',
-      getData: d => numberWithSpaces(d[name]?.amount),
+      getData: d => toPrice(d[name]?.amount),
     },
     bottom: {
       name: priceAmountAndPercentageFieldsLabels[name]?.percentage,
       align: 'end',
-      getData: d => numberWithSpaces(d[name]?.percentage),
+      getData: d => toPrice(d[name]?.percentage),
     },
     width: countedWidth,
     action: 'valueByPath',
@@ -87,11 +87,11 @@ export function createColumnForPriceEntity<Type extends OfferPriceEntity = any>(
 const keys: PriceAmountAndPercentageFieldsKey[] = [
   'commission',
   'markup',
-  'bonus',
-  'cashback',
-  'discount',
-  'tax',
-  'vat',
+  // 'bonus',
+  // 'cashback',
+  // 'discount',
+  // 'tax',
+  // 'vat',
 ];
 
 export const basePriceColumns: CellTittleProps<OfferPriceEntity>[] = [
@@ -99,9 +99,9 @@ export const basePriceColumns: CellTittleProps<OfferPriceEntity>[] = [
     top: {
       name: t('Price OUT'),
       align: 'end',
-      getData: d => numberWithSpaces(d?.out),
+      getData: d => toPrice(d?.out),
     },
-    bottom: { name: t('Price IN'), align: 'end', getData: d => numberWithSpaces(null) },
+    bottom: { name: t('Price IN'), align: 'end', getData: d => toPrice(d?.in) },
     width: '170px',
     action: 'valueByPath',
   },
@@ -119,9 +119,9 @@ export function getBasePriceColumns<Type extends OfferPriceEntity = any>(): Cell
       top: {
         name: t('Price OUT'),
         align: 'end',
-        getData: d => numberWithSpaces(d?.out),
+        getData: d => toPrice(d?.out),
       },
-      bottom: { name: t('Price IN'), align: 'end', getData: d => numberWithSpaces(null) },
+      bottom: { name: t('Price IN'), align: 'end', getData: d => toPrice(d?.in) },
       width: '170px',
       action: 'valueByPath',
     },
@@ -134,14 +134,16 @@ export function getBasePriceColumns<Type extends OfferPriceEntity = any>(): Cell
   ];
 }
 
-export const priceListContentColumns: CellTittleProps<OfferPriceEntity>[] = [
+export const pricesColumns: CellTittleProps<OfferPriceEntity>[] = [
   {
-    top: { name: t('Product label'), getData: d => d?.offer?.label },
+    top: { name: t('Offer label'), getData: d => d?.offer?.label },
     bottom: { name: t('Variation label'), getData: d => d?.variation?.label },
     width: '270px',
-    getImgPreview: ({ product }) => (product?.images ? product?.images[0]?.img_preview : ''),
+    getImgPreview: row => (row?.offer?.images ? row?.offer?.images[0]?.img_preview : row?.variation?.imgPreview || ''),
     action: 'doubleDataWithAvatar',
   },
+
+  ...basePriceColumns,
   {
     top: { name: t('SKU'), getData: d => d?.offer?.sku },
     bottom: { name: t('SKU'), getData: d => d?.variation?.sku },
@@ -155,7 +157,6 @@ export const priceListContentColumns: CellTittleProps<OfferPriceEntity>[] = [
     action: 'valueByPath',
   },
 
-  ...basePriceColumns,
   {
     top: { name: t('Author'), path: 'author.name' },
     bottom: { name: t('email'), path: 'author.email' },
@@ -168,15 +169,15 @@ export const priceListContentColumns: CellTittleProps<OfferPriceEntity>[] = [
 
 export const pricesColumnsForProductReview: CellTittleProps<OfferPriceEntity>[] = [
   {
-    top: { name: t('Variation label'), getData: d => d?.variation?.label },
+    top: { name: t('Label'), getData: d => d?.variation?.label ?? d?.offer?.label },
     // bottom: { name: '',  getData: d => ''},
-    getImgPreview: rd => (rd.offer?.images ? rd.offer?.images[0]?.img_preview : ''),
+    getImgPreview: rd => (rd.offer?.images ? rd.offer?.images[0]?.img_preview : rd.variation?.imgPreview),
     width: '170px',
     action: 'doubleDataWithAvatar',
   },
   {
-    top: { name: t('SKU'), getData: d => d?.variation?.sku },
-    bottom: { name: t('barCode'), getData: d => d?.variation?.barCode },
+    top: { name: t('SKU'), getData: d => d?.variation?.sku ?? d?.offer?.sku },
+    bottom: { name: t('barCode'), getData: d => d?.variation?.barCode ?? d?.offer?.barCode },
     width: '170px',
     action: 'valueByPath',
   },

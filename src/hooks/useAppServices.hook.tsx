@@ -1,5 +1,5 @@
 import usePermissionsServiceHook, { PermissionService } from './usePermissionsService.hook';
-import useProductsServiceHook, { ProductsService } from './useProductsService.hook';
+import useProductsServiceHook, { OffersService } from './useProductsService.hook';
 import useTransactionsServiceHook, { UseFinancesService } from './useTransactionsService.hook';
 import { DirectoriesService } from './useDirService.hook';
 import { useDirService } from './index';
@@ -22,7 +22,7 @@ import UseDeliveriesServiceHook, { UseDeliveriesService } from './services/useDe
 export { AppModuleName as ServiceName } from '../redux/reduxTypes.types';
 export interface AppService {
   [AppModuleName.permissions]: PermissionService;
-  [AppModuleName.products]: ProductsService;
+  [AppModuleName.products]: OffersService;
   [AppModuleName.finances]: UseFinancesService;
   [AppModuleName.directories]: DirectoriesService;
   [AppModuleName.priceManagement]: PriceManagementService;

@@ -1,12 +1,12 @@
-import DimensionsInputs, { DimensionsFormData } from '../FormProduct/components/DimensionsInputs';
-import { useAppForm } from '../../../hooks';
-import { FormArea } from '../FormArea/FormArea';
-import useProductsService from '../../../hooks/useProductsService.hook';
-import { ToastService } from '../../../services';
-import { IDimensions } from '../../../types/utils.types';
+import DimensionsInputs, { DimensionsFormData } from './DimensionsInputs';
+import { useAppForm } from '../../../../hooks';
+import { FormArea } from '../../FormArea/FormArea';
+import useOffersService from '../../../../hooks/useProductsService.hook';
+import { ToastService } from '../../../../services';
+import { IDimensions } from '../../../../types/utils.types';
 import { useState } from 'react';
-import { OfferFormAreaProps } from './types';
-import { t } from '../../../lang';
+import { OfferFormAreaProps } from '../types';
+import { t } from '../../../../lang';
 
 export interface OfferDimensionsFormSectionProps extends OfferFormAreaProps<IDimensions> {}
 
@@ -16,7 +16,7 @@ export const OfferDimensionsFormArea = ({
   disabled,
   ...props
 }: OfferDimensionsFormSectionProps) => {
-  const service = useProductsService();
+  const service = useOffersService();
   const [isLoading, setIsLoading] = useState(false);
   const form = useAppForm<DimensionsFormData>({
     defaultValues: { dimensions: defaultValues ?? {} },

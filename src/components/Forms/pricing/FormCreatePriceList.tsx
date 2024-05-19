@@ -1,7 +1,7 @@
 import {
-  IPriceList,
   IPriceListReqData,
   PriceListDto,
+  PriceListEntity,
   PriceListType,
 } from '../../../types/price-management/priceManagement.types';
 import ModalForm, { ModalFormProps } from '../../ModalForm';
@@ -16,12 +16,12 @@ import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/For
 import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
 
 export interface FormCreatePriceListProps extends Omit<ModalFormProps<PriceListType>, 'onSubmit' | 'afterSubmit'> {
-  defaultData?: Partial<IPriceList>;
+  defaultData?: Partial<PriceListEntity>;
   edit?: boolean;
   onSubmit?: AppSubmitHandler<
     IPriceListReqData,
     {
-      onSuccess?: (data: IPriceList) => void;
+      onSuccess?: (data: PriceListEntity) => void;
       onError?: () => void;
     }
   >;

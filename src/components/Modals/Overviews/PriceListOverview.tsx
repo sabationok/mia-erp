@@ -1,23 +1,23 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import TableList, { ITableListProps } from '../../TableList/TableList';
 import { useEffect, useMemo, useState } from 'react';
-import { IPriceList, OfferPriceEntity } from '../../../types/price-management/priceManagement.types';
+import { OfferPriceEntity, PriceListEntity } from '../../../types/price-management/priceManagement.types';
 import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
 import { usePriceListOverviewActionsCreator } from '../../../hooks/usePriceListOverviewActionsCreator.hook';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { usePriceListsSelector } from '../../../redux/selectors.store';
 import { FormCreatePriceProps } from '../../Forms/pricing/FormCreatePrice/FormCreatePrice';
-import { priceListContentColumns } from '../../../data/priceManagement.data';
+import { pricesColumns } from '../../../data/priceManagement.data';
 
 export interface PriceListOverviewProps extends Omit<ModalFormProps, 'onSubmit' | 'afterSubmit'> {
   createFormProps?: FormCreatePriceProps;
-  priceList?: IPriceList;
+  priceList?: PriceListEntity;
   getTableSetting: (data?: OfferPriceEntity[]) => ITableListProps<OfferPriceEntity>;
   listId?: string;
   onSubmit?: (
     data: OfferPriceEntity | OfferPriceEntity[],
     options: UseAppFormSubmitOptions & {
-      onSuccess: (newData: IPriceList) => void;
+      onSuccess: (newData: PriceListEntity) => void;
       onLoading: (l: boolean) => void;
     }
   ) => void;
@@ -63,7 +63,7 @@ const PriceListOverview: React.FC<PriceListOverviewProps> = ({
         actionsCreator={actionsCreator}
         isSearch={false}
         tableData={tableData}
-        tableTitles={priceListContentColumns}
+        tableTitles={pricesColumns}
       />
     </ModalForm>
   );

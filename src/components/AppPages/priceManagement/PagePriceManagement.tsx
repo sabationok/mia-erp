@@ -9,7 +9,7 @@ import { ISortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import usePriceManagementServiceHook from '../../../hooks/usePriceManagementService.hook';
 import usePriceManagementActionsCreatorHook from '../../../hooks/usePriceManagementActionsCreator.hook';
-import { IPriceList } from '../../../types/price-management/priceManagement.types';
+import { PriceListEntity } from '../../../types/price-management/priceManagement.types';
 import { useNavigate } from 'react-router-dom';
 import { BaseAppPageProps } from '../index';
 import { priceListColumns } from '../../../data/priceManagement.data';
@@ -26,7 +26,7 @@ const PagePriceManagement: React.FC<BaseAppPageProps> = (props: Props) => {
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   const tableConfig = useMemo(
-    (): ITableListProps<IPriceList> => ({
+    (): ITableListProps<PriceListEntity> => ({
       tableData: state.lists,
       tableTitles: priceListColumns,
       isFilter: false,

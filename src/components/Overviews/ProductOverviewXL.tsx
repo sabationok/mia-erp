@@ -5,7 +5,7 @@ import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import { t } from '../../lang';
 import { usePageCurrentProduct } from '../AppPages/PageProductOverview/PageOfferProvider';
-import { OverlayHeader } from '../Forms/FormProduct/components';
+import { OverlayHeader } from '../Overlays';
 import { checks, enumToFilterOptions, toAppDateFormat } from '../../utils';
 import { IMeasurement } from '../../types/utils.types';
 import TabSelector from '../atoms/TabSelector';

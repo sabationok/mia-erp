@@ -23,8 +23,8 @@ export interface FormAfterSubmitOptionsProps extends UseFormSubmitOptions {
   control?: FormAfterSubmitOptionsControl;
 }
 
-export const useAfterSubmitOptions = () => {
-  const [state, setState] = useState<UseFormSubmitOptions>({ ...initialOptions });
+export const useAfterSubmitOptions = <O extends Record<string, any> = any>(options?: O) => {
+  const [state, setState] = useState<UseFormSubmitOptions>({ ...initialOptions, ...(options ?? {}) });
 
   const control: FormAfterSubmitOptionsControl = useCallback((option: keyof UseFormSubmitOptions) => {
     setState(prev => ({

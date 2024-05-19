@@ -1,15 +1,15 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { StateErrorType } from 'redux/reduxTypes.types';
-import { IPriceList, OfferPriceEntity } from '../../types/price-management/priceManagement.types';
+import { OfferPriceEntity, PriceListEntity } from '../../types/price-management/priceManagement.types';
 import * as thunks from './priceManagement.thunks';
 import { checks } from '../../utils';
 import { PartialRecord, UUID } from '../../types/utils.types';
 import { omit } from 'lodash';
 
 export interface PricesState {
-  lists: IPriceList[];
-  filteredLists?: IPriceList[];
-  current?: IPriceList | null;
+  lists: PriceListEntity[];
+  filteredLists?: PriceListEntity[];
+  current?: PriceListEntity | null;
   isLoading: boolean;
   error: StateErrorType;
   dataMap: PartialRecord<UUID, OfferPriceEntity>;
@@ -83,7 +83,7 @@ export const priceManagementSlice = createSlice({
       })
       .addCase(thunks.getAllPricesThunk.fulfilled, (s, a) => {
         if (a.payload.refreshCurrent) {
-          s.current = { ...(s.current as IPriceList), prices: a.payload?.data };
+          s.current = { ...(s.current as PriceListEntity), prices: a.payload?.data };
         }
 
         a.payload?.data.forEach(price => {

@@ -1,13 +1,13 @@
-import { OfferFormAreaProps } from './types';
-import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { OfferEntity, OfferImageSlotEntity } from '../../../types/offers/offers.types';
-import { useOfferLoadersProvider } from '../../Modals/CreateOfferModal';
-import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import { OfferFormAreaProps } from '../types';
+import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
+import { OfferEntity, OfferImageSlotEntity } from '../../../../types/offers/offers.types';
+import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
+import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useMemo, useState } from 'react';
-import { FormArea } from '../FormArea/FormArea';
-import FormOfferImagesComponent from '../FormProduct/components/FormOfferImagesComponent';
-import { getIdRef } from '../../../utils';
-import { t } from '../../../lang';
+import { FormArea } from '../../FormArea/FormArea';
+import FormOfferImagesComponent from './FormOfferImagesComponent';
+import { getIdRef } from '../../../../utils';
+import { t } from '../../../../lang';
 
 export interface OfferFormImagesAreaProps extends OfferFormAreaProps<OfferImageSlotEntity[]> {
   onSubmit?: AppSubmitHandler<Partial<OfferImageSlotEntity>[]>;

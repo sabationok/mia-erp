@@ -8,7 +8,7 @@ import { TabOption } from '../../atoms/TabSelector';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { ProductsService } from '../../../hooks/useProductsService.hook';
+import { OffersService } from '../../../hooks/useProductsService.hook';
 import FlexBox from '../../atoms/FlexBox';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { useProductsSelector } from '../../../redux/selectors.store';
@@ -28,7 +28,7 @@ export interface DirPropertiesProps
     IPropertyDto,
     IPropertyDto,
     IProperty,
-    ProductsService,
+    OffersService,
     PropertiesLevelType & { onSuccess?: (data: IProperty[]) => void }
   > {}
 

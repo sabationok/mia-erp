@@ -1,18 +1,18 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Text } from '../../atoms/Text';
-import { FormArea } from '../FormArea/FormArea';
+import { Text } from '../../../atoms/Text';
+import { FormArea } from '../../FormArea/FormArea';
 import styled from 'styled-components';
-import FlexBox from '../../atoms/FlexBox';
+import FlexBox from '../../../atoms/FlexBox';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { usePropertiesSelector } from '../../../redux/selectors.store';
-import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
-import { OfferFormAreaProps } from './types';
-import { useOfferLoadersProvider } from '../../Modals/CreateOfferModal';
-import { ArrayUUID } from '../../../redux/global.types';
-import { t } from '../../../lang';
-import { OfferEntity } from '../../../types/offers/offers.types';
+import { usePropertiesSelector } from '../../../../redux/selectors.store';
+import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
+import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
+import CustomSelect from '../../../atoms/Inputs/CustomSelect/CustomSelect';
+import { OfferFormAreaProps } from '../types';
+import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
+import { ArrayUUID } from '../../../../redux/global.types';
+import { t } from '../../../../lang';
+import { OfferEntity } from '../../../../types/offers/offers.types';
 
 export interface OfferFormPropertiesAreaProps extends OfferFormAreaProps<ArrayUUID> {
   onSubmit?: AppSubmitHandler<string[]>;
