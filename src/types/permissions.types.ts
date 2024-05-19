@@ -1,9 +1,10 @@
 import { ICustomRole } from '../redux/customRoles/customRoles.types';
 import { AppResponse, IBase, OnlyUUID } from '../redux/global.types';
-import { ICompany } from './companies.types';
+import { CompanyEntity } from './companies.types';
 import { IUserBase } from './auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';
 import { OutputIntegrationBase } from './integrations.types';
+import { AppDate } from './utils.types';
 
 export enum PermissionStatus {
   PENDING = 'PENDING',
@@ -15,17 +16,20 @@ export enum PermissionRecipientEnum {
   user = 'user',
   integration = 'integration',
 }
-export interface IPermission extends IBase {
-  company?: Partial<ICompany>;
-  user?: Partial<IUserBase>;
-  integration?: Partial<OutputIntegrationBase>;
-  owner?: Partial<IUserBase>;
-  role?: Partial<ICustomRole>;
+export interface PermissionEntity extends IBase {
+  company?: CompanyEntity;
+  user?: IUserBase;
+  integration?: OutputIntegrationBase;
+  owner?: IUserBase;
+  role?: ICustomRole;
   email?: string;
   status?: PermissionStatus;
   code?: string | number;
-  expireAt?: number | Date;
+  expireAt?: AppDate;
+
   permission_token?: string;
+  access_token?: string;
+  refresh_token?: string;
 }
 
 export interface IPermissionForReq {
@@ -35,9 +39,9 @@ export interface IPermissionForReq {
   actions?: any[];
 }
 
-export interface IPermissionResData extends AppResponse<IPermission> {}
+export interface IPermissionResData extends AppResponse<PermissionEntity> {}
 
-export interface IPermissionsResData extends AppResponse<IPermission[]> {}
+export interface IPermissionsResData extends AppResponse<PermissionEntity[]> {}
 
 export interface IPermissionReqData<D = IPermissionForReq | Partial<IPermissionForReq>> {
   id: string;
@@ -46,9 +50,9 @@ export interface IPermissionReqData<D = IPermissionForReq | Partial<IPermissionF
 }
 
 export interface IPermissionsState {
-  permission: Partial<IPermission>;
-  permissions: IPermission[];
-  users: IPermission[];
+  permission: Partial<PermissionEntity>;
+  permissions: PermissionEntity[];
+  users: PermissionEntity[];
   permission_token?: string;
   isLoading: boolean;
   error: StateErrorType;

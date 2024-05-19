@@ -2,10 +2,10 @@ import { ArrayUUID, IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/gl
 import { IProductCategoryDirItem, ISupplierDirItem } from '../dir.types';
 import { FilterOption } from '../../components/atoms/TabSelector';
 import { OfferPriceEntity } from '../price-management/priceManagement.types';
-import { ICompany } from '../companies.types';
+import { CompanyEntity } from '../companies.types';
 import { IWarehouse, WarehouseItemEntity } from '../warehouses.types';
 import { IBrand } from '../../redux/directories/brands.types';
-import { IUser } from '../auth.types';
+import { UserEntity } from '../auth.types';
 import { AppQueryParams } from '../../api';
 import { VariationEntity } from './variations.types';
 import { IPropertyValue } from './properties.types';
@@ -97,9 +97,9 @@ export interface IProductBase
 }
 
 export interface IProductAddsFields extends IProductBase {
-  owner?: ICompany;
-  author?: IUser;
-  editor?: IUser;
+  owner?: CompanyEntity;
+  author?: UserEntity;
+  editor?: UserEntity;
 
   category?: IProductCategoryDirItem;
   categories?: IProductCategoryDirItem[];

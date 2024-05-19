@@ -2,13 +2,13 @@ import { IOrderTempSlot } from '../../types/orders/orders.types';
 import FlexBox from '../atoms/FlexBox';
 import styled, { useTheme } from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { OfferImageSlotEntity } from '../../types/offers/offers.types';
 import { Text } from '../atoms/Text';
 import { t } from '../../lang';
 import CountSelectorBase from '../atoms/CountSelectorBase';
 import InputLabel from '../atoms/Inputs/InputLabel';
-import { numberWithSpaces } from '../../utils/numbers';
+import { numberWithSpaces } from '../../utils';
 
 export interface OrderSlotOverviewProps {
   slot?: IOrderTempSlot;
@@ -33,22 +33,22 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
 }) => {
   const [formData, setFormData] = useState<IOrderTempSlot | undefined>(slot);
 
-  const handleUpdateQuantity = useCallback(
-    (value: number) => {
-      setFormData(prev => {
-        if (!prev) return prev;
-
-        const newData = {
-          ...prev,
-          quantity: value,
-          total: !prev?.in ? prev?.in : value * prev?.in,
-        };
-        onUpdate && onUpdate(newData);
-        return newData;
-      });
-    },
-    [onUpdate]
-  );
+  // const handleUpdateQuantity = useCallback(
+  //   (value: number) => {
+  //     setFormData(prev => {
+  //       if (!prev) return prev;
+  //
+  //       const newData = {
+  //         ...prev,
+  //         quantity: value,
+  //         total: !prev?.in ? prev?.in : value * prev?.in,
+  //       };
+  //       onUpdate && onUpdate(newData);
+  //       return newData;
+  //     });
+  //   },
+  //   [onUpdate]
+  // );
 
   const imgPreview = useMemo(() => {
     let images: OfferImageSlotEntity[] = [];
@@ -126,7 +126,7 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
               {editable && (
                 <InputLabel label={t('quantity')} style={{ width: '100%', marginBottom: 8 }} disabled={disabled}>
                   <CountSelectorBase
-                    onChangeValue={handleUpdateQuantity}
+                    // onChangeValue={handleUpdateQuantity}
                     value={formData?.quantity}
                     disabled={disabled}
                   />
@@ -275,8 +275,8 @@ const overviewInputs: {
   borderBottom?: boolean;
 }[] = [
   { label: t('Price'), name: 'out' },
-  { label: t('Bonus'), name: 'bonus' },
-  { label: t('Cashback'), name: 'cashback' },
-  { label: t('Discount'), name: 'discount' },
-  { label: t('Total amount'), name: 'total' },
+  // { label: t('Bonus'), name: 'bonus' },
+  // { label: t('Cashback'), name: 'cashback' },
+  // { label: t('Discount'), name: 'discount' },
+  // { label: t('Total amount'), name: 'total' },
 ];

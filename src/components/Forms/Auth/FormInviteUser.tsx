@@ -6,11 +6,11 @@ import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { useCustomRolesSelector } from '../../../redux/selectors.store';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import InputText from '../../atoms/Inputs/InputText';
-import { IPermission } from '../../../types/permissions.types';
+import { PermissionEntity } from '../../../types/permissions.types';
 import { FormInputs } from '../components/atoms';
 
 export interface FormInviteUserProps extends Omit<ModalFormProps<any, any, undefined>, 'onSubmit'> {
-  onSubmit?: AppSubmitHandler<FormInviteUserData, { onSuccess?: (d: IPermission) => void }>;
+  onSubmit?: AppSubmitHandler<FormInviteUserData, { onSuccess?: (d: PermissionEntity) => void }>;
 }
 
 export interface FormInviteUserData {

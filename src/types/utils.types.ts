@@ -1,7 +1,7 @@
 import { MeasurementUnit } from './offers/offers.types';
 import { AddressDto } from '../redux/global.types';
 import { ServiceMethodBase } from './integrations.types';
-import { ICompany } from './companies.types';
+import { CompanyEntity } from './companies.types';
 import { LangPack } from '../lang';
 import { Path } from 'react-hook-form';
 
@@ -60,7 +60,7 @@ export interface HasDisabledAttributes {
 }
 
 export interface HasOwnerAsCompany {
-  owner?: MaybeNull<ICompany>;
+  owner?: MaybeNull<CompanyEntity>;
 }
 
 export interface HasAuthor {

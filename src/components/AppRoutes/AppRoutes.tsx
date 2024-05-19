@@ -53,16 +53,16 @@ const AppRoutes: React.FC<{ isLoaded?: boolean }> = () => {
             element={<AppPages.PageTransactions path={AppPagesEnum.transactions} />}
           />
 
-          <Route path={AppPagesEnum.products} element={<AppPages.PageProducts path={AppPagesEnum.products} />} />
+          <Route path={AppPagesEnum.offers} element={<AppPages.PageProducts path={AppPagesEnum.offers} />} />
           <Route
-            path={`${AppPagesEnum.products}/:${AppUrlParamKeys.productId}`}
-            element={<AppPages.PageProductOverview path={AppPagesEnum.products} />}
+            path={`${AppPagesEnum.offers}/:${AppUrlParamKeys.offerId}`}
+            element={<AppPages.PageProductOverview path={AppPagesEnum.offers} />}
           />
 
           <Route path={AppPagesEnum.orders} element={<AppPages.PageOrders path={AppPagesEnum.orders} />} />
           <Route
             path={`${AppPagesEnum.orders}/:${AppUrlParamKeys.orderId}`}
-            element={<AppPages.PageOrderOverview path={AppPagesEnum.products} />}
+            element={<AppPages.PageOrderOverview path={AppPagesEnum.offers} />}
           />
 
           <Route path={AppPagesEnum.refunds} element={<AppPages.PageRefunds path={AppPagesEnum.refunds} />} />

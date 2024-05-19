@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { takeFullGridArea, takeFullPlace } from './pagesStyles';
 import { useAuthSelector } from 'redux/selectors.store';
 import { usePermissionsSelector } from 'hooks/usePermissionsService.hook';
-import { IPermission } from '../../types/permissions.types';
+import { PermissionEntity } from '../../types/permissions.types';
 import { ITableListProps } from '../TableList/tableTypes.types';
 import usePermissionsActionsCreator from '../../hooks/usePermissonsActionsCreator';
 import { CompanyQueryType } from '../../redux/global.types';
@@ -48,7 +48,7 @@ const PageHome: React.FC<Props> = ({ path }) => {
   }, [companyType?.param, state.permissions]);
 
   const tableConfig = useMemo(
-    (): ITableListProps<IPermission> => ({
+    (): ITableListProps<PermissionEntity> => ({
       tableData: permissionsData,
       tableTitles: permissionsTableColumns,
       tableSearchParams: permissionsSearchParams,

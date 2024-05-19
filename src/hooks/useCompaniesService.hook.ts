@@ -1,5 +1,5 @@
-import { ICompany, ICompanyReqData } from '../types/companies.types';
-import { IPermission } from '../types/permissions.types';
+import { CompanyEntity, ICompanyReqData } from '../types/companies.types';
+import { PermissionEntity } from '../types/permissions.types';
 import { useMemo } from 'react';
 import { CompaniesApi, createApiCall } from '../api';
 import { defaultApiCallPayload, defaultThunkPayload } from '../utils';
@@ -8,10 +8,10 @@ import { useAppDispatch } from '../redux/store.store';
 import { getCompanyByIdThunk, updateCompanyByIdThunk } from '../redux/companies/companies.thunks';
 
 export interface CompaniesService {
-  delete: ServiceApiCaller<string, Partial<IPermission>>;
-  getById: ServiceDispatcherAsync<{ _id?: string; params?: { fullInfo?: boolean; configs?: boolean } }, ICompany>;
-  create: ServiceApiCaller<ICompanyReqData, IPermission>;
-  update: ServiceDispatcherAsync<ICompanyReqData, IPermission>;
+  delete: ServiceApiCaller<string, Partial<PermissionEntity>>;
+  getById: ServiceDispatcherAsync<{ _id?: string; params?: { fullInfo?: boolean; configs?: boolean } }, CompanyEntity>;
+  create: ServiceApiCaller<ICompanyReqData, PermissionEntity>;
+  update: ServiceDispatcherAsync<ICompanyReqData, PermissionEntity>;
 }
 const { create, deleteById } = CompaniesApi;
 const useCompaniesServiceHook = (): CompaniesService => {

@@ -1,7 +1,7 @@
 import { createAction } from '@reduxjs/toolkit';
-import { IPermission } from '../../types/permissions.types';
+import { PermissionEntity } from '../../types/permissions.types';
 
 export const clearCurrentPermission = createAction('permissions/clearCurrent');
-export const updatePermissionsWithNew = createAction<IPermission>('permissions/updatePermissionsWithNew');
+export const updatePermissionsWithNew = createAction<PermissionEntity>('permissions/updatePermissionsWithNew');
 export const updatePermissionsWithDelete = createAction<{ id: string }>('permissions/updatePermissionsWithDelete');
-export const setMockPermissionData = createAction<IPermission>('permissions/setMockPermissionData');
+export const setMockPermissionData = createAction<PermissionEntity>('permissions/setMockPermissionData');

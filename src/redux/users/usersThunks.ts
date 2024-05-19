@@ -1,4 +1,4 @@
-import { IRegisteredUser, IRegisteredUserInfoRes, IRegistrationData, IUser } from 'types/auth.types';
+import { IRegisteredUser, IRegisteredUserInfoRes, IRegistrationData, UserEntity } from 'types/auth.types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import { AsyncThunkConfig } from 'redux/reduxTypes.types';
@@ -13,11 +13,11 @@ export const usersApiRoutes = {
   createByAdmin: `${USERS_API_BASENAME}/createByAdmin`,
 };
 
-export interface IGetAllUsersRes extends AppResponse<IUser[]> {}
+export interface IGetAllUsersRes extends AppResponse<UserEntity[]> {}
 
-export interface IGetUserByIdRes extends AppResponse<IUser> {}
+export interface IGetUserByIdRes extends AppResponse<UserEntity> {}
 
-export const getAllUsersThunk = createAsyncThunk<IUser[], ThunkPayload, AsyncThunkConfig>(
+export const getAllUsersThunk = createAsyncThunk<UserEntity[], ThunkPayload, AsyncThunkConfig>(
   'auth/getAllUsersThunk',
   async ({ onError, onSuccess }, thunkAPI) => {
     try {
@@ -34,7 +34,7 @@ export const getAllUsersThunk = createAsyncThunk<IUser[], ThunkPayload, AsyncThu
   }
 );
 
-export const getUserById = createAsyncThunk<IUser, ThunkPayload<{ userId: string }>, AsyncThunkConfig>(
+export const getUserById = createAsyncThunk<UserEntity, ThunkPayload<{ userId: string }>, AsyncThunkConfig>(
   'auth/getUserById',
   async ({ onSuccess, onError, data }, thunkAPI) => {
     try {

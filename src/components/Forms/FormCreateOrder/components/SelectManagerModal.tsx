@@ -1,5 +1,5 @@
 import ModalForm, { ModalFormProps } from '../../../ModalForm';
-import { IPermission, PermissionRecipientEnum } from '../../../../types/permissions.types';
+import { PermissionEntity, PermissionRecipientEnum } from '../../../../types/permissions.types';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { usersDirColumns } from '../../../../data/usersDir.data';
@@ -10,8 +10,8 @@ import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../../redux/reduxTypes.types';
 
 export interface SelectManagerModalProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect'> {
-  onSelect?: (manager: IPermission) => void;
-  onSubmit?: AppSubmitHandler<IPermission>;
+  onSelect?: (manager: PermissionEntity) => void;
+  onSubmit?: AppSubmitHandler<PermissionEntity>;
 }
 
 const SelectManagerModal: React.FC<SelectManagerModalProps> = ({ onSubmit, onSelect, onClose, ...p }) => {
@@ -20,7 +20,7 @@ const SelectManagerModal: React.FC<SelectManagerModalProps> = ({ onSubmit, onSel
 
   const [isLoading] = useState(false);
 
-  const tableConfigs = useMemo((): ITableListProps<IPermission> => {
+  const tableConfigs = useMemo((): ITableListProps<PermissionEntity> => {
     return {
       tableData: users.filter(el => !el.integration),
       onRowClick: data => {

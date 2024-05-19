@@ -1,12 +1,12 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { SelectItem } from '../components/TableList/TableList';
-import { IPermission, PermissionStatus } from '../types/permissions.types';
+import { PermissionEntity, PermissionStatus } from '../types/permissions.types';
 import { initialCompany } from '../redux/companies/companies.slice';
 import { testUserKarina } from './usersDir.data';
 import { initialCustomRole } from './customRoles.data';
 import { t } from '../lang';
 
-export const permissionsTableColumns: CellTittleProps<IPermission>[] = [
+export const permissionsTableColumns: CellTittleProps<PermissionEntity>[] = [
   {
     top: {
       name: t('label'),
@@ -120,40 +120,10 @@ export const permissionsSearchParams: SelectItem[] = [
   },
 ];
 
-export const initialPermission: IPermission = {
+export const initialPermission: PermissionEntity = {
   _id: 'companyId',
   status: PermissionStatus.ACCEPTED,
   company: initialCompany,
   user: testUserKarina,
   role: initialCustomRole,
 };
-export const testPermissions: IPermission[] = [
-  initialPermission,
-  {
-    ...initialPermission,
-    _id: 'dfbscfbvfgnbd13f5g13bdg1',
-    company: { ...initialCompany, _id: 'dfbscxvfgnbd13f5g13bdg1', name: { first: 'Roga & Copyta' } },
-    role: { ...initialPermission.role, label: 'Менеджер' },
-  },
-  {
-    ...initialPermission,
-    _id: 'dfbscfbvsvxfgnbd13f5g13bdg1',
-    company: { ...initialCompany, _id: 'dfbscxvfgnbd13f5g13bdg1', name: { first: 'Roga & Copyta' } },
-    role: { ...initialPermission.role, label: 'Менеджер' },
-  },
-  {
-    ...initialPermission,
-    _id: 'dfbscxvcxgnbd13f5g13bdg1',
-    status: PermissionStatus.PENDING,
-    company: { ...initialCompany, _id: 'dfbsdfsdf13f5g13bdg1', name: { first: 'Roga & Copyta 3' } },
-    role: { ...initialPermission.role, label: 'Помічник' },
-  },
-  {
-    ...initialPermission,
-    _id: 'dfbscxvsdfbvsd13f5g13bdg1',
-    status: PermissionStatus.ACCEPTED,
-    company: { ...initialCompany, _id: 'dfbsxcvgbd13f5g13bdg1', name: { first: 'Roga & Copyta 4' } },
-    role: { ...initialPermission.role, label: 'Аудитор' },
-    owner: testUserKarina,
-  },
-];

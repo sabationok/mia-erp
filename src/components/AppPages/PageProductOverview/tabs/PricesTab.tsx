@@ -20,7 +20,7 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
   const modalS = useModalProvider();
 
   const productsS = useAppServiceProvider()[ServiceName.products];
-  const offerId = useAppParams().productId;
+  const offerId = useAppParams().offerId;
   const currentOffer = useCurrentOffer({ id: offerId });
 
   const loaders = useLoadersProvider<OfferOverlayLoaderKey>();

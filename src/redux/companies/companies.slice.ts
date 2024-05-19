@@ -1,9 +1,9 @@
-import { ICompaniesState, ICompany } from '../../types/companies.types';
+import { ICompaniesState, CompanyEntity } from '../../types/companies.types';
 import { createSlice } from '@reduxjs/toolkit';
 import { testUserKarina } from '../../data/usersDir.data';
 import { getCompanyByIdThunk, updateCompanyByIdThunk } from './companies.thunks';
 
-export const initialCompany: ICompany = {
+export const initialCompany: CompanyEntity = {
   _id: 'companyId',
   name: { first: 'Initial Comp' },
   label: { print: 'Initial Comp LTD' },

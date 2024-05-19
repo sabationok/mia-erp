@@ -1,6 +1,6 @@
 import { AppResponse, IBase, OnlyUUID } from '../global.types';
 import { OfferPriceEntity } from '../../types/price-management/priceManagement.types';
-import { ICompany } from '../../types/companies.types';
+import { CompanyEntity } from '../../types/companies.types';
 import { IManager } from '../../types/auth.types';
 import { ISupplierDirItem } from '../../types/dir.types';
 import { TabOption } from '../../components/atoms/TabSelector';
@@ -19,14 +19,14 @@ export type RefundStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'succ
 export interface IRefundSlotItem extends OfferPriceEntity {
   slot?: OnlyUUID;
   order?: OnlyUUID;
-  owner?: ICompany;
+  owner?: CompanyEntity;
   manager?: IManager;
 
   origin?: Partial<OfferPriceEntity>;
 }
 
 export interface IRefundSlot extends OfferPriceEntity {
-  owner: ICompany;
+  owner: CompanyEntity;
   order?: OnlyUUID;
 
   origin?: OfferPriceEntity;
@@ -36,7 +36,7 @@ export interface IRefundSlot extends OfferPriceEntity {
 }
 
 export interface IRefund extends IBase {
-  owner: ICompany;
+  owner: CompanyEntity;
   manager?: IManager;
 
   barCode?: string;

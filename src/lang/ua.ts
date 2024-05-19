@@ -127,6 +127,24 @@ export const langUa = {
   products: 'Продукти',
   Manager: 'Менеджер',
 
+  page_priceLists: 'Прайс листи',
+  page_priceManagement: 'Управління цінами',
+  page_prices: 'Ціни',
+  page_documentsFlow: 'Документи',
+  page_companies: 'Компанії',
+  page_warehouses: 'Склади',
+  page_warehouses_docs: 'Складські документи',
+  page_dashboard: 'Дашборд',
+  page_transactions: 'Рух коштів',
+  page_orders: 'Замовлення',
+  page_refunds: 'Повернення',
+  page_supplement: 'Постачання',
+  page_storage: 'Склад',
+  page_offers: 'Номенклатура',
+  page_manager: 'Менеджер',
+  page_admin: 'Адмін',
+  page_customers: 'Клієнти',
+
   [MeasurementUnit.Pc]: 'шт.', // Штука (Piece)
   [MeasurementUnit.G]: 'г.', // Грам (Gram)
   [MeasurementUnit.Kg]: 'кг.', // Кілограм (Kilogram)

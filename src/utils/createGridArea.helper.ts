@@ -1,5 +1,5 @@
 import { FieldValues } from 'react-hook-form/dist/types';
-import { EntityPath } from '../../types/utils.types';
+import { EntityPath } from '../types/utils.types';
 
 export const createGridAreaFromKeyArrays = <T extends FieldValues = any>(
   areasArrays: (EntityPath<T> | string)[][] = [[]]

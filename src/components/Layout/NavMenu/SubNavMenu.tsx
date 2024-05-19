@@ -2,7 +2,7 @@ import FlexBox from '../../atoms/FlexBox';
 import styled from 'styled-components';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../../redux/store.store';
-import { IPermission } from '../../../types/permissions.types';
+import { PermissionEntity } from '../../../types/permissions.types';
 import { IWarehouse } from '../../../types/warehouses.types';
 import { PriceListEntity } from '../../../types/price-management/priceManagement.types';
 import { usePermissionsSelector } from '../../../hooks/usePermissionsService.hook';
@@ -23,7 +23,7 @@ const getLinkDataMap: Record<
     label: `${warehouse?.label} | ${warehouse?.code}`,
   }),
   [AppPagesEnum.priceLists]: (priceList: PriceListEntity) => ({ id: priceList._id, label: priceList?.label }),
-  [AppPagesEnum.companies]: (permission: IPermission) => ({
+  [AppPagesEnum.companies]: (permission: PermissionEntity) => ({
     id: permission?.company?._id,
     label: permission?.company?.label?.base,
   }),

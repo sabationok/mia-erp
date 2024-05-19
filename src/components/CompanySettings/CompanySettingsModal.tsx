@@ -9,7 +9,7 @@ import WarehousingPolicyTab from './settings-tabs/WarehousingPolicyTab';
 import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
 import { OverlayHeader } from '../Overlays';
-import { ICompany } from '../../types/companies.types';
+import { CompanyEntity } from '../../types/companies.types';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../redux/reduxTypes.types';
 import { usePermissionsSelector } from '../../redux/selectors.store';
@@ -39,7 +39,7 @@ const CompanySettingsModal: React.FC<CompanySettingsProps> = ({ onClose, ...prop
   const service = useAppServiceProvider()[AppModuleName.companies];
   const permission = usePermissionsSelector().permission;
   const [current, setCurrent] = useState<CompanySettingsTabs>(tabs[0].value);
-  const [currentCompany, setCurrentCompany] = useState<ICompany>();
+  const [currentCompany, setCurrentCompany] = useState<CompanyEntity>();
 
   useEffect(() => {
     service.getById({

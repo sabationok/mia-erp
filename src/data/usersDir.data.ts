@@ -1,7 +1,7 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
-import { ISystemRole, IUser } from 'types/auth.types';
+import { ISystemRole, UserEntity } from 'types/auth.types';
 import { karina_avatar } from '../img';
-import { IPermission } from '../types/permissions.types';
+import { PermissionEntity } from '../types/permissions.types';
 import { t } from '../lang';
 
 export const testUserKarinaSystemRole: ISystemRole = {
@@ -10,14 +10,14 @@ export const testUserKarinaSystemRole: ISystemRole = {
   name: 'ADMIN',
   actions: [],
 };
-export const testUserKarina: IUser = {
+export const testUserKarina: UserEntity = {
   _id: 'sdth651g6sdfbdb5fg16d',
   name: 'Каріна Дизайнівна Дизайнер',
   email: 'karina.des@mail.com',
   avatarURL: karina_avatar,
   sysRole: testUserKarinaSystemRole,
 };
-export const usersDirColumns: CellTittleProps<IPermission>[] = [
+export const usersDirColumns: CellTittleProps<PermissionEntity>[] = [
   {
     top: {
       name: `${t('ПІП')}/${t('Label')}`,
@@ -63,7 +63,7 @@ export const usersDirColumns: CellTittleProps<IPermission>[] = [
   },
 ];
 
-export const usersMockData: Partial<IUser> & any[] = [
+export const usersMockData: Partial<UserEntity> & any[] = [
   {
     _id: 'sfbvssdgbdfg',
     name: 'Петро',

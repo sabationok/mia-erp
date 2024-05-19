@@ -27,8 +27,8 @@ export interface FormProductDefaultsOverlayProps extends CreatedOverlay {
 }
 
 export enum FormProductDefaultsTabs {
-  variation = 'variation',
   price = 'price',
+  variation = 'variation',
   warehouse = 'warehouse',
   inventory = 'inventory',
   supplier = 'supplier',
@@ -41,7 +41,7 @@ export type OfferOverlayLoaderKey =
 const tabs = enumToFilterOptions(FormProductDefaultsTabs);
 const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({ onClose, onSubmit }) => {
   const loaders = useLoaders<OfferOverlayLoaderKey>();
-  const offerId = useAppParams()?.productId;
+  const offerId = useAppParams()?.offerId;
   const currentOffer = useCurrentOffer({ id: offerId });
 
   const productsS = useAppServiceProvider()[ServiceName.products];
@@ -58,13 +58,14 @@ const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({
   );
 
   const onValid = (fData: IProductDefaultsFormData) => {
-    productsS.setDefaults({
-      data: { data: { defaults: toReqData(fData) as never }, _id: currentOffer?._id, updateCurrent: true },
-      onSuccess: (data, meta) => {
-        console.log(data, meta);
-      },
-      onLoading: loaders.onLoading('submiting'),
-    });
+    currentOffer?._id &&
+      productsS.setDefaults({
+        data: { _id: currentOffer?._id, defaults: toReqData(fData) as never, updateCurrent: true },
+        onSuccess: (data, meta) => {
+          console.log(data, meta);
+        },
+        onLoading: loaders.onLoading('submiting'),
+      });
   };
 
   const renderTab = useMemo(() => {

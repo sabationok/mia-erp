@@ -3,7 +3,7 @@ import { ITrCategory, ITrCategoryFormData, TagTypeEnum, TrCategoryTypeEnum } fro
 import { CountsTypesEnum, ICount, ICountFormData } from '../redux/directories/counts.types';
 import { TabOption } from '../components/atoms/TabSelector';
 import { IBase } from '../redux/global.types';
-import { ICompany } from './companies.types';
+import { CompanyEntity } from './companies.types';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { IModalProviderContext, ModalService } from '../components/ModalProvider/ModalProvider';
 import { DirectoriesService } from '../hooks/useDirService.hook';
@@ -25,7 +25,7 @@ export interface DirItemTypeByDirType extends Record<ApiDirType, any> {
 
 export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> extends IBase {
   dirType?: DirType;
-  owner?: Pick<ICompany, '_id' | 'name' | 'email'>;
+  owner?: Pick<CompanyEntity, '_id' | 'name' | 'email'>;
   // products?: IProduct[];
   // orders?: IOrder[];
   parent?: IBaseDirItem<Type, DirType>;
@@ -47,7 +47,7 @@ export interface IBaseDirItem<Type = any, DirType extends ApiDirType = any> exte
 export interface IDirItemBase<DirType extends ApiDirType = any> extends IBase {
   type?: DirItemTypeByDirType[DirType];
   dirType?: DirType;
-  owner?: Pick<ICompany, '_id' | 'name' | 'email'>;
+  owner?: Pick<CompanyEntity, '_id' | 'name' | 'email'>;
   // products?: OnlyUUID[];
   // orders?: OnlyUUID[];
   parent?: MaybeNull<IDirItemBase<DirType>>;

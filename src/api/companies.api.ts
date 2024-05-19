@@ -1,7 +1,7 @@
-import { ICompany, ICompanyDeletingRes, ICompanyReqData, ICompanyUpdatingRes } from '../types/companies.types';
+import { CompanyEntity, ICompanyDeletingRes, ICompanyReqData, ICompanyUpdatingRes } from '../types/companies.types';
 import APP_CONFIGS from 'redux/APP_CONFIGS';
 import { AppResponse } from '../redux/global.types';
-import { IPermission } from '../types/permissions.types';
+import { PermissionEntity } from '../types/permissions.types';
 import { ClientApi } from './client.api';
 
 export class CompaniesApi {
@@ -14,13 +14,13 @@ export class CompaniesApi {
   }: {
     _id?: string;
     params?: { fullInfo?: boolean; configs?: boolean };
-  } = {}): Promise<AppResponse<ICompany>> => {
+  } = {}): Promise<AppResponse<CompanyEntity>> => {
     return this.api.get(this.endpoints.getById(_id), {
       params,
     });
   };
 
-  public static readonly create = async (data?: ICompanyReqData): Promise<AppResponse<IPermission>> => {
+  public static readonly create = async (data?: ICompanyReqData): Promise<AppResponse<PermissionEntity>> => {
     return this.api.post(this.endpoints.create(), data?.data);
   };
 

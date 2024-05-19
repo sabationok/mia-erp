@@ -1,6 +1,6 @@
 import { IBase, IBaseKeys, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
 import { LangPack } from '../lang';
-import { ICompany } from './companies.types';
+import { CompanyEntity } from './companies.types';
 import { AppQueryParams } from '../api';
 import { HasBaseCmsConfigs } from './cms.types';
 import { HasCompany, HasDisabledAttributes, HasEmbeddedType, HasLabel, HasType, MaybeNull } from './utils.types';
@@ -77,7 +77,7 @@ export enum LiqPayInvoicingTypeEnum {
 }
 
 export interface ExtServiceBase extends IBase {
-  owner: ICompany;
+  owner: CompanyEntity;
   label: string;
   provider: ExternalServiceProvidersEnum;
   lang?: LangPack;

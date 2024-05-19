@@ -6,6 +6,7 @@ import { getStatusesByEnum } from './statuses.data';
 import { enumToFilterOptions } from '../utils';
 import { FilterOption } from '../components/atoms/TabSelector';
 import { ImageSetSrcType } from '../types/offers/offer-images.types';
+import { toPrice } from '../utils/numbers';
 
 export const offerStatusesData = getStatusesByEnum(OfferStatusEnum);
 export const OfferStatusFilterOptions = enumToFilterOptions(OfferStatusEnum);
@@ -18,53 +19,81 @@ export const formAddImageSetTabs: FilterOption<ImageSetSrcType>[] = [
 ];
 export const offersTableColumns: CellTittleProps<OfferEntity>[] = [
   {
-    top: { name: t('label'), align: 'start', getData: rd => rd?.label },
-    // bottom: { name: t('sku'), align: 'start', getData: rd => rd?.sku },
+    top: { name: t('label'), getData: rd => rd?.label },
+    // bottom: { name: t('sku'), getData: rd => rd?.sku },
     getImgPreview: pr => (pr.images ? pr.images[0]?.img_preview : undefined),
     width: '270px',
     action: 'dataWithAvatar',
   },
   {
-    top: { name: t('sku'), align: 'start', getData: rd => rd?.sku },
-    bottom: { name: t('barCode'), align: 'start', getData: rd => rd?.barCode },
+    top: { name: t('sku'), getData: rd => rd?.sku },
+    bottom: { name: t('barCode'), getData: rd => rd?.barCode },
     width: '200px',
     action: 'valueByPath',
   },
   {
-    top: { name: t('type'), align: 'start', path: 'type' },
-    bottom: { name: t('status'), align: 'start', getData: d => d.approved as never },
+    top: { name: t('type'), path: 'type' },
+    bottom: { name: t('status'), getData: d => d.approved as never },
     width: '100px',
     action: 'status',
   },
 
+  {
+    top: { name: t('Price OUT'), align: 'end', getData: d => toPrice(d.price?.out) },
+    bottom: { name: t('Price IN'), align: 'end', getData: d => toPrice(d.price?.in) },
+    width: '150px',
+    action: 'valueByPath',
+  },
+
+  {
+    top: { name: t('Variation label'), getData: d => d.variation?.label || '---' },
+    bottom: { name: t('SKU'), getData: d => d.variation?.sku || '---' },
+    width: '190px',
+    action: 'valueByPath',
+  },
+
+  {
+    top: { name: t('Warehouse'), getData: d => d.warehouse?.label },
+    bottom: { name: t('Code'), getData: d => d.warehouse?.code },
+    width: '150px',
+    action: 'valueByPath',
+  },
+
+  // {
+  //   top: { name: t('Price OUT'), align: 'end', getData: d => toPrice(d.price?.out) },
+  //   bottom: { name: t('Price IN'), getData: d => toPrice(d.price?.in) },
+  //   width: '150px',
+  //   action: 'valueByPath',
+  // },
+
   // {
   //   top: {
   //     name: t('category'),
-  //     align: 'start',
+  //
   //     getData: rd => rd.category?.label,
   //   },
   //   bottom: {
   //     name: t('parentCategory'),
-  //     align: 'start',
+  //
   //     getData: rd => rd.category?.parent?.label,
   //   },
   //   width: '180px',
   //   action: 'valueByPath',
   // },
   {
-    top: { name: 'Бренд', align: 'start', path: 'brand.label' },
-    bottom: { name: 'Виробник', align: 'start', path: 'manufacturer.name' },
+    top: { name: 'Бренд', path: 'brand.label' },
+    bottom: { name: 'Виробник', path: 'manufacturer.name' },
     width: '150px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Опис', align: 'start', path: 'description' },
+    top: { name: 'Опис', path: 'description' },
     width: '150px',
     action: 'valueByPath',
   },
   {
-    top: { name: 'Оновив', align: 'start', getData: rd => rd?.editor?.email },
-    bottom: { name: 'Автор', align: 'start', getData: rd => rd?.author?.email },
+    top: { name: 'Оновив', getData: rd => rd?.editor?.email },
+    bottom: { name: 'Автор', getData: rd => rd?.author?.email },
     width: '150px',
     action: 'valueByPath',
   },

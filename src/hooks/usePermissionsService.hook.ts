@@ -15,7 +15,7 @@ import {
   updatePermissionThunk,
 } from '../redux/permissions/permissions.thunk';
 import {
-  IPermission,
+  PermissionEntity,
   IPermissionForReq,
   IPermissionReqData,
   IPermissionsState,
@@ -25,35 +25,35 @@ import { useMemo } from 'react';
 import { CompanyQueryType, ServiceDispatcherAsync } from 'redux/global.types';
 import { clearCurrentPermission } from '../redux/permissions/permissions.action';
 import { defaultThunkPayload } from '../utils/fabrics';
-import { ICompany, ICompanyForReq, ICompanyReqData } from '../types/companies.types';
-import { IUser } from '../types/auth.types';
+import { CompanyEntity, ICompanyForReq, ICompanyReqData } from '../types/companies.types';
+import { UserEntity } from '../types/auth.types';
 
 export interface PermissionService {
   getAllByCompanyId: ServiceDispatcherAsync<
     { _id: string; params?: { recipient?: PermissionRecipientEnum }; refresh?: boolean },
-    IPermission[]
+    PermissionEntity[]
   >;
-  getAllByUserId: ServiceDispatcherAsync<{ userId: string; query?: { type?: CompanyQueryType } }, IPermission[]>;
+  getAllByUserId: ServiceDispatcherAsync<{ userId: string; query?: { type?: CompanyQueryType } }, PermissionEntity[]>;
   deleteById: ServiceDispatcherAsync<{ id: string }>;
   edit: ServiceDispatcherAsync<IPermissionReqData>;
   create: ServiceDispatcherAsync<IPermissionForReq>;
   getCurrent: ServiceDispatcherAsync<{ id: string }>;
-  permissionLogOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean; user: IUser }>;
+  permissionLogOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean; user: UserEntity }>;
   logOut: ServiceDispatcherAsync<{ _id: string }, { _id?: string; result?: boolean }>;
-  logIn: ServiceDispatcherAsync<{ _id: string }, IPermission>;
+  logIn: ServiceDispatcherAsync<{ _id: string }, PermissionEntity>;
   clearCurrent: () => void;
   validatePermission?: (validateBy: ValidatePermissionOptions) => boolean;
 
-  createInvitation: ServiceDispatcherAsync<IPermissionForReq, IPermission>;
-  updateInvitation?: ServiceDispatcherAsync<IPermissionForReq, IPermission>;
-  rejectInvitation?: ServiceDispatcherAsync<IPermissionForReq, IPermission>;
-  acceptInvitation?: ServiceDispatcherAsync<IPermissionForReq, IPermission>;
-  deleteInvitation?: ServiceDispatcherAsync<IPermissionForReq, IPermission>;
+  createInvitation: ServiceDispatcherAsync<IPermissionForReq, PermissionEntity>;
+  updateInvitation?: ServiceDispatcherAsync<IPermissionForReq, PermissionEntity>;
+  rejectInvitation?: ServiceDispatcherAsync<IPermissionForReq, PermissionEntity>;
+  acceptInvitation?: ServiceDispatcherAsync<IPermissionForReq, PermissionEntity>;
+  deleteInvitation?: ServiceDispatcherAsync<IPermissionForReq, PermissionEntity>;
 
   createCompany: ServiceDispatcherAsync<ICompanyForReq>;
   deleteCompany: ServiceDispatcherAsync<{ _id: string }>;
 
-  updateCurrentCompany: ServiceDispatcherAsync<ICompanyReqData, ICompany>;
+  updateCurrentCompany: ServiceDispatcherAsync<ICompanyReqData, CompanyEntity>;
 }
 
 export interface ValidatePermissionOptions {

@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useAppParams, useCurrentOffer } from '../../../hooks';
@@ -20,42 +20,49 @@ export const usePageCurrentProduct = () => useContext(PageCurrentProductCTX) as 
 
 const PageOfferProvider: React.FC<PageOfferProviderProps> = ({ children }) => {
   const service = useAppServiceProvider()[ServiceName.products];
-  const offerId = useAppParams()?.productId;
-  const currentOffer = useCurrentOffer({ id: offerId });
-  const productsS = useAppServiceProvider()[ServiceName.products];
-
   const loaders = useOfferOverviewLoaders();
+  const params = useAppParams();
+  const offerId = params?.offerId;
+
+  const currentOffer = useCurrentOffer({ id: offerId });
 
   useEffect(() => {
     if (loaders?.isLoading?.offer) return;
 
-    if (offerId && offerId !== currentOffer?._id) {
-      const close = loaders.show('offer');
-
-      productsS
+    if (offerId) {
+      service
         .getProductFullInfo({
           data: { _id: offerId },
           onLoading: loaders.onLoading('offer'),
         })
-        .finally(close);
+        .finally();
     }
     // eslint-disable-next-line
   }, [offerId]);
 
   // const { currentOffer } = useProductsSelector();
 
-  const clearCurrent = useCallback(() => {
+  const clearCurrent = () => {
     service.clearCurrent(undefined);
-  }, [service]);
+  };
 
-  const CTX = useMemo(
-    (): PageOfferProviderValue => ({
-      clearCurrent,
-      currentOffer,
-    }),
-    [clearCurrent, currentOffer]
+  useEffect(() => {
+    return () => {
+      service.clearCurrent(undefined);
+    };
+
+    // eslint-disable-next-line
+  }, []);
+
+  return (
+    <PageCurrentProductCTX.Provider
+      value={{
+        clearCurrent,
+        currentOffer,
+      }}
+    >
+      {children}
+    </PageCurrentProductCTX.Provider>
   );
-
-  return <PageCurrentProductCTX.Provider value={CTX}>{children}</PageCurrentProductCTX.Provider>;
 };
 export default PageOfferProvider;

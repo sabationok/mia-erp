@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 import { takeFullGridArea } from '../pagesStyles';
 import AppGridPage from '../AppGridPage';
-import React, { useCallback, useEffect, useState } from 'react';
-import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import React, { useCallback, useState } from 'react';
 import PageOfferProvider from './PageOfferProvider';
 import OfferOverviewPageRightSide from './OfferOverviewPageRightSide';
 import OfferOverviewPageLeftSide from './OfferOverviewPageLeftSide';
@@ -22,18 +21,9 @@ export const useOfferOverviewLoaders = () => useLoadersProvider<OfferOverviewLoa
 const PageOfferOverview: React.FC<Props> = ({ path }) => {
   const loaders = useLoaders<OfferOverviewLoaderKey>({ offer: { content: t('Loading product info') } });
   const [isRightSideVisible, setIsRightSideVisible] = useState<boolean>(false);
-  const productsS = useAppServiceProvider()[ServiceName.products];
 
   const toggleRightSide = useCallback(() => {
     setIsRightSideVisible(p => !p);
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      productsS.clearCurrent(undefined);
-    };
-
-    // eslint-disable-next-line
   }, []);
 
   return (

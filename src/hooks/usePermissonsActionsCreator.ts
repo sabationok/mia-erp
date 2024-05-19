@@ -1,5 +1,5 @@
 import { ITableAction, ITableListContext, TableActionCreator } from '../components/TableList/tableTypes.types';
-import { IPermission } from '../types/permissions.types';
+import { PermissionEntity } from '../types/permissions.types';
 import { PermissionService } from './usePermissionsService.hook';
 import { IModalProviderContext, useModalService } from '../components/ModalProvider/ModalProvider';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +13,7 @@ import { TableActionsBuilder } from '../utils/tables';
 import { t } from '../lang';
 import { useAuthSelector } from '../redux/selectors.store';
 
-export type PermissionsActionsCreator = TableActionCreator<IPermission>;
+export type PermissionsActionsCreator = TableActionCreator<PermissionEntity>;
 
 export type PermissionsActionsType =
   | 'enterCompany'
@@ -26,12 +26,12 @@ export type PermissionsActionsType =
   | 'createPermission'
   | 'deletePermission'
   | 'editPermission';
-export const isMyCompany = ({ owner, user }: IPermission) => {
+export const isMyCompany = ({ owner, user }: PermissionEntity) => {
   return user?._id === owner?._id;
 };
 
 export interface PermissionsTablesActionProps {
-  ctx: ITableListContext<IPermission>;
+  ctx: ITableListContext<PermissionEntity>;
   navigate: NavigateFunction;
   service: PermissionService;
   companyType: CompanyQueryType;
@@ -155,7 +155,7 @@ const createAddNewCompanyAction = ({ modalService }: PermissionsTablesActionProp
 });
 const builder = new TableActionsBuilder<
   PermissionService,
-  IPermission,
+  PermissionEntity,
   { query: { type: CompanyQueryType }; userId?: string }
 >();
 builder.add('refresh', ({ ctx, service, extra }) => {

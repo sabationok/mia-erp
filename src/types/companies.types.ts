@@ -1,5 +1,5 @@
 import { AddressDto, AppResponse, ContactsDto, IBase, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
-import { IPermission } from './permissions.types';
+import { PermissionEntity } from './permissions.types';
 import { IUserBase } from './auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';
 import { IWarehouse } from './warehouses.types';
@@ -67,14 +67,14 @@ export interface ICompanyBase extends IBase, HasEmbeddedLabel, HasEmbeddedName, 
   locations?: AddressDto;
 }
 
-export interface ICompany
+export interface CompanyEntity
   extends ICompanyBase,
     HasInvoicingPolicy,
     HasDeliveryPolicy,
     HasWarehousingPolicy,
     HasSupplementPolicy {
   owner?: Pick<IUserBase, '_id' | 'name' | 'email'>;
-  permissions?: Partial<IPermission>[];
+  permissions?: Partial<PermissionEntity>[];
   warehouses?: MaybeNull<IWarehouse[]>;
   externalServices?: MaybeNull<ExtServiceBase[]>;
 
@@ -83,8 +83,8 @@ export interface ICompany
 }
 
 export interface ICompaniesState {
-  companies: ICompany[];
-  current?: ICompany;
+  companies: CompanyEntity[];
+  current?: CompanyEntity;
   isLoading: boolean;
   error: StateErrorType;
 }
@@ -216,12 +216,12 @@ export interface ICompanyConfigsFormData extends ICompanyConfigsDto {
   manager?: IFormDataValueWithID;
 }
 
-export interface IGetAllCompaniesRes extends AppResponse<ICompany[]> {}
+export interface IGetAllCompaniesRes extends AppResponse<CompanyEntity[]> {}
 
-export interface ICompanyRes extends AppResponse<ICompany> {}
+export interface ICompanyRes extends AppResponse<CompanyEntity> {}
 
-export interface ICompanyUpdatingRes extends AppResponse<ICompany> {}
+export interface ICompanyUpdatingRes extends AppResponse<CompanyEntity> {}
 
-export interface ICompanyCreatingRes extends AppResponse<IPermission> {}
+export interface ICompanyCreatingRes extends AppResponse<PermissionEntity> {}
 
 export interface ICompanyDeletingRes extends AppResponse<{ _id: string; result: true }> {}

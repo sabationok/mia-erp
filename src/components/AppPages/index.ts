@@ -12,7 +12,7 @@ export enum AppPagesEnum {
   orders = 'orders',
   refunds = 'refunds',
   supplement = 'supplement',
-  products = 'products',
+  offers = 'offers',
   dashboard = 'dashboard',
   storage = 'storage',
   manager = 'manager',
@@ -45,12 +45,13 @@ export const appPages: Record<string, IAppPage<PagePathType>> = {
   documentsFlow: { path: 'documentsFlow', iconId: 'assignment' },
   orders: { path: 'orders', iconId: 'assignmentOkOutlined' },
   refunds: { path: 'refunds', iconId: 'assignmentBackOutlined' },
-  supplement: { path: 'supplement', iconId: 'assignmentInOutlined' },
-  products: { path: 'products', iconId: 'storageOutlined' },
-  warehouses: { path: 'warehouses', iconId: 'storageOutlined', subMenuKey: AppPagesEnum.warehouses },
+  offers: { path: 'offers', iconId: 'storageOutlined' },
   priceLists: { path: 'priceLists', iconId: 'assignment', subMenuKey: AppPagesEnum.priceLists },
+  supplement: { path: 'supplement', iconId: 'assignmentInOutlined' },
+  warehouses: { path: 'warehouses', iconId: 'storageOutlined', subMenuKey: AppPagesEnum.warehouses },
   manager: { path: 'manager', iconId: 'assignmentPersonOutlined' },
   customers: { path: 'customers', iconId: 'assignmentPersonOutlined' },
+
   // director: { path: 'director', iconId: 'assignmentPersonOutlined' },
 };
 
@@ -59,7 +60,7 @@ export type PagePathType = keyof typeof AppPagesEnum | AppPagesEnum;
 export const pages: IAppPage[] = Object.entries(appPages).map(([path, page]) => {
   return {
     ...page,
-    title: t(page.path),
+    title: t('page' + '_' + page.path),
     moduleName: path,
     path,
   };

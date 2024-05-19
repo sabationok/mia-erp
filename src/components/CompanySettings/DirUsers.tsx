@@ -7,7 +7,7 @@ import usePermissionsServiceHook, {
   PermissionService,
   usePermissionsSelector,
 } from '../../hooks/usePermissionsService.hook';
-import { IPermission } from '../../types/permissions.types';
+import { PermissionEntity } from '../../types/permissions.types';
 import { IModalProviderContext, useModalProvider } from '../ModalProvider/ModalProvider';
 import { ToastService } from '../../services';
 
@@ -15,7 +15,7 @@ export interface DirUsersProps extends DirBaseProps {
   getTableSettings: (options: {
     modalService: IModalProviderContext;
     service: PermissionService;
-  }) => ITableListProps<IPermission>;
+  }) => ITableListProps<PermissionEntity>;
 }
 
 const DirUsers: React.FC<DirUsersProps> = ({ getTableSettings, ...props }) => {

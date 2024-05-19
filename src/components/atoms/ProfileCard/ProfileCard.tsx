@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import { IUser } from 'types/auth.types';
-import { ICompany } from '../../../types/companies.types';
+import { UserEntity } from 'types/auth.types';
+import { CompanyEntity } from '../../../types/companies.types';
 
 export interface ProfileCardProps {
-  profile?: Partial<IUser & ICompany>;
+  profile?: Partial<UserEntity & CompanyEntity>;
   // avatarURL?: string;
   // name?: string;
   // email?: string;

@@ -1,7 +1,7 @@
 import { AppResponse, IBase } from '../redux/global.types';
 import { AuthErrorType } from '../redux/reduxTypes.types';
-import { IPermission } from './permissions.types';
-import { IEmbeddedName, MaybeNull } from './utils.types';
+import { PermissionEntity } from './permissions.types';
+import { HasEmbeddedLabel, HasEmbeddedName, HasEmbeddedReference } from './utils.types';
 
 export interface ISystemRole extends IBase {
   name?: string;
@@ -9,27 +9,23 @@ export interface ISystemRole extends IBase {
   actions: string[];
 }
 
-export interface IUserBase extends IBase {
-  name?: MaybeNull<string | IEmbeddedName>;
-  secondName?: string;
+export interface IUserBase extends IBase, HasEmbeddedName, HasEmbeddedLabel, HasEmbeddedReference {
   email?: string;
+  phone?: string;
   avatarURL?: string;
   sysRole?: ISystemRole;
-}
-
-export interface IUser extends IUserBase {
   ref?: string;
-  permissions?: Partial<IPermission>[];
 }
 
-export interface IManager extends IUserBase {
-  code?: string;
-  permission?: IPermission;
+export interface UserEntity extends IUserBase {
+  permissions?: Partial<PermissionEntity>[];
 }
+
+export interface IManager extends PermissionEntity {}
 
 export interface IAuthState {
-  user: IUser;
-  permission: IPermission;
+  user: UserEntity;
+  permission: PermissionEntity;
   access_token?: string;
   refresh_token?: string;
   isLoading: boolean;
@@ -37,7 +33,7 @@ export interface IAuthState {
   error: AuthErrorType;
 }
 
-export type ILoggedUserInfo = Pick<IAuthState, 'access_token'> & Pick<IUser, 'email' | '_id'>;
+export type ILoggedUserInfo = Pick<IAuthState, 'access_token'> & Pick<UserEntity, 'email' | '_id'>;
 
 export interface ILoggedUserInfoRes extends AppResponse<ILoggedUserInfo> {}
 
@@ -61,4 +57,4 @@ export interface IRegistrationData extends ILoginUserData {
   secondName?: string;
 }
 
-export type ICurrentUser = Pick<IUser, 'email'> & Pick<IAuthState, 'access_token' | 'refresh_token'>;
+export type ICurrentUser = Pick<UserEntity, 'email'> & Pick<IAuthState, 'access_token' | 'refresh_token'>;

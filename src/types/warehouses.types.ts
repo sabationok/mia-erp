@@ -1,6 +1,6 @@
 import { IBase, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
 import { OfferEntity } from './offers/offers.types';
-import { ICompany } from './companies.types';
+import { CompanyEntity } from './companies.types';
 import { OfferPriceEntity } from './price-management/priceManagement.types';
 import { VariationEntity } from './offers/variations.types';
 import { AppQueryParams } from '../api';
@@ -23,7 +23,7 @@ export enum WarehouseDocumentType {
   removeFromReserve = 'removeFromReserve',
 }
 export interface IWarehouse extends IBase {
-  owner?: ICompany;
+  owner?: CompanyEntity;
   manager?: any;
 
   label: string;
@@ -59,7 +59,7 @@ export interface IWarehouseReqData {
 export type ProductInventoryStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
 export interface WarehouseItemEntity extends IBase, WithPeriod {
-  owner?: ICompany;
+  owner?: CompanyEntity;
   warehouse?: IWarehouse;
   offer?: OfferEntity;
   variation?: VariationEntity;

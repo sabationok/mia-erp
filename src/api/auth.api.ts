@@ -4,7 +4,7 @@ import {
   ILoginUserData,
   IRegisteredUserInfoRes,
   IRegistrationData,
-  IUser,
+  UserEntity,
 } from '../types/auth.types';
 import { ClientApi } from './client.api';
 import { AppResponse } from '../redux/global.types';
@@ -25,7 +25,7 @@ export default class AuthApi {
     return this.api.post(this.endpoints[Endpoints.logOut]());
   }
 
-  public static getCurrentUser = (): Promise<AppResponse<IUser>> => {
+  public static getCurrentUser = (): Promise<AppResponse<UserEntity>> => {
     return this.api.get(this.endpoints.getCurrent());
   };
 }

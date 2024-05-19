@@ -1,23 +1,25 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { IPage } from 'redux/page/pageSlice';
 import styled from 'styled-components';
 
 import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
 import { Text } from '../../atoms/Text';
-import { useAppPages, useAppParams, useCloseByEscapeOrClickOnBackdrop } from '../../../hooks';
+import { useAppPages, useAppRouter, useCloseByEscapeOrClickOnBackdrop } from '../../../hooks';
 import SubNavMenu from './SubNavMenu';
 import FlexBox from '../../atoms/FlexBox';
 import { AppPagesEnum } from '../../AppPages';
 import { iconId } from '../../../img/sprite';
 
 const NavMenu: React.FC = () => {
-  const { permissionId } = useAppParams();
+  const router = useAppRouter();
+  const permissionId = router.params?.permissionId;
+  const location = router.location;
   const pages = useAppPages({ permissionId });
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [activePage, setActivePage] = useState<IPage>(pages[0]);
-  const location = useLocation();
   const [isSubMenuOpen, setIsSubMenuOpen] = useState<Record<string, boolean>>({});
 
   const handleOpenNavMenu = useCallback(() => {
@@ -123,7 +125,7 @@ interface MenuState {
 const StyledNavMenu = styled.div`
   position: relative;
 
-  min-width: 150px;
+  min-width: 180px;
   max-width: 100%;
   height: 100%;
 
@@ -131,7 +133,7 @@ const StyledNavMenu = styled.div`
   font-weight: 600;
 
   @media screen and (min-width: 768px) {
-    min-width: 250px;
+    min-width: 280px;
   }
 `;
 const MenuButton = styled(ButtonIcon)<{ isOpen: boolean }>`
@@ -155,18 +157,14 @@ const MenuButton = styled(ButtonIcon)<{ isOpen: boolean }>`
     transform: ${({ isOpen }) => `rotate(${isOpen ? '180' : '0'}deg)`};
   }
 `;
-const NavMenuContainer = styled.div<MenuState>`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-
+const NavMenuContainer = styled(FlexBox)<MenuState>`
   position: absolute;
   top: 100%;
   left: 0;
 
   overflow: hidden;
   min-width: 100%;
-  max-width: calc(100% + 30px);
+  max-width: calc(100% + 70px);
   height: ${({ isOpen }) => (isOpen ? 'calc(100vh - 50px)' : '80vh')};
 
   border-radius: 2px;
@@ -196,7 +194,8 @@ const NavList = styled.div`
   min-width: 100%;
   max-height: 100%;
 
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 
   padding: 8px 0;
 `;

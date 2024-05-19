@@ -9,7 +9,7 @@ import FlexBox from '../../atoms/FlexBox';
 import styled from 'styled-components';
 import { IWarehouse, WarehousingSettingsFormData } from '../../../types/warehouses.types';
 import { t } from 'lang';
-import { ICompany, ICompanyDto, ICompanyForReq, ICompanyWithConfigs } from 'types/companies.types';
+import { CompanyEntity, ICompanyDto, ICompanyForReq, ICompanyWithConfigs } from 'types/companies.types';
 import { Text } from '../../atoms/Text';
 import Switch from '../../atoms/Switch';
 import { getIdRef } from '../../../utils/data-transform';
@@ -18,7 +18,7 @@ import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { ToastService } from '../../../services';
 
 export interface FormWarehousingSettingsProps
-  extends Omit<ModalFormProps<any, any, ICompany>, 'onSubmit' | 'onSelect'> {
+  extends Omit<ModalFormProps<any, any, CompanyEntity>, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<ICompanyForReq>;
 }
 export function createWarehousingSettingsFormData(
