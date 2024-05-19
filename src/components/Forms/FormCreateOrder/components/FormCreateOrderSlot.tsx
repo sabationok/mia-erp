@@ -15,7 +15,7 @@ import { ModalHeader } from '../../../atoms';
 import FlexBox from '../../../atoms/FlexBox';
 import StepsController from '../../components/StepsController';
 import { useAppForm } from '../../../../hooks';
-import { createTableTitlesFromTemplate } from '../../../../utils';
+import { createTableTitlesFromProperties } from '../../../../utils';
 import { usePropertiesSelector } from '../../../../redux/selectors.store';
 import VariationsApi from '../../../../api/variations.api';
 import { transformVariationTableData } from '../../../../utils/tables';
@@ -102,7 +102,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
   );
   const variationTableTitles = useMemo(() => {
     const template = templates.find(t => t._id === formData?.product?.template?._id);
-    return createTableTitlesFromTemplate(template);
+    return createTableTitlesFromProperties(template);
   }, [templates, formData]);
 
   const variationsTableConfig = useMemo(

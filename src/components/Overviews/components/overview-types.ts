@@ -1,9 +1,9 @@
+import { OverlayHandler } from 'Providers/Overlay/OverlayStackProvider';
 import React from 'react';
-import { OverlayHandler } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
 
 export type RenderOverviewCellComponent<Data = any> = React.FC<{
   cell: Omit<OverviewCellProps<Data>, 'CellComponent'>;
-  setOverlayContent: OverlayHandler;
+  overlayHandler: OverlayHandler;
   data?: Data;
 }>;
 

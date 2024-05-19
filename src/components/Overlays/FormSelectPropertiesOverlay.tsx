@@ -1,19 +1,18 @@
 import styled from 'styled-components';
-import FlexBox from '../../atoms/FlexBox';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import { usePropertiesSelector } from '../../../redux/selectors.store';
-import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import FlexBox from '../atoms/FlexBox';
+import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import { usePropertiesSelector } from '../../redux/selectors.store';
+import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { FormEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
-import { Text } from '../../atoms/Text';
-import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { OverlayHandlerReturn } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
-import { OnlyUUID } from '../../../redux/global.types';
-import { ModalFormProps } from '../../ModalForm';
-import { ToastService } from '../../../services';
-import { OverlayFooter, OverlayForm, OverlayHeader } from './components';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
-import { t } from '../../../lang';
-import { OfferEntity } from '../../../types/offers/offers.types';
+import { Text } from '../atoms/Text';
+import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
+import { OnlyUUID } from '../../redux/global.types';
+import { ModalFormProps } from '../ModalForm';
+import { ToastService } from '../../services';
+import { OverlayFooter, OverlayForm, OverlayHeader } from '../Forms/FormProduct/components';
+import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
+import { t } from '../../lang';
+import { OfferEntity } from '../../types/offers/offers.types';
 
 export interface FormSelectPropertiesProps
   extends OverlayHandlerReturn,

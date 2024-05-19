@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { takeFullGridArea } from '../pagesStyles';
 import { AppGridPage } from '../pages';
 import { useAppParams } from '../../../hooks';
-import PageOverlayProvider from '../../atoms/PageOverlayProvider';
+import OverlayStackProvider from '../../../Providers/Overlay/OverlayStackProvider';
 import PageOrderOverviewLeftSide from './PageOrderOverviewLeftSide';
 import PageOrderOverviewTabs from './PageOrderOverviewTabs';
 import { BaseAppPageProps } from '../index';
@@ -36,13 +36,13 @@ const PageOrderOverview: React.FC<Props> = ({ path }) => {
   return (
     <AppGridPage path={path}>
       <PageCurrentOrderProvider>
-        <PageOverlayProvider>
+        <OverlayStackProvider>
           <Page>
             <PageOrderOverviewLeftSide toggleRightSideVisibility={toggleRightSide} />
 
             <PageOrderOverviewTabs toggleVisibility={toggleRightSide} isVisible={isTabsSideVisible} />
           </Page>
-        </PageOverlayProvider>
+        </OverlayStackProvider>
       </PageCurrentOrderProvider>
     </AppGridPage>
   );

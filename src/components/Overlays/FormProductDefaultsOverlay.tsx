@@ -1,28 +1,27 @@
-import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { IProductDefaultsFormData, OfferEntity } from '../../../types/offers/offers.types';
+import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
+import { IProductDefaultsFormData, OfferEntity } from '../../types/offers/offers.types';
 import styled from 'styled-components';
-import { OverlayHandlerReturn } from '../../atoms/PageOverlayProvider';
-import { ModalHeader, OverlayFooter } from '../../atoms';
-import FlexBox from '../../atoms/FlexBox';
-import { useAppForm, useAppParams, useCurrentOffer } from '../../../hooks';
-import { enumToFilterOptions } from '../../../utils/fabrics';
-import TabSelector from '../../atoms/TabSelector';
+import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
+import { ModalHeader, OverlayFooter } from '../atoms';
+import FlexBox from '../atoms/FlexBox';
+import { useAppForm, useAppParams, useCurrentOffer } from '../../hooks';
+import { enumToFilterOptions, toReqData } from '../../utils';
+import TabSelector from '../atoms/TabSelector';
 import React, { useCallback, useMemo, useState } from 'react';
 
-import PricesTab from '../../AppPages/PageProductOverview/tabs/PricesTab';
-import VariationsTab from '../../AppPages/PageProductOverview/tabs/VariationsTab';
-import WarehousingTab from '../../AppPages/PageProductOverview/tabs/WarehousingTab';
-import CounterpartyTab from './tabs/CounterpartyTab';
-import { CounterpartyTypesEnum } from '../../../redux/directories/counterparties.types';
-import { t } from '../../../lang';
-import WarehousesTab from './tabs/WarehousesTab';
-import { OnlyUUID } from '../../../redux/global.types';
-import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { toReqData } from '../../../utils';
-import { LoadersProvider } from '../../../Providers/Loaders/LoaderProvider';
-import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
+import PricesTab from '../AppPages/PageProductOverview/tabs/PricesTab';
+import VariationsTab from '../AppPages/PageProductOverview/tabs/VariationsTab';
+import WarehousingTab from '../AppPages/PageProductOverview/tabs/WarehousingTab';
+import CounterpartyTab from '../Forms/FormProduct/tabs/CounterpartyTab';
+import { CounterpartyTypesEnum } from '../../redux/directories/counterparties.types';
+import { t } from '../../lang';
+import WarehousesTab from '../Forms/FormProduct/tabs/WarehousesTab';
+import { OnlyUUID } from '../../redux/global.types';
+import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import { LoadersProvider } from '../../Providers/Loaders/LoaderProvider';
+import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 
-export interface FormProductDefaultsOverlayProps extends OverlayHandlerReturn {
+export interface FormProductDefaultsOverlayProps extends CreatedOverlay {
   onSubmit?: AppSubmitHandler<IProductDefaultsFormData>;
   offer?: OfferEntity;
 }
@@ -38,6 +37,7 @@ export type OfferOverlayLoaderKey =
   | keyof typeof FormProductDefaultsTabs
   | `${keyof typeof FormProductDefaultsTabs}s`
   | 'submiting';
+
 const tabs = enumToFilterOptions(FormProductDefaultsTabs);
 const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({ onClose, onSubmit }) => {
   const loaders = useLoaders<OfferOverlayLoaderKey>();
@@ -70,19 +70,17 @@ const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({
   const renderTab = useMemo(() => {
     const tabsMap: Record<FormProductDefaultsTabs, React.ReactNode> = {
       [FormProductDefaultsTabs.warehouse]: <WarehousesTab onSelect={handleSelect} selected={formValues?.warehouse} />,
-      [FormProductDefaultsTabs.price]: (
-        <PricesTab withActions={false} onSelect={handleSelect} selected={formValues?.price} />
-      ),
+      [FormProductDefaultsTabs.price]: <PricesTab withActions onSelect={handleSelect} selected={formValues?.price} />,
       [FormProductDefaultsTabs.variation]: (
-        <VariationsTab withActions={false} onSelect={handleSelect} selected={formValues?.variation} />
+        <VariationsTab withActions onSelect={handleSelect} selected={formValues?.variation} />
       ),
       [FormProductDefaultsTabs.inventory]: (
-        <WarehousingTab withActions={false} onSelect={handleSelect} selected={formValues?.inventory} />
+        <WarehousingTab withActions onSelect={handleSelect} selected={formValues?.inventory} />
       ),
       [FormProductDefaultsTabs.supplier]: (
         <CounterpartyTab
           types={[CounterpartyTypesEnum.SUPPLIER]}
-          withActions={false}
+          withActions
           onSelect={handleSelect}
           selected={formValues?.supplier}
         />

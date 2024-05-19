@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import { MouseEventHandler, useCallback, useMemo, useState } from 'react';
-import { usePageOverlayService } from '../../atoms/PageOverlayProvider';
+import { useOverlayService } from '../../../Providers/Overlay/OverlayStackProvider';
 import OrderOverviewXL from '../../Overviews/OrderOverviewXL';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
@@ -11,7 +11,7 @@ export interface PageOrderOverviewLeftSideProps {
 }
 const PageOrderOverviewLeftSide: React.FC<PageOrderOverviewLeftSideProps> = ({ toggleRightSideVisibility }) => {
   const { currentOrder } = useOrdersSelector();
-  const overlayService = usePageOverlayService();
+  const overlayService = useOverlayService();
   const setLoading = useState(false)[1];
   const { orders: ordersServ } = useAppServiceProvider();
 
@@ -19,7 +19,7 @@ const PageOrderOverviewLeftSide: React.FC<PageOrderOverviewLeftSideProps> = ({ t
     (id: string): MouseEventHandler<HTMLDivElement> =>
       ev => {
         if (ev.target === ev.currentTarget) {
-          overlayService.removeStackItem(id);
+          overlayService.remove(id);
         }
       },
     [overlayService]
@@ -43,7 +43,7 @@ const PageOrderOverviewLeftSide: React.FC<PageOrderOverviewLeftSideProps> = ({ t
             key={`overlay-${id}`}
             {...props}
             onClose={() => {
-              overlayService.removeStackItem(id);
+              overlayService.remove(id);
             }}
             overlayId={id}
             index={index}

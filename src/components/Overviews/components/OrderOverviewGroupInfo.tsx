@@ -5,7 +5,7 @@ import { OverviewCellHeader } from './OverviewCellHeader';
 import { Text } from '../../atoms/Text';
 import { t } from '../../../lang';
 
-export const OrderOverviewGroupInfo: RenderOverviewCellComponent<OrderEntity> = ({ cell, setOverlayContent, data }) => {
+export const OrderOverviewGroupInfo: RenderOverviewCellComponent<OrderEntity> = ({ cell, overlayHandler, data }) => {
   return (
     <CellStyledComp.Cell>
       <OverviewCellHeader title={cell?.title} />

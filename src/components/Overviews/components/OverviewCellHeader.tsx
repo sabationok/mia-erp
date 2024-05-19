@@ -36,27 +36,27 @@ export const OverviewCellHeader = ({
       </CellStyledComp.CellText>
 
       {onOpenOverlayPress && (
-        <CellStyledComp.CellHeaderButton type={'button'} onClick={onOpenOverlayPress}>
+        <CellStyledComp.HeaderButton type={'button'} onClick={onOpenOverlayPress}>
           {openOverlayButtonTitle}
-        </CellStyledComp.CellHeaderButton>
+        </CellStyledComp.HeaderButton>
       )}
 
       {!editMode && onEditPress && (
-        <CellStyledComp.CellHeaderButton type={'button'} onClick={onEditPress}>
+        <CellStyledComp.HeaderButton type={'button'} onClick={onEditPress}>
           {editButtonText}
-        </CellStyledComp.CellHeaderButton>
+        </CellStyledComp.HeaderButton>
       )}
 
       {editMode && onCancelPress && (
-        <CellStyledComp.CellHeaderButton type={'button'} onClick={onCancelPress}>
+        <CellStyledComp.HeaderButton type={'button'} onClick={onCancelPress}>
           {cancelButtonText}
-        </CellStyledComp.CellHeaderButton>
+        </CellStyledComp.HeaderButton>
       )}
 
       {editMode && onAcceptPress && (
-        <CellStyledComp.CellHeaderButton type={'button'} disabled={!canAccept} onClick={onAcceptPress}>
+        <CellStyledComp.HeaderButton type={'button'} disabled={!canAccept} onClick={onAcceptPress}>
           {acceptButtonText}
-        </CellStyledComp.CellHeaderButton>
+        </CellStyledComp.HeaderButton>
       )}
     </FlexBox>
   );

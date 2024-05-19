@@ -1,6 +1,7 @@
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useMemo } from 'react';
 import { PartialRecord } from '../types/utils.types';
+import { useAppParams } from './index';
 
 export interface AppQuery extends PartialRecord<string, string | string[] | string[][]> {
   offerId?: string;
@@ -9,10 +10,14 @@ export interface AppQuery extends PartialRecord<string, string | string[] | stri
 }
 export const useAppRouter = <Query extends AppQuery = AppQuery, T extends string = any>() => {
   const navTo = useNavigate();
+  const location = useLocation();
+  const params = useAppParams();
+
+  const goBack = () => window.history.back();
 
   const [sp, _setSP] = useSearchParams();
 
-  const currentHash: T | undefined = (window.location.hash.replace('#', '') as T) || undefined;
+  const currentHash: T | undefined = (location.hash.replace('#', '') as T) || undefined;
 
   const query = useMemo(
     () =>
@@ -25,6 +30,7 @@ export const useAppRouter = <Query extends AppQuery = AppQuery, T extends string
   );
 
   return {
+    location,
     setHash: (value: string) => navTo({ search: sp.toString(), hash: value }),
     query,
     queryToString: () => sp.toString(),
@@ -58,7 +64,8 @@ export const useAppRouter = <Query extends AppQuery = AppQuery, T extends string
     unSet: () => {
       return navTo({ search: sp.toString(), hash: '' });
     },
-
+    params,
+    goBack,
     hash: currentHash,
   };
 };

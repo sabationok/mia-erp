@@ -4,16 +4,15 @@ import React, { useMemo, useState } from 'react';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import { t } from '../../lang';
-import { usePageCurrentProduct } from '../AppPages/PageProductOverview/PageCurrentProductProvider';
-import { useProductsSelector } from '../../redux/selectors.store';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { usePageCurrentProduct } from '../AppPages/PageProductOverview/PageOfferProvider';
 import { OverlayHeader } from '../Forms/FormProduct/components';
 import { checks, enumToFilterOptions, toAppDateFormat } from '../../utils';
-import { useAppParams } from '../../hooks';
 import { IMeasurement } from '../../types/utils.types';
 import TabSelector from '../atoms/TabSelector';
 import { OverviewCellProps } from './components/overview-types';
 import { OverviewCells } from './components/Cells';
+import { useOverlayService } from '../../Providers/Overlay/OverlayStackProvider';
+import { useAppRouter } from '../../hooks';
 
 export interface ProductOverviewXLProps {
   product?: OfferEntity;
@@ -29,65 +28,41 @@ export interface ProductOverviewXLProps {
 
 export enum ProductOverviewTabsEnum {
   General = 'General',
-  Futures = 'Futures',
   Properties = 'Properties',
   Defaults = 'Defaults',
   Images = 'Images',
+  Futures = 'Futures',
   Cms = 'Cms',
 }
 export const ProductOverviewTabsList = enumToFilterOptions(ProductOverviewTabsEnum);
 const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }) => {
-  const product = useProductsSelector().currentOffer;
+  const router = useAppRouter();
   const page = usePageCurrentProduct();
-  const productId = useAppParams()?.productId;
-  const navigate = useNavigate();
-  const location = useLocation();
+  const offer = page.currentOffer;
+  const overlaySrv = useOverlayService();
+
   const [currentTab, setCurrentTab] = useState<ProductOverviewTabsEnum>(ProductOverviewTabsEnum.General);
 
   const renderCells = useMemo(
     () =>
-      productOverviewCells
-        .filter(el => el.tab === currentTab)
-        .map(({ CellComponent, ...cell }) => {
-          if (CellComponent) {
-            return (
-              <CellComponent
-                key={cell.title}
-                setOverlayContent={page.createOverlayComponent}
-                cell={cell}
-                data={product}
-              />
-            );
-          }
-          return (
-            <OverviewCells.Text
-              key={cell.title}
-              setOverlayContent={page.createOverlayComponent}
-              cell={cell}
-              data={product}
-            />
-          );
-        }),
-    [currentTab, page.createOverlayComponent, product]
+      offerOverviewCellsMap[currentTab]?.map(({ CellComponent, ...cell }) => {
+        if (CellComponent) {
+          return <CellComponent key={cell.title} overlayHandler={overlaySrv.open} cell={cell} data={offer} />;
+        }
+        return <OverviewCells.Text key={cell.title} overlayHandler={overlaySrv.open} cell={cell} data={offer} />;
+      }),
+    [currentTab, overlaySrv.open, offer]
   );
 
   return (
     <Container fillWidth flex={1} className={className} padding={'0 8px'}>
-      <OverlayHeader
-        title={t('Offer overview')}
-        onBackPress={() => {
-          if (location?.pathname) {
-            const newPath = location?.pathname?.replace(`/${product?._id || productId}`, '');
-
-            newPath && navigate(newPath);
-          }
-        }}
-      />
+      <OverlayHeader title={t('Offer overview')} onBackPress={router.goBack} />
 
       <TabSelector
         optionProps={{ fitContentH: true }}
         filterOptions={ProductOverviewTabsList}
         onOptSelect={option => {
+          router.replace({ hash: option?.value });
           setCurrentTab(option?.value);
         }}
       />
@@ -175,35 +150,35 @@ const productOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEn
   {
     title: t('Label'),
     CellComponent: OverviewCells.Text,
-    getValue: product => product?.label,
+    getValue: data => data?.label,
     gridArea: 'label',
     tab: ProductOverviewTabsEnum.General,
   },
   {
     title: t('status'),
     CellComponent: OverviewCells.OfferStatusChanger,
-    getValue: product => product?.approved as string | null | undefined,
+    getValue: data => data?.approved as string | null | undefined,
     gridArea: 'approved',
     tab: ProductOverviewTabsEnum.General,
   },
   {
     title: t('Type'),
     CellComponent: OverviewCells.Text,
-    getValue: product => product?.type,
+    getValue: data => data?.type,
     gridArea: 'type',
     tab: ProductOverviewTabsEnum.General,
   },
   {
     title: t('SKU'),
     CellComponent: OverviewCells.Text,
-    getValue: product => product?.sku,
+    getValue: data => data?.sku,
     gridArea: 'sku',
     tab: ProductOverviewTabsEnum.General,
   },
   {
     title: t('Bar-code'),
     CellComponent: OverviewCells.Text,
-    getValue: product => product?.barCode,
+    getValue: data => data?.barCode,
     gridArea: 'barCode',
     tab: ProductOverviewTabsEnum.General,
   },
@@ -218,7 +193,7 @@ const productOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEn
   {
     title: t('Brand'),
     CellComponent: OverviewCells.Text,
-    getValue: product => product?.brand?.label,
+    getValue: data => data?.brand?.label,
     gridArea: 'brand',
     tab: ProductOverviewTabsEnum.General,
   },
@@ -246,7 +221,7 @@ const productOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEn
   {
     title: t('Description'),
     CellComponent: OverviewCells.Text,
-    getValue: product => product?.description,
+    getValue: data => data?.description,
     gridArea: 'description',
     tab: ProductOverviewTabsEnum.General,
   },
@@ -296,7 +271,7 @@ const productOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEn
   {
     title: t('Is promo'),
     CellComponent: OverviewCells.Text,
-    getValue: product => product?.futures?.isPromo,
+    getValue: data => data?.futures?.isPromo,
     gridArea: 'isPromo',
     tab: ProductOverviewTabsEnum.Futures,
   },
@@ -353,3 +328,18 @@ const productOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEn
     tab: ProductOverviewTabsEnum.Images,
   },
 ];
+
+const offerOverviewCellsMap: Record<
+  ProductOverviewTabsEnum | string,
+  OverviewCellProps<OfferEntity, ProductOverviewTabsEnum>[]
+> = {};
+productOverviewCells.forEach(item => {
+  const tab = item.tab;
+  if (tab) {
+    if (offerOverviewCellsMap[tab]) {
+      offerOverviewCellsMap[tab].push(item);
+    } else {
+      offerOverviewCellsMap[tab] = [item];
+    }
+  }
+});

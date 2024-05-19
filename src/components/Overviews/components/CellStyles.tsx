@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
 
-const CellHeaderButton = styled.button`
+const HeaderButton = styled.button`
   display: flex;
   align-items: center;
 
@@ -11,8 +11,8 @@ const CellHeaderButton = styled.button`
 
   font-family: inherit;
   font-weight: 600;
-  font-size: 12px;
-  padding: 0 6px;
+  font-size: 13px;
+  padding: 6px 10px;
   color: ${p => p.theme.accentColor.base};
 
   cursor: pointer;
@@ -24,10 +24,11 @@ const CellHeaderButton = styled.button`
 `;
 
 const Cell = styled(FlexBox)`
-  min-height: 70px;
+  //min-height: 70px;
   height: max-content;
+  min-height: max-content;
 
-  padding: 12px 8px;
+  padding: 0 8px 8px;
   gap: 4px;
 
   //overflow: hidden;
@@ -106,7 +107,7 @@ export const CellStyledComp = {
   ImagesSetBox,
   CellText,
   Tag,
-  CellHeaderButton,
+  HeaderButton,
   Cell,
   DefaultTag,
 };

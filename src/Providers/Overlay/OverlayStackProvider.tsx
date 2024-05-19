@@ -1,40 +1,39 @@
 import { createContext, useCallback, useContext, useState } from 'react';
 import { nanoid } from '@reduxjs/toolkit';
 
-export interface PageOverlayProviderValue {
-  getOverlayStack: () => OverlayStackItemData[];
-  overlayStack: OverlayStackItemData[];
-  createOverlayComponent: OverlayHandler;
-  removeStackItem: (id: string) => void;
+export interface OverlayStackProviderValue {
+  getStack: () => OverlayStackItemData[];
+  open: OverlayHandler;
+  remove: (id: string) => void;
   clearStack: () => void;
 }
 
-export type OverlayHandler = <Props = any>(params: OverlayHandlerParams<Props>) => OverlayHandlerReturn;
+export type OverlayHandler = <Props = any>(params: OverlayHandlerParams<Props>) => CreatedOverlay;
 
 export interface OverlayHandlerParams<Props = any> {
   RenderComponent: React.FC<OverlayRenderComponentProps<Props>>;
   props?: OverlayRenderComponentProps<Props>;
 }
+export type OverlayRenderComponentProps<Props = any> = CreatedOverlay & Props;
 
 export interface OverlayStackItemData<Props = any> {
-  RenderComponent: React.FC<OverlayRenderComponentProps<Props>>;
+  RenderComponent: React.FC<OverlayRenderComponentProps<Props & CreatedOverlay>>;
   props?: OverlayRenderComponentProps<Props>;
   id: string;
 }
 
-export type OverlayRenderComponentProps<Props = any> = OverlayHandlerReturn & Props;
 export interface OverlayRenderComponent<Props = any> extends React.FC<OverlayRenderComponentProps<Props>> {}
 
-export interface OverlayHandlerReturn {
+export interface CreatedOverlay {
   onClose?: () => void;
   index?: number;
-  overlayId?: string;
+  compId?: string;
 }
 export const PageCurrentOrderCTX = createContext({});
 
-export const usePageOverlayService = () => useContext(PageCurrentOrderCTX) as PageOverlayProviderValue;
+export const useOverlayService = () => useContext(PageCurrentOrderCTX) as OverlayStackProviderValue;
 
-const PageOverlayProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+const OverlayStackProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const [overlayStack, setOverlayStack] = useState<OverlayStackItemData[]>([]);
 
   const removeStackItem = useCallback((id: string) => {
@@ -54,7 +53,7 @@ const PageOverlayProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
           const isExist = prev.find(el => el.id.includes(params.RenderComponent.name));
 
           if (isExist) {
-            const clearedStack = prev.filter(el => el.id !== isExist.id);
+            const clearedStack = prev.filter(el => el.RenderComponent?.name !== isExist.RenderComponent?.name);
 
             return [
               ...clearedStack,
@@ -75,25 +74,24 @@ const PageOverlayProvider: React.FC<{ children?: React.ReactNode }> = ({ childre
         });
       }
 
-      const returnData: OverlayHandlerReturn = {
+      const returnData: CreatedOverlay = {
         onClose: () => removeStackItem(id),
-        overlayId: id,
+        compId: id,
       };
       return returnData;
     },
     [removeStackItem]
   );
 
-  const getOverlayStack = useCallback(() => overlayStack, [overlayStack]);
+  const getStack = () => overlayStack;
 
-  const value: PageOverlayProviderValue = {
-    getOverlayStack,
-    removeStackItem,
+  const value: OverlayStackProviderValue = {
+    getStack,
+    remove: removeStackItem,
     clearStack,
-    createOverlayComponent,
-    overlayStack,
+    open: createOverlayComponent,
   };
 
   return <PageCurrentOrderCTX.Provider value={value}>{children}</PageCurrentOrderCTX.Provider>;
 };
-export default PageOverlayProvider;
+export default OverlayStackProvider;

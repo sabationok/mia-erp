@@ -5,13 +5,13 @@ import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import React, { useMemo } from 'react';
 import { CellStyledComp } from './CellStyles';
 import { OverviewCellHeader } from './OverviewCellHeader';
-import FormProductCategoriesOverlay from '../../Forms/FormProduct/FormSelectCategoriesOverlay';
+import FormProductCategoriesOverlay from '../../Overlays/FormSelectCategoriesOverlay';
 import FlexBox from '../../atoms/FlexBox';
 import { IProductCategoryDirItem } from '../../../types/dir.types';
 
 export const OfferOverviewCategoriesCell: RenderOverviewCellComponent<OfferEntity> = ({
   cell,
-  setOverlayContent,
+  overlayHandler,
   data,
 }) => {
   const categories = useDirectorySelector(ApiDirType.CATEGORIES_PROD).directory;
@@ -31,7 +31,7 @@ export const OfferOverviewCategoriesCell: RenderOverviewCellComponent<OfferEntit
         title={cell?.title}
         openOverlayButtonTitle={'Змінити'}
         onOpenOverlayPress={() => {
-          setOverlayContent({
+          overlayHandler({
             RenderComponent: FormProductCategoriesOverlay,
           });
         }}

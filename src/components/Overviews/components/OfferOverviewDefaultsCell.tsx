@@ -7,20 +7,17 @@ import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
 import { CellStyledComp } from './CellStyles';
 import { OverviewCellHeader } from './OverviewCellHeader';
-import FormProductDefaultsOverlay from '../../Forms/FormProduct/FormProductDefaultsOverlay';
+import FormProductDefaultsOverlay from '../../Overlays/FormProductDefaultsOverlay';
 
 import { OfferPriceEntity } from '../../../types/price-management/priceManagement.types';
 import { MaybeNull } from '../../../types/utils.types';
 import { toPrice } from '../../../utils/numbers';
 
-export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity> = ({
-  data,
-  cell,
-  setOverlayContent,
-}) => {
+export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity> = ({ data, cell, overlayHandler }) => {
   const theme = useTheme();
   const warehouse = data?.warehouse;
   const supplier = data?.supplier;
+  const price = data?.price;
 
   const renderVariationTags = useMemo(() => {
     const variation = data?.variation;
@@ -56,10 +53,8 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity>
     });
   }, [data?.variation]);
 
-  const priceInfoCellsData = useMemo(() => createPriceOverviewTagsData(data?.price), [data?.price]);
-
   const renderPriceInfo = useMemo(() => {
-    return priceInfoCellsData.map((item, index) => {
+    return createPriceOverviewTagsData(price).map((item, index) => {
       return (
         <FlexBox
           key={item?.title}
@@ -78,14 +73,14 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity>
         </FlexBox>
       );
     });
-  }, [priceInfoCellsData]);
+  }, [price]);
 
   return (
     <CellStyledComp.Cell style={{ minHeight: 'max-content' }}>
       <OverviewCellHeader
         title={cell?.title}
         onOpenOverlayPress={() => {
-          setOverlayContent({
+          overlayHandler({
             RenderComponent: FormProductDefaultsOverlay,
           });
         }}

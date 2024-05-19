@@ -2,7 +2,7 @@ import { RenderOverviewCellComponent } from './overview-types';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import React, { useMemo, useState } from 'react';
-import FormSelectPropertiesOverlay from '../../Forms/FormProduct/FormSelectPropertiesOverlay';
+import FormSelectPropertiesOverlay from '../../Overlays/FormSelectPropertiesOverlay';
 import FlexBox from '../../atoms/FlexBox';
 import { t } from '../../../lang';
 import { CellStyledComp } from './CellStyles';
@@ -11,7 +11,7 @@ import { OverviewPropertyComponent } from './OverviewPropertyComponent';
 
 export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEntity> = ({
   cell,
-  setOverlayContent,
+  overlayHandler,
   data,
 }) => {
   const templates = useProductsSelector().properties;
@@ -34,11 +34,11 @@ export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEnt
       return (
         <OverviewPropertyComponent
           key={`prop-${prop?._id}`}
-          {...{ index, setOverlayContent, item: prop, selectedItems, data }}
+          {...{ index, overlayHandler: overlayHandler, item: prop, selectedItems, data }}
         />
       );
     });
-  }, [availableProperties, setOverlayContent, selectedItems, data]);
+  }, [availableProperties, overlayHandler, selectedItems, data]);
 
   return (
     <CellStyledComp.Cell
@@ -50,7 +50,7 @@ export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEnt
       <OverviewCellHeader
         title={cell?.title}
         onOpenOverlayPress={() => {
-          setOverlayContent({
+          overlayHandler({
             RenderComponent: FormSelectPropertiesOverlay,
             props: { offer: data },
           });

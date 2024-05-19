@@ -6,7 +6,6 @@ import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Text } from '../../../atoms/Text';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
-import { OverlayHandlerReturn } from '../../../AppPages/PageProductOverview/PageCurrentProductProvider';
 import { toVariationFormData, toVariationReqData } from '../../../../utils';
 import { IVariationFormData, VariationEntity } from '../../../../types/offers/variations.types';
 import { OnlyUUID } from '../../../../redux/global.types';

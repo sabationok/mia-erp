@@ -1,4 +1,4 @@
-import { usePageCurrentProduct } from './PageCurrentProductProvider';
+import { usePageCurrentProduct } from './PageOfferProvider';
 import { useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import { Text } from '../../atoms/Text';
@@ -10,10 +10,6 @@ import PricesTab from './tabs/PricesTab';
 import WarehousingTab from './tabs/WarehousingTab';
 import { ModalHeader } from '../../atoms';
 
-// const openLoader = (current: RightSideOptionEnum) =>
-//   ToastService.createLoader('Loading data...').open({
-//     afterClose: [`${current} data loaded`, { type: 'success' }],
-//   });
 enum RightSideOptionEnum {
   Variations = 'Variations',
   Prices = 'Prices',
@@ -21,33 +17,30 @@ enum RightSideOptionEnum {
 }
 const toggleOptions = enumToFilterOptions(RightSideOptionEnum);
 
-export interface PageProductOverviewRightSideProps {
+export interface OfferOverviewPageRightSideProps {
   isVisible?: boolean;
   toggleVisibility?: () => void;
 }
-// interface ITableDataByType {
-//   [RightSideOptionEnum.Variations]: IVariation;
-//   [RightSideOptionEnum.Prices]: IPriceListItem;
-// }
-const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> = ({ isVisible, toggleVisibility }) => {
+
+const OfferOverviewPageRightSide: React.FC<OfferOverviewPageRightSideProps> = ({ isVisible, toggleVisibility }) => {
   const page = usePageCurrentProduct();
 
-  const [current, setCurrent] = useState<RightSideOptionEnum>(RightSideOptionEnum.Variations);
+  const [currentTab, setCurrentTab] = useState<RightSideOptionEnum>(RightSideOptionEnum.Variations);
 
   const renderTab = useMemo(() => {
     if (!page.currentOffer) {
       return null;
     }
     const tabs: Record<RightSideOptionEnum, React.ReactNode> = {
-      [RightSideOptionEnum.Prices]: <WarehousingTab withActions />,
-      [RightSideOptionEnum.Warehousing]: <PricesTab withActions />,
       [RightSideOptionEnum.Variations]: <VariationsTab withActions />,
+      [RightSideOptionEnum.Warehousing]: <PricesTab withActions />,
+      [RightSideOptionEnum.Prices]: <WarehousingTab withActions />,
     };
-    return tabs?.[current] ?? null;
-  }, [current, page.currentOffer]);
+    return tabs?.[currentTab] ?? null;
+  }, [currentTab, page.currentOffer]);
 
   const filterHandler: FilterSelectHandler<RightSideOptionEnum> = (_, value, index) => {
-    setCurrent(value);
+    setCurrentTab(value);
   };
 
   return (
@@ -68,7 +61,12 @@ const PageProductOverviewRightSide: React.FC<PageProductOverviewRightSideProps> 
       )}
 
       <TabBox overflow={'hidden'} fillWidth flex={1}>
-        <TabSelector filterOptions={toggleOptions} defaultValue={current} onOptSelect={filterHandler} preventFilter />
+        <TabSelector
+          filterOptions={toggleOptions}
+          defaultValue={currentTab}
+          onOptSelect={filterHandler}
+          preventFilter
+        />
 
         {renderTab}
       </TabBox>
@@ -104,4 +102,4 @@ const TabBox = styled(FlexBox)`
   //border-bottom: 1px solid ${p => p.theme.modalBorderColor};
 `;
 
-export default PageProductOverviewRightSide;
+export default OfferOverviewPageRightSide;

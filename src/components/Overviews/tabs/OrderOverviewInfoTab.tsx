@@ -2,7 +2,7 @@ import FlexBox from '../../atoms/FlexBox';
 import styled from 'styled-components';
 import React, { useMemo, useState } from 'react';
 import { OrderEntity } from '../../../types/orders/orders.types';
-import { usePageOverlayService } from '../../atoms/PageOverlayProvider';
+import { useOverlayService } from '../../../Providers/Overlay/OverlayStackProvider';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { t } from '../../../lang';
 import { OverviewCellProps } from '../components/overview-types';
@@ -23,7 +23,7 @@ enum OrderOverviewInfoTabsEnum {
 const tabs = _enumToTabs(OrderOverviewInfoTabsEnum);
 
 const OrderOverviewInfoTab: React.FC<OrderOverviewInfoTabProps> = _p => {
-  const overlayS = usePageOverlayService();
+  const overlayS = useOverlayService();
   const currentOrder = useOrdersSelector().currentOrder;
   const [currentTab, setCurrentTab] = useState<OrderOverviewInfoTabsEnum>(OrderOverviewInfoTabsEnum.General);
 
@@ -33,25 +33,11 @@ const OrderOverviewInfoTab: React.FC<OrderOverviewInfoTabProps> = _p => {
         .filter(cell => cell.tab === currentTab)
         .map(({ CellComponent, ...cell }) => {
           if (CellComponent) {
-            return (
-              <CellComponent
-                key={cell.title}
-                setOverlayContent={overlayS.createOverlayComponent}
-                cell={cell}
-                data={currentOrder}
-              />
-            );
+            return <CellComponent key={cell.title} setOverlayContent={overlayS.open} cell={cell} data={currentOrder} />;
           }
-          return (
-            <OverviewCells.Text
-              key={cell.title}
-              setOverlayContent={overlayS.createOverlayComponent}
-              cell={cell}
-              data={currentOrder}
-            />
-          );
+          return <OverviewCells.Text key={cell.title} overlayHandler={overlayS.open} cell={cell} data={currentOrder} />;
         }),
-    [currentTab, overlayS.createOverlayComponent, currentOrder]
+    [currentTab, overlayS.open, currentOrder]
   );
   return (
     <Box fillWidth flex={1} overflow={'auto'}>

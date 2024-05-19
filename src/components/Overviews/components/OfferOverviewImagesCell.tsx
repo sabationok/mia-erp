@@ -3,16 +3,12 @@ import { OfferEntity } from '../../../types/offers/offers.types';
 import React, { useMemo } from 'react';
 import { formAddImageSetTabs } from '../../Forms/FormProduct/FormAddImageSet';
 import ImagePreviewSmall from '../../atoms/ImagePreviewSmall';
-import FormProductImages from '../../Forms/FormProduct/FormProductImagesOverlay';
+import FormProductImages from '../../Overlays/FormProductImagesOverlay';
 import FlexBox from '../../atoms/FlexBox';
 import { CellStyledComp } from './CellStyles';
 import { OverviewCellHeader } from './OverviewCellHeader';
 
-export const OfferOverviewImagesCell: RenderOverviewCellComponent<OfferEntity> = ({
-  data,
-  cell,
-  setOverlayContent,
-}) => {
+export const OfferOverviewImagesCell: RenderOverviewCellComponent<OfferEntity> = ({ data, cell, overlayHandler }) => {
   const renderImageSets = useMemo(() => {
     return data?.images?.map((set, index) => {
       return (
@@ -30,7 +26,7 @@ export const OfferOverviewImagesCell: RenderOverviewCellComponent<OfferEntity> =
       <OverviewCellHeader
         title={cell?.title}
         onOpenOverlayPress={() => {
-          setOverlayContent({ RenderComponent: FormProductImages });
+          overlayHandler({ RenderComponent: FormProductImages });
         }}
       />
 

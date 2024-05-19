@@ -1,9 +1,9 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { IVariationTemplate } from '../types/offers/properties.types';
+import { IProperty } from '../types/offers/properties.types';
 import { t } from '../lang';
 import {
-  VariationEntity,
   IVariationTableData,
+  VariationEntity,
   VariationPropertiesMapInTableData,
 } from '../types/offers/variations.types';
 import { AmountAndPercentage, PriceAmountAndPercentageFields } from '../types/price-management/priceManagement.types';
@@ -52,12 +52,12 @@ export const transformVariationTableData = (variation: VariationEntity): IVariat
   return { ...variation, propertiesMap };
 };
 
-export function createTableTitlesFromTemplate(
-  template?: IVariationTemplate
+export function createTableTitlesFromProperties(
+  properties?: IProperty[]
 ): CellTittleProps<IVariationTableData>[] | undefined {
   let titles: CellTittleProps<IVariationTableData>[] = [];
-  if (template && template?.childrenList) {
-    titles = template?.childrenList
+  if (properties?.length) {
+    titles = properties
       ?.filter(el => el?.isSelectable)
       ?.map(p => {
         const title: CellTittleProps<IVariationTableData> = {
@@ -147,14 +147,14 @@ export const priceAmountAndPercentageFieldsLabels: Record<
   keyof PriceAmountAndPercentageFields,
   Record<keyof AmountAndPercentage, string>
 > = {
-  cashback: {
-    amount: t('Commission, amount'),
-    percentage: t('Commission, %'),
-  },
-  discount: {
-    amount: t('Discount, amount'),
-    percentage: t('Discount, %'),
-  },
+  // cashback: {
+  //   amount: t('Commission, amount'),
+  //   percentage: t('Commission, %'),
+  // },
+  // discount: {
+  //   amount: t('Discount, amount'),
+  //   percentage: t('Discount, %'),
+  // },
   markup: {
     amount: t('Markup, amount'),
     percentage: t('Markup, %'),
@@ -163,18 +163,18 @@ export const priceAmountAndPercentageFieldsLabels: Record<
     amount: t('Commission, amount'),
     percentage: t('Commission, %'),
   },
-  bonus: {
-    amount: t('Bonus, amount'),
-    percentage: t('Bonus, %'),
-  },
-  vat: {
-    amount: t('Vat, amount'),
-    percentage: t('Vat, %'),
-  },
-  tax: {
-    amount: t('Tax, amount'),
-    percentage: t('Tax, %'),
-  },
+  // bonus: {
+  //   amount: t('Bonus, amount'),
+  //   percentage: t('Bonus, %'),
+  // },
+  // vat: {
+  //   amount: t('Vat, amount'),
+  //   percentage: t('Vat, %'),
+  // },
+  // tax: {
+  //   amount: t('Tax, amount'),
+  //   percentage: t('Tax, %'),
+  // },
 };
 
 export function createPriceColumnForBatch(

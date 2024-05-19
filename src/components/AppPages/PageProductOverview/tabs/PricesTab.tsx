@@ -9,7 +9,7 @@ import { getIdRef } from 'utils/data-transform';
 import { OnlyUUID } from 'redux/global.types';
 import { useAppParams, useCurrentOffer } from '../../../../hooks';
 import { useLoadersProvider } from '../../../../Providers/Loaders/LoaderProvider';
-import { OfferOverlayLoaderKey } from '../../../Forms/FormProduct/FormProductDefaultsOverlay';
+import { OfferOverlayLoaderKey } from '../../../Overlays/FormProductDefaultsOverlay';
 
 export interface PricesTabProps {
   onSelect?: (price: OnlyUUID) => void;
@@ -50,41 +50,42 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
           }
         }
       },
-      actionsCreator: ctx => {
-        const currentId = ctx.selectedRow?._id;
+      actionsCreator: !withActions
+        ? undefined
+        : ctx => {
+            const currentId = ctx.selectedRow?._id;
 
-        return [
-          { icon: 'refresh', type: 'onlyIcon', onClick: () => loadData({ refresh: true }) },
-          { separator: true },
-          { icon: 'delete', type: 'onlyIcon', disabled: !currentId },
-          { icon: 'copy', type: 'onlyIcon', disabled: !currentId },
-          { icon: 'edit', type: 'onlyIcon', disabled: !currentId },
-          { separator: true },
-          {
-            icon: 'plus',
-            type: 'onlyIconFilled',
-            onClick: () => {
-              const m = modalS.open({
-                ModalChildren: FormCreatePrice,
-                modalChildrenProps: {
-                  offer: currentOffer,
-                  onSubmit: (d, o) => {
-                    console.log('FormCreatePrice submit pr overview', d);
-                    pricesS.addPriceToList({
-                      data: { updateCurrent: true, data: { data: d } },
-                      onSuccess: () => {
-                        o?.close && m?.onClose();
+            return [
+              { icon: 'refresh', type: 'onlyIcon', onClick: () => loadData({ refresh: true }) },
+              { separator: true },
+              { icon: 'delete', type: 'onlyIcon', disabled: !currentId },
+              { icon: 'copy', type: 'onlyIcon', disabled: !currentId },
+              { icon: 'edit', type: 'onlyIcon', disabled: !currentId },
+              { separator: true },
+              {
+                icon: 'plus',
+                type: 'onlyIconFilled',
+                onClick: () => {
+                  const m = modalS.open({
+                    ModalChildren: FormCreatePrice,
+                    modalChildrenProps: {
+                      offer: currentOffer,
+                      onSubmit: (d, o) => {
+                        pricesS.addPriceToList({
+                          data: { updateCurrent: true, data: { data: d } },
+                          onSuccess: () => {
+                            o?.close && m?.onClose();
+                          },
+                        });
                       },
-                    });
-                  },
+                    },
+                  });
                 },
-              });
-            },
+              },
+            ];
           },
-        ];
-      },
     };
-  }, [currentOffer, onSelect, loadData, modalS, pricesS]);
+  }, [currentOffer, withActions, onSelect, loadData, modalS, pricesS]);
 
   useEffect(() => {
     // if ((!currentOffer?.prices || currentOffer?.prices?.length === 0) && currentProduct?._id) {

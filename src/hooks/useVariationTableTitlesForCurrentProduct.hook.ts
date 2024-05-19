@@ -1,6 +1,6 @@
 import { useProductsSelector, usePropertiesSelector } from '../redux/selectors.store';
 import { useMemo } from 'react';
-import { createTableTitlesFromTemplate } from '../utils';
+import { createTableTitlesFromProperties } from '../utils';
 
 export default function useVariationTableTitlesForCurrentProduct() {
   const currentProduct = useProductsSelector().currentOffer;
@@ -8,6 +8,6 @@ export default function useVariationTableTitlesForCurrentProduct() {
 
   return useMemo(() => {
     const template = templates.find(t => t._id === currentProduct?.template?._id);
-    return createTableTitlesFromTemplate(template);
+    return createTableTitlesFromProperties(template);
   }, [currentProduct?.template?._id, templates]);
 }

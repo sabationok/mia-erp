@@ -5,14 +5,14 @@ import FormCreateVariation from '../../Forms/offers/FormOfferVariation/FormCreat
 import FlexBox from '../../atoms/FlexBox';
 import React from 'react';
 
-export const OfferOverviewVariationsTemplateCell: RenderOverviewCellComponent = ({ cell, setOverlayContent, data }) => {
+export const OfferOverviewVariationsTemplateCell: RenderOverviewCellComponent = ({ cell, overlayHandler, data }) => {
   return (
     <CellStyledComp.Cell padding={'4px'}>
       <OverviewCellHeader
         title={cell.title}
         openOverlayButtonTitle={'Перегляд'}
         onOpenOverlayPress={() => {
-          setOverlayContent({ RenderComponent: FormCreateVariation, props: { create: true } });
+          overlayHandler({ RenderComponent: FormCreateVariation, props: { create: true } });
         }}
       />
 

@@ -7,7 +7,7 @@ import { IWarehouse } from '../../../../types/warehouses.types';
 import { warehousesTableColumns } from '../../../../data/warehauses.data';
 import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useLoadersProvider } from '../../../../Providers/Loaders/LoaderProvider';
-import { OfferOverlayLoaderKey } from '../FormProductDefaultsOverlay';
+import { OfferOverlayLoaderKey } from '../../../Overlays/FormProductDefaultsOverlay';
 
 export interface WarehousesTabProps {
   onSelect?: (warehouse: OnlyUUID) => void;

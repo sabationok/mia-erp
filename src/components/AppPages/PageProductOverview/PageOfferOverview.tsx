@@ -3,22 +3,23 @@ import { takeFullGridArea } from '../pagesStyles';
 import AppGridPage from '../AppGridPage';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import PageCurrentProductProvider from './PageCurrentProductProvider';
-import PageProductOverviewRightSide from './PageProductOverviewRightSide';
-import PageProductOverviewLeftSide from './PageProductOverviewLeftSide';
+import PageOfferProvider from './PageOfferProvider';
+import OfferOverviewPageRightSide from './OfferOverviewPageRightSide';
+import OfferOverviewPageLeftSide from './OfferOverviewPageLeftSide';
 import { BaseAppPageProps } from '../index';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { LoadersProvider, useLoadersProvider } from '../../../Providers/Loaders/LoaderProvider';
 import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
 import { t } from '../../../lang';
+import OverlayStackProvider from '../../../Providers/Overlay/OverlayStackProvider';
 
 interface Props extends BaseAppPageProps {}
 
-export type OfferOverviewLoaderKey = 'offer' | keyof OfferEntity;
+export type OfferOverviewLoaderKey = 'offer' | 'update_offer' | 'refresh_offer' | keyof OfferEntity;
 
 export const useOfferOverviewLoaders = () => useLoadersProvider<OfferOverviewLoaderKey>();
 
-const PageProductOverview: React.FC<Props> = ({ path }) => {
+const PageOfferOverview: React.FC<Props> = ({ path }) => {
   const loaders = useLoaders<OfferOverviewLoaderKey>({ offer: { content: t('Loading product info') } });
   const [isRightSideVisible, setIsRightSideVisible] = useState<boolean>(false);
   const productsS = useAppServiceProvider()[ServiceName.products];
@@ -37,15 +38,17 @@ const PageProductOverview: React.FC<Props> = ({ path }) => {
 
   return (
     <LoadersProvider value={loaders}>
-      <PageCurrentProductProvider>
-        <AppGridPage path={path}>
-          <Page>
-            <PageProductOverviewLeftSide toggleRightSideVisibility={toggleRightSide} />
+      <PageOfferProvider>
+        <OverlayStackProvider>
+          <AppGridPage path={path}>
+            <Page>
+              <OfferOverviewPageLeftSide toggleRightSideVisibility={toggleRightSide} />
 
-            <PageProductOverviewRightSide isVisible={isRightSideVisible} toggleVisibility={toggleRightSide} />
-          </Page>
-        </AppGridPage>
-      </PageCurrentProductProvider>
+              <OfferOverviewPageRightSide isVisible={isRightSideVisible} toggleVisibility={toggleRightSide} />
+            </Page>
+          </AppGridPage>
+        </OverlayStackProvider>
+      </PageOfferProvider>
     </LoadersProvider>
   );
 };
@@ -65,4 +68,4 @@ const Page = styled.div`
   }
 `;
 
-export default PageProductOverview;
+export default PageOfferOverview;

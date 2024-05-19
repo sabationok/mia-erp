@@ -1,14 +1,17 @@
-import { usePageCurrentProduct } from '../PageCurrentProductProvider';
+import { usePageCurrentProduct } from '../PageOfferProvider';
 import { useModalProvider } from '../../../ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { createTableTitlesFromTemplate, transformVariationTableData } from '../../../../utils/tables';
+import { useCallback, useEffect, useMemo } from 'react';
+import { createTableTitlesFromProperties, transformVariationTableData } from '../../../../utils/tables';
 import FormCreateVariation from '../../../Forms/offers/FormOfferVariation/FormCreateVariationOverlay';
 import { IVariationTableData } from '../../../../types/offers/variations.types';
-import { useProductsSelector, usePropertiesSelector } from '../../../../redux/selectors.store';
+import { usePropertiesSelector } from '../../../../redux/selectors.store';
 import { getIdRef } from '../../../../utils/data-transform';
 import { OnlyUUID } from '../../../../redux/global.types';
+import { useLoadersProvider } from '../../../../Providers/Loaders/LoaderProvider';
+import { OfferOverlayLoaderKey } from '../../../Overlays/FormProductDefaultsOverlay';
+import { IProperty } from '../../../../types/offers/properties.types';
 
 export interface VariationsTabProps {
   onSelect?: (variation: OnlyUUID) => void;
@@ -17,36 +20,43 @@ export interface VariationsTabProps {
 }
 
 const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withActions = true }) => {
+  const loaders = useLoadersProvider<OfferOverlayLoaderKey>();
   const page = usePageCurrentProduct();
   const modalS = useModalProvider();
-  const currentProduct = useProductsSelector().currentOffer;
+  const currentOffer = page.currentOffer;
   const productsS = useAppServiceProvider()[ServiceName.products];
   const templates = usePropertiesSelector();
-  const [loading, setLoading] = useState(false);
 
   const loadData = useCallback(
     ({ refresh, update }: { refresh?: boolean; update?: boolean }) => {
-      if (!currentProduct) return;
-      const product = getIdRef(currentProduct);
+      if (!currentOffer) return;
 
       productsS.getAllVariationsByProductId({
-        data: { refreshCurrent: refresh, updateCurrent: update, product },
-        onLoading: setLoading,
+        data: { refreshCurrent: refresh, updateCurrent: update, offerId: currentOffer._id },
+        onLoading: loaders.onLoading('variations'),
       });
     },
-    [currentProduct, productsS]
+    [currentOffer, loaders, productsS]
   );
-
   const variationsTableTitles = useMemo(() => {
-    const template = templates.find(t => t._id === currentProduct?.template?._id);
+    const propertiesMap: Record<string, IProperty> = {};
+    for (const variation of currentOffer?.variations ?? []) {
+      const propsList = variation.properties;
 
-    return createTableTitlesFromTemplate(template);
-  }, [currentProduct?.template?._id, templates]);
+      for (const prop of propsList ?? []) {
+        const propId = prop?.parent?._id;
+        if (propId && prop.parent) {
+          propertiesMap[propId] = prop.parent;
+        }
+      }
+    }
+    return createTableTitlesFromProperties(Object.values(propertiesMap));
+  }, [currentOffer?.variations]);
 
   const tableConfig = useMemo(() => {
     return {
       tableTitles: variationsTableTitles,
-      tableData: currentProduct?.variations,
+      tableData: currentOffer?.variations,
       transformData: transformVariationTableData,
       onRowClick: data => {
         if (onSelect) {
@@ -81,7 +91,7 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
                 disabled: !currentId,
                 onClick: () => {
                   if (!currentId || !ctx.selectedRow) return;
-                  const dataForUpdate = currentProduct?.variations?.find(v => v?._id === currentId);
+                  const dataForUpdate = currentOffer?.variations?.find(v => v?._id === currentId);
 
                   modalS.open({
                     ModalChildren: FormCreateVariation,
@@ -108,15 +118,23 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
             ];
           },
     } as ITableListProps<IVariationTableData>;
-  }, [currentProduct?.variations, loadData, modalS, onSelect, page.currentOffer, variationsTableTitles, withActions]);
+  }, [currentOffer?.variations, loadData, modalS, onSelect, page.currentOffer, variationsTableTitles, withActions]);
 
   useEffect(() => {
-    loadData({ refresh: true });
-    // if ((!currentProduct?.variations || currentProduct?.variations?.length === 0) && currentProduct?._id) {
-    // }
+    if (currentOffer) {
+      loadData({ refresh: true });
+    }
     // eslint-disable-next-line
   }, []);
 
-  return <TableList {...tableConfig} isSearch={false} isFilter={false} isLoading={loading} selectedRow={selected} />;
+  return (
+    <TableList
+      {...tableConfig}
+      isSearch={false}
+      isFilter={false}
+      isLoading={loaders?.isLoading?.variations}
+      selectedRow={selected}
+    />
+  );
 };
 export default VariationsTab;

@@ -12,7 +12,7 @@ export const PageTransactions = lazy(() => import('./PageTransactions'));
 
 // * PRODUCTS
 export const PageProducts = lazy(() => import('./offersManagement/PageProducts'));
-export const PageProductOverview = lazy(() => import('./PageProductOverview/PageProductOverview'));
+export const PageProductOverview = lazy(() => import('./PageProductOverview/PageOfferOverview'));
 
 // * PRICE MANAGEMENT
 export const PagePriceManagement = lazy(() => import('./priceManagement/PagePriceManagement'));

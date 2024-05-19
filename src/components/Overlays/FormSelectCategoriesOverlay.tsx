@@ -1,13 +1,12 @@
-import { OverlayHandlerReturn } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
 import styled from 'styled-components';
-import FlexBox from '../../atoms/FlexBox';
-import { useDirectorySelector, useProductsSelector } from '../../../redux/selectors.store';
-import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import FlexBox from '../atoms/FlexBox';
+import { useDirectorySelector, useProductsSelector } from '../../redux/selectors.store';
+import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { FormEventHandler, useEffect, useMemo, useState } from 'react';
-import { getIdRef } from '../../../utils/data-transform';
-import FormProductCategories from './FormProductCategories';
-import { ApiDirType } from '../../../redux/APP_CONFIGS';
-import { OverlayFooter, OverlayForm, OverlayHeader } from './components';
+import { getIdRef } from '../../utils/data-transform';
+import FormProductCategories from '../Forms/FormProduct/FormProductCategories';
+import { ApiDirType } from '../../redux/APP_CONFIGS';
+import { OverlayFooter, OverlayForm, OverlayHeader } from '../Forms/FormProduct/components';
 
 export interface FormSelectCategoriesOverlayProps extends OverlayHandlerReturn {}
 

@@ -36,4 +36,4 @@ export const CreateOffer = lazy(() => import('./offers/FormCreateOffer'));
 export const CreateVariation = lazy(() => import('./offers/_FormCreateVariation'));
 export const Variation = lazy(() => import('./offers/FormOfferVariation/FormCreateVariationOverlay'));
 export const CreateProperty = lazy(() => import('./offers/FormCreateProperty'));
-export const SelectProperties = lazy(() => import('./FormProduct/FormSelectPropertiesOverlay'));
+export const SelectProperties = lazy(() => import('../Overlays/FormSelectPropertiesOverlay'));

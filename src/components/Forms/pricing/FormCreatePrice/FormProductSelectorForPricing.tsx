@@ -8,7 +8,7 @@ import TableList from '../../../TableList/TableList';
 import { ServiceName, useAppServiceProvider } from 'hooks/useAppServices.hook';
 import { VariationEntity } from 'types/offers/variations.types';
 import { useProductsSelector } from 'redux/selectors.store';
-import { createTableTitlesFromTemplate, getIdRef } from 'utils';
+import { createTableTitlesFromProperties, getIdRef } from 'utils';
 import { transformVariationTableData } from 'utils/tables';
 import { OnRowClickHandler } from '../../../TableList/tableTypes.types';
 import { OnlyUUID } from 'redux/global.types';
@@ -44,7 +44,7 @@ const FormProductSelectorForPricing: React.FC<FormProductSelectorForPricingProps
 
   const tableTitles = useMemo(() => {
     const t = templates.find(t => t._id === currentOffer?.template?._id);
-    return t ? createTableTitlesFromTemplate(t) : undefined;
+    return t ? createTableTitlesFromProperties(t) : undefined;
   }, [currentOffer?.template?._id, templates]);
 
   const transformedTableData = useMemo(() => {

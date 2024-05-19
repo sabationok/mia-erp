@@ -11,8 +11,11 @@ import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { t } from '../../../lang';
 import { OverviewCellHeader } from './OverviewCellHeader';
 import { CellStyledComp } from './CellStyles';
+import { useOfferOverviewLoaders } from '../../AppPages/PageProductOverview/PageOfferOverview';
 
 export const OfferOverviewStatusChangerCell: RenderOverviewCellComponent<OfferEntity> = ({ cell, data }) => {
+  const loaders = useOfferOverviewLoaders();
+
   const [canEdit, setCanEdit] = useState(false);
   const [current, setCurrent] = useState<OfferStatusEnum | undefined>(data?.approved);
 
@@ -35,6 +38,7 @@ export const OfferOverviewStatusChangerCell: RenderOverviewCellComponent<OfferEn
         setCanEdit(false);
         ToastService.success('Product updated');
       },
+      onLoading: loaders?.onLoading('offer'),
     });
   };
 
@@ -46,7 +50,7 @@ export const OfferOverviewStatusChangerCell: RenderOverviewCellComponent<OfferEn
   }, []);
 
   return (
-    <CellStyledComp.Cell style={{ minHeight: 'max-content' }}>
+    <CellStyledComp.Cell>
       <OverviewCellHeader
         title={cell?.title}
         onCancelPress={handleCancelPress}
@@ -77,7 +81,7 @@ export const OfferOverviewStatusChangerCell: RenderOverviewCellComponent<OfferEn
                 {t('Cancel')}
               </ButtonIcon>
 
-              <ButtonIcon variant={'filledSmall'} disabled={!canAccept} flex={1} onClick={handleAcceptPress}>
+              <ButtonIcon variant={'filledSmall'} disabled={!canAccept} onClick={handleAcceptPress}>
                 {t('Ok')}
               </ButtonIcon>
             </FlexBox>

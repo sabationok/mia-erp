@@ -1,12 +1,11 @@
-import FormOfferImagesComponent from './components/FormOfferImagesComponent';
+import FormOfferImagesComponent from '../Forms/FormProduct/components/FormOfferImagesComponent';
 import { FormEventHandler, useState } from 'react';
-import { OverlayHandlerReturn } from '../../AppPages/PageProductOverview/PageCurrentProductProvider';
-import { OfferEntity, OfferImageSlotEntity } from '../../../types/offers/offers.types';
+import { OfferEntity, OfferImageSlotEntity } from '../../types/offers/offers.types';
 import styled, { useTheme } from 'styled-components';
-import { useProductsSelector } from '../../../redux/selectors.store';
-import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { getIdRef } from '../../../utils/data-transform';
-import { OverlayFooter, OverlayHeader } from './components';
+import { useProductsSelector } from '../../redux/selectors.store';
+import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import { getIdRef } from '../../utils/data-transform';
+import { OverlayFooter, OverlayHeader } from '../Forms/FormProduct/components';
 
 export interface FormProductImagesOverlayProps extends OverlayHandlerReturn {
   product?: OfferEntity;

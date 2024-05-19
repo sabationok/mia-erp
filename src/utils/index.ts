@@ -8,7 +8,7 @@ import { countPercentage, numberWithSpaces } from './numbers';
 import founderByDataPath from './founderByDataPath';
 import { toInputValueDate } from './date-time';
 import { enumToArray } from './fabrics';
-import { createTableTitlesFromTemplate } from './tables';
+import { createTableTitlesFromProperties } from './tables';
 import * as checks from './check';
 
 export * from './fabrics';
@@ -34,6 +34,6 @@ export {
   toTrReqData,
   toInputValueDate,
   enumToArray,
-  createTableTitlesFromTemplate,
+  createTableTitlesFromProperties,
   checks,
 };

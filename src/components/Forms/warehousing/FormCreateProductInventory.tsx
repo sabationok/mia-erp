@@ -14,7 +14,7 @@ import InputText from '../../atoms/Inputs/InputText';
 import { t } from '../../../lang';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import ButtonsGroup from '../../atoms/ButtonsGroup';
-import { createTableTitlesFromTemplate } from '../../../utils';
+import { createTableTitlesFromProperties } from '../../../utils';
 import { transformVariationTableData } from '../../../utils/tables';
 import { createApiCall, PriceManagementApi } from '../../../api';
 import { getIdRef } from '../../../utils/data-transform';
@@ -64,7 +64,7 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
 
   const variationsTableTitles = useMemo(() => {
     const template = templates.find(t => t._id === currentProduct?.template?._id);
-    return createTableTitlesFromTemplate(template);
+    return createTableTitlesFromProperties(template);
   }, [currentProduct?.template?._id, templates]);
 
   useEffect(() => {
