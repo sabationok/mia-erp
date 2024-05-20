@@ -109,6 +109,7 @@ export const productsSlice = createSlice({
         // } else if (a.payload?.updateCurrent && s.currentOffer) {
         //   s.currentOffer = { ...s.currentOffer, ...a.payload?.data };
         // }
+
         ManageOffersStateMap(s, { data: a.payload?.data }, { refresh: a.payload?.refreshCurrent });
       })
       .addCase(getAllPropertiesThunk.fulfilled, (s, a) => {
