@@ -53,16 +53,16 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
 
   const imgPreview = useMemo(() => {
     let images: OfferImageSlotEntity[] = [];
-    if (formData?.product?.images) {
+    if (formData?.product?.images?.length) {
       images = formData?.product?.images;
     }
-    if (formData?.variation?.offer?.images) {
+    if (formData?.variation?.offer?.images?.length) {
       images = formData?.variation?.offer?.images;
     }
-    if (formData?.inventory?.offer?.images) {
+    if (formData?.inventory?.offer?.images?.length) {
       images = formData?.inventory?.offer?.images;
     }
-    if (formData?.origin?.offer?.images) {
+    if (formData?.origin?.offer?.images?.length) {
       images = formData?.origin?.offer?.images;
     }
     return images[0]?.img_preview || '';

@@ -6,12 +6,10 @@ export const toVariationReqData = (formData: IVariationFormData, _id?: string): 
   // isDevMode && console.log('createVariationReqData input', formData);
 
   const data: IVariationReqData['data'] = {
-    ...pick(formData, ['timeFrom', 'timeTo', 'label', 'sku', 'barCode']),
-    product: formData?.product ? getIdRef(formData?.product) : undefined,
+    ...pick(formData, ['timeFrom', 'timeTo', 'label', 'sku', 'barCode', 'imgPreview', 'cmsConfigs']),
+    offer: formData?.offer ? getIdRef(formData?.offer) : undefined,
     properties: formData?.propertiesMap ? Object.values(formData?.propertiesMap) : undefined,
   };
-
-  // const dataForReq = createDataForReq(data);
 
   return _id ? { data, _id } : { data };
 };

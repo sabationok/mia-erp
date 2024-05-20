@@ -38,7 +38,7 @@ export interface HasVariation {
 
 export interface VariationDto extends IVariationBase, HasBaseCmsConfigsDto {
   properties?: string[];
-  product?: OnlyUUID;
+  offer?: OnlyUUID;
 }
 
 export interface IVariationReqData {
