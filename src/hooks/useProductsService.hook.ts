@@ -1,5 +1,5 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
-import { IProductDefaultsDto, IProductReqData, OfferEntity } from '../types/offers/offers.types';
+import { IOfferDefaultsDto, IProductReqData, OfferEntity } from '../types/offers/offers.types';
 import { OnlyUUID, ServiceApiCaller, ServiceDispatcher, ServiceDispatcherAsync } from 'redux/global.types';
 import {
   createProductThunk,
@@ -13,7 +13,7 @@ import {
 import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
 import { AppQueryParams, createApiCall } from 'api';
-import OffersApi from '../api/offersApi';
+import OffersApi from '../api/offers.api';
 import PropertiesApi from '../api/properties.api';
 import { IProperty, IPropertyReqData } from '../types/offers/properties.types';
 import { createPropertyThunk, getAllPropertiesThunk } from '../redux/products/properties/properties.thunks';
@@ -42,7 +42,7 @@ export interface OffersService {
   setDefaults: ServiceDispatcherAsync<
     {
       _id: string;
-      defaults: IProductDefaultsDto;
+      defaults: IOfferDefaultsDto;
       refreshCurrent?: boolean;
       updateCurrent?: boolean;
     },

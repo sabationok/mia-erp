@@ -1,6 +1,6 @@
 import { pick } from 'lodash';
-import { ArrayOfObjUUID, ArrayUUID, IdKeyVersion, ObjUUID, OnlyUUID } from '../../redux/global.types';
-import { OfferEntity, IProductFullDto, IProductFullFormData } from '../../types/offers/offers.types';
+import { ArrayOfObjUUID, ArrayOfUUID, IdKeyVersion, ObjUUID, OnlyUUID } from '../../redux/global.types';
+import { IProductFullFormData, OfferDto, OfferEntity } from '../../types/offers/offers.types';
 
 export * from './toReqData.helper';
 export * from './toQueriesForReq.helper';
@@ -56,7 +56,7 @@ export function formatPhoneNumber(phoneNumberString: string): string | null {
 export const createArrayOfObjUUID = (arr: string[]): ArrayOfObjUUID => {
   return arr.map(_id => ({ _id }));
 };
-export const createArrayStringUUID = (arr: OnlyUUID[]): ArrayUUID => {
+export const createArrayStringUUID = (arr: OnlyUUID[]): ArrayOfUUID => {
   return arr.map(obj => obj._id);
 };
 export const getFormValuePickPaths = (data?: any) => {
@@ -65,7 +65,7 @@ export const getFormValuePickPaths = (data?: any) => {
 export const idsArrToObjIdArrPaths = <T extends keyof OfferEntity | string = any>(key: T) => {
   return ['properties', 'categories', 'recommends'].includes(key);
 };
-export function createProductDto(input: IProductFullFormData): IProductFullDto {
+export function createProductDto(input: IProductFullFormData): OfferDto {
   // const arrPaths = ['properties', 'categories', 'recommends'];
   return input;
 }

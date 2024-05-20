@@ -2,10 +2,10 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import { ThunkPayload } from '../store.store';
 import { isAxiosError } from 'axios';
-import { IProductDefaultsDto, IProductReqData, OfferEntity } from '../../types/offers/offers.types';
+import { IOfferDefaultsDto, IProductReqData, OfferEntity } from '../../types/offers/offers.types';
 import { AppQueryParams, WarehousesApi } from '../../api';
 import { createThunkPayloadCreator } from '../../api/createApiCall.api';
-import OffersApi from '../../api/offersApi';
+import OffersApi from '../../api/offers.api';
 import { OnlyUUID } from '../global.types';
 import { OfferPriceEntity } from '../../types/price-management/priceManagement.types';
 import { WarehouseItemEntity } from '../../types/warehouses.types';
@@ -162,7 +162,7 @@ export const updateProductDefaultsThunk = createAsyncThunk<
   ThunkPayload<
     {
       _id: string;
-      defaults: IProductDefaultsDto;
+      defaults: IOfferDefaultsDto;
       refreshCurrent?: boolean;
       updateCurrent?: boolean;
     } & ActionWithCurrent,

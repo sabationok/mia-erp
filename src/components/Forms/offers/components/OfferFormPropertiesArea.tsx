@@ -10,11 +10,11 @@ import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import CustomSelect from '../../../atoms/Inputs/CustomSelect/CustomSelect';
 import { OfferFormAreaProps } from '../types';
 import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
-import { ArrayUUID } from '../../../../redux/global.types';
+import { ArrayOfUUID } from '../../../../redux/global.types';
 import { t } from '../../../../lang';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 
-export interface OfferFormPropertiesAreaProps extends OfferFormAreaProps<ArrayUUID> {
+export interface OfferFormPropertiesAreaProps extends OfferFormAreaProps<ArrayOfUUID> {
   onSubmit?: AppSubmitHandler<string[]>;
   onSelect?: (id: string) => void;
   onChange?: (ids: string[]) => void;

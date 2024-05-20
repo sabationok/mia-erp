@@ -12,31 +12,26 @@ export interface CellTextDblAndAvatarProps {
 const CellTextDblAndAvatar: React.FC<CellTextDblAndAvatarProps & React.HTMLAttributes<HTMLDivElement>> = ({
   titleInfo: { top, bottom, width, getImgPreview, imgPreviewIcon },
   titleInfo,
-  idx,
 }) => {
   const { rowData } = useRow();
-
-  const imgPreview = useMemo(() => {
-    return getImgPreview ? getImgPreview(rowData, titleInfo) : null;
-  }, [getImgPreview, rowData, titleInfo]);
 
   const cellConfig = useMemo(
     (): IDataCellProps => ({
       content: {
+        ...top,
         data: top.getData ? top.getData(rowData, titleInfo) : null,
-        align: top.align,
-        uppercase: top.uppercase,
       },
-      subContent: {
-        data: bottom && bottom.getData ? bottom.getData(rowData, titleInfo) : null,
-        align: bottom?.align,
-        uppercase: bottom?.uppercase,
-      },
+      subContent: !bottom
+        ? undefined
+        : {
+            ...bottom,
+            data: bottom && bottom.getData ? bottom.getData(rowData, titleInfo) : null,
+          },
       width,
-      imgUrl: imgPreview,
+      imgUrl: getImgPreview ? getImgPreview(rowData, titleInfo) : null,
       imgPreviewIcon,
     }),
-    [bottom, imgPreview, imgPreviewIcon, rowData, titleInfo, top, width]
+    [bottom, getImgPreview, imgPreviewIcon, rowData, titleInfo, top, width]
   );
 
   return <Cell.DoubleWithAvatar {...cellConfig} />;

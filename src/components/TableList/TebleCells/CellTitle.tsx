@@ -27,6 +27,7 @@ export type CellTitleContent<DataType = any, DataPath extends string = any> = {
 export type CellTittleProps<DataType = any, DataPath extends string = any> = {
   top: CellTitleContent<DataType, DataPath>;
   bottom?: CellTitleContent<DataType, DataPath>;
+  cells?: CellTitleContent<DataType, DataPath>[];
   imgPreviewPath?: DataType;
   getImgPreview?: (rowData: DataType, titleProps: CellTittleProps<DataType, DataPath>) => string | null | undefined;
   imgPreviewIcon?: IconIdType;

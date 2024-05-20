@@ -13,6 +13,7 @@ export const permissionsTableColumns: CellTittleProps<PermissionEntity>[] = [
       align: 'start',
       path: 'company.name',
       getData: rd => {
+        console.log(rd);
         if (rd.company?.name) {
           return [rd.company?.name?.first, rd.company?.name?.middle, rd.company?.name?.second]
             .filter(el => el)
@@ -26,7 +27,7 @@ export const permissionsTableColumns: CellTittleProps<PermissionEntity>[] = [
       name: 'ІПН/ЄДРПОУ',
       align: 'start',
       getData(rd) {
-        return rd.company?.taxCode?.corp ?? '---, ' + rd.company?.taxCode?.personal ?? '---';
+        return (rd.company?.taxCode?.corp ?? '---, ') + (rd.company?.taxCode?.personal ?? '---');
       },
     },
 

@@ -10,6 +10,19 @@ export interface OnlyUUID {
   _id: UUID;
 }
 
+export type FieldValues = Record<string, any>;
+
+export type Values<T extends any> = T[keyof T];
+export type Keys<T extends any> = keyof T;
+
+export type PaginationDto = {
+  offset?: number;
+  limit?: number;
+};
+
+export type Ref = OnlyUUID;
+export type RefsObj<Keys extends string | number | symbol> = Partial<Record<Keys, Ref>>;
+
 export type ArrayUUID = Array<string>;
 export type ArrayOfObjUUID = Array<OnlyUUID>;
 

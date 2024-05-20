@@ -1,6 +1,6 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
-import { IProductDefaultsDto, IProductReqData, OfferEntity } from '../types/offers/offers.types';
+import { IOfferDefaultsDto, IProductReqData, OfferEntity } from '../types/offers/offers.types';
 import { AppResponse } from '../redux/global.types';
 import { ClientApi } from './client.api';
 
@@ -24,7 +24,7 @@ export default class OffersApi {
 
   public static async updateDefaultsById(data?: {
     _id: string;
-    defaults: IProductDefaultsDto;
+    defaults: IOfferDefaultsDto;
   }): Promise<AppResponse<OfferEntity>> {
     return this.api.patch(this.endpoints.updateDefaultsById(data?._id), data?.defaults);
   }

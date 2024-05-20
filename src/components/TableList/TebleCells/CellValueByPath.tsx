@@ -20,16 +20,16 @@ const CellValueByPath: React.FC<CellValueByPathProps & React.HTMLAttributes<HTML
   const cellConfig = useMemo(
     (): IDataCellProps => ({
       content: {
+        ...top,
         data: top.getData
           ? top.getData(rowData, titleInfo)
           : getValueByPath({
               data: rowData,
               ...top,
             }),
-        align: top.align,
-        uppercase: top.uppercase,
       },
       subContent: {
+        ...bottom,
         data:
           bottom && bottom.getData
             ? bottom.getData(rowData, titleInfo)
@@ -37,8 +37,6 @@ const CellValueByPath: React.FC<CellValueByPathProps & React.HTMLAttributes<HTML
                 data: rowData,
                 ...bottom,
               }),
-        align: bottom?.align,
-        uppercase: bottom?.uppercase,
       },
       width,
     }),

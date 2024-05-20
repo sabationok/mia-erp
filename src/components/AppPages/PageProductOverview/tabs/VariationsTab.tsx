@@ -4,14 +4,14 @@ import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServ
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { useCallback, useEffect, useMemo } from 'react';
 import { createTableTitlesFromProperties, transformVariationTableData } from '../../../../utils/tables';
-import FormCreateVariation from '../../../Overlays/FormCreateVariationOverlay';
 import { IVariationTableData } from '../../../../types/offers/variations.types';
 import { usePropertiesSelector } from '../../../../redux/selectors.store';
-import { getIdRef } from '../../../../utils/data-transform';
+import { getIdRef } from '../../../../utils';
 import { OnlyUUID } from '../../../../redux/global.types';
 import { useLoadersProvider } from '../../../../Providers/Loaders/LoaderProvider';
 import { OfferOverlayLoaderKey } from '../../../Overlays/FormProductDefaultsOverlay';
 import { IProperty } from '../../../../types/offers/properties.types';
+import CreateVariationOverlay from '../../../Overlays/CreateVariationOverlay';
 
 export interface VariationsTabProps {
   onSelect?: (variation: OnlyUUID) => void;
@@ -94,7 +94,7 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
                   const dataForUpdate = currentOffer?.variations?.find(v => v?._id === currentId);
 
                   modalS.open({
-                    ModalChildren: FormCreateVariation,
+                    ModalChildren: CreateVariationOverlay,
                     modalChildrenProps: {
                       update: currentId,
                       defaultState: dataForUpdate,
@@ -110,8 +110,8 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
                   // toggleVisibility && toggleVisibility();
 
                   modalS.open({
-                    ModalChildren: FormCreateVariation,
-                    modalChildrenProps: { product: page.currentOffer },
+                    ModalChildren: CreateVariationOverlay,
+                    modalChildrenProps: { offer: page.currentOffer },
                   });
                 },
               },

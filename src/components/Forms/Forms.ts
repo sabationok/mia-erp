@@ -34,7 +34,7 @@ export const WarehousingSettings = lazy(() => import('./warehousing/FormWarehous
 // * PRODUCTS
 export const CreateOfferModal = lazy(() => import('../Modals/CreateOfferModal'));
 export const EditOfferModal = lazy(() => import('../Modals/EditOfferModal'));
-export const CreateVariation = lazy(() => import('./offers/FormOfferVariation/_FormCreateVariation'));
-export const Variation = lazy(() => import('../Overlays/FormCreateVariationOverlay'));
+export const CreateVariation = lazy(() => import('./offers/variations/_FormCreateVariation'));
+// export const CreateVariationOverlay = lazy(() => import('../Overlays/CreateVariationOverlay'));
 export const CreateProperty = lazy(() => import('./offers/properties/FormCreateProperty'));
-export const SelectProperties = lazy(() => import('../Overlays/FormSelectPropertiesOverlay'));
+// export const SelectProperties = lazy(() => import('../Overlays/FormSelectPropertiesOverlay'));

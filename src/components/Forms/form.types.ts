@@ -18,8 +18,8 @@ export type { FormInviteUserProps } from './Auth/FormInviteUser';
 export type { CreateOfferModalProps } from '../Modals/CreateOfferModal';
 export type { EditOfferModalProps } from '../Modals/EditOfferModal';
 export type { FormCreatePropertyProps } from './offers/properties/FormCreateProperty';
-export type { FormCreateVariationProps } from './offers/FormOfferVariation/_FormCreateVariation';
-export type { FormVariationProps } from '../Overlays/FormCreateVariationOverlay';
+export type { FormCreateVariationProps } from './offers/variations/_FormCreateVariation';
+export type { CreateVariationModalProps } from '../Overlays/CreateVariationOverlay';
 // sep WAREHOUSING
 export type { FormCreateWarehouseProps } from './warehousing/FormCreateWarehouse';
 export type { FormCreateProductInventoryProps } from './warehousing/FormCreateProductInventory';

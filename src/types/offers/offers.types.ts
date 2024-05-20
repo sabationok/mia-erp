@@ -1,24 +1,31 @@
-import { ArrayUUID, IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/global.types';
+import { ArrayOfUUID, IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/global.types';
 import { IProductCategoryDirItem, ISupplierDirItem } from '../dir.types';
 import { FilterOption } from '../../components/atoms/TabSelector';
 import { OfferPriceEntity } from '../price-management/priceManagement.types';
-import { CompanyEntity } from '../companies.types';
 import { IWarehouse, WarehouseItemEntity } from '../warehouses.types';
 import { IBrand } from '../../redux/directories/brands.types';
-import { UserEntity } from '../auth.types';
-import { AppQueryParams } from '../../api';
+import { AppQueries, AppQueryParams } from '../../api';
 import { VariationEntity } from './variations.types';
 import { IPropertyValue } from './properties.types';
 import {
   AppDate,
+  HasAuthor,
   HasDescription,
   HasDimensions,
+  HasEditor,
   HasLabel,
   HasMeasurement,
+  HasOwnerAsCompany,
   HasStatus,
   HasType,
+  Keys,
   MaybeNull,
+  PartialRecord,
+  UUID,
 } from '../utils.types';
+import { OfferImageSlotEntity } from './offer-images.types';
+
+export type { OfferImageSlotEntity } from './offer-images.types';
 
 export enum OfferStatusEnum {
   pending = 'pending',
@@ -30,7 +37,6 @@ export enum OfferStatusEnum {
   // info = 'info',
 }
 
-// export type ProductStatus = keyof ProductStatusEnum | ProductStatusEnum;
 export interface OfferOrderingInfo {
   isAvailable?: MaybeNull<boolean>;
   time?: MaybeNull<AppDate>;
@@ -38,12 +44,6 @@ export interface OfferOrderingInfo {
 export type OfferFutures = {
   isPromo?: MaybeNull<boolean>;
   negativeSale?: MaybeNull<boolean>;
-  // reservation?: MaybeNull<OfferOrderingInfo>;
-  // availability?: MaybeNull<OfferOrderingInfo>;
-  // customOrder?: MaybeNull<OfferOrderingInfo>;
-  // preOrder?: MaybeNull<OfferOrderingInfo>;
-  // customProduction?: MaybeNull<OfferOrderingInfo>;
-  // rent?: MaybeNull<OfferOrderingInfo>;
 } & HasStatus<string> &
   Partial<
     Record<
@@ -74,7 +74,7 @@ export enum OfferTypeEnum {
 
 export type ProductFilterOpt = FilterOption<OfferTypeEnum>;
 
-export interface IProductBase
+export interface IOfferBase
   extends IBase,
     HasLabel,
     HasMeasurement,
@@ -96,11 +96,19 @@ export interface IProductBase
   images?: OfferImageSlotEntity[];
 }
 
-export interface IProductAddsFields extends IProductBase {
-  owner?: CompanyEntity;
-  author?: UserEntity;
-  editor?: UserEntity;
-
+export interface IOfferRelatedDefaultFields {
+  variation?: VariationEntity;
+  price?: OfferPriceEntity;
+  warehouse?: IWarehouse;
+  inventory?: WarehouseItemEntity;
+  supplier?: ISupplierDirItem;
+}
+export interface IOfferWithRelatedFields
+  extends IOfferBase,
+    HasOwnerAsCompany,
+    HasAuthor,
+    HasEditor,
+    IOfferRelatedDefaultFields {
   category?: IProductCategoryDirItem;
   categories?: IProductCategoryDirItem[];
 
@@ -116,40 +124,21 @@ export interface IProductAddsFields extends IProductBase {
   inventories?: WarehouseItemEntity[];
 }
 
-export interface IProductDefaults {
-  variation?: VariationEntity;
-  price?: OfferPriceEntity;
-  warehouse?: IWarehouse;
-  inventory?: WarehouseItemEntity;
-  supplier?: ISupplierDirItem;
-}
-
-export interface IProductWithDefaults extends IProductAddsFields, IProductDefaults {
-  defaults?: IProductDefaults;
-}
-
-export interface OfferEntity extends IProductWithDefaults {}
-
-export interface OfferImageSlotEntity extends Partial<IBase> {
-  img_preview?: string;
-  img_1x?: string;
-  img_2x?: string;
-  webp?: string;
-  order: number;
+export interface OfferEntity extends IOfferWithRelatedFields {
+  defaults?: IOfferRelatedDefaultFields;
 }
 
 // * >>>>>>> FORM DATA <<<<<<<
 export interface IProductBaseFormData extends IProductBaseDto {}
 
-export interface IProductDefaultsFormData extends Record<keyof IProductDefaults, IFormDataValueWithID> {}
+export interface IProductDefaultsFormData extends Record<keyof IOfferRelatedDefaultFields, IFormDataValueWithID> {}
 
 export interface IProductWithAddsFieldsFormData extends IProductBaseFormData {}
 
-export interface IProductFullFormData
-  extends Omit<IProductFullDto, 'recommends' | 'properties' | 'images' | 'categories'> {
-  categories?: ArrayUUID;
-  recommends?: ArrayUUID;
-  properties?: ArrayUUID;
+export interface IProductFullFormData extends Omit<OfferDto, 'recommends' | 'properties' | 'images' | 'categories'> {
+  categories?: ArrayOfUUID;
+  recommends?: ArrayOfUUID;
+  properties?: ArrayOfUUID;
 
   defaults?: IProductDefaultsFormData;
   images?: OfferImageSlotEntity[];
@@ -158,33 +147,33 @@ export interface IProductFullFormData
 export interface IProductFormData extends IProductFullFormData {}
 
 // * >>>>>> PRODUCT DTO <<<<<<<
-export interface IProductBaseDto extends Omit<IProductBase, '_id' | 'createdAt' | 'deletedAt' | 'updatedAt'> {}
+export interface IProductBaseDto extends Omit<IOfferBase, '_id' | 'createdAt' | 'deletedAt' | 'updatedAt'> {}
 
 export interface IProductWithAddsFieldsDto extends IProductBaseDto {
   category?: OnlyUUID;
   brand?: OnlyUUID;
   template?: OnlyUUID;
 
-  categories?: ArrayUUID;
-  recommends?: ArrayUUID;
-  properties?: ArrayUUID;
+  categories?: ArrayOfUUID;
+  recommends?: ArrayOfUUID;
+  properties?: ArrayOfUUID;
 }
 
-export interface IProductDefaultsDto extends Partial<Record<keyof IProductDefaults, OnlyUUID>> {}
+type OfferDefaultRefKey = Keys<IOfferRelatedDefaultFields>;
+type OfferDefaultsIdKey = Keys<Pick<AppQueries, 'warehouseId' | 'variationId' | 'priceId' | 'inventoryId'>>;
+export interface IOfferDefaultsDto
+  extends PartialRecord<OfferDefaultRefKey, OnlyUUID>,
+    PartialRecord<OfferDefaultsIdKey, UUID> {}
 
-export interface IProductFullDto extends IProductWithAddsFieldsDto, IProductDefaultsDto {
-  defaults?: IProductDefaultsDto;
-}
-
-export interface IProductDto extends IProductFullDto {}
+export interface OfferDto extends IProductWithAddsFieldsDto, IOfferDefaultsDto {}
 
 export interface IProductReqData {
   _id?: string;
-  data?: IProductDto;
+  data?: OfferDto;
   params?: AppQueryParams;
 }
 
-export interface HasProduct {
-  product?: MaybeNull<IWarehouse>;
+export interface HasOffer {
+  offer?: MaybeNull<OfferEntity>;
 }
 // ? PROPERTIES ================================================

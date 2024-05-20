@@ -13,7 +13,7 @@ export interface MagicLinkRef {
   magicLink: MagicLink;
 }
 
-export type ArrayUUID = Array<string>;
+export type ArrayOfUUID = Array<string>;
 export type ArrayOfObjUUID = Array<OnlyUUID>;
 
 export type IdKeyVersion = '_id' | 'id';

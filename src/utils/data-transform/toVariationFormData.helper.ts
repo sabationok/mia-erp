@@ -1,14 +1,17 @@
-import { VariationEntity, IVariationFormData } from '../../types/offers/variations.types';
+import { IVariationFormData, VariationEntity } from '../../types/offers/variations.types';
 import { nanoid } from '@reduxjs/toolkit';
 import { getIdRef } from './index';
 
 export const toVariationFormData = (variation: Partial<VariationEntity>): IVariationFormData => {
-  let propertiesMap: Record<string, string> = {};
-  variation?.properties?.map(prop => {
+  const propertiesMap: Record<string, string> = {};
+
+  variation?.properties?.forEach(prop => {
     if (prop?._id && prop?.parent?._id) {
-      propertiesMap = { ...propertiesMap, [prop.parent?._id]: prop._id };
+      const parentId = prop.parent?._id;
+      if (parentId) {
+        propertiesMap[parentId] = prop._id;
+      }
     }
-    return null;
   });
 
   return {
@@ -16,7 +19,7 @@ export const toVariationFormData = (variation: Partial<VariationEntity>): IVaria
     timeTo: variation?.timeTo,
     label: variation.label ? variation.label : `${variation?.offer?.label}. {{VARIATION_LABEL}}`,
     sku: variation.sku ? variation.sku : `${variation?.offer?.sku ? variation?.offer?.sku + '-' : ''}${nanoid(8)}`,
-    product: variation?.offer ? getIdRef(variation.offer) : undefined,
+    offer: variation?.offer ? getIdRef(variation.offer) : undefined,
     propertiesMap,
   };
 };

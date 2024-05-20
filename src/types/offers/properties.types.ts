@@ -15,11 +15,11 @@ export interface IPropertyBase extends IBase {
   cmsConfigs?: MaybeNull<ICmsPropertyConfigs>;
 }
 
-export interface IVariationTemplate extends Omit<IPropertyBase, 'parent'> {
+export interface IProperiesGroup extends Omit<IPropertyBase, 'parent'> {
   childrenList?: IProperty[];
 }
 export interface IProperty extends IPropertyBase {
-  parent?: IVariationTemplate;
+  parent?: IProperiesGroup;
   childrenList?: IPropertyValue[];
 }
 

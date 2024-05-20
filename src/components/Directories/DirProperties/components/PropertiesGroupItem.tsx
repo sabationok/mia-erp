@@ -6,9 +6,9 @@ import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import { DiPropertiesRenderItemProps } from '../DirProperties';
 import PropertyItem from './PropertyItem';
 import { t } from '../../../../lang';
-import { IVariationTemplate } from '../../../../types/offers/properties.types';
+import { IProperiesGroup } from '../../../../types/offers/properties.types';
 
-const PropertyGroupItem: React.FC<DiPropertiesRenderItemProps<IVariationTemplate>> = ({
+const PropertyGroupItem: React.FC<DiPropertiesRenderItemProps<IProperiesGroup>> = ({
   item,
   onUpdate,
   onCreateChild,

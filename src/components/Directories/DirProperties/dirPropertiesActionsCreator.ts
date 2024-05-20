@@ -1,6 +1,6 @@
 import { DirInTreeActionsCreatorType } from '../../../types/dir.types';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
-import { IProperty, IPropertyDto, IPropertyValue, IVariationTemplate } from '../../../types/offers/properties.types';
+import { IProperiesGroup, IProperty, IPropertyDto, IPropertyValue } from '../../../types/offers/properties.types';
 import { OffersService } from '../../../hooks/useProductsService.hook';
 import { Modals } from '../../Modals/Modals';
 import { t } from '../../../lang';
@@ -164,13 +164,13 @@ enum DirPropertyType {
 }
 
 type DirPropertyItemByType = {
-  [DirPropertyType.group]: IVariationTemplate;
+  [DirPropertyType.group]: IProperiesGroup;
   [DirPropertyType.prop]: IProperty;
   [DirPropertyType.value]: IPropertyValue;
 };
 type DirPropertyParentItemByType = {
   [DirPropertyType.group]: null;
-  [DirPropertyType.prop]: IVariationTemplate;
+  [DirPropertyType.prop]: IProperiesGroup;
   [DirPropertyType.value]: IProperty;
 };
 

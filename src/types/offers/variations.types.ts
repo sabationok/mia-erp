@@ -29,7 +29,7 @@ export interface IVariationTableData extends VariationEntity {
 }
 export interface IVariationFormData extends IVariationBase, HasBaseCmsConfigsDto {
   propertiesMap?: VariationPropertiesMapInFormData;
-  product?: OnlyUUID & { label?: string } & HasBaseCmsConfigsDto;
+  offer?: OnlyUUID & { label?: string } & HasBaseCmsConfigsDto;
 }
 
 export interface HasVariation {

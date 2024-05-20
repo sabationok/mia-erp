@@ -15,7 +15,7 @@ import {
   getAllVariationsByProductIdThunk,
   updateVariationThunk,
 } from './variations/variations.thunks';
-import { IVariationTemplate } from '../../types/offers/properties.types';
+import { IProperiesGroup } from '../../types/offers/properties.types';
 import { createPropertyThunk, getAllPropertiesThunk } from './properties/properties.thunks';
 import {
   clearCurrentProductAction,
@@ -36,7 +36,7 @@ export interface OffersState {
   products: OfferEntity[];
   currentOffer?: OfferEntity;
   filteredProducts?: OfferEntity[];
-  properties: IVariationTemplate[];
+  properties: IProperiesGroup[];
   isLoading: boolean;
   error: StateErrorType;
 

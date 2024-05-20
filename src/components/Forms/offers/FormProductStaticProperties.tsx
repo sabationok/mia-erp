@@ -1,4 +1,4 @@
-import { IPropertyValue, IVariationTemplate } from '../../../types/offers/properties.types';
+import { IProperiesGroup, IPropertyValue } from '../../../types/offers/properties.types';
 import { IFormDataValueWithID } from '../../../redux/global.types';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import FlexBox from '../../atoms/FlexBox';
@@ -7,7 +7,7 @@ import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { Text } from '../../atoms/Text';
 
 export interface FormProductStaticPropertiesProps {
-  template?: IVariationTemplate;
+  template?: IProperiesGroup;
   formData?: IFormDataValueWithID[];
   onSelect?: (id: string, option?: IPropertyValue) => void;
   onChange?: (ids: string[]) => void;
