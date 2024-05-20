@@ -28,15 +28,15 @@ const useLoadInitialAppDataHook = ({
   const {
     directories: { getAllByDirType },
     products,
-    priceManagement,
+    // priceManagement,
     // transactions,
     deliveries,
     warehouses,
     payments,
     integrations,
     // shipments,
-    invoicing,
-    customers,
+    // invoicing,
+    // customers,
   } = useAppServiceProvider();
 
   const load = async () => {
@@ -62,15 +62,15 @@ const useLoadInitialAppDataHook = ({
         products.getAllProperties({ data: { params: { createTreeData: true } } });
         products.getAll({ data: { refresh: true } });
         warehouses.getAll({ data: { refresh: true } });
-        priceManagement.getAll({ data: { refresh: true } });
+        // priceManagement.getAll({ data: { refresh: true } });
         //  transactions.getAll({ data: { refresh: true } });
 
         integrations.getAllExtServices({
           onSuccess: () => {
-            invoicing.getAllMethods();
+            // invoicing.getAllMethods();
             payments.getAllMethods();
             deliveries.getAllMethods();
-            customers.getAllMethods();
+            // customers.getAllMethods();
           },
         });
         directoriesForLoading.map(({ dirType, createTreeData }) => {

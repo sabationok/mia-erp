@@ -47,8 +47,8 @@ const usePriceManagementService = (): PriceManagementService => {
       refreshListById: arg => dispatch(thunks.refreshPriceListByIdThunk(defaultThunkPayload(arg))),
 
       // ? PRICES
-      addPriceToList: arg => dispatch(thunks.addPriceToListThunk(defaultThunkPayload(arg))),
-      updatePriceById: arg => dispatch(thunks.updatePriceInListThunk(defaultThunkPayload(arg))),
+      addPriceToList: arg => dispatch(thunks.createPriceThunk(defaultThunkPayload(arg))),
+      updatePriceById: arg => dispatch(thunks.updatePriceThunk(defaultThunkPayload(arg))),
 
       getAllPrices: args => dispatch(thunks.getAllPricesThunk(defaultThunkPayload(args))),
 

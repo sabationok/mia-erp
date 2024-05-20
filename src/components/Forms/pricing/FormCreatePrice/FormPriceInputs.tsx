@@ -179,7 +179,7 @@ const InputsHeader = ({ headers = [] }: { headers: string[] }) => {
   const renderHeaders = useMemo(() => {
     return headers.map(label => {
       return (
-        <HeaderBox>
+        <HeaderBox key={label}>
           <Text $weight={500} $size={12}>
             {label}
           </Text>

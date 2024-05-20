@@ -1,5 +1,5 @@
 import { persistStore } from 'redux-persist';
-import { configureStore } from '@reduxjs/toolkit';
+import { AnyAction, configureStore } from '@reduxjs/toolkit';
 import rootReducer, { RootReducerType } from './rootReducer.store';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -16,7 +16,8 @@ export const store = configureStore({
 });
 
 export type AppDispatch = typeof store.dispatch;
-
+export type ActionPayload<D = any> = { refresh?: boolean } & D;
+export type Action<D = any> = AnyAction & { payload: ActionPayload<D> };
 export interface ThunkPayload<SD = any, RD = any, E = any | unknown, MD = any> {
   data?: SD;
   onSuccess?: (data: RD, meta?: MD) => void;

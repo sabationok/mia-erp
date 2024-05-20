@@ -1,8 +1,7 @@
-import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { OfferPriceEntity, PriceListEntity } from '../../types/price-management/priceManagement.types';
 import * as thunks from './priceManagement.thunks';
-import { checks } from '../../utils';
 import { PartialRecord, UUID } from '../../types/utils.types';
 import { omit } from 'lodash';
 
@@ -70,7 +69,7 @@ export const priceManagementSlice = createSlice({
           s.current = a.payload.data;
         }
       })
-      .addCase(thunks.addPriceToListThunk.fulfilled, (s, a) => {
+      .addCase(thunks.createPriceThunk.fulfilled, (s, a) => {
         if (s?.current) {
           if (a.payload.data) {
             s.current = {
@@ -93,36 +92,10 @@ export const priceManagementSlice = createSlice({
       .addCase(thunks.deletePriceFromListThunk.fulfilled, (s, a) => {
         ManagePricesStateMap(s, { removeId: a.payload?.data?.priceId });
       })
-      .addCase(thunks.updatePriceInListThunk.fulfilled, (s, a) => {
+      .addCase(thunks.updatePriceThunk.fulfilled, (s, a) => {
         ManagePricesStateMap(s, { data: a.payload.data });
-      })
-
-      .addMatcher(inPending, s => {
-        s.isLoading = true;
-        s.error = null;
-      })
-      .addMatcher(inFulfilled, s => {
-        s.isLoading = false;
-        s.error = null;
-      })
-      .addMatcher(inError, (s, a: PayloadAction<StateErrorType>) => {
-        s.isLoading = false;
-        s.error = a.payload;
       }),
 });
-
-export function isPriceManagementCase(type: string) {
-  return checks.isStr(type) && type.startsWith('users');
-}
-function inPending(a: AnyAction) {
-  return isPriceManagementCase(a.type) && a.type.endsWith('pending');
-}
-function inFulfilled(a: AnyAction) {
-  return isPriceManagementCase(a.type) && a.type.endsWith('fulfilled');
-}
-function inError(a: AnyAction) {
-  return isPriceManagementCase(a.type) && a.type.endsWith('rejected');
-}
 
 function ManagePricesStateMap(
   st: PricesState,
