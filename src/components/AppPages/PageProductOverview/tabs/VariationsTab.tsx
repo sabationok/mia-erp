@@ -5,7 +5,6 @@ import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { useCallback, useEffect, useMemo } from 'react';
 import { createTableTitlesFromProperties, transformVariationTableData } from '../../../../utils/tables';
 import { IVariationTableData } from '../../../../types/offers/variations.types';
-import { usePropertiesSelector } from '../../../../redux/selectors.store';
 import { getIdRef } from '../../../../utils';
 import { OnlyUUID } from '../../../../redux/global.types';
 import { useLoadersProvider } from '../../../../Providers/Loaders/LoaderProvider';
@@ -25,7 +24,7 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
   const modalS = useModalProvider();
   const currentOffer = page.currentOffer;
   const productsS = useAppServiceProvider()[ServiceName.products];
-  const templates = usePropertiesSelector();
+  // const templates = usePropertiesSelector();
 
   const loadData = useCallback(
     ({ refresh, update }: { refresh?: boolean; update?: boolean }) => {

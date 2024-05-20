@@ -38,7 +38,7 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
     [currentOffer, loaders, productsS]
   );
 
-  const updateDefaults = ({}: { price?: OnlyUUID }) => {};
+  // const updateDefaults = ({}: { price?: OnlyUUID }) => {};
 
   const tableConfig = useMemo((): ITableListProps<OfferPriceEntity> => {
     return {

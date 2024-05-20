@@ -18,8 +18,8 @@ type SetDataCallback<T extends any> = (...data: T[]) => void;
 
 export interface LoadersMethods<
   Name extends string,
-  Data extends PartialRecord<Name, any> = PartialRecord<Name, any>,
-  _Errors extends PartialRecord<Name, any> = PartialRecord<Name, any>
+  Data extends PartialRecord<Name, any> = PartialRecord<Name, any>
+  // _Errors extends PartialRecord<Name, any> = PartialRecord<Name, any>
 > {
   setData: <N extends Name, D extends Data>(name: N, data: D[N] | ((prev?: D[N]) => D[N])) => void;
   setError: (name: Name, error: any) => void;
@@ -44,7 +44,7 @@ export interface UseLoadersReturn<
   Name extends string = string,
   Data extends PartialRecord<Name, any> = PartialRecord<Name, any>,
   Errors extends PartialRecord<Name, any> = PartialRecord<Name, any>
-> extends LoadersMethods<Name, Data, Errors> {
+> extends LoadersMethods<Name, Data> {
   isFullLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
@@ -98,7 +98,7 @@ export const useLoaders = <
   }, [errors, loadersSet]);
 
   const loaders = useMemo(() => {
-    class Loaders implements LoadersMethods<Name, Data, Errors> {
+    class Loaders implements LoadersMethods<Name, Data> {
       setData = <N extends Name, D extends Data>(name: N, data: D[N] | ((prev?: D[N]) => D[N])) => {
         namesSetRef.current.add(name);
         if (data instanceof Function) {

@@ -36,7 +36,7 @@ const EditOfferModal: React.FC<EditOfferModalProps> = ({ onClose, _id, copy }) =
     }
   );
 
-  const { setData, state, ...lMethods } = loaders;
+  const { setData, state } = loaders;
 
   const offerId = copy ? state.formData?._id : _id;
 

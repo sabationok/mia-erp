@@ -31,7 +31,8 @@ const OrderSlotOverview: React.FC<OrderSlotOverviewProps> = ({
   onUpdate,
   editable,
 }) => {
-  const [formData, setFormData] = useState<IOrderTempSlot | undefined>(slot);
+  // * setFormData
+  const [formData] = useState<IOrderTempSlot | undefined>(slot);
 
   // const handleUpdateQuantity = useCallback(
   //   (value: number) => {

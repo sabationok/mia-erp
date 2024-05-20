@@ -60,7 +60,7 @@ export type PagePathType = keyof typeof AppPagesEnum | AppPagesEnum;
 export const pages: IAppPage[] = Object.entries(appPages).map(([path, page]) => {
   return {
     ...page,
-    title: t('page' + '_' + page.path),
+    title: t('page_' + page.path),
     moduleName: path,
     path,
   };

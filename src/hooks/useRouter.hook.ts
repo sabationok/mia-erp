@@ -14,8 +14,8 @@ export const useAppRouter = <Query extends AppQuery = AppQuery, T extends string
   const params = useAppParams();
 
   const goBack = () => window.history.back();
-
-  const [sp, _setSP] = useSearchParams();
+  //  _setSP
+  const [sp] = useSearchParams();
 
   const currentHash: T | undefined = (location.hash.replace('#', '') as T) || undefined;
 

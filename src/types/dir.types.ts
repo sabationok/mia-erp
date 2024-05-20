@@ -162,7 +162,7 @@ export type DirInTreeActionsCreatorType<
 
   onUpdate?: (id: string, data: ItemDataType, options?: UseAppFormSubmitOptions & SubmitOptions) => void;
   onDelete?: (id: string, options?: UseAppFormSubmitOptions & SubmitOptions) => void;
-
+  getDto?: () => ItemDto;
   onChangeArchiveStatus?: (id: string, status: boolean, options?: UseAppFormSubmitOptions & SubmitOptions) => void;
   onChangeDisableStatus?: (id: string, status: boolean, options?: UseAppFormSubmitOptions & SubmitOptions) => void;
 };

@@ -272,22 +272,22 @@ function ManageOffersStateMap(
   }
 }
 
-function ManageOfferDefaults(
-  st: OffersState,
-  input: { data?: OfferEntity },
-  options?: { refresh?: boolean; isForList?: boolean }
-) {
-  if (input.data) {
-    const itemId = input.data?._id;
-    const itemSku = input.data?.sku;
-
-    st.dataMap[itemId] = options?.refresh ? input.data : { ...st.dataMap?.[itemId], ...input.data };
-
-    if (itemSku) {
-      st.skuKeysMap[itemSku] = itemId;
-    }
-  }
-}
+// function ManageOfferDefaults(
+//   st: OffersState,
+//   input: { data?: OfferEntity },
+//   options?: { refresh?: boolean; isForList?: boolean }
+// ) {
+//   if (input.data) {
+//     const itemId = input.data?._id;
+//     const itemSku = input.data?.sku;
+//
+//     st.dataMap[itemId] = options?.refresh ? input.data : { ...st.dataMap?.[itemId], ...input.data };
+//
+//     if (itemSku) {
+//       st.skuKeysMap[itemSku] = itemId;
+//     }
+//   }
+// }
 
 function ManageVariationsStateMap(
   st: OffersState,

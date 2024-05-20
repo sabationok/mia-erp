@@ -15,7 +15,8 @@ export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEnt
   data,
 }) => {
   const templates = useProductsSelector().properties;
-  const [currentId, setCurrentId] = useState<string>(templates[0]?._id);
+  // ! setCurrentId
+  const [currentId] = useState<string>(templates[0]?._id);
 
   const template = useMemo(() => {
     return templates.find(t => t._id === currentId);

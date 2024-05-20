@@ -86,8 +86,8 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   const loaders = useLoaders<'create'>();
   const currentOffer = useCurrentOffer({ id: update || offerId || offer?._id });
   const submitOptions = useAfterSubmitOptions();
-
-  const [currentTemplate, _setCurrentTemplate] = useState<IProperiesGroup>(templates?.[0]);
+  // _setCurrentTemplate
+  const [currentTemplate] = useState<IProperiesGroup>(templates?.[0]);
   const [selectedPropsMap, setSelectedPropsMap] = useState<Record<string, IPropertyValue>>({});
 
   const { propertiesList, propValuesDataMap } = useMemo(() => {
@@ -147,7 +147,8 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
     });
     const _labels: string[] = currentOffer?.label ? [currentOffer?.label] : [];
 
-    for (const [_, value] of _sorted) {
+    for (const entry of _sorted) {
+      const value = entry[1];
       value?.label && _labels.push(value?.label);
     }
     const _base = !_sorted?.length ? `${currentOffer?.label}. {{VARIATION_LABEL}}` : _labels.join('. ');
