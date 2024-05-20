@@ -90,10 +90,11 @@ const AddImageSetModal = ({
         <FlexBox padding={'8px 0'}>
           <ButtonsGroup
             options={formAddImageSetTabs}
-            defaultIndex={type ? formAddImageSetTabs.findIndex(el => el.value === type) : 0}
+            currentOption={current}
+            // defaultIndex={type ? formAddImageSetTabs.findIndex(el => el.value === type) : 0}
             onSelect={info => {
               setCurrent(info.option);
-              inputRef.current?.focus({ preventScroll: true });
+              // inputRef.current?.focus({ preventScroll: true });
             }}
           />
         </FlexBox>

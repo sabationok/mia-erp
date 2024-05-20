@@ -47,13 +47,13 @@ export const OfferFormImagesArea = ({
 
   return (
     <FormArea
-      hideLabel
       label={t('Images')}
       onSubmit={handleSubmit}
       disabled={disabled || !canSubmit}
       isLoading={loaders.isLoading?.images}
     >
       <FormOfferImagesComponent
+        hideLabel
         initialData={state}
         onChangeState={setState}
         contentContainerStyle={{
