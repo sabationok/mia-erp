@@ -6,7 +6,7 @@ import { IFinTransactionsState } from './finances/finances.slice';
 import { ICustomRolesState } from './customRoles/customRoles.slice';
 import { IUsersState } from './users/users.types';
 import { IAppSettings } from './appSettings/appSettings.slice';
-import { OffersState } from './products/products.slice';
+import { OffersState } from './products/offers.slice';
 import { PricesState } from './priceManagement/priceManagement.slice';
 import { ApiDirType } from './APP_CONFIGS';
 import { IDirItemBase } from '../types/dir.types';

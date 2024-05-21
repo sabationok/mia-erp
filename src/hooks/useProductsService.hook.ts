@@ -19,7 +19,7 @@ import { IProperty, IPropertyReqData } from '../types/offers/properties.types';
 import { createPropertyThunk, getAllPropertiesThunk } from '../redux/products/properties/properties.thunks';
 import {
   createVariationThunk,
-  getAllVariationsByProductIdThunk,
+  getAllVariationsByOfferIdThunk,
   updateVariationThunk,
 } from '../redux/products/variations/variations.thunks';
 import { IVariationReqData, VariationEntity } from '../types/offers/variations.types';
@@ -113,7 +113,7 @@ const useOffersService = (): OffersService => {
       // * VARIATIONS
       createVariation: args => dispatch(createVariationThunk(defaultThunkPayload(args))),
       updateVariationById: args => dispatch(updateVariationThunk(defaultThunkPayload(args))),
-      getAllVariationsByProductId: args => dispatch(getAllVariationsByProductIdThunk(defaultThunkPayload(args))),
+      getAllVariationsByProductId: args => dispatch(getAllVariationsByOfferIdThunk(defaultThunkPayload(args))),
 
       // * PRICES
       getAllPrices: args => dispatch(getAllOfferPricesThunk(defaultThunkPayload(args))),

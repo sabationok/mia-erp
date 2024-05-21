@@ -42,8 +42,8 @@ export const updateVariationThunk = createAsyncThunk<
     return thunkApi.rejectWithValue(isAxiosError(e));
   }
 });
-export const getAllVariationsByProductIdThunk = createAsyncThunk<
-  { data: VariationEntity[]; refreshCurrent?: boolean } | undefined,
+export const getAllVariationsByOfferIdThunk = createAsyncThunk<
+  { data: VariationEntity[]; offerId?: string; refreshCurrent?: boolean } | undefined,
   ThunkPayload<{ offerId: string; params?: AppQueryParams; refreshCurrent?: boolean }, VariationEntity[]>
 >('products/getAllVariationsByProductIdThunk', async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
@@ -54,7 +54,7 @@ export const getAllVariationsByProductIdThunk = createAsyncThunk<
       args?.onSuccess && args?.onSuccess(res?.data?.data);
     }
     args?.onLoading && args?.onLoading(false);
-    return { data: res?.data.data, refreshCurrent: args.data?.refreshCurrent };
+    return { data: res?.data.data, refreshCurrent: args.data?.refreshCurrent, offerId: args.data?.offerId };
   } catch (e) {
     args?.onLoading && args?.onLoading(false);
     args?.onError && args?.onError(e);

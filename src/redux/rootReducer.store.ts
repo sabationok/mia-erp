@@ -9,7 +9,7 @@ import { persistorConfigs } from './configs.store';
 import { customRolesSlice } from './customRoles/customRoles.slice';
 import { permissionsSlice } from './permissions/permissions.slice';
 import { directoriesSlice } from './directories/directories.slice';
-import { productsSlice } from './products/products.slice';
+import { offersSlice } from './products/offers.slice';
 import { priceManagementSlice } from './priceManagement/priceManagement.slice';
 import { ordersSlice } from './orders/orders.slice';
 import { refundsSlice } from './refunds/refunds.slice';
@@ -31,7 +31,7 @@ const rootReducer = combineReducers({
   [permissionsSlice.name]: persistReducer(persistorConfigs.permissions, permissionsSlice.reducer),
   [appPageSlice.name]: persistReducer(persistorConfigs.pageSettings, appPageSlice.reducer),
   [financesSlice.name]: persistReducer(persistorConfigs.finances, financesSlice.reducer),
-  [productsSlice.name]: persistReducer(persistorConfigs.products, productsSlice.reducer),
+  [offersSlice.name]: persistReducer(persistorConfigs.products, offersSlice.reducer),
   [ordersSlice.name]: persistReducer(persistorConfigs.orders, ordersSlice.reducer),
   [customRolesSlice.name]: persistReducer(persistorConfigs.customRoles, customRolesSlice.reducer),
   [priceManagementSlice.name]: persistReducer(persistorConfigs.priceLists, priceManagementSlice.reducer),

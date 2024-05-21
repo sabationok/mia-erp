@@ -12,7 +12,7 @@ import {
 } from './products.thunks';
 import {
   createVariationThunk,
-  getAllVariationsByProductIdThunk,
+  getAllVariationsByOfferIdThunk,
   updateVariationThunk,
 } from './variations/variations.thunks';
 import { IProperiesGroup } from '../../types/offers/properties.types';
@@ -57,11 +57,12 @@ const initialState: OffersState = {
 
   dataMap: {},
   skuKeysMap: {},
+
   variationsKeysMap: {},
   variationsMap: {},
 };
 
-export const productsSlice = createSlice({
+export const offersSlice = createSlice({
   name: 'products',
   initialState,
   reducers: {},
@@ -123,36 +124,42 @@ export const productsSlice = createSlice({
         }
       })
       .addCase(createVariationThunk.fulfilled, (s, a) => {
-        if (!a.payload) {
-          return;
-        } else {
-          s?.currentOffer?.variations?.unshift(a.payload);
-          ManageVariationsStateMap(s, { data: a.payload });
-        }
+        // if (!a.payload) {
+        //   return;
+        // } else {
+        //   s?.currentOffer?.variations?.unshift(a.payload);
+        // }
+        ManageVariationsStateMap(s, { data: a.payload });
       })
 
       .addCase(updateVariationThunk.fulfilled, (s, a) => {
-        if (!a.payload) {
-          return;
-        } else if (s.currentOffer) {
-          s.currentOffer.variations = s?.currentOffer?.variations?.map(vrn =>
-            vrn._id === a.payload?._id ? a.payload : vrn
-          );
-          ManageVariationsStateMap(s, { data: a.payload });
-        }
+        // if (!a.payload) {
+        //   return;
+        // } else if (s.currentOffer) {
+        //   s.currentOffer.variations = s?.currentOffer?.variations?.map(vrn =>
+        //     vrn._id === a.payload?._id ? a.payload : vrn
+        //   );
+        // }
+        ManageVariationsStateMap(s, { data: a.payload });
       })
-      .addCase(getAllVariationsByProductIdThunk.fulfilled, (s, a) => {
-        if (a.payload?.refreshCurrent) {
-          s.currentOffer = { ...(s.currentOffer as OfferEntity), variations: a.payload.data };
+      .addCase(getAllVariationsByOfferIdThunk.fulfilled, (s, a) => {
+        // if (s.currentOffer) {
+        //   s.currentOffer = { ...(s.currentOffer as OfferEntity), variations: a.payload?.data };
+        // }
+
+        const offerId = a.payload?.offerId || a.payload?.data?.[0]?._id;
+        if (offerId) {
+          a.payload?.data.forEach(vr => {
+            ManageVariationsStateMap(s, { data: vr, offerId });
+          });
+
+          ManageOffersStateMap(s, { data: { _id: offerId, variations: a.payload?.data } });
         }
-        a.payload?.data.forEach(vr => {
-          ManageVariationsStateMap(s, { data: vr });
-        });
       })
       .addCase(getAllOfferPricesThunk.fulfilled, (s, a) => {
-        if (a.payload?.refreshCurrent) {
-          s.currentOffer = { ...(s.currentOffer as OfferEntity), prices: a.payload.data };
-        }
+        // if (a.payload?.refreshCurrent) {
+        //   s.currentOffer = { ...(s.currentOffer as OfferEntity), prices: a.payload.data };
+        // }
         if (a.payload.params?.offerId) {
           ManageOffersStateMap(s, { data: { _id: a.payload.params?.offerId, prices: a.payload.data } });
         }
@@ -184,6 +191,7 @@ export const productsSlice = createSlice({
             ? [...a.payload.data, ...s.currentOffer?.variations]
             : a.payload.data,
         };
+
         a.payload?.data.forEach(vr => {
           ManageVariationsStateMap(s, { data: vr });
         });
