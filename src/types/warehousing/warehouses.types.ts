@@ -1,11 +1,11 @@
-import { IBase, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
-import { OfferEntity } from './offers/offers.types';
-import { CompanyEntity } from './companies.types';
-import { OfferPriceEntity } from './price-management/priceManagement.types';
-import { VariationEntity } from './offers/variations.types';
-import { AppQueryParams } from '../api';
-import { GeolocationPoint } from '../services/Geolocation.service';
-import { HasAuthor, HasOwnerAsCompany, HasStatus, HasStatusRef, HasType, MaybeNull, WithPeriod } from './utils.types';
+import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/global.types';
+import { OfferEntity } from '../offers/offers.types';
+import { CompanyEntity } from '../companies.types';
+import { OfferPriceEntity } from '../price-management/price-management.types';
+import { VariationEntity } from '../offers/variations.types';
+import { AppQueryParams } from '../../api';
+import { GeolocationPoint } from '../../services/Geolocation.service';
+import { HasAuthor, HasOwnerAsCompany, HasStatus, HasStatusRef, HasType, MaybeNull, WithPeriod } from '../utils.types';
 
 export enum WarehouseTypeEnum {
   WAREHOUSE = 'warehouse',

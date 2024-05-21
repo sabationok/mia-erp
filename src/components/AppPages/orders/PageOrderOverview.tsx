@@ -7,13 +7,11 @@ import OverlayStackProvider from '../../../Providers/Overlay/OverlayStackProvide
 import PageOrderOverviewLeftSide from './PageOrderOverviewLeftSide';
 import PageOrderOverviewTabs from './PageOrderOverviewTabs';
 import { BaseAppPageProps } from '../index';
-import PageCurrentOrderProvider from './PageCurrentOrderProvider';
+import PageOrderProvider from './PageOrderProvider';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 
 interface Props extends BaseAppPageProps {}
-
-// const loader = ToastService.createLoader('Loading order info');
 
 const PageOrderOverview: React.FC<Props> = ({ path }) => {
   const service = useAppServiceProvider()[AppModuleName.orders];
@@ -35,7 +33,7 @@ const PageOrderOverview: React.FC<Props> = ({ path }) => {
 
   return (
     <AppGridPage path={path}>
-      <PageCurrentOrderProvider>
+      <PageOrderProvider>
         <OverlayStackProvider>
           <Page>
             <PageOrderOverviewLeftSide toggleRightSideVisibility={toggleRightSide} />
@@ -43,7 +41,7 @@ const PageOrderOverview: React.FC<Props> = ({ path }) => {
             <PageOrderOverviewTabs toggleVisibility={toggleRightSide} isVisible={isTabsSideVisible} />
           </Page>
         </OverlayStackProvider>
-      </PageCurrentOrderProvider>
+      </PageOrderProvider>
     </AppGridPage>
   );
 };

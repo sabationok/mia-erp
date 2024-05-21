@@ -14,9 +14,9 @@ export interface PageOfferProviderValue {
   mainPagePath?: string;
 }
 
-export const PageCurrentProductCTX = createContext({});
+export const PageCurrentOfferCTX = createContext({});
 
-export const usePageCurrentProduct = () => useContext(PageCurrentProductCTX) as PageOfferProviderValue;
+export const usePageCurrentOffer = () => useContext(PageCurrentOfferCTX) as PageOfferProviderValue;
 
 const PageOfferProvider: React.FC<PageOfferProviderProps> = ({ children }) => {
   const service = useAppServiceProvider()[ServiceName.products];
@@ -55,14 +55,14 @@ const PageOfferProvider: React.FC<PageOfferProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <PageCurrentProductCTX.Provider
+    <PageCurrentOfferCTX.Provider
       value={{
         clearCurrent,
         currentOffer,
       }}
     >
       {children}
-    </PageCurrentProductCTX.Provider>
+    </PageCurrentOfferCTX.Provider>
   );
 };
 export default PageOfferProvider;

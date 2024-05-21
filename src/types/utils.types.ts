@@ -52,7 +52,7 @@ export type MaybeNull<T = any> = T | null;
 export type MaybeArr<T = any> = T extends (infer U)[] ? U[] : T;
 
 export interface HasCurrencyCode {
-  currency?: MaybeNull<CurrencyCode>;
+  currency?: MaybeNull<CurrencyCode | string>;
 }
 export interface EmbeddedReference {
   internal?: MaybeNull<string>;
@@ -74,6 +74,21 @@ export interface HasDisabledAttributes {
 
 export interface HasOwnerAsCompany {
   owner?: MaybeNull<CompanyEntity>;
+}
+export interface HasBrutto {
+  brutto?: MaybeNull<string>;
+}
+export interface HasImgPreview {
+  imgPreview?: MaybeNull<string>;
+}
+export interface HasNetto {
+  netto?: MaybeNull<string>;
+}
+export interface HasSku {
+  sku?: MaybeNull<string>;
+}
+export interface HasBarCode {
+  barCode?: MaybeNull<string>;
 }
 
 export interface HasAuthor {

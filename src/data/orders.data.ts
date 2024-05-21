@@ -1,11 +1,12 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { IOrderSlot, OrderEntity, OrderStatusEnum } from '../types/orders/orders.types';
+import { OrderEntity, OrderStatusEnum } from '../types/orders/orders.types';
+import { OrderSlotEntity } from '../types/orders/order-slot.types';
 import { t } from '../lang';
 import { SelectItem } from '../components/TableList/tableTypes.types';
 import { FilterOption } from '../components/atoms/TabSelector';
 import { getStatusesByEnum } from './statuses.data';
-import { numberWithSpaces } from '../utils';
 import { getBasePriceColumns } from './priceManagement.data';
+import { toPrice } from '../utils/numbers';
 
 const createdDateColumn: CellTittleProps = {
   top: { name: t('updated'), align: 'center', path: 'updatedAt' },
@@ -42,45 +43,46 @@ export const orderStatuses: FilterOption<OrderStatusEnum>[] = [
   { _id: '5.2', value: OrderStatusEnum.expired, label: t(OrderStatusEnum.expired), color: 'rgb(164,171,182)' },
 ];
 
-export type DataPath =
-  | 'owner.label'
-  | 'owner.name'
-  | 'author.name'
-  | 'author.email'
-  | 'editor.name'
-  | 'editor.email'
-  | 'auditor.name'
-  | 'auditor.email'
-  | 'contractor.name'
-  | 'contractor.type'
-  | 'eventDate'
-  | 'type'
-  | 'status'
-  | 'amount'
-  | 'currency'
-  | 'comment'
-  | 'createdAt'
-  | 'updatedAt'
-  | 'mark.label'
-  | 'invoice.label'
-  | 'invoice.code'
-  | 'invoice.number'
-  | 'payment.label'
-  | 'payment.code'
-  | 'payment.number'
-  | 'order.code'
-  | 'total'
-  | 'manager.name'
-  | 'manager.code'
-  | 'manager.email'
-  | 'customer.name'
-  | 'customer.phone'
-  | 'receiver.name'
-  | 'receiver.phone'
-  | 'invoices'
-  | 'payments'
-  | 'transporters';
-export const ordersTableColumns: CellTittleProps<OrderEntity, DataPath>[] = [
+// export type DataPath =
+//   | 'owner.label'
+//   | 'owner.name'
+//   | 'author.name'
+//   | 'author.email'
+//   | 'editor.name'
+//   | 'editor.email'
+//   | 'auditor.name'
+//   | 'auditor.email'
+//   | 'contractor.name'
+//   | 'contractor.type'
+//   | 'eventDate'
+//   | 'type'
+//   | 'status'
+//   | 'amount'
+//   | 'currency'
+//   | 'comment'
+//   | 'createdAt'
+//   | 'updatedAt'
+//   | 'mark.label'
+//   | 'invoice.label'
+//   | 'invoice.code'
+//   | 'invoice.number'
+//   | 'payment.label'
+//   | 'payment.code'
+//   | 'payment.number'
+//   | 'order.code'
+//   | 'total'
+//   | 'manager.name'
+//   | 'manager.code'
+//   | 'manager.email'
+//   | 'customer.name'
+//   | 'customer.phone'
+//   | 'receiver.name'
+//   | 'receiver.phone'
+//   | 'invoices'
+//   | 'payments'
+//   | 'transporters';
+
+export const ordersTableColumns: CellTittleProps<OrderEntity>[] = [
   {
     top: {
       name: `${t('Status')}`,
@@ -100,9 +102,9 @@ export const ordersTableColumns: CellTittleProps<OrderEntity, DataPath>[] = [
     top: {
       name: t('Total amount'),
       align: 'end',
-      getData: rd => numberWithSpaces(rd.total?.amount ?? 0),
+      getData: rd => toPrice(rd.summary?.netto ?? 0),
     },
-    bottom: { name: t('Slots count'), align: 'end', getData: rd => rd.total?.items },
+    bottom: { name: t('Slots count'), align: 'end', getData: rd => rd.slots?.length || rd.summary?.slotsCount },
     width: '120px',
     action: 'numberWithSpaces',
   },
@@ -227,27 +229,27 @@ export const ordersSearchParams: SelectItem[] = [
   },
 ];
 
-export const orderSlotsTableColumns: CellTittleProps<IOrderSlot>[] = [
+export const orderSlotsTableColumns: CellTittleProps<OrderSlotEntity>[] = [
   {
-    // top: { name: t('Product label'), getData: rd => rd.product?.label },
+    // top: { name: t('Product label'), getData: rd => rd.offer?.label },
     top: { name: t('Variation label'), getData: rd => rd.variation?.label },
     action: 'text',
     width: '210px',
   },
   {
-    top: { name: t('Product sku'), getData: rd => rd.product?.sku },
+    top: { name: t('Product sku'), getData: rd => rd.offer?.sku },
     bottom: { name: t('Variation sku'), getData: rd => rd.variation?.sku },
     action: 'valueByPath',
     width: '150px',
   },
   {
-    top: { name: t('Product bar-code'), getData: rd => rd.product?.barCode },
+    top: { name: t('Product bar-code'), getData: rd => rd.offer?.barCode },
     bottom: { name: t('Variation bar-code'), getData: rd => rd.variation?.barCode },
     action: 'valueByPath',
     width: '150px',
   },
   {
-    top: { name: t('Total amount'), getData: rd => rd.total },
+    top: { name: t('Total amount'), getData: rd => rd.netto },
     bottom: { name: t('Total q-ty'), getData: rd => rd.quantity },
     action: 'valueByPath',
     width: '125px',

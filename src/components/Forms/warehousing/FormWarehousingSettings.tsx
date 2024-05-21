@@ -7,7 +7,7 @@ import { usePermissionsSelector, useWarehousesSelector } from '../../../redux/se
 import { FilterOption } from '../../atoms/TabSelector';
 import FlexBox from '../../atoms/FlexBox';
 import styled from 'styled-components';
-import { IWarehouse, WarehousingSettingsFormData } from '../../../types/warehouses.types';
+import { IWarehouse, WarehousingSettingsFormData } from '../../../types/warehousing/warehouses.types';
 import { t } from 'lang';
 import { CompanyEntity, ICompanyDto, ICompanyForReq, ICompanyWithConfigs } from 'types/companies.types';
 import { Text } from '../../atoms/Text';

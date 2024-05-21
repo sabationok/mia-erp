@@ -24,8 +24,8 @@ import {
 } from '../redux/products/variations/variations.thunks';
 import { IVariationReqData, VariationEntity } from '../types/offers/variations.types';
 import { clearCurrentProductAction } from '../redux/products/products.actions';
-import { OfferPriceEntity } from '../types/price-management/priceManagement.types';
-import { WarehouseItemEntity } from '../types/warehouses.types';
+import { OfferPriceEntity } from '../types/price-management/price-management.types';
+import { WarehouseItemEntity } from '../types/warehousing/warehouses.types';
 import { GetAllPricesQuery } from '../api/priceManagement.api';
 
 export interface OffersService {

@@ -6,7 +6,7 @@ import {
   OfferPriceEntity,
   PriceListEntity,
   PriceListTypeEnum,
-} from '../types/price-management/priceManagement.types';
+} from '../types/price-management/price-management.types';
 import FormCreatePriceList from '../components/Forms/pricing/FormCreatePriceList';
 import { omit } from 'lodash';
 import { getIdRef } from '../utils/data-transform';

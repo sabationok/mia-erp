@@ -1,6 +1,11 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
-import { WarehouseItemEntity, IWarehouse, IWarehouseDocReqData, IWarehouseReqData } from '../types/warehouses.types';
+import {
+  WarehouseItemEntity,
+  IWarehouse,
+  IWarehouseDocReqData,
+  IWarehouseReqData,
+} from '../types/warehousing/warehouses.types';
 import { AppResponse, OnlyUUID } from '../redux/global.types';
 import { ClientApi } from './client.api';
 

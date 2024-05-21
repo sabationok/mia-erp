@@ -1,4 +1,4 @@
-import { usePageCurrentProduct } from './PageOfferProvider';
+import { usePageCurrentOffer } from './PageOfferProvider';
 import { useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import { Text } from '../../atoms/Text';
@@ -23,7 +23,7 @@ export interface OfferOverviewPageRightSideProps {
 }
 
 const OfferOverviewPageRightSide: React.FC<OfferOverviewPageRightSideProps> = ({ isVisible, toggleVisibility }) => {
-  const page = usePageCurrentProduct();
+  const page = usePageCurrentOffer();
 
   const [currentTab, setCurrentTab] = useState<RightSideOptionEnum>(RightSideOptionEnum.Variations);
 

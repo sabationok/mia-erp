@@ -6,7 +6,7 @@ import {
   IProductInventoryReqData,
   IWarehouse,
   IWarehouseReqData,
-} from '../types/warehouses.types';
+} from '../types/warehousing/warehouses.types';
 import {
   createWarehouseThunk,
   getAllWarehousesThunk,

@@ -2,7 +2,7 @@ import { AddressDto, AppResponse, ContactsDto, IBase, IFormDataValueWithID, Only
 import { PermissionEntity } from './permissions.types';
 import { IUserBase } from './auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';
-import { IWarehouse } from './warehouses.types';
+import { IWarehouse } from './warehousing/warehouses.types';
 import { ExtServiceBase, InputIntegrationBase, OutputIntegrationBase } from './integrations.types';
 import { HasEmbeddedLabel, HasEmbeddedName, HasTaxCode, MaybeNull } from './utils.types';
 import { ISupplierDirItem } from './dir.types';

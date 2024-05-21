@@ -18,7 +18,7 @@ import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
 
 interface Props extends BaseAppPageProps {}
 
-const PageProducts: React.FC<any> = (props: Props) => {
+const PageOffers: React.FC<any> = (props: Props) => {
   const loaders = useLoaders<'offers'>();
   const { onLoading, isLoading } = loaders;
 
@@ -53,7 +53,7 @@ const PageProducts: React.FC<any> = (props: Props) => {
   );
 
   useEffect(() => {
-    if (state.products?.length) return;
+    if (state.list?.length) return;
 
     if (sortParams || filterParams) {
       return;
@@ -76,7 +76,7 @@ const PageProducts: React.FC<any> = (props: Props) => {
         <TableList
           {...tableConfig}
           {...{
-            tableData: state.products,
+            tableData: state.list,
             tableTitles: offersTableColumns,
           }}
           isLoading={isLoading?.offers}
@@ -90,7 +90,7 @@ const Page = styled.div`
   ${takeFullGridArea}
 `;
 
-export default PageProducts;
+export default PageOffers;
 
 export const useProductsTableSettings = () => {
   const service = useStorageServiceHook();
@@ -104,7 +104,7 @@ export const useProductsTableSettings = () => {
 
   const tableConfig = useMemo(
     (): ITableListProps<OfferEntity> => ({
-      tableData: state.products,
+      tableData: state.list,
       tableTitles: offersTableColumns,
       tableSortParams: transactionsSearchParams.filter(el => el.sort),
       filterSelectors,
@@ -125,7 +125,7 @@ export const useProductsTableSettings = () => {
         }).then();
       },
     }),
-    [actionsCreator, filterParams, filterSelectors, getAll, sortParams, state.products]
+    [actionsCreator, filterParams, filterSelectors, getAll, sortParams, state.list]
   );
 
   useEffect(() => {
@@ -134,14 +134,14 @@ export const useProductsTableSettings = () => {
     }
 
     if (!sortParams && !filterParams) {
-      if (state.products.length === 0) {
+      if (state.list.length === 0) {
         getAll({
           data: { refresh: true },
           onLoading: setIsLoading,
         });
       }
     }
-  }, [filterParams, getAll, isLoading, sortParams, state.products.length, tableConfig]);
+  }, [filterParams, getAll, isLoading, sortParams, state.list.length, tableConfig]);
 
   return {
     tableConfig,

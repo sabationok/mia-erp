@@ -11,7 +11,7 @@ import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { t } from '../../../lang';
 import { OverviewCellHeader } from './OverviewCellHeader';
 import { CellStyledComp } from './CellStyles';
-import { useOfferOverviewLoaders } from '../../AppPages/PageProductOverview/PageOfferOverview';
+import { useOfferOverviewLoaders } from '../../AppPages/offers/PageOfferOverview';
 
 export const OfferOverviewStatusChangerCell: RenderOverviewCellComponent<OfferEntity> = ({ cell, data }) => {
   const loaders = useOfferOverviewLoaders();

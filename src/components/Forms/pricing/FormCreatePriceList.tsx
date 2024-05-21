@@ -3,7 +3,7 @@ import {
   PriceListDto,
   PriceListEntity,
   PriceListType,
-} from '../../../types/price-management/priceManagement.types';
+} from '../../../types/price-management/price-management.types';
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { useAppForm } from '../../../hooks';

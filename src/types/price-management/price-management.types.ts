@@ -65,9 +65,7 @@ export type PriceAmountAndPercentageFieldsKey = keyof typeof PriceAmountAndPerce
 export interface PriceAmountAndPercentageFields
   extends Record<PriceAmountAndPercentageFieldsKey, AmountAndPercentage> {}
 
-export interface IPriceBase extends PriceAmountAndPercentageFields {
-  label?: string;
-
+export interface IPriceBase extends PriceAmountAndPercentageFields, HasLabel {
   in?: number | string;
   out?: number | string;
 }

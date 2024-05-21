@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkPayload } from '../store.store';
 import { AppQueryParams, createApiCall, WarehousesApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
-import { IWarehouse, IWarehouseReqData } from '../../types/warehouses.types';
+import { IWarehouse, IWarehouseReqData } from '../../types/warehousing/warehouses.types';
 import { OnlyUUID } from '../global.types';
 
 enum WarehousingThunkType {

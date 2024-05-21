@@ -1,21 +1,21 @@
-import { usePageCurrentProduct } from './PageOfferProvider';
-import ProductOverviewXL from '../../Overviews/ProductOverviewXL';
+import { usePageCurrentOffer } from './PageOfferProvider';
 import { useModalProvider } from '../../ModalProvider/ModalProvider';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import React from 'react';
-import { Modals } from '../../Modals/Modals';
 import { useOfferOverviewLoaders } from './PageOfferOverview';
-import { t } from '../../../lang';
 import { OverlayStack } from '../../../Providers/Overlay/OverlayStack';
+import ProductOverviewXL from 'components/Overviews/ProductOverviewXL';
+import { Modals } from '../../Modals/Modals';
+import { t } from '../../../lang';
 
 export interface OfferOverviewPageLeftSideProps {
   toggleRightSideVisibility?: () => void;
 }
 
 const OfferOverviewPageLeftSide: React.FC<OfferOverviewPageLeftSideProps> = ({ toggleRightSideVisibility }) => {
-  const page = usePageCurrentProduct();
+  const page = usePageCurrentOffer();
   const loaders = useOfferOverviewLoaders();
 
   const modalS = useModalProvider();

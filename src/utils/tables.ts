@@ -6,8 +6,8 @@ import {
   VariationEntity,
   VariationPropertiesMapInTableData,
 } from '../types/offers/variations.types';
-import { AmountAndPercentage, PriceAmountAndPercentageFields } from '../types/price-management/priceManagement.types';
-import { WarehouseItemEntity } from '../types/warehouses.types';
+import { AmountAndPercentage, PriceAmountAndPercentageFields } from '../types/price-management/price-management.types';
+import { WarehouseItemEntity } from '../types/warehousing/warehouses.types';
 import { numberWithSpaces } from './numbers';
 import { ITableAction, ITableListContext } from '../components/TableList/tableTypes.types';
 import { NavigateFunction } from 'react-router/dist/lib/hooks';

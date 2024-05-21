@@ -1,4 +1,4 @@
-import { IWarehouseDto, WarehouseTypeEnum } from '../../../types/warehouses.types';
+import { IWarehouseDto, WarehouseTypeEnum } from '../../../types/warehousing/warehouses.types';
 import { useAppForm } from '../../../hooks';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';

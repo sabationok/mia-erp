@@ -1,32 +1,28 @@
 import { AppResponse } from '../../redux/global.types';
-import { IPriceBase, OfferPriceEntity } from '../price-management/priceManagement.types';
+import { AmountAndPercentage } from '../price-management/price-management.types';
 import { ICustomerBase } from '../customers.types';
 import { AppQueryParams } from '../../api';
 import { ICommunicationMethod } from '../integrations.types';
 import {
-  CurrencyCode,
+  HasCurrencyCode,
   HasEmbeddedReference,
   HasEmbeddedReferences,
   HasExecuteDate,
   HasExpireDate,
   HasManager,
   HasOwnerAsCompany,
-  HasQuantity,
   HasStatus,
   HasSummary,
-  HasTotal,
   IBase,
   MaybeNull,
-  OnlyUUID,
 } from '../utils.types';
-import { OfferEntity } from '../offers/offers.types';
-import { IWarehouse, WarehouseItemEntity } from '../warehouses.types';
 import { IInvoice } from '../invoices.types';
 import { IDelivery } from '../deliveries.types';
 import { IPayment } from '../payments.types';
-import { VariationEntity } from '../offers/variations.types';
 import { ICreateOrderInfoDto } from './createOrderInfo.dto';
 import { ICreateOrderInfoFormState } from './createOrderInfoFormState.type';
+import { PriceDiscountType } from 'types/price-management/discounts';
+import { IOrderSlotDto, IOrderTempSlot, OrderSlotEntity } from './order-slot.types';
 
 export * from './createOrderInfo.dto';
 export * from './createOrderInfoFormState.type';
@@ -44,9 +40,6 @@ export interface HasOrder {
   order?: MaybeNull<OrderEntity>;
 }
 
-export interface HasOrdersList {
-  orders?: MaybeNull<OrderEntity[]>;
-}
 export enum OrderStatusEnum {
   new = 'order_new',
   inWork = 'order_inWork',
@@ -61,61 +54,20 @@ export enum OrderStatusEnum {
 
 // export type OrderStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
-export interface IOrderSlotBase extends IPriceBase, HasStatus<OrderStatusEnum>, HasQuantity, HasTotal {
-  order?: OnlyUUID;
-  delivery?: OnlyUUID;
-  invoice?: OnlyUUID;
-
-  product?: OfferEntity;
-  warehouse?: IWarehouse;
-  origin?: OfferPriceEntity;
-  inventory?: WarehouseItemEntity;
-  variation?: VariationEntity;
-
-  imgPreview?: string;
-
-  fromRef?: string;
-
-  discounts?: OfferPriceEntity['discounts'];
-}
-
-export interface IOrderSlot extends IBase, IOrderSlotBase, HasOwnerAsCompany {}
-
-export interface IOrderSlotDto extends HasQuantity {
-  product?: OnlyUUID;
-  variation?: OnlyUUID;
-  origin?: OnlyUUID;
-  inventory?: OnlyUUID;
-  warehouse?: OnlyUUID;
-}
-
-export interface IOrderTempSlot extends IOrderSlotBase {
-  tempId?: string;
-}
-
-export interface OrderSummaryInfo {
-  items: number;
-  amount: number;
-  bonus: number;
-  discount: number;
-  cashback: number;
-  received: number;
-  discounts: any[];
-  bonuses: any[];
-  taxes: any[];
-  currency: CurrencyCode;
-}
-
-export interface OrderTotals {
-  items?: number;
-  amount?: number;
-}
-
 export interface IOrdersGroup extends Omit<OrderEntity, 'group'> {
   orders?: MaybeNull<OrderEntity[]>;
   strategy?: MaybeNull<string>;
 }
-
+export type OrderSummaryType = HasCurrencyCode & {
+  brutto: number;
+  netto: number;
+  hold: number;
+  received: number;
+  slotsCount: number;
+  [PriceDiscountType.bonus]?: string | number;
+  [PriceDiscountType.discount]?: string | number;
+  [PriceDiscountType.cashback]?: string | number;
+};
 export interface OrderEntity
   extends IBase,
     HasOwnerAsCompany,
@@ -124,7 +76,7 @@ export interface OrderEntity
     HasEmbeddedReference,
     HasExecuteDate,
     HasStatus<OrderStatusEnum>,
-    HasSummary<OrderSummaryInfo>,
+    HasSummary<OrderSummaryType>,
     HasEmbeddedReferences<string, string> {
   group?: MaybeNull<IOrdersGroup>;
 
@@ -141,9 +93,7 @@ export interface OrderEntity
     receiver?: MaybeNull<ICommunicationMethod>;
   };
 
-  total?: MaybeNull<OrderTotals>;
-
-  slots?: IOrderSlot[];
+  slots?: OrderSlotEntity[];
   invoices?: IInvoice[];
   payments?: IPayment[];
   deliveries?: IDelivery[];
@@ -175,3 +125,24 @@ export interface ICreateOrdersWithSlotsAndGroupByWarehousesReqData {
   data: ICreateOrdersGroupDto;
   params?: AppQueryParams;
 }
+
+export interface OrderSummary extends HasCurrencyCode {
+  discount?: AmountAndPercentage;
+
+  cashback?: AmountAndPercentage;
+
+  bonus?: AmountAndPercentage;
+
+  ordersAmount?: string;
+
+  ordersCount?: number;
+  offersCount?: number;
+  slotsCount?: number;
+
+  forPay?: string;
+
+  deliveriesCount?: number;
+  deliveryPrice?: number | string;
+}
+
+export interface FormOrderSummaryData extends OrderSummary {}

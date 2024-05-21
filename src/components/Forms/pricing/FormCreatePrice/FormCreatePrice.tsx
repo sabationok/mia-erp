@@ -1,6 +1,6 @@
 import ModalForm, { ModalFormProps } from '../../../ModalForm';
 import FlexBox from '../../../atoms/FlexBox';
-import { IPriceFormData } from '../../../../types/price-management/priceManagement.types';
+import { IPriceFormData } from '../../../../types/price-management/price-management.types';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import { useAppForm } from '../../../../hooks';
 import FormProductSelectorForPricing from './FormProductSelectorForPricing';

@@ -5,7 +5,7 @@ import {
   IUpdatePriceReqData,
   OfferPriceEntity,
   PriceListEntity,
-} from '../../types/price-management/priceManagement.types';
+} from '../../types/price-management/price-management.types';
 import { ThunkPayload } from '../store.store';
 import { AppQueryParams, createApiCall, PriceManagementApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';

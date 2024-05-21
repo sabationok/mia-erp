@@ -10,7 +10,6 @@ import { useAppParams } from '../../../hooks';
 import OrderContentTab from './tabs/OrderContentTab';
 import OrderInvoicesTab from './tabs/OrderInvoicesTab';
 import OrderPaymentsTab from './tabs/OrderPaymentsTab';
-import OrderShipmentsTab from './tabs/OrderShipmentsTab';
 
 export interface PageOrderOverviewTabsProps {
   isVisible?: boolean;
@@ -20,7 +19,7 @@ enum OrderTabNameEnum {
   Content = 'Content',
   Invoices = 'Invoices',
   Payments = 'Payments',
-  Shipments = 'Shipments',
+  // Shipments = 'Shipments',
 }
 const toggleOptions = enumToFilterOptions(OrderTabNameEnum);
 const PageOrderOverviewTabs = ({ toggleVisibility, isVisible }: PageOrderOverviewTabsProps) => {
@@ -39,9 +38,6 @@ const PageOrderOverviewTabs = ({ toggleVisibility, isVisible }: PageOrderOvervie
     }
     if (current === OrderTabNameEnum.Payments) {
       return <OrderPaymentsTab />;
-    }
-    if (current === OrderTabNameEnum.Shipments) {
-      return <OrderShipmentsTab />;
     }
   }, [current]);
 

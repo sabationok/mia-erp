@@ -46,14 +46,8 @@ const OrderOverviewXL: React.FC<OrderOverviewXLProps> = p => {
     if (tabs[currentTab].value === OrderOverviewTabs.info) {
       return <OrderOverviewInfoTab />;
     }
-    if (tabs[currentTab].value === OrderOverviewTabs.chat) {
-      return <OrderOverviewInfoTab />;
-    }
-    if (tabs[currentTab].value === OrderOverviewTabs.statuses) {
-      return <OrderOverviewInfoTab />;
-    }
 
-    return;
+    return null;
   }, [currentTab]);
 
   return (

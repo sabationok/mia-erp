@@ -1,4 +1,4 @@
-import { usePageCurrentProduct } from '../PageOfferProvider';
+import { usePageCurrentOffer } from '../PageOfferProvider';
 import { useModalProvider } from '../../../ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
@@ -20,7 +20,7 @@ export interface VariationsTabProps {
 
 const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withActions = true }) => {
   const loaders = useLoadersProvider<OfferOverlayLoaderKey>();
-  const page = usePageCurrentProduct();
+  const page = usePageCurrentOffer();
   const modalS = useModalProvider();
   const currentOffer = page.currentOffer;
   const productsS = useAppServiceProvider()[ServiceName.products];

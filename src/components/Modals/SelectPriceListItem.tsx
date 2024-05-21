@@ -9,7 +9,7 @@ import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import { TabOption } from '../atoms/TabSelector';
-import { OfferPriceEntity } from '../../types/price-management/priceManagement.types';
+import { OfferPriceEntity } from '../../types/price-management/price-management.types';
 
 export interface SelectPriceListItemProps
   extends Omit<ModalFormProps<any, any, OfferPriceEntity>, 'onSubmit' | 'onSelect'> {

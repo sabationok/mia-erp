@@ -20,6 +20,8 @@ export * from './createStepChecker';
 export * from './data-transform';
 export * from './date-time';
 
+export * from './orders';
+
 export { default as createStepsChecker } from './createStepChecker';
 
 export {

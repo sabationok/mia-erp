@@ -1,6 +1,6 @@
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import PriceListOverview, { PriceListOverviewProps } from './Overviews/PriceListOverview';
-import ProductOverview, { ProductOverviewProps } from '../Overviews/ProductOverview';
+import OfferOverview, { ProductOverviewProps } from '../Overviews/OfferOverview';
 import SelectProductModal, { SelectProductModalProps } from './SelectProductModal';
 import AppFilter, { AppFilterProps } from '../Filter/AppFilter';
 import DirVariationsTemplate, { DirVariationsTemplateProps } from '../Directories/DirVariationsTemplate';
@@ -91,7 +91,7 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   // [Modals.DirTreeComponent]: DirTreeComp,
   // sep Modals props
   [Modals.PriceListOverview]: PriceListOverview,
-  [Modals.ProductOverview]: ProductOverview,
+  [Modals.ProductOverview]: OfferOverview,
   [Modals.SelectProductModal]: SelectProductModal,
   [Modals.AppFilter]: AppFilter,
 };

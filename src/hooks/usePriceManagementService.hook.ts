@@ -9,7 +9,7 @@ import {
   IUpdatePriceReqData,
   OfferPriceEntity,
   PriceListEntity,
-} from '../types/price-management/priceManagement.types';
+} from '../types/price-management/price-management.types';
 import * as thunks from '../redux/priceManagement/priceManagement.thunks';
 import { IPricesThunksData } from '../redux/priceManagement/priceManagement.thunks';
 

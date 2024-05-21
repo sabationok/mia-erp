@@ -9,6 +9,7 @@ import CellTextDblAndAvatar from './CellTextDblAndAvatar';
 import CellNumberWithSpaces from './CellNumberWithSpaces';
 import CellTextAndAvatar from './CellTextAndAvatar';
 import CellText from './CellText';
+import CellPrices from './CellPrices';
 
 export const CellsMap = {
   cell: Cell,
@@ -23,6 +24,7 @@ export const CellsMap = {
   doubleDataWithAvatar: CellTextDblAndAvatar,
   dataWithAvatar: CellTextAndAvatar,
   numberWithSpaces: CellNumberWithSpaces,
+  prices: CellPrices,
 };
 
 export type CellActionsName = keyof typeof CellsMap;

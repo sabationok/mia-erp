@@ -1,6 +1,6 @@
 import { IBase, OnlyUUID } from '../../redux/global.types';
-import { WarehouseItemEntity } from '../warehouses.types';
-import { OfferPriceEntity } from '../price-management/priceManagement.types';
+import { WarehouseItemEntity } from '../warehousing/warehouses.types';
+import { OfferPriceEntity } from '../price-management/price-management.types';
 import { AppQueryParams } from '../../api';
 import { OfferEntity } from './offers.types';
 import { IPropertyValue } from './properties.types';

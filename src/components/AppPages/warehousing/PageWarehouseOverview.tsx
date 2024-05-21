@@ -9,7 +9,7 @@ import { ISortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import { warehouseOverviewTableColumns } from '../../../data/warehauses.data';
 import { useAppParams } from '../../../hooks';
-import { WarehouseItemEntity } from '../../../types/warehouses.types';
+import { WarehouseItemEntity } from '../../../types/warehousing/warehouses.types';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useModalProvider } from '../../ModalProvider/ModalProvider';
 import { Modals } from '../../Modals/Modals';

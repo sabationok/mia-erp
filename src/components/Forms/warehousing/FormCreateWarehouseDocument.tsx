@@ -8,7 +8,7 @@ import {
   IWarehouseDoc,
   IWarehouseDocFormData,
   WarehouseDocumentType,
-} from '../../../types/warehouses.types';
+} from '../../../types/warehousing/warehouses.types';
 import { t } from '../../../lang';
 import { useAppForm } from '../../../hooks';
 import { useProductsSelector, useWarehousesSelector } from '../../../redux/selectors.store';

@@ -9,9 +9,9 @@ import { enumToFilterOptions, toReqData } from '../../utils';
 import TabSelector from '../atoms/TabSelector';
 import React, { useCallback, useMemo, useState } from 'react';
 
-import PricesTab from '../AppPages/PageProductOverview/tabs/PricesTab';
-import VariationsTab from '../AppPages/PageProductOverview/tabs/VariationsTab';
-import WarehousingTab from '../AppPages/PageProductOverview/tabs/WarehousingTab';
+import PricesTab from '../AppPages/offers/tabs/PricesTab';
+import VariationsTab from '../AppPages/offers/tabs/VariationsTab';
+import WarehousingTab from '../AppPages/offers/tabs/WarehousingTab';
 import CounterpartyTab from '../Forms/offers/tabs/CounterpartyTab';
 import { CounterpartyTypesEnum } from '../../redux/directories/counterparties.types';
 import { t } from '../../lang';

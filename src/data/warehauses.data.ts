@@ -1,5 +1,5 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { WarehouseItemEntity, IWarehouse } from '../types/warehouses.types';
+import { WarehouseItemEntity, IWarehouse } from '../types/warehousing/warehouses.types';
 import { t } from '../lang';
 import { numberWithSpaces } from '../utils';
 

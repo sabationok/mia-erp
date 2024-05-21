@@ -10,9 +10,13 @@ export const PageAuth = lazy(() => import('./PageAuth'));
 // * TRANSACTIONS
 export const PageTransactions = lazy(() => import('./PageTransactions'));
 
-// * PRODUCTS
-export const PageProducts = lazy(() => import('./offersManagement/PageProducts'));
-export const PageProductOverview = lazy(() => import('./PageProductOverview/PageOfferOverview'));
+// * ORDERS
+export const PageOrders = lazy(() => import('./orders/PageOrders'));
+export const PageOrderOverview = lazy(() => import('./orders/PageOrderOverview'));
+
+// * OFFERS
+export const PageOffers = lazy(() => import('./offers/PageOffers'));
+export const PageOfferOverview = lazy(() => import('./offers/PageOfferOverview'));
 
 // * PRICE MANAGEMENT
 export const PagePriceManagement = lazy(() => import('./priceManagement/PagePriceManagement'));
@@ -21,10 +25,6 @@ export const PagePriceListOverview = lazy(() => import('./priceManagement/PagePr
 // * WAREHOUSING
 export const PageWarehouses = lazy(() => import('./warehousing/PageWarehouses'));
 export const PageWarehouseOverview = lazy(() => import('./warehousing/PageWarehouseOverview'));
-
-// * ORDERS
-export const PageOrders = lazy(() => import('./orders/PageOrders'));
-export const PageOrderOverview = lazy(() => import('./orders/PageOrderOverview'));
 
 // * CUSTOMERS
 export const PageCustomers = lazy(() => import('./customers/PageCustomers'));

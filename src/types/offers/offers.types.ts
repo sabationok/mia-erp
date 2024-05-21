@@ -1,8 +1,8 @@
 import { ArrayOfUUID, IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/global.types';
 import { IProductCategoryDirItem, ISupplierDirItem } from '../dir.types';
 import { FilterOption } from '../../components/atoms/TabSelector';
-import { OfferPriceEntity } from '../price-management/priceManagement.types';
-import { IWarehouse, WarehouseItemEntity } from '../warehouses.types';
+import { OfferPriceEntity } from '../price-management/price-management.types';
+import { IWarehouse, WarehouseItemEntity } from '../warehousing/warehouses.types';
 import { IBrand } from '../../redux/directories/brands.types';
 import { AppQueries, AppQueryParams } from '../../api';
 import { VariationEntity } from './variations.types';

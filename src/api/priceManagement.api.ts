@@ -7,7 +7,7 @@ import {
   IUpdatePriceReqData,
   OfferPriceEntity,
   PriceListEntity,
-} from '../types/price-management/priceManagement.types';
+} from '../types/price-management/price-management.types';
 import { AppQueryParams } from './index';
 
 export type GetAllPricesQuery = Pick<

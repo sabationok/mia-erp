@@ -9,7 +9,7 @@ import { CellStyledComp } from './CellStyles';
 import { OverviewCellHeader } from './OverviewCellHeader';
 import FormProductDefaultsOverlay from '../../Overlays/FormProductDefaultsOverlay';
 
-import { OfferPriceEntity } from '../../../types/price-management/priceManagement.types';
+import { OfferPriceEntity } from '../../../types/price-management/price-management.types';
 import { MaybeNull } from '../../../types/utils.types';
 import { toPrice } from '../../../utils/numbers';
 

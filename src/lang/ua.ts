@@ -1,7 +1,7 @@
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { ContractorsTypesEnum } from '../redux/directories/contractors.types';
 import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../types/companies.types';
-import { WarehouseDocumentType } from '../types/warehouses.types';
+import { WarehouseDocumentType } from '../types/warehousing/warehouses.types';
 import { MeasurementUnit } from '../types/offers/offers.types';
 import { OrderStatusEnum } from '../types/orders/orders.types';
 import { PaymentInternalTypeEnum } from '../types/integrations.types';

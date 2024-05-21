@@ -4,7 +4,7 @@ import {
   OfferPriceEntity,
   PriceAmountAndPercentageFieldsKey,
   PriceListEntity,
-} from '../types/price-management/priceManagement.types';
+} from '../types/price-management/price-management.types';
 import { priceAmountAndPercentageFieldsLabels } from '../utils/tables';
 import { toPrice } from '../utils/numbers';
 

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { StateErrorType } from 'redux/reduxTypes.types';
-import { OfferPriceEntity, PriceListEntity } from '../../types/price-management/priceManagement.types';
+import { OfferPriceEntity, PriceListEntity } from '../../types/price-management/price-management.types';
 import * as thunks from './priceManagement.thunks';
 import { PartialRecord, UUID } from '../../types/utils.types';
 import { omit } from 'lodash';

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { pricesColumnsForProductReview } from 'data/priceManagement.data';
 import FormCreatePrice from '../../../Forms/pricing/FormCreatePrice/FormCreatePrice';
-import { OfferPriceEntity } from 'types/price-management/priceManagement.types';
+import { OfferPriceEntity } from 'types/price-management/price-management.types';
 import { useModalProvider } from '../../../ModalProvider/ModalProvider';
 import { getIdRef } from 'utils/data-transform';
 import { OnlyUUID } from 'redux/global.types';

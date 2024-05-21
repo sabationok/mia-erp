@@ -27,13 +27,13 @@ import { PartialRecord } from '../../types/utils.types';
 import { VariationEntity } from '../../types/offers/variations.types';
 import { onCreatePriceCase, onGetPricesCase, onUpdatePriceCase } from '../priceManagement/prices.actions';
 import { Action } from '../store.store';
-import { OfferPriceEntity } from '../../types/price-management/priceManagement.types';
+import { OfferPriceEntity } from '../../types/price-management/price-management.types';
 
 type SKU = string;
 type UUID = string;
 
 export interface OffersState {
-  products: OfferEntity[];
+  list: OfferEntity[];
   currentOffer?: OfferEntity;
   filteredProducts?: OfferEntity[];
   properties: IProperiesGroup[];
@@ -50,7 +50,7 @@ export interface OffersState {
 const initialState: OffersState = {
   isLoading: false,
   error: null,
-  products: [],
+  list: [],
   currentOffer: undefined,
   filteredProducts: [],
   properties: [],
@@ -71,20 +71,20 @@ export const offersSlice = createSlice({
       .addCase(getAllProductsThunk.fulfilled, (s, a) => {
         if (Array.isArray(a.payload.data)) {
           if (a.payload.refresh) {
-            s.products = a.payload.data;
+            s.list = a.payload.data;
             return;
           } else {
-            s.products = [...a.payload.data, ...s.products];
+            s.list = [...a.payload.data, ...s.list];
           }
 
           a.payload.data.forEach(offer => {
-            ManageOffersStateMap(s, { data: offer });
+            ManageOffersStateMap(s, { data: offer }, { refresh: false });
           });
         }
       })
       .addCase(createProductThunk.fulfilled, (s, a) => {
         if (a.payload?.data) {
-          // s.products = [a.payload.data, ...s.products];
+          // s.list = [a.payload.data, ...s.list];
           ManageOffersStateMap(s, a.payload);
         }
       })

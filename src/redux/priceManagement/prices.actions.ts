@@ -2,7 +2,7 @@ import { AnyAction } from '@reduxjs/toolkit';
 import * as thunks from './priceManagement.thunks';
 import { isString } from 'lodash';
 import { Action } from '../store.store';
-import { OfferPriceEntity } from '../../types/price-management/priceManagement.types';
+import { OfferPriceEntity } from '../../types/price-management/price-management.types';
 
 export function isPriceManagementCase(type: string) {
   return isString(type) && type.startsWith('priceLists');

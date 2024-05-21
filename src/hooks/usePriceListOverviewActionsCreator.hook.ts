@@ -1,5 +1,5 @@
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
-import { OfferPriceEntity } from '../types/price-management/priceManagement.types';
+import { OfferPriceEntity } from '../types/price-management/price-management.types';
 import { useModalService } from '../components/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
 import { OnlyUUID } from '../redux/global.types';

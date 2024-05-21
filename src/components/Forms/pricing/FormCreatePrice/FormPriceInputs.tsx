@@ -3,7 +3,7 @@ import {
   IPriceBase,
   PriceAmountAndPercentageFieldsEnum,
   PriceAmountAndPercentageFieldsKey,
-} from '../../../../types/price-management/priceManagement.types';
+} from '../../../../types/price-management/price-management.types';
 import FlexBox from '../../../atoms/FlexBox';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
 import InputText from '../../../atoms/Inputs/InputText';

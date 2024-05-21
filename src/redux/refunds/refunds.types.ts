@@ -1,10 +1,10 @@
 import { AppResponse, IBase, OnlyUUID } from '../global.types';
-import { OfferPriceEntity } from '../../types/price-management/priceManagement.types';
+import { OfferPriceEntity } from '../../types/price-management/price-management.types';
 import { CompanyEntity } from '../../types/companies.types';
 import { IManager } from '../../types/auth.types';
 import { ISupplierDirItem } from '../../types/dir.types';
 import { TabOption } from '../../components/atoms/TabSelector';
-import { IWarehouse } from '../../types/warehouses.types';
+import { IWarehouse } from '../../types/warehousing/warehouses.types';
 import { ICustomerBase } from '../../types/customers.types';
 
 export type RefundTypeFilterOption = TabOption;
