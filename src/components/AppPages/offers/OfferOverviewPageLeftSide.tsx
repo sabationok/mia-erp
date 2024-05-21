@@ -6,7 +6,7 @@ import FlexBox from '../../atoms/FlexBox';
 import React from 'react';
 import { useOfferOverviewLoaders } from './PageOfferOverview';
 import { OverlayStack } from '../../../Providers/Overlay/OverlayStack';
-import ProductOverviewXL from 'components/Overviews/ProductOverviewXL';
+import OfferOverviewXL from 'components/Overviews/OfferOverviewXL';
 import { Modals } from '../../Modals/Modals';
 import { t } from '../../../lang';
 
@@ -24,7 +24,7 @@ const OfferOverviewPageLeftSide: React.FC<OfferOverviewPageLeftSideProps> = ({ t
 
   return (
     <LeftSide>
-      <ProductOverviewXL
+      <OfferOverviewXL
         product={page?.currentOffer}
         onEdit={() => {
           if (!page.currentOffer) {

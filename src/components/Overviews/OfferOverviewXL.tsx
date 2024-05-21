@@ -7,10 +7,11 @@ import { t } from '../../lang';
 import { usePageCurrentOffer } from '../AppPages/offers/PageOfferProvider';
 import { OverlayHeader } from '../Overlays';
 import TabSelector from '../atoms/TabSelector';
-import { OverviewCells } from './components/Cells';
+
 import { useOverlayService } from '../../Providers/Overlay/OverlayStackProvider';
 import { useAppRouter } from '../../hooks';
 import { offerOverviewCellsMap, ProductOverviewTabsEnum, ProductOverviewTabsList } from './offerOverviewCellsMap';
+import { OverviewCells } from './components';
 
 export interface ProductOverviewXLProps {
   product?: OfferEntity;
@@ -24,7 +25,7 @@ export interface ProductOverviewXLProps {
   className?: string;
 }
 
-const ProductOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }) => {
+const OfferOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }) => {
   const router = useAppRouter();
   const page = usePageCurrentOffer();
   const offer = page.currentOffer;
@@ -133,4 +134,4 @@ const OpenBtn = styled(ButtonIcon)`
   }
 `;
 
-export default ProductOverviewXL;
+export default OfferOverviewXL;

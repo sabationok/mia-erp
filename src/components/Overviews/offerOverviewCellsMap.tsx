@@ -1,7 +1,7 @@
 import { OverviewCellProps } from './components/overview-types';
 import { OfferEntity } from '../../types/offers/offers.types';
 import { t } from '../../lang';
-import { OverviewCells } from './components/Cells';
+import { OverviewCells } from './components';
 import { IMeasurement } from '../../types/utils.types';
 import { enumToFilterOptions, toAppDateFormat } from '../../utils';
 import { isString } from 'lodash';
@@ -14,6 +14,9 @@ export enum ProductOverviewTabsEnum {
   Futures = 'Futures',
   Cms = 'Cms',
 }
+
+console.log('OverviewCells', OverviewCells);
+
 export const ProductOverviewTabsList = enumToFilterOptions(ProductOverviewTabsEnum);
 
 const offerOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEnum>[] = [
@@ -26,7 +29,7 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEnum
   },
   {
     title: t('status'),
-    CellComponent: OverviewCells.OfferStatusChanger,
+    CellComponent: OverviewCells.Text,
     getValue: data => data?.approved as string | null | undefined,
     gridArea: 'approved',
     tab: ProductOverviewTabsEnum.General,

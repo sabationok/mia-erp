@@ -4,7 +4,7 @@ import React, { useMemo, useState } from 'react';
 import { useOverlayService } from '../../../Providers/Overlay/OverlayStackProvider';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import TabSelector from '../../atoms/TabSelector';
-import { OverviewCells } from '../components/Cells';
+import { OverviewCells } from '../components';
 import { orderOverviewCellsMap, orderOverviewInfoTabs, OrderOverviewInfoTabsEnum } from '../orderOverviewCellsMap';
 
 export interface OrderOverviewInfoTabProps {}

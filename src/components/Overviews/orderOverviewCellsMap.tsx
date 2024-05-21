@@ -1,9 +1,9 @@
 import { OverviewCellProps } from './components/overview-types';
 import { OrderEntity } from '../../types/orders/orders.types';
 import { t } from '../../lang';
-import { OverviewCells } from './components/Cells';
+import { OverviewCells } from './components';
+
 import { _enumToTabs } from '../../utils';
-import { ProductOverviewTabsEnum } from './ProductOverviewXL';
 
 export enum OrderOverviewInfoTabsEnum {
   General = 'General',
@@ -18,26 +18,22 @@ export const orderOverviewInfoTabs = _enumToTabs(OrderOverviewInfoTabsEnum);
 const orderOverviewCells: OverviewCellProps<OrderEntity>[] = [
   {
     title: t('Manager'),
-    CellComponent: OverviewCells.Text,
     getValue: data => data?.manager?.user?.email,
     tab: OrderOverviewInfoTabsEnum.General,
   },
   {
     title: t('Reference'),
-    CellComponent: OverviewCells.Text,
     getValue: data => data?.reference?.internal,
     tab: OrderOverviewInfoTabsEnum.General,
   },
 
   {
     title: t('Group reference'),
-    CellComponent: OverviewCells.Text,
     getValue: data => data?.group?.reference?.internal,
     tab: OrderOverviewInfoTabsEnum.General,
   },
   {
     title: t('Group strategy'),
-    CellComponent: OverviewCells.Text,
     getValue: data => data?.group?.strategy,
     tab: OrderOverviewInfoTabsEnum.General,
   },
@@ -50,7 +46,6 @@ const orderOverviewCells: OverviewCellProps<OrderEntity>[] = [
 
   {
     title: t('Status'),
-    CellComponent: OverviewCells.Text,
     getValue: data => data?.status,
     tab: OrderOverviewInfoTabsEnum.General,
   },
@@ -73,7 +68,7 @@ const orderOverviewCells: OverviewCellProps<OrderEntity>[] = [
 ];
 
 export const orderOverviewCellsMap: Record<
-  ProductOverviewTabsEnum | string,
+  OrderOverviewInfoTabsEnum | string,
   OverviewCellProps<OrderEntity, OrderOverviewInfoTabsEnum>[]
 > = {};
 orderOverviewCells.forEach(item => {
