@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/counter-app-ts/static/css/main.14bc2301.css",
-    "main.js": "/counter-app-ts/static/js/main.774bfcda.js",
+    "main.js": "/counter-app-ts/static/js/main.c19ca595.js",
     "static/js/915.71f1749c.chunk.js": "/counter-app-ts/static/js/915.71f1749c.chunk.js",
     "static/js/155.716e4a09.chunk.js": "/counter-app-ts/static/js/155.716e4a09.chunk.js",
     "static/js/616.8eb76f3f.chunk.js": "/counter-app-ts/static/js/616.8eb76f3f.chunk.js",
@@ -19,12 +19,12 @@
     "static/js/800.9131f867.chunk.js": "/counter-app-ts/static/js/800.9131f867.chunk.js",
     "static/js/985.b6fa9e6b.chunk.js": "/counter-app-ts/static/js/985.b6fa9e6b.chunk.js",
     "static/js/868.8ef5e030.chunk.js": "/counter-app-ts/static/js/868.8ef5e030.chunk.js",
-    "static/js/931.b1607a0a.chunk.js": "/counter-app-ts/static/js/931.b1607a0a.chunk.js",
-    "static/js/531.f9f670a9.chunk.js": "/counter-app-ts/static/js/531.f9f670a9.chunk.js",
-    "static/js/145.7a118ded.chunk.js": "/counter-app-ts/static/js/145.7a118ded.chunk.js",
+    "static/js/931.22de06f7.chunk.js": "/counter-app-ts/static/js/931.22de06f7.chunk.js",
+    "static/js/531.33df7d6b.chunk.js": "/counter-app-ts/static/js/531.33df7d6b.chunk.js",
+    "static/js/145.734441d8.chunk.js": "/counter-app-ts/static/js/145.734441d8.chunk.js",
     "static/js/638.645064e5.chunk.js": "/counter-app-ts/static/js/638.645064e5.chunk.js",
     "static/js/435.46ebcc06.chunk.js": "/counter-app-ts/static/js/435.46ebcc06.chunk.js",
-    "static/js/275.e7209034.chunk.js": "/counter-app-ts/static/js/275.e7209034.chunk.js",
+    "static/js/275.08f4a50d.chunk.js": "/counter-app-ts/static/js/275.08f4a50d.chunk.js",
     "static/js/681.6655fb77.chunk.js": "/counter-app-ts/static/js/681.6655fb77.chunk.js",
     "static/js/149.897bfc70.chunk.js": "/counter-app-ts/static/js/149.897bfc70.chunk.js",
     "static/js/144.c76a35fa.chunk.js": "/counter-app-ts/static/js/144.c76a35fa.chunk.js",
@@ -53,7 +53,7 @@
     "static/media/Gilroy-Regular.woff2": "/counter-app-ts/static/media/Gilroy-Regular.f6c9931fabe5a6eb3307.woff2",
     "index.html": "/counter-app-ts/index.html",
     "main.14bc2301.css.map": "/counter-app-ts/static/css/main.14bc2301.css.map",
-    "main.774bfcda.js.map": "/counter-app-ts/static/js/main.774bfcda.js.map",
+    "main.c19ca595.js.map": "/counter-app-ts/static/js/main.c19ca595.js.map",
     "915.71f1749c.chunk.js.map": "/counter-app-ts/static/js/915.71f1749c.chunk.js.map",
     "155.716e4a09.chunk.js.map": "/counter-app-ts/static/js/155.716e4a09.chunk.js.map",
     "616.8eb76f3f.chunk.js.map": "/counter-app-ts/static/js/616.8eb76f3f.chunk.js.map",
@@ -71,12 +71,12 @@
     "800.9131f867.chunk.js.map": "/counter-app-ts/static/js/800.9131f867.chunk.js.map",
     "985.b6fa9e6b.chunk.js.map": "/counter-app-ts/static/js/985.b6fa9e6b.chunk.js.map",
     "868.8ef5e030.chunk.js.map": "/counter-app-ts/static/js/868.8ef5e030.chunk.js.map",
-    "931.b1607a0a.chunk.js.map": "/counter-app-ts/static/js/931.b1607a0a.chunk.js.map",
-    "531.f9f670a9.chunk.js.map": "/counter-app-ts/static/js/531.f9f670a9.chunk.js.map",
-    "145.7a118ded.chunk.js.map": "/counter-app-ts/static/js/145.7a118ded.chunk.js.map",
+    "931.22de06f7.chunk.js.map": "/counter-app-ts/static/js/931.22de06f7.chunk.js.map",
+    "531.33df7d6b.chunk.js.map": "/counter-app-ts/static/js/531.33df7d6b.chunk.js.map",
+    "145.734441d8.chunk.js.map": "/counter-app-ts/static/js/145.734441d8.chunk.js.map",
     "638.645064e5.chunk.js.map": "/counter-app-ts/static/js/638.645064e5.chunk.js.map",
     "435.46ebcc06.chunk.js.map": "/counter-app-ts/static/js/435.46ebcc06.chunk.js.map",
-    "275.e7209034.chunk.js.map": "/counter-app-ts/static/js/275.e7209034.chunk.js.map",
+    "275.08f4a50d.chunk.js.map": "/counter-app-ts/static/js/275.08f4a50d.chunk.js.map",
     "681.6655fb77.chunk.js.map": "/counter-app-ts/static/js/681.6655fb77.chunk.js.map",
     "149.897bfc70.chunk.js.map": "/counter-app-ts/static/js/149.897bfc70.chunk.js.map",
     "144.c76a35fa.chunk.js.map": "/counter-app-ts/static/js/144.c76a35fa.chunk.js.map",
@@ -100,6 +100,6 @@
   },
   "entrypoints": [
     "static/css/main.14bc2301.css",
-    "static/js/main.774bfcda.js"
+    "static/js/main.c19ca595.js"
   ]
 }
