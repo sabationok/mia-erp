@@ -40,25 +40,4 @@ const LeftSide = styled(FlexBox)`
 
   border-right: 1px solid ${p => p.theme.modalBorderColor};
 `;
-const Backdrop = styled(FlexBox)`
-  position: absolute;
-
-  top: 0;
-  left: ${p => (p.isActive ? 0 : '100%')};
-  z-index: 20;
-
-  background-color: ${p => p.theme.backdropColor};
-
-  transition: all ${p => p.theme.globals.timingFunctionMain};
-`;
-
-const OverlayBox = styled(FlexBox)`
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 20;
-
-  animation: 'OverlayFromRight';
-`;
-
 export default PageOrderOverviewLeftSide;

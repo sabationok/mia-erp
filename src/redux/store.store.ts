@@ -16,8 +16,9 @@ export const store = configureStore({
 });
 
 export type AppDispatch = typeof store.dispatch;
-export type ActionPayload<D = any> = { refresh?: boolean } & D;
+export type ActionPayload<D = any> = { refresh?: boolean; update?: boolean } & D;
 export type Action<D = any> = AnyAction & { payload: ActionPayload<D> };
+
 export interface ThunkPayload<SD = any, RD = any, E = any | unknown, MD = any> {
   data?: SD;
   onSuccess?: (data: RD, meta?: MD) => void;

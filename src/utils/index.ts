@@ -21,6 +21,7 @@ export * from './data-transform';
 export * from './date-time';
 
 export * from './orders';
+export * from './updateStringArray.helper';
 
 export { default as createStepsChecker } from './createStepChecker';
 
