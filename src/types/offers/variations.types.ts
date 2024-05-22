@@ -1,6 +1,6 @@
 import { IBase, OnlyUUID } from '../../redux/global.types';
 import { WarehouseItemEntity } from '../warehousing/warehouses.types';
-import { OfferPriceEntity } from '../price-management/price-management.types';
+import { PriceEntity } from '../price-management/price-management.types';
 import { AppQueryParams } from '../../api';
 import { OfferEntity } from './offers.types';
 import { IPropertyValue } from './properties.types';
@@ -15,7 +15,7 @@ export interface IVariationBase extends HasDimensions, WithPeriod, HasLabel {
 
 export interface VariationEntity extends IVariationBase, IBase, HasCompany, HasBaseCmsConfigs {
   offer?: OfferEntity;
-  price?: OfferPriceEntity;
+  price?: PriceEntity;
   inventories?: WarehouseItemEntity[];
 
   properties?: IPropertyValue[];

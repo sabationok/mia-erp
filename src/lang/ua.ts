@@ -489,4 +489,21 @@ export const langUa = {
   'Bonus, %': 'Бонус, %',
   'Cashback, amount': 'Кешбек, сума',
   'Cashback, %': 'Кешбек, %',
+
+  Type: 'Тип',
+  'Bonus balance': 'Бонусний баланс',
+  'Value type': 'Тип значення',
+  Discount_Volume_Type: "Тип об'єму",
+  Discount_Threshold: 'Поріг нарахування',
+
+  [`Discount_discount`]: 'Знижка',
+  [`Discount_cashback`]: 'Кешбек',
+  [`Discount_bonus`]: 'Бонус',
+  [`Discount_default`]: 'Системний',
+  [`Discount_refme`]: 'RefmeApp',
+  [`Discount_amount`]: 'Ставка',
+  [`Discount_percentage`]: 'Відсоток',
+  [`Discount_cart`]: 'Корзина',
+  [`Discount_slot`]: 'Позиція',
+  [`Discount_order`]: 'Замовлення',
 };

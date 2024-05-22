@@ -11,7 +11,7 @@ import InputLabel from '../../atoms/Inputs/InputLabel';
 import { t } from '../../../lang';
 import ButtonSwitch from '../../atoms/ButtonSwitch';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
-import ModalFooter from '../../Modal/ModalFooter';
+import ModalFooter from '../../atoms/Modal/ModalFooter';
 import { _enumToTabs } from '../../../utils';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';

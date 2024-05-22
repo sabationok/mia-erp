@@ -11,7 +11,7 @@ export enum AppModuleName {
   counts = 'counts',
   directories = 'directories',
   finances = 'finances',
-  products = 'products',
+  offers = 'offers',
   orders = 'orders',
   invoices = 'invoices',
   payments = 'payments',

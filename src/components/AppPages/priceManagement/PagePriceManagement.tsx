@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useEffect, useMemo, useState } from 'react';
 import { ITableListProps } from '../../TableList/tableTypes.types';
 import AppGridPage from '../AppGridPage';
-import { usePriceListsSelector } from '../../../redux/selectors.store';
+import { usePriceManagementSelector } from '../../../redux/selectors.store';
 import { ISortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import usePriceManagementServiceHook from '../../../hooks/usePriceManagementService.hook';
@@ -17,7 +17,7 @@ import { priceListColumns } from '../../../data/priceManagement.data';
 interface Props extends BaseAppPageProps {}
 const PagePriceManagement: React.FC<BaseAppPageProps> = (props: Props) => {
   const service = usePriceManagementServiceHook();
-  const state = usePriceListsSelector();
+  const state = usePriceManagementSelector();
   const navigate = useNavigate();
   const { getAll } = service;
   const actionsCreator = usePriceManagementActionsCreatorHook();

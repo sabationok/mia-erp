@@ -1,6 +1,6 @@
 import { ModalFormProps } from '../ModalForm';
 import { OfferDimensionsFormArea } from '../Forms/offers/components/OfferDimensionsFormArea';
-import ModalBase from '../Modal';
+import ModalBase from '../atoms/Modal';
 import { t } from '../../lang';
 import { toOfferFormData } from '../../utils';
 import { useEffect } from 'react';
@@ -68,7 +68,7 @@ const EditOfferModal: React.FC<EditOfferModalProps> = ({ onClose, _id, copy }) =
         <TabSelector
           filterOptions={productsFilterOptions}
           defaultValue={state?.formData?.type ?? undefined}
-          preventFilter
+          preventDefault
           onOptSelect={o => {
             setData('formData', p => ({ ...p, type: o.value }));
           }}

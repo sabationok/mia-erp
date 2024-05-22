@@ -8,6 +8,12 @@ export const UUIDRefSchema = yup.object().shape({
 });
 export const arrOfUUIDSchema = yup.array().of(UUIDSchema).min(1);
 
+export const isStringOrNumberSchema = yup
+  .mixed()
+  .test('is-string-or-number', 'Value must be a string or a number', function (value: any) {
+    return typeof value === 'string' || typeof value === 'number';
+  });
+
 export const orderInfoBaseSchema = yup.object().shape({
   manager: UUIDRefSchema.required('Is required field'),
   status: yup.string(),

@@ -1,6 +1,7 @@
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { FilterReturnDataType } from '../components/Filter/AppFilter';
 import { OnlyUUID, UUID } from '../redux/global.types';
+import { AppDate, ArrayUUID, Values } from '../types/utils.types';
 
 export * from './client.api';
 export { default as TransactionsApi } from './transactions.api';
@@ -27,7 +28,6 @@ export * from './transactions.api';
 export * from './companies.api';
 export * from './permissions.api';
 export * from './directories.api';
-export * from './priceManagement.api';
 export * from './offers.api';
 export * from './orders.api';
 export * from './refunds.api';
@@ -40,6 +40,10 @@ export * from './customers.api';
 export * from './communication.api';
 export * from './ext-services.api';
 export * from './integrations.api';
+
+// sep PRICES
+export * from './Discounts.api';
+export * from './priceManagement.api';
 
 export enum AppQueryKey {
   dirType = 'dirType',
@@ -54,71 +58,106 @@ export enum AppQueryKey {
   filterParams = 'filterParams',
 }
 
-export interface AppQueries<Type = any> extends Record<string, any> {
-  type?: Type;
-
-  ownerId?: UUID;
-  parentId?: UUID;
-  productId?: UUID;
-  inventoryId?: UUID;
-  warehouseId?: UUID;
-  variationId?: UUID;
-  listId?: UUID;
-  priceId?: UUID;
-  orderId?: UUID;
-  slotId?: UUID;
-  categoryId?: UUID;
-  paymentId?: UUID;
-  invoiceId?: UUID;
-  shipmentId?: UUID;
-  serviceId?: UUID;
-  offerId?: UUID;
+export enum BaseQueryKeyEnum {
+  owner = 'owner',
+  parent = 'parent',
+  product = 'product',
+  inventory = 'inventory',
+  warehouse = 'warehouse',
+  variation = 'variation',
+  list = 'list',
+  price = 'price',
+  order = 'order',
+  slot = 'slot',
+  category = 'category',
+  payment = 'payment',
+  invoice = 'invoice',
+  shipment = 'shipment',
+  service = 'service',
+  offer = 'offer',
 }
-export interface AppQueryParams<Type = any> extends AppQueries<Type> {
+export type BaseQueryKeyType = Values<typeof BaseQueryKeyEnum>;
+export type IdQueryKeyType = `${BaseQueryKeyType}Id`;
+export type IdsQueryKeyType = `${BaseQueryKeyType}Ids`;
+
+export type RefQueries = { [key in BaseQueryKeyType]?: OnlyUUID };
+export type IdQueries = { [key in IdQueryKeyType]?: UUID };
+export type IdsQueries = { [key in IdsQueryKeyType]?: ArrayUUID };
+
+export interface AppQueries<Type = any> extends Record<string, any>, RefQueries, IdQueries, IdsQueries {
+  type?: Type;
+}
+export interface PaginationQuery {
+  limit?: number;
+  offset?: number;
+}
+export interface PeriodQuery {
+  timeFrom?: AppDate;
+  timeTo?: AppDate;
+}
+export interface AppQueryParams<Type = any> extends AppQueries<Type>, PaginationQuery, PeriodQuery {
   dirType?: ApiDirType;
   isArchived?: boolean;
+  withDeleted?: boolean;
   deleted?: boolean;
   disabled?: boolean;
   createTreeData?: boolean;
   sortParams?: ISortParams;
   search?: string;
   searchBy?: string;
+  searchRef?: string;
   disabledForClient?: boolean;
   status?: string | { internal?: string; external?: string };
+  reference?: string | { internal?: string; external?: string };
   statusType?: 'internal' | 'external';
+  referenceType?: 'internal' | 'external';
   isDefault?: boolean;
   asDefault?: boolean;
   fullInfo?: boolean;
+  categories?: UUID[];
 
-  group?: OnlyUUID;
-  manager?: OnlyUUID;
-  customer?: OnlyUUID;
-  owner?: OnlyUUID;
-  parent?: OnlyUUID;
-  offer?: OnlyUUID;
-  inventory?: OnlyUUID;
-  warehouse?: OnlyUUID;
-  variation?: OnlyUUID;
-  list?: OnlyUUID;
-  price?: OnlyUUID;
-  order?: OnlyUUID;
-  slot?: OnlyUUID;
-  category?: OnlyUUID;
-  payment?: OnlyUUID;
-  invoice?: OnlyUUID;
-  shipment?: OnlyUUID;
-  service?: OnlyUUID;
-
-  categories?: string[];
-
-  timeFrom?: string | number | Date;
-  timeTo?: string | number | Date;
   filterParams?: Partial<FilterReturnDataType>;
+
+  // group?: OnlyUUID;
+  // manager?: OnlyUUID;
+  // customer?: OnlyUUID;
+  // owner?: OnlyUUID;
+  // parent?: OnlyUUID;
+  // offer?: OnlyUUID;
+  // inventory?: OnlyUUID;
+  // warehouse?: OnlyUUID;
+  // variation?: OnlyUUID;
+  // list?: OnlyUUID;
+  // price?: OnlyUUID;
+  // order?: OnlyUUID;
+  // slot?: OnlyUUID;
+  // category?: OnlyUUID;
+  // payment?: OnlyUUID;
+  // invoice?: OnlyUUID;
+  // shipment?: OnlyUUID;
+  // service?: OnlyUUID;
+
+  // ownerId?: UUID;
+  // parentId?: UUID;
+  // productId?: UUID;
+  // inventoryId?: UUID;
+  // warehouseId?: UUID;
+  // variationId?: UUID;
+  // listId?: UUID;
+  // priceId?: UUID;
+  // orderId?: UUID;
+  // slotId?: UUID;
+  // categoryId?: UUID;
+  // paymentId?: UUID;
+  // invoiceId?: UUID;
+  // shipmentId?: UUID;
+  // serviceId?: UUID;
+  // offerId?: UUID;
 }
 
-export type SortOrder = 'desc' | 'asc' | 'descending' | 'ascending' | 'DESC' | 'ASC';
+export type SortOrderType = 'desc' | 'asc' | 'descending' | 'ascending' | 'DESC' | 'ASC';
 
 export interface ISortParams<DataPath = any> {
-  sortOrder?: SortOrder;
+  sortOrder?: SortOrderType;
   dataPath?: DataPath | string;
 }

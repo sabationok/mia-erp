@@ -1,25 +1,25 @@
 import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo } from 'react';
 import useAppParams from '../../hooks/useAppParams.hook';
 import { AxiosError } from 'axios';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import AppLoader from '../atoms/AppLoader';
 import { isUndefined } from 'lodash';
-import useLoadInitialAppDataHook from '../../hooks/useLoadInitialAppData.hook';
 import { t } from '../../lang';
 import { ToastService } from '../../services';
 import { ClientApi } from '../../api';
+import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
+import useLoadInitialAppDataHook from 'hooks/useLoadInitialAppData.hook';
 
 type Props = {
   redirectTo?: string;
 };
 const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const loaders = useLoaders<'permission' | 'isLoaded' | 'appData', { isLoaded?: boolean }>();
   const navigate = useNavigate();
-
   const { permissionId } = useAppParams();
+
   const {
     permissions: { clearCurrent },
     auth: { logOutUser },
@@ -45,10 +45,10 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
 
   const hasPermission = useMemo(() => !!state.permission._id, [state.permission._id]);
 
-  const onAppLoadFinish = () => setIsLoaded(true);
+  const onAppLoadFinish = () => loaders.setData('isLoaded', true);
 
   useLoadInitialAppDataHook({
-    onLoading: setLoading,
+    onLoading: loaders.onLoading('appData'),
     onSuccess: onAppLoadFinish,
   });
 
@@ -87,7 +87,7 @@ const PermissionCheck: React.FC<Props> = ({ redirectTo }) => {
     };
   }, [clearCurrent, hasPermission, logOutUser, permissionId]);
 
-  if (loading || !isLoaded) {
+  if (loaders.isLoading?.permission) {
     return <AppLoader isLoading comment={t('Permission check, please wait')} />;
   }
 

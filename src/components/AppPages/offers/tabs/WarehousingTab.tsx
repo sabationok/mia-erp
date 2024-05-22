@@ -18,7 +18,7 @@ export interface WarehousingTabProps {
 const WarehousingTab = ({ onSelect, selected, withActions }: WarehousingTabProps) => {
   const currentProduct = useProductsSelector().currentOffer;
   const modalS = useModalProvider();
-  const productsS = useAppServiceProvider()[ServiceName.products];
+  const productsS = useAppServiceProvider()[ServiceName.offers];
   const [loading, setLoading] = useState(false);
 
   const loadData = useCallback(

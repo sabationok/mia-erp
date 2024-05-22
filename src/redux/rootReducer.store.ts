@@ -31,7 +31,7 @@ const rootReducer = combineReducers({
   [permissionsSlice.name]: persistReducer(persistorConfigs.permissions, permissionsSlice.reducer),
   [appPageSlice.name]: persistReducer(persistorConfigs.pageSettings, appPageSlice.reducer),
   [financesSlice.name]: persistReducer(persistorConfigs.finances, financesSlice.reducer),
-  [offersSlice.name]: persistReducer(persistorConfigs.products, offersSlice.reducer),
+  [offersSlice.name]: persistReducer(persistorConfigs.offers, offersSlice.reducer),
   [ordersSlice.name]: persistReducer(persistorConfigs.orders, ordersSlice.reducer),
   [customRolesSlice.name]: persistReducer(persistorConfigs.customRoles, customRolesSlice.reducer),
   [priceManagementSlice.name]: persistReducer(persistorConfigs.priceLists, priceManagementSlice.reducer),

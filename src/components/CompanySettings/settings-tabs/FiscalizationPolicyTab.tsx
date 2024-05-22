@@ -7,7 +7,7 @@ import {
 } from '../../../types/companies.types';
 import { useCompaniesSelector } from '../../../redux/selectors.store';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
-import ModalFooter from '../../Modal/ModalFooter';
+import ModalFooter from '../../atoms/Modal/ModalFooter';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { useState } from 'react';

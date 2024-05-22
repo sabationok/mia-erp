@@ -6,13 +6,14 @@ import {
   getAllInventoriesByProductIdThunk,
   getAllOfferPricesThunk,
   getAllProductsThunk,
+  getOfferThunk,
   getProductFullInfoThunk,
   updateProductDefaultsThunk,
   updateProductThunk,
 } from '../redux/products/products.thunks';
 import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
-import { AppQueryParams, createApiCall } from 'api';
+import { AppQueryParams, createApiCall, GetOneOfferQuery } from 'api';
 import OffersApi from '../api/offers.api';
 import PropertiesApi from '../api/properties.api';
 import { IProperty, IPropertyReqData } from '../types/offers/properties.types';
@@ -24,7 +25,7 @@ import {
 } from '../redux/products/variations/variations.thunks';
 import { IVariationReqData, VariationEntity } from '../types/offers/variations.types';
 import { clearCurrentProductAction } from '../redux/products/products.actions';
-import { OfferPriceEntity } from '../types/price-management/price-management.types';
+import { PriceEntity } from '../types/price-management/price-management.types';
 import { WarehouseItemEntity } from '../types/warehousing/warehouses.types';
 import { GetAllPricesQuery } from '../api/priceManagement.api';
 
@@ -36,6 +37,7 @@ export interface OffersService {
     OfferEntity
   >; // !!!!! ===>>> ServiceDispatcher
   getById: ServiceApiCaller<string, OfferEntity>;
+  getOne: ServiceDispatcherAsync<{ params?: GetOneOfferQuery }, OfferEntity>;
   getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, OfferEntity[]>;
   getProductFullInfo: ServiceDispatcherAsync<OnlyUUID, OfferEntity>;
   clearCurrent: ServiceDispatcher<undefined>;
@@ -75,7 +77,7 @@ export interface OffersService {
       updateCurrent?: boolean;
       params: GetAllPricesQuery;
     },
-    OfferPriceEntity[]
+    PriceEntity[]
   >;
   // * INVENTORIES
   getAllInventories: ServiceDispatcherAsync<
@@ -95,8 +97,9 @@ const useOffersService = (): OffersService => {
     return {
       create: args => dispatch(createProductThunk(defaultThunkPayload(args))),
       updateById: args => dispatch(updateProductThunk(defaultThunkPayload(args))),
-      deleteById: args => createApiCall(defaultApiCallPayload(args), OffersApi.deleteById, OffersApi),
-      getById: args => createApiCall(defaultApiCallPayload(args), OffersApi.getById, OffersApi),
+      deleteById: args => createApiCall(defaultApiCallPayload(args), OffersApi.deleteById),
+      getById: args => createApiCall(defaultApiCallPayload(args), OffersApi.getById),
+      getOne: args => dispatch(getOfferThunk(defaultThunkPayload(args))),
       getAll: args => dispatch(getAllProductsThunk(defaultThunkPayload(args))),
       getProductFullInfo: args => dispatch(getProductFullInfoThunk(defaultThunkPayload(args))),
       clearCurrent: () => dispatch(clearCurrentProductAction()),

@@ -20,7 +20,7 @@ export type ActionPayload<D = any> = { refresh?: boolean; update?: boolean } & D
 export type Action<D = any> = AnyAction & { payload: ActionPayload<D> };
 
 export interface ThunkPayload<SD = any, RD = any, E = any | unknown, MD = any> {
-  data?: SD;
+  data?: ActionPayload<SD>;
   onSuccess?: (data: RD, meta?: MD) => void;
   onError?: (error: E) => void;
   onLoading?: (loading: boolean) => void;

@@ -20,7 +20,7 @@ const OfferOverviewPageLeftSide: React.FC<OfferOverviewPageLeftSideProps> = ({ t
 
   const modalS = useModalProvider();
 
-  const { products: productsS } = useAppServiceProvider();
+  const { offers: offersSrv } = useAppServiceProvider();
 
   return (
     <LeftSide>
@@ -42,8 +42,8 @@ const OfferOverviewPageLeftSide: React.FC<OfferOverviewPageLeftSideProps> = ({ t
         onRefresh={() => {
           if (!page.currentOffer?._id) return;
 
-          productsS.getProductFullInfo({
-            data: { _id: page.currentOffer?._id },
+          offersSrv.getOne({
+            data: { params: { _id: page.currentOffer?._id } },
             onLoading: loaders.onLoading('offer'),
           });
         }}

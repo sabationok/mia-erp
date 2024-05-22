@@ -8,8 +8,8 @@ export const AppLoaderSpiner = ({
 }: {
   strokeWidth?: number;
   visible?: boolean;
-  size: number;
-}) => {
+  size?: number;
+} = {}) => {
   const theme = useTheme();
 
   return (

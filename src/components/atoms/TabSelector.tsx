@@ -1,13 +1,13 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { checks } from '../../utils';
 import { t } from '../../lang';
 import { MaybeNull } from '../../types/utils.types';
+import { isFunction, isUndefined } from 'lodash';
 
 export interface ModalFormFilterProps<V = any, D = any> {
   getDefaultValue?: (opt: FilterOption<V, D>) => number;
-  preventFilter?: boolean;
+  preventDefault?: boolean;
   filterOptions?: FilterOption<V, D>[];
 
   onOptSelect?: FilterSelectHandler<V, D>;
@@ -39,10 +39,10 @@ export interface FilterOption<V = any, D = any> extends Record<string, any> {
   isActive?: boolean;
 }
 
-export interface DynamicFilterOption<V = any> extends FilterOption<V> {
-  onPress?: () => void;
-  onSelect?: (option: FilterOption<V>) => void;
-}
+// export interface DynamicFilterOption<V = any> extends FilterOption<V> {
+//   onPress?: () => void;
+//   onSelect?: (option: FilterOption<V>) => void;
+// }
 // export type FilterOptionSelectHandler<V = any, D = any> = (option: FilterOption<V, D>, value: V, index: number) => void;
 
 export type FilterSelectHandler<V = any, D = any> = (
@@ -59,7 +59,7 @@ export interface TabOption<V = any, D = any> extends FilterOption<V, D> {}
 const TabSelector = <V = any, D = any>({
   filterOptions = [],
   onOptSelect,
-  preventFilter,
+  preventDefault,
   defaultFilterValue,
   defaultOption,
   getDefaultValue,
@@ -74,16 +74,15 @@ const TabSelector = <V = any, D = any>({
   ...props
 }: ModalFormFilterProps<V, D> & React.HTMLAttributes<HTMLDivElement>) => {
   const [current, setCurrent] = useState<number>(currentIndex);
-  // const { listRef } = useScrollTo<HTMLDivElement>(current.toString());
 
   const handleSelectOpt = useCallback(
     (idx: number, option: TabOption) => {
       return () => {
         setCurrent(idx);
 
-        if (checks.isFun(onChangeIndex)) onChangeIndex(idx);
-        if (checks.isFun(onFilterValueSelect)) onFilterValueSelect({ name, value: option.value });
-        if (checks.isFun(onOptSelect)) onOptSelect(option, option.value, idx);
+        if (isFunction(onChangeIndex)) onChangeIndex(idx);
+        if (isFunction(onFilterValueSelect)) onFilterValueSelect({ name, value: option.value });
+        if (isFunction(onOptSelect)) onOptSelect(option, option.value, idx);
       };
     },
     [name, onFilterValueSelect, onOptSelect, onChangeIndex]
@@ -97,24 +96,24 @@ const TabSelector = <V = any, D = any>({
   };
 
   useEffect(() => {
-    if (checks.isNotUnd(currentIndex)) {
+    if (!isUndefined(currentIndex)) {
       setCurrent(currentIndex);
       return;
     }
 
-    if (checks.isNotUnd(defaultFilterValue)) {
+    if (!isUndefined(defaultFilterValue)) {
       const defIndex = filterOptions.findIndex(el => el.value === defaultFilterValue);
       defIndex > 0 && setCurrent(defIndex);
     }
   }, [currentIndex, defaultFilterValue, filterOptions]);
 
   useEffect(() => {
-    if (preventFilter || defaultFilterValue) return;
+    if (preventDefault || defaultFilterValue) return;
 
     if (filterOptions.length > 0) {
-      checks.isFun(onChangeIndex) && onChangeIndex(current);
-      checks.isFun(onOptSelect) && onOptSelect(filterOptions[current], filterOptions[current].value, current);
-      checks.isFun(onFilterValueSelect) && onFilterValueSelect({ name, value: filterOptions[current].value });
+      isFunction(onChangeIndex) && onChangeIndex(current);
+      isFunction(onOptSelect) && onOptSelect(filterOptions[current], filterOptions[current].value, current);
+      isFunction(onFilterValueSelect) && onFilterValueSelect({ name, value: filterOptions[current].value });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -192,6 +192,7 @@ const offers = {
   deleteById: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.deleteById}/${id}`,
   updateById: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.updateById}/${id}`,
   getById: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/getById/${id}`,
+  getOne: (): string => `${API_BASE_ROUTES.PRODUCTS}/one`,
   getFullInfoById: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/${Endpoints.getFullInfoById}/${id}`,
   updateDefaultsById: (id?: string): string => `${API_BASE_ROUTES.PRODUCTS}/update/defaults/${id}`,
 
@@ -228,9 +229,10 @@ const customRoles = {
 const appSettings: ApiEndpointsMap = {
   getAllActions: () => `${API_BASE_ROUTES.APP}/getAllActions`,
 };
-const priceManagementEndpoints: ApiEndpointsMap = {
+const priceManagementEndpoints = {
   getAll: () => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/getAll`,
   getById: (listId: string) => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/getById/${listId}`,
+  getOne: () => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/one`,
   createList: () => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.createList}`,
   updateList: (listId: string) => `${API_BASE_ROUTES.PRICE_MANAGEMENT}/${Endpoints.updateList}/${listId}`,
 
@@ -255,7 +257,7 @@ const ordersEndpoints = {
 
   getSlots: () => `${API_BASE_ROUTES.ORDERS}/slots`,
   updateById: (orderId: string) => `${API_BASE_ROUTES.ORDERS}/${Endpoints.updateById}/${orderId}`,
-  createManyOrdersGroupedByWarehouse: () => `${API_BASE_ROUTES.ORDERS}/create/group/byWarehouses`,
+  createGroupedByWarehouse: () => `${API_BASE_ROUTES.ORDERS}/create/group/byWarehouses`,
 };
 
 const refunds = {

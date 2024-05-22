@@ -81,7 +81,7 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   offer,
   ...props
 }) => {
-  const service = useAppServiceProvider()[ServiceName.products];
+  const service = useAppServiceProvider()[ServiceName.offers];
   const templates = usePropertiesSelector();
   const loaders = useLoaders<'create'>();
   const currentOffer = useCurrentOffer({ id: update || offerId || offer?._id });

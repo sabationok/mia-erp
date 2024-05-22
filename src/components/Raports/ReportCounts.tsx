@@ -61,7 +61,7 @@ const ReportCounts: React.FC<IReportCountsProps<CountType>> = ({ entryList, filt
   }
 
   return (
-    <ModalForm {...props} preventFilter filterOptions={filterOptionsMemo} onOptSelect={handleSelect}>
+    <ModalForm {...props} preventDefault filterOptions={filterOptionsMemo} onOptSelect={handleSelect}>
       <FlexBox fillWidth flex={'1'}>
         {filterOpt.value && (
           <ReportList entryList={[]} totalAmount={countedTotals[filterOpt.value] || 0} currency={currency} />

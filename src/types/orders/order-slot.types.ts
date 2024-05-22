@@ -18,7 +18,7 @@ import { HasBaseCmsConfigs } from '../cms.types';
 import { OrderStatusEnum } from './orders.types';
 import { OfferEntity } from '../offers/offers.types';
 import { IWarehouse } from '../warehousing/warehouses.types';
-import { IPriceBase, OfferPriceEntity } from '../price-management/price-management.types';
+import { IPriceBase, PriceEntity } from '../price-management/price-management.types';
 import { VariationEntity } from '../offers/variations.types';
 import { PriceDiscountRecord } from '../price-management/discounts';
 
@@ -51,7 +51,7 @@ export interface IOrderSlotBase
 
   offer?: OfferEntity;
   warehouse?: IWarehouse;
-  origin?: OfferPriceEntity;
+  origin?: PriceEntity;
   // inventory?: IProductInventory;
   variation?: VariationEntity;
 }
@@ -63,7 +63,7 @@ export interface IOrderTempSlotMeta extends HasType<TempSlotTypeEnum | string> {
   hasVariations?: boolean;
   hasInventories?: boolean;
 
-  discounts?: OfferPriceEntity['discounts'] | PriceDiscountRecord[];
+  discounts?: PriceEntity['discounts'] | PriceDiscountRecord[];
 }
 
 export interface IOrderTempSlot extends IOrderSlotBase, IOrderTempSlotMeta {}
@@ -74,7 +74,7 @@ export interface OrderSlotEntity extends IOrderSlotBase, HasOwnerAsCompany, IOrd
   order?: OnlyUUID;
   group?: OnlyUUID;
 
-  discounts?: OfferPriceEntity['discounts'];
+  discounts?: PriceEntity['discounts'];
 }
 
 export interface IOrderSlotDto extends HasSku, HasLabel, HasQuantity, HasCurrencyCode, HasImgPreview {

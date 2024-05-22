@@ -18,6 +18,7 @@ export * from './getCustomerFullNameOrLabel.helper';
 
 export const getIdRef = <T extends OnlyUUID>(data: T, key: '_id' = '_id'): OnlyUUID =>
   key in data ? pick(data, key) : { [key]: '' };
+export const getIdFromRef = <T extends OnlyUUID>(data: T): string => ('_id' in data ? data?._id : '');
 
 // * REFACTORING NEEDED
 export const ExtractObjId = <T extends ObjUUID, K extends IdKeyVersion = '_id'>(data: T, key: K) => {

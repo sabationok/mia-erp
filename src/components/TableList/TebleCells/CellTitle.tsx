@@ -34,7 +34,7 @@ export type CellTittleProps<DataType = any, DataPath extends string = any> = {
   width: string;
   idx?: number;
   titleInfo?: CellTittleProps;
-  action: CellActionsName;
+  action?: CellActionsName;
   onClick?: (ev: React.MouseEvent<HTMLDivElement>) => void;
   visibility?: boolean;
 };

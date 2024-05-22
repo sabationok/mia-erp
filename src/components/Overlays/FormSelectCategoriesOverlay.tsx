@@ -13,7 +13,7 @@ export interface FormSelectCategoriesOverlayProps extends OverlayHandlerReturn {
 const FormProductCategoriesOverlay = ({ onClose }: FormSelectCategoriesOverlayProps) => {
   const { currentOffer } = useProductsSelector();
   const { directory } = useDirectorySelector(ApiDirType.CATEGORIES_PROD);
-  const service = useAppServiceProvider()[ServiceName.products];
+  const service = useAppServiceProvider()[ServiceName.offers];
   const [state, setState] = useState<string[]>([]);
 
   const handleFormSubmit: FormEventHandler = ev => {

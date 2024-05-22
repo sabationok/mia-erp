@@ -1,6 +1,6 @@
 import { ThunkPayload } from './store.store';
 import { AxiosResponse } from 'axios';
-import { ApiCallerPayload } from '../api/createApiCall.api';
+import { ApiCallerPayload } from '../api';
 import { ApiDirType } from './APP_CONFIGS';
 import { AppDate, MaybeNull } from '../types/utils.types';
 

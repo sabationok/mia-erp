@@ -1,5 +1,5 @@
-import { HasType, IBase } from 'types/utils.types';
-import { HasBaseCmsConfigs, ICmsBaseConfigs } from '../cms.types';
+import { HasType, IBase, OnlyUUID, UUID } from 'types/utils.types';
+import { CmsBaseConfigsDto, HasBaseCmsConfigs } from '../cms.types';
 
 export enum PriceDiscountType {
   discount = 'discount',
@@ -22,6 +22,18 @@ export enum PriceDiscountVolumeType {
   slot = 'slot',
   order = 'order',
 }
+export enum DiscountKeyEnum {
+  dateFrom = 'dateFrom',
+  dateTo = 'dateTo',
+  balanceType = 'balanceType',
+  volumeType = 'volumeType',
+  threshold = 'threshold',
+  valueType = 'valueType',
+  value = 'value',
+  slotCategory = 'slotCategory',
+  cmsConfigs = 'cmsConfigs',
+  type = 'type',
+}
 interface IDiscountBase extends HasType<PriceDiscountType>, HasBaseCmsConfigs {
   dateFrom?: string;
 
@@ -36,10 +48,22 @@ interface IDiscountBase extends HasType<PriceDiscountType>, HasBaseCmsConfigs {
   value?: string;
 
   slotCategory?: string;
-
-  cmsConfigs?: ICmsBaseConfigs;
 }
 export interface PriceDiscountRecord extends IDiscountBase {}
 export interface PriceDiscountEntity extends IBase, IDiscountBase {
+  offers?: OnlyUUID[];
+  orders?: OnlyUUID[];
+  slots?: OnlyUUID[];
+  priceLists?: OnlyUUID[];
+  prices?: OnlyUUID[];
+
   tempId?: string;
+}
+
+export interface PriceDiscountDto extends PriceDiscountRecord {
+  price: OnlyUUID;
+  priceId: UUID;
+  offer?: OnlyUUID;
+
+  cmsConfigs?: CmsBaseConfigsDto;
 }

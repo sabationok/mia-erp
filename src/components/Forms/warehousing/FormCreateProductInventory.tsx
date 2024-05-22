@@ -5,16 +5,15 @@ import { OfferEntity } from '../../../types/offers/offers.types';
 import TableList from '../../TableList/TableList';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
 import { IProductInventoryFormData } from '../../../types/warehousing/warehouses.types';
-import { OfferPriceEntity } from '../../../types/price-management/price-management.types';
+import { PriceEntity } from '../../../types/price-management/price-management.types';
 import { VariationEntity } from '../../../types/offers/variations.types';
 import styled from 'styled-components';
-import { useProductsSelector, usePropertiesSelector } from '../../../redux/selectors.store';
+import { useProductsSelector } from '../../../redux/selectors.store';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import { t } from '../../../lang';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import ButtonsGroup from '../../atoms/ButtonsGroup';
-import { createTableTitlesFromProperties } from '../../../utils';
 import { transformVariationTableData } from '../../../utils/tables';
 import { createApiCall, PriceManagementApi } from '../../../api';
 import { getIdRef } from '../../../utils/data-transform';
@@ -52,26 +51,26 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
   }, [currentProduct, props?.product]);
 
   // const { products: productsS, warehouses: warehousesS } = useAppServiceProvider();
-  const [loadedPrices, setLoadedPrices] = useState<OfferPriceEntity[]>([]);
-  const [selectedPrice, setSelectedPrice] = useState<OfferPriceEntity | OnlyUUID | undefined>();
+  const [loadedPrices, setLoadedPrices] = useState<PriceEntity[]>([]);
+  const [selectedPrice, setSelectedPrice] = useState<PriceEntity | OnlyUUID | undefined>();
   const [selectedVariation, setSelectedVariation] = useState<VariationEntity>();
 
   useEffect(() => {
     console.log('FormCreateProductInventory selectedPrice', selectedPrice);
   }, [selectedPrice]);
 
-  const templates = usePropertiesSelector();
+  // const templates = usePropertiesSelector();
 
-  const variationsTableTitles = useMemo(() => {
-    const template = templates.find(t => t._id === currentProduct?.template?._id);
-    return createTableTitlesFromProperties(template);
-  }, [currentProduct?.template?._id, templates]);
+  // const variationsTableTitles = useMemo(() => {
+  //   const template = templates.find(t => t._id === currentProduct?.template?._id);
+  //   return createTableTitlesFromProperties(template);
+  // }, [currentProduct?.template?._id, templates]);
 
   useEffect(() => {
     if (selectedVariation) {
       createApiCall(
         { data: { variation: getIdRef(selectedVariation) }, onSuccess: setLoadedPrices },
-        PriceManagementApi.getAllPrices,
+        PriceManagementApi.prices.getAll,
         PriceManagementApi
       );
     }
@@ -90,7 +89,7 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
 
     createApiCall(
       { data: { variation }, onSuccess: setLoadedPrices },
-      PriceManagementApi.getAllPrices,
+      PriceManagementApi.prices.getAll,
       PriceManagementApi
     );
   }, []);
@@ -118,7 +117,7 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
         <InputLabel label={t('Select variation')}>
           <FlexBox style={{ height: 300 }} overflow={'hidden'}>
             <TableList
-              tableTitles={variationsTableTitles}
+              // tableTitles={variationsTableTitles}
               tableData={transformedVariationsTableData}
               isSearch={false}
               onRowClick={handleSelectVariation}

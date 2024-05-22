@@ -1,5 +1,5 @@
 import { AppResponse, IBase, OnlyUUID } from '../global.types';
-import { OfferPriceEntity } from '../../types/price-management/price-management.types';
+import { PriceEntity } from '../../types/price-management/price-management.types';
 import { CompanyEntity } from '../../types/companies.types';
 import { IManager } from '../../types/auth.types';
 import { ISupplierDirItem } from '../../types/dir.types';
@@ -16,20 +16,20 @@ export enum RefundTypeEnum {
 
 export type RefundStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
-export interface IRefundSlotItem extends OfferPriceEntity {
+export interface IRefundSlotItem extends PriceEntity {
   slot?: OnlyUUID;
   order?: OnlyUUID;
   owner?: CompanyEntity;
   manager?: IManager;
 
-  origin?: Partial<OfferPriceEntity>;
+  origin?: Partial<PriceEntity>;
 }
 
-export interface IRefundSlot extends OfferPriceEntity {
+export interface IRefundSlot extends PriceEntity {
   owner: CompanyEntity;
   order?: OnlyUUID;
 
-  origin?: OfferPriceEntity;
+  origin?: PriceEntity;
   status?: RefundStatus;
   warehouse?: IWarehouse;
   supplier?: ISupplierDirItem;

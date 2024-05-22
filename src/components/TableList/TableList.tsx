@@ -17,6 +17,7 @@ import {
 import { FilterReturnDataType } from '../Filter/AppFilter';
 import { IBase } from '../../redux/global.types';
 import TableLoader from './TableLoader';
+import { isUndefined } from 'lodash';
 
 export type { ITableListContext, ITableListProps, OnCheckBoxChangeHandlerEvent, UseTableHookType, SelectItem };
 export const TableCTX = createContext({});
@@ -43,7 +44,7 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
   // const tBodyRef = useRef<HTMLElement>(null);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const rowRef = useRef<HTMLElement>();
-  const [selectedRow, setSelectedRow] = useState<any | undefined>(props?.selectedRow);
+  const [selectedRow, setSelectedRow] = useState<any | undefined>();
   const setFilterData = useState<FilterReturnDataType>()[1];
   const [loading, setLoading] = useState(isLoading);
 
@@ -86,6 +87,12 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
     },
     [tableData]
   );
+
+  useEffect(() => {
+    if (!isUndefined(props?.selectedRow)) {
+      setSelectedRow(props?.selectedRow);
+    }
+  }, [props?.selectedRow]);
 
   const CTX = useMemo(
     (): ITableListContext<IBase> => ({

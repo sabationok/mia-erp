@@ -57,7 +57,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   actionsCreator,
   ...props
 }) => {
-  const service = useAppServiceProvider()[ServiceName.products];
+  const service = useAppServiceProvider()[ServiceName.offers];
   const { properties } = useProductsSelector();
   const modalService = useModalProvider();
   const [current, setCurrent] = useState(filterDefaultValue);

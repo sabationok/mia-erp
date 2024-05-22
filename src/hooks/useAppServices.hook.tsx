@@ -22,7 +22,7 @@ import UseDeliveriesServiceHook, { UseDeliveriesService } from './services/useDe
 export { AppModuleName as ServiceName } from '../redux/reduxTypes.types';
 export interface AppService {
   [AppModuleName.permissions]: PermissionService;
-  [AppModuleName.products]: OffersService;
+  [AppModuleName.offers]: OffersService;
   [AppModuleName.finances]: UseFinancesService;
   [AppModuleName.directories]: DirectoriesService;
   [AppModuleName.priceManagement]: PriceManagementService;
@@ -49,7 +49,7 @@ const useAppService = (): AppService => {
     auth: useAppAuthHook(),
     permissions: usePermissionsServiceHook(),
     integrations: useIntegrationsService(),
-    products: useProductsServiceHook(),
+    offers: useProductsServiceHook(),
     finances: useTransactionsServiceHook(),
     directories: useDirService(),
     priceManagement: usePriceManagementServiceHook(),

@@ -7,7 +7,7 @@ import ButtonSwitch from '../../atoms/ButtonSwitch';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import { useTranslatedMethodsList } from '../../../hooks/useTranslatedMethodsList.hook';
 import { useState } from 'react';
-import ModalFooter from '../../Modal/ModalFooter';
+import ModalFooter from '../../atoms/Modal/ModalFooter';
 import { _enumToTabs } from '../../../utils';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import TabSelector from '../../atoms/TabSelector';

@@ -9,7 +9,7 @@ import { CellStyledComp } from '../../components/CellStyles';
 import { OverviewCellHeader } from '../../components/OverviewCellHeader';
 import FormProductDefaultsOverlay from '../../../Overlays/FormProductDefaultsOverlay';
 
-import { OfferPriceEntity } from '../../../../types/price-management/price-management.types';
+import { PriceEntity } from '../../../../types/price-management/price-management.types';
 import { MaybeNull } from '../../../../types/utils.types';
 import { toPrice } from '../../../../utils/numbers';
 
@@ -154,7 +154,7 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity>
 };
 
 export function createPriceOverviewTagsData(
-  price?: OfferPriceEntity
+  price?: PriceEntity
 ): { title: string; amount?: number | string; percentage?: number | string }[] {
   return [
     { title: t('Input'), amount: toPrice(price?.in) },

@@ -1,7 +1,7 @@
-import FlexBox from '../atoms/FlexBox';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { t } from '../../lang';
-import { Text } from '../atoms/Text';
+import FlexBox from '../FlexBox';
+import ButtonIcon from '../ButtonIcon/ButtonIcon';
+import { t } from '../../../lang';
+import { Text } from '../Text';
 import styled from 'styled-components';
 
 export interface ModalHeaderProps {

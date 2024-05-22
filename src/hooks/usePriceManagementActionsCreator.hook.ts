@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { TableActionCreator } from '../components/TableList/tableTypes.types';
 import {
   IPriceListItemReqData,
-  OfferPriceEntity,
+  PriceEntity,
   PriceListEntity,
   PriceListTypeEnum,
 } from '../types/price-management/price-management.types';
@@ -19,7 +19,7 @@ export type PriceManagementActionsCreator = TableActionCreator<PriceListEntity>;
 
 export const PriceManagementItemTypeFilterOptions = enumToFilterOptions(PriceListTypeEnum);
 
-export const createPriceDataForReq = (input: Required<OfferPriceEntity>): IPriceListItemReqData => {
+export const createPriceDataForReq = (input: Required<PriceEntity>): IPriceListItemReqData => {
   return {
     ...getIdRef(input),
     data: {

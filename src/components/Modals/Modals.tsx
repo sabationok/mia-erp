@@ -7,6 +7,7 @@ import DirVariationsTemplate, { DirVariationsTemplateProps } from '../Directorie
 import DirPoperties, { DirPropertiesProps } from '../Directories/DirProperties/DirProperties';
 import Forms, { FormPropTypes } from '../Forms';
 import { FormCreateBankAccountProps } from '../Forms/finances/FormCreateBankAccount';
+import ModalCreatePrice, { ModalCreatePriceProps } from './ModalCreatePrice';
 
 export enum Modals {
   ModalForm = 'ModalForm',
@@ -15,8 +16,10 @@ export enum Modals {
   FormCreateDirTreeComp = 'FormCreateDirTreeComp',
   FormCreateContractor = 'FormCreateContractor',
   FormCreateTransaction = 'FormCreateTransaction',
-  FormCreatePrice = 'FormCreatePrice',
+
+  CreatePrice = 'CreatePrice',
   FormCreatePriceList = 'FormCreatePriceList',
+
   FormCreateCustomRole = 'FormCreateCustomRole',
   FormCreateCount = 'FormCreateCount',
   FormCreateCategory = 'FormCreateCategory',
@@ -31,7 +34,7 @@ export enum Modals {
   FormCreateWarehouse = 'FormCreateWarehouse',
   FormCreateWarehouseDocument = 'FormCreateWarehouseDocument',
 
-  // ? ORDERS
+  // sep ORDERS
   FormCreateOrder = 'FormCreateOrder',
   FormCreateOrdersGroup = 'FormCreateOrdersGroup',
   SelectOrderType = 'SelectOrderType',
@@ -61,7 +64,7 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   [Modals.FormCreateTransaction]: Forms.CreateTransaction,
   [Modals.FormCreateCategory]: Forms.CreateCategory,
   [Modals.FormCreatePriceList]: Forms.CreatePriceList,
-  [Modals.FormCreatePrice]: Forms.CreatePrice,
+  [Modals.CreatePrice]: ModalCreatePrice,
   [Modals.FormCreateCustomRole]: Forms.CreateCustomRole,
   [Modals.FormCreateCount]: Forms.CreateCount,
   [Modals.FormCreateCompany]: Forms.CreateCompany,
@@ -106,8 +109,6 @@ export interface ModalChildrenProps extends Record<Modals, any> {
   [Modals.FormCreateContractor]: FormPropTypes.FormCreateContractorProps;
   [Modals.FormCreateTransaction]: FormPropTypes.FormCreateTransactionProps;
   [Modals.FormCreateCategory]: FormPropTypes.FormCreateCategoryProps;
-  [Modals.FormCreatePriceList]: FormPropTypes.FormCreatePriceListProps;
-  [Modals.FormCreatePrice]: FormPropTypes.FormCreatePriceProps;
   [Modals.FormCreateCategory]: FormPropTypes.FormCreateCategoryProps;
   [Modals.FormCreateCount]: FormPropTypes.FormCreateCountProps;
   [Modals.FormCreateCompany]: FormPropTypes.FormCreateCompanyProps;
@@ -115,6 +116,10 @@ export interface ModalChildrenProps extends Record<Modals, any> {
   [Modals.FormCreateMethod]: FormPropTypes.FormCreateMethodProps;
   [Modals.FormInviteUser]: FormPropTypes.FormInviteUserProps;
   [Modals.FormCreateTag]: FormPropTypes.FormCreateTagProps;
+
+  // sep PRICING
+  [Modals.FormCreatePriceList]: FormPropTypes.FormCreatePriceListProps;
+  [Modals.CreatePrice]: ModalCreatePriceProps;
 
   [Modals.FormCreateOfferInventory]: FormPropTypes.FormCreateProductInventoryProps;
   [Modals.FormCreateWarehouse]: FormPropTypes.FormCreateWarehouseProps;

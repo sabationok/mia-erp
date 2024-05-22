@@ -9,7 +9,7 @@ import { t } from '../../../../lang';
 import { enumToFilterOptions } from '../../../../utils/fabrics';
 import TabSelector from '../../../atoms/TabSelector';
 import { IVariationTableData } from '../../../../types/offers/variations.types';
-import { OfferPriceEntity } from '../../../../types/price-management/price-management.types';
+import { PriceEntity } from '../../../../types/price-management/price-management.types';
 import styled from 'styled-components';
 import { ModalHeader } from '../../../atoms';
 import FlexBox from '../../../atoms/FlexBox';
@@ -46,7 +46,7 @@ const stepsLong = enumToFilterOptions(FormCreateOrderSlotSteps);
 // TODO const stepsShort = enumToFilterOptions(FormCreateOrderSlotSteps).filter(el => el.value !== 'batch');
 
 export interface FormCreateOrderSlotFormData {
-  price?: OfferPriceEntity;
+  price?: PriceEntity;
   variation?: IVariationTableData;
   product?: OfferEntity;
   warehouse?: IWarehouse;

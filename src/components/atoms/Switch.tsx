@@ -2,6 +2,7 @@ import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { OnCheckBoxChangeHandler } from '../TableList/tableTypes.types';
 import ButtonIcon from './ButtonIcon/ButtonIcon';
+import { isUndefined } from 'lodash';
 
 type Props = {
   checked?: boolean;
@@ -11,19 +12,26 @@ type Props = {
   size?: string;
 };
 
-function Switch({ checked = false, onChange, mr, disabled = false, size = '20px' }: Props) {
+function Switch({ checked, onChange, mr, disabled = false, size = '20px' }: Props) {
   const [isChecked, setIsChecked] = useState<boolean>(checked ?? false);
 
   const onSwitchPress = () => {
-    setIsChecked(p => {
-      onChange && onChange({ checked: !p });
-      return !p;
-    });
+    if (onChange) {
+      onChange({ checked: !isChecked });
+    } else {
+      setIsChecked(p => !p);
+    }
   };
 
   useEffect(() => {
     setIsChecked(disabled ? false : checked ?? false);
   }, [checked, disabled]);
+
+  useEffect(() => {
+    if (!isUndefined(checked)) {
+      setIsChecked(checked);
+    }
+  }, []);
 
   return (
     <StSwitch

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Text } from '../../../atoms/Text';
-import { FormArea } from '../../FormArea/FormArea';
+import { AccordionForm } from '../../FormArea/AccordionForm';
 import styled from 'styled-components';
 import FlexBox from '../../../atoms/FlexBox';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
@@ -25,7 +25,7 @@ export interface OfferFormPropertiesAreaProps extends OfferFormAreaProps<ArrayOf
 export const OfferFormPropertiesArea = ({ onSubmit, onSuccess, disabled, offer }: OfferFormPropertiesAreaProps) => {
   const loaders = useOfferLoadersProvider();
   const templates = usePropertiesSelector();
-  const service = useAppServiceProvider()[ServiceName.products];
+  const service = useAppServiceProvider()[ServiceName.offers];
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [templateId, setTemplateId] = useState<string>(templates[0]?._id);
 
@@ -107,7 +107,7 @@ export const OfferFormPropertiesArea = ({ onSubmit, onSuccess, disabled, offer }
   }, [offer?.properties]);
 
   return (
-    <FormArea
+    <AccordionForm
       label={t('Properties')}
       onSubmit={handleSubmit}
       isLoading={loaders.isLoading?.properties}
@@ -125,7 +125,7 @@ export const OfferFormPropertiesArea = ({ onSubmit, onSuccess, disabled, offer }
       <TemplateBox flex={1} overflow={'auto'}>
         {renderTemplate}
       </TemplateBox>
-    </FormArea>
+    </AccordionForm>
   );
 };
 const TemplateBox = styled(FlexBox)`

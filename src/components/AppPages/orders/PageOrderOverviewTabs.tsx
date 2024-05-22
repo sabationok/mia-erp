@@ -67,7 +67,7 @@ const PageOrderOverviewTabs = ({ toggleVisibility, isVisible }: PageOrderOvervie
       </Top>
 
       <FlexBox>
-        <TabSelector filterOptions={toggleOptions} defaultValue={current} onOptSelect={filterHandler} preventFilter />
+        <TabSelector filterOptions={toggleOptions} defaultValue={current} onOptSelect={filterHandler} preventDefault />
       </FlexBox>
 
       {renderTab}

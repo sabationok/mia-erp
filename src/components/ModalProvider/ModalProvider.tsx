@@ -46,6 +46,7 @@ type HandleOpenModalAsyncType = <M extends Modals = any, P = any, S = any>(
   args: IModalRenderItemParams<M, P, S>,
   getPropsAsync?: () => Promise<P>
 ) => Promise<OpenModalReturnType | undefined>;
+
 type OpenModalHandler = <M extends Modals = any, P = any, S = any>(
   args: IModalRenderItemParams<M, P, S>
 ) => OpenModalReturnType;

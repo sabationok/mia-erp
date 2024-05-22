@@ -61,7 +61,7 @@ export const useCompaniesSelector = () =>
   useSelector<RootState, ICompaniesState>((state: RootState): ICompaniesState => state['companies']);
 export const useRefundsSelector = () =>
   useSelector<RootState, IRefundsState>((state: RootState): IRefundsState => state['refunds']);
-export const usePriceListsSelector = () =>
+export const usePriceManagementSelector = () =>
   useSelector<RootState, PricesState>((state: RootState): PricesState => state.priceLists);
 export const useWarehousesSelector = () =>
   useSelector<RootState, IWarehouseState>((state: RootState): IWarehouseState => state.warehouses);
@@ -80,7 +80,7 @@ export const useDirectorySelector = <DT extends ApiDirType = any>(
   return { directory: state.directories[dirType] };
 };
 export const useFindPriceListById = (_id?: string) => {
-  const { lists } = usePriceListsSelector();
+  const { lists } = usePriceManagementSelector();
   return useMemo(() => {
     return lists.find(list => list._id === _id);
   }, [_id, lists]);

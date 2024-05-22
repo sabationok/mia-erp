@@ -5,7 +5,6 @@ import { isAxiosError } from 'axios';
 import { ITransaction, ITransactionReqData } from '../../types/finances/transactions.types';
 import TransactionsApi from '../../api/transactions.api';
 import { AppQueryParams, createApiCall } from '../../api';
-import { createThunkPayloadCreator } from '../../api/createApiCall.api';
 
 // export async function payloadCreator<R = any>(
 //   getResponse: () => R,
@@ -66,10 +65,10 @@ export const createTransactionThunk = createAsyncThunk<
     return thunkApi.rejectWithValue(isAxiosError(error));
   }
 });
-export const deleteTransactionThunk = createAsyncThunk(
-  'transactions/deleteTransactionThunk',
-  createThunkPayloadCreator(TransactionsApi.deleteById, TransactionsApi)
-);
+// export const deleteTransactionThunk = createAsyncThunk(
+//   'transactions/deleteTransactionThunk',
+//   createThunkPayloadCreator(TransactionsApi.deleteById, TransactionsApi)
+// );
 // export const deleteTransactionThunk = createAsyncThunk(
 //   'transactions/deleteTransactionThunk',
 //   async (payload, thunkAPI) => {

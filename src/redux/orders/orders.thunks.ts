@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { OrderEntity, IOrderReqData, IOrderSlot } from '../../types/orders/orders.types';
+import { IOrderReqData, OrderEntity } from '../../types/orders/orders.types';
 import { ThunkPayload } from '../store.store';
 import { AppQueryParams, createApiCall, OrdersApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
@@ -7,6 +7,7 @@ import { OnlyUUID } from '../global.types';
 import { buildGetAllInvoicesThunk } from '../invoices/invoicing.thunks';
 import { buildGetAllDeliveriesThunk } from '../deliveries/deliveries.thunks';
 import { buildGetAllPaymentsThunk } from '../payments/payments.thunks';
+import { OrderSlotEntity } from '../../types/orders/order-slot.types';
 
 enum OrdersThunkTypeEnum {
   getAll = 'orders/getAllOrdersThunk',
@@ -82,12 +83,12 @@ export const getOrderByIdThunk = createAsyncThunk<
   }
 });
 export const getOrderSlotsThunk = createAsyncThunk<
-  { update?: boolean; data: IOrderSlot[] },
-  ThunkPayload<{ update?: boolean; params?: Pick<AppQueryParams, 'order' | 'group'> }, IOrderSlot[]>
+  { update?: boolean; data: OrderSlotEntity[] },
+  ThunkPayload<{ update?: boolean; params?: Pick<AppQueryParams, 'order' | 'group'> }, OrderSlotEntity[]>
 >(OrdersThunkTypeEnum.getSlots, async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
   try {
-    const res = await OrdersApi.getSlots(args.data);
+    const res = await OrdersApi.slots.getAll(undefined, args.data);
     if (res) {
       args?.onSuccess && args?.onSuccess(res?.data?.data);
     }

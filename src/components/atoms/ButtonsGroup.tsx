@@ -10,6 +10,7 @@ export type ButtonsGroupOption<V = any> = FilterOption<V>;
 export interface ButtonsGroupProps<V = any> {
   options?: ButtonsGroupOption<V>[];
   defaultIndex?: number;
+  value?: V;
   onSelect?: ButtonGroupSelectHandler<V>;
   backgroundColor?: string;
   borderRadius?: string;
@@ -30,6 +31,7 @@ const ButtonsGroup = <V = any,>({
   onChangeIndex,
   currentOption,
   disabled,
+  value,
 }: ButtonsGroupProps<V>) => {
   const [current, setCurrent] = useState(0);
 
@@ -47,37 +49,30 @@ const ButtonsGroup = <V = any,>({
   );
 
   const renderButtons = useMemo(() => {
-    return options?.map((opt, idx) => (
-      <OptionButton
-        key={`group-option-${opt?.label || idx}`}
-        variant={current === idx ? 'filledSmall' : 'defOutlinedSmall'}
-        onClick={handleSelect(opt, idx)}
-        disabled={disabled ?? opt?.disabled}
-      >
-        {opt.label && (
-          <Text $size={11} $weight={600} $align={'center'} className={'inner'}>
-            {opt.label}
-          </Text>
-        )}
-        {opt?.extraLabel}
-      </OptionButton>
-    ));
-  }, [current, disabled, handleSelect, options]);
+    return options?.map((opt, idx) => {
+      const isActive = value ? value === opt.value : current === idx;
+      return (
+        <OptionButton
+          key={`group-option-${opt?.label || idx}`}
+          variant={isActive ? 'filledSmall' : 'defOutlinedSmall'}
+          onClick={handleSelect(opt, idx)}
+          disabled={disabled ?? opt?.disabled}
+        >
+          {opt.label && (
+            <Text $size={11} $weight={600} $align={'center'} className={'inner'}>
+              {opt.label}
+            </Text>
+          )}
+          {opt?.extraLabel}
+        </OptionButton>
+      );
+    });
+  }, [current, disabled, handleSelect, options, value]);
 
   useEffect(() => {
-    if (!isUndefined(defaultIndex)) {
-      setCurrent(defaultIndex);
-
-      // onSelect &&
-      //   options &&
-      //   onSelect({ option: options[defaultIndex], value: options[defaultIndex]?.value, index: defaultIndex });
-    }
-  }, [defaultIndex]);
-
-  useEffect(() => {
-    if (!isUndefined(currentOption) && !isUndefined(options)) {
+    if (!isUndefined(currentOption)) {
       setCurrent(
-        options.findIndex(o => (o?.value ? o?.value === currentOption?.value : o?._id === currentOption?._id))
+        options?.findIndex(o => (o?.value ? o?.value === currentOption?.value : o?._id === currentOption?._id)) ?? 0
       );
     }
   }, [currentOption, options]);

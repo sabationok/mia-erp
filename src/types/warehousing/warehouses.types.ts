@@ -1,7 +1,7 @@
 import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/global.types';
 import { OfferEntity } from '../offers/offers.types';
 import { CompanyEntity } from '../companies.types';
-import { OfferPriceEntity } from '../price-management/price-management.types';
+import { PriceEntity } from '../price-management/price-management.types';
 import { VariationEntity } from '../offers/variations.types';
 import { AppQueryParams } from '../../api';
 import { GeolocationPoint } from '../../services/Geolocation.service';
@@ -63,7 +63,7 @@ export interface WarehouseItemEntity extends IBase, WithPeriod {
   warehouse?: IWarehouse;
   offer?: OfferEntity;
   variation?: VariationEntity;
-  price?: OfferPriceEntity;
+  price?: PriceEntity;
 
   stock?: number;
   reserved?: number;
@@ -74,7 +74,7 @@ export interface WarehouseItemEntity extends IBase, WithPeriod {
 export interface IProductInventoryFormData extends WithPeriod, HasStatus<ProductInventoryStatus> {
   product?: Omit<OfferEntity, 'categories' | 'inventories' | 'category' | 'properties'>;
   variation?: Omit<VariationEntity, 'properties'>;
-  price?: Omit<OfferPriceEntity, 'list' | 'offer'>;
+  price?: Omit<PriceEntity, 'list' | 'offer'>;
   warehouse?: IWarehouse;
 
   stock?: number;
@@ -130,7 +130,7 @@ export interface IWarehouseDoc extends WithPeriod, HasType<WarehouseDocumentType
   warehouse?: IWarehouse;
   product?: OfferEntity;
   variation?: VariationEntity;
-  price?: OfferPriceEntity;
+  price?: PriceEntity;
 
   amount?: number;
   batch?: string;

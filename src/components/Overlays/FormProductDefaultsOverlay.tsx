@@ -44,7 +44,7 @@ const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({
   const offerId = useAppParams()?.offerId;
   const currentOffer = useCurrentOffer({ id: offerId });
 
-  const productsS = useAppServiceProvider()[ServiceName.products];
+  const productsS = useAppServiceProvider()[ServiceName.offers];
 
   const [currentTabIdx, setCurrentTabIdx] = useState(0);
 
@@ -70,7 +70,9 @@ const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({
 
   const renderTab = useMemo(() => {
     const tabsMap: Record<FormProductDefaultsTabs, React.ReactNode> = {
-      [FormProductDefaultsTabs.warehouse]: <WarehousesTab onSelect={handleSelect} selected={formValues?.warehouse} />,
+      [FormProductDefaultsTabs.warehouse]: (
+        <WarehousesTab withActions onSelect={handleSelect} selected={formValues?.warehouse} />
+      ),
       [FormProductDefaultsTabs.price]: <PricesTab withActions onSelect={handleSelect} selected={formValues?.price} />,
       [FormProductDefaultsTabs.variation]: (
         <VariationsTab withActions onSelect={handleSelect} selected={formValues?.variation} />
@@ -80,8 +82,8 @@ const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({
       ),
       [FormProductDefaultsTabs.supplier]: (
         <CounterpartyTab
-          types={[CounterpartyTypesEnum.SUPPLIER]}
           withActions
+          types={[CounterpartyTypesEnum.SUPPLIER]}
           onSelect={handleSelect}
           selected={formValues?.supplier}
         />

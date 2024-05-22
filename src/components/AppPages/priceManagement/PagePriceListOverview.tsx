@@ -6,12 +6,12 @@ import { takeFullGridArea } from '../pagesStyles';
 import { usePriceListOverviewActionsCreator } from '../../../hooks/usePriceListOverviewActionsCreator.hook';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useEffect, useMemo, useState } from 'react';
-import { OfferPriceEntity } from '../../../types/price-management/price-management.types';
+import { PriceEntity } from '../../../types/price-management/price-management.types';
 import { ITableListProps } from '../../TableList/tableTypes.types';
 import { ISortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import TableList from '../../TableList/TableList';
-import { usePriceListsSelector } from '../../../redux/selectors.store';
+import { usePriceManagementSelector } from '../../../redux/selectors.store';
 import { BaseAppPageProps } from '../index';
 import { pricesColumns } from '../../../data/priceManagement.data';
 import { getIdRef } from '../../../utils/data-transform';
@@ -23,7 +23,7 @@ const PagePriceListOverview: React.FC<Props> = ({ path }) => {
   const {
     priceManagement: { getById, getAllPrices },
   } = useAppServiceProvider();
-  const list = usePriceListsSelector()?.current;
+  const list = usePriceManagementSelector()?.current;
   const [isLoading, setIsLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ISortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
@@ -35,7 +35,7 @@ const PagePriceListOverview: React.FC<Props> = ({ path }) => {
   }, [filterParams, sortParams]);
 
   const tableConfig = useMemo(
-    (): ITableListProps<OfferPriceEntity> => ({
+    (): ITableListProps<PriceEntity> => ({
       tableData: list?.prices,
       isFilter: false,
       isSearch: true,

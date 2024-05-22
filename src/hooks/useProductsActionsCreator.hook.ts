@@ -11,7 +11,7 @@ import CreateOfferModal from '../components/Modals/CreateOfferModal';
 export type OffersActionsCreator = TableActionCreator<OfferEntity>;
 
 const useOffersActionsCreator = (): OffersActionsCreator => {
-  const service = useAppServiceProvider()[ServiceName.products];
+  const service = useAppServiceProvider()[ServiceName.offers];
   const navigate = useNavigate();
   const modals = useModalProvider();
 

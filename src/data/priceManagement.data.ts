@@ -1,8 +1,8 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { t } from '../lang';
 import {
-  OfferPriceEntity,
   PriceAmountAndPercentageFieldsKey,
+  PriceEntity,
   PriceListEntity,
 } from '../types/price-management/price-management.types';
 import { priceAmountAndPercentageFieldsLabels } from '../utils/tables';
@@ -62,7 +62,7 @@ export const priceListColumns: CellTittleProps<PriceListEntity>[] = [
   dateColumn,
 ];
 
-export function createColumnForPriceEntity<Type extends OfferPriceEntity = any>(
+export function createColumnForPriceEntity<Type extends PriceEntity = any>(
   name: PriceAmountAndPercentageFieldsKey,
   width?: string
 ): CellTittleProps<Type> {
@@ -94,7 +94,7 @@ const keys: PriceAmountAndPercentageFieldsKey[] = [
   // 'vat',
 ];
 
-export const basePriceColumns: CellTittleProps<OfferPriceEntity>[] = [
+export const basePriceColumns: CellTittleProps<PriceEntity>[] = [
   {
     top: {
       name: t('Price OUT'),
@@ -113,7 +113,7 @@ export const basePriceColumns: CellTittleProps<OfferPriceEntity>[] = [
   },
 ];
 
-export function getBasePriceColumns<Type extends OfferPriceEntity = any>(): CellTittleProps<Type>[] {
+export function getBasePriceColumns<Type extends PriceEntity = any>(): CellTittleProps<Type>[] {
   return [
     {
       top: {
@@ -134,7 +134,7 @@ export function getBasePriceColumns<Type extends OfferPriceEntity = any>(): Cell
   ];
 }
 
-export const pricesColumns: CellTittleProps<OfferPriceEntity>[] = [
+export const pricesColumns: CellTittleProps<PriceEntity>[] = [
   {
     top: { name: t('Offer label'), getData: d => d?.offer?.label },
     bottom: { name: t('Variation label'), getData: d => d?.variation?.label },
@@ -167,7 +167,7 @@ export const pricesColumns: CellTittleProps<OfferPriceEntity>[] = [
   dateColumn,
 ];
 
-export const pricesColumnsForProductReview: CellTittleProps<OfferPriceEntity>[] = [
+export const pricesColumnsForProductReview: CellTittleProps<PriceEntity>[] = [
   {
     top: { name: t('Label'), getData: d => d?.variation?.label ?? d?.offer?.label },
     // bottom: { name: '',  getData: d => ''},

@@ -1,10 +1,13 @@
 import { AppResponse } from '../redux/global.types';
-import { isAxiosError } from 'axios';
 
-export type GetResponseCallback<SD = any, RD = any, MD = any> = (arg?: SD) => Promise<AppResponse<RD, MD> | undefined>;
+export type GetResponseCallback<SD = any, PR = any, RD = any, MD = any> = (
+  arg?: SD,
+  params?: PR
+) => Promise<AppResponse<RD, MD> | undefined>;
 
-export interface ApiCallerPayload<SD = any, RD = any, E = any | unknown> {
+export interface ApiCallerPayload<SD = any, PR = any, RD = any, E = any | unknown> {
   data?: SD;
+  params?: PR;
   onSuccess?: (data: RD) => void;
   onError?: (error: E) => void;
   onLoading?: (loading: boolean) => void;
@@ -14,15 +17,15 @@ export interface ApiCallerPayload<SD = any, RD = any, E = any | unknown> {
   throwError?: boolean;
 }
 
-export type ApiCaller<SD = any, RD = any, E = any, MD = any, CTX = any> = (
-  payload: ApiCallerPayload<SD, RD, E>,
-  getResponseCallback: GetResponseCallback<SD, RD, MD>,
-  context?: CTX
-) => Promise<AppResponse<RD, MD> | undefined>;
+// export type ApiCaller<SD = any, PR = any, RD = any, E = any, MD = any, CTX = any> = (
+//   payload: ApiCallerPayload<SD, PR, RD, E>,
+//   getResponseCallback: GetResponseCallback<SD, RD, MD>,
+//   context?: CTX
+// ) => Promise<AppResponse<RD, MD> | undefined>;
 
-const createApiCall = async <SD = any, RD = any, E = any, MD = any, CTX = any>(
-  { onLoading, onError, onSuccess, data, logError, logRes, logResData, throwError }: ApiCallerPayload<SD, RD, E>,
-  getResponseCallback: GetResponseCallback<SD, RD, MD>,
+const createApiCall = async <SD = any, PR = any, RD = any, E = any, MD = any, CTX = any>(
+  { onLoading, onError, onSuccess, data, logError, logRes, logResData, throwError }: ApiCallerPayload<SD, PR, RD, E>,
+  getResponseCallback: GetResponseCallback<SD, PR, RD, MD>,
   context?: CTX
 ): Promise<AppResponse<RD, MD> | undefined> => {
   onLoading && onLoading(true);
@@ -55,9 +58,19 @@ const createApiCall = async <SD = any, RD = any, E = any, MD = any, CTX = any>(
   }
 };
 
-const createThunkApiCall = async <SD = any, RD = any, E = any, MD = any, CTX = any>(
-  { onLoading, onError, onSuccess, data, logError, logRes }: ApiCallerPayload<SD, RD, E>,
-  getResponseCallback: GetResponseCallback<SD, RD, MD>,
+export const apiCall = async <SD = any, PR = any, RD = any, E = any, MD = any, CTX = any>(
+  getResponseCallback: GetResponseCallback<SD, PR, RD, MD>,
+  {
+    onLoading,
+    onError,
+    onSuccess,
+    data,
+    params,
+    logError,
+    logRes,
+    logResData,
+    throwError,
+  }: ApiCallerPayload<SD, PR, RD, E>,
   context?: CTX
 ): Promise<AppResponse<RD, MD> | undefined> => {
   onLoading && onLoading(true);
@@ -65,57 +78,71 @@ const createThunkApiCall = async <SD = any, RD = any, E = any, MD = any, CTX = a
   const getResponse = context ? getResponseCallback.bind(context) : getResponseCallback;
 
   try {
-    const res = await getResponse(data);
+    const res = await getResponse(data, params);
     if (res && res.data.data && onSuccess) {
       onSuccess(res.data.data);
     }
-    logRes && console.log(res);
+    if (logRes || logResData) {
+      console.warn(`[${getResponseCallback.name}]`);
+      logRes && console.log(res);
+      logResData && console.log(res?.data);
+    }
+    onLoading && onLoading(false);
     return res;
   } catch (e) {
     onError && onError(e as unknown as E);
-    logError && console.error(e);
-    throw e;
-  } finally {
+    if (logError) {
+      console.warn(`[${getResponseCallback.name}]`);
+      console.error(e);
+    }
     onLoading && onLoading(false);
+
+    if (throwError) {
+      throw e;
+    }
   }
 };
 
-export const createThunkPayloadCreator =
-  <SD = any, RD = any, MD = any, E = any, Context = any>(
-    getResponseCallback: GetResponseCallback<SD, RD, MD>,
-    context?: Context
-  ) =>
-  () => {
-    return async (payload: ApiCallerPayload<SD, RD, E>, thunkApi: any) => {
-      try {
-        const res = await createThunkApiCall<SD, RD, E, MD, Context>(payload, getResponseCallback, context);
-
-        if (res) return res.data.data;
-      } catch (e) {
-        return thunkApi?.rejectWithValue(isAxiosError(e));
-      }
-    };
-  };
-
-async function apiCaller<SD = any, RD = any, E = any, MD = any>(
-  { onLoading, onError, onSuccess, data }: ApiCallerPayload<SD, RD, E>,
-  getResponseCallback: GetResponseCallback<SD, RD, MD>
-) {
-  const callback = async (data?: SD) => getResponseCallback(data);
-  onLoading && onLoading(true);
-  try {
-    const res = await callback(data);
-    if (res && res.data.data && onSuccess) {
-      onSuccess(res.data.data);
-      return res.data.data;
-    }
-  } catch (e) {
-    onError && onError(e as unknown as E);
-  } finally {
-    onLoading && onLoading(false);
-  }
-}
+// const createThunkApiCall = async <SD = any, PR = any, RD = any, E = any, MD = any, CTX = any>(
+//   { onLoading, onError, onSuccess, data, logError, logRes }: ApiCallerPayload<SD, PR, RD, E>,
+//   getResponseCallback: GetResponseCallback<SD, PR, RD, MD>,
+//   context?: CTX
+// ): Promise<AppResponse<RD, MD> | undefined> => {
+//   onLoading && onLoading(true);
+//
+//   const getResponse = context ? getResponseCallback.bind(context) : getResponseCallback;
+//
+//   try {
+//     const res = await getResponse(data);
+//     if (res && res.data.data && onSuccess) {
+//       onSuccess(res.data.data);
+//     }
+//     logRes && console.log(res);
+//     return res;
+//   } catch (e) {
+//     onError && onError(e as unknown as E);
+//     logError && console.error(e);
+//     throw e;
+//   } finally {
+//     onLoading && onLoading(false);
+//   }
+// };
+//
+// export const createThunkPayloadCreator =
+//   <SD = any,PR=any, RD = any, MD = any, E = any, Context = any>(
+//     getResponseCallback: GetResponseCallback<SD, RD, MD>,
+//     context?: Context
+//   ) =>
+//   () => {
+//     return async (payload: ApiCallerPayload<SD, RD, E>, thunkApi: Getth) => {
+//       try {
+//         const res = await createThunkApiCall<SD, RD, E, MD, Context>(payload, getResponseCallback, context);
+//
+//         if (res) return res.data.data;
+//       } catch (e) {
+//         return thunkApi?.rejectWithValue(isAxiosError(e));
+//       }
+//     };
+//   };
 
 export { createApiCall };
-
-export default apiCaller as ApiCaller;

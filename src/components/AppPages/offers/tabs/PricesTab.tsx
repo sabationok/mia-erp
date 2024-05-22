@@ -1,15 +1,16 @@
 import { ServiceName, useAppServiceProvider } from 'hooks/useAppServices.hook';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
-import { pricesColumnsForProductReview } from 'data/priceManagement.data';
-import FormCreatePrice from '../../../Forms/pricing/FormCreatePrice/FormCreatePrice';
-import { OfferPriceEntity } from 'types/price-management/price-management.types';
+import { PriceEntity } from 'types/price-management/price-management.types';
 import { useModalProvider } from '../../../ModalProvider/ModalProvider';
-import { getIdRef } from 'utils/data-transform';
 import { OnlyUUID } from 'redux/global.types';
 import { useAppParams, useCurrentOffer } from '../../../../hooks';
 import { useLoadersProvider } from '../../../../Providers/Loaders/LoaderProvider';
-import { OfferOverlayLoaderKey } from '../../../Overlays/FormProductDefaultsOverlay';
+import ModalCreatePrice from '../../../Modals/ModalCreatePrice';
+import { pricesColumnsForProductReview } from '../../../../data/priceManagement.data';
+import { IBase } from '../../../../types/utils.types';
+import { useAppDispatch } from '../../../../redux/store.store';
+import { getPriceThunk } from '../../../../redux/priceManagement/priceManagement.thunks';
 
 export interface PricesTabProps {
   onSelect?: (price: OnlyUUID) => void;
@@ -18,12 +19,12 @@ export interface PricesTabProps {
 }
 const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions = true }) => {
   const modalS = useModalProvider();
-
-  const productsS = useAppServiceProvider()[ServiceName.products];
+  const productsS = useAppServiceProvider()[ServiceName.offers];
   const offerId = useAppParams().offerId;
   const currentOffer = useCurrentOffer({ id: offerId });
-
-  const loaders = useLoadersProvider<OfferOverlayLoaderKey>();
+  const [selectedRow, setSelectedRoe] = useState<IBase>();
+  const loaders = useLoadersProvider<'prices' | 'price' | 'discounts' | 'discount'>();
+  const dispatch = useAppDispatch();
 
   // const pricesS = useAppServiceProvider()[ServiceName.priceManagement];
 
@@ -40,50 +41,56 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
 
   // const updateDefaults = ({}: { price?: OnlyUUID }) => {};
 
-  const tableConfig = useMemo((): ITableListProps<OfferPriceEntity> => {
+  const tableConfig = useMemo((): ITableListProps<PriceEntity> => {
     return {
-      tableData: currentOffer?.prices,
-      tableTitles: pricesColumnsForProductReview,
       onRowClick: data => {
+        setSelectedRoe(data?.rowData);
+
         if (onSelect) {
-          if (data?.rowData) {
-            onSelect(getIdRef(data?.rowData));
-            return;
-          } else if (data?._id) {
-            onSelect({ _id: data?._id });
-          }
+          onSelect({ _id: data?._id || data?.rowData?._id || '' });
         }
       },
       actionsCreator: !withActions
         ? undefined
         : ctx => {
-            const currentId = ctx.selectedRow?._id;
+            const currentId = ctx.selectedRow?._id || selectedRow?._id;
 
             return [
               { icon: 'refresh', type: 'onlyIcon', onClick: () => loadData({ refresh: true }) },
               { separator: true },
               { icon: 'delete', type: 'onlyIcon', disabled: !currentId },
               { icon: 'copy', type: 'onlyIcon', disabled: !currentId },
-              { icon: 'edit', type: 'onlyIcon', disabled: !currentId },
+              {
+                icon: 'edit',
+                type: 'onlyIcon',
+                disabled: !currentId,
+                onClick: () => {
+                  dispatch(
+                    getPriceThunk({
+                      data: { params: { _id: currentId } },
+                      onLoading: loaders.onLoading('price'),
+                      onSuccess: () => {},
+                    })
+                  );
+
+                  modalS.open({
+                    ModalChildren: ModalCreatePrice,
+                    modalChildrenProps: {
+                      offer: currentOffer,
+                      updateId: currentId,
+                    },
+                  });
+                },
+              },
               { separator: true },
               {
                 icon: 'plus',
                 type: 'onlyIconFilled',
                 onClick: () => {
                   modalS.open({
-                    ModalChildren: FormCreatePrice,
+                    ModalChildren: ModalCreatePrice,
                     modalChildrenProps: {
                       offer: currentOffer,
-                      // onSubmit: (d, o) => {
-                      //   pricesS.addPriceToList({
-                      //     data: { updateCurrent: true, data: { data: d } },
-                      //     onSuccess: data => {
-                      //       updateDefaults({ price: { _id: data._id } });
-                      //
-                      //       o?.close && m?.onClose();
-                      //     },
-                      //   });
-                      // },
                     },
                   });
                 },
@@ -91,7 +98,7 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
             ];
           },
     };
-  }, [currentOffer, withActions, onSelect, loadData, modalS]);
+  }, [withActions, onSelect, selectedRow?._id, loadData, loaders, modalS, currentOffer]);
 
   useEffect(() => {
     // if ((!currentOffer?.prices || currentOffer?.prices?.length === 0) && currentProduct?._id) {
@@ -107,6 +114,8 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
       isFilter={false}
       isLoading={loaders?.isLoading?.prices}
       selectedRow={selected}
+      tableData={currentOffer?.prices}
+      tableTitles={pricesColumnsForProductReview}
     />
   );
 };

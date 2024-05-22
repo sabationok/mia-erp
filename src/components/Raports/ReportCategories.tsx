@@ -68,7 +68,7 @@ const ReportCategories: React.FC<IReportCategoriesProps<CategoryTypes>> = ({
   }
 
   return (
-    <ModalForm {...props} filterOptions={reportCategoriesFilterOptions} preventFilter onOptSelect={handleSelect}>
+    <ModalForm {...props} filterOptions={reportCategoriesFilterOptions} preventDefault onOptSelect={handleSelect}>
       <FlexBox fillWidth flex={'1'}>
         {filterOpt.value && (
           <ReportList

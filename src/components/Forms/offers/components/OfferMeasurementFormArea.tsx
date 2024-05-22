@@ -1,6 +1,6 @@
 import MeasurementInputs, { MeasurementInputsFormData } from './MeasuremenInputs';
 import { useAppForm } from '../../../../hooks';
-import { FormArea } from '../../FormArea/FormArea';
+import { AccordionForm } from '../../FormArea/AccordionForm';
 import useOffersService from '../../../../hooks/useProductsService.hook';
 import { ToastService } from '../../../../services';
 import { IMeasurement } from '../../../../types/utils.types';
@@ -31,7 +31,7 @@ export const OfferMeasurementFormArea = ({ defaultValues, _id, disabled, ...prop
     ? Object.values(form.formState.touchedFields?.measurement)?.some(fd => fd)
     : false;
   return (
-    <FormArea
+    <AccordionForm
       onSubmit={form.handleSubmit(onValid)}
       label={t('Measurement info')}
       isLoading={isLoading}
@@ -39,6 +39,6 @@ export const OfferMeasurementFormArea = ({ defaultValues, _id, disabled, ...prop
       {...props}
     >
       <MeasurementInputs appForm={form} disabled={disabled} />
-    </FormArea>
+    </AccordionForm>
   );
 };

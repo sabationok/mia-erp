@@ -1,11 +1,11 @@
 import { createAction } from '@reduxjs/toolkit';
 import { VariationEntity } from '../../types/offers/variations.types';
-import { OfferPriceEntity } from '../../types/price-management/price-management.types';
+import { PriceEntity } from '../../types/price-management/price-management.types';
 import { WarehouseItemEntity } from '../../types/warehousing/warehouses.types';
 
 export const clearCurrentProductAction = createAction<undefined, 'products/clearCurrent'>('products/clearCurrent');
 export const setCurrentProductPricesAction = createAction<
-  { refresh?: boolean; data: OfferPriceEntity[] },
+  { refresh?: boolean; data: PriceEntity[] },
   'products/setCurrentProductPrices'
 >('products/setCurrentProductPrices');
 export const setCurrentProductVariationsAction = createAction<

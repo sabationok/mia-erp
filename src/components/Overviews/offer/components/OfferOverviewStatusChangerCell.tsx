@@ -19,7 +19,7 @@ export const OfferOverviewStatusChangerCell: RenderOverviewCellComponent<OfferEn
   const [canEdit, setCanEdit] = useState(false);
   const [current, setCurrent] = useState<OfferStatusEnum | undefined>(data?.approved);
 
-  const service = useAppServiceProvider()[ServiceName.products];
+  const service = useAppServiceProvider()[ServiceName.offers];
 
   const currentStatusData = useMemo(() => getStatusData(current), [current]);
 

@@ -13,7 +13,7 @@ export interface FormProductImagesOverlayProps extends OverlayHandlerReturn {
 
 const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onClose }) => {
   const currentProduct = useProductsSelector().currentOffer;
-  const service = useAppServiceProvider()[ServiceName.products];
+  const service = useAppServiceProvider()[ServiceName.offers];
   const [state, setState] = useState<Partial<OfferImageSlotEntity>[]>(currentProduct?.images || []);
   const [loading, setLoading] = useState(false);
 

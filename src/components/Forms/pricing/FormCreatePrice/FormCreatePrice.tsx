@@ -1,18 +1,16 @@
 import ModalForm, { ModalFormProps } from '../../../ModalForm';
 import FlexBox from '../../../atoms/FlexBox';
-import { IPriceFormData } from '../../../../types/price-management/price-management.types';
+import { IPriceFormData, PriceFormDataPath } from '../../../../types/price-management/price-management.types';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import { useAppForm } from '../../../../hooks';
-import FormProductSelectorForPricing from './FormProductSelectorForPricing';
 import { useCallback, useState } from 'react';
 import { OfferEntity } from '../../../../types/offers/offers.types';
-import { usePriceListsSelector, useProductsSelector } from '../../../../redux/selectors.store';
+import { usePriceManagementSelector, useProductsSelector } from '../../../../redux/selectors.store';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../components/FormAfterSubmitOptions';
 import { t } from '../../../../lang';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
-import { Path } from 'react-hook-form';
 import { toReqData } from '../../../../utils';
 import { OnRowClickHandler } from '../../../TableList/tableTypes.types';
 import TableList from '../../../TableList/TableList';
@@ -47,10 +45,9 @@ export interface FormCreatePriceProps
   variation?: VariationEntity;
   update?: string;
 }
-export type PriceFormDataPath = Path<IPriceFormData>;
 const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update, offer, onSubmit, ...props }) => {
   const service = useAppServiceProvider()[ServiceName.priceManagement];
-  const offersSrv = useAppServiceProvider()[ServiceName.products];
+  const offersSrv = useAppServiceProvider()[ServiceName.offers];
   const productInState = useProductsSelector().currentOffer;
   const currentOffer = offer || productInState;
 
@@ -173,19 +170,6 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
       {...props}
     >
       <FlexBox padding={'0 0 8px'} flex={1} overflow={'auto'}>
-        {!currentOffer && (
-          <FormProductSelectorForPricing
-            title={'Select product for pricing'}
-            disabled={!defaultState?.list?._id}
-            selected={formValues?.offer}
-            variation={formValues.variation}
-            onChange={(p, v) => {
-              setValue('offer', p);
-              setValue('variation', v);
-            }}
-          />
-        )}
-
         <FormPriceInputs
           form={priceForm}
           handleBlur={(_name, callback) => {
@@ -232,7 +216,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
 export default FormCreatePrice;
 
 const PriceListSelectArea = ({ onSelect }: { onSelect?: (info: UUID) => void; error?: string }) => {
-  const { lists } = usePriceListsSelector();
+  const { lists } = usePriceManagementSelector();
 
   const handleSelectPriceList: OnRowClickHandler = data => {
     data?._id && onSelect && onSelect(data?._id);

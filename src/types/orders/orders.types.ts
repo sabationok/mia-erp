@@ -123,7 +123,6 @@ export interface ICreateOrdersGroupDto {
 
 export interface ICreateOrdersWithSlotsAndGroupByWarehousesReqData {
   data: ICreateOrdersGroupDto;
-  params?: AppQueryParams;
 }
 
 export interface OrderSummary extends HasCurrencyCode {

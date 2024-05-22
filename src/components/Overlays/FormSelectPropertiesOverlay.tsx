@@ -40,7 +40,7 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
   ...props
 }) => {
   const currentOffer = offer;
-  const service = useAppServiceProvider()[ServiceName.products];
+  const service = useAppServiceProvider()[ServiceName.offers];
   const templates = usePropertiesSelector();
   const [currentId, setCurrentId] = useState<string>(templates[0]?._id);
 

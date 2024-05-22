@@ -1,4 +1,4 @@
-import { FormArea } from '../../FormArea/FormArea';
+import { AccordionForm } from '../../FormArea/AccordionForm';
 import { OfferFormAreaProps } from '../types';
 import {
   IProductFormData,
@@ -62,7 +62,7 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
   }
 
   return (
-    <FormArea
+    <AccordionForm
       label={t('Base info')}
       isLoading={!edit ? isLoading?.offer_create : isLoading?.offer_update}
       onSubmit={appForm.handleSubmit(onValid)}
@@ -101,6 +101,6 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
       <InputLabel label={t('description')} error={errors.description}>
         <TextareaPrimary placeholder={t('description')} {...register('description')} />
       </InputLabel>
-    </FormArea>
+    </AccordionForm>
   );
 };

@@ -1,6 +1,6 @@
 import ModalHeader from './ModalHeader';
 import TabSelector, { ModalFormFilterProps } from '../atoms/TabSelector';
-import ModalFooter from '../Modal/ModalFooter';
+import ModalFooter from '../atoms/Modal/ModalFooter';
 
 import styled from 'styled-components';
 import { FormEvent, memo } from 'react';
@@ -43,7 +43,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
   footer = true,
   children,
   filterOptions,
-  preventFilter,
+  preventDefault,
   onSubmit,
   onReset,
   onOptSelect,
@@ -78,7 +78,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
           <TabSelector
             onOptSelect={onOptSelect}
             filterOptions={filterOptions}
-            preventFilter={preventFilter}
+            preventDefault={preventDefault}
             defaultOption={defaultOption}
             onFilterValueSelect={onFilterValueSelect}
             name={filterName}

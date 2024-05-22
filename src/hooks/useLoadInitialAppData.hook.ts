@@ -6,12 +6,12 @@ import { ToastService } from '../services';
 import { PermissionRecipientEnum } from '../types/permissions.types';
 
 const directoriesForLoading: { dirType: ApiDirType; createTreeData?: boolean }[] = [
-  { dirType: ApiDirType.COUNTS, createTreeData: true },
-  { dirType: ApiDirType.CATEGORIES_TR, createTreeData: true },
+  // { dirType: ApiDirType.COUNTS, createTreeData: true },
+  // { dirType: ApiDirType.CATEGORIES_TR, createTreeData: true },
   { dirType: ApiDirType.CATEGORIES_PROD, createTreeData: true },
-  { dirType: ApiDirType.ACTIVITIES, createTreeData: true },
+  // { dirType: ApiDirType.ACTIVITIES, createTreeData: true },
   { dirType: ApiDirType.BRANDS, createTreeData: true },
-  { dirType: ApiDirType.CONTRACTORS },
+  // { dirType: ApiDirType.CONTRACTORS },
   { dirType: ApiDirType.TAGS },
 ];
 const useLoadInitialAppDataHook = ({
@@ -27,13 +27,14 @@ const useLoadInitialAppDataHook = ({
   const prService = usePermissionsServiceHook();
   const {
     directories: { getAllByDirType },
-    products,
+
     // priceManagement,
     // transactions,
     deliveries,
     warehouses,
     payments,
     integrations,
+    offers,
     // shipments,
     // invoicing,
     // customers,
@@ -59,8 +60,8 @@ const useLoadInitialAppDataHook = ({
           });
         }
 
-        products.getAllProperties({ data: { params: { createTreeData: true } } });
-        products.getAll({ data: { refresh: true } });
+        offers.getAllProperties({ data: { params: { createTreeData: true } } });
+        // offers.getAll({ data: { refresh: true } });
         warehouses.getAll({ data: { refresh: true } });
         // priceManagement.getAll({ data: { refresh: true } });
         //  transactions.getAll({ data: { refresh: true } });

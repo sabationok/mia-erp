@@ -4,7 +4,7 @@ import { OfferEntity, OfferImageSlotEntity } from '../../../../types/offers/offe
 import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useMemo, useState } from 'react';
-import { FormArea } from '../../FormArea/FormArea';
+import { AccordionForm } from '../../FormArea/AccordionForm';
 import FormOfferImagesComponent from './FormOfferImagesComponent';
 import { getIdRef } from '../../../../utils';
 import { t } from '../../../../lang';
@@ -25,7 +25,7 @@ export const OfferFormImagesArea = ({
   const loaders = useOfferLoadersProvider();
   const [state, setState] = useState<Partial<OfferImageSlotEntity>[]>(defaultValues || loaders?.state?.images || []);
 
-  const service = useAppServiceProvider()[ServiceName.products];
+  const service = useAppServiceProvider()[ServiceName.offers];
   const handleSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
 
@@ -46,7 +46,7 @@ export const OfferFormImagesArea = ({
   }, []);
 
   return (
-    <FormArea
+    <AccordionForm
       label={t('Images')}
       onSubmit={handleSubmit}
       disabled={disabled || !canSubmit}
@@ -62,6 +62,6 @@ export const OfferFormImagesArea = ({
           // borderBottom: `1px solid ${theme.sideBarBorderColor}`,
         }}
       />
-    </FormArea>
+    </AccordionForm>
   );
 };

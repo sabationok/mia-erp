@@ -1,7 +1,7 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
-import FlexBox from '../atoms/FlexBox';
-import { t } from '../../lang';
+import FlexBox from '../FlexBox';
+import { t } from '../../../lang';
 
 export interface IModalFooterProps {
   onSubmitPassed?: boolean;

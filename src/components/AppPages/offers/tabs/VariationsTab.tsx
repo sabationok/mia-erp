@@ -23,7 +23,7 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
   const page = usePageCurrentOffer();
   const modalS = useModalProvider();
   const currentOffer = page.currentOffer;
-  const productsS = useAppServiceProvider()[ServiceName.products];
+  const productsS = useAppServiceProvider()[ServiceName.offers];
   // const templates = usePropertiesSelector();
 
   const loadData = useCallback(

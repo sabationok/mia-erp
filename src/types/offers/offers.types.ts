@@ -1,7 +1,7 @@
 import { ArrayOfUUID, IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/global.types';
 import { IProductCategoryDirItem, ISupplierDirItem } from '../dir.types';
 import { FilterOption } from '../../components/atoms/TabSelector';
-import { OfferPriceEntity } from '../price-management/price-management.types';
+import { PriceEntity } from '../price-management/price-management.types';
 import { IWarehouse, WarehouseItemEntity } from '../warehousing/warehouses.types';
 import { IBrand } from '../../redux/directories/brands.types';
 import { AppQueries, AppQueryParams } from '../../api';
@@ -98,7 +98,7 @@ export interface IOfferBase
 
 export interface IOfferRelatedDefaultFields {
   variation?: VariationEntity;
-  price?: OfferPriceEntity;
+  price?: PriceEntity;
   warehouse?: IWarehouse;
   inventory?: WarehouseItemEntity;
   supplier?: ISupplierDirItem;
@@ -119,7 +119,7 @@ export interface IOfferWithRelatedFields
   properties?: IPropertyValue[];
 
   variations?: VariationEntity[];
-  prices?: OfferPriceEntity[];
+  prices?: PriceEntity[];
   warehouses?: IWarehouse[];
   inventories?: WarehouseItemEntity[];
 }

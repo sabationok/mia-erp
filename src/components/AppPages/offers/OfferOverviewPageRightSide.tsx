@@ -9,11 +9,16 @@ import VariationsTab from './tabs/VariationsTab';
 import PricesTab from './tabs/PricesTab';
 import WarehousingTab from './tabs/WarehousingTab';
 import { ModalHeader } from '../../atoms';
+import { SalesTab } from './tabs/SalesTab';
+import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
+import { OfferOverlayLoaderKey } from '../../Overlays/FormProductDefaultsOverlay';
+import { LoadersProvider } from '../../../Providers/Loaders/LoaderProvider';
 
 enum RightSideOptionEnum {
-  Variations = 'Variations',
   Prices = 'Prices',
+  Variations = 'Variations',
   Warehousing = 'Warehousing',
+  Sales = 'Sales',
 }
 const TabsList = enumToFilterOptions(RightSideOptionEnum);
 
@@ -24,8 +29,9 @@ export interface OfferOverviewPageRightSideProps {
 
 const OfferOverviewPageRightSide: React.FC<OfferOverviewPageRightSideProps> = ({ isVisible, toggleVisibility }) => {
   const page = usePageCurrentOffer();
+  const loaders = useLoaders<OfferOverlayLoaderKey>();
 
-  const [currentTab, setCurrentTab] = useState<RightSideOptionEnum>(RightSideOptionEnum.Variations);
+  const [currentTab, setCurrentTab] = useState<RightSideOptionEnum>(TabsList[0].value);
 
   const renderTab = useMemo(() => {
     if (!page.currentOffer) {
@@ -35,6 +41,7 @@ const OfferOverviewPageRightSide: React.FC<OfferOverviewPageRightSideProps> = ({
       [RightSideOptionEnum.Variations]: <VariationsTab withActions />,
       [RightSideOptionEnum.Warehousing]: <WarehousingTab withActions />,
       [RightSideOptionEnum.Prices]: <PricesTab withActions />,
+      [RightSideOptionEnum.Sales]: <SalesTab withActions />,
     };
     return tabs?.[currentTab] ?? null;
   }, [currentTab, page.currentOffer]);
@@ -44,28 +51,30 @@ const OfferOverviewPageRightSide: React.FC<OfferOverviewPageRightSideProps> = ({
   };
 
   return (
-    <RightSide overflow={'hidden'} fillHeight isVisible={isVisible}>
-      {isVisible && (
-        <ModalHeader
-          onBackPress={toggleVisibility}
-          renderTitle={
-            <FlexBox padding={'0 8px'} fxDirection={'row'} alignItems={'center'} justifyContent={'center'} gap={8}>
-              <Text $weight={600} $size={14}>
-                {page?.currentOffer?.label}
-              </Text>
+    <LoadersProvider value={loaders}>
+      <RightSide overflow={'hidden'} fillHeight isVisible={isVisible}>
+        {isVisible && (
+          <ModalHeader
+            onBackPress={toggleVisibility}
+            renderTitle={
+              <FlexBox padding={'0 8px'} fxDirection={'row'} alignItems={'center'} justifyContent={'center'} gap={8}>
+                <Text $weight={600} $size={14}>
+                  {page?.currentOffer?.label}
+                </Text>
 
-              <Text $size={14}>{page?.currentOffer?.sku}</Text>
-            </FlexBox>
-          }
-        />
-      )}
+                <Text $size={14}>{page?.currentOffer?.sku}</Text>
+              </FlexBox>
+            }
+          />
+        )}
 
-      <TabBox overflow={'hidden'} fillWidth flex={1}>
-        <TabSelector filterOptions={TabsList} defaultValue={currentTab} onOptSelect={filterHandler} preventFilter />
+        <TabBox overflow={'hidden'} fillWidth flex={1}>
+          <TabSelector filterOptions={TabsList} onOptSelect={filterHandler} preventDefault />
 
-        {renderTab}
-      </TabBox>
-    </RightSide>
+          {renderTab}
+        </TabBox>
+      </RightSide>
+    </LoadersProvider>
   );
 };
 const RightSide = styled(FlexBox)<{ isVisible?: boolean }>`

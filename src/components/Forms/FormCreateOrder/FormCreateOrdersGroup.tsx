@@ -10,7 +10,7 @@ import { t } from '../../../lang';
 import StepsController from '../components/StepsController';
 import OrderGroupsStuffingStep from './steps/OrderGroupsStuffingStep';
 import OrderInfoStep from './steps/OrderInfoStep';
-import { ICreateOrderInfoFormState, IOrderTempSlot, OrderEntity } from '../../../types/orders/orders.types';
+import { ICreateOrderInfoFormState, OrderEntity } from '../../../types/orders/orders.types';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { ToastService } from '../../../services';
 import _ from 'lodash';
@@ -20,7 +20,8 @@ import { orderInfoBaseSchema } from '../validation';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import * as fns from 'date-fns';
 import { FieldErrors } from 'react-hook-form/dist/types/errors';
-import { createApiCall, OrdersApi } from '../../../api';
+import { apiCall, OrdersApi } from '../../../api';
+import { IOrderTempSlot } from '../../../types/orders/order-slot.types';
 
 export interface FormCreateOrdersGroupProps
   extends Omit<ModalFormProps<any, any, FormCreateOrdersGroupStepsData>, 'onSubmit'> {
@@ -108,26 +109,17 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onClose }
       return;
     }
 
-    createApiCall(
-      {
-        data: {
-          data: {
-            info: service.toOrderInfoReqData(orderInfoFormValues, {
-              omitPathArr: [],
-            }),
-            slots: service.toOrderSlotsReqData(currentGroupFormState.slots),
-          },
-        },
-        onSuccess: data => {
-          console.log(data);
-        },
-        onError: error => {
-          console.log(error);
-        },
-        onLoading: setIsSubmitting,
+    apiCall(OrdersApi.groups.createGroupedByWarehouse, {
+      data: {
+        info: service.toOrderInfoReqData(orderInfoFormValues, {
+          omitPathArr: [],
+        }),
+        slots: service.toOrderSlotsReqData(currentGroupFormState.slots),
       },
-      OrdersApi.createManyOrdersGroupedByWarehouse
-    );
+      onLoading: setIsSubmitting,
+      logError: true,
+      logResData: true,
+    });
   };
   const onErrorSubmit = (errors: FieldErrors<ICreateOrderInfoFormState>) => {
     console.log(onErrorSubmit.name, errors);

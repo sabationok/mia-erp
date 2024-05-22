@@ -1,7 +1,7 @@
 import { HasOwnerAsCompany, HasStatus, IBase, MaybeNull, WithPeriod } from '../utils.types';
 import { OfferEntity } from '../offers/offers.types';
 import { VariationEntity } from '../offers/variations.types';
-import { OfferPriceEntity } from '../price-management/price-management.types';
+import { PriceEntity } from '../price-management/price-management.types';
 import { IWarehouse } from './warehouses.types';
 
 export type WarehouseInventoryStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
@@ -10,7 +10,7 @@ export interface WarehouseInventoryEntity extends IBase, WithPeriod, HasOwnerAsC
   warehouse?: IWarehouse;
   offer?: OfferEntity;
   variation?: VariationEntity;
-  price?: OfferPriceEntity;
+  price?: PriceEntity;
   status?: WarehouseInventoryStatus;
 
   available?: number;
@@ -25,7 +25,7 @@ export interface HasWarehouseInventory {
 export interface IProductInventoryFormData extends WithPeriod, HasStatus<WarehouseInventoryStatus> {
   offer?: Omit<OfferEntity, 'categories' | 'inventories' | 'category' | 'properties'>;
   variation?: Omit<VariationEntity, 'properties'>;
-  price?: Omit<OfferPriceEntity, 'list' | 'offer'>;
+  price?: Omit<PriceEntity, 'list' | 'offer'>;
   warehouse?: IWarehouse;
 
   stock?: number;

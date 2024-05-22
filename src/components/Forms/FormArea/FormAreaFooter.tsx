@@ -10,6 +10,8 @@ export interface FormAreaFooterProps {
   canSubmit?: boolean;
   isLoading?: boolean;
   disabled?: boolean;
+  onAcceptPress?: () => void;
+  onResetPress?: () => void;
 }
 
 const FormAreaFooter: React.FC<FormAreaFooterProps & React.HTMLAttributes<HTMLDivElement>> = ({
@@ -18,6 +20,8 @@ const FormAreaFooter: React.FC<FormAreaFooterProps & React.HTMLAttributes<HTMLDi
   disabled,
   hasOnSubmit = false,
   hasOnReset,
+  onAcceptPress,
+  onResetPress,
   ...props
 }) => {
   return (
@@ -29,13 +33,24 @@ const FormAreaFooter: React.FC<FormAreaFooterProps & React.HTMLAttributes<HTMLDi
       )}
 
       <FlexBox fillWidth gap={8} fxDirection={'row'} justifyContent={'flex-end'} padding={'8px 0'}>
-        {hasOnReset && (
-          <ButtonIcon type={'reset'} variant={'outlinedSmall'} isLoading={isLoading} disabled={disabled}>
+        {(hasOnReset || onResetPress) && (
+          <ButtonIcon
+            type={onResetPress ? 'button' : 'reset'}
+            variant={'outlinedSmall'}
+            isLoading={isLoading}
+            disabled={disabled}
+          >
             {isLoading ? t('Loading...') : t('Clear')}
           </ButtonIcon>
         )}
 
-        <ButtonIcon type={'submit'} variant={'filledSmall'} isLoading={isLoading} disabled={disabled}>
+        <ButtonIcon
+          type={onAcceptPress ? 'button' : 'submit'}
+          onClick={onAcceptPress}
+          variant={'filledSmall'}
+          isLoading={isLoading}
+          disabled={disabled}
+        >
           {isLoading ? t('Loading...') : t('Save')}
         </ButtonIcon>
       </FlexBox>

@@ -3,6 +3,7 @@ import {
   IPriceBase,
   PriceAmountAndPercentageFieldsEnum,
   PriceAmountAndPercentageFieldsKey,
+  PriceFormDataPath,
 } from '../../../../types/price-management/price-management.types';
 import FlexBox from '../../../atoms/FlexBox';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
@@ -13,7 +14,6 @@ import { UseFormReturn } from 'react-hook-form/dist/types';
 import { enumToArray } from '../../../../utils';
 import { ChangeHandler } from 'react-hook-form/dist/types/form';
 import { Text } from '../../../atoms/Text';
-import { PriceFormDataPath } from './FormCreatePrice';
 import { Fragment, useMemo } from 'react';
 import Decimal from 'decimal.js';
 

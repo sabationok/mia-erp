@@ -1,22 +1,21 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
-import { ThunkPayload } from '../store.store';
+import { ActionPayload, ThunkPayload } from '../store.store';
 import { isAxiosError } from 'axios';
 import { IOfferDefaultsDto, IProductReqData, OfferEntity } from '../../types/offers/offers.types';
-import { AppQueryParams, WarehousesApi } from '../../api';
-import { createThunkPayloadCreator } from '../../api/createApiCall.api';
+import { AppQueryParams, GetAllPricesQuery, GetOneOfferQuery, WarehousesApi } from '../../api';
 import OffersApi from '../../api/offers.api';
 import { OnlyUUID } from '../global.types';
-import { OfferPriceEntity } from '../../types/price-management/price-management.types';
+import { PriceEntity } from '../../types/price-management/price-management.types';
 import { WarehouseItemEntity } from '../../types/warehousing/warehouses.types';
 import { VariationEntity } from '../../types/offers/variations.types';
 import _ from 'lodash';
-import { GetAllPricesQuery } from '../../api/priceManagement.api';
 import { buildGetAllPricesThunk } from '../priceManagement/priceManagement.thunks';
 
 enum ProductsThunkType {
   getAllProductsThunk = 'products/getAllProductsThunk',
   getProductFullInfoThunk = 'products/getProductFullInfoThunk',
+  getOne = 'products/getOneThunk',
   createProductThunk = 'products/createProductThunk',
   updateProductThunk = 'products/updateProductThunk',
   deleteProductThunk = 'products/deleteProductThunk',
@@ -43,10 +42,7 @@ export interface ProductThunkPayloadByType {
     },
     VariationEntity[]
   >;
-  [ProductsThunkType.getAllPrices]: ThunkPayload<
-    ActionWithCurrent & { params?: GetAllPricesQuery },
-    OfferPriceEntity[]
-  >;
+  [ProductsThunkType.getAllPrices]: ThunkPayload<ActionWithCurrent & { params?: GetAllPricesQuery }, PriceEntity[]>;
   [ProductsThunkType.getAllInventories]: ThunkPayload<
     ActionWithCurrent & {
       params?: Pick<
@@ -64,7 +60,7 @@ export interface ProductThunkReturnDataByType {
   [ProductsThunkType.updateProductThunk]: {};
   [ProductsThunkType.deleteProductThunk]: {};
   [ProductsThunkType.getAllVariations]: ActionWithCurrent & { data: VariationEntity[] };
-  [ProductsThunkType.getAllPrices]: ActionWithCurrent & { data: OfferPriceEntity[] };
+  [ProductsThunkType.getAllPrices]: ActionWithCurrent & { data: PriceEntity[] };
   [ProductsThunkType.getAllInventories]: ActionWithCurrent & { data: WarehouseItemEntity[] };
 }
 export const getAllProductsThunk = createAsyncThunk<
@@ -85,6 +81,28 @@ export const getAllProductsThunk = createAsyncThunk<
     onSuccess && onSuccess(response.data.data);
 
     return { data: response.data.data, refresh: data?.refresh };
+  } catch (error) {
+    onError && onError(error);
+
+    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+  } finally {
+    onLoading && onLoading(false);
+  }
+});
+
+export const getOfferThunk = createAsyncThunk<
+  ActionPayload<{ data: OfferEntity }>,
+  ThunkPayload<{ params?: GetOneOfferQuery }, { data: OfferEntity }>
+>(ProductsThunkType.getOne, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
+  onLoading && onLoading(true);
+
+  try {
+    const res = await OffersApi.getOne(data);
+    if (res) {
+      onSuccess && onSuccess(res.data);
+    }
+
+    return { ...data, data: res.data.data };
   } catch (error) {
     onError && onError(error);
 
@@ -185,10 +203,10 @@ export const updateProductDefaultsThunk = createAsyncThunk<
     args?.onLoading && args?.onLoading(false);
   }
 });
-export const deleteProductThunk = createAsyncThunk(
-  ProductsThunkType.deleteProductThunk,
-  createThunkPayloadCreator(OffersApi.deleteById, OffersApi)
-);
+// export const deleteProductThunk = createAsyncThunk(
+//   ProductsThunkType.deleteProductThunk,
+//   createThunkPayloadCreator(OffersApi.deleteById)
+// );
 export const getAllOfferPricesThunk = buildGetAllPricesThunk(ProductsThunkType.getAllPrices);
 
 export const getAllInventoriesByProductIdThunk = createAsyncThunk<

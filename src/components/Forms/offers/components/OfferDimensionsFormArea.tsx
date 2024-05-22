@@ -1,6 +1,6 @@
 import DimensionsInputs, { DimensionsFormData } from './DimensionsInputs';
 import { useAppForm } from '../../../../hooks';
-import { FormArea } from '../../FormArea/FormArea';
+import { AccordionForm } from '../../FormArea/AccordionForm';
 import useOffersService from '../../../../hooks/useProductsService.hook';
 import { ToastService } from '../../../../services';
 import { IDimensions } from '../../../../types/utils.types';
@@ -40,7 +40,7 @@ export const OfferDimensionsFormArea = ({
     : false;
 
   return (
-    <FormArea
+    <AccordionForm
       onSubmit={form.handleSubmit(onValid)}
       label={t('Package size')}
       isLoading={isLoading}
@@ -48,6 +48,6 @@ export const OfferDimensionsFormArea = ({
       disabled={!canSubmit || disabled}
     >
       <DimensionsInputs form={form} disabled={disabled} />
-    </FormArea>
+    </AccordionForm>
   );
 };

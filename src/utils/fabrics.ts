@@ -111,8 +111,16 @@ function defaultApiCallPayload<SD = any, RD = any, E = any>({
 function enumToArray<T extends object = any>(enumObj: T): Array<T[keyof T]> {
   return Object.values(enumObj);
 }
-function enumToFilterOptions<T extends Record<string, any> = any>(enumObj: T): FilterOption<T[keyof T]>[] {
-  return enumToArray(enumObj).map(el => ({ label: t(el as string), value: el }));
+function enumToFilterOptions<T extends Record<string, any> = any, ValueKey extends string | number = any>(
+  enumObj: T,
+  {
+    labelPrefix,
+  }: {
+    valueKey?: ValueKey;
+    labelPrefix?: string;
+  } = {}
+): FilterOption<T[keyof T]>[] {
+  return enumToArray(enumObj).map(el => ({ label: t(labelPrefix ? labelPrefix + '_' + el : el), value: el }));
 }
 export function _enumToTabs<T extends Record<string, any> = any>(
   enumObj: T,

@@ -60,7 +60,7 @@ const CompanySettingsModal: React.FC<CompanySettingsProps> = ({ onClose, ...prop
 
       <TabSelector
         filterOptions={tabs}
-        preventFilter={true}
+        preventDefault={true}
         onOptSelect={(_, v) => {
           setCurrent(v);
         }}

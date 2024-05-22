@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useEffect, useState } from 'react';
-import { OfferPriceEntity } from '../../../types/price-management/price-management.types';
+import { PriceEntity } from '../../../types/price-management/price-management.types';
 import { getIdRef } from '../../../utils/data-transform';
 
 export interface ProductOverviewProps extends Omit<ModalFormProps, 'onSelect' | 'onSubmit'> {
@@ -16,7 +16,7 @@ export interface ProductOverviewProps extends Omit<ModalFormProps, 'onSelect' | 
 
 const OfferOverview: React.FC<ProductOverviewProps> = ({ product, ...props }) => {
   const { priceManagement } = useAppServiceProvider();
-  const [priceList, setPriceList] = useState<OfferPriceEntity[]>([]);
+  const [priceList, setPriceList] = useState<PriceEntity[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

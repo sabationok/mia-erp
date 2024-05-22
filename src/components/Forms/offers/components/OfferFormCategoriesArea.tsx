@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Text } from '../../../atoms/Text';
-import { FormArea } from '../../FormArea/FormArea';
+import { AccordionForm } from '../../FormArea/AccordionForm';
 import styled from 'styled-components';
 import FlexBox, { FlexLi, FlexUl } from '../../../atoms/FlexBox';
 import { useDirectorySelector } from '../../../../redux/selectors.store';
@@ -29,7 +29,7 @@ export const OfferFormCategoriesArea = ({
   const loaders = useOfferLoadersProvider();
   const offerCategories = useDirectorySelector(ApiDirType.CATEGORIES_PROD).directory;
   const [parentIdsMap, setParentIdsMap] = useState<Record<string, { selected: boolean; parentIds: string[] }>>({});
-  const service = useAppServiceProvider()[ServiceName.products];
+  const service = useAppServiceProvider()[ServiceName.offers];
 
   const selectedIds = useMemo(
     () =>
@@ -192,7 +192,7 @@ export const OfferFormCategoriesArea = ({
   }, [handleRemove, handleSelect, offerCategories, parentIdsMap, selectedIds]);
 
   return (
-    <FormArea
+    <AccordionForm
       label={t('Categories')}
       onSubmit={handleSubmit}
       onReset={handleReset}
@@ -202,7 +202,7 @@ export const OfferFormCategoriesArea = ({
       <ListBox flex={1} overflow={'auto'}>
         {renderCategories}
       </ListBox>
-    </FormArea>
+    </AccordionForm>
   );
 };
 const ListBox = styled(FlexUl)`
