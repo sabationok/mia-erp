@@ -1,8 +1,8 @@
-import { RenderOverviewCellComponent } from './overview-types';
-import { CellStyledComp } from './CellStyles';
-import { OverviewCellHeader } from './OverviewCellHeader';
-import FormCreateVariation from '../../Overlays/CreateVariationOverlay';
-import FlexBox from '../../atoms/FlexBox';
+import { RenderOverviewCellComponent } from '../../components/overview-types';
+import { CellStyledComp } from '../../components/CellStyles';
+import { OverviewCellHeader } from '../../components/OverviewCellHeader';
+import FormCreateVariation from '../../../Overlays/CreateVariationOverlay';
+import FlexBox from '../../../atoms/FlexBox';
 import React from 'react';
 
 export const OfferOverviewVariationsTemplateCell: RenderOverviewCellComponent = ({ cell, overlayHandler, data }) => {

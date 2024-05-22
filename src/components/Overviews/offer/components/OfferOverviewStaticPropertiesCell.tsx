@@ -1,13 +1,13 @@
-import { RenderOverviewCellComponent } from './overview-types';
-import { OfferEntity } from '../../../types/offers/offers.types';
-import { useProductsSelector } from '../../../redux/selectors.store';
+import { RenderOverviewCellComponent } from '../../components/overview-types';
+import { OfferEntity } from '../../../../types/offers/offers.types';
+import { useProductsSelector } from '../../../../redux/selectors.store';
 import React, { useMemo, useState } from 'react';
-import FormSelectPropertiesOverlay from '../../Overlays/FormSelectPropertiesOverlay';
-import FlexBox from '../../atoms/FlexBox';
-import { t } from '../../../lang';
-import { CellStyledComp } from './CellStyles';
-import { OverviewCellHeader } from './OverviewCellHeader';
-import { OverviewPropertyComponent } from './OverviewPropertyComponent';
+import FormSelectPropertiesOverlay from '../../../Overlays/FormSelectPropertiesOverlay';
+import FlexBox from '../../../atoms/FlexBox';
+import { t } from '../../../../lang';
+import { CellStyledComp } from '../../components/CellStyles';
+import { OverviewCellHeader } from '../../components/OverviewCellHeader';
+import { OverviewPropertyComponent } from '../../components/OverviewPropertyComponent';
 
 export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEntity> = ({
   cell,

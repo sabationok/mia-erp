@@ -1,17 +1,17 @@
-import { RenderOverviewCellComponent } from './overview-types';
-import { OfferEntity } from '../../../types/offers/offers.types';
+import { RenderOverviewCellComponent } from '../../components/overview-types';
+import { OfferEntity } from '../../../../types/offers/offers.types';
 import { useTheme } from 'styled-components';
 import React, { useMemo } from 'react';
-import { t } from '../../../lang';
-import FlexBox from '../../atoms/FlexBox';
-import { Text } from '../../atoms/Text';
-import { CellStyledComp } from './CellStyles';
-import { OverviewCellHeader } from './OverviewCellHeader';
-import FormProductDefaultsOverlay from '../../Overlays/FormProductDefaultsOverlay';
+import { t } from '../../../../lang';
+import FlexBox from '../../../atoms/FlexBox';
+import { Text } from '../../../atoms/Text';
+import { CellStyledComp } from '../../components/CellStyles';
+import { OverviewCellHeader } from '../../components/OverviewCellHeader';
+import FormProductDefaultsOverlay from '../../../Overlays/FormProductDefaultsOverlay';
 
-import { OfferPriceEntity } from '../../../types/price-management/price-management.types';
-import { MaybeNull } from '../../../types/utils.types';
-import { toPrice } from '../../../utils/numbers';
+import { OfferPriceEntity } from '../../../../types/price-management/price-management.types';
+import { MaybeNull } from '../../../../types/utils.types';
+import { toPrice } from '../../../../utils/numbers';
 
 export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity> = ({ data, cell, overlayHandler }) => {
   const theme = useTheme();

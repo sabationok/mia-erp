@@ -1,9 +1,9 @@
-import { RenderOverviewCellComponent } from './overview-types';
-import { OrderEntity } from '../../../types/orders/orders.types';
-import { CellStyledComp } from './CellStyles';
-import { OverviewCellHeader } from './OverviewCellHeader';
-import { Text } from '../../atoms/Text';
-import { t } from '../../../lang';
+import { RenderOverviewCellComponent } from '../../components/overview-types';
+import { OrderEntity } from '../../../../types/orders/orders.types';
+import { CellStyledComp } from '../../components/CellStyles';
+import { OverviewCellHeader } from '../../components/OverviewCellHeader';
+import { Text } from '../../../atoms/Text';
+import { t } from '../../../../lang';
 
 export const OrderOverviewGroupInfo: RenderOverviewCellComponent<OrderEntity> = ({ cell, overlayHandler, data }) => {
   return (

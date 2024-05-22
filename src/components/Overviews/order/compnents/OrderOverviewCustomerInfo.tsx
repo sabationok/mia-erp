@@ -1,11 +1,11 @@
-import { RenderOverviewCellComponent } from './overview-types';
-import { OrderEntity } from '../../../types/orders/orders.types';
-import { CellStyledComp } from './CellStyles';
-import FlexBox from '../../atoms/FlexBox';
-import { Text } from '../../atoms/Text';
-import { t } from '../../../lang';
+import { RenderOverviewCellComponent } from '../../components/overview-types';
+import { OrderEntity } from '../../../../types/orders/orders.types';
+import { CellStyledComp } from '../../components/CellStyles';
+import FlexBox from '../../../atoms/FlexBox';
+import { Text } from '../../../atoms/Text';
+import { t } from '../../../../lang';
 import { useMemo } from 'react';
-import { OverviewCellHeader } from './OverviewCellHeader';
+import { OverviewCellHeader } from '../../components/OverviewCellHeader';
 
 export const OrderOverviewCustomerInfo: RenderOverviewCellComponent<OrderEntity> = ({ cell, data }) => {
   const renderCells = useMemo(() => {

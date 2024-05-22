@@ -7,11 +7,28 @@ import { t } from '../../../lang';
 import { usePageCurrentOffer } from '../../AppPages/offers/PageOfferProvider';
 import { OverlayHeader } from '../../Overlays';
 import TabSelector from '../../atoms/TabSelector';
-
 import { useOverlayService } from '../../../Providers/Overlay/OverlayStackProvider';
 import { useAppRouter } from '../../../hooks';
-import { getOfferOverviewCellsMap, ProductOverviewTabsEnum, ProductOverviewTabsList } from './offerOverviewCellsMap';
-import { OverviewTextCell } from '../components';
+import { OverviewTextCell } from '../components/OverviewTextCell';
+import { enumToFilterOptions, toAppDateFormat } from '../../../utils';
+import { OverviewCellProps } from '../components/overview-types';
+import { IMeasurement, PartialRecord } from '../../../types/utils.types';
+import { isString } from 'lodash';
+import { OfferOverviewCategoriesCell } from './components/OfferOverviewCategoriesCell';
+import { OfferOverviewStaticProperties } from './components/OfferOverviewStaticPropertiesCell';
+import { OfferOverviewDefaultsCell } from './components/OfferOverviewDefaultsCell';
+import { OfferOverviewImagesCell } from './components/OfferOverviewImagesCell';
+
+export enum OfferOverviewTabsEnum {
+  General = 'General',
+  Properties = 'Properties',
+  Defaults = 'Defaults',
+  Images = 'Images',
+  Futures = 'Futures',
+  Cms = 'Cms',
+}
+
+export const ProductOverviewTabsList = enumToFilterOptions(OfferOverviewTabsEnum);
 
 export interface ProductOverviewXLProps {
   product?: OfferEntity;
@@ -24,25 +41,27 @@ export interface ProductOverviewXLProps {
   onOpenRightSide?: () => void;
   className?: string;
 }
-const cellsMap = getOfferOverviewCellsMap();
 
 const OfferOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }) => {
   const router = useAppRouter();
   const page = usePageCurrentOffer();
   const offer = page.currentOffer;
   const overlaySrv = useOverlayService();
+  const cellsMap = getOfferOverviewCellsMap();
 
-  const [currentTab, setCurrentTab] = useState<ProductOverviewTabsEnum>(ProductOverviewTabsEnum.General);
-  console.log('OfferOverviewXL', cellsMap);
+  const [currentTab, setCurrentTab] = useState<OfferOverviewTabsEnum>(OfferOverviewTabsEnum.General);
+
   const renderCells = useMemo(
     () =>
-      cellsMap[currentTab]?.map(({ CellComponent, ...cell }) => {
-        if (CellComponent) {
-          return <CellComponent key={cell.title} overlayHandler={overlaySrv.open} cell={cell} data={offer} />;
-        }
-        return <OverviewTextCell key={cell.title} overlayHandler={overlaySrv.open} cell={cell} data={offer} />;
-      }),
-    [currentTab, overlaySrv.open, offer]
+      !cellsMap[currentTab]
+        ? null
+        : cellsMap[currentTab]?.map(({ CellComponent, ...cell }) => {
+            if (CellComponent) {
+              return <CellComponent key={cell.title} overlayHandler={overlaySrv.open} cell={cell} data={offer} />;
+            }
+            return <OverviewTextCell key={cell.title} overlayHandler={overlaySrv.open} cell={cell} data={offer} />;
+          }),
+    [cellsMap, currentTab, overlaySrv.open, offer]
   );
 
   return (
@@ -134,5 +153,187 @@ const OpenBtn = styled(ButtonIcon)`
     display: none;
   }
 `;
+const offerOverviewCells: OverviewCellProps<OfferEntity, OfferOverviewTabsEnum>[] = [
+  {
+    title: t('Label'),
+    getValue: data => data?.label,
+    gridArea: 'label',
+    tab: OfferOverviewTabsEnum.General,
+  },
+  {
+    title: t('status'),
+    getValue: data => data?.approved as string | null | undefined,
+    gridArea: 'approved',
+    tab: OfferOverviewTabsEnum.General,
+  },
+  {
+    title: t('Type'),
+    getValue: data => data?.type,
+    gridArea: 'type',
+    tab: OfferOverviewTabsEnum.General,
+  },
+  {
+    title: t('SKU'),
+    getValue: data => data?.sku,
+    gridArea: 'sku',
+    tab: OfferOverviewTabsEnum.General,
+  },
+  {
+    title: t('Bar-code'),
+    getValue: data => data?.barCode,
+    gridArea: 'barCode',
+    tab: OfferOverviewTabsEnum.General,
+  },
 
+  {
+    title: t('Categories'),
+    CellComponent: OfferOverviewCategoriesCell,
+    gridArea: 'categories',
+    tab: OfferOverviewTabsEnum.General,
+  },
+
+  {
+    title: t('Brand'),
+    getValue: data => data?.brand?.label,
+    gridArea: 'brand',
+    tab: OfferOverviewTabsEnum.General,
+  },
+  {
+    title: t('Measurement'),
+    gridArea: 'measurement',
+    getValue: product => {
+      try {
+        const data: IMeasurement = product?.measurement ? JSON.parse(product?.measurement as string) : {};
+        const arr = [
+          `${t('unit')}: ${data?.unit || 0}`,
+          `${t('min')}: ${data?.min || 0}`,
+          `${t('max')}: ${data?.max || 0}`,
+          `${t('step')}: ${data?.step || 0}`,
+        ];
+
+        return arr.join(' | ');
+      } catch (e) {
+        return '';
+      }
+    },
+    tab: OfferOverviewTabsEnum.General,
+  },
+  {
+    title: t('Description'),
+    getValue: data => data?.description,
+    gridArea: 'description',
+    tab: OfferOverviewTabsEnum.General,
+  },
+
+  // * FUTURES
+
+  {
+    title: t('Negative sales'),
+    getValue: product => (product?.futures?.negativeSale ? 'Yes' : 'No'),
+    gridArea: 'reservation',
+    tab: OfferOverviewTabsEnum.Futures,
+  },
+
+  {
+    title: t('Reservation'),
+    getValue: product => (product?.futures?.reservation?.isAvailable ? 'Yes' : 'No'),
+    gridArea: 'reservation',
+    tab: OfferOverviewTabsEnum.Futures,
+  },
+
+  {
+    title: t('Custom production'),
+    getValue: product => (product?.futures?.customProduction?.isAvailable ? 'Yes' : 'No'),
+    gridArea: 'customProduction',
+    tab: OfferOverviewTabsEnum.Futures,
+  },
+
+  {
+    title: t('Custom order'),
+    getValue: product => (product?.futures?.customOrder?.isAvailable ? 'Yes' : 'No'),
+    gridArea: 'customOrder',
+    tab: OfferOverviewTabsEnum.Futures,
+  },
+
+  {
+    title: t('Pre-order'),
+    getValue: product => (product?.futures?.preOrder?.isAvailable ? 'Yes' : 'No'),
+    gridArea: 'preOrder',
+    tab: OfferOverviewTabsEnum.Futures,
+  },
+
+  {
+    title: t('Is promo'),
+    getValue: data => data?.futures?.isPromo,
+    gridArea: 'isPromo',
+    tab: OfferOverviewTabsEnum.Futures,
+  },
+
+  // * PROPERTIES
+  {
+    title: t('Properties'),
+    CellComponent: OfferOverviewStaticProperties,
+    gridArea: 'properties',
+    tab: OfferOverviewTabsEnum.Properties,
+  },
+
+  // * DEFAULTS
+  {
+    title: t('Default values'),
+    CellComponent: OfferOverviewDefaultsCell,
+    gridArea: 'defaults',
+    tab: OfferOverviewTabsEnum.Defaults,
+  },
+
+  {
+    title: t('Created by / Date / Time'),
+    getValue: product =>
+      product?.author
+        ? `${product?.author?.user?.email} / ${
+            product?.createdAt && isString(product?.createdAt) ? toAppDateFormat(Date.parse(product?.createdAt)) : ''
+          }`
+        : null,
+    gridArea: 'created',
+    tab: OfferOverviewTabsEnum.General,
+  },
+  {
+    title: t('Updated by / Date / Time'),
+    getValue: product =>
+      product?.editor
+        ? `${product?.editor?.user?.email} / ${
+            product?.updatedAt && isString(product?.updatedAt) ? toAppDateFormat(Date.parse(product?.updatedAt)) : ''
+          }`
+        : null,
+    gridArea: 'updated',
+    tab: OfferOverviewTabsEnum.General,
+  },
+
+  {
+    title: t('Images'),
+    CellComponent: OfferOverviewImagesCell,
+    gridArea: 'images',
+    tab: OfferOverviewTabsEnum.Images,
+  },
+];
+
+function getOfferOverviewCellsMap(): PartialRecord<
+  OfferOverviewTabsEnum | string,
+  OverviewCellProps<OfferEntity, OfferOverviewTabsEnum>[]
+> {
+  const offerOverviewCellsMap: PartialRecord<
+    OfferOverviewTabsEnum | string,
+    OverviewCellProps<OfferEntity, OfferOverviewTabsEnum>[]
+  > = {};
+  offerOverviewCells.forEach(item => {
+    const tab = item.tab;
+    if (tab) {
+      if (offerOverviewCellsMap[tab]) {
+        offerOverviewCellsMap[tab]?.push(item);
+      } else {
+        offerOverviewCellsMap[tab] = [item];
+      }
+    }
+  });
+  return offerOverviewCellsMap;
+}
 export default OfferOverviewXL;
