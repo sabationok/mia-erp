@@ -1,10 +1,15 @@
-import { OverviewCellProps } from './components/overview-types';
-import { OfferEntity } from '../../types/offers/offers.types';
-import { t } from '../../lang';
-import { OverviewCells } from './components';
-import { IMeasurement } from '../../types/utils.types';
-import { enumToFilterOptions, toAppDateFormat } from '../../utils';
+import { OverviewCellProps } from '../components/overview-types';
+import { OfferEntity } from '../../../types/offers/offers.types';
+import { t } from '../../../lang';
+import { IMeasurement } from '../../../types/utils.types';
+import { enumToFilterOptions, toAppDateFormat } from '../../../utils';
 import { isString } from 'lodash';
+import {
+  OfferOverviewCategoriesCell,
+  OfferOverviewDefaultsCell,
+  OfferOverviewImagesCell,
+  OfferOverviewStaticProperties,
+} from '../components';
 
 export enum ProductOverviewTabsEnum {
   General = 'General',
@@ -15,42 +20,35 @@ export enum ProductOverviewTabsEnum {
   Cms = 'Cms',
 }
 
-console.log('OverviewCells', OverviewCells);
-
 export const ProductOverviewTabsList = enumToFilterOptions(ProductOverviewTabsEnum);
 
 const offerOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEnum>[] = [
   {
     title: t('Label'),
-    CellComponent: OverviewCells.Text,
     getValue: data => data?.label,
     gridArea: 'label',
     tab: ProductOverviewTabsEnum.General,
   },
   {
     title: t('status'),
-    CellComponent: OverviewCells.Text,
     getValue: data => data?.approved as string | null | undefined,
     gridArea: 'approved',
     tab: ProductOverviewTabsEnum.General,
   },
   {
     title: t('Type'),
-    CellComponent: OverviewCells.Text,
     getValue: data => data?.type,
     gridArea: 'type',
     tab: ProductOverviewTabsEnum.General,
   },
   {
     title: t('SKU'),
-    CellComponent: OverviewCells.Text,
     getValue: data => data?.sku,
     gridArea: 'sku',
     tab: ProductOverviewTabsEnum.General,
   },
   {
     title: t('Bar-code'),
-    CellComponent: OverviewCells.Text,
     getValue: data => data?.barCode,
     gridArea: 'barCode',
     tab: ProductOverviewTabsEnum.General,
@@ -58,21 +56,19 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEnum
 
   {
     title: t('Categories'),
-    CellComponent: OverviewCells.OfferCategories,
+    CellComponent: OfferOverviewCategoriesCell,
     gridArea: 'categories',
     tab: ProductOverviewTabsEnum.General,
   },
 
   {
     title: t('Brand'),
-    CellComponent: OverviewCells.Text,
     getValue: data => data?.brand?.label,
     gridArea: 'brand',
     tab: ProductOverviewTabsEnum.General,
   },
   {
     title: t('Measurement'),
-    CellComponent: OverviewCells.Text,
     gridArea: 'measurement',
     getValue: product => {
       try {
@@ -93,7 +89,6 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEnum
   },
   {
     title: t('Description'),
-    CellComponent: OverviewCells.Text,
     getValue: data => data?.description,
     gridArea: 'description',
     tab: ProductOverviewTabsEnum.General,
@@ -103,7 +98,6 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEnum
 
   {
     title: t('Negative sales'),
-    CellComponent: OverviewCells.Text,
     getValue: product => (product?.futures?.negativeSale ? 'Yes' : 'No'),
     gridArea: 'reservation',
     tab: ProductOverviewTabsEnum.Futures,
@@ -111,7 +105,6 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEnum
 
   {
     title: t('Reservation'),
-    CellComponent: OverviewCells.Text,
     getValue: product => (product?.futures?.reservation?.isAvailable ? 'Yes' : 'No'),
     gridArea: 'reservation',
     tab: ProductOverviewTabsEnum.Futures,
@@ -119,7 +112,6 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEnum
 
   {
     title: t('Custom production'),
-    CellComponent: OverviewCells.Text,
     getValue: product => (product?.futures?.customProduction?.isAvailable ? 'Yes' : 'No'),
     gridArea: 'customProduction',
     tab: ProductOverviewTabsEnum.Futures,
@@ -127,7 +119,6 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEnum
 
   {
     title: t('Custom order'),
-    CellComponent: OverviewCells.Text,
     getValue: product => (product?.futures?.customOrder?.isAvailable ? 'Yes' : 'No'),
     gridArea: 'customOrder',
     tab: ProductOverviewTabsEnum.Futures,
@@ -135,7 +126,6 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEnum
 
   {
     title: t('Pre-order'),
-    CellComponent: OverviewCells.Text,
     getValue: product => (product?.futures?.preOrder?.isAvailable ? 'Yes' : 'No'),
     gridArea: 'preOrder',
     tab: ProductOverviewTabsEnum.Futures,
@@ -143,7 +133,6 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEnum
 
   {
     title: t('Is promo'),
-    CellComponent: OverviewCells.Text,
     getValue: data => data?.futures?.isPromo,
     gridArea: 'isPromo',
     tab: ProductOverviewTabsEnum.Futures,
@@ -152,7 +141,7 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEnum
   // * PROPERTIES
   {
     title: t('Properties'),
-    CellComponent: OverviewCells.OfferStaticProperties,
+    CellComponent: OfferOverviewStaticProperties,
     gridArea: 'properties',
     tab: ProductOverviewTabsEnum.Properties,
   },
@@ -160,14 +149,13 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEnum
   // * DEFAULTS
   {
     title: t('Default values'),
-    CellComponent: OverviewCells.OfferDefaults,
+    CellComponent: OfferOverviewDefaultsCell,
     gridArea: 'defaults',
     tab: ProductOverviewTabsEnum.Defaults,
   },
 
   {
     title: t('Created by / Date / Time'),
-    CellComponent: OverviewCells.Text,
     getValue: product =>
       product?.author
         ? `${product?.author?.user?.email} / ${
@@ -179,7 +167,6 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEnum
   },
   {
     title: t('Updated by / Date / Time'),
-    CellComponent: OverviewCells.Text,
     getValue: product =>
       product?.editor
         ? `${product?.editor?.user?.email} / ${
@@ -192,23 +179,29 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, ProductOverviewTabsEnum
 
   {
     title: t('Images'),
-    CellComponent: OverviewCells.OfferImages,
+    CellComponent: OfferOverviewImagesCell,
     gridArea: 'images',
     tab: ProductOverviewTabsEnum.Images,
   },
 ];
 
-export const offerOverviewCellsMap: Record<
+export const getOfferOverviewCellsMap = (): Record<
   ProductOverviewTabsEnum | string,
   OverviewCellProps<OfferEntity, ProductOverviewTabsEnum>[]
-> = {};
-offerOverviewCells.forEach(item => {
-  const tab = item.tab;
-  if (tab) {
-    if (offerOverviewCellsMap[tab]) {
-      offerOverviewCellsMap[tab].push(item);
-    } else {
-      offerOverviewCellsMap[tab] = [item];
+> => {
+  const offerOverviewCellsMap: Record<
+    ProductOverviewTabsEnum | string,
+    OverviewCellProps<OfferEntity, ProductOverviewTabsEnum>[]
+  > = {};
+  offerOverviewCells.forEach(item => {
+    const tab = item.tab;
+    if (tab) {
+      if (offerOverviewCellsMap[tab]) {
+        offerOverviewCellsMap[tab].push(item);
+      } else {
+        offerOverviewCellsMap[tab] = [item];
+      }
     }
-  }
-});
+  });
+  return offerOverviewCellsMap;
+};

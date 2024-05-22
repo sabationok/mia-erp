@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import AddOrderSlot from './AddOrderSlot';
 import { OnlyUUID } from '../../../../redux/global.types';
 import { IOrderSlot, IOrderSlotBase, IOrderTempSlot } from '../../../../types/orders/orders.types';
-import OrderSlotOverview from '../../../Overviews/OrderSlotOverview';
+import OrderSlotOverview from '../../../Overviews/order/OrderSlotOverview';
 import { nanoid } from '@reduxjs/toolkit';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import { t } from '../../../../lang';

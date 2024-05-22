@@ -1,17 +1,17 @@
-import { OfferEntity } from '../../types/offers/offers.types';
-import FlexBox from '../atoms/FlexBox';
+import { OfferEntity } from '../../../types/offers/offers.types';
+import FlexBox from '../../atoms/FlexBox';
 import React, { useMemo, useState } from 'react';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
-import { t } from '../../lang';
-import { usePageCurrentOffer } from '../AppPages/offers/PageOfferProvider';
-import { OverlayHeader } from '../Overlays';
-import TabSelector from '../atoms/TabSelector';
+import { t } from '../../../lang';
+import { usePageCurrentOffer } from '../../AppPages/offers/PageOfferProvider';
+import { OverlayHeader } from '../../Overlays';
+import TabSelector from '../../atoms/TabSelector';
 
-import { useOverlayService } from '../../Providers/Overlay/OverlayStackProvider';
-import { useAppRouter } from '../../hooks';
-import { offerOverviewCellsMap, ProductOverviewTabsEnum, ProductOverviewTabsList } from './offerOverviewCellsMap';
-import { OverviewCells } from './components';
+import { useOverlayService } from '../../../Providers/Overlay/OverlayStackProvider';
+import { useAppRouter } from '../../../hooks';
+import { getOfferOverviewCellsMap, ProductOverviewTabsEnum, ProductOverviewTabsList } from './offerOverviewCellsMap';
+import { OverviewTextCell } from '../components';
 
 export interface ProductOverviewXLProps {
   product?: OfferEntity;
@@ -24,6 +24,7 @@ export interface ProductOverviewXLProps {
   onOpenRightSide?: () => void;
   className?: string;
 }
+const cellsMap = getOfferOverviewCellsMap();
 
 const OfferOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }) => {
   const router = useAppRouter();
@@ -32,14 +33,14 @@ const OfferOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }) 
   const overlaySrv = useOverlayService();
 
   const [currentTab, setCurrentTab] = useState<ProductOverviewTabsEnum>(ProductOverviewTabsEnum.General);
-
+  console.log('OfferOverviewXL', cellsMap);
   const renderCells = useMemo(
     () =>
-      offerOverviewCellsMap[currentTab]?.map(({ CellComponent, ...cell }) => {
+      cellsMap[currentTab]?.map(({ CellComponent, ...cell }) => {
         if (CellComponent) {
           return <CellComponent key={cell.title} overlayHandler={overlaySrv.open} cell={cell} data={offer} />;
         }
-        return <OverviewCells.Text key={cell.title} overlayHandler={overlaySrv.open} cell={cell} data={offer} />;
+        return <OverviewTextCell key={cell.title} overlayHandler={overlaySrv.open} cell={cell} data={offer} />;
       }),
     [currentTab, overlaySrv.open, offer]
   );

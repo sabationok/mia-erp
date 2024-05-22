@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import ProductCardSimpleOverview from '../Overviews/ProductCardSimpleOverview';
+import ProductCardSimpleOverview from '../Overviews/offer/ProductCardSimpleOverview';
 import { AppQueryParams, createApiCall, PriceManagementApi } from '../../api';
 import FlexBox from '../atoms/FlexBox';
 import InputLabel from '../atoms/Inputs/InputLabel';

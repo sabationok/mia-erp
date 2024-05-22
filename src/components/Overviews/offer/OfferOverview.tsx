@@ -1,14 +1,14 @@
-import ModalForm, { ModalFormProps } from '../ModalForm';
-import FlexBox from '../atoms/FlexBox';
-import { OfferEntity } from '../../types/offers/offers.types';
+import ModalForm, { ModalFormProps } from '../../ModalForm';
+import FlexBox from '../../atoms/FlexBox';
+import { OfferEntity } from '../../../types/offers/offers.types';
 import ProductCardSimpleOverview from './ProductCardSimpleOverview';
-import TableList from '../TableList/TableList';
+import TableList from '../../TableList/TableList';
 import styled from 'styled-components';
-import { pricesColumnsForProductReview } from '../../data/priceManagement.data';
-import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import { pricesColumnsForProductReview } from '../../../data/priceManagement.data';
+import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useEffect, useState } from 'react';
-import { OfferPriceEntity } from '../../types/price-management/price-management.types';
-import { getIdRef } from '../../utils/data-transform';
+import { OfferPriceEntity } from '../../../types/price-management/price-management.types';
+import { getIdRef } from '../../../utils/data-transform';
 
 export interface ProductOverviewProps extends Omit<ModalFormProps, 'onSelect' | 'onSubmit'> {
   product?: OfferEntity;

@@ -6,7 +6,7 @@ import FlexBox from '../../atoms/FlexBox';
 import React from 'react';
 import { useOfferOverviewLoaders } from './PageOfferOverview';
 import { OverlayStack } from '../../../Providers/Overlay/OverlayStack';
-import OfferOverviewXL from 'components/Overviews/OfferOverviewXL';
+import OfferOverviewXL from 'components/Overviews/offer/OfferOverviewXL';
 import { Modals } from '../../Modals/Modals';
 import { t } from '../../../lang';
 

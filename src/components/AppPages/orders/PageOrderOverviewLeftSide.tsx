@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { OverlayStack } from '../../../Providers/Overlay/OverlayStack';
-import OrderOverviewXL from 'components/Overviews/OrderOverviewXL';
+import OrderOverviewXL from 'components/Overviews/order/OrderOverviewXL';
 
 export interface PageOrderOverviewLeftSideProps {
   toggleRightSideVisibility?: () => void;

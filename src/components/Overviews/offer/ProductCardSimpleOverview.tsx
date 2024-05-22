@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import FlexBox from '../atoms/FlexBox';
+import FlexBox from '../../atoms/FlexBox';
 import { useMemo } from 'react';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { OfferEntity } from '../../types/offers/offers.types';
-import { t } from '../../lang';
-import { MaybeNull } from '../../types/utils.types';
+import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import { OfferEntity } from '../../../types/offers/offers.types';
+import { t } from '../../../lang';
+import { MaybeNull } from '../../../types/utils.types';
 
 export interface ProductCardForSelectorProps {
   product: OfferEntity;

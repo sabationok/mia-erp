@@ -1,26 +1,28 @@
-import FlexBox from '../../atoms/FlexBox';
+import FlexBox from '../../../atoms/FlexBox';
 import styled from 'styled-components';
 import React, { useMemo, useState } from 'react';
-import { useOverlayService } from '../../../Providers/Overlay/OverlayStackProvider';
-import { useOrdersSelector } from '../../../redux/selectors.store';
-import TabSelector from '../../atoms/TabSelector';
-import { OverviewCells } from '../components';
-import { orderOverviewCellsMap, orderOverviewInfoTabs, OrderOverviewInfoTabsEnum } from '../orderOverviewCellsMap';
+import { useOverlayService } from '../../../../Providers/Overlay/OverlayStackProvider';
+import { useOrdersSelector } from '../../../../redux/selectors.store';
+import TabSelector from '../../../atoms/TabSelector';
+import { getOrderOverviewCellsMap } from './orderOverviewCellsMap';
+import { orderOverviewInfoTabs, OrderOverviewInfoTabsEnum } from '../OrderOverviewXL';
+import { OverviewTextCell } from '../../components';
 
 export interface OrderOverviewInfoTabProps {}
+const cellsMap = getOrderOverviewCellsMap();
 
 const OrderOverviewInfoTab: React.FC<OrderOverviewInfoTabProps> = _p => {
   const overlayS = useOverlayService();
   const currentOrder = useOrdersSelector().currentOrder;
   const [currentTab, setCurrentTab] = useState<OrderOverviewInfoTabsEnum>(OrderOverviewInfoTabsEnum.General);
-
+  console.log('OrderOverviewInfoTab', cellsMap);
   const renderCells = useMemo(
     () =>
-      orderOverviewCellsMap[currentTab].map(({ CellComponent, ...cell }) => {
+      cellsMap[currentTab].map(({ CellComponent, ...cell }) => {
         if (CellComponent) {
           return <CellComponent key={cell.title} overlayHandler={overlayS.open} cell={cell} data={currentOrder} />;
         }
-        return <OverviewCells.Text key={cell.title} overlayHandler={overlayS.open} cell={cell} data={currentOrder} />;
+        return <OverviewTextCell key={cell.title} overlayHandler={overlayS.open} cell={cell} data={currentOrder} />;
       }),
     [currentTab, overlayS.open, currentOrder]
   );

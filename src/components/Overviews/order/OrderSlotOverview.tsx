@@ -1,14 +1,14 @@
-import { IOrderTempSlot } from '../../types/orders/orders.types';
-import FlexBox from '../atoms/FlexBox';
+import { IOrderTempSlot } from '../../../types/orders/orders.types';
+import FlexBox from '../../atoms/FlexBox';
 import styled, { useTheme } from 'styled-components';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { useMemo, useState } from 'react';
-import { OfferImageSlotEntity } from '../../types/offers/offers.types';
-import { Text } from '../atoms/Text';
-import { t } from '../../lang';
-import CountSelectorBase from '../atoms/CountSelectorBase';
-import InputLabel from '../atoms/Inputs/InputLabel';
-import { numberWithSpaces } from '../../utils';
+import { OfferImageSlotEntity } from '../../../types/offers/offers.types';
+import { Text } from '../../atoms/Text';
+import { t } from '../../../lang';
+import CountSelectorBase from '../../atoms/CountSelectorBase';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import { numberWithSpaces } from '../../../utils';
 
 export interface OrderSlotOverviewProps {
   slot?: IOrderTempSlot;

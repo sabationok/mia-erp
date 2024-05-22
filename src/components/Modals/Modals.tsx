@@ -1,6 +1,6 @@
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import PriceListOverview, { PriceListOverviewProps } from './Overviews/PriceListOverview';
-import OfferOverview, { ProductOverviewProps } from '../Overviews/OfferOverview';
+import OfferOverview, { ProductOverviewProps } from '../Overviews/offer/OfferOverview';
 import SelectProductModal, { SelectProductModalProps } from './SelectProductModal';
 import AppFilter, { AppFilterProps } from '../Filter/AppFilter';
 import DirVariationsTemplate, { DirVariationsTemplateProps } from '../Directories/DirVariationsTemplate';

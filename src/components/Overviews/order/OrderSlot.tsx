@@ -1,8 +1,8 @@
-import FlexBox from '../atoms/FlexBox';
-import { IOrderSlot } from '../../types/orders/orders.types';
+import FlexBox from '../../atoms/FlexBox';
+import { IOrderSlot } from '../../../types/orders/orders.types';
 import styled from 'styled-components';
 import { useMemo } from 'react';
-import { t } from '../../lang';
+import { t } from '../../../lang';
 
 export interface OrderSlotProps {
   slot?: IOrderSlot;

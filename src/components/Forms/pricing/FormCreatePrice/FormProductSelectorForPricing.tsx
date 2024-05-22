@@ -2,7 +2,7 @@ import FlexBox from '../../../atoms/FlexBox';
 import { useEffect, useMemo, useState } from 'react';
 import { useModalProvider } from '../../../ModalProvider/ModalProvider';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
-import ProductCardSimpleOverview from '../../../Overviews/ProductCardSimpleOverview';
+import ProductCardSimpleOverview from '../../../Overviews/offer/ProductCardSimpleOverview';
 import { Modals } from '../../../Modals/Modals';
 import TableList from '../../../TableList/TableList';
 import { ServiceName, useAppServiceProvider } from 'hooks/useAppServices.hook';

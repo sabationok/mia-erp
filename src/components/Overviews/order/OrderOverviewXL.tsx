@@ -1,16 +1,26 @@
-import { OrderEntity } from '../../types/orders/orders.types';
-import FlexBox from '../atoms/FlexBox';
-import { ModalHeader } from '../atoms';
+import { OrderEntity } from '../../../types/orders/orders.types';
+import FlexBox from '../../atoms/FlexBox';
+import { ModalHeader } from '../../atoms';
 import React, { useMemo, useState } from 'react';
-import { useOrdersSelector } from '../../redux/selectors.store';
+import { useOrdersSelector } from '../../../redux/selectors.store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { t } from '../../lang';
-import { useAppParams } from '../../hooks';
-import { enumToFilterOptions } from '../../utils';
-import TabSelector from '../atoms/TabSelector';
+import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import { t } from '../../../lang';
+import { useAppParams } from '../../../hooks';
+import { _enumToTabs, enumToFilterOptions } from '../../../utils';
+import TabSelector from '../../atoms/TabSelector';
 import OrderOverviewInfoTab from './tabs/OrderOverviewInfoTab';
+
+export enum OrderOverviewInfoTabsEnum {
+  General = 'General',
+  Customer = 'Customer',
+  Invoicing = 'Invoicing',
+  Delivery = 'Delivery',
+  Additional = 'Additional',
+}
+
+export const orderOverviewInfoTabs = _enumToTabs(OrderOverviewInfoTabsEnum);
 
 export interface OrderOverviewXLProps {
   order?: OrderEntity;

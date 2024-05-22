@@ -1,6 +1,6 @@
 import { IOrderTempSlot } from '../../../../types/orders/orders.types';
 import { useMemo } from 'react';
-import OrderSlotOverview from '../../../Overviews/OrderSlotOverview';
+import OrderSlotOverview from '../../../Overviews/order/OrderSlotOverview';
 import FormAccordionItem from '../../components/FormAccordionItem';
 import styled, { useTheme } from 'styled-components';
 import FlexBox from '../../../atoms/FlexBox';
