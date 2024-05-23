@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import LogoSvg from 'components/Layout/LogoSvg';
@@ -12,6 +12,12 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import SecurityInputControlHOC from '../../atoms/Inputs/SecurityInputControlHOC';
 import { ToastService } from '../../../services';
+import { HasRegisterCompanyDtoFields, HasRegisterUserDtoFields } from '../../../types/auth.types';
+import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
+import { pick } from 'lodash';
+import { useAppParams, useAppRouter } from '../../../hooks';
+import { BusinessSubjectTypeEnum } from '../../../types/companies.types';
+import FlexBox from '../../atoms/FlexBox';
 
 export interface Props {
   helloTitle?: string;
@@ -20,45 +26,62 @@ export interface Props {
   login?: boolean;
 }
 
-export interface IRegistrationFormData {
-  name: string;
-  secondName: string;
+export interface IRegistrationFormData extends HasRegisterUserDtoFields, HasRegisterCompanyDtoFields {
   email: string;
   password: string;
   approvePassword: string;
 }
 
-const initialFormDataLogin: Partial<Pick<IRegistrationFormData, 'email' | 'password'>> = { email: '', password: '' };
-
-const initialFormDataRegister: IRegistrationFormData = {
-  name: '',
-  secondName: '',
-  email: '',
-  password: '',
-  approvePassword: '',
-};
-const validLogInData = yup.object().shape({
+const registerSchema = yup.object().shape({
+  name: yup.object().shape({
+    first: yup.string().optional(),
+    second: yup.string().optional(),
+  }),
+  label: yup.object().shape({
+    base: yup.string().optional(),
+    print: yup.string().optional(),
+  }),
   email: yup.string().required(),
   password: yup.string().required(),
-  approvePassword: yup.string(),
+  approvePassword: yup.string().required(),
+});
+const logInSchema = yup.object().shape({
+  email: yup.string().required(),
+  password: yup.string().required(),
 });
 
+const registerParam = {
+  [BusinessSubjectTypeEnum.person]: 'name',
+  [BusinessSubjectTypeEnum.company]: 'label',
+  [BusinessSubjectTypeEnum.entrepreneur]: null,
+} as const;
+
 export type AuthFormProps = Props & React.HTMLAttributes<HTMLFormElement>;
+
 const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...props }) => {
   const authService = useAuthService();
-  const navigate = useNavigate();
+  const router = useAppRouter();
 
-  const [isLogging, setIsLogging] = useState(false);
+  const navigate = useNavigate();
+  const loaders = useLoaders<'logIn' | 'register'>();
+  const businessType = useAppParams().businessType as BusinessSubjectTypeEnum;
+  const omitParam = registerParam?.[businessType];
+
+  useEffect(() => {
+    if (registration && (!businessType || !(businessType in registerParam))) {
+      router.replace({ pathname: BusinessSubjectTypeEnum.person });
+    }
+  }, [businessType, registration, router]);
 
   const {
     register,
     formState: { errors, isValid },
     handleSubmit,
     watch,
-  } = useForm<Partial<IRegistrationFormData>>({
-    defaultValues: (login && initialFormDataLogin) || (registration && initialFormDataRegister) || {},
+  } = useForm<IRegistrationFormData>({
     reValidateMode: 'onSubmit',
-    resolver: yupResolver(validLogInData),
+    resolver: yupResolver(login ? logInSchema : omitParam ? registerSchema.omit([omitParam]) : registerSchema),
+    shouldUnregister: true,
   });
   const formValues = watch();
 
@@ -67,21 +90,24 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
     [formValues.approvePassword, formValues.password, isValid, registration]
   );
 
-  function onFormSubmit(data: Partial<IRegistrationFormData>) {
+  function onFormSubmit(data: IRegistrationFormData) {
     login &&
       authService.loginUser({
-        data,
+        data: {
+          password: data.password,
+          email: data.email,
+        },
         onSuccess() {
           ToastService.success('Login success');
         },
         onError() {
           ToastService.error('Login error');
         },
-        onLoading: setIsLogging,
+        onLoading: loaders.onLoading('logIn'),
       });
     registration &&
-      authService.registerUser({
-        data,
+      authService.register({
+        data: pick(data, ['password', 'email', 'name']),
         onSuccess() {
           navigate('/auth/logIn');
           ToastService.success('Registration success');
@@ -89,7 +115,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
         onError() {
           ToastService.error('Registration error');
         },
-        onLoading: setIsLogging,
+        onLoading: loaders.onLoading('register'),
       });
   }
 
@@ -99,26 +125,62 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
 
       <Title>{title}</Title>
 
-      <Links>
-        <StNavLink textTransform="uppercase" variant="def" to={'/auth/login'}>
-          {'Вхід'}
-        </StNavLink>
+      <FlexBox fillWidth margin={'8px 0'}>
+        <Links>
+          <StNavLink textTransform="uppercase" variant="def" to={'/auth/login'}>
+            {'Вхід'}
+          </StNavLink>
 
-        <StNavLink textTransform="uppercase" variant="def" to={'/auth/register'}>
-          {'Реєстрація'}
-        </StNavLink>
-      </Links>
+          <StNavLink textTransform="uppercase" variant="def" to={`/auth/register/${BusinessSubjectTypeEnum.person}`}>
+            {'Реєстрація'}
+          </StNavLink>
+        </Links>
+
+        {registration && (
+          <Links>
+            <StNavLink textTransform="uppercase" variant="def" to={`/auth/register/${BusinessSubjectTypeEnum.person}`}>
+              {'Фіз. особа'}
+            </StNavLink>
+
+            <StNavLink textTransform="uppercase" variant="def" to={`/auth/register/${BusinessSubjectTypeEnum.company}`}>
+              {'Компанія'}
+            </StNavLink>
+            <StNavLink
+              textTransform="uppercase"
+              variant="def"
+              to={`/auth/register/${BusinessSubjectTypeEnum.entrepreneur}`}
+            >
+              {'ФОП'}
+            </StNavLink>
+          </Links>
+        )}
+      </FlexBox>
 
       <Inputs>
         {registration && (
           <>
-            <AuthInputLabel icon="personOutlined" error={errors.name}>
-              <InputText placeholder="І'мя" {...register('name')} />
-            </AuthInputLabel>
+            {businessType !== 'company' && (
+              <>
+                <AuthInputLabel icon="personOutlined" error={errors.name?.first}>
+                  <InputText placeholder="І'мя" {...register('name.first')} />
+                </AuthInputLabel>
 
-            <AuthInputLabel icon="personOutlined" error={errors.secondName}>
-              <InputText placeholder="Прізвище" {...register('secondName')} />
-            </AuthInputLabel>
+                <AuthInputLabel icon="personOutlined" error={errors.name?.second}>
+                  <InputText placeholder="Прізвище" {...register('name.second')} />
+                </AuthInputLabel>
+              </>
+            )}
+            {businessType !== 'person' && (
+              <>
+                <AuthInputLabel icon="personOutlined" error={errors.label?.base}>
+                  <InputText placeholder="Назва" {...register('label.base')} />
+                </AuthInputLabel>
+
+                <AuthInputLabel icon="personOutlined" error={errors.label?.print}>
+                  <InputText placeholder="Назва для друку" {...register('label.print')} />
+                </AuthInputLabel>
+              </>
+            )}
 
             <AuthInputLabel icon="email" error={errors.email}>
               <InputText placeholder="Електронна адреса" {...register('email')} />
@@ -161,7 +223,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
           textTransform="uppercase"
           variant="filledSmall"
           disabled={disableSubmit}
-          isLoading={isLogging}
+          isLoading={loaders.hasLoading}
         >
           {registration ? 'Зареєструватись' : 'Увійти'}
         </StButtonIcon>
@@ -220,14 +282,12 @@ const Title = styled.p`
   margin-bottom: 20px;
 `;
 
-const Links = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+const Links = styled(FlexBox)`
+  flex-direction: row;
+  justify-content: stretch;
 
   width: 100%;
   height: 36px;
-
-  margin-bottom: 16px;
 `;
 
 const Inputs = styled.div`
@@ -275,6 +335,7 @@ const StLink = styled(Link)`
 
 const StNavLink = styled(NavLinkIcon)`
   position: relative;
+  flex: 1;
 
   font-weight: 700;
   font-size: 12px;

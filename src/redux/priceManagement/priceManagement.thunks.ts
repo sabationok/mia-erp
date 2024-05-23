@@ -34,7 +34,6 @@ export const getPriceThunk = createAsyncThunk<
   arg.onLoading && arg.onLoading(true);
   try {
     const res = await PriceManagementApi.prices.getOne(undefined, arg.data?.params);
-
     return { ...arg.data, data: res.data?.data };
   } catch (e) {
     return thunkAPI.rejectWithValue(axiosErrorCheck(e));

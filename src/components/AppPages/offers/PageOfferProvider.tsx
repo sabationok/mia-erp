@@ -19,7 +19,7 @@ export const PageCurrentOfferCTX = createContext({});
 export const usePageCurrentOffer = () => useContext(PageCurrentOfferCTX) as PageOfferProviderValue;
 
 const PageOfferProvider: React.FC<PageOfferProviderProps> = ({ children }) => {
-  const service = useAppServiceProvider()[ServiceName.offers];
+  const offersSrv = useAppServiceProvider()[ServiceName.offers];
   const loaders = useOfferOverviewLoaders();
   const params = useAppParams();
   const offerId = params?.offerId;
@@ -30,7 +30,7 @@ const PageOfferProvider: React.FC<PageOfferProviderProps> = ({ children }) => {
     if (loaders?.isLoading?.offer) return;
 
     if (offerId) {
-      service
+      offersSrv
         .getOne({
           data: {
             params: {
@@ -49,12 +49,12 @@ const PageOfferProvider: React.FC<PageOfferProviderProps> = ({ children }) => {
   // const { currentOffer } = useProductsSelector();
 
   const clearCurrent = () => {
-    service.clearCurrent(undefined);
+    offersSrv.clearCurrent(undefined);
   };
 
   useEffect(() => {
     return () => {
-      service.clearCurrent(undefined);
+      offersSrv.clearCurrent(undefined);
     };
 
     // eslint-disable-next-line

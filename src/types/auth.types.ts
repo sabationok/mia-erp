@@ -57,4 +57,22 @@ export interface IRegistrationData extends ILoginUserData {
   secondName?: string;
 }
 
+export interface HasRegisterUserDtoFields {
+  name?: {
+    first?: string;
+    second?: string;
+  };
+}
+export interface HasRegisterCompanyDtoFields {
+  label?: {
+    base?: string;
+    full?: string;
+    print?: string;
+  };
+}
+export type RegisterDto = {
+  email?: string;
+  password?: string;
+} & (HasRegisterUserDtoFields | HasRegisterCompanyDtoFields);
+
 export type ICurrentUser = Pick<UserEntity, 'email'> & Pick<IAuthState, 'access_token' | 'refresh_token'>;

@@ -68,7 +68,7 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
                   dispatch(
                     getPriceThunk({
                       data: { params: { _id: currentId } },
-                      onLoading: loaders.onLoading('price'),
+                      onLoading: loaders.onLoading('price', undefined, { content: 'Refreshing price info...' }),
                       onSuccess: () => {},
                     })
                   );
@@ -98,7 +98,7 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
             ];
           },
     };
-  }, [withActions, onSelect, selectedRow?._id, loadData, loaders, modalS, currentOffer]);
+  }, [withActions, onSelect, selectedRow?._id, loadData, dispatch, loaders, modalS, currentOffer]);
 
   useEffect(() => {
     // if ((!currentOffer?.prices || currentOffer?.prices?.length === 0) && currentProduct?._id) {

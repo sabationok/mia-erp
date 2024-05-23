@@ -55,7 +55,10 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
           onSubmit: (data, o) => {
             service
               .createProperty({
-                data: { data: toReqData({ ...data, parent }), params: { createTreeData: true } },
+                data: {
+                  data: toReqData({ ...data, parent }),
+                  params: { createTreeData: true, dataView: 'tree', getAll: true },
+                },
                 onSuccess: rd => {
                   options?.onSuccess && options?.onSuccess(rd);
                   o?.close && modal?.onClose();
@@ -79,7 +82,10 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
           onSubmit: (data, o) => {
             service
               .createProperty({
-                data: { data: toReqData({ ...data, parent }), params: { createTreeData: true } },
+                data: {
+                  data: toReqData({ ...data, parent }),
+                  params: { createTreeData: true, dataView: 'tree', getAll: true },
+                },
                 onSuccess: rd => {
                   options?.onSuccess && options?.onSuccess(rd);
 
@@ -105,7 +111,7 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
           onSubmit: (data, o) => {
             service
               ?.updatePropertyById({
-                data: { _id, data, params: { createTreeData: true } },
+                data: { _id, data, params: { createTreeData: true, dataView: 'tree', getAll: true } },
                 onSuccess: rd => {
                   options?.onSuccess && options?.onSuccess(rd);
 
@@ -122,7 +128,11 @@ export const dirPropertiesActionsCreator: DirInTreeActionsCreatorType<
       console.log(_id, status);
       service
         .changeDisabledStatus({
-          data: { _id, data: { isSelectable: status }, params: { createTreeData: true } },
+          data: {
+            _id,
+            data: { isSelectable: status },
+            params: { createTreeData: true, dataView: 'tree', getAll: true },
+          },
         })
         .then();
     },

@@ -3,7 +3,7 @@ import {
   ILoggedUserInfoRes,
   ILoginUserData,
   IRegisteredUserInfoRes,
-  IRegistrationData,
+  RegisterDto,
   UserEntity,
 } from '../types/auth.types';
 import { ClientApi } from './client.api';
@@ -13,9 +13,9 @@ export default class AuthApi {
   private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.auth;
 
-  public static async registerUser(data?: IRegistrationData): Promise<IRegisteredUserInfoRes> {
+  public static register = (data?: RegisterDto): Promise<IRegisteredUserInfoRes> => {
     return this.api.post(this.endpoints[Endpoints.register](), data);
-  }
+  };
 
   public static async logInUser(data: ILoginUserData): Promise<ILoggedUserInfoRes> {
     return this.api.post(this.endpoints[Endpoints.logIn](), data);

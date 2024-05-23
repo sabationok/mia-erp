@@ -21,6 +21,10 @@ export function toReqData<IncomeDataType extends Record<string, any> = any, Omit
   // console.log('before', { inputCopy }, { outData });
   try {
     Object.entries(inputCopy).forEach(([key, value]) => {
+      if (!value) {
+        return;
+      }
+
       if (options?.ignorePaths?.includes(key)) {
         // console.log('ignorePaths', { key }, { value });
         outData[key] = value;

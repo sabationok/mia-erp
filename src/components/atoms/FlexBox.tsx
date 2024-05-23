@@ -109,11 +109,24 @@ export const FlexBoxCss = css<FlexBoxProps>`
     if (xlStyles) return XlStyles;
   }};
 `;
-const FlexBox = styled.div<FlexBoxProps>`
+export const FlexBox = styled.div<FlexBoxProps>`
   ${FlexBoxCss}
 `;
-export const FlexLabel = styled.label<FlexBoxProps>`
+
+export const FlexFieldSet = styled.fieldset<FlexBoxProps>`
   ${FlexBoxCss}
+  &[disabled] {
+    & input,
+    & button,
+    & textarea {
+      pointer-events: none;
+      user-select: none;
+      opacity: 75%;
+    }
+  }
+`;
+export const FlexLabel = styled.label<FlexBoxProps>`
+  ${FlexBoxCss};
 `;
 export const FlexUl = styled.ul<FlexBoxProps>`
   ${FlexBoxCss}

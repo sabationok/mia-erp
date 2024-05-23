@@ -1,16 +1,18 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
-import { ILoginUserData, IRegistrationData } from '../types/auth.types';
-import { logInUserThunk, logOutUserThunk, registerUserThunk } from '../redux/auth/auth.thunks';
-import { ServiceDispatcher, ServiceDispatcherAsync } from '../redux/global.types';
+import { ILoginUserData, RegisterDto } from '../types/auth.types';
+import { logInUserThunk, logOutUserThunk } from '../redux/auth/auth.thunks';
+import { ServiceApiCaller, ServiceDispatcher, ServiceDispatcherAsync } from '../redux/global.types';
 import { useMemo } from 'react';
-import { defaultThunkPayload } from '../utils/fabrics';
+import { defaultApiCallPayload, defaultThunkPayload } from '../utils/fabrics';
 import { SetLoggedUserAction } from '../redux/auth/auth.actions';
+import { apiCall } from '../api';
+import AuthApi from '../api/auth.api';
 
 export interface AuthService {
   sendRecoveryEmail: ServiceDispatcherAsync<Pick<ILoginUserData, 'email'>>;
   logOutUser: ServiceDispatcherAsync;
   loginUser: ServiceDispatcherAsync<ILoginUserData>;
-  registerUser: ServiceDispatcherAsync<IRegistrationData>;
+  register: ServiceApiCaller<RegisterDto>;
   recoveryPassword: (...args: any[]) => void;
   setLoggedUser: ServiceDispatcher;
 }
@@ -22,7 +24,7 @@ const useAuthService = (): AuthService => {
       sendRecoveryEmail: arg => dispatch(logInUserThunk(defaultThunkPayload(arg))),
       loginUser: arg => dispatch(logInUserThunk(defaultThunkPayload(arg))),
       logOutUser: arg => dispatch(logOutUserThunk(defaultThunkPayload(arg))),
-      registerUser: arg => dispatch(registerUserThunk(defaultThunkPayload(arg))),
+      register: arg => apiCall(AuthApi.register, defaultApiCallPayload(arg)),
       recoveryPassword: arg => {
         console.log(defaultThunkPayload(arg));
       },

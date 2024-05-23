@@ -1,4 +1,4 @@
-import FlexBox, { FlexForm } from '../../atoms/FlexBox';
+import FlexBox, { FlexFieldSet, FlexForm } from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import FormAreaFooter from './FormAreaFooter';
@@ -66,6 +66,8 @@ export const AccordionFormArea = ({
     }
   }, [isOpen]);
 
+  useEffect(() => {}, []);
+
   return (
     <FlexBox fillWidth style={{ position: 'relative' }}>
       {!hideLabel && (
@@ -98,8 +100,8 @@ export const AccordionFormArea = ({
         </Header>
       )}
 
-      <ExpandableBox isActive={_isOpen}>
-        {children}
+      <ExpandableBox disabled={disabled} isActive={_isOpen}>
+        {_isOpen ? children : null}
 
         {renderFooter || (
           <FormAreaFooter
@@ -124,7 +126,7 @@ const Header = styled(FlexBox)`
 
   background-color: ${p => p.theme.modalBackgroundColor};
 `;
-const ExpandableBox = styled(FlexBox)`
+const ExpandableBox = styled(FlexFieldSet)`
   overflow: hidden;
   max-height: ${p => (p.isActive ? '100%' : '0')};
   padding: 0 8px;

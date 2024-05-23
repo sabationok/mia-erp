@@ -10,6 +10,9 @@ export enum AppUrlParamKeys {
   orderId = 'orderId',
   refundId = 'refundId',
   customerId = 'customerId',
+  for = 'for',
+  type = 'type',
+  businessType = 'businessType',
 }
 export type AppUrlParams = Record<AppUrlParamKeys, string>;
 const useAppParams = (): Readonly<Partial<AppUrlParams>> => useParams<AppUrlParams>();

@@ -35,8 +35,8 @@ const ButtonSwitch = <Name extends string | number | symbol = string>({
 
   const options = useMemo(
     () => [
-      { value: false, label: t(rejectLabel ?? 'No') },
-      { value: true, label: t(acceptLabel ?? 'Yes') },
+      { value: false, label: rejectLabel ?? t('No') },
+      { value: true, label: acceptLabel ?? t('Yes') },
     ],
     [acceptLabel, rejectLabel]
   );
@@ -47,9 +47,7 @@ const ButtonSwitch = <Name extends string | number | symbol = string>({
     }
   }, [value]);
 
-  return (
-    <ButtonsGroup options={options} disabled={disabled} defaultIndex={current ? 1 : 0} onChangeIndex={handleChange} />
-  );
+  return <ButtonsGroup options={options} disabled={disabled} value={current} onChangeIndex={handleChange} />;
 };
 
 export default ButtonSwitch;

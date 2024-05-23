@@ -102,6 +102,8 @@ export interface AppQueryParams<Type = any> extends AppQueries<Type>, Pagination
   deleted?: boolean;
   disabled?: boolean;
   createTreeData?: boolean;
+  getAll?: boolean;
+  dataView?: 'tree' | 'list';
   sortParams?: ISortParams;
   search?: string;
   searchBy?: string;

@@ -8,16 +8,16 @@ import {
   ILoginUserData,
   IRegisteredUser,
   IRegisteredUserInfoRes,
-  IRegistrationData,
+  RegisterDto,
 } from '../../types/auth.types';
 import { ThunkPayload } from '../store.store';
 import AuthApi from '../../api/auth.api';
 
-export const registerUserThunk = createAsyncThunk<IRegisteredUser, ThunkPayload<IRegistrationData>>(
-  'auth/registerUserThunk',
+export const registerUserThunk = createAsyncThunk<IRegisteredUser, ThunkPayload<RegisterDto>>(
+  'auth/registerThunk',
   async ({ data, onSuccess, onError }, thunkAPI) => {
     try {
-      const response: IRegisteredUserInfoRes = await AuthApi.registerUser(data);
+      const response: IRegisteredUserInfoRes = await AuthApi.register(data);
 
       onSuccess && onSuccess(response.data.data);
 

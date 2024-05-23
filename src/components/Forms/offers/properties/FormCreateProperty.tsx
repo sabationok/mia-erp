@@ -8,11 +8,11 @@ import InputText from '../../../atoms/Inputs/InputText';
 import { useAppForm } from '../../../../hooks';
 import { IProperty, IPropertyBase, IPropertyDto, PropertyFormData } from '../../../../types/offers/properties.types';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../components/FormAfterSubmitOptions';
-import { Text } from '../../../atoms/Text';
-import styled from 'styled-components';
 import ButtonSwitch from '../../../atoms/ButtonSwitch';
-import React, { useEffect } from 'react';
+import React from 'react';
 import LangButtonsGroup from '../../../atoms/LangButtonsGroup';
+import { AccordionFormArea } from '../../FormArea/AccordionForm';
+import { toReqData } from '../../../../utils';
 
 export interface FormCreatePropertyProps extends Omit<ModalFormProps<OfferTypeEnum, any, IPropertyBase>, 'onSubmit'> {
   onSubmit?: AppSubmitHandler<IPropertyDto, { isGroup?: boolean; isProperty?: boolean; isValue?: boolean }>;
@@ -44,19 +44,18 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
     register,
     handleSubmit,
     setValue,
+    formValues,
   } = useAppForm<IPropertyFormData>({
-    defaultValues: { ...defaultState, type } as IPropertyFormData,
+    defaultValues: { isSelectable: false, ...defaultState, type } as IPropertyFormData,
   });
 
-  console.log(errors);
-
-  const onValid = (data: IPropertyFormData) => {
-    onSubmit && onSubmit(data, { ...submitOptions.state, isGroup, isProperty, isValue });
+  const selectableHandler = (checked: boolean) => {
+    setValue('isSelectable', checked);
   };
 
-  useEffect(() => {
-    console.log('parent', defaultState?.parent);
-  }, [defaultState?.parent]);
+  const onValid = (data: IPropertyFormData) => {
+    onSubmit && onSubmit(toReqData(data), { ...submitOptions.state, isGroup, isProperty, isValue });
+  };
 
   return (
     <ModalForm
@@ -68,54 +67,40 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
       }}
       extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
-      <FlexBox padding={'4px 8px 8px'} flex={1} fillWidth>
-        <InputLabel label={t('type')} disabled>
-          <InputText placeholder={t('type')} {...register('type')} disabled />
-        </InputLabel>
-
-        {(isProperty || isValue) && (
-          <InputLabel label={t(isProperty ? 'group' : 'property')} disabled>
-            <InputText
-              placeholder={t(isProperty ? 'group' : 'property')}
-              defaultValue={defaultState?.parent?.label ?? ''}
-              disabled
-            />
-          </InputLabel>
-        )}
-
-        <InputLabel label={t('label')} required>
-          <InputText placeholder={t('insertLabel')} {...register('label')} autoFocus required />
-        </InputLabel>
-
-        {isProperty && (
-          <InputLabel label={'Доступно для формування варіацій'}>
-            <ButtonSwitch
-              name={'isSelectable'}
-              value={!!defaultState?.isSelectable}
-              onChange={res => {
-                setValue('isSelectable', res);
-              }}
-            />
-          </InputLabel>
-        )}
-
-        <CmsConfigs margin={'8px 0 0'} fillWidth>
-          <CmsConfigsHeader padding={'8px'} justifyContent={'flex-end'} fxDirection={'row'} fillWidth>
-            <Text $size={13} $weight={500}>
-              {t('Cms configs')}
-            </Text>
-          </CmsConfigsHeader>
-
-          <InputLabel label={t('Cms key')}>
-            <InputText placeholder={t('Key')} {...register('cmsConfigs.key')} />
+      <FlexBox padding={'4px 8px 8px'} flex={1} gap={12} fillWidth>
+        <AccordionFormArea label={'Main info'} expandable={false} isOpen={true}>
+          <InputLabel label={t('type')} disabled>
+            <InputText placeholder={t('type')} {...register('type')} disabled />
           </InputLabel>
 
+          {(isProperty || isValue) && (
+            <InputLabel label={t(isProperty ? 'group' : 'property')} disabled>
+              <InputText
+                placeholder={t(isProperty ? 'group' : 'property')}
+                defaultValue={defaultState?.parent?.label ?? ''}
+                disabled
+              />
+            </InputLabel>
+          )}
+
+          <InputLabel label={t('label')} required>
+            <InputText placeholder={t('insertLabel')} {...register('label')} autoFocus required />
+          </InputLabel>
+
+          {isProperty && (
+            <InputLabel label={'Доступно для формування варіацій'}>
+              <ButtonSwitch name={'isSelectable'} value={!!formValues?.isSelectable} onChange={selectableHandler} />
+            </InputLabel>
+          )}
+        </AccordionFormArea>
+
+        <AccordionFormArea label={'Cms params'} expandable={true} isOpen={false} disabled>
           <InputLabel label={t('Cms key')} error={errors?.cmsConfigs?.key}>
             <InputText placeholder={'Key'} {...register('cmsConfigs.key')} />
           </InputLabel>
 
-          <InputLabel label={t('Language key')} error={errors?.cmsConfigs?.key}>
-            <LangButtonsGroup />
+          <InputLabel label={t('Language key')}>
+            <LangButtonsGroup disabled />
           </InputLabel>
 
           <InputLabel label={t('Label by lang key')} error={errors?.cmsConfigs?.labels?.ua}>
@@ -130,30 +115,23 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
 
           {isValue && defaultState?.parent?.cmsConfigs?.type === 'color' && (
             <InputLabel label={t('Colors')}>
-              <InputText placeholder={t('Colors')} type={'color'} {...register('cmsConfigs.description')} />
+              <InputText placeholder={t('Colors')} type={'color'} {...register('cmsConfigs.colors')} />
             </InputLabel>
           )}
-
-          {/*{isProperty && (*/}
-          {/*  <InputLabel label={t('Cms type')}>*/}
-          {/*    <CustomSelect*/}
-          {/*      {...registerSelect('cmsConfigs.type', {*/}
-          {/*        options: propCmsTypeFilterOptions,*/}
-          {/*        placeholder: t('Select cms type'),*/}
-          {/*      })}*/}
-          {/*    />*/}
-          {/*  </InputLabel>*/}
-          {/*)}*/}
-        </CmsConfigs>
+        </AccordionFormArea>
+        {/*{isProperty && (*/}
+        {/*  <InputLabel label={t('Cms type')}>*/}
+        {/*    <CustomSelect*/}
+        {/*      {...registerSelect('cmsConfigs.type', {*/}
+        {/*        options: propCmsTypeFilterOptions,*/}
+        {/*        placeholder: t('Select cms type'),*/}
+        {/*      })}*/}
+        {/*    />*/}
+        {/*  </InputLabel>*/}
+        {/*)}*/}
       </FlexBox>
     </ModalForm>
   );
 };
 
-const CmsConfigs = styled(FlexBox)``;
-
-const CmsConfigsHeader = styled(FlexBox)`
-  border-top: 1px solid ${p => p.theme.modalBorderColor};
-  border-bottom: 1px solid ${p => p.theme.modalBorderColor};
-`;
 export default FormCreateProperty;

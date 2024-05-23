@@ -139,11 +139,11 @@ export enum ApiDirType {
 }
 
 const auth = {
-  register: () => `${API_BASE_ROUTES.AUTH}/${Endpoints.register}`,
-  logIn: () => `${API_BASE_ROUTES.AUTH}/${Endpoints.logIn}`,
-  logOut: () => `${API_BASE_ROUTES.AUTH}/${Endpoints.logOut}`,
-  deleteById: (id?: string) => `${API_BASE_ROUTES.AUTH}/${Endpoints.deleteById}`,
-  getCurrent: (id?: string) => `${API_BASE_ROUTES.AUTH}/${Endpoints.getCurrent}`,
+  register: () => `${API_BASE_ROUTES.AUTH}/register`,
+  logIn: () => `${API_BASE_ROUTES.AUTH}/logIn`,
+  logOut: () => `${API_BASE_ROUTES.AUTH}/logOut`,
+  deleteById: (id?: string) => `${API_BASE_ROUTES.AUTH}/deleteById`,
+  getCurrent: (id?: string) => `${API_BASE_ROUTES.AUTH}/getCurrent`,
 };
 const permissions: ApiEndpointsMap = {
   updateById: (permissionId?: string) => `${API_BASE_ROUTES.PERMISSIONS}/delete/${permissionId}`,

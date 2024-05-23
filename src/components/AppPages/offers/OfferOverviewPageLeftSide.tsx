@@ -43,7 +43,7 @@ const OfferOverviewPageLeftSide: React.FC<OfferOverviewPageLeftSideProps> = ({ t
           if (!page.currentOffer?._id) return;
 
           offersSrv.getOne({
-            data: { params: { _id: page.currentOffer?._id } },
+            data: { params: { _id: page.currentOffer?._id, getPrices: false, getVariations: false } },
             onLoading: loaders.onLoading('offer'),
           });
         }}

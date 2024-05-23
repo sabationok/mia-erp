@@ -27,7 +27,7 @@ import { IVariationReqData, VariationEntity } from '../types/offers/variations.t
 import { clearCurrentProductAction } from '../redux/products/products.actions';
 import { PriceEntity } from '../types/price-management/price-management.types';
 import { WarehouseItemEntity } from '../types/warehousing/warehouses.types';
-import { GetAllPricesQuery } from '../api/priceManagement.api';
+import { GetAllPricesQuery } from '../api';
 
 export interface OffersService {
   create: ServiceDispatcherAsync<IProductReqData, OfferEntity>;
@@ -37,7 +37,7 @@ export interface OffersService {
     OfferEntity
   >; // !!!!! ===>>> ServiceDispatcher
   getById: ServiceApiCaller<string, OfferEntity>;
-  getOne: ServiceDispatcherAsync<{ params?: GetOneOfferQuery }, OfferEntity>;
+  getOne: ServiceDispatcherAsync<{ params?: GetOneOfferQuery }, { data: OfferEntity }>;
   getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, OfferEntity[]>;
   getProductFullInfo: ServiceDispatcherAsync<OnlyUUID, OfferEntity>;
   clearCurrent: ServiceDispatcher<undefined>;

@@ -50,7 +50,7 @@ const ButtonsGroup = <V = any,>({
 
   const renderButtons = useMemo(() => {
     return options?.map((opt, idx) => {
-      const isActive = value ? value === opt.value : current === idx;
+      const isActive = value !== undefined ? value === opt.value : current === idx;
       return (
         <OptionButton
           key={`group-option-${opt?.label || idx}`}
