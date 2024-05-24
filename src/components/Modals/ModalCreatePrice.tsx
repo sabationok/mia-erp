@@ -61,7 +61,7 @@ const ModalCreatePrice: React.FC<ModalCreatePriceProps> = ({ updateId, offer, on
     >
       <LoadersProvider value={loaders}>
         <FlexBox padding={'0 0 24px'}>
-          <CreatePriceFormArea defaultState={loaders.state?.price} />
+          <CreatePriceFormArea offer={offer} defaultState={loaders.state?.price} />
 
           {!!loaders.state.discounts?.length && (
             <TableList

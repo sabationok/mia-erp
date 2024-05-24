@@ -47,7 +47,7 @@ export function AddDiscountFormArea({ onSuccess, priceId, ...props }: AddDiscoun
     },
   });
 
-  const { reset, setValue, formValues, register, trigger, handleSubmit, ...methods } = form;
+  const { setValue, formValues, register, handleSubmit } = form;
 
   const onValid = (fData: PriceDiscountDto) => {
     apiCall(DiscountsApi.create, {

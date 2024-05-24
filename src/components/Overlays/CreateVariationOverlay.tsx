@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import FlexBox from '../atoms/FlexBox';
+import FlexBox, { FlexForm } from '../atoms/FlexBox';
 import { usePropertiesSelector } from '../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import * as React from 'react';
@@ -25,6 +25,7 @@ import { IProperiesGroup, IProperty, IPropertyValue } from '../../types/offers/p
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
 import { OfferEntity } from '../../types/offers/offers.types';
+import CustomSelect, { CustomSelectHandler } from '../atoms/Inputs/CustomSelect/CustomSelect';
 
 export interface CreateVariationModalProps
   extends CreatedOverlay,
@@ -69,7 +70,39 @@ const validation = yup.object().shape({
     out: yup.string(),
   }),
 });
+export const PropTemplateSelect = ({
+  selected,
+  onSelect,
+}: {
+  selected?: IProperiesGroup;
+  onSelect?: (opt: IProperiesGroup) => void;
+}) => {
+  const templates = usePropertiesSelector();
+  const [currentTemplate, setCurrentTemplate] = useState<IProperiesGroup | undefined>(selected);
+  // const loaders = useLoaders<'getList'>();
+  const handleSelect: CustomSelectHandler<IProperiesGroup> = option => {
+    if (onSelect && option) {
+      onSelect(option);
+    } else {
+      setCurrentTemplate(option);
+    }
+  };
 
+  useEffect(() => {
+    if (selected) {
+      setCurrentTemplate(selected);
+    }
+  }, [selected]);
+
+  return (
+    <CustomSelect
+      label={t('Select properties group')}
+      selectedOption={currentTemplate}
+      onSelect={handleSelect}
+      options={templates}
+    />
+  );
+};
 const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   onClose,
   title,
@@ -82,13 +115,11 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   ...props
 }) => {
   const service = useAppServiceProvider()[ServiceName.offers];
-  const templates = usePropertiesSelector();
   const loaders = useLoaders<'create'>();
   const currentOffer = useCurrentOffer({ id: update || offerId || offer?._id });
   const submitOptions = useAfterSubmitOptions();
-  // _setCurrentTemplate
-  const [currentTemplate] = useState<IProperiesGroup>(templates?.[0]);
   const [selectedPropsMap, setSelectedPropsMap] = useState<Record<string, IPropertyValue>>({});
+  const [currentTemplate, setCurrentTemplate] = useState<IProperiesGroup>();
 
   const { propertiesList, propValuesDataMap } = useMemo(() => {
     const list = currentTemplate?.childrenList?.filter(el => el?.isSelectable);
@@ -126,10 +157,6 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
     reset,
   } = formMethods;
 
-  useEffect(() => {
-    console.log({ formValues });
-  }, [formValues]);
-
   const selectedIds = useMemo(() => {
     return formValues?.propertiesMap ? Object.values(formValues?.propertiesMap) : [];
     // eslint-disable-next-line
@@ -139,7 +166,7 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
     return selectedIds.length > 0;
   }, [selectedIds.length]);
 
-  const { label } = useMemo(() => {
+  const { label: compiledLabel } = useMemo(() => {
     // const _sortedIds = Object.keys(selectedPropsMap ?? {}).sort((prev, next) => prev.localeCompare(next));
 
     const _sorted = Object.entries(selectedPropsMap).sort((prev, next) => {
@@ -157,8 +184,8 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   }, [currentOffer?.label, selectedPropsMap]);
 
   useEffect(() => {
-    setValue('label', label);
-  }, [label, setValue]);
+    setValue('label', compiledLabel);
+  }, [compiledLabel, setValue]);
 
   const onValid = useCallback(
     (data: IVariationFormData) => {
@@ -255,6 +282,8 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
           {/*<DimensionsInputs form={formMethods} />*/}
         </Inputs>
 
+        <PropTemplateSelect onSelect={setCurrentTemplate} selected={currentTemplate} />
+
         <TemplateBox padding={'0 0 8px'} margin={'8px 0 0'}>
           {renderTemplate}
         </TemplateBox>
@@ -295,13 +324,13 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   );
 };
 
-const FormContainer = styled.form`
+const FormContainer = styled(FlexForm)`
   flex: 1;
+  max-height: 100%;
+  height: 100vh;
 
-  display: flex;
-  flex-direction: column;
   width: 100%;
-  padding: 0 8px;
+  padding: 0 12px;
 
   overflow: hidden;
 

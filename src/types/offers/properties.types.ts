@@ -56,6 +56,7 @@ export interface CmsPropertyConfigsDto extends ICmsBaseConfigs {
   description?: string;
 }
 export interface PropertyFormData {
+  _id?: string;
   parent?: IFormDataValueWithID;
   label?: string;
   type?: OfferTypeEnum;

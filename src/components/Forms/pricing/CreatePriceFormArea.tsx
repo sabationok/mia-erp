@@ -93,7 +93,10 @@ export const CreatePriceFormArea = ({ update, offer, defaultState }: FormCreateP
   };
   const onValid = (formData: IPriceFormData) => {
     const dataForReq = toReqData(formData);
-
+    if (!formData?.offer?._id) {
+      ToastService.warning('Not passed offer id');
+      return;
+    }
     if (update) {
       service.updatePriceById({
         data: { data: { _id: update, data: dataForReq }, updateCurrent: true },
