@@ -5,36 +5,25 @@ export const updateIdsArray = ({
   toggle,
 }: {
   id: string;
-  arr?: string[] | ProxyConstructor;
+  arr?: string[];
   remove?: boolean;
   toggle?: boolean;
 }): string[] => {
-  // if (!Array.isArray(arr)) {
-  //   console.log('IS NOT AN ARRAY');
-  //   console.log(arr, { id });
-  // }
-
   if (toggle) {
-    if (Array.isArray(arr)) {
-      // console.warn('toggle | isArray');
+    if (arr) {
       return !arr.includes(id) ? [id, ...arr] : arr.filter(el => el !== id);
     }
-    // console.warn('toggle | not isArray');
     return [id];
   } else if (remove) {
     if (Array.isArray(arr)) {
-      // console.warn('remove | isArray');
       return arr.filter(el => el !== id);
     }
-    // console.warn('remove | not isArray');
     return [];
   }
-  if (Array.isArray(arr)) {
-    // console.warn('isArray ADD TO ARRAY', !arr.includes(id));
-
+  if (arr) {
     return !arr.includes(id) ? [id, ...arr] : arr;
   }
-  return (arr || []) as string[];
+  return [id] as string[];
 };
 
 export const updateArray = <Data = any>({

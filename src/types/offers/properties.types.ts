@@ -2,29 +2,46 @@ import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/global.types'
 import { AppQueryParams } from '../../api';
 import { OfferTypeEnum } from './offers.types';
 import { ICmsBaseConfigs } from '../cms.types';
-import { MaybeNull } from '../utils.types';
+import { MaybeNull, PartialRecord, UUID, Values } from '../utils.types';
 
-export interface IPropertyBase extends IBase {
+export enum PropertyLevelTypeEnum {
+  group = 'group',
+  prop = 'prop',
+  value = 'value',
+}
+export enum PropertySelectableTypeEnum {
+  static = 'static',
+  dynamic = 'dynamic',
+}
+export type PropertyLevelIsType = PartialRecord<Values<typeof PropertyLevelTypeEnum>, boolean>;
+interface PropertyTempData {
+  levelIs?: PropertyLevelIsType;
+  selectableType?: PropertySelectableTypeEnum;
+}
+export interface PropertyBaseEntity extends IBase, PropertyTempData {
   label?: MaybeNull<string>;
   type?: OfferTypeEnum;
   isSelectable?: MaybeNull<boolean>;
+  levelType?: PropertyLevelTypeEnum;
 
-  parent?: IPropertyBase;
-  childrenList?: IPropertyBase[];
+  parent?: PropertyBaseEntity;
+  childrenList?: PropertyBaseEntity[];
 
   cmsConfigs?: MaybeNull<ICmsPropertyConfigs>;
 }
 
-export interface IProperiesGroup extends Omit<IPropertyBase, 'parent'> {
-  childrenList?: IProperty[];
+export interface ProperiesGroupEntity extends Omit<PropertyBaseEntity, 'parent'> {
+  childrenList?: PropertyEntity[];
+  levelType?: PropertyLevelTypeEnum.group;
 }
-export interface IProperty extends IPropertyBase {
-  parent?: IProperiesGroup;
-  childrenList?: IPropertyValue[];
+export interface PropertyEntity extends PropertyBaseEntity {
+  parent?: ProperiesGroupEntity;
+  childrenList?: PropertyValueEntity[];
+  levelType?: PropertyLevelTypeEnum.prop;
 }
-
-export interface IPropertyValue extends Omit<IPropertyBase, 'childrenList'> {
-  parent?: IProperty;
+export interface PropertyValueEntity extends Omit<PropertyBaseEntity, 'childrenList'> {
+  parent?: PropertyEntity;
+  levelType?: PropertyLevelTypeEnum.value;
 }
 
 export enum PropertyTypeEnum {
@@ -56,11 +73,13 @@ export interface CmsPropertyConfigsDto extends ICmsBaseConfigs {
   description?: string;
 }
 export interface PropertyFormData {
-  _id?: string;
+  _id?: UUID;
   parent?: IFormDataValueWithID;
+  parentId?: UUID;
   label?: string;
   type?: OfferTypeEnum;
   isSelectable?: boolean;
+  levelType?: PropertyLevelTypeEnum;
 
   cmsConfigs?: MaybeNull<CmsPropertyConfigsDto>;
 }

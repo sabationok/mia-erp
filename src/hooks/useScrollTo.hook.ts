@@ -1,15 +1,20 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { isUndefined } from 'lodash';
 import { ToastService } from '../services';
-import { checks } from '../utils';
 
 export const useScrollTo = <E extends HTMLElement = any>(
   id?: string | number,
-  options?: { delay?: number; horizontal?: boolean; offsetFix?: number }
+  {
+    preventDefault = false,
+    ...options
+  }: { delay?: number; horizontal?: boolean; offsetFix?: number; preventDefault?: boolean } = {}
 ) => {
   const listRef = useRef<E>(null);
 
   const scrollTo = useCallback(
-    (id: string | number) => {
+    async (id: string | number) => {
+      // const hashId = window.location.hash.replace('#', '');
+
       try {
         if (!(listRef.current instanceof HTMLElement)) {
           return;
@@ -25,7 +30,6 @@ export const useScrollTo = <E extends HTMLElement = any>(
             left: options?.horizontal ? countedOffset : 0,
             behavior: 'smooth',
           };
-          console.log({ scrollToOptions, offset, countedOffset });
 
           listRef.current?.scrollTo(scrollToOptions);
         }
@@ -38,12 +42,14 @@ export const useScrollTo = <E extends HTMLElement = any>(
   );
 
   useEffect(() => {
-    if (!checks.isUnd(id)) {
+    if (preventDefault) return;
+
+    if (!isUndefined(id)) {
       setTimeout(() => {
         scrollTo(id);
-      }, options?.delay || 500);
+      }, options?.delay ?? 500);
     }
-  }, [id, options?.delay, options?.horizontal, scrollTo]);
+  }, [id, options?.delay, preventDefault, scrollTo]);
 
   return { listRef, scrollTo };
 };

@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
 import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
-import { IProperty } from '../../../types/offers/properties.types';
+import { PropertyEntity } from '../../../types/offers/properties.types';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { CellStyledComp } from './CellStyles';
 
 interface OverviewPropertyComponentProps {
-  item: IProperty;
+  item: PropertyEntity;
   selectedItems?: string[];
   data?: OfferEntity;
   index: number;

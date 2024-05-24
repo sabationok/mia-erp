@@ -1,4 +1,4 @@
-import { IProperiesGroup, IPropertyValue } from '../../../types/offers/properties.types';
+import { ProperiesGroupEntity, PropertyValueEntity } from '../../../types/offers/properties.types';
 import { IFormDataValueWithID } from '../../../redux/global.types';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import FlexBox from '../../atoms/FlexBox';
@@ -7,9 +7,9 @@ import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { Text } from '../../atoms/Text';
 
 export interface FormProductStaticPropertiesProps {
-  template?: IProperiesGroup;
+  template?: ProperiesGroupEntity;
   formData?: IFormDataValueWithID[];
-  onSelect?: (id: string, option?: IPropertyValue) => void;
+  onSelect?: (id: string, option?: PropertyValueEntity) => void;
   onChange?: (ids: string[]) => void;
   children?: React.ReactNode;
   defaultData?: string[];
@@ -30,7 +30,7 @@ const FormProductStaticProperties: React.FC<FormProductStaticPropertiesProps> = 
   }, [defaultData]);
 
   const handleSelect = useCallback(
-    (id: string, option?: IPropertyValue) => {
+    (id: string, option?: PropertyValueEntity) => {
       setSelectedIds(p => {
         const newData = p.includes(id) ? p.filter(el => el !== id) : [...p, id];
         onSelect && onSelect(id);

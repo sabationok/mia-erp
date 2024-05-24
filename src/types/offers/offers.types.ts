@@ -6,7 +6,7 @@ import { IWarehouse, WarehouseItemEntity } from '../warehousing/warehouses.types
 import { IBrand } from '../../redux/directories/brands.types';
 import { AppQueries, AppQueryParams } from '../../api';
 import { VariationEntity } from './variations.types';
-import { IPropertyValue } from './properties.types';
+import { PropertyValueEntity } from './properties.types';
 import {
   AppDate,
   HasAuthor,
@@ -116,7 +116,7 @@ export interface IOfferWithRelatedFields
   recommends?: OfferEntity[];
 
   // template?: IVariationTemplate;
-  properties?: IPropertyValue[];
+  properties?: PropertyValueEntity[];
 
   variations?: VariationEntity[];
   prices?: PriceEntity[];

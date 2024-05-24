@@ -36,7 +36,7 @@ export interface CustomSelectBaseProps<Option = CustomSelectOptionBase> {
 
 export type CustomSelectOnClickHandler = <Option = any>(option?: Option, value?: keyof Option, index?: number) => void;
 
-export type CustomSelectHandler<Option = any> = (option?: Option, value?: keyof Option, index?: number) => void;
+export type CustomSelectHandler<Option = any> = (option: Option, value?: keyof Option, index?: number) => void;
 
 export type CustomSelectOptionBase = {
   _id?: string;

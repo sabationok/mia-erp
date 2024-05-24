@@ -6,28 +6,28 @@ import { LangPack } from '../lang';
 import { Path } from 'react-hook-form';
 
 export type UUID = string;
+export type LABEL = string;
+export type SKU = string;
+export type ARtICLE = string;
+export type REFERENCE = string;
+
 export interface OnlyUUID {
   _id: UUID;
 }
+export type Ref = OnlyUUID;
 
 export type FieldValues = Record<string, any>;
 
 export type Values<T extends any> = T[keyof T];
 export type Keys<T extends any> = keyof T;
 
-export type PaginationDto = {
-  offset?: number;
-  limit?: number;
-};
+export type RefsMap<Keys extends string | number | symbol> = Partial<Record<Keys, Ref>>;
 
-export type Ref = OnlyUUID;
-export type RefsObj<Keys extends string | number | symbol> = Partial<Record<Keys, Ref>>;
+export type ArrayOfUUID = Array<string>;
 
-export type ArrayUUID = Array<string>;
-export type ArrayOfObjUUID = Array<OnlyUUID>;
+export type ArrayOfRefs = Array<OnlyUUID>;
 
 export type IdKeyVersion = '_id' | 'id';
-export type ObjUUID<K extends IdKeyVersion = '_id'> = Record<K, string>;
 
 export interface IBase extends OnlyUUID {
   createdAt?: MaybeNull<Date | string>;

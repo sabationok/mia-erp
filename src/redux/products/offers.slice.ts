@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { StateErrorType } from 'redux/reduxTypes.types';
-import { OfferEntity } from '../../types/offers/offers.types';
+import { OfferEntity, OfferTypeEnum } from '../../types/offers/offers.types';
 import {
   createProductThunk,
   getAllInventoriesByProductIdThunk,
@@ -16,7 +16,12 @@ import {
   getAllVariationsByOfferIdThunk,
   updateVariationThunk,
 } from './variations/variations.thunks';
-import { IProperiesGroup } from '../../types/offers/properties.types';
+import {
+  ProperiesGroupEntity,
+  PropertyBaseEntity,
+  PropertyLevelTypeEnum,
+  PropertySelectableTypeEnum,
+} from '../../types/offers/properties.types';
 import { createPropertyThunk, getAllPropertiesThunk } from './properties/properties.thunks';
 import {
   clearCurrentProductAction,
@@ -24,20 +29,17 @@ import {
   setCurrentProductPricesAction,
   setCurrentProductVariationsAction,
 } from './products.actions';
-import { PartialRecord } from '../../types/utils.types';
+import { PartialRecord, SKU, UUID } from '../../types/utils.types';
 import { VariationEntity } from '../../types/offers/variations.types';
 import { onCreatePriceCase, onGetPricesCase, onUpdatePriceCase } from '../priceManagement/prices.actions';
 import { Action } from '../store.store';
 import { PriceEntity } from '../../types/price-management/price-management.types';
 
-type SKU = string;
-type UUID = string;
-
 export interface OffersState {
   list: OfferEntity[];
   currentOffer?: OfferEntity;
   filteredProducts?: OfferEntity[];
-  properties: IProperiesGroup[];
+  properties: ProperiesGroupEntity[];
   isLoading: boolean;
   error: StateErrorType;
 
@@ -46,6 +48,10 @@ export interface OffersState {
 
   variationsKeysMap: PartialRecord<UUID, UUID[]>;
   variationsMap: PartialRecord<UUID, VariationEntity>;
+
+  propertiesKeysMap: PartialRecord<UUID, UUID[]>;
+  propertiesDataMap: PartialRecord<UUID, PropertyBaseEntity>;
+  propertiesByTypeKeysMap: Record<OfferTypeEnum | PropertySelectableTypeEnum | PropertyLevelTypeEnum, UUID[]>;
 }
 
 const initialState: OffersState = {
@@ -61,6 +67,18 @@ const initialState: OffersState = {
 
   variationsKeysMap: {},
   variationsMap: {},
+
+  propertiesKeysMap: {},
+  propertiesDataMap: {},
+  propertiesByTypeKeysMap: {
+    group: [],
+    value: [],
+    prop: [],
+    GOODS: [],
+    SERVICE: [],
+    static: [],
+    dynamic: [],
+  },
 };
 
 export const offersSlice = createSlice({
@@ -103,14 +121,10 @@ export const offersSlice = createSlice({
         ManageOffersStateMap(s, { data: a.payload?.data }, { refresh: a.payload?.refreshCurrent });
       })
       .addCase(getAllPropertiesThunk.fulfilled, (s, a) => {
-        if (a.payload) {
-          s.properties = a.payload;
-        }
+        UpdatePropertiesMap(s, a.payload);
       })
       .addCase(createPropertyThunk.fulfilled, (s, a) => {
-        if (a.payload) {
-          s.properties = a.payload;
-        }
+        UpdatePropertiesMap(s, { data: [a.payload.data] });
       })
       .addCase(createVariationThunk.fulfilled, (s, a) => {
         // if (!a.payload) {
@@ -314,6 +328,71 @@ function ManageVariationsStateMap(
         } else {
           st.dataMap[offerId]?.variations?.unshift(input.data);
         }
+      }
+    }
+  }
+}
+
+function UpdatePropertiesMap(
+  st: OffersState,
+  {
+    data,
+  }: {
+    data: PropertyBaseEntity[];
+  }
+) {
+  data.forEach(item => {
+    const itemId = item._id;
+    const parentId = item?.parent?._id;
+
+    st.propertiesDataMap[itemId] = {
+      ...(st.propertiesDataMap?.[itemId] ?? {}),
+      ...item,
+      selectableType: item.isSelectable ? PropertySelectableTypeEnum.dynamic : PropertySelectableTypeEnum.static,
+    };
+
+    if (item.levelType) {
+      const current = st.propertiesByTypeKeysMap[item.levelType] ?? [];
+      st.propertiesByTypeKeysMap[item.levelType] = Array.from(new Set([itemId, ...current]));
+    }
+
+    if (item.type) {
+      const current = st.propertiesByTypeKeysMap[item.type] ?? [];
+      st.propertiesByTypeKeysMap[item.type] = Array.from(new Set([itemId, ...current]));
+    }
+
+    if (parentId) {
+      const current = st.propertiesKeysMap[parentId] ?? [];
+      st.propertiesKeysMap[parentId] = Array.from(new Set([itemId, ...current]));
+    }
+
+    if (item?.childrenList) {
+      UpdatePropertiesMap(st, { data: item?.childrenList });
+    }
+  });
+}
+
+function DeletePropertyFromMap(st: OffersState, input: { id: string }) {
+  const currentId = input.id;
+  const current = st.propertiesDataMap?.[currentId];
+
+  function removeCurrentIdFromList(list?: string[]) {
+    if (list) {
+      list = list.filter(el => el !== currentId);
+    } else {
+      list = [];
+    }
+    return list;
+  }
+
+  if (current) {
+    delete st.propertiesDataMap?.[currentId];
+    removeCurrentIdFromList(st.propertiesKeysMap?.[currentId]);
+
+    const childIds = st.propertiesKeysMap?.[currentId];
+    if (childIds) {
+      for (const childId of childIds) {
+        DeletePropertyFromMap(st, { id: childId });
       }
     }
   }

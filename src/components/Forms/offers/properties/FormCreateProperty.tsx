@@ -6,66 +6,45 @@ import InputLabel from '../../../atoms/Inputs/InputLabel';
 import { t } from '../../../../lang';
 import InputText from '../../../atoms/Inputs/InputText';
 import { useAppForm } from '../../../../hooks';
-import { IProperty, IPropertyBase, IPropertyDto, PropertyFormData } from '../../../../types/offers/properties.types';
+import {
+  IPropertyDto,
+  PropertyBaseEntity,
+  PropertyFormData,
+  PropertyLevelIsType,
+} from '../../../../types/offers/properties.types';
 import ButtonSwitch from '../../../atoms/ButtonSwitch';
 import React from 'react';
 import LangButtonsGroup from '../../../atoms/LangButtonsGroup';
 import { AccordionForm } from '../../FormArea/AccordionForm';
-import { toReqData } from '../../../../utils';
+import { getIdRef, toReqData } from '../../../../utils';
 import ModalBase from '../../../atoms/Modal';
-import TabSelector from '../../../atoms/TabSelector';
-import { MaybeNull, PartialRecord } from '../../../../types/utils.types';
+import { MaybeNull } from '../../../../types/utils.types';
 import { pick } from 'lodash';
 import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 
-export interface FormCreatePropertyProps extends Omit<ModalFormProps<OfferTypeEnum, any, IPropertyBase>, 'onSubmit'> {
-  onSubmit?: AppSubmitHandler<IPropertyDto, { isGroup?: boolean; isProperty?: boolean; isValue?: boolean }>;
-  type?: OfferTypeEnum;
+export interface FormCreatePropertyProps
+  extends Omit<ModalFormProps<OfferTypeEnum, any, PropertyBaseEntity>, 'onSubmit'> {
   create?: boolean;
-  parent?: IProperty;
+  parent?: PropertyBaseEntity;
   edit?: boolean;
-  levelIs: PropertyLevelIsType;
-  isGroup?: boolean;
-  isProperty?: boolean;
-  isValue?: boolean;
 }
 
 export interface IPropertyFormData extends PropertyFormData {}
-export type PropertyLevelIsType = PartialRecord<'value' | 'group' | 'prop', boolean>;
-// function getLevelIs(prop: IPropertyBase): Record<PropertyLevelIsType, boolean> {
-//   if (prop.parent) {
-//     return {};
-//   }
-//   if (!prop.parent) {
-//     return {};
-//   }
-//   if (prop.childrenList && prop.parent) {
-//     return {};
-//   }
-// }
-const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
-  onSubmit,
-  isGroup,
-  isProperty,
-  isValue,
-  defaultState,
-  type,
-  parent,
-  filterOptions,
-  title,
-  ...props
-}) => {
+
+const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({ defaultState, parent, title, onClose, ...props }) => {
   const offersSrv = useAppServiceProvider().offers;
 
-  const levelIs: PropertyLevelIsType = {
-    group: isGroup,
-    prop: isProperty,
-    value: isValue,
-  };
   // const submitOptions = useAfterSubmitOptions();
   const form = useAppForm<IPropertyFormData>({
-    defaultValues: { isSelectable: false, ...defaultState, type } as IPropertyFormData,
+    defaultValues: {
+      isSelectable: false,
+      ...defaultState,
+      parent: parent ? getIdRef(parent) : undefined,
+    } as IPropertyFormData,
   });
+
+  const levelIs: PropertyLevelIsType = { [parent?.levelType ?? 'group']: true };
+
   const {
     // formState: { errors },
     register,
@@ -79,23 +58,22 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
   };
 
   const onValid = (data: IPropertyFormData) => {
-    if (formValues._id) {
-      offersSrv.updatePropertyById({ data: { _id: formValues._id, data: toReqData(pick(data, ['cmsConfigs'])) } });
-    }
-    onSubmit && onSubmit(toReqData(data), { isGroup, isProperty, isValue });
+    console.log(toReqData(pick(data, ['_id', 'label', 'isSelectable', 'parent', 'parentId', 'type', 'levelType'])));
+    //
+    // if (formValues._id) {
+    //   offersSrv.updatePropertyById({
+    //     data: { _id: formValues._id, data: toReqData(omit(data, ['cmsConfigs',])) },
+    //   });
+    // } else {
+    //   offersSrv.createProperty({
+    //     data: { _id: formValues._id, data: toReqData(omit(data, ['cmsConfigs', 'isSelectable'])) },
+    //   });
+    // }
   };
 
   return (
-    <ModalBase fillHeight title={title}>
+    <ModalBase fillHeight title={title || 'Create property'} onClose={onClose}>
       <FlexBox>
-        {filterOptions && (
-          <TabSelector
-            filterOptions={filterOptions}
-            onOptSelect={(_o, value, _i) => {
-              setValue('type', value);
-            }}
-          />
-        )}
         <FlexBox padding={'4px 8px 8px'} flex={1} gap={12} fillWidth>
           <AccordionForm
             label={'Main info'}
@@ -108,11 +86,11 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
               <InputText placeholder={t('type')} {...register('type')} disabled />
             </InputLabel>
 
-            {(levelIs.prop || levelIs.value) && (
-              <InputLabel label={t(isProperty ? 'group' : 'property')} disabled>
+            {parent && (
+              <InputLabel label={t(levelIs?.group ? 'group' : 'property')} disabled>
                 <InputText
-                  placeholder={t(isProperty ? 'group' : 'property')}
-                  defaultValue={defaultState?.parent?.label ?? ''}
+                  placeholder={t(levelIs?.group ? 'group' : 'property')}
+                  defaultValue={parent?.label ?? ''}
                   disabled
                 />
               </InputLabel>
@@ -122,20 +100,14 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
               <InputText placeholder={t('insertLabel')} {...register('label')} autoFocus required />
             </InputLabel>
 
-            {levelIs.prop && (
+            {levelIs?.group && (
               <InputLabel label={'Доступно для формування варіацій'}>
                 <ButtonSwitch name={'isSelectable'} value={!!formValues?.isSelectable} onChange={selectableHandler} />
               </InputLabel>
             )}
           </AccordionForm>
 
-          <PropertyCmsParamsForm
-            defaultState={defaultState}
-            levelIs={levelIs}
-            onSubmit={(data, options) => {
-              onSubmit && onSubmit(data, options);
-            }}
-          />
+          <PropertyCmsParamsForm defaultState={defaultState} levelIs={levelIs} />
 
           {/*{isProperty && (*/}
           {/*  <InputLabel label={t('Cms type')}>*/}
@@ -158,7 +130,7 @@ export const PropertyCmsParamsForm = ({
   defaultState,
 }: {
   levelIs?: PropertyLevelIsType;
-  defaultState?: MaybeNull<Partial<IPropertyBase>>;
+  defaultState?: MaybeNull<Partial<PropertyBaseEntity>>;
   onSubmit?: AppSubmitHandler<Pick<IPropertyDto, 'cmsConfigs'>, { levelIs?: PropertyLevelIsType }>;
 }) => {
   const offersSrv = useAppServiceProvider().offers;
@@ -178,7 +150,7 @@ export const PropertyCmsParamsForm = ({
       offersSrv.updatePropertyById({ data: { _id: formValues._id, data: toReqData(pick(data, ['cmsConfigs'])) } });
     }
 
-    onSubmit && onSubmit(toReqData(pick(data, ['cmsConfigs'])), { levelIs });
+    // onSubmit && onSubmit(toReqData(pick(data, ['cmsConfigs'])), { levelIs });
   };
   return (
     <AccordionForm label={'Cms params'} expandable={true} isOpen={false} onSubmit={handleSubmit(onValid)}>

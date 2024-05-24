@@ -21,7 +21,7 @@ import { t } from '../../lang';
 import LangButtonsGroup from '../atoms/LangButtonsGroup';
 import { MaybeNull, UUID } from '../../types/utils.types';
 import OfferVariationPropertySelector from '../Forms/offers/variations/OfferVariationPropertySelector';
-import { IProperiesGroup, IProperty, IPropertyValue } from '../../types/offers/properties.types';
+import { ProperiesGroupEntity, PropertyEntity, PropertyValueEntity } from '../../types/offers/properties.types';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
 import { OfferEntity } from '../../types/offers/offers.types';
@@ -74,13 +74,13 @@ export const PropTemplateSelect = ({
   selected,
   onSelect,
 }: {
-  selected?: IProperiesGroup;
-  onSelect?: (opt: IProperiesGroup) => void;
+  selected?: ProperiesGroupEntity;
+  onSelect?: (opt: ProperiesGroupEntity) => void;
 }) => {
   const templates = usePropertiesSelector();
-  const [currentTemplate, setCurrentTemplate] = useState<IProperiesGroup | undefined>(selected);
+  const [currentTemplate, setCurrentTemplate] = useState<ProperiesGroupEntity | undefined>(selected);
   // const loaders = useLoaders<'getList'>();
-  const handleSelect: CustomSelectHandler<IProperiesGroup> = option => {
+  const handleSelect: CustomSelectHandler<ProperiesGroupEntity> = option => {
     if (onSelect && option) {
       onSelect(option);
     } else {
@@ -118,14 +118,14 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   const loaders = useLoaders<'create'>();
   const currentOffer = useCurrentOffer({ id: update || offerId || offer?._id });
   const submitOptions = useAfterSubmitOptions();
-  const [selectedPropsMap, setSelectedPropsMap] = useState<Record<string, IPropertyValue>>({});
-  const [currentTemplate, setCurrentTemplate] = useState<IProperiesGroup>();
+  const [selectedPropsMap, setSelectedPropsMap] = useState<Record<string, PropertyValueEntity>>({});
+  const [currentTemplate, setCurrentTemplate] = useState<ProperiesGroupEntity>();
 
   const { propertiesList, propValuesDataMap } = useMemo(() => {
     const list = currentTemplate?.childrenList?.filter(el => el?.isSelectable);
-    const _propValuesMap: Record<string, IPropertyValue> = {};
+    const _propValuesMap: Record<string, PropertyValueEntity> = {};
 
-    const map: Record<string, IProperty> = Object.assign(
+    const map: Record<string, PropertyEntity> = Object.assign(
       {},
       ...(list ?? []).map(pr => {
         if (pr?.childrenList?.length) {

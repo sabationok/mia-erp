@@ -13,10 +13,10 @@ import {
 } from '../redux/products/products.thunks';
 import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
-import { AppQueryParams, createApiCall, GetOneOfferQuery } from 'api';
+import { apiCall, AppQueryParams, createApiCall, GetOneOfferQuery } from 'api';
 import OffersApi from '../api/offers.api';
 import PropertiesApi from '../api/properties.api';
-import { IProperty, IPropertyReqData } from '../types/offers/properties.types';
+import { IPropertyReqData, PropertyEntity } from '../types/offers/properties.types';
 import { createPropertyThunk, getAllPropertiesThunk } from '../redux/products/properties/properties.thunks';
 import {
   createVariationThunk,
@@ -52,14 +52,15 @@ export interface OffersService {
   >;
 
   // * PROPERTIES
-  createProperty: ServiceDispatcherAsync<IPropertyReqData, IProperty[]>;
-  getAllProperties: ServiceDispatcherAsync<IPropertyReqData, IProperty[]>;
-  updatePropertyById: ServiceApiCaller<IPropertyReqData, IProperty[]>;
-  deletePropertyById: ServiceApiCaller<IPropertyReqData, IProperty[]>;
-  getPropertyById: ServiceApiCaller<IPropertyReqData, IProperty>;
+  getAllProperties: ServiceDispatcherAsync<IPropertyReqData, PropertyEntity[]>;
+  createProperty: ServiceDispatcherAsync<IPropertyReqData, PropertyEntity>;
+  updatePropertyById: ServiceApiCaller<IPropertyReqData, PropertyEntity>;
+  deletePropertyById: ServiceApiCaller<IPropertyReqData, PropertyEntity>;
+
+  getPropertyById: ServiceApiCaller<IPropertyReqData, PropertyEntity>;
   changeDisabledStatus: ServiceApiCaller<
     OnlyUUID & { data?: { isSelectable?: boolean }; params?: AppQueryParams },
-    IProperty[]
+    PropertyEntity
   >;
 
   // * VARIATIONS
@@ -108,10 +109,10 @@ const useOffersService = (): OffersService => {
       // * PROPERTIES
       createProperty: args => dispatch(createPropertyThunk(defaultThunkPayload(args))),
       getAllProperties: args => dispatch(getAllPropertiesThunk(defaultThunkPayload(args))),
-      deletePropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.deleteById, PropertiesApi),
-      updatePropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.updateById, PropertiesApi),
-      getPropertyById: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.getById, PropertiesApi),
-      changeDisabledStatus: args => createApiCall(defaultApiCallPayload(args), PropertiesApi.updateById, PropertiesApi),
+      deletePropertyById: args => apiCall(PropertiesApi.deleteById, defaultApiCallPayload(args)),
+      updatePropertyById: args => apiCall(PropertiesApi.updateById, defaultApiCallPayload(args)),
+      getPropertyById: args => apiCall(PropertiesApi.getById, defaultApiCallPayload(args)),
+      changeDisabledStatus: args => apiCall(PropertiesApi.updateById, defaultApiCallPayload(args)),
 
       // * VARIATIONS
       createVariation: args => dispatch(createVariationThunk(defaultThunkPayload(args))),

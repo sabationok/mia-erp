@@ -62,6 +62,7 @@ function defaultThunkPayload<SD extends FieldValues = any, RD = any, MD = any, E
     },
     onLoading(l) {
       (logAll || logLoading) && console.log('defaultThunkPayload onLoading', l);
+
       onLoading && onLoading(l);
     },
     data,
@@ -91,7 +92,7 @@ function defaultApiCallPayload<SD = any, RD = any, E = any>({
       (logAll || logLoading) && console.log('defaultApiCallPayload onLoading', l);
       onLoading && onLoading(l);
     },
-    data: data,
+    data: data as never,
   };
 }
 

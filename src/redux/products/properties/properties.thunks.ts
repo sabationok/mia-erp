@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ThunkPayload } from '../../store.store';
+import { ActionPayload, ThunkPayload } from '../../store.store';
 import PropertiesApi from '../../../api/properties.api';
 import { isAxiosError } from 'axios';
-import { IProperty, IPropertyReqData } from '../../../types/offers/properties.types';
+import { IPropertyReqData, PropertyEntity } from '../../../types/offers/properties.types';
 
 enum PropertiesThunkType {
   getAll = 'products/getAllPropertiesThunk',
@@ -10,40 +10,38 @@ enum PropertiesThunkType {
 }
 
 export const getAllPropertiesThunk = createAsyncThunk<
-  IProperty[] | undefined,
-  ThunkPayload<IPropertyReqData, IProperty[]>
+  ActionPayload<{ data: PropertyEntity[] }>,
+  ThunkPayload<IPropertyReqData, PropertyEntity[]>
 >(PropertiesThunkType.getAll, async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
-
   try {
     const res = await PropertiesApi.getAll({ data: args.data });
-    args?.onLoading && args?.onLoading(false);
     args?.onSuccess && args?.onSuccess(res?.data?.data);
-
-    return res?.data.data;
+    return res?.data;
   } catch (e) {
-    args?.onLoading && args?.onLoading(false);
     args?.onError && args?.onError(e);
     return thunkApi.rejectWithValue(isAxiosError(e));
+  } finally {
+    args?.onLoading && args?.onLoading(false);
   }
 });
 
 export const createPropertyThunk = createAsyncThunk<
-  IProperty[] | undefined,
-  ThunkPayload<IPropertyReqData, IProperty[]>
+  ActionPayload<{ data: PropertyEntity }>,
+  ThunkPayload<IPropertyReqData, PropertyEntity>
 >(PropertiesThunkType.create, async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
 
   try {
     const res = await PropertiesApi.create(args.data);
-    args?.onLoading && args?.onLoading(false);
     args?.onSuccess && args?.onSuccess(res?.data?.data);
 
-    return res?.data.data;
+    return res?.data;
   } catch (e) {
-    args?.onLoading && args?.onLoading(false);
     args?.onError && args?.onError(e);
     return thunkApi.rejectWithValue(isAxiosError(e));
+  } finally {
+    args?.onLoading && args?.onLoading(false);
   }
 });
 

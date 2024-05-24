@@ -1,4 +1,4 @@
-import { IProperty, IPropertyValue } from '../../../../types/offers/properties.types';
+import { PropertyEntity, PropertyTypeEnum, PropertyValueEntity } from '../../../../types/offers/properties.types';
 import { MaybeNull } from '../../../../types/utils.types';
 import * as React from 'react';
 import { useMemo } from 'react';
@@ -6,10 +6,17 @@ import { Text } from '../../../atoms/Text';
 import styled from 'styled-components';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import FlexBox from '../../../atoms/FlexBox';
-import { PropertyItemStylesByCmsKey } from '../../../Directories/DirProperties/components/PropertyItem';
 
+const PropertyItemStylesByCmsKey: Record<string, { numColumns?: number }> = {
+  [PropertyTypeEnum.size]: {
+    numColumns: 4,
+  },
+  [PropertyTypeEnum.color]: {
+    numColumns: 2,
+  },
+};
 export interface OfferVariationPropertySelectorProps {
-  item: IProperty;
+  item: PropertyEntity;
   selectedValue?: string;
   selectedIds?: string[];
   onSelect?: (propId: string, valueId: string, label?: MaybeNull<string>) => void;
@@ -65,7 +72,7 @@ const RenderPropertyValue = ({
   isSelected,
   onSelect,
 }: {
-  item: IPropertyValue;
+  item: PropertyValueEntity;
   isSelected?: boolean;
   onSelect: (id: string) => void;
 }) => {

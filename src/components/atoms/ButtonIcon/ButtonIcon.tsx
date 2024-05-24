@@ -3,6 +3,7 @@ import sprite, { IconIdType } from 'img/sprite';
 import styled, { css, DefaultTheme, FlattenInterpolation, ThemeProps } from 'styled-components';
 import { Property } from 'csstype';
 import { AppLoaderSpiner } from '../AppLoaderSpiner';
+import { Keys } from '../../../types/utils.types';
 
 type TextTransform = 'uppercase' | 'lowercase' | 'capitalize' | 'none';
 
@@ -371,6 +372,10 @@ const onlyIconFilled = css`
   ${filled}
   ${icon}
 `;
+const onlyIconOutlined = css`
+  ${outlined}
+  ${icon}
+`;
 const onlyIcon = css`
   ${def};
   ${icon};
@@ -473,15 +478,18 @@ const variants = {
   textExtraSmall,
   textSmall,
   textLarge,
+
   onlyIcon,
   onlyIconNoEffects,
   onlyIconFilled,
+  onlyIconOutlined,
+
   defOutlinedSmall,
   defOutlinedLarge,
   pointerBottom,
 };
 
-export type ButtonIconVariant = keyof typeof variants;
+export type ButtonIconVariant = Keys<typeof variants>;
 
 function getVariant(variant?: ButtonIconVariant): FlattenInterpolation<ThemeProps<DefaultTheme>> {
   return variant ? variants[variant] : variants.def;

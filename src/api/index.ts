@@ -1,7 +1,7 @@
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { FilterReturnDataType } from '../components/Filter/AppFilter';
 import { OnlyUUID, UUID } from '../redux/global.types';
-import { AppDate, ArrayUUID, Values } from '../types/utils.types';
+import { AppDate, ArrayOfUUID, Values } from '../types/utils.types';
 
 export * from './client.api';
 export { default as TransactionsApi } from './transactions.api';
@@ -82,7 +82,7 @@ export type IdsQueryKeyType = `${BaseQueryKeyType}Ids`;
 
 export type RefQueries = { [key in BaseQueryKeyType]?: OnlyUUID };
 export type IdQueries = { [key in IdQueryKeyType]?: UUID };
-export type IdsQueries = { [key in IdsQueryKeyType]?: ArrayUUID };
+export type IdsQueries = { [key in IdsQueryKeyType]?: ArrayOfUUID };
 
 export interface AppQueries<Type = any> extends Record<string, any>, RefQueries, IdQueries, IdsQueries {
   type?: Type;

@@ -1,5 +1,5 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { IProperty } from '../types/offers/properties.types';
+import { PropertyEntity } from '../types/offers/properties.types';
 import { t } from '../lang';
 import {
   IVariationTableData,
@@ -53,7 +53,7 @@ export const transformVariationTableData = (variation: VariationEntity): IVariat
 };
 
 export function createTableTitlesFromProperties(
-  properties?: IProperty[]
+  properties?: PropertyEntity[]
 ): CellTittleProps<IVariationTableData>[] | undefined {
   let titles: CellTittleProps<IVariationTableData>[] = [];
   if (properties?.length) {

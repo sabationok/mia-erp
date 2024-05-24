@@ -9,7 +9,7 @@ import { getIdRef } from '../../../../utils';
 import { OnlyUUID } from '../../../../redux/global.types';
 import { useLoadersProvider } from '../../../../Providers/Loaders/LoaderProvider';
 import { OfferOverlayLoaderKey } from '../../../Overlays/FormProductDefaultsOverlay';
-import { IProperty } from '../../../../types/offers/properties.types';
+import { PropertyEntity } from '../../../../types/offers/properties.types';
 import CreateVariationOverlay from '../../../Overlays/CreateVariationOverlay';
 
 export interface VariationsTabProps {
@@ -38,7 +38,7 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
     [currentOffer, loaders, productsS]
   );
   const variationsTableTitles = useMemo(() => {
-    const propertiesMap: Record<string, IProperty> = {};
+    const propertiesMap: Record<string, PropertyEntity> = {};
     for (const variation of currentOffer?.variations ?? []) {
       const propsList = variation.properties;
 

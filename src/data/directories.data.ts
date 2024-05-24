@@ -34,7 +34,6 @@ import {
   tagsFilterOptions,
 } from './modalFilterOptions.data';
 import { ToastService } from '../services';
-import { dirPropertiesActionsCreator } from '../components/Directories/DirProperties/dirPropertiesActionsCreator';
 import { BankAccountTypeFilterOptions } from '../components/Forms/finances/FormCreateBankAccount';
 import DirBankAccountsComp from '../components/Directories/DirBankAccounts';
 
@@ -345,14 +344,10 @@ const brandsDir: IDirectoryListItem<any, DirBrandsProps> = {
 
 const prodPropertiesProps: DirPropertiesProps = {
   title: t(ApiDirType.PROPERTIES_PRODUCTS),
-  createParentTitle: t('Create properties group'),
   dirType: ApiDirType.PROPERTIES_PRODUCTS,
-  fillHeight: true,
-  filterOptions: productsFilterOptions,
-  filterSearchPath: 'type',
-  availableLevels: 3,
-  creatingChild: true,
-  actionsCreator: dirPropertiesActionsCreator,
+  actionsCreator: () => {
+    return {};
+  },
 };
 const prodPropertiesDir: IDirectoryListItem<any, DirPropertiesProps> = {
   title: prodPropertiesProps.title,

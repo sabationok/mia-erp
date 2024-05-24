@@ -11,6 +11,8 @@ import { enumToArray } from './fabrics';
 import { createTableTitlesFromProperties } from './tables';
 import * as checks from './check';
 
+export { default as createStepsChecker } from './createStepChecker';
+
 export * from './createGridArea.helper';
 
 export * from './fabrics';
@@ -22,8 +24,7 @@ export * from './date-time';
 
 export * from './orders';
 export * from './updateStringArray.helper';
-
-export { default as createStepsChecker } from './createStepChecker';
+export * from './forArray.helpers';
 
 export {
   founder,

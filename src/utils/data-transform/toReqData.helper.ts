@@ -7,6 +7,7 @@ export interface ToRequestDataOptions<OmitPath extends string = string> {
   amountToNumberPath?: string;
   checkArrayPath?: string;
   ignorePaths?: string[];
+  isRoot?: boolean;
 }
 
 export function toReqData<IncomeDataType extends Record<string, any> = any, OmitPath extends string = string>(
@@ -14,8 +15,11 @@ export function toReqData<IncomeDataType extends Record<string, any> = any, Omit
   options?: ToRequestDataOptions<OmitPath>
 ): Partial<IncomeDataType> {
   // console.log(options?.omitPathArr);
-
-  const inputCopy = omit(incomeData, ['_id', 'createdAt', 'updatedAt', ...(options?.omitPathArr || [])]);
+  const _omitkeys = ['createdAt', 'updatedAt', ...(options?.omitPathArr || [])];
+  if (options?.isRoot === false) {
+    _omitkeys.unshift('_id');
+  }
+  const inputCopy = omit(incomeData, _omitkeys);
 
   let outData: Record<string, any> = {};
   // console.log('before', { inputCopy }, { outData });
@@ -75,6 +79,7 @@ export function toReqData<IncomeDataType extends Record<string, any> = any, Omit
         }
         const recursiveRes = toReqData(value, {
           ...options,
+          isRoot: false,
           omitPathArr: options?.omitPathArr
             ?.filter(omiPath => omiPath.startsWith(key))
             .map(omiPath => omiPath.replace(`${key}.`, '')) as never,

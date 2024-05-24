@@ -103,15 +103,10 @@ export const useLoaders = <
         namesSetRef.current.add(name);
         if (data instanceof Function) {
           setState(p => {
-            console.warn('[data instanceof Function]'.toUpperCase(), name, { ...p, [name]: data(p?.[name]) });
-            console.log({ data, prev: p?.[name] });
-
             return { ...p, [name]: data(p?.[name]) };
           });
         } else {
           setState(p => {
-            console.log(name, { ...p, [name]: data });
-
             return { ...p, [name]: data };
           });
         }
