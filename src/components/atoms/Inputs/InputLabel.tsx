@@ -5,7 +5,7 @@ import FlexBox from '../FlexBox';
 
 export interface InputLabelProps extends React.HTMLAttributes<HTMLDivElement> {
   label?: string;
-  direction?: 'horizontal' | 'vertical';
+  direction?: 'horizontal' | 'vertical' | 'row' | 'column';
   uppercase?: boolean;
   error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
   success?: string;
@@ -43,6 +43,7 @@ const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = (
             {`${label}${required ? ' *' : ''}`}
           </Label>
         )}
+
         <InputBox>{children}</InputBox>
       </Wrapper>
 
@@ -85,12 +86,13 @@ const Label = styled.label<Pick<InputLabelProps, 'align' | 'direction' | 'upperc
   max-width: ${({ direction = 'horizontal' }) => (direction === 'horizontal' ? '100px' : '100%')};
 `;
 
-const Wrapper = styled(FlexBox)<{
-  isLabel: boolean;
-  direction?: 'horizontal' | 'vertical';
-}>`
+const Wrapper = styled(FlexBox)<
+  Pick<InputLabelProps, 'direction'> & {
+    isLabel: boolean;
+  }
+>`
   ${({ direction }) =>
-    direction === 'vertical'
+    direction === 'vertical' || direction === 'column'
       ? css`
           flex-direction: column;
         `
@@ -114,10 +116,10 @@ const HelperText = styled.div<{
   success?: boolean;
   loading?: boolean;
 }>`
-  padding: 2px;
-  min-height: 12px;
+  padding: 2px 4px;
+  min-height: 13px;
 
-  font-size: 9px;
+  font-size: 12px;
   line-height: 1.5;
 
   color: ${({ error, success, theme }) => (error && 'tomato') || (success && 'lightgreen') || 'inherit'};

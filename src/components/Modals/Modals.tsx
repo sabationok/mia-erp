@@ -4,7 +4,7 @@ import OfferOverview, { ProductOverviewProps } from '../Overviews/offer/OfferOve
 import SelectProductModal, { SelectProductModalProps } from './SelectProductModal';
 import AppFilter, { AppFilterProps } from '../Filter/AppFilter';
 import DirVariationsTemplate, { DirVariationsTemplateProps } from '../Directories/DirVariationsTemplate';
-import DirPoperties, { DirPropertiesProps } from '../Directories/DirProperties/DirProperties';
+import DirPoperties, { DirPropertiesProps } from '../Directories/DirProperties';
 import Forms, { FormPropTypes } from '../Forms';
 import { FormCreateBankAccountProps } from '../Forms/finances/FormCreateBankAccount';
 import ModalCreatePrice, { ModalCreatePriceProps } from './ModalCreatePrice';

@@ -1,35 +1,35 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
-import { IDirInTreeProps } from '../../../types/dir.types';
+import { IDirInTreeProps } from '../../types/dir.types';
 
-import TabSelector, { FilterOption } from '../../atoms/TabSelector';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import { OffersService } from '../../../hooks/useProductsService.hook';
-import FlexBox, { FlexLi, FlexUl } from '../../atoms/FlexBox';
-import { ApiDirType } from '../../../redux/APP_CONFIGS';
-import { useProductsSelector } from '../../../redux/selectors.store';
+import TabSelector, { FilterOption } from '../atoms/TabSelector';
+import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import { OffersService } from '../../hooks/useProductsService.hook';
+import FlexBox, { FlexLi, FlexUl } from '../atoms/FlexBox';
+import { ApiDirType } from '../../redux/APP_CONFIGS';
+import { useProductsSelector } from '../../redux/selectors.store';
 import {
   IPropertyDto,
   PropertyBaseEntity,
   PropertyEntity,
   PropertyLevelIsType,
-  PropertyLevelTypeEnum,
-} from '../../../types/offers/properties.types';
-import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { OnlyUUID } from '../../../redux/global.types';
-import { MaybeNull, Values } from '../../../types/utils.types';
-import ModalBase from '../../atoms/Modal';
-import { Text } from '../../atoms/Text';
-import { productsFilterOptions } from '../../../data/modalFilterOptions.data';
-import { OfferTypeEnum } from '../../../types/offers/offers.types';
-import { CustomSelectHandler } from '../../atoms/Inputs/CustomSelect/CustomSelect';
-import FormCreateProperty from '../../Forms/offers/properties/FormCreateProperty';
-import { RenderStackHistory } from '../../atoms/RenderStackHistory';
+} from '../../types/offers/properties.types';
+import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
+import { OnlyUUID } from '../../redux/global.types';
+import { MaybeNull, Values } from '../../types/utils.types';
+import ModalBase from '../atoms/Modal';
+import { Text } from '../atoms/Text';
+import { productsFilterOptions } from '../../data/modalFilterOptions.data';
+import { OfferTypeEnum } from '../../types/offers/offers.types';
+import { CustomSelectHandler } from '../atoms/Inputs/CustomSelect/CustomSelect';
+import FormCreateProperty from '../Forms/offers/properties/FormCreateProperty';
+import { RenderStackHistory } from '../atoms/RenderStackHistory';
 import styled, { useTheme } from 'styled-components';
-import { t } from '../../../lang';
-import ButtonSwitch from '../../atoms/ButtonSwitch';
-import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
+import { t } from '../../lang';
+import ButtonSwitch from '../atoms/ButtonSwitch';
+import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
+import InputLabel from 'components/atoms/Inputs/InputLabel';
 
 export interface DirPropertiesProps
   extends IDirInTreeProps<
@@ -60,41 +60,34 @@ type FilterData = {
   isSelectable?: boolean;
 };
 
-function getLevelTypeByParent(parent: PropertyBaseEntity) {
-  switch (parent?.levelType) {
-    case PropertyLevelTypeEnum.group:
-      return PropertyLevelTypeEnum.prop;
-    case PropertyLevelTypeEnum.prop:
-      return PropertyLevelTypeEnum.value;
-    default:
-      return PropertyLevelTypeEnum.group;
-  }
-}
+// function getLevelTypeByParent(parent: PropertyBaseEntity) {
+//   switch (parent?.levelType) {
+//     case PropertyLevelTypeEnum.group:
+//       return PropertyLevelTypeEnum.prop;
+//     case PropertyLevelTypeEnum.prop:
+//       return PropertyLevelTypeEnum.value;
+//     default:
+//       return PropertyLevelTypeEnum.group;
+//   }
+// }
 
 const DirProperties: React.FC<DirPropertiesProps> = ({
-  createParentTitle,
-  dirType,
-  filterSearchPath,
-  filterDefaultValue,
-  availableLevels = 3,
+  // availableLevels = 3,
   title,
-  actionsCreator,
   onClose,
-  ...props
 }) => {
   const state = useProductsSelector();
   const theme = useTheme();
   const service = useAppServiceProvider().offers;
   const loaders = useLoaders<'getAll' | string>({ getAll: { content: 'Refreshing properties' } });
   const modalSrv = useModalProvider();
-
   const [stack, setStack] = useState<PropertyBaseEntity[]>([]);
-  const currentId: string | undefined = stack[stack.length - 1]?._id;
-
   const [filerData, setFilerData] = useState<FilterData>({
     type: OfferTypeEnum.GOODS,
     isSelectable: false,
   });
+
+  const currentId: string | undefined = stack[stack.length - 1]?._id;
 
   const { roots } = useMemo(() => {
     const _rootItems: PropertyBaseEntity[] = [];
@@ -169,7 +162,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   };
   useEffect(() => {
     service.getAllProperties({
-      onLoading: loaders.onLoading('getAll', undefined),
+      onLoading: loaders.onLoading('getAll'),
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -177,14 +170,13 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
 
   const onAddNewHandler = () => {
     const parent = currentData.current;
-
     modalSrv.open({
       ModalChildren: FormCreateProperty,
       modalChildrenProps: {
         parent,
         defaultState: {
           type: parent?.type ?? filerData?.type,
-          isSelectable: parent?.isSelectable ?? filerData?.isSelectable,
+          isSelectable: currentData.levelIs?.prop ? parent?.isSelectable : filerData?.isSelectable,
         },
       },
     });
@@ -196,9 +188,6 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
         ModalChildren: FormCreateProperty,
         modalChildrenProps: {
           parent: currentData.parent,
-
-          // defaultState: { type: currentData.current?.type, isSelectable: currentData.current?.isSelectable },
-
           updateId: currentData.current._id,
         },
       });
@@ -210,16 +199,22 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
         <TabSelector {...registerTabSelector('type')} filterOptions={productsFilterOptions} />
         <RenderStackHistory stack={stack} />
 
-        <FlexBox margin={'8px 0'}>
-          <ButtonSwitch
-            value={filerData.isSelectable}
-            onChange={val => {
-              setFilerData(prev => {
-                return { ...prev, isSelectable: val };
-              });
-            }}
-          />
-        </FlexBox>
+        {stack.length === 1 && (
+          <FlexBox margin={'8px 0'}>
+            <InputLabel label={t('Select type')}>
+              <ButtonSwitch
+                rejectLabel={t('Static')}
+                acceptLabel={t('Dynamic')}
+                value={filerData.isSelectable}
+                onChange={val => {
+                  setFilerData(prev => {
+                    return { ...prev, isSelectable: val };
+                  });
+                }}
+              />
+            </InputLabel>
+          </FlexBox>
+        )}
       </FlexBox>
 
       <FlexUl overflow={'auto'} flex={1} fillWidth padding={'8px'}>

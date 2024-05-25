@@ -17,7 +17,11 @@ import { apiCall, AppQueryParams, createApiCall, GetOneOfferQuery } from 'api';
 import OffersApi from '../api/offers.api';
 import PropertiesApi from '../api/properties.api';
 import { IPropertyReqData, PropertyEntity } from '../types/offers/properties.types';
-import { createPropertyThunk, getAllPropertiesThunk } from '../redux/products/properties/properties.thunks';
+import {
+  createPropertyThunk,
+  getAllPropertiesThunk,
+  updatePropertyThunk,
+} from '../redux/products/properties/properties.thunks';
 import {
   createVariationThunk,
   getAllVariationsByOfferIdThunk,
@@ -54,7 +58,7 @@ export interface OffersService {
   // * PROPERTIES
   getAllProperties: ServiceDispatcherAsync<IPropertyReqData, PropertyEntity[]>;
   createProperty: ServiceDispatcherAsync<IPropertyReqData, PropertyEntity>;
-  updatePropertyById: ServiceApiCaller<IPropertyReqData, PropertyEntity>;
+  updatePropertyById: ServiceDispatcherAsync<IPropertyReqData, PropertyEntity>;
   deletePropertyById: ServiceApiCaller<IPropertyReqData, PropertyEntity>;
 
   getPropertyById: ServiceApiCaller<IPropertyReqData, PropertyEntity>;
@@ -110,7 +114,7 @@ const useOffersService = (): OffersService => {
       createProperty: args => dispatch(createPropertyThunk(defaultThunkPayload(args))),
       getAllProperties: args => dispatch(getAllPropertiesThunk(defaultThunkPayload(args))),
       deletePropertyById: args => apiCall(PropertiesApi.deleteById, defaultApiCallPayload(args)),
-      updatePropertyById: args => apiCall(PropertiesApi.updateById, defaultApiCallPayload(args)),
+      updatePropertyById: args => dispatch(updatePropertyThunk(defaultApiCallPayload(args))),
       getPropertyById: args => apiCall(PropertiesApi.getById, defaultApiCallPayload(args)),
       changeDisabledStatus: args => apiCall(PropertiesApi.updateById, defaultApiCallPayload(args)),
 

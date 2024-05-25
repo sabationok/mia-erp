@@ -93,5 +93,5 @@ export interface IPropertyDto {
 export interface IPropertyReqData {
   _id?: string;
   data?: IPropertyDto;
-  params?: AppQueryParams;
+  params?: Pick<AppQueryParams, 'dataView' | 'getAll'>;
 }

@@ -5,7 +5,7 @@ import { UseLoadersReturn } from './useLoaders.hook';
 export const LoadersContext = createContext({} as UseLoadersReturn<any, any, any>);
 export const useLoadersProvider = <
   Name extends string,
-  Data extends PartialRecord<Name, any> = PartialRecord<Name, any>,
+  Data extends PartialRecord<Name | string, any> = PartialRecord<Name | string, any>,
   Errors extends PartialRecord<Name, any> = PartialRecord<Name, any>
 >() => useContext<UseLoadersReturn<Name, Data, Errors>>(LoadersContext);
 

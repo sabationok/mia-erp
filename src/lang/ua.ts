@@ -83,7 +83,13 @@ export const langUa = {
   [OwnershipTypeEnum.UA_COLLECTIVE_ENTERPRISE]: 'Колективне підприємство',
 
   GOODS: 'Товари',
+  SERVICE: 'Послуги',
   SERVICES: 'Послуги',
+
+  offer_GOOD: 'Товар',
+  offer_GOODS: 'Товари',
+  offer_SERVICE: 'Послуга',
+  offer_SERVICES: 'Послуги',
 
   'Delivery method': 'Спосіб доставки',
   'Delivery methods': 'Способи доставки',

@@ -22,7 +22,7 @@ import {
   PropertyLevelTypeEnum,
   PropertySelectableTypeEnum,
 } from '../../types/offers/properties.types';
-import { createPropertyThunk, getAllPropertiesThunk } from './properties/properties.thunks';
+import { createPropertyThunk, getAllPropertiesThunk, updatePropertyThunk } from './properties/properties.thunks';
 import {
   clearCurrentProductAction,
   setCurrentProductInventoriesAction,
@@ -31,7 +31,7 @@ import {
 } from './products.actions';
 import { PartialRecord, SKU, UUID } from '../../types/utils.types';
 import { VariationEntity } from '../../types/offers/variations.types';
-import { onCreatePriceCase, onGetPricesCase, onUpdatePriceCase } from '../priceManagement/prices.actions';
+import { onCreatePriceCase, onUpdatePriceCase } from '../priceManagement/prices.actions';
 import { Action } from '../store.store';
 import { PriceEntity } from '../../types/price-management/price-management.types';
 
@@ -120,71 +120,21 @@ export const offersSlice = createSlice({
       .addCase(updateProductDefaultsThunk.fulfilled, (s, a) => {
         ManageOffersStateMap(s, { data: a.payload?.data }, { refresh: a.payload?.refreshCurrent });
       })
+      .addCase(clearCurrentProductAction, s => {
+        s.currentOffer = { _id: '' };
+      })
+      // * ============>>>>>>>>>>> PROPERTIES
       .addCase(getAllPropertiesThunk.fulfilled, (s, a) => {
         UpdatePropertiesMap(s, a.payload);
       })
       .addCase(createPropertyThunk.fulfilled, (s, a) => {
         UpdatePropertiesMap(s, { data: [a.payload.data] });
       })
-      .addCase(createVariationThunk.fulfilled, (s, a) => {
-        // if (!a.payload) {
-        //   return;
-        // } else {
-        //   s?.currentOffer?.variations?.unshift(a.payload);
-        // }
-        ManageVariationsStateMap(s, { data: a.payload });
+      .addCase(updatePropertyThunk.fulfilled, (s, a) => {
+        UpdatePropertiesMap(s, { data: [a.payload.data] });
       })
+      //  * sep ============>>>>>>>>>>> VARIATIONS
 
-      .addCase(updateVariationThunk.fulfilled, (s, a) => {
-        // if (!a.payload) {
-        //   return;
-        // } else if (s.currentOffer) {
-        //   s.currentOffer.variations = s?.currentOffer?.variations?.map(vrn =>
-        //     vrn._id === a.payload?._id ? a.payload : vrn
-        //   );
-        // }
-        ManageVariationsStateMap(s, { data: a.payload });
-      })
-      .addCase(getAllVariationsByOfferIdThunk.fulfilled, (s, a) => {
-        // if (s.currentOffer) {
-        //   s.currentOffer = { ...(s.currentOffer as OfferEntity), variations: a.payload?.data };
-        // }
-
-        const offerId = a.payload?.offerId || a.payload?.data?.[0]?._id;
-        if (offerId) {
-          a.payload?.data.forEach(vr => {
-            ManageVariationsStateMap(s, { data: vr, offerId });
-          });
-
-          ManageOffersStateMap(s, { data: { _id: offerId, variations: a.payload?.data } });
-        }
-      })
-      .addCase(getAllOfferPricesThunk.fulfilled, (s, a) => {
-        // if (a.payload?.refreshCurrent) {
-        //   s.currentOffer = { ...(s.currentOffer as OfferEntity), prices: a.payload.data };
-        // }
-        if (a.payload.params?.offerId) {
-          ManageOffersStateMap(s, { data: { _id: a.payload.params?.offerId, prices: a.payload.data } });
-        }
-      })
-      .addCase(getAllInventoriesByProductIdThunk.fulfilled, (s, a) => {
-        if (a.payload?.refreshCurrent) {
-          s.currentOffer = { ...(s.currentOffer as OfferEntity), inventories: a.payload.data };
-        }
-      })
-      .addCase(clearCurrentProductAction, s => {
-        s.currentOffer = { _id: '' };
-      })
-      .addCase(setCurrentProductPricesAction, (s, a) => {
-        s.currentOffer = {
-          ...(s.currentOffer as OfferEntity),
-          prices: a.payload.refresh
-            ? a.payload?.data
-            : s.currentOffer?.prices
-            ? [...a.payload.data, ...s.currentOffer?.prices]
-            : a.payload.data,
-        };
-      })
       .addCase(setCurrentProductVariationsAction, (s, a) => {
         s.currentOffer = {
           ...(s.currentOffer as OfferEntity),
@@ -198,6 +148,45 @@ export const offersSlice = createSlice({
         a.payload?.data.forEach(vr => {
           ManageVariationsStateMap(s, { data: vr });
         });
+      })
+      .addCase(createVariationThunk.fulfilled, (s, a) => {
+        ManageVariationsStateMap(s, { data: a.payload });
+      })
+
+      .addCase(updateVariationThunk.fulfilled, (s, a) => {
+        ManageVariationsStateMap(s, { data: a.payload });
+      })
+      .addCase(getAllVariationsByOfferIdThunk.fulfilled, (s, a) => {
+        const offerId = a.payload?.offerId || a.payload?.data?.[0]?._id;
+        if (offerId) {
+          a.payload?.data.forEach(vr => {
+            ManageVariationsStateMap(s, { data: vr, offerId });
+          });
+
+          ManageOffersStateMap(s, { data: { _id: offerId, variations: a.payload?.data } });
+        }
+      })
+      //  * sep ============>>>>>>>>>>> PRICES
+      .addCase(getAllOfferPricesThunk.fulfilled, (s, a) => {
+        if (a.payload.params?.offerId) {
+          ManageOffersStateMap(s, { data: { _id: a.payload.params?.offerId, prices: a.payload.data } });
+        }
+      })
+      .addCase(setCurrentProductPricesAction, (s, a) => {
+        s.currentOffer = {
+          ...(s.currentOffer as OfferEntity),
+          prices: a.payload.refresh
+            ? a.payload?.data
+            : s.currentOffer?.prices
+            ? [...a.payload.data, ...s.currentOffer?.prices]
+            : a.payload.data,
+        };
+      })
+      //  * sep ============>>>>>>>>>>> INVENTORIES
+      .addCase(getAllInventoriesByProductIdThunk.fulfilled, (s, a) => {
+        if (a.payload?.refreshCurrent) {
+          s.currentOffer = { ...(s.currentOffer as OfferEntity), inventories: a.payload.data };
+        }
       })
       .addCase(setCurrentProductInventoriesAction, (s, a) => {
         s.currentOffer = {
@@ -231,28 +220,23 @@ export const offersSlice = createSlice({
           if (!current) return;
 
           if (current?.prices?.length) {
-            current?.prices?.unshift(a.payload.data);
+            current.prices.map(price => {
+              return price?._id === a.payload.data._id ? a.payload.data : price;
+            });
           }
           current.prices = [a.payload?.data];
 
           s.dataMap[offerId] = current;
         }
-      })
-      .addMatcher(onGetPricesCase, (s, a: Action<{ data: PriceEntity[] }>) => {
-        console.log('onGetPricesCase', a);
       }),
+  // .addMatcher(onGetPricesCase, (s, a: Action<{ data: PriceEntity[] }>) => {
+  //   console.log('onGetPricesCase', a);
+  // }),
 });
 
 // function isProductsCase(type: string) {
 //   return checks.isStr(type) && type.startsWith('products');
 // }
-// const defaultsKeys: (keyof Pick<OfferEntity, 'warehouse' | 'price' | 'variation' | 'inventory' | 'supplier'>)[] = [
-//   'warehouse',
-//   'price',
-//   'variation',
-//   'inventory',
-//   'supplier',
-// ];
 
 function ManageOffersStateMap(
   st: OffersState,
@@ -343,13 +327,18 @@ function UpdatePropertiesMap(
 ) {
   data.forEach(item => {
     const itemId = item._id;
-    const parentId = item?.parent?._id;
-
+    const prev = st.propertiesDataMap?.[itemId];
     st.propertiesDataMap[itemId] = {
-      ...(st.propertiesDataMap?.[itemId] ?? {}),
+      ...prev,
       ...item,
-      selectableType: item.isSelectable ? PropertySelectableTypeEnum.dynamic : PropertySelectableTypeEnum.static,
+      parent: prev?.parent
+        ? {
+            ...prev?.parent,
+            ...item?.parent,
+          }
+        : item?.parent,
     };
+    const parentId = st.propertiesDataMap?.[itemId]?.parent?._id;
 
     if (!item?.parent) {
       const current = st.propertiesByTypeKeysMap.group ?? [];
@@ -373,7 +362,7 @@ function UpdatePropertiesMap(
   });
 }
 
-function DeletePropertyFromMap(st: OffersState, input: { id: string }) {
+export function DeletePropertyFromMap(st: OffersState, input: { id: string }) {
   const currentId = input.id;
   const current = st.propertiesDataMap?.[currentId];
 

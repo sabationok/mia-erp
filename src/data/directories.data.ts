@@ -24,7 +24,7 @@ import { ModalChildrenProps, Modals } from '../components/Modals/Modals';
 import { CountsTypesEnum } from '../redux/directories/counts.types';
 import { TrCategoryTypeEnum } from '../types/directories.types';
 import { DirectoriesService } from '../hooks/useDirService.hook';
-import DirProperties, { DirPropertiesProps } from '../components/Directories/DirProperties/DirProperties';
+import DirProperties, { DirPropertiesProps } from '../components/Directories/DirProperties';
 import { IDirectoryListItem } from '../components/SideBarContent/Directories';
 import {
   categoriesFilterOptions,

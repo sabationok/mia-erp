@@ -92,7 +92,7 @@ export const AccordionFormArea = ({
               size={'32px'}
               padding={'1px'}
               variant={'onlyIconNoEffects'}
-              icon={_isOpen ? 'SmallArrowUp' : 'SmallArrowDown'}
+              icon={_isOpen ? 'SmallArrowDown' : 'SmallArrowLeft'}
               iconSize={'100%'}
               onClick={onToggleIsOpenHandler}
             />

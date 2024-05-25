@@ -21,7 +21,7 @@ export interface LoadersMethods<
   Data extends PartialRecord<Name, any> = PartialRecord<Name, any>
   // _Errors extends PartialRecord<Name, any> = PartialRecord<Name, any>
 > {
-  setData: <N extends Name, D extends Data>(name: N, data: D[N] | ((prev?: D[N]) => D[N])) => void;
+  setData: <N extends keyof Data, D extends Data>(name: N, data: D[N] | ((prev?: D[N]) => D[N])) => void;
   setError: (name: Name, error: any) => void;
   setSuccess: (name: Name, value: boolean) => void;
   onLoading: (
@@ -99,8 +99,9 @@ export const useLoaders = <
 
   const loaders = useMemo(() => {
     class Loaders implements LoadersMethods<Name, Data> {
-      setData = <N extends Name, D extends Data>(name: N, data: D[N] | ((prev?: D[N]) => D[N])) => {
-        namesSetRef.current.add(name);
+      setData = <N extends keyof Data, D extends Data>(name: N, data: D[N] | ((prev?: D[N]) => D[N])) => {
+        // namesSetRef.current.add(name);
+
         if (data instanceof Function) {
           setState(p => {
             return { ...p, [name]: data(p?.[name]) };
@@ -161,7 +162,7 @@ export const useLoaders = <
           namesSetRef.current.add(name);
 
           l && this.setError(name, null);
-          // l && this.setSuccess(name, false);
+          l && this.setSuccess(name, false);
 
           loadersRef.current = { ...loadersRef.current, [name]: l };
 

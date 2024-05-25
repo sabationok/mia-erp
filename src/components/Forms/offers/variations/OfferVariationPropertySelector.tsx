@@ -27,7 +27,6 @@ export const OfferVariationPropertySelector = ({
   item,
   selectedIds = [],
   onSelect,
-  childrenList,
 }: OfferVariationPropertySelectorProps) => {
   const state = useProductsSelector();
 
@@ -44,6 +43,8 @@ export const OfferVariationPropertySelector = ({
         _valuesList.push(value);
       }
     }
+
+    console.log({ _propId }, { _valuesList }, { _valuesIds });
 
     return _valuesList?.map(value => {
       const isSelected = selectedIds.includes(value._id);

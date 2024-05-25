@@ -38,7 +38,7 @@ export interface AppService {
   [AppModuleName.roles]: CustomRolesService;
   [AppModuleName.integrations]: UseIntegrationsService;
   [AppModuleName.deliveries]: UseDeliveriesService;
-  get<T extends AppServiceKey = any>(module: T): AppService[T];
+  get<T extends AppServiceKey = any>(module: T): AppService[T] extends AppService[T] ? AppService[T] : unknown;
 }
 
 type AppServiceKey = keyof Omit<AppService, 'get'>;
