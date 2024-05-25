@@ -10,12 +10,14 @@ export const OverlayHeader = ({
   title,
   okButton,
   canSubmit,
+  children,
 }: {
   canSubmit?: boolean;
   onBackPress?: () => void;
   onClosePress?: () => void;
   title?: string;
   okButton?: boolean;
+  children?: React.ReactNode;
 }) => {
   return (
     <Header

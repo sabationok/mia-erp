@@ -11,39 +11,57 @@ import {
   PropertyBaseEntity,
   PropertyFormData,
   PropertyLevelIsType,
+  PropertyLevelTypeEnum,
 } from '../../../../types/offers/properties.types';
-import ButtonSwitch from '../../../atoms/ButtonSwitch';
 import React from 'react';
 import LangButtonsGroup from '../../../atoms/LangButtonsGroup';
 import { AccordionForm } from '../../FormArea/AccordionForm';
 import { getIdRef, toReqData } from '../../../../utils';
 import ModalBase from '../../../atoms/Modal';
 import { MaybeNull } from '../../../../types/utils.types';
-import { pick } from 'lodash';
+import { omit, pick } from 'lodash';
 import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
+import ButtonSwitch from '../../../atoms/ButtonSwitch';
+import { useLoaders } from '../../../../Providers/Loaders/useLoaders.hook';
+import { useProductsSelector } from '../../../../redux/selectors.store';
 
 export interface FormCreatePropertyProps
   extends Omit<ModalFormProps<OfferTypeEnum, any, PropertyBaseEntity>, 'onSubmit'> {
   create?: boolean;
   parent?: PropertyBaseEntity;
   edit?: boolean;
+  updateId?: string;
 }
 
 export interface IPropertyFormData extends PropertyFormData {}
 
-const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({ defaultState, parent, title, onClose, ...props }) => {
+const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
+  updateId,
+  defaultState,
+  parent,
+  title,
+  onClose,
+  ...props
+}) => {
   const offersSrv = useAppServiceProvider().offers;
+  const dataMap = useProductsSelector().propertiesDataMap;
+  const levelIs: PropertyLevelIsType = { [parent?.levelType ?? 'group']: true };
+  const current = updateId ? dataMap?.[updateId] : undefined;
 
+  const loaders = useLoaders<'create' | 'update' | 'current', { current?: Partial<PropertyBaseEntity> }>(
+    {},
+    { current }
+  );
   // const submitOptions = useAfterSubmitOptions();
   const form = useAppForm<IPropertyFormData>({
     defaultValues: {
-      isSelectable: false,
+      isSelectable: parent?.selectableType === 'dynamic' ?? false,
+      levelType: PropertyLevelTypeEnum.group,
+
       ...defaultState,
       parent: parent ? getIdRef(parent) : undefined,
     } as IPropertyFormData,
   });
-
-  const levelIs: PropertyLevelIsType = { [parent?.levelType ?? 'group']: true };
 
   const {
     // formState: { errors },
@@ -58,17 +76,24 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({ defaultState, p
   };
 
   const onValid = (data: IPropertyFormData) => {
-    console.log(toReqData(pick(data, ['_id', 'label', 'isSelectable', 'parent', 'parentId', 'type', 'levelType'])));
-    //
-    // if (formValues._id) {
-    //   offersSrv.updatePropertyById({
-    //     data: { _id: formValues._id, data: toReqData(omit(data, ['cmsConfigs',])) },
-    //   });
-    // } else {
-    //   offersSrv.createProperty({
-    //     data: { _id: formValues._id, data: toReqData(omit(data, ['cmsConfigs', 'isSelectable'])) },
-    //   });
-    // }
+    if (updateId) {
+      offersSrv.updatePropertyById({
+        data: { _id: updateId, data: toReqData(omit(data, ['cmsConfigs'])) },
+        onSuccess: data => {
+          loaders.setData('current', data);
+        },
+      });
+    } else {
+      offersSrv.createProperty({
+        data: {
+          _id: formValues._id,
+          data: toReqData(omit(data, ['cmsConfigs'])),
+        },
+        onSuccess: data => {
+          loaders.setData('current', data);
+        },
+      });
+    }
   };
 
   return (
@@ -86,6 +111,10 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({ defaultState, p
               <InputText placeholder={t('type')} {...register('type')} disabled />
             </InputLabel>
 
+            <InputLabel label={t('Доступно для формування варіацій')} disabled>
+              <InputText placeholder={t('type')} value={formValues.isSelectable ? 'Так' : 'Ні'} disabled />
+            </InputLabel>
+
             {parent && (
               <InputLabel label={t(levelIs?.group ? 'group' : 'property')} disabled>
                 <InputText
@@ -100,14 +129,14 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({ defaultState, p
               <InputText placeholder={t('insertLabel')} {...register('label')} autoFocus required />
             </InputLabel>
 
-            {levelIs?.group && (
+            {levelIs?.group && formValues?._id && (
               <InputLabel label={'Доступно для формування варіацій'}>
-                <ButtonSwitch name={'isSelectable'} value={!!formValues?.isSelectable} onChange={selectableHandler} />
+                <ButtonSwitch name={'isSelectable'} value={formValues?.isSelectable} onChange={selectableHandler} />
               </InputLabel>
             )}
           </AccordionForm>
 
-          <PropertyCmsParamsForm defaultState={defaultState} levelIs={levelIs} />
+          {loaders.state.current && <PropertyCmsParamsForm defaultState={loaders.state.current} levelIs={levelIs} />}
 
           {/*{isProperty && (*/}
           {/*  <InputLabel label={t('Cms type')}>*/}

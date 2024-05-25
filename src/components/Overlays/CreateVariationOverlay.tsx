@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import FlexBox, { FlexForm } from '../atoms/FlexBox';
-import { usePropertiesSelector } from '../../redux/selectors.store';
+import { useProductsSelector } from '../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -11,7 +11,7 @@ import { IVariationFormData, VariationEntity } from '../../types/offers/variatio
 import { ToastService } from '../../services';
 import { ModalFormProps } from '../ModalForm';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../Forms/components/FormAfterSubmitOptions';
-import { OverlayFooter, OverlayHeader } from './index';
+import { OverlayFooter } from './index';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useAppForm, useCurrentOffer } from '../../hooks';
@@ -21,11 +21,17 @@ import { t } from '../../lang';
 import LangButtonsGroup from '../atoms/LangButtonsGroup';
 import { MaybeNull, UUID } from '../../types/utils.types';
 import OfferVariationPropertySelector from '../Forms/offers/variations/OfferVariationPropertySelector';
-import { ProperiesGroupEntity, PropertyEntity, PropertyValueEntity } from '../../types/offers/properties.types';
+import {
+  ProperiesGroupEntity,
+  PropertyBaseEntity,
+  PropertyEntity,
+  PropertyValueEntity,
+} from '../../types/offers/properties.types';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
 import { OfferEntity } from '../../types/offers/offers.types';
 import CustomSelect, { CustomSelectHandler } from '../atoms/Inputs/CustomSelect/CustomSelect';
+import DrawerBase from './OverlayBase';
 
 export interface CreateVariationModalProps
   extends CreatedOverlay,
@@ -77,9 +83,24 @@ export const PropTemplateSelect = ({
   selected?: ProperiesGroupEntity;
   onSelect?: (opt: ProperiesGroupEntity) => void;
 }) => {
-  const templates = usePropertiesSelector();
+  const state = useProductsSelector();
   const [currentTemplate, setCurrentTemplate] = useState<ProperiesGroupEntity | undefined>(selected);
   // const loaders = useLoaders<'getList'>();
+
+  const groupsList = useMemo(() => {
+    const _rootIds = state.propertiesByTypeKeysMap.group;
+    const _items: PropertyBaseEntity[] = [];
+
+    for (const _id of _rootIds) {
+      const item = state.propertiesDataMap?.[_id];
+      if (item?.isSelectable) {
+        _items.push(item);
+      }
+    }
+
+    return _items;
+  }, []);
+
   const handleSelect: CustomSelectHandler<ProperiesGroupEntity> = option => {
     if (onSelect && option) {
       onSelect(option);
@@ -99,7 +120,7 @@ export const PropTemplateSelect = ({
       label={t('Select properties group')}
       selectedOption={currentTemplate}
       onSelect={handleSelect}
-      options={templates}
+      options={groupsList}
     />
   );
 };
@@ -249,78 +270,73 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   }, [propertiesList, selectedIds, handleSelect]);
 
   return (
-    <FormContainer
-      onSubmit={handleSubmit(onValid, errors => {
-        console.error('[SUBMIT ERROR]', errors);
-      })}
-      onReset={handleClearMap}
-      {...props}
-    >
-      <OverlayHeader
-        onBackPress={onClose}
-        title={(title || currentTemplate?.label) ?? ''}
-        canSubmit={canSubmit}
-        okButton
-      />
-
-      <Content flex={1} fillWidth overflow={'auto'}>
-        <Inputs>
-          <InputLabel label={t('label')} error={errors.label}>
-            <InputText {...register('label', { required: true })} placeholder={t('label')} required />
-          </InputLabel>
-
-          <FlexBox fxDirection={'row'} gap={8} fillWidth>
-            <InputLabel label={t('sku')} error={errors.sku}>
-              <InputText {...register('sku', { required: true })} placeholder={t('sku')} required />
+    <DrawerBase fillHeight onBackPress={onClose} okButton={false} title={title}>
+      <FormContainer
+        onSubmit={handleSubmit(onValid, errors => {
+          console.error('[SUBMIT ERROR]', errors);
+        })}
+        onReset={handleClearMap}
+        {...props}
+      >
+        <Content flex={1} fillWidth overflow={'auto'}>
+          <Inputs>
+            <InputLabel label={t('label')} error={errors.label}>
+              <InputText {...register('label', { required: true })} placeholder={t('label')} required />
             </InputLabel>
 
-            <InputLabel label={t('barCode')} error={errors.barCode}>
-              <InputText {...register('barCode')} placeholder={t('barCode')} />
-            </InputLabel>
-          </FlexBox>
-
-          {/*<DimensionsInputs form={formMethods} />*/}
-        </Inputs>
-
-        <PropTemplateSelect onSelect={setCurrentTemplate} selected={currentTemplate} />
-
-        <TemplateBox padding={'0 0 8px'} margin={'8px 0 0'}>
-          {renderTemplate}
-        </TemplateBox>
-
-        {!currentOffer && (
-          <CmsConfigs padding={'8px 0'} fillWidth>
-            <CmsConfigsHeader padding={'8px'} justifyContent={'flex-end'} fxDirection={'row'} fillWidth>
-              <Text $size={13} $weight={500}>
-                {t('Cms configs')}
-              </Text>
-            </CmsConfigsHeader>
-
-            <Inputs>
-              <InputLabel label={t('Language key')} error={errors?.cmsConfigs?.key}>
-                <LangButtonsGroup disabled />
+            <FlexBox fxDirection={'row'} gap={8} fillWidth>
+              <InputLabel label={t('sku')} error={errors.sku}>
+                <InputText {...register('sku', { required: true })} placeholder={t('sku')} required />
               </InputLabel>
 
-              <InputLabel label={t('Label by lang key')} error={errors?.cmsConfigs?.labels?.ua}>
-                <InputText placeholder={'Label'} {...register('cmsConfigs.labels.ua')} />
+              <InputLabel label={t('barCode')} error={errors.barCode}>
+                <InputText {...register('barCode')} placeholder={t('barCode')} />
               </InputLabel>
-            </Inputs>
-          </CmsConfigs>
-        )}
-      </Content>
+            </FlexBox>
 
-      <OverlayFooter
-        loading={loaders.isLoading?.create}
-        resetButtonShown
-        submitButtonText={loaders.isLoading?.create ? 'Loading...' : update ? 'Підтвердити' : 'Додати'}
-        canSubmit={canSubmit}
-        extraFooter={
-          <ExtraFooterBox>
-            <FormAfterSubmitOptions {...submitOptions} />
-          </ExtraFooterBox>
-        }
-      />
-    </FormContainer>
+            {/*<DimensionsInputs form={formMethods} />*/}
+          </Inputs>
+
+          <PropTemplateSelect onSelect={setCurrentTemplate} selected={currentTemplate} />
+
+          <TemplateBox padding={'0 0 8px'} margin={'8px 0 0'}>
+            {renderTemplate}
+          </TemplateBox>
+
+          {!currentOffer && (
+            <CmsConfigs padding={'8px 0'} fillWidth>
+              <CmsConfigsHeader padding={'8px'} justifyContent={'flex-end'} fxDirection={'row'} fillWidth>
+                <Text $size={13} $weight={500}>
+                  {t('Cms configs')}
+                </Text>
+              </CmsConfigsHeader>
+
+              <Inputs>
+                <InputLabel label={t('Language key')} error={errors?.cmsConfigs?.key}>
+                  <LangButtonsGroup disabled />
+                </InputLabel>
+
+                <InputLabel label={t('Label by lang key')} error={errors?.cmsConfigs?.labels?.ua}>
+                  <InputText placeholder={'Label'} {...register('cmsConfigs.labels.ua')} />
+                </InputLabel>
+              </Inputs>
+            </CmsConfigs>
+          )}
+        </Content>
+
+        <OverlayFooter
+          loading={loaders.isLoading?.create}
+          resetButtonShown
+          submitButtonText={loaders.isLoading?.create ? 'Loading...' : update ? 'Підтвердити' : 'Додати'}
+          canSubmit={canSubmit}
+          extraFooter={
+            <ExtraFooterBox>
+              <FormAfterSubmitOptions {...submitOptions} />
+            </ExtraFooterBox>
+          }
+        />
+      </FormContainer>
+    </DrawerBase>
   );
 };
 

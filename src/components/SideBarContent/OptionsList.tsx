@@ -20,7 +20,7 @@ const OptionsList: React.FC<IIOptionsListProps & React.HTMLAttributes<HTMLUListE
 
   const renderList = useMemo(
     () =>
-      options.map(({ title, iconId, ModalChildren, modalChildrenProps, disabled = true }, idx) => (
+      options?.map(({ title, iconId, ModalChildren, modalChildrenProps, disabled = true }, idx) => (
         <ListItem key={title || iconId || idx}>
           <StButtonIcon
             variant="defNoEffects"
