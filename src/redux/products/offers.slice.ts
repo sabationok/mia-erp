@@ -351,19 +351,20 @@ function UpdatePropertiesMap(
       selectableType: item.isSelectable ? PropertySelectableTypeEnum.dynamic : PropertySelectableTypeEnum.static,
     };
 
-    if (item.levelType) {
-      const current = st.propertiesByTypeKeysMap[item.levelType] ?? [];
-      st.propertiesByTypeKeysMap[item.levelType] = Array.from(new Set([itemId, ...current]));
-    }
+    if (!item?.parent) {
+      const current = st.propertiesByTypeKeysMap.group ?? [];
 
-    if (item.type) {
-      const current = st.propertiesByTypeKeysMap[item.type] ?? [];
-      st.propertiesByTypeKeysMap[item.type] = Array.from(new Set([itemId, ...current]));
+      st.propertiesByTypeKeysMap.group = Array.from(new Set([...current, itemId]));
+
+      if (item.type) {
+        const current = st.propertiesByTypeKeysMap[item.type] ?? [];
+        st.propertiesByTypeKeysMap[item.type] = Array.from(new Set([...current, itemId]));
+      }
     }
 
     if (parentId) {
       const current = st.propertiesKeysMap[parentId] ?? [];
-      st.propertiesKeysMap[parentId] = Array.from(new Set([itemId, ...current]));
+      st.propertiesKeysMap[parentId] = Array.from(new Set([...current, itemId]));
     }
 
     if (item?.childrenList) {

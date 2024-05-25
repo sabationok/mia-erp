@@ -25,17 +25,18 @@ export const RenderStackHistory = <Item extends IBase & { label?: MaybeNull<stri
   return (
     <List fxDirection={'row'} fillWidth overflow={'auto'} ref={scroller.listRef}>
       {stack.map((item, index) => {
+        const isLast = stack.length - 1 === index;
         return (
           <FlexLi
             key={item?._id}
-            id={stack.length - 1 === index ? '_last' : item?._id}
+            id={isLast ? '_last' : item?._id}
             width={'max-content'}
             gap={8}
             padding={'8px 6px'}
             fxDirection={'row'}
             alignItems={'center'}
           >
-            <Text $weight={500} $size={13}>
+            <Text $weight={isLast ? 700 : 500} $size={13}>
               {item?.label}
             </Text>
 

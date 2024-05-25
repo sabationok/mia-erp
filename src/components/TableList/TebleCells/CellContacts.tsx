@@ -41,7 +41,7 @@ const CellContactsDbl: React.FC<CellContactsDblProps & React.HTMLAttributes<HTML
 
   return (
     <CellBase style={{ width }} {...props}>
-      <Top align={top.align} uppercase={top.uppercase}>
+      <Top align={top.align} uppercase={false}>
         <StIcon icon={'mailOutlined'} size={'12px'} />
 
         <FlexBox justifyContent={'center'} title={contentTop} className="inner">
@@ -49,7 +49,7 @@ const CellContactsDbl: React.FC<CellContactsDblProps & React.HTMLAttributes<HTML
         </FlexBox>
       </Top>
 
-      <Bottom align={bottom?.align} uppercase={bottom?.uppercase}>
+      <Bottom align={bottom?.align} uppercase={false}>
         <StIcon icon={'phoneOutlined'} size={'12px'} />
 
         <FlexBox justifyContent={'center'} title={contentBottom} className="inner">

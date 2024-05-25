@@ -7,8 +7,8 @@ import { isUndefined } from 'lodash';
 import { Text } from './Text';
 
 export type ButtonsGroupOption<V = any> = FilterOption<V>;
-export interface ButtonsGroupProps<V = any> {
-  options?: ButtonsGroupOption<V>[];
+export interface ButtonsGroupProps<V = any, Opt extends ButtonsGroupOption<V> = any> {
+  options?: Opt[];
   defaultIndex?: number;
   value?: V;
   onSelect?: ButtonGroupSelectHandler<V>;
@@ -23,7 +23,7 @@ export type ButtonGroupSelectHandler<V = any> = (info: {
   value: V;
   index: number;
 }) => void;
-const ButtonsGroup = <V = any,>({
+const ButtonsGroup = <V = any, Opt extends ButtonsGroupOption<V> = any>({
   options,
   borderRadius,
   onSelect,
@@ -32,7 +32,7 @@ const ButtonsGroup = <V = any,>({
   currentOption,
   disabled,
   value,
-}: ButtonsGroupProps<V>) => {
+}: ButtonsGroupProps<V, Opt>) => {
   const [current, setCurrent] = useState(0);
 
   const handleSelect = useCallback(

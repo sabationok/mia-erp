@@ -22,6 +22,7 @@ export interface PropertyBaseEntity extends IBase, PropertyTempData {
   label?: MaybeNull<string>;
   type?: OfferTypeEnum;
   isSelectable?: MaybeNull<boolean>;
+  level?: number;
   levelType?: PropertyLevelTypeEnum;
 
   parent?: PropertyBaseEntity;
@@ -32,16 +33,13 @@ export interface PropertyBaseEntity extends IBase, PropertyTempData {
 
 export interface ProperiesGroupEntity extends Omit<PropertyBaseEntity, 'parent'> {
   childrenList?: PropertyEntity[];
-  levelType?: PropertyLevelTypeEnum.group;
 }
 export interface PropertyEntity extends PropertyBaseEntity {
   parent?: ProperiesGroupEntity;
   childrenList?: PropertyValueEntity[];
-  levelType?: PropertyLevelTypeEnum.prop;
 }
 export interface PropertyValueEntity extends Omit<PropertyBaseEntity, 'childrenList'> {
   parent?: PropertyEntity;
-  levelType?: PropertyLevelTypeEnum.value;
 }
 
 export enum PropertyTypeEnum {
@@ -79,7 +77,6 @@ export interface PropertyFormData {
   label?: string;
   type?: OfferTypeEnum;
   isSelectable?: boolean;
-  levelType?: PropertyLevelTypeEnum;
 
   cmsConfigs?: MaybeNull<CmsPropertyConfigsDto>;
 }

@@ -1,4 +1,4 @@
-import { ICompaniesState, CompanyEntity } from '../../types/companies.types';
+import { CompanyEntity, ICompaniesState } from '../../types/companies.types';
 import { createSlice } from '@reduxjs/toolkit';
 import { testUserKarina } from '../../data/usersDir.data';
 import { getCompanyByIdThunk, updateCompanyByIdThunk } from './companies.thunks';
@@ -13,7 +13,7 @@ export const initialCompany: CompanyEntity = {
 };
 
 const initialCompState: ICompaniesState = {
-  current: undefined,
+  currentRoot: undefined,
   // companies: [initialCompany, { ...initialCompany, _id: 'dfbsdfgbd13f5g13bdg1', name: 'Roga & Copyta' }],
   companies: [],
   isLoading: false,

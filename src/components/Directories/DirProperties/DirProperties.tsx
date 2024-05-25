@@ -1,10 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useModalProvider } from 'components/ModalProvider/ModalProvider';
 import { IDirInTreeProps } from '../../../types/dir.types';
 
 import TabSelector, { FilterOption } from '../../atoms/TabSelector';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { OffersService } from '../../../hooks/useProductsService.hook';
 import FlexBox, { FlexLi, FlexUl } from '../../atoms/FlexBox';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
@@ -14,21 +13,23 @@ import {
   PropertyBaseEntity,
   PropertyEntity,
   PropertyLevelIsType,
-  PropertySelectableTypeEnum,
+  PropertyLevelTypeEnum,
 } from '../../../types/offers/properties.types';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { OnlyUUID } from '../../../redux/global.types';
 import { MaybeNull, Values } from '../../../types/utils.types';
 import ModalBase from '../../atoms/Modal';
 import { Text } from '../../atoms/Text';
-import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
-import { productsFilterOptions, propertiesSelectableTypeFilterOptions } from '../../../data/modalFilterOptions.data';
+import { productsFilterOptions } from '../../../data/modalFilterOptions.data';
 import { OfferTypeEnum } from '../../../types/offers/offers.types';
 import { CustomSelectHandler } from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import FormCreateProperty from '../../Forms/offers/properties/FormCreateProperty';
 import { RenderStackHistory } from '../../atoms/RenderStackHistory';
 import styled, { useTheme } from 'styled-components';
 import { t } from '../../../lang';
+import ButtonSwitch from '../../atoms/ButtonSwitch';
+import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
 
 export interface DirPropertiesProps
   extends IDirInTreeProps<
@@ -56,9 +57,19 @@ export interface DiPropertiesRenderItemProps<
 
 type FilterData = {
   type: Values<typeof OfferTypeEnum>;
-  selectType: Values<typeof PropertySelectableTypeEnum>;
   isSelectable?: boolean;
 };
+
+function getLevelTypeByParent(parent: PropertyBaseEntity) {
+  switch (parent?.levelType) {
+    case PropertyLevelTypeEnum.group:
+      return PropertyLevelTypeEnum.prop;
+    case PropertyLevelTypeEnum.prop:
+      return PropertyLevelTypeEnum.value;
+    default:
+      return PropertyLevelTypeEnum.group;
+  }
+}
 
 const DirProperties: React.FC<DirPropertiesProps> = ({
   createParentTitle,
@@ -73,26 +84,73 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
 }) => {
   const state = useProductsSelector();
   const theme = useTheme();
-  const service = useAppServiceProvider()[ServiceName.offers];
+  const service = useAppServiceProvider().offers;
   const loaders = useLoaders<'getAll' | string>({ getAll: { content: 'Refreshing properties' } });
   const modalSrv = useModalProvider();
+
   const [stack, setStack] = useState<PropertyBaseEntity[]>([]);
-  const [currentId, setCurrentId] = useState<string>('');
+  const currentId: string | undefined = stack[stack.length - 1]?._id;
+
   const [filerData, setFilerData] = useState<FilterData>({
     type: OfferTypeEnum.GOODS,
-    selectType: PropertySelectableTypeEnum.dynamic,
+    isSelectable: false,
   });
+
+  const { roots } = useMemo(() => {
+    const _rootItems: PropertyBaseEntity[] = [];
+
+    state.propertiesByTypeKeysMap[filerData.type].forEach(itemId => {
+      const item = state.propertiesDataMap?.[itemId];
+
+      if (item) {
+        _rootItems.push(item);
+      }
+    });
+
+    return {
+      roots: _rootItems,
+    };
+  }, [filerData.type, state.propertiesByTypeKeysMap, state.propertiesDataMap]);
+
+  const currentData = useMemo(() => {
+    const _current: PropertyBaseEntity | undefined = stack?.[stack?.length - 1];
+    const _parent: PropertyBaseEntity | undefined = stack?.[stack?.length - 2];
+    const _filtered: PropertyBaseEntity[] = [];
+
+    const _ids = _current ? state.propertiesKeysMap?.[_current._id] || [] : [];
+
+    for (const id of _ids) {
+      const item = state.propertiesDataMap?.[id];
+      if (item?.isSelectable === filerData.isSelectable) {
+        if (item) {
+          _filtered.push(item);
+        }
+      }
+    }
+
+    const _levelIs: PropertyLevelIsType = {};
+    if (_current?.levelType) {
+      _levelIs[_current?.levelType] = true;
+    }
+    return {
+      levelIs: _levelIs,
+      current: _current,
+      parent: _parent,
+      children: _filtered,
+    };
+  }, [filerData.isSelectable, stack, state.propertiesDataMap, state.propertiesKeysMap]);
 
   const registerTabSelector = <Name extends keyof FilterData>(
     name: Name
   ): {
-    onOptSelect: CustomSelectHandler<FilterOption<FilterData[Name]>>;
+    onOptSelect: CustomSelectHandler<FilterOption<FilterData[Name], PropertyBaseEntity>>;
     defaultValue: FilterData[Name];
   } => {
     return {
       onOptSelect: option => {
-        setStack([]);
-        setCurrentId('');
+        if (name === 'type') {
+          setStack([]);
+        }
         setFilerData(prev => (option ? { ...prev, [name]: option.value } : prev));
       },
       defaultValue: filerData[name],
@@ -100,100 +158,72 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   };
 
   const onSetCurrentHandler = (item: PropertyBaseEntity) => {
-    setCurrentId(item._id);
     setStack(prev => prev.concat([item]));
   };
   const onGoBackHandler = () => {
     if (stack.length) {
-      setStack(prev => {
-        const newData = prev.splice(0, prev.length - 1);
-        if (newData?.length) {
-          setCurrentId(newData[newData.length - 1]?._id);
-        } else {
-          setCurrentId('');
-        }
-
-        return newData;
-      });
+      setStack(prev => prev.splice(0, prev.length - 1));
     } else {
       onClose && onClose();
     }
   };
+  useEffect(() => {
+    service.getAllProperties({
+      onLoading: loaders.onLoading('getAll', undefined),
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onAddNewHandler = () => {
+    const parent = currentData.current;
+
     modalSrv.open({
       ModalChildren: FormCreateProperty,
       modalChildrenProps: {
-        parent: current,
-        defaultState: { type: filerData.type, isSelectable: filerData.selectType === 'dynamic' },
+        parent,
+        defaultState: {
+          type: parent?.type ?? filerData?.type,
+          isSelectable: parent?.isSelectable ?? filerData?.isSelectable,
+        },
       },
     });
   };
 
   const onEditCurrentHandler = () => {
-    current &&
+    currentData.current &&
       modalSrv.open({
         ModalChildren: FormCreateProperty,
         modalChildrenProps: {
-          parent: current,
-          defaultState: { ...current, type: filerData.type, isSelectable: filerData.selectType === 'dynamic' },
+          parent: currentData.parent,
+
+          // defaultState: { type: currentData.current?.type, isSelectable: currentData.current?.isSelectable },
+
+          updateId: currentData.current._id,
         },
       });
   };
 
-  const { fList, root, current } = useMemo(() => {
-    const item: PropertyBaseEntity | undefined = state.propertiesDataMap?.[currentId];
-    const _rootIds = state.propertiesByTypeKeysMap.group.filter(itemId => {
-      const item = state.propertiesDataMap?.[itemId];
-      if (item?.selectableType) {
-        return item?.type === filerData.type && item?.selectableType === filerData.selectType;
-      }
-      return item?.type === filerData.type;
-    });
-    const _filtered: PropertyBaseEntity[] = [];
-
-    const _ids = item ? state.propertiesKeysMap?.[item._id] || [] : [];
-    for (const id of _ids) {
-      const item = state.propertiesDataMap?.[id];
-      if (item) {
-        _filtered.push(item);
-      }
-    }
-
-    return {
-      root: _rootIds?.map(itemId => {
-        return state.propertiesDataMap?.[itemId] ?? null;
-      }),
-      current: item,
-      fList: _filtered,
-    };
-  }, [
-    currentId,
-    filerData.selectType,
-    filerData.type,
-    state.propertiesByTypeKeysMap.group,
-    state.propertiesDataMap,
-    state.propertiesKeysMap,
-  ]);
-
-  // useEffect(() => {
-  //   service.getAllProperties({
-  //     onLoading: loaders.onLoading('getAll', undefined),
-  //   });
-  //
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
   return (
     <ModalBase title={title} fillHeight>
       <FlexBox padding={'0 8px'}>
         <TabSelector {...registerTabSelector('type')} filterOptions={productsFilterOptions} />
-        <TabSelector {...registerTabSelector('selectType')} filterOptions={propertiesSelectableTypeFilterOptions} />
-
         <RenderStackHistory stack={stack} />
+
+        <FlexBox margin={'8px 0'}>
+          <ButtonSwitch
+            value={filerData.isSelectable}
+            onChange={val => {
+              setFilerData(prev => {
+                return { ...prev, isSelectable: val };
+              });
+            }}
+          />
+        </FlexBox>
       </FlexBox>
 
       <FlexUl overflow={'auto'} flex={1} fillWidth padding={'8px'}>
-        {(current ? fList : root)?.map(item => {
+        {(currentData?.current ? currentData?.children : roots)?.map(item => {
           return (
             item && (
               <RenderItem
@@ -229,7 +259,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
           {t('Back')}
         </ButtonIcon>
 
-        <ButtonIcon variant={'outlinedSmall'} onClick={onEditCurrentHandler} disabled={!current}>
+        <ButtonIcon variant={'outlinedSmall'} onClick={onEditCurrentHandler} disabled={!currentId}>
           {'Edit current'}
         </ButtonIcon>
 

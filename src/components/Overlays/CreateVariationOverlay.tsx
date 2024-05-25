@@ -19,7 +19,7 @@ import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import { t } from '../../lang';
 import LangButtonsGroup from '../atoms/LangButtonsGroup';
-import { MaybeNull, UUID } from '../../types/utils.types';
+import { UUID } from '../../types/utils.types';
 import OfferVariationPropertySelector from '../Forms/offers/variations/OfferVariationPropertySelector';
 import {
   ProperiesGroupEntity,
@@ -29,9 +29,12 @@ import {
 } from '../../types/offers/properties.types';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
-import { OfferEntity } from '../../types/offers/offers.types';
+import { OfferEntity, OfferTypeEnum } from '../../types/offers/offers.types';
 import CustomSelect, { CustomSelectHandler } from '../atoms/Inputs/CustomSelect/CustomSelect';
 import DrawerBase from './OverlayBase';
+import ButtonsGroup from '../atoms/ButtonsGroup';
+import { productsFilterOptions } from '../../data/modalFilterOptions.data';
+import { AppModuleName } from '../../redux/reduxTypes.types';
 
 export interface CreateVariationModalProps
   extends CreatedOverlay,
@@ -79,27 +82,35 @@ const validation = yup.object().shape({
 export const PropTemplateSelect = ({
   selected,
   onSelect,
+  filterValue = OfferTypeEnum.GOODS,
+  hasFilter = false,
 }: {
   selected?: ProperiesGroupEntity;
   onSelect?: (opt: ProperiesGroupEntity) => void;
+  filterValue?: OfferTypeEnum;
+  hasFilter?: boolean;
 }) => {
-  const state = useProductsSelector();
-  const [currentTemplate, setCurrentTemplate] = useState<ProperiesGroupEntity | undefined>(selected);
-  // const loaders = useLoaders<'getList'>();
+  const service = useAppServiceProvider().get(AppModuleName.offers);
+  useEffect(() => {
+    console.log({ offers_service: service });
+  }, [service]);
 
-  const groupsList = useMemo(() => {
-    const _rootIds = state.propertiesByTypeKeysMap.group;
+  const state = useProductsSelector();
+  const [filter, setFilter] = useState<OfferTypeEnum>(filterValue);
+  const [currentTemplate, setCurrentTemplate] = useState<ProperiesGroupEntity | undefined>();
+  const loaders = useLoaders<'getList'>();
+
+  const rootList = useMemo(() => {
+    const _rootIds = state.propertiesByTypeKeysMap[filter];
     const _items: PropertyBaseEntity[] = [];
 
     for (const _id of _rootIds) {
       const item = state.propertiesDataMap?.[_id];
-      if (item?.isSelectable) {
-        _items.push(item);
-      }
+      item && _items.push(item);
     }
 
     return _items;
-  }, []);
+  }, [filter, state.propertiesByTypeKeysMap, state.propertiesDataMap]);
 
   const handleSelect: CustomSelectHandler<ProperiesGroupEntity> = option => {
     if (onSelect && option) {
@@ -115,13 +126,31 @@ export const PropTemplateSelect = ({
     }
   }, [selected]);
 
+  // useEffect(() => {
+  //   if ()
+  // }, []);
+
   return (
-    <CustomSelect
-      label={t('Select properties group')}
-      selectedOption={currentTemplate}
-      onSelect={handleSelect}
-      options={groupsList}
-    />
+    <FlexBox margin={'8px 0'} gap={8}>
+      {hasFilter && (
+        <InputLabel label={t('Select type')}>
+          <ButtonsGroup
+            options={productsFilterOptions}
+            value={filter}
+            onSelect={({ value }) => {
+              setFilter(value);
+            }}
+          />
+        </InputLabel>
+      )}
+      <CustomSelect
+        label={t('Select properties group')}
+        selectedOption={currentTemplate}
+        onSelect={handleSelect}
+        options={rootList}
+        placeholder={'Select properties group'}
+      />
+    </FlexBox>
   );
 };
 const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
@@ -135,32 +164,14 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   offer,
   ...props
 }) => {
+  const state = useProductsSelector();
   const service = useAppServiceProvider()[ServiceName.offers];
   const loaders = useLoaders<'create'>();
   const currentOffer = useCurrentOffer({ id: update || offerId || offer?._id });
   const submitOptions = useAfterSubmitOptions();
   const [selectedPropsMap, setSelectedPropsMap] = useState<Record<string, PropertyValueEntity>>({});
+
   const [currentTemplate, setCurrentTemplate] = useState<ProperiesGroupEntity>();
-
-  const { propertiesList, propValuesDataMap } = useMemo(() => {
-    const list = currentTemplate?.childrenList?.filter(el => el?.isSelectable);
-    const _propValuesMap: Record<string, PropertyValueEntity> = {};
-
-    const map: Record<string, PropertyEntity> = Object.assign(
-      {},
-      ...(list ?? []).map(pr => {
-        if (pr?.childrenList?.length) {
-          pr?.childrenList.forEach(val => {
-            _propValuesMap[val._id] = val;
-          });
-        }
-
-        return { [pr._id]: pr };
-      })
-    );
-
-    return { propertiesList: list, propertiesDataMap: map, propValuesDataMap: _propValuesMap };
-  }, [currentTemplate?.childrenList]);
 
   const formMethods = useAppForm<IVariationFormData>({
     defaultValues: toVariationFormData(
@@ -177,6 +188,21 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
     formValues,
     reset,
   } = formMethods;
+
+  const propertiesList = useMemo(() => {
+    const _rootId = currentTemplate?._id;
+    const _propertiesList: PropertyEntity[] = [];
+    const _propertiesIds = state.propertiesKeysMap?.[_rootId ?? 'def'] ?? [];
+
+    for (const propId of _propertiesIds) {
+      const prop = state.propertiesDataMap?.[propId];
+      if (prop) {
+        _propertiesList.push(prop);
+      }
+    }
+
+    return _propertiesList;
+  }, [currentTemplate?._id, state.propertiesDataMap, state.propertiesKeysMap]);
 
   const selectedIds = useMemo(() => {
     return formValues?.propertiesMap ? Object.values(formValues?.propertiesMap) : [];
@@ -243,12 +269,14 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   );
 
   const handleSelect = useCallback(
-    (parentId: string, id: string, label?: MaybeNull<string>) => {
+    (parentId: string, id: string) => {
       setValue(`propertiesMap.${parentId}`, id);
-
-      setSelectedPropsMap(p => ({ ...p, [parentId]: propValuesDataMap?.[id] }));
+      const value = state.propertiesDataMap?.[id];
+      if (value) {
+        setSelectedPropsMap(p => ({ ...p, [parentId]: value }));
+      }
     },
-    [propValuesDataMap, setValue]
+    [setValue, state.propertiesDataMap]
   );
 
   const handleClearMap = useCallback(() => {
@@ -256,7 +284,7 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
     setSelectedPropsMap({});
   }, [setValue]);
 
-  const renderTemplate = useMemo(() => {
+  const renderPropertiesList = useMemo(() => {
     return propertiesList?.map(prop => {
       return (
         <OfferVariationPropertySelector
@@ -300,7 +328,7 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
           <PropTemplateSelect onSelect={setCurrentTemplate} selected={currentTemplate} />
 
           <TemplateBox padding={'0 0 8px'} margin={'8px 0 0'}>
-            {renderTemplate}
+            {renderPropertiesList}
           </TemplateBox>
 
           {!currentOffer && (

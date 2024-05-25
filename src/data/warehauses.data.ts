@@ -1,5 +1,5 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { WarehouseItemEntity, IWarehouse } from '../types/warehousing/warehouses.types';
+import { IWarehouse, WarehouseItemEntity } from '../types/warehousing/warehouses.types';
 import { t } from '../lang';
 import { numberWithSpaces } from '../utils';
 
@@ -17,8 +17,8 @@ export const warehousesTableColumns: CellTittleProps<IWarehouse>[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: t('email') },
-    bottom: { name: t('phone') },
+    top: { name: t('email'), path: 'email' },
+    bottom: { name: t('phone'), path: 'phone' },
     width: '180px',
     action: 'contacts',
   },

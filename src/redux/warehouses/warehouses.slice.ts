@@ -29,7 +29,7 @@ export const warehousesSlice = createSlice({
   name: 'warehouses',
   initialState,
   reducers: {},
-  extraReducers: builder =>
+  extraReducers: builder => {
     builder
       .addCase(getAllWarehousesThunk.fulfilled, (s, a) => {
         const inputArr = a?.payload?.data && Array.isArray(a?.payload?.data) ? a?.payload?.data : [];
@@ -50,20 +50,6 @@ export const warehousesSlice = createSlice({
           s.current = a.payload;
         }
       })
-      // .addCase(refreshPriceListByIdThunk.fulfilled, (s, { payload: p }) => {
-      //   const idx = s.warehouses.findIndex(l => l._id === p?._id);
-      //   if (idx >= 0 && p) {
-      //     s.warehouses.splice(idx, 1, p);
-      //     console.log('refreshPriceListById action', `idx-${idx}`, s.warehouses);
-      //   }
-      // })
-      // .addCase(updatePriceListByIdThunk.fulfilled, (s, p) => {
-      //   const idx = s.warehouses.findIndex(l => l._id === 'p?._id');
-      //   if (idx >= 0 && p.payload) {
-      //     s.warehouses.splice(idx, 1, p.payload);
-      //     console.log('updateList action', `idx-${idx}`, s.warehouses);
-      //   }
-      // })
       .addMatcher(inPending, s => {
         s.isLoading = true;
         s.error = null;
@@ -75,7 +61,8 @@ export const warehousesSlice = createSlice({
       .addMatcher(inError, (s, a: PayloadAction<StateErrorType>) => {
         s.isLoading = false;
         s.error = a.payload;
-      }),
+      });
+  },
 });
 function isWarehousingCase(type: string) {
   return checks.isStr(type) && type.startsWith('warehouses');

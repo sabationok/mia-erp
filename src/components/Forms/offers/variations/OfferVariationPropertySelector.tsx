@@ -6,6 +6,7 @@ import { Text } from '../../../atoms/Text';
 import styled from 'styled-components';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import FlexBox from '../../../atoms/FlexBox';
+import { useProductsSelector } from '../../../../redux/selectors.store';
 
 const PropertyItemStylesByCmsKey: Record<string, { numColumns?: number }> = {
   [PropertyTypeEnum.size]: {
@@ -19,15 +20,32 @@ export interface OfferVariationPropertySelectorProps {
   item: PropertyEntity;
   selectedValue?: string;
   selectedIds?: string[];
+  childrenList?: PropertyEntity['childrenList'];
   onSelect?: (propId: string, valueId: string, label?: MaybeNull<string>) => void;
 }
 export const OfferVariationPropertySelector = ({
   item,
   selectedIds = [],
   onSelect,
+  childrenList,
 }: OfferVariationPropertySelectorProps) => {
+  const state = useProductsSelector();
+
   const renderChildren = useMemo(() => {
-    return item.childrenList?.map(value => {
+    const _propId = item?._id;
+
+    const _valuesList: PropertyValueEntity[] = [];
+
+    const _valuesIds = state.propertiesKeysMap?.[_propId] ?? [];
+
+    for (const valueId of _valuesIds) {
+      const value = state.propertiesDataMap?.[valueId];
+      if (value) {
+        _valuesList.push(value);
+      }
+    }
+
+    return _valuesList?.map(value => {
       const isSelected = selectedIds.includes(value._id);
 
       return (
@@ -39,7 +57,7 @@ export const OfferVariationPropertySelector = ({
         />
       );
     });
-  }, [item._id, item.childrenList, onSelect, selectedIds]);
+  }, [item._id, onSelect, selectedIds, state.propertiesDataMap, state.propertiesKeysMap]);
 
   return (
     <PropertyBox key={`property-box-${item._id}`} gap={8} fillWidth padding={'8px 0 0'}>

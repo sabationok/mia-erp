@@ -26,7 +26,7 @@ const initialState: PricesState = {
   isLoading: false,
   error: null,
   lists: [],
-  current: null,
+  currentRoot: null,
   filteredLists: [],
   dataMap: {},
   keysMap: {},

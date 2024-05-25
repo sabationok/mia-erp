@@ -11,7 +11,6 @@ import {
   PropertyBaseEntity,
   PropertyFormData,
   PropertyLevelIsType,
-  PropertyLevelTypeEnum,
 } from '../../../../types/offers/properties.types';
 import React from 'react';
 import LangButtonsGroup from '../../../atoms/LangButtonsGroup';
@@ -31,6 +30,8 @@ export interface FormCreatePropertyProps
   parent?: PropertyBaseEntity;
   edit?: boolean;
   updateId?: string;
+  parentLevelIs?: PropertyLevelIsType;
+  currentLevelIs?: PropertyLevelIsType;
 }
 
 export interface IPropertyFormData extends PropertyFormData {}
@@ -45,22 +46,29 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
 }) => {
   const offersSrv = useAppServiceProvider().offers;
   const dataMap = useProductsSelector().propertiesDataMap;
-  const levelIs: PropertyLevelIsType = { [parent?.levelType ?? 'group']: true };
+  const parentLevelIs: PropertyLevelIsType = { [parent?.levelType ?? 'group']: true };
+  const currentLevelIs: PropertyLevelIsType = { [parent?.levelType ?? 'group']: true };
   const current = updateId ? dataMap?.[updateId] : undefined;
 
   const loaders = useLoaders<'create' | 'update' | 'current', { current?: Partial<PropertyBaseEntity> }>(
-    {},
+    { create: { content: 'Creating...' }, update: { content: 'Updating...' } },
     { current }
   );
-  // const submitOptions = useAfterSubmitOptions();
-  const form = useAppForm<IPropertyFormData>({
-    defaultValues: {
-      isSelectable: parent?.selectableType === 'dynamic' ?? false,
-      levelType: PropertyLevelTypeEnum.group,
 
-      ...defaultState,
-      parent: parent ? getIdRef(parent) : undefined,
-    } as IPropertyFormData,
+  const form = useAppForm<IPropertyFormData>({
+    defaultValues: !defaultState
+      ? undefined
+      : ({
+          isSelectable: parent?.selectableType === 'dynamic' ?? false,
+          ...defaultState,
+          parent: parent ? getIdRef(parent) : undefined,
+        } as IPropertyFormData),
+    values: loaders.state?.current
+      ? ({
+          ...loaders.state?.current,
+          parent: parent ? getIdRef(parent) : undefined,
+        } as IPropertyFormData)
+      : undefined,
   });
 
   const {
@@ -79,14 +87,15 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
     if (updateId) {
       offersSrv.updatePropertyById({
         data: { _id: updateId, data: toReqData(omit(data, ['cmsConfigs'])) },
+        onLoading: loaders.onLoading('update'),
         onSuccess: data => {
           loaders.setData('current', data);
         },
       });
     } else {
       offersSrv.createProperty({
+        onLoading: loaders.onLoading('create'),
         data: {
-          _id: formValues._id,
           data: toReqData(omit(data, ['cmsConfigs'])),
         },
         onSuccess: data => {
@@ -97,10 +106,16 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
   };
 
   return (
-    <ModalBase fillHeight title={title || 'Create property'} onClose={onClose}>
+    <ModalBase
+      isLoading={loaders.hasLoading}
+      fillHeight
+      title={title || formValues?._id ? 'Update property' : 'Create property'}
+      onClose={onClose}
+    >
       <FlexBox>
         <FlexBox padding={'4px 8px 8px'} flex={1} gap={12} fillWidth>
           <AccordionForm
+            isLoading={loaders.hasLoading}
             label={'Main info'}
             expandable={false}
             isOpen={true}
@@ -116,9 +131,9 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
             </InputLabel>
 
             {parent && (
-              <InputLabel label={t(levelIs?.group ? 'group' : 'property')} disabled>
+              <InputLabel label={t(parentLevelIs?.group ? 'group' : 'property')} disabled>
                 <InputText
-                  placeholder={t(levelIs?.group ? 'group' : 'property')}
+                  placeholder={t(parentLevelIs?.group ? 'group' : 'property')}
                   defaultValue={parent?.label ?? ''}
                   disabled
                 />
@@ -129,33 +144,20 @@ const FormCreateProperty: React.FC<FormCreatePropertyProps> = ({
               <InputText placeholder={t('insertLabel')} {...register('label')} autoFocus required />
             </InputLabel>
 
-            {levelIs?.group && formValues?._id && (
+            {currentLevelIs?.prop && formValues?._id && (
               <InputLabel label={'Доступно для формування варіацій'}>
                 <ButtonSwitch name={'isSelectable'} value={formValues?.isSelectable} onChange={selectableHandler} />
               </InputLabel>
             )}
           </AccordionForm>
 
-          {loaders.state.current && <PropertyCmsParamsForm defaultState={loaders.state.current} levelIs={levelIs} />}
-
-          {/*{isProperty && (*/}
-          {/*  <InputLabel label={t('Cms type')}>*/}
-          {/*    <CustomSelect*/}
-          {/*      {...registerSelect('cmsConfigs.type', {*/}
-          {/*        options: propCmsTypeFilterOptions,*/}
-          {/*        placeholder: t('Select cms type'),*/}
-          {/*      })}*/}
-          {/*    />*/}
-          {/*  </InputLabel>*/}
-          {/*)}*/}
+          {formValues?._id && <PropertyCmsParamsForm defaultState={formValues} levelIs={currentLevelIs} />}
         </FlexBox>
       </FlexBox>
     </ModalBase>
   );
 };
 export const PropertyCmsParamsForm = ({
-  levelIs,
-  onSubmit,
   defaultState,
 }: {
   levelIs?: PropertyLevelIsType;
@@ -170,7 +172,6 @@ export const PropertyCmsParamsForm = ({
     formState: { errors },
     register,
     handleSubmit,
-    // setValue,
     formValues,
   } = form;
 
@@ -195,17 +196,13 @@ export const PropertyCmsParamsForm = ({
         <InputText placeholder={'Label'} {...register('cmsConfigs.labels.ua')} />
       </InputLabel>
 
-      {levelIs?.group && (
-        <InputLabel label={t('Description')}>
-          <InputText placeholder={t('description')} {...register('cmsConfigs.description')} />
-        </InputLabel>
-      )}
+      <InputLabel label={t('Description')}>
+        <InputText placeholder={t('description')} {...register('cmsConfigs.description')} />
+      </InputLabel>
 
-      {levelIs?.group && formValues?.cmsConfigs?.key === 'color' && (
-        <InputLabel disabled label={t('Colors')}>
-          <InputText placeholder={t('Colors')} type={'color'} {...register('cmsConfigs.colors')} />
-        </InputLabel>
-      )}
+      <InputLabel disabled label={t('Colors')}>
+        <InputText placeholder={t('Colors')} type={'color'} {...register('cmsConfigs.colors')} />
+      </InputLabel>
     </AccordionForm>
   );
 };
