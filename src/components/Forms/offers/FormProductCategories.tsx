@@ -9,7 +9,7 @@ import { Text } from '../../atoms/Text';
 import { useDirectorySelector } from '../../../redux/selectors.store';
 import { UUID } from '../../../types/utils.types';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import { useCurrentOffer } from '../../../hooks';
+import { OfferEntity } from '../../../types/offers/offers.types';
 
 export interface FormProductCategoriesProps {
   onSelect?: (id: string, option?: OfferCategoryEntity) => void;
@@ -20,6 +20,7 @@ export interface FormProductCategoriesProps {
   defaultData?: string[];
   selectedIds?: string[];
   options?: OfferCategoryEntity[];
+  offer?: OfferEntity;
 }
 
 const getUnicIds = (map: IsSelectedIdsMap) => {
@@ -31,18 +32,18 @@ const getUnicIds = (map: IsSelectedIdsMap) => {
 };
 
 type IsSelectedIdsMap = Record<UUID, UUID[]>;
-const FormProductCategories: React.FC<FormProductCategoriesProps> = ({ onChangeIds, onChange }) => {
+const FormProductCategories: React.FC<FormProductCategoriesProps> = ({ onChangeIds, onChange, offer }) => {
   const treeData = useDirectorySelector(ApiDirType.CATEGORIES_PROD).directory;
-  const currentOffer = useCurrentOffer();
+
   const [selectedMap, setSelectedMap] = useState<IsSelectedIdsMap>({});
 
   const init = useMemo(() => {
-    if (!currentOffer?.categories) {
+    if (!offer?.categories) {
       return undefined;
     }
 
     const _next: IsSelectedIdsMap = {};
-    currentOffer?.categories?.forEach(category => {
+    offer?.categories?.forEach(category => {
       const parentId = category.parent?._id;
       const catId = category?._id;
 
@@ -60,7 +61,7 @@ const FormProductCategories: React.FC<FormProductCategoriesProps> = ({ onChangeI
     });
 
     return _next;
-  }, [currentOffer?.categories]);
+  }, [offer?.categories]);
 
   useEffect(() => {
     if (init) setSelectedMap(init);
