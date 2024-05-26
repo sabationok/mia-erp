@@ -1,5 +1,5 @@
 import { useRow } from '../TableRows/TableRow';
-import CheckBox, { CustomCheckboxEvent, CustomCheckboxEventHandler } from './CellComponents/CheckBox';
+import CheckBox, { ButtonCheckboxEvent, CustomCheckboxEventHandler } from './CellComponents/CheckBox';
 import styled from 'styled-components';
 import { memo } from 'react';
 
@@ -14,7 +14,7 @@ interface Props {
 const CellCheckBox: React.FC<Props> = ({ className }) => {
   const { rowData, onRowCheckboxChange, checked } = useRow();
 
-  function onChange({ checked, event }: CustomCheckboxEvent) {
+  function onChange({ checked, event }: ButtonCheckboxEvent) {
     onRowCheckboxChange && onRowCheckboxChange({ checked, _id: rowData._id });
   }
 

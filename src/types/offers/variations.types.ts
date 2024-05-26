@@ -3,7 +3,7 @@ import { WarehouseItemEntity } from '../warehousing/warehouses.types';
 import { PriceEntity } from '../price-management/price-management.types';
 import { AppQueryParams } from '../../api';
 import { OfferEntity } from './offers.types';
-import { PropertyValueEntity } from './properties.types';
+import { ProperiesGroupEntity, PropertyValueEntity } from './properties.types';
 import { HasCompany, HasDimensions, HasLabel, MaybeNull, WithPeriod } from '../utils.types';
 import { HasBaseCmsConfigs, HasBaseCmsConfigsDto } from '../cms.types';
 
@@ -18,6 +18,7 @@ export interface VariationEntity extends IVariationBase, IBase, HasCompany, HasB
   price?: PriceEntity;
   inventories?: WarehouseItemEntity[];
 
+  template?: ProperiesGroupEntity;
   properties?: PropertyValueEntity[];
 }
 
@@ -29,7 +30,10 @@ export interface IVariationTableData extends VariationEntity {
 }
 export interface IVariationFormData extends IVariationBase, HasBaseCmsConfigsDto {
   propertiesMap?: VariationPropertiesMapInFormData;
-  offer?: OnlyUUID & { label?: string } & HasBaseCmsConfigsDto;
+
+  template: OnlyUUID & { label?: string };
+
+  offer: OnlyUUID & { label?: string } & HasBaseCmsConfigsDto;
 }
 
 export interface HasVariation {

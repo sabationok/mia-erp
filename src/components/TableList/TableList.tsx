@@ -6,7 +6,7 @@ import TableOverHead from './TableOverHead/TableOverHead';
 import TableFooter from './TableFooter/TableFooter';
 import styled from 'styled-components';
 import { MaxToTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
-import { CustomCheckboxEvent } from './TebleCells/CellComponents/CheckBox';
+import { ButtonCheckboxEvent } from './TebleCells/CellComponents/CheckBox';
 import {
   ITableListContext,
   ITableListProps,
@@ -39,13 +39,14 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
   filterDefaultValues,
   scrollBarWidth,
   onSubmitSearch,
+  selectedRow,
   ...props
 }) => {
   // const tBodyRef = useRef<HTMLElement>(null);
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const rowRef = useRef<HTMLElement>();
-  const [selectedRow, setSelectedRow] = useState<any | undefined>();
   const setFilterData = useState<FilterReturnDataType>()[1];
+  const [_selectedRows, _setSelectedRows] = useState<string[]>([]);
+  const [_selectedRow, _setSelectedRow] = useState<any | undefined>(selectedRow);
   const [loading, setLoading] = useState(isLoading);
 
   const rowGrid = useMemo(
@@ -66,33 +67,35 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
 
   const onRowClickWrapper = useCallback(
     (rowData: any) => {
-      setSelectedRow(rowData);
+      _setSelectedRow(rowData);
+
       typeof onRowClick === 'function' && onRowClick(rowData);
     },
     [onRowClick]
   );
 
   const onCheckboxChangeWrapper = useCallback(({ checked, _id }: OnCheckBoxChangeHandlerEvent) => {
-    setSelectedRows(prev => {
+    _setSelectedRows(prev => {
       if (checked && _id) return [...prev, _id];
       if (!checked && _id) return prev.filter(el => el !== _id);
       return prev;
     });
   }, []);
+
   const onHeadCheckboxChange = useCallback(
-    (e: CustomCheckboxEvent) => {
+    (e: ButtonCheckboxEvent) => {
       const { checked } = e;
-      if (checked) setSelectedRows(prev => tableData?.map(el => el._id) || prev);
-      if (!checked) setSelectedRows([]);
+      if (checked) _setSelectedRows(prev => tableData?.map(el => el._id) || prev);
+      if (!checked) _setSelectedRows([]);
     },
     [tableData]
   );
 
   useEffect(() => {
-    if (!isUndefined(props?.selectedRow)) {
-      setSelectedRow(props?.selectedRow);
+    if (!isUndefined(selectedRow)) {
+      _setSelectedRow(selectedRow);
     }
-  }, [props?.selectedRow]);
+  }, [selectedRow]);
 
   const CTX = useMemo(
     (): ITableListContext<IBase> => ({
@@ -106,8 +109,8 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
       filterDefaultValues,
       rowGrid,
       rowRef,
-      selectedRows,
-      selectedRow,
+      selectedRows: _selectedRows,
+      selectedRow: _selectedRow,
       tableData,
       onFilterSubmit: onFilterSubmitWrapper,
       onRowClick: onRowClickWrapper,
@@ -131,22 +134,17 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
       onSubmitSearch,
       props,
       rowGrid,
-      selectedRow,
-      selectedRows,
+      _selectedRow,
+      _selectedRows,
       tableData,
       tableSearchParams,
       tableTitles,
     ]
   );
 
-  useEffect(() => {
-    if (props?.selectedRow) {
-      setSelectedRow(props?.selectedRow);
-    }
-  }, [props?.selectedRow]);
   return (
     <Table {...props}>
-      <TableCTX.Provider value={CTX}>
+      <TableCTX.Provider value={{ ...CTX }}>
         <TableOverHead />
 
         <TableScroll className={'TableScroll'} scrollBarWidth={scrollBarWidth}>

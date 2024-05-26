@@ -12,6 +12,7 @@ export { default as useAppDate } from './useAppDate.hook';
 export * from './useRouter.hook';
 export * from './useAppParams.hook';
 export * from './useCurrentOffer.hook';
+export * from './useCurrentVariation.hook';
 
 export { default as useScrollTo } from './useScrollTo.hook';
 

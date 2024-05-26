@@ -17,6 +17,7 @@ const QuickActions: React.FC<{ closeOnClickOut?: boolean }> = ({ closeOnClickOut
 
   useEffect(() => {
     if (selectedRow) setIsShown(true);
+
     if (!selectedRow && selectedRows && selectedRows?.length === 0) {
       setIsShown(false);
     }

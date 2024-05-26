@@ -14,27 +14,19 @@ import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../Forms/componen
 import { OverlayFooter } from './index';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useAppForm, useCurrentOffer } from '../../hooks';
+import { useAppForm, useCurrentOffer, useCurrentVariation } from '../../hooks';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import { t } from '../../lang';
 import LangButtonsGroup from '../atoms/LangButtonsGroup';
 import { UUID } from '../../types/utils.types';
 import OfferVariationPropertySelector from '../Forms/offers/variations/OfferVariationPropertySelector';
-import {
-  ProperiesGroupEntity,
-  PropertyBaseEntity,
-  PropertyEntity,
-  PropertyValueEntity,
-} from '../../types/offers/properties.types';
+import { ProperiesGroupEntity, PropertyEntity, PropertyValueEntity } from '../../types/offers/properties.types';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
-import { OfferEntity, OfferTypeEnum } from '../../types/offers/offers.types';
-import CustomSelect, { CustomSelectHandler } from '../atoms/Inputs/CustomSelect/CustomSelect';
+import { OfferEntity } from '../../types/offers/offers.types';
 import DrawerBase from './OverlayBase';
-import ButtonsGroup from '../atoms/ButtonsGroup';
-import { productsFilterOptions } from '../../data/modalFilterOptions.data';
-import { AppModuleName } from '../../redux/reduxTypes.types';
+import { PropertiesGroupSelect } from '../atoms/PropertiesGroupSelect';
 
 export interface CreateVariationModalProps
   extends CreatedOverlay,
@@ -79,80 +71,6 @@ const validation = yup.object().shape({
     out: yup.string(),
   }),
 });
-export const PropTemplateSelect = ({
-  selected,
-  onSelect,
-  filterValue = OfferTypeEnum.GOODS,
-  hasFilter = false,
-}: {
-  selected?: ProperiesGroupEntity;
-  onSelect?: (opt: ProperiesGroupEntity) => void;
-  filterValue?: OfferTypeEnum;
-  hasFilter?: boolean;
-}) => {
-  const service = useAppServiceProvider().get(AppModuleName.offers);
-  useEffect(() => {
-    console.log({ offers_service: service });
-  }, [service]);
-
-  const state = useProductsSelector();
-  const [filter, setFilter] = useState<OfferTypeEnum>(filterValue);
-  const [currentTemplate, setCurrentTemplate] = useState<ProperiesGroupEntity | undefined>();
-  const loaders = useLoaders<'getList'>();
-
-  const rootList = useMemo(() => {
-    const _rootIds = state.propertiesByTypeKeysMap[filter];
-    const _items: PropertyBaseEntity[] = [];
-
-    for (const _id of _rootIds) {
-      const item = state.propertiesDataMap?.[_id];
-      item && _items.push(item);
-    }
-
-    return _items;
-  }, [filter, state.propertiesByTypeKeysMap, state.propertiesDataMap]);
-
-  const handleSelect: CustomSelectHandler<ProperiesGroupEntity> = option => {
-    if (onSelect && option) {
-      onSelect(option);
-    } else {
-      setCurrentTemplate(option);
-    }
-  };
-
-  useEffect(() => {
-    if (selected) {
-      setCurrentTemplate(selected);
-    }
-  }, [selected]);
-
-  // useEffect(() => {
-  //   if ()
-  // }, []);
-
-  return (
-    <FlexBox margin={'8px 0'} gap={8}>
-      {hasFilter && (
-        <InputLabel label={t('Select type')}>
-          <ButtonsGroup
-            options={productsFilterOptions}
-            value={filter}
-            onSelect={({ value }) => {
-              setFilter(value);
-            }}
-          />
-        </InputLabel>
-      )}
-      <CustomSelect
-        label={t('Select properties group')}
-        selectedOption={currentTemplate}
-        onSelect={handleSelect}
-        options={rootList}
-        placeholder={'Select properties group'}
-      />
-    </FlexBox>
-  );
-};
 const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   onClose,
   title,
@@ -167,7 +85,9 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   const state = useProductsSelector();
   const service = useAppServiceProvider()[ServiceName.offers];
   const loaders = useLoaders<'create'>();
-  const currentOffer = useCurrentOffer({ id: update || offerId || offer?._id });
+  const currentOffer = useCurrentOffer({ id: offerId || offer?._id });
+  const { variation } = useCurrentVariation({ id: update });
+
   const submitOptions = useAfterSubmitOptions();
   const [selectedPropsMap, setSelectedPropsMap] = useState<Record<string, PropertyValueEntity>>({});
 
@@ -175,11 +95,15 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
 
   const formMethods = useAppForm<IVariationFormData>({
     defaultValues: toVariationFormData(
-      defaultState ? { ...defaultState, offer: currentOffer } : { offer: currentOffer }
+      defaultState
+        ? { ...defaultState, offer: currentOffer, template: currentTemplate }
+        : { offer: currentOffer, template: currentTemplate }
     ),
+    values: variation ? toVariationFormData(variation) : undefined,
     resolver: yupResolver(validation as never),
     reValidateMode: 'onSubmit',
   });
+
   const {
     setValue,
     handleSubmit,
@@ -297,6 +221,10 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
     });
   }, [propertiesList, selectedIds, handleSelect]);
 
+  // useEffect(() => {
+  //   if ()
+  // }, []);
+
   return (
     <DrawerBase fillHeight onBackPress={onClose} okButton={false} title={title}>
       <FormContainer
@@ -308,6 +236,26 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
       >
         <Content flex={1} fillWidth overflow={'auto'}>
           <Inputs>
+            {/*{!variation && (*/}
+            {/*)}*/}
+            <InputLabel label={t('Offer label')} error={errors?.offer?._id} required disabled>
+              <InputText value={currentOffer?.label ?? undefined} placeholder={t('label')} required disabled />
+            </InputLabel>
+
+            <FlexBox fxDirection={'row'} gap={8} fillWidth>
+              <InputLabel label={t('sku')} disabled>
+                <InputText disabled placeholder={t('sku')} />
+              </InputLabel>
+
+              <InputLabel label={t('barCode')}>
+                <InputText placeholder={t('barCode')} />
+              </InputLabel>
+            </FlexBox>
+          </Inputs>
+          <Inputs>
+            {/*{!variation && (*/}
+            {/*)}*/}
+
             <InputLabel label={t('label')} error={errors.label}>
               <InputText {...register('label', { required: true })} placeholder={t('label')} required />
             </InputLabel>
@@ -325,13 +273,13 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
             {/*<DimensionsInputs form={formMethods} />*/}
           </Inputs>
 
-          <PropTemplateSelect onSelect={setCurrentTemplate} selected={currentTemplate} />
+          <PropertiesGroupSelect onSelect={setCurrentTemplate} selected={currentTemplate} />
 
-          <TemplateBox padding={'0 0 8px'} margin={'8px 0 0'}>
+          <TemplateBox padding={'0 8px'} margin={'8px 0'}>
             {renderPropertiesList}
           </TemplateBox>
 
-          {!currentOffer && (
+          {currentOffer && (
             <CmsConfigs padding={'8px 0'} fillWidth>
               <CmsConfigsHeader padding={'8px'} justifyContent={'flex-end'} fxDirection={'row'} fillWidth>
                 <Text $size={13} $weight={500}>
