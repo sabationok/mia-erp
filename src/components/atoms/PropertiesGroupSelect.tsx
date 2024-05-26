@@ -1,7 +1,5 @@
 import { OfferTypeEnum } from '../../types/offers/offers.types';
 import { ProperiesGroupEntity, PropertyBaseEntity } from '../../types/offers/properties.types';
-import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
-import { AppModuleName } from '../../redux/reduxTypes.types';
 import { useProductsSelector } from '../../redux/selectors.store';
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
@@ -23,7 +21,7 @@ export const PropertiesGroupSelect = ({
   filterValue?: OfferTypeEnum;
   hasFilter?: boolean;
 }) => {
-  const service = useAppServiceProvider().get(AppModuleName.offers);
+  // const service = useAppServiceProvider().get(AppModuleName.offers);
 
   const state = useProductsSelector();
   const [filter, setFilter] = useState<OfferTypeEnum>(filterValue);

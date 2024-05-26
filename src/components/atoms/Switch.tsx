@@ -31,7 +31,7 @@ function Switch({ checked, onChange, mr, disabled = false, size = '20px' }: Prop
     if (!isUndefined(checked)) {
       setIsChecked(checked);
     }
-  }, []);
+  }, [checked]);
 
   return (
     <StSwitch
