@@ -1,28 +1,35 @@
 import React, { useMemo } from 'react';
 import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
-import { PropertyEntity } from '../../../types/offers/properties.types';
+import { PropertyEntity, PropertyValueEntity } from '../../../types/offers/properties.types';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { CellStyledComp } from './CellStyles';
 
 interface OverviewPropertyComponentProps {
   item: PropertyEntity;
-  selectedItems?: string[];
+  selectedIds?: string[];
+  selectedItems?: PropertyValueEntity[];
   data?: OfferEntity;
   index: number;
 }
-export const OverviewPropertyComponent: React.FC<OverviewPropertyComponentProps> = ({ item, selectedItems }) => {
+export const OverviewPropertyComponent: React.FC<OverviewPropertyComponentProps> = ({
+  item,
+  selectedIds,
+  selectedItems,
+}) => {
   const renderValues = useMemo(() => {
-    return item.childrenList
-      ?.filter(el => selectedItems?.includes(el._id))
-      ?.map((value, index) => {
-        return (
-          <CellStyledComp.CategoryItem key={`prop-v-${value._id}`} className={'PROP_VALUE'} maxWidth={'130px'}>
-            {value.label}
-          </CellStyledComp.CategoryItem>
-        );
-      });
-  }, [item.childrenList, selectedItems]);
+    const _list = selectedItems?.length
+      ? selectedItems
+      : item.childrenList?.filter(el => selectedIds?.includes(el._id));
+
+    return _list?.map((value, index) => {
+      return (
+        <CellStyledComp.CategoryItem key={`prop-v-${value._id}`} className={'PROP_VALUE'} maxWidth={'130px'}>
+          {value.label}
+        </CellStyledComp.CategoryItem>
+      );
+    });
+  }, [item.childrenList, selectedIds, selectedItems]);
 
   return (
     <FlexBox className={'PROPERTY'} gap={8} alignItems={'flex-end'}>

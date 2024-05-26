@@ -24,7 +24,7 @@ const PageOfferProvider: React.FC<PageOfferProviderProps> = ({ children }) => {
   const params = useAppParams();
   const offerId = params?.offerId;
 
-  const currentOffer = useCurrentOffer({ id: offerId });
+  const currentOffer = useCurrentOffer({ _id: offerId });
 
   useEffect(() => {
     if (loaders?.isLoading?.offer) return;

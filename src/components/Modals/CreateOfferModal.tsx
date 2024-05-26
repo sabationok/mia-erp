@@ -31,7 +31,7 @@ const CreateOfferModal: React.FC<CreateOfferModalProps> = ({ onClose, _id }) => 
     setData,
   } = loaders;
   const router = useAppRouter();
-  const currenOffer = useCurrentOffer({ id: router.query?.offerId });
+  const currenOffer = useCurrentOffer({ _id: router.query?.offerId });
 
   useEffect(() => {
     router.push({ query: {} });

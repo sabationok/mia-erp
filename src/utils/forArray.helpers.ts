@@ -24,3 +24,7 @@ export function ObjectFromEntries<
 >(obj: Obj): [Key, Value][] {
   return Object.entries(obj) as [Key, Value][];
 }
+
+export function sortIds(ids?: string[]) {
+  return [...(ids ?? [])]?.sort((a, b) => a.localeCompare(b));
+}

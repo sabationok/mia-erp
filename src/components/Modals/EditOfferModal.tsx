@@ -27,7 +27,7 @@ export interface EditOfferModalProps extends ModalFormProps {
 }
 
 const EditOfferModal: React.FC<EditOfferModalProps> = ({ onClose, _id, copy }) => {
-  const currentOffer = useCurrentOffer({ id: _id });
+  const currentOffer = useCurrentOffer({ _id: _id });
   const service = useOffersService();
   const loaders = useLoaders<OfferLoadersKey, OfferLoadersData>(
     { offer_refresh: { content: 'Refreshing...' }, offer_update: { content: 'Updating...' } },

@@ -8,8 +8,8 @@ export interface FlexBoxBaseProps {
   background?: Property.Background;
   gap?: number;
   alignSelf?: Property.AlignSelf;
-  maxWidth?: string;
-  maxHeight?: string;
+  maxWidth?: Property.MaxHeight;
+  maxHeight?: Property.MinHeight;
   width?: Property.Width;
   height?: Property.Height;
   padding?: Property.Padding;

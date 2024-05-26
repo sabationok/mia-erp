@@ -1,21 +1,24 @@
 import styled from 'styled-components';
 import FlexBox from '../atoms/FlexBox';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { usePropertiesSelector } from '../../redux/selectors.store';
+import { useProductsSelector } from '../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import * as React from 'react';
 import { FormEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
-import { Text } from '../atoms/Text';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { OnlyUUID } from '../../redux/global.types';
 import { ModalFormProps } from '../ModalForm';
 import { ToastService } from '../../services';
 import { OverlayFooter, OverlayForm, OverlayHeader } from './index';
-import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
-import { t } from '../../lang';
 import { OfferEntity } from '../../types/offers/offers.types';
+import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
+import { PropertyBaseEntity, PropertyEntity } from '../../types/offers/properties.types';
+import OfferVariationPropertySelector from '../Forms/offers/variations/OfferVariationPropertySelector';
+import { PropertiesGroupSelect } from '../atoms/PropertiesGroupSelect';
+import { useCurrentOffer } from '../../hooks';
+import { sortIds } from '../../utils';
 
 export interface FormSelectPropertiesProps
-  extends OverlayHandlerReturn,
+  extends CreatedOverlay,
     Omit<ModalFormProps<any, any, string[]>, 'onSubmit' | 'onChange' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<string[]>;
   onSelect?: (id: string) => void;
@@ -24,7 +27,7 @@ export interface FormSelectPropertiesProps
   offer?: OfferEntity;
   template?: OnlyUUID;
 
-  update?: string;
+  updateId?: string;
 }
 
 const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
@@ -32,34 +35,59 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
   title,
   defaultState,
   onSubmit,
-  update,
+  updateId,
   offer,
   template,
   onSelect,
   onChange,
   ...props
 }) => {
-  const currentOffer = offer;
+  const currentOffer = useCurrentOffer(offer);
+  const state = useProductsSelector();
   const service = useAppServiceProvider()[ServiceName.offers];
-  const templates = usePropertiesSelector();
-  const [currentId, setCurrentId] = useState<string>(templates[0]?._id);
+  const [currentTemplate, setCurrentTemlate] = useState<PropertyBaseEntity>();
 
   const [loading, setLoading] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  const templateData = useMemo(() => {
-    return templates.find(t => t._id === currentId);
-  }, [currentId, templates]);
+  const initState = useMemo(() => {
+    return sortIds(currentOffer?.properties?.map(prop => prop._id));
+  }, [currentOffer?.properties]);
+
+  useEffect(() => {
+    if (initState?.length) {
+      setSelectedIds(initState);
+    }
+    // eslint-disable-next-line
+  }, []);
+
+  const propertiesList = useMemo(() => {
+    const _rootId = currentTemplate?._id;
+    const _propertiesList: PropertyEntity[] = [];
+    const _propertiesIds = state.propertiesKeysMap?.[_rootId ?? 'def'] ?? [];
+
+    for (const propId of _propertiesIds) {
+      const prop = state.propertiesDataMap?.[propId];
+      if (prop && !prop?.isSelectable) {
+        const childrenIds = state.propertiesKeysMap[prop?._id];
+        if (childrenIds?.length) {
+          _propertiesList.push(prop);
+        }
+      }
+    }
+
+    return _propertiesList;
+  }, [currentTemplate?._id, state.propertiesDataMap, state.propertiesKeysMap]);
 
   const canSubmit = useMemo(() => {
-    return currentOffer?.properties?.map(p => p._id).join(',') !== selectedIds.join(',');
-  }, [currentOffer?.properties, selectedIds]);
+    return sortIds(initState)?.join(',') !== sortIds(selectedIds).join(',');
+  }, [initState, selectedIds]);
 
   const handleSubmit: FormEventHandler = useCallback(
     event => {
       event.preventDefault();
 
-      const id = update ?? currentOffer?._id;
+      const id = updateId ?? currentOffer?._id;
       if (id) {
         service.updateById({
           data: { _id: id, data: { properties: selectedIds } },
@@ -75,54 +103,27 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
 
       onSubmit && onSubmit(selectedIds);
     },
-    [currentOffer?._id, onClose, onSubmit, selectedIds, service, update]
+    [currentOffer?._id, onClose, onSubmit, selectedIds, service, updateId]
   );
 
-  const handleSelect = useCallback(
-    (id: string, parentId?: string) => {
-      setSelectedIds(prev => {
-        const newData = prev.includes(id) ? prev.filter(el => el !== id) : [...prev, id];
+  const handleSelect = useCallback((_parentId?: string, valueId: string = '') => {
+    setSelectedIds(prev => {
+      return prev.includes(valueId) ? prev.filter(el => el !== valueId) : [...prev, valueId];
+    });
+  }, []);
 
-        onChange && onChange(newData);
-        onSelect && onSelect(id);
-
-        return newData;
-      });
-    },
-    [onChange, onSelect]
-  );
-
-  const renderTemplate = useMemo(() => {
-    return templateData?.childrenList
-      ?.filter(el => !el?.isSelectable)
-      .map(prop => {
-        return (
-          <PropertyBox key={`property-${prop._id}`} gap={8} fillWidth padding={'8px 0 0'}>
-            <Text style={{ flex: 1, paddingLeft: 12 }} $weight={500}>
-              {prop.label}
-            </Text>
-
-            <PropertyValuesList fillWidth padding={'8px 0'} gap={6} flexWrap={'wrap'} fxDirection={'row'}>
-              {prop.childrenList?.map(value => {
-                const isActive = selectedIds.includes(value._id);
-
-                return (
-                  <ValueTag
-                    key={`prop-value-${value._id}`}
-                    variant={isActive ? 'filledSmall' : 'outlinedSmall'}
-                    padding={'6px 8px'}
-                    fontWeight={500}
-                    onClick={() => handleSelect(value._id, prop._id)}
-                  >
-                    {value.label}
-                  </ValueTag>
-                );
-              })}
-            </PropertyValuesList>
-          </PropertyBox>
-        );
-      });
-  }, [handleSelect, selectedIds, templateData?.childrenList]);
+  const renderPropertiesList = useMemo(() => {
+    return propertiesList?.map(prop => {
+      return (
+        <OfferVariationPropertySelector
+          key={`prop_${prop._id}`}
+          item={prop}
+          selectedIds={selectedIds}
+          onSelect={handleSelect}
+        />
+      );
+    });
+  }, [propertiesList, selectedIds, handleSelect]);
 
   useEffect(() => {
     if (currentOffer?.properties) {
@@ -135,22 +136,15 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
       <OverlayHeader
         onBackPress={onClose}
         canSubmit={canSubmit}
-        title={(title || templateData?.label) ?? ''}
+        title={(title || currentTemplate?.label) ?? ''}
         okButton
       />
 
-      <CustomSelect
-        label={t('Available templates')}
-        options={templates}
-        selectedValue={currentId}
-        onSelect={option => {
-          setCurrentId(option?._id);
-        }}
-      />
+      <PropertiesGroupSelect onSelect={setCurrentTemlate} selected={currentTemplate} />
 
-      <TemplateBox flex={1} overflow={'auto'}>
-        {renderTemplate}
-      </TemplateBox>
+      <PropertiesBox flex={1} overflow={'auto'}>
+        {renderPropertiesList}
+      </PropertiesBox>
 
       <OverlayFooter
         canSubmit={canSubmit}
@@ -161,38 +155,8 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
   );
 };
 
-const TemplateBox = styled(FlexBox)`
-  border-top: 1px solid ${p => p.theme.sideBarBorderColor};
-  border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
+const PropertiesBox = styled(FlexBox)`
   padding-bottom: 8px;
 `;
 
-const PropertyBox = styled(FlexBox)`
-  &:not(:first-child) {
-    border-top: 1px solid ${p => p.theme.sideBarBorderColor};
-  }
-`;
-const PropertyValuesList = styled(FlexBox)<{ numColumns?: number }>`
-  //display: grid;
-  //grid-template-columns: repeat(auto-fill, 25%);
-  //
-  //@media screen and (max-width: 480px) {
-  //  grid-template-columns: repeat(auto-fill, 50%);
-  //}
-`;
-
-const ValueTag = styled(ButtonIcon)`
-  flex-basis: 100px;
-  min-width: max-content;
-
-  //width: 100%;
-  //min-width: unset;
-
-  // border-radius: 2px;
-  // border: 2px solid ${p => p.theme.accentColor.light};
-  //
-  // &:hover {
-  //   border: 2px solid ${p => p.theme.accentColor.base};
-  // }
-`;
 export default FormSelectPropertiesOverlay;

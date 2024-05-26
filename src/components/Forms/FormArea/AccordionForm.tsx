@@ -5,7 +5,8 @@ import FormAreaFooter from './FormAreaFooter';
 import { useEffect, useState } from 'react';
 import { isUndefined } from 'lodash';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { Property } from 'csstype';
 
 export interface AccordionFormAreaProps {
   children?: React.ReactNode;
@@ -24,13 +25,18 @@ export interface AccordionFormAreaProps {
 
   hasOnSubmit?: boolean;
   hasOnReset?: boolean;
+
+  canSubmit?: boolean;
+  isEmpty?: boolean;
+
+  maxHeight?: Property.MaxHeight;
 }
 export interface AccordionFormProps extends AccordionFormAreaProps {
   onSubmit?: AppSubmitHandler;
   onReset?: () => void;
 }
 
-export const AccordionForm = ({ onSubmit, onReset, children, ...rest }: AccordionFormProps) => {
+export const AccordionForm = ({ isEmpty, onSubmit, onReset, children, ...rest }: AccordionFormProps) => {
   return (
     <FlexForm fillWidth onSubmit={onSubmit} onReset={onReset}>
       <AccordionFormArea {...rest} hasOnReset={!!onReset} hasOnSubmit={!!onSubmit}>
@@ -56,6 +62,8 @@ export const AccordionFormArea = ({
   hasOnReset,
   isHeaderSticky,
   hideFooter,
+  canSubmit,
+  maxHeight,
 }: AccordionFormAreaProps) => {
   const [_isOpen, _setIsOpen] = useState(isOpen);
 
@@ -69,7 +77,7 @@ export const AccordionFormArea = ({
   }, [isOpen]);
 
   return (
-    <FlexBox fillWidth style={{ position: 'relative' }}>
+    <FlexBox fillWidth style={{ position: 'relative' }} maxHeight={maxHeight}>
       {!hideLabel && (
         <Header
           gap={8}
@@ -100,7 +108,7 @@ export const AccordionFormArea = ({
         </Header>
       )}
 
-      <ExpandableBox disabled={disabled} isActive={_isOpen}>
+      <ExpandableBox disabled={disabled} isActive={_isOpen} maxHeight={maxHeight}>
         {_isOpen ? children : null}
 
         {hideFooter
@@ -110,7 +118,7 @@ export const AccordionFormArea = ({
                 hasOnSubmit={!!hasOnSubmit}
                 hasOnReset={!!hasOnReset}
                 isLoading={isLoading}
-                disabled={disabled}
+                disabled={!canSubmit || disabled}
                 onAcceptPress={onAcceptPress}
                 onResetPress={onResetPress}
               />
@@ -120,11 +128,16 @@ export const AccordionFormArea = ({
   );
 };
 
-const Header = styled(FlexBox)`
+const StickyCss = css`
   position: sticky;
   top: 0;
   left: 0;
   z-index: 6;
+`;
+
+const Header = styled(FlexBox)<{ isSticky?: boolean }>`
+  ${p => (p.isSticky ?? true ? StickyCss : '')}
+  min-height: 36px;
 
   background-color: ${p => p.theme.modalBackgroundColor};
 `;

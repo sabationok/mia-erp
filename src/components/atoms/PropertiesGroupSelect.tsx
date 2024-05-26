@@ -9,27 +9,32 @@ import InputLabel from './Inputs/InputLabel';
 import { t } from '../../lang';
 import ButtonsGroup from './ButtonsGroup';
 import { productsFilterOptions } from '../../data/modalFilterOptions.data';
+import { Values } from '../../types/utils.types';
 
+type FilterData = {
+  type: Values<typeof OfferTypeEnum>;
+  isSelectable?: boolean;
+};
 export const PropertiesGroupSelect = ({
   selected,
   onSelect,
-  filterValue = OfferTypeEnum.GOODS,
+  filterValue = { type: OfferTypeEnum.GOODS, isSelectable: true },
   hasFilter = false,
 }: {
   selected?: ProperiesGroupEntity;
   onSelect?: (opt: ProperiesGroupEntity) => void;
-  filterValue?: OfferTypeEnum;
+  filterValue?: FilterData;
   hasFilter?: boolean;
 }) => {
   // const service = useAppServiceProvider().get(AppModuleName.offers);
 
   const state = useProductsSelector();
-  const [filter, setFilter] = useState<OfferTypeEnum>(filterValue);
+  const [filter, setFilter] = useState<FilterData>(filterValue);
   const [currentTemplate, setCurrentTemplate] = useState<ProperiesGroupEntity | undefined>();
   // const loaders = useLoaders<'getList' | 'create' | 'update'>();
 
   const rootList = useMemo(() => {
-    const _rootIds = state.propertiesByTypeKeysMap[filter];
+    const _rootIds = state.propertiesByTypeKeysMap[filter.type];
     const _items: PropertyBaseEntity[] = [];
 
     for (const _id of _rootIds) {
@@ -63,9 +68,6 @@ export const PropertiesGroupSelect = ({
       }
     }
   }, [currentTemplate, onSelect, rootList]);
-  // useEffect(() => {
-  //   if ()
-  // }, []);
 
   return (
     <FlexBox margin={'8px 0'} gap={8}>
@@ -73,9 +75,11 @@ export const PropertiesGroupSelect = ({
         <InputLabel label={t('Select type')}>
           <ButtonsGroup
             options={productsFilterOptions}
-            value={filter}
+            value={filter.type}
             onSelect={({ value }) => {
-              setFilter(value);
+              setFilter(prev => {
+                return { ...prev, type: value };
+              });
             }}
           />
         </InputLabel>

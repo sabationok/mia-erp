@@ -12,6 +12,7 @@ import { IProductFullFormData, OfferEntity } from '../../../../types/offers/offe
 import { ApiDirType } from '../../../../redux/APP_CONFIGS';
 import { IDirItemBase } from '../../../../types/dir.types';
 import CheckBox from '../../../TableList/TebleCells/CellComponents/CheckBox';
+import { sortIds } from '../../../../utils';
 
 export interface OfferFormCategoriesAreaProps extends OfferFormAreaProps<IProductFullFormData['categories']> {
   onSelect?: (id: string) => void;
@@ -28,14 +29,17 @@ export const OfferFormCategoriesArea = ({
 }: OfferFormCategoriesAreaProps) => {
   const loaders = useOfferLoadersProvider();
   const offerCategories = useDirectorySelector(ApiDirType.CATEGORIES_PROD).directory;
+  const initIds = sortIds(offer?.categories?.map(p => p._id));
   const [parentIdsMap, setParentIdsMap] = useState<Record<string, { selected: boolean; parentIds: string[] }>>({});
   const service = useAppServiceProvider()[ServiceName.offers];
 
   const selectedIds = useMemo(
     () =>
-      Object.keys(parentIdsMap).filter(idKey => {
-        return parentIdsMap?.[idKey]?.selected;
-      }),
+      sortIds(
+        Object.keys(parentIdsMap).filter(idKey => {
+          return parentIdsMap?.[idKey]?.selected;
+        })
+      ),
     [parentIdsMap]
   );
 
@@ -109,17 +113,11 @@ export const OfferFormCategoriesArea = ({
   };
 
   const canSubmit = useMemo(() => {
-    if (disabled) return false;
     if (offer?.categories?.length) {
-      return (
-        offer?.categories
-          ?.map(p => p._id)
-          .sort((a, b) => a.localeCompare(b))
-          .join(',') !== selectedIds.sort((a, b) => a.localeCompare(b)).join(',')
-      );
+      return initIds?.join(',') !== selectedIds.join(',');
     }
     return !!selectedIds.length;
-  }, [offer?.categories, disabled, selectedIds]);
+  }, [offer?.categories?.length, selectedIds, initIds]);
 
   useEffect(() => {
     if (defaultValues?.length) {
@@ -197,7 +195,8 @@ export const OfferFormCategoriesArea = ({
       onSubmit={handleSubmit}
       onReset={handleReset}
       isLoading={loaders.isLoading?.properties}
-      disabled={!canSubmit}
+      canSubmit={canSubmit}
+      maxHeight={'300px'}
     >
       <ListBox flex={1} overflow={'auto'}>
         {renderCategories}
@@ -206,8 +205,6 @@ export const OfferFormCategoriesArea = ({
   );
 };
 const ListBox = styled(FlexUl)`
-  border-top: 1px solid ${p => p.theme.sideBarBorderColor};
-  border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
   padding-bottom: 8px;
 `;
 const CategoryBox = styled(FlexLi)`

@@ -42,7 +42,7 @@ const tabs = enumToFilterOptions(FormProductDefaultsTabs);
 const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({ onClose, onSubmit }) => {
   const loaders = useLoaders<OfferOverlayLoaderKey>();
   const offerId = useAppParams()?.offerId;
-  const currentOffer = useCurrentOffer({ id: offerId });
+  const currentOffer = useCurrentOffer({ _id: offerId });
 
   const productsS = useAppServiceProvider()[ServiceName.offers];
 

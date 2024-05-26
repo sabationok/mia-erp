@@ -36,6 +36,7 @@ export const OfferMeasurementFormArea = ({ defaultValues, _id, disabled, ...prop
       label={t('Measurement info')}
       isLoading={isLoading}
       disabled={!canSubmit || disabled}
+      isOpen={false}
       {...props}
     >
       <MeasurementInputs appForm={form} disabled={disabled} />

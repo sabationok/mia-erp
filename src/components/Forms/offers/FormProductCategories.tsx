@@ -1,17 +1,18 @@
 import * as React from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import FlexBox from '../../atoms/FlexBox';
-import translate from '../../../lang';
+import { useCallback, useEffect, useState } from 'react';
+import FlexBox, { FlexLi, FlexUl } from '../../atoms/FlexBox';
 import { IDirItemBase, IProductCategoryDirItem } from '../../../types/dir.types';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import styled from 'styled-components';
+import { ApiDirType } from '../../../redux/APP_CONFIGS';
+import CheckBox from '../../TableList/TebleCells/CellComponents/CheckBox';
+import { Text } from '../../atoms/Text';
 
 export interface FormProductCategoriesProps {
   onSelect?: (id: string, option?: IProductCategoryDirItem) => void;
   onChange?: (ids: string[]) => void;
   children?: React.ReactNode;
   defaultData?: string[];
+  selectedIds?: string[];
   options?: IProductCategoryDirItem[];
 }
 
@@ -45,109 +46,74 @@ const FormProductCategories: React.FC<FormProductCategoriesProps> = ({ options, 
     [onChange]
   );
 
-  const renderTreeData = useMemo(() => {
-    return options?.map((item, index) => {
-      return (
-        <ListItem
-          key={`item_lvl_0_${item._id}`}
-          item={item}
-          index={index}
-          selectedIds={selectedIds}
-          onRemove={handleRemove}
-        />
-      );
-    });
-  }, [handleRemove, options, selectedIds]);
-
   useEffect(() => {
-    if (defaultData) {
-      setSelectedIds(defaultData);
+    if (selectedIds) {
+      setSelectedIds(selectedIds);
     }
-  }, [defaultData]);
+  }, [selectedIds]);
 
   return (
-    <FlexBox fillWidth gap={6}>
-      <CustomSelect
-        treeMode
-        dropDownIsAbsolute
-        defaultValue={defaultData}
-        {...{
-          label: translate('categories'),
-          placeholder: translate('categories'),
-          required: true,
-          options,
-        }}
-        onSelect={handleSelect}
-      />
-
-      <FlexBox fxDirection={'row'} flexWrap={'wrap'} gap={8}>
-        {renderTreeData}
-      </FlexBox>
+    <FlexBox fxDirection={'row'} gap={8}>
+      {}
     </FlexBox>
   );
 };
 
-const ListItem: React.FC<{
-  item: IDirItemBase;
-  lvl?: number;
-  index?: number;
-  onRemove?: (id: string) => void;
-  selectedIds: string[];
-}> = ({
-  item,
-  index = 0,
-  lvl = 0,
-  selectedIds,
-  onRemove = () => {
-    console.log('onRemove not passed', lvl);
-  },
-}) => {
-  const renderChildren = useMemo(() => {
-    return item?.childrenList?.map((item, index) => {
-      return (
-        <ListItem
-          key={`item_lvl_${lvl}_${item._id}`}
-          item={item}
-          index={index}
-          onRemove={onRemove}
-          lvl={lvl + 1}
-          selectedIds={selectedIds}
-        />
-      );
-    });
-  }, [item?.childrenList, lvl, onRemove, selectedIds]);
+export default FormProductCategories;
 
-  const isSelected = useMemo(() => {
-    return selectedIds.includes(item._id);
-  }, [item._id, selectedIds]);
+const ListBox = styled(FlexUl)`
+  padding-bottom: 8px;
+`;
+const CategoryBox = styled(FlexLi)`
+  &:not(:first-child) {
+    border-top: 1px solid ${p => p.theme.sideBarBorderColor};
+  }
+`;
+const CategoriesList = styled(FlexUl)<{ numColumns?: number }>``;
+
+const CategoryItem = styled(FlexLi)``;
+
+const RenderItem = ({
+  item,
+  onChange,
+  getIsSelected,
+  parentIds,
+}: {
+  parentIds?: string[];
+  item: IDirItemBase<ApiDirType.CATEGORIES_PROD>;
+  onChange?: (checked: boolean, id: string, parentIds?: string[]) => void;
+  getIsSelected?: (id: string, checkChildren: boolean) => boolean;
+}) => {
+  const isActive = getIsSelected && getIsSelected(item._id, !!item?.childrenList?.length);
   return (
-    <>
-      {isSelected && (
-        <TagItem fxDirection={'row'} alignItems={'center'} padding={'0 2px 0 12px'} gap={2}>
-          {item?.parent?.label && `${item?.parent?.label}/`}
-          {`${item?.label}`}
-          <ButtonIcon
-            variant={'onlyIcon'}
-            endIcon={'close'}
-            size={'24px'}
-            endIconSize={'80%'}
-            onClick={() => onRemove && onRemove(item._id)}
-          />
-        </TagItem>
-      )}
-      {renderChildren}
-    </>
+    <CategoryItem key={`cate-value-${item._id}`} padding={'0 8px 0px 12px'} gap={12}>
+      <FlexBox fxDirection={'row'} alignItems={'center'} gap={12}>
+        <CheckBox
+          checked={isActive}
+          onChange={ev => {
+            onChange && onChange(ev.checked, item._id, parentIds);
+          }}
+        />
+
+        <Text $size={14} $weight={500}>
+          {item.label}
+        </Text>
+      </FlexBox>
+
+      <CategoriesList>
+        {!!item.childrenList?.length &&
+          item.childrenList.map(child => {
+            return (
+              <RenderItem
+                key={child._id}
+                item={child}
+                onChange={onChange}
+                getIsSelected={getIsSelected}
+                parentIds={[...(parentIds ?? []), item._id]}
+              />
+            );
+          })}
+      </CategoriesList>
+    </CategoryItem>
   );
 };
-
-const TagItem = styled(FlexBox)`
-  font-weight: 500;
-  font-size: 12px;
-  color: ${p => p.theme.accentColor.base};
-
-  min-height: 28px;
-
-  border-radius: 2px;
-  border: 1px solid ${p => p.theme.accentColor.base};
-`;
-export default FormProductCategories;

@@ -51,6 +51,7 @@ export const OfferFormImagesArea = ({
       onSubmit={handleSubmit}
       disabled={disabled || !canSubmit}
       isLoading={loaders.isLoading?.images}
+      isOpen={false}
     >
       <FormOfferImagesComponent
         hideLabel

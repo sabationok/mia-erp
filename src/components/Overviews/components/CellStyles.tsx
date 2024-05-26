@@ -89,10 +89,10 @@ const CategoryItem = styled(FlexBox)`
 
   flex-direction: row;
 
-  padding: 4px;
+  padding: 4px 8px;
 
   font-weight: 500;
-  font-size: 12px;
+  font-size: 13px;
   color: ${p => p.theme.fontColorSidebar};
 
   min-height: 28px;

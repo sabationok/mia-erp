@@ -86,7 +86,7 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   const service = useAppServiceProvider()[ServiceName.offers];
   const loaders = useLoaders<'create' | 'update' | 'refresh'>();
   const { variation } = useCurrentVariation({ id: updateId });
-  const currentOffer = useCurrentOffer({ id: variation?.offer?._id || offerId || offer?._id });
+  const currentOffer = useCurrentOffer({ _id: variation?.offer?._id || offerId || offer?._id });
 
   const submitOptions = useAfterSubmitOptions();
 

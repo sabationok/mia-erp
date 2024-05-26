@@ -1,45 +1,66 @@
 import { RenderOverviewCellComponent } from '../../components/overview-types';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 import { useProductsSelector } from '../../../../redux/selectors.store';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef } from 'react';
 import FormSelectPropertiesOverlay from '../../../Overlays/FormSelectPropertiesOverlay';
 import FlexBox from '../../../atoms/FlexBox';
 import { t } from '../../../../lang';
 import { CellStyledComp } from '../../components/CellStyles';
 import { OverviewCellHeader } from '../../components/OverviewCellHeader';
 import { OverviewPropertyComponent } from '../../components/OverviewPropertyComponent';
+import { PropertyEntity, PropertyValueEntity } from '../../../../types/offers/properties.types';
 
 export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEntity> = ({
   cell,
   overlayHandler,
   data,
 }) => {
-  const templates = useProductsSelector().properties;
-  // ! setCurrentId
-  const [currentId] = useState<string>(templates[0]?._id);
+  const state = useProductsSelector();
+  const selectedIds = useRef(new Set(data?.properties?.map(prop => prop._id)));
+  const selectedParentIds = useRef(new Set(data?.properties?.map(prop => prop?.parent?._id)));
 
-  const template = useMemo(() => {
-    return templates.find(t => t._id === currentId);
-  }, [currentId, templates]);
+  // const rootList = useMemo(() => {
+  //   const _rootIds = state.propertiesByTypeKeysMap[data?.type ?? 'group'];
+  //   const _items: PropertyBaseEntity[] = [];
+  //
+  //   for (const _id of _rootIds) {
+  //     const item = state.propertiesDataMap?.[_id];
+  //     item && _items.push(item);
+  //   }
+  //
+  //   return _items;
+  // }, [data?.type, state.propertiesByTypeKeysMap, state.propertiesDataMap]);
+  const { propertiesList, valuesListMap } = useMemo(() => {
+    const _propertiesList: PropertyEntity[] = [];
 
-  const availableProperties = useMemo(() => {
-    return template?.childrenList?.filter(prop => !prop.isSelectable);
-  }, [template?.childrenList]);
+    const _valuesListMap: Record<string, PropertyValueEntity[]> = {};
 
-  const selectedItems = useMemo(() => {
-    return data?.properties?.map(p => p._id);
-  }, [data?.properties]);
+    for (const propValue of data?.properties ?? []) {
+      const parent = state.propertiesDataMap?.[propValue._id];
+
+      if (parent && selectedParentIds.current.has(parent._id)) {
+        _propertiesList.push(parent);
+        if (_valuesListMap[parent._id]) {
+          _valuesListMap[parent._id].push(propValue);
+        } else {
+          _valuesListMap[parent._id] = [];
+        }
+      }
+    }
+
+    return { propertiesList: _propertiesList, valuesListMap: _valuesListMap };
+  }, [data?.properties, state.propertiesDataMap]);
 
   const renderProperties = useMemo(() => {
-    return availableProperties?.map((prop, index) => {
+    return propertiesList?.map((prop, index) => {
       return (
         <OverviewPropertyComponent
           key={`prop-${prop?._id}`}
-          {...{ index, overlayHandler: overlayHandler, item: prop, selectedItems, data }}
+          {...{ index, overlayHandler: overlayHandler, item: prop, selectedItems: valuesListMap[prop._id], data }}
         />
       );
     });
-  }, [availableProperties, overlayHandler, selectedItems, data]);
+  }, [propertiesList, overlayHandler, valuesListMap, data]);
 
   return (
     <CellStyledComp.Cell

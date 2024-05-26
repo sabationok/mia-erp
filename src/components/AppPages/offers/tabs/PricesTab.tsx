@@ -21,7 +21,7 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
   const modalS = useModalProvider();
   const productsS = useAppServiceProvider()[ServiceName.offers];
   const offerId = useAppParams().offerId;
-  const currentOffer = useCurrentOffer({ id: offerId });
+  const currentOffer = useCurrentOffer({ _id: offerId });
   const [selectedRow, setSelectedRoe] = useState<IBase>();
   const loaders = useLoadersProvider<'prices' | 'price' | 'discounts' | 'discount'>();
   const dispatch = useAppDispatch();

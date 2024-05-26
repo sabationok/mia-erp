@@ -1,18 +1,19 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Text } from '../../../atoms/Text';
+import React, { useCallback, useMemo, useState } from 'react';
 import { AccordionForm } from '../../FormArea/AccordionForm';
 import styled from 'styled-components';
 import FlexBox from '../../../atoms/FlexBox';
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { usePropertiesSelector } from '../../../../redux/selectors.store';
+import { useProductsSelector } from '../../../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
-import CustomSelect from '../../../atoms/Inputs/CustomSelect/CustomSelect';
 import { OfferFormAreaProps } from '../types';
 import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
 import { ArrayOfUUID } from '../../../../redux/global.types';
 import { t } from '../../../../lang';
 import { OfferEntity } from '../../../../types/offers/offers.types';
+import { PropertiesGroupSelect } from '../../../atoms/PropertiesGroupSelect';
+import { PropertyBaseEntity, PropertyEntity } from '../../../../types/offers/properties.types';
+import OfferVariationPropertySelector from '../variations/OfferVariationPropertySelector';
+import { Text } from '../../../atoms/Text';
 
 export interface OfferFormPropertiesAreaProps extends OfferFormAreaProps<ArrayOfUUID> {
   onSubmit?: AppSubmitHandler<string[]>;
@@ -22,12 +23,19 @@ export interface OfferFormPropertiesAreaProps extends OfferFormAreaProps<ArrayOf
   update?: string;
 }
 
+const sortIds = (ids?: string[]): string[] => {
+  return [...(ids ?? [])]?.sort((a, b) => a.localeCompare(b));
+};
+
 export const OfferFormPropertiesArea = ({ onSubmit, onSuccess, disabled, offer }: OfferFormPropertiesAreaProps) => {
   const loaders = useOfferLoadersProvider();
-  const templates = usePropertiesSelector();
+  const state = useProductsSelector();
   const service = useAppServiceProvider()[ServiceName.offers];
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [templateId, setTemplateId] = useState<string>(templates[0]?._id);
+
+  const initIds = sortIds(offer?.properties?.map(p => p._id));
+
+  const [selectedIds, setSelectedIds] = useState<string[]>(initIds);
+  const [template, setTemplate] = useState<PropertyBaseEntity>();
 
   const handleSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
@@ -43,103 +51,70 @@ export const OfferFormPropertiesArea = ({ onSubmit, onSuccess, disabled, offer }
     }
   };
 
-  const templateData = useMemo(() => {
-    return templates.find(t => t._id === templateId);
-  }, [templateId, templates]);
-
   const canSubmit = useMemo(() => {
     if (disabled) return false;
-    if (offer?.properties?.length) {
-      return (
-        offer?.properties
-          ?.map(p => p._id)
-          .sort((a, b) => a.localeCompare(b))
-          .join(',') !== selectedIds.sort((a, b) => a.localeCompare(b)).join(',')
-      );
+
+    return !initIds?.length ? false : initIds?.join(',') !== sortIds(selectedIds)?.join(',');
+  }, [disabled, selectedIds, initIds]);
+
+  const propertiesList = useMemo(() => {
+    const _rootId = template?._id;
+    const _propertiesList: PropertyEntity[] = [];
+    const _propertiesIds = state.propertiesKeysMap?.[_rootId ?? 'def'] ?? [];
+
+    for (const propId of _propertiesIds) {
+      const prop = state.propertiesDataMap?.[propId];
+      if (prop && !prop?.isSelectable) {
+        const childrenIds = state.propertiesKeysMap[prop?._id];
+        if (childrenIds?.length) {
+          _propertiesList.push(prop);
+        }
+      }
     }
-    return !!selectedIds.length;
-  }, [offer?.properties, disabled, selectedIds]);
 
-  const handleSelect = useCallback((id: string, _parentId?: string) => {
+    return _propertiesList;
+  }, [template, state.propertiesDataMap, state.propertiesKeysMap]);
+
+  const handleSelect = useCallback((_parentId?: string, valueId: string = '') => {
     setSelectedIds(prev => {
-      const newData = prev.includes(id) ? prev.filter(el => el !== id) : [...prev, id];
-
-      return newData;
+      return prev.includes(valueId) ? prev.filter(el => el !== valueId) : [...prev, valueId];
     });
   }, []);
 
-  const renderTemplate = useMemo(() => {
-    return templateData?.childrenList
-      ?.filter(el => !el?.isSelectable)
-      .map(prop => {
-        return (
-          <PropertyBox key={`property-${prop._id}`} gap={8} fillWidth padding={'8px 0 0'}>
-            <Text style={{ flex: 1, paddingLeft: 12 }} $weight={500}>
-              {prop.label}
-            </Text>
-
-            <PropertyValuesList fillWidth padding={'8px 0'} gap={6} flexWrap={'wrap'} fxDirection={'row'}>
-              {prop.childrenList?.map(value => {
-                const isActive = selectedIds.includes(value._id);
-
-                return (
-                  <ValueTag
-                    key={`prop-value-${value._id}`}
-                    variant={isActive ? 'filledSmall' : 'outlinedSmall'}
-                    padding={'6px 8px'}
-                    fontWeight={500}
-                    onClick={() => handleSelect(value._id, prop._id)}
-                  >
-                    {value.label}
-                  </ValueTag>
-                );
-              })}
-            </PropertyValuesList>
-          </PropertyBox>
-        );
-      });
-  }, [handleSelect, selectedIds, templateData?.childrenList]);
-
-  useEffect(() => {
-    if (offer?.properties) {
-      setSelectedIds(offer?.properties.map(p => p._id));
-    }
-  }, [offer?.properties]);
+  const renderPropertiesList = useMemo(() => {
+    return propertiesList?.map(prop => {
+      return (
+        <OfferVariationPropertySelector
+          key={`prop_${prop._id}`}
+          item={prop}
+          selectedIds={selectedIds}
+          onSelect={handleSelect}
+        />
+      );
+    });
+  }, [propertiesList, selectedIds, handleSelect]);
 
   return (
     <AccordionForm
       label={t('Properties')}
+      canSubmit={canSubmit}
       onSubmit={handleSubmit}
       isLoading={loaders.isLoading?.properties}
-      disabled={!canSubmit}
     >
-      <CustomSelect
-        label={t('Available templates')}
-        options={templates}
-        selectedValue={templateId}
-        onSelect={option => {
-          setTemplateId(option?._id);
-        }}
-      />
+      <PropertiesGroupSelect selected={template} onSelect={setTemplate} />
 
       <TemplateBox flex={1} overflow={'auto'}>
-        {renderTemplate}
+        {renderPropertiesList?.length ? (
+          renderPropertiesList
+        ) : (
+          <FlexBox padding={'24px'} alignItems={'center'} justifyContent={'center'}>
+            <Text $size={16}>{t('Data not found')}</Text>
+          </FlexBox>
+        )}
       </TemplateBox>
     </AccordionForm>
   );
 };
 const TemplateBox = styled(FlexBox)`
-  border-top: 1px solid ${p => p.theme.sideBarBorderColor};
-  border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
   padding-bottom: 8px;
-`;
-const PropertyBox = styled(FlexBox)`
-  &:not(:first-child) {
-    border-top: 1px solid ${p => p.theme.sideBarBorderColor};
-  }
-`;
-const PropertyValuesList = styled(FlexBox)<{ numColumns?: number }>``;
-const ValueTag = styled(ButtonIcon)`
-  flex-basis: 100px;
-  min-width: max-content;
 `;

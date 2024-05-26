@@ -44,6 +44,7 @@ export const OfferDimensionsFormArea = ({
       onSubmit={form.handleSubmit(onValid)}
       label={t('Package size')}
       isLoading={isLoading}
+      isOpen={false}
       {...props}
       disabled={!canSubmit || disabled}
     >
