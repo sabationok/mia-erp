@@ -189,7 +189,7 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, OfferOverviewTabsEnum>[
     title: t('Categories'),
     CellComponent: OfferOverviewCategoriesCell,
     gridArea: 'categories',
-    tab: OfferOverviewTabsEnum.General,
+    tab: OfferOverviewTabsEnum.Properties,
   },
 
   {

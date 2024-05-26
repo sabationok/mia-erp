@@ -10,7 +10,7 @@ export const OverlayHeader = ({
   title,
   okButton,
   canSubmit,
-  children,
+  isLoading,
 }: {
   canSubmit?: boolean;
   onBackPress?: () => void;
@@ -18,6 +18,7 @@ export const OverlayHeader = ({
   title?: string;
   okButton?: boolean;
   children?: React.ReactNode;
+  isLoading?: boolean;
 }) => {
   return (
     <Header
@@ -31,10 +32,10 @@ export const OverlayHeader = ({
     >
       {onBackPress && (
         <ButtonIcon
-          variant={'textExtraSmall'}
+          variant={'textSmall'}
           icon={'SmallArrowLeft'}
           iconSize={'22px'}
-          padding={'0'}
+          padding={'0 6px'}
           style={{ minWidth: 'max-content', minHeight: '100%' }}
           onClick={onBackPress}
         >
@@ -54,14 +55,15 @@ export const OverlayHeader = ({
 
       {okButton && (
         <ButtonIcon
-          variant={'textExtraSmall'}
+          variant={'textSmall'}
           gap={'6px'}
           type={'submit'}
           padding={'0 6px'}
-          endIcon={'done'}
-          endIconSize={'22px'}
+          icon={'done'}
+          iconSize={'22px'}
           style={{ minWidth: 'max-content', minHeight: '100%' }}
           disabled={!canSubmit}
+          isLoading={isLoading}
         >
           {'Ok'}
         </ButtonIcon>

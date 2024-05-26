@@ -13,7 +13,7 @@ import { useCurrentOffer } from '../../hooks';
 
 export interface FormSelectCategoriesOverlayProps extends CreatedOverlay {}
 
-const FormProductCategoriesOverlay = ({ onClose }: FormSelectCategoriesOverlayProps) => {
+const OfferCategoriesOverlay = ({ onClose }: FormSelectCategoriesOverlayProps) => {
   const service = useAppServiceProvider()[ServiceName.offers];
   const currentOffer = useCurrentOffer();
   const { directory } = useDirectorySelector(ApiDirType.CATEGORIES_PROD);
@@ -48,13 +48,24 @@ const FormProductCategoriesOverlay = ({ onClose }: FormSelectCategoriesOverlayPr
 
   return (
     <OverlayForm onSubmit={handleFormSubmit}>
-      <OverlayHeader title={'Категорії'} onBackPress={onClose} canSubmit={canSubmit} okButton />
+      <OverlayHeader
+        title={'Категорії'}
+        onBackPress={onClose}
+        canSubmit={canSubmit}
+        okButton
+        isLoading={loaders.isLoading?.update}
+      />
 
       <Content padding={'0 0 8px 0'} flex={1} overflow={'auto'}>
-        <OfferCategoriesSelector onChangeIds={setCategoriesIds} options={directory} defaultData={categoriesIds} />
+        <OfferCategoriesSelector
+          onChangeIds={setCategoriesIds}
+          options={directory}
+          defaultData={categoriesIds}
+          offer={currentOffer}
+        />
       </Content>
 
-      <OverlayFooter canSubmit={canSubmit} />
+      <OverlayFooter canSubmit={canSubmit} loading={loaders.isLoading?.update} />
     </OverlayForm>
   );
 };
@@ -63,4 +74,4 @@ const Content = styled(FlexBox)`
   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
   border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
 `;
-export default FormProductCategoriesOverlay;
+export default OfferCategoriesOverlay;
