@@ -30,7 +30,6 @@ export enum Modals {
   EditOffer = 'EditOffer',
   FormCreateOfferInventory = 'FormCreateOfferInventory',
   FormCreateProperty = 'FormCreateProperty',
-  FormCreateVariation = 'FormCreateVariation',
   FormCreateWarehouse = 'FormCreateWarehouse',
   FormCreateWarehouseDocument = 'FormCreateWarehouseDocument',
 
@@ -78,7 +77,6 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   // sep OFFERS
   [Modals.CreateOffer]: Forms.CreateOfferModal,
   [Modals.EditOffer]: Forms.EditOfferModal,
-  [Modals.FormCreateVariation]: Forms.CreateVariation,
   [Modals.FormCreateProperty]: Forms.CreateProperty,
 
   // sep ORDERS
@@ -128,8 +126,6 @@ export interface ModalChildrenProps extends Record<Modals, any> {
   [Modals.CreateOffer]: FormPropTypes.CreateOfferModalProps;
   [Modals.EditOffer]: FormPropTypes.EditOfferModalProps;
   [Modals.FormCreateProperty]: FormPropTypes.FormCreatePropertyProps;
-
-  [Modals.FormCreateVariation]: FormPropTypes.FormCreateVariationProps;
 
   // sep ORDERS
   [Modals.FormCreateOrder]: FormPropTypes.FormCreateOrderProps;

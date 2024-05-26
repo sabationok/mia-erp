@@ -4,7 +4,7 @@ import { useDirectorySelector } from '../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { FormEventHandler, useEffect, useMemo, useState } from 'react';
 import { getIdRef, sortIds } from '../../utils';
-import FormProductCategories from '../Forms/offers/FormProductCategories';
+import OfferCategoriesSelector from '../Forms/offers/categories/OfferCategoriesSelector';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { OverlayFooter, OverlayForm, OverlayHeader } from './index';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
@@ -51,7 +51,7 @@ const FormProductCategoriesOverlay = ({ onClose }: FormSelectCategoriesOverlayPr
       <OverlayHeader title={'Категорії'} onBackPress={onClose} canSubmit={canSubmit} okButton />
 
       <Content padding={'0 0 8px 0'} flex={1} overflow={'auto'}>
-        <FormProductCategories onChangeIds={setCategoriesIds} options={directory} defaultData={categoriesIds} />
+        <OfferCategoriesSelector onChangeIds={setCategoriesIds} options={directory} defaultData={categoriesIds} />
       </Content>
 
       <OverlayFooter canSubmit={canSubmit} />

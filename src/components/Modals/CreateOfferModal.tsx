@@ -72,6 +72,8 @@ const CreateOfferModal: React.FC<CreateOfferModalProps> = ({ onClose, _id }) => 
 
               <OfferFormPropertiesArea offer={currenOffer} defaultValues={formData?.properties} disabled={!formData} />
 
+              <OfferFormImagesArea offer={currenOffer} defaultValues={formData?.images} disabled={!formData} />
+
               <OfferDimensionsFormArea offer={currenOffer} defaultValues={formData?.dimensions} disabled={!formData} />
 
               <OfferMeasurementFormArea
@@ -79,8 +81,6 @@ const CreateOfferModal: React.FC<CreateOfferModalProps> = ({ onClose, _id }) => 
                 defaultValues={formData?.measurement}
                 disabled={!formData}
               />
-
-              <OfferFormImagesArea offer={currenOffer} defaultValues={formData?.images} disabled={!formData} />
             </>
           )}
         </FlexBox>

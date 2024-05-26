@@ -14,6 +14,7 @@ import { PropertiesGroupSelect } from '../../../atoms/PropertiesGroupSelect';
 import { PropertyBaseEntity, PropertyEntity } from '../../../../types/offers/properties.types';
 import OfferVariationPropertySelector from '../variations/OfferVariationPropertySelector';
 import { Text } from '../../../atoms/Text';
+import { useCurrentOffer } from '../../../../hooks';
 
 export interface OfferFormPropertiesAreaProps extends OfferFormAreaProps<ArrayOfUUID> {
   onSubmit?: AppSubmitHandler<string[]>;
@@ -30,9 +31,10 @@ const sortIds = (ids?: string[]): string[] => {
 export const OfferFormPropertiesArea = ({ onSubmit, onSuccess, disabled, offer }: OfferFormPropertiesAreaProps) => {
   const loaders = useOfferLoadersProvider();
   const state = useProductsSelector();
+  const currentOffer = useCurrentOffer(offer);
   const service = useAppServiceProvider()[ServiceName.offers];
 
-  const initIds = sortIds(offer?.properties?.map(p => p._id));
+  const initIds = sortIds(currentOffer?.properties?.map(p => p._id));
 
   const [selectedIds, setSelectedIds] = useState<string[]>(initIds);
   const [template, setTemplate] = useState<PropertyBaseEntity>();
@@ -42,9 +44,9 @@ export const OfferFormPropertiesArea = ({ onSubmit, onSuccess, disabled, offer }
 
     if (onSubmit) {
       onSubmit(selectedIds);
-    } else if (offer) {
+    } else if (currentOffer) {
       service.updateById({
-        data: { _id: offer?._id, updateCurrent: true, data: { properties: selectedIds } },
+        data: { _id: currentOffer?._id, updateCurrent: true, data: { properties: selectedIds } },
         onLoading: loaders.onLoading('properties'),
         onSuccess: onSuccess,
       });
@@ -98,6 +100,8 @@ export const OfferFormPropertiesArea = ({ onSubmit, onSuccess, disabled, offer }
       canSubmit={canSubmit}
       onSubmit={handleSubmit}
       isLoading={loaders.isLoading?.properties}
+      isOpen={false}
+      disabled={!currentOffer || disabled}
     >
       <PropertiesGroupSelect selected={template} onSelect={setTemplate} />
 

@@ -21,19 +21,6 @@ export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEnt
   const valuesIdsSet = useRef(new Set(currentOffer?.properties?.map(prop => prop._id) ?? []));
   const selectedParentIdsSet = useRef(new Set(currentOffer?.properties?.map(prop => prop?.parent?._id) ?? []));
 
-  console.log(valuesIdsSet, selectedParentIdsSet);
-
-  // const rootList = useMemo(() => {
-  //   const _rootIds = state.propertiesByTypeKeysMap[data?.type ?? 'group'];
-  //   const _items: PropertyBaseEntity[] = [];
-  //
-  //   for (const _id of _rootIds) {
-  //     const item = state.propertiesDataMap?.[_id];
-  //     item && _items.push(item);
-  //   }
-  //
-  //   return _items;
-  // }, [data?.type, state.propertiesByTypeKeysMap, state.propertiesDataMap]);
   const { propertiesList, valuesListMap } = useMemo(() => {
     const _propertiesList: PropertyEntity[] = [];
 
@@ -92,7 +79,6 @@ export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEnt
         ) : (
           <CellStyledComp.CellText $weight={500}>{t('undefined')}</CellStyledComp.CellText>
         )}
-        {/*{renderPropertiesFromVariations}*/}
       </FlexBox>
     </CellStyledComp.Cell>
   );

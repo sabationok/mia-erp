@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import FlexBox, { FlexLabel, FlexLi, FlexUl } from '../../atoms/FlexBox';
-import { OfferCategoryEntity } from '../../../types/dir.types';
+import FlexBox, { FlexLabel, FlexLi, FlexUl } from '../../../atoms/FlexBox';
+import { OfferCategoryEntity } from '../../../../types/dir.types';
 import styled from 'styled-components';
-import { ApiDirType } from '../../../redux/APP_CONFIGS';
-import CheckBox from '../../TableList/TebleCells/CellComponents/CheckBox';
-import { Text } from '../../atoms/Text';
-import { useDirectorySelector } from '../../../redux/selectors.store';
-import { UUID } from '../../../types/utils.types';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import { OfferEntity } from '../../../types/offers/offers.types';
+import { ApiDirType } from '../../../../redux/APP_CONFIGS';
+import CheckBox from '../../../TableList/TebleCells/CellComponents/CheckBox';
+import { Text } from '../../../atoms/Text';
+import { useDirectorySelector } from '../../../../redux/selectors.store';
+import { UUID } from '../../../../types/utils.types';
+import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import { OfferEntity } from '../../../../types/offers/offers.types';
 
-export interface FormProductCategoriesProps {
+export interface OfferCategoriesSelectorProps {
   onSelect?: (id: string, option?: OfferCategoryEntity) => void;
   onChange?: (ids: string) => void;
   onChangeIds?: (ids: string[]) => void;
@@ -32,7 +32,7 @@ const getUnicIds = (map: IsSelectedIdsMap) => {
 };
 
 type IsSelectedIdsMap = Record<UUID, UUID[]>;
-const FormProductCategories: React.FC<FormProductCategoriesProps> = ({ onChangeIds, onChange, offer }) => {
+const OfferCategoriesSelector: React.FC<OfferCategoriesSelectorProps> = ({ onChangeIds, onChange, offer }) => {
   const treeData = useDirectorySelector(ApiDirType.CATEGORIES_PROD).directory;
 
   const [selectedMap, setSelectedMap] = useState<IsSelectedIdsMap>({});
@@ -105,15 +105,8 @@ const FormProductCategories: React.FC<FormProductCategoriesProps> = ({ onChangeI
     };
     return treeData.map(parent => {
       return (
-        <RootBox>
-          <RenderCategory
-            key={parent._id}
-            item={parent}
-            depth={0}
-            pathIds={[]}
-            isChecked={isSelected}
-            onChange={toggleSelected}
-          />
+        <RootBox key={parent._id}>
+          <RenderCategory item={parent} depth={0} pathIds={[]} isChecked={isSelected} onChange={toggleSelected} />
         </RootBox>
       );
     });
@@ -122,9 +115,9 @@ const FormProductCategories: React.FC<FormProductCategoriesProps> = ({ onChangeI
   return <FlexBox minWidth={'max-content'}>{renderCategories}</FlexBox>;
 };
 
-export default FormProductCategories;
+export default OfferCategoriesSelector;
 
-const RootBox = styled(FlexLi)`
+const RootBox = styled(FlexBox)`
   //padding: 8px 0;
   // &:not(:first-child) {
   //   border-top: 1px solid ${p => p.theme.sideBarBorderColor};

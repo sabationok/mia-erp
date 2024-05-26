@@ -49,9 +49,11 @@ export const OfferFormImagesArea = ({
     <AccordionForm
       label={t('Images')}
       onSubmit={handleSubmit}
-      disabled={disabled || !canSubmit}
+      canSubmit={canSubmit}
+      disabled={disabled}
       isLoading={loaders.isLoading?.images}
       isOpen={false}
+      maxHeight={'400px'}
     >
       <FormOfferImagesComponent
         hideLabel

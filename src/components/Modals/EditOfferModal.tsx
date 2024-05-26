@@ -108,6 +108,13 @@ const EditOfferModal: React.FC<EditOfferModalProps> = ({ onClose, _id, copy }) =
               disabled={!state.formData}
             />
 
+            <OfferFormImagesArea
+              offer={currentOffer}
+              defaultValues={state?.formData?.images}
+              disabled={!state?.formData}
+              _id={copy ? state?.formData?._id : _id}
+            />
+
             <OfferDimensionsFormArea
               offer={currentOffer}
               defaultValues={state.formData?.dimensions}
@@ -119,13 +126,6 @@ const EditOfferModal: React.FC<EditOfferModalProps> = ({ onClose, _id, copy }) =
               defaultValues={state.formData?.measurement}
               disabled={copy ? !(state.formData?._id && state.formData) : !_id}
               _id={offerId}
-            />
-
-            <OfferFormImagesArea
-              offer={currentOffer}
-              defaultValues={state?.formData?.images}
-              disabled={!state?.formData}
-              _id={copy ? state?.formData?._id : _id}
             />
           </FlexBox>
         )}
