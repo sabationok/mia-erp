@@ -9,6 +9,7 @@ import { CellStyledComp } from '../../components/CellStyles';
 import { OverviewCellHeader } from '../../components/OverviewCellHeader';
 import { OverviewPropertyComponent } from '../../components/OverviewPropertyComponent';
 import { PropertyEntity, PropertyValueEntity } from '../../../../types/offers/properties.types';
+import { useCurrentOffer } from '../../../../hooks';
 
 export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEntity> = ({
   cell,
@@ -16,8 +17,11 @@ export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEnt
   data,
 }) => {
   const state = useProductsSelector();
-  const selectedIds = useRef(new Set(data?.properties?.map(prop => prop._id)));
-  const selectedParentIds = useRef(new Set(data?.properties?.map(prop => prop?.parent?._id)));
+  const currentOffer = useCurrentOffer(data);
+  const valuesIdsSet = useRef(new Set(currentOffer?.properties?.map(prop => prop._id) ?? []));
+  const selectedParentIdsSet = useRef(new Set(currentOffer?.properties?.map(prop => prop?.parent?._id) ?? []));
+
+  console.log(valuesIdsSet, selectedParentIdsSet);
 
   // const rootList = useMemo(() => {
   //   const _rootIds = state.propertiesByTypeKeysMap[data?.type ?? 'group'];
@@ -35,21 +39,24 @@ export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEnt
 
     const _valuesListMap: Record<string, PropertyValueEntity[]> = {};
 
-    for (const propValue of data?.properties ?? []) {
-      const parent = state.propertiesDataMap?.[propValue._id];
+    for (const propId of Array.from(selectedParentIdsSet.current)) {
+      const parent = propId ? state.propertiesDataMap?.[propId] : undefined;
 
-      if (parent && selectedParentIds.current.has(parent._id)) {
+      if (parent) {
         _propertiesList.push(parent);
-        if (_valuesListMap[parent._id]) {
-          _valuesListMap[parent._id].push(propValue);
-        } else {
-          _valuesListMap[parent._id] = [];
-        }
+        _valuesListMap[parent._id] = [];
+      }
+    }
+    for (const valueId of Array.from(valuesIdsSet.current)) {
+      const value = valueId ? state.propertiesDataMap?.[valueId] : undefined;
+
+      if (value && value.parent?._id) {
+        _valuesListMap[value.parent?._id].push(value);
       }
     }
 
     return { propertiesList: _propertiesList, valuesListMap: _valuesListMap };
-  }, [data?.properties, state.propertiesDataMap]);
+  }, [state.propertiesDataMap]);
 
   const renderProperties = useMemo(() => {
     return propertiesList?.map((prop, index) => {
@@ -80,12 +87,11 @@ export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEnt
       />
 
       <FlexBox fillWidth gap={8} alignItems={renderProperties && renderProperties?.length > 0 ? 'stretch' : 'flex-end'}>
-        {renderProperties && renderProperties?.length > 0 ? (
+        {propertiesList?.length > 0 ? (
           renderProperties
         ) : (
           <CellStyledComp.CellText $weight={500}>{t('undefined')}</CellStyledComp.CellText>
         )}
-
         {/*{renderPropertiesFromVariations}*/}
       </FlexBox>
     </CellStyledComp.Cell>

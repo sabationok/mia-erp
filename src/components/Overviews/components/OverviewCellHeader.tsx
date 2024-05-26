@@ -30,7 +30,14 @@ export const OverviewCellHeader = ({
   canAccept?: boolean;
 }) => {
   return (
-    <FlexBox fxDirection={'row'} justifyContent={'space-between'} height={'max-content'} alignItems={'center'}>
+    <FlexBox
+      fxDirection={'row'}
+      justifyContent={'space-between'}
+      height={'max-content'}
+      alignItems={'center'}
+      minHeight={'36px'}
+      padding={'4px 0'}
+    >
       <CellStyledComp.CellText $isTitle $size={13} style={{ marginRight: 'auto' }}>
         {title}
       </CellStyledComp.CellText>
