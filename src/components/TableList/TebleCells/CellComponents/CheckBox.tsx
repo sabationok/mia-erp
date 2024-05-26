@@ -3,7 +3,7 @@ import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
 import * as _ from 'lodash';
 import styled from 'styled-components';
 import { IconIdType } from 'img/sprite';
-import { FlexLabel } from '../../../atoms/FlexBox';
+import { FlexBox, FlexLabel } from '../../../atoms/FlexBox';
 
 export interface CheckBoxProps {
   size?: string;
@@ -43,16 +43,18 @@ const CheckBox: React.FC<CheckBoxProps & Omit<React.InputHTMLAttributes<HTMLInpu
 
   return (
     <Label disabled={disabled} checked={isChecked}>
-      <StInput
-        id={`checkbox_${id ?? ''}`}
-        className={'visually-hidden'}
-        checked={isChecked}
-        type={'checkbox'}
-        disabled={disabled}
-        onChange={onChangeHandler}
-      ></StInput>
+      <FlexBox>
+        <StInput
+          id={`checkbox_${id ?? ''}`}
+          className={'visually-hidden'}
+          checked={isChecked}
+          type={'checkbox'}
+          disabled={disabled}
+          onChange={onChangeHandler}
+        />
 
-      <SvgIcon size={size} icon={icon || (isChecked ? 'checkBoxOn' : 'checkBoxOff')} style={{ fill: 'inherit' }} />
+        <SvgIcon size={size} icon={icon || (isChecked ? 'checkBoxOn' : 'checkBoxOff')} style={{ fill: 'inherit' }} />
+      </FlexBox>
     </Label>
   );
 };
@@ -61,6 +63,8 @@ const Label = styled(FlexLabel)<{ checked?: boolean; disabled?: boolean }>`
   background-color: inherit;
   padding: 0;
   position: relative;
+
+  min-width: max-content;
 
   fill: ${({ theme, checked }) => (checked ? theme.accentColor.base : theme.fillColor)};
   border-radius: 3px;

@@ -52,10 +52,8 @@ export const OfferFormPropertiesArea = ({ onSubmit, onSuccess, disabled, offer }
   };
 
   const canSubmit = useMemo(() => {
-    if (disabled) return false;
-
-    return !initIds?.length ? false : initIds?.join(',') !== sortIds(selectedIds)?.join(',');
-  }, [disabled, selectedIds, initIds]);
+    return initIds?.join(',') !== sortIds(selectedIds)?.join(',');
+  }, [selectedIds, initIds]);
 
   const propertiesList = useMemo(() => {
     const _rootId = template?._id;

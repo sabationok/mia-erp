@@ -1,4 +1,4 @@
-import FlexBox from '../atoms/FlexBox';
+import FlexBox, { FlexForm } from '../atoms/FlexBox';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { Text } from '../atoms/Text';
 import styled from 'styled-components';
@@ -118,7 +118,7 @@ export const OverlayFooter = ({
           flex={1}
           type={'submit'}
           style={{ padding: '0 12px' }}
-          textTransform={'uppercase'}
+          // textTransform={'uppercase'}
           fontWeight={600}
           endIcon={'SmallArrowRight'}
           endIconSize={'24px'}
@@ -134,14 +134,15 @@ export const OverlayFooter = ({
 
 const Footer = styled(FlexBox)``;
 
-export const OverlayForm = ({
-  children,
-  ...props
-}: { children?: React.ReactNode } & React.HTMLAttributes<HTMLFormElement>) => {
-  return <Form {...props}>{children}</Form>;
-};
+// export const OverlayForm = ({
+//   children,
+//   ...props
+// }: { children?: React.ReactNode } & React.HTMLAttributes<HTMLFormElement>) => {
+//   const theme=useTheme()
+//   return <FlexForm flex={1} overflow={'hidden'} maxWidth={'480px'} width={'100%'} background={theme.modalBackgroundColor} {...props}>{children}</FlexForm>;
+// };
 
-const Form = styled.form`
+export const OverlayForm = styled(FlexForm)`
   flex: 1;
 
   display: flex;
@@ -151,6 +152,8 @@ const Form = styled.form`
   max-width: 480px;
 
   padding: 0 8px;
+
+  overflow: hidden;
 
   background-color: ${p => p.theme.modalBackgroundColor};
 `;

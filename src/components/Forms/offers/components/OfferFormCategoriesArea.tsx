@@ -113,20 +113,17 @@ export const OfferFormCategoriesArea = ({
   };
 
   const canSubmit = useMemo(() => {
-    if (offer?.categories?.length) {
-      return initIds?.join(',') !== selectedIds.join(',');
-    }
-    return !!selectedIds.length;
-  }, [offer?.categories?.length, selectedIds, initIds]);
+    return initIds?.join(',') !== selectedIds.join(',');
+  }, [selectedIds, initIds]);
 
   useEffect(() => {
     if (defaultValues?.length) {
       setParentIdsMap(prev =>
         Object.assign(
           prev,
-          ...defaultValues.map(item => {
+          ...defaultValues.map(idKey => {
             return {
-              [item]: {
+              [idKey]: {
                 parentIds: [],
                 selected: true,
               },
@@ -135,8 +132,7 @@ export const OfferFormCategoriesArea = ({
         )
       );
     }
-    // eslint-disable-next-line
-  }, []);
+  }, [defaultValues]);
 
   const renderCategories = useMemo(() => {
     return offerCategories.map(parent => {

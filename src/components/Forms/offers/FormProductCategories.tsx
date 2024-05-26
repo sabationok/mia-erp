@@ -1,119 +1,209 @@
 import * as React from 'react';
-import { useCallback, useEffect, useState } from 'react';
-import FlexBox, { FlexLi, FlexUl } from '../../atoms/FlexBox';
-import { IDirItemBase, IProductCategoryDirItem } from '../../../types/dir.types';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import FlexBox, { FlexLabel, FlexLi, FlexUl } from '../../atoms/FlexBox';
+import { OfferCategoryEntity } from '../../../types/dir.types';
 import styled from 'styled-components';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import CheckBox from '../../TableList/TebleCells/CellComponents/CheckBox';
 import { Text } from '../../atoms/Text';
+import { useDirectorySelector } from '../../../redux/selectors.store';
+import { UUID } from '../../../types/utils.types';
+import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import { useCurrentOffer } from '../../../hooks';
 
 export interface FormProductCategoriesProps {
-  onSelect?: (id: string, option?: IProductCategoryDirItem) => void;
-  onChange?: (ids: string[]) => void;
+  onSelect?: (id: string, option?: OfferCategoryEntity) => void;
+  onChange?: (ids: string) => void;
+  onChangeIds?: (ids: string[]) => void;
+  onChangeMap?: (map: IsSelectedIdsMap) => void;
   children?: React.ReactNode;
   defaultData?: string[];
   selectedIds?: string[];
-  options?: IProductCategoryDirItem[];
+  options?: OfferCategoryEntity[];
 }
 
-const FormProductCategories: React.FC<FormProductCategoriesProps> = ({ options, onSelect, onChange, defaultData }) => {
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+const getUnicIds = (map: IsSelectedIdsMap) => {
+  const idsArrays = Object.keys(map).filter(key => {
+    return map?.[key]?.length;
+  });
 
-  const handleSelect = useCallback(
-    (option?: IProductCategoryDirItem) => {
-      setSelectedIds(prev => {
-        const newData = option
-          ? prev.includes(option?._id)
-            ? prev.filter(el => el !== option?._id)
-            : [...prev, option._id]
-          : prev;
-        onSelect && option?._id && onSelect(option?._id);
-        onChange && onChange(newData);
-        return newData;
-      });
-    },
-    [onChange, onSelect]
-  );
-  const handleRemove = useCallback(
-    (id: string) => {
-      setSelectedIds(prev => {
-        const newData = prev.filter(el => el !== id);
+  return idsArrays;
+};
 
-        onChange && onChange(newData);
-        return newData;
-      });
-    },
-    [onChange]
-  );
+type IsSelectedIdsMap = Record<UUID, UUID[]>;
+const FormProductCategories: React.FC<FormProductCategoriesProps> = ({ onChangeIds, onChange }) => {
+  const treeData = useDirectorySelector(ApiDirType.CATEGORIES_PROD).directory;
+  const currentOffer = useCurrentOffer();
+  const [selectedMap, setSelectedMap] = useState<IsSelectedIdsMap>({});
+
+  const init = useMemo(() => {
+    if (!currentOffer?.categories) {
+      return undefined;
+    }
+
+    const _next: IsSelectedIdsMap = {};
+    currentOffer?.categories?.forEach(category => {
+      const parentId = category.parent?._id;
+      const catId = category?._id;
+
+      if (!catId) return;
+
+      if (parentId) {
+        _next[parentId] = _next[parentId] ? [..._next[parentId], catId] : [catId];
+      }
+      _next[catId] = _next[catId] ? [..._next[catId], catId] : [catId];
+    });
+    Object.entries(_next).forEach(([key, val]) => {
+      if (_next[key]?.length > 1) {
+        _next[key] = Array.from(new Set(val));
+      }
+    });
+
+    return _next;
+  }, [currentOffer?.categories]);
 
   useEffect(() => {
-    if (selectedIds) {
-      setSelectedIds(selectedIds);
-    }
-  }, [selectedIds]);
+    if (init) setSelectedMap(init);
+    // eslint-disable-next-line
+  }, []);
 
-  return (
-    <FlexBox fxDirection={'row'} gap={8}>
-      {}
-    </FlexBox>
+  const toggleSelected = useCallback(
+    async (ev: { checked: boolean; _id: UUID; pathIds: UUID[] }) => {
+      onChange && onChange(ev._id);
+
+      setSelectedMap(prev => {
+        const newMap = ev.checked ? { ...prev, [ev._id]: [ev._id] } : { ...prev, [ev._id]: [] };
+
+        if (!ev.checked) {
+          prev?.[ev._id]?.forEach(removeId => {
+            newMap[removeId] = [];
+          });
+          newMap[ev._id] = [];
+        } else {
+          let ids: string[] = ev.pathIds;
+          ev.pathIds.forEach((registerId, index) => {
+            ids = ids.slice(1, ids.length);
+            if (registerId === ev._id) {
+              newMap[registerId] = [registerId];
+            } else {
+              newMap[registerId] = [...new Set([...(newMap[registerId] ?? []), ...ids])];
+            }
+          });
+        }
+
+        onChangeIds && onChangeIds(getUnicIds(newMap));
+        return newMap;
+      });
+    },
+    [onChange, onChangeIds]
   );
+
+  const renderCategories = useMemo(() => {
+    const isSelected = (id: UUID) => {
+      return !!selectedMap?.[id]?.length;
+    };
+    return treeData.map(parent => {
+      return (
+        <RootBox>
+          <RenderCategory
+            key={parent._id}
+            item={parent}
+            depth={0}
+            pathIds={[]}
+            isChecked={isSelected}
+            onChange={toggleSelected}
+          />
+        </RootBox>
+      );
+    });
+  }, [selectedMap, toggleSelected, treeData]);
+
+  return <FlexBox minWidth={'max-content'}>{renderCategories}</FlexBox>;
 };
 
 export default FormProductCategories;
 
-const ListBox = styled(FlexUl)`
-  padding-bottom: 8px;
+const RootBox = styled(FlexLi)`
+  //padding: 8px 0;
+  // &:not(:first-child) {
+  //   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
+  // }
 `;
-const CategoryBox = styled(FlexLi)`
-  &:not(:first-child) {
-    border-top: 1px solid ${p => p.theme.sideBarBorderColor};
-  }
-`;
+
 const CategoriesList = styled(FlexUl)<{ numColumns?: number }>``;
 
-const CategoryItem = styled(FlexLi)``;
+const CategoryListItem = styled(FlexLi)`
+  &:not(:last-child) {
+  }
 
-const RenderItem = ({
+  min-width: max-content;
+`;
+
+const CategoryItem = styled(FlexBox)`
+  border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
+`;
+
+const RenderCategory = ({
+  pathIds,
   item,
+  depth = 0,
   onChange,
-  getIsSelected,
-  parentIds,
+  isChecked,
 }: {
-  parentIds?: string[];
-  item: IDirItemBase<ApiDirType.CATEGORIES_PROD>;
-  onChange?: (checked: boolean, id: string, parentIds?: string[]) => void;
-  getIsSelected?: (id: string, checkChildren: boolean) => boolean;
+  pathIds: UUID[];
+  item: OfferCategoryEntity;
+  depth: number;
+  onChange?: (ev: { checked: boolean; _id: UUID; pathIds: UUID[] }) => void;
+  isChecked?: (id: UUID) => boolean;
 }) => {
-  const isActive = getIsSelected && getIsSelected(item._id, !!item?.childrenList?.length);
+  const [isOpen, setIsOpen] = useState(!!item?.childrenList?.length);
+  const itemId = item?._id ?? '';
+
+  const nextPathIds = [...pathIds, itemId];
   return (
-    <CategoryItem key={`cate-value-${item._id}`} padding={'0 8px 0px 12px'} gap={12}>
-      <FlexBox fxDirection={'row'} alignItems={'center'} gap={12}>
-        <CheckBox
-          checked={isActive}
-          onChange={ev => {
-            onChange && onChange(ev.checked, item._id, parentIds);
+    <CategoryListItem key={`cate-value-${itemId}`} padding={depth ? '0 0 0 16px' : ''}>
+      <CategoryItem gap={12} fxDirection={'row'} alignItems={'center'} padding={'8px 0'}>
+        <ButtonIcon
+          variant={'onlyIconNoEffects'}
+          iconSize={'22px'}
+          disabled={!item?.childrenList?.length}
+          icon={isOpen ? 'SmallArrowDown' : 'SmallArrowRight'}
+          onClick={() => {
+            setIsOpen(p => !p);
           }}
         />
 
-        <Text $size={14} $weight={500}>
-          {item.label}
-        </Text>
-      </FlexBox>
+        <FlexLabel flex={1} fxDirection={'row'} alignItems={'center'} gap={12} padding={'4px 6px'}>
+          <CheckBox
+            size={'22px'}
+            checked={isChecked ? isChecked(itemId) : false}
+            onChange={ev => {
+              onChange && onChange({ pathIds: nextPathIds, _id: itemId, checked: ev.checked });
+            }}
+          />
 
-      <CategoriesList>
-        {!!item.childrenList?.length &&
-          item.childrenList.map(child => {
+          <Text $size={14} $weight={500}>
+            {item.label}
+          </Text>
+        </FlexLabel>
+      </CategoryItem>
+
+      {isOpen && (
+        <CategoriesList>
+          {item.childrenList?.map(child => {
             return (
-              <RenderItem
+              <RenderCategory
                 key={child._id}
+                depth={depth + 1}
                 item={child}
                 onChange={onChange}
-                getIsSelected={getIsSelected}
-                parentIds={[...(parentIds ?? []), item._id]}
+                isChecked={isChecked}
+                pathIds={nextPathIds}
               />
             );
           })}
-      </CategoriesList>
-    </CategoryItem>
+        </CategoriesList>
+      )}
+    </CategoryListItem>
   );
 };

@@ -1,5 +1,5 @@
 import { ArrayOfUUID, IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/global.types';
-import { IProductCategoryDirItem, ISupplierDirItem } from '../dir.types';
+import { ISupplierDirItem, OfferCategoryEntity } from '../dir.types';
 import { FilterOption } from '../../components/atoms/TabSelector';
 import { PriceEntity } from '../price-management/price-management.types';
 import { IWarehouse, WarehouseItemEntity } from '../warehousing/warehouses.types';
@@ -109,8 +109,8 @@ export interface IOfferWithRelatedFields
     HasAuthor,
     HasEditor,
     IOfferRelatedDefaultFields {
-  category?: IProductCategoryDirItem;
-  categories?: IProductCategoryDirItem[];
+  category?: OfferCategoryEntity;
+  categories?: OfferCategoryEntity[];
 
   brand?: IBrand;
   recommends?: OfferEntity[];

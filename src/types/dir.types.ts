@@ -184,8 +184,8 @@ export interface DirActivitiesProps
 
 // ? ================ PRODUCT CATEGORIES
 export interface IProductParentCategoryDirItem extends IDirItemBase<ApiDirType.CATEGORIES_PROD> {}
-export interface IProductCategoryDirItem extends IDirItemBase<ApiDirType.CATEGORIES_PROD> {}
-export interface IProductCategoryDirItem extends IDirItemBase<ApiDirType.CATEGORIES_PROD> {}
+export interface OfferCategoryEntity extends IDirItemBase<ApiDirType.CATEGORIES_PROD> {}
+// export interface IProductCategoryDirItem extends IDirItemBase<ApiDirType.CATEGORIES_PROD> {}
 
 // ? ================ BRANDS
 export interface IBrand extends IDirItemBase {}

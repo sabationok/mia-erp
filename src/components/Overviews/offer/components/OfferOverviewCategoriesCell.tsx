@@ -7,7 +7,7 @@ import { CellStyledComp } from '../../components/CellStyles';
 import { OverviewCellHeader } from '../../components/OverviewCellHeader';
 import FormProductCategoriesOverlay from '../../../Overlays/FormSelectCategoriesOverlay';
 import FlexBox from '../../../atoms/FlexBox';
-import { IProductCategoryDirItem } from '../../../../types/dir.types';
+import { OfferCategoryEntity } from '../../../../types/dir.types';
 
 export const OfferOverviewCategoriesCell: RenderOverviewCellComponent<OfferEntity> = ({
   cell,
@@ -53,7 +53,7 @@ export const OfferOverviewCategoriesCell: RenderOverviewCellComponent<OfferEntit
 };
 
 const NotActiveTreeDataItem: React.FC<{
-  item: IProductCategoryDirItem;
+  item: OfferCategoryEntity;
   lvl?: number;
   index?: number;
   selectedIds: string[];
