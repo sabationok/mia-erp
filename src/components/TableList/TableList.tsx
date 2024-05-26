@@ -1,4 +1,4 @@
-import React, { createContext, memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import TableHead from './TableHead';
 import TableBody from './TableBody';
 import QuickActions from './QuickActions';
@@ -15,19 +15,19 @@ import {
   UseTableHookType,
 } from './tableTypes.types';
 import { FilterReturnDataType } from '../Filter/AppFilter';
-import { IBase } from '../../redux/global.types';
 import TableLoader from './TableLoader';
 import { isUndefined } from 'lodash';
+import { OnlyUUID } from '../../types/utils.types';
 
 export type { ITableListContext, ITableListProps, OnCheckBoxChangeHandlerEvent, UseTableHookType, SelectItem };
 export const TableCTX = createContext({});
 export const useTable: UseTableHookType = () => useContext(TableCTX);
 
-const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>> = ({
+const TableList = <TData extends Partial<OnlyUUID> = any>({
   tableData,
   isLoading = false,
   RowActionsComp,
-  TableActionsComp,
+  // TableActionsComp,
   tableTitles,
   tableSearchParams,
   actionsCreator,
@@ -41,12 +41,12 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
   onSubmitSearch,
   selectedRow,
   ...props
-}) => {
+}: ITableListProps<TData> & React.HTMLAttributes<HTMLDivElement>) => {
   // const tBodyRef = useRef<HTMLElement>(null);
   const rowRef = useRef<HTMLElement>();
   const setFilterData = useState<FilterReturnDataType>()[1];
   const [_selectedRows, _setSelectedRows] = useState<string[]>([]);
-  const [_selectedRow, _setSelectedRow] = useState<any | undefined>(selectedRow);
+  const [_selectedRow, _setSelectedRow] = useState<Partial<TData> | undefined>(selectedRow);
   const [loading, setLoading] = useState(isLoading);
 
   const rowGrid = useMemo(
@@ -66,8 +66,8 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
   );
 
   const onRowClickWrapper = useCallback(
-    (rowData: any) => {
-      _setSelectedRow(rowData);
+    (rowData?: { _id?: string; rowData?: TData }) => {
+      _setSelectedRow(rowData?.rowData);
 
       typeof onRowClick === 'function' && onRowClick(rowData);
     },
@@ -85,7 +85,8 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
   const onHeadCheckboxChange = useCallback(
     (e: ButtonCheckboxEvent) => {
       const { checked } = e;
-      if (checked) _setSelectedRows(prev => tableData?.map(el => el._id) || prev);
+      if (checked) _setSelectedRows(prev => tableData?.map(el => el?._id ?? '') || prev);
+
       if (!checked) _setSelectedRows([]);
     },
     [tableData]
@@ -98,9 +99,9 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
   }, [selectedRow]);
 
   const CTX = useMemo(
-    (): ITableListContext<IBase> => ({
+    (): ITableListContext<TData> => ({
       RowActionsComp,
-      TableActionsComp,
+      // TableActionsComp,
       actionsCreator,
       footer,
       tableSearchParams,
@@ -122,7 +123,7 @@ const TableList: React.FC<ITableListProps & React.HTMLAttributes<HTMLDivElement>
     }),
     [
       RowActionsComp,
-      TableActionsComp,
+      // TableActionsComp,
       actionsCreator,
       filterDefaultValues,
       filterTitle,
@@ -207,4 +208,4 @@ const TableScroll = styled.div<{ scrollBarWidth?: number }>`
   }
 `;
 
-export default memo(TableList);
+export default TableList;

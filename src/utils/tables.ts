@@ -65,7 +65,7 @@ export function createTableTitlesFromProperties(
             name: p?.label || '---',
             dataKey: p?._id,
             getData: (rd, t) => {
-              if (t?.top?.dataKey && rd.propertiesMap[t?.top?.dataKey]) {
+              if (t?.top?.dataKey && rd.propertiesMap?.[t?.top?.dataKey]) {
                 const value = rd.propertiesMap[t?.top?.dataKey];
                 return value?.label;
               }

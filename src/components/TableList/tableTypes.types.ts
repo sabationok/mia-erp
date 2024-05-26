@@ -59,12 +59,16 @@ export type OnHeadCheckBoxChangeHandler<V = any> = (data: V) => any;
 export interface ITableListProps<TDataType = any> {
   tableTitles?: CellTittleProps<TDataType>[];
   tableData?: TDataType[];
+  selectedRow?: Partial<TDataType>;
+  actionsCreator?: TableActionCreator<ITableListContext<TDataType>>;
+  transformData?: <T = any>(data: TDataType) => T;
+
   tableSearchParams?: SelectItem[];
   tableSortParams?: SelectItem[];
-  transformData?: <T = any>(data: TDataType) => T;
+
   RowActionsComp?: React.ReactNode;
-  tableActions?: TableActionsProps<TDataType>;
-  TableActionsComp?: React.ReactNode;
+  // tableActions?: TableActionsProps<TDataType>;
+  // TableActionsComp?: React.ReactNode;
   isFilter?: boolean;
   isSearch?: boolean;
   footer?: boolean;
@@ -76,42 +80,43 @@ export interface ITableListProps<TDataType = any> {
   filterTitle?: string;
   filterSelectors?: FilterSelectorType[];
   filterDefaultValues?: FilterReturnDataType;
-  selectedRow?: Partial<TDataType>;
   isLoading?: boolean;
   scrollBarWidth?: number;
-  actionsCreator?: TableActionCreator<TDataType>;
+  selectedRows?: string[];
 
   onSubmitSearch?: (data: TableSearchFormState) => void;
   onFilterSubmit?: (filterData: FilterReturnDataType) => void;
   handleTableSort?: (param: SelectItem, sortOrder: SelectItem['sortOrder']) => void;
   onRowClick?: OnRowClickHandler<TDataType | undefined>;
   onRowDoubleClick?: OnRowClickHandler<TDataType | undefined>;
+
   onCheckboxChange?: OnCheckBoxChangeHandler;
   onHeadCheckboxChange?: OnHeadCheckBoxChangeHandler;
+
   onTableSortParamChange?: (params: SelectItem) => void;
   onRefresh?: (loading: boolean) => void;
 }
 
 export interface ITableListContext<TDataType = any> extends ITableListProps<TDataType> {
-  selectedRows?: string[];
   rowRef?: React.MutableRefObject<HTMLElement | undefined>;
 }
 
 export type UseTableHookType = <TDataType = any>() => ITableListContext<TDataType>;
 
-export interface ITableAction<N extends string = any> {
-  name?: N;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  title?: string;
-  disabled?: boolean;
-  disabledCheck?: () => boolean;
-  type?: ButtonIconVariant;
-  separator?: boolean;
-  description?: string;
-  icon?: IconIdType;
-  iconSize?: string;
-}
+export type ITableAction<N extends string = any> =
+  | {
+      name?: N;
+      onClick?: React.MouseEventHandler<HTMLButtonElement>;
+      title?: string;
+      label?: string;
+      renderLabel?: React.ReactNode;
+      disabled?: boolean;
+      disabledCheck?: () => boolean;
+      type?: ButtonIconVariant;
+      description?: string;
+      icon?: IconIdType;
+      iconSize?: string;
+    }
+  | { separator?: boolean };
 
-export type TableActionCreator<TData = any, N extends string = any> = (
-  ctx: ITableListContext<TData>
-) => ITableAction<N>[];
+export type TableActionCreator<CTXType = any, N extends string = any> = (ctx: CTXType) => ITableAction<N>[];

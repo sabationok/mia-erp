@@ -44,8 +44,6 @@ export const OfferVariationPropertySelector = ({
       }
     }
 
-    console.log({ _propId }, { _valuesList }, { _valuesIds });
-
     return _valuesList?.map(value => {
       const isSelected = selectedIds.includes(value._id);
 

@@ -6,7 +6,7 @@ import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Text } from '../atoms/Text';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import { toVariationFormData, toVariationReqData } from '../../utils';
+import { ObjectEntries, toVariationFormData, toVariationReqData } from '../../utils';
 import { IVariationFormData, VariationEntity } from '../../types/offers/variations.types';
 import { ToastService } from '../../services';
 import { ModalFormProps } from '../ModalForm';
@@ -27,6 +27,7 @@ import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
 import { OfferEntity } from '../../types/offers/offers.types';
 import DrawerBase from './OverlayBase';
 import { PropertiesGroupSelect } from '../atoms/PropertiesGroupSelect';
+import { AccordionFormArea } from '../Forms/FormArea/AccordionForm';
 
 export interface CreateVariationModalProps
   extends CreatedOverlay,
@@ -34,14 +35,14 @@ export interface CreateVariationModalProps
   onSubmit?: AppSubmitHandler<IVariationFormData>;
   offer?: OfferEntity;
   offerId?: UUID;
-  update?: UUID;
+  updateId?: UUID;
 
   create?: boolean;
 
-  defaultState?: VariationEntity;
+  defaultState?: Partial<VariationEntity>;
 }
-const validation = yup.object().shape({
-  label: yup.string().required().min(5).max(64),
+const _schema = yup.object().shape({
+  label: yup.string().required().min(5).max(128),
   sku: yup.string().required().min(8).max(32),
   barCode: yup.string().max(32),
   cms: yup.object().shape({
@@ -74,9 +75,8 @@ const validation = yup.object().shape({
 const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   onClose,
   title,
-  defaultState,
   onSubmit,
-  update,
+  updateId,
   create,
   offerId,
   offer,
@@ -84,23 +84,22 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
 }) => {
   const state = useProductsSelector();
   const service = useAppServiceProvider()[ServiceName.offers];
-  const loaders = useLoaders<'create'>();
-  const currentOffer = useCurrentOffer({ id: offerId || offer?._id });
-  const { variation } = useCurrentVariation({ id: update });
+  const loaders = useLoaders<'create' | 'update' | 'refresh'>();
+  const { variation } = useCurrentVariation({ id: updateId });
+  const currentOffer = useCurrentOffer({ id: variation?.offer?._id || offerId || offer?._id });
 
   const submitOptions = useAfterSubmitOptions();
-  const [selectedPropsMap, setSelectedPropsMap] = useState<Record<string, PropertyValueEntity>>({});
 
   const [currentTemplate, setCurrentTemplate] = useState<ProperiesGroupEntity>();
 
   const formMethods = useAppForm<IVariationFormData>({
     defaultValues: toVariationFormData(
-      defaultState
-        ? { ...defaultState, offer: currentOffer, template: currentTemplate }
-        : { offer: currentOffer, template: currentTemplate }
+      variation
+        ? { ...variation, offer: currentOffer, template: currentTemplate }
+        : { offer: currentOffer, template: currentTemplate },
+      currentOffer
     ),
-    values: variation ? toVariationFormData(variation) : undefined,
-    resolver: yupResolver(validation as never),
+    resolver: yupResolver(_schema as never),
     reValidateMode: 'onSubmit',
   });
 
@@ -113,6 +112,17 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
     reset,
   } = formMethods;
 
+  const [selectedPropsMap, setSelectedPropsMap] = useState<Record<string, PropertyValueEntity>>(() => {
+    const init: Record<string, PropertyValueEntity> = {};
+    for (const [propId, valueId] of ObjectEntries(formValues.propertiesMap ?? {})) {
+      const value = state.propertiesDataMap?.[valueId];
+      if (value) {
+        init[propId] = value;
+      }
+    }
+    return init;
+  });
+
   const propertiesList = useMemo(() => {
     const _rootId = currentTemplate?._id;
     const _propertiesList: PropertyEntity[] = [];
@@ -120,8 +130,11 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
 
     for (const propId of _propertiesIds) {
       const prop = state.propertiesDataMap?.[propId];
-      if (prop) {
-        _propertiesList.push(prop);
+      if (prop?.isSelectable) {
+        const childrenIds = state.propertiesKeysMap[prop?._id];
+        if (childrenIds?.length) {
+          _propertiesList.push(prop);
+        }
       }
     }
 
@@ -149,47 +162,45 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
       const value = entry[1];
       value?.label && _labels.push(value?.label);
     }
-    const _base = !_sorted?.length ? `${currentOffer?.label}. {{VARIATION_LABEL}}` : _labels.join('. ');
+    const _base = !_sorted?.length
+      ? variation?.label ?? `${currentOffer?.label}. {{VARIATION_LABEL}}`
+      : _labels.join('. ');
 
     return { label: _base };
-  }, [currentOffer?.label, selectedPropsMap]);
+  }, [currentOffer?.label, selectedPropsMap, variation?.label]);
 
   useEffect(() => {
     setValue('label', compiledLabel);
-  }, [compiledLabel, setValue]);
+  }, [compiledLabel, setValue, variation]);
 
   const onValid = useCallback(
     (data: IVariationFormData) => {
-      if (update) {
-        service
-          .updateVariationById({
-            data: toVariationReqData(data, update),
-            onSuccess: data => {
-              console.log('updateVariationById onSuccess', data);
+      if (updateId) {
+        service.updateVariationById({
+          data: toVariationReqData(data, updateId),
+          onSuccess: data => {
+            console.log('updateVariationById onSuccess', data);
 
-              onClose && onClose();
-            },
-            onError: ToastService.toastAxiosError,
-            onLoading: loaders.onLoading('create'),
-          })
-          .then();
+            onClose && onClose();
+          },
+          onError: ToastService.toastAxiosError,
+          onLoading: loaders.onLoading('update'),
+        });
       } else {
-        service
-          .createVariation({
-            data: toVariationReqData(data),
-            onSuccess: data => {
-              submitOptions.state.close && onClose && onClose();
-              submitOptions.state.clear && reset();
-            },
-            onError: ToastService.toastAxiosError,
-            onLoading: loaders.onLoading('create'),
-          })
-          .then();
+        service.createVariation({
+          data: toVariationReqData(data),
+          onSuccess: data => {
+            submitOptions.state.close && onClose && onClose();
+            submitOptions.state.clear && reset();
+          },
+          onError: ToastService.toastAxiosError,
+          onLoading: loaders.onLoading('create'),
+        });
       }
 
       // onSubmit && onSubmit(data);
     },
-    [loaders, onClose, reset, service, submitOptions.state.clear, submitOptions.state.close, update]
+    [loaders, onClose, reset, service, submitOptions.state.clear, submitOptions.state.close, updateId]
   );
 
   const handleSelect = useCallback(
@@ -221,10 +232,6 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
     });
   }, [propertiesList, selectedIds, handleSelect]);
 
-  // useEffect(() => {
-  //   if ()
-  // }, []);
-
   return (
     <DrawerBase fillHeight onBackPress={onClose} okButton={false} title={title}>
       <FormContainer
@@ -234,28 +241,24 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
         onReset={handleClearMap}
         {...props}
       >
-        <Content flex={1} fillWidth overflow={'auto'}>
-          <Inputs>
-            {/*{!variation && (*/}
-            {/*)}*/}
+        <Content flex={1} fillWidth overflow={'auto'} gap={12}>
+          <AccordionFormArea label={'Offer'} expandable={false} hideFooter>
             <InputLabel label={t('Offer label')} error={errors?.offer?._id} required disabled>
               <InputText value={currentOffer?.label ?? undefined} placeholder={t('label')} required disabled />
             </InputLabel>
 
             <FlexBox fxDirection={'row'} gap={8} fillWidth>
               <InputLabel label={t('sku')} disabled>
-                <InputText disabled placeholder={t('sku')} />
+                <InputText value={currentOffer?.sku ?? undefined} placeholder={t('sku')} disabled />
               </InputLabel>
 
-              <InputLabel label={t('barCode')}>
-                <InputText placeholder={t('barCode')} />
+              <InputLabel label={t('barCode')} disabled>
+                <InputText value={currentOffer?.barCode ?? undefined} placeholder={t('barCode')} disabled />
               </InputLabel>
             </FlexBox>
-          </Inputs>
-          <Inputs>
-            {/*{!variation && (*/}
-            {/*)}*/}
+          </AccordionFormArea>
 
+          <AccordionFormArea label={'Main info'} expandable={false} hideFooter>
             <InputLabel label={t('label')} error={errors.label}>
               <InputText {...register('label', { required: true })} placeholder={t('label')} required />
             </InputLabel>
@@ -271,39 +274,49 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
             </FlexBox>
 
             {/*<DimensionsInputs form={formMethods} />*/}
-          </Inputs>
+          </AccordionFormArea>
 
-          <PropertiesGroupSelect onSelect={setCurrentTemplate} selected={currentTemplate} />
+          <AccordionFormArea label={t('Properties')} expandable={false} hideFooter>
+            <PropertiesGroupSelect
+              onSelect={opt => {
+                setValue('template', opt);
+                setCurrentTemplate(opt);
+              }}
+              selected={currentTemplate}
+            />
 
-          <TemplateBox padding={'0 8px'} margin={'8px 0'}>
-            {renderPropertiesList}
-          </TemplateBox>
+            <TemplateBox padding={'0 8px'} margin={'8px 0'}>
+              {renderPropertiesList}
+            </TemplateBox>
+          </AccordionFormArea>
 
-          {currentOffer && (
-            <CmsConfigs padding={'8px 0'} fillWidth>
-              <CmsConfigsHeader padding={'8px'} justifyContent={'flex-end'} fxDirection={'row'} fillWidth>
-                <Text $size={13} $weight={500}>
-                  {t('Cms configs')}
-                </Text>
-              </CmsConfigsHeader>
+          {variation && (
+            <AccordionFormArea label={t('Cms information')} expandable={false} hideFooter>
+              <CmsConfigs padding={'8px 0'} fillWidth>
+                <CmsConfigsHeader padding={'8px'} justifyContent={'flex-end'} fxDirection={'row'} fillWidth>
+                  <Text $size={13} $weight={500}>
+                    {t('Cms configs')}
+                  </Text>
+                </CmsConfigsHeader>
 
-              <Inputs>
-                <InputLabel label={t('Language key')} error={errors?.cmsConfigs?.key}>
-                  <LangButtonsGroup disabled />
-                </InputLabel>
+                <Inputs>
+                  <InputLabel label={t('Language key')} error={errors?.cmsConfigs?.key}>
+                    <LangButtonsGroup disabled />
+                  </InputLabel>
 
-                <InputLabel label={t('Label by lang key')} error={errors?.cmsConfigs?.labels?.ua}>
-                  <InputText placeholder={'Label'} {...register('cmsConfigs.labels.ua')} />
-                </InputLabel>
-              </Inputs>
-            </CmsConfigs>
+                  <InputLabel label={t('Label by lang key')} error={errors?.cmsConfigs?.labels?.ua}>
+                    <InputText placeholder={'Label'} {...register('cmsConfigs.labels.ua')} />
+                  </InputLabel>
+                </Inputs>
+              </CmsConfigs>
+            </AccordionFormArea>
           )}
         </Content>
 
         <OverlayFooter
           loading={loaders.isLoading?.create}
           resetButtonShown
-          submitButtonText={loaders.isLoading?.create ? 'Loading...' : update ? 'Підтвердити' : 'Додати'}
+          submitButtonText={loaders.isLoading?.create ? 'Loading...' : updateId ? 'Підтвердити' : 'Додати'}
           canSubmit={canSubmit}
           extraFooter={
             <ExtraFooterBox>
@@ -322,11 +335,11 @@ const FormContainer = styled(FlexForm)`
   height: 100vh;
 
   width: 100%;
-  padding: 0 12px;
+  //padding: 0 12px;
 
   overflow: hidden;
 
-  max-width: 480px;
+  //max-width: 380px;
   color: ${p => p.theme.fontColorSidebar};
   background-color: ${p => p.theme.tableBackgroundColor};
 `;

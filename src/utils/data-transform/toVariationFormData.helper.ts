@@ -24,6 +24,7 @@ export const toVariationFormData = (variation: Partial<VariationEntity>, offer?:
       ? variation.sku
       : `${(variation?.offer || offer)?.sku ? (variation?.offer || offer)?.sku + '-' : ''}${nanoid(8)}`,
     offer: offer || (variation?.offer ? getIdRef(variation.offer) : undefined),
+    template: variation?.template ? getIdRef(variation.template) : undefined,
     propertiesMap,
   };
 };

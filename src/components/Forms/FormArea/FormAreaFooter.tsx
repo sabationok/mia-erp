@@ -36,6 +36,7 @@ const FormAreaFooter: React.FC<FormAreaFooterProps & React.HTMLAttributes<HTMLDi
         {(hasOnReset || onResetPress) && (
           <ButtonIcon
             type={onResetPress ? 'button' : 'reset'}
+            onClick={onResetPress}
             variant={'outlinedSmall'}
             isLoading={isLoading}
             disabled={disabled}
@@ -49,7 +50,7 @@ const FormAreaFooter: React.FC<FormAreaFooterProps & React.HTMLAttributes<HTMLDi
           onClick={onAcceptPress}
           variant={'filledSmall'}
           isLoading={isLoading}
-          disabled={disabled}
+          disabled={!hasOnSubmit ?? disabled}
         >
           {isLoading ? t('Loading...') : t('Save')}
         </ButtonIcon>

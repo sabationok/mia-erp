@@ -4,13 +4,13 @@ import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServ
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { useCallback, useEffect, useMemo } from 'react';
 import { createTableTitlesFromProperties, transformVariationTableData } from '../../../../utils/tables';
-import { IVariationTableData } from '../../../../types/offers/variations.types';
 import { getIdRef } from '../../../../utils';
 import { OnlyUUID } from '../../../../redux/global.types';
 import { useLoadersProvider } from '../../../../Providers/Loaders/LoaderProvider';
 import { OfferOverlayLoaderKey } from '../../../Overlays/FormProductDefaultsOverlay';
 import { PropertyEntity } from '../../../../types/offers/properties.types';
 import CreateVariationOverlay from '../../../Overlays/CreateVariationOverlay';
+import { IVariationTableData } from '../../../../types/offers/variations.types';
 
 export interface VariationsTabProps {
   onSelect?: (variation: OnlyUUID) => void;
@@ -52,11 +52,8 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
     return createTableTitlesFromProperties(Object.values(propertiesMap));
   }, [currentOffer?.variations]);
 
-  const tableConfig = useMemo(() => {
+  const tableConfig = useMemo((): ITableListProps<IVariationTableData> => {
     return {
-      tableTitles: variationsTableTitles,
-      tableData: currentOffer?.variations,
-      transformData: transformVariationTableData,
       onRowClick: data => {
         if (onSelect) {
           if (data?.rowData) {
@@ -90,13 +87,11 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
                 disabled: !currentId,
                 onClick: () => {
                   if (!currentId || !ctx.selectedRow) return;
-                  const dataForUpdate = currentOffer?.variations?.find(v => v?._id === currentId);
 
                   modalS.open({
                     ModalChildren: CreateVariationOverlay,
                     modalChildrenProps: {
-                      update: currentId,
-                      defaultState: dataForUpdate,
+                      updateId: currentId,
                     },
                   });
                 },
@@ -116,8 +111,8 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
               },
             ];
           },
-    } as ITableListProps<IVariationTableData>;
-  }, [currentOffer?.variations, loadData, modalS, onSelect, page.currentOffer, variationsTableTitles, withActions]);
+    };
+  }, [loadData, modalS, onSelect, page.currentOffer, withActions]);
 
   useEffect(() => {
     if (currentOffer) {
@@ -133,6 +128,9 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
       isFilter={false}
       isLoading={loaders?.isLoading?.variations}
       selectedRow={selected}
+      tableData={currentOffer?.variations}
+      tableTitles={variationsTableTitles}
+      transformData={transformVariationTableData as never}
     />
   );
 };

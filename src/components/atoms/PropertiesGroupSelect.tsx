@@ -56,6 +56,15 @@ export const PropertiesGroupSelect = ({
     }
   }, [selected]);
 
+  useEffect(() => {
+    if (rootList?.length && !currentTemplate) {
+      if (onSelect && rootList[0]) {
+        onSelect(rootList[0]);
+      } else {
+        setCurrentTemplate(rootList[0]);
+      }
+    }
+  }, [currentTemplate, onSelect, rootList]);
   // useEffect(() => {
   //   if ()
   // }, []);

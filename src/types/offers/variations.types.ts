@@ -4,7 +4,7 @@ import { PriceEntity } from '../price-management/price-management.types';
 import { AppQueryParams } from '../../api';
 import { OfferEntity } from './offers.types';
 import { ProperiesGroupEntity, PropertyValueEntity } from './properties.types';
-import { HasCompany, HasDimensions, HasLabel, MaybeNull, WithPeriod } from '../utils.types';
+import { HasCompany, HasDimensions, HasLabel, MaybeNull, UUID, WithPeriod } from '../utils.types';
 import { HasBaseCmsConfigs, HasBaseCmsConfigsDto } from '../cms.types';
 
 export interface IVariationBase extends HasDimensions, WithPeriod, HasLabel {
@@ -26,14 +26,14 @@ export type VariationPropertiesMapInTableData = Record<string, PropertyValueEnti
 
 export type VariationPropertiesMapInFormData = Record<string, string>;
 export interface IVariationTableData extends VariationEntity {
-  propertiesMap: VariationPropertiesMapInTableData;
+  propertiesMap?: VariationPropertiesMapInTableData;
 }
 export interface IVariationFormData extends IVariationBase, HasBaseCmsConfigsDto {
   propertiesMap?: VariationPropertiesMapInFormData;
 
-  template: OnlyUUID & { label?: string };
+  template?: OnlyUUID;
 
-  offer: OnlyUUID & { label?: string } & HasBaseCmsConfigsDto;
+  offer?: OnlyUUID & { label?: string } & HasBaseCmsConfigsDto;
 }
 
 export interface HasVariation {
@@ -43,6 +43,9 @@ export interface HasVariation {
 export interface VariationDto extends IVariationBase, HasBaseCmsConfigsDto {
   properties?: string[];
   offer?: OnlyUUID;
+  template?: OnlyUUID;
+  offerId?: UUID;
+  templateId?: UUID;
 }
 
 export interface IVariationReqData {

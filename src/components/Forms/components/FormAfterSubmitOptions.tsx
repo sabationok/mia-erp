@@ -59,10 +59,10 @@ const FormAfterSubmitOptions: React.FC<FormAfterSubmitOptionsProps> = ({ control
   }, [state]);
 
   return (
-    <Container fillWidth gap={4} padding={'4px 8px'} alignItems={'center'}>
+    <Container fillWidth gap={10} padding={'8px 12px'} alignItems={'center'}>
       <Text $size={12}>{`${t('afterSave')}: `}</Text>
 
-      <FlexBox fxDirection={'row'} gap={8} flex={1}>
+      <FlexBox fxDirection={'row'} gap={12} flex={1}>
         <Label
           gap={8}
           flex={1}
@@ -78,6 +78,7 @@ const FormAfterSubmitOptions: React.FC<FormAfterSubmitOptionsProps> = ({ control
             {t('clear')}
           </Text>
         </Label>
+
         <Label
           gap={8}
           flex={1}

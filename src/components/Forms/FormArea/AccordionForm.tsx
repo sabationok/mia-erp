@@ -15,6 +15,7 @@ export interface AccordionFormAreaProps {
   disabled?: boolean;
   isOpen?: boolean;
   expandable?: boolean;
+  hideFooter?: boolean;
   hideLabel?: boolean;
   label?: string;
   onAcceptPress?: () => void;
@@ -54,6 +55,7 @@ export const AccordionFormArea = ({
   hasOnSubmit,
   hasOnReset,
   isHeaderSticky,
+  hideFooter,
 }: AccordionFormAreaProps) => {
   const [_isOpen, _setIsOpen] = useState(isOpen);
 
@@ -65,8 +67,6 @@ export const AccordionFormArea = ({
       _setIsOpen(isOpen);
     }
   }, [isOpen]);
-
-  useEffect(() => {}, []);
 
   return (
     <FlexBox fillWidth style={{ position: 'relative' }}>
@@ -103,16 +103,18 @@ export const AccordionFormArea = ({
       <ExpandableBox disabled={disabled} isActive={_isOpen}>
         {_isOpen ? children : null}
 
-        {renderFooter || (
-          <FormAreaFooter
-            hasOnSubmit={!!hasOnSubmit}
-            hasOnReset={!!hasOnReset}
-            isLoading={isLoading}
-            disabled={disabled}
-            onAcceptPress={onAcceptPress}
-            onResetPress={onResetPress}
-          />
-        )}
+        {hideFooter
+          ? null
+          : renderFooter || (
+              <FormAreaFooter
+                hasOnSubmit={!!hasOnSubmit}
+                hasOnReset={!!hasOnReset}
+                isLoading={isLoading}
+                disabled={disabled}
+                onAcceptPress={onAcceptPress}
+                onResetPress={onResetPress}
+              />
+            )}
       </ExpandableBox>
     </FlexBox>
   );
@@ -129,6 +131,6 @@ const Header = styled(FlexBox)`
 const ExpandableBox = styled(FlexFieldSet)`
   overflow: hidden;
   max-height: ${p => (p.isActive ? '100%' : '0')};
-  padding: 0 8px;
+  padding: 8px;
   //transition: all ${p => p.theme.globals.timingFunctionMain};
 `;
