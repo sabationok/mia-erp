@@ -104,7 +104,7 @@ const DataWithAvatarCell: React.FC<Omit<IDataCellProps, 'subContent'>> = ({
 }) => {
   return (
     <CellDoubleDataWithAvatar style={{ width }}>
-      <FlexBox padding={'0px'} alignItems={'center'} justifyContent={'center'} width={'40px'} height={'40px'}>
+      <FlexBox padding={'0 0 0 4px'} alignItems={'center'} justifyContent={'center'} width={'40px'} height={'40px'}>
         <Avatar
           src={imgUrl}
           shape={'square'}

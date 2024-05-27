@@ -108,7 +108,7 @@ const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onCha
 
       <Buttons fxDirection={'row'} gap={8} padding={'8px'}>
         <ButtonIcon
-          variant={'defOutlinedSmall'}
+          variant={'defaultSmall'}
           onClick={() => {
             const res = window.confirm('Remove all items?');
             if (res) {

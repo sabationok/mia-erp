@@ -2,10 +2,10 @@ import FlexBox, { FlexFieldSet, FlexForm } from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import FormAreaFooter from './FormAreaFooter';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { isUndefined } from 'lodash';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import styled, { css } from 'styled-components';
+import styled, { css, useTheme } from 'styled-components';
 import { Property } from 'csstype';
 
 export interface AccordionFormAreaProps {
@@ -16,13 +16,13 @@ export interface AccordionFormAreaProps {
   disabled?: boolean;
   isOpen?: boolean;
   expandable?: boolean;
-  hideFooter?: boolean;
-  hideLabel?: boolean;
   label?: string;
   onAcceptPress?: () => void;
   onResetPress?: () => void;
   isHeaderSticky?: boolean;
 
+  hideFooter?: boolean;
+  hideHeader?: boolean;
   hasOnSubmit?: boolean;
   hasOnReset?: boolean;
 
@@ -30,22 +30,26 @@ export interface AccordionFormAreaProps {
   isEmpty?: boolean;
 
   maxHeight?: Property.MaxHeight;
+
+  formId?: string;
 }
 export interface AccordionFormProps extends AccordionFormAreaProps {
   onSubmit?: AppSubmitHandler;
   onReset?: () => void;
 }
 
-export const AccordionForm = ({ isEmpty, onSubmit, onReset, children, ...rest }: AccordionFormProps) => {
+export const AccordionForm = ({ isEmpty, onSubmit, onReset, children, formId, ...rest }: AccordionFormProps) => {
+  const _formId = useId();
+
   return (
-    <FlexForm fillWidth onSubmit={onSubmit} onReset={onReset}>
-      <AccordionFormArea {...rest} hasOnReset={!!onReset} hasOnSubmit={!!onSubmit}>
+    <StyledForm onSubmit={onSubmit} onReset={onReset} maxWidth={'100%'} id={formId}>
+      <AccordionFormArea {...rest} hasOnReset={!!onReset} hasOnSubmit={!!onSubmit} formId={formId || _formId}>
         {children}
       </AccordionFormArea>
-    </FlexForm>
+    </StyledForm>
   );
 };
-
+const StyledForm = styled(FlexForm)``;
 export const AccordionFormArea = ({
   children,
   renderFooter,
@@ -53,7 +57,7 @@ export const AccordionFormArea = ({
   disabled,
   label = 'Form area',
   isLoading,
-  hideLabel,
+  hideHeader,
   isOpen = true,
   expandable = true,
   onAcceptPress,
@@ -62,13 +66,14 @@ export const AccordionFormArea = ({
   hasOnReset,
   isHeaderSticky,
   hideFooter,
-  canSubmit,
+  canSubmit = true,
   maxHeight,
+  formId,
 }: AccordionFormAreaProps) => {
   const [_isOpen, _setIsOpen] = useState(isOpen);
-
+  const theme = useTheme();
   const onToggleIsOpenHandler = () => {
-    _setIsOpen(p => !p);
+    expandable && _setIsOpen(p => !p);
   };
   useEffect(() => {
     if (!isUndefined(isOpen)) {
@@ -77,52 +82,49 @@ export const AccordionFormArea = ({
   }, [isOpen]);
 
   return (
-    <FlexBox fillWidth style={{ position: 'relative' }} maxHeight={maxHeight}>
-      {!hideLabel && (
-        <Header
-          gap={8}
-          overflow={'hidden'}
-          // style={{
-          //   position: !isHeaderSticky ? 'sticky' : 'static',
-          // }}
-          fxDirection={'row'}
-          justifyContent={'space-between'}
-          alignItems={'center'}
-        >
-          {renderTitle || (
-            <Text $size={14} $weight={600} $padding={'8px'}>
-              {label}
-            </Text>
-          )}
-
-          {expandable && (
-            <ButtonIcon
-              size={'32px'}
-              padding={'1px'}
-              variant={'onlyIconNoEffects'}
-              icon={_isOpen ? 'SmallArrowDown' : 'SmallArrowLeft'}
-              iconSize={'100%'}
-              onClick={onToggleIsOpenHandler}
-            />
-          )}
+    <FlexBox fillWidth style={{ position: 'relative' }} maxHeight={maxHeight} maxWidth={'100%'}>
+      {!hideHeader && (
+        <Header gap={8} fxDirection={'row'} justifyContent={'space-between'} alignItems={'center'}>
+          <ButtonIcon
+            variant={'defNoEffects'}
+            endIcon={!expandable ? undefined : _isOpen ? 'SmallArrowDown' : 'SmallArrowLeft'}
+            endIconSize={'30px'}
+            onClick={onToggleIsOpenHandler}
+            justifyContent={'space-between'}
+            endIconStyles={{
+              fill: theme.accentColor.base,
+            }}
+            style={{ borderBottom: `1px solid ${theme.modalBorderColor}`, height: '50px' }}
+            flex={1}
+          >
+            {renderTitle || (
+              <Text $size={14} $weight={600} $padding={'0 8px'}>
+                {label}
+              </Text>
+            )}
+          </ButtonIcon>
         </Header>
       )}
 
-      <ExpandableBox disabled={disabled} isActive={_isOpen} maxHeight={maxHeight}>
-        {_isOpen ? children : null}
+      <ExpandableBox disabled={disabled} flex={1} isActive={_isOpen} maxHeight={maxHeight}>
+        {_isOpen ? (
+          <FlexBox padding={'8px'} maxWidth={'100%'} overflow={'hidden'}>
+            {children}
 
-        {hideFooter
-          ? null
-          : renderFooter || (
-              <FormAreaFooter
-                hasOnSubmit={!!hasOnSubmit}
-                hasOnReset={!!hasOnReset}
-                isLoading={isLoading}
-                disabled={!canSubmit || disabled}
-                onAcceptPress={onAcceptPress}
-                onResetPress={onResetPress}
-              />
-            )}
+            {hideFooter
+              ? null
+              : renderFooter || (
+                  <FormAreaFooter
+                    hasOnSubmit={!!hasOnSubmit}
+                    hasOnReset={!!hasOnReset}
+                    isLoading={isLoading}
+                    disabled={!canSubmit || disabled}
+                    onAcceptPress={onAcceptPress}
+                    onResetPress={onResetPress}
+                  />
+                )}
+          </FlexBox>
+        ) : null}
       </ExpandableBox>
     </FlexBox>
   );
@@ -143,7 +145,8 @@ const Header = styled(FlexBox)<{ isSticky?: boolean }>`
 `;
 const ExpandableBox = styled(FlexFieldSet)`
   overflow: hidden;
+  max-width: 100%;
+
   max-height: ${p => (p.isActive ? '100%' : '0')};
-  padding: 8px;
   //transition: all ${p => p.theme.globals.timingFunctionMain};
 `;

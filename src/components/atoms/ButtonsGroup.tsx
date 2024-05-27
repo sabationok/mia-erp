@@ -54,7 +54,7 @@ const ButtonsGroup = <V = any, Opt extends ButtonsGroupOption<V> = any>({
       return (
         <OptionButton
           key={`group-option-${opt?.label || idx}`}
-          variant={isActive ? 'filledSmall' : 'defOutlinedSmall'}
+          variant={isActive ? 'filledSmall' : 'defaultSmall'}
           onClick={handleSelect(opt, idx)}
           disabled={disabled ?? opt?.disabled}
         >

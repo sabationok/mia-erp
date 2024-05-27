@@ -25,7 +25,7 @@ export const OfferFormCategoriesArea = ({ offer, disabled }: OfferFormCategories
   const [categoriesIds, setCategoriesIds] = useState<string[]>(initIds);
 
   const canSubmit = useMemo(() => {
-    return initIds?.join(',') !== sortIds(categoriesIds).join(',');
+    return !!categoriesIds?.length && initIds?.join(',') !== sortIds(categoriesIds).join(',');
   }, [initIds, categoriesIds]);
 
   const handleFormSubmit: FormEventHandler = ev => {

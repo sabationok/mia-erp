@@ -8,14 +8,14 @@ export const AppLoaderSpiner = ({
 }: {
   strokeWidth?: number;
   visible?: boolean;
-  size?: number;
+  size?: number | string;
 } = {}) => {
   const theme = useTheme();
 
   return (
     <Oval
-      height={`${size}`}
-      width={`${size}`}
+      height={size}
+      width={size}
       color={theme.accentColor.base}
       ariaLabel="tail-spin-loading"
       visible={visible}

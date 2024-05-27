@@ -172,7 +172,7 @@ const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update,
       <FlexBox padding={'0 0 8px'} flex={1} overflow={'auto'}>
         <FormPriceInputs
           form={priceForm}
-          handleBlur={(_name, callback) => {
+          handleOnBlur={(_name, callback) => {
             return ev => {
               callback && callback(ev);
               recalculateValues();

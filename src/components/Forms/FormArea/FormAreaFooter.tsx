@@ -37,7 +37,7 @@ const FormAreaFooter: React.FC<FormAreaFooterProps & React.HTMLAttributes<HTMLDi
           <ButtonIcon
             type={onResetPress ? 'button' : 'reset'}
             onClick={onResetPress}
-            variant={'textSmall'}
+            variant={'defaultMiddle'}
             isLoading={isLoading}
             disabled={disabled}
           >
@@ -48,7 +48,7 @@ const FormAreaFooter: React.FC<FormAreaFooterProps & React.HTMLAttributes<HTMLDi
         <ButtonIcon
           type={onAcceptPress ? 'button' : 'submit'}
           onClick={onAcceptPress}
-          variant={'filledSmall'}
+          variant={'filledMiddle'}
           isLoading={isLoading}
           disabled={disabled || !hasOnSubmit}
         >

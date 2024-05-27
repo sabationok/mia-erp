@@ -14,14 +14,21 @@ import { UseFormReturn } from 'react-hook-form/dist/types';
 import { enumToArray } from '../../../../utils';
 import { ChangeHandler } from 'react-hook-form/dist/types/form';
 import { Text } from '../../../atoms/Text';
-import { Fragment, useMemo } from 'react';
+import { FocusEventHandler, Fragment, useMemo } from 'react';
 import Decimal from 'decimal.js';
 
 export interface FormPriceInputsProps {
   onChange?: (price: IPriceBase) => void;
   form: UseFormReturn<IPriceBase>;
-  handleBlur: HandleUseFormBlur<PriceFormDataPath>;
+  handleOnBlur: HandleUseFormBlur<PriceFormDataPath>;
+  onBlur?: FocusEventHandler;
 }
+
+type HandleUseFormBlur<Name = any> = (
+  name: Name,
+  callback: ChangeHandler
+) => (ev: React.FocusEvent<HTMLInputElement>) => void;
+
 export const FormPriceDecimal = Decimal.clone({ precision: 2 });
 
 const PriceAmountAndPercentageInputsNames = enumToArray(PriceAmountAndPercentageFieldsEnum);
@@ -95,10 +102,6 @@ const FormBaseInputs = ({
   );
 };
 
-type HandleUseFormBlur<Name = any> = (
-  name: Name,
-  callback: ChangeHandler
-) => (ev: React.FocusEvent<HTMLInputElement>) => void;
 const FormPriceAmountAnPercentageInputsByName = ({
   handleBlur,
   form: { register },
@@ -157,19 +160,19 @@ const FormPriceAmountAndPercentageInputs = ({
   );
 };
 
-const FormPriceInputs: React.FC<FormPriceInputsProps> = ({ form, handleBlur }) => {
+const FormPriceInputs: React.FC<FormPriceInputsProps> = ({ form, onBlur, handleOnBlur }) => {
   return (
     <FlexBox fillWidth padding={'8px 0'}>
       <InputsHeader headers={['', `${t('Input')} *`, `${t('Output')} *`]} />
 
       <TBody fillWidth>
-        <FormBaseInputs form={form} handleBlur={handleBlur} />
+        <FormBaseInputs form={form} handleBlur={handleOnBlur} />
       </TBody>
 
       <InputsHeader headers={['', t('Amount'), t('Percentage, %')]} />
 
       <TBody fillWidth>
-        <FormPriceAmountAndPercentageInputs form={form} handleBlur={handleBlur} />
+        <FormPriceAmountAndPercentageInputs form={form} handleBlur={handleOnBlur} />
       </TBody>
     </FlexBox>
   );

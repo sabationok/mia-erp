@@ -297,7 +297,7 @@ const CustomSelect: React.ForwardRefRenderFunction<any, CustomSelectProps> = (
             </NoOptions>
           )}
           {onCreatePress && (
-            <CreateButton variant={'defOutlinedSmall'} icon={'plus'} iconSize={'16px'} onClick={onCreatePress}>
+            <CreateButton variant={'defaultSmall'} icon={'plus'} iconSize={'16px'} onClick={onCreatePress}>
               <span>{'Створити'}</span>
             </CreateButton>
           )}

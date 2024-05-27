@@ -29,7 +29,7 @@ const ConfirmModal: React.FC<Props> = ({
         <Text>{text}</Text>
       </Top>
       <Bottom>
-        <ButtonIcon variant={'defOutlinedSmall'}></ButtonIcon>
+        <ButtonIcon variant={'defaultSmall'}></ButtonIcon>
         <ButtonIcon variant={'filledSmall'}></ButtonIcon>
       </Bottom>
     </Form>

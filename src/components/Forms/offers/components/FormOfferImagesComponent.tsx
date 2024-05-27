@@ -8,10 +8,10 @@ import { useModalService } from '../../../ModalProvider/ModalProvider';
 import AddImageSetModal, { FormAddImageSetData } from '../AddImageSetModal';
 import ImagePreviewSmall from '../../../atoms/ImagePreviewSmall';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
-import { checks as check } from '../../../../utils';
 import { t } from '../../../../lang';
 import { formAddImageSetTabs } from '../../../../data';
 import { ImageSetSrcType } from '../../../../types/offers/offer-images.types';
+import { isNumber } from 'lodash';
 
 export interface FormOfferImagesComponentProps {
   onChangeState?: (state: Partial<OfferImageSlotEntity>[]) => void;
@@ -23,6 +23,8 @@ export interface FormOfferImagesComponentProps {
   contentContainerStyle?: React.CSSProperties;
   FooterComponent?: React.FC<{ onAddNewImageSetPress: () => void }>;
   HeaderComponent?: React.FC;
+
+  onlyPreviews?: boolean;
 }
 
 const FormOfferImagesComponent: React.FC<FormOfferImagesComponentProps> = ({
@@ -34,6 +36,7 @@ const FormOfferImagesComponent: React.FC<FormOfferImagesComponentProps> = ({
   FooterComponent,
   contentContainerStyle,
   hideLabel,
+  onlyPreviews = true,
 }) => {
   const modalS = useModalService();
 
@@ -148,65 +151,69 @@ const FormOfferImagesComponent: React.FC<FormOfferImagesComponentProps> = ({
     }
 
     return dataForRender?.map((slot, slotIndex) => {
-      const renderPreviews = formAddImageSetTabs.map((el, imgIndex) => {
-        return (
-          <ImagePreviewSmall
-            key={`small-prev_${imgIndex}`}
-            src={slot[el?.value as never]}
-            title={el.label ?? ''}
-            onEditPress={() => {
-              modalS.open({
-                ModalChildren: AddImageSetModal,
-                modalChildrenProps: {
-                  defaultState: slot,
-                  type: el.value,
-                  onSubmit: data => {
-                    el.value &&
-                      data[el.value] &&
-                      handleAddImageToSet({
-                        setId: slot?._id,
-                        setIndex: slotIndex,
-                        uri: data[el.value],
-                        type: el.value,
-                      });
+      const renderPreviews = (onlyPreviews ? formAddImageSetTabs.slice(0, 1) : formAddImageSetTabs).map(
+        (el, imgIndex) => {
+          return (
+            <ImagePreviewSmall
+              key={`small-prev_${imgIndex}`}
+              src={slot[el?.value as never]}
+              title={el.label ?? ''}
+              onEditPress={() => {
+                modalS.open({
+                  ModalChildren: AddImageSetModal,
+                  modalChildrenProps: {
+                    defaultState: slot,
+                    type: el.value,
+                    onSubmit: data => {
+                      el.value &&
+                        data[el.value] &&
+                        handleAddImageToSet({
+                          setId: slot?._id,
+                          setIndex: slotIndex,
+                          uri: data[el.value],
+                          type: el.value,
+                        });
+                    },
                   },
-                },
-              });
-            }}
-            onDeletePress={() => {
-              handleRemoveImageFromSet({ setId: '', setIndex: slotIndex, type: el.value });
-            }}
-          />
-        );
-      });
+                });
+              }}
+              onDeletePress={() => {
+                handleRemoveImageFromSet({ setId: '', setIndex: slotIndex, type: el.value });
+              }}
+            />
+          );
+        }
+      );
 
       return (
         <ImagesSetBox
           key={`images-set_${slot?._id || slotIndex}`}
-          gap={2}
+          gap={6}
           fxDirection={'row'}
-          fillWidth
-          overflow={'auto'}
+          maxWidth={'100%'}
+          overflow={'hidden'}
         >
-          {canEditOrder && (
+          {dataForRender?.length > 1 && canEditOrder && !onlyPreviews && (
             <SlotOrderChanger
               currentOrder={slot?.order}
               canMoveUp={(slot?.order ?? 0) > 1}
               onMoveUpPress={() => {
-                check.isNum(slot.order) && handleChangeOrder(slot.order, -1);
+                isNumber(slot.order) && handleChangeOrder(slot.order, -1);
               }}
               canMoveDown={(slot?.order ?? 0) < formData.length}
               onMoveDownPress={() => {
-                check.isNum(slot.order) && handleChangeOrder(slot.order, +1);
+                isNumber(slot.order) && handleChangeOrder(slot.order, +1);
               }}
             />
           )}
 
-          {renderPreviews}
+          <FlexBox overflow={'auto'} gap={6} fxDirection={'row'}>
+            {renderPreviews}
+          </FlexBox>
         </ImagesSetBox>
       );
     });
-  }, [canEditOrder, formData, handleAddImageToSet, handleChangeOrder, handleRemoveImageFromSet, modalS]);
+  }, [canEditOrder, formData, handleAddImageToSet, handleChangeOrder, handleRemoveImageFromSet, modalS, onlyPreviews]);
 
   useEffect(() => {
     if (initialData) {
@@ -216,7 +223,7 @@ const FormOfferImagesComponent: React.FC<FormOfferImagesComponentProps> = ({
   }, []);
 
   return (
-    <>
+    <FlexBox maxWidth={'100%'} overflow={'hidden'}>
       {renderHeader || (
         <FlexBox
           padding={'4px 8px'}
@@ -230,36 +237,26 @@ const FormOfferImagesComponent: React.FC<FormOfferImagesComponentProps> = ({
             {!hideLabel && t('Images')}
           </Text>
 
-          <AddImageSetButton type={'button'} onClick={onClose || handleAddNewSet}>
+          <ButtonIcon type={'button'} variant={'textExtraSmall'} onClick={onClose || handleAddNewSet}>
             {onClose ? t('Close') : t('Add')}
-          </AddImageSetButton>
+          </ButtonIcon>
         </FlexBox>
       )}
 
-      <FlexBox gap={2} padding={'8px 0'} style={contentContainerStyle}>
+      <FlexBox
+        gap={6}
+        padding={'8px 0'}
+        style={contentContainerStyle}
+        fxDirection={onlyPreviews ? 'row' : 'column'}
+        flexWrap={onlyPreviews ? 'wrap' : 'unset'}
+      >
         {renderImageSets}
       </FlexBox>
 
       {FooterComponent && <FooterComponent onAddNewImageSetPress={handleAddNewSet} />}
-    </>
+    </FlexBox>
   );
 };
-const AddImageSetButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: ${p => p.theme.accentColor.base};
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 2px 6px;
-
-  background-color: transparent;
-  border: 0;
-
-  cursor: pointer;
-`;
 
 const ImagesSetBox = styled(FlexBox)`
   &::-webkit-scrollbar {

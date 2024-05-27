@@ -41,10 +41,7 @@ export const OfferFormPropertiesArea = ({ onSubmit, onSuccess, disabled, offer }
 
   const handleSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
-
-    if (onSubmit) {
-      onSubmit(selectedIds);
-    } else if (currentOffer) {
+    if (currentOffer) {
       service.updateById({
         data: { _id: currentOffer?._id, updateCurrent: true, data: { properties: selectedIds } },
         onLoading: loaders.onLoading('properties'),
@@ -54,7 +51,7 @@ export const OfferFormPropertiesArea = ({ onSubmit, onSuccess, disabled, offer }
   };
 
   const canSubmit = useMemo(() => {
-    return initIds?.join(',') !== sortIds(selectedIds)?.join(',');
+    return !!selectedIds?.length && initIds?.join(',') !== sortIds(selectedIds)?.join(',');
   }, [selectedIds, initIds]);
 
   const propertiesList = useMemo(() => {

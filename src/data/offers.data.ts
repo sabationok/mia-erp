@@ -21,7 +21,7 @@ export const offersTableColumns: CellTittleProps<OfferEntity>[] = [
   {
     top: { name: t('label'), getData: rd => rd?.label },
     // bottom: { name: t('sku'), getData: rd => rd?.sku },
-    getImgPreview: pr => (pr.images ? pr.images[0]?.img_preview : undefined),
+    getImgPreview: pr => (pr.images ? pr.images?.[0]?.img_preview : undefined),
     width: '270px',
     action: 'dataWithAvatar',
   },
@@ -92,8 +92,8 @@ export const offersTableColumns: CellTittleProps<OfferEntity>[] = [
     action: 'valueByPath',
   },
   {
-    top: { name: 'Оновив', getData: rd => rd?.editor?.email },
-    bottom: { name: 'Автор', getData: rd => rd?.author?.email },
+    top: { name: 'Оновив', getData: rd => rd?.editor?.user?.email ?? '---' },
+    bottom: { name: 'Автор', getData: rd => rd?.author?.user?.email ?? '---' },
     width: '150px',
     action: 'valueByPath',
   },

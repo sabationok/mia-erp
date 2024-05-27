@@ -1,13 +1,13 @@
-import ModalForm, { ModalFormProps } from '../../ModalForm';
-import TableList, { ITableListProps } from '../../TableList/TableList';
+import ModalForm, { ModalFormProps } from '../ModalForm';
+import TableList, { ITableListProps } from '../TableList/TableList';
 import { useEffect, useMemo, useState } from 'react';
-import { PriceEntity, PriceListEntity } from '../../../types/price-management/price-management.types';
-import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
-import { usePriceListOverviewActionsCreator } from '../../../hooks/usePriceListOverviewActionsCreator.hook';
-import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { usePriceManagementSelector } from '../../../redux/selectors.store';
-import { FormCreatePriceProps } from '../../Forms/pricing/FormCreatePrice/FormCreatePrice';
-import { pricesColumns } from '../../../data/priceManagement.data';
+import { PriceEntity, PriceListEntity } from '../../types/price-management/price-management.types';
+import { UseAppFormSubmitOptions } from '../../hooks/useAppForm.hook';
+import { usePriceListOverviewActionsCreator } from '../../hooks/usePriceListOverviewActionsCreator.hook';
+import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import { usePriceManagementSelector } from '../../redux/selectors.store';
+import { FormCreatePriceProps } from '../Forms/pricing/FormCreatePrice/FormCreatePrice';
+import { pricesColumns } from '../../data/priceManagement.data';
 
 export interface PriceListOverviewProps extends Omit<ModalFormProps, 'onSubmit' | 'afterSubmit'> {
   createFormProps?: FormCreatePriceProps;

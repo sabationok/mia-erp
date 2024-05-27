@@ -103,7 +103,7 @@ const FormCreateCustomer: React.FC<FormCreateCustomerProps> = ({ defaultState, w
             </InputLabel>
 
             <FlexBox fxDirection={'row'} fillWidth gap={8} padding={'8px 0'}>
-              <ButtonIcon variant={'defOutlinedSmall'}>{t('Clear referrer')}</ButtonIcon>
+              <ButtonIcon variant={'defaultSmall'}>{t('Clear referrer')}</ButtonIcon>
               <ButtonIcon variant={'outlinedSmall'} flex={1}>
                 {t('Select referrer')}
               </ButtonIcon>

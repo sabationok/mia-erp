@@ -37,6 +37,7 @@ export interface FormCreatePriceAreaProps
 
 export const CreatePriceFormArea = ({ update, offer, defaultState }: FormCreatePriceAreaProps) => {
   const loaders = usePriceModalFormLoaders();
+  // ! const Offer = useCurrentOffer(offer);
 
   const service = useAppServiceProvider()[ServiceName.priceManagement];
   const offersSrv = useAppServiceProvider()[ServiceName.offers];
@@ -141,7 +142,7 @@ export const CreatePriceFormArea = ({ update, offer, defaultState }: FormCreateP
       <FlexBox padding={'0 0 8px'} flex={1} overflow={'auto'}>
         <FormPriceInputs
           form={priceForm}
-          handleBlur={(_name, callback) => {
+          handleOnBlur={(_name, callback) => {
             return ev => {
               callback && callback(ev);
               recalculateValues();

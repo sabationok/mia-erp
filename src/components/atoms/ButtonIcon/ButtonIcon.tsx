@@ -1,9 +1,10 @@
-import React, { memo } from 'react';
+import React, { CSSProperties, memo } from 'react';
 import sprite, { IconIdType } from 'img/sprite';
 import styled, { css, DefaultTheme, FlattenInterpolation, ThemeProps } from 'styled-components';
 import { Property } from 'csstype';
 import { AppLoaderSpiner } from '../AppLoaderSpiner';
 import { Keys } from '../../../types/utils.types';
+import FlexBox from '../FlexBox';
 
 type TextTransform = 'uppercase' | 'lowercase' | 'capitalize' | 'none';
 
@@ -22,17 +23,18 @@ interface ButtonIconStyleProps {
 }
 interface ButtonProps extends ButtonIconStyleProps {
   size?: string;
+  sizeType?: ButtonSize;
   variant: ButtonIconVariant;
   padding?: string;
   icon?: IconIdType;
   iconId?: string;
   iconSize?: string;
   isActive?: boolean;
-  iconStyles?: {};
+  iconStyles?: CSSProperties;
   endIcon?: IconIdType;
   endIconId?: string;
   endIconSize?: string;
-  endIconStyles?: {};
+  endIconStyles?: CSSProperties;
   textTransform?: TextTransform;
   fontWeight?: 400 | 500 | 600 | 700 | 900;
   isLoading?: boolean;
@@ -89,8 +91,9 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
         type,
         onClick,
         className: 'buttonIcon',
+        isLoading: isLoading,
         ...props,
-        disabled: isLoading || props?.disabled,
+        disabled: props?.disabled,
       }}
     >
       {(iconId || icon) && (
@@ -98,8 +101,9 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
           <use href={`${sprite}#icon-${icon || iconId}`} />
         </SvgIcon>
       )}
-
-      {isLoading ? <AppLoaderSpiner strokeWidth={3} size={18} /> : variant && !variant.includes('Icon') && children}
+      {variant && !variant.includes('Icon') && children}
+      {/*{children}*/}
+      <ButtonLoader isLoading={isLoading} variant={variant} size={size} />
 
       {(endIconId || endIcon) && (
         <SvgIcon className="endIcon" style={endIconStyle}>
@@ -110,17 +114,25 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
   );
 };
 
+const ButtonIsLoadingCss = css`
+  pointer-events: none;
+  &[disabled] {
+    opacity: 1;
+  }
+`;
+
 const StyledButtonIcon = styled.button<ButtonIconProps>`
   flex: ${p => p?.flex};
 
   display: flex;
+  position: relative;
   align-items: ${p => p?.alignItems || 'center'};
   justify-content: ${p => p?.justifyContent || 'center'};
   gap: ${p => p?.gap || 0};
 
   text-align: center;
-  font-size: 12px;
-  font-weight: ${({ fontWeight = 500 }) => fontWeight};
+  font-size: 13px;
+  font-weight: ${({ fontWeight = 600 }) => fontWeight};
   font-family: inherit;
   letter-spacing: 0.05em;
   color: inherit;
@@ -140,6 +152,7 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
   margin: ${p => p?.margin || 0};
 
   ${({ variant = 'def' }) => getVariant(variant)}
+  ${({ sizeType }) => getSize(sizeType)}
 
   &[disabled] {
     pointer-events: none;
@@ -150,9 +163,11 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
   }
   padding: ${p => p.padding};
 
+  ${p => (p.isLoading ? ButtonIsLoadingCss : '')};
+
   @media screen and (max-width: 480px) {
     //text-transform: uppercase;
-    font-size: 16px;
+    font-size: 14px;
     //height: max-content;
   }
 `;
@@ -177,40 +192,13 @@ const def = css`
 `;
 const defNoEffects = css`
   background-color: ${({ theme }) => theme.globals.defaultBtnBckgrndColor.def};
+  &:hover,
+  &:active,
+  &:focus {
+    background: ${({ theme }) => theme.globals.defaultBtnBckgrndColor.def};
+  }
 `;
-// const pointer = css`
-//   background-color: ${({ theme }) => theme.defaultBtnBckgrndColor.def};
 
-//   position: relative;
-//   fill: ${({ theme }) => theme.colorLight};
-
-//   border-radius: 0;
-//   border-width: 0;
-//   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
-//   &::before {
-//     content: '';
-//     position: absolute;
-//     top: 50%;
-//     left: 0;
-
-//     transform: translateY(-50%);
-
-//     width: 3px;
-//     height: 50%;
-
-//     background-color: transparent;
-//     transition: height ${({ theme }) => theme.globals.timingFunctionLong};
-//   }
-//   ${def}
-//   &:hover {
-//     &::before {
-//       height: 100%;
-//       background-color: ${({ theme }) => theme.accentColor.base};
-//     }
-//   }
-//   &:active {
-//   }
-// `;
 const pointerLeft = css`
   position: relative;
 
@@ -285,25 +273,28 @@ const pointerBottom = css`
 `;
 const extraSmall = css`
   padding: 4px 8px;
-
   min-width: 40px;
   height: 20px;
 `;
 const small = css`
   padding: 6px 12px;
-
   min-width: 50px;
-  height: 28px;
+  height: 26px;
+`;
+const middle = css`
+  padding: 6px 16px;
+  min-width: 80px;
+  height: 32px;
 `;
 const large = css`
   padding: 6px 16px;
-
   min-width: 100px;
-  height: 36px;
+  height: 42px;
 `;
 const icon = css`
   min-width: 26px;
-  height: 26px;
+  min-height: 26px;
+  width: fit-content;
 `;
 const outlined = css`
   color: ${({ theme }) => theme.accentColor.base};
@@ -321,12 +312,13 @@ const outlined = css`
     color: ${({ theme }) => theme.accentColor.pressed};
     fill: ${({ theme }) => theme.accentColor.pressed};
     border: 1px solid ${({ theme }) => theme.accentColor.pressed};
-    background-color: var(--ligthOrange);
-    box-shadow: var(--btnShadow_active);
+    //background-color: var(--ligthOrange);
+    //box-shadow: var(--btnShadow_active);
   }
 
   &[disabled] {
     border-color: ${({ theme }) => theme.field.backgroundColor};
+    pointer-events: none;
   }
 `;
 const outlinedExtraSmall = css`
@@ -337,9 +329,9 @@ const outlinedSmall = css`
   ${small};
   ${outlined};
 `;
-const outlinedLarge = css`
+const outlinedMiddle = css`
   ${outlined};
-  ${large};
+  ${middle};
 `;
 const filled = css`
   color: ${({ theme }) => theme.colorLight};
@@ -364,8 +356,8 @@ const filledSmall = css`
   ${small}
   ${filled}
 `;
-const filledLarge = css`
-  ${large}
+const filledMiddle = css`
+  ${middle}
   ${filled}
 `;
 const onlyIconFilled = css`
@@ -437,9 +429,9 @@ const textSmall = css`
   ${text};
   ${small};
 `;
-const textLarge = css`
+const textMiddle = css`
   ${text};
-  ${large};
+  ${middle};
 `;
 const defOutlined = css`
   ${def};
@@ -452,15 +444,19 @@ const defOutlined = css`
   }
 
   &:active {
-    background-color: var(--ligthOrange);
-    box-shadow: var(--btnShadow_active);
+    //background-color: var(--ligthOrange);
+    //box-shadow: var(--btnShadow_active);
   }
 `;
-const defOutlinedSmall = css`
+const defaultSmall = css`
   ${defOutlined};
   ${small};
 `;
-const defOutlinedLarge = css`
+const defaultMiddle = css`
+  ${defOutlined};
+  ${middle};
+`;
+const defaultLarge = css`
   ${defOutlined};
   ${large};
 `;
@@ -468,31 +464,74 @@ const defOutlinedLarge = css`
 const variants = {
   def,
   defNoEffects,
+
+  defaultSmall: defaultSmall,
+  defaultMiddle: defaultMiddle,
+  defaultLarge,
+
   pointerLeft,
-  outlinedLarge,
-  filledLarge,
+
+  outlinedMiddle,
   outlinedSmall,
   outlinedExtraSmall,
+
+  filledMiddle,
   filledSmall,
   underlinedText,
+
   textExtraSmall,
   textSmall,
-  textLarge,
+  textMiddle: textMiddle,
 
   onlyIcon,
   onlyIconNoEffects,
   onlyIconFilled,
   onlyIconOutlined,
 
-  defOutlinedSmall,
-  defOutlinedLarge,
   pointerBottom,
 };
 
+const buttonSizeCss = {
+  extraSmall,
+  small,
+  middle,
+  large,
+};
+
 export type ButtonIconVariant = Keys<typeof variants>;
+export type ButtonSize = Keys<typeof buttonSizeCss>;
 
 function getVariant(variant?: ButtonIconVariant): FlattenInterpolation<ThemeProps<DefaultTheme>> {
-  return variant ? variants[variant] : variants.def;
+  return variant ? variants?.[variant] : variants.def;
 }
+
+function getSize(size?: ButtonSize | null): FlattenInterpolation<ThemeProps<DefaultTheme>> | undefined {
+  return size ? buttonSizeCss?.[size] : undefined;
+}
+
+const ButtonLoader = ({
+  isLoading,
+  size,
+}: {
+  variant?: ButtonIconProps['variant'];
+  isLoading?: ButtonIconProps['isLoading'];
+  size?: ButtonIconProps['size'];
+}) => {
+  const _size = isNaN(Number(size?.replace('px', ''))) ? 18 : Number(size?.replace('px', '')) * 0.6;
+  return isLoading ? (
+    <LoaderBox fillHeight fillWidth>
+      <AppLoaderSpiner strokeWidth={3} size={_size ?? 18} />
+    </LoaderBox>
+  ) : null;
+};
+const LoaderBox = styled(FlexBox)`
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: ${p => p.theme.backdropColor}; // backdropColorDarkExtraLight
+`;
 
 export default memo(ButtonIcon);

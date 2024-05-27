@@ -6,7 +6,7 @@ import { ITableListProps } from '../../../TableList/tableTypes.types';
 import TableList from '../../../TableList/TableList';
 import { AppQueryParams, createApiCall, OffersApi, WarehousesApi } from '../../../../api';
 import { t } from '../../../../lang';
-import { enumToFilterOptions } from '../../../../utils/fabrics';
+import { createTableTitlesFromProperties, enumToFilterOptions, getIdRef, useStepsHandler } from '../../../../utils';
 import TabSelector from '../../../atoms/TabSelector';
 import { IVariationTableData } from '../../../../types/offers/variations.types';
 import { PriceEntity } from '../../../../types/price-management/price-management.types';
@@ -15,18 +15,15 @@ import { ModalHeader } from '../../../atoms';
 import FlexBox from '../../../atoms/FlexBox';
 import StepsController from '../../components/StepsController';
 import { useAppForm } from '../../../../hooks';
-import { createTableTitlesFromProperties } from '../../../../utils';
 import { usePropertiesSelector } from '../../../../redux/selectors.store';
 import VariationsApi from '../../../../api/variations.api';
 import { transformVariationTableData } from '../../../../utils/tables';
-import { getIdRef } from '../../../../utils/data-transform';
-import { IOrderTempSlot } from '../../../../types/orders/orders.types';
 import { IWarehouse, WarehouseItemEntity } from '../../../../types/warehousing/warehouses.types';
 import { warehouseBatchColumns } from '../../../../data/warehauses.data';
-import { useStepsHandler } from '../../../../utils/createStepChecker';
 import _ from 'lodash';
 import { nanoid } from '@reduxjs/toolkit';
-import { offersTableColumns } from '../../../../data/offers.data';
+import { offersTableColumns } from '../../../../data';
+import { IOrderTempSlot } from '../../../../types/orders/order-slot.types';
 
 export interface FormCreateOrderSlotProps
   extends Omit<ModalFormProps<FormCreateOrderSlotSteps, any, FormCreateOrderSlotFormData>, 'onSubmit' | 'onSelect'> {
@@ -101,9 +98,8 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
     [formData?.product, products, setFormValue, setNextStep, setValue]
   );
   const variationTableTitles = useMemo(() => {
-    const template = templates.find(t => t._id === formData?.product?.template?._id);
-    return createTableTitlesFromProperties(template);
-  }, [templates, formData]);
+    return createTableTitlesFromProperties(formData?.variation?.properties);
+  }, [formData]);
 
   const variationsTableConfig = useMemo(
     (): ITableListProps<IVariationTableData> => ({
@@ -204,7 +200,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
     if (stepCheck(FormCreateOrderSlotSteps.variation) && product) {
       return createApiCall(
         {
-          data: { offerId: getIdRef(product) },
+          data: { offerId: product?._id },
           onSuccess: d => {
             setVariations(d.map(v => transformVariationTableData(v)));
           },

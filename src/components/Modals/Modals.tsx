@@ -1,5 +1,5 @@
 import ModalForm, { ModalFormProps } from '../ModalForm';
-import PriceListOverview, { PriceListOverviewProps } from './Overviews/PriceListOverview';
+import PriceListOverview, { PriceListOverviewProps } from './PriceListOverview';
 import OfferOverview, { ProductOverviewProps } from '../Overviews/offer/OfferOverview';
 import SelectProductModal, { SelectProductModalProps } from './SelectProductModal';
 import AppFilter, { AppFilterProps } from '../Filter/AppFilter';

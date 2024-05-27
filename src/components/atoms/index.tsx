@@ -118,7 +118,7 @@ export const OverlayFooter = ({
         )}
 
         <ButtonIcon
-          variant={'filledLarge'}
+          variant={'filledMiddle'}
           flex={1}
           type={'submit'}
           style={{ padding: '0 12px' }}

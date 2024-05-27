@@ -25,7 +25,7 @@ export interface OfferVariationPropertySelectorProps {
 }
 export const OfferVariationPropertySelector = ({
   item,
-  selectedIds = [],
+  selectedIds,
   onSelect,
 }: OfferVariationPropertySelectorProps) => {
   const state = useProductsSelector();
@@ -45,8 +45,7 @@ export const OfferVariationPropertySelector = ({
     }
 
     return _valuesList?.map(value => {
-      const isSelected = selectedIds.includes(value._id);
-
+      const isSelected = selectedIds?.includes(value._id);
       return (
         <RenderPropertyValue
           key={`prop-value-${value._id}`}

@@ -58,7 +58,7 @@ const ModalContainer = styled.div<
   height: ${({ height = '', fillHeight, fitContentV }) =>
     (fillHeight && '90vh') || (fitContentV && 'max-content') || height};
 
-  min-width: 250px;
+  min-width: 230px;
   max-width: 100%;
 
   //overflow: hidden;

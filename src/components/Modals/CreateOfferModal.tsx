@@ -55,7 +55,7 @@ const CreateOfferModal: React.FC<CreateOfferModalProps> = ({ onClose, _id }) => 
       }
     >
       <LoadersProvider value={loaders}>
-        <FlexBox padding={'0 8px 16px'}>
+        <FlexBox padding={'0 8px 16px'} overflow={'hidden'}>
           <OfferBaseInfoFormArea
             defaultValues={formData}
             onSuccess={data => {
