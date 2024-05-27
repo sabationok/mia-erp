@@ -3,7 +3,7 @@ import { useTable } from './TableList';
 
 import styled from 'styled-components';
 import { forwardRef, useMemo } from 'react';
-import { IBase } from '../../redux/global.types';
+import { IBase } from '../../redux/app-redux.types';
 
 const TableBody: React.ForwardRefRenderFunction<any, any> = (props, ref) => {
   const { tableData, rowRef, selectedRow, onRowClick, selectedRows = [] } = useTable();

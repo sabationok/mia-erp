@@ -6,7 +6,7 @@ import {
   IWarehouseDocReqData,
   IWarehouseReqData,
 } from '../types/warehousing/warehouses.types';
-import { AppResponse, OnlyUUID } from '../redux/global.types';
+import { AppResponse, OnlyUUID } from '../redux/app-redux.types';
 import { ClientApi } from './client.api';
 
 export class WarehousesApi {

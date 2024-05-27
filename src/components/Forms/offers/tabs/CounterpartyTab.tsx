@@ -1,4 +1,4 @@
-import { OnlyUUID } from '../../../../redux/global.types';
+import { OnlyUUID } from '../../../../redux/app-redux.types';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { useDirectorySelector } from '../../../../redux/selectors.store';
 import { useMemo, useState } from 'react';

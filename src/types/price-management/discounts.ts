@@ -17,10 +17,15 @@ export enum DiscountValueTypeEnum {
   percentage = 'percentage',
 }
 
+export enum DiscountThresholdTypeEnum {
+  amount = 'amount',
+  quantity = 'quantity',
+}
+
 export enum PriceDiscountVolumeType {
-  cart = 'cart',
   slot = 'slot',
   order = 'order',
+  cart = 'cart',
 }
 export enum DiscountKeyEnum {
   dateFrom = 'dateFrom',
@@ -43,6 +48,7 @@ interface IDiscountBase extends HasType<PriceDiscountType>, HasBaseCmsConfigs {
 
   volumeType?: PriceDiscountVolumeType;
   threshold?: number;
+  thresholdType?: DiscountThresholdTypeEnum;
 
   valueType?: DiscountValueTypeEnum;
   value?: string;
@@ -54,6 +60,7 @@ export interface PriceDiscountEntity extends IBase, IDiscountBase {
   offers?: OnlyUUID[];
   orders?: OnlyUUID[];
   slots?: OnlyUUID[];
+
   priceLists?: OnlyUUID[];
   prices?: OnlyUUID[];
 
@@ -61,9 +68,9 @@ export interface PriceDiscountEntity extends IBase, IDiscountBase {
 }
 
 export interface PriceDiscountDto extends PriceDiscountRecord {
-  price: OnlyUUID;
-  priceId: UUID;
-  offer?: OnlyUUID;
+  pricesIds?: UUID[];
+  priceId?: UUID[];
+  offersIds?: UUID[];
 
   cmsConfigs?: CmsBaseConfigsDto;
 }

@@ -19,7 +19,7 @@ import { createApiCall, PriceManagementApi } from '../../../api';
 import { getIdRef } from '../../../utils/data-transform';
 import { OnRowClickHandler } from '../../TableList/tableTypes.types';
 import { useForm } from 'react-hook-form';
-import { OnlyUUID } from '../../../redux/global.types';
+import { OnlyUUID } from '../../../redux/app-redux.types';
 
 export interface FormCreateProductInventoryProps extends Omit<ModalFormProps<IProductInventoryFormData>, 'onSubmit'> {
   product?: OfferEntity;

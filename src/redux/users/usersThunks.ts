@@ -3,7 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import { AsyncThunkConfig } from 'redux/reduxTypes.types';
 import { ThunkPayload } from '../store.store';
-import { AppResponse } from '../global.types';
+import { AppResponse } from '../app-redux.types';
 import { ClientApi } from '../../api';
 
 const USERS_API_BASENAME = '/users';

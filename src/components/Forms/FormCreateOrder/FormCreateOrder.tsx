@@ -5,7 +5,7 @@ import { useAppForm } from '../../../hooks';
 import { useCallback, useMemo, useState } from 'react';
 import TabSelector from '../../atoms/TabSelector';
 import OrderSlotsList from './components/OrderSlotsList';
-import { OnlyUUID } from '../../../redux/global.types';
+import { OnlyUUID } from '../../../redux/app-redux.types';
 import { createStepsChecker, enumToFilterOptions } from '../../../utils';
 import styled from 'styled-components';
 

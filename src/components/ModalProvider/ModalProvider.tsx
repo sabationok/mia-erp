@@ -35,24 +35,31 @@ export type OpenModalReturnType =
   | undefined;
 
 export type CreatedModal = {
-  onClose: () => void;
-  id: string;
+  onClose?: () => void;
+  id?: string;
 };
-export type ModalCreator<M extends Modals = any, P = any, S = any> = (
-  modal: CreatedModal
-) => IModalRenderItemParams<M, P, S>;
+// export type ModalCreator<M extends Modals = any, P = any, S = any> = (
+//   modal: CreatedModal
+// ) => IModalRenderItemParams<M, P, S>;
 
 type HandleOpenModalAsyncType = <M extends Modals = any, P = any, S = any>(
   args: IModalRenderItemParams<M, P, S>,
   getPropsAsync?: () => Promise<P>
 ) => Promise<OpenModalReturnType | undefined>;
 
-type OpenModalHandler = <M extends Modals = any, P = any, S = any>(
+export type OpenModalHandler = <M extends Modals = any, P = any, S = any>(
   args: IModalRenderItemParams<M, P, S>
 ) => OpenModalReturnType;
 
+export type ModalCreator = <Props = any, S = any>(
+  Component: React.FC<Props>,
+  props?: Omit<Props, keyof CreatedModal>,
+  settings?: IModalSettings & S
+) => OpenModalReturnType;
+
 export interface IModalProviderContext {
-  create: <M extends Modals = any, S = any>(creator: ModalCreator<M, ModalChildrenProps[M], S>) => boolean;
+  create: ModalCreator;
+
   openModal: OpenModalHandler;
   open: OpenModalHandler;
   handleCloseModal: (id?: string) => void;
@@ -112,36 +119,24 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
     [onClose]
   );
 
-  const createModal = useCallback(
-    <M extends Modals = any, P = any, S = any>(modalCreator: ModalCreator<M, P, S>) => {
-      if (typeof modalCreator === 'function') {
-        let id = nanoid(8);
+  const createModal: ModalCreator = useCallback(
+    <P = any, S = any>(Component: React.FC<P>, props?: Omit<P, keyof CreatedModal>, settings?: S) => {
+      let id = nanoid(8);
 
-        const { ModalChildren, modalChildrenProps, settings, Modal, props } = modalCreator({
-          id,
-          onClose: () => onClose(id),
-        });
-
-        try {
-          if (ModalChildren && (typeof ModalChildren === 'function' || typeof ModalChildren === 'object')) {
-            setModalContent(prev => [...prev, { ModalChildren, modalChildrenProps, settings, id }]);
-            return true;
-          }
-          if (Modal && ModalChildrenMap[Modal]) {
-            setModalContent(prev => [
-              ...prev,
-              { ModalChildren: ModalChildrenMap[Modal], modalChildrenProps: props, settings, id },
-            ]);
-            return true;
-          }
-          console.error('Add modal to stack error');
-          toast.error(`Add modal to stack error:\n >>> ${Modal} <<<`);
-        } catch (e) {
-          console.log(e);
-          return false;
+      try {
+        if (Component && (typeof Component === 'function' || typeof Component === 'object')) {
+          setModalContent(prev => [...prev, { ModalChildren: Component, props, settings, id }]);
+          return {
+            id,
+            onClose: () => onClose(id),
+          };
         }
+        console.error('Add modal to stack error');
+        toast.error(`Add modal to stack error:\n >>> ${Component} <<<`);
+      } catch (e) {
+        console.log(e);
+        return undefined;
       }
-      return true;
     },
     [onClose]
   );

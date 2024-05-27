@@ -6,7 +6,7 @@ import {
 } from 'types/finances/transactions.types';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
-import { AppResponse } from '../redux/global.types';
+import { AppResponse } from '../redux/app-redux.types';
 import { BankAccountReqData, IBankAccount } from '../types/finances/bank-accounts.types';
 import { ClientApi } from './client.api';
 

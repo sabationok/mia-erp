@@ -2,7 +2,7 @@ import { TableActionCreator } from '../components/TableList/tableTypes.types';
 import { PriceEntity } from '../types/price-management/price-management.types';
 import { useModalService } from '../components/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
-import { OnlyUUID } from '../redux/global.types';
+import { OnlyUUID } from '../redux/app-redux.types';
 import FormCreatePrice from '../components/Forms/pricing/FormCreatePrice/FormCreatePrice';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { ToastService } from '../services';

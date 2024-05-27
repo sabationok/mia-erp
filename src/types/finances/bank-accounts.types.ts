@@ -1,4 +1,4 @@
-import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/global.types';
+import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/app-redux.types';
 import { HasCompany, HasLabel, HasType, MaybeNull } from '../utils.types';
 import { IInvoicingMethod } from '../integrations.types';
 

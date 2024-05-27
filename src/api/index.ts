@@ -1,6 +1,6 @@
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { FilterReturnDataType } from '../components/Filter/AppFilter';
-import { OnlyUUID, UUID } from '../redux/global.types';
+import { OnlyUUID, UUID } from '../redux/app-redux.types';
 import { AppDate, ArrayOfUUID, Values } from '../types/utils.types';
 
 export * from './client.api';
@@ -75,6 +75,8 @@ export enum BaseQueryKeyEnum {
   shipment = 'shipment',
   service = 'service',
   offer = 'offer',
+  discount = 'discount',
+  role = 'role',
 }
 export type BaseQueryKeyType = Values<typeof BaseQueryKeyEnum>;
 export type IdQueryKeyType = `${BaseQueryKeyType}Id`;
@@ -96,6 +98,7 @@ export interface PeriodQuery {
   timeTo?: AppDate;
 }
 export interface AppQueryParams<Type = any> extends AppQueries<Type>, PaginationQuery, PeriodQuery {
+  ids?: string;
   dirType?: ApiDirType;
   isArchived?: boolean;
   withDeleted?: boolean;

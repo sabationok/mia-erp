@@ -1,4 +1,4 @@
-import { AppResponse } from '../../redux/global.types';
+import { AppResponse } from '../../redux/app-redux.types';
 import { AmountAndPercentage } from '../price-management/price-management.types';
 import { ICustomerBase } from '../customers.types';
 import { AppQueryParams } from '../../api';

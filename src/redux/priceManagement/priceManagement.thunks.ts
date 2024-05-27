@@ -9,7 +9,7 @@ import {
 import { ThunkPayload } from '../store.store';
 import { apiCall, AppQueryParams, GetOnePriceQuery, PriceManagementApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
-import { OnlyUUID } from '../global.types';
+import { OnlyUUID } from '../app-redux.types';
 import { isAxiosError } from 'axios';
 import { GetAllPricesQuery } from '../../api/priceManagement.api';
 
@@ -34,8 +34,12 @@ export const getPriceThunk = createAsyncThunk<
   arg.onLoading && arg.onLoading(true);
   try {
     const res = await PriceManagementApi.prices.getOne(undefined, arg.data?.params);
+
+    arg.onSuccess && arg.onSuccess(res.data?.data);
+
     return { ...arg.data, data: res.data?.data };
   } catch (e) {
+    arg.onError && arg.onError(e);
     return thunkAPI.rejectWithValue(axiosErrorCheck(e));
   } finally {
     arg.onLoading && arg.onLoading(false);

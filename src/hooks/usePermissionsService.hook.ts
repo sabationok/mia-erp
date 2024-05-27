@@ -22,7 +22,7 @@ import {
   PermissionRecipientEnum,
 } from '../types/permissions.types';
 import { useMemo } from 'react';
-import { CompanyQueryType, ServiceDispatcherAsync } from 'redux/global.types';
+import { CompanyQueryType, ServiceDispatcherAsync } from 'redux/app-redux.types';
 import { clearCurrentPermission } from '../redux/permissions/permissions.action';
 import { defaultThunkPayload } from '../utils/fabrics';
 import { CompanyEntity, ICompanyForReq, ICompanyReqData } from '../types/companies.types';

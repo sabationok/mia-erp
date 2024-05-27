@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import styled from 'styled-components';
 import { CellActionsName } from '../TebleCells';
 import { IconIdType } from '../../../img/sprite/iconId.data';
-import { IBase } from '../../../redux/global.types';
+import { IBase } from '../../../redux/app-redux.types';
 import { MaybeNull } from '../../../types/utils.types';
 
 export type CellTitleContent<DataType = any, DataPath extends string = any> = {

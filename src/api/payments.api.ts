@@ -1,6 +1,6 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
-import { AppResponse } from '../redux/global.types';
+import { AppResponse } from '../redux/app-redux.types';
 import { IPayment } from '../types/payments.types';
 import { IPaymentMethod, IPaymentMethodReqData } from '../types/integrations.types';
 import { ClientApi } from './client.api';

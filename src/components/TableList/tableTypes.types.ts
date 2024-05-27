@@ -60,7 +60,7 @@ export interface ITableListProps<TDataType = any> {
   tableTitles?: CellTittleProps<TDataType>[];
   tableData?: TDataType[];
   selectedRow?: Partial<TDataType>;
-  actionsCreator?: TableActionCreator<ITableListContext<TDataType>>;
+  actionsCreator?: TableActionCreator<TDataType>;
   transformData?: <T = any>(data: TDataType) => T;
 
   tableSearchParams?: SelectItem[];
@@ -119,4 +119,6 @@ export type ITableAction<N extends string = any> =
     }
   | { separator?: boolean };
 
-export type TableActionCreator<CTXType = any, N extends string = any> = (ctx: CTXType) => ITableAction<N>[];
+export type TableActionCreator<DataType = any, N extends string = any> = (
+  ctx: ITableListContext<DataType>
+) => ITableAction<N>[];

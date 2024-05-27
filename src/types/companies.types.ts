@@ -1,4 +1,4 @@
-import { AddressDto, AppResponse, ContactsDto, IBase, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
+import { AddressDto, AppResponse, ContactsDto, IBase, IFormDataValueWithID, OnlyUUID } from '../redux/app-redux.types';
 import { PermissionEntity } from './permissions.types';
 import { IUserBase } from './auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';

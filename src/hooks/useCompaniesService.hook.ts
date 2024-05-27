@@ -3,7 +3,7 @@ import { PermissionEntity } from '../types/permissions.types';
 import { useMemo } from 'react';
 import { CompaniesApi, createApiCall } from '../api';
 import { defaultApiCallPayload, defaultThunkPayload } from '../utils';
-import { ServiceApiCaller, ServiceDispatcherAsync } from '../redux/global.types';
+import { ServiceApiCaller, ServiceDispatcherAsync } from '../redux/app-redux.types';
 import { useAppDispatch } from '../redux/store.store';
 import { getCompanyByIdThunk, updateCompanyByIdThunk } from '../redux/companies/companies.thunks';
 

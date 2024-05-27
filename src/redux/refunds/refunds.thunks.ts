@@ -3,7 +3,7 @@ import { ThunkPayload } from '../store.store';
 import { AppQueryParams, createApiCall, RefundsApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
 import { isAxiosError } from 'axios';
-import { OnlyUUID } from '../global.types';
+import { OnlyUUID } from '../app-redux.types';
 import { IRefund, IRefundReqData } from './refunds.types';
 
 export const getAllRefundsThunk = createAsyncThunk<

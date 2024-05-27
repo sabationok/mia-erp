@@ -1,4 +1,4 @@
-import { OnlyUUID } from '../../../../redux/global.types';
+import { OnlyUUID } from '../../../../redux/app-redux.types';
 
 export interface OfferOverviewAddsTabProps {
   onSelect?: (item: OnlyUUID) => void;

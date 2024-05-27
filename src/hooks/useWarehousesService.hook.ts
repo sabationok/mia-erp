@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { OnlyUUID, ServiceApiCaller, ServiceDispatcherAsync } from '../redux/global.types';
+import { OnlyUUID, ServiceApiCaller, ServiceDispatcherAsync } from '../redux/app-redux.types';
 import { AppQueryParams } from '../api';
 import {
   WarehouseItemEntity,

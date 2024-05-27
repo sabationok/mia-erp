@@ -5,7 +5,8 @@ import * as thunks from './priceManagement.thunks';
 import { PartialRecord, UUID } from '../../types/utils.types';
 import { omit } from 'lodash';
 import { PriceDiscountEntity } from '../../types/price-management/discounts';
-import { getIdFromRef } from 'utils';
+import { onCreateDiscountMather, onGetDiscountsMatcher } from './discounts/discounts.matchers';
+import { Action } from '../store.store';
 
 export interface PricesState {
   lists: PriceListEntity[];
@@ -17,6 +18,7 @@ export interface PricesState {
   keysMap: PartialRecord<UUID, UUID[]>;
 
   discounts: {
+    list: PriceDiscountEntity[];
     dataMap: PartialRecord<UUID, PriceDiscountEntity>;
     keysMap: PartialRecord<UUID, UUID[]>;
   };
@@ -26,12 +28,13 @@ const initialState: PricesState = {
   isLoading: false,
   error: null,
   lists: [],
-  currentRoot: null,
+  // currentRoot: null,
   filteredLists: [],
   dataMap: {},
   keysMap: {},
 
   discounts: {
+    list: [],
     keysMap: {},
     dataMap: {},
   },
@@ -109,38 +112,66 @@ export const priceManagementSlice = createSlice({
             discounts = discounts.concat(price.discounts);
           }
         });
-
-        if (discounts?.length) {
-          discounts.forEach(item => {
-            ManageDiscountsStateMap(s, { data: item });
-          });
-        }
       })
       .addCase(thunks.deletePriceFromListThunk.fulfilled, (s, a) => {
         ManagePricesStateMap(s, { removeId: a.payload?.data?.priceId });
       })
       .addCase(thunks.updatePriceThunk.fulfilled, (s, a) => {
         ManagePricesStateMap(s, { data: a.payload.data });
-      }),
-});
+      })
+      .addMatcher(
+        onGetDiscountsMatcher,
+        (st, a: Action<{ data: PriceDiscountEntity[]; params?: { priceId?: string } }>) => {
+          console.warn('onGetDiscountsCase  =======>>>>>>>>>');
+          console.log(a);
 
+          const priceId = a.payload.params?.priceId;
+          if (priceId && st.dataMap[priceId]) {
+            const current = st.dataMap[priceId];
+            if (current) {
+              current.discounts = a.payload.data;
+              st.dataMap[priceId] = current;
+            }
+          }
+        }
+      )
+      .addMatcher(
+        onCreateDiscountMather,
+        (st, a: Action<{ data: PriceDiscountEntity; params?: { priceId?: string } }>) => {
+          const priceId = a.payload.params?.priceId;
+          if (priceId && st.dataMap[priceId]) {
+            const current = st.dataMap[priceId];
+            if (current) {
+              current.discounts = [a.payload.data, ...(current?.discounts ?? [])];
+
+              st.dataMap[priceId] = current;
+            }
+          }
+        }
+      ),
+});
 function ManagePricesStateMap(
   st: PricesState,
   input: { data?: PriceEntity; removeId?: string },
-  options?: { refresh?: boolean; isForList?: boolean }
+  options?: { refresh?: boolean; isForList?: boolean; setDiscounts?: boolean }
 ) {
   if (input.data) {
     const itemId = input.data?._id;
 
-    st.dataMap[itemId] = options?.refresh ? input.data : { ...st.dataMap?.[itemId], ...input.data };
-    const offerId = input?.data?.offer?._id;
-    const variationId = input?.data?.variation?._id;
+    st.dataMap[itemId] = options?.refresh
+      ? input.data
+      : { ...st.dataMap?.[itemId], ...input.data, discounts: input.data?.discounts };
 
-    if (offerId) {
-      st.keysMap[offerId] = Array.from(new Set(...(st.keysMap[offerId] ?? [])).add(itemId));
-    }
-    if (variationId) {
-      st.keysMap[variationId] = Array.from(new Set(...(st.keysMap[variationId] ?? [])).add(itemId));
+    const current = st.dataMap?.[itemId];
+
+    for (const idKey of [current?.offer?._id, current?.variation?._id]) {
+      if (idKey) {
+        const idsSet = new Set(st.discounts.keysMap?.[idKey]);
+        if (!idsSet?.has(itemId)) {
+          idsSet.add(itemId);
+          st.discounts.keysMap[idKey] = Array.from(idsSet);
+        }
+      }
     }
   } else if (input?.removeId) {
     const itemId = input?.removeId;
@@ -148,48 +179,12 @@ function ManagePricesStateMap(
 
     st.dataMap = omit(st.dataMap, itemId);
 
-    const offerId = current?.offer?._id;
-    const variationId = current?.variation?._id;
-
-    if (offerId) {
-      const idsSet = new Set(...(st.keysMap[offerId] ?? []));
-      idsSet.delete(itemId);
-      st.keysMap[offerId] = Array.from(idsSet);
-    }
-    if (variationId) {
-      const idsSet = new Set(...(st.keysMap[variationId] ?? []));
-      idsSet.delete(itemId);
-      st.keysMap[variationId] = Array.from(idsSet);
-    }
-  }
-}
-
-function idsFromRefs<Ref extends { [key in '_id']: string }>(refs: Ref[]): string[] {
-  const ids: string[] = [];
-  for (const ref of refs) {
-    const id = getIdFromRef(ref);
-    if (id) ids.push(id);
-  }
-  return ids;
-}
-function ManageDiscountsStateMap(
-  st: PricesState,
-  input: { data?: PriceDiscountEntity; removeId?: string },
-  options?: { refresh?: boolean; isForList?: boolean }
-) {
-  if (input.data) {
-    const itemId = input.data?._id;
-
-    st.discounts.dataMap[itemId] = options?.refresh ? input.data : { ...st.discounts.dataMap?.[itemId], ...input.data };
-
-    const priceIdKeys = input?.data?.prices?.length ? idsFromRefs(input?.data?.prices) : [];
-    const orderIdKeys = input?.data?.offers?.length ? idsFromRefs(input?.data?.offers) : [];
-
-    for (const priceId of [...priceIdKeys, ...orderIdKeys]) {
-      console.log('discounts before', st.discounts.keysMap[priceId]);
-      const idsSet = new Set(...(st.discounts.keysMap?.[priceId] ?? []));
-      st.discounts.keysMap[priceId] = Array.from(idsSet);
-      console.log('discounts after', st.discounts.keysMap[priceId]);
+    for (const idKey of [current?.offer?._id, current?.variation?._id]) {
+      if (idKey) {
+        const idsSet = new Set(...(st.keysMap[idKey] ?? []));
+        idsSet.delete(itemId);
+        st.keysMap[idKey] = Array.from(idsSet);
+      }
     }
   }
 }

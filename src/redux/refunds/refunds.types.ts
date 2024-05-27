@@ -1,4 +1,4 @@
-import { AppResponse, IBase, OnlyUUID } from '../global.types';
+import { AppResponse, IBase, OnlyUUID } from '../app-redux.types';
 import { PriceEntity } from '../../types/price-management/price-management.types';
 import { CompanyEntity } from '../../types/companies.types';
 import { IManager } from '../../types/auth.types';

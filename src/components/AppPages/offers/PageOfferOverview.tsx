@@ -19,7 +19,11 @@ export type OfferOverviewLoaderKey = 'offer' | 'update_offer' | 'refresh_offer' 
 export const useOfferOverviewLoaders = () => useLoadersProvider<OfferOverviewLoaderKey>();
 
 const PageOfferOverview: React.FC<Props> = ({ path }) => {
-  const loaders = useLoaders<OfferOverviewLoaderKey>({ offer: { content: t('Loading product info') } });
+  const loaders = useLoaders<OfferOverviewLoaderKey>({
+    offer: { content: t('Loading product info') },
+    prices: { content: 'Loading prices' },
+    variations: { content: 'Loading variations' },
+  });
   const [isRightSideVisible, setIsRightSideVisible] = useState<boolean>(false);
 
   const toggleRightSide = useCallback(() => {

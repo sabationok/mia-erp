@@ -1,6 +1,6 @@
 import { useAppDispatch } from '../redux/store.store';
 import { useMemo } from 'react';
-import { ServiceApiCaller, ServiceDispatcherAsync } from '../redux/global.types';
+import { ServiceApiCaller, ServiceDispatcherAsync } from '../redux/app-redux.types';
 import { defaultApiCallPayload, defaultThunkPayload } from '../utils/fabrics';
 import {
   ExternalServiceTypeEnum,

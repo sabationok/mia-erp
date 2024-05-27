@@ -4,6 +4,7 @@ import FlexBox from '../../atoms/FlexBox';
 import { t } from '../../../lang';
 
 export interface FormAreaFooterProps {
+  formId?: string;
   hasOnSubmit?: boolean;
   hasOnReset?: boolean;
   extraFooter?: React.ReactNode;
@@ -22,6 +23,7 @@ const FormAreaFooter: React.FC<FormAreaFooterProps & React.HTMLAttributes<HTMLDi
   hasOnReset,
   onAcceptPress,
   onResetPress,
+  formId,
   ...props
 }) => {
   return (
@@ -35,24 +37,26 @@ const FormAreaFooter: React.FC<FormAreaFooterProps & React.HTMLAttributes<HTMLDi
       <FlexBox fillWidth gap={8} fxDirection={'row'} justifyContent={'flex-end'} padding={'8px 0'}>
         {(hasOnReset || onResetPress) && (
           <ButtonIcon
+            form={formId}
             type={onResetPress ? 'button' : 'reset'}
             onClick={onResetPress}
             variant={'defaultMiddle'}
             isLoading={isLoading}
             disabled={disabled}
           >
-            {isLoading ? t('Loading...') : t('Clear')}
+            {t('Clear')}
           </ButtonIcon>
         )}
 
         <ButtonIcon
+          form={formId}
           type={onAcceptPress ? 'button' : 'submit'}
           onClick={onAcceptPress}
           variant={'filledMiddle'}
           isLoading={isLoading}
           disabled={disabled || !hasOnSubmit}
         >
-          {isLoading ? t('Loading...') : t('Save')}
+          {t('Save')}
         </ButtonIcon>
       </FlexBox>
     </Footer>

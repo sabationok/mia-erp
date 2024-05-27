@@ -3,7 +3,7 @@ import storage from 'redux-persist/lib/storage';
 import storageSession from 'redux-persist/lib/storage/session';
 import { AppModuleName } from './reduxTypes.types';
 
-type Key = keyof typeof AppModuleName | string;
+type Key = keyof typeof AppModuleName | 'pageSettings' | string;
 export const persistorConfigs: Record<
   Key,
   {
@@ -54,8 +54,27 @@ export const persistorConfigs: Record<
   offers: {
     key: 'offers',
     storage: storageSession,
-    whitelist: ['products', 'currentProduct', 'properties', 'dataMap'],
+    whitelist: [
+      'properties',
+      'keysMap',
+      'dataMap',
+      'list',
+      'properties',
+      'dataMap',
+      'skuKeysMap',
+      'variationsKeysMap',
+      'variationsMap',
+      'propertiesKeysMap',
+      'propertiesDataMap',
+      'propertiesByTypeKeysMap',
+    ],
   },
+  discounts: {
+    key: 'offers',
+    storage: storageSession,
+    whitelist: ['variations', 'properties', 'keysMap', 'dataMap'],
+  },
+
   orders: {
     key: 'orders',
     storage: storageSession,

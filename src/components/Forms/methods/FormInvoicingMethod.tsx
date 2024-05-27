@@ -12,7 +12,7 @@ import FlexBox from '../../atoms/FlexBox';
 import LangButtonsGroup from '../../atoms/LangButtonsGroup';
 import { IInvoicingMethod, ServiceMethodBase } from '../../../types/integrations.types';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { IBaseKeys } from '../../../redux/global.types';
+import { IBaseKeys } from '../../../redux/app-redux.types';
 import * as yup from 'yup';
 import styled from 'styled-components';
 import { DisabledStates } from '../../../types/utils.types';

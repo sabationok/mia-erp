@@ -1,4 +1,4 @@
-import { ServiceDispatcherAsync } from '../redux/global.types';
+import { ServiceDispatcherAsync } from '../redux/app-redux.types';
 import { ICustomer, ICustomerReqDta } from '../types/customers.types';
 import { useMemo } from 'react';
 import { useAppDispatch } from '../redux/store.store';

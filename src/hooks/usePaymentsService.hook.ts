@@ -1,6 +1,6 @@
 import { useAppDispatch } from '../redux/store.store';
 import { useMemo } from 'react';
-import { ServiceDispatcherAsync } from '../redux/global.types';
+import { ServiceDispatcherAsync } from '../redux/app-redux.types';
 import { getAllPaymentMethodsThunk } from '../redux/payments/payments.thunks';
 import { defaultThunkPayload } from '../utils';
 import { IPaymentMethod, IPaymentMethodReqData } from '../types/integrations.types';

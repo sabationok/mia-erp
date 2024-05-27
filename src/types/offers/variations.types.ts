@@ -1,4 +1,4 @@
-import { IBase, OnlyUUID } from '../../redux/global.types';
+import { IBase, OnlyUUID } from '../../redux/app-redux.types';
 import { WarehouseItemEntity } from '../warehousing/warehouses.types';
 import { PriceEntity } from '../price-management/price-management.types';
 import { AppQueryParams } from '../../api';

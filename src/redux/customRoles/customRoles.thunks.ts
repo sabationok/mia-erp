@@ -4,7 +4,7 @@ import { ICustomRole, ModuleWithActions } from 'redux/customRoles/customRoles.ty
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { axiosErrorCheck } from 'utils';
 import { ThunkPayload } from '../store.store';
-import { AppResponse } from '../global.types';
+import { AppResponse } from '../app-redux.types';
 import CustomRolesApi from '../../api/customRoles.api';
 import { ClientApi } from '../../api';
 // import { token } from '../../services/baseApi';

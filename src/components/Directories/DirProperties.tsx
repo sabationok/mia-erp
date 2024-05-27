@@ -15,7 +15,7 @@ import {
   PropertyLevelIsType,
 } from '../../types/offers/properties.types';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import { OnlyUUID } from '../../redux/global.types';
+import { OnlyUUID } from '../../redux/app-redux.types';
 import { MaybeNull, Values } from '../../types/utils.types';
 import ModalBase from '../atoms/Modal';
 import { Text } from '../atoms/Text';

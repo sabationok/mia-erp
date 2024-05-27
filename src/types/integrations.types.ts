@@ -1,4 +1,4 @@
-import { IBase, IBaseKeys, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
+import { IBase, IBaseKeys, IFormDataValueWithID, OnlyUUID } from '../redux/app-redux.types';
 import { LangPack } from '../lang';
 import { CompanyEntity } from './companies.types';
 import { AppQueryParams } from '../api';

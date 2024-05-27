@@ -1,4 +1,4 @@
-import { IBase } from '../global.types';
+import { IBase } from '../app-redux.types';
 import { ICompanyBase } from '../../types/companies.types';
 import { LangPack } from '../../lang';
 

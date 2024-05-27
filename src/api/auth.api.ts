@@ -7,7 +7,7 @@ import {
   UserEntity,
 } from '../types/auth.types';
 import { ClientApi } from './client.api';
-import { AppResponse } from '../redux/global.types';
+import { AppResponse } from '../redux/app-redux.types';
 
 export default class AuthApi {
   private static api = ClientApi.clientRef;

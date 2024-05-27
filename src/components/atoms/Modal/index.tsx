@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import React, { memo } from 'react';
 import { ModalHeader } from './ModalHeader';
+import { useModal } from '../../ModalProvider/ModalComponent';
 
 export interface ModalBaseProps extends Omit<React.FormHTMLAttributes<HTMLDivElement>, 'onSubmit' | 'onReset'> {
   footer?: boolean;
@@ -18,8 +19,8 @@ export interface ModalBaseProps extends Omit<React.FormHTMLAttributes<HTMLDivEle
 }
 
 const ModalBase: React.FC<ModalBaseProps> = ({
-  title = 'default modal title',
-  footer = true,
+  title = 'Default modal title',
+  footer = false,
   children,
   extraFooter,
   extraHeader,
@@ -28,9 +29,10 @@ const ModalBase: React.FC<ModalBaseProps> = ({
   onBackPress,
   ...props
 }) => {
+  const modal = useModal();
   return (
     <ModalContainer className="modal_base" {...props}>
-      <ModalHeader title={title} onClose={onClose} onBackPress={onBackPress}>
+      <ModalHeader title={title} onClose={onClose || modal?.onClose} onBackPress={onBackPress}>
         {extraHeader}
       </ModalHeader>
 

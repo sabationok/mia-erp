@@ -16,7 +16,7 @@ import CounterpartyTab from '../Forms/offers/tabs/CounterpartyTab';
 import { CounterpartyTypesEnum } from '../../redux/directories/counterparties.types';
 import { t } from '../../lang';
 import WarehousesTab from '../Forms/offers/tabs/WarehousesTab';
-import { OnlyUUID } from '../../redux/global.types';
+import { OnlyUUID } from '../../redux/app-redux.types';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { LoadersProvider } from '../../Providers/Loaders/LoaderProvider';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';

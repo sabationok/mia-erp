@@ -3,10 +3,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { PriceEntity } from 'types/price-management/price-management.types';
 import { useModalProvider } from '../../../ModalProvider/ModalProvider';
-import { OnlyUUID } from 'redux/global.types';
+import { OnlyUUID } from 'redux/app-redux.types';
 import { useAppParams, useCurrentOffer } from '../../../../hooks';
 import { useLoadersProvider } from '../../../../Providers/Loaders/LoaderProvider';
-import ModalCreatePrice from '../../../Modals/ModalCreatePrice';
+import CreatePriceModal from '../../../Modals/CreatePriceModal';
 import { pricesColumnsForProductReview } from '../../../../data/priceManagement.data';
 import { IBase } from '../../../../types/utils.types';
 import { useAppDispatch } from '../../../../redux/store.store';
@@ -39,8 +39,6 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
     [currentOffer, loaders, productsS]
   );
 
-  // const updateDefaults = ({}: { price?: OnlyUUID }) => {};
-
   const tableConfig = useMemo((): ITableListProps<PriceEntity> => {
     return {
       onRowClick: data => {
@@ -58,8 +56,8 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
             return [
               { icon: 'refresh', type: 'onlyIcon', onClick: () => loadData({ refresh: true }) },
               { separator: true },
-              { icon: 'delete', type: 'onlyIcon', disabled: !currentId },
-              { icon: 'copy', type: 'onlyIcon', disabled: !currentId },
+              { icon: 'delete', type: 'onlyIcon', disabled: true },
+              { icon: 'copy', type: 'onlyIcon', disabled: true },
               {
                 icon: 'edit',
                 type: 'onlyIcon',
@@ -69,17 +67,17 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
                     getPriceThunk({
                       data: { params: { _id: currentId } },
                       onLoading: loaders.onLoading('price', undefined, { content: 'Refreshing price info...' }),
-                      onSuccess: () => {},
+                      onSuccess: () => {
+                        modalS.open({
+                          ModalChildren: CreatePriceModal,
+                          modalChildrenProps: {
+                            offer: currentOffer,
+                            updateId: currentId,
+                          },
+                        });
+                      },
                     })
                   );
-
-                  modalS.open({
-                    ModalChildren: ModalCreatePrice,
-                    modalChildrenProps: {
-                      offer: currentOffer,
-                      updateId: currentId,
-                    },
-                  });
                 },
               },
               { separator: true },
@@ -88,7 +86,7 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
                 type: 'onlyIconFilled',
                 onClick: () => {
                   modalS.open({
-                    ModalChildren: ModalCreatePrice,
+                    ModalChildren: CreatePriceModal,
                     modalChildrenProps: {
                       offer: currentOffer,
                     },

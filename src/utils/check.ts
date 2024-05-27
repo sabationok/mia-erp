@@ -1,4 +1,4 @@
-import { OnlyUUID } from '../redux/global.types';
+import { OnlyUUID } from '../redux/app-redux.types';
 
 export const isNum = (v: any): v is number => typeof v === 'number';
 export const isStr = (v: any): v is string => typeof v === 'string';

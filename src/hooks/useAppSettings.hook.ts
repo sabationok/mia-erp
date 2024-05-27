@@ -11,7 +11,7 @@ import {
 import { useMemo } from 'react';
 import { defaultThunkPayload } from '../utils/fabrics';
 import { getAppActionsThunk } from '../redux/appSettings/appSettings.thunks';
-import { RoleActionType, ServiceDispatcherAsync } from '../redux/global.types';
+import { RoleActionType, ServiceDispatcherAsync } from '../redux/app-redux.types';
 
 export interface AppSettingsService {
   toggleAppMode: () => void;

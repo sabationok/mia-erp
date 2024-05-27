@@ -1,5 +1,5 @@
 import { pick } from 'lodash';
-import { ArrayOfObjUUID, ArrayOfUUID, IdKeyVersion, ObjUUID, OnlyUUID } from '../../redux/global.types';
+import { ArrayOfObjUUID, ArrayOfUUID, IdKeyVersion, ObjUUID, OnlyUUID } from '../../redux/app-redux.types';
 import { IProductFullFormData, OfferDto, OfferEntity } from '../../types/offers/offers.types';
 
 export * from './toReqData.helper';

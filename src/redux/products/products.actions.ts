@@ -4,7 +4,7 @@ import { PriceEntity } from '../../types/price-management/price-management.types
 import { WarehouseItemEntity } from '../../types/warehousing/warehouses.types';
 
 export const clearCurrentProductAction = createAction<undefined, 'products/clearCurrent'>('products/clearCurrent');
-export const setCurrentProductPricesAction = createAction<
+export const setOfferPricesAction = createAction<
   { refresh?: boolean; data: PriceEntity[] },
   'products/setCurrentProductPrices'
 >('products/setCurrentProductPrices');

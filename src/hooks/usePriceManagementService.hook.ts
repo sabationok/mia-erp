@@ -1,5 +1,5 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
-import { OnlyUUID, ServiceApiCaller, ServiceDispatcherAsync } from 'redux/global.types';
+import { OnlyUUID, ServiceApiCaller, ServiceDispatcherAsync } from 'redux/app-redux.types';
 import { useMemo } from 'react';
 import { defaultThunkPayload } from 'utils/fabrics';
 import { AppQueryParams } from 'api';

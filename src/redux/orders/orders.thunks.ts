@@ -3,7 +3,7 @@ import { IOrderReqData, OrderEntity } from '../../types/orders/orders.types';
 import { ThunkPayload } from '../store.store';
 import { AppQueryParams, createApiCall, OrdersApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
-import { OnlyUUID } from '../global.types';
+import { OnlyUUID } from '../app-redux.types';
 import { buildGetAllInvoicesThunk } from '../invoices/invoicing.thunks';
 import { buildGetAllDeliveriesThunk } from '../deliveries/deliveries.thunks';
 import { buildGetAllPaymentsThunk } from '../payments/payments.thunks';

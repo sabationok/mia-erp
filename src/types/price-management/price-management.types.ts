@@ -1,4 +1,4 @@
-import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/global.types';
+import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/app-redux.types';
 import { TabOption } from '../../components/atoms/TabSelector';
 import { OfferEntity } from '../offers/offers.types';
 import { VariationEntity } from '../offers/variations.types';

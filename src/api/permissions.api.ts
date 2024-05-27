@@ -7,7 +7,7 @@ import {
   PermissionRecipientEnum,
   PermissionStatus,
 } from '../types/permissions.types';
-import { AppResponse, CompanyQueryType } from '../redux/global.types';
+import { AppResponse, CompanyQueryType } from '../redux/app-redux.types';
 import { UserEntity } from '../types/auth.types';
 import { ClientApi } from './client.api';
 

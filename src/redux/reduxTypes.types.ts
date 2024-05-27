@@ -26,6 +26,8 @@ export enum AppModuleName {
   priceManagement = 'priceManagement',
   companies = 'companies',
   invoicing = 'invoicing',
+  discounts = 'discounts',
+  cart = 'cart',
 }
 
 export type AsyncThunkConfig = {

@@ -2,7 +2,7 @@ import { forwardRef } from 'react';
 import InputLabel, { InputLabelProps } from './InputLabel';
 import InputText from './InputText';
 
-import { IBase } from '../../../redux/global.types';
+import { IBase } from '../../../redux/app-redux.types';
 import styled from 'styled-components';
 
 export interface SelectOption extends Partial<IBase> {

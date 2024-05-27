@@ -1,5 +1,5 @@
 import APP_CONFIGS, { Endpoints } from '../redux/APP_CONFIGS';
-import { AppResponse } from '../redux/global.types';
+import { AppResponse } from '../redux/app-redux.types';
 import { IBaseDirItem } from '../types/dir.types';
 import { AppQueryParams } from './index';
 import { ClientApi } from './client.api';

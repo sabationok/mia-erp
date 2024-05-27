@@ -11,20 +11,23 @@ import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
 import { t } from '../../../lang';
 import Switch from '../../atoms/Switch';
-import { usePriceModalFormLoaders } from '../../Modals/ModalCreatePrice';
+import { usePriceModalFormLoaders } from '../../Modals/CreatePriceModal';
 import * as yup from 'yup';
-import { isStringOrNumberSchema, UUIDRefSchema } from '../validation';
+import { isNumberStringSchema, UUIDRefSchema, UUIDSchema } from '../validation';
 import { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { VariationEntity } from '../../../types/offers/variations.types';
 
 const validation = yup.object().shape({
-  in: isStringOrNumberSchema,
-  out: isStringOrNumberSchema.required(),
-  list: UUIDRefSchema.optional(),
+  in: isNumberStringSchema.nullable(),
+  out: isNumberStringSchema.required(),
+  list: UUIDRefSchema.nullable(),
   offer: UUIDRefSchema.required(),
-  variation: UUIDRefSchema.optional(),
+  variation: UUIDRefSchema.nullable(),
+  offerId: UUIDSchema.nullable(),
+  variationId: UUIDSchema.nullable(),
+  listId: UUIDSchema.nullable(),
 });
 
 export interface FormCreatePriceAreaProps
@@ -136,7 +139,7 @@ export const CreatePriceFormArea = ({ update, offer, defaultState }: FormCreateP
       isLoading={loaders.hasLoading}
       onSubmit={handleSubmit(onValid, e => {
         ToastService.warning('Invalid form data');
-        console.warn(e);
+        console.error('[Validation error]', e);
       })}
     >
       <FlexBox padding={'0 0 8px'} flex={1} overflow={'auto'}>

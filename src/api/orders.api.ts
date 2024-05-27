@@ -1,6 +1,6 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { ICreateOrdersGroupDto, IOrderRes, OrderEntity } from '../types/orders/orders.types';
-import { AppResponse, OnlyUUID } from '../redux/global.types';
+import { AppResponse, OnlyUUID } from '../redux/app-redux.types';
 import { AppQueryParams } from './index';
 import { ClientApi } from './client.api';
 import { OrderSlotEntity } from '../types/orders/order-slot.types';

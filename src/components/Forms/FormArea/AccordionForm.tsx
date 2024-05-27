@@ -42,7 +42,7 @@ export const AccordionForm = ({ isEmpty, onSubmit, onReset, children, formId, ..
   const _formId = useId();
 
   return (
-    <StyledForm onSubmit={onSubmit} onReset={onReset} maxWidth={'100%'} id={formId}>
+    <StyledForm onSubmit={onSubmit ?? (ev => ev.preventDefault())} onReset={onReset} maxWidth={'100%'} id={_formId}>
       <AccordionFormArea {...rest} hasOnReset={!!onReset} hasOnSubmit={!!onSubmit} formId={formId || _formId}>
         {children}
       </AccordionFormArea>
@@ -73,7 +73,7 @@ export const AccordionFormArea = ({
   const [_isOpen, _setIsOpen] = useState(isOpen);
   const theme = useTheme();
   const onToggleIsOpenHandler = () => {
-    expandable && _setIsOpen(p => !p);
+    _setIsOpen(p => !p);
   };
   useEffect(() => {
     if (!isUndefined(isOpen)) {
@@ -85,12 +85,13 @@ export const AccordionFormArea = ({
     <FlexBox fillWidth style={{ position: 'relative' }} maxHeight={maxHeight} maxWidth={'100%'}>
       {!hideHeader && (
         <Header gap={8} fxDirection={'row'} justifyContent={'space-between'} alignItems={'center'}>
-          <ButtonIcon
+          <HeaderButton
             variant={'defNoEffects'}
             endIcon={!expandable ? undefined : _isOpen ? 'SmallArrowDown' : 'SmallArrowLeft'}
             endIconSize={'30px'}
             onClick={onToggleIsOpenHandler}
             justifyContent={'space-between'}
+            disabled={!expandable}
             endIconStyles={{
               fill: theme.accentColor.base,
             }}
@@ -102,7 +103,7 @@ export const AccordionFormArea = ({
                 {label}
               </Text>
             )}
-          </ButtonIcon>
+          </HeaderButton>
         </Header>
       )}
 
@@ -115,6 +116,7 @@ export const AccordionFormArea = ({
               ? null
               : renderFooter || (
                   <FormAreaFooter
+                    formId={formId}
                     hasOnSubmit={!!hasOnSubmit}
                     hasOnReset={!!hasOnReset}
                     isLoading={isLoading}
@@ -149,4 +151,10 @@ const ExpandableBox = styled(FlexFieldSet)`
 
   max-height: ${p => (p.isActive ? '100%' : '0')};
   //transition: all ${p => p.theme.globals.timingFunctionMain};
+`;
+const HeaderButton = styled(ButtonIcon)`
+  &[disabled] {
+    opacity: 1;
+    pointer-events: none;
+  }
 `;

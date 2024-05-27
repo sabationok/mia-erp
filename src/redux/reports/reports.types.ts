@@ -1,6 +1,6 @@
 import { IReportBaseProps } from '../../components/Raports/report.types';
 import { ModalFormProps } from '../../components/ModalForm';
-import { IBase } from '../global.types';
+import { IBase } from '../app-redux.types';
 import { FilterReturnDataType } from '../../components/Filter/AppFilter';
 
 export interface IReportConfigs<P = IReportBaseProps> extends ModalFormProps {

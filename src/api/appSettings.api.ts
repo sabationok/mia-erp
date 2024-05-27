@@ -1,5 +1,5 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
-import { AppResponse, RoleActionType } from '../redux/global.types';
+import { AppResponse, RoleActionType } from '../redux/app-redux.types';
 import { ClientApi } from './client.api';
 
 export default class AppSettingsApi {

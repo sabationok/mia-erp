@@ -1,4 +1,4 @@
-import { ServiceDispatcherAsync } from '../../redux/global.types';
+import { ServiceDispatcherAsync } from '../../redux/app-redux.types';
 import { useAppDispatch } from '../../redux/store.store';
 import { defaultThunkPayload } from '../../utils/fabrics';
 import { useMemo } from 'react';

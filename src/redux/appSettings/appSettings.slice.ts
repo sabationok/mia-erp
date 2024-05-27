@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { AccentColorName, appThemes, getAccentColor, getTheme, globals, IAppTheme } from 'theme';
 import { actionResetAppSettings, actionSelectAccentColor, actionToggleDarkMode } from './appSettings.actions';
 import { getAppActionsThunk } from './appSettings.thunks';
-import { RoleActionType } from '../global.types';
+import { RoleActionType } from '../app-redux.types';
 
 export interface IAppSettings {
   isDarkMode?: boolean;

@@ -1,6 +1,6 @@
 import { ICustomerBase } from '../customers.types';
 import { IUserBase } from '../auth.types';
-import { AddressDto, IFormDataValueWithID, OnlyUUID } from '../../redux/global.types';
+import { AddressDto, IFormDataValueWithID, OnlyUUID } from '../../redux/app-redux.types';
 import { AppDate, FormDataLocationRefs, HasEmbeddedType } from '../utils.types';
 import { PaymentInternalTypeEnum } from '../integrations.types';
 

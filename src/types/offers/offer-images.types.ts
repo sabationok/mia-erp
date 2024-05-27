@@ -1,4 +1,4 @@
-import { IBase } from '../../redux/global.types';
+import { IBase } from '../../redux/app-redux.types';
 
 export enum ImageSetSrcType {
   img_preview = 'img_preview',

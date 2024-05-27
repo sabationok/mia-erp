@@ -1,14 +1,14 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { IOfferDefaultsDto, IProductReqData, OfferEntity } from '../types/offers/offers.types';
-import { OnlyUUID, ServiceApiCaller, ServiceDispatcher, ServiceDispatcherAsync } from 'redux/global.types';
+import { OnlyUUID, ServiceApiCaller, ServiceDispatcher, ServiceDispatcherAsync } from 'redux/app-redux.types';
 import {
   createProductThunk,
   getAllInventoriesByProductIdThunk,
   getAllOfferPricesThunk,
   getAllProductsThunk,
+  getOfferFullInfoThunk,
   getOfferThunk,
-  getProductFullInfoThunk,
-  updateProductDefaultsThunk,
+  updateOfferDefaultsThunk,
   updateProductThunk,
 } from '../redux/products/products.thunks';
 import { useMemo } from 'react';
@@ -106,9 +106,9 @@ const useOffersService = (): OffersService => {
       getById: args => createApiCall(defaultApiCallPayload(args), OffersApi.getById),
       getOne: args => dispatch(getOfferThunk(defaultThunkPayload(args))),
       getAll: args => dispatch(getAllProductsThunk(defaultThunkPayload(args))),
-      getProductFullInfo: args => dispatch(getProductFullInfoThunk(defaultThunkPayload(args))),
+      getProductFullInfo: args => dispatch(getOfferFullInfoThunk(defaultThunkPayload(args))),
       clearCurrent: () => dispatch(clearCurrentProductAction()),
-      setDefaults: args => dispatch(updateProductDefaultsThunk(defaultThunkPayload(args))),
+      setDefaults: args => dispatch(updateOfferDefaultsThunk(defaultThunkPayload(args))),
 
       // * PROPERTIES
       createProperty: args => dispatch(createPropertyThunk(defaultThunkPayload(args))),

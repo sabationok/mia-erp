@@ -3,7 +3,7 @@ import { ThunkPayload } from '../store.store';
 import { AppQueryParams, createApiCall, WarehousesApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
 import { IWarehouse, IWarehouseReqData } from '../../types/warehousing/warehouses.types';
-import { OnlyUUID } from '../global.types';
+import { OnlyUUID } from '../app-redux.types';
 
 enum WarehousingThunkType {
   getAll = 'warehouses/getAllWarehousesThunk',

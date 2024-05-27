@@ -1,4 +1,4 @@
-import { AppResponse, IBase } from '../redux/global.types';
+import { AppResponse, IBase } from '../redux/app-redux.types';
 import { AuthErrorType } from '../redux/reduxTypes.types';
 import { PermissionEntity } from './permissions.types';
 import { HasEmbeddedLabel, HasEmbeddedName, HasEmbeddedReference } from './utils.types';

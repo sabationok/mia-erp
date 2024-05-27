@@ -1,4 +1,4 @@
-import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/global.types';
+import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/app-redux.types';
 import { AppQueryParams } from '../../api';
 import { OfferTypeEnum } from './offers.types';
 import { ICmsBaseConfigs } from '../cms.types';

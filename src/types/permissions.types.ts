@@ -1,5 +1,5 @@
 import { ICustomRole } from '../redux/customRoles/customRoles.types';
-import { AppResponse, IBase, OnlyUUID } from '../redux/global.types';
+import { AppResponse, IBase, OnlyUUID } from '../redux/app-redux.types';
 import { CompanyEntity } from './companies.types';
 import { IUserBase } from './auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';

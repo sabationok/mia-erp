@@ -501,8 +501,11 @@ export const langUa = {
   'Value type': 'Тип значення',
   Discount_Volume_Type: "Тип об'єму",
   Discount_Threshold: 'Поріг нарахування',
+  Discount_Threshold_Type: 'Тип порогу нарахування',
 
   [`Discount_discount`]: 'Знижка',
+  [`Discount_threshold_type_quantity`]: 'Кількість',
+  [`Discount_threshold_type_total`]: 'Сума',
   [`Discount_cashback`]: 'Кешбек',
   [`Discount_bonus`]: 'Бонус',
   [`Discount_default`]: 'Системний',

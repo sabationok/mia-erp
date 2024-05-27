@@ -1,5 +1,5 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
-import { AppResponse } from '../redux/global.types';
+import { AppResponse } from '../redux/app-redux.types';
 import { ModuleWithActions } from '../redux/customRoles/customRoles.types';
 import { ClientApi } from './client.api';
 

@@ -1,5 +1,5 @@
 import _, { omit } from 'lodash';
-import { OnlyUUID } from '../../redux/global.types';
+import { OnlyUUID } from '../../redux/app-redux.types';
 
 export interface ToRequestDataOptions<OmitPath extends string = string> {
   omitPathArr?: OmitPath[];

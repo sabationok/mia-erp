@@ -7,7 +7,7 @@ import {
   IContactsSlot,
   IFormDataValueWithID,
   OnlyUUID,
-} from '../redux/global.types';
+} from '../redux/app-redux.types';
 import { OrderEntity } from './orders/orders.types';
 import { BusinessSubjectTypeEnum } from './companies.types';
 import {

@@ -1,4 +1,4 @@
-import { AddressDto, OnlyUUID } from '../../redux/global.types';
+import { AddressDto, OnlyUUID } from '../../redux/app-redux.types';
 import { AppDate, LocationRefsDto } from '../utils.types';
 
 export interface ICreateOrderInfoDto {

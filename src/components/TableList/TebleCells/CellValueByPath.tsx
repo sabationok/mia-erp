@@ -17,31 +17,30 @@ const CellValueByPath: React.FC<CellValueByPathProps & React.HTMLAttributes<HTML
 }) => {
   const { rowData } = useRow();
 
-  const cellConfig = useMemo(
-    (): IDataCellProps => ({
-      content: {
-        ...top,
-        data: top.getData
-          ? top.getData(rowData, titleInfo)
-          : getValueByPath({
-              data: rowData,
-              ...top,
-            }),
-      },
-      subContent: {
-        ...bottom,
+  const cellConfig = useMemo((): IDataCellProps => {
+    const props: IDataCellProps = {
+      content: {},
+      subContent: {},
+      width,
+    };
+    for (const [key, val] of [
+      ['content', top],
+      ['subContent', bottom],
+    ] as const) {
+      props[key] = {
+        ...val,
         data:
-          bottom && bottom.getData
-            ? bottom.getData(rowData, titleInfo)
+          val && val.getData
+            ? val.getData(rowData, titleInfo)
             : getValueByPath({
                 data: rowData,
-                ...bottom,
+                ...val,
               }),
-      },
-      width,
-    }),
-    [bottom, rowData, titleInfo, top, width]
-  );
+      };
+    }
+
+    return props;
+  }, [bottom, rowData, titleInfo, top, width]);
 
   return <Cell.Double {...cellConfig} {...props} />;
 };

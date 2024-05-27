@@ -1,6 +1,6 @@
 import { useAppDispatch } from '../redux/store.store';
 import { useMemo } from 'react';
-import { ServiceDispatcherAsync } from '../redux/global.types';
+import { ServiceDispatcherAsync } from '../redux/app-redux.types';
 import { defaultThunkPayload } from '../utils/fabrics';
 import { getAllInvoiceMethodsThunk } from '../redux/invoices/invoicing.thunks';
 import { IInvoicingMethod, IInvoicingMethodReqData } from '../types/integrations.types';

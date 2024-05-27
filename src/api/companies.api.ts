@@ -1,6 +1,6 @@
 import { CompanyEntity, ICompanyDeletingRes, ICompanyReqData, ICompanyUpdatingRes } from '../types/companies.types';
 import APP_CONFIGS from 'redux/APP_CONFIGS';
-import { AppResponse } from '../redux/global.types';
+import { AppResponse } from '../redux/app-redux.types';
 import { PermissionEntity } from '../types/permissions.types';
 import { ClientApi } from './client.api';
 

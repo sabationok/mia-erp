@@ -5,7 +5,7 @@ import { AppQueryParams, CommunicationApi, CustomersApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
 import { ICommunicationMethod, ICommunicationMethodReqData } from '../../types/integrations.types';
 import { AxiosResponse } from 'axios';
-import { AppResponseType } from '../global.types';
+import { AppResponseType } from '../app-redux.types';
 
 enum CustomersThunkTypeEnum {
   create = 'customers/createCustomerThunk',

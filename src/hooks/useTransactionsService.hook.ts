@@ -1,6 +1,6 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { ITransaction, ITransactionReqData } from '../types/finances/transactions.types';
-import { ServiceApiCaller, ServiceDispatcherAsync } from 'redux/global.types';
+import { ServiceApiCaller, ServiceDispatcherAsync } from 'redux/app-redux.types';
 import { createTransactionThunk, getAllTransactionsThunk } from '../redux/finances/transactions.thunks';
 import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';

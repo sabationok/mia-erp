@@ -1,6 +1,6 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
-import { AppResponse } from '../redux/global.types';
+import { AppResponse } from '../redux/app-redux.types';
 import { IVariationReqData, VariationEntity } from 'types/offers/variations.types';
 import { ClientApi } from './client.api';
 

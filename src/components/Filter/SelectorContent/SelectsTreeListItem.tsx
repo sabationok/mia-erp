@@ -2,7 +2,7 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import SelectsTreeList from './SelectsTreeList';
-import { IBase } from '../../../redux/global.types';
+import { IBase } from '../../../redux/app-redux.types';
 
 export interface SelectsTreeListItemProps<TFields = IBase> {
   checked?: boolean;

@@ -5,7 +5,7 @@ import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.h
 import * as React from 'react';
 import { FormEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import { OnlyUUID } from '../../redux/global.types';
+import { OnlyUUID } from '../../redux/app-redux.types';
 import { ModalFormProps } from '../ModalForm';
 import { ToastService } from '../../services';
 import { OverlayFooter, OverlayForm, OverlayHeader } from './index';

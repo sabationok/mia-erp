@@ -1,4 +1,4 @@
-import { AddressDto } from 'redux/global.types';
+import { AddressDto } from 'redux/app-redux.types';
 import { HTMLAttributes } from 'react';
 import { t } from 'lang';
 

@@ -9,7 +9,6 @@ import { IContractor } from '../../../redux/directories/contractors.types';
 import { ITrCategory } from '../../../types/directories.types';
 import CellCheckBox from '../TebleCells/CellCheckBox';
 import { CellsMap } from '../TebleCells';
-import CellTextDbl from '../TebleCells/CellTextDbl';
 import { OnCheckBoxChangeHandler } from '../tableTypes.types';
 
 export type TRowDataType = ITransaction | ICount | IContractor | ITrCategory | IDocument;
@@ -59,13 +58,13 @@ const TableRow: React.FC<TableRowProps> = ({ onPress, checked, rowData, ...props
     return (
       tableTitles &&
       tableTitles?.map((item, idx) => {
-        let CellComp = item.action ? CellsMap[item.action] : CellTextDbl;
+        let CellComp = (item.action && item.action in CellsMap && CellsMap?.[item.action]) || CellsMap.valueByPath;
         if (typeof CellComp === 'function' || typeof CellComp === 'object') {
           return <CellComp key={idx} titleInfo={item} idx={idx} />;
         }
-        console.warn('CellComp error', '====>>>>', item.action);
-
-        return <CellTextDbl key={idx} titleInfo={item} idx={idx} />;
+        console.error('[Table error error]]', '====>>>>', `[${item.action}]`);
+        CellComp = CellsMap.valueByPath;
+        return <CellComp key={idx} titleInfo={item} idx={idx} />;
       })
     );
   }, [tableTitles]);

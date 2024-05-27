@@ -1,4 +1,4 @@
-import { IBase, IFormDataValueWithID, OnlyUUID } from '../redux/global.types';
+import { IBase, IFormDataValueWithID, OnlyUUID } from '../redux/app-redux.types';
 import { OrderEntity, IOrderSlot } from './orders/orders.types';
 import { IInvoicingMethod } from './integrations.types';
 import {

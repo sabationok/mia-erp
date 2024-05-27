@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { AddressDto } from '../../redux/global.types';
+import { AddressDto } from '../../redux/app-redux.types';
 
 export const UUIDSchema = yup.string().uuid();
 
@@ -8,10 +8,14 @@ export const UUIDRefSchema = yup.object().shape({
 });
 export const arrOfUUIDSchema = yup.array().of(UUIDSchema).min(1);
 
-export const isStringOrNumberSchema = yup
+export const isNumberStringSchema = yup
   .mixed()
-  .test('is-string-or-number', 'Value must be a string or a number', function (value: any) {
-    return typeof value === 'string' || typeof value === 'number';
+  .test('is-string-or-number', 'Value must be a numeric string and not less then 0', function (value: any, ctx) {
+    const _number = Number(value);
+    if (isNaN(_number)) {
+      return false;
+    }
+    return _number > 0;
   });
 
 export const orderInfoBaseSchema = yup.object().shape({

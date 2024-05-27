@@ -14,8 +14,8 @@ import CellPrices from './CellPrices';
 export const CellsMap = {
   cell: Cell,
   text: CellText,
+  textDbl: CellTextDbl,
   valueByPath: CellValueByPath,
-  cellDbl: CellTextDbl,
   status: CellStatus,
   dateSimple: CellDateSimple,
   dateDbl: CellDateSimple,

@@ -1,4 +1,4 @@
-import { AddressDto, OnlyUUID } from '../redux/global.types';
+import { AddressDto, OnlyUUID } from '../redux/app-redux.types';
 import { IDeliveryMethod } from './integrations.types';
 import {
   HasCompany,

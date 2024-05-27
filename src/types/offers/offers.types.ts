@@ -1,4 +1,4 @@
-import { ArrayOfUUID, IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/global.types';
+import { ArrayOfUUID, IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/app-redux.types';
 import { ISupplierDirItem, OfferCategoryEntity } from '../dir.types';
 import { FilterOption } from '../../components/atoms/TabSelector';
 import { PriceEntity } from '../price-management/price-management.types';
@@ -6,7 +6,7 @@ import { IWarehouse, WarehouseItemEntity } from '../warehousing/warehouses.types
 import { IBrand } from '../../redux/directories/brands.types';
 import { AppQueries, AppQueryParams } from '../../api';
 import { VariationEntity } from './variations.types';
-import { PropertyValueEntity } from './properties.types';
+import { ProperiesGroupEntity, PropertyValueEntity } from './properties.types';
 import {
   AppDate,
   HasAuthor,
@@ -24,6 +24,7 @@ import {
   UUID,
 } from '../utils.types';
 import { OfferImageSlotEntity } from './offer-images.types';
+import { WarehouseInventoryEntity } from '../warehousing/warehouse-inventory.types';
 
 export type { OfferImageSlotEntity } from './offer-images.types';
 
@@ -109,19 +110,18 @@ export interface IOfferWithRelatedFields
     HasAuthor,
     HasEditor,
     IOfferRelatedDefaultFields {
-  category?: OfferCategoryEntity;
   categories?: OfferCategoryEntity[];
 
   brand?: IBrand;
   recommends?: OfferEntity[];
 
-  // template?: IVariationTemplate;
+  template?: ProperiesGroupEntity;
   properties?: PropertyValueEntity[];
 
   variations?: VariationEntity[];
   prices?: PriceEntity[];
   warehouses?: IWarehouse[];
-  inventories?: WarehouseItemEntity[];
+  inventories?: WarehouseInventoryEntity[];
 }
 
 export interface OfferEntity extends IOfferWithRelatedFields {

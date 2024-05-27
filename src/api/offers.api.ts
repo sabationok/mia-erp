@@ -1,7 +1,7 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import { IOfferDefaultsDto, IProductReqData, OfferEntity } from '../types/offers/offers.types';
-import { AppResponse } from '../redux/global.types';
+import { AppResponse } from '../redux/app-redux.types';
 import { ClientApi } from './client.api';
 import { UUID } from '../types/utils.types';
 

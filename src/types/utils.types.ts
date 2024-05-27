@@ -1,5 +1,5 @@
 import { MeasurementUnit } from './offers/offers.types';
-import { AddressDto } from '../redux/global.types';
+import { AddressDto } from '../redux/app-redux.types';
 import { ServiceMethodBase } from './integrations.types';
 import { CompanyEntity } from './companies.types';
 import { LangPack } from '../lang';

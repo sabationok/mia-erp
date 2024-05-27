@@ -1,4 +1,4 @@
-import { IBase, OnlyUUID } from '../redux/global.types';
+import { IBase, OnlyUUID } from '../redux/app-redux.types';
 import { IPaymentMethod } from './integrations.types';
 import {
   HasEmbeddedError,

@@ -5,7 +5,7 @@ import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { useCallback, useEffect, useMemo } from 'react';
 import { createTableTitlesFromProperties, transformVariationTableData } from '../../../../utils/tables';
 import { getIdRef } from '../../../../utils';
-import { OnlyUUID } from '../../../../redux/global.types';
+import { OnlyUUID } from '../../../../redux/app-redux.types';
 import { useLoadersProvider } from '../../../../Providers/Loaders/LoaderProvider';
 import { OfferOverlayLoaderKey } from '../../../Overlays/FormProductDefaultsOverlay';
 import { PropertyEntity } from '../../../../types/offers/properties.types';

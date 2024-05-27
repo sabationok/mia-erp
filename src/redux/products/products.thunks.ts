@@ -3,14 +3,12 @@ import { axiosErrorCheck } from 'utils';
 import { ActionPayload, ThunkPayload } from '../store.store';
 import { isAxiosError } from 'axios';
 import { IOfferDefaultsDto, IProductReqData, OfferEntity } from '../../types/offers/offers.types';
-import { AppQueryParams, GetAllPricesQuery, GetOneOfferQuery, WarehousesApi } from '../../api';
+import { AppQueryParams, GetOneOfferQuery, WarehousesApi } from '../../api';
 import OffersApi from '../../api/offers.api';
-import { OnlyUUID } from '../global.types';
-import { PriceEntity } from '../../types/price-management/price-management.types';
-import { WarehouseItemEntity } from '../../types/warehousing/warehouses.types';
-import { VariationEntity } from '../../types/offers/variations.types';
+import { OnlyUUID } from '../app-redux.types';
 import _ from 'lodash';
 import { buildGetAllPricesThunk } from '../priceManagement/priceManagement.thunks';
+import { WarehouseInventoryEntity } from '../../types/warehousing/warehouse-inventory.types';
 
 enum ProductsThunkType {
   getAllProductsThunk = 'products/getAllProductsThunk',
@@ -28,41 +26,7 @@ enum ProductsThunkType {
 
   updateDefaults = 'products/updateDefaultsByIdThunk',
 }
-type ActionWithCurrent = { refreshCurrent?: boolean; updateCurrent?: boolean };
 
-export interface ProductThunkPayloadByType {
-  [ProductsThunkType.getAllProductsThunk]: {};
-  [ProductsThunkType.getProductFullInfoThunk]: {};
-  [ProductsThunkType.createProductThunk]: {};
-  [ProductsThunkType.updateProductThunk]: {};
-  [ProductsThunkType.deleteProductThunk]: {};
-  [ProductsThunkType.getAllVariations]: ThunkPayload<
-    ActionWithCurrent & {
-      params?: Pick<AppQueryParams, 'list' | 'listId' | 'offer' | 'offerId' | 'variation' | 'variationId'>;
-    },
-    VariationEntity[]
-  >;
-  [ProductsThunkType.getAllPrices]: ThunkPayload<ActionWithCurrent & { params?: GetAllPricesQuery }, PriceEntity[]>;
-  [ProductsThunkType.getAllInventories]: ThunkPayload<
-    ActionWithCurrent & {
-      params?: Pick<
-        AppQueryParams,
-        'price' | 'priceId' | 'offer' | 'offerId' | 'variation' | 'variationId' | 'warehouse' | 'warehouseId'
-      >;
-    },
-    WarehouseItemEntity[]
-  >;
-}
-export interface ProductThunkReturnDataByType {
-  [ProductsThunkType.getAllProductsThunk]: {};
-  [ProductsThunkType.getProductFullInfoThunk]: {};
-  [ProductsThunkType.createProductThunk]: {};
-  [ProductsThunkType.updateProductThunk]: {};
-  [ProductsThunkType.deleteProductThunk]: {};
-  [ProductsThunkType.getAllVariations]: ActionWithCurrent & { data: VariationEntity[] };
-  [ProductsThunkType.getAllPrices]: ActionWithCurrent & { data: PriceEntity[] };
-  [ProductsThunkType.getAllInventories]: ActionWithCurrent & { data: WarehouseItemEntity[] };
-}
 export const getAllProductsThunk = createAsyncThunk<
   { refresh?: boolean; data?: OfferEntity[] },
   ThunkPayload<
@@ -112,9 +76,9 @@ export const getOfferThunk = createAsyncThunk<
   }
 });
 
-export const getProductFullInfoThunk = createAsyncThunk<
-  ActionWithCurrent & { data: OfferEntity },
-  ThunkPayload<OnlyUUID & ActionWithCurrent & { omit?: [keyof OfferEntity] }, OfferEntity>
+export const getOfferFullInfoThunk = createAsyncThunk<
+  ActionPayload<{ data: OfferEntity }>,
+  ThunkPayload<OnlyUUID & { omit?: [keyof OfferEntity] }, OfferEntity>
 >(ProductsThunkType.getProductFullInfoThunk, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
   onLoading && onLoading(true);
 
@@ -156,8 +120,8 @@ export const createProductThunk = createAsyncThunk<
 });
 
 export const updateProductThunk = createAsyncThunk<
-  (ActionWithCurrent & { data?: OfferEntity }) | undefined,
-  ThunkPayload<IProductReqData & ActionWithCurrent, OfferEntity>
+  ActionPayload<{ data?: OfferEntity }>,
+  ThunkPayload<IProductReqData, OfferEntity>
 >(ProductsThunkType.updateProductThunk, async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
 
@@ -168,22 +132,22 @@ export const updateProductThunk = createAsyncThunk<
     }
 
     args?.onLoading && args?.onLoading(false);
-    return { data: res?.data.data, refreshCurrent: args?.data?.refreshCurrent };
+    return { data: res?.data.data, refreshCurrent: args?.data?.refresh };
   } catch (error) {
     args?.onLoading && args?.onLoading(false);
     args?.onError && args?.onError(error);
     return thunkApi.rejectWithValue(isAxiosError(error));
   }
 });
-export const updateProductDefaultsThunk = createAsyncThunk<
-  (ActionWithCurrent & { data?: OfferEntity }) | undefined,
+export const updateOfferDefaultsThunk = createAsyncThunk<
+  ActionPayload<{ data: OfferEntity }>,
   ThunkPayload<
     {
       _id: string;
       defaults: IOfferDefaultsDto;
       refreshCurrent?: boolean;
       updateCurrent?: boolean;
-    } & ActionWithCurrent,
+    },
     OfferEntity
   >
 >(ProductsThunkType.updateDefaults, async (args, thunkApi) => {
@@ -210,8 +174,13 @@ export const updateProductDefaultsThunk = createAsyncThunk<
 export const getAllOfferPricesThunk = buildGetAllPricesThunk(ProductsThunkType.getAllPrices);
 
 export const getAllInventoriesByProductIdThunk = createAsyncThunk<
-  ProductThunkReturnDataByType['products/getAllInventories'],
-  ProductThunkPayloadByType['products/getAllInventories']
+  ActionPayload<{ data: WarehouseInventoryEntity[] }>,
+  ThunkPayload<
+    {
+      params?: Pick<AppQueryParams, 'warehouse' | 'warehouseId' | 'offer' | 'offerId' | 'variation' | 'variationId'>;
+    },
+    WarehouseInventoryEntity[]
+  >
 >(ProductsThunkType.getAllInventories, async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
   try {
@@ -220,7 +189,7 @@ export const getAllInventoriesByProductIdThunk = createAsyncThunk<
       args?.onSuccess && args?.onSuccess(res?.data.data);
     }
 
-    return { data: res?.data.data, refreshCurrent: args?.data?.refreshCurrent };
+    return { data: res?.data.data, refreshCurrent: args?.data?.refresh };
   } catch (error) {
     args?.onError && args?.onError(error);
     return thunkApi.rejectWithValue(isAxiosError(error));

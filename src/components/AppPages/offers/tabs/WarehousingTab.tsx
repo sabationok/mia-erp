@@ -7,7 +7,7 @@ import { useModalProvider } from '../../../ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useProductsSelector } from '../../../../redux/selectors.store';
 import { getIdRef } from '../../../../utils/data-transform';
-import { OnlyUUID } from '../../../../redux/global.types';
+import { OnlyUUID } from '../../../../redux/app-redux.types';
 
 export interface WarehousingTabProps {
   onSelect?: (inventory: OnlyUUID) => void;

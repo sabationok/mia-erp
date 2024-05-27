@@ -2,7 +2,7 @@ import { ModalFormProps } from '../components/ModalForm';
 import { ITrCategory, ITrCategoryFormData, TagTypeEnum, TrCategoryTypeEnum } from './directories.types';
 import { CountsTypesEnum, ICount, ICountFormData } from '../redux/directories/counts.types';
 import { TabOption } from '../components/atoms/TabSelector';
-import { IBase } from '../redux/global.types';
+import { IBase } from '../redux/app-redux.types';
 import { CompanyEntity } from './companies.types';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { IModalProviderContext, ModalService } from '../components/ModalProvider/ModalProvider';

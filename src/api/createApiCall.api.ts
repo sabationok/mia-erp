@@ -1,4 +1,4 @@
-import { AppResponse } from '../redux/global.types';
+import { AppResponse } from '../redux/app-redux.types';
 
 export type GetResponseCallback<SD = any, PR = any, RD = any, MD = any> = (
   arg?: SD,

@@ -1,4 +1,4 @@
-import { AppResponse, IBase } from '../../redux/global.types';
+import { AppResponse, IBase } from '../../redux/app-redux.types';
 import { IContractor } from '../../redux/directories/contractors.types';
 import { IActivity } from '../../redux/directories/activities.types';
 import { ICount } from '../../redux/directories/counts.types';

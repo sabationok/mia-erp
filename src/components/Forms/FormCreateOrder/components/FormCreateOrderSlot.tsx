@@ -15,7 +15,6 @@ import { ModalHeader } from '../../../atoms';
 import FlexBox from '../../../atoms/FlexBox';
 import StepsController from '../../components/StepsController';
 import { useAppForm } from '../../../../hooks';
-import { usePropertiesSelector } from '../../../../redux/selectors.store';
 import VariationsApi from '../../../../api/variations.api';
 import { transformVariationTableData } from '../../../../utils/tables';
 import { IWarehouse, WarehouseItemEntity } from '../../../../types/warehousing/warehouses.types';
@@ -69,8 +68,6 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
   const setFormValue = useCallback(<Key extends FormKey = any>(key: Key, value: FormCreateOrderSlotFormData[Key]) => {
     setFormData(prev => ({ ...prev, [key]: value }));
   }, []);
-
-  const templates = usePropertiesSelector();
 
   const { watch, setValue } = useAppForm<{ search?: string; searchBy?: string }>();
   const { search, searchBy } = watch();

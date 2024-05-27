@@ -1,4 +1,4 @@
-import { AppResponse } from '../global.types';
+import { AppResponse } from '../app-redux.types';
 import { IDirItemBase } from '../../types/dir.types';
 import { ApiDirType } from '../APP_CONFIGS';
 

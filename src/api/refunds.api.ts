@@ -1,5 +1,5 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
-import { AppResponse, OnlyUUID } from '../redux/global.types';
+import { AppResponse, OnlyUUID } from '../redux/app-redux.types';
 import { OfferEntity } from '../types/offers/offers.types';
 import { IAllRefundsRes, IRefund, IRefundRes, IRefundSlot } from '../redux/refunds/refunds.types';
 import { ClientApi } from './client.api';

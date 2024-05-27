@@ -1,7 +1,7 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueries } from './index';
 import { ExternalServiceTypeEnum, ExtServiceBase } from '../types/integrations.types';
-import { AppResponse } from '../redux/global.types';
+import { AppResponse } from '../redux/app-redux.types';
 import { ClientApi } from './client.api';
 
 export interface GetIntegrationsListQuery extends Pick<AppQueries, 'warehouseId' | 'serviceId'> {

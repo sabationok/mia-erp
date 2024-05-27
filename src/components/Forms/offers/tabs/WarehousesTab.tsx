@@ -1,5 +1,5 @@
 import TableList, { ITableListProps } from '../../../TableList/TableList';
-import { OnlyUUID } from '../../../../redux/global.types';
+import { OnlyUUID } from '../../../../redux/app-redux.types';
 import { useWarehousesSelector } from '../../../../redux/selectors.store';
 import { useCallback, useEffect, useMemo } from 'react';
 import { getIdRef } from '../../../../utils';

@@ -7,7 +7,7 @@ import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServ
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import { OfferFormAreaProps } from '../types';
 import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
-import { ArrayOfUUID } from '../../../../redux/global.types';
+import { ArrayOfUUID } from '../../../../redux/app-redux.types';
 import { t } from '../../../../lang';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 import { PropertiesGroupSelect } from '../../../atoms/PropertiesGroupSelect';

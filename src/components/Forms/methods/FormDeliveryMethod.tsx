@@ -16,7 +16,7 @@ import { useInvoicesSelector } from '../../../redux/selectors.store';
 import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { Text } from '../../atoms/Text';
 import InputText from '../../atoms/Inputs/InputText';
-import { IBaseKeys } from '../../../redux/global.types';
+import { IBaseKeys } from '../../../redux/app-redux.types';
 import LangButtonsGroup from '../../atoms/LangButtonsGroup';
 import { DisabledStates } from '../../../types/utils.types';
 

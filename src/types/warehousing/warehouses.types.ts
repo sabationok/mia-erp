@@ -1,4 +1,4 @@
-import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/global.types';
+import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/app-redux.types';
 import { OfferEntity } from '../offers/offers.types';
 import { CompanyEntity } from '../companies.types';
 import { PriceEntity } from '../price-management/price-management.types';
@@ -6,15 +6,15 @@ import { VariationEntity } from '../offers/variations.types';
 import { AppQueryParams } from '../../api';
 import { GeolocationPoint } from '../../services/Geolocation.service';
 import { HasAuthor, HasOwnerAsCompany, HasStatus, HasStatusRef, HasType, MaybeNull, WithPeriod } from '../utils.types';
+import { WarehouseInventoryEntity } from './warehouse-inventory.types';
+
+export * from './warehouse-inventory.types';
 
 export enum WarehouseTypeEnum {
   WAREHOUSE = 'warehouse',
   STORE = 'store',
 }
-export enum DeliverNameEnum {
-  novaposhta = 'novaposhta',
-  ukrposhta = 'ukrposhta',
-}
+
 export enum WarehouseDocumentType {
   addToStock = 'addToStock',
   reserveFromStock = 'reserveFromStock',
@@ -58,18 +58,7 @@ export interface IWarehouseReqData {
 
 export type ProductInventoryStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
-export interface WarehouseItemEntity extends IBase, WithPeriod {
-  owner?: CompanyEntity;
-  warehouse?: IWarehouse;
-  offer?: OfferEntity;
-  variation?: VariationEntity;
-  price?: PriceEntity;
-
-  stock?: number;
-  reserved?: number;
-  awaiting?: number;
-  lost?: number;
-}
+export interface WarehouseItemEntity extends WarehouseInventoryEntity {}
 
 export interface IProductInventoryFormData extends WithPeriod, HasStatus<ProductInventoryStatus> {
   product?: Omit<OfferEntity, 'categories' | 'inventories' | 'category' | 'properties'>;

@@ -1,5 +1,5 @@
 import { useAppDispatch } from 'redux/store.store';
-import { ServiceDispatcherAsync } from '../redux/global.types';
+import { ServiceDispatcherAsync } from '../redux/app-redux.types';
 import { useMemo } from 'react';
 import { ICustomRole, ModuleWithActions } from '../redux/customRoles/customRoles.types';
 import { createCustomRoleThunk, getAllActionsThunk } from '../redux/customRoles/customRoles.thunks';

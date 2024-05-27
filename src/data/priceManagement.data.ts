@@ -7,6 +7,30 @@ import {
 } from '../types/price-management/price-management.types';
 import { priceAmountAndPercentageFieldsLabels } from '../utils/tables';
 import { toPrice } from '../utils/numbers';
+import { enumToFilterOptions } from '../utils';
+import {
+  DiscountThresholdTypeEnum,
+  DiscountValueTypeEnum,
+  PriceBonusProviderEnum,
+  PriceDiscountType,
+  PriceDiscountVolumeType,
+} from '../types/price-management/discounts';
+
+export const PriceDiscountTypeOptions = enumToFilterOptions(PriceDiscountType, { labelPrefix: 'Discount' });
+export const PriceDiscountProviderOptions = enumToFilterOptions(PriceBonusProviderEnum, { labelPrefix: 'Discount' });
+export const PriceDiscountValueTypeOptions = enumToFilterOptions(DiscountValueTypeEnum, { labelPrefix: 'Discount' });
+export const PriceDiscountVolumeTypeOptions = enumToFilterOptions(PriceDiscountVolumeType, { labelPrefix: 'Discount' });
+export const PriceDiscountThresholdTypeOptions = enumToFilterOptions(DiscountThresholdTypeEnum, {
+  labelPrefix: 'Discount_threshold_type',
+});
+
+export const DiscountFilters = {
+  Type: PriceDiscountTypeOptions,
+  BalanceProvider: PriceDiscountProviderOptions,
+  ValueType: PriceDiscountValueTypeOptions,
+  VolumeType: PriceDiscountVolumeTypeOptions,
+  ThresholdType: PriceDiscountThresholdTypeOptions,
+};
 
 const dateColumn: CellTittleProps = {
   top: { name: t('Updated'), align: 'center', getData: d => d?.createdAt },
@@ -163,7 +187,6 @@ export const pricesColumns: CellTittleProps<PriceEntity>[] = [
     width: '150px',
     action: 'valueByPath',
   },
-
   dateColumn,
 ];
 

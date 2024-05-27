@@ -7,7 +7,7 @@ import DirVariationsTemplate, { DirVariationsTemplateProps } from '../Directorie
 import DirPoperties, { DirPropertiesProps } from '../Directories/DirProperties';
 import Forms, { FormPropTypes } from '../Forms';
 import { FormCreateBankAccountProps } from '../Forms/finances/FormCreateBankAccount';
-import ModalCreatePrice, { ModalCreatePriceProps } from './ModalCreatePrice';
+import CreatePriceModal, { ModalCreatePriceProps } from './CreatePriceModal';
 
 export enum Modals {
   ModalForm = 'ModalForm',
@@ -63,7 +63,7 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   [Modals.FormCreateTransaction]: Forms.CreateTransaction,
   [Modals.FormCreateCategory]: Forms.CreateCategory,
   [Modals.FormCreatePriceList]: Forms.CreatePriceList,
-  [Modals.CreatePrice]: ModalCreatePrice,
+  [Modals.CreatePrice]: CreatePriceModal,
   [Modals.FormCreateCustomRole]: Forms.CreateCustomRole,
   [Modals.FormCreateCount]: Forms.CreateCount,
   [Modals.FormCreateCompany]: Forms.CreateCompany,

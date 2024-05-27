@@ -1,4 +1,4 @@
-import { ServiceDispatcherAsync } from '../redux/global.types';
+import { ServiceDispatcherAsync } from '../redux/app-redux.types';
 import { useAppDispatch } from '../redux/store.store';
 import { getAllDeliveryMethodsThunk } from '../redux/shipments/shipments.thunks';
 import { defaultThunkPayload } from '../utils/fabrics';

@@ -9,7 +9,7 @@ import { usePermissionsSelector } from 'hooks/usePermissionsService.hook';
 import { PermissionEntity } from '../../types/permissions.types';
 import { ITableListProps } from '../TableList/tableTypes.types';
 import usePermissionsActionsCreator from '../../hooks/usePermissonsActionsCreator';
-import { CompanyQueryType } from '../../redux/global.types';
+import { CompanyQueryType } from '../../redux/app-redux.types';
 import { PermissionStatus } from 'types/permissions.types';
 import { permissionsTableColumns } from '../../data/permissions.data';
 import { permissionsSearchParams } from '../../data/companies.data';

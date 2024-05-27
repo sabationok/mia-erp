@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useAppDispatch } from '../redux/store.store';
-import { OnlyUUID, ServiceDispatcher, ServiceDispatcherAsync } from '../redux/global.types';
+import { OnlyUUID, ServiceDispatcher, ServiceDispatcherAsync } from '../redux/app-redux.types';
 import {
   ICreateOrderInfoDto,
   ICreateOrderInfoFormState,
