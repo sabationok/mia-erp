@@ -1,7 +1,11 @@
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useCallback, useState } from 'react';
 import { useAppForm } from '../../../hooks';
-import { IPriceFormData, PriceFormDataPath } from '../../../types/price-management/price-management.types';
+import {
+  IPriceFormData,
+  OfferPriceTypeEnum,
+  PriceFormDataPath,
+} from '../../../types/price-management/price-management.types';
 import { yupResolver } from '@hookform/resolvers/yup';
 import FormPriceInputs, { FormPriceDecimal } from './FormCreatePrice/FormPriceInputs';
 import { toReqData } from '../../../utils';
@@ -18,6 +22,9 @@ import { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { VariationEntity } from '../../../types/offers/variations.types';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import { PriceTypeOptions } from '../../../data/priceManagement.data';
+import ButtonsGroup from '../../atoms/ButtonsGroup';
 
 const validation = yup.object().shape({
   in: isNumberStringSchema.nullable(),
@@ -46,8 +53,9 @@ export const CreatePriceFormArea = ({ update, offer, defaultState }: FormCreateP
   const offersSrv = useAppServiceProvider()[ServiceName.offers];
   const [isDefault, setIsDefault] = useState(false);
 
-  const priceForm = useAppForm<IPriceFormData>({
+  const form = useAppForm<IPriceFormData>({
     defaultValues: {
+      type: OfferPriceTypeEnum.fixed,
       in: 0,
       out: 0,
       commission: { amount: 0, percentage: 0 },
@@ -58,7 +66,7 @@ export const CreatePriceFormArea = ({ update, offer, defaultState }: FormCreateP
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
-  const { formValues, setValue, handleSubmit } = priceForm;
+  const { formValues, setValue, handleSubmit } = form;
 
   const { in: cost, out: price } = formValues;
 
@@ -101,9 +109,9 @@ export const CreatePriceFormArea = ({ update, offer, defaultState }: FormCreateP
       ToastService.warning('Not passed offer id');
       return;
     }
-    if (update) {
+    if (formData?.offer?._id) {
       service.updatePriceById({
-        data: { data: { _id: update, data: dataForReq }, updateCurrent: true },
+        data: { data: { _id: formData?.offer?._id, data: dataForReq }, updateCurrent: true },
         onLoading: loaders.onLoading('update'),
         onSuccess: loaders.onSuccess('update', (data, meta) => {
           if (isDefault && formData.offer?._id) {
@@ -143,8 +151,12 @@ export const CreatePriceFormArea = ({ update, offer, defaultState }: FormCreateP
       })}
     >
       <FlexBox padding={'0 0 8px'} flex={1} overflow={'auto'}>
+        <InputLabel label={t('type')}>
+          <ButtonsGroup value={formValues.type} options={PriceTypeOptions} onSelect={o => setValue('type', o.value)} />
+        </InputLabel>
+
         <FormPriceInputs
-          form={priceForm}
+          form={form}
           handleOnBlur={(_name, callback) => {
             return ev => {
               callback && callback(ev);

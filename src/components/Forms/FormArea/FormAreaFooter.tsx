@@ -69,6 +69,8 @@ const Footer = styled.footer`
   align-items: stretch;
   flex-wrap: wrap;
 
+  max-width: 100%;
+
   //position: sticky;
   //bottom: 0;
   //left: 0;

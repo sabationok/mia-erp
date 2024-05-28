@@ -299,11 +299,11 @@ const icon = css`
 const outlined = css`
   color: ${({ theme }) => theme.accentColor.base};
   fill: ${({ theme }) => theme.accentColor.base};
-  border: 1px solid ${({ theme }) => theme.accentColor.base};
+  border: 2px solid ${({ theme }) => theme.accentColor.base};
   /* background-color: transparent; */
 
   &:hover {
-    border: 1px solid ${({ theme }) => theme.accentColor.hover};
+    border: 2px solid ${({ theme }) => theme.accentColor.hover};
     color: ${({ theme }) => theme.accentColor.hover};
     fill: ${({ theme }) => theme.accentColor.hover};
   }
@@ -311,7 +311,7 @@ const outlined = css`
   &:active {
     color: ${({ theme }) => theme.accentColor.pressed};
     fill: ${({ theme }) => theme.accentColor.pressed};
-    border: 1px solid ${({ theme }) => theme.accentColor.pressed};
+    border: 2px solid ${({ theme }) => theme.accentColor.pressed};
     //background-color: var(--ligthOrange);
     //box-shadow: var(--btnShadow_active);
   }
@@ -353,20 +353,21 @@ const filled = css`
   }
 `;
 const filledSmall = css`
-  ${small}
-  ${filled}
+  ${small};
+  ${filled};
 `;
 const filledMiddle = css`
-  ${middle}
-  ${filled}
+  ${middle};
+  ${filled};
 `;
 const onlyIconFilled = css`
-  ${filled}
-  ${icon}
+  ${filled};
+  ${icon};
 `;
 const onlyIconOutlined = css`
-  ${outlined}
-  ${icon}
+  ${outlined};
+  ${icon};
+  //border-width: 2px;
 `;
 const onlyIcon = css`
   ${def};

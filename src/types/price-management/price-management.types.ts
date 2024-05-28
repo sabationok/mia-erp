@@ -5,8 +5,8 @@ import { VariationEntity } from '../offers/variations.types';
 import { AppQueryParams } from '../../api';
 import { ICompanyBase } from '../companies.types';
 import { IUserBase } from '../auth.types';
-import { EntityPath, HasDescription, HasLabel, HasStatus, HasType, MaybeNull, WithPeriod } from '../utils.types';
-import { PriceDiscountEntity } from './discounts';
+import { EntityPath, HasDescription, HasLabel, HasStatus, HasType, MaybeNull, UUID, WithPeriod } from '../utils.types';
+import { PriceDiscountEntity, PriceDiscountRecord } from './discounts';
 import { Path } from 'react-hook-form';
 
 export enum PriceListTypeEnum {
@@ -23,6 +23,12 @@ export type PriceListStatus = 'rejected' | 'approved' | 'pending' | 'error' | 's
 export type PriceListType = 'purchases' | 'sales';
 
 export type PriceListFilterOption = TabOption<PriceListType>;
+
+export enum OfferPriceTypeEnum {
+  fixed = 'fixed',
+  recommend = 'recommend',
+  onContract = 'onContract',
+}
 
 export interface PriceListDto
   extends WithPeriod,
@@ -66,20 +72,28 @@ export type PriceAmountAndPercentageFieldsKey = keyof typeof PriceAmountAndPerce
 export interface PriceAmountAndPercentageFields
   extends Record<PriceAmountAndPercentageFieldsKey, AmountAndPercentage> {}
 
-export interface IPriceBase extends PriceAmountAndPercentageFields, HasLabel {
+export interface IPriceBase extends PriceAmountAndPercentageFields, HasLabel, HasType<OfferPriceTypeEnum> {
   in?: number | string;
   out?: number | string;
 }
 
 export type BasePriceInfoPath = EntityPath<IPriceBase>;
 
-export interface IPriceDto extends IPriceBase, WithPeriod {
+export interface CreatePriceDto extends IPriceBase, WithPeriod {
   list?: OnlyUUID;
   product?: OnlyUUID;
   variation?: OnlyUUID;
+
+  listId?: UUID;
+  productId?: UUID;
+  variationId?: UUID;
+
+  discounts?: (OnlyUUID | PriceDiscountRecord)[];
 }
 
-export type UpdatePriceDto = Partial<Omit<IPriceDto, 'list' | 'product' | 'variation'>>;
+export type UpdatePriceDto = Partial<Omit<CreatePriceDto, 'list' | 'product' | 'variation'>> & {
+  // discountsIds?: UUID[];
+};
 
 export interface PriceEntity extends IBase, IPriceBase {
   owner?: ICompanyBase;
@@ -93,7 +107,7 @@ export interface PriceEntity extends IBase, IPriceBase {
   discounts?: PriceDiscountEntity[];
 }
 
-export interface IPriceFormData extends Omit<IPriceDto, 'product' | 'variation' | 'list'> {
+export interface IPriceFormData extends Omit<CreatePriceDto, 'product' | 'variation' | 'list'> {
   offer?: IFormDataValueWithID;
   variation?: IFormDataValueWithID;
   list?: IFormDataValueWithID;
@@ -109,12 +123,12 @@ export interface IPriceListReqData {
 
 export interface IPriceListItemReqData {
   _id?: string;
-  data: IPriceDto;
+  data: CreatePriceDto;
   params?: AppQueryParams;
 }
 
 export interface ICreatePriceReqData {
-  data: IPriceDto;
+  data: CreatePriceDto;
   params?: AppQueryParams;
 }
 

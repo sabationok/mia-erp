@@ -22,6 +22,7 @@ import { ShipmentsState } from './shipments/shipments.slice';
 import { IntegrationsState } from './integrations/integrations.slice';
 import { DeliveriesState } from './deliveries/deliveries.slice';
 import { ICompaniesState } from '../types/companies.types';
+import { DiscountsState } from './priceManagement/discounts/discounts.slice';
 
 export const useAuthSelector = () => useSelector<RootState, IAuthState>((state: RootState) => state.auth);
 export const useUsersSelector = () => useSelector<RootState, IUsersState>((state: RootState) => state.users);
@@ -50,7 +51,7 @@ export const useProductsSelector = () =>
   useSelector<RootState, OffersState>((state: RootState): OffersState => state.products);
 export const usePropertiesSelector = () =>
   useSelector<RootState, OffersState['properties']>(
-    (state: RootState): OffersState['properties'] => state.products.properties
+    (state: RootState): OffersState['properties'] => state?.['products']?.properties
   );
 export const useOrdersSelector = () =>
   useSelector<RootState, IOrdersState>((state: RootState): IOrdersState => state.orders);
@@ -63,6 +64,10 @@ export const useRefundsSelector = () =>
   useSelector<RootState, IRefundsState>((state: RootState): IRefundsState => state['refunds']);
 export const usePriceManagementSelector = () =>
   useSelector<RootState, PricesState>((state: RootState): PricesState => state.priceLists);
+
+export const usePriceDiscountsSelector = () =>
+  useSelector<RootState, DiscountsState>((state: RootState): DiscountsState => state?.['discounts']);
+
 export const useWarehousesSelector = () =>
   useSelector<RootState, IWarehouseState>((state: RootState): IWarehouseState => state.warehouses);
 export const useCustomRolesSelector = () =>

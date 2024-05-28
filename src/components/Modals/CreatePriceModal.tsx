@@ -11,7 +11,7 @@ import { CreatePriceFormArea } from '../Forms/pricing/CreatePriceFormArea';
 import TableList from '../TableList/TableList';
 import { PriceDiscountEntity } from '../../types/price-management/discounts';
 import FlexBox from '../atoms/FlexBox';
-import { usePriceManagementSelector } from '../../redux/selectors.store';
+import { usePriceDiscountsSelector } from '../../redux/selectors.store';
 import { useCurrentPrice } from '../../hooks';
 import { AccordionFormArea } from '../Forms/FormArea/AccordionForm';
 import { useModalService } from '../ModalProvider/ModalProvider';
@@ -19,6 +19,7 @@ import { CreateDiscountModal } from './CreateDiscountModal';
 import { useAppDispatch } from '../../redux/store.store';
 import { getAllDiscountsThunk } from '../../redux/priceManagement/discounts/discounts.thunks';
 import { CellTittleProps } from '../TableList/TebleCells/CellTitle';
+import { updatePriceThunk } from '../../redux/priceManagement/priceManagement.thunks';
 
 export interface ModalCreatePriceProps
   extends Omit<ModalFormProps<any, any, IPriceFormData>, 'onSubmit' | 'afterSubmit'> {
@@ -36,62 +37,113 @@ type UsePriceFormLoadersKey =
   | 'set_default'
   | 'create_discount'
   | 'update_discount'
-  | 'discounts';
+  | 'discounts'
+  | 'all_discounts';
 
 export const usePriceModalFormLoaders = () => useLoadersProvider<UsePriceFormLoadersKey>();
 
 const CreatePriceModal: React.FC<ModalCreatePriceProps> = ({ updateId, offer, onSubmit, ...props }) => {
   const Price = useCurrentPrice({ _id: updateId });
-  const state = usePriceManagementSelector();
+  const discountsState = usePriceDiscountsSelector();
   const modalSrv = useModalService();
   const loaders = useLoaders<UsePriceFormLoadersKey, { price?: PriceEntity; discounts?: PriceDiscountEntity[] }>(
     {
       create: { content: 'Creating...' },
       set_default: { content: 'Updating offer...' },
     },
-    { price: Price.current, discounts: Price.current?.discounts }
+    { price: Price, discounts: Price?.discounts }
   );
   const dispatch = useAppDispatch();
 
   return (
-    <ModalBase
-      title={t('Pricing')}
-      onClose={props?.onClose}
-      // extraHeader={
-      //   // <TabSelector
-      //   //   defaultValue={formData?.type ?? OfferTypeEnum.GOODS}
-      //   //   filterOptions={productsFilterOptions}
-      //   //   onOptSelect={o => setData('formData', prev => ({ ...prev, type: o.value }))}
-      //   // />
-      // }
-    >
+    <ModalBase title={t('Pricing')} onClose={props?.onClose}>
       <LoadersProvider value={loaders}>
         <FlexBox padding={'0 8px 24px'}>
-          <CreatePriceFormArea offer={offer} defaultState={Price.current} />
+          <CreatePriceFormArea offer={offer} defaultState={Price} />
 
           <AccordionFormArea label={'Select discounts'}>
-            <TableList tableData={loaders.state?.discounts} isSearch={false} tableTitles={discountTableTitles} />
+            <TableList
+              tableData={loaders.state?.discounts}
+              isSearch={false}
+              tableTitles={discountTableTitles}
+              actionsCreator={() => {
+                return [
+                  {
+                    icon: 'refresh',
+                    disabled: !Price?._id,
+                    onClick: () => {
+                      Price?._id &&
+                        dispatch(
+                          getAllDiscountsThunk({
+                            data: { params: { priceId: Price?._id } },
+                            onLoading: loaders.onLoading('discounts'),
+                          })
+                        );
+                    },
+                  },
+                  { separator: true },
+                  {
+                    icon: 'delete',
+                    type: 'onlyIconFilled',
+                    disabled: !Price?._id,
+                    onClick: () => {
+                      Price?._id &&
+                        dispatch(
+                          updatePriceThunk({
+                            data: { data: { _id: Price?._id, data: { discounts: [] } } },
+                            onLoading: loaders.onLoading('update'),
+                          })
+                        );
+                    },
+                  },
+                ];
+              }}
+            />
 
             <FlexBox minHeight={'250px'}>
               <TableList
-                tableData={state.discounts.list}
+                tableData={discountsState.list}
                 isSearch={false}
                 tableTitles={discountTableTitles}
+                isLoading={loaders.isLoading?.discounts}
                 actionsCreator={ctx => {
+                  const currentId = ctx.selectedRow?._id;
                   return [
                     {
                       icon: 'refresh',
                       onClick: () => {
-                        dispatch(getAllDiscountsThunk({}));
+                        dispatch(
+                          getAllDiscountsThunk({
+                            onLoading: loaders.onLoading('all_discounts'),
+                          })
+                        );
                       },
                     },
-
+                    { separator: true },
+                    {
+                      icon: 'done',
+                      type: 'onlyIconOutlined',
+                      disabled: !currentId,
+                      onClick: () => {
+                        if (Price?._id && currentId) {
+                          dispatch(
+                            updatePriceThunk({
+                              onLoading: loaders.onLoading('update'),
+                              data: {
+                                data: { _id: Price._id, data: { discounts: [{ _id: currentId }] } },
+                              },
+                            })
+                          );
+                        }
+                      },
+                    },
+                    { separator: true },
                     {
                       icon: 'plus',
                       type: 'onlyIconFilled',
                       onClick: () => {
                         modalSrv.create(CreateDiscountModal, {
-                          priceId: Price.current?._id,
+                          priceId: Price?._id,
                           onSuccess: d => {
                             loaders.setData('discounts', p => {
                               return [d, ...(p ?? [])];

@@ -1,6 +1,7 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { t } from '../lang';
 import {
+  OfferPriceTypeEnum,
   PriceAmountAndPercentageFieldsKey,
   PriceEntity,
   PriceListEntity,
@@ -9,6 +10,7 @@ import { priceAmountAndPercentageFieldsLabels } from '../utils/tables';
 import { toPrice } from '../utils/numbers';
 import { enumToFilterOptions } from '../utils';
 import {
+  DiscountLimitTypeEnum,
   DiscountThresholdTypeEnum,
   DiscountValueTypeEnum,
   PriceBonusProviderEnum,
@@ -17,9 +19,17 @@ import {
 } from '../types/price-management/discounts';
 
 export const PriceDiscountTypeOptions = enumToFilterOptions(PriceDiscountType, { labelPrefix: 'Discount' });
+export const PriceTypeOptions = enumToFilterOptions(OfferPriceTypeEnum, { labelPrefix: 'Price' });
 export const PriceDiscountProviderOptions = enumToFilterOptions(PriceBonusProviderEnum, { labelPrefix: 'Discount' });
 export const PriceDiscountValueTypeOptions = enumToFilterOptions(DiscountValueTypeEnum, { labelPrefix: 'Discount' });
 export const PriceDiscountVolumeTypeOptions = enumToFilterOptions(PriceDiscountVolumeType, { labelPrefix: 'Discount' });
+// export const PriceDiscountThresholdTTypeOptions = enumToFilterOptions(DiscountThresholdTypeEnum, {
+//   labelPrefix: 'Discount_threshold_type',
+// });
+
+export const DiscountLimitTypeOptions = enumToFilterOptions(DiscountLimitTypeEnum, {
+  labelPrefix: 'Discount_limit_type',
+});
 export const PriceDiscountThresholdTypeOptions = enumToFilterOptions(DiscountThresholdTypeEnum, {
   labelPrefix: 'Discount_threshold_type',
 });
@@ -30,6 +40,8 @@ export const DiscountFilters = {
   ValueType: PriceDiscountValueTypeOptions,
   VolumeType: PriceDiscountVolumeTypeOptions,
   ThresholdType: PriceDiscountThresholdTypeOptions,
+  // ThresholdTType: PriceDiscountThresholdTTypeOptions,
+  LimitType: DiscountLimitTypeOptions,
 };
 
 const dateColumn: CellTittleProps = {

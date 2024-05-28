@@ -16,12 +16,6 @@ export interface PricesState {
   error: StateErrorType;
   dataMap: PartialRecord<UUID, PriceEntity>;
   keysMap: PartialRecord<UUID, UUID[]>;
-
-  discounts: {
-    list: PriceDiscountEntity[];
-    dataMap: PartialRecord<UUID, PriceDiscountEntity>;
-    keysMap: PartialRecord<UUID, UUID[]>;
-  };
 }
 
 const initialState: PricesState = {
@@ -32,12 +26,6 @@ const initialState: PricesState = {
   filteredLists: [],
   dataMap: {},
   keysMap: {},
-
-  discounts: {
-    list: [],
-    keysMap: {},
-    dataMap: {},
-  },
 };
 
 export const priceManagementSlice = createSlice({
@@ -166,10 +154,10 @@ function ManagePricesStateMap(
 
     for (const idKey of [current?.offer?._id, current?.variation?._id]) {
       if (idKey) {
-        const idsSet = new Set(st.discounts.keysMap?.[idKey]);
+        const idsSet = new Set(st.keysMap?.[idKey]);
         if (!idsSet?.has(itemId)) {
           idsSet.add(itemId);
-          st.discounts.keysMap[idKey] = Array.from(idsSet);
+          st.keysMap[idKey] = Array.from(idsSet);
         }
       }
     }

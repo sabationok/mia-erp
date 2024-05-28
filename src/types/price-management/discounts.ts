@@ -21,6 +21,10 @@ export enum DiscountThresholdTypeEnum {
   amount = 'amount',
   quantity = 'quantity',
 }
+export enum DiscountLimitTypeEnum {
+  amount = 'amount',
+  quantity = 'quantity',
+}
 
 export enum PriceDiscountVolumeType {
   slot = 'slot',
@@ -50,10 +54,15 @@ interface IDiscountBase extends HasType<PriceDiscountType>, HasBaseCmsConfigs {
   threshold?: number;
   thresholdType?: DiscountThresholdTypeEnum;
 
+  limit?: number;
+  limitType?: DiscountLimitTypeEnum;
+
   valueType?: DiscountValueTypeEnum;
   value?: string;
 
   slotCategory?: string;
+
+  label?: string;
 }
 export interface PriceDiscountRecord extends IDiscountBase {}
 export interface PriceDiscountEntity extends IBase, IDiscountBase {

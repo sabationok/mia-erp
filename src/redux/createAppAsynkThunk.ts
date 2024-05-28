@@ -17,7 +17,7 @@ export const createAppAsyncThunk = <
   return createAsyncThunk<
     ActionPayload<{ data: ReturnData; params?: Params; extra?: Extra }>,
     ThunkPayload<
-      { data: SubmitData; params?: Params; extra?: Extra },
+      { data?: SubmitData; params?: Params; extra?: Extra },
       ActionPayload<{ data: ReturnData; params?: Params; extra?: Extra }>
     >
   >(type, async (arg, thunkAPI) => {

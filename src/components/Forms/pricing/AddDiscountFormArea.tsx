@@ -17,6 +17,8 @@ import { createDiscountThunk } from '../../../redux/priceManagement/discounts/di
 import { DiscountFilters } from '../../../data/priceManagement.data';
 import FlexBox from '../../atoms/FlexBox';
 import { useLoadersProvider } from '../../../Providers/Loaders/LoaderProvider';
+import { toReqData } from '../../../utils';
+import { omit } from 'lodash';
 
 export interface CreateDiscountFormData extends PriceDiscountDto {
   _id?: string;
@@ -45,8 +47,7 @@ export function AddDiscountFormArea({ discount, onSuccess, priceId, ...props }: 
       createDiscountThunk({
         data: {
           data: {
-            ...fData,
-            pricesIds: priceId ? [priceId] : undefined,
+            ...toReqData(omit(fData, ['cmsConfigs'])),
           },
         },
         onLoading: loaders.onLoading('discount'),
@@ -98,19 +99,23 @@ export function AddDiscountFormArea({ discount, onSuccess, priceId, ...props }: 
         />
       </InputLabel>
 
-      <FlexBox fxDirection={'row'} gap={16}>
-        <InputLabel label={'Value'}>
-          <InputText type={'number'} step={'0.01'} min={0} {...register('value', { valueAsNumber: true })} />
+      <FlexBox fxDirection={'row'} gap={16} alignItems={'flex-end'}>
+        <InputLabel label={t('Value')} error={form.formState?.errors?.value}>
+          <InputText type={'number'} step={'0.01'} min={0.01} {...register('value', { valueAsNumber: true })} />
         </InputLabel>
 
-        <InputLabel label={t('Discount_Threshold')}>
-          <InputText type={'number'} step={'0.01'} min={0} {...register('threshold', { valueAsNumber: true })} />
+        <InputLabel label={t('Discount threshold')} error={form.formState?.errors?.threshold}>
+          <InputText type={'number'} step={'0.01'} min={0.01} {...register('threshold', { valueAsNumber: true })} />
+        </InputLabel>
+
+        <InputLabel label={t('Discount limit')} error={form.formState?.errors?.limit}>
+          <InputText type={'number'} step={'0.01'} min={0.01} {...register('limit', { valueAsNumber: true })} />
         </InputLabel>
       </FlexBox>
 
-      {!!formValues.threshold && (
+      {!!(formValues.threshold || formValues.limit) && (
         <>
-          <InputLabel label={t('Discount_Volume_Type')}>
+          <InputLabel label={t('Discount volume type')}>
             <ButtonsGroup
               value={formValues.volumeType}
               onSelect={({ value }) => {
@@ -119,7 +124,11 @@ export function AddDiscountFormArea({ discount, onSuccess, priceId, ...props }: 
               options={DiscountFilters.VolumeType}
             />
           </InputLabel>
-          <InputLabel label={t('Discount_Volume_Type')}>
+        </>
+      )}
+      {!!formValues.threshold && (
+        <>
+          <InputLabel label={t('Discount threshold type')} error={form.formState?.errors?.thresholdType}>
             <ButtonsGroup
               value={formValues.thresholdType}
               onSelect={({ value }) => {
@@ -130,6 +139,24 @@ export function AddDiscountFormArea({ discount, onSuccess, priceId, ...props }: 
           </InputLabel>
         </>
       )}
+
+      {!!formValues.limit && (
+        <>
+          <InputLabel label={t('Discount limit type')} error={form.formState?.errors?.limitType}>
+            <ButtonsGroup
+              value={formValues.limitType}
+              onSelect={({ value }) => {
+                setValue('limitType', value);
+              }}
+              options={DiscountFilters.LimitType}
+            />
+          </InputLabel>
+        </>
+      )}
+
+      <InputLabel label={t('Label')} error={form.formState?.errors?.label}>
+        <InputText {...register('label')} />
+      </InputLabel>
     </AccordionForm>
   );
 }

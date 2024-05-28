@@ -41,6 +41,6 @@ export class DiscountsApi {
     dto: PriceDiscountDto;
     _id: string;
   }): Promise<AppResponse<PriceDiscountEntity>> => {
-    return this._client.post(this._endpoints.create, data);
+    return this._client.patch(this._endpoints.create, data);
   };
 }

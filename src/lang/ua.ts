@@ -5,6 +5,7 @@ import { WarehouseDocumentType } from '../types/warehousing/warehouses.types';
 import { MeasurementUnit } from '../types/offers/offers.types';
 import { OrderStatusEnum } from '../types/orders/orders.types';
 import { PaymentInternalTypeEnum } from '../types/integrations.types';
+import { OfferPriceTypeEnum } from '../types/price-management/price-management.types';
 
 export const langUa = {
   // DIRECTORIES
@@ -499,14 +500,22 @@ export const langUa = {
   Type: 'Тип',
   'Bonus balance': 'Бонусний баланс',
   'Value type': 'Тип значення',
-  Discount_Volume_Type: "Тип об'єму",
-  Discount_Threshold: 'Поріг нарахування',
-  Discount_Threshold_Type: 'Тип порогу нарахування',
+  'Discount volume type': "Тип об'єму",
+  'Discount threshold': 'Поріг нарахування',
+  'Discount threshold type': 'Тип порогу нарахування',
+  'Discount limit': 'Поріг нарахування',
+  'Discount limit type': 'Тип ліміту нарахування',
+
+  [`Price_${OfferPriceTypeEnum.fixed}`]: 'Фіксоваона',
+  [`Price_${OfferPriceTypeEnum.recommend}`]: 'Рекомендована',
+  [`Price_${OfferPriceTypeEnum.onContract}`]: 'Договірна',
 
   [`Discount_discount`]: 'Знижка',
   [`Discount_threshold_type_quantity`]: 'Кількість',
-  [`Discount_threshold_type_total`]: 'Сума',
+  [`Discount_threshold_type_amount`]: 'Сума',
   [`Discount_cashback`]: 'Кешбек',
+  [`Discount_limit_type_quantity`]: 'Кількість',
+  [`Discount_limit_type_amount`]: 'Сума',
   [`Discount_bonus`]: 'Бонус',
   [`Discount_default`]: 'Системний',
   [`Discount_refme`]: 'RefmeApp',

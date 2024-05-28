@@ -56,7 +56,7 @@ export class PricesApi {
     return this.api.post(this.endpoints.createPrice(), input?.data);
   };
   public static updateById = async (input?: IUpdatePriceReqData): Promise<AppResponse<PriceEntity>> => {
-    return this.api.post(this.endpoints.updatePrice(input?._id), input?.data);
+    return this.api.patch(this.endpoints.updatePrice(input?._id), input?.data);
   };
 }
 

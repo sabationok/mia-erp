@@ -12,6 +12,7 @@ import { LoadersProvider } from '../../Providers/Loaders/LoaderProvider';
 import { useAppDispatch } from '../../redux/store.store';
 import { updateDiscountThunk } from '../../redux/priceManagement/discounts/discounts.thunks';
 import { toReqData } from '../../utils';
+import { omit } from 'lodash';
 
 export interface CreateDiscountModalProps extends CreatedModal {
   priceId?: string;
@@ -29,6 +30,11 @@ export const CreateDiscountModal = ({ onSuccess, priceId, offerId, discount }: C
   });
   const form = useAppForm<CreateDiscountFormData>({
     defaultValues: {
+      ...omit(Discount, 'cmsConfigs'),
+      cmsConfigs: {
+        key: Discount?.cmsConfigs?.key ?? undefined,
+        labels: Discount?.cmsConfigs?.labels ?? undefined,
+      },
       pricesIds: priceId ? [priceId] : undefined,
       offersIds: offerId ? [offerId] : undefined,
     },
