@@ -17,7 +17,7 @@ import { AccordionFormArea } from '../Forms/FormArea/AccordionForm';
 import { useModalService } from '../ModalProvider/ModalProvider';
 import { CreateDiscountModal } from './CreateDiscountModal';
 import { useAppDispatch } from '../../redux/store.store';
-import { getAllDiscountsThunk } from '../../redux/priceManagement/discounts/discounts.thunks';
+import { getAllDiscountsThunk, removeDiscountThunk } from '../../redux/priceManagement/discounts/discounts.thunks';
 import { CellTittleProps } from '../TableList/TebleCells/CellTitle';
 import { updatePriceThunk } from '../../redux/priceManagement/priceManagement.thunks';
 import InputLabel from '../atoms/Inputs/InputLabel';
@@ -93,16 +93,13 @@ const CreatePriceModal: React.FC<ModalCreatePriceProps> = ({ updateId, offer, on
                         disabled: !currentId || !Price?._id,
                         onClick: () => {
                           Price?._id &&
+                            currentId &&
                             dispatch(
-                              updatePriceThunk({
+                              removeDiscountThunk({
                                 data: {
                                   data: {
-                                    _id: Price?._id,
-                                    data: {
-                                      discounts: Price.discounts
-                                        ?.filter(el => el._id !== currentId)
-                                        .map(el => ({ _id: el._id })),
-                                    },
+                                    discountId: currentId,
+                                    priceId: Price?._id,
                                   },
                                 },
                                 onLoading: loaders.onLoading('update'),

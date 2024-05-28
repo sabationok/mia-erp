@@ -5,7 +5,7 @@ import * as thunks from './priceManagement.thunks';
 import { PartialRecord, UUID } from '../../types/utils.types';
 import { omit } from 'lodash';
 import { PriceDiscountEntity } from '../../types/price-management/discounts';
-import { onCreateDiscountMather, onGetDiscountsMatcher } from './discounts/discounts.matchers';
+import { onCreateDiscountMather, onGetDiscountsMatcher, onRemoveDiscountCase } from './discounts/discounts.matchers';
 import { Action } from '../store.store';
 
 export interface PricesState {
@@ -133,6 +133,21 @@ export const priceManagementSlice = createSlice({
               current.discounts = [a.payload.data, ...(current?.discounts ?? [])];
 
               st.dataMap[priceId] = current;
+            }
+          }
+        }
+      )
+      .addMatcher(
+        onRemoveDiscountCase,
+        (s, a: Action<{ data: { result: boolean; discountId?: string; priceId?: string } }>) => {
+          const priceId = a.payload.data?.priceId;
+          const discountId = a.payload.data?.discountId;
+
+          if (priceId) {
+            const currrent = s.dataMap[priceId];
+            if (currrent?.discounts?.length) {
+              currrent.discounts = currrent.discounts?.filter(item => item._id !== discountId);
+              s.dataMap[priceId] = currrent;
             }
           }
         }

@@ -27,6 +27,7 @@ export enum DiscountsThunkTypeEnum {
   create = 'discounts/createOneThunk',
   update = 'discounts/updateOneThunk',
   getOne = 'discounts/getOneThunk',
+  remove = 'discounts/removeThunk',
 }
 
 export const buildGetAllDiscountsThunk = (type: string = DiscountsThunkTypeEnum.getAll) =>
@@ -44,3 +45,7 @@ export const updateDiscountThunk = createAppAsyncThunk(
 );
 
 export const getDiscountThunk = createAppAsyncThunk(DiscountsThunkTypeEnum.getOne, PriceManagementApi.discounts.getOne);
+export const removeDiscountThunk = createAppAsyncThunk(
+  DiscountsThunkTypeEnum.remove,
+  PriceManagementApi.discounts.remove
+);

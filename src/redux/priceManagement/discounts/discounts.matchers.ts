@@ -15,3 +15,7 @@ export function onGetDiscountsMatcher(a: AnyAction) {
 export function onGetOneDiscountCase(a: AnyAction) {
   return a.type === thunks.getDiscountThunk.fulfilled;
 }
+
+export function onRemoveDiscountCase(a: AnyAction) {
+  return a.type === thunks.removeDiscountThunk.fulfilled;
+}

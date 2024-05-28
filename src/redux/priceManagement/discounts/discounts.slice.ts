@@ -36,6 +36,9 @@ export const discountsSlice = createSlice({
       })
       .addCase(thunks.updateDiscountThunk.fulfilled, (s, a) => {
         ManageDiscountsStateMap(s, { data: a.payload.data }, { refresh: false });
+      })
+      .addCase(thunks.removeDiscountThunk.fulfilled, (s, a) => {
+        ManageDiscountsStateMap(s, { removeId: a.payload.data?.discountId });
       }),
 });
 
@@ -44,7 +47,20 @@ function ManageDiscountsStateMap(
   input: { data?: PriceDiscountEntity; removeId?: string },
   options?: { refresh?: boolean; isForList?: boolean }
 ) {
-  if (input.data) {
+  if (input.removeId) {
+    const current = st.dataMap[input.removeId];
+    const IdKeys = idsFromRefs([...(current?.prices ?? []), ...(current?.offers ?? [])]);
+
+    for (const priceId of IdKeys) {
+      const idsSet = new Set(st.keysMap?.[priceId]);
+      if (!idsSet?.has(input.removeId)) {
+        idsSet.delete(input.removeId);
+        st.keysMap[priceId] = Array.from(idsSet);
+      }
+    }
+
+    delete st.dataMap[input.removeId];
+  } else if (input.data) {
     const itemId = input.data?._id;
 
     st.dataMap[itemId] = options?.refresh ? input.data : { ...st.dataMap?.[itemId], ...input.data };

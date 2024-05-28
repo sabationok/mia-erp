@@ -19,6 +19,7 @@ export class DiscountsApi {
     create: `${this._BASE_URL}/create`,
     update: `${this._BASE_URL}/update`,
     getOne: `${this._BASE_URL}/one`,
+    remove: `${this._BASE_URL}/remove`,
   };
 
   public static readonly getAll = (
@@ -42,5 +43,12 @@ export class DiscountsApi {
     _id: string;
   }): Promise<AppResponse<PriceDiscountEntity>> => {
     return this._client.patch(this._endpoints.create, data);
+  };
+
+  public static readonly remove = (data?: {
+    discountId: string;
+    priceId: string;
+  }): Promise<AppResponse<{ result: boolean; discountId: string; priceId?: string }>> => {
+    return this._client.patch(this._endpoints.remove, data);
   };
 }
