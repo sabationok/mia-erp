@@ -27,6 +27,7 @@ const TableOverHead: React.FC<React.HTMLAttributes<HTMLDivElement>> = props => {
       <FlexBox
         fxDirection={quickActionsDirection === 'row-reverse' ? 'row-reverse' : 'row'}
         margin={'0 0 0 auto'}
+        gap={12}
         style={{ justifySelf: 'flex-end' }}
       >
         {isFilter && <TableFilter />}

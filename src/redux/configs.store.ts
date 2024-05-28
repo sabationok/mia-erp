@@ -11,6 +11,10 @@ export const persistorConfigs: Record<
     storage: Storage | WebStorage;
   } & PersistConfig<any>
 > = {
+  cart: {
+    key: 'cart',
+    storage,
+  },
   auth: {
     key: 'auth',
     storage,

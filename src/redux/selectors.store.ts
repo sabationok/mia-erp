@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { RootState } from './store.store';
 import { useSelector } from 'react-redux';
 import { IAuthState } from '../types/auth.types';
@@ -23,6 +22,7 @@ import { IntegrationsState } from './integrations/integrations.slice';
 import { DeliveriesState } from './deliveries/deliveries.slice';
 import { ICompaniesState } from '../types/companies.types';
 import { DiscountsState } from './priceManagement/discounts/discounts.slice';
+import { CartState } from './cart/cart.slice';
 
 export const useAuthSelector = () => useSelector<RootState, IAuthState>((state: RootState) => state.auth);
 export const useUsersSelector = () => useSelector<RootState, IUsersState>((state: RootState) => state.users);
@@ -73,6 +73,9 @@ export const useWarehousesSelector = () =>
 export const useCustomRolesSelector = () =>
   useSelector<RootState, ICustomRolesState>((state: RootState) => state.customRoles);
 
+export const useCartSelector = (): CartState =>
+  useSelector<RootState, CartState>((state: RootState) => state?.['cart']);
+
 export const useDirectorySelector = <DT extends ApiDirType = any>(
   dirType: DT
 ): {
@@ -83,10 +86,4 @@ export const useDirectorySelector = <DT extends ApiDirType = any>(
   const state = useSelector((state: RootState) => state.directories);
 
   return { directory: state.directories[dirType] };
-};
-export const useFindPriceListById = (_id?: string) => {
-  const { lists } = usePriceManagementSelector();
-  return useMemo(() => {
-    return lists.find(list => list._id === _id);
-  }, [_id, lists]);
 };

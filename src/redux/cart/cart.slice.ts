@@ -1,6 +1,6 @@
 import { OfferEntity } from 'types/offers/offers.types';
 import { IOrderTempSlot } from 'types/orders/order-slot.types';
-import { IWarehouse } from '../../types/warehousing/warehouses.types';
+import { WarehouseEntity } from '../../types/warehousing/warehouses.types';
 import { createSlice } from '@reduxjs/toolkit';
 import { Action } from '../store.store';
 import {
@@ -37,7 +37,7 @@ export type CartWarehouseData = {
   slotKeys: TempId[];
   selectedIds: TempId[];
   isSelected?: boolean;
-  info?: Partial<IWarehouse>;
+  info?: Partial<WarehouseEntity>;
 };
 export type OrderSlotsMap = Record<TempId, Partial<IOrderTempSlot>>;
 

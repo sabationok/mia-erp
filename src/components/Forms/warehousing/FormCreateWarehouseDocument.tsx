@@ -4,7 +4,7 @@ import InputText from '../../atoms/Inputs/InputText';
 import styled from 'styled-components';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import {
-  IWarehouse,
+  WarehouseEntity,
   IWarehouseDoc,
   IWarehouseDocFormData,
   WarehouseDocumentType,
@@ -140,7 +140,7 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
     },
     [setValue]
   );
-  const handleSelectWarehouse: OnRowClickHandler<IWarehouse> = useCallback(
+  const handleSelectWarehouse: OnRowClickHandler<WarehouseEntity> = useCallback(
     data => {
       data?._id && setValue('warehouse._id', data?._id);
     },

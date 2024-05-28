@@ -2,7 +2,7 @@ import { AddressDto, AppResponse, ContactsDto, IBase, IFormDataValueWithID, Only
 import { PermissionEntity } from './permissions.types';
 import { IUserBase } from './auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';
-import { IWarehouse } from './warehousing/warehouses.types';
+import { WarehouseEntity } from './warehousing/warehouses.types';
 import { ExtServiceBase, InputIntegrationBase, OutputIntegrationBase } from './integrations.types';
 import { HasEmbeddedLabel, HasEmbeddedName, HasTaxCode, MaybeNull } from './utils.types';
 import { ISupplierDirItem } from './dir.types';
@@ -44,7 +44,7 @@ export interface HasInvoicingPolicy {
 }
 export interface HasWarehousingPolicy {
   warehousingPolicy?: MaybeNull<{
-    warehouse?: MaybeNull<IWarehouse>;
+    warehouse?: MaybeNull<WarehouseEntity>;
   }>;
 }
 export interface HasSupplementPolicy {
@@ -75,7 +75,7 @@ export interface CompanyEntity
     HasSupplementPolicy {
   owner?: Pick<IUserBase, '_id' | 'name' | 'email'>;
   permissions?: Partial<PermissionEntity>[];
-  warehouses?: MaybeNull<IWarehouse[]>;
+  warehouses?: MaybeNull<WarehouseEntity[]>;
   externalServices?: MaybeNull<ExtServiceBase[]>;
 
   inputs?: MaybeNull<InputIntegrationBase[]>;
@@ -200,7 +200,7 @@ export interface ICompanyReqData {
 //   manager?: Pick<IPermission, '_id' | 'createdAt' | 'deletedAt' | 'updatedAt' | 'user'>;
 // }
 export interface ICompanyConfigs {
-  warehouse?: IWarehouse;
+  warehouse?: WarehouseEntity;
   supplier?: IFormDataValueWithID;
   manager?: any;
 }

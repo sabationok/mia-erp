@@ -4,7 +4,7 @@ import { CompanyEntity } from '../../types/companies.types';
 import { IManager } from '../../types/auth.types';
 import { ISupplierDirItem } from '../../types/dir.types';
 import { TabOption } from '../../components/atoms/TabSelector';
-import { IWarehouse } from '../../types/warehousing/warehouses.types';
+import { WarehouseEntity } from '../../types/warehousing/warehouses.types';
 import { ICustomerBase } from '../../types/customers.types';
 
 export type RefundTypeFilterOption = TabOption;
@@ -31,7 +31,7 @@ export interface IRefundSlot extends PriceEntity {
 
   origin?: PriceEntity;
   status?: RefundStatus;
-  warehouse?: IWarehouse;
+  warehouse?: WarehouseEntity;
   supplier?: ISupplierDirItem;
 }
 

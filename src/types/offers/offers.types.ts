@@ -2,7 +2,7 @@ import { ArrayOfUUID, IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/
 import { ISupplierDirItem, OfferCategoryEntity } from '../dir.types';
 import { FilterOption } from '../../components/atoms/TabSelector';
 import { PriceEntity } from '../price-management/price-management.types';
-import { IWarehouse, WarehouseItemEntity } from '../warehousing/warehouses.types';
+import { WarehouseEntity, WarehouseItemEntity } from '../warehousing/warehouses.types';
 import { IBrand } from '../../redux/directories/brands.types';
 import { AppQueries, AppQueryParams } from '../../api';
 import { VariationEntity } from './variations.types';
@@ -25,6 +25,7 @@ import {
 } from '../utils.types';
 import { OfferImageSlotEntity } from './offer-images.types';
 import { WarehouseInventoryEntity } from '../warehousing/warehouse-inventory.types';
+import { HasBaseCmsConfigs } from '../cms.types';
 
 export type { OfferImageSlotEntity } from './offer-images.types';
 
@@ -82,7 +83,8 @@ export interface IOfferBase
     HasDimensions,
     HasDescription,
     HasType<OfferTypeEnum>,
-    HasStatus<OfferStatusEnum> {
+    HasStatus<OfferStatusEnum>,
+    HasBaseCmsConfigs {
   sku?: string;
   barCode?: string;
   qrCode?: string;
@@ -100,7 +102,7 @@ export interface IOfferBase
 export interface IOfferRelatedDefaultFields {
   variation?: VariationEntity;
   price?: PriceEntity;
-  warehouse?: IWarehouse;
+  warehouse?: WarehouseEntity;
   inventory?: WarehouseItemEntity;
   supplier?: ISupplierDirItem;
 }
@@ -120,7 +122,7 @@ export interface IOfferWithRelatedFields
 
   variations?: VariationEntity[];
   prices?: PriceEntity[];
-  warehouses?: IWarehouse[];
+  warehouses?: WarehouseEntity[];
   inventories?: WarehouseInventoryEntity[];
 }
 

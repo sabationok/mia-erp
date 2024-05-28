@@ -17,7 +17,7 @@ import {
 import { HasBaseCmsConfigs } from '../cms.types';
 import { OrderStatusEnum } from './orders.types';
 import { OfferEntity } from '../offers/offers.types';
-import { IWarehouse } from '../warehousing/warehouses.types';
+import { WarehouseEntity, WarehouseInventoryEntity } from '../warehousing/warehouses.types';
 import { IPriceBase, PriceEntity } from '../price-management/price-management.types';
 import { VariationEntity } from '../offers/variations.types';
 import { PriceDiscountRecord } from '../price-management/discounts';
@@ -27,7 +27,7 @@ export enum TempSlotTypeEnum {
   Ordering = 'Ordering',
 }
 
-export interface IOrderSlotPrice extends Partial<Omit<IPriceBase, 'discounts'>> {
+export interface IOrderSlotPrice extends Partial<Omit<IPriceBase, 'discounts' | 'type'>> {
   discount?: { amount?: string; percentage?: string };
   bonus?: { amount?: string; percentage?: string };
   cashback?: { amount?: string; percentage?: string };
@@ -50,9 +50,9 @@ export interface IOrderSlotBase
   fromRef?: MaybeNull<string>;
 
   offer?: OfferEntity;
-  warehouse?: IWarehouse;
+  warehouse?: WarehouseEntity;
   origin?: PriceEntity;
-  // inventory?: IProductInventory;
+  inventory?: WarehouseInventoryEntity;
   variation?: VariationEntity;
 }
 

@@ -1,16 +1,16 @@
 import { useWarehousesSelector } from '../redux/selectors.store';
 import { useMemo } from 'react';
 import { FilterOption } from '../components/atoms/TabSelector';
-import { IWarehouse } from '../types/warehousing/warehouses.types';
+import { WarehouseEntity } from '../types/warehousing/warehouses.types';
 import { OnlyUUID } from '../redux/app-redux.types';
 import { getIdRef } from '../utils/data-transform';
 import { usePermissionsSelector } from './usePermissionsService.hook';
 import { PermissionEntity, PermissionStatus } from '../types/permissions.types';
 
-export function useWarehousesAsFilterOptions(): FilterOption<OnlyUUID, IWarehouse>[] {
+export function useWarehousesAsFilterOptions(): FilterOption<OnlyUUID, WarehouseEntity>[] {
   const warehouses = useWarehousesSelector().warehouses;
 
-  return useMemo((): FilterOption<OnlyUUID, IWarehouse>[] => {
+  return useMemo((): FilterOption<OnlyUUID, WarehouseEntity>[] => {
     return warehouses.map(w => ({ ...w, value: getIdRef(w), label: `${w?.label} | ${w?.code || '---'}` }));
   }, [warehouses]);
 }

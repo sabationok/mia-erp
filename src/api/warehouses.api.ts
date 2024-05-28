@@ -2,7 +2,7 @@ import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import {
   WarehouseItemEntity,
-  IWarehouse,
+  WarehouseEntity,
   IWarehouseDocReqData,
   IWarehouseReqData,
 } from '../types/warehousing/warehouses.types';
@@ -13,18 +13,18 @@ export class WarehousesApi {
   private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.warehousing;
 
-  public static async createWarehouse(data?: IWarehouseReqData): Promise<AppResponse<IWarehouse>> {
+  public static async createWarehouse(data?: IWarehouseReqData): Promise<AppResponse<WarehouseEntity>> {
     return this.api.post(this.endpoints.create(), data?.data, { params: data?.params });
   }
 
-  public static async updateWarehouse(data?: IWarehouseReqData): Promise<AppResponse<IWarehouse>> {
+  public static async updateWarehouse(data?: IWarehouseReqData): Promise<AppResponse<WarehouseEntity>> {
     return this.api.patch(this.endpoints.update(data?._id), data?.data);
   }
-  public static async getById(warehouse?: OnlyUUID, params?: AppQueryParams): Promise<AppResponse<IWarehouse>> {
+  public static async getById(warehouse?: OnlyUUID, params?: AppQueryParams): Promise<AppResponse<WarehouseEntity>> {
     return this.api.get(this.endpoints.getById(warehouse?._id), { params: params });
   }
 
-  public static async getAllWarehouses(params?: AppQueryParams): Promise<AppResponse<IWarehouse[]>> {
+  public static async getAllWarehouses(params?: AppQueryParams): Promise<AppResponse<WarehouseEntity[]>> {
     return this.api.get(this.endpoints.getAll(), { params: params });
   }
 

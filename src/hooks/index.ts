@@ -16,5 +16,7 @@ export * from './useCurrentVariation.hook';
 
 export * from './pricing.hooks';
 
+export * from './useCartService.hook';
+
 export { default as useScrollTo } from './useScrollTo.hook';
 export * from './useListData.hook';

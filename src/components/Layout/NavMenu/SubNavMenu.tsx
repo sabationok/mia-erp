@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../../redux/store.store';
 import { PermissionEntity } from '../../../types/permissions.types';
-import { IWarehouse } from '../../../types/warehousing/warehouses.types';
+import { WarehouseEntity } from '../../../types/warehousing/warehouses.types';
 import { PriceListEntity } from '../../../types/price-management/price-management.types';
 import { usePermissionsSelector } from '../../../hooks/usePermissionsService.hook';
 import { useEffect, useMemo } from 'react';
@@ -18,7 +18,7 @@ const getLinkDataMap: Record<
   AppPagesEnum | string,
   ((option: any) => { id?: string; label?: MaybeNull<string> }) | undefined
 > = {
-  [AppPagesEnum.warehouses]: (warehouse: IWarehouse) => ({
+  [AppPagesEnum.warehouses]: (warehouse: WarehouseEntity) => ({
     id: warehouse._id,
     label: `${warehouse?.label} | ${warehouse?.code}`,
   }),

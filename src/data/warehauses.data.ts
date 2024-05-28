@@ -1,9 +1,9 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { IWarehouse, WarehouseItemEntity } from '../types/warehousing/warehouses.types';
+import { WarehouseEntity, WarehouseItemEntity } from '../types/warehousing/warehouses.types';
 import { t } from '../lang';
 import { numberWithSpaces } from '../utils';
 
-export const warehousesTableColumns: CellTittleProps<IWarehouse>[] = [
+export const warehousesTableColumns: CellTittleProps<WarehouseEntity>[] = [
   {
     top: { name: t('label'), getData: rd => rd.label },
     bottom: { name: t('code'), getData: rd => rd.code },

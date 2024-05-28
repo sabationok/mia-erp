@@ -7,7 +7,7 @@ import { usePermissionsSelector, useWarehousesSelector } from '../../../redux/se
 import { FilterOption } from '../../atoms/TabSelector';
 import FlexBox from '../../atoms/FlexBox';
 import styled from 'styled-components';
-import { IWarehouse, WarehousingSettingsFormData } from '../../../types/warehousing/warehouses.types';
+import { WarehouseEntity, WarehousingSettingsFormData } from '../../../types/warehousing/warehouses.types';
 import { t } from 'lang';
 import { CompanyEntity, ICompanyDto, ICompanyForReq, ICompanyWithConfigs } from 'types/companies.types';
 import { Text } from '../../atoms/Text';
@@ -85,7 +85,7 @@ export const FormWarehousingSettings: React.FC<FormWarehousingSettingsProps> = (
             options: warehousesSelectOptions,
             label: t('Default warehouse'),
             placeholder: t('Select default warehouse'),
-            getLabel: (d: Partial<IWarehouse>) => {
+            getLabel: (d: Partial<WarehouseEntity>) => {
               return `${d.label} | ${d?.code}`;
             },
           })}

@@ -3,7 +3,7 @@ import { OnlyUUID } from '../../../../redux/app-redux.types';
 import { useWarehousesSelector } from '../../../../redux/selectors.store';
 import { useCallback, useEffect, useMemo } from 'react';
 import { getIdRef } from '../../../../utils';
-import { IWarehouse } from '../../../../types/warehousing/warehouses.types';
+import { WarehouseEntity } from '../../../../types/warehousing/warehouses.types';
 import { warehousesTableColumns } from '../../../../data/warehauses.data';
 import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useLoadersProvider } from '../../../../Providers/Loaders/LoaderProvider';
@@ -29,7 +29,7 @@ const WarehousesTab: React.FC<WarehousesTabProps> = ({ onSelect, selected, withA
     // eslint-disable-next-line
   }, []);
 
-  const tableConfigs = useMemo((): ITableListProps<IWarehouse> => {
+  const tableConfigs = useMemo((): ITableListProps<WarehouseEntity> => {
     return {
       tableData: warehouses,
       tableTitles: warehousesTableColumns,

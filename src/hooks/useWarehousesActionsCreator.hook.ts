@@ -2,7 +2,7 @@ import { ITableAction, ITableListContext } from '../components/TableList/tableTy
 import { IModalProviderContext, useModalProvider } from '../components/ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { WarehousesService } from './useWarehousesService.hook';
-import { IWarehouse, IWarehouseDto, IWarehouseReqData } from '../types/warehousing/warehouses.types';
+import { WarehouseEntity, IWarehouseDto, IWarehouseReqData } from '../types/warehousing/warehouses.types';
 import { Modals } from '../components/Modals/Modals';
 import { IWarehouseFormData } from '../components/Forms/warehousing/FormCreateWarehouse';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +13,7 @@ import { getIdRef } from '../utils/data-transform';
 import _ from 'lodash';
 
 export type WarehouseActionCreatorOptions = {
-  ctx: ITableListContext<IWarehouse>;
+  ctx: ITableListContext<WarehouseEntity>;
   service: WarehousesService;
   modalService: IModalProviderContext;
   navigate: NavigateFunction;
@@ -153,7 +153,8 @@ const useWarehousesActionsCreator = (): WarehouseTableActionsCreator => {
   const service = useAppServiceProvider()[ServiceName.warehouses];
   const navigate = useNavigate();
 
-  return (ctx: ITableListContext<IWarehouse>) => actionCreators.map(a => a({ modalService, service, ctx, navigate }));
+  return (ctx: ITableListContext<WarehouseEntity>) =>
+    actionCreators.map(a => a({ modalService, service, ctx, navigate }));
 };
 
 export default useWarehousesActionsCreator;

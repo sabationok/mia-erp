@@ -22,7 +22,7 @@ export enum WarehouseDocumentType {
   returnFromReserve = 'returnFromReserve',
   removeFromReserve = 'removeFromReserve',
 }
-export interface IWarehouse extends IBase {
+export interface WarehouseEntity extends IBase {
   owner?: CompanyEntity;
   manager?: any;
 
@@ -64,7 +64,7 @@ export interface IProductInventoryFormData extends WithPeriod, HasStatus<Product
   product?: Omit<OfferEntity, 'categories' | 'inventories' | 'category' | 'properties'>;
   variation?: Omit<VariationEntity, 'properties'>;
   price?: Omit<PriceEntity, 'list' | 'offer'>;
-  warehouse?: IWarehouse;
+  warehouse?: WarehouseEntity;
 
   stock?: number;
   reserved?: number;
@@ -97,7 +97,7 @@ export interface IProductInventoryReqData {
   params?: AppQueryParams;
 }
 export interface HasWarehouse {
-  warehouse?: MaybeNull<IWarehouse>;
+  warehouse?: MaybeNull<WarehouseEntity>;
 }
 export interface HasWarehouseInventory {
   inventory?: MaybeNull<WarehouseItemEntity>;
@@ -116,7 +116,7 @@ export interface WarehousingSettingsFormData {
 // * WAREHOUSE DOCUMENTS
 
 export interface IWarehouseDoc extends WithPeriod, HasType<WarehouseDocumentType>, HasOwnerAsCompany, HasAuthor {
-  warehouse?: IWarehouse;
+  warehouse?: WarehouseEntity;
   product?: OfferEntity;
   variation?: VariationEntity;
   price?: PriceEntity;

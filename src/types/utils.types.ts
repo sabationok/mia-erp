@@ -183,7 +183,7 @@ export interface HasSummary<T extends object> {
 }
 
 export interface HasQuantity {
-  quantity?: MaybeNull<number>;
+  quantity?: number;
 }
 
 export interface WithPeriod {

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { IOrderTempSlot } from 'types/orders/orders.types';
 import FlexBox from '../../../atoms/FlexBox';
 import styled from 'styled-components';
-import { IWarehouse } from '../../../../types/warehousing/warehouses.types';
+import { WarehouseEntity } from '../../../../types/warehousing/warehouses.types';
 import { useOrdersSelector } from '../../../../redux/selectors.store';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import { ToastService } from 'services';
@@ -48,7 +48,7 @@ const OrderGroupsStuffingStep: React.FC<OrderGroupsStuffingStepProps> = ({ onCha
   );
 
   const groupedData = useMemo(() => {
-    let map: Record<string, { slots: (IOrderTempSlot & { tempId?: string })[]; warehouse?: IWarehouse }> = {};
+    let map: Record<string, { slots: (IOrderTempSlot & { tempId?: string })[]; warehouse?: WarehouseEntity }> = {};
 
     slots?.map(slot => {
       if (slot.warehouse?._id) {

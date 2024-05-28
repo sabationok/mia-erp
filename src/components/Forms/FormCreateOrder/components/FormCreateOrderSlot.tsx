@@ -17,7 +17,7 @@ import StepsController from '../../components/StepsController';
 import { useAppForm } from '../../../../hooks';
 import VariationsApi from '../../../../api/variations.api';
 import { transformVariationTableData } from '../../../../utils/tables';
-import { IWarehouse, WarehouseItemEntity } from '../../../../types/warehousing/warehouses.types';
+import { WarehouseEntity, WarehouseItemEntity } from '../../../../types/warehousing/warehouses.types';
 import { warehouseBatchColumns } from '../../../../data/warehauses.data';
 import _ from 'lodash';
 import { nanoid } from '@reduxjs/toolkit';
@@ -45,7 +45,7 @@ export interface FormCreateOrderSlotFormData {
   price?: PriceEntity;
   variation?: IVariationTableData;
   product?: OfferEntity;
-  warehouse?: IWarehouse;
+  warehouse?: WarehouseEntity;
   inventory?: WarehouseItemEntity;
 }
 type FormKey = keyof FormCreateOrderSlotFormData;
