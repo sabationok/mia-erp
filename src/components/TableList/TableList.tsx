@@ -12,16 +12,17 @@ import {
   ITableListProps,
   OnCheckBoxChangeHandlerEvent,
   SelectItem,
-  UseTableHookType,
+  UseTableReturnType,
 } from './tableTypes.types';
 import { FilterReturnDataType } from '../Filter/AppFilter';
 import TableLoader from './TableLoader';
 import { isUndefined } from 'lodash';
 import { OnlyUUID } from '../../types/utils.types';
+import FlexBox from '../atoms/FlexBox';
 
-export type { ITableListContext, ITableListProps, OnCheckBoxChangeHandlerEvent, UseTableHookType, SelectItem };
+export type { ITableListContext, ITableListProps, OnCheckBoxChangeHandlerEvent, UseTableReturnType, SelectItem };
 export const TableCTX = createContext({});
-export const useTable: UseTableHookType = () => useContext(TableCTX);
+export const useTable: UseTableReturnType = () => useContext(TableCTX);
 
 const TableList = <TData extends Partial<OnlyUUID> = any>({
   tableData,
@@ -148,19 +149,25 @@ const TableList = <TData extends Partial<OnlyUUID> = any>({
       <TableCTX.Provider value={{ ...CTX }}>
         <TableOverHead />
 
-        <TableScroll className={'TableScroll'} scrollBarWidth={scrollBarWidth}>
-          <TableHead />
+        <FlexBox fxDirection={'row'} maxWidth={'100%'} overflow={'hidden'} height={'100%'} flex={1} maxHeight={'100%'}>
+          <FlexBox overflow={'hidden'} flex={1} maxHeight={'100%'}>
+            <TableScroll className={'TableScroll'} scrollBarWidth={scrollBarWidth}>
+              <TableHead />
 
-          {tableData?.length !== 0 && <TableBody ref={rowRef} />}
+              {tableData?.length !== 0 && <TableBody ref={rowRef} />}
+
+              <TableLoader isLoading={isLoading || loading} />
+            </TableScroll>
+          </FlexBox>
 
           {actionsCreator && (
             <MaxToTabletXl>
-              <QuickActions />
+              <>
+                <QuickActions />
+              </>
             </MaxToTabletXl>
           )}
-
-          <TableLoader isLoading={isLoading || loading} />
-        </TableScroll>
+        </FlexBox>
 
         {tableData?.length === 0 && <NoData>Дані відсутні</NoData>}
 
@@ -170,16 +177,6 @@ const TableList = <TData extends Partial<OnlyUUID> = any>({
   );
 };
 
-const NoData = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  max-width: 100%;
-
-  padding: 12px;
-
-  border-top: 1px solid ${p => p.theme.trBorderClr};
-`;
 const Table = styled.div`
   display: grid;
   grid-template-columns: 1fr;
@@ -193,19 +190,30 @@ const Table = styled.div`
 
   //background-color: ${({ theme }) => theme.tableBackgroundColor};
 `;
-const TableScroll = styled.div<{ scrollBarWidth?: number }>`
+const TableScroll = styled(FlexBox)<{ scrollBarWidth?: number }>`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 40px 1fr min-content;
+  grid-template-rows: 48px 1fr min-content;
+
+  flex: 1;
 
   height: 100%;
   width: 100%;
   overflow: auto;
 
   &::-webkit-scrollbar {
-    width: ${({ scrollBarWidth = 6 }) => scrollBarWidth}px;
-    height: ${({ scrollBarWidth = 6 }) => scrollBarWidth}px;
+    width: ${({ scrollBarWidth = 4 }) => scrollBarWidth}px;
+    height: ${({ scrollBarWidth = 4 }) => scrollBarWidth}px;
   }
 `;
+const NoData = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  height: 50px;
+  padding: 12px;
 
+  border-top: 1px solid ${p => p.theme.trBorderClr};
+`;
 export default TableList;
