@@ -1,9 +1,10 @@
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useCallback, useState } from 'react';
-import { useAppForm } from '../../../hooks';
+import { useAppForm, useCurrentOffer, useCurrentPrice } from '../../../hooks';
 import {
   IPriceFormData,
   OfferPriceTypeEnum,
+  PriceEntity,
   PriceFormDataPath,
 } from '../../../types/price-management/price-management.types';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -41,13 +42,15 @@ export interface FormCreatePriceAreaProps
   extends Omit<ModalFormProps<any, any, IPriceFormData>, 'onSubmit' | 'afterSubmit'> {
   onSubmit?: AppSubmitHandler<IPriceFormData>;
   offer?: OfferEntity;
+  price?: PriceEntity;
   variation?: VariationEntity;
-  update?: string;
+  updateId?: string;
 }
 
-export const CreatePriceFormArea = ({ update, offer, defaultState }: FormCreatePriceAreaProps) => {
+export const CreatePriceFormArea = ({ price, updateId, offer, defaultState }: FormCreatePriceAreaProps) => {
   const loaders = usePriceModalFormLoaders();
-  // ! const Offer = useCurrentOffer(offer);
+  const Offer = useCurrentOffer(offer);
+  const Price = useCurrentPrice(price ?? { _id: updateId });
 
   const service = useAppServiceProvider()[ServiceName.priceManagement];
   const offersSrv = useAppServiceProvider()[ServiceName.offers];
@@ -55,12 +58,13 @@ export const CreatePriceFormArea = ({ update, offer, defaultState }: FormCreateP
 
   const form = useAppForm<IPriceFormData>({
     defaultValues: {
+      _id: updateId,
       type: OfferPriceTypeEnum.fixed,
       in: 0,
       out: 0,
       commission: { amount: 0, percentage: 0 },
       markup: { amount: 0, percentage: 0 },
-      offer: offer,
+      offer: Offer,
       ...defaultState,
     },
     resolver: yupResolver(validation),
@@ -68,12 +72,12 @@ export const CreatePriceFormArea = ({ update, offer, defaultState }: FormCreateP
   });
   const { formValues, setValue, handleSubmit } = form;
 
-  const { in: cost, out: price } = formValues;
+  const { in: costValue, out: priceValue } = formValues;
 
   const recalculateValues = useCallback(
     (_name?: PriceFormDataPath) => {
-      const Cost = new FormPriceDecimal(cost ?? 0);
-      const Price = new FormPriceDecimal(price ?? 0);
+      const Cost = new FormPriceDecimal(costValue ?? 0);
+      const Price = new FormPriceDecimal(priceValue ?? 0);
       const CommissionAmount = Price.minus(Cost);
       const CommissionPercentage = CommissionAmount.div(Price).times(100);
 
@@ -90,32 +94,28 @@ export const CreatePriceFormArea = ({ update, offer, defaultState }: FormCreateP
         percentage: CommissionPercentage.toFixed(2),
       });
     },
-    [cost, price, setValue]
+    [costValue, priceValue, setValue]
   );
 
   const onSetAsDefault = async (offerId: string, priceId: string) => {
     offersSrv.setDefaults({
       data: { _id: offerId, defaults: { price: { _id: priceId } } },
-      onSuccess: () => {
-        setIsDefault(false);
-        // submitOptions.state?.close && props?.onClose && props?.onClose();
-      },
       onLoading: loaders.onLoading('set_default'),
     });
   };
-  const onValid = (formData: IPriceFormData) => {
-    const dataForReq = toReqData(formData);
-    if (!formData?.offer?._id) {
+  const onValid = (fData: IPriceFormData) => {
+    const dataForReq = toReqData(fData);
+    if (!fData?.offer?._id) {
       ToastService.warning('Not passed offer id');
       return;
     }
-    if (formData?.offer?._id) {
+    if (fData?._id) {
       service.updatePriceById({
-        data: { data: { _id: formData?.offer?._id, data: dataForReq }, updateCurrent: true },
+        data: { data: { _id: fData?._id, data: dataForReq }, updateCurrent: true },
         onLoading: loaders.onLoading('update'),
         onSuccess: loaders.onSuccess('update', (data, meta) => {
-          if (isDefault && formData.offer?._id) {
-            onSetAsDefault(formData.offer?._id, data._id);
+          if (isDefault && fData.offer?._id) {
+            onSetAsDefault(fData.offer?._id, data._id);
           } else {
             // submitOptions.state?.close && props?.onClose && props?.onClose();
           }
@@ -128,9 +128,10 @@ export const CreatePriceFormArea = ({ update, offer, defaultState }: FormCreateP
         onLoading: loaders.onLoading('create'),
         onSuccess: (data, meta) => {
           loaders.setData('create', data);
+          form.setValue('_id', data._id);
 
-          if (isDefault && formData.offer?._id) {
-            onSetAsDefault(formData.offer?._id, data._id);
+          if (isDefault && fData.offer?._id) {
+            onSetAsDefault(fData.offer?._id, data._id);
           } else {
             // submitOptions.state?.close && props?.onClose && props?.onClose();
           }
@@ -165,11 +166,12 @@ export const CreatePriceFormArea = ({ update, offer, defaultState }: FormCreateP
           }}
         />
 
-        <FlexBox padding={'8px'} fxDirection={'row'} justifyContent={'space-between'} alignItems={'center'}>
+        <FlexBox padding={'0 8px'} fxDirection={'row'} justifyContent={'space-between'} alignItems={'center'}>
           <Text>{t('Set as default')}</Text>
           <Switch
-            size={'34px'}
-            checked={isDefault}
+            size={'44px'}
+            disabled={!Offer?.price?._id || Offer?.price?._id === Price?._id}
+            checked={!Offer?.price?._id || Offer?.price?._id === Price?._id || isDefault}
             onChange={ev => {
               setIsDefault(ev.checked);
             }}

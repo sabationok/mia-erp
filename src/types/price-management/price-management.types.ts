@@ -108,6 +108,7 @@ export interface PriceEntity extends IBase, IPriceBase {
 }
 
 export interface IPriceFormData extends Omit<CreatePriceDto, 'product' | 'variation' | 'list'> {
+  _id?: string;
   offer?: IFormDataValueWithID;
   variation?: IFormDataValueWithID;
   list?: IFormDataValueWithID;

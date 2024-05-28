@@ -77,9 +77,9 @@ export interface PriceDiscountEntity extends IBase, IDiscountBase {
 }
 
 export interface PriceDiscountDto extends PriceDiscountRecord {
-  pricesIds?: UUID[];
-  priceId?: UUID[];
-  offersIds?: UUID[];
+  priceId?: UUID;
+  offerId?: UUID;
+  listId?: UUID;
 
   cmsConfigs?: CmsBaseConfigsDto;
 }

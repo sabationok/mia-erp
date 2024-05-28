@@ -503,7 +503,7 @@ export const langUa = {
   'Discount volume type': "Тип об'єму",
   'Discount threshold': 'Поріг нарахування',
   'Discount threshold type': 'Тип порогу нарахування',
-  'Discount limit': 'Поріг нарахування',
+  'Discount limit': 'Ліміт нарахування',
   'Discount limit type': 'Тип ліміту нарахування',
 
   [`Price_${OfferPriceTypeEnum.fixed}`]: 'Фіксоваона',

@@ -136,7 +136,7 @@ const StickyCss = css`
   position: sticky;
   top: 0;
   left: 0;
-  z-index: 6;
+  z-index: 60;
 `;
 
 const Header = styled(FlexBox)<{ isSticky?: boolean }>`

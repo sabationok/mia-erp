@@ -24,10 +24,6 @@ function Switch({ checked, onChange, mr, disabled = false, size = '20px' }: Prop
   };
 
   useEffect(() => {
-    setIsChecked(disabled ? false : checked ?? false);
-  }, [checked, disabled]);
-
-  useEffect(() => {
     if (!isUndefined(checked)) {
       setIsChecked(checked);
     }
@@ -41,6 +37,7 @@ function Switch({ checked, onChange, mr, disabled = false, size = '20px' }: Prop
       size={size}
       iconSize={'90%'}
       isActive={isChecked}
+      disabled={disabled}
     />
   );
 }
@@ -48,7 +45,7 @@ function Switch({ checked, onChange, mr, disabled = false, size = '20px' }: Prop
 const StSwitch = styled(ButtonIcon)<{
   disabled?: boolean;
 }>`
-  fill: ${({ isActive, theme }) => (isActive ? '' : theme.modalBorderColor)};
+  fill: ${({ isActive, theme }) => (isActive ? '' : theme.accentColor.light)};
 
   opacity: ${({ disabled }) => (disabled ? '70%' : 1)};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'all')};

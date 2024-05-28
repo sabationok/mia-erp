@@ -6,7 +6,6 @@ import {
   PriceDiscountRecord,
   PriceDiscountType,
 } from '../../../types/price-management/discounts';
-import { useCurrentDiscount } from '../../../hooks';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import ButtonsGroup from '../../atoms/ButtonsGroup';
@@ -35,7 +34,7 @@ export interface AddDiscountFormAreaProps extends AccordionFormProps {
 }
 
 export function AddDiscountFormArea({ discount, onSuccess, priceId, ...props }: AddDiscountFormAreaProps) {
-  const Discount = useCurrentDiscount(discount);
+  // const Discount = useCurrentDiscount(discount);
   const loaders = useLoadersProvider<'discount' | 'create' | 'update' | 'current'>();
   const form = useAppFormProvider<CreateDiscountFormData>();
 
@@ -100,16 +99,22 @@ export function AddDiscountFormArea({ discount, onSuccess, priceId, ...props }: 
       </InputLabel>
 
       <FlexBox fxDirection={'row'} gap={16} alignItems={'flex-end'}>
-        <InputLabel label={t('Value')} error={form.formState?.errors?.value}>
-          <InputText type={'number'} step={'0.01'} min={0.01} {...register('value', { valueAsNumber: true })} />
+        <InputLabel label={t('Value')} error={form.formState?.errors?.value} required>
+          <InputText
+            type={'number'}
+            required
+            step={0.01}
+            min={0.01}
+            {...register('value', { valueAsNumber: true, required: true })}
+          />
         </InputLabel>
 
         <InputLabel label={t('Discount threshold')} error={form.formState?.errors?.threshold}>
-          <InputText type={'number'} step={'0.01'} min={0.01} {...register('threshold', { valueAsNumber: true })} />
+          <InputText type={'number'} step={0.01} min={0.01} {...register('threshold', { valueAsNumber: true })} />
         </InputLabel>
 
         <InputLabel label={t('Discount limit')} error={form.formState?.errors?.limit}>
-          <InputText type={'number'} step={'0.01'} min={0.01} {...register('limit', { valueAsNumber: true })} />
+          <InputText type={'number'} step={0.01} min={0.01} {...register('limit', { valueAsNumber: true })} />
         </InputLabel>
       </FlexBox>
 

@@ -35,8 +35,8 @@ export const CreateDiscountModal = ({ onSuccess, priceId, offerId, discount }: C
         key: Discount?.cmsConfigs?.key ?? undefined,
         labels: Discount?.cmsConfigs?.labels ?? undefined,
       },
-      pricesIds: priceId ? [priceId] : undefined,
-      offersIds: offerId ? [offerId] : undefined,
+      priceId,
+      offerId,
     },
   });
   const dispatch = useAppDispatch();

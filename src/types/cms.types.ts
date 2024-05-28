@@ -3,10 +3,12 @@ import { MaybeNull } from './utils.types';
 
 export interface ICmsBaseConfigs {
   key?: MaybeNull<string>;
+  extRef?: MaybeNull<string>;
   labels?: MaybeNull<LangPack>;
 }
 export interface CmsBaseConfigsDto {
   key?: string;
+  extRef?: string;
   labels?: LangPack;
 }
 
