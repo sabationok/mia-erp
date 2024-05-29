@@ -2,16 +2,18 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { SelectItem } from 'components/TableList/TableList';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { checks } from 'utils';
+import { TableSearchParam } from '../../tableTypes.types';
+import { isFunction } from 'lodash';
+import { Text } from '../../../atoms/Text';
 
-export interface ISearchParamInputProps {
-  data?: SelectItem[];
-  defaultValue?: SelectItem;
-  selectedItem?: SelectItem;
-  onSelect?: (item: SelectItem) => void;
+export interface ISearchParamInputProps<DataKey = any> {
+  params?: TableSearchParam<DataKey>[];
+  defaultValue?: TableSearchParam<DataKey>;
+  selectedItem?: TableSearchParam<DataKey>;
+  onSelect?: (item: TableSearchParam<DataKey>) => void;
 }
 
-const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue, selectedItem, onSelect }) => {
+const SearchParamInput: React.FC<ISearchParamInputProps> = ({ params, defaultValue, selectedItem, onSelect }) => {
   const [current, setCurrent] = useState<number>(0);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -25,30 +27,34 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
     (item: SelectItem, index: number) => {
       setCurrent(index);
 
-      checks.isFun(onSelect) && onSelect(item);
+      isFunction(onSelect) && onSelect(item);
 
       handleToggleList();
     },
     [onSelect, setCurrent]
   );
   const renderFilteredList = useMemo(() => {
-    return data ? (
-      data.map((item, index) => (
+    return params ? (
+      params.map((item, index) => (
         <ListItem
           key={item.dataKey || item.dataPath}
           title={item.label}
           isSelected={index === current}
           onClick={() => handleSelect(item, index)}
         >
-          <span>{item.label}</span>
+          <Text $size={14} $weight={500}>
+            {item.label}
+          </Text>
         </ListItem>
       ))
     ) : (
       <ListItem listEmpty>
-        <span>Нічого не знайдено</span>
+        <Text $size={14} $weight={500}>
+          {'Параметри відсутні'}
+        </Text>
       </ListItem>
     );
-  }, [current, data, handleSelect]);
+  }, [current, params, handleSelect]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -79,6 +85,7 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ data, defaultValue
         variant="onlyIconNoEffects"
         onClick={() => handleToggleList()}
         data-select
+        disabled={!params?.length}
       />
 
       <InputBox className={isOpen ? 'isOpen' : ''} isOpen={isOpen} data-select>
@@ -96,7 +103,7 @@ const InputBox = styled.label<{ isOpen?: boolean }>`
   position: absolute;
   top: 110%;
   right: 0;
-  z-index: 2;
+  z-index: 100;
 
   width: 100%;
 

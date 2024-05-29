@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { ActionsCreatorOptions, DirBaseProps, DirItemTypeByDirType } from '../../types/dir.types';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { useModalProvider } from '../ModalProvider/ModalProvider';
+import { useModalProvider } from '../../Providers/ModalProvider/ModalProvider';
 import { ISortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
 import { useDirService } from '../../hooks';

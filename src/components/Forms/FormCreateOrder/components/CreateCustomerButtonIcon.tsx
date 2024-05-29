@@ -1,6 +1,6 @@
 import { ICustomer } from '../../../../types/customers.types';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
-import { useModalService } from '../../../ModalProvider/ModalProvider';
+import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import FormCreateCustomer from '../../crm/FormCreateCustomer';
 import { t } from '../../../../lang';

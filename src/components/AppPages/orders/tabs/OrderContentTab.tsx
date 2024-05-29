@@ -61,8 +61,8 @@ const OrderContentTab: React.FC<OrderContentTabProps> = p => {
       </FlexBox>
 
       <TableList
-        isSearch={false}
-        isFilter={false}
+        hasSearch={false}
+        hasFilter={false}
         {...tableConfigs}
         tableData={tableData}
         isLoading={isLoading}

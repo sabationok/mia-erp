@@ -1,4 +1,4 @@
-import { useModalProvider } from '../../components/ModalProvider/ModalProvider';
+import { useModalProvider } from '../../Providers/ModalProvider/ModalProvider';
 import useDirServiceHook from '../useDirService.hook';
 import { FormCreateContractorProps } from '../../components/Forms/Directories/FormCreateCounterparty';
 import { Modals } from '../../components/Modals/Modals';

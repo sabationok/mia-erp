@@ -1,9 +1,10 @@
 import { t } from '../../lang';
+import { AppUrlParamKeys } from '../../hooks';
 
 export * as AppPages from './pages';
 
 export interface BaseAppPageProps {
-  path: PagePathType;
+  path: PagePathType | `${AppPagesEnum}/:${AppUrlParamKeys}`;
 }
 
 export enum AppPagesEnum {
@@ -23,6 +24,7 @@ export enum AppPagesEnum {
   priceLists = 'priceLists',
   director = 'director',
   customers = 'customers',
+  cart = 'cart',
 }
 
 export enum AppRoleName {}
@@ -44,6 +46,7 @@ export const appPages: Record<string, IAppPage<PagePathType>> = {
   transactions: { path: 'transactions', iconId: 'cashFlow' },
   documentsFlow: { path: 'documentsFlow', iconId: 'assignment' },
   orders: { path: 'orders', iconId: 'assignmentOkOutlined' },
+  cart: { path: 'cart', iconId: 'assignmentOkOutlined' },
   refunds: { path: 'refunds', iconId: 'assignmentBackOutlined' },
   offers: { path: 'offers', iconId: 'storageOutlined' },
   priceLists: { path: 'priceLists', iconId: 'assignment', subMenuKey: AppPagesEnum.priceLists },

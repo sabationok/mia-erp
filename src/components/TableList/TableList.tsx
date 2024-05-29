@@ -24,26 +24,39 @@ export type { ITableListContext, ITableListProps, OnCheckBoxChangeHandlerEvent, 
 export const TableCTX = createContext({});
 export const useTable: UseTableReturnType = () => useContext(TableCTX);
 
-const TableList = <TData extends Partial<OnlyUUID> = any>({
-  tableData,
-  isLoading = false,
-  RowActionsComp,
-  // TableActionsComp,
-  tableTitles,
-  tableSearchParams,
-  actionsCreator,
-  footer = false,
-  onRowClick,
-  onCheckboxChange,
-  onFilterSubmit,
-  filterTitle,
-  filterDefaultValues,
-  scrollBarWidth,
-  onSubmitSearch,
-  selectedRow,
-  ...props
-}: ITableListProps<TData> & React.HTMLAttributes<HTMLDivElement>) => {
+const omitProps = [
+  'onSubmitSearch',
+  'onHeadCheckboxChange',
+  'onRefresh',
+  'onCheckboxChange',
+  'onTableSortChange',
+  'onTableSortParamChange',
+  'filterSelectors',
+  'filterDefaultValues',
+  'filterTitle',
+  'hasFilter',
+  'itemRef',
+  'onRefreshPress',
+  'transformData',
+] as (keyof ITableListProps)[];
+
+const TableList = <TData extends Partial<OnlyUUID> = any>(
+  props: ITableListProps<TData> & React.HTMLAttributes<HTMLDivElement>
+) => {
   // const tBodyRef = useRef<HTMLElement>(null);
+  const {
+    tableData,
+    isLoading = false,
+    tableTitles,
+    actionsCreator,
+    showFooter = false,
+    onRowClick,
+    onFilterSubmit,
+    scrollBarWidth,
+    selectedRow,
+    ...rest
+  } = props;
+
   const rowRef = useRef<HTMLElement>();
   const setFilterData = useState<FilterReturnDataType>()[1];
   const [_selectedRows, _setSelectedRows] = useState<string[]>([]);
@@ -83,7 +96,7 @@ const TableList = <TData extends Partial<OnlyUUID> = any>({
     });
   }, []);
 
-  const onHeadCheckboxChange = useCallback(
+  const onHeadCheckboxChangeWrapper = useCallback(
     (e: ButtonCheckboxEvent) => {
       const { checked } = e;
       if (checked) _setSelectedRows(prev => tableData?.map(el => el?._id ?? '') || prev);
@@ -101,52 +114,32 @@ const TableList = <TData extends Partial<OnlyUUID> = any>({
 
   const CTX = useMemo(
     (): ITableListContext<TData> => ({
-      RowActionsComp,
-      // TableActionsComp,
-      actionsCreator,
-      footer,
-      tableSearchParams,
-      tableTitles,
-      filterTitle,
-      filterDefaultValues,
       rowGrid,
       rowRef,
       selectedRows: _selectedRows,
       selectedRow: _selectedRow,
-      tableData,
       onFilterSubmit: onFilterSubmitWrapper,
       onRowClick: onRowClickWrapper,
       onCheckboxChange: onCheckboxChangeWrapper,
-      onHeadCheckboxChange: onHeadCheckboxChange,
-      onSubmitSearch,
+      onHeadCheckboxChange: onHeadCheckboxChangeWrapper,
       onRefresh: setLoading,
       ...props,
     }),
     [
-      RowActionsComp,
-      // TableActionsComp,
-      actionsCreator,
-      filterDefaultValues,
-      filterTitle,
-      footer,
       onCheckboxChangeWrapper,
       onFilterSubmitWrapper,
-      onHeadCheckboxChange,
+      onHeadCheckboxChangeWrapper,
       onRowClickWrapper,
-      onSubmitSearch,
       props,
       rowGrid,
       _selectedRow,
       _selectedRows,
-      tableData,
-      tableSearchParams,
-      tableTitles,
     ]
   );
 
   return (
-    <Table {...props}>
-      <TableCTX.Provider value={{ ...CTX }}>
+    <Table {...{ onClick: rest.onClick, className: rest.className }}>
+      <TableCTX.Provider value={CTX}>
         <TableOverHead />
 
         <FlexBox fxDirection={'row'} maxWidth={'100%'} overflow={'hidden'} height={'100%'} flex={1} maxHeight={'100%'}>
@@ -160,7 +153,7 @@ const TableList = <TData extends Partial<OnlyUUID> = any>({
             </TableScroll>
           </FlexBox>
 
-          {actionsCreator && (
+          {actionsCreator && props.quickActionsPosition !== 'top' && (
             <MaxToTabletXl>
               <>
                 <QuickActions />
@@ -171,7 +164,7 @@ const TableList = <TData extends Partial<OnlyUUID> = any>({
 
         {tableData?.length === 0 && <NoData>Дані відсутні</NoData>}
 
-        {footer && <TableFooter />}
+        {showFooter && <TableFooter />}
       </TableCTX.Provider>
     </Table>
   );

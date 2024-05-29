@@ -121,6 +121,11 @@ export interface AppQueryParams<Type = any> extends AppQueries<Type>, Pagination
   fullInfo?: boolean;
   categories?: UUID[];
 
+  sku?: string;
+  barCode?: string;
+  label?: string;
+  langKey?: string;
+
   filterParams?: Partial<FilterReturnDataType>;
 
   // group?: OnlyUUID;

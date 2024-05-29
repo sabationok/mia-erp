@@ -29,9 +29,9 @@ const PageWarehouses: React.FC<any> = (props: Props) => {
     (): ITableListProps<WarehouseEntity> => ({
       tableData: state.warehouses,
       tableTitles: warehousesTableColumns,
-      isFilter: false,
-      isSearch: true,
-      footer: false,
+      hasFilter: false,
+      hasSearch: true,
+      showFooter: false,
       actionsCreator,
       onRowDoubleClick(ev) {
         ev?._id && navigate(ev?._id);
@@ -40,7 +40,7 @@ const PageWarehouses: React.FC<any> = (props: Props) => {
         setFilterParams(filterParams);
         getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading }).then();
       },
-      handleTableSort: (param, sortOrder) => {
+      onTableSortChange: (param, sortOrder) => {
         setSortParams({ dataPath: param.dataPath, sortOrder });
         getAll({
           data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },

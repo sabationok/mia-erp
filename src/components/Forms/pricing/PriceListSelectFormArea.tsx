@@ -19,7 +19,7 @@ export const PriceListSelectFormArea = ({ onSelect }: { onSelect?: (info: UUID) 
         <TableList
           tableTitles={priceListColumns}
           tableData={lists}
-          isSearch={false}
+          hasSearch={false}
           onRowClick={handleSelectPriceList}
         />
       </FlexBox>

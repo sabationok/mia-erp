@@ -13,7 +13,7 @@ export const PageTransactions = lazy(() => import('./PageTransactions'));
 // * ORDERS
 export const PageOrders = lazy(() => import('./orders/PageOrders'));
 export const PageOrderOverview = lazy(() => import('./orders/PageOrderOverview'));
-
+export const PageCart = lazy(() => import('./cart/CartPage'));
 // * OFFERS
 export const PageOffers = lazy(() => import('./offers/PageOffers'));
 export const PageOfferOverview = lazy(() => import('./offers/PageOfferOverview'));

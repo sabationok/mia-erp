@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useModalProvider } from '../ModalProvider/ModalProvider';
+import { useModalProvider } from '../../Providers/ModalProvider/ModalProvider';
 import { IDirectoryListItem } from './Directories';
 import { Text } from '../atoms/Text';
 import { Container, ListItem, Trigger } from './styles';

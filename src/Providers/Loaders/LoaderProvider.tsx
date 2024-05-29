@@ -7,7 +7,16 @@ export const useLoadersProvider = <
   Name extends string,
   Data extends PartialRecord<Name | string, any> = PartialRecord<Name | string, any>,
   Errors extends PartialRecord<Name, any> = PartialRecord<Name, any>
->() => useContext<UseLoadersReturn<Name, Data, Errors>>(LoadersContext);
+>(
+  loaders?: UseLoadersReturn<Name, Data, Errors>
+) => {
+  const ctx = useContext<UseLoadersReturn<Name, Data, Errors>>(LoadersContext);
+  if (loaders) {
+    return loaders;
+  } else {
+    return ctx;
+  }
+};
 
 export const LoadersProvider = <
   Name extends string,

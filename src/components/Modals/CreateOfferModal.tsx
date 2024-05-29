@@ -17,6 +17,7 @@ import { OfferFormImagesArea } from '../Forms/offers/components/OfferFormImagesA
 import { useAppRouter, useCurrentOffer } from '../../hooks';
 import { OfferFormCategoriesArea } from '../Forms/offers/components/OfferFormCategoriesArea';
 import { OfferLoadersData, OfferLoadersKey } from '../Forms/offers/types';
+import { omit } from 'lodash';
 
 export interface CreateOfferModalProps extends ModalFormProps {
   _id: string;
@@ -34,11 +35,11 @@ const CreateOfferModal: React.FC<CreateOfferModalProps> = ({ onClose, _id }) => 
   const currenOffer = useCurrentOffer({ _id: router.query?.offerId });
 
   useEffect(() => {
-    router.push({ query: {} });
+    router.push({ query: omit(router.query, ['offerId']) });
 
-    return () => {
-      router.push({ query: {} });
-    };
+    // return () => {
+    //   router.push({ query: {} });
+    // };
     // eslint-disable-next-line
   }, []);
 

@@ -1,5 +1,5 @@
 import { usePageCurrentOffer } from './PageOfferProvider';
-import { useModalProvider } from '../../ModalProvider/ModalProvider';
+import { useModalProvider } from '../../../Providers/ModalProvider/ModalProvider';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';

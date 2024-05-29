@@ -29,16 +29,16 @@ export const useOrderTableConfigs = () => {
       tableData: state.refunds,
       tableTitles: ordersTableColumns as never,
       // tableSortParams: ordersSearchParams.filter(el => el.sort),
-      isFilter: true,
-      isSearch: true,
-      footer: true,
+      hasFilter: true,
+      hasSearch: true,
+      showFooter: true,
       checkBoxes: true,
       // actionsCreator,
       onFilterSubmit: filterParams => {
         setFilterParams(filterParams);
         getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading }).then();
       },
-      handleTableSort: (param, sortOrder) => {
+      onTableSortChange: (param, sortOrder) => {
         setSortParams({ dataPath: param.dataPath, sortOrder });
         getAll({
           data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },

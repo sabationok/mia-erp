@@ -1,7 +1,11 @@
-import { useOverlayService } from './OverlayStackProvider';
-import React, { MouseEventHandler, useCallback, useMemo } from 'react';
+import { CreatedOverlay, useOverlayService } from './OverlayStackProvider';
+import React, { createContext, MouseEventHandler, useCallback, useContext, useMemo } from 'react';
 import styled from 'styled-components';
 import FlexBox from '../../components/atoms/FlexBox';
+
+export interface OverlayLocalValue extends CreatedOverlay {}
+export const OverlayLocalCTX = createContext<OverlayLocalValue>({});
+export const useOverlay = () => useContext(OverlayLocalCTX);
 
 export const OverlayStack = (_: { name?: string }) => {
   const overlaySrv = useOverlayService();
@@ -29,15 +33,25 @@ export const OverlayStack = (_: { name?: string }) => {
           alignItems={'flex-end'}
           onClick={onOverlayBackdropClick(id)}
         >
-          <RenderComponent
-            key={`overlay-${id}`}
-            {...props}
-            onClose={() => {
-              overlaySrv.remove(id);
+          <OverlayLocalCTX.Provider
+            value={{
+              onClose: () => {
+                overlaySrv.remove(id);
+              },
+              compId: id,
+              index: index,
             }}
-            overlayId={id}
-            index={index}
-          />
+          >
+            <RenderComponent
+              key={`overlay-${id}`}
+              {...props}
+              onClose={() => {
+                overlaySrv.remove(id);
+              }}
+              compId={id}
+              index={index}
+            />
+          </OverlayLocalCTX.Provider>
         </OverlayBox>
       );
     });
@@ -57,13 +71,13 @@ const Backdrop = styled(FlexBox)`
   right: 0;
   width: 100%;
   height: 100%;
+  z-index: 200;
+
   left: ${p => (p.isActive ? 0 : '100%')};
 
   opacity: ${p => (p.isActive ? 1 : 0)};
   visibility: ${p => (p.isActive ? 'visible' : 'hidden')};
   pointer-events: ${p => (p.isActive ? 'all' : 'none')};
-
-  z-index: 20;
 
   background-color: ${p => p.theme.backdropColor};
 
@@ -77,6 +91,8 @@ const OverlayBox = styled(FlexBox)`
   z-index: 20;
 
   max-width: 360px;
+
+  height: 100%;
 
   animation: TransformFromRight;
 

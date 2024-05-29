@@ -31,15 +31,15 @@ const PageCustomerOverview: React.FC<Props> = props => {
     (): ITableListProps<ICustomerBase> => ({
       // tableData: state.products,
       tableTitles: customersColumns,
-      isFilter: true,
-      isSearch: true,
-      footer: false,
+      hasFilter: true,
+      hasSearch: true,
+      showFooter: false,
       checkBoxes: true,
       onFilterSubmit: filterParams => {
         setFilterParams(filterParams);
         // getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading }).then();
       },
-      handleTableSort: (param, sortOrder) => {
+      onTableSortChange: (param, sortOrder) => {
         setSortParams({ dataPath: param.dataPath, sortOrder });
         // getAll({
         //   data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },
@@ -86,15 +86,15 @@ export const useCustomersTableSettings = () => {
 
   const tableConfig = useMemo(
     (): ITableListProps<ICustomerBase> => ({
-      isFilter: true,
-      isSearch: true,
-      footer: false,
+      hasFilter: true,
+      hasSearch: true,
+      showFooter: false,
       checkBoxes: true,
       onFilterSubmit: filterParams => {
         setFilterParams(filterParams);
         // getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading }).then();
       },
-      handleTableSort: (param, sortOrder) => {
+      onTableSortChange: (param, sortOrder) => {
         setSortParams({ dataPath: param.dataPath, sortOrder });
         // getAll({
         //   data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },

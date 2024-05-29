@@ -44,8 +44,8 @@ const EditOfferModal: React.FC<EditOfferModalProps> = ({ onClose, _id, copy }) =
 
   useEffect(() => {
     service.getProductFullInfo({
-      data: { _id },
-      onSuccess: loaders.onSuccess('offer_refresh', data => {
+      data: { params: { _id } },
+      onSuccess: loaders.onSuccess('offer_refresh', ({ data }) => {
         if (copy) {
           data._id = '';
         }

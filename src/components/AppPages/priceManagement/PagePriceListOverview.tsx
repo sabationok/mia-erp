@@ -37,15 +37,15 @@ const PagePriceListOverview: React.FC<Props> = ({ path }) => {
   const tableConfig = useMemo(
     (): ITableListProps<PriceEntity> => ({
       tableData: list?.prices,
-      isFilter: false,
-      isSearch: true,
-      footer: false,
+      hasFilter: false,
+      hasSearch: true,
+      showFooter: false,
       checkBoxes: true,
       actionsCreator,
       onFilterSubmit: filterParams => {
         setFilterParams(filterParams);
       },
-      handleTableSort: (param, sortOrder) => {
+      onTableSortChange: (param, sortOrder) => {
         setSortParams({ dataPath: param.dataPath, sortOrder });
       },
     }),
@@ -76,7 +76,7 @@ const PagePriceListOverview: React.FC<Props> = ({ path }) => {
           {...tableConfig}
           isLoading={isLoading}
           actionsCreator={actionsCreator}
-          isSearch={false}
+          hasSearch={false}
           tableTitles={pricesColumns}
         />
       </Page>

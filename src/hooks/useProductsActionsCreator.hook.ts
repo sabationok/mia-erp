@@ -1,18 +1,18 @@
-import { useModalProvider } from '../components/ModalProvider/ModalProvider';
+import { useModalProvider } from '../Providers/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
-import { TableActionCreator } from '../components/TableList/tableTypes.types';
+import { TableActionsCreator } from '../components/TableList/tableTypes.types';
 import { OfferEntity } from '../types/offers/offers.types';
-import { useNavigate } from 'react-router-dom';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { t } from '../lang';
 import EditOfferModal from '../components/Modals/EditOfferModal';
 import CreateOfferModal from '../components/Modals/CreateOfferModal';
+import { useAppRouter } from './useRouter.hook';
 
-export type OffersActionsCreator = TableActionCreator<OfferEntity>;
+export type OffersActionsCreator = TableActionsCreator<OfferEntity>;
 
 const useOffersActionsCreator = (): OffersActionsCreator => {
   const service = useAppServiceProvider()[ServiceName.offers];
-  const navigate = useNavigate();
+  const router = useAppRouter();
   const modals = useModalProvider();
 
   return useCallback(
@@ -34,9 +34,7 @@ const useOffersActionsCreator = (): OffersActionsCreator => {
         icon: 'openInNew',
         disabled: !ctx.selectedRow?._id,
         type: 'onlyIcon',
-        onClick: () => {
-          ctx.selectedRow?._id && navigate(ctx.selectedRow?._id);
-        },
+        href: `/app/${router.params.permissionId}/offers/` + ctx.selectedRow?._id,
       },
 
       {
@@ -48,27 +46,24 @@ const useOffersActionsCreator = (): OffersActionsCreator => {
         disabled: !ctx?.selectedRow?._id,
         onClick: () => {
           ctx?.selectedRow?._id &&
-            modals.openModal({
-              ModalChildren: EditOfferModal,
-              modalChildrenProps: {
-                title: 'Змінити',
-                _id: ctx?.selectedRow?._id,
+            modals.create(EditOfferModal, {
+              title: 'Змінити',
+              _id: ctx?.selectedRow?._id,
+              fillHeight: true,
 
-                // defaultState: formData,
-                // onSubmit: (data, o) => {
-                //   service.updateById({
-                //     data,
-                //     onSuccess(d) {
-                //       o?.closeAfterSave && modal?.onClose();
-                //       ToastService.success(`Product updated`);
-                //     },
-                //     onError: e => {
-                //       console.error('Product apdate action', e);
-                //     },
-                //   });
-                // },
-                fillHeight: true,
-              },
+              // defaultState: formData,
+              // onSubmit: (data, o) => {
+              //   service.updateById({
+              //     data,
+              //     onSuccess(d) {
+              //       o?.closeAfterSave && modal?.onClose();
+              //       ToastService.success(`Product updated`);
+              //     },
+              //     onError: e => {
+              //       console.error('Product apdate action', e);
+              //     },
+              //   });
+              // },
             });
         },
       },
@@ -81,12 +76,9 @@ const useOffersActionsCreator = (): OffersActionsCreator => {
         disabled: !ctx?.selectedRow?._id,
         onClick: () => {
           ctx?.selectedRow?._id &&
-            modals.openModal({
-              ModalChildren: EditOfferModal,
-              modalChildrenProps: {
-                _id: ctx?.selectedRow?._id,
-                copy: true,
-              },
+            modals.create(EditOfferModal, {
+              _id: ctx?.selectedRow?._id,
+              copy: true,
             });
         },
       },
@@ -107,14 +99,12 @@ const useOffersActionsCreator = (): OffersActionsCreator => {
         type: 'onlyIconFilled',
         disabled: false,
         onClick: () => {
-          modals.open({
-            ModalChildren: CreateOfferModal,
-          });
+          modals.create(CreateOfferModal);
         },
       },
     ],
 
-    [modals, navigate, service]
+    [modals, router, service]
   );
 };
 

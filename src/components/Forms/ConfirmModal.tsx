@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { IModalChildrenProps } from '../ModalProvider/ModalProvider';
+import { IModalChildrenProps } from '../../Providers/ModalProvider/ModalProvider';
 
 type Props = {
   fillHeight?: boolean;

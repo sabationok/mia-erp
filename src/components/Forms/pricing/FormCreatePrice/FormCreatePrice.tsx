@@ -224,7 +224,12 @@ const PriceListSelectArea = ({ onSelect }: { onSelect?: (info: UUID) => void; er
 
   return (
     <FlexBox fillWidth style={{ height: 250 }} padding={'8px 4px'} overflow={'hidden'}>
-      <TableList tableTitles={priceListColumns} tableData={lists} isSearch={false} onRowClick={handleSelectPriceList} />
+      <TableList
+        tableTitles={priceListColumns}
+        tableData={lists}
+        hasSearch={false}
+        onRowClick={handleSelectPriceList}
+      />
     </FlexBox>
   );
 };

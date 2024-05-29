@@ -119,7 +119,7 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
             <TableList
               // tableTitles={variationsTableTitles}
               tableData={transformedVariationsTableData}
-              isSearch={false}
+              hasSearch={false}
               onRowClick={handleSelectVariation}
             />
           </FlexBox>
@@ -130,7 +130,7 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
             <TableList
               tableTitles={pricesColumnsForProductReview}
               tableData={loadedPrices}
-              isSearch={false}
+              hasSearch={false}
               onRowClick={handleSelectPrice}
             />
           </FlexBox>

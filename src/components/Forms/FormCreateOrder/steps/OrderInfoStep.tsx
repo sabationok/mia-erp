@@ -7,7 +7,7 @@ import { Text } from 'components/atoms/Text';
 import FormAccordionItem from '../../components/FormAccordionItem';
 import InputLabel from 'components/atoms/Inputs/InputLabel';
 import { ICreateOrderInfoFormState } from 'types/orders/orders.types';
-import { useModalService } from '../../../ModalProvider/ModalProvider';
+import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import SelectCustomerModal from '../components/SelectCustomerModal';
 import TagButtonsFilter from 'components/atoms/TagButtonsFilter';

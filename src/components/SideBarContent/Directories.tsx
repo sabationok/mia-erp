@@ -1,4 +1,4 @@
-import { useModalService } from 'components/ModalProvider/ModalProvider';
+import { useModalService } from 'Providers/ModalProvider/ModalProvider';
 import { useMemo } from 'react';
 import { ModalChildrenProps, Modals } from '../Modals/Modals';
 import { Text } from '../atoms/Text';

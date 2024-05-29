@@ -1,4 +1,4 @@
-import { CreatedModal } from '../ModalProvider/ModalProvider';
+import { CreatedModal } from '../../Providers/ModalProvider/ModalProvider';
 import { PriceDiscountEntity } from '../../types/price-management/discounts';
 import { useAppForm, useCurrentDiscount } from '../../hooks';
 import ModalBase from '../atoms/Modal';

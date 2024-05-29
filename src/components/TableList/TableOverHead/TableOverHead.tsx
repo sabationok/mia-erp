@@ -13,16 +13,16 @@ const TableOverHead: React.FC<React.HTMLAttributes<HTMLDivElement>> = props => {
     quickActionsPosition,
     quickActionsDirection,
     actionsCreator,
-    isFilter,
+    hasFilter,
     onSubmitSearch,
-    tableSearchParams,
-    isSearch = true,
+    searchParams,
+    hasSearch = true,
   } = useTable();
 
   const actions = (
     <ActionsBox
       className={'rightSide'}
-      style={{ padding: !isFilter && !isFilter && !actionsCreator ? '0' : '4px 8px' }}
+      style={{ padding: !hasFilter && !hasFilter && !actionsCreator ? '0' : '4px 8px' }}
     >
       <FlexBox
         fxDirection={quickActionsDirection === 'row-reverse' ? 'row-reverse' : 'row'}
@@ -30,9 +30,9 @@ const TableOverHead: React.FC<React.HTMLAttributes<HTMLDivElement>> = props => {
         gap={12}
         style={{ justifySelf: 'flex-end' }}
       >
-        {isFilter && <TableFilter />}
+        {hasFilter && <TableFilter />}
 
-        {isFilter && actionsCreator && <Separator />}
+        {hasFilter && actionsCreator && <Separator />}
 
         {actionsCreator && <TActions renderSeparator={<Separator />} />}
       </FlexBox>
@@ -41,8 +41,8 @@ const TableOverHead: React.FC<React.HTMLAttributes<HTMLDivElement>> = props => {
 
   return (
     <OverHead className="tOverHead" {...props} fxDirection={'row'} flexWrap={'wrap'}>
-      <LeftSide className={'leftSide'} style={{ padding: isSearch ? '4px 8px' : '0' }}>
-        {isSearch && <TableSearchForm {...{ tableSearchParams }} onSubmit={onSubmitSearch} />}
+      <LeftSide className={'leftSide'} style={{ padding: hasSearch ? '4px 8px' : '0' }}>
+        {hasSearch && <TableSearchForm {...{ searchParams }} onSubmit={onSubmitSearch} />}
       </LeftSide>
 
       {quickActionsPosition === 'top' ? actions : <DeviceControl.MinDesktop>{actions}</DeviceControl.MinDesktop>}
@@ -55,13 +55,12 @@ const OverHead = styled(FlexBox)`
 
   gap: 8px;
 
-  position: relative;
-  overflow: hidden;
+  position: static;
+  //overflow: hidden;
   z-index: 50;
 
   width: 100%;
 
-  transform-origin: right;
   //background-color: ${({ theme }) => theme.tableBackgroundColor};
   @media screen and (max-height: 480px) {
     //padding: 8px;
@@ -125,7 +124,7 @@ const Separator = styled.div`
     left: 50%;
     height: 100%;
     width: 1px;
-    border-right: 2px solid ${({ theme }) => theme.tableHeaderStroke};
+    border-right: 2px solid ${({ theme }) => theme.modalBorderColor};
   }
 `;
 

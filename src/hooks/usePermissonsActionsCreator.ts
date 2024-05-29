@@ -1,7 +1,7 @@
-import { ITableAction, ITableListContext, TableActionCreator } from '../components/TableList/tableTypes.types';
+import { ITableAction, ITableListContext, TableActionsCreator } from '../components/TableList/tableTypes.types';
 import { PermissionEntity } from '../types/permissions.types';
 import { PermissionService } from './usePermissionsService.hook';
-import { IModalProviderContext, useModalService } from '../components/ModalProvider/ModalProvider';
+import { IModalProviderContext, useModalService } from '../Providers/ModalProvider/ModalProvider';
 import { useNavigate } from 'react-router-dom';
 import { CompanyQueryType } from '../redux/app-redux.types';
 import { toast } from 'react-toastify';
@@ -13,7 +13,7 @@ import { TableActionsBuilder } from '../utils/tables';
 import { t } from '../lang';
 import { useAuthSelector } from '../redux/selectors.store';
 
-export type PermissionsActionsCreator = TableActionCreator<PermissionEntity>;
+export type PermissionsActionsCreator = TableActionsCreator<PermissionEntity>;
 
 export type PermissionsActionsType =
   | 'enterCompany'

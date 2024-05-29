@@ -5,12 +5,13 @@ import { Provider } from 'react-redux';
 import { persistor, store } from 'redux/store.store';
 import { PersistGate } from 'redux-persist/integration/react';
 import { BrowserRouter } from 'react-router-dom';
-import AppThemeProvider from 'components/AppThemeProvider/AppThemeProvider';
-import ModalProvider from 'components/ModalProvider/ModalProvider';
+import AppThemeProvider from 'Providers/AppThemeProvider/AppThemeProvider';
+import ModalProvider from 'Providers/ModalProvider/ModalProvider';
 import './index.scss';
 import 'react-toastify/dist/ReactToastify.css';
 import SideBarProvider from 'components/SideBarLeft/SideBarProvider';
 import { AppServiceProvider } from './hooks/useAppServices.hook';
+import CartProvider from 'Providers/CartProvider';
 
 // import reportWebVitals from './reportWebVitals';
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
@@ -21,11 +22,13 @@ root.render(
       <BrowserRouter basename="/counter-app-ts">
         <AppServiceProvider>
           <AppThemeProvider>
-            <ModalProvider>
-              <SideBarProvider>
-                <App />
-              </SideBarProvider>
-            </ModalProvider>
+            <CartProvider>
+              <ModalProvider>
+                <SideBarProvider>
+                  <App />
+                </SideBarProvider>
+              </ModalProvider>
+            </CartProvider>
           </AppThemeProvider>
         </AppServiceProvider>
       </BrowserRouter>

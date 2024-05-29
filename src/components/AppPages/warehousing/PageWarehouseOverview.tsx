@@ -2,7 +2,7 @@ import TableList, { ITableListContext } from 'components/TableList/TableList';
 import { takeFullGridArea } from '../pagesStyles';
 import styled from 'styled-components';
 import { useEffect, useMemo, useState } from 'react';
-import { ITableListProps, TableActionCreator } from '../../TableList/tableTypes.types';
+import { ITableListProps, TableActionsCreator } from '../../TableList/tableTypes.types';
 import AppGridPage from '../AppGridPage';
 import { useWarehousesSelector } from '../../../redux/selectors.store';
 import { ISortParams } from '../../../api';
@@ -11,7 +11,7 @@ import { warehouseOverviewTableColumns } from '../../../data/warehauses.data';
 import { useAppParams } from '../../../hooks';
 import { WarehouseItemEntity } from '../../../types/warehousing/warehouses.types';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { useModalProvider } from '../../ModalProvider/ModalProvider';
+import { useModalProvider } from '../../../Providers/ModalProvider/ModalProvider';
 import { Modals } from '../../Modals/Modals';
 import { BaseAppPageProps } from '../index';
 
@@ -29,15 +29,15 @@ const PageWarehouseOverview: React.FC<any> = (props: Props) => {
   const tableConfig = useMemo(
     (): ITableListProps<WarehouseItemEntity> => ({
       tableData: state.current?.inventories,
-      isFilter: false,
-      isSearch: true,
-      footer: false,
+      hasFilter: false,
+      hasSearch: true,
+      showFooter: false,
       checkBoxes: true,
       actionsCreator,
       onFilterSubmit: filterParams => {
         setFilterParams(filterParams);
       },
-      handleTableSort: (param, sortOrder) => {
+      onTableSortChange: (param, sortOrder) => {
         setSortParams({ dataPath: param.dataPath, sortOrder });
       },
     }),
@@ -70,7 +70,7 @@ const Page = styled.div`
   ${takeFullGridArea}
 `;
 
-type WarehouseTableActionsCreator = TableActionCreator<WarehouseItemEntity>;
+type WarehouseTableActionsCreator = TableActionsCreator<WarehouseItemEntity>;
 
 const useWarehouseOverviewActionsCreator = (): WarehouseTableActionsCreator => {
   // const service = useAppServiceProvider().warehouses;

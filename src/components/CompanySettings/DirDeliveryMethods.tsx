@@ -8,7 +8,7 @@ import DirListItem from '../Directories/DirList/DirListItem';
 import { useTranslatedMethodsList } from '../../hooks/useTranslatedMethodsList.hook';
 import { IDeliveryMethod } from '../../types/integrations.types';
 import { useDeliveriesSelector } from '../../redux/selectors.store';
-import { useModalProvider } from '../ModalProvider/ModalProvider';
+import { useModalProvider } from '../../Providers/ModalProvider/ModalProvider';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { UseDeliveriesService } from '../../hooks/services/useDeliveriesService.hook';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';

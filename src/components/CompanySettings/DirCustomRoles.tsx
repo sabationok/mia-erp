@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import ModalForm from 'components/ModalForm';
 import styled from 'styled-components';
-import { useModalProvider } from 'components/ModalProvider/ModalProvider';
+import { useModalProvider } from 'Providers/ModalProvider/ModalProvider';
 import useCustomRolesService, { CustomRolesService } from 'hooks/useCustomRolesService.hook';
 import FlexBox from '../atoms/FlexBox';
 import { useCustomRolesSelector } from '../../redux/selectors.store';

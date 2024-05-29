@@ -1,45 +1,49 @@
 import { usePageCurrentOffer } from '../PageOfferProvider';
-import { useModalProvider } from '../../../ModalProvider/ModalProvider';
+import { useModalProvider } from '../../../../Providers/ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { useCallback, useEffect, useMemo } from 'react';
 import { createTableTitlesFromProperties, transformVariationTableData } from '../../../../utils/tables';
-import { getIdRef } from '../../../../utils';
 import { OnlyUUID } from '../../../../redux/app-redux.types';
-import { useLoadersProvider } from '../../../../Providers/Loaders/LoaderProvider';
 import { OfferOverlayLoaderKey } from '../../../Overlays/FormProductDefaultsOverlay';
 import { PropertyEntity } from '../../../../types/offers/properties.types';
 import CreateVariationOverlay from '../../../Overlays/CreateVariationOverlay';
-import { IVariationTableData } from '../../../../types/offers/variations.types';
+import { IVariationTableData, VariationEntity } from '../../../../types/offers/variations.types';
+import { OfferEntity } from '../../../../types/offers/offers.types';
+import { useCurrentOffer } from '../../../../hooks';
+import { useLoaders } from '../../../../Providers/Loaders/useLoaders.hook';
 
 export interface VariationsTabProps {
-  onSelect?: (variation: OnlyUUID) => void;
+  onSelect?: (variation: VariationEntity) => void;
   selected?: OnlyUUID;
   withActions?: boolean;
+  offer?: OfferEntity;
 }
 
-const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withActions = true }) => {
-  const loaders = useLoadersProvider<OfferOverlayLoaderKey>();
+const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withActions = true, offer }) => {
+  const loaders = useLoaders<OfferOverlayLoaderKey>();
+
   const page = usePageCurrentOffer();
+  const Offer = useCurrentOffer(offer || page?.currentOffer);
+
   const modalS = useModalProvider();
-  const currentOffer = page.currentOffer;
   const productsS = useAppServiceProvider()[ServiceName.offers];
   // const templates = usePropertiesSelector();
 
   const loadData = useCallback(
     ({ refresh, update }: { refresh?: boolean; update?: boolean }) => {
-      if (!currentOffer) return;
+      if (!Offer) return;
 
       productsS.getAllVariationsByProductId({
-        data: { refreshCurrent: refresh, updateCurrent: update, offerId: currentOffer._id },
+        data: { refreshCurrent: refresh, updateCurrent: update, offerId: Offer._id },
         onLoading: loaders.onLoading('variations'),
       });
     },
-    [currentOffer, loaders, productsS]
+    [Offer, loaders, productsS]
   );
   const variationsTableTitles = useMemo(() => {
     const propertiesMap: Record<string, PropertyEntity> = {};
-    for (const variation of currentOffer?.variations ?? []) {
+    for (const variation of Offer?.variations ?? []) {
       const propsList = variation.properties;
 
       for (const prop of propsList ?? []) {
@@ -50,18 +54,13 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
       }
     }
     return createTableTitlesFromProperties(Object.values(propertiesMap));
-  }, [currentOffer?.variations]);
+  }, [Offer?.variations]);
 
   const tableConfig = useMemo((): ITableListProps<IVariationTableData> => {
     return {
       onRowClick: data => {
-        if (onSelect) {
-          if (data?.rowData) {
-            onSelect(getIdRef(data?.rowData));
-            return;
-          } else if (data?._id) {
-            onSelect({ _id: data?._id });
-          }
+        if (onSelect && data?.rowData) {
+          onSelect(data?.rowData);
         }
       },
       actionsCreator: !withActions
@@ -71,6 +70,7 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
 
             return [
               { icon: 'refresh', type: 'onlyIcon', onClick: () => loadData({ refresh: true }) },
+              // { icon: 'done', type: 'onlyIconOutlined', onClick: () => loadData({ refresh: true }) },
               { separator: true },
               {
                 icon: 'delete',
@@ -88,11 +88,8 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
                 onClick: () => {
                   if (!currentId || !ctx.selectedRow) return;
 
-                  modalS.open({
-                    ModalChildren: CreateVariationOverlay,
-                    modalChildrenProps: {
-                      updateId: currentId,
-                    },
+                  modalS.create(CreateVariationOverlay, {
+                    updateId: currentId,
                   });
                 },
               },
@@ -103,10 +100,7 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
                 onClick: () => {
                   // toggleVisibility && toggleVisibility();
 
-                  modalS.open({
-                    ModalChildren: CreateVariationOverlay,
-                    modalChildrenProps: { offer: page.currentOffer },
-                  });
+                  modalS.create(CreateVariationOverlay, { offer: Offer });
                 },
               },
             ];
@@ -115,7 +109,7 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
   }, [loadData, modalS, onSelect, page.currentOffer, withActions]);
 
   useEffect(() => {
-    if (currentOffer) {
+    if (Offer) {
       loadData({ refresh: true });
     }
     // eslint-disable-next-line
@@ -124,11 +118,11 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
   return (
     <TableList
       {...tableConfig}
-      isSearch={false}
-      isFilter={false}
+      hasSearch={false}
+      hasFilter={false}
       isLoading={loaders?.isLoading?.variations}
       selectedRow={selected}
-      tableData={currentOffer?.variations}
+      tableData={Offer?.variations}
       tableTitles={variationsTableTitles}
       transformData={transformVariationTableData as never}
     />

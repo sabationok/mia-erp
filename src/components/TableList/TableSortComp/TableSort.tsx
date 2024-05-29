@@ -4,13 +4,13 @@ import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import TableSortParamsList from './TableSortParamsList';
 import styled from 'styled-components';
 import { ITableListProps, SelectItem } from 'components/TableList/TableList';
-import { useModalProvider } from '../../ModalProvider/ModalProvider';
+import { useModalProvider } from '../../../Providers/ModalProvider/ModalProvider';
 import ModalForm from '../../ModalForm';
-import { RenderModalComponentChildrenProps } from '../../ModalProvider/ModalComponent';
+import { RenderModalComponentChildrenProps } from '../../../Providers/ModalProvider/ModalComponent';
 
 export interface TableSortProps {
   tableSortParams: SelectItem[];
-  onSelect?: ITableListProps['handleTableSort'];
+  onSelect?: ITableListProps['onTableSortChange'];
 }
 
 const TableSort: React.FC<TableSortProps> = ({ tableSortParams, onSelect }) => {

@@ -2,10 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { OfferEntity, OfferTypeEnum } from '../../types/offers/offers.types';
 import {
-  createProductThunk,
+  createOfferThunk,
   getAllInventoriesByProductIdThunk,
   getAllOfferPricesThunk,
-  getAllProductsThunk,
+  getAllOffersThunk,
   getOfferFullInfoThunk,
   getOfferThunk,
   updateOfferDefaultsThunk,
@@ -88,7 +88,7 @@ export const offersSlice = createSlice({
   reducers: {},
   extraReducers: builder =>
     builder
-      .addCase(getAllProductsThunk.fulfilled, (s, a) => {
+      .addCase(getAllOffersThunk.fulfilled, (s, a) => {
         if (Array.isArray(a.payload.data)) {
           if (a.payload.refresh) {
             s.list = a.payload.data;
@@ -106,7 +106,7 @@ export const offersSlice = createSlice({
           });
         }
       })
-      .addCase(createProductThunk.fulfilled, (s, a) => {
+      .addCase(createOfferThunk.fulfilled, (s, a) => {
         if (a.payload?.data) {
           ManageOffersStateMap(s, a.payload);
         }

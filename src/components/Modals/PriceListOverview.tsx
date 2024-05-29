@@ -61,7 +61,7 @@ const PriceListOverview: React.FC<PriceListOverviewProps> = ({
       <TableList
         {...tableSettings}
         actionsCreator={actionsCreator}
-        isSearch={false}
+        hasSearch={false}
         tableData={tableData}
         tableTitles={pricesColumns}
       />

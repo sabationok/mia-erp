@@ -4,6 +4,7 @@ import { memo, useMemo } from 'react';
 import { useTable } from './TableList';
 import { iconId } from '../../img/sprite';
 import { FlexBoxBaseProps } from '../atoms/FlexBox';
+import { NavLink } from 'react-router-dom';
 
 // export interface TableActionProps<TData = any> extends ITableAction {}
 
@@ -25,10 +26,25 @@ const TableActions: React.FC<TableActionsProps> = ({ renderSeparator = <></>, bt
     // @ts-ignore
 
     return actions.map(
-      ({ separator, description, iconSize = '90%', onClick, disabledCheck, type, icon, ...props }, idx) =>
-        separator ? (
-          <Separator key={icon || idx} />
-        ) : (
+      ({ separator, href, description, iconSize = '90%', onClick, disabledCheck, type, icon, ...props }, idx) => {
+        if (separator) {
+          return <Separator key={icon || idx} />;
+        }
+        if (href) {
+          return (
+            <NavLink key={icon || idx} to={href}>
+              <ButtonIcon
+                variant={type || 'onlyIcon'}
+                size={btnSize ? `${btnSize}px` : '26px'}
+                iconSize={'90%'}
+                // @ts-ignore
+                iconId={icon ? iconId?.[icon] : 'info'}
+                {...props}
+              />
+            </NavLink>
+          );
+        }
+        return (
           <ButtonIcon
             key={icon || idx}
             variant={type || 'onlyIcon'}
@@ -39,7 +55,8 @@ const TableActions: React.FC<TableActionsProps> = ({ renderSeparator = <></>, bt
             onClick={onClick}
             {...props}
           />
-        )
+        );
+      }
     );
   }, [btnSize, renderSeparator, table]);
 

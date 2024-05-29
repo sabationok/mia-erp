@@ -1,6 +1,6 @@
-import { useModalProvider } from '../components/ModalProvider/ModalProvider';
+import { useModalProvider } from '../Providers/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
-import { ITableListContext, TableActionCreator } from '../components/TableList/tableTypes.types';
+import { ITableListContext, TableActionsCreator } from '../components/TableList/tableTypes.types';
 import { OrderEntity } from '../types/orders/orders.types';
 import { Modals } from '../components/Modals/Modals';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,7 @@ import { t } from '../lang';
 import { useAppServiceProvider } from './useAppServices.hook';
 import { AppModuleName } from '../redux/reduxTypes.types';
 
-export type OrdersActionsCreator = TableActionCreator<OrderEntity>;
+export type OrdersActionsCreator = TableActionsCreator<OrderEntity>;
 const useOrdersActionsCreatorHook = (): OrdersActionsCreator => {
   const modalS = useModalProvider();
   const navigate = useNavigate();

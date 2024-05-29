@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { ErrorContent } from 'components/atoms';
-import { useModalProvider } from 'components/ModalProvider/ModalProvider';
+import { useModalProvider } from 'Providers/ModalProvider/ModalProvider';
 import { useSideBar } from './SideBarProvider';
 import styled, { css } from 'styled-components';
 import FlexBox from '../atoms/FlexBox';
@@ -21,7 +21,6 @@ const SideBarOptions: React.FC = () => {
 
   const onMenuClose = useCallback(
     (ev: KeyboardEvent | MouseEvent) => {
-      console.log('onMenuClose useCallback | modal', modal.isOpen());
       if (modal.isOpen()) return;
 
       const { target } = ev;

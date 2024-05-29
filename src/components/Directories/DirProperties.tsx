@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useModalProvider } from 'components/ModalProvider/ModalProvider';
+import { useModalProvider } from 'Providers/ModalProvider/ModalProvider';
 import { IDirInTreeProps } from '../../types/dir.types';
 
 import TabSelector, { FilterOption } from '../atoms/TabSelector';

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import ModalForm from 'components/ModalForm';
 import styled from 'styled-components';
-import { useModalProvider } from 'components/ModalProvider/ModalProvider';
+import { useModalProvider } from 'Providers/ModalProvider/ModalProvider';
 import FlexBox from '../atoms/FlexBox';
 import { useDirectorySelector } from '../../redux/selectors.store';
 

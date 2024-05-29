@@ -37,9 +37,9 @@ export type CartWarehouseData = {
   slotKeys: TempId[];
   selectedIds: TempId[];
   isSelected?: boolean;
-  info?: Partial<WarehouseEntity>;
+  info?: WarehouseEntity;
 };
-export type OrderSlotsMap = Record<TempId, Partial<IOrderTempSlot>>;
+export type OrderSlotsMap = Record<TempId, IOrderTempSlot>;
 
 export interface SetRecommendationPayload {
   _id?: string;
@@ -107,7 +107,7 @@ export const cartSlice = createSlice({
       s.summary = a.payload;
     },
     addNewSlotToCartAction(st, a: Action<{ data: IOrderTempSlot }>) {
-      const fromRefKey = a.payload.data.offer?._id;
+      const fromRefKey = a.payload.data?.offer?._id;
 
       if (fromRefKey && st.recommends?.[fromRefKey]?.fromRef) {
         a.payload.data.fromRef = st.recommends?.[fromRefKey]?.fromRef;
@@ -251,9 +251,12 @@ const UpdateCartSlotMutation = (
     });
     s.warehousesDataMap[warehouseId] = {
       ...wrSata,
-      info: { ...item?.warehouse, ...wrSata.info },
+      // info: Object.assign(item?.warehouse ?? {}, wrSata?.info ?? {}),
       isSelected: wrSata.slotKeys?.length === wrSata.selectedIds?.length,
     };
+    if (item?.warehouse) {
+      s.warehousesDataMap[warehouseId].info = { ...item?.warehouse, ...(wrSata?.info ?? {}) };
+    }
   }
   return {};
 };

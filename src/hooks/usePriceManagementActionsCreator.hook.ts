@@ -1,6 +1,6 @@
-import { useModalProvider } from '../components/ModalProvider/ModalProvider';
+import { useModalProvider } from '../Providers/ModalProvider/ModalProvider';
 import { useCallback } from 'react';
-import { TableActionCreator } from '../components/TableList/tableTypes.types';
+import { TableActionsCreator } from '../components/TableList/tableTypes.types';
 import {
   IPriceListItemReqData,
   PriceEntity,
@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { enumToFilterOptions } from '../utils/fabrics';
 import { ToastService } from '../services';
 
-export type PriceManagementActionsCreator = TableActionCreator<PriceListEntity>;
+export type PriceManagementActionsCreator = TableActionsCreator<PriceListEntity>;
 
 export const PriceManagementItemTypeFilterOptions = enumToFilterOptions(PriceListTypeEnum);
 

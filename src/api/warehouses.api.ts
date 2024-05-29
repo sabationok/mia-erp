@@ -1,10 +1,10 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
 import {
-  WarehouseItemEntity,
-  WarehouseEntity,
   IWarehouseDocReqData,
   IWarehouseReqData,
+  WarehouseEntity,
+  WarehouseItemEntity,
 } from '../types/warehousing/warehouses.types';
 import { AppResponse, OnlyUUID } from '../redux/app-redux.types';
 import { ClientApi } from './client.api';
@@ -24,13 +24,17 @@ export class WarehousesApi {
     return this.api.get(this.endpoints.getById(warehouse?._id), { params: params });
   }
 
-  public static async getAllWarehouses(params?: AppQueryParams): Promise<AppResponse<WarehouseEntity[]>> {
+  public static async getAllWarehouses(
+    params?: Pick<AppQueryParams, 'ids' | 'label' | 'barCode'>
+  ): Promise<AppResponse<WarehouseEntity[]>> {
     return this.api.get(this.endpoints.getAll(), { params: params });
   }
 
-  public static async getAllInventories(params?: AppQueryParams): Promise<AppResponse<WarehouseItemEntity[]>> {
+  public static getAllInventories = async (
+    params?: Pick<AppQueryParams, 'warehouse' | 'warehouseId' | 'offer' | 'offerId' | 'variation' | 'variationId'>
+  ): Promise<AppResponse<WarehouseItemEntity[]>> => {
     return this.api.get(this.endpoints.getAllInventories(), { params });
-  }
+  };
 
   // public static async getPriceListById(list?: OnlyUUID, params?: AppQueryParams): Promise<IWarehouseRe> {
   //   return this.api.get(this.endpoints.getById(list?._id), { params: params });

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { warehouseOverviewTableColumns } from '../../../../data/warehauses.data';
 import Forms from '../../../Forms';
 import { WarehouseItemEntity } from '../../../../types/warehousing/warehouses.types';
-import { useModalProvider } from '../../../ModalProvider/ModalProvider';
+import { useModalProvider } from '../../../../Providers/ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useProductsSelector } from '../../../../redux/selectors.store';
 import { getIdRef } from '../../../../utils/data-transform';
@@ -78,7 +78,7 @@ const WarehousingTab = ({ onSelect, selected, withActions }: WarehousingTabProps
     // eslint-disable-next-line
   }, []);
 
-  return <TableList {...tableConfigs} isSearch={false} isFilter={false} isLoading={loading} selectedRow={selected} />;
+  return <TableList {...tableConfigs} hasSearch={false} hasFilter={false} isLoading={loading} selectedRow={selected} />;
 };
 
 export default WarehousingTab;

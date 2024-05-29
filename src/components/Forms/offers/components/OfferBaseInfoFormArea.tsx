@@ -24,7 +24,7 @@ import { useDirectorySelector } from '../../../../redux/selectors.store';
 
 export interface OfferBaseInfoFormAreaProps extends OfferFormAreaProps<IProductFullFormData> {
   type?: MaybeNull<OfferTypeEnum>;
-  onSuccess?: (data: OfferEntity) => void;
+  onSuccess?: (data: { data: OfferEntity }) => void;
   edit?: boolean;
 }
 
@@ -50,12 +50,16 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
 
     !edit
       ? service.create({
-          data: { data: productForSubmit },
+          data: {
+            data: {
+              data: productForSubmit,
+            },
+          },
           onSuccess: onSuccess,
           onLoading: onLoading('offer_create'),
         })
       : service.updateById({
-          data: { data: productForSubmit, _id },
+          data: { data: { data: productForSubmit, _id } },
           onSuccess: onSuccess,
           onLoading: onLoading('offer_update'),
         });

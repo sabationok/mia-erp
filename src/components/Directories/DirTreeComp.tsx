@@ -1,6 +1,6 @@
 import ModalForm from '../ModalForm';
 import { useEffect, useMemo, useState } from 'react';
-import { useModalProvider } from '../ModalProvider/ModalProvider';
+import { useModalProvider } from '../../Providers/ModalProvider/ModalProvider';
 import { useDirService, useFilteredLisData } from '../../hooks';
 import { useDirectorySelector } from '../../redux/selectors.store';
 import { TabOption } from '../atoms/TabSelector';
@@ -8,7 +8,7 @@ import DirListItem from './DirList/DirListItem';
 import FlexBox from '../atoms/FlexBox';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { DirInTreeActionsCreatorType, IDirItemBase } from '../../types/dir.types';
-import { RenderModalComponentChildrenProps } from '../ModalProvider/ModalComponent';
+import { RenderModalComponentChildrenProps } from '../../Providers/ModalProvider/ModalComponent';
 import ExtraFooterWithButton from '../atoms/ExtraFooterWithButton';
 
 export interface DirTreeComponentProps extends RenderModalComponentChildrenProps {

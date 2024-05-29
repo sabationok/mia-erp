@@ -26,6 +26,8 @@ export * from './orders';
 export * from './updateStringArray.helper';
 export * from './forArray.helpers';
 
+export * from './setValueByPath.helper';
+
 export * from './createOrderTempSlot.helper';
 
 export {

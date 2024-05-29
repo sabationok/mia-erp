@@ -31,18 +31,18 @@ const PageTransactions: React.FC<any> = (props: Props) => {
     (): ITableListProps<ITransaction> => ({
       tableData: state.transactions,
       tableTitles: transactionsColumns,
-      tableSortParams: transactionsSearchParams.filter(el => el.sort),
+      sortParams: transactionsSearchParams.filter(el => el.sort),
       filterSelectors,
-      isFilter: true,
-      isSearch: true,
-      footer: true,
+      hasFilter: true,
+      hasSearch: true,
+      showFooter: true,
       checkBoxes: true,
       actionsCreator,
       onFilterSubmit: filterParams => {
         setFilterParams(filterParams);
         getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading });
       },
-      handleTableSort: (param, sortOrder) => {
+      onTableSortChange: (param, sortOrder) => {
         setSortParams({ dataPath: param.dataPath, sortOrder });
         getAll({
           data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },

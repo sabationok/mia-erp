@@ -76,7 +76,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
     (): ITableListProps<OfferEntity> => ({
       tableTitles: offersTableColumns,
       tableData: products,
-      tableSearchParams: [
+      searchParams: [
         { dataPath: 'label', label: t('label') },
         { dataPath: 'sku', label: t('sku') },
       ],
@@ -102,7 +102,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
     (): ITableListProps<IVariationTableData> => ({
       tableTitles: variationTableTitles,
       tableData: variations,
-      isSearch: false,
+      hasSearch: false,
       selectedRow: formData?.variation,
       onRowClick: data => {
         const v = variations.find(p => p._id === data?._id);
@@ -133,7 +133,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
     (): ITableListProps<WarehouseItemEntity> => ({
       tableTitles: warehouseBatchColumns,
       tableData: inventories,
-      isSearch: false,
+      hasSearch: false,
       selectedRow: formData?.inventory,
       onRowClick: data => {
         const v = inventories.find(p => p._id === data?._id);

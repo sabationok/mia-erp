@@ -19,7 +19,6 @@ import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 
 interface Props extends BaseAppPageProps {}
-
 const ordersFilterOptions = enumToFilterOptions(OrderStatusEnum);
 
 // const useDynamicFilterOptionsByEnum = <T extends Record<string, any> = any>(
@@ -102,17 +101,17 @@ export const useOrderTableConfigs = () => {
     (): ITableListProps<OrderEntity> => ({
       tableData: state.orders,
       tableTitles: ordersTableColumns,
-      tableSortParams: ordersSearchParams.filter(el => el.sort),
-      isFilter: true,
-      isSearch: true,
-      footer: true,
+      sortParams: ordersSearchParams.filter(el => el.sort),
+      hasFilter: true,
+      hasSearch: true,
+      showFooter: true,
       checkBoxes: true,
       actionsCreator,
       onFilterSubmit: filterParams => {
         setFilterParams(filterParams);
         getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading }).then();
       },
-      handleTableSort: (param, sortOrder) => {
+      onTableSortChange: (param, sortOrder) => {
         setSortParams({ dataPath: param.dataPath, sortOrder });
         getAll({
           data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },

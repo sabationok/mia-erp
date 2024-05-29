@@ -1,8 +1,8 @@
-import { IModalProviderContext, useModalProvider } from '../components/ModalProvider/ModalProvider';
+import { IModalProviderContext, useModalProvider } from '../Providers/ModalProvider/ModalProvider';
 import { UseFinancesService } from './useTransactionsService.hook';
 
 import { filterOptions } from '../data/transactions.data';
-import { ITableAction, ITableListContext, TableActionCreator } from '../components/TableList/tableTypes.types';
+import { ITableAction, ITableListContext, TableActionsCreator } from '../components/TableList/tableTypes.types';
 import { ITransaction } from '../types/finances/transactions.types';
 
 import { useTransactionsSelector } from '../redux/selectors.store';
@@ -18,7 +18,7 @@ export interface TransactionsTablesActionProps {
 }
 export type ITransactionsTableAction = ITableAction<string>;
 export type TransactionsActionCreator = (options: TransactionsTablesActionProps) => ITransactionsTableAction;
-export type TrActionsCreator = TableActionCreator<ITransaction>;
+export type TrActionsCreator = TableActionsCreator<ITransaction>;
 
 const createEditTransactionAction = ({
   ctx,

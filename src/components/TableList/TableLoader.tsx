@@ -22,11 +22,10 @@ const TableLoader = ({ isLoading, text = t('Loading content...') }: { isLoading?
           strokeWidth={3}
           strokeWidthSecondary={3}
         />
-        {text && (
-          <Text $weight={500} $size={12}>
-            {text}
-          </Text>
-        )}
+
+        <Text $weight={500} $size={12}>
+          {text}
+        </Text>
       </Loader>
     </TableLoaderBox>
   );
@@ -35,20 +34,20 @@ const TableLoaderBox = styled(FlexBox)<{ isLoading?: boolean }>`
   position: absolute;
   top: 100%;
   left: 50%;
-  z-index: 50;
+  z-index: 70;
 
   padding: 8px 8px 24px;
 
   transform: ${p => (p.isLoading ? 'translate(-50%, -100%)' : 'translate(-50%, 0)')};
 
   max-width: 90%;
-  transition: ${p => p.theme.globals.timingFnMain};
+  transition: ${p => p.theme.globals.timingFnMui};
 `;
 const Loader = styled(FlexBox)`
-  min-height: 60px;
+  min-height: 70px;
   width: 320px;
-  max-width: 100%;
-  border-radius: 2px;
+  max-width: 80%;
+  border-radius: 4px;
 
   background-color: ${p => p.theme.modalBackgroundColor};
   box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1), 0 2px 15px 0 rgba(0, 0, 0, 0.05);

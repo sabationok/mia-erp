@@ -68,7 +68,7 @@ const CounterpartyTab: React.FC<CounterpartyTabProps> = ({ onSelect, withActions
     };
   }, [filteredData, onSelect, withActions]);
 
-  return <TableList isSearch={false} isLoading={loading} {...tableConfigs} />;
+  return <TableList hasSearch={false} isLoading={loading} {...tableConfigs} />;
 };
 
 export default CounterpartyTab;

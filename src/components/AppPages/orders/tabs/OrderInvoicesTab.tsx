@@ -47,8 +47,8 @@ const OrderInvoicesTab: React.FC<OrderInvoicesTabProps> = ({ order }) => {
   return (
     <TableList
       {...tableConfigs}
-      isSearch={false}
-      isFilter={false}
+      hasSearch={false}
+      hasFilter={false}
       isLoading={isLoading}
       tableData={currentOrder?.invoices}
       tableTitles={invoicesTableColumns}

@@ -38,7 +38,7 @@ export interface AppService {
   [AppModuleName.roles]: CustomRolesService;
   [AppModuleName.integrations]: UseIntegrationsService;
   [AppModuleName.deliveries]: UseDeliveriesService;
-  get<T extends AppServiceKey = any>(module: T): AppService[T] extends AppService[T] ? AppService[T] : unknown;
+  get<T extends AppServiceKey = any>(module: T): AppService[T];
 }
 
 type AppServiceKey = keyof Omit<AppService, 'get'>;
@@ -67,7 +67,7 @@ const useAppService = (): AppService => {
 
   return Object.assign(services, {
     get(module: AppServiceKey) {
-      return services[module];
+      return services?.[module];
     },
   });
 };

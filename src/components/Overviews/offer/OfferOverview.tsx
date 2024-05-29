@@ -42,8 +42,8 @@ const OfferOverview: React.FC<ProductOverviewProps> = ({ product, ...props }) =>
           <TableList
             tableTitles={pricesColumnsForProductReview}
             tableData={priceList}
-            isSearch={false}
-            isFilter={false}
+            hasSearch={false}
+            hasFilter={false}
             isLoading={loading}
           />
         </PricesBox>

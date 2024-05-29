@@ -29,9 +29,9 @@ const PagePriceManagement: React.FC<BaseAppPageProps> = (props: Props) => {
     (): ITableListProps<PriceListEntity> => ({
       tableData: state.lists,
       tableTitles: priceListColumns,
-      isFilter: false,
-      isSearch: true,
-      footer: false,
+      hasFilter: false,
+      hasSearch: true,
+      showFooter: false,
       checkBoxes: true,
       actionsCreator,
       onRowDoubleClick: ev => {
@@ -41,7 +41,7 @@ const PagePriceManagement: React.FC<BaseAppPageProps> = (props: Props) => {
         setFilterParams(filterParams);
         getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading }).then();
       },
-      handleTableSort: (param, sortOrder) => {
+      onTableSortChange: (param, sortOrder) => {
         setSortParams({ dataPath: param.dataPath, sortOrder });
         getAll({
           data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },

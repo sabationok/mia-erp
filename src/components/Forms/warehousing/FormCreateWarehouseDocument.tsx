@@ -4,10 +4,10 @@ import InputText from '../../atoms/Inputs/InputText';
 import styled from 'styled-components';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import {
-  WarehouseEntity,
   IWarehouseDoc,
   IWarehouseDocFormData,
   WarehouseDocumentType,
+  WarehouseEntity,
 } from '../../../types/warehousing/warehouses.types';
 import { t } from '../../../lang';
 import { useAppForm } from '../../../hooks';
@@ -207,7 +207,7 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
               <TableList
                 tableTitles={warehousesTableColumns}
                 tableData={warehouses}
-                isSearch={false}
+                hasSearch={false}
                 onRowClick={handleSelectWarehouse}
               />
             </FlexBox>
@@ -218,7 +218,7 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
               <TableList
                 tableTitles={variationsTableTitles}
                 tableData={transformedVariationsTableData}
-                isSearch={false}
+                hasSearch={false}
                 onRowClick={handleSelectVariation}
               />
             </FlexBox>
@@ -229,7 +229,7 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
               <TableList
                 tableTitles={pricesColumnsForProductReview}
                 tableData={currentPricesData}
-                isSearch={false}
+                hasSearch={false}
                 onRowClick={handleSelectPrice}
               />
             </FlexBox>

@@ -8,7 +8,7 @@ import usePermissionsServiceHook, {
   usePermissionsSelector,
 } from '../../hooks/usePermissionsService.hook';
 import { PermissionEntity } from '../../types/permissions.types';
-import { IModalProviderContext, useModalProvider } from '../ModalProvider/ModalProvider';
+import { IModalProviderContext, useModalProvider } from '../../Providers/ModalProvider/ModalProvider';
 import { ToastService } from '../../services';
 
 export interface DirUsersProps extends DirBaseProps {

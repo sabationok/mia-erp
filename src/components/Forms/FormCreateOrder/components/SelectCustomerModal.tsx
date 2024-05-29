@@ -7,7 +7,7 @@ import { customersColumns } from '../../../../data/customers.data';
 import { t } from '../../../../lang';
 import TableList from '../../../TableList/TableList';
 import { useCustomersSelector } from '../../../../redux/selectors.store';
-import { useModalService } from '../../../ModalProvider/ModalProvider';
+import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import FormCreateCustomer from '../../crm/FormCreateCustomer';
 import { toReqData } from '../../../../utils/data-transform';

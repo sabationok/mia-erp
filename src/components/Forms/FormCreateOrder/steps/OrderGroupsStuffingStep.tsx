@@ -8,7 +8,7 @@ import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 import { ToastService } from 'services';
 import { t } from 'lang';
 import { Modals } from '../../../Modals/Modals';
-import { useModalService } from '../../../ModalProvider/ModalProvider';
+import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import OrderGroupItem from '../components/OrderGroupItem';
 import { getIdRef } from 'utils/data-transform';
 import { FormOrderStepBaseProps } from '../formOrder.types';

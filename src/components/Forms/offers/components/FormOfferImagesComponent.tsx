@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Text } from '../../../atoms/Text';
-import { useModalService } from '../../../ModalProvider/ModalProvider';
+import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import AddImageSetModal, { FormAddImageSetData } from '../AddImageSetModal';
 import ImagePreviewSmall from '../../../atoms/ImagePreviewSmall';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';

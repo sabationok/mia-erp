@@ -18,45 +18,45 @@ export const deviceParams = {
   DESKTOP_START,
 };
 
-export const MinDesktop: React.FC<{ children: React.ReactElement<any, any> | null }> = ({ children }) => {
+export const MinDesktop: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const isDesktop = useMediaQuery({ minWidth: DESKTOP_START });
-  return isDesktop ? children : null;
+  return isDesktop ? <>{children}</> : null;
 };
-export const Tablet: React.FC<{ children: React.ReactElement<any, any> | null }> = ({ children }) => {
+export const Tablet: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const isTablet = useMediaQuery({ minWidth: TABLET_START, maxWidth: TABLET_END });
-  return isTablet ? children : null;
+  return isTablet ? <>{children}</> : null;
 };
-export const TabletXL: React.FC<{ children: React.ReactElement<any, any> | null }> = ({ children }) => {
+export const TabletXL: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const isTabletXl = useMediaQuery({ minWidth: TABLET_MAX_START, maxWidth: DESKTOP_START });
-  return isTabletXl ? children : null;
+  return isTabletXl ? <>{children}</> : null;
 };
-export const AllTablets: React.FC<{ children: React.ReactElement<any, any> | null }> = ({ children }) => {
+export const AllTablets: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const isTablet = useMediaQuery({ minWidth: TABLET_START, maxWidth: TABLET_MAX_END });
-  return isTablet ? children : null;
+  return isTablet ? <>{children}</> : null;
 };
-export const LiitleMobile: React.FC<{ children: React.ReactElement<any, any> | null }> = ({ children }) => {
+export const LiitleMobile: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const isLittleMobile = useMediaQuery({ maxWidth: LITTLE_MOBILE });
-  return isLittleMobile ? children : null;
+  return isLittleMobile ? <>{children}</> : null;
 };
-export const Mobile: React.FC<{ children: React.ReactElement<any, any> | null }> = ({ children }) => {
+export const Mobile: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const isMobile = useMediaQuery({ maxWidth: MOBILE_END });
-  return isMobile ? children : null;
+  return isMobile ? <>{children}</> : null;
 };
-export const MaxToTablet: React.FC<{ children: React.ReactElement<any, any> | null }> = ({ children }) => {
+export const MaxToTablet: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const isTablet = useMediaQuery({ maxWidth: TABLET_END });
-  return isTablet ? children : null;
+  return isTablet ? <>{children}</> : null;
 };
-export const MaxToTabletXl: React.FC<{ children: React.ReactElement<any, any> | null }> = ({ children }) => {
+export const MaxToTabletXl: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const isTabletXL = useMediaQuery({ maxWidth: DESKTOP_START });
-  return isTabletXL ? children : null;
+  return isTabletXL ? <>{children}</> : null;
 };
-export const MinTabletXl: React.FC<{ children: React.ReactElement<any, any> | null }> = ({ children }) => {
+export const MinTabletXl: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const isTabletXL = useMediaQuery({ minWidth: TABLET_MAX_START });
-  return isTabletXL ? children : null;
+  return isTabletXL ? <>{children}</> : null;
 };
-export const NotMobile: React.FC<{ children: React.ReactElement<any, any> | null }> = ({ children }) => {
+export const NotMobile: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const isNotMobile = useMediaQuery({ minWidth: TABLET_MAX_START });
-  return isNotMobile ? children : null;
+  return isNotMobile ? <>{children}</> : null;
 };
 export const NotMobileRoute: React.FC<{ redirectTo?: string | any }> = ({ redirectTo }) => {
   const isMobile = useMediaQuery({ minWidth: MOBILE_END });

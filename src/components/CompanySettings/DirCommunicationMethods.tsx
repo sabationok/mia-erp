@@ -9,7 +9,7 @@ import { useTranslatedMethodsList } from '../../hooks/useTranslatedMethodsList.h
 import { useCustomersSelector } from '../../redux/selectors.store';
 import { ICommunicationMethod } from '../../types/integrations.types';
 import useCustomersService, { CustomersService } from '../../hooks/useCustomersService';
-import { useModalProvider } from '../ModalProvider/ModalProvider';
+import { useModalProvider } from '../../Providers/ModalProvider/ModalProvider';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import FormCreateMethod from '../Forms/Directories/FormCreateMethod';
 

@@ -1,6 +1,6 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { OrderEntity, OrderStatusEnum } from '../types/orders/orders.types';
-import { OrderSlotEntity } from '../types/orders/order-slot.types';
+import { IOrderTempSlot, OrderSlotEntity } from '../types/orders/order-slot.types';
 import { t } from '../lang';
 import { SelectItem } from '../components/TableList/tableTypes.types';
 import { FilterOption } from '../components/atoms/TabSelector';
@@ -228,25 +228,24 @@ export const ordersSearchParams: SelectItem[] = [
     sort: true,
   },
 ];
+const extraKeys: ('cashback' | 'bonus' | 'discount')[] = ['cashback', 'bonus', 'discount'];
+function getTempOrderSlotColumns(): CellTittleProps<OrderSlotEntity>[] {
+  return extraKeys.map(key => {
+    return {
+      top: { name: t(key), align: 'end', getData: rd => toPrice(rd?.[key]?.amount) },
+      bottom: { name: t(key), align: 'end', getData: rd => toPrice(rd?.[key]?.percentage) },
+      action: 'valueByPath',
+      width: '90px',
+    };
+  });
+}
 
 export const orderSlotsTableColumns: CellTittleProps<OrderSlotEntity>[] = [
   {
-    // top: { name: t('Product label'), getData: rd => rd.offer?.label },
-    top: { name: t('Variation label'), getData: rd => rd.variation?.label },
-    action: 'text',
+    top: { name: t('Offer label'), getData: rd => rd.offer?.label },
+    bottom: { name: t('Variation label'), getData: rd => rd.variation?.label },
+    action: 'valueByPath',
     width: '210px',
-  },
-  {
-    top: { name: t('Product sku'), getData: rd => rd.offer?.sku },
-    bottom: { name: t('Variation sku'), getData: rd => rd.variation?.sku },
-    action: 'valueByPath',
-    width: '150px',
-  },
-  {
-    top: { name: t('Product bar-code'), getData: rd => rd.offer?.barCode },
-    bottom: { name: t('Variation bar-code'), getData: rd => rd.variation?.barCode },
-    action: 'valueByPath',
-    width: '150px',
   },
   {
     top: { name: t('Total amount'), getData: rd => rd.netto },
@@ -255,8 +254,21 @@ export const orderSlotsTableColumns: CellTittleProps<OrderSlotEntity>[] = [
     width: '125px',
   },
   ...getBasePriceColumns(),
-  { top: { name: t('') }, bottom: { name: t('') }, action: 'valueByPath', width: '125px' },
-  { top: { name: t('') }, bottom: { name: t('') }, action: 'valueByPath', width: '125px' },
-  { top: { name: t('') }, bottom: { name: t('') }, action: 'valueByPath', width: '125px' },
+  ...getTempOrderSlotColumns(),
+  {
+    top: { name: t('Offer sku'), getData: rd => rd.offer?.sku },
+    bottom: { name: t('Variation sku'), getData: rd => rd.variation?.sku },
+    action: 'valueByPath',
+    width: '150px',
+  },
+  {
+    top: { name: t('Offer bar-code'), getData: rd => rd.offer?.barCode },
+    bottom: { name: t('Variation bar-code'), getData: rd => rd.variation?.barCode },
+    action: 'valueByPath',
+    width: '150px',
+  },
   createdDateColumn,
 ];
+
+export const tempOrderSlotTableColumns: CellTittleProps<IOrderTempSlot>[] =
+  orderSlotsTableColumns as CellTittleProps<IOrderTempSlot>[];

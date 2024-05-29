@@ -1,4 +1,3 @@
-import { SelectItem } from 'components/TableList/TableList';
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { t } from '../lang';
 import { OfferEntity, OfferStatusEnum } from '../types/offers/offers.types';
@@ -7,6 +6,7 @@ import { enumToFilterOptions } from '../utils';
 import { FilterOption } from '../components/atoms/TabSelector';
 import { ImageSetSrcType } from '../types/offers/offer-images.types';
 import { toPrice } from '../utils/numbers';
+import { TableSearchParam, TableSortParam } from '../components/TableList/tableTypes.types';
 
 export const offerStatusesData = getStatusesByEnum(OfferStatusEnum);
 export const OfferStatusFilterOptions = enumToFilterOptions(OfferStatusEnum);
@@ -104,106 +104,19 @@ export const offersTableColumns: CellTittleProps<OfferEntity>[] = [
     action: 'dateDbl',
   },
 ];
-
-export const productsSearchParams: SelectItem[] = [
-  // {
-  //   label: t('type'),
-  //   dataPath: 'type',
-  //   filter: false,
-  //   search: true,
-  //   sort: true,
-  // },
-  // {
-  //   label: t('price'),
-  //   dataPath: 'price',
-  //   filter: false,
-  //   search: true,
-  //   sort: true,
-  // },
-  // {
-  //   label: 'Оновлено',
-  //   dataPath: 'createdAt',
-  //   filter: false,
-  //   search: false,
-  //   sort: true,
-  // },
-  // {
-  //   label: 'Створено',
-  //   dataPath: 'updatedAt',
-  //   filter: false,
-  //   search: false,
-  //   sort: true,
-  // },
-  // {
-  //   label: t('countIn'),
-  //   dataPath: 'countIn.label',
-  //   filter: false,
-  //   search: true,
-  //   sort: true,
-  // },
-  // {
-  //   label: t('subCountIn'),
-  //   dataPath: 'subCountIn.label',
-  //   filter: false,
-  //   search: true,
-  //   sort: true,
-  // },
-  // {
-  //   label: t('countOut'),
-  //   dataPath: 'countOut.label',
-  //   filter: false,
-  //   search: true,
-  //   sort: true,
-  // },
-  // {
-  //   label: t('subCountOut'),
-  //   dataPath: 'subCountOut.label',
-  //   filter: false,
-  //   search: true,
-  //   sort: true,
-  // },
-  // {
-  //   label: t('category'),
-  //   dataPath: 'category.label',
-  //   filter: false,
-  //   search: true,
-  //   sort: true,
-  // },
-  // {
-  //   label: t('subCategory'),
-  //   dataPath: 'subCategory.label',
-  //   filter: false,
-  //   search: true,
-  //   sort: true,
-  // },
-  //
-  // {
-  //   label: 'Контрагент',
-  //   dataPath: 'contractor.name',
-  //   filter: false,
-  //   search: true,
-  //   sort: true,
-  // },
-  // {
-  //   label: 'Документ',
-  //   dataPath: 'document',
-  //   filter: false,
-  //   search: true,
-  //   sort: true,
-  // },
-  // {
-  //   label: t('project'),
-  //   dataPath: 'project.label',
-  //   filter: false,
-  //   search: true,
-  //   sort: true,
-  // },
-  // { label: 'Мітка', dataPath: 'mark.label', filter: false, search: true, sort: true },
-  // {
-  //   label: 'Статус',
-  //   dataPath: 'status',
-  //   filter: false,
-  //   search: true,
-  //   sort: true,
-  // },
+export type OfferSortParam = TableSortParam<'sku' | 'label' | 'barCode' | 'price' | 'status'>;
+export const offersSortParams: OfferSortParam[] = [
+  { dataKey: 'sku', label: 'SKU' },
+  { dataKey: 'label', label: t('Label') },
+  { dataKey: 'barCode', label: t('Bar-code') },
+  { dataKey: 'status', label: t('Status') },
+  { dataKey: 'price', label: t('Price') },
+];
+export type OfferSearchParam = TableSearchParam<'sku' | 'label' | 'barCode', 'warehouse.label' | 'warehouse.code'>;
+export const offersSearchParams: OfferSearchParam[] = [
+  { dataKey: 'sku', label: 'SKU' },
+  { dataKey: 'label', label: t('Label') },
+  { dataKey: 'barCode', label: t('Bar-code') },
+  { dataPath: 'warehouse.code', label: t('Warehouse code') },
+  { dataPath: 'warehouse.label', label: t('Warehouse label') },
 ];

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import Selector from './Selector';
 import ModalForm, { ModalFormProps } from 'components/ModalForm';
 import { SubmitHandler } from 'react-hook-form';
@@ -95,10 +95,6 @@ const Filter: React.FC<AppFilterProps> = ({
     },
     [setValue, unregister]
   );
-
-  useEffect(() => {
-    console.log('filter formValues', formValues);
-  }, [formValues]);
 
   const handleOpenSelector = useCallback(
     (idx: number) => {

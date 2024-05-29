@@ -4,6 +4,7 @@ import ModalFooter from '../atoms/Modal/ModalFooter';
 
 import styled from 'styled-components';
 import { FormEvent, memo } from 'react';
+import { useModal } from '../../Providers/ModalProvider/ModalComponent';
 
 export interface ModalFormBaseProps<T = any>
   extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit' | 'onReset'> {
@@ -56,6 +57,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
   filterName,
   ...props
 }) => {
+  const modal = useModal();
   function handleSubmit(ev: FormEvent<HTMLFormElement>) {
     ev.preventDefault();
 
@@ -65,7 +67,9 @@ const ModalForm: React.FC<ModalFormProps> = ({
   }
 
   function handleReset() {
-    onClose ? onClose() : console.warn('No passed onClose handler');
+    const close = onClose ?? modal.onClose;
+    close();
+
     if (!onReset) return console.log('No passed "onReset" handler');
     if (typeof onReset === 'function') onReset();
   }

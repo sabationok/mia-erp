@@ -1,5 +1,5 @@
 import ButtonIcon, { ButtonIconProps } from 'components/atoms/ButtonIcon/ButtonIcon';
-import { IModalRenderItemParams, useModalProvider } from 'components/ModalProvider/ModalProvider';
+import { IModalRenderItemParams, useModalProvider } from 'Providers/ModalProvider/ModalProvider';
 import styled from 'styled-components';
 
 interface ModalButtonProps {

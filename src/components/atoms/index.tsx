@@ -3,6 +3,7 @@ import FlexBox from './FlexBox';
 import { Text } from './Text';
 import styled from 'styled-components';
 import { t } from '../../lang';
+import { isUndefined } from 'lodash';
 
 export const DefaultContent: React.FC<{ content?: string }> = ({ content } = {}) => {
   return <div>{`Default content: ${content}`}</div>;
@@ -96,8 +97,12 @@ export const OverlayFooter = ({
   canSubmit,
   onCreatePress,
   resetButtonShown,
+  onAcceptPress,
+  canAccept,
 }: {
+  onAcceptPress?: () => void;
   canSubmit?: boolean;
+  canAccept?: boolean;
   resetButtonShown?: boolean;
   extraFooter?: React.ReactNode;
   loading?: boolean;
@@ -120,14 +125,15 @@ export const OverlayFooter = ({
         <ButtonIcon
           variant={'filledMiddle'}
           flex={1}
-          type={'submit'}
+          type={isUndefined(canSubmit) ? 'button' : 'submit'}
           style={{ padding: '0 12px' }}
           textTransform={'uppercase'}
           fontWeight={600}
           endIcon={'SmallArrowRight'}
           endIconSize={'24px'}
-          disabled={!canSubmit}
+          disabled={isUndefined(canSubmit) ? !canAccept : !canSubmit}
           isLoading={loading}
+          onClick={onAcceptPress}
         >
           {submitButtonText}
         </ButtonIcon>

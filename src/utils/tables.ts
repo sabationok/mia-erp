@@ -11,7 +11,7 @@ import { WarehouseItemEntity } from '../types/warehousing/warehouses.types';
 import { numberWithSpaces } from './numbers';
 import { ITableAction, ITableListContext } from '../components/TableList/tableTypes.types';
 import { NavigateFunction } from 'react-router/dist/lib/hooks';
-import { IModalProviderContext } from '../components/ModalProvider/ModalProvider';
+import { IModalProviderContext } from '../Providers/ModalProvider/ModalProvider';
 
 export interface TableActionsBuilderControls<Service = any, Extra = any> {
   // ctx: ITableListContext<TData>;

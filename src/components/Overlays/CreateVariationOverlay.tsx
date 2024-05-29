@@ -86,7 +86,7 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   const service = useAppServiceProvider()[ServiceName.offers];
   const loaders = useLoaders<'create' | 'update' | 'refresh'>();
   const { variation } = useCurrentVariation({ id: updateId });
-  const currentOffer = useCurrentOffer({ _id: variation?.offer?._id || offerId || offer?._id });
+  const Offer = useCurrentOffer({ _id: variation?.offer?._id || offerId || offer?._id });
 
   const submitOptions = useAfterSubmitOptions();
 
@@ -95,9 +95,9 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   const formMethods = useAppForm<IVariationFormData>({
     defaultValues: toVariationFormData(
       variation
-        ? { ...variation, offer: currentOffer, template: currentTemplate }
-        : { offer: currentOffer, template: currentTemplate },
-      currentOffer
+        ? { ...variation, offer: Offer, template: currentTemplate }
+        : { offer: Offer, template: currentTemplate },
+      Offer
     ),
     resolver: yupResolver(_schema as never),
     reValidateMode: 'onSubmit',
@@ -156,18 +156,16 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
     const _sorted = Object.entries(selectedPropsMap).sort((prev, next) => {
       return prev[0].localeCompare(next[0]);
     });
-    const _labels: string[] = currentOffer?.label ? [currentOffer?.label] : [];
+    const _labels: string[] = Offer?.label ? [Offer?.label] : [];
 
     for (const entry of _sorted) {
       const value = entry[1];
       value?.label && _labels.push(value?.label);
     }
-    const _base = !_sorted?.length
-      ? variation?.label ?? `${currentOffer?.label}. {{VARIATION_LABEL}}`
-      : _labels.join('. ');
+    const _base = !_sorted?.length ? variation?.label ?? `${Offer?.label}. {{VARIATION_LABEL}}` : _labels.join('. ');
 
     return { label: _base };
-  }, [currentOffer?.label, selectedPropsMap, variation?.label]);
+  }, [Offer?.label, selectedPropsMap, variation?.label]);
 
   useEffect(() => {
     setValue('label', compiledLabel);
@@ -244,16 +242,16 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
         <Content flex={1} fillWidth overflow={'auto'} gap={12}>
           <AccordionFormArea label={'Offer'} expandable={false} hideFooter>
             <InputLabel label={t('Offer label')} error={errors?.offer?._id} required disabled>
-              <InputText value={currentOffer?.label ?? undefined} placeholder={t('label')} required disabled />
+              <InputText value={Offer?.label ?? undefined} placeholder={t('label')} required disabled />
             </InputLabel>
 
             <FlexBox fxDirection={'row'} gap={8} fillWidth>
               <InputLabel label={t('sku')} disabled>
-                <InputText value={currentOffer?.sku ?? undefined} placeholder={t('sku')} disabled />
+                <InputText value={Offer?.sku ?? undefined} placeholder={t('sku')} disabled />
               </InputLabel>
 
               <InputLabel label={t('barCode')} disabled>
-                <InputText value={currentOffer?.barCode ?? undefined} placeholder={t('barCode')} disabled />
+                <InputText value={Offer?.barCode ?? undefined} placeholder={t('barCode')} disabled />
               </InputLabel>
             </FlexBox>
           </AccordionFormArea>

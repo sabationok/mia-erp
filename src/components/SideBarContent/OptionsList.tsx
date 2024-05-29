@@ -1,6 +1,6 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
-import { useModalProvider } from 'components/ModalProvider/ModalProvider';
+import { useModalProvider } from 'Providers/ModalProvider/ModalProvider';
 import { useMemo } from 'react';
 
 export interface IOptionsListItemProps {

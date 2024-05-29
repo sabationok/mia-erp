@@ -1,8 +1,9 @@
-import { ThunkPayload } from './store.store';
+import { ActionPayload, ThunkPayload } from './store.store';
 import { AxiosResponse } from 'axios';
 import { ApiCallerPayload } from '../api';
 import { ApiDirType } from './APP_CONFIGS';
 import { AppDate, MaybeNull } from '../types/utils.types';
+import { AsyncThunk } from '@reduxjs/toolkit';
 
 export type UUID = string;
 export type MagicLink = string;
@@ -114,3 +115,13 @@ export type ServiceDispatcherAsync<SD = any, RD = any, E = any> = (args?: ThunkP
 export type ServiceApiCaller<SD = any, RD = any, E = any | unknown, MD = any> = (
   payload: ApiCallerPayload<SD, RD, E>
 ) => Promise<AppResponse<RD, MD> | undefined>;
+
+export type _ServiceDispatcherAsync<Thunk extends AsyncThunk<ActionPayload, ThunkPayload, any>> = (
+  ...args: Parameters<Thunk>
+) => Promise<
+  | {
+      payload: unknown | Parameters<Thunk>[0];
+      type: string;
+    }
+  | undefined
+>;

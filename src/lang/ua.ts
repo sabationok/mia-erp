@@ -151,6 +151,7 @@ export const langUa = {
   page_manager: 'Менеджер',
   page_admin: 'Адмін',
   page_customers: 'Клієнти',
+  page_cart: 'Корзина',
 
   [MeasurementUnit.Pc]: 'шт.', // Штука (Piece)
   [MeasurementUnit.G]: 'г.', // Грам (Gram)

@@ -14,30 +14,38 @@ export interface GetOneOfferQuery {
   getVariations?: boolean;
   getDiscounts?: boolean;
 }
+export interface GetAllOffersQuery
+  extends Pick<AppQueryParams, 'sku' | 'label' | 'barCode' | 'filterParams' | 'sortParams' | 'limit' | 'offset'> {
+  warehouse?: {
+    ids?: string[];
+    code?: string;
+    label?: string;
+  };
+}
 export default class OffersApi {
   private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.offers;
 
-  public static async getAll(params?: AppQueryParams): Promise<AppResponse<OfferEntity[]>> {
+  public static getAll = async (_?: undefined, params?: GetAllOffersQuery): Promise<AppResponse<OfferEntity[]>> => {
     return this.api.get(this.endpoints.getAll(), {
       params,
     });
-  }
+  };
 
-  public static async create(data?: IProductReqData): Promise<AppResponse<OfferEntity>> {
+  public static create = (data?: IProductReqData): Promise<AppResponse<OfferEntity>> => {
     return this.api.post(this.endpoints.create(), data?.data);
-  }
+  };
 
-  public static async updateById(data?: IProductReqData): Promise<AppResponse<OfferEntity>> {
+  public static updateById = (data?: IProductReqData): Promise<AppResponse<OfferEntity>> => {
     return this.api.patch(this.endpoints.updateById(data?._id), data?.data);
-  }
+  };
 
-  public static async updateDefaultsById(data?: {
+  public static updateDefaultsById = (data?: {
     _id: string;
     defaults: IOfferDefaultsDto;
-  }): Promise<AppResponse<OfferEntity>> {
+  }): Promise<AppResponse<OfferEntity>> => {
     return this.api.patch(this.endpoints.updateDefaultsById(data?._id), data?.defaults);
-  }
+  };
 
   public static getById = (id?: string, params?: AppQueryParams): Promise<AppResponse<OfferEntity>> => {
     return this.api.get(this.endpoints.getById(id), { params });

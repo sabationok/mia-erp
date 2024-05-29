@@ -67,7 +67,7 @@ const WarehousesTab: React.FC<WarehousesTabProps> = ({ onSelect, selected, withA
   // }, []);
 
   return (
-    <TableList isSearch={false} {...tableConfigs} isLoading={loaders.isLoading?.warehouses} selectedRow={selected} />
+    <TableList hasSearch={false} {...tableConfigs} isLoading={loaders.isLoading?.warehouses} selectedRow={selected} />
   );
 };
 

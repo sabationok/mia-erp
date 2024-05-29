@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import React, { memo } from 'react';
 import { ModalHeader } from './ModalHeader';
-import { useModal } from '../../ModalProvider/ModalComponent';
+import { useModal } from '../../../Providers/ModalProvider/ModalComponent';
 
 export interface ModalBaseProps extends Omit<React.FormHTMLAttributes<HTMLDivElement>, 'onSubmit' | 'onReset'> {
   footer?: boolean;

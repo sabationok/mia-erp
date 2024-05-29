@@ -9,7 +9,7 @@ import { useCloseByEscapeOrClickOnBackdrop } from '../../hooks';
 import FlexBox from '../atoms/FlexBox';
 
 const QuickActions: React.FC<{ closeOnClickOut?: boolean }> = ({ closeOnClickOut = false }) => {
-  const { quickActionsDirection, actionsCreator, isFilter, footer, selectedRow, selectedRows } = useTable();
+  const { quickActionsDirection, actionsCreator, hasFilter, showFooter, selectedRow, selectedRows } = useTable();
   const [isShown, setIsShown] = useState(false);
 
   function onMenuBtnClick() {
@@ -27,23 +27,23 @@ const QuickActions: React.FC<{ closeOnClickOut?: boolean }> = ({ closeOnClickOut
   useCloseByEscapeOrClickOnBackdrop(setIsShown, 'data-burger', closeOnClickOut);
 
   return (
-    <Menu isShown={isShown} hasFooter={footer} data-burger fxDirection={'column'}>
+    <Menu isShown={isShown} hasFooter={showFooter} data-burger fxDirection={'column'}>
       <List isShown={isShown}>
         <FlexBox
           padding={'16px 8px'}
           gap={12}
           fxDirection={quickActionsDirection === 'column-reverse' ? 'column-reverse' : 'column'}
         >
-          {isFilter && <TableFilter btnSize={36} />}
+          {hasFilter && <TableFilter btnSize={36} />}
 
-          {isFilter && actionsCreator && <Separator />}
+          {hasFilter && actionsCreator && <Separator />}
 
           {actionsCreator && <TActions btnSize={36} renderSeparator={<Separator />} />}
         </FlexBox>
       </List>
 
       <ToggleButton
-        hasFooter={footer}
+        hasFooter={showFooter}
         isShown={isShown}
         icon={'plus'}
         variant="def"
@@ -57,7 +57,7 @@ const QuickActions: React.FC<{ closeOnClickOut?: boolean }> = ({ closeOnClickOut
 type StyledProps = { isShown: boolean; hasFooter?: boolean };
 
 const Menu = styled(FlexBox)<StyledProps>`
-  position: absolute;
+  position: sticky;
   top: 0;
   right: 0;
   z-index: 55;
@@ -67,17 +67,20 @@ const Menu = styled(FlexBox)<StyledProps>`
   transition: all ${({ theme }) => theme.globals.timingFnLong};
 
   border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
+
   ${({ isShown, theme }) =>
     isShown
       ? css<StyledProps>`
           //visibility: visible;
           //pointer-events: all;
+          border-width: 1px;
           max-width: 100%;
           //box-shadow: ${theme.globals.shadowMain};
           //border-top: 1px solid ${({ theme }) => theme.modalBorderColor};
         `
       : css`
           max-width: 0;
+          border-color: transparent;
         `};
 `;
 
@@ -119,8 +122,8 @@ const List = styled.div<{ isShown: boolean }>`
 const ToggleButton = styled(ButtonIcon)<StyledProps>`
   position: absolute;
   //bottom: 0;
-  right: ${({ isShown }) => (isShown ? '60px' : '10px')};
-  bottom: ${({ hasFooter }) => (hasFooter ? '50px' : '10px')};
+  right: ${({ isShown }) => (isShown ? '60px' : '16px')};
+  bottom: ${({ hasFooter }) => (hasFooter ? '60px' : '16px')};
   z-index: 30;
 
   border-radius: 50%;

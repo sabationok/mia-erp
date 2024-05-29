@@ -3,7 +3,7 @@ import TableList from '../../../TableList/TableList';
 export interface OrderPaymentsTabProps {}
 
 const OrderPaymentsTab: React.FC<OrderPaymentsTabProps> = () => {
-  return <TableList isSearch={false} isFilter={false} />;
+  return <TableList hasSearch={false} hasFilter={false} />;
 };
 
 export default OrderPaymentsTab;

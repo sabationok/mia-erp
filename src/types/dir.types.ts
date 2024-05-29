@@ -5,7 +5,7 @@ import { TabOption } from '../components/atoms/TabSelector';
 import { IBase } from '../redux/app-redux.types';
 import { CompanyEntity } from './companies.types';
 import { ApiDirType } from '../redux/APP_CONFIGS';
-import { IModalProviderContext, ModalService } from '../components/ModalProvider/ModalProvider';
+import { IModalProviderContext, ModalService } from '../Providers/ModalProvider/ModalProvider';
 import { DirectoriesService } from '../hooks/useDirService.hook';
 import { AppSubmitHandler, UseAppFormSubmitOptions } from '../hooks/useAppForm.hook';
 import { ContractorsTypesEnum } from '../redux/directories/contractors.types';

@@ -4,6 +4,7 @@ import { nanoid } from '@reduxjs/toolkit';
 export interface OverlayStackProviderValue {
   getStack: () => OverlayStackItemData[];
   open: OverlayHandler;
+  create: OverlayCreator;
   remove: (id: string) => void;
   clearStack: () => void;
 }
@@ -14,6 +15,12 @@ export interface OverlayHandlerParams<Props = any> {
   RenderComponent: React.FC<OverlayRenderComponentProps<Props>>;
   props?: OverlayRenderComponentProps<Props>;
 }
+
+export type OverlayCreator = <Props = any>(
+  Component: React.FC<OverlayRenderComponentProps<Props>>,
+  props: OverlayRenderComponentProps<Props>
+) => CreatedOverlay;
+
 export type OverlayRenderComponentProps<Props = any> = CreatedOverlay & Props;
 
 export interface OverlayStackItemData<Props = any> {
@@ -90,6 +97,7 @@ const OverlayStackProvider: React.FC<{ children?: React.ReactNode }> = ({ childr
     remove: removeStackItem,
     clearStack,
     open: createOverlayComponent,
+    create: (Component, props) => createOverlayComponent({ RenderComponent: Component, props }),
   };
 
   return <PageCurrentOrderCTX.Provider value={value}>{children}</PageCurrentOrderCTX.Provider>;

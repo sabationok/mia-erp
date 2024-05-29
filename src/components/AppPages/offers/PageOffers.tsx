@@ -2,27 +2,34 @@ import TableList from 'components/TableList/TableList';
 import { takeFullGridArea } from '../pagesStyles';
 import styled from 'styled-components';
 import { useEffect, useMemo, useState } from 'react';
-import { ITableListProps } from '../../TableList/tableTypes.types';
+import { ITableListProps, TableSortOrderEnum, TableSortParam } from '../../TableList/tableTypes.types';
 import AppGridPage from '../AppGridPage';
 import { useProductsSelector } from '../../../redux/selectors.store';
 import { ISortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import { OfferEntity } from '../../../types/offers/offers.types';
-import useStorageServiceHook from '../../../hooks/useProductsService.hook';
 import useProductsFilterSelectorsHook from '../../../hooks/useProductsFilterSelectors.hook';
 import useOffersActionsCreator from '../../../hooks/useProductsActionsCreator.hook';
 import { BaseAppPageProps } from '../index';
-import { offersTableColumns } from '../../../data/offers.data';
-import { transactionsSearchParams } from '../../../data/transactions.data';
+import {
+  OfferSearchParam,
+  OfferSortParam,
+  offersSearchParams,
+  offersSortParams,
+  offersTableColumns,
+} from '../../../data';
 import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
+import { TableSearchFormState } from '../../TableList/TableOverHead/TableSearchForm/TableSearchForm';
+import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import { AppModuleName } from '../../../redux/reduxTypes.types';
 
 interface Props extends BaseAppPageProps {}
 
 const PageOffers: React.FC<any> = (props: Props) => {
-  const loaders = useLoaders<'offers'>();
+  const loaders = useLoaders<'offers'>({ offers: { content: 'Refeshing...' } });
   const { onLoading, isLoading } = loaders;
+  const { getAll } = useAppServiceProvider()[AppModuleName.offers];
 
-  const { getAll } = useStorageServiceHook();
   const state = useProductsSelector();
   const filterSelectors = useProductsFilterSelectorsHook();
   const actionsCreator = useOffersActionsCreator();
@@ -32,19 +39,33 @@ const PageOffers: React.FC<any> = (props: Props) => {
   const tableConfig = useMemo(
     (): ITableListProps<OfferEntity> => ({
       filterSelectors,
-      isFilter: true,
-      isSearch: true,
-      footer: false,
+      hasFilter: true,
+      hasSearch: true,
+      showFooter: false,
       checkBoxes: true,
       actionsCreator,
+      tableTitles: offersTableColumns,
+      searchParams: offersSearchParams,
+      sortParams: offersSortParams,
+      onSubmitSearch: ({ searchParam, search }) => {
+        searchParam?.dataKey &&
+          getAll({
+            data: { refresh: true, params: { [searchParam.dataKey]: search } },
+            onLoading: onLoading('offers'),
+          }).then();
+      },
       onFilterSubmit: filterParams => {
         setFilterParams(filterParams);
-        getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: onLoading('offers') }).then();
+
+        getAll({
+          data: { refresh: true, params: { filterParams, sortParams } },
+          onLoading: onLoading('offers'),
+        }).then();
       },
-      handleTableSort: (param, sortOrder) => {
+      onTableSortChange: (param, sortOrder) => {
         setSortParams({ dataPath: param.dataPath, sortOrder });
         getAll({
-          data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },
+          data: { refresh: true, params: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },
           onLoading: onLoading('offers'),
         }).then();
       },
@@ -77,7 +98,6 @@ const PageOffers: React.FC<any> = (props: Props) => {
           {...tableConfig}
           {...{
             tableData: state.list,
-            tableTitles: offersTableColumns,
           }}
           isLoading={isLoading?.offers}
         />
@@ -92,35 +112,69 @@ const Page = styled.div`
 
 export default PageOffers;
 
-export const useProductsTableSettings = () => {
-  const service = useStorageServiceHook();
-  const state = useProductsSelector();
+export const useOffersTableSettings = ({
+  searchState,
+  sortState,
+}: {
+  searchState?: TableSearchFormState<OfferSearchParam>;
+  sortState?: { param: OfferSortParam; order: TableSortOrderEnum };
+}) => {
+  const service = useAppServiceProvider().get(AppModuleName.offers);
   const { getAll } = service;
+  const state = useProductsSelector();
+
   const filterSelectors = useProductsFilterSelectorsHook();
   const actionsCreator = useOffersActionsCreator();
+
   const [isLoading, setIsLoading] = useState(false);
-  const [sortParams, setSortParams] = useState<ISortParams>();
+  const [sortParams, setSortParams] = useState<{ param: TableSortParam; order: TableSortOrderEnum } | undefined>(
+    sortState
+  );
+  const [searchParams, setSearchParams] = useState<TableSearchFormState | undefined>(searchState);
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   const tableConfig = useMemo(
-    (): ITableListProps<OfferEntity> => ({
+    (): ITableListProps<OfferEntity, OfferSearchParam, OfferSortParam> => ({
+      onSubmitSearch: data => {
+        if (data.search) {
+          if (data.searchParam?.dataKey) {
+            setSearchParams(data);
+            getAll({
+              data: { refresh: true, params: { [data.searchParam?.dataKey]: data.search } },
+              onLoading: setIsLoading,
+            }).then();
+          }
+        } else {
+          getAll({
+            data: { refresh: true },
+            onLoading: setIsLoading,
+          }).then();
+        }
+      },
       tableData: state.list,
       tableTitles: offersTableColumns,
-      tableSortParams: transactionsSearchParams.filter(el => el.sort),
+      searchParams: offersSearchParams,
+      sortParams: offersSortParams,
       filterSelectors,
-      isFilter: true,
-      isSearch: true,
-      footer: false,
+      hasFilter: true,
+      hasSearch: true,
+      showFooter: false,
       checkBoxes: true,
       actionsCreator,
       onFilterSubmit: filterParams => {
         setFilterParams(filterParams);
-        getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading }).then();
-      },
-      handleTableSort: (param, sortOrder) => {
-        setSortParams({ dataPath: param.dataPath, sortOrder });
         getAll({
-          data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },
+          data: {
+            refresh: true,
+            params: { filterParams, sortParams: { sortOrder: sortParams?.order, dataPath: sortParams?.param.dataKey } },
+          },
+          onLoading: setIsLoading,
+        }).then();
+      },
+      onTableSortChange: (param, sortOrder) => {
+        setSortParams({ param, order: sortOrder });
+        getAll({
+          data: { refresh: true, params: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },
           onLoading: setIsLoading,
         }).then();
       },
@@ -148,5 +202,6 @@ export const useProductsTableSettings = () => {
     isLoading,
     sortParams,
     filterParams,
+    searchParams,
   };
 };

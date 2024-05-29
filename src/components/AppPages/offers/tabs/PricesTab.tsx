@@ -2,7 +2,7 @@ import { ServiceName, useAppServiceProvider } from 'hooks/useAppServices.hook';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { PriceEntity } from 'types/price-management/price-management.types';
-import { useModalProvider } from '../../../ModalProvider/ModalProvider';
+import { useModalProvider } from '../../../../Providers/ModalProvider/ModalProvider';
 import { OnlyUUID } from 'redux/app-redux.types';
 import { useAppParams, useCurrentOffer } from '../../../../hooks';
 import { useLoadersProvider } from '../../../../Providers/Loaders/LoaderProvider';
@@ -108,8 +108,8 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
   return (
     <TableList
       {...tableConfig}
-      isSearch={false}
-      isFilter={false}
+      hasSearch={false}
+      hasFilter={false}
       isLoading={loaders?.isLoading?.prices}
       selectedRow={selected}
       tableData={currentOffer?.prices}

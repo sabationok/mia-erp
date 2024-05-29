@@ -224,7 +224,7 @@ const CounterpartiesProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
   filterOptions: counterpartyFilterOptions,
   getTableSettings: ({ service, modalService, type, dirType }) => ({
     tableTitles: contractorsColumns,
-    tableSearchParams: contractorsSearchParams,
+    searchParams: contractorsSearchParams,
     actionsCreator: _ctx => [
       { icon: 'openInNew' },
       { icon: 'edit' },

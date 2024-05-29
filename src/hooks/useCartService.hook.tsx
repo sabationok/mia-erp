@@ -41,8 +41,25 @@ const useCartActions = () => {
   function setChecked({ tempId, checked, warehouseId }: { warehouseId?: string; tempId?: string; checked: boolean }) {
     dispatch(setCheckedStatusAction({ tempId, checked, warehouseId }));
   }
-  function getSlot(tempId?: string) {
-    return tempId ? state.slotsMap?.[tempId] : undefined;
+
+  function _toSlot(slot?: IOrderTempSlot): GetCurrentSlotReturn {
+    return {
+      ...slot,
+      setQty: (q: number) => {
+        slot?.tempId && setQty(slot?.tempId, q);
+      },
+      isAdded() {
+        return isInCart(slot);
+      },
+      isChecked() {
+        return isSelected(slot);
+      },
+    };
+  }
+  function getSlot(tempId?: string): GetCurrentSlotReturn {
+    const slot = tempId ? state.slotsMap?.[tempId] : undefined;
+
+    return _toSlot(slot);
   }
 
   function setQty(tempId: string, quantity: number) {
@@ -109,18 +126,7 @@ const useCartActions = () => {
     const data =
       !variationId || !state.keysMap?.[variationId] ? undefined : state.slotsMap?.[state.keysMap?.[variationId]];
 
-    return {
-      ...data,
-      setQty: (q: number) => {
-        data?.tempId && setQty(data?.tempId, q);
-      },
-      isAdded() {
-        return isInCart(data);
-      },
-      isChecked() {
-        return isSelected(data);
-      },
-    };
+    return _toSlot(data);
   }
 
   return {

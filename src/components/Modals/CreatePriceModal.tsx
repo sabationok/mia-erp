@@ -14,7 +14,7 @@ import FlexBox from '../atoms/FlexBox';
 import { usePriceDiscountsSelector } from '../../redux/selectors.store';
 import { useCurrentPrice } from '../../hooks';
 import { AccordionFormArea } from '../Forms/FormArea/AccordionForm';
-import { useModalService } from '../ModalProvider/ModalProvider';
+import { useModalService } from '../../Providers/ModalProvider/ModalProvider';
 import { CreateDiscountModal } from './CreateDiscountModal';
 import { useAppDispatch } from '../../redux/store.store';
 import { getAllDiscountsThunk, removeDiscountThunk } from '../../redux/priceManagement/discounts/discounts.thunks';
@@ -67,7 +67,7 @@ const CreatePriceModal: React.FC<ModalCreatePriceProps> = ({ updateId, offer, on
               <FlexBox minHeight={'150px'} maxHeight={'250px'}>
                 <TableList
                   tableData={Price?.discounts}
-                  isSearch={false}
+                  hasSearch={false}
                   tableTitles={discountTableTitles}
                   actionsCreator={ctx => {
                     const currentId = ctx.selectedRow?._id;
@@ -116,7 +116,7 @@ const CreatePriceModal: React.FC<ModalCreatePriceProps> = ({ updateId, offer, on
               <FlexBox minHeight={'150px'} maxHeight={'250px'}>
                 <TableList
                   tableData={discountsState.list}
-                  isSearch={false}
+                  hasSearch={false}
                   tableTitles={discountTableTitles}
                   isLoading={loaders.isLoading?.discounts}
                   actionsCreator={ctx => {

@@ -26,7 +26,7 @@ export interface WarehouseEntity extends IBase {
   owner?: CompanyEntity;
   manager?: any;
 
-  label: string;
+  label?: string;
   code?: string | number;
   type?: WarehouseTypeEnum;
 

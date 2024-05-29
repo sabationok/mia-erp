@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import ModalPortal from './ModalPortal';
 import ModalComponent, { IModalSettings } from './ModalComponent';
 import { nanoid } from '@reduxjs/toolkit';
-import { ModalChildrenMap, ModalChildrenProps, Modals } from '../Modals/Modals';
+import { ModalChildrenMap, ModalChildrenProps, Modals } from '../../components/Modals/Modals';
 import { toast } from 'react-toastify';
 import { ToastService } from '../../services';
 
@@ -67,6 +67,7 @@ export interface IModalProviderContext {
   handleOpenModalAsync: HandleOpenModalAsyncType;
   getState: () => IModalRenderItemParams[];
   isOpen: () => boolean;
+  clearStack: () => void;
 }
 export interface ModalService extends IModalProviderContext {}
 export const ModalProviderContext = createContext({});
@@ -150,6 +151,9 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
       close: onClose,
       isOpen,
       getState,
+      clearStack: () => {
+        setModalContent([]);
+      },
       handleOpenModalAsync: async <M extends Modals = any, P = any, S = any>(
         options: IModalRenderItemParams<M, P, S>,
         getPropsAsync?: () => Promise<P>

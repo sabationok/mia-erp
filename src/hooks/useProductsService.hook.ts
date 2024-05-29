@@ -1,11 +1,17 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
-import { IOfferDefaultsDto, IProductReqData, OfferEntity } from '../types/offers/offers.types';
-import { OnlyUUID, ServiceApiCaller, ServiceDispatcher, ServiceDispatcherAsync } from 'redux/app-redux.types';
+import { OfferEntity } from '../types/offers/offers.types';
 import {
-  createProductThunk,
+  _ServiceDispatcherAsync,
+  OnlyUUID,
+  ServiceApiCaller,
+  ServiceDispatcher,
+  ServiceDispatcherAsync,
+} from 'redux/app-redux.types';
+import {
+  createOfferThunk,
   getAllInventoriesByProductIdThunk,
   getAllOfferPricesThunk,
-  getAllProductsThunk,
+  getAllOffersThunk,
   getOfferFullInfoThunk,
   getOfferThunk,
   updateOfferDefaultsThunk,
@@ -33,27 +39,18 @@ import { PriceEntity } from '../types/price-management/price-management.types';
 import { WarehouseItemEntity } from '../types/warehousing/warehouses.types';
 import { GetAllPricesQuery } from '../api';
 
+// type Test=_ServiceDispatcherAsync<typeof createOfferThunk>
+
 export interface OffersService {
-  create: ServiceDispatcherAsync<IProductReqData, OfferEntity>;
+  create: _ServiceDispatcherAsync<typeof createOfferThunk>;
   deleteById: ServiceApiCaller<string, OfferEntity>; // !!!!! ===>>> ServiceDispatcher
-  updateById: ServiceDispatcherAsync<
-    IProductReqData & { refreshCurrent?: boolean; updateCurrent?: boolean },
-    OfferEntity
-  >; // !!!!! ===>>> ServiceDispatcher
+  updateById: _ServiceDispatcherAsync<typeof updateProductThunk>; // !!!!! ===>>> ServiceDispatcher
   getById: ServiceApiCaller<string, OfferEntity>;
   getOne: ServiceDispatcherAsync<{ params?: GetOneOfferQuery }, { data: OfferEntity }>;
-  getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, OfferEntity[]>;
-  getProductFullInfo: ServiceDispatcherAsync<OnlyUUID, OfferEntity>;
+  getAll: _ServiceDispatcherAsync<typeof getAllOffersThunk>;
+  getProductFullInfo: _ServiceDispatcherAsync<typeof getOfferFullInfoThunk>;
   clearCurrent: ServiceDispatcher<undefined>;
-  setDefaults: ServiceDispatcherAsync<
-    {
-      _id: string;
-      defaults: IOfferDefaultsDto;
-      refreshCurrent?: boolean;
-      updateCurrent?: boolean;
-    },
-    OfferEntity
-  >;
+  setDefaults: _ServiceDispatcherAsync<typeof updateOfferDefaultsThunk>;
 
   // * PROPERTIES
   getAllProperties: ServiceDispatcherAsync<IPropertyReqData, PropertyEntity[]>;
@@ -100,12 +97,12 @@ const useOffersService = (): OffersService => {
 
   return useMemo((): OffersService => {
     return {
-      create: args => dispatch(createProductThunk(defaultThunkPayload(args))),
+      create: args => dispatch(createOfferThunk(defaultThunkPayload(args))),
       updateById: args => dispatch(updateProductThunk(defaultThunkPayload(args))),
       deleteById: args => createApiCall(defaultApiCallPayload(args), OffersApi.deleteById),
       getById: args => createApiCall(defaultApiCallPayload(args), OffersApi.getById),
       getOne: args => dispatch(getOfferThunk(defaultThunkPayload(args))),
-      getAll: args => dispatch(getAllProductsThunk(defaultThunkPayload(args))),
+      getAll: args => dispatch(getAllOffersThunk(defaultThunkPayload(args))),
       getProductFullInfo: args => dispatch(getOfferFullInfoThunk(defaultThunkPayload(args))),
       clearCurrent: () => dispatch(clearCurrentProductAction()),
       setDefaults: args => dispatch(updateOfferDefaultsThunk(defaultThunkPayload(args))),

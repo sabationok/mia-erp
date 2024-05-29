@@ -51,9 +51,9 @@ const PageHome: React.FC<Props> = ({ path }) => {
     (): ITableListProps<PermissionEntity> => ({
       tableData: permissionsData,
       tableTitles: permissionsTableColumns,
-      tableSearchParams: permissionsSearchParams,
-      isFilter: false,
-      isSearch: true,
+      searchParams: permissionsSearchParams,
+      hasFilter: false,
+      hasSearch: true,
       checkBoxes: false,
       actionsCreator,
     }),

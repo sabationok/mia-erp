@@ -1,5 +1,5 @@
 import { ITableAction, ITableListContext } from '../components/TableList/tableTypes.types';
-import { IModalProviderContext, useModalProvider } from '../components/ModalProvider/ModalProvider';
+import { IModalProviderContext, useModalProvider } from '../Providers/ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from './useAppServices.hook';
 import { WarehousesService } from './useWarehousesService.hook';
 import { WarehouseEntity, IWarehouseDto, IWarehouseReqData } from '../types/warehousing/warehouses.types';
