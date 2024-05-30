@@ -3,16 +3,15 @@ import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import { OfferEntity, OfferImageSlotEntity } from '../../../../types/offers/offers.types';
 import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { AccordionForm } from '../../FormArea/AccordionForm';
 import FormOfferImagesComponent from './FormOfferImagesComponent';
 import { getIdRef } from '../../../../utils';
 import { t } from '../../../../lang';
-import { ConfigService } from '../../../../services';
 
 export interface OfferFormImagesAreaProps extends OfferFormAreaProps<OfferImageSlotEntity[]> {
   onSubmit?: AppSubmitHandler<Partial<OfferImageSlotEntity>[]>;
-  onSuccess?: (data: OfferEntity) => void;
+  onSuccess?: (data: { data: OfferEntity }) => void;
   update?: string;
 }
 
@@ -25,9 +24,7 @@ export const OfferFormImagesArea = ({
 }: OfferFormImagesAreaProps) => {
   const loaders = useOfferLoadersProvider();
   const [state, setState] = useState<Partial<OfferImageSlotEntity>[]>(defaultValues || loaders?.state?.images || []);
-  useEffect(() => {
-    console.log(ConfigService);
-  }, []);
+
   const service = useAppServiceProvider()[ServiceName.offers];
   const handleSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
@@ -36,7 +33,7 @@ export const OfferFormImagesArea = ({
       onSubmit(state);
     } else if (offer) {
       service.updateById({
-        data: { ...getIdRef(offer), data: { images: state as OfferImageSlotEntity[] }, refreshCurrent: true },
+        data: { refresh: true, data: { ...getIdRef(offer), data: { images: state as OfferImageSlotEntity[] } } },
         onSuccess: onSuccess,
         onLoading: loaders.onLoading('images'),
       });
@@ -45,8 +42,8 @@ export const OfferFormImagesArea = ({
     }
   };
   const canSubmit = useMemo(() => {
-    return true;
-  }, []);
+    return !!state?.length;
+  }, [state?.length]);
 
   return (
     <AccordionForm

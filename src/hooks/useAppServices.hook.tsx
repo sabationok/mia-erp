@@ -1,5 +1,5 @@
 import usePermissionsServiceHook, { PermissionService } from './usePermissionsService.hook';
-import useProductsServiceHook, { OffersService } from './useProductsService.hook';
+import useProductsServiceHook, { OffersService } from './useOffersService.hook';
 import useTransactionsServiceHook, { UseFinancesService } from './useTransactionsService.hook';
 import { DirectoriesService } from './useDirService.hook';
 import { useDirService } from './index';

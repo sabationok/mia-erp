@@ -9,6 +9,7 @@ export enum AppUrlParamKeys {
   discountId = 'discountId',
   offerId = 'offerId',
   orderId = 'orderId',
+  cartId = 'cartId',
   refundId = 'refundId',
   customerId = 'customerId',
   for = 'for',

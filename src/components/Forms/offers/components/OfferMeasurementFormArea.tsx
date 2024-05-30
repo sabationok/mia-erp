@@ -1,7 +1,7 @@
 import MeasurementInputs, { MeasurementInputsFormData } from './MeasuremenInputs';
 import { useAppForm } from '../../../../hooks';
 import { AccordionForm } from '../../FormArea/AccordionForm';
-import useOffersService from '../../../../hooks/useProductsService.hook';
+import useOffersService from '../../../../hooks/useOffersService.hook';
 import { ToastService } from '../../../../services';
 import { IMeasurement } from '../../../../types/utils.types';
 import { useState } from 'react';

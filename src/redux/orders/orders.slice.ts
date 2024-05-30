@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ICreateOrdersGroupFormState, OrderEntity, IOrdersGroup } from '../../types/orders/orders.types';
+import { ICreateOrdersGroupFormState, OrderEntity, OrdersGroupEntity } from '../../types/orders/orders.types';
 
 import {
   AddSlotToGroupAction,
@@ -19,7 +19,7 @@ import {
 
 export interface IOrdersState {
   orders: OrderEntity[];
-  orderGroups?: IOrdersGroup[];
+  orderGroups?: OrdersGroupEntity[];
   currentOrder?: OrderEntity;
   ordersGroupFormData: ICreateOrdersGroupFormState;
   filteredOrders?: [];

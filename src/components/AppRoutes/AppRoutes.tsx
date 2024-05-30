@@ -63,7 +63,7 @@ const AppRoutes: React.FC<{ isLoaded?: boolean }> = () => {
           <Route path={AppPagesEnum.cart} element={<AppPages.PageCart path={AppPagesEnum.cart} />} />
           <Route
             path={AppPagesEnum.cart}
-            element={<AppPages.PageCart path={`${AppPagesEnum.cart}/:${AppUrlParamKeys.orderId}`} />}
+            element={<AppPages.PageCart path={`${AppPagesEnum.cart}/:${AppUrlParamKeys.cartId}`} />}
           />
 
           <Route path={AppPagesEnum.offers} element={<AppPages.PageOffers path={AppPagesEnum.offers} />} />

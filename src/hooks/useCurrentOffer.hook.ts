@@ -1,5 +1,5 @@
 import { useProductsSelector } from '../redux/selectors.store';
-import { useAppParams } from './index';
+import { useAppParams, useAppQuery } from './index';
 import { VariationEntity } from '../types/offers/variations.types';
 import { OfferEntity } from '../types/offers/offers.types';
 import { useEffect, useMemo } from 'react';
@@ -11,12 +11,18 @@ type CurrentOffer = OfferEntity & {
 };
 export const useCurrentOffer = ({ _id }: { _id?: string } = {}): CurrentOffer | undefined => {
   const param = useAppParams();
-  const id = _id ?? param?.offerId;
+  const query = useAppQuery();
+  const id = _id || param?.offerId || query.query.offerId;
+  // useEffect(() => {
+  //   console.log(useCurrentOffer.name, ['_id', _id, 'param?.offerId', param?.offerId, 'query.offerId', query.offerId]);
+  // }, [_id, id, param?.offerId, query.query.offerId]);
+
   const state = useProductsSelector();
   const service = useAppServiceProvider().get(AppModuleName.offers);
 
   const offer = useMemo(() => {
     const _offer = id ? state.dataMap?.[id] : undefined;
+
     function getVariations(): VariationEntity[] {
       const _idsList = id ? state.variationsKeysMap?.[id] : undefined;
 
@@ -42,7 +48,7 @@ export const useCurrentOffer = ({ _id }: { _id?: string } = {}): CurrentOffer | 
   }, [id, state.dataMap, state.variationsKeysMap, state.variationsMap]);
 
   useEffect(() => {
-    if (!offer) {
+    if (!offer && id) {
       service.getOne({
         data: { params: { _id: id } },
       });

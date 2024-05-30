@@ -1,5 +1,4 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import ModalPortal from './ModalPortal';
 import ModalComponent, { IModalSettings } from './ModalComponent';
 import { nanoid } from '@reduxjs/toolkit';
 import { ModalChildrenMap, ModalChildrenProps, Modals } from '../../components/Modals/Modals';
@@ -201,7 +200,8 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
     <ModalProviderContext.Provider value={CTX}>
       {children}
 
-      <ModalPortal portalId={portalId}>{renderModalContent}</ModalPortal>
+      {renderModalContent}
+      {/*<ModalPortal portalId={portalId}>{}</ModalPortal>*/}
     </ModalProviderContext.Provider>
   );
 };

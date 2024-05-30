@@ -84,7 +84,13 @@ export const AccordionFormArea = ({
   return (
     <FlexBox fillWidth style={{ position: 'relative' }} maxHeight={maxHeight} maxWidth={'100%'}>
       {!hideHeader && (
-        <Header gap={8} fxDirection={'row'} justifyContent={'space-between'} alignItems={'center'}>
+        <Header
+          gap={8}
+          fxDirection={'row'}
+          justifyContent={'space-between'}
+          alignItems={'center'}
+          style={{ borderBottom: `1px solid ${theme.modalBorderColor}` }}
+        >
           <HeaderButton
             variant={'defNoEffects'}
             endIcon={!expandable ? undefined : _isOpen ? 'SmallArrowDown' : 'SmallArrowLeft'}
@@ -95,7 +101,7 @@ export const AccordionFormArea = ({
             endIconStyles={{
               fill: theme.accentColor.base,
             }}
-            style={{ borderBottom: `1px solid ${theme.modalBorderColor}`, height: '50px' }}
+            style={{ height: '50px' }}
             flex={1}
           >
             {renderTitle || (
@@ -110,7 +116,7 @@ export const AccordionFormArea = ({
       <ExpandableBox disabled={disabled} flex={1} isActive={_isOpen} maxHeight={maxHeight}>
         {_isOpen ? (
           <FlexBox padding={'8px'} maxWidth={'100%'} overflow={'hidden'}>
-            <FlexBox flex={1} overflow={'hidden'}>
+            <FlexBox flex={1} overflow={'hidden'} padding={'0 0 8px'}>
               {children}
             </FlexBox>
 

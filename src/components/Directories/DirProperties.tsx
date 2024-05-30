@@ -4,7 +4,7 @@ import { IDirInTreeProps } from '../../types/dir.types';
 
 import TabSelector, { FilterOption } from '../atoms/TabSelector';
 import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
-import { OffersService } from '../../hooks/useProductsService.hook';
+import { OffersService } from '../../hooks/useOffersService.hook';
 import FlexBox, { FlexLi, FlexUl } from '../atoms/FlexBox';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useProductsSelector } from '../../redux/selectors.store';

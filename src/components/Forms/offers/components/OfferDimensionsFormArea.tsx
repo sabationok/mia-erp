@@ -1,7 +1,7 @@
 import DimensionsInputs, { DimensionsFormData } from './DimensionsInputs';
 import { useAppForm } from '../../../../hooks';
 import { AccordionForm } from '../../FormArea/AccordionForm';
-import useOffersService from '../../../../hooks/useProductsService.hook';
+import useOffersService from '../../../../hooks/useOffersService.hook';
 import { ToastService } from '../../../../services';
 import { IDimensions } from '../../../../types/utils.types';
 import { useState } from 'react';
@@ -24,7 +24,7 @@ export const OfferDimensionsFormArea = ({
 
   const onValid = (sData: DimensionsFormData) => {
     service.updateById({
-      data: { data: sData, _id },
+      data: { data: { data: sData, _id } },
       onSuccess(d) {
         ToastService.success(`Product updated`);
       },

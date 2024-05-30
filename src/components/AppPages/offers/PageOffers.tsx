@@ -8,7 +8,7 @@ import { useProductsSelector } from '../../../redux/selectors.store';
 import { GetAllOffersQuery } from '../../../api';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import useProductsFilterSelectorsHook from '../../../hooks/useProductsFilterSelectors.hook';
-import useOffersActionsCreator from '../../../hooks/useProductsActionsCreator.hook';
+import useOffersActionsCreator from '../../../hooks/useOffersActionsCreator.hook';
 import { BaseAppPageProps } from '../index';
 import {
   OfferSearchParam,

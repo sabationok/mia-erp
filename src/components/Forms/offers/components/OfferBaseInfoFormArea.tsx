@@ -16,7 +16,7 @@ import CustomSelect from '../../../atoms/Inputs/CustomSelect/CustomSelect';
 import { ApiDirType } from '../../../../redux/APP_CONFIGS';
 import TextareaPrimary from '../../../atoms/Inputs/TextareaPrimary';
 import { toReqData } from '../../../../utils';
-import useOffersService from '../../../../hooks/useProductsService.hook';
+import useOffersService from '../../../../hooks/useOffersService.hook';
 import { MaybeNull } from '../../../../types/utils.types';
 import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
 import { OfferStatusFilterOptions } from '../../../../data';
@@ -72,6 +72,7 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
       onSubmit={appForm.handleSubmit(onValid)}
       onReset={appForm.reset}
       canSubmit={true}
+      expandable={false}
     >
       <InputLabel label={t('label')} error={errors.label} required>
         <InputText placeholder={t('label')} {...register('label')} required autoFocus />
@@ -96,19 +97,19 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
       />
 
       <CustomSelect
+        {...registerSelect('warehouse', {
+          options: warehouses.warehouses,
+          label: t('Select warehouse'),
+          placeholder: t('Select warehouse'),
+        })}
+      />
+
+      <CustomSelect
         {...registerSelect('approved', {
           options: OfferStatusFilterOptions,
           label: t('status'),
           placeholder: t('status'),
           value: formValues.approved,
-        })}
-      />
-
-      <CustomSelect
-        {...registerSelect('warehouse', {
-          options: warehouses.warehouses,
-          label: t('Select warehouse'),
-          placeholder: t('Select warehouse'),
         })}
       />
 

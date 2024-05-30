@@ -26,7 +26,7 @@ export const setFormStateAction = createAction<Partial<ICreateOrderInfoFormState
   CartActionType.setFormState
 );
 
-export const clearFormStateAction = createAction(CartActionType.clearFormState);
+export const clearFormStateAction = createAction<{ cartId?: string }>(CartActionType.clearFormState);
 
 export const setCurrentSlotAction = createAction<Partial<IOrderTempSlot>>(CartActionType.setCurrentSlot);
 

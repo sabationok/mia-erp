@@ -19,7 +19,6 @@ import Switch from '../../atoms/Switch';
 import { usePriceModalFormLoaders } from '../../Modals/CreatePriceModal';
 import * as yup from 'yup';
 import { isNumberStringSchema, UUIDRefSchema, UUIDSchema } from '../validation';
-import { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { VariationEntity } from '../../../types/offers/variations.types';
@@ -38,16 +37,28 @@ const validation = yup.object().shape({
   listId: UUIDSchema.nullable(),
 });
 
-export interface FormCreatePriceAreaProps
-  extends Omit<ModalFormProps<any, any, IPriceFormData>, 'onSubmit' | 'afterSubmit'> {
+export interface FormCreatePriceAreaProps {
   onSubmit?: AppSubmitHandler<IPriceFormData>;
   offer?: OfferEntity;
   price?: PriceEntity;
   variation?: VariationEntity;
   updateId?: string;
+  defaultState?: IPriceFormData;
+
+  title?: string;
+  expandable?: boolean;
+  isOpen?: boolean;
 }
 
-export const CreatePriceFormArea = ({ price, updateId, offer, defaultState }: FormCreatePriceAreaProps) => {
+export const CreatePriceFormArea = ({
+  price,
+  updateId,
+  offer,
+  defaultState,
+  expandable,
+  isOpen,
+  title,
+}: FormCreatePriceAreaProps) => {
   const loaders = usePriceModalFormLoaders();
   const Offer = useCurrentOffer(offer);
   const Price = useCurrentPrice(price ?? { _id: updateId });
@@ -99,7 +110,7 @@ export const CreatePriceFormArea = ({ price, updateId, offer, defaultState }: Fo
 
   const onSetAsDefault = async (offerId: string, priceId: string) => {
     offersSrv.setDefaults({
-      data: { _id: offerId, defaults: { price: { _id: priceId } } },
+      data: { data: { _id: offerId, defaults: { price: { _id: priceId } } } },
       onLoading: loaders.onLoading('set_default'),
     });
   };
@@ -142,9 +153,9 @@ export const CreatePriceFormArea = ({ price, updateId, offer, defaultState }: Fo
 
   return (
     <AccordionForm
-      expandable={false}
-      isOpen
-      label={t('Main info')}
+      expandable={expandable ?? false}
+      isOpen={isOpen ?? true}
+      label={title ?? t('Main info')}
       isLoading={loaders.hasLoading}
       onSubmit={handleSubmit(onValid, e => {
         ToastService.warning('Invalid form data');

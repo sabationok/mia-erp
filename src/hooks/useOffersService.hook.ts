@@ -19,7 +19,7 @@ import {
 } from '../redux/products/products.thunks';
 import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
-import { apiCall, AppQueryParams, createApiCall, GetOneOfferQuery } from 'api';
+import { apiCall, AppQueryParams, createApiCall } from 'api';
 import OffersApi from '../api/offers.api';
 import PropertiesApi from '../api/properties.api';
 import { IPropertyReqData, PropertyEntity } from '../types/offers/properties.types';
@@ -36,7 +36,6 @@ import {
 import { IVariationReqData, VariationEntity } from '../types/offers/variations.types';
 import { clearCurrentProductAction } from '../redux/products/products.actions';
 import { PriceEntity } from '../types/price-management/price-management.types';
-import { WarehouseItemEntity } from '../types/warehousing/warehouses.types';
 import { GetAllPricesQuery } from '../api';
 
 // type Test=_ServiceDispatcherAsync<typeof createOfferThunk>
@@ -46,7 +45,7 @@ export interface OffersService {
   deleteById: ServiceApiCaller<string, OfferEntity>; // !!!!! ===>>> ServiceDispatcher
   updateById: _ServiceDispatcherAsync<typeof updateProductThunk>; // !!!!! ===>>> ServiceDispatcher
   getById: ServiceApiCaller<string, OfferEntity>;
-  getOne: ServiceDispatcherAsync<{ params?: GetOneOfferQuery }, { data: OfferEntity }>;
+  getOne: _ServiceDispatcherAsync<typeof getOfferThunk>;
   getAll: _ServiceDispatcherAsync<typeof getAllOffersThunk>;
   getProductFullInfo: _ServiceDispatcherAsync<typeof getOfferFullInfoThunk>;
   clearCurrent: ServiceDispatcher<undefined>;
@@ -82,14 +81,7 @@ export interface OffersService {
     PriceEntity[]
   >;
   // * INVENTORIES
-  getAllInventories: ServiceDispatcherAsync<
-    {
-      refreshCurrent?: boolean;
-      updateCurrent?: boolean;
-      params: AppQueryParams;
-    },
-    WarehouseItemEntity[]
-  >;
+  getAllInventories: _ServiceDispatcherAsync<typeof getAllInventoriesByProductIdThunk>;
 }
 
 const useOffersService = (): OffersService => {

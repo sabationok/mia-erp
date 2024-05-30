@@ -7,12 +7,12 @@ import TableList from '../../TableList/TableList';
 import { useCart } from '../../../Providers/CartProvider';
 import { useCartSelector } from '../../../redux/selectors.store';
 import { tempOrderSlotTableColumns } from '../../../data';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useModalService } from '../../../Providers/ModalProvider/ModalProvider';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { AccordionFormArea } from '../../Forms/FormArea/AccordionForm';
 import { ITableAction } from '../../TableList/tableTypes.types';
-import { useAppQuery, useAppRouter } from '../../../hooks';
+import { useAppParams, useAppQuery, useAppRouter } from '../../../hooks';
 import OverlayStackProvider from '../../../Providers/Overlay/OverlayStackProvider';
 import { OverlayStack } from '../../../Providers/Overlay/OverlayStack';
 import SelectOfferModal from './SelectOfferModal';
@@ -24,7 +24,15 @@ interface Props extends BaseAppPageProps {}
 export default function CartPage({ path }: Props) {
   // const [isVisible, setIsVisible] = useState(false);
   const query = useAppQuery();
+  const params = useAppParams();
   const isDesktop = useMediaQuery({ query: '(min-width: 960px)' });
+  const cart = useCart();
+
+  useEffect(() => {
+    if (params.cartId) {
+      cart.actions.setCartId(params.cartId);
+    }
+  }, []);
 
   return (
     <AppGridPage path={path}>
@@ -92,25 +100,25 @@ const RightSide = styled(FlexBox)<{ isVisible?: boolean }>`
     box-shadow: 0 12px 26px rgba(0, 0, 0, 0.25);
   }
 `;
-type WarehouseId = string;
+
 function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
   const cartState = useCartSelector();
   const cart = useCart();
   const modalSrv = useModalService();
   const router = useAppRouter();
 
-  const renderWarehouses = useMemo(() => {
-    return Object.values(cartState.ordersDataMap)
-      .filter(el => el.slotKeys?.length)
-      .map((wrhs, index) => {
-        const wrhsId = wrhs.warehouse?._id;
+  const renderOrders = useMemo(() => {
+    return Object.values(cartState.orders.dataMap)
+      .filter(el => el.slotsIds?.length)
+      .map((order, index) => {
+        const wrhsId = order.tempId;
         if (!wrhsId) {
           return null;
         }
-        const slots = cart.warehousesSlotsMap?.[wrhsId];
+        const slots = cart.ordersSlotsMap?.[wrhsId];
 
         return (
-          <AccordionFormArea key={wrhsId ?? index} label={wrhs.warehouse?.label} hideFooter>
+          <AccordionFormArea key={wrhsId ?? index} label={order.warehouse?.label} hideFooter>
             <FlexBox minHeight={'300px'}>
               <TableList
                 tableData={slots}
@@ -143,7 +151,7 @@ function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
                       icon: 'plus',
                       onClick: () => {
                         modalSrv.create(SelectOfferModal, {
-                          warehouse: wrhs.warehouse,
+                          warehouse: order.warehouse,
                         });
                       },
                     },
@@ -154,11 +162,11 @@ function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
           </AccordionFormArea>
         );
       });
-  }, [cart.actions, cart.warehousesSlotsMap, cartState.ordersDataMap, modalSrv, router]);
+  }, [cart.actions, cart.ordersSlotsMap, cartState.orders.dataMap, modalSrv, router]);
 
   return (
     <FlexBox overflow={'auto'} fillHeight>
-      <FlexBox flex={1}>{renderWarehouses}</FlexBox>
+      <FlexBox flex={1}>{renderOrders}</FlexBox>
 
       <FlexBox
         fxDirection={'row'}

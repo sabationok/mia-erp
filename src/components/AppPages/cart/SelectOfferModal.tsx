@@ -79,7 +79,7 @@ export default function SelectOfferModal({
         }}
       />
 
-      <FooterSummary slot={counted} onChangeQuantity={setQuantity} />
+      {selected && <FooterSummary slot={counted} onChangeQuantity={setQuantity} />}
 
       <OverlayFooter
         canAccept={!!selected}

@@ -33,7 +33,7 @@ export enum OrderTypeEnum {
 }
 
 export interface HasOrdersGroup {
-  group?: MaybeNull<IOrdersGroup>;
+  group?: MaybeNull<OrdersGroupEntity>;
 }
 
 export interface HasOrder {
@@ -54,7 +54,7 @@ export enum OrderStatusEnum {
 
 // export type OrderStatus = 'rejected' | 'approved' | 'pending' | 'error' | 'success' | 'warning' | 'info';
 
-export interface IOrdersGroup extends Omit<OrderEntity, 'group'> {
+export interface OrdersGroupEntity extends Omit<OrderEntity, 'group'> {
   orders?: MaybeNull<OrderEntity[]>;
   strategy?: MaybeNull<string>;
 }
@@ -78,7 +78,7 @@ export interface OrderEntity
     HasStatus<OrderStatusEnum>,
     HasSummary<OrderSummaryType>,
     HasEmbeddedReferences<string, string> {
-  group?: MaybeNull<IOrdersGroup>;
+  group?: MaybeNull<OrdersGroupEntity>;
 
   number?: MaybeNull<number>;
 

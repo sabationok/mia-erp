@@ -1,4 +1,4 @@
-export const updateIdsArray = ({
+export const updateIdsArray = <IdType extends string | number | symbol>({
   id,
   arr,
   remove,
@@ -7,26 +7,26 @@ export const updateIdsArray = ({
   onUpdate,
   upend,
 }: {
-  id: string;
-  arr?: string[];
+  id: IdType;
+  arr?: IdType[];
   remove?: boolean;
   toggle?: boolean;
-  onUpdate?: (id: string) => void;
-  onRemove?: (id: string) => void;
+  onUpdate?: (id: IdType) => void;
+  onRemove?: (id: IdType) => void;
   upend?: boolean;
-}): string[] => {
-  const _update = (arr: string[]) => {
+}): IdType[] => {
+  const _update = (arr: IdType[]) => {
     const newArr = upend ? [...arr, id] : [id, ...arr];
     if (newArr.length > arr.length) {
-      const _onUpdate = async (id: string) => onUpdate && onUpdate(id);
+      const _onUpdate = async (id: IdType) => onUpdate && onUpdate(id);
       _onUpdate(id).catch();
     }
     return newArr;
   };
-  const _remove = (arr: string[]) => {
-    const newArr = arr.filter(el => el !== id);
+  const _remove = (arr: IdType[]) => {
+    const newArr = arr.filter(el => el !== id) as IdType[];
     if (newArr.length < arr.length) {
-      const _onRemove = async (id: string) => onRemove && onRemove(id);
+      const _onRemove = async (id: IdType) => onRemove && onRemove(id);
       _onRemove(id).catch();
     }
     return newArr;
@@ -43,7 +43,7 @@ export const updateIdsArray = ({
   if (Array.isArray(arr)) {
     return _update(arr);
   }
-  return [id] as string[];
+  return [id] as IdType[];
 };
 
 export const updateArray = <Data = any>({

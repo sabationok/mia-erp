@@ -104,23 +104,40 @@ export const offersSlice = createSlice({
               { refresh: true, isForList: true, setPrices: false, setVariations: false }
             );
           });
+          return s;
         }
       })
       .addCase(createOfferThunk.fulfilled, (s, a) => {
         if (a.payload?.data) {
           ManageOffersStateMap(s, a.payload);
         }
+        return s;
       })
       .addCase(updateProductThunk.fulfilled, (s, a) => {
         if (a.payload?.data) {
           ManageOffersStateMap(s, { data: a.payload.data });
         }
+        return s;
       })
       .addCase(getOfferFullInfoThunk.fulfilled, (s, a) => {
         ManageOffersStateMap(s, a.payload, { refresh: a.payload.refresh });
+        return s;
       })
       .addCase(getOfferThunk.fulfilled, (s, a) => {
-        ManageOffersStateMap(s, a.payload, a.payload);
+        // ManageOffersStateMap(s, a.payload, a.payload);
+
+        const offer = a.payload.data;
+        const itemId = offer?._id;
+        const itemSku = offer?.sku;
+
+        s.dataMap = { ...s.dataMap, [itemId]: { ...s.dataMap?.[itemId], ...offer } };
+        if (itemSku) {
+          s.skuKeysMap[itemSku] = itemId;
+        }
+
+        console.warn('addCase(getOfferThunk');
+        console.dir(s.dataMap[itemId]);
+        return s;
       })
       .addCase(updateOfferDefaultsThunk.fulfilled, (s, a) => {
         ManageOffersStateMap(s, { data: a.payload?.data }, { refresh: a.payload?.refresh });
@@ -252,22 +269,23 @@ function ManageOffersStateMap(
 ) {
   const itemId = input.data?._id;
   const itemSku = input.data?.sku;
+
   const offer = options?.isForList ? omit(input.data, ['prices', 'variations']) : input.data;
 
-  if (options?.refresh) {
-    st.dataMap[itemId] = offer;
-  } else {
-    st.dataMap[itemId] = { ...st.dataMap?.[itemId], ...offer };
-
-    // for (const dataKey of defaultsKeys) {
-    //   const currentData = st.dataMap?.[itemId];
-    //
-    //   newData[dataKey] = {
-    //     ...(currentData?.[dataKey] ?? {}),
-    //     ...(input?.data?.[dataKey] ?? {}),
-    //   };
-    // }
-  }
+  // if (options?.refresh) {
+  //   st.dataMap[itemId] = offer;
+  // } else {
+  st.dataMap = { ...st.dataMap, [itemId]: { ...st.dataMap?.[itemId], ...offer } };
+  console.log(itemId, st.dataMap);
+  // for (const dataKey of defaultsKeys) {
+  //   const currentData = st.dataMap?.[itemId];
+  //
+  //   newData[dataKey] = {
+  //     ...(currentData?.[dataKey] ?? {}),
+  //     ...(input?.data?.[dataKey] ?? {}),
+  //   };
+  // }
+  // }
   if (itemSku) {
     st.skuKeysMap[itemSku] = itemId;
   }

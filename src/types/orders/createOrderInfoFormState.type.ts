@@ -5,6 +5,7 @@ import { AppDate, FormDataLocationRefs, HasEmbeddedType } from '../utils.types';
 import { PaymentInternalTypeEnum } from '../integrations.types';
 
 export interface ICreateOrderInfoFormState {
+  cartId?: string;
   customer?: ICustomerBase;
   receiver?: ICustomerBase;
 

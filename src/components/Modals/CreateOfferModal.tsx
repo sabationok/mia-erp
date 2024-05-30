@@ -55,7 +55,7 @@ const CreateOfferModal: React.FC<CreateOfferModalProps> = ({ onClose, _id }) => 
       }
     >
       <LoadersProvider value={loaders}>
-        <FlexBox padding={'0 8px 16px'} overflow={'hidden'}>
+        <FlexBox padding={'0 8px 16px'}>
           <OfferBaseInfoFormArea
             defaultValues={formData}
             onSuccess={({ data }) => {
@@ -72,7 +72,14 @@ const CreateOfferModal: React.FC<CreateOfferModalProps> = ({ onClose, _id }) => 
 
               <OfferFormPropertiesArea offer={Offer} defaultValues={formData?.properties} disabled={!formData} />
 
-              <CreatePriceFormArea offer={Offer} defaultState={Offer?.price} price={Offer?.price} />
+              <CreatePriceFormArea
+                expandable={true}
+                isOpen={false}
+                offer={Offer}
+                defaultState={Offer?.price}
+                price={Offer?.price}
+                title={t('Price')}
+              />
 
               <OfferFormImagesArea offer={Offer} defaultValues={formData?.images} disabled={!formData} />
 
