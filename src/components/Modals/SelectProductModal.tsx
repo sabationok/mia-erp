@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { OfferEntity } from '../../types/offers/offers.types';
 import ProductCardSimpleOverview from '../Overviews/offer/ProductCardSimpleOverview';
-import { AppQueryParams, createApiCall } from '../../api';
+import { apiCall, AppQueryParams } from '../../api';
 import OffersApi from '../../api/offers.api';
 import FlexBox from '../atoms/FlexBox';
 import InputLabel from '../atoms/Inputs/InputLabel';
@@ -57,14 +57,14 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ selected, onSel
 
   const getData = useCallback(
     (search?: string, searchBy?: string) =>
-      createApiCall(
-        {
-          data: { search, searchBy },
-          onSuccess: setLoadedData,
-        },
-        OffersApi.getAll,
-        OffersApi
-      ),
+      apiCall(OffersApi.getAll, {
+        params: searchBy
+          ? {
+              [searchBy]: search,
+            }
+          : undefined,
+        onSuccess: setLoadedData,
+      }),
     []
   );
   const onValid = ({ search, searchBy }: Pick<SelectProductModalProps, 'search' | 'searchBy'>) =>

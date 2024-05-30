@@ -1,5 +1,4 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
-import { SelectItem } from 'components/TableList/TableList';
 import React from 'react';
 import styled from 'styled-components';
 import SearchParamInput from './SearchParamInput';
@@ -7,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { TableSearchParam } from '../../tableTypes.types';
+import { FlexForm } from '../../../atoms/FlexBox';
 
 export interface TableSearchProps<Param extends TableSearchParam = any> {
   searchParams?: Param[];
@@ -15,14 +15,14 @@ export interface TableSearchProps<Param extends TableSearchParam = any> {
 
 export interface TableSearchFormState<Param extends TableSearchParam = TableSearchParam> {
   search: string;
-  searchParam: Param;
+  param: Param;
 }
 
 const validation = yup.object().shape({
   search: yup.string().required(),
-  searchParam: yup.object().shape({
-    dataKey: yup.string(),
-  }),
+  // searchParam: yup.object().shape({
+  //   dataKey: yup.string(),
+  // }),
 });
 
 const TableSearchForm: React.FC<TableSearchProps> = ({ onSubmit, searchParams }) => {
@@ -33,14 +33,14 @@ const TableSearchForm: React.FC<TableSearchProps> = ({ onSubmit, searchParams })
     setValue,
     handleSubmit,
   } = useForm<TableSearchFormState>({
-    defaultValues: { search: '', searchParam: searchParams?.[0] },
-    reValidateMode: 'onChange',
+    defaultValues: { param: searchParams?.[0] },
+    reValidateMode: 'onSubmit',
     resolver: yupResolver(validation),
   });
-  const { search, searchParam } = watch();
+  const { search, param } = watch();
 
-  function onSelect(item: SelectItem) {
-    setValue('searchParam', item);
+  function onSelect<Param>(item: TableSearchParam<Param>) {
+    setValue('param', item);
   }
 
   function onValid(fData: TableSearchFormState) {
@@ -49,16 +49,21 @@ const TableSearchForm: React.FC<TableSearchProps> = ({ onSubmit, searchParams })
 
   function handleReset() {
     setValue('search', '');
-    setValue('searchParam', searchParams?.[0]);
+    setValue('param', searchParams?.[0]);
 
-    onSubmit && onSubmit({ search: '', searchParam: undefined });
+    onSubmit && onSubmit({ search: '', param: undefined });
   }
 
   return (
-    <SearchForm onSubmit={handleSubmit(onValid)} onReset={handleReset}>
+    <SearchForm
+      onSubmit={handleSubmit(onValid, errors => {
+        console.warn('[Table search form submit error]', errors);
+      })}
+      onReset={handleReset}
+    >
       <StyledLabel isActive={!!search}>
         <SearchInput
-          placeholder={searchParam?.label ? `Пошук за: "${searchParam?.label}"` : 'Оберіть параметр пошуку'}
+          placeholder={param?.label ? `Пошук за: "${param?.label}"` : 'Оберіть параметр пошуку'}
           {...register('search')}
         />
 
@@ -70,23 +75,16 @@ const TableSearchForm: React.FC<TableSearchProps> = ({ onSubmit, searchParams })
         size={'28px'}
         iconSize={'90%'}
         variant={'onlyIconNoEffects'}
-        disabled={!searchParam || !search}
+        disabled={!param || !search}
         type={'submit'}
       />
 
-      <SearchParamInput
-        {...{
-          params: searchParams,
-          onSelect,
-          searchParam,
-          defaultValue: searchParam,
-        }}
-      />
+      <SearchParamInput params={searchParams} onSelect={onSelect} param={param} />
     </SearchForm>
   );
 };
 
-const SearchForm = styled.div`
+const SearchForm = styled(FlexForm)`
   flex: 1 0 150px;
 
   display: grid;

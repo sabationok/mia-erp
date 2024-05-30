@@ -1,13 +1,8 @@
 import { WarehouseEntity } from '../../../types/warehousing/warehouses.types';
 import { useCart } from '../../../Providers/CartProvider';
-import { useAppQuery, useAppRouter } from '../../../hooks';
-import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { AppModuleName } from '../../../redux/reduxTypes.types';
-import { useProductsSelector } from '../../../redux/selectors.store';
-import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
+import { useAppQuery } from '../../../hooks';
 import { useMemo, useState } from 'react';
 import { VariationEntity } from '../../../types/offers/variations.types';
-import { useModalService } from '../../../Providers/ModalProvider/ModalProvider';
 import { countOrderSlotValues } from '../../../utils';
 import { OverlayHeader } from '../../Overlays';
 import FlexBox from '../../atoms/FlexBox';
@@ -20,15 +15,14 @@ export default function OrderSlotOverview({ warehouse }: { warehouse?: Warehouse
   const query = useAppQuery();
   const currentSlot = cart.actions.getSlot(query.query?.slotId);
 
-  const service = useAppServiceProvider().get(AppModuleName.offers);
-  const { getAll } = service;
-  const offersState = useProductsSelector();
-  const router = useAppRouter();
-  const loaders = useLoaders();
+  // const service = useAppServiceProvider().get(AppModuleName.offers);
+  // const { getAll } = service;
+  // const offersState = useProductsSelector();
+  // const router = useAppRouter();
+  // const loaders = useLoaders();
   const [selected, setSelected] = useState<VariationEntity | undefined>(currentSlot.variation);
   const [quantity, setQuantity] = useState(currentSlot?.quantity ?? 1);
-
-  const modalSrv = useModalService();
+  // const modalSrv = useModalService();
 
   const counted = useMemo(() => {
     return countOrderSlotValues({

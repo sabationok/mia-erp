@@ -1,5 +1,5 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
-import { AppQueryParams } from './index';
+import { AppQueryParams, ISortParams } from './index';
 import { IOfferDefaultsDto, IProductReqData, OfferEntity } from '../types/offers/offers.types';
 import { AppResponse } from '../redux/app-redux.types';
 import { ClientApi } from './client.api';
@@ -15,7 +15,8 @@ export interface GetOneOfferQuery {
   getDiscounts?: boolean;
 }
 export interface GetAllOffersQuery
-  extends Pick<AppQueryParams, 'sku' | 'label' | 'barCode' | 'filterParams' | 'sortParams' | 'limit' | 'offset'> {
+  extends Pick<AppQueryParams, 'sku' | 'label' | 'barCode' | 'filterParams' | 'limit' | 'offset'>,
+    ISortParams {
   warehouse?: {
     ids?: string[];
     code?: string;

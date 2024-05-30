@@ -19,25 +19,27 @@ const CustomerInfoComponent = ({
   const renderCells = useMemo(() => {
     if (!info) return undefined;
 
-    return getCustomerInfoComponentCells({ info, isReceiver, isManager }).map(({ label, getValue, visible }) => {
-      return (
-        visible && (
-          <FlexBox
-            key={label}
-            gap={2}
-            padding={'4px'}
-            flex={'1 1 50%'}
-            maxWidth={'50%'}
-            border={`1px solid ${theme.modalBorderColor}`}
-          >
-            <Text $size={10}>{label}</Text>
-            <Text $align={'right'} $size={12} $weight={600}>
-              {getValue(info)}
-            </Text>
-          </FlexBox>
-        )
-      );
-    });
+    return getCustomerInfoComponentCells({ info: warehouse, isReceiver, isManager }).map(
+      ({ label, getValue, visible }) => {
+        return (
+          visible && (
+            <FlexBox
+              key={label}
+              gap={2}
+              padding={'4px'}
+              flex={'1 1 50%'}
+              maxWidth={'50%'}
+              border={`1px solid ${theme.modalBorderColor}`}
+            >
+              <Text $size={10}>{label}</Text>
+              <Text $align={'right'} $size={12} $weight={600}>
+                {getValue(info)}
+              </Text>
+            </FlexBox>
+          )
+        );
+      }
+    );
   }, [info, isManager, isReceiver, theme.modalBorderColor]);
 
   return (

@@ -5,9 +5,7 @@ import ModalBase from '../../atoms/Modal';
 import { countOrderSlotValues } from '../../../utils';
 import { useMemo, useState } from 'react';
 import { useCart } from '../../../Providers/CartProvider';
-import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
-import { useTheme } from 'styled-components';
-import { useAppQuery, useCurrentOffer } from '../../../hooks';
+import { useCurrentOffer } from '../../../hooks';
 import { VariationEntity } from '../../../types/offers/variations.types';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { WarehouseEntity } from '../../../types/warehousing/warehouses.types';
@@ -23,12 +21,12 @@ export const SelectVariationModal = ({
   warehouse?: WarehouseEntity;
   slotId?: string;
 } & CreatedModal) => {
-  const query = useAppQuery();
+  // const query = useAppQuery();
+
   const modalSrv = useModalProvider();
   const Offer = useCurrentOffer(offer);
   const [selected, setSelected] = useState<VariationEntity>();
-  const theme = useTheme();
-  const loaders = useLoaders();
+  // const loaders = useLoaders();
   const cart = useCart();
   const currentSlot = cart.actions.getSlotByVariationId(selected?._id);
   const [quantity, setQuantity] = useState(currentSlot?.quantity ?? 1);

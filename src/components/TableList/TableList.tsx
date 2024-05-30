@@ -24,22 +24,6 @@ export type { ITableListContext, ITableListProps, OnCheckBoxChangeHandlerEvent, 
 export const TableCTX = createContext({});
 export const useTable: UseTableReturnType = () => useContext(TableCTX);
 
-const omitProps = [
-  'onSubmitSearch',
-  'onHeadCheckboxChange',
-  'onRefresh',
-  'onCheckboxChange',
-  'onTableSortChange',
-  'onTableSortParamChange',
-  'filterSelectors',
-  'filterDefaultValues',
-  'filterTitle',
-  'hasFilter',
-  'itemRef',
-  'onRefreshPress',
-  'transformData',
-] as (keyof ITableListProps)[];
-
 const TableList = <TData extends Partial<OnlyUUID> = any>(
   props: ITableListProps<TData> & React.HTMLAttributes<HTMLDivElement>
 ) => {

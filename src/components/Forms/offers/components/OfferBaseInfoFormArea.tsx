@@ -20,7 +20,7 @@ import useOffersService from '../../../../hooks/useProductsService.hook';
 import { MaybeNull } from '../../../../types/utils.types';
 import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
 import { OfferStatusFilterOptions } from '../../../../data';
-import { useDirectorySelector } from '../../../../redux/selectors.store';
+import { useDirectorySelector, useWarehousesSelector } from '../../../../redux/selectors.store';
 
 export interface OfferBaseInfoFormAreaProps extends OfferFormAreaProps<IProductFullFormData> {
   type?: MaybeNull<OfferTypeEnum>;
@@ -30,7 +30,7 @@ export interface OfferBaseInfoFormAreaProps extends OfferFormAreaProps<IProductF
 
 export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _id }: OfferBaseInfoFormAreaProps) => {
   const { isLoading, onLoading } = useOfferLoadersProvider();
-
+  const warehouses = useWarehousesSelector();
   const service = useOffersService();
 
   const brandsList = useDirectorySelector(ApiDirType.BRANDS).directory;
@@ -100,6 +100,15 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
           options: OfferStatusFilterOptions,
           label: t('status'),
           placeholder: t('status'),
+          value: formValues.approved,
+        })}
+      />
+
+      <CustomSelect
+        {...registerSelect('warehouse', {
+          options: warehouses.warehouses,
+          label: t('Select warehouse'),
+          placeholder: t('Select warehouse'),
         })}
       />
 

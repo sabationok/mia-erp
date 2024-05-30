@@ -34,6 +34,7 @@ export interface TableSearchParam<DataKey = any, DataPath = any> {
   label?: string;
   dataKey?: DataKey;
   dataPath?: DataPath;
+  isArray?: boolean;
 }
 export interface TableSortParam<DataKey = any, DataPath = any> {
   _id?: string;

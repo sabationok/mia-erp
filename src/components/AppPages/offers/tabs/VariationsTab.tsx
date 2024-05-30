@@ -106,7 +106,7 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
             ];
           },
     };
-  }, [loadData, modalS, onSelect, page.currentOffer, withActions]);
+  }, [Offer, loadData, modalS, onSelect, withActions]);
 
   useEffect(() => {
     if (Offer) {

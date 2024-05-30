@@ -7,37 +7,37 @@ import TableList from '../../TableList/TableList';
 import { useCart } from '../../../Providers/CartProvider';
 import { useCartSelector } from '../../../redux/selectors.store';
 import { tempOrderSlotTableColumns } from '../../../data';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useModalService } from '../../../Providers/ModalProvider/ModalProvider';
-import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
 import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
 import { AccordionFormArea } from '../../Forms/FormArea/AccordionForm';
 import { ITableAction } from '../../TableList/tableTypes.types';
 import { useAppQuery, useAppRouter } from '../../../hooks';
 import OverlayStackProvider from '../../../Providers/Overlay/OverlayStackProvider';
 import { OverlayStack } from '../../../Providers/Overlay/OverlayStack';
-import { useMediaQuery } from 'react-responsive';
 import SelectOfferModal from './SelectOfferModal';
 import OrderSlotOverview from './OrderSlotOverview';
+import { useMediaQuery } from 'react-responsive';
 
 interface Props extends BaseAppPageProps {}
 
 export default function CartPage({ path }: Props) {
-  const [isVisible, setIsVisible] = useState(false);
+  // const [isVisible, setIsVisible] = useState(false);
   const query = useAppQuery();
-
-  useEffect(() => {}, []);
+  const isDesktop = useMediaQuery({ query: '(min-width: 960px)' });
 
   return (
     <AppGridPage path={path}>
       <OverlayStackProvider>
         <Page fillWidth flex={1} overflow={'hidden'} fillHeight fxDirection={'row'} gap={12}>
           <FlexBox fillHeight flex={2}>
-            <PageCartSlots onSlotEditPress={() => setIsVisible(true)} />
+            <PageCartSlots
+            // onSlotEditPress={() => setIsVisible(true)}
+            />
           </FlexBox>
 
           <RightSide
-            isVisible={!!query?.query?.slotId}
+            isVisible={isDesktop ? undefined : !!query?.query?.slotId}
             className={'RightSide'}
             // onAcceptPress={() => setIsVisible(false)}
             style={
@@ -99,22 +99,18 @@ function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
   const modalSrv = useModalService();
   const router = useAppRouter();
 
-  const isDesktop = useMediaQuery({ query: '(min-width: 960px)' });
-
-  const loaders = useLoaders<WarehouseId>();
-
   const renderWarehouses = useMemo(() => {
-    return Object.values(cartState.warehousesDataMap)
+    return Object.values(cartState.ordersDataMap)
       .filter(el => el.slotKeys?.length)
       .map((wrhs, index) => {
-        const wrhsId = wrhs.info?._id;
+        const wrhsId = wrhs.warehouse?._id;
         if (!wrhsId) {
           return null;
         }
         const slots = cart.warehousesSlotsMap?.[wrhsId];
 
         return (
-          <AccordionFormArea key={wrhsId ?? index} label={wrhs.info?.label} hideFooter>
+          <AccordionFormArea key={wrhsId ?? index} label={wrhs.warehouse?.label} hideFooter>
             <FlexBox minHeight={'300px'}>
               <TableList
                 tableData={slots}
@@ -147,7 +143,7 @@ function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
                       icon: 'plus',
                       onClick: () => {
                         modalSrv.create(SelectOfferModal, {
-                          warehouse: wrhs.info,
+                          warehouse: wrhs.warehouse,
                         });
                       },
                     },
@@ -158,7 +154,7 @@ function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
           </AccordionFormArea>
         );
       });
-  }, [cart.actions, cart.warehousesSlotsMap, cartState.warehousesDataMap, modalSrv, router]);
+  }, [cart.actions, cart.warehousesSlotsMap, cartState.ordersDataMap, modalSrv, router]);
 
   return (
     <FlexBox overflow={'auto'} fillHeight>

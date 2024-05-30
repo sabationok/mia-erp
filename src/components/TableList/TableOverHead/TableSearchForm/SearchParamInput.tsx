@@ -1,19 +1,20 @@
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import { SelectItem } from 'components/TableList/TableList';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { TableSearchParam } from '../../tableTypes.types';
 import { isFunction } from 'lodash';
 import { Text } from '../../../atoms/Text';
+import { useCloseByBackdropClick, useCloseByEscape } from '../../../../hooks/useCloseByEscapeOrClickOnBackdrop.hook';
 
 export interface ISearchParamInputProps<DataKey = any> {
   params?: TableSearchParam<DataKey>[];
-  defaultValue?: TableSearchParam<DataKey>;
+  param?: TableSearchParam<DataKey>;
   selectedItem?: TableSearchParam<DataKey>;
   onSelect?: (item: TableSearchParam<DataKey>) => void;
 }
 
-const SearchParamInput: React.FC<ISearchParamInputProps> = ({ params, defaultValue, selectedItem, onSelect }) => {
+const SearchParamInput: React.FC<ISearchParamInputProps> = ({ params, param, onSelect }) => {
   const [current, setCurrent] = useState<number>(0);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -33,20 +34,26 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ params, defaultVal
     },
     [onSelect, setCurrent]
   );
+
   const renderFilteredList = useMemo(() => {
     return params ? (
-      params.map((item, index) => (
-        <ListItem
-          key={item.dataKey || item.dataPath}
-          title={item.label}
-          isSelected={index === current}
-          onClick={() => handleSelect(item, index)}
-        >
-          <Text $size={14} $weight={500}>
-            {item.label}
-          </Text>
-        </ListItem>
-      ))
+      params.map((item, index) => {
+        const compareKey: 'dataKey' | 'dataPath' | '_id' | null =
+          (param?.dataKey && 'dataKey') || (param?.dataPath && 'dataPath') || (param?._id && '_id') || null;
+
+        return (
+          <ListItem
+            key={item.dataKey || item.dataPath}
+            title={item.label}
+            isSelected={compareKey ? param?.[compareKey] === item?.[compareKey] : index === current}
+            onClick={() => handleSelect(item, index)}
+          >
+            <Text $size={14} $weight={500}>
+              {item.label}
+            </Text>
+          </ListItem>
+        );
+      })
     ) : (
       <ListItem listEmpty>
         <Text $size={14} $weight={500}>
@@ -54,27 +61,10 @@ const SearchParamInput: React.FC<ISearchParamInputProps> = ({ params, defaultVal
         </Text>
       </ListItem>
     );
-  }, [current, params, handleSelect]);
+  }, [params, param, current, handleSelect]);
 
-  useEffect(() => {
-    if (!isOpen) return;
-
-    function onMenuClose(ev: MouseEvent | KeyboardEvent) {
-      const { target } = ev;
-      const allowClose =
-        (target instanceof HTMLElement && !target.closest('[data-select]')) ||
-        (ev instanceof KeyboardEvent && ev?.code === 'Escape');
-      allowClose && setIsOpen(false);
-    }
-
-    document.addEventListener('click', onMenuClose);
-    document.addEventListener('keydown', onMenuClose);
-
-    return () => {
-      document.removeEventListener('click', onMenuClose);
-      document.removeEventListener('keydown', onMenuClose);
-    };
-  }, [isOpen]);
+  useCloseByEscape(setIsOpen);
+  useCloseByBackdropClick(setIsOpen, 'data-select');
 
   return (
     <>

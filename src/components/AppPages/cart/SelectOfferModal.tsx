@@ -3,18 +3,17 @@ import { CreatedModal, useModalService } from '../../../Providers/ModalProvider/
 import { useCart } from '../../../Providers/CartProvider';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
-import { useProductsSelector } from '../../../redux/selectors.store';
 import { useAppRouter } from '../../../hooks';
-import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
 import { useEffect, useMemo, useState } from 'react';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { useOffersTableSettings } from '../offers/PageOffers';
-import { countOrderSlotValues } from '../../../utils';
+import { countOrderSlotValues, setValueByPath } from '../../../utils';
 import OverlayBase from '../../Overlays/OverlayBase';
 import TableList from '../../TableList/TableList';
 import { FooterSummary } from './FooterSummary';
 import { OverlayFooter } from '../../atoms';
 import { SelectVariationModal } from './SelectVariationModal';
+import { GetAllOffersQuery } from '../../../api';
 
 export default function SelectOfferModal({
   warehouse,
@@ -24,16 +23,16 @@ export default function SelectOfferModal({
   const service = useAppServiceProvider().get(AppModuleName.offers);
   const { getAll } = service;
   const currentSlot = cart.actions.getSlot(slotId);
-  const offersState = useProductsSelector();
+  // const offersState = useProductsSelector();
   const router = useAppRouter();
-  const loaders = useLoaders();
+  // const loaders = useLoaders();
   const [selected, setSelected] = useState<OfferEntity>();
   const [quantity, setQuantity] = useState(currentSlot?.quantity ?? 1);
 
   const modalSrv = useModalService();
 
-  const { tableConfig, isLoading, sortParams } = useOffersTableSettings({
-    searchState: { search: warehouse?._id ?? '', searchParam: { dataPath: 'warehouse.label', label: 'Склад' } },
+  const { tableConfig, isLoading, searchParams } = useOffersTableSettings({
+    searchState: { search: warehouse?.label ?? '', param: { dataPath: 'warehouse.label', label: 'Склад' } },
   });
 
   const counted = useMemo(() => {
@@ -41,6 +40,10 @@ export default function SelectOfferModal({
   }, [currentSlot, quantity, selected?.price]);
 
   useEffect(() => {
+    const params: GetAllOffersQuery = setValueByPath(searchParams?.param?.dataPath, searchParams?.search);
+
+    console.log(params);
+
     if (warehouse) {
       getAll({
         data: {
@@ -55,11 +58,12 @@ export default function SelectOfferModal({
     }
     // eslint-disable-next-line
   }, []);
+
   return (
     <OverlayBase title={warehouse?.label || 'Select offer'} fillHeight>
       <TableList
         {...tableConfig}
-        isLoading={isLoading}
+        isLoading={isLoading?.offers}
         checkBoxes={false}
         selectedRow={selected}
         onRowClick={data => {

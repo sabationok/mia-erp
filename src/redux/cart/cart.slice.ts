@@ -1,25 +1,24 @@
-import { OfferEntity } from 'types/offers/offers.types';
 import { IOrderTempSlot } from 'types/orders/order-slot.types';
 import { WarehouseEntity } from '../../types/warehousing/warehouses.types';
 import { createSlice } from '@reduxjs/toolkit';
 import { Action } from '../store.store';
-import {
-  clearFormStateAction,
-  removeCurrentSlotAction,
-  setCurrentSlotAction,
-  setFormStateAction,
-} from './cart.actions';
+import { clearFormStateAction, setFormStateAction } from './cart.actions';
 import { updateIdsArray } from '../../utils';
 import { FormOrderSummaryData, ICreateOrderInfoFormState, OrderSummary } from 'types/orders/orders.types';
 
-type WarehouseId = string;
-type TempId = string;
+export const CART_ID_PREFIX = 'cart';
+
+export type TempOrderId = string;
+export type TempSlotId = string;
+export type CartId = string;
+
+export type CartItemId = TempSlotId | `${typeof CART_ID_PREFIX}_${CartId}_${TempSlotId}`;
+export type CartOrderId = TempOrderId | `${typeof CART_ID_PREFIX}_${CartId}_${TempOrderId}`;
 
 export interface CartState {
+  cartId?: CartId;
   info?: any;
-  slots: Partial<IOrderTempSlot>[];
-  currentSlot?: Partial<IOrderTempSlot>;
-  currentOffer?: OfferEntity;
+  slots: IOrderTempSlot[];
 
   summary: OrderSummary;
 
@@ -27,19 +26,21 @@ export interface CartState {
   recommends: Record<string, SetRecommendationPayload & { timestamp?: number }>;
 
   slotsMap: OrderSlotsMap;
-  keysMap: Record<WarehouseId, TempId>;
-  offersMap: Record<WarehouseId, TempId[]>;
+  keysMap: Record<CartOrderId, CartItemId>;
+  offersMap: Record<CartOrderId, CartItemId[]>;
 
-  warehousesDataMap: Record<WarehouseId, CartWarehouseData>;
+  ordersDataMap: Record<CartOrderId, CartOrderData>;
 }
-export type CartWarehouseData = {
+export type CartOrderData = {
   summary: OrderSummary;
-  slotKeys: TempId[];
-  selectedIds: TempId[];
+  slots: IOrderTempSlot[];
+  slotKeys: CartItemId[];
+  selectedIds: CartItemId[];
   isSelected?: boolean;
-  info?: WarehouseEntity;
+  warehouse?: WarehouseEntity;
+  orders?: CartOrderData[];
 };
-export type OrderSlotsMap = Record<TempId, IOrderTempSlot>;
+export type OrderSlotsMap = Record<CartItemId, IOrderTempSlot>;
 
 export interface SetRecommendationPayload {
   _id?: string;
@@ -77,13 +78,17 @@ const initialCartState: CartState = {
   keysMap: {},
   offersMap: {},
 
-  warehousesDataMap: {},
+  ordersDataMap: {},
 };
 
 export const cartSlice = createSlice({
   name: 'cart',
   initialState: initialCartState,
   reducers: {
+    setCartIdAction: (s, a: Action<{ userId?: string }>) => {
+      s.cartId = a.payload.userId;
+      return s;
+    },
     setRecommendationAction: (s, a: Action<SetRecommendationPayload>) => {
       const key = a.payload?.offerId || a.payload?.sku;
       if (key) {
@@ -97,9 +102,9 @@ export const cartSlice = createSlice({
     clearRecommendations: s => {
       s.recommends = {};
     },
-    setWarehouseSummary(s, a: Action<{ warehouseId: WarehouseId; data: FormOrderSummaryData }>) {
-      s.warehousesDataMap[a.payload.warehouseId] = {
-        ...s.warehousesDataMap[a.payload.warehouseId],
+    setWarehouseSummary(s, a: Action<{ warehouseId: CartOrderId; data: FormOrderSummaryData }>) {
+      s.ordersDataMap[a.payload.warehouseId] = {
+        ...s.ordersDataMap[a.payload.warehouseId],
         summary: a.payload.data,
       };
     },
@@ -125,6 +130,16 @@ export const cartSlice = createSlice({
       });
       return st;
     },
+    setSlotAction(st, a: Action<{ data: IOrderTempSlot }>) {
+      const fromRefKey = a.payload.data.offer?._id;
+      if (fromRefKey && st.recommends?.[fromRefKey]?.fromRef) {
+        a.payload.data.fromRef = st.recommends?.[fromRefKey]?.fromRef;
+      }
+      UpdateCartSlotMutation(st, a.payload.data, {
+        update: false,
+      });
+      return st;
+    },
     removeSlotAction(st, a: Action<{ tempId: string }>) {
       RemoveCartSlotMutation(st, a.payload);
 
@@ -133,10 +148,10 @@ export const cartSlice = createSlice({
     clearCartAction(s) {
       s.slots = [];
       s.slotsMap = {};
-      Object.keys(s.warehousesDataMap).forEach(key => {
-        if (s.warehousesDataMap[key]) {
-          s.warehousesDataMap[key].summary = {};
-          s.warehousesDataMap[key].slotKeys = [];
+      Object.keys(s.ordersDataMap).forEach(key => {
+        if (s.ordersDataMap[key]) {
+          s.ordersDataMap[key].summary = {};
+          s.ordersDataMap[key].slotKeys = [];
         }
       });
       // RecountSummariesMutation(s);
@@ -153,7 +168,7 @@ export const cartSlice = createSlice({
         });
         // const wrId = s.slotsMap[tempId].warehouse?._id;
         // if (wrId) {
-        //   const wrs = s.warehousesDataMap?.[wrId];
+        //   const wrs = s.ordersDataMap?.[wrId];
         //   if (wrs) {
         //     wrs.selectedIds = updateStringArray({
         //       id: tempId,
@@ -161,12 +176,12 @@ export const cartSlice = createSlice({
         //       remove: checked,
         //     });
         //
-        //     s.warehousesDataMap[wrId] = wrs;
+        //     s.ordersDataMap[wrId] = wrs;
         //   }
         // }
       } else if (warehouseId) {
-        const wr = s.warehousesDataMap?.[warehouseId];
-        s.warehousesDataMap[warehouseId] = {
+        const wr = s.ordersDataMap?.[warehouseId];
+        s.ordersDataMap[warehouseId] = {
           ...wr,
           selectedIds: checked ? wr.slotKeys : [],
           isSelected: checked,
@@ -176,12 +191,6 @@ export const cartSlice = createSlice({
   },
   extraReducers: builder =>
     builder
-      .addCase(setCurrentSlotAction, (s, a) => {
-        s.currentSlot = a.payload;
-      })
-      .addCase(removeCurrentSlotAction, (s, _a) => {
-        s.currentSlot = undefined;
-      })
       .addCase(setFormStateAction, (s, a) => {
         s.information = {
           ...s.information,
@@ -207,55 +216,70 @@ export const {
 } = cartSlice.actions;
 
 const UpdateCartSlotMutation = (
-  s: CartState,
+  st: CartState,
   item: IOrderTempSlot,
-  _options?: { update?: boolean }
-): { warehouseId?: string; recount?: boolean } => {
-  const { tempId } = item;
-  if (!tempId) {
+  options?: { update?: boolean }
+): { orderId?: string; recount?: boolean } => {
+  const { tempId: slotId } = item;
+  if (!slotId) {
     return {};
   }
-  const exist = s.slotsMap?.[tempId];
-  s.slotsMap[tempId] = { ...exist, ...item };
+  let tempId = slotId;
 
-  const current = s.slotsMap[tempId];
+  const currentCartId = st.cartId;
+  if (currentCartId) {
+    const clotCartId = tempId?.startsWith(CART_ID_PREFIX) ? tempId?.split('_')[1] : undefined;
+    if (clotCartId && clotCartId !== currentCartId) {
+      console.error('This slot is not for current cart', { currentCartId, clotCartId });
+
+      return {};
+    }
+  }
+
+  const exist = st.slotsMap?.[tempId];
+  st.slotsMap[tempId] = options?.update ? { ...exist, ...item } : item;
+
+  const current = st.slotsMap[tempId];
   if (current.offer?._id) {
-    s.offersMap[current.offer?._id] = updateIdsArray({
+    st.offersMap[current.offer?._id] = updateIdsArray({
       id: tempId,
-      arr: s.offersMap[current.offer?._id],
+      arr: st.offersMap[current.offer?._id],
     });
   }
 
   if (current?.variation?._id) {
-    if (!s.keysMap?.[current?.variation?._id]) s.keysMap[current.variation._id] = tempId;
+    if (!st.keysMap?.[current?.variation?._id]) st.keysMap[current.variation._id] = tempId;
   }
+  if (current?.warehouse) {
+    const orderId = currentCartId
+      ? `${CART_ID_PREFIX}_${currentCartId}_${current?.warehouse?._id}`
+      : current?.warehouse?._id;
 
-  const warehouseId = current?.warehouse?._id;
+    if (orderId) {
+      let orderData = st.ordersDataMap?.[orderId] || {
+        slotKeys: [],
+        selectedIds: [],
+        isSelected: true,
+        warehouse: {},
+      };
+      orderData.slotKeys = updateIdsArray({
+        id: tempId,
+        arr: orderData?.slotKeys,
+      });
 
-  if (warehouseId) {
-    let wrSata = s.warehousesDataMap?.[warehouseId] || {
-      slotKeys: [],
-      selectedIds: [],
-      isSelected: true,
-      info: {},
-    };
-    wrSata.slotKeys = updateIdsArray({
-      id: tempId,
-      arr: wrSata?.slotKeys,
-    });
-
-    wrSata.selectedIds = updateIdsArray({
-      id: tempId,
-      arr: wrSata?.selectedIds,
-      remove: !current?.isSelected,
-    });
-    s.warehousesDataMap[warehouseId] = {
-      ...wrSata,
-      // info: Object.assign(item?.warehouse ?? {}, wrSata?.info ?? {}),
-      isSelected: wrSata.slotKeys?.length === wrSata.selectedIds?.length,
-    };
-    if (item?.warehouse) {
-      s.warehousesDataMap[warehouseId].info = { ...item?.warehouse, ...(wrSata?.info ?? {}) };
+      orderData.selectedIds = updateIdsArray({
+        id: tempId,
+        arr: orderData?.selectedIds,
+        remove: !current?.isSelected,
+      });
+      st.ordersDataMap[orderId] = {
+        ...orderData,
+        // info: Object.assign(item?.warehouse ?? {}, wrSata?.info ?? {}),
+        isSelected: orderData.slotKeys?.length === orderData.selectedIds?.length,
+      };
+      if (item?.warehouse) {
+        st.ordersDataMap[orderId].warehouse = { ...item?.warehouse, ...(orderData?.warehouse ?? {}) };
+      }
     }
   }
   return {};
@@ -266,7 +290,7 @@ function RemoveCartSlotMutation(st: CartState, { tempId }: { tempId: string }) {
 
   let warehouseId = exist?.warehouse?._id?.slice();
 
-  const wrhs = warehouseId ? st.warehousesDataMap?.[warehouseId] : undefined;
+  const wrhs = warehouseId ? st.ordersDataMap?.[warehouseId] : undefined;
 
   if (wrhs) {
     const offerId = exist?.offer?._id;

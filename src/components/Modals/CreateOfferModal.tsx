@@ -17,7 +17,7 @@ import { OfferFormImagesArea } from '../Forms/offers/components/OfferFormImagesA
 import { useAppRouter, useCurrentOffer } from '../../hooks';
 import { OfferFormCategoriesArea } from '../Forms/offers/components/OfferFormCategoriesArea';
 import { OfferLoadersData, OfferLoadersKey } from '../Forms/offers/types';
-import { omit } from 'lodash';
+import { CreatePriceFormArea } from '../Forms/pricing/CreatePriceFormArea';
 
 export interface CreateOfferModalProps extends ModalFormProps {
   _id: string;
@@ -32,11 +32,10 @@ const CreateOfferModal: React.FC<CreateOfferModalProps> = ({ onClose, _id }) => 
     setData,
   } = loaders;
   const router = useAppRouter();
-  const currenOffer = useCurrentOffer({ _id: router.query?.offerId });
+  const Offer = useCurrentOffer({ _id: router.query?.offerId });
 
   useEffect(() => {
-    router.push({ query: omit(router.query, ['offerId']) });
-
+    // router.push({ query: omit(router.query, ['offerId']) });
     // return () => {
     //   router.push({ query: {} });
     // };
@@ -59,7 +58,7 @@ const CreateOfferModal: React.FC<CreateOfferModalProps> = ({ onClose, _id }) => 
         <FlexBox padding={'0 8px 16px'} overflow={'hidden'}>
           <OfferBaseInfoFormArea
             defaultValues={formData}
-            onSuccess={data => {
+            onSuccess={({ data }) => {
               setData('formData', toOfferFormData(data));
 
               router.push({ query: { offerId: data?._id } });
@@ -67,21 +66,19 @@ const CreateOfferModal: React.FC<CreateOfferModalProps> = ({ onClose, _id }) => 
             type={formData?.type}
           />
 
-          {currenOffer && (
+          {Offer && (
             <>
-              <OfferFormCategoriesArea offer={currenOffer} defaultValues={formData?.categories} disabled={!formData} />
+              <OfferFormCategoriesArea offer={Offer} defaultValues={formData?.categories} disabled={!formData} />
 
-              <OfferFormPropertiesArea offer={currenOffer} defaultValues={formData?.properties} disabled={!formData} />
+              <OfferFormPropertiesArea offer={Offer} defaultValues={formData?.properties} disabled={!formData} />
 
-              <OfferFormImagesArea offer={currenOffer} defaultValues={formData?.images} disabled={!formData} />
+              <CreatePriceFormArea offer={Offer} defaultState={Offer?.price} price={Offer?.price} />
 
-              <OfferDimensionsFormArea offer={currenOffer} defaultValues={formData?.dimensions} disabled={!formData} />
+              <OfferFormImagesArea offer={Offer} defaultValues={formData?.images} disabled={!formData} />
 
-              <OfferMeasurementFormArea
-                offer={currenOffer}
-                defaultValues={formData?.measurement}
-                disabled={!formData}
-              />
+              <OfferDimensionsFormArea offer={Offer} defaultValues={formData?.dimensions} disabled={!formData} />
+
+              <OfferMeasurementFormArea offer={Offer} defaultValues={formData?.measurement} disabled={!formData} />
             </>
           )}
         </FlexBox>

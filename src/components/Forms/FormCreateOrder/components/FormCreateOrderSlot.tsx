@@ -83,7 +83,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
       selectedRow: formData?.product,
       onSubmitSearch: data => {
         setValue('search', data.search);
-        setValue('searchBy', data.searchParam?.dataPath);
+        setValue('searchBy', data.param?.dataPath);
       },
       onRowClick: data => {
         const v = products.find(p => p._id === data?._id);

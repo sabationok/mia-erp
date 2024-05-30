@@ -20,6 +20,7 @@ export interface GetCurrentSlotReturn extends Partial<IOrderTempSlot> {
   setQty: (q: number) => void;
   isAdded: () => boolean;
   isChecked: () => boolean;
+  remove: () => void;
 }
 export interface CartService {
   actions: UseCartActions;
@@ -53,6 +54,9 @@ const useCartActions = () => {
       },
       isChecked() {
         return isSelected(slot);
+      },
+      remove() {
+        slot?.tempId && remove(slot?.tempId);
       },
     };
   }
@@ -94,7 +98,7 @@ const useCartActions = () => {
     return wrhs?.slotKeys?.includes(tempId);
   }
   function getWarehouseById(id: string) {
-    return state.warehousesDataMap?.[id];
+    return state.ordersDataMap?.[id];
   }
   function getWarehouseBySlot(slot?: IOrderTempSlot) {
     const wrhsId = !slot?.warehouse?._id
@@ -104,7 +108,7 @@ const useCartActions = () => {
       : slot?.warehouse?._id;
     if (!wrhsId) return undefined;
 
-    return state.warehousesDataMap?.[wrhsId];
+    return state.ordersDataMap?.[wrhsId];
   }
   function update(slot: IOrderTempSlot) {
     dispatch(updateSlotAction({ data: createOrderTempSlot(slot) }));
@@ -119,7 +123,7 @@ const useCartActions = () => {
     return !!state.offersMap?.[offerId]?.length;
   }
   function getWrsData(id: string) {
-    return state.warehousesDataMap?.[id];
+    return state.ordersDataMap?.[id];
   }
 
   function getSlotByVariationId(variationId?: string): GetCurrentSlotReturn {
@@ -153,7 +157,7 @@ export function collectSlotsByQuery(
 ): IOrderTempSlot[] {
   const slots: IOrderTempSlot[] = [];
   if (warehouseId) {
-    const wrs = st?.warehousesDataMap?.[warehouseId];
+    const wrs = st?.ordersDataMap?.[warehouseId];
     const tempIds = omitNotSelected ? wrs?.selectedIds : wrs?.slotKeys;
     if (wrs?.slotKeys?.length) {
       for (const key of tempIds) {
@@ -167,7 +171,7 @@ export function collectSlotsByQuery(
   Object.values(st.slotsMap).forEach(slot => {
     const wrsId = slot?.warehouse?._id;
     if (!wrsId) return false;
-    const wrs = st?.warehousesDataMap?.[wrsId];
+    const wrs = st?.ordersDataMap?.[wrsId];
     const tempIds = omitNotSelected ? wrs?.selectedIds : wrs?.slotKeys;
     if (!!slot?.tempId && tempIds?.includes(slot?.tempId)) {
       slots.push(slot);
@@ -188,7 +192,7 @@ export const useCartService = (): CartService => {
     const warehousesSlotsMap: Record<string, IOrderTempSlot[]> = {};
     const warehousesSelectedSlotsMap: Record<string, IOrderTempSlot[]> = {};
     const warehousesSummariesMap: Record<string, OrderSummary> = {};
-    const wrhsIds = Object.entries(state.warehousesDataMap);
+    const wrhsIds = Object.entries(state.ordersDataMap);
     let isCartEmpty = true;
     let hasSelectedSlots = false;
 
@@ -212,7 +216,7 @@ export const useCartService = (): CartService => {
       }
     }
 
-    for (const [wrhsId, _wrhs] of wrhsIds) {
+    for (const [wrhsId] of wrhsIds) {
       if (warehousesSelectedSlotsMap[wrhsId]?.length) {
         warehousesSummariesMap[wrhsId] = countOrderSummary({
           slots: warehousesSelectedSlotsMap[wrhsId],
@@ -230,12 +234,10 @@ export const useCartService = (): CartService => {
       isCartEmpty,
       hasSelectedSlots,
     };
-  }, [state.slotsMap, state.warehousesDataMap]);
+  }, [state.slotsMap, state.ordersDataMap]);
 
   const res = useMemo((): CartService & { wrsIds: string[] } => {
-    const wrsIds = Object.keys(state.warehousesDataMap).filter(
-      wrsId => state.warehousesDataMap?.[wrsId]?.selectedIds?.length
-    );
+    const wrsIds = Object.keys(state.ordersDataMap).filter(wrsId => state.ordersDataMap?.[wrsId]?.selectedIds?.length);
 
     return {
       ...countedCartData,
@@ -249,7 +251,7 @@ export const useCartService = (): CartService => {
       },
       clearFormState: () => dispatch(setFormStateAction(undefined)),
     };
-  }, [actions, countedCartData, dispatch, state.warehousesDataMap]);
+  }, [actions, countedCartData, dispatch, state.ordersDataMap]);
 
   return res;
 };

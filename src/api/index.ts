@@ -1,7 +1,7 @@
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { FilterReturnDataType } from '../components/Filter/AppFilter';
 import { OnlyUUID, UUID } from '../redux/app-redux.types';
-import { AppDate, ArrayOfUUID, Values } from '../types/utils.types';
+import { AppDate, ArrayOfUUID, Keys, PartialRecord, Values } from '../types/utils.types';
 
 export * from './client.api';
 export { default as TransactionsApi } from './transactions.api';
@@ -58,7 +58,7 @@ export enum AppQueryKey {
   filterParams = 'filterParams',
 }
 
-export enum BaseQueryKeyEnum {
+export enum RefQueryKeyEnum {
   owner = 'owner',
   parent = 'parent',
   product = 'product',
@@ -70,21 +70,65 @@ export enum BaseQueryKeyEnum {
   order = 'order',
   slot = 'slot',
   category = 'category',
+  property = 'property',
   payment = 'payment',
   invoice = 'invoice',
   shipment = 'shipment',
-  service = 'service',
+  tag = 'tag',
   offer = 'offer',
-  discount = 'discount',
-  role = 'role',
+  brand = 'brand',
+  cart = 'cart',
 }
-export type BaseQueryKeyType = Values<typeof BaseQueryKeyEnum>;
-export type IdQueryKeyType = `${BaseQueryKeyType}Id`;
-export type IdsQueryKeyType = `${BaseQueryKeyType}Ids`;
+export enum IdQueryKeyEnum {
+  ownerId = 'ownerId',
+  parentId = 'parentId',
+  productId = 'productId',
+  inventoryId = 'inventoryId',
+  warehouseId = 'warehouseId',
+  variationId = 'variationId',
+  listId = 'listId',
+  priceId = 'priceId',
+  orderId = 'orderId',
+  slotId = 'slotId',
+  categoryId = 'categoryId',
+  propertyId = 'propertyId',
+  paymentId = 'paymentId',
+  invoiceId = 'invoiceId',
+  shipmentId = 'shipmentId',
+  tagId = 'tagId',
+  offerId = 'offerId',
+  brandId = 'brandId',
+  cartId = 'cartId',
+}
+export enum IdsQueryKeyEnum {
+  ownersIds = 'ownersIds',
+  parentsIds = 'parentsIds',
+  productsIds = 'productsIds',
+  warehousesIds = 'warehousesIds',
+  variationsIds = 'variationsIds',
+  inventoriesIds = 'inventoriesIds',
+  listsIds = 'listsIds',
+  pricesIds = 'pricesIds',
+  ordersIds = 'ordersIds',
+  slotsIds = 'slotsIds',
+  propertiesIds = 'propertiesIds',
+  brandsIds = 'brandsIds',
+  categoriesIds = 'categoriesIds',
+  paymentsIds = 'paymentsIds',
+  invoicesIds = 'invoicesIds',
+  offersIds = 'offersIds',
+  tagsIds = 'tagsIds',
+}
 
-export type RefQueries = { [key in BaseQueryKeyType]?: OnlyUUID };
-export type IdQueries = { [key in IdQueryKeyType]?: UUID };
-export type IdsQueries = { [key in IdsQueryKeyType]?: ArrayOfUUID };
+export type BaseQueryKeyType = Values<typeof RefQueryKeyEnum>;
+
+export type IdQueryKeyType = Keys<typeof IdQueryKeyEnum>;
+
+export type IdsQueryKeyType = Keys<typeof IdsQueryKeyEnum>;
+
+export type RefQueries = PartialRecord<BaseQueryKeyType, OnlyUUID>;
+export type IdQueries = PartialRecord<IdQueryKeyType, UUID>;
+export type IdsQueries = PartialRecord<IdsQueryKeyType, ArrayOfUUID>;
 
 export interface AppQueries<Type = any> extends Record<string, any>, RefQueries, IdQueries, IdsQueries {
   type?: Type;
@@ -127,47 +171,12 @@ export interface AppQueryParams<Type = any> extends AppQueries<Type>, Pagination
   langKey?: string;
 
   filterParams?: Partial<FilterReturnDataType>;
-
-  // group?: OnlyUUID;
-  // manager?: OnlyUUID;
-  // customer?: OnlyUUID;
-  // owner?: OnlyUUID;
-  // parent?: OnlyUUID;
-  // offer?: OnlyUUID;
-  // inventory?: OnlyUUID;
-  // warehouse?: OnlyUUID;
-  // variation?: OnlyUUID;
-  // list?: OnlyUUID;
-  // price?: OnlyUUID;
-  // order?: OnlyUUID;
-  // slot?: OnlyUUID;
-  // category?: OnlyUUID;
-  // payment?: OnlyUUID;
-  // invoice?: OnlyUUID;
-  // shipment?: OnlyUUID;
-  // service?: OnlyUUID;
-
-  // ownerId?: UUID;
-  // parentId?: UUID;
-  // productId?: UUID;
-  // inventoryId?: UUID;
-  // warehouseId?: UUID;
-  // variationId?: UUID;
-  // listId?: UUID;
-  // priceId?: UUID;
-  // orderId?: UUID;
-  // slotId?: UUID;
-  // categoryId?: UUID;
-  // paymentId?: UUID;
-  // invoiceId?: UUID;
-  // shipmentId?: UUID;
-  // serviceId?: UUID;
-  // offerId?: UUID;
 }
 
 export type SortOrderType = 'desc' | 'asc' | 'descending' | 'ascending' | 'DESC' | 'ASC';
 
-export interface ISortParams<DataPath = any> {
+export interface ISortParams<DataKey = any, DataPath = any> {
   sortOrder?: SortOrderType;
   dataPath?: DataPath | string;
+  dataKey?: DataPath | string;
 }
