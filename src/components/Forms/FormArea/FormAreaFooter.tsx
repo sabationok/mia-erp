@@ -34,7 +34,7 @@ const FormAreaFooter: React.FC<FormAreaFooterProps & React.HTMLAttributes<HTMLDi
         </ExtraFooter>
       )}
 
-      <FlexBox fillWidth gap={8} fxDirection={'row'} justifyContent={'flex-end'} padding={'8px 0'}>
+      <FlexBox fillWidth gap={8} fxDirection={'row'} justifyContent={'flex-end'} padding={'8px'}>
         {(hasOnReset || onResetPress) && (
           <ButtonIcon
             form={formId}
@@ -90,7 +90,7 @@ const Footer = styled.footer`
   //border-right: 1px solid ${({ theme }) => theme.modalBorderColor};
   color: ${({ theme }) => theme.fontColorHeader};
   fill: ${({ theme }) => theme.fillColorHeader};
-  background-color: ${({ theme }) => theme.modalBackgroundColor};
+  //background-color: ${({ theme }) => theme.modalBackgroundColor};
 `;
 
 const ExtraFooter = styled(FlexBox)`

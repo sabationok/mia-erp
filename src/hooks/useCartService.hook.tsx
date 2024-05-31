@@ -163,10 +163,10 @@ const useCartActions = () => {
         },
       };
     }
-    static getCartById(id: actions.CartId): actions.CartOrdersGroup | undefined {
-      return state.dataMap?.[id];
+    static getCartById(id?: actions.CartId): actions.CartOrdersGroup | undefined {
+      return state.dataMap?.[id || CART_DEFAULT_ID];
     }
-    static getCurrentCart(id: actions.CartId) {
+    static getCurrentCart(id?: actions.CartId) {
       const cart = this.getCartById(id);
 
       return cart ? this._addCartMethods(cart) : cart;

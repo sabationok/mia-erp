@@ -29,7 +29,7 @@ export type VariationId = string;
 export type CartSlotId = `${typeof CART_ID_PREFIX}_${CartId}_${SlotId}`;
 export type CartOrderId = `${typeof CART_ID_PREFIX}_${CartId}_${OrderId}`;
 
-export type CartOrderSummary = OrderSummary | OrdersGroupEntity['summary'];
+export type CartOrderSummary = OrderSummary;
 
 type SliceMap<RefKey extends string, InverseKey extends string, DataType, Extra = any> = {
   dataMap: Record<RefKey, DataType>;
@@ -111,9 +111,9 @@ const InitCart = (customer?: ICustomer, st?: CartState, tempId?: CartId): CartOr
     summary: {
       slotsCount: 0,
       offersCount: 0,
-      ordersAmount: '0',
+      brutto: '0',
       ordersCount: 0,
-      forPay: '0',
+      netto: '0',
       deliveriesCount: 0,
       deliveryPrice: '0',
       // cashback: { amount: '0', percentage: '0' },
@@ -147,9 +147,9 @@ const InitCartOrder = (cartId: CartId, warehouse?: WarehouseEntity, st?: CartSta
     summary: {
       slotsCount: 0,
       offersCount: 0,
-      ordersAmount: '0',
+      brutto: '0',
       ordersCount: 0,
-      forPay: '0',
+      netto: '0',
       deliveriesCount: 0,
       deliveryPrice: '0',
       // cashback: { amount: '0', percentage: '0' },

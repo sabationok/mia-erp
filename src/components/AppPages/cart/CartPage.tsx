@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import { takeFullGridArea } from '../pagesStyles';
 import { BaseAppPageProps } from '../index';
@@ -18,6 +18,9 @@ import { OverlayStack } from '../../../Providers/Overlay/OverlayStack';
 import SelectOfferModal from './SelectOfferModal';
 import OrderSlotOverview from './OrderSlotOverview';
 import { useMediaQuery } from 'react-responsive';
+import { Text } from '../../atoms/Text';
+import { t } from '../../../lang';
+import { toPrice } from '../../../utils/numbers';
 
 interface Props extends BaseAppPageProps {}
 
@@ -32,6 +35,7 @@ export default function CartPage({ path }: Props) {
     if (params.cartId) {
       cart.actions.setCartId(params.cartId);
     }
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -102,70 +106,115 @@ const RightSide = styled(FlexBox)<{ isVisible?: boolean }>`
 `;
 
 function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
+  const cartId = useAppQuery().query.cartId;
   const cartState = useCartSelector();
-  const cart = useCart();
+  const cartSrv = useCart();
   const modalSrv = useModalService();
   const router = useAppRouter();
+  const theme = useTheme();
+  const cart = cartSrv.actions.getCurrentCart(cartId);
 
   const renderOrders = useMemo(() => {
-    return Object.values(cartState.orders.dataMap)
-      .filter(el => el.slotsIds?.length)
-      .map((order, index) => {
-        const wrhsId = order.tempId;
-        if (!wrhsId) {
-          return null;
-        }
-        const slots = cart.ordersSlotsMap?.[wrhsId];
+    const ordersIds = cart?.ordersIds;
 
-        return (
-          <AccordionFormArea key={wrhsId ?? index} label={order.warehouse?.label} hideFooter>
-            <FlexBox minHeight={'300px'}>
-              <TableList
-                tableData={slots}
-                hasSearch={false}
-                hasFilter={false}
-                tableTitles={tempOrderSlotTableColumns}
-                actionsCreator={(ctx): ITableAction[] => {
-                  const currentId = ctx.selectedRow?.tempId;
-                  return [
-                    {
-                      icon: 'delete',
-                      disabled: !currentId,
-                      onClick: () => {
-                        currentId && cart.actions.remove(currentId);
-                      },
+    return ordersIds?.map((orderId, index) => {
+      if (!orderId) {
+        return null;
+      }
+      const order = cartSrv.actions.getOrderById(orderId);
+      const slots = cartSrv.ordersSlotsMap?.[orderId];
+
+      return (
+        <AccordionFormArea key={orderId ?? index} label={order?.warehouse?.label} hideFooter>
+          <FlexBox minHeight={'300px'}>
+            <TableList
+              tableData={slots}
+              hasSearch={false}
+              hasFilter={false}
+              tableTitles={tempOrderSlotTableColumns}
+              actionsCreator={(ctx): ITableAction[] => {
+                const currentId = ctx.selectedRow?.tempId;
+                return [
+                  {
+                    icon: 'delete',
+                    disabled: !currentId,
+                    onClick: () => {
+                      currentId && cartSrv.actions.remove(currentId);
                     },
-                    {
-                      icon: 'edit',
-                      disabled: !currentId,
-                      onClick: () => {
-                        currentId &&
-                          router.push({
-                            query: {
-                              slotId: currentId,
-                            },
-                          });
-                      },
-                    },
-                    {
-                      icon: 'plus',
-                      onClick: () => {
-                        modalSrv.create(SelectOfferModal, {
-                          warehouse: order.warehouse,
+                  },
+                  {
+                    icon: 'edit',
+                    disabled: !currentId,
+                    onClick: () => {
+                      currentId &&
+                        router.push({
+                          query: {
+                            slotId: currentId,
+                          },
                         });
-                      },
                     },
-                  ];
-                }}
-              />
-            </FlexBox>
-          </AccordionFormArea>
-        );
-      });
-  }, [cart.actions, cart.ordersSlotsMap, cartState.orders.dataMap, modalSrv, router]);
+                  },
+                  {
+                    icon: 'plus',
+                    disabled: !order?.warehouse,
+                    onClick: () => {
+                      order?.warehouse &&
+                        modalSrv.create(SelectOfferModal, {
+                          warehouse: order?.warehouse,
+                        });
+                    },
+                  },
+                ];
+              }}
+            />
+          </FlexBox>
+        </AccordionFormArea>
+      );
+    });
+  }, [cart?.ordersIds, cartSrv.actions, cartSrv.ordersSlotsMap, modalSrv, router]);
 
   return (
     <FlexBox overflow={'auto'} fillHeight>
+      <AccordionFormArea label={`Cart: ${cart?.tempId}`} expandable={true} isOpen={true} hideFooter={true}>
+        <FlexBox padding={'8px 12px'} flexWrap={'wrap'} fxDirection={'row'} gap={10}>
+          {(['cashback', 'bonus', 'discount'] as const).map(dataKey => {
+            return (
+              <FlexBox
+                key={dataKey}
+                background={theme.backgroundColorSecondary}
+                borderRadius={'4px'}
+                justifyContent={'space-between'}
+              >
+                <Text $weight={400} $size={12} $padding={'4px 6px'} $textTransform={'capitalize'}>
+                  {t(dataKey)}
+                </Text>
+                <Text $weight={600} $size={13} $padding={'4px 6px'} $align={'end'}>
+                  {toPrice(cart?.summary?.[dataKey]?.amount)}
+                </Text>
+              </FlexBox>
+            );
+          })}
+
+          {(['brutto', 'netto'] as const).map(dataKey => {
+            return (
+              <FlexBox
+                key={dataKey}
+                background={theme.backgroundColorSecondary}
+                borderRadius={'4px'}
+                justifyContent={'space-between'}
+              >
+                <Text $weight={400} $size={12} $padding={'4px 6px'} $textTransform={'capitalize'}>
+                  {t(dataKey)}
+                </Text>
+                <Text $weight={600} $size={13} $padding={'4px 6px'} $align={'end'}>
+                  {toPrice(cart?.summary?.[dataKey])}
+                </Text>
+              </FlexBox>
+            );
+          })}
+        </FlexBox>
+      </AccordionFormArea>
+
       <FlexBox flex={1}>{renderOrders}</FlexBox>
 
       <FlexBox

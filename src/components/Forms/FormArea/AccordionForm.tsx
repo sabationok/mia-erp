@@ -115,8 +115,8 @@ export const AccordionFormArea = ({
 
       <ExpandableBox disabled={disabled} flex={1} isActive={_isOpen} maxHeight={maxHeight}>
         {_isOpen ? (
-          <FlexBox padding={'8px'} maxWidth={'100%'} overflow={'hidden'}>
-            <FlexBox flex={1} overflow={'hidden'} padding={'0 0 8px'}>
+          <FlexBox maxWidth={'100%'} overflow={'hidden'}>
+            <FlexBox flex={1} overflow={'hidden'} padding={'8px'}>
               {children}
             </FlexBox>
 
@@ -151,7 +151,8 @@ const Header = styled(FlexBox)<{ isSticky?: boolean }>`
   ${p => (p.isSticky ?? true ? StickyCss : '')}
   min-height: 36px;
 
-  background-color: ${p => p.theme.modalBackgroundColor};
+  backdrop-filter: blur(3px);
+  //background-color: ${p => p.theme.modalBackgroundColor};
 `;
 const ExpandableBox = styled(FlexFieldSet)`
   overflow: hidden;

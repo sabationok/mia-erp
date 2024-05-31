@@ -14,11 +14,12 @@ import { FooterSummary } from './FooterSummary';
 import { OverlayFooter } from '../../atoms';
 import { SelectVariationModal } from './SelectVariationModal';
 import { GetAllOffersQuery } from '../../../api';
+import { CartSlotId } from '../../../redux/cart/cart.slice';
 
 export default function SelectOfferModal({
   warehouse,
   slotId,
-}: { warehouse?: WarehouseEntity; slotId?: string } & CreatedModal) {
+}: { warehouse?: WarehouseEntity; slotId?: CartSlotId } & CreatedModal) {
   const cart = useCart();
   const service = useAppServiceProvider().get(AppModuleName.offers);
   const { getAll } = service;
@@ -32,7 +33,9 @@ export default function SelectOfferModal({
   const modalSrv = useModalService();
 
   const { tableConfig, isLoading, searchParams } = useOffersTableSettings({
-    searchState: { search: warehouse?.label ?? '', param: { dataPath: 'warehouse.label', label: 'Склад' } },
+    searchState: warehouse?.label
+      ? { search: warehouse?.label ?? '', param: { dataPath: 'warehouse.label', label: 'Склад' } }
+      : undefined,
   });
 
   const counted = useMemo(() => {
@@ -42,17 +45,11 @@ export default function SelectOfferModal({
   useEffect(() => {
     const params: GetAllOffersQuery = setValueByPath(searchParams?.param?.dataPath, searchParams?.search);
 
-    console.log(params);
-
     if (warehouse) {
       getAll({
         data: {
           refresh: true,
-          params: {
-            warehouse: {
-              ids: [warehouse._id],
-            },
-          },
+          params: params,
         },
       });
     }

@@ -132,13 +132,12 @@ export interface OrderSummary extends HasCurrencyCode {
 
   bonus?: AmountAndPercentage;
 
-  ordersAmount?: string;
+  brutto?: string;
+  netto?: string;
 
   ordersCount?: number;
   offersCount?: number;
   slotsCount?: number;
-
-  forPay?: string;
 
   deliveriesCount?: number;
   deliveryPrice?: number | string;

@@ -30,8 +30,8 @@ export function countOrderSummary({
   const deliveriesCount = warehousesCount ?? warehouses?.length ?? 0;
 
   let Total: InitTotals = {
-    Brutto: new Decimal(defValues?.ordersAmount ?? 0),
-    Netto: new Decimal(defValues?.forPay ?? 0),
+    Brutto: new Decimal(defValues?.brutto ?? 0),
+    Netto: new Decimal(defValues?.netto ?? 0),
     Bonus: new Decimal(defValues?.bonus?.amount ?? 0),
     Discount: new Decimal(defValues?.discount?.amount ?? 0),
     Cashback: new Decimal(defValues?.cashback?.amount ?? 0),
@@ -52,8 +52,8 @@ export function countOrderSummary({
   } else if (warehouses) {
     Total = warehouses.reduce((prev, next) => {
       return {
-        Brutto: prev.Brutto.plus(next?.ordersAmount ?? 0),
-        Netto: prev.Netto.plus(next?.forPay ?? 0),
+        Brutto: prev.Brutto.plus(next?.brutto ?? 0),
+        Netto: prev.Netto.plus(next?.netto ?? 0),
         Bonus: prev.Bonus.plus(next?.bonus?.amount ?? 0),
         Discount: prev.Discount.plus(next?.discount?.amount ?? 0),
         Cashback: prev.Cashback.plus(next?.cashback?.amount ?? 0),
@@ -61,7 +61,7 @@ export function countOrderSummary({
     }, Total);
   }
   const res: OrderSummary = {
-    ordersAmount: Total.Brutto.toFixed(2),
+    brutto: Total.Brutto.toFixed(2),
 
     currency: currency,
 
@@ -74,7 +74,7 @@ export function countOrderSummary({
     bonus: {
       amount: Total.Bonus.toFixed(2),
     },
-    forPay: (Total?.deliveriesCost ? Total.Netto.plus(Total.deliveriesCost) : Total.Netto).toFixed(2),
+    netto: (Total?.deliveriesCost ? Total.Netto.plus(Total.deliveriesCost) : Total.Netto).toFixed(2),
   };
   if (deliveriesCount) {
     res.deliveriesCount = deliveriesCount;

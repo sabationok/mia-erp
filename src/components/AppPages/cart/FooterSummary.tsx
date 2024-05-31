@@ -84,7 +84,7 @@ export const FooterSummary = ({
         );
       })}
 
-      {(['netto', 'brutto'] as const).map(dataKey => {
+      {(['brutto', 'netto'] as const).map(dataKey => {
         return (
           <FlexBox
             key={dataKey}
