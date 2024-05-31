@@ -19,18 +19,12 @@ import {
   CreateOrderTempSlotArgs,
   ObjectKeys,
 } from '../utils';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import _ from 'lodash';
 import { setFormStateAction } from '../redux/cart/cart.actions';
 import { ICustomer } from '../types/customers.types';
 import { useAppParams } from './index';
 
-export interface GetCurrentSlotReturn extends Partial<IOrderTempSlot> {
-  setQty: (q: number) => void;
-  isAdded: () => boolean;
-  isChecked: () => boolean;
-  remove: () => void;
-}
 export interface CartService {
   actions: UseCartActions;
   setFormState: (info: ICreateOrderInfoFormState) => void;
@@ -44,7 +38,16 @@ export interface CartService {
   hasSelectedSlots: boolean;
 }
 type UseCartActions = ReturnType<typeof useCartActions>;
-
+export interface GetCurrentSlotReturn extends Partial<IOrderTempSlot> {
+  setQty: (q: number) => void;
+  isAdded: () => boolean;
+  isChecked: () => boolean;
+  remove: () => void;
+}
+export interface GetCurrentCartReturn extends Partial<actions.CartOrdersGroup> {
+  remove: () => void;
+  clear: () => void;
+}
 const useCartActions = () => {
   const dispatch = useAppDispatch();
   const state = useCartSelector();
@@ -88,7 +91,7 @@ const useCartActions = () => {
       };
     }
     static getSlot(tempId?: actions.CartSlotId): GetCurrentSlotReturn {
-      const slot = tempId ? state.slots.dataMap?.[tempId] : undefined;
+      const slot = tempId ? state.slots?.dataMap?.[tempId] : undefined;
 
       return this._addSlotMethods(slot);
     }
@@ -124,12 +127,6 @@ const useCartActions = () => {
       return wrhs?.slotsIds?.includes(tempId);
     }
 
-    static getCartById(id: actions.CartId): actions.CartOrdersGroup | undefined {
-      return state.dataMap?.[id];
-    }
-    static getOrderById(id: actions.CartOrderId): actions.CartOrder | undefined {
-      return state.orders.dataMap?.[id];
-    }
     static getOrderBySlot(slot?: IOrderTempSlot) {
       const orderId = slot?.cartOrderId
         ? slot?.cartOrderId
@@ -151,19 +148,36 @@ const useCartActions = () => {
       dispatch(removeSlotAction({ tempId }));
     }
     static isOfferInCart({ offerId, cartId }: { cartId: actions.CartId; offerId: string }) {
-      return !!state.dataMap?.[cartId]?.offersIds?.length;
+      return !!state.dataMap?.[cartId]?.offersIdsMap?.[offerId]?.length;
     }
-    // getWrsDataBy(id: string) {
-    //   const cartId=state.keysMap?.[id]
-    //
-    //   return state.ordersDataMap?.[id];
-    // }
 
-    static getSlotByVariationId(variationId?: string, cartId?: actions.CartId): GetCurrentSlotReturn | undefined {
-      if (variationId && cartId) {
-        const cart = state.dataMap?.[cartId];
+    static getOrderById(id: actions.CartOrderId): actions.CartOrder | undefined {
+      return state.orders.dataMap?.[id];
+    }
+    private static _addCartMethods(cart: actions.CartOrdersGroup | undefined): GetCurrentCartReturn {
+      return {
+        ...cart,
+        remove: () => {},
+        clear: () => {
+          cart?.tempId && this.clearCart(cart?.tempId);
+        },
+      };
+    }
+    static getCartById(id: actions.CartId): actions.CartOrdersGroup | undefined {
+      return state.dataMap?.[id];
+    }
+    static getCurrentCart(id: actions.CartId) {
+      const cart = this.getCartById(id);
 
-        let slot: IOrderTempSlot | null = null;
+      return cart ? this._addCartMethods(cart) : cart;
+    }
+
+    static getSlotByVariationId(variationId?: string, _cartId?: actions.CartId): GetCurrentSlotReturn | undefined {
+      if (variationId) {
+        // const cart = state.dataMap?.[cartId];
+
+        let slotId = state.slots?.variationsIdMap?.[variationId];
+        const slot = this.getSlot(slotId);
         if (slot) {
           return this._addSlotMethods(slot);
         }
@@ -220,8 +234,6 @@ export const useCartService = (): CartService => {
     const cart = actions.getCartById(cartId);
 
     const ordersIds = cart?.ordersIds;
-
-    console.log('countedCartData', { ordersIds });
 
     let isCartEmpty = true;
     let hasSelectedSlots = false;
@@ -287,6 +299,10 @@ export const useCartService = (): CartService => {
       clearFormState: () => dispatch(setFormStateAction(undefined)),
     };
   }, [actions, countedCartData, dispatch, state.orders.dataMap]);
+
+  useEffect(() => {
+    console.log('[ STATE ]', Object.entries(state));
+  }, [state]);
 
   return res;
 };

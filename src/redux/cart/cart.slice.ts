@@ -1,5 +1,5 @@
 import { IOrderTempSlot } from 'types/orders/order-slot.types';
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, nanoid } from '@reduxjs/toolkit';
 import { Action } from '../store.store';
 import { clearFormStateAction, setFormStateAction } from './cart.actions';
 import { updateIdsArray } from '../../utils';
@@ -18,86 +18,18 @@ import { WarehouseEntity } from '../../types/warehousing/warehouses.types';
 export const CART_ID_PREFIX = 'cart';
 export const CART_DEFAULT_ID = 'default';
 
-export type OrderId = string;
-export type SlotId = string;
-export type CartId = string | typeof CART_DEFAULT_ID;
-type CustomerId = string;
-type OfferId = string;
+type OrderId = string;
+type SlotId = string;
+export type CustomerId = string;
+export type CartId = CustomerId | typeof CART_DEFAULT_ID;
+export type WarehouseId = string;
+export type OfferId = string;
+export type VariationId = string;
 
 export type CartSlotId = `${typeof CART_ID_PREFIX}_${CartId}_${SlotId}`;
 export type CartOrderId = `${typeof CART_ID_PREFIX}_${CartId}_${OrderId}`;
 
 export type CartOrderSummary = OrderSummary | OrdersGroupEntity['summary'];
-export interface CartOrdersGroup extends Omit<OrdersGroupEntity, 'summary'> {
-  tempId: CartId;
-
-  information?: ICreateOrderInfoFormState;
-  summary: CartOrderSummary;
-
-  ordersIds: CartOrderId[];
-  slotsIds: CartSlotId[];
-
-  offersIds: OfferId[];
-}
-export interface CartOrder extends Omit<OrderEntity, 'summary'> {
-  tempId: CartOrderId;
-  cartId: CartId;
-
-  ordersIds: CartOrderId[];
-
-  slotsIds: CartSlotId[];
-  selectedIds: CartSlotId[];
-
-  isSelected?: boolean;
-
-  warehouse?: WarehouseEntity;
-  summary: CartOrderSummary;
-  orders?: CartOrder[];
-}
-
-const InitCart = (customer?: ICustomer): CartOrdersGroup => {
-  return {
-    _id: '',
-    tempId: customer?._id || CART_DEFAULT_ID,
-    slotsIds: [],
-    ordersIds: [],
-    offersIds: [],
-    summary: {
-      slotsCount: 0,
-      offersCount: 0,
-      ordersAmount: '0',
-      ordersCount: 0,
-      forPay: '0',
-      deliveriesCount: 0,
-      deliveryPrice: '0',
-      // cashback: { amount: '0', percentage: '0' },
-    },
-    information: {
-      customer,
-    },
-  };
-};
-const InitCartOrder = (cartId: CartId, warehouse: WarehouseEntity): CartOrder => {
-  return {
-    _id: '',
-    cartId,
-    tempId: `${CART_ID_PREFIX}_${cartId}_${warehouse._id}`,
-    slotsIds: [],
-    ordersIds: [],
-    selectedIds: [],
-    // offersIds: [],
-    summary: {
-      slotsCount: 0,
-      offersCount: 0,
-      ordersAmount: '0',
-      ordersCount: 0,
-      forPay: '0',
-      deliveriesCount: 0,
-      deliveryPrice: '0',
-      // cashback: { amount: '0', percentage: '0' },
-    },
-  };
-};
 
 type SliceMap<RefKey extends string, InverseKey extends string, DataType, Extra = any> = {
   dataMap: Record<RefKey, DataType>;
@@ -106,12 +38,16 @@ type SliceMap<RefKey extends string, InverseKey extends string, DataType, Extra 
   extra?: Extra;
 };
 export interface CartStateMap extends SliceMap<CartId, CustomerId, CartOrdersGroup> {}
+export interface OrdersStateMap extends SliceMap<CartOrderId, CartOrderId, CartOrder> {}
+export interface SlotsStateMap extends SliceMap<CartSlotId, CartOrderId, IOrderTempSlot> {
+  variationsIdMap: Record<VariationId, CartSlotId>;
+}
 export interface CartState extends CartStateMap {
   currentId?: CartId;
 
   carts: CartStateMap;
-  orders: SliceMap<CartOrderId, CartOrderId, CartOrder>;
-  slots: SliceMap<CartSlotId, CartOrderId, IOrderTempSlot>;
+  orders: OrdersStateMap;
+  slots: SlotsStateMap;
 
   recommends: Record<string, SetRecommendationPayload & { timestamp?: number }>;
 }
@@ -127,6 +63,120 @@ export interface SetRecommendationPayload extends HasSku, HasLabel, HasBaseCmsCo
       properties?: { _id?: string }[];
     };
 }
+
+export interface CartOrdersGroup extends Omit<OrdersGroupEntity, 'summary' | 'orders'> {
+  tempId: CartId;
+
+  information?: ICreateOrderInfoFormState;
+  summary: CartOrderSummary;
+
+  warehousesIds: WarehouseId[];
+  ordersIds: CartOrderId[];
+  slotsIds: CartSlotId[];
+
+  offersIdsMap: Record<OfferId, CartSlotId[]>;
+
+  orders: OrdersStateMap;
+}
+export interface CartOrder extends Omit<OrderEntity, 'summary' | 'slots'> {
+  tempId: CartOrderId;
+  cartId: CartId;
+
+  ordersIds: CartOrderId[];
+
+  slotsIds: CartSlotId[];
+  selectedIds: CartSlotId[];
+
+  isSelected?: boolean;
+
+  warehouse?: WarehouseEntity;
+  summary: CartOrderSummary;
+  orders?: CartOrder[];
+  slots: SlotsStateMap;
+}
+
+const InitCart = (customer?: ICustomer, st?: CartState, tempId?: CartId): CartOrdersGroup => {
+  const newCart: CartOrdersGroup = {
+    _id: '',
+    tempId: tempId ?? (customer?._id || CART_DEFAULT_ID),
+    slotsIds: [],
+    ordersIds: [],
+    offersIdsMap: {},
+    orders: {
+      dataMap: {},
+      keysMap: {},
+      ids: [],
+    },
+    warehousesIds: [],
+    summary: {
+      slotsCount: 0,
+      offersCount: 0,
+      ordersAmount: '0',
+      ordersCount: 0,
+      forPay: '0',
+      deliveriesCount: 0,
+      deliveryPrice: '0',
+      // cashback: { amount: '0', percentage: '0' },
+    },
+    information: {
+      customer,
+    },
+  };
+  if (st) {
+    st.dataMap[newCart.tempId] = newCart;
+  }
+
+  return newCart;
+};
+
+const InitCartOrder = (cartId: CartId, warehouse?: WarehouseEntity, st?: CartState): CartOrder => {
+  const order: CartOrder = {
+    _id: '',
+    cartId,
+    tempId: `${CART_ID_PREFIX}_${cartId}_${warehouse?._id || nanoid(12)}`,
+    slotsIds: [],
+    ordersIds: [],
+    selectedIds: [],
+    slots: {
+      dataMap: {},
+      keysMap: {},
+      ids: [],
+      variationsIdMap: {},
+    },
+    // offersIds: [],
+    summary: {
+      slotsCount: 0,
+      offersCount: 0,
+      ordersAmount: '0',
+      ordersCount: 0,
+      forPay: '0',
+      deliveriesCount: 0,
+      deliveryPrice: '0',
+      // cashback: { amount: '0', percentage: '0' },
+    },
+  };
+
+  if (st) {
+    st.orders.dataMap[order.tempId] = order;
+    const cart = st.dataMap[cartId];
+
+    if (cart) {
+      cart.ordersIds = updateIdsArray({
+        id: order.tempId,
+        arr: cart?.ordersIds,
+      });
+      if (warehouse?._id) {
+        cart.warehousesIds = updateIdsArray({
+          id: warehouse?._id,
+          arr: cart?.warehousesIds,
+        });
+      }
+      st.dataMap[cartId] = cart;
+    }
+  }
+
+  return order;
+};
 
 const initialCartState: CartState = {
   currentId: CART_DEFAULT_ID,
@@ -156,6 +206,7 @@ const initialCartState: CartState = {
     dataMap: {},
     keysMap: {},
     ids: [],
+    variationsIdMap: {},
   },
 };
 
@@ -357,7 +408,7 @@ export const {
 const UpdateCartSlotMutation = (
   st: CartState,
   item: IOrderTempSlot,
-  options?: { update?: boolean }
+  options?: { update?: boolean; cartId?: CartId; customer?: ICustomer }
 ): { orderId?: string; recount?: boolean } => {
   const { tempId: slotId } = item;
   if (!slotId) {
@@ -365,7 +416,9 @@ const UpdateCartSlotMutation = (
   }
   let tempId = slotId;
 
-  const currentCartId = st.currentId;
+  let currentCartId = item.cartId || st.currentId;
+
+  const Cart = (currentCartId ? st.dataMap[currentCartId] : undefined) || InitCart(options?.customer);
 
   if (currentCartId) {
     const [prefix] = tempId.split('_');
@@ -381,37 +434,47 @@ const UpdateCartSlotMutation = (
     //   return {};
     // }
   } else {
-    console.error('[Cart error]'.toUpperCase(), { currentCartId, tempId, slot: item });
-    return {};
+    currentCartId = Cart.tempId;
+    console.warn('[Cart warning]'.toUpperCase(), { currentCartId, tempId, slot: item });
   }
 
   try {
-    const exist = st.slots.dataMap?.[tempId];
+    const existSlot = st.slots.dataMap?.[tempId];
 
-    st.slots.dataMap[tempId] = options?.update ? { ...exist, ...item } : item;
+    st.slots.dataMap[tempId] = options?.update && existSlot ? { ...existSlot, ...item } : item;
 
-    const current = st.slots.dataMap[tempId];
-    if (current.offer?._id) {
-      st.dataMap[currentCartId].offersIds = updateIdsArray({
-        id: current.offer?._id,
-        arr: st.dataMap[currentCartId]?.offersIds,
+    const updatedSlot = st.slots.dataMap[tempId];
+
+    const offerId = updatedSlot.offer?._id;
+    if (offerId) {
+      st.dataMap[currentCartId].offersIdsMap[offerId] = updateIdsArray({
+        id: tempId,
+        arr: st.dataMap[currentCartId].offersIdsMap[offerId],
       });
     }
-
-    if (current.variation?._id) {
-      st.dataMap[currentCartId].offersIds = updateIdsArray({
-        id: current.variation?._id,
-        arr: st.dataMap[currentCartId]?.offersIds,
-      });
+    const variationId = updatedSlot.variation?._id;
+    if (variationId) {
+      st.slots.variationsIdMap[variationId] = tempId;
     }
 
-    if (current?.warehouse) {
-      const orderId: CartOrderId | undefined = currentCartId
-        ? `${CART_ID_PREFIX}_${currentCartId}_${current?.warehouse?._id}`
-        : undefined;
+    if (updatedSlot?.warehouse) {
+      const warehouseId = updatedSlot?.warehouse?._id;
+      let orderId = item.cartOrderId;
 
-      if (orderId) {
-        let orderData = st.orders.dataMap?.[orderId] || InitCartOrder(currentCartId, current?.warehouse);
+      const orderData =
+        (orderId ? st.orders.dataMap?.[orderId] : undefined) ||
+        InitCartOrder(currentCartId, updatedSlot?.warehouse, st);
+
+      Cart.warehousesIds = updateIdsArray({
+        id: warehouseId,
+        arr: Cart.warehousesIds,
+      });
+
+      if (orderData) {
+        if (!orderId) {
+          orderId = orderData.tempId;
+        }
+
         orderData.slotsIds = updateIdsArray({
           id: tempId,
           arr: orderData?.slotsIds,
@@ -420,13 +483,18 @@ const UpdateCartSlotMutation = (
         orderData.selectedIds = updateIdsArray({
           id: tempId,
           arr: orderData?.selectedIds,
-          remove: !current?.isSelected,
+          remove: !updatedSlot?.isSelected,
         });
 
         orderData.isSelected = orderData.slotsIds?.length === orderData.selectedIds?.length;
 
-        orderData.warehouse = { ...(orderData?.warehouse ?? {}), ...current?.warehouse };
+        orderData.warehouse = { ...(orderData?.warehouse ?? {}), ...updatedSlot?.warehouse };
 
+        st.slots.dataMap[tempId].cartId = currentCartId;
+        st.slots.dataMap[tempId].cartOrderId = orderId;
+        st.slots.dataMap[tempId] = orderId;
+
+        st.dataMap[currentCartId] = Cart;
         st.orders.dataMap[orderId] = orderData;
       }
     }
@@ -442,17 +510,20 @@ function RemoveCartSlotMutation(st: CartState, { tempId }: { tempId: CartSlotId 
   let cartId = slot?.cartId;
   const cart = cartId ? st.dataMap?.[cartId] : undefined;
 
-  // TODO переробити / додати варіації
   const offerId = slot?.offer?._id;
-  if (offerId && cart?.offersIds?.length) {
-    cart.offersIds = updateIdsArray({
+  if (offerId && cart?.offersIdsMap[offerId]?.length) {
+    cart.offersIdsMap[offerId] = updateIdsArray({
       id: tempId,
-      arr: cart?.offersIds,
+      arr: cart.offersIdsMap[offerId],
       remove: true,
     });
   }
+  const variationId = slot?.variation?._id;
+  if (variationId && st?.slots.variationsIdMap[variationId]) {
+    delete st?.slots.variationsIdMap[variationId];
+  }
 
-  let orderId = slot?.cartOrderId;
+  const orderId = slot?.cartOrderId;
   const order = orderId ? st.orders.dataMap?.[orderId] : undefined;
 
   if (order) {
@@ -461,11 +532,16 @@ function RemoveCartSlotMutation(st: CartState, { tempId }: { tempId: CartSlotId 
       arr: order.slotsIds,
       remove: true,
     });
+
+    if (!order.slotsIds) {
+    }
     order.selectedIds = updateIdsArray({
       id: tempId,
       arr: order.selectedIds,
       remove: true,
     });
+
+    st.orders.dataMap[order.tempId] = order;
   }
 }
 

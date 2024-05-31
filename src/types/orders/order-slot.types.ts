@@ -21,7 +21,7 @@ import { WarehouseEntity, WarehouseInventoryEntity } from '../warehousing/wareho
 import { IPriceBase, PriceEntity } from '../price-management/price-management.types';
 import { VariationEntity } from '../offers/variations.types';
 import { PriceDiscountRecord } from '../price-management/discounts';
-import { CartOrderId, CartSlotId } from '../../redux/cart/cart.slice';
+import { CartId, CartOrderId, CartSlotId } from '../../redux/cart/cart.slice';
 
 export enum TempSlotTypeEnum {
   Cart = 'Cart',
@@ -64,7 +64,7 @@ export interface IOrderTempSlotMeta extends HasType<TempSlotTypeEnum | string> {
   hasVariations?: boolean;
   hasInventories?: boolean;
 
-  cartId?: CartSlotId;
+  cartId?: CartId;
   cartOrderId?: CartOrderId;
 
   discounts?: PriceEntity['discounts'] | PriceDiscountRecord[];
