@@ -1,15 +1,15 @@
-import { OfferImageSlotEntity } from '../../../types/offers/offers.types';
-import ModalForm, { ModalFormProps } from '../../ModalForm';
+import { OfferImageSlotEntity } from '../../../../types/offers/offers.types';
+import ModalForm, { ModalFormProps } from '../../../ModalForm';
 import { ChangeEventHandler, useRef, useState } from 'react';
-import { FilterOption } from '../../atoms/TabSelector';
-import FlexBox from '../../atoms/FlexBox';
-import SvgIcon from '../../atoms/SvgIcon/SvgIcon';
-import InputLabel from '../../atoms/Inputs/InputLabel';
-import InputText from '../../atoms/Inputs/InputText';
-import ButtonsGroup from '../../atoms/ButtonsGroup';
+import { FilterOption } from '../../../atoms/TabSelector';
+import FlexBox from '../../../atoms/FlexBox';
+import SvgIcon from '../../../atoms/SvgIcon/SvgIcon';
+import InputLabel from '../../../atoms/Inputs/InputLabel';
+import InputText from '../../../atoms/Inputs/InputText';
+import ButtonsGroup from '../../../atoms/ButtonsGroup';
 import styled from 'styled-components';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
-import { ImageSetSrcType } from '../../../types/offers/offer-images.types';
+import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import { ImageSetSrcType } from '../../../../types/offers/offer-images.types';
 import { formAddImageSetTabs } from 'data';
 
 export interface FormAddImageSetData extends Partial<Omit<OfferImageSlotEntity, '_id' | 'createdAt' | 'updatedAt'>> {}

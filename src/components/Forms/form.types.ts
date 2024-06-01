@@ -17,7 +17,7 @@ export type { FormInviteUserProps } from './Auth/FormInviteUser';
 // sep OFFERS
 export type { CreateOfferModalProps } from '../Modals/CreateOfferModal';
 export type { EditOfferModalProps } from '../Modals/EditOfferModal';
-export type { FormCreatePropertyProps } from './offers/properties/FormCreateProperty';
+export type { OfferPropertyModalProps } from '../Modals/CreatePropertyModal';
 export type { FormCreateVariationProps } from './offers/variations/_FormCreateVariation';
 export type { CreateVariationModalProps } from '../Overlays/CreateVariationOverlay';
 // sep WAREHOUSING

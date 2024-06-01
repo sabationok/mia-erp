@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { AccordionForm } from '../../FormArea/AccordionForm';
 import styled from 'styled-components';
 import FlexBox from '../../../atoms/FlexBox';
-import { useProductsSelector } from '../../../../redux/selectors.store';
+import { useOffersSelector } from '../../../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import { OfferFormAreaProps } from '../types';
@@ -15,37 +15,31 @@ import { PropertyBaseEntity, PropertyEntity } from '../../../../types/offers/pro
 import OfferVariationPropertySelector from '../variations/OfferVariationPropertySelector';
 import { Text } from '../../../atoms/Text';
 import { useCurrentOffer } from '../../../../hooks';
+import { sortIds, updateIdsArray } from '../../../../utils';
 
 export interface OfferFormPropertiesAreaProps extends OfferFormAreaProps<ArrayOfUUID> {
   onSubmit?: AppSubmitHandler<string[]>;
   onSelect?: (id: string) => void;
   onChange?: (ids: string[]) => void;
   onSuccess?: (data: { data: OfferEntity }) => void;
-  update?: string;
 }
 
-const sortIds = (ids?: string[]): string[] => {
-  return [...(ids ?? [])]?.sort((a, b) => a.localeCompare(b));
-};
-
-export const OfferFormPropertiesArea = ({ onSubmit, onSuccess, disabled, offer }: OfferFormPropertiesAreaProps) => {
+export const OfferFormPropertiesArea = ({ onSuccess, disabled, offer }: OfferFormPropertiesAreaProps) => {
   const loaders = useOfferLoadersProvider();
-  const state = useProductsSelector();
-  const currentOffer = useCurrentOffer(offer);
-  const service = useAppServiceProvider()[ServiceName.offers];
-
-  const initIds = sortIds(currentOffer?.properties?.map(p => p._id));
-
+  const state = useOffersSelector();
+  const Offer = useCurrentOffer(offer);
+  const service = useAppServiceProvider().get(ServiceName.offers);
+  const initIds = sortIds(Offer?.properties?.map(p => p._id));
   const [selectedIds, setSelectedIds] = useState<string[]>(initIds);
   const [template, setTemplate] = useState<PropertyBaseEntity>();
 
   const handleSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
-    if (currentOffer) {
+    if (Offer) {
       service.updateById({
         data: {
           data: {
-            _id: currentOffer?._id,
+            _id: Offer?._id,
             data: { properties: selectedIds },
           },
         },
@@ -80,7 +74,12 @@ export const OfferFormPropertiesArea = ({ onSubmit, onSuccess, disabled, offer }
 
   const handleSelect = useCallback((_parentId?: string, valueId: string = '') => {
     setSelectedIds(prev => {
-      return prev.includes(valueId) ? prev.filter(el => el !== valueId) : [...prev, valueId];
+      // prev.includes(valueId) ? prev.filter(el => el !== valueId) : [...prev, valueId]
+      return updateIdsArray({
+        arr: prev,
+        id: valueId,
+        toggle: true,
+      });
     });
   }, []);
 
@@ -104,7 +103,7 @@ export const OfferFormPropertiesArea = ({ onSubmit, onSuccess, disabled, offer }
       onSubmit={handleSubmit}
       isLoading={loaders.isLoading?.properties}
       isOpen={false}
-      disabled={!currentOffer || disabled}
+      disabled={!Offer || disabled}
     >
       <PropertiesGroupSelect selected={template} onSelect={setTemplate} />
 

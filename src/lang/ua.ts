@@ -499,6 +499,8 @@ export const langUa = {
   'Cashback, %': 'Кешбек, %',
 
   Type: 'Тип',
+  Key: 'Ключ',
+  'Custom type': 'Кастомний тип',
   'Bonus balance': 'Бонусний баланс',
   'Value type': 'Тип значення',
   'Discount volume type': "Тип об'єму",

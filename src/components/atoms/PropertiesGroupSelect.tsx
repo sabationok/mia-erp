@@ -1,6 +1,6 @@
 import { OfferTypeEnum } from '../../types/offers/offers.types';
 import { ProperiesGroupEntity, PropertyBaseEntity } from '../../types/offers/properties.types';
-import { useProductsSelector } from '../../redux/selectors.store';
+import { useOffersSelector } from '../../redux/selectors.store';
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import CustomSelect, { CustomSelectHandler } from './Inputs/CustomSelect/CustomSelect';
@@ -28,7 +28,7 @@ export const PropertiesGroupSelect = ({
 }) => {
   // const service = useAppServiceProvider().get(AppModuleName.offers);
 
-  const state = useProductsSelector();
+  const state = useOffersSelector();
   const [filter, setFilter] = useState<FilterData>(filterValue);
   const [currentTemplate, setCurrentTemplate] = useState<ProperiesGroupEntity | undefined>();
   // const loaders = useLoaders<'getList' | 'create' | 'update'>();

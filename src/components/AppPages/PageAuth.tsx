@@ -6,10 +6,10 @@ export interface PageAuthProps {
   register?: boolean;
   login?: boolean;
   recovery?: boolean;
-  sendRecoveryMail?: boolean;
+  sendRecoveryEmail?: boolean;
 }
 
-const PageAuth: React.FC<PageAuthProps> = ({ register, recovery, login, sendRecoveryMail }) => {
+const PageAuth: React.FC<PageAuthProps> = ({ register, recovery, login, sendRecoveryEmail }) => {
   return (
     <Page className="PageAuth">
       {(register || login) && (
@@ -20,7 +20,7 @@ const PageAuth: React.FC<PageAuthProps> = ({ register, recovery, login, sendReco
         />
       )}
 
-      {(recovery || sendRecoveryMail) && (
+      {(recovery || sendRecoveryEmail) && (
         <RecoveryPasswordForm
           title={recovery ? 'Відновлення паролю' : 'Для відновлення паролю введіть ваш e-mail'}
           recovery={recovery}

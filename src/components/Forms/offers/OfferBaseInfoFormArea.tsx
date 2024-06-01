@@ -1,26 +1,21 @@
-import { AccordionForm } from '../../FormArea/AccordionForm';
-import { OfferFormAreaProps } from '../types';
-import {
-  IProductFormData,
-  IProductFullFormData,
-  OfferEntity,
-  OfferTypeEnum,
-} from '../../../../types/offers/offers.types';
-import { useAppForm } from '../../../../hooks';
-import InputLabel from '../../../atoms/Inputs/InputLabel';
-import { t } from '../../../../lang';
-import InputText from '../../../atoms/Inputs/InputText';
-import FlexBox from '../../../atoms/FlexBox';
+import { AccordionForm } from '../FormArea/AccordionForm';
+import { OfferFormAreaProps } from './types';
+import { IProductFormData, IProductFullFormData, OfferEntity, OfferTypeEnum } from '../../../types/offers/offers.types';
+import { useAppForm } from '../../../hooks';
+import InputLabel from '../../atoms/Inputs/InputLabel';
+import { t } from '../../../lang';
+import InputText from '../../atoms/Inputs/InputText';
+import FlexBox from '../../atoms/FlexBox';
 import * as React from 'react';
-import CustomSelect from '../../../atoms/Inputs/CustomSelect/CustomSelect';
-import { ApiDirType } from '../../../../redux/APP_CONFIGS';
-import TextareaPrimary from '../../../atoms/Inputs/TextareaPrimary';
-import { toReqData } from '../../../../utils';
-import useOffersService from '../../../../hooks/useOffersService.hook';
-import { MaybeNull } from '../../../../types/utils.types';
-import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
-import { OfferStatusFilterOptions } from '../../../../data';
-import { useDirectorySelector, useWarehousesSelector } from '../../../../redux/selectors.store';
+import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import { ApiDirType } from '../../../redux/APP_CONFIGS';
+import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
+import { toReqData } from '../../../utils';
+import useOffersService from '../../../hooks/useOffersService.hook';
+import { MaybeNull } from '../../../types/utils.types';
+import { useOfferLoadersProvider } from '../../Modals/CreateOfferModal';
+import { OfferStatusFilterOptions } from '../../../data';
+import { useDirectorySelector, useWarehousesSelector } from '../../../redux/selectors.store';
 
 export interface OfferBaseInfoFormAreaProps extends OfferFormAreaProps<IProductFullFormData> {
   type?: MaybeNull<OfferTypeEnum>;
@@ -30,8 +25,9 @@ export interface OfferBaseInfoFormAreaProps extends OfferFormAreaProps<IProductF
 
 export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _id }: OfferBaseInfoFormAreaProps) => {
   const { isLoading, onLoading } = useOfferLoadersProvider();
-  const warehouses = useWarehousesSelector();
+  const warehousesState = useWarehousesSelector();
   const service = useOffersService();
+  const counterparties = useDirectorySelector(ApiDirType.COUNTERPARTIES).directory;
 
   const brandsList = useDirectorySelector(ApiDirType.BRANDS).directory;
 
@@ -98,9 +94,17 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
 
       <CustomSelect
         {...registerSelect('warehouse', {
-          options: warehouses.warehouses,
+          options: warehousesState.warehouses,
           label: t('Select warehouse'),
           placeholder: t('Select warehouse'),
+        })}
+      />
+
+      <CustomSelect
+        {...registerSelect('supplier', {
+          options: counterparties,
+          label: t('Select supplier'),
+          placeholder: t('Select supplier'),
         })}
       />
 
@@ -110,6 +114,7 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
           label: t('status'),
           placeholder: t('status'),
           value: formValues.approved,
+          selectedValue: formValues.approved,
         })}
       />
 

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import FlexBox, { FlexForm } from '../atoms/FlexBox';
-import { useProductsSelector } from '../../redux/selectors.store';
+import { useOffersSelector } from '../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -82,7 +82,7 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   offer,
   ...props
 }) => {
-  const state = useProductsSelector();
+  const state = useOffersSelector();
   const service = useAppServiceProvider()[ServiceName.offers];
   const loaders = useLoaders<'create' | 'update' | 'refresh'>();
   const { variation } = useCurrentVariation({ id: updateId });

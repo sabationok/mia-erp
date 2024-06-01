@@ -36,7 +36,7 @@ const AppRoutes: React.FC<{ isLoaded?: boolean }> = () => {
         {/*<Route path="register" element={<AppPages.PageAuth register />} />*/}
         <Route path={`register/:${AppUrlParamKeys.businessType}`} element={<AppPages.PageAuth register />} />
         <Route path="login" element={<AppPages.PageAuth login />} />
-        <Route path="sendRecoveryPasswordMail" element={<AppPages.PageAuth sendRecoveryMail />} />
+        <Route path="sendRecoveryPasswordMail" element={<AppPages.PageAuth sendRecoveryEmail />} />
         <Route path="recoveryPassword" element={<AppPages.PageAuth recovery />} />
         <Route path={'*'} element={<Navigate to="/auth/login" />} />
       </Route>

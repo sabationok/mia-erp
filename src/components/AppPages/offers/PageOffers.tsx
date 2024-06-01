@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useEffect, useMemo, useState } from 'react';
 import { ITableListProps, TableSortOrderEnum } from '../../TableList/tableTypes.types';
 import AppGridPage from '../AppGridPage';
-import { useProductsSelector } from '../../../redux/selectors.store';
+import { useOffersSelector } from '../../../redux/selectors.store';
 import { GetAllOffersQuery } from '../../../api';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import useProductsFilterSelectorsHook from '../../../hooks/useProductsFilterSelectors.hook';
@@ -54,7 +54,7 @@ export const useOffersTableSettings = ({
   const { onLoading, isLoading } = loaders;
   const service = useAppServiceProvider().get(AppModuleName.offers);
   const { getAll } = service;
-  const state = useProductsSelector();
+  const state = useOffersSelector();
 
   const filterSelectors = useProductsFilterSelectorsHook();
   const actionsCreator = useOffersActionsCreator();

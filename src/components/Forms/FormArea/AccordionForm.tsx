@@ -89,7 +89,7 @@ export const AccordionFormArea = ({
           fxDirection={'row'}
           justifyContent={'space-between'}
           alignItems={'center'}
-          style={{ borderBottom: `1px solid ${theme.modalBorderColor}` }}
+          isSticky={isHeaderSticky}
         >
           <HeaderButton
             variant={'defNoEffects'}
@@ -116,7 +116,7 @@ export const AccordionFormArea = ({
       <ExpandableBox disabled={disabled} flex={1} isActive={_isOpen} maxHeight={maxHeight}>
         {_isOpen ? (
           <FlexBox maxWidth={'100%'} overflow={'hidden'}>
-            <FlexBox flex={1} overflow={'hidden'} padding={'8px'}>
+            <FlexBox flex={1} overflow={'hidden'} padding={'8px 8px 12px'}>
               {children}
             </FlexBox>
 
@@ -152,6 +152,7 @@ const Header = styled(FlexBox)<{ isSticky?: boolean }>`
   min-height: 36px;
 
   backdrop-filter: blur(3px);
+  border-bottom: 1px solid ${p => p.theme.modalBorderColor};
   //background-color: ${p => p.theme.modalBackgroundColor};
 `;
 const ExpandableBox = styled(FlexFieldSet)`
@@ -159,7 +160,12 @@ const ExpandableBox = styled(FlexFieldSet)`
   max-width: 100%;
 
   max-height: ${p => (p.isActive ? '100%' : '0')};
-  //transition: all ${p => p.theme.globals.timingFunctionMain};
+  transition: all ${p => p.theme.globals.timingFunctionMain};
+
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
 `;
 const HeaderButton = styled(ButtonIcon)`
   &[disabled] {

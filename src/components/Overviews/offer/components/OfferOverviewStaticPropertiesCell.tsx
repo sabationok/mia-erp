@@ -1,6 +1,6 @@
 import { RenderOverviewCellComponent } from '../../components/overview-types';
 import { OfferEntity } from '../../../../types/offers/offers.types';
-import { useProductsSelector } from '../../../../redux/selectors.store';
+import { useOffersSelector } from '../../../../redux/selectors.store';
 import React, { useMemo, useRef } from 'react';
 import FormSelectPropertiesOverlay from '../../../Overlays/FormSelectPropertiesOverlay';
 import FlexBox from '../../../atoms/FlexBox';
@@ -16,7 +16,7 @@ export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEnt
   overlayHandler,
   data,
 }) => {
-  const state = useProductsSelector();
+  const state = useOffersSelector();
   const currentOffer = useCurrentOffer(data);
   const valuesIdsSet = useRef(new Set(currentOffer?.properties?.map(prop => prop._id) ?? []));
   const selectedParentIdsSet = useRef(new Set(currentOffer?.properties?.map(prop => prop?.parent?._id) ?? []));

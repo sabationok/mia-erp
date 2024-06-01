@@ -7,7 +7,7 @@ import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
 import { OffersService } from '../../hooks/useOffersService.hook';
 import FlexBox, { FlexLi, FlexUl } from '../atoms/FlexBox';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { useProductsSelector } from '../../redux/selectors.store';
+import { useOffersSelector } from '../../redux/selectors.store';
 import {
   IPropertyDto,
   PropertyBaseEntity,
@@ -22,7 +22,7 @@ import { Text } from '../atoms/Text';
 import { productsFilterOptions } from '../../data/modalFilterOptions.data';
 import { OfferTypeEnum } from '../../types/offers/offers.types';
 import { CustomSelectHandler } from '../atoms/Inputs/CustomSelect/CustomSelect';
-import FormCreateProperty from '../Forms/offers/properties/FormCreateProperty';
+import CreatePropertyModal from '../Modals/CreatePropertyModal';
 import { RenderStackHistory } from '../atoms/RenderStackHistory';
 import styled, { useTheme } from 'styled-components';
 import { t } from '../../lang';
@@ -76,7 +76,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   title,
   onClose,
 }) => {
-  const state = useProductsSelector();
+  const state = useOffersSelector();
   const theme = useTheme();
   const service = useAppServiceProvider().offers;
   const loaders = useLoaders<'getAll' | string>({ getAll: { content: 'Refreshing properties' } });
@@ -173,7 +173,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   const onAddNewHandler = () => {
     const parent = currentData.current;
     modalSrv.open({
-      ModalChildren: FormCreateProperty,
+      ModalChildren: CreatePropertyModal,
       modalChildrenProps: {
         parent,
         defaultState: {
@@ -188,7 +188,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   const onEditCurrentHandler = () => {
     currentData.current &&
       modalSrv.open({
-        ModalChildren: FormCreateProperty,
+        ModalChildren: CreatePropertyModal,
         modalChildrenProps: {
           parent: currentData.parent,
           updateId: currentData.current._id,
@@ -243,7 +243,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
         gap={8}
         fxDirection={'row'}
         overflow={'auto'}
-        padding={'8px 8px 16px'}
+        padding={'8px 0 16px'}
         style={{
           borderTop: `1px solid ${theme.sideBarBorderColor}`,
         }}

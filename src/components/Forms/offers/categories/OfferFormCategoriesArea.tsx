@@ -8,7 +8,7 @@ import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
 import { t } from '../../../../lang';
 import { IProductFullFormData, OfferEntity } from '../../../../types/offers/offers.types';
 import { idsFromRefs, sortIds } from '../../../../utils';
-import OfferCategoriesSelector from '../categories/OfferCategoriesSelector';
+import OfferCategoriesSelector from './OfferCategoriesSelector';
 import { useCurrentOffer } from '../../../../hooks';
 
 export interface OfferFormCategoriesAreaProps extends OfferFormAreaProps<IProductFullFormData['categories']> {

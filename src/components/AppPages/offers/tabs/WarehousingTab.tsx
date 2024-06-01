@@ -5,7 +5,7 @@ import Forms from '../../../Forms';
 import { WarehouseItemEntity } from '../../../../types/warehousing/warehouses.types';
 import { useModalProvider } from '../../../../Providers/ModalProvider/ModalProvider';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
-import { useProductsSelector } from '../../../../redux/selectors.store';
+import { useOffersSelector } from '../../../../redux/selectors.store';
 import { getIdRef } from '../../../../utils/data-transform';
 import { OnlyUUID } from '../../../../redux/app-redux.types';
 
@@ -16,7 +16,7 @@ export interface WarehousingTabProps {
 }
 
 const WarehousingTab = ({ onSelect, selected, withActions }: WarehousingTabProps) => {
-  const currentProduct = useProductsSelector().currentOffer;
+  const currentProduct = useOffersSelector().currentOffer;
   const modalS = useModalProvider();
   const productsS = useAppServiceProvider()[ServiceName.offers];
   const [loading, setLoading] = useState(false);

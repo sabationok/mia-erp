@@ -48,8 +48,8 @@ export const InputStyles = css<TextInputProps>`
   }
 
   @media screen and (max-width: 480px) {
-    height: 34px;
-    font-size: 14px;
+    height: 40px;
+    font-size: 15px;
   }
 `;
 

@@ -50,7 +50,7 @@ const Wrapper = styled.div`
   gap: 4px;
 `;
 const HelperText = styled.span<{ isError?: boolean; isSuccess?: boolean }>`
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.5;
 
   width: 100%;

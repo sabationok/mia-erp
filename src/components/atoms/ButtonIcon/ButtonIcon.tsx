@@ -337,11 +337,12 @@ const outlinedMiddle = css`
   ${outlined};
   ${middle};
 `;
+
 const filled = css`
   color: ${({ theme }) => theme.colorLight};
   fill: ${({ theme }) => theme.colorLight};
   background-color: ${({ theme }) => theme.accentColor.base};
-
+  border-width: 2px;
   &:hover {
     color: ${({ theme }) => theme.colorLight};
     fill: ${({ theme }) => theme.colorLight};
@@ -399,7 +400,7 @@ const onlyIconNoEffects = css`
     fill: ${({ theme }) => theme.accentColor.pressed};
   }
 `;
-const underlinedText = css`
+const textUnderlined = css`
   text-decoration: underline;
   cursor: pointer;
   color: ${({ theme }) => theme.accentColor.base};
@@ -442,10 +443,10 @@ const defOutlined = css`
   ${def};
   color: ${({ theme }) => theme.fontColor};
   fill: ${({ theme }) => theme.fillColor};
-  border: 1px solid ${({ theme }) => theme.borderColor};
+  border: 2px solid ${({ theme }) => theme.borderColor};
 
   &:hover {
-    border: 1px solid ${({ theme }) => theme.trBorderClr};
+    border: 2px solid ${({ theme }) => theme.trBorderClr};
   }
 
   &:active {
@@ -470,8 +471,8 @@ const variants = {
   def,
   defNoEffects,
 
-  defaultSmall: defaultSmall,
-  defaultMiddle: defaultMiddle,
+  defaultSmall,
+  defaultMiddle,
   defaultLarge,
 
   pointerLeft,
@@ -482,11 +483,11 @@ const variants = {
 
   filledMiddle,
   filledSmall,
-  underlinedText,
 
   textExtraSmall,
   textSmall,
-  textMiddle: textMiddle,
+  textMiddle,
+  textUnderlined,
 
   onlyIcon,
   onlyIconNoEffects,
@@ -494,6 +495,9 @@ const variants = {
   onlyIconOutlined,
 
   pointerBottom,
+  filled,
+  outlined,
+  text,
 };
 
 const buttonSizeCss = {

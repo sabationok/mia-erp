@@ -8,7 +8,7 @@ import { IProductInventoryFormData } from '../../../types/warehousing/warehouses
 import { PriceEntity } from '../../../types/price-management/price-management.types';
 import { VariationEntity } from '../../../types/offers/variations.types';
 import styled from 'styled-components';
-import { useProductsSelector } from '../../../redux/selectors.store';
+import { useOffersSelector } from '../../../redux/selectors.store';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import { t } from '../../../lang';
@@ -42,7 +42,7 @@ enum ReservationOptions {
 const reservationOptions = enumToFilterOptions(ReservationOptions);
 const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({ ...props }) => {
   // const modalS = useModalProvider();
-  const currentProduct = useProductsSelector().currentOffer;
+  const currentProduct = useOffersSelector().currentOffer;
 
   const form = useForm({});
 

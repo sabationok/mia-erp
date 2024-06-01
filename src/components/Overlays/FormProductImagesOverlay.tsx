@@ -1,8 +1,8 @@
-import FormOfferImagesComponent from '../Forms/offers/components/FormOfferImagesComponent';
+import FormOfferImagesComponent from '../Forms/offers/images/FormOfferImagesComponent';
 import { FormEventHandler, useState } from 'react';
 import { OfferEntity, OfferImageSlotEntity } from '../../types/offers/offers.types';
 import styled, { useTheme } from 'styled-components';
-import { useProductsSelector } from '../../redux/selectors.store';
+import { useOffersSelector } from '../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { getIdRef } from '../../utils/data-transform';
 import { OverlayFooter, OverlayHeader } from './index';
@@ -12,7 +12,7 @@ export interface FormProductImagesOverlayProps extends OverlayHandlerReturn {
 }
 
 const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onClose }) => {
-  const currentProduct = useProductsSelector().currentOffer;
+  const currentProduct = useOffersSelector().currentOffer;
   const service = useAppServiceProvider()[ServiceName.offers];
   const [state, setState] = useState<Partial<OfferImageSlotEntity>[]>(currentProduct?.images || []);
   const [loading, setLoading] = useState(false);

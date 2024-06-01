@@ -1,4 +1,4 @@
-import { useProductsSelector } from '../redux/selectors.store';
+import { useOffersSelector } from '../redux/selectors.store';
 import { useAppParams, useAppQuery } from './index';
 import { VariationEntity } from '../types/offers/variations.types';
 import { OfferEntity } from '../types/offers/offers.types';
@@ -17,7 +17,7 @@ export const useCurrentOffer = ({ _id }: { _id?: string } = {}): CurrentOffer | 
   //   console.log(useCurrentOffer.name, ['_id', _id, 'param?.offerId', param?.offerId, 'query.offerId', query.offerId]);
   // }, [_id, id, param?.offerId, query.query.offerId]);
 
-  const state = useProductsSelector();
+  const state = useOffersSelector();
   const service = useAppServiceProvider().get(AppModuleName.offers);
 
   const offer = useMemo(() => {

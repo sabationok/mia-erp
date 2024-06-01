@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import FlexBox from '../atoms/FlexBox';
-import { useProductsSelector } from '../../redux/selectors.store';
+import { useOffersSelector } from '../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import * as React from 'react';
 import { FormEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
@@ -43,7 +43,7 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
   ...props
 }) => {
   const currentOffer = useCurrentOffer(offer);
-  const state = useProductsSelector();
+  const state = useOffersSelector();
   const service = useAppServiceProvider()[ServiceName.offers];
   const [currentTemplate, setCurrentTemlate] = useState<PropertyBaseEntity>();
 

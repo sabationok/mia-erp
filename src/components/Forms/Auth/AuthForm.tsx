@@ -1,11 +1,10 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
 import styled from 'styled-components';
 import LogoSvg from 'components/Layout/LogoSvg';
 import AuthInputLabel from '../../atoms/Inputs/AuthInputLabel';
 import NavLinkIcon from 'components/atoms/LinkIcon/NavLinkIcon';
-import { Link, useNavigate } from 'react-router-dom';
-import useAuthService from '../../../hooks/useAppAuth.hook';
+import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import InputText from '../../atoms/Inputs/InputText';
 import * as yup from 'yup';
@@ -14,10 +13,11 @@ import SecurityInputControlHOC from '../../atoms/Inputs/SecurityInputControlHOC'
 import { ToastService } from '../../../services';
 import { HasRegisterCompanyDtoFields, HasRegisterUserDtoFields } from '../../../types/auth.types';
 import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
-import { pick } from 'lodash';
+import { omit } from 'lodash';
 import { useAppParams, useAppRouter } from '../../../hooks';
 import { BusinessSubjectTypeEnum } from '../../../types/companies.types';
 import FlexBox from '../../atoms/FlexBox';
+import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 
 export interface Props {
   helloTitle?: string;
@@ -59,13 +59,17 @@ const registerParam = {
 export type AuthFormProps = Props & React.HTMLAttributes<HTMLFormElement>;
 
 const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...props }) => {
-  const authService = useAuthService();
+  const authService = useAppServiceProvider().get(ServiceName.auth);
   const router = useAppRouter();
-
-  const navigate = useNavigate();
   const loaders = useLoaders<'logIn' | 'register'>();
+
   const businessType = useAppParams().businessType as BusinessSubjectTypeEnum;
+
   const omitParam = registerParam?.[businessType];
+
+  useEffect(() => {
+    console.log({ businessType });
+  }, [businessType]);
 
   useEffect(() => {
     if (registration && (!businessType || !(businessType in registerParam))) {
@@ -78,24 +82,35 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
     formState: { errors, isValid },
     handleSubmit,
     watch,
+    setError,
+    clearErrors,
   } = useForm<IRegistrationFormData>({
     reValidateMode: 'onSubmit',
     resolver: yupResolver(login ? logInSchema : omitParam ? registerSchema.omit([omitParam]) : registerSchema),
     shouldUnregister: true,
   });
-  const formValues = watch();
+  // const formValues = watch();
 
-  const disableSubmit = useMemo(
-    () => !isValid || (registration && formValues.password !== formValues.approvePassword),
-    [formValues.approvePassword, formValues.password, isValid, registration]
-  );
+  // const disableSubmit = useMemo(
+  //   () => !isValid || (registration && formValues.password !== formValues.approvePassword),
+  //   [formValues.approvePassword, formValues.password, isValid, registration]
+  // );
 
-  function onFormSubmit(data: IRegistrationFormData) {
+  function onFormSubmit({ approvePassword, ...fData }: IRegistrationFormData) {
+    if (approvePassword) {
+      if (approvePassword !== fData.password) {
+        setError('approvePassword', { message: 'паролі не співпадають' });
+        return;
+      } else {
+        clearErrors();
+      }
+    }
+
     login &&
       authService.loginUser({
         data: {
-          password: data.password,
-          email: data.email,
+          password: fData.password,
+          email: fData.email,
         },
         onSuccess() {
           ToastService.success('Login success');
@@ -107,15 +122,16 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
       });
     registration &&
       authService.register({
-        data: pick(data, ['password', 'email', 'name']),
+        data: omit(fData, omitParam ? [omitParam, 'approvePassword'] : ['approvePassword']),
+        onLoading: loaders.onLoading('register'),
         onSuccess() {
-          navigate('/auth/logIn');
+          router.push({ pathname: '/auth/logIn' });
+
           ToastService.success('Registration success');
         },
         onError() {
           ToastService.error('Registration error');
         },
-        onLoading: loaders.onLoading('register'),
       });
   }
 
@@ -131,7 +147,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
             {'Вхід'}
           </StNavLink>
 
-          <StNavLink textTransform="uppercase" variant="def" to={`/auth/register/${BusinessSubjectTypeEnum.person}`}>
+          <StNavLink
+            textTransform="uppercase"
+            variant="def"
+            to={`/auth/register/${businessType ?? BusinessSubjectTypeEnum.person}`}
+          >
             {'Реєстрація'}
           </StNavLink>
         </Links>
@@ -145,6 +165,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
             <StNavLink textTransform="uppercase" variant="def" to={`/auth/register/${BusinessSubjectTypeEnum.company}`}>
               {'Компанія'}
             </StNavLink>
+
             <StNavLink
               textTransform="uppercase"
               variant="def"
@@ -183,7 +204,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
             )}
 
             <AuthInputLabel icon="email" error={errors.email}>
-              <InputText placeholder="Електронна адреса" {...register('email')} />
+              <InputText placeholder={'Електронна адреса'} {...register('email')} />
             </AuthInputLabel>
 
             <AuthInputLabel icon="lock_O" error={errors.password}>
@@ -195,7 +216,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
             <AuthInputLabel icon="lock_O" error={errors.approvePassword}>
               <SecurityInputControlHOC
                 renderInput={props => (
-                  <InputText {...props} placeholder="Повторіть пароль" {...register('approvePassword')} />
+                  <InputText {...props} placeholder={'Повторіть пароль'} {...register('approvePassword')} />
                 )}
               />
             </AuthInputLabel>
@@ -204,7 +225,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
 
         {!registration && (
           <>
-            <AuthInputLabel icon="email">
+            <AuthInputLabel icon="email" error={errors.email}>
               <InputText placeholder="Електронна адреса" {...register('email')} />
             </AuthInputLabel>
 
@@ -219,10 +240,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
 
       <Buttons>
         <StButtonIcon
-          type="submit"
-          textTransform="uppercase"
-          variant="filledSmall"
-          disabled={disableSubmit}
+          type={'submit'}
+          textTransform={'uppercase'}
+          variant={'filledMiddle'}
+          sizeType={'large'}
+          // disabled={disableSubmit}
           isLoading={loaders.hasLoading}
         >
           {registration ? 'Зареєструватись' : 'Увійти'}

@@ -11,7 +11,7 @@ import {
 } from '../../../types/warehousing/warehouses.types';
 import { t } from '../../../lang';
 import { useAppForm } from '../../../hooks';
-import { useProductsSelector, useWarehousesSelector } from '../../../redux/selectors.store';
+import { useOffersSelector, useWarehousesSelector } from '../../../redux/selectors.store';
 import { Path } from 'react-hook-form';
 import { HTMLInputTypeAttribute, useCallback, useEffect, useMemo } from 'react';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
@@ -76,7 +76,7 @@ const formCreateWarehouseInputs: {
 
 const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseDocumentProps) => {
   const { products: productsS } = useAppServiceProvider();
-  const currentProduct = useProductsSelector().currentOffer;
+  const currentProduct = useOffersSelector().currentOffer;
   const warehouses = useWarehousesSelector().warehouses;
   // const [availablePrices,setAvailablePrices]=useState()
 

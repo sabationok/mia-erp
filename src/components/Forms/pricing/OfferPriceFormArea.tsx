@@ -1,5 +1,5 @@
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useAppForm, useCurrentOffer, useCurrentPrice } from '../../../hooks';
 import {
   IPriceFormData,
@@ -63,8 +63,9 @@ export const OfferPriceFormArea = ({
   const Offer = useCurrentOffer(offer);
   const Price = useCurrentPrice(price ?? { _id: updateId });
 
-  const service = useAppServiceProvider()[ServiceName.priceManagement];
-  const offersSrv = useAppServiceProvider()[ServiceName.offers];
+  const service = useAppServiceProvider().get(ServiceName.priceManagement);
+  const offersSrv = useAppServiceProvider().get(ServiceName.offers);
+
   // const [isDefault, setIsDefault] = useState(!Offer?.price);
 
   const form = useAppForm<IPriceFormData>({
@@ -83,6 +84,11 @@ export const OfferPriceFormArea = ({
     reValidateMode: 'onSubmit',
   });
   const { formValues, setValue, handleSubmit } = form;
+
+  useEffect(() => {
+    console.log('formValues', formValues);
+  }, [formValues]);
+
   const setIsDefault = (checked: boolean) => {
     setValue('setAsDefault', checked);
   };
@@ -163,7 +169,7 @@ export const OfferPriceFormArea = ({
       expandable={expandable ?? false}
       isOpen={isOpen ?? true}
       label={title ?? t('Main info')}
-      isLoading={loaders.isLoading?.price || loaders.isLoading?.set_default_price}
+      isLoading={loaders.isLoading?.price || loaders.isLoading?.update || loaders.isLoading?.set_default_price}
       canSubmit={canSubmit}
       onSubmit={handleSubmit(onValid, e => {
         ToastService.warning('Invalid form data');
@@ -189,7 +195,7 @@ export const OfferPriceFormArea = ({
           <Text>{t('Is default')}</Text>
           <Switch
             size={'44px'}
-            disabled={!Offer?.price?._id || Offer?.price?._id === Price?._id}
+            disabled={Offer?.price?._id === Price?._id}
             checked={formValues.setAsDefault}
             onChange={ev => {
               setIsDefault(ev.checked);

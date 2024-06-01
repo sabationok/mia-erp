@@ -5,7 +5,7 @@ import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import { useAppForm } from '../../../../hooks';
 import { useCallback, useState } from 'react';
 import { OfferEntity } from '../../../../types/offers/offers.types';
-import { usePriceManagementSelector, useProductsSelector } from '../../../../redux/selectors.store';
+import { useOffersSelector, usePriceManagementSelector } from '../../../../redux/selectors.store';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../components/FormAfterSubmitOptions';
 import { t } from '../../../../lang';
 import * as yup from 'yup';
@@ -48,7 +48,7 @@ export interface FormCreatePriceProps
 const FormCreatePrice: React.FC<FormCreatePriceProps> = ({ defaultState, update, offer, onSubmit, ...props }) => {
   const service = useAppServiceProvider()[ServiceName.priceManagement];
   const offersSrv = useAppServiceProvider()[ServiceName.offers];
-  const productInState = useProductsSelector().currentOffer;
+  const productInState = useOffersSelector().currentOffer;
   const currentOffer = offer || productInState;
 
   const loaders = useLoaders<'price' | 'set_default'>({

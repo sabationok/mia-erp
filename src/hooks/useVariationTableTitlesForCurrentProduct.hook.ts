@@ -1,9 +1,9 @@
-import { useProductsSelector, usePropertiesSelector } from '../redux/selectors.store';
+import { useOffersSelector, usePropertiesSelector } from '../redux/selectors.store';
 import { useMemo } from 'react';
 import { createTableTitlesFromProperties } from '../utils';
 
 export default function useVariationTableTitlesForCurrentProduct() {
-  const currentProduct = useProductsSelector().currentOffer;
+  const currentProduct = useOffersSelector().currentOffer;
   const templates = usePropertiesSelector();
 
   return useMemo(() => {

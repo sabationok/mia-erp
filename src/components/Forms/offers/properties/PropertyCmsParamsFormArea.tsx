@@ -17,7 +17,7 @@ import { LangKeyEnum, t } from '../../../../lang';
 import InputText from '../../../atoms/Inputs/InputText';
 import LangButtonsGroup from '../../../atoms/LangButtonsGroup';
 import React, { useState } from 'react';
-import { FormCreatePropertyLoaderKey, IPropertyFormData } from './FormCreateProperty';
+import { FormCreatePropertyLoaderKey, IPropertyFormData } from '../../../Modals/CreatePropertyModal';
 import FlexBox from '../../../atoms/FlexBox';
 import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
 
@@ -69,11 +69,13 @@ export const PropertyCmsParamsFormArea = (_: {
 
       <FlexBox padding={'8px'} overflow={'auto'} fxDirection={'row'} flexWrap={'wrap'} gap={6}>
         {recommendTypesOptions.map(key => {
+          const isActive = formValues.cmsConfigs?.type === key;
           return (
             <ButtonIcon
-              variant={'outlinedSmall'}
+              key={key}
+              variant={isActive ? 'filledSmall' : 'outlinedSmall'}
               onClick={() => {
-                form.setValue('cmsConfigs.type', key);
+                form.setValue('cmsConfigs.type', key, { shouldTouch: true, shouldDirty: true, shouldValidate: true });
               }}
             >
               {key}
