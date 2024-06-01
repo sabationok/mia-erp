@@ -162,6 +162,7 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
     dropDownIsAbsolute = true,
     treeMode,
     selectedValue,
+    onChange,
     ...props
   }: CustomSelectProps<Option>,
   _ref: React.ForwardedRef<any>
@@ -268,12 +269,14 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
               disabled={!fieldMode}
               required={required}
               // ref={_ref}
-              {...omit(
-                { ...pick(props, [`${fieldMode ? 'onChange' : ''}`, 'onBlur', 'name', 'id', 'ref', 'placeholder']) },
-                ['error', 'success', 'loading']
-              )}
+              {...omit({ ...pick(props, ['onBlur', 'name', 'id', 'ref', 'placeholder']) }, [
+                'error',
+                'success',
+                'loading',
+              ])}
               {...inputProps}
               value={inputCurrentValue}
+              onChange={() => {}}
             />
 
             <IconsBox fxDirection={'row'} gap={6} fillHeight alignItems={'center'} padding={'0 8px 0 0'}>

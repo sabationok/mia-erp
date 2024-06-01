@@ -23,8 +23,8 @@ import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { VariationEntity } from '../../../types/offers/variations.types';
 import InputLabel from '../../atoms/Inputs/InputLabel';
-import { PriceTypeOptions } from '../../../data/priceManagement.data';
 import ButtonsGroup from '../../atoms/ButtonsGroup';
+import { PriceTypeOptions } from '../../../data/priceManagement.data';
 
 const validation = yup.object().shape({
   in: isNumberStringSchema.nullable(),
@@ -61,7 +61,7 @@ export const OfferPriceFormArea = ({
 }: FormCreatePriceAreaProps) => {
   const loaders = usePriceModalFormLoaders();
   const Offer = useCurrentOffer(offer);
-  const Price = useCurrentPrice(price ?? { _id: updateId });
+  const Price = useCurrentPrice(price ?? { _id: updateId }) || Offer?.price;
 
   const service = useAppServiceProvider().get(ServiceName.priceManagement);
   const offersSrv = useAppServiceProvider().get(ServiceName.offers);
@@ -86,9 +86,11 @@ export const OfferPriceFormArea = ({
   const { formValues, setValue, handleSubmit } = form;
 
   useEffect(() => {
+    const disabledCheckbox = Offer?.price?._id === Price?._id;
     console.log('formValues', formValues);
-  }, [formValues]);
 
+    console.log({ disabledCheckbox }, Offer, Price);
+  }, [Offer, Price, formValues]);
   const setIsDefault = (checked: boolean) => {
     setValue('setAsDefault', checked);
   };
@@ -178,7 +180,11 @@ export const OfferPriceFormArea = ({
     >
       <FlexBox padding={'0 0 8px'} flex={1} overflow={'auto'}>
         <InputLabel label={t('type')}>
-          <ButtonsGroup value={formValues.type} options={PriceTypeOptions} onSelect={o => setValue('type', o.value)} />
+          <ButtonsGroup
+            value={formValues.type}
+            options={PriceTypeOptions}
+            onSelect={o => setValue('type', o.value, { shouldTouch: true, shouldDirty: true })}
+          />
         </InputLabel>
 
         <FormPriceInputs

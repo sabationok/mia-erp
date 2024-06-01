@@ -3,6 +3,16 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ActionPayload, ThunkArgs } from './store.store';
 import { axiosErrorCheck } from '../utils';
 
+type ThunkGetAppResponseFn<Data = any, Params = any, Return = any, Meta = any> = (
+  data?: Data,
+  params?: Params
+) => Promise<AppResponse<Return, Meta>>;
+
+// type ThunkGetResponseFn<Data = any, Params = any, Return = any, Meta = any> = (input?: {
+//   data: Data;
+//   params?: Params;
+// }) => Promise<AppResponse<Return, Meta>>;
+
 export const createAppAsyncThunk = <
   Data = any,
   Params = any,
@@ -13,7 +23,7 @@ export const createAppAsyncThunk = <
   // ThunkConfig extends AsyncThunkConfig = any
 >(
   type: string,
-  getResponse: (data?: Data, params?: Params) => Promise<AppResponse<Return, Meta>>
+  getResponse: ThunkGetAppResponseFn<Data, Params, Return, Meta>
 ) => {
   return createAsyncThunk<
     ActionPayload<{ data: Return; params?: Params; extra?: Extra }>,
@@ -24,23 +34,23 @@ export const createAppAsyncThunk = <
       any,
       Params
     >
-  >(type, async (arg, thunkAPI) => {
-    arg?.onLoading && arg?.onLoading(true);
+  >(type, async ({ onError, onLoading, onSuccess, ...arg } = {}, thunkAPI) => {
+    onLoading && onLoading(true);
 
     try {
       const res = await getResponse(arg?.data?.data, arg?.params || arg?.data?.params);
       const rData = { ...arg?.data, ...arg, data: res?.data.data };
 
       if (res) {
-        arg?.onSuccess && arg?.onSuccess(rData, res?.data?.meta);
+        onSuccess && onSuccess(rData, res?.data?.meta);
       }
 
       return rData;
     } catch (error) {
-      arg?.onError && arg?.onError(error);
+      onError && onError(error);
       return thunkAPI.rejectWithValue(axiosErrorCheck(error));
     } finally {
-      arg?.onLoading && arg?.onLoading(false);
+      onLoading && onLoading(false);
     }
   });
 };

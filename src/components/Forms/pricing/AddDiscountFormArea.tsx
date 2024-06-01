@@ -8,7 +8,7 @@ import {
 } from '../../../types/price-management/discounts';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
-import ButtonsGroup from '../../atoms/ButtonsGroup';
+import ButtonsGroup, { ButtonGroupSelectHandler } from '../../atoms/ButtonsGroup';
 import { t } from 'lang';
 import { UUID } from '../../../types/utils.types';
 import { useAppDispatch } from '../../../redux/store.store';
@@ -18,6 +18,7 @@ import FlexBox from '../../atoms/FlexBox';
 import { useLoadersProvider } from '../../../Providers/Loaders/LoaderProvider';
 import { toReqData } from '../../../utils';
 import { omit } from 'lodash';
+import { Path } from 'react-hook-form';
 
 export interface CreateDiscountFormData extends PriceDiscountDto {
   _id?: string;
@@ -40,6 +41,12 @@ export function AddDiscountFormArea({ discount, onSuccess, priceId, ...props }: 
 
   const { setValue, formValues, register, handleSubmit } = form;
   const dispatch = useAppDispatch();
+
+  const registerOnSelect = (name: Path<CreateDiscountFormData>): ButtonGroupSelectHandler<any> => {
+    return info => {
+      setValue(name, info.value, { shouldDirty: true, shouldTouch: true });
+    };
+  };
 
   const onValid = (fData: PriceDiscountDto) => {
     dispatch(
@@ -67,22 +74,14 @@ export function AddDiscountFormArea({ discount, onSuccess, priceId, ...props }: 
       isLoading={loaders.hasLoading}
     >
       <InputLabel label={t('Type')}>
-        <ButtonsGroup
-          value={formValues.type}
-          onSelect={({ value }) => {
-            setValue('type', value);
-          }}
-          options={DiscountFilters.Type}
-        />
+        <ButtonsGroup value={formValues.type} onSelect={registerOnSelect('type')} options={DiscountFilters.Type} />
       </InputLabel>
 
       {formValues.type === PriceDiscountType.bonus && (
         <InputLabel label={t('Bonus balance')}>
           <ButtonsGroup
             value={formValues.balanceType}
-            onSelect={({ value }) => {
-              setValue('balanceType', value);
-            }}
+            onSelect={registerOnSelect('balanceType')}
             options={DiscountFilters.BalanceProvider}
           />
         </InputLabel>
@@ -91,9 +90,7 @@ export function AddDiscountFormArea({ discount, onSuccess, priceId, ...props }: 
       <InputLabel label={t('Value type')}>
         <ButtonsGroup
           value={formValues.valueType}
-          onSelect={({ value }) => {
-            setValue('valueType', value);
-          }}
+          onSelect={registerOnSelect('valueType')}
           options={DiscountFilters.ValueType}
         />
       </InputLabel>
@@ -123,9 +120,7 @@ export function AddDiscountFormArea({ discount, onSuccess, priceId, ...props }: 
           <InputLabel label={t('Discount volume type')}>
             <ButtonsGroup
               value={formValues.volumeType}
-              onSelect={({ value }) => {
-                setValue('volumeType', value);
-              }}
+              onSelect={registerOnSelect('volumeType')}
               options={DiscountFilters.VolumeType}
             />
           </InputLabel>
@@ -136,9 +131,7 @@ export function AddDiscountFormArea({ discount, onSuccess, priceId, ...props }: 
           <InputLabel label={t('Discount threshold type')} error={form.formState?.errors?.thresholdType}>
             <ButtonsGroup
               value={formValues.thresholdType}
-              onSelect={({ value }) => {
-                setValue('thresholdType', value);
-              }}
+              onSelect={registerOnSelect('thresholdType')}
               options={DiscountFilters.ThresholdType}
             />
           </InputLabel>
@@ -150,9 +143,7 @@ export function AddDiscountFormArea({ discount, onSuccess, priceId, ...props }: 
           <InputLabel label={t('Discount limit type')} error={form.formState?.errors?.limitType}>
             <ButtonsGroup
               value={formValues.limitType}
-              onSelect={({ value }) => {
-                setValue('limitType', value);
-              }}
+              onSelect={registerOnSelect('limitType')}
               options={DiscountFilters.LimitType}
             />
           </InputLabel>

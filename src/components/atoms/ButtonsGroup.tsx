@@ -5,10 +5,13 @@ import styled from 'styled-components';
 import { FilterOption } from './TabSelector';
 import { isUndefined } from 'lodash';
 import { Text } from './Text';
+import { Path } from 'react-hook-form';
+import { FieldValues } from '../../types/utils.types';
+import { UseFormReturn } from 'react-hook-form/dist/types';
 
 export type ButtonsGroupOption<V = any> = FilterOption<V>;
-export interface ButtonsGroupProps<V = any, Opt extends ButtonsGroupOption<V> = any> {
-  options?: Opt[];
+export interface ButtonsGroupProps<V = any, FormData extends FieldValues = any, Name = Path<FormData>> {
+  options?: ButtonsGroupOption<V>[];
   defaultIndex?: number;
   value?: V;
   onSelect?: ButtonGroupSelectHandler<V>;
@@ -17,6 +20,8 @@ export interface ButtonsGroupProps<V = any, Opt extends ButtonsGroupOption<V> = 
   currentOption?: ButtonsGroupOption<V>;
   onChangeIndex?: (index: number) => void;
   disabled?: boolean;
+  name?: Name;
+  form?: UseFormReturn<FormData>;
 }
 export type ButtonGroupSelectHandler<V = any> = (info: {
   option: ButtonsGroupOption<V>;
@@ -32,12 +37,16 @@ const ButtonsGroup = <V = any, Opt extends ButtonsGroupOption<V> = any>({
   currentOption,
   disabled,
   value,
+  name,
+  form,
 }: ButtonsGroupProps<V, Opt>) => {
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState(defaultIndex);
 
   const handleSelect = useCallback(
     (option: ButtonsGroupOption, index: number) => () => {
-      if (onSelect) {
+      if (form?.setValue && name) {
+        form?.setValue(name, option?.value, { shouldDirty: true, shouldTouch: true, shouldValidate: true });
+      } else if (onSelect) {
         options && onSelect({ option, value: option?.value, index });
       } else if (onChangeIndex) {
         onChangeIndex(index);
@@ -45,7 +54,7 @@ const ButtonsGroup = <V = any, Opt extends ButtonsGroupOption<V> = any>({
         setCurrent(index);
       }
     },
-    [onChangeIndex, onSelect, options]
+    [name, onChangeIndex, onSelect, options]
   );
 
   const renderButtons = useMemo(() => {

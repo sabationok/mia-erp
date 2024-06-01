@@ -50,7 +50,7 @@ export const useOffersTableSettings = ({
   searchState?: TableSearchFormState<OfferSearchParam>;
   sortState?: { param: OfferSortParam; order: TableSortOrderEnum };
 }) => {
-  const loaders = useLoaders<'offers'>({ offers: { content: 'Refeshing...' } });
+  const loaders = useLoaders<'offers'>({ offers: { content: 'Refreshing...' } });
   const { onLoading, isLoading } = loaders;
   const service = useAppServiceProvider().get(AppModuleName.offers);
   const { getAll } = service;
