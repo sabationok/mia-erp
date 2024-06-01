@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from '../../utils';
 import { AppQueryParams, PaymentsApi } from '../../api';
 import { IPayment } from '../../types/payments.types';
-import { ThunkPayload } from '../store.store';
+import { ThunkArgs } from '../store.store';
 import { IPaymentMethod, IPaymentMethodReqData } from '../../types/integrations.types';
 
 enum PaymentsThunkTypeEnum {
@@ -11,7 +11,7 @@ enum PaymentsThunkTypeEnum {
   updateMethod = 'payments/updateMethodThunk',
 }
 
-export const getAllPaymentMethodsThunk = createAsyncThunk<IPaymentMethod[], ThunkPayload<unknown, IPaymentMethod[]>>(
+export const getAllPaymentMethodsThunk = createAsyncThunk<IPaymentMethod[], ThunkArgs<unknown, IPaymentMethod[]>>(
   PaymentsThunkTypeEnum.getAllMethods,
   async (args, thunkAPI) => {
     args?.onLoading && args?.onLoading(true);
@@ -31,7 +31,7 @@ export const getAllPaymentMethodsThunk = createAsyncThunk<IPaymentMethod[], Thun
 );
 export const updatePaymentMethodThunk = createAsyncThunk<
   IPaymentMethod,
-  ThunkPayload<IPaymentMethodReqData, IPaymentMethod>
+  ThunkArgs<IPaymentMethodReqData, IPaymentMethod>
 >(PaymentsThunkTypeEnum.updateMethod, async (args, thunkAPI) => {
   args?.onLoading && args?.onLoading(true);
   try {
@@ -52,7 +52,7 @@ export const getAllPaymentsThunk = buildGetAllPaymentsThunk(PaymentsThunkTypeEnu
 export function buildGetAllPaymentsThunk(type: string) {
   return createAsyncThunk<
     { refresh?: boolean; update?: boolean; data: IPayment[] },
-    ThunkPayload<
+    ThunkArgs<
       { refresh?: boolean; params?: Pick<AppQueryParams, 'group' | 'order' | 'manager' | 'customer'> },
       IPayment[]
     >

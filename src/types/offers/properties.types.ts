@@ -45,10 +45,11 @@ export interface PropertyValueEntity extends Omit<PropertyBaseEntity, 'childrenL
 export enum PropertyTypeEnum {
   size = 'size',
   color = 'color',
+  care = 'care',
   weight = 'weight',
   condition = 'condition',
   material = 'material',
-  sex = 'sex',
+  gender = 'gender',
   tags = 'tags',
   composition = 'composition',
   collection = 'collection',

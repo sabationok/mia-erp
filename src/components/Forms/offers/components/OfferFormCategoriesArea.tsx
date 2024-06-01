@@ -7,7 +7,7 @@ import { OfferFormAreaProps } from '../types';
 import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
 import { t } from '../../../../lang';
 import { IProductFullFormData, OfferEntity } from '../../../../types/offers/offers.types';
-import { getIdRef, sortIds } from '../../../../utils';
+import { idsFromRefs, sortIds } from '../../../../utils';
 import OfferCategoriesSelector from '../categories/OfferCategoriesSelector';
 import { useCurrentOffer } from '../../../../hooks';
 
@@ -18,9 +18,9 @@ export interface OfferFormCategoriesAreaProps extends OfferFormAreaProps<IProduc
 }
 
 export const OfferFormCategoriesArea = ({ offer, disabled }: OfferFormCategoriesAreaProps) => {
-  const currentOffer = useCurrentOffer(offer);
+  const Offer = useCurrentOffer(offer);
   const loaders = useOfferLoadersProvider();
-  const initIds = sortIds(currentOffer?.categories?.map(p => p._id));
+  const initIds = sortIds(Offer?.categories?.map(p => p._id));
   const service = useAppServiceProvider()[ServiceName.offers];
   const [categoriesIds, setCategoriesIds] = useState<string[]>(initIds);
 
@@ -31,17 +31,22 @@ export const OfferFormCategoriesArea = ({ offer, disabled }: OfferFormCategories
   const handleFormSubmit: FormEventHandler = ev => {
     ev.preventDefault();
 
-    currentOffer &&
+    Offer &&
       service.updateById({
         onLoading: loaders.onLoading('categories'),
-        data: { ...getIdRef(currentOffer), data: { categories: categoriesIds }, refreshCurrent: true },
+        data: {
+          data: {
+            _id: Offer._id,
+            data: { categories: categoriesIds },
+          },
+        },
         onSuccess: (data, meta) => {},
       });
   };
 
   useEffect(() => {
-    if (currentOffer?.categories) {
-      setCategoriesIds(currentOffer?.categories.map(c => c._id));
+    if (Offer?.categories) {
+      setCategoriesIds(idsFromRefs(Offer?.categories));
     }
     // eslint-disable-next-line
   }, []);
@@ -51,14 +56,13 @@ export const OfferFormCategoriesArea = ({ offer, disabled }: OfferFormCategories
       label={t('Categories')}
       onSubmit={handleFormSubmit}
       disabled={disabled}
-      // onReset={handleReset}
-      isLoading={loaders.isLoading?.properties}
+      isLoading={loaders.isLoading?.categories}
       canSubmit={canSubmit}
       maxHeight={'300px'}
       isOpen={false}
     >
       <ListBox flex={1} overflow={'auto'}>
-        <OfferCategoriesSelector onChangeIds={setCategoriesIds} offer={currentOffer} />
+        <OfferCategoriesSelector onChangeIds={setCategoriesIds} offer={Offer} />
       </ListBox>
     </AccordionForm>
   );

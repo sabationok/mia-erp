@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from '../../utils';
 import { AppQueryParams, InvoicesApi } from '../../api';
-import { ThunkPayload } from '../store.store';
+import { ThunkArgs } from '../store.store';
 import { IInvoicingMethod, IInvoicingMethodReqData } from '../../types/integrations.types';
 import { isAxiosError } from 'axios';
 import { IInvoice } from '../../types/invoices.types';
@@ -13,27 +13,27 @@ enum InvoicesThunkTypeEnum {
   updateMethod = 'invoicing/updateMethodThunk',
 }
 
-export const getAllInvoiceMethodsThunk = createAsyncThunk<
-  IInvoicingMethod[],
-  ThunkPayload<unknown, IInvoicingMethod[]>
->(InvoicesThunkTypeEnum.getAllMethods, async (args, thunkAPI) => {
-  args?.onLoading && args?.onLoading(true);
-  try {
-    const res = await InvoicesApi.getAllMethods();
-    res && args?.onSuccess && args?.onSuccess(res?.data?.data);
+export const getAllInvoiceMethodsThunk = createAsyncThunk<IInvoicingMethod[], ThunkArgs<unknown, IInvoicingMethod[]>>(
+  InvoicesThunkTypeEnum.getAllMethods,
+  async (args, thunkAPI) => {
+    args?.onLoading && args?.onLoading(true);
+    try {
+      const res = await InvoicesApi.getAllMethods();
+      res && args?.onSuccess && args?.onSuccess(res?.data?.data);
 
-    args?.onLoading && args?.onLoading(false);
-    return res?.data?.data;
-  } catch (e) {
-    args?.onLoading && args?.onLoading(false);
-    args?.onError && args?.onError(e);
+      args?.onLoading && args?.onLoading(false);
+      return res?.data?.data;
+    } catch (e) {
+      args?.onLoading && args?.onLoading(false);
+      args?.onError && args?.onError(e);
 
-    return thunkAPI.rejectWithValue(axiosErrorCheck(e));
+      return thunkAPI.rejectWithValue(axiosErrorCheck(e));
+    }
   }
-});
+);
 export const updateInvoicingMethodThunk = createAsyncThunk<
   IInvoicingMethod,
-  ThunkPayload<IInvoicingMethodReqData, IInvoicingMethod>
+  ThunkArgs<IInvoicingMethodReqData, IInvoicingMethod>
 >(InvoicesThunkTypeEnum.updateMethod, async (args, thunkAPI) => {
   args?.onLoading && args?.onLoading(true);
   try {
@@ -54,7 +54,7 @@ export const getAllInvoicesThunk = buildGetAllInvoicesThunk(InvoicesThunkTypeEnu
 export function buildGetAllInvoicesThunk(type: string) {
   return createAsyncThunk<
     { refresh?: boolean; update?: boolean; data: IInvoice[] },
-    ThunkPayload<
+    ThunkArgs<
       { refresh?: boolean; params?: Pick<AppQueryParams, 'group' | 'order' | 'manager' | 'customer'> },
       IInvoice[]
     >

@@ -1,4 +1,4 @@
-import { ThunkPayload } from './store.store';
+import { ThunkArgs } from './store.store';
 import { AxiosResponse } from 'axios';
 import { ApiCallerPayload } from '../api';
 import { ApiDirType } from './APP_CONFIGS';
@@ -103,7 +103,7 @@ export type ServiceDispatcher<P = any> = (args: P) =>
     }
   | undefined;
 
-export type ServiceDispatcherAsync<SD = any, RD = any, E = any> = (args?: ThunkPayload<SD, RD, E>) => Promise<
+export type ServiceDispatcherAsync<SD = any, RD = any, E = any> = (args?: ThunkArgs<SD, RD, E>) => Promise<
   | {
       payload: unknown | RD;
       type: string;
@@ -116,10 +116,11 @@ export type ServiceApiCaller<SD = any, RD = any, E = any | unknown, MD = any> = 
 ) => Promise<AppResponse<RD, MD> | undefined>;
 
 // AsyncThunk<ActionPayload, ThunkPayload, any>
-export type _ServiceDispatcherAsync<Thunk extends (...args: any[]) => any> = (...args: Parameters<Thunk>) => Promise<
+export type __ServiceDispatcherAsync<Thunk extends (...args: any[]) => any> = (...args: Parameters<Thunk>) => Promise<
   | {
       payload: unknown | Parameters<Thunk>[0];
       type: string;
     }
   | undefined
+  | ReturnType<Thunk>
 >;

@@ -1,12 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import AppSettingsApi from '../../api/appSettings.api';
-import { ThunkPayload } from '../store.store';
+import { ThunkArgs } from '../store.store';
 import { RoleActionType } from '../app-redux.types';
 import { axiosErrorCheck } from '../../utils';
 
 export const getAppActionsThunk = createAsyncThunk<
   Record<string, RoleActionType[]>,
-  ThunkPayload<any, Record<string, RoleActionType[]>>
+  ThunkArgs<any, Record<string, RoleActionType[]>>
 >('appSettings/getAppActionsThunk', async ({ onLoading, onError, onSuccess }, thunkAPI) => {
   onLoading && onLoading(true);
   try {

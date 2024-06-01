@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { IOrderReqData, OrderEntity } from '../../types/orders/orders.types';
-import { ThunkPayload } from '../store.store';
+import { ThunkArgs } from '../store.store';
 import { AppQueryParams, createApiCall, OrdersApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
 import { OnlyUUID } from '../app-redux.types';
@@ -19,7 +19,7 @@ enum OrdersThunkTypeEnum {
 }
 export const getAllOrdersThunk = createAsyncThunk<
   { refresh?: boolean; data?: OrderEntity[] },
-  ThunkPayload<
+  ThunkArgs<
     {
       refresh?: boolean;
       query?: AppQueryParams;
@@ -44,7 +44,7 @@ export const getAllOrdersThunk = createAsyncThunk<
   }
 });
 
-export const createOrderThunk = createAsyncThunk<OrderEntity | undefined, ThunkPayload<IOrderReqData, OrderEntity>>(
+export const createOrderThunk = createAsyncThunk<OrderEntity | undefined, ThunkArgs<IOrderReqData, OrderEntity>>(
   OrdersThunkTypeEnum.createOne,
   async (args, thunkApi) => {
     try {
@@ -66,7 +66,7 @@ export const createOrderThunk = createAsyncThunk<OrderEntity | undefined, ThunkP
 );
 export const getOrderByIdThunk = createAsyncThunk<
   { data: OrderEntity; refreshCurrent?: boolean },
-  ThunkPayload<OnlyUUID & { params?: { fullInfo?: boolean }; options?: { refreshCurrent?: boolean } }, OrderEntity>
+  ThunkArgs<OnlyUUID & { params?: { fullInfo?: boolean }; options?: { refreshCurrent?: boolean } }, OrderEntity>
 >('orders/getOrderByIdThunk', async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
   try {
@@ -84,7 +84,7 @@ export const getOrderByIdThunk = createAsyncThunk<
 });
 export const getOrderSlotsThunk = createAsyncThunk<
   { update?: boolean; data: OrderSlotEntity[] },
-  ThunkPayload<{ update?: boolean; params?: Pick<AppQueryParams, 'order' | 'group'> }, OrderSlotEntity[]>
+  ThunkArgs<{ update?: boolean; params?: Pick<AppQueryParams, 'order' | 'group'> }, OrderSlotEntity[]>
 >(OrdersThunkTypeEnum.getSlots, async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
   try {

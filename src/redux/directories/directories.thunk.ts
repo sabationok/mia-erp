@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { axiosErrorCheck } from 'utils';
-import { ThunkPayload } from '../store.store';
+import { ThunkArgs } from '../store.store';
 import { AppQueryParams, DirectoriesApi } from '../../api';
 import { ApiDirType } from '../APP_CONFIGS';
 import { GetAllByDirTypeOptions } from '../../api/directories.api';
@@ -40,7 +40,7 @@ export interface DirThunkBaseReturnData<Data = any, Meta = any> {
 
 export const getAllDirectoryItemsThunk = createAsyncThunk<
   DirThunkBaseReturnData<IDirItemBase[]>,
-  ThunkPayload<DirThunkBaseSubmitData, DirThunkBaseReturnData<IDirItemBase[]>>
+  ThunkArgs<DirThunkBaseSubmitData, DirThunkBaseReturnData<IDirItemBase[]>>
 >(DirThunkTypePrefix.getAllByDirType, async ({ data, onSuccess, onError }, thunkAPI) => {
   try {
     const res = await DirectoriesApi.getAllByDirType<IDirItemBase>(data as GetAllByDirTypeOptions);
@@ -59,7 +59,7 @@ export const getAllDirectoryItemsThunk = createAsyncThunk<
 
 export const createDirectoryItemThunk = createAsyncThunk<
   DirThunkBaseReturnData<IDirItemBase[]>,
-  ThunkPayload<CreateDirItemThunkSubmitData<IDirItemBase>, DirThunkBaseReturnData<IDirItemBase[]>>
+  ThunkArgs<CreateDirItemThunkSubmitData<IDirItemBase>, DirThunkBaseReturnData<IDirItemBase[]>>
 >(DirThunkTypePrefix.create, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
   onLoading && onLoading(true);
 
@@ -84,7 +84,7 @@ export const createDirectoryItemThunk = createAsyncThunk<
 
 export const deleteDirectoryItemThunk = createAsyncThunk<
   DirThunkBaseReturnData<IDirItemBase[]>,
-  ThunkPayload<UpdateDirItemThunkSubmitData, DirThunkBaseReturnData<IDirItemBase[]>>
+  ThunkArgs<UpdateDirItemThunkSubmitData, DirThunkBaseReturnData<IDirItemBase[]>>
 >(DirThunkTypePrefix.delete, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
   onLoading && onLoading(true);
 
@@ -110,7 +110,7 @@ export const deleteDirectoryItemThunk = createAsyncThunk<
 
 export const updateDirectoryItemThunk = createAsyncThunk<
   DirThunkBaseReturnData<IDirItemBase[]>,
-  ThunkPayload<UpdateDirItemThunkSubmitData, DirThunkBaseReturnData<IDirItemBase[]>>
+  ThunkArgs<UpdateDirItemThunkSubmitData, DirThunkBaseReturnData<IDirItemBase[]>>
 >(DirThunkTypePrefix.update, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
   onLoading && onLoading(true);
 

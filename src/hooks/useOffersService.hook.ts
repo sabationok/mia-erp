@@ -1,7 +1,7 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { OfferEntity } from '../types/offers/offers.types';
 import {
-  _ServiceDispatcherAsync,
+  __ServiceDispatcherAsync,
   OnlyUUID,
   ServiceApiCaller,
   ServiceDispatcher,
@@ -41,15 +41,15 @@ import { GetAllPricesQuery } from '../api';
 // type Test=_ServiceDispatcherAsync<typeof createOfferThunk>
 
 export interface OffersService {
-  create: _ServiceDispatcherAsync<typeof createOfferThunk>;
+  create: __ServiceDispatcherAsync<typeof createOfferThunk>;
   deleteById: ServiceApiCaller<string, OfferEntity>; // !!!!! ===>>> ServiceDispatcher
-  updateById: _ServiceDispatcherAsync<typeof updateProductThunk>; // !!!!! ===>>> ServiceDispatcher
+  updateById: __ServiceDispatcherAsync<typeof updateProductThunk>; // !!!!! ===>>> ServiceDispatcher
   getById: ServiceApiCaller<string, OfferEntity>;
-  getOne: _ServiceDispatcherAsync<typeof getOfferThunk>;
-  getAll: _ServiceDispatcherAsync<typeof getAllOffersThunk>;
-  getProductFullInfo: _ServiceDispatcherAsync<typeof getOfferFullInfoThunk>;
+  getOne: __ServiceDispatcherAsync<typeof getOfferThunk>;
+  getAll: __ServiceDispatcherAsync<typeof getAllOffersThunk>;
+  getProductFullInfo: __ServiceDispatcherAsync<typeof getOfferFullInfoThunk>;
   clearCurrent: ServiceDispatcher<undefined>;
-  setDefaults: _ServiceDispatcherAsync<typeof updateOfferDefaultsThunk>;
+  setDefaults: __ServiceDispatcherAsync<typeof updateOfferDefaultsThunk>;
 
   // * PROPERTIES
   getAllProperties: ServiceDispatcherAsync<IPropertyReqData, PropertyEntity[]>;
@@ -81,7 +81,7 @@ export interface OffersService {
     PriceEntity[]
   >;
   // * INVENTORIES
-  getAllInventories: _ServiceDispatcherAsync<typeof getAllInventoriesByProductIdThunk>;
+  getAllInventories: __ServiceDispatcherAsync<typeof getAllInventoriesByProductIdThunk>;
 }
 
 const useOffersService = (): OffersService => {

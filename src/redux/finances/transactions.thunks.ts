@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
-import { ThunkPayload } from '../store.store';
+import { ThunkArgs } from '../store.store';
 import { isAxiosError } from 'axios';
 import { ITransaction, ITransactionReqData } from '../../types/finances/transactions.types';
 import TransactionsApi from '../../api/transactions.api';
@@ -28,7 +28,7 @@ import { AppQueryParams, createApiCall } from '../../api';
 
 export const getAllTransactionsThunk = createAsyncThunk<
   { refresh?: boolean; data?: ITransaction[] },
-  ThunkPayload<
+  ThunkArgs<
     {
       refresh?: boolean;
       query?: AppQueryParams;
@@ -55,7 +55,7 @@ export const getAllTransactionsThunk = createAsyncThunk<
 
 export const createTransactionThunk = createAsyncThunk<
   ITransaction | undefined,
-  ThunkPayload<ITransactionReqData, ITransaction>
+  ThunkArgs<ITransactionReqData, ITransaction>
 >('transactions/createTransactionThunk', async (payload, thunkApi) => {
   try {
     const res = await createApiCall(payload, TransactionsApi.create, TransactionsApi);

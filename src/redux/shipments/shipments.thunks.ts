@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from '../../utils';
 import { ShipmentsApi } from '../../api';
-import { ThunkPayload } from '../store.store';
+import { ThunkArgs } from '../store.store';
 import { IDeliveryMethod } from '../../types/integrations.types';
 
 enum ShipmentsThunkTypeEnum {
@@ -11,7 +11,7 @@ enum ShipmentsThunkTypeEnum {
   updateMethod = 'shipments/updateMethodThunk',
 }
 
-export const getAllDeliveryMethodsThunk = createAsyncThunk<IDeliveryMethod[], ThunkPayload<unknown, IDeliveryMethod[]>>(
+export const getAllDeliveryMethodsThunk = createAsyncThunk<IDeliveryMethod[], ThunkArgs<unknown, IDeliveryMethod[]>>(
   ShipmentsThunkTypeEnum.getAllMethods,
   async (args, thunkAPI) => {
     args?.onLoading && args?.onLoading(true);
@@ -29,7 +29,7 @@ export const getAllDeliveryMethodsThunk = createAsyncThunk<IDeliveryMethod[], Th
     }
   }
 );
-export const updateShipmentMethodThunk = createAsyncThunk<IDeliveryMethod, ThunkPayload<any, IDeliveryMethod>>(
+export const updateShipmentMethodThunk = createAsyncThunk<IDeliveryMethod, ThunkArgs<any, IDeliveryMethod>>(
   ShipmentsThunkTypeEnum.updateMethod,
   async (args, thunkAPI) => {
     args?.onLoading && args?.onLoading(true);

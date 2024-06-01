@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios';
 import { ICustomRole, ModuleWithActions } from 'redux/customRoles/customRoles.types';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { axiosErrorCheck } from 'utils';
-import { ThunkPayload } from '../store.store';
+import { ThunkArgs } from '../store.store';
 import { AppResponse } from '../app-redux.types';
 import CustomRolesApi from '../../api/customRoles.api';
 import { ClientApi } from '../../api';
@@ -35,7 +35,7 @@ export interface IPayloadGetAllRoles {
 }
 export const getAllActionsThunk = createAsyncThunk<
   { data: ModuleWithActions[] },
-  ThunkPayload<undefined, ModuleWithActions[]>
+  ThunkArgs<undefined, ModuleWithActions[]>
 >(RolesThunkTypeEnum.getAllActions, async (args, thunkAPI) => {
   args?.onLoading && args.onLoading(true);
   try {
@@ -68,7 +68,7 @@ export const getAllRolesThunk = createAsyncThunk<IAllCustomRoles, IPayloadGetAll
     }
   }
 );
-export const createCustomRoleThunk = createAsyncThunk<ICustomRole, ThunkPayload<Partial<ICustomRole>, ICustomRole>>(
+export const createCustomRoleThunk = createAsyncThunk<ICustomRole, ThunkArgs<Partial<ICustomRole>, ICustomRole>>(
   RolesThunkTypeEnum.create,
   async ({ onSuccess, onError, data }, thunkAPI) => {
     try {

@@ -1,5 +1,5 @@
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useAppForm, useCurrentOffer, useCurrentPrice } from '../../../hooks';
 import {
   IPriceFormData,
@@ -50,7 +50,7 @@ export interface FormCreatePriceAreaProps {
   isOpen?: boolean;
 }
 
-export const CreatePriceFormArea = ({
+export const OfferPriceFormArea = ({
   price,
   updateId,
   offer,
@@ -65,7 +65,7 @@ export const CreatePriceFormArea = ({
 
   const service = useAppServiceProvider()[ServiceName.priceManagement];
   const offersSrv = useAppServiceProvider()[ServiceName.offers];
-  const [isDefault, setIsDefault] = useState(false);
+  // const [isDefault, setIsDefault] = useState(!Offer?.price);
 
   const form = useAppForm<IPriceFormData>({
     defaultValues: {
@@ -77,12 +77,15 @@ export const CreatePriceFormArea = ({
       markup: { amount: 0, percentage: 0 },
       offer: Offer,
       ...defaultState,
+      setAsDefault: !Offer?.price?._id || Offer?.price?._id === Price?._id,
     },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });
   const { formValues, setValue, handleSubmit } = form;
-
+  const setIsDefault = (checked: boolean) => {
+    setValue('setAsDefault', checked);
+  };
   const { in: costValue, out: priceValue } = formValues;
 
   const recalculateValues = useCallback(
@@ -109,12 +112,14 @@ export const CreatePriceFormArea = ({
   );
 
   const onSetAsDefault = async (offerId: string, priceId: string) => {
+    if (Offer?.price?._id && Offer?.price?._id === priceId) return;
+
     offersSrv.setDefaults({
       data: { data: { _id: offerId, defaults: { price: { _id: priceId } } } },
-      onLoading: loaders.onLoading('set_default'),
+      onLoading: loaders.onLoading('set_default_price'),
     });
   };
-  const onValid = (fData: IPriceFormData) => {
+  const onValid = ({ setAsDefault, ...fData }: IPriceFormData) => {
     const dataForReq = toReqData(fData);
     if (!fData?.offer?._id) {
       ToastService.warning('Not passed offer id');
@@ -125,7 +130,7 @@ export const CreatePriceFormArea = ({
         data: { data: { _id: fData?._id, data: dataForReq }, updateCurrent: true },
         onLoading: loaders.onLoading('update'),
         onSuccess: loaders.onSuccess('update', (data, meta) => {
-          if (isDefault && fData.offer?._id) {
+          if (setAsDefault && fData.offer?._id) {
             onSetAsDefault(fData.offer?._id, data._id);
           } else {
             // submitOptions.state?.close && props?.onClose && props?.onClose();
@@ -136,12 +141,12 @@ export const CreatePriceFormArea = ({
     } else {
       service.addPriceToList({
         data: { data: { data: dataForReq as never }, updateCurrent: true },
-        onLoading: loaders.onLoading('create'),
-        onSuccess: (data, meta) => {
+        onLoading: loaders.onLoading('price'),
+        onSuccess: data => {
           loaders.setData('create', data);
           form.setValue('_id', data._id);
 
-          if (isDefault && fData.offer?._id) {
+          if (setAsDefault && fData.offer?._id) {
             onSetAsDefault(fData.offer?._id, data._id);
           } else {
             // submitOptions.state?.close && props?.onClose && props?.onClose();
@@ -151,12 +156,15 @@ export const CreatePriceFormArea = ({
     }
   };
 
+  const canSubmit = Object.values(form.formState.touchedFields).some(el => !!el);
+
   return (
     <AccordionForm
       expandable={expandable ?? false}
       isOpen={isOpen ?? true}
       label={title ?? t('Main info')}
-      isLoading={loaders.hasLoading}
+      isLoading={loaders.isLoading?.price || loaders.isLoading?.set_default_price}
+      canSubmit={canSubmit}
       onSubmit={handleSubmit(onValid, e => {
         ToastService.warning('Invalid form data');
         console.error('[Validation error]', e);
@@ -177,12 +185,12 @@ export const CreatePriceFormArea = ({
           }}
         />
 
-        <FlexBox padding={'0 8px'} fxDirection={'row'} justifyContent={'space-between'} alignItems={'center'}>
-          <Text>{t('Set as default')}</Text>
+        <FlexBox padding={'0 8px 0 0'} fxDirection={'row'} justifyContent={'space-between'} alignItems={'center'}>
+          <Text>{t('Is default')}</Text>
           <Switch
             size={'44px'}
             disabled={!Offer?.price?._id || Offer?.price?._id === Price?._id}
-            checked={!Offer?.price?._id || Offer?.price?._id === Price?._id || isDefault}
+            checked={formValues.setAsDefault}
             onChange={ev => {
               setIsDefault(ev.checked);
             }}

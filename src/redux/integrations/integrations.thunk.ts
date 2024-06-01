@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AppModuleName } from '../reduxTypes.types';
 import { ExternalServiceTypeEnum, ExtServiceBase } from '../../types/integrations.types';
-import { ThunkPayload } from '../store.store';
+import { ThunkArgs } from '../store.store';
 import { axiosErrorCheck } from '../../utils';
 import { ExtServicesApi } from '../../api';
 
@@ -11,7 +11,7 @@ const IntegrationsThunkType = {
 
 export const getAllExtIntegrationServicesThunk = createAsyncThunk<
   { data: ExtServiceBase[] },
-  ThunkPayload<{ params?: { type?: ExternalServiceTypeEnum } }, ExtServiceBase[]>
+  ThunkArgs<{ params?: { type?: ExternalServiceTypeEnum } }, ExtServiceBase[]>
 >(IntegrationsThunkType.getAllExtServices, async (arg, thunkAPI) => {
   arg?.onLoading && arg?.onLoading(true);
   try {

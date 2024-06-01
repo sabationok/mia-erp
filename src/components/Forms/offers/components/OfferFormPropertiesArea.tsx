@@ -20,7 +20,7 @@ export interface OfferFormPropertiesAreaProps extends OfferFormAreaProps<ArrayOf
   onSubmit?: AppSubmitHandler<string[]>;
   onSelect?: (id: string) => void;
   onChange?: (ids: string[]) => void;
-  onSuccess?: (data: OfferEntity) => void;
+  onSuccess?: (data: { data: OfferEntity }) => void;
   update?: string;
 }
 
@@ -43,7 +43,13 @@ export const OfferFormPropertiesArea = ({ onSubmit, onSuccess, disabled, offer }
     ev.preventDefault();
     if (currentOffer) {
       service.updateById({
-        data: { _id: currentOffer?._id, updateCurrent: true, data: { properties: selectedIds } },
+        data: {
+          data: {
+            _id: currentOffer?._id,
+            data: { properties: selectedIds },
+          },
+        },
+        update: true,
         onLoading: loaders.onLoading('properties'),
         onSuccess: onSuccess,
       });

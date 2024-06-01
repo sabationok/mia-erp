@@ -112,6 +112,7 @@ export interface IPriceFormData extends Omit<CreatePriceDto, 'product' | 'variat
   offer?: IFormDataValueWithID;
   variation?: IFormDataValueWithID;
   list?: IFormDataValueWithID;
+  setAsDefault?: boolean;
 
   // discounts?: (PriceDiscountRecord | OnlyUUID)[];
 }

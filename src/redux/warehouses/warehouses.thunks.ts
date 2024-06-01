@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ThunkPayload } from '../store.store';
+import { ThunkArgs } from '../store.store';
 import { AppQueryParams, createApiCall, WarehousesApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
-import { WarehouseEntity, IWarehouseReqData } from '../../types/warehousing/warehouses.types';
+import { IWarehouseReqData, WarehouseEntity } from '../../types/warehousing/warehouses.types';
 import { OnlyUUID } from '../app-redux.types';
 
 enum WarehousingThunkType {
@@ -18,7 +18,7 @@ export const getAllWarehousesThunk = createAsyncThunk<
       data: WarehouseEntity[];
     }
   | undefined,
-  ThunkPayload<
+  ThunkArgs<
     {
       refresh?: boolean;
       query?: AppQueryParams;
@@ -50,7 +50,7 @@ export const getAllWarehousesThunk = createAsyncThunk<
     return thunkAPI.rejectWithValue(axiosErrorCheck(e));
   }
 });
-export const createWarehouseThunk = createAsyncThunk<WarehouseEntity, ThunkPayload<IWarehouseReqData, WarehouseEntity>>(
+export const createWarehouseThunk = createAsyncThunk<WarehouseEntity, ThunkArgs<IWarehouseReqData, WarehouseEntity>>(
   WarehousingThunkType.create,
   async (arg, thunkAPI) => {
     const { data, onLoading, onSuccess, onError } = arg;
@@ -74,7 +74,7 @@ export const createWarehouseThunk = createAsyncThunk<WarehouseEntity, ThunkPaylo
 
 export const getWarehouseByIdThunk = createAsyncThunk<
   WarehouseEntity | undefined,
-  ThunkPayload<OnlyUUID, WarehouseEntity>
+  ThunkArgs<OnlyUUID, WarehouseEntity>
 >(WarehousingThunkType.getById, async (arg, thunkAPI) => {
   const { data, onLoading, onSuccess, onError } = arg;
 

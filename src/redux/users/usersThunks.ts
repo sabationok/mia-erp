@@ -2,7 +2,7 @@ import { IRegisteredUser, IRegisteredUserInfoRes, IRegistrationData, UserEntity 
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import { AsyncThunkConfig } from 'redux/reduxTypes.types';
-import { ThunkPayload } from '../store.store';
+import { ThunkArgs } from '../store.store';
 import { AppResponse } from '../app-redux.types';
 import { ClientApi } from '../../api';
 
@@ -17,7 +17,7 @@ export interface IGetAllUsersRes extends AppResponse<UserEntity[]> {}
 
 export interface IGetUserByIdRes extends AppResponse<UserEntity> {}
 
-export const getAllUsersThunk = createAsyncThunk<UserEntity[], ThunkPayload, AsyncThunkConfig>(
+export const getAllUsersThunk = createAsyncThunk<UserEntity[], ThunkArgs, AsyncThunkConfig>(
   'auth/getAllUsersThunk',
   async ({ onError, onSuccess }, thunkAPI) => {
     try {
@@ -34,7 +34,7 @@ export const getAllUsersThunk = createAsyncThunk<UserEntity[], ThunkPayload, Asy
   }
 );
 
-export const getUserById = createAsyncThunk<UserEntity, ThunkPayload<{ userId: string }>, AsyncThunkConfig>(
+export const getUserById = createAsyncThunk<UserEntity, ThunkArgs<{ userId: string }>, AsyncThunkConfig>(
   'auth/getUserById',
   async ({ onSuccess, onError, data }, thunkAPI) => {
     try {
@@ -51,22 +51,21 @@ export const getUserById = createAsyncThunk<UserEntity, ThunkPayload<{ userId: s
   }
 );
 
-export const createUserByAdminThunk = createAsyncThunk<
-  IRegisteredUser,
-  ThunkPayload<IRegistrationData>,
-  AsyncThunkConfig
->('auth/createUserByAdminThunk', async ({ onSuccess, onError, data }, thunkAPI) => {
-  try {
-    const {
-      data: { data },
-    }: IRegisteredUserInfoRes = await ClientApi.clientRef.post(usersApiRoutes.createByAdmin, {});
+export const createUserByAdminThunk = createAsyncThunk<IRegisteredUser, ThunkArgs<IRegistrationData>, AsyncThunkConfig>(
+  'auth/createUserByAdminThunk',
+  async ({ onSuccess, onError, data }, thunkAPI) => {
+    try {
+      const {
+        data: { data },
+      }: IRegisteredUserInfoRes = await ClientApi.clientRef.post(usersApiRoutes.createByAdmin, {});
 
-    onSuccess && onSuccess(data);
+      onSuccess && onSuccess(data);
 
-    return data;
-  } catch (error) {
-    onError && onError(error);
+      return data;
+    } catch (error) {
+      onError && onError(error);
 
-    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
+    }
   }
-});
+);

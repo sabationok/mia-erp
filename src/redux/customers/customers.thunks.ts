@@ -1,6 +1,6 @@
 import { AsyncThunkPayloadCreator, createAsyncThunk } from '@reduxjs/toolkit';
 import { ICustomer, ICustomerReqDta } from '../../types/customers.types';
-import { ThunkPayload } from '../store.store';
+import { ThunkArgs } from '../store.store';
 import { AppQueryParams, CommunicationApi, CustomersApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
 import { ICommunicationMethod, ICommunicationMethodReqData } from '../../types/integrations.types';
@@ -20,7 +20,7 @@ enum CustomersThunkTypeEnum {
 }
 
 export const asyncThunkPayloadCreatorWrapper =
-  <Return extends AppResponseType = any, Arg extends ThunkPayload = any>(
+  <Return extends AppResponseType = any, Arg extends ThunkArgs = any>(
     getResponse: () => Promise<AxiosResponse<Return>>
   ): AsyncThunkPayloadCreator<Return, Arg> =>
   async (arg, thunkAPI) => {
@@ -36,7 +36,7 @@ export const asyncThunkPayloadCreatorWrapper =
     }
   };
 
-export const createCustomerThunk = createAsyncThunk<ICustomer, ThunkPayload<ICustomerReqDta, ICustomer>>(
+export const createCustomerThunk = createAsyncThunk<ICustomer, ThunkArgs<ICustomerReqDta, ICustomer>>(
   CustomersThunkTypeEnum.create,
   async (arg, thunkAPI) => {
     try {
@@ -53,7 +53,7 @@ export const createCustomerThunk = createAsyncThunk<ICustomer, ThunkPayload<ICus
 );
 export const updateCustomerThunk = createAsyncThunk<
   { data: ICustomer; refresh?: boolean },
-  ThunkPayload<{ data: ICustomerReqDta; refresh?: boolean }, ICustomer>
+  ThunkArgs<{ data: ICustomerReqDta; refresh?: boolean }, ICustomer>
 >(CustomersThunkTypeEnum.update, async (arg, thunkAPI) => {
   console.log('updateCustomerThunk');
 
@@ -71,7 +71,7 @@ export const updateCustomerThunk = createAsyncThunk<
 });
 export const getAllCustomersThunk = createAsyncThunk<
   { refresh?: boolean; data: ICustomer[] },
-  ThunkPayload<{ refresh?: boolean; params: AppQueryParams }, ICustomer[]>
+  ThunkArgs<{ refresh?: boolean; params: AppQueryParams }, ICustomer[]>
 >(CustomersThunkTypeEnum.getAll, async (arg, thunkAPI) => {
   try {
     const res = await CustomersApi.getAllByQueries(arg.data?.params);
@@ -87,7 +87,7 @@ export const getAllCustomersThunk = createAsyncThunk<
 
 export const getAllCommunicationInvoiceMethodsThunk = createAsyncThunk<
   ICommunicationMethod[],
-  ThunkPayload<unknown, ICommunicationMethod[]>
+  ThunkArgs<unknown, ICommunicationMethod[]>
 >(CustomersThunkTypeEnum.getAllMethods, async (args, thunkAPI) => {
   args?.onLoading && args?.onLoading(true);
   try {
@@ -105,7 +105,7 @@ export const getAllCommunicationInvoiceMethodsThunk = createAsyncThunk<
 });
 export const updateCommunicationMethodThunk = createAsyncThunk<
   ICommunicationMethod,
-  ThunkPayload<ICommunicationMethodReqData, ICommunicationMethod>
+  ThunkArgs<ICommunicationMethodReqData, ICommunicationMethod>
 >(CustomersThunkTypeEnum.updateMethod, async (args, thunkAPI) => {
   args?.onLoading && args?.onLoading(true);
   try {

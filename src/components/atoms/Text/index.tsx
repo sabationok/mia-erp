@@ -10,6 +10,7 @@ export interface TextProps {
   $size?: number;
   $weight?: FontWeight;
   $align?: Property.TextAlign;
+  $whiteSpase?: Property.WhiteSpace;
   $textTransform?: Property.TextTransform;
   $ellipsisMode?: boolean;
   $padding?: Property.Padding;
@@ -31,6 +32,7 @@ export const Text = styled.span<TextProps>`
   color: ${({ color, ...p }) => color || 'inherit'};
   padding: ${({ $padding, ...p }) => $padding ?? 0};
   margin: ${({ $margin, ...p }) => $margin ?? 0};
+  white-space: ${({ $whiteSpase }) => $whiteSpase};
 
   cursor: inherit;
 

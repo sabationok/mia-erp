@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ThunkPayload } from '../../store.store';
+import { ThunkArgs } from '../../store.store';
 import { AppQueryParams } from '../../../api';
 import TransactionsApi from '../../../api/transactions.api';
 import { axiosErrorCheck } from '../../../utils';
@@ -11,7 +11,7 @@ enum BankAccountsThunkType {
   getList = 'finances/getBankAccountsListThunk',
 }
 
-export const createBankAccountThunk = createAsyncThunk<IBankAccount, ThunkPayload<BankAccountReqData, IBankAccount>>(
+export const createBankAccountThunk = createAsyncThunk<IBankAccount, ThunkArgs<BankAccountReqData, IBankAccount>>(
   BankAccountsThunkType.create,
   async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
     onLoading && onLoading(true);
@@ -34,7 +34,7 @@ export const createBankAccountThunk = createAsyncThunk<IBankAccount, ThunkPayloa
 
 export const updateBankAccountThunk = createAsyncThunk<
   IBankAccount,
-  ThunkPayload<Omit<BankAccountReqData, 'params'>, IBankAccount>
+  ThunkArgs<Omit<BankAccountReqData, 'params'>, IBankAccount>
 >(BankAccountsThunkType.create, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
   onLoading && onLoading(true);
 
@@ -55,7 +55,7 @@ export const updateBankAccountThunk = createAsyncThunk<
 
 export const getBankAccountsListThunk = createAsyncThunk<
   { update?: boolean; data?: IBankAccount[] },
-  ThunkPayload<
+  ThunkArgs<
     {
       update?: boolean;
       query?: AppQueryParams;

@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from '../../utils';
-import { ThunkPayload } from '../store.store';
+import { ThunkArgs } from '../store.store';
 import { CompanyEntity, ICompanyReqData } from '../../types/companies.types';
 import { CompaniesApi } from '../../api';
 
@@ -67,7 +67,7 @@ export enum CompanyThunkType {
 export function buildGetCompanyByIdThunk(type: string) {
   return createAsyncThunk<
     CompanyEntity,
-    ThunkPayload<
+    ThunkArgs<
       {
         _id?: string;
         params?: { fullInfo?: boolean; configs?: boolean };
@@ -91,7 +91,7 @@ export function buildGetCompanyByIdThunk(type: string) {
 
 export const getCompanyByIdThunk = buildGetCompanyByIdThunk(CompanyThunkType.getById);
 export function buildUpdateCompanyThunk(type: string) {
-  return createAsyncThunk<CompanyEntity, ThunkPayload<ICompanyReqData, CompanyEntity>>(
+  return createAsyncThunk<CompanyEntity, ThunkArgs<ICompanyReqData, CompanyEntity>>(
     type,
     async ({ data, onSuccess, onError }, thunkAPI) => {
       try {

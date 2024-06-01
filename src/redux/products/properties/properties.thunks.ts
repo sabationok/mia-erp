@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ActionPayload, ThunkPayload } from '../../store.store';
+import { ActionPayload, ThunkArgs } from '../../store.store';
 import PropertiesApi from '../../../api/properties.api';
 import { IPropertyReqData, PropertyEntity } from '../../../types/offers/properties.types';
 import { axiosErrorCheck } from '../../../utils';
@@ -12,7 +12,7 @@ enum PropertiesThunkType {
 
 export const getAllPropertiesThunk = createAsyncThunk<
   ActionPayload<{ data: PropertyEntity[] }>,
-  ThunkPayload<IPropertyReqData, PropertyEntity[]>
+  ThunkArgs<IPropertyReqData, PropertyEntity[]>
 >(PropertiesThunkType.getAll, async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
   try {
@@ -29,7 +29,7 @@ export const getAllPropertiesThunk = createAsyncThunk<
 
 export const createPropertyThunk = createAsyncThunk<
   ActionPayload<{ data: PropertyEntity }>,
-  ThunkPayload<IPropertyReqData, PropertyEntity>
+  ThunkArgs<IPropertyReqData, PropertyEntity>
 >(PropertiesThunkType.create, async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
 
@@ -48,7 +48,7 @@ export const createPropertyThunk = createAsyncThunk<
 
 export const updatePropertyThunk = createAsyncThunk<
   ActionPayload<{ data: PropertyEntity }>,
-  ThunkPayload<IPropertyReqData, PropertyEntity>
+  ThunkArgs<IPropertyReqData, PropertyEntity>
 >(PropertiesThunkType.update, async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
 

@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from '../../utils';
 import { AppQueryParams, DeliveriesApi } from '../../api';
-import { ThunkPayload } from '../store.store';
+import { ThunkArgs } from '../store.store';
 import { IDeliveryMethod, IDeliveryMethodReqData } from '../../types/integrations.types';
 import { isAxiosError } from 'axios';
 import { IDelivery } from '../../types/deliveries.types';
@@ -12,7 +12,7 @@ enum DeliveriesThunkTypeEnum {
   updateMethod = 'deliveries/updateMethodThunk',
 }
 
-export const getAllDeliveryMethodsThunk = createAsyncThunk<IDeliveryMethod[], ThunkPayload<unknown, IDeliveryMethod[]>>(
+export const getAllDeliveryMethodsThunk = createAsyncThunk<IDeliveryMethod[], ThunkArgs<unknown, IDeliveryMethod[]>>(
   DeliveriesThunkTypeEnum.getAllMethods,
   async (args, thunkAPI) => {
     args?.onLoading && args?.onLoading(true);
@@ -32,7 +32,7 @@ export const getAllDeliveryMethodsThunk = createAsyncThunk<IDeliveryMethod[], Th
 );
 export const updateDeliveryMethodThunk = createAsyncThunk<
   IDeliveryMethod,
-  ThunkPayload<IDeliveryMethodReqData, IDeliveryMethod>
+  ThunkArgs<IDeliveryMethodReqData, IDeliveryMethod>
 >(DeliveriesThunkTypeEnum.updateMethod, async (args, thunkAPI) => {
   args?.onLoading && args?.onLoading(true);
   try {
@@ -53,10 +53,7 @@ export const getAllDeliveriesThunk = buildGetAllDeliveriesThunk(DeliveriesThunkT
 export function buildGetAllDeliveriesThunk(type: string) {
   return createAsyncThunk<
     { refresh?: boolean; update?: boolean; data: IDelivery[] },
-    ThunkPayload<
-      { refreshCurrent?: boolean; params?: Pick<AppQueryParams, 'group' | 'order' | 'manager'> },
-      IDelivery[]
-    >
+    ThunkArgs<{ refreshCurrent?: boolean; params?: Pick<AppQueryParams, 'group' | 'order' | 'manager'> }, IDelivery[]>
   >(type, async (args, thunkApi) => {
     try {
       const res = await DeliveriesApi.getAllByQueries(args?.data?.params);

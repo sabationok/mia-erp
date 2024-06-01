@@ -1,4 +1,4 @@
-import { ThunkPayload } from '../redux/store.store';
+import { ThunkArgs } from '../redux/store.store';
 import { FieldValues } from 'react-hook-form';
 import { FilterOption } from '../components/atoms/TabSelector';
 import { t } from '../lang';
@@ -6,7 +6,7 @@ import { t } from '../lang';
 function createThunkPayload<SD extends FieldValues = any, RD = any, E = any>(
   payloadData?: SD,
   options?: CreateThunkPayloadOptions<SD, RD, E>
-): ThunkPayload<SD, RD, E> {
+): ThunkArgs<SD, RD, E> {
   const { logData, logError, logLoading, logAll, onError, onSuccess, onLoading } = options || {};
   return {
     onSuccess: (d: RD) => {
@@ -78,7 +78,7 @@ function defaultApiCallPayload<SD = any, RD = any, E = any>({
   onSuccess,
   onLoading,
   data,
-}: CreateThunkPayloadOptions<SD, RD, E> = {}): ThunkPayload<SD, RD, E> {
+}: CreateThunkPayloadOptions<SD, RD, E> = {}): ThunkArgs<SD, RD, E> {
   return {
     onSuccess: (d: RD) => {
       (logAll || logData) && console.log('defaultApiCallPayload onSuccess', d);

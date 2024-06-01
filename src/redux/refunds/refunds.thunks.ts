@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ThunkPayload } from '../store.store';
+import { ThunkArgs } from '../store.store';
 import { AppQueryParams, createApiCall, RefundsApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
 import { isAxiosError } from 'axios';
@@ -8,7 +8,7 @@ import { IRefund, IRefundReqData } from './refunds.types';
 
 export const getAllRefundsThunk = createAsyncThunk<
   { refresh?: boolean; data?: IRefund[] },
-  ThunkPayload<
+  ThunkArgs<
     {
       refresh?: boolean;
       query?: AppQueryParams;
@@ -33,7 +33,7 @@ export const getAllRefundsThunk = createAsyncThunk<
   }
 });
 
-export const createRefundThunk = createAsyncThunk<IRefund | undefined, ThunkPayload<IRefundReqData, IRefund>>(
+export const createRefundThunk = createAsyncThunk<IRefund | undefined, ThunkArgs<IRefundReqData, IRefund>>(
   'refunds/createRefundThunk',
   async (args, thunkApi) => {
     try {
@@ -53,7 +53,7 @@ export const createRefundThunk = createAsyncThunk<IRefund | undefined, ThunkPayl
     }
   }
 );
-export const getRefundByIdThunk = createAsyncThunk<IRefund | undefined, ThunkPayload<OnlyUUID, IRefund>>(
+export const getRefundByIdThunk = createAsyncThunk<IRefund | undefined, ThunkArgs<OnlyUUID, IRefund>>(
   'refunds/getRefundByIdThunk',
   async (args, thunkApi) => {
     try {
@@ -73,7 +73,7 @@ export const getRefundByIdThunk = createAsyncThunk<IRefund | undefined, ThunkPay
     }
   }
 );
-export const getRefundSlotsById = createAsyncThunk<IRefund | undefined, ThunkPayload<OnlyUUID, IRefund>>(
+export const getRefundSlotsById = createAsyncThunk<IRefund | undefined, ThunkArgs<OnlyUUID, IRefund>>(
   'refunds/getRefundSlotsById',
   async (args, thunkApi) => {
     try {

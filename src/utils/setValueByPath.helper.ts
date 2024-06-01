@@ -29,7 +29,7 @@ export function setValueByPath<Obj extends Record<string, any> = Record<string, 
   target?: Obj
 ): Obj {
   const separator = options?.separator || '.';
-  const pathArray = path.split(separator);
+  const pathArray = path?.split(separator) ?? '';
 
   // Рекурсивна функція для установки значення
   const setValueRecursively = (currentObj: Record<string, any>, keys: string[]): void => {
@@ -46,9 +46,12 @@ export function setValueByPath<Obj extends Record<string, any> = Record<string, 
       }
     } catch (e) {}
   };
-
   // Клонування об'єкта для запобігання мутації вхідного об'єкта
   const newObj = target ? JSON.parse(JSON.stringify(target)) : {};
+
+  if (!path) {
+    return newObj as Obj;
+  }
 
   setValueRecursively(newObj, pathArray);
 

@@ -5,7 +5,7 @@ import {
   PermissionEntity,
   PermissionRecipientEnum,
 } from '../../types/permissions.types';
-import { ThunkPayload } from '../store.store';
+import { ThunkArgs } from '../store.store';
 import { axiosErrorCheck } from 'utils';
 import { CompaniesApi, PermissionsApi } from '../../api';
 import { ICompanyForReq } from '../../types/companies.types';
@@ -31,7 +31,7 @@ enum PermissionsThunkType {
 
 export const getAllPermissionsByUserIdThunk = createAsyncThunk<
   PermissionEntity[],
-  ThunkPayload<{
+  ThunkArgs<{
     userId: string;
     query?: { type?: CompanyQueryType };
   }>
@@ -57,7 +57,7 @@ export const getAllPermissionsByUserIdThunk = createAsyncThunk<
 
 export const getAllPermissionsByCompanyIdThunk = createAsyncThunk<
   PermissionEntity[],
-  ThunkPayload<{ _id: string; params?: { recipient?: PermissionRecipientEnum } }>
+  ThunkArgs<{ _id: string; params?: { recipient?: PermissionRecipientEnum } }>
 >('permissions/getAllPermissionsByCompanyIdThunk', async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
   onLoading && onLoading(true);
   try {
@@ -80,7 +80,7 @@ export const getAllPermissionsByCompanyIdThunk = createAsyncThunk<
 
 export const getCurrentPermissionThunk = createAsyncThunk<
   Partial<{ permission_token: string } & PermissionEntity>,
-  ThunkPayload<
+  ThunkArgs<
     {
       id: string;
     },
@@ -103,7 +103,7 @@ export const getCurrentPermissionThunk = createAsyncThunk<
     return thunkAPI.rejectWithValue(axiosErrorCheck(error));
   }
 });
-export const logInPermissionThunk = createAsyncThunk<PermissionEntity, ThunkPayload<{ _id: string }, PermissionEntity>>(
+export const logInPermissionThunk = createAsyncThunk<PermissionEntity, ThunkArgs<{ _id: string }, PermissionEntity>>(
   PermissionsThunkType.login,
   async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
     onLoading && onLoading(true);
@@ -126,7 +126,7 @@ export const logInPermissionThunk = createAsyncThunk<PermissionEntity, ThunkPayl
 );
 export const logOutPermissionThunk = createAsyncThunk<
   { _id?: string; result: boolean; user: UserEntity },
-  ThunkPayload<
+  ThunkArgs<
     any,
     {
       _id?: string;
@@ -153,27 +153,27 @@ export const logOutPermissionThunk = createAsyncThunk<
     return thunkAPI.rejectWithValue(axiosErrorCheck(error));
   }
 });
-export const createPermissionThunk = createAsyncThunk<
-  PermissionEntity,
-  ThunkPayload<IPermissionForReq, PermissionEntity>
->(PermissionsThunkType.create, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
-  onLoading && onLoading(true);
-  try {
-    const response = await PermissionsApi.create(data as IPermissionForReq);
-    if (response) {
-      onSuccess && onSuccess(response.data.data);
+export const createPermissionThunk = createAsyncThunk<PermissionEntity, ThunkArgs<IPermissionForReq, PermissionEntity>>(
+  PermissionsThunkType.create,
+  async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
+    onLoading && onLoading(true);
+    try {
+      const response = await PermissionsApi.create(data as IPermissionForReq);
+      if (response) {
+        onSuccess && onSuccess(response.data.data);
+      }
+      onLoading && onLoading(false);
+
+      return response.data.data;
+    } catch (error) {
+      onError && onError(error);
+      onLoading && onLoading(false);
+
+      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
     }
-    onLoading && onLoading(false);
-
-    return response.data.data;
-  } catch (error) {
-    onError && onError(error);
-    onLoading && onLoading(false);
-
-    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
   }
-});
-export const inviteUserThunk = createAsyncThunk<PermissionEntity, ThunkPayload<IPermissionForReq, PermissionEntity>>(
+);
+export const inviteUserThunk = createAsyncThunk<PermissionEntity, ThunkArgs<IPermissionForReq, PermissionEntity>>(
   PermissionsThunkType.inviteUser,
   async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
     onLoading && onLoading(false);
@@ -196,7 +196,7 @@ export const inviteUserThunk = createAsyncThunk<PermissionEntity, ThunkPayload<I
     }
   }
 );
-export const createCompanyWithPermissionThunk = createAsyncThunk<PermissionEntity, ThunkPayload<ICompanyForReq>>(
+export const createCompanyWithPermissionThunk = createAsyncThunk<PermissionEntity, ThunkArgs<ICompanyForReq>>(
   PermissionsThunkType.createCompanyWithPermission,
   async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
     onLoading && onLoading(true);
@@ -220,7 +220,7 @@ export const createCompanyWithPermissionThunk = createAsyncThunk<PermissionEntit
 
 export const deleteCompanyWithPermissionThunk = createAsyncThunk<
   Partial<{ _id?: string; result: boolean }>,
-  ThunkPayload<{ _id: string }>
+  ThunkArgs<{ _id: string }>
 >(PermissionsThunkType.deleteCompanyWithPermission, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
   onLoading && onLoading(true);
   try {
@@ -239,7 +239,7 @@ export const deleteCompanyWithPermissionThunk = createAsyncThunk<
     return thunkAPI.rejectWithValue(axiosErrorCheck(error));
   }
 });
-export const updatePermissionThunk = createAsyncThunk<Partial<PermissionEntity>, ThunkPayload<IPermissionReqData>>(
+export const updatePermissionThunk = createAsyncThunk<Partial<PermissionEntity>, ThunkArgs<IPermissionReqData>>(
   PermissionsThunkType.update,
   async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
     onLoading && onLoading(true);
@@ -263,7 +263,7 @@ export const updatePermissionThunk = createAsyncThunk<Partial<PermissionEntity>,
 
 export const deletePermissionByIdThunk = createAsyncThunk<
   { _id?: string; result: boolean },
-  ThunkPayload<Partial<IPermissionReqData>>
+  ThunkArgs<Partial<IPermissionReqData>>
 >(PermissionsThunkType.deletePermissionById, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
   onLoading && onLoading(true);
   try {

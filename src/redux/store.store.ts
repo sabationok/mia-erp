@@ -15,14 +15,22 @@ export const store = configureStore({
   devTools: process.env.NODE_ENV === 'development',
 });
 
+interface ActionPayloadBase {
+  refresh?: boolean;
+  update?: boolean;
+  prepend?: boolean;
+  upend?: boolean;
+}
 export type AppDispatch = typeof store.dispatch;
-export type ActionPayload<D = any> = { refresh?: boolean; update?: boolean; prepend?: boolean; upend?: boolean } & D;
+export type ActionPayload<D = any> = ActionPayloadBase & D;
 export type Action<D = any> = AnyAction & { payload: ActionPayload<D> };
 
-export interface ThunkPayload<SD = any, RD = any, E = any | unknown, MD = any> {
-  data?: ActionPayload<SD>;
-  onSuccess?: (data: RD, meta?: MD) => void;
-  onError?: (error: E) => void;
+export interface ThunkArgs<Data = any, Return = any, Error = any | unknown, Meta = any, Params = any>
+  extends ActionPayloadBase {
+  data?: ActionPayload<Data>;
+  params?: Params;
+  onSuccess?: (data: Return, meta?: Meta) => void;
+  onError?: (error: Error) => void;
   onLoading?: (loading: boolean) => void;
 }
 

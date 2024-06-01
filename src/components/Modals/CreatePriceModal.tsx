@@ -7,7 +7,7 @@ import { VariationEntity } from '../../types/offers/variations.types';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { LoadersProvider, useLoadersProvider } from '../../Providers/Loaders/LoaderProvider';
 import ModalBase from '../atoms/Modal';
-import { CreatePriceFormArea } from '../Forms/pricing/CreatePriceFormArea';
+import { OfferPriceFormArea } from '../Forms/pricing/OfferPriceFormArea';
 import TableList from '../TableList/TableList';
 import { PriceDiscountEntity } from '../../types/price-management/discounts';
 import FlexBox from '../atoms/FlexBox';
@@ -31,11 +31,10 @@ export interface ModalCreatePriceProps
 }
 
 type UsePriceFormLoadersKey =
-  | 'create'
+  | 'price'
   | 'update'
   | 'copy'
-  | 'price'
-  | 'set_default'
+  | 'set_default_price'
   | 'create_discount'
   | 'update_discount'
   | 'discounts'
@@ -49,8 +48,9 @@ const CreatePriceModal: React.FC<ModalCreatePriceProps> = ({ updateId, offer, on
   const modalSrv = useModalService();
   const loaders = useLoaders<UsePriceFormLoadersKey, { price?: PriceEntity; discounts?: PriceDiscountEntity[] }>(
     {
-      create: { content: 'Creating...' },
-      set_default: { content: 'Updating offer...' },
+      price: { content: 'Creating...' },
+      update: { content: 'Updating...' },
+      set_default_price: { content: 'Updating offer...' },
     },
     { price: Price, discounts: Price?.discounts }
   );
@@ -60,7 +60,7 @@ const CreatePriceModal: React.FC<ModalCreatePriceProps> = ({ updateId, offer, on
     <ModalBase title={t('Pricing')} onClose={props?.onClose}>
       <LoadersProvider value={loaders}>
         <FlexBox padding={'0 8px 24px'}>
-          <CreatePriceFormArea offer={offer} defaultState={Price} price={Price} />
+          <OfferPriceFormArea offer={offer} defaultState={Price} price={Price} />
 
           <AccordionFormArea label={'Select discounts'}>
             <InputLabel label={'Added discounts'}>

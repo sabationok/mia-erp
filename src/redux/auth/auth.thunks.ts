@@ -10,10 +10,10 @@ import {
   IRegisteredUserInfoRes,
   RegisterDto,
 } from '../../types/auth.types';
-import { ThunkPayload } from '../store.store';
+import { ThunkArgs } from '../store.store';
 import AuthApi from '../../api/auth.api';
 
-export const registerUserThunk = createAsyncThunk<IRegisteredUser, ThunkPayload<RegisterDto>>(
+export const registerUserThunk = createAsyncThunk<IRegisteredUser, ThunkArgs<RegisterDto>>(
   'auth/registerThunk',
   async ({ data, onSuccess, onError }, thunkAPI) => {
     try {
@@ -32,7 +32,7 @@ export const registerUserThunk = createAsyncThunk<IRegisteredUser, ThunkPayload<
 
 export const logInUserThunk = createAsyncThunk<
   ILoggedUserInfo,
-  ThunkPayload<ILoginUserData>,
+  ThunkArgs<ILoginUserData>,
   {
     state: { auth: IAuthState };
   }
@@ -49,7 +49,7 @@ export const logInUserThunk = createAsyncThunk<
   }
 });
 
-export const logOutUserThunk = createAsyncThunk<any, ThunkPayload>(
+export const logOutUserThunk = createAsyncThunk<any, ThunkArgs>(
   'auth/logOutUserThunk',
   async ({ data, onSuccess, onError }, thunkAPI) => {
     try {
@@ -64,7 +64,7 @@ export const logOutUserThunk = createAsyncThunk<any, ThunkPayload>(
 
 export const getCurrentUserThunk = createAsyncThunk<
   ICurrentUser,
-  ThunkPayload<
+  ThunkArgs<
     {
       permissionId: string;
     },

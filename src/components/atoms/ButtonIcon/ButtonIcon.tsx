@@ -103,7 +103,7 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
       )}
       {variant && !variant.includes('Icon') && children}
       {/*{children}*/}
-      <ButtonLoader isLoading={isLoading} variant={variant} size={size} />
+      <ButtonLoader isLoading={isLoading} variant={variant} size={size || '20px'} />
 
       {(endIconId || endIcon) && (
         <SvgIcon className="endIcon" style={endIconStyle}>
@@ -173,6 +173,10 @@ const StyledButtonIcon = styled.button<ButtonIconProps>`
 `;
 
 const SvgIcon = styled.svg`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   pointer-events: none;
   width: 100%;
   height: 100%;

@@ -1,13 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { IVariationReqData, VariationEntity } from '../../../types/offers/variations.types';
-import { ThunkPayload } from '../../store.store';
+import { ThunkArgs } from '../../store.store';
 import VariationsApi from '../../../api/variations.api';
 import { isAxiosError } from 'axios';
 import { AppQueryParams } from '../../../api';
 
 export const createVariationThunk = createAsyncThunk<
   VariationEntity | undefined,
-  ThunkPayload<IVariationReqData, VariationEntity>
+  ThunkArgs<IVariationReqData, VariationEntity>
 >('products/createVariationThunk', async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
   try {
@@ -26,7 +26,7 @@ export const createVariationThunk = createAsyncThunk<
 
 export const updateVariationThunk = createAsyncThunk<
   VariationEntity | undefined,
-  ThunkPayload<IVariationReqData, VariationEntity>
+  ThunkArgs<IVariationReqData, VariationEntity>
 >('products/updateVariationThunk', async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
   try {
@@ -44,7 +44,7 @@ export const updateVariationThunk = createAsyncThunk<
 });
 export const getAllVariationsByOfferIdThunk = createAsyncThunk<
   { data: VariationEntity[]; offerId?: string; refreshCurrent?: boolean } | undefined,
-  ThunkPayload<{ offerId: string; params?: AppQueryParams; refreshCurrent?: boolean }, VariationEntity[]>
+  ThunkArgs<{ offerId: string; params?: AppQueryParams; refreshCurrent?: boolean }, VariationEntity[]>
 >('products/getAllVariationsByProductIdThunk', async (args, thunkApi) => {
   args?.onLoading && args?.onLoading(true);
 

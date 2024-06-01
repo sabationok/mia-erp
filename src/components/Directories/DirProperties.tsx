@@ -88,7 +88,9 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   });
 
   const currentId: string | undefined = stack[stack.length - 1]?._id;
-
+  const onStackItemSelect = (position: number) => {
+    setStack(p => [...p].slice(0, position + 1));
+  };
   const { roots } = useMemo(() => {
     const _rootItems: PropertyBaseEntity[] = [];
 
@@ -181,7 +183,8 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
       },
     });
   };
-
+  const canGoNext = stack?.length <= 3;
+  const canAddNew = stack?.length <= 2;
   const onEditCurrentHandler = () => {
     currentData.current &&
       modalSrv.open({
@@ -197,7 +200,8 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
     <ModalBase title={title} fillHeight>
       <FlexBox padding={'0 8px'}>
         <TabSelector {...registerTabSelector('type')} filterOptions={productsFilterOptions} />
-        <RenderStackHistory stack={stack} />
+
+        <RenderStackHistory stack={stack} onItemSelect={(_, index) => onStackItemSelect(index)} />
 
         {stack.length === 1 && (
           <FlexBox margin={'8px 0'}>
@@ -228,7 +232,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
                 }}
                 item={item}
                 // disabled={!state.propertiesKeysMap?.[item._id]?.length}
-                disabled={stack?.length >= 2}
+                disabled={!canGoNext}
               />
             )
           );
@@ -238,34 +242,32 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
       <FlexBox
         gap={8}
         fxDirection={'row'}
+        overflow={'auto'}
         padding={'8px 8px 16px'}
         style={{
           borderTop: `1px solid ${theme.sideBarBorderColor}`,
         }}
       >
-        <ButtonIcon
-          variant={'outlinedSmall'}
-          icon={'arrowLeft'}
-          iconSize={'22px'}
-          onClick={() => {
-            onGoBackHandler();
-          }}
-        >
-          {t('Back')}
+        <BackButton variant={'onlyIcon'} icon={'arrowLeft'} iconSize={'100%'} size={'32px'} onClick={onGoBackHandler}>
+          {/*{t('Back')}*/}
+        </BackButton>
+
+        <ButtonIcon variant={'outlinedMiddle'} onClick={onEditCurrentHandler} disabled={!currentId}>
+          {t('Edit')}
         </ButtonIcon>
 
-        <ButtonIcon variant={'outlinedSmall'} onClick={onEditCurrentHandler} disabled={!currentId}>
-          {'Edit current'}
-        </ButtonIcon>
-
-        <ButtonIcon variant={'outlinedSmall'} onClick={onAddNewHandler}>
-          {'Add new'}
+        <ButtonIcon variant={'outlinedMiddle'} onClick={onAddNewHandler} disabled={!canAddNew}>
+          {t('Add')}
         </ButtonIcon>
       </FlexBox>
     </ModalBase>
   );
 };
 
+const BackButton = styled(ButtonIcon)`
+  padding: 8px;
+  max-width: fit-content;
+`;
 const RenderItem = ({
   item,
   disabled,

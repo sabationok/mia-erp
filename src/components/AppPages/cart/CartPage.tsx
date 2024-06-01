@@ -125,7 +125,11 @@ function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
       const slots = cartSrv.ordersSlotsMap?.[orderId];
 
       return (
-        <AccordionFormArea key={orderId ?? index} label={order?.warehouse?.label} hideFooter>
+        <AccordionFormArea
+          key={orderId ?? index}
+          label={t('Warehouse') + ': ' + order?.warehouse?.label ?? t('undefined')}
+          hideFooter
+        >
           <FlexBox minHeight={'300px'}>
             <TableList
               tableData={slots}

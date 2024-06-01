@@ -18,7 +18,7 @@ import { OfferFormImagesArea } from '../Forms/offers/components/OfferFormImagesA
 import { useCurrentOffer } from '../../hooks';
 import { OfferFormCategoriesArea } from '../Forms/offers/components/OfferFormCategoriesArea';
 import { OfferLoadersData, OfferLoadersKey } from '../Forms/offers/types';
-import { CreatePriceFormArea } from '../Forms/pricing/CreatePriceFormArea';
+import { OfferPriceFormArea } from '../Forms/pricing/OfferPriceFormArea';
 
 export interface EditOfferModalProps extends ModalFormProps {
   _id: string;
@@ -41,24 +41,7 @@ const EditOfferModal: React.FC<EditOfferModalProps> = ({ onClose, offer, copy })
 
   const { setData, state } = loaders;
 
-  const offerId = copy ? state.formData?._id : offer?._id;
-
-  // useEffect(() => {
-  //   service.getProductFullInfo({
-  //     data: { params: { _id } },
-  //     onSuccess: loaders.onSuccess('offer_refresh', ({ data }) => {
-  //       if (copy) {
-  //         data._id = '';
-  //       }
-  //       // const formData = toOfferFormData(data);
-  //       setData('formData', toOfferFormData(data));
-  //       router.push({ query: { offerId: _id } });
-  //     }),
-  //     onLoading: loaders.onLoading('offer_refresh'),
-  //   });
-  //
-  //   // eslint-disable-next-line
-  // }, [_id, copy]);
+  const offerId = copy ? state.formData?._id : Offer?._id;
 
   if (!Offer) {
     return (
@@ -121,7 +104,7 @@ const EditOfferModal: React.FC<EditOfferModalProps> = ({ onClose, offer, copy })
               disabled={!state.formData}
             />
 
-            <CreatePriceFormArea
+            <OfferPriceFormArea
               expandable={true}
               isOpen={false}
               offer={Offer}
