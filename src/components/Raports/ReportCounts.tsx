@@ -34,14 +34,14 @@ const ReportCounts: React.FC<IReportCountsProps<CountType>> = ({ entryList, opti
   }, [entryList]);
 
   const filterOptionsMemo = useMemo(() => {
-    if (!filterOptions) return;
-    return filterOptions.map(el => ({
+    if (!options) return;
+    return options.map(el => ({
       ...el,
       extraLabel: (
         <ExtraLabel colorType={el.value}>{`${numberWithSpaces(countedTotals[el.value])} ${currency || ''}`}</ExtraLabel>
       ),
     }));
-  }, [countedTotals, currency, filterOptions]);
+  }, [countedTotals, currency, options]);
 
   // const entryLists = useMemo((): Partial<Record<CountType, ReportListItemProps<CountType>[]>> => {
   //   let data: Partial<Record<CountType, ReportListItemProps<CountType>[]>> = {};

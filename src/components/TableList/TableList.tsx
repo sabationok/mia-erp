@@ -108,10 +108,10 @@ const TableList = <TData extends Partial<OnlyUUID> = any>(
         onHeadCheckboxChange(e);
       } else {
         const { checked } = e;
-        _setSelectedRows(checked ? rowIds ?? [] : []);
+        _setSelectedRows(checked ? _rowIds ?? [] : []);
       }
     },
-    [onHeadCheckboxChange, rowIds]
+    [onHeadCheckboxChange, _rowIds]
   );
 
   useEffect(() => {
