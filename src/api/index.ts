@@ -178,5 +178,5 @@ export type SortOrderType = 'desc' | 'asc' | 'descending' | 'ascending' | 'DESC'
 export interface ISortParams<DataKey = any, DataPath = any> {
   sortOrder?: SortOrderType;
   dataPath?: DataPath | string;
-  dataKey?: DataPath | string;
+  dataKey?: DataKey | string;
 }

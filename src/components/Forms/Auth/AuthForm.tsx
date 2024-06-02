@@ -79,9 +79,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
 
   const {
     register,
-    formState: { errors, isValid },
+    formState: { errors },
     handleSubmit,
-    watch,
     setError,
     clearErrors,
   } = useForm<IRegistrationFormData>({

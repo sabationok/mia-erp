@@ -13,14 +13,14 @@ import styled from 'styled-components';
 export default function OrderSlotOverview({ warehouse }: { warehouse?: WarehouseEntity; slotId?: string }) {
   const cart = useCart();
   const query = useAppQuery();
-  const currentSlot = cart.actions.getSlot(query.query?.slotId);
+  const currentSlot = cart.actions.getSlot(query.query?.slotId as never);
 
   // const service = useAppServiceProvider().get(AppModuleName.offers);
   // const { getAll } = service;
   // const offersState = useProductsSelector();
   // const router = useAppRouter();
   // const loaders = useLoaders();
-  const [selected, setSelected] = useState<VariationEntity | undefined>(currentSlot.variation);
+  const [selected] = useState<VariationEntity | undefined>(currentSlot.variation);
   const [quantity, setQuantity] = useState(currentSlot?.quantity ?? 1);
   // const modalSrv = useModalService();
 

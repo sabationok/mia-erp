@@ -26,8 +26,8 @@ export type WarehouseId = string;
 export type OfferId = string;
 export type VariationId = string;
 
-export type CartSlotId = `${typeof CART_ID_PREFIX}_${CartId}_${SlotId}`;
-export type CartOrderId = `${typeof CART_ID_PREFIX}_${CartId}_${OrderId}`;
+export type CartSlotId = string | `${typeof CART_ID_PREFIX}_${CartId}_${SlotId}`;
+export type CartOrderId = string | `${typeof CART_ID_PREFIX}_${CartId}_${OrderId}`;
 
 export type CartOrderSummary = OrderSummary;
 
@@ -492,7 +492,6 @@ const UpdateCartSlotMutation = (
 
         st.slots.dataMap[tempId].cartId = currentCartId;
         st.slots.dataMap[tempId].cartOrderId = orderId;
-        st.slots.dataMap[tempId] = orderId;
 
         st.dataMap[currentCartId] = Cart;
         st.orders.dataMap[orderId] = orderData;

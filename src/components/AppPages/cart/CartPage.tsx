@@ -5,7 +5,6 @@ import { BaseAppPageProps } from '../index';
 import { AppGridPage } from '../pages';
 import TableList from '../../TableList/TableList';
 import { useCart } from '../../../Providers/CartProvider';
-import { useCartSelector } from '../../../redux/selectors.store';
 import { tempOrderSlotTableColumns } from '../../../data';
 import { useEffect, useMemo } from 'react';
 import { useModalService } from '../../../Providers/ModalProvider/ModalProvider';
@@ -107,7 +106,7 @@ const RightSide = styled(FlexBox)<{ isVisible?: boolean }>`
 
 function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
   const cartId = useAppQuery().query.cartId;
-  const cartState = useCartSelector();
+  // const cartState = useCartSelector();
   const cartSrv = useCart();
   const modalSrv = useModalService();
   const router = useAppRouter();

@@ -125,7 +125,7 @@ export interface ModalChildrenProps extends Record<Modals, any> {
   // sep OFFERS
   [Modals.CreateOffer]: FormPropTypes.CreateOfferModalProps;
   [Modals.EditOffer]: FormPropTypes.EditOfferModalProps;
-  [Modals.FormCreateProperty]: FormPropTypes.FormCreatePropertyProps;
+  [Modals.FormCreateProperty]: FormPropTypes.OfferPropertyModalProps;
 
   // sep ORDERS
   [Modals.FormCreateOrder]: FormPropTypes.FormCreateOrderProps;
