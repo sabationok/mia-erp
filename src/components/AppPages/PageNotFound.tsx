@@ -1,4 +1,4 @@
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 import styled from 'styled-components';
 import MyTreeSelect from '../atoms/Inputs/MyTreeSelect';
 import * as React from 'react';

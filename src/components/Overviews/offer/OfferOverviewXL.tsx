@@ -1,7 +1,7 @@
 import { OfferEntity } from '../../../types/offers/offers.types';
 import FlexBox from '../../atoms/FlexBox';
 import React, { useMemo, useState } from 'react';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../atoms/ButtonIcon';
 import styled from 'styled-components';
 import { t } from '../../../lang';
 import { usePageCurrentOffer } from '../../AppPages/offers/PageOfferProvider';

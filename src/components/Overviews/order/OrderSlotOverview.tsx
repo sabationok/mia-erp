@@ -1,7 +1,7 @@
 import { IOrderTempSlot } from '../../../types/orders/orders.types';
 import FlexBox from '../../atoms/FlexBox';
 import styled, { useTheme } from 'styled-components';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../atoms/ButtonIcon';
 import { useMemo, useState } from 'react';
 import { OfferImageSlotEntity } from '../../../types/offers/offers.types';
 import { Text } from '../../atoms/Text';

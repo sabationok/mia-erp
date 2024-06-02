@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../atoms/ButtonIcon';
 import { IModalChildrenProps } from '../../Providers/ModalProvider/ModalProvider';
 
 type Props = {

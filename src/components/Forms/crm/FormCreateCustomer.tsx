@@ -9,7 +9,7 @@ import InputText from '../../atoms/Inputs/InputText';
 import ButtonsGroup from '../../atoms/ButtonsGroup';
 import { businessSubjectTypeFilterOptions } from '../../../data/companies.data';
 import { useForm } from 'react-hook-form';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../atoms/ButtonIcon';
 import CheckboxesListSelector from '../../atoms/CheckboxesListSelector';
 import { enumToFilterOptions } from '../../../utils/fabrics';
 import { useMemo } from 'react';

@@ -4,7 +4,7 @@ import { isUndefined, omit, pick } from 'lodash';
 import styled, { css } from 'styled-components';
 import FlexBox from '../../FlexBox';
 import { RefCallBack } from 'react-hook-form';
-import ButtonIcon from '../../ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../ButtonIcon';
 import CheckBox from '../../../TableList/TebleCells/CellComponents/CheckBox';
 import { IEmbeddedName, MaybeNull } from '../../../../types/utils.types';
 

@@ -3,7 +3,7 @@ import { useModalProvider } from 'Providers/ModalProvider/ModalProvider';
 import { IDirInTreeProps } from '../../types/dir.types';
 
 import TabSelector, { FilterOption } from '../atoms/TabSelector';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../atoms/ButtonIcon';
 import { OffersService } from '../../hooks/useOffersService.hook';
 import FlexBox, { FlexLi, FlexUl } from '../atoms/FlexBox';
 import { ApiDirType } from '../../redux/APP_CONFIGS';

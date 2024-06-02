@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 import { ErrorContent } from 'components/atoms';
 import { useModalProvider } from 'Providers/ModalProvider/ModalProvider';
 import { useSideBar } from './SideBarProvider';

@@ -1,5 +1,5 @@
 import FlexBox, { FlexForm } from '../atoms/FlexBox';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../atoms/ButtonIcon';
 import { Text } from '../atoms/Text';
 import styled from 'styled-components';
 import * as React from 'react';

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 
 import TableSortParamsList from './TableSortParamsList';
 import styled from 'styled-components';

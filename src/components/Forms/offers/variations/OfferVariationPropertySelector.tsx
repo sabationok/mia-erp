@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useMemo, useState } from 'react';
 import { Text } from '../../../atoms/Text';
 import styled from 'styled-components';
-import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../../atoms/ButtonIcon';
 import FlexBox from '../../../atoms/FlexBox';
 import { useOffersSelector } from '../../../../redux/selectors.store';
 import { t } from '../../../../lang';

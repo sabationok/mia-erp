@@ -7,7 +7,7 @@ import { Text } from '../../../atoms/Text';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import AddImageSetModal, { FormAddImageSetData } from './AddImageSetModal';
 import ImagePreviewSmall from '../../../atoms/ImagePreviewSmall';
-import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../../atoms/ButtonIcon';
 import { t } from '../../../../lang';
 import { formAddImageSetTabs } from '../../../../data';
 import { ImageSetSrcType } from '../../../../types/offers/offer-images.types';

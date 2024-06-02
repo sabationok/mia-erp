@@ -1,4 +1,4 @@
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 
@@ -35,7 +35,7 @@ const TablePagination: React.FC<TablePaginationProps> = ({ onSelect }) => {
   return (
     <Box>
       <DropDownBox>
-        <StButton isOpen={isOpen} variant='def' endIconSize='26px' endIconId='SmallArrowUp' onClick={onOpen}>
+        <StButton isOpen={isOpen} variant="def" endIconSize="26px" endIconId="SmallArrowUp" onClick={onOpen}>
           <span>{current?.label}</span>
         </StButton>
 
@@ -105,18 +105,18 @@ const SelectList = styled.ul<{ isOpen: boolean }>`
   border: 1px solid ${({ theme }) => theme.trBorderClr};
   box-shadow: ${({ theme }) => theme.globals.shadowMain};
   transition: all ${({ theme }) => theme.globals.timingFunctionMain},
-  transform ${({ theme }) => theme.globals.timingFnMui};
+    transform ${({ theme }) => theme.globals.timingFnMui};
   transform-origin: bottom;
 
   ${({ isOpen }) =>
-          isOpen
-                  ? css``
-                  : css`
-                    transform: scale(0.7, 0.5);
-                    opacity: 0;
-                    visibility: hidden;
-                    pointer-events: none;
-                  `}
+    isOpen
+      ? css``
+      : css`
+          transform: scale(0.7, 0.5);
+          opacity: 0;
+          visibility: hidden;
+          pointer-events: none;
+        `}
 `;
 const SelectItem = styled.li`
   font-size: 16px;

@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { OnCheckBoxChangeHandler } from '../TableList/tableTypes.types';
-import ButtonIcon from './ButtonIcon/ButtonIcon';
+import ButtonIcon from './ButtonIcon';
 import { isUndefined } from 'lodash';
 
 type Props = {

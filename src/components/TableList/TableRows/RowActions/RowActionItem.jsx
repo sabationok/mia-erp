@@ -1,4 +1,4 @@
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 
 import s from './RowActions.module.scss';
 

@@ -1,6 +1,6 @@
 import { ChangeEventHandler, useEffect, useRef, useState } from 'react';
 import FlexBox from './FlexBox';
-import ButtonIcon from './ButtonIcon/ButtonIcon';
+import ButtonIcon from './ButtonIcon';
 import styled from 'styled-components';
 import InputText from './Inputs/InputText';
 import { checks } from '../../utils';

@@ -2,7 +2,7 @@ import { useTable } from './TableList';
 import FlexBox, { FlexLi, FlexUl } from '../atoms/FlexBox';
 import styled from 'styled-components';
 import React, { useEffect, useMemo, useState } from 'react';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../atoms/ButtonIcon';
 import { useCloseByEscapeOrClickOnBackdrop } from '../../hooks';
 
 export interface TableActionsListProps {

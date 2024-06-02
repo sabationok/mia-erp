@@ -1,6 +1,6 @@
 import FlexBox from '../../../atoms/FlexBox';
 import { IntegrationTabProps } from '../InputIntegrationsTab';
-import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../../atoms/ButtonIcon';
 import { useEffect, useMemo, useState } from 'react';
 import { Text } from '../../../atoms/Text';
 import { t } from 'lang';

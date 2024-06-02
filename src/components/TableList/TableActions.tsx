@@ -1,9 +1,9 @@
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../atoms/ButtonIcon';
 import { memo, useMemo } from 'react';
 // import { ITableAction } from './tableTypes.types';
 import { useTable } from './TableList';
 import { iconId } from '../../img/sprite';
-import { FlexBoxBaseProps } from '../atoms/FlexBox';
+import { FlexBaseProps } from '../atoms/FlexBox';
 import { NavLink } from 'react-router-dom';
 
 // export interface TableActionProps<TData = any> extends ITableAction {}
@@ -11,7 +11,7 @@ import { NavLink } from 'react-router-dom';
 export interface TableActionsProps {
   renderSeparator?: React.ReactNode;
   btnSize?: number;
-  fxDirection?: FlexBoxBaseProps['fxDirection'];
+  fxDirection?: FlexBaseProps['fxDirection'];
 }
 
 const TableActions: React.FC<TableActionsProps> = ({ renderSeparator = <></>, btnSize = 26 }) => {

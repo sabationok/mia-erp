@@ -1,7 +1,7 @@
 import { CSSProperties, HTMLInputTypeAttribute, useState } from 'react';
 import FlexBox from '../FlexBox';
 import styled from 'styled-components';
-import ButtonIcon from '../ButtonIcon/ButtonIcon';
+import ButtonIcon from '../ButtonIcon';
 
 const InputSecurityControlHOC = ({
   children,

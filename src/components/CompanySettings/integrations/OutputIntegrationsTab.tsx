@@ -12,7 +12,7 @@ import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { Text } from '../../atoms/Text';
 import { toAppDateFormat } from '../../../utils';
 import { isNumber } from 'lodash';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../atoms/ButtonIcon';
 import { StorageService } from '../../../services';
 
 export interface OutputIntegrationsTabProps {}

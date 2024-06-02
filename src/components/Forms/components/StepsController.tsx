@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import { FilterOption } from '../../atoms/TabSelector';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../atoms/ButtonIcon';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { checks } from '../../../utils';
 import { t } from '../../../lang';

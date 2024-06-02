@@ -1,6 +1,6 @@
 import { FilterChangeHandler, FilterOption, FilterSelectHandler, FilterSelectValueHandler } from './TabSelector';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import ButtonIcon from './ButtonIcon/ButtonIcon';
+import ButtonIcon from './ButtonIcon';
 import { checks } from '../../utils';
 import FlexBox from './FlexBox';
 import { t } from '../../lang';

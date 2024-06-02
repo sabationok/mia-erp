@@ -7,7 +7,7 @@ import OffersApi from '../../api/offers.api';
 import FlexBox from '../atoms/FlexBox';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../atoms/ButtonIcon';
 import styled from 'styled-components';
 import ModalForm, { ModalFormProps } from '../ModalForm';
 import { TabOption } from '../atoms/TabSelector';

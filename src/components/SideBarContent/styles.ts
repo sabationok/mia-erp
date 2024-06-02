@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import ButtonIcon from '../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../atoms/ButtonIcon';
 import { Text } from '../atoms/Text';
 
 export const Container = styled.ul`

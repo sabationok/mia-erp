@@ -1,5 +1,5 @@
 import React from 'react';
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 import { useSideBar } from '../SideBarProvider';
 import styled from 'styled-components';
 

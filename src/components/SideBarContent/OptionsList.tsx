@@ -1,4 +1,4 @@
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 import styled from 'styled-components';
 import { useModalProvider } from 'Providers/ModalProvider/ModalProvider';
 import { useMemo } from 'react';

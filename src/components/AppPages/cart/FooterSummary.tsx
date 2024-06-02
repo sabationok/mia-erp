@@ -7,7 +7,7 @@ import { Text } from '../../atoms/Text';
 import { t } from '../../../lang';
 import { toPrice } from '../../../utils/numbers';
 import InputText from '../../atoms/Inputs/InputText';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../atoms/ButtonIcon';
 
 export const FooterSummary = ({
   slot,

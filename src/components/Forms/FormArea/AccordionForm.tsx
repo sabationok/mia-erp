@@ -4,7 +4,7 @@ import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import FormAreaFooter from './FormAreaFooter';
 import { useEffect, useId, useState } from 'react';
 import { isUndefined } from 'lodash';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../atoms/ButtonIcon';
 import styled, { css, useTheme } from 'styled-components';
 import { Property } from 'csstype';
 

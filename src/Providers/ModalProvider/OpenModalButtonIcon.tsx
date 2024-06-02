@@ -1,4 +1,4 @@
-import ButtonIcon, { ButtonIconProps } from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon, { ButtonIconProps } from 'components/atoms/ButtonIcon';
 import { IModalRenderItemParams, useModalProvider } from 'Providers/ModalProvider/ModalProvider';
 import styled from 'styled-components';
 

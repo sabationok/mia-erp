@@ -1,4 +1,4 @@
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { FilterSelectorProps, IFilterSelectorAddsProps } from '../Selector';

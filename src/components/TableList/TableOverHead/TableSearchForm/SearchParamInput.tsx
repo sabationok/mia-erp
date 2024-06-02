@@ -1,4 +1,4 @@
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 import { SelectItem } from 'components/TableList/TableList';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';

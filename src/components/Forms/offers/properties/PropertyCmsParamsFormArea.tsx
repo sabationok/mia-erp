@@ -19,7 +19,7 @@ import LangButtonsGroup from '../../../atoms/LangButtonsGroup';
 import React, { useState } from 'react';
 import { FormCreatePropertyLoaderKey, IPropertyFormData } from '../../../Modals/CreatePropertyModal';
 import FlexBox from '../../../atoms/FlexBox';
-import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../../atoms/ButtonIcon';
 
 const recommendTypesOptions = ObjectValues(PropertyTypeEnum);
 export const PropertyCmsParamsFormArea = (_: {

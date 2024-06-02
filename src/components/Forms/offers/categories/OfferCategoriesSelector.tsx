@@ -8,7 +8,7 @@ import CheckBox from '../../../TableList/TebleCells/CellComponents/CheckBox';
 import { Text } from '../../../atoms/Text';
 import { useDirectorySelector } from '../../../../redux/selectors.store';
 import { UUID } from '../../../../types/utils.types';
-import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../../atoms/ButtonIcon';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 
 export interface OfferCategoriesSelectorProps {

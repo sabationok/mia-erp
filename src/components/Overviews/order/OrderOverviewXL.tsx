@@ -5,7 +5,7 @@ import React, { useMemo, useState } from 'react';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../atoms/ButtonIcon';
 import { t } from '../../../lang';
 import { useAppParams } from '../../../hooks';
 import { enumToFilterOptions } from '../../../utils';

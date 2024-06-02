@@ -4,7 +4,7 @@ import FlexBox from '../../../atoms/FlexBox';
 import styled from 'styled-components';
 import { WarehouseEntity } from '../../../../types/warehousing/warehouses.types';
 import { useOrdersSelector } from '../../../../redux/selectors.store';
-import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../../atoms/ButtonIcon';
 import { ToastService } from 'services';
 import { t } from 'lang';
 import { Modals } from '../../../Modals/Modals';

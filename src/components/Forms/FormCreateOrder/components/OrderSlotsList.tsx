@@ -6,7 +6,7 @@ import { OnlyUUID } from '../../../../redux/app-redux.types';
 import { IOrderSlot, IOrderSlotBase, IOrderTempSlot } from '../../../../types/orders/orders.types';
 import OrderSlotOverview from '../../../Overviews/order/OrderSlotOverview';
 import { nanoid } from '@reduxjs/toolkit';
-import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../../atoms/ButtonIcon';
 import { t } from '../../../../lang';
 import { Modals } from '../../../Modals/Modals';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 
 import styled from 'styled-components';
 import UserInfo from './UserInfo';

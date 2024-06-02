@@ -16,7 +16,7 @@ import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { useEffect, useState } from 'react';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../atoms/ButtonIcon';
 import { Text } from '../../atoms/Text';
 
 export interface FormCreateOutputIntegrationProps extends Omit<ModalFormProps, 'onSubmit'> {

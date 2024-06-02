@@ -1,4 +1,4 @@
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import SelectsTreeList from './SelectsTreeList';

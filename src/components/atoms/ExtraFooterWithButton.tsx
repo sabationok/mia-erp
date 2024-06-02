@@ -1,5 +1,5 @@
 import FlexBox from './FlexBox';
-import ButtonIcon from './ButtonIcon/ButtonIcon';
+import ButtonIcon from './ButtonIcon';
 import styled from 'styled-components';
 
 export interface FormCreateInnerProps {

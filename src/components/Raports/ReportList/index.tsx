@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useMemo } from 'react';
 import FlexBox, { FieldBox } from '../../atoms/FlexBox';
 import CheckBox from '../../TableList/TebleCells/CellComponents/CheckBox';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../atoms/ButtonIcon';
 import { iconId } from '../../../img/sprite';
 import styled from 'styled-components';
 import { Text } from '../../atoms/Text';

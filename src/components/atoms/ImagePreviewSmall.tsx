@@ -1,4 +1,4 @@
-import ButtonIcon from './ButtonIcon/ButtonIcon';
+import ButtonIcon from './ButtonIcon';
 import { Text } from './Text';
 import styled from 'styled-components';
 import FlexBox from './FlexBox';

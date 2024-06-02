@@ -1,5 +1,5 @@
 import FlexBox from '../../../atoms/FlexBox';
-import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../../atoms/ButtonIcon';
 import { useEffect, useMemo, useState } from 'react';
 import { Text } from '../../../atoms/Text';
 import { t } from 'lang';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { CellTittleProps } from './TebleCells/CellTitle';
 import { FilterReturnDataType, FilterSelectorType } from '../Filter/AppFilter';
-import { ButtonIconVariant } from '../atoms/ButtonIcon/ButtonIcon';
+import { ButtonIconVariant } from '../atoms/ButtonIcon';
 import { IconIdType } from '../../img/sprite';
 import { TableSearchFormState } from './TableOverHead/TableSearchForm/TableSearchForm';
 import { Property } from 'csstype';

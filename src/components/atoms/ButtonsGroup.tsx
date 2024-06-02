@@ -1,6 +1,6 @@
 import FlexBox from './FlexBox';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import ButtonIcon from './ButtonIcon/ButtonIcon';
+import ButtonIcon from './ButtonIcon';
 import styled from 'styled-components';
 import { FilterOption } from './TabSelector';
 import { isUndefined } from 'lodash';

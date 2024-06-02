@@ -1,7 +1,7 @@
 import { ICustomer } from '../../../../types/customers.types';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
-import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../../atoms/ButtonIcon';
 import FormCreateCustomer from '../../crm/FormCreateCustomer';
 import { t } from '../../../../lang';
 import { toReqData } from '../../../../utils/data-transform';

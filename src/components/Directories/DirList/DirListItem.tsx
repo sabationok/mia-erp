@@ -1,4 +1,4 @@
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { IBaseDirItem, IDirItemBase } from '../../../types/dir.types';

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 import { NavLink } from 'react-router-dom';
 import { IPage } from 'redux/page/pageSlice';
 import styled from 'styled-components';

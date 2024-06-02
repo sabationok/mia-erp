@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import FlexBox, { FlexBoxProps } from '../../atoms/FlexBox';
 import styled from 'styled-components';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../atoms/ButtonIcon';
 import { isBoolean } from 'lodash';
 import { t } from '../../../lang';
 

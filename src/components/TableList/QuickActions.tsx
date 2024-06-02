@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 
 import styled, { css } from 'styled-components';
 import { useTable } from './TableList';

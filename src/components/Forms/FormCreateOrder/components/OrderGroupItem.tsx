@@ -4,7 +4,7 @@ import OrderSlotOverview from '../../../Overviews/order/OrderSlotOverview';
 import FormAccordionItem from '../../components/FormAccordionItem';
 import styled, { useTheme } from 'styled-components';
 import FlexBox from '../../../atoms/FlexBox';
-import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../../atoms/ButtonIcon';
 import { t } from 'lang';
 import { Text } from '../../../atoms/Text';
 

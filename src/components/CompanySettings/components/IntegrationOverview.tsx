@@ -4,7 +4,7 @@ import { checks } from '../../../utils';
 import { toAppDateFormat } from '../../../utils/date-time';
 import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../atoms/ButtonIcon';
 import styled from 'styled-components';
 
 export interface IntegrationOverviewProps {

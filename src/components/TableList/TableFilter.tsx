@@ -1,4 +1,4 @@
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 import { useModalProvider } from 'Providers/ModalProvider/ModalProvider';
 import { useTable } from './TableList';
 import AppFilter from '../Filter/AppFilter';

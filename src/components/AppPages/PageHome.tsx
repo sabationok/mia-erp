@@ -1,4 +1,4 @@
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 import TableList from 'components/TableList/TableList';
 import { useSearchParams } from 'react-router-dom';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';

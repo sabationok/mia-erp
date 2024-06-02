@@ -7,7 +7,7 @@ import { offerStatusesData } from '../../../../data/offers.data';
 import { ToastService } from '../../../../services';
 import FlexBox from '../../../atoms/FlexBox';
 import Changer from '../../../atoms/Changer';
-import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../../atoms/ButtonIcon';
 import { t } from '../../../../lang';
 import { OverviewCellHeader } from '../../components/OverviewCellHeader';
 import { CellStyledComp } from '../../components/CellStyles';

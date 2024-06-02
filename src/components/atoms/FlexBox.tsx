@@ -1,12 +1,15 @@
-import styled, { css } from 'styled-components';
+import styled, { css, DefaultTheme, ThemedStyledProps } from 'styled-components';
 import { Property } from 'csstype';
 
-export interface FlexBoxBaseProps {
+export interface FlexBaseProps {
+  display?: Property.Display;
+  flex?: Property.Flex;
+  flexWrap?: Property.FlexWrap;
   fxDirection?: Property.FlexDirection;
   alignItems?: Property.AlignItems;
   justifyContent?: Property.JustifyContent;
-  background?: Property.Background;
   gap?: number;
+
   alignSelf?: Property.AlignSelf;
 
   maxWidth?: Property.MaxWidth;
@@ -15,72 +18,95 @@ export interface FlexBoxBaseProps {
   minHeight?: Property.MinHeight;
   width?: Property.Width;
   height?: Property.Height;
+
   padding?: Property.Padding;
+  margin?: Property.Margin;
+
   borderBottom?: Property.BorderBottom;
+
   borderRadius?: Property.BorderRadius;
   border?: Property.Border;
+
   fillWidth?: boolean;
   fillHeight?: boolean;
-  margin?: string;
-  flex?: Property.Flex;
-  flexWrap?: Property.FlexWrap;
+
   overflow?: Property.Overflow;
+  background?: Property.Background;
 
   isActive?: boolean;
 }
 
-export interface FlexBoxProps extends FlexBoxBaseProps {
-  xsStyles?: FlexBoxBaseProps;
-  xlStyles?: FlexBoxBaseProps;
+export interface FlexBoxProps extends FlexBaseProps {
+  xsStyles?: FlexBaseProps;
+  xlStyles?: FlexBaseProps;
 }
 
-const XsStyles = css<FlexBoxProps>`
-  @media (max-width: 480px) {
-    flex-direction: ${({ xsStyles, fxDirection = 'column' }) => xsStyles?.fxDirection || fxDirection};
-    align-items: ${({ xsStyles, alignItems = 'flex-start' }) => xsStyles?.alignItems || alignItems};
-    justify-content: ${({ xsStyles, justifyContent = 'flex-start' }) => xsStyles?.justifyContent || justifyContent};
-    flex: ${({ xsStyles, flex = '' }) => xsStyles?.flex || flex};
-    flex-wrap: ${({ xsStyles, flexWrap = '' }) => xsStyles?.flexWrap || flexWrap};
-    border-bottom: ${({ xsStyles, borderBottom = 'none' }) => xsStyles?.borderBottom || borderBottom};
-    border: ${({ xsStyles, border = 'none' }) => xsStyles?.border || border};
-    gap: ${({ xsStyles, gap = 0 }) => xsStyles?.gap || gap}px;
-    padding: ${({ xsStyles, padding = 0 }) => xsStyles?.padding || padding};
-    align-self: ${({ xsStyles, alignSelf = 'none' }) => xsStyles?.alignSelf || alignSelf};
-    max-width: ${({ xsStyles, maxWidth = null }) => xsStyles?.maxWidth || (maxWidth ? maxWidth : 'none')};
-    max-height: ${({ xsStyles, maxHeight = null }) => xsStyles?.maxWidth || (maxHeight ? maxHeight : 'none')};
-    width: ${({ xsStyles, width = 'auto', fillWidth }) =>
-      (xsStyles?.fillWidth ? '100%' : xsStyles?.width) || (fillWidth ? '100%' : width)};
-    height: ${({ xsStyles, height = 'auto', fillHeight }) =>
-      (xsStyles?.fillHeight ? '100%' : xsStyles?.height) || (fillHeight ? '100%' : height)};
-    background: ${({ xsStyles, background = 'none' }) => xsStyles?.background || background};
-    border-radius: ${({ xsStyles, borderRadius = 'none' }) => xsStyles?.borderRadius || borderRadius};
-    overflow: ${({ xsStyles, overflow = '' }) => xsStyles?.overflow || overflow};
-  }
-`;
+export interface FlexProps extends FlexBaseProps {
+  sStyles?: FlexBaseProps;
+  xsStyles?: FlexBaseProps;
+  xlStyles?: FlexBaseProps;
+}
 
-const XlStyles = css<FlexBoxProps>`
-  @media (max-width: 768px) {
-    flex-direction: ${({ xlStyles, fxDirection = 'column' }) => xlStyles?.fxDirection || fxDirection};
-    align-items: ${({ xlStyles, alignItems = 'flex-start' }) => xlStyles?.alignItems || alignItems};
-    justify-content: ${({ xlStyles, justifyContent = 'flex-start' }) => xlStyles?.justifyContent || justifyContent};
-    flex: ${({ xlStyles, flex = '' }) => xlStyles?.flex || flex};
-    flex-wrap: ${({ xlStyles, flexWrap = '' }) => xlStyles?.flexWrap || flexWrap};
-    border-bottom: ${({ xlStyles, borderBottom = 'none' }) => xlStyles?.borderBottom || borderBottom};
-    border: ${({ xlStyles, border = 'none' }) => xlStyles?.border || border};
-    gap: ${({ xlStyles, gap = 0 }) => xlStyles?.gap || gap}px;
-    padding: ${({ xlStyles, padding = 0 }) => xlStyles?.padding || padding};
-    align-self: ${({ xlStyles, alignSelf = 'none' }) => xlStyles?.alignSelf || alignSelf};
-    max-width: ${({ xlStyles, maxWidth = null }) => xlStyles?.maxWidth || (maxWidth ? maxWidth : 'none')};
-    max-height: ${({ xlStyles, maxHeight = null }) => xlStyles?.maxWidth || (maxHeight ? maxHeight : 'none')};
-    width: ${({ xlStyles, width = 'auto', fillWidth }) =>
-      (xlStyles?.fillWidth ? '100%' : xlStyles?.width) || (fillWidth ? '100%' : width)};
-    height: ${({ xlStyles, height = 'auto', fillHeight }) =>
-      (xlStyles?.fillHeight ? '100%' : xlStyles?.height) || (fillHeight ? '100%' : height)};
-    background: ${({ xlStyles, background = 'none' }) => xlStyles?.background || background};
-    border-radius: ${({ xlStyles, borderRadius = 'none' }) => xlStyles?.borderRadius || borderRadius};
-    overflow: ${({ xlStyles, overflow = '' }) => xlStyles?.overflow || overflow};
+type MediasStylesKey = keyof Pick<FlexProps, 'sStyles' | 'xsStyles' | 'xlStyles'>;
+function createFlexBoxStyles({ query, key }: { query: string; key: MediasStylesKey }) {
+  return css<FlexProps>`
+    ${p => ''}
+    @media screen and (${query}) {
+      display: ${({ display = '', ...p }) => p[key]?.display || display};
+      flex-direction: ${({ fxDirection = 'column', ...p }) => p[key]?.fxDirection || fxDirection};
+      align-items: ${({ alignItems, ...p }) => p[key]?.alignItems || alignItems};
+      justify-content: ${({ justifyContent, ...p }) => p[key]?.justifyContent || justifyContent};
+      flex: ${({ flex = '', ...p }) => p[key]?.flex || flex};
+      flex-wrap: ${({ flexWrap = '', ...p }) => p[key]?.flexWrap || flexWrap};
+      border-bottom: ${({ borderBottom = 0, ...p }) => p[key]?.borderBottom || borderBottom};
+      border: ${({ border = 0, ...p }) => p[key]?.border || border};
+      gap: ${({ gap = 0, ...p }) => p[key]?.gap || gap}px;
+      padding: ${({ padding = 0, ...p }) => p[key]?.padding || padding};
+      margin: ${({ margin = 0, ...p }) => p[key]?.margin || margin};
+      align-self: ${({ alignSelf, ...p }) => p[key]?.alignSelf || alignSelf};
+      max-width: ${({ maxWidth = null, ...p }) => p[key]?.maxWidth || maxWidth};
+      max-height: ${({ maxHeight = null, ...p }) => p[key]?.maxWidth || maxHeight};
+
+      min-width: ${({ minWidth = null, ...p }) => p[key]?.minWidth || minWidth};
+      min-height: ${({ minHeight = null, ...p }) => p[key]?.minHeight || minHeight};
+
+      width: ${({ width = 'auto', fillWidth, ...p }) =>
+        (p[key]?.fillWidth ? '100%' : p[key]?.width) || (fillWidth ? '100%' : width)};
+      height: ${({ height = 'auto', fillHeight, ...p }) =>
+        (p[key]?.fillHeight ? '100%' : p[key]?.height) || (fillHeight ? '100%' : height)};
+      background: ${({ background, ...p }) => p[key]?.background || background};
+      border-radius: ${({ borderRadius = 0, ...p }) => p[key]?.borderRadius || borderRadius};
+      overflow: ${({ overflow = '', ...p }) => p[key]?.overflow || overflow};
+    }
+  `;
+}
+
+const S_Styles = createFlexBoxStyles({ query: 'max-width: 480px', key: 'sStyles' });
+
+const XS_Styles = createFlexBoxStyles({
+  query: 'max-width: 960px',
+  key: 'xsStyles',
+});
+
+const XL_Styles = createFlexBoxStyles({
+  query: 'min-width: 960px',
+  key: 'xlStyles',
+});
+
+function getMediaStyles(key: MediasStylesKey) {
+  switch (key) {
+    case 'sStyles': {
+      return (props: ThemedStyledProps<FlexProps, DefaultTheme>) => (props[key] ? S_Styles : undefined);
+    }
+    case 'xsStyles': {
+      return (props: ThemedStyledProps<FlexProps, DefaultTheme>) => (props[key] ? XS_Styles : undefined);
+    }
+    case 'xlStyles': {
+      return (props: ThemedStyledProps<FlexProps, DefaultTheme>) => (props[key] ? XL_Styles : undefined);
+    }
   }
-`;
+}
+
 export const FlexBoxCss = css<FlexBoxProps>`
   display: flex;
 
@@ -107,12 +133,10 @@ export const FlexBoxCss = css<FlexBoxProps>`
   border: ${p => p.border};
 
   cursor: default;
-  ${({ xsStyles }) => {
-    if (xsStyles) return XsStyles;
-  }};
-  ${({ xlStyles }) => {
-    if (xlStyles) return XlStyles;
-  }};
+
+  ${getMediaStyles('sStyles')};
+  ${getMediaStyles('xsStyles')};
+  ${getMediaStyles('xlStyles')};
 `;
 export const FlexBox = styled.div<FlexBoxProps>`
   ${FlexBoxCss}
@@ -130,6 +154,7 @@ export const FlexFieldSet = styled.fieldset<FlexBoxProps>`
     }
   }
 `;
+
 export const FlexLabel = styled.label<FlexBoxProps>`
   ${FlexBoxCss};
 `;

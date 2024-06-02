@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import { useMemo } from 'react';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../atoms/ButtonIcon';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { t } from '../../../lang';
 import { MaybeNull } from '../../../types/utils.types';

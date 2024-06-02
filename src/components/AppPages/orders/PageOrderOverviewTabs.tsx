@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
-import ButtonIcon from '../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../atoms/ButtonIcon';
 import { Text } from '../../atoms/Text';
 import TabSelector, { FilterSelectHandler } from '../../atoms/TabSelector';
 import { useMemo, useState } from 'react';

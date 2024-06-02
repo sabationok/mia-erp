@@ -1,5 +1,5 @@
 import FlexBox from './FlexBox';
-import ButtonIcon from './ButtonIcon/ButtonIcon';
+import ButtonIcon from './ButtonIcon';
 import { useEffect, useMemo, useState } from 'react';
 import { useTheme } from 'styled-components';
 import { Text } from './Text';

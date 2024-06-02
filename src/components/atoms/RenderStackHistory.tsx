@@ -5,7 +5,7 @@ import { Text } from './Text';
 import SvgIcon from './SvgIcon/SvgIcon';
 import styled from 'styled-components';
 import { useScrollTo } from '../../hooks';
-import ButtonIcon from './ButtonIcon/ButtonIcon';
+import ButtonIcon from './ButtonIcon';
 
 export const RenderStackHistory = <Item extends IBase & { label?: MaybeNull<string> }>({
   stack,

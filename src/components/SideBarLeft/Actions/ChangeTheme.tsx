@@ -1,4 +1,4 @@
-import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from 'components/atoms/ButtonIcon';
 import useAppSettings from 'hooks/useAppSettings.hook';
 import { useAppSettingsSelector } from '../../../redux/selectors.store';
 

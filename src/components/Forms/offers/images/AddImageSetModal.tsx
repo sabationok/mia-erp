@@ -8,7 +8,7 @@ import InputLabel from '../../../atoms/Inputs/InputLabel';
 import InputText from '../../../atoms/Inputs/InputText';
 import ButtonsGroup from '../../../atoms/ButtonsGroup';
 import styled from 'styled-components';
-import ButtonIcon from '../../../atoms/ButtonIcon/ButtonIcon';
+import ButtonIcon from '../../../atoms/ButtonIcon';
 import { ImageSetSrcType } from '../../../../types/offers/offer-images.types';
 import { formAddImageSetTabs } from 'data';
 

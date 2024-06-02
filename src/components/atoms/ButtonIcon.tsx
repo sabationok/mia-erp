@@ -2,9 +2,9 @@ import React, { CSSProperties, memo } from 'react';
 import sprite, { IconIdType } from 'img/sprite';
 import styled, { css, DefaultTheme, FlattenInterpolation, ThemeProps } from 'styled-components';
 import { Property } from 'csstype';
-import { AppLoaderSpiner } from '../AppLoaderSpiner';
-import { Keys } from '../../../types/utils.types';
-import FlexBox from '../FlexBox';
+import { AppLoaderSpiner } from './AppLoaderSpiner';
+import { Keys } from '../../types/utils.types';
+import FlexBox from './FlexBox';
 
 type TextTransform = 'uppercase' | 'lowercase' | 'capitalize' | 'none';
 
