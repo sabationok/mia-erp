@@ -15,7 +15,7 @@ export const isNumberStringSchema = yup
     if (isNaN(_number)) {
       return false;
     }
-    return _number > 0;
+    return _number >= 0;
   });
 
 export const orderInfoBaseSchema = yup.object().shape({

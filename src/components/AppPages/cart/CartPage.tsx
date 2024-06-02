@@ -10,7 +10,7 @@ import { tempOrderSlotTableColumns } from '../../../data';
 import { useEffect, useMemo } from 'react';
 import { useModalService } from '../../../Providers/ModalProvider/ModalProvider';
 import ButtonIcon from '../../atoms/ButtonIcon';
-import { AccordionFormArea } from '../../Forms/FormArea/AccordionForm';
+import { AccordionFormArea } from '../../atoms/FormArea/AccordionForm';
 import { ITableAction } from '../../TableList/tableTypes.types';
 import { useAppParams, useAppQuery, useAppRouter } from '../../../hooks';
 import OverlayStackProvider from '../../../Providers/Overlay/OverlayStackProvider';

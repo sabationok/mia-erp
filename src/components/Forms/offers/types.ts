@@ -1,6 +1,6 @@
 import { MaybeNull } from '../../../types/utils.types';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { IProductFullFormData, OfferEntity } from '../../../types/offers/offers.types';
+import { IOfferFullFormData, OfferEntity } from '../../../types/offers/offers.types';
 
 export interface OfferFormAreaProps<DefaultValues = any> {
   _id?: string;
@@ -9,7 +9,7 @@ export interface OfferFormAreaProps<DefaultValues = any> {
   title?: string;
   offer?: OfferEntity;
   onSubmit?: AppSubmitHandler<DefaultValues>;
-  formData?: IProductFullFormData & { _id?: string };
+  formData?: IOfferFullFormData & { _id?: string };
   update?: string;
 }
 
@@ -22,6 +22,6 @@ export type OfferLoadersKey =
   | keyof OfferEntity;
 
 export type OfferLoadersData = {
-  formData?: IProductFullFormData & { _id?: string };
+  formData?: IOfferFullFormData & { _id?: string };
   offer?: OfferEntity;
 } & Partial<OfferEntity>;

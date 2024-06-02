@@ -32,7 +32,7 @@ export type { OfferImageSlotEntity } from './offer-images.types';
 export enum OfferStatusEnum {
   pending = 'pending',
   rejected = 'rejected',
-  success = 'success',
+  // success = 'success',
   approved = 'approved',
   // error = 'error',
   warning = 'warning',
@@ -137,7 +137,7 @@ export interface IProductDefaultsFormData extends Record<keyof IOfferRelatedDefa
 
 export interface IProductWithAddsFieldsFormData extends IProductBaseFormData {}
 
-export interface IProductFullFormData extends Omit<OfferDto, 'recommends' | 'properties' | 'images' | 'categories'> {
+export interface IOfferFullFormData extends Omit<OfferDto, 'recommends' | 'properties' | 'images' | 'categories'> {
   categories?: ArrayOfUUID;
   recommends?: ArrayOfUUID;
   properties?: ArrayOfUUID;
@@ -146,7 +146,7 @@ export interface IProductFullFormData extends Omit<OfferDto, 'recommends' | 'pro
   images?: OfferImageSlotEntity[];
 }
 
-export interface IProductFormData extends IProductFullFormData {}
+export interface IProductFormData extends IOfferFullFormData {}
 
 // * >>>>>> PRODUCT DTO <<<<<<<
 export interface IProductBaseDto extends Omit<IOfferBase, '_id' | 'createdAt' | 'deletedAt' | 'updatedAt'> {}
@@ -162,6 +162,7 @@ export interface IProductWithAddsFieldsDto extends IProductBaseDto {
 }
 
 type OfferDefaultRefKey = Keys<IOfferRelatedDefaultFields>;
+
 type OfferDefaultsIdKey = Keys<Pick<AppQueries, 'warehouseId' | 'variationId' | 'priceId' | 'inventoryId'>>;
 export interface IOfferDefaultsDto
   extends PartialRecord<OfferDefaultRefKey, OnlyUUID>,

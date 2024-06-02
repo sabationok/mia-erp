@@ -1,6 +1,6 @@
 import ButtonIcon from 'components/atoms/ButtonIcon';
 import styled from 'styled-components';
-import FlexBox from '../../atoms/FlexBox';
+import FlexBox from '../FlexBox';
 import { t } from '../../../lang';
 
 export interface FormAreaFooterProps {

@@ -11,7 +11,7 @@ import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../../redux/reduxTypes.types';
 import { ObjectValues, toReqData } from '../../../../utils';
 import { pick } from 'lodash';
-import { AccordionForm } from '../../FormArea/AccordionForm';
+import { AccordionForm } from '../../../atoms/FormArea/AccordionForm';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
 import { LangKeyEnum, t } from '../../../../lang';
 import InputText from '../../../atoms/Inputs/InputText';
@@ -54,7 +54,7 @@ export const PropertyCmsParamsFormArea = (_: {
     <AccordionForm
       label={'Cms params'}
       expandable={true}
-      canSubmit={!!form.formState.touchedFields?.cmsConfigs}
+      canSubmit={!!form.formState.dirtyFields?.cmsConfigs}
       isLoading={loaders.isLoading?.update}
       isOpen={Object.values(formValues?.cmsConfigs ?? {}).some(el => !!el)}
       onSubmit={handleSubmit(onValid)}

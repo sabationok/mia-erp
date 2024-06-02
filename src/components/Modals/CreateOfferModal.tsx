@@ -4,12 +4,9 @@ import ModalBase from '../atoms/Modal';
 import { t } from '../../lang';
 import { toOfferFormData } from '../../utils';
 import { useEffect } from 'react';
-import { OfferTypeEnum } from '../../types/offers/offers.types';
 import { OfferMeasurementFormArea } from 'components/Forms/offers/measurement/OfferMeasurementFormArea';
 import { OfferBaseInfoFormArea } from '../Forms/offers/OfferBaseInfoFormArea';
 import FlexBox from '../atoms/FlexBox';
-import TabSelector from '../atoms/TabSelector';
-import { offerTypeFilterOptions } from '../../data/modalFilterOptions.data';
 import { OfferFormPropertiesArea } from '../Forms/offers/properties/OfferFormPropertiesArea';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { LoadersProvider, useLoadersProvider } from '../../Providers/Loaders/LoaderProvider';
@@ -43,17 +40,7 @@ const CreateOfferModal: React.FC<CreateOfferModalProps> = ({ onClose, _id }) => 
   }, []);
 
   return (
-    <ModalBase
-      title={t('Create offer')}
-      onClose={onClose}
-      extraHeader={
-        <TabSelector
-          defaultValue={formData?.type ?? OfferTypeEnum.GOODS}
-          filterOptions={offerTypeFilterOptions}
-          onOptSelect={o => setData('formData', prev => ({ ...prev, type: o.value }))}
-        />
-      }
-    >
+    <ModalBase title={t('Create offer')} onClose={onClose}>
       <LoadersProvider value={loaders}>
         <FlexBox padding={'0 8px 16px'}>
           <OfferBaseInfoFormArea

@@ -4,7 +4,7 @@ import { useAppForm, useCurrentDiscount } from '../../hooks';
 import ModalBase from '../atoms/Modal';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { AddDiscountFormArea, CreateDiscountFormData } from '../Forms/pricing/AddDiscountFormArea';
-import { AccordionForm } from '../Forms/FormArea/AccordionForm';
+import { AccordionForm } from '../atoms/FormArea/AccordionForm';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import { AppFormProvider } from '../../hooks/useAppForm.hook';

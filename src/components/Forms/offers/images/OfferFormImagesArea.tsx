@@ -4,7 +4,7 @@ import { OfferEntity, OfferImageSlotEntity } from '../../../../types/offers/offe
 import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useMemo, useState } from 'react';
-import { AccordionForm } from '../../FormArea/AccordionForm';
+import { AccordionForm } from '../../../atoms/FormArea/AccordionForm';
 import FormOfferImagesComponent from './FormOfferImagesComponent';
 import { getIdRef } from '../../../../utils';
 import { t } from '../../../../lang';

@@ -1,4 +1,4 @@
-import { AccordionForm, AccordionFormProps } from '../FormArea/AccordionForm';
+import { AccordionForm, AccordionFormProps } from '../../atoms/FormArea/AccordionForm';
 import { AppSubmitHandler, useAppFormProvider } from '../../../hooks/useAppForm.hook';
 import {
   PriceDiscountDto,
@@ -74,7 +74,13 @@ export function AddDiscountFormArea({ discount, onSuccess, priceId, ...props }: 
       isLoading={loaders.hasLoading}
     >
       <InputLabel label={t('Type')}>
-        <ButtonsGroup value={formValues.type} onSelect={registerOnSelect('type')} options={DiscountFilters.Type} />
+        <ButtonsGroup
+          options={DiscountFilters.Type}
+          form={form}
+          name={'type'}
+          value={formValues.type}
+          // onSelect={registerOnSelect('type')}
+        />
       </InputLabel>
 
       {formValues.type === PriceDiscountType.bonus && (

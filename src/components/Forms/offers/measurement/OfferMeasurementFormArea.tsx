@@ -1,6 +1,6 @@
 import MeasurementInputs, { MeasurementInputsFormData } from './MeasuremenInputs';
 import { useAppForm } from '../../../../hooks';
-import { AccordionForm } from '../../FormArea/AccordionForm';
+import { AccordionForm } from '../../../atoms/FormArea/AccordionForm';
 import useOffersService from '../../../../hooks/useOffersService.hook';
 import { ToastService } from '../../../../services';
 import { IMeasurement } from '../../../../types/utils.types';
@@ -17,7 +17,8 @@ export const OfferMeasurementFormArea = ({ defaultValues, _id, disabled, ...prop
 
   const onValid = (sData: MeasurementInputsFormData) => {
     service.updateById({
-      data: { data: sData, _id },
+      data: { data: { data: sData, _id } },
+      update: true,
       onSuccess(d) {
         ToastService.success(`Product updated`);
       },
@@ -27,8 +28,8 @@ export const OfferMeasurementFormArea = ({ defaultValues, _id, disabled, ...prop
       onLoading: setIsLoading,
     });
   };
-  const canSubmit = form.formState.touchedFields?.measurement
-    ? Object.values(form.formState.touchedFields?.measurement)?.some(fd => fd)
+  const canSubmit = form.formState.dirtyFields?.measurement
+    ? Object.values(form.formState.dirtyFields?.measurement)?.some(fd => fd)
     : false;
   return (
     <AccordionForm

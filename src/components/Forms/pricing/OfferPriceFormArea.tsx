@@ -11,7 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import FormPriceInputs, { FormPriceDecimal } from './FormCreatePrice/FormPriceInputs';
 import { toReqData } from '../../../utils';
 import { ToastService } from '../../../services';
-import { AccordionForm } from '../FormArea/AccordionForm';
+import { AccordionForm } from '../../atoms/FormArea/AccordionForm';
 import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
 import { t } from '../../../lang';
@@ -25,10 +25,12 @@ import { VariationEntity } from '../../../types/offers/variations.types';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import ButtonsGroup from '../../atoms/ButtonsGroup';
 import { PriceTypeOptions } from '../../../data/priceManagement.data';
+import { useAppDispatch } from '../../../redux/store.store';
+import { setOfferDefaultsAction } from '../../../redux/products/offers.slice';
 
 const validation = yup.object().shape({
-  in: isNumberStringSchema.nullable(),
-  out: isNumberStringSchema.required(),
+  in: isNumberStringSchema.optional(),
+  out: isNumberStringSchema.optional(),
   list: UUIDRefSchema.nullable(),
   offer: UUIDRefSchema.required(),
   variation: UUIDRefSchema.nullable(),
@@ -62,7 +64,7 @@ export const OfferPriceFormArea = ({
   const loaders = usePriceModalFormLoaders();
   const Offer = useCurrentOffer(offer);
   const Price = useCurrentPrice(price ?? { _id: updateId }) || Offer?.price;
-
+  const dispatch = useAppDispatch();
   const service = useAppServiceProvider().get(ServiceName.priceManagement);
   const offersSrv = useAppServiceProvider().get(ServiceName.offers);
 
@@ -119,6 +121,7 @@ export const OfferPriceFormArea = ({
     offersSrv.setDefaults({
       data: { data: { _id: offerId, defaults: { price: { _id: priceId } } } },
       onLoading: loaders.onLoading('set_default_price'),
+      onSuccess: d => {},
     });
   };
   const onValid = ({ setAsDefault, ...fData }: IPriceFormData) => {
@@ -132,10 +135,13 @@ export const OfferPriceFormArea = ({
         data: { data: { _id: fData?._id, data: dataForReq }, updateCurrent: true },
         onLoading: loaders.onLoading('update'),
         onSuccess: loaders.onSuccess('update', (data, meta) => {
+          if (Offer?._id && Offer?.price?._id === data?._id) {
+            dispatch(setOfferDefaultsAction({ offerId: Offer?._id, data: { price: data } }));
+          }
+
           if (setAsDefault && fData.offer?._id) {
             onSetAsDefault(fData.offer?._id, data._id);
           } else {
-            // submitOptions.state?.close && props?.onClose && props?.onClose();
           }
         }),
       });
@@ -158,7 +164,7 @@ export const OfferPriceFormArea = ({
     }
   };
 
-  const canSubmit = Object.values(form.formState.touchedFields).some(el => !!el);
+  const canSubmit = Object.values(form.formState.dirtyFields).some(el => !!el);
 
   return (
     <AccordionForm

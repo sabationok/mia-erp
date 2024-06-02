@@ -9,8 +9,6 @@ import { OfferBaseInfoFormArea } from '../Forms/offers/OfferBaseInfoFormArea';
 import FlexBox from '../atoms/FlexBox';
 import { AppLoaderSpiner } from '../atoms/AppLoaderSpiner';
 import { Text } from '../atoms/Text';
-import TabSelector from '../atoms/TabSelector';
-import { offerTypeFilterOptions } from '../../data/modalFilterOptions.data';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { LoadersProvider } from 'Providers/Loaders/LoaderProvider';
 import { OfferFormPropertiesArea } from '../Forms/offers/properties/OfferFormPropertiesArea';
@@ -27,10 +25,9 @@ export interface EditOfferModalProps extends ModalFormProps {
 
 const EditOfferModal: React.FC<EditOfferModalProps> = ({ onClose, offer, copy }) => {
   const Offer = useCurrentOffer(offer);
-
-  //
   // const service = useOffersService();
   // const router = useAppRouter();
+
   const loaders = useLoaders<OfferLoadersKey, OfferLoadersData>(
     { offer_refresh: { content: 'Refreshing...' }, offer_update: { content: 'Updating...' } },
     {
@@ -55,21 +52,7 @@ const EditOfferModal: React.FC<EditOfferModalProps> = ({ onClose, offer, copy })
   }
 
   return (
-    <ModalBase
-      fillHeight
-      title={!copy ? t('Update offer') : t('Copy offer')}
-      onClose={onClose}
-      extraHeader={
-        <TabSelector
-          filterOptions={offerTypeFilterOptions}
-          defaultValue={state?.formData?.type ?? undefined}
-          preventDefault
-          onOptSelect={o => {
-            setData('formData', p => ({ ...p, type: o.value }));
-          }}
-        />
-      }
-    >
+    <ModalBase fillHeight title={!copy ? t('Update offer') : t('Copy offer')} onClose={onClose}>
       <LoadersProvider value={loaders}>
         {loaders.isLoading?.offer ? (
           <FlexBox fillWidth padding={'24px'} alignItems={'center'} gap={16}>

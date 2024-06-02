@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { AccordionForm } from '../../FormArea/AccordionForm';
+import { AccordionForm } from '../../../atoms/FormArea/AccordionForm';
 import styled from 'styled-components';
 import FlexBox from '../../../atoms/FlexBox';
 import { useOffersSelector } from '../../../../redux/selectors.store';

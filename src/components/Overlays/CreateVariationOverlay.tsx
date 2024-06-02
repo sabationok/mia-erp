@@ -27,7 +27,7 @@ import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
 import { OfferEntity } from '../../types/offers/offers.types';
 import DrawerBase from './OverlayBase';
 import { PropertiesGroupSelect } from '../atoms/PropertiesGroupSelect';
-import { AccordionFormArea } from '../Forms/FormArea/AccordionForm';
+import { AccordionFormArea } from '../atoms/FormArea/AccordionForm';
 
 export interface CreateVariationModalProps
   extends CreatedOverlay,

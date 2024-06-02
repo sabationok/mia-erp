@@ -5,7 +5,7 @@ import { AppModuleName } from '../../../../redux/reduxTypes.types';
 import { useAppFormProvider } from '../../../../hooks/useAppForm.hook';
 import { toReqData } from '../../../../utils';
 import { omit } from 'lodash';
-import { AccordionForm } from '../../FormArea/AccordionForm';
+import { AccordionForm } from '../../../atoms/FormArea/AccordionForm';
 import FlexBox from '../../../atoms/FlexBox';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
 import { t } from '../../../../lang';

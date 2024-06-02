@@ -1,6 +1,6 @@
-import { AccordionForm } from '../FormArea/AccordionForm';
+import { AccordionForm } from '../../atoms/FormArea/AccordionForm';
 import { OfferFormAreaProps } from './types';
-import { IProductFormData, IProductFullFormData, OfferEntity, OfferTypeEnum } from '../../../types/offers/offers.types';
+import { IOfferFullFormData, IProductFormData, OfferEntity, OfferTypeEnum } from '../../../types/offers/offers.types';
 import { useAppForm } from '../../../hooks';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import { t } from '../../../lang';
@@ -16,8 +16,11 @@ import { MaybeNull } from '../../../types/utils.types';
 import { useOfferLoadersProvider } from '../../Modals/CreateOfferModal';
 import { OfferStatusFilterOptions } from '../../../data';
 import { useDirectorySelector, useWarehousesSelector } from '../../../redux/selectors.store';
+import TabSelector from '../../atoms/TabSelector';
+import { offerTypeFilterOptions } from '../../../data/modalFilterOptions.data';
+import ButtonSwitch from '../../atoms/ButtonSwitch';
 
-export interface OfferBaseInfoFormAreaProps extends OfferFormAreaProps<IProductFullFormData> {
+export interface OfferBaseInfoFormAreaProps extends OfferFormAreaProps<IOfferFullFormData> {
   type?: MaybeNull<OfferTypeEnum>;
   onSuccess?: (data: { data: OfferEntity }) => void;
   edit?: boolean;
@@ -25,10 +28,10 @@ export interface OfferBaseInfoFormAreaProps extends OfferFormAreaProps<IProductF
 
 export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _id }: OfferBaseInfoFormAreaProps) => {
   const { isLoading, onLoading } = useOfferLoadersProvider();
-  const warehousesState = useWarehousesSelector();
   const service = useOffersService();
-  const counterparties = useDirectorySelector(ApiDirType.COUNTERPARTIES).directory;
 
+  const warehousesState = useWarehousesSelector();
+  const counterparties = useDirectorySelector(ApiDirType.COUNTERPARTIES).directory;
   const brandsList = useDirectorySelector(ApiDirType.BRANDS).directory;
 
   const {
@@ -36,9 +39,11 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
     register,
     registerSelect,
     formValues,
+    setValue,
+    handleSubmit,
     ...appForm
-  } = useAppForm<IProductFullFormData>({
-    defaultValues: { ...defaultValues, type },
+  } = useAppForm<IOfferFullFormData>({
+    defaultValues: { ...defaultValues, type, visible: true },
   });
 
   function onValid(sData: IProductFormData) {
@@ -62,65 +67,82 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
   }
 
   return (
-    <AccordionForm
-      label={t('Base info')}
-      isLoading={!edit ? isLoading?.offer_create : isLoading?.offer_update}
-      onSubmit={appForm.handleSubmit(onValid)}
-      onReset={appForm.reset}
-      canSubmit={true}
-      expandable={false}
-    >
-      <InputLabel label={t('label')} error={errors.label} required>
-        <InputText placeholder={t('label')} {...register('label')} required autoFocus />
-      </InputLabel>
+    <>
+      <TabSelector
+        defaultValue={formValues?.type ?? OfferTypeEnum.GOODS}
+        filterOptions={offerTypeFilterOptions}
+        onOptSelect={o => setValue('type', o.value)}
+      />
 
-      <FlexBox fxDirection={'row'} gap={6} fillWidth>
-        <InputLabel label={t('sku')} error={errors.sku}>
-          <InputText placeholder={t('sku')} {...register('sku')} />
+      <AccordionForm
+        label={t('Base info')}
+        isLoading={!edit ? isLoading?.offer_create : isLoading?.offer_update}
+        onSubmit={handleSubmit(onValid)}
+        onReset={appForm.reset}
+        canSubmit={true}
+        expandable={false}
+      >
+        <InputLabel label={t('label')} error={errors.label} required>
+          <InputText placeholder={t('label')} {...register('label')} required autoFocus />
         </InputLabel>
 
-        <InputLabel label={'Штрих-код'} error={errors.barCode}>
-          <InputText placeholder={'Штрих-код'} {...register('barCode')} />
+        <FlexBox fxDirection={'row'} gap={6} fillWidth>
+          <InputLabel label={t('sku')} error={errors.sku}>
+            <InputText placeholder={t('sku')} {...register('sku')} />
+          </InputLabel>
+
+          <InputLabel label={t('Bar-code')} error={errors.barCode}>
+            <InputText placeholder={t('Bar-code')} {...register('barCode')} />
+          </InputLabel>
+        </FlexBox>
+
+        <CustomSelect
+          {...registerSelect('brand', {
+            options: brandsList,
+            label: t('brand'),
+            placeholder: t('selectBrand'),
+          })}
+        />
+
+        <CustomSelect
+          {...registerSelect('warehouse', {
+            options: warehousesState.warehouses,
+            label: t('Select warehouse'),
+            placeholder: t('Select warehouse'),
+          })}
+        />
+
+        <CustomSelect
+          {...registerSelect('supplier', {
+            options: counterparties,
+            label: t('Select supplier'),
+            placeholder: t('Select supplier'),
+          })}
+        />
+
+        <CustomSelect
+          {...registerSelect('approved', {
+            options: OfferStatusFilterOptions,
+            label: t('status'),
+            placeholder: t('status'),
+            value: formValues.approved,
+            selectedValue: formValues.approved,
+          })}
+        />
+
+        <InputLabel label={t('description')} error={errors.description}>
+          <TextareaPrimary placeholder={t('description')} {...register('description')} />
         </InputLabel>
-      </FlexBox>
 
-      <CustomSelect
-        {...registerSelect('brand', {
-          options: brandsList,
-          label: t('brand'),
-          placeholder: t('selectBrand'),
-        })}
-      />
-
-      <CustomSelect
-        {...registerSelect('warehouse', {
-          options: warehousesState.warehouses,
-          label: t('Select warehouse'),
-          placeholder: t('Select warehouse'),
-        })}
-      />
-
-      <CustomSelect
-        {...registerSelect('supplier', {
-          options: counterparties,
-          label: t('Select supplier'),
-          placeholder: t('Select supplier'),
-        })}
-      />
-
-      <CustomSelect
-        {...registerSelect('approved', {
-          options: OfferStatusFilterOptions,
-          label: t('status'),
-          placeholder: t('status'),
-          value: formValues.approved,
-          selectedValue: formValues.approved,
-        })}
-      />
-
-      <InputLabel label={t('description')} error={errors.description}>
-        <TextareaPrimary placeholder={t('description')} {...register('description')} />
-      </InputLabel>
-    </AccordionForm>
+        <InputLabel label={t('Visibility')} error={errors.description}>
+          <ButtonSwitch
+            value={formValues.visible}
+            onChange={val => {
+              setValue('visible', val, { shouldTouch: true, shouldDirty: true });
+            }}
+          />
+        </InputLabel>
+      </AccordionForm>
+    </>
   );
 };

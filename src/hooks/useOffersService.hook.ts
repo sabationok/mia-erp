@@ -16,7 +16,7 @@ import {
   getOfferThunk,
   updateOfferDefaultsThunk,
   updateProductThunk,
-} from '../redux/products/products.thunks';
+} from '../redux/products/offers.thunks';
 import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
 import { apiCall, AppQueryParams, createApiCall } from 'api';
@@ -34,7 +34,7 @@ import {
   updateVariationThunk,
 } from '../redux/products/variations/variations.thunks';
 import { IVariationReqData, VariationEntity } from '../types/offers/variations.types';
-import { clearCurrentProductAction } from '../redux/products/products.actions';
+import { clearCurrentProductAction } from '../redux/products/offers.actions';
 import { PriceEntity } from '../types/price-management/price-management.types';
 import { GetAllPricesQuery } from '../api';
 

@@ -167,7 +167,7 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
     onChange,
     ...props
   }: CustomSelectProps<Option>,
-  _ref: React.ForwardedRef<any>
+  _ref: React.ForwardedRef<Ref>
 ) => {
   const [currentOption, setCurrentOption] = useState<CustomSelectOption | undefined>(selectedOption);
   const [isOpen, setIsOpen] = useState<boolean>(keepOpen || open);
@@ -180,12 +180,8 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
   }, [keepOpen]);
 
   const inputCurrentValue = useMemo(() => {
-    return getLabel && currentOption
-      ? getLabel(currentOption) ?? undefined
-      : currentOption
-      ? currentOption?.label || currentOption?.name
-      : undefined;
-  }, [currentOption, getLabel]);
+    return currentOption ? currentOption?.label || currentOption?.name || undefined : undefined;
+  }, [currentOption]);
 
   const onSelectOption = useCallback(
     (index: number, option?: any) => {
@@ -280,7 +276,7 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
               {...inputProps}
               // defaultValue={inputCurrentValue}
               value={inputCurrentValue}
-              // onChange={() => {}}
+              onChange={() => {}}
             />
 
             <IconsBox fxDirection={'row'} gap={6} fillHeight alignItems={'center'} padding={'0 8px 0 0'}>
@@ -393,14 +389,6 @@ const SelectOptionCss = css<{ isActive?: boolean }>`
 `;
 const Option = styled(FlexBox)<{ isActive?: boolean }>`
   ${SelectOptionCss}
-`;
-const StNativeOption = styled.option<{ isActive?: boolean }>`
-  display: flex;
-  ${SelectOptionCss}
-  &[selected] {
-    font-weight: ${({ isActive }) => (isActive ? 700 : '')};
-    background-color: ${({ theme }) => theme.modalBackgroundColor};
-  }
 `;
 
 const LabelInner = styled.fieldset<{

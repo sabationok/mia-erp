@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { StateErrorType } from 'redux/reduxTypes.types';
-import { OfferEntity, OfferTypeEnum } from '../../types/offers/offers.types';
+import { IOfferRelatedDefaultFields, OfferEntity, OfferTypeEnum } from '../../types/offers/offers.types';
 import {
   createOfferThunk,
   getAllInventoriesByProductIdThunk,
@@ -10,7 +10,7 @@ import {
   getOfferThunk,
   updateOfferDefaultsThunk,
   updateProductThunk,
-} from './products.thunks';
+} from './offers.thunks';
 import {
   createVariationThunk,
   getAllVariationsByOfferIdThunk,
@@ -28,14 +28,15 @@ import {
   setCurrentProductInventoriesAction,
   setCurrentProductVariationsAction,
   setOfferPricesAction,
-} from './products.actions';
+} from './offers.actions';
 import { PartialRecord, SKU, UUID } from '../../types/utils.types';
 import { VariationEntity } from '../../types/offers/variations.types';
 import { onCreatePriceMather, onUpdatePriceMatcher } from '../priceManagement/prices.actions';
-import { Action } from '../store.store';
+import { Action, ActionPayload } from '../store.store';
 import { PriceEntity } from '../../types/price-management/price-management.types';
 import { omit } from 'lodash';
 
+type OfferDefaultsKey = keyof IOfferRelatedDefaultFields;
 export interface OffersState {
   list: OfferEntity[];
   currentOffer?: OfferEntity;
@@ -85,7 +86,14 @@ const initialState: OffersState = {
 export const offersSlice = createSlice({
   name: 'products',
   initialState,
-  reducers: {},
+  reducers: {
+    setOfferDefaultsAction: (
+      st,
+      { payload: { data, offerId } }: Action<{ offerId: string; data: Partial<Pick<OfferEntity, OfferDefaultsKey>> }>
+    ) => {
+      ManageOffersStateMap(st, { data: { _id: offerId, ...data } }, {});
+    },
+  },
   extraReducers: builder =>
     builder
       .addCase(getAllOffersThunk.fulfilled, (s, a) => {
@@ -115,12 +123,12 @@ export const offersSlice = createSlice({
       })
       .addCase(updateProductThunk.fulfilled, (s, a) => {
         if (a.payload?.data) {
-          ManageOffersStateMap(s, { data: a.payload.data });
+          ManageOffersStateMap(s, a.payload);
         }
         return s;
       })
       .addCase(getOfferFullInfoThunk.fulfilled, (s, a) => {
-        ManageOffersStateMap(s, a.payload, { refresh: a.payload.refresh });
+        ManageOffersStateMap(s, a.payload, a.payload);
         return s;
       })
       .addCase(getOfferThunk.fulfilled, (s, a) => {
@@ -128,7 +136,8 @@ export const offersSlice = createSlice({
         return s;
       })
       .addCase(updateOfferDefaultsThunk.fulfilled, (s, a) => {
-        ManageOffersStateMap(s, { data: a.payload?.data }, { refresh: a.payload?.refresh });
+        ManageOffersStateMap(s, a.payload, a.payload);
+        return s;
       })
       .addCase(clearCurrentProductAction, s => {
         s.currentOffer = { _id: '' };
@@ -246,6 +255,8 @@ export const offersSlice = createSlice({
   // }),
 });
 
+export const { setOfferDefaultsAction } = offersSlice.actions;
+
 // function isProductsCase(type: string) {
 //   return checks.isStr(type) && type.startsWith('products');
 // }
@@ -253,10 +264,15 @@ export const offersSlice = createSlice({
 function ManageOffersStateMap(
   st: OffersState,
   input: { data: OfferEntity },
-  options?: { refresh?: boolean; isForList?: boolean; setPrices?: boolean; setVariations?: boolean }
+  options?: ActionPayload & {
+    refresh?: boolean;
+    isForList?: boolean;
+    setPrices?: boolean;
+    setVariations?: boolean;
+  }
 ) {
-  const itemId = input.data?._id;
-  const itemSku = input.data?.sku;
+  const itemId = input?.data?._id;
+  const itemSku = input?.data?.sku;
 
   const offer = options?.isForList ? omit(input.data, ['prices', 'variations']) : input.data;
 
@@ -264,21 +280,11 @@ function ManageOffersStateMap(
     st.dataMap[itemId] = offer;
   } else {
     // st.dataMap = { ...st.dataMap, [itemId]: { ...st.dataMap?.[itemId], ...offer } };
-
     st.dataMap[itemId] = { ...st.dataMap?.[itemId], ...offer };
+
+    // TODO переробити
   }
-
   const OfferFromState = st.dataMap[itemId];
-
-  // for (const dataKey of defaultsKeys) {
-  //   const currentData = st.dataMap?.[itemId];
-  //
-  //   newData[dataKey] = {
-  //     ...(currentData?.[dataKey] ?? {}),
-  //     ...(input?.data?.[dataKey] ?? {}),
-  //   };
-  // }
-  // }
 
   if (itemSku) {
     st.skuKeysMap[itemSku] = itemId;

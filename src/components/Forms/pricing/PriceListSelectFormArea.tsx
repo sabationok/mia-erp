@@ -4,7 +4,7 @@ import { OnRowClickHandler } from '../../TableList/tableTypes.types';
 import FlexBox from '../../atoms/FlexBox';
 import TableList from '../../TableList/TableList';
 import { priceListColumns } from '../../../data/priceManagement.data';
-import { AccordionForm } from '../FormArea/AccordionForm';
+import { AccordionForm } from '../../atoms/FormArea/AccordionForm';
 
 export const PriceListSelectFormArea = ({ onSelect }: { onSelect?: (info: UUID) => void; error?: string }) => {
   const { lists } = usePriceManagementSelector();

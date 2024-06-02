@@ -1,17 +1,17 @@
 import { FormEventHandler, useEffect, useMemo, useState } from 'react';
-import { AccordionForm } from '../../FormArea/AccordionForm';
+import { AccordionForm } from '../../../atoms/FormArea/AccordionForm';
 import styled from 'styled-components';
 import { FlexUl } from '../../../atoms/FlexBox';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { OfferFormAreaProps } from '../types';
 import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
 import { t } from '../../../../lang';
-import { IProductFullFormData, OfferEntity } from '../../../../types/offers/offers.types';
+import { IOfferFullFormData, OfferEntity } from '../../../../types/offers/offers.types';
 import { idsFromRefs, sortIds } from '../../../../utils';
 import OfferCategoriesSelector from './OfferCategoriesSelector';
 import { useCurrentOffer } from '../../../../hooks';
 
-export interface OfferFormCategoriesAreaProps extends OfferFormAreaProps<IProductFullFormData['categories']> {
+export interface OfferFormCategoriesAreaProps extends OfferFormAreaProps<IOfferFullFormData['categories']> {
   onSelect?: (id: string) => void;
   onChange?: (ids: string[]) => void;
   onSuccess?: (data: OfferEntity) => void;

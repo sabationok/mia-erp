@@ -1,7 +1,7 @@
-import { OfferEntity, IProductFullFormData } from '../../types/offers/offers.types';
+import { IOfferFullFormData, OfferEntity } from '../../types/offers/offers.types';
 import _, { isObject, pick } from 'lodash';
 
-export function toOfferFormData(input: OfferEntity): IProductFullFormData {
+export function toOfferFormData(input: OfferEntity): IOfferFullFormData {
   const createProductFormDataOmitPaths: (keyof OfferEntity | string)[] = [
     '_id',
     'createdAt',
@@ -19,30 +19,30 @@ export function toOfferFormData(input: OfferEntity): IProductFullFormData {
     return ['properties', 'categories'].includes(key);
   };
   const data = _.cloneDeep(_.omit(input, createProductFormDataOmitPaths));
-  let output: Record<keyof IProductFullFormData | string, any> = {};
+  let output: Record<keyof IOfferFullFormData | string, any> = {};
 
   Object.entries(data).map(([k, v], _index) => {
     if (v === null) {
-      return (output[k as keyof IProductFullFormData] = v);
+      return (output[k as keyof IOfferFullFormData] = v);
     }
     if (!v) {
       return { [k]: v };
     }
     if (['string', 'number'].includes(typeof v)) {
-      return (output[k as keyof IProductFullFormData] = v);
+      return (output[k as keyof IOfferFullFormData] = v);
     } else if (typeof v === 'object') {
       if (Array.isArray(v)) {
         if (isArrayForTransformToIdsArray(k)) {
-          return (output[k as keyof IProductFullFormData] = v.map(el => isObject(el) && '_id' in el && el._id)).filter(
+          return (output[k as keyof IOfferFullFormData] = v.map(el => isObject(el) && '_id' in el && el._id)).filter(
             el => el
           );
         }
-        return (output[k as keyof IProductFullFormData] = v);
+        return (output[k as keyof IOfferFullFormData] = v);
       }
       const newValue = pick(v, getFormValuePickPaths(v));
-      return (output[k as keyof IProductFullFormData] = newValue);
+      return (output[k as keyof IOfferFullFormData] = newValue);
     } else {
-      return (output[k as keyof IProductFullFormData] = v);
+      return (output[k as keyof IOfferFullFormData] = v);
     }
   });
 

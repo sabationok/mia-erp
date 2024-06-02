@@ -28,7 +28,7 @@ export type ButtonGroupSelectHandler<V = any> = (info: {
   value: V;
   index: number;
 }) => void;
-const ButtonsGroup = <V = any, Opt extends ButtonsGroupOption<V> = any>({
+const ButtonsGroup = <V = any, FormData extends FieldValues = any>({
   options,
   borderRadius,
   onSelect,
@@ -39,13 +39,13 @@ const ButtonsGroup = <V = any, Opt extends ButtonsGroupOption<V> = any>({
   value,
   name,
   form,
-}: ButtonsGroupProps<V, Opt>) => {
+}: ButtonsGroupProps<V, FormData>) => {
   const [current, setCurrent] = useState(defaultIndex);
 
   const handleSelect = useCallback(
     (option: ButtonsGroupOption, index: number) => () => {
       if (form?.setValue && name) {
-        form?.setValue(name, option?.value, { shouldDirty: true, shouldTouch: true, shouldValidate: true });
+        form.setValue(name, option.value, { shouldDirty: true, shouldTouch: true });
       } else if (onSelect) {
         options && onSelect({ option, value: option?.value, index });
       } else if (onChangeIndex) {
@@ -54,7 +54,7 @@ const ButtonsGroup = <V = any, Opt extends ButtonsGroupOption<V> = any>({
         setCurrent(index);
       }
     },
-    [name, onChangeIndex, onSelect, options]
+    [form, name, onChangeIndex, onSelect, options]
   );
 
   const renderButtons = useMemo(() => {

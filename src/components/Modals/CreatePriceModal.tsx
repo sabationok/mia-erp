@@ -13,7 +13,7 @@ import { PriceDiscountEntity } from '../../types/price-management/discounts';
 import FlexBox from '../atoms/FlexBox';
 import { usePriceDiscountsSelector } from '../../redux/selectors.store';
 import { useCurrentPrice } from '../../hooks';
-import { AccordionFormArea } from '../Forms/FormArea/AccordionForm';
+import { AccordionFormArea } from '../atoms/FormArea/AccordionForm';
 import { useModalService } from '../../Providers/ModalProvider/ModalProvider';
 import { CreateDiscountModal } from './CreateDiscountModal';
 import { useAppDispatch } from '../../redux/store.store';

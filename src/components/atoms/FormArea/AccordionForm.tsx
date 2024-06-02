@@ -1,10 +1,10 @@
-import FlexBox, { FlexFieldSet, FlexForm } from '../../atoms/FlexBox';
-import { Text } from '../../atoms/Text';
+import FlexBox, { FlexFieldSet, FlexForm } from '../FlexBox';
+import { Text } from '../Text';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import FormAreaFooter from './FormAreaFooter';
 import { useEffect, useId, useState } from 'react';
 import { isUndefined } from 'lodash';
-import ButtonIcon from '../../atoms/ButtonIcon';
+import ButtonIcon from '../ButtonIcon';
 import styled, { css, useTheme } from 'styled-components';
 import { Property } from 'csstype';
 

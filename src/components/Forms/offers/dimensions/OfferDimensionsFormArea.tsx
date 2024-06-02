@@ -1,6 +1,6 @@
 import DimensionsInputs, { DimensionsFormData } from './DimensionsInputs';
 import { useAppForm } from '../../../../hooks';
-import { AccordionForm } from '../../FormArea/AccordionForm';
+import { AccordionForm } from '../../../atoms/FormArea/AccordionForm';
 import useOffersService from '../../../../hooks/useOffersService.hook';
 import { ToastService } from '../../../../services';
 import { IDimensions } from '../../../../types/utils.types';
@@ -35,8 +35,8 @@ export const OfferDimensionsFormArea = ({
     });
   };
 
-  const canSubmit = form.formState.touchedFields?.dimensions
-    ? Object.values(form.formState.touchedFields?.dimensions)?.some(fd => fd)
+  const canSubmit = form.formState.dirtyFields?.dimensions
+    ? Object.values(form.formState.dirtyFields?.dimensions)?.some(fd => fd)
     : false;
 
   return (
