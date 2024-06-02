@@ -1,7 +1,8 @@
 import { useRow } from '../TableRows/TableRow';
-import CheckBox, { ButtonCheckboxEvent, CustomCheckboxEventHandler } from './CellComponents/CheckBox';
+import CheckBox, { CustomCheckboxEventHandler } from './CellComponents/CheckBox';
 import styled from 'styled-components';
 import { memo } from 'react';
+import { useTable } from '../TableList';
 
 interface Props {
   title?: string;
@@ -12,15 +13,19 @@ interface Props {
 }
 
 const CellCheckBox: React.FC<Props> = ({ className }) => {
-  const { rowId, onRowCheckboxChange, checked } = useRow();
-
-  function onChange({ checked }: ButtonCheckboxEvent) {
-    onRowCheckboxChange && onRowCheckboxChange({ checked, rowId: rowId });
-  }
+  const { onCheckboxChange } = useTable();
+  const { rowId, checked } = useRow();
 
   return (
     <StCell className={className}>
-      <CheckBox id={`checkbox_${rowId}`} value={rowId} onChange={onChange} checked={checked} />
+      <CheckBox
+        id={`checkbox_${rowId}`}
+        value={rowId}
+        checked={checked}
+        onChange={event => {
+          onCheckboxChange && onCheckboxChange({ ...event, rowId: rowId, value: rowId });
+        }}
+      />
     </StCell>
   );
 };

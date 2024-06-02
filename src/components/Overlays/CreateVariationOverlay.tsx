@@ -245,7 +245,7 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   }, [propertiesList, selectedIds, handleSelect]);
 
   return (
-    <DrawerBase fillHeight onBackPress={onClose} okButton={false} title={title}>
+    <DrawerBase fillHeight onBackPress={onClose} okButton={false} title={title || 'Create variation'}>
       <FormContainer
         onSubmit={handleSubmit(onValid, errors => {
           console.error('[SUBMIT ERROR]', errors);
@@ -281,7 +281,7 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
               </InputLabel>
 
               <InputLabel label={t('barCode')} error={errors.barCode}>
-                <InputText {...register('barCode', { valueAsNumber: true })} placeholder={t('barCode')} />
+                <InputText {...register('barCode')} placeholder={t('barCode')} />
               </InputLabel>
             </FlexBox>
 
@@ -328,7 +328,8 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
         <OverlayFooter
           loading={loaders.isLoading?.create}
           resetButtonShown
-          submitButtonText={loaders.isLoading?.create ? 'Loading...' : updateId ? 'Підтвердити' : 'Додати'}
+          onGoBackPress={onClose}
+          submitButtonText={updateId ? 'Підтвердити' : 'Додати'}
           canSubmit={canSubmit}
           extraFooter={
             <ExtraFooterBox>

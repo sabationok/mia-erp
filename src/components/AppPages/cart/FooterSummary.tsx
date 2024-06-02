@@ -71,7 +71,7 @@ export const FooterSummary = ({
           <FlexBox
             key={dataKey}
             background={theme.fieldBackgroundColor}
-            borderRadius={'6px'}
+            borderRadius={'4px'}
             justifyContent={'space-between'}
           >
             <Text $weight={400} $size={12} $padding={'4px 6px'}>
@@ -89,7 +89,7 @@ export const FooterSummary = ({
           <FlexBox
             key={dataKey}
             background={theme.fieldBackgroundColor}
-            borderRadius={'6px'}
+            borderRadius={'4px'}
             justifyContent={'space-between'}
           >
             <Text $weight={400} $size={12} $padding={'4px 6px'}>

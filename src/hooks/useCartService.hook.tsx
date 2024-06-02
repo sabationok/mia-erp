@@ -3,21 +3,15 @@ import { ICreateOrderInfoFormState } from '../types/orders/createOrderInfoFormSt
 import { OrderSummary } from '../types/orders/orders.types';
 import { useAppDispatch } from '../redux/store.store';
 import { useCartSelector } from '../redux/selectors.store';
-import * as actions from '../redux/cart/cart.slice';
-import {
-  addNewSlotToCartAction,
-  CART_DEFAULT_ID,
-  clearCartAction,
-  removeSlotAction,
-  setCheckedStatusAction,
-  updateSlotAction,
-} from '../redux/cart/cart.slice';
+import * as AppCart from '../redux/cart/cart.slice';
+
 import {
   countOrderSlotValues,
   countOrderSummary,
   createOrderTempSlot,
   CreateOrderTempSlotArgs,
   ObjectKeys,
+  toSerializableObj,
 } from '../utils';
 import { useEffect, useMemo } from 'react';
 import _ from 'lodash';
@@ -30,9 +24,9 @@ export interface CartService {
   setFormState: (info: ICreateOrderInfoFormState) => void;
   clearFormState: () => void;
   deliveriesCount: number;
-  ordersSlotsMap: Record<actions.CartOrderId, IOrderTempSlot[]>;
-  ordersSummariesMap: Record<actions.CartOrderId, OrderSummary>;
-  ordersSelectedSlotsMap: Record<actions.CartOrderId, IOrderTempSlot[]>;
+  ordersSlotsMap: Record<AppCart.CartOrderId, IOrderTempSlot[]>;
+  ordersSummariesMap: Record<AppCart.CartOrderId, OrderSummary>;
+  ordersSelectedSlotsMap: Record<AppCart.CartOrderId, IOrderTempSlot[]>;
   summary: OrderSummary;
   isCartEmpty: boolean;
   hasSelectedSlots: boolean;
@@ -44,14 +38,14 @@ export interface GetCurrentSlotReturn extends Partial<IOrderTempSlot> {
   isChecked: () => boolean;
   remove: () => void;
 }
-export interface GetCurrentCartReturn extends Partial<actions.CartOrdersGroup> {
+export interface GetCurrentCartReturn extends Partial<AppCart.CartOrdersGroup> {
   remove: () => void;
   clear: () => void;
 }
 const useCartActions = () => {
   const dispatch = useAppDispatch();
   const state = useCartSelector();
-  const cartId = useAppParams().cartId || CART_DEFAULT_ID;
+  const cartId = useAppParams().cartId || AppCart.CART_DEFAULT_ID;
 
   class Actions {
     static setChecked({
@@ -59,18 +53,25 @@ const useCartActions = () => {
       checked,
       orderId,
     }: {
-      orderId?: actions.CartOrderId;
-      tempId?: actions.CartSlotId;
+      orderId?: AppCart.CartOrderId;
+      tempId?: AppCart.CartSlotId;
       checked: boolean;
     }) {
-      dispatch(setCheckedStatusAction({ tempId, checked, orderId }));
+      dispatch(AppCart.setCheckedStatusAction({ tempId, checked, orderId }));
     }
 
-    static setCartId(id?: actions.CartId, customer?: ICustomer) {
-      dispatch(actions.setCartIdAction({ cartId: id || cartId }));
+    static setCartId(id?: AppCart.CartId, customer?: ICustomer) {
+      dispatch(AppCart.setCartIdAction({ cartId: id || cartId }));
     }
-    static clearCart(cartId: actions.CartId) {
-      dispatch(actions.clearCartAction({ cartId }));
+    static clearCart(cartId: AppCart.CartId) {
+      dispatch(AppCart.clearCartAction({ cartId }));
+    }
+    static removeCart(cartId: AppCart.CartId) {
+      dispatch(AppCart.removeCartAction({ cartId }));
+    }
+
+    static removeOrder(orderId: AppCart.CartOrderId) {
+      dispatch(AppCart.removeOrderAction({ orderId }));
     }
 
     private static _addSlotMethods(slot?: IOrderTempSlot): GetCurrentSlotReturn {
@@ -90,16 +91,17 @@ const useCartActions = () => {
         },
       };
     }
-    static getSlot(tempId?: actions.CartSlotId): GetCurrentSlotReturn {
-      const slot = tempId ? state.slots?.dataMap?.[tempId] : undefined;
-
-      return this._addSlotMethods(slot);
+    static getSlotById(tempId?: AppCart.CartSlotId) {
+      return tempId ? state.slots?.dataMap?.[tempId] : undefined;
     }
-    static setQty(tempId: actions.CartSlotId, quantity: number) {
-      const slot = this.getSlot(tempId);
+    static getSlotWithMethods(tempId?: AppCart.CartSlotId): GetCurrentSlotReturn {
+      return this._addSlotMethods(this.getSlotById(tempId));
+    }
+    static setQty(tempId: AppCart.CartSlotId, quantity: number) {
+      const slot = this.getSlotById(tempId);
       if (!slot) return;
       dispatch(
-        updateSlotAction({
+        AppCart.updateSlotAction({
           data: {
             ...countOrderSlotValues({ ...slot, quantity }),
             isSelected: true,
@@ -108,7 +110,7 @@ const useCartActions = () => {
       );
     }
     static addSlot(args: CreateOrderTempSlotArgs) {
-      dispatch(addNewSlotToCartAction({ data: createOrderTempSlot(args) }));
+      dispatch(AppCart.addNewSlotToCartAction({ data: createOrderTempSlot(toSerializableObj(args)) }));
     }
     static isSelected(slot?: IOrderTempSlot) {
       const tempId = slot?.tempId;
@@ -131,53 +133,55 @@ const useCartActions = () => {
       const orderId = slot?.cartOrderId
         ? slot?.cartOrderId
         : slot?.tempId
-        ? this.getSlot(slot?.tempId)?.cartOrderId
+        ? this.getSlotWithMethods(slot?.tempId)?.cartOrderId
         : undefined;
 
       if (!orderId) return undefined;
 
       return state.orders.dataMap?.[orderId];
     }
-    static clear(cartId?: actions.CartId) {
-      dispatch(clearCartAction({ cartId }));
+    static clear(cartId?: AppCart.CartId) {
+      dispatch(AppCart.clearCartAction({ cartId }));
     }
     static update(slot: IOrderTempSlot) {
-      dispatch(updateSlotAction({ data: createOrderTempSlot(slot) }));
+      dispatch(AppCart.updateSlotAction({ data: createOrderTempSlot(toSerializableObj(slot)) }));
     }
-    static removeSlot(tempId: actions.CartSlotId) {
-      dispatch(removeSlotAction({ tempId }));
+    static removeSlot(tempId: AppCart.CartSlotId) {
+      dispatch(AppCart.removeSlotAction({ tempId }));
     }
-    static isOfferInCart({ offerId, cartId }: { cartId: actions.CartId; offerId: string }) {
+    static isOfferInCart({ offerId, cartId }: { cartId: AppCart.CartId; offerId: string }) {
       return !!state.dataMap?.[cartId]?.offersIdsMap?.[offerId]?.length;
     }
 
-    static getOrderById(id: actions.CartOrderId): actions.CartOrder | undefined {
+    static getOrderById(id: AppCart.CartOrderId): AppCart.CartOrder | undefined {
       return state.orders.dataMap?.[id];
     }
-    private static _addCartMethods(cart: actions.CartOrdersGroup | undefined): GetCurrentCartReturn {
+    private static _addCartMethods(cart: AppCart.CartOrdersGroup | undefined): GetCurrentCartReturn {
       return {
         ...cart,
-        remove: () => {},
+        remove: () => {
+          cart?.tempId && this.removeCart(cart?.tempId);
+        },
         clear: () => {
           cart?.tempId && this.clearCart(cart?.tempId);
         },
       };
     }
-    static getCartById(id?: actions.CartId): actions.CartOrdersGroup | undefined {
-      return state.dataMap?.[id || CART_DEFAULT_ID];
+    static getCartById(id?: AppCart.CartId): AppCart.CartOrdersGroup | undefined {
+      return !id ? undefined : state.dataMap?.[id];
     }
-    static getCurrentCart(id?: actions.CartId) {
+    static getCurrentCart(id?: AppCart.CartId) {
       const cart = this.getCartById(id);
 
       return cart ? this._addCartMethods(cart) : cart;
     }
 
-    static getSlotByVariationId(variationId?: string, _cartId?: actions.CartId): GetCurrentSlotReturn | undefined {
+    static getSlotByVariationId(variationId?: string, _cartId?: AppCart.CartId): GetCurrentSlotReturn | undefined {
       if (variationId) {
         // const cart = state.dataMap?.[cartId];
 
         let slotId = state.slots?.variationsIdMap?.[variationId];
-        const slot = this.getSlot(slotId);
+        const slot = this.getSlotWithMethods(slotId);
         if (slot) {
           return this._addSlotMethods(slot);
         }
@@ -220,16 +224,16 @@ const useCartActions = () => {
 
 export const useCartService = (): CartService => {
   const dispatch = useAppDispatch();
-  const cartId = useAppParams().cartId || CART_DEFAULT_ID;
+  const cartId = useAppParams().cartId || AppCart.CART_DEFAULT_ID;
 
   const state = useCartSelector();
 
   const actions = useCartActions();
 
   const countedCartData = useMemo(() => {
-    const ordersSlotsMap: Record<actions.CartOrderId, IOrderTempSlot[]> = {};
-    const ordersSelectedSlotsMap: Record<actions.CartOrderId, IOrderTempSlot[]> = {};
-    const ordersSummariesMap: Record<actions.CartOrderId, OrderSummary> = {};
+    const ordersSlotsMap: Record<AppCart.CartOrderId, IOrderTempSlot[]> = {};
+    const ordersSelectedSlotsMap: Record<AppCart.CartOrderId, IOrderTempSlot[]> = {};
+    const ordersSummariesMap: Record<AppCart.CartOrderId, OrderSummary> = {};
 
     const cart = actions.getCartById(cartId);
 
@@ -243,11 +247,13 @@ export const useCartService = (): CartService => {
       if (!order) break;
 
       ordersSlotsMap[orderId] = [];
+
       if (order.slotsIds?.length) {
         isCartEmpty = false;
 
         order.slotsIds.forEach(key => {
-          ordersSlotsMap[orderId].push(state.slots.dataMap?.[key]);
+          const slot = state.slots.dataMap?.[key];
+          slot && ordersSlotsMap[orderId].push(slot);
         });
 
         if (order.selectedIds?.length) {

@@ -58,14 +58,14 @@ export interface IOrderSlotBase
 }
 
 export interface IOrderTempSlotMeta extends HasType<TempSlotTypeEnum | string> {
+  cartId?: CartId;
+  cartOrderId?: CartOrderId;
   tempId?: CartSlotId;
+
   isSelected?: boolean;
   isInCart?: boolean;
   hasVariations?: boolean;
   hasInventories?: boolean;
-
-  cartId?: CartId;
-  cartOrderId?: CartOrderId;
 
   discounts?: PriceEntity['discounts'] | PriceDiscountRecord[];
 }

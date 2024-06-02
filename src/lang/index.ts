@@ -1,7 +1,7 @@
 import { langUa } from './ua';
 import { checks } from '../utils';
 
-export type LangTextKey = keyof typeof langUa | string;
+export type LangTextKey = keyof typeof langUa & string;
 export enum LangKeyEnum {
   ua = 'ua',
   en = 'en',

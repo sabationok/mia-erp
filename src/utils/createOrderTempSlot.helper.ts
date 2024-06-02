@@ -277,7 +277,7 @@ export const countOrderSlotValues = (slot: Partial<IOrderTempSlot>, onGetDiscoun
       amount: extras.discount.toString(),
     };
   } else {
-    console.warn('slot?.origin?.discounts list is empty');
+    // console.warn('slot?.origin?.discounts list is empty');
     slot.discounts = [];
   }
 

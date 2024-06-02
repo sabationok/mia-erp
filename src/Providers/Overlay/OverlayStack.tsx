@@ -79,7 +79,7 @@ const Backdrop = styled(FlexBox)`
   visibility: ${p => (p.isActive ? 'visible' : 'hidden')};
   pointer-events: ${p => (p.isActive ? 'all' : 'none')};
 
-  background-color: ${p => p.theme.backdropColor};
+  background-color: ${p => p.theme.backdropColorDark};
 
   transition: all ${p => p.theme.globals.timingFunctionMain};
 `;

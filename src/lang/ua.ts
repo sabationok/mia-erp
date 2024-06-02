@@ -43,6 +43,7 @@ export const langUa = {
 
   Change: 'Змінити',
   Cancel: 'Скасувати',
+  Warehouse: 'Склад',
 
   'Payment checkout services': 'Сервіси оплати',
   'Delivery types': 'Спосoби доставки',

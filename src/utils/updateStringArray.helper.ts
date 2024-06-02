@@ -11,26 +11,27 @@ export const updateIdsArray = <IdType extends string | number | symbol>({
   arr?: IdType[];
   remove?: boolean;
   toggle?: boolean;
-  onUpdate?: (id: IdType) => void;
-  onRemove?: (id: IdType) => void;
+  onUpdate?: (id: IdType, arr: IdType[]) => void;
+  onRemove?: (id: IdType, arr: IdType[]) => void;
   upend?: boolean;
 }): IdType[] => {
   const idsSet = new Set(Array.isArray(arr) ? arr : []);
-
   const _update = (): IdType[] => {
     const newArr = upend ? [...idsSet, id] : [id, ...idsSet];
+
     if (newArr.length > idsSet.size) {
-      const _onUpdate = async (id: IdType) => onUpdate && onUpdate(id);
-      _onUpdate(id).catch();
+      const _onUpdate = async () => onUpdate && onUpdate(id, newArr);
+      _onUpdate().catch();
     }
     return newArr;
   };
   const _remove = () => {
     idsSet.delete(id);
+
     const newArr = [...idsSet] as IdType[];
     if (newArr.length < idsSet.size) {
-      const _onRemove = async (id: IdType) => onRemove && onRemove(id);
-      _onRemove(id).catch();
+      const _onRemove = async () => onRemove && onRemove(id, newArr);
+      _onRemove().catch();
     }
     return newArr;
   };

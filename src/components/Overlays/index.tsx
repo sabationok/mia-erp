@@ -30,6 +30,9 @@ export const OverlayHeader = ({
       gap={8}
       padding={'2px 0'}
       overflow={'hidden'}
+      sStyles={{
+        minHeight: '40px',
+      }}
     >
       {onBackPress && (
         <ButtonIcon
@@ -37,6 +40,7 @@ export const OverlayHeader = ({
           icon={'SmallArrowLeft'}
           iconSize={'22px'}
           padding={'0 6px'}
+          gap={4}
           style={{ minWidth: 'max-content', minHeight: '100%' }}
           onClick={onBackPress}
         >
@@ -57,7 +61,7 @@ export const OverlayHeader = ({
       {okButton && (
         <ButtonIcon
           variant={'textSmall'}
-          gap={'6px'}
+          gap={4}
           type={'submit'}
           padding={'0 6px'}
           icon={'done'}
@@ -95,6 +99,7 @@ export const OverlayFooter = ({
   canSubmit,
   onCreatePress,
   resetButtonShown,
+  onGoBackPress,
 }: {
   canSubmit?: boolean;
   resetButtonShown?: boolean;
@@ -102,29 +107,34 @@ export const OverlayFooter = ({
   loading?: boolean;
   onCreatePress?: () => void;
   submitButtonText?: string;
+  onGoBackPress?: () => void;
 }) => {
   return (
     <Footer fillWidth>
       {extraFooter}
 
-      <FlexBox padding={'8px 8px'} fxDirection={'row'} gap={8} alignItems={'center'}>
+      <FlexBox padding={'8px 8px 16px'} fxDirection={'row'} gap={8} alignItems={'center'}>
+        {onGoBackPress && (
+          <ButtonIcon variant={'onlyIcon'} icon={'SmallArrowLeft'} size={'28px'} iconSize={'90%'} type={'reset'} />
+        )}
+
         {resetButtonShown && (
-          <ButtonIcon variant={'onlyIcon'} icon={'clear'} size={'36px'} iconSize={'80%'} type={'reset'} />
+          <ButtonIcon variant={'onlyIcon'} icon={'clear'} size={'28px'} iconSize={'90%'} type={'reset'} />
         )}
 
         {onCreatePress && (
-          <ButtonIcon variant={'onlyIcon'} icon={'plus'} size={'36px'} iconSize={'80%'} onClick={onCreatePress} />
+          <ButtonIcon variant={'onlyIcon'} icon={'plus'} size={'32px'} iconSize={'90%'} onClick={onCreatePress} />
         )}
 
         <ButtonIcon
           variant={'filledMiddle'}
           flex={1}
           type={'submit'}
-          style={{ padding: '0 12px' }}
+          // style={{ padding: '0 12px' }}
           // textTransform={'uppercase'}
           fontWeight={600}
-          endIcon={'SmallArrowRight'}
-          endIconSize={'24px'}
+          endIcon={'done'}
+          // endIconSize={'24px'}
           isLoading={loading}
           disabled={!canSubmit}
         >

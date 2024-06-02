@@ -78,7 +78,7 @@ const Backdrop = styled(FlexBox)`
   //align-items: flex-end;
 
   max-height: 100%;
-  background-color: ${p => p.theme.backdropColor};
+  background-color: ${p => p.theme.backdropColorDark};
 
   transition: none;
 `;

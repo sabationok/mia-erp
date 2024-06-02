@@ -20,6 +20,7 @@ import { useMediaQuery } from 'react-responsive';
 import { Text } from '../../atoms/Text';
 import { t } from '../../../lang';
 import { toPrice } from '../../../utils/numbers';
+import { CART_DEFAULT_ID } from '../../../redux/cart/cart.slice';
 
 interface Props extends BaseAppPageProps {}
 
@@ -40,7 +41,7 @@ export default function CartPage({ path }: Props) {
   return (
     <AppGridPage path={path}>
       <OverlayStackProvider>
-        <Page fillWidth flex={1} overflow={'hidden'} fillHeight fxDirection={'row'} gap={12}>
+        <Page fillWidth flex={1} overflow={'hidden'} fillHeight fxDirection={'row'} gap={4}>
           <FlexBox fillHeight flex={2}>
             <PageCartSlots
             // onSlotEditPress={() => setIsVisible(true)}
@@ -87,11 +88,20 @@ const RightSide = styled(FlexBox)<{ isVisible?: boolean }>`
   transition: ${p => p.theme.globals.timingFunctionMain};
   background-color: ${p => p.theme.backgroundColorLight};
 
-  @media screen and (min-width: 768px) {
+  border-color: ${p => p.theme.trBorderClr};
+  border-style: solid;
+  border: 0;
+
+  // border-left-width: ${p => (p.isVisible ? `1px` : 0)};
+  border-left-width: 1px;
+
+  @media screen and (min-width: 960px) {
     min-width: 320px;
   }
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 960px) {
+    border-left-width: ${p => (p.isVisible ? `1px` : 0)};
+
     position: absolute;
     top: 0;
     right: 0;
@@ -100,7 +110,7 @@ const RightSide = styled(FlexBox)<{ isVisible?: boolean }>`
 
     transform: translateX(${p => (p.isVisible ? 0 : 100)}%);
 
-    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.25);
+    box-shadow: ${p => (p.isVisible ? `0 12px 26px rgba(0, 0, 0, 0.25)` : '')};
   }
 `;
 
@@ -111,10 +121,10 @@ function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
   const modalSrv = useModalService();
   const router = useAppRouter();
   const theme = useTheme();
-  const cart = cartSrv.actions.getCurrentCart(cartId);
+  const Cart = cartSrv.actions.getCurrentCart(cartId || CART_DEFAULT_ID);
 
   const renderOrders = useMemo(() => {
-    const ordersIds = cart?.ordersIds;
+    const ordersIds = Cart?.ordersIds;
 
     return ordersIds?.map((orderId, index) => {
       if (!orderId) {
@@ -128,6 +138,13 @@ function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
           key={orderId ?? index}
           label={t('Warehouse') + ': ' + order?.warehouse?.label ?? t('undefined')}
           hideFooter
+          renderTitle={
+            <FlexBox fxDirection={'row'} gap={8} padding={'0 12px'}>
+              <Text $size={13} $weight={600} $padding={'2px 8px'}>
+                {t('Warehouse') + ': ' + order?.warehouse?.label ?? t('undefined')}
+              </Text>
+            </FlexBox>
+          }
         >
           <FlexBox minHeight={'300px'}>
             <TableList
@@ -142,12 +159,15 @@ function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
                 cartSrv.actions.setChecked({ orderId, checked: ev.checked });
               }}
               selectedRows={order?.selectedIds}
+              rowIds={order?.slotsIds}
               keyExtractor={data => {
-                return data.tempId ?? 'slot';
+                return data?.tempId ?? 'slot';
               }}
               tableTitles={tempOrderSlotTableColumns}
+              onRowClick={() => {}}
               actionsCreator={(ctx): ITableAction[] => {
                 const currentId = ctx.selectedRow?.tempId;
+
                 return [
                   {
                     icon: 'delete',
@@ -170,6 +190,7 @@ function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
                   },
                   {
                     icon: 'plus',
+                    type: 'onlyIconFilled',
                     disabled: !order?.warehouse,
                     onClick: () => {
                       order?.warehouse &&
@@ -182,28 +203,40 @@ function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
               }}
             />
           </FlexBox>
+
+          <FlexBox padding={'8px 0'}>
+            <ButtonIcon
+              variant={'filledMiddle'}
+              onClick={() => {
+                // modalSrv.create(SelectOfferModal, {});
+                cartSrv.actions.removeOrder(orderId);
+              }}
+            >
+              {'Remove'}
+            </ButtonIcon>
+          </FlexBox>
         </AccordionFormArea>
       );
     });
-  }, [cart?.ordersIds, cartSrv.actions, cartSrv.ordersSlotsMap, modalSrv, router]);
+  }, [Cart?.ordersIds, cartSrv.actions, cartSrv.ordersSlotsMap, modalSrv, router]);
 
   return (
     <FlexBox overflow={'auto'} fillHeight>
-      <AccordionFormArea label={`Cart: ${cart?.tempId}`} expandable={true} isOpen={true} hideFooter={true}>
+      <AccordionFormArea label={`Cart: ${Cart?.tempId}`} expandable={true} isOpen={true} hideFooter={true}>
         <FlexBox padding={'8px 12px'} flexWrap={'wrap'} fxDirection={'row'} gap={10}>
           {(['cashback', 'bonus', 'discount'] as const).map(dataKey => {
             return (
               <FlexBox
                 key={dataKey}
                 background={theme.backgroundColorSecondary}
-                borderRadius={'4px'}
+                borderRadius={'2px'}
                 justifyContent={'space-between'}
               >
                 <Text $weight={400} $size={12} $padding={'4px 6px'} $textTransform={'capitalize'}>
                   {t(dataKey)}
                 </Text>
                 <Text $weight={600} $size={13} $padding={'4px 6px'} $align={'end'}>
-                  {toPrice(cart?.summary?.[dataKey]?.amount)}
+                  {toPrice(Cart?.summary?.[dataKey]?.amount)}
                 </Text>
               </FlexBox>
             );
@@ -214,14 +247,14 @@ function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
               <FlexBox
                 key={dataKey}
                 background={theme.backgroundColorSecondary}
-                borderRadius={'4px'}
+                borderRadius={'2px'}
                 justifyContent={'space-between'}
               >
                 <Text $weight={400} $size={12} $padding={'4px 6px'} $textTransform={'capitalize'}>
                   {t(dataKey)}
                 </Text>
                 <Text $weight={600} $size={13} $padding={'4px 6px'} $align={'end'}>
-                  {toPrice(cart?.summary?.[dataKey])}
+                  {toPrice(Cart?.summary?.[dataKey])}
                 </Text>
               </FlexBox>
             );
@@ -229,7 +262,9 @@ function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
         </FlexBox>
       </AccordionFormArea>
 
-      <FlexBox flex={1}>{renderOrders}</FlexBox>
+      <FlexBox flex={1} gap={8}>
+        {renderOrders}
+      </FlexBox>
 
       <FlexBox
         fxDirection={'row'}
@@ -248,13 +283,25 @@ function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
         }}
       >
         <ButtonIcon
-          variant={'filledMiddle'}
+          variant={'outlinedMiddle'}
           icon={'plus'}
+          disabled={!Cart}
           onClick={() => {
             modalSrv.create(SelectOfferModal, {});
           }}
         >
-          {'Create'}
+          {'Add slot'}
+        </ButtonIcon>
+
+        <ButtonIcon
+          variant={'filledMiddle'}
+          disabled={!cartId}
+          onClick={() => {
+            Cart?.remove();
+            // cartId && cartSrv.actions.removeCart(cartId);
+          }}
+        >
+          {'Remove all'}
         </ButtonIcon>
       </FlexBox>
     </FlexBox>

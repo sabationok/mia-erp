@@ -11,11 +11,11 @@ export interface CheckBoxProps {
   idx?: string | number;
   onChange?: CustomCheckboxEventHandler;
 }
-export interface ButtonCheckboxEvent extends React.ChangeEvent<HTMLInputElement> {
+export interface CheckboxEvent extends React.ChangeEvent<HTMLInputElement> {
   checked: boolean;
 }
 
-export type CustomCheckboxEventHandler = (event: ButtonCheckboxEvent) => void;
+export type CustomCheckboxEventHandler = (event: CheckboxEvent) => void;
 
 const CheckBox: React.FC<CheckBoxProps & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'size'>> = ({
   onChange,

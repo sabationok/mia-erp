@@ -165,13 +165,13 @@ const FormPriceInputs: React.FC<FormPriceInputsProps> = ({ form, onBlur, handleO
     <FlexBox fillWidth padding={'8px 0'}>
       <InputsHeader headers={['', `${t('Input')} *`, `${t('Output')} *`]} />
 
-      <TBody fillWidth>
+      <TBody fillWidth gap={8}>
         <FormBaseInputs form={form} handleBlur={handleOnBlur} />
       </TBody>
 
       <InputsHeader headers={['', t('Amount'), t('Percentage, %')]} />
 
-      <TBody fillWidth>
+      <TBody fillWidth gap={8}>
         <FormPriceAmountAndPercentageInputs form={form} handleBlur={handleOnBlur} />
       </TBody>
     </FlexBox>

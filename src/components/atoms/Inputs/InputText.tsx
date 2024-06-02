@@ -18,7 +18,7 @@ export const InputStyles = css<TextInputProps>`
     (error && theme.globals.colors.error) || (success && theme.globals.colors.success) || 'inherit'};
 
   background-color: inherit;
-  border-radius: 2px;
+  border-radius: 4px;
   border: 1px solid
     ${({ error, success, theme }) =>
       (error && theme.globals.colors.error) || (success && theme.globals.colors.success) || theme.globals.inputBorder};

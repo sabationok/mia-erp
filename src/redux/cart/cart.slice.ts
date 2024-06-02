@@ -12,7 +12,7 @@ import {
 } from 'types/orders/orders.types';
 import { ICustomer } from '../../types/customers.types';
 import { HasBaseCmsConfigs } from '../../types/cms.types';
-import { HasLabel, HasSku } from '../../types/utils.types';
+import { HasImgPreview, HasLabel, HasSku } from '../../types/utils.types';
 import { WarehouseEntity } from '../../types/warehousing/warehouses.types';
 
 export const CART_ID_PREFIX = 'cart';
@@ -51,7 +51,7 @@ export interface CartState extends CartStateMap {
   recommends: Record<string, SetRecommendationPayload & { timestamp?: number }>;
 }
 
-export interface SetRecommendationPayload extends HasSku, HasLabel, HasBaseCmsConfigs {
+export interface SetRecommendationPayload extends HasSku, HasLabel, HasBaseCmsConfigs, HasImgPreview {
   _id?: string;
   offerId?: string;
   fromRef: string;
@@ -261,10 +261,19 @@ export const cartSlice = createSlice({
       return st;
     },
     removeSlotAction: (st, a: Action<{ tempId: CartSlotId }>) => {
-      RemoveCartSlotMutation(st, a.payload);
+      RemoveSlot(st, a.payload);
 
       return st;
     },
+    removeOrderAction: (st, a: Action<{ orderId: string }>) => {
+      const order = st.orders.dataMap?.[a.payload.orderId];
+      order && RemoveOrder(st, order);
+      return st;
+    },
+    removeCartAction: (st, a: Action<{ cartId: string }>) => {
+      return st;
+    },
+
     clearCartAction(s, a: Action<{ cartId?: CartId }>) {
       const { cartId } = a.payload;
       if (cartId) {
@@ -275,8 +284,7 @@ export const cartSlice = createSlice({
         if (orderIds?.length) {
           orderIds.forEach(orderId => {
             const order = s.orders.dataMap[orderId];
-            const nestedOrdersIds = order.ordersIds;
-            console.log('clearCartAction', { nestedOrdersIds });
+            // const nestedOrdersIds = order.ordersIds;
 
             const slotsIds = order.slotsIds;
 
@@ -304,49 +312,26 @@ export const cartSlice = createSlice({
       // RecountSummariesMutation(s);
     },
     setCheckedStatusAction(
-      s,
+      st,
       {
         payload: { tempId, orderId, checked },
       }: Action<{ orderId?: CartOrderId; tempId?: CartSlotId; checked: boolean }>
     ) {
       if (tempId) {
-        const slot = s.slots.dataMap?.[tempId];
-
-        if (slot) {
-          slot.isSelected = checked;
-          slot.isInCart = true;
-        }
-
-        // const wrId = s.slotsMap[tempId].warehouse?._id;
-        // if (wrId) {
-        //   const wrs = s.ordersDataMap?.[wrId];
-        //   if (wrs) {
-        //     wrs.selectedIds = updateStringArray({
-        //       id: tempId,
-        //       arr: wrs.selectedIds,
-        //       remove: checked,
-        //     });
-        //
-        //     s.ordersDataMap[wrId] = wrs;
-        //   }
-        // }
+        SetSlotCheckedStatus(st, { tempId, checked });
       } else if (orderId) {
-        const order = s.orders.dataMap?.[orderId];
+        const order = st.orders.dataMap?.[orderId];
         const slotIds = order.slotsIds;
 
         if (slotIds?.length) {
           slotIds.forEach(slotId => {
-            if (s.slots.dataMap[slotId]) {
-              s.slots.dataMap[slotId].isSelected = checked;
-            }
+            SetSlotCheckedStatus(st, { tempId: slotId, checked, isFoList: true });
           });
         }
+        order.selectedIds = checked ? slotIds : [];
+        order.isSelected = checked;
 
-        s.orders.dataMap[orderId] = {
-          ...order,
-          selectedIds: checked ? slotIds : [],
-          isSelected: checked,
-        };
+        st.orders.dataMap[orderId] = order;
       }
     },
   },
@@ -383,6 +368,8 @@ export const {
   removeSlotAction,
   clearCartAction,
   setCheckedStatusAction,
+  removeOrderAction,
+  removeCartAction,
   setOrderSummaryAction,
   setCartIdAction,
 } = cartSlice.actions;
@@ -403,18 +390,11 @@ const UpdateCartSlotMutation = (
   const Cart = (currentCartId ? st.dataMap[currentCartId] : undefined) || InitCart(options?.customer);
 
   if (currentCartId) {
-    const [prefix] = tempId.split('_');
+    const [prefix] = tempId?.split('_') ?? [];
     if (prefix !== CART_ID_PREFIX) {
       tempId = `${CART_ID_PREFIX}_${currentCartId}_${tempId}`;
       item.tempId = tempId;
     }
-
-    // const clotCartId = tempId?.startsWith(CART_ID_PREFIX) ? tempId?.split('_')[1] : undefined;
-    // if (clotCartId && clotCartId !== currentCartId) {
-    //   console.error('This slot is not for current cart', { currentCartId, clotCartId });
-    //
-    //   return {};
-    // }
   } else {
     currentCartId = Cart.tempId;
     console.warn('[Cart warning]'.toUpperCase(), { currentCartId, tempId, slot: item });
@@ -485,14 +465,31 @@ const UpdateCartSlotMutation = (
   return {};
 };
 
-function RemoveCartSlotMutation(st: CartState, { tempId }: { tempId: CartSlotId }) {
+function RemoveSlot(
+  st: CartState,
+  { tempId, fromOrder = true, fromCart = true }: { tempId: CartSlotId; fromOrder?: boolean; fromCart?: boolean }
+) {
   const slot = st.slots.dataMap?.[tempId];
 
-  let cartId = slot?.cartId;
+  const variationId = slot?.variation?._id;
+  if (variationId && st?.slots.variationsIdMap[variationId]) {
+    delete st?.slots.variationsIdMap[variationId];
+  }
 
+  if (slot) {
+    delete st.slots.dataMap?.[tempId];
+  }
+
+  fromCart && slot && RemoveSlotFromCart(st, slot);
+
+  fromOrder && slot && RemoveSlotFromOrder(st, slot);
+}
+function RemoveSlotFromCart(st: CartState, { tempId, cartId, offer, ...slot }: IOrderTempSlot) {
+  if (!tempId || !cartId) return;
   const cart = cartId ? st.dataMap?.[cartId] : undefined;
+  if (!cart) return;
 
-  const offerId = slot?.offer?._id;
+  const offerId = offer?._id;
   if (offerId && cart?.offersIdsMap[offerId]?.length) {
     cart.offersIdsMap[offerId] = updateIdsArray({
       id: tempId,
@@ -500,23 +497,28 @@ function RemoveCartSlotMutation(st: CartState, { tempId }: { tempId: CartSlotId 
       remove: true,
     });
   }
-  const variationId = slot?.variation?._id;
-  if (variationId && st?.slots.variationsIdMap[variationId]) {
-    delete st?.slots.variationsIdMap[variationId];
-  }
 
-  const orderId = slot?.cartOrderId;
-  const order = orderId ? st.orders.dataMap?.[orderId] : undefined;
+  cart.slotsIds = updateIdsArray({
+    id: tempId,
+    arr: cart.slotsIds,
+    remove: true,
+  });
+}
+function RemoveSlotFromOrder(st: CartState, { tempId, cartOrderId }: IOrderTempSlot) {
+  if (!tempId || !cartOrderId) return;
+  const order = cartOrderId ? st.orders.dataMap?.[cartOrderId] : undefined;
 
   if (order) {
+    if (order.slotsIds.length <= 1) {
+      RemoveOrder(st, order);
+      return;
+    }
+
     order.slotsIds = updateIdsArray({
       id: tempId,
       arr: order.slotsIds,
       remove: true,
     });
-
-    if (!order.slotsIds) {
-    }
     order.selectedIds = updateIdsArray({
       id: tempId,
       arr: order.selectedIds,
@@ -525,6 +527,41 @@ function RemoveCartSlotMutation(st: CartState, { tempId }: { tempId: CartSlotId 
 
     st.orders.dataMap[order.tempId] = order;
   }
+}
+function RemoveOrder(st: CartState, order: CartOrder) {
+  order.slotsIds?.forEach(slotId => {
+    RemoveSlot(st, { tempId: slotId, fromOrder: false, fromCart: true });
+  });
+
+  if (order.tempId) {
+    delete st?.orders.dataMap?.[order.tempId];
+  }
+  return UpdateCart(st, { order, remove: true });
+}
+
+function UpdateCart(
+  st: CartState,
+  { slot, order, remove }: { slot?: IOrderTempSlot; order?: CartOrder; remove?: boolean }
+) {
+  const cartId = order?.cartId || slot?.cartId;
+  if (!cartId) return;
+
+  const cart = cartId ? st.dataMap?.[cartId] : undefined;
+  if (!cart) return;
+
+  if (order) {
+    cart.ordersIds = updateIdsArray({
+      id: order.tempId,
+      arr: cart.ordersIds,
+      remove,
+    });
+  }
+
+  if (slot) {
+    remove && RemoveSlotFromCart(st, slot);
+  }
+
+  // st.dataMap[cartId] = cart;
 }
 
 // export function isCartCase(type: string) {
@@ -539,3 +576,32 @@ function RemoveCartSlotMutation(st: CartState, { tempId }: { tempId: CartSlotId 
 // function inError(a: AnyAction) {
 //   return isCartCase(a.type) && a.type.endsWith('rejected');
 // }
+
+function SetSlotCheckedStatus(
+  st: CartState,
+  { tempId, checked, isFoList }: { tempId: CartSlotId; checked: boolean; isFoList?: boolean }
+) {
+  const slot = st.slots.dataMap?.[tempId];
+  if (slot) {
+    slot.isSelected = checked;
+
+    st.slots.dataMap[tempId] = slot;
+
+    if (!isFoList) {
+      const orderId = slot?.cartOrderId;
+      if (orderId) {
+        const order = st.orders.dataMap?.[orderId];
+
+        if (order) {
+          order.selectedIds = updateIdsArray({
+            id: tempId,
+            arr: order.selectedIds,
+            remove: !checked,
+          });
+
+          st.orders.dataMap[orderId] = order;
+        }
+      }
+    }
+  }
+}

@@ -5,6 +5,7 @@ import { ButtonIconVariant } from '../atoms/ButtonIcon';
 import { IconIdType } from '../../img/sprite';
 import { TableSearchFormState } from './TableOverHead/TableSearchForm/TableSearchForm';
 import { Property } from 'csstype';
+import { CheckboxEvent } from './TebleCells/CellComponents/CheckBox';
 
 export enum TableSortOrderEnum {
   desc = 'desc',
@@ -61,19 +62,19 @@ export interface TableActionsProps<TDataType = any> {
   actions?: TableActionProps<TDataType>[];
 }
 
-export type OnRowClickEvent<RData = any> = (MouseEvent | React.MouseEvent<HTMLDivElement>) & {
+export type OnRowClickEvent<RData = any> = Partial<MouseEvent | React.MouseEvent<HTMLDivElement>> & {
   rowId?: string;
   rowData?: RData;
 };
 export type OnRowClickHandler<RData = any> = (event?: OnRowClickEvent<RData>) => any;
 
-export type CheckboxChangeEvent<V = any> = (MouseEvent | React.MouseEvent<HTMLDivElement>) & {
+export type CheckboxChangeEvent<V = any> = CheckboxEvent & {
   checked: boolean;
   rowId?: string;
   value?: V;
 };
-export type OnCheckBoxChangeHandler<V = any> = (data: CheckboxChangeEvent<V>) => any;
-export type OnHeadCheckBoxChangeHandler<V = any> = (data: V) => any;
+export type OnCheckBoxChangeHandler<V = any> = (ev: CheckboxChangeEvent<V>) => any;
+export type OnHeadCheckBoxChangeHandler<V = any> = (ev: CheckboxChangeEvent<V>) => any;
 
 export type TableQuickActionsPosition = 'top' | 'right' | 'bottom' | 'left';
 export interface ITableListProps<
@@ -111,6 +112,7 @@ export interface ITableListProps<
   isLoading?: boolean;
   scrollBarWidth?: number;
   selectedRows?: string[];
+  rowIds?: string[];
 
   quickActionsPosition?: TableQuickActionsPosition;
   quickActionsDirection?: Property.FlexDirection;

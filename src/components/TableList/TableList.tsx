@@ -6,19 +6,21 @@ import TableOverHead from './TableOverHead/TableOverHead';
 import TableFooter from './TableFooter/TableFooter';
 import styled from 'styled-components';
 import { MaxToTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
-import { ButtonCheckboxEvent } from './TebleCells/CellComponents/CheckBox';
+import { CheckboxEvent } from './TebleCells/CellComponents/CheckBox';
 import {
   CheckboxChangeEvent,
   ITableListContext,
   ITableListProps,
+  OnRowClickHandler,
   SelectItem,
   UseTableReturnType,
 } from './tableTypes.types';
 import { FilterReturnDataType } from '../Filter/AppFilter';
 import TableLoader from './TableLoader';
-import { isUndefined } from 'lodash';
+import { isFunction, isUndefined } from 'lodash';
 import { OnlyUUID } from '../../types/utils.types';
 import FlexBox from '../atoms/FlexBox';
+import { updateIdsArray } from '../../utils';
 
 export type { ITableListContext, ITableListProps, CheckboxChangeEvent, UseTableReturnType, SelectItem };
 export const TableCTX = createContext({});
@@ -39,14 +41,21 @@ const TableList = <TData extends Partial<OnlyUUID> = any>(
     scrollBarWidth,
     selectedRow,
     keyExtractor,
+    selectedRows,
+    onCheckboxChange,
+    onHeadCheckboxChange,
+    rowIds,
     ...rest
   } = props;
 
   const rowRef = useRef<HTMLElement>();
   const setFilterData = useState<FilterReturnDataType>()[1];
-  const [_selectedRows, _setSelectedRows] = useState<string[]>([]);
+  const [_selectedRows, _setSelectedRows] = useState<string[]>(selectedRows ?? []);
   const [_selectedRow, _setSelectedRow] = useState<Partial<TData> | undefined>(selectedRow);
   const [loading, setLoading] = useState(isLoading);
+  const _rowIds = useMemo(() => {
+    return rowIds ? rowIds : tableData?.map((el, index) => (keyExtractor ? keyExtractor(el, index) : el?._id ?? ''));
+  }, [keyExtractor, rowIds, tableData]);
 
   const rowGrid = useMemo(
     () => ({
@@ -64,38 +73,46 @@ const TableList = <TData extends Partial<OnlyUUID> = any>(
     [onFilterSubmit, setFilterData]
   );
 
-  const onRowClickWrapper = useCallback(
-    (rowData?: { _id?: string; rowData?: TData }) => {
-      _setSelectedRow(rowData?.rowData);
-
-      typeof onRowClick === 'function' && onRowClick(rowData);
+  const onRowClickWrapper: OnRowClickHandler<TData | undefined> = useCallback(
+    event => {
+      _setSelectedRow(event?.rowData);
+      console.log('[onRowClickWrapper]', event);
+      isFunction(onRowClick) && onRowClick(event);
     },
     [onRowClick]
   );
 
-  const onCheckboxChangeWrapper = useCallback(({ checked, rowId }: CheckboxChangeEvent) => {
-    _setSelectedRows(prev => {
-      if (checked && rowId) return [...prev, rowId];
-      if (!checked && rowId) return prev.filter(el => el !== rowId);
-      return prev;
-    });
-  }, []);
-  const onHeadCheckboxChangeWrapper = useCallback(
-    (e: ButtonCheckboxEvent) => {
-      const { checked } = e;
-      if (checked)
-        _setSelectedRows(
-          prev => tableData?.map((el, index) => (keyExtractor ? keyExtractor(el, index) : el?._id ?? '')) || prev
-        );
-
-      if (!checked) _setSelectedRows([]);
+  const onCheckboxChangeWrapper = useCallback(
+    ({ checked, rowId, ...ev }: CheckboxChangeEvent) => {
+      if (onCheckboxChange) {
+        onCheckboxChange({ checked, rowId, ...ev });
+      } else {
+        _setSelectedRows(prev => {
+          return rowId
+            ? updateIdsArray({
+                id: rowId,
+                arr: prev,
+                remove: checked,
+                // toggle: true,
+              })
+            : prev;
+        });
+      }
     },
-    [keyExtractor, tableData]
+    [onCheckboxChange]
   );
 
-  useEffect(() => {
-    console.log(_selectedRows);
-  }, [_selectedRows]);
+  const onHeadCheckboxChangeWrapper = useCallback(
+    (e: CheckboxEvent) => {
+      if (onHeadCheckboxChange) {
+        onHeadCheckboxChange(e);
+      } else {
+        const { checked } = e;
+        _setSelectedRows(checked ? rowIds ?? [] : []);
+      }
+    },
+    [onHeadCheckboxChange, rowIds]
+  );
 
   useEffect(() => {
     if (!isUndefined(selectedRow)) {
@@ -105,16 +122,16 @@ const TableList = <TData extends Partial<OnlyUUID> = any>(
 
   const CTX = useMemo(
     (): ITableListContext<TData> => ({
-      rowGrid,
-      rowRef,
       selectedRows: _selectedRows,
       selectedRow: _selectedRow,
+      onRefresh: setLoading,
+      ...props,
       onFilterSubmit: onFilterSubmitWrapper,
       onRowClick: onRowClickWrapper,
       onCheckboxChange: onCheckboxChangeWrapper,
       onHeadCheckboxChange: onHeadCheckboxChangeWrapper,
-      onRefresh: setLoading,
-      ...props,
+      rowGrid,
+      rowRef,
     }),
     [
       onCheckboxChangeWrapper,

@@ -4,7 +4,6 @@ import { useAppQuery } from '../../../hooks';
 import { useMemo, useState } from 'react';
 import { VariationEntity } from '../../../types/offers/variations.types';
 import { countOrderSlotValues } from '../../../utils';
-import { OverlayHeader } from '../../Overlays';
 import FlexBox from '../../atoms/FlexBox';
 import { FooterSummary } from './FooterSummary';
 import { OverlayFooter } from '../../atoms';
@@ -13,39 +12,37 @@ import styled from 'styled-components';
 export default function OrderSlotOverview({ warehouse }: { warehouse?: WarehouseEntity; slotId?: string }) {
   const cart = useCart();
   const query = useAppQuery();
-  const currentSlot = cart.actions.getSlot(query.query?.slotId as never);
-
+  const Slot = cart.actions.getSlotWithMethods(query.query?.slotId as never);
   // const service = useAppServiceProvider().get(AppModuleName.offers);
   // const { getAll } = service;
   // const offersState = useProductsSelector();
   // const router = useAppRouter();
   // const loaders = useLoaders();
-  const [selected] = useState<VariationEntity | undefined>(currentSlot.variation);
-  const [quantity, setQuantity] = useState(currentSlot?.quantity ?? 1);
   // const modalSrv = useModalService();
+
+  const [selected] = useState<VariationEntity | undefined>(Slot.variation);
+  const [quantity, setQuantity] = useState(Slot?.quantity ?? 1);
 
   const counted = useMemo(() => {
     return countOrderSlotValues({
-      ...selected?.price,
-      offer: selected,
       variation: selected,
-      ...currentSlot,
+      ...Slot,
+      ...(selected?.price ?? Slot),
+      origin: selected?.price ?? Slot.origin,
       quantity: quantity,
     });
-  }, [currentSlot, quantity, selected]);
+  }, [Slot, quantity, selected]);
 
   return (
     <Container fillHeight maxWidth={'380px'} flex={1} padding={'0 8px 8px'}>
-      <OverlayHeader title={'Current slot'} />
-
       <FlexBox flex={1}></FlexBox>
 
       <FooterSummary slot={counted} onChangeQuantity={setQuantity} />
 
       <OverlayFooter
-        canAccept={!!currentSlot.tempId && currentSlot.quantity !== quantity}
+        canAccept={!!Slot.tempId && Slot.quantity !== quantity}
         onAcceptPress={() => {
-          currentSlot.setQty(quantity);
+          Slot.setQty(quantity);
         }}
       />
     </Container>

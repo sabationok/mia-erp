@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { useOffersTableSettings } from '../offers/PageOffers';
 import { countOrderSlotValues, setValueByPath } from '../../../utils';
-import OverlayBase from '../../Overlays/OverlayBase';
+import DrawerBase from '../../Overlays/OverlayBase';
 import TableList from '../../TableList/TableList';
 import { FooterSummary } from './FooterSummary';
 import { OverlayFooter } from '../../atoms';
@@ -19,11 +19,12 @@ import { CartSlotId } from '../../../redux/cart/cart.slice';
 export default function SelectOfferModal({
   warehouse,
   slotId,
+  onClose,
 }: { warehouse?: WarehouseEntity; slotId?: CartSlotId } & CreatedModal) {
   const cart = useCart();
   const service = useAppServiceProvider().get(AppModuleName.offers);
   const { getAll } = service;
-  const currentSlot = cart.actions.getSlot(slotId);
+  const currentSlot = cart.actions.getSlotWithMethods(slotId);
   // const offersState = useProductsSelector();
   const router = useAppRouter();
   // const loaders = useLoaders();
@@ -57,7 +58,7 @@ export default function SelectOfferModal({
   }, []);
 
   return (
-    <OverlayBase title={warehouse?.label || 'Select offer'} fillHeight>
+    <DrawerBase title={'Select offer'} fillHeight okButton onBackPress={onClose}>
       <TableList
         {...tableConfig}
         isLoading={isLoading?.offers}
@@ -88,6 +89,6 @@ export default function SelectOfferModal({
           }
         }}
       />
-    </OverlayBase>
+    </DrawerBase>
   );
 }

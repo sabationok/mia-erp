@@ -5,7 +5,7 @@ export type { AccentColorName, IAccentColors, IAccentColor };
 export const globals = {
   colorLight: '#EFEFEF',
   trBorderClr: '#464646',
-  inputBorder: '#5c5c5c',
+  inputBorder: '#7B7B7B',
   inputPlaceholderColor: '#7B7B7B',
   shadowMain: '0px 8px 10px 10px rgba(0, 0, 0, 0.15)',
   shadowSecondary: '0 10px 12px 5px rgba(21, 21, 21, 0.25), 0 10px 12px 4px rgba(211, 211, 211, 0.15)',
@@ -65,7 +65,9 @@ const darkTheme = {
   backgroundColorMain: 'rgb(28, 28, 28)',
   backgroundColorSecondary: 'rgb(39, 39, 39)',
   backgroundColorLight: '#323234',
-  backdropColor: 'rgba(21, 21, 21, 0.5)',
+  backdropColorDark: 'rgba(21, 21, 21, 0.5)',
+  backdropColorDarkLight: 'rgba(21, 21, 21, 0.25)',
+  backdropColorDarkExtraLight: 'rgba(21, 21, 21, 0.1)',
   borderColor: '#59595a',
 
   trBorderClr: 'rgba(70, 70, 73, 1)', // 'rgba(122, 122, 122, 1)',
@@ -143,10 +145,16 @@ const darkTheme = {
 type ITheme = typeof darkTheme;
 
 const lightTheme: Partial<ITheme & Record<string, any>> = {
+  ...darkTheme,
+
   backgroundColorMain: '#5C5C5D',
   backgroundColorSecondary: '#DADADA',
   backgroundColorLight: '#FAFAFA',
-  backdropColor: 'rgba(21, 21, 21, 0.3)',
+  // backdropColor: 'rgba(21, 21, 21, 0.3)',
+  backdropColorDark: 'rgba(21, 21, 21, 0.5)',
+  backdropColorDarkLight: 'rgba(21, 21, 21, 0.25)',
+  backdropColorDarkExtraLight: 'rgba(21, 21, 21, 0.1)',
+
   colorLight: '#EFEFEF',
   fontColor: '#272727',
   fillColor: '#272727',

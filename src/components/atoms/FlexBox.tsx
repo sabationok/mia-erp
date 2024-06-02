@@ -1,55 +1,51 @@
 import styled, { css, DefaultTheme, ThemedStyledProps } from 'styled-components';
 import { Property } from 'csstype';
+import { CSSProperties } from 'react';
 
-export interface FlexBaseProps {
-  display?: Property.Display;
-  flex?: Property.Flex;
-  flexWrap?: Property.FlexWrap;
+export interface FlexBaseProps
+  extends Pick<
+    CSSProperties,
+    | 'display'
+    | 'flex'
+    | 'flexWrap'
+    | 'alignItems'
+    | 'justifyContent'
+    | 'alignSelf'
+    | 'justifySelf'
+    | 'maxWidth'
+    | 'maxHeight'
+    | 'minWidth'
+    | 'minHeight'
+    | 'width'
+    | 'height'
+    | 'padding'
+    | 'margin'
+    | 'borderBottom'
+    | 'borderRadius'
+    | 'border'
+  > {
   fxDirection?: Property.FlexDirection;
-  alignItems?: Property.AlignItems;
-  justifyContent?: Property.JustifyContent;
   gap?: number;
-
-  alignSelf?: Property.AlignSelf;
-
-  maxWidth?: Property.MaxWidth;
-  maxHeight?: Property.MaxHeight;
-  minWidth?: Property.MinWidth;
-  minHeight?: Property.MinHeight;
-  width?: Property.Width;
-  height?: Property.Height;
-
-  padding?: Property.Padding;
-  margin?: Property.Margin;
-
-  borderBottom?: Property.BorderBottom;
-
-  borderRadius?: Property.BorderRadius;
-  border?: Property.Border;
-
-  fillWidth?: boolean;
-  fillHeight?: boolean;
 
   overflow?: Property.Overflow;
   background?: Property.Background;
+
+  fillWidth?: boolean;
+  fillHeight?: boolean;
 
   isActive?: boolean;
 }
 
 export interface FlexBoxProps extends FlexBaseProps {
-  xsStyles?: FlexBaseProps;
-  xlStyles?: FlexBaseProps;
-}
-
-export interface FlexProps extends FlexBaseProps {
   sStyles?: FlexBaseProps;
   xsStyles?: FlexBaseProps;
   xlStyles?: FlexBaseProps;
 }
 
-type MediasStylesKey = keyof Pick<FlexProps, 'sStyles' | 'xsStyles' | 'xlStyles'>;
+type MediasStylesKey = keyof Pick<FlexBoxProps, 'sStyles' | 'xsStyles' | 'xlStyles'>;
+
 function createFlexBoxStyles({ query, key }: { query: string; key: MediasStylesKey }) {
-  return css<FlexProps>`
+  return css<FlexBoxProps>`
     ${p => ''}
     @media screen and (${query}) {
       display: ${({ display = '', ...p }) => p[key]?.display || display};
@@ -58,12 +54,18 @@ function createFlexBoxStyles({ query, key }: { query: string; key: MediasStylesK
       justify-content: ${({ justifyContent, ...p }) => p[key]?.justifyContent || justifyContent};
       flex: ${({ flex = '', ...p }) => p[key]?.flex || flex};
       flex-wrap: ${({ flexWrap = '', ...p }) => p[key]?.flexWrap || flexWrap};
-      border-bottom: ${({ borderBottom = 0, ...p }) => p[key]?.borderBottom || borderBottom};
-      border: ${({ border = 0, ...p }) => p[key]?.border || border};
+
+      border-bottom: ${({ borderBottom, ...p }) => p[key]?.borderBottom || borderBottom};
+      border: ${({ border, ...p }) => p[key]?.border || border};
+
       gap: ${({ gap = 0, ...p }) => p[key]?.gap || gap}px;
+      stroke: ${p => []};
       padding: ${({ padding = 0, ...p }) => p[key]?.padding || padding};
       margin: ${({ margin = 0, ...p }) => p[key]?.margin || margin};
+
       align-self: ${({ alignSelf, ...p }) => p[key]?.alignSelf || alignSelf};
+      justify-self: ${({ justifySelf, ...p }) => p[key]?.justifySelf || justifySelf};
+
       max-width: ${({ maxWidth = null, ...p }) => p[key]?.maxWidth || maxWidth};
       max-height: ${({ maxHeight = null, ...p }) => p[key]?.maxWidth || maxHeight};
 
@@ -74,7 +76,9 @@ function createFlexBoxStyles({ query, key }: { query: string; key: MediasStylesK
         (p[key]?.fillWidth ? '100%' : p[key]?.width) || (fillWidth ? '100%' : width)};
       height: ${({ height = 'auto', fillHeight, ...p }) =>
         (p[key]?.fillHeight ? '100%' : p[key]?.height) || (fillHeight ? '100%' : height)};
+
       background: ${({ background, ...p }) => p[key]?.background || background};
+
       border-radius: ${({ borderRadius = 0, ...p }) => p[key]?.borderRadius || borderRadius};
       overflow: ${({ overflow = '', ...p }) => p[key]?.overflow || overflow};
     }
@@ -96,13 +100,13 @@ const XL_Styles = createFlexBoxStyles({
 function getMediaStyles(key: MediasStylesKey) {
   switch (key) {
     case 'sStyles': {
-      return (props: ThemedStyledProps<FlexProps, DefaultTheme>) => (props[key] ? S_Styles : undefined);
+      return (props: ThemedStyledProps<FlexBoxProps, DefaultTheme>) => (props[key] ? S_Styles : undefined);
     }
     case 'xsStyles': {
-      return (props: ThemedStyledProps<FlexProps, DefaultTheme>) => (props[key] ? XS_Styles : undefined);
+      return (props: ThemedStyledProps<FlexBoxProps, DefaultTheme>) => (props[key] ? XS_Styles : undefined);
     }
     case 'xlStyles': {
-      return (props: ThemedStyledProps<FlexProps, DefaultTheme>) => (props[key] ? XL_Styles : undefined);
+      return (props: ThemedStyledProps<FlexBoxProps, DefaultTheme>) => (props[key] ? XL_Styles : undefined);
     }
   }
 }
@@ -111,24 +115,35 @@ export const FlexBoxCss = css<FlexBoxProps>`
   display: flex;
 
   flex-direction: ${({ fxDirection = 'column' }) => fxDirection};
-  align-items: ${({ alignItems = '' }) => alignItems};
-  justify-content: ${({ justifyContent = '' }) => justifyContent};
+
+  align-items: ${({ alignItems }) => alignItems};
+  justify-content: ${({ justifyContent }) => justifyContent};
+
   flex: ${({ flex = '' }) => flex};
-  flex-wrap: ${({ flexWrap = '' }) => flexWrap};
-  border-bottom: ${({ borderBottom = 0 }) => borderBottom};
-  border: ${({ border = 'none' }) => border};
+  flex-wrap: ${({ flexWrap }) => flexWrap};
+
+  border-bottom: ${({ borderBottom }) => borderBottom};
+  border: ${({ border }) => border};
+
   gap: ${({ gap = 0 }) => gap}px;
+
   padding: ${({ padding = 0 }) => padding};
   margin: ${({ margin = 0 }) => margin};
-  align-self: ${({ alignSelf = '' }) => alignSelf};
+
+  align-self: ${({ alignSelf }) => alignSelf};
+  justify-self: ${({ justifySelf, ...p }) => justifySelf};
+
   max-width: ${({ maxWidth }) => maxWidth ?? ''};
   min-width: ${({ minWidth }) => minWidth ?? ''};
+
   max-height: ${({ maxHeight }) => maxHeight ?? ''};
   min-height: ${({ minHeight }) => minHeight ?? ''};
+
   width: ${({ width = 'auto', fillWidth }) => (fillWidth ? '100%' : width)};
   height: ${({ height = 'auto', fillHeight }) => (fillHeight ? '100%' : height)};
-  background: ${({ background = 'none' }) => background};
-  border-radius: ${({ borderRadius = 'none' }) => borderRadius};
+
+  background: ${({ background }) => background};
+  border-radius: ${({ borderRadius }) => borderRadius};
   overflow: ${({ overflow }) => overflow};
   border: ${p => p.border};
 
@@ -143,7 +158,8 @@ export const FlexBox = styled.div<FlexBoxProps>`
 `;
 
 export const FlexFieldSet = styled.fieldset<FlexBoxProps>`
-  ${FlexBoxCss}
+  ${FlexBoxCss};
+  border: 0;
   &[disabled] {
     & input,
     & button,

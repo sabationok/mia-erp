@@ -49,7 +49,7 @@ const Backdrop = styled.div<{ isOpen: boolean }>`
   width: 100%;
   height: 100%;
 
-  background: ${({ theme }) => theme.backdropColor};
+  background: ${({ theme }) => theme.backdropColorDark};
   backdrop-filter: blur(1px);
 `;
 

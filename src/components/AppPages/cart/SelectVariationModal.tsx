@@ -1,6 +1,6 @@
 import { OverlayFooter } from 'components/atoms';
 import { FooterSummary } from './FooterSummary';
-import { countOrderSlotValues, toSerializableObj } from '../../../utils';
+import { countOrderSlotValues } from '../../../utils';
 import { useMemo, useState } from 'react';
 import { useCart } from '../../../Providers/CartProvider';
 import { useAppRouter, useCurrentOffer } from '../../../hooks';
@@ -8,7 +8,7 @@ import { VariationEntity } from '../../../types/offers/variations.types';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { WarehouseEntity } from '../../../types/warehousing/warehouses.types';
 import { CreatedModal, useModalProvider } from '../../../Providers/ModalProvider/ModalProvider';
-import OverlayBase from '../../Overlays/OverlayBase';
+import DrawerBase from '../../Overlays/OverlayBase';
 import VariationsTab from '../offers/tabs/VariationsTab';
 import { omit } from 'lodash';
 
@@ -45,7 +45,7 @@ export const SelectVariationModal = ({
   }, [currentSlot, Offer, quantity, selected, warehouse]);
 
   return (
-    <OverlayBase title={`Select variation | ${Offer?.label}`} fillHeight>
+    <DrawerBase title={`Select variation | ${Offer?.label}`} fillHeight okButton onBackPress={onClose}>
       <VariationsTab offer={Offer} onSelect={setSelected} selected={selected} />
 
       <FooterSummary slot={counted} onChangeQuantity={setQuantity} />
@@ -53,18 +53,11 @@ export const SelectVariationModal = ({
       <OverlayFooter
         canAccept={!!selected}
         onAcceptPress={() => {
-          const serialized = toSerializableObj(counted);
-
-          if (!counted?.warehouse) {
-            console.warn(`[]`);
-            return;
-          }
-
           if (selected?._id) {
             if (counted?.tempId && counted?.tempId?.includes(selected?._id)) {
-              counted.quantity !== currentSlot?.quantity && cart.actions.update(serialized);
+              counted.quantity !== currentSlot?.quantity && cart.actions.update(counted);
             } else if (counted?.warehouse) {
-              cart.actions.addSlot(serialized);
+              cart.actions.addSlot(counted);
             }
           }
 
@@ -72,6 +65,6 @@ export const SelectVariationModal = ({
           modalSrv.clearStack();
         }}
       />
-    </OverlayBase>
+    </DrawerBase>
   );
 };

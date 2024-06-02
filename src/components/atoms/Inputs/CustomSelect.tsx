@@ -1,14 +1,15 @@
 import InputLabel, { InputLabelProps } from './InputLabel';
 import { forwardRef, InputHTMLAttributes, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { isUndefined, omit, pick } from 'lodash';
+import { isUndefined, pick } from 'lodash';
 import styled, { css } from 'styled-components';
-import FlexBox from '../FlexBox';
+import FlexBox, { FlexFieldSet } from '../FlexBox';
 import { RefCallBack } from 'react-hook-form';
 import ButtonIcon from '../ButtonIcon';
 import { IEmbeddedName, MaybeNull } from '../../../types/utils.types';
 import { useCloseByBackdropClick } from '../../../hooks/useCloseByEscapeOrClickOnBackdrop.hook';
 import { nanoid } from '@reduxjs/toolkit';
 import CheckBox from 'components/TableList/TebleCells/CellComponents/CheckBox';
+import InputText from './InputText';
 
 export interface CustomSelectBaseProps<Option extends CustomSelectOptionBase = CustomSelectOptionBase> {
   InputComponent?: React.FC<InputHTMLAttributes<HTMLInputElement>>;
@@ -268,11 +269,11 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
               disabled={!fieldMode}
               required={required}
               // ref={_ref}
-              {...omit({ ...pick(props, ['onBlur', 'name', 'id', 'ref', 'placeholder']) }, [
-                'error',
-                'success',
-                'loading',
-              ])}
+
+              name={name}
+              onBlur={props.onBlur}
+              id={id}
+              placeholder={props.placeholder}
               {...inputProps}
               // defaultValue={inputCurrentValue}
               value={inputCurrentValue}
@@ -391,27 +392,25 @@ const Option = styled(FlexBox)<{ isActive?: boolean }>`
   ${SelectOptionCss}
 `;
 
-const LabelInner = styled.fieldset<{
+const LabelInner = styled(FlexFieldSet)<{
   error?: boolean;
   success?: boolean;
   fieldMode?: boolean;
 }>`
   flex: 1;
-
-  display: flex;
+  flex-direction: row;
   align-items: center;
 
   padding: 0;
   margin: 0;
 
   width: 100%;
-  min-height: 28px;
 
   color: ${({ error, success, theme }) =>
     (error && theme.globals.colors.error) || (success && theme.globals.colors.success) || 'inherit'};
 
   background-color: ${({ theme, fieldMode = 'true' }) => (fieldMode ? theme.field.backgroundColor : 'transparent')};
-  border-radius: 2px;
+  border-radius: 4px;
 
   border: 1px solid
     ${({ error, success, fieldMode = 'true', theme }) =>
@@ -447,12 +446,10 @@ const LabelInner = styled.fieldset<{
   }
 `;
 
-const StyledInput = styled.input`
+const StyledInput = styled(InputText)`
   flex: 1;
-  height: 100%;
-  width: 100%;
 
-  padding: 4px 8px;
+  //padding: 4px 8px;
   color: inherit;
   font-weight: 500;
 

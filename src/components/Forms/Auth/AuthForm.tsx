@@ -16,8 +16,9 @@ import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
 import { omit } from 'lodash';
 import { useAppParams, useAppRouter } from '../../../hooks';
 import { BusinessSubjectTypeEnum } from '../../../types/companies.types';
-import FlexBox from '../../atoms/FlexBox';
+import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
+import { ObjectValues } from '../../../utils';
 
 export interface Props {
   helloTitle?: string;
@@ -30,6 +31,7 @@ export interface IRegistrationFormData extends HasRegisterUserDtoFields, HasRegi
   email: string;
   password: string;
   approvePassword: string;
+  businessType?: BusinessSubjectTypeEnum;
 }
 
 const registerSchema = yup.object().shape({
@@ -43,7 +45,11 @@ const registerSchema = yup.object().shape({
   }),
   email: yup.string().required(),
   password: yup.string().required(),
-  approvePassword: yup.string().required(),
+  approvePassword: yup.string(),
+  businessType: yup.string().oneOf(ObjectValues(BusinessSubjectTypeEnum)).required(),
+  // approvePassword: yup
+  //   .string()
+  //   .when('password', { is: val => !!val, then: yup.string().required(), otherwise: yup.string().required() }),
 });
 const logInSchema = yup.object().shape({
   email: yup.string().required(),
@@ -68,10 +74,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
   const omitParam = registerParam?.[businessType];
 
   useEffect(() => {
-    console.log({ businessType });
-  }, [businessType]);
-
-  useEffect(() => {
     if (registration && (!businessType || !(businessType in registerParam))) {
       router.replace({ pathname: BusinessSubjectTypeEnum.person });
     }
@@ -84,6 +86,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
     setError,
     clearErrors,
   } = useForm<IRegistrationFormData>({
+    defaultValues: {},
     reValidateMode: 'onSubmit',
     resolver: yupResolver(login ? logInSchema : omitParam ? registerSchema.omit([omitParam]) : registerSchema),
     shouldUnregister: true,
@@ -242,7 +245,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
           type={'submit'}
           textTransform={'uppercase'}
           variant={'filledMiddle'}
-          sizeType={'large'}
           // disabled={disableSubmit}
           isLoading={loaders.hasLoading}
         >
@@ -255,9 +257,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
   );
 };
 
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
+const Form = styled(FlexForm)`
   justify-content: flex-start;
   align-items: center;
 
@@ -272,9 +272,10 @@ const Form = styled.form`
 
   padding: 20px 16px;
 
-  border-radius: 2px;
+  border-radius: 4px;
 
   box-shadow: ${({ theme }) => theme.globals.shadowMain};
+
   border: 1px solid ${({ theme }) => theme.trBorderClr};
   /* background-color: #1c1c1e; */
   background-color: ${({ theme }) => theme.modalBackgroundColor};

@@ -1,5 +1,5 @@
 import React, { createContext, memo, useCallback, useContext, useMemo, useState } from 'react';
-import { CheckboxChangeEvent, useTable } from '../TableList';
+import { useTable } from '../TableList';
 
 import styled from 'styled-components';
 import { ThRow, ThRowData, ThRowStickyEl } from './TableHeadRow';
@@ -9,8 +9,6 @@ import { IContractor } from '../../../redux/directories/contractors.types';
 import { ITrCategory } from '../../../types/directories.types';
 import CellCheckBox from '../TebleCells/CellCheckBox';
 import { CellsMap } from '../TebleCells';
-import { OnCheckBoxChangeHandler } from '../tableTypes.types';
-import { isUndefined } from 'lodash';
 
 export type TRowDataType = ITransaction | ICount | IContractor | ITrCategory | IDocument;
 
@@ -27,7 +25,6 @@ export interface RowCTXValue extends TableRowProps {
   isActionsOpen?: boolean;
   onToggleActions?: () => void;
   onCloseActions?: () => void;
-  onRowCheckboxChange?: OnCheckBoxChangeHandler;
   rowId?: string;
 }
 
@@ -35,23 +32,12 @@ export const RowCTX = createContext<any>({});
 export const useRow = () => useContext(RowCTX) as RowCTXValue;
 
 const TableRow: React.FC<TableRowProps> = ({ rowId, onPress, checked, rowData, ...props }) => {
-  const { tableTitles, tableData, rowGrid, checkBoxes, onCheckboxChange, transformData } = useTable<TRowDataType>();
+  const { tableTitles, tableData, rowGrid, checkBoxes, transformData } = useTable<TRowDataType>();
   const [isActionsOpen, setIsActionsOpen] = useState(false);
-  const [isChecked, setIsChecked] = useState<boolean>(checked ?? false);
 
   const onToggleActions = useCallback(() => {
     setIsActionsOpen(prev => !prev);
   }, []);
-  const onRowCheckboxChange = useCallback(
-    (event: CheckboxChangeEvent) => {
-      if (onCheckboxChange) {
-        onCheckboxChange(event);
-      } else {
-        setIsChecked(event.checked);
-      }
-    },
-    [onCheckboxChange]
-  );
 
   const currentRowData = useMemo(() => (transformData ? transformData(rowData) : rowData), [rowData, transformData]);
 
@@ -60,58 +46,37 @@ const TableRow: React.FC<TableRowProps> = ({ rowId, onPress, checked, rowData, .
   }, []);
 
   const renderRow = useMemo(() => {
-    return (
-      tableTitles &&
-      tableTitles?.map((item, idx) => {
-        let CellComp = (item.action && item.action in CellsMap && CellsMap?.[item.action]) || CellsMap.valueByPath;
-        if ('call' in CellComp) {
-          return <CellComp key={idx} titleInfo={item} idx={idx} />;
-        }
-        console.error('[Table error error]]', '====>>>>', `[${item.action}]`);
-        CellComp = CellsMap.valueByPath;
+    return tableTitles?.map((item, idx) => {
+      let CellComp = (item.action && item.action in CellsMap && CellsMap?.[item.action]) || CellsMap.valueByPath;
+      if (['function', 'object'].includes(typeof CellComp)) {
         return <CellComp key={idx} titleInfo={item} idx={idx} />;
-      })
-    );
+      }
+      console.error('[Table row error]', '====>>>>', `[${item.action}]`);
+      CellComp = CellsMap.valueByPath;
+      return <CellComp key={idx} titleInfo={item} idx={idx} />;
+    });
   }, [tableTitles]);
+
   const CTX = useMemo((): RowCTXValue => {
     return {
       ...props,
       rowId,
-      checked: isUndefined(checked) ? isChecked : checked,
+      checked,
       rowData: currentRowData,
       isActionsOpen,
       onToggleActions,
       onCloseActions,
-      onRowCheckboxChange,
     };
-  }, [
-    props,
-    rowId,
-    checked,
-    isChecked,
-    currentRowData,
-    isActionsOpen,
-    onToggleActions,
-    onCloseActions,
-    onRowCheckboxChange,
-  ]);
+  }, [props, rowId, checked, currentRowData, isActionsOpen, onToggleActions, onCloseActions]);
 
   return (
     <RowCTX.Provider value={CTX}>
-      <Row
-        id={`_${rowId}`}
-        isActive={props?.isActive}
-        onClick={() => {
-          console.log('rowData', rowData, { rowId });
-        }}
-        checked={isChecked}
-        data-row={`_${rowId}`}
-      >
+      <Row id={`_${rowId}`} isActive={props?.isActive} checked={checked} data-row={`_${rowId}`}>
         <RowStickyEl>{checkBoxes && <CellCheckBox />}</RowStickyEl>
 
-        <RowData gridRepeat={tableData?.length || 0} style={{ ...rowGrid }} onClick={onPress}>
+        <RowCells gridRepeat={tableData?.length || 0} style={{ ...rowGrid }} onClick={onPress}>
           {renderRow}
-        </RowData>
+        </RowCells>
       </Row>
     </RowCTX.Provider>
   );
@@ -153,7 +118,7 @@ const RowStickyEl = styled(ThRowStickyEl)`
   height: 50px;
 `;
 
-const RowData = styled(ThRowData)<{ gridRepeat: number }>`
+const RowCells = styled(ThRowData)<{ gridRepeat: number }>`
   display: grid;
   grid-template-columns: ${({ gridRepeat }) => `repeat(${gridRepeat} min-content)`};
   grid-template-rows: 50px;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useTable } from '../TableList';
-import CheckBox, { ButtonCheckboxEvent } from './CellComponents/CheckBox';
+import CheckBox, { CheckboxEvent } from './CellComponents/CheckBox';
 
 // import s from './TableCells.module.scss';
 export type CellCheckBoxHeadProps = {
@@ -14,7 +14,7 @@ const CellCheckBoxHead: React.FC<CellCheckBoxHeadProps> = ({ title, className, .
   const [some, setSome] = useState(false);
   const [everyOn, setEveryOn] = useState(false);
 
-  function onChange(event: ButtonCheckboxEvent) {
+  function onChange(event: CheckboxEvent) {
     setSome(prev => prev);
     setEveryOn(prev => prev);
     onHeadCheckboxChange && onHeadCheckboxChange(event);

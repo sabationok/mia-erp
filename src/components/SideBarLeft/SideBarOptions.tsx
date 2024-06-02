@@ -84,7 +84,7 @@ const Backdrop = styled.div<{ isOpen: boolean; maxWidth?: string }>`
   height: 100%;
   overflow: hidden;
   /* min-width: calc(100vw - 40px); */
-  background-color: ${({ theme }) => theme.backdropColor};
+  background-color: ${({ theme }) => theme.backdropColorDark};
 
   transition: visibility ${({ theme }) => theme.globals.timingFunctionMain},
     opacity ${({ theme }) => theme.globals.timingFunctionMain}, width ${({ theme }) => theme.globals.timingFnNull};

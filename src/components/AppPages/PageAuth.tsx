@@ -1,6 +1,7 @@
 import AuthForm from 'components/Forms/Auth/AuthForm';
 import RecoveryPasswordForm from 'components/Forms/Auth/RecoveryPasswordForm';
 import styled from 'styled-components';
+import FlexBox from '../atoms/FlexBox';
 
 export interface PageAuthProps {
   register?: boolean;
@@ -30,7 +31,7 @@ const PageAuth: React.FC<PageAuthProps> = ({ register, recovery, login, sendReco
   );
 };
 
-const Page = styled.div`
+const Page = styled(FlexBox)`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -38,7 +39,7 @@ const Page = styled.div`
   width: 100%;
   height: 100%;
 
-  background-color: ${({ theme }) => theme.backgroundColorMain};
+  background-color: ${({ theme }) => theme.backdropColorDark};
 `;
 
 export default PageAuth;

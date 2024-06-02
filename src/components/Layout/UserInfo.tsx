@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import ProfileCard from 'components/atoms/ProfileCard/ProfileCard';
-import usePermissionsServiceHook, { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
+import { usePermissionsSelector } from '../../hooks/usePermissionsService.hook';
 import FlexBox from '../atoms/FlexBox';
 import ButtonIcon from '../atoms/ButtonIcon';
 import { Text } from '../atoms/Text';
@@ -8,6 +8,7 @@ import useAppAuthHook from '../../hooks/useAppAuth.hook';
 import { useMemo } from 'react';
 import { useAuthSelector } from '../../redux/selectors.store';
 import translate from '../../lang';
+import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 
 export interface IUserInfoProps {
   isOpen: boolean;
@@ -17,7 +18,7 @@ export interface IUserInfoProps {
 const UserInfo: React.FC<IUserInfoProps> = ({ isOpen, onClose }) => {
   const { logOutUser, setLoggedUser } = useAppAuthHook();
   const { user } = useAuthSelector();
-  const { permissionLogOut, clearCurrent } = usePermissionsServiceHook();
+  const { permissionLogOut, clearCurrent } = useAppServiceProvider().get(ServiceName.permissions);
   const { permission, permission_token } = usePermissionsSelector();
 
   function onBackdropClick(ev: React.MouseEvent) {
@@ -99,7 +100,7 @@ const Backdrop = styled.div<{ isOpen: boolean; transitionDelay?: string }>`
 
   width: 100%;
   height: 100%;
-  background-color: ${({ theme }) => theme.backdropColor};
+  background-color: ${({ theme }) => theme.backdropColorDark};
 
   ${({ isOpen }) =>
     isOpen

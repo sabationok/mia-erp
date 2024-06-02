@@ -43,13 +43,11 @@ const TableBody: React.ForwardRefRenderFunction<any, any> = (props, ref) => {
           <TableRow
             key={rowId}
             rowId={rowId}
-            {...{
-              rowData,
-              idx,
-              checked: selectedRows?.includes(rowId),
-              isActive: selectedRow?._id === rowId,
-              onPress: () => onRowClick && onRowClick({ rowId: rowId, rowData: { ...rowData, _id: rowId } }),
-            }}
+            rowData={rowData}
+            idx={idx}
+            checked={selectedRows?.includes(rowId)}
+            isActive={selectedRow?._id === rowId}
+            onPress={() => onRowClick && onRowClick({ rowId, rowData: { ...rowData } })}
           />
         );
       }),

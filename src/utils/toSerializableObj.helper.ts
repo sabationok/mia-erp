@@ -1,4 +1,4 @@
-export function toSerializableObj(obj: Record<string, any>) {
+export function toSerializableObj<Args extends Record<string, any>>(obj: Args) {
   // Створюємо новий об'єкт, щоб уникнути мутації оригінального об'єкта
   const result: Record<string, any> = {};
 
@@ -6,6 +6,9 @@ export function toSerializableObj(obj: Record<string, any>) {
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
       const value = obj[key];
+      if (value === null) {
+        continue;
+      }
 
       // Якщо значення є функцією, ми його пропускаємо
       if (typeof value === 'function') {
@@ -13,9 +16,9 @@ export function toSerializableObj(obj: Record<string, any>) {
       }
 
       // Якщо значення є об'єктом, викликаємо функцію рекурсивно
-      if (typeof value === 'object' && value !== null) {
+      if (typeof value === 'object') {
         result[key] = Array.isArray(value)
-          ? value.map(item => {
+          ? value.map((item: any) => {
               return toSerializableObj(item);
             })
           : toSerializableObj(value);
@@ -26,5 +29,5 @@ export function toSerializableObj(obj: Record<string, any>) {
     }
   }
 
-  return result;
+  return result as Args;
 }

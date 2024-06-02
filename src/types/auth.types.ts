@@ -2,6 +2,7 @@ import { AppResponse, IBase } from '../redux/app-redux.types';
 import { AuthErrorType } from '../redux/reduxTypes.types';
 import { PermissionEntity } from './permissions.types';
 import { HasEmbeddedLabel, HasEmbeddedName, HasEmbeddedReference } from './utils.types';
+import { BusinessSubjectTypeEnum } from './companies.types';
 
 export interface ISystemRole extends IBase {
   name?: string;
@@ -73,6 +74,7 @@ export interface HasRegisterCompanyDtoFields {
 export type RegisterDto = {
   email?: string;
   password?: string;
+  businessType?: BusinessSubjectTypeEnum;
 } & (HasRegisterUserDtoFields | HasRegisterCompanyDtoFields);
 
 export type ICurrentUser = Pick<UserEntity, 'email'> & Pick<IAuthState, 'access_token' | 'refresh_token'>;
