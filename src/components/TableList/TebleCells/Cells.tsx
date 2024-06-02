@@ -64,7 +64,7 @@ const SimpleDataCell: React.FC<Omit<IDataCellProps, 'subContent'>> = ({ width, c
 const DoubleDataWithAvatarCell: React.FC<IDataCellProps> = ({ width, content, subContent, imgUrl, imgPreviewIcon }) => {
   return (
     <CellDoubleDataWithAvatar style={{ width }}>
-      <FlexBox padding={'2px'}>
+      <FlexBox padding={'2px 2px 2px 6px'}>
         <Avatar
           src={imgUrl}
           shape={'square'}

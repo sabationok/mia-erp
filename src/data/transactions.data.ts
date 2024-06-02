@@ -3,9 +3,10 @@ import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
 import { ITransaction } from '../types/finances/transactions.types';
 import { t } from '../lang';
 import { TabOption } from '../components/atoms/TabSelector';
-import { CategoryTypes } from '../types/directories.types';
+import { FinTransactionType, FinTransactionTypeEnum } from '../types/directories.types';
+import { enumToFilterOptions } from '../utils';
 
-export type TransactionsFilterOpt = TabOption<CategoryTypes>;
+export type TransactionsFilterOpt = TabOption<FinTransactionType>;
 export type DataPath =
   | 'countIn.label'
   | 'subCountIn.label'
@@ -44,6 +45,9 @@ export type DataPath =
   | 'payment.code'
   | 'payment.number'
   | 'order.code';
+
+export const transactionTypeFilterOptions: TransactionsFilterOpt[] = enumToFilterOptions(FinTransactionTypeEnum);
+
 export const transactionsColumnsNew: CellTittleProps<ITransaction, DataPath>[] = [
   {
     top: { name: t('date'), align: 'center', path: 'eventDate' },
@@ -337,10 +341,4 @@ export const transactionsSearchParams: SelectItem[] = [
     search: true,
     sort: true,
   },
-];
-
-export const filterOptions: TransactionsFilterOpt[] = [
-  { label: t('INCOME'), value: 'INCOME' },
-  { label: t('TRANSFER'), value: 'TRANSFER' },
-  { label: t('EXPENSE'), value: 'EXPENSE' },
 ];

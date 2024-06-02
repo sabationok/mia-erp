@@ -28,7 +28,7 @@ export interface FormCreatePriceListProps extends Omit<ModalFormProps<PriceListT
 }
 
 const FormCreatePriceList: React.FC<FormCreatePriceListProps> = ({
-  filterOptions,
+  options,
   onSubmit,
   defaultData,
   edit,

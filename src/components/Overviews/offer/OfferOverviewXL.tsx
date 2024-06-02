@@ -70,7 +70,7 @@ const OfferOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }) 
 
       <TabSelector
         optionProps={{ fitContentH: true }}
-        filterOptions={ProductOverviewTabsList}
+        options={ProductOverviewTabsList}
         onOptSelect={option => {
           router.replace({ hash: option?.value });
           setCurrentTab(option?.value);

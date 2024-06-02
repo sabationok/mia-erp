@@ -176,7 +176,7 @@ const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseD
       title={'Create new warehouse document'}
       width={'960px'}
       {...props}
-      filterOptions={docTypeFilterOptions}
+      options={docTypeFilterOptions}
       onOptSelect={(_o, value, _i) => {
         setValue('type', value);
       }}

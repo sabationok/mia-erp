@@ -74,7 +74,7 @@ const InvoicingPolicyTab = ({ onClose, onSubmit }: InvoicingPolicyTabProps) => {
 
   return (
     <>
-      <TabSelector filterOptions={tabs} onChangeIndex={index => setCurrent(tabs[index].value)} />
+      <TabSelector options={tabs} onChangeIndex={index => setCurrent(tabs[index].value)} />
 
       <FlexForm flex={1} overflow={'hidden'} onSubmit={form.handleSubmit(onValid)}>
         <FlexBox overflow={'auto'} flex={1} fillWidth padding={'0 4px 8px'}>

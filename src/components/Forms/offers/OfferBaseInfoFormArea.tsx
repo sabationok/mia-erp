@@ -70,7 +70,7 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
     <>
       <TabSelector
         defaultValue={formValues?.type ?? OfferTypeEnum.GOODS}
-        filterOptions={offerTypeFilterOptions}
+        options={offerTypeFilterOptions}
         onOptSelect={o => setValue('type', o.value)}
       />
 

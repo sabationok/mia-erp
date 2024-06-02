@@ -52,7 +52,7 @@ const OrderContentTab: React.FC<OrderContentTabProps> = p => {
     <FlexBox fillWidth overflow={'hidden'} flex={1}>
       <FlexBox fillWidth>
         <TabSelector
-          filterOptions={offerTypeFilterOptions}
+          options={offerTypeFilterOptions}
           currentIndex={currentTab}
           onOptSelect={(_o, _v, i) => {
             setCurrentTab(i);

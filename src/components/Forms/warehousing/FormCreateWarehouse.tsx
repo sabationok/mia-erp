@@ -67,7 +67,7 @@ const FormCreateWarehouse: React.FC<FormCreateWarehouseProps> = ({ defaultState,
       onSubmit={handleSubmit(onValid, errors => {
         console.error('Form Create Warehouse', errors);
       })}
-      filterOptions={warehouseTypeFilterOptions}
+      options={warehouseTypeFilterOptions}
       filterName={'type'}
       onFilterValueSelect={({ name, value }) => setValue(name, value)}
       extraFooter={<FormAfterSubmitOptions {...submitOptions} />}

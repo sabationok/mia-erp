@@ -199,7 +199,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   return (
     <ModalBase title={title} fillHeight>
       <FlexBox padding={'0 8px'}>
-        <TabSelector {...registerTabSelector('type')} filterOptions={offerTypeFilterOptions} />
+        <TabSelector {...registerTabSelector('type')} options={offerTypeFilterOptions} />
 
         <RenderStackHistory stack={stack} onItemSelect={(_, index) => onStackItemSelect(index)} />
 

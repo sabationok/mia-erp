@@ -76,13 +76,13 @@ const InputIntegrationsTab: React.FC<InputIntegrationsTabProps> = ({ ...props })
     <>
       <TabSelector
         optionProps={{ fitContentH: true }}
-        filterOptions={tabs}
+        options={tabs}
         onOptSelect={info => setCurrentType(info?.value)}
       />
 
       <TabSelector
         optionProps={{ fitContentH: true }}
-        filterOptions={filteredProviders}
+        options={filteredProviders}
         onOptSelect={info => setProviderType(info?.value)}
       />
 

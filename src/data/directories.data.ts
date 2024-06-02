@@ -8,7 +8,7 @@ import {
   DirCountsProps,
   DirInTreeActionsCreatorType,
   DirMarksProps,
-  DirProductCategoriesProps,
+  DirOfferCategoriesProps,
   DirTagsProps,
   GetDirInTreeActionsCreatorOptions,
   IDirItemBase,
@@ -22,7 +22,7 @@ import { toReqData } from '../utils';
 import { OfferTypeEnum } from '../types/offers/offers.types';
 import { ModalChildrenProps, Modals } from '../components/Modals/Modals';
 import { CountsTypesEnum } from '../redux/directories/counts.types';
-import { TrCategoryTypeEnum } from '../types/directories.types';
+import { FinTransactionTypeEnum } from '../types/directories.types';
 import { DirectoriesService } from '../hooks/useDirService.hook';
 import DirProperties, { DirPropertiesProps } from '../components/Directories/DirProperties';
 import { IDirectoryListItem } from '../components/SideBarContent/Directories';
@@ -158,7 +158,7 @@ const CountsProps: DirCountsProps = {
   creatingParent: true,
   archiving: true,
   filterSearchPath: 'type',
-  filterOptions: countsFilterOptions,
+  options: countsFilterOptions,
   filterDefaultValue: CountsTypesEnum.ACTIVE,
   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCount, { createParentTitle: t('Create count') }),
 };
@@ -173,7 +173,7 @@ const countsDir: IDirectoryListItem<any, DirCountsProps> = {
 
 const CategoriesProps: DirCategoriesProps = {
   title: 'Статті доходів/витрат',
-  filterOptions: categoriesFilterOptions,
+  options: categoriesFilterOptions,
   fillHeight: true,
   editing: true,
   creatingChild: true,
@@ -183,7 +183,7 @@ const CategoriesProps: DirCategoriesProps = {
   dirType: ApiDirType.CATEGORIES_TR,
   availableLevels: 2,
   filterSearchPath: 'type',
-  filterDefaultValue: TrCategoryTypeEnum.INCOME,
+  filterDefaultValue: FinTransactionTypeEnum.INCOME,
   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCategory, { createParentTitle: t('Create category') }),
 };
 const trCategoriesDir: IDirectoryListItem<any, DirCategoriesProps> = {
@@ -193,12 +193,12 @@ const trCategoriesDir: IDirectoryListItem<any, DirCategoriesProps> = {
   modalChildrenProps: CategoriesProps,
   disabled: false,
 };
-const ProductCategoriesProps: DirProductCategoriesProps = {
+const ProductCategoriesProps: DirOfferCategoriesProps = {
   title: t('productCategories'),
   fillHeight: true,
   createParentTitle: t('Create category'),
   dirType: ApiDirType.CATEGORIES_PROD,
-  filterOptions: offerTypeFilterOptions,
+  options: offerTypeFilterOptions,
   editing: true,
   creatingChild: true,
   creatingParent: true,
@@ -208,7 +208,7 @@ const ProductCategoriesProps: DirProductCategoriesProps = {
   availableLevels: 5,
   actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateCategory, { createParentTitle: t('Create category') }),
 };
-const prodCategoriesDir: IDirectoryListItem<any, DirProductCategoriesProps> = {
+const prodCategoriesDir: IDirectoryListItem<any, DirOfferCategoriesProps> = {
   title: ProductCategoriesProps.title,
   iconId: iconId.folder,
   ModalChildren: DirTreeComp,
@@ -221,7 +221,7 @@ const CounterpartiesProps: DirTableCompProps<ApiDirType.CONTRACTORS> = {
   fillHeight: true,
   fillWidth: true,
   dirType: ApiDirType.CONTRACTORS,
-  filterOptions: counterpartyFilterOptions,
+  options: counterpartyFilterOptions,
   getTableSettings: ({ service, modalService, type, dirType }) => ({
     tableTitles: contractorsColumns,
     searchParams: contractorsSearchParams,
@@ -297,7 +297,7 @@ const dirTagsProps: DirTagsProps = {
   title: t(ApiDirType.TAGS),
   dirType: ApiDirType.TAGS,
   availableLevels: 1,
-  filterOptions: tagsFilterOptions,
+  options: tagsFilterOptions,
   createParentTitle: t('createTag'),
   filterSearchPath: 'type',
   fillHeight: true,
@@ -445,7 +445,7 @@ const directories: Partial<IDirectoryListItem>[] = [
   },
 
   {
-    title: t('Size tabels'),
+    title: t('Size tables'),
     disabled: true,
   },
 ];

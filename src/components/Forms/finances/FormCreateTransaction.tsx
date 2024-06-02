@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import styled from 'styled-components';
 import { CurrencyCode, ITransaction, ITransactionReqData, TransactionType } from 'types/finances/transactions.types';
-import { CategoryTypes } from 'types/directories.types';
+import { FinTransactionType } from 'types/directories.types';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import * as yup from 'yup';
@@ -20,14 +20,14 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
 import { UseAppFormSubmitOptions } from '../../../hooks/useAppForm.hook';
 
-export type TransactionsFilterOpt = TabOption<CategoryTypes>;
+export type TransactionsFilterOpt = TabOption<FinTransactionType>;
 
 export interface FormCreateTransactionProps extends Omit<ModalFormProps, 'onSubmit'> {
   edit?: boolean;
   copy?: boolean;
   id?: string;
   onSubmit?: (data: ITransactionReqData, options?: UseAppFormSubmitOptions) => void;
-  filterOptions?: TransactionsFilterOpt[];
+  tabs?: TransactionsFilterOpt[];
   defaultState?: Partial<ITransaction>;
   addInputs?: boolean;
 }
@@ -107,7 +107,7 @@ const FormCreateTransaction: React.FC<FormCreateTransactionProps> = ({
   const renderInputsCountIn = useMemo(() => {
     const parentOptions = directories[ApiDirType.COUNTS];
 
-    const parent = parentOptions.find(el => el._id === formValues.countIn?._id);
+    const parent = parentOptions.find((el: any) => el._id === formValues.countIn?._id);
 
     return formValues.type && ['INCOME', 'TRANSFER'].includes(formValues.type) ? (
       <>
@@ -137,7 +137,7 @@ const FormCreateTransaction: React.FC<FormCreateTransactionProps> = ({
   const renderInputsCountOut = useMemo(() => {
     const parentOptions = directories[ApiDirType.COUNTS];
 
-    const childOptions = parentOptions.find(el => el._id === formValues.countOut?._id)?.childrenList;
+    const childOptions = parentOptions.find((el: any) => el._id === formValues.countOut?._id)?.childrenList;
 
     return formValues.type && ['EXPENSE', 'TRANSFER'].includes(formValues.type) ? (
       <>
@@ -166,9 +166,9 @@ const FormCreateTransaction: React.FC<FormCreateTransactionProps> = ({
   }, [directories, errors.countOut, errors.subCountOut, formValues.countOut?._id, formValues.type, registerSelect]);
 
   const renderInputsCategories = useMemo(() => {
-    const parentOptions = directories[ApiDirType.CATEGORIES_TR].filter(el => el.type === formValues.type);
+    const parentOptions = directories[ApiDirType.CATEGORIES_TR].filter((el: any) => el.type === formValues.type);
 
-    const childOptions = parentOptions.find(el => el._id === formValues.category?._id)?.childrenList;
+    const childOptions = parentOptions.find((el: any) => el._id === formValues.category?._id)?.childrenList;
 
     return (
       <>

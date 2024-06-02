@@ -50,7 +50,7 @@ const OrderOverviewInfoTab: React.FC<OrderOverviewInfoTabProps> = _p => {
     <Box fillWidth flex={1} overflow={'auto'}>
       <TabSelector
         optionProps={{ fitContentH: true }}
-        filterOptions={orderOverviewInfoTabs}
+        options={orderOverviewInfoTabs}
         onOptSelect={option => {
           setCurrentTab(option?.value);
         }}

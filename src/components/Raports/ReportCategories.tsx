@@ -5,24 +5,24 @@ import ModalForm from '../ModalForm';
 import { IReportBaseProps } from './report.types';
 import FlexBox from 'components/atoms/FlexBox';
 import { TabOption } from '../atoms/TabSelector';
-import { CategoryTypes, TrCategoryTypeEnum } from '../../types/directories.types';
+import { FinTransactionType, FinTransactionTypeEnum } from '../../types/directories.types';
 import styled from 'styled-components';
 import { enumToArray, founder, numberWithSpaces } from '../../utils';
 import { categoriesFilterOptions } from '../../data/modalFilterOptions.data';
 
 export interface IReportCategoriesProps<V = any, D = any> extends IReportBaseProps<unknown, V, D> {
-  entryList?: ReportListItemProps<CategoryTypes>[];
+  entryList?: ReportListItemProps<FinTransactionType>[];
   currency?: string;
 }
 
-const ReportCategories: React.FC<IReportCategoriesProps<CategoryTypes>> = ({
+const ReportCategories: React.FC<IReportCategoriesProps<FinTransactionType>> = ({
   currency = 'UAH',
   entryList,
   ...props
 }) => {
-  const [filterOpt, setFilterOpt] = useState<Partial<TabOption<CategoryTypes>>>({});
+  const [filterOpt, setFilterOpt] = useState<Partial<TabOption<FinTransactionType>>>({});
   const countedTotals = useMemo(() => {
-    let totals: Record<CategoryTypes, number> = {
+    let totals: Record<FinTransactionType, number> = {
       INCOME: 0,
       EXPENSE: 0,
       TRANSFER: 0,
@@ -50,12 +50,12 @@ const ReportCategories: React.FC<IReportCategoriesProps<CategoryTypes>> = ({
     [countedTotals, currency]
   );
 
-  const entryLists = useMemo((): Partial<Record<CategoryTypes, ReportListItemProps<CategoryTypes>[]>> => {
-    let data: Partial<Record<CategoryTypes, ReportListItemProps<CategoryTypes>[]>> = {};
+  const entryLists = useMemo((): Partial<Record<FinTransactionType, ReportListItemProps<FinTransactionType>[]>> => {
+    let data: Partial<Record<FinTransactionType, ReportListItemProps<FinTransactionType>[]>> = {};
 
     if (!entryList) return data;
 
-    enumToArray(TrCategoryTypeEnum).map(key => {
+    enumToArray(FinTransactionTypeEnum).map(key => {
       data[key] = founder({ searchParam: 'type', searchQuery: key, data: entryList });
       return '';
     });
@@ -63,12 +63,12 @@ const ReportCategories: React.FC<IReportCategoriesProps<CategoryTypes>> = ({
     return data;
   }, [entryList]);
 
-  function handleSelect(option: TabOption<CategoryTypes>, value: CategoryTypes) {
+  function handleSelect(option: TabOption<FinTransactionType>, value: FinTransactionType) {
     setFilterOpt(option);
   }
 
   return (
-    <ModalForm {...props} filterOptions={reportCategoriesFilterOptions} preventDefault onOptSelect={handleSelect}>
+    <ModalForm {...props} options={reportCategoriesFilterOptions} preventDefault onOptSelect={handleSelect}>
       <FlexBox fillWidth flex={'1'}>
         {filterOpt.value && (
           <ReportList
@@ -88,10 +88,10 @@ const ReportCategories: React.FC<IReportCategoriesProps<CategoryTypes>> = ({
   );
 };
 
-const ExtraLabel = styled.div<{ colorType?: CategoryTypes }>`
+const ExtraLabel = styled.div<{ colorType?: FinTransactionType }>`
   font-weight: 400;
   color: ${({ colorType, theme }) => {
-    const map: Record<CategoryTypes, any> = {
+    const map: Record<FinTransactionType, any> = {
       INCOME: theme.globals.colors.success,
       EXPENSE: theme.globals.colors.error,
       TRANSFER: theme.globals.colors.info,

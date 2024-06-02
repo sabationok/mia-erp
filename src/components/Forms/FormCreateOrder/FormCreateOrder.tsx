@@ -13,7 +13,7 @@ import styled from 'styled-components';
 //   manager: yup.object().shape({ _id: yup.string() } as Record<keyof IUser, any>),
 // } as Record<keyof IOrder, any>);
 
-export interface FormCreateOrderProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect' | 'filterOptions'> {
+export interface FormCreateOrderProps extends Omit<ModalFormProps, 'onSubmit' | 'onSelect' | 'options'> {
   onSubmit?: AppSubmitHandler<OrderEntity>;
 }
 
@@ -63,7 +63,7 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ defaultState, onSubmi
   }, [currentTab, content, handleSelect, handleRemove]);
 
   const renderFilter = useMemo(() => {
-    return <TabSelector filterOptions={FormCreateOrderTabs} onChangeIndex={setCurrentTab} currentIndex={currentTab} />;
+    return <TabSelector options={FormCreateOrderTabs} onChangeIndex={setCurrentTab} currentIndex={currentTab} />;
   }, [currentTab]);
 
   return (

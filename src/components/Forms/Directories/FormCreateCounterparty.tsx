@@ -128,7 +128,7 @@ const FormCreateCounterparty: React.FC<FormCreateContractorProps> = ({
       {...props}
       onSubmit={formEventWrapper(onSubmit)}
       onOptSelect={(_o, v) => setValue('type', v)}
-      filterOptions={isFilterByTypeOn ? counterpartyFilterOptions : undefined}
+      options={isFilterByTypeOn ? counterpartyFilterOptions : undefined}
       isValid={isValid}
       extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >

@@ -6,11 +6,12 @@ import styled from 'styled-components';
 
 import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
 import { Text } from '../../atoms/Text';
-import { useAppPages, useAppRouter, useCloseByEscapeOrClickOnBackdrop } from '../../../hooks';
+import { useAppPages, useAppRouter } from '../../../hooks';
 import SubNavMenu from './SubNavMenu';
 import FlexBox from '../../atoms/FlexBox';
 import { AppPagesEnum } from '../../AppPages';
 import { iconId } from '../../../img/sprite';
+import { useCloseByBackdropClick, useCloseByEscape } from '../../../hooks/useCloseByEscapeOrClickOnBackdrop.hook';
 
 const NavMenu: React.FC = () => {
   const router = useAppRouter();
@@ -97,7 +98,8 @@ const NavMenu: React.FC = () => {
     setActivePage(currentPageData || pages[0]);
   }, [location.pathname, pages, permissionId]);
 
-  useCloseByEscapeOrClickOnBackdrop(setIsOpen, 'data-nav-menu', true);
+  useCloseByEscape(setIsOpen, { disabled: true });
+  useCloseByBackdropClick(setIsOpen, 'data-nav-menu', { disabled: true });
 
   return (
     <StyledNavMenu data-nav-menu>

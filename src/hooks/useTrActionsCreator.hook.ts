@@ -1,7 +1,7 @@
 import { IModalProviderContext, useModalProvider } from '../Providers/ModalProvider/ModalProvider';
 import { UseFinancesService } from './useTransactionsService.hook';
 
-import { filterOptions } from '../data/transactions.data';
+import { transactionTypeFilterOptions } from '../data/transactions.data';
 import { ITableAction, ITableListContext, TableActionsCreator } from '../components/TableList/tableTypes.types';
 import { ITransaction } from '../types/finances/transactions.types';
 
@@ -38,8 +38,8 @@ const createEditTransactionAction = ({
       Modal: Modals.FormCreateTransaction,
       props: {
         title: 'Редагування транзакції',
-        filterOptions,
-        defaultOption: filterOptions.findIndex(el => el.value === tr?.type),
+        filterOptions: transactionTypeFilterOptions,
+        defaultOption: transactionTypeFilterOptions.findIndex(el => el.value === tr?.type),
         defaultState: tr,
         fillHeight: true,
         onSubmit: (data, o) => {
@@ -72,8 +72,8 @@ const createCopyTransactionAction = ({
       Modal: Modals.FormCreateTransaction,
       props: {
         title: 'Копіювання транзакції',
-        filterOptions,
-        defaultOption: filterOptions.findIndex(el => el.value === tr?.type),
+        filterOptions: transactionTypeFilterOptions,
+        defaultOption: transactionTypeFilterOptions.findIndex(el => el.value === tr?.type),
         defaultState: tr,
         fillHeight: true,
         onSubmit: (data, o) => {
@@ -124,7 +124,7 @@ const createAddIncomeTransactionAction = ({
       Modal: Modals.FormCreateTransaction,
       props: {
         title: 'Створити',
-        filterOptions,
+        filterOptions: transactionTypeFilterOptions,
         defaultOption: 0,
         fillHeight: true,
         defaultState: { type: 'INCOME' },
@@ -157,7 +157,7 @@ const createAddTransferTransactionAction = ({
       Modal: Modals.FormCreateTransaction,
       props: {
         title: 'Створити нову',
-        filterOptions,
+        filterOptions: transactionTypeFilterOptions,
         defaultOption: 1,
         fillHeight: true,
         defaultState: { type: 'TRANSFER' },
@@ -190,7 +190,7 @@ const createAddExpenseTransactionAction = ({
       Modal: Modals.FormCreateTransaction,
       props: {
         title: 'Створити',
-        filterOptions,
+        filterOptions: transactionTypeFilterOptions,
         defaultOption: 2,
         defaultState: { type: 'EXPENSE' },
         onSubmit: (data, o) => {

@@ -13,14 +13,14 @@ const categoriesReport: IReportConfigs<IReportCategoriesProps> = {
   title: 'Доходи/Витрати',
   iconId: iconId.info,
   ModalChildren: ReportCategories,
-  modalChildrenProps: { title: 'Звіт по категоріях', fillHeight: true, filterOptions: categoriesFilterOptions },
+  modalChildrenProps: { title: 'Звіт по категоріях', fillHeight: true, options: categoriesFilterOptions },
   disabled: false,
 };
 const countsReport: IReportConfigs<IReportCountsProps> = {
   title: 'Рахунки',
   iconId: iconId.info,
   ModalChildren: ReportCounts,
-  modalChildrenProps: { title: 'Звіт по рахунках', fillHeight: true, filterOptions: countsFilterOptions },
+  modalChildrenProps: { title: 'Звіт по рахунках', fillHeight: true, options: countsFilterOptions },
   disabled: false,
 };
 export const reportByContractorsColumns: CellTittleProps[] = [

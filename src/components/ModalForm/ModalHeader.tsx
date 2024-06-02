@@ -6,7 +6,7 @@ export interface ModalFormHeaderProps {
 }
 
 const ModalHeader: React.FC<ModalFormHeaderProps & React.ImgHTMLAttributes<HTMLDivElement>> = ({
-  title = 'default header titile',
+  title = 'Default header title',
   children,
   ...props
 }) => {
@@ -48,6 +48,10 @@ const HeaderContainer = styled.header`
 
   color: ${({ theme }) => theme.fontColorHeader};
   background-color: ${({ theme }) => theme.modalBackgroundColor};
+
+  @media screen and (max-width: 480px) {
+    height: 32px;
+  }
 `;
 const Title = styled.p`
   //color: #efefef;

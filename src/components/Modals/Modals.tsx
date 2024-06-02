@@ -3,7 +3,6 @@ import PriceListOverview, { PriceListOverviewProps } from './PriceListOverview';
 import OfferOverview, { ProductOverviewProps } from '../Overviews/offer/OfferOverview';
 import SelectProductModal, { SelectProductModalProps } from './SelectProductModal';
 import AppFilter, { AppFilterProps } from '../Filter/AppFilter';
-import DirVariationsTemplate, { DirVariationsTemplateProps } from '../Directories/DirVariationsTemplate';
 import DirPoperties, { DirPropertiesProps } from '../Directories/DirProperties';
 import Forms, { FormPropTypes } from '../Forms';
 import { FormCreateBankAccountProps } from '../Forms/finances/FormCreateBankAccount';
@@ -39,7 +38,6 @@ export enum Modals {
   SelectOrderType = 'SelectOrderType',
   FormCreateOrderSlot = 'FormCreateOrderSlot',
   // sep DIRECTORIES
-  DirVariationsTemplate = 'DirVariationsTemplate',
   DirProperties = 'DirProperties',
   // DirTreeComponent = 'DirTreeComponent',
 
@@ -87,7 +85,6 @@ export const ModalChildrenMap: Record<Modals, React.FC<any>> = {
   // sep FINANCES
   [Modals.FormCreateBankAccount]: Forms.CreateBankAccount,
   // sep DIRECTORIES
-  [Modals.DirVariationsTemplate]: DirVariationsTemplate,
   [Modals.DirProperties]: DirPoperties,
   // [Modals.DirTreeComponent]: DirTreeComp,
   // sep Modals props
@@ -135,7 +132,6 @@ export interface ModalChildrenProps extends Record<Modals, any> {
 
   // sep DIRECTORIES
   [Modals.DirProperties]: DirPropertiesProps;
-  [Modals.DirVariationsTemplate]: DirVariationsTemplateProps;
   // [Modals.DirTreeComponent]: IDirInTreeProps;
   // sep Modals props
 

@@ -1,8 +1,9 @@
 import { IContractor } from '../redux/directories/contractors.types';
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { SelectItem } from '../components/TableList/tableTypes.types';
+import { TableSearchParam } from '../components/TableList/tableTypes.types';
 import { t } from '../lang';
 import { ICounterparty } from '../redux/directories/counterparties.types';
+import { Path } from 'react-hook-form';
 
 export const contractorsColumns: CellTittleProps<IContractor>[] = [
   {
@@ -46,26 +47,26 @@ export const contractorsColumns: CellTittleProps<IContractor>[] = [
   },
 ];
 
-export const contractorsSearchParams: SelectItem[] = [
+export const contractorsSearchParams: TableSearchParam<Path<Omit<IContractor, 'childrenList'>>>[] = [
   {
     label: "Ім'я",
-    dataPath: 'name',
+    dataKey: 'name',
   },
   {
     label: 'Телефон',
-    dataPath: 'phone',
+    dataKey: 'phone',
   },
   {
     label: 'Емейл',
-    dataPath: 'email',
+    dataKey: 'email',
   },
   {
     label: 'Коментар',
-    dataPath: 'comment',
+    dataKey: 'description',
   },
   {
     label: 'Теги',
-    dataPath: 'tags',
+    dataKey: 'tags',
   },
 ];
 export const counterpartyColumns: CellTittleProps<ICounterparty>[] = [

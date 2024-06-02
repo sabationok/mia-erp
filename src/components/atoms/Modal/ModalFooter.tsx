@@ -27,14 +27,14 @@ const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElem
 
       <FlexBox fillWidth gap={8} fxDirection={'row'} justifyContent={'flex-end'} padding={'8px'}>
         {onSubmitPassed && (
-          <ButtonIcon type="reset" variant={'defaultSmall'}>
+          <ButtonIcon type="reset" variant={'defaultMiddle'}>
             {t('Close')}
           </ButtonIcon>
         )}
 
         <ButtonIcon
           type={onSubmitPassed ? 'submit' : 'reset'}
-          variant={'filledSmall'}
+          variant={'filledMiddle'}
           isLoading={isLoading}
           disabled={!isValid}
         >

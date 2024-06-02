@@ -59,7 +59,7 @@ const CompanySettingsModal: React.FC<CompanySettingsProps> = ({ onClose, ...prop
       <OverlayHeader title={'Company settings'} onClosePress={onClose} />
 
       <TabSelector
-        filterOptions={tabs}
+        options={tabs}
         preventDefault={true}
         onOptSelect={(_, v) => {
           setCurrent(v);

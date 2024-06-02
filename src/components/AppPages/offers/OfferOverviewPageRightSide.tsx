@@ -69,7 +69,7 @@ const OfferOverviewPageRightSide: React.FC<OfferOverviewPageRightSideProps> = ({
         )}
 
         <TabBox overflow={'hidden'} fillWidth flex={1}>
-          <TabSelector filterOptions={TabsList} onOptSelect={filterHandler} preventDefault />
+          <TabSelector options={TabsList} onOptSelect={filterHandler} preventDefault />
 
           {renderTab}
         </TabBox>

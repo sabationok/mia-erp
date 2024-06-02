@@ -30,7 +30,7 @@ const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose,
     <Container overflow={'hidden'} fillWidth>
       <StHeader title={'External services'} onClose={onClose} />
 
-      <TabSelector filterOptions={integrationTypeTabs} onOptSelect={info => setIntegrationType(info?.value)} />
+      <TabSelector options={integrationTypeTabs} onOptSelect={info => setIntegrationType(info?.value)} />
 
       <FlexBox overflow={'auto'} flex={1} fillWidth>
         {renderModalContent}

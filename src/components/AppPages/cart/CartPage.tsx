@@ -21,9 +21,16 @@ import { Text } from '../../atoms/Text';
 import { t } from '../../../lang';
 import { toPrice } from '../../../utils/numbers';
 import { CART_DEFAULT_ID } from '../../../redux/cart/cart.slice';
+import { enumToTabs } from '../../../utils';
+import TabSelector from '../../atoms/TabSelector';
 
 interface Props extends BaseAppPageProps {}
 
+export enum CartPageRightTabsEnum {
+  Slot = 'Slot',
+  Chat = 'Chat',
+}
+export const cartPageTabsOptions = enumToTabs(CartPageRightTabsEnum, opt => t(opt));
 export default function CartPage({ path }: Props) {
   // const [isVisible, setIsVisible] = useState(false);
   const query = useAppQuery();
@@ -66,6 +73,8 @@ export default function CartPage({ path }: Props) {
               }
             }
           >
+            <TabSelector options={cartPageTabsOptions} />
+
             <OrderSlotOverview />
           </RightSide>
         </Page>
@@ -295,10 +304,9 @@ function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
 
         <ButtonIcon
           variant={'filledMiddle'}
-          disabled={!cartId}
+          disabled={!Cart}
           onClick={() => {
             Cart?.remove();
-            // cartId && cartSrv.actions.removeCart(cartId);
           }}
         >
           {'Remove all'}

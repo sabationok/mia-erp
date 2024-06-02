@@ -42,7 +42,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
   title = 'default modal title',
   footer = true,
   children,
-  filterOptions,
+  options,
   preventDefault,
   onSubmit,
   onReset,
@@ -77,10 +77,10 @@ const ModalForm: React.FC<ModalFormProps> = ({
   return (
     <ModalFormContainer className="modalForm" onSubmit={handleSubmit} onReset={handleReset} {...props}>
       <ModalHeader title={title}>
-        {filterOptions && (
+        {options && (
           <TabSelector
             onOptSelect={onOptSelect}
-            filterOptions={filterOptions}
+            options={options}
             preventDefault={preventDefault}
             defaultOption={defaultOption}
             onFilterValueSelect={onFilterValueSelect}
@@ -91,7 +91,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
         {extraHeader}
       </ModalHeader>
 
-      <ModalMain className="main" filterOn={!!filterOptions}>
+      <ModalMain className="main" filterOn={!!options}>
         {children}
       </ModalMain>
 

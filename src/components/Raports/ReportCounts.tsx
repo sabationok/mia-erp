@@ -15,7 +15,7 @@ export interface IReportCountsProps<V = any, D = any> extends IReportBaseProps<u
   currency?: CurrencyCode;
 }
 
-const ReportCounts: React.FC<IReportCountsProps<CountType>> = ({ entryList, filterOptions, currency, ...props }) => {
+const ReportCounts: React.FC<IReportCountsProps<CountType>> = ({ entryList, options, currency, ...props }) => {
   const [filterOpt, setFilterOpt] = useState<Partial<TabOption<CountType>>>({});
   const countedTotals = useMemo(() => {
     let totals: Record<CountType, number> = {
@@ -61,7 +61,7 @@ const ReportCounts: React.FC<IReportCountsProps<CountType>> = ({ entryList, filt
   }
 
   return (
-    <ModalForm {...props} preventDefault filterOptions={filterOptionsMemo} onOptSelect={handleSelect}>
+    <ModalForm {...props} preventDefault options={filterOptionsMemo} onOptSelect={handleSelect}>
       <FlexBox fillWidth flex={'1'}>
         {filterOpt.value && (
           <ReportList entryList={[]} totalAmount={countedTotals[filterOpt.value] || 0} currency={currency} />

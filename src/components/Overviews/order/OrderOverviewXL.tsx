@@ -64,11 +64,7 @@ const OrderOverviewXL: React.FC<OrderOverviewXLProps> = p => {
       />
 
       <Content flex={1} fillWidth overflow={'auto'}>
-        <TabSelector
-          filterOptions={tabs}
-          optionProps={{ fitContentH: true }}
-          onOptSelect={(_o, _v, i) => setCurrentTab(i)}
-        />
+        <TabSelector options={tabs} optionProps={{ fitContentH: true }} onOptSelect={(_o, _v, i) => setCurrentTab(i)} />
 
         {renderTab}
       </Content>

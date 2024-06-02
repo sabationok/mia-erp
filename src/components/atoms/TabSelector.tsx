@@ -8,7 +8,7 @@ import { isFunction, isUndefined } from 'lodash';
 export interface ModalFormFilterProps<V = any, D = any> {
   getDefaultValue?: (opt: FilterOption<V, D>) => number;
   preventDefault?: boolean;
-  filterOptions?: FilterOption<V, D>[];
+  options?: FilterOption<V, D>[];
 
   onOptSelect?: FilterSelectHandler<V, D>;
   onFilterValueSelect?: FilterSelectValueHandler<V>;
@@ -57,7 +57,7 @@ export type FilterChangeHandler<V = any> = (values: V[], name?: string) => void;
 export interface TabOption<V = any, D = any> extends FilterOption<V, D> {}
 
 const TabSelector = <V = any, D = any>({
-  filterOptions = [],
+  options = [],
   onOptSelect,
   preventDefault,
   defaultFilterValue,
@@ -102,24 +102,24 @@ const TabSelector = <V = any, D = any>({
     }
 
     if (!isUndefined(defaultFilterValue)) {
-      const defIndex = filterOptions.findIndex(el => el.value === defaultFilterValue);
+      const defIndex = options.findIndex(el => el.value === defaultFilterValue);
       defIndex > 0 && setCurrent(defIndex);
     }
-  }, [currentIndex, defaultFilterValue, filterOptions]);
+  }, [currentIndex, defaultFilterValue, options]);
 
   useEffect(() => {
     if (preventDefault || defaultFilterValue) return;
 
-    if (filterOptions.length > 0) {
+    if (options.length > 0) {
       isFunction(onChangeIndex) && onChangeIndex(current);
-      isFunction(onOptSelect) && onOptSelect(filterOptions[current], filterOptions[current].value, current);
-      isFunction(onFilterValueSelect) && onFilterValueSelect({ name, value: filterOptions[current].value });
+      isFunction(onOptSelect) && onOptSelect(options[current], options[current].value, current);
+      isFunction(onFilterValueSelect) && onFilterValueSelect({ name, value: options[current].value });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const renderOptions = useMemo(() => {
-    return filterOptions?.map((opt, idx) => (
+    return options?.map((opt, idx) => (
       <StButtonIcon
         key={idx}
         id={`filter-opt_${opt?.value || idx}`}
@@ -140,12 +140,12 @@ const TabSelector = <V = any, D = any>({
         )}
       </StButtonIcon>
     ));
-  }, [asStepper, current, filterOptions, handleSelectOpt, renderLabel]);
+  }, [asStepper, current, options, handleSelectOpt, renderLabel]);
 
   return (
     <Filter
       className="filter"
-      gridRepeat={(filterOptions?.length ?? 0) + (onReset ? 1 : 0)}
+      gridRepeat={(options?.length ?? 0) + (onReset ? 1 : 0)}
       optionProps={optionProps}
       {...props}
     >

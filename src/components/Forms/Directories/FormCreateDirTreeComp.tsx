@@ -55,7 +55,7 @@ const FormCreateDirTreeComp: React.FC<FormCreateDirTreeCompProps> = ({
       extraFooter={<FormAfterSubmitOptions {...submitOptions} />}
     >
       <FormInputs>
-        {props.filterOptions && (
+        {props.options && (
           <InputLabel label={t('type')} error={errors.type} disabled>
             <InputText defaultValue={type ? t(`${type}s` as any).toUpperCase() : type} disabled />
           </InputLabel>

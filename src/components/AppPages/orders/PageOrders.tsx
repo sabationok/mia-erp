@@ -69,7 +69,7 @@ const PageOrders: React.FC<any> = (props: Props) => {
       <Page>
         <TabSelector
           style={{ height: 52 }}
-          filterOptions={ordersFilterOptions}
+          options={ordersFilterOptions}
           renderLabel={renderLabel}
           optionProps={{ fitContentH: false }}
         />

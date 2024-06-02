@@ -139,7 +139,7 @@ const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({
       <Form onSubmit={handleSubmit(onValid)}>
         <ModalHeader onBackPress={onClose} title={t('Default values')} canSubmit={canSubmit} />
 
-        <TabSelector filterOptions={tabs} currentIndex={currentTabIdx} onChangeIndex={setCurrentTabIdx} />
+        <TabSelector options={tabs} currentIndex={currentTabIdx} onChangeIndex={setCurrentTabIdx} />
 
         <Content flex={1} fillWidth overflow={'hidden'}>
           {renderTab}

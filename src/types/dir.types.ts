@@ -1,5 +1,5 @@
 import { ModalFormProps } from '../components/ModalForm';
-import { ITrCategory, ITrCategoryFormData, TagTypeEnum, TrCategoryTypeEnum } from './directories.types';
+import { FinTransactionTypeEnum, ITrCategory, ITrCategoryFormData, TagTypeEnum } from './directories.types';
 import { CountsTypesEnum, ICount, ICountFormData } from '../redux/directories/counts.types';
 import { TabOption } from '../components/atoms/TabSelector';
 import { IBase } from '../redux/app-redux.types';
@@ -15,7 +15,7 @@ import { MaybeNull } from './utils.types';
 
 export interface DirItemTypeByDirType extends Record<ApiDirType, any> {
   [ApiDirType.COUNTS]: CountsTypesEnum;
-  [ApiDirType.CATEGORIES_TR]: TrCategoryTypeEnum;
+  [ApiDirType.CATEGORIES_TR]: FinTransactionTypeEnum;
   [ApiDirType.CATEGORIES_PROD]: OfferTypeEnum;
   [ApiDirType.PROPERTIES_PRODUCTS]: OfferTypeEnum;
   [ApiDirType.CONTRACTORS]: ContractorsTypesEnum | CounterpartyTypesEnum;
@@ -106,7 +106,7 @@ export interface IDirInTreeProps<
   dirType: DirType;
   type?: DirItemTypeByDirType[DirType];
   createParentTitle?: string;
-  filterOptions?: TabOption<DirItemTypeByDirType[DirType]>[];
+  options?: TabOption<DirItemTypeByDirType[DirType]>[];
   filterSearchPath?: keyof IDirItemBase<DirType>;
   filterDefaultValue?: DirItemTypeByDirType[DirType];
   availableLevels?: number;
@@ -170,7 +170,7 @@ export type DirInTreeActionsCreatorType<
 export interface DirCategoriesProps
   extends IDirInTreeProps<ApiDirType.CATEGORIES_TR, ITrCategoryFormData, ITrCategoryFormData, ITrCategory> {}
 
-export interface DirProductCategoriesProps
+export interface DirOfferCategoriesProps
   extends IDirInTreeProps<ApiDirType.CATEGORIES_PROD, ITrCategoryFormData, ITrCategoryFormData, ITrCategory> {}
 
 // export interface DirBrandsProps

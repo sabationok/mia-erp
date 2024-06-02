@@ -264,7 +264,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
       <ModalHeader title={t('Select product')} onBackPress={onClose} />
 
       <Content fillWidth flex={1} overflow={'hidden'}>
-        <TabSelector filterOptions={stepsLong} asStepper currentIndex={stepIdx} />
+        <TabSelector options={stepsLong} asStepper currentIndex={stepIdx} />
 
         <TableList {...tableConfig} isLoading={isLoading} />
       </Content>

@@ -10,7 +10,7 @@ export interface FormCreateInnerProps {
 const ExtraFooterWithButton: React.FC<FormCreateInnerProps> = ({ buttonText, onClick }) => {
   return (
     <Container fillWidth padding={'8px'}>
-      <ButtonIcon variant={'outlinedSmall'} onClick={onClick}>
+      <ButtonIcon variant={'outlinedMiddle'} onClick={onClick}>
         {buttonText || 'Create'}
       </ButtonIcon>
     </Container>

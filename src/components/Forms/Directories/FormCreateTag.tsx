@@ -24,7 +24,7 @@ const validation = yup.object().shape({
 });
 
 const FormCreateTag: React.FC<FormCreateTagProps> = ({
-  filterOptions = tagsFilterOptions,
+  options = tagsFilterOptions,
   onSubmit,
   type,
   parent,
@@ -73,7 +73,7 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({
     >
       <FormInputs>
         <TagButtonsFilter<TagTypeEnum>
-          options={filterOptions}
+          options={options}
           name={'type'}
           onSelectValue={({ name, value }) => setValue(name, value)}
           values={formValues.type ? [formValues.type] : undefined}

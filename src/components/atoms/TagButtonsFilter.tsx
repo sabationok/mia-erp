@@ -64,14 +64,14 @@ const TagButtonsFilter = <Value extends string | number = any>({
     }
   }, [values]);
 
-  const renderFilter = useMemo(() => {
+  const renderOptions = useMemo(() => {
     return options?.map((opt, index) => {
       const isActive = selectedValues.includes(opt.value);
       return (
         <ButtonIcon
           isActive={isActive}
           key={`f-opt_${opt.value}`}
-          variant={isActive ? 'filledSmall' : 'outlinedSmall'}
+          variant={isActive ? 'filledMiddle' : 'outlinedMiddle'}
           onClick={() => handleSelect(opt, index)}
           style={{
             width: '100%',
@@ -91,6 +91,18 @@ const TagButtonsFilter = <Value extends string | number = any>({
     });
   }, [handleSelect, options, selectedValues]);
 
+  const renderResetButton = (
+    <ButtonIcon
+      variant={'defaultMiddle'}
+      onClick={() => setSelectedValues([])}
+      style={{ width: '100%', minWidth: 'unset', padding: '4px 8px' }}
+    >
+      <Text $ellipsisMode={true} $size={12} style={{ fontWeight: 'inherit' }}>
+        {resetButtonLabel || 'Clear'}
+      </Text>
+    </ButtonIcon>
+  );
+
   return (
     <FlexBox
       fillWidth
@@ -98,30 +110,13 @@ const TagButtonsFilter = <Value extends string | number = any>({
       fxDirection={'row'}
       flex={1}
       flexWrap={'wrap'}
-      style={{ display: 'grid', gridTemplateColumns: `repeat(${numColumns || 2}, 1fr)` }}
+      style={{ display: 'grid', gridTemplateColumns: `repeat(${numColumns || 3}, 1fr)` }}
     >
-      {resetButtonPosition === 'start' && (
-        <ButtonIcon
-          variant={selectedValues.length === 0 ? 'filledSmall' : 'outlinedSmall'}
-          onClick={() => setSelectedValues([])}
-          style={{ width: '100%', minWidth: 'unset', padding: '4px 8px' }}
-        >
-          <Text $ellipsisMode={true} $size={12} style={{ fontWeight: 'inherit' }}>
-            {resetButtonLabel || 'Clear'}
-          </Text>
-        </ButtonIcon>
-      )}
+      {resetButtonPosition === 'start' && renderResetButton}
 
-      {renderFilter}
+      {renderOptions}
 
-      {resetButtonPosition === 'end' && (
-        <ButtonIcon
-          variant={selectedValues.length === 0 ? 'filledSmall' : 'outlinedSmall'}
-          onClick={() => setSelectedValues([])}
-        >
-          {resetButtonLabel || 'Clear'}
-        </ButtonIcon>
-      )}
+      {resetButtonPosition === 'end' && renderResetButton}
     </FlexBox>
   );
 };

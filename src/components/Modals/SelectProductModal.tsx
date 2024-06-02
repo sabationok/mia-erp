@@ -78,7 +78,7 @@ const SelectProductModal: React.FC<SelectProductModalProps> = ({ selected, onSel
       fillHeight
       title={'Select product'}
       {...props}
-      filterOptions={productSelectorFilterOptions}
+      options={productSelectorFilterOptions}
       isValid={!!current}
       footer={false}
       onOptSelect={(_o, v, index) => {

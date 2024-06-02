@@ -8,14 +8,14 @@ export interface DefaultDirectoryType extends IBase {
   disabled?: boolean;
 }
 
-export interface ITrCategory extends IBaseDirItem<CategoryTypes, ApiDirType.CATEGORIES_TR> {}
+export interface ITrCategory extends IBaseDirItem<FinTransactionType, ApiDirType.CATEGORIES_TR> {}
 
 export interface ITrCategoryFormData
   extends Omit<ITrCategory, '_id' | 'createdAt' | 'updatedAt' | 'childrenList' | 'parent'> {
   parent?: Omit<ITrCategory, '_id' | 'createdAt' | 'updatedAt' | 'childrenList' | 'parent'>;
 }
 
-export enum TrCategoryTypeEnum {
+export enum FinTransactionTypeEnum {
   INCOME = 'INCOME',
   TRANSFER = 'TRANSFER',
   EXPENSE = 'EXPENSE',
@@ -34,4 +34,4 @@ export enum TagTypeEnum {
   TRANSPORTER = 'TRANSPORTER',
 }
 
-export type CategoryTypes = keyof typeof TrCategoryTypeEnum;
+export type FinTransactionType = keyof typeof FinTransactionTypeEnum;

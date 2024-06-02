@@ -131,7 +131,7 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onClose }
         <ModalHeader title={t('Create orders group by warehouse')} onBackPress={onClose} />
 
         <Content fillWidth flex={1} overflow={'hidden'}>
-          <TabSelector filterOptions={steps} asStepper currentIndex={stepIdx} optionProps={{ fitContentH: true }} />
+          <TabSelector options={steps} asStepper currentIndex={stepIdx} optionProps={{ fitContentH: true }} />
 
           {renderStep}
         </Content>
