@@ -13,7 +13,7 @@ import { IDeliveryMethod, IInvoicingMethod, ServiceMethodBase } from '../../../t
 import ButtonSwitch from '../../atoms/ButtonSwitch';
 import { useTranslatedMethodsList } from '../../../hooks/useTranslatedMethodsList.hook';
 import { useInvoicesSelector } from '../../../redux/selectors.store';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import CustomSelect from '../../atoms/Inputs/CustomSelect';
 import { Text } from '../../atoms/Text';
 import InputText from '../../atoms/Inputs/InputText';
 import { IBaseKeys } from '../../../redux/app-redux.types';

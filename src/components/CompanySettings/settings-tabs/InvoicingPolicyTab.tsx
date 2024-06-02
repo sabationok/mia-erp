@@ -10,7 +10,7 @@ import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import { t } from '../../../lang';
 import ButtonSwitch from '../../atoms/ButtonSwitch';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import CustomSelect from '../../atoms/Inputs/CustomSelect';
 import ModalFooter from '../../atoms/Modal/ModalFooter';
 import { _enumToTabs } from '../../../utils';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';

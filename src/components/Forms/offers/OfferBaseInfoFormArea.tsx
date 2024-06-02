@@ -7,7 +7,7 @@ import { t } from '../../../lang';
 import InputText from '../../atoms/Inputs/InputText';
 import FlexBox from '../../atoms/FlexBox';
 import * as React from 'react';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import CustomSelect from '../../atoms/Inputs/CustomSelect';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
 import { toReqData } from '../../../utils';

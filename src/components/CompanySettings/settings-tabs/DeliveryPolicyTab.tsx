@@ -1,7 +1,7 @@
 import { CompanySettingsTabBaseProps } from './companySettingsTabs.types';
 import { DeliveryPolicyJsonData, ICompanyDeliveryPolicyFormData } from '../../../types/companies.types';
 import { useCompaniesSelector, useDeliveriesSelector } from '../../../redux/selectors.store';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import CustomSelect from '../../atoms/Inputs/CustomSelect';
 import { t } from '../../../lang';
 import ButtonSwitch from '../../atoms/ButtonSwitch';
 import InputLabel from '../../atoms/Inputs/InputLabel';

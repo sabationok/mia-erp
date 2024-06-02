@@ -11,7 +11,7 @@ import InputText from '../../atoms/Inputs/InputText';
 import { enumToFilterOptions, toReqData } from '../../../utils';
 import { t } from '../../../lang';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import CustomSelect from '../../atoms/Inputs/CustomSelect';
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';

@@ -3,7 +3,7 @@ import { FieldValues, UseFormProps, UseFormReturn } from 'react-hook-form/dist/t
 import { createContext, useCallback, useContext } from 'react';
 import { UseFormHandleSubmit } from 'react-hook-form/dist/types/form';
 import { InputLabelProps } from '../components/atoms/Inputs/InputLabel';
-import { CustomSelectBaseProps } from '../components/atoms/Inputs/CustomSelect/CustomSelect';
+import { CustomSelectBaseProps } from '../components/atoms/Inputs/CustomSelect';
 import { AnyFn } from '../utils/types';
 
 export type CustomSelectProps = CustomSelectBaseProps &

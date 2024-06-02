@@ -2,7 +2,7 @@ import { Path } from 'react-hook-form';
 import { MeasurementUnit } from 'types/offers/offers.types';
 import { FilterOption } from '../../../atoms/TabSelector';
 import { enumToFilterOptions } from 'utils/fabrics';
-import CustomSelect from '../../../atoms/Inputs/CustomSelect/CustomSelect';
+import CustomSelect from '../../../atoms/Inputs/CustomSelect';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
 import InputText from '../../../atoms/Inputs/InputText';
 import FlexBox from '../../../atoms/FlexBox';

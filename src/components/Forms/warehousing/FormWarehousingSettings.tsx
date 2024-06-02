@@ -2,7 +2,7 @@ import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useAppForm } from '../../../hooks';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import CustomSelect from '../../atoms/Inputs/CustomSelect';
 import { usePermissionsSelector, useWarehousesSelector } from '../../../redux/selectors.store';
 import { FilterOption } from '../../atoms/TabSelector';
 import FlexBox from '../../atoms/FlexBox';

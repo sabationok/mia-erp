@@ -3,7 +3,7 @@ import { useAppForm } from '../../../hooks';
 import { ICompanyWarehousingPolicyFormData } from '../../../types/companies.types';
 import { usePermissionsSelector, useWarehousesSelector } from '../../../redux/selectors.store';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import CustomSelect from '../../atoms/Inputs/CustomSelect';
 import { t } from '../../../lang';
 import { toReqData } from '../../../utils';
 import ModalFooter from '../../atoms/Modal/ModalFooter';

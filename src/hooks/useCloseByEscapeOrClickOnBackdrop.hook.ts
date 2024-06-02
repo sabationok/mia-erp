@@ -52,9 +52,11 @@ export function useCloseByBackdropClick(
 ) {
   useEffect(() => {
     function onCloseCallback(ev: MouseEvent | KeyboardEvent) {
-      if (!disabled) return;
+      if (disabled) return;
 
-      if (ev instanceof KeyboardEvent && ev?.code === 'Escape') setState(false);
+      if (ev.target instanceof HTMLElement && !ev.target.closest(`[${dataAttribute}]`)) {
+        setState(false);
+      }
     }
 
     if (!disabled) {
@@ -62,7 +64,9 @@ export function useCloseByBackdropClick(
     }
 
     return () => {
-      document.removeEventListener('click', onCloseCallback);
+      if (!disabled) {
+        document.removeEventListener('click', onCloseCallback);
+      }
     };
   }, [disabled, dataAttribute, setState]);
 }

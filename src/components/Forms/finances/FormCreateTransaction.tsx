@@ -9,7 +9,7 @@ import InputText from '../../atoms/Inputs/InputText';
 import * as yup from 'yup';
 import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
 import { TabOption } from '../../atoms/TabSelector';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import CustomSelect from '../../atoms/Inputs/CustomSelect';
 import { toInputValueDate, toTrReqData } from '../../../utils';
 import { useAppSelector } from '../../../redux/store.store';
 import FlexBox from '../../atoms/FlexBox';

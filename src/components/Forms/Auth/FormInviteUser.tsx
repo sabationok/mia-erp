@@ -4,7 +4,7 @@ import { useAppForm } from '../../../hooks';
 import { ICustomRole } from '../../../redux/customRoles/customRoles.types';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { useCustomRolesSelector } from '../../../redux/selectors.store';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import CustomSelect from '../../atoms/Inputs/CustomSelect';
 import InputText from '../../atoms/Inputs/InputText';
 import { PermissionEntity } from '../../../types/permissions.types';
 import { FormInputs } from '../components/atoms';

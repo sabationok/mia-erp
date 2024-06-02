@@ -1,12 +1,14 @@
-import InputLabel, { InputLabelProps } from '../InputLabel';
-import { forwardRef, InputHTMLAttributes, memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import InputLabel, { InputLabelProps } from './InputLabel';
+import { forwardRef, InputHTMLAttributes, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { isUndefined, omit, pick } from 'lodash';
 import styled, { css } from 'styled-components';
-import FlexBox from '../../FlexBox';
+import FlexBox from '../FlexBox';
 import { RefCallBack } from 'react-hook-form';
-import ButtonIcon from '../../ButtonIcon';
-import CheckBox from '../../../TableList/TebleCells/CellComponents/CheckBox';
-import { IEmbeddedName, MaybeNull } from '../../../../types/utils.types';
+import ButtonIcon from '../ButtonIcon';
+import { IEmbeddedName, MaybeNull } from '../../../types/utils.types';
+import { useCloseByBackdropClick } from '../../../hooks/useCloseByEscapeOrClickOnBackdrop.hook';
+import { nanoid } from '@reduxjs/toolkit';
+import CheckBox from 'components/TableList/TebleCells/CellComponents/CheckBox';
 
 export interface CustomSelectBaseProps<Option extends CustomSelectOptionBase = CustomSelectOptionBase> {
   InputComponent?: React.FC<InputHTMLAttributes<HTMLInputElement>>;
@@ -76,7 +78,7 @@ const CustomSelectOptionComponent: React.FC<CustomSelectItemProps> = ({
   isActive,
   ...props
 }) => {
-  const renderChildrenList = useMemo(() => {
+  const renderChildren = useMemo(() => {
     return option?.childrenList?.map((ch, index) => {
       const isActive =
         (option?._id && option?._id === currentOptionId) ||
@@ -117,11 +119,11 @@ const CustomSelectOptionComponent: React.FC<CustomSelectItemProps> = ({
   return (
     <>
       <Option
-        // justifyContent={'flex-start'}
-        // gap={8}
-        // fillWidth
-        // fxDirection={'row'}
-        // padding={'5px 8px'}
+        justifyContent={'flex-start'}
+        gap={8}
+        fillWidth
+        fxDirection={'row'}
+        padding={'5px 8px'}
         onClick={() => onSelect && onSelect(index, option)}
         isActive={isActive}
         {...props}
@@ -131,7 +133,7 @@ const CustomSelectOptionComponent: React.FC<CustomSelectItemProps> = ({
         <span className={'inner'}>{renderLabel}</span>
       </Option>
 
-      {treeMode && <FlexBox padding={'0 0 0 8px'}>{renderChildrenList}</FlexBox>}
+      {treeMode && <FlexBox padding={'0 0 0 8px'}>{renderChildren}</FlexBox>}
     </>
   );
 };
@@ -170,9 +172,8 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
   const [currentOption, setCurrentOption] = useState<CustomSelectOption | undefined>(selectedOption);
   const [isOpen, setIsOpen] = useState<boolean>(keepOpen || open);
   const labelRef = useRef<HTMLLabelElement>(null);
-  const _selectId = useId();
 
-  // const selectId = useMemo(() => (id ? id : nanoid(5)), [id]);
+  const selectId = useMemo(() => (id ? id : `_${nanoid(5)}`), [id]);
 
   const handleOpenState = useCallback(() => {
     !keepOpen && setIsOpen(prev => !prev);
@@ -180,10 +181,10 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
 
   const inputCurrentValue = useMemo(() => {
     return getLabel && currentOption
-      ? getLabel(currentOption)
+      ? getLabel(currentOption) ?? undefined
       : currentOption
       ? currentOption?.label || currentOption?.name
-      : '';
+      : undefined;
   }, [currentOption, getLabel]);
 
   const onSelectOption = useCallback(
@@ -243,27 +244,29 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
     }
   }, [options, selectedValue]);
 
+  useCloseByBackdropClick(setIsOpen, `data-select=${selectId}`, { disabled: !isOpen });
+
   return (
-    <FlexBox id={_selectId} className={'select-box'} fillWidth style={{ position: 'relative' }} data-select={_selectId}>
-      <FlexBox fillWidth style={{ position: 'relative' }}>
-        <InputLabel
-          direction={'vertical'}
-          required={required}
-          ref={labelRef}
-          {...pick(props, [
-            'error',
-            'success',
-            'helperText',
-            'loading',
-            'label',
-            'id',
-            'uppercase',
-            'align',
-            'direction',
-            'disabled',
-          ])}
-          {...labelProps}
-        >
+    <FlexBox id={selectId} className={'select-box'} fillWidth data-select={selectId}>
+      <InputLabel
+        direction={'vertical'}
+        required={required}
+        ref={labelRef}
+        {...pick(props, [
+          'error',
+          'success',
+          'helperText',
+          'loading',
+          'label',
+          'id',
+          'uppercase',
+          'align',
+          'direction',
+          'disabled',
+        ])}
+        {...labelProps}
+      >
+        <FlexBox fillWidth style={{ position: 'relative' }}>
           <LabelInner fieldMode={fieldMode} error={!!props.error} success={!!props.success}>
             <StyledInput
               disabled={!fieldMode}
@@ -275,8 +278,9 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
                 'loading',
               ])}
               {...inputProps}
+              // defaultValue={inputCurrentValue}
               value={inputCurrentValue}
-              onChange={() => {}}
+              // onChange={() => {}}
             />
 
             <IconsBox fxDirection={'row'} gap={6} fillHeight alignItems={'center'} padding={'0 8px 0 0'}>
@@ -302,25 +306,25 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
               />
             </IconsBox>
           </LabelInner>
-        </InputLabel>
-      </FlexBox>
 
-      <Options isOpen={isOpen} isInAbsolute={dropDownIsAbsolute}>
-        <FlexBox fillWidth overflow={'auto'}>
-          {options && options?.length > 0 ? (
-            renderOptions
-          ) : (
-            <NoOptions fillWidth fxDirection={'row'} alignItems={'center'} justifyContent={'center'}>
-              <span>{'Опції відсутні'}</span>
-            </NoOptions>
-          )}
-          {onCreatePress && (
-            <CreateButton variant={'defaultSmall'} icon={'plus'} iconSize={'16px'} onClick={onCreatePress}>
-              <span>{'Створити'}</span>
-            </CreateButton>
-          )}
+          <Options isOpen={isOpen} isInAbsolute={dropDownIsAbsolute}>
+            <FlexBox fillWidth overflow={'auto'}>
+              {options && options?.length > 0 ? (
+                renderOptions
+              ) : (
+                <NoOptions fillWidth fxDirection={'row'} alignItems={'center'} justifyContent={'center'}>
+                  <span>{'Опції відсутні'}</span>
+                </NoOptions>
+              )}
+              {onCreatePress && (
+                <CreateButton variant={'defaultSmall'} icon={'plus'} iconSize={'16px'} onClick={onCreatePress}>
+                  <span>{'Створити'}</span>
+                </CreateButton>
+              )}
+            </FlexBox>
+          </Options>
         </FlexBox>
-      </Options>
+      </InputLabel>
     </FlexBox>
   );
 };
@@ -360,15 +364,19 @@ const Options = styled(FlexBox)<{
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
 `;
 
-const Option = styled.option<{ isActive?: boolean }>`
-  min-height: 28px;
+const SelectOptionCss = css<{ isActive?: boolean }>`
+  min-height: 30px;
   height: max-content;
+  align-items: center;
+  justify-content: flex-start;
 
-  display: flex;
+  &:hover {
+    color: ${({ theme }) => theme.accentColor.hover};
+  }
 
   padding: 4px 8px;
 
-  cursor: default;
+  //cursor: default;
 
   font-weight: ${({ isActive }) => (isActive ? 700 : '')};
   background-color: ${({ theme }) => theme.modalBackgroundColor};
@@ -381,6 +389,17 @@ const Option = styled.option<{ isActive?: boolean }>`
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+  }
+`;
+const Option = styled(FlexBox)<{ isActive?: boolean }>`
+  ${SelectOptionCss}
+`;
+const StNativeOption = styled.option<{ isActive?: boolean }>`
+  display: flex;
+  ${SelectOptionCss}
+  &[selected] {
+    font-weight: ${({ isActive }) => (isActive ? 700 : '')};
+    background-color: ${({ theme }) => theme.modalBackgroundColor};
   }
 `;
 
@@ -483,3 +502,45 @@ const CreateButton = styled(ButtonIcon)`
 `;
 
 export default memo(forwardRef(CustomSelect));
+
+// const dropdownRef = useRef<HTMLDivElement>(null);
+// const [dropdownStyle, setDropdownStyle] = useState<CSSProperties>({});
+// useLayoutEffect(() => {
+//   const getAncestor = (element: HTMLElement | null) => {
+//     while (element) {
+//       const style = window.getComputedStyle(element);
+//
+//       if (style.overflow === 'auto') {
+//         return element;
+//       }
+//       element = element.parentElement;
+//     }
+//     return element;
+//   };
+//
+//   if (isOpen) {
+//     const dropdown = dropdownRef.current;
+//     const dropdownRect = dropdown?.getBoundingClientRect();
+//
+//     if (dropdownRect) {
+//       if (dropdown) {
+//         const ancestor = getAncestor(dropdown);
+//         const ancestorRect = ancestor?.getBoundingClientRect();
+//
+//         console.log({ dropdown, dropdownRect });
+//         console.log({ ancestor, ancestorRect });
+//
+//         if (ancestorRect) {
+//           // Перевіряємо, чи випадаючий список виходить за межі вікна браузера
+//           if (dropdownRect.bottom > ancestorRect?.bottom) {
+//             // Позиціонуємо список зверху
+//             setDropdownStyle({ top: '100%', bottom: 'auto' });
+//           } else {
+//             setDropdownStyle({ top: 'auto', bottom: '100%' });
+//             // Позиціонуємо список знизу
+//           }
+//         }
+//       }
+//     }
+//   }
+// }, [isOpen]);

@@ -12,7 +12,7 @@ import React, { useMemo } from 'react';
 import { useAppForm } from '../../../hooks';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import CustomSelect from '../../atoms/Inputs/CustomSelect';
 import ButtonsGroup from '../../atoms/ButtonsGroup';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { useDirectorySelector } from '../../../redux/selectors.store';

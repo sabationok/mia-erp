@@ -2,7 +2,7 @@ import ButtonIcon from 'components/atoms/ButtonIcon';
 import styled from 'styled-components';
 import MyTreeSelect from '../atoms/Inputs/MyTreeSelect';
 import * as React from 'react';
-import CustomSelect from '../atoms/Inputs/CustomSelect/CustomSelect';
+import CustomSelect from '../atoms/Inputs/CustomSelect';
 import FlexBox from '../atoms/FlexBox';
 import { takeFullGridArea } from './pagesStyles';
 

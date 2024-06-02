@@ -12,7 +12,7 @@ import {
   OutputIntegrationBase,
 } from '../../../types/integrations.types';
 import FlexBox from '../../atoms/FlexBox';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import CustomSelect from '../../atoms/Inputs/CustomSelect';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { useEffect, useState } from 'react';

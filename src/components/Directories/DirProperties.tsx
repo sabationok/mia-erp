@@ -21,7 +21,7 @@ import ModalBase from '../atoms/Modal';
 import { Text } from '../atoms/Text';
 import { offerTypeFilterOptions } from '../../data/modalFilterOptions.data';
 import { OfferTypeEnum } from '../../types/offers/offers.types';
-import { CustomSelectHandler } from '../atoms/Inputs/CustomSelect/CustomSelect';
+import { CustomSelectHandler } from '../atoms/Inputs/CustomSelect';
 import CreatePropertyModal from '../Modals/CreatePropertyModal';
 import { RenderStackHistory } from '../atoms/RenderStackHistory';
 import styled, { useTheme } from 'styled-components';

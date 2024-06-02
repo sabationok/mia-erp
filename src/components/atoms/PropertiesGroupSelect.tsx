@@ -3,7 +3,7 @@ import { ProperiesGroupEntity, PropertyBaseEntity } from '../../types/offers/pro
 import { useOffersSelector } from '../../redux/selectors.store';
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
-import CustomSelect, { CustomSelectHandler } from './Inputs/CustomSelect/CustomSelect';
+import CustomSelect, { CustomSelectHandler } from './Inputs/CustomSelect';
 import FlexBox from './FlexBox';
 import InputLabel from './Inputs/InputLabel';
 import { t } from '../../lang';

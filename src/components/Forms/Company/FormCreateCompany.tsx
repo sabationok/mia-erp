@@ -8,7 +8,7 @@ import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import ButtonsGroup from '../../atoms/ButtonsGroup';
 import { t } from '../../../lang';
 import { useAppForm } from '../../../hooks';
-import CustomSelect from '../../atoms/Inputs/CustomSelect/CustomSelect';
+import CustomSelect from '../../atoms/Inputs/CustomSelect';
 import { businessSubjectTypeFilterOptions, ownershipTypeFilterOptions } from '../../../data/companies.data';
 import { ContractorsTypesEnum } from '../../../redux/directories/contractors.types';
 import { FormInputs } from '../components/atoms';
