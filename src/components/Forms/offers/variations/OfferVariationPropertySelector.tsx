@@ -1,7 +1,7 @@
 import { PropertyEntity, PropertyTypeEnum, PropertyValueEntity } from '../../../../types/offers/properties.types';
 import { MaybeNull } from '../../../../types/utils.types';
 import * as React from 'react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Text } from '../../../atoms/Text';
 import styled from 'styled-components';
 import ButtonIcon from '../../../atoms/ButtonIcon';
@@ -31,6 +31,7 @@ export interface OfferVariationPropertySelectorProps {
   item: PropertyEntity;
   selectedValue?: string;
   selectedIds?: string[];
+  isOpen?: boolean;
   childrenList?: PropertyEntity['childrenList'];
   onSelect?: (propId: string, valueId: string, label?: MaybeNull<string>) => void;
 }
@@ -38,11 +39,15 @@ export const OfferVariationPropertySelector = ({
   item,
   selectedIds,
   onSelect,
+  isOpen,
 }: OfferVariationPropertySelectorProps) => {
   const state = useOffersSelector();
-  const [isOpen, setIsOpen] = useState(false);
+  const [_isOpen, setIsOpen] = useState(isOpen ?? false);
 
-  const renderChildren = useMemo(() => {
+  const childrenList = useMemo(() => {
+    if (item.childrenList?.length) {
+      return item.childrenList;
+    }
     const _propId = item?._id;
 
     const _valuesList: PropertyValueEntity[] = [];
@@ -55,8 +60,11 @@ export const OfferVariationPropertySelector = ({
         _valuesList.push(value);
       }
     }
+    return _valuesList;
+  }, [item?._id, item.childrenList, state.propertiesDataMap, state.propertiesKeysMap]);
 
-    return _valuesList?.map(value => {
+  const renderChildren = useMemo(() => {
+    return childrenList?.map(value => {
       const isSelected = selectedIds?.includes(value._id);
       return (
         <RenderPropertyValue
@@ -67,29 +75,51 @@ export const OfferVariationPropertySelector = ({
         />
       );
     });
-  }, [item._id, onSelect, selectedIds, state.propertiesDataMap, state.propertiesKeysMap]);
+  }, [childrenList, item._id, onSelect, selectedIds]);
+
+  useEffect(() => {
+    if (childrenList?.length) {
+      setIsOpen(true);
+    }
+  }, [childrenList?.length]);
 
   return (
-    <PropertyBox key={`property-box-${item._id}`} gap={8} fillWidth padding={'8px 0 0'}>
-      <FlexBox gap={6} padding={'0 0 0 8px'}>
+    <PropertyBox key={`property-box-${item._id}`} gap={8} fillWidth>
+      <FlexBox gap={8} fxDirection={'row'} padding={'6px 0'} justifyContent={'space-between'} alignItems={'flex-start'}>
         <Text $weight={500}>{item.label}</Text>
 
-        {item.cmsConfigs?.type && (
-          <Text $size={11} $weight={400}>
-            {t('Cms type:')} {`"${item.cmsConfigs?.type}"`}
-          </Text>
-        )}
+        <ButtonIcon
+          variant={'onlyIcon'}
+          size={'26px'}
+          iconSize={'100%'}
+          icon={_isOpen ? 'SmallArrowDown' : 'SmallArrowLeft'}
+          onClick={() => {
+            setIsOpen(p => !p);
+          }}
+        />
       </FlexBox>
 
-      <PropertyValuesBox
-        fillWidth
-        padding={'8px 0'}
-        gap={6}
-        {...(item.cmsConfigs?.type ? PropertyItemStylesByCmsKey?.[item.cmsConfigs?.type] : undefined)}
-        isActive={isOpen}
-      >
-        {renderChildren}
-      </PropertyValuesBox>
+      {_isOpen && (
+        <>
+          {item.cmsConfigs?.type && (
+            <FlexBox gap={6} padding={'6px'} justifyContent={'center'}>
+              <Text $size={11} $weight={400}>
+                {t('Cms type:')} {`"${item.cmsConfigs?.type}"`}
+              </Text>
+            </FlexBox>
+          )}
+
+          <PropertyValuesBox
+            fillWidth
+            padding={'8px 0'}
+            gap={6}
+            {...(item.cmsConfigs?.type ? PropertyItemStylesByCmsKey?.[item.cmsConfigs?.type] : undefined)}
+            isActive={_isOpen}
+          >
+            {renderChildren}
+          </PropertyValuesBox>
+        </>
+      )}
     </PropertyBox>
   );
 };
