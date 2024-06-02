@@ -28,6 +28,7 @@ import { OfferEntity } from '../../types/offers/offers.types';
 import DrawerBase from './OverlayBase';
 import { PropertiesGroupSelect } from '../atoms/PropertiesGroupSelect';
 import { AccordionFormArea } from '../atoms/FormArea/AccordionForm';
+import { omit } from 'lodash';
 
 export interface CreateVariationModalProps
   extends CreatedOverlay,
@@ -126,6 +127,8 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   const propertiesList = useMemo(() => {
     const _rootId = currentTemplate?._id;
     const _propertiesList: PropertyEntity[] = [];
+    // const _sortedPropertiesIds=sortIds(ObjectKeys(state.propertiesKeysMap))
+
     const _propertiesIds = state.propertiesKeysMap?.[_rootId ?? 'def'] ?? [];
 
     for (const propId of _propertiesIds) {
@@ -140,15 +143,6 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
 
     return _propertiesList;
   }, [currentTemplate?._id, state.propertiesDataMap, state.propertiesKeysMap]);
-
-  const selectedIds = useMemo(() => {
-    return formValues?.propertiesMap ? Object.values(formValues?.propertiesMap) : [];
-    // eslint-disable-next-line
-  }, [formValues?.propertiesMap, formValues]);
-
-  const canSubmit = useMemo(() => {
-    return selectedIds.length > 0;
-  }, [selectedIds.length]);
 
   const { label: compiledLabel } = useMemo(() => {
     // const _sortedIds = Object.keys(selectedPropsMap ?? {}).sort((prev, next) => prev.localeCompare(next));
@@ -203,19 +197,39 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
 
   const handleSelect = useCallback(
     (parentId: string, id: string) => {
-      setValue(`propertiesMap.${parentId}`, id);
-      const value = state.propertiesDataMap?.[id];
-      if (value) {
-        setSelectedPropsMap(p => ({ ...p, [parentId]: value }));
+      const currentId = formValues.propertiesMap?.[parentId];
+
+      const remove = currentId && currentId === id;
+
+      if (remove) {
+        setValue(`propertiesMap.${parentId}`, '');
+
+        setSelectedPropsMap(p => omit(p, parentId));
+      } else {
+        setValue(`propertiesMap.${parentId}`, id);
+
+        const value = state.propertiesDataMap?.[id];
+        if (value) {
+          setSelectedPropsMap(p => ({ ...p, [parentId]: value }));
+        }
       }
     },
-    [setValue, state.propertiesDataMap]
+    [formValues.propertiesMap, setValue, state.propertiesDataMap]
   );
 
   const handleClearMap = useCallback(() => {
     setValue('propertiesMap', {});
     setSelectedPropsMap({});
   }, [setValue]);
+
+  const selectedIds = useMemo(() => {
+    return formValues?.propertiesMap ? Object.values(formValues?.propertiesMap) : [];
+    // eslint-disable-next-line
+  }, [formValues?.propertiesMap, formValues]);
+
+  const canSubmit = useMemo(() => {
+    return selectedIds.length > 0;
+  }, [selectedIds.length]);
 
   const renderPropertiesList = useMemo(() => {
     return propertiesList?.map(prop => {
@@ -245,7 +259,7 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
               <InputText value={Offer?.label ?? undefined} placeholder={t('label')} required disabled />
             </InputLabel>
 
-            <FlexBox fxDirection={'row'} gap={8} fillWidth>
+            <FlexBox fxDirection={'row'} gap={12} fillWidth>
               <InputLabel label={t('sku')} disabled>
                 <InputText value={Offer?.sku ?? undefined} placeholder={t('sku')} disabled />
               </InputLabel>
@@ -261,13 +275,13 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
               <InputText {...register('label', { required: true })} placeholder={t('label')} required />
             </InputLabel>
 
-            <FlexBox fxDirection={'row'} gap={8} fillWidth>
+            <FlexBox fxDirection={'row'} gap={12} fillWidth>
               <InputLabel label={t('sku')} error={errors.sku}>
                 <InputText {...register('sku', { required: true })} placeholder={t('sku')} required />
               </InputLabel>
 
               <InputLabel label={t('barCode')} error={errors.barCode}>
-                <InputText {...register('barCode')} placeholder={t('barCode')} />
+                <InputText {...register('barCode', { valueAsNumber: true })} placeholder={t('barCode')} />
               </InputLabel>
             </FlexBox>
 
