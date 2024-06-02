@@ -10,7 +10,7 @@ export const PriceListSelectFormArea = ({ onSelect }: { onSelect?: (info: UUID) 
   const { lists } = usePriceManagementSelector();
 
   const handleSelectPriceList: OnRowClickHandler = data => {
-    data?._id && onSelect && onSelect(data?._id);
+    data?.rowId && onSelect && onSelect(data?.rowId);
   };
 
   return (

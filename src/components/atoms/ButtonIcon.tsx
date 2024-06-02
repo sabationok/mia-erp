@@ -22,7 +22,7 @@ interface ButtonIconStyleProps {
   // border?: Property.Border;
 }
 interface ButtonProps extends ButtonIconStyleProps {
-  size?: string;
+  size?: `${string}px` | `${string}%`;
   sizeType?: ButtonSize;
   variant: ButtonIconVariant;
   padding?: string;
@@ -526,6 +526,8 @@ const ButtonLoader = ({
   isLoading?: ButtonIconProps['isLoading'];
   size?: ButtonIconProps['size'];
 }) => {
+  const maybeNumber =
+    (size?.endsWith('%') && size?.replace('%', '')) || (size?.endsWith('%') && size?.replace('%', ''));
   const _size = isNaN(Number(size?.replace('px', ''))) ? 18 : Number(size?.replace('px', '')) * 0.6;
   return isLoading ? (
     <LoaderBox fillHeight fillWidth>

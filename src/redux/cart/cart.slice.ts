@@ -1,6 +1,6 @@
 import { IOrderTempSlot } from 'types/orders/order-slot.types';
 import { createSlice, nanoid } from '@reduxjs/toolkit';
-import { Action } from '../store.store';
+import { Action, ActionPayload } from '../store.store';
 import { clearFormStateAction, setFormStateAction } from './cart.actions';
 import { updateIdsArray } from '../../utils';
 import {
@@ -45,7 +45,6 @@ export interface SlotsStateMap extends SliceMap<CartSlotId, CartOrderId, IOrderT
 export interface CartState extends CartStateMap {
   currentId?: CartId;
 
-  carts: CartStateMap;
   orders: OrdersStateMap;
   slots: SlotsStateMap;
 
@@ -75,8 +74,6 @@ export interface CartOrdersGroup extends Omit<OrdersGroupEntity, 'summary' | 'or
   slotsIds: CartSlotId[];
 
   offersIdsMap: Record<OfferId, CartSlotId[]>;
-
-  orders: OrdersStateMap;
 }
 export interface CartOrder extends Omit<OrderEntity, 'summary' | 'slots'> {
   tempId: CartOrderId;
@@ -92,7 +89,6 @@ export interface CartOrder extends Omit<OrderEntity, 'summary' | 'slots'> {
   warehouse?: WarehouseEntity;
   summary: CartOrderSummary;
   orders?: CartOrder[];
-  slots: SlotsStateMap;
 }
 
 const InitCart = (customer?: ICustomer, st?: CartState, tempId?: CartId): CartOrdersGroup => {
@@ -102,11 +98,7 @@ const InitCart = (customer?: ICustomer, st?: CartState, tempId?: CartId): CartOr
     slotsIds: [],
     ordersIds: [],
     offersIdsMap: {},
-    orders: {
-      dataMap: {},
-      keysMap: {},
-      ids: [],
-    },
+
     warehousesIds: [],
     summary: {
       slotsCount: 0,
@@ -137,12 +129,7 @@ const InitCartOrder = (cartId: CartId, warehouse?: WarehouseEntity, st?: CartSta
     slotsIds: [],
     ordersIds: [],
     selectedIds: [],
-    slots: {
-      dataMap: {},
-      keysMap: {},
-      ids: [],
-      variationsIdMap: {},
-    },
+
     // offersIds: [],
     summary: {
       slotsCount: 0,
@@ -187,14 +174,6 @@ const initialCartState: CartState = {
   },
   keysMap: {},
   ids: [],
-
-  ...InitCart(),
-
-  carts: {
-    dataMap: {},
-    keysMap: {},
-    ids: [],
-  },
 
   orders: {
     dataMap: {},
@@ -331,11 +310,13 @@ export const cartSlice = createSlice({
       }: Action<{ orderId?: CartOrderId; tempId?: CartSlotId; checked: boolean }>
     ) {
       if (tempId) {
-        UpdateCartSlotMutation(s, {
-          tempId,
-          isSelected: checked,
-          isInCart: checked,
-        });
+        const slot = s.slots.dataMap?.[tempId];
+
+        if (slot) {
+          slot.isSelected = checked;
+          slot.isInCart = true;
+        }
+
         // const wrId = s.slotsMap[tempId].warehouse?._id;
         // if (wrId) {
         //   const wrs = s.ordersDataMap?.[wrId];
@@ -352,6 +333,7 @@ export const cartSlice = createSlice({
       } else if (orderId) {
         const order = s.orders.dataMap?.[orderId];
         const slotIds = order.slotsIds;
+
         if (slotIds?.length) {
           slotIds.forEach(slotId => {
             if (s.slots.dataMap[slotId]) {
@@ -408,7 +390,7 @@ export const {
 const UpdateCartSlotMutation = (
   st: CartState,
   item: IOrderTempSlot,
-  options?: { update?: boolean; cartId?: CartId; customer?: ICustomer }
+  options?: ActionPayload<{ cartId?: CartId; customer?: ICustomer }>
 ): { orderId?: string; recount?: boolean } => {
   const { tempId: slotId } = item;
   if (!slotId) {
@@ -441,7 +423,7 @@ const UpdateCartSlotMutation = (
   try {
     const existSlot = st.slots.dataMap?.[tempId];
 
-    st.slots.dataMap[tempId] = options?.update && existSlot ? { ...existSlot, ...item } : item;
+    st.slots.dataMap[tempId] = options?.update ? { ...(existSlot ?? {}), ...item } : item;
 
     const updatedSlot = st.slots.dataMap[tempId];
 
@@ -507,6 +489,7 @@ function RemoveCartSlotMutation(st: CartState, { tempId }: { tempId: CartSlotId 
   const slot = st.slots.dataMap?.[tempId];
 
   let cartId = slot?.cartId;
+
   const cart = cartId ? st.dataMap?.[cartId] : undefined;
 
   const offerId = slot?.offer?._id;

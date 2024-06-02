@@ -219,7 +219,7 @@ const PriceListSelectArea = ({ onSelect }: { onSelect?: (info: UUID) => void; er
   const { lists } = usePriceManagementSelector();
 
   const handleSelectPriceList: OnRowClickHandler = data => {
-    data?._id && onSelect && onSelect(data?._id);
+    data?.rowId && onSelect && onSelect(data?.rowId);
   };
 
   return (

@@ -45,7 +45,7 @@ const PricesTab: React.FC<PricesTabProps> = ({ onSelect, selected, withActions =
         setSelectedRoe(data?.rowData);
 
         if (onSelect) {
-          onSelect({ _id: data?._id || data?.rowData?._id || '' });
+          onSelect({ _id: data?.rowId || data?.rowData?._id || '' });
         }
       },
       actionsCreator: !withActions

@@ -3,10 +3,9 @@ import { useTable } from './TableList';
 
 import styled from 'styled-components';
 import { forwardRef, useMemo } from 'react';
-import { IBase } from '../../redux/app-redux.types';
 
 const TableBody: React.ForwardRefRenderFunction<any, any> = (props, ref) => {
-  const { tableData, rowRef, selectedRow, onRowClick, selectedRows = [] } = useTable();
+  const { tableData, keyExtractor, rowRef, selectedRow, onRowClick, selectedRows = [] } = useTable();
 
   const handleOnRowClick = (ev: React.MouseEvent<HTMLDivElement>) => {
     if (!rowRef) return;
@@ -39,20 +38,22 @@ const TableBody: React.ForwardRefRenderFunction<any, any> = (props, ref) => {
   const renderRows = useMemo(
     () =>
       tableData?.map((rowData, idx) => {
+        const rowId = keyExtractor ? keyExtractor(rowData, idx) : rowData?._id;
         return (
           <TableRow
-            key={idx}
+            key={rowId}
+            rowId={rowId}
             {...{
               rowData,
               idx,
-              checked: selectedRows?.includes(rowData._id),
-              isActive: (selectedRow as IBase)?._id === rowData?._id,
-              onPress: () => onRowClick && onRowClick({ _id: rowData?._id, rowData }),
+              checked: selectedRows?.includes(rowId),
+              isActive: selectedRow?._id === rowId,
+              onPress: () => onRowClick && onRowClick({ rowId: rowId, rowData: { ...rowData, _id: rowId } }),
             }}
           />
         );
       }),
-    [onRowClick, selectedRow, selectedRows, tableData]
+    [keyExtractor, onRowClick, selectedRow?._id, selectedRows, tableData]
   );
 
   return <TBody onClick={handleOnRowClick}>{renderRows}</TBody>;

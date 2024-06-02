@@ -24,7 +24,7 @@ const SelectManagerModal: React.FC<SelectManagerModalProps> = ({ onSubmit, onSel
     return {
       tableData: users.filter(el => !el.integration),
       onRowClick: data => {
-        const res = users.find(pr => pr._id === data?._id);
+        const res = users.find(pr => pr._id === data?.rowId);
         res && onSelect && onSelect(res);
       },
       actionsCreator: ctx => {

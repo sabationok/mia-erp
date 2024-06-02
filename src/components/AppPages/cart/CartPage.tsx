@@ -134,6 +134,17 @@ function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
               tableData={slots}
               hasSearch={false}
               hasFilter={false}
+              checkBoxes={true}
+              onCheckboxChange={ev => {
+                cartSrv.actions.setChecked({ tempId: ev.rowId, checked: ev.checked });
+              }}
+              onHeadCheckboxChange={ev => {
+                cartSrv.actions.setChecked({ orderId, checked: ev.checked });
+              }}
+              selectedRows={order?.selectedIds}
+              keyExtractor={data => {
+                return data.tempId ?? 'slot';
+              }}
               tableTitles={tempOrderSlotTableColumns}
               actionsCreator={(ctx): ITableAction[] => {
                 const currentId = ctx.selectedRow?.tempId;
@@ -142,7 +153,7 @@ function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
                     icon: 'delete',
                     disabled: !currentId,
                     onClick: () => {
-                      currentId && cartSrv.actions.remove(currentId);
+                      currentId && cartSrv.actions.removeSlot(currentId);
                     },
                   },
                   {
@@ -231,6 +242,9 @@ function PageCartSlots({ onSlotEditPress }: { onSlotEditPress?: () => void }) {
           position: 'sticky',
           bottom: 0,
           left: 0,
+          zIndex: 100,
+
+          backdropFilter: 'blur(3px)',
         }}
       >
         <ButtonIcon

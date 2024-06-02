@@ -42,8 +42,8 @@ const WarehousingTab = ({ onSelect, selected, withActions }: WarehousingTabProps
           if (data?.rowData) {
             onSelect(getIdRef(data?.rowData));
             return;
-          } else if (data?._id) {
-            onSelect({ _id: data?._id });
+          } else if (data?.rowId) {
+            onSelect({ _id: data?.rowId });
           }
         }
       },

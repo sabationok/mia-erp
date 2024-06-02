@@ -8,9 +8,9 @@ import styled from 'styled-components';
 import { MaxToTabletXl } from 'components/atoms/DeviceTypeInformer/DeviceTypeController';
 import { ButtonCheckboxEvent } from './TebleCells/CellComponents/CheckBox';
 import {
+  CheckboxChangeEvent,
   ITableListContext,
   ITableListProps,
-  OnCheckBoxChangeHandlerEvent,
   SelectItem,
   UseTableReturnType,
 } from './tableTypes.types';
@@ -20,7 +20,7 @@ import { isUndefined } from 'lodash';
 import { OnlyUUID } from '../../types/utils.types';
 import FlexBox from '../atoms/FlexBox';
 
-export type { ITableListContext, ITableListProps, OnCheckBoxChangeHandlerEvent, UseTableReturnType, SelectItem };
+export type { ITableListContext, ITableListProps, CheckboxChangeEvent, UseTableReturnType, SelectItem };
 export const TableCTX = createContext({});
 export const useTable: UseTableReturnType = () => useContext(TableCTX);
 
@@ -38,6 +38,7 @@ const TableList = <TData extends Partial<OnlyUUID> = any>(
     onFilterSubmit,
     scrollBarWidth,
     selectedRow,
+    keyExtractor,
     ...rest
   } = props;
 
@@ -72,23 +73,29 @@ const TableList = <TData extends Partial<OnlyUUID> = any>(
     [onRowClick]
   );
 
-  const onCheckboxChangeWrapper = useCallback(({ checked, _id }: OnCheckBoxChangeHandlerEvent) => {
+  const onCheckboxChangeWrapper = useCallback(({ checked, rowId }: CheckboxChangeEvent) => {
     _setSelectedRows(prev => {
-      if (checked && _id) return [...prev, _id];
-      if (!checked && _id) return prev.filter(el => el !== _id);
+      if (checked && rowId) return [...prev, rowId];
+      if (!checked && rowId) return prev.filter(el => el !== rowId);
       return prev;
     });
   }, []);
-
   const onHeadCheckboxChangeWrapper = useCallback(
     (e: ButtonCheckboxEvent) => {
       const { checked } = e;
-      if (checked) _setSelectedRows(prev => tableData?.map(el => el?._id ?? '') || prev);
+      if (checked)
+        _setSelectedRows(
+          prev => tableData?.map((el, index) => (keyExtractor ? keyExtractor(el, index) : el?._id ?? '')) || prev
+        );
 
       if (!checked) _setSelectedRows([]);
     },
-    [tableData]
+    [keyExtractor, tableData]
   );
+
+  useEffect(() => {
+    console.log(_selectedRows);
+  }, [_selectedRows]);
 
   useEffect(() => {
     if (!isUndefined(selectedRow)) {

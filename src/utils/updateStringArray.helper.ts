@@ -15,17 +15,20 @@ export const updateIdsArray = <IdType extends string | number | symbol>({
   onRemove?: (id: IdType) => void;
   upend?: boolean;
 }): IdType[] => {
-  const _update = (arr: IdType[]) => {
-    const newArr = upend ? [...arr, id] : [id, ...arr];
-    if (newArr.length > arr.length) {
+  const idsSet = new Set(Array.isArray(arr) ? arr : []);
+
+  const _update = (): IdType[] => {
+    const newArr = upend ? [...idsSet, id] : [id, ...idsSet];
+    if (newArr.length > idsSet.size) {
       const _onUpdate = async (id: IdType) => onUpdate && onUpdate(id);
       _onUpdate(id).catch();
     }
     return newArr;
   };
-  const _remove = (arr: IdType[]) => {
-    const newArr = arr.filter(el => el !== id) as IdType[];
-    if (newArr.length < arr.length) {
+  const _remove = () => {
+    idsSet.delete(id);
+    const newArr = [...idsSet] as IdType[];
+    if (newArr.length < idsSet.size) {
       const _onRemove = async (id: IdType) => onRemove && onRemove(id);
       _onRemove(id).catch();
     }
@@ -33,17 +36,11 @@ export const updateIdsArray = <IdType extends string | number | symbol>({
   };
 
   if (toggle) {
-    if (Array.isArray(arr)) {
-      return arr.includes(id) ? _remove(arr) : _update(arr);
-    }
-    return [id];
+    return idsSet.has(id) ? _remove() : _update();
   } else if (remove) {
-    return Array.isArray(arr) ? _remove(arr) : [];
+    return _remove();
   }
-  if (Array.isArray(arr)) {
-    return _update(arr);
-  }
-  return [id] as IdType[];
+  return idsSet.has(id) ? [...idsSet] : _update();
 };
 
 export const updateArray = <Data = any>({

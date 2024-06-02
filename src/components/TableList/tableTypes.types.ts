@@ -61,20 +61,18 @@ export interface TableActionsProps<TDataType = any> {
   actions?: TableActionProps<TDataType>[];
 }
 
-export type OnRowClickHandlerData<RData = any> = {
-  ev?: MouseEvent | React.MouseEvent<HTMLDivElement>;
-  _id?: string;
+export type OnRowClickEvent<RData = any> = (MouseEvent | React.MouseEvent<HTMLDivElement>) & {
+  rowId?: string;
   rowData?: RData;
 };
-export type OnRowClickHandler<RData = any> = (data?: OnRowClickHandlerData<RData>) => any;
+export type OnRowClickHandler<RData = any> = (event?: OnRowClickEvent<RData>) => any;
 
-export type OnCheckBoxChangeHandlerEvent<V = any> = {
-  ev?: MouseEvent | React.MouseEvent<HTMLDivElement>;
+export type CheckboxChangeEvent<V = any> = (MouseEvent | React.MouseEvent<HTMLDivElement>) & {
   checked: boolean;
-  _id?: string;
+  rowId?: string;
   value?: V;
 };
-export type OnCheckBoxChangeHandler<V = any> = (data: OnCheckBoxChangeHandlerEvent<V>) => any;
+export type OnCheckBoxChangeHandler<V = any> = (data: CheckboxChangeEvent<V>) => any;
 export type OnHeadCheckBoxChangeHandler<V = any> = (data: V) => any;
 
 export type TableQuickActionsPosition = 'top' | 'right' | 'bottom' | 'left';
@@ -102,6 +100,8 @@ export interface ITableListProps<
   pagination?: boolean;
   counter?: boolean;
   checkBoxes?: boolean;
+
+  keyExtractor?: (data: TDataType, index?: number) => string;
 
   rowGrid?: any;
 

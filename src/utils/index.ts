@@ -29,6 +29,7 @@ export * from './forArray.helpers';
 export * from './setValueByPath.helper';
 
 export * from './createOrderTempSlot.helper';
+export * from './toSerializableObj.helper';
 
 export {
   founder,

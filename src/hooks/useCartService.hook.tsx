@@ -86,7 +86,7 @@ const useCartActions = () => {
           return this.isSelected(slot);
         },
         remove: () => {
-          slot?.tempId && this.remove(slot?.tempId);
+          slot?.tempId && this.removeSlot(slot?.tempId);
         },
       };
     }
@@ -144,7 +144,7 @@ const useCartActions = () => {
     static update(slot: IOrderTempSlot) {
       dispatch(updateSlotAction({ data: createOrderTempSlot(slot) }));
     }
-    static remove(tempId: actions.CartSlotId) {
+    static removeSlot(tempId: actions.CartSlotId) {
       dispatch(removeSlotAction({ tempId }));
     }
     static isOfferInCart({ offerId, cartId }: { cartId: actions.CartId; offerId: string }) {

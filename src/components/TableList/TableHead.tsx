@@ -16,9 +16,9 @@ const THead = styled.div`
   left: 0;
   z-index: 20;
 
-  //background-color: ${({ theme }) => theme.tableHeaderBackground};
+  background-color: ${({ theme }) => theme.tableHeaderBackground};
 
-  background-color: ${({ theme }) => theme.accentColor.extraLight};
+  //background-color: ${({ theme }) => theme.accentColor.extraLight};
 `;
 
 export default TableHead;

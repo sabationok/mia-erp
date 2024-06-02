@@ -1,14 +1,22 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
-export function axiosErrorCheck<T extends Error | AxiosError>(
-  error: T | unknown
-): T extends AxiosError ? AxiosError : string {
+export function axiosErrorCheck<T = any>(error: T | unknown) {
   if (axios.isAxiosError(error)) {
-    console.error(error);
-    return error as unknown as T extends AxiosError ? AxiosError : never;
+    console.error('[Axios Error Check]', error);
+
+    return {
+      statusCode: error.status,
+      message: error.response?.data?.message ?? 'Axios Error Check',
+      error: error.response?.data ?? {},
+      code: error?.code,
+      ...(error.response?.data ?? {}),
+    };
   }
   console.error('[Axios Error Check | Unknown error occurred]'.toUpperCase(), error);
-  return 'Unknown error occurred' as T extends AxiosError ? never : string;
+  return {
+    statusCode: 500,
+    message: 'Unknown error occurred',
+  };
 }
 
 export default axiosErrorCheck;

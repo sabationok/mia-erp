@@ -1,5 +1,5 @@
 import React, { createContext, memo, useCallback, useContext, useMemo, useState } from 'react';
-import { OnCheckBoxChangeHandlerEvent, useTable } from '../TableList';
+import { CheckboxChangeEvent, useTable } from '../TableList';
 
 import styled from 'styled-components';
 import { ThRow, ThRowData, ThRowStickyEl } from './TableHeadRow';
@@ -10,6 +10,7 @@ import { ITrCategory } from '../../../types/directories.types';
 import CellCheckBox from '../TebleCells/CellCheckBox';
 import { CellsMap } from '../TebleCells';
 import { OnCheckBoxChangeHandler } from '../tableTypes.types';
+import { isUndefined } from 'lodash';
 
 export type TRowDataType = ITransaction | ICount | IContractor | ITrCategory | IDocument;
 
@@ -19,6 +20,7 @@ export interface TableRowProps {
   checked?: boolean;
   isActive?: boolean;
   onPress?: () => void;
+  rowId?: string;
 }
 
 export interface RowCTXValue extends TableRowProps {
@@ -26,14 +28,14 @@ export interface RowCTXValue extends TableRowProps {
   onToggleActions?: () => void;
   onCloseActions?: () => void;
   onRowCheckboxChange?: OnCheckBoxChangeHandler;
+  rowId?: string;
 }
 
 export const RowCTX = createContext<any>({});
 export const useRow = () => useContext(RowCTX) as RowCTXValue;
 
-const TableRow: React.FC<TableRowProps> = ({ onPress, checked, rowData, ...props }) => {
-  const { tableTitles, selectedRows, tableData, rowGrid, checkBoxes, onCheckboxChange, transformData } =
-    useTable<TRowDataType>();
+const TableRow: React.FC<TableRowProps> = ({ rowId, onPress, checked, rowData, ...props }) => {
+  const { tableTitles, tableData, rowGrid, checkBoxes, onCheckboxChange, transformData } = useTable<TRowDataType>();
   const [isActionsOpen, setIsActionsOpen] = useState(false);
   const [isChecked, setIsChecked] = useState<boolean>(checked ?? false);
 
@@ -41,9 +43,12 @@ const TableRow: React.FC<TableRowProps> = ({ onPress, checked, rowData, ...props
     setIsActionsOpen(prev => !prev);
   }, []);
   const onRowCheckboxChange = useCallback(
-    (event: OnCheckBoxChangeHandlerEvent) => {
-      setIsChecked(event.checked);
-      onCheckboxChange && onCheckboxChange(event);
+    (event: CheckboxChangeEvent) => {
+      if (onCheckboxChange) {
+        onCheckboxChange(event);
+      } else {
+        setIsChecked(event.checked);
+      }
     },
     [onCheckboxChange]
   );
@@ -59,7 +64,7 @@ const TableRow: React.FC<TableRowProps> = ({ onPress, checked, rowData, ...props
       tableTitles &&
       tableTitles?.map((item, idx) => {
         let CellComp = (item.action && item.action in CellsMap && CellsMap?.[item.action]) || CellsMap.valueByPath;
-        if (typeof CellComp === 'function' || typeof CellComp === 'object') {
+        if ('call' in CellComp) {
           return <CellComp key={idx} titleInfo={item} idx={idx} />;
         }
         console.error('[Table error error]]', '====>>>>', `[${item.action}]`);
@@ -71,25 +76,36 @@ const TableRow: React.FC<TableRowProps> = ({ onPress, checked, rowData, ...props
   const CTX = useMemo((): RowCTXValue => {
     return {
       ...props,
+      rowId,
+      checked: isUndefined(checked) ? isChecked : checked,
       rowData: currentRowData,
-      checked: selectedRows?.includes(currentRowData._id),
       isActionsOpen,
       onToggleActions,
       onCloseActions,
       onRowCheckboxChange,
     };
-  }, [props, currentRowData, selectedRows, isActionsOpen, onToggleActions, onCloseActions, onRowCheckboxChange]);
+  }, [
+    props,
+    rowId,
+    checked,
+    isChecked,
+    currentRowData,
+    isActionsOpen,
+    onToggleActions,
+    onCloseActions,
+    onRowCheckboxChange,
+  ]);
 
   return (
     <RowCTX.Provider value={CTX}>
       <Row
-        id={`_${currentRowData?._id}`}
+        id={`_${rowId}`}
         isActive={props?.isActive}
         onClick={() => {
-          console.log('rowData', rowData);
+          console.log('rowData', rowData, { rowId });
         }}
         checked={isChecked}
-        data-row
+        data-row={`_${rowId}`}
       >
         <RowStickyEl>{checkBoxes && <CellCheckBox />}</RowStickyEl>
 

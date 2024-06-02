@@ -29,6 +29,7 @@ export const OverlayHeader = ({
       height={'32px'}
       gap={8}
       padding={'2px 0'}
+      overflow={'hidden'}
     >
       {onBackPress && (
         <ButtonIcon

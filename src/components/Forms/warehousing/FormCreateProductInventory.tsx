@@ -82,7 +82,7 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
   );
 
   const handleSelectVariation: OnRowClickHandler = useCallback(data => {
-    const variation = data?._id ? { _id: data._id } : null;
+    const variation = data?.rowId ? { _id: data.rowId } : null;
     if (!variation) return;
 
     setSelectedVariation(variation);
@@ -95,7 +95,7 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
   }, []);
 
   const handleSelectPrice: OnRowClickHandler = useCallback(data => {
-    const price = data?._id ? { _id: data._id } : null;
+    const price = data?.rowId ? { _id: data.rowId } : null;
     if (!price) return;
 
     setSelectedPrice(price);

@@ -86,7 +86,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
         setValue('searchBy', data.param?.dataPath);
       },
       onRowClick: data => {
-        const v = products.find(p => p._id === data?._id);
+        const v = products.find(p => p._id === data?.rowId);
 
         v && setFormValue('product', v);
         setNextStep();
@@ -105,7 +105,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
       hasSearch: false,
       selectedRow: formData?.variation,
       onRowClick: data => {
-        const v = variations.find(p => p._id === data?._id);
+        const v = variations.find(p => p._id === data?.rowId);
 
         v && setFormValue('variation', v);
         setNextStep();
@@ -136,7 +136,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
       hasSearch: false,
       selectedRow: formData?.inventory,
       onRowClick: data => {
-        const v = inventories.find(p => p._id === data?._id);
+        const v = inventories.find(p => p._id === data?.rowId);
 
         v && setFormValue('inventory', v);
         v?.warehouse && setFormValue('warehouse', v?.warehouse);

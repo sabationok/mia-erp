@@ -12,15 +12,15 @@ interface Props {
 }
 
 const CellCheckBox: React.FC<Props> = ({ className }) => {
-  const { rowData, onRowCheckboxChange, checked } = useRow();
+  const { rowId, onRowCheckboxChange, checked } = useRow();
 
-  function onChange({ checked, event }: ButtonCheckboxEvent) {
-    onRowCheckboxChange && onRowCheckboxChange({ checked, _id: rowData._id });
+  function onChange({ checked }: ButtonCheckboxEvent) {
+    onRowCheckboxChange && onRowCheckboxChange({ checked, rowId: rowId });
   }
 
   return (
     <StCell className={className}>
-      <CheckBox id={rowData._id} onChange={onChange} checked={checked} />
+      <CheckBox id={`checkbox_${rowId}`} value={rowId} onChange={onChange} checked={checked} />
     </StCell>
   );
 };

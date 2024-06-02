@@ -35,7 +35,7 @@ const PagePriceManagement: React.FC<BaseAppPageProps> = (props: Props) => {
       checkBoxes: true,
       actionsCreator,
       onRowDoubleClick: ev => {
-        ev?._id && navigate(`${ev?._id}`);
+        ev?.rowId && navigate(`${ev?.rowId}`);
       },
       onFilterSubmit: filterParams => {
         setFilterParams(filterParams);

@@ -1,15 +1,16 @@
 import { OverlayFooter } from 'components/atoms';
-import VariationsTab from '../offers/tabs/VariationsTab';
 import { FooterSummary } from './FooterSummary';
-import ModalBase from '../../atoms/Modal';
-import { countOrderSlotValues } from '../../../utils';
+import { countOrderSlotValues, toSerializableObj } from '../../../utils';
 import { useMemo, useState } from 'react';
 import { useCart } from '../../../Providers/CartProvider';
-import { useCurrentOffer } from '../../../hooks';
+import { useAppRouter, useCurrentOffer } from '../../../hooks';
 import { VariationEntity } from '../../../types/offers/variations.types';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { WarehouseEntity } from '../../../types/warehousing/warehouses.types';
 import { CreatedModal, useModalProvider } from '../../../Providers/ModalProvider/ModalProvider';
+import OverlayBase from '../../Overlays/OverlayBase';
+import VariationsTab from '../offers/tabs/VariationsTab';
+import { omit } from 'lodash';
 
 export const SelectVariationModal = ({
   offer,
@@ -27,6 +28,7 @@ export const SelectVariationModal = ({
   const Offer = useCurrentOffer(offer);
   const [selected, setSelected] = useState<VariationEntity>();
   // const loaders = useLoaders();
+  const router = useAppRouter();
   const cart = useCart();
   const currentSlot = cart.actions.getSlotByVariationId(selected?._id);
   const [quantity, setQuantity] = useState(currentSlot?.quantity ?? 1);
@@ -43,7 +45,7 @@ export const SelectVariationModal = ({
   }, [currentSlot, Offer, quantity, selected, warehouse]);
 
   return (
-    <ModalBase title={`Select variation | ${Offer?.label}`} fillHeight>
+    <OverlayBase title={`Select variation | ${Offer?.label}`} fillHeight>
       <VariationsTab offer={Offer} onSelect={setSelected} selected={selected} />
 
       <FooterSummary slot={counted} onChangeQuantity={setQuantity} />
@@ -51,19 +53,25 @@ export const SelectVariationModal = ({
       <OverlayFooter
         canAccept={!!selected}
         onAcceptPress={() => {
-          if (selected?._id) {
-            if (counted?.tempId && counted?.tempId?.includes(selected?._id)) {
-              counted.quantity !== currentSlot.quantity && cart.actions.update(counted);
-            } else if (counted?.warehouse) {
-              cart.actions.addSlot(counted);
-            }
+          const serialized = toSerializableObj(counted);
 
-            modalSrv.clearStack();
+          if (!counted?.warehouse) {
+            console.warn(`[]`);
+            return;
           }
 
-          onClose && onClose();
+          if (selected?._id) {
+            if (counted?.tempId && counted?.tempId?.includes(selected?._id)) {
+              counted.quantity !== currentSlot?.quantity && cart.actions.update(serialized);
+            } else if (counted?.warehouse) {
+              cart.actions.addSlot(serialized);
+            }
+          }
+
+          router.push({ query: omit(router.query, ['offerId', 'slotId', 'variationId']) });
+          modalSrv.clearStack();
         }}
       />
-    </ModalBase>
+    </OverlayBase>
   );
 };
