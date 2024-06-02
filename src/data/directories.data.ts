@@ -30,7 +30,7 @@ import {
   categoriesFilterOptions,
   counterpartyFilterOptions,
   countsFilterOptions,
-  productsFilterOptions,
+  offerTypeFilterOptions,
   tagsFilterOptions,
 } from './modalFilterOptions.data';
 import { ToastService } from '../services';
@@ -198,7 +198,7 @@ const ProductCategoriesProps: DirProductCategoriesProps = {
   fillHeight: true,
   createParentTitle: t('Create category'),
   dirType: ApiDirType.CATEGORIES_PROD,
-  filterOptions: productsFilterOptions,
+  filterOptions: offerTypeFilterOptions,
   editing: true,
   creatingChild: true,
   creatingParent: true,

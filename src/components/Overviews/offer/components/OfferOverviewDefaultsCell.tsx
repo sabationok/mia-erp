@@ -19,6 +19,8 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity>
   const supplier = data?.supplier;
   const price = data?.price;
 
+  console.log('OfferOverviewDefaultsCell', { price, data });
+
   const renderVariationTags = useMemo(() => {
     const variation = data?.variation;
     const tagsData: { title: string; value?: MaybeNull<number | string> }[] = [

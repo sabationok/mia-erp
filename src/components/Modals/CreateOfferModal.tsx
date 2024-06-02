@@ -9,7 +9,7 @@ import { OfferMeasurementFormArea } from 'components/Forms/offers/measurement/Of
 import { OfferBaseInfoFormArea } from '../Forms/offers/OfferBaseInfoFormArea';
 import FlexBox from '../atoms/FlexBox';
 import TabSelector from '../atoms/TabSelector';
-import { productsFilterOptions } from '../../data/modalFilterOptions.data';
+import { offerTypeFilterOptions } from '../../data/modalFilterOptions.data';
 import { OfferFormPropertiesArea } from '../Forms/offers/properties/OfferFormPropertiesArea';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { LoadersProvider, useLoadersProvider } from '../../Providers/Loaders/LoaderProvider';
@@ -49,7 +49,7 @@ const CreateOfferModal: React.FC<CreateOfferModalProps> = ({ onClose, _id }) => 
       extraHeader={
         <TabSelector
           defaultValue={formData?.type ?? OfferTypeEnum.GOODS}
-          filterOptions={productsFilterOptions}
+          filterOptions={offerTypeFilterOptions}
           onOptSelect={o => setData('formData', prev => ({ ...prev, type: o.value }))}
         />
       }

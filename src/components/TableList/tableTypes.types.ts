@@ -151,7 +151,7 @@ export type ITableAction<N extends string = any> = {
   icon?: IconIdType;
   iconSize?: string;
   separator?: boolean;
-  href?: string;
+  navTo?: string;
 };
 
 export type TableActionsCreator<DataType = any, N extends string = any, Extra = any> = (

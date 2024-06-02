@@ -7,17 +7,24 @@ import { t } from '../lang';
 import EditOfferModal from '../components/Modals/EditOfferModal';
 import CreateOfferModal from '../components/Modals/CreateOfferModal';
 import { useAppRouter } from './useRouter.hook';
+import { useOffersSelector } from '../redux/selectors.store';
+import { UseLoadersReturn } from '../Providers/Loaders/useLoaders.hook';
 
 export type OffersActionsCreator = TableActionsCreator<OfferEntity>;
 
-const useOffersActionsCreator = (): OffersActionsCreator => {
-  const service = useAppServiceProvider()[ServiceName.offers];
+export const useOffersActionsCreator = ({
+  loaders,
+}: { loaders?: UseLoadersReturn<'refresh' | 'offer'> } = {}): OffersActionsCreator => {
+  const service = useAppServiceProvider().get(ServiceName.offers);
   const router = useAppRouter();
   const modals = useModalProvider();
+  const stateMap = useOffersSelector().dataMap;
 
   return useCallback(
     ctx => {
       const currentId = ctx.selectedRow?._id;
+      const Offer = currentId ? stateMap?.[currentId] : undefined;
+
       return [
         {
           name: 'refreshData',
@@ -25,36 +32,44 @@ const useOffersActionsCreator = (): OffersActionsCreator => {
           icon: 'refresh',
           type: 'onlyIcon',
           onClick: () => {
-            service.getAll({ data: { refresh: true }, onLoading: ctx.onRefresh });
+            service.getAll({
+              data: { refresh: true },
+              onLoading: loaders ? loaders.onLoading('refresh') : ctx.onRefresh,
+            });
           },
         },
         { separator: true },
 
         {
-          name: 'reviewProduct',
+          name: 'review',
           title: 'Перегляд продукту',
           icon: 'openInNew',
           disabled: !currentId,
           type: 'onlyIcon',
-          href: `/app/${router.params.permissionId}/offers/` + currentId,
+          navTo: `/app/${router.params.permissionId}/offers/` + currentId,
         },
 
         {
-          name: 'editProduct',
+          name: 'edit',
           title: 'Змінити',
           icon: 'edit',
           iconSize: '90%',
           type: 'onlyIcon',
           disabled: !currentId,
           onClick: () => {
-            if (currentId) {
+            if (Offer) {
+              modals.create(EditOfferModal, {
+                offer: Offer,
+              });
+            } else if (currentId) {
               service.getOne({
                 data: { data: { params: { _id: currentId } } },
-                onLoading: ctx.onRefresh,
+                onLoading: loaders ? loaders.onLoading('offer') : ctx.onRefresh,
                 onSuccess: ({ data }) => {
-                  router.push({ query: { offerId: data._id } });
+                  // router.push({ query: { offerId: data._id } });
+
                   modals.create(EditOfferModal, {
-                    _id: data._id,
+                    offer: data,
                   });
                 },
               });
@@ -62,16 +77,16 @@ const useOffersActionsCreator = (): OffersActionsCreator => {
           },
         },
         {
-          name: 'copyProduct',
+          name: 'copy',
           title: 'Копіювати',
           icon: 'copy',
           iconSize: '90%',
           type: 'onlyIcon',
-          disabled: !currentId,
+          disabled: !Offer,
           onClick: () => {
-            currentId &&
+            Offer &&
               modals.create(EditOfferModal, {
-                _id: currentId,
+                offer: Offer,
                 copy: true,
               });
           },
@@ -99,7 +114,7 @@ const useOffersActionsCreator = (): OffersActionsCreator => {
       ];
     },
 
-    [modals, router, service]
+    [loaders, modals, router, service, stateMap]
   );
 };
 

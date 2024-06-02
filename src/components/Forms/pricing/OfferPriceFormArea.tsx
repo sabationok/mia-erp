@@ -1,5 +1,5 @@
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useAppForm, useCurrentOffer, useCurrentPrice } from '../../../hooks';
 import {
   IPriceFormData,
@@ -85,12 +85,6 @@ export const OfferPriceFormArea = ({
   });
   const { formValues, setValue, handleSubmit } = form;
 
-  useEffect(() => {
-    const disabledCheckbox = Offer?.price?._id === Price?._id;
-    console.log('formValues', formValues);
-
-    console.log({ disabledCheckbox }, Offer, Price);
-  }, [Offer, Price, formValues]);
   const setIsDefault = (checked: boolean) => {
     setValue('setAsDefault', checked);
   };

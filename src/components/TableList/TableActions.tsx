@@ -26,13 +26,13 @@ const TableActions: React.FC<TableActionsProps> = ({ renderSeparator = <></>, bt
     // @ts-ignore
 
     return actions.map(
-      ({ separator, href, description, iconSize = '90%', onClick, disabledCheck, type, icon, ...props }, idx) => {
+      ({ separator, navTo, description, iconSize = '90%', onClick, disabledCheck, type, icon, ...props }, idx) => {
         if (separator) {
           return <Separator key={icon || idx} />;
         }
-        if (href) {
+        if (navTo) {
           return (
-            <NavLink key={icon || idx} to={href}>
+            <NavLink key={icon || idx} to={navTo}>
               <ButtonIcon
                 variant={type || 'onlyIcon'}
                 size={btnSize ? `${btnSize}px` : '26px'}

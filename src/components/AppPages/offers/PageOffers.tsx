@@ -50,14 +50,18 @@ export const useOffersTableSettings = ({
   searchState?: TableSearchFormState<OfferSearchParam>;
   sortState?: { param: OfferSortParam; order: TableSortOrderEnum };
 }) => {
-  const loaders = useLoaders<'offers'>({ offers: { content: 'Refreshing...' } });
+  const loaders = useLoaders<'offers' | 'refresh' | 'offer'>({
+    offers: { content: 'Refreshing...' },
+    refresh: { content: 'Refreshing...' },
+    offer: { content: 'Refreshing...' },
+  });
   const { onLoading, isLoading } = loaders;
   const service = useAppServiceProvider().get(AppModuleName.offers);
   const { getAll } = service;
   const state = useOffersSelector();
 
   const filterSelectors = useProductsFilterSelectorsHook();
-  const actionsCreator = useOffersActionsCreator();
+  const actionsCreator = useOffersActionsCreator({ loaders });
 
   const [sortParams, setSortParams] = useState(sortState);
   const [searchParams, setSearchParams] = useState<TableSearchFormState | undefined>(searchState);

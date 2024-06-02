@@ -4,7 +4,7 @@ import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { useOrdersSelector } from '../../../../redux/selectors.store';
 import { useEffect, useMemo, useState } from 'react';
 import { orderSlotsTableColumns } from '../../../../data/orders.data';
-import { productsFilterOptions } from '../../../../data/modalFilterOptions.data';
+import { offerTypeFilterOptions } from '../../../../data/modalFilterOptions.data';
 import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../../redux/reduxTypes.types';
 import { getIdRef } from '../../../../utils';
@@ -20,7 +20,7 @@ const OrderContentTab: React.FC<OrderContentTabProps> = p => {
   const { currentOrder } = useOrdersSelector();
 
   const tableData = useMemo(() => {
-    return currentOrder?.slots?.filter(el => el.product?.type === productsFilterOptions[currentTab]?.value);
+    return currentOrder?.slots?.filter(el => el.product?.type === offerTypeFilterOptions[currentTab]?.value);
   }, [currentOrder?.slots, currentTab]);
 
   const tableConfigs = useMemo((): ITableListProps<IOrderSlot> => {
@@ -52,7 +52,7 @@ const OrderContentTab: React.FC<OrderContentTabProps> = p => {
     <FlexBox fillWidth overflow={'hidden'} flex={1}>
       <FlexBox fillWidth>
         <TabSelector
-          filterOptions={productsFilterOptions}
+          filterOptions={offerTypeFilterOptions}
           currentIndex={currentTab}
           onOptSelect={(_o, _v, i) => {
             setCurrentTab(i);

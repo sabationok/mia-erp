@@ -19,7 +19,7 @@ import { OnlyUUID } from '../../redux/app-redux.types';
 import { MaybeNull, Values } from '../../types/utils.types';
 import ModalBase from '../atoms/Modal';
 import { Text } from '../atoms/Text';
-import { productsFilterOptions } from '../../data/modalFilterOptions.data';
+import { offerTypeFilterOptions } from '../../data/modalFilterOptions.data';
 import { OfferTypeEnum } from '../../types/offers/offers.types';
 import { CustomSelectHandler } from '../atoms/Inputs/CustomSelect/CustomSelect';
 import CreatePropertyModal from '../Modals/CreatePropertyModal';
@@ -199,7 +199,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   return (
     <ModalBase title={title} fillHeight>
       <FlexBox padding={'0 8px'}>
-        <TabSelector {...registerTabSelector('type')} filterOptions={productsFilterOptions} />
+        <TabSelector {...registerTabSelector('type')} filterOptions={offerTypeFilterOptions} />
 
         <RenderStackHistory stack={stack} onItemSelect={(_, index) => onStackItemSelect(index)} />
 

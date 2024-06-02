@@ -124,19 +124,7 @@ export const offersSlice = createSlice({
         return s;
       })
       .addCase(getOfferThunk.fulfilled, (s, a) => {
-        // ManageOffersStateMap(s, a.payload, a.payload);
-
-        const offer = a.payload.data;
-        const itemId = offer?._id;
-        const itemSku = offer?.sku;
-
-        s.dataMap = { ...s.dataMap, [itemId]: { ...s.dataMap?.[itemId], ...offer } };
-        if (itemSku) {
-          s.skuKeysMap[itemSku] = itemId;
-        }
-
-        console.warn('addCase(getOfferThunk');
-        console.dir(s.dataMap[itemId]);
+        ManageOffersStateMap(s, a.payload, a.payload);
         return s;
       })
       .addCase(updateOfferDefaultsThunk.fulfilled, (s, a) => {
@@ -272,11 +260,16 @@ function ManageOffersStateMap(
 
   const offer = options?.isForList ? omit(input.data, ['prices', 'variations']) : input.data;
 
-  // if (options?.refresh) {
-  //   st.dataMap[itemId] = offer;
-  // } else {
-  st.dataMap = { ...st.dataMap, [itemId]: { ...st.dataMap?.[itemId], ...offer } };
-  console.log(itemId, st.dataMap);
+  if (options?.refresh) {
+    st.dataMap[itemId] = offer;
+  } else {
+    // st.dataMap = { ...st.dataMap, [itemId]: { ...st.dataMap?.[itemId], ...offer } };
+
+    st.dataMap[itemId] = { ...st.dataMap?.[itemId], ...offer };
+  }
+
+  const OfferFromState = st.dataMap[itemId];
+
   // for (const dataKey of defaultsKeys) {
   //   const currentData = st.dataMap?.[itemId];
   //
@@ -286,8 +279,14 @@ function ManageOffersStateMap(
   //   };
   // }
   // }
+
   if (itemSku) {
     st.skuKeysMap[itemSku] = itemId;
+  }
+
+  if (!options?.isForList && OfferFromState) {
+    const listIndex = st.list.findIndex(o => o._id === itemId);
+    st.list[listIndex] = OfferFromState;
   }
 }
 

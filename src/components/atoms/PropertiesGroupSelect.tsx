@@ -8,7 +8,7 @@ import FlexBox from './FlexBox';
 import InputLabel from './Inputs/InputLabel';
 import { t } from '../../lang';
 import ButtonsGroup from './ButtonsGroup';
-import { productsFilterOptions } from '../../data/modalFilterOptions.data';
+import { offerTypeFilterOptions } from '../../data/modalFilterOptions.data';
 import { Values } from '../../types/utils.types';
 
 type FilterData = {
@@ -74,7 +74,7 @@ export const PropertiesGroupSelect = ({
       {hasFilter && (
         <InputLabel label={t('Select type')}>
           <ButtonsGroup
-            options={productsFilterOptions}
+            options={offerTypeFilterOptions}
             value={filter.type}
             onSelect={({ value }) => {
               setFilter(prev => {

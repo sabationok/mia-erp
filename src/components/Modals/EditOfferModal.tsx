@@ -10,7 +10,7 @@ import FlexBox from '../atoms/FlexBox';
 import { AppLoaderSpiner } from '../atoms/AppLoaderSpiner';
 import { Text } from '../atoms/Text';
 import TabSelector from '../atoms/TabSelector';
-import { productsFilterOptions } from '../../data/modalFilterOptions.data';
+import { offerTypeFilterOptions } from '../../data/modalFilterOptions.data';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { LoadersProvider } from 'Providers/Loaders/LoaderProvider';
 import { OfferFormPropertiesArea } from '../Forms/offers/properties/OfferFormPropertiesArea';
@@ -21,9 +21,8 @@ import { OfferLoadersData, OfferLoadersKey } from '../Forms/offers/types';
 import { OfferPriceFormArea } from '../Forms/pricing/OfferPriceFormArea';
 
 export interface EditOfferModalProps extends ModalFormProps {
-  _id: string;
   copy?: boolean;
-  offer?: OfferEntity;
+  offer: OfferEntity;
 }
 
 const EditOfferModal: React.FC<EditOfferModalProps> = ({ onClose, offer, copy }) => {
@@ -62,7 +61,7 @@ const EditOfferModal: React.FC<EditOfferModalProps> = ({ onClose, offer, copy })
       onClose={onClose}
       extraHeader={
         <TabSelector
-          filterOptions={productsFilterOptions}
+          filterOptions={offerTypeFilterOptions}
           defaultValue={state?.formData?.type ?? undefined}
           preventDefault
           onOptSelect={o => {

@@ -7,7 +7,7 @@ import { PropertySelectableTypeEnum } from '../types/offers/properties.types';
 
 export const categoriesFilterOptions = enumToFilterOptions(TrCategoryTypeEnum);
 export const countsFilterOptions = enumToFilterOptions(CountsTypesEnum);
-export const productsFilterOptions = enumToFilterOptions(OfferTypeEnum);
+export const offerTypeFilterOptions = enumToFilterOptions(OfferTypeEnum);
 
 export const propertiesSelectableTypeFilterOptions = enumToFilterOptions(PropertySelectableTypeEnum);
 export const tagsFilterOptions = enumToFilterOptions(TagTypeEnum);
