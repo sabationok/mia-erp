@@ -92,7 +92,7 @@ const TableList = <TData extends Partial<OnlyUUID> = any>(
             ? updateIdsArray({
                 id: rowId,
                 arr: prev,
-                remove: checked,
+                remove: !checked,
                 // toggle: true,
               })
             : prev;
@@ -122,10 +122,10 @@ const TableList = <TData extends Partial<OnlyUUID> = any>(
 
   const CTX = useMemo(
     (): ITableListContext<TData> => ({
-      selectedRows: _selectedRows,
-      selectedRow: _selectedRow,
       onRefresh: setLoading,
       ...props,
+      selectedRows: _selectedRows,
+      selectedRow: _selectedRow,
       onFilterSubmit: onFilterSubmitWrapper,
       onRowClick: onRowClickWrapper,
       onCheckboxChange: onCheckboxChangeWrapper,

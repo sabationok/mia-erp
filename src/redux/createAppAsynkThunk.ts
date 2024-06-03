@@ -8,11 +8,6 @@ type ThunkGetAppResponseFn<Data = any, Params = any, Return = any, Meta = any> =
   params?: Params
 ) => Promise<AppResponse<Return, Meta>>;
 
-// type ThunkGetResponseFn<Data = any, Params = any, Return = any, Meta = any> = (input?: {
-//   data: Data;
-//   params?: Params;
-// }) => Promise<AppResponse<Return, Meta>>;
-
 export const createAppAsyncThunk = <
   Data = any,
   Params = any,

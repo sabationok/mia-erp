@@ -79,7 +79,7 @@ const darkTheme = {
   tableHeaderBackground: '#47474b',
   tableHeaderStroke: 'rgba(122, 122, 122)',
   tableRowStroke: '#E9E9E9',
-  tableRowShadow: '0px 1px 6px rgba(220, 133, 31, 0.2)',
+  tableRowShadow: `0px 5px 12px ${'rgba(157,157,157,0.8)'}`,
   tableRowBackgroundHover: '#3A3A3C',
   tableRowBackgroundActive: '#323234',
   tableRowBackgroundSelected: '#323234',
@@ -169,7 +169,7 @@ const lightTheme: Partial<ITheme & Record<string, any>> = {
   tableHeaderStroke: '#FFF',
   tableBackgroundColor: '#fafafa',
   tableRowStroke: '#E9E9E9',
-  tableRowShadow: '0px 1px 4px rgba(0, 0, 0, 0.16)',
+  // tableRowShadow: '0px 1px 4px rgba(0, 0, 0, 0.16)',
   tableRowBackgroundHover: '#EDEDED',
   tableRowBackgroundActive: '#F2F2F2',
 

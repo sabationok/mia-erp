@@ -101,8 +101,9 @@ const Row = styled(ThRow)<{ checked?: boolean; isActive?: boolean }>`
   &:hover {
     //border-color: ${({ theme }) => theme.accentColor.base};
     z-index: 10;
-    background-color: ${({ theme }) => theme.tableRowBackgroundHover};
-    box-shadow: ${({ theme }) => theme.tableRowShadow};
+    border-color: ${({ theme }) => theme.accentColor.light};
+    outline: 1px solid ${({ theme }) => theme.accentColor.light};
+    //box-shadow: ${({ theme }) => theme.tableRowShadow};
   }
 
   &:active {
