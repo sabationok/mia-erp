@@ -34,7 +34,7 @@ export enum OfferStatusEnum {
   rejected = 'rejected',
   // success = 'success',
   approved = 'approved',
-  // error = 'error',
+  error = 'error',
   warning = 'warning',
   // info = 'info',
 }
@@ -72,6 +72,7 @@ export enum MeasurementUnit {
 export enum OfferTypeEnum {
   GOODS = 'GOODS',
   SERVICE = 'SERVICE',
+  SET = 'SET',
 }
 
 export type ProductFilterOpt = FilterOption<OfferTypeEnum>;
@@ -95,7 +96,7 @@ export interface IOfferBase
 
   futures?: MaybeNull<OfferFutures>;
 
-  tags?: string[];
+  tags?: IBase[];
   images?: OfferImageSlotEntity[];
 }
 

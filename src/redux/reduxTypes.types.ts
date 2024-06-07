@@ -64,3 +64,10 @@ export type StateErrorType = AxiosError | Error | unknown;
 //   /** type to be passed into the second argument of `rejectWithValue` to finally be merged into `rejectedAction.meta` */
 //   rejectedMeta?: unknown
 // }
+
+export type SliceMap<RefKey extends string, InverseKey extends string, DataType, Extra = any> = {
+  dataMap: Record<RefKey, DataType>;
+  keysMap: Record<RefKey, InverseKey[]>;
+  ids: RefKey[];
+  extra?: Extra;
+};

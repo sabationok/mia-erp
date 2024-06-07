@@ -8,7 +8,7 @@ import { Path } from 'react-hook-form';
 export type UUID = string;
 export type LABEL = string;
 export type SKU = string;
-export type ARtICLE = string;
+export type ARTICLE = string;
 export type REFERENCE = string;
 
 export interface OnlyUUID {
@@ -23,7 +23,7 @@ export type Keys<T extends any> = keyof T;
 
 export type RefsMap<Keys extends string | number | symbol> = Partial<Record<Keys, Ref>>;
 
-export type ArrayOfUUID = Array<string>;
+export type ArrayOfUUID = Array<UUID>;
 
 export type ArrayOfRefs = Array<OnlyUUID>;
 

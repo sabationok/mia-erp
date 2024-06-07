@@ -1,32 +1,38 @@
 import { IOfferFullFormData, OfferEntity } from '../../types/offers/offers.types';
-import _, { isObject, pick } from 'lodash';
+import _, { isObject } from 'lodash';
+
+const omitPaths: (keyof OfferEntity | string)[] = [
+  '_id',
+  'createdAt',
+  'updatedAt',
+  'deletedAt',
+  'prices',
+  'variations',
+  'warehouses',
+  'inventories',
+];
+// const getFormValuePickPaths = (data?: any) => {
+//   return data ? ['_id', 'label', 'email', 'dirType', 'parent', 'name', 'secondName'].filter(key => key in data) : [];
+// };
+const isArrayForTransformToIdsArray = <T extends keyof OfferEntity | string = any>(key: T) => {
+  return ['properties', 'categories'].includes(key);
+};
 
 export function toOfferFormData(input: OfferEntity): IOfferFullFormData {
-  const createProductFormDataOmitPaths: (keyof OfferEntity | string)[] = [
-    '_id',
-    'createdAt',
-    'updatedAt',
-    'deletedAt',
-    'prices',
-    'variations',
-    'warehouses',
-    'inventories',
-  ];
-  const getFormValuePickPaths = (data?: any) => {
-    return data ? ['_id', 'label', 'email', 'dirType', 'parent', 'name', 'secondName'].filter(key => key in data) : [];
-  };
-  const isArrayForTransformToIdsArray = <T extends keyof OfferEntity | string = any>(key: T) => {
-    return ['properties', 'categories'].includes(key);
-  };
-  const data = _.cloneDeep(_.omit(input, createProductFormDataOmitPaths));
+  const data = _.cloneDeep(_.omit(input, omitPaths));
+
   let output: Record<keyof IOfferFullFormData | string, any> = {};
 
-  Object.entries(data).map(([k, v], _index) => {
+  Object.entries(data).forEach(([k, v], _index) => {
+    if (v === undefined) {
+      return;
+    }
+
     if (v === null) {
       return (output[k as keyof IOfferFullFormData] = v);
     }
-    if (!v) {
-      return { [k]: v };
+    if (typeof v === 'boolean') {
+      return (output[k as keyof IOfferFullFormData] = v);
     }
     if (['string', 'number'].includes(typeof v)) {
       return (output[k as keyof IOfferFullFormData] = v);
@@ -39,8 +45,8 @@ export function toOfferFormData(input: OfferEntity): IOfferFullFormData {
         }
         return (output[k as keyof IOfferFullFormData] = v);
       }
-      const newValue = pick(v, getFormValuePickPaths(v));
-      return (output[k as keyof IOfferFullFormData] = newValue);
+      // const newValue = pick(v, getFormValuePickPaths(v));
+      return (output[k as keyof IOfferFullFormData] = v);
     } else {
       return (output[k as keyof IOfferFullFormData] = v);
     }

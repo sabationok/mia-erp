@@ -16,7 +16,7 @@ const RowActions = () => {
   const location = useLocation();
   const { isActionsOpen, handleToggleActions, rowData } = useRow();
   const pathRef = useRef(`${location.pathname}/${rowData._id}/${baseRoutes[location.pathname]}`);
-  const linkRef = useRef(`${window.location.origin}/counter-app-ts${pathRef.current}`);
+  const linkRef = useRef(`${window.location.origin}/mia-erp${pathRef.current}`);
   const navigate = useNavigate();
 
   function navigateById() {

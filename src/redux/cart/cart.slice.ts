@@ -14,6 +14,7 @@ import { ICustomer } from '../../types/customers.types';
 import { HasBaseCmsConfigs } from '../../types/cms.types';
 import { HasImgPreview, HasLabel, HasSku } from '../../types/utils.types';
 import { WarehouseEntity } from '../../types/warehousing/warehouses.types';
+import { SliceMap } from '../reduxTypes.types';
 
 export const CART_ID_PREFIX = 'cart';
 export const CART_DEFAULT_ID = 'default';
@@ -31,12 +32,6 @@ export type CartOrderId = string | `${typeof CART_ID_PREFIX}_${CartId}_${OrderId
 
 export type CartOrderSummary = OrderSummary;
 
-type SliceMap<RefKey extends string, InverseKey extends string, DataType, Extra = any> = {
-  dataMap: Record<RefKey, DataType>;
-  keysMap: Record<RefKey, InverseKey[]>;
-  ids: RefKey[];
-  extra?: Extra;
-};
 export interface CartStateMap extends SliceMap<CartId, CustomerId, CartOrdersGroup> {}
 export interface OrdersStateMap extends SliceMap<CartOrderId, CartOrderId, CartOrder> {}
 export interface SlotsStateMap extends SliceMap<CartSlotId, CartOrderId, IOrderTempSlot> {

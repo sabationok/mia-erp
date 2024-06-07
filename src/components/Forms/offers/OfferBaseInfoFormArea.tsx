@@ -1,6 +1,12 @@
 import { AccordionForm } from '../../atoms/FormArea/AccordionForm';
 import { OfferFormAreaProps } from './types';
-import { IOfferFullFormData, IProductFormData, OfferEntity, OfferTypeEnum } from '../../../types/offers/offers.types';
+import {
+  IOfferFullFormData,
+  IProductFormData,
+  OfferEntity,
+  OfferStatusEnum,
+  OfferTypeEnum,
+} from '../../../types/offers/offers.types';
 import { useAppForm } from '../../../hooks';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import { t } from '../../../lang';
@@ -43,7 +49,7 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
     handleSubmit,
     ...appForm
   } = useAppForm<IOfferFullFormData>({
-    defaultValues: { ...defaultValues, type, visible: true },
+    defaultValues: { visible: false, approved: OfferStatusEnum.pending, ...defaultValues, type },
   });
 
   function onValid(sData: IProductFormData) {
