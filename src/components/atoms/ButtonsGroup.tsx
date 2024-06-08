@@ -64,11 +64,13 @@ const ButtonsGroup = <V = any, FormData extends FieldValues = any>({
         <OptionButton
           key={`group-option-${opt?.label || idx}`}
           variant={isActive ? 'filledSmall' : 'defaultSmall'}
+          isActive={isActive}
+          sizeType={'middle'}
           onClick={handleSelect(opt, idx)}
           disabled={disabled ?? opt?.disabled}
         >
           {opt.label && (
-            <Text $size={11} $weight={600} $align={'center'} className={'inner'}>
+            <Text $size={13} $weight={600} $align={'center'} className={'inner'}>
               {opt.label}
             </Text>
           )}
@@ -100,8 +102,13 @@ const Buttons = styled(FlexBox)<ButtonsGroupProps>`
 `;
 const OptionButton = styled(ButtonIcon)`
   flex: 1;
-  padding: 0 8px;
-  min-width: 50px;
+  padding: 2px 4px;
+  min-width: ${p => (p.isActive ? 'max-content' : '50px')};
+
+  &:hover {
+    color: ${p => (p.isActive ? '' : p.theme.accentColor.base)};
+    border-color: ${p => (p.isActive ? '' : p.theme.accentColor.light)};
+  }
 
   overflow: hidden;
 
@@ -111,11 +118,11 @@ const OptionButton = styled(ButtonIcon)`
     max-width: 100%;
   }
 
-  @media screen and (max-width: 320px) {
-    font-size: 10px;
-  }
-  @media screen and (max-width: 480px) {
-    font-size: 12px;
-  }
+  //@media screen and (max-width: 320px) {
+  //  font-size: 11px;
+  //}
+  //@media screen and (max-width: 480px) {
+  //  font-size: 13px;
+  //}
 `;
 export default ButtonsGroup;

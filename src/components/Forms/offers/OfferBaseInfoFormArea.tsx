@@ -12,7 +12,6 @@ import InputLabel from '../../atoms/Inputs/InputLabel';
 import { t } from '../../../lang';
 import InputText from '../../atoms/Inputs/InputText';
 import FlexBox from '../../atoms/FlexBox';
-import * as React from 'react';
 import CustomSelect from '../../atoms/Inputs/CustomSelect';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
@@ -22,9 +21,9 @@ import { MaybeNull } from '../../../types/utils.types';
 import { useOfferLoadersProvider } from '../../Modals/CreateOfferModal';
 import { OfferStatusFilterOptions } from '../../../data';
 import { useDirectorySelector, useWarehousesSelector } from '../../../redux/selectors.store';
-import TabSelector from '../../atoms/TabSelector';
 import { offerTypeFilterOptions } from '../../../data/modalFilterOptions.data';
 import ButtonSwitch from '../../atoms/ButtonSwitch';
+import ButtonsGroup from '../../atoms/ButtonsGroup';
 
 export interface OfferBaseInfoFormAreaProps extends OfferFormAreaProps<IOfferFullFormData> {
   type?: MaybeNull<OfferTypeEnum>;
@@ -74,12 +73,6 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
 
   return (
     <>
-      <TabSelector
-        defaultValue={formValues?.type ?? OfferTypeEnum.GOODS}
-        options={offerTypeFilterOptions}
-        onOptSelect={o => setValue('type', o.value)}
-      />
-
       <AccordionForm
         label={t('Base info')}
         isLoading={!edit ? isLoading?.offer_create : isLoading?.offer_update}
@@ -88,6 +81,12 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
         canSubmit={true}
         expandable={false}
       >
+        <ButtonsGroup
+          value={formValues?.type ?? OfferTypeEnum.GOODS}
+          options={offerTypeFilterOptions}
+          onSelect={o => setValue('type', o.value)}
+        />
+
         <InputLabel label={t('label')} error={errors.label} required>
           <InputText placeholder={t('label')} {...register('label')} required autoFocus />
         </InputLabel>

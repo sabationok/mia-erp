@@ -18,7 +18,7 @@ export interface InputLabelProps extends React.HTMLAttributes<HTMLFieldSetElemen
   required?: boolean;
 }
 
-const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = (
+const InputLabel: React.ForwardRefRenderFunction<HTMLFieldSetElement, InputLabelProps> = (
   {
     label,
     className,
@@ -35,7 +35,7 @@ const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = (
     required,
     ...props
   },
-  ref: React.ForwardedRef<HTMLFieldSetElement>
+  ref
 ) => {
   return (
     <Box className={className} disabled={disabled} {...props} ref={ref}>

@@ -61,7 +61,7 @@ const EditOfferModal: React.FC<EditOfferModalProps> = ({ onClose, offer, copy })
             <Text>{t('Loading info about offer...')}</Text>
           </FlexBox>
         ) : (
-          <FlexBox padding={'0 8px 16px'}>
+          <FlexBox padding={'0 0 16px'}>
             <OfferBaseInfoFormArea
               _id={offerId}
               edit={!copy}

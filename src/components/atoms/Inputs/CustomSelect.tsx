@@ -6,10 +6,10 @@ import FlexBox, { FlexFieldSet } from '../FlexBox';
 import { RefCallBack } from 'react-hook-form';
 import ButtonIcon from '../ButtonIcon';
 import { IEmbeddedName, MaybeNull } from '../../../types/utils.types';
-import { useCloseByBackdropClick } from '../../../hooks/useCloseByEscapeOrClickOnBackdrop.hook';
 import { nanoid } from '@reduxjs/toolkit';
 import CheckBox from 'components/TableList/TebleCells/CellComponents/CheckBox';
 import InputText from './InputText';
+import { useCloseByBackdropClick } from '../../../hooks/useCloseByEscapeOrClickOnBackdrop.hook';
 
 export interface CustomSelectBaseProps<Option extends CustomSelectOptionBase = CustomSelectOptionBase> {
   InputComponent?: React.FC<InputHTMLAttributes<HTMLInputElement>>;
@@ -158,7 +158,7 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
     open = false,
     onSelect,
     onClear,
-    fieldMode,
+    fieldMode = true,
     required,
     getLabel,
     onCreatePress,
@@ -166,13 +166,16 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
     treeMode,
     selectedValue,
     onChange,
+    // disabled: ds,
+    disabled,
     ...props
   }: CustomSelectProps<Option>,
   _ref: React.ForwardedRef<Ref>
 ) => {
   const [currentOption, setCurrentOption] = useState<CustomSelectOption | undefined>(selectedOption);
   const [isOpen, setIsOpen] = useState<boolean>(keepOpen || open);
-  const labelRef = useRef<HTMLLabelElement>(null);
+  // const disabled = true;
+  const labelRef = useRef<HTMLFieldSetElement>(null);
 
   const selectId = useMemo(() => (id ? id : `_${nanoid(5)}`), [id]);
 
@@ -180,9 +183,11 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
     !keepOpen && setIsOpen(prev => !prev);
   }, [keepOpen]);
 
-  const inputCurrentValue = useMemo(() => {
-    return currentOption ? currentOption?.label || currentOption?.name || undefined : undefined;
-  }, [currentOption]);
+  const optionData = selectedOption || currentOption;
+
+  // const inputCurrentValue = useMemo(() => {
+  //   return option ? option?.label || option?.name || null : null;
+  // }, [currentOption, selectedOption]);
 
   const onSelectOption = useCallback(
     (index: number, option?: any) => {
@@ -196,33 +201,58 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
         setCurrentOption(option);
       }
 
-      handleOpenState();
+      setIsOpen(false);
     },
-    [handleOpenState, onSelect, valueKey]
+    [onSelect, valueKey]
   );
 
   const handleOnClear = useCallback(() => {
+    if (onClear) {
+      onClear();
+    } else {
+    }
+
     setCurrentOption(undefined);
     setIsOpen(false);
-    onClear && onClear();
   }, [onClear]);
 
   const renderOptions = useMemo(
     () =>
-      options?.map((opt, idx) => (
-        <CustomSelectOptionComponent
-          key={`select-opt-${opt._id || opt?.value || idx}`}
-          index={idx}
-          option={opt}
-          level={0}
-          getLabel={getLabel}
-          treeMode={treeMode}
-          onSelect={onSelectOption}
-          currentOptionId={currentOption?._id}
-          currentOptionValue={currentOption?.value}
-        />
-      )),
-    [currentOption?._id, currentOption?.value, getLabel, onSelectOption, options, treeMode]
+      !!options?.length ? (
+        options?.map((opt, idx) => {
+          const key = opt._id || opt?.value;
+          const activeKey = selectedOption?._id || selectedOption?.value;
+
+          return (
+            <CustomSelectOptionComponent
+              key={`select-opt-${key || idx}`}
+              index={idx}
+              option={opt}
+              isActive={key === activeKey}
+              level={0}
+              getLabel={getLabel}
+              treeMode={treeMode}
+              onSelect={onSelectOption}
+              currentOptionId={currentOption?._id}
+              currentOptionValue={currentOption?.value}
+            />
+          );
+        })
+      ) : (
+        <NoOptions fillWidth fxDirection={'row'} alignItems={'center'} justifyContent={'center'}>
+          <span>{'Опції відсутні'}</span>
+        </NoOptions>
+      ),
+    [
+      currentOption?._id,
+      currentOption?.value,
+      getLabel,
+      onSelectOption,
+      options,
+      selectedOption?._id,
+      selectedOption?.value,
+      treeMode,
+    ]
   );
 
   useEffect(() => {
@@ -244,85 +274,81 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
   useCloseByBackdropClick(setIsOpen, `data-select=${selectId}`, { disabled: !isOpen });
 
   return (
-    <FlexBox id={selectId} className={'select-box'} fillWidth data-select={selectId}>
-      <InputLabel
-        direction={'vertical'}
-        required={required}
-        ref={labelRef}
-        {...pick(props, [
-          'error',
-          'success',
-          'helperText',
-          'loading',
-          'label',
-          'id',
-          'uppercase',
-          'align',
-          'direction',
-          'disabled',
-        ])}
-        {...labelProps}
-      >
-        <FlexBox fillWidth style={{ position: 'relative' }}>
-          <LabelInner fieldMode={fieldMode} error={!!props.error} success={!!props.success}>
-            <StyledInput
-              disabled={!fieldMode}
-              required={required}
-              // ref={_ref}
+    <InputLabel
+      id={selectId}
+      // onBlurCapture={() => {
+      //   setIsOpen(false);
+      // }}
+      onFocusCapture={() => {
+        setIsOpen(true);
+      }}
+      className={'select-box'}
+      fillWidth
+      data-select={selectId}
+      direction={'vertical'}
+      required={required}
+      ref={labelRef}
+      disabled={disabled}
+      {...pick(props, ['error', 'success', 'helperText', 'loading', 'label', 'id', 'uppercase', 'align', 'direction'])}
+      {...labelProps}
+    >
+      <FlexBox fillWidth style={{ position: 'relative' }}>
+        <LabelInner fieldMode={fieldMode} error={!!props.error} success={!!props.success} isActive={isOpen}>
+          <StyledInput
+            disabled={fieldMode}
+            fieldMode={fieldMode}
+            required={required}
+            // ref={_ref}
 
-              name={name}
-              onBlur={props.onBlur}
-              id={id}
-              placeholder={props.placeholder}
-              {...inputProps}
-              // defaultValue={inputCurrentValue}
-              value={inputCurrentValue}
-              onChange={() => {}}
-            />
+            name={name}
+            onBlur={props.onBlur}
+            id={id}
+            placeholder={props.placeholder}
+            {...inputProps}
+            defaultValue={optionData?.label || optionData?.name}
+            value={optionData?.label || optionData?.name || ''}
+            onChange={() => {}}
+          />
 
-            <IconsBox fxDirection={'row'} gap={6} fillHeight alignItems={'center'} padding={'0 8px 0 0'}>
-              {onClear && currentOption && (
-                <ButtonIcon
-                  variant={'onlyIconNoEffects'}
-                  className={'clearBtn'}
-                  icon={'close'}
-                  size={'20px'}
-                  onClick={handleOnClear}
-                  disabled={props.disabled}
-                />
-              )}
-
+          <ActionsBox fxDirection={'row'} gap={6} fillHeight alignItems={'center'} padding={'0 8px 0 0'}>
+            {onClear && currentOption && (
               <ButtonIcon
                 variant={'onlyIconNoEffects'}
-                className={'openBtn'}
-                icon={!isOpen ? 'SmallArrowDown' : 'SmallArrowUp'}
-                size={'24px'}
-                iconSize={'100%'}
-                onClick={handleOpenState}
-                disabled={props.disabled}
+                className={'clearBtn'}
+                icon={'close'}
+                size={'26px'}
+                onClick={handleOnClear}
+                disabled={disabled}
               />
-            </IconsBox>
-          </LabelInner>
+            )}
 
-          <Options isOpen={isOpen} isInAbsolute={dropDownIsAbsolute}>
-            <FlexBox fillWidth overflow={'auto'}>
-              {options && options?.length > 0 ? (
-                renderOptions
-              ) : (
-                <NoOptions fillWidth fxDirection={'row'} alignItems={'center'} justifyContent={'center'}>
-                  <span>{'Опції відсутні'}</span>
-                </NoOptions>
-              )}
-              {onCreatePress && (
-                <CreateButton variant={'defaultSmall'} icon={'plus'} iconSize={'16px'} onClick={onCreatePress}>
+            <ButtonIcon
+              variant={'onlyIconNoEffects'}
+              className={'openBtn'}
+              icon={!isOpen ? 'SmallArrowDown' : 'SmallArrowUp'}
+              size={'26px'}
+              iconSize={'100%'}
+              onClick={handleOpenState}
+              disabled={disabled}
+            />
+          </ActionsBox>
+        </LabelInner>
+
+        <Options isOpen={isOpen} isInAbsolute={dropDownIsAbsolute}>
+          <FlexBox fillWidth overflow={'auto'}>
+            {renderOptions}
+
+            {onCreatePress && (
+              <FlexBox padding={'8px'}>
+                <CreateButton variant={'defaultMiddle'} icon={'plus'} iconSize={'20px'} onClick={onCreatePress}>
                   <span>{'Створити'}</span>
                 </CreateButton>
-              )}
-            </FlexBox>
-          </Options>
-        </FlexBox>
-      </InputLabel>
-    </FlexBox>
+              </FlexBox>
+            )}
+          </FlexBox>
+        </Options>
+      </FlexBox>
+    </InputLabel>
   );
 };
 
@@ -336,7 +362,7 @@ const Options = styled(FlexBox)<{
     return isInAbsolute
       ? css`
           position: absolute;
-          top: 100%;
+          top: 115%;
           left: 0;
           z-index: 500;
         `
@@ -346,7 +372,7 @@ const Options = styled(FlexBox)<{
   font-size: 14px;
   overflow: hidden;
 
-  max-height: ${({ isOpen }) => (isOpen ? '140px' : 0)};
+  max-height: ${({ isOpen }) => (isOpen ? '160px' : 0)};
   opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
 
   width: 100%;
@@ -357,8 +383,124 @@ const Options = styled(FlexBox)<{
   border: 1px solid ${({ theme }) => theme.fieldBackgroundColor};
 
   background-color: ${({ theme }) => theme.modalBackgroundColor};
-  box-shadow: 0 3px 4px 4px rgba(21, 21, 21, 0.15), 0 3px 4px 4px rgba(99, 99, 99, 0.15);
+  box-shadow:
+    0 3px 4px 4px rgba(21, 21, 21, 0.15),
+    0 3px 4px 4px rgba(99, 99, 99, 0.15);
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
+`;
+
+const LabelInner = styled(FlexFieldSet)<{
+  error?: boolean;
+  success?: boolean;
+  fieldMode?: boolean;
+}>`
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+
+  position: relative;
+
+  padding: 0;
+  margin: 0;
+
+  width: 100%;
+
+  color: ${({ error, success, theme }) =>
+    (error && theme.globals.colors.error) || (success && theme.globals.colors.success) || 'inherit'};
+
+  background-color: ${({ theme, fieldMode = 'true' }) => (fieldMode ? theme.field.backgroundColor : 'transparent')};
+  border-radius: 4px;
+
+  border: 1px solid
+    ${({ error, success, fieldMode = true, theme }) =>
+      (error && theme.globals.colors.error) ||
+      (success && theme.globals.colors.success) ||
+      (fieldMode && theme.field.backgroundColor) ||
+      theme.input.borderColor};
+
+  &:hover {
+    border-color: ${({ theme }) => theme.accentColor.base};
+    //box-shadow: 0 0 3px ${({ theme }) => theme.accentColor.base};
+  }
+
+  &:focus,
+  &:focus-within,
+  &:focus-visible {
+    border-color: ${({ theme }) => theme.accentColor.base};
+    outline: 1px solid ${({ theme }) => theme.accentColor.base};
+    box-shadow: 0 0 5px ${({ theme }) => theme.accentColor.base};
+  }
+
+  ${p =>
+    p.isActive
+      ? css`
+          border-color: ${({ theme }) => theme.accentColor.base};
+          outline: 1px solid ${({ theme }) => theme.accentColor.base};
+          box-shadow: 0 0 5px ${({ theme }) => theme.accentColor.base};
+        `
+      : ''}
+
+  &::placeholder {
+    font-size: inherit;
+    color: ${({ theme }) => theme.globals.inputPlaceholderColor};
+  }
+
+  transition: all ${p => p.theme.globals.timingFunctionMain};
+
+  &[disabled] {
+    pointer-events: none;
+    opacity: 70%;
+  }
+
+  @media screen and (max-width: 480px) {
+    height: 34px;
+    font-size: 16px;
+  }
+`;
+
+const StyledInput = styled(InputText)<{ fieldMode?: boolean }>`
+  flex: 1;
+
+  //padding: 4px 8px;
+
+  background-color: transparent;
+  border-radius: inherit;
+  border: 0;
+  outline: none;
+  box-shadow: unset;
+
+  &:hover,
+  &:focus,
+  &:focus-visible {
+    border: 0;
+    outline: none;
+
+    box-shadow: unset;
+  }
+`;
+
+const NoOptions = styled(FlexBox)`
+  min-height: 46px;
+
+  justify-content: center;
+  align-items: center;
+
+  font-weight: 700;
+  line-height: 1.55;
+`;
+const ActionsBox = styled(FlexBox)`
+  //position: absolute;
+  //right: 0;
+
+  max-height: 100%;
+
+  color: ${({ theme }) => theme.accentColor.base};
+  fill: ${({ theme }) => theme.accentColor.base};
+`;
+
+const CreateButton = styled(ButtonIcon)`
+  color: ${({ theme }) => theme.accentColor.base};
+  fill: ${({ theme }) => theme.accentColor.base};
 `;
 
 const SelectOptionCss = css<{ isActive?: boolean }>`
@@ -369,7 +511,16 @@ const SelectOptionCss = css<{ isActive?: boolean }>`
 
   &:hover {
     color: ${({ theme }) => theme.accentColor.hover};
+    background-color: ${({ theme }) => theme.accentColor.extraLight};
   }
+
+  ${p =>
+    p.isActive
+      ? css`
+          color: ${({ theme }) => theme.accentColor.hover};
+          background-color: ${({ theme }) => theme.accentColor.extraLight};
+        `
+      : ''}
 
   padding: 4px 8px;
 
@@ -387,103 +538,12 @@ const SelectOptionCss = css<{ isActive?: boolean }>`
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
   }
-`;
-const Option = styled(FlexBox)<{ isActive?: boolean }>`
-  ${SelectOptionCss}
-`;
-
-const LabelInner = styled(FlexFieldSet)<{
-  error?: boolean;
-  success?: boolean;
-  fieldMode?: boolean;
-}>`
-  flex: 1;
-  flex-direction: row;
-  align-items: center;
-
-  padding: 0;
-  margin: 0;
-
-  width: 100%;
-
-  color: ${({ error, success, theme }) =>
-    (error && theme.globals.colors.error) || (success && theme.globals.colors.success) || 'inherit'};
-
-  background-color: ${({ theme, fieldMode = 'true' }) => (fieldMode ? theme.field.backgroundColor : 'transparent')};
-  border-radius: 4px;
-
-  border: 1px solid
-    ${({ error, success, fieldMode = 'true', theme }) =>
-      (error && theme.globals.colors.error) ||
-      (success && theme.globals.colors.success) ||
-      (fieldMode && theme.field.backgroundColor) ||
-      theme.input.borderColor};
-
-  &:hover {
-    border-color: ${({ theme }) => theme.accentColor.base};
-    //box-shadow: 0 0 3px ${({ theme }) => theme.accentColor.base};
-  }
-
-  &:focus,
-  &:focus-visible {
-    border-color: ${({ theme }) => theme.accentColor.base};
-    outline: 1px solid ${({ theme }) => theme.accentColor.base};
-  }
-
-  &::placeholder {
-    font-size: inherit;
-    color: ${({ theme }) => theme.globals.inputPlaceholderColor};
-  }
-
-  &[disabled] {
-    pointer-events: none;
-    opacity: 70%;
-  }
-
   @media screen and (max-width: 480px) {
-    height: 34px;
-    font-size: 16px;
+    min-height: 38px;
   }
 `;
-
-const StyledInput = styled(InputText)`
-  flex: 1;
-
-  //padding: 4px 8px;
-  color: inherit;
-  font-weight: 500;
-
-  background-color: transparent;
-  border-radius: 0;
-  border: 0;
-  outline: none;
-
-  &:hover,
-  &:focus,
-  &:focus-visible {
-    outline: none;
-  }
-`;
-const NoOptions = styled(FlexBox)`
-  margin-top: 8px;
-
-  min-height: 28px;
-
-  font-weight: 700;
-  line-height: 1.3;
-`;
-const IconsBox = styled(FlexBox)`
-  max-height: 100%;
-
-  color: ${({ theme }) => theme.accentColor.base};
-  fill: ${({ theme }) => theme.accentColor.base};
-`;
-
-const CreateButton = styled(ButtonIcon)`
-  margin-top: 8px;
-
-  color: ${({ theme }) => theme.accentColor.base};
-  fill: ${({ theme }) => theme.accentColor.base};
+const Option = styled(FlexBox)`
+  ${SelectOptionCss};
 `;
 
 export default memo(forwardRef(CustomSelect));

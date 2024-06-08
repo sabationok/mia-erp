@@ -11,6 +11,7 @@ export const InputStyles = css<TextInputProps>`
 
   width: 100%;
   height: 28px;
+  font-weight: 500;
 
   text-align: ${({ align = 'left' }) => align};
 
