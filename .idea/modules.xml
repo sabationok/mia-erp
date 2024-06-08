@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/counter-app-ts.iml" filepath="$PROJECT_DIR$/.idea/counter-app-ts.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/mia-erp.iml" filepath="$PROJECT_DIR$/.idea/mia-erp.iml" />
     </modules>
   </component>
 </project>

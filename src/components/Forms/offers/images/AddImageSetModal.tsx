@@ -3,7 +3,7 @@ import ModalForm, { ModalFormProps } from '../../../ModalForm';
 import { ChangeEventHandler, useRef, useState } from 'react';
 import { FilterOption } from '../../../atoms/TabSelector';
 import FlexBox from '../../../atoms/FlexBox';
-import SvgIcon from '../../../atoms/SvgIcon/SvgIcon';
+import SvgIcon from '../../../atoms/SvgIcon';
 import InputLabel from '../../../atoms/Inputs/InputLabel';
 import InputText from '../../../atoms/Inputs/InputText';
 import ButtonsGroup from '../../../atoms/ButtonsGroup';

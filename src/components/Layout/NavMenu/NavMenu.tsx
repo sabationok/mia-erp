@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { IPage } from 'redux/page/pageSlice';
 import styled from 'styled-components';
 
-import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
+import SvgIcon from 'components/atoms/SvgIcon';
 import { Text } from '../../atoms/Text';
 import { useAppPages, useAppRouter } from '../../../hooks';
 import SubNavMenu from './SubNavMenu';
@@ -58,7 +58,7 @@ const NavMenu: React.FC = () => {
                   onNavLinkClick(item);
                 }}
               >
-                <SvgIcon iconId={item.iconId} size="18px" style={{ display: 'none' }} />
+                <SvgIcon icon={item.iconId} size="18px" style={{ display: 'none' }} />
 
                 <Text>{item?.title || '---'}</Text>
               </StyledNavLink>

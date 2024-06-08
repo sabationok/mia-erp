@@ -1,9 +1,11 @@
-import React, { CSSProperties, forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 import styled, { css } from 'styled-components';
 import { FieldError, FieldErrorsImpl, Merge } from 'react-hook-form';
-import FlexBox from '../FlexBox';
+import FlexBox, { FlexBoxProps, FlexFieldSet } from '../FlexBox';
+import { Property } from 'csstype';
+import { Text } from '../Text';
 
-export interface InputLabelProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface InputLabelProps extends React.HTMLAttributes<HTMLFieldSetElement>, FlexBoxProps {
   label?: string;
   direction?: 'horizontal' | 'vertical' | 'row' | 'column';
   uppercase?: boolean;
@@ -11,7 +13,7 @@ export interface InputLabelProps extends React.HTMLAttributes<HTMLDivElement> {
   success?: string;
   loading?: boolean;
   helperText?: string;
-  align?: CSSProperties['alignItems'];
+  align?: Property.AlignItems;
   disabled?: boolean;
   required?: boolean;
 }
@@ -33,14 +35,15 @@ const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = (
     required,
     ...props
   },
-  ref: React.ForwardedRef<HTMLDivElement>
+  ref: React.ForwardedRef<HTMLFieldSetElement>
 ) => {
   return (
     <Box className={className} disabled={disabled} {...props} ref={ref}>
       <Wrapper isLabel={!!label} direction={direction}>
         {label && (
           <Label htmlFor={id} uppercase={uppercase} align={align} direction={direction} className="label">
-            {`${label}${required ? ' *' : ''}`}
+            {label}
+            {required && <Text color={'tomato'}>{' *'}</Text>}
           </Label>
         )}
 
@@ -56,7 +59,7 @@ const InputLabel: React.ForwardRefRenderFunction<any, InputLabelProps> = (
   );
 };
 
-const Box = styled.div<{
+const Box = styled(FlexFieldSet)<{
   disabled?: boolean;
   error?: boolean;
   success?: boolean;
@@ -72,12 +75,13 @@ const Box = styled.div<{
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'all')};
 `;
 const Label = styled.label<Pick<InputLabelProps, 'align' | 'direction' | 'uppercase'>>`
-  display: flex;
+  //display: flex;
+
   align-items: ${({ align = 'center' }) => align};
 
   padding: 8px 8px 4px;
 
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.3;
   font-weight: 500;
   text-transform: ${({ uppercase }) => (uppercase ? 'uppercase' : 'none')};
@@ -122,7 +126,7 @@ const HelperText = styled.div<{
   font-size: 12px;
   line-height: 1.5;
 
-  color: ${({ error, success, theme }) => (error && 'tomato') || (success && 'lightgreen') || 'inherit'};
+  color: ${({ error, success }) => (error && 'tomato') || (success && 'lightgreen') || 'inherit'};
 
   cursor: default;
 `;

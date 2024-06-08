@@ -2,7 +2,7 @@ import { IBase, MaybeNull } from '../../types/utils.types';
 import React, { useEffect } from 'react';
 import { FlexLi, FlexUl } from './FlexBox';
 import { Text } from './Text';
-import SvgIcon from './SvgIcon/SvgIcon';
+import SvgIcon from './SvgIcon';
 import styled from 'styled-components';
 import { useScrollTo } from '../../hooks';
 import ButtonIcon from './ButtonIcon';

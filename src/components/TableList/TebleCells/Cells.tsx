@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import React from 'react';
 import { CellTitleContent } from './CellTitle';
 import { Avatar } from 'antd';
-import SvgIcon from '../../atoms/SvgIcon/SvgIcon';
+import SvgIcon from '../../atoms/SvgIcon';
 import FlexBox from '../../atoms/FlexBox';
 import StatusComp from './CellComponents/StatusComp';
 import { StatusNames } from '../../../data/statuses.data';

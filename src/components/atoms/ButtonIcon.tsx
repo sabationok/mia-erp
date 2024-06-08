@@ -1,10 +1,11 @@
 import React, { CSSProperties, memo } from 'react';
-import sprite, { IconIdType } from 'img/sprite';
+import { IconIdType } from 'img/sprite';
 import styled, { css, DefaultTheme, FlattenInterpolation, ThemeProps } from 'styled-components';
 import { Property } from 'csstype';
 import { AppLoaderSpiner } from './AppLoaderSpiner';
 import { Keys } from '../../types/utils.types';
 import FlexBox, { FlexBoxCss, FlexBoxProps } from './FlexBox';
+import SvgIcon from './SvgIcon';
 
 interface ButtonStyleProps extends FlexBoxProps {
   flexDirection?: Property.FlexDirection;
@@ -19,10 +20,10 @@ export interface ButtonIconsProps {
   endIconStyles?: CSSProperties;
 
   icon?: IconIdType;
-  iconId?: string;
+  iconId?: IconIdType;
 
   endIcon?: IconIdType;
-  endIconId?: string;
+  endIconId?: IconIdType;
 }
 interface ButtonProps extends ButtonStyleProps, React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: `${string}px` | `${string}%`;
@@ -73,6 +74,9 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
     ...endIconStyles,
   };
 
+  const _startIcon = iconId || icon;
+  const _endIcon = endIconId || endIcon;
+
   return (
     <StButton
       {...{
@@ -85,18 +89,18 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
         ...props,
       }}
     >
-      {(iconId || icon) && (
-        <SvgIcon className="icon" style={iconStyle}>
-          <use href={`${sprite}#icon-${icon || iconId}`} />
+      {_startIcon && (
+        <SvgIcon className="icon" style={iconStyle} icon={_startIcon}>
+          {/*<use href={`${sprite}#icon-${icon || iconId}`} />*/}
         </SvgIcon>
       )}
       {variant && !variant.includes('Icon') && children}
       {/*{children}*/}
       <ButtonLoader isLoading={isLoading} variant={variant} size={size || '20px'} />
 
-      {(endIconId || endIcon) && (
-        <SvgIcon className="endIcon" style={endIconStyle}>
-          <use href={`${sprite}#icon-${endIcon || endIconId}`}></use>
+      {_endIcon && (
+        <SvgIcon className="endIcon" style={endIconStyle} icon={_endIcon}>
+          {/*<use href={`${sprite}#icon-${endIcon || endIconId}`}></use>*/}
         </SvgIcon>
       )}
     </StButton>
@@ -192,15 +196,17 @@ const StButton = styled.button<ButtonIconProps>`
   }
 `;
 
-const SvgIcon = styled.svg`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  pointer-events: none;
-  width: 100%;
-  height: 100%;
-`;
+// const SvgIcon = styled.svg`
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//
+//   pointer-events: none;
+//   width: 100%;
+//   height: 100%;
+//
+//   aspect-ratio: 1/1;
+// `;
 
 const def = css`
   background-color: ${({ theme }) => theme.globals.defaultBtnBckgrndColor.def};
@@ -324,9 +330,6 @@ const pointerBottom = css`
       background-color: ${({ theme }) => theme.accentColor.base};
     }
   }
-
-  &:active {
-  }
 `;
 
 const icon = css`
@@ -334,6 +337,9 @@ const icon = css`
   min-height: 26px;
   width: fit-content;
   padding: 0;
+
+  aspect-ratio: 1/1;
+
   @media screen and (max-width: 480px) {
     min-width: 28px;
     min-height: 28px;

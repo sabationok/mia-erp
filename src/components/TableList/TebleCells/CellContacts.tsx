@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { useRow } from '../TableRows/TableRow';
 import { CellTitleContent, CellTittleProps } from './CellTitle';
-import SvgIcon from '../../atoms/SvgIcon/SvgIcon';
+import SvgIcon from '../../atoms/SvgIcon';
 import getValueByPath from '../../../utils/getValueByPath';
 import FlexBox from '../../atoms/FlexBox';
 

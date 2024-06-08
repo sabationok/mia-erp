@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
-import SvgIcon from 'components/atoms/SvgIcon/SvgIcon';
+import SvgIcon from 'components/atoms/SvgIcon';
 import * as _ from 'lodash';
 import styled from 'styled-components';
 import { IconIdType } from 'img/sprite';
