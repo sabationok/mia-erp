@@ -10,11 +10,9 @@ export interface CellTextDblProps {
   idx?: number;
 }
 
-const CellStatus: React.FC<CellTextDblProps & React.HTMLAttributes<HTMLDivElement>> = ({
+const CellDoubleStatus: React.FC<CellTextDblProps & React.HTMLAttributes<HTMLDivElement>> = ({
   titleInfo: { top, bottom, width = '100px' },
   titleInfo,
-  idx,
-  ...props
 }) => {
   const { rowData } = useRow();
 
@@ -43,4 +41,4 @@ const CellStatus: React.FC<CellTextDblProps & React.HTMLAttributes<HTMLDivElemen
   return <Cells.DoubleStatus {...cellConfig} width={width} />;
 };
 
-export default memo(CellStatus);
+export default memo(CellDoubleStatus);

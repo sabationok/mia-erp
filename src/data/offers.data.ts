@@ -7,6 +7,7 @@ import { FilterOption } from '../components/atoms/TabSelector';
 import { ImageSetSrcType } from '../types/offers/offer-images.types';
 import { toPrice } from '../utils/numbers';
 import { TableSearchParam, TableSortParam } from '../components/TableList/tableTypes.types';
+import { IBase } from '../types/utils.types';
 
 export const offerStatusesData = getStatusesByEnum(OfferStatusEnum);
 export const OfferStatusFilterOptions = enumToFilterOptions(OfferStatusEnum);
@@ -31,16 +32,23 @@ export const offersTableColumns: CellTittleProps<OfferEntity>[] = [
     width: '200px',
     action: 'valueByPath',
   },
+
   {
     top: { name: t('type'), path: 'type' },
-    bottom: { name: t('status'), getData: d => d.approved as never },
     width: '100px',
+    action: 'status',
+  },
+  {
+    // top: { name: t('type'), path: 'type' },
+    bottom: { name: t('status'), getData: d => d.approved as never },
+    top: { name: t('Visibility'), getData: d => (d.visible ? 'visible' : 'hidden') },
+    width: '120px',
     action: 'status',
   },
 
   {
-    top: { name: t('Price OUT'), align: 'end', getData: d => toPrice(d.price?.out) },
-    bottom: { name: t('Price IN'), align: 'end', getData: d => toPrice(d.price?.in) },
+    top: { name: t('Price OUT'), align: 'end', getData: d => (d.price?.out ? toPrice(d.price?.out) : '--.--') },
+    bottom: { name: t('Price IN'), align: 'end', getData: d => (d.price?.in ? toPrice(d.price?.in) : '--.--') },
     width: '150px',
     action: 'valueByPath',
   },
@@ -81,29 +89,42 @@ export const offersTableColumns: CellTittleProps<OfferEntity>[] = [
   //   action: 'valueByPath',
   // },
   {
-    top: { name: 'Бренд', path: 'brand.label' },
-    bottom: { name: 'Виробник', path: 'manufacturer.name' },
-    width: '150px',
-    action: 'valueByPath',
+    top: { name: 'Бренд', getData: rd => rd.brand?.label },
+    bottom: { name: 'Виробник', getData: rd => rd.brand?.manufacturer },
+    width: '180px',
+    action: 'doubleDataWithAvatar',
   },
-  {
-    top: { name: 'Опис', path: 'description' },
-    width: '150px',
-    action: 'valueByPath',
-  },
+  // {
+  //   top: { name: 'Опис', path: 'description' },
+  //   width: '150px',
+  //   action: 'valueByPath',
+  // },
   {
     top: { name: 'Оновив', getData: rd => rd?.editor?.user?.email ?? '---' },
     bottom: { name: 'Автор', getData: rd => rd?.author?.user?.email ?? '---' },
     width: '150px',
     action: 'valueByPath',
   },
-  {
+  datesColumn(),
+];
+
+export function deletesStatusColumn<Data extends IBase = any>(): CellTittleProps<Data> {
+  return {
+    top: { name: t('Deleted status'), align: 'center', path: 'updatedAt' },
+    bottom: { name: 'Створено', align: 'center', path: 'createdAt' },
+    width: '150px',
+    action: 'dateDbl',
+  };
+}
+export function datesColumn<Data extends IBase = any>(): CellTittleProps<Data> {
+  return {
     top: { name: 'Оновлено', align: 'center', path: 'updatedAt' },
     bottom: { name: 'Створено', align: 'center', path: 'createdAt' },
     width: '150px',
     action: 'dateDbl',
-  },
-];
+  };
+}
+
 export type OfferSortParam = TableSortParam<'sku' | 'label' | 'barCode' | 'price' | 'status'>;
 export const offersSortParams: OfferSortParam[] = [
   { dataKey: 'sku', label: 'SKU' },

@@ -26,13 +26,13 @@ export interface IDataCellProps<T = any> {
 const DoubleDataCell: React.FC<IDataCellProps> = ({ width, content, subContent }) => {
   return (
     <CellDoubleData style={{ width }}>
-      <Content align={content?.align} uppercase={content?.uppercase} fontWeight={600} fontSize={'12px'}>
+      <Content align={content?.align} uppercase={content?.uppercase} fontWeight={600} fontSize={'13px'}>
         <div title={content?.data || ''} className="inner">
           {content?.data}
         </div>
       </Content>
 
-      <Content align={subContent?.align} uppercase={subContent?.uppercase} fontWeight={500} fontSize={'11px'}>
+      <Content align={subContent?.align} uppercase={subContent?.uppercase} fontWeight={500} fontSize={'12px'}>
         {subContent ? (
           <div title={subContent?.data || ''} className="inner">
             {subContent.data}
@@ -47,10 +47,10 @@ const SimpleDataCell: React.FC<Omit<IDataCellProps, 'subContent'>> = ({ width, c
     <CellBase style={{ width }}>
       <Content align={content?.align} uppercase={content?.uppercase} style={{ maxHeight: '100%' }}>
         <Text
-          $size={12}
+          $size={13}
           $weight={500}
           $ellipsisMode={true}
-          $lines={2}
+          $lines={3}
           title={content?.data || ''}
           style={{ maxHeight: '100%' }}
         >
@@ -78,13 +78,13 @@ const DoubleDataWithAvatarCell: React.FC<IDataCellProps> = ({ width, content, su
       </FlexBox>
 
       <CellDoubleData>
-        <Content align={content?.align} uppercase={content?.uppercase} fontWeight={500} fontSize={'12px'}>
+        <Content align={content?.align} uppercase={content?.uppercase} fontWeight={500} fontSize={'13px'}>
           <div title={content?.data || ''} className="inner">
             {content?.data}
           </div>
         </Content>
 
-        <Content align={subContent?.align} uppercase={subContent?.uppercase} fontWeight={400} fontSize={'11px'}>
+        <Content align={subContent?.align} uppercase={subContent?.uppercase} fontWeight={400} fontSize={'12px'}>
           {subContent ? (
             <div title={subContent?.data || ''} className="inner">
               {subContent.data}
@@ -104,38 +104,44 @@ const DataWithAvatarCell: React.FC<Omit<IDataCellProps, 'subContent'>> = ({
 }) => {
   return (
     <CellDoubleDataWithAvatar style={{ width }}>
-      <FlexBox padding={'0 0 0 4px'} alignItems={'center'} justifyContent={'center'} width={'40px'} height={'40px'}>
-        <Avatar
-          src={imgUrl}
-          shape={'square'}
-          style={{ borderRadius: '2px', width: '100%', height: '100%' }}
-          icon={<SvgIcon icon={imgPreviewIcon || 'gallery'} size={'90%'} fill={'#fff'} />}
-        />
-      </FlexBox>
+      <AvatarBox icon={imgPreviewIcon} imgUrl={imgUrl} />
 
-      <CellBase>
-        <Content align={content?.align} uppercase={content?.uppercase} fontWeight={500} fontSize={'12px'}>
-          <div title={content?.data || ''} className="inner">
-            {content?.data}
-          </div>
-        </Content>
-      </CellBase>
+      <SimpleDataCell content={content} />
     </CellDoubleDataWithAvatar>
   );
 };
-
+const AvatarBox = ({ imgUrl, icon }: { imgUrl?: string | null; icon?: IconIdType }) => {
+  return (
+    <FlexBox
+      // padding={'0 0 0 6px'}
+      alignItems={'center'}
+      justifyContent={'center'}
+      minWidth={'40px'}
+      maxWidth={'40px'}
+      height={'40px'}
+      margin={'auto'}
+    >
+      <Avatar
+        src={imgUrl}
+        shape={'square'}
+        style={{ borderRadius: '4px', width: '100%', height: '100%' }}
+        icon={<SvgIcon icon={icon || 'gallery'} size={'90%'} fill={'#fff'} />}
+      />
+    </FlexBox>
+  );
+};
 const DoubleStatusCell: React.FC<IDataCellProps<StatusNames>> = ({ width, content, subContent }) => {
   return (
     <CellDoubleData style={{ width }}>
-      <Content align={content?.align} uppercase={content?.uppercase} fontWeight={600} fontSize={'12px'}>
+      <Content align={content?.align} uppercase={content?.uppercase} fontWeight={600} fontSize={'14px'}>
         <StatusComp status={content?.data} variant={'text'} fillWidth />
       </Content>
 
-      <Content align={subContent?.align} uppercase={subContent?.uppercase} fontWeight={500} fontSize={'11px'}>
-        {subContent ? (
-          <StatusComp status={subContent?.data} fontSize={'10px'} variant={'filled'} fontWeight={500} />
-        ) : null}
-      </Content>
+      {subContent?.data ? (
+        <Content align={subContent?.align} uppercase={subContent?.uppercase} fontWeight={500} fontSize={'12px'}>
+          <StatusComp status={subContent?.data} fontSize={'10px'} variant={'outlined'} fontWeight={500} />
+        </Content>
+      ) : null}
     </CellDoubleData>
   );
 };
@@ -159,7 +165,7 @@ const CellDoubleDataWithAvatar = styled(CellBase)`
 
   //gap: 8px;
 
-  padding: 0;
+  //padding: 0 0 0 6px;
 `;
 
 const Content = styled.div<
@@ -171,9 +177,9 @@ const Content = styled.div<
   //border: 1px solid tomato;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 
-  font-size: ${({ fontSize = '10px' }) => fontSize};
+  font-size: ${({ fontSize = '11px' }) => fontSize};
   font-weight: ${({ fontWeight = 400 }) => fontWeight};
 
   width: 100%;
@@ -191,7 +197,7 @@ const Content = styled.div<
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1; */
     //word-break: break-word;
-    line-height: 1.2;
+    line-height: 1.45;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -399,6 +399,9 @@ export const langUa = {
   logOutUser: 'Вийти з профілю',
   logOutPermission: 'Вийти з компанії',
 
+  Hidden: 'Прихований',
+  Visible: 'Видимий',
+
   select: 'Обрати',
   selected: 'Обрано',
 

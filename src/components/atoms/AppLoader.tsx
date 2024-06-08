@@ -14,7 +14,7 @@ const AppLoader: React.FC<AppLoaderProps> = ({ isLoading, comment = 'Please wait
   const theme = useTheme();
   return (
     <Backdrop isOpen={isLoading}>
-      <FlexBox gap={16} alignItems={'center'}>
+      <FlexBox gap={16} alignItems={'center'} padding={'16px'}>
         <Oval
           height="60"
           width="60"
@@ -28,7 +28,7 @@ const AppLoader: React.FC<AppLoaderProps> = ({ isLoading, comment = 'Please wait
           strokeWidthSecondary={3}
         />
         {comment && (
-          <Text $align={'center'} $size={22} $weight={600} color={'#fff'}>
+          <Text $align={'center'} $size={16} $weight={600} color={'#fff'}>
             {comment}
           </Text>
         )}
@@ -49,7 +49,7 @@ const Backdrop = styled.div<{ isOpen: boolean }>`
   width: 100%;
   height: 100%;
 
-  background: ${({ theme }) => theme.backdropColorDark};
+  background: ${({ theme }) => theme.backdropColorDarkLight};
   backdrop-filter: blur(1px);
 `;
 

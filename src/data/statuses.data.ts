@@ -83,15 +83,15 @@ const colors = {
   default: 'rgb(154, 154, 154)',
   defaultLight: '#E9E9E9',
   clrInfo: '#3498db',
-  clrInfoLight: 'rgb(156,200,255)',
+  clrInfoLight: 'rgb(227,239,255)',
   clrSuccess: '#07bc0c',
-  clrSuccessLight: 'rgb(165,255,155)',
+  clrSuccessLight: 'rgb(216,255,211)',
   clrWarning: '#f1c40f',
-  clrWarningLight: 'rgb(255,250,155)',
+  clrWarningLight: 'rgb(255,251,202)',
   clrError: '#e74c3c',
-  clrErrorLight: 'rgb(255,158,155)',
+  clrErrorLight: 'rgb(255,203,201)',
   clrPrimary: '#cdcdcd',
-  expense: '#FF3B30',
+  expense: '#ff645b',
   income: '#30D158',
   transfer: '#5E5CE6',
   textPrimary: '#EFEFEF',
@@ -102,7 +102,7 @@ export interface StatusData<Name extends string | number | symbol = any> {
   color?: string;
   colorSecondary?: string;
   label: string;
-  iconId?: IconIdType;
+  icon?: IconIdType;
   description?: string;
 }
 
@@ -121,43 +121,47 @@ export enum StatusNameEnum {
   rejected = 'rejected',
   GOODS = 'GOODS',
   SERVICE = 'SERVICE',
+  // SET = 'SET',
+
+  visible = 'visible',
+  hidden = 'hidden',
 }
 
 export const statusDataMap: Record<StatusNameEnum, StatusData> = {
   noStatus: {
     name: 'NO_STATUS',
     color: 'inherit',
-    iconId: 'info',
+    icon: 'info',
     label: t('undefined'),
     colorSecondary: colors.defaultLight,
   },
   error: {
     name: 'error',
-    color: 'inherit',
-    iconId: 'error',
+    icon: 'error',
     label: t('error'),
-    colorSecondary: colors.clrErrorLight,
     description: 'error',
+    color: colors.clrError,
+    colorSecondary: colors.clrErrorLight,
   },
   success: {
     name: 'success',
-    color: 'inherit',
-    iconId: 'success',
+    icon: 'success',
     label: t('success'),
+    color: colors.clrSuccess,
     colorSecondary: colors.clrSuccessLight,
   },
   info: {
     name: 'info',
-    color: 'inherit',
-    iconId: 'info',
+    icon: 'info',
     label: t('info'),
+    color: colors.clrInfo,
     colorSecondary: colors.clrInfoLight,
   },
   warning: {
     name: 'warning',
-    color: 'inherit',
-    iconId: 'warning',
+    icon: 'warning',
     label: t('warning'),
+    color: colors.clrWarning,
     colorSecondary: colors.clrWarningLight,
   },
   INCOME: {
@@ -213,6 +217,19 @@ export const statusDataMap: Record<StatusNameEnum, StatusData> = {
     label: t('approved'),
     color: colors.clrSuccess,
     colorSecondary: colors.clrSuccessLight,
+  },
+  hidden: {
+    name: 'hidden',
+    label: t('Hidden'),
+    color: colors.clrWarning,
+    colorSecondary: colors.clrWarningLight,
+  },
+
+  visible: {
+    name: 'visible',
+    label: t('Visible'),
+    color: colors.clrInfo,
+    colorSecondary: colors.clrInfoLight,
   },
 };
 

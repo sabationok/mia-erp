@@ -1,14 +1,15 @@
-import React, { CSSProperties, memo, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 
 import styled, { css } from 'styled-components';
 import { getStatusData, StatusData, StatusNames } from 'data/statuses.data';
+import { Property } from 'csstype';
 
 export type StatusCompVariants = 'outlined' | 'filled' | 'text';
 
 export interface StatusCompProps {
   status?: StatusNames;
   variant?: StatusCompVariants;
-  fontSize?: CSSProperties['fontSize'];
+  fontSize?: Property.FontSize;
   fontWeight?: 300 | 400 | 500 | 600 | 700 | 800 | 900;
   fillWidth?: boolean;
 }
@@ -50,24 +51,25 @@ type VariantProps = {
 };
 const variantsMap: VariansMapType = {
   outlined: css<VariantProps>`
-    //padding: 4px 4px;
-    border-radius: 2px;
-    color: ${({ color }) => (color ? color : '')};
-    fill: ${({ color }) => (color ? color : '')};
-    border: 2px solid ${({ color, theme }) => (color ? color : theme.borderColor)};
+    border-radius: 4px;
+    font-weight: 600;
+    color: ${({ color }) => (color ? color : 'inherit')};
+    fill: ${({ color }) => (color ? color : 'inherit')};
+    border: 1px solid ${({ color, theme }) => (color ? color : theme.borderColor)};
+    background-color: ${({ backgroundColor }) => (backgroundColor ? backgroundColor : '')};
   `,
   filled: css<VariantProps>`
-    //padding: 4px 4px;
     height: 100%;
-    padding: 0 8px;
+
     border-radius: 4px;
-    //color: ${({ color }) => (color ? color : '')};
-    color: #fff;
-    fill: #fff;
+    color: ${({ color }) => (color ? color : 'inherit')};
+    fill: ${({ color }) => (color ? color : 'inherit')};
     background-color: ${({ backgroundColor }) => (backgroundColor ? backgroundColor : '')};
   `,
   text: css<VariantProps>`
-    color: ${({ color }) => (color ? color : '')};
+    padding: 2px 0;
+    color: ${({ color }) => (color ? color : 'inherit')};
+    fill: ${({ color }) => (color ? color : 'inherit')};
   `,
 };
 
@@ -88,11 +90,14 @@ const StStatusComp = styled.div<
   max-width: 100%;
   height: 100%;
 
+  padding: 4px 6px;
+
   overflow: hidden;
 
+  color: ${({ color }) => (color ? color : 'inherit')};
+  fill: ${({ fill }) => (fill ? fill : 'inherit')};
+
   cursor: default;
-  color: ${({ color, theme }) => (color ? color : '')};
-  fill: ${({ fill, theme }) => (fill ? fill : '')};
   border-radius: 2px;
 
   ${({ variant }) => (variant ? variantsMap[variant] : variantsMap['text'])};
@@ -102,7 +107,7 @@ const Label = styled.span<StatusCompProps>`
   overflow: hidden;
   text-overflow: ellipsis;
 
-  font-size: ${({ fontSize = '14px' }) => fontSize};
-  font-weight: ${({ fontWeight = 600 }) => fontWeight};
+  //font-size: ${({ fontSize = '14px' }) => fontSize};
+  //font-weight: ${({ fontWeight = 600 }) => fontWeight};
 `;
 export default memo(StatusComp);
