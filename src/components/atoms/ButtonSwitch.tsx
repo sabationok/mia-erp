@@ -47,10 +47,6 @@ const ButtonSwitch = <Name extends string | number | symbol = string>({
     }
   }, [value]);
 
-  useEffect(() => {
-    console.log({ value });
-  }, [value]);
-
   return <ButtonsGroup options={options} disabled={disabled} value={current} onChangeIndex={handleChange} />;
 };
 

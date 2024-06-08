@@ -183,11 +183,10 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
     !keepOpen && setIsOpen(prev => !prev);
   }, [keepOpen]);
 
-  const optionData = selectedOption || currentOption;
-
-  // const inputCurrentValue = useMemo(() => {
-  //   return option ? option?.label || option?.name || null : null;
-  // }, [currentOption, selectedOption]);
+  const inputCurrentValue = useMemo(() => {
+    const option = selectedOption || currentOption;
+    return option ? option?.label || option?.name || null : null;
+  }, [currentOption, selectedOption]);
 
   const onSelectOption = useCallback(
     (index: number, option?: any) => {
@@ -276,12 +275,6 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
   return (
     <InputLabel
       id={selectId}
-      // onBlurCapture={() => {
-      //   setIsOpen(false);
-      // }}
-      onFocusCapture={() => {
-        setIsOpen(true);
-      }}
       className={'select-box'}
       fillWidth
       data-select={selectId}
@@ -305,8 +298,8 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
             id={id}
             placeholder={props.placeholder}
             {...inputProps}
-            defaultValue={optionData?.label || optionData?.name}
-            value={optionData?.label || optionData?.name || ''}
+            defaultValue={inputCurrentValue}
+            value={inputCurrentValue || ''}
             onChange={() => {}}
           />
 
