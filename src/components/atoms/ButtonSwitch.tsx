@@ -3,11 +3,8 @@ import _ from 'lodash';
 import { t } from '../../lang';
 import ButtonsGroup from './ButtonsGroup';
 
-export type ButtonSwitchChangeHandler<Name extends string | number | symbol = string> = (
-  res: boolean,
-  name?: Name
-) => void;
-interface ButtonSwitchProps<Name extends string | number | symbol = string> {
+export type ButtonSwitchChangeHandler<Name extends string | number = string> = (res: boolean, name?: Name) => void;
+interface ButtonSwitchProps<Name extends string | number = string> {
   acceptLabel?: string;
   rejectLabel?: string;
   onChange?: ButtonSwitchChangeHandler<Name>;
@@ -16,7 +13,7 @@ interface ButtonSwitchProps<Name extends string | number | symbol = string> {
   disabled?: boolean;
 }
 
-const ButtonSwitch = <Name extends string | number | symbol = string>({
+const ButtonSwitch = <Name extends string | number = string>({
   name,
   onChange,
   value = false,

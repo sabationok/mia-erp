@@ -58,10 +58,10 @@ function createFlexBoxStyles({ query, key }: { query: string; key: MediasStylesK
       border-bottom: ${({ borderBottom, ...p }) => p[key]?.borderBottom || borderBottom};
       border: ${({ border, ...p }) => p[key]?.border || border};
 
-      gap: ${({ gap = 0, ...p }) => p[key]?.gap || gap}px;
+      gap: ${({ gap = 0, ...p }) => p[key]?.gap ?? gap}px;
       stroke: ${p => []};
-      padding: ${({ padding = 0, ...p }) => p[key]?.padding || padding};
-      margin: ${({ margin = 0, ...p }) => p[key]?.margin || margin};
+      padding: ${({ padding = 0, ...p }) => p[key]?.padding ?? padding};
+      margin: ${({ margin = 0, ...p }) => p[key]?.margin ?? margin};
 
       align-self: ${({ alignSelf, ...p }) => p[key]?.alignSelf || alignSelf};
       justify-self: ${({ justifySelf, ...p }) => p[key]?.justifySelf || justifySelf};
@@ -79,7 +79,7 @@ function createFlexBoxStyles({ query, key }: { query: string; key: MediasStylesK
 
       background: ${({ background, ...p }) => p[key]?.background || background};
 
-      border-radius: ${({ borderRadius = 0, ...p }) => p[key]?.borderRadius || borderRadius};
+      border-radius: ${({ borderRadius = 0, ...p }) => p[key]?.borderRadius ?? borderRadius};
       overflow: ${({ overflow = '', ...p }) => p[key]?.overflow || overflow};
     }
   `;
@@ -158,6 +158,8 @@ export const FlexBox = styled.div<FlexBoxProps>`
 `;
 
 export const FlexFieldSet = styled.fieldset<FlexBoxProps>`
+  min-inline-size: unset;
+
   ${FlexBoxCss};
   border: 0;
   &[disabled] {

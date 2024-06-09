@@ -113,10 +113,10 @@ export const AccordionFormArea = ({
         </Header>
       )}
 
-      <ExpandableBox disabled={disabled} flex={1} isActive={_isOpen} maxHeight={maxHeight}>
+      <ExpandableBox disabled={disabled} flex={1} isActive={_isOpen} maxHeight={maxHeight} maxWidth={'100%'}>
         {_isOpen ? (
-          <FlexBox maxWidth={'100%'} overflow={'hidden'}>
-            <FlexBox flex={1} overflow={'hidden'} padding={'8px 8px 12px'}>
+          <>
+            <FlexBox flex={1} maxWidth={'100%'} overflow={'hidden'} padding={'8px 8px 12px'}>
               {children}
             </FlexBox>
 
@@ -133,7 +133,7 @@ export const AccordionFormArea = ({
                     onResetPress={onResetPress}
                   />
                 )}
-          </FlexBox>
+          </>
         ) : null}
       </ExpandableBox>
     </FlexBox>
@@ -158,14 +158,16 @@ const Header = styled(FlexBox)<{ isSticky?: boolean }>`
 const ExpandableBox = styled(FlexFieldSet)`
   overflow: hidden;
   max-width: 100%;
+  width: 100%;
+  height: unset;
 
   max-height: ${p => (p.isActive ? '100%' : '0')};
   transition: all ${p => p.theme.globals.timingFunctionMain};
 
-  &::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-  }
+  //&::-webkit-scrollbar {
+  //  width: 4px;
+  //  height: 4px;
+  //}
 `;
 const HeaderButton = styled(ButtonIcon)`
   &[disabled] {

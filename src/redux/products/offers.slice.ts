@@ -3,7 +3,7 @@ import { StateErrorType } from 'redux/reduxTypes.types';
 import { IOfferRelatedDefaultFields, OfferEntity, OfferTypeEnum } from '../../types/offers/offers.types';
 import * as thunks from './offers.thunks';
 import {
-  ProperiesGroupEntity,
+  PropertiesGroupEntity,
   PropertyBaseEntity,
   PropertyLevelTypeEnum,
   PropertySelectableTypeEnum,
@@ -27,7 +27,7 @@ export interface OffersState {
   list: OfferEntity[];
   currentOffer?: OfferEntity;
   filteredProducts?: OfferEntity[];
-  properties: ProperiesGroupEntity[];
+  properties: PropertiesGroupEntity[];
   isLoading: boolean;
   error: StateErrorType;
 
@@ -126,6 +126,10 @@ export const offersSlice = createSlice({
       })
       // * ============>>>>>>>>>>> PROPERTIES
       .addCase(getAllPropertiesThunk.fulfilled, (s, a) => {
+        if (a.payload.params?.dataView === 'tree') {
+          s.properties = a.payload.data;
+        }
+
         UpdatePropertiesMap(s, a.payload);
       })
       .addCase(createPropertyThunk.fulfilled, (s, a) => {
@@ -158,9 +162,9 @@ export const offersSlice = createSlice({
         ManageVariationsStateMap(s, { data: a.payload.data });
       })
       .addCase(thunks.getAllVariationsByOfferIdThunk.fulfilled, (s, a) => {
-        const { upend, prepend } = a.payload;
+        // const { upend, prepend } = a.payload;
 
-        s.list = prepend ? [...a.payload.data, ...s.list] : upend ? [...s.list, ...a.payload.data] : a.payload.data;
+        // s.list = prepend ? [...a.payload.data, ...s.list] : upend ? [...s.list, ...a.payload.data] : a.payload.data;
 
         const offerId = a.payload?.params?.offerId || a.payload?.data?.[0]?._id;
         if (offerId) {

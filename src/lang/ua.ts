@@ -36,6 +36,9 @@ export const langUa = {
   staticProperties: 'Статичні характеристики',
   availableProperties: 'Доступні характеристики',
 
+  From: 'З',
+  To: 'До',
+
   counter: 'Бухгалтер',
   auditor: 'Аудитор',
   [ContractorsTypesEnum.SUPPLIER]: 'Постачальник',
@@ -178,7 +181,7 @@ export const langUa = {
   projects: 'Проєкти',
 
   createdAt: 'Створено',
-  updateAt: 'Оновлено',
+  updatedAt: 'Оновлено',
   deletedAt: 'Видалено',
 
   'Created at': 'Створено',

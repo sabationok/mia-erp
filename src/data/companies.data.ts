@@ -60,7 +60,7 @@ export const companiesTableColumns: CellTittleProps<CompanyEntity>[] = [
 export const permissionsSearchParams: SelectItem[] = [
   { label: t('date'), dataPath: 'eventDate', filter: false, search: false, sort: true },
   { label: t('createdAt'), dataPath: 'createdAt', filter: false, search: false, sort: true },
-  { label: t('updateAt'), dataPath: 'updateAt', filter: false, search: false, sort: true },
+  { label: t('updatedAt'), dataPath: 'updateAt', filter: false, search: false, sort: true },
   { label: t('countIn'), dataPath: 'countIn', filter: false, search: true, sort: true },
   { label: t('subCountIn'), dataPath: 'subCountIn', filter: false, search: true, sort: true },
   { label: t('countOut'), dataPath: 'countOut', filter: false, search: true, sort: true },

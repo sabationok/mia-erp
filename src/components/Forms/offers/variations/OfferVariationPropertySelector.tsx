@@ -8,6 +8,7 @@ import ButtonIcon from '../../../atoms/ButtonIcon';
 import FlexBox from '../../../atoms/FlexBox';
 import { useOffersSelector } from '../../../../redux/selectors.store';
 import { t } from '../../../../lang';
+import TagButtonsFilter from '../../../atoms/TagButtonsFilter';
 
 interface PropertyItemStyleByCmsTypeProps {
   numColumns?: number;
@@ -31,15 +32,19 @@ export interface OfferVariationPropertySelectorProps {
   item: PropertyEntity;
   selectedValue?: string;
   selectedIds?: string[];
+  multiple?: boolean;
   isOpen?: boolean;
   childrenList?: PropertyEntity['childrenList'];
   onSelect?: (propId: string, valueId: string, label?: MaybeNull<string>) => void;
+  onChangeIds?: (propId: string, valueIds: string[]) => void;
 }
 export const OfferVariationPropertySelector = ({
   item,
   selectedIds,
   onSelect,
   isOpen,
+  multiple,
+  onChangeIds,
 }: OfferVariationPropertySelectorProps) => {
   const state = useOffersSelector();
   const [_isOpen, setIsOpen] = useState(isOpen ?? false);
@@ -63,19 +68,19 @@ export const OfferVariationPropertySelector = ({
     return _valuesList;
   }, [item?._id, item.childrenList, state.propertiesDataMap, state.propertiesKeysMap]);
 
-  const renderChildren = useMemo(() => {
-    return childrenList?.map(value => {
-      const isSelected = selectedIds?.includes(value._id);
-      return (
-        <RenderPropertyValue
-          key={`prop-value-${value._id}`}
-          item={value}
-          isSelected={isSelected}
-          onSelect={id => onSelect && onSelect(item._id, id, value?.label)}
-        />
-      );
-    });
-  }, [childrenList, item._id, onSelect, selectedIds]);
+  // const renderChildren = useMemo(() => {
+  //   return childrenList?.map(value => {
+  //     const isSelected = selectedIds?.includes(value._id);
+  //     return (
+  //       <RenderPropertyValue
+  //         key={`prop-value-${value._id}`}
+  //         item={value}
+  //         isSelected={isSelected}
+  //         onSelect={id => onSelect && onSelect(item._id, id, value?.label)}
+  //       />
+  //     );
+  //   });
+  // }, [childrenList, item._id, onSelect, selectedIds]);
 
   useEffect(() => {
     if (childrenList?.length) {
@@ -83,9 +88,11 @@ export const OfferVariationPropertySelector = ({
     }
   }, [childrenList?.length]);
 
+  const configs = item.cmsConfigs?.type ? PropertyItemStylesByCmsKey?.[item.cmsConfigs?.type] : undefined;
+
   return (
     <PropertyBox key={`property-box-${item._id}`} gap={8} fillWidth>
-      <FlexBox gap={8} fxDirection={'row'} padding={'6px 0'} justifyContent={'space-between'} alignItems={'flex-start'}>
+      <FlexBox gap={8} fxDirection={'row'} padding={'6px 0'} justifyContent={'space-between'} alignItems={'center'}>
         <Text $weight={500}>{item.label}</Text>
 
         <ButtonIcon
@@ -102,22 +109,22 @@ export const OfferVariationPropertySelector = ({
       {_isOpen && (
         <>
           {item.cmsConfigs?.type && (
-            <FlexBox gap={6} padding={'6px'} justifyContent={'center'}>
+            <FlexBox gap={6} padding={'6px'} justifyContent={'center'} alignItems={'center'}>
               <Text $size={11} $weight={400}>
                 {t('Cms type:')} {`"${item.cmsConfigs?.type}"`}
               </Text>
             </FlexBox>
           )}
 
-          <PropertyValuesBox
-            fillWidth
-            padding={'8px 0'}
-            gap={6}
-            {...(item.cmsConfigs?.type ? PropertyItemStylesByCmsKey?.[item.cmsConfigs?.type] : undefined)}
-            isActive={_isOpen}
-          >
-            {renderChildren}
-          </PropertyValuesBox>
+          <TagButtonsFilter
+            numColumns={configs?.numColumns}
+            multiple={multiple}
+            onChange={values => {
+              onChangeIds && onChangeIds(item._id, values);
+            }}
+            values={selectedIds}
+            options={childrenList}
+          />
         </>
       )}
     </PropertyBox>
@@ -130,40 +137,35 @@ const PropertyBox = styled(FlexBox)`
   }
 `;
 
-const PropertyValuesBox = styled(FlexBox)<PropertyItemStyleByCmsTypeProps>`
-  width: 100%;
-  display: grid;
+const PropertyValuesBox = styled(FlexBox)<PropertyItemStyleByCmsTypeProps>``;
 
-  grid-template-columns: repeat(${p => p?.numColumns ?? 2}, 1fr);
-`;
+// const RenderPropertyValue = ({
+//   item,
+//   isSelected,
+//   onSelect,
+// }: {
+//   item: PropertyValueEntity;
+//   isSelected?: boolean;
+//   onSelect: (id: string) => void;
+// }) => {
+//   return (
+//     <ValueTag
+//       variant={isSelected ? 'filledMiddle' : 'outlinedMiddle'}
+//       padding={'6px 8px'}
+//       fontWeight={500}
+//       onClick={() => {
+//         onSelect && onSelect(item._id);
+//       }}
+//     >
+//       {item.label}
+//     </ValueTag>
+//   );
+// };
 
-const RenderPropertyValue = ({
-  item,
-  isSelected,
-  onSelect,
-}: {
-  item: PropertyValueEntity;
-  isSelected?: boolean;
-  onSelect: (id: string) => void;
-}) => {
-  return (
-    <ValueTag
-      variant={isSelected ? 'filledMiddle' : 'outlinedMiddle'}
-      padding={'6px 8px'}
-      fontWeight={500}
-      onClick={() => {
-        onSelect && onSelect(item._id);
-      }}
-    >
-      {item.label}
-    </ValueTag>
-  );
-};
-
-const ValueTag = styled(ButtonIcon)`
-  width: 100%;
-  max-width: 100%;
-  min-width: 50px;
-`;
+// const ValueTag = styled(ButtonIcon)`
+//   width: 100%;
+//   max-width: 100%;
+//   min-width: 50px;
+// `;
 
 export default OfferVariationPropertySelector;

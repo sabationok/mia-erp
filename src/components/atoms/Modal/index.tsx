@@ -86,7 +86,9 @@ const ModalMain = styled.main`
   display: flex;
   flex-direction: column;
 
-  overflow: auto;
+  //overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   position: relative;
   height: 100%;
   max-width: 100%;

@@ -38,7 +38,7 @@ const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElem
           isLoading={isLoading}
           disabled={!isValid}
         >
-          {isLoading ? t('Loading...') : onSubmitPassed ? t('Save') : t('Close')}
+          {onSubmitPassed ? t('Save') : t('Close')}
         </ButtonIcon>
       </FlexBox>
     </Footer>
@@ -54,7 +54,7 @@ const Footer = styled.footer`
   position: sticky;
   bottom: 0;
   left: 0;
-  z-index: 10;
+  z-index: 80;
 
   overflow: hidden;
 

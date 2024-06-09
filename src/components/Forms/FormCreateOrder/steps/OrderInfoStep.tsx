@@ -184,7 +184,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
                     resetButtonLabel={t('Not needed')}
                     options={communicationMethodsList}
                     resetButtonPosition={'start'}
-                    onSelectValue={({ value }) => {
+                    onSelect={({ value }) => {
                       handleOnChangeValue('communication.customer', { _id: value });
                     }}
                   />
@@ -250,7 +250,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
                       resetButtonLabel={t('Without')}
                       options={communicationMethodsList.map(mtd => ({ ...mtd, value: mtd._id }))}
                       resetButtonPosition={'start'}
-                      onSelectValue={({ value }) => {
+                      onSelect={({ value }) => {
                         handleOnChangeValue('communication.receiver', { _id: value });
                       }}
                     />

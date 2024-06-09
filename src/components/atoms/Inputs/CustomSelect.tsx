@@ -37,8 +37,8 @@ export interface CustomSelectBaseProps<Option extends CustomSelectOptionBase = C
   isTouched?: boolean;
   isDirty?: boolean;
 
-  options?: CustomSelectOption<Option>[];
-  getOptions?: () => CustomSelectOption<Option>[];
+  options?: Option[];
+  getOptions?: () => Option[];
   validateOption?: (option: Option) => boolean;
 
   onClear?: () => void;
@@ -46,7 +46,7 @@ export interface CustomSelectBaseProps<Option extends CustomSelectOptionBase = C
   handleOpenState?: (prevState: boolean) => boolean;
   open?: boolean;
 
-  selectedOption?: CustomSelectOption<Option>;
+  selectedOption?: Option;
   selectedValue?: string | number;
   keepOpen?: boolean;
 
@@ -102,13 +102,12 @@ const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<
   const [_currentOption, setCurrentOption] = useState<CustomSelectOption | undefined>(selectedOption);
 
   const labelRef = useRef<HTMLFieldSetElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const listBoxRef = useRef(null);
 
   const [isOpen, setIsOpen] = useState<boolean>(keepOpen || open);
 
   const _compId = useMemo(() => (id ? id : `_${nanoid(5)}`), [id]);
-
-  const currentOption = selectedOption || _currentOption;
 
   const handleOpenState = useCallback(() => {
     setIsOpen(prev => !prev);
@@ -116,12 +115,13 @@ const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<
 
   const isActiveCheck = useCallback(
     <Option extends CustomSelectOption>(option: Option) => {
+      const currentOption = selectedOption || _currentOption;
       const key = option._id || option?.value;
       const activeKey = currentOption?._id || currentOption?.value;
 
       return key === activeKey;
     },
-    [currentOption?._id, currentOption?.value]
+    [_currentOption, selectedOption]
   );
 
   const onSelectOption = useCallback(
@@ -174,6 +174,12 @@ const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<
   );
 
   useEffect(() => {
+    if (inputRef.current && _currentOption) {
+      inputRef.current.value = _currentOption?.label || _currentOption?.name;
+    }
+  }, [_currentOption]);
+
+  useEffect(() => {
     if (!isUndefined(selectedOption)) {
       setCurrentOption(selectedOption);
     }
@@ -195,7 +201,6 @@ const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<
     <InputLabel
       id={_compId}
       className={'select-box'}
-      fillWidth
       data-select={_compId}
       direction={'vertical'}
       required={required}
@@ -211,18 +216,9 @@ const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<
             fieldMode={fieldMode}
             required={required}
             id={id}
-            onChange={() => {}}
-            value={
-              inputControl
-                ? undefined
-                : currentOption
-                  ? currentOption?.label || currentOption?.name || undefined
-                  : undefined
-            }
-            // ref={inputControl?.name ? inputControl.ref : undefined}
             {...inputControl}
             placeholder={props.placeholder}
-            // defaultValue={displayValue}
+            ref={inputRef}
           />
 
           <ActionsBox fxDirection={'row'} gap={6} fillHeight alignItems={'center'} padding={'0 8px 0 0'}>
@@ -281,7 +277,7 @@ const OptionsList = styled(FlexUl)<{
   position: absolute;
   top: 115%;
   left: 0;
-  z-index: 20;
+  z-index: 70;
 
   border-radius: 4px;
   border: 1px solid ${({ theme }) => theme.modalBorderColor};

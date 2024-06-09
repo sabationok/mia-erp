@@ -27,9 +27,10 @@ import { RenderStackHistory } from '../atoms/RenderStackHistory';
 import styled, { useTheme } from 'styled-components';
 import { t } from '../../lang';
 import ButtonSwitch from '../atoms/ButtonSwitch';
-import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import InputLabel from 'components/atoms/Inputs/InputLabel';
+import { useAppDispatch } from '../../redux/store.store';
+import { getAllPropertiesThunk } from '../../redux/products/properties/properties.thunks';
 
 export interface DirPropertiesProps
   extends IDirInTreeProps<
@@ -78,7 +79,8 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
 }) => {
   const state = useOffersSelector();
   const theme = useTheme();
-  const service = useAppServiceProvider().offers;
+  const dispatch = useAppDispatch();
+
   const loaders = useLoaders<'getAll' | string>({ getAll: { content: 'Refreshing properties' } });
   const modalSrv = useModalProvider();
   const [stack, setStack] = useState<PropertyBaseEntity[]>([]);
@@ -97,7 +99,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
     state.propertiesByTypeKeysMap[filerData.type].forEach(itemId => {
       const item = state.propertiesDataMap?.[itemId];
 
-      if (item) {
+      if (item && !item?.parent) {
         _rootItems.push(item);
       }
     });
@@ -163,9 +165,12 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
     }
   };
   useEffect(() => {
-    service.getAllProperties({
-      onLoading: loaders.onLoading('getAll'),
-    });
+    dispatch(
+      getAllPropertiesThunk({
+        // params: { dataView: 'tree', depth: 3 },
+        onLoading: loaders.onLoading('getAll'),
+      })
+    );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

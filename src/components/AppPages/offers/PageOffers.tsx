@@ -22,6 +22,7 @@ import { TableSearchFormState } from '../../TableList/TableOverHead/TableSearchF
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { setValueByPath } from '../../../utils';
+import FlexBox from '../../atoms/FlexBox';
 
 interface Props extends BaseAppPageProps {}
 
@@ -37,7 +38,7 @@ const PageOffers: React.FC<any> = (props: Props) => {
   );
 };
 
-const Page = styled.div`
+const Page = styled(FlexBox)`
   ${takeFullGridArea}
 `;
 
@@ -65,7 +66,6 @@ export const useOffersTableSettings = ({
 
   const [sortParams, setSortParams] = useState(sortState);
   const [searchParams, setSearchParams] = useState<TableSearchFormState | undefined>(searchState);
-  // const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   const tableConfig = useMemo(
     (): ITableListProps<OfferEntity, OfferSearchParam, OfferSortParam> => ({
@@ -95,7 +95,7 @@ export const useOffersTableSettings = ({
       searchParams: offersSearchParams,
       sortParams: offersSortParams,
       filterSelectors,
-      hasFilter: true,
+      hasFilter: false,
       hasSearch: true,
       showFooter: false,
       checkBoxes: true,

@@ -1,12 +1,6 @@
 import { AppDispatch, useAppDispatch } from 'redux/store.store';
 import { OfferEntity } from '../types/offers/offers.types';
-import {
-  __ServiceDispatcherAsync,
-  OnlyUUID,
-  ServiceApiCaller,
-  ServiceDispatcher,
-  ServiceDispatcherAsync,
-} from 'redux/app-redux.types';
+import { __ServiceDispatcherAsync, OnlyUUID, ServiceApiCaller, ServiceDispatcher } from 'redux/app-redux.types';
 import {
   createOfferThunk,
   createVariationThunk,
@@ -22,7 +16,7 @@ import {
   updateVariationThunk,
 } from '../redux/products/offers.thunks';
 import { useMemo } from 'react';
-import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
+import { defaultApiCallPayload } from 'utils/fabrics';
 import { apiCall, AppQueryParams, createApiCall } from 'api';
 import OffersApi from '../api/offers.api';
 import PropertiesApi from '../api/properties.api';
@@ -48,9 +42,9 @@ export interface OffersService {
   setDefaults: __ServiceDispatcherAsync<typeof updateOfferDefaultsThunk>;
 
   // * PROPERTIES
-  getAllProperties: ServiceDispatcherAsync<IPropertyReqData, PropertyEntity[]>;
-  createProperty: ServiceDispatcherAsync<IPropertyReqData, PropertyEntity>;
-  updatePropertyById: ServiceDispatcherAsync<IPropertyReqData, PropertyEntity>;
+  getAllProperties: __ServiceDispatcherAsync<typeof getAllPropertiesThunk>;
+  createProperty: __ServiceDispatcherAsync<typeof createPropertyThunk>;
+  updatePropertyById: __ServiceDispatcherAsync<typeof updatePropertyThunk>;
   deletePropertyById: ServiceApiCaller<IPropertyReqData, PropertyEntity>;
 
   getPropertyById: ServiceApiCaller<IPropertyReqData, PropertyEntity>;
@@ -97,9 +91,9 @@ const useOffersService = (): OffersService => {
       setDefaults: args => dispatch(updateOfferDefaultsThunk(args)),
 
       // * PROPERTIES
-      createProperty: args => dispatch(createPropertyThunk(defaultThunkPayload(args))),
-      getAllProperties: args => dispatch(getAllPropertiesThunk(defaultThunkPayload(args))),
-      updatePropertyById: args => dispatch(updatePropertyThunk(defaultApiCallPayload(args))),
+      createProperty: args => dispatch(createPropertyThunk(args)),
+      getAllProperties: args => dispatch(getAllPropertiesThunk(args)),
+      updatePropertyById: args => dispatch(updatePropertyThunk(args)),
       deletePropertyById: args => apiCall(PropertiesApi.deleteById, defaultApiCallPayload(args)),
       getPropertyById: args => apiCall(PropertiesApi.getById, defaultApiCallPayload(args)),
       changeDisabledStatus: args => apiCall(PropertiesApi.updateById, defaultApiCallPayload(args)),

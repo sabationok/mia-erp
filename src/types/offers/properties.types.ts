@@ -31,11 +31,11 @@ export interface PropertyBaseEntity extends IBase, PropertyTempData {
   cmsConfigs?: MaybeNull<ICmsPropertyConfigs>;
 }
 
-export interface ProperiesGroupEntity extends Omit<PropertyBaseEntity, 'parent'> {
+export interface PropertiesGroupEntity extends Omit<PropertyBaseEntity, 'parent'> {
   childrenList?: PropertyEntity[];
 }
 export interface PropertyEntity extends PropertyBaseEntity {
-  parent?: ProperiesGroupEntity;
+  parent?: PropertiesGroupEntity;
   childrenList?: PropertyValueEntity[];
 }
 export interface PropertyValueEntity extends Omit<PropertyBaseEntity, 'childrenList'> {
@@ -94,5 +94,5 @@ export interface IPropertyDto {
 export interface IPropertyReqData {
   _id?: string;
   data?: IPropertyDto;
-  params?: Pick<AppQueryParams, 'dataView' | 'getAll'>;
+  params?: Pick<AppQueryParams, 'dataView' | 'getAll' | 'depth' | 'withDeleted'>;
 }

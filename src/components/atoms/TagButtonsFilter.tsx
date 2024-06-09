@@ -1,17 +1,20 @@
 import { FilterChangeHandler, FilterOption, FilterSelectHandler, FilterSelectValueHandler } from './TabSelector';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ButtonIcon from './ButtonIcon';
-import { checks } from '../../utils';
 import FlexBox from './FlexBox';
 import { t } from '../../lang';
 import { Text } from './Text';
+import { isArray, isString } from 'lodash';
 
 export type TagButtonsFilterOnSelectValue<Value = any> = FilterSelectValueHandler<Value>;
-export type TagButtonsFilterOnSelect<Value = any> = FilterSelectHandler<Value>;
+export type TagButtonsFilterOnSelect<
+  Value = any,
+  Option extends TagButtonsFilterOption<Value> = any,
+> = FilterSelectHandler<Value, any, Option>;
 export type TagButtonsFilterOnChange<Value = any> = FilterChangeHandler<Value>;
 export type TagButtonsFilterOption<Value = any> = FilterOption<Value>;
 
-const TagButtonsFilter = <Value extends string | number = any>({
+const TagButtonsFilter = <Value extends string = string>({
   options,
   multiple,
   values,
@@ -24,11 +27,11 @@ const TagButtonsFilter = <Value extends string | number = any>({
   resetButtonPosition,
   resetButtonLabel,
 }: {
-  options?: TagButtonsFilterOption<Value>[];
-  values?: Value[];
-  onSelect?: TagButtonsFilterOnSelect<Value>;
-  onChange?: TagButtonsFilterOnChange<Value>;
-  onSelectValue?: TagButtonsFilterOnSelectValue<Value>;
+  options?: TagButtonsFilterOption<Value | string>[];
+  values?: Value | string[];
+  onSelect?: TagButtonsFilterOnSelect<Value | string>;
+  onChange?: TagButtonsFilterOnChange<Value | string>;
+  onSelectValue?: TagButtonsFilterOnSelectValue<Value | string>;
   multiple?: boolean;
   numColumns?: number;
   gap?: number;
@@ -36,18 +39,22 @@ const TagButtonsFilter = <Value extends string | number = any>({
   resetButtonPosition?: 'start' | 'end';
   resetButtonLabel?: string;
 }) => {
-  const [selectedValues, setSelectedValues] = useState<Value[]>([]);
+  const [selectedValues, setSelectedValues] = useState<(Value | string)[]>([]);
 
   const handleSelect = useCallback(
-    (option: TagButtonsFilterOption<Value>, index: number) => {
+    (option: TagButtonsFilterOption<Value | string>, index: number) => {
+      const value = option.value || option._id;
+      if (!value) {
+        return;
+      }
       if (!multiple) {
         if (onSelect) onSelect(option, option.value, index);
-        if (onSelectValue) onSelectValue({ name, value: option.value });
-        setSelectedValues([option.value]);
+        if (onSelectValue) onSelectValue({ name, value: value });
+        setSelectedValues([value]);
       } else {
-        const newData = !selectedValues.includes(option.value)
-          ? [...selectedValues, option.value]
-          : selectedValues.filter(el => el !== option.value);
+        const newData = !selectedValues.includes(value)
+          ? [...selectedValues, value]
+          : selectedValues.filter(el => el !== value);
         if (onChange) {
           onChange(newData, name);
         } else {
@@ -59,18 +66,19 @@ const TagButtonsFilter = <Value extends string | number = any>({
   );
 
   useEffect(() => {
-    if (checks.isArray(values)) {
+    if (isArray(values)) {
       setSelectedValues(values);
     }
   }, [values]);
 
   const renderOptions = useMemo(() => {
     return options?.map((opt, index) => {
-      const isActive = selectedValues.includes(opt.value);
+      const value = opt.value || opt._id || index.toString();
+      const isActive = !!value && selectedValues.includes(value);
       return (
         <ButtonIcon
           isActive={isActive}
-          key={`f-opt_${opt.value}`}
+          key={`tag-opt_${value}`}
           variant={isActive ? 'filledMiddle' : 'outlinedMiddle'}
           onClick={() => handleSelect(opt, index)}
           style={{
@@ -84,7 +92,7 @@ const TagButtonsFilter = <Value extends string | number = any>({
           }}
         >
           <Text $ellipsisMode={true} $size={12} style={{ fontWeight: 'inherit' }}>
-            {checks.isStr(opt?.label) ? t(opt.label) : opt.value}
+            {isString(opt?.label) ? t(opt.label) : opt.value}
           </Text>
         </ButtonIcon>
       );

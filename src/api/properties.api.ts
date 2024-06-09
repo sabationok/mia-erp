@@ -25,6 +25,7 @@ export default class PropertiesApi {
     return this.api.get(this.endpoints.getAll(), {
       params: {
         dataView: 'tree',
+        depth: 3,
         ...params,
       },
     });

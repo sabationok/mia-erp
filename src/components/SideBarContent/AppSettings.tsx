@@ -33,7 +33,7 @@ const AppSettings: React.FC<AppSettingsProps> = () => {
           <TagButtonsFilter
             options={colorsList}
             numColumns={2}
-            onSelectValue={ev => {
+            onSelect={ev => {
               service.selectAccentColor(ev.value);
             }}
           />

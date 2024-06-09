@@ -3,7 +3,7 @@ import { WarehouseItemEntity } from '../warehousing/warehouses.types';
 import { PriceEntity } from '../price-management/price-management.types';
 import { AppQueryParams } from '../../api';
 import { OfferEntity } from './offers.types';
-import { ProperiesGroupEntity, PropertyValueEntity } from './properties.types';
+import { PropertiesGroupEntity, PropertyValueEntity } from './properties.types';
 import {
   HasBarCode,
   HasCompany,
@@ -24,7 +24,7 @@ export interface VariationEntity extends IVariationBase, IBase, HasCompany, HasB
   price?: PriceEntity;
   inventories?: WarehouseItemEntity[];
 
-  template?: ProperiesGroupEntity;
+  template?: PropertiesGroupEntity;
   properties?: PropertyValueEntity[];
 
   propsKey?: string;

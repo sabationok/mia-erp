@@ -52,7 +52,7 @@ const useLoadInitialAppDataHook = ({
           });
         }
 
-        offers.getAllProperties({ data: { params: { dataView: 'tree' } } });
+        offers.getAllProperties({ data: { params: { dataView: 'tree', depth: 3 } } });
         // offers.getAll({ data: { refresh: true } });
         warehouses.getAll({ data: { refresh: true } });
         // priceManagement.getAll({ data: { refresh: true } });

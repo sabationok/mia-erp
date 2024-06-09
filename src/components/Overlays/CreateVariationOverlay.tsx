@@ -21,7 +21,7 @@ import { t } from '../../lang';
 import LangButtonsGroup from '../atoms/LangButtonsGroup';
 import { UUID } from '../../types/utils.types';
 import OfferVariationPropertySelector from '../Forms/offers/variations/OfferVariationPropertySelector';
-import { ProperiesGroupEntity, PropertyEntity, PropertyValueEntity } from '../../types/offers/properties.types';
+import { PropertiesGroupEntity, PropertyEntity, PropertyValueEntity } from '../../types/offers/properties.types';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
 import { OfferEntity } from '../../types/offers/offers.types';
@@ -91,7 +91,7 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
 
   const submitOptions = useAfterSubmitOptions();
 
-  const [currentTemplate, setCurrentTemplate] = useState<ProperiesGroupEntity>();
+  const [currentTemplate, setCurrentTemplate] = useState<PropertiesGroupEntity>();
 
   const formMethods = useAppForm<IVariationFormData>({
     defaultValues: toVariationFormData(

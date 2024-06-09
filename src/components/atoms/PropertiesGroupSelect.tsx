@@ -1,5 +1,5 @@
 import { OfferTypeEnum } from '../../types/offers/offers.types';
-import { ProperiesGroupEntity, PropertyBaseEntity } from '../../types/offers/properties.types';
+import { PropertiesGroupEntity, PropertyBaseEntity } from '../../types/offers/properties.types';
 import { useOffersSelector } from '../../redux/selectors.store';
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
@@ -21,8 +21,8 @@ export const PropertiesGroupSelect = ({
   filterValue = { type: OfferTypeEnum.GOODS, isSelectable: true },
   hasFilter = false,
 }: {
-  selected?: ProperiesGroupEntity;
-  onSelect?: (opt: ProperiesGroupEntity) => void;
+  selected?: PropertiesGroupEntity;
+  onSelect?: (opt: PropertiesGroupEntity) => void;
   filterValue?: FilterData;
   hasFilter?: boolean;
 }) => {
@@ -30,7 +30,7 @@ export const PropertiesGroupSelect = ({
 
   const state = useOffersSelector();
   const [filter, setFilter] = useState<FilterData>(filterValue);
-  const [currentTemplate, setCurrentTemplate] = useState<ProperiesGroupEntity | undefined>();
+  const [currentTemplate, setCurrentTemplate] = useState<PropertiesGroupEntity | undefined>();
   // const loaders = useLoaders<'getList' | 'create' | 'update'>();
 
   const rootList = useMemo(() => {
@@ -45,7 +45,7 @@ export const PropertiesGroupSelect = ({
     return _items;
   }, [filter, state.propertiesByTypeKeysMap, state.propertiesDataMap]);
 
-  const handleSelect: CustomSelectHandler<ProperiesGroupEntity> = option => {
+  const handleSelect: CustomSelectHandler<PropertiesGroupEntity> = option => {
     if (onSelect && option) {
       onSelect(option);
     } else {

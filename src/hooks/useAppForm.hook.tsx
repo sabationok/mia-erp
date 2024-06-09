@@ -56,7 +56,7 @@ const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = a
   formProps?: UseFormProps<TFieldValues, TContext>
 ): UseAppFormReturn<TFieldValues, TContext> => {
   const form = useForm<TFieldValues>(formProps);
-  const { setValue, unregister, register, watch, getFieldState } = form;
+  const { setValue, unregister, watch, getFieldState } = form;
   const formValues = watch();
 
   // function onSubmitHandler(onValid: AppSubmitHandler<TFieldValues>, onInvalid: AppErrorSubmitHandler<TFieldValues>) {
@@ -76,36 +76,30 @@ const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = a
       }
     ): CustomSelectProps => {
       const fieldState = getFieldState(name);
-      const registerReturn = register(name);
 
       return {
-        ...registerReturn,
         ref: props?.ref,
-        inputControl: props?.inputName ? register(props?.inputName) : undefined,
+        ...fieldState,
+        // inputControl: props?.inputName ? register(props?.inputName) : undefined,
         onSelect: (option, value) => {
-          setValue<Path<TFieldValues>>(name, props?.onlyValue ? value : (option as any));
+          setValue<Path<TFieldValues>>(name, props?.onlyValue ? value : (option as any), {
+            shouldDirty: true,
+            shouldTouch: true,
+          });
           // if (childControl?.childName) clearChild(childControl?.childName);
         },
         name,
-        selectedOption: getValueByPath({ data: formValues, path: name }),
+        selectedValue: getValueByPath({ data: formValues, path: name }),
 
-        ...fieldState,
         onClear: () => {
-          if (!formValues[name]) return;
-
-          // setValue(name, null as any);
           unregister(name);
-
           if (childControl?.childName) unregister(childControl?.childName);
-
-          if (!props?.options || props.options.length === 0) {
-          }
         },
-        disabled: !props?.options || props?.options?.length === 0,
+        disabled: props?.options ? props?.options?.length === 0 : undefined,
         ...props,
       };
     },
-    [formValues, getFieldState, register, setValue, unregister]
+    [formValues, getFieldState, setValue, unregister]
   );
 
   return {

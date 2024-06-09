@@ -24,8 +24,8 @@ export const ModalHeader = ({
   ...props
 }: ModalHeaderProps) => {
   return (
-    <Header {...props} padding={'4px 0'}>
-      <FlexBox fillWidth fxDirection={'row'} justifyContent={'space-between'} alignItems={'stretch'} height={'32px'}>
+    <Header {...props} padding={'8px'}>
+      <FlexBox fillWidth fxDirection={'row'} justifyContent={'space-between'} alignItems={'center'} height={'32px'}>
         {onBackPress && (
           <ButtonIcon
             variant={'textExtraSmall'}

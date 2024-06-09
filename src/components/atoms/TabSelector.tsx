@@ -4,21 +4,23 @@ import styled from 'styled-components';
 import { t } from '../../lang';
 import { MaybeNull } from '../../types/utils.types';
 import { isFunction, isUndefined } from 'lodash';
+import FlexBox from './FlexBox';
 
-export interface ModalFormFilterProps<V = any, D = any> {
-  getDefaultValue?: (opt: FilterOption<V, D>) => number;
+export interface ModalFormFilterProps<V = any, D = any, Option extends FilterOption<V, D> = any> {
+  getDefaultValue?: (opt: Option) => number;
   preventDefault?: boolean;
-  options?: FilterOption<V, D>[];
+  options?: Option[];
 
-  onOptSelect?: FilterSelectHandler<V, D>;
+  onOptSelect?: FilterSelectHandler<V, D, Option>;
+  onSelect?: FilterSelectHandler<V, D, Option>;
   onFilterValueSelect?: FilterSelectValueHandler<V>;
   onChangeIndex?: (index: number) => void;
 
   name?: any;
-  defaultOption?: number | FilterOption<V, D> | V;
+  defaultOption?: Option;
   currentIndex?: number;
   defaultFilterValue?: string;
-  renderLabel?: (info: { option?: FilterOption<V, D>; index: number; isActive: boolean }) => React.ReactNode;
+  renderLabel?: (info: { option?: Option; index: number; isActive: boolean }) => React.ReactNode;
 
   asStepper?: boolean;
   onReset?: () => void;
@@ -30,7 +32,7 @@ export interface FilterOption<V = any, D = any> extends Record<string, any> {
   _id?: string;
   label?: MaybeNull<string>;
   name?: string;
-  value: V;
+  value?: V;
   data?: D;
   color?: string;
   extraLabel?: React.ReactNode;
@@ -45,20 +47,23 @@ export interface FilterOption<V = any, D = any> extends Record<string, any> {
 // }
 // export type FilterOptionSelectHandler<V = any, D = any> = (option: FilterOption<V, D>, value: V, index: number) => void;
 
-export type FilterSelectHandler<V = any, D = any> = (
-  option: FilterOption<V, D>,
-  value: V,
-  index: number,
+export type FilterSelectHandler<V = any, D = any, Option extends FilterOption<V, D> = any> = (
+  option: Option,
+  value?: V,
+  index?: number,
   name?: string
 ) => void;
+
 export type FilterSelectValueHandler<V = any> = (info: { name: any & string; value: V }) => void;
 
 export type FilterChangeHandler<V = any> = (values: V[], name?: string) => void;
-export interface TabOption<V = any, D = any> extends FilterOption<V, D> {}
 
-const TabSelector = <V = any, D = any>({
+export type TabOption<V = any, D = any> = FilterOption<V, D>;
+
+const TabSelector = <V = any, D = any, Option extends FilterOption<V, D> = any>({
   options = [],
   onOptSelect,
+  onSelect,
   preventDefault,
   defaultFilterValue,
   defaultOption,
@@ -72,7 +77,7 @@ const TabSelector = <V = any, D = any>({
   renderLabel,
   onReset,
   ...props
-}: ModalFormFilterProps<V, D> & React.HTMLAttributes<HTMLDivElement>) => {
+}: ModalFormFilterProps<V, D, Option> & React.HTMLAttributes<HTMLDivElement>) => {
   const [current, setCurrent] = useState<number>(currentIndex);
 
   const handleSelectOpt = useCallback(
@@ -100,20 +105,22 @@ const TabSelector = <V = any, D = any>({
       setCurrent(currentIndex);
       return;
     }
+  }, [currentIndex]);
 
+  useEffect(() => {
     if (!isUndefined(defaultFilterValue)) {
-      const defIndex = options.findIndex(el => el.value === defaultFilterValue);
+      const defIndex = options.findIndex(el => el.value === defaultFilterValue || el._id === defaultFilterValue);
       defIndex > 0 && setCurrent(defIndex);
     }
-  }, [currentIndex, defaultFilterValue, options]);
+  }, [defaultFilterValue, options]);
 
   useEffect(() => {
     if (preventDefault || defaultFilterValue) return;
 
     if (options.length > 0) {
-      isFunction(onChangeIndex) && onChangeIndex(current);
-      isFunction(onOptSelect) && onOptSelect(options[current], options[current].value, current);
-      isFunction(onFilterValueSelect) && onFilterValueSelect({ name, value: options[current].value });
+      // isFunction(onChangeIndex) && onChangeIndex(current);
+      // isFunction(onOptSelect) && onOptSelect(options[current], options[current].value, current);
+      // isFunction(onFilterValueSelect) && onFilterValueSelect({ name, value: options[current].value });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -143,20 +150,17 @@ const TabSelector = <V = any, D = any>({
   }, [asStepper, current, options, handleSelectOpt, renderLabel]);
 
   return (
-    <Filter
-      className="filter"
-      gridRepeat={(options?.length ?? 0) + (onReset ? 1 : 0)}
-      optionProps={optionProps}
-      {...props}
-    >
+    <FlexBox className="filter" overflow={'hidden'} maxWidth={'100%'} {...props}>
       {onReset && (
         <StButtonIcon variant="def" onClick={handleReset} isActive={current === -1}>
           <span className={'inner'}>{t('All')}</span>
         </StButtonIcon>
       )}
 
-      {renderOptions}
-    </Filter>
+      <Filter optionProps={optionProps} gridRepeat={(options?.length ?? 0) + (onReset ? 1 : 0)}>
+        {renderOptions}
+      </Filter>
+    </FlexBox>
   );
 };
 
@@ -164,11 +168,12 @@ const Filter = styled.div<{ gridRepeat?: number; optionProps?: { fitContentH?: b
   display: grid;
   align-items: center;
   grid-template-columns: ${({ gridRepeat, optionProps }) =>
-    `repeat(${gridRepeat || 1}, minmax(${(optionProps?.fitContentH && 'min-content') || '150px'} ,1fr))`};
+    `repeat(${gridRepeat || 1}, minmax(${((optionProps?.fitContentH ?? true) && 'min-content') || '150px'} ,1fr))`};
 
   height: 32px;
   min-height: 32px;
   overflow: auto;
+  max-width: 100%;
 
   background-color: ${({ theme }) => theme.modalBackgroundColor};
 

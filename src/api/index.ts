@@ -137,11 +137,17 @@ export interface PaginationQuery {
   limit?: number;
   offset?: number;
 }
-export interface PeriodQuery {
-  timeFrom?: AppDate;
-  timeTo?: AppDate;
+export interface TimePeriodQuery {
+  timeFrom?: number;
+  timeTo?: number;
 }
-export interface AppQueryParams<Type = any> extends AppQueries<Type>, PaginationQuery, PeriodQuery {
+
+export interface DatePeriodQuery {
+  dateFrom?: AppDate;
+  dateTo?: AppDate;
+}
+
+export interface AppQueryParams<Type = any> extends AppQueries<Type>, PaginationQuery, TimePeriodQuery {
   ids?: string;
   dirType?: ApiDirType;
   isArchived?: boolean;
@@ -151,6 +157,7 @@ export interface AppQueryParams<Type = any> extends AppQueries<Type>, Pagination
   createTreeData?: boolean;
   getAll?: boolean;
   dataView?: 'tree' | 'list';
+  depth?: number;
   sortParams?: ApiQuerySortParams;
   search?: string;
   searchBy?: string;

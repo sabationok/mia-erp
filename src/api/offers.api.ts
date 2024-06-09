@@ -1,6 +1,12 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
-import { ApiQuerySearchParams, ApiQuerySortParams, AppQueryParams } from './index';
-import { IOfferDefaultsDto, IProductReqData, OfferEntity } from '../types/offers/offers.types';
+import { ApiQuerySearchParams, ApiQuerySortParams, AppQueryParams, DatePeriodQuery } from './index';
+import {
+  IOfferDefaultsDto,
+  IProductReqData,
+  OfferEntity,
+  OfferStatusEnum,
+  OfferTypeEnum,
+} from '../types/offers/offers.types';
 import { AppResponse } from '../redux/app-redux.types';
 import { ClientApi } from './client.api';
 import { UUID } from '../types/utils.types';
@@ -16,7 +22,10 @@ export interface GetOneOfferQuery {
   getDiscounts?: boolean;
 }
 export interface GetAllOffersQuery
-  extends Pick<AppQueryParams, 'sku' | 'label' | 'barCode' | 'limit' | 'offset'>,
+  extends Pick<
+      AppQueryParams,
+      'sku' | 'label' | 'barCode' | 'limit' | 'offset' | 'tagsIds' | 'categoriesIds' | 'brandsIds' | 'propertiesIds'
+    >,
     ApiQuerySortParams<OfferSortParam['dataPath']>,
     ApiQuerySearchParams<OfferSearchParam['dataPath']> {
   warehouse?: {
@@ -24,6 +33,12 @@ export interface GetAllOffersQuery
     code?: string;
     label?: string;
   };
+  type?: OfferTypeEnum;
+  approved?: OfferStatusEnum;
+  visible?: boolean;
+  createdAt?: DatePeriodQuery;
+  updatedAt?: DatePeriodQuery;
+  deletedAt?: DatePeriodQuery;
 }
 export default class OffersApi {
   private static api = ClientApi.clientRef;
