@@ -7,47 +7,65 @@ export default class PropertiesApi {
   private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.propertiesApiEndpoints;
 
-  public static getAll = ({ data }: { data?: IPropertyReqData }): Promise<AppResponse<PropertyEntity[]>> => {
+  public static getAll = (
+    _?: undefined,
+    params?: IPropertyReqData['params']
+  ): Promise<AppResponse<PropertyEntity[]>> => {
     return this.api.get(this.endpoints.getAll(), {
       params: {
-        ...data?.params,
         dataView: 'list',
+        ...params,
       },
     });
   };
-  public static getAllsTree = ({ data }: { data?: IPropertyReqData }): Promise<AppResponse<PropertyEntity[]>> => {
+  public static getAllInTree = (
+    _?: undefined,
+    params?: IPropertyReqData['params']
+  ): Promise<AppResponse<PropertyEntity[]>> => {
     return this.api.get(this.endpoints.getAll(), {
       params: {
-        ...data?.params,
         dataView: 'tree',
+        ...params,
       },
     });
   };
 
-  public static create = (data?: IPropertyReqData): Promise<AppResponse<PropertyEntity>> => {
+  public static create = (
+    data?: IPropertyReqData,
+    params?: IPropertyReqData['params']
+  ): Promise<AppResponse<PropertyEntity>> => {
     return this.api.post(this.endpoints.create(), data?.data, {
       params: {
-        ...data?.params,
         dataView: 'list',
         getAll: false,
+        ...data?.params,
+        ...params,
       },
     });
   };
 
-  public static updateById = (data?: IPropertyReqData): Promise<AppResponse<PropertyEntity>> => {
+  public static updateById = (
+    data?: IPropertyReqData,
+    params?: IPropertyReqData['params']
+  ): Promise<AppResponse<PropertyEntity>> => {
     return this.api.patch(this.endpoints.updateById(data?._id), data?.data, {
       params: {
-        ...data?.params,
         dataView: 'list',
         getAll: false,
+        ...data?.params,
+        ...params,
       },
     });
   };
 
-  public static getById = (data?: IPropertyReqData): Promise<AppResponse<PropertyEntity>> => {
+  public static getById = (
+    data?: IPropertyReqData,
+    params?: IPropertyReqData['params']
+  ): Promise<AppResponse<PropertyEntity>> => {
     return this.api.get(this.endpoints.getById(data?._id), {
       params: {
         ...data?.params,
+        ...params,
       },
     });
   };
@@ -55,9 +73,9 @@ export default class PropertiesApi {
   public static deleteById = (data?: IPropertyReqData): Promise<AppResponse<PropertyEntity>> => {
     return this.api.delete(this.endpoints.deleteById(data?._id), {
       params: {
-        ...data?.params,
         getAll: false,
         dataView: 'list',
+        ...data?.params,
       },
     });
   };

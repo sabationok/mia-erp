@@ -55,12 +55,11 @@ const ModalContainer = styled.div<
   max-height: 90vh;
 
   color: ${p => p.theme.fontColorSidebar};
-  width: ${({ width = '480px', fillWidth, fitContentH }) =>
-    (fillWidth && '100vw') || (fitContentH && 'max-content') || width};
+  width: ${({ width, fillWidth, fitContentH }) => (fillWidth && '100vw') || (fitContentH && 'max-content') || width};
   height: ${({ height = '', fillHeight, fitContentV }) =>
     (fillHeight && '90vh') || (fitContentV && 'max-content') || height};
 
-  min-width: 230px;
+  //min-width: 230px;
   max-width: 100%;
 
   //overflow: hidden;

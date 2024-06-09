@@ -10,6 +10,8 @@ import { CheckboxEvent } from './TebleCells/CellComponents/CheckBox';
 export enum TableSortOrderEnum {
   desc = 'desc',
   asc = 'asc',
+  DESC = 'DESC',
+  ASC = 'ASC',
 }
 export interface SelectItemBase extends Record<string, any> {
   _id?: string;
@@ -29,7 +31,7 @@ export interface SelectItemBase extends Record<string, any> {
 
 export interface SelectItem extends SelectItemBase {}
 
-export interface TableSearchParam<DataKey = any, DataPath = any> {
+export interface TableSearchParam<DataPath = any, DataKey = any> {
   _id?: string;
   id?: string;
   label?: string;
@@ -37,7 +39,7 @@ export interface TableSearchParam<DataKey = any, DataPath = any> {
   dataPath?: DataPath;
   isArray?: boolean;
 }
-export interface TableSortParam<DataKey = any, DataPath = any> {
+export interface TableSortParam<DataPath = any, DataKey = any> {
   _id?: string;
   id?: string;
   label?: string;
@@ -81,7 +83,7 @@ export interface ITableListProps<
   TDataType = any,
   SearchParam extends TableSearchParam = TableSearchParam,
   SortParam extends TableSortParam = TableSortParam,
-  Extra = any
+  Extra = any,
 > {
   tableTitles?: CellTittleProps<TDataType>[];
   tableData?: TDataType[];

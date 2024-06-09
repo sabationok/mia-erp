@@ -9,7 +9,7 @@ import InputText from '../../atoms/Inputs/InputText';
 import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
 import { DirectoriesFormProps } from '../../../types/dir.types';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../atoms/FormAfterSubmitOptions';
 import { useAppForm } from '../../../hooks';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 

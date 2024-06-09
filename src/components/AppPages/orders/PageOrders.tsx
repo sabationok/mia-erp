@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ITableListProps } from '../../TableList/tableTypes.types';
 import AppGridPage from '../AppGridPage';
 import { useOrdersSelector } from '../../../redux/selectors.store';
-import { ISortParams } from '../../../api';
+import { ApiQuerySortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import { ordersSearchParams, ordersTableColumns } from '../../../data';
 import { OrderEntity, OrderStatusEnum } from '../../../types/orders/orders.types';
@@ -94,7 +94,7 @@ export const useOrderTableConfigs = () => {
   const actionsCreator = useOrdersActionsCreatorHook();
   // const filterSelectors = useProductsFilterSelectorsHook();
   const [isLoading, setIsLoading] = useState(false);
-  const [sortParams, setSortParams] = useState<ISortParams>();
+  const [sortParams, setSortParams] = useState<ApiQuerySortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   const tableConfig = useMemo(
@@ -112,9 +112,9 @@ export const useOrderTableConfigs = () => {
         getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading }).then();
       },
       onTableSortChange: (param, sortOrder) => {
-        setSortParams({ dataPath: param.dataPath, sortOrder });
+        setSortParams({ sortPath: param.dataPath, sortOrder });
         getAll({
-          data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },
+          data: { refresh: true, query: { sortParams: { sortPath: param.dataPath, sortOrder }, filterParams } },
           onLoading: setIsLoading,
         }).then();
       },

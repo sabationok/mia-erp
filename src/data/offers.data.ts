@@ -7,7 +7,7 @@ import { FilterOption } from '../components/atoms/TabSelector';
 import { ImageSetSrcType } from '../types/offers/offer-images.types';
 import { toPrice } from '../utils/numbers';
 import { TableSearchParam, TableSortParam } from '../components/TableList/tableTypes.types';
-import { IBase } from '../types/utils.types';
+import { IBase, Values } from '../types/utils.types';
 
 export const offerStatusesData = getStatusesByEnum(OfferStatusEnum);
 export const OfferStatusFilterOptions = enumToFilterOptions(OfferStatusEnum);
@@ -125,19 +125,50 @@ export function datesColumn<Data extends IBase = any>(): CellTittleProps<Data> {
   };
 }
 
-export type OfferSortParam = TableSortParam<'sku' | 'label' | 'barCode' | 'price' | 'status'>;
-export const offersSortParams: OfferSortParam[] = [
-  { dataKey: 'sku', label: 'SKU' },
-  { dataKey: 'label', label: t('Label') },
-  { dataKey: 'barCode', label: t('Bar-code') },
-  { dataKey: 'status', label: t('Status') },
-  { dataKey: 'price', label: t('Price') },
+const OfferSortPaths = [
+  'label',
+  'barCode',
+  'sku',
+  'approved',
+  'deletedAt',
+  'updatedAt',
+  'createdAt',
+  'brand.label',
+  'warehouse.label',
+  'warehouse.code',
+  'price.out',
+  'variations.label',
+  'variations.barCode',
+  'variations.sku',
+  'variations.price.out',
+  'variations.deletedAt',
+  'variations.updatedAt',
+  'variations.createdAt',
 ];
-export type OfferSearchParam = TableSearchParam<'sku' | 'label' | 'barCode', 'warehouse.label' | 'warehouse.code'>;
-export const offersSearchParams: OfferSearchParam[] = [
-  { dataKey: 'sku', label: 'SKU' },
-  { dataKey: 'label', label: t('Label') },
-  { dataKey: 'barCode', label: t('Bar-code') },
+
+export type OfferSortParam = TableSortParam<Values<typeof OfferSortPaths>>;
+export const offersSortParams: OfferSortParam[] = [
+  { dataPath: 'sku', label: 'SKU' },
+  { dataPath: 'label', label: t('Label') },
+  { dataPath: 'barCode', label: t('Bar-code') },
+  { dataPath: 'approved', label: t('Status') },
+  { dataPath: 'price.out', label: t('Price') },
+
+  { dataPath: 'createdAt', label: t('Created at') },
+  { dataPath: 'updatedAt', label: t('Updated at') },
+  { dataPath: 'deletedAt', label: t('Deleted at') },
+
+  { dataPath: 'brand.label', label: t('Created at') },
   { dataPath: 'warehouse.code', label: t('Warehouse code') },
   { dataPath: 'warehouse.label', label: t('Warehouse label') },
+];
+
+export type OfferSearchParam = TableSearchParam<Values<typeof OfferSortPaths>>;
+export const offersSearchParams: OfferSearchParam[] = [
+  { dataPath: 'sku', label: 'SKU' },
+  { dataPath: 'label', label: t('Label') },
+  { dataPath: 'barCode', label: t('Bar-code') },
+  { dataPath: 'warehouse.code', label: t('Warehouse code') },
+  { dataPath: 'warehouse.label', label: t('Warehouse label') },
+  { dataPath: 'brand.label', label: t('Brand label') },
 ];

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useEffect, useMemo, useState } from 'react';
 import { ITableListProps } from '../../TableList/tableTypes.types';
 import AppGridPage from '../AppGridPage';
-import { ISortParams } from '../../../api';
+import { ApiQuerySortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import { Path } from 'react-hook-form';
 import { ICustomer, ICustomerBase } from '../../../types/customers.types';
@@ -31,7 +31,7 @@ const PageCustomers: React.FC<Props> = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const modalS = useModalService();
   const state = useCustomersSelector();
-  const [sortParams, setSortParams] = useState<ISortParams>();
+  const [sortParams, setSortParams] = useState<ApiQuerySortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
   const service = useAppServiceProvider()[ServiceName.customers];
 
@@ -106,7 +106,7 @@ const PageCustomers: React.FC<Props> = (props: Props) => {
         // getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading }).then();
       },
       onTableSortChange: (param, sortOrder) => {
-        setSortParams({ dataPath: param.dataPath, sortOrder });
+        setSortParams({ sortPath: param.dataPath, sortOrder });
         // getAll({
         //   data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },
         //   onLoading: setIsLoading,
@@ -147,7 +147,7 @@ const Page = styled.div`
 export default PageCustomers;
 
 export const useCustomersTableSettings = () => {
-  const [sortParams, setSortParams] = useState<ISortParams>();
+  const [sortParams, setSortParams] = useState<ApiQuerySortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   const tableConfig = useMemo(
@@ -161,7 +161,7 @@ export const useCustomersTableSettings = () => {
         // getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading }).then();
       },
       onTableSortChange: (param, sortOrder) => {
-        setSortParams({ dataPath: param.dataPath, sortOrder });
+        setSortParams({ sortPath: param.dataPath, sortOrder });
         // getAll({
         //   data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },
         //   onLoading: setIsLoading,

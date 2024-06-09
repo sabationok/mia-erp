@@ -43,7 +43,7 @@ export interface DirPropertiesProps
 
 export interface DiPropertiesRenderItemProps<
   Item extends PropertyBaseEntity = PropertyBaseEntity,
-  ParentItem extends PropertyBaseEntity = PropertyBaseEntity
+  ParentItem extends PropertyBaseEntity = PropertyBaseEntity,
 > {
   item: Item;
   parent?: MaybeNull<ParentItem>;
@@ -198,9 +198,9 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
 
   return (
     <ModalBase title={title} fillHeight>
-      <FlexBox padding={'0 8px'}>
-        <TabSelector {...registerTabSelector('type')} options={offerTypeFilterOptions} />
+      <TabSelector {...registerTabSelector('type')} options={offerTypeFilterOptions} />
 
+      <FlexBox padding={'0 8px'}>
         <RenderStackHistory stack={stack} onItemSelect={(_, index) => onStackItemSelect(index)} />
 
         {stack.length === 1 && (

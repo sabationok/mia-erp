@@ -1,4 +1,4 @@
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../atoms/FormAfterSubmitOptions';
 import React, { useState } from 'react';
 import { useAppForm } from '../../../hooks';
 import { yupResolver } from '@hookform/resolvers/yup';

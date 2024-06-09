@@ -6,7 +6,7 @@ import InputLabel from '../../atoms/Inputs/InputLabel';
 import { t } from '../../../lang';
 import React, { useState } from 'react';
 import { useAppForm } from '../../../hooks';
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../atoms/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import FlexBox from '../../atoms/FlexBox';
 import { IDeliveryMethod, IInvoicingMethod, ServiceMethodBase } from '../../../types/integrations.types';

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { t } from 'lang';
 import { Text } from 'components/atoms/Text';
-import FormAccordionItem from '../../components/FormAccordionItem';
+import FormAccordionItem from '../../../atoms/FormAccordionItem';
 import InputLabel from 'components/atoms/Inputs/InputLabel';
 import { ICreateOrderInfoFormState } from 'types/orders/orders.types';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';

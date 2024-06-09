@@ -4,14 +4,20 @@ import { PriceEntity } from '../price-management/price-management.types';
 import { AppQueryParams } from '../../api';
 import { OfferEntity } from './offers.types';
 import { ProperiesGroupEntity, PropertyValueEntity } from './properties.types';
-import { HasCompany, HasDimensions, HasLabel, MaybeNull, UUID, WithPeriod } from '../utils.types';
+import {
+  HasBarCode,
+  HasCompany,
+  HasDimensions,
+  HasImgPreview,
+  HasLabel,
+  HasSku,
+  MaybeNull,
+  UUID,
+  WithPeriod,
+} from '../utils.types';
 import { HasBaseCmsConfigs, HasBaseCmsConfigsDto } from '../cms.types';
 
-export interface IVariationBase extends HasDimensions, WithPeriod, HasLabel {
-  sku?: string;
-  barCode?: string;
-  imgPreview?: string;
-}
+export interface IVariationBase extends HasDimensions, WithPeriod, HasImgPreview, HasLabel, HasSku, HasBarCode {}
 
 export interface VariationEntity extends IVariationBase, IBase, HasCompany, HasBaseCmsConfigs {
   offer?: OfferEntity;
@@ -20,6 +26,8 @@ export interface VariationEntity extends IVariationBase, IBase, HasCompany, HasB
 
   template?: ProperiesGroupEntity;
   properties?: PropertyValueEntity[];
+
+  propsKey?: string;
 }
 
 export type VariationPropertiesMapInTableData = Record<string, PropertyValueEntity>;
@@ -50,6 +58,6 @@ export interface VariationDto extends IVariationBase, HasBaseCmsConfigsDto {
 
 export interface IVariationReqData {
   _id?: string;
-  data: VariationDto;
-  params?: AppQueryParams;
+  data?: VariationDto;
+  params?: Pick<AppQueryParams, 'offerId' | 'withDeleted' | 'sku' | 'label' | 'barCode' | 'langKey' | 'search'>;
 }

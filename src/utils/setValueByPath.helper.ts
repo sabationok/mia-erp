@@ -25,8 +25,8 @@
 export function setValueByPath<Obj extends Record<string, any> = Record<string, any>>(
   path: string,
   value: any,
-  options?: { separator?: string },
-  target?: Obj
+  target?: Obj,
+  options?: { separator?: string; mutation?: boolean }
 ): Obj {
   const separator = options?.separator || '.';
   const pathArray = path?.split(separator) ?? '';
@@ -47,7 +47,7 @@ export function setValueByPath<Obj extends Record<string, any> = Record<string, 
     } catch (e) {}
   };
   // Клонування об'єкта для запобігання мутації вхідного об'єкта
-  const newObj = target ? JSON.parse(JSON.stringify(target)) : {};
+  const newObj = target ? (options?.mutation ? target : JSON.parse(JSON.stringify(target))) : {};
 
   if (!path) {
     return newObj as Obj;

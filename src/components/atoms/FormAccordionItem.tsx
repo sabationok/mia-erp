@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import FlexBox, { FlexBoxProps } from '../../atoms/FlexBox';
+import FlexBox, { FlexBoxProps } from './FlexBox';
 import styled from 'styled-components';
-import ButtonIcon from '../../atoms/ButtonIcon';
+import ButtonIcon from './ButtonIcon';
 import { isBoolean } from 'lodash';
-import { t } from '../../../lang';
+import { t } from '../../lang';
 
 export interface FormAccordeonItemProps {
   children?: React.ReactNode;

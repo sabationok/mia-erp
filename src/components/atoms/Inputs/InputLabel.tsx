@@ -5,7 +5,7 @@ import FlexBox, { FlexBoxProps, FlexFieldSet } from '../FlexBox';
 import { Property } from 'csstype';
 import { Text } from '../Text';
 
-export interface InputLabelProps extends React.HTMLAttributes<HTMLFieldSetElement>, FlexBoxProps {
+export interface InputLabelProps extends Omit<React.HTMLAttributes<HTMLFieldSetElement>, 'onSelect'>, FlexBoxProps {
   label?: string;
   direction?: 'horizontal' | 'vertical' | 'row' | 'column';
   uppercase?: boolean;

@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ITableListProps } from '../../TableList/tableTypes.types';
 import AppGridPage from '../AppGridPage';
 import { usePriceManagementSelector } from '../../../redux/selectors.store';
-import { ISortParams } from '../../../api';
+import { ApiQuerySortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import usePriceManagementServiceHook from '../../../hooks/usePriceManagementService.hook';
 import usePriceManagementActionsCreatorHook from '../../../hooks/usePriceManagementActionsCreator.hook';
@@ -22,7 +22,7 @@ const PagePriceManagement: React.FC<BaseAppPageProps> = (props: Props) => {
   const { getAll } = service;
   const actionsCreator = usePriceManagementActionsCreatorHook();
   const [isLoading, setIsLoading] = useState(false);
-  const [sortParams, setSortParams] = useState<ISortParams>();
+  const [sortParams, setSortParams] = useState<ApiQuerySortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   const tableConfig = useMemo(
@@ -42,9 +42,9 @@ const PagePriceManagement: React.FC<BaseAppPageProps> = (props: Props) => {
         getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading }).then();
       },
       onTableSortChange: (param, sortOrder) => {
-        setSortParams({ dataPath: param.dataPath, sortOrder });
+        setSortParams({ sortPath: param.dataPath, sortOrder });
         getAll({
-          data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },
+          data: { refresh: true, query: { sortParams: { sortPath: param.dataPath, sortOrder }, filterParams } },
           onLoading: setIsLoading,
         }).then();
       },

@@ -1,12 +1,12 @@
 import styled from 'styled-components';
-import FlexBox from '../../atoms/FlexBox';
-import { FilterOption } from '../../atoms/TabSelector';
-import ButtonIcon from '../../atoms/ButtonIcon';
+import FlexBox from './FlexBox';
+import { FilterOption } from './TabSelector';
+import ButtonIcon from './ButtonIcon';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { checks } from '../../../utils';
-import { t } from '../../../lang';
+import { checks } from '../../utils';
+import { t } from '../../lang';
 import { useMediaQuery } from 'react-responsive';
-import { MaybeNull } from '../../../types/utils.types';
+import { MaybeNull } from '../../types/utils.types';
 
 export type StepChangeEvent<V = any, D = any> = {
   option: FilterOption<V, D>;

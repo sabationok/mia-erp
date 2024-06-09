@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { memo, useCallback, useEffect, useState } from 'react';
-import { t } from '../../../lang';
+import { t } from '../../lang';
 import styled from 'styled-components';
-import FlexBox from '../../atoms/FlexBox';
-import CheckBox from '../../TableList/TebleCells/CellComponents/CheckBox';
-import { Text } from '../../atoms/Text';
+import FlexBox from './FlexBox';
+import CheckBox from '../TableList/TebleCells/CellComponents/CheckBox';
+import { Text } from './Text';
 import _ from 'lodash';
 
 export interface UseFormSubmitOptions {

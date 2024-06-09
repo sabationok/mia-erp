@@ -5,15 +5,16 @@ import TableSortParamsList from './TableSortParamsList';
 import styled from 'styled-components';
 import { ITableListProps, SelectItem } from 'components/TableList/TableList';
 import { useModalProvider } from '../../../Providers/ModalProvider/ModalProvider';
-import ModalForm from '../../ModalForm';
 import { RenderModalComponentChildrenProps } from '../../../Providers/ModalProvider/ModalComponent';
+import { TableSortParam } from '../tableTypes.types';
+import ModalBase from '../../atoms/Modal';
 
 export interface TableSortProps {
-  tableSortParams: SelectItem[];
+  sortParams: TableSortParam[];
   onSelect?: ITableListProps['onTableSortChange'];
 }
 
-const TableSort: React.FC<TableSortProps> = ({ tableSortParams, onSelect }) => {
+const TableSort: React.FC<TableSortProps> = ({ sortParams, onSelect }) => {
   const modals = useModalProvider();
   const [current, setCurrent] = useState<SelectItem>();
 
@@ -30,9 +31,9 @@ const TableSort: React.FC<TableSortProps> = ({ tableSortParams, onSelect }) => {
 
   const ModalSort: React.FC<RenderModalComponentChildrenProps> = ({ ...props }) => {
     return (
-      <ModalForm fitContentH fitContentV footer={false} title={'Сортування'} {...props}>
-        <TableSortParamsList {...{ tableSortParams, onSelect: handleSelect, current, isOpen: true }} />
-      </ModalForm>
+      <ModalBase fitContentH fitContentV footer={false} title={'Сортування'} {...props}>
+        <TableSortParamsList {...{ sortParams: sortParams, onSelect: handleSelect, current, isOpen: true }} />
+      </ModalBase>
     );
   };
   return (

@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
 import { ModalHeader } from '../../atoms';
 import { t } from '../../../lang';
-import StepsController from '../components/StepsController';
+import StepsController from '../../atoms/StepsController';
 import OrderGroupsStuffingStep from './steps/OrderGroupsStuffingStep';
 import OrderInfoStep from './steps/OrderInfoStep';
 import { ICreateOrderInfoFormState, OrderEntity } from '../../../types/orders/orders.types';

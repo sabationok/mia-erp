@@ -1,9 +1,8 @@
 import InputLabel, { InputLabelProps } from './InputLabel';
 import { forwardRef, InputHTMLAttributes, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { isUndefined, pick } from 'lodash';
+import { isUndefined } from 'lodash';
 import styled, { css } from 'styled-components';
-import FlexBox, { FlexFieldSet } from '../FlexBox';
-import { RefCallBack } from 'react-hook-form';
+import FlexBox, { FlexFieldSet, FlexLi, FlexUl } from '../FlexBox';
 import ButtonIcon from '../ButtonIcon';
 import { IEmbeddedName, MaybeNull } from '../../../types/utils.types';
 import { nanoid } from '@reduxjs/toolkit';
@@ -12,139 +11,53 @@ import InputText from './InputText';
 import { useCloseByBackdropClick } from '../../../hooks/useCloseByEscapeOrClickOnBackdrop.hook';
 
 export interface CustomSelectBaseProps<Option extends CustomSelectOptionBase = CustomSelectOptionBase> {
-  InputComponent?: React.FC<InputHTMLAttributes<HTMLInputElement>>;
+  InputComponent?: React.FC<InputHTMLAttributes<HTMLSelectElement>>;
   valueKey?: string;
-  onSelect?: CustomSelectHandler;
+  valuePath?: string;
+
+  inputProps?: Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'>;
+  ref?: React.MutableRefObject<any>;
+
+  labelProps?: Omit<InputLabelProps, 'onSelect'>;
+
+  onSelect?: CustomSelectHandler<Option>;
+
+  error?: { message?: string } & Record<string, any>;
+  isTouched?: boolean;
+  isDirty?: boolean;
 
   options?: CustomSelectOption<Option>[];
   getOptions?: () => CustomSelectOption<Option>[];
+  validateOption?: (option: Option) => boolean;
+
   onClear?: () => void;
+
   handleOpenState?: (prevState: boolean) => boolean;
   open?: boolean;
-  ref?: RefCallBack;
+
   selectedOption?: CustomSelectOption<Option>;
   selectedValue?: string | number;
   keepOpen?: boolean;
-  inputProps?: Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'>;
-  labelProps?: Omit<InputLabelProps, 'onSelect'>;
+
   fieldMode?: boolean;
-  treeMode?: boolean;
-  multipleMode?: boolean;
-  validateOption?: (option: CustomSelectOption<Option>) => boolean;
-  getLabel?: <Data = any>(option: CustomSelectOption<Data>) => React.ReactNode;
+
   dropDownIsAbsolute?: boolean;
+
   onCreatePress?: () => void;
 }
 
-export type CustomSelectOnClickHandler = <Option = any>(option?: Option, value?: keyof Option, index?: number) => void;
+export type CustomSelectHandler<Option = CustomSelectOption, Value = any> = (
+  option: Option,
+  value?: Value,
+  index?: number
+) => void;
 
-export type CustomSelectHandler<Option = any> = (option: Option, value?: keyof Option, index?: number) => void;
+export type CustomSelectProps<Option extends CustomSelectOption = CustomSelectOption> = CustomSelectBaseProps<Option> &
+  Omit<React.InputHTMLAttributes<HTMLSelectElement>, 'onSelect'> &
+  Pick<InputLabelProps, 'label' | 'required' | 'error' | 'success'> &
+  Pick<CustomSelectItemProps, 'getLabel' | 'treeMode'>;
 
-export type CustomSelectOptionBase = {
-  _id?: string;
-  id?: string;
-  label?: MaybeNull<string | any>;
-  name?: MaybeNull<string | IEmbeddedName>;
-  secondName?: string;
-  value?: string | number;
-};
-export type CustomSelectOption<Data = any> = {
-  parent?: MaybeNull<CustomSelectOption<Data>>;
-  childrenList?: MaybeNull<CustomSelectOption<Data>[]>;
-} & CustomSelectOptionBase &
-  Data;
-export interface CustomSelectItemProps extends CustomSelectOption {
-  index: number;
-  isActive?: boolean;
-  currentOptionId?: string;
-  currentOptionValue?: string | number;
-  treeMode?: boolean;
-  option?: CustomSelectOption<CustomSelectOptionBase>;
-  level: number;
-  isActiveOption?: <Data = any>(option: Data) => boolean;
-  getLabel?: <Data = any>(option: CustomSelectOption<Data>) => React.ReactNode;
-  onClick?: CustomSelectOnClickHandler;
-  onSelect?: (index: number, option?: any) => void;
-}
-const CustomSelectOptionComponent: React.FC<CustomSelectItemProps> = ({
-  getLabel,
-  treeMode,
-  option,
-  onSelect,
-  onClick,
-  index,
-  currentOptionId,
-  currentOptionValue,
-  level = 0,
-  isActive,
-  ...props
-}) => {
-  const renderChildren = useMemo(() => {
-    return option?.childrenList?.map((ch, index) => {
-      const isActive =
-        (option?._id && option?._id === currentOptionId) ||
-        (option?.value && option?.value === currentOptionValue) ||
-        false;
-
-      return (
-        <CustomSelectOptionComponent
-          key={`select-opt_${ch?._id}`}
-          option={ch}
-          index={index}
-          onSelect={onSelect}
-          treeMode={treeMode}
-          getLabel={getLabel}
-          level={level + 1}
-          isActive={isActive}
-          currentOptionId={currentOptionId}
-          currentOptionValue={currentOptionValue}
-        />
-      );
-    });
-  }, [
-    option?.childrenList,
-    option?._id,
-    option?.value,
-    currentOptionId,
-    currentOptionValue,
-    onSelect,
-    treeMode,
-    getLabel,
-    level,
-  ]);
-
-  const renderLabel = useMemo((): undefined | string | number | null => {
-    return getLabel && option ? getLabel(option) : option?.label || option?.name;
-  }, [getLabel, option]);
-
-  return (
-    <>
-      <Option
-        justifyContent={'flex-start'}
-        gap={8}
-        fillWidth
-        fxDirection={'row'}
-        padding={'5px 8px'}
-        onClick={() => onSelect && onSelect(index, option)}
-        isActive={isActive}
-        {...props}
-      >
-        {treeMode && <CheckBox size={'16px'} checked={isActive} />}
-
-        <span className={'inner'}>{renderLabel}</span>
-      </Option>
-
-      {treeMode && <FlexBox padding={'0 0 0 8px'}>{renderChildren}</FlexBox>}
-    </>
-  );
-};
-
-export type CustomSelectProps<OptionData extends CustomSelectOptionBase = CustomSelectOptionBase> =
-  CustomSelectBaseProps<OptionData> &
-    Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'> &
-    Omit<InputLabelProps, 'onSelect'>;
-// : React.ForwardRefRenderFunction<any, CustomSelectProps>
-const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomSelectOptionBase>(
+const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<Value> = CustomSelectOption<Value>>(
   {
     InputComponent,
     inputProps = {},
@@ -164,36 +77,46 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
     onCreatePress,
     dropDownIsAbsolute = true,
     treeMode,
+    multiple = true,
     selectedValue,
     onChange,
-    // disabled: ds,
     disabled,
+    label,
+    error,
+    success,
     ...props
   }: CustomSelectProps<Option>,
   _ref: React.ForwardedRef<Ref>
 ) => {
-  const [currentOption, setCurrentOption] = useState<CustomSelectOption | undefined>(selectedOption);
+  const [_currentOption, setCurrentOption] = useState<CustomSelectOption | undefined>(selectedOption);
   const [isOpen, setIsOpen] = useState<boolean>(keepOpen || open);
-  // const disabled = true;
+
   const labelRef = useRef<HTMLFieldSetElement>(null);
 
-  const selectId = useMemo(() => (id ? id : `_${nanoid(5)}`), [id]);
+  const _compId = useMemo(() => (id ? id : `_${nanoid(5)}`), [id]);
+
+  const currentOption = selectedOption || _currentOption;
 
   const handleOpenState = useCallback(() => {
     !keepOpen && setIsOpen(prev => !prev);
   }, [keepOpen]);
 
+  const isActiveCheck = useCallback(
+    <Option extends CustomSelectOption>(option: Option) => {
+      const key = option._id || option?.value;
+      const activeKey = currentOption?._id || currentOption?.value;
+
+      return key === activeKey;
+    },
+    [currentOption?._id, currentOption?.value]
+  );
+
   const inputCurrentValue = useMemo(() => {
-    const option = selectedOption || currentOption;
-    return option ? option?.label || option?.name || null : null;
-  }, [currentOption, selectedOption]);
+    return currentOption ? currentOption?.label || currentOption?.name || null : null;
+  }, [currentOption]);
 
   const onSelectOption = useCallback(
-    (index: number, option?: any) => {
-      if (onSelect && valueKey && valueKey && option[valueKey]) {
-        onSelect(option, option[valueKey], index);
-        return;
-      }
+    (option: Option, value?: Value, index?: number) => {
       if (onSelect) {
         onSelect(option, option?.value, index);
       } else {
@@ -202,15 +125,13 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
 
       setIsOpen(false);
     },
-    [onSelect, valueKey]
+    [onSelect]
   );
 
   const handleOnClear = useCallback(() => {
     if (onClear) {
       onClear();
-    } else {
     }
-
     setCurrentOption(undefined);
     setIsOpen(false);
   }, [onClear]);
@@ -220,20 +141,18 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
       !!options?.length ? (
         options?.map((opt, idx) => {
           const key = opt._id || opt?.value;
-          const activeKey = selectedOption?._id || selectedOption?.value;
 
           return (
-            <CustomSelectOptionComponent
+            <CustomSelectItem<any, Option>
               key={`select-opt-${key || idx}`}
               index={idx}
-              option={opt}
-              isActive={key === activeKey}
+              option={opt as never}
+              isActive={isActiveCheck(opt)}
+              isActiveCheck={isActiveCheck}
               level={0}
               getLabel={getLabel}
               treeMode={treeMode}
               onSelect={onSelectOption}
-              currentOptionId={currentOption?._id}
-              currentOptionValue={currentOption?.value}
             />
           );
         })
@@ -242,16 +161,7 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
           <span>{'Опції відсутні'}</span>
         </NoOptions>
       ),
-    [
-      currentOption?._id,
-      currentOption?.value,
-      getLabel,
-      onSelectOption,
-      options,
-      selectedOption?._id,
-      selectedOption?.value,
-      treeMode,
-    ]
+    [getLabel, isActiveCheck, options, treeMode]
   );
 
   useEffect(() => {
@@ -270,31 +180,27 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
     }
   }, [options, selectedValue]);
 
-  useCloseByBackdropClick(setIsOpen, `data-select=${selectId}`, { disabled: !isOpen });
+  useCloseByBackdropClick(setIsOpen, `data-select=${_compId}`, { disabled: !isOpen });
 
   return (
     <InputLabel
-      id={selectId}
+      id={_compId}
       className={'select-box'}
       fillWidth
-      data-select={selectId}
+      data-select={_compId}
       direction={'vertical'}
       required={required}
       ref={labelRef}
       disabled={disabled}
-      {...pick(props, ['error', 'success', 'helperText', 'loading', 'label', 'id', 'uppercase', 'align', 'direction'])}
+      {...{ label, error, success }}
       {...labelProps}
     >
       <FlexBox fillWidth style={{ position: 'relative' }}>
-        <LabelInner fieldMode={fieldMode} error={!!props.error} success={!!props.success} isActive={isOpen}>
+        <LabelInner fieldMode={fieldMode} error={!!error} success={!!success} isActive={isOpen}>
           <StyledInput
             disabled={fieldMode}
             fieldMode={fieldMode}
             required={required}
-            // ref={_ref}
-
-            name={name}
-            onBlur={props.onBlur}
             id={id}
             placeholder={props.placeholder}
             {...inputProps}
@@ -304,7 +210,7 @@ const CustomSelect = <Ref = any, Option extends CustomSelectOptionBase = CustomS
           />
 
           <ActionsBox fxDirection={'row'} gap={6} fillHeight alignItems={'center'} padding={'0 8px 0 0'}>
-            {onClear && currentOption && (
+            {onClear && _currentOption && (
               <ButtonIcon
                 variant={'onlyIconNoEffects'}
                 className={'clearBtn'}
@@ -496,49 +402,6 @@ const CreateButton = styled(ButtonIcon)`
   fill: ${({ theme }) => theme.accentColor.base};
 `;
 
-const SelectOptionCss = css<{ isActive?: boolean }>`
-  min-height: 30px;
-  height: max-content;
-  align-items: center;
-  justify-content: flex-start;
-
-  &:hover {
-    color: ${({ theme }) => theme.accentColor.hover};
-    background-color: ${({ theme }) => theme.accentColor.extraLight};
-  }
-
-  ${p =>
-    p.isActive
-      ? css`
-          color: ${({ theme }) => theme.accentColor.hover};
-          background-color: ${({ theme }) => theme.accentColor.extraLight};
-        `
-      : ''}
-
-  padding: 4px 8px;
-
-  //cursor: default;
-
-  font-weight: ${({ isActive }) => (isActive ? 700 : '')};
-  background-color: ${({ theme }) => theme.modalBackgroundColor};
-
-  & .inner {
-    height: max-content;
-    width: 100%;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-  }
-  @media screen and (max-width: 480px) {
-    min-height: 38px;
-  }
-`;
-const Option = styled(FlexBox)`
-  ${SelectOptionCss};
-`;
-
 export default memo(forwardRef(CustomSelect));
 
 // const dropdownRef = useRef<HTMLDivElement>(null);
@@ -582,3 +445,127 @@ export default memo(forwardRef(CustomSelect));
 //     }
 //   }
 // }, [isOpen]);
+
+export type CustomSelectOptionBase<Value = any> = {
+  _id?: string;
+  id?: string;
+  value?: Value;
+
+  label?: MaybeNull<string | any>;
+  name?: MaybeNull<string | IEmbeddedName>;
+
+  secondName?: string;
+};
+export type CustomSelectOption<Value = any> = {
+  parent?: MaybeNull<CustomSelectOption<Value>>;
+  childrenList?: MaybeNull<CustomSelectOption<Value>[]>;
+} & CustomSelectOptionBase<Value>;
+
+export type CustomSelectItemProps<Value = any, Option extends CustomSelectOption<Value> = CustomSelectOption<Value>> = {
+  index: number;
+  level: number;
+
+  isActive?: boolean;
+  treeMode?: boolean;
+
+  option: Option;
+  isActiveCheck?: (option: Option) => boolean;
+  getLabel?: (option: Option) => React.ReactNode;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
+  onSelect?: (option: Option, value?: Value, index?: number) => void;
+};
+const CustomSelectItem = <Value = any, Option extends CustomSelectOption<Value> = CustomSelectOption<Value>>(
+  props: CustomSelectItemProps<Value, Option>
+) => {
+  const { getLabel, onClick, treeMode, option, onSelect, index, level = 0, isActive, isActiveCheck } = props;
+
+  const renderChildren = useMemo(() => {
+    return option?.childrenList?.map((ch, index) => {
+      return (
+        <CustomSelectItem<Value, Option>
+          {...props}
+          key={`select-opt_${ch?._id}`}
+          option={ch as never}
+          index={index}
+          level={level + 1}
+          isActive={isActiveCheck && isActiveCheck(ch as never)}
+        />
+      );
+    });
+  }, [option?.childrenList, isActiveCheck, props, level]);
+
+  const renderLabel = useMemo(() => {
+    return getLabel && option ? getLabel(option) ?? '---' : option?.label || option?.name;
+  }, [getLabel, option]);
+
+  return (
+    <FlexLi>
+      <Option
+        className={'selectOption'}
+        justifyContent={'flex-start'}
+        gap={8}
+        fillWidth
+        fxDirection={'row'}
+        padding={'8px 10px'}
+        isActive={isActive}
+        onClick={event => {
+          onClick && onClick(event);
+          onSelect && onSelect(option, option?.value, index);
+        }}
+      >
+        {treeMode && <CheckBox size={'16px'} checked={isActive} />}
+
+        <span className={'inner'}>{renderLabel}</span>
+      </Option>
+
+      {treeMode && (
+        <FlexUl padding={'0 0 0 8px'} className={'childrenList'}>
+          {renderChildren}
+        </FlexUl>
+      )}
+    </FlexLi>
+  );
+};
+
+const SelectOptionCss = css<{ isActive?: boolean }>`
+  min-height: 30px;
+  height: max-content;
+  align-items: center;
+  justify-content: flex-start;
+
+  &:hover {
+    color: ${({ theme }) => theme.accentColor.hover};
+    background-color: ${({ theme }) => theme.accentColor.extraLight};
+  }
+
+  ${p =>
+    p.isActive
+      ? css`
+          color: ${({ theme }) => theme.accentColor.hover};
+          background-color: ${({ theme }) => theme.accentColor.extraLight};
+        `
+      : ''}
+
+  padding: 4px 8px;
+
+  //cursor: default;
+
+  font-weight: ${({ isActive }) => (isActive ? 700 : '')};
+  //background-color: ${({ theme }) => theme.modalBackgroundColor};
+
+  & .inner {
+    height: max-content;
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  @media screen and (max-width: 480px) {
+    min-height: 38px;
+  }
+`;
+const Option = styled(FlexBox)`
+  ${SelectOptionCss};
+`;

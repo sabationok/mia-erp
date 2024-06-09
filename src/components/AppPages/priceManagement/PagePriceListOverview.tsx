@@ -8,7 +8,7 @@ import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { useEffect, useMemo, useState } from 'react';
 import { PriceEntity } from '../../../types/price-management/price-management.types';
 import { ITableListProps } from '../../TableList/tableTypes.types';
-import { ISortParams } from '../../../api';
+import { ApiQuerySortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import TableList from '../../TableList/TableList';
 import { usePriceManagementSelector } from '../../../redux/selectors.store';
@@ -25,7 +25,7 @@ const PagePriceListOverview: React.FC<Props> = ({ path }) => {
   } = useAppServiceProvider();
   const list = usePriceManagementSelector()?.current;
   const [isLoading, setIsLoading] = useState(false);
-  const [sortParams, setSortParams] = useState<ISortParams>();
+  const [sortParams, setSortParams] = useState<ApiQuerySortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const PagePriceListOverview: React.FC<Props> = ({ path }) => {
         setFilterParams(filterParams);
       },
       onTableSortChange: (param, sortOrder) => {
-        setSortParams({ dataPath: param.dataPath, sortOrder });
+        setSortParams({ sortPath: param.dataPath, sortOrder });
       },
     }),
     [actionsCreator, list?.prices]

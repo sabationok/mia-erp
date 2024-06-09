@@ -41,11 +41,7 @@ export const ModalHeader = ({
 
         {renderTitle || (
           <FlexBox justifyContent={'center'} overflow={'hidden'}>
-            <Text
-              $weight={600}
-              $size={14}
-              style={{ textTransform: 'uppercase', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}
-            >
+            <Text $weight={600} $size={14} $lines={1} $ellipsisMode $textTransform={'uppercase'}>
               {title}
             </Text>
           </FlexBox>
@@ -54,7 +50,7 @@ export const ModalHeader = ({
         {showSubmitButton && (
           <ButtonIcon
             variant={'textExtraSmall'}
-            gap={'6px'}
+            gap={6}
             type={showSubmitButton ? 'submit' : 'button'}
             padding={'0 6px'}
             endIcon={'done'}
@@ -89,4 +85,6 @@ const ExtraHeader = styled.div`
   width: 100%;
   height: min-content;
   overflow: hidden;
+
+  max-width: 100%;
 `;

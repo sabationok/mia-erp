@@ -151,7 +151,7 @@ export interface AppQueryParams<Type = any> extends AppQueries<Type>, Pagination
   createTreeData?: boolean;
   getAll?: boolean;
   dataView?: 'tree' | 'list';
-  sortParams?: ISortParams;
+  sortParams?: ApiQuerySortParams;
   search?: string;
   searchBy?: string;
   searchRef?: string;
@@ -173,10 +173,16 @@ export interface AppQueryParams<Type = any> extends AppQueries<Type>, Pagination
   filterParams?: Partial<FilterReturnDataType>;
 }
 
-export type SortOrderType = 'desc' | 'asc' | 'descending' | 'ascending' | 'DESC' | 'ASC';
+export type SortOrderType = 'desc' | 'asc' | 'DESC' | 'ASC';
 
-export interface ISortParams<DataKey = any, DataPath = any> {
+export interface ApiQuerySortParams<DataPath = any, DataKey = any> {
   sortOrder?: SortOrderType;
-  dataPath?: DataPath | string;
+  sortPath?: DataPath | string;
   dataKey?: DataKey | string;
+}
+
+export interface ApiQuerySearchParams<Path = any> {
+  searchPath?: Path | string;
+  // dataKey?: DataKey | string;
+  search?: string;
 }

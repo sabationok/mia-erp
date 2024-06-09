@@ -13,7 +13,7 @@ import { PriceEntity } from '../../../../types/price-management/price-management
 import styled from 'styled-components';
 import { ModalHeader } from '../../../atoms';
 import FlexBox from '../../../atoms/FlexBox';
-import StepsController from '../../components/StepsController';
+import StepsController from '../../../atoms/StepsController';
 import { useAppForm } from '../../../../hooks';
 import VariationsApi from '../../../../api/variations.api';
 import { transformVariationTableData } from '../../../../utils/tables';
@@ -203,7 +203,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
           },
           onLoading: setIsLoading,
         },
-        VariationsApi.getAllByProductId,
+        VariationsApi.getAllByOfferId,
         VariationsApi
       );
     }

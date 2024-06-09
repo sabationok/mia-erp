@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { ActionsCreatorOptions, DirBaseProps, DirItemTypeByDirType } from '../../types/dir.types';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
 import { useModalProvider } from '../../Providers/ModalProvider/ModalProvider';
-import { ISortParams } from '../../api';
+import { ApiQuerySortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
 import { useDirService } from '../../hooks';
 import { useDirectorySelector } from '../../redux/selectors.store';
@@ -14,15 +14,15 @@ export interface DirTableCompProps<
   DirType extends ApiDirType = any,
   CreateDTO = any,
   UpdateDTO = any,
-  ItemDataType = any
+  ItemDataType = any,
 > extends DirBaseProps {
   dirType: ApiDirType;
   type?: DirItemTypeByDirType[DirType];
 
   getTableSettings?: (
     options: ActionsCreatorOptions<DirType, CreateDTO, UpdateDTO, ItemDataType> & {
-      sortParams?: ISortParams;
-      setSortParams?: (params?: ISortParams) => void;
+      sortParams?: ApiQuerySortParams;
+      setSortParams?: (params?: ApiQuerySortParams) => void;
       filterParams?: FilterReturnDataType;
       setFilterParams?: (filterData?: FilterReturnDataType) => void;
     }
@@ -34,7 +34,7 @@ const DirTableComp: React.FC<DirTableCompProps> = ({ type, dirType, getTableSett
   const service = useDirService();
   const tableData = useDirectorySelector(dirType).directory;
   const [isLoading] = useState(false);
-  const [sortParams, setSortParams] = useState<ISortParams>();
+  const [sortParams, setSortParams] = useState<ApiQuerySortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   const tableSettingsMemo = useMemo((): ITableListProps => {

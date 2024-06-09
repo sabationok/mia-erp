@@ -1,5 +1,4 @@
 import { Path } from 'react-hook-form';
-import { MeasurementUnit } from 'types/offers/offers.types';
 import { FilterOption } from '../../../atoms/TabSelector';
 import { enumToFilterOptions } from 'utils/fabrics';
 import CustomSelect from '../../../atoms/Inputs/CustomSelect';
@@ -10,10 +9,11 @@ import * as React from 'react';
 import { UseAppFormReturn } from 'hooks/useAppForm.hook';
 import { t } from 'lang';
 import { HasMeasurement } from 'types/utils.types';
+import { MeasurementUnit } from '../../../../types/enums.types';
 
 export interface MeasurementInputsFormData extends HasMeasurement {}
 
-const productsMeasurementUnitOptions = enumToFilterOptions(MeasurementUnit);
+const offerMeasurementUnitOptions = enumToFilterOptions(MeasurementUnit);
 
 const measurementInputs: {
   label?: string;
@@ -22,7 +22,7 @@ const measurementInputs: {
   type?: HTMLInputElement['type'];
   options?: FilterOption[];
 }[] = [
-  { name: 'measurement.unit', label: t('unit'), placeholder: t('unit'), options: productsMeasurementUnitOptions },
+  { name: 'measurement.unit', label: t('unit'), placeholder: t('unit'), options: offerMeasurementUnitOptions },
   { name: 'measurement.min', label: t('min'), placeholder: t('min'), type: 'number' },
   { name: 'measurement.max', label: t('max'), placeholder: t('max'), type: 'number' },
   // { name: 'measurement.step', label: t('step'), placeholder: t('step'), type: 'number' },

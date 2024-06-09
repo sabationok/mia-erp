@@ -10,7 +10,7 @@ import { ObjectEntries, toVariationFormData, toVariationReqData } from '../../ut
 import { IVariationFormData, VariationEntity } from '../../types/offers/variations.types';
 import { ToastService } from '../../services';
 import { ModalFormProps } from '../ModalForm';
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../Forms/components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../atoms/FormAfterSubmitOptions';
 import { OverlayFooter } from './index';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';

@@ -5,15 +5,15 @@ import { UseFormHandleSubmit } from 'react-hook-form/dist/types/form';
 import { InputLabelProps } from '../components/atoms/Inputs/InputLabel';
 import { CustomSelectBaseProps } from '../components/atoms/Inputs/CustomSelect';
 import { AnyFn } from '../utils/types';
+import { getValueByPath } from '../utils';
 
 export type CustomSelectProps = CustomSelectBaseProps &
   Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'> &
   Omit<InputLabelProps, 'onSelect'>;
 
-export type RegisterSelect<TFieldValues extends FieldValues = FieldValues> = (
+export type UseRegisterSelect<TFieldValues extends FieldValues = FieldValues> = (
   name: Path<TFieldValues>,
-
-  props?: Omit<CustomSelectProps, 'name'> & { onlyValue?: true },
+  props?: Omit<CustomSelectProps, 'name'> & { onlyValue?: boolean; inputName?: Path<TFieldValues> },
   childControl?: {
     childName?: Path<TFieldValues>;
   }
@@ -21,7 +21,7 @@ export type RegisterSelect<TFieldValues extends FieldValues = FieldValues> = (
 
 export interface UseAppFormReturn<TFieldValues extends FieldValues = FieldValues, TContext = any>
   extends UseFormReturn<TFieldValues, TContext> {
-  registerSelect: RegisterSelect<TFieldValues>;
+  registerSelect: UseRegisterSelect<TFieldValues>;
   formValues: TFieldValues;
   onSubmitHandler?: (
     onValid: SubmitHandler<TFieldValues>,
@@ -61,7 +61,7 @@ const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = a
   formProps?: UseFormProps<TFieldValues, TContext>
 ): UseAppFormReturn<TFieldValues, TContext> => {
   const form = useForm<TFieldValues>(formProps);
-  const { setValue, unregister, register, watch } = form;
+  const { setValue, unregister, register, watch, getFieldState } = form;
   const formValues = watch();
 
   // function onSubmitHandler(onValid: AppSubmitHandler<TFieldValues>, onInvalid: AppErrorSubmitHandler<TFieldValues>) {
@@ -75,19 +75,26 @@ const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = a
   const registerSelect = useCallback(
     (
       name: Path<TFieldValues>,
-      props?: Omit<CustomSelectProps, 'name'> & { onlyValue?: true },
+      props?: Omit<CustomSelectProps, 'name'> & { onlyValue?: boolean; inputName?: Path<TFieldValues> },
       childControl?: {
         childName?: Path<TFieldValues>;
       }
     ): CustomSelectProps => {
+      const fieldState = getFieldState(name);
+      const registerReturn = register(name);
+
       return {
-        ...register(name),
+        ...registerReturn,
+        ref: props?.ref,
+        inputRef: registerReturn.ref,
         onSelect: (option, value) => {
           setValue<Path<TFieldValues>>(name, props?.onlyValue ? value : (option as any));
           // if (childControl?.childName) clearChild(childControl?.childName);
         },
         name,
-        selectedOption: formValues[name],
+        selectedOption: getValueByPath({ data: formValues, path: name }),
+
+        ...fieldState,
         onClear: () => {
           if (!formValues[name]) return;
 
@@ -103,7 +110,7 @@ const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = a
         ...props,
       };
     },
-    [formValues, register, setValue, unregister]
+    [formValues, getFieldState, register, setValue, unregister]
   );
 
   return {

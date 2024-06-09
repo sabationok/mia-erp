@@ -2,72 +2,75 @@ import ButtonIcon from 'components/atoms/ButtonIcon';
 import { ModalFormProps } from 'components/ModalForm';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { SelectItem } from 'components/TableList/TableList';
-import { iconId } from '../../../img/sprite';
+import FlexBox, { FlexLi } from '../../atoms/FlexBox';
+import { TableSortOrderEnum, TableSortParam } from '../tableTypes.types';
 
 export interface TableSortParamsListProps extends Omit<ModalFormProps, 'onSelect'> {
-  tableSortParams?: SelectItem[];
-  current?: SelectItem;
-  isOpen?: boolean;
-  // onOpenClick: (isOpen?: boolean) => void;
-  onSelect: (param: SelectItem, sortOrder: SelectItem['sortOrder']) => void;
+  sortParams?: TableSortParam[];
+  current?: TableSortParam;
+  sortOrder?: TableSortOrderEnum;
+  onSelect: (param: TableSortParam, sortOrder: TableSortOrderEnum) => void;
+  multiple?: boolean;
 }
 
-const TableSortParamsList: React.FC<TableSortParamsListProps> = ({ tableSortParams, onSelect, current }) => {
-  const [currentEl, setCurrentEl] = useState<SelectItem | undefined>(current);
+const TableSortParamsList: React.FC<TableSortParamsListProps> = ({ sortParams, sortOrder, onSelect, current }) => {
+  const [state, setState] = useState<{ param?: TableSortParam; sortOrder?: TableSortOrderEnum }>({
+    param: current,
+    sortOrder,
+  });
 
-  function handleSetCurrentState(param: SelectItem, sortOrder: SelectItem['sortOrder']) {
+  function registerSelector(param: TableSortParam, sortOrder: TableSortOrderEnum) {
     return () => {
       onSelect && onSelect(param, sortOrder);
 
-      setCurrentEl({ ...param, sortOrder });
+      setState({ param, sortOrder });
     };
   }
 
-  function isActive(param: SelectItem, sortOrder: SelectItem['sortOrder']) {
-    return param.dataPath === currentEl?.dataPath && currentEl?.sortOrder === sortOrder;
+  function isActiveParam(param: TableSortParam) {
+    return param.dataPath === state?.param?.dataPath;
+  }
+  function isActiveOrder(sortOrder: TableSortOrderEnum) {
+    return state?.sortOrder === sortOrder;
   }
 
   return (
-    <Box data-table-sort-close>
+    <Box data-table-sort-close padding={'0 0 16px'}>
       <SelectList>
-        {tableSortParams?.map(param => (
-          <ListParam
-            key={`sortItem-${param.dataKey || param.dataPath}`}
-            isActive={param.dataPath === currentEl?.dataPath}
-          >
-            <ParamLabel>{param.name || param.label}</ParamLabel>
+        {sortParams?.map(param => {
+          const isActive = isActiveParam(param);
+          return (
+            <ListParam key={`sortItem-${param.dataKey || param.dataPath}`} isActive={isActive}>
+              <ParamLabel>{param.label || param.label}</ParamLabel>
 
-            <SetOrderButton
-              className="button"
-              isActive={isActive(param, 'desc')}
-              variant="onlyIconNoEffects"
-              size="100%"
-              iconSize="80%"
-              iconId={iconId.SmallArrowDown}
-              onClick={handleSetCurrentState(param, 'desc')}
-            />
+              <SetOrderButton
+                className="button"
+                isActive={isActive && isActiveOrder(TableSortOrderEnum.DESC)}
+                variant="onlyIconNoEffects"
+                size={'36px'}
+                iconSize="90%"
+                icon={'SmallArrowDown'}
+                onClick={registerSelector(param, TableSortOrderEnum.DESC)}
+              />
 
-            <SetOrderButton
-              className="button"
-              isActive={isActive(param, 'asc')}
-              variant="onlyIconNoEffects"
-              size="100%"
-              iconSize="80%"
-              iconId={iconId.SmallArrowUp}
-              onClick={handleSetCurrentState(param, 'asc')}
-            />
-          </ListParam>
-        ))}
+              <SetOrderButton
+                className="button"
+                isActive={isActive && isActiveOrder(TableSortOrderEnum.ASC)}
+                variant="onlyIconNoEffects"
+                size={'36px'}
+                iconSize="90%"
+                icon={'SmallArrowUp'}
+                onClick={registerSelector(param, TableSortOrderEnum.ASC)}
+              />
+            </ListParam>
+          );
+        })}
       </SelectList>
     </Box>
   );
 };
 
-const Box = styled.div<{ isOpen?: boolean }>`
-  display: flex;
-  flex-direction: column;
-
+const Box = styled(FlexBox)`
   max-height: 100%;
   max-width: 100%;
   width: 100%;
@@ -80,30 +83,29 @@ const Box = styled.div<{ isOpen?: boolean }>`
 
   background-color: ${({ theme }) => theme.modalBackgroundColor};
   box-shadow: ${({ theme }) => theme.globals.shadowMain};
-  transition: all ${({ theme }) => theme.globals.timingFunctionMain},
+  transition:
+    all ${({ theme }) => theme.globals.timingFunctionMain},
     transform ${({ theme }) => theme.globals.timingFnMui};
 `;
 const SelectList = styled.ul`
   display: grid;
   grid-template-columns: 1fr;
+  grid-auto-rows: fit-content;
 `;
 const SetOrderButton = styled(ButtonIcon)<{ isActive: boolean }>`
   visibility: hidden;
   transition: none;
   fill: ${({ isActive, theme }) => (isActive ? theme.accentColor.base : theme.fontColorHeader)};
 `;
-const ListParam = styled.li<{ isActive: boolean }>`
-  display: grid;
-  grid-template-columns: 1fr 36px 36px;
-  grid-template-rows: 36px;
+const ListParam = styled(FlexLi)`
+  flex-direction: row;
   align-items: center;
+
   position: relative;
 
   font-size: 14px;
 
   padding: 0 8px;
-
-  cursor: default;
 
   color: ${({ isActive, theme }) => (isActive ? theme.fontColorHeader : '')};
   background-color: ${({ isActive, theme }) => (isActive ? theme.backgroundColorSecondary : '')};

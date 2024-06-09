@@ -31,7 +31,7 @@ const PageOffers: React.FC<any> = (props: Props) => {
   return (
     <AppGridPage path={props.path}>
       <Page>
-        <TableList {...tableConfig} isLoading={isLoading?.offers} />
+        <TableList {...tableConfig} showFooter isLoading={isLoading?.offers} />
       </Page>
     </AppGridPage>
   );
@@ -71,19 +71,21 @@ export const useOffersTableSettings = ({
     (): ITableListProps<OfferEntity, OfferSearchParam, OfferSortParam> => ({
       onSubmitSearch: data => {
         if (data.search) {
-          const params: GetAllOffersQuery | undefined = data.param?.dataPath
-            ? setValueByPath(data.param?.dataPath, data.search)
-            : undefined;
+          const params: GetAllOffersQuery = {};
+
+          const path = data.param?.dataPath;
+          if (path && data.search) {
+            setValueByPath(path, data.search, params, { mutation: true });
+          }
 
           setSearchParams(data);
 
           getAll({
-            data: { refresh: true, params },
+            params,
             onLoading: onLoading('offers'),
           }).then();
         } else {
           getAll({
-            data: { refresh: true },
             onLoading: onLoading('offers'),
           }).then();
         }
@@ -98,32 +100,18 @@ export const useOffersTableSettings = ({
       showFooter: false,
       checkBoxes: true,
       actionsCreator,
-      // onFilterSubmit: filterParams => {
-      //   setFilterParams(filterParams);
-      //   getAll({
-      //     data: {
-      //       refresh: true,
-      //       params: {
-      //         filterParams,
-      //         sortOrder: sortParams?.order,
-      //         dataKey: sortParams?.param.dataKey,
-      //         dataPath: sortParams?.param.dataPath,
-      //       },
-      //     },
-      //     onLoading: setIsLoading,
-      //   }).then();
-      // },
+
       onTableSortChange: (param, order) => {
         setSortParams({ param, order });
+
+        console.log({ param, order });
+
         getAll({
-          data: {
-            refresh: true,
-            params: {
-              sortOrder: order,
-              dataKey: param?.dataKey,
-              dataPath: param?.dataPath,
-            },
+          params: {
+            sortOrder: order,
+            sortPath: param.dataPath,
           },
+
           onLoading: onLoading('offers'),
         }).then();
       },
@@ -134,7 +122,6 @@ export const useOffersTableSettings = ({
   useEffect(() => {
     if (state.list.length === 0) {
       getAll({
-        data: { refresh: true },
         onLoading: onLoading('offers'),
       });
     }

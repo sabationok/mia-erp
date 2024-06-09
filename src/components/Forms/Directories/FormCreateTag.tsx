@@ -8,7 +8,7 @@ import { t } from '../../../lang';
 import InputText from '../../atoms/Inputs/InputText';
 import React from 'react';
 import { useAppForm } from '../../../hooks';
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../atoms/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { FormInputs } from '../components/atoms';

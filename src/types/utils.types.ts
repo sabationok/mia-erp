@@ -1,9 +1,9 @@
-import { MeasurementUnit } from './offers/offers.types';
 import { AddressDto } from '../redux/app-redux.types';
 import { ServiceMethodBase } from './integrations.types';
 import { CompanyEntity } from './companies.types';
 import { LangPack } from '../lang';
 import { Path } from 'react-hook-form';
+import { MeasurementUnit } from './enums.types';
 
 export type UUID = string;
 export type LABEL = string;
@@ -18,7 +18,7 @@ export type Ref = OnlyUUID;
 
 export type FieldValues = Record<string, any>;
 
-export type Values<T extends any> = T[keyof T];
+export type Values<T extends any> = T extends (infer U)[] ? U : T[keyof T];
 export type Keys<T extends any> = keyof T;
 
 export type RefsMap<Keys extends string | number | symbol> = Partial<Record<Keys, Ref>>;
@@ -157,6 +157,9 @@ export interface IMeasurement {
 }
 
 export type MeasurementKeyType = keyof IMeasurement;
+export interface HasMeasurement {
+  measurement?: IMeasurement;
+}
 
 export interface IDimensions {
   width?: MaybeNull<number>;
@@ -167,12 +170,8 @@ export interface IDimensions {
 
 export type DimensionsKeyType = keyof IDimensions;
 
-export interface HasMeasurement {
-  measurement?: MaybeNull<IMeasurement>;
-}
-
 export interface HasDimensions {
-  dimensions?: MaybeNull<IDimensions>;
+  dimensions?: IDimensions;
 }
 export interface HasTotal {
   total?: MaybeNull<number>;
@@ -292,5 +291,3 @@ export interface LocationRefsDto {
 // ??? Experimental
 
 export type HasNamedList<Key extends string | number = any, Data = any> = Record<Key, MaybeNull<Data[]>>;
-
-export type T_HasSlotsList<Slot = any> = HasNamedList<'slots', Slot>;

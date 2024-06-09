@@ -1,7 +1,7 @@
 import ModalForm, { ModalFormProps } from 'components/ModalForm';
 
 import * as yup from 'yup';
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../atoms/FormAfterSubmitOptions';
 import { useAppForm } from '../../../hooks';
 import { BankAccountDestinationType, BankAccountFormData } from '../../../types/finances/bank-accounts.types';
 import { yupResolver } from '@hookform/resolvers/yup';

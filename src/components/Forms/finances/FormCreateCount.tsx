@@ -11,7 +11,7 @@ import { DirectoriesFormProps } from '../../../types/dir.types';
 import { useAppForm } from '../../../hooks';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { pick } from 'lodash';
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../atoms/FormAfterSubmitOptions';
 import { ApiDirType } from '../../../redux/APP_CONFIGS';
 import { FormInputs } from '../components/atoms';
 

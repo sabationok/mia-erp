@@ -8,7 +8,7 @@ import { useTrActionsCreator } from '../../hooks/useTrActionsCreator.hook';
 import { ITableListProps } from '../TableList/tableTypes.types';
 import AppGridPage from './AppGridPage';
 import { useTransactionsSelector } from '../../redux/selectors.store';
-import { ISortParams } from '../../api';
+import { ApiQuerySortParams } from '../../api';
 import { FilterReturnDataType } from '../Filter/AppFilter';
 import { BaseAppPageProps } from './index';
 import { transactionsColumns, transactionsSearchParams } from '../../data/transactions.data';
@@ -24,7 +24,7 @@ const PageTransactions: React.FC<any> = (props: Props) => {
   const filterSelectors = useTrFilterSelectors();
   const actionsCreator = useTrActionsCreator(service);
   const [isLoading, setIsLoading] = useState(false);
-  const [sortParams, setSortParams] = useState<ISortParams>();
+  const [sortParams, setSortParams] = useState<ApiQuerySortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   const tableConfig = useMemo(
@@ -43,9 +43,9 @@ const PageTransactions: React.FC<any> = (props: Props) => {
         getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading });
       },
       onTableSortChange: (param, sortOrder) => {
-        setSortParams({ dataPath: param.dataPath, sortOrder });
+        setSortParams({ sortPath: param.dataPath, sortOrder });
         getAll({
-          data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },
+          data: { refresh: true, query: { sortParams: { sortPath: param.dataPath, sortOrder }, filterParams } },
           onLoading: setIsLoading,
         });
       },

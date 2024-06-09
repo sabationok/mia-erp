@@ -29,6 +29,11 @@ import { HasBaseCmsConfigs } from '../cms.types';
 
 export type { OfferImageSlotEntity } from './offer-images.types';
 
+export enum OfferTypeEnum {
+  GOODS = 'GOODS',
+  SERVICE = 'SERVICE',
+  SET = 'SET',
+}
 export enum OfferStatusEnum {
   pending = 'pending',
   rejected = 'rejected',
@@ -53,27 +58,6 @@ export type OfferFutures = {
       MaybeNull<OfferOrderingInfo>
     >
   >;
-
-export enum MeasurementUnit {
-  Pc = 'Pc', // Штука (Piece)
-  G = 'G', // Грам (Gram)
-  Kg = 'Kg', // Кілограм (Kilogram)
-  Ml = 'Ml', // Мілілітр (Milliliter)
-  L = 'L', // Літр (Liter)
-  Sm = 'Sm', // Сантиметр
-  M = 'M', // Метр (Meter)
-  SqSm = 'SqSm', // Квадратний метр (SquareSMeter)
-  CuSm = 'CuSm,', // Кубічний метр (CubicSMeter)
-  SqM = 'SqM', // Квадратний метр (SquareMeter)
-  CuM = 'CuM', // Кубічний метр (CubicMeter)
-  Other = 'Other', // Інше (Other)
-}
-
-export enum OfferTypeEnum {
-  GOODS = 'GOODS',
-  SERVICE = 'SERVICE',
-  SET = 'SET',
-}
 
 export type ProductFilterOpt = FilterOption<OfferTypeEnum>;
 

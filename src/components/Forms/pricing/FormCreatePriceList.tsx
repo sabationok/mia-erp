@@ -12,7 +12,7 @@ import FlexBox from '../../atoms/FlexBox';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import { t } from '../../../lang';
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../atoms/FormAfterSubmitOptions';
 import TextareaPrimary from '../../atoms/Inputs/TextareaPrimary';
 
 export interface FormCreatePriceListProps extends Omit<ModalFormProps<PriceListType>, 'onSubmit' | 'afterSubmit'> {

@@ -15,7 +15,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import translate, { getTranslatedString } from '../../../lang';
 import { FieldValues } from 'react-hook-form/dist/types';
 import { AppErrorSubmitHandler, AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../components/FormAfterSubmitOptions';
+import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../../atoms/FormAfterSubmitOptions';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { Text } from '../../atoms/Text';
 

@@ -9,13 +9,17 @@ import {
 } from 'redux/app-redux.types';
 import {
   createOfferThunk,
+  createVariationThunk,
   getAllInventoriesByProductIdThunk,
   getAllOfferPricesThunk,
   getAllOffersThunk,
+  getAllVariationsByOfferIdThunk,
+  getAllVariationsThunk,
   getOfferFullInfoThunk,
   getOfferThunk,
   updateOfferDefaultsThunk,
   updateProductThunk,
+  updateVariationThunk,
 } from '../redux/products/offers.thunks';
 import { useMemo } from 'react';
 import { defaultApiCallPayload, defaultThunkPayload } from 'utils/fabrics';
@@ -28,15 +32,7 @@ import {
   getAllPropertiesThunk,
   updatePropertyThunk,
 } from '../redux/products/properties/properties.thunks';
-import {
-  createVariationThunk,
-  getAllVariationsByOfferIdThunk,
-  updateVariationThunk,
-} from '../redux/products/variations/variations.thunks';
-import { IVariationReqData, VariationEntity } from '../types/offers/variations.types';
-import { clearCurrentProductAction } from '../redux/products/offers.actions';
-import { PriceEntity } from '../types/price-management/price-management.types';
-import { GetAllPricesQuery } from '../api';
+import { clearCurrentOfferAction } from '../redux/products/offers.actions';
 
 // type Test=_ServiceDispatcherAsync<typeof createOfferThunk>
 
@@ -64,22 +60,21 @@ export interface OffersService {
   >;
 
   // * VARIATIONS
-  createVariation: ServiceDispatcherAsync<IVariationReqData, VariationEntity>;
-  updateVariationById: ServiceDispatcherAsync<IVariationReqData, VariationEntity>;
-  getAllVariationsByProductId: ServiceDispatcherAsync<
-    { offerId: string; params?: AppQueryParams; refreshCurrent?: boolean; updateCurrent?: boolean },
-    VariationEntity[]
-  >;
+  createVariation: __ServiceDispatcherAsync<typeof createVariationThunk>;
+  updateVariationById: __ServiceDispatcherAsync<typeof updateVariationThunk>;
+
+  getAllVariations: __ServiceDispatcherAsync<typeof getAllVariationsThunk>;
+
+  getAllVariationsByProductId: __ServiceDispatcherAsync<typeof getAllVariationsByOfferIdThunk>;
+
+  variations: {
+    create: __ServiceDispatcherAsync<typeof createVariationThunk>;
+    update: __ServiceDispatcherAsync<typeof updateVariationThunk>;
+    getAll: __ServiceDispatcherAsync<typeof getAllVariationsThunk>;
+  };
 
   // * PRICES
-  getAllPrices: ServiceDispatcherAsync<
-    {
-      refreshCurrent?: boolean;
-      updateCurrent?: boolean;
-      params: GetAllPricesQuery;
-    },
-    PriceEntity[]
-  >;
+  getAllPrices: __ServiceDispatcherAsync<typeof getAllOfferPricesThunk>;
   // * INVENTORIES
   getAllInventories: __ServiceDispatcherAsync<typeof getAllInventoriesByProductIdThunk>;
 }
@@ -89,34 +84,43 @@ const useOffersService = (): OffersService => {
 
   return useMemo((): OffersService => {
     return {
-      create: args => dispatch(createOfferThunk(defaultThunkPayload(args))),
-      updateById: args => dispatch(updateProductThunk(defaultThunkPayload(args))),
       deleteById: args => createApiCall(defaultApiCallPayload(args), OffersApi.deleteById),
       getById: args => createApiCall(defaultApiCallPayload(args), OffersApi.getById),
-      getOne: args => dispatch(getOfferThunk(defaultThunkPayload(args))),
-      getAll: args => dispatch(getAllOffersThunk(defaultThunkPayload(args))),
-      getProductFullInfo: args => dispatch(getOfferFullInfoThunk(defaultThunkPayload(args))),
-      clearCurrent: () => dispatch(clearCurrentProductAction()),
-      setDefaults: args => dispatch(updateOfferDefaultsThunk(defaultThunkPayload(args))),
+
+      create: args => dispatch(createOfferThunk(args)),
+      updateById: args => dispatch(updateProductThunk(args)),
+      getOne: args => dispatch(getOfferThunk(args)),
+      getAll: args => dispatch(getAllOffersThunk(args)),
+
+      getProductFullInfo: args => dispatch(getOfferFullInfoThunk(args)),
+      clearCurrent: () => dispatch(clearCurrentOfferAction()),
+      setDefaults: args => dispatch(updateOfferDefaultsThunk(args)),
 
       // * PROPERTIES
       createProperty: args => dispatch(createPropertyThunk(defaultThunkPayload(args))),
       getAllProperties: args => dispatch(getAllPropertiesThunk(defaultThunkPayload(args))),
-      deletePropertyById: args => apiCall(PropertiesApi.deleteById, defaultApiCallPayload(args)),
       updatePropertyById: args => dispatch(updatePropertyThunk(defaultApiCallPayload(args))),
+      deletePropertyById: args => apiCall(PropertiesApi.deleteById, defaultApiCallPayload(args)),
       getPropertyById: args => apiCall(PropertiesApi.getById, defaultApiCallPayload(args)),
       changeDisabledStatus: args => apiCall(PropertiesApi.updateById, defaultApiCallPayload(args)),
 
       // * VARIATIONS
-      createVariation: args => dispatch(createVariationThunk(defaultThunkPayload(args))),
-      updateVariationById: args => dispatch(updateVariationThunk(defaultThunkPayload(args))),
-      getAllVariationsByProductId: args => dispatch(getAllVariationsByOfferIdThunk(defaultThunkPayload(args))),
+      createVariation: args => dispatch(createVariationThunk(args)),
+      updateVariationById: args => dispatch(updateVariationThunk(args)),
+      getAllVariations: args => dispatch(getAllVariationsThunk(args)),
 
+      variations: {
+        create: args => dispatch(createVariationThunk(args)),
+        update: args => dispatch(updateVariationThunk(args)),
+        getAll: args => dispatch(getAllVariationsThunk(args)),
+      },
+
+      getAllVariationsByProductId: args => dispatch(getAllVariationsByOfferIdThunk(args)),
       // * PRICES
-      getAllPrices: args => dispatch(getAllOfferPricesThunk(defaultThunkPayload(args))),
+      getAllPrices: args => dispatch(getAllOfferPricesThunk(args)),
 
       // * WAREHOUSING
-      getAllInventories: args => dispatch(getAllInventoriesByProductIdThunk(defaultThunkPayload(args))),
+      getAllInventories: args => dispatch(getAllInventoriesByProductIdThunk(args)),
     };
   }, [dispatch]);
 };

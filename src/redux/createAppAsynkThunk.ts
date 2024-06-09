@@ -13,7 +13,7 @@ export const createAppAsyncThunk = <
   Params = any,
   Return = any,
   Meta = any,
-  Extra = any
+  Extra = any,
   // Error = any,
   // ThunkConfig extends AsyncThunkConfig = any
 >(
@@ -31,6 +31,8 @@ export const createAppAsyncThunk = <
     >
   >(type, async ({ onError, onLoading, onSuccess, ...arg } = {}, thunkAPI) => {
     onLoading && onLoading(true);
+
+    console.log([arg?.data?.data, arg?.params || arg?.data?.params]);
 
     try {
       const res = await getResponse(arg?.data?.data, arg?.params || arg?.data?.params);

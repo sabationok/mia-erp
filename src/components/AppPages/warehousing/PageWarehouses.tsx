@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ITableListProps } from '../../TableList/tableTypes.types';
 import AppGridPage from '../AppGridPage';
 import { useWarehousesSelector } from '../../../redux/selectors.store';
-import { ISortParams } from '../../../api';
+import { ApiQuerySortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import useWarehousesActionsCreatorHook from '../../../hooks/useWarehousesActionsCreator.hook';
 import { warehousesTableColumns } from '../../../data/warehauses.data';
@@ -21,7 +21,7 @@ const PageWarehouses: React.FC<any> = (props: Props) => {
   const { getAll } = useAppServiceProvider()[ServiceName.warehouses];
   const state = useWarehousesSelector();
   const [isLoading, setIsLoading] = useState(false);
-  const [sortParams, setSortParams] = useState<ISortParams>();
+  const [sortParams, setSortParams] = useState<ApiQuerySortParams>();
   const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
   const actionsCreator = useWarehousesActionsCreatorHook();
 
@@ -41,9 +41,9 @@ const PageWarehouses: React.FC<any> = (props: Props) => {
         getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading }).then();
       },
       onTableSortChange: (param, sortOrder) => {
-        setSortParams({ dataPath: param.dataPath, sortOrder });
+        setSortParams({ sortPath: param.dataPath, sortOrder });
         getAll({
-          data: { refresh: true, query: { sortParams: { dataPath: param.dataPath, sortOrder }, filterParams } },
+          data: { refresh: true, query: { sortParams: { sortPath: param.dataPath, sortOrder }, filterParams } },
           onLoading: setIsLoading,
         }).then();
       },

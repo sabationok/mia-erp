@@ -2,41 +2,22 @@ import { ApiDirType } from '../redux/APP_CONFIGS';
 import { ContractorsTypesEnum } from '../redux/directories/contractors.types';
 import { BusinessSubjectTypeEnum, OwnershipTypeEnum } from '../types/companies.types';
 import { WarehouseDocumentType } from '../types/warehousing/warehouses.types';
-import { MeasurementUnit } from '../types/offers/offers.types';
 import { OrderStatusEnum } from '../types/orders/orders.types';
 import { PaymentInternalTypeEnum } from '../types/integrations.types';
 import { OfferPriceTypeEnum } from '../types/price-management/price-management.types';
+import { MeasurementUnit } from '../types/enums.types';
 
 export const langUa = {
   // DIRECTORIES
 
-  [ApiDirType.CATEGORIES_TR]: 'Статті доходів/витрат',
-  [ApiDirType.CATEGORIES_PROD]: 'Категорії товарів/послуг',
-  [ApiDirType.BRANDS]: 'Бренди',
-  [ApiDirType.TAGS]: 'Теги',
-  [ApiDirType.WAREHOUSES]: 'Склади',
-  [ApiDirType.VARIATIONS]: 'Варіації',
-  [ApiDirType.BANK_ACCOUNTS]: 'Банківські рахунки',
-  [ApiDirType.PROPERTIES_PRODUCTS]: 'Характеристики товарів/послуг',
-
-  [OrderStatusEnum.new]: 'Нове',
-  [OrderStatusEnum.inWork]: 'Взято у роботу',
-  [OrderStatusEnum.rejectedByCustomer]: 'Скасовано замовником',
-  [OrderStatusEnum.rejectedByManager]: 'Скасовано менеджером',
-  [OrderStatusEnum.active]: 'Активне',
-  [OrderStatusEnum.fulfilled]: 'Завершено успішно',
-  [OrderStatusEnum.fulfilledWithRefund]: 'Завершено з поверненням',
-  [OrderStatusEnum.archived]: 'Архів',
-  [OrderStatusEnum.expired]: 'Протерміновано',
-
-  [PaymentInternalTypeEnum.postTransfer]: 'Поштовий переказ',
-  [PaymentInternalTypeEnum.bankTransfer]: 'Банківський переказ',
-  [PaymentInternalTypeEnum.imposedPayment]: 'Наладений платіж',
-
   externalService: 'Зовнішній сервіс',
+  'External service': 'Зовнішній сервіс',
 
   variationsTemplate: 'Шаблон для варіацій',
   variationsTemplates: 'Шаблони для варіацій',
+
+  'Variations template': 'Шаблон для варіацій',
+  'Variations templates': 'Шаблони для варіацій',
 
   'The same': 'Той самий',
   Another: 'Інший',
@@ -154,17 +135,6 @@ export const langUa = {
   page_customers: 'Клієнти',
   page_cart: 'Корзина',
 
-  [MeasurementUnit.Pc]: 'шт.', // Штука (Piece)
-  [MeasurementUnit.G]: 'г.', // Грам (Gram)
-  [MeasurementUnit.Kg]: 'кг.', // Кілограм (Kilogram)
-  [MeasurementUnit.Ml]: 'мл.', // Мілілітр (Milliliter)
-  [MeasurementUnit.L]: 'л.', // Літр (Liter)
-  [MeasurementUnit.M]: 'м.', // Метр (Meter)
-  [MeasurementUnit.Sm]: 'см.', // Метр (Meter)
-  [MeasurementUnit.SqM]: 'кв.м.', // Квадратний метр (SquareMeter)
-  [MeasurementUnit.CuM]: 'куб.м.', // Кубічний метр (CubicMeter)
-  [MeasurementUnit.Other]: 'інше', // Інше (Other)
-
   quantity: 'Кількість',
   batch: 'Партія',
 
@@ -199,13 +169,22 @@ export const langUa = {
   mark: 'Мітка',
   marks: 'Мітки',
   activityType: 'Вид діяльності',
+  'Activity type': 'Вид діяльності',
   activityTypes: 'Види діяльності',
+  'Activity types': 'Види діяльності',
   user: 'Користувач',
   users: 'Користувачі',
   project: 'Проєкт',
   projects: 'Проєкти',
+
   createdAt: 'Створено',
   updateAt: 'Оновлено',
+  deletedAt: 'Видалено',
+
+  'Created at': 'Створено',
+  'Updated at': 'Оновлено',
+  'Deleted at': 'Видалено',
+
   document: 'Документ',
   documents: 'Документи',
   status: 'Статус',
@@ -375,15 +354,26 @@ export const langUa = {
   EXPENSES: 'Витрати',
   TRANSFER: 'Переказ',
   TRANSFERS: 'Перекази',
+
+  type_transactions_INCOME: 'Дохід',
+  type_transactions_INCOMES: 'Доходи',
+  type_transactions_EXPENSE: 'Витрата',
+  type_transactions_EXPENSES: 'Витрати',
+  type_transactions_TRANSFER: 'Переказ',
+  type_transactions_TRANSFERS: 'Перекази',
+
   ACTIVE: 'Актив',
   ACTIVES: 'Активи',
   PASSIVE: 'Пасив',
   PASSIVES: 'Пасиви',
 
+  type_fin_account_ACTIVE: 'Актив',
+  type_fin_account_ACTIVES: 'Активи',
+  type_fin_account_PASSIVE: 'Пасив',
+  type_fin_account_PASSIVES: 'Пасиви',
+
   DEFAULT: 'DEFAULT',
-
   CUSTOM: 'CUSTOM',
-
   BASE: 'BASE',
   ADDITIONAL: 'ADDITIONAL',
 
@@ -432,12 +422,6 @@ export const langUa = {
   Customer: 'Клієнт',
   Receiver: 'Отримувач',
 
-  [WarehouseDocumentType.addToStock]: 'Прихід на склад',
-  [WarehouseDocumentType.removeFromStock]: 'Списання зі складу',
-  [WarehouseDocumentType.reserveFromStock]: 'Резервування',
-  [WarehouseDocumentType.returnFromReserve]: 'Повернення з резерву',
-  [WarehouseDocumentType.removeFromReserve]: 'Списання з резерву',
-
   SKU: 'SKU',
   Images: 'Зображення',
   Brand: 'Бренд',
@@ -446,8 +430,8 @@ export const langUa = {
   Measurement: 'Вимірювання',
 
   'Step is not finished': 'Крок не завершено',
-  'Variations template': 'Шаблон варіацій',
-  'Product label': 'Назва продукту',
+
+  'Offer label': 'Назва продукту',
   'Variation label': 'Назва варіації',
   'Default params': 'Параметри за замовчуванням',
   'Default values': 'Значення за замовчуванням',
@@ -513,9 +497,13 @@ export const langUa = {
   'Discount limit': 'Ліміт нарахування',
   'Discount limit type': 'Тип ліміту нарахування',
 
-  [`Price_${OfferPriceTypeEnum.fixed}`]: 'Фіксоваона',
+  [`Price_${OfferPriceTypeEnum.fixed}`]: 'Фіксована',
   [`Price_${OfferPriceTypeEnum.recommend}`]: 'Рекомендована',
   [`Price_${OfferPriceTypeEnum.onContract}`]: 'Договірна',
+
+  [`type_price_${OfferPriceTypeEnum.fixed}`]: 'Фіксована',
+  [`type_price_${OfferPriceTypeEnum.recommend}`]: 'Рекомендована',
+  [`type_price_${OfferPriceTypeEnum.onContract}`]: 'Договірна',
 
   [`Discount_discount`]: 'Знижка',
   [`Discount_threshold_type_quantity`]: 'Кількість',
@@ -531,4 +519,90 @@ export const langUa = {
   [`Discount_cart`]: 'Корзина',
   [`Discount_slot`]: 'Позиція',
   [`Discount_order`]: 'Замовлення',
+
+  type_discount_discount: 'Знижка',
+  type_discount_threshold_type_quantity: 'Кількість',
+  type_discount_threshold_type_amount: 'Сума',
+  type_discount_cashback: 'Кешбек',
+  type_discount_limit_type_quantity: 'Кількість',
+  type_discount_limit_type_amount: 'Сума',
+  type_discount_bonus: 'Бонус',
+  type_discount_default: 'Системний',
+  type_discount_refme: 'RefmeApp',
+  type_discount_amount: 'Ставка',
+  type_discount_percentage: 'Відсоток',
+  type_discount_cart: 'Корзина',
+  type_discount_slot: 'Позиція',
+  type_discount_order: 'Замовлення',
+
+  [ApiDirType.CATEGORIES_TR]: 'Статті доходів/витрат',
+  [ApiDirType.CATEGORIES_PROD]: 'Категорії товарів/послуг',
+  [ApiDirType.BRANDS]: 'Бренди',
+  [ApiDirType.TAGS]: 'Теги',
+  [ApiDirType.WAREHOUSES]: 'Склади',
+  [ApiDirType.VARIATIONS]: 'Варіації',
+  [ApiDirType.BANK_ACCOUNTS]: 'Банківські рахунки',
+  [ApiDirType.PROPERTIES_PRODUCTS]: 'Характеристики товарів/послуг',
+
+  [OrderStatusEnum.new]: 'Нове',
+  [OrderStatusEnum.inWork]: 'Взято у роботу',
+  [OrderStatusEnum.rejectedByCustomer]: 'Скасовано замовником',
+  [OrderStatusEnum.rejectedByManager]: 'Скасовано менеджером',
+  [OrderStatusEnum.active]: 'Активне',
+  [OrderStatusEnum.fulfilled]: 'Завершено успішно',
+  [OrderStatusEnum.fulfilledWithRefund]: 'Завершено з поверненням',
+  [OrderStatusEnum.archived]: 'Архів',
+  [OrderStatusEnum.expired]: 'Протерміновано',
+
+  [`status_order_${OrderStatusEnum.new}`]: 'Нове',
+  [`status_order_${OrderStatusEnum.inWork}`]: 'Взято у роботу',
+  [`status_order_${OrderStatusEnum.rejectedByCustomer}`]: 'Скасовано замовником',
+  [`status_order_${OrderStatusEnum.rejectedByManager}`]: 'Скасовано менеджером',
+  [`status_order_${OrderStatusEnum.active}`]: 'Активне',
+  [`status_order_${OrderStatusEnum.fulfilled}`]: 'Завершено успішно',
+  [`status_order_${OrderStatusEnum.fulfilledWithRefund}`]: 'Завершено з поверненням',
+  [`status_order_${OrderStatusEnum.archived}`]: 'Архів',
+  [`status_order_${OrderStatusEnum.expired}`]: 'Протерміновано',
+
+  [PaymentInternalTypeEnum.postTransfer]: 'Поштовий переказ',
+  [PaymentInternalTypeEnum.bankTransfer]: 'Банківський переказ',
+  [PaymentInternalTypeEnum.imposedPayment]: 'Наладений платіж',
+
+  [`method_payment_${PaymentInternalTypeEnum.postTransfer}`]: 'Поштовий переказ',
+  [`method_payment_${PaymentInternalTypeEnum.bankTransfer}`]: 'Банківський переказ',
+  [`method_payment_${PaymentInternalTypeEnum.imposedPayment}`]: 'Наладений платіж',
+
+  [WarehouseDocumentType.addToStock]: 'Прихід на склад',
+  [WarehouseDocumentType.removeFromStock]: 'Списання зі складу',
+  [WarehouseDocumentType.reserveFromStock]: 'Резервування',
+  [WarehouseDocumentType.returnFromReserve]: 'Повернення з резерву',
+  [WarehouseDocumentType.removeFromReserve]: 'Списання з резерву',
+
+  [`type_warehouse_document_${WarehouseDocumentType.addToStock}`]: 'Прихід на склад',
+  [`type_warehouse_document_${WarehouseDocumentType.removeFromStock}`]: 'Списання зі складу',
+  [`type_warehouse_document_${WarehouseDocumentType.reserveFromStock}`]: 'Резервування',
+  [`type_warehouse_document_${WarehouseDocumentType.returnFromReserve}`]: 'Повернення з резерву',
+  [`type_warehouse_document_${WarehouseDocumentType.removeFromReserve}`]: 'Списання з резерву',
+
+  [MeasurementUnit.Pc]: 'шт.', // Штука (Piece)
+  [MeasurementUnit.G]: 'г.', // Грам (Gram)
+  [MeasurementUnit.Kg]: 'кг.', // Кілограм (Kilogram)
+  [MeasurementUnit.Ml]: 'мл.', // Мілілітр (Milliliter)
+  [MeasurementUnit.L]: 'л.', // Літр (Liter)
+  [MeasurementUnit.M]: 'м.', // Метр (Meter)
+  [MeasurementUnit.Sm]: 'см.', // Метр (Meter)
+  [MeasurementUnit.SqM]: 'кв.м.', // Квадратний метр (SquareMeter)
+  [MeasurementUnit.CuM]: 'куб.м.', // Кубічний метр (CubicMeter)
+  [MeasurementUnit.Other]: 'інше', // Інше (Other)
+
+  [`type_measurement_${MeasurementUnit.Pc}`]: 'шт.', // Штука (Piece)
+  [`type_measurement_${MeasurementUnit.G}`]: 'г.', // Грам (Gram)
+  [`type_measurement_${MeasurementUnit.Kg}`]: 'кг.', // Кілограм (Kilogram)
+  [`type_measurement_${MeasurementUnit.Ml}`]: 'мл.', // Мілілітр (Milliliter)
+  [`type_measurement_${MeasurementUnit.L}`]: 'л.', // Літр (Liter)
+  [`type_measurement_${MeasurementUnit.M}`]: 'м.', // Метр (Meter)
+  [`type_measurement_${MeasurementUnit.Sm}`]: 'см.', // Метр (Meter)
+  [`type_measurement_${MeasurementUnit.SqM}`]: 'кв.м.', // Квадратний метр (SquareMeter)
+  [`type_measurement_${MeasurementUnit.CuM}`]: 'куб.м.', // Кубічний метр (CubicMeter)
+  [`type_measurement_${MeasurementUnit.Other}`]: 'інше', // Інше (Other)
 };
