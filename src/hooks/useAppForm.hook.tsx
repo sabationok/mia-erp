@@ -2,14 +2,9 @@ import { Path, SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-for
 import { FieldValues, UseFormProps, UseFormReturn } from 'react-hook-form/dist/types';
 import { createContext, useCallback, useContext } from 'react';
 import { UseFormHandleSubmit } from 'react-hook-form/dist/types/form';
-import { InputLabelProps } from '../components/atoms/Inputs/InputLabel';
-import { CustomSelectBaseProps } from '../components/atoms/Inputs/CustomSelect';
+import { CustomSelectProps } from '../components/atoms/Inputs/CustomSelect';
 import { AnyFn } from '../utils/types';
 import { getValueByPath } from '../utils';
-
-export type CustomSelectProps = CustomSelectBaseProps &
-  Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'> &
-  Omit<InputLabelProps, 'onSelect'>;
 
 export type UseRegisterSelect<TFieldValues extends FieldValues = FieldValues> = (
   name: Path<TFieldValues>,
@@ -86,7 +81,7 @@ const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = a
       return {
         ...registerReturn,
         ref: props?.ref,
-        inputRef: registerReturn.ref,
+        inputControl: props?.inputName ? register(props?.inputName) : undefined,
         onSelect: (option, value) => {
           setValue<Path<TFieldValues>>(name, props?.onlyValue ? value : (option as any));
           // if (childControl?.childName) clearChild(childControl?.childName);

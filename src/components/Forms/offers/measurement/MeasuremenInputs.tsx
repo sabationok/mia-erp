@@ -45,7 +45,6 @@ const MeasurementInputs = ({
               options: input?.options,
               label: input?.label,
               placeholder: input?.label,
-              dropDownIsAbsolute: true,
               onlyValue: true,
             })}
             disabled={disabled}

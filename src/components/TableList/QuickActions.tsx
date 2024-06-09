@@ -123,14 +123,15 @@ const ToggleButton = styled(ButtonIcon)<StyledProps>`
   position: absolute;
   //bottom: 0;
   right: ${({ isShown }) => (isShown ? '60px' : '16px')};
-  bottom: ${({ hasFooter }) => (hasFooter ? '60px' : '16px')};
+  bottom: ${({ hasFooter }) => (hasFooter ? '16px' : '16px')};
   z-index: 30;
 
   border-radius: 50%;
   fill: ${({ theme }) => theme.accentColor.base};
 
-  box-shadow: ${({ isShown, theme }) => (isShown ? theme.globals.shadowMain : '')};
-  background-color: ${({ theme, isShown }) => (isShown ? theme.backgroundColorMain : theme.backgroundColorSecondary)};
+  //box-shadow: ${({ isShown, theme }) => (isShown ? theme.globals.shadowMain : '')};
+  background-color: ${({ theme, isShown }) =>
+    isShown ? theme.backgroundColorSecondary : theme.backgroundColorSecondary};
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
 
@@ -143,7 +144,7 @@ const ToggleButton = styled(ButtonIcon)<StyledProps>`
   }
 
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundColorMain};
+    background-color: ${({ theme }) => theme.backgroundColorSecondary};
   }
 
   &:active {

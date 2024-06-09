@@ -1,4 +1,4 @@
-import React, { CSSProperties, memo } from 'react';
+import React, { CSSProperties, forwardRef, memo } from 'react';
 import { IconIdType } from 'img/sprite';
 import styled, { css, DefaultTheme, FlattenInterpolation, ThemeProps } from 'styled-components';
 import { Property } from 'csstype';
@@ -35,24 +35,27 @@ interface ButtonProps extends ButtonStyleProps, React.ButtonHTMLAttributes<HTMLB
 
 export type ButtonIconProps = ButtonProps & ButtonIconsProps;
 
-const ButtonIcon: React.FC<ButtonIconProps> = ({
-  children,
-  isActive,
-  type = 'button',
-  size,
-  variant = 'def',
-  iconId,
-  icon,
-  iconSize = '18px',
-  iconStyles = {},
-  endIcon,
-  endIconId,
-  endIconSize = '18px',
-  endIconStyles = {},
-  isLoading,
-  onClick,
-  ...props
-}) => {
+const ButtonIcon = (
+  {
+    children,
+    isActive,
+    type = 'button',
+    size,
+    variant = 'def',
+    iconId,
+    icon,
+    iconSize = '18px',
+    iconStyles = {},
+    endIcon,
+    endIconId,
+    endIconSize = '18px',
+    endIconStyles = {},
+    isLoading,
+    onClick,
+    ...props
+  }: ButtonIconProps,
+  _ref: React.ForwardedRef<any>
+) => {
   let styles = {
     width: size,
     height: size,
@@ -594,4 +597,4 @@ const LoaderBox = styled(FlexBox)`
 export const Button = {
   Base: memo(BaseButton),
 };
-export default memo(ButtonIcon);
+export default memo(forwardRef(ButtonIcon));

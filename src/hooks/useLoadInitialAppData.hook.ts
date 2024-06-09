@@ -2,7 +2,6 @@ import usePermissionsServiceHook, { usePermissionsSelector } from './usePermissi
 import { useEffect } from 'react';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { useAppServiceProvider } from './useAppServices.hook';
-import { ToastService } from '../services';
 import { PermissionRecipientEnum } from '../types/permissions.types';
 
 const directoriesForLoading: { dirType: ApiDirType; createTreeData?: boolean }[] = [
@@ -42,13 +41,6 @@ const useLoadInitialAppDataHook = ({
 
   const load = async () => {
     onLoading && onLoading(true);
-    const close = () =>
-      setTimeout(
-        ToastService.createLoader('Loading app data...').open({
-          afterClose: ['App data loaded', { type: 'success' }],
-        }).close,
-        2000
-      );
 
     if (permission_token || _id) {
       // setIsLoading(true);
@@ -60,7 +52,7 @@ const useLoadInitialAppDataHook = ({
           });
         }
 
-        offers.getAllProperties({ data: { params: { createTreeData: true } } });
+        offers.getAllProperties({ data: { params: { dataView: 'tree' } } });
         // offers.getAll({ data: { refresh: true } });
         warehouses.getAll({ data: { refresh: true } });
         // priceManagement.getAll({ data: { refresh: true } });
@@ -88,12 +80,12 @@ const useLoadInitialAppDataHook = ({
         // ]);
         onSuccess && onSuccess();
         onLoading && onLoading(false);
-        close();
+
         // setIsLoading(false);
       } catch (e) {
         onLoading && onLoading(false);
         onError && onError(e);
-        close();
+
         // setIsLoading(false);
       }
     }

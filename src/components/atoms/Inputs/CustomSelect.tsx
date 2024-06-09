@@ -1,5 +1,15 @@
 import InputLabel, { InputLabelProps } from './InputLabel';
-import { forwardRef, InputHTMLAttributes, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  forwardRef,
+  InputHTMLAttributes,
+  memo,
+  RefCallback,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { isUndefined } from 'lodash';
 import styled, { css } from 'styled-components';
 import FlexBox, { FlexFieldSet, FlexLi, FlexUl } from '../FlexBox';
@@ -7,16 +17,17 @@ import ButtonIcon from '../ButtonIcon';
 import { IEmbeddedName, MaybeNull } from '../../../types/utils.types';
 import { nanoid } from '@reduxjs/toolkit';
 import CheckBox from 'components/TableList/TebleCells/CellComponents/CheckBox';
-import InputText from './InputText';
 import { useCloseByBackdropClick } from '../../../hooks/useCloseByEscapeOrClickOnBackdrop.hook';
+import InputText from './InputText';
+import { UseFormRegisterReturn } from 'react-hook-form';
 
 export interface CustomSelectBaseProps<Option extends CustomSelectOptionBase = CustomSelectOptionBase> {
   InputComponent?: React.FC<InputHTMLAttributes<HTMLSelectElement>>;
   valueKey?: string;
   valuePath?: string;
 
-  inputProps?: Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onSelect'>;
-  ref?: React.MutableRefObject<any>;
+  inputControl?: UseFormRegisterReturn & { value?: string };
+  ref?: RefCallback<any>;
 
   labelProps?: Omit<InputLabelProps, 'onSelect'>;
 
@@ -60,7 +71,7 @@ export type CustomSelectProps<Option extends CustomSelectOption = CustomSelectOp
 const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<Value> = CustomSelectOption<Value>>(
   {
     InputComponent,
-    inputProps = {},
+    inputControl,
     labelProps = {},
     selectedOption,
     keepOpen,
@@ -89,17 +100,19 @@ const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<
   _ref: React.ForwardedRef<Ref>
 ) => {
   const [_currentOption, setCurrentOption] = useState<CustomSelectOption | undefined>(selectedOption);
-  const [isOpen, setIsOpen] = useState<boolean>(keepOpen || open);
 
   const labelRef = useRef<HTMLFieldSetElement>(null);
+  const listBoxRef = useRef(null);
+
+  const [isOpen, setIsOpen] = useState<boolean>(keepOpen || open);
 
   const _compId = useMemo(() => (id ? id : `_${nanoid(5)}`), [id]);
 
   const currentOption = selectedOption || _currentOption;
 
   const handleOpenState = useCallback(() => {
-    !keepOpen && setIsOpen(prev => !prev);
-  }, [keepOpen]);
+    setIsOpen(prev => !prev);
+  }, []);
 
   const isActiveCheck = useCallback(
     <Option extends CustomSelectOption>(option: Option) => {
@@ -110,10 +123,6 @@ const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<
     },
     [currentOption?._id, currentOption?.value]
   );
-
-  const inputCurrentValue = useMemo(() => {
-    return currentOption ? currentOption?.label || currentOption?.name || null : null;
-  }, [currentOption]);
 
   const onSelectOption = useCallback(
     (option: Option, value?: Value, index?: number) => {
@@ -161,7 +170,7 @@ const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<
           <span>{'Опції відсутні'}</span>
         </NoOptions>
       ),
-    [getLabel, isActiveCheck, options, treeMode]
+    [getLabel, isActiveCheck, onSelectOption, options, treeMode]
   );
 
   useEffect(() => {
@@ -195,18 +204,25 @@ const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<
       {...{ label, error, success }}
       {...labelProps}
     >
-      <FlexBox fillWidth style={{ position: 'relative' }}>
+      <FlexBox className={'SelectOptionsListContainer'} fillWidth style={{ position: 'relative' }}>
         <LabelInner fieldMode={fieldMode} error={!!error} success={!!success} isActive={isOpen}>
           <StyledInput
             disabled={fieldMode}
             fieldMode={fieldMode}
             required={required}
             id={id}
-            placeholder={props.placeholder}
-            {...inputProps}
-            defaultValue={inputCurrentValue}
-            value={inputCurrentValue || ''}
             onChange={() => {}}
+            value={
+              inputControl
+                ? undefined
+                : currentOption
+                  ? currentOption?.label || currentOption?.name || undefined
+                  : undefined
+            }
+            // ref={inputControl?.name ? inputControl.ref : undefined}
+            {...inputControl}
+            placeholder={props.placeholder}
+            // defaultValue={displayValue}
           />
 
           <ActionsBox fxDirection={'row'} gap={6} fillHeight alignItems={'center'} padding={'0 8px 0 0'}>
@@ -227,13 +243,13 @@ const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<
               icon={!isOpen ? 'SmallArrowDown' : 'SmallArrowUp'}
               size={'26px'}
               iconSize={'100%'}
-              onClick={handleOpenState}
+              onClick={keepOpen ? undefined : handleOpenState}
               disabled={disabled}
             />
           </ActionsBox>
         </LabelInner>
 
-        <Options isOpen={isOpen} isInAbsolute={dropDownIsAbsolute}>
+        <OptionsList isOpen={isOpen} ref={listBoxRef}>
           <FlexBox fillWidth overflow={'auto'}>
             {renderOptions}
 
@@ -245,47 +261,51 @@ const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<
               </FlexBox>
             )}
           </FlexBox>
-        </Options>
+        </OptionsList>
       </FlexBox>
     </InputLabel>
   );
 };
 
-const Options = styled(FlexBox)<{
+const OptionsList = styled(FlexUl)<{
   isOpen?: boolean;
   inView?: boolean;
   intersectionRatio?: number;
   isInAbsolute?: boolean;
 }>`
-  ${({ isInAbsolute }) => {
-    return isInAbsolute
-      ? css`
-          position: absolute;
-          top: 115%;
-          left: 0;
-          z-index: 500;
-        `
-      : '';
-  }}
-
   font-size: 14px;
   overflow: hidden;
 
-  max-height: ${({ isOpen }) => (isOpen ? '160px' : 0)};
-  opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
-
   width: 100%;
 
-  //margin-top: 6px;
+  position: absolute;
+  top: 115%;
+  left: 0;
+  z-index: 20;
 
   border-radius: 4px;
-  border: 1px solid ${({ theme }) => theme.fieldBackgroundColor};
+  border: 1px solid ${({ theme }) => theme.modalBorderColor};
 
   background-color: ${({ theme }) => theme.modalBackgroundColor};
   box-shadow:
     0 3px 4px 4px rgba(21, 21, 21, 0.15),
-    0 3px 4px 4px rgba(99, 99, 99, 0.15);
+    0 3px 4px 4px rgba(220, 220, 220, 0.15);
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
+  ${p =>
+    p.isOpen
+      ? css`
+          max-height: calc(30px * 4);
+          @media screen and (max-width: 480px) {
+            max-height: calc(38px * 4);
+          }
+          opacity: 1;
+        `
+      : css`
+          opacity: 0;
+          max-height: 0;
+          pointer-events: none;
+          visibility: hidden;
+        `};
 `;
 
 const LabelInner = styled(FlexFieldSet)<{
@@ -338,7 +358,6 @@ const LabelInner = styled(FlexFieldSet)<{
           box-shadow: 0 0 5px ${({ theme }) => theme.accentColor.base};
         `
       : ''}
-
   &::placeholder {
     font-size: inherit;
     color: ${({ theme }) => theme.globals.inputPlaceholderColor};
@@ -387,6 +406,7 @@ const NoOptions = styled(FlexBox)`
   font-weight: 700;
   line-height: 1.55;
 `;
+
 const ActionsBox = styled(FlexBox)`
   //position: absolute;
   //right: 0;
@@ -404,48 +424,6 @@ const CreateButton = styled(ButtonIcon)`
 
 export default memo(forwardRef(CustomSelect));
 
-// const dropdownRef = useRef<HTMLDivElement>(null);
-// const [dropdownStyle, setDropdownStyle] = useState<CSSProperties>({});
-// useLayoutEffect(() => {
-//   const getAncestor = (element: HTMLElement | null) => {
-//     while (element) {
-//       const style = window.getComputedStyle(element);
-//
-//       if (style.overflow === 'auto') {
-//         return element;
-//       }
-//       element = element.parentElement;
-//     }
-//     return element;
-//   };
-//
-//   if (isOpen) {
-//     const dropdown = dropdownRef.current;
-//     const dropdownRect = dropdown?.getBoundingClientRect();
-//
-//     if (dropdownRect) {
-//       if (dropdown) {
-//         const ancestor = getAncestor(dropdown);
-//         const ancestorRect = ancestor?.getBoundingClientRect();
-//
-//         console.log({ dropdown, dropdownRect });
-//         console.log({ ancestor, ancestorRect });
-//
-//         if (ancestorRect) {
-//           // Перевіряємо, чи випадаючий список виходить за межі вікна браузера
-//           if (dropdownRect.bottom > ancestorRect?.bottom) {
-//             // Позиціонуємо список зверху
-//             setDropdownStyle({ top: '100%', bottom: 'auto' });
-//           } else {
-//             setDropdownStyle({ top: 'auto', bottom: '100%' });
-//             // Позиціонуємо список знизу
-//           }
-//         }
-//       }
-//     }
-//   }
-// }, [isOpen]);
-
 export type CustomSelectOptionBase<Value = any> = {
   _id?: string;
   id?: string;
@@ -454,7 +432,7 @@ export type CustomSelectOptionBase<Value = any> = {
   label?: MaybeNull<string | any>;
   name?: MaybeNull<string | IEmbeddedName>;
 
-  secondName?: string;
+  // secondName?: string;
 };
 export type CustomSelectOption<Value = any> = {
   parent?: MaybeNull<CustomSelectOption<Value>>;
@@ -503,6 +481,7 @@ const CustomSelectItem = <Value = any, Option extends CustomSelectOption<Value> 
       <Option
         className={'selectOption'}
         justifyContent={'flex-start'}
+        id={option?._id}
         gap={8}
         fillWidth
         fxDirection={'row'}
@@ -529,7 +508,6 @@ const CustomSelectItem = <Value = any, Option extends CustomSelectOption<Value> 
 
 const SelectOptionCss = css<{ isActive?: boolean }>`
   min-height: 30px;
-  height: max-content;
   align-items: center;
   justify-content: flex-start;
 
@@ -548,10 +526,7 @@ const SelectOptionCss = css<{ isActive?: boolean }>`
 
   padding: 4px 8px;
 
-  //cursor: default;
-
   font-weight: ${({ isActive }) => (isActive ? 700 : '')};
-  //background-color: ${({ theme }) => theme.modalBackgroundColor};
 
   & .inner {
     height: max-content;
@@ -562,6 +537,7 @@ const SelectOptionCss = css<{ isActive?: boolean }>`
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
   }
+
   @media screen and (max-width: 480px) {
     min-height: 38px;
   }
