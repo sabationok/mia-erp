@@ -131,6 +131,6 @@ export const iconId = {
   logIn: 'logIn',
 };
 
-export type IconIdType = keyof typeof iconId & string;
+export type IconIdType = keyof typeof iconId | string;
 
 export default sprite;

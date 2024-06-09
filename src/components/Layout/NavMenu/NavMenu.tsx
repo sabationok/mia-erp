@@ -10,8 +10,8 @@ import { useAppPages, useAppRouter } from '../../../hooks';
 import SubNavMenu from './SubNavMenu';
 import FlexBox from '../../atoms/FlexBox';
 import { AppPagesEnum } from '../../AppPages';
-import { iconId } from '../../../img/sprite';
 import { useCloseByBackdropClick, useCloseByEscape } from '../../../hooks/useCloseByEscapeOrClickOnBackdrop.hook';
+import { useAppSelector } from '../../../redux/store.store';
 
 const NavMenu: React.FC = () => {
   const router = useAppRouter();
@@ -22,6 +22,8 @@ const NavMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [activePage, setActivePage] = useState<IPage>(pages[0]);
   const [isSubMenuOpen, setIsSubMenuOpen] = useState<Record<string, boolean>>({});
+
+  const { warehouses, priceLists, permissions } = useAppSelector();
 
   const handleOpenNavMenu = useCallback(() => {
     setIsOpen(!isOpen);
@@ -45,50 +47,66 @@ const NavMenu: React.FC = () => {
     setIsSubMenuOpen(prev => ({ ...prev, [key]: !prev[key] }));
   }, []);
 
-  const renderLinks = useMemo(
-    () =>
-      pages.map(item => {
-        return (
-          <React.Fragment key={`nav-item-${item.path}`}>
-            <FlexBox fxDirection={'row'}>
-              <StyledNavLink
-                key={item?.path}
-                to={item.path}
-                onClick={() => {
-                  onNavLinkClick(item);
-                }}
-              >
-                <SvgIcon icon={item.iconId} size="18px" style={{ display: 'none' }} />
+  const renderLinks = useMemo(() => {
+    const dataMap: Record<AppPagesEnum | string, any[] | undefined> = {
+      [AppPagesEnum.warehouses]: warehouses.warehouses,
+      [AppPagesEnum.priceLists]: priceLists.lists,
+      [AppPagesEnum.companies]: permissions.permissions,
+    };
 
-                <Text>{item?.title || '---'}</Text>
-              </StyledNavLink>
+    return pages.map(item => {
+      const childrenList = item.subMenuKey ? dataMap[item.subMenuKey] : undefined;
+      return (
+        <React.Fragment key={`nav-item-${item.path}`}>
+          <FlexBox fxDirection={'row'}>
+            <StyledNavLink
+              key={item?.path}
+              to={item.path}
+              onClick={() => {
+                onNavLinkClick(item);
+              }}
+            >
+              <SvgIcon icon={item.iconId} size="18px" style={{ display: 'none' }} />
 
-              {item.subMenuKey && (
-                <ButtonIcon
-                  variant={'onlyIconNoEffects'}
-                  icon={isSubMenuOpen[item.subMenuKey] ? 'SmallArrowDown' : 'SmallArrowLeft'}
-                  size={'32px'}
-                  onClick={() => item.subMenuKey && onOpenSubMenuStateChange(item.subMenuKey)}
-                />
-              )}
-            </FlexBox>
+              <Text>{item?.title || '---'}</Text>
+            </StyledNavLink>
 
-            {item?.subMenuKey && (
-              <FlexBox height={isSubMenuOpen[item.subMenuKey] ? 'max-content' : '0'} overflow={'hidden'}>
-                <SubNavMenu
-                  key={item?.subMenuKey}
-                  subMenuKey={item?.subMenuKey}
-                  onActive={key => {
-                    setIsSubMenuOpen(prev => ({ ...prev, [key]: true }));
-                  }}
-                />
-              </FlexBox>
+            {item.subMenuKey && (
+              <ButtonIcon
+                variant={'onlyIconNoEffects'}
+                icon={isSubMenuOpen[item.subMenuKey] ? 'SmallArrowDown' : 'SmallArrowLeft'}
+                size={'32px'}
+                iconSize={'80%'}
+                disabled={!childrenList?.length}
+                onClick={() => item.subMenuKey && onOpenSubMenuStateChange(item.subMenuKey)}
+              />
             )}
-          </React.Fragment>
-        );
-      }),
-    [isSubMenuOpen, onNavLinkClick, onOpenSubMenuStateChange, pages]
-  );
+          </FlexBox>
+
+          {item?.subMenuKey && (
+            <FlexBox height={isSubMenuOpen[item.subMenuKey] ? 'max-content' : '0'} overflow={'hidden'}>
+              <SubNavMenu
+                key={item?.subMenuKey}
+                subMenuKey={item?.subMenuKey}
+                childrenList={childrenList}
+                onActive={key => {
+                  setIsSubMenuOpen(prev => ({ ...prev, [key]: true }));
+                }}
+              />
+            </FlexBox>
+          )}
+        </React.Fragment>
+      );
+    });
+  }, [
+    isSubMenuOpen,
+    onNavLinkClick,
+    onOpenSubMenuStateChange,
+    pages,
+    permissions.permissions,
+    priceLists.lists,
+    warehouses.warehouses,
+  ]);
 
   useEffect(() => {
     const currentPageData = pages.find(
@@ -104,13 +122,15 @@ const NavMenu: React.FC = () => {
   return (
     <StyledNavMenu data-nav-menu>
       <MenuButton
-        variant="def"
-        endIconSize="24px"
-        endIconId={iconId.SmallArrowDown}
+        // variant="def"
+        // endIconSize="24px"
+        // endIconId={iconId.SmallArrowDown}
         isOpen={isOpen}
         onClick={handleOpenNavMenu}
       >
         {activePage?.title}
+
+        <SvgIcon icon={'SmallArrowDown'} size={'26px'} className={'endIcon'} />
       </MenuButton>
 
       <NavMenuContainer isOpen={isOpen}>
@@ -138,7 +158,7 @@ const StyledNavMenu = styled.div`
     min-width: 280px;
   }
 `;
-const MenuButton = styled(ButtonIcon)<{ isOpen: boolean }>`
+const MenuButton = styled.button<{ isOpen: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -148,6 +168,8 @@ const MenuButton = styled(ButtonIcon)<{ isOpen: boolean }>`
 
   padding: 0 8px 0 16px;
   border-radius: 0;
+
+  //border: 1px solid;
 
   font-size: 12px;
   font-weight: 600;
@@ -165,11 +187,11 @@ const NavMenuContainer = styled(FlexBox)<MenuState>`
   left: 0;
 
   overflow: hidden;
+  width: max-content;
   min-width: 100%;
   max-width: calc(100% + 70px);
   height: ${({ isOpen }) => (isOpen ? 'calc(100vh - 50px)' : '80vh')};
 
-  border-radius: 2px;
   border: 1px solid ${p => p.theme.modalBorderColor};
 
   background-color: ${({ theme }) => theme.modalBackgroundColor};
@@ -177,6 +199,7 @@ const NavMenuContainer = styled(FlexBox)<MenuState>`
   box-shadow: ${({ isOpen, theme }) =>
     isOpen ? '0 6px 18px 0px rgba(21, 21, 21, 0.15), 0 6px 18px 0px rgba(211, 211, 211, 0.15)' : ''};
 
+  border-radius: 4px;
   // box-shadow: ${({ theme }) => theme.globals.shadowSecondary};
 
   opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
@@ -256,8 +279,8 @@ const StyledNavLink = styled(NavLink)`
   }
 
   @media screen and (min-width: 768px) {
-    min-height: 32px;
-    font-size: 12px;
+    min-height: 34px;
+    font-size: 14px;
     height: min-content;
   }
 `;
