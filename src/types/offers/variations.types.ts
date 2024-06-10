@@ -1,34 +1,13 @@
-import { IBase, OnlyUUID } from '../../redux/app-redux.types';
-import { WarehouseItemEntity } from '../warehousing/warehouses.types';
-import { PriceEntity } from '../price-management/price-management.types';
+import { OnlyUUID } from '../../redux/app-redux.types';
 import { AppQueryParams } from '../../api';
 import { OfferEntity } from './offers.types';
-import { PropertiesGroupEntity, PropertyValueEntity } from './properties.types';
-import {
-  HasBarCode,
-  HasCompany,
-  HasDimensions,
-  HasImgPreview,
-  HasLabel,
-  HasSku,
-  MaybeNull,
-  UUID,
-  WithPeriod,
-} from '../utils.types';
-import { HasBaseCmsConfigs, HasBaseCmsConfigsDto } from '../cms.types';
+import { PropertyValueEntity } from './properties.types';
+import { MaybeNull, UUID } from '../utils.types';
+import { HasBaseCmsConfigsDto } from '../cms.types';
 
-export interface IVariationBase extends HasDimensions, WithPeriod, HasImgPreview, HasLabel, HasSku, HasBarCode {}
+export interface IVariationBase {}
 
-export interface VariationEntity extends IVariationBase, IBase, HasCompany, HasBaseCmsConfigs {
-  offer?: OfferEntity;
-  price?: PriceEntity;
-  inventories?: WarehouseItemEntity[];
-
-  template?: PropertiesGroupEntity;
-  properties?: PropertyValueEntity[];
-
-  propsKey?: string;
-}
+export interface VariationEntity extends IVariationBase, OfferEntity {}
 
 export type VariationPropertiesMapInTableData = Record<string, PropertyValueEntity>;
 

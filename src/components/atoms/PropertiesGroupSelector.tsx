@@ -36,7 +36,7 @@ export const PropertiesGroupSelector = ({
 
   const rootList = useMemo(() => {
     if (state.properties?.length) {
-      return state.properties.filter(item => item.childrenList?.length);
+      return state.properties;
     }
 
     const _rootIds = state.propertiesByTypeKeysMap[filter.type];
@@ -47,7 +47,7 @@ export const PropertiesGroupSelector = ({
       item && _items.push(item);
     }
 
-    return _items.filter(item => item.childrenList?.length);
+    return _items;
   }, [filter.type, state.properties, state.propertiesByTypeKeysMap, state.propertiesDataMap]);
 
   const handleSelect: CustomSelectHandler<PropertiesGroupEntity> = option => {

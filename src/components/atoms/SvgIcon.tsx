@@ -31,8 +31,6 @@ const Svg = styled.svg<SvgIconProps>`
   align-items: center;
   justify-content: center;
 
-  position: relative;
-
   width: ${({ size }) => size ?? '24px'};
   //height: ${({ size }) => size ?? '24px'};
 

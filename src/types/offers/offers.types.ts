@@ -10,18 +10,22 @@ import { PropertiesGroupEntity, PropertyValueEntity } from './properties.types';
 import {
   AppDate,
   HasAuthor,
+  HasBarCode,
   HasDescription,
   HasDimensions,
   HasEditor,
+  HasImgPreview,
   HasLabel,
   HasMeasurement,
   HasOwnerAsCompany,
+  HasSku,
   HasStatus,
   HasType,
   Keys,
   MaybeNull,
   PartialRecord,
   UUID,
+  WithPeriod,
 } from '../utils.types';
 import { OfferImageSlotEntity } from './offer-images.types';
 import { WarehouseInventoryEntity } from '../warehousing/warehouse-inventory.types';
@@ -69,10 +73,16 @@ export interface IOfferBase
     HasDescription,
     HasType<OfferTypeEnum>,
     HasStatus<OfferStatusEnum>,
-    HasBaseCmsConfigs {
-  sku?: string;
-  barCode?: string;
+    HasBaseCmsConfigs,
+    HasDimensions,
+    WithPeriod,
+    HasImgPreview,
+    HasBarCode,
+    HasSku {
   qrCode?: string;
+
+  template?: PropertiesGroupEntity;
+  propsKey?: string;
 
   approved?: OfferStatusEnum;
   archived?: boolean;
