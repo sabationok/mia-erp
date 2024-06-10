@@ -2,9 +2,8 @@ import { FilterChangeHandler, FilterOption, FilterSelectHandler, FilterSelectVal
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ButtonIcon from './ButtonIcon';
 import FlexBox from './FlexBox';
-import { t } from '../../lang';
 import { Text } from './Text';
-import { isArray, isString } from 'lodash';
+import { isArray } from 'lodash';
 
 export type TagButtonsFilterOnSelectValue<Value = any> = FilterSelectValueHandler<Value>;
 export type TagButtonsFilterOnSelect<
@@ -45,6 +44,7 @@ const TagButtonsFilter = <Value extends string = string>({
     (option: TagButtonsFilterOption<Value | string>, index: number) => {
       const value = option.value || option._id;
       if (!value) {
+        console.warn('Not found option value or _id');
         return;
       }
       if (!multiple) {
@@ -91,8 +91,8 @@ const TagButtonsFilter = <Value extends string = string>({
             color: !isActive ? opt?.color ?? '' : '',
           }}
         >
-          <Text $ellipsisMode={true} $size={12} style={{ fontWeight: 'inherit' }}>
-            {isString(opt?.label) ? t(opt.label) : opt.value}
+          <Text $ellipsisMode={true} $size={13} style={{ fontWeight: 'inherit' }}>
+            {opt.label}
           </Text>
         </ButtonIcon>
       );

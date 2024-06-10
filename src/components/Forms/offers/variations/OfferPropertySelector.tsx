@@ -28,7 +28,7 @@ const PropertyItemStylesByCmsKey: Record<PropertyTypeEnum | string, PropertyItem
     numColumns: 1,
   },
 };
-export interface OfferVariationPropertySelectorProps {
+export interface OfferPropertySelectorProps {
   item: PropertyEntity;
   selectedValue?: string;
   selectedIds?: string[];
@@ -38,14 +38,14 @@ export interface OfferVariationPropertySelectorProps {
   onSelect?: (propId: string, valueId: string, label?: MaybeNull<string>) => void;
   onChangeIds?: (propId: string, valueIds: string[]) => void;
 }
-export const OfferVariationPropertySelector = ({
+export const OfferPropertySelector = ({
   item,
   selectedIds,
   onSelect,
   isOpen,
   multiple,
   onChangeIds,
-}: OfferVariationPropertySelectorProps) => {
+}: OfferPropertySelectorProps) => {
   const state = useOffersSelector();
   const [_isOpen, setIsOpen] = useState(isOpen ?? false);
 
@@ -67,20 +67,6 @@ export const OfferVariationPropertySelector = ({
     }
     return _valuesList;
   }, [item?._id, item.childrenList, state.propertiesDataMap, state.propertiesKeysMap]);
-
-  // const renderChildren = useMemo(() => {
-  //   return childrenList?.map(value => {
-  //     const isSelected = selectedIds?.includes(value._id);
-  //     return (
-  //       <RenderPropertyValue
-  //         key={`prop-value-${value._id}`}
-  //         item={value}
-  //         isSelected={isSelected}
-  //         onSelect={id => onSelect && onSelect(item._id, id, value?.label)}
-  //       />
-  //     );
-  //   });
-  // }, [childrenList, item._id, onSelect, selectedIds]);
 
   useEffect(() => {
     if (childrenList?.length) {
@@ -118,7 +104,11 @@ export const OfferVariationPropertySelector = ({
 
           <TagButtonsFilter
             numColumns={configs?.numColumns}
+            name={item._id}
             multiple={multiple}
+            onSelectValue={info => {
+              onSelect && onSelect(info.name, info.value);
+            }}
             onChange={values => {
               onChangeIds && onChangeIds(item._id, values);
             }}
@@ -137,7 +127,7 @@ const PropertyBox = styled(FlexBox)`
   }
 `;
 
-const PropertyValuesBox = styled(FlexBox)<PropertyItemStyleByCmsTypeProps>``;
+// const PropertyValuesBox = styled(FlexBox)<PropertyItemStyleByCmsTypeProps>``;
 
 // const RenderPropertyValue = ({
 //   item,
@@ -168,4 +158,4 @@ const PropertyValuesBox = styled(FlexBox)<PropertyItemStyleByCmsTypeProps>``;
 //   min-width: 50px;
 // `;
 
-export default OfferVariationPropertySelector;
+export default OfferPropertySelector;

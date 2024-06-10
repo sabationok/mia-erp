@@ -12,8 +12,8 @@ import { OverlayFooter, OverlayForm, OverlayHeader } from './index';
 import { OfferEntity } from '../../types/offers/offers.types';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
 import { PropertyBaseEntity, PropertyEntity } from '../../types/offers/properties.types';
-import OfferVariationPropertySelector from '../Forms/offers/variations/OfferVariationPropertySelector';
-import { PropertiesGroupSelect } from '../atoms/PropertiesGroupSelect';
+import OfferPropertySelector from '../Forms/offers/variations/OfferPropertySelector';
+import { PropertiesGroupSelector } from '../atoms/PropertiesGroupSelector';
 import { useCurrentOffer } from '../../hooks';
 import { sortIds } from '../../utils';
 
@@ -115,12 +115,7 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
   const renderPropertiesList = useMemo(() => {
     return propertiesList?.map(prop => {
       return (
-        <OfferVariationPropertySelector
-          key={`prop_${prop._id}`}
-          item={prop}
-          selectedIds={selectedIds}
-          onSelect={handleSelect}
-        />
+        <OfferPropertySelector key={`prop_${prop._id}`} item={prop} selectedIds={selectedIds} onSelect={handleSelect} />
       );
     });
   }, [propertiesList, selectedIds, handleSelect]);
@@ -140,7 +135,7 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
         okButton
       />
 
-      <PropertiesGroupSelect onSelect={setCurrentTemlate} selected={currentTemplate} />
+      <PropertiesGroupSelector onSelect={setCurrentTemlate} selected={currentTemplate} />
 
       <PropertiesBox flex={1} overflow={'auto'}>
         {renderPropertiesList}

@@ -27,7 +27,7 @@ export const langUa = {
   Warehouse: 'Склад',
 
   'Payment checkout services': 'Сервіси оплати',
-  'Delivery types': 'Спосoби доставки',
+  'Delivery types': 'Методи доставки',
   'Payment hold': 'Холд платежу',
 
   Review: 'Перегляд',

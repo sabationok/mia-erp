@@ -34,7 +34,7 @@ const OfferOverviewPageLeftSide: React.FC<OfferOverviewPageLeftSideProps> = ({ t
           modalS.openModal({
             Modal: Modals.EditOffer,
             props: {
-              _id: page?.currentOffer?._id,
+              offer: page?.currentOffer,
               title: t('Edit offer'),
             },
           });

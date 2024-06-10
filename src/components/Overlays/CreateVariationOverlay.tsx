@@ -20,13 +20,13 @@ import InputText from '../atoms/Inputs/InputText';
 import { t } from '../../lang';
 import LangButtonsGroup from '../atoms/LangButtonsGroup';
 import { UUID } from '../../types/utils.types';
-import OfferVariationPropertySelector from '../Forms/offers/variations/OfferVariationPropertySelector';
+import OfferPropertySelector from '../Forms/offers/variations/OfferPropertySelector';
 import { PropertiesGroupEntity, PropertyEntity, PropertyValueEntity } from '../../types/offers/properties.types';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
 import { OfferEntity } from '../../types/offers/offers.types';
 import DrawerBase from './OverlayBase';
-import { PropertiesGroupSelect } from '../atoms/PropertiesGroupSelect';
+import { PropertiesGroupSelector } from '../atoms/PropertiesGroupSelector';
 import { AccordionFormArea } from '../atoms/FormArea/AccordionForm';
 import { omit } from 'lodash';
 
@@ -125,6 +125,10 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   });
 
   const propertiesList = useMemo(() => {
+    if (currentTemplate?.childrenList?.length) {
+      return currentTemplate?.childrenList.filter(item => item.isSelectable && item?.childrenList?.length);
+    }
+
     const _rootId = currentTemplate?._id;
     const _propertiesList: PropertyEntity[] = [];
     // const _sortedPropertiesIds=sortIds(ObjectKeys(state.propertiesKeysMap))
@@ -142,7 +146,7 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
     }
 
     return _propertiesList;
-  }, [currentTemplate?._id, state.propertiesDataMap, state.propertiesKeysMap]);
+  }, [currentTemplate?._id, currentTemplate?.childrenList, state.propertiesDataMap, state.propertiesKeysMap]);
 
   const { label: compiledLabel } = useMemo(() => {
     // const _sortedIds = Object.keys(selectedPropsMap ?? {}).sort((prev, next) => prev.localeCompare(next));
@@ -169,7 +173,8 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
     (data: IVariationFormData) => {
       if (updateId) {
         service.updateVariationById({
-          data: toVariationReqData(data, updateId),
+          data: { data: toVariationReqData(data) },
+
           onSuccess: data => {
             console.log('updateVariationById onSuccess', data);
 
@@ -180,7 +185,7 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
         });
       } else {
         service.createVariation({
-          data: toVariationReqData(data),
+          data: { data: toVariationReqData(data) },
           onSuccess: data => {
             submitOptions.state.close && onClose && onClose();
             submitOptions.state.clear && reset();
@@ -194,12 +199,14 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
     },
     [loaders, onClose, reset, service, submitOptions.state.clear, submitOptions.state.close, updateId]
   );
-
+  useEffect(() => {
+    console.log(formValues);
+  }, []);
   const handleSelect = useCallback(
     (parentId: string, id: string) => {
-      const currentId = formValues.propertiesMap?.[parentId];
+      const existId = formValues.propertiesMap?.[parentId];
 
-      const remove = currentId && currentId === id;
+      const remove = existId && existId === id;
 
       if (remove) {
         setValue(`propertiesMap.${parentId}`, '');
@@ -233,16 +240,22 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
 
   const renderPropertiesList = useMemo(() => {
     return propertiesList?.map(prop => {
+      const selectedId = formValues?.propertiesMap?.[prop._id];
       return (
-        <OfferVariationPropertySelector
+        <OfferPropertySelector
           key={`prop_${prop._id}`}
           item={prop}
-          selectedIds={selectedIds}
+          selectedIds={selectedId ? [selectedId] : undefined}
           onSelect={handleSelect}
+          onChangeIds={(propId, [valueId]) => {
+            console.log('onChangeIds', propId, valueId);
+
+            handleSelect(propId, valueId);
+          }}
         />
       );
     });
-  }, [propertiesList, selectedIds, handleSelect]);
+  }, [propertiesList, formValues?.propertiesMap, handleSelect]);
 
   return (
     <DrawerBase fillHeight onBackPress={onClose} okButton={false} title={title || 'Create variation'}>
@@ -289,7 +302,7 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
           </AccordionFormArea>
 
           <AccordionFormArea label={t('Properties')} expandable={false} hideFooter>
-            <PropertiesGroupSelect
+            <PropertiesGroupSelector
               onSelect={opt => {
                 setValue('template', opt);
                 setCurrentTemplate(opt);
@@ -329,7 +342,7 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
           loading={loaders.isLoading?.create}
           resetButtonShown
           onGoBackPress={onClose}
-          submitButtonText={updateId ? 'Підтвердити' : 'Додати'}
+          submitButtonText={t('Accept')}
           canSubmit={canSubmit}
           extraFooter={
             <ExtraFooterBox>

@@ -29,7 +29,7 @@ import { offerTypeFilterOptions } from '../data/modalFilterOptions.data';
 import TagButtonsFilter from '../components/atoms/TagButtonsFilter';
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import OfferCategoriesSelector from '../components/Forms/offers/categories/OfferCategoriesSelector';
-import OfferVariationPropertySelector from '../components/Forms/offers/variations/OfferVariationPropertySelector';
+import OfferPropertySelector from '../components/Forms/offers/variations/OfferPropertySelector';
 import { PropertiesGroupEntity } from '../types/offers/properties.types';
 import TabSelector from '../components/atoms/TabSelector';
 import { omit } from 'lodash';
@@ -259,7 +259,7 @@ const OffersFilterModal = ({ onSubmit, onClose }: { onSubmit?: (data: GetAllOffe
 
           {template?.childrenList?.map(item => {
             return (
-              <OfferVariationPropertySelector
+              <OfferPropertySelector
                 key={item._id}
                 item={item}
                 multiple

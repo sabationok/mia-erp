@@ -150,7 +150,7 @@ const TabSelector = <V = any, D = any, Option extends FilterOption<V, D> = any>(
   }, [asStepper, current, options, handleSelectOpt, renderLabel]);
 
   return (
-    <FlexBox className="filter" overflow={'hidden'} maxWidth={'100%'} {...props}>
+    <FlexBox className="filter" overflow={'hidden'} fillWidth maxWidth={'100%'} {...props}>
       {onReset && (
         <StButtonIcon variant="def" onClick={handleReset} isActive={current === -1}>
           <span className={'inner'}>{t('All')}</span>
@@ -168,10 +168,11 @@ const Filter = styled.div<{ gridRepeat?: number; optionProps?: { fitContentH?: b
   display: grid;
   align-items: center;
   grid-template-columns: ${({ gridRepeat, optionProps }) =>
-    `repeat(${gridRepeat || 1}, minmax(${((optionProps?.fitContentH ?? true) && 'min-content') || '150px'} ,1fr))`};
+    `repeat(${gridRepeat || 1}, minmax(${(optionProps?.fitContentH && 'min-content') || '150px'} ,1fr))`};
 
   height: 32px;
   min-height: 32px;
+  min-width: 100%;
   overflow: auto;
   max-width: 100%;
 
@@ -179,6 +180,7 @@ const Filter = styled.div<{ gridRepeat?: number; optionProps?: { fitContentH?: b
 
   //border-right: 1px solid ${({ theme }) => theme.modalBorderColor};
   //border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
+  border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
 
   &::-webkit-scrollbar {
     width: 0;
@@ -193,7 +195,7 @@ const StButtonIcon = styled(ButtonIcon)<{ asStep?: boolean; customLabel?: boolea
   gap: 0;
 
   font-weight: 600;
-  font-size: 11px;
+  font-size: 13px;
   text-transform: uppercase;
   text-align: center;
 
@@ -202,7 +204,7 @@ const StButtonIcon = styled(ButtonIcon)<{ asStep?: boolean; customLabel?: boolea
   border-width: 0;
 
   height: 100%;
-  min-height: 28px;
+  min-height: 32px;
 
   padding: ${p => (p.customLabel ? '2px 4px' : '6px 12px')};
 
@@ -229,7 +231,6 @@ const StButtonIcon = styled(ButtonIcon)<{ asStep?: boolean; customLabel?: boolea
     bottom: 0;
     left: 0;
     width: 100%;
-    border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
   }
 
   &::after {

@@ -10,9 +10,9 @@ import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
 import { ArrayOfUUID } from '../../../../redux/app-redux.types';
 import { t } from '../../../../lang';
 import { OfferEntity } from '../../../../types/offers/offers.types';
-import { PropertiesGroupSelect } from '../../../atoms/PropertiesGroupSelect';
+import { PropertiesGroupSelector } from '../../../atoms/PropertiesGroupSelector';
 import { PropertyBaseEntity, PropertyEntity } from '../../../../types/offers/properties.types';
-import OfferVariationPropertySelector from '../variations/OfferVariationPropertySelector';
+import OfferPropertySelector from '../variations/OfferPropertySelector';
 import { Text } from '../../../atoms/Text';
 import { useCurrentOffer } from '../../../../hooks';
 import { sortIds, updateIdsArray } from '../../../../utils';
@@ -55,6 +55,10 @@ export const OfferFormPropertiesArea = ({ onSuccess, disabled, offer }: OfferFor
   }, [selectedIds, initIds]);
 
   const propertiesList = useMemo(() => {
+    if (template?.childrenList?.length) {
+      return template?.childrenList.filter(item => !item?.isSelectable);
+    }
+
     const _rootId = template?._id;
     const _propertiesList: PropertyEntity[] = [];
     const _propertiesIds = state.propertiesKeysMap?.[_rootId ?? 'def'] ?? [];
@@ -86,12 +90,7 @@ export const OfferFormPropertiesArea = ({ onSuccess, disabled, offer }: OfferFor
   const renderPropertiesList = useMemo(() => {
     return propertiesList?.map(prop => {
       return (
-        <OfferVariationPropertySelector
-          key={`prop_${prop._id}`}
-          item={prop}
-          selectedIds={selectedIds}
-          onSelect={handleSelect}
-        />
+        <OfferPropertySelector key={`prop_${prop._id}`} item={prop} selectedIds={selectedIds} onSelect={handleSelect} />
       );
     });
   }, [propertiesList, selectedIds, handleSelect]);
@@ -105,7 +104,7 @@ export const OfferFormPropertiesArea = ({ onSuccess, disabled, offer }: OfferFor
       isOpen={false}
       disabled={!Offer || disabled}
     >
-      <PropertiesGroupSelect selected={template} onSelect={setTemplate} />
+      <PropertiesGroupSelector selected={template} onSelect={setTemplate} />
 
       <TemplateBox flex={1} overflow={'auto'}>
         {renderPropertiesList?.length ? (

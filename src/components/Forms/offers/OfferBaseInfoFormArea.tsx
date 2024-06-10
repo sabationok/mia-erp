@@ -130,8 +130,7 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
             options: OfferStatusFilterOptions,
             label: t('status'),
             placeholder: t('status'),
-            value: formValues.approved,
-            selectedValue: formValues.approved,
+            onlyValue: true,
           })}
         />
 

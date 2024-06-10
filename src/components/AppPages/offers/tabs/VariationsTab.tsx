@@ -27,19 +27,24 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
   const Offer = useCurrentOffer(offer || page?.currentOffer);
 
   const modalS = useModalProvider();
-  const productsS = useAppServiceProvider()[ServiceName.offers];
+  const offerSrv = useAppServiceProvider()[ServiceName.offers];
   // const templates = usePropertiesSelector();
 
   const loadData = useCallback(
     ({ refresh, update }: { refresh?: boolean; update?: boolean }) => {
       if (!Offer) return;
 
-      productsS.getAllVariationsByProductId({
-        data: { refreshCurrent: refresh, updateCurrent: update, offerId: Offer._id },
+      offerSrv.getAllVariations({
+        data: {},
+        params: {
+          offerId: Offer._id,
+        },
+        update,
+        refresh,
         onLoading: loaders.onLoading('variations'),
       });
     },
-    [Offer, loaders, productsS]
+    [Offer, loaders, offerSrv]
   );
   const variationsTableTitles = useMemo(() => {
     const propertiesMap: Record<string, PropertyEntity> = {};

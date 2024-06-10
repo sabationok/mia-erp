@@ -188,9 +188,7 @@ const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<
   useEffect(() => {
     if (!isUndefined(selectedValue)) {
       setCurrentOption(
-        options?.find((el: CustomSelectOptionBase) =>
-          el.value ? el.value === selectedValue : el?._id === selectedValue
-        )
+        options?.find((el: CustomSelectOptionBase) => el.value === selectedValue || el?._id === selectedValue)
       );
     }
   }, [options, selectedValue]);

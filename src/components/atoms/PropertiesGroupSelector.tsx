@@ -3,19 +3,20 @@ import { PropertiesGroupEntity, PropertyBaseEntity } from '../../types/offers/pr
 import { useOffersSelector } from '../../redux/selectors.store';
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
-import CustomSelect, { CustomSelectHandler } from './Inputs/CustomSelect';
+import { CustomSelectHandler } from './Inputs/CustomSelect';
 import FlexBox from './FlexBox';
 import InputLabel from './Inputs/InputLabel';
 import { t } from '../../lang';
 import ButtonsGroup from './ButtonsGroup';
 import { offerTypeFilterOptions } from '../../data/modalFilterOptions.data';
 import { Values } from '../../types/utils.types';
+import TabSelector from './TabSelector';
 
 type FilterData = {
   type: Values<typeof OfferTypeEnum>;
   isSelectable?: boolean;
 };
-export const PropertiesGroupSelect = ({
+export const PropertiesGroupSelector = ({
   selected,
   onSelect,
   filterValue = { type: OfferTypeEnum.GOODS, isSelectable: true },
@@ -34,6 +35,10 @@ export const PropertiesGroupSelect = ({
   // const loaders = useLoaders<'getList' | 'create' | 'update'>();
 
   const rootList = useMemo(() => {
+    if (state.properties?.length) {
+      return state.properties.filter(item => item.childrenList?.length);
+    }
+
     const _rootIds = state.propertiesByTypeKeysMap[filter.type];
     const _items: PropertyBaseEntity[] = [];
 
@@ -42,8 +47,8 @@ export const PropertiesGroupSelect = ({
       item && _items.push(item);
     }
 
-    return _items;
-  }, [filter, state.propertiesByTypeKeysMap, state.propertiesDataMap]);
+    return _items.filter(item => item.childrenList?.length);
+  }, [filter.type, state.properties, state.propertiesByTypeKeysMap, state.propertiesDataMap]);
 
   const handleSelect: CustomSelectHandler<PropertiesGroupEntity> = option => {
     if (onSelect && option) {
@@ -85,13 +90,9 @@ export const PropertiesGroupSelect = ({
         </InputLabel>
       )}
 
-      <CustomSelect
-        label={t('Select properties group')}
-        selectedOption={currentTemplate}
-        onSelect={handleSelect}
-        options={rootList}
-        placeholder={t('Select properties group')}
-      />
+      <InputLabel label={t('Select properties group')}>
+        <TabSelector options={rootList} onOptSelect={handleSelect} />
+      </InputLabel>
     </FlexBox>
   );
 };
