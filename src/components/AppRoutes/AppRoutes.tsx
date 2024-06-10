@@ -33,8 +33,8 @@ const AppRoutes: React.FC<{ isLoaded?: boolean }> = () => {
 
       <Route path={'/auth/*'} element={<PublicRoute redirectTo={`/app/${AppPagesEnum.companies}`} />}>
         <Route index element={<Navigate to="/auth/login" />} />
-        {/*<Route path="register" element={<AppPages.PageAuth register />} />*/}
-        <Route path={`register/:${AppUrlParamKeys.businessType}`} element={<AppPages.PageAuth register />} />
+        <Route path="register" element={<AppPages.PageAuth register />} />
+        {/*<Route path={`register/:${AppUrlParamKeys.businessType}`} element={<AppPages.PageAuth register />} />*/}
         <Route path="login" element={<AppPages.PageAuth login />} />
         <Route path="sendRecoveryPasswordMail" element={<AppPages.PageAuth sendRecoveryEmail />} />
         <Route path="recoveryPassword" element={<AppPages.PageAuth recovery />} />

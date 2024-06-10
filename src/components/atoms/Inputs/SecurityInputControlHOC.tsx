@@ -9,7 +9,12 @@ const InputSecurityControlHOC = ({
   htmlType = 'text',
 }: {
   htmlType?: HTMLInputTypeAttribute;
-  renderInput?: (props: { type: HTMLInputTypeAttribute; style?: CSSProperties }) => React.ReactNode;
+  renderInput?: (props: {
+    type: HTMLInputTypeAttribute;
+    style?: CSSProperties;
+    id: string;
+    key: string;
+  }) => React.ReactNode;
   // children?: React.ReactNode;
   visible?: boolean;
   onSetVisible?: (value: boolean) => void;
@@ -25,9 +30,16 @@ const InputSecurityControlHOC = ({
       ? !isVisible
         ? renderInput({
             type: 'password',
+            id: 'secure_hidden',
+            key: 'secure_hidden',
             style: { paddingRight: 36 },
           })
-        : renderInput({ type: htmlType, style: { paddingRight: 36 } })
+        : renderInput({
+            type: htmlType,
+            id: 'text_visible',
+            key: 'text_visible',
+            style: { paddingRight: 36 },
+          })
       : null;
   }, [htmlType, isVisible, renderInput]);
 

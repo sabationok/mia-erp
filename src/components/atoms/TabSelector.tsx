@@ -1,4 +1,4 @@
-import ButtonIcon from 'components/atoms/ButtonIcon';
+import ButtonIcon, { buttonPointerCss } from 'components/atoms/ButtonIcon';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { t } from '../../lang';
@@ -189,66 +189,7 @@ const Filter = styled.div<{ gridRepeat?: number; optionProps?: { fitContentH?: b
 `;
 
 const StButtonIcon = styled(ButtonIcon)<{ asStep?: boolean; customLabel?: boolean }>`
-  position: relative;
-  flex-direction: column;
-  justify-content: space-around;
-  gap: 0;
-
-  font-weight: 600;
-  font-size: 13px;
-  text-transform: uppercase;
-  text-align: center;
-
-  border-radius: 0;
-  border-style: none;
-  border-width: 0;
-
-  height: 100%;
-  min-height: 32px;
-
-  padding: ${p => (p.customLabel ? '2px 4px' : '6px 12px')};
-
-  color: ${({ theme, ...p }) => (p.isActive ? theme.accentColor.base : theme.fontColorHeader)};
-
-  &:hover {
-    color: ${({ theme, ...p }) => theme.accentColor.base};
-    //&::after {
-    //  width: 100%;
-    //}
-  }
-  & .inner {
-    text-align: center;
-    width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-
-  &::before {
-    display: block;
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-  }
-
-  &::after {
-    display: block;
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: ${p => (p.asStep ? 0 : 50)}%;
-    height: 2px;
-    width: ${p => (p.isActive ? 100 : 0)}%;
-    transition: all ${({ theme }) => theme.globals.timingFnMui};
-    transform: translate(${p => (p.asStep ? 0 : -50)}%);
-    background-color: ${({ theme }) => theme.accentColor.base};
-  }
-
-  &[disabled] {
-    opacity: ${p => (p?.asStep ? 1 : '60%')};
-  }
+  ${buttonPointerCss.bottom}
 `;
 
 export default TabSelector;

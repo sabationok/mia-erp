@@ -199,9 +199,7 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
     },
     [loaders, onClose, reset, service, submitOptions.state.clear, submitOptions.state.close, updateId]
   );
-  useEffect(() => {
-    console.log(formValues);
-  }, []);
+
   const handleSelect = useCallback(
     (parentId: string, id: string) => {
       const existId = formValues.propertiesMap?.[parentId];

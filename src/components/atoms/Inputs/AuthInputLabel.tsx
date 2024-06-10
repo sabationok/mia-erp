@@ -4,6 +4,7 @@ import SvgIcon from 'components/atoms/SvgIcon';
 import { IconIdType } from 'img/sprite/iconId.data';
 import { InputLabelProps } from './InputLabel';
 import { FlexBox, FlexLabel } from '../FlexBox';
+import { Text } from '../Text';
 
 export interface AuthInputLabelProps {
   icon: IconIdType;
@@ -21,27 +22,34 @@ const AuthInputLabel: React.FC<AuthInputLabelProps & Omit<InputLabelProps, 'succ
   ...props
 }) => {
   return (
-    <FlexLabel fxDirection={'row'} fillWidth gap={8} alignItems={'center'}>
-      <SvgIcon size="30px" icon={icon} />
-      <FlexBox gap={4} fillWidth>
+    <FlexLabel fillWidth gap={8} alignItems={'center'}>
+      <FlexBox gap={4} fillWidth alignItems={'center'} fxDirection={'row'}>
+        <SvgIcon size="30px" icon={icon} />
+
         {children}
 
-        {(error?.message || success?.message || helperText) && (
-          <HelperText isError={!!error} isSuccess={!!success}>
-            {(typeof error?.message === 'string' && error?.message) || success?.message || helperText}
-          </HelperText>
-        )}
+        <SvgIcon
+          size={'30px'}
+          icon={!error ? (success ? 'success' : undefined) : 'error'}
+          isError={!!error}
+          isSuccess={!!success}
+        />
       </FlexBox>
-      <SvgIcon size={'30px'} icon={!error ? 'success' : 'error'} isError={!!error} isSuccess={!!success} />
+
+      {(error?.message || success?.message || helperText) && (
+        <HelperText isError={!!error} isSuccess={!!success}>
+          {(typeof error?.message === 'string' && error?.message) || success?.message || helperText}
+        </HelperText>
+      )}
     </FlexLabel>
   );
 };
 
-const HelperText = styled.span<{ isError?: boolean; isSuccess?: boolean }>`
+const HelperText = styled(Text)<{ isError?: boolean; isSuccess?: boolean }>`
   font-size: 12px;
   line-height: 1.5;
 
-  width: 100%;
+  //width: 100%;
 
   font-weight: 500;
 

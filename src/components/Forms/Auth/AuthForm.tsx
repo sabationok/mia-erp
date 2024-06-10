@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon';
 import styled from 'styled-components';
 import LogoSvg from 'components/Layout/LogoSvg';
@@ -14,7 +14,7 @@ import { ToastService } from '../../../services';
 import { HasRegisterCompanyDtoFields, HasRegisterUserDtoFields } from '../../../types/auth.types';
 import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
 import { omit } from 'lodash';
-import { useAppParams, useAppRouter } from '../../../hooks';
+import { useAppRouter } from '../../../hooks';
 import { BusinessSubjectTypeEnum } from '../../../types/companies.types';
 import FlexBox, { FlexForm } from '../../atoms/FlexBox';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
@@ -39,10 +39,10 @@ const registerSchema = yup.object().shape({
     first: yup.string().optional(),
     second: yup.string().optional(),
   }),
-  label: yup.object().shape({
-    base: yup.string().optional(),
-    print: yup.string().optional(),
-  }),
+  // label: yup.object().shape({
+  //   base: yup.string().optional(),
+  //   print: yup.string().optional(),
+  // }),
   email: yup.string().required(),
   password: yup.string().required(),
   approvePassword: yup.string(),
@@ -56,11 +56,11 @@ const logInSchema = yup.object().shape({
   password: yup.string().required(),
 });
 
-const registerParam = {
-  [BusinessSubjectTypeEnum.person]: 'name',
-  [BusinessSubjectTypeEnum.company]: 'label',
-  [BusinessSubjectTypeEnum.entrepreneur]: null,
-} as const;
+// const registerParam = {
+//   [BusinessSubjectTypeEnum.person]: 'name',
+//   [BusinessSubjectTypeEnum.company]: 'label',
+//   [BusinessSubjectTypeEnum.entrepreneur]: null,
+// } as const;
 
 export type AuthFormProps = Props & React.HTMLAttributes<HTMLFormElement>;
 
@@ -69,29 +69,20 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
   const router = useAppRouter();
   const loaders = useLoaders<'logIn' | 'register'>();
 
-  const businessType = useAppParams().businessType as BusinessSubjectTypeEnum;
-
-  const omitParam = registerParam?.[businessType];
-
-  useEffect(() => {
-    if (registration && (!businessType || !(businessType in registerParam))) {
-      router.replace({ pathname: BusinessSubjectTypeEnum.person });
-    }
-  }, [businessType, registration, router]);
-
   const {
     register,
     formState: { errors },
     handleSubmit,
     setError,
     clearErrors,
+    watch,
   } = useForm<IRegistrationFormData>({
     defaultValues: {},
     reValidateMode: 'onSubmit',
-    resolver: yupResolver(login ? logInSchema : omitParam ? registerSchema.omit([omitParam]) : registerSchema),
+    resolver: yupResolver(login ? logInSchema : registerSchema),
     shouldUnregister: true,
   });
-  // const formValues = watch();
+  const formValues = watch();
 
   // const disableSubmit = useMemo(
   //   () => !isValid || (registration && formValues.password !== formValues.approvePassword),
@@ -124,7 +115,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
       });
     registration &&
       authService.register({
-        data: omit(fData, omitParam ? [omitParam, 'approvePassword'] : ['approvePassword']),
+        data: omit(fData, ['approvePassword']),
         onLoading: loaders.onLoading('register'),
         onSuccess() {
           router.push({ pathname: '/auth/logIn' });
@@ -149,61 +140,22 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
             {'Вхід'}
           </StNavLink>
 
-          <StNavLink
-            textTransform="uppercase"
-            variant="def"
-            to={`/auth/register/${businessType ?? BusinessSubjectTypeEnum.person}`}
-          >
+          <StNavLink textTransform="uppercase" variant="def" to={`/auth/register`}>
             {'Реєстрація'}
           </StNavLink>
         </Links>
-
-        {registration && (
-          <Links>
-            <StNavLink textTransform="uppercase" variant="def" to={`/auth/register/${BusinessSubjectTypeEnum.person}`}>
-              {'Фіз. особа'}
-            </StNavLink>
-
-            <StNavLink textTransform="uppercase" variant="def" to={`/auth/register/${BusinessSubjectTypeEnum.company}`}>
-              {'Компанія'}
-            </StNavLink>
-
-            <StNavLink
-              textTransform="uppercase"
-              variant="def"
-              to={`/auth/register/${BusinessSubjectTypeEnum.entrepreneur}`}
-            >
-              {'ФОП'}
-            </StNavLink>
-          </Links>
-        )}
       </FlexBox>
 
       <Inputs>
         {registration && (
           <>
-            {businessType !== 'company' && (
-              <>
-                <AuthInputLabel icon="personOutlined" error={errors.name?.first}>
-                  <InputText placeholder="І'мя" {...register('name.first')} />
-                </AuthInputLabel>
+            <AuthInputLabel icon="personOutlined" error={errors.name?.first}>
+              <InputText placeholder="І'мя" {...register('name.first')} />
+            </AuthInputLabel>
 
-                <AuthInputLabel icon="personOutlined" error={errors.name?.second}>
-                  <InputText placeholder="Прізвище" {...register('name.second')} />
-                </AuthInputLabel>
-              </>
-            )}
-            {businessType !== 'person' && (
-              <>
-                <AuthInputLabel icon="personOutlined" error={errors.label?.base}>
-                  <InputText placeholder="Назва" {...register('label.base')} />
-                </AuthInputLabel>
-
-                <AuthInputLabel icon="personOutlined" error={errors.label?.print}>
-                  <InputText placeholder="Назва для друку" {...register('label.print')} />
-                </AuthInputLabel>
-              </>
-            )}
+            <AuthInputLabel icon="personOutlined" error={errors.name?.second}>
+              <InputText placeholder="Прізвище" {...register('name.second')} />
+            </AuthInputLabel>
 
             <AuthInputLabel icon="email" error={errors.email}>
               <InputText placeholder={'Електронна адреса'} {...register('email')} />
@@ -215,7 +167,15 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
               />
             </AuthInputLabel>
 
-            <AuthInputLabel icon="lock_O" error={errors.approvePassword}>
+            <AuthInputLabel
+              icon="lock_O"
+              error={errors.approvePassword}
+              success={
+                !!formValues.password && formValues.password === formValues.approvePassword
+                  ? { message: 'Passwords are equals' }
+                  : undefined
+              }
+            >
               <SecurityInputControlHOC
                 renderInput={props => (
                   <InputText {...props} placeholder={'Повторіть пароль'} {...register('approvePassword')} />
@@ -316,6 +276,7 @@ const Inputs = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding: 8px 0;
 
   margin-bottom: 12px;
   width: 100%;

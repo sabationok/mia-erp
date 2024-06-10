@@ -272,7 +272,7 @@ const pointerLeft = css`
   border: 0;
   border-radius: 0;
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
-  transition: none;
+  //transition: none;
 
   &::before {
     content: '';
@@ -594,7 +594,74 @@ const LoaderBox = styled(FlexBox)`
   background-color: ${p => p.theme.backdropColorDark}; // backdropColorDarkExtraLight
 `;
 
+const pointerBottomCss = css<{ asStep?: boolean; customLabel?: boolean; isActive?: boolean }>`
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 0;
+
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  text-align: center;
+
+  border-radius: 0;
+  border-style: none;
+  border-width: 0;
+
+  height: 100%;
+  min-height: 32px;
+
+  position: relative;
+  padding: ${p => (p.customLabel ? '2px 4px' : '6px 12px')};
+
+  color: ${({ theme, ...p }) => (p.isActive ? theme.accentColor.base : theme.fontColorHeader)};
+
+  &:hover {
+    color: ${({ theme, ...p }) => theme.accentColor.base};
+    //&::after {
+    //  width: 100%;
+    //}
+  }
+  & .inner {
+    text-align: center;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  &::before {
+    display: block;
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  &::after {
+    display: block;
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: ${p => (p.asStep ? 0 : 50)}%;
+    height: 2px;
+    width: ${p => (p.isActive ? 100 : 0)}%;
+    transition: all ${({ theme }) => theme.globals.timingFnMui};
+    transform: translate(${p => (p.asStep ? 0 : -50)}%);
+    background-color: ${({ theme }) => theme.accentColor.base};
+  }
+
+  &[disabled] {
+    opacity: ${p => (p?.asStep ? 1 : '75%')};
+    pointer-events: none;
+  }
+`;
 export const Button = {
   Base: memo(BaseButton),
+};
+export const buttonPointerCss = {
+  bottom: pointerBottomCss,
+  left: pointerLeft,
 };
 export default memo(forwardRef(ButtonIcon));
