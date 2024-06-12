@@ -1,11 +1,7 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { PropertyEntity } from '../types/offers/properties.types';
 import { t } from '../lang';
-import {
-  IVariationTableData,
-  VariationEntity,
-  VariationPropertiesMapInTableData,
-} from '../types/offers/variations.types';
+import { VariationEntity, VariationPropertiesMapInTableData } from '../types/offers/variations.types';
 import { AmountAndPercentage, PriceAmountAndPercentageFields } from '../types/price-management/price-management.types';
 import { WarehouseItemEntity } from '../types/warehousing/warehouses.types';
 import { numberWithSpaces } from './numbers';
@@ -39,7 +35,7 @@ export class TableActionsBuilder<Service = any, TData = any, Extra = any, Name e
   }
 }
 
-export const transformVariationTableData = (variation: VariationEntity): IVariationTableData => {
+export const transformVariationTableData = (variation: VariationEntity): VariationEntity => {
   let propertiesMap: VariationPropertiesMapInTableData = {};
 
   variation.properties?.map(value => {
@@ -54,13 +50,13 @@ export const transformVariationTableData = (variation: VariationEntity): IVariat
 
 export function createTableTitlesFromProperties(
   properties?: PropertyEntity[]
-): CellTittleProps<IVariationTableData>[] | undefined {
-  let titles: CellTittleProps<IVariationTableData>[] = [];
+): CellTittleProps<VariationEntity>[] | undefined {
+  let titles: CellTittleProps<VariationEntity>[] = [];
   if (properties?.length) {
     titles = properties
       ?.filter(el => el?.isSelectable)
       ?.map(p => {
-        const title: CellTittleProps<IVariationTableData> = {
+        const title: CellTittleProps<VariationEntity> = {
           top: {
             name: p?.label || '---',
             dataKey: p?._id,

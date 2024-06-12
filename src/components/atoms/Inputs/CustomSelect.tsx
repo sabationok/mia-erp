@@ -116,6 +116,7 @@ const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<
   const isActiveCheck = useCallback(
     <Option extends CustomSelectOption>(option: Option) => {
       const currentOption = selectedOption || _currentOption;
+
       const key = option._id || option?.value;
       const activeKey = currentOption?._id || currentOption?.value;
 
@@ -185,13 +186,13 @@ const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<
     }
   }, [selectedOption]);
 
-  useEffect(() => {
-    if (!isUndefined(selectedValue)) {
-      setCurrentOption(
-        options?.find((el: CustomSelectOptionBase) => el.value === selectedValue || el?._id === selectedValue)
-      );
-    }
-  }, [options, selectedValue]);
+  // useEffect(() => {
+  //   if (!isUndefined(selectedValue)) {
+  //     setCurrentOption(
+  //       options?.find((el: CustomSelectOptionBase) => el.value === selectedValue || el?._id === selectedValue)
+  //     );
+  //   }
+  // }, [options, selectedValue]);
 
   useCloseByBackdropClick(setIsOpen, `data-select=${_compId}`, { disabled: !isOpen });
 

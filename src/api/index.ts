@@ -110,6 +110,7 @@ export enum IdsQueryKeyEnum {
   listsIds = 'listsIds',
   pricesIds = 'pricesIds',
   ordersIds = 'ordersIds',
+  customerIds = 'customerIds',
   slotsIds = 'slotsIds',
   propertiesIds = 'propertiesIds',
   brandsIds = 'brandsIds',

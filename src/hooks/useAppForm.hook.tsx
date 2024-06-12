@@ -4,7 +4,6 @@ import { createContext, useCallback, useContext } from 'react';
 import { UseFormHandleSubmit } from 'react-hook-form/dist/types/form';
 import { CustomSelectProps } from '../components/atoms/Inputs/CustomSelect';
 import { AnyFn } from '../utils/types';
-import { getValueByPath } from '../utils';
 
 type UseRegisterSelectProps<Path extends string> = Omit<CustomSelectProps, 'name'> & {
   onlyValue?: boolean;
@@ -13,7 +12,10 @@ type UseRegisterSelectProps<Path extends string> = Omit<CustomSelectProps, 'name
   valuePath?: Path;
 };
 
-export type UseRegisterSelect<TFieldValues extends FieldValues = FieldValues, P extends Path<TFieldValues> = any> = (
+export type UseRegisterSelect<
+  TFieldValues extends FieldValues = FieldValues,
+  P extends Path<TFieldValues> = Path<TFieldValues>,
+> = (
   name: P,
   props?: UseRegisterSelectProps<P>,
   childControl?: {
@@ -21,9 +23,35 @@ export type UseRegisterSelect<TFieldValues extends FieldValues = FieldValues, P 
   }
 ) => CustomSelectProps;
 
+export type UseIdsTogglerProps = { multiple?: boolean };
+export type UseIdsToggler<
+  TFieldValues extends FieldValues,
+  Name extends Path<TFieldValues> = Path<TFieldValues>,
+  Value extends string | string[] = string | string[],
+> = (name: Name, options?: UseIdsTogglerProps) => UseIdsTogglerReturn<TFieldValues, Name, Value> & UseIdsTogglerProps;
+
+export type UseIdsTogglerReturn<
+  TFieldValues extends FieldValues,
+  Name extends Path<TFieldValues> = Path<TFieldValues>,
+  Value extends string | string[] = string | string[],
+> = {
+  name: Name;
+  value: Value;
+  onChangeIds: (info: { value: Value; name: Name }) => void;
+};
+
+// export type UseRegisterSelect<TFieldValues extends FieldValues = FieldValues, P extends Path<TFieldValues> = any> = (
+//   name: P,
+//   props?: UseRegisterSelectProps<P>,
+//   childControl?: {
+//     childName?: P;
+//   }
+// ) => CustomSelectProps;
+
 export interface UseAppFormReturn<TFieldValues extends FieldValues = FieldValues, TContext = any>
   extends UseFormReturn<TFieldValues, TContext> {
   registerSelect: UseRegisterSelect<TFieldValues>;
+  registerIdsToggler: UseIdsToggler<TFieldValues>;
   formValues: TFieldValues;
   onSubmitHandler?: (
     onValid: SubmitHandler<TFieldValues>,
@@ -63,18 +91,35 @@ const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = a
   formProps?: UseFormProps<TFieldValues, TContext>
 ): UseAppFormReturn<TFieldValues, TContext> => {
   type IntPath = Path<TFieldValues>;
+  // type IntPathValue = PathValue<TFieldValues, IntPath>;
 
   const form = useForm<TFieldValues>(formProps);
   const { setValue, unregister, watch, getFieldState } = form;
   const formValues = watch();
 
-  // function onSubmitHandler(onValid: AppSubmitHandler<TFieldValues>, onInvalid: AppErrorSubmitHandler<TFieldValues>) {
-  //   if (!onValid) return;
-  //   const onValidSubmit: SubmitHandler<TFieldValues> = data => onValid(data, afterSubmitOptions);
-  //
-  //   const onInvalidSubmit: SubmitErrorHandler<TFieldValues> = errors => onInvalid(errors as any);
-  //   return handleSubmit(onValidSubmit, onInvalidSubmit);
-  // }
+  const registerIdsToggler = useCallback(
+    (name: IntPath, props?: UseIdsTogglerProps) => {
+      const value = form.getValues(name);
+      const set = new Set<string>(value);
+      const toggleId = (id: string) => (set.has(id) ? set.delete(id) : set.add(id));
+
+      return {
+        ...props,
+        name,
+        value,
+        onChangeIds: ({ value: maybeIdsArr, name }: { name: IntPath; value: string | string[] }) => {
+          if (props?.multiple) {
+            Array.isArray(maybeIdsArr) ? maybeIdsArr.forEach(toggleId) : toggleId(maybeIdsArr);
+
+            form.setValue(name, [...set] as never, { shouldDirty: true, shouldTouch: true });
+          } else {
+            form.setValue(name, maybeIdsArr as never, { shouldDirty: true, shouldTouch: true });
+          }
+        },
+      };
+    },
+    [form]
+  );
 
   const registerSelect = useCallback(
     (
@@ -87,40 +132,41 @@ const useAppForm = <TFieldValues extends FieldValues = FieldValues, TContext = a
       const onlyValue = props?.onlyValue;
 
       const optionPath = props?.optionPath ?? name;
-      const valuePath = props?.valuePath ?? name;
+      const valuePath = props?.valuePath;
 
       return {
         ref: props?.ref,
-        ...getFieldState(onlyValue ? valuePath : optionPath),
+        ...getFieldState(onlyValue && valuePath ? valuePath : optionPath),
         onSelect: (option, value) => {
-          setValue<Path<TFieldValues>>(onlyValue ? valuePath : optionPath, onlyValue ? value : (option as any), {
-            shouldDirty: true,
-            shouldTouch: true,
-          });
+          setValue<Path<TFieldValues>>(
+            onlyValue && valuePath ? valuePath : optionPath,
+            onlyValue ? value : (option as any),
+            {
+              shouldDirty: true,
+              shouldTouch: true,
+            }
+          );
         },
         name,
-        selectedOption: !optionPath || onlyValue ? undefined : getValueByPath({ data: formValues, path: optionPath }),
-        selectedValue: props?.selectedValue
-          ? props?.selectedValue
-          : !valuePath
-            ? undefined
-            : getValueByPath({ data: formValues, path: valuePath }),
+        selectedOption: !optionPath || onlyValue ? undefined : form.getValues(optionPath),
+        selectedValue: props?.selectedValue ? props?.selectedValue : !valuePath ? undefined : form.getValues(valuePath),
 
         onClear: () => {
-          unregister(onlyValue ? valuePath : optionPath);
+          unregister(onlyValue && valuePath ? valuePath : optionPath);
           if (childControl?.childName) unregister(childControl?.childName);
         },
         disabled: props?.options ? props?.options?.length === 0 : undefined,
         ...props,
       };
     },
-    [formValues, getFieldState, setValue, unregister]
+    [form, getFieldState, setValue, unregister]
   );
 
   return {
     ...form,
     formValues,
     registerSelect,
+    registerIdsToggler,
   };
 };
 

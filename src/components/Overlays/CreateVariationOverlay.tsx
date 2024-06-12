@@ -24,7 +24,7 @@ import OfferPropertySelector from '../Forms/offers/variations/OfferPropertySelec
 import { PropertiesGroupEntity, PropertyEntity, PropertyValueEntity } from '../../types/offers/properties.types';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
-import { OfferEntity } from '../../types/offers/offers.types';
+import { IOfferFullFormData, OfferEntity } from '../../types/offers/offers.types';
 import DrawerBase from './OverlayBase';
 import { PropertiesGroupSelector } from '../atoms/PropertiesGroupSelector';
 import { AccordionFormArea } from '../atoms/FormArea/AccordionForm';
@@ -86,21 +86,21 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   const state = useOffersSelector();
   const service = useAppServiceProvider()[ServiceName.offers];
   const loaders = useLoaders<'create' | 'update' | 'refresh'>();
-  const { variation } = useCurrentVariation({ id: updateId });
+  const { variation } = useCurrentVariation({ _id: updateId });
   const Offer = useCurrentOffer({ _id: variation?.offer?._id || offerId || offer?._id });
 
   const submitOptions = useAfterSubmitOptions();
 
   const [currentTemplate, setCurrentTemplate] = useState<PropertiesGroupEntity>();
 
-  const formMethods = useAppForm<IVariationFormData>({
+  const formMethods = useAppForm<IOfferFullFormData>({
     defaultValues: toVariationFormData(
       variation
         ? { ...variation, offer: Offer, template: currentTemplate }
         : { offer: Offer, template: currentTemplate },
       Offer
     ),
-    resolver: yupResolver(_schema as never),
+    resolver: yupResolver(_schema),
     reValidateMode: 'onSubmit',
   });
 

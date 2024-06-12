@@ -180,7 +180,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
                 <InputLabel label={t('Communication methods')}>
                   <TagButtonsFilter
                     numColumns={2}
-                    values={[formValues?.communication?.customer?._id ?? '']}
+                    value={[formValues?.communication?.customer?._id ?? '']}
                     resetButtonLabel={t('Not needed')}
                     options={communicationMethodsList}
                     resetButtonPosition={'start'}
@@ -246,7 +246,7 @@ const OrderInfoStep: React.FC<OrderInfoStepProps> = ({ onChangeValidStatus }) =>
                   <InputLabel label={t('Communication methods')}>
                     <TagButtonsFilter
                       numColumns={2}
-                      values={[formValues?.communication?.receiver?._id ?? '']}
+                      value={[formValues?.communication?.receiver?._id ?? '']}
                       resetButtonLabel={t('Without')}
                       options={communicationMethodsList.map(mtd => ({ ...mtd, value: mtd._id }))}
                       resetButtonPosition={'start'}

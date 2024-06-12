@@ -1,33 +1,24 @@
 import { OnlyUUID } from '../../redux/app-redux.types';
 import { AppQueryParams } from '../../api';
-import { OfferEntity } from './offers.types';
-import { PropertyValueEntity } from './properties.types';
+import { IOfferBase, OfferEntity } from './offers.types';
 import { MaybeNull, UUID } from '../utils.types';
 import { HasBaseCmsConfigsDto } from '../cms.types';
 
-export interface IVariationBase {}
+export interface IVariationBase extends IOfferBase {}
 
-export interface VariationEntity extends IVariationBase, OfferEntity {}
-
-export type VariationPropertiesMapInTableData = Record<string, PropertyValueEntity>;
-
-export type VariationPropertiesMapInFormData = Record<string, string>;
-export interface IVariationTableData extends VariationEntity {
-  propertiesMap?: VariationPropertiesMapInTableData;
+export interface VariationEntity extends OfferEntity {
+  offer?: OfferEntity;
 }
-export interface IVariationFormData extends IVariationBase, HasBaseCmsConfigsDto {
-  propertiesMap?: VariationPropertiesMapInFormData;
 
-  template?: OnlyUUID;
-
-  offer?: OnlyUUID & { label?: string } & HasBaseCmsConfigsDto;
+export interface IVariationFormData extends Partial<IVariationBase> {
+  offer?: Partial<OfferEntity>;
 }
 
 export interface HasVariation {
   variation?: MaybeNull<VariationEntity>;
 }
 
-export interface VariationDto extends IVariationBase, HasBaseCmsConfigsDto {
+export interface VariationDto extends Omit<IVariationBase, 'cmsConfigs'>, HasBaseCmsConfigsDto {
   properties?: string[];
   offer?: OnlyUUID;
   template?: OnlyUUID;

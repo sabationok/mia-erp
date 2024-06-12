@@ -116,8 +116,8 @@ const NavMenu: React.FC = () => {
     setActivePage(currentPageData || pages[0]);
   }, [location.pathname, pages, permissionId]);
 
-  useCloseByEscape(setIsOpen, { disabled: true });
-  useCloseByBackdropClick(setIsOpen, 'data-nav-menu', { disabled: true });
+  useCloseByEscape(setIsOpen, { disabled: !isOpen });
+  useCloseByBackdropClick(setIsOpen, 'data-nav-menu', { disabled: !isOpen });
 
   return (
     <StyledNavMenu data-nav-menu>

@@ -4,18 +4,8 @@ import { getIdRef } from './index';
 import { OfferEntity } from '../../types/offers/offers.types';
 
 export const toVariationFormData = (variation: Partial<VariationEntity>, offer?: OfferEntity): IVariationFormData => {
-  const propertiesMap: Record<string, string> = {};
-
-  variation?.properties?.forEach(prop => {
-    if (prop?._id && prop?.parent?._id) {
-      const parentId = prop.parent?._id;
-      if (parentId) {
-        propertiesMap[parentId] = prop._id;
-      }
-    }
-  });
-
   return {
+    _id: variation?._id,
     timeFrom: variation?.timeFrom,
     timeTo: variation?.timeTo,
     imgPreview: variation?.imgPreview || (variation?.offer || offer)?.images?.[0]?.img_preview,
@@ -25,6 +15,6 @@ export const toVariationFormData = (variation: Partial<VariationEntity>, offer?:
       : `${(variation?.offer || offer)?.sku ? (variation?.offer || offer)?.sku + '-' : ''}${nanoid(8)}`,
     offer: offer || (variation?.offer ? getIdRef(variation.offer) : undefined),
     template: variation?.template ? getIdRef(variation.template) : undefined,
-    propertiesMap,
+    propertiesMap: variation?.propertiesMap,
   };
 };

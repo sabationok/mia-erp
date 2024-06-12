@@ -112,7 +112,7 @@ export const OfferPropertySelector = ({
             onChange={values => {
               onChangeIds && onChangeIds(item._id, values);
             }}
-            values={selectedIds}
+            value={selectedIds}
             options={childrenList}
           />
         </>

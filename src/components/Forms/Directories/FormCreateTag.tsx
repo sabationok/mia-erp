@@ -76,7 +76,7 @@ const FormCreateTag: React.FC<FormCreateTagProps> = ({
           options={options}
           name={'type'}
           onSelect={({ name, value }) => setValue(name, value)}
-          values={formValues.type ? [formValues.type] : undefined}
+          value={formValues.type ? [formValues.type] : undefined}
         />
 
         <InputLabel label={t('label')} direction={'vertical'} error={errors.label} required>

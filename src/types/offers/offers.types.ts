@@ -66,8 +66,7 @@ export type OfferFutures = {
 export type ProductFilterOpt = FilterOption<OfferTypeEnum>;
 
 export interface IOfferBase
-  extends IBase,
-    HasLabel,
+  extends HasLabel,
     HasMeasurement,
     HasDimensions,
     HasDescription,
@@ -92,7 +91,11 @@ export interface IOfferBase
 
   tags?: IBase[];
   images?: OfferImageSlotEntity[];
+
+  propertiesMap?: PropertyValuesMap;
 }
+
+export type PropertyValuesMap = Record<string, PropertyValueEntity>;
 
 export interface IOfferRelatedDefaultFields {
   variation?: VariationEntity;
@@ -101,8 +104,9 @@ export interface IOfferRelatedDefaultFields {
   inventory?: WarehouseItemEntity;
   supplier?: ISupplierDirItem;
 }
-export interface IOfferWithRelatedFields
-  extends IOfferBase,
+export interface OfferEntity
+  extends IBase,
+    IOfferBase,
     HasOwnerAsCompany,
     HasAuthor,
     HasEditor,
@@ -119,10 +123,6 @@ export interface IOfferWithRelatedFields
   prices?: PriceEntity[];
   warehouses?: WarehouseEntity[];
   inventories?: WarehouseInventoryEntity[];
-}
-
-export interface OfferEntity extends IOfferWithRelatedFields {
-  defaults?: IOfferRelatedDefaultFields;
 }
 
 // * >>>>>>> FORM DATA <<<<<<<
@@ -165,7 +165,7 @@ export interface IOfferDefaultsDto
 
 export interface OfferDto extends IProductWithAddsFieldsDto, IOfferDefaultsDto {}
 
-export interface IProductReqData {
+export interface OfferReqData {
   _id?: string;
   data?: OfferDto;
   params?: AppQueryParams;
@@ -173,5 +173,9 @@ export interface IProductReqData {
 
 export interface HasOffer {
   offer?: MaybeNull<OfferEntity>;
+}
+
+export interface HasOffers {
+  offers?: MaybeNull<OfferEntity[]>;
 }
 // ? PROPERTIES ================================================

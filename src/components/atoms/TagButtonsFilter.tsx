@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import ButtonIcon from './ButtonIcon';
 import FlexBox from './FlexBox';
 import { Text } from './Text';
-import { isArray } from 'lodash';
+import { isUndefined } from 'lodash';
 
 export type TagButtonsFilterOnSelectValue<Value = any> = FilterSelectValueHandler<Value>;
 export type TagButtonsFilterOnSelect<
@@ -16,7 +16,7 @@ export type TagButtonsFilterOption<Value = any> = FilterOption<Value>;
 const TagButtonsFilter = <Value extends string = string>({
   options,
   multiple,
-  values,
+  value,
   numColumns,
   gap,
   name = 'filter',
@@ -25,12 +25,14 @@ const TagButtonsFilter = <Value extends string = string>({
   onSelectValue,
   resetButtonPosition,
   resetButtonLabel,
+  onChangeIds,
 }: {
   options?: TagButtonsFilterOption<Value | string>[];
-  values?: Value | string[];
+  value?: Value | string[];
   onSelect?: TagButtonsFilterOnSelect<Value | string>;
   onChange?: TagButtonsFilterOnChange<Value | string>;
   onSelectValue?: TagButtonsFilterOnSelectValue<Value | string>;
+  onChangeIds?: TagButtonsFilterOnSelectValue<Value | string | string[]>;
   multiple?: boolean;
   numColumns?: number;
   gap?: number;
@@ -42,47 +44,51 @@ const TagButtonsFilter = <Value extends string = string>({
 
   const handleSelect = useCallback(
     (option: TagButtonsFilterOption<Value | string>, index: number) => {
-      const value = option.value || option._id;
-      if (!value) {
+      const _value = option.value || option._id;
+      if (!_value) {
         console.warn('Not found option value or _id');
         return;
       }
+
       if (!multiple) {
-        if (onSelect) onSelect(option, option.value, index);
-        if (onSelectValue) onSelectValue({ name, value: value });
-        setSelectedValues([value]);
+        setSelectedValues([_value]);
+
+        if (onChangeIds) return onChangeIds({ name, value: _value });
+        if (onSelect) return onSelect(option, option.value, index);
+        if (onSelectValue) return onSelectValue({ name, value: _value });
       } else {
-        const newData = !selectedValues.includes(value)
-          ? [...selectedValues, value]
-          : selectedValues.filter(el => el !== value);
-        if (onChange) {
-          onChange(newData, name);
-        } else {
-          setSelectedValues(newData);
-        }
+        const ids = Array.isArray(value) ? value : selectedValues;
+        const newData = !ids.includes(_value) ? [...ids, _value] : ids.filter(el => el !== _value);
+
+        setSelectedValues(newData);
+        if (onChangeIds) return onChangeIds({ name, value: newData });
+        if (onChange) return onChange(newData, name);
       }
     },
-    [multiple, name, onChange, onSelect, onSelectValue, selectedValues]
+    [multiple, name, onChange, onChangeIds, onSelect, onSelectValue, selectedValues, value]
   );
 
   useEffect(() => {
-    if (isArray(values)) {
-      setSelectedValues(values);
-    }
-  }, [values]);
+    console.log({ value });
+
+    // if (isArray(value)) {
+    //   setSelectedValues(value);
+    // }
+  }, [value]);
 
   const renderOptions = useMemo(() => {
     return options?.map((opt, index) => {
-      const value = opt.value || opt._id || index.toString();
-      const isActive = !!value && selectedValues.includes(value);
+      const _value = opt.value || opt._id || index.toString();
+      const isActive = !!_value && (value || selectedValues).includes(_value);
+
       return (
         <ButtonIcon
           isActive={isActive}
-          key={`tag-opt_${value}`}
+          key={`tag-opt_${_value}`}
           variant={isActive ? 'filledMiddle' : 'outlinedMiddle'}
           onClick={() => handleSelect(opt, index)}
           style={{
-            width: '100%',
+            // width: '100%',
             minWidth: 'unset',
             padding: '4px 8px',
 
@@ -97,7 +103,7 @@ const TagButtonsFilter = <Value extends string = string>({
         </ButtonIcon>
       );
     });
-  }, [handleSelect, options, selectedValues]);
+  }, [handleSelect, options, selectedValues, value]);
 
   const renderResetButton = (
     <ButtonIcon
@@ -116,9 +122,13 @@ const TagButtonsFilter = <Value extends string = string>({
       fillWidth
       gap={gap || 8}
       fxDirection={'row'}
-      flex={1}
+      // flex={1}
       flexWrap={'wrap'}
-      style={{ display: 'grid', gridTemplateColumns: `repeat(${numColumns || 3}, 1fr)` }}
+      style={
+        isUndefined(numColumns)
+          ? { flexDirection: 'row' }
+          : { display: 'grid', gridTemplateColumns: `repeat(${numColumns || 3}, 1fr)` }
+      }
     >
       {resetButtonPosition === 'start' && renderResetButton}
 

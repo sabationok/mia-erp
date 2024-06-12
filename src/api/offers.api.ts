@@ -2,8 +2,8 @@ import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { ApiQuerySearchParams, ApiQuerySortParams, AppQueryParams, DatePeriodQuery } from './index';
 import {
   IOfferDefaultsDto,
-  IProductReqData,
   OfferEntity,
+  OfferReqData,
   OfferStatusEnum,
   OfferTypeEnum,
 } from '../types/offers/offers.types';
@@ -50,11 +50,11 @@ export default class OffersApi {
     });
   };
 
-  public static create = (data?: IProductReqData): Promise<AppResponse<OfferEntity>> => {
+  public static create = (data?: OfferReqData): Promise<AppResponse<OfferEntity>> => {
     return this.api.post(this.endpoints.create(), data?.data);
   };
 
-  public static updateById = (data?: IProductReqData): Promise<AppResponse<OfferEntity>> => {
+  public static updateById = (data?: OfferReqData): Promise<AppResponse<OfferEntity>> => {
     return this.api.patch(this.endpoints.updateById(data?._id), data?.data);
   };
 

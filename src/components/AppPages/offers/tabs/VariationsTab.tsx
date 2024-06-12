@@ -8,7 +8,7 @@ import { OnlyUUID } from '../../../../redux/app-redux.types';
 import { OfferOverlayLoaderKey } from '../../../Overlays/FormProductDefaultsOverlay';
 import { PropertyEntity } from '../../../../types/offers/properties.types';
 import CreateVariationOverlay from '../../../Overlays/CreateVariationOverlay';
-import { IVariationTableData, VariationEntity } from '../../../../types/offers/variations.types';
+import { VariationEntity } from '../../../../types/offers/variations.types';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 import { useCurrentOffer } from '../../../../hooks';
 import { useLoaders } from '../../../../Providers/Loaders/useLoaders.hook';
@@ -61,7 +61,7 @@ const VariationsTab: React.FC<VariationsTabProps> = ({ onSelect, selected, withA
     return createTableTitlesFromProperties(Object.values(propertiesMap));
   }, [Offer?.variations]);
 
-  const tableConfig = useMemo((): ITableListProps<IVariationTableData> => {
+  const tableConfig = useMemo((): ITableListProps<VariationEntity> => {
     return {
       onRowClick: data => {
         if (onSelect && data?.rowData) {

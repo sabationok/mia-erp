@@ -8,7 +8,7 @@ import { AppQueryParams, createApiCall, OffersApi, WarehousesApi } from '../../.
 import { t } from '../../../../lang';
 import { createTableTitlesFromProperties, enumToFilterOptions, getIdRef, useStepsHandler } from '../../../../utils';
 import TabSelector from '../../../atoms/TabSelector';
-import { IVariationTableData } from '../../../../types/offers/variations.types';
+import { VariationEntity } from '../../../../types/offers/variations.types';
 import { PriceEntity } from '../../../../types/price-management/price-management.types';
 import styled from 'styled-components';
 import { ModalHeader } from '../../../atoms';
@@ -43,7 +43,7 @@ const stepsLong = enumToFilterOptions(FormCreateOrderSlotSteps);
 
 export interface FormCreateOrderSlotFormData {
   price?: PriceEntity;
-  variation?: IVariationTableData;
+  variation?: VariationEntity;
   product?: OfferEntity;
   warehouse?: WarehouseEntity;
   inventory?: WarehouseItemEntity;
@@ -59,7 +59,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
 }) => {
   const { stepCheck, stepIdx, setPrevStep, setNextStep } = useStepsHandler(stepsLong);
   const [products, setProducts] = useState<OfferEntity[]>([]);
-  const [variations, setVariations] = useState<IVariationTableData[]>([]);
+  const [variations, setVariations] = useState<VariationEntity[]>([]);
   // const [prices, setPrices] = useState<IPriceListItem[]>([]);
   const [inventories, setInventories] = useState<WarehouseItemEntity[]>([]);
   const [formData, setFormData] = useState<FormCreateOrderSlotFormData>({});
@@ -99,7 +99,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
   }, [formData]);
 
   const variationsTableConfig = useMemo(
-    (): ITableListProps<IVariationTableData> => ({
+    (): ITableListProps<VariationEntity> => ({
       tableTitles: variationTableTitles,
       tableData: variations,
       hasSearch: false,

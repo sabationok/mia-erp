@@ -209,7 +209,7 @@ const OffersFilterModal = ({ onSubmit, onClose }: { onSubmit?: (data: GetAllOffe
             onSelectValue={option => {
               filter.setValue('approved', option.value as OfferStatusEnum);
             }}
-            values={filter.formValues.approved ? [filter.formValues.approved] : undefined}
+            value={filter.formValues.approved ? [filter.formValues.approved] : undefined}
             options={offerStatusFilterOptions}
           />
         </InputLabel>
@@ -234,7 +234,7 @@ const OffersFilterModal = ({ onSubmit, onClose }: { onSubmit?: (data: GetAllOffe
             onChange={values => {
               filter.setValue('tagsIds', values);
             }}
-            values={filter.formValues.tagsIds}
+            value={filter.formValues.tagsIds}
             options={mappedOptions.tags}
           />
         </AccordionFormArea>
@@ -284,7 +284,7 @@ const OffersFilterModal = ({ onSubmit, onClose }: { onSubmit?: (data: GetAllOffe
             onChange={values => {
               filter.setValue('brandsIds', values);
             }}
-            values={filter.formValues.brandsIds}
+            value={filter.formValues.brandsIds}
             options={mappedOptions.brands}
           />
         </AccordionFormArea>
@@ -295,7 +295,7 @@ const OffersFilterModal = ({ onSubmit, onClose }: { onSubmit?: (data: GetAllOffe
             onChange={values => {
               filter.setValue('warehouse.ids', values);
             }}
-            values={filter.formValues.warehouse?.ids}
+            value={filter.formValues.warehouse?.ids}
             options={mappedOptions.warehouses}
           />
         </AccordionFormArea>

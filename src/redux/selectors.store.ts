@@ -48,7 +48,7 @@ export const useFinancesSelector = (): IFinTransactionsState =>
   useSelector<RootState, IFinTransactionsState>((state: RootState): IFinTransactionsState => state.transactions);
 
 export const useOffersSelector = () =>
-  useSelector<RootState, OffersState>((state: RootState): OffersState => state.products);
+  useSelector<RootState, OffersState>((state: RootState): OffersState => state?.['products']);
 export const usePropertiesSelector = () =>
   useSelector<RootState, OffersState['properties']>(
     (state: RootState): OffersState['properties'] => state?.['products']?.properties
