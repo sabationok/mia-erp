@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/mia-erp/static/css/main.6f560526.css",
-    "main.js": "/mia-erp/static/js/main.b533bfed.js",
+    "main.js": "/mia-erp/static/js/main.6105a1a5.js",
     "static/js/915.66b0f699.chunk.js": "/mia-erp/static/js/915.66b0f699.chunk.js",
     "static/js/155.66ab9695.chunk.js": "/mia-erp/static/js/155.66ab9695.chunk.js",
     "static/js/616.6a65e786.chunk.js": "/mia-erp/static/js/616.6a65e786.chunk.js",
@@ -12,7 +12,7 @@
     "static/js/989.08601d75.chunk.js": "/mia-erp/static/js/989.08601d75.chunk.js",
     "static/js/779.07d43e24.chunk.js": "/mia-erp/static/js/779.07d43e24.chunk.js",
     "static/js/548.fa5b87e0.chunk.js": "/mia-erp/static/js/548.fa5b87e0.chunk.js",
-    "static/js/226.e9b6237f.chunk.js": "/mia-erp/static/js/226.e9b6237f.chunk.js",
+    "static/js/226.1c0a5f94.chunk.js": "/mia-erp/static/js/226.1c0a5f94.chunk.js",
     "static/js/751.7c8af1ce.chunk.js": "/mia-erp/static/js/751.7c8af1ce.chunk.js",
     "static/js/768.5aaabc99.chunk.js": "/mia-erp/static/js/768.5aaabc99.chunk.js",
     "static/js/152.358de244.chunk.js": "/mia-erp/static/js/152.358de244.chunk.js",
@@ -20,12 +20,12 @@
     "static/js/800.639151f3.chunk.js": "/mia-erp/static/js/800.639151f3.chunk.js",
     "static/js/985.4162c643.chunk.js": "/mia-erp/static/js/985.4162c643.chunk.js",
     "static/js/868.95acc5d3.chunk.js": "/mia-erp/static/js/868.95acc5d3.chunk.js",
-    "static/js/931.b7f4669c.chunk.js": "/mia-erp/static/js/931.b7f4669c.chunk.js",
+    "static/js/931.06bce3a8.chunk.js": "/mia-erp/static/js/931.06bce3a8.chunk.js",
     "static/js/531.e47007b9.chunk.js": "/mia-erp/static/js/531.e47007b9.chunk.js",
     "static/js/491.d04bf161.chunk.js": "/mia-erp/static/js/491.d04bf161.chunk.js",
     "static/js/638.0e9c6ca5.chunk.js": "/mia-erp/static/js/638.0e9c6ca5.chunk.js",
     "static/js/435.cf4c4735.chunk.js": "/mia-erp/static/js/435.cf4c4735.chunk.js",
-    "static/js/275.13db86b2.chunk.js": "/mia-erp/static/js/275.13db86b2.chunk.js",
+    "static/js/275.e716f620.chunk.js": "/mia-erp/static/js/275.e716f620.chunk.js",
     "static/js/681.a9fabcbd.chunk.js": "/mia-erp/static/js/681.a9fabcbd.chunk.js",
     "static/js/149.aac7bbab.chunk.js": "/mia-erp/static/js/149.aac7bbab.chunk.js",
     "static/js/144.f56fd6c4.chunk.js": "/mia-erp/static/js/144.f56fd6c4.chunk.js",
@@ -52,7 +52,7 @@
     "static/media/Gilroy-Regular.woff2": "/mia-erp/static/media/Gilroy-Regular.f6c9931fabe5a6eb3307.woff2",
     "index.html": "/mia-erp/index.html",
     "main.6f560526.css.map": "/mia-erp/static/css/main.6f560526.css.map",
-    "main.b533bfed.js.map": "/mia-erp/static/js/main.b533bfed.js.map",
+    "main.6105a1a5.js.map": "/mia-erp/static/js/main.6105a1a5.js.map",
     "915.66b0f699.chunk.js.map": "/mia-erp/static/js/915.66b0f699.chunk.js.map",
     "155.66ab9695.chunk.js.map": "/mia-erp/static/js/155.66ab9695.chunk.js.map",
     "616.6a65e786.chunk.js.map": "/mia-erp/static/js/616.6a65e786.chunk.js.map",
@@ -63,7 +63,7 @@
     "989.08601d75.chunk.js.map": "/mia-erp/static/js/989.08601d75.chunk.js.map",
     "779.07d43e24.chunk.js.map": "/mia-erp/static/js/779.07d43e24.chunk.js.map",
     "548.fa5b87e0.chunk.js.map": "/mia-erp/static/js/548.fa5b87e0.chunk.js.map",
-    "226.e9b6237f.chunk.js.map": "/mia-erp/static/js/226.e9b6237f.chunk.js.map",
+    "226.1c0a5f94.chunk.js.map": "/mia-erp/static/js/226.1c0a5f94.chunk.js.map",
     "751.7c8af1ce.chunk.js.map": "/mia-erp/static/js/751.7c8af1ce.chunk.js.map",
     "768.5aaabc99.chunk.js.map": "/mia-erp/static/js/768.5aaabc99.chunk.js.map",
     "152.358de244.chunk.js.map": "/mia-erp/static/js/152.358de244.chunk.js.map",
@@ -71,12 +71,12 @@
     "800.639151f3.chunk.js.map": "/mia-erp/static/js/800.639151f3.chunk.js.map",
     "985.4162c643.chunk.js.map": "/mia-erp/static/js/985.4162c643.chunk.js.map",
     "868.95acc5d3.chunk.js.map": "/mia-erp/static/js/868.95acc5d3.chunk.js.map",
-    "931.b7f4669c.chunk.js.map": "/mia-erp/static/js/931.b7f4669c.chunk.js.map",
+    "931.06bce3a8.chunk.js.map": "/mia-erp/static/js/931.06bce3a8.chunk.js.map",
     "531.e47007b9.chunk.js.map": "/mia-erp/static/js/531.e47007b9.chunk.js.map",
     "491.d04bf161.chunk.js.map": "/mia-erp/static/js/491.d04bf161.chunk.js.map",
     "638.0e9c6ca5.chunk.js.map": "/mia-erp/static/js/638.0e9c6ca5.chunk.js.map",
     "435.cf4c4735.chunk.js.map": "/mia-erp/static/js/435.cf4c4735.chunk.js.map",
-    "275.13db86b2.chunk.js.map": "/mia-erp/static/js/275.13db86b2.chunk.js.map",
+    "275.e716f620.chunk.js.map": "/mia-erp/static/js/275.e716f620.chunk.js.map",
     "681.a9fabcbd.chunk.js.map": "/mia-erp/static/js/681.a9fabcbd.chunk.js.map",
     "149.aac7bbab.chunk.js.map": "/mia-erp/static/js/149.aac7bbab.chunk.js.map",
     "144.f56fd6c4.chunk.js.map": "/mia-erp/static/js/144.f56fd6c4.chunk.js.map",
@@ -98,6 +98,6 @@
   },
   "entrypoints": [
     "static/css/main.6f560526.css",
-    "static/js/main.b533bfed.js"
+    "static/js/main.6105a1a5.js"
   ]
 }
