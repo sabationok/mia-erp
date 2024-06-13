@@ -1,5 +1,5 @@
 import { FilterChangeHandler, FilterOption, FilterSelectHandler, FilterSelectValueHandler } from './TabSelector';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import ButtonIcon from './ButtonIcon';
 import FlexBox from './FlexBox';
 import { Text } from './Text';
@@ -67,14 +67,6 @@ const TagButtonsFilter = <Value extends string = string>({
     },
     [multiple, name, onChange, onChangeIds, onSelect, onSelectValue, selectedValues, value]
   );
-
-  useEffect(() => {
-    console.log({ value });
-
-    // if (isArray(value)) {
-    //   setSelectedValues(value);
-    // }
-  }, [value]);
 
   const renderOptions = useMemo(() => {
     return options?.map((opt, index) => {

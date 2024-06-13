@@ -1,10 +1,33 @@
-import { HasImgPreview, HasLabel, Keys } from './utils.types';
-import { HasOffer } from './offers/offers.types';
+import {
+  HasAuthor,
+  HasDescription,
+  HasEditor,
+  HasIconUrl,
+  HasIsDisabledFlag,
+  HasLabel,
+  HasOwnerAsCompany,
+  Keys,
+  OnlyUUID,
+} from './utils.types';
+import { HasOffers } from './offers/offers.types';
 import { AppQueryParams } from '../api';
+import { HasBaseCmsConfigs } from './cms.types';
 
-export interface TagBaseEntity extends HasLabel, HasImgPreview {}
+export interface TagCmsConfigs
+  extends HasBaseCmsConfigs<{
+    colors?: {
+      border?: string;
+      font?: string;
+      background?: string;
+    };
+  }> {}
+export interface TagBaseEntity extends HasLabel, HasIconUrl, HasDescription, HasIsDisabledFlag, TagCmsConfigs {}
 
-interface TagEntity extends TagBaseEntity, HasOffer {}
+export interface TagEntity extends TagBaseEntity, HasOwnerAsCompany, HasAuthor, HasEditor, HasOffers, TagCmsConfigs {}
+
+export interface HasTags {
+  tags?: TagEntity[];
+}
 
 export type TagDtoIdsKey = Keys<Pick<AppQueryParams, 'offersIds' | 'ordersIds' | 'customerIds'>>;
-export interface TagItemDto extends TagBaseEntity, Pick<AppQueryParams, TagDtoIdsKey> {}
+export interface TagItemDto extends Partial<OnlyUUID>, TagBaseEntity {}

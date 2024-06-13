@@ -4,9 +4,10 @@ import { FieldError, FieldErrorsImpl, Merge } from 'react-hook-form';
 import FlexBox, { FlexBoxProps, FlexFieldSet } from '../FlexBox';
 import { Property } from 'csstype';
 import { Text } from '../Text';
+import { LangTextKey, t } from '../../../lang';
 
 export interface InputLabelProps extends Omit<React.HTMLAttributes<HTMLFieldSetElement>, 'onSelect'>, FlexBoxProps {
-  label?: string;
+  label?: LangTextKey;
   direction?: 'horizontal' | 'vertical' | 'row' | 'column';
   uppercase?: boolean;
   error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
@@ -42,7 +43,7 @@ const InputLabel: React.ForwardRefRenderFunction<HTMLFieldSetElement, InputLabel
       <Wrapper isLabel={!!label} direction={direction}>
         {label && (
           <Label htmlFor={id} uppercase={uppercase} align={align} direction={direction} className="label">
-            {label}
+            {t(label)}
             {required && <Text color={'tomato'}>{' *'}</Text>}
           </Label>
         )}

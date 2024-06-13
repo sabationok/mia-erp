@@ -7,6 +7,7 @@ import { isUndefined } from 'lodash';
 import ButtonIcon from '../ButtonIcon';
 import styled, { css, useTheme } from 'styled-components';
 import { Property } from 'csstype';
+import { LangTextKey, t } from '../../../lang';
 
 export interface AccordionFormAreaProps {
   children?: React.ReactNode;
@@ -16,7 +17,7 @@ export interface AccordionFormAreaProps {
   disabled?: boolean;
   isOpen?: boolean;
   expandable?: boolean;
-  label?: string;
+  label?: LangTextKey;
   onAcceptPress?: () => void;
   onResetPress?: () => void;
   isHeaderSticky?: boolean;
@@ -106,7 +107,7 @@ export const AccordionFormArea = ({
           >
             {renderTitle || (
               <Text $size={14} $weight={600} $padding={'0 8px'}>
-                {label}
+                {t(label)}
               </Text>
             )}
           </HeaderButton>

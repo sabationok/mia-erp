@@ -30,6 +30,7 @@ import {
 import { OfferImageSlotEntity } from './offer-images.types';
 import { WarehouseInventoryEntity } from '../warehousing/warehouse-inventory.types';
 import { HasBaseCmsConfigs } from '../cms.types';
+import { HasTags } from '../tags.types';
 
 export type { OfferImageSlotEntity } from './offer-images.types';
 
@@ -89,7 +90,6 @@ export interface IOfferBase
 
   futures?: MaybeNull<OfferFutures>;
 
-  tags?: IBase[];
   images?: OfferImageSlotEntity[];
 
   propertiesMap?: PropertyValuesMap;
@@ -110,7 +110,8 @@ export interface OfferEntity
     HasOwnerAsCompany,
     HasAuthor,
     HasEditor,
-    IOfferRelatedDefaultFields {
+    IOfferRelatedDefaultFields,
+    HasTags {
   categories?: OfferCategoryEntity[];
 
   brand?: IBrand;

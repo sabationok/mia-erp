@@ -492,6 +492,7 @@ export const langUa = {
   Type: 'Тип',
   Key: 'Ключ',
   'Custom type': 'Кастомний тип',
+  'Custom key': 'Кастомний ключ',
   'Bonus balance': 'Бонусний баланс',
   'Value type': 'Тип значення',
   'Discount volume type': "Тип об'єму",

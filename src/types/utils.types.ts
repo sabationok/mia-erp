@@ -81,6 +81,10 @@ export interface HasBrutto {
 export interface HasImgPreview {
   imgPreview?: MaybeNull<string>;
 }
+
+export interface HasIconUrl {
+  iconUrl?: MaybeNull<string>;
+}
 export interface HasNetto {
   netto?: MaybeNull<string>;
 }
@@ -271,8 +275,20 @@ export interface HasAmount {
   amount?: MaybeNull<number>;
 }
 
+// * FLAGS
+export interface HasVisibleFlag {
+  isVisible?: MaybeNull<boolean>;
+}
+
+export interface HasIsDisabledFlag {
+  isDisabled?: MaybeNull<boolean>;
+}
+
 export interface HasIsValidFlag {
   isValid?: MaybeNull<boolean>;
+}
+export interface HasIsDraftFlag {
+  isDraft?: MaybeNull<boolean>;
 }
 
 export interface FormDataLocationRef {
