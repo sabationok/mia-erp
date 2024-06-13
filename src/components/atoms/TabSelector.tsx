@@ -77,7 +77,7 @@ const TabSelector = <V = any, D = any, Option extends FilterOption<V, D> = any>(
   renderLabel,
   onReset,
   ...props
-}: ModalFormFilterProps<V, D, Option> & React.HTMLAttributes<HTMLDivElement>) => {
+}: ModalFormFilterProps<V, D, Option> & Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'>) => {
   const [current, setCurrent] = useState<number>(currentIndex);
 
   const handleSelectOpt = useCallback(

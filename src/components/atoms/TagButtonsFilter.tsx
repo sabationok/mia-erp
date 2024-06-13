@@ -1,5 +1,5 @@
 import { FilterChangeHandler, FilterSelectValueHandler } from './TabSelector';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { CSSProperties, useCallback, useMemo, useState } from 'react';
 import ButtonIcon from './ButtonIcon';
 import FlexBox from './FlexBox';
 import { Text } from './Text';
@@ -35,6 +35,26 @@ export type TagButtonsFilterOnSelect<
 
 export type TagButtonsFilterOnChange<Value = any> = FilterChangeHandler<Value>;
 
+export interface TagButtonsFilterProps<
+  Value extends string = string,
+  Option extends TagSelectOption<Value | string> = TagSelectOption<Value | string>,
+> {
+  options?: Option[];
+  value?: Value | string[];
+  onSelect?: TagButtonsFilterOnSelect<Value | string, Option>;
+  onChange?: TagButtonsFilterOnChange<Value | string>;
+  onSelectValue?: TagFilterOnSelectValue<Value | string>;
+  disabledCheck?: (item: TagSelectOption<Value | string>) => boolean;
+  onChangeIds?: TagFilterOnSelectValue<Value | string | string[]>;
+  multiple?: boolean;
+  numColumns?: number;
+  gap?: number;
+  name?: string;
+  resetButtonPosition?: 'start' | 'end';
+  resetButtonLabel?: string;
+  getButtonStyles?: (option: Option) => CSSProperties;
+}
+
 const TagButtonsFilter = <
   Value extends string = string,
   Option extends TagSelectOption<Value | string> = TagSelectOption<Value | string>,
@@ -52,21 +72,8 @@ const TagButtonsFilter = <
   resetButtonLabel,
   onChangeIds,
   disabledCheck,
-}: {
-  options?: Option[];
-  value?: Value | string[];
-  onSelect?: TagButtonsFilterOnSelect<Value | string, Option>;
-  onChange?: TagButtonsFilterOnChange<Value | string>;
-  onSelectValue?: TagFilterOnSelectValue<Value | string>;
-  disabledCheck?: (item: TagSelectOption<Value | string>) => boolean;
-  onChangeIds?: TagFilterOnSelectValue<Value | string | string[]>;
-  multiple?: boolean;
-  numColumns?: number;
-  gap?: number;
-  name?: string;
-  resetButtonPosition?: 'start' | 'end';
-  resetButtonLabel?: string;
-}) => {
+  getButtonStyles,
+}: TagButtonsFilterProps<Value, Option>) => {
   const [selectedValues, setSelectedValues] = useState<(Value | string)[]>([]);
 
   const handleSelect = useCallback(
@@ -115,18 +122,16 @@ const TagButtonsFilter = <
             minWidth: 'unset',
             padding: '4px 8px',
 
-            // borderColor: !isActive ? opt?.color ?? '' : '',
-            // backgroundColor: isActive ? opt?.color ?? '' : '',
-            // color: !isActive ? opt?.color ?? '' : '',
+            ...(getButtonStyles && getButtonStyles(opt)),
           }}
         >
-          <Text $ellipsisMode={true} $size={13} style={{ fontWeight: 'inherit' }}>
+          <Text $ellipsisMode={true} $size={13} color={'inherit'} style={{ fontWeight: 'inherit' }}>
             {opt.label}
           </Text>
         </ButtonIcon>
       );
     });
-  }, [disabledCheck, handleSelect, options, selectedValues, value]);
+  }, [disabledCheck, getButtonStyles, handleSelect, options, selectedValues, value]);
 
   const renderResetButton = (
     <ButtonIcon

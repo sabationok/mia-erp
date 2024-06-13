@@ -10,11 +10,23 @@ export const InputColor = React.forwardRef(
     {
       label,
       disabled,
+      showText = false,
       ...props
-    }: { disabled?: boolean; name?: string; label?: LangTextKey } & React.HTMLAttributes<HTMLInputElement>,
+    }: { showText?: boolean; disabled?: boolean; name?: string; label?: LangTextKey; defaultValue?: string } & Omit<
+      React.HTMLAttributes<HTMLInputElement>,
+      'defaultValue'
+    >,
     ref?: React.ForwardedRef<HTMLInputElement>
   ) => {
     const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+      if (typeof props.defaultValue === 'string') {
+        if (inputRef.current) {
+          inputRef.current.value = props.defaultValue;
+        }
+      }
+    }, [props.defaultValue]);
 
     useEffect(() => {
       if (ref) {
@@ -30,17 +42,15 @@ export const InputColor = React.forwardRef(
       const value = e.target.value;
 
       if (inputRef.current) inputRef.current.value = value;
-      // if (inputRef.current) {
-      // }
 
       props.onChange && props.onChange(e);
     };
     return (
-      <CompLabel style={{ position: 'relative' }} fillWidth flex={1} fxDirection={'row'} gap={4} alignItems={'center'}>
+      <CompLabel style={{ position: 'relative' }} fxDirection={'row'} gap={4} alignItems={'center'}>
         <InputBox
           style={{
-            borderColor: inputRef.current?.value,
-            backgroundColor: inputRef.current?.value,
+            borderColor: inputRef.current?.value || props.defaultValue,
+            backgroundColor: inputRef.current?.value || props.defaultValue,
           }}
         >
           <StInputColor
@@ -53,17 +63,19 @@ export const InputColor = React.forwardRef(
           />
         </InputBox>
 
-        <FlexBox
-          flex={1}
-          style={{ cursor: 'inherit' }}
-          alignItems={'center'}
-          justifyContent={'center'}
-          padding={'2px 8px'}
-        >
-          <Text $weight={500} $size={15} $ellipsisMode={true}>
-            {inputRef.current?.value || 'unset'}
-          </Text>
-        </FlexBox>
+        {showText && (
+          <FlexBox
+            flex={1}
+            style={{ cursor: 'inherit' }}
+            alignItems={'center'}
+            justifyContent={'center'}
+            padding={'2px 8px'}
+          >
+            <Text $weight={500} $size={15} $ellipsisMode={true}>
+              {inputRef.current?.value || props.defaultValue || 'unset'}
+            </Text>
+          </FlexBox>
+        )}
       </CompLabel>
     );
   }
@@ -122,7 +134,7 @@ const InputBox = styled(FlexBox)`
   cursor: pointer;
 
   border: 1px solid #cbcbcb;
-  border-radius: 2px;
+  border-radius: 3px;
 `;
 const StInputColor = styled(InputText)`
   //position: absolute;

@@ -25,7 +25,10 @@ export class TagsApi extends ClientApi {
     return this._api.patch(this.endpoints.update(), data);
   };
 
-  public static delete = (data?: { _id: string }): Promise<AppResponse<{ result: boolean }>> => {
-    return this._api.delete(this.endpoints.delete(data?._id));
+  public static delete = (
+    data?: { _id: string },
+    params?: { soft?: boolean }
+  ): Promise<AppResponse<{ result: boolean }>> => {
+    return this._api.delete(this.endpoints.delete(data?._id), { params });
   };
 }

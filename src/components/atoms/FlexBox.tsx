@@ -23,12 +23,11 @@ export interface FlexBaseProps
     | 'borderBottom'
     | 'borderRadius'
     | 'border'
+    | 'overflow'
+    | 'background'
   > {
   fxDirection?: Property.FlexDirection;
   gap?: number;
-
-  overflow?: Property.Overflow;
-  background?: Property.Background;
 
   fillWidth?: boolean;
   fillHeight?: boolean;
@@ -42,9 +41,9 @@ export interface FlexBoxProps extends FlexBaseProps {
   xlStyles?: FlexBaseProps;
 }
 
-type MediasStylesKey = keyof Pick<FlexBoxProps, 'sStyles' | 'xsStyles' | 'xlStyles'>;
+type MediaStylesKey = keyof Pick<FlexBoxProps, 'sStyles' | 'xsStyles' | 'xlStyles'>;
 
-function createFlexBoxStyles({ query, key }: { query: string; key: MediasStylesKey }) {
+function createFlexBoxStyles({ query, key }: { query: string; key: MediaStylesKey }) {
   return css<FlexBoxProps>`
     ${p => ''}
     @media screen and (${query}) {
@@ -97,7 +96,7 @@ const XL_Styles = createFlexBoxStyles({
   key: 'xlStyles',
 });
 
-function getMediaStyles(key: MediasStylesKey) {
+function getMediaStyles(key: MediaStylesKey) {
   switch (key) {
     case 'sStyles': {
       return (props: ThemedStyledProps<FlexBoxProps, DefaultTheme>) => (props[key] ? S_Styles : undefined);

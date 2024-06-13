@@ -2,7 +2,7 @@ import { CreatedModal, useModalService } from '../../Providers/ModalProvider/Mod
 import ModalBase from '../atoms/Modal';
 import TagButtonsFilter from '../atoms/TagButtonsFilter';
 import { tagsFilterOptions } from '../../data/modalFilterOptions.data';
-import { FlexBox } from '../atoms/FlexBox';
+import { FlexBox, FlexLabel } from '../atoms/FlexBox';
 import { TagTypeEnum } from '../../types/directories.types';
 import { PartialRecord } from '../../types/utils.types';
 import { useAppForm } from '../../hooks';
@@ -16,47 +16,48 @@ import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { InputColor } from '../atoms/Inputs/InputColor';
 import { useTagsSelector } from '../../redux/selectors.store';
-import { createTagThunk, getAllTagsThunk, updateTagThunk } from '../../redux/tags/tags.thunks';
+import { createTagThunk, deleteTagThunk, getAllTagsThunk, updateTagThunk } from '../../redux/tags/tags.thunks';
 import { useAppDispatch } from '../../redux/store.store';
 import { toReqData } from '../../utils';
-import { Button } from '../atoms/ButtonIcon';
+import ButtonIcon, { Button } from '../atoms/ButtonIcon';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import ButtonSwitch from '../atoms/ButtonSwitch';
 
 export interface DirTagsModalProps extends CreatedModal {}
 
-interface DirectoryFormState {
-  tagId: string;
-  type: TagTypeEnum;
-}
 const DirTagsModal = (_props: {}) => {
-  const _form = useAppForm<DirectoryFormState>({ defaultValues: { type: TagTypeEnum.OFFER } });
   const state = useTagsSelector();
   const modalSrv = useModalService();
-  const { formValues, registerIdsToggler } = _form;
+
+  const [type, setType] = useState(TagTypeEnum.OFFER);
+
   const [selectedItem, setSelectedItem] = useState<TagEntity>();
   const dispatch = useAppDispatch();
-  const RenderForm = tabs[formValues.type];
-  const dataList = state.listsMap[formValues.type];
+  const RenderForm = tabs[type];
+  const dataList = state.listsMap[type];
 
   useEffect(() => {
-    if (!dataList.length) {
-      dispatch(getAllTagsThunk({ params: { type: formValues.type ?? TagTypeEnum.OFFER } }));
+    if (!dataList?.length) {
+      dispatch(getAllTagsThunk({ params: { type: type ?? TagTypeEnum.OFFER } }));
     }
-  }, [dataList.length, dispatch, formValues.type]);
+  }, [dataList.length, dispatch, type]);
 
   useEffect(() => {
-    if (selectedItem && selectedItem?.type !== formValues.type) {
+    if (selectedItem && selectedItem?.type !== type) {
       setSelectedItem(undefined);
     }
-  }, [formValues.type, selectedItem, selectedItem?.type]);
+  }, [type, selectedItem, selectedItem?.type]);
 
   return (
     <ModalBase title={'Tags directory'} fillHeight>
       <AccordionFormArea expandable={false} isOpen hideFooter label={'Select type'}>
         <TagButtonsFilter
           options={tagsFilterOptions}
-          {...registerIdsToggler('type')}
+          value={type}
+          onSelect={option => {
+            option.value && setType(option.value);
+            dispatch(getAllTagsThunk({ params: { type: option.value } }));
+          }}
           disabledCheck={item => !item.value && ![TagTypeEnum.OFFER].includes(item.value as never)}
         />
       </AccordionFormArea>
@@ -66,10 +67,15 @@ const DirTagsModal = (_props: {}) => {
           <TagButtonsFilter
             options={state.list}
             value={selectedItem?._id}
+            getButtonStyles={op => ({
+              backgroundColor: op.cmsConfigs?.colors?.background,
+              color: op.cmsConfigs?.colors?.font,
+              borderColor: op.cmsConfigs?.colors?.border,
+            })}
             onSelect={option => {
               if (RenderForm) {
                 modalSrv.create(RenderForm, {
-                  type: formValues.type,
+                  type: type,
                   defaultValues: _.omit(option, ['owner', 'author', 'editor']),
                 });
               }
@@ -89,8 +95,8 @@ const DirTagsModal = (_props: {}) => {
           variant={'defaultMiddle'}
           onClick={() => {
             modalSrv.create(RenderForm, {
-              type: formValues.type,
-              defaultValues: { type: formValues.type },
+              type: type,
+              defaultValues: { type: type },
             });
           }}
         >
@@ -129,14 +135,33 @@ const TagsForm = ({ defaultValues, type }: FormProps) => {
   };
 
   return (
-    <ModalBase title={'Tags form'} fillHeight width={'360px'}>
+    <ModalBase
+      title={'Tags form'}
+      fillHeight
+      width={'360px'}
+      menuActions={[
+        {
+          title: t('Delete'),
+          isVisible: !!_form.formValues._id,
+          isDanger: true,
+          onPress: () => {
+            _form.formValues._id &&
+              dispatch(
+                deleteTagThunk({
+                  data: { data: { _id: _form.formValues._id }, extra: { type: _form.formValues.type } },
+                })
+              );
+          },
+        },
+      ]}
+    >
       <AccordionForm
         label={defaultValues?.type ?? 'Main info'}
         expandable={false}
         canSubmit={canSubmit}
         isLoading={loaders.hasLoading}
         onSubmit={_form.handleSubmit(fData => {
-          onValid(_.omit(fData, ['cmsConfigs']));
+          onValid(_.omit(fData, ['_id', 'cmsConfigs']));
         })}
       >
         <InputLabel label={'Label'}>
@@ -169,8 +194,11 @@ const TagsForm = ({ defaultValues, type }: FormProps) => {
         disabled={!defaultValues?._id}
         label={'Cms params'}
         onSubmit={_form.handleSubmit(fData => {
-          onValid(_.omit(fData, ['cmsConfigs']));
-          console.log('TagsForm', _.pick(fData, ['_id', 'cmsConfigs']));
+          const reqData = _.pick(fData, ['_id', 'cmsConfigs']);
+
+          onValid(reqData);
+
+          console.log('TagsForm', reqData);
         })}
       >
         <InputLabel label={'Custom key'}>
@@ -181,18 +209,48 @@ const TagsForm = ({ defaultValues, type }: FormProps) => {
           {t('Colors')}
         </Text>
 
-        <FlexBox style={{ columnGap: 12 }} fxDirection={'row'} flexWrap={'wrap'}>
-          <InputLabel label={'Font'} disabled={!defaultValues?._id} width={'150px'}>
-            <InputColor {..._form.register('cmsConfigs.colors.font')} disabled={!defaultValues?._id} />
-          </InputLabel>
+        <FlexBox fxDirection={'row'} gap={12} fillWidth>
+          <FlexBox padding={'8px'} height={'fit-content'}>
+            <ButtonIcon
+              variant={'outlinedMiddle'}
+              style={{
+                borderColor: _form.formValues.cmsConfigs?.colors?.border,
+                color: _form.formValues.cmsConfigs?.colors?.font,
+                backgroundColor: _form.formValues.cmsConfigs?.colors?.background,
+              }}
+            >
+              {_form.formValues.label}
+            </ButtonIcon>
+          </FlexBox>
 
-          <InputLabel label={'Border'} disabled={!defaultValues?._id} width={'150px'}>
-            <InputColor {..._form.register('cmsConfigs.colors.border')} disabled={!defaultValues?._id} />
-          </InputLabel>
+          <FlexBox gap={8} flex={1} padding={'8px'}>
+            <FlexLabel alignItems={'center'} gap={8} justifyContent={'space-between'} fxDirection={'row'} fillWidth>
+              <Text>{t('Text')}</Text>
+              <InputColor
+                {..._form.register('cmsConfigs.colors.font')}
+                defaultValue={_form.formValues.cmsConfigs?.colors?.font}
+                disabled={!defaultValues?._id}
+              />
+            </FlexLabel>
 
-          <InputLabel label={'Background'} disabled={!defaultValues?._id} width={'150px'}>
-            <InputColor {..._form.register('cmsConfigs.colors.background')} disabled={!defaultValues?._id} />
-          </InputLabel>
+            <FlexLabel alignItems={'center'} gap={8} justifyContent={'space-between'} fxDirection={'row'} fillWidth>
+              <Text>{t('Border')}</Text>
+              <InputColor
+                {..._form.register('cmsConfigs.colors.border')}
+                defaultValue={_form.formValues.cmsConfigs?.colors?.border}
+                disabled={!defaultValues?._id}
+              />
+            </FlexLabel>
+
+            <FlexLabel alignItems={'center'} gap={8} justifyContent={'space-between'} fxDirection={'row'} fillWidth>
+              <Text>{t('Background')}</Text>
+              <InputColor
+                {..._form.register('cmsConfigs.colors.background')}
+                defaultValue={_form.formValues.cmsConfigs?.colors?.background}
+                disabled={!defaultValues?._id}
+              />
+            </FlexLabel>
+          </FlexBox>
         </FlexBox>
       </AccordionForm>
     </ModalBase>

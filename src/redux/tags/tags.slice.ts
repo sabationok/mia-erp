@@ -56,5 +56,24 @@ export const tagsSlice = createSlice({
           st.list = a.payload.upend ? st.list.concat([a.payload.data]) : [a.payload.data].concat(st.list);
         }
         return st;
+      })
+      .addCase(thunks.updateTagThunk.fulfilled, (st, a) => {
+        const type = a.payload.data?.type;
+
+        if (type) {
+          let list = st.listsMap[type];
+          const index = list.findIndex(item => item._id === a.payload.data._id);
+
+          if (index >= 0) {
+            list[index] = a.payload.data;
+          }
+          st.list = list;
+        } else {
+          const index = st.list.findIndex(item => item._id === a.payload.data._id);
+          if (index >= 0) {
+            st.list[index] = a.payload.data;
+          }
+        }
+        return st;
       }),
 });
