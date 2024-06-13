@@ -9,22 +9,27 @@ export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) =>
 
   return (
     <CellStyledComp.Cell>
-      <CellStyledComp.CellText $isTitle $size={12}>
+      <CellStyledComp.CellText $isTitle $size={13} $padding={'6px 8px'}>
         {cell?.title}
       </CellStyledComp.CellText>
 
       <FlexBox
         fillWidth
         flex={1}
-        fxDirection={'row'}
+        fxDirection={'column'}
+        gap={8}
         justifyContent={'flex-end'}
         alignItems={'flex-end'}
         overflow={'hidden'}
-        style={{ minHeight: 24 }}
+        style={{ minHeight: 32 }}
       >
-        <CellStyledComp.CellText $isTitle={!value} $weight={500}>
-          {value || t('undefined')}
-        </CellStyledComp.CellText>
+        {!value || ['string', 'number'].includes(typeof value) ? (
+          <CellStyledComp.CellText $isTitle={!value} $weight={500}>
+            {value || t('undefined')}
+          </CellStyledComp.CellText>
+        ) : (
+          value
+        )}
       </FlexBox>
     </CellStyledComp.Cell>
   );

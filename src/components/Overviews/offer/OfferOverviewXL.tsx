@@ -18,6 +18,8 @@ import { OfferOverviewCategoriesCell } from './components/OfferOverviewCategorie
 import { OfferOverviewStaticProperties } from './components/OfferOverviewStaticPropertiesCell';
 import { OfferOverviewDefaultsCell } from './components/OfferOverviewDefaultsCell';
 import { OfferOverviewImagesCell } from './components/OfferOverviewImagesCell';
+import { Text } from '../../atoms/Text';
+import { OfferOverviewTagsCell } from './components/OfferOverviewTagsCell';
 
 export enum OfferOverviewTabsEnum {
   General = 'General',
@@ -73,7 +75,7 @@ const OfferOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }) 
         options={ProductOverviewTabsList}
         onOptSelect={option => {
           router.replace({ hash: option?.value });
-          setCurrentTab(option?.value);
+          option?.value && setCurrentTab(option?.value);
         }}
       />
 
@@ -185,10 +187,23 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, OfferOverviewTabsEnum>[
     tab: OfferOverviewTabsEnum.General,
   },
 
+  // * PROPERTIES
   {
     title: t('Categories'),
     CellComponent: OfferOverviewCategoriesCell,
     gridArea: 'categories',
+    tab: OfferOverviewTabsEnum.Properties,
+  },
+  {
+    title: t('Properties'),
+    CellComponent: OfferOverviewStaticProperties,
+    gridArea: 'properties',
+    tab: OfferOverviewTabsEnum.Properties,
+  },
+  {
+    title: t('Tags'),
+    CellComponent: OfferOverviewTagsCell,
+    gridArea: 'tagss',
     tab: OfferOverviewTabsEnum.Properties,
   },
 
@@ -269,14 +284,6 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, OfferOverviewTabsEnum>[
     tab: OfferOverviewTabsEnum.Futures,
   },
 
-  // * PROPERTIES
-  {
-    title: t('Properties'),
-    CellComponent: OfferOverviewStaticProperties,
-    gridArea: 'properties',
-    tab: OfferOverviewTabsEnum.Properties,
-  },
-
   // * DEFAULTS
   {
     title: t('Default values'),
@@ -287,23 +294,45 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, OfferOverviewTabsEnum>[
 
   {
     title: t('Created by / Date / Time'),
-    getValue: product =>
-      product?.author
-        ? `${product?.author?.user?.email} / ${
-            product?.createdAt && isString(product?.createdAt) ? toAppDateFormat(Date.parse(product?.createdAt)) : ''
-          }`
-        : null,
+    getValue: product => {
+      return [
+        { title: 'Created by', value: product?.author?.user?.email },
+        {
+          title: 'Created at',
+          value:
+            product?.createdAt && isString(product?.createdAt) ? toAppDateFormat(Date.parse(product?.createdAt)) : '',
+        },
+      ].map(item => {
+        return (
+          <FlexBox key={item.title} gap={4} fillWidth justifyContent={'space-between'} fxDirection={'row'}>
+            <Text>{item.title ?? t('undefined')}</Text>
+            <Text>{item.value ?? t('undefined')}</Text>
+          </FlexBox>
+        );
+      });
+    },
     gridArea: 'created',
     tab: OfferOverviewTabsEnum.General,
   },
   {
     title: t('Updated by / Date / Time'),
-    getValue: product =>
-      product?.editor
-        ? `${product?.editor?.user?.email} / ${
-            product?.updatedAt && isString(product?.updatedAt) ? toAppDateFormat(Date.parse(product?.updatedAt)) : ''
-          }`
-        : null,
+    getValue: product => {
+      return [
+        { title: 'Updated by', value: product?.editor?.user?.email },
+        {
+          title: 'Updated at',
+          value:
+            product?.updatedAt && isString(product?.updatedAt) ? toAppDateFormat(Date.parse(product?.updatedAt)) : '',
+        },
+      ].map(item => {
+        return (
+          <FlexBox key={item.title} gap={4} fillWidth justifyContent={'space-between'} fxDirection={'row'}>
+            <Text>{item.title ?? t('undefined')}</Text>
+            <Text>{item.value ?? t('undefined')}</Text>
+          </FlexBox>
+        );
+      });
+    },
     gridArea: 'updated',
     tab: OfferOverviewTabsEnum.General,
   },
@@ -336,4 +365,5 @@ function getOfferOverviewCellsMap(): PartialRecord<
   });
   return offerOverviewCellsMap;
 }
+
 export default OfferOverviewXL;

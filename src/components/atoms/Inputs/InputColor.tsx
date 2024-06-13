@@ -11,6 +11,7 @@ export const InputColor = React.forwardRef(
       label,
       disabled,
       showText = false,
+      defaultValue = '#212121',
       ...props
     }: { showText?: boolean; disabled?: boolean; name?: string; label?: LangTextKey; defaultValue?: string } & Omit<
       React.HTMLAttributes<HTMLInputElement>,
@@ -21,12 +22,12 @@ export const InputColor = React.forwardRef(
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-      if (typeof props.defaultValue === 'string') {
+      if (typeof defaultValue === 'string') {
         if (inputRef.current) {
-          inputRef.current.value = props.defaultValue;
+          inputRef.current.value = defaultValue;
         }
       }
-    }, [props.defaultValue]);
+    }, [defaultValue]);
 
     useEffect(() => {
       if (ref) {
@@ -49,8 +50,8 @@ export const InputColor = React.forwardRef(
       <CompLabel style={{ position: 'relative' }} fxDirection={'row'} gap={4} alignItems={'center'}>
         <InputBox
           style={{
-            borderColor: inputRef.current?.value || props.defaultValue,
-            backgroundColor: inputRef.current?.value || props.defaultValue,
+            borderColor: inputRef.current?.value || defaultValue,
+            backgroundColor: inputRef.current?.value || defaultValue,
           }}
         >
           <StInputColor
@@ -72,7 +73,7 @@ export const InputColor = React.forwardRef(
             padding={'2px 8px'}
           >
             <Text $weight={500} $size={15} $ellipsisMode={true}>
-              {inputRef.current?.value || props.defaultValue || 'unset'}
+              {inputRef.current?.value || defaultValue || 'unset'}
             </Text>
           </FlexBox>
         )}

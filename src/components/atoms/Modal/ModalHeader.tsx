@@ -149,7 +149,15 @@ const HeaderActions = ({ actions }: { actions: IModalHeaderAction[] }) => {
         onClick={() => setIsVisible(p => !p)}
       />
       {isVisible && (
-        <MenuDropdown ref={listRef} style={{ position: 'absolute', top: '120%', right: '0', zIndex: 100 }}>
+        <MenuDropdown
+          onBlur={ev => {
+            ev.stopPropagation();
+
+            setIsVisible(false);
+          }}
+          ref={listRef}
+          style={{ position: 'absolute', top: '120%', right: '0', zIndex: 100 }}
+        >
           {renderActions}
 
           <ButtonIcon

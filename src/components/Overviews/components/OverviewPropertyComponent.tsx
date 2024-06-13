@@ -8,19 +8,13 @@ import { CellStyledComp } from './CellStyles';
 interface OverviewPropertyComponentProps {
   item: PropertyEntity;
   selectedIds?: string[];
-  selectedItems?: PropertyValueEntity[];
+  items?: PropertyValueEntity[];
   data?: OfferEntity;
   index: number;
 }
-export const OverviewPropertyComponent: React.FC<OverviewPropertyComponentProps> = ({
-  item,
-  selectedIds,
-  selectedItems,
-}) => {
+export const OverviewPropertyComponent: React.FC<OverviewPropertyComponentProps> = ({ item, selectedIds, items }) => {
   const renderValues = useMemo(() => {
-    const _list = selectedItems?.length
-      ? selectedItems
-      : item.childrenList?.filter(el => selectedIds?.includes(el._id));
+    const _list = items?.length ? items : item.childrenList?.filter(el => selectedIds?.includes(el._id));
 
     return _list?.map((value, index) => {
       return (
@@ -29,7 +23,7 @@ export const OverviewPropertyComponent: React.FC<OverviewPropertyComponentProps>
         </CellStyledComp.CategoryItem>
       );
     });
-  }, [item.childrenList, selectedIds, selectedItems]);
+  }, [item.childrenList, selectedIds, items]);
 
   return (
     <FlexBox className={'PROPERTY'} gap={8} alignItems={'flex-end'}>

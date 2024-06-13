@@ -111,23 +111,32 @@ type FormProps = { type: TagTypeEnum; defaultValues?: TagItemDto };
 
 const TagsForm = ({ defaultValues, type }: FormProps) => {
   const dispatch = useAppDispatch();
-  const _form = useAppForm<TagItemDto>({ defaultValues: { isDisabled: false, isVisible: true, ...defaultValues } });
-  const loaders = useLoaders<'create' | 'update' | 'cms'>();
+  const _form = useAppForm<TagItemDto>({
+    defaultValues: {
+      isDisabled: false,
+      isVisible: true,
+      cmsConfigs: { colors: { font: '#fafafa', border: '#212121', background: '#212121' } },
+      ...defaultValues,
+    },
+  });
+  type LoadersKey = 'create' | 'update' | 'cms';
+
+  const loaders = useLoaders<LoadersKey>();
 
   const canSubmit = Object.values(_.omit(_form.formState.dirtyFields, ['cmsConfigs'])).some(field => !!field);
   const canSubmitCms = Object.values(_form.formState.dirtyFields?.cmsConfigs ?? {}).some(field => !!field);
-  const onValid = (fData: TagItemDto) => {
+  const onValid = (fData: TagItemDto, loaderKey?: LoadersKey) => {
     if (fData._id) {
       dispatch(
         updateTagThunk({
-          onLoading: loaders.onLoading('update'),
+          onLoading: loaders.onLoading(loaderKey || 'update'),
           data: { data: toReqData(fData) },
         })
       );
     } else {
       dispatch(
         createTagThunk({
-          onLoading: loaders.onLoading('create'),
+          onLoading: loaders.onLoading(loaderKey || 'create'),
           data: { data: toReqData(fData) },
         })
       );
@@ -159,7 +168,7 @@ const TagsForm = ({ defaultValues, type }: FormProps) => {
         label={defaultValues?.type ?? 'Main info'}
         expandable={false}
         canSubmit={canSubmit}
-        isLoading={loaders.hasLoading}
+        isLoading={loaders.isLoading?.update || loaders.isLoading?.create}
         onSubmit={_form.handleSubmit(fData => {
           onValid(_.omit(fData, ['_id', 'cmsConfigs']));
         })}
@@ -190,13 +199,15 @@ const TagsForm = ({ defaultValues, type }: FormProps) => {
 
       <AccordionForm
         canSubmit={canSubmitCms}
-        isLoading={loaders.isLoading.update}
+        isLoading={loaders.isLoading.cms}
         disabled={!defaultValues?._id}
+        isOpen={!defaultValues?._id}
+        expandable={!!defaultValues?._id}
         label={'Cms params'}
         onSubmit={_form.handleSubmit(fData => {
           const reqData = _.pick(fData, ['_id', 'cmsConfigs']);
 
-          onValid(reqData);
+          onValid(reqData, 'cms');
 
           console.log('TagsForm', reqData);
         })}
