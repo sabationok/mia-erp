@@ -229,3 +229,19 @@ export const FieldBox = styled(FlexBox)`
 `;
 
 export default FlexBox;
+
+export interface GridBoxProps extends FlexBoxProps {
+  $columns?: string[] | Property.GridTemplateColumns;
+  $rows?: string[] | Property.GridTemplateRows;
+  $autoColumns?: string[] | Property.GridAutoColumns;
+  $autoRows?: string[] | Property.GridAutoRows;
+}
+export const SimpleGridBox = styled.div<GridBoxProps>`
+  ${FlexBoxCss};
+  display: grid;
+  grid-template-columns: ${p => (Array.isArray(p.$columns) ? p.$columns?.join(' ') : p.$columns)};
+  grid-template-rows: ${p => (Array.isArray(p.$rows) ? p.$rows?.join(' ') : p.$rows)};
+
+  grid-auto-columns: ${p => (Array.isArray(p.$autoColumns) ? p.$autoColumns?.join(' ') : p.$autoColumns)};
+  grid-auto-rows: ${p => (Array.isArray(p.$autoRows) ? p.$autoRows?.join(' ') : p.$autoRows)};
+`;

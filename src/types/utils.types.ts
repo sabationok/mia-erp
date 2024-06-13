@@ -276,7 +276,7 @@ export interface HasAmount {
 }
 
 // * FLAGS
-export interface HasVisibleFlag {
+export interface HasIsVisibleFlag {
   isVisible?: MaybeNull<boolean>;
 }
 

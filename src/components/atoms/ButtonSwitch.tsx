@@ -2,13 +2,14 @@ import { useEffect, useMemo, useState } from 'react';
 import _ from 'lodash';
 import { t } from '../../lang';
 import ButtonsGroup from './ButtonsGroup';
+import { MaybeNull } from '../../types/utils.types';
 
 export type ButtonSwitchChangeHandler<Name extends string | number = string> = (res: boolean, name?: Name) => void;
 interface ButtonSwitchProps<Name extends string | number = string> {
   acceptLabel?: string;
   rejectLabel?: string;
   onChange?: ButtonSwitchChangeHandler<Name>;
-  value?: boolean;
+  value?: MaybeNull<boolean>;
   name?: Name;
   disabled?: boolean;
 }

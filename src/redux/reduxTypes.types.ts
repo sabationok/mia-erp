@@ -12,6 +12,7 @@ export enum AppModuleName {
   directories = 'directories',
   finances = 'finances',
   offers = 'offers',
+  tags = 'tags',
   orders = 'orders',
   invoices = 'invoices',
   payments = 'payments',

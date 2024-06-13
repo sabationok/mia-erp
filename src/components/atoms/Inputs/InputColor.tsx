@@ -7,10 +7,15 @@ import InputText from './InputText';
 
 export const InputColor = React.forwardRef(
   (
-    { label, ...props }: { name?: string; label?: LangTextKey } & React.HTMLAttributes<HTMLInputElement>,
+    {
+      label,
+      disabled,
+      ...props
+    }: { disabled?: boolean; name?: string; label?: LangTextKey } & React.HTMLAttributes<HTMLInputElement>,
     ref?: React.ForwardedRef<HTMLInputElement>
   ) => {
     const inputRef = useRef<HTMLInputElement>(null);
+
     useEffect(() => {
       if (ref) {
         if (typeof ref === 'function') {
@@ -41,14 +46,21 @@ export const InputColor = React.forwardRef(
           <StInputColor
             {...props}
             style={{ visibility: 'hidden', border: 0, opacity: 0, outline: 0 }}
+            disabled={disabled}
             type={'color'}
             ref={inputRef}
             onChange={handleChange}
           />
         </InputBox>
 
-        <FlexBox flex={1} style={{ cursor: 'inherit' }}>
-          <Text $weight={500} $size={15} color={inputRef.current?.value} $ellipsisMode={true}>
+        <FlexBox
+          flex={1}
+          style={{ cursor: 'inherit' }}
+          alignItems={'center'}
+          justifyContent={'center'}
+          padding={'2px 8px'}
+        >
+          <Text $weight={500} $size={15} $ellipsisMode={true}>
             {inputRef.current?.value || 'unset'}
           </Text>
         </FlexBox>

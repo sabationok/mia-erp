@@ -23,6 +23,7 @@ import { DeliveriesState } from './deliveries/deliveries.slice';
 import { ICompaniesState } from '../types/companies.types';
 import { DiscountsState } from './priceManagement/discounts/discounts.slice';
 import { CartState } from './cart/cart.slice';
+import { TagsState } from './tags/tags.slice';
 
 export const useAuthSelector = () => useSelector<RootState, IAuthState>((state: RootState) => state.auth);
 export const useUsersSelector = () => useSelector<RootState, IUsersState>((state: RootState) => state.users);
@@ -75,6 +76,9 @@ export const useCustomRolesSelector = () =>
 
 export const useCartSelector = (): CartState =>
   useSelector<RootState, CartState>((state: RootState) => state?.['cart']);
+
+export const useTagsSelector = (): TagsState =>
+  useSelector<RootState, TagsState>((state: RootState) => state?.['tags']);
 
 export const useDirectorySelector = <DT extends ApiDirType = any>(
   dirType: DT

@@ -1,19 +1,44 @@
-import { FilterChangeHandler, FilterOption, FilterSelectHandler, FilterSelectValueHandler } from './TabSelector';
+import { FilterChangeHandler, FilterSelectValueHandler } from './TabSelector';
 import React, { useCallback, useMemo, useState } from 'react';
 import ButtonIcon from './ButtonIcon';
 import FlexBox from './FlexBox';
 import { Text } from './Text';
 import { isUndefined } from 'lodash';
+import { MaybeNull } from '../../types/utils.types';
 
-export type TagButtonsFilterOnSelectValue<Value = any> = FilterSelectValueHandler<Value>;
+export type TagFilterOnSelectValue<Value = any> = FilterSelectValueHandler<Value>;
+
+export type TagSelectOption<V = any, Name extends string = any> = {
+  _id?: string;
+
+  label?: MaybeNull<string>;
+
+  name?: Name;
+
+  value?: V;
+
+  disabled?: boolean;
+
+  isActive?: boolean;
+};
+
+export type TagSelectHandler<
+  V = any,
+  Name extends string = any,
+  Option extends TagSelectOption<V, Name> = TagSelectOption<V, Name>,
+> = (option: Option, value?: V, index?: number, name?: string) => void;
+
 export type TagButtonsFilterOnSelect<
   Value = any,
-  Option extends TagButtonsFilterOption<Value> = any,
-> = FilterSelectHandler<Value, any, Option>;
-export type TagButtonsFilterOnChange<Value = any> = FilterChangeHandler<Value>;
-export type TagButtonsFilterOption<Value = any> = FilterOption<Value>;
+  Option extends TagSelectOption<Value> = TagSelectOption<Value>,
+> = TagSelectHandler<Value, any, Option>;
 
-const TagButtonsFilter = <Value extends string = string>({
+export type TagButtonsFilterOnChange<Value = any> = FilterChangeHandler<Value>;
+
+const TagButtonsFilter = <
+  Value extends string = string,
+  Option extends TagSelectOption<Value | string> = TagSelectOption<Value | string>,
+>({
   options,
   multiple,
   value,
@@ -26,13 +51,15 @@ const TagButtonsFilter = <Value extends string = string>({
   resetButtonPosition,
   resetButtonLabel,
   onChangeIds,
+  disabledCheck,
 }: {
-  options?: TagButtonsFilterOption<Value | string>[];
+  options?: Option[];
   value?: Value | string[];
-  onSelect?: TagButtonsFilterOnSelect<Value | string>;
+  onSelect?: TagButtonsFilterOnSelect<Value | string, Option>;
   onChange?: TagButtonsFilterOnChange<Value | string>;
-  onSelectValue?: TagButtonsFilterOnSelectValue<Value | string>;
-  onChangeIds?: TagButtonsFilterOnSelectValue<Value | string | string[]>;
+  onSelectValue?: TagFilterOnSelectValue<Value | string>;
+  disabledCheck?: (item: TagSelectOption<Value | string>) => boolean;
+  onChangeIds?: TagFilterOnSelectValue<Value | string | string[]>;
   multiple?: boolean;
   numColumns?: number;
   gap?: number;
@@ -43,7 +70,7 @@ const TagButtonsFilter = <Value extends string = string>({
   const [selectedValues, setSelectedValues] = useState<(Value | string)[]>([]);
 
   const handleSelect = useCallback(
-    (option: TagButtonsFilterOption<Value | string>, index: number) => {
+    (option: Option, index: number) => {
       const _value = option.value || option._id;
       if (!_value) {
         console.warn('Not found option value or _id');
@@ -53,16 +80,18 @@ const TagButtonsFilter = <Value extends string = string>({
       if (!multiple) {
         setSelectedValues([_value]);
 
-        if (onChangeIds) return onChangeIds({ name, value: _value });
-        if (onSelect) return onSelect(option, option.value, index);
-        if (onSelectValue) return onSelectValue({ name, value: _value });
+        if (onSelect) onSelect(option, option.value, index);
+        if (onChangeIds) onChangeIds({ name, value: _value });
+        if (onSelectValue) onSelectValue({ name, value: _value });
+        return;
       } else {
         const ids = Array.isArray(value) ? value : selectedValues;
         const newData = !ids.includes(_value) ? [...ids, _value] : ids.filter(el => el !== _value);
 
         setSelectedValues(newData);
-        if (onChangeIds) return onChangeIds({ name, value: newData });
-        if (onChange) return onChange(newData, name);
+
+        if (onChangeIds) onChangeIds({ name, value: newData });
+        if (onChange) onChange(newData, name);
       }
     },
     [multiple, name, onChange, onChangeIds, onSelect, onSelectValue, selectedValues, value]
@@ -70,8 +99,9 @@ const TagButtonsFilter = <Value extends string = string>({
 
   const renderOptions = useMemo(() => {
     return options?.map((opt, index) => {
+      const _values = value || selectedValues;
       const _value = opt.value || opt._id || index.toString();
-      const isActive = !!_value && (value || selectedValues).includes(_value);
+      const isActive = value && (Array.isArray(_values) ? _values.includes(_value) : _value === _values);
 
       return (
         <ButtonIcon
@@ -79,14 +109,15 @@ const TagButtonsFilter = <Value extends string = string>({
           key={`tag-opt_${_value}`}
           variant={isActive ? 'filledMiddle' : 'outlinedMiddle'}
           onClick={() => handleSelect(opt, index)}
+          disabled={disabledCheck && disabledCheck(opt)}
           style={{
             // width: '100%',
             minWidth: 'unset',
             padding: '4px 8px',
 
-            borderColor: !isActive ? opt?.color ?? '' : '',
-            backgroundColor: isActive ? opt?.color ?? '' : '',
-            color: !isActive ? opt?.color ?? '' : '',
+            // borderColor: !isActive ? opt?.color ?? '' : '',
+            // backgroundColor: isActive ? opt?.color ?? '' : '',
+            // color: !isActive ? opt?.color ?? '' : '',
           }}
         >
           <Text $ellipsisMode={true} $size={13} style={{ fontWeight: 'inherit' }}>
@@ -95,7 +126,7 @@ const TagButtonsFilter = <Value extends string = string>({
         </ButtonIcon>
       );
     });
-  }, [handleSelect, options, selectedValues, value]);
+  }, [disabledCheck, handleSelect, options, selectedValues, value]);
 
   const renderResetButton = (
     <ButtonIcon

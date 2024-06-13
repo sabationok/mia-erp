@@ -19,6 +19,7 @@ export enum API_BASE_ROUTES {
   PRICE_MANAGEMENT = '/priceManagement',
   WAREHOUSES = '/warehouses',
   PAYMENTS = '/payments',
+  TAGS = '/tags',
   INVOICES = '/invoices',
   SHIPMENTS = '/shipments',
   DELIVERY = '/delivery',
@@ -351,6 +352,14 @@ const integrations = {
   update: (type?: IntegrationType, id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/update/${type}/${id}`,
 };
 
+const tags = {
+  getAll: () => `${API_BASE_ROUTES.TAGS}/getAll`,
+  create: () => `${API_BASE_ROUTES.TAGS}/create`,
+  update: () => `${API_BASE_ROUTES.TAGS}/update`,
+  delete: (id?: string) => `${API_BASE_ROUTES.TAGS}/one/${id}`,
+  getOne: () => `${API_BASE_ROUTES.TAGS}/one`,
+};
+
 const APP_CONFIGS = {
   endpoints: {
     appSettings,
@@ -375,6 +384,7 @@ const APP_CONFIGS = {
     communications,
     refunds,
     integrations,
+    tags,
   },
 };
 

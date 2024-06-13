@@ -78,7 +78,7 @@ const ModalContainer = styled.div<
   }
 
   @media screen and (min-width: 480px) {
-    width: ${p => (p.fillWidth ? '98vw' : '450px')};
+    width: ${p => (p.fillWidth ? '98vw' : p.width ? p.width : '450px')};
   }
 `;
 

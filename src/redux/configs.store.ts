@@ -35,6 +35,11 @@ export const persistorConfigs: Record<
     storage: storageSession,
     whitelist: ['pageGrid'],
   },
+  tags: {
+    key: 'tags',
+    storage: storageSession,
+    whitelist: ['list'],
+  },
   // categories: {
   //   key: 'categories',
   //   storage: storageSession,

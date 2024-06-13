@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 import styled, { css } from 'styled-components';
 import { FieldError, FieldErrorsImpl, Merge } from 'react-hook-form';
-import FlexBox, { FlexBoxProps, FlexFieldSet } from '../FlexBox';
+import FlexBox, { FlexBoxProps, FlexFieldSet, FlexLabel } from '../FlexBox';
 import { Property } from 'csstype';
 import { Text } from '../Text';
 import { LangTextKey, t } from '../../../lang';
@@ -70,12 +70,12 @@ const Box = styled(FlexFieldSet)<{
 
   position: relative;
 
-  width: 100%;
+  width: ${p => (p.width ? p.width : '100%')};
 
   opacity: ${({ disabled }) => (disabled ? 0.75 : 1)};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'all')};
 `;
-const Label = styled.label<Pick<InputLabelProps, 'align' | 'direction' | 'uppercase'>>`
+const Label = styled(FlexLabel)<Pick<InputLabelProps, 'align' | 'direction' | 'uppercase'>>`
   //display: flex;
 
   align-items: ${({ align = 'center' }) => align};
@@ -105,7 +105,6 @@ const Wrapper = styled(FlexBox)<
           flex-direction: row;
           align-items: center;
         `};
-
   width: 100%;
 `;
 
