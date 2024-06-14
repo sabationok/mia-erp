@@ -39,3 +39,10 @@ export function idsFromRefs<Ref extends { [key in '_id']: string }>(refs: Ref[])
   }
   return ids;
 }
+export const getUnicSelectedIdsFromMap = (map: Record<string, string[]>) => {
+  const idsArrays = Object.keys(map).filter(key => {
+    return map?.[key]?.length;
+  });
+
+  return idsArrays;
+};

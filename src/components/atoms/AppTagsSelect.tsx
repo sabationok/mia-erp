@@ -10,6 +10,8 @@ import TabSelector from './TabSelector';
 import { TagTypeEnum } from '../../types/directories.types';
 import { TagEntity } from '../../types/tags.types';
 import TagButtonsFilter, { TagButtonsFilterProps } from './TagButtonsFilter';
+import { useAppDispatch } from '../../redux/store.store';
+import { getAllTagsThunk } from '../../redux/tags/tags.thunks';
 
 type FilterData = {
   type: Values<typeof TagTypeEnum>;
@@ -20,13 +22,15 @@ export const AppTagsSelect = ({
   filterValue = { type: TagTypeEnum.OFFER },
   onChangeIds,
   value,
+  hideFilter,
 }: {
   selected?: TagEntity;
   onSelect?: (opt: TagEntity) => void;
   filterValue?: FilterData;
+  hideFilter?: boolean;
 } & Pick<TagButtonsFilterProps<TagTypeEnum, TagEntity>, 'onChangeIds' | 'value'>) => {
   // const service = useAppServiceProvider().get(AppModuleName.offers);
-
+  const dispatch = useAppDispatch();
   const state = useTagsSelector();
   const [filter, setFilter] = useState<FilterData>(filterValue);
   const [current, setCurrent] = useState<TagEntity | undefined>();
@@ -44,32 +48,46 @@ export const AppTagsSelect = ({
     }
   }, [selected]);
 
+  // useEffect(() => {
+  //   if (list?.length && !current) {
+  //     if (onSelect && list[0]) {
+  //       onSelect(list[0]);
+  //     } else {
+  //       setCurrent(list[0]);
+  //     }
+  //   }
+  // }, [current, onSelect, list]);
+
   useEffect(() => {
-    if (list?.length && !current) {
-      if (onSelect && list[0]) {
-        onSelect(list[0]);
-      } else {
-        setCurrent(list[0]);
-      }
+    if (!list?.length) {
+      dispatch(
+        getAllTagsThunk({
+          params: { type: filter.type },
+        })
+      );
+    } else {
+      console.log(list, filter.type);
     }
-  }, [current, onSelect, list]);
+  }, [dispatch, filter.type, list?.length]);
 
   return (
     <FlexBox margin={'8px 0'} gap={8}>
-      <InputLabel label={t('Select tags group')}>
-        <TabSelector
-          options={tagsFilterOptions}
-          defaultValue={filter.type}
-          onSelect={({ value }) => {
-            value &&
-              setFilter(prev => {
-                return { ...prev, type: value };
-              });
-          }}
-        />
-      </InputLabel>
+      {!hideFilter && (
+        <InputLabel label={t('Select tags group')}>
+          <TabSelector
+            options={tagsFilterOptions}
+            defaultValue={filter.type}
+            onSelect={({ value }) => {
+              value &&
+                setFilter(prev => {
+                  return { ...prev, type: value };
+                });
+            }}
+          />
+        </InputLabel>
+      )}
 
-      <TagButtonsFilter onChangeIds={onChangeIds} value={value} />
+      <TagButtonsFilter multiple options={list} onChangeIds={onChangeIds} value={value} />
     </FlexBox>
   );
 };

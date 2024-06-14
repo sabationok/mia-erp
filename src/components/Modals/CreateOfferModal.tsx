@@ -15,6 +15,7 @@ import { useAppRouter, useCurrentOffer } from '../../hooks';
 import { OfferFormCategoriesArea } from '../Forms/offers/categories/OfferFormCategoriesArea';
 import { OfferLoadersData, OfferLoadersKey } from '../Forms/offers/types';
 import { OfferPriceFormArea } from '../Forms/pricing/OfferPriceFormArea';
+import OfferTagsFormArea from '../Forms/offers/OfferTagsFormArea';
 
 export interface CreateOfferModalProps extends ModalFormProps {
   _id: string;
@@ -69,6 +70,8 @@ const CreateOfferModal: React.FC<CreateOfferModalProps> = ({ onClose, _id }) => 
               />
 
               <OfferFormImagesArea offer={Offer} defaultValues={formData?.images} disabled={!formData} />
+
+              <OfferTagsFormArea offer={Offer} defaultValues={formData?.tagsIds} disabled={!formData} />
 
               <OfferDimensionsFormArea offer={Offer} defaultValues={formData?.dimensions} disabled={!formData} />
 

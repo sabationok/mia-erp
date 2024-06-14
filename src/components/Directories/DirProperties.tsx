@@ -269,10 +269,10 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   );
 };
 
-const BackButton = styled(ButtonIcon)`
-  padding: 8px;
-  max-width: fit-content;
-`;
+// const BackButton = styled(ButtonIcon)`
+//   padding: 8px;
+//   max-width: fit-content;
+// `;
 const RenderItem = ({
   item,
   disabled,

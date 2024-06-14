@@ -17,6 +17,7 @@ import { useCurrentOffer } from '../../hooks';
 import { OfferFormCategoriesArea } from '../Forms/offers/categories/OfferFormCategoriesArea';
 import { OfferLoadersData, OfferLoadersKey } from '../Forms/offers/types';
 import { OfferPriceFormArea } from '../Forms/pricing/OfferPriceFormArea';
+import OfferTagsFormArea from '../Forms/offers/OfferTagsFormArea';
 
 export interface EditOfferModalProps extends ModalFormProps {
   copy?: boolean;
@@ -100,6 +101,13 @@ const EditOfferModal: React.FC<EditOfferModalProps> = ({ onClose, offer, copy })
               defaultValues={state?.formData?.images}
               disabled={!state?.formData}
               _id={offerId}
+            />
+
+            <OfferTagsFormArea
+              _id={offerId}
+              offer={Offer}
+              defaultValues={state.formData?.tagsIds}
+              disabled={!state.formData}
             />
 
             <OfferDimensionsFormArea
