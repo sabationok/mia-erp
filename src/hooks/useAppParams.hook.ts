@@ -17,6 +17,6 @@ export enum AppUrlParamKeys {
   businessType = 'businessType',
 }
 export type AppUrlParams = Record<AppUrlParamKeys, string>;
-const useAppParams = (): Readonly<Partial<AppUrlParams>> => useParams<AppUrlParams>();
+const useAppParams = (): Readonly<Partial<AppUrlParams & { '*': string }>> => useParams<AppUrlParams>();
 
 export default useAppParams;

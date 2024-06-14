@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon';
 import { NavLink } from 'react-router-dom';
 import { IPage } from 'redux/page/pageSlice';
@@ -8,8 +8,8 @@ import SvgIcon from 'components/atoms/SvgIcon';
 import { Text } from '../../atoms/Text';
 import { useAppPages, useAppRouter } from '../../../hooks';
 import SubNavMenu from './SubNavMenu';
-import FlexBox from '../../atoms/FlexBox';
-import { AppPagesEnum } from '../../AppPages';
+import FlexBox, { FlexUl } from '../../atoms/FlexBox';
+import { AppPagesEnum, IAppPage } from '../../AppPages';
 import { useCloseByBackdropClick, useCloseByEscape } from '../../../hooks/useCloseByEscapeOrClickOnBackdrop.hook';
 import { useAppSelector } from '../../../redux/store.store';
 
@@ -18,33 +18,23 @@ const NavMenu: React.FC = () => {
   const permissionId = router.params?.permissionId;
   const location = router.location;
   const pages = useAppPages({ permissionId });
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [activePage, setActivePage] = useState<IPage>(pages[0]);
-  const [isSubMenuOpen, setIsSubMenuOpen] = useState<Record<string, boolean>>({});
-
   const { warehouses, priceLists, permissions } = useAppSelector();
 
-  const handleOpenNavMenu = useCallback(() => {
-    setIsOpen(!isOpen);
-  }, [isOpen]);
+  const currentPageData = useMemo(() => {
+    const currentPageData = pages.find(
+      page => page.path === location.pathname || location.pathname.includes(page.path)
+    );
 
-  function handleSetActivePage(page: IPage) {
-    setActivePage(page);
-  }
+    return currentPageData || pages?.[0];
+  }, [location.pathname, pages]);
 
-  const onNavLinkClick = useCallback(
-    (page: IPage) => {
-      handleSetActivePage(page);
+  const handleToggleIsOpen = () => {
+    setIsOpen(p => !p);
+  };
 
-      handleOpenNavMenu();
-    },
-    [handleOpenNavMenu]
-  );
-
-  // TODO need refactoring
-  const onOpenSubMenuStateChange = useCallback((key: AppPagesEnum) => {
-    setIsSubMenuOpen(prev => ({ ...prev, [key]: !prev[key] }));
+  const onNavLinkClick = useCallback((page: IPage) => {
+    handleToggleIsOpen();
   }, []);
 
   const renderLinks = useMemo(() => {
@@ -57,86 +47,86 @@ const NavMenu: React.FC = () => {
     return pages.map(item => {
       const childrenList = item.subMenuKey ? dataMap[item.subMenuKey] : undefined;
       return (
-        <React.Fragment key={`nav-item-${item.path}`}>
-          <FlexBox fxDirection={'row'}>
-            <StyledNavLink
-              key={item?.path}
-              to={item.path}
-              onClick={() => {
-                onNavLinkClick(item);
-              }}
-            >
-              <SvgIcon icon={item.iconId} size="18px" style={{ display: 'none' }} />
-
-              <Text>{item?.title || '---'}</Text>
-            </StyledNavLink>
-
-            {item.subMenuKey && (
-              <ButtonIcon
-                variant={'onlyIconNoEffects'}
-                icon={isSubMenuOpen[item.subMenuKey] ? 'SmallArrowDown' : 'SmallArrowLeft'}
-                size={'32px'}
-                iconSize={'80%'}
-                disabled={!childrenList?.length}
-                onClick={() => item.subMenuKey && onOpenSubMenuStateChange(item.subMenuKey)}
-              />
-            )}
-          </FlexBox>
-
-          {item?.subMenuKey && (
-            <FlexBox height={isSubMenuOpen[item.subMenuKey] ? 'max-content' : '0'} overflow={'hidden'}>
-              <SubNavMenu
-                key={item?.subMenuKey}
-                subMenuKey={item?.subMenuKey}
-                childrenList={childrenList}
-                onActive={key => {
-                  setIsSubMenuOpen(prev => ({ ...prev, [key]: true }));
-                }}
-              />
-            </FlexBox>
-          )}
-        </React.Fragment>
+        <MenuItem key={item.path} item={item} childrenList={childrenList} onItemPress={() => onNavLinkClick(item)} />
       );
     });
-  }, [
-    isSubMenuOpen,
-    onNavLinkClick,
-    onOpenSubMenuStateChange,
-    pages,
-    permissions.permissions,
-    priceLists.lists,
-    warehouses.warehouses,
-  ]);
+  }, [onNavLinkClick, pages, permissions.permissions, priceLists.lists, warehouses.warehouses]);
 
-  useEffect(() => {
-    const currentPageData = pages.find(
-      page => page.path === location.pathname || location.pathname.includes(page.path)
-    );
-
-    setActivePage(currentPageData || pages[0]);
-  }, [location.pathname, pages, permissionId]);
-
-  useCloseByEscape(setIsOpen, { disabled: !isOpen });
-  useCloseByBackdropClick(setIsOpen, 'data-nav-menu', { disabled: !isOpen });
+  useCloseByEscape(setIsOpen);
+  useCloseByBackdropClick(setIsOpen, 'data-nav-menu');
 
   return (
     <StyledNavMenu data-nav-menu>
       <MenuButton
+        type={'button'}
         // variant="def"
         // endIconSize="24px"
         // endIconId={iconId.SmallArrowDown}
         isOpen={isOpen}
-        onClick={handleOpenNavMenu}
+        onClick={handleToggleIsOpen}
       >
-        {activePage?.title}
+        {currentPageData?.title}
 
         <SvgIcon icon={'SmallArrowDown'} size={'26px'} className={'endIcon'} />
       </MenuButton>
 
-      <NavMenuContainer isOpen={isOpen}>
+      <NavMenuContainer
+        isOpen={isOpen}
+        onBlur={() => {
+          setIsOpen(false);
+        }}
+      >
         <NavList>{renderLinks}</NavList>
       </NavMenuContainer>
     </StyledNavMenu>
+  );
+};
+
+const MenuItem = ({
+  onItemPress,
+  item,
+  childrenList,
+}: {
+  onItemPress?: () => void;
+  item: IAppPage;
+  childrenList?: any[];
+}) => {
+  const [isSubMenuOpen, setIsSubMenuOpen] = useState<boolean>(false);
+
+  return (
+    <React.Fragment key={`nav-item-${item.path}`}>
+      <FlexBox fxDirection={'row'}>
+        <StyledNavLink key={item?.path} to={item.path} onClick={onItemPress}>
+          <SvgIcon icon={item.iconId} size="18px" style={{ display: 'none' }} />
+
+          <Text>{item?.title || '---'}</Text>
+        </StyledNavLink>
+
+        {!!childrenList?.length && (
+          <ButtonIcon
+            variant={'onlyIconNoEffects'}
+            icon={isSubMenuOpen ? 'SmallArrowDown' : 'SmallArrowLeft'}
+            size={'32px'}
+            iconSize={'80%'}
+            disabled={!childrenList?.length}
+            onClick={() => setIsSubMenuOpen(p => !p)}
+          />
+        )}
+      </FlexBox>
+
+      {!!childrenList?.length && item?.subMenuKey && (
+        <FlexBox height={isSubMenuOpen ? 'max-content' : '0'} overflow={'hidden'}>
+          <SubNavMenu
+            key={item?.subMenuKey}
+            subMenuKey={item?.subMenuKey}
+            childrenList={childrenList}
+            onActive={_ => {
+              setIsSubMenuOpen(true);
+            }}
+          />
+        </FlexBox>
+      )}
+    </React.Fragment>
   );
 };
 
@@ -150,9 +140,6 @@ const StyledNavMenu = styled.div`
   min-width: 180px;
   max-width: 100%;
   height: 100%;
-
-  font-size: 12px;
-  font-weight: 600;
 
   @media screen and (min-width: 768px) {
     min-width: 280px;
@@ -179,6 +166,7 @@ const MenuButton = styled.button<{ isOpen: boolean }>`
 
   & .endIcon {
     transform: ${({ isOpen }) => `rotate(${isOpen ? '180' : '0'}deg)`};
+    transition: transform ${p => p.theme.globals.timingFnMain};
   }
 `;
 const NavMenuContainer = styled(FlexBox)<MenuState>`
@@ -211,7 +199,7 @@ const NavMenuContainer = styled(FlexBox)<MenuState>`
   transition: all ${({ theme }) => theme.globals.timingFnMain};
 `;
 
-const NavList = styled.div`
+const NavList = styled(FlexUl)`
   display: grid;
   grid-template-columns: 1fr;
   align-content: start;
@@ -233,8 +221,8 @@ const StyledNavLink = styled(NavLink)`
   position: relative;
 
   width: 100%;
-  min-height: 34px;
-  font-size: 14px;
+  min-height: 38px;
+  font-size: 15px;
   height: min-content;
 
   padding: 4px 16px;
@@ -259,7 +247,7 @@ const StyledNavLink = styled(NavLink)`
   }
 
   &:hover {
-    //background-color: rgba(254, 254, 254, 0.25);
+    background-color: ${({ theme: { accentColor } }) => accentColor.extraLight};
 
     &::before {
       height: 100%;
@@ -268,10 +256,7 @@ const StyledNavLink = styled(NavLink)`
   }
 
   &.active {
-    //background-color: rgba(254, 254, 254, 0.05);
-    /* color: var(--darkOrange); */
-    /* fill: var(--darkOrange); */
-
+    background-color: ${({ theme: { accentColor } }) => accentColor.extraLight};
     &::before {
       height: 80%;
       background-color: ${({ theme: { accentColor } }) => accentColor.base};
@@ -280,7 +265,7 @@ const StyledNavLink = styled(NavLink)`
 
   @media screen and (min-width: 768px) {
     min-height: 34px;
-    font-size: 14px;
+    font-size: 15px;
     height: min-content;
   }
 `;

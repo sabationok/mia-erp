@@ -43,35 +43,12 @@ export function getAccentColor(name: AccentColorName): IAccentColor {
     base: colors[5],
     pressed: colors[2],
     hover: colors[7],
-    disabled: colors[0],
+    disabled: colors[1],
     focus: colors[6],
     light: colors[2],
     extraLight: colors[0],
   };
 }
-
-// const ORANGE: IAccentColor = {
-//   // base: 'rgb(220, 133, 31)',
-//   // pressed: 'rgb(227, 156, 65)',
-//   // hover: 'rgb(205, 133, 50)',
-//   // hover: '#FFA033',
-//   // pressed: '#CC6D00',
-//   //
-//   // base: 'rgba(255, 136, 0, 1)',
-//   // pressed: 'rgb(220, 133, 31)',
-//   // hover: '#CC6D00',
-//   // disabled: '',
-//   // focus: '',
-//   // light: 'rgb(250,213,172)',
-//
-//   ...LIGHT_BLUE,
-// };
-// const accentColors = {
-//   orange: ORANGE,
-//   lightBlue: LIGHT_BLUE,
-//   green: LIGHT_GREEN,
-//   lime: LIME,
-// };
 
 export enum AccentColorEnum {
   red = 'red',

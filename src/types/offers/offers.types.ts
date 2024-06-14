@@ -129,7 +129,7 @@ export interface OfferEntity
 // * >>>>>>> FORM DATA <<<<<<<
 export interface IProductBaseFormData extends IProductBaseDto {}
 
-export interface IProductDefaultsFormData extends Record<keyof IOfferRelatedDefaultFields, IFormDataValueWithID> {}
+export interface OfferDefaultsFormState extends Record<keyof IOfferRelatedDefaultFields, IFormDataValueWithID> {}
 
 export interface IProductWithAddsFieldsFormData extends IProductBaseFormData {}
 
@@ -138,7 +138,7 @@ export interface IOfferFullFormData extends Omit<OfferDto, 'recommends' | 'prope
   recommends?: ArrayOfUUID;
   properties?: ArrayOfUUID;
 
-  defaults?: IProductDefaultsFormData;
+  defaults?: OfferDefaultsFormState;
   images?: OfferImageSlotEntity[];
 }
 

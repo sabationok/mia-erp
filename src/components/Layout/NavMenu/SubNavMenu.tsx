@@ -9,6 +9,7 @@ import { useEffect, useMemo } from 'react';
 import { AppPagesEnum } from '../../AppPages';
 import { Text } from '../../atoms/Text';
 import { IBase } from '../../../types/utils.types';
+import { buttonPointerCss } from '../../atoms/ButtonIcon';
 
 export interface SubNavMenuProps {
   subMenuKey: AppPagesEnum;
@@ -30,7 +31,7 @@ const getLinkDataMap: Record<
         gap={8}
         style={{ cursor: 'inherit' }}
       >
-        <Text $ellipsisMode>{warehouse?.label + (warehouse?.label ?? '')}</Text>
+        <Text $ellipsisMode>{warehouse?.label}</Text>
 
         <Text>{warehouse?.code}</Text>
       </FlexBox>
@@ -97,7 +98,7 @@ const StyledNavLink = styled(NavLink)`
 
   width: 100%;
   min-height: 34px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 400;
   height: min-content;
 
@@ -107,13 +108,16 @@ const StyledNavLink = styled(NavLink)`
   border-style: none;
   transition: none;
 
+  ${buttonPointerCss.left};
+
   &.active {
     color: ${p => p.theme.accentColor.base};
     background-color: ${p => p.theme.accentColor.extraLight};
   }
   @media screen and (min-width: 768px) {
-    min-height: 30px;
-
+    min-height: 28px;
+    font-size: 14px;
+    font-weight: 400;
     height: min-content;
   }
 `;

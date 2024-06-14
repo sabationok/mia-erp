@@ -1,5 +1,5 @@
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import { IProductDefaultsFormData, OfferEntity } from '../../types/offers/offers.types';
+import { OfferDefaultsFormState, OfferEntity } from '../../types/offers/offers.types';
 import styled from 'styled-components';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
 import { ModalHeader, OverlayFooter } from '../atoms';
@@ -20,35 +20,39 @@ import { OnlyUUID } from '../../redux/app-redux.types';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { LoadersProvider } from '../../Providers/Loaders/LoaderProvider';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
+import { Keys } from '../../types/utils.types';
+import _ from 'lodash';
 
 export interface FormProductDefaultsOverlayProps extends CreatedOverlay {
-  onSubmit?: AppSubmitHandler<IProductDefaultsFormData>;
+  onSubmit?: AppSubmitHandler<OfferDefaultsFormState>;
   offer?: OfferEntity;
 }
 
-export enum FormProductDefaultsTabs {
+export enum FormOfferDefaultsTabs {
   price = 'price',
   variation = 'variation',
   warehouse = 'warehouse',
   inventory = 'inventory',
   supplier = 'supplier',
 }
+
 export type OfferOverlayLoaderKey =
-  | keyof typeof FormProductDefaultsTabs
-  | `${keyof typeof FormProductDefaultsTabs}s`
+  | keyof typeof FormOfferDefaultsTabs
+  | `${keyof typeof FormOfferDefaultsTabs}s`
   | 'submiting';
 
-const tabs = enumToFilterOptions(FormProductDefaultsTabs);
+const tabs = enumToFilterOptions(FormOfferDefaultsTabs);
+
 const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({ onClose, onSubmit }) => {
   const loaders = useLoaders<OfferOverlayLoaderKey>();
   const offerId = useAppParams()?.offerId;
-  const currentOffer = useCurrentOffer({ _id: offerId });
+  const Offer = useCurrentOffer({ _id: offerId });
 
   const productsS = useAppServiceProvider()[ServiceName.offers];
 
   const [currentTabIdx, setCurrentTabIdx] = useState(0);
 
-  const { setValue, formValues, handleSubmit } = useAppForm<IProductDefaultsFormData>();
+  const { setValue, getValues, formValues, handleSubmit } = useAppForm<OfferDefaultsFormState>();
 
   const handleSelect = useCallback(
     (data: OnlyUUID) => {
@@ -57,30 +61,31 @@ const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({
     [currentTabIdx, setValue]
   );
 
-  const onValid = (fData: IProductDefaultsFormData) => {
-    currentOffer?._id &&
+  const onValid = (fData: OfferDefaultsFormState) => {
+    Offer?._id &&
       productsS.setDefaults({
-        data: { _id: currentOffer?._id, defaults: toReqData(fData) as never, updateCurrent: true },
+        data: { data: { _id: Offer?._id, defaults: toReqData(fData) } },
         onSuccess: (data, meta) => {
           console.log(data, meta);
         },
         onLoading: loaders.onLoading('submiting'),
       });
   };
-
-  const renderTab = useMemo(() => {
-    const tabsMap: Record<FormProductDefaultsTabs, React.ReactNode> = {
-      [FormProductDefaultsTabs.warehouse]: (
+  const tabsMap = useMemo(() => {
+    const _tabsMap: Record<FormOfferDefaultsTabs, React.FC> = {
+      [FormOfferDefaultsTabs.warehouse]: () => (
         <WarehousesTab withActions onSelect={handleSelect} selected={formValues?.warehouse} />
       ),
-      [FormProductDefaultsTabs.price]: <PricesTab withActions onSelect={handleSelect} selected={formValues?.price} />,
-      [FormProductDefaultsTabs.variation]: (
+      [FormOfferDefaultsTabs.price]: () => (
+        <PricesTab withActions onSelect={handleSelect} selected={formValues?.price} />
+      ),
+      [FormOfferDefaultsTabs.variation]: () => (
         <VariationsTab withActions onSelect={handleSelect} selected={formValues?.variation} />
       ),
-      [FormProductDefaultsTabs.inventory]: (
+      [FormOfferDefaultsTabs.inventory]: () => (
         <WarehousingTab withActions onSelect={handleSelect} selected={formValues?.inventory} />
       ),
-      [FormProductDefaultsTabs.supplier]: (
+      [FormOfferDefaultsTabs.supplier]: () => (
         <CounterpartyTab
           withActions
           types={[CounterpartyTypesEnum.SUPPLIER]}
@@ -89,10 +94,8 @@ const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({
         />
       ),
     };
-
-    return tabsMap[tabs[currentTabIdx]?.value] ?? null;
+    return _tabsMap;
   }, [
-    currentTabIdx,
     formValues?.inventory,
     formValues?.price,
     formValues?.supplier,
@@ -101,38 +104,22 @@ const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({
     handleSelect,
   ]);
 
-  const canSubmit = useMemo(() => {
-    const defaults = currentOffer?.defaults;
+  const renderTab = useMemo(() => {
+    const Tab = tabsMap[tabs[currentTabIdx]?.value] ?? null;
+    return Tab ? <Tab /> : null;
+  }, [currentTabIdx, tabsMap]);
 
-    const tabIs: Record<FormProductDefaultsTabs | string, boolean> = {
-      [tabs?.[currentTabIdx]?.value ?? '']: true,
+  const canSubmit = useMemo(() => {
+    const compareIdsByPath = (key: Keys<typeof FormOfferDefaultsTabs>) => {
+      const dataKey = `${key}._id`;
+
+      const id_a = getValues(dataKey);
+
+      return id_a && id_a !== _.get(Offer, dataKey);
     };
 
-    if (tabIs.variation) {
-      return formValues.variation && formValues.variation._id !== defaults?.variation?._id;
-    }
-    if (tabIs.price) {
-      return formValues.price && formValues.price._id !== defaults?.price?._id;
-    }
-    if (tabIs.warehouse) {
-      return formValues.warehouse && formValues.warehouse._id !== defaults?.warehouse?._id;
-    }
-    if (tabIs.inventory) {
-      return formValues.inventory && formValues.inventory._id !== defaults?.inventory?._id;
-    }
-    if (tabIs.supplier) {
-      return formValues.supplier && formValues.supplier._id !== defaults?.supplier?._id;
-    }
-    return;
-  }, [
-    currentOffer?.defaults,
-    currentTabIdx,
-    formValues.inventory,
-    formValues.price,
-    formValues.supplier,
-    formValues.variation,
-    formValues.warehouse,
-  ]);
+    return compareIdsByPath(tabs?.[currentTabIdx]?.value);
+  }, [Offer, getValues, currentTabIdx]);
 
   return (
     <LoadersProvider value={loaders}>
@@ -145,7 +132,7 @@ const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({
           {renderTab}
         </Content>
 
-        <OverlayFooter loading={loaders.hasLoading} onCreatePress={() => {}} canSubmit={canSubmit} />
+        <OverlayFooter loading={loaders.hasLoading} canSubmit={canSubmit} />
       </Form>
     </LoadersProvider>
   );

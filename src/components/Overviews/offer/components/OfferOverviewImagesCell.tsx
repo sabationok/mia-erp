@@ -10,12 +10,12 @@ import { formAddImageSetTabs } from '../../../../data';
 
 export const OfferOverviewImagesCell: RenderOverviewCellComponent<OfferEntity> = ({ data, cell, overlayHandler }) => {
   const renderImageSets = useMemo(() => {
-    return data?.images?.map((set, index) => {
+    return data?.images?.map((imgsSet, index) => {
       return (
-        <CellStyledComp.ImagesSetBox key={`set_${set?._id || index}`} fxDirection={'row'} gap={2} overflow={'auto'}>
-          {formAddImageSetTabs.map(el => (
-            <ImagePreviewSmall key={`img_${el.value}`} src={set[el.value] || ''} disabled />
-          ))}
+        <CellStyledComp.ImagesSetBox key={`set_${imgsSet?._id || index}`} fxDirection={'row'} gap={2} overflow={'auto'}>
+          {formAddImageSetTabs.map(
+            el => el.value && <ImagePreviewSmall key={`img_${el.value}`} src={imgsSet[el.value] || ''} disabled />
+          )}
         </CellStyledComp.ImagesSetBox>
       );
     });

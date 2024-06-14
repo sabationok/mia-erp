@@ -51,8 +51,8 @@ const GlobalStyles = createGlobalStyle`
 
   @media screen and (min-width: 480px) {
     ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+      width: 4px;
+      height: 4px;
     }
 
     ::-webkit-scrollbar-track {
