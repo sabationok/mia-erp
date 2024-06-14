@@ -1,4 +1,4 @@
-import { IOfferFullFormData, OfferEntity } from '../../types/offers/offers.types';
+import { OfferEntity, OfferFullFormData } from '../../types/offers/offers.types';
 import _, { isObject } from 'lodash';
 
 const omitPaths: (keyof OfferEntity | string)[] = [
@@ -18,10 +18,10 @@ const isArrayForTransformToIdsArray = <T extends keyof OfferEntity | string = an
   return ['properties', 'categories'].includes(key);
 };
 
-export function toOfferFormData(input: OfferEntity): IOfferFullFormData {
+export function toOfferFormData(input: OfferEntity): OfferFullFormData {
   const data = _.cloneDeep(_.omit(input, omitPaths));
 
-  let output: Record<keyof IOfferFullFormData | string, any> = {};
+  let output: Record<keyof OfferFullFormData | string, any> = {};
 
   Object.entries(data).forEach(([k, v], _index) => {
     if (v === undefined) {
@@ -29,26 +29,26 @@ export function toOfferFormData(input: OfferEntity): IOfferFullFormData {
     }
 
     if (v === null) {
-      return (output[k as keyof IOfferFullFormData] = v);
+      return (output[k as keyof OfferFullFormData] = v);
     }
     if (typeof v === 'boolean') {
-      return (output[k as keyof IOfferFullFormData] = v);
+      return (output[k as keyof OfferFullFormData] = v);
     }
     if (['string', 'number'].includes(typeof v)) {
-      return (output[k as keyof IOfferFullFormData] = v);
+      return (output[k as keyof OfferFullFormData] = v);
     } else if (typeof v === 'object') {
       if (Array.isArray(v)) {
         if (isArrayForTransformToIdsArray(k)) {
-          return (output[k as keyof IOfferFullFormData] = v.map(el => isObject(el) && '_id' in el && el._id)).filter(
+          return (output[k as keyof OfferFullFormData] = v.map(el => isObject(el) && '_id' in el && el._id)).filter(
             el => el
           );
         }
-        return (output[k as keyof IOfferFullFormData] = v);
+        return (output[k as keyof OfferFullFormData] = v);
       }
       // const newValue = pick(v, getFormValuePickPaths(v));
-      return (output[k as keyof IOfferFullFormData] = v);
+      return (output[k as keyof OfferFullFormData] = v);
     } else {
-      return (output[k as keyof IOfferFullFormData] = v);
+      return (output[k as keyof OfferFullFormData] = v);
     }
   });
 

@@ -1,6 +1,5 @@
 import { ArrayOfUUID, IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/app-redux.types';
 import { ISupplierDirItem, OfferCategoryEntity } from '../dir.types';
-import { FilterOption } from '../../components/atoms/TabSelector';
 import { PriceEntity } from '../price-management/price-management.types';
 import { WarehouseEntity, WarehouseItemEntity } from '../warehousing/warehouses.types';
 import { IBrand } from '../../redux/directories/brands.types';
@@ -15,6 +14,7 @@ import {
   HasDimensions,
   HasEditor,
   HasImgPreview,
+  HasIsVisibleFlag,
   HasLabel,
   HasMeasurement,
   HasOwnerAsCompany,
@@ -64,7 +64,7 @@ export type OfferFutures = {
     >
   >;
 
-export type ProductFilterOpt = FilterOption<OfferTypeEnum>;
+export type PropertyValuesMap = Record<string, PropertyValueEntity>;
 
 export interface IOfferBase
   extends HasLabel,
@@ -78,14 +78,15 @@ export interface IOfferBase
     WithPeriod,
     HasImgPreview,
     HasBarCode,
-    HasSku {
+    HasSku,
+    HasIsVisibleFlag {
   qrCode?: string;
 
   template?: PropertiesGroupEntity;
   propsKey?: string;
 
   approved?: OfferStatusEnum;
-  archived?: boolean;
+
   visible?: boolean;
 
   futures?: MaybeNull<OfferFutures>;
@@ -94,8 +95,6 @@ export interface IOfferBase
 
   propertiesMap?: PropertyValuesMap;
 }
-
-export type PropertyValuesMap = Record<string, PropertyValueEntity>;
 
 export interface IOfferRelatedDefaultFields {
   variation?: VariationEntity;
@@ -114,6 +113,7 @@ export interface OfferEntity
     HasTags {
   categories?: OfferCategoryEntity[];
 
+  offer?: OfferEntity;
   brand?: IBrand;
   recommends?: OfferEntity[];
 
@@ -127,13 +127,13 @@ export interface OfferEntity
 }
 
 // * >>>>>>> FORM DATA <<<<<<<
-export interface IProductBaseFormData extends IProductBaseDto {}
+export interface IProductBaseFormData extends OfferBaseDto {}
 
 export interface OfferDefaultsFormState extends Record<keyof IOfferRelatedDefaultFields, IFormDataValueWithID> {}
 
 export interface IProductWithAddsFieldsFormData extends IProductBaseFormData {}
 
-export interface IOfferFullFormData extends Omit<OfferDto, 'recommends' | 'properties' | 'images' | 'categories'> {
+export interface OfferFullFormData extends Omit<OfferDto, 'recommends' | 'properties' | 'images' | 'categories'> {
   categories?: ArrayOfUUID;
   recommends?: ArrayOfUUID;
   properties?: ArrayOfUUID;
@@ -142,12 +142,12 @@ export interface IOfferFullFormData extends Omit<OfferDto, 'recommends' | 'prope
   images?: OfferImageSlotEntity[];
 }
 
-export interface IProductFormData extends IOfferFullFormData {}
+export interface OfferFormData extends OfferFullFormData {}
 
-// * >>>>>> PRODUCT DTO <<<<<<<
-export interface IProductBaseDto extends Omit<IOfferBase, '_id' | 'createdAt' | 'deletedAt' | 'updatedAt'> {}
+// * >>>>>> OFFER DTO <<<<<<<
+export interface OfferBaseDto extends Omit<IOfferBase, '_id' | 'createdAt' | 'deletedAt' | 'updatedAt'> {}
 
-export interface IProductWithAddsFieldsDto extends IProductBaseDto {
+export interface OfferWithAddsFieldsDto extends OfferBaseDto {
   category?: OnlyUUID;
   brand?: OnlyUUID;
   template?: OnlyUUID;
@@ -164,7 +164,7 @@ export interface IOfferDefaultsDto
   extends PartialRecord<OfferDefaultRefKey, OnlyUUID>,
     PartialRecord<OfferDefaultsIdKey, UUID> {}
 
-export interface OfferDto extends IProductWithAddsFieldsDto, IOfferDefaultsDto {}
+export interface OfferDto extends OfferWithAddsFieldsDto, IOfferDefaultsDto {}
 
 export interface OfferReqData {
   _id?: string;

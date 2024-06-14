@@ -5,7 +5,7 @@ import styled, { useTheme } from 'styled-components';
 import { useOffersSelector } from '../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { getIdRef } from '../../utils';
-import { OverlayFooter, OverlayHeader } from './index';
+import { DrawerHeader, OverlayFooter } from './index';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
 
 export interface FormProductImagesOverlayProps extends CreatedOverlay {
@@ -45,9 +45,7 @@ const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onC
           borderTop: `1px solid ${theme.sideBarBorderColor}`,
           borderBottom: `1px solid ${theme.sideBarBorderColor}`,
         }}
-        renderHeader={
-          <OverlayHeader title={'Зображення'} onBackPress={onClose} okButton canSubmit={state.length > 0} />
-        }
+        renderHeader={<DrawerHeader title={'Зображення'} onBackPress={onClose} okButton canSubmit={state.length > 0} />}
         FooterComponent={props => {
           return (
             <OverlayFooter onCreatePress={props.onAddNewImageSetPress} loading={loading} canSubmit={state.length > 0} />

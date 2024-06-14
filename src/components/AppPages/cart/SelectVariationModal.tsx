@@ -39,7 +39,7 @@ export const SelectVariationModal = ({
       quantity: quantity,
       ...(selected?.price ?? Offer?.price),
       offer: Offer,
-      variation: selected,
+      origin: selected,
       warehouse: warehouse ?? Offer?.warehouse,
     });
   }, [currentSlot, Offer, quantity, selected, warehouse]);

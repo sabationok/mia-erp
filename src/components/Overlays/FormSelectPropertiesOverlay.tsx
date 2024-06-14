@@ -8,7 +8,7 @@ import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { OnlyUUID } from '../../redux/app-redux.types';
 import { ModalFormProps } from '../ModalForm';
 import { ToastService } from '../../services';
-import { OverlayFooter, OverlayForm, OverlayHeader } from './index';
+import { DrawerHeader, OverlayFooter, OverlayForm } from './index';
 import { OfferEntity } from '../../types/offers/offers.types';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
 import { PropertyBaseEntity, PropertyEntity } from '../../types/offers/properties.types';
@@ -128,7 +128,7 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
 
   return (
     <OverlayForm onSubmit={handleSubmit} {...props}>
-      <OverlayHeader
+      <DrawerHeader
         onBackPress={onClose}
         canSubmit={canSubmit}
         title={(title || currentTemplate?.label) ?? ''}

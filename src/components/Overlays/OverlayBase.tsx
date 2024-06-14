@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import React, { memo } from 'react';
-import { OverlayHeader } from './index';
+import { DrawerHeader } from './index';
 
 export interface DrawerBaseProps extends Omit<React.FormHTMLAttributes<HTMLDivElement>, 'onSubmit' | 'onReset'> {
   footer?: boolean;
@@ -34,7 +34,7 @@ const DrawerBase: React.FC<DrawerBaseProps> = ({
 }) => {
   return (
     <DrawerContainer className="modal_base" {...props}>
-      <OverlayHeader
+      <DrawerHeader
         onBackPress={onBackPress}
         onClosePress={onClosePress}
         title={title}
@@ -42,7 +42,7 @@ const DrawerBase: React.FC<DrawerBaseProps> = ({
         okButton={okButton}
       >
         {extraHeader}
-      </OverlayHeader>
+      </DrawerHeader>
 
       <Content className="main">{children}</Content>
     </DrawerContainer>

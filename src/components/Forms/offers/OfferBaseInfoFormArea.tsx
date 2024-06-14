@@ -1,9 +1,9 @@
 import { AccordionForm } from '../../atoms/FormArea/AccordionForm';
 import { OfferFormAreaProps } from './types';
 import {
-  IOfferFullFormData,
-  IProductFormData,
   OfferEntity,
+  OfferFormData,
+  OfferFullFormData,
   OfferStatusEnum,
   OfferTypeEnum,
 } from '../../../types/offers/offers.types';
@@ -25,7 +25,7 @@ import { offerTypeFilterOptions } from '../../../data/modalFilterOptions.data';
 import ButtonSwitch from '../../atoms/ButtonSwitch';
 import ButtonsGroup from '../../atoms/ButtonsGroup';
 
-export interface OfferBaseInfoFormAreaProps extends OfferFormAreaProps<IOfferFullFormData> {
+export interface OfferBaseInfoFormAreaProps extends OfferFormAreaProps<OfferFullFormData> {
   type?: MaybeNull<OfferTypeEnum>;
   onSuccess?: (data: { data: OfferEntity }) => void;
   edit?: boolean;
@@ -47,11 +47,11 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
     setValue,
     handleSubmit,
     ...appForm
-  } = useAppForm<IOfferFullFormData>({
+  } = useAppForm<OfferFullFormData>({
     defaultValues: { visible: false, approved: OfferStatusEnum.pending, ...defaultValues, type },
   });
 
-  function onValid(sData: IProductFormData) {
+  function onValid(sData: OfferFormData) {
     const productForSubmit = toReqData(sData, { ignorePaths: ['measurement'] });
 
     !edit

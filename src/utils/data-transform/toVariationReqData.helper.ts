@@ -1,8 +1,8 @@
-import { IVariationFormData, IVariationReqData } from '../../types/offers/variations.types';
+import { IVariationReqData, VariationFormData } from '../../types/offers/variations.types';
 import { pick } from 'lodash';
 import { toReqData } from './index';
 
-export const toVariationReqData = (formData: IVariationFormData, _id?: string): IVariationReqData => {
+export const toVariationReqData = (formData: VariationFormData, _id?: string): IVariationReqData => {
   // isDevMode && console.log('createVariationReqData input', formData);
   const data: IVariationReqData['data'] = toReqData({
     ...pick(formData, [

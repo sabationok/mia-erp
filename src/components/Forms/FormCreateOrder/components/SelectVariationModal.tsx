@@ -1,11 +1,11 @@
 import ModalForm, { ModalFormProps } from '../../../ModalForm';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
-import { VariationEntity, IVariationFormData } from '../../../../types/offers/variations.types';
+import { VariationEntity, VariationFormData } from '../../../../types/offers/variations.types';
 import { t } from '../../../../lang';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 
 export interface SelectVariationModalProps
-  extends Omit<ModalFormProps<any, any, IVariationFormData>, 'onSubmit' | 'onSelect'> {
+  extends Omit<ModalFormProps<any, any, VariationFormData>, 'onSubmit' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<VariationEntity>;
   product?: OfferEntity;
 }

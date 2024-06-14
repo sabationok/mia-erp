@@ -6,7 +6,7 @@ import { FormEventHandler, useEffect, useMemo, useState } from 'react';
 import { getIdRef, sortIds } from '../../utils';
 import OfferCategoriesSelector from '../Forms/offers/categories/OfferCategoriesSelector';
 import { ApiDirType } from '../../redux/APP_CONFIGS';
-import { OverlayFooter, OverlayForm, OverlayHeader } from './index';
+import { DrawerHeader, OverlayFooter, OverlayForm } from './index';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { useCurrentOffer } from '../../hooks';
@@ -48,7 +48,7 @@ const OfferCategoriesOverlay = ({ onClose }: FormSelectCategoriesOverlayProps) =
 
   return (
     <OverlayForm onSubmit={handleFormSubmit}>
-      <OverlayHeader
+      <DrawerHeader
         title={'Категорії'}
         onBackPress={onClose}
         canSubmit={canSubmit}

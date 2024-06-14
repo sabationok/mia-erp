@@ -212,7 +212,7 @@ const FormCreateOrderSlot: React.FC<FormCreateOrderSlotProps> = ({
         {
           data: {
             offer: getIdRef(product),
-            variation: variation ? getIdRef(variation) : undefined,
+            origin: variation ? getIdRef(variation) : undefined,
             warehouse: params?.warehouse ? getIdRef(params?.warehouse) : undefined,
           },
           onSuccess: setInventories,

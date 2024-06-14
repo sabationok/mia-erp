@@ -6,12 +6,12 @@ import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServ
 import { OfferFormAreaProps } from '../types';
 import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
 import { t } from '../../../../lang';
-import { IOfferFullFormData, OfferEntity } from '../../../../types/offers/offers.types';
+import { OfferEntity, OfferFullFormData } from '../../../../types/offers/offers.types';
 import { idsFromRefs, sortIds } from '../../../../utils';
 import OfferCategoriesSelector from './OfferCategoriesSelector';
 import { useCurrentOffer } from '../../../../hooks';
 
-export interface OfferFormCategoriesAreaProps extends OfferFormAreaProps<IOfferFullFormData['categories']> {
+export interface OfferFormCategoriesAreaProps extends OfferFormAreaProps<OfferFullFormData['categories']> {
   onSelect?: (id: string) => void;
   onChange?: (ids: string[]) => void;
   onSuccess?: (data: OfferEntity) => void;

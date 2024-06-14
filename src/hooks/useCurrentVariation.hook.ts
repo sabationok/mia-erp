@@ -3,7 +3,10 @@ import { useMemo } from 'react';
 import { VariationEntity } from '../types/offers/variations.types';
 import { PropertyValuesMap } from '../types/offers/offers.types';
 
-export const useCurrentVariation = ({ _id }: { _id?: string } = {}) => {
+export interface UseCurrentVariationReturn extends Partial<VariationEntity> {
+  origin?: VariationEntity;
+}
+export const useCurrentVariation = ({ _id }: { _id?: string } = {}): UseCurrentVariationReturn => {
   const state = useOffersSelector();
 
   const res = useMemo((): VariationEntity | undefined => {
@@ -26,6 +29,7 @@ export const useCurrentVariation = ({ _id }: { _id?: string } = {}) => {
   }, [_id, state.variationsMap]);
 
   return {
-    variation: res,
+    ...res,
+    origin: res,
   };
 };

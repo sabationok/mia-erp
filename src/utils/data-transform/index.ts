@@ -1,6 +1,6 @@
 import { pick } from 'lodash';
 import { ArrayOfObjUUID, ArrayOfUUID, IdKeyVersion, ObjUUID, OnlyUUID } from '../../redux/app-redux.types';
-import { IOfferFullFormData, OfferDto, OfferEntity } from '../../types/offers/offers.types';
+import { OfferDto, OfferEntity, OfferFullFormData } from '../../types/offers/offers.types';
 
 export * from './toReqData.helper';
 export * from './toQueriesForReq.helper';
@@ -66,7 +66,7 @@ export const getFormValuePickPaths = (data?: any) => {
 export const idsArrToObjIdArrPaths = <T extends keyof OfferEntity | string = any>(key: T) => {
   return ['properties', 'categories', 'recommends'].includes(key);
 };
-export function createProductDto(input: IOfferFullFormData): OfferDto {
+export function createProductDto(input: OfferFullFormData): OfferDto {
   // const arrPaths = ['properties', 'categories', 'recommends'];
   return input;
 }

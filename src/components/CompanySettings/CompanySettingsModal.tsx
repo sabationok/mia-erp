@@ -8,7 +8,7 @@ import InvoicingPolicyTab from './settings-tabs/InvoicingPolicyTab';
 import WarehousingPolicyTab from './settings-tabs/WarehousingPolicyTab';
 import FlexBox from '../atoms/FlexBox';
 import styled from 'styled-components';
-import { OverlayHeader } from '../Overlays';
+import { DrawerHeader } from '../Overlays';
 import { CompanyEntity } from '../../types/companies.types';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../redux/reduxTypes.types';
@@ -56,7 +56,7 @@ const CompanySettingsModal: React.FC<CompanySettingsProps> = ({ onClose, ...prop
 
   return (
     <ModalBox>
-      <OverlayHeader title={'Company settings'} onClosePress={onClose} />
+      <DrawerHeader title={'Company settings'} onClosePress={onClose} />
 
       <TabSelector
         options={tabs}

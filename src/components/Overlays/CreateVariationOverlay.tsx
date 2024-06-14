@@ -3,11 +3,10 @@ import FlexBox, { FlexForm } from '../atoms/FlexBox';
 import { useOffersSelector } from '../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import * as React from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Text } from '../atoms/Text';
+import { useCallback, useMemo, useState } from 'react';
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import { ObjectEntries, toVariationFormData, toVariationReqData } from '../../utils';
-import { IVariationFormData, VariationEntity } from '../../types/offers/variations.types';
+import { sortIds, toVariationFormData, toVariationReqData } from '../../utils';
+import { VariationEntity, VariationFormData } from '../../types/offers/variations.types';
 import { ToastService } from '../../services';
 import { ModalFormProps } from '../ModalForm';
 import FormAfterSubmitOptions, { useAfterSubmitOptions } from '../atoms/FormAfterSubmitOptions';
@@ -21,19 +20,18 @@ import { t } from '../../lang';
 import LangButtonsGroup from '../atoms/LangButtonsGroup';
 import { UUID } from '../../types/utils.types';
 import OfferPropertySelector from '../Forms/offers/variations/OfferPropertySelector';
-import { PropertiesGroupEntity, PropertyEntity, PropertyValueEntity } from '../../types/offers/properties.types';
+import { PropertiesGroupEntity, PropertyEntity } from '../../types/offers/properties.types';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
-import { IOfferFullFormData, OfferEntity } from '../../types/offers/offers.types';
+import { OfferEntity, OfferFullFormData, PropertyValuesMap } from '../../types/offers/offers.types';
 import DrawerBase from './OverlayBase';
 import { PropertiesGroupSelector } from '../atoms/PropertiesGroupSelector';
 import { AccordionFormArea } from '../atoms/FormArea/AccordionForm';
-import { omit } from 'lodash';
 
 export interface CreateVariationModalProps
   extends CreatedOverlay,
     Omit<ModalFormProps<any, any, VariationEntity>, 'onSubmit' | 'defaultState'> {
-  onSubmit?: AppSubmitHandler<IVariationFormData>;
+  onSubmit?: AppSubmitHandler<VariationFormData>;
   offer?: OfferEntity;
   offerId?: UUID;
   updateId?: UUID;
@@ -86,17 +84,17 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   const state = useOffersSelector();
   const service = useAppServiceProvider()[ServiceName.offers];
   const loaders = useLoaders<'create' | 'update' | 'refresh'>();
-  const { variation } = useCurrentVariation({ _id: updateId });
-  const Offer = useCurrentOffer({ _id: variation?.offer?._id || offerId || offer?._id });
+  const Variation = useCurrentVariation({ _id: updateId });
+  const Offer = useCurrentOffer({ _id: Variation?.offer?._id || offerId || offer?._id });
 
   const submitOptions = useAfterSubmitOptions();
 
-  const [currentTemplate, setCurrentTemplate] = useState<PropertiesGroupEntity>();
+  const [currentTemplate, setCurrentTemplate] = useState<PropertiesGroupEntity | undefined>(Variation.template);
 
-  const formMethods = useAppForm<IOfferFullFormData>({
+  const formMethods = useAppForm<OfferFullFormData>({
     defaultValues: toVariationFormData(
-      variation
-        ? { ...variation, offer: Offer, template: currentTemplate }
+      Variation
+        ? { ...Variation, offer: Offer, template: currentTemplate }
         : { offer: Offer, template: currentTemplate },
       Offer
     ),
@@ -111,18 +109,9 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
     formState: { errors },
     formValues,
     reset,
+    resetField,
+    getValues,
   } = formMethods;
-
-  const [selectedPropsMap, setSelectedPropsMap] = useState<Record<string, PropertyValueEntity>>(() => {
-    const init: Record<string, PropertyValueEntity> = {};
-    for (const [propId, valueId] of ObjectEntries(formValues.propertiesMap ?? {})) {
-      const value = state.propertiesDataMap?.[valueId];
-      if (value) {
-        init[propId] = value;
-      }
-    }
-    return init;
-  });
 
   const propertiesList = useMemo(() => {
     if (currentTemplate?.childrenList?.length) {
@@ -148,50 +137,52 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
     return _propertiesList;
   }, [currentTemplate?._id, currentTemplate?.childrenList, state.propertiesDataMap, state.propertiesKeysMap]);
 
-  const { label: compiledLabel } = useMemo(() => {
-    // const _sortedIds = Object.keys(selectedPropsMap ?? {}).sort((prev, next) => prev.localeCompare(next));
+  const compileLabel = useCallback(
+    (valuesMap: PropertyValuesMap) => {
+      if (!valuesMap) {
+        return `${Offer?.label}. {{VARIATION_LABEL}}`;
+      }
 
-    const _sorted = Object.entries(selectedPropsMap).sort((prev, next) => {
-      return prev[0].localeCompare(next[0]);
-    });
-    const _labels: string[] = Offer?.label ? [Offer?.label] : [];
+      const _sortedIds = !valuesMap ? [] : sortIds(Object.keys(valuesMap));
 
-    for (const entry of _sorted) {
-      const value = entry[1];
-      value?.label && _labels.push(value?.label);
-    }
-    const _base = !_sorted?.length ? variation?.label ?? `${Offer?.label}. {{VARIATION_LABEL}}` : _labels.join('. ');
+      const _labels: string[] = Offer?.label ? [Offer?.label] : [];
 
-    return { label: _base };
-  }, [Offer?.label, selectedPropsMap, variation?.label]);
+      for (const propId of _sortedIds) {
+        const value = valuesMap[propId];
 
-  useEffect(() => {
-    setValue('label', compiledLabel);
-  }, [compiledLabel, setValue, variation]);
+        value?.label && _labels.push(value?.label);
+      }
+      const _compiled = !_labels?.length
+        ? Variation?.label || `${Offer?.label}. {{VARIATION_LABEL}}`
+        : _labels.join('. ');
+
+      return _compiled;
+    },
+    [Offer?.label, Variation?.label]
+  );
+
+  // useEffect(() => {
+  //   setValue('label', compiledLabel);
+  // }, [compiledLabel, setValue, Variation]);
 
   const onValid = useCallback(
-    (data: IVariationFormData) => {
+    (data: VariationFormData) => {
       if (updateId) {
         service.updateVariationById({
-          data: { data: toVariationReqData(data) },
-
-          onSuccess: data => {
-            console.log('updateVariationById onSuccess', data);
-
-            onClose && onClose();
-          },
-          onError: ToastService.toastAxiosError,
+          onSuccess: loaders.onSuccess('update', onClose),
           onLoading: loaders.onLoading('update'),
+          onError: ToastService.toastAxiosError,
+          data: { data: toVariationReqData(data) },
         });
       } else {
         service.createVariation({
-          data: { data: toVariationReqData(data) },
+          onError: ToastService.toastAxiosError,
+          onLoading: loaders.onLoading('create'),
           onSuccess: data => {
             submitOptions.state.close && onClose && onClose();
             submitOptions.state.clear && reset();
           },
-          onError: ToastService.toastAxiosError,
-          onLoading: loaders.onLoading('create'),
+          data: { data: toVariationReqData(data) },
         });
       }
 
@@ -202,30 +193,25 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
 
   const handleSelect = useCallback(
     (parentId: string, id: string) => {
-      const existId = formValues.propertiesMap?.[parentId];
+      const key = `propertiesMap.${parentId}` as const;
+      const exist = getValues(key);
 
-      const remove = existId && existId === id;
-
-      if (remove) {
-        setValue(`propertiesMap.${parentId}`, '');
-
-        setSelectedPropsMap(p => omit(p, parentId));
+      if (exist && exist._id === id) {
+        resetField(key);
       } else {
-        setValue(`propertiesMap.${parentId}`, id);
-
         const value = state.propertiesDataMap?.[id];
+        console.log('handleSelect value');
         if (value) {
-          setSelectedPropsMap(p => ({ ...p, [parentId]: value }));
+          setValue(key, value);
         }
       }
     },
-    [formValues.propertiesMap, setValue, state.propertiesDataMap]
+    [getValues, resetField, setValue, state.propertiesDataMap]
   );
 
   const handleClearMap = useCallback(() => {
-    setValue('propertiesMap', {});
-    setSelectedPropsMap({});
-  }, [setValue]);
+    resetField('propertiesMap');
+  }, [resetField]);
 
   const selectedIds = useMemo(() => {
     return formValues?.propertiesMap ? Object.values(formValues?.propertiesMap) : [];
@@ -238,18 +224,14 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
 
   const renderPropertiesList = useMemo(() => {
     return propertiesList?.map(prop => {
-      const selectedId = formValues?.propertiesMap?.[prop._id];
+      const selectedId = formValues?.propertiesMap?.[prop._id]?._id;
+      console.log('selectedId', selectedId);
       return (
         <OfferPropertySelector
           key={`prop_${prop._id}`}
           item={prop}
           selectedIds={selectedId ? [selectedId] : undefined}
           onSelect={handleSelect}
-          onChangeIds={(propId, [valueId]) => {
-            console.log('onChangeIds', propId, valueId);
-
-            handleSelect(propId, valueId);
-          }}
         />
       );
     });
@@ -264,9 +246,9 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
         onReset={handleClearMap}
         {...props}
       >
-        <Content flex={1} fillWidth overflow={'auto'} gap={12}>
-          <AccordionFormArea label={'Offer'} expandable={false} hideFooter>
-            <InputLabel label={t('Offer label')} error={errors?.offer?._id} required disabled>
+        <Content flex={1} fillWidth overflow={'auto'}>
+          <AccordionFormArea label={'Offer'} hideFooter isOpen={false}>
+            <InputLabel label={t('Offer label')} required disabled>
               <InputText value={Offer?.label ?? undefined} placeholder={t('label')} required disabled />
             </InputLabel>
 
@@ -313,15 +295,9 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
             </TemplateBox>
           </AccordionFormArea>
 
-          {variation && (
+          {Variation && (
             <AccordionFormArea label={t('Cms information')} expandable={false} hideFooter>
-              <CmsConfigs padding={'8px 0'} fillWidth>
-                <CmsConfigsHeader padding={'8px'} justifyContent={'flex-end'} fxDirection={'row'} fillWidth>
-                  <Text $size={13} $weight={500}>
-                    {t('Cms configs')}
-                  </Text>
-                </CmsConfigsHeader>
-
+              <FlexBox className={'CmsConfigs'} padding={'8px 0'} fillWidth>
                 <Inputs>
                   <InputLabel label={t('Language key')} error={errors?.cmsConfigs?.key}>
                     <LangButtonsGroup disabled />
@@ -331,7 +307,7 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
                     <InputText placeholder={'Label'} {...register('cmsConfigs.labels.ua')} />
                   </InputLabel>
                 </Inputs>
-              </CmsConfigs>
+              </FlexBox>
             </AccordionFormArea>
           )}
         </Content>
@@ -381,13 +357,6 @@ const Inputs = styled(FlexBox)`
 
 const ExtraFooterBox = styled(FlexBox)`
   border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
-`;
-
-const CmsConfigs = styled(FlexBox)``;
-
-const CmsConfigsHeader = styled(FlexBox)`
-  border-top: 1px solid ${p => p.theme.modalBorderColor};
-  border-bottom: 1px solid ${p => p.theme.modalBorderColor};
 `;
 
 export default CreateVariationOverlay;

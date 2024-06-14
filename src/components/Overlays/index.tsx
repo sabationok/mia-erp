@@ -4,7 +4,7 @@ import { Text } from '../atoms/Text';
 import styled from 'styled-components';
 import * as React from 'react';
 
-export const OverlayHeader = ({
+export const DrawerHeader = ({
   onBackPress,
   onClosePress,
   title,
@@ -38,14 +38,12 @@ export const OverlayHeader = ({
         <ButtonIcon
           variant={'textSmall'}
           icon={'SmallArrowLeft'}
-          iconSize={'22px'}
-          padding={'0 6px'}
+          iconSize={'28px'}
+          padding={'0'}
           gap={4}
           style={{ minWidth: 'max-content', minHeight: '100%' }}
           onClick={onBackPress}
-        >
-          {'Back'}
-        </ButtonIcon>
+        ></ButtonIcon>
       )}
 
       <FlexBox justifyContent={'center'} overflow={'hidden'} padding={'0 8px'}>

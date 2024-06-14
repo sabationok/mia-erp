@@ -5,7 +5,7 @@ import ButtonIcon from '../../atoms/ButtonIcon';
 import styled from 'styled-components';
 import { t } from '../../../lang';
 import { usePageCurrentOffer } from '../../AppPages/offers/PageOfferProvider';
-import { OverlayHeader } from '../../Overlays';
+import { DrawerHeader } from '../../Overlays';
 import TabSelector from '../../atoms/TabSelector';
 import { useOverlayService } from '../../../Providers/Overlay/OverlayStackProvider';
 import { useAppRouter } from '../../../hooks';
@@ -68,7 +68,7 @@ const OfferOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }) 
 
   return (
     <Container fillWidth flex={1} className={className} padding={'0 8px'}>
-      <OverlayHeader title={t('Offer overview')} onBackPress={router.goBack} />
+      <DrawerHeader title={t('Offer overview')} onBackPress={router.goBack} />
 
       <TabSelector
         optionProps={{ fitContentH: true }}

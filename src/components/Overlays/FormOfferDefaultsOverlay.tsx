@@ -23,7 +23,7 @@ import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { Keys } from '../../types/utils.types';
 import _ from 'lodash';
 
-export interface FormProductDefaultsOverlayProps extends CreatedOverlay {
+export interface FormOfferDefaultsOverlayProps extends CreatedOverlay {
   onSubmit?: AppSubmitHandler<OfferDefaultsFormState>;
   offer?: OfferEntity;
 }
@@ -55,7 +55,7 @@ function getFormDefaultValues(offer: OfferEntity) {
 
   return ObjectFromEntries(map.entries());
 }
-const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({ onClose, onSubmit }) => {
+const FormOfferDefaultsOverlay: React.FC<FormOfferDefaultsOverlayProps> = ({ onClose, onSubmit }) => {
   const loaders = useLoaders<OfferOverlayLoaderKey>();
   const offerId = useAppParams()?.offerId;
   const Offer = useCurrentOffer({ _id: offerId });
@@ -170,4 +170,4 @@ const Content = styled(FlexBox)`
 
   border-bottom: 1px solid ${p => p.theme.modalBorderColor};
 `;
-export default FormProductDefaultsOverlay;
+export default FormOfferDefaultsOverlay;

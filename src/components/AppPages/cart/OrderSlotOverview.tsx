@@ -25,7 +25,7 @@ export default function OrderSlotOverview({ warehouse }: { warehouse?: Warehouse
 
   const counted = useMemo(() => {
     return countOrderSlotValues({
-      variation: selected,
+      origin: selected,
       ...Slot,
       ...(selected?.price ?? Slot),
       origin: selected?.price ?? Slot.origin,

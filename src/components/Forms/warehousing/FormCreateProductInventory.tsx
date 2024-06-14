@@ -69,7 +69,7 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
   useEffect(() => {
     if (selectedVariation) {
       createApiCall(
-        { data: { variation: getIdRef(selectedVariation) }, onSuccess: setLoadedPrices },
+        { data: { origin: getIdRef(selectedVariation) }, onSuccess: setLoadedPrices },
         PriceManagementApi.prices.getAll,
         PriceManagementApi
       );
@@ -88,7 +88,7 @@ const FormCreateProductInventory: React.FC<FormCreateProductInventoryProps> = ({
     setSelectedVariation(variation);
 
     createApiCall(
-      { data: { variation }, onSuccess: setLoadedPrices },
+      { data: { variation: origin }, onSuccess: setLoadedPrices },
       PriceManagementApi.prices.getAll,
       PriceManagementApi
     );

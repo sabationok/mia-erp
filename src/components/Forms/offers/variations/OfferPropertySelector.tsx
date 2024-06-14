@@ -110,6 +110,8 @@ export const OfferPropertySelector = ({
               onSelect && onSelect(info.name, info.value);
             }}
             onChange={values => {
+              console.log('onChange', values);
+
               onChangeIds && onChangeIds(item._id, values);
             }}
             value={selectedIds}
@@ -122,6 +124,9 @@ export const OfferPropertySelector = ({
 };
 const PropertyBox = styled(FlexBox)`
   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
+
+  padding-bottom: 12px;
+
   &:last-child {
     border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
   }

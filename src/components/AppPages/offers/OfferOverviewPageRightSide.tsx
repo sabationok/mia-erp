@@ -11,7 +11,7 @@ import WarehousingTab from './tabs/WarehousingTab';
 import { ModalHeader } from '../../atoms';
 import { SalesTab } from './tabs/SalesTab';
 import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
-import { OfferOverlayLoaderKey } from '../../Overlays/FormProductDefaultsOverlay';
+import { OfferOverlayLoaderKey } from '../../Overlays/FormOfferDefaultsOverlay';
 import { LoadersProvider } from '../../../Providers/Loaders/LoaderProvider';
 
 enum RightSideOptionEnum {

@@ -1,9 +1,9 @@
-import { IVariationFormData, VariationEntity } from '../../types/offers/variations.types';
+import { VariationEntity, VariationFormData } from '../../types/offers/variations.types';
 import { nanoid } from '@reduxjs/toolkit';
 import { getIdRef } from './index';
 import { OfferEntity } from '../../types/offers/offers.types';
 
-export const toVariationFormData = (variation: Partial<VariationEntity>, offer?: OfferEntity): IVariationFormData => {
+export const toVariationFormData = (variation: Partial<VariationEntity>, offer?: OfferEntity): VariationFormData => {
   return {
     _id: variation?._id,
     timeFrom: variation?.timeFrom,
