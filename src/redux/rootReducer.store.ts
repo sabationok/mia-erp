@@ -48,7 +48,7 @@ const rootReducer = combineReducers({
   [integrationsSlice.name]: persistReducer(persistorConfigs.integrations, integrationsSlice.reducer),
   [discountsSlice.name]: persistReducer(persistorConfigs.discounts, discountsSlice.reducer),
   [cartSlice.name]: persistReducer(persistorConfigs.cart, cartSlice.reducer),
-  [tagsSlice.name]: persistReducer(persistorConfigs.cart, tagsSlice.reducer),
+  [tagsSlice.name]: persistReducer(persistorConfigs.tags, tagsSlice.reducer),
 });
 
 export type RootReducerType = typeof rootReducer;

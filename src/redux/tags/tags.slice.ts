@@ -50,6 +50,7 @@ export const tagsSlice = createSlice({
 
         if (type) {
           let list = st.listsMap[type];
+          console.log('createTagThunk', { type });
           list = a.payload.upend ? list.concat([a.payload.data]) : [a.payload.data].concat(st.list);
           st.list = list;
         } else {

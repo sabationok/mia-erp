@@ -7,7 +7,6 @@ import { useOfferLoadersProvider } from '../../Modals/CreateOfferModal';
 import { idsFromRefs, sortIds } from '../../../utils';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { FormEventHandler, useEffect, useMemo, useState } from 'react';
-import styled from 'styled-components';
 import { TagTypeEnum } from '../../../types/directories.types';
 import { isArray } from 'lodash';
 
@@ -55,7 +54,14 @@ const OfferTagsFormArea = ({ disabled, offer }: OfferTagsFormAreaProps) => {
   }, []);
 
   return (
-    <AccordionForm label={'Tags'} isOpen={false} disabled={disabled} onSubmit={handleFormSubmit} canSubmit={canSubmit}>
+    <AccordionForm
+      label={'Tags'}
+      isOpen={false}
+      disabled={disabled}
+      onSubmit={handleFormSubmit}
+      canSubmit={canSubmit}
+      isLoading={loaders.isLoading.tags}
+    >
       <AppTagsSelect
         filterValue={{ type: TagTypeEnum.OFFER }}
         hideFilter
@@ -69,9 +75,9 @@ const OfferTagsFormArea = ({ disabled, offer }: OfferTagsFormAreaProps) => {
 };
 export default OfferTagsFormArea;
 
-const Inner = styled.div``;
-const ContainerChild = styled.div`
-  @container sidebar (width < calc(64 px + 12 ch)) {
-    display: none;
-  }
-`;
+// const Inner = styled.div``;
+// const ContainerChild = styled.div`
+//   @container sidebar (width < calc(64 px + 12 ch)) {
+//     display: none;
+//   }
+// `;

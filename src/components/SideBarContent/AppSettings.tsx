@@ -4,41 +4,72 @@ import { AppModuleName } from '../../redux/reduxTypes.types';
 import FlexBox from '../atoms/FlexBox';
 import TagButtonsFilter from '../atoms/TagButtonsFilter';
 import { AccentColorEnum, getAccentColor } from '../../theme/accentColors';
-import { enumToFilterOptions } from '../../utils/fabrics';
+import { enumToFilterOptions, enumToTabs } from '../../utils/fabrics';
 import { Text } from '../atoms/Text';
 import { t } from '../../lang';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import TabSelector from '../atoms/TabSelector';
 
 export interface AppSettingsProps {
   onClose?: () => void;
 }
 
+enum Tabs {
+  Color = 'Color',
+  Other = 'Other',
+}
+const tabOptions = enumToTabs(Tabs);
 const accentColorsList = enumToFilterOptions(AccentColorEnum);
 const AppSettings: React.FC<AppSettingsProps> = () => {
   const service = useAppServiceProvider()[AppModuleName.appSettings];
+  const [currentTab, setCurrentTab] = useState(Tabs.Color);
   const colorsList = useMemo(() => {
     const data = accentColorsList.map(el => ({ ...el, color: getAccentColor(el.value).base }));
 
     return data;
   }, []);
 
+  const renderTab = useMemo(() => {
+    const _tabs = {
+      [Tabs.Color]: () => {
+        return (
+          <FlexBox fillWidth gap={8} padding={'0 8px'}>
+            <Text $padding={'4px 6px'} $size={12} $weight={600}>
+              {t('Select color')}
+            </Text>
+
+            <TagButtonsFilter
+              options={colorsList}
+              numColumns={2}
+              getButtonStyles={button => {
+                return {
+                  color: button.color,
+                  borderColor: button.color,
+                };
+              }}
+              onSelect={ev => {
+                service.selectAccentColor(ev.value);
+              }}
+            />
+          </FlexBox>
+        );
+      },
+      [Tabs.Other]: () => null,
+    };
+    const render = _tabs[currentTab];
+    return render ? render() : null;
+  }, [colorsList, currentTab, service]);
+
   return (
     <Container>
-      <li>
-        <FlexBox fillWidth gap={8} padding={'0 8px'}>
-          <Text $padding={'4px 6px'} $size={12} $weight={600}>
-            {t('Select color')}
-          </Text>
-
-          <TagButtonsFilter
-            options={colorsList}
-            numColumns={2}
-            onSelect={ev => {
-              service.selectAccentColor(ev.value);
-            }}
-          />
-        </FlexBox>
-      </li>
+      <TabSelector
+        options={tabOptions}
+        defaultFilterValue={currentTab}
+        onSelect={opt => {
+          opt.value && setCurrentTab(opt.value);
+        }}
+      />
+      {renderTab}
     </Container>
   );
 };

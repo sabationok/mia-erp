@@ -91,7 +91,7 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
           <InputText placeholder={t('label')} {...register('label')} required autoFocus />
         </InputLabel>
 
-        <FlexBox fxDirection={'row'} gap={6} fillWidth>
+        <FlexBox fxDirection={'row'} gap={12} fillWidth>
           <InputLabel label={t('sku')} error={errors.sku}>
             <InputText placeholder={t('sku')} {...register('sku')} />
           </InputLabel>
@@ -131,6 +131,7 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
             label: t('status'),
             placeholder: t('status'),
             onlyValue: true,
+            valuePath: 'approved',
           })}
         />
 

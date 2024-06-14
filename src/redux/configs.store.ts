@@ -38,7 +38,7 @@ export const persistorConfigs: Record<
   tags: {
     key: 'tags',
     storage: storageSession,
-    whitelist: ['list'],
+    whitelist: ['list', 'listsMap'],
   },
   // categories: {
   //   key: 'categories',

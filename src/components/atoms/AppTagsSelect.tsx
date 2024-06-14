@@ -12,6 +12,11 @@ import { TagEntity } from '../../types/tags.types';
 import TagButtonsFilter, { TagButtonsFilterProps } from './TagButtonsFilter';
 import { useAppDispatch } from '../../redux/store.store';
 import { getAllTagsThunk } from '../../redux/tags/tags.thunks';
+import ButtonIcon from './ButtonIcon';
+import { useTheme } from 'styled-components';
+import { useLoaders } from 'Providers/Loaders/useLoaders.hook';
+import { useModalService } from '../../Providers/ModalProvider/ModalProvider';
+import FormTags from '../Modals/FormTags';
 
 type FilterData = {
   type: Values<typeof TagTypeEnum>;
@@ -29,12 +34,14 @@ export const AppTagsSelect = ({
   filterValue?: FilterData;
   hideFilter?: boolean;
 } & Pick<TagButtonsFilterProps<TagTypeEnum, TagEntity>, 'onChangeIds' | 'value'>) => {
+  const theme = useTheme();
   // const service = useAppServiceProvider().get(AppModuleName.offers);
   const dispatch = useAppDispatch();
   const state = useTagsSelector();
+  const modalSrv = useModalService();
   const [filter, setFilter] = useState<FilterData>(filterValue);
-  const [current, setCurrent] = useState<TagEntity | undefined>();
-  // const loaders = useLoaders<'getList' | 'create' | 'update'>();
+  // const [current, setCurrent] = useState<TagEntity | undefined>();
+  const loaders = useLoaders<'getList' | 'create' | 'update' | 'delete'>();
 
   const list = useMemo(() => {
     const type = filter.type;
@@ -42,11 +49,11 @@ export const AppTagsSelect = ({
     return state.listsMap?.[type];
   }, [filter.type, state.listsMap]);
 
-  useEffect(() => {
-    if (selected) {
-      setCurrent(selected);
-    }
-  }, [selected]);
+  // useEffect(() => {
+  //   if (selected) {
+  //     setCurrent(selected);
+  //   }
+  // }, [selected]);
 
   // useEffect(() => {
   //   if (list?.length && !current) {
@@ -65,13 +72,31 @@ export const AppTagsSelect = ({
           params: { type: filter.type },
         })
       );
-    } else {
-      console.log(list, filter.type);
     }
-  }, [dispatch, filter.type, list?.length]);
+  }, [dispatch, filter.type, list, list?.length]);
+
+  const onCreateNewPress = () => {
+    modalSrv.create(FormTags, { defaultValues: { type: filter.type } });
+  };
 
   return (
-    <FlexBox margin={'8px 0'} gap={8}>
+    <FlexBox gap={8}>
+      <FlexBox
+        fxDirection={'row'}
+        gap={8}
+        padding={'0 0 8px'}
+        borderBottom={`1px solid ${theme.modalBorderColor}`}
+        justifyContent={'flex-end'}
+      >
+        {/*<ButtonIcon variant={'filled'} sizeType={'extraSmall'} disabled isLoading={loaders.isLoading.delete} danger>*/}
+        {/*  {t('Delete')}*/}
+        {/*</ButtonIcon>*/}
+
+        <ButtonIcon variant={'text'} sizeType={'extraSmall'} onClick={onCreateNewPress}>
+          {t('Add')}
+        </ButtonIcon>
+      </FlexBox>
+
       {!hideFilter && (
         <InputLabel label={t('Select tags group')}>
           <TabSelector

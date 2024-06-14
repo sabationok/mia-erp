@@ -6,6 +6,8 @@ import { AppLoaderSpiner } from './AppLoaderSpiner';
 import { Keys } from '../../types/utils.types';
 import FlexBox, { FlexBoxCss, FlexBoxProps } from './FlexBox';
 import SvgIcon from './SvgIcon';
+import { ActionColorName, IAccentColor } from '../../theme';
+import { ObjectFromEntries } from '../../utils';
 
 interface ButtonStyleProps extends FlexBoxProps {
   flexDirection?: Property.FlexDirection;
@@ -25,10 +27,15 @@ export interface ButtonIconsProps {
   endIcon?: IconIdType;
   endIconId?: IconIdType;
 }
+export type ButtonDangerLevel = Keys<Pick<typeof ActionColorName, 'error' | 'warning'>>;
 interface ButtonProps extends ButtonStyleProps, React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: `${string}px` | `${string}%`;
   sizeType?: ButtonSize;
-  variant: ButtonIconVariant;
+
+  danger?: boolean;
+  warning?: boolean;
+
+  variant?: ButtonIconVariant;
 
   isLoading?: boolean;
 }
@@ -199,17 +206,18 @@ const StButton = styled.button<ButtonIconProps>`
   }
 `;
 
-// const SvgIcon = styled.svg`
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//
-//   pointer-events: none;
-//   width: 100%;
-//   height: 100%;
-//
-//   aspect-ratio: 1/1;
-// `;
+function getEffectColorCallback(effect: Keys<IAccentColor> = 'base') {
+  return ({ theme, danger, warning }: { theme: DefaultTheme } & ButtonProps) => {
+    const action = danger ? 'error' : warning ? 'warning' : '';
+    return action ? theme.actions?.[action]?.[effect] || theme.accentColor?.[effect] : theme.accentColor?.[effect];
+  };
+}
+
+const getEffectColor = ObjectFromEntries(
+  (['base', 'disabled', 'hover', 'pressed', 'light', 'extraLight', 'focus'] as Keys<IAccentColor>[]).map(key => {
+    return [key, getEffectColorCallback(key)];
+  })
+);
 
 const def = css`
   background-color: ${({ theme }) => theme.globals.defaultBtnBckgrndColor.def};
@@ -293,13 +301,15 @@ const pointerLeft = css`
   &:hover {
     &::before {
       height: 100%;
-      background-color: ${({ theme }) => theme.accentColor.base};
+      background-color: ${getEffectColor.base};
     }
   }
 
   &:active {
   }
 `;
+
+//: Record<Keys<IAccentColor>, ReturnType<typeof getEffectColor>>
 const pointerBottom = css`
   background-color: ${({ theme }) => theme.globals.defaultBtnBckgrndColor.def};
 
@@ -330,7 +340,7 @@ const pointerBottom = css`
   &:hover {
     &::before {
       height: 100%;
-      background-color: ${({ theme }) => theme.accentColor.base};
+      background-color: ${getEffectColor.base};
     }
   }
 `;
@@ -349,21 +359,21 @@ const icon = css`
   }
 `;
 const outlined = css`
-  color: ${({ theme }) => theme.accentColor.base};
-  fill: ${({ theme }) => theme.accentColor.base};
-  border: 2px solid ${({ theme }) => theme.accentColor.base};
+  color: ${getEffectColor.base};
+  fill: ${getEffectColor.base};
+  border: 2px solid ${getEffectColor.base};
   /* background-color: transparent; */
 
   &:hover {
-    border: 2px solid ${({ theme }) => theme.accentColor.hover};
-    color: ${({ theme }) => theme.accentColor.hover};
-    fill: ${({ theme }) => theme.accentColor.hover};
+    border: 2px solid ${getEffectColor.hover};
+    color: ${getEffectColor.hover};
+    fill: ${getEffectColor.hover};
   }
 
   &:active {
-    color: ${({ theme }) => theme.accentColor.pressed};
-    fill: ${({ theme }) => theme.accentColor.pressed};
-    border: 2px solid ${({ theme }) => theme.accentColor.pressed};
+    color: ${getEffectColor.pressed};
+    fill: ${getEffectColor.pressed};
+    border: 2px solid ${getEffectColor.pressed};
   }
 
   &[disabled] {
@@ -371,8 +381,9 @@ const outlined = css`
     pointer-events: none;
   }
 `;
+
 const outlinedExtraSmall = css`
-  ${small};
+  ${outlined};
   ${extraSmall};
 `;
 const outlinedSmall = css`
@@ -387,16 +398,16 @@ const outlinedMiddle = css`
 const filled = css`
   color: ${({ theme }) => theme.colorLight};
   fill: ${({ theme }) => theme.colorLight};
-  background-color: ${({ theme }) => theme.accentColor.base};
+  background-color: ${getEffectColor.base};
   border-width: 2px;
   &:hover {
     color: ${({ theme }) => theme.colorLight};
     fill: ${({ theme }) => theme.colorLight};
-    background-color: ${({ theme }) => theme.accentColor.hover};
+    background-color: ${getEffectColorCallback('hover')};
   }
 
   &:active {
-    background-color: ${({ theme }) => theme.accentColor.pressed};
+    background-color: ${getEffectColorCallback('pressed')};
   }
 
   &[disabled] {
@@ -425,52 +436,52 @@ const onlyIconOutlined = css`
 const onlyIcon = css`
   ${def};
   ${icon};
-  fill: ${({ theme }) => theme.accentColor.base};
+  fill: ${getEffectColor.base};
 
   &:hover {
-    fill: ${({ theme }) => theme.accentColor.hover};
+    fill: ${getEffectColor.hover};
   }
 
   &:active {
-    fill: ${({ theme }) => theme.accentColor.pressed};
+    fill: ${getEffectColor.pressed};
   }
 `;
 const onlyIconNoEffects = css`
   ${defNoEffects};
   ${icon};
-  fill: ${({ theme }) => theme.accentColor.base};
+  fill: ${getEffectColor.base};
 
   &:hover {
-    fill: ${({ theme }) => theme.accentColor.hover};
+    fill: ${getEffectColor.hover};
   }
 
   &:active {
-    fill: ${({ theme }) => theme.accentColor.pressed};
+    fill: ${getEffectColor.pressed};
   }
 `;
 const textUnderlined = css`
   text-decoration: underline;
   cursor: pointer;
-  color: ${({ theme }) => theme.accentColor.base};
+  color: ${getEffectColor.base};
 
   &:hover {
-    color: ${({ theme }) => theme.accentColor.hover};
+    color: ${getEffectColor.hover};
   }
 
   &:active {
-    color: ${({ theme }) => theme.accentColor.pressed};
+    color: ${getEffectColor.pressed};
   }
 `;
 const text = css`
   ${def};
-  color: ${({ theme }) => theme.accentColor.base};
+  color: ${getEffectColor.base};
 
   &:hover {
-    color: ${({ theme }) => theme.accentColor.hover};
+    color: ${getEffectColor.hover};
   }
 
   &:active {
-    color: ${({ theme }) => theme.accentColor.pressed};
+    color: ${getEffectColor.pressed};
   }
 `;
 const textExtraSmall = css`
@@ -543,6 +554,7 @@ const variants = {
   onlyIconOutlined,
 
   pointerBottom,
+
   filled,
   outlined,
   text,
@@ -649,7 +661,7 @@ const pointerBottomCss = css<{ asStep?: boolean; customLabel?: boolean; isActive
     width: ${p => (p.isActive ? 100 : 0)}%;
     transition: all ${({ theme }) => theme.globals.timingFnMui};
     transform: translate(${p => (p.asStep ? 0 : -50)}%);
-    background-color: ${({ theme }) => theme.accentColor.base};
+    background-color: ${getEffectColor.base};
   }
 
   &[disabled] {

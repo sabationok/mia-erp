@@ -1,4 +1,5 @@
 import * as antdColors from '@ant-design/colors';
+import * as colors from '@ant-design/colors';
 
 // const LIGHT_BLUE: IAccentColor = {
 //   base: 'rgb(31,176,220)',
@@ -47,6 +48,19 @@ export function getAccentColor(name: AccentColorName): IAccentColor {
     focus: colors[6],
     light: colors[2],
     extraLight: colors[0],
+  };
+}
+export function getGeneratedColor(...args: Parameters<typeof colors.generate>): IAccentColor {
+  const color = colors.generate(...args);
+
+  return {
+    base: color[5],
+    pressed: color[2],
+    hover: color[7],
+    disabled: color[1],
+    focus: color[6],
+    light: color[2],
+    extraLight: color[0],
   };
 }
 

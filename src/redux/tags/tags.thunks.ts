@@ -3,12 +3,12 @@ import { TagsApi } from '../../api/Tags.api';
 import { TagTypeEnum } from '../../types/directories.types';
 
 export enum TagThunkTypeEnum {
-  create = 'create',
-  update = 'update',
-  getAll = 'getAll',
-  getOne = 'getOne',
-  softDelete = 'softDelete',
-  delete = 'delete',
+  create = 'tags/create/Thunk',
+  update = 'tags/update/Thunk',
+  getAll = 'tags/getAll/Thunk',
+  getOne = 'tags/getOne/Thunk',
+  softDelete = 'tags/softDelete/Thunk',
+  delete = 'tags/delete/Thunk',
 }
 
 export const createTagThunk = createAppAsyncThunk(TagThunkTypeEnum.create, TagsApi.create);

@@ -175,8 +175,10 @@ const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<
   );
 
   useEffect(() => {
-    if (inputRef.current && _currentOption) {
-      inputRef.current.value = _currentOption?.label || _currentOption?.name;
+    if (inputRef.current) {
+      if (_currentOption) {
+        inputRef.current.value = _currentOption?.label || _currentOption?.name;
+      }
     }
   }, [_currentOption]);
 
@@ -186,13 +188,13 @@ const CustomSelect = <Ref = any, Value = any, Option extends CustomSelectOption<
     }
   }, [selectedOption]);
 
-  // useEffect(() => {
-  //   if (!isUndefined(selectedValue)) {
-  //     setCurrentOption(
-  //       options?.find((el: CustomSelectOptionBase) => el.value === selectedValue || el?._id === selectedValue)
-  //     );
-  //   }
-  // }, [options, selectedValue]);
+  useEffect(() => {
+    if (!isUndefined(selectedValue)) {
+      setCurrentOption(
+        options?.find((el: CustomSelectOptionBase) => el.value === selectedValue || el?._id === selectedValue)
+      );
+    }
+  }, [options, selectedValue]);
 
   useCloseByBackdropClick(setIsOpen, `data-select=${_compId}`, { disabled: !isOpen });
 

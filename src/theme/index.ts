@@ -1,7 +1,19 @@
-import { AccentColorName, IAccentColor, IAccentColors } from './accentColors';
+import { AccentColorName, getGeneratedColor, IAccentColor, IAccentColors } from './accentColors';
+import { Keys } from '../types/utils.types';
+import { ObjectEntries, ObjectFromEntries } from '../utils';
 
 export type { AccentColorName, IAccentColors, IAccentColor };
 
+export enum ActionColorName {
+  light = 'light',
+  dark = 'dark',
+  default = 'default',
+  info = 'info',
+  success = 'success',
+  warning = 'warning',
+  error = 'error',
+  primary = 'primary',
+}
 export const globals = {
   colorLight: '#EFEFEF',
   trBorderClr: '#464646',
@@ -34,32 +46,18 @@ export const globals = {
 };
 export type IThemeGlobals = typeof globals;
 
-// export interface ITheme extends Record<string, any> {
-//   backgroundColorMain: string;
-//   backgroundColorSecondary: string;
-//   backgroundColorLight?: string;
-//   backdropColor?: string;
-//   borderColor: string;
-//   trBorderClr: string;
-//   trBorderClrLight?: string;
-//   trBorderClrDark?: string;
-//   colorLight: string;
-//   fontColor: string;
-//   fillColor: string;
-//   fontColorHeader?: string;
-//   fillColorHeader?: string;
-//   fontColorSidebar?: string;
-//   fillColorSidebar?: string;
-//   tableBackgroundColor: string;
-//   defaultBtnBckgrndColor: {
-//     def: string;
-//     pressed: string;
-//     hover: string;
-//     disabled: string;
-//     focus: string;
-//     light: string;
-//   };
-// }
+type ActionColorsSet = Record<Keys<typeof ActionColorName>, IAccentColor>;
+
+const actionColorsDarkTheme: ActionColorsSet = ObjectFromEntries(
+  ObjectEntries(globals.colors).map(([key, value]) => {
+    return [key, getGeneratedColor(value, { theme: 'dark' })];
+  })
+);
+const actionColorsDefaultTheme: ActionColorsSet = ObjectFromEntries(
+  ObjectEntries(globals.colors).map(([key, value]) => {
+    return [key, getGeneratedColor(value, { theme: 'default' })];
+  })
+);
 
 const darkTheme = {
   backgroundColorMain: 'rgb(28, 28, 28)',
@@ -141,6 +139,8 @@ const darkTheme = {
     focus: '',
     light: '',
   },
+
+  actions: actionColorsDarkTheme,
 };
 type ITheme = typeof darkTheme;
 
@@ -228,6 +228,7 @@ const lightTheme: Partial<ITheme & Record<string, any>> = {
     focus: '',
     light: '',
   },
+  actions: actionColorsDefaultTheme,
 };
 
 export interface IAppTheme extends ITheme {
@@ -252,7 +253,7 @@ declare module 'styled-components' {
 export function getTheme(themeName?: ThemeType) {
   return themeName && appThemes[themeName] ? appThemes[themeName] : appThemes.light;
 }
-export { getAccentColor } from './accentColors';
+export { getAccentColor, getGeneratedColor } from './accentColors';
 // export function getAccentColor(colorName?: AccentColorNamesType) {
 //   return colorName && accentColors[colorName] ? accentColors[colorName] : accentColors.orange;
 // }

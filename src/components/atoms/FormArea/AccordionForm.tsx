@@ -117,7 +117,7 @@ export const AccordionFormArea = ({
       <ExpandableBox disabled={disabled} flex={1} isActive={_isOpen} maxHeight={maxHeight} maxWidth={'100%'}>
         {_isOpen ? (
           <>
-            <FlexBox flex={1} maxWidth={'100%'} overflow={'hidden'} padding={'8px 8px 12px'}>
+            <FlexBox flex={1} maxWidth={'100%'} overflow={'hidden'} padding={'8px'}>
               {children}
             </FlexBox>
 

@@ -21,6 +21,7 @@ export interface FlexBaseProps
     | 'padding'
     | 'margin'
     | 'borderBottom'
+    | 'borderTop'
     | 'borderRadius'
     | 'border'
     | 'overflow'
@@ -54,6 +55,7 @@ function createFlexBoxStyles({ query, key }: { query: string; key: MediaStylesKe
       flex: ${({ flex = '', ...p }) => p[key]?.flex || flex};
       flex-wrap: ${({ flexWrap = '', ...p }) => p[key]?.flexWrap || flexWrap};
 
+      border-top: ${({ borderTop, ...p }) => p[key]?.borderTop || borderTop};
       border-bottom: ${({ borderBottom, ...p }) => p[key]?.borderBottom || borderBottom};
       border: ${({ border, ...p }) => p[key]?.border || border};
 
@@ -121,9 +123,6 @@ export const FlexBoxCss = css<FlexBoxProps>`
   flex: ${({ flex = '' }) => flex};
   flex-wrap: ${({ flexWrap }) => flexWrap};
 
-  border-bottom: ${({ borderBottom }) => borderBottom};
-  border: ${({ border }) => border};
-
   gap: ${({ gap = 0 }) => gap}px;
 
   padding: ${({ padding = 0 }) => padding};
@@ -144,7 +143,10 @@ export const FlexBoxCss = css<FlexBoxProps>`
   background: ${({ background }) => background};
   border-radius: ${({ borderRadius }) => borderRadius};
   overflow: ${({ overflow }) => overflow};
-  border: ${p => p.border};
+
+  border-top: ${({ borderTop }) => borderTop};
+  border-bottom: ${({ borderBottom }) => borderBottom};
+  border: ${({ border }) => border};
 
   cursor: default;
 

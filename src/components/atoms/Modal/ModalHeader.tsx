@@ -37,6 +37,8 @@ export const ModalHeader = ({
   menuActions,
   ...props
 }: ModalHeaderProps) => {
+  const visibleActions = menuActions?.filter(a => a.isVisible !== false);
+
   return (
     <Header {...props} padding={'8px 0'}>
       <FlexBox
@@ -65,7 +67,8 @@ export const ModalHeader = ({
             </Text>
           </FlexBox>
         )}
-        {!!menuActions?.length && <HeaderActions actions={menuActions} />}
+
+        {!!visibleActions?.length && <HeaderActions actions={visibleActions} />}
 
         {hasOkButton && (
           <ButtonIcon
@@ -107,14 +110,14 @@ const ExtraHeader = styled.div`
   max-width: 100%;
 `;
 
-const HeaderActions = ({ actions }: { actions: IModalHeaderAction[] }) => {
+const HeaderActions = ({ actions }: { actions?: IModalHeaderAction[] }) => {
   const [isVisible, setIsVisible] = useState(false);
   const listRef = useRef<HTMLUListElement>(null);
   const theme = useTheme();
 
   const renderActions = useMemo(() => {
     return actions
-      .filter(item => item.isVisible !== false)
+      ?.filter(item => item.isVisible !== false)
       .map(({ isDanger, isWarn, ...action }, index) => {
         const color = isDanger ? 'error' : isWarn ? 'warning' : undefined;
 
