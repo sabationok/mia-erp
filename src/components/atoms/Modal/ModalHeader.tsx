@@ -47,7 +47,7 @@ export const ModalHeader = ({
         height={'32px'}
         gap={8}
       >
-        {!onBackPress && (
+        {onBackPress && (
           <ButtonIcon
             variant={'onlyIconNoEffects'}
             icon={'SmallArrowLeft'}

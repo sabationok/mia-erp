@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import React, { memo } from 'react';
 import { ModalHeader, ModalHeaderProps } from './ModalHeader';
 import { useModal } from '../../../Providers/ModalProvider/ModalComponent';
+import { FlexBoxProps, FlexMain } from '../FlexBox';
 
 export interface ModalBaseProps
   extends ModalHeaderProps,
@@ -17,6 +18,7 @@ export interface ModalBaseProps
   fitContentH?: boolean;
   height?: string;
   width?: string;
+  contentContainerProps?: FlexBoxProps;
 }
 
 const ModalBase: React.FC<ModalBaseProps> = ({
@@ -32,6 +34,7 @@ const ModalBase: React.FC<ModalBaseProps> = ({
   menuActions,
   canSubmit,
   renderTitle,
+  contentContainerProps,
   ...props
 }) => {
   const modal = useModal();
@@ -50,7 +53,9 @@ const ModalBase: React.FC<ModalBaseProps> = ({
         {extraHeader}
       </ModalHeader>
 
-      <ModalMain className="main">{children}</ModalMain>
+      <ModalMain {...contentContainerProps} className="main">
+        {children}
+      </ModalMain>
     </ModalContainer>
   );
 };
@@ -96,14 +101,12 @@ const ModalContainer = styled.div<
   }
 `;
 
-const ModalMain = styled.main`
-  display: flex;
-  flex-direction: column;
-
+const ModalMain = styled(FlexMain)`
   //overflow: auto;
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
+
   height: 100%;
   max-width: 100%;
   max-height: 100%;

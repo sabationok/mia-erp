@@ -202,10 +202,10 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   };
 
   return (
-    <ModalBase title={title} fillHeight>
+    <ModalBase title={title} fillHeight onBackPress={onGoBackHandler} contentContainerProps={{ padding: '0 8px' }}>
       <TabSelector {...registerTabSelector('type')} options={offerTypeFilterOptions} />
 
-      <FlexBox padding={'0 8px'}>
+      <FlexBox>
         <RenderStackHistory stack={stack} onItemSelect={(_, index) => onStackItemSelect(index)} />
 
         {stack.length === 1 && (
@@ -226,7 +226,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
         )}
       </FlexBox>
 
-      <FlexUl overflow={'auto'} flex={1} fillWidth padding={'8px'}>
+      <FlexUl overflow={'auto'} flex={1} fillWidth padding={'8px 0'}>
         {(currentData?.current ? currentData?.children : roots)?.map(item => {
           return (
             item && (
@@ -253,9 +253,9 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
           borderTop: `1px solid ${theme.sideBarBorderColor}`,
         }}
       >
-        <BackButton variant={'onlyIcon'} icon={'arrowLeft'} iconSize={'100%'} size={'32px'} onClick={onGoBackHandler}>
-          {/*{t('Back')}*/}
-        </BackButton>
+        {/*<BackButton variant={'onlyIcon'} icon={'arrowLeft'} iconSize={'100%'} size={'32px'} onClick={onGoBackHandler}>*/}
+        {/*  /!*{t('Back')}*!/*/}
+        {/*</BackButton>*/}
 
         <ButtonIcon variant={'outlinedMiddle'} onClick={onEditCurrentHandler} disabled={!currentId}>
           {t('Edit')}

@@ -156,6 +156,16 @@ export const FlexBox = styled.div<FlexBoxProps>`
   ${FlexBoxCss}
 `;
 
+export const FlexFooter = styled.footer<FlexBoxProps>`
+  ${FlexBoxCss}
+`;
+export const FlexHeader = styled.header<FlexBoxProps>`
+  ${FlexBoxCss}
+`;
+export const FlexMain = styled.main<FlexBoxProps>`
+  ${FlexBoxCss}
+`;
+
 export const FlexFieldSet = styled.fieldset<FlexBoxProps>`
   min-inline-size: unset;
 

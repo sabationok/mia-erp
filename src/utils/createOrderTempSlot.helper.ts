@@ -74,7 +74,7 @@ export function createOrderTempSlot({
     currency: CurrencyCode.UAH,
     quantity: quantity ?? 1,
     offer: offer,
-    variation: origin,
+    variation: variation,
     fromRef,
     origin: priceInfo,
     inventory: inventory ?? offer?.inventory,
