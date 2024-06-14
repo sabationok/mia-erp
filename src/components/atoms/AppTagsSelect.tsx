@@ -14,7 +14,6 @@ import { useAppDispatch } from '../../redux/store.store';
 import { getAllTagsThunk } from '../../redux/tags/tags.thunks';
 import ButtonIcon from './ButtonIcon';
 import { useTheme } from 'styled-components';
-import { useLoaders } from 'Providers/Loaders/useLoaders.hook';
 import { useModalService } from '../../Providers/ModalProvider/ModalProvider';
 import FormTags from '../Modals/FormTags';
 
@@ -41,7 +40,7 @@ export const AppTagsSelect = ({
   const modalSrv = useModalService();
   const [filter, setFilter] = useState<FilterData>(filterValue);
   // const [current, setCurrent] = useState<TagEntity | undefined>();
-  const loaders = useLoaders<'getList' | 'create' | 'update' | 'delete'>();
+  // const loaders = useLoaders<'getList' | 'create' | 'update' | 'delete'>();
 
   const list = useMemo(() => {
     const type = filter.type;

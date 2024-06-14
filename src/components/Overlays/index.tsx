@@ -117,7 +117,13 @@ export const OverlayFooter = ({
 
       <FlexBox padding={'8px 8px 16px'} fxDirection={'row'} gap={8} alignItems={'center'}>
         {onGoBackPress && (
-          <ButtonIcon variant={'onlyIcon'} icon={'SmallArrowLeft'} size={'28px'} iconSize={'90%'} type={'reset'} />
+          <ButtonIcon
+            variant={'onlyIcon'}
+            icon={'SmallArrowLeft'}
+            size={'28px'}
+            iconSize={'90%'}
+            onClick={onGoBackPress}
+          />
         )}
 
         {resetButtonShown && (

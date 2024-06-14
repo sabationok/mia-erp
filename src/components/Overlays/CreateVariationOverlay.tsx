@@ -29,6 +29,7 @@ import { AccordionFormArea } from '../atoms/FormArea/AccordionForm';
 import { LoadersProvider } from '../../Providers/Loaders/LoaderProvider';
 import _ from 'lodash';
 import { nanoid } from '@reduxjs/toolkit';
+import { Text } from '../atoms/Text';
 
 export interface CreateVariationModalProps
   extends CreatedOverlay,
@@ -42,6 +43,7 @@ export interface CreateVariationModalProps
 
   defaultState?: Partial<VariationEntity>;
 }
+
 const _schema = yup.object().shape({
   label: yup.string().required().min(5).max(128),
   sku: yup.string().required().min(8).max(32),
@@ -73,6 +75,11 @@ const _schema = yup.object().shape({
     out: yup.string(),
   }),
 });
+const mainInputsProps = [
+  { title: t('Offer label'), name: 'label', required: true, flex: '2 0 100%' },
+  { title: t('SKU'), name: 'sku', required: true, flex: '1 1 40%' },
+  { title: t('Bar-code'), name: 'barCode', required: false, flex: '1 1 40%' },
+] as const;
 const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   onClose,
   title,
@@ -268,35 +275,51 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
         >
           <Content flex={1} fillWidth overflow={'auto'}>
             <AccordionFormArea label={'Offer'} hideFooter isOpen={false}>
-              {(
-                [
-                  { title: t('Offer label'), name: 'label' },
-                  { title: t('SKU'), name: 'sku' },
-                  { title: t('Bar-code'), name: 'barCode' },
-                ] as const
-              ).map(({ name, title }) => {
-                return (
-                  <InputLabel key={name} label={title} disabled>
-                    <InputText value={Offer?.[name] ?? undefined} placeholder={t('label')} disabled />
-                  </InputLabel>
-                );
-              })}
+              <FlexBox
+                className={'Variation_Main_Offer_Info'}
+                flexWrap={'wrap'}
+                fxDirection={'row'}
+                alignItems={'flex-end'}
+                style={{ columnGap: 12 }}
+              >
+                {mainInputsProps.map(({ name, title, flex }) => {
+                  return (
+                    <InputLabel key={name} className={name} flex={flex} label={title} disabled>
+                      {/*<InputText value={Offer?.[name] ?? undefined} placeholder={title} disabled />*/}
+                      <FlexBox padding={'4px 8px'} minHeight={'32px'}>
+                        <Text $weight={600} $size={14}>
+                          {Offer?.[name] ?? undefined}
+                        </Text>
+                      </FlexBox>
+                    </InputLabel>
+                  );
+                })}
+              </FlexBox>
             </AccordionFormArea>
 
             <AccordionFormArea label={'Main info'} expandable={false} hideFooter>
-              {(
-                [
-                  { title: t('Offer label'), name: 'label', required: true },
-                  { title: t('SKU'), name: 'sku', required: true },
-                  { title: t('Bar-code'), name: 'barCode', required: false },
-                ] as const
-              ).map(({ name, title, required }) => {
-                return (
-                  <InputLabel key={name} label={title} error={errors?.[name]} required={required}>
-                    <InputText {...register(name, { required })} placeholder={t('label')} />
-                  </InputLabel>
-                );
-              })}
+              <FlexBox
+                className={'Variation_Main_info'}
+                flexWrap={'wrap'}
+                fxDirection={'row'}
+                alignItems={'flex-end'}
+                style={{ columnGap: 12 }}
+              >
+                {mainInputsProps.map(({ name, title, flex, required }) => {
+                  return (
+                    <InputLabel
+                      key={name}
+                      className={name}
+                      label={title}
+                      error={errors?.[name]}
+                      required={required}
+                      flex={flex}
+                    >
+                      <InputText {...register(name, { required })} placeholder={t('label')} />
+                    </InputLabel>
+                  );
+                })}
+              </FlexBox>
             </AccordionFormArea>
 
             <AccordionFormArea label={t('Properties')} expandable={false} hideFooter>

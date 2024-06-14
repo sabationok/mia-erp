@@ -2,7 +2,7 @@ import { RenderOverviewCellComponent } from '../../components/overview-types';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 import React, { useMemo } from 'react';
 import ImagePreviewSmall from '../../../atoms/ImagePreviewSmall';
-import FormProductImages from '../../../Overlays/FormProductImagesOverlay';
+import FormProductImages from '../../../Overlays/FormOfferImagesOverlay';
 import FlexBox from '../../../atoms/FlexBox';
 import { CellStyledComp } from '../../components/CellStyles';
 import { OverviewCellHeader } from '../../components/OverviewCellHeader';

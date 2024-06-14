@@ -13,7 +13,7 @@ export interface FormProductImagesOverlayProps extends CreatedOverlay {
   offer?: OfferEntity;
 }
 
-const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onClose, offer }) => {
+const FormOfferImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onClose, offer }) => {
   const Offer = useCurrentOffer(offer);
 
   const service = useAppServiceProvider()[ServiceName.offers];
@@ -73,4 +73,4 @@ const Form = styled(FlexForm)`
 //   border-top: 1px solid ${p => 'tomato' || p.theme.sideBarBorderColor};
 //   border-bottom: 1px solid ${p => 'tomato' || p.theme.sideBarBorderColor};
 // `;
-export default FormProductImagesOverlay;
+export default FormOfferImagesOverlay;
