@@ -44,7 +44,8 @@ const AddImageSetModal = ({
     setFormData(prev => ({ ...prev, [name]: value }));
   };
   const handleClear = () => {
-    current?.value && setFormData(prev => ({ ...prev, [current?.value]: '' }));
+    const key = current?.value;
+    key && setFormData(prev => ({ ...prev, [key]: '' }));
   };
 
   return (

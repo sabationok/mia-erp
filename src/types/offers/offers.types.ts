@@ -1,5 +1,5 @@
 import { ArrayOfUUID, IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/app-redux.types';
-import { ISupplierDirItem, OfferCategoryEntity } from '../dir.types';
+import { OfferCategoryEntity, SupplierDirEntity } from '../dir.types';
 import { PriceEntity } from '../price-management/price-management.types';
 import { WarehouseEntity, WarehouseItemEntity } from '../warehousing/warehouses.types';
 import { IBrand } from '../../redux/directories/brands.types';
@@ -30,7 +30,7 @@ import {
 import { OfferImageSlotEntity } from './offer-images.types';
 import { WarehouseInventoryEntity } from '../warehousing/warehouse-inventory.types';
 import { HasBaseCmsConfigs } from '../cms.types';
-import { HasTags } from '../tags.types';
+import { HasTags, TagEntity } from '../tags.types';
 
 export type { OfferImageSlotEntity } from './offer-images.types';
 
@@ -82,7 +82,6 @@ export interface IOfferBase
     HasIsVisibleFlag {
   qrCode?: string;
 
-  template?: PropertiesGroupEntity;
   propsKey?: string;
 
   approved?: OfferStatusEnum;
@@ -101,7 +100,7 @@ export interface IOfferRelatedDefaultFields {
   price?: PriceEntity;
   warehouse?: WarehouseEntity;
   inventory?: WarehouseItemEntity;
-  supplier?: ISupplierDirItem;
+  supplier?: SupplierDirEntity;
 }
 export interface OfferEntity
   extends IBase,
@@ -111,14 +110,15 @@ export interface OfferEntity
     HasEditor,
     IOfferRelatedDefaultFields,
     HasTags {
-  categories?: OfferCategoryEntity[];
-
   offer?: OfferEntity;
   brand?: IBrand;
+  categories?: OfferCategoryEntity[];
+
   recommends?: OfferEntity[];
 
   template?: PropertiesGroupEntity;
   properties?: PropertyValueEntity[];
+  tags?: TagEntity[];
 
   variations?: VariationEntity[];
   prices?: PriceEntity[];
@@ -127,21 +127,16 @@ export interface OfferEntity
 }
 
 // * >>>>>>> FORM DATA <<<<<<<
-export interface IProductBaseFormData extends OfferBaseDto {}
 
-export interface OfferDefaultsFormState extends Record<keyof IOfferRelatedDefaultFields, IFormDataValueWithID> {}
+export interface OfferDefaultsFormData extends PartialRecord<keyof IOfferRelatedDefaultFields, IFormDataValueWithID> {}
 
-export interface IProductWithAddsFieldsFormData extends IProductBaseFormData {}
+export interface OfferFullFormData extends OfferDto {
+  defaults?: OfferDefaultsFormData;
 
-export interface OfferFullFormData extends Omit<OfferDto, 'recommends' | 'properties' | 'images' | 'categories'> {
-  categories?: ArrayOfUUID;
-  recommends?: ArrayOfUUID;
-  properties?: ArrayOfUUID;
-
-  defaults?: OfferDefaultsFormState;
   images?: OfferImageSlotEntity[];
 
   propValuesIdsMap?: Record<string, string>;
+  propertiesMap?: PropertyValuesMap;
 }
 
 export interface OfferFormData extends OfferFullFormData {}
@@ -149,14 +144,23 @@ export interface OfferFormData extends OfferFullFormData {}
 // * >>>>>> OFFER DTO <<<<<<<
 export interface OfferBaseDto extends Omit<IOfferBase, '_id' | 'createdAt' | 'deletedAt' | 'updatedAt'> {}
 
-export interface OfferWithAddsFieldsDto extends OfferBaseDto {
-  category?: OnlyUUID;
+export enum OfferFormRelatedFieldKeyEnum {
+  categories = 'categories',
+  recommends = 'recommends',
+  properties = 'properties',
+  tags = 'tags',
+  categoriesIds = 'categoriesIds',
+  recommendsIds = 'recommendsIds',
+  propertiesIds = 'propertiesIds',
+  tagsIds = 'tagsIds',
+}
+
+export interface OfferRelatedFieldsDto extends PartialRecord<OfferFormRelatedFieldKeyEnum, ArrayOfUUID> {
   brand?: OnlyUUID;
   template?: OnlyUUID;
 
-  categories?: ArrayOfUUID;
-  recommends?: ArrayOfUUID;
-  properties?: ArrayOfUUID;
+  brandId?: UUID;
+  templateId?: UUID;
 }
 
 type OfferDefaultRefKey = Keys<IOfferRelatedDefaultFields>;
@@ -166,16 +170,12 @@ export interface IOfferDefaultsDto
   extends PartialRecord<OfferDefaultRefKey, OnlyUUID>,
     PartialRecord<OfferDefaultsIdKey, UUID> {}
 
-export interface OfferDto extends OfferWithAddsFieldsDto, IOfferDefaultsDto {}
+export interface OfferDto extends OfferBaseDto, OfferRelatedFieldsDto, IOfferDefaultsDto {}
 
 export interface OfferReqData {
   _id?: string;
   data?: OfferDto;
   params?: AppQueryParams;
-}
-
-export interface HasOffer {
-  offer?: MaybeNull<OfferEntity>;
 }
 
 export interface HasOffers {

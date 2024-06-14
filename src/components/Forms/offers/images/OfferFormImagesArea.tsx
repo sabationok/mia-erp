@@ -9,8 +9,9 @@ import FormOfferImagesComponent from './FormOfferImagesComponent';
 import { getIdRef } from '../../../../utils';
 import { t } from '../../../../lang';
 
-export interface OfferFormImagesAreaProps extends OfferFormAreaProps<OfferImageSlotEntity[]> {
-  onSubmit?: AppSubmitHandler<Partial<OfferImageSlotEntity>[]>;
+type OfferField = Partial<OfferImageSlotEntity>[];
+export interface OfferFormImagesAreaProps extends OfferFormAreaProps<OfferField> {
+  onSubmit?: AppSubmitHandler<OfferField>;
   onSuccess?: (data: { data: OfferEntity }) => void;
   update?: string;
 }
@@ -23,11 +24,12 @@ export const OfferFormImagesArea = ({
   defaultValues,
 }: OfferFormImagesAreaProps) => {
   const loaders = useOfferLoadersProvider();
-  const [state, setState] = useState<Partial<OfferImageSlotEntity>[]>(defaultValues || loaders?.state?.images || []);
+  const [state, setState] = useState<OfferField>(defaultValues || loaders?.state?.images || []);
 
   const service = useAppServiceProvider()[ServiceName.offers];
   const handleSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
+    ev.stopPropagation();
 
     if (onSubmit) {
       onSubmit(state);

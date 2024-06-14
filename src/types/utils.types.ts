@@ -41,7 +41,7 @@ export enum CurrencyCode {
   EUR = 'EUR',
   USD = 'USD',
 }
-export type PartialRecord<K extends keyof any, V = any> = { [key in K]?: V };
+export type PartialRecord<K extends string | number | symbol, V> = Partial<Record<K, V>>;
 
 export type EntityPath<Entity> = Path<Entity>;
 

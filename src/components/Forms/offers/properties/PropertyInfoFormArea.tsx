@@ -40,9 +40,9 @@ export const PropertyInfoFormArea = ({
   const onValid = (data: IPropertyFormData) => {
     if (updateId) {
       offersSrv.updatePropertyById({
-        data: { _id: updateId, data: toReqData(omit(data, ['cmsConfigs'])) },
+        data: { data: { _id: updateId, data: toReqData(omit(data, ['cmsConfigs', '_id'])) } },
         onLoading: loaders.onLoading('update'),
-        onSuccess: data => {
+        onSuccess: ({ data }) => {
           loaders.setData('currentId', data._id);
         },
       });
@@ -50,9 +50,9 @@ export const PropertyInfoFormArea = ({
       offersSrv.createProperty({
         onLoading: loaders.onLoading('create'),
         data: {
-          data: toReqData(omit(data, ['cmsConfigs'])),
+          data: { data: toReqData(omit(data, ['cmsConfigs'])) },
         },
-        onSuccess: data => {
+        onSuccess: ({ data }) => {
           loaders.setData('currentId', data._id);
         },
       });

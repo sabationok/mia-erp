@@ -101,7 +101,7 @@ export interface IDirInTreeProps<
   UpdateDTO = any,
   ItemDataType extends IDirItemBase = any,
   Service = any,
-  SubmitOptions = any
+  SubmitOptions = any,
 > extends DirBaseProps {
   dirType: DirType;
   type?: DirItemTypeByDirType[DirType];
@@ -126,7 +126,7 @@ export type ActionsCreatorOptions<
   DirType extends ApiDirType = any,
   CreateDTO = any,
   UpdateDTO = any,
-  ItemDataType = any
+  ItemDataType = any,
 > = {
   modalService: IModalProviderContext;
   service: DirectoriesService<DirType, CreateDTO, UpdateDTO, ItemDataType>;
@@ -146,7 +146,7 @@ export type DirInTreeActionsCreatorType<
   ItemDataType extends IDirItemBase = any,
   Service = any,
   ItemDto = any,
-  SubmitOptions = any
+  SubmitOptions = any,
 > = (options: DirInTreeActionsCreatorOptions<DirType, ItemDataType, Service>) => {
   onCreateParent?: (options?: UseAppFormSubmitOptions & SubmitOptions) => void;
   onCreateChild?: (
@@ -199,7 +199,7 @@ export interface DirMarksProps extends IDirInTreeProps<ApiDirType.MARKS> {}
 export interface ITagDirItem extends IDirItemBase<ApiDirType.TAGS> {}
 export interface DirTagsProps extends IDirInTreeProps<ApiDirType.TAGS> {}
 
-export interface ISupplierDirItem extends IDirItemBase<ApiDirType.CONTRACTORS> {}
+export interface SupplierDirEntity extends IDirItemBase<ApiDirType.CONTRACTORS> {}
 
 // ? ======== METHODS
 export interface IShipmentDirItem extends IDirItemBase<ApiDirType.METHODS_SHIPMENT> {}

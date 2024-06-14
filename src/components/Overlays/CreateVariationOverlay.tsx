@@ -188,7 +188,17 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
 
       // onSubmit && onSubmit(data);
     },
-    [loaders, onClose, reset, service, submitOptions.state.clear, submitOptions.state.close, updateId]
+    [
+      Offer?.sku,
+      loaders,
+      onClose,
+      reset,
+      service,
+      setValue,
+      submitOptions.state.clear,
+      submitOptions.state.close,
+      updateId,
+    ]
   );
 
   const handleSelect = useCallback(
@@ -336,10 +346,6 @@ const FormContainer = styled(FlexForm)`
 const Content = styled(FlexBox)`
   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
   border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
-`;
-
-const Inputs = styled(FlexBox)`
-  padding: 0 4px;
 `;
 
 const ExtraFooterBox = styled(FlexBox)`

@@ -44,7 +44,7 @@ export const PropertyCmsParamsFormArea = (_: {
       offersSrv.updatePropertyById({
         onLoading: loaders.onLoading('update'),
         onSuccess: loaders.onSuccess('update', d => loaders.setData('current', d)),
-        data: { _id: formValues._id, data: toReqData(pick(data, ['cmsConfigs', '_id'])) },
+        data: { data: { _id: formValues._id, data: toReqData(pick(data, ['cmsConfigs', '_id'])) } },
       });
     }
 

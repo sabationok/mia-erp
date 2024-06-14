@@ -5,7 +5,7 @@ import { StateErrorType } from '../redux/reduxTypes.types';
 import { WarehouseEntity } from './warehousing/warehouses.types';
 import { ExtServiceBase, InputIntegrationBase, OutputIntegrationBase } from './integrations.types';
 import { HasEmbeddedLabel, HasEmbeddedName, HasTaxCode, MaybeNull } from './utils.types';
-import { ISupplierDirItem } from './dir.types';
+import { SupplierDirEntity } from './dir.types';
 
 export enum OwnershipTypeEnum {
   UA_TOV = 'ua_tov',
@@ -49,7 +49,7 @@ export interface HasWarehousingPolicy {
 }
 export interface HasSupplementPolicy {
   supplementPolicy?: MaybeNull<{
-    supplier?: MaybeNull<ISupplierDirItem>;
+    supplier?: MaybeNull<SupplierDirEntity>;
   }>;
 }
 

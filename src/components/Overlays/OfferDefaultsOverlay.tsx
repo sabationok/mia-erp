@@ -1,5 +1,5 @@
 import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
-import { OfferDefaultsFormState, OfferEntity } from '../../types/offers/offers.types';
+import { OfferDefaultsFormData, OfferEntity } from '../../types/offers/offers.types';
 import styled from 'styled-components';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
 import { ModalHeader, OverlayFooter } from '../atoms';
@@ -24,7 +24,7 @@ import { Keys } from '../../types/utils.types';
 import _ from 'lodash';
 
 export interface FormOfferDefaultsOverlayProps extends CreatedOverlay {
-  onSubmit?: AppSubmitHandler<OfferDefaultsFormState>;
+  onSubmit?: AppSubmitHandler<OfferDefaultsFormData>;
   offer?: OfferEntity;
 }
 
@@ -64,7 +64,7 @@ const OfferDefaultsOverlay: React.FC<FormOfferDefaultsOverlayProps> = ({ onClose
 
   const [currentTabIdx, setCurrentTabIdx] = useState(0);
 
-  const { setValue, getValues, formValues, handleSubmit } = useAppForm<OfferDefaultsFormState>({
+  const { setValue, getValues, formValues, handleSubmit } = useAppForm<OfferDefaultsFormData>({
     defaultValues: !Offer ? undefined : getFormDefaultValues(Offer),
   });
 
@@ -77,7 +77,7 @@ const OfferDefaultsOverlay: React.FC<FormOfferDefaultsOverlayProps> = ({ onClose
     [currentTabIdx, setValue]
   );
 
-  const onValid = (fData: OfferDefaultsFormState) => {
+  const onValid = (fData: OfferDefaultsFormData) => {
     Offer?._id &&
       productsS.setDefaults({
         data: { data: { _id: Offer?._id, defaults: toReqData(fData) } },

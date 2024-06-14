@@ -2,7 +2,7 @@ import { AppResponse, IBase, OnlyUUID } from '../app-redux.types';
 import { PriceEntity } from '../../types/price-management/price-management.types';
 import { CompanyEntity } from '../../types/companies.types';
 import { IManager } from '../../types/auth.types';
-import { ISupplierDirItem } from '../../types/dir.types';
+import { SupplierDirEntity } from '../../types/dir.types';
 import { TabOption } from '../../components/atoms/TabSelector';
 import { WarehouseEntity } from '../../types/warehousing/warehouses.types';
 import { ICustomerBase } from '../../types/customers.types';
@@ -32,7 +32,7 @@ export interface IRefundSlot extends PriceEntity {
   origin?: PriceEntity;
   status?: RefundStatus;
   warehouse?: WarehouseEntity;
-  supplier?: ISupplierDirItem;
+  supplier?: SupplierDirEntity;
 }
 
 export interface IRefund extends IBase {

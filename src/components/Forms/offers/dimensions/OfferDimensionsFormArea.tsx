@@ -3,12 +3,12 @@ import { useAppForm } from '../../../../hooks';
 import { AccordionForm } from '../../../atoms/FormArea/AccordionForm';
 import useOffersService from '../../../../hooks/useOffersService.hook';
 import { ToastService } from '../../../../services';
-import { IDimensions } from '../../../../types/utils.types';
 import { useState } from 'react';
 import { OfferFormAreaProps } from '../types';
 import { t } from '../../../../lang';
+import { OfferFormData } from '../../../../types/offers/offers.types';
 
-export interface OfferDimensionsFormSectionProps extends OfferFormAreaProps<IDimensions> {}
+export interface OfferDimensionsFormSectionProps extends OfferFormAreaProps<OfferFormData['dimensions']> {}
 
 export const OfferDimensionsFormArea = ({
   defaultValues,
