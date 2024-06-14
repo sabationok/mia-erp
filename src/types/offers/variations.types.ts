@@ -8,7 +8,7 @@ export interface IVariationBase extends IOfferBase {}
 
 export interface VariationEntity extends OfferEntity {}
 
-export interface VariationFormData extends OfferFullFormData {
+export interface VariationFormData extends Partial<OnlyUUID>, OfferFullFormData {
   offerId?: UUID;
   offer?: OnlyUUID;
 }

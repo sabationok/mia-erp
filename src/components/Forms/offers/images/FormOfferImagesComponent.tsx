@@ -207,7 +207,7 @@ const FormOfferImagesComponent: React.FC<FormOfferImagesComponentProps> = ({
             />
           )}
 
-          <FlexBox overflow={'auto'} gap={6} fxDirection={'row'}>
+          <FlexBox className={'scrollBox'} overflow={'auto'} gap={6} fxDirection={'row'}>
             {renderPreviews}
           </FlexBox>
         </ImagesSetBox>
@@ -223,7 +223,7 @@ const FormOfferImagesComponent: React.FC<FormOfferImagesComponentProps> = ({
   }, []);
 
   return (
-    <FlexBox maxWidth={'100%'} overflow={'hidden'}>
+    <FlexBox maxWidth={'100%'} overflow={'hidden'} flex={1}>
       {renderHeader || (
         <FlexBox
           padding={'4px 8px'}
@@ -259,9 +259,11 @@ const FormOfferImagesComponent: React.FC<FormOfferImagesComponentProps> = ({
 };
 
 const ImagesSetBox = styled(FlexBox)`
-  &::-webkit-scrollbar {
-    width: 0;
-    height: 0;
+  & .scrollBox {
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
   }
 `;
 const SlotOrderChanger = ({

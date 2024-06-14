@@ -17,16 +17,18 @@ import { useAppForm, useCurrentOffer, useCurrentVariation } from '../../hooks';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
 import { t } from '../../lang';
-import LangButtonsGroup from '../atoms/LangButtonsGroup';
 import { UUID } from '../../types/utils.types';
 import OfferPropertySelector from '../Forms/offers/variations/OfferPropertySelector';
 import { PropertiesGroupEntity, PropertyEntity } from '../../types/offers/properties.types';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
-import { OfferEntity, OfferFullFormData, PropertyValuesMap } from '../../types/offers/offers.types';
+import { OfferEntity, PropertyValuesMap } from '../../types/offers/offers.types';
 import DrawerBase from './OverlayBase';
 import { PropertiesGroupSelector } from '../atoms/PropertiesGroupSelector';
 import { AccordionFormArea } from '../atoms/FormArea/AccordionForm';
+import { LoadersProvider } from '../../Providers/Loaders/LoaderProvider';
+import _ from 'lodash';
+import { nanoid } from '@reduxjs/toolkit';
 
 export interface CreateVariationModalProps
   extends CreatedOverlay,
@@ -88,10 +90,9 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   const Offer = useCurrentOffer({ _id: Variation?.offer?._id || offerId || offer?._id });
 
   const submitOptions = useAfterSubmitOptions();
-
   const [currentTemplate, setCurrentTemplate] = useState<PropertiesGroupEntity | undefined>(Variation.template);
 
-  const formMethods = useAppForm<OfferFullFormData>({
+  const formMethods = useAppForm<VariationFormData>({
     defaultValues: toVariationFormData(
       Variation
         ? { ...Variation, offer: Offer, template: currentTemplate }
@@ -109,8 +110,6 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
     formState: { errors },
     formValues,
     reset,
-    resetField,
-    getValues,
   } = formMethods;
 
   const propertiesList = useMemo(() => {
@@ -156,14 +155,11 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
         ? Variation?.label || `${Offer?.label}. {{VARIATION_LABEL}}`
         : _labels.join('. ');
 
+      setValue('label', _compiled);
       return _compiled;
     },
-    [Offer?.label, Variation?.label]
+    [Offer?.label, Variation?.label, setValue]
   );
-
-  // useEffect(() => {
-  //   setValue('label', compiledLabel);
-  // }, [compiledLabel, setValue, Variation]);
 
   const onValid = useCallback(
     (data: VariationFormData) => {
@@ -179,8 +175,12 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
           onError: ToastService.toastAxiosError,
           onLoading: loaders.onLoading('create'),
           onSuccess: data => {
-            submitOptions.state.close && onClose && onClose();
-            submitOptions.state.clear && reset();
+            if (submitOptions.state.close) {
+              onClose && onClose();
+            } else {
+              submitOptions.state.clear && reset();
+              setValue('sku', (Offer?.sku ?? '') + nanoid(12));
+            }
           },
           data: { data: toVariationReqData(data) },
         });
@@ -192,139 +192,129 @@ const CreateVariationOverlay: React.FC<CreateVariationModalProps> = ({
   );
 
   const handleSelect = useCallback(
-    (parentId: string, id: string) => {
-      const key = `propertiesMap.${parentId}` as const;
-      const exist = getValues(key);
-
-      if (exist && exist._id === id) {
-        resetField(key);
+    (parentId: string, valueId: string) => {
+      const exist = formValues.propertiesMap?.[parentId];
+      if (exist && exist._id === valueId) {
+        const newMap = _.omit(formValues.propertiesMap, parentId);
+        setValue('propertiesMap', newMap);
+        compileLabel(newMap);
       } else {
-        const value = state.propertiesDataMap?.[id];
-        console.log('handleSelect value');
+        const value = state.propertiesDataMap?.[valueId];
         if (value) {
-          setValue(key, value);
+          const newMap = { ...formValues.propertiesMap, [parentId]: value };
+          setValue('propertiesMap', newMap);
+          compileLabel(newMap);
         }
       }
     },
-    [getValues, resetField, setValue, state.propertiesDataMap]
+    [compileLabel, formValues.propertiesMap, setValue, state.propertiesDataMap]
   );
 
-  const handleClearMap = useCallback(() => {
-    resetField('propertiesMap');
-  }, [resetField]);
-
   const selectedIds = useMemo(() => {
-    return formValues?.propertiesMap ? Object.values(formValues?.propertiesMap) : [];
-    // eslint-disable-next-line
-  }, [formValues?.propertiesMap, formValues]);
+    return formValues?.propertiesMap ? Object.values(formValues?.propertiesMap).map(item => item._id) : [];
+  }, [formValues]);
 
   const canSubmit = useMemo(() => {
-    return selectedIds.length > 0;
-  }, [selectedIds.length]);
+    const _sortedInit = !Variation.propValuesIdsSet ? undefined : sortIds(Variation.propValuesIdsSet)?.join('.');
+
+    const _sortedCurrent = !selectedIds ? undefined : sortIds(selectedIds)?.join('.');
+
+    return !!_sortedCurrent && _sortedCurrent !== _sortedInit;
+  }, [Variation.propValuesIdsSet, selectedIds]);
+
+  const propValuesIds = useMemo((): Record<string, string | undefined> => {
+    return formValues?.propertiesMap
+      ? Object.fromEntries(
+          Object.entries(formValues?.propertiesMap).map(([propId, item]) => {
+            return [propId, item?._id];
+          })
+        )
+      : {};
+  }, [formValues?.propertiesMap]);
 
   const renderPropertiesList = useMemo(() => {
     return propertiesList?.map(prop => {
-      const selectedId = formValues?.propertiesMap?.[prop._id]?._id;
-      console.log('selectedId', selectedId);
+      const selectedId = propValuesIds[prop._id];
+
       return (
         <OfferPropertySelector
           key={`prop_${prop._id}`}
           item={prop}
-          selectedIds={selectedId ? [selectedId] : undefined}
+          selectedIds={selectedId ? [selectedId] : []}
           onSelect={handleSelect}
         />
       );
     });
-  }, [propertiesList, formValues?.propertiesMap, handleSelect]);
+  }, [propertiesList, propValuesIds, handleSelect]);
 
   return (
     <DrawerBase fillHeight onBackPress={onClose} okButton={false} title={title || 'Create variation'}>
-      <FormContainer
-        onSubmit={handleSubmit(onValid, errors => {
-          console.error('[SUBMIT ERROR]', errors);
-        })}
-        onReset={handleClearMap}
-        {...props}
-      >
-        <Content flex={1} fillWidth overflow={'auto'}>
-          <AccordionFormArea label={'Offer'} hideFooter isOpen={false}>
-            <InputLabel label={t('Offer label')} required disabled>
-              <InputText value={Offer?.label ?? undefined} placeholder={t('label')} required disabled />
-            </InputLabel>
-
-            <FlexBox fxDirection={'row'} gap={12} fillWidth>
-              <InputLabel label={t('sku')} disabled>
-                <InputText value={Offer?.sku ?? undefined} placeholder={t('sku')} disabled />
-              </InputLabel>
-
-              <InputLabel label={t('barCode')} disabled>
-                <InputText value={Offer?.barCode ?? undefined} placeholder={t('barCode')} disabled />
-              </InputLabel>
-            </FlexBox>
-          </AccordionFormArea>
-
-          <AccordionFormArea label={'Main info'} expandable={false} hideFooter>
-            <InputLabel label={t('label')} error={errors.label}>
-              <InputText {...register('label', { required: true })} placeholder={t('label')} required />
-            </InputLabel>
-
-            <FlexBox fxDirection={'row'} gap={12} fillWidth>
-              <InputLabel label={t('sku')} error={errors.sku}>
-                <InputText {...register('sku', { required: true })} placeholder={t('sku')} required />
-              </InputLabel>
-
-              <InputLabel label={t('barCode')} error={errors.barCode}>
-                <InputText {...register('barCode')} placeholder={t('barCode')} />
-              </InputLabel>
-            </FlexBox>
-
-            {/*<DimensionsInputs form={formMethods} />*/}
-          </AccordionFormArea>
-
-          <AccordionFormArea label={t('Properties')} expandable={false} hideFooter>
-            <PropertiesGroupSelector
-              onSelect={opt => {
-                setValue('template', opt);
-                setCurrentTemplate(opt);
-              }}
-              selected={currentTemplate}
-            />
-
-            <TemplateBox padding={'0 8px'} margin={'8px 0'}>
-              {renderPropertiesList}
-            </TemplateBox>
-          </AccordionFormArea>
-
-          {Variation && (
-            <AccordionFormArea label={t('Cms information')} expandable={false} hideFooter>
-              <FlexBox className={'CmsConfigs'} padding={'8px 0'} fillWidth>
-                <Inputs>
-                  <InputLabel label={t('Language key')} error={errors?.cmsConfigs?.key}>
-                    <LangButtonsGroup disabled />
+      <LoadersProvider value={loaders}>
+        <FormContainer
+          onSubmit={handleSubmit(onValid, errors => {
+            console.error('[SUBMIT ERROR]', errors);
+          })}
+          {...props}
+        >
+          <Content flex={1} fillWidth overflow={'auto'}>
+            <AccordionFormArea label={'Offer'} hideFooter isOpen={false}>
+              {(
+                [
+                  { title: t('Offer label'), name: 'label' },
+                  { title: t('SKU'), name: 'sku' },
+                  { title: t('Bar-code'), name: 'barCode' },
+                ] as const
+              ).map(({ name, title }) => {
+                return (
+                  <InputLabel key={name} label={title} disabled>
+                    <InputText value={Offer?.[name] ?? undefined} placeholder={t('label')} disabled />
                   </InputLabel>
-
-                  <InputLabel label={t('Label by lang key')} error={errors?.cmsConfigs?.labels?.ua}>
-                    <InputText placeholder={'Label'} {...register('cmsConfigs.labels.ua')} />
-                  </InputLabel>
-                </Inputs>
-              </FlexBox>
+                );
+              })}
             </AccordionFormArea>
-          )}
-        </Content>
 
-        <OverlayFooter
-          loading={loaders.isLoading?.create}
-          resetButtonShown
-          onGoBackPress={onClose}
-          submitButtonText={t('Accept')}
-          canSubmit={canSubmit}
-          extraFooter={
-            <ExtraFooterBox>
-              <FormAfterSubmitOptions {...submitOptions} />
-            </ExtraFooterBox>
-          }
-        />
-      </FormContainer>
+            <AccordionFormArea label={'Main info'} expandable={false} hideFooter>
+              {(
+                [
+                  { title: t('Offer label'), name: 'label', required: true },
+                  { title: t('SKU'), name: 'sku', required: true },
+                  { title: t('Bar-code'), name: 'barCode', required: false },
+                ] as const
+              ).map(({ name, title, required }) => {
+                return (
+                  <InputLabel key={name} label={title} error={errors?.[name]} required={required}>
+                    <InputText {...register(name, { required })} placeholder={t('label')} />
+                  </InputLabel>
+                );
+              })}
+            </AccordionFormArea>
+
+            <AccordionFormArea label={t('Properties')} expandable={false} hideFooter>
+              <PropertiesGroupSelector
+                onSelect={opt => {
+                  setValue('template', opt);
+                  setCurrentTemplate(opt);
+                }}
+                selected={currentTemplate}
+              />
+
+              <FlexBox padding={'0 8px'}>{renderPropertiesList}</FlexBox>
+            </AccordionFormArea>
+          </Content>
+
+          <OverlayFooter
+            loading={loaders.isLoading?.create}
+            onGoBackPress={onClose}
+            submitButtonText={t('Accept')}
+            canSubmit={canSubmit}
+            extraFooter={
+              <ExtraFooterBox>
+                <FormAfterSubmitOptions {...submitOptions} />
+              </ExtraFooterBox>
+            }
+          />
+        </FormContainer>
+      </LoadersProvider>
     </DrawerBase>
   );
 };
@@ -346,9 +336,6 @@ const FormContainer = styled(FlexForm)`
 const Content = styled(FlexBox)`
   border-top: 1px solid ${p => p.theme.sideBarBorderColor};
   border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
-`;
-const TemplateBox = styled(FlexBox)`
-  padding-bottom: 8px;
 `;
 
 const Inputs = styled(FlexBox)`

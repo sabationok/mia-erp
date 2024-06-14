@@ -26,7 +26,7 @@ export const OfferOverviewImagesCell: RenderOverviewCellComponent<OfferEntity> =
       <OverviewCellHeader
         title={cell?.title}
         onOpenOverlayPress={() => {
-          overlayHandler({ RenderComponent: FormProductImages });
+          overlayHandler({ RenderComponent: FormProductImages, props: { offer: data } });
         }}
       />
 

@@ -55,7 +55,7 @@ function getFormDefaultValues(offer: OfferEntity) {
 
   return ObjectFromEntries(map.entries());
 }
-const FormOfferDefaultsOverlay: React.FC<FormOfferDefaultsOverlayProps> = ({ onClose, onSubmit }) => {
+const OfferDefaultsOverlay: React.FC<FormOfferDefaultsOverlayProps> = ({ onClose, onSubmit }) => {
   const loaders = useLoaders<OfferOverlayLoaderKey>();
   const offerId = useAppParams()?.offerId;
   const Offer = useCurrentOffer({ _id: offerId });
@@ -170,4 +170,4 @@ const Content = styled(FlexBox)`
 
   border-bottom: 1px solid ${p => p.theme.modalBorderColor};
 `;
-export default FormOfferDefaultsOverlay;
+export default OfferDefaultsOverlay;

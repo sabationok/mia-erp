@@ -2,20 +2,22 @@ import FormOfferImagesComponent from '../Forms/offers/images/FormOfferImagesComp
 import { FormEventHandler, useState } from 'react';
 import { OfferEntity, OfferImageSlotEntity } from '../../types/offers/offers.types';
 import styled, { useTheme } from 'styled-components';
-import { useOffersSelector } from '../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { getIdRef } from '../../utils';
 import { DrawerHeader, OverlayFooter } from './index';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
+import { useCurrentOffer } from '../../hooks';
+import { FlexForm } from '../atoms/FlexBox';
 
 export interface FormProductImagesOverlayProps extends CreatedOverlay {
-  product?: OfferEntity;
+  offer?: OfferEntity;
 }
 
-const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onClose }) => {
-  const currentProduct = useOffersSelector().currentOffer;
+const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onClose, offer }) => {
+  const Offer = useCurrentOffer(offer);
+
   const service = useAppServiceProvider()[ServiceName.offers];
-  const [state, setState] = useState<Partial<OfferImageSlotEntity>[]>(currentProduct?.images || []);
+  const [state, setState] = useState<Partial<OfferImageSlotEntity>[]>(Offer?.images || []);
   const [loading, setLoading] = useState(false);
 
   const theme = useTheme();
@@ -24,9 +26,9 @@ const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onC
     ev.preventDefault();
     ev.stopPropagation();
 
-    currentProduct &&
+    Offer &&
       service.updateById({
-        data: { data: { ...getIdRef(currentProduct), data: { images: state as OfferImageSlotEntity[] } } },
+        data: { data: { ...getIdRef(Offer), data: { images: state as OfferImageSlotEntity[] } } },
         onSuccess: () => {
           onClose && onClose();
         },
@@ -39,6 +41,7 @@ const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onC
       <FormOfferImagesComponent
         initialData={state}
         onClose={onClose}
+        onlyPreviews={false}
         onChangeState={setState}
         contentContainerStyle={{
           flex: 1,
@@ -56,11 +59,8 @@ const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onC
   );
 };
 
-const Form = styled.form`
+const Form = styled(FlexForm)`
   flex: 1;
-
-  display: flex;
-  flex-direction: column;
 
   width: 100%;
   max-width: 480px;

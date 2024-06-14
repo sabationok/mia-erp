@@ -86,7 +86,6 @@ const TagButtonsFilter = <
 
       if (!multiple) {
         setSelectedValues([_value]);
-
         if (onSelect) onSelect(option, option.value, index);
         if (onChangeIds) onChangeIds({ name, value: _value });
         if (onSelectValue) onSelectValue({ name, value: _value });
@@ -106,9 +105,9 @@ const TagButtonsFilter = <
 
   const renderOptions = useMemo(() => {
     return options?.map((opt, index) => {
-      const _values = value || selectedValues;
+      const _maybeArray = value || selectedValues;
       const _value = opt.value || opt._id || index.toString();
-      const isActive = value && (Array.isArray(_values) ? _values.includes(_value) : _value === _values);
+      const isActive = Array.isArray(_maybeArray) ? _maybeArray.includes(_value) : _value === _maybeArray;
 
       return (
         <ButtonIcon

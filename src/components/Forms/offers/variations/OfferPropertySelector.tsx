@@ -106,16 +106,14 @@ export const OfferPropertySelector = ({
             numColumns={configs?.numColumns}
             name={item._id}
             multiple={multiple}
+            value={selectedIds}
+            options={childrenList}
             onSelectValue={info => {
               onSelect && onSelect(info.name, info.value);
             }}
             onChange={values => {
-              console.log('onChange', values);
-
               onChangeIds && onChangeIds(item._id, values);
             }}
-            value={selectedIds}
-            options={childrenList}
           />
         </>
       )}

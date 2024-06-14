@@ -140,6 +140,8 @@ export interface OfferFullFormData extends Omit<OfferDto, 'recommends' | 'proper
 
   defaults?: OfferDefaultsFormState;
   images?: OfferImageSlotEntity[];
+
+  propValuesIdsMap?: Record<string, string>;
 }
 
 export interface OfferFormData extends OfferFullFormData {}

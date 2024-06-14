@@ -3,6 +3,7 @@ import { Text } from './Text';
 import styled from 'styled-components';
 import FlexBox from './FlexBox';
 import * as React from 'react';
+import SvgIcon from './SvgIcon';
 
 export interface ImageSmallPreviewProps {
   src: string;
@@ -30,6 +31,8 @@ const ImagePreviewSmall = ({
       className={`ImagePreview_${title}`}
       fillWidth
       overflow={'hidden'}
+      alignItems={'center'}
+      justifyContent={'center'}
       gap={4}
       height={'115px'}
       border={'1px solid lightgrey'}
@@ -37,16 +40,22 @@ const ImagePreviewSmall = ({
       style={{ position: 'relative' }}
       disabled={disabled}
     >
-      {src && <img src={src} alt={title} style={{ width: '100%' }} />}
+      {src ? (
+        <img src={src} alt={title} style={{ width: '100%' }} />
+      ) : (
+        <SvgIcon icon={'gallery'} size={'28px'} fill={'lightgrey'} />
+      )}
 
       <ImagePreviewBottom fillWidth>
-        <FlexBox padding={'4px'}>
-          <Text $size={12} $weight={500} color={'#fff'}>
-            {title}
-          </Text>
-        </FlexBox>
+        {title && (
+          <FlexBox padding={'4px'}>
+            <Text $size={12} $weight={500} color={'#fff'}>
+              {title}
+            </Text>
+          </FlexBox>
+        )}
 
-        <ImagePreviewTop
+        <ImagePreviewActions
           className={'top'}
           fxDirection={'row'}
           gap={6}
@@ -69,15 +78,20 @@ const ImagePreviewSmall = ({
             disabled={!onDeletePress}
             onClick={onDeletePress}
           />
-        </ImagePreviewTop>
+        </ImagePreviewActions>
       </ImagePreviewBottom>
     </ImageSmallPreviewBox>
   );
 };
 
 const ImageSmallPreviewBox = styled(FlexBox)<{ disabled?: boolean; maxWidth?: string; maxHeight?: string }>`
-  min-width: 90px;
-  width: 90px;
+  min-width: 112px;
+  //width: 90px;
+
+  aspect-ratio: 1/1.35;
+
+  object-position: center;
+  object-fit: contain;
 
   pointer-events: ${p => (p.disabled ? 'none' : 'all')};
 
@@ -88,7 +102,7 @@ const ImageSmallPreviewBox = styled(FlexBox)<{ disabled?: boolean; maxWidth?: st
   }
 `;
 
-const ImagePreviewTop = styled(FlexBox)`
+const ImagePreviewActions = styled(FlexBox)`
   //position: absolute;
   //top: 0;
   //left: 0;

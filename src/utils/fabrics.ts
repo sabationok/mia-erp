@@ -120,7 +120,7 @@ function enumToFilterOptions<T extends Record<string, any> = any, ValueKey exten
     valueKey?: ValueKey;
     labelPrefix?: string;
   } = {}
-): FilterOption<T[keyof T]>[] {
+): (FilterOption<T[keyof T]> & { value: T[keyof T] })[] {
   return enumToArray(enumObj).map(el => ({ label: t(labelPrefix ? labelPrefix + '_' + el : el), value: el }));
 }
 export function _enumToTabs<T extends Record<string, any> = any>(

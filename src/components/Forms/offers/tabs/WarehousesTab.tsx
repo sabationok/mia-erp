@@ -7,7 +7,7 @@ import { WarehouseEntity } from '../../../../types/warehousing/warehouses.types'
 import { warehousesTableColumns } from '../../../../data/warehauses.data';
 import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useLoadersProvider } from '../../../../Providers/Loaders/LoaderProvider';
-import { OfferOverlayLoaderKey } from '../../../Overlays/FormOfferDefaultsOverlay';
+import { OfferOverlayLoaderKey } from '../../../Overlays/OfferDefaultsOverlay';
 
 export interface WarehousesTabProps {
   onSelect?: (warehouse: OnlyUUID) => void;

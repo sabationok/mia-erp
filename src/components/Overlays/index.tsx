@@ -11,6 +11,7 @@ export const DrawerHeader = ({
   okButton,
   canSubmit,
   isLoading,
+  renderTitle,
 }: {
   canSubmit?: boolean;
   onBackPress?: () => void;
@@ -19,6 +20,7 @@ export const DrawerHeader = ({
   okButton?: boolean;
   children?: React.ReactNode;
   isLoading?: boolean;
+  renderTitle?: React.ReactNode;
 }) => {
   return (
     <Header
@@ -47,13 +49,15 @@ export const DrawerHeader = ({
       )}
 
       <FlexBox justifyContent={'center'} overflow={'hidden'} padding={'0 8px'}>
-        <Text
-          $weight={600}
-          $size={14}
-          style={{ textTransform: 'uppercase', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}
-        >
-          {title}
-        </Text>
+        {renderTitle || (
+          <Text
+            $weight={600}
+            $size={14}
+            style={{ textTransform: 'uppercase', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}
+          >
+            {title}
+          </Text>
+        )}
       </FlexBox>
 
       {okButton && (

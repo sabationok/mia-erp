@@ -1,6 +1,6 @@
 import { usePageCurrentOffer } from './PageOfferProvider';
 import { useMemo, useState } from 'react';
-import { enumToFilterOptions } from '../../../utils/fabrics';
+import { enumToFilterOptions } from '../../../utils';
 import { Text } from '../../atoms/Text';
 import TabSelector, { FilterSelectHandler } from '../../atoms/TabSelector';
 import styled from 'styled-components';
@@ -8,11 +8,11 @@ import FlexBox from '../../atoms/FlexBox';
 import VariationsTab from './tabs/VariationsTab';
 import PricesTab from './tabs/PricesTab';
 import WarehousingTab from './tabs/WarehousingTab';
-import { ModalHeader } from '../../atoms';
 import { SalesTab } from './tabs/SalesTab';
 import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
-import { OfferOverlayLoaderKey } from '../../Overlays/FormOfferDefaultsOverlay';
+import { OfferOverlayLoaderKey } from '../../Overlays/OfferDefaultsOverlay';
 import { LoadersProvider } from '../../../Providers/Loaders/LoaderProvider';
+import { DrawerHeader } from '../../Overlays';
 
 enum RightSideOptionEnum {
   Prices = 'Prices',
@@ -43,18 +43,18 @@ const OfferOverviewPageRightSide: React.FC<OfferOverviewPageRightSideProps> = ({
       [RightSideOptionEnum.Prices]: <PricesTab withActions />,
       [RightSideOptionEnum.Sales]: <SalesTab withActions />,
     };
-    return tabs?.[currentTab] ?? null;
+    return currentTab ? tabs?.[currentTab] ?? null : null;
   }, [currentTab, page.currentOffer]);
 
   const filterHandler: FilterSelectHandler<RightSideOptionEnum> = (_, value, index) => {
-    setCurrentTab(value);
+    value && setCurrentTab(value);
   };
 
   return (
     <LoadersProvider value={loaders}>
       <RightSide overflow={'hidden'} fillHeight isVisible={isVisible}>
         {isVisible && (
-          <ModalHeader
+          <DrawerHeader
             onBackPress={toggleVisibility}
             renderTitle={
               <FlexBox padding={'0 8px'} fxDirection={'row'} alignItems={'center'} justifyContent={'center'} gap={8}>
@@ -62,7 +62,9 @@ const OfferOverviewPageRightSide: React.FC<OfferOverviewPageRightSideProps> = ({
                   {page?.currentOffer?.label}
                 </Text>
 
-                <Text $size={14}>{page?.currentOffer?.sku}</Text>
+                <Text $size={14} $weight={400}>
+                  {page?.currentOffer?.sku}
+                </Text>
               </FlexBox>
             }
           />
@@ -79,6 +81,8 @@ const OfferOverviewPageRightSide: React.FC<OfferOverviewPageRightSideProps> = ({
 };
 const RightSide = styled(FlexBox)<{ isVisible?: boolean }>`
   overflow: auto;
+
+  padding: 0 8px;
 
   max-width: 100%;
 
@@ -102,7 +106,7 @@ const RightSide = styled(FlexBox)<{ isVisible?: boolean }>`
 `;
 
 const TabBox = styled(FlexBox)`
-  border-top: 1px solid ${p => p.theme.modalBorderColor};
+  //border-top: 1px solid ${p => p.theme.modalBorderColor};
   //border-bottom: 1px solid ${p => p.theme.modalBorderColor};
 `;
 
