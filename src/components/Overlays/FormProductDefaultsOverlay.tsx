@@ -5,7 +5,7 @@ import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
 import { ModalHeader, OverlayFooter } from '../atoms';
 import FlexBox from '../atoms/FlexBox';
 import { useAppForm, useAppParams, useCurrentOffer } from '../../hooks';
-import { enumToFilterOptions, toReqData } from '../../utils';
+import { enumToFilterOptions, getIdRef, ObjectFromEntries, toReqData } from '../../utils';
 import TabSelector from '../atoms/TabSelector';
 import React, { useCallback, useMemo, useState } from 'react';
 
@@ -28,7 +28,7 @@ export interface FormProductDefaultsOverlayProps extends CreatedOverlay {
   offer?: OfferEntity;
 }
 
-export enum FormOfferDefaultsTabs {
+export enum OfferDefaultFieldKeyEnum {
   price = 'price',
   variation = 'variation',
   warehouse = 'warehouse',
@@ -37,12 +37,24 @@ export enum FormOfferDefaultsTabs {
 }
 
 export type OfferOverlayLoaderKey =
-  | keyof typeof FormOfferDefaultsTabs
-  | `${keyof typeof FormOfferDefaultsTabs}s`
+  | keyof typeof OfferDefaultFieldKeyEnum
+  | `${keyof typeof OfferDefaultFieldKeyEnum}s`
   | 'submiting';
 
-const tabs = enumToFilterOptions(FormOfferDefaultsTabs);
+const tabs = enumToFilterOptions(OfferDefaultFieldKeyEnum);
+function getFormDefaultValues(offer: OfferEntity) {
+  const map = new Map<OfferDefaultFieldKeyEnum, OnlyUUID>();
 
+  tabs.forEach(tab => {
+    const key = tab.value;
+    if (key) {
+      const field = key ? offer?.[key] : undefined;
+      if (field) map.set(key, getIdRef(field));
+    }
+  });
+
+  return ObjectFromEntries(map.entries());
+}
 const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({ onClose, onSubmit }) => {
   const loaders = useLoaders<OfferOverlayLoaderKey>();
   const offerId = useAppParams()?.offerId;
@@ -52,7 +64,9 @@ const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({
 
   const [currentTabIdx, setCurrentTabIdx] = useState(0);
 
-  const { setValue, getValues, formValues, handleSubmit } = useAppForm<OfferDefaultsFormState>();
+  const { setValue, getValues, formValues, handleSubmit } = useAppForm<OfferDefaultsFormState>({
+    defaultValues: !Offer ? undefined : getFormDefaultValues(Offer),
+  });
 
   const handleSelect = useCallback(
     (data: OnlyUUID) => {
@@ -74,37 +88,31 @@ const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({
       });
   };
   const tabsMap = useMemo(() => {
-    const _tabsMap: Record<FormOfferDefaultsTabs, React.FC> = {
-      [FormOfferDefaultsTabs.warehouse]: () => (
-        <WarehousesTab withActions onSelect={handleSelect} selected={formValues?.warehouse} />
+    const _tabsMap: Record<OfferDefaultFieldKeyEnum, React.FC> = {
+      [OfferDefaultFieldKeyEnum.warehouse]: () => (
+        <WarehousesTab withActions onSelect={handleSelect} selected={getValues('warehouse')} />
       ),
-      [FormOfferDefaultsTabs.price]: () => (
-        <PricesTab withActions onSelect={handleSelect} selected={formValues?.price} />
+      [OfferDefaultFieldKeyEnum.price]: () => {
+        console.log("getValues('price')", getValues('price'));
+        return <PricesTab withActions onSelect={handleSelect} selected={getValues('price')} />;
+      },
+      [OfferDefaultFieldKeyEnum.variation]: () => (
+        <VariationsTab withActions onSelect={handleSelect} selected={getValues('variation')} />
       ),
-      [FormOfferDefaultsTabs.variation]: () => (
-        <VariationsTab withActions onSelect={handleSelect} selected={formValues?.variation} />
+      [OfferDefaultFieldKeyEnum.inventory]: () => (
+        <WarehousingTab withActions onSelect={handleSelect} selected={getValues('inventory')} />
       ),
-      [FormOfferDefaultsTabs.inventory]: () => (
-        <WarehousingTab withActions onSelect={handleSelect} selected={formValues?.inventory} />
-      ),
-      [FormOfferDefaultsTabs.supplier]: () => (
+      [OfferDefaultFieldKeyEnum.supplier]: () => (
         <CounterpartyTab
           withActions
           types={[CounterpartyTypesEnum.SUPPLIER]}
           onSelect={handleSelect}
-          selected={formValues?.supplier}
+          selected={getValues('supplier')}
         />
       ),
     };
     return _tabsMap;
-  }, [
-    formValues?.inventory,
-    formValues?.price,
-    formValues?.supplier,
-    formValues?.variation,
-    formValues?.warehouse,
-    handleSelect,
-  ]);
+  }, [getValues, handleSelect]);
 
   const renderTab = useMemo(() => {
     const currentKey = tabs?.[currentTabIdx]?.value;
@@ -114,17 +122,16 @@ const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({
   }, [currentTabIdx, tabsMap]);
 
   const canSubmit = useMemo(() => {
-    const compareIdsByPath = (key: Keys<typeof FormOfferDefaultsTabs>) => {
+    const currentKey = tabs?.[currentTabIdx]?.value;
+    const compareIdsByPath = (key: Keys<typeof OfferDefaultFieldKeyEnum>) => {
       const dataKey = `${key}._id` as const;
-
-      const id_a = getValues(dataKey);
+      const id_a = _.get(formValues, dataKey);
 
       return !!id_a && id_a !== _.get(Offer, dataKey);
     };
 
-    const currentKey = tabs?.[currentTabIdx]?.value;
     return !currentKey ? false : compareIdsByPath(currentKey);
-  }, [Offer, getValues, currentTabIdx]);
+  }, [currentTabIdx, formValues, Offer]);
 
   return (
     <LoadersProvider value={loaders}>

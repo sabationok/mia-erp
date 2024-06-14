@@ -19,6 +19,14 @@ export function ObjectEntries<
   return Object.entries(obj) as [Key, Value][];
 }
 
+export function ObjectFromEntries<Key extends string, T>(
+  entries: Iterable<readonly [Key, T]>
+): {
+  [key in Key]: T;
+} {
+  return Object.fromEntries(entries) as { [key in Key]: T };
+}
+
 export function sortIds(ids?: string[]) {
   return [...(ids ?? [])]?.sort((a, b) => a.localeCompare(b));
 }
