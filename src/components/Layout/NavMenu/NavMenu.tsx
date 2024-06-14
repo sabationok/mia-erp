@@ -47,10 +47,16 @@ const NavMenu: React.FC = () => {
     return pages.map(item => {
       const childrenList = item.subMenuKey ? dataMap[item.subMenuKey] : undefined;
       return (
-        <MenuItem key={item.path} item={item} childrenList={childrenList} onItemPress={() => onNavLinkClick(item)} />
+        <MenuItem
+          key={item.path}
+          item={item}
+          isActive={currentPageData?.path === item.path}
+          childrenList={childrenList}
+          onItemPress={() => onNavLinkClick(item)}
+        />
       );
     });
-  }, [onNavLinkClick, pages, permissions.permissions, priceLists.lists, warehouses.warehouses]);
+  }, [currentPageData?.path, onNavLinkClick, pages, permissions.permissions, priceLists.lists, warehouses.warehouses]);
 
   useCloseByEscape(setIsOpen);
   useCloseByBackdropClick(setIsOpen, 'data-nav-menu');
@@ -86,16 +92,18 @@ const MenuItem = ({
   onItemPress,
   item,
   childrenList,
+  isActive,
 }: {
   onItemPress?: () => void;
   item: IAppPage;
   childrenList?: any[];
+  isActive?: boolean;
 }) => {
   const [isSubMenuOpen, setIsSubMenuOpen] = useState<boolean>(false);
 
   return (
     <React.Fragment key={`nav-item-${item.path}`}>
-      <FlexBox fxDirection={'row'}>
+      <MenuListItem fxDirection={'row'} isActive={isActive} justifyContent={'space-between'}>
         <StyledNavLink key={item?.path} to={item.path} onClick={onItemPress}>
           <SvgIcon icon={item.iconId} size="18px" style={{ display: 'none' }} />
 
@@ -109,10 +117,11 @@ const MenuItem = ({
             size={'32px'}
             iconSize={'80%'}
             disabled={!childrenList?.length}
+            background={'transparent'}
             onClick={() => setIsSubMenuOpen(p => !p)}
           />
         )}
-      </FlexBox>
+      </MenuListItem>
 
       {!!childrenList?.length && item?.subMenuKey && (
         <FlexBox height={isSubMenuOpen ? 'max-content' : '0'} overflow={'hidden'}>
@@ -212,7 +221,9 @@ const NavList = styled(FlexUl)`
 
   padding: 8px 0;
 `;
-
+const MenuListItem = styled(FlexBox)`
+  background-color: ${({ theme: { accentColor }, ...p }) => (p.isActive ? accentColor.extraLight : '')};
+`;
 const StyledNavLink = styled(NavLink)`
   display: flex;
   align-items: center;
@@ -247,8 +258,6 @@ const StyledNavLink = styled(NavLink)`
   }
 
   &:hover {
-    background-color: ${({ theme: { accentColor } }) => accentColor.extraLight};
-
     &::before {
       height: 100%;
       background-color: ${({ theme: { accentColor } }) => accentColor.base};

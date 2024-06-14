@@ -4,10 +4,11 @@ import { OfferEntity, OfferImageSlotEntity } from '../../types/offers/offers.typ
 import styled, { useTheme } from 'styled-components';
 import { useOffersSelector } from '../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
-import { getIdRef } from '../../utils/data-transform';
+import { getIdRef } from '../../utils';
 import { OverlayFooter, OverlayHeader } from './index';
+import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
 
-export interface FormProductImagesOverlayProps extends OverlayHandlerReturn {
+export interface FormProductImagesOverlayProps extends CreatedOverlay {
   product?: OfferEntity;
 }
 
@@ -21,10 +22,11 @@ const FormProductImagesOverlay: React.FC<FormProductImagesOverlayProps> = ({ onC
 
   const handleFormSubmit: FormEventHandler = ev => {
     ev.preventDefault();
+    ev.stopPropagation();
 
     currentProduct &&
       service.updateById({
-        data: { ...getIdRef(currentProduct), data: { images: state as OfferImageSlotEntity[] }, refreshCurrent: true },
+        data: { data: { ...getIdRef(currentProduct), data: { images: state as OfferImageSlotEntity[] } } },
         onSuccess: () => {
           onClose && onClose();
         },

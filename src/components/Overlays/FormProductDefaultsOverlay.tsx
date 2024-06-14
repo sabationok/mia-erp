@@ -56,7 +56,9 @@ const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({
 
   const handleSelect = useCallback(
     (data: OnlyUUID) => {
-      setValue(tabs[currentTabIdx].value, data);
+      const key = tabs[currentTabIdx].value;
+
+      key && setValue(key, data);
     },
     [currentTabIdx, setValue]
   );
@@ -105,20 +107,23 @@ const FormProductDefaultsOverlay: React.FC<FormProductDefaultsOverlayProps> = ({
   ]);
 
   const renderTab = useMemo(() => {
-    const Tab = tabsMap[tabs[currentTabIdx]?.value] ?? null;
+    const currentKey = tabs?.[currentTabIdx]?.value;
+    const Tab = currentKey ? tabsMap[currentKey] ?? null : null;
+
     return Tab ? <Tab /> : null;
   }, [currentTabIdx, tabsMap]);
 
   const canSubmit = useMemo(() => {
     const compareIdsByPath = (key: Keys<typeof FormOfferDefaultsTabs>) => {
-      const dataKey = `${key}._id`;
+      const dataKey = `${key}._id` as const;
 
       const id_a = getValues(dataKey);
 
-      return id_a && id_a !== _.get(Offer, dataKey);
+      return !!id_a && id_a !== _.get(Offer, dataKey);
     };
 
-    return compareIdsByPath(tabs?.[currentTabIdx]?.value);
+    const currentKey = tabs?.[currentTabIdx]?.value;
+    return !currentKey ? false : compareIdsByPath(currentKey);
   }, [Offer, getValues, currentTabIdx]);
 
   return (
