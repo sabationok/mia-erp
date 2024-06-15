@@ -15,6 +15,8 @@ export { default as createStepsChecker } from './createStepChecker';
 
 export * from './createGridArea.helper';
 
+export * from './sliceCleaner.helper';
+
 export * from './fabrics';
 export * from './founder';
 export * from './createStepChecker';

@@ -14,37 +14,38 @@ import {
   updateCurrentCompanyThunk,
   updatePermissionThunk,
 } from './permissions.thunk';
-import { initialPermission, testPermissions } from '../../data/permissions.data';
+import { initialPermission } from '../../data/permissions.data';
 import { clearCurrentPermission, setMockPermissionData } from './permissions.action';
-import { checks } from '../../utils';
+import { checks, sliceCleaner } from '../../utils';
 import { StateErrorType } from '../reduxTypes.types';
 import { getAllAccessKeys } from '../../components/AppPages';
+import { onUserLogout } from '../auth/auth.actions';
 
-const initialPermissionStateState: IPermissionsState = {
+const initState: IPermissionsState = {
   permission: {},
   permission_token: '',
-  permissions: [] || testPermissions,
+  permissions: [],
   users: [],
   isLoading: false,
   error: null,
 };
 export const permissionsSlice = createSlice({
   name: 'permissions',
-  initialState: initialPermissionStateState,
+  initialState: initState,
   reducers: {},
   extraReducers: builder =>
     builder
       .addCase(getCurrentPermissionThunk.fulfilled, (s: IPermissionsState, a) => {
         s.permission = {
           ...a.payload,
-          role: { ...a.payload.role, accessKeys: getAllAccessKeys() },
+          role: { ...a.payload.role, accessKeys: getAllAccessKeys() } as never,
         };
         s.permission_token = a.payload.permission_token;
       })
       .addCase(setMockPermissionData, (s, a) => {
         s.permission = {
           ...a.payload,
-          role: { ...a.payload.role, accessKeys: getAllAccessKeys() },
+          role: { ...a.payload.role, accessKeys: getAllAccessKeys() } as never,
         };
         s.permission_token = a.payload.permission_token;
       })
@@ -66,7 +67,7 @@ export const permissionsSlice = createSlice({
       .addCase(logInPermissionThunk.fulfilled, (s, a) => {
         s.permission = {
           ...a.payload,
-          role: { ...a.payload.role, accessKeys: initialPermission.role?.accessKeys },
+          role: { ...a.payload.role, accessKeys: initialPermission.role?.accessKeys } as never,
         };
         s.permission_token = a.payload.permission_token;
       })
@@ -101,7 +102,8 @@ export const permissionsSlice = createSlice({
       .addMatcher(inError, (s, a: PayloadAction<StateErrorType>) => {
         s.isLoading = false;
         s.error = a.payload;
-      }),
+      })
+      .addMatcher(onUserLogout, sliceCleaner(initState)),
 });
 function isPermissionsCase(type: string) {
   return checks.isStr(type) && type.startsWith('permissions');

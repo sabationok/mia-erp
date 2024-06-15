@@ -3,7 +3,6 @@ import { StateErrorType } from 'redux/reduxTypes.types';
 import { IOfferRelatedDefaultFields, OfferEntity, OfferTypeEnum } from '../../types/offers/offers.types';
 import * as thunks from './offers.thunks';
 import {
-  PropertiesGroupEntity,
   PropertyBaseEntity,
   PropertyLevelTypeEnum,
   PropertySelectableTypeEnum,
@@ -15,13 +14,15 @@ import { VariationEntity } from '../../types/offers/variations.types';
 import { onCreatePriceMather, onUpdatePriceMatcher } from '../priceManagement/prices.actions';
 import { Action, ActionPayload } from '../store.store';
 import { PriceEntity } from '../../types/price-management/price-management.types';
+import { onUserLogout } from '../auth/auth.actions';
+import { sliceCleaner } from '../../utils';
 
 type OfferDefaultsKey = keyof IOfferRelatedDefaultFields;
 export interface OffersState {
   list: OfferEntity[];
   currentOffer?: OfferEntity;
   filteredProducts?: OfferEntity[];
-  properties: PropertiesGroupEntity[];
+  properties: PropertyBaseEntity[];
   isLoading: boolean;
   error: StateErrorType;
 
@@ -205,7 +206,8 @@ export const offersSlice = createSlice({
 
           s.dataMap[offerId] = current;
         }
-      }),
+      })
+      .addMatcher(onUserLogout, sliceCleaner(initialState)),
   // .addMatcher(onGetPricesCase, (s, a: Action<{ data: PriceEntity[] }>) => {
   //   console.log('onGetPricesCase', a);
   // }),

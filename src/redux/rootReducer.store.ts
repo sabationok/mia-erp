@@ -1,7 +1,7 @@
 import { persistReducer } from 'redux-persist';
 import { combineReducers } from '@reduxjs/toolkit';
 import { authSlice } from './auth/auth.slice';
-import { usersSlice } from './users/usersSlice';
+import { usersSlice } from './users/users.slice';
 import { appSettingsSlice } from './appSettings/appSettings.slice';
 import { appPageSlice } from './page/pageSlice';
 import { financesSlice } from './finances/finances.slice';

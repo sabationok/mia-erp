@@ -162,6 +162,7 @@ export interface AppQueryParams<Type = any> extends AppQueries<Type>, Pagination
   getAll?: boolean;
   dataView?: 'tree' | 'list';
   depth?: number;
+  isSelectable?: boolean;
   sortParams?: ApiQuerySortParams;
   search?: string;
   searchBy?: string;

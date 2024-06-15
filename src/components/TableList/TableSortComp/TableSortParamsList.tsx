@@ -1,18 +1,31 @@
 import ButtonIcon from 'components/atoms/ButtonIcon';
-import { ModalFormProps } from 'components/ModalForm';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import FlexBox, { FlexLi } from '../../atoms/FlexBox';
 import { TableSortOrderEnum, TableSortParam } from '../tableTypes.types';
+import ModalBase from '../../atoms/Modal';
+import { CreatedModal } from '../../../Providers/ModalProvider/ModalProvider';
 
-export interface TableSortParamsListProps extends Omit<ModalFormProps, 'onSelect'> {
+export interface TableSortParamsListProps extends CreatedModal {
   sortParams?: TableSortParam[];
   current?: TableSortParam;
   sortOrder?: TableSortOrderEnum;
   onSelect: (param: TableSortParam, sortOrder: TableSortOrderEnum) => void;
   multiple?: boolean;
 }
-
+export const ModalSortLst: React.FC<TableSortParamsListProps & CreatedModal> = ({
+  sortParams,
+  onSelect,
+  multiple,
+  current,
+  ...props
+}) => {
+  return (
+    <ModalBase fitContentH fitContentV footer={false} title={'Сортування'} {...props}>
+      <TableSortParamsList {...{ sortParams, onSelect, current, isOpen: true }} />
+    </ModalBase>
+  );
+};
 const TableSortParamsList: React.FC<TableSortParamsListProps> = ({ sortParams, sortOrder, onSelect, current }) => {
   const [state, setState] = useState<{ param?: TableSortParam; sortOrder?: TableSortOrderEnum }>({
     param: current,

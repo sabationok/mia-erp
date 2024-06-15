@@ -3,7 +3,9 @@ import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { WarehouseEntity } from '../../types/warehousing/warehouses.types';
 import { createWarehouseThunk, getAllWarehousesThunk, getWarehouseByIdThunk } from './warehouses.thunks';
-import { checks } from '../../utils';
+import { sliceCleaner } from '../../utils';
+import { onUserLogout } from '../auth/auth.actions';
+import { isString } from 'lodash';
 
 export interface IWarehouseState {
   warehouses: WarehouseEntity[];
@@ -50,29 +52,30 @@ export const warehousesSlice = createSlice({
           s.current = a.payload;
         }
       })
-      .addMatcher(inPending, s => {
-        s.isLoading = true;
-        s.error = null;
-      })
-      .addMatcher(inFulfilled, s => {
-        s.isLoading = false;
-        s.error = null;
-      })
+      // .addMatcher(inPending, s => {
+      //   s.isLoading = true;
+      //   s.error = null;
+      // })
+      // .addMatcher(inFulfilled, s => {
+      //   s.isLoading = false;
+      //   s.error = null;
+      // })
       .addMatcher(inError, (s, a: PayloadAction<StateErrorType>) => {
-        s.isLoading = false;
+        // s.isLoading = false;
         s.error = a.payload;
-      });
+      })
+      .addMatcher(onUserLogout, sliceCleaner(initialState));
   },
 });
 function isWarehousingCase(type: string) {
-  return checks.isStr(type) && type.startsWith('warehouses');
+  return isString(type) && type.startsWith('warehouses');
 }
-function inPending(a: AnyAction) {
-  return isWarehousingCase(a.type) && a.type.endsWith('pending');
-}
-function inFulfilled(a: AnyAction) {
-  return isWarehousingCase(a.type) && a.type.endsWith('fulfilled');
-}
+// function inPending(a: AnyAction) {
+//   return isWarehousingCase(a.type) && a.type.endsWith('pending');
+// }
+// function inFulfilled(a: AnyAction) {
+//   return isWarehousingCase(a.type) && a.type.endsWith('fulfilled');
+// }
 function inError(a: AnyAction) {
   return isWarehousingCase(a.type) && a.type.endsWith('rejected');
 }

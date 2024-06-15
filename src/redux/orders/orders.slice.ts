@@ -16,6 +16,8 @@ import {
   getOrderByIdThunk,
   getOrderSlotsThunk,
 } from './orders.thunks';
+import { onUserLogout } from '../auth/auth.actions';
+import { sliceCleaner } from '../../utils';
 
 export interface IOrdersState {
   orders: OrderEntity[];
@@ -32,7 +34,7 @@ const initialOrdersGroupFormData: ICreateOrdersGroupFormState = {
   info: {},
   orders: [],
 };
-const initialOrdersState: IOrdersState = {
+const initState: IOrdersState = {
   orders: [],
   currentOrder: { _id: '' },
   ordersGroupFormData: initialOrdersGroupFormData,
@@ -65,7 +67,7 @@ const initialOrdersState: IOrdersState = {
 
 export const ordersSlice = createSlice({
   name: 'orders',
-  initialState: initialOrdersState,
+  initialState: initState,
   reducers: {},
   extraReducers: builder =>
     builder
@@ -139,5 +141,6 @@ export const ordersSlice = createSlice({
         } else {
           s.currentOrder.payments = a.payload.data;
         }
-      }),
+      })
+      .addMatcher(onUserLogout, sliceCleaner(initState)),
 });

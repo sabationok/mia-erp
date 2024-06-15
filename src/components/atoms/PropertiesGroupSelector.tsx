@@ -12,6 +12,9 @@ import { offerTypeFilterOptions } from '../../data/modalFilterOptions.data';
 import { Values } from '../../types/utils.types';
 import TabSelector from './TabSelector';
 import { Text } from './Text';
+import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
+import { ServiceName, useAppServiceProvider } from '../../hooks/useAppServices.hook';
+import ButtonIcon from './ButtonIcon';
 
 export type PropertiesFilterData = {
   type: Values<typeof OfferTypeEnum>;
@@ -39,22 +42,24 @@ export const PropertiesGroupSelector = ({
     ...filterValue,
   });
   const [currentTemplate, setCurrentTemplate] = useState<PropertiesGroupEntity | undefined>(defaultValue);
-  // const loaders = useLoaders<'getList' | 'create' | 'update'>();
+  const loaders = useLoaders<'refreshTree' | 'create' | 'update'>();
+
+  const service = useAppServiceProvider().get(ServiceName.offers);
 
   const rootList = useMemo(() => {
     if (state.properties?.length) {
-      return state.properties;
+      return state.properties.filter(item => !item.parent);
     }
 
-    const _rootIds = state.propertiesByTypeKeysMap[filter.type];
-    const _items: PropertyBaseEntity[] = [];
+    const _ids = state.propertiesByTypeKeysMap[filter.type];
+    const _roots: PropertyBaseEntity[] = [];
 
-    for (const _id of _rootIds) {
+    for (const _id of _ids) {
       const item = state.propertiesDataMap?.[_id];
-      item && _items.push(item);
+      !item?.parent && item && _roots.push(item);
     }
 
-    return _items;
+    return _roots;
   }, [filter.type, state.properties, state.propertiesByTypeKeysMap, state.propertiesDataMap]);
 
   const handleSelect: CustomSelectHandler<PropertiesGroupEntity> = option => {
@@ -84,6 +89,33 @@ export const PropertiesGroupSelector = ({
 
   return (
     <FlexBox gap={8}>
+      <FlexBox
+        padding={'4px 8px'}
+        fxDirection={'row'}
+        gap={12}
+        alignItems={'center'}
+        fillWidth
+        justifyContent={'space-between'}
+      >
+        <ButtonIcon
+          variant={'text'}
+          sizeType={'extraSmall'}
+          isLoading={loaders.isLoading.refreshTree}
+          onClick={() => {
+            service.getAllProperties({
+              params: { dataView: 'tree', depth: 3 },
+              onLoading: loaders.onLoading('refreshTree'),
+            });
+          }}
+        >
+          {t('Refresh')}
+        </ButtonIcon>
+
+        <ButtonIcon variant={'text'} sizeType={'extraSmall'}>
+          {t('Add')}
+        </ButtonIcon>
+      </FlexBox>
+
       {hasFilter && (
         <InputLabel label={t('Select type')}>
           <ButtonsGroup

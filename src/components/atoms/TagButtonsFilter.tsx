@@ -1,5 +1,5 @@
 import { FilterChangeHandler, FilterSelectValueHandler } from './TabSelector';
-import React, { CSSProperties, useCallback, useMemo, useState } from 'react';
+import React, { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react';
 import ButtonIcon from './ButtonIcon';
 import FlexBox from './FlexBox';
 import { Text } from './Text';
@@ -75,7 +75,9 @@ const TagButtonsFilter = <
   getButtonStyles,
 }: TagButtonsFilterProps<Value, Option>) => {
   const [selectedValues, setSelectedValues] = useState<(Value | string)[]>([]);
-
+  useEffect(() => {
+    console.log('TagButtonsFilterProps', options);
+  }, [options]);
   const handleSelect = useCallback(
     (option: Option, index: number) => {
       const _value = option.value || option._id;

@@ -1,60 +1,54 @@
 import React, { useState } from 'react';
 import ButtonIcon from 'components/atoms/ButtonIcon';
-
-import TableSortParamsList from './TableSortParamsList';
+import { ModalSortLst } from './TableSortParamsList';
 import styled from 'styled-components';
-import { ITableListProps, SelectItem } from 'components/TableList/TableList';
+import { ITableListProps } from 'components/TableList/TableList';
 import { useModalProvider } from '../../../Providers/ModalProvider/ModalProvider';
-import { RenderModalComponentChildrenProps } from '../../../Providers/ModalProvider/ModalComponent';
-import { TableSortParam } from '../tableTypes.types';
-import ModalBase from '../../atoms/Modal';
+import { TableSortOrderEnum, TableSortParam } from '../tableTypes.types';
+import FlexBox from '../../atoms/FlexBox';
 
 export interface TableSortProps {
-  sortParams: TableSortParam[];
+  sortParams?: TableSortParam[];
+  sortOrder?: TableSortOrderEnum;
   onSelect?: ITableListProps['onTableSortChange'];
 }
 
-const TableSort: React.FC<TableSortProps> = ({ sortParams, onSelect }) => {
+const TableSort: React.FC<TableSortProps> = ({ sortParams, sortOrder, onSelect }) => {
   const modals = useModalProvider();
-  const [current, setCurrent] = useState<SelectItem>();
+  const [state, setState] = useState<{ param?: TableSortParam; sortOrder?: TableSortOrderEnum }>({});
 
+  function handleSelect(param: TableSortParam, sortOrder: TableSortProps['sortOrder']) {
+    setState({ param, sortOrder });
+    sortOrder && onSelect && onSelect(param, sortOrder);
+  }
   function onOpenClick() {
-    modals.openModal({
-      ModalChildren: ModalSort,
+    modals.create(ModalSortLst, {
+      sortParams,
+      current: state.param,
+      sortOrder: state.sortOrder,
+      onSelect: handleSelect,
     });
   }
 
-  function handleSelect(param: SelectItem, sortOrder: SelectItem['sortOrder']) {
-    setCurrent({ ...param, sortOrder });
-    sortOrder && onSelect && onSelect(param, sortOrder);
-  }
-
-  const ModalSort: React.FC<RenderModalComponentChildrenProps> = ({ ...props }) => {
-    return (
-      <ModalBase fitContentH fitContentV footer={false} title={'Сортування'} {...props}>
-        <TableSortParamsList {...{ sortParams: sortParams, onSelect: handleSelect, current, isOpen: true }} />
-      </ModalBase>
-    );
-  };
   return (
-    <Box>
+    <Box padding={'4px 0'}>
       <StButton
-        sortOrder={current?.sortOrder}
+        sortOrder={state?.sortOrder}
         variant="def"
         endIconSize="26px"
         endIconId="SmallArrowDown"
         onClick={onOpenClick}
         data-table-sort-open
       >
-        <span title={current?.name || current?.label || ''} style={{ textAlign: 'start' }}>
-          {current?.name || current?.label || 'Оберіть параметр'}
+        <span title={state?.param?.label || ''} style={{ textAlign: 'start' }}>
+          {state?.param?.label || 'Оберіть параметр'}
         </span>
       </StButton>
     </Box>
   );
 };
 
-const Box = styled.div`
+const Box = styled(FlexBox)`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -64,9 +58,7 @@ const Box = styled.div`
   width: 200px;
 `;
 
-const StButton = styled(ButtonIcon)<{ sortOrder?: SelectItem['sortOrder'] }>`
-  display: grid;
-  grid-template-columns: 1fr 26px;
+const StButton = styled(ButtonIcon)<TableSortProps>`
   height: 100%;
   max-width: 100%;
   width: 100%;

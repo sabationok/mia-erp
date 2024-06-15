@@ -6,14 +6,14 @@ export class ClientApi {
   private static BASE_URL_LOCALHOST = `http://localhost:${this.LOCALHOST_API_PORT}/api/`;
   private static BASE_URL_RAILWAY = `https://mia-erp-dev.up.railway.app/api/`;
 
-  private  static readonly _clientRef = axios.create({
+  private static readonly _clientRef = axios.create({
     baseURL: ConfigService.IS_DEV_MODE ? this.BASE_URL_LOCALHOST : this.BASE_URL_RAILWAY,
   });
   static get clientRef(): AxiosInstance {
     return this._clientRef;
   }
 
-  public static  getTokens() {
+  public static getTokens() {
     return {
       access: this._clientRef.defaults.headers.Authorization,
       permission: this._clientRef.defaults.headers.Permission,

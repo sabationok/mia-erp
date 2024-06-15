@@ -3,7 +3,8 @@ import { getAllActionsThunk, getAllRolesThunk } from './customRoles.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { rolesMockData } from 'data/customRoles.data';
 import { ICustomRole, ModuleWithActions } from 'redux/customRoles/customRoles.types';
-import { checks } from '../../utils';
+import { checks, sliceCleaner } from '../../utils';
+import { onUserLogout } from '../auth/auth.actions';
 
 export interface ICustomRolesState {
   customRoles: ICustomRole[];
@@ -42,7 +43,8 @@ export const customRolesSlice = createSlice({
       .addMatcher(inError, (state, action: PayloadAction<StateErrorType>) => {
         state.isLoading = false;
         state.error = action.payload;
-      }),
+      })
+      .addMatcher(onUserLogout, sliceCleaner(initialState)),
 });
 
 export function isCustomRolesCase(type: string) {

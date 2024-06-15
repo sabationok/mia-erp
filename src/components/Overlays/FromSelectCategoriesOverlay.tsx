@@ -28,11 +28,12 @@ const OfferCategoriesOverlay = ({ onClose }: FormSelectCategoriesOverlayProps) =
 
   const handleFormSubmit: FormEventHandler = ev => {
     ev.preventDefault();
+    ev.stopPropagation();
 
     currentOffer &&
       service.updateById({
         onLoading: loaders.onLoading('update'),
-        data: { ...getIdRef(currentOffer), data: { categories: categoriesIds }, refreshCurrent: true },
+        data: { data: { ...getIdRef(currentOffer), data: { categories: categoriesIds } } },
         onSuccess: (data, meta) => {
           onClose && onClose();
         },

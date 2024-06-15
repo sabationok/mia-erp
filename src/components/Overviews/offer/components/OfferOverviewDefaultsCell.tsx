@@ -7,7 +7,7 @@ import FlexBox from '../../../atoms/FlexBox';
 import { Text } from '../../../atoms/Text';
 import { CellStyledComp } from '../../components/CellStyles';
 import { OverviewCellHeader } from '../../components/OverviewCellHeader';
-import OfferDefaultsOverlay from '../../../Overlays/OfferDefaultsOverlay';
+import FormOfferDefaultsOverlay from '../../../Overlays/FormOfferDefaultsOverlay';
 
 import { PriceEntity } from '../../../../types/price-management/price-management.types';
 import { MaybeNull } from '../../../../types/utils.types';
@@ -81,7 +81,7 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity>
         title={cell?.title}
         onOpenOverlayPress={() => {
           overlayHandler({
-            RenderComponent: OfferDefaultsOverlay,
+            RenderComponent: FormOfferDefaultsOverlay,
           });
         }}
       />

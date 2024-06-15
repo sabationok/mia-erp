@@ -10,7 +10,7 @@ import PricesTab from './tabs/PricesTab';
 import WarehousingTab from './tabs/WarehousingTab';
 import { SalesTab } from './tabs/SalesTab';
 import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
-import { OfferOverlayLoaderKey } from '../../Overlays/OfferDefaultsOverlay';
+import { OfferOverlayLoaderKey } from '../../Overlays/FormOfferDefaultsOverlay';
 import { LoadersProvider } from '../../../Providers/Loaders/LoaderProvider';
 import { DrawerHeader } from '../../Overlays';
 

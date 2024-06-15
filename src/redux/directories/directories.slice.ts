@@ -9,7 +9,9 @@ import {
 } from './directories.thunk';
 import { IDirItemBase } from '../../types/dir.types';
 import { DefaultDirectoryType } from '../../types/directories.types';
-import { checks, enumToArray } from '../../utils';
+import { enumToArray, sliceCleaner } from '../../utils';
+import { onUserLogout } from '../auth/auth.actions';
+import { isString } from 'lodash';
 
 export interface IDirectoriesState extends Record<string, any> {
   defaultDirectories?: Record<string, DefaultDirectoryType[]>;
@@ -72,11 +74,12 @@ export const directoriesSlice = createSlice({
       .addMatcher(inError, (s, a: PayloadAction<AuthErrorType>) => {
         s.isLoading = false;
         s.error = a.payload;
-      }),
+      })
+      .addMatcher(onUserLogout, sliceCleaner(initialState)),
 });
 
 function isDirectoriesCase(type: string) {
-  return checks.isStr(type) && type.startsWith('directories');
+  return isString(type) && type.startsWith('directories');
 }
 function inPending(a: AnyAction) {
   return isDirectoriesCase(a.type) && a.type.endsWith('pending');
@@ -87,5 +90,3 @@ function inFulfilled(a: AnyAction) {
 function inError(a: AnyAction) {
   return isDirectoriesCase(a.type) && a.type.endsWith('rejected');
 }
-
-export const directoriesReducer = directoriesSlice.reducer;

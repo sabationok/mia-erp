@@ -7,27 +7,22 @@ import {
   ILoggedUserInfo,
   ILoginUserData,
   IRegisteredUser,
-  IRegisteredUserInfoRes,
   RegisterDto,
 } from '../../types/auth.types';
 import { ThunkArgs } from '../store.store';
 import AuthApi from '../../api/auth.api';
+import { createAppAsyncThunk } from '../createAppAsynkThunk';
 
-export const registerUserThunk = createAsyncThunk<IRegisteredUser, ThunkArgs<RegisterDto>>(
-  'auth/registerThunk',
-  async ({ data, onSuccess, onError }, thunkAPI) => {
-    try {
-      const response: IRegisteredUserInfoRes = await AuthApi.register(data);
+export enum AuthThunkTypeEnum {
+  register = 'auth/registerThunk',
+  logIn = 'auth/logInUserThunk',
+  logOut = 'auth/logOutUserThunk',
+  getCurrent = 'auth/getCurrentUserThunk',
+}
 
-      onSuccess && onSuccess(response.data.data);
-
-      return response.data.data;
-    } catch (error) {
-      onError && onError(error);
-
-      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-    }
-  }
+export const registerUserThunk = createAppAsyncThunk<IRegisteredUser, ThunkArgs<RegisterDto>>(
+  AuthThunkTypeEnum.register,
+  AuthApi.register
 );
 
 export const logInUserThunk = createAsyncThunk<
@@ -36,7 +31,7 @@ export const logInUserThunk = createAsyncThunk<
   {
     state: { auth: IAuthState };
   }
->('auth/logInUserThunk', async ({ data, onSuccess, onError }, thunkAPI) => {
+>(AuthThunkTypeEnum.logIn, async ({ data, onSuccess, onError }, thunkAPI) => {
   try {
     const response = await AuthApi.logInUser(data as ILoginUserData);
 
@@ -50,7 +45,7 @@ export const logInUserThunk = createAsyncThunk<
 });
 
 export const logOutUserThunk = createAsyncThunk<any, ThunkArgs>(
-  'auth/logOutUserThunk',
+  AuthThunkTypeEnum.logOut,
   async ({ data, onSuccess, onError }, thunkAPI) => {
     try {
       const response = await AuthApi.logOutUser();
@@ -70,7 +65,7 @@ export const getCurrentUserThunk = createAsyncThunk<
     },
     ICurrentUserInfoRes
   >
->('auth/getCurrentUserThunk', async ({ onSuccess, onError, onLoading, data }, thunkAPI) => {
+>(AuthThunkTypeEnum.getCurrent, async ({ onSuccess, onError, onLoading, data }, thunkAPI) => {
   try {
     const response = await AuthApi.getCurrentUser();
 

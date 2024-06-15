@@ -2,14 +2,15 @@ import { createSlice } from '@reduxjs/toolkit';
 import * as thunks from './tags.thunks';
 import { TagEntity } from '../../types/tags.types';
 import { TagTypeEnum } from '../../types/directories.types';
-import { ObjectValues } from '../../utils';
+import { ObjectValues, sliceCleaner } from '../../utils';
+import { onUserLogout } from '../auth/auth.actions';
 
 export interface TagsState {
   list: TagEntity[];
   listsMap: Record<TagTypeEnum, TagEntity[]>;
 }
 
-const init: TagsState = {
+const initState: TagsState = {
   list: [],
 
   listsMap: Object.assign(
@@ -22,7 +23,7 @@ const init: TagsState = {
 export const tagsSlice = createSlice({
   name: 'tags',
   reducers: {},
-  initialState: init,
+  initialState: initState,
   extraReducers: builder =>
     builder
       .addCase(thunks.getAllTagsThunk.fulfilled, (st, a) => {
@@ -76,5 +77,6 @@ export const tagsSlice = createSlice({
           }
         }
         return st;
-      }),
+      })
+      .addMatcher(onUserLogout, sliceCleaner(initState)),
 });

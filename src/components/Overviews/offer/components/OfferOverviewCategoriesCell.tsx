@@ -5,22 +5,23 @@ import { ApiDirType } from '../../../../redux/APP_CONFIGS';
 import React, { useMemo } from 'react';
 import { CellStyledComp } from '../../components/CellStyles';
 import { OverviewCellHeader } from '../../components/OverviewCellHeader';
-import OfferCategoriesOverlay from '../../../Overlays/SelectCategoriesOverlay';
+import OfferCategoriesOverlay from '../../../Overlays/FromSelectCategoriesOverlay';
 import FlexBox from '../../../atoms/FlexBox';
 import { OfferCategoryEntity } from '../../../../types/dir.types';
+import { useOverlayService } from '../../../../Providers/Overlay/OverlayStackProvider';
+import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 
-export const OfferOverviewCategoriesCell: RenderOverviewCellComponent<OfferEntity> = ({
-  cell,
-  overlayHandler,
-  data,
-}) => {
+export const OfferOverviewCategoriesCell: RenderOverviewCellComponent<OfferEntity> = ({ cell, data }) => {
+  const overlaySrv = useOverlayService();
+  const modalSrv = useModalService();
+
   const categories = useDirectorySelector(ApiDirType.CATEGORIES_PROD).directory;
   const selectedCategoryIds = useMemo(() => {
     return data?.categories?.map(el => el._id) ?? [];
   }, [data?.categories]);
 
   const renderItems = useMemo(() => {
-    return categories.map((c, index) => {
+    return categories.map(c => {
       return <NotActiveTreeDataItem key={`cat_${c._id}`} selectedIds={selectedCategoryIds} item={c} />;
     });
   }, [categories, selectedCategoryIds]);
@@ -31,9 +32,11 @@ export const OfferOverviewCategoriesCell: RenderOverviewCellComponent<OfferEntit
         title={cell?.title}
         openOverlayButtonTitle={'Змінити'}
         onOpenOverlayPress={() => {
-          overlayHandler({
-            RenderComponent: OfferCategoriesOverlay,
-          });
+          if (overlaySrv.create) {
+            overlaySrv.create(OfferCategoriesOverlay);
+          } else {
+            modalSrv.create(OfferCategoriesOverlay);
+          }
         }}
       />
 

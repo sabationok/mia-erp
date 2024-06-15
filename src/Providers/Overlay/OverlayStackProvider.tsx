@@ -18,7 +18,7 @@ export interface OverlayHandlerParams<Props = any> {
 
 export type OverlayCreator = <Props = any>(
   Component: React.FC<OverlayRenderComponentProps<Props>>,
-  props: OverlayRenderComponentProps<Props>
+  props?: OverlayRenderComponentProps<Props>
 ) => CreatedOverlay;
 
 export type OverlayRenderComponentProps<Props = any> = CreatedOverlay & Props;

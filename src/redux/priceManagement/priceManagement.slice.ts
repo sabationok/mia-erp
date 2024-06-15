@@ -7,6 +7,8 @@ import { omit } from 'lodash';
 import { PriceDiscountEntity } from '../../types/price-management/discounts';
 import { onCreateDiscountMather, onGetDiscountsMatcher, onRemoveDiscountCase } from './discounts/discounts.matchers';
 import { Action } from '../store.store';
+import { onUserLogout } from '../auth/auth.actions';
+import { sliceCleaner } from '../../utils';
 
 export interface PricesState {
   lists: PriceListEntity[];
@@ -151,7 +153,8 @@ export const priceManagementSlice = createSlice({
             }
           }
         }
-      ),
+      )
+      .addMatcher(onUserLogout, sliceCleaner(initialState)),
 });
 function ManagePricesStateMap(
   st: PricesState,

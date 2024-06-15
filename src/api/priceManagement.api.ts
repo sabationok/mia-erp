@@ -58,6 +58,9 @@ export class PricesApi {
   public static updateById = async (input?: IUpdatePriceReqData): Promise<AppResponse<PriceEntity>> => {
     return this.api.patch(this.endpoints.updatePrice(input?._id), input?.data);
   };
+  public static deleteById = async (_?: undefined, params?: { _id: string }): Promise<AppResponse<PriceEntity>> => {
+    return this.api.patch(this.endpoints.updatePrice(params?._id));
+  };
 }
 
 export class PriceManagementApi {
