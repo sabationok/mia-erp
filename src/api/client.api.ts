@@ -7,7 +7,13 @@ export class ClientApi {
   private static BASE_URL_RAILWAY = `https://mia-erp-dev.up.railway.app/api/`;
 
   private static readonly _clientRef = axios.create({
-    baseURL: ConfigService.IS_DEV_MODE ? this.BASE_URL_LOCALHOST : this.BASE_URL_RAILWAY,
+    baseURL: ConfigService.baseApiProvider.isLocalhost
+      ? this.BASE_URL_LOCALHOST
+      : ConfigService.baseApiProvider.isRailway
+        ? this.BASE_URL_RAILWAY
+        : ConfigService.IS_DEV_MODE
+          ? this.BASE_URL_LOCALHOST
+          : this.BASE_URL_RAILWAY,
   });
   static get clientRef(): AxiosInstance {
     return this._clientRef;

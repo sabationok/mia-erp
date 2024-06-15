@@ -1,6 +1,6 @@
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { FilterReturnDataType } from '../components/Filter/AppFilter';
-import { OnlyUUID, UUID } from '../redux/app-redux.types';
+import { CompanyQueryTypeEnum, OnlyUUID, UUID } from '../redux/app-redux.types';
 import { AppDate, ArrayOfUUID, Keys, PartialRecord, Values } from '../types/utils.types';
 
 export * from './client.api';
@@ -176,6 +176,8 @@ export interface AppQueryParams<Type = any> extends AppQueries<Type>, Pagination
   asDefault?: boolean;
   fullInfo?: boolean;
   categories?: UUID[];
+
+  companyType?: CompanyQueryTypeEnum;
 
   sku?: string;
   barCode?: string;

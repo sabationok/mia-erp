@@ -58,19 +58,9 @@ export const companiesTableColumns: CellTittleProps<CompanyEntity>[] = [
   },
 ];
 export const permissionsSearchParams: SelectItem[] = [
-  { label: t('date'), dataPath: 'eventDate', filter: false, search: false, sort: true },
-  { label: t('createdAt'), dataPath: 'createdAt', filter: false, search: false, sort: true },
-  { label: t('updatedAt'), dataPath: 'updateAt', filter: false, search: false, sort: true },
-  { label: t('countIn'), dataPath: 'countIn', filter: false, search: true, sort: true },
-  { label: t('subCountIn'), dataPath: 'subCountIn', filter: false, search: true, sort: true },
-  { label: t('countOut'), dataPath: 'countOut', filter: false, search: true, sort: true },
-  { label: t('subCountOut'), dataPath: 'subCountOut', filter: false, search: true, sort: true },
-  { label: t('category'), dataPath: 'category', filter: false, search: true, sort: true },
-  { label: t('subCategory'), dataPath: 'subCategory', filter: false, search: true, sort: true },
-  { label: t('amount'), dataPath: 'amount', filter: false, search: true, sort: true },
-  { label: t('contractor'), dataPath: 'contractor', filter: false, search: true, sort: true },
-  { label: t('document'), dataPath: 'document', filter: false, search: true, sort: true },
-  { label: t('project'), dataPath: 'project', filter: false, search: true, sort: true },
-  { label: t('mark'), dataPath: 'mark', filter: false, search: true, sort: true },
+  // { label: t('date'), dataPath: 'eventDate', filter: false, search: false, sort: true },
+  { label: t('Label'), dataPath: 'label.base', filter: false, search: false, sort: true },
+  { label: t('Name first'), dataPath: 'name.first', filter: false, search: false, sort: true },
+  { label: t('Name first'), dataPath: 'name.first', filter: false, search: false, sort: true },
   { label: t('status'), dataPath: 'status', filter: false, search: true, sort: true },
 ];

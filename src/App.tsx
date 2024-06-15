@@ -21,7 +21,35 @@ const App: React.FC = () => {
       </AppContainer>
 
       <ToastContainer
-        position="bottom-left"
+        position="top-center"
+        autoClose={1000}
+        limit={4}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={isDarkMode ? 'dark' : 'light'}
+      />
+
+      <ToastContainer
+        position="top-center"
+        autoClose={1000}
+        limit={4}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={isDarkMode ? 'dark' : 'light'}
+      />
+
+      <ToastContainer
+        position="top-center"
         autoClose={1000}
         limit={4}
         hideProgressBar={false}

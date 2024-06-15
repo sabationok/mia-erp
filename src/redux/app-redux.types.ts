@@ -2,7 +2,7 @@ import { ThunkArgs } from './store.store';
 import { AxiosResponse } from 'axios';
 import { ApiCallerPayload } from '../api';
 import { ApiDirType } from './APP_CONFIGS';
-import { AppDate, MaybeNull } from '../types/utils.types';
+import { AppDate, MaybeNull, Values } from '../types/utils.types';
 
 export type UUID = string;
 export type MagicLink = string;
@@ -43,29 +43,32 @@ export interface RoleActionType extends OnlyUUID {
   type?: string;
 }
 
-export enum ModuleNames {
-  COMPANIES = 'COMPANIES',
-  TRANSACTIONS = 'TRANSACTIONS',
-  ORDERS = 'ORDERS',
-  REFUNDS = 'REFUNDS',
-  SUPPLEMENT = 'SUPPLEMENT',
-  STORAGE = 'STORAGE',
-  MANAGER = 'MANAGER',
-  ADMIN = 'ADMIN',
-  PRODUCTS = 'PRODUCTS',
-  DIR_CATEGORIES_TR = 'DIR_CATEGORIES_TR',
-  DIR_CATEGORIES_PROD = 'DIR_CATEGORIES_PROD',
-  DIR_COUNTS = 'DIR_COUNTS',
-  DIR_CONTRACTORS = 'DIR_CONTRACTORS',
-  DIR_ACTIVITIES = 'DIR_ACTIVITIES',
-}
+// export enum ModuleNames {
+//   COMPANIES = 'COMPANIES',
+//   TRANSACTIONS = 'TRANSACTIONS',
+//   ORDERS = 'ORDERS',
+//   REFUNDS = 'REFUNDS',
+//   SUPPLEMENT = 'SUPPLEMENT',
+//   STORAGE = 'STORAGE',
+//   MANAGER = 'MANAGER',
+//   ADMIN = 'ADMIN',
+//   PRODUCTS = 'PRODUCTS',
+//   DIR_CATEGORIES_TR = 'DIR_CATEGORIES_TR',
+//   DIR_CATEGORIES_PROD = 'DIR_CATEGORIES_PROD',
+//   DIR_COUNTS = 'DIR_COUNTS',
+//   DIR_CONTRACTORS = 'DIR_CONTRACTORS',
+//   DIR_ACTIVITIES = 'DIR_ACTIVITIES',
+// }
 
 export enum CompanyQueryTypeEnum {
   own = 'own',
-  all = 'all',
-  invites = 'invites',
   invited = 'invited',
+  invites = 'invites',
+  all = 'all',
 }
+
+export type CompanyQueryType = Values<CompanyQueryTypeEnum>;
+
 export interface IContactsSlot extends ContactsDto, IBase {}
 export interface ContactsDto {
   email?: string;
@@ -93,8 +96,6 @@ export type AppResponseType<D = any, M = any> = {
   data: D;
 };
 export interface AppResponse<D = any, M = any> extends AxiosResponse<AppResponseType<D, M>> {}
-
-export type CompanyQueryType = 'own' | 'all' | 'invites' | 'invited';
 
 export type ServiceDispatcher<P = any> = (args: P) =>
   | {

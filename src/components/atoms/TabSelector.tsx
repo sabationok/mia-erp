@@ -88,6 +88,7 @@ const TabSelector = <V = any, D = any, Option extends FilterOption<V, D> = any>(
         if (isFunction(onChangeIndex)) onChangeIndex(idx);
         if (isFunction(onFilterValueSelect)) onFilterValueSelect({ name, value: option.value });
         if (isFunction(onOptSelect)) onOptSelect(option, option.value, idx);
+        if (isFunction(onSelect)) onSelect(option, option.value, idx);
       };
     },
     [name, onFilterValueSelect, onOptSelect, onChangeIndex]
