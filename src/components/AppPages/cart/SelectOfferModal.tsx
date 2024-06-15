@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { useOffersTableSettings } from '../offers/PageOffers';
 import { countOrderSlotValues, setValueByPath } from '../../../utils';
-import DrawerBase from '../../Overlays/OverlayBase';
+import DrawerBase from '../../atoms/OverlayBase';
 import TableList from '../../TableList/TableList';
 import { FooterSummary } from './FooterSummary';
 import { OverlayFooter } from '../../atoms';

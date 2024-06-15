@@ -101,7 +101,7 @@ const RightSide = styled(FlexBox)<{ isVisible?: boolean }>`
 
     transform: translateX(${p => (p.isVisible ? 0 : 100)}%);
 
-    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.25);
+    box-shadow: ${p => (p.isVisible ? '0 12px 26px rgba(0, 0, 0, 0.25)' : '')};
   }
 `;
 

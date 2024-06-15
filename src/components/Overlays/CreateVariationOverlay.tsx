@@ -23,7 +23,7 @@ import { PropertiesGroupEntity, PropertyEntity } from '../../types/offers/proper
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
 import { OfferEntity, PropertyValuesMap } from '../../types/offers/offers.types';
-import DrawerBase from './OverlayBase';
+import DrawerBase from '../atoms/OverlayBase';
 import { PropertiesGroupSelector } from '../atoms/PropertiesGroupSelector';
 import { AccordionFormArea } from '../atoms/FormArea/AccordionForm';
 import { LoadersProvider } from '../../Providers/Loaders/LoaderProvider';

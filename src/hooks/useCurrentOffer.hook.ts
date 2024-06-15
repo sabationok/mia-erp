@@ -9,7 +9,7 @@ import { AppModuleName } from '../redux/reduxTypes.types';
 type CurrentOffer = OfferEntity & {
   getVariations(): VariationEntity[];
 };
-export const useCurrentOffer = ({ _id }: { _id?: string } = {}): CurrentOffer | undefined => {
+export const useCurrentOffer = ({ _id, ...rest }: { _id?: string } = {}): CurrentOffer | undefined => {
   const param = useAppParams();
   const query = useAppQuery();
   const id = _id || param?.offerId || query.query.offerId;
@@ -23,7 +23,11 @@ export const useCurrentOffer = ({ _id }: { _id?: string } = {}): CurrentOffer | 
   const offer = useMemo(() => {
     const _offer = id ? state.dataMap?.[id] : undefined;
 
+    console.log('use current offer', _offer);
     function getVariations(): VariationEntity[] {
+      if (_offer?.variations?.length) {
+        return _offer.variations;
+      }
       const _idsList = id ? state.variationsKeysMap?.[id] : undefined;
 
       if (!_idsList) {

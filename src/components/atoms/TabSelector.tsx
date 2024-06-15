@@ -170,7 +170,7 @@ const Filter = styled.div<{ gridRepeat?: number; optionProps?: { fitContentH?: b
   grid-template-columns: ${({ gridRepeat, optionProps }) =>
     `repeat(${gridRepeat || 1}, minmax(${(optionProps?.fitContentH && 'min-content') || '150px'} ,1fr))`};
 
-  height: 32px;
+  height: max-content;
   min-height: 32px;
   min-width: 100%;
   overflow: auto;

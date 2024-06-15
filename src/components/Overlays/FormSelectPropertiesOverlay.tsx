@@ -11,11 +11,12 @@ import { ToastService } from '../../services';
 import { DrawerHeader, OverlayFooter, OverlayForm } from './index';
 import { OfferEntity } from '../../types/offers/offers.types';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
-import { PropertyBaseEntity, PropertyEntity } from '../../types/offers/properties.types';
+import { PropertiesGroupEntity, PropertyEntity } from '../../types/offers/properties.types';
 import OfferPropertySelector from '../Forms/offers/variations/OfferPropertySelector';
-import { PropertiesGroupSelector } from '../atoms/PropertiesGroupSelector';
+import { PropertiesFilterData, PropertiesGroupSelector } from '../atoms/PropertiesGroupSelector';
 import { useCurrentOffer } from '../../hooks';
 import { sortIds } from '../../utils';
+import { t } from '../../lang';
 
 export interface FormSelectPropertiesProps
   extends CreatedOverlay,
@@ -28,6 +29,8 @@ export interface FormSelectPropertiesProps
   template?: OnlyUUID;
 
   updateId?: string;
+
+  filterValue?: Partial<PropertiesFilterData>;
 }
 
 const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
@@ -42,17 +45,29 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
   onChange,
   ...props
 }) => {
-  const currentOffer = useCurrentOffer(offer);
+  const Offer = useCurrentOffer(offer);
   const state = useOffersSelector();
   const service = useAppServiceProvider()[ServiceName.offers];
-  const [currentTemplate, setCurrentTemlate] = useState<PropertyBaseEntity>();
+
+  const initialTemplate = useMemo(() => {
+    if (!Offer?.template) {
+      const id = Offer?.properties?.[0]?.path?.split('.')?.[0];
+
+      return id ? { _id: id } : undefined;
+    }
+
+    // return undefined;
+    return Offer?.template;
+  }, [Offer?.properties, Offer?.template]);
+
+  const [currentTemplate, setCurrentTemplate] = useState<PropertiesGroupEntity | undefined>();
 
   const [loading, setLoading] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const initState = useMemo(() => {
-    return sortIds(currentOffer?.properties?.map(prop => prop._id));
-  }, [currentOffer?.properties]);
+    return sortIds(Offer?.properties?.map(prop => prop._id));
+  }, [Offer?.properties]);
 
   useEffect(() => {
     if (initState?.length) {
@@ -62,10 +77,15 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
   }, []);
 
   const propertiesList = useMemo(() => {
-    const _rootId = currentTemplate?._id;
-    const _propertiesList: PropertyEntity[] = [];
-    const _propertiesIds = state.propertiesKeysMap?.[_rootId ?? 'def'] ?? [];
+    if (currentTemplate?.childrenList?.length) {
+      return currentTemplate?.childrenList.filter(item => !item.isSelectable);
+    }
 
+    const _rootId = currentTemplate?._id;
+    if (!_rootId) return undefined;
+    const _propertiesList: PropertyEntity[] = [];
+    const _propertiesIds = state.propertiesKeysMap?.[_rootId];
+    if (!_propertiesIds) return undefined;
     for (const propId of _propertiesIds) {
       const prop = state.propertiesDataMap?.[propId];
       if (prop && !prop?.isSelectable) {
@@ -77,7 +97,7 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
     }
 
     return _propertiesList;
-  }, [currentTemplate?._id, state.propertiesDataMap, state.propertiesKeysMap]);
+  }, [currentTemplate?._id, currentTemplate?.childrenList, state.propertiesDataMap, state.propertiesKeysMap]);
 
   const canSubmit = useMemo(() => {
     return sortIds(initState)?.join(',') !== sortIds(selectedIds).join(',');
@@ -86,14 +106,15 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
   const handleSubmit: FormEventHandler = useCallback(
     event => {
       event.preventDefault();
+      event.stopPropagation();
 
-      const id = updateId ?? currentOffer?._id;
+      const id = updateId ?? Offer?._id;
       if (id) {
         service.updateById({
-          data: { data: { _id: id, data: { properties: selectedIds } } },
+          data: { data: { _id: id, data: { properties: selectedIds, templateId: currentTemplate?._id } } },
           onLoading: setLoading,
           onSuccess: (data, _meta) => {
-            ToastService.success('Product updated');
+            ToastService.success('Offer updated');
             onClose && onClose();
           },
         });
@@ -103,7 +124,7 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
 
       onSubmit && onSubmit(selectedIds);
     },
-    [currentOffer?._id, onClose, onSubmit, selectedIds, service, updateId]
+    [Offer?._id, currentTemplate?._id, onClose, onSubmit, selectedIds, service, updateId]
   );
 
   const handleSelect = useCallback((_parentId?: string, valueId: string = '') => {
@@ -121,23 +142,23 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
   }, [propertiesList, selectedIds, handleSelect]);
 
   useEffect(() => {
-    if (currentOffer?.properties) {
-      setSelectedIds(currentOffer?.properties.map(p => p._id));
+    if (Offer?.properties) {
+      setSelectedIds(Offer?.properties.map(p => p._id));
     }
-  }, [currentOffer?.properties]);
+  }, [Offer?.properties]);
 
   return (
     <OverlayForm onSubmit={handleSubmit} {...props}>
-      <DrawerHeader
-        onBackPress={onClose}
-        canSubmit={canSubmit}
-        title={(title || currentTemplate?.label) ?? ''}
-        okButton
+      <DrawerHeader onBackPress={onClose} canSubmit={canSubmit} title={t('Properties')} okButton />
+
+      <PropertiesGroupSelector
+        onSelect={setCurrentTemplate}
+        filterValue={{ isSelectable: false }}
+        selected={currentTemplate}
+        defaultValue={initialTemplate}
       />
 
-      <PropertiesGroupSelector onSelect={setCurrentTemlate} selected={currentTemplate} />
-
-      <PropertiesBox flex={1} overflow={'auto'}>
+      <PropertiesBox flex={1} padding={'0 8px'} overflow={'auto'}>
         {renderPropertiesList}
       </PropertiesBox>
 

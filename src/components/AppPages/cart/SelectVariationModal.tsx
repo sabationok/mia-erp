@@ -8,7 +8,7 @@ import { VariationEntity } from '../../../types/offers/variations.types';
 import { OfferEntity } from '../../../types/offers/offers.types';
 import { WarehouseEntity } from '../../../types/warehousing/warehouses.types';
 import { CreatedModal, useModalProvider } from '../../../Providers/ModalProvider/ModalProvider';
-import DrawerBase from '../../Overlays/OverlayBase';
+import DrawerBase from '../../atoms/OverlayBase';
 import VariationsTab from '../offers/tabs/VariationsTab';
 import { omit } from 'lodash';
 

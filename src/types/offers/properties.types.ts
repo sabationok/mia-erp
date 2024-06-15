@@ -23,6 +23,8 @@ export interface PropertyBaseEntity extends IBase, PropertyTempData {
   type?: OfferTypeEnum;
   isSelectable?: MaybeNull<boolean>;
   level?: number;
+  path?: string;
+
   levelType?: PropertyLevelTypeEnum;
 
   parent?: PropertyBaseEntity;

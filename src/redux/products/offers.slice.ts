@@ -9,18 +9,12 @@ import {
   PropertySelectableTypeEnum,
 } from '../../types/offers/properties.types';
 import { createPropertyThunk, getAllPropertiesThunk, updatePropertyThunk } from './properties/properties.thunks';
-import {
-  clearCurrentOfferAction,
-  setCurrentProductInventoriesAction,
-  setCurrentProductVariationsAction,
-  setOfferPricesAction,
-} from './offers.actions';
+import { clearCurrentOfferAction, setCurrentProductInventoriesAction, setOfferPricesAction } from './offers.actions';
 import { PartialRecord, SKU, UUID } from '../../types/utils.types';
 import { VariationEntity } from '../../types/offers/variations.types';
 import { onCreatePriceMather, onUpdatePriceMatcher } from '../priceManagement/prices.actions';
 import { Action, ActionPayload } from '../store.store';
 import { PriceEntity } from '../../types/price-management/price-management.types';
-import { omit } from 'lodash';
 
 type OfferDefaultsKey = keyof IOfferRelatedDefaultFields;
 export interface OffersState {
@@ -89,37 +83,27 @@ export const offersSlice = createSlice({
         s.list = prepend ? [...a.payload.data, ...s.list] : upend ? [...s.list, ...a.payload.data] : a.payload.data;
 
         a.payload.data.forEach(offer => {
-          ManageOffersStateMap(
+          return ManageOffersStateMap(
             s,
             { data: offer },
             { refresh: true, isForList: true, setPrices: false, setVariations: false }
           );
         });
-        return s;
       })
       .addCase(thunks.createOfferThunk.fulfilled, (s, a) => {
-        if (a.payload?.data) {
-          ManageOffersStateMap(s, a.payload);
-        }
-        return s;
+        return ManageOffersStateMap(s, a.payload, a.payload);
       })
-      .addCase(thunks.updateProductThunk.fulfilled, (s, a) => {
-        if (a.payload?.data) {
-          ManageOffersStateMap(s, a.payload);
-        }
-        return s;
+      .addCase(thunks.updateOfferThunk.fulfilled, (s, a) => {
+        return ManageOffersStateMap(s, a.payload, a.payload);
       })
       .addCase(thunks.getOfferFullInfoThunk.fulfilled, (s, a) => {
-        ManageOffersStateMap(s, a.payload, a.payload);
-        return s;
+        return ManageOffersStateMap(s, a.payload, a.payload);
       })
       .addCase(thunks.getOfferThunk.fulfilled, (s, a) => {
-        ManageOffersStateMap(s, a.payload, a.payload);
-        return s;
+        return ManageOffersStateMap(s, a.payload, a.payload);
       })
       .addCase(thunks.updateOfferDefaultsThunk.fulfilled, (s, a) => {
-        ManageOffersStateMap(s, a.payload, a.payload);
-        return s;
+        return ManageOffersStateMap(s, a.payload, a.payload);
       })
       .addCase(clearCurrentOfferAction, s => {
         s.currentOffer = { _id: '' };
@@ -140,20 +124,6 @@ export const offersSlice = createSlice({
       })
       //  * sep ============>>>>>>>>>>> VARIATIONS
 
-      .addCase(setCurrentProductVariationsAction, (s, a) => {
-        s.currentOffer = {
-          ...(s.currentOffer as OfferEntity),
-          variations: a.payload.refresh
-            ? a.payload?.data
-            : s.currentOffer?.variations
-              ? [...a.payload.data, ...s.currentOffer?.variations]
-              : a.payload.data,
-        };
-
-        a.payload?.data.forEach(vr => {
-          ManageVariationsStateMap(s, { data: vr });
-        });
-      })
       .addCase(thunks.createVariationThunk.fulfilled, (s, a) => {
         ManageVariationsStateMap(s, { data: a.payload.data });
       })
@@ -162,23 +132,19 @@ export const offersSlice = createSlice({
         ManageVariationsStateMap(s, { data: a.payload.data });
       })
       .addCase(thunks.getAllVariationsByOfferIdThunk.fulfilled, (s, a) => {
-        // const { upend, prepend } = a.payload;
-
-        // s.list = prepend ? [...a.payload.data, ...s.list] : upend ? [...s.list, ...a.payload.data] : a.payload.data;
-
         const offerId = a.payload?.params?.offerId || a.payload?.data?.[0]?._id;
         if (offerId) {
           a.payload?.data.forEach(vr => {
             ManageVariationsStateMap(s, { data: vr, offerId });
           });
 
-          ManageOffersStateMap(s, { data: { _id: offerId, variations: a.payload?.data } });
+          return ManageOffersStateMap(s, { data: { _id: offerId, variations: a.payload?.data } });
         }
       })
       //  * sep ============>>>>>>>>>>> PRICES
       .addCase(thunks.getAllOfferPricesThunk.fulfilled, (s, a) => {
         if (a.payload.params?.offerId) {
-          ManageOffersStateMap(s, { data: { _id: a.payload.params?.offerId, prices: a.payload.data } });
+          return ManageOffersStateMap(s, { data: { _id: a.payload.params?.offerId, prices: a.payload.data } });
         }
       })
       .addCase(setOfferPricesAction, (s, a) => {
@@ -264,26 +230,35 @@ function ManageOffersStateMap(
   const itemId = input?.data?._id;
   const itemSku = input?.data?.sku;
 
-  const offer = options?.isForList ? omit(input.data, ['prices', 'variations']) : input.data;
+  console.log('input.data', input.data);
+  const offer = input.data;
 
   if (options?.refresh) {
     st.dataMap[itemId] = offer;
   } else {
-    // st.dataMap = { ...st.dataMap, [itemId]: { ...st.dataMap?.[itemId], ...offer } };
-    st.dataMap[itemId] = { ...st.dataMap?.[itemId], ...offer };
-
-    // TODO переробити
+    try {
+      st.dataMap[itemId] = {
+        ...(st.dataMap[itemId] ? JSON.parse(JSON.stringify(st.dataMap[itemId])) : {}),
+        ...offer,
+      };
+    } catch (e) {
+      console.error('[ManageOffersStateMap]', e);
+    }
   }
-  const OfferFromState = st.dataMap[itemId];
+
+  const Offer = st.dataMap[itemId];
+
+  console.log('offer from state', Offer);
 
   if (itemSku) {
     st.skuKeysMap[itemSku] = itemId;
   }
 
-  if (!options?.isForList && OfferFromState) {
+  if (!options?.isForList && Offer) {
     const listIndex = st.list.findIndex(o => o._id === itemId);
-    st.list[listIndex] = OfferFromState;
+    st.list[listIndex] = Offer;
   }
+  return st;
 }
 
 // function ManageOfferDefaults(

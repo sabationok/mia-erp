@@ -30,7 +30,7 @@ export const getOfferFullInfoThunk = createAppAsyncThunk(
 );
 
 export const createOfferThunk = createAppAsyncThunk(OffersThunkType.create, OffersApi.create);
-export const updateProductThunk = createAppAsyncThunk(OffersThunkType.update, OffersApi.updateById);
+export const updateOfferThunk = createAppAsyncThunk(OffersThunkType.update, OffersApi.updateById);
 
 export const updateOfferDefaultsThunk = createAppAsyncThunk(
   OffersThunkType.updateDefaults,

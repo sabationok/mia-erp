@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import React, { memo } from 'react';
-import { DrawerHeader } from './index';
+import { DrawerHeader } from '../Overlays';
 
 export interface DrawerBaseProps extends Omit<React.FormHTMLAttributes<HTMLDivElement>, 'onSubmit' | 'onReset'> {
   footer?: boolean;

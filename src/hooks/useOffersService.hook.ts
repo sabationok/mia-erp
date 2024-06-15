@@ -12,7 +12,7 @@ import {
   getOfferFullInfoThunk,
   getOfferThunk,
   updateOfferDefaultsThunk,
-  updateProductThunk,
+  updateOfferThunk,
   updateVariationThunk,
 } from '../redux/products/offers.thunks';
 import { useMemo } from 'react';
@@ -33,7 +33,7 @@ import { clearCurrentOfferAction } from '../redux/products/offers.actions';
 export interface OffersService {
   create: __ServiceDispatcherAsync<typeof createOfferThunk>;
   deleteById: ServiceApiCaller<string, OfferEntity>; // !!!!! ===>>> ServiceDispatcher
-  updateById: __ServiceDispatcherAsync<typeof updateProductThunk>; // !!!!! ===>>> ServiceDispatcher
+  updateById: __ServiceDispatcherAsync<typeof updateOfferThunk>; // !!!!! ===>>> ServiceDispatcher
   getById: ServiceApiCaller<string, OfferEntity>;
   getOne: __ServiceDispatcherAsync<typeof getOfferThunk>;
   getAll: __ServiceDispatcherAsync<typeof getAllOffersThunk>;
@@ -82,7 +82,7 @@ const useOffersService = (): OffersService => {
       getById: args => createApiCall(defaultApiCallPayload(args), OffersApi.getById),
 
       create: args => dispatch(createOfferThunk(args)),
-      updateById: args => dispatch(updateProductThunk(args)),
+      updateById: args => dispatch(updateOfferThunk(args)),
       getOne: args => dispatch(getOfferThunk(args)),
       getAll: args => dispatch(getAllOffersThunk(args)),
 

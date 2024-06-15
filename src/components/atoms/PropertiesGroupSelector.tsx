@@ -11,27 +11,34 @@ import ButtonsGroup from './ButtonsGroup';
 import { offerTypeFilterOptions } from '../../data/modalFilterOptions.data';
 import { Values } from '../../types/utils.types';
 import TabSelector from './TabSelector';
+import { Text } from './Text';
 
-type FilterData = {
+export type PropertiesFilterData = {
   type: Values<typeof OfferTypeEnum>;
   isSelectable?: boolean;
 };
 export const PropertiesGroupSelector = ({
   selected,
   onSelect,
-  filterValue = { type: OfferTypeEnum.GOODS, isSelectable: true },
+  filterValue,
   hasFilter = false,
+  defaultValue,
 }: {
   selected?: PropertiesGroupEntity;
+  defaultValue?: PropertiesGroupEntity;
   onSelect?: (opt: PropertiesGroupEntity) => void;
-  filterValue?: FilterData;
+  filterValue?: Partial<PropertiesFilterData>;
   hasFilter?: boolean;
 }) => {
   // const service = useAppServiceProvider().get(AppModuleName.offers);
 
   const state = useOffersSelector();
-  const [filter, setFilter] = useState<FilterData>(filterValue);
-  const [currentTemplate, setCurrentTemplate] = useState<PropertiesGroupEntity | undefined>();
+  const [filter, setFilter] = useState<PropertiesFilterData>({
+    type: OfferTypeEnum.GOODS,
+    isSelectable: true,
+    ...filterValue,
+  });
+  const [currentTemplate, setCurrentTemplate] = useState<PropertiesGroupEntity | undefined>(defaultValue);
   // const loaders = useLoaders<'getList' | 'create' | 'update'>();
 
   const rootList = useMemo(() => {
@@ -65,17 +72,18 @@ export const PropertiesGroupSelector = ({
   }, [selected]);
 
   useEffect(() => {
-    if (rootList?.length && !currentTemplate) {
-      if (onSelect && rootList[0]) {
-        onSelect(rootList[0]);
+    if (rootList?.length && !selected) {
+      const found = rootList.find(item => item._id === currentTemplate?._id);
+      if (onSelect && found) {
+        onSelect(found);
       } else {
-        setCurrentTemplate(rootList[0]);
+        setCurrentTemplate(found);
       }
     }
-  }, [currentTemplate, onSelect, rootList]);
+  }, [currentTemplate?._id, onSelect, rootList, selected]);
 
   return (
-    <FlexBox margin={'8px 0'} gap={8}>
+    <FlexBox gap={8}>
       {hasFilter && (
         <InputLabel label={t('Select type')}>
           <ButtonsGroup
@@ -90,9 +98,24 @@ export const PropertiesGroupSelector = ({
         </InputLabel>
       )}
 
-      <InputLabel label={t('Select properties group')}>
-        <TabSelector options={rootList} onOptSelect={handleSelect} />
-      </InputLabel>
+      {defaultValue?._id ? (
+        <FlexBox padding={'8px'} gap={8} fxDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
+          <Text $align={'center'} $size={15} $weight={500}>
+            {t('Current')}
+          </Text>
+          <Text $align={'center'} $size={15} $weight={600}>
+            {selected?.label}
+          </Text>
+        </FlexBox>
+      ) : (
+        <InputLabel label={t('Select properties group')}>
+          <TabSelector
+            options={rootList}
+            onOptSelect={handleSelect}
+            defaultFilterValue={selected?._id || currentTemplate?._id}
+          />
+        </InputLabel>
+      )}
     </FlexBox>
   );
 };

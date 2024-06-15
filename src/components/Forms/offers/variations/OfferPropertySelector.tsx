@@ -9,6 +9,7 @@ import FlexBox from '../../../atoms/FlexBox';
 import { useOffersSelector } from '../../../../redux/selectors.store';
 import { t } from '../../../../lang';
 import TagButtonsFilter from '../../../atoms/TagButtonsFilter';
+import SvgIcon from '../../../atoms/SvgIcon';
 
 interface PropertyItemStyleByCmsTypeProps {
   numColumns?: number;
@@ -77,23 +78,26 @@ export const OfferPropertySelector = ({
   const configs = item.cmsConfigs?.type ? PropertyItemStylesByCmsKey?.[item.cmsConfigs?.type] : undefined;
 
   return (
-    <PropertyBox key={`property-box-${item._id}`} gap={8} fillWidth>
-      <FlexBox gap={8} fxDirection={'row'} padding={'6px 0'} justifyContent={'space-between'} alignItems={'center'}>
-        <Text $weight={500}>{item.label}</Text>
+    <PropertyBox key={`property-box-${item._id}`} fillWidth>
+      <ButtonIcon
+        gap={8}
+        fxDirection={'row'}
+        padding={'6px 0'}
+        justifyContent={'space-between'}
+        alignItems={'center'}
+        onClick={() => {
+          setIsOpen(p => !p);
+        }}
+      >
+        <Text $weight={500} $padding={'0 8px'}>
+          {item.label}
+        </Text>
 
-        <ButtonIcon
-          variant={'onlyIcon'}
-          size={'26px'}
-          iconSize={'100%'}
-          icon={_isOpen ? 'SmallArrowDown' : 'SmallArrowLeft'}
-          onClick={() => {
-            setIsOpen(p => !p);
-          }}
-        />
-      </FlexBox>
+        <SvgIcon size={'28px'} icon={_isOpen ? 'SmallArrowDown' : 'SmallArrowLeft'} />
+      </ButtonIcon>
 
       {_isOpen && (
-        <>
+        <ExpandContainer padding={'8px 0'}>
           {item.cmsConfigs?.type && (
             <FlexBox gap={6} padding={'6px'} justifyContent={'center'} alignItems={'center'}>
               <Text $size={11} $weight={400}>
@@ -115,22 +119,26 @@ export const OfferPropertySelector = ({
               onChangeIds && onChangeIds(item._id, values);
             }}
           />
-        </>
+        </ExpandContainer>
       )}
     </PropertyBox>
   );
 };
 const PropertyBox = styled(FlexBox)`
-  border-top: 1px solid ${p => p.theme.sideBarBorderColor};
+  &:not(:first-child) {
+    border-top: 1px solid ${p => p.theme.sideBarBorderColor};
+  }
 
-  padding-bottom: 12px;
+  //padding-bottom: 8px;
 
   &:last-child {
     border-bottom: 1px solid ${p => p.theme.sideBarBorderColor};
   }
 `;
 
-// const PropertyValuesBox = styled(FlexBox)<PropertyItemStyleByCmsTypeProps>``;
+const ExpandContainer = styled(FlexBox)`
+  border-top: 1px solid ${p => p.theme.sideBarBorderColor};
+`;
 
 // const RenderPropertyValue = ({
 //   item,
