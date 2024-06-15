@@ -11,7 +11,7 @@ import { AppModuleName } from '../redux/reduxTypes.types';
 import { TableActionsBuilder } from '../utils/tables';
 import { t } from '../lang';
 import { useAuthSelector } from '../redux/selectors.store';
-import { CompanyQueryType } from '../types/companies.types';
+import { CompanyQueryType, CompanyQueryTypeEnum } from '../types/companies.types';
 
 export type PermissionsActionsCreator = TableActionsCreator<PermissionEntity>;
 
@@ -34,7 +34,7 @@ export interface PermissionsTablesActionProps {
   ctx: ITableListContext<PermissionEntity>;
   navigate: NavigateFunction;
   service: PermissionService;
-  companyType: CompanyQueryType;
+  companyType: CompanyQueryTypeEnum;
   modalService: IModalProviderContext;
 }
 
@@ -177,7 +177,7 @@ builder.add('refresh', ({ ctx, service, extra }) => {
   };
 });
 
-const usePermissionsActionsCreator = (companyType: CompanyQueryType): PermissionsActionsCreator => {
+const usePermissionsActionsCreator = (companyType: CompanyQueryTypeEnum): PermissionsActionsCreator => {
   const service = useAppServiceProvider()[AppModuleName.permissions];
   const modalService = useModalService();
   const userId = useAuthSelector()?.user?._id;
