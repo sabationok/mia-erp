@@ -5,11 +5,13 @@ import { AppQueryParams } from './index';
 import { ClientApi } from './client.api';
 import { OrderSlotEntity } from '../types/orders/order-slot.types';
 
+export interface GetOrderSlotsApiQuery
+  extends Partial<Pick<AppQueryParams, 'groupId' | 'orderId' | 'order' | 'group' | 'offerId'>> {}
 export class OrderSlotsApi {
   private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.ordersEndpoints;
 
-  public static getAll = (_?: undefined, params: AppQueryParams = {}): Promise<AppResponse<OrderSlotEntity[]>> => {
+  public static getAll = (_?: undefined, params?: GetOrderSlotsApiQuery): Promise<AppResponse<OrderSlotEntity[]>> => {
     return this.api.get(this.endpoints.slots.getList(), { params });
   };
 }

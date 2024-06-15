@@ -1,10 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from '../../utils';
-import { AppQueryParams, InvoicesApi } from '../../api';
+import { InvoicesApi } from '../../api';
 import { ThunkArgs } from '../store.store';
 import { IInvoicingMethod, IInvoicingMethodReqData } from '../../types/integrations.types';
-import { isAxiosError } from 'axios';
-import { IInvoice } from '../../types/invoices.types';
+import { createAppAsyncThunk } from '../createAppAsynkThunk';
 
 enum InvoicesThunkTypeEnum {
   getAll = 'invoicing/getAllInvoicesThunk',
@@ -52,25 +51,5 @@ export const updateInvoicingMethodThunk = createAsyncThunk<
 
 export const getAllInvoicesThunk = buildGetAllInvoicesThunk(InvoicesThunkTypeEnum.getAll);
 export function buildGetAllInvoicesThunk(type: string) {
-  return createAsyncThunk<
-    { refresh?: boolean; update?: boolean; data: IInvoice[] },
-    ThunkArgs<
-      { refresh?: boolean; params?: Pick<AppQueryParams, 'group' | 'order' | 'manager' | 'customer'> },
-      IInvoice[]
-    >
-  >(type, async (args, thunkApi) => {
-    try {
-      const res = await InvoicesApi.getAllByQueries(args?.data?.params);
-      if (res) {
-        args?.onSuccess && args?.onSuccess(res?.data.data);
-      }
-
-      return { ...res?.data, ...args?.data };
-    } catch (error) {
-      args?.onError && args?.onError(error);
-      return thunkApi.rejectWithValue(isAxiosError(error));
-    } finally {
-      args?.onLoading && args?.onLoading(false);
-    }
-  });
+  return createAppAsyncThunk(type, InvoicesApi.getAll);
 }

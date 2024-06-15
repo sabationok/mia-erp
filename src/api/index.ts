@@ -96,8 +96,11 @@ export enum IdQueryKeyEnum {
   invoiceId = 'invoiceId',
   shipmentId = 'shipmentId',
   tagId = 'tagId',
+  groupId = 'groupId',
   offerId = 'offerId',
   brandId = 'brandId',
+  customerId = 'customerId',
+  managerId = 'managerId',
   cartId = 'cartId',
 }
 export enum IdsQueryKeyEnum {

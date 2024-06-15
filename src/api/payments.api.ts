@@ -15,6 +15,17 @@ export default class PaymentsApi {
   public static getAllByQueries(params?: AppQueryParams) {
     return this.api.get(this.endpoints.create(), { params });
   }
+  public static getAll = (
+    _?: undefined,
+    params?: Partial<
+      Pick<
+        AppQueryParams,
+        'customer' | 'manager' | 'group' | 'status' | 'order' | 'orderId' | 'invoiceId' | 'withDeleted'
+      >
+    >
+  ): Promise<AppResponse<IPayment[]>> => {
+    return this.api.get(this.endpoints.getAll(), { params });
+  };
   public static getAllMethods(
     params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>
   ): Promise<AppResponse<IPaymentMethod[]>> {

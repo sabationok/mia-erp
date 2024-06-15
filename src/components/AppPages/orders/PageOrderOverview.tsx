@@ -7,7 +7,6 @@ import OverlayStackProvider from '../../../Providers/Overlay/OverlayStackProvide
 import PageOrderOverviewLeftSide from './PageOrderOverviewLeftSide';
 import PageOrderOverviewTabs from './PageOrderOverviewTabs';
 import { BaseAppPageProps } from '../index';
-import PageOrderProvider from './PageOrderProvider';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 
@@ -33,15 +32,13 @@ const PageOrderOverview: React.FC<Props> = ({ path }) => {
 
   return (
     <AppGridPage path={path}>
-      <PageOrderProvider>
-        <OverlayStackProvider>
-          <Page>
-            <PageOrderOverviewLeftSide toggleRightSideVisibility={toggleRightSide} />
+      <OverlayStackProvider>
+        <Page>
+          <PageOrderOverviewLeftSide toggleRightSideVisibility={toggleRightSide} />
 
-            <PageOrderOverviewTabs toggleVisibility={toggleRightSide} isVisible={isTabsSideVisible} />
-          </Page>
-        </OverlayStackProvider>
-      </PageOrderProvider>
+          <PageOrderOverviewTabs toggleVisibility={toggleRightSide} isVisible={isTabsSideVisible} />
+        </Page>
+      </OverlayStackProvider>
     </AppGridPage>
   );
 };

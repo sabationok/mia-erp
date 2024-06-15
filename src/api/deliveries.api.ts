@@ -3,6 +3,7 @@ import { AppQueryParams } from './index';
 import { AppResponse } from '../redux/app-redux.types';
 import { IDeliveryMethod, IDeliveryMethodReqData } from '../types/integrations.types';
 import { ClientApi } from './client.api';
+import { IDelivery } from '../types/deliveries.types';
 
 export default class DeliveriesApi {
   private static api = ClientApi.clientRef;
@@ -11,9 +12,12 @@ export default class DeliveriesApi {
   public static createOne(args?: any, params?: AppQueryParams) {
     return this.api.post(this.endpoints.create());
   }
-  public static getAllByQueries(params?: AppQueryParams) {
+  public static getAll = (
+    _?: undefined,
+    params?: Partial<Pick<AppQueryParams, 'orderId' | 'groupId' | 'customerId' | 'withDeleted'>>
+  ): Promise<AppResponse<IDelivery[]>> => {
     return this.api.get(this.endpoints.getAll(), { params });
-  }
+  };
   public static getById(id?: string, params?: AppQueryParams) {
     return this.api.get(this.endpoints.getById(id), { params });
   }

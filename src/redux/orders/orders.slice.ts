@@ -34,7 +34,7 @@ const initialOrdersGroupFormData: ICreateOrdersGroupFormState = {
 };
 const initialOrdersState: IOrdersState = {
   orders: [],
-  currentOrder: { _id: '', magicLink: '' },
+  currentOrder: { _id: '' },
   ordersGroupFormData: initialOrdersGroupFormData,
   isLoading: false,
   error: null,

@@ -17,10 +17,12 @@ export default class InvoicesApi {
     return this.api.post(this.endpoints.createForDelivery(), req?.data, { params: req?.params });
   }
 
-  public static getAllByQueries(params?: AppQueryParams): Promise<AppResponse<IInvoice[]>> {
+  public static getAll = (
+    _?: undefined,
+    params?: Partial<Pick<AppQueryParams, 'orderId' | 'deliveryId' | 'groupId' | 'customerId' | 'withDeleted'>>
+  ): Promise<AppResponse<IInvoice[]>> => {
     return this.api.get(this.endpoints.getAll(), { params });
-  }
-
+  };
   public static getAllMethods = (): Promise<AppResponse<IInvoicingMethod[]>> => {
     return this.api.get(this.endpoints.methods.getAll());
   };

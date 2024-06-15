@@ -7,7 +7,7 @@ import { OnlyUUID } from '../app-redux.types';
 import { buildGetAllInvoicesThunk } from '../invoices/invoicing.thunks';
 import { buildGetAllDeliveriesThunk } from '../deliveries/deliveries.thunks';
 import { buildGetAllPaymentsThunk } from '../payments/payments.thunks';
-import { OrderSlotEntity } from '../../types/orders/order-slot.types';
+import { createAppAsyncThunk } from '../createAppAsynkThunk';
 
 enum OrdersThunkTypeEnum {
   getAll = 'orders/getAllOrdersThunk',
@@ -82,23 +82,7 @@ export const getOrderByIdThunk = createAsyncThunk<
     args?.onLoading && args?.onLoading(false);
   }
 });
-export const getOrderSlotsThunk = createAsyncThunk<
-  { update?: boolean; data: OrderSlotEntity[] },
-  ThunkArgs<{ update?: boolean; params?: Pick<AppQueryParams, 'order' | 'group'> }, OrderSlotEntity[]>
->(OrdersThunkTypeEnum.getSlots, async (args, thunkApi) => {
-  args?.onLoading && args?.onLoading(true);
-  try {
-    const res = await OrdersApi.slots.getAll(undefined, args.data);
-    if (res) {
-      args?.onSuccess && args?.onSuccess(res?.data?.data);
-    }
-    return { ...res?.data, ...args?.data };
-  } catch (error) {
-    return thunkApi.rejectWithValue(axiosErrorCheck(error));
-  } finally {
-    args?.onLoading && args?.onLoading(false);
-  }
-});
+export const getOrderSlotsThunk = createAppAsyncThunk(OrdersThunkTypeEnum.getSlots, OrdersApi.slots.getAll);
 export const getAllInvoicesByOrderThunk = buildGetAllInvoicesThunk(OrdersThunkTypeEnum.getAllInvoices);
 export const getAllDeliveriesByOrderThunk = buildGetAllDeliveriesThunk(OrdersThunkTypeEnum.getAllDeliveries);
 export const getAllPaymentsByOrderThunk = buildGetAllPaymentsThunk(OrdersThunkTypeEnum.getAllPayments);

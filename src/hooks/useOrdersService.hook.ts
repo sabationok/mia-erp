@@ -1,6 +1,11 @@
 import { useMemo } from 'react';
 import { useAppDispatch } from '../redux/store.store';
-import { OnlyUUID, ServiceDispatcher, ServiceDispatcherAsync } from '../redux/app-redux.types';
+import {
+  __ServiceDispatcherAsync,
+  OnlyUUID,
+  ServiceDispatcher,
+  ServiceDispatcherAsync,
+} from '../redux/app-redux.types';
 import {
   ICreateOrderInfoDto,
   ICreateOrderInfoFormState,
@@ -31,10 +36,7 @@ import {
   ToRequestDataOptions,
 } from '../utils';
 import { EntityPath } from '../types/utils.types';
-import { IInvoice } from '../types/invoices.types';
-import { IDelivery } from '../types/deliveries.types';
-import { IPayment } from '../types/payments.types';
-import { IOrderSlotDto, IOrderTempSlot, OrderSlotEntity } from '../types/orders/order-slot.types';
+import { IOrderSlotDto, IOrderTempSlot } from '../types/orders/order-slot.types';
 
 type EmptyFn = (...args: any[]) => Promise<any>;
 
@@ -47,24 +49,12 @@ export interface OrdersService {
     OrderEntity
   >;
   getAll: ServiceDispatcherAsync<{ refresh?: boolean; query?: AppQueryParams }, OrderEntity[]>;
-  getSlots: ServiceDispatcherAsync<
-    { params?: Pick<AppQueryParams<any>, 'group' | 'order'>; update?: boolean },
-    OrderSlotEntity[]
-  >;
+  getSlots: __ServiceDispatcherAsync<typeof getOrderSlotsThunk>;
 
-  getPaymentsByOrderId: ServiceDispatcherAsync<
-    { params?: Pick<AppQueryParams<any>, 'customer' | 'manager' | 'group' | 'status' | 'order'>; update?: boolean },
-    IPayment[]
-  >;
+  getPaymentsByOrderId: __ServiceDispatcherAsync<typeof getAllPaymentsByOrderThunk>;
 
-  getInvoicesByOrderId: ServiceDispatcherAsync<
-    { params?: Pick<AppQueryParams<any>, 'customer' | 'manager' | 'group' | 'status' | 'order'>; update?: boolean },
-    IInvoice[]
-  >;
-  getDeliveriesByOrderId: ServiceDispatcherAsync<
-    { params?: Pick<AppQueryParams<any>, 'customer' | 'manager' | 'group' | 'status' | 'order'>; update?: boolean },
-    IDelivery[]
-  >;
+  getInvoicesByOrderId: __ServiceDispatcherAsync<typeof getAllInvoicesByOrderThunk>;
+  getDeliveriesByOrderId: __ServiceDispatcherAsync<typeof getAllDeliveriesByOrderThunk>;
 
   getShipmentsByOrderId: EmptyFn | ServiceDispatcherAsync<OnlyUUID>;
 
@@ -100,9 +90,9 @@ const useOrdersServiceHook = (): OrdersService => {
 
       getSlots: args => dispatch(getOrderSlotsThunk(defaultThunkPayload(args))),
 
-      getPaymentsByOrderId: args => dispatch(getAllPaymentsByOrderThunk(defaultThunkPayload(args))),
-      getInvoicesByOrderId: args => dispatch(getAllInvoicesByOrderThunk(defaultThunkPayload(args))),
-      getDeliveriesByOrderId: args => dispatch(getAllDeliveriesByOrderThunk(defaultThunkPayload(args))),
+      getPaymentsByOrderId: args => dispatch(getAllPaymentsByOrderThunk(args)),
+      getInvoicesByOrderId: args => dispatch(getAllInvoicesByOrderThunk(args)),
+      getDeliveriesByOrderId: args => dispatch(getAllDeliveriesByOrderThunk(args)),
 
       getShipmentsByOrderId: async () => dispatch(() => {}),
       addTempSlot: args => dispatch(AddSlotToGroupAction(args)),
