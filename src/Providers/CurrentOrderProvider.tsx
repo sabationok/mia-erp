@@ -3,7 +3,6 @@ import { useOrdersSelector } from '../redux/selectors.store';
 import { OrderEntity } from '../types/orders/orders.types';
 import { ServiceName, useAppServiceProvider } from '../hooks/useAppServices.hook';
 import { useAppParams } from '../hooks';
-import { getIdRef } from '../utils';
 import { useAppDispatch } from '../redux/store.store';
 import {
   getAllDeliveriesByOrderThunk,
@@ -17,15 +16,13 @@ export interface PageCurrentOrderProviderProps {
   children?: React.ReactNode;
 }
 
-export type OrderProviderValue =
-  | (Partial<OrderEntity> & {
-      _origin: OrderEntity;
-      getSlots: __ServiceDispatcherAsync<typeof getOrderSlotsThunk>;
-      getPayments: __ServiceDispatcherAsync<typeof getAllPaymentsByOrderThunk>;
-      getInvoices: __ServiceDispatcherAsync<typeof getAllInvoicesByOrderThunk>;
-      getDeliveries: __ServiceDispatcherAsync<typeof getAllDeliveriesByOrderThunk>;
-    })
-  | undefined;
+export type OrderProviderValue = Partial<OrderEntity> & {
+  _origin?: OrderEntity;
+  getSlots: __ServiceDispatcherAsync<typeof getOrderSlotsThunk>;
+  getPayments: __ServiceDispatcherAsync<typeof getAllPaymentsByOrderThunk>;
+  getInvoices: __ServiceDispatcherAsync<typeof getAllInvoicesByOrderThunk>;
+  getDeliveries: __ServiceDispatcherAsync<typeof getAllDeliveriesByOrderThunk>;
+};
 
 export const CurrentOrderCTX = createContext({});
 
@@ -38,26 +35,26 @@ const CurrentOrderProvider: React.FC<PageCurrentOrderProviderProps> = ({ childre
   const service = useAppServiceProvider()[ServiceName.orders];
 
   const CTX = useMemo((): OrderProviderValue => {
-    if (currentOrder) {
-      return {
-        ...currentOrder,
-        _origin: currentOrder,
-        getSlots: async args => {
-          return dispatch(getOrderSlotsThunk({ ...args, data: { params: { order: getIdRef(currentOrder) } } }));
-        },
-        getPayments: async args => {
-          return dispatch(getAllPaymentsByOrderThunk({ ...args, data: { params: { orderId: currentOrder._id } } }));
-        },
-        getInvoices: async () => {
-          return dispatch(getAllInvoicesByOrderThunk({ data: { params: { orderId: currentOrder._id } } }));
-        },
-        getDeliveries: async () => {
-          return dispatch(getAllDeliveriesByOrderThunk({ data: { params: { orderId: currentOrder._id } } }));
-        },
-      };
-    } else {
-      return undefined;
-    }
+    const orderId = currentOrder?._id;
+
+    return {
+      ...currentOrder,
+      _origin: currentOrder,
+      getSlots: async args => {
+        return !orderId ? undefined : dispatch(getOrderSlotsThunk({ ...args, data: { params: { orderId } } }));
+      },
+      getPayments: async args => {
+        return !orderId ? undefined : dispatch(getAllPaymentsByOrderThunk({ ...args, data: { params: { orderId } } }));
+      },
+      getInvoices: async args => {
+        return !orderId ? undefined : dispatch(getAllInvoicesByOrderThunk({ ...args, data: { params: { orderId } } }));
+      },
+      getDeliveries: async args => {
+        return !orderId
+          ? undefined
+          : dispatch(getAllDeliveriesByOrderThunk({ ...args, data: { params: { orderId } } }));
+      },
+    };
   }, [currentOrder, dispatch]);
 
   useEffect(() => {

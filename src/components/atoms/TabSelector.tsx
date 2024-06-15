@@ -23,7 +23,7 @@ export interface ModalFormFilterProps<V = any, D = any, Option extends FilterOpt
   renderLabel?: (info: { option?: Option; index: number; isActive: boolean }) => React.ReactNode;
 
   asStepper?: boolean;
-  onReset?: () => void;
+  onResetPress?: () => void;
 
   optionProps?: { fitContentH?: boolean };
 }
@@ -75,9 +75,9 @@ const TabSelector = <V = any, D = any, Option extends FilterOption<V, D> = any>(
   onChangeIndex,
   optionProps,
   renderLabel,
-  onReset,
+  onResetPress,
   ...props
-}: ModalFormFilterProps<V, D, Option> & Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect'>) => {
+}: ModalFormFilterProps<V, D, Option> & Omit<React.HTMLAttributes<HTMLDivElement>, 'onSelect' | 'onReset'>) => {
   const [current, setCurrent] = useState<number>(currentIndex);
 
   const handleSelectOpt = useCallback(
@@ -94,33 +94,35 @@ const TabSelector = <V = any, D = any, Option extends FilterOption<V, D> = any>(
   );
 
   const handleReset = () => {
-    if (onReset) {
+    if (onResetPress) {
       setCurrent(-1);
-      onReset();
+      onResetPress();
     }
   };
 
   useEffect(() => {
+    if (onResetPress || preventDefault) return;
     if (!isUndefined(currentIndex)) {
       setCurrent(currentIndex);
       return;
     }
-  }, [currentIndex]);
+  }, [currentIndex, onResetPress, preventDefault]);
 
   useEffect(() => {
+    if (onResetPress || preventDefault) return;
     if (!isUndefined(defaultFilterValue)) {
       const defIndex = options.findIndex(el => el.value === defaultFilterValue || el._id === defaultFilterValue);
       defIndex > 0 && setCurrent(defIndex);
     }
-  }, [defaultFilterValue, options]);
+  }, [defaultFilterValue, onResetPress, options, preventDefault]);
 
   useEffect(() => {
-    if (preventDefault || defaultFilterValue) return;
+    if (onResetPress || preventDefault || defaultFilterValue) return;
 
     if (options.length > 0) {
-      // isFunction(onChangeIndex) && onChangeIndex(current);
-      // isFunction(onOptSelect) && onOptSelect(options[current], options[current].value, current);
-      // isFunction(onFilterValueSelect) && onFilterValueSelect({ name, value: options[current].value });
+      if (isFunction(onChangeIndex)) onChangeIndex(current);
+      if (isFunction(onOptSelect)) onOptSelect(options[current], options[current].value, current);
+      if (isFunction(onFilterValueSelect)) onFilterValueSelect({ name, value: options[current].value });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -151,13 +153,12 @@ const TabSelector = <V = any, D = any, Option extends FilterOption<V, D> = any>(
 
   return (
     <FlexBox className="filter" overflow={'hidden'} fillWidth maxWidth={'100%'} {...props}>
-      {onReset && (
-        <StButtonIcon variant="def" onClick={handleReset} isActive={current === -1}>
-          <span className={'inner'}>{t('All')}</span>
-        </StButtonIcon>
-      )}
-
-      <Filter optionProps={optionProps} gridRepeat={(options?.length ?? 0) + (onReset ? 1 : 0)}>
+      <Filter optionProps={optionProps} gridRepeat={(options?.length ?? 0) + (onResetPress ? 1 : 0)}>
+        {onResetPress && (
+          <StButtonIcon variant="def" onClick={handleReset} isActive={current === -1}>
+            <span className={'inner'}>{t('All')}</span>
+          </StButtonIcon>
+        )}
         {renderOptions}
       </Filter>
     </FlexBox>

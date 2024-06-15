@@ -3,47 +3,53 @@ import TabSelector from '../../../atoms/TabSelector';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { useOrdersSelector } from '../../../../redux/selectors.store';
 import { useEffect, useMemo, useState } from 'react';
-import { orderSlotsTableColumns } from '../../../../data/orders.data';
+import { orderSlotsTableColumns } from '../../../../data';
 import { offerTypeFilterOptions } from '../../../../data/modalFilterOptions.data';
 import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../../redux/reduxTypes.types';
-import { getIdRef } from '../../../../utils';
-import { IOrderSlot } from '../../../../types/orders/orders.types';
+import { useLoaders } from '../../../../Providers/Loaders/useLoaders.hook';
+import { OfferTypeEnum } from '../../../../types/offers/offers.types';
+import { useCurrentOrder } from '../../../../Providers/CurrentOrderProvider';
+import { OrderSlotEntity } from '../../../../types/orders/order-slot.types';
 
 export interface OrderContentTabProps {}
 
 const OrderContentTab: React.FC<OrderContentTabProps> = p => {
   const service = useAppServiceProvider()[AppModuleName.orders];
-  const [isLoading, setIsLoading] = useState(false);
-  const [currentTab, setCurrentTab] = useState<number>(0);
+  const [currentTab, setCurrentTab] = useState<OfferTypeEnum | undefined>();
+  const loaders = useLoaders<'update' | 'create' | 'refresh'>();
+  const Order = useCurrentOrder();
 
   const { currentOrder } = useOrdersSelector();
 
   const tableData = useMemo(() => {
-    return currentOrder?.slots?.filter(el => el.product?.type === offerTypeFilterOptions[currentTab]?.value);
-  }, [currentOrder?.slots, currentTab]);
+    // const grouped=groupBy(currentOrder?.slots)
 
-  const tableConfigs = useMemo((): ITableListProps<IOrderSlot> => {
+    if (currentTab) {
+      return Order?.slots?.filter(el => el.offer?.type === currentTab);
+    } else return Order?.slots;
+  }, [Order?.slots, currentTab]);
+
+  const tableConfigs = useMemo((): ITableListProps<OrderSlotEntity> => {
     return {
-      actionsCreator: ctx => {
+      actionsCreator: _ctx => {
         return [
           {
             icon: 'refresh',
             name: 'refresh',
+            disabled: !Order._id,
             onClick: () => {
-              if (currentOrder?._id) {
-                service.getSlots({ data: { params: { order: getIdRef(currentOrder) } }, onLoading: setIsLoading });
-              }
+              Order.getSlots({ onLoading: loaders.onLoading('refresh') });
             },
           },
         ];
       },
     };
-  }, [currentOrder, service]);
+  }, [Order, loaders]);
 
   useEffect(() => {
-    if (currentOrder?._id) {
-      service.getSlots({ data: { params: { order: getIdRef(currentOrder) } } });
+    if (!Order?.slots?.length) {
+      Order.getSlots({ onLoading: loaders.onLoading('refresh') });
     }
     // eslint-disable-next-line
   }, []);
@@ -53,9 +59,13 @@ const OrderContentTab: React.FC<OrderContentTabProps> = p => {
       <FlexBox fillWidth>
         <TabSelector
           options={offerTypeFilterOptions}
-          currentIndex={currentTab}
-          onOptSelect={(_o, _v, i) => {
-            setCurrentTab(i);
+          defaultValue={currentTab}
+          preventDefault
+          onResetPress={() => {
+            setCurrentTab(undefined);
+          }}
+          onOptSelect={(_o, value) => {
+            setCurrentTab(value);
           }}
         />
       </FlexBox>
@@ -65,7 +75,7 @@ const OrderContentTab: React.FC<OrderContentTabProps> = p => {
         hasFilter={false}
         {...tableConfigs}
         tableData={tableData}
-        isLoading={isLoading}
+        isLoading={loaders.isLoading.refresh}
         tableTitles={orderSlotsTableColumns}
       />
     </FlexBox>

@@ -2,22 +2,23 @@ import TableList, { ITableListProps } from '../../../TableList/TableList';
 import { invoicesTableColumns } from '../../../../data/invoicing.data';
 import { useOrdersSelector } from '../../../../redux/selectors.store';
 import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
-import { useEffect, useMemo, useState } from 'react';
-import { getIdRef } from '../../../../utils';
+import { useEffect, useMemo } from 'react';
 import { IInvoice } from '../../../../types/invoices.types';
 import { OrderTabProps } from './orderTabs.types';
 import { AppModuleName } from '../../../../redux/reduxTypes.types';
+import { useCurrentOrder } from '../../../../Providers/CurrentOrderProvider';
+import { useLoaders } from '../../../../Providers/Loaders/useLoaders.hook';
 
 export interface OrderInvoicesTabProps extends OrderTabProps {}
 
-const OrderInvoicesTab: React.FC<OrderInvoicesTabProps> = ({ order }) => {
+const OrderInvoicesTab: React.FC<OrderInvoicesTabProps> = ({}) => {
   const state = useOrdersSelector();
-  const currentOrder = order ?? state?.currentOrder;
   const service = useAppServiceProvider().get(AppModuleName.orders);
 
-  // const modalService = useModalService();
+  const Order = useCurrentOrder();
 
-  const [isLoading, setIsLoading] = useState(false);
+  // const modalService = useModalService();
+  const loaders = useLoaders<'refresh'>();
 
   const tableConfigs = useMemo((): ITableListProps<IInvoice> => {
     return {
@@ -26,20 +27,19 @@ const OrderInvoicesTab: React.FC<OrderInvoicesTabProps> = ({ order }) => {
           {
             name: 'refresh',
             icon: 'refresh',
+            disabled: !Order._id,
             onClick: () => {
-              if (currentOrder?._id) {
-                service.getInvoicesByOrderId({ data: { params: { order: getIdRef(currentOrder) } } });
-              }
+              Order.getInvoices({});
             },
           },
         ];
       },
     };
-  }, [currentOrder, service]);
+  }, [Order]);
 
   useEffect(() => {
-    if (currentOrder?._id) {
-      service.getInvoicesByOrderId({ data: { params: { order: getIdRef(currentOrder) } }, onLoading: setIsLoading });
+    if (Order?._id) {
+      Order.getInvoices({ onLoading: loaders.onLoading('refresh') });
     }
     // eslint-disable-next-line
   }, []);
@@ -49,8 +49,8 @@ const OrderInvoicesTab: React.FC<OrderInvoicesTabProps> = ({ order }) => {
       {...tableConfigs}
       hasSearch={false}
       hasFilter={false}
-      isLoading={isLoading}
-      tableData={currentOrder?.invoices}
+      isLoading={loaders.isLoading.refresh}
+      tableData={Order?.invoices}
       tableTitles={invoicesTableColumns}
     />
   );

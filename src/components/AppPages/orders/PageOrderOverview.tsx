@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { takeFullGridArea } from '../pagesStyles';
 import { AppGridPage } from '../pages';
@@ -9,6 +9,7 @@ import PageOrderOverviewTabs from './PageOrderOverviewTabs';
 import { BaseAppPageProps } from '../index';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
+import CurrentOrderProvider from '../../../Providers/CurrentOrderProvider';
 
 interface Props extends BaseAppPageProps {}
 
@@ -18,9 +19,9 @@ const PageOrderOverview: React.FC<Props> = ({ path }) => {
   const [isTabsSideVisible, setIsTabsSideVisible] = useState<boolean>(false);
   const { orderId } = useAppParams();
 
-  const toggleRightSide = useCallback(() => {
+  const toggleRightSide = () => {
     setIsTabsSideVisible(p => !p);
-  }, []);
+  };
 
   useEffect(() => {
     if (orderId) {
@@ -32,13 +33,15 @@ const PageOrderOverview: React.FC<Props> = ({ path }) => {
 
   return (
     <AppGridPage path={path}>
-      <OverlayStackProvider>
-        <Page>
-          <PageOrderOverviewLeftSide toggleRightSideVisibility={toggleRightSide} />
+      <CurrentOrderProvider>
+        <OverlayStackProvider>
+          <Page>
+            <PageOrderOverviewLeftSide toggleRightSideVisibility={toggleRightSide} />
 
-          <PageOrderOverviewTabs toggleVisibility={toggleRightSide} isVisible={isTabsSideVisible} />
-        </Page>
-      </OverlayStackProvider>
+            <PageOrderOverviewTabs toggleVisibility={toggleRightSide} isVisible={isTabsSideVisible} />
+          </Page>
+        </OverlayStackProvider>
+      </CurrentOrderProvider>
     </AppGridPage>
   );
 };

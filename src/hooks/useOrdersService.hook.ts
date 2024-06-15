@@ -93,8 +93,8 @@ const useOrdersServiceHook = (): OrdersService => {
       getPaymentsByOrderId: args => dispatch(getAllPaymentsByOrderThunk(args)),
       getInvoicesByOrderId: args => dispatch(getAllInvoicesByOrderThunk(args)),
       getDeliveriesByOrderId: args => dispatch(getAllDeliveriesByOrderThunk(args)),
-
       getShipmentsByOrderId: async () => dispatch(() => {}),
+
       addTempSlot: args => dispatch(AddSlotToGroupAction(args)),
       removeTempSlot: args => dispatch(RemoveSlotFromGroupAction(args)),
       updateTempSlot: args => dispatch(UpdateSlotInGroupAction(args)),

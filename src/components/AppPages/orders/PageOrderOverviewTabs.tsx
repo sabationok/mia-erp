@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 import FlexBox from '../../atoms/FlexBox';
-import ButtonIcon from '../../atoms/ButtonIcon';
-import { Text } from '../../atoms/Text';
 import TabSelector, { FilterSelectHandler } from '../../atoms/TabSelector';
 import { useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../../utils';
@@ -10,6 +8,9 @@ import { useAppParams } from '../../../hooks';
 import OrderContentTab from './tabs/OrderContentTab';
 import OrderInvoicesTab from './tabs/OrderInvoicesTab';
 import OrderPaymentsTab from './tabs/OrderPaymentsTab';
+import OrderDeliveriesTab from './tabs/OrderDeliveriesTab';
+import { DrawerHeader } from '../../Overlays';
+import { t } from '../../../lang';
 
 export interface PageOrderOverviewTabsProps {
   isVisible?: boolean;
@@ -19,6 +20,7 @@ enum OrderTabNameEnum {
   Content = 'Content',
   Invoices = 'Invoices',
   Payments = 'Payments',
+  Deliveries = 'Deliveries',
   // Shipments = 'Shipments',
 }
 const toggleOptions = enumToFilterOptions(OrderTabNameEnum);
@@ -39,38 +41,28 @@ const PageOrderOverviewTabs = ({ toggleVisibility, isVisible }: PageOrderOvervie
     if (current === OrderTabNameEnum.Payments) {
       return <OrderPaymentsTab />;
     }
+    if (current === OrderTabNameEnum.Deliveries) {
+      return <OrderDeliveriesTab />;
+    }
   }, [current]);
 
   const filterHandler: FilterSelectHandler<OrderTabNameEnum> = (_, value, index) => {
-    setCurrent(value);
+    value && setCurrent(value);
   };
 
   return (
     <RightSide overflow={'hidden'} fillHeight isVisible={isVisible}>
-      <Top fillWidth gap={4} isVisible={isVisible} fxDirection={'row'} justifyContent={'space-between'}>
-        <ButtonIcon
-          variant={'textExtraSmall'}
-          icon={'SmallArrowLeft'}
-          style={{ padding: 6 }}
-          onClick={toggleVisibility}
-        >
-          {'Back'}
-        </ButtonIcon>
-
-        <FlexBox padding={'0 8px'}>
-          <Text $weight={600} $size={14}>
-            {currentOrder?.code}
-          </Text>
-
-          <Text $size={10}>{orderId}</Text>
-        </FlexBox>
-      </Top>
+      {isVisible && (
+        <DrawerHeader title={currentOrder?.reference?.internal ?? t('undefined')} onBackPress={toggleVisibility} />
+      )}
 
       <FlexBox>
         <TabSelector options={toggleOptions} defaultValue={current} onOptSelect={filterHandler} preventDefault />
       </FlexBox>
 
-      {renderTab}
+      <FlexBox overflow={'hidden'} flex={1}>
+        {renderTab}
+      </FlexBox>
     </RightSide>
   );
 };
@@ -94,7 +86,7 @@ const RightSide = styled(FlexBox)<{ isVisible?: boolean }>`
 
     transform: translateX(${p => (p.isVisible ? 0 : 100)}%);
 
-    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.25);
+    box-shadow: ${p => (p.isVisible ? '0 12px 26px rgba(0, 0, 0, 0.25)' : '')};
   }
 `;
 

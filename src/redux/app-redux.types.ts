@@ -124,3 +124,10 @@ export type __ServiceDispatcherAsync<Thunk extends (...args: any[]) => any> = (.
   | undefined
   | ReturnType<Thunk>
 >;
+export type __ServiceDispatcher<Thunk extends (...args: any[]) => any> = (...args: Parameters<Thunk>) =>
+  | {
+      payload: unknown | Parameters<Thunk>[0];
+      type: string;
+    }
+  | undefined
+  | ReturnType<Thunk>;

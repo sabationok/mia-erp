@@ -45,7 +45,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
   options,
   preventDefault,
   onSubmit,
-  onReset,
+  onResetPress,
   onOptSelect,
   defaultOption,
   extraFooter,
