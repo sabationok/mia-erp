@@ -29,7 +29,7 @@ export interface Props {
 
 export interface IRegistrationFormData extends HasRegisterUserDtoFields, HasRegisterCompanyDtoFields {
   email: string;
-  password: string;
+  current_password: string;
   approvePassword: string;
   businessType?: BusinessSubjectTypeEnum;
 }
@@ -39,12 +39,8 @@ const registerSchema = yup.object().shape({
     first: yup.string().optional(),
     second: yup.string().optional(),
   }),
-  // label: yup.object().shape({
-  //   base: yup.string().optional(),
-  //   print: yup.string().optional(),
-  // }),
   email: yup.string().required(),
-  password: yup.string().required(),
+  current_password: yup.string().required(),
   approvePassword: yup.string(),
   businessType: yup.string().oneOf(ObjectValues(BusinessSubjectTypeEnum)).required(),
   // approvePassword: yup
@@ -53,14 +49,8 @@ const registerSchema = yup.object().shape({
 });
 const logInSchema = yup.object().shape({
   email: yup.string().required(),
-  password: yup.string().required(),
+  current_password: yup.string().required(),
 });
-
-// const registerParam = {
-//   [BusinessSubjectTypeEnum.person]: 'name',
-//   [BusinessSubjectTypeEnum.company]: 'label',
-//   [BusinessSubjectTypeEnum.entrepreneur]: null,
-// } as const;
 
 export type AuthFormProps = Props & React.HTMLAttributes<HTMLFormElement>;
 
@@ -91,7 +81,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
 
   function onFormSubmit({ approvePassword, ...fData }: IRegistrationFormData) {
     if (approvePassword) {
-      if (approvePassword !== fData.password) {
+      if (approvePassword !== fData.current_password) {
         setError('approvePassword', { message: 'паролі не співпадають' });
         return;
       } else {
@@ -102,7 +92,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
     login &&
       authService.loginUser({
         data: {
-          password: fData.password,
+          password: fData.current_password,
           email: fData.email,
         },
         onSuccess() {
@@ -115,7 +105,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
       });
     registration &&
       authService.register({
-        data: omit(fData, ['approvePassword']),
+        data: omit({ ...fData, password: fData.current_password }, ['approvePassword', 'current_password']),
         onLoading: loaders.onLoading('register'),
         onSuccess() {
           router.push({ pathname: '/auth/logIn' });
@@ -161,9 +151,16 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
               <InputText placeholder={'Електронна адреса'} {...register('email')} />
             </AuthInputLabel>
 
-            <AuthInputLabel icon="lock_O" error={errors.password}>
+            <AuthInputLabel icon="lock_O" error={errors.current_password}>
               <SecurityInputControlHOC
-                renderInput={props => <InputText {...props} placeholder="Пароль" {...register('password')} />}
+                renderInput={props => (
+                  <InputText
+                    {...props}
+                    key={'regster_password'}
+                    placeholder="Пароль"
+                    {...register('current_password')}
+                  />
+                )}
               />
             </AuthInputLabel>
 
@@ -171,7 +168,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
               icon="lock_O"
               error={errors.approvePassword}
               success={
-                !!formValues.password && formValues.password === formValues.approvePassword
+                !!formValues.current_password && formValues.current_password === formValues.approvePassword
                   ? { message: 'Passwords are equals' }
                   : undefined
               }
@@ -191,9 +188,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ title, registration, login, ...prop
               <InputText placeholder="Електронна адреса" {...register('email')} />
             </AuthInputLabel>
 
-            <AuthInputLabel icon="lock_O" error={errors.password}>
+            <AuthInputLabel icon="lock_O" error={errors.current_password}>
               <SecurityInputControlHOC
-                renderInput={props => <InputText {...props} placeholder="Пароль" {...register('password')} />}
+                renderInput={props => (
+                  <InputText {...props} key={'login_password'} placeholder="Пароль" {...register('current_password')} />
+                )}
               />
             </AuthInputLabel>
           </>

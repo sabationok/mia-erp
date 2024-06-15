@@ -68,7 +68,7 @@ const ModalContainer = styled.div<
   grid-template-rows: min-content 1fr max-content;
 
   position: relative;
-  padding: 0 8px;
+  padding: 0 8px 8px;
 
   min-height: 200px;
   max-height: 90vh;

@@ -3,6 +3,8 @@ import { AccentColorName, appThemes, getAccentColor, getTheme, globals, IAppThem
 import { actionResetAppSettings, actionSelectAccentColor, actionToggleDarkMode } from './appSettings.actions';
 import { getAppActionsThunk } from './appSettings.thunks';
 import { RoleActionType } from '../app-redux.types';
+import { onUserLogout } from '../auth/auth.actions';
+import { sliceCleaner } from '../../utils';
 
 export interface IAppSettings {
   isDarkMode?: boolean;
@@ -44,7 +46,8 @@ export const appSettingsSlice = createSlice({
         state.appTheme = initialState.appTheme;
 
         console.log('app reset', state);
-      }),
+      })
+      .addMatcher(onUserLogout, sliceCleaner(initialState)),
 });
 
 export const appSettingsReducer = appSettingsSlice.reducer;

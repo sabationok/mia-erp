@@ -93,7 +93,9 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   const onStackItemSelect = (position: number) => {
     setStack(p => [...p].slice(0, position + 1));
   };
-  const { roots } = useMemo(() => {
+  const roots = useMemo(() => {
+    if (state.properties.length) return state.properties;
+
     const _rootItems: PropertyBaseEntity[] = [];
 
     state.propertiesByTypeKeysMap[filerData.type].forEach(itemId => {
@@ -104,10 +106,8 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
       }
     });
 
-    return {
-      roots: _rootItems,
-    };
-  }, [filerData.type, state.propertiesByTypeKeysMap, state.propertiesDataMap]);
+    return _rootItems;
+  }, [filerData.type, state.properties, state.propertiesByTypeKeysMap, state.propertiesDataMap]);
 
   const currentData = useMemo(() => {
     const _current: PropertyBaseEntity | undefined = stack?.[stack?.length - 1];
@@ -165,6 +165,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
     }
   };
   useEffect(() => {
+    if (roots.length) return;
     dispatch(
       getAllPropertiesThunk({
         // params: { dataView: 'tree', depth: 3 },
@@ -203,7 +204,11 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
 
   return (
     <ModalBase title={title} fillHeight onBackPress={onGoBackHandler} contentContainerProps={{ padding: '0 8px' }}>
-      <TabSelector {...registerTabSelector('type')} options={offerTypeFilterOptions} />
+      <TabSelector
+        {...registerTabSelector('type')}
+        optionProps={{ fitContentH: true }}
+        options={offerTypeFilterOptions}
+      />
 
       <FlexBox>
         <RenderStackHistory stack={stack} onItemSelect={(_, index) => onStackItemSelect(index)} />
@@ -248,7 +253,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
         gap={8}
         fxDirection={'row'}
         overflow={'auto'}
-        padding={'8px 0 16px'}
+        padding={'8px '}
         style={{
           borderTop: `1px solid ${theme.sideBarBorderColor}`,
         }}
@@ -263,6 +268,20 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
 
         <ButtonIcon variant={'outlinedMiddle'} onClick={onAddNewHandler} disabled={!canAddNew}>
           {t('Add')}
+        </ButtonIcon>
+
+        <ButtonIcon
+          variant={'defaultMiddle'}
+          onClick={() => {
+            dispatch(
+              getAllPropertiesThunk({
+                // params: { dataView: 'tree', depth: 3 },
+                onLoading: loaders.onLoading('getAll'),
+              })
+            );
+          }}
+        >
+          {t('Refresh')}
         </ButtonIcon>
       </FlexBox>
     </ModalBase>
