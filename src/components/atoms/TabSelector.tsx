@@ -91,7 +91,7 @@ const TabSelector = <V = any, D = any, Option extends FilterOption<V, D> = any>(
         if (isFunction(onSelect)) onSelect(option, option.value, idx);
       };
     },
-    [name, onFilterValueSelect, onOptSelect, onChangeIndex]
+    [onChangeIndex, onFilterValueSelect, name, onOptSelect, onSelect]
   );
 
   const handleReset = () => {
@@ -122,8 +122,9 @@ const TabSelector = <V = any, D = any, Option extends FilterOption<V, D> = any>(
 
     if (options.length > 0) {
       if (isFunction(onChangeIndex)) onChangeIndex(current);
-      if (isFunction(onOptSelect)) onOptSelect(options[current], options[current].value, current);
       if (isFunction(onFilterValueSelect)) onFilterValueSelect({ name, value: options[current].value });
+      if (isFunction(onOptSelect)) onOptSelect(options[current], options[current].value, current);
+      if (isFunction(onSelect)) onSelect(options[current], options[current].value, current);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -180,8 +181,6 @@ const Filter = styled.div<{ gridRepeat?: number; optionProps?: { fitContentH?: b
 
   background-color: ${({ theme }) => theme.modalBackgroundColor};
 
-  //border-right: 1px solid ${({ theme }) => theme.modalBorderColor};
-  //border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
   border-bottom: 1px solid ${({ theme }) => theme.modalBorderColor};
 
   &::-webkit-scrollbar {

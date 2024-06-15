@@ -3,7 +3,6 @@ import { PermissionEntity } from '../types/permissions.types';
 import { PermissionService } from './usePermissionsService.hook';
 import { IModalProviderContext, useModalService } from '../Providers/ModalProvider/ModalProvider';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { NavigateFunction } from 'react-router/dist/lib/hooks';
 import { Modals } from '../components/Modals/Modals';
 import { useAppServiceProvider } from './useAppServices.hook';
@@ -12,6 +11,7 @@ import { TableActionsBuilder } from '../utils/tables';
 import { t } from '../lang';
 import { useAuthSelector } from '../redux/selectors.store';
 import { CompanyQueryType, CompanyQueryTypeEnum } from '../types/companies.types';
+import { ToastService } from '../services';
 
 export type PermissionsActionsCreator = TableActionsCreator<PermissionEntity>;
 
@@ -59,7 +59,7 @@ const createEnterCompanyAction = ({
         data: { _id: ctx.selectedRow?._id },
         onSuccess: data => {
           if (!data._id) return console.log('data', data);
-          toast.success(`Current company: ${data.company?.name}`);
+          ToastService.success(`Welcome: "${data.company?.name?.first || data.company?.label?.base}"`);
           navigate(`/app/${data._id}`);
         },
         onError: error => {
