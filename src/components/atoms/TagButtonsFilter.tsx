@@ -1,6 +1,6 @@
 import { FilterChangeHandler, FilterSelectValueHandler } from './TabSelector';
 import React, { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react';
-import ButtonIcon from './ButtonIcon';
+import ButtonIcon, { ButtonIconProps } from './ButtonIcon';
 import FlexBox from './FlexBox';
 import { Text } from './Text';
 import { isUndefined } from 'lodash';
@@ -53,6 +53,7 @@ export interface TagButtonsFilterProps<
   resetButtonPosition?: 'start' | 'end';
   resetButtonLabel?: string;
   getButtonStyles?: (option: Option) => CSSProperties;
+  getButtonProps?: (option: Option) => Pick<ButtonIconProps, 'colorSchema'>;
 }
 
 const TagButtonsFilter = <
@@ -73,6 +74,7 @@ const TagButtonsFilter = <
   onChangeIds,
   disabledCheck,
   getButtonStyles,
+  getButtonProps,
 }: TagButtonsFilterProps<Value, Option>) => {
   const [selectedValues, setSelectedValues] = useState<(Value | string)[]>([]);
   useEffect(() => {
@@ -125,6 +127,7 @@ const TagButtonsFilter = <
 
             ...(getButtonStyles && getButtonStyles(opt)),
           }}
+          {...(getButtonProps && getButtonProps(opt))}
         >
           <Text $ellipsisMode={true} $size={13} color={'inherit'} style={{ fontWeight: 'inherit' }}>
             {opt.label}
@@ -132,7 +135,7 @@ const TagButtonsFilter = <
         </ButtonIcon>
       );
     });
-  }, [disabledCheck, getButtonStyles, handleSelect, options, selectedValues, value]);
+  }, [getButtonProps, disabledCheck, getButtonStyles, handleSelect, options, selectedValues, value]);
 
   const renderResetButton = (
     <ButtonIcon

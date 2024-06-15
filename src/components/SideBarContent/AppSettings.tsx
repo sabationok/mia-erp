@@ -40,11 +40,10 @@ const AppSettings: React.FC<AppSettingsProps> = () => {
 
             <TagButtonsFilter
               options={colorsList}
-              numColumns={2}
-              getButtonStyles={button => {
+              numColumns={1}
+              getButtonProps={button => {
                 return {
-                  color: button.color,
-                  borderColor: button.color,
+                  colorSchema: getAccentColor(button.value),
                 };
               }}
               onSelect={ev => {

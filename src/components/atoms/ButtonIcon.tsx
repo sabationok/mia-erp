@@ -32,6 +32,8 @@ interface ButtonProps extends ButtonStyleProps, React.ButtonHTMLAttributes<HTMLB
   size?: `${string}px` | `${string}%`;
   sizeType?: ButtonSize;
 
+  colorSchema?: IAccentColor;
+
   danger?: boolean;
   warning?: boolean;
 
@@ -207,9 +209,9 @@ const StButton = styled.button<ButtonIconProps>`
 `;
 
 function getEffectColorCallback(effect: Keys<IAccentColor> = 'base') {
-  return ({ theme, danger, warning }: { theme: DefaultTheme } & ButtonProps) => {
+  return ({ theme, danger, warning, colorSchema }: { theme: DefaultTheme } & ButtonProps) => {
     const action = danger ? 'error' : warning ? 'warning' : '';
-    return action ? theme.actions?.[action]?.[effect] || theme.accentColor?.[effect] : theme.accentColor?.[effect];
+    return ((action && theme.actions?.[action]) || colorSchema || theme.accentColor)?.[effect];
   };
 }
 

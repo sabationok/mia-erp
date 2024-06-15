@@ -272,6 +272,8 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
 
         <ButtonIcon
           variant={'defaultMiddle'}
+          justifySelf={'flex-end'}
+          isLoading={loaders.isLoading.getAll}
           onClick={() => {
             dispatch(
               getAllPropertiesThunk({

@@ -129,7 +129,7 @@ export const FlexBoxCss = css<FlexBoxProps>`
   margin: ${({ margin = 0 }) => margin};
 
   align-self: ${({ alignSelf }) => alignSelf};
-  justify-self: ${({ justifySelf, ...p }) => justifySelf};
+  justify-self: ${({ justifySelf }) => justifySelf};
 
   max-width: ${({ maxWidth }) => maxWidth ?? ''};
   min-width: ${({ minWidth }) => minWidth ?? ''};
