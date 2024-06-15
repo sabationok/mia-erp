@@ -34,7 +34,7 @@ const SupplementPolicyTab = ({ onClose }: SupplementPolicyTabProps) => {
         />
       </FlexBox>
 
-      <ModalFooter onSubmitPassed isLoading={false}></ModalFooter>
+      <ModalFooter hasOnSubmit isLoading={false}></ModalFooter>
     </FlexForm>
   );
 };

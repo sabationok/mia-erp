@@ -2,7 +2,7 @@ import { ThunkArgs } from './store.store';
 import { AxiosResponse } from 'axios';
 import { ApiCallerPayload } from '../api';
 import { ApiDirType } from './APP_CONFIGS';
-import { AppDate, MaybeNull, Values } from '../types/utils.types';
+import { AppDate, MaybeNull } from '../types/utils.types';
 
 export type UUID = string;
 export type MagicLink = string;
@@ -59,15 +59,6 @@ export interface RoleActionType extends OnlyUUID {
 //   DIR_CONTRACTORS = 'DIR_CONTRACTORS',
 //   DIR_ACTIVITIES = 'DIR_ACTIVITIES',
 // }
-
-export enum CompanyQueryTypeEnum {
-  own = 'own',
-  invited = 'invited',
-  invites = 'invites',
-  all = 'all',
-}
-
-export type CompanyQueryType = Values<CompanyQueryTypeEnum>;
 
 export interface IContactsSlot extends ContactsDto, IBase {}
 export interface ContactsDto {

@@ -4,14 +4,14 @@ import FlexBox from '../FlexBox';
 import { t } from '../../../lang';
 
 export interface IModalFooterProps {
-  onSubmitPassed?: boolean;
+  hasOnSubmit?: boolean;
   extraFooter?: React.ReactNode;
   isValid?: boolean;
   isLoading?: boolean;
 }
 
 const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElement>> = ({
-  onSubmitPassed,
+  hasOnSubmit,
   extraFooter,
   isValid = true,
   isLoading = false,
@@ -26,19 +26,19 @@ const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElem
       )}
 
       <FlexBox fillWidth gap={8} fxDirection={'row'} justifyContent={'flex-end'} padding={'8px'}>
-        {onSubmitPassed && (
+        {hasOnSubmit && (
           <ButtonIcon type="reset" variant={'defaultMiddle'}>
             {t('Close')}
           </ButtonIcon>
         )}
 
         <ButtonIcon
-          type={onSubmitPassed ? 'submit' : 'reset'}
+          type={hasOnSubmit ? 'submit' : 'reset'}
           variant={'filledMiddle'}
           isLoading={isLoading}
           disabled={!isValid}
         >
-          {onSubmitPassed ? t('Save') : t('Close')}
+          {hasOnSubmit ? t('Save') : t('Close')}
         </ButtonIcon>
       </FlexBox>
     </Footer>

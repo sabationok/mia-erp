@@ -7,7 +7,6 @@ import { usePermissionsSelector } from 'hooks/usePermissionsService.hook';
 import { PermissionEntity } from '../../types/permissions.types';
 import { ITableListProps } from '../TableList/tableTypes.types';
 import usePermissionsActionsCreator from '../../hooks/usePermissonsActionsCreator';
-import { CompanyQueryType, CompanyQueryTypeEnum } from '../../redux/app-redux.types';
 import { PermissionStatus } from 'types/permissions.types';
 import { permissionsTableColumns } from '../../data/permissions.data';
 import { permissionsSearchParams } from '../../data/companies.data';
@@ -19,8 +18,7 @@ import { enumToFilterOptions } from '../../utils';
 import { useAppRouter } from '../../hooks';
 import TabSelector from '../atoms/TabSelector';
 import FlexBox from '../atoms/FlexBox';
-
-export type CompanyTypeItem = { title: string; param: CompanyQueryType };
+import { CompanyQueryTypeEnum } from 'types/companies.types';
 
 const companyFilterOptions = enumToFilterOptions(CompanyQueryTypeEnum);
 

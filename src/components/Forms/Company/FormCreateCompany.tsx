@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { BusinessSubjectTypeEnum, ICompanyFormData } from '../../../types/companies.types';
-import ModalForm, { ModalFormProps } from '../../ModalForm';
+import { ModalFormProps } from '../../ModalForm';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
@@ -15,11 +15,22 @@ import { FormInputs } from '../components/atoms';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { toReqData } from '../../../utils';
 import { ToastService } from '../../../services';
+import { AppFormProvider, useAppFormProvider } from '../../../hooks/useAppForm.hook';
+import { HasEmbeddedLabel, HasEmbeddedName } from '../../../types/utils.types';
+import { FlexForm } from '../../atoms/FlexBox';
+import ModalBase from '../../atoms/Modal';
+import ModalFooter from '../../atoms/Modal/ModalFooter';
 
 export interface FormCreateCompanyProps extends Omit<ModalFormProps<any, any, ICompanyFormData>, 'onSubmit'> {}
-const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...props }) => {
+const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, title, onClose, ...props }) => {
   const pServ = useAppServiceProvider()[AppModuleName.permissions];
   const [isLoading, setIsLoading] = useState(false);
+  const formMethods = useAppForm<ICompanyFormData>({
+    defaultValues: { businessSubjectType: BusinessSubjectTypeEnum.company, ...defaultState },
+    reValidateMode: 'onBlur',
+    // resolver: yupResolver(createCompanyFormSchema),
+    shouldUnregister: true,
+  });
   const {
     register,
     unregister,
@@ -28,12 +39,7 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
     formValues: { businessSubjectType, type: currentType, ...formValues },
     registerSelect,
     setValue,
-  } = useAppForm<ICompanyFormData>({
-    defaultValues: { businessSubjectType: BusinessSubjectTypeEnum.company, ...defaultState },
-    reValidateMode: 'onBlur',
-    // resolver: yupResolver(createCompanyFormSchema),
-    shouldUnregister: true,
-  });
+  } = formMethods;
 
   const formRenderConfig = useMemo(
     () => ({
@@ -64,7 +70,7 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
         onSuccess(data) {
           console.log('Company created', data);
           ToastService.success(`Company created: ${data?.name || data?.label}`);
-          props?.onClose && props?.onClose();
+          onClose && onClose();
         },
         onError() {
           ToastService.error('Error');
@@ -75,101 +81,120 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, ...
   }
 
   return (
-    <Form
-      fillHeight
-      width={'480px'}
-      {...props}
-      isLoading={isLoading}
-      onSubmit={handleSubmit(onValid, errors => {
-        console.error('FormCreateCompany', errors);
-      })}
-    >
-      <FormInputs flex={1} fillWidth padding={'8px 4px'} overflow={'auto'}>
-        <InputLabel label={t('businessSubjectType')} error={errors.businessSubjectType} required>
-          <ButtonsGroup
-            options={businessSubjectTypeFilterOptions}
-            currentOption={{ value: businessSubjectType }}
-            onSelect={({ value }) => {
-              setValue('businessSubjectType', value);
-              if (value !== BusinessSubjectTypeEnum.company) {
-                unregister('ownershipType');
-              }
-            }}
-          />
-        </InputLabel>
+    <ModalBase onClose={onClose} fillHeight width={'480px'} title={title}>
+      <FlexForm
+        fillHeight
+        {...props}
+        onSubmit={handleSubmit(onValid, errors => {
+          console.error('[Form Create Company]', errors);
+        })}
+      >
+        {/*<ModalHeader title={title} onClose={onClose} />*/}
 
-        {formRenderConfig.renderOwnershipTypeSelect && (
-          <CustomSelect
-            {...registerSelect('ownershipType', {
-              options: ownershipTypeFilterOptions,
-              label: 'Форма власності',
-              placeholder: 'Оберіть форму власності компанії',
-            })}
-          />
-        )}
-
-        {formRenderConfig.renderNamesInputs && (
-          <>
-            <InputLabel label={t('name')} error={errors.name?.first} required>
-              <InputText
-                placeholder={t('Insert first name')}
-                {...register('name.first')}
-                required
-                autoFocus={formRenderConfig.renderNamesInputs}
+        <AppFormProvider value={formMethods}>
+          <FormInputs flex={1} fillWidth padding={'8px 4px'} overflow={'auto'}>
+            <InputLabel label={t('businessSubjectType')} error={errors.businessSubjectType} required>
+              <ButtonsGroup
+                options={businessSubjectTypeFilterOptions}
+                currentOption={{ value: businessSubjectType }}
+                onSelect={({ value }) => {
+                  setValue('businessSubjectType', value);
+                  if (value !== BusinessSubjectTypeEnum.company) {
+                    unregister('ownershipType');
+                  }
+                }}
               />
             </InputLabel>
 
-            <InputLabel label={t('secondName')} error={errors?.name?.second}>
-              <InputText placeholder={t('insertSecondName')} {...register('name.second')} />
+            {formRenderConfig.renderNamesInputs && <NameInputs />}
+
+            {formRenderConfig.renderLabelInput && <LabelInputs />}
+
+            <InputLabel label={'Емейл (основний)'} error={errors.email} required>
+              <InputText placeholder={'Введіть основний емейл'} {...register('email')} type={'email'} required />
             </InputLabel>
 
-            <InputLabel label={t('Middle name')} error={errors?.name?.middle}>
-              <InputText placeholder={t('Insert middle name')} {...register('name.middle')} />
+            <InputLabel label={'Телефон (основний)'} error={errors.phone} required>
+              <InputText placeholder={'Введіть осний контактний номер'} {...register('phone')} />
             </InputLabel>
-          </>
-        )}
 
-        {formRenderConfig.renderLabelInput && (
-          <>
-            <InputLabel label={t('Label')} error={errors.label?.base} required={!formRenderConfig.renderNamesInputs}>
-              <InputText
-                placeholder={t('insertLabel')}
-                {...register('label.base')}
-                required={!formRenderConfig.renderNamesInputs}
-                autoFocus={!formRenderConfig.renderNamesInputs}
+            {formRenderConfig.renderOwnershipTypeSelect && (
+              <CustomSelect
+                {...registerSelect('ownershipType', {
+                  options: ownershipTypeFilterOptions,
+                  label: 'Форма власності',
+                  placeholder: 'Оберіть форму власності компанії',
+                })}
               />
-            </InputLabel>
+            )}
 
-            <InputLabel label={t('Print label')} error={errors.label?.print}>
-              <InputText placeholder={t('Enter print label')} {...register('label.print')} />
-            </InputLabel>
-          </>
-        )}
+            {formRenderConfig.renderTaxCode && (
+              <InputLabel label={t('taxCode')} error={errors.taxCode}>
+                <InputText placeholder={t('taxCode')} {...register('taxCode')} />
+              </InputLabel>
+            )}
 
-        <InputLabel label={'Емейл (основний)'} error={errors.email} required>
-          <InputText placeholder={'Введіть основний емейл'} {...register('email')} type={'email'} required />
-        </InputLabel>
+            {formRenderConfig.renderPersonalTaxCode && (
+              <InputLabel label={t('personalTaxCode')} error={errors.taxCode}>
+                <InputText placeholder={t('personalTaxCode')} {...register('personalTaxCode')} />
+              </InputLabel>
+            )}
+          </FormInputs>
+        </AppFormProvider>
+      </FlexForm>
 
-        <InputLabel label={'Телефон (основний)'} error={errors.phone}>
-          <InputText placeholder={'Введіть осний контактний номер'} {...register('phone')} />
-        </InputLabel>
-
-        {formRenderConfig.renderTaxCode && (
-          <InputLabel label={t('taxCode')} error={errors.taxCode}>
-            <InputText placeholder={t('taxCode')} {...register('taxCode')} />
-          </InputLabel>
-        )}
-
-        {formRenderConfig.renderPersonalTaxCode && (
-          <InputLabel label={t('personalTaxCode')} error={errors.taxCode}>
-            <InputText placeholder={t('personalTaxCode')} {...register('personalTaxCode')} />
-          </InputLabel>
-        )}
-      </FormInputs>
-    </Form>
+      <ModalFooter hasOnSubmit isValid isLoading={isLoading} />
+    </ModalBase>
   );
 };
 
-const Form = styled(ModalForm)``;
+const Form = styled(FlexForm)``;
+
+const LabelInputs = (props: { autoFocus?: boolean }) => {
+  const {
+    register,
+    formState: { errors },
+  } = useAppFormProvider<HasEmbeddedLabel>();
+
+  return (
+    <>
+      <InputLabel label={t('Label')} error={errors.label?.base} required={true}>
+        <InputText placeholder={t('insertLabel')} {...register('label.base')} required={true} autoFocus={true} />
+      </InputLabel>
+
+      <InputLabel label={t('Print label')} error={errors.label?.print}>
+        <InputText placeholder={t('Enter print label')} {...register('label.print')} />
+      </InputLabel>
+    </>
+  );
+};
+
+const NameInputs = (props: { autoFocus?: boolean }) => {
+  const {
+    register,
+    formState: { errors },
+  } = useAppFormProvider<HasEmbeddedName>();
+
+  return (
+    <>
+      <InputLabel label={t('name')} error={errors.name?.first} required>
+        <InputText
+          placeholder={t('Insert first name')}
+          {...register('name.first')}
+          required
+          autoFocus={props.autoFocus}
+        />
+      </InputLabel>
+
+      <InputLabel label={t('secondName')} error={errors?.name?.second}>
+        <InputText placeholder={t('insertSecondName')} {...register('name.second')} />
+      </InputLabel>
+
+      <InputLabel label={t('Middle name')} error={errors?.name?.middle}>
+        <InputText placeholder={t('Insert middle name')} {...register('name.middle')} />
+      </InputLabel>
+    </>
+  );
+};
 
 export default FormCreateCompany;

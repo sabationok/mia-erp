@@ -95,7 +95,7 @@ const FiscalizationPolicyTab = ({ onClose, onSubmit }: FiscalizationPolicyTabPro
           {/*</InputLabel>*/}
         </FlexBox>
 
-        <ModalFooter onSubmitPassed isLoading={loading} />
+        <ModalFooter hasOnSubmit isLoading={loading} />
       </FlexForm>
     </>
   );

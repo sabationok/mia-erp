@@ -96,7 +96,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
       </ModalMain>
 
       {footer && (
-        <ModalFooter onSubmitPassed={!!onSubmit} extraFooter={extraFooter} isValid={isValid} isLoading={isLoading} />
+        <ModalFooter hasOnSubmit={!!onSubmit} extraFooter={extraFooter} isValid={isValid} isLoading={isLoading} />
       )}
     </ModalFormContainer>
   );

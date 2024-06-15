@@ -50,7 +50,7 @@ const WarehousingPolicyTab: React.FC<WarehousingPolicyTabProps> = () => {
         />
       </FlexBox>
 
-      <ModalFooter onSubmitPassed isLoading={false}></ModalFooter>
+      <ModalFooter hasOnSubmit isLoading={false}></ModalFooter>
     </FlexForm>
   );
 };

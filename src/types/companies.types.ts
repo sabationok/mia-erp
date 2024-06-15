@@ -4,8 +4,17 @@ import { IUserBase } from './auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';
 import { WarehouseEntity } from './warehousing/warehouses.types';
 import { ExtServiceBase, InputIntegrationBase, OutputIntegrationBase } from './integrations.types';
-import { HasEmbeddedLabel, HasEmbeddedName, HasTaxCode, MaybeNull } from './utils.types';
+import { HasEmbeddedLabel, HasEmbeddedName, HasTaxCode, MaybeNull, Values } from './utils.types';
 import { SupplierDirEntity } from './dir.types';
+
+export enum CompanyQueryTypeEnum {
+  own = 'own',
+  invited = 'invited',
+  invites = 'invites',
+  all = 'all',
+}
+
+export type CompanyQueryType = Values<CompanyQueryTypeEnum>;
 
 export enum OwnershipTypeEnum {
   UA_TOV = 'ua_tov',

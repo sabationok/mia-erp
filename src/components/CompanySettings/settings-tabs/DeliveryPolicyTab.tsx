@@ -117,7 +117,7 @@ const DeliveryPolicyTab = ({ onClose, onSubmit }: DeliveryPolicyTabProps) => {
           )}
         </FlexBox>
 
-        <ModalFooter onSubmitPassed isLoading={loading} />
+        <ModalFooter hasOnSubmit isLoading={loading} />
       </FlexForm>
     </>
   );

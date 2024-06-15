@@ -3,7 +3,6 @@ import { PermissionEntity } from '../types/permissions.types';
 import { PermissionService } from './usePermissionsService.hook';
 import { IModalProviderContext, useModalService } from '../Providers/ModalProvider/ModalProvider';
 import { useNavigate } from 'react-router-dom';
-import { CompanyQueryType } from '../redux/app-redux.types';
 import { toast } from 'react-toastify';
 import { NavigateFunction } from 'react-router/dist/lib/hooks';
 import { Modals } from '../components/Modals/Modals';
@@ -12,6 +11,7 @@ import { AppModuleName } from '../redux/reduxTypes.types';
 import { TableActionsBuilder } from '../utils/tables';
 import { t } from '../lang';
 import { useAuthSelector } from '../redux/selectors.store';
+import { CompanyQueryType } from '../types/companies.types';
 
 export type PermissionsActionsCreator = TableActionsCreator<PermissionEntity>;
 

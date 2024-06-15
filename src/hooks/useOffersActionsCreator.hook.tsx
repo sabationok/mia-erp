@@ -322,7 +322,7 @@ const OffersFilterModal = ({ onSubmit, onClose }: { onSubmit?: (data: GetAllOffe
           })}
         </AccordionFormArea>
 
-        <ModalFooter onSubmitPassed />
+        <ModalFooter hasOnSubmit />
       </FlexForm>
     </ModalBase>
   );

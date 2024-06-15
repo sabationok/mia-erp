@@ -1,7 +1,7 @@
 import { ApiDirType } from '../redux/APP_CONFIGS';
 import { FilterReturnDataType } from '../components/Filter/AppFilter';
-import { CompanyQueryTypeEnum, OnlyUUID, UUID } from '../redux/app-redux.types';
-import { AppDate, ArrayOfUUID, Keys, PartialRecord, Values } from '../types/utils.types';
+import { AppDate, ArrayOfUUID, Keys, OnlyUUID, PartialRecord, UUID, Values } from '../types/utils.types';
+import { CompanyQueryTypeEnum } from 'types/companies.types';
 
 export * from './client.api';
 export { default as TransactionsApi } from './transactions.api';

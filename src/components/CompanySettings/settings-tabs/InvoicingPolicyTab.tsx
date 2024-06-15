@@ -101,7 +101,7 @@ const InvoicingPolicyTab = ({ onClose, onSubmit }: InvoicingPolicyTabProps) => {
           </InputLabel>
         </FlexBox>
 
-        <ModalFooter onSubmitPassed isLoading={loading}></ModalFooter>
+        <ModalFooter hasOnSubmit isLoading={loading}></ModalFooter>
       </FlexForm>
     </>
   );
