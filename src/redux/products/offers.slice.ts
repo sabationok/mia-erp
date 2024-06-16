@@ -129,14 +129,17 @@ export const offersSlice = createSlice({
       .addCase(thunks.updateVariationThunk.fulfilled, (s, a) => {
         ManageVariationsStateMap(s, { data: a.payload.data });
       })
-      .addCase(thunks.getAllVariationsByOfferIdThunk.fulfilled, (s, a) => {
+      .addCase(thunks.getAllVariationsThunk.fulfilled, (s, a) => {
         const offerId = a.payload?.params?.offerId || a.payload?.data?.[0]?._id;
+
         if (offerId) {
           a.payload?.data.forEach(vr => {
             ManageVariationsStateMap(s, { data: vr, offerId });
           });
 
           return ManageOffersStateMap(s, { data: { _id: offerId, variations: a.payload?.data } });
+        } else {
+          console.warn('addCase(thunks.getAllVariationsByOfferIdThunk.fulfilled', { offerId });
         }
       })
       //  * sep ============>>>>>>>>>>> PRICES
@@ -229,7 +232,7 @@ function ManageOffersStateMap(
   const itemId = input?.data?._id;
   const itemSku = input?.data?.sku;
 
-  console.log('input.data', input.data);
+  // console.log('input.data', input.data);
   const offer = input.data;
 
   if (options?.refresh) {
@@ -237,7 +240,8 @@ function ManageOffersStateMap(
   } else {
     try {
       st.dataMap[itemId] = {
-        ...(st.dataMap[itemId] ? JSON.parse(JSON.stringify(st.dataMap[itemId])) : {}),
+        // ...(st.dataMap[itemId] ? JSON.parse(JSON.stringify(st.dataMap[itemId])) : {}),
+        ...st.dataMap[itemId],
         ...offer,
       };
     } catch (e) {
@@ -247,7 +251,7 @@ function ManageOffersStateMap(
 
   const Offer = st.dataMap[itemId];
 
-  console.log('offer from state', Offer);
+  // console.log('offer from state', Offer);
 
   if (itemSku) {
     st.skuKeysMap[itemSku] = itemId;

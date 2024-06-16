@@ -23,7 +23,6 @@ export const useCurrentOffer = ({ _id, ...rest }: { _id?: string } = {}): Curren
   const offer = useMemo(() => {
     const _offer = id ? state.dataMap?.[id] : undefined;
 
-    console.log('use current offer', _offer);
     function getVariations(): VariationEntity[] {
       if (_offer?.variations?.length) {
         return _offer.variations;
@@ -48,6 +47,7 @@ export const useCurrentOffer = ({ _id, ...rest }: { _id?: string } = {}): Curren
     if (!_offer) {
       return undefined;
     }
+
     return { ..._offer, getVariations };
   }, [id, state.dataMap, state.variationsKeysMap, state.variationsMap]);
 
