@@ -79,8 +79,8 @@ const FormOfferDefaultsOverlay: React.FC<FormOfferDefaultsOverlayProps> = ({ onC
 
   const onValid = (fData: OfferDefaultsFormData) => {
     Offer?._id &&
-      productsS.setDefaults({
-        data: { data: { _id: Offer?._id, defaults: toReqData(fData) } },
+      productsS.updateById({
+        data: { data: { _id: Offer?._id, ...toReqData(fData) } },
         onSuccess: (data, meta) => {
           console.log(data, meta);
         },

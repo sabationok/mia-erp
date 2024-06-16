@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react';
-import styled from 'styled-components';
 import { BusinessSubjectTypeEnum, ICompanyFormData } from '../../../types/companies.types';
 import { ModalFormProps } from '../../ModalForm';
 import InputLabel from '../../atoms/Inputs/InputLabel';
@@ -147,8 +146,6 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, tit
     </ModalBase>
   );
 };
-
-const Form = styled(FlexForm)``;
 
 const LabelInputs = (props: { autoFocus?: boolean }) => {
   const {

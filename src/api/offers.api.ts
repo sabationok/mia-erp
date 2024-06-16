@@ -1,12 +1,6 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { ApiQuerySearchParams, ApiQuerySortParams, AppQueryParams, DatePeriodQuery } from './index';
-import {
-  IOfferDefaultsDto,
-  OfferEntity,
-  OfferReqData,
-  OfferStatusEnum,
-  OfferTypeEnum,
-} from '../types/offers/offers.types';
+import { OfferEntity, OfferReqData, OfferStatusEnum, OfferTypeEnum } from '../types/offers/offers.types';
 import { AppResponse } from '../redux/app-redux.types';
 import { ClientApi } from './client.api';
 import { UUID } from '../types/utils.types';
@@ -14,9 +8,6 @@ import { OfferSearchParam, OfferSortParam } from '../data';
 
 export interface GetOneOfferQuery {
   _id?: UUID;
-  sku?: string;
-  label?: string;
-  langKey?: string;
   getPrices?: boolean;
   getVariations?: boolean;
   getDiscounts?: boolean;
@@ -56,13 +47,6 @@ export default class OffersApi {
 
   public static updateById = (data?: OfferReqData): Promise<AppResponse<OfferEntity>> => {
     return this.api.patch(this.endpoints.updateById(data?._id), data?.data);
-  };
-
-  public static updateDefaultsById = (data?: {
-    _id: string;
-    defaults: IOfferDefaultsDto;
-  }): Promise<AppResponse<OfferEntity>> => {
-    return this.api.patch(this.endpoints.updateDefaultsById(data?._id), data?.defaults);
   };
 
   public static getById = (id?: string, params?: AppQueryParams): Promise<AppResponse<OfferEntity>> => {

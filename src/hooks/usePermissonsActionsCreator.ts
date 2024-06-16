@@ -3,7 +3,6 @@ import { PermissionEntity } from '../types/permissions.types';
 import { PermissionService } from './usePermissionsService.hook';
 import { IModalProviderContext, useModalService } from '../Providers/ModalProvider/ModalProvider';
 import { useNavigate } from 'react-router-dom';
-import { NavigateFunction } from 'react-router/dist/lib/hooks';
 import { Modals } from '../components/Modals/Modals';
 import { useAppServiceProvider } from './useAppServices.hook';
 import { AppModuleName } from '../redux/reduxTypes.types';
@@ -12,6 +11,7 @@ import { t } from '../lang';
 import { useAuthSelector } from '../redux/selectors.store';
 import { CompanyQueryType, CompanyQueryTypeEnum } from '../types/companies.types';
 import { ToastService } from '../services';
+import { AppRouter, useAppRouter } from './useRouter.hook';
 
 export type PermissionsActionsCreator = TableActionsCreator<PermissionEntity>;
 
@@ -32,7 +32,7 @@ export const isMyCompany = ({ owner, user }: PermissionEntity) => {
 
 export interface PermissionsTablesActionProps {
   ctx: ITableListContext<PermissionEntity>;
-  navigate: NavigateFunction;
+  router: AppRouter;
   service: PermissionService;
   companyType: CompanyQueryTypeEnum;
   modalService: IModalProviderContext;
@@ -40,11 +40,7 @@ export interface PermissionsTablesActionProps {
 
 export type IPermissionsTableAction = ITableAction<PermissionsActionsType>;
 export type PermissionsActionCreator = (options: PermissionsTablesActionProps) => IPermissionsTableAction;
-const createEnterCompanyAction = ({
-  ctx,
-  navigate,
-  service,
-}: PermissionsTablesActionProps): IPermissionsTableAction => ({
+const createEnterCompanyAction = ({ ctx, router, service }: PermissionsTablesActionProps): IPermissionsTableAction => ({
   name: 'enterCompany',
   title: 'Перейти',
   icon: 'logIn',
@@ -60,7 +56,7 @@ const createEnterCompanyAction = ({
         onSuccess: data => {
           if (!data._id) return console.log('data', data);
           ToastService.success(`Welcome: "${data.company?.name?.first || data.company?.label?.base}"`);
-          navigate(`/app/${data._id}`);
+          router.push({ pathname: `/app/${data._id}` });
         },
         onError: error => {
           console.log(error);
@@ -71,8 +67,6 @@ const createEnterCompanyAction = ({
 });
 const createEditCompanyAction = ({
   ctx,
-  navigate,
-  service,
   companyType,
   modalService,
 }: PermissionsTablesActionProps): IPermissionsTableAction => ({
@@ -181,7 +175,7 @@ const usePermissionsActionsCreator = (companyType: CompanyQueryTypeEnum): Permis
   const service = useAppServiceProvider()[AppModuleName.permissions];
   const modalService = useModalService();
   const userId = useAuthSelector()?.user?._id;
-
+  const router = useAppRouter();
   const navigate = useNavigate();
 
   return (ctx): ITableAction<PermissionsActionsType>[] => {
@@ -209,6 +203,7 @@ const usePermissionsActionsCreator = (companyType: CompanyQueryTypeEnum): Permis
       service,
       modalService,
       companyType,
+      router,
     };
     const build = builder.activate({
       navigate,

@@ -18,8 +18,6 @@ enum OffersThunkType {
   getAllPrices = 'products/getAllPrices',
 
   getAllInventories = 'products/getAllInventories',
-
-  updateDefaults = 'products/updateDefaultsByIdThunk',
 }
 
 export const getAllOffersThunk = createAppAsyncThunk(OffersThunkType.getAllThunk, OffersApi.getAll);
@@ -31,11 +29,6 @@ export const getOfferFullInfoThunk = createAppAsyncThunk(
 
 export const createOfferThunk = createAppAsyncThunk(OffersThunkType.create, OffersApi.create);
 export const updateOfferThunk = createAppAsyncThunk(OffersThunkType.update, OffersApi.updateById);
-
-export const updateOfferDefaultsThunk = createAppAsyncThunk(
-  OffersThunkType.updateDefaults,
-  OffersApi.updateDefaultsById
-);
 
 export const getAllOfferPricesThunk = buildGetAllPricesThunk(OffersThunkType.getAllPrices);
 export const getAllInventoriesByProductIdThunk = createAppAsyncThunk(

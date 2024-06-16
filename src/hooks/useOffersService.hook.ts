@@ -11,7 +11,6 @@ import {
   getAllVariationsThunk,
   getOfferFullInfoThunk,
   getOfferThunk,
-  updateOfferDefaultsThunk,
   updateOfferThunk,
   updateVariationThunk,
 } from '../redux/products/offers.thunks';
@@ -39,7 +38,6 @@ export interface OffersService {
   getAll: __ServiceDispatcherAsync<typeof getAllOffersThunk>;
   getProductFullInfo: __ServiceDispatcherAsync<typeof getOfferFullInfoThunk>;
   clearCurrent: ServiceDispatcher<undefined>;
-  setDefaults: __ServiceDispatcherAsync<typeof updateOfferDefaultsThunk>;
 
   // * PROPERTIES
   getAllProperties: __ServiceDispatcherAsync<typeof getAllPropertiesThunk>;
@@ -88,7 +86,6 @@ const useOffersService = (): OffersService => {
 
       getProductFullInfo: args => dispatch(getOfferFullInfoThunk(args)),
       clearCurrent: () => dispatch(clearCurrentOfferAction()),
-      setDefaults: args => dispatch(updateOfferDefaultsThunk(args)),
 
       // * PROPERTIES
       createProperty: args => dispatch(createPropertyThunk(args)),

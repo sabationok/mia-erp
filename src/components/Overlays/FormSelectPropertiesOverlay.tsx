@@ -111,7 +111,7 @@ const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
       const id = updateId ?? Offer?._id;
       if (id) {
         service.updateById({
-          data: { data: { _id: id, data: { properties: selectedIds, templateId: currentTemplate?._id } } },
+          data: { data: { _id: id, data: { propertiesIds: selectedIds, templateId: currentTemplate?._id } } },
           onLoading: setLoading,
           onSuccess: (data, _meta) => {
             ToastService.success('Offer updated');

@@ -103,9 +103,6 @@ export const offersSlice = createSlice({
       .addCase(thunks.getOfferThunk.fulfilled, (s, a) => {
         return ManageOffersStateMap(s, a.payload, a.payload);
       })
-      .addCase(thunks.updateOfferDefaultsThunk.fulfilled, (s, a) => {
-        return ManageOffersStateMap(s, a.payload, a.payload);
-      })
       .addCase(clearCurrentOfferAction, s => {
         s.currentOffer = { _id: '' };
       })

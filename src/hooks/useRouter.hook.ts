@@ -48,10 +48,13 @@ export const useAppRouter = <Query extends AppQueryParams = AppQueryParams, Hash
     },
 
     unSet: () => {
-      return navTo({ search: sp.toString(), hash: '' });
+      navTo({ search: sp.toString(), hash: '' });
+      return;
     },
     params,
     goBack,
     hash: currentHash,
   };
 };
+
+export type AppRouter = ReturnType<typeof useAppRouter>;

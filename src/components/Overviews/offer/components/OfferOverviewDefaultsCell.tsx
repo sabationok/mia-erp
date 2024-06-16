@@ -12,12 +12,16 @@ import FormOfferDefaultsOverlay from '../../../Overlays/FormOfferDefaultsOverlay
 import { PriceEntity } from '../../../../types/price-management/price-management.types';
 import { MaybeNull } from '../../../../types/utils.types';
 import { toPrice } from '../../../../utils/numbers';
+import { useOverlayService } from '../../../../Providers/Overlay/OverlayStackProvider';
+import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 
 export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity> = ({ data, cell, overlayHandler }) => {
   const theme = useTheme();
   const warehouse = data?.warehouse;
   const supplier = data?.supplier;
   const price = data?.price;
+  const overlaySrv = useOverlayService();
+  const modalSrv = useModalService();
 
   const renderVariationTags = useMemo(() => {
     const variation = data?.variation;
@@ -80,9 +84,11 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity>
       <OverviewCellHeader
         title={cell?.title}
         onOpenOverlayPress={() => {
-          overlayHandler({
-            RenderComponent: FormOfferDefaultsOverlay,
-          });
+          if (overlaySrv.create) {
+            overlaySrv.create(FormOfferDefaultsOverlay);
+          } else {
+            modalSrv.create(FormOfferDefaultsOverlay);
+          }
         }}
       />
 
