@@ -31,7 +31,7 @@ const PageHome: React.FC<Props> = ({ path }) => {
   const actionsCreator = usePermissionsActionsCreator(query.companyType || CompanyQueryTypeEnum.own);
   const [loading, setLoading] = useState(false);
 
-  const { data, companyTypeIs } = useMemo(() => {
+  const { data } = useMemo(() => {
     const type = query.companyType || CompanyQueryTypeEnum.own;
     const companyTypeIs: PartialRecord<CompanyQueryTypeEnum, boolean> = {
       [type]: true,

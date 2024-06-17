@@ -1,4 +1,8 @@
 import { getIdFromRef } from './data-transform';
+import { Path } from 'react-hook-form';
+import { Values } from '../types/utils.types';
+import { orderBy } from 'lodash';
+import { TableSortOrderEnum, TableSortParam } from '../components/TableList/tableTypes.types';
 
 export function ObjectKeys<Obj extends object = object, Key extends keyof Obj = keyof Obj>(obj: Obj): Key[] {
   return Object.keys(obj) as Key[];
@@ -46,3 +50,11 @@ export const getUnicSelectedIdsFromMap = (map: Record<string, string[]>) => {
 
   return idsArrays;
 };
+
+export function getSortedDataByParam<DataType = any>(
+  data: DataType[],
+  param: TableSortParam<Path<DataType>, never, DataType>,
+  sortOrder: Values<Pick<typeof TableSortOrderEnum, 'desc' | 'asc'>>
+) {
+  return orderBy(data, [param.dataPath], [sortOrder]);
+}

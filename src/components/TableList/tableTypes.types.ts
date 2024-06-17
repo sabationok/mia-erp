@@ -6,9 +6,6 @@ import { IconIdType } from '../../img/sprite';
 import { TableSearchFormState } from './TableOverHead/TableSearchForm/TableSearchForm';
 import { Property } from 'csstype';
 import { CheckboxEvent } from './TebleCells/CellComponents/CheckBox';
-import { orderBy } from 'lodash';
-import { Path } from 'react-hook-form';
-import { Values } from '../../types/utils.types';
 
 export enum TableSortOrderEnum {
   desc = 'desc',
@@ -52,14 +49,6 @@ export interface TableSortParam<DataPath = any, DataKey = any, DataType = any> {
   dataPath?: DataPath;
   isManual?: boolean;
   callback?: (data: DataType, param: TableSortParam<DataPath, DataKey>) => boolean;
-}
-
-function getSortedDataByParam<DataType = any>(
-  data: DataType[],
-  param: TableSortParam<Path<DataType>, never, DataType>,
-  sortOrder: Values<Pick<typeof TableSortOrderEnum, 'desc' | 'asc'>>
-) {
-  return orderBy(data, [param.dataPath], [sortOrder]);
 }
 
 export interface TableActionProps<TDataType = any> {

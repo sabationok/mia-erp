@@ -13,11 +13,10 @@ export const permissionsTableColumns: CellTittleProps<PermissionEntity>[] = [
       align: 'start',
       path: 'company.name',
       getData: rd => {
-        console.log(rd);
         if (rd.company?.name) {
-          return [rd.company?.name?.first, rd.company?.name?.middle, rd.company?.name?.second]
-            .filter(el => el)
-            .join(' ');
+          return [rd.company?.name?.first ?? '', rd.company?.name?.middle ?? '', rd.company?.name?.second ?? ''].join(
+            ' '
+          );
         } else {
           return rd.company?.label?.base ?? t('Undefined label');
         }
