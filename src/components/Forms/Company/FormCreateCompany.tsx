@@ -20,8 +20,8 @@ import { FlexForm } from '../../atoms/FlexBox';
 import ModalBase from '../../atoms/Modal';
 import ModalFooter from '../../atoms/Modal/ModalFooter';
 
-export interface FormCreateCompanyProps extends Omit<ModalFormProps<any, any, ICompanyFormData>, 'onSubmit'> {}
-const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, title, onClose, ...props }) => {
+export interface FormCreateCompanyProps extends ModalFormProps<any, any, ICompanyFormData> {}
+const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, id, title, onClose, ...props }) => {
   const pServ = useAppServiceProvider()[AppModuleName.permissions];
   const [isLoading, setIsLoading] = useState(false);
   const formMethods = useAppForm<ICompanyFormData>({
@@ -142,7 +142,7 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, tit
         </AppFormProvider>
       </FlexForm>
 
-      <ModalFooter hasOnSubmit canSubmit isLoading={isLoading} />
+      <ModalFooter canSubmit isLoading={isLoading} />
     </ModalBase>
   );
 };

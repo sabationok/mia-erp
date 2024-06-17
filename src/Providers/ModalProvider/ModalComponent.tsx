@@ -122,7 +122,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
 
   const renderChildren = useMemo(() => {
     return RenderModalComponentChildren ? (
-      <RenderModalComponentChildren modalId={id} onClose={onClose} index={idx} {...childrenProps} />
+      <RenderModalComponentChildren id={id} onClose={onClose} index={idx} {...childrenProps} />
     ) : null;
     // eslint-disable-next-line
   }, [childrenProps, id, idx]);

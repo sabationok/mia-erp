@@ -74,10 +74,10 @@ export const useModalProvider = () => useContext(ModalProviderContext) as ModalS
 export const useModalService = () => useContext(ModalProviderContext) as ModalService;
 
 const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) => {
-  const [modalStack, setModalContent] = useState<IModalRenderItemParams<any, any>[]>([]);
+  const [modalStack, setModalStack] = useState<IModalRenderItemParams<any, any>[]>([]);
 
   const onClose = useCallback((id?: string | number) => {
-    setModalContent(prev => (id ? prev.filter(el => el.id !== id) : [...prev].splice(-1)));
+    setModalStack(prev => (id ? prev.filter(el => el.id !== id) : [...prev].splice(-1)));
   }, []);
 
   const getState = useCallback(() => {
@@ -99,13 +99,13 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
       try {
         if (ModalChildren && (typeof ModalChildren === 'function' || typeof ModalChildren === 'object')) {
           const id = `${ModalChildren.name}_${nanoid(8)}`;
-          setModalContent(prev => [...prev, { ModalChildren, modalChildrenProps, settings, id }]);
+          setModalStack(prev => [...prev, { ModalChildren, modalChildrenProps, settings, id }]);
           return { onClose: () => onClose(id), id };
         }
         if (Modal && ModalChildrenMap[Modal]) {
           const id = `${Modal}_${nanoid(8)}`;
 
-          setModalContent(prev => [
+          setModalStack(prev => [
             ...prev,
             { ModalChildren: ModalChildrenMap[Modal], modalChildrenProps: props, settings, id },
           ]);
@@ -125,7 +125,7 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
 
       try {
         if (Component && (typeof Component === 'function' || typeof Component === 'object')) {
-          setModalContent(prev => [...prev, { ModalChildren: Component, props, settings, id }]);
+          setModalStack(prev => [...prev, { ModalChildren: Component, props, settings, id }]);
           return {
             id,
             onClose: () => onClose(id),
@@ -151,7 +151,7 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
       isOpen,
       getState,
       clearStack: () => {
-        setModalContent([]);
+        setModalStack([]);
       },
       handleOpenModalAsync: async <M extends Modals = any, P = any, S = any>(
         options: IModalRenderItemParams<M, P, S>,

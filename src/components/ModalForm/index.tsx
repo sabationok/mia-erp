@@ -5,13 +5,15 @@ import ModalFooter from '../atoms/Modal/ModalFooter';
 import styled from 'styled-components';
 import { FormEvent, memo } from 'react';
 import { useModal } from '../../Providers/ModalProvider/ModalComponent';
+import { CreatedModal } from '../../Providers/ModalProvider/ModalProvider';
 
 export interface ModalFormBaseProps<T = any>
-  extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit' | 'onReset'> {
+  extends CreatedModal,
+    Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit' | 'onSelect'> {
   onSubmit?: (ev: FormEvent<HTMLFormElement>) => void;
   onReset?: (args?: any) => void;
   footer?: boolean;
-  onClose?: () => void;
+  // onClose?: () => void;
   defaultState?: Partial<T>;
   beforeSubmit?: () => void;
   afterSubmit?: () => void;
@@ -55,6 +57,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
   onClose,
   onFilterValueSelect,
   filterName,
+  onReset,
   ...props
 }) => {
   const modal = useModal();

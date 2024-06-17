@@ -1,4 +1,4 @@
-import styled, { css, DefaultTheme, ThemedStyledProps } from 'styled-components';
+import styled, { css, ExecutionContext } from 'styled-components';
 import { Property } from 'csstype';
 import { CSSProperties } from 'react';
 
@@ -101,13 +101,13 @@ const XL_Styles = createFlexBoxStyles({
 function getMediaStyles(key: MediaStylesKey) {
   switch (key) {
     case 'sStyles': {
-      return (props: ThemedStyledProps<FlexBoxProps, DefaultTheme>) => (props[key] ? S_Styles : undefined);
+      return (props: ExecutionContext & FlexBoxProps) => (props[key] ? S_Styles : undefined);
     }
     case 'xsStyles': {
-      return (props: ThemedStyledProps<FlexBoxProps, DefaultTheme>) => (props[key] ? XS_Styles : undefined);
+      return (props: ExecutionContext & FlexBoxProps) => (props[key] ? XS_Styles : undefined);
     }
     case 'xlStyles': {
-      return (props: ThemedStyledProps<FlexBoxProps, DefaultTheme>) => (props[key] ? XL_Styles : undefined);
+      return (props: ExecutionContext & FlexBoxProps) => (props[key] ? XL_Styles : undefined);
     }
   }
 }

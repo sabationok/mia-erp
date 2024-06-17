@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import FlexBox from '../FlexBox';
 import { t } from '../../../lang';
 import { isUndefined } from 'lodash';
+import { useModal } from '../../../Providers/ModalProvider/ModalComponent';
 
 export interface IModalFooterProps {
   hasOnSubmit?: boolean;
@@ -18,6 +19,7 @@ const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElem
   isLoading = false,
   ...props
 }) => {
+  const modal = useModal();
   return (
     <Footer {...props} className="modalFooter">
       {extraFooter && (
@@ -27,7 +29,7 @@ const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElem
       )}
 
       <FlexBox fillWidth gap={8} fxDirection={'row'} justifyContent={'space-between'} padding={'8px'}>
-        <ButtonIcon type="reset" variant={'defaultMiddle'} disabled={isLoading}>
+        <ButtonIcon type="reset" variant={'defaultMiddle'} disabled={isLoading} onClick={modal.onClose}>
           {t('Close')}
         </ButtonIcon>
 
