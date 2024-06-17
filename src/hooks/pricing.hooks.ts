@@ -1,23 +1,26 @@
 import { usePriceDiscountsSelector, usePriceManagementSelector } from '../redux/selectors.store';
 import { useAppParams, useAppQuery } from './index';
-import { OnlyUUID } from '../types/utils.types';
 import { PriceDiscountEntity } from '../types/price-management/discounts';
 import { PriceEntity } from '../types/price-management/price-management.types';
 
-export const useCurrentPrice = ({ _id }: { _id?: string } = {}): PriceEntity | undefined => {
+export const useCurrentPrice = <Info extends Partial<PriceEntity> = any>(
+  input?: Info
+): PriceEntity | Info | undefined => {
   const state = usePriceManagementSelector();
   const _paramId = useAppParams().priceId;
   const _queryId = useAppQuery().query.priceId;
-  const priceId = _id || _paramId || _queryId;
-  return priceId ? state?.dataMap[priceId] : undefined;
+  const priceId = input?._id || _paramId || _queryId;
+  return priceId ? state?.dataMap[priceId] || input : input;
 };
 
-export const useCurrentDiscount = ({ _id }: Partial<OnlyUUID> = {}): PriceDiscountEntity | undefined => {
+export const useCurrentDiscount = <Info extends Partial<PriceDiscountEntity>>(
+  input?: Info
+): PriceDiscountEntity | Info | undefined => {
   const state = usePriceDiscountsSelector();
   const _paramId = useAppParams().discountId;
   const _queryId = useAppQuery().query.discountId;
 
-  const priceId = _id || _paramId || _queryId;
+  const priceId = input?._id || _paramId || _queryId;
 
-  return priceId ? state?.dataMap[priceId] : undefined;
+  return priceId ? state?.dataMap[priceId] || input : input;
 };

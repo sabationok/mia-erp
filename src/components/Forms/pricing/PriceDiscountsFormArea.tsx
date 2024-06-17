@@ -67,7 +67,7 @@ const PriceDiscountsFormArea: React.FC<AccordionFormAreaProps & { offer?: OfferE
       });
     }
     // eslint-disable-next-line
-  }, []);
+  }, [state.list.length]);
 
   const handleSubmit = () => {
     if (Price?._id) {
@@ -86,11 +86,25 @@ const PriceDiscountsFormArea: React.FC<AccordionFormAreaProps & { offer?: OfferE
           },
         })
       );
+    } else {
+      console.warn('Price id not passed');
     }
   };
 
+  if (!Price?._id) {
+    return (
+      <AccordionForm label={`Select discounts (price not passed)`} expandable={false} isOpen={false}></AccordionForm>
+    );
+  }
+
   return (
-    <AccordionForm canSubmit={canSubmit} label={'Select discounts'} onSubmit={handleSubmit}>
+    <AccordionForm
+      canSubmit={canSubmit}
+      isLoading={loaders.isLoading.update}
+      label={'Select discounts'}
+      onSubmit={handleSubmit}
+      isOpen={false}
+    >
       <FlexBox fxDirection={'row'} padding={'8px'} gap={8} justifyContent={'space-between'}>
         <ButtonIcon
           sizeType={'extraSmall'}
@@ -318,6 +332,16 @@ const fields: (CardFieldProps | { separator: boolean; text?: string })[] = [
       label: t('Type'),
       getValue: item => item?.thresholdType,
     },
+  },
+
+  {
+    label: t('Discount source volume'),
+    getValue: item => item?.sourceVolume,
+  },
+
+  {
+    label: t('Discount target volume'),
+    getValue: item => item?.targetVolume,
   },
   // {
   //   label: t('Discount threshold type'),

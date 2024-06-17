@@ -5,7 +5,17 @@ import { VariationEntity } from '../offers/variations.types';
 import { AppQueryParams } from '../../api';
 import { ICompanyBase } from '../companies.types';
 import { IUserBase } from '../auth.types';
-import { EntityPath, HasDescription, HasLabel, HasStatus, HasType, MaybeNull, UUID, WithPeriod } from '../utils.types';
+import {
+  EntityPath,
+  HasDescription,
+  HasLabel,
+  HasStatus,
+  HasType,
+  MaybeNull,
+  PartialRecord,
+  UUID,
+  WithPeriod,
+} from '../utils.types';
 import { PriceDiscountEntity, PriceDiscountRecord } from './discounts';
 import { Path } from 'react-hook-form';
 
@@ -70,7 +80,7 @@ export enum PriceAmountAndPercentageFieldsEnum {
 export type PriceAmountAndPercentageFieldsKey = keyof typeof PriceAmountAndPercentageFieldsEnum;
 
 export interface PriceAmountAndPercentageFields
-  extends Record<PriceAmountAndPercentageFieldsKey, AmountAndPercentage> {}
+  extends PartialRecord<PriceAmountAndPercentageFieldsKey, AmountAndPercentage> {}
 
 export interface IPriceBase extends PriceAmountAndPercentageFields, HasLabel, HasType<OfferPriceTypeEnum> {
   in?: number | string;

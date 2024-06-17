@@ -62,7 +62,7 @@ const CreatePriceModal: React.FC<ModalCreatePriceProps> = ({ updateId, offer, on
 
 export default CreatePriceModal;
 
-const discountTableTitles: CellTittleProps<PriceDiscountEntity>[] = [
+export const discountTableTitles: CellTittleProps<PriceDiscountEntity>[] = [
   {
     top: { name: 'Type', getData: d => d.type },
     bottom: { name: 'Bonus balance', getData: d => d.balanceType },
