@@ -9,7 +9,7 @@ import { ITableListProps } from '../TableList/tableTypes.types';
 import usePermissionsActionsCreator from '../../hooks/usePermissonsActionsCreator';
 import { PermissionStatus } from 'types/permissions.types';
 import { permissionsTableColumns } from '../../data/permissions.data';
-import { permissionsSearchParams } from '../../data/companies.data';
+import { permissionsSearchParams, permissionsSortParams } from '../../data/companies.data';
 import { useAppServiceProvider } from '../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../redux/reduxTypes.types';
 import { BaseAppPageProps } from './index';
@@ -31,7 +31,7 @@ const PageHome: React.FC<Props> = ({ path }) => {
   const actionsCreator = usePermissionsActionsCreator(query.companyType || CompanyQueryTypeEnum.own);
   const [loading, setLoading] = useState(false);
 
-  const { data: permissionsData } = useMemo(() => {
+  const { data, companyTypeIs } = useMemo(() => {
     const type = query.companyType || CompanyQueryTypeEnum.own;
     const companyTypeIs: PartialRecord<CompanyQueryTypeEnum, boolean> = {
       [type]: true,
@@ -53,15 +53,17 @@ const PageHome: React.FC<Props> = ({ path }) => {
 
   const tableConfig = useMemo(
     (): ITableListProps<PermissionEntity> => ({
-      tableData: permissionsData,
+      tableData: data,
       tableTitles: permissionsTableColumns,
       searchParams: permissionsSearchParams,
+      sortParams: permissionsSortParams,
       hasFilter: false,
+      showFooter: true,
       hasSearch: true,
       checkBoxes: false,
       actionsCreator,
     }),
-    [actionsCreator, permissionsData]
+    [actionsCreator, data]
   );
 
   useEffect(() => {

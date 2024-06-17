@@ -1,12 +1,9 @@
 import FlexBox from '../../../atoms/FlexBox';
 import TabSelector from '../../../atoms/TabSelector';
 import TableList, { ITableListProps } from '../../../TableList/TableList';
-import { useOrdersSelector } from '../../../../redux/selectors.store';
 import { useEffect, useMemo, useState } from 'react';
 import { orderSlotsTableColumns } from '../../../../data';
 import { offerTypeFilterOptions } from '../../../../data/modalFilterOptions.data';
-import { useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
-import { AppModuleName } from '../../../../redux/reduxTypes.types';
 import { useLoaders } from '../../../../Providers/Loaders/useLoaders.hook';
 import { OfferTypeEnum } from '../../../../types/offers/offers.types';
 import { useCurrentOrder } from '../../../../Providers/CurrentOrderProvider';
@@ -14,7 +11,7 @@ import { OrderSlotEntity } from '../../../../types/orders/order-slot.types';
 
 export interface OrderContentTabProps {}
 
-const OrderContentTab: React.FC<OrderContentTabProps> = p => {
+export const OrderContentTab: React.FC<OrderContentTabProps> = p => {
   // const service = useAppServiceProvider()[AppModuleName.orders];
   const [currentTab, setCurrentTab] = useState<OfferTypeEnum | undefined>();
   const loaders = useLoaders<'update' | 'create' | 'refresh'>();

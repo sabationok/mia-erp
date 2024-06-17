@@ -2,18 +2,19 @@ import ButtonIcon from 'components/atoms/ButtonIcon';
 import styled from 'styled-components';
 import FlexBox from '../FlexBox';
 import { t } from '../../../lang';
+import { isUndefined } from 'lodash';
 
 export interface IModalFooterProps {
   hasOnSubmit?: boolean;
   extraFooter?: React.ReactNode;
-  isValid?: boolean;
+  canSubmit?: boolean;
   isLoading?: boolean;
 }
 
 const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElement>> = ({
   hasOnSubmit,
   extraFooter,
-  isValid = true,
+  canSubmit = true,
   isLoading = false,
   ...props
 }) => {
@@ -25,21 +26,21 @@ const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElem
         </ExtraFooter>
       )}
 
-      <FlexBox fillWidth gap={8} fxDirection={'row'} justifyContent={'flex-end'} padding={'8px'}>
-        {hasOnSubmit && (
-          <ButtonIcon type="reset" variant={'defaultMiddle'}>
-            {t('Close')}
-          </ButtonIcon>
-        )}
-
-        <ButtonIcon
-          type={hasOnSubmit ? 'submit' : 'reset'}
-          variant={'filledMiddle'}
-          isLoading={isLoading}
-          disabled={!isValid}
-        >
-          {hasOnSubmit ? t('Save') : t('Close')}
+      <FlexBox fillWidth gap={8} fxDirection={'row'} justifyContent={'space-between'} padding={'8px'}>
+        <ButtonIcon type="reset" variant={'defaultMiddle'} disabled={isLoading}>
+          {t('Close')}
         </ButtonIcon>
+
+        {
+          <ButtonIcon
+            type={!isUndefined(canSubmit) || hasOnSubmit ? 'submit' : 'button'}
+            variant={'filledMiddle'}
+            isLoading={isLoading}
+            disabled={!hasOnSubmit || !canSubmit}
+          >
+            {t('Save')}
+          </ButtonIcon>
+        }
       </FlexBox>
     </Footer>
   );

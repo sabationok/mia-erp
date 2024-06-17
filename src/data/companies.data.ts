@@ -1,8 +1,8 @@
 import { CellTittleProps } from 'components/TableList/TebleCells/CellTitle';
-import { SelectItem } from '../components/TableList/TableList';
 import { t } from '../lang';
 import { BusinessSubjectTypeEnum, CompanyEntity, OwnershipTypeEnum } from '../types/companies.types';
 import { enumToFilterOptions } from '../utils';
+import { TableSearchParam, TableSortParam } from '../components/TableList/tableTypes.types';
 
 export const ownershipTypeFilterOptions = enumToFilterOptions(OwnershipTypeEnum);
 export const businessSubjectTypeFilterOptions = enumToFilterOptions(BusinessSubjectTypeEnum);
@@ -57,10 +57,19 @@ export const companiesTableColumns: CellTittleProps<CompanyEntity>[] = [
     action: 'dateSimple',
   },
 ];
-export const permissionsSearchParams: SelectItem[] = [
-  // { label: t('date'), dataPath: 'eventDate', filter: false, search: false, sort: true },
-  { label: t('Label'), dataPath: 'label.base', filter: false, search: false, sort: true },
-  { label: t('Name first'), dataPath: 'name.first', filter: false, search: false, sort: true },
-  { label: t('Name first'), dataPath: 'name.first', filter: false, search: false, sort: true },
-  { label: t('status'), dataPath: 'status', filter: false, search: true, sort: true },
+export const permissionsSearchParams: TableSearchParam[] = [
+  { label: t('Label base'), dataPath: 'label.base' },
+  { label: t('Label print'), dataPath: 'label.print' },
+  { label: t('Name first'), dataPath: 'name.first' },
+  { label: t('Name second'), dataPath: 'name.second' },
+  { label: t('status'), dataPath: 'status' },
+];
+export const permissionsSortParams: TableSortParam[] = [
+  { label: t('Label'), dataPath: 'label.base' },
+  { label: t('Name first'), dataPath: 'name.first' },
+  { label: t('Name second'), dataPath: 'name.second' },
+  { label: t('status'), dataPath: 'status' },
+  { label: t('Type'), dataPath: 'status' },
+  { label: t('status'), dataPath: 'status' },
+  { label: t('status'), dataPath: 'status' },
 ];

@@ -142,7 +142,7 @@ const FormCreateCompany: React.FC<FormCreateCompanyProps> = ({ defaultState, tit
         </AppFormProvider>
       </FlexForm>
 
-      <ModalFooter hasOnSubmit isValid isLoading={isLoading} />
+      <ModalFooter hasOnSubmit canSubmit isLoading={isLoading} />
     </ModalBase>
   );
 };
