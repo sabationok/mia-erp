@@ -4,7 +4,6 @@ import TabSelector, { FilterSelectHandler } from '../../atoms/TabSelector';
 import { useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../../utils';
 import { useOrdersSelector } from '../../../redux/selectors.store';
-import { useAppParams } from '../../../hooks';
 import OrderContentTab from './tabs/OrderContentTab';
 import OrderInvoicesTab from './tabs/OrderInvoicesTab';
 import OrderPaymentsTab from './tabs/OrderPaymentsTab';
@@ -25,7 +24,7 @@ enum OrderTabNameEnum {
 }
 const toggleOptions = enumToFilterOptions(OrderTabNameEnum);
 const PageOrderOverviewTabs = ({ toggleVisibility, isVisible }: PageOrderOverviewTabsProps) => {
-  const orderId = useAppParams()?.orderId;
+  // const orderId = useAppParams()?.orderId;
 
   const { currentOrder } = useOrdersSelector();
   // const service = useAppServiceProvider()[ServiceName.orders];
@@ -90,10 +89,4 @@ const RightSide = styled(FlexBox)<{ isVisible?: boolean }>`
   }
 `;
 
-const Top = styled(FlexBox)<{ isVisible?: boolean }>`
-  @media screen and (min-width: 768px) {
-    display: none;
-  }
-  border-bottom: 1px solid ${p => p.theme.modalBorderColor};
-`;
 export default PageOrderOverviewTabs;

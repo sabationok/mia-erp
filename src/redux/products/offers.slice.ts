@@ -138,8 +138,6 @@ export const offersSlice = createSlice({
           });
 
           return ManageOffersStateMap(s, { data: { _id: offerId, variations: a.payload?.data } });
-        } else {
-          console.warn('addCase(thunks.getAllVariationsByOfferIdThunk.fulfilled', { offerId });
         }
       })
       //  * sep ============>>>>>>>>>>> PRICES
