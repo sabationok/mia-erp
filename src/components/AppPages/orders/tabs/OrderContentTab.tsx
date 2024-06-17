@@ -15,12 +15,12 @@ import { OrderSlotEntity } from '../../../../types/orders/order-slot.types';
 export interface OrderContentTabProps {}
 
 const OrderContentTab: React.FC<OrderContentTabProps> = p => {
-  const service = useAppServiceProvider()[AppModuleName.orders];
+  // const service = useAppServiceProvider()[AppModuleName.orders];
   const [currentTab, setCurrentTab] = useState<OfferTypeEnum | undefined>();
   const loaders = useLoaders<'update' | 'create' | 'refresh'>();
   const Order = useCurrentOrder();
 
-  const { currentOrder } = useOrdersSelector();
+  // const { currentOrder } = useOrdersSelector();
 
   const tableData = useMemo(() => {
     // const grouped=groupBy(currentOrder?.slots)
