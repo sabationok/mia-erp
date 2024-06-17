@@ -9,6 +9,7 @@ export interface OfferFormAreaProps<DefaultValues = any> {
   title?: string;
   offer?: OfferEntity;
   onSubmit?: AppSubmitHandler<DefaultValues>;
+  onSuccess?: (data: { data: OfferEntity }) => void;
   formData?: OfferFullFormData & { _id?: string };
   update?: string;
 }

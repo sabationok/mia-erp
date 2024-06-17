@@ -14,15 +14,22 @@ import {
   DiscountThresholdTypeEnum,
   DiscountValueTypeEnum,
   PriceBonusProviderEnum,
+  PriceDiscountSourceVolumeType,
+  PriceDiscountTargetVolumeType,
   PriceDiscountType,
-  PriceDiscountVolumeType,
 } from '../types/price-management/discounts';
 
 export const PriceDiscountTypeOptions = enumToFilterOptions(PriceDiscountType, { labelPrefix: 'Discount' });
 export const PriceTypeOptions = enumToFilterOptions(OfferPriceTypeEnum, { labelPrefix: 'Price' });
 export const PriceDiscountProviderOptions = enumToFilterOptions(PriceBonusProviderEnum, { labelPrefix: 'Discount' });
 export const PriceDiscountValueTypeOptions = enumToFilterOptions(DiscountValueTypeEnum, { labelPrefix: 'Discount' });
-export const PriceDiscountVolumeTypeOptions = enumToFilterOptions(PriceDiscountVolumeType, { labelPrefix: 'Discount' });
+export const PriceDiscountSourceVolumeTypeOptions = enumToFilterOptions(PriceDiscountSourceVolumeType, {
+  labelPrefix: 'Discount',
+});
+export const PriceDiscountTargetVolumeTypeOptions = enumToFilterOptions(PriceDiscountTargetVolumeType, {
+  labelPrefix: 'Discount',
+});
+
 // export const PriceDiscountThresholdTTypeOptions = enumToFilterOptions(DiscountThresholdTypeEnum, {
 //   labelPrefix: 'Discount_threshold_type',
 // });
@@ -38,10 +45,12 @@ export const DiscountFilters = {
   Type: PriceDiscountTypeOptions,
   BalanceProvider: PriceDiscountProviderOptions,
   ValueType: PriceDiscountValueTypeOptions,
-  VolumeType: PriceDiscountVolumeTypeOptions,
   ThresholdType: PriceDiscountThresholdTypeOptions,
-  // ThresholdTType: PriceDiscountThresholdTTypeOptions,
+
   LimitType: DiscountLimitTypeOptions,
+
+  SourceVolume: PriceDiscountSourceVolumeTypeOptions,
+  TargetVolume: PriceDiscountTargetVolumeTypeOptions,
 };
 
 const dateColumn: CellTittleProps = {

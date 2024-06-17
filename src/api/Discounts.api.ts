@@ -2,6 +2,7 @@ import { ClientApi } from './client.api';
 import { AppResponse } from '../redux/app-redux.types';
 import { PriceDiscountDto, PriceDiscountEntity } from '../types/price-management/discounts';
 import { AppQueryParams } from './index';
+import { OnlyUUID } from '../types/utils.types';
 
 export interface GetDiscountQuery {
   getOffers?: boolean;
@@ -38,11 +39,8 @@ export class DiscountsApi {
     return this._client.post(this._endpoints.create, data);
   };
 
-  public static readonly update = (data?: {
-    dto: PriceDiscountDto;
-    _id: string;
-  }): Promise<AppResponse<PriceDiscountEntity>> => {
-    return this._client.patch(this._endpoints.create, data);
+  public static readonly update = (data?: PriceDiscountDto & OnlyUUID): Promise<AppResponse<PriceDiscountEntity>> => {
+    return this._client.patch(this._endpoints.update, data);
   };
 
   public static readonly remove = (data?: {

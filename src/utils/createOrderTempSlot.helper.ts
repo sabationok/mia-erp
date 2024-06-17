@@ -10,8 +10,8 @@ import {
   DiscountValueTypeEnum,
   PriceBonusProviderEnum,
   PriceDiscountEntity,
+  PriceDiscountSourceVolumeType,
   PriceDiscountType,
-  PriceDiscountVolumeType,
 } from '../types/price-management/discounts';
 import { CurrencyCode, MaybeNull, PartialRecord } from '../types/utils.types';
 import { ObjectValues } from './forArray.helpers';
@@ -109,7 +109,7 @@ const getRuleKey = (rule: PriceDiscountEntity): MapKey => `${rule?.type || 'TYPE
 export const getDiscountsByCategoriesAndThresholdMap = (slot: IOrderTempSlot, temp: CountedSlotData) => {
   const filteredDiscounts = slot?.origin?.discounts
     ?.filter(item => {
-      if (item.volumeType !== PriceDiscountVolumeType.slot) {
+      if (item.volumeType !== PriceDiscountSourceVolumeType.slot) {
         return false;
       }
       // ! прибираємо ті до яких Ми ще НЕ доросли, якщо праивло має поріг звісно ж

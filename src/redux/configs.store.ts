@@ -77,7 +77,7 @@ export const persistorConfigs: Record<
     ],
   },
   discounts: {
-    key: 'offers',
+    key: 'discounts',
     storage: storageSession,
     whitelist: ['list', 'keysMap', 'dataMap'],
   },

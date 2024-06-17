@@ -12,7 +12,7 @@ import OfferCategoriesSelector from './OfferCategoriesSelector';
 import { useCurrentOffer } from '../../../../hooks';
 
 export interface OfferFormCategoriesAreaProps
-  extends OfferFormAreaProps<OfferFullFormData[OfferFormRelatedFieldKeyEnum.categories]> {
+  extends OfferFormAreaProps<OfferFullFormData[OfferFormRelatedFieldKeyEnum.categoriesIds]> {
   onSelect?: (id: string) => void;
   onChange?: (ids: string[]) => void;
   onSuccess?: (data: OfferEntity) => void;
@@ -38,7 +38,7 @@ export const OfferFormCategoriesArea = ({ offer, disabled }: OfferFormCategories
         data: {
           data: {
             _id: Offer._id,
-            data: { categories: categoriesIds },
+            data: { categoriesIds },
           },
         },
         onSuccess: (data, meta) => {},

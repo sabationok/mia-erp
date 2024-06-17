@@ -2,6 +2,7 @@ import { AppResponse } from './app-redux.types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ActionPayload, ThunkArgs } from './store.store';
 import { axiosErrorCheck } from '../utils';
+import { AsyncThunkConfig } from './reduxTypes.types';
 
 type ThunkGetAppResponseFn<Data = any, Params = any, Return = any, Meta = any> = (
   data?: Data,
@@ -15,7 +16,7 @@ export const createAppAsyncThunk = <
   Meta = any,
   Extra = any,
   // Error = any,
-  // ThunkConfig extends AsyncThunkConfig = any
+  ThunkConfig extends AsyncThunkConfig = any,
 >(
   type: string,
   getResponse: ThunkGetAppResponseFn<Data, Params, Return, Meta>

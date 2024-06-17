@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import styled, { css } from 'styled-components';
+import { css, styled } from 'styled-components';
 import { FieldError, FieldErrorsImpl, Merge } from 'react-hook-form';
 import FlexBox, { FlexBoxProps, FlexFieldSet } from '../FlexBox';
 import { Property } from 'csstype';
@@ -39,7 +39,7 @@ const InputLabel: React.ForwardRefRenderFunction<HTMLFieldSetElement, InputLabel
   ref
 ) => {
   return (
-    <Box className={className} disabled={disabled} {...props} ref={ref}>
+    <Box className={className} disabled={disabled} {...props} ref={ref} gap={8}>
       <Wrapper isLabel={!!label} direction={direction}>
         {label && (
           <Label htmlFor={id} uppercase={uppercase} align={align} direction={direction} className="label">
@@ -120,14 +120,19 @@ const HelperText = styled.div<{
   success?: boolean;
   loading?: boolean;
 }>`
-  padding: 2px 4px;
+  padding: 4px 8px;
   min-height: 13px;
 
   font-size: 12px;
   line-height: 1.5;
+  margin: 0 0 6px;
+
+  border: 1px solid;
+  border-radius: 4px;
 
   color: ${({ error, success }) => (error && 'tomato') || (success && 'lightgreen') || 'inherit'};
-
+  border-color: ${({ theme, error, success }) =>
+    (error && 'tomato') || (success && 'lightgreen') || theme.modalBorderColor};
   cursor: default;
 `;
 

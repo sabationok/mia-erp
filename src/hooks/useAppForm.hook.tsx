@@ -68,7 +68,11 @@ export interface UseAppFormSubmitOptions {
   // onOptionsChange?: (options: UseAppFormSubmitOptions) => void;
 }
 
-export type AppSubmitHandler<D = any, O = any> = (data: D, options?: O & UseAppFormSubmitOptions) => void;
+export type AppSubmitHandler<D = any, O = any> = (
+  data: D,
+  options?: O & UseAppFormSubmitOptions,
+  ev?: React.FormEvent
+) => void;
 
 export type AppErrorSubmitHandler<E = any, O = any> = (errors: E, options?: UseAppFormSubmitOptions & O) => void;
 

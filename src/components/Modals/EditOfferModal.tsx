@@ -18,6 +18,7 @@ import { OfferFormCategoriesArea } from '../Forms/offers/categories/OfferFormCat
 import { OfferLoadersData, OfferLoadersKey } from '../Forms/offers/types';
 import { OfferPriceFormArea } from '../Forms/pricing/OfferPriceFormArea';
 import OfferTagsFormArea from '../Forms/offers/OfferTagsFormArea';
+import PriceDiscountsFormArea from '../Forms/pricing/PriceDiscountsFormArea';
 
 export interface EditOfferModalProps extends ModalFormProps {
   copy?: boolean;
@@ -76,14 +77,14 @@ const EditOfferModal: React.FC<EditOfferModalProps> = ({ onClose, offer, copy })
             <OfferFormCategoriesArea
               _id={offerId}
               offer={Offer}
-              defaultValues={state.formData?.categories}
+              defaultValues={state.formData?.categoriesIds}
               disabled={!state.formData}
             />
 
             <OfferFormPropertiesArea
               _id={offerId}
               offer={Offer}
-              defaultValues={state.formData?.properties}
+              defaultValues={state.formData?.propertiesIds}
               disabled={!state.formData}
             />
 
@@ -95,6 +96,8 @@ const EditOfferModal: React.FC<EditOfferModalProps> = ({ onClose, offer, copy })
               price={Offer?.price}
               title={t('Price')}
             />
+
+            {Offer?.price && <PriceDiscountsFormArea price={Offer?.price} />}
 
             <OfferFormImagesArea
               offer={Offer}

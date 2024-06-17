@@ -4,12 +4,10 @@ import styled from 'styled-components';
 import FlexBox from '../../../atoms/FlexBox';
 import { useOffersSelector } from '../../../../redux/selectors.store';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
-import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import { OfferFormAreaProps } from '../types';
 import { useOfferLoadersProvider } from '../../../Modals/CreateOfferModal';
-import { ArrayOfUUID } from '../../../../redux/app-redux.types';
 import { t } from '../../../../lang';
-import { OfferEntity } from '../../../../types/offers/offers.types';
+import { OfferFormRelatedFieldKeyEnum, OfferFullFormData } from '../../../../types/offers/offers.types';
 import { PropertiesGroupSelector } from '../../../atoms/PropertiesGroupSelector';
 import { PropertyBaseEntity, PropertyEntity } from '../../../../types/offers/properties.types';
 import OfferPropertySelector from '../variations/OfferPropertySelector';
@@ -17,11 +15,11 @@ import { Text } from '../../../atoms/Text';
 import { useCurrentOffer } from '../../../../hooks';
 import { sortIds, updateIdsArray } from '../../../../utils';
 
-export interface OfferFormPropertiesAreaProps extends OfferFormAreaProps<ArrayOfUUID> {
-  onSubmit?: AppSubmitHandler<string[]>;
+export interface OfferFormPropertiesAreaProps
+  extends OfferFormAreaProps<OfferFullFormData[OfferFormRelatedFieldKeyEnum.propertiesIds]> {
+  // onSubmit?: AppSubmitHandler<string[]>;
   onSelect?: (id: string) => void;
   onChange?: (ids: string[]) => void;
-  onSuccess?: (data: { data: OfferEntity }) => void;
 }
 
 export const OfferFormPropertiesArea = ({ onSuccess, disabled, offer }: OfferFormPropertiesAreaProps) => {
@@ -30,17 +28,19 @@ export const OfferFormPropertiesArea = ({ onSuccess, disabled, offer }: OfferFor
   const Offer = useCurrentOffer(offer);
   const service = useAppServiceProvider().get(ServiceName.offers);
   const initIds = sortIds(Offer?.properties?.map(p => p._id));
-  const [selectedIds, setSelectedIds] = useState<string[]>(initIds);
+  const [propertiesIds, setPropertiesIds] = useState<string[]>(initIds);
   const [template, setTemplate] = useState<PropertyBaseEntity>();
 
   const handleSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
+    ev.stopPropagation();
+
     if (Offer) {
       service.updateById({
         data: {
           data: {
             _id: Offer?._id,
-            data: { properties: selectedIds },
+            data: { propertiesIds, templateId: template?._id },
           },
         },
         update: true,
@@ -51,8 +51,8 @@ export const OfferFormPropertiesArea = ({ onSuccess, disabled, offer }: OfferFor
   };
 
   const canSubmit = useMemo(() => {
-    return !!selectedIds?.length && initIds?.join(',') !== sortIds(selectedIds)?.join(',');
-  }, [selectedIds, initIds]);
+    return !!propertiesIds?.length && initIds?.join(',') !== sortIds(propertiesIds)?.join(',');
+  }, [propertiesIds, initIds]);
 
   const propertiesList = useMemo(() => {
     if (template?.childrenList?.length) {
@@ -77,7 +77,7 @@ export const OfferFormPropertiesArea = ({ onSuccess, disabled, offer }: OfferFor
   }, [template, state.propertiesDataMap, state.propertiesKeysMap]);
 
   const handleSelect = useCallback((_parentId?: string, valueId: string = '') => {
-    setSelectedIds(prev => {
+    setPropertiesIds(prev => {
       // prev.includes(valueId) ? prev.filter(el => el !== valueId) : [...prev, valueId]
       return updateIdsArray({
         arr: prev,
@@ -90,10 +90,15 @@ export const OfferFormPropertiesArea = ({ onSuccess, disabled, offer }: OfferFor
   const renderPropertiesList = useMemo(() => {
     return propertiesList?.map(prop => {
       return (
-        <OfferPropertySelector key={`prop_${prop._id}`} item={prop} selectedIds={selectedIds} onSelect={handleSelect} />
+        <OfferPropertySelector
+          key={`prop_${prop._id}`}
+          item={prop}
+          selectedIds={propertiesIds}
+          onSelect={handleSelect}
+        />
       );
     });
-  }, [propertiesList, selectedIds, handleSelect]);
+  }, [propertiesList, propertiesIds, handleSelect]);
 
   return (
     <AccordionForm

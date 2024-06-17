@@ -80,7 +80,7 @@ export const OfferPriceFormArea = ({
       markup: { amount: 0, percentage: 0 },
       offer: Offer,
       ...defaultState,
-      setAsDefault: !Offer?.price?._id || Offer?.price?._id === Price?._id,
+      setAsDefault: !Offer?.price?._id,
     },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
@@ -88,7 +88,7 @@ export const OfferPriceFormArea = ({
   const { formValues, setValue, handleSubmit } = form;
 
   const setIsDefault = (checked: boolean) => {
-    setValue('setAsDefault', checked);
+    setValue('setAsDefault', checked, { shouldTouch: true, shouldDirty: true });
   };
   const { in: costValue, out: priceValue } = formValues;
 
@@ -98,6 +98,14 @@ export const OfferPriceFormArea = ({
       const Price = new FormPriceDecimal(priceValue ?? 0);
       const CommissionAmount = Price.minus(Cost);
       const CommissionPercentage = CommissionAmount.div(Price).times(100);
+
+      if (Price.lte(0)) {
+        setValue('in', Cost.toFixed(2));
+        return;
+      } else if (Cost.lte(0)) {
+        setValue('out', Price.toFixed(2));
+        return;
+      }
 
       setValue('in', Cost.toFixed(2));
       setValue('out', Price.toFixed(2));
@@ -118,8 +126,8 @@ export const OfferPriceFormArea = ({
   const onSetAsDefault = async (offerId: string, priceId: string) => {
     if (Offer?.price?._id && Offer?.price?._id === priceId) return;
 
-    offersSrv.setDefaults({
-      data: { data: { _id: offerId, defaults: { price: { _id: priceId } } } },
+    offersSrv.updateById({
+      data: { data: { _id: offerId, data: { price: { _id: priceId } } } },
       onLoading: loaders.onLoading('set_default_price'),
       onSuccess: d => {},
     });
@@ -141,7 +149,6 @@ export const OfferPriceFormArea = ({
 
           if (setAsDefault && fData.offer?._id) {
             onSetAsDefault(fData.offer?._id, data._id);
-          } else {
           }
         }),
       });

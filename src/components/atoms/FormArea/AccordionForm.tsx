@@ -1,6 +1,5 @@
 import FlexBox, { FlexFieldSet, FlexForm } from '../FlexBox';
 import { Text } from '../Text';
-import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import FormAreaFooter from './FormAreaFooter';
 import { useEffect, useId, useState } from 'react';
 import { isUndefined } from 'lodash';
@@ -35,7 +34,7 @@ export interface AccordionFormAreaProps {
   formId?: string;
 }
 export interface AccordionFormProps extends AccordionFormAreaProps {
-  onSubmit?: AppSubmitHandler;
+  onSubmit?: React.FormEventHandler;
   onReset?: () => void;
 }
 
@@ -43,7 +42,17 @@ export const AccordionForm = ({ isEmpty, onSubmit, onReset, children, formId, ..
   const _formId = useId();
 
   return (
-    <StyledForm onSubmit={onSubmit ?? (ev => ev.preventDefault())} onReset={onReset} maxWidth={'100%'} id={_formId}>
+    <StyledForm
+      onSubmit={ev => {
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        onSubmit && onSubmit(ev);
+      }}
+      onReset={onReset}
+      maxWidth={'100%'}
+      id={_formId}
+    >
       <AccordionFormArea {...rest} hasOnReset={!!onReset} hasOnSubmit={!!onSubmit} formId={formId || _formId}>
         {children}
       </AccordionFormArea>

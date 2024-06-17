@@ -145,9 +145,6 @@ export interface OfferFormData extends OfferFullFormData {}
 export interface OfferBaseDto extends Omit<IOfferBase, '_id' | 'createdAt' | 'deletedAt' | 'updatedAt'> {}
 
 export enum OfferFormRelatedFieldKeyEnum {
-  categories = 'categories',
-  recommends = 'recommends',
-  properties = 'properties',
   tags = 'tags',
   categoriesIds = 'categoriesIds',
   recommendsIds = 'recommendsIds',
@@ -156,9 +153,6 @@ export enum OfferFormRelatedFieldKeyEnum {
 }
 
 export interface OfferRelatedFieldsDto extends PartialRecord<OfferFormRelatedFieldKeyEnum, ArrayOfUUID> {
-  brand?: OnlyUUID;
-  template?: OnlyUUID;
-
   brandId?: UUID;
   templateId?: UUID;
 }

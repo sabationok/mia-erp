@@ -15,6 +15,7 @@ export enum PriceBonusProviderEnum {
 export enum DiscountValueTypeEnum {
   amount = 'amount',
   percentage = 'percentage',
+  index = 'index',
 }
 
 export enum DiscountThresholdTypeEnum {
@@ -26,7 +27,12 @@ export enum DiscountLimitTypeEnum {
   quantity = 'quantity',
 }
 
-export enum PriceDiscountVolumeType {
+export enum PriceDiscountSourceVolumeType {
+  slot = 'slot',
+  order = 'order',
+  cart = 'cart',
+}
+export enum PriceDiscountTargetVolumeType {
   slot = 'slot',
   order = 'order',
   cart = 'cart',
@@ -34,33 +40,44 @@ export enum PriceDiscountVolumeType {
 export enum DiscountKeyEnum {
   dateFrom = 'dateFrom',
   dateTo = 'dateTo',
+
+  timeFrom = 'timeFrom',
+  timeTo = 'timeTo',
+
   balanceType = 'balanceType',
-  volumeType = 'volumeType',
+  sourceVolume = 'sourceVolume',
+  targetVolume = 'targetVolume',
   threshold = 'threshold',
+  thresholdType = 'thresholdType',
   valueType = 'valueType',
   value = 'value',
-  slotCategory = 'slotCategory',
+  category = 'category',
   cmsConfigs = 'cmsConfigs',
   type = 'type',
 }
 interface IDiscountBase extends HasType<PriceDiscountType>, HasBaseCmsConfigs {
   dateFrom?: string;
-
   dateTo?: string;
+
+  timeFrom?: string;
+  timeTo?: string;
 
   balanceType?: PriceBonusProviderEnum;
 
-  volumeType?: PriceDiscountVolumeType;
+  volumeType?: PriceDiscountSourceVolumeType;
   threshold?: number;
   thresholdType?: DiscountThresholdTypeEnum;
 
   limit?: number;
   limitType?: DiscountLimitTypeEnum;
 
+  sourceVolume?: PriceDiscountSourceVolumeType;
+  targetVolume?: PriceDiscountTargetVolumeType;
+
   valueType?: DiscountValueTypeEnum;
   value?: string;
 
-  slotCategory?: string;
+  category?: string;
 
   label?: string;
 }

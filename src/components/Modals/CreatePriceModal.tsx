@@ -8,19 +8,11 @@ import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { LoadersProvider, useLoadersProvider } from '../../Providers/Loaders/LoaderProvider';
 import ModalBase from '../atoms/Modal';
 import { OfferPriceFormArea } from '../Forms/pricing/OfferPriceFormArea';
-import TableList from '../TableList/TableList';
 import { PriceDiscountEntity } from '../../types/price-management/discounts';
 import FlexBox from '../atoms/FlexBox';
-import { usePriceDiscountsSelector } from '../../redux/selectors.store';
 import { useCurrentPrice } from '../../hooks';
-import { AccordionFormArea } from '../atoms/FormArea/AccordionForm';
-import { useModalService } from '../../Providers/ModalProvider/ModalProvider';
-import { CreateDiscountModal } from './CreateDiscountModal';
-import { useAppDispatch } from '../../redux/store.store';
-import { getAllDiscountsThunk, removeDiscountThunk } from '../../redux/priceManagement/discounts/discounts.thunks';
 import { CellTittleProps } from '../TableList/TebleCells/CellTitle';
-import { updatePriceThunk } from '../../redux/priceManagement/priceManagement.thunks';
-import InputLabel from '../atoms/Inputs/InputLabel';
+import PriceDiscountsFormArea from 'components/Forms/pricing/PriceDiscountsFormArea';
 
 export interface ModalCreatePriceProps
   extends Omit<ModalFormProps<any, any, IPriceFormData>, 'onSubmit' | 'afterSubmit'> {
@@ -38,144 +30,37 @@ type UsePriceFormLoadersKey =
   | 'create_discount'
   | 'update_discount'
   | 'discounts'
-  | 'all_discounts';
+  | 'all_discounts'
+  | `deleting_id.${string}`;
 
 export const usePriceModalFormLoaders = () => useLoadersProvider<UsePriceFormLoadersKey>();
 
 const CreatePriceModal: React.FC<ModalCreatePriceProps> = ({ updateId, offer, onSubmit, ...props }) => {
   const Price = useCurrentPrice({ _id: updateId });
-  const discountsState = usePriceDiscountsSelector();
-  const modalSrv = useModalService();
   const loaders = useLoaders<UsePriceFormLoadersKey, { price?: PriceEntity; discounts?: PriceDiscountEntity[] }>(
     {
       price: { content: 'Creating...' },
       update: { content: 'Updating...' },
       set_default_price: { content: 'Updating offer...' },
+      discounts: { content: 'Refreshing...' },
     },
     { price: Price, discounts: Price?.discounts }
   );
-  const dispatch = useAppDispatch();
 
   return (
     <ModalBase title={t('Pricing')} onClose={props?.onClose}>
       <LoadersProvider value={loaders}>
-        <FlexBox padding={'0 8px 24px'}>
+        <FlexBox padding={'0 0 24px'}>
           <OfferPriceFormArea offer={offer} defaultState={Price} price={Price} />
 
-          <AccordionFormArea label={'Select discounts'}>
-            <InputLabel label={'Added discounts'}>
-              <FlexBox minHeight={'150px'} maxHeight={'250px'}>
-                <TableList
-                  tableData={Price?.discounts}
-                  hasSearch={false}
-                  tableTitles={discountTableTitles}
-                  actionsCreator={ctx => {
-                    const currentId = ctx.selectedRow?._id;
-
-                    return [
-                      {
-                        icon: 'refresh',
-                        disabled: !Price?._id,
-                        onClick: () => {
-                          Price?._id &&
-                            dispatch(
-                              getAllDiscountsThunk({
-                                data: { params: { priceId: Price?._id } },
-                                onLoading: loaders.onLoading('discounts'),
-                              })
-                            );
-                        },
-                      },
-                      { separator: true },
-                      {
-                        icon: 'delete',
-                        type: 'onlyIconFilled',
-                        disabled: !currentId || !Price?._id,
-                        onClick: () => {
-                          Price?._id &&
-                            currentId &&
-                            dispatch(
-                              removeDiscountThunk({
-                                data: {
-                                  data: {
-                                    discountId: currentId,
-                                    priceId: Price?._id,
-                                  },
-                                },
-                                onLoading: loaders.onLoading('update'),
-                              })
-                            );
-                        },
-                      },
-                    ];
-                  }}
-                />
-              </FlexBox>
-            </InputLabel>
-            <InputLabel label={'Available discounts'}>
-              <FlexBox minHeight={'150px'} maxHeight={'250px'}>
-                <TableList
-                  tableData={discountsState.list}
-                  hasSearch={false}
-                  tableTitles={discountTableTitles}
-                  isLoading={loaders.isLoading?.discounts}
-                  actionsCreator={ctx => {
-                    const currentId = ctx.selectedRow?._id;
-                    return [
-                      {
-                        icon: 'refresh',
-                        onClick: () => {
-                          dispatch(
-                            getAllDiscountsThunk({
-                              onLoading: loaders.onLoading('all_discounts'),
-                            })
-                          );
-                        },
-                      },
-                      { separator: true },
-                      {
-                        icon: 'done',
-                        type: 'onlyIconOutlined',
-                        disabled: !currentId,
-                        onClick: () => {
-                          if (Price?._id && currentId) {
-                            dispatch(
-                              updatePriceThunk({
-                                onLoading: loaders.onLoading('update'),
-                                data: {
-                                  data: { _id: Price._id, data: { discounts: [{ _id: currentId }] } },
-                                },
-                              })
-                            );
-                          }
-                        },
-                      },
-                      { separator: true },
-                      {
-                        icon: 'plus',
-                        type: 'onlyIconFilled',
-                        onClick: () => {
-                          modalSrv.create(CreateDiscountModal, {
-                            priceId: Price?._id,
-                            onSuccess: d => {
-                              loaders.setData('discounts', p => {
-                                return [d, ...(p ?? [])];
-                              });
-                            },
-                          });
-                        },
-                      },
-                    ];
-                  }}
-                />
-              </FlexBox>
-            </InputLabel>
-          </AccordionFormArea>
+          <PriceDiscountsFormArea price={Price} />
         </FlexBox>
       </LoadersProvider>
     </ModalBase>
   );
 };
+
+export default CreatePriceModal;
 
 const discountTableTitles: CellTittleProps<PriceDiscountEntity>[] = [
   {
@@ -215,5 +100,115 @@ const discountTableTitles: CellTittleProps<PriceDiscountEntity>[] = [
     action: 'valueByPath',
   },
 ];
+//
+//
+// {/*<InputLabel label={'Added discounts'}>*/}
+// {/*  <FlexBox minHeight={'150px'} maxHeight={'250px'}>*/}
+// {/*    <TableList*/}
+// {/*      tableData={Price?.discounts}*/}
+// {/*      hasSearch={false}*/}
+// {/*      tableTitles={discountTableTitles}*/}
+// {/*      actionsCreator={ctx => {*/}
+// {/*        const currentId = ctx.selectedRow?._id;*/}
+//
+// {/*        return [*/}
+// {/*          {*/}
+// {/*            icon: 'refresh',*/}
+// {/*            disabled: !Price?._id,*/}
+// {/*            onClick: () => {*/}
+// {/*              Price?._id &&*/}
+// {/*              dispatch(*/}
+// {/*                getAllDiscountsThunk({*/}
+// {/*                  data: { params: { priceId: Price?._id } },*/}
+// {/*                  onLoading: loaders.onLoading('discounts'),*/}
+// {/*                })*/}
+// {/*              );*/}
+// {/*            },*/}
+// {/*          },*/}
+// {/*          { separator: true },*/}
+// {/*          {*/}
+// {/*            icon: 'delete',*/}
+// {/*            type: 'onlyIconFilled',*/}
+// {/*            disabled: !currentId || !Price?._id,*/}
+// {/*            onClick: () => {*/}
+// {/*              Price?._id &&*/}
+// {/*              currentId &&*/}
+// {/*              dispatch(*/}
+// {/*                removeDiscountThunk({*/}
+// {/*                  data: {*/}
+// {/*                    data: {*/}
+// {/*                      discountId: currentId,*/}
+// {/*                      priceId: Price?._id,*/}
+// {/*                    },*/}
+// {/*                  },*/}
+// {/*                  onLoading: loaders.onLoading('update'),*/}
+// {/*                })*/}
+// {/*              );*/}
+// {/*            },*/}
+// {/*          },*/}
+// {/*        ];*/}
+// {/*      }}*/}
+// {/*    />*/}
+// {/*  </FlexBox>*/}
+// {/*</InputLabel>*/}
 
-export default CreatePriceModal;
+// <FlexBox fxDirection={'row'} gap={8}>
+//   <InputLabel label={'Available discounts'}>
+//     <FlexBox minHeight={'150px'} maxHeight={'250px'}>
+//       <TableList
+//         tableData={availableDiscounts}
+//         hasSearch={false}
+//         tableTitles={discountTableTitles}
+//         isLoading={loaders.isLoading?.discounts}
+//         actionsCreator={ctx => {
+//           const currentId = ctx.selectedRow?._id;
+//           return [
+//             {
+//               icon: 'refresh',
+//               onClick: () => {
+//                 dispatch(
+//                   getAllDiscountsThunk({
+//                     onLoading: loaders.onLoading('all_discounts'),
+//                   })
+//                 );
+//               },
+//             },
+//             { separator: true },
+//             {
+//               icon: 'done',
+//               type: 'onlyIconOutlined',
+//               disabled: !currentId,
+//               onClick: () => {
+//                 if (Price?._id && currentId) {
+//                   dispatch(
+//                     updatePriceThunk({
+//                       onLoading: loaders.onLoading('update'),
+//                       data: {
+//                         data: { _id: Price._id, data: { discounts: [{ _id: currentId }] } },
+//                       },
+//                     })
+//                   );
+//                 }
+//               },
+//             },
+//             { separator: true },
+//             {
+//               icon: 'plus',
+//               type: 'onlyIconFilled',
+//               onClick: () => {
+//                 modalSrv.create(CreateDiscountModal, {
+//                   priceId: Price?._id,
+//                   onSuccess: d => {
+//                     loaders.setData('discounts', p => {
+//                       return [d, ...(p ?? [])];
+//                     });
+//                   },
+//                 });
+//               },
+//             },
+//           ];
+//         }}
+//       />
+//     </FlexBox>
+//   </InputLabel>
+// </FlexBox>

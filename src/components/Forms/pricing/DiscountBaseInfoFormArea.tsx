@@ -12,7 +12,7 @@ import ButtonsGroup, { ButtonGroupSelectHandler } from '../../atoms/ButtonsGroup
 import { t } from 'lang';
 import { UUID } from '../../../types/utils.types';
 import { useAppDispatch } from '../../../redux/store.store';
-import { createDiscountThunk } from '../../../redux/priceManagement/discounts/discounts.thunks';
+import { createDiscountThunk, updateDiscountThunk } from '../../../redux/priceManagement/discounts/discounts.thunks';
 import { DiscountFilters } from '../../../data/priceManagement.data';
 import FlexBox from '../../atoms/FlexBox';
 import { useLoadersProvider } from '../../../Providers/Loaders/LoaderProvider';
@@ -34,7 +34,7 @@ export interface AddDiscountFormAreaProps extends AccordionFormProps {
   discount?: PriceDiscountEntity;
 }
 
-export function AddDiscountFormArea({ discount, onSuccess, priceId, ...props }: AddDiscountFormAreaProps) {
+export function DiscountBaseInfoFormArea({ discount, onSuccess, priceId, ...props }: AddDiscountFormAreaProps) {
   // const Discount = useCurrentDiscount(discount);
   const loaders = useLoadersProvider<'discount' | 'create' | 'update' | 'current'>();
   const form = useAppFormProvider<CreateDiscountFormData>();
@@ -48,20 +48,32 @@ export function AddDiscountFormArea({ discount, onSuccess, priceId, ...props }: 
     };
   };
 
-  const onValid = (fData: PriceDiscountDto) => {
-    dispatch(
-      createDiscountThunk({
-        data: {
-          data: {
-            ...toReqData(omit(fData, ['cmsConfigs'])),
-          },
-        },
-        onLoading: loaders.onLoading('discount'),
-        onSuccess: ({ data }) => {
-          onSuccess && onSuccess(data);
-        },
-      })
-    );
+  const onValid = (fData: CreateDiscountFormData) => {
+    !fData._id
+      ? dispatch(
+          createDiscountThunk({
+            data: {
+              data: {
+                ...toReqData(omit(fData, ['cmsConfigs'])),
+              },
+            },
+            onLoading: loaders.onLoading('discount'),
+            onSuccess: ({ data }) => {
+              onSuccess && onSuccess(data);
+            },
+          })
+        )
+      : dispatch(
+          updateDiscountThunk({
+            data: {
+              data: { ...toReqData(omit(fData, ['cmsConfigs'])), _id: fData._id },
+            },
+            onLoading: loaders.onLoading('discount'),
+            onSuccess: ({ data }) => {
+              onSuccess && onSuccess(data);
+            },
+          })
+        );
   };
 
   return (
@@ -105,6 +117,7 @@ export function AddDiscountFormArea({ discount, onSuccess, priceId, ...props }: 
         <InputLabel label={t('Value')} error={form.formState?.errors?.value} required>
           <InputText
             type={'number'}
+            align={'center'}
             required
             step={0.01}
             min={0.01}
@@ -113,25 +126,34 @@ export function AddDiscountFormArea({ discount, onSuccess, priceId, ...props }: 
         </InputLabel>
 
         <InputLabel label={t('Discount threshold')} error={form.formState?.errors?.threshold}>
-          <InputText type={'number'} step={0.01} min={0.01} {...register('threshold', { valueAsNumber: true })} />
+          <InputText
+            align={'center'}
+            type={'number'}
+            step={0.01}
+            min={0.01}
+            {...register('threshold', { valueAsNumber: true })}
+          />
         </InputLabel>
 
         <InputLabel label={t('Discount limit')} error={form.formState?.errors?.limit}>
-          <InputText type={'number'} step={0.01} min={0.01} {...register('limit', { valueAsNumber: true })} />
+          <InputText
+            align={'center'}
+            type={'number'}
+            step={0.01}
+            min={0.01}
+            {...register('limit', { valueAsNumber: true })}
+          />
         </InputLabel>
       </FlexBox>
 
-      {!!(formValues.threshold || formValues.limit) && (
-        <>
-          <InputLabel label={t('Discount volume type')}>
-            <ButtonsGroup
-              value={formValues.volumeType}
-              onSelect={registerOnSelect('volumeType')}
-              options={DiscountFilters.VolumeType}
-            />
-          </InputLabel>
-        </>
-      )}
+      <InputLabel label={t('Discount target volume')} helperText={t('Від якої суми буде вираховуватись')}>
+        <ButtonsGroup
+          value={formValues.targetVolume}
+          onSelect={registerOnSelect('targetVolume')}
+          options={DiscountFilters.TargetVolume}
+        />
+      </InputLabel>
+
       {!!formValues.threshold && (
         <>
           <InputLabel label={t('Discount threshold type')} error={form.formState?.errors?.thresholdType}>
@@ -154,6 +176,16 @@ export function AddDiscountFormArea({ discount, onSuccess, priceId, ...props }: 
             />
           </InputLabel>
         </>
+      )}
+
+      {!!formValues.threshold && !!formValues.limit && (
+        <InputLabel label={t('Discount source volume')}>
+          <ButtonsGroup
+            value={formValues.sourceVolume}
+            onSelect={registerOnSelect('sourceVolume')}
+            options={DiscountFilters.SourceVolume}
+          />
+        </InputLabel>
       )}
 
       <InputLabel label={t('Label')} error={form.formState?.errors?.label}>

@@ -3,7 +3,7 @@ import { PriceDiscountEntity } from '../../types/price-management/discounts';
 import { useAppForm, useCurrentDiscount } from '../../hooks';
 import ModalBase from '../atoms/Modal';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
-import { AddDiscountFormArea, CreateDiscountFormData } from '../Forms/pricing/AddDiscountFormArea';
+import { CreateDiscountFormData, DiscountBaseInfoFormArea } from '../Forms/pricing/DiscountBaseInfoFormArea';
 import { AccordionForm } from '../atoms/FormArea/AccordionForm';
 import InputLabel from '../atoms/Inputs/InputLabel';
 import InputText from '../atoms/Inputs/InputText';
@@ -13,6 +13,7 @@ import { useAppDispatch } from '../../redux/store.store';
 import { updateDiscountThunk } from '../../redux/priceManagement/discounts/discounts.thunks';
 import { toReqData } from '../../utils';
 import { omit } from 'lodash';
+import { t } from '../../lang';
 
 export interface CreateDiscountModalProps extends CreatedModal {
   priceId?: string;
@@ -42,10 +43,10 @@ export const CreateDiscountModal = ({ onSuccess, priceId, offerId, discount }: C
   const dispatch = useAppDispatch();
 
   return (
-    <ModalBase title={'Discount'} fillHeight>
+    <ModalBase title={`Discount ${Discount ? `(${t('edit')})` : ''}`} fillHeight>
       <LoadersProvider value={loaders}>
         <AppFormProvider value={form}>
-          <AddDiscountFormArea discount={Discount} onSuccess={onSuccess} />
+          <DiscountBaseInfoFormArea discount={Discount} onSuccess={onSuccess} />
 
           <AccordionForm
             label={'Cms'}
@@ -56,7 +57,7 @@ export const CreateDiscountModal = ({ onSuccess, priceId, offerId, discount }: C
                 dispatch(
                   updateDiscountThunk({
                     data: {
-                      data: { _id: id, dto: toReqData({ cmsConfigs: fData.cmsConfigs }) },
+                      data: { ...toReqData({ cmsConfigs: fData.cmsConfigs }), _id: id },
                     },
                   })
                 );

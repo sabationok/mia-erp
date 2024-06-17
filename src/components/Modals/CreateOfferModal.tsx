@@ -16,6 +16,7 @@ import { OfferFormCategoriesArea } from '../Forms/offers/categories/OfferFormCat
 import { OfferLoadersData, OfferLoadersKey } from '../Forms/offers/types';
 import { OfferPriceFormArea } from '../Forms/pricing/OfferPriceFormArea';
 import OfferTagsFormArea from '../Forms/offers/OfferTagsFormArea';
+import PriceDiscountsFormArea from '../Forms/pricing/PriceDiscountsFormArea';
 
 export interface CreateOfferModalProps extends ModalFormProps {
   _id: string;
@@ -56,18 +57,20 @@ const CreateOfferModal: React.FC<CreateOfferModalProps> = ({ onClose, _id }) => 
 
           {Offer && (
             <>
-              <OfferFormCategoriesArea offer={Offer} defaultValues={formData?.categories} disabled={!formData} />
+              <OfferFormCategoriesArea offer={Offer} defaultValues={formData?.categoriesIds} disabled={!formData} />
 
-              <OfferFormPropertiesArea offer={Offer} defaultValues={formData?.properties} disabled={!formData} />
+              <OfferFormPropertiesArea offer={Offer} defaultValues={formData?.propertiesIds} disabled={!formData} />
 
               <OfferPriceFormArea
-                expandable={true}
+                expandable={!!Offer}
                 isOpen={false}
                 offer={Offer}
                 defaultState={Offer?.price}
                 price={Offer?.price}
                 title={t('Price')}
               />
+
+              {Offer?.price && <PriceDiscountsFormArea price={Offer?.price} />}
 
               <OfferFormImagesArea offer={Offer} defaultValues={formData?.images} disabled={!formData} />
 

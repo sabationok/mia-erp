@@ -34,6 +34,32 @@ export interface FlexBaseProps
   fillHeight?: boolean;
 
   isActive?: boolean;
+
+  $display?: Property.Display;
+  $flex?: Property.Flex;
+  $flexWrap?: Property.FlexWrap;
+  $fxDirection?: Property.FlexDirection;
+  $alignItems?: Property.AlignItems;
+  $justifyContent?: Property.JustifyContent;
+  $alignSelf?: Property.AlignSelf;
+  $gap?: number;
+
+  $maxWidth?: Property.Width;
+  $maxHeight?: Property.Width;
+  $minWidth?: Property.Width;
+  $minHeight?: Property.Width;
+  width?: Property.Width;
+  height?: Property.Height;
+  $padding?: Property.Padding;
+  margin?: Property.Margin;
+  $fillWidth?: boolean;
+  $fillHeight?: boolean;
+
+  $borderBottom?: Property.BorderBottom;
+  $borderRadius?: Property.BorderRadius;
+  $border?: Property.Border;
+  $background?: Property.Background;
+  overflow?: Property.Overflow;
 }
 
 export interface FlexBoxProps extends FlexBaseProps {
