@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkmia_erp=self.webpackChunkmia_erp||[]).push([[495],{8495:function(n,i,t){t.d(i,{SI:function(){return h},VU:function(){return a}});var e,r,u,o=t(168),c=t(2360),a=(0,c.iv)(e||(e=(0,o.Z)(["\n  grid-column: 1/13;\n  grid-row: 1/13;\n"]))),h=(0,c.iv)(r||(r=(0,o.Z)(["\n  width: 100%;\n  height: 100%;\n"])));(0,c.iv)(u||(u=(0,o.Z)(["\n  outline: 1px solid tomato;\n"])))}}]);
-//# sourceMappingURL=495.4cfee2f7.chunk.js.map

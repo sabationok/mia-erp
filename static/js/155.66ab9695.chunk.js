@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkmia_erp=self.webpackChunkmia_erp||[]).push([[155],{155:function(n,e,i){i.r(e);var t,r=i(168),a=(i(2791),i(2360)),s=i(3329),c=a.ZP.div(t||(t=(0,r.Z)(["\n  display: flex;\n  align-items: center;\n  justify-content: center;\n\n  font-size: 18px;\n  line-height: 1.2;\n  letter-spacing: 0.07em;\n\n  margin: 8px auto;\n\n  box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);\n\n  width: 80%;\n  height: 50%;\n  \n"])));e.default=function(){return(0,s.jsx)(c,{children:(0,s.jsx)("p",{children:"Error!"})})}}}]);
-//# sourceMappingURL=155.66ab9695.chunk.js.map
