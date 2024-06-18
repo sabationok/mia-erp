@@ -69,7 +69,7 @@ const InputIntegrationsList = ({
         // ),
       };
     });
-  }, [active, list, onDelete, onEdit, onSetAsDefault]);
+  }, [checkIsActive, list, onDelete, onEdit, onSetAsDefault]);
 
   return (
     <FlexBox fillWidth overflow={'auto'}>
