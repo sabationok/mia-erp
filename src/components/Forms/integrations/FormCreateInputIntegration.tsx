@@ -83,7 +83,8 @@ const FormCreateInputIntegration: React.FC<FormCreateInputIntegrationProps> = ({
             type={'date'}
             {...form.register('expireAt', {
               setValueAs: d => {
-                return new Date(d).toISOString();
+                console.log('new Date(d).toISOString', d);
+                return d ? new Date(d).toISOString() : d;
               },
             })}
           />

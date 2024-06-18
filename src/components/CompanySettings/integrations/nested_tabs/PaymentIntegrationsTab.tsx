@@ -15,6 +15,8 @@ import { usePaymentsSelector } from 'redux/selectors.store';
 import { useAppServiceProvider } from 'hooks/useAppServices.hook';
 import { AppModuleName } from 'redux/reduxTypes.types';
 import InputIntegrationsList from '../../components/InputIntegrationsList';
+import { apiCall, ExtServicesApi, IntegrationsApi } from '../../../../api';
+import { useLoaders } from '../../../../Providers/Loaders/useLoaders.hook';
 
 export interface PaymentIntegrationsTabProps extends IntegrationTabProps {}
 
@@ -27,10 +29,15 @@ const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
   ...props
 }) => {
   const service = useAppServiceProvider()[AppModuleName.integrations];
+  const loaders = useLoaders<'activate' | 'getAll' | 'delete'>({
+    activate: { content: t('Activating') + '...' },
+    getAll: { content: t('Refreshing') + '...' },
+    delete: { content: t('Deleting') + '...' },
+  });
   const [integrationsList, setIntegrationsList] = useState<InputIntegrationBase[]>([]);
   const modalS = useModalService();
   const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);
-  const checkoutMethods = useTranslatedMethodsList(usePaymentsSelector().methods);
+  const methodsList = useTranslatedMethodsList(usePaymentsSelector().methods);
   const handleToggleListVisibility = () => setIsListVisible(p => !p);
 
   const onOpenModalPress = () => {
@@ -46,7 +53,7 @@ const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
   };
 
   const renderPaymentMethods = useMemo(() => {
-    const methods = checkoutMethods.filter(m => {
+    const methods = methodsList.filter(m => {
       return m.service?._id === currentServiceData?._id;
     });
 
@@ -57,11 +64,12 @@ const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
         </FlexBox>
       );
     });
-  }, [currentServiceData?._id, checkoutMethods]);
+  }, [currentServiceData?._id, methodsList]);
 
   useEffect(() => {
     currentServiceData &&
       service.getAll({
+        onLoading: loaders.onLoading('getAll'),
         data: {
           type: 'input',
           serviceId: currentServiceData._id,
@@ -71,6 +79,7 @@ const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
           setIntegrationsList(data);
         },
       });
+    // eslint-disable-next-line
   }, [currentServiceData, service]);
 
   return (
@@ -112,9 +121,32 @@ const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
 
         <InputIntegrationsList
           list={integrationsList}
+          checkIsActive={data => {
+            return data._id === currentServiceData?.defIntegration?._id;
+          }}
           onEdit={() => {}}
-          onSetAsDefault={() => {}}
-          onDelete={() => {}}
+          onSetAsDefault={data => {
+            if (!currentServiceData?._id) return;
+
+            apiCall(ExtServicesApi.setDefaultInput, {
+              onLoading: loaders.onLoading('activate'),
+              data: {
+                serviceId: currentServiceData?._id,
+                inputId: data._id,
+              },
+            });
+          }}
+          onDelete={data => {
+            apiCall(IntegrationsApi.remove, {
+              onLoading: loaders.onLoading('delete'),
+              data: { id: data._id, type: 'input' },
+              onSuccess: res => {
+                setIntegrationsList(prev => {
+                  return prev.filter(pr => pr._id !== data._id);
+                });
+              },
+            });
+          }}
           active={currentServiceData?.defIntegration}
         />
       </FlexBox>

@@ -21,6 +21,6 @@ export default class ExtServicesApi {
     serviceId: string;
     inputId: string;
   }): Promise<AppResponse<ExtServiceBase[]>> => {
-    return this.api.get(this.endpoints.setDefaultInput(data?.serviceId, data?.inputId));
+    return this.api.patch(this.endpoints.setDefaultInput(data?.serviceId, data?.inputId));
   };
 }

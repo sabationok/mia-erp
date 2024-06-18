@@ -10,14 +10,23 @@ export interface InputIntegrationsListProps {
   onDelete?: (info: InputIntegrationBase) => void;
   onEdit?: (info: InputIntegrationBase) => void;
   active?: InputIntegrationBase;
+  checkIsActive?: (data: InputIntegrationBase) => boolean;
 }
 
-const InputIntegrationsList = ({ list, onSetAsDefault, onDelete, onEdit, active }: InputIntegrationsListProps) => {
+const InputIntegrationsList = ({
+  list,
+  onSetAsDefault,
+  onDelete,
+  checkIsActive,
+  onEdit,
+  active,
+}: InputIntegrationsListProps) => {
   const preparedList = useMemo((): IAccordionOptionProps[] => {
     return list.map((opt: InputIntegrationBase): IAccordionOptionProps => {
+      const isActive = checkIsActive && checkIsActive(opt);
       return {
         title: opt.label ?? '',
-        isActive: active ? active._id === opt._id : false,
+        isActive: isActive,
         ChildrenComponent: () => (
           <IntegrationOverview
             {...{
@@ -25,7 +34,7 @@ const InputIntegrationsList = ({ list, onSetAsDefault, onDelete, onEdit, active 
               onSetAsDefaultPress: () => onSetAsDefault && onSetAsDefault(opt),
               onDeletePress: () => onDelete && onDelete(opt),
               onEditPress: () => onEdit && onEdit(opt),
-              isDefault: active ? active._id === opt._id : false,
+              isDefault: isActive,
             }}
           />
         ),
