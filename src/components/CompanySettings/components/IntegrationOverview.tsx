@@ -35,7 +35,7 @@ const IntegrationOverview = ({
   ];
 
   return (
-    <Card fillWidth>
+    <Card fillWidth gap={12}>
       <FlexBox flex={1} padding={'4px 0'} gap={8}>
         {rows.map(
           info =>

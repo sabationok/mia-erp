@@ -38,6 +38,7 @@ const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
   const modalS = useModalService();
   const [isListVisible, setIsListVisible] = useState(infoVisible ?? false);
   const methodsList = useTranslatedMethodsList(usePaymentsSelector().methods);
+  const [activeId, setActiveId] = useState<string | undefined>(currentServiceData?.defIntegration?._id);
   const handleToggleListVisibility = () => setIsListVisible(p => !p);
 
   const onOpenModalPress = () => {
@@ -122,14 +123,14 @@ const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
         <InputIntegrationsList
           list={integrationsList}
           checkIsActive={data => {
-            return data._id === currentServiceData?.defIntegration?._id;
+            return data._id === activeId;
           }}
-          onEdit={() => {}}
           onSetAsDefault={data => {
             if (!currentServiceData?._id) return;
 
             apiCall(ExtServicesApi.setDefaultInput, {
               onLoading: loaders.onLoading('activate'),
+              onSuccess: () => setActiveId(data._id),
               data: {
                 serviceId: currentServiceData?._id,
                 inputId: data._id,
@@ -137,6 +138,8 @@ const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
             });
           }}
           onDelete={data => {
+            if (!window.confirm(`Delete integration: "${data.label}" ?`)) return;
+
             apiCall(IntegrationsApi.remove, {
               onLoading: loaders.onLoading('delete'),
               data: { id: data._id, type: 'input' },

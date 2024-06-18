@@ -33,7 +33,7 @@ const InputIntegrationsList = ({
               info: opt,
               onSetAsDefaultPress: () => onSetAsDefault && onSetAsDefault(opt),
               onDeletePress: () => onDelete && onDelete(opt),
-              onEditPress: () => onEdit && onEdit(opt),
+              onEditPress: !onEdit ? undefined : () => onEdit && onEdit(opt),
               isDefault: isActive,
             }}
           />
