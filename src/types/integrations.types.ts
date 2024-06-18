@@ -3,7 +3,7 @@ import { LangPack } from '../lang';
 import { CompanyEntity } from './companies.types';
 import { AppQueryParams } from '../api';
 import { HasBaseCmsConfigs } from './cms.types';
-import { HasCompany, HasDisabledAttributes, HasEmbeddedType, HasLabel, HasType, MaybeNull } from './utils.types';
+import { HasCompany, HasDisabledAttributes, HasEmbeddedType, HasLabel, HasType, MaybeNull, UUID } from './utils.types';
 import { IBankAccount } from './finances/bank-accounts.types';
 
 export enum IntegrationTypeEnum {
@@ -97,9 +97,18 @@ export interface InputIntegrationBase extends IBase, HasLabel, HasCompany, HasTy
 
   apiKey?: string; // !
   secret?: string; // !
-  hasSecret?: boolean;
+
+  publicKey?: string; // !
+  privateKey?: string; // !
+
+  publicKeyMask?: string; // !
+  privateKeyMask?: string; // !
+
+  // hasSecret?: boolean;
   expireAt?: string | Date;
+
   login?: string;
+  password?: string;
 
   description?: string;
 }
@@ -109,15 +118,27 @@ export interface OutputIntegrationBase extends InputIntegrationBase {
 }
 
 export interface IntegrationBaseDto {
-  expireAt?: string | Date | number;
+  expireAt?: string;
   label?: string;
   description?: string;
+  redirectBaseUrl?: string;
 }
 
-export interface CreateIntegrationFormData extends Partial<Omit<IntegrationBaseDto, 'service'>> {
+export interface IntegrationFormData extends Partial<Omit<IntegrationBaseDto, 'service'>>, Partial<OnlyUUID> {
   apiKey?: string;
   secret?: string;
+
+  publicKey?: string;
+  privateKey?: string;
+
   login?: string;
+  password?: string;
+
+  serviceId?: UUID;
+  warehouseId?: UUID;
+  finAccountId?: UUID;
+
+  setAsDefault?: boolean;
 
   service?: IFormDataValueWithID;
   warehouse?: IFormDataValueWithID;
@@ -127,11 +148,16 @@ export interface CreateIntegrationFormData extends Partial<Omit<IntegrationBaseD
 export interface InputIntegrationDto extends IntegrationBaseDto {
   apiKey?: string;
   secret?: string;
-  login?: string;
 
-  service?: OnlyUUID;
-  warehouse?: OnlyUUID;
-  finCount?: OnlyUUID;
+  login?: string;
+  password?: string;
+
+  publicKey?: string;
+  privateKey?: string;
+
+  serviceId?: UUID;
+  warehouseId?: UUID;
+  finAccountId?: UUID;
 }
 
 export interface CreateOutputIntegrationFormData
@@ -143,6 +169,12 @@ export interface CreateOutputIntegrationFormData
 export interface OutputIntegrationDto extends IntegrationBaseDto {
   role?: OnlyUUID;
   service?: OnlyUUID;
+
+  roleId?: UUID;
+  serviceId?: UUID;
+
+  setAsDefault?: boolean;
+
   chatIds?: ChatIds;
 }
 
@@ -161,7 +193,7 @@ export interface ExtDeliveryService extends ExtServiceBase {
 export interface ServiceMethodBase<
   InternalType extends string = any,
   ExternalType extends string = any,
-  Service extends ExtServiceBase = any
+  Service extends ExtServiceBase = any,
 > extends IBase,
     HasLabel,
     HasEmbeddedType<InternalType, ExternalType>,

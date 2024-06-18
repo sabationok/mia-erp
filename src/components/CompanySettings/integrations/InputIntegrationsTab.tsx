@@ -1,7 +1,7 @@
 import { ReactElement, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import _ from 'lodash';
-import { enumToFilterOptions } from '../../../utils/fabrics';
+import { enumToFilterOptions } from '../../../utils';
 import { ExternalServiceTypeEnum, ExtServiceBase } from '../../../types/integrations.types';
 import PaymentIntegrationsTab from './nested_tabs/PaymentIntegrationsTab';
 import DeliveryIntegrationsTab from './nested_tabs/DeliveryIntegrationsTab';

@@ -248,7 +248,7 @@ const ordersEndpoints = {
   getOrderById: (orderId?: string) => `${API_BASE_ROUTES.ORDERS}/order/${orderId}`,
   getGroupById: (groupId?: string) => `${API_BASE_ROUTES.ORDERS}/group/${groupId}`,
   create: () => `${API_BASE_ROUTES.ORDERS}/create`,
-
+  getOne: () => `${API_BASE_ROUTES.ORDERS}/one`,
   slots: {
     getList: () => `${API_BASE_ROUTES.ORDERS}/slots/getList`,
     update: () => ``,
@@ -256,7 +256,6 @@ const ordersEndpoints = {
     delete: () => ``,
   },
 
-  getSlots: () => `${API_BASE_ROUTES.ORDERS}/slots`,
   updateById: (orderId: string) => `${API_BASE_ROUTES.ORDERS}/${Endpoints.updateById}/${orderId}`,
   createGroupedByWarehouse: () => `${API_BASE_ROUTES.ORDERS}/create/group/byWarehouses`,
 };
@@ -337,6 +336,8 @@ const extServices = {
   getById: (id?: string) => `${API_BASE_ROUTES.EXT_SERVICES}/service/getById/${id}`,
   updateService: () => `${API_BASE_ROUTES.EXT_SERVICES}/service/update`,
   getList: () => `${API_BASE_ROUTES.EXT_SERVICES}/getAll`,
+  setDefaultInput: (serviceId?: string, inputId?: string) =>
+    `${API_BASE_ROUTES.EXT_SERVICES}/setDefaultInput/${serviceId}/${inputId}`,
 
   createInputInt: () => `${API_BASE_ROUTES.EXT_SERVICES}/${Endpoints.integrations}/input/create`,
   createOutputInt: () => `${API_BASE_ROUTES.EXT_SERVICES}/${Endpoints.integrations}/output/create`,
@@ -350,6 +351,7 @@ const integrations = {
   getById: (id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/${id}`,
   create: (type?: IntegrationType) => `${API_BASE_ROUTES.INTEGRATIONS}/create/${type}`,
   update: (type?: IntegrationType, id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/update/${type}/${id}`,
+  delete: (type?: IntegrationType, id?: string) => `${API_BASE_ROUTES.INTEGRATIONS}/${type}/${id}`,
 };
 
 const tags = {

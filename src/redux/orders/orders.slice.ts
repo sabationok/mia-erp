@@ -102,9 +102,7 @@ export const ordersSlice = createSlice({
         s.ordersGroupFormData = { ...initialOrdersGroupFormData };
       })
       .addCase(getOrderByIdThunk.fulfilled, (S, A) => {
-        if (A.payload.refreshCurrent) {
-          S.currentOrder = A.payload.data;
-        }
+        S.currentOrder = A.payload.data;
       })
       .addCase(getOrderSlotsThunk.fulfilled, (s, a) => {
         if (!s.currentOrder) return;

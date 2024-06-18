@@ -5,7 +5,7 @@ import SearchParamInput from './SearchParamInput';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { TableSearchParam } from '../../tableTypes.types';
+import { TableSearchParam, TableSortOrderEnum, TableSortParam } from '../../tableTypes.types';
 import { FlexForm } from '../../../atoms/FlexBox';
 
 export interface TableSearchProps<Param extends TableSearchParam = any> {
@@ -15,6 +15,11 @@ export interface TableSearchProps<Param extends TableSearchParam = any> {
 
 export interface TableSearchFormState<Param extends TableSearchParam = TableSearchParam> {
   search: string;
+  param: Param;
+}
+
+export interface TableSortFormState<Param extends TableSortParam = TableSortParam> {
+  order: TableSortOrderEnum;
   param: Param;
 }
 

@@ -108,7 +108,7 @@ export const offersTableColumns: CellTittleProps<OfferEntity>[] = [
   datesColumn(),
 ];
 
-export function deletesStatusColumn<Data extends IBase = any>(): CellTittleProps<Data> {
+export function deletedStatusColumn<Data extends IBase = any>(): CellTittleProps<Data> {
   return {
     top: { name: t('Deleted status'), align: 'center', path: 'updatedAt' },
     bottom: { name: 'Створено', align: 'center', path: 'createdAt' },
@@ -144,9 +144,9 @@ const OfferSortPaths = [
   'variations.deletedAt',
   'variations.updatedAt',
   'variations.createdAt',
-];
+] as const;
 
-export type OfferSortParam = TableSortParam<Values<typeof OfferSortPaths>>;
+export type OfferSortParam = TableSortParam<Values<typeof OfferSortPaths> | string>;
 export const offersSortParams: OfferSortParam[] = [
   { dataPath: 'sku', label: 'SKU' },
   { dataPath: 'label', label: t('Label') },
@@ -158,12 +158,12 @@ export const offersSortParams: OfferSortParam[] = [
   { dataPath: 'updatedAt', label: t('Updated at') },
   { dataPath: 'deletedAt', label: t('Deleted at') },
 
-  { dataPath: 'brand.label', label: t('Created at') },
+  { dataPath: 'brand.label', label: t('Brand label') },
   { dataPath: 'warehouse.code', label: t('Warehouse code') },
   { dataPath: 'warehouse.label', label: t('Warehouse label') },
 ];
 
-export type OfferSearchParam = TableSearchParam<Values<typeof OfferSortPaths>>;
+export type OfferSearchParam = TableSearchParam<Values<typeof OfferSortPaths> | string>;
 export const offersSearchParams: OfferSearchParam[] = [
   { dataPath: 'sku', label: 'SKU' },
   { dataPath: 'label', label: t('Label') },

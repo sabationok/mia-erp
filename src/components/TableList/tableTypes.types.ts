@@ -31,23 +31,24 @@ export interface SelectItemBase extends Record<string, any> {
 
 export interface SelectItem extends SelectItemBase {}
 
-export interface TableSearchParam<DataPath = any, DataKey = any, DataType = any> {
+export interface TableSelectParamBase<DataPath = any, DataKey = any, DataType = any> {
   _id?: string;
   id?: string;
   label?: string;
   dataKey?: DataKey;
   dataPath?: DataPath;
-  isArray?: boolean;
   isManual?: boolean;
+  data?: DataType[];
+}
+
+export interface TableSearchParam<DataPath = any, DataKey = any, DataType = any>
+  extends TableSelectParamBase<DataPath, DataKey, DataType> {
+  isArray?: boolean;
+
   callback?: (data: DataType, param: TableSearchParam<DataPath, DataKey>) => boolean;
 }
-export interface TableSortParam<DataPath = any, DataKey = any, DataType = any> {
-  _id?: string;
-  id?: string;
-  label?: string;
-  dataKey?: DataKey;
-  dataPath?: DataPath;
-  isManual?: boolean;
+export interface TableSortParam<DataPath = any, DataKey = any, DataType = any>
+  extends TableSelectParamBase<DataPath, DataKey, DataType> {
   callback?: (data: DataType, param: TableSortParam<DataPath, DataKey>) => boolean;
 }
 

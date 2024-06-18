@@ -27,6 +27,7 @@ export interface GetAllOffersQuery
   type?: OfferTypeEnum;
   approved?: OfferStatusEnum;
   visible?: boolean;
+  isVisible?: boolean;
   createdAt?: DatePeriodQuery;
   updatedAt?: DatePeriodQuery;
   deletedAt?: DatePeriodQuery;

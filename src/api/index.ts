@@ -2,6 +2,7 @@ import { ApiDirType } from '../redux/APP_CONFIGS';
 import { FilterReturnDataType } from '../components/Filter/AppFilter';
 import { AppDate, ArrayOfUUID, Keys, OnlyUUID, PartialRecord, UUID, Values } from '../types/utils.types';
 import { CompanyQueryTypeEnum } from 'types/companies.types';
+import { TableSortOrderEnum } from '../components/TableList/tableTypes.types';
 
 export * from './client.api';
 export { default as TransactionsApi } from './transactions.api';
@@ -164,6 +165,7 @@ export interface AppQueryParams<Type = any> extends AppQueries<Type>, Pagination
   depth?: number;
   isSelectable?: boolean;
   sortParams?: ApiQuerySortParams;
+  sortOrder?: TableSortOrderEnum;
   search?: string;
   searchBy?: string;
   searchRef?: string;

@@ -1,9 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { IOrderReqData, OrderEntity } from '../../types/orders/orders.types';
-import { ThunkArgs } from '../store.store';
-import { AppQueryParams, createApiCall, OrdersApi } from '../../api';
-import { axiosErrorCheck } from '../../utils';
-import { OnlyUUID } from '../app-redux.types';
+import { OrdersApi } from '../../api';
 import { buildGetAllInvoicesThunk } from '../invoices/invoicing.thunks';
 import { buildGetAllDeliveriesThunk } from '../deliveries/deliveries.thunks';
 import { buildGetAllPaymentsThunk } from '../payments/payments.thunks';
@@ -17,72 +12,64 @@ enum OrdersThunkTypeEnum {
   getAllPayments = 'orders/getAllPaymentsByOrderThunk',
   getSlots = 'orders/getOrderSlotsThunk',
 }
-export const getAllOrdersThunk = createAsyncThunk<
-  { refresh?: boolean; data?: OrderEntity[] },
-  ThunkArgs<
-    {
-      refresh?: boolean;
-      query?: AppQueryParams;
-    },
-    OrderEntity[]
-  >
->(OrdersThunkTypeEnum.getAll, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
-  onLoading && onLoading(true);
 
-  try {
-    const response = await OrdersApi.getAll(data?.query);
+export enum OrdersThunkType {
+  addGroup = 'orders/addGroupThunk',
+  getListByQuery = 'orders/getListThunk',
+  getOneByQuery = 'orders/getOneThunk',
+  getOneById = 'orders/getOneByIdThunk',
+  getPaymentsList = 'orders/getPaymentsListThunk',
+  getDeliveryById = 'orders/getDeliveriesInfoThunk',
+  reject = 'orders/rejectThunk',
+  confirmReject = 'orders/confirmRejectThunk',
+  abortReject = 'orders/abortRejectThunk',
+}
 
-    onSuccess && onSuccess(response.data.data);
+export const addOrdersGroup = createAppAsyncThunk(OrdersThunkType.addGroup, OrdersApi.groups.createGroupedByWarehouse);
 
-    onLoading && onLoading(false);
-    return { data: response.data.data, refresh: data?.refresh };
-  } catch (error) {
-    onError && onError(error);
+export const getOrdersListByQueryThunk = createAppAsyncThunk(OrdersThunkType.getListByQuery, OrdersApi.getAll);
 
-    onLoading && onLoading(false);
-    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-  }
-});
+export const getOrderThunk = createAppAsyncThunk(OrdersThunkType.getOneByQuery, OrdersApi.getOne);
 
-export const createOrderThunk = createAsyncThunk<OrderEntity | undefined, ThunkArgs<IOrderReqData, OrderEntity>>(
-  OrdersThunkTypeEnum.createOne,
-  async (args, thunkApi) => {
-    try {
-      const res = await createApiCall(
-        {
-          ...args,
-          logRes: true,
-          throwError: true,
-        },
-        OrdersApi.createOne,
-        OrdersApi
-      );
+export const getOrderByIdThunk = createAppAsyncThunk(OrdersThunkType.getOneById, OrdersApi.getById);
+export const getAllOrdersThunk = createAppAsyncThunk(OrdersThunkTypeEnum.getAll, OrdersApi.getAll);
 
-      return res?.data.data;
-    } catch (error) {
-      return thunkApi.rejectWithValue(axiosErrorCheck(error));
-    }
-  }
-);
-export const getOrderByIdThunk = createAsyncThunk<
-  { data: OrderEntity; refreshCurrent?: boolean },
-  ThunkArgs<OnlyUUID & { params?: { fullInfo?: boolean }; options?: { refreshCurrent?: boolean } }, OrderEntity>
->('orders/getOrderByIdThunk', async (args, thunkApi) => {
-  args?.onLoading && args?.onLoading(true);
-  try {
-    const res = await OrdersApi.getById(args.data);
-    if (res && args?.onSuccess) {
-      args.onSuccess(res.data?.data, res?.data?.meta);
-    }
-
-    return { ...res?.data, ...args.data?.options };
-  } catch (error) {
-    return thunkApi.rejectWithValue(axiosErrorCheck(error));
-  } finally {
-    args?.onLoading && args?.onLoading(false);
-  }
-});
 export const getOrderSlotsThunk = createAppAsyncThunk(OrdersThunkTypeEnum.getSlots, OrdersApi.slots.getAll);
 export const getAllInvoicesByOrderThunk = buildGetAllInvoicesThunk(OrdersThunkTypeEnum.getAllInvoices);
 export const getAllDeliveriesByOrderThunk = buildGetAllDeliveriesThunk(OrdersThunkTypeEnum.getAllDeliveries);
 export const getAllPaymentsByOrderThunk = buildGetAllPaymentsThunk(OrdersThunkTypeEnum.getAllPayments);
+
+// export const softRemoveOrderThunk = createAppAsyncThunk(
+//   OrdersThunkType.getPaymentsList,
+//   OrdersApi.softRemoveOrder
+//   // (...args: Parameters<(typeof OrdersApi)['softRemoveOrder']>) =>
+//   //   OrdersApi.softRemoveOrder(...args)
+// );
+
+// export const rejectOrderThunk = createAppAsyncThunk(
+//   OrdersThunkType.reject,
+//   OrdersApi.rejectOrder
+//   //  async (data?: { _id: string }) => {
+//   //    return axios(`/api/reject-order/${data?._id}`, {
+//   //      url: `/api/reject-order/${data?._id}`,
+//   //      params: {
+//   //        orderId: data?._id,
+//   //      },
+//   //    });
+//   //  }
+// );
+
+// export const confirmRejectOrderThunk = createAppAsyncThunk(
+//   OrdersThunkType.confirmReject,
+//   OrdersApi.rejectConfirm
+//
+//   // ! not delete (...args: Parameters<(typeof OrdersApi)['rejectConfirm']>) =>
+//   // ! not delete   OrdersApi.rejectConfirm(...args)
+// );
+
+// export const abortRejectOrderThunk = createAppAsyncThunk(
+//   OrdersThunkType.abortReject,
+//   OrdersApi.rejectAbort
+//   //   (...args: Parameters<(typeof OrdersApi)['rejectAbort']>) =>
+//   //     OrdersApi.rejectAbort(...args)
+// );

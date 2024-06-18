@@ -244,6 +244,10 @@ export const langUa = {
   Label: 'Назва',
   'Bar-code': 'Штрих-код',
 
+  'Warehouse code': 'Код складу',
+  'Warehouse label': 'Назва складу',
+  'Brand label': 'Назва бренду',
+
   Invoices: 'Інвойси',
   Invoice: 'Інвойс',
 

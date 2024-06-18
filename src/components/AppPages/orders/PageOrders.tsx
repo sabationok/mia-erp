@@ -5,18 +5,30 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ITableListProps } from '../../TableList/tableTypes.types';
 import AppGridPage from '../AppGridPage';
 import { useOrdersSelector } from '../../../redux/selectors.store';
-import { ApiQuerySortParams } from '../../../api';
-import { FilterReturnDataType } from '../../Filter/AppFilter';
-import { ordersSearchParams, ordersTableColumns } from '../../../data';
+import { GetAllOffersQuery } from '../../../api';
+import {
+  OrdersSearchParam,
+  ordersSearchParams,
+  OrdersSortParam,
+  ordersSortParams,
+  ordersTableColumns,
+} from '../../../data';
 import { OrderEntity, OrderStatusEnum } from '../../../types/orders/orders.types';
 import useOrdersActionsCreatorHook from '../../../hooks/useOrdersActionsCreator.hook';
 import { BaseAppPageProps } from '../index';
-import { enumToFilterOptions } from '../../../utils';
+import { enumToFilterOptions, setValueByPath } from '../../../utils';
 import TabSelector, { FilterOption } from '../../atoms/TabSelector';
 import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
+import {
+  TableSearchFormState,
+  TableSortFormState,
+} from '../../TableList/TableOverHead/TableSearchForm/TableSearchForm';
+import { isString } from 'lodash';
+import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
+import { useAppRouter } from '../../../hooks';
 
 interface Props extends BaseAppPageProps {}
 const ordersFilterOptions = enumToFilterOptions(OrderStatusEnum);
@@ -75,7 +87,7 @@ const PageOrders: React.FC<any> = (props: Props) => {
         />
 
         <FlexBox fillWidth flex={1} overflow={'hidden'}>
-          <TableList {...tableConfig} isLoading={isLoading} />
+          <TableList {...tableConfig} isLoading={isLoading.orders} />
         </FlexBox>
       </Page>
     </AppGridPage>
@@ -89,47 +101,89 @@ const Page = styled(FlexBox)`
 export default PageOrders;
 
 export const useOrderTableConfigs = () => {
+  const loaders = useLoaders<'orders' | 'refresh' | 'order'>({
+    orders: { content: 'Refreshing...' },
+    refresh: { content: 'Refreshing...' },
+    order: { content: 'Refreshing...' },
+  });
+  const { onLoading, isLoading } = loaders;
   const { getAll } = useAppServiceProvider()[AppModuleName.orders];
   const state = useOrdersSelector();
   const actionsCreator = useOrdersActionsCreatorHook();
+
+  const router = useAppRouter<{ searchPath?: OrdersSearchParam['dataPath']; sortPath?: OrdersSortParam['dataPath'] }>();
+
   // const filterSelectors = useProductsFilterSelectorsHook();
-  const [isLoading, setIsLoading] = useState(false);
-  const [sortParams, setSortParams] = useState<ApiQuerySortParams>();
-  const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
+  const [sortParams, setSortParams] = useState<TableSortFormState<OrdersSearchParam>>();
+  const [searchParams, setSearchParams] = useState<TableSearchFormState<OrdersSortParam>>();
 
   const tableConfig = useMemo(
     (): ITableListProps<OrderEntity> => ({
       tableData: state.orders,
       tableTitles: ordersTableColumns,
-      sortParams: ordersSearchParams.filter(el => el.sort),
-      hasFilter: true,
+      sortParams: ordersSearchParams,
+      searchParams: ordersSortParams,
+      hasFilter: false,
       hasSearch: true,
       showFooter: true,
       checkBoxes: true,
       actionsCreator,
-      onFilterSubmit: filterParams => {
-        setFilterParams(filterParams);
-        getAll({ data: { refresh: true, query: { filterParams, sortParams } }, onLoading: setIsLoading }).then();
+
+      onSubmitSearch: data => {
+        if (data.search) {
+          const params: GetAllOffersQuery = {};
+          const path = data.param?.dataPath;
+          router.push({
+            query: {
+              search: data.search,
+              searchPath: path,
+            },
+          });
+
+          if (path && data.search) {
+            if (isString(path)) setValueByPath(path, data.search, params, { mutation: true });
+          }
+
+          setSearchParams(data);
+
+          getAll({
+            params,
+            onLoading: onLoading('orders'),
+          }).then();
+        } else {
+          getAll({
+            onLoading: onLoading('orders'),
+          }).then();
+        }
       },
-      onTableSortChange: (param, sortOrder) => {
-        setSortParams({ sortPath: param.dataPath, sortOrder });
+
+      onTableSortChange: (param, order) => {
+        setSortParams({ param, order });
+
+        router.push({
+          query: {
+            sortPath: param.dataPath,
+            sortOrder: order,
+          },
+        });
+
         getAll({
-          data: { refresh: true, query: { sortParams: { sortPath: param.dataPath, sortOrder }, filterParams } },
-          onLoading: setIsLoading,
+          params: {
+            sortOrder: order,
+            sortPath: param.dataPath,
+          },
+
+          onLoading: onLoading('orders'),
         }).then();
       },
     }),
-    [actionsCreator, filterParams, getAll, sortParams, state.orders]
+    [actionsCreator, getAll, onLoading, router, state.orders]
   );
 
   useEffect(() => {
-    if (sortParams || filterParams) {
-      return;
-    }
-
     getAll({
       data: { refresh: true },
-      onLoading: setIsLoading,
+      onLoading: onLoading('orders'),
     });
 
     // eslint-disable-next-line
@@ -139,6 +193,6 @@ export const useOrderTableConfigs = () => {
     tableConfig,
     isLoading,
     sortParams,
-    filterParams,
+    searchParams,
   };
 };

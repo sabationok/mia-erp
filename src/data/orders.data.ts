@@ -2,11 +2,12 @@ import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
 import { OrderEntity, OrderStatusEnum } from '../types/orders/orders.types';
 import { IOrderTempSlot, OrderSlotEntity } from '../types/orders/order-slot.types';
 import { t } from '../lang';
-import { SelectItem } from '../components/TableList/tableTypes.types';
+import { TableSearchParam, TableSortParam } from '../components/TableList/tableTypes.types';
 import { FilterOption } from '../components/atoms/TabSelector';
 import { getStatusesByEnum } from './statuses.data';
 import { getBasePriceColumns } from './priceManagement.data';
 import { toPrice } from '../utils/numbers';
+import { Values } from '../types/utils.types';
 
 const createdDateColumn: CellTittleProps = {
   top: { name: t('updated'), align: 'center', path: 'updatedAt' },
@@ -183,51 +184,6 @@ export const ordersTableColumns: CellTittleProps<OrderEntity>[] = [
   createdDateColumn,
 ];
 
-export const ordersSearchParams: SelectItem[] = [
-  {
-    label: 'Дата',
-    dataPath: 'eventDate',
-    filter: false,
-    search: false,
-    sort: true,
-  },
-  { label: 'Мітка', dataPath: 'mark.label', filter: false, search: true, sort: true },
-  {
-    label: 'Статус',
-    dataPath: 'status',
-    filter: false,
-    search: false,
-    sort: true,
-  },
-  {
-    label: t('type'),
-    dataPath: 'type',
-    filter: false,
-    search: true,
-    sort: true,
-  },
-  {
-    label: t('amount'),
-    dataPath: 'total',
-    filter: false,
-    search: true,
-    sort: true,
-  },
-  {
-    label: 'Оновлено',
-    dataPath: 'createdAt',
-    filter: false,
-    search: false,
-    sort: true,
-  },
-  {
-    label: 'Створено',
-    dataPath: 'updatedAt',
-    filter: false,
-    search: false,
-    sort: true,
-  },
-];
 const extraKeys: ('cashback' | 'bonus' | 'discount')[] = ['cashback', 'bonus', 'discount'];
 function getTempOrderSlotColumns(): CellTittleProps<OrderSlotEntity>[] {
   return extraKeys.map(key => {
@@ -272,3 +228,95 @@ export const orderSlotsTableColumns: CellTittleProps<OrderSlotEntity>[] = [
 
 export const tempOrderSlotTableColumns: CellTittleProps<IOrderTempSlot>[] =
   orderSlotsTableColumns as CellTittleProps<IOrderTempSlot>[];
+
+const OrdersAllowedPaths = [
+  'manager.email',
+  'manager.code',
+
+  'managers.email',
+  'managers.code',
+
+  'customer.email',
+  'customer.phone',
+  'customer.name.first',
+  'customer.name.second',
+  'customer.reference',
+
+  'receiver.email',
+  'receiver.phone',
+  'receiver.name.first',
+  'receiver.name.second',
+  'receiver.reference',
+
+  'barCode',
+  'reference.internal',
+  'reference.external',
+
+  'group.reference.internal',
+  'group.reference.external',
+
+  'status',
+  'deletedAt',
+  'updatedAt',
+  'createdAt',
+
+  'warehouse.label',
+  'warehouse.code',
+
+  // 'variations.label',
+  // 'variations.barCode',
+  // 'variations.sku',
+  // 'variations.price.out',
+  // 'variations.deletedAt',
+  // 'variations.updatedAt',
+  // 'variations.createdAt',
+] as const;
+
+export type OrdersSortParam = TableSortParam<Values<typeof OrdersAllowedPaths>>;
+export const ordersSortParams: OrdersSortParam[] = [
+  { dataPath: 'reference.internal', label: t('Reference / Internal') },
+  { dataPath: 'reference.external', label: t('Reference / External') },
+
+  { dataPath: 'group.reference.internal', label: t('Reference / Internal') + ` / ${t('Group').toLowerCase()}` },
+  { dataPath: 'group.reference.external', label: t('Reference / External') + ` / ${t('Group').toLowerCase()}` },
+
+  { dataPath: 'barCode', label: t('Bar-code') },
+  { dataPath: 'status', label: t('Status') },
+
+  { dataPath: 'manager.email', label: t('Manager email') },
+  { dataPath: 'manager.code', label: t('Manager code') },
+  { dataPath: 'managers.email', label: t('Any managers email') },
+  { dataPath: 'managers.code', label: t('Any managers code') },
+
+  { dataPath: 'customer.email', label: t('Customer email') },
+  { dataPath: 'customer.phone', label: t('Customer phone') },
+  { dataPath: 'customer.name.first', label: t('Customer first name') },
+  { dataPath: 'customer.name.second', label: t('Customer second name') },
+  { dataPath: 'customer.reference', label: t('Customer reference') },
+
+  { dataPath: 'receiver.email', label: t('Customer email') },
+  { dataPath: 'receiver.phone', label: t('Customer phone') },
+  { dataPath: 'receiver.name.first', label: t('Customer first name') },
+  { dataPath: 'receiver.name.second', label: t('Customer second name') },
+  { dataPath: 'receiver.reference', label: t('Customer reference') },
+
+  { dataPath: 'warehouse.code', label: t('Warehouse code') },
+  { dataPath: 'warehouse.label', label: t('Warehouse label') },
+
+  { dataPath: 'createdAt', label: t('Created at') },
+  { dataPath: 'updatedAt', label: t('Updated at') },
+  { dataPath: 'deletedAt', label: t('Deleted at') },
+];
+
+export type OrdersSearchParam = TableSearchParam<Values<typeof OrdersAllowedPaths>>;
+export const ordersSearchParams: OrdersSearchParam[] = [
+  { dataPath: 'reference.internal', label: t('Reference / Internal') },
+  { dataPath: 'reference.external', label: t('Reference / External') },
+  { dataPath: 'barCode', label: t('Bar-code') },
+  { dataPath: 'warehouse.code', label: t('Warehouse code') },
+  { dataPath: 'warehouse.label', label: t('Warehouse label') },
+  { dataPath: 'manager.email', label: t('Manager email') },
+  { dataPath: 'manager.code', label: t('Manager code') },
+  { dataPath: 'managers.email', label: t('Any managers email') },
+  { dataPath: 'managers.code', label: t('Any managers code') },
+];

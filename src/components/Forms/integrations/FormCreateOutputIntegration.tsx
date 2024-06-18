@@ -6,9 +6,9 @@ import { t } from '../../../lang';
 import InputText from '../../atoms/Inputs/InputText';
 import {
   ChatIds,
-  CreateIntegrationFormData,
   CreateOutputIntegrationFormData,
   ExtServiceBase,
+  IntegrationFormData,
   OutputIntegrationBase,
 } from '../../../types/integrations.types';
 import FlexBox from '../../atoms/FlexBox';
@@ -20,7 +20,7 @@ import ButtonIcon from '../../atoms/ButtonIcon';
 import { Text } from '../../atoms/Text';
 
 export interface FormCreateOutputIntegrationProps extends Omit<ModalFormProps, 'onSubmit'> {
-  onSubmit?: AppSubmitHandler<CreateIntegrationFormData>;
+  onSubmit?: AppSubmitHandler<IntegrationFormData>;
   onSuccess?: (info: { data: OutputIntegrationBase }) => void;
   service?: ExtServiceBase;
 }
@@ -40,7 +40,7 @@ const FormCreateOutputIntegration: React.FC<FormCreateOutputIntegrationProps> = 
 
   const [isOpenChatIdInput, setIsOpenChatInput] = useState<Record<ChatProviderKey, boolean>>({ telegram: false });
 
-  const onValid = (data: CreateIntegrationFormData) => {
+  const onValid = (data: IntegrationFormData) => {
     intServ.createOutput({
       onSuccess: data => {
         console.log('Form Create OUTPUT Integration', data);

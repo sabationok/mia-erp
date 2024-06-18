@@ -2,7 +2,7 @@ import TableList from 'components/TableList/TableList';
 import { takeFullGridArea } from '../pagesStyles';
 import styled from 'styled-components';
 import { useEffect, useMemo, useState } from 'react';
-import { ITableListProps, TableSortOrderEnum } from '../../TableList/tableTypes.types';
+import { ITableListProps } from '../../TableList/tableTypes.types';
 import AppGridPage from '../AppGridPage';
 import { useOffersSelector } from '../../../redux/selectors.store';
 import { GetAllOffersQuery } from '../../../api';
@@ -18,11 +18,15 @@ import {
   offersTableColumns,
 } from '../../../data';
 import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
-import { TableSearchFormState } from '../../TableList/TableOverHead/TableSearchForm/TableSearchForm';
+import {
+  TableSearchFormState,
+  TableSortFormState,
+} from '../../TableList/TableOverHead/TableSearchForm/TableSearchForm';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { setValueByPath } from '../../../utils';
 import FlexBox from '../../atoms/FlexBox';
+import { isString } from 'lodash';
 
 interface Props extends BaseAppPageProps {}
 
@@ -49,7 +53,7 @@ export const useOffersTableSettings = ({
   sortState,
 }: {
   searchState?: TableSearchFormState<OfferSearchParam>;
-  sortState?: { param: OfferSortParam; order: TableSortOrderEnum };
+  sortState?: TableSortFormState<OfferSortParam>;
 }) => {
   const loaders = useLoaders<'offers' | 'refresh' | 'offer'>({
     offers: { content: 'Refreshing...' },
@@ -75,7 +79,7 @@ export const useOffersTableSettings = ({
 
           const path = data.param?.dataPath;
           if (path && data.search) {
-            setValueByPath(path, data.search, params, { mutation: true });
+            if (isString(path)) setValueByPath(path, data.search, params, { mutation: true });
           }
 
           setSearchParams(data);
@@ -103,8 +107,6 @@ export const useOffersTableSettings = ({
 
       onTableSortChange: (param, order) => {
         setSortParams({ param, order });
-
-        console.log({ param, order });
 
         getAll({
           params: {

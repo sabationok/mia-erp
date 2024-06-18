@@ -2,14 +2,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppParams, useAppQuery } from './index';
 import { AppQueryParams } from '../api';
 
-export const useAppRouter = <Query extends AppQueryParams = AppQueryParams, Hash extends string = any>() => {
+export const useAppRouter = <Query = any, Hash extends string = any>() => {
   const navTo = useNavigate();
   const location = useLocation();
   const params = useAppParams();
-  const { query, params: sp } = useAppQuery();
+  const { query, params: sp } = useAppQuery<Query & AppQueryParams>();
 
   const goBack = () => window.history.back();
-  //  _setSP
 
   const currentHash: Hash | undefined = (location.hash.replace('#', '') as Hash) || undefined;
 
@@ -20,7 +19,7 @@ export const useAppRouter = <Query extends AppQueryParams = AppQueryParams, Hash
     },
     query,
     queryToString: () => sp.toString(),
-    push: async ({ pathname, query, hash }: { pathname?: string; query?: Query; hash?: string }) => {
+    push: async ({ pathname, query, hash }: { pathname?: string; query?: Query & AppQueryParams; hash?: string }) => {
       try {
         navTo({
           pathname,
@@ -32,7 +31,15 @@ export const useAppRouter = <Query extends AppQueryParams = AppQueryParams, Hash
       }
     },
 
-    replace: async ({ pathname, query, hash }: { pathname?: string; query?: Query; hash?: string }) => {
+    replace: async ({
+      pathname,
+      query,
+      hash,
+    }: {
+      pathname?: string;
+      query?: Query & AppQueryParams;
+      hash?: string;
+    }) => {
       try {
         navTo(
           {

@@ -22,8 +22,8 @@
 //   return currentObj as Obj;
 // }
 
-export function setValueByPath<Obj extends Record<string, any> = Record<string, any>>(
-  path: string,
+export function setValueByPath<Obj extends Record<string, any> = Record<string, any>, Path extends string = string>(
+  path: Path,
   value: any,
   target?: Obj,
   options?: { separator?: string; mutation?: boolean }

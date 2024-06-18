@@ -27,7 +27,7 @@ const PriceDiscountsFormArea: React.FC<AccordionFormAreaProps & { offer?: OfferE
   offer,
   ...props
 }) => {
-  const Price = useCurrentPrice(price);
+  const Price = useCurrentPrice(price) || price || offer?.price;
 
   const dispatch = useAppDispatch();
   const state = usePriceDiscountsSelector();

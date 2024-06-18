@@ -9,41 +9,45 @@ import {
 import { AppResponse } from '../redux/app-redux.types';
 import { ClientApi } from './client.api';
 
-export interface GetAllIntegrationsQueries extends Pick<AppQueries, 'warehouseId' | 'serviceId'> {
+export type GetAllIntegrationsQueries = Partial<Pick<AppQueries, 'warehouseId' | 'serviceId'>> & {
   type: IntegrationType;
-}
-export default class ExtServicesApi {
+};
+export class ExtServicesApi {
   private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.integrations;
 
-  public static createInputIntegration(data?: {
+  public static createInputIntegration = (data?: {
     data: InputIntegrationDto;
-  }): Promise<AppResponse<InputIntegrationBase>> {
+  }): Promise<AppResponse<InputIntegrationBase>> => {
     return this.api.post(this.endpoints.create('input'), data?.data);
-  }
+  };
 
-  public static createOutputIntegration(data?: {
+  public static createOutputIntegration = (data?: {
     data: OutputIntegrationDto;
-  }): Promise<AppResponse<InputIntegrationBase>> {
-    return this.api.post(this.endpoints.create('output'), data?.data);
-  }
+    params: { setAsDefault?: boolean };
+  }): Promise<AppResponse<InputIntegrationBase>> => {
+    return this.api.post(this.endpoints.create('output'), data?.data, {
+      params: { setAsDefault: data?.data.setAsDefault ?? data?.params.setAsDefault },
+    });
+  };
 
-  public static updateOutputIntegration(data?: {
+  public static updateOutputIntegration = (data?: {
     data: OutputIntegrationDto;
-  }): Promise<AppResponse<InputIntegrationBase>> {
+  }): Promise<AppResponse<InputIntegrationBase>> => {
     return this.api.post(this.endpoints.create('output'), data?.data);
-  }
+  };
 
-  // public static getAllExtIntegrationServices(
-  //   params?: AppQueryParams<ExtServiceBase>
-  // ): Promise<AppResponse<ExtServiceBase[]>> {
-  //   console.log(params);
-  //   return this.api.get(this.endpoints.getAll(), { params });
-  // }
-
-  public static getAllByQueries(
+  public static getAllByQueries = (
     params?: GetAllIntegrationsQueries
-  ): Promise<AppResponse<(InputIntegrationBase | OutputIntegrationBase)[]>> {
+  ): Promise<AppResponse<(InputIntegrationBase | OutputIntegrationBase)[]>> => {
     return this.api.get(this.endpoints.getAll(params?.type), { params });
-  }
+  };
+
+  public static remove = (data?: {
+    type: 'input' | 'output' | undefined;
+    id: string | undefined;
+  }): Promise<AppResponse<{ result: boolean }>> => {
+    return this.api.delete(this.endpoints.delete(data?.type, data?.id));
+  };
 }
+export default ExtServicesApi;

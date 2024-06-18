@@ -53,7 +53,7 @@ const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
     return methods.map(m => {
       return (
         <FlexBox key={m._id} border={'1px solid lightgrey'} padding={'4px 6px'} borderRadius={'4px'}>
-          <Text $size={10}>{m.label}</Text>
+          <Text $size={13}>{m.label}</Text>
         </FlexBox>
       );
     });
@@ -62,7 +62,11 @@ const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
   useEffect(() => {
     currentServiceData &&
       service.getAll({
-        data: { type: 'input', ...toQueriesForReq({ service: getIdRef(currentServiceData) }) },
+        data: {
+          type: 'input',
+          serviceId: currentServiceData._id,
+          ...toQueriesForReq({ service: getIdRef(currentServiceData) }),
+        },
         onSuccess: data => {
           setIntegrationsList(data);
         },
@@ -72,29 +76,31 @@ const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
   return (
     <FlexBox fillWidth flex={1} overflow={'hidden'}>
       <List overflow={'hidden'} isVisible={isListVisible} fillWidth>
-        <Text $size={11} $weight={600} $margin={'4px 8px'}>
-          {t('Payment methods')}
-        </Text>
+        <FlexBox padding={'8px 0'}>
+          <Text $size={13} $weight={500} $margin={'4px 8px'}>
+            {t('Payment methods')}
+          </Text>
 
-        <FlexBox fxDirection={'row'} padding={'4px 2px'} flexWrap={'wrap'} gap={4} fillWidth>
-          {renderPaymentMethods}
+          <FlexBox fxDirection={'row'} padding={'4px 2px'} flexWrap={'wrap'} gap={4} fillWidth>
+            {renderPaymentMethods}
+          </FlexBox>
+
+          {/*<Text $size={11} $weight={600} $margin={'4px 8px'}>*/}
+          {/*  {t('Support')}*/}
+          {/*</Text>*/}
+
+          {/*<Text $size={16}>{t('+380 5632 55623')}</Text>*/}
+
+          {/*<Text $size={11} $weight={600} $margin={'4px 8px'}>*/}
+          {/*  {t('Url')}*/}
+          {/*</Text>*/}
+
+          {/*<Text $size={16}>{t('www.monobank.ua/contacts')}</Text>*/}
         </FlexBox>
-
-        {/*<Text $size={11} $weight={600} $margin={'4px 8px'}>*/}
-        {/*  {t('Support')}*/}
-        {/*</Text>*/}
-
-        {/*<Text $size={16}>{t('+380 5632 55623')}</Text>*/}
-
-        {/*<Text $size={11} $weight={600} $margin={'4px 8px'}>*/}
-        {/*  {t('Url')}*/}
-        {/*</Text>*/}
-
-        {/*<Text $size={16}>{t('www.monobank.ua/contacts')}</Text>*/}
       </List>
 
       <ButtonIcon
-        variant={'textExtraSmall'}
+        variant={'textSmall'}
         icon={isListVisible ? 'SmallArrowUp' : 'SmallArrowDown'}
         onClick={handleToggleListVisibility}
       >

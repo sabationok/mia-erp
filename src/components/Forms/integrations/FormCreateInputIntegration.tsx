@@ -1,20 +1,22 @@
 import ModalForm, { ModalFormProps } from '../../ModalForm';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
-import { useForm } from 'react-hook-form';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import { t } from '../../../lang';
 import InputText from '../../atoms/Inputs/InputText';
 import FlexBox from '../../atoms/FlexBox';
 import InputSecurityControlHOC from '../../atoms/Inputs/SecurityInputControlHOC';
-import { CreateIntegrationFormData, ExtServiceBase, InputIntegrationBase } from '../../../types/integrations.types';
-import { getIdRef } from '../../../utils/data-transform';
+import { ExtServiceBase, InputIntegrationBase, IntegrationFormData } from '../../../types/integrations.types';
 import { useAppServiceProvider } from '../../../hooks/useAppServices.hook';
 import { AppModuleName } from '../../../redux/reduxTypes.types';
 import { useState } from 'react';
 import ButtonSwitch from '../../atoms/ButtonSwitch';
+import { useAppForm } from '../../../hooks';
+import { toReqData } from '../../../utils';
+import { omit } from 'lodash';
 
-export interface FormCreateInputIntegrationProps extends Omit<ModalFormProps, 'onSubmit'> {
-  onSubmit?: AppSubmitHandler<CreateIntegrationFormData>;
+export interface FormCreateInputIntegrationProps
+  extends Omit<ModalFormProps<any, any, IntegrationFormData>, 'onSubmit'> {
+  onSubmit?: AppSubmitHandler<IntegrationFormData>;
   onSuccess?: (data: { data: InputIntegrationBase }) => void;
   service: ExtServiceBase;
 }
@@ -24,20 +26,27 @@ const FormCreateInputIntegration: React.FC<FormCreateInputIntegrationProps> = ({
   service,
   onSuccess,
   onClose,
+  defaultState,
   ...p
 }) => {
   const intServ = useAppServiceProvider()[AppModuleName.integrations];
-  const form = useForm<CreateIntegrationFormData>();
+  const form = useAppForm<IntegrationFormData>({
+    defaultValues: {
+      ...defaultState,
+      serviceId: service?._id,
+      setAsDefault: service.defIntegration?._id === defaultState?._id,
+    },
+  });
   const [loading, setLoading] = useState(false);
 
-  const onValid = (data: CreateIntegrationFormData) => {
+  const onValid = (data: IntegrationFormData) => {
     intServ.createInput({
       onSuccess: data => {
         onSuccess && onSuccess({ data });
         onClose && onClose();
       },
       onLoading: setLoading,
-      data: { data: { ...data, service: getIdRef(service) } },
+      data: { data: toReqData({ ...omit(data, ['service']), serviceId: service?._id }) },
     });
   };
 
@@ -59,25 +68,36 @@ const FormCreateInputIntegration: React.FC<FormCreateInputIntegrationProps> = ({
         {/*</InputLabel>*/}
 
         <InputLabel label={t('Public key')}>
-          <InputText placeholder={t('Public key')} {...form.register('apiKey')} />
+          <InputText placeholder={t('Public key')} {...form.register('publicKey')} />
         </InputLabel>
 
         <InputLabel label={t('Private key')}>
           <InputSecurityControlHOC
-            renderInput={p => <InputText placeholder={t('Private key')} {...p} {...form.register('secret')} />}
+            renderInput={p => <InputText placeholder={t('Private key')} {...p} {...form.register('privateKey')} />}
           />
         </InputLabel>
 
         <InputLabel label={t('Expire at')}>
-          <InputText placeholder={t('Expired at')} type={'date'} {...form.register('expireAt')} />
+          <InputText
+            placeholder={t('Expired at')}
+            type={'date'}
+            {...form.register('expireAt', {
+              setValueAs: d => {
+                return new Date(d).toISOString();
+              },
+            })}
+          />
         </InputLabel>
 
         <InputLabel label={t('Description')}>
           <InputText placeholder={t('Description')} {...form.register('description')} />
         </InputLabel>
 
-        <InputLabel label={t('Set as default')} disabled>
-          <ButtonSwitch disabled />
+        <InputLabel label={t('Set as default')}>
+          <ButtonSwitch
+            value={form.formValues.setAsDefault}
+            onChange={value => form.setValue('setAsDefault', value, { shouldDirty: true, shouldTouch: true })}
+          />
         </InputLabel>
       </FlexBox>
     </ModalForm>
