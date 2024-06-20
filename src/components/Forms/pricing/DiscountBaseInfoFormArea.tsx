@@ -178,18 +178,12 @@ export function DiscountBaseInfoFormArea({ discount, onSuccess, priceId, ...prop
         </>
       )}
 
-      {!!formValues.threshold && !!formValues.limit && (
-        <InputLabel label={t('Discount source volume')}>
-          <ButtonsGroup
-            value={formValues.sourceVolume}
-            onSelect={registerOnSelect('sourceVolume')}
-            options={DiscountFilters.SourceVolume}
-          />
-        </InputLabel>
-      )}
-
       <InputLabel label={t('Label')} error={form.formState?.errors?.label}>
         <InputText {...register('label')} />
+      </InputLabel>
+
+      <InputLabel label={t('Promo code')} error={form.formState?.errors?.promoCode} disabled>
+        <InputText {...register('promoCode')} disabled />
       </InputLabel>
     </AccordionForm>
   );

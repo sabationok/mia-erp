@@ -62,6 +62,8 @@ interface IDiscountBase extends HasType<PriceDiscountType>, HasBaseCmsConfigs {
   timeFrom?: string;
   timeTo?: string;
 
+  promoCode?: string;
+
   balanceType?: PriceBonusProviderEnum;
 
   volumeType?: PriceDiscountSourceVolumeType;
