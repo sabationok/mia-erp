@@ -95,16 +95,21 @@ export interface HasBarCode {
   barCode?: MaybeNull<string>;
 }
 
+type PermissionShortType = IBase & {
+  user?: IBase & HasEmbeddedName & HasEmbeddedLabel & { email?: string };
+  customer?: IBase & HasEmbeddedName & HasEmbeddedLabel & { email?: string };
+  integration?: IBase & { label?: string };
+};
 export interface HasAuthor {
-  author?: MaybeNull<IBase & { user?: IBase & { name?: string; email?: string } }>;
+  author?: MaybeNull<PermissionShortType>;
 }
 
 export interface HasEditor {
-  editor?: MaybeNull<IBase & { user?: IBase & { name?: string; email?: string } }>;
+  editor?: MaybeNull<PermissionShortType>;
 }
 
 export interface HasManager {
-  manager?: MaybeNull<IBase & { user?: IBase & { name?: string; email?: string } }>;
+  manager?: MaybeNull<PermissionShortType>;
 }
 
 export interface HasCompany extends IBase, HasOwnerAsCompany, HasAuthor, HasEditor {}

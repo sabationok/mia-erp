@@ -28,6 +28,7 @@ export enum API_BASE_ROUTES {
   COUNTERPARTIES = '/counterparties',
   EXT_SERVICES = '/ext-services',
   INTEGRATIONS = '/integrations',
+  TRACK_LINKS = 'tracking-links',
 }
 
 export enum Endpoints {
@@ -362,6 +363,14 @@ const tags = {
   getOne: () => `${API_BASE_ROUTES.TAGS}/one`,
 };
 
+const tracking = {
+  links: {
+    create: () => `${API_BASE_ROUTES.TRACK_LINKS}/create`,
+    getAll: () => `${API_BASE_ROUTES.TRACK_LINKS}/getAll`,
+    track: () => `${API_BASE_ROUTES.TRACK_LINKS}/track`,
+  },
+};
+
 const APP_CONFIGS = {
   endpoints: {
     appSettings,
@@ -387,6 +396,7 @@ const APP_CONFIGS = {
     refunds,
     integrations,
     tags,
+    tracking,
   },
 };
 

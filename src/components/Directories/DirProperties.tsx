@@ -192,6 +192,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
         onLoading: loaders.onLoading('getAll'),
       })
     );
+    // eslint-disable-next-line
   }, [currentData, dispatch]);
 
   const onAddNewHandler = () => {

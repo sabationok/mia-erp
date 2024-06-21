@@ -13,12 +13,14 @@ import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
 import { OfferOverlayLoaderKey } from '../../Overlays/FormOfferDefaultsOverlay';
 import { LoadersProvider } from '../../../Providers/Loaders/LoaderProvider';
 import { DrawerHeader } from '../../Overlays';
+import { LinksTab } from './tabs/LinksTab';
 
 enum RightSideOptionEnum {
   Prices = 'Prices',
   Variations = 'Variations',
   Warehousing = 'Warehousing',
   Sales = 'Sales',
+  Links = 'Links',
 }
 const TabsList = enumToFilterOptions(RightSideOptionEnum);
 
@@ -42,6 +44,7 @@ const OfferOverviewPageRightSide: React.FC<OfferOverviewPageRightSideProps> = ({
       [RightSideOptionEnum.Warehousing]: <WarehousingTab withActions />,
       [RightSideOptionEnum.Prices]: <PricesTab withActions />,
       [RightSideOptionEnum.Sales]: <SalesTab withActions />,
+      [RightSideOptionEnum.Links]: <LinksTab withActions />,
     };
     return currentTab ? tabs?.[currentTab] ?? null : null;
   }, [currentTab, page.currentOffer]);

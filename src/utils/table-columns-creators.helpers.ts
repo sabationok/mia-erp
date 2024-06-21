@@ -1,5 +1,5 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { HasAuthor, IBase, WithPeriod } from '../types/utils.types';
+import { HasAuthor, HasEditor, IBase, WithPeriod } from '../types/utils.types';
 import { t } from '../lang';
 
 export const buildTableColumnCreator = <TData>(column: CellTittleProps<TData>) => {
@@ -12,8 +12,29 @@ export const createDateColumn = buildTableColumnCreator<Partial<IBase>>({
   action: 'dateDbl',
 });
 export const createAuthorColumn = buildTableColumnCreator<Partial<HasAuthor>>({
-  top: { name: t('Author'), getData: rd => rd.author?.user?.email },
-  bottom: { name: t('email'), path: 'author.email' },
+  top: { name: t('Author'), getData: rd => rd.author?.user?.email || rd.author?.user?.email || rd.author?.user?.email },
+  bottom: {
+    name: t('Permission holder'),
+    getData: rd =>
+      (rd.author?.user && 'user') ||
+      (rd.author?.customer && 'customer') ||
+      (rd.author?.integration && 'integration') ||
+      '---',
+  },
+  width: '150px',
+  action: 'valueByPath',
+});
+
+export const createEditorColumn = buildTableColumnCreator<Partial<HasEditor>>({
+  top: { name: t('Editor'), getData: rd => rd.editor?.user?.email || rd.editor?.user?.email || rd.editor?.user?.email },
+  bottom: {
+    name: t('Permission holder'),
+    getData: rd =>
+      (rd.editor?.user && 'user') ||
+      (rd.editor?.customer && 'customer') ||
+      (rd.editor?.integration && 'integration') ||
+      '---',
+  },
   width: '150px',
   action: 'valueByPath',
 });
