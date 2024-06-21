@@ -104,27 +104,10 @@ const PriceDiscountsFormArea: React.FC<AccordionFormAreaProps & { offer?: OfferE
       label={'Select discounts'}
       onSubmit={handleSubmit}
       isOpen={false}
-    >
-      <FlexBox fxDirection={'row'} padding={'8px'} gap={8} justifyContent={'space-between'}>
-        <ButtonIcon
-          sizeType={'extraSmall'}
-          variant={'text'}
-          isLoading={loaders.isLoading.discounts}
-          onClick={() => {
-            dispatch(
-              getAllDiscountsThunk({
-                onLoading: loaders.onLoading('discounts'),
-              })
-            );
-          }}
-        >
-          {t('Refresh')}
-        </ButtonIcon>
-
-        <ButtonIcon
-          sizeType={'extraSmall'}
-          variant={'text'}
-          onClick={() => {
+      actions={[
+        {
+          title: 'Add new',
+          onPress: () => {
             modalSrv.create(CreateDiscountModal, {
               priceId: Price?._id,
               onSuccess: d => {
@@ -133,12 +116,21 @@ const PriceDiscountsFormArea: React.FC<AccordionFormAreaProps & { offer?: OfferE
                 });
               },
             });
-          }}
-        >
-          {t('Add')}
-        </ButtonIcon>
-      </FlexBox>
-
+          },
+        },
+        {
+          title: 'Refresh',
+          onPress: () => {
+            dispatch(
+              getAllDiscountsThunk({
+                onLoading: loaders.onLoading('discounts'),
+              })
+            );
+          },
+        },
+        { title: 'Delete', danger: true, disabled: true },
+      ]}
+    >
       <FlexBox overflow={'auto'}>
         <FlexBox gap={8} fxDirection={'row'} width={'max-content'} padding={'8px'}>
           {state.list?.map(item => {

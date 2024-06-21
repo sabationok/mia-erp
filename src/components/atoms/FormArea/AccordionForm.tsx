@@ -7,6 +7,7 @@ import ButtonIcon from '../ButtonIcon';
 import styled, { css, useTheme } from 'styled-components';
 import { Property } from 'csstype';
 import { LangTextKey, t } from '../../../lang';
+import ActionsDropdown, { ActionsDropDownProps } from '../ActionsDropdown';
 
 export interface AccordionFormAreaProps {
   children?: React.ReactNode;
@@ -32,7 +33,9 @@ export interface AccordionFormAreaProps {
   maxHeight?: Property.MaxHeight;
 
   formId?: string;
+  actions?: ActionsDropDownProps['actions'];
 }
+
 export interface AccordionFormProps extends AccordionFormAreaProps {
   onSubmit?: React.FormEventHandler;
   onReset?: () => void;
@@ -79,6 +82,7 @@ export const AccordionFormArea = ({
   canSubmit = true,
   maxHeight,
   formId,
+  actions,
 }: AccordionFormAreaProps) => {
   const [_isOpen, _setIsOpen] = useState(isOpen);
   const theme = useTheme();
@@ -123,9 +127,30 @@ export const AccordionFormArea = ({
         </Header>
       )}
 
-      <ExpandableBox disabled={disabled} flex={1} isActive={_isOpen} maxHeight={maxHeight} maxWidth={'100%'}>
+      <ExpandableBox
+        className={'ExpandableBox'}
+        disabled={disabled}
+        flex={1}
+        isActive={_isOpen}
+        maxHeight={maxHeight}
+        maxWidth={'100%'}
+      >
         {_isOpen ? (
           <>
+            {actions && (
+              <FlexBox
+                borderBottom={`1px solid ${theme.modalBorderColor}`}
+                alignItems={'center'}
+                fxDirection={'row'}
+                justifyContent={'flex-end'}
+                gap={8}
+                padding={'8px 0'}
+                margin={'0 8px'}
+              >
+                <ActionsDropdown actions={actions} />
+              </FlexBox>
+            )}
+
             <FlexBox flex={1} maxWidth={'100%'} overflow={'hidden'} padding={'8px'}>
               {children}
             </FlexBox>

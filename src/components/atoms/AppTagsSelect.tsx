@@ -12,10 +12,10 @@ import { TagEntity } from '../../types/tags.types';
 import TagButtonsFilter, { TagButtonsFilterProps } from './TagButtonsFilter';
 import { useAppDispatch } from '../../redux/store.store';
 import { getAllTagsThunk } from '../../redux/tags/tags.thunks';
-import ButtonIcon from './ButtonIcon';
 import { useTheme } from 'styled-components';
 import { useModalService } from '../../Providers/ModalProvider/ModalProvider';
 import FormTags from '../Modals/FormTags';
+import ActionsDropdown from './ActionsDropdown';
 
 type FilterData = {
   type: Values<typeof TagTypeEnum>;
@@ -83,17 +83,11 @@ export const AppTagsSelect = ({
       <FlexBox
         fxDirection={'row'}
         gap={8}
-        padding={'0 0 8px'}
+        padding={'0 8px 8px'}
         borderBottom={`1px solid ${theme.modalBorderColor}`}
         justifyContent={'flex-end'}
       >
-        {/*<ButtonIcon variant={'filled'} sizeType={'extraSmall'} disabled isLoading={loaders.isLoading.delete} danger>*/}
-        {/*  {t('Delete')}*/}
-        {/*</ButtonIcon>*/}
-
-        <ButtonIcon variant={'text'} sizeType={'extraSmall'} onClick={onCreateNewPress}>
-          {t('Add')}
-        </ButtonIcon>
+        <ActionsDropdown actions={[{ title: t('Create'), onPress: onCreateNewPress }]} />
       </FlexBox>
 
       {!hideFilter && (

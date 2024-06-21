@@ -1,6 +1,6 @@
 import React, { CSSProperties, forwardRef, memo } from 'react';
 import { IconIdType } from 'img/sprite';
-import styled, { css, DefaultTheme, FlattenInterpolation, ThemeProps } from 'styled-components';
+import styled, { css, DefaultTheme, RuleSet } from 'styled-components';
 import { Property } from 'csstype';
 import { AppLoaderSpiner } from './AppLoaderSpiner';
 import { Keys } from '../../types/utils.types';
@@ -29,7 +29,7 @@ export interface ButtonIconsProps {
 }
 export type ButtonDangerLevel = Keys<Pick<typeof ActionColorName, 'error' | 'warning'>>;
 interface ButtonProps extends ButtonStyleProps, React.ButtonHTMLAttributes<HTMLButtonElement> {
-  size?: `${string}px` | `${string}%`;
+  size?: `${string}${'px' | '%'}`;
   sizeType?: ButtonSize;
 
   colorSchema?: IAccentColor;
@@ -572,11 +572,11 @@ const buttonSizeCss = {
 export type ButtonIconVariant = Keys<typeof variants>;
 export type ButtonSize = Keys<typeof buttonSizeCss>;
 
-function getVariant(variant?: ButtonIconVariant): FlattenInterpolation<ThemeProps<DefaultTheme>> {
+function getVariant(variant?: ButtonIconVariant): RuleSet<object> {
   return variant ? variants?.[variant] : variants.def;
 }
 
-function getSize(size?: ButtonSize | null): FlattenInterpolation<ThemeProps<DefaultTheme>> | undefined {
+function getSize(size?: ButtonSize | null): RuleSet<object> | undefined {
   return size ? buttonSizeCss?.[size] : undefined;
 }
 

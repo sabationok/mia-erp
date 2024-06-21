@@ -33,6 +33,8 @@ export * from './setValueByPath.helper';
 export * from './createOrderTempSlot.helper';
 export * from './toSerializableObj.helper';
 
+export * from './table-columns-creators.helpers';
+
 export {
   founder,
   founderByDataPath,

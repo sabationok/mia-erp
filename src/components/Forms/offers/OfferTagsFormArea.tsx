@@ -15,7 +15,7 @@ type OfferField = OfferFullFormData['tagsIds'] | OfferFullFormData['tags'];
 export interface OfferTagsFormAreaProps extends OfferFormAreaProps<OfferField> {
   onSelect?: (id: string) => void;
   onChange?: (ids: string[]) => void;
-  onSuccess?: (data: OfferEntity) => void;
+  onSuccess?: (data: { data: OfferEntity }) => void;
 }
 
 const OfferTagsFormArea = ({ disabled, offer }: OfferTagsFormAreaProps) => {

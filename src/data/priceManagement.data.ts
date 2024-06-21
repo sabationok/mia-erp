@@ -8,12 +8,13 @@ import {
 } from '../types/price-management/price-management.types';
 import { priceAmountAndPercentageFieldsLabels } from '../utils/tables';
 import { toPrice } from '../utils/numbers';
-import { enumToFilterOptions } from '../utils';
+import { createDateColumn, enumToFilterOptions } from '../utils';
 import {
   DiscountLimitTypeEnum,
   DiscountThresholdTypeEnum,
   DiscountValueTypeEnum,
   PriceBonusProviderEnum,
+  PriceDiscountEntity,
   PriceDiscountSourceVolumeType,
   PriceDiscountTargetVolumeType,
   PriceDiscountType,
@@ -53,12 +54,6 @@ export const DiscountFilters = {
   TargetVolume: PriceDiscountTargetVolumeTypeOptions,
 };
 
-const dateColumn: CellTittleProps = {
-  top: { name: t('Updated'), align: 'center', getData: d => d?.createdAt },
-  bottom: { name: t('Created'), align: 'center', getData: d => d?.updatedAt },
-  width: '170px',
-  action: 'dateDbl',
-};
 export const priceListColumns: CellTittleProps<PriceListEntity>[] = [
   {
     top: { name: t('label'), path: 'label' },
@@ -104,7 +99,7 @@ export const priceListColumns: CellTittleProps<PriceListEntity>[] = [
     width: '250px',
     action: 'valueByPath',
   },
-  dateColumn,
+  createDateColumn(),
 ];
 
 export function createColumnForPriceEntity<Type extends PriceEntity = any>(
@@ -202,13 +197,7 @@ export const pricesColumns: CellTittleProps<PriceEntity>[] = [
     action: 'valueByPath',
   },
 
-  {
-    top: { name: t('Author'), path: 'author.name' },
-    bottom: { name: t('email'), path: 'author.email' },
-    width: '150px',
-    action: 'valueByPath',
-  },
-  dateColumn,
+  createDateColumn(),
 ];
 
 export const pricesColumnsForProductReview: CellTittleProps<PriceEntity>[] = [
@@ -248,5 +237,46 @@ export const pricesColumnsForProductReview: CellTittleProps<PriceEntity>[] = [
     action: 'dateDbl',
   },
 
-  dateColumn,
+  createDateColumn(),
+];
+
+export const discountTableTitles: CellTittleProps<PriceDiscountEntity>[] = [
+  {
+    top: { name: 'Type', getData: d => d.type },
+    bottom: { name: 'Bonus balance', getData: d => d.balanceType },
+    width: '125px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Value', align: 'end', getData: d => d.value },
+    bottom: { name: 'Value type', getData: d => d.valueType },
+    width: '125px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Threshold', align: 'end', getData: d => d.threshold },
+    bottom: { name: 'Threshold type', getData: d => d.thresholdType },
+    width: '125px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Limit', align: 'end', getData: d => d.limit },
+    bottom: { name: 'Limit type', getData: d => d.limitType },
+    width: '125px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Label', getData: d => d.label },
+    bottom: { name: 'Cms key', getData: d => d.cmsConfigs?.key },
+    width: '125px',
+    action: 'valueByPath',
+  },
+  {
+    top: { name: 'Cms key', getData: d => d.cmsConfigs?.key },
+    bottom: { name: 'Cms external key', getData: d => d.cmsConfigs?.extRef },
+    width: '125px',
+    action: 'valueByPath',
+  },
+
+  createDateColumn(),
 ];

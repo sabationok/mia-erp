@@ -192,7 +192,7 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
         onLoading: loaders.onLoading('getAll'),
       })
     );
-  }, []);
+  }, [currentData, dispatch]);
 
   const onAddNewHandler = () => {
     const parent = currentData.current;
