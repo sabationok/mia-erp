@@ -155,6 +155,13 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
   };
 
   const onSetCurrentHandler = (item: PropertyBaseEntity) => {
+    // dispatch(
+    //   getAllPropertiesThunk({
+    //     params: { dataView: 'list', parentId: item._id },
+    //     onLoading: loaders.onLoading('getAll'),
+    //   })
+    // );
+
     setStack(prev => prev.concat([item]));
   };
   const onGoBackHandler = () => {
@@ -168,12 +175,23 @@ const DirProperties: React.FC<DirPropertiesProps> = ({
     if (roots.length) return;
     dispatch(
       getAllPropertiesThunk({
-        // params: { dataView: 'tree', depth: 3 },
+        params: { dataView: 'list' },
         onLoading: loaders.onLoading('getAll'),
       })
     );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!currentData.current?._id) return;
+    if (currentData.children.length) return;
+    dispatch(
+      getAllPropertiesThunk({
+        params: { dataView: 'list', parentId: currentData.current?._id },
+        onLoading: loaders.onLoading('getAll'),
+      })
+    );
   }, []);
 
   const onAddNewHandler = () => {

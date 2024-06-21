@@ -96,5 +96,5 @@ export interface IPropertyDto {
 export interface IPropertyReqData {
   _id?: string;
   data?: IPropertyDto;
-  params?: Pick<AppQueryParams, 'dataView' | 'getAll' | 'depth' | 'withDeleted'>;
+  params?: Pick<AppQueryParams, 'dataView' | 'getAll' | 'depth' | 'parentId' | 'withDeleted'>;
 }

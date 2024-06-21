@@ -6,7 +6,6 @@ import { ITableListProps, TableActionsCreator } from '../../TableList/tableTypes
 import AppGridPage from '../AppGridPage';
 import { useWarehousesSelector } from '../../../redux/selectors.store';
 import { ApiQuerySortParams } from '../../../api';
-import { FilterReturnDataType } from '../../Filter/AppFilter';
 import { warehouseOverviewTableColumns } from '../../../data/warehauses.data';
 import { useAppParams } from '../../../hooks';
 import { WarehouseItemEntity } from '../../../types/warehousing/warehouses.types';
@@ -14,9 +13,17 @@ import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppService
 import { useModalProvider } from '../../../Providers/ModalProvider/ModalProvider';
 import { Modals } from '../../Modals/Modals';
 import { BaseAppPageProps } from '../index';
+import { enumToTabs } from '../../../utils';
+import TabSelector from '../../atoms/TabSelector';
 
 interface Props extends BaseAppPageProps {}
 
+enum WarehouseOverviewTabsEnum {
+  Inventories = 'Inventories',
+  Documents = 'Documents',
+  Warehouse = 'Warehouse',
+}
+const tabsOptions = enumToTabs(WarehouseOverviewTabsEnum);
 const PageWarehouseOverview: React.FC<any> = (props: Props) => {
   const warehouseId = useAppParams().warehouseId;
   const { getById } = useAppServiceProvider()[ServiceName.warehouses];
@@ -24,19 +31,15 @@ const PageWarehouseOverview: React.FC<any> = (props: Props) => {
   const actionsCreator = useWarehouseOverviewActionsCreator();
   const [isLoading, setIsLoading] = useState(false);
   const [sortParams, setSortParams] = useState<ApiQuerySortParams>();
-  const [filterParams, setFilterParams] = useState<FilterReturnDataType>();
 
   const tableConfig = useMemo(
     (): ITableListProps<WarehouseItemEntity> => ({
       tableData: state.current?.inventories,
       hasFilter: false,
       hasSearch: true,
-      showFooter: false,
-      checkBoxes: true,
+      showFooter: true,
+      checkBoxes: !!state.current?.inventories?.length,
       actionsCreator,
-      onFilterSubmit: filterParams => {
-        setFilterParams(filterParams);
-      },
       onTableSortChange: (param, sortOrder) => {
         setSortParams({ sortPath: param.dataPath, sortOrder });
       },
@@ -45,21 +48,18 @@ const PageWarehouseOverview: React.FC<any> = (props: Props) => {
   );
 
   useEffect(() => {
+    console.log('sortParams', sortParams);
     if (warehouseId) {
       getById({ data: { _id: warehouseId }, onLoading: setIsLoading });
     }
     // eslint-disable-next-line
   }, [warehouseId]);
 
-  useEffect(() => {
-    console.log('PageWarehouseOverview ============>>>>>>>>>>');
-    console.log('sortParams', sortParams);
-    console.log('filterParams', filterParams);
-  }, [filterParams, sortParams]);
-
   return (
     <AppGridPage path={props.path}>
       <Page>
+        <TabSelector options={tabsOptions} />
+
         <TableList {...tableConfig} isLoading={isLoading} tableTitles={warehouseOverviewTableColumns} />
       </Page>
     </AppGridPage>
@@ -80,10 +80,10 @@ const useWarehouseOverviewActionsCreator = (): WarehouseTableActionsCreator => {
     const current = ctx.selectedRow;
 
     return [
-      { name: 'deleteProductInventory', icon: 'delete', onClick: () => {} },
-      { name: 'editProductInventory', icon: 'edit', onClick: () => {} },
+      { name: 'deleteInventory', icon: 'delete', onClick: () => {} },
+      { name: 'editInventory', icon: 'edit', onClick: () => {} },
       {
-        name: 'addProductInventory',
+        name: 'addInventory',
         icon: 'plus',
         type: 'onlyIconFilled',
         onClick: () => {
@@ -96,7 +96,7 @@ const useWarehouseOverviewActionsCreator = (): WarehouseTableActionsCreator => {
                   Modal: Modals.FormCreateWarehouseDocument,
                   props: {
                     product: p,
-                    title: `Create warehouse document for product: ${p?.label}`,
+                    title: `Create warehouse document. Offer ${p?.label}`,
                   },
                 });
               },
