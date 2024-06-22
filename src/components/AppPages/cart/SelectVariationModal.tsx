@@ -1,4 +1,4 @@
-import { OverlayFooter } from 'components/atoms';
+import { DrawerFooter } from 'components/atoms';
 import { FooterSummary } from './FooterSummary';
 import { countOrderSlotValues } from '../../../utils';
 import { useMemo, useState } from 'react';
@@ -50,7 +50,7 @@ export const SelectVariationModal = ({
 
       <FooterSummary slot={counted} onChangeQuantity={setQuantity} />
 
-      <OverlayFooter
+      <DrawerFooter
         canAccept={!!selected}
         onAcceptPress={() => {
           if (selected?._id) {

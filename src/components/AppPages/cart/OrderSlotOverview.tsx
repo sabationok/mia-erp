@@ -6,7 +6,7 @@ import { VariationEntity } from '../../../types/offers/variations.types';
 import { countOrderSlotValues } from '../../../utils';
 import FlexBox from '../../atoms/FlexBox';
 import { FooterSummary } from './FooterSummary';
-import { OverlayFooter } from '../../atoms';
+import { DrawerFooter } from '../../atoms';
 import styled from 'styled-components';
 
 export default function OrderSlotOverview({ warehouse }: { warehouse?: WarehouseEntity; slotId?: string }) {
@@ -39,7 +39,7 @@ export default function OrderSlotOverview({ warehouse }: { warehouse?: Warehouse
 
       <FooterSummary slot={counted} onChangeQuantity={setQuantity} />
 
-      <OverlayFooter
+      <DrawerFooter
         canAccept={!!Slot.tempId && Slot.quantity !== quantity}
         onAcceptPress={() => {
           Slot.setQty(quantity);

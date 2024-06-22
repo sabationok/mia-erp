@@ -12,7 +12,10 @@ export const createDateColumn = buildTableColumnCreator<Partial<IBase>>({
   action: 'dateDbl',
 });
 export const createAuthorColumn = buildTableColumnCreator<Partial<HasAuthor>>({
-  top: { name: t('Author'), getData: rd => rd.author?.user?.email || rd.author?.user?.email || rd.author?.user?.email },
+  top: {
+    name: t('Author'),
+    getData: rd => rd.author?.user?.email || rd.author?.customer?.email || rd.author?.integration?.label,
+  },
   bottom: {
     name: t('Permission holder'),
     getData: rd =>
@@ -21,12 +24,15 @@ export const createAuthorColumn = buildTableColumnCreator<Partial<HasAuthor>>({
       (rd.author?.integration && 'integration') ||
       '---',
   },
-  width: '150px',
+  width: '210px',
   action: 'valueByPath',
 });
 
 export const createEditorColumn = buildTableColumnCreator<Partial<HasEditor>>({
-  top: { name: t('Editor'), getData: rd => rd.editor?.user?.email || rd.editor?.user?.email || rd.editor?.user?.email },
+  top: {
+    name: t('Editor'),
+    getData: rd => rd.editor?.user?.email || rd.editor?.customer?.email || rd.editor?.integration?.label,
+  },
   bottom: {
     name: t('Permission holder'),
     getData: rd =>
@@ -35,7 +41,7 @@ export const createEditorColumn = buildTableColumnCreator<Partial<HasEditor>>({
       (rd.editor?.integration && 'integration') ||
       '---',
   },
-  width: '150px',
+  width: '210px',
   action: 'valueByPath',
 });
 

@@ -2,7 +2,7 @@ import { AppSubmitHandler } from '../../hooks/useAppForm.hook';
 import { OfferDefaultsFormData, OfferEntity } from '../../types/offers/offers.types';
 import styled from 'styled-components';
 import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
-import { ModalHeader, OverlayFooter } from '../atoms';
+import { DrawerFooter } from '../atoms';
 import FlexBox from '../atoms/FlexBox';
 import { useAppForm, useAppParams, useCurrentOffer } from '../../hooks';
 import { enumToFilterOptions, getIdRef, ObjectFromEntries, toReqData } from '../../utils';
@@ -22,6 +22,7 @@ import { LoadersProvider } from '../../Providers/Loaders/LoaderProvider';
 import { useLoaders } from '../../Providers/Loaders/useLoaders.hook';
 import { Keys } from '../../types/utils.types';
 import _ from 'lodash';
+import { DrawerHeader } from './index';
 
 export interface FormOfferDefaultsOverlayProps extends CreatedOverlay {
   onSubmit?: AppSubmitHandler<OfferDefaultsFormData>;
@@ -55,7 +56,7 @@ function getFormDefaultValues(offer: OfferEntity) {
 
   return ObjectFromEntries(map.entries());
 }
-const FormOfferDefaultsOverlay: React.FC<FormOfferDefaultsOverlayProps> = ({ onClose, onSubmit }) => {
+const FormOfferDefaultsDrawer: React.FC<FormOfferDefaultsOverlayProps> = ({ onClose, onSubmit }) => {
   const loaders = useLoaders<OfferOverlayLoaderKey>();
   const offerId = useAppParams()?.offerId;
   const Offer = useCurrentOffer({ _id: offerId });
@@ -136,7 +137,7 @@ const FormOfferDefaultsOverlay: React.FC<FormOfferDefaultsOverlayProps> = ({ onC
   return (
     <LoadersProvider value={loaders}>
       <Form onSubmit={handleSubmit(onValid)}>
-        <ModalHeader onBackPress={onClose} title={t('Default values')} canSubmit={canSubmit} />
+        <DrawerHeader onBackPress={onClose} title={t('Default values')} canSubmit={canSubmit} />
 
         <TabSelector options={tabs} currentIndex={currentTabIdx} onChangeIndex={setCurrentTabIdx} />
 
@@ -144,7 +145,7 @@ const FormOfferDefaultsOverlay: React.FC<FormOfferDefaultsOverlayProps> = ({ onC
           {renderTab}
         </Content>
 
-        <OverlayFooter loading={loaders.hasLoading} canSubmit={canSubmit} />
+        <DrawerFooter loading={loaders.hasLoading} canSubmit={canSubmit} />
       </Form>
     </LoadersProvider>
   );
@@ -170,4 +171,4 @@ const Content = styled(FlexBox)`
 
   border-bottom: 1px solid ${p => p.theme.modalBorderColor};
 `;
-export default FormOfferDefaultsOverlay;
+export default FormOfferDefaultsDrawer;

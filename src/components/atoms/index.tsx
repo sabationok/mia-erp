@@ -90,7 +90,7 @@ const Header = styled(FlexBox)`
   height: 32px;
 `;
 
-export const OverlayFooter = ({
+export const DrawerFooter = ({
   submitButtonText = 'Прийняти',
   loading,
   extraFooter,

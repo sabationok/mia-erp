@@ -4,7 +4,7 @@ import { t } from '../../../../lang';
 import { enumToFilterOptions } from '../../../../utils/fabrics';
 import { CreatedModal } from '../../../../Providers/ModalProvider/ModalProvider';
 import styled from 'styled-components';
-import { ModalHeader, OverlayFooter } from '../../../atoms';
+import { DrawerFooter, ModalHeader } from '../../../atoms';
 import ButtonsGroup from '../../../atoms/ButtonsGroup';
 import FlexBox from '../../../atoms/FlexBox';
 import { FormEventHandler, useEffect, useState } from 'react';
@@ -42,7 +42,7 @@ const SelectOrderTypeModal: React.FC<SelectOrderTypeModalProps> = ({ onClose, on
         />
       </Content>
 
-      <OverlayFooter canSubmit />
+      <DrawerFooter canSubmit />
     </Form>
   );
 };

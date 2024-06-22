@@ -11,7 +11,7 @@ import { countOrderSlotValues, setValueByPath } from '../../../utils';
 import DrawerBase from '../../atoms/OverlayBase';
 import TableList from '../../TableList/TableList';
 import { FooterSummary } from './FooterSummary';
-import { OverlayFooter } from '../../atoms';
+import { DrawerFooter } from '../../atoms';
 import { SelectVariationModal } from './SelectVariationModal';
 import { GetAllOffersQuery } from '../../../api';
 import { CartSlotId } from '../../../redux/cart/cart.slice';
@@ -79,7 +79,7 @@ export default function SelectOfferModal({
 
       {selected && <FooterSummary slot={counted} onChangeQuantity={setQuantity} />}
 
-      <OverlayFooter
+      <DrawerFooter
         canAccept={!!selected}
         onAcceptPress={() => {
           if (selected) {
