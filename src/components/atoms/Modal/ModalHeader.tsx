@@ -101,6 +101,9 @@ export const ModalHeader = ({
 };
 const Header = styled(FlexBox)`
   min-height: 32px;
+  max-width: 100%;
+  overflow-y: visible;
+  overflow-x: hidden;
 `;
 const ExtraHeader = styled.div`
   width: 100%;

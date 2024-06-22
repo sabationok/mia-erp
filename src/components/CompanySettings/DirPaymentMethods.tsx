@@ -6,9 +6,9 @@ import FlexBox from '../atoms/FlexBox';
 import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../../types/dir.types';
 import DirListItem from '../Directories/DirList/DirListItem';
 import usePaymentsServiceHook from '../../hooks/usePaymentsService.hook';
-import { useTranslatedMethodsList } from '../../hooks/useTranslatedMethodsList.hook';
 import { usePaymentsSelector } from '../../redux/selectors.store';
 import { IPaymentMethod, PaymentInternalTypeEnum } from '../../types/integrations.types';
+import { t } from '../../lang';
 
 export interface DirPaymentMethodsProps
   extends IDirInTreeProps<MethodDirType, IPaymentMethod, IPaymentMethod, IPaymentMethod> {
@@ -31,13 +31,35 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
 }) => {
   const service = usePaymentsServiceHook();
   const modalService = useModalProvider();
-  const methods = useTranslatedMethodsList(usePaymentsSelector().methods, { withFullLabel: true });
+  const methods = usePaymentsSelector().methods;
+  const [providerId, setProviderId] = useState<string>();
 
   const [current, setCurrent] = useState<PaymentInternalTypeEnum>();
 
+  const providersData = useMemo(() => {
+    const _map = new Map(
+      methods.map(method => {
+        return [method.service?.provider, method.service];
+      })
+    );
+    return {
+      map: _map,
+      set: [..._map.keys()],
+      tabs: [..._map.entries()].map(([key, item]) => {
+        return {
+          value: item?._id,
+          _id: item?._id,
+          label: key ? t(key) : key,
+        };
+      }),
+    };
+  }, [methods]);
+
   const fData = useMemo(() => {
-    return methods.filter(m => m.type?.internal === current);
-  }, [current, methods]);
+    return methods.filter(item => {
+      return providerId && item.service?._id === providerId && current && item.type?.internal === current;
+    });
+  }, [current, methods, providerId]);
 
   const actions = useMemo(
     () =>
@@ -48,22 +70,6 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
       }),
     [dirType, modalService, service]
   );
-
-  // const listByProviders = useMemo(() => {
-  //   let providers: Record<string, PaymentServProvider & { childrenList: IPaymentMethod[] }> = {};
-  //   methods.map(m => {
-  //     if (m.parent) {
-  //       const current = providers[m.parent._id] || m.parent;
-  //       providers[m.parent._id] = {
-  //         ...current,
-  //         childrenList: current?.childrenList ? [...current?.childrenList, m] : [m],
-  //       };
-  //     }
-  //     return '';
-  //   });
-  //
-  //   return Object.values(providers);
-  // }, [methods]);
 
   const renderList = useMemo(
     () =>
@@ -88,7 +94,12 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
     // eslint-disable-next-line
   }, []);
   return (
-    <StModalForm style={{ maxWidth: 480 }} {...props} onOptSelect={option => setCurrent(option.value)}>
+    <StModalForm
+      style={{ maxWidth: 480 }}
+      {...props}
+      options={providersData.tabs}
+      onOptSelect={option => setCurrent(option.value)}
+    >
       <FlexBox fillWidth flex={'1'} gap={8} padding={'8px 4px'}>
         {renderList}
       </FlexBox>

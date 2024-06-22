@@ -8,6 +8,8 @@ export interface ToRequestDataOptions<OmitPath extends string = string> {
   checkArrayPath?: string;
   ignorePaths?: string[];
   isRoot?: boolean;
+  uuidFieldKeysMap?: Record<string, string>;
+  uuidArraysFieldKeysMap?: Record<string, string>;
 }
 
 export function toReqData<IncomeDataType extends Record<string, any> = any, OmitPath extends string = string>(
@@ -19,23 +21,25 @@ export function toReqData<IncomeDataType extends Record<string, any> = any, Omit
   if (options?.isRoot === false) {
     _omitkeys.unshift('_id');
   }
-  const inputCopy = omit(incomeData, _omitkeys);
+  const inputCopy = options?.isRoot
+    ? JSON.parse(JSON.stringify(omit(incomeData, _omitkeys)))
+    : omit(incomeData, _omitkeys);
 
   let outData: Record<string, any> = {};
   // console.log('before', { inputCopy }, { outData });
   try {
     Object.entries(inputCopy).forEach(([key, value]) => {
-      if (!value) {
+      if (_.isUndefined(value) || _.isNull(value)) {
+        // console.log('isUndefined', { key }, { value });
+        return;
+      }
+      if (['undefined', 'function', 'null'].includes(typeof value)) {
         return;
       }
 
       if (options?.ignorePaths?.includes(key)) {
         // console.log('ignorePaths', { key }, { value });
         outData[key] = value;
-        return;
-      }
-      if (_.isUndefined(value) || _.isNull(value)) {
-        // console.log('isUndefined', { key }, { value });
         return;
       }
 
@@ -56,6 +60,22 @@ export function toReqData<IncomeDataType extends Record<string, any> = any, Omit
         }
 
         if ('_id' in value) {
+          if (options?.uuidFieldKeysMap) {
+            const idKey = options?.uuidFieldKeysMap?.[key];
+
+            if (idKey) {
+              return (outData[idKey] = value);
+            }
+          }
+
+          if (options?.uuidArraysFieldKeysMap) {
+            const idsKey = options?.uuidArraysFieldKeysMap?.[key];
+
+            if (idsKey) {
+              return (outData[idsKey] = value);
+            }
+          }
+
           // console.log("'_id' in value", { key }, { value });
           return (outData[key] = { _id: value?._id } as OnlyUUID);
         }
@@ -70,7 +90,7 @@ export function toReqData<IncomeDataType extends Record<string, any> = any, Omit
         }
 
         if (
-          Object.entries(value).some(([k, v]) => {
+          Object.entries(value).some(([k, _v]) => {
             if (k === '_id' && value) return true;
             if (k === 'value' && value) return true;
             return false;

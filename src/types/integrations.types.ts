@@ -206,8 +206,8 @@ export interface ServiceMethodBase<
 }
 export interface IMethodReqData<DtoLike = any> {
   _id?: string;
-  data?: Omit<DtoLike, IBaseKeys | 'isDefault' | 'service' | 'extService'>;
-  params?: Pick<AppQueryParams, 'disabled' | 'isDefault' | 'disabledForClient'>;
+  data?: Partial<OnlyUUID> & Omit<DtoLike, IBaseKeys | 'isDefault' | 'service' | 'extService'>;
+  params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>;
 }
 export enum PaymentInternalTypeEnum {
   postTransfer = 'postTransfer',
@@ -246,30 +246,29 @@ export interface IInvoicingMethod
     ExtInvoicingService
   > {}
 export interface IInvoicingMethodReqData extends IMethodReqData<IInvoicingMethod> {}
+
 // * DELIVERY
-export interface IDeliveryMethodInvoicingPolicy {
-  method?: IInvoicingMethod;
+export interface IDeliveryMethodMinCostFields {
   minCost?: { delivery?: number; return?: number };
 }
 export interface IDeliveryMethod extends ServiceMethodBase<string, string, ExtDeliveryService> {
-  // invoicing?: IDeliveryMethodInvoicingPolicy;
+  configs?: {
+    duration?: MaybeNull<number>;
+  };
+  invoicingPolicy?: { configs?: IDeliveryMethodMinCostFields };
+  paymentPolicy?: {
+    configs?: IDeliveryMethodMinCostFields & {
+      commissionSender?: MaybeNull<number>;
+      commissionReceiver?: MaybeNull<number>;
+    };
+    methodsIds?: UUID[];
+  };
 }
 
-export interface IDeliveryMethodPaymentPolicy {
-  minCost?: MaybeNull<{
-    delivery: MaybeNull<number>;
-
-    return: MaybeNull<number>;
-  }>;
-}
 export interface IDeliveryMethodDto
-  extends Partial<Omit<IDeliveryMethod, IBaseKeys | 'isDefault' | 'invoicing' | 'service' | 'extService'>> {
-  // invoicing?: Pick<IDeliveryMethodInvoicingPolicy, 'minCost'> & { method?: OnlyUUID };
-  duration?: MaybeNull<number>;
-  paymentPolicy?: IDeliveryMethodPaymentPolicy;
-  commissionSender?: MaybeNull<number>;
-  commissionReceiver?: MaybeNull<number>;
-}
+  extends Partial<
+    Omit<IDeliveryMethod, 'createdAt' | 'deletedAt' | 'updatedAt' | 'isDefault' | 'service' | 'extService'>
+  > {}
 
 export interface IDeliveryMethodReqData extends IMethodReqData<IDeliveryMethodDto> {}
 
@@ -281,7 +280,11 @@ export interface IPaymentMethod
     ExtDeliveryService
   > {
   bankAccount?: MaybeNull<IBankAccount>;
-  card?: MaybeNull<{ holder?: string; mask?: string }>;
+  // card?: MaybeNull<{ holder?: string; mask?: string }>;
+  configs?: {
+    commissionSender?: number;
+    commissionReceiver?: number;
+  };
 }
 export interface IPaymentMethodReqData extends IMethodReqData<IPaymentMethod> {}
 

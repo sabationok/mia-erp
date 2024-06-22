@@ -30,7 +30,7 @@ export const deliveriesSlice = createSlice({
         s.methods = a.payload;
       })
       .addCase(updateDeliveryMethodThunk.fulfilled, (s, a) => {
-        s.methods = s.methods.map(mtd => (mtd._id === a.payload._id ? a.payload : mtd));
+        s.methods = s.methods.map(mtd => (mtd._id === a.payload._id ? { ...mtd, ...a.payload } : mtd));
       })
       .addCase(getAllDeliveriesThunk.fulfilled, (s, a) => {
         if (a.payload?.update) {

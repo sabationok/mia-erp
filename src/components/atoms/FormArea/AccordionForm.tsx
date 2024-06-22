@@ -56,7 +56,13 @@ export const AccordionForm = ({ isEmpty, onSubmit, onReset, children, formId, ..
       maxWidth={'100%'}
       id={_formId}
     >
-      <AccordionFormArea {...rest} hasOnReset={!!onReset} hasOnSubmit={!!onSubmit} formId={formId || _formId}>
+      <AccordionFormArea
+        {...rest}
+        isOpen={!children ? false : rest.isOpen}
+        hasOnReset={!!onReset}
+        hasOnSubmit={!!onSubmit}
+        formId={formId || _formId}
+      >
         {children}
       </AccordionFormArea>
     </StyledForm>
@@ -103,7 +109,8 @@ export const AccordionFormArea = ({
           fxDirection={'row'}
           justifyContent={'space-between'}
           alignItems={'center'}
-          isSticky={isHeaderSticky}
+          $isSticky={isHeaderSticky}
+          $isOpen={_isOpen}
         >
           <HeaderButton
             variant={'defNoEffects'}
@@ -182,11 +189,11 @@ const StickyCss = css`
   z-index: 60;
 `;
 
-const Header = styled(FlexBox)<{ isSticky?: boolean }>`
-  ${p => (p.isSticky ?? true ? StickyCss : '')}
+const Header = styled(FlexBox)<{ $isSticky?: boolean; $isOpen?: boolean }>`
+  ${p => (p.$isSticky ?? true ? StickyCss : '')}
   min-height: 36px;
 
-  backdrop-filter: blur(3px);
+  backdrop-filter: ${p => (p.$isOpen ? 'blur(3px)' : '')};
   border-bottom: 1px solid ${p => p.theme.modalBorderColor};
   //background-color: ${p => p.theme.modalBackgroundColor};
 `;

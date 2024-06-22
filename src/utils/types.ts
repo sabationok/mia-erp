@@ -1,1 +1,1 @@
-export type AnyFn = <Args extends any[] = any[], Return = any>(...args: Args) => Return;
+export type AnyFn = <Args extends any[] = any[], Return = any>(...args: Args) => Return | void;
