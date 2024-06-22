@@ -124,6 +124,7 @@ const TableList = <TData extends Partial<OnlyUUID> = any>(
     (): ITableListContext<TData> => ({
       onRefresh: setLoading,
       ...props,
+      checkBoxes: props?.tableData?.length ? props.checkBoxes : false,
       selectedRows: _selectedRows,
       selectedRow: _selectedRow,
       onFilterSubmit: onFilterSubmitWrapper,
@@ -134,14 +135,14 @@ const TableList = <TData extends Partial<OnlyUUID> = any>(
       rowRef,
     }),
     [
-      onCheckboxChangeWrapper,
-      onFilterSubmitWrapper,
-      onHeadCheckboxChangeWrapper,
-      onRowClickWrapper,
       props,
-      rowGrid,
-      _selectedRow,
       _selectedRows,
+      _selectedRow,
+      onFilterSubmitWrapper,
+      onRowClickWrapper,
+      onCheckboxChangeWrapper,
+      onHeadCheckboxChangeWrapper,
+      rowGrid,
     ]
   );
 

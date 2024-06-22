@@ -57,7 +57,13 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
 
   const fData = useMemo(() => {
     return methods.filter(item => {
-      return providerId && item.service?._id === providerId && current && item.type?.internal === current;
+      if (providerId && item.service?._id !== providerId) {
+        return false;
+      }
+      if (current && item.type?.internal !== current) {
+        return false;
+      }
+      return true;
     });
   }, [current, methods, providerId]);
 
@@ -98,7 +104,7 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
       style={{ maxWidth: 480 }}
       {...props}
       options={providersData.tabs}
-      onOptSelect={option => setCurrent(option.value)}
+      onOptSelect={option => setProviderId(option.value)}
     >
       <FlexBox fillWidth flex={'1'} gap={8} padding={'8px 4px'}>
         {renderList}
@@ -116,10 +122,12 @@ const actionsCreatorForDirPaymentMethods: DirInTreeActionsCreatorType<
   IPaymentMethod,
   any,
   IPaymentMethod
-> = () => {
+> = controls => {
   return {
     onUpdate: (id, data, options) => {
-      console.log('IPaymentMethod onUpdate', data);
+      // controls.modalService.create(FormPaymentMethod, {
+      //   defaultState: data,
+      // });
     },
     // onChangeDisableStatus: (id, status, options) => {
     //   console.log('IPaymentMethod onChangeDisableStatus', id, status);

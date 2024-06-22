@@ -6,7 +6,8 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { TableSearchParam, TableSortOrderEnum, TableSortParam } from '../../tableTypes.types';
-import { FlexForm } from '../../../atoms/FlexBox';
+import { FlexForm, FlexLabel } from '../../../atoms/FlexBox';
+import { ToastService } from '../../../../services';
 
 export interface TableSearchProps<Param extends TableSearchParam = any> {
   searchParams?: Param[];
@@ -63,6 +64,7 @@ const TableSearchForm: React.FC<TableSearchProps> = ({ onSubmit, searchParams })
     <SearchForm
       onSubmit={handleSubmit(onValid, errors => {
         console.warn('[Table search form submit error]', errors);
+        ToastService.error(errors.search?.message);
       })}
       onReset={handleReset}
     >
@@ -72,12 +74,14 @@ const TableSearchForm: React.FC<TableSearchProps> = ({ onSubmit, searchParams })
           {...register('search')}
         />
 
-        {search && <ClearButton variant={'onlyIconNoEffects'} icon={'close'} type={'reset'} onClick={handleReset} />}
+        {search && (
+          <ClearButton variant={'onlyIconNoEffects'} size={'32px'} iconSize={'70%'} icon={'close'} type={'reset'} />
+        )}
       </StyledLabel>
 
       <ButtonIcon
         icon={'search'}
-        size={'28px'}
+        size={'32px'}
         iconSize={'90%'}
         variant={'onlyIconNoEffects'}
         disabled={!param || !search}
@@ -90,19 +94,24 @@ const TableSearchForm: React.FC<TableSearchProps> = ({ onSubmit, searchParams })
 };
 
 const SearchForm = styled(FlexForm)`
-  flex: 1 0 150px;
+  flex-direction: row;
+  //
+  //display: grid;
+  //grid-template-columns: 1fr min-content min-content;
+  max-width: 100%;
 
-  display: grid;
-  grid-template-columns: 1fr min-content min-content;
+  align-items: center;
 
-  max-width: 350px;
+  //max-width: 450px;
+  height: 100%;
   z-index: 60;
   position: relative;
 `;
 
-const StyledLabel = styled.label<{ isActive?: boolean }>`
+const StyledLabel = styled(FlexLabel)`
   display: flex;
   align-items: center;
+  max-width: 100%;
 
   position: relative;
 
@@ -110,16 +119,20 @@ const StyledLabel = styled.label<{ isActive?: boolean }>`
   border-image: none;
   border-width: 0;
 
+  height: 100%;
+  width: max-content;
+
   &::before {
     display: block;
     content: '';
     position: absolute;
     bottom: 0;
-    left: 50%;
+    left: 0;
+    //left: 50%;
     height: 2px;
-    width: ${({ isActive }) => (isActive ? '100%' : 0)};
+    width: ${({ $isActive }) => ($isActive ? '100%' : 0)};
     transition: all ${({ theme }) => theme.globals.timingFnMui};
-    transform: translate(-50%);
+    //transform: translate(-50%);
     background-color: ${({ theme }) => theme.accentColor.base};
   }
 
@@ -127,14 +140,17 @@ const StyledLabel = styled.label<{ isActive?: boolean }>`
     &::before {
       width: 100%;
     }
+    //width: 250px;
   }
+
+  transition: all ${p => p.theme.globals.timingFunctionMain};
 `;
 const SearchInput = styled.input`
   height: 100%;
-  width: 100%;
+  //width: 100%;
   padding: 4px 40px 4px 8px;
 
-  font-size: 12px;
+  font-size: 14px;
   font-family: inherit;
   color: inherit;
 
@@ -146,21 +162,29 @@ const SearchInput = styled.input`
 
   border-style: none;
   border-radius: 0;
-  border-bottom: 1px solid ${({ theme }) => theme.sideBarBorderColor};
+  //border-bottom: 1px solid ${({ theme }) => theme.sideBarBorderColor};
 
   &:hover,
   &:focus {
     /* border-bottom-color: ${({ theme }) => theme.accentColor.hover}; */
     outline-style: none;
   }
+
+  //&:focus-visible,
+  &:not(:placeholder-shown) {
+    //width: 250px;
+    max-width: 100%;
+  }
+
+  transition: all ${p => p.theme.globals.timingFunctionMain};
 `;
 
 const ClearButton = styled(ButtonIcon)`
   position: absolute;
   right: 0;
-  top: 50%;
+  //top: 50%;
   z-index: 5;
 
-  transform: translateY(-50%);
+  //transform: translateY(-50%);
 `;
 export default TableSearchForm;

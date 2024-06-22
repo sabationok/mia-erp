@@ -4,7 +4,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LangKeyEnum, t } from '../../../lang';
 import React, { useState } from 'react';
 import { useAppForm } from '../../../hooks';
-import { useAfterSubmitOptions } from '../../atoms/FormAfterSubmitOptions';
 import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import FlexBox from '../../atoms/FlexBox';
 import { IDeliveryMethod, ServiceMethodBase } from '../../../types/integrations.types';
@@ -40,11 +39,9 @@ const validation = yup.object().shape({
 } as Record<keyof ServiceMethodBase | string, any>);
 
 const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defaultState, ...props }) => {
-  const submitOptions = useAfterSubmitOptions();
+  // const submitOptions = useAfterSubmitOptions();
 
   const loaders = useLoaders<'main' | keyof IDeliveryMethodFormData>();
-
-  // const invMethods = useTranslatedMethodsList(useInvoicesSelector().methods, { withFullLabel: true });
   const pmntMethods = useTranslatedMethodsList(usePaymentsSelector().methods, { withFullLabel: true });
   const dispatch = useAppDispatch();
   const [langKey, setLangKey] = useState<LangKeyEnum>(LangKeyEnum.ua);
@@ -54,7 +51,7 @@ const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defau
     reValidateMode: 'onSubmit',
   });
   const {
-    formState: { errors, isValid, dirtyFields },
+    formState: { errors },
     handleSubmit,
     register,
     formValues,

@@ -60,6 +60,8 @@ export interface FlexBaseProps
   $border?: Property.Border;
   $background?: Property.Background;
   overflow?: Property.Overflow;
+
+  $isActive?: boolean;
 }
 
 export interface FlexBoxProps extends FlexBaseProps {

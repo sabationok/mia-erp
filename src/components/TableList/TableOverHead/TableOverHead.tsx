@@ -41,7 +41,7 @@ const TableOverHead: React.FC<React.HTMLAttributes<HTMLDivElement>> = props => {
 
   return (
     <OverHead className="tOverHead" {...props} fxDirection={'row'} flexWrap={'wrap'}>
-      <LeftSide className={'leftSide'} style={{ padding: hasSearch ? '4px 8px' : '0' }}>
+      <LeftSide className={'leftSide'}>
         {hasSearch && <TableSearchForm {...{ searchParams }} onSubmit={onSubmitSearch} />}
       </LeftSide>
 
@@ -80,6 +80,11 @@ const LeftSide = styled.div`
   align-items: center;
   justify-content: space-between;
 
+  height: 32px;
+  padding: 0 8px;
+
+  flex: 1 1 200px;
+  max-width: 350px;
   /* overflow: hidden; */
 `;
 const ActionsBox = styled(FlexBox)`
