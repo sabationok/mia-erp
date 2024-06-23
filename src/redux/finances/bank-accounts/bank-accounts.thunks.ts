@@ -1,9 +1,5 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ThunkArgs } from '../../store.store';
-import { AppQueryParams } from '../../../api';
-import TransactionsApi from '../../../api/transactions.api';
-import { axiosErrorCheck } from '../../../utils';
-import { BankAccountReqData, IBankAccount } from '../../../types/finances/bank-accounts.types';
+import { FinanceApi } from '../../../api';
+import { createAppAsyncThunk } from '../../createAppAsynkThunk';
 
 enum BankAccountsThunkType {
   create = 'finances/createBankAccountThunk',
@@ -11,71 +7,9 @@ enum BankAccountsThunkType {
   getList = 'finances/getBankAccountsListThunk',
 }
 
-export const createBankAccountThunk = createAsyncThunk<IBankAccount, ThunkArgs<BankAccountReqData, IBankAccount>>(
-  BankAccountsThunkType.create,
-  async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
-    onLoading && onLoading(true);
-
-    try {
-      const res = await TransactionsApi.createBankAccount(data);
-
-      onSuccess && onSuccess(res.data.data, res.data.meta);
-
-      return res.data.data;
-    } catch (error) {
-      onError && onError(error);
-
-      return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-    } finally {
-      onLoading && onLoading(false);
-    }
-  }
+export const createBankAccountThunk = createAppAsyncThunk(BankAccountsThunkType.create, FinanceApi.bankAccounts.create);
+export const updateBankAccountThunk = createAppAsyncThunk(BankAccountsThunkType.update, FinanceApi.bankAccounts.update);
+export const getBankAccountsListThunk = createAppAsyncThunk(
+  BankAccountsThunkType.getList,
+  FinanceApi.bankAccounts.getAll
 );
-
-export const updateBankAccountThunk = createAsyncThunk<
-  IBankAccount,
-  ThunkArgs<Omit<BankAccountReqData, 'params'>, IBankAccount>
->(BankAccountsThunkType.create, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
-  onLoading && onLoading(true);
-
-  try {
-    const res = await TransactionsApi.updateBankAccount(data);
-
-    onSuccess && onSuccess(res.data.data, res.data.meta);
-
-    return res.data.data;
-  } catch (error) {
-    onError && onError(error);
-
-    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-  } finally {
-    onLoading && onLoading(false);
-  }
-});
-
-export const getBankAccountsListThunk = createAsyncThunk<
-  { update?: boolean; data?: IBankAccount[] },
-  ThunkArgs<
-    {
-      update?: boolean;
-      query?: AppQueryParams;
-    },
-    IBankAccount[]
-  >
->(BankAccountsThunkType.getList, async ({ data, onSuccess, onError, onLoading }, thunkAPI) => {
-  onLoading && onLoading(true);
-
-  try {
-    const res = await TransactionsApi.getBankAccountsList({ params: data?.query });
-
-    onSuccess && onSuccess(res.data.data, res.data.meta);
-
-    return { ...res.data, ...data };
-  } catch (error) {
-    onError && onError(error);
-
-    return thunkAPI.rejectWithValue(axiosErrorCheck(error));
-  } finally {
-    onLoading && onLoading(false);
-  }
-});

@@ -46,7 +46,6 @@ const DirBankAccountsComp = ({
       }),
     [actionsCreator, current, service, dirType, modalService]
   );
-
   useEffect(() => {
     // if (!directory.length) {
     service.bankAccounts.getList();

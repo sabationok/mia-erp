@@ -34,9 +34,9 @@ import {
   tagsFilterOptions,
 } from './modalFilterOptions.data';
 import { ToastService } from '../services';
-import { BankAccountTypeFilterOptions } from '../components/Forms/finances/FormCreateBankAccount';
 import DirBankAccountsComp from '../components/Directories/DirBankAccounts';
 import DirTagsModal, { DirTagsModalProps } from '../components/Directories/DirTagsModal';
+import { BankAccountTypeFilterOptions } from './finances.data';
 
 export const getDirInTreeActionsCreator = (
   Modal: Modals = Modals.FormCreateDirTreeComp,
@@ -387,6 +387,7 @@ const directories: Partial<IDirectoryListItem>[] = [
       filterOptions: BankAccountTypeFilterOptions,
       filterSearchPath: 'type',
       availableLevels: 1,
+      editing: true,
 
       actionsCreator: getDirInTreeActionsCreator(Modals.FormCreateBankAccount, {
         createParentTitle: t('Create bank account'),

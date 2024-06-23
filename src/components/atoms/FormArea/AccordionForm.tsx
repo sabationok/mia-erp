@@ -9,14 +9,24 @@ import { Property } from 'csstype';
 import { LangTextKey, t } from '../../../lang';
 import ActionsDropdown, { ActionsDropDownProps } from '../ActionsDropdown';
 
-export interface AccordionFormAreaProps {
+export interface AccordionFormBaseProps {
+  isLoading?: boolean;
+
+  disabled?: boolean;
+
+  isOpen?: boolean;
+
+  expandable?: boolean;
+
+  canSubmit?: boolean;
+
+  onSubmit?: React.FormEventHandler;
+  onReset?: () => void;
+}
+export interface AccordionFormAreaProps extends AccordionFormBaseProps {
   children?: React.ReactNode;
   renderFooter?: React.ReactNode;
   renderTitle?: React.ReactNode;
-  isLoading?: boolean;
-  disabled?: boolean;
-  isOpen?: boolean;
-  expandable?: boolean;
   label?: LangTextKey;
   onAcceptPress?: () => void;
   onResetPress?: () => void;
@@ -27,7 +37,6 @@ export interface AccordionFormAreaProps {
   hasOnSubmit?: boolean;
   hasOnReset?: boolean;
 
-  canSubmit?: boolean;
   isEmpty?: boolean;
 
   maxHeight?: Property.MaxHeight;
@@ -36,10 +45,7 @@ export interface AccordionFormAreaProps {
   actions?: ActionsDropDownProps['actions'];
 }
 
-export interface AccordionFormProps extends AccordionFormAreaProps {
-  onSubmit?: React.FormEventHandler;
-  onReset?: () => void;
-}
+export interface AccordionFormProps extends AccordionFormAreaProps {}
 
 export const AccordionForm = ({ isEmpty, onSubmit, onReset, children, formId, ...rest }: AccordionFormProps) => {
   const _formId = useId();

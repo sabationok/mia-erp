@@ -7,6 +7,9 @@ import { PaymentInternalTypeEnum } from '../types/integrations.types';
 import { OfferPriceTypeEnum } from '../types/price-management/price-management.types';
 import { MeasurementUnit } from '../types/enums.types';
 
+export enum LangTextPrefix {
+  bank_account = 'bank_account',
+}
 export const langUa = {
   // DIRECTORIES
 
@@ -67,6 +70,17 @@ export const langUa = {
   [OwnershipTypeEnum.UA_BRANCH]: 'Філія',
   [OwnershipTypeEnum.UA_FRANCHISING_COMPANY]: 'Франчайзингова компанія',
   [OwnershipTypeEnum.UA_COLLECTIVE_ENTERPRISE]: 'Колективне підприємство',
+
+  [`${LangTextPrefix.bank_account}_personal`]: 'особистий',
+  [`${LangTextPrefix.bank_account}_business`]: 'бізнес',
+  [`${LangTextPrefix.bank_account}_salary`]: 'зарплата',
+  [`${LangTextPrefix.bank_account}_deposit`]: 'депозит',
+  [`${LangTextPrefix.bank_account}_investment`]: 'інвестиція',
+  [`${LangTextPrefix.bank_account}_currency`]: 'валюта',
+  [`${LangTextPrefix.bank_account}_travel`]: 'подорож',
+  [`${LangTextPrefix.bank_account}_ira`]: 'ІРА (індивідуальний пенсійний рахунок)',
+  [`${LangTextPrefix.bank_account}_payroll`]: 'платіжна відомість',
+  [`${LangTextPrefix.bank_account}_escrow`]: 'ескроу',
 
   GOODS: 'Товари',
   SERVICE: 'Послуги',

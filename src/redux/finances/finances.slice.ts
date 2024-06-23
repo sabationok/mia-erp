@@ -5,7 +5,11 @@ import { ITransaction } from 'types/finances/transactions.types';
 import { checks } from '../../utils';
 import { ICount } from '../directories/counts.types';
 import { IBankAccount } from '../../types/finances/bank-accounts.types';
-import { createBankAccountThunk, getBankAccountsListThunk } from './bank-accounts/bank-accounts.thunks';
+import {
+  createBankAccountThunk,
+  getBankAccountsListThunk,
+  updateBankAccountThunk,
+} from './bank-accounts/bank-accounts.thunks';
 
 export interface IFinTransactionsState {
   transactions: ITransaction[];
@@ -47,11 +51,20 @@ export const financesSlice = createSlice({
         s.transactions = a.payload ? [a.payload, ...s.transactions] : s.transactions;
       })
       .addCase(createBankAccountThunk.fulfilled, (s, a) => {
-        s.bankAccounts.push(a.payload);
+        s.bankAccounts.push(a.payload.data);
+      })
+      .addCase(updateBankAccountThunk.fulfilled, (s, a) => {
+        s.bankAccounts.map(item => {
+          if (item._id === a.payload.data._id) {
+            return { ...item, ...a.payload.data };
+          } else {
+            return item;
+          }
+        });
       })
       .addCase(getBankAccountsListThunk.fulfilled, (s, a) => {
         if (a.payload.update && a.payload.data) {
-          s.bankAccounts.concat(a.payload.data);
+          s.bankAccounts = s.bankAccounts.concat(a.payload.data);
         } else {
           s.bankAccounts = a.payload.data ?? [];
         }

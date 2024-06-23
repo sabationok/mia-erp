@@ -1,35 +1,31 @@
-import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/app-redux.types';
-import { HasCompany, HasLabel, HasType, MaybeNull } from '../utils.types';
+import { IBase, OnlyUUID } from '../../redux/app-redux.types';
+import { HasCompany, HasLabel, HasType, MaybeNull, UUID } from '../utils.types';
+import { IPaymentMethod } from '../integrations.types';
 
-export interface IBankAccount extends IBase, HasCompany, HasLabel, HasType<BankAccountDestinationType> {
+export interface BankDetailsBase {
+  label?: MaybeNull<string>;
+  country?: MaybeNull<string>;
+  taxCode?: MaybeNull<string>;
+}
+export interface IBankAccountBase extends HasLabel, HasType<BankAccountDestinationType> {
   iban?: MaybeNull<string>;
   card?: MaybeNull<string>;
-  taxId?: MaybeNull<string>;
+  taxCode?: MaybeNull<string>;
   holder?: MaybeNull<string>;
-  bank?: MaybeNull<{
-    label?: MaybeNull<string>;
-    country?: MaybeNull<string>;
-    taxId?: MaybeNull<string>;
-  }>;
-  finCount?: MaybeNull<OnlyUUID>;
-  integration?: MaybeNull<OnlyUUID>;
-  // method?: MaybeNull<IInvoicingMethod>;
+  bank?: MaybeNull<BankDetailsBase>;
 }
-export interface BankAccountFormData extends BankAccountDto {}
-export interface BankAccountDto {
-  label?: string;
-  iban?: string;
-  card?: string;
-  type?: IFormDataValueWithID;
+export interface IBankAccount extends IBase, HasCompany, IBankAccountBase {
+  finAccount?: MaybeNull<OnlyUUID>;
+  integration?: MaybeNull<OnlyUUID>;
+  method?: MaybeNull<IPaymentMethod>;
+}
 
-  taxId?: string;
-  holder?: string;
-  bank?: {
-    label?: string;
-    country?: string;
-    taxId?: string;
-  };
-  finCount?: OnlyUUID;
+export interface BankAccountFormData extends BankAccountDto {
+  withMethod?: boolean;
+}
+export interface BankAccountDto extends Partial<OnlyUUID>, IBankAccountBase {
+  finAccountsId?: UUID;
+  integrationId?: UUID;
 }
 
 export interface BankAccountReqData {

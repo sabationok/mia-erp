@@ -7,7 +7,7 @@ import { FlexBoxProps, FlexMain } from '../FlexBox';
 export interface ModalBaseProps
   extends ModalHeaderProps,
     Omit<React.FormHTMLAttributes<HTMLDivElement>, 'onSubmit' | 'onReset'> {
-  footer?: boolean;
+  $hasFooter?: boolean;
   onClose?: () => void;
   isLoading?: boolean;
   extraFooter?: React.ReactNode;
@@ -23,7 +23,7 @@ export interface ModalBaseProps
 
 const ModalBase: React.FC<ModalBaseProps> = ({
   title = 'Default modal title',
-  footer = false,
+  $hasFooter = false,
   children,
   extraFooter,
   extraHeader,

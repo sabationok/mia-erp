@@ -21,7 +21,7 @@ export const ModalSortLst: React.FC<TableSortParamsListProps & CreatedModal> = (
   ...props
 }) => {
   return (
-    <ModalBase fitContentH fitContentV footer={false} title={'Сортування'} {...props}>
+    <ModalBase fitContentH fitContentV $hasFooter={false} title={'Сортування'} {...props}>
       <TableSortParamsList {...{ sortParams, onSelect, current, isOpen: true }} />
     </ModalBase>
   );
