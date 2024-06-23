@@ -35,7 +35,7 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
   const methods = usePaymentsSelector().methods;
   const [providerId, setProviderId] = useState<string | 'default'>();
 
-  const [current, _setCurrent] = useState<PaymentInternalTypeEnum>();
+  const [current] = useState<PaymentInternalTypeEnum>();
 
   const providersData = useMemo(() => {
     const _map = new Map<string | 'default', IPaymentMethod['service']>(
