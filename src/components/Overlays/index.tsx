@@ -53,7 +53,8 @@ export const DrawerHeader = ({
           <Text
             $weight={600}
             $size={14}
-            style={{ textTransform: 'uppercase', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}
+
+            // style={{ textTransform: 'uppercase', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}
           >
             {title}
           </Text>

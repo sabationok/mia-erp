@@ -13,7 +13,7 @@ export interface IModalFooterProps {
 }
 
 const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElement>> = ({
-  hasOnSubmit,
+  hasOnSubmit = true,
   extraFooter,
   canSubmit = true,
   isLoading = false,
@@ -33,7 +33,7 @@ const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElem
           {t('Close')}
         </ButtonIcon>
 
-        {
+        {hasOnSubmit && (
           <ButtonIcon
             type={!isUndefined(canSubmit) || hasOnSubmit ? 'submit' : 'button'}
             variant={'filledMiddle'}
@@ -42,7 +42,7 @@ const ModalFooter: React.FC<IModalFooterProps & React.HTMLAttributes<HTMLDivElem
           >
             {t('Save')}
           </ButtonIcon>
-        }
+        )}
       </FlexBox>
     </Footer>
   );

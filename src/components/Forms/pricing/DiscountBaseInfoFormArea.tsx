@@ -39,15 +39,20 @@ export function DiscountBaseInfoFormArea({ discount, onSuccess, priceId, ...prop
   const loaders = useLoadersProvider<'discount' | 'create' | 'update' | 'current'>();
   const form = useAppFormProvider<CreateDiscountFormData>();
 
-  const { setValue, formValues, register, handleSubmit } = form;
+  const { setValue, unregister, formValues, register, handleSubmit } = form;
   const dispatch = useAppDispatch();
-
   const registerOnSelect = (name: Path<CreateDiscountFormData>): ButtonGroupSelectHandler<any> => {
     return info => {
       setValue(name, info.value, { shouldDirty: true, shouldTouch: true });
+      console.log(info);
+      if (name === 'type' && info.value !== PriceDiscountType.bonus) {
+        unregister('balanceType');
+      }
     };
   };
-
+  // useEffect(() => {
+  //   console.log('formValues', formValues);
+  // }, [formValues]);
   const onValid = (fData: CreateDiscountFormData) => {
     !fData._id
       ? dispatch(
@@ -91,7 +96,7 @@ export function DiscountBaseInfoFormArea({ discount, onSuccess, priceId, ...prop
           form={form}
           name={'type'}
           value={formValues.type}
-          // onSelect={registerOnSelect('type')}
+          onSelect={registerOnSelect('type')}
         />
       </InputLabel>
 
@@ -146,14 +151,6 @@ export function DiscountBaseInfoFormArea({ discount, onSuccess, priceId, ...prop
         </InputLabel>
       </FlexBox>
 
-      <InputLabel label={t('Discount target volume')} helperText={t('Від якої суми буде вираховуватись')}>
-        <ButtonsGroup
-          value={formValues.targetVolume}
-          onSelect={registerOnSelect('targetVolume')}
-          options={DiscountFilters.TargetVolume}
-        />
-      </InputLabel>
-
       {!!formValues.threshold && (
         <>
           <InputLabel label={t('Discount threshold type')} error={form.formState?.errors?.thresholdType}>
@@ -173,6 +170,31 @@ export function DiscountBaseInfoFormArea({ discount, onSuccess, priceId, ...prop
               value={formValues.limitType}
               onSelect={registerOnSelect('limitType')}
               options={DiscountFilters.LimitType}
+            />
+          </InputLabel>
+        </>
+      )}
+
+      {(!!formValues.limit || !!formValues.threshold) && (
+        <>
+          <InputLabel
+            label={'Від якої суми рахуємо?' || t('Discount source volume')}
+            // helperText={t('Від якої суми буде вираховуватись')}
+          >
+            <ButtonsGroup
+              value={formValues.sourceVolume}
+              onSelect={registerOnSelect('sourceVolume')}
+              options={DiscountFilters.SourceVolume}
+            />
+          </InputLabel>
+          <InputLabel
+            label={'На яку суму орієнтуємось?' || t('Discount target volume')}
+            // helperText={t('На яку суму орієнтуватись')}
+          >
+            <ButtonsGroup
+              value={formValues.targetVolume}
+              onSelect={registerOnSelect('targetVolume')}
+              options={DiscountFilters.TargetVolume}
             />
           </InputLabel>
         </>

@@ -134,16 +134,17 @@ const PriceDiscountsFormArea: React.FC<AccordionFormAreaProps & { offer?: OfferE
       <FlexBox overflow={'auto'}>
         <FlexBox gap={8} fxDirection={'row'} width={'max-content'} padding={'8px'}>
           {state.list?.map(item => {
+            const _data = state.dataMap?.[item?._id] || item;
             return (
               <PriceDiscountCard
-                item={item}
-                isActive={selectedIds?.includes(item._id)}
-                onChange={registerOnChange(item)}
-                isDeleting={loaders.isLoading?.[`deleting_id.${item._id}`]}
+                item={_data}
+                isActive={selectedIds?.includes(_data._id)}
+                onChange={registerOnChange(_data)}
+                isDeleting={loaders.isLoading?.[`deleting_id.${_data._id}`]}
                 onEditPress={() => {
                   modalSrv.create(CreateDiscountModal, {
                     priceId: Price?._id,
-                    discount: item,
+                    discount: _data,
                     onSuccess(d) {
                       onToggleIdHandler(d._id, true);
                     },

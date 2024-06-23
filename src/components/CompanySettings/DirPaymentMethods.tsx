@@ -1,6 +1,5 @@
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import ModalForm from 'components/ModalForm';
-import styled from 'styled-components';
 import { useModalProvider } from 'Providers/ModalProvider/ModalProvider';
 import FlexBox from '../atoms/FlexBox';
 import { DirInTreeActionsCreatorType, IDirInTreeProps, MethodDirType } from '../../types/dir.types';
@@ -109,7 +108,7 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
     // eslint-disable-next-line
   }, []);
   return (
-    <StModalForm
+    <ModalForm
       style={{ maxWidth: 480 }}
       {...props}
       options={providersData.tabs}
@@ -118,11 +117,9 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
       <FlexBox fillWidth flex={'1'} gap={8} padding={'8px 4px'}>
         {renderList}
       </FlexBox>
-    </StModalForm>
+    </ModalForm>
   );
 };
-
-const StModalForm = styled(ModalForm)``;
 
 export default memo(DirPaymentMethods);
 

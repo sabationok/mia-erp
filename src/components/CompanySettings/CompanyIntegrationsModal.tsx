@@ -2,13 +2,12 @@ import { ModalFormProps } from '../ModalForm';
 import FlexBox from '../atoms/FlexBox';
 import { useMemo, useState } from 'react';
 import { enumToFilterOptions } from '../../utils/fabrics';
-import styled from 'styled-components';
-import { ModalHeader } from '../atoms';
 import TabSelector from '../atoms/TabSelector';
 import ModalFooter from '../atoms/Modal/ModalFooter';
 import InputIntegrationsTab from './integrations/InputIntegrationsTab';
 import { IntegrationTypeEnum } from '../../types/integrations.types';
 import OutputIntegrationsTab from './integrations/OutputIntegrationsTab';
+import ModalBase from '../atoms/Modal';
 
 export interface CompanyIntegrationsProps extends Omit<ModalFormProps, 'onSubmit'> {}
 
@@ -27,33 +26,16 @@ const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose,
   }, [integrationType]);
 
   return (
-    <Container overflow={'hidden'} fillWidth>
-      <StHeader title={'External services'} onClose={onClose} />
-
+    <ModalBase fillHeight title={'External services'} onClose={onClose} fillWidth>
       <TabSelector options={integrationTypeTabs} onOptSelect={info => setIntegrationType(info?.value)} />
 
       <FlexBox overflow={'auto'} flex={1} fillWidth>
         {renderModalContent}
       </FlexBox>
 
-      <ModalFooter onClick={onClose}></ModalFooter>
-    </Container>
+      <ModalFooter onClick={onClose} hasOnSubmit={false}></ModalFooter>
+    </ModalBase>
   );
 };
-
-const Container = styled(FlexBox)`
-  padding: 0 8px;
-
-  max-width: 100%;
-  width: 480px;
-
-  height: 98vh;
-  max-height: 100%;
-
-  background-color: ${p => p.theme.modalBackgroundColor};
-`;
-const StHeader = styled(ModalHeader)`
-  border-bottom: 1px solid ${p => p.theme.modalBorderColor};
-`;
 
 export default CompanyIntegrationsModal;

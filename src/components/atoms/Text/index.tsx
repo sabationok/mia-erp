@@ -2,27 +2,40 @@ import { Property } from 'csstype';
 import FontType, { FontWeight } from './text.types';
 import styled, { css } from 'styled-components';
 
-export interface TextProps {
-  $lines?: number;
+export interface BaseTypographyProps {
   $display?: Property.Display;
   $isActive?: boolean;
   $disabled?: boolean;
-  $family?: FontType;
   $size?: Property.FontSize | number;
-  $weight?: FontWeight;
-  $align?: Property.TextAlign;
   $whiteSpase?: Property.WhiteSpace;
-  $textTransform?: Property.TextTransform;
-  $ellipsisMode?: boolean;
   $padding?: Property.Padding;
   $margin?: Property.Margin;
 
+  $family?: FontType;
+  $lineHeight?: Property.LineHeight;
+  $weight?: FontWeight;
+  $align?: Property.TextAlign;
+  $textTransform?: Property.TextTransform;
+  $fontStyle?: Property.FontStyle;
+  $textDecoration?: Property.TextDecoration;
   color?: Property.Color;
+
+  $ellipsisMode?: boolean;
+  $lines?: number;
+  $whiteSpace?: Property.WhiteSpace;
+
+  margin?: Property.Margin;
+}
+
+export interface TypographyProps extends BaseTypographyProps {
+  $xsStyles?: BaseTypographyProps;
+  $xlStyles?: BaseTypographyProps;
+  $xxlStyles?: BaseTypographyProps;
 }
 
 // ! DEFAULT VALUES
 
-export const TextFlexCss = css<TextProps>`
+export const TextFlexCss = css<BaseTypographyProps>`
   display: ${p => (p.$lines ? 'flex' : p.$display ? p.$display : 'inline-block')};
 
   font-family: ${({ $family = 'Montserrat' }) => $family};
@@ -32,22 +45,33 @@ export const TextFlexCss = css<TextProps>`
 
   text-align: ${({ $align = 'left' }) => $align};
   text-transform: ${({ $textTransform }) => $textTransform};
-  color: ${({ color, ...p }) => color || 'inherit'};
+  color: ${({ color, ...p }) => color};
   padding: ${({ $padding, ...p }) => $padding ?? 0};
   margin: ${({ $margin, ...p }) => $margin ?? 0};
 
   cursor: inherit;
 
-  text-overflow: ${p => (p.$ellipsisMode ? 'ellipsis' : 'unset')};
-  overflow: ${p => (p.$ellipsisMode ? 'hidden' : 'unset')};
-  white-space: ${p => (p.$ellipsisMode ? 'nowrap' : p.$whiteSpase ?? 'unset')};
+  white-space: ${p => (p.$lines || p.$ellipsisMode ? 'nowrap' : p.$whiteSpase ?? 'unset')};
+  overflow: ${p => (p.$lines || p.$ellipsisMode ? 'hidden' : 'unset')};
+  text-overflow: ${p => (p.$lines || p.$ellipsisMode ? 'ellipsis' : 'unset')};
 
   -webkit-line-clamp: ${p => p.$lines ?? 2}; /* number of lines to show */
   line-clamp: ${p => p.$lines ?? 2};
   -webkit-box-orient: ${p => (p.$lines ? 'vertical' : 'unset')};
 `;
+// ${({ $xsStyles }) => {
+//   if ($xsStyles) return XsStyles;
+// }};
+//
+// ${({ $xlStyles }) => {
+//   if ($xlStyles) return XlStyles;
+// }};
+//
+// ${({ $xxlStyles }) => {
+//   if ($xxlStyles) return XxlStyles;
+// }};
 
-export const Text = styled.span<TextProps>`
+export const Text = styled.span<BaseTypographyProps>`
   ${TextFlexCss}
 `;
 
