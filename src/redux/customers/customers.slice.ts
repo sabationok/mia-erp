@@ -49,7 +49,7 @@ export const customersSlice = createSlice({
         s.methods = a.payload;
       })
       .addCase(updateCommunicationMethodThunk.fulfilled, (s, a) => {
-        s.methods = s.methods.map(mtd => (mtd._id === a.payload._id ? a.payload : mtd));
+        s.methods = s.methods.map(mtd => (mtd._id === a.payload._id ? { ...mtd, ...a.payload } : mtd));
       })
       .addMatcher(onUserLogout, sliceCleaner(initialState)),
 });

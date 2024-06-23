@@ -120,6 +120,7 @@ export interface AppQueryParams<Type = any> extends AppQueries<Type>, Pagination
   dirType?: ApiDirType;
   isArchived?: boolean;
   withDeleted?: boolean;
+  withDefault?: boolean;
   deleted?: boolean;
   disabled?: boolean;
   createTreeData?: boolean;

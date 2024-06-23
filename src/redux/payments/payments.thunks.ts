@@ -16,7 +16,7 @@ export const getAllPaymentMethodsThunk = createAsyncThunk<IPaymentMethod[], Thun
   async (args, thunkAPI) => {
     args?.onLoading && args?.onLoading(true);
     try {
-      const res = await PaymentsApi.getAllMethods();
+      const res = await PaymentsApi.methods.getAll();
       res && args?.onSuccess && args?.onSuccess(res?.data?.data);
 
       args?.onLoading && args?.onLoading(false);
@@ -35,7 +35,7 @@ export const updatePaymentMethodThunk = createAsyncThunk<
 >(PaymentsThunkTypeEnum.updateMethod, async (args, thunkAPI) => {
   args?.onLoading && args?.onLoading(true);
   try {
-    const res = await PaymentsApi.updateMethod(args?.data);
+    const res = await PaymentsApi.methods.update(args?.data);
     res && args?.onSuccess && args?.onSuccess(res?.data?.data);
 
     args?.onLoading && args?.onLoading(false);

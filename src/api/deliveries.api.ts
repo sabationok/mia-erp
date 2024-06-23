@@ -5,33 +5,35 @@ import { IDeliveryMethod, IDeliveryMethodReqData } from '../types/integrations.t
 import { ClientApi } from './client.api';
 import { IDelivery } from '../types/deliveries.types';
 
-export default class DeliveriesApi {
+export class DeliveryMethodsApi {
+  private static api = ClientApi.clientRef;
+  private static endpoints = APP_CONFIGS.endpoints.deliveries.methods;
+
+  public static getAll = (
+    params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>
+  ): Promise<AppResponse<IDeliveryMethod[]>> => {
+    return this.api.get(this.endpoints.getAll(), { params });
+  };
+  public static update = (args?: IDeliveryMethodReqData): Promise<AppResponse<IDeliveryMethod>> => {
+    return this.api.patch(this.endpoints.update(), args?.data, { params: args?.params });
+  };
+}
+export class DeliveriesApi {
   private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.deliveries;
-
-  public static createOne(args?: any, params?: AppQueryParams) {
-    return this.api.post(this.endpoints.create());
-  }
+  static readonly methods = DeliveryMethodsApi;
+  public static createOne = (args?: any, params?: AppQueryParams): Promise<AppResponse<IDelivery>> => {
+    return this.api.post(this.endpoints.create(), args?.data);
+  };
   public static getAll = (
     _?: undefined,
     params?: Partial<Pick<AppQueryParams, 'orderId' | 'groupId' | 'customerId' | 'withDeleted'>>
   ): Promise<AppResponse<IDelivery[]>> => {
     return this.api.get(this.endpoints.getAll(), { params });
   };
-  public static getById(id?: string, params?: AppQueryParams) {
+  public static getById = (id?: string, params?: AppQueryParams) => {
     return this.api.get(this.endpoints.getById(id), { params });
-  }
-
-  public static getByOrderId(id?: string, params?: AppQueryParams) {
-    return this.api.get(this.endpoints.getByOrderId(id), { params });
-  }
-
-  public static getAllMethods(
-    params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>
-  ): Promise<AppResponse<IDeliveryMethod[]>> {
-    return this.api.get(this.endpoints.methods.getAll(), { params });
-  }
-  public static updateMethod(args?: IDeliveryMethodReqData): Promise<AppResponse<IDeliveryMethod>> {
-    return this.api.patch(this.endpoints.methods.update(args?._id), args?.data, { params: args?.params });
-  }
+  };
 }
+
+export default DeliveriesApi;

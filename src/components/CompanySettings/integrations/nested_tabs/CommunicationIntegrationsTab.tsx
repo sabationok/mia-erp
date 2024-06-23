@@ -37,7 +37,7 @@ const CommunicationIntegrationsTab: React.FC<CommunicationIntegrationsTabProps> 
           onSuccess: d => setIntegrationsList(p => [...p, d?.data]),
           service: currentServiceData,
         },
-        settings: { closeByBackdropPress: false, closeByEscapePress: false },
+        $settings: { closeByBackdropPress: false, closeByEscapePress: false },
       });
   };
 

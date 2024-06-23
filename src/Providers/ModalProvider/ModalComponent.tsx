@@ -10,8 +10,8 @@ interface ModalComponentProps<P = any> {
   settings?: IModalSettings;
   onClose: () => void;
   id?: number | string;
-  totalLength?: number;
-  isLast?: boolean;
+  $totalLength?: number;
+  $isLast?: boolean;
 }
 export interface RenderModalComponentChildrenProps {
   onClose?: () => void;
@@ -92,8 +92,8 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   settings,
   onClose,
   id,
-  totalLength,
-  isLast,
+  $totalLength,
+  $isLast,
 }) => {
   const [modalSettings, setModalSettings] = useState<IModalSettings>({ ...initialSettings, ...settings });
   function handleSetModalSettings(settings: IModalSettings) {
@@ -131,7 +131,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
     if (!modalSettings.closeByEscapePress) return;
 
     function handleToggleModalByEsc(evt: KeyboardEvent) {
-      if (!isLast || !modalSettings.closeByEscapePress) return;
+      if (!$isLast || !modalSettings.closeByEscapePress) return;
 
       if (evt?.code === 'Escape') {
         if (typeof onClose === 'function') onClose();
@@ -143,12 +143,12 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
     return () => {
       document.removeEventListener('keydown', handleToggleModalByEsc);
     };
-  }, [isLast, modalSettings.closeByEscapePress, onClose]);
+  }, [$isLast, modalSettings.closeByEscapePress, onClose]);
 
   return (
     <Backdrop
       key={idx}
-      isLast={isLast}
+      $isLast={$isLast}
       style={modalSettings.backdropStyle}
       modalSettings={modalSettings}
       onMouseDown={handleMouseDownOnBackdrop}
@@ -168,7 +168,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
 };
 
 const Backdrop = styled.div<{
-  isLast: boolean | undefined;
+  $isLast: boolean | undefined;
   modalSettings: IModalSettings;
 }>`
   display: flex;
@@ -183,8 +183,8 @@ const Backdrop = styled.div<{
   width: 100%;
   height: 100%;
 
-  background-color: ${({ isLast, modalSettings }) => (isLast ? modalSettings.backdropColor : '')};
-  /* animation: ${({ isLast, modalSettings }) => (!isLast ? modalSettings.backdropAnimation : '')}; */
+  background-color: ${({ $isLast, modalSettings }) => ($isLast ? modalSettings.backdropColor : '')};
+  /* animation: ${({ $isLast, modalSettings }) => (!$isLast ? modalSettings.backdropAnimation : '')}; */
 `;
 const Modal = styled.div<{ modalSettings: IModalSettings }>`
   display: flex;

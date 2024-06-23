@@ -46,7 +46,7 @@ const FormDeliveryMethod: React.FC<FormDeliveryMethodProps> = ({ onSubmit, defau
   const dispatch = useAppDispatch();
   const [langKey, setLangKey] = useState<LangKeyEnum>(LangKeyEnum.ua);
   const formMethods = useAppForm<IDeliveryMethodFormData>({
-    defaultValues: { ...omit(defaultState, ['isDefault', 'athor', 'owner', 'editor', 'parent', 'value', 'service']) },
+    defaultValues: { ...omit(defaultState, ['isDefault', 'author', 'owner', 'editor', 'parent', 'value', 'service']) },
     resolver: yupResolver(validation),
     reValidateMode: 'onSubmit',
   });

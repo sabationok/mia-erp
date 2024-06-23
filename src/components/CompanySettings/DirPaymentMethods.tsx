@@ -9,6 +9,7 @@ import usePaymentsServiceHook from '../../hooks/usePaymentsService.hook';
 import { usePaymentsSelector } from '../../redux/selectors.store';
 import { IPaymentMethod, PaymentInternalTypeEnum } from '../../types/integrations.types';
 import { t } from '../../lang';
+import { FormPaymentMethod } from '../Forms/methods/FormPaymentMethod';
 
 export interface DirPaymentMethodsProps
   extends IDirInTreeProps<MethodDirType, IPaymentMethod, IPaymentMethod, IPaymentMethod> {
@@ -34,7 +35,7 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
   const methods = usePaymentsSelector().methods;
   const [providerId, setProviderId] = useState<string>();
 
-  const [current, setCurrent] = useState<PaymentInternalTypeEnum>();
+  const [current, _setCurrent] = useState<PaymentInternalTypeEnum>();
 
   const providersData = useMemo(() => {
     const _map = new Map(
@@ -125,9 +126,9 @@ const actionsCreatorForDirPaymentMethods: DirInTreeActionsCreatorType<
 > = controls => {
   return {
     onUpdate: (id, data, options) => {
-      // controls.modalService.create(FormPaymentMethod, {
-      //   defaultState: data,
-      // });
+      controls.modalService.create(FormPaymentMethod, {
+        defaultState: data,
+      });
     },
     // onChangeDisableStatus: (id, status, options) => {
     //   console.log('IPaymentMethod onChangeDisableStatus', id, status);

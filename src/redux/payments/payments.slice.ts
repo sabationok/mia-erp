@@ -29,7 +29,7 @@ export const paymentsSlice = createSlice({
         s.methods = a.payload;
       })
       .addCase(updatePaymentMethodThunk.fulfilled, (s, a) => {
-        s.methods = s.methods.map(mtd => (mtd._id === a.payload._id ? a.payload : mtd));
+        s.methods = s.methods.map(mtd => (mtd._id === a.payload._id ? { ...mtd, ...a.payload } : mtd));
       })
       .addCase(getAllPaymentsThunk.fulfilled, (s, a) => {
         if (a.payload.update) {

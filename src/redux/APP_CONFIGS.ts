@@ -88,13 +88,13 @@ function createMethodsEndpoints(routeBaseUrl: string): {
   getAll: () => string;
   getList: () => string;
   create: () => string;
-  update: (id?: string) => string;
+  update: () => string;
 } {
   return {
-    getAll: () => `${routeBaseUrl}/${Endpoints.methods}/getAll`,
-    getList: () => `${routeBaseUrl}/${Endpoints.methods}/getAll`,
-    create: () => `${routeBaseUrl}/${Endpoints.methods}/create`,
-    update: (id?: string) => `${routeBaseUrl}/${Endpoints.methods}/update/${id}`,
+    getAll: () => `${routeBaseUrl}/methods/getAll`,
+    getList: () => `${routeBaseUrl}/methods/getAll`,
+    create: () => `${routeBaseUrl}/methods/create`,
+    update: () => `${routeBaseUrl}/methods/update`,
   };
 }
 
@@ -289,8 +289,8 @@ const warehousing = {
 const payments = {
   create: () => `${API_BASE_ROUTES.PAYMENTS}/create`,
   getAll: () => `${API_BASE_ROUTES.PAYMENTS}/getAll`,
-  getAllMethods: () => `${API_BASE_ROUTES.PAYMENTS}/${Endpoints.methods}/getAll`,
-  updateMethod: (id?: string) => `${API_BASE_ROUTES.PAYMENTS}/${Endpoints.methods}/update/${id}`,
+
+  methods: createMethodsEndpoints(API_BASE_ROUTES.PAYMENTS),
 };
 
 const invoices = {
@@ -299,9 +299,6 @@ const invoices = {
   getAll: () => `${API_BASE_ROUTES.INVOICES}/getAll`,
 
   methods: createMethodsEndpoints(API_BASE_ROUTES.INVOICES),
-
-  getAllMethods: () => `${API_BASE_ROUTES.INVOICES}/${Endpoints.methods}/getAll`,
-  updateMethod: (id?: string) => `${API_BASE_ROUTES.INVOICES}/${Endpoints.methods}/update/${id}`,
 };
 
 const shipments = {

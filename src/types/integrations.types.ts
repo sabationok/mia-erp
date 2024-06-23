@@ -4,7 +4,6 @@ import { CompanyEntity } from './companies.types';
 import { AppQueryParams } from '../api';
 import { HasBaseCmsConfigs } from './cms.types';
 import { HasCompany, HasDisabledAttributes, HasEmbeddedType, HasLabel, HasType, MaybeNull, UUID } from './utils.types';
-import { IBankAccount } from './finances/bank-accounts.types';
 
 export enum IntegrationTypeEnum {
   input = 'input',
@@ -200,6 +199,7 @@ export interface ServiceMethodBase<
     HasDisabledAttributes,
     HasBaseCmsConfigs {
   isDefault?: boolean;
+  group?: string;
 
   service?: MaybeNull<Service>;
   extService?: MaybeNull<Service>;
@@ -207,7 +207,7 @@ export interface ServiceMethodBase<
 export interface IMethodReqData<DtoLike = any> {
   _id?: string;
   data?: Partial<OnlyUUID> & Omit<DtoLike, IBaseKeys | 'isDefault' | 'service' | 'extService'>;
-  params?: Pick<AppQueryParams, 'disabled' | 'isDefault'>;
+  params?: Pick<AppQueryParams, 'disabled' | 'withDeleted' | 'withDefault'>;
 }
 export enum PaymentInternalTypeEnum {
   postTransfer = 'postTransfer',
@@ -276,10 +276,10 @@ export interface IDeliveryMethodReqData extends IMethodReqData<IDeliveryMethodDt
 export interface IPaymentMethod
   extends ServiceMethodBase<
     PaymentInternalTypeEnum,
-    string | MonoCheckoutMethod | LiqPayCheckoutMethodEnum,
-    ExtDeliveryService
+    string | MonoCheckoutMethod | LiqPayCheckoutMethodEnum
+    // ExtDeliveryService
   > {
-  bankAccount?: MaybeNull<IBankAccount>;
+  // bankAccount?: MaybeNull<IBankAccount>;
   // card?: MaybeNull<{ holder?: string; mask?: string }>;
   configs?: {
     commissionSender?: number;

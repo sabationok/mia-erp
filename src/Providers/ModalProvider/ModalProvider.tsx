@@ -22,7 +22,7 @@ export interface IModalRenderItemParams<M extends Modals = any, P = any, S = any
   Modal?: M;
   props?: ModalChildrenProps[M];
   modalChildrenProps?: P;
-  settings?: IModalSettings & S;
+  $settings?: IModalSettings & S;
   id?: number | string;
 }
 
@@ -92,14 +92,14 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
     <M extends Modals = any, P = any, S = any>({
       ModalChildren,
       modalChildrenProps,
-      settings,
+      $settings,
       Modal,
       props,
     }: IModalRenderItemParams<M, P, S>): OpenModalReturnType => {
       try {
         if (ModalChildren && (typeof ModalChildren === 'function' || typeof ModalChildren === 'object')) {
           const id = `${ModalChildren.name}_${nanoid(8)}`;
-          setModalStack(prev => [...prev, { ModalChildren, modalChildrenProps, settings, id }]);
+          setModalStack(prev => [...prev, { ModalChildren, modalChildrenProps, $settings: $settings, id }]);
           return { onClose: () => onClose(id), id };
         }
         if (Modal && ModalChildrenMap[Modal]) {
@@ -107,7 +107,7 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
 
           setModalStack(prev => [
             ...prev,
-            { ModalChildren: ModalChildrenMap[Modal], modalChildrenProps: props, settings, id },
+            { ModalChildren: ModalChildrenMap[Modal], modalChildrenProps: props, $settings: $settings, id },
           ]);
           return { onClose: () => onClose(id), id };
         }
@@ -125,7 +125,7 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
 
       try {
         if (Component && (typeof Component === 'function' || typeof Component === 'object')) {
-          setModalStack(prev => [...prev, { ModalChildren: Component, props, settings, id }]);
+          setModalStack(prev => [...prev, { ModalChildren: Component, props, $settings: $settings, id }]);
           return {
             id,
             onClose: () => onClose(id),
@@ -174,10 +174,10 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
           {...{
             idx,
             id: Item.id,
-            totalLength: modalStack.length,
-            isLast: idx === modalStack.length - 1,
+            $totalLength: modalStack.length,
+            $isLast: idx === modalStack.length - 1,
             onClose: () => onClose(Item.id),
-            settings: Item?.settings,
+            $settings: Item?.$settings,
           }}
           RenderModalComponentChildren={Item.ModalChildren}
           childrenProps={Item.props || Item.modalChildrenProps}

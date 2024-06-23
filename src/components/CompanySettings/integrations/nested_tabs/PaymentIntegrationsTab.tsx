@@ -49,7 +49,7 @@ const PaymentIntegrationsTab: React.FC<PaymentIntegrationsTabProps> = ({
           onSuccess: d => setIntegrationsList(p => [...p, d?.data]),
           service: currentServiceData,
         },
-        settings: { closeByBackdropPress: false, closeByEscapePress: false },
+        $settings: { closeByBackdropPress: false, closeByEscapePress: false },
       });
   };
 

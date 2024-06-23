@@ -16,7 +16,7 @@ export const getAllDeliveryMethodsThunk = createAsyncThunk<IDeliveryMethod[], Th
   async (args, thunkAPI) => {
     args?.onLoading && args?.onLoading(true);
     try {
-      const res = await DeliveriesApi.getAllMethods();
+      const res = await DeliveriesApi.methods.getAll();
       res && args?.onSuccess && args?.onSuccess(res?.data?.data);
 
       args?.onLoading && args?.onLoading(false);
@@ -35,7 +35,7 @@ export const updateDeliveryMethodThunk = createAsyncThunk<
 >(DeliveriesThunkTypeEnum.updateMethod, async (args, thunkAPI) => {
   args?.onLoading && args?.onLoading(true);
   try {
-    const res = await DeliveriesApi.updateMethod(args?.data);
+    const res = await DeliveriesApi.methods.update(args?.data);
     res && args?.onSuccess && args?.onSuccess(res?.data?.data);
 
     args?.onLoading && args?.onLoading(false);

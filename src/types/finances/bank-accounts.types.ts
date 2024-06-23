@@ -1,6 +1,5 @@
 import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/app-redux.types';
 import { HasCompany, HasLabel, HasType, MaybeNull } from '../utils.types';
-import { IInvoicingMethod } from '../integrations.types';
 
 export interface IBankAccount extends IBase, HasCompany, HasLabel, HasType<BankAccountDestinationType> {
   iban?: MaybeNull<string>;
@@ -14,7 +13,7 @@ export interface IBankAccount extends IBase, HasCompany, HasLabel, HasType<BankA
   }>;
   finCount?: MaybeNull<OnlyUUID>;
   integration?: MaybeNull<OnlyUUID>;
-  method?: MaybeNull<IInvoicingMethod>;
+  // method?: MaybeNull<IInvoicingMethod>;
 }
 export interface BankAccountFormData extends BankAccountDto {}
 export interface BankAccountDto {
