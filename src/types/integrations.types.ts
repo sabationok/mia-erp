@@ -4,6 +4,7 @@ import { CompanyEntity } from './companies.types';
 import { AppQueryParams } from '../api';
 import { HasBaseCmsConfigs } from './cms.types';
 import { HasCompany, HasDisabledAttributes, HasEmbeddedType, HasLabel, HasType, MaybeNull, UUID } from './utils.types';
+import { IBankAccount } from './finances/bank-accounts.types';
 
 export enum IntegrationTypeEnum {
   input = 'input',
@@ -189,6 +190,10 @@ export interface ExtCommunicationService extends ExtServiceBase {
 export interface ExtDeliveryService extends ExtServiceBase {
   methods?: IDeliveryMethod[];
 }
+
+export interface ExtPaymentService extends ExtServiceBase {
+  methods?: IPaymentMethod[];
+}
 export interface ServiceMethodBase<
   InternalType extends string = any,
   ExternalType extends string = any,
@@ -276,11 +281,10 @@ export interface IDeliveryMethodReqData extends IMethodReqData<IDeliveryMethodDt
 export interface IPaymentMethod
   extends ServiceMethodBase<
     PaymentInternalTypeEnum,
-    string | MonoCheckoutMethod | LiqPayCheckoutMethodEnum
-    // ExtDeliveryService
+    string | MonoCheckoutMethod | LiqPayCheckoutMethodEnum,
+    ExtPaymentService
   > {
-  // bankAccount?: MaybeNull<IBankAccount>;
-  // card?: MaybeNull<{ holder?: string; mask?: string }>;
+  bankAccount?: MaybeNull<IBankAccount>;
   configs?: {
     commissionSender?: number;
     commissionReceiver?: number;

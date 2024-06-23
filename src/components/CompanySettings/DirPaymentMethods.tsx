@@ -33,13 +33,17 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
   const service = usePaymentsServiceHook();
   const modalService = useModalProvider();
   const methods = usePaymentsSelector().methods;
-  const [providerId, setProviderId] = useState<string>();
+  const [providerId, setProviderId] = useState<string | 'default'>();
 
   const [current, _setCurrent] = useState<PaymentInternalTypeEnum>();
 
   const providersData = useMemo(() => {
-    const _map = new Map(
+    const _map = new Map<string | 'default', IPaymentMethod['service']>(
       methods.map(method => {
+        if (!method.service?.provider) {
+          return ['default', method.service];
+        }
+
         return [method.service?.provider, method.service];
       })
     );
@@ -48,8 +52,8 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
       set: [..._map.keys()],
       tabs: [..._map.entries()].map(([key, item]) => {
         return {
-          value: item?._id,
-          _id: item?._id,
+          value: item?._id || 'default',
+          _id: item?._id || 'default',
           label: key ? t(key) : key,
         };
       }),
@@ -58,6 +62,10 @@ const DirPaymentMethods: React.FC<DirPaymentMethodsProps> = ({
 
   const fData = useMemo(() => {
     return methods.filter(item => {
+      if (providerId === 'default') {
+        return !item.service;
+      }
+
       if (providerId && item.service?._id !== providerId) {
         return false;
       }
@@ -130,8 +138,5 @@ const actionsCreatorForDirPaymentMethods: DirInTreeActionsCreatorType<
         defaultState: data,
       });
     },
-    // onChangeDisableStatus: (id, status, options) => {
-    //   console.log('IPaymentMethod onChangeDisableStatus', id, status);
-    // },
   };
 };

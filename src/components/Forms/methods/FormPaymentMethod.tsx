@@ -4,18 +4,19 @@ import { AppSubmitHandler } from '../../../hooks/useAppForm.hook';
 import { DisabledStates, IBaseKeys } from '../../../types/utils.types';
 import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
 import { useAppDispatch } from '../../../redux/store.store';
-import React from 'react';
-import { t } from '../../../lang';
+import React, { useState } from 'react';
+import { LangKeyEnum, t } from '../../../lang';
 import { useAppForm } from '../../../hooks';
 import { omit, pick } from 'lodash';
 import ModalBase from '../../atoms/Modal';
-import { toReqData } from '../../../utils';
+import { enumToArray, toReqData } from '../../../utils';
 import { updatePaymentMethodThunk } from '../../../redux/payments/payments.thunks';
 import { AccordionForm } from '../../atoms/FormArea/AccordionForm';
 import InputLabel from '../../atoms/Inputs/InputLabel';
 import InputText from '../../atoms/Inputs/InputText';
 import ButtonSwitch from '../../atoms/ButtonSwitch';
 import FlexBox from '../../atoms/FlexBox';
+import LangButtonsGroup from '../../atoms/LangButtonsGroup';
 
 export interface FormPaymentMethodProps extends Omit<ModalFormProps<any, any, IPaymentMethod>, 'onSubmit'> {
   _id?: string;
@@ -33,7 +34,7 @@ export const FormPaymentMethod = ({ defaultState, onClose, title, ...props }: Fo
 
   const dispatch = useAppDispatch();
 
-  // const [langKey, setLangKey] = useState<LangKeyEnum>(LangKeyEnum.ua);
+  const [langKey, setLangKey] = useState<LangKeyEnum>(LangKeyEnum.ua);
 
   const formMethods = useAppForm<IPaymentMethodFormData>({
     defaultValues: { ...omit(defaultState, ['isDefault', 'author', 'owner', 'editor', 'parent', 'value']) },
@@ -47,6 +48,7 @@ export const FormPaymentMethod = ({ defaultState, onClose, title, ...props }: Fo
     getValues,
     register,
     getFieldState,
+    setFocus,
   } = formMethods;
   const registerSwitch = (name: keyof DisabledStates) => {
     return {
@@ -62,7 +64,7 @@ export const FormPaymentMethod = ({ defaultState, onClose, title, ...props }: Fo
     const pickPaths: (keyof IPaymentMethodFormData)[] | undefined = areaName ? [areaName] : undefined;
 
     const omitPaths: (keyof IPaymentMethodFormData | string)[] | undefined = !areaName
-      ? ['isDefault', 'owner', 'author', 'editor', 'cmsConfigs', 'type', 'group']
+      ? ['isDefault', 'owner', 'author', 'editor', 'cmsConfigs', 'type', 'group', 'labels']
       : undefined;
 
     const reqData = pickPaths ? pick(fData, ['_id', ...pickPaths]) : omitPaths ? omit(fData, omitPaths) : fData;
@@ -142,6 +144,43 @@ export const FormPaymentMethod = ({ defaultState, onClose, title, ...props }: Fo
           <ButtonSwitch {...registerSwitch('customer')} />
         </InputLabel>
       </AccordionForm>
+
+      <AccordionForm label={t('Cms params')} {...registerFormArea('cmsConfigs')}>
+        <InputLabel label={t('Custom key')} error={errors?.cmsConfigs?.key}>
+          <InputText placeholder={'Key'} {...register('cmsConfigs.key')} />
+        </InputLabel>
+
+        {/*<InputLabel label={t('External reference')} error={errors?.cmsConfigs?.extRef}>*/}
+        {/*  <InputText placeholder={'Reference'} {...register('cmsConfigs.extRef')} />*/}
+        {/*</InputLabel>*/}
+
+        <InputLabel label={t('Language key')} error={errors?.cmsConfigs?.key}>
+          <LangButtonsGroup
+            onChange={key => {
+              setLangKey(key);
+              setTimeout(() => setFocus(`cmsConfigs.labels.${key}`), 150);
+            }}
+            value={langKey}
+          />
+        </InputLabel>
+
+        {langKey && (
+          <InputLabel disabled={!langKey} label={t('Label by lang key')} error={errors?.cmsConfigs?.labels?.[langKey]}>
+            {langInputs.map(key => {
+              return (
+                <InputText
+                  type={langKey === key ? 'text' : 'hidden'}
+                  disabled={!langKey}
+                  placeholder={'Label'}
+                  {...register(`cmsConfigs.labels.${key}`)}
+                  // value={getValues(`cmsConfigs.labels.${key}`)}
+                />
+              );
+            })}
+          </InputLabel>
+        )}
+      </AccordionForm>
     </ModalBase>
   );
 };
+const langInputs = enumToArray(LangKeyEnum);

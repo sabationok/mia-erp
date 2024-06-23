@@ -130,8 +130,6 @@ const actionsCreatorForDeliveryMethods: DirInTreeActionsCreatorType<
             const omitPaths = data.isDefault
               ? (['label', 'labels', 'type'] as (keyof IDeliveryMethodFormData | string)[])
               : ['isDefault', 'service', 'extService', 'value', 'parent'];
-            console.log('Form data', data);
-            console.log('Req Method data', toReqData(data, { omitPathArr: omitPaths }));
 
             service.update({
               data: { _id, data: toReqData(data, { omitPathArr: omitPaths }) },

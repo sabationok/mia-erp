@@ -53,7 +53,7 @@ export type OpenModalHandler = <M extends Modals = any, P = any, S = any>(
 export type ModalCreator = <Props = any, S = any>(
   Component: React.FC<Props>,
   props?: Omit<Props, keyof CreatedModal>,
-  settings?: IModalSettings & S
+  $settings?: IModalSettings & S
 ) => OpenModalReturnType;
 
 export interface IModalProviderContext {
@@ -120,7 +120,7 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children, portalId }) =>
   );
 
   const createModal: ModalCreator = useCallback(
-    <P = any, S = any>(Component: React.FC<P>, props?: Omit<P, keyof CreatedModal>, settings?: S) => {
+    <P = any, S = any>(Component: React.FC<P>, props?: Omit<P, keyof CreatedModal>, $settings?: S) => {
       let id = nanoid(8);
 
       try {
