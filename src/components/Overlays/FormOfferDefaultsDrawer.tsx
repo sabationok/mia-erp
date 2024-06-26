@@ -139,7 +139,12 @@ const FormOfferDefaultsDrawer: React.FC<FormOfferDefaultsOverlayProps> = ({ onCl
       <Form onSubmit={handleSubmit(onValid)}>
         <DrawerHeader onBackPress={onClose} title={t('Default values')} canSubmit={canSubmit} />
 
-        <TabSelector options={tabs} currentIndex={currentTabIdx} onChangeIndex={setCurrentTabIdx} />
+        <TabSelector
+          optionProps={{ fitContentH: true }}
+          options={tabs}
+          currentIndex={currentTabIdx}
+          onChangeIndex={setCurrentTabIdx}
+        />
 
         <Content flex={1} fillWidth overflow={'hidden'}>
           {renderTab}

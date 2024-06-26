@@ -27,8 +27,8 @@ const QuickActions: React.FC<{ closeOnClickOut?: boolean }> = ({ closeOnClickOut
   useCloseByEscapeOrClickOnBackdrop(setIsShown, 'data-burger', closeOnClickOut);
 
   return (
-    <Menu isShown={isShown} hasFooter={showFooter} data-burger fxDirection={'column'}>
-      <List isShown={isShown}>
+    <Menu $isShown={isShown} $hasFooter={showFooter} data-burger fxDirection={'column'}>
+      <List $isShown={isShown}>
         <FlexBox
           padding={'16px 8px'}
           gap={12}
@@ -43,8 +43,8 @@ const QuickActions: React.FC<{ closeOnClickOut?: boolean }> = ({ closeOnClickOut
       </List>
 
       <ToggleButton
-        hasFooter={showFooter}
-        isShown={isShown}
+        $hasFooter={showFooter}
+        $isShown={isShown}
         icon={'plus'}
         variant="def"
         iconSize="70%"
@@ -54,7 +54,7 @@ const QuickActions: React.FC<{ closeOnClickOut?: boolean }> = ({ closeOnClickOut
     </Menu>
   );
 };
-type StyledProps = { isShown: boolean; hasFooter?: boolean };
+type StyledProps = { $isShown: boolean; $hasFooter?: boolean };
 
 const Menu = styled(FlexBox)<StyledProps>`
   position: sticky;
@@ -68,15 +68,11 @@ const Menu = styled(FlexBox)<StyledProps>`
 
   border-left: 1px solid ${({ theme }) => theme.modalBorderColor};
 
-  ${({ isShown, theme }) =>
-    isShown
-      ? css<StyledProps>`
-          //visibility: visible;
-          //pointer-events: all;
+  ${({ $isShown, theme }) =>
+    $isShown
+      ? css`
           border-width: 1px;
           max-width: 100%;
-          //box-shadow: ${theme.globals.shadowMain};
-          //border-top: 1px solid ${({ theme }) => theme.modalBorderColor};
         `
       : css`
           max-width: 0;
@@ -84,18 +80,18 @@ const Menu = styled(FlexBox)<StyledProps>`
         `};
 `;
 
-const List = styled.div<{ isShown: boolean }>`
+const List = styled.div<StyledProps>`
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
   gap: 8px;
   margin-top: auto;
 
-  overflow: auto;
-
-  ${({ isShown }) =>
-    isShown
-      ? css<StyledProps>`
+  overflow-y: auto;
+  overflow-x: hidden;
+  ${({ $isShown }) =>
+    $isShown
+      ? css`
           visibility: visible;
           pointer-events: all;
         `
@@ -115,23 +111,22 @@ const List = styled.div<{ isShown: boolean }>`
   ::-webkit-scrollbar-button {
     height: 0;
     width: 0;
-    overflow: hidden;
   }
 `;
 
 const ToggleButton = styled(ButtonIcon)<StyledProps>`
   position: absolute;
   //bottom: 0;
-  right: ${({ isShown }) => (isShown ? '60px' : '16px')};
-  bottom: ${({ hasFooter }) => (hasFooter ? '16px' : '16px')};
+  right: ${({ $isShown }) => ($isShown ? '60px' : '16px')};
+  bottom: ${({ $hasFooter }) => ($hasFooter ? '16px' : '16px')};
   z-index: 30;
 
   border-radius: 50%;
   fill: ${({ theme }) => theme.accentColor.base};
 
-  //box-shadow: ${({ isShown, theme }) => (isShown ? theme.globals.shadowMain : '')};
-  background-color: ${({ theme, isShown }) =>
-    isShown ? theme.backgroundColorSecondary : theme.backgroundColorSecondary};
+  //box-shadow: ${({ $isShown, theme }) => ($isShown ? theme.globals.shadowMain : '')};
+  background-color: ${({ theme, $isShown }) =>
+    $isShown ? theme.backgroundColorSecondary : theme.backgroundColorSecondary};
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
   transition: all ${({ theme }) => theme.globals.timingFunctionMain};
 
@@ -140,7 +135,7 @@ const ToggleButton = styled(ButtonIcon)<StyledProps>`
   }
 
   & .icon {
-    transform: ${({ isShown }) => (isShown ? 'rotate(45deg)' : '')};
+    transform: ${({ $isShown }) => ($isShown ? 'rotate(45deg)' : '')};
   }
 
   &:hover {
@@ -152,26 +147,6 @@ const ToggleButton = styled(ButtonIcon)<StyledProps>`
   }
 `;
 
-//
-// @media screen and(max-height: 480px) {
-//   flex-direction: row;
-//   width: max-content;
-//   height: 48px;
-//   ${({ isShown }) =>
-//   isShown
-//     ? css`
-//             max-width: 90vw;
-//             padding: 8px 64px 8px 16px;
-//             visibility: visible;
-//             pointer-events: all;
-//           `
-//     : css`
-//             max-width: 48px;
-//             padding: 8px;
-//             /* visibility: hidden; */
-//             pointer-events: none;
-//           `};
-// }
 const Separator = styled.div`
   align-self: stretch;
   position: relative;
