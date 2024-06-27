@@ -1,6 +1,8 @@
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import * as React from 'react';
 import { takeFullGridArea } from './pagesStyles';
+import FlexBox from '../atoms/FlexBox';
+import ButtonIcon from '../atoms/ButtonIcon';
 
 export type ErrorNameType = 'notFoundPage' | 'notFound';
 
@@ -33,6 +35,7 @@ export const errors: IErrors = {
   },
 };
 const PageNotFound: React.FC<IErrorPageProps> = ({ errName = 'notFoundPage' }) => {
+  const theme = useTheme();
   return (
     <Page className={'PageNotFound'}>
       <ErrorNotification>
@@ -41,6 +44,15 @@ const PageNotFound: React.FC<IErrorPageProps> = ({ errName = 'notFoundPage' }) =
         <Title>{errors[errName]?.title}</Title>
 
         <Text>{errors[errName]?.error}</Text>
+
+        <FlexBox gap={12} fxDirection={'row'}>
+          <ButtonIcon icon={'SmallArrowLeft'} iconSize={'28px'} variant={'outlinedMiddle'}>
+            {'Go back'}
+          </ButtonIcon>
+          <ButtonIcon endIcon={'home'} variant={'outlinedMiddle'}>
+            {'Go home'}
+          </ButtonIcon>
+        </FlexBox>
       </ErrorNotification>
     </Page>
   );
@@ -78,6 +90,9 @@ const ErrorNotification = styled.div`
 
   gap: 4px;
 
+  border-radius: 4px;
+
+  box-shadow: ${p => p.theme.globals.shadowSecondary};
   border: 1px solid ${({ theme }) => theme.trBorderClr};
 `;
 const ErrorCode = styled.p`
