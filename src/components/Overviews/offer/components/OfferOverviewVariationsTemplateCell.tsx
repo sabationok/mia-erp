@@ -1,14 +1,14 @@
-import { RenderOverviewCellComponent } from '../../components/overview-types';
+import { RenderOverviewAreaComponent } from '../../components/overview-types';
 import { AreaStyledComp } from '../../components/CellStyles';
-import { OverviewCellHeader } from '../../components/OverviewCellHeader';
+import { OverviewAreaHeader } from '../../components/OverviewAreaHeader';
 import FormCreateVariation from '../../../Overlays/CreateVariationOverlay';
 import FlexBox from '../../../atoms/FlexBox';
 import React from 'react';
 
-export const OfferOverviewVariationsTemplateCell: RenderOverviewCellComponent = ({ cell, overlayHandler, data }) => {
+export const OfferOverviewVariationsTemplateCell: RenderOverviewAreaComponent = ({ cell, overlayHandler, data }) => {
   return (
     <AreaStyledComp.Cell padding={'4px'}>
-      <OverviewCellHeader
+      <OverviewAreaHeader
         title={cell.title}
         openOverlayButtonTitle={'Перегляд'}
         onOpenOverlayPress={() => {

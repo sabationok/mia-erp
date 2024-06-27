@@ -1,4 +1,4 @@
-import { RenderOverviewCellComponent } from '../../components/overview-types';
+import { RenderOverviewAreaComponent } from '../../components/overview-types';
 import { OfferEntity, OfferStatusEnum } from '../../../../types/offers/offers.types';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
@@ -9,11 +9,11 @@ import FlexBox from '../../../atoms/FlexBox';
 import Changer from '../../../atoms/Changer';
 import ButtonIcon from '../../../atoms/ButtonIcon';
 import { t } from '../../../../lang';
-import { OverviewCellHeader } from '../../components/OverviewCellHeader';
+import { OverviewAreaHeader } from '../../components/OverviewAreaHeader';
 import { AreaStyledComp } from '../../components/CellStyles';
 import { useOfferOverviewLoaders } from '../../../AppPages/offers/PageOfferOverview';
 
-export const OfferOverviewStatusChangerCell: RenderOverviewCellComponent<OfferEntity> = ({ cell, data }) => {
+export const OfferOverviewStatusChangerCell: RenderOverviewAreaComponent<OfferEntity> = ({ cell, data }) => {
   const loaders = useOfferOverviewLoaders();
 
   const [canEdit, setCanEdit] = useState(false);
@@ -51,7 +51,7 @@ export const OfferOverviewStatusChangerCell: RenderOverviewCellComponent<OfferEn
 
   return (
     <AreaStyledComp.Cell>
-      <OverviewCellHeader
+      <OverviewAreaHeader
         title={cell?.title}
         onCancelPress={handleCancelPress}
         onEditPress={() => setCanEdit(true)}

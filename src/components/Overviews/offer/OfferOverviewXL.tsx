@@ -9,13 +9,13 @@ import { DrawerHeader } from '../../Overlays';
 import TabSelector from '../../atoms/TabSelector';
 import { useOverlayService } from '../../../Providers/Overlay/OverlayStackProvider';
 import { useAppRouter } from '../../../hooks';
-import { OverviewTextCell } from '../components/OverviewTextCell';
+import { OverviewTextArea } from '../components/OverviewTextArea';
 import { enumToFilterOptions, toAppDateFormat } from '../../../utils';
 import { OverviewCellProps } from '../components/overview-types';
 import { IMeasurement, PartialRecord } from '../../../types/utils.types';
 import { isString } from 'lodash';
 import { OfferOverviewCategoriesArea } from './components/OfferOverviewCategoriesArea';
-import { OfferOverviewStaticProperties } from './components/OfferOverviewStaticPropertiesCell';
+import { OfferOverviewStaticPropertiesArea } from './components/OfferOverviewStaticPropertiesArea';
 import { OfferOverviewDefaultsArea } from './components/OfferOverviewDefaultsArea';
 import { OfferOverviewImagesArea } from './components/OfferOverviewImagesArea';
 import { Text } from '../../atoms/Text';
@@ -61,7 +61,7 @@ const OfferOverviewXL: React.FC<ProductOverviewXLProps> = ({ className, ...p }) 
             if (CellComponent) {
               return <CellComponent key={cell.title} overlayHandler={overlaySrv.open} cell={cell} data={offer} />;
             }
-            return <OverviewTextCell key={cell.title} overlayHandler={overlaySrv.open} cell={cell} data={offer} />;
+            return <OverviewTextArea key={cell.title} overlayHandler={overlaySrv.open} cell={cell} data={offer} />;
           }),
     [cellsMap, currentTab, overlaySrv.open, offer]
   );
@@ -196,7 +196,7 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, OfferOverviewTabsEnum>[
   },
   {
     title: t('Properties'),
-    CellComponent: OfferOverviewStaticProperties,
+    CellComponent: OfferOverviewStaticPropertiesArea,
     gridArea: 'properties',
     tab: OfferOverviewTabsEnum.Properties,
   },

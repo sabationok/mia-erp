@@ -10,16 +10,16 @@ import { ModalFormProps } from '../ModalForm';
 import { ToastService } from '../../services';
 import { DrawerHeader, OverlayFooter, OverlayForm } from './index';
 import { OfferEntity } from '../../types/offers/offers.types';
-import { CreatedOverlay } from '../../Providers/Overlay/OverlayStackProvider';
 import { PropertiesGroupEntity, PropertyEntity } from '../../types/offers/properties.types';
 import OfferPropertySelector from '../Forms/offers/variations/OfferPropertySelector';
 import { PropertiesFilterData, PropertiesGroupSelector } from '../atoms/PropertiesGroupSelector';
 import { useCurrentOffer } from '../../hooks';
 import { sortIds } from '../../utils';
 import { t } from '../../lang';
+import { CreatedDrawer } from '../../Providers/Drawer';
 
 export interface FormSelectPropertiesProps
-  extends CreatedOverlay,
+  extends CreatedDrawer,
     Omit<ModalFormProps<any, any, string[]>, 'onSubmit' | 'onChange' | 'onSelect'> {
   onSubmit?: AppSubmitHandler<string[]>;
   onSelect?: (id: string) => void;
@@ -33,7 +33,7 @@ export interface FormSelectPropertiesProps
   filterValue?: Partial<PropertiesFilterData>;
 }
 
-const FormSelectPropertiesOverlay: React.FC<FormSelectPropertiesProps> = ({
+const FormSelectPropertiesDrawer: React.FC<FormSelectPropertiesProps> = ({
   onClose,
   title,
   defaultState,
@@ -175,4 +175,4 @@ const PropertiesBox = styled(FlexBox)`
   padding-bottom: 8px;
 `;
 
-export default FormSelectPropertiesOverlay;
+export default FormSelectPropertiesDrawer;

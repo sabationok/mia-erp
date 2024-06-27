@@ -1,14 +1,14 @@
-import { RenderOverviewCellComponent } from '../../components/overview-types';
+import { RenderOverviewAreaComponent } from '../../components/overview-types';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 import React, { useMemo } from 'react';
 import ImagePreviewSmall from '../../../atoms/ImagePreviewSmall';
 import FormProductImages from '../../../Overlays/FormOfferImagesOverlay';
 import FlexBox from '../../../atoms/FlexBox';
 import { AreaStyledComp } from '../../components/CellStyles';
-import { OverviewCellHeader } from '../../components/OverviewCellHeader';
+import { OverviewAreaHeader } from '../../components/OverviewAreaHeader';
 import { formAddImageSetTabs } from '../../../../data';
 
-export const OfferOverviewImagesArea: RenderOverviewCellComponent<OfferEntity> = ({ data, cell, overlayHandler }) => {
+export const OfferOverviewImagesArea: RenderOverviewAreaComponent<OfferEntity> = ({ data, cell, overlayHandler }) => {
   const renderImageSets = useMemo(() => {
     return data?.images?.map((imgsSet, index) => {
       return (
@@ -32,7 +32,7 @@ export const OfferOverviewImagesArea: RenderOverviewCellComponent<OfferEntity> =
 
   return (
     <AreaStyledComp.Cell style={{ minHeight: 'max-content', padding: '4px 0' }}>
-      <OverviewCellHeader
+      <OverviewAreaHeader
         title={cell?.title}
         onOpenOverlayPress={() => {
           overlayHandler({ RenderComponent: FormProductImages, props: { offer: data } });

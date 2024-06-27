@@ -1,14 +1,14 @@
-import { RenderOverviewCellComponent } from '../../components/overview-types';
+import { RenderOverviewAreaComponent } from '../../components/overview-types';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 import React, { useMemo } from 'react';
-import FormSelectPropertiesDrawer from '../../../Overlays/FormSelectPropertiesOverlay';
 import FlexBox from '../../../atoms/FlexBox';
 import { t } from '../../../../lang';
 import { AreaStyledComp } from '../../components/CellStyles';
-import { OverviewCellHeader } from '../../components/OverviewCellHeader';
+import { OverviewAreaHeader } from '../../components/OverviewAreaHeader';
 import { useCurrentOffer } from '../../../../hooks';
+import FormSelectOfferTagsDrawer from '../../../Overlays/FormSelectOfferTagsDrawer';
 
-export const OfferOverviewTagsArea: RenderOverviewCellComponent<OfferEntity> = ({ cell, overlayHandler, data }) => {
+export const OfferOverviewTagsArea: RenderOverviewAreaComponent<OfferEntity> = ({ cell, overlayHandler, data }) => {
   const Offer = useCurrentOffer(data);
 
   const renderValues = useMemo(() => {
@@ -33,17 +33,17 @@ export const OfferOverviewTagsArea: RenderOverviewCellComponent<OfferEntity> = (
       className={'TAGS_LIST_CELL'}
       style={{ minHeight: 'max-content' }}
     >
-      <OverviewCellHeader
+      <OverviewAreaHeader
         title={cell?.title}
         onOpenOverlayPress={() => {
           overlayHandler({
-            RenderComponent: FormSelectPropertiesDrawer,
+            RenderComponent: FormSelectOfferTagsDrawer,
             props: { offer: data },
           });
         }}
       />
 
-      <FlexBox fillWidth gap={8} alignItems={'stretch'}>
+      <FlexBox fillWidth gap={8} fxDirection={'row'} alignItems={'stretch'}>
         {Offer?.tags?.length ? (
           renderValues
         ) : (

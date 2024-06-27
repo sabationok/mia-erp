@@ -1,14 +1,14 @@
-import { RenderOverviewCellComponent } from '../../components/overview-types';
+import { RenderOverviewAreaComponent } from '../../components/overview-types';
 import { OrderEntity } from '../../../../types/orders/orders.types';
 import { AreaStyledComp } from '../../components/CellStyles';
-import { OverviewCellHeader } from '../../components/OverviewCellHeader';
+import { OverviewAreaHeader } from '../../components/OverviewAreaHeader';
 import { t } from '../../../../lang';
 import { useMemo } from 'react';
 import FlexBox from '../../../atoms/FlexBox';
 import { numberWithSpaces } from '../../../../utils';
 import { Text } from '../../../atoms/Text';
 
-export const OrderOverviewTotals: RenderOverviewCellComponent<OrderEntity> = ({ data, cell }) => {
+export const OrderOverviewTotals: RenderOverviewAreaComponent<OrderEntity> = ({ data, cell }) => {
   const renderCells = useMemo(() => {
     const cells: { label: string; value?: React.ReactNode; visible?: boolean }[] = [
       { label: t('Amount'), value: numberWithSpaces(data?.total?.amount) },
@@ -24,7 +24,7 @@ export const OrderOverviewTotals: RenderOverviewCellComponent<OrderEntity> = ({ 
 
   return (
     <AreaStyledComp.Cell>
-      <OverviewCellHeader title={cell.title} />
+      <OverviewAreaHeader title={cell.title} />
 
       {renderCells}
     </AreaStyledComp.Cell>

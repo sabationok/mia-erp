@@ -1,10 +1,10 @@
-import { RenderOverviewCellComponent } from './overview-types';
+import { RenderOverviewAreaComponent } from './overview-types';
 import FlexBox from '../../atoms/FlexBox';
 import { t } from '../../../lang';
 import React, { useMemo } from 'react';
 import { AreaStyledComp } from './CellStyles';
 
-export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) => {
+export const OverviewTextArea: RenderOverviewAreaComponent = ({ cell, data }) => {
   const value = useMemo(() => (cell.getValue ? cell.getValue(data) : null), [cell, data]);
 
   return (

@@ -4,7 +4,7 @@ import React, { useMemo, useState } from 'react';
 import { useOverlayService } from '../../../../Providers/Overlay/OverlayStackProvider';
 import { useOrdersSelector } from '../../../../redux/selectors.store';
 import TabSelector from '../../../atoms/TabSelector';
-import { OverviewTextCell } from 'components/Overviews/components/OverviewTextCell';
+import { OverviewTextArea } from 'components/Overviews/components/OverviewTextArea';
 import { OverviewCellProps } from '../../components/overview-types';
 import { OrderEntity } from '../../../../types/orders/orders.types';
 import { t } from '../../../../lang';
@@ -41,7 +41,7 @@ const OrderOverviewInfoTab: React.FC<OrderOverviewInfoTabProps> = _p => {
             if (CellComponent) {
               return <CellComponent key={cell.title} overlayHandler={overlayS.open} cell={cell} data={currentOrder} />;
             }
-            return <OverviewTextCell key={cell.title} overlayHandler={overlayS.open} cell={cell} data={currentOrder} />;
+            return <OverviewTextArea key={cell.title} overlayHandler={overlayS.open} cell={cell} data={currentOrder} />;
           }),
     [cellsMap, currentTab, overlayS.open, currentOrder]
   );

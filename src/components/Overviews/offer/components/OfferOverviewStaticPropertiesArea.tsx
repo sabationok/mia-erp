@@ -1,17 +1,17 @@
-import { RenderOverviewCellComponent } from '../../components/overview-types';
+import { RenderOverviewAreaComponent } from '../../components/overview-types';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 import { useOffersSelector } from '../../../../redux/selectors.store';
 import React, { useMemo } from 'react';
-import FormSelectPropertiesOverlay from '../../../Overlays/FormSelectPropertiesOverlay';
+import FormSelectPropertiesDrawer from '../../../Overlays/FormSelectPropertiesDrawer';
 import FlexBox from '../../../atoms/FlexBox';
 import { t } from '../../../../lang';
 import { AreaStyledComp } from '../../components/CellStyles';
-import { OverviewCellHeader } from '../../components/OverviewCellHeader';
+import { OverviewAreaHeader } from '../../components/OverviewAreaHeader';
 import { OverviewPropertyComponent } from '../../components/OverviewPropertyComponent';
 import { PropertyValueEntity } from '../../../../types/offers/properties.types';
 import { useCurrentOffer } from '../../../../hooks';
 
-export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEntity> = ({
+export const OfferOverviewStaticPropertiesArea: RenderOverviewAreaComponent<OfferEntity> = ({
   cell,
   overlayHandler,
   data,
@@ -76,11 +76,11 @@ export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEnt
       className={'PROPERTIES_LIST_CELL'}
       style={{ minHeight: renderProperties && renderProperties?.length > 0 ? 'max-content' : 50 }}
     >
-      <OverviewCellHeader
+      <OverviewAreaHeader
         title={cell?.title}
         onOpenOverlayPress={() => {
           overlayHandler({
-            RenderComponent: FormSelectPropertiesOverlay,
+            RenderComponent: FormSelectPropertiesDrawer,
             props: { offer: data },
           });
         }}

@@ -1,17 +1,17 @@
-import { RenderOverviewCellComponent } from '../../components/overview-types';
+import { RenderOverviewAreaComponent } from '../../components/overview-types';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 import { useDirectorySelector } from '../../../../redux/selectors.store';
 import { ApiDirType } from '../../../../redux/APP_CONFIGS';
 import React, { useMemo } from 'react';
 import { AreaStyledComp } from '../../components/CellStyles';
-import { OverviewCellHeader } from '../../components/OverviewCellHeader';
+import { OverviewAreaHeader } from '../../components/OverviewAreaHeader';
 import OfferCategoriesOverlay from '../../../Overlays/FromSelectCategoriesOverlay';
 import FlexBox from '../../../atoms/FlexBox';
 import { OfferCategoryEntity } from '../../../../types/dir.types';
 import { useOverlayService } from '../../../../Providers/Overlay/OverlayStackProvider';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 
-export const OfferOverviewCategoriesArea: RenderOverviewCellComponent<OfferEntity> = ({ cell, data }) => {
+export const OfferOverviewCategoriesArea: RenderOverviewAreaComponent<OfferEntity> = ({ cell, data }) => {
   const overlaySrv = useOverlayService();
   const modalSrv = useModalService();
 
@@ -28,7 +28,7 @@ export const OfferOverviewCategoriesArea: RenderOverviewCellComponent<OfferEntit
 
   return (
     <AreaStyledComp.Cell style={{ minHeight: 'max-content' }}>
-      <OverviewCellHeader
+      <OverviewAreaHeader
         title={cell?.title}
         openOverlayButtonTitle={'Змінити'}
         onOpenOverlayPress={() => {

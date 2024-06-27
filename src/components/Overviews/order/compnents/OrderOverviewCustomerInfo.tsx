@@ -1,13 +1,13 @@
-import { RenderOverviewCellComponent } from '../../components/overview-types';
+import { RenderOverviewAreaComponent } from '../../components/overview-types';
 import { OrderEntity } from '../../../../types/orders/orders.types';
 import { AreaStyledComp } from '../../components/CellStyles';
 import FlexBox from '../../../atoms/FlexBox';
 import { Text } from '../../../atoms/Text';
 import { t } from '../../../../lang';
 import { useMemo } from 'react';
-import { OverviewCellHeader } from '../../components/OverviewCellHeader';
+import { OverviewAreaHeader } from '../../components/OverviewAreaHeader';
 
-export const OrderOverviewCustomerInfo: RenderOverviewCellComponent<OrderEntity> = ({ cell, data }) => {
+export const OrderOverviewCustomerInfo: RenderOverviewAreaComponent<OrderEntity> = ({ cell, data }) => {
   const renderCells = useMemo(() => {
     const customer = data?.customer;
 
@@ -71,7 +71,7 @@ export const OrderOverviewCustomerInfo: RenderOverviewCellComponent<OrderEntity>
 
   return (
     <AreaStyledComp.Cell>
-      {cell?.title && <OverviewCellHeader title={cell?.title} />}
+      {cell?.title && <OverviewAreaHeader title={cell?.title} />}
 
       {renderCells}
     </AreaStyledComp.Cell>

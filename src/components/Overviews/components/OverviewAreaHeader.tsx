@@ -3,7 +3,7 @@ import FlexBox from '../../atoms/FlexBox';
 import React from 'react';
 import { AreaStyledComp } from './CellStyles';
 
-export const OverviewCellHeader = ({
+export const OverviewAreaHeader = ({
   title = 'Title',
   openOverlayButtonTitle = t('Change'),
   onOpenOverlayPress,

@@ -1,4 +1,4 @@
-import { RenderOverviewCellComponent } from '../../components/overview-types';
+import { RenderOverviewAreaComponent } from '../../components/overview-types';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 import { useTheme } from 'styled-components';
 import React, { useMemo } from 'react';
@@ -6,7 +6,7 @@ import { t } from '../../../../lang';
 import FlexBox from '../../../atoms/FlexBox';
 import { Text } from '../../../atoms/Text';
 import { AreaStyledComp } from '../../components/CellStyles';
-import { OverviewCellHeader } from '../../components/OverviewCellHeader';
+import { OverviewAreaHeader } from '../../components/OverviewAreaHeader';
 import FormOfferDefaultsDrawer from '../../../Overlays/FormOfferDefaultsDrawer';
 
 import { PriceEntity } from '../../../../types/price-management/price-management.types';
@@ -15,7 +15,7 @@ import { toPrice } from '../../../../utils/numbers';
 import { useOverlayService } from '../../../../Providers/Overlay/OverlayStackProvider';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 
-export const OfferOverviewDefaultsArea: RenderOverviewCellComponent<OfferEntity> = ({ data, cell, overlayHandler }) => {
+export const OfferOverviewDefaultsArea: RenderOverviewAreaComponent<OfferEntity> = ({ data, cell, overlayHandler }) => {
   const theme = useTheme();
   const warehouse = data?.warehouse;
   const supplier = data?.supplier;
@@ -81,7 +81,7 @@ export const OfferOverviewDefaultsArea: RenderOverviewCellComponent<OfferEntity>
 
   return (
     <AreaStyledComp.Cell style={{ minHeight: 'max-content' }}>
-      <OverviewCellHeader
+      <OverviewAreaHeader
         title={cell?.title}
         onOpenOverlayPress={() => {
           if (overlaySrv.create) {

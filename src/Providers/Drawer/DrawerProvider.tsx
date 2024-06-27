@@ -7,9 +7,9 @@ export interface DrawerProviderProps {
 }
 
 export interface CreatedDrawer {
-  compId: string;
-  onClose: () => void;
-  index: number;
+  compId?: string;
+  onClose?: () => void;
+  index?: number;
 }
 
 export interface DrawerConfigs {
