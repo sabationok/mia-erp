@@ -1,6 +1,6 @@
 import { RenderOverviewCellComponent } from '../../components/overview-types';
 import { OrderEntity } from '../../../../types/orders/orders.types';
-import { CellStyledComp } from '../../components/CellStyles';
+import { AreaStyledComp } from '../../components/CellStyles';
 import { OverviewCellHeader } from '../../components/OverviewCellHeader';
 import { t } from '../../../../lang';
 import { useMemo } from 'react';
@@ -17,16 +17,16 @@ export const OrderOverviewTotals: RenderOverviewCellComponent<OrderEntity> = ({ 
     return cells.map(cell => (
       <FlexBox fxDirection={'row'} padding={'6px'} justifyContent={'space-between'} fillWidth gap={8}>
         <Text $size={11}>{cell.label}</Text>
-        <CellStyledComp.CellText $weight={600}>{cell?.value}</CellStyledComp.CellText>
+        <AreaStyledComp.CellText $weight={600}>{cell?.value}</AreaStyledComp.CellText>
       </FlexBox>
     ));
   }, [data?.total?.amount, data?.total?.items]);
 
   return (
-    <CellStyledComp.Cell>
+    <AreaStyledComp.Cell>
       <OverviewCellHeader title={cell.title} />
 
       {renderCells}
-    </CellStyledComp.Cell>
+    </AreaStyledComp.Cell>
   );
 };

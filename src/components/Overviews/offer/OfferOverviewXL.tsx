@@ -14,12 +14,12 @@ import { enumToFilterOptions, toAppDateFormat } from '../../../utils';
 import { OverviewCellProps } from '../components/overview-types';
 import { IMeasurement, PartialRecord } from '../../../types/utils.types';
 import { isString } from 'lodash';
-import { OfferOverviewCategoriesCell } from './components/OfferOverviewCategoriesCell';
+import { OfferOverviewCategoriesArea } from './components/OfferOverviewCategoriesArea';
 import { OfferOverviewStaticProperties } from './components/OfferOverviewStaticPropertiesCell';
-import { OfferOverviewDefaultsCell } from './components/OfferOverviewDefaultsCell';
-import { OfferOverviewImagesCell } from './components/OfferOverviewImagesCell';
+import { OfferOverviewDefaultsArea } from './components/OfferOverviewDefaultsArea';
+import { OfferOverviewImagesArea } from './components/OfferOverviewImagesArea';
 import { Text } from '../../atoms/Text';
-import { OfferOverviewTagsCell } from './components/OfferOverviewTagsCell';
+import { OfferOverviewTagsArea } from './components/OfferOverviewTagsArea';
 
 export enum OfferOverviewTabsEnum {
   General = 'General',
@@ -190,7 +190,7 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, OfferOverviewTabsEnum>[
   // * PROPERTIES
   {
     title: t('Categories'),
-    CellComponent: OfferOverviewCategoriesCell,
+    CellComponent: OfferOverviewCategoriesArea,
     gridArea: 'categories',
     tab: OfferOverviewTabsEnum.Properties,
   },
@@ -202,8 +202,8 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, OfferOverviewTabsEnum>[
   },
   {
     title: t('Tags'),
-    CellComponent: OfferOverviewTagsCell,
-    gridArea: 'tagss',
+    CellComponent: OfferOverviewTagsArea,
+    gridArea: 'tags',
     tab: OfferOverviewTabsEnum.Properties,
   },
 
@@ -218,7 +218,9 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, OfferOverviewTabsEnum>[
     gridArea: 'measurement',
     getValue: product => {
       try {
-        const data: IMeasurement = product?.measurement ? JSON.parse(product?.measurement as string) : {};
+        const data: IMeasurement = isString(product?.measurement)
+          ? JSON.parse(product?.measurement as string)
+          : product?.measurement;
         const arr = [
           `${t('unit')}: ${data?.unit || 0}`,
           `${t('min')}: ${data?.min || 0}`,
@@ -277,17 +279,17 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, OfferOverviewTabsEnum>[
     tab: OfferOverviewTabsEnum.Futures,
   },
 
-  {
-    title: t('Is promo'),
-    getValue: data => data?.futures?.isPromo,
-    gridArea: 'isPromo',
-    tab: OfferOverviewTabsEnum.Futures,
-  },
+  // {
+  //   title: t('Is promo'),
+  //   getValue: data => data?.futures?.isPromo,
+  //   gridArea: 'isPromo',
+  //   tab: OfferOverviewTabsEnum.Futures,
+  // },
 
   // * DEFAULTS
   {
     title: t('Default values'),
-    CellComponent: OfferOverviewDefaultsCell,
+    CellComponent: OfferOverviewDefaultsArea,
     gridArea: 'defaults',
     tab: OfferOverviewTabsEnum.Defaults,
   },
@@ -339,7 +341,7 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, OfferOverviewTabsEnum>[
 
   {
     title: t('Images'),
-    CellComponent: OfferOverviewImagesCell,
+    CellComponent: OfferOverviewImagesArea,
     gridArea: 'images',
     tab: OfferOverviewTabsEnum.Images,
   },

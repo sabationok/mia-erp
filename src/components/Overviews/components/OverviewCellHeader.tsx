@@ -1,7 +1,7 @@
 import { t } from '../../../lang';
 import FlexBox from '../../atoms/FlexBox';
 import React from 'react';
-import { CellStyledComp } from './CellStyles';
+import { AreaStyledComp } from './CellStyles';
 
 export const OverviewCellHeader = ({
   title = 'Title',
@@ -38,32 +38,32 @@ export const OverviewCellHeader = ({
       minHeight={'36px'}
       padding={'4px 0'}
     >
-      <CellStyledComp.CellText $isTitle $size={13} style={{ marginRight: 'auto' }}>
+      <AreaStyledComp.CellText $isTitle $size={13} style={{ marginRight: 'auto' }}>
         {title}
-      </CellStyledComp.CellText>
+      </AreaStyledComp.CellText>
 
       {onOpenOverlayPress && (
-        <CellStyledComp.HeaderButton type={'button'} onClick={onOpenOverlayPress}>
+        <AreaStyledComp.HeaderButton type={'button'} onClick={onOpenOverlayPress}>
           {openOverlayButtonTitle}
-        </CellStyledComp.HeaderButton>
+        </AreaStyledComp.HeaderButton>
       )}
 
       {!editMode && onEditPress && (
-        <CellStyledComp.HeaderButton type={'button'} onClick={onEditPress}>
+        <AreaStyledComp.HeaderButton type={'button'} onClick={onEditPress}>
           {editButtonText}
-        </CellStyledComp.HeaderButton>
+        </AreaStyledComp.HeaderButton>
       )}
 
       {editMode && onCancelPress && (
-        <CellStyledComp.HeaderButton type={'button'} onClick={onCancelPress}>
+        <AreaStyledComp.HeaderButton type={'button'} onClick={onCancelPress}>
           {cancelButtonText}
-        </CellStyledComp.HeaderButton>
+        </AreaStyledComp.HeaderButton>
       )}
 
       {editMode && onAcceptPress && (
-        <CellStyledComp.HeaderButton type={'button'} disabled={!canAccept} onClick={onAcceptPress}>
+        <AreaStyledComp.HeaderButton type={'button'} disabled={!canAccept} onClick={onAcceptPress}>
           {acceptButtonText}
-        </CellStyledComp.HeaderButton>
+        </AreaStyledComp.HeaderButton>
       )}
     </FlexBox>
   );

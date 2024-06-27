@@ -2,16 +2,16 @@ import { RenderOverviewCellComponent } from './overview-types';
 import FlexBox from '../../atoms/FlexBox';
 import { t } from '../../../lang';
 import React, { useMemo } from 'react';
-import { CellStyledComp } from './CellStyles';
+import { AreaStyledComp } from './CellStyles';
 
 export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) => {
   const value = useMemo(() => (cell.getValue ? cell.getValue(data) : null), [cell, data]);
 
   return (
-    <CellStyledComp.Cell>
-      <CellStyledComp.CellText $isTitle $size={13} $padding={'6px 8px'}>
+    <AreaStyledComp.Cell>
+      <AreaStyledComp.CellText $isTitle $size={13} $padding={'6px 8px'}>
         {cell?.title}
-      </CellStyledComp.CellText>
+      </AreaStyledComp.CellText>
 
       <FlexBox
         fillWidth
@@ -24,13 +24,13 @@ export const OverviewTextCell: RenderOverviewCellComponent = ({ cell, data }) =>
         style={{ minHeight: 32 }}
       >
         {!value || ['string', 'number'].includes(typeof value) ? (
-          <CellStyledComp.CellText $isTitle={!value} $weight={500}>
+          <AreaStyledComp.CellText $isTitle={!value} $weight={500}>
             {value || t('undefined')}
-          </CellStyledComp.CellText>
+          </AreaStyledComp.CellText>
         ) : (
           value
         )}
       </FlexBox>
-    </CellStyledComp.Cell>
+    </AreaStyledComp.Cell>
   );
 };

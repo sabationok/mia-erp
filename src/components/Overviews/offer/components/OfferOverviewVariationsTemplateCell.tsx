@@ -1,5 +1,5 @@
 import { RenderOverviewCellComponent } from '../../components/overview-types';
-import { CellStyledComp } from '../../components/CellStyles';
+import { AreaStyledComp } from '../../components/CellStyles';
 import { OverviewCellHeader } from '../../components/OverviewCellHeader';
 import FormCreateVariation from '../../../Overlays/CreateVariationOverlay';
 import FlexBox from '../../../atoms/FlexBox';
@@ -7,7 +7,7 @@ import React from 'react';
 
 export const OfferOverviewVariationsTemplateCell: RenderOverviewCellComponent = ({ cell, overlayHandler, data }) => {
   return (
-    <CellStyledComp.Cell padding={'4px'}>
+    <AreaStyledComp.Cell padding={'4px'}>
       <OverviewCellHeader
         title={cell.title}
         openOverlayButtonTitle={'Перегляд'}
@@ -25,11 +25,11 @@ export const OfferOverviewVariationsTemplateCell: RenderOverviewCellComponent = 
         alignItems={'flex-end'}
         overflow={'hidden'}
       >
-        <CellStyledComp.CellText
+        <AreaStyledComp.CellText
           $disabled={!data?.template?.label}
           $weight={500}
-        >{`${data?.template?.label}`}</CellStyledComp.CellText>
+        >{`${data?.template?.label}`}</AreaStyledComp.CellText>
       </FlexBox>
-    </CellStyledComp.Cell>
+    </AreaStyledComp.Cell>
   );
 };

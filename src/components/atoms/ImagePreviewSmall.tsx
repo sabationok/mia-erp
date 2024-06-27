@@ -3,11 +3,13 @@ import { Text } from './Text';
 import styled from 'styled-components';
 import FlexBox from './FlexBox';
 import * as React from 'react';
+import { useState } from 'react';
 import SvgIcon from './SvgIcon';
+import { MaybeNull } from '../../types/utils.types';
 
 export interface ImageSmallPreviewProps {
   src: string;
-  title?: string;
+  title?: MaybeNull<string>;
   type?: string;
   onDeletePress?: () => void;
   onEditPress?: () => void;
@@ -26,6 +28,7 @@ const ImagePreviewSmall = ({
   maxWidth,
   maxHeight,
 }: ImageSmallPreviewProps) => {
+  const [isLoaded, setIsLoaded] = useState(false);
   return (
     <ImageSmallPreviewBox
       className={`ImagePreview_${title}`}
@@ -34,21 +37,27 @@ const ImagePreviewSmall = ({
       alignItems={'center'}
       justifyContent={'center'}
       gap={4}
-      height={'115px'}
-      border={'1px solid lightgrey'}
-      borderRadius={'2px'}
+      border={!isLoaded ? '1px solid lightgrey' : ''}
+      borderRadius={'4px'}
       style={{ position: 'relative' }}
       disabled={disabled}
     >
       {src ? (
-        <img src={src} alt={title} style={{ width: '100%' }} />
+        <img
+          src={src}
+          alt={title || 'img_title'}
+          style={{ width: '100%' }}
+          onLoad={() => {
+            setIsLoaded(true);
+          }}
+        />
       ) : (
         <SvgIcon icon={'gallery'} size={'28px'} fill={'lightgrey'} />
       )}
 
       <ImagePreviewBottom fillWidth>
         {title && (
-          <FlexBox padding={'4px'}>
+          <FlexBox padding={'6px 8px'}>
             <Text $size={12} $weight={500} color={'#fff'}>
               {title}
             </Text>
@@ -85,8 +94,7 @@ const ImagePreviewSmall = ({
 };
 
 const ImageSmallPreviewBox = styled(FlexBox)<{ disabled?: boolean; maxWidth?: string; maxHeight?: string }>`
-  min-width: 112px;
-  //width: 90px;
+  min-width: 115px;
 
   aspect-ratio: 1/1.35;
 
@@ -103,18 +111,10 @@ const ImageSmallPreviewBox = styled(FlexBox)<{ disabled?: boolean; maxWidth?: st
 `;
 
 const ImagePreviewActions = styled(FlexBox)`
-  //position: absolute;
-  //top: 0;
-  //left: 0;
-  //z-index: 5;
-
   height: 0;
   min-height: 0;
   padding: 0 6px;
   overflow: hidden;
-
-  //background-color: rgba(26, 26, 26, 0.2);
-  //backdrop-filter: blur(3px);
 
   transition: min-height ${p => p.theme.globals.timingFnMain};
 `;

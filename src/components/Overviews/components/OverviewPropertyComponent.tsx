@@ -3,7 +3,7 @@ import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
 import { PropertyEntity, PropertyValueEntity } from '../../../types/offers/properties.types';
 import { OfferEntity } from '../../../types/offers/offers.types';
-import { CellStyledComp } from './CellStyles';
+import { AreaStyledComp } from './CellStyles';
 
 interface OverviewPropertyComponentProps {
   item: PropertyEntity;
@@ -18,9 +18,9 @@ export const OverviewPropertyComponent: React.FC<OverviewPropertyComponentProps>
 
     return _list?.map((value, index) => {
       return (
-        <CellStyledComp.CategoryItem key={`prop-v-${value._id}`} className={'PROP_VALUE'} maxWidth={'130px'}>
+        <AreaStyledComp.CategoryItem key={`prop-v-${value._id}`} className={'PROP_VALUE'} maxWidth={'130px'}>
           {value.label}
-        </CellStyledComp.CategoryItem>
+        </AreaStyledComp.CategoryItem>
       );
     });
   }, [item.childrenList, selectedIds, items]);
@@ -28,9 +28,9 @@ export const OverviewPropertyComponent: React.FC<OverviewPropertyComponentProps>
   return (
     <FlexBox className={'PROPERTY'} gap={8} alignItems={'flex-end'}>
       <FlexBox alignItems={'center'} fxDirection={'row'} fillWidth gap={8}>
-        <CellStyledComp.CellText $size={13} $weight={600}>
+        <AreaStyledComp.CellText $size={13} $weight={600}>
           {item?.label}
-        </CellStyledComp.CellText>
+        </AreaStyledComp.CellText>
       </FlexBox>
 
       <FlexBox fxDirection={'row'} flexWrap={'wrap'} fillWidth gap={6}>

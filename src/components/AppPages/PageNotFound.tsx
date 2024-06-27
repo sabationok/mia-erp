@@ -1,4 +1,4 @@
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 import * as React from 'react';
 import { takeFullGridArea } from './pagesStyles';
 import FlexBox from '../atoms/FlexBox';
@@ -35,10 +35,9 @@ export const errors: IErrors = {
   },
 };
 const PageNotFound: React.FC<IErrorPageProps> = ({ errName = 'notFoundPage' }) => {
-  const theme = useTheme();
   return (
     <Page className={'PageNotFound'}>
-      <ErrorNotification>
+      <Box>
         <ErrorCode>{errors[errName]?.status}</ErrorCode>
 
         <Title>{errors[errName]?.title}</Title>
@@ -53,7 +52,7 @@ const PageNotFound: React.FC<IErrorPageProps> = ({ errName = 'notFoundPage' }) =
             {'Go home'}
           </ButtonIcon>
         </FlexBox>
-      </ErrorNotification>
+      </Box>
     </Page>
   );
 };
@@ -78,7 +77,7 @@ const Page = styled.div`
   ${takeFullGridArea};
 `;
 
-const ErrorNotification = styled.div`
+const Box = styled.div`
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;

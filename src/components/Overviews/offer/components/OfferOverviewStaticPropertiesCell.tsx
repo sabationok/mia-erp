@@ -5,7 +5,7 @@ import React, { useMemo } from 'react';
 import FormSelectPropertiesOverlay from '../../../Overlays/FormSelectPropertiesOverlay';
 import FlexBox from '../../../atoms/FlexBox';
 import { t } from '../../../../lang';
-import { CellStyledComp } from '../../components/CellStyles';
+import { AreaStyledComp } from '../../components/CellStyles';
 import { OverviewCellHeader } from '../../components/OverviewCellHeader';
 import { OverviewPropertyComponent } from '../../components/OverviewPropertyComponent';
 import { PropertyValueEntity } from '../../../../types/offers/properties.types';
@@ -70,7 +70,7 @@ export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEnt
   }, [propertiesList, overlayHandler, valuesListMap, data]);
 
   return (
-    <CellStyledComp.Cell
+    <AreaStyledComp.Cell
       padding={'4px 4px 8px'}
       gap={8}
       className={'PROPERTIES_LIST_CELL'}
@@ -90,9 +90,9 @@ export const OfferOverviewStaticProperties: RenderOverviewCellComponent<OfferEnt
         {idsSet.properties?.size ? (
           renderProperties
         ) : (
-          <CellStyledComp.CellText $weight={500}>{t('undefined')}</CellStyledComp.CellText>
+          <AreaStyledComp.CellText $weight={500}>{t('undefined')}</AreaStyledComp.CellText>
         )}
       </FlexBox>
-    </CellStyledComp.Cell>
+    </AreaStyledComp.Cell>
   );
 };

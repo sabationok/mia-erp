@@ -1,28 +1,33 @@
 import { RenderOverviewCellComponent } from '../../components/overview-types';
 import { OfferEntity } from '../../../../types/offers/offers.types';
 import React, { useMemo } from 'react';
-import FormSelectPropertiesOverlay from '../../../Overlays/FormSelectPropertiesOverlay';
+import FormSelectPropertiesDrawer from '../../../Overlays/FormSelectPropertiesOverlay';
 import FlexBox from '../../../atoms/FlexBox';
 import { t } from '../../../../lang';
-import { CellStyledComp } from '../../components/CellStyles';
+import { AreaStyledComp } from '../../components/CellStyles';
 import { OverviewCellHeader } from '../../components/OverviewCellHeader';
 import { useCurrentOffer } from '../../../../hooks';
 
-export const OfferOverviewTagsCell: RenderOverviewCellComponent<OfferEntity> = ({ cell, overlayHandler, data }) => {
+export const OfferOverviewTagsArea: RenderOverviewCellComponent<OfferEntity> = ({ cell, overlayHandler, data }) => {
   const Offer = useCurrentOffer(data);
 
   const renderValues = useMemo(() => {
     return Offer?.tags?.map((value, index) => {
       return (
-        <CellStyledComp.CategoryItem key={`prop-v-${value._id}`} className={'PROP_VALUE'} maxWidth={'130px'}>
+        <AreaStyledComp.CategoryItem
+          key={`prop-v-${value._id}`}
+          className={'TagItem'}
+          width={'fit-content'}
+          maxWidth={'130px'}
+        >
           {value.label}
-        </CellStyledComp.CategoryItem>
+        </AreaStyledComp.CategoryItem>
       );
     });
   }, [Offer?.tags]);
 
   return (
-    <CellStyledComp.Cell
+    <AreaStyledComp.Cell
       padding={'4px 4px 8px'}
       gap={8}
       className={'TAGS_LIST_CELL'}
@@ -32,7 +37,7 @@ export const OfferOverviewTagsCell: RenderOverviewCellComponent<OfferEntity> = (
         title={cell?.title}
         onOpenOverlayPress={() => {
           overlayHandler({
-            RenderComponent: FormSelectPropertiesOverlay,
+            RenderComponent: FormSelectPropertiesDrawer,
             props: { offer: data },
           });
         }}
@@ -42,9 +47,9 @@ export const OfferOverviewTagsCell: RenderOverviewCellComponent<OfferEntity> = (
         {Offer?.tags?.length ? (
           renderValues
         ) : (
-          <CellStyledComp.CellText $weight={500}>{t('undefined')}</CellStyledComp.CellText>
+          <AreaStyledComp.CellText $weight={500}>{t('undefined')}</AreaStyledComp.CellText>
         )}
       </FlexBox>
-    </CellStyledComp.Cell>
+    </AreaStyledComp.Cell>
   );
 };

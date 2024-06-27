@@ -10,7 +10,7 @@ import Changer from '../../../atoms/Changer';
 import ButtonIcon from '../../../atoms/ButtonIcon';
 import { t } from '../../../../lang';
 import { OverviewCellHeader } from '../../components/OverviewCellHeader';
-import { CellStyledComp } from '../../components/CellStyles';
+import { AreaStyledComp } from '../../components/CellStyles';
 import { useOfferOverviewLoaders } from '../../../AppPages/offers/PageOfferOverview';
 
 export const OfferOverviewStatusChangerCell: RenderOverviewCellComponent<OfferEntity> = ({ cell, data }) => {
@@ -50,7 +50,7 @@ export const OfferOverviewStatusChangerCell: RenderOverviewCellComponent<OfferEn
   }, []);
 
   return (
-    <CellStyledComp.Cell>
+    <AreaStyledComp.Cell>
       <OverviewCellHeader
         title={cell?.title}
         onCancelPress={handleCancelPress}
@@ -87,19 +87,19 @@ export const OfferOverviewStatusChangerCell: RenderOverviewCellComponent<OfferEn
             </FlexBox>
           </>
         ) : (
-          <CellStyledComp.Tag
+          <AreaStyledComp.Tag
             style={{
               alignSelf: 'flex-end',
               borderColor: currentStatusData?.colorSecondary,
               backgroundColor: currentStatusData?.colorSecondary,
             }}
           >
-            <CellStyledComp.CellText $isTitle={!current} $weight={600} $align={'right'}>
+            <AreaStyledComp.CellText $isTitle={!current} $weight={600} $align={'right'}>
               {t(current || 'undefined')}
-            </CellStyledComp.CellText>
-          </CellStyledComp.Tag>
+            </AreaStyledComp.CellText>
+          </AreaStyledComp.Tag>
         )}
       </FlexBox>
-    </CellStyledComp.Cell>
+    </AreaStyledComp.Cell>
   );
 };

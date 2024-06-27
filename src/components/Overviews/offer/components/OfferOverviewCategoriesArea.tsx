@@ -3,7 +3,7 @@ import { OfferEntity } from '../../../../types/offers/offers.types';
 import { useDirectorySelector } from '../../../../redux/selectors.store';
 import { ApiDirType } from '../../../../redux/APP_CONFIGS';
 import React, { useMemo } from 'react';
-import { CellStyledComp } from '../../components/CellStyles';
+import { AreaStyledComp } from '../../components/CellStyles';
 import { OverviewCellHeader } from '../../components/OverviewCellHeader';
 import OfferCategoriesOverlay from '../../../Overlays/FromSelectCategoriesOverlay';
 import FlexBox from '../../../atoms/FlexBox';
@@ -11,7 +11,7 @@ import { OfferCategoryEntity } from '../../../../types/dir.types';
 import { useOverlayService } from '../../../../Providers/Overlay/OverlayStackProvider';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 
-export const OfferOverviewCategoriesCell: RenderOverviewCellComponent<OfferEntity> = ({ cell, data }) => {
+export const OfferOverviewCategoriesArea: RenderOverviewCellComponent<OfferEntity> = ({ cell, data }) => {
   const overlaySrv = useOverlayService();
   const modalSrv = useModalService();
 
@@ -27,7 +27,7 @@ export const OfferOverviewCategoriesCell: RenderOverviewCellComponent<OfferEntit
   }, [categories, selectedCategoryIds]);
 
   return (
-    <CellStyledComp.Cell style={{ minHeight: 'max-content' }}>
+    <AreaStyledComp.Cell style={{ minHeight: 'max-content' }}>
       <OverviewCellHeader
         title={cell?.title}
         openOverlayButtonTitle={'Змінити'}
@@ -51,7 +51,7 @@ export const OfferOverviewCategoriesCell: RenderOverviewCellComponent<OfferEntit
       >
         {renderItems}
       </FlexBox>
-    </CellStyledComp.Cell>
+    </AreaStyledComp.Cell>
   );
 };
 
@@ -81,10 +81,10 @@ const NotActiveTreeDataItem: React.FC<{
   return (
     <>
       {isSelected && (
-        <CellStyledComp.CategoryItem fxDirection={'row'} alignItems={'center'} padding={'0 2px 0 12px'} gap={2}>
+        <AreaStyledComp.CategoryItem fxDirection={'row'} alignItems={'center'} padding={'0 2px 0 12px'} gap={2}>
           {item?.parent?.label && `${item?.parent?.label}/`}
           {`${item?.label}`}
-        </CellStyledComp.CategoryItem>
+        </AreaStyledComp.CategoryItem>
       )}
       {renderChildren}
     </>

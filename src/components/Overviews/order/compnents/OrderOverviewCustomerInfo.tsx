@@ -1,6 +1,6 @@
 import { RenderOverviewCellComponent } from '../../components/overview-types';
 import { OrderEntity } from '../../../../types/orders/orders.types';
-import { CellStyledComp } from '../../components/CellStyles';
+import { AreaStyledComp } from '../../components/CellStyles';
 import FlexBox from '../../../atoms/FlexBox';
 import { Text } from '../../../atoms/Text';
 import { t } from '../../../../lang';
@@ -70,10 +70,10 @@ export const OrderOverviewCustomerInfo: RenderOverviewCellComponent<OrderEntity>
   }, [data?.customer]);
 
   return (
-    <CellStyledComp.Cell>
+    <AreaStyledComp.Cell>
       {cell?.title && <OverviewCellHeader title={cell?.title} />}
 
       {renderCells}
-    </CellStyledComp.Cell>
+    </AreaStyledComp.Cell>
   );
 };

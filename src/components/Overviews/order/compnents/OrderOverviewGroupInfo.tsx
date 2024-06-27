@@ -1,20 +1,20 @@
 import { RenderOverviewCellComponent } from '../../components/overview-types';
 import { OrderEntity } from '../../../../types/orders/orders.types';
-import { CellStyledComp } from '../../components/CellStyles';
+import { AreaStyledComp } from '../../components/CellStyles';
 import { OverviewCellHeader } from '../../components/OverviewCellHeader';
 import { Text } from '../../../atoms/Text';
 import { t } from '../../../../lang';
 
 export const OrderOverviewGroupInfo: RenderOverviewCellComponent<OrderEntity> = ({ cell, overlayHandler, data }) => {
   return (
-    <CellStyledComp.Cell>
+    <AreaStyledComp.Cell>
       <OverviewCellHeader title={cell?.title} />
 
       {data?.group?.magicLink ? (
         <Text>{data?.group?.magicLink}</Text>
       ) : (
-        <CellStyledComp.CellText>{t('undefined')}</CellStyledComp.CellText>
+        <AreaStyledComp.CellText>{t('undefined')}</AreaStyledComp.CellText>
       )}
-    </CellStyledComp.Cell>
+    </AreaStyledComp.Cell>
   );
 };

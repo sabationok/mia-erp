@@ -5,7 +5,7 @@ import React, { useMemo } from 'react';
 import { t } from '../../../../lang';
 import FlexBox from '../../../atoms/FlexBox';
 import { Text } from '../../../atoms/Text';
-import { CellStyledComp } from '../../components/CellStyles';
+import { AreaStyledComp } from '../../components/CellStyles';
 import { OverviewCellHeader } from '../../components/OverviewCellHeader';
 import FormOfferDefaultsDrawer from '../../../Overlays/FormOfferDefaultsDrawer';
 
@@ -15,7 +15,7 @@ import { toPrice } from '../../../../utils/numbers';
 import { useOverlayService } from '../../../../Providers/Overlay/OverlayStackProvider';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 
-export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity> = ({ data, cell, overlayHandler }) => {
+export const OfferOverviewDefaultsArea: RenderOverviewCellComponent<OfferEntity> = ({ data, cell, overlayHandler }) => {
   const theme = useTheme();
   const warehouse = data?.warehouse;
   const supplier = data?.supplier;
@@ -80,7 +80,7 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity>
   }, [price]);
 
   return (
-    <CellStyledComp.Cell style={{ minHeight: 'max-content' }}>
+    <AreaStyledComp.Cell style={{ minHeight: 'max-content' }}>
       <OverviewCellHeader
         title={cell?.title}
         onOpenOverlayPress={() => {
@@ -93,9 +93,9 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity>
       />
 
       <FlexBox fillWidth>
-        <CellStyledComp.CellText $weight={600} style={{ color: theme?.fontColorHeader }}>
+        <AreaStyledComp.CellText $weight={600} style={{ color: theme?.fontColorHeader }}>
           {t('warehouse')}
-        </CellStyledComp.CellText>
+        </AreaStyledComp.CellText>
 
         <FlexBox fillWidth flexWrap={'wrap'} fxDirection={'row'}>
           {[
@@ -118,9 +118,9 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity>
       </FlexBox>
 
       <FlexBox fillWidth>
-        <CellStyledComp.CellText $weight={600} style={{ color: theme?.fontColorHeader }}>
+        <AreaStyledComp.CellText $weight={600} style={{ color: theme?.fontColorHeader }}>
           {t('supplier')}
-        </CellStyledComp.CellText>
+        </AreaStyledComp.CellText>
 
         {[
           { label: t('Label'), value: supplier?.label },
@@ -141,21 +141,21 @@ export const OfferOverviewDefaultsCell: RenderOverviewCellComponent<OfferEntity>
       </FlexBox>
 
       <FlexBox fillWidth gap={6}>
-        <CellStyledComp.CellText $weight={600} style={{ color: theme?.fontColorHeader }}>
+        <AreaStyledComp.CellText $weight={600} style={{ color: theme?.fontColorHeader }}>
           {t('variation')}
-        </CellStyledComp.CellText>
+        </AreaStyledComp.CellText>
 
         <FlexBox fillWidth>{renderVariationTags}</FlexBox>
       </FlexBox>
 
       <FlexBox fillWidth gap={6}>
-        <CellStyledComp.CellText $weight={600} style={{ color: theme?.fontColorHeader }}>
+        <AreaStyledComp.CellText $weight={600} style={{ color: theme?.fontColorHeader }}>
           {t('price')}
-        </CellStyledComp.CellText>
+        </AreaStyledComp.CellText>
 
         <FlexBox fillWidth>{renderPriceInfo}</FlexBox>
       </FlexBox>
-    </CellStyledComp.Cell>
+    </AreaStyledComp.Cell>
   );
 };
 

@@ -64,8 +64,8 @@ const CellText = styled(Text)<{ $isTitle?: boolean }>`
     p.$isTitle
       ? p.theme.globals.inputPlaceholderColor
       : p.$disabled
-      ? p.theme.globals.inputPlaceholderColor
-      : undefined};
+        ? p.theme.globals.inputPlaceholderColor
+        : undefined};
 `;
 const ImagesSetBox = styled(FlexBox)`
   &::-webkit-scrollbar {
@@ -102,7 +102,7 @@ const CategoryItem = styled(FlexBox)`
   border: 1px solid ${p => p.theme.accentColor.base};
 `;
 
-export const CellStyledComp = {
+export const AreaStyledComp = {
   CategoryItem,
   ImagesSetBox,
   CellText,
