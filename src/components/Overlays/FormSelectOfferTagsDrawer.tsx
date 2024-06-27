@@ -53,19 +53,9 @@ const FormSelectPropertiesDrawer: React.FC<FormSelectPropertiesProps> = ({
   const initState = useMemo(() => {
     return sortIds(Offer?.tags?.map(prop => prop._id));
   }, [Offer?.tags]);
-  console.log('Offer?.tags', Offer?.tags);
-  console.log('initState', initState);
 
   const [loading, setLoading] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>(initState);
-  console.log('selectedIds', selectedIds);
-
-  // useEffect(() => {
-  //   if (initState?.length) {
-  //     setSelectedIds(initState);
-  //   }
-  //   // eslint-disable-next-line
-  // }, []);
 
   const canSubmit = useMemo(() => {
     return initState?.join(',') !== sortIds(selectedIds).join(',');
@@ -122,8 +112,7 @@ const FormSelectPropertiesDrawer: React.FC<FormSelectPropertiesProps> = ({
 };
 
 const Content = styled(FlexBox)`
-  padding-bottom: 8px;
-  padding: 16px 0;
+  padding: 16px 8px;
 `;
 
 export default FormSelectPropertiesDrawer;

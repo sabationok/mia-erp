@@ -10,7 +10,6 @@ import FormSelectOfferTagsDrawer from '../../../Overlays/FormSelectOfferTagsDraw
 
 export const OfferOverviewTagsArea: RenderOverviewAreaComponent<OfferEntity> = ({ cell, overlayHandler, data }) => {
   const Offer = useCurrentOffer(data);
-  console.log(Offer);
   const renderValues = useMemo(() => {
     return Offer?.tags?.map((value, index) => {
       return (
