@@ -1,4 +1,4 @@
-import { AppResponse } from '../../redux/app-redux.types';
+import { ApiResponse } from '../../redux/app-redux.types';
 import { AmountAndPercentage } from '../price-management/price-management.types';
 import { ICustomerBase } from '../customers.types';
 import { AppQueryParams } from '../../api';
@@ -106,9 +106,9 @@ export interface ICreateOrdersGroupFormState {
   orders: OrderEntity[];
 }
 
-export interface IAllOrdersRes extends AppResponse<OrderEntity[]> {}
+export interface IAllOrdersRes extends ApiResponse<OrderEntity[]> {}
 
-export interface IOrderRes extends AppResponse<OrderEntity> {}
+export interface IOrderRes extends ApiResponse<OrderEntity> {}
 
 export interface IOrderReqData {
   _id?: string;

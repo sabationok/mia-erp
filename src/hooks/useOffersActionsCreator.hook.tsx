@@ -168,7 +168,7 @@ const OffersFilterModal = ({ onSubmit, onClose }: { onSubmit?: (data: GetAllOffe
   const dirBrands = useDirectorySelector(ApiDirType.BRANDS);
   const dirCategories = useDirectorySelector(ApiDirType.CATEGORIES_PROD);
   const dirProperties = usePropertiesSelector();
-  const warehouses = useWarehousesSelector().warehouses;
+  const warehouses = useWarehousesSelector().list;
 
   const filter = useAppForm<OffersFilterForm>();
 

@@ -1,5 +1,5 @@
 import { ICustomRole } from '../redux/customRoles/customRoles.types';
-import { AppResponse, IBase, OnlyUUID } from '../redux/app-redux.types';
+import { ApiResponse, IBase, OnlyUUID } from '../redux/app-redux.types';
 import { CompanyEntity } from './companies.types';
 import { IUserBase } from './auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';
@@ -39,9 +39,9 @@ export interface IPermissionForReq {
   actions?: any[];
 }
 
-export interface IPermissionResData extends AppResponse<PermissionEntity> {}
+export interface IPermissionResData extends ApiResponse<PermissionEntity> {}
 
-export interface IPermissionsResData extends AppResponse<PermissionEntity[]> {}
+export interface IPermissionsResData extends ApiResponse<PermissionEntity[]> {}
 
 export interface IPermissionReqData<D = IPermissionForReq | Partial<IPermissionForReq>> {
   id: string;

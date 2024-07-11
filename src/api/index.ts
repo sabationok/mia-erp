@@ -35,6 +35,7 @@ export * from './shipments.api';
 export * from './deliveries.api';
 export * from './customers.api';
 export * from './communication.api';
+export * from './counterparties.api';
 
 // * EXT SERVICES
 export * from './ext-services.api';

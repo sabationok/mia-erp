@@ -10,7 +10,7 @@ import {
   OrdersGroupEntity,
   OrderSummary,
 } from 'types/orders/orders.types';
-import { ICustomer } from '../../types/customers.types';
+import { CustomerEntity } from '../../types/customers.types';
 import { HasBaseCmsConfigs } from '../../types/cms.types';
 import { HasImgPreview, HasLabel, HasSku } from '../../types/utils.types';
 import { WarehouseEntity } from '../../types/warehousing/warehouses.types';
@@ -86,7 +86,7 @@ export interface CartOrder extends Omit<OrderEntity, 'summary' | 'slots'> {
   orders?: CartOrder[];
 }
 
-const InitCart = (customer?: ICustomer, st?: CartState, tempId?: CartId): CartOrdersGroup => {
+const InitCart = (customer?: CustomerEntity, st?: CartState, tempId?: CartId): CartOrdersGroup => {
   const newCart: CartOrdersGroup = {
     _id: '',
     tempId: tempId ?? (customer?._id || CART_DEFAULT_ID),
@@ -192,7 +192,7 @@ export const cartSlice = createSlice({
       s.currentId = a.payload.cartId;
       return s;
     },
-    addNewCartAction: (st, a: Action<{ customer: ICustomer }>) => {
+    addNewCartAction: (st, a: Action<{ customer: CustomerEntity }>) => {
       st.dataMap[a.payload.customer._id] = InitCart(a.payload.customer);
     },
     removeCartIdAction: (s, a: Action<{ cartId?: string }>) => {
@@ -372,7 +372,7 @@ export const {
 const UpdateCartSlotMutation = (
   st: CartState,
   item: IOrderTempSlot,
-  options?: ActionPayload<{ cartId?: CartId; customer?: ICustomer }>
+  options?: ActionPayload<{ cartId?: CartId; customer?: CustomerEntity }>
 ): { orderId?: string; recount?: boolean } => {
   const { tempId: slotId } = item;
   if (!slotId) {

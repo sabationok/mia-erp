@@ -1,5 +1,37 @@
 import { AppDispatch, RootState } from './store.store';
 import { AxiosError } from 'axios';
+import type { IAuthState } from '../types/auth.types';
+import type { AppSettingsState } from './appSettings/appSettings.slice';
+import type { DirectoriesState } from './directories/directories.slice';
+import type { OffersState } from './products/offers.slice';
+import type { TagsState } from './tags/tags.slice';
+import type { OrdersState } from './orders/orders.slice';
+import type { InvoicesState } from './invoices/invoices.slice';
+import type { PaymentsState } from './payments/payments.slice';
+import type { DeliveriesState } from './deliveries/deliveries.slice';
+import type { CustomersState } from './customers/customers.slice';
+import type { CounterpartiesState } from './counterparties/counterparties.slice';
+import type { WarehousingState } from './warehouses/warehouses.slice';
+import { DiscountsState } from './priceManagement/discounts/discounts.slice';
+import { CompaniesState } from '../types/companies.types';
+
+export type AppRootState = {
+  auth: IAuthState;
+  appSettings: AppSettingsState;
+  permissions: PermissionState;
+  directories: DirectoriesState;
+  offers: OffersState;
+  tags: TagsState;
+  orders: OrdersState;
+  invoicing: InvoicesState;
+  payments: PaymentsState;
+  deliveries: DeliveriesState;
+  customers: CustomersState;
+  counterparty: CounterpartiesState;
+  warehouses: WarehousingState;
+  discounts: DiscountsState;
+  companies: CompaniesState;
+};
 
 export enum AppModuleName {
   integrations = 'integrations',

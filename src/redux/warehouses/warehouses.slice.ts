@@ -1,30 +1,45 @@
 import { AnyAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
-// import { createTransactionThunk, getAllTransactionsThunk } from 'redux/transactions/transactions.thunks';
 import { StateErrorType } from 'redux/reduxTypes.types';
-import { WarehouseEntity } from '../../types/warehousing/warehouses.types';
+import { WarehouseEntity, WarehouseInventoryEntity } from '../../types/warehousing/warehouses.types';
 import { createWarehouseThunk, getAllWarehousesThunk, getWarehouseByIdThunk } from './warehouses.thunks';
 import { sliceCleaner } from '../../utils';
 import { onUserLogout } from '../auth/auth.actions';
 import { isString } from 'lodash';
+import { UUID } from '../../types/utils.types';
 
-export interface IWarehouseState {
-  warehouses: WarehouseEntity[];
+export interface WarehousingState {
+  list: WarehouseEntity[];
   current?: WarehouseEntity;
   filteredLists?: WarehouseEntity[];
   isLoading: boolean;
+  keysMap: Record<UUID, UUID[]>;
+  dataMap: Record<UUID, WarehouseEntity>;
+
   error: StateErrorType;
+  inventories: {
+    listsMap?: Record<UUID, WarehouseInventoryEntity[]>;
+    keysMap: Record<UUID, UUID[]>;
+    dataMap: Record<UUID, WarehouseInventoryEntity>;
+  };
 }
 
-const initialState: IWarehouseState = {
-  warehouses: [],
+const initialState: WarehousingState = {
+  list: [],
   current: {
     _id: '',
     label: '',
     inventories: [],
   },
+  keysMap: {},
+  dataMap: {},
   filteredLists: [],
   isLoading: false,
   error: null,
+  inventories: {
+    listsMap: {},
+    keysMap: {},
+    dataMap: {},
+  },
 };
 
 export const warehousesSlice = createSlice({
@@ -37,29 +52,23 @@ export const warehousesSlice = createSlice({
         const inputArr = a?.payload?.data && Array.isArray(a?.payload?.data) ? a?.payload?.data : [];
 
         if (a.payload?.refresh) {
-          s.warehouses = [...inputArr];
+          s.list = [...inputArr];
           return;
         }
-        s.warehouses = [...inputArr, ...s.warehouses];
+        s.list = [...inputArr, ...s.list];
       })
       .addCase(createWarehouseThunk.fulfilled, (s, a) => {
         if (a.payload) {
-          s.warehouses = [a.payload, ...s.warehouses];
+          s.list = [a.payload, ...s.list];
         }
       })
       .addCase(getWarehouseByIdThunk.fulfilled, (s, a) => {
         if (a.payload) {
           s.current = a.payload;
+          s.dataMap[a.payload._id] = a.payload;
         }
       })
-      // .addMatcher(inPending, s => {
-      //   s.isLoading = true;
-      //   s.error = null;
-      // })
-      // .addMatcher(inFulfilled, s => {
-      //   s.isLoading = false;
-      //   s.error = null;
-      // })
+
       .addMatcher(inError, (s, a: PayloadAction<StateErrorType>) => {
         // s.isLoading = false;
         s.error = a.payload;

@@ -1,4 +1,4 @@
-import { AppResponse, IBase } from '../redux/app-redux.types';
+import { ApiResponse, IBase } from '../redux/app-redux.types';
 import { AuthErrorType } from '../redux/reduxTypes.types';
 import { PermissionEntity } from './permissions.types';
 import { HasEmbeddedLabel, HasEmbeddedName, HasEmbeddedReference } from './utils.types';
@@ -36,13 +36,13 @@ export interface IAuthState {
 
 export type ILoggedUserInfo = Pick<IAuthState, 'access_token'> & Pick<UserEntity, 'email' | '_id'>;
 
-export interface ILoggedUserInfoRes extends AppResponse<ILoggedUserInfo> {}
+export interface ILoggedUserInfoRes extends ApiResponse<ILoggedUserInfo> {}
 
-export interface IRegisteredUserInfoRes extends AppResponse<IRegisteredUser> {}
+export interface IRegisteredUserInfoRes extends ApiResponse<IRegisteredUser> {}
 
-export interface IRecoveryPasswordRes extends AppResponse<ILoggedUserInfo> {}
+export interface IRecoveryPasswordRes extends ApiResponse<ILoggedUserInfo> {}
 
-export interface ICurrentUserInfoRes extends AppResponse<ICurrentUser> {}
+export interface ICurrentUserInfoRes extends ApiResponse<ICurrentUser> {}
 
 export interface IRegisteredUser {
   email?: string;

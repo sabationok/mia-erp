@@ -1,14 +1,27 @@
-import { IBase, IFormDataValueWithID, OnlyUUID } from '../../redux/app-redux.types';
+import { IFormDataValueWithID } from '../../redux/app-redux.types';
 import { OfferEntity } from '../offers/offers.types';
 import { CompanyEntity } from '../companies.types';
 import { PriceEntity } from '../price-management/price-management.types';
 import { VariationEntity } from '../offers/variations.types';
 import { AppQueryParams } from '../../api';
-import { GeolocationPoint } from '../../services/Geolocation.service';
-import { HasAuthor, HasOwnerAsCompany, HasStatus, HasStatusRef, HasType, MaybeNull, WithPeriod } from '../utils.types';
+import {
+  HasAuthor,
+  HasOwnerAsCompany,
+  HasStatus,
+  HasStatusRef,
+  HasType,
+  IBase,
+  MaybeNull,
+  OnlyUUID,
+  WithPeriod,
+} from '../utils.types';
 import { WarehouseInventoryEntity } from './warehouse-inventory.types';
+import { InputIntegrationBase } from '../integrations.types';
+import { WarehousingDocumentEntity } from './warehousing-documents.types';
+import { AddressDto, AddressEntity } from '../addresses/addresses.types';
 
 export * from './warehouse-inventory.types';
+export * from './warehousing-documents.types';
 
 export enum WarehouseTypeEnum {
   WAREHOUSE = 'warehouse',
@@ -24,19 +37,22 @@ export enum WarehouseDocumentType {
 }
 export interface WarehouseEntity extends IBase {
   owner?: CompanyEntity;
-  manager?: any;
+  manager?: OnlyUUID;
 
   label?: string;
-  code?: string | number;
+  code?: string;
+
   type?: WarehouseTypeEnum;
 
-  location?: GeolocationPoint;
-  address?: string;
+  inventories?: WarehouseInventoryEntity[];
+  documents?: WarehousingDocumentEntity[];
 
-  inventories?: OnlyUUID[];
+  integrations?: InputIntegrationBase[];
 
   novaposhtaApiKey?: string;
   ukrposhtaApiKey?: string;
+
+  address?: AddressEntity;
 }
 
 export interface IWarehouseDto {
@@ -46,7 +62,8 @@ export interface IWarehouseDto {
   phone?: string;
   type?: WarehouseTypeEnum;
   manager?: IFormDataValueWithID;
-  location?: GeolocationPoint;
+
+  address?: AddressDto;
 }
 export interface IWarehouseReqData {
   _id?: string;

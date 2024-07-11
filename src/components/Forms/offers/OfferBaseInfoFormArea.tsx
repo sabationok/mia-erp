@@ -111,7 +111,7 @@ export const OfferBaseInfoFormArea = ({ defaultValues, edit, type, onSuccess, _i
 
         <CustomSelect
           {...registerSelect('warehouse', {
-            options: warehousesState.warehouses,
+            options: warehousesState.list,
             label: t('Select warehouse'),
             placeholder: t('Select warehouse'),
           })}

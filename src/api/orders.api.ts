@@ -1,6 +1,6 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { ICreateOrdersGroupDto, IOrderRes, OrderEntity } from '../types/orders/orders.types';
-import { AppResponse, OnlyUUID } from '../redux/app-redux.types';
+import { ApiResponse, OnlyUUID } from '../redux/app-redux.types';
 import { ApiQuerySearchParams, ApiQuerySortParams, AppQueryParams } from './index';
 import { ClientApi } from './client.api';
 import { OrderSlotEntity } from '../types/orders/order-slot.types';
@@ -13,7 +13,7 @@ export class OrderSlotsApi {
   private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.ordersEndpoints;
 
-  public static getAll = (_?: undefined, params?: GetOrderSlotsApiQuery): Promise<AppResponse<OrderSlotEntity[]>> => {
+  public static getAll = (_?: undefined, params?: GetOrderSlotsApiQuery): Promise<ApiResponse<OrderSlotEntity[]>> => {
     return this.api.get(this.endpoints.slots.getList(), { params });
   };
 }
@@ -63,21 +63,21 @@ export default class OrdersApi {
   private static endpoints = APP_CONFIGS.endpoints.ordersEndpoints;
   public static readonly groups = OrderGroupsApi;
   public static readonly slots = OrderSlotsApi;
-  public static getAll = (_?: any, params?: GetAllOrdersQuery): Promise<AppResponse<OrderEntity[]>> => {
+  public static getAll = (_?: any, params?: GetAllOrdersQuery): Promise<ApiResponse<OrderEntity[]>> => {
     return this.api.get(this.endpoints.getAll(), { params });
   };
-  public static getOne = (_?: unknown, params?: GetOrderQuery): Promise<AppResponse<OrderEntity>> => {
+  public static getOne = (_?: unknown, params?: GetOrderQuery): Promise<ApiResponse<OrderEntity>> => {
     return this.api.get(this.endpoints.getOne(), {
       params,
     });
   };
   public static getById = (
     data?: OnlyUUID & { params?: { fullInfo?: boolean } }
-  ): Promise<AppResponse<OrderEntity>> => {
+  ): Promise<ApiResponse<OrderEntity>> => {
     return this.api.get(this.endpoints.getOrderById(data?._id), { params: data?.params });
   };
 
-  public static createOne = (...args: any[]): Promise<AppResponse<OrderEntity>> => {
+  public static createOne = (...args: any[]): Promise<ApiResponse<OrderEntity>> => {
     return this.api.post(this.endpoints.create());
   };
 }

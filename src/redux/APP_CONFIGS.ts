@@ -280,11 +280,17 @@ const warehousing = {
   update: (id?: string) => `${API_BASE_ROUTES.WAREHOUSES}/update/${id}`,
   getById: (id?: string) => `${API_BASE_ROUTES.WAREHOUSES}/getById/${id}`,
   getAll: () => `${API_BASE_ROUTES.WAREHOUSES}/getAll`,
-  getAllByWarehouseId: (id?: string) => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.getAllByWarehouseId}/${id}`,
 
-  getAllInventories: () => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.inventories}/getAll`,
-  createDocument: () => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.documents}/create`,
-  getAllDocuments: () => `${API_BASE_ROUTES.WAREHOUSES}/${Endpoints.documents}/getAll`,
+  inventories: {
+    getAll: () => `${API_BASE_ROUTES.WAREHOUSES}/inventories/getAll`,
+    getOne: () => `${API_BASE_ROUTES.WAREHOUSES}/inventories/one`,
+    update: () => `${API_BASE_ROUTES.WAREHOUSES}/inventories/update`,
+  },
+  documents: {
+    getAll: () => `${API_BASE_ROUTES.WAREHOUSES}/documents/getAll`,
+    getOne: () => `${API_BASE_ROUTES.WAREHOUSES}/documents/one`,
+    create: () => `${API_BASE_ROUTES.WAREHOUSES}/documents/create`,
+  },
 };
 const payments = {
   create: () => `${API_BASE_ROUTES.PAYMENTS}/create`,
@@ -322,6 +328,17 @@ const customers = {
   update: (id?: string) => `${API_BASE_ROUTES.CUSTOMERS}/update/${id}`,
   getAll: () => `${API_BASE_ROUTES.CUSTOMERS}/getAll`,
   getById: (id?: string) => `${API_BASE_ROUTES.CUSTOMERS}/getById/${id}`,
+};
+const counterparties = {
+  create: () => `${API_BASE_ROUTES.CUSTOMERS}/create`,
+  update: (id?: string) => `${API_BASE_ROUTES.CUSTOMERS}/update/${id}`,
+  getAll: () => `${API_BASE_ROUTES.CUSTOMERS}/getAll`,
+  getById: (id?: string) => `${API_BASE_ROUTES.CUSTOMERS}/getById/${id}`,
+  connection: {
+    request: (id?: string) => `${API_BASE_ROUTES.CUSTOMERS}/connection/request/${id}`,
+    accept: (id?: string) => `${API_BASE_ROUTES.CUSTOMERS}/connection/accept${id}`,
+    reject: (id?: string) => `${API_BASE_ROUTES.CUSTOMERS}/connection/reject${id}`,
+  },
 };
 const communications = {
   getAllMethods: () => `${API_BASE_ROUTES.COMMUNICATION}/${Endpoints.methods}/getAll`,
@@ -394,6 +411,7 @@ const APP_CONFIGS = {
     integrations,
     tags,
     tracking,
+    counterparties,
   },
 };
 

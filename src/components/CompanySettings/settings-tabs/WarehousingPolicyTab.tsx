@@ -13,7 +13,7 @@ export interface WarehousingPolicyTabProps extends CompanySettingsTabBaseProps {
 const WarehousingPolicyTab: React.FC<WarehousingPolicyTabProps> = () => {
   const company = usePermissionsSelector().permission.company;
 
-  const warehouses = useWarehousesSelector().warehouses;
+  const warehouses = useWarehousesSelector().list;
   // const warehousesSelectOptions = useMemo(
   //   (): FilterOption<string>[] => warehouses.map(w => ({ ...w, value: w._id })),
   //   [warehouses]

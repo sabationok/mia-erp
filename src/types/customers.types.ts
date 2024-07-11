@@ -1,24 +1,10 @@
 import { AppQueryParams } from '../api';
-import {
-  AddressDto,
-  ContactsDto,
-  IAddressSlot,
-  IBase,
-  IContactsSlot,
-  IFormDataValueWithID,
-  OnlyUUID,
-} from '../redux/app-redux.types';
+import { IFormDataValueWithID, OnlyUUID } from '../redux/app-redux.types';
 import { OrderEntity } from './orders/orders.types';
-import { BusinessSubjectTypeEnum } from './companies.types';
-import {
-  AppDate,
-  HasCompany,
-  HasEmbeddedLabel,
-  HasEmbeddedName,
-  HasMagicLink,
-  HasTaxCode,
-  MaybeNull,
-} from './utils.types';
+import { HasCompany, HasMagicLink, HasReference, MaybeNull, UUID } from './utils.types';
+import { ProfileEntity } from './profile/profile.type';
+import { AddressDto } from './addresses/addresses.types';
+import { ContactsDto } from './contacts/contacts.types';
 
 export enum CustomerTypeEnum {
   active = 'active',
@@ -32,52 +18,36 @@ export enum EngagementSource {
 }
 
 export interface HasCustomer {
-  receiver?: MaybeNull<ICustomer>;
+  receiver?: MaybeNull<CustomerEntity>;
 }
 
 export interface HasReceiver {
-  receiver?: MaybeNull<ICustomer>;
+  receiver?: MaybeNull<CustomerEntity>;
 }
 
-export interface ICustomerBase extends IBase, HasEmbeddedLabel, HasEmbeddedName, HasTaxCode {
-  email?: string;
-  phone?: string;
-
-  age?: string;
-  birthDate?: AppDate;
-
-  avatarURL?: string;
-  tags?: string[];
-
-  sexType?: MaybeNull<string>;
-
-  type?: CustomerTypeEnum;
-  businessType?: BusinessSubjectTypeEnum;
-  engagementSource?: EngagementSource;
-}
-export interface ICustomer extends ICustomerBase, HasMagicLink, HasCompany {
+export interface ICustomerBase extends ProfileEntity {}
+export interface CustomerEntity extends ICustomerBase, HasMagicLink, HasCompany, HasReference {
   orders?: OrderEntity[];
 
-  referer?: ICustomer;
-  referrals?: ICustomer[];
-
-  addresses?: IContactsSlot[];
-  contacts?: IAddressSlot[];
+  referer?: CustomerEntity;
+  referrals?: CustomerEntity[];
 }
 
-export interface ICustomerDto extends Omit<ICustomerBase, '_id' | 'createdAt' | 'updatedAt' | 'deletedAt'> {
+export interface ICustomerDto
+  extends Omit<ICustomerBase, '_id' | 'createdAt' | 'updatedAt' | 'deletedAt' | 'contacts' | 'addresses'> {
   referrer?: OnlyUUID;
+  referrerId?: UUID;
 }
 
 export interface ICustomerFormData extends ICustomerDto {
   referrer?: IFormDataValueWithID;
 
-  addresses?: ContactsDto[];
-  contacts?: AddressDto[];
+  addresses?: AddressDto[];
+  contacts?: ContactsDto[];
 }
 
 export interface ICustomerReqDta {
   _id?: string;
   data?: ICustomerDto;
-  params?: AppQueryParams;
+  params?: Pick<AppQueryParams, 'email' | 'reference' | 'referenceType' | 'phone' | 'ids' | 'ownerId' | 'userId'>;
 }

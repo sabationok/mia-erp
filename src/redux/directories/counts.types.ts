@@ -1,4 +1,4 @@
-import { AppResponse } from '../app-redux.types';
+import { ApiResponse } from '../app-redux.types';
 import { IDirItemBase } from '../../types/dir.types';
 import { ApiDirType } from '../APP_CONFIGS';
 
@@ -20,8 +20,8 @@ export interface ICountFormData extends Omit<ICount, '_id' | 'createdAt' | 'upda
   currency?: string;
 }
 
-export interface IGetAllCountsRes extends AppResponse<ICount[]> {}
+export interface IGetAllCountsRes extends ApiResponse<ICount[]> {}
 
-export interface ICreateCountThunkRes extends AppResponse<ICount> {}
+export interface ICreateCountThunkRes extends ApiResponse<ICount> {}
 
-export interface IDeleteCountThunkRes extends AppResponse<{ _id: string }> {}
+export interface IDeleteCountThunkRes extends ApiResponse<{ _id: string }> {}

@@ -36,7 +36,7 @@ export const getAllWarehousesThunk = createAsyncThunk<
         data: data?.query,
         logError: true,
       },
-      WarehousesApi.getAllWarehouses,
+      WarehousesApi.getAll,
       WarehousesApi
     );
     if (res?.data.data) {

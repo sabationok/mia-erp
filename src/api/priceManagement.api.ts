@@ -1,6 +1,6 @@
 import { ClientApi } from './client.api';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
-import { AppResponse, OnlyUUID } from '../redux/app-redux.types';
+import { ApiResponse, OnlyUUID } from '../redux/app-redux.types';
 import {
   ICreatePriceReqData,
   IPriceListReqData,
@@ -20,19 +20,19 @@ export class PriceListsApi {
   private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.priceManagementEndpoints;
 
-  public static create = async (data?: IPriceListReqData): Promise<AppResponse<PriceListEntity>> => {
+  public static create = async (data?: IPriceListReqData): Promise<ApiResponse<PriceListEntity>> => {
     return this.api.post(this.endpoints.createList(), data?.data);
   };
 
-  public static update = async (data?: IPriceListReqData): Promise<AppResponse<PriceListEntity>> => {
+  public static update = async (data?: IPriceListReqData): Promise<ApiResponse<PriceListEntity>> => {
     return this.api.patch(this.endpoints.updateList(data?._id || ''), data?.data);
   };
 
-  public static getAll = async (query?: AppQueryParams): Promise<AppResponse<PriceListEntity[]>> => {
+  public static getAll = async (query?: AppQueryParams): Promise<ApiResponse<PriceListEntity[]>> => {
     return this.api.get(this.endpoints.getAll(), { params: query });
   };
 
-  public static getById = async (list?: OnlyUUID, query?: AppQueryParams): Promise<AppResponse<PriceListEntity>> => {
+  public static getById = async (list?: OnlyUUID, query?: AppQueryParams): Promise<ApiResponse<PriceListEntity>> => {
     return this.api.get(this.endpoints.getById(list?._id || ''), { params: query });
   };
 }
@@ -44,21 +44,21 @@ export class PricesApi {
   private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.priceManagementEndpoints;
 
-  public static getOne = async (_?: undefined, params?: GetOnePriceQuery): Promise<AppResponse<PriceEntity>> => {
+  public static getOne = async (_?: undefined, params?: GetOnePriceQuery): Promise<ApiResponse<PriceEntity>> => {
     return this.api.get(this.endpoints.getOne(), { params });
   };
 
-  public static getAll = async (params?: GetAllPricesQuery): Promise<AppResponse<PriceEntity[]>> => {
+  public static getAll = async (params?: GetAllPricesQuery): Promise<ApiResponse<PriceEntity[]>> => {
     return this.api.get(this.endpoints.getAllPrices(), { params });
   };
 
-  public static create = async (input?: ICreatePriceReqData): Promise<AppResponse<PriceEntity>> => {
+  public static create = async (input?: ICreatePriceReqData): Promise<ApiResponse<PriceEntity>> => {
     return this.api.post(this.endpoints.createPrice(), input?.data);
   };
-  public static updateById = async (input?: IUpdatePriceReqData): Promise<AppResponse<PriceEntity>> => {
+  public static updateById = async (input?: IUpdatePriceReqData): Promise<ApiResponse<PriceEntity>> => {
     return this.api.patch(this.endpoints.updatePrice(input?._id), input?.data);
   };
-  public static deleteById = async (_?: undefined, params?: { _id: string }): Promise<AppResponse<PriceEntity>> => {
+  public static deleteById = async (_?: undefined, params?: { _id: string }): Promise<ApiResponse<PriceEntity>> => {
     return this.api.patch(this.endpoints.updatePrice(params?._id));
   };
 }

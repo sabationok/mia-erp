@@ -11,7 +11,7 @@ export interface DirContractorsProps extends DirBaseProps {
   tableSettings?: ITableListProps<IContractor>;
 }
 
-const DirContractors: React.FC<DirContractorsProps> = ({ tableSettings, ...props }) => {
+const DirCounterparties: React.FC<DirContractorsProps> = ({ tableSettings, ...props }) => {
   const { directories } = useAppServiceProvider();
 
   useEffect(() => {
@@ -37,4 +37,4 @@ const StModalForm = styled(ModalForm)`
     padding: 8px;
   }
 `;
-export default DirContractors;
+export default DirCounterparties;

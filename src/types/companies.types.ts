@@ -1,11 +1,13 @@
-import { AddressDto, AppResponse, ContactsDto, IBase, IFormDataValueWithID, OnlyUUID } from '../redux/app-redux.types';
+import { IFormDataValueWithID } from '../redux/app-redux.types';
 import { PermissionEntity } from './permissions.types';
 import { IUserBase } from './auth.types';
 import { StateErrorType } from '../redux/reduxTypes.types';
 import { WarehouseEntity } from './warehousing/warehouses.types';
 import { ExtServiceBase, InputIntegrationBase, OutputIntegrationBase } from './integrations.types';
-import { HasEmbeddedLabel, HasEmbeddedName, HasTaxCode, MaybeNull, Values } from './utils.types';
+import { HasEmbeddedLabel, HasEmbeddedName, HasTaxCode, IBase, MaybeNull, OnlyUUID, UUID, Values } from './utils.types';
 import { SupplierDirEntity } from './dir.types';
+import { ContactsDto } from './contacts/contacts.types';
+import { AddressEntity } from './addresses/addresses.types';
 
 export enum CompanyQueryTypeEnum {
   own = 'own',
@@ -73,7 +75,7 @@ export interface ICompanyBase extends IBase, HasEmbeddedLabel, HasEmbeddedName, 
   avatarUrl?: string;
   avatarPreviewUrl?: string;
   contacts?: ContactsDto[];
-  locations?: AddressDto;
+  addresses?: AddressEntity[];
 }
 
 export interface CompanyEntity
@@ -91,7 +93,7 @@ export interface CompanyEntity
   outputs?: MaybeNull<OutputIntegrationBase[]>;
 }
 
-export interface ICompaniesState {
+export interface CompaniesState {
   companies: CompanyEntity[];
   current?: CompanyEntity;
   isLoading: boolean;
@@ -140,6 +142,7 @@ export interface ICompanyInvoicingPolicyFormData {
 }
 export interface DeliveryPolicyJsonData {
   method?: string;
+  methodId?: string;
   selectByClient?: boolean;
   autoCreate?: boolean;
   autoPublish?: boolean;
@@ -182,6 +185,10 @@ export interface ICompanyDto extends Omit<ICompanyBase, '_id' | 'createdAt' | 'u
   supplier?: OnlyUUID;
   manager?: OnlyUUID;
 
+  warehouseId?: UUID;
+  supplierId?: UUID;
+  managerId?: UUID;
+
   deliveryPolicy?: {
     sales?: DeliveryPolicyJsonData;
   };
@@ -215,22 +222,12 @@ export interface ICompanyConfigs {
 }
 export interface ICompanyWithConfigs extends ICompanyBase, ICompanyConfigs {}
 export interface ICompanyConfigsDto {
-  warehouse?: OnlyUUID;
-  supplier?: OnlyUUID;
-  manager?: OnlyUUID;
+  warehouseId?: UUID;
+  supplierId?: UUID;
+  managerId?: UUID;
 }
 export interface ICompanyConfigsFormData extends ICompanyConfigsDto {
   warehouse?: IFormDataValueWithID;
   supplier?: IFormDataValueWithID;
   manager?: IFormDataValueWithID;
 }
-
-export interface IGetAllCompaniesRes extends AppResponse<CompanyEntity[]> {}
-
-export interface ICompanyRes extends AppResponse<CompanyEntity> {}
-
-export interface ICompanyUpdatingRes extends AppResponse<CompanyEntity> {}
-
-export interface ICompanyCreatingRes extends AppResponse<PermissionEntity> {}
-
-export interface ICompanyDeletingRes extends AppResponse<{ _id: string; result: true }> {}

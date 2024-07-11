@@ -7,7 +7,7 @@ import {
   UserEntity,
 } from '../types/auth.types';
 import { ClientApi } from './client.api';
-import { AppResponse } from '../redux/app-redux.types';
+import { ApiResponse } from '../redux/app-redux.types';
 
 export default class AuthApi {
   private static api = ClientApi.clientRef;
@@ -25,7 +25,7 @@ export default class AuthApi {
     return this.api.post(this.endpoints[Endpoints.logOut]());
   }
 
-  public static getCurrentUser = (): Promise<AppResponse<UserEntity>> => {
+  public static getCurrentUser = (): Promise<ApiResponse<UserEntity>> => {
     return this.api.get(this.endpoints.getCurrent());
   };
 }

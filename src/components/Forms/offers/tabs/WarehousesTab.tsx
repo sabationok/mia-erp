@@ -18,7 +18,7 @@ export interface WarehousesTabProps {
 const WarehousesTab: React.FC<WarehousesTabProps> = ({ onSelect, selected, withActions }) => {
   const { warehouses: wrhsSrv } = useAppServiceProvider();
   const loaders = useLoadersProvider<OfferOverlayLoaderKey>();
-  const warehouses = useWarehousesSelector().warehouses;
+  const warehouses = useWarehousesSelector().list;
 
   const loadData = useCallback(() => {
     wrhsSrv.getAll({ onLoading: loaders.onLoading('warehouses'), data: { refresh: true } });

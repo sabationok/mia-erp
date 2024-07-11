@@ -1,24 +1,24 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 import { AppQueryParams } from './index';
-import { AppResponse, OnlyUUID } from '../redux/app-redux.types';
-import { ICustomer, ICustomerReqDta } from '../types/customers.types';
+import { ApiResponse, OnlyUUID } from '../redux/app-redux.types';
+import { CustomerEntity, ICustomerReqDta } from '../types/customers.types';
 import { ClientApi } from './client.api';
 
 export default class CustomersApi {
   private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.customers;
 
-  public static create(info?: ICustomerReqDta): Promise<AppResponse<ICustomer>> {
+  public static create(info?: ICustomerReqDta): Promise<ApiResponse<CustomerEntity>> {
     console.table(info);
     return this.api.post(this.endpoints.create(), info);
   }
-  public static update(info?: ICustomerReqDta): Promise<AppResponse<ICustomer>> {
+  public static update(info?: ICustomerReqDta): Promise<ApiResponse<CustomerEntity>> {
     return this.api.patch(this.endpoints.update(info?._id), info?.data);
   }
-  public static getAllByQueries(params?: AppQueryParams): Promise<AppResponse<ICustomer[]>> {
+  public static getAllByQueries(params?: AppQueryParams): Promise<ApiResponse<CustomerEntity[]>> {
     return this.api.get(this.endpoints.getAll(), { params });
   }
-  public static getById(customer?: OnlyUUID, params?: AppQueryParams): Promise<AppResponse<ICustomer>> {
+  public static getById(customer?: OnlyUUID, params?: AppQueryParams): Promise<ApiResponse<CustomerEntity>> {
     return this.api.get(this.endpoints.getById(customer?._id), { params });
   }
 }

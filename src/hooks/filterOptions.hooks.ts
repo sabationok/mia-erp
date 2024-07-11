@@ -8,7 +8,7 @@ import { usePermissionsSelector } from './usePermissionsService.hook';
 import { PermissionEntity, PermissionStatus } from '../types/permissions.types';
 
 export function useWarehousesAsFilterOptions(): FilterOption<OnlyUUID, WarehouseEntity>[] {
-  const warehouses = useWarehousesSelector().warehouses;
+  const warehouses = useWarehousesSelector().list;
 
   return useMemo((): FilterOption<OnlyUUID, WarehouseEntity>[] => {
     return warehouses.map(w => ({ ...w, value: getIdRef(w), label: `${w?.label} | ${w?.code || '---'}` }));

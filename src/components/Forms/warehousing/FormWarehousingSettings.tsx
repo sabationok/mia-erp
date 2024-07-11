@@ -37,7 +37,7 @@ export function createWarehousingSettingsReqData(fData?: WarehousingSettingsForm
   };
 }
 const useWarehousesAsSelectOptions = (): FilterOption[] => {
-  return useWarehousesSelector().warehouses.map(w => ({ ...w, value: w._id }));
+  return useWarehousesSelector().list.map(w => ({ ...w, value: w._id }));
 };
 export const FormWarehousingSettings: React.FC<FormWarehousingSettingsProps> = ({
   defaultState,

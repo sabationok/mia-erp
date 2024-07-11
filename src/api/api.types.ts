@@ -3,8 +3,13 @@ import { ApiDirType } from '../redux/APP_CONFIGS';
 import { TableSortOrderEnum } from '../components/TableList/tableTypes.types';
 import { CompanyQueryTypeEnum } from '../types/companies.types';
 import { FilterReturnDataType } from '../components/Filter/AppFilter';
+import { AxiosResponse } from 'axios';
+import { AppResponseType } from '../redux/app-redux.types';
 
 export enum ApiHeaders {
+  p_token = 'p-token',
+  p_token_server = 'p-token-server',
+  authorization = 'authorization',
   x_token_crm = 'x-token-crm',
   Device_Id = 'Device-Id',
   User_Reference = 'User-Reference',
@@ -166,3 +171,5 @@ export interface ApiQuerySearchParams<Path = any> {
   // dataKey?: DataKey | string;
   search?: string;
 }
+
+export interface ApiResponse<D = any, M = any> extends AxiosResponse<AppResponseType<D, M>> {}

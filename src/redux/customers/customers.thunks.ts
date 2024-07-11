@@ -1,5 +1,5 @@
 import { AsyncThunkPayloadCreator, createAsyncThunk } from '@reduxjs/toolkit';
-import { ICustomer, ICustomerReqDta } from '../../types/customers.types';
+import { CustomerEntity, ICustomerReqDta } from '../../types/customers.types';
 import { ThunkArgs } from '../store.store';
 import { AppQueryParams, CommunicationApi, CustomersApi } from '../../api';
 import { axiosErrorCheck } from '../../utils';
@@ -36,7 +36,7 @@ export const asyncThunkPayloadCreatorWrapper =
     }
   };
 
-export const createCustomerThunk = createAsyncThunk<ICustomer, ThunkArgs<ICustomerReqDta, ICustomer>>(
+export const createCustomerThunk = createAsyncThunk<CustomerEntity, ThunkArgs<ICustomerReqDta, CustomerEntity>>(
   CustomersThunkTypeEnum.create,
   async (arg, thunkAPI) => {
     try {
@@ -52,8 +52,8 @@ export const createCustomerThunk = createAsyncThunk<ICustomer, ThunkArgs<ICustom
   }
 );
 export const updateCustomerThunk = createAsyncThunk<
-  { data: ICustomer; refresh?: boolean },
-  ThunkArgs<{ data: ICustomerReqDta; refresh?: boolean }, ICustomer>
+  { data: CustomerEntity; refresh?: boolean },
+  ThunkArgs<{ data: ICustomerReqDta; refresh?: boolean }, CustomerEntity>
 >(CustomersThunkTypeEnum.update, async (arg, thunkAPI) => {
   console.log('updateCustomerThunk');
 
@@ -70,8 +70,8 @@ export const updateCustomerThunk = createAsyncThunk<
   }
 });
 export const getAllCustomersThunk = createAsyncThunk<
-  { refresh?: boolean; data: ICustomer[] },
-  ThunkArgs<{ refresh?: boolean; params: AppQueryParams }, ICustomer[]>
+  { refresh?: boolean; data: CustomerEntity[] },
+  ThunkArgs<{ refresh?: boolean; params: AppQueryParams }, CustomerEntity[]>
 >(CustomersThunkTypeEnum.getAll, async (arg, thunkAPI) => {
   try {
     const res = await CustomersApi.getAllByQueries(arg.data?.params);

@@ -1,7 +1,7 @@
 import { PartialRecord, Values } from 'types/utils.types';
 import { ApiHeaders } from './api.types';
 import { CreateTrackingLinkDto, TrackingLinkEntity } from '../types/tracking';
-import { AppResponse } from 'redux/app-redux.types';
+import { ApiResponse } from 'redux/app-redux.types';
 import { ClientApi } from './client.api';
 import APP_CONFIGS from '../redux/APP_CONFIGS';
 
@@ -25,19 +25,19 @@ class TrackingLinksApi {
   public static create = (
     data?: CreateTrackingLinkDto,
     params?: { getExist?: boolean; canUpdate?: boolean }
-  ): Promise<AppResponse<{ updated?: boolean; exist: boolean; link: TrackingLinkEntity }>> => {
+  ): Promise<ApiResponse<{ updated?: boolean; exist: boolean; link: TrackingLinkEntity }>> => {
     return this._api.post(this._endpoints.create(), data, {
       headers: this.headers as any,
       params,
     });
   };
-  public static getAll = (_?: undefined, params?: GetAllLinksQuery): Promise<AppResponse<TrackingLinkEntity[]>> => {
+  public static getAll = (_?: undefined, params?: GetAllLinksQuery): Promise<ApiResponse<TrackingLinkEntity[]>> => {
     return this._api.get(this._endpoints.getAll(), {
       params,
       headers: this.headers as any,
     });
   };
-  public static track = (data?: { code: string }): Promise<AppResponse<TrackingLinkEntity>> => {
+  public static track = (data?: { code: string }): Promise<ApiResponse<TrackingLinkEntity>> => {
     return this._api.post(this._endpoints.track(), data, {
       headers: this.headers as any,
     });

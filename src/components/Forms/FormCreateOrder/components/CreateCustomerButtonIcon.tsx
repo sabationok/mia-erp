@@ -1,4 +1,4 @@
-import { ICustomer } from '../../../../types/customers.types';
+import { CustomerEntity } from '../../../../types/customers.types';
 import { ServiceName, useAppServiceProvider } from '../../../../hooks/useAppServices.hook';
 import { useModalService } from '../../../../Providers/ModalProvider/ModalProvider';
 import ButtonIcon from '../../../atoms/ButtonIcon';
@@ -11,7 +11,7 @@ const CreateCustomerButtonIcon = ({
   onSuccess,
   isReceiver,
 }: {
-  onSuccess?: (customer: ICustomer) => void;
+  onSuccess?: (customer: CustomerEntity) => void;
   isReceiver?: boolean;
 }) => {
   const customerS = useAppServiceProvider()[ServiceName.customers];

@@ -1,4 +1,4 @@
-import { AppResponse, IBase } from '../../redux/app-redux.types';
+import { ApiResponse, IBase } from '../../redux/app-redux.types';
 import { IContractor } from '../../redux/directories/contractors.types';
 import { IActivity } from '../../redux/directories/activities.types';
 import { ICount } from '../../redux/directories/counts.types';
@@ -77,8 +77,8 @@ export interface ITransactionReqData {
   data: ITransactionForReq;
 }
 
-export interface IAllTransactionsRes extends AppResponse<ITransaction[]> {}
+export interface IAllTransactionsRes extends ApiResponse<ITransaction[]> {}
 
-export interface ITransactionRes extends AppResponse<ITransaction> {}
+export interface ITransactionRes extends ApiResponse<ITransaction> {}
 
-export interface ICreateTransactionRes extends AppResponse<ITransaction> {}
+export interface ICreateTransactionRes extends ApiResponse<ITransaction> {}

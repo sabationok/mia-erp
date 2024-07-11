@@ -4,7 +4,7 @@ import { ICustomRole, ModuleWithActions } from 'redux/customRoles/customRoles.ty
 import { StateErrorType } from 'redux/reduxTypes.types';
 import { axiosErrorCheck } from 'utils';
 import { ThunkArgs } from '../store.store';
-import { AppResponse } from '../app-redux.types';
+import { ApiResponse } from '../app-redux.types';
 import CustomRolesApi from '../../api/customRoles.api';
 import { ClientApi } from '../../api';
 // import { token } from '../../services/baseApi';
@@ -72,7 +72,7 @@ export const createCustomRoleThunk = createAsyncThunk<ICustomRole, ThunkArgs<Par
   RolesThunkTypeEnum.create,
   async ({ onSuccess, onError, data }, thunkAPI) => {
     try {
-      const response: AppResponse<ICustomRole> = await ClientApi.clientRef.post(rolesApiRoutes.create(), data);
+      const response: ApiResponse<ICustomRole> = await ClientApi.clientRef.post(rolesApiRoutes.create(), data);
 
       onSuccess && onSuccess(response.data.data);
 

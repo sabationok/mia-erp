@@ -1,5 +1,5 @@
 import APP_CONFIGS from '../redux/APP_CONFIGS';
-import { AppResponse, OnlyUUID } from '../redux/app-redux.types';
+import { ApiResponse, OnlyUUID } from '../redux/app-redux.types';
 import { OfferEntity } from '../types/offers/offers.types';
 import { IAllRefundsRes, IRefund, IRefundRes, IRefundSlot } from '../redux/refunds/refunds.types';
 import { ClientApi } from './client.api';
@@ -20,7 +20,7 @@ export default class RefundsApi {
     return this.api.post(this.endpoints.create());
   }
 
-  public static async deleteOne(...args: any[]): Promise<AppResponse<IRefund & { result: boolean }>> {
+  public static async deleteOne(...args: any[]): Promise<ApiResponse<IRefund & { result: boolean }>> {
     return this.api.delete(this.endpoints.deleteById());
   }
 
@@ -28,25 +28,25 @@ export default class RefundsApi {
   //   return this.api.patch(this.endpoints.up());
   // }
 
-  public static async getAllSlotsByRefundId(...args: any[]): Promise<AppResponse<IRefundSlot[]>> {
+  public static async getAllSlotsByRefundId(...args: any[]): Promise<ApiResponse<IRefundSlot[]>> {
     return this.api.get(this.endpoints.getAllRefundSlots());
   }
-  public static async addRefundSlot(...args: any[]): Promise<AppResponse<IRefundSlot>> {
+  public static async addRefundSlot(...args: any[]): Promise<ApiResponse<IRefundSlot>> {
     return this.api.post(this.endpoints.addSlotToRefund());
   }
-  public static async softDeleteRefundSlot(...args: any[]): Promise<AppResponse<IRefundSlot & { result: boolean }>> {
+  public static async softDeleteRefundSlot(...args: any[]): Promise<ApiResponse<IRefundSlot & { result: boolean }>> {
     return this.api.get(this.endpoints.softDeleteSlotFromRefund());
   }
-  public static async addRefundSlotItem(order: OnlyUUID): Promise<AppResponse<IRefundSlot>> {
+  public static async addRefundSlotItem(order: OnlyUUID): Promise<ApiResponse<IRefundSlot>> {
     return this.api.post(this.endpoints.addItemToRefundSlot(order._id));
   }
   public static async softDeleteRefundSlotItem(
     ...args: any[]
-  ): Promise<AppResponse<IRefundSlot & { result: boolean }>> {
+  ): Promise<ApiResponse<IRefundSlot & { result: boolean }>> {
     return this.api.get(this.endpoints.softDeleteRefundSlotItem());
   }
 
-  public static async getPreparedDataForNewSlot(product?: OnlyUUID): Promise<AppResponse<OfferEntity>> {
+  public static async getPreparedDataForNewSlot(product?: OnlyUUID): Promise<ApiResponse<OfferEntity>> {
     return this.api.get(this.endpoints.getDataForNewRefundSlot(product?._id));
   }
 }

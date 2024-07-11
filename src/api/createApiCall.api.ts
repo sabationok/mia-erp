@@ -1,9 +1,9 @@
-import { AppResponse } from '../redux/app-redux.types';
+import { ApiResponse } from '../redux/app-redux.types';
 
 export type GetResponseCallback<SD = any, PR = any, RD = any, MD = any> = (
   arg?: SD,
   params?: PR
-) => Promise<AppResponse<RD, MD> | undefined>;
+) => Promise<ApiResponse<RD, MD> | undefined>;
 
 export interface ApiCallerPayload<SD = any, PR = any, RD = any, E = any | unknown> {
   data?: SD;
@@ -27,7 +27,7 @@ const createApiCall = async <SD = any, PR = any, RD = any, E = any, MD = any, CT
   { onLoading, onError, onSuccess, data, logError, logRes, logResData, throwError }: ApiCallerPayload<SD, PR, RD, E>,
   getResponseCallback: GetResponseCallback<SD, PR, RD, MD>,
   context?: CTX
-): Promise<AppResponse<RD, MD> | undefined> => {
+): Promise<ApiResponse<RD, MD> | undefined> => {
   onLoading && onLoading(true);
 
   const getResponse = context ? getResponseCallback.bind(context) : getResponseCallback;
@@ -72,7 +72,7 @@ export const apiCall = async <SD = any, PR = any, RD = any, E = any, MD = any, C
     throwError,
   }: ApiCallerPayload<SD, PR, RD, E>,
   context?: CTX
-): Promise<AppResponse<RD, MD> | undefined> => {
+): Promise<ApiResponse<RD, MD> | undefined> => {
   onLoading && onLoading(true);
 
   const getResponse = context ? getResponseCallback.bind(context) : getResponseCallback;

@@ -1,9 +1,9 @@
-import { AddressDto } from '../redux/app-redux.types';
 import { ServiceMethodBase } from './integrations.types';
 import { CompanyEntity } from './companies.types';
 import { LangPack } from '../lang';
 import { Path } from 'react-hook-form';
 import { MeasurementUnit } from './enums.types';
+import { AddressDto } from './addresses/addresses.types';
 
 export type UUID = string;
 export type LABEL = string;
@@ -61,6 +61,10 @@ export interface EmbeddedReference {
 
 export interface HasEmbeddedReference {
   reference?: MaybeNull<EmbeddedReference>;
+}
+
+export interface HasReference {
+  reference?: string;
 }
 
 export interface DisabledStates {

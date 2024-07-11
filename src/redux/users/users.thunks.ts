@@ -3,7 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { axiosErrorCheck } from 'utils';
 import { AsyncThunkConfig } from 'redux/reduxTypes.types';
 import { ThunkArgs } from '../store.store';
-import { AppResponse } from '../app-redux.types';
+import { ApiResponse } from '../app-redux.types';
 import { ClientApi } from '../../api';
 
 const USERS_API_BASENAME = '/users';
@@ -13,9 +13,9 @@ export const usersApiRoutes = {
   createByAdmin: `${USERS_API_BASENAME}/createByAdmin`,
 };
 
-export interface IGetAllUsersRes extends AppResponse<UserEntity[]> {}
+export interface IGetAllUsersRes extends ApiResponse<UserEntity[]> {}
 
-export interface IGetUserByIdRes extends AppResponse<UserEntity> {}
+export interface IGetUserByIdRes extends ApiResponse<UserEntity> {}
 
 export const getAllUsersThunk = createAsyncThunk<UserEntity[], ThunkArgs, AsyncThunkConfig>(
   'auth/getAllUsersThunk',

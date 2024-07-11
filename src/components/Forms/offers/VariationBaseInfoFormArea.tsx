@@ -92,7 +92,7 @@ export const VariationBaseInfoFormArea = ({ defaultValues, onSuccess, _id }: Var
 
         <CustomSelect
           {...registerSelect('warehouse', {
-            options: warehousesState.warehouses,
+            options: warehousesState.list,
             label: t('Select warehouse'),
             placeholder: t('Select warehouse'),
           })}

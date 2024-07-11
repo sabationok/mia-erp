@@ -27,7 +27,7 @@ const PageWarehouses: React.FC<any> = (props: Props) => {
 
   const tableConfig = useMemo(
     (): ITableListProps<WarehouseEntity> => ({
-      tableData: state.warehouses,
+      tableData: state.list,
       tableTitles: warehousesTableColumns,
       hasFilter: false,
       hasSearch: true,
@@ -48,7 +48,7 @@ const PageWarehouses: React.FC<any> = (props: Props) => {
         }).then();
       },
     }),
-    [actionsCreator, filterParams, getAll, navigate, sortParams, state.warehouses]
+    [actionsCreator, filterParams, getAll, navigate, sortParams, state.list]
   );
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const PageWarehouses: React.FC<any> = (props: Props) => {
     }
 
     if (!sortParams && !filterParams) {
-      if (state.warehouses.length === 0) {
+      if (state.list.length === 0) {
         getAll({
           data: { refresh: true },
           onLoading: setIsLoading,
@@ -67,7 +67,7 @@ const PageWarehouses: React.FC<any> = (props: Props) => {
         });
       }
     }
-  }, [filterParams, getAll, sortParams, state.warehouses.length]);
+  }, [filterParams, getAll, sortParams, state.list.length]);
   return (
     <AppGridPage path={props.path}>
       <Page>

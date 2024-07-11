@@ -1,4 +1,4 @@
-import { ICustomer } from '../../../../types/customers.types';
+import { CustomerEntity } from '../../../../types/customers.types';
 import ModalForm, { ModalFormProps } from '../../../ModalForm';
 import { AppSubmitHandler } from '../../../../hooks/useAppForm.hook';
 import { useEffect, useMemo } from 'react';
@@ -13,8 +13,8 @@ import FormCreateCustomer from '../../crm/FormCreateCustomer';
 import { toReqData } from '../../../../utils/data-transform';
 
 export interface SelectCustomerModalProps extends Omit<ModalFormProps, 'onSelect' | 'onSubmit'> {
-  onSelect?: (customer: ICustomer) => void;
-  onSubmit?: AppSubmitHandler<ICustomer>;
+  onSelect?: (customer: CustomerEntity) => void;
+  onSubmit?: AppSubmitHandler<CustomerEntity>;
   asReceiver?: boolean;
 }
 const SelectCustomerModal: React.FC<SelectCustomerModalProps> = ({ onSelect, onSubmit, onClose, asReceiver, ...p }) => {
@@ -22,7 +22,7 @@ const SelectCustomerModal: React.FC<SelectCustomerModalProps> = ({ onSelect, onS
   const modalS = useModalService();
   const service = useAppServiceProvider()[ServiceName.customers];
 
-  const tableConfigs = useMemo((): ITableListProps<ICustomer> => {
+  const tableConfigs = useMemo((): ITableListProps<CustomerEntity> => {
     return {
       tableData: customers,
       tableTitles: customersColumns,

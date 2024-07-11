@@ -13,7 +13,7 @@ import { enumToArray, sliceCleaner } from '../../utils';
 import { onUserLogout } from '../auth/auth.actions';
 import { isString } from 'lodash';
 
-export interface IDirectoriesState extends Record<string, any> {
+export interface DirectoriesState extends Record<string, any> {
   defaultDirectories?: Record<string, DefaultDirectoryType[]>;
   directories: Record<ApiDirType | string, IDirItemBase[]>;
   error: AuthErrorType;
@@ -31,7 +31,7 @@ const createInitialDirMap = () => {
   return directories;
 };
 
-const initialState: IDirectoriesState = {
+const initialState: DirectoriesState = {
   isLoading: false,
   error: null,
   directories: createInitialDirMap(),

@@ -7,7 +7,7 @@ import AppGridPage from '../AppGridPage';
 import { ApiQuerySortParams } from '../../../api';
 import { FilterReturnDataType } from '../../Filter/AppFilter';
 import { Path } from 'react-hook-form';
-import { ICustomer, ICustomerBase } from '../../../types/customers.types';
+import { CustomerEntity, ICustomerBase } from '../../../types/customers.types';
 import { customersColumns } from '../../../data/customers.data';
 import { BaseAppPageProps } from '../index';
 import { ServiceName, useAppServiceProvider } from '../../../hooks/useAppServices.hook';
@@ -36,7 +36,7 @@ const PageCustomers: React.FC<Props> = (props: Props) => {
   const service = useAppServiceProvider()[ServiceName.customers];
 
   const tableConfig = useMemo(
-    (): ITableListProps<ICustomer> => ({
+    (): ITableListProps<CustomerEntity> => ({
       tableData: state.customers,
       tableTitles: customersColumns,
       hasFilter: true,

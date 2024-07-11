@@ -26,7 +26,7 @@ const CompanyIntegrationsModal: React.FC<CompanyIntegrationsProps> = ({ onClose,
   }, [integrationType]);
 
   return (
-    <ModalBase fillHeight title={'External services'} onClose={onClose} fillWidth>
+    <ModalBase fillHeight title={'External services'} onClose={onClose}>
       <TabSelector options={integrationTypeTabs} onOptSelect={info => setIntegrationType(info?.value)} />
 
       <FlexBox overflow={'auto'} flex={1} fillWidth>

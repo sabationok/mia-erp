@@ -6,7 +6,7 @@ import {
   OutputIntegrationBase,
   OutputIntegrationDto,
 } from '../types/integrations.types';
-import { AppResponse } from '../redux/app-redux.types';
+import { ApiResponse } from '../redux/app-redux.types';
 import { ClientApi } from './client.api';
 
 export type GetAllIntegrationsQueries = Partial<Pick<AppQueries, 'warehouseId' | 'serviceId'>> & {
@@ -18,14 +18,14 @@ export class ExtServicesApi {
 
   public static createInputIntegration = (data?: {
     data: InputIntegrationDto;
-  }): Promise<AppResponse<InputIntegrationBase>> => {
+  }): Promise<ApiResponse<InputIntegrationBase>> => {
     return this.api.post(this.endpoints.create('input'), data?.data);
   };
 
   public static createOutputIntegration = (data?: {
     data: OutputIntegrationDto;
     params: { setAsDefault?: boolean };
-  }): Promise<AppResponse<InputIntegrationBase>> => {
+  }): Promise<ApiResponse<InputIntegrationBase>> => {
     return this.api.post(this.endpoints.create('output'), data?.data, {
       params: { setAsDefault: data?.data.setAsDefault ?? data?.params.setAsDefault },
     });
@@ -33,20 +33,20 @@ export class ExtServicesApi {
 
   public static updateOutputIntegration = (data?: {
     data: OutputIntegrationDto;
-  }): Promise<AppResponse<InputIntegrationBase>> => {
+  }): Promise<ApiResponse<InputIntegrationBase>> => {
     return this.api.post(this.endpoints.create('output'), data?.data);
   };
 
   public static getAllByQueries = (
     params?: GetAllIntegrationsQueries
-  ): Promise<AppResponse<(InputIntegrationBase | OutputIntegrationBase)[]>> => {
+  ): Promise<ApiResponse<(InputIntegrationBase | OutputIntegrationBase)[]>> => {
     return this.api.get(this.endpoints.getAll(params?.type), { params });
   };
 
   public static remove = (data?: {
     type: 'input' | 'output' | undefined;
     id: string | undefined;
-  }): Promise<AppResponse<{ result: boolean }>> => {
+  }): Promise<ApiResponse<{ result: boolean }>> => {
     return this.api.delete(this.endpoints.delete(data?.type, data?.id));
   };
 }

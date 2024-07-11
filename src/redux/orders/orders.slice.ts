@@ -19,7 +19,7 @@ import {
 import { onUserLogout } from '../auth/auth.actions';
 import { sliceCleaner } from '../../utils';
 
-export interface IOrdersState {
+export interface OrdersState {
   orders: OrderEntity[];
   orderGroups?: OrdersGroupEntity[];
   currentOrder?: OrderEntity;
@@ -34,7 +34,7 @@ const initialOrdersGroupFormData: ICreateOrdersGroupFormState = {
   info: {},
   orders: [],
 };
-const initState: IOrdersState = {
+const initState: OrdersState = {
   orders: [],
   currentOrder: { _id: '' },
   ordersGroupFormData: initialOrdersGroupFormData,

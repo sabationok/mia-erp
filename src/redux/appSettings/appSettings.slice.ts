@@ -3,21 +3,19 @@ import { AccentColorName, appThemes, getAccentColor, getTheme, globals, IAppThem
 import { actionResetAppSettings, actionSelectAccentColor, actionToggleDarkMode } from './appSettings.actions';
 import { getAppActionsThunk } from './appSettings.thunks';
 import { RoleActionType } from '../app-redux.types';
-import { onUserLogout } from '../auth/auth.actions';
-import { sliceCleaner } from '../../utils';
 
-export interface IAppSettings {
+export interface AppSettingsState {
   isDarkMode?: boolean;
   accentColor?: AccentColorName;
   appTheme: IAppTheme;
   appActions: Record<string, RoleActionType[]>;
 }
 
-const initialState: IAppSettings = {
+const initialState: AppSettingsState = {
   isDarkMode: false,
   accentColor: 'orange',
   appActions: {},
-  appTheme: { ...appThemes.light, accentColor: getAccentColor('orange'), globals: globals },
+  appTheme: { ...appThemes.light, accentColor: getAccentColor('green'), globals: globals },
 };
 
 export const appSettingsSlice = createSlice({
@@ -46,8 +44,8 @@ export const appSettingsSlice = createSlice({
         state.appTheme = initialState.appTheme;
 
         console.log('app reset', state);
-      })
-      .addMatcher(onUserLogout, sliceCleaner(initialState)),
+      }),
+  // .addMatcher(onUserLogout, sliceCleaner(initialState)),
 });
 
 export const appSettingsReducer = appSettingsSlice.reducer;

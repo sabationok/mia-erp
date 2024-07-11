@@ -1,4 +1,4 @@
-import { AppResponse, IBase, OnlyUUID } from '../app-redux.types';
+import { ApiResponse, IBase, OnlyUUID } from '../app-redux.types';
 import { PriceEntity } from '../../types/price-management/price-management.types';
 import { CompanyEntity } from '../../types/companies.types';
 import { IManager } from '../../types/auth.types';
@@ -55,9 +55,9 @@ export interface IRefund extends IBase {
   innerComment?: string;
 }
 
-export interface IAllRefundsRes extends AppResponse<IRefund[]> {}
+export interface IAllRefundsRes extends ApiResponse<IRefund[]> {}
 
-export interface IRefundRes extends AppResponse<IRefund> {}
+export interface IRefundRes extends ApiResponse<IRefund> {}
 
 export interface IRefundReqData {
   _id?: string;

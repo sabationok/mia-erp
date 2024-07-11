@@ -14,7 +14,7 @@ export interface SupplementPolicyTabProps extends CompanySettingsTabBaseProps {}
 const SupplementPolicyTab = ({ onClose }: SupplementPolicyTabProps) => {
   const form = useAppForm<ICompanyConfigsFormData>();
 
-  const warehouses = useWarehousesSelector().warehouses;
+  const warehouses = useWarehousesSelector().list;
   const warehousesSelectOptions = useMemo(
     (): FilterOption<string>[] => warehouses.map(w => ({ ...w, value: w._id })),
     [warehouses]

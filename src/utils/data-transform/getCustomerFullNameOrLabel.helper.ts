@@ -1,6 +1,6 @@
-import { ICustomer } from '../../types/customers.types';
+import { CustomerEntity } from '../../types/customers.types';
 
-export function getCustomerFullNameOrLabel(info: ICustomer): string {
+export function getCustomerFullNameOrLabel(info: CustomerEntity): string {
   const entry = info?.label ?? info?.name;
 
   return entry

@@ -77,7 +77,7 @@ const formCreateWarehouseInputs: {
 const FormCreateWarehouseDocument = ({ product, ...props }: FormCreateWarehouseDocumentProps) => {
   const { products: productsS } = useAppServiceProvider();
   const currentProduct = useOffersSelector().currentOffer;
-  const warehouses = useWarehousesSelector().warehouses;
+  const warehouses = useWarehousesSelector().list;
   // const [availablePrices,setAvailablePrices]=useState()
 
   const currentProductData = useMemo(() => {

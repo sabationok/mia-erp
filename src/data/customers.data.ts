@@ -1,8 +1,8 @@
 import { CellTittleProps } from '../components/TableList/TebleCells/CellTitle';
-import { ICustomer } from '../types/customers.types';
+import { CustomerEntity } from '../types/customers.types';
 import { t } from '../lang';
 
-export const customersColumns: CellTittleProps<ICustomer>[] = [
+export const customersColumns: CellTittleProps<CustomerEntity>[] = [
   {
     top: {
       name: `${t('label')}/${t('name')}`,

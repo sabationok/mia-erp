@@ -1,4 +1,4 @@
-import { AppResponse } from './app-redux.types';
+import { ApiResponse } from './app-redux.types';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ActionPayload, ThunkArgs } from './store.store';
 import { axiosErrorCheck } from '../utils';
@@ -6,7 +6,7 @@ import { axiosErrorCheck } from '../utils';
 type ThunkGetAppResponseFn<Data = any, Params = any, Return = any, Meta = any> = (
   data?: Data,
   params?: Params
-) => Promise<AppResponse<Return, Meta>>;
+) => Promise<ApiResponse<Return, Meta>>;
 
 export const createAppAsyncThunk = <
   Data = any,

@@ -16,7 +16,7 @@ import {
 import { useEffect, useMemo } from 'react';
 import _ from 'lodash';
 import { setFormStateAction } from '../redux/cart/cart.actions';
-import { ICustomer } from '../types/customers.types';
+import { CustomerEntity } from '../types/customers.types';
 import { useAppParams } from './index';
 
 export interface CartService {
@@ -60,7 +60,7 @@ const useCartActions = () => {
       dispatch(AppCart.setCheckedStatusAction({ tempId, checked, orderId }));
     }
 
-    static setCartId(id?: AppCart.CartId, customer?: ICustomer) {
+    static setCartId(id?: AppCart.CartId, customer?: CustomerEntity) {
       dispatch(AppCart.setCartIdAction({ cartId: id || cartId }));
     }
     static clearCart(cartId: AppCart.CartId) {
@@ -133,8 +133,8 @@ const useCartActions = () => {
       const orderId = slot?.cartOrderId
         ? slot?.cartOrderId
         : slot?.tempId
-        ? this.getSlotWithMethods(slot?.tempId)?.cartOrderId
-        : undefined;
+          ? this.getSlotWithMethods(slot?.tempId)?.cartOrderId
+          : undefined;
 
       if (!orderId) return undefined;
 

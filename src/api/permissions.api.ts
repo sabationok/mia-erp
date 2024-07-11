@@ -1,13 +1,13 @@
 import APP_CONFIGS, { Endpoints } from '../redux/APP_CONFIGS';
 import {
-  PermissionEntity,
   IPermissionForReq,
   IPermissionReqData,
   IPermissionsResData,
+  PermissionEntity,
   PermissionRecipientEnum,
   PermissionStatus,
 } from '../types/permissions.types';
-import { AppResponse, CompanyQueryType } from '../redux/app-redux.types';
+import { ApiResponse, CompanyQueryType } from '../redux/app-redux.types';
 import { UserEntity } from '../types/auth.types';
 import { ClientApi } from './client.api';
 
@@ -15,31 +15,31 @@ export default class PermissionsApi {
   private static api = ClientApi.clientRef;
   private static endpoints = APP_CONFIGS.endpoints.permissions;
 
-  public static create(data: IPermissionForReq): Promise<AppResponse<PermissionEntity>> {
+  public static create(data: IPermissionForReq): Promise<ApiResponse<PermissionEntity>> {
     return this.api.post(this.endpoints.create(), data);
   }
 
-  public static inviteUser(data: IPermissionForReq): Promise<AppResponse<PermissionEntity>> {
+  public static inviteUser(data: IPermissionForReq): Promise<ApiResponse<PermissionEntity>> {
     return this.api.post(this.endpoints.inviteUser(), data);
   }
 
-  public static deleteById<RD = any>(id: string): Promise<AppResponse<{ _id?: string; result: boolean } | RD>> {
+  public static deleteById<RD = any>(id: string): Promise<ApiResponse<{ _id?: string; result: boolean } | RD>> {
     return this.api.post(this.endpoints.deleteById(id));
   }
 
-  public static getCurrent(): Promise<AppResponse<{ permission_token: string } & PermissionEntity>> {
+  public static getCurrent(): Promise<ApiResponse<{ permission_token: string } & PermissionEntity>> {
     return this.api.get(this.endpoints.getCurrent());
   }
 
-  public static updateById({ id, data }: IPermissionReqData): Promise<AppResponse<PermissionEntity>> {
+  public static updateById({ id, data }: IPermissionReqData): Promise<ApiResponse<PermissionEntity>> {
     return this.api.post(this.endpoints.updateById(id), data);
   }
 
-  public static logIn(id: string): Promise<AppResponse<PermissionEntity>> {
+  public static logIn(id: string): Promise<ApiResponse<PermissionEntity>> {
     return this.api.post(this.endpoints.logIn(id));
   }
 
-  public static logOut(): Promise<AppResponse<{ _id: string; result: boolean; user: UserEntity }>> {
+  public static logOut(): Promise<ApiResponse<{ _id: string; result: boolean; user: UserEntity }>> {
     return this.api.post(this.endpoints.logOut());
   }
 
@@ -48,7 +48,7 @@ export default class PermissionsApi {
     data,
   }: IPermissionReqData<{
     status: [PermissionStatus.REJECTED];
-  }>): Promise<AppResponse<PermissionEntity>> {
+  }>): Promise<ApiResponse<PermissionEntity>> {
     return this.api.post(this.endpoints.updateById(id), data);
   }
 
@@ -57,7 +57,7 @@ export default class PermissionsApi {
     data,
   }: IPermissionReqData<{
     status: [PermissionStatus.ACCEPTED];
-  }>): Promise<AppResponse<PermissionEntity>> {
+  }>): Promise<ApiResponse<PermissionEntity>> {
     return this.api.post(this.endpoints.updateById(id), data);
   }
 
