@@ -15,6 +15,11 @@ export enum API_BASE_ROUTES {
   PROPERTIES = '/products/properties',
   VARIATIONS = '/products/variations',
   ORDERS = '/orders',
+  ORDERS_SLOTS = '/orders/slots',
+  ORDERS_SALES = '/orders/sales',
+  ORDERS_SALES_SLOTS = '/orders/sales/slots',
+  ORDERS_PURCHASE = '/orders/purchases',
+  ORDERS_PURCHASE_SLOTS = '/orders/purchases/slots',
   REFUNDS = '/refunds',
   PRICE_MANAGEMENT = '/priceManagement',
   WAREHOUSES = '/warehouses',
@@ -247,18 +252,59 @@ const priceManagementEndpoints = {
 const ordersEndpoints = {
   getAll: () => `${API_BASE_ROUTES.ORDERS}/getAll`,
   getOrderById: (orderId?: string) => `${API_BASE_ROUTES.ORDERS}/order/${orderId}`,
-  getGroupById: (groupId?: string) => `${API_BASE_ROUTES.ORDERS}/group/${groupId}`,
   create: () => `${API_BASE_ROUTES.ORDERS}/create`,
   getOne: () => `${API_BASE_ROUTES.ORDERS}/one`,
+
   slots: {
-    getList: () => `${API_BASE_ROUTES.ORDERS}/slots/getList`,
-    update: () => ``,
-    addNew: () => ``,
-    delete: () => ``,
+    getAll: () => `${API_BASE_ROUTES.ORDERS_SLOTS}/getAll`,
+    update: () => `${API_BASE_ROUTES.ORDERS_SLOTS}/update`,
+    create: () => `${API_BASE_ROUTES.ORDERS_SLOTS}/create`,
+    remove: () => `${API_BASE_ROUTES.ORDERS_SLOTS}/remove`,
   },
 
   updateById: (orderId: string) => `${API_BASE_ROUTES.ORDERS}/${Endpoints.updateById}/${orderId}`,
   createGroupedByWarehouse: () => `${API_BASE_ROUTES.ORDERS}/create/group/byWarehouses`,
+
+  sales: {
+    getAll: () => `${API_BASE_ROUTES.ORDERS_SALES}/getAll`,
+    create: () => `${API_BASE_ROUTES.ORDERS_SALES}/create`,
+    getOne: () => `${API_BASE_ROUTES.ORDERS_SALES}/one`,
+    groups: {
+      createByWarehouse: () => `${API_BASE_ROUTES.ORDERS}/create/group/byWarehouses`,
+    },
+    slots: {
+      getAll: () => `${API_BASE_ROUTES.ORDERS_SALES_SLOTS}/getAll`,
+      update: () => `${API_BASE_ROUTES.ORDERS_SALES_SLOTS}/update`,
+      create: () => `${API_BASE_ROUTES.ORDERS_SALES_SLOTS}/create`,
+      remove: () => `${API_BASE_ROUTES.ORDERS_SALES_SLOTS}/remove`,
+    },
+    reject: {
+      request: () => `${API_BASE_ROUTES.ORDERS_SALES_SLOTS}/reject/request`,
+      confirm: () => `${API_BASE_ROUTES.ORDERS_SALES_SLOTS}/reject/confirm`,
+      abort: () => `${API_BASE_ROUTES.ORDERS_SALES_SLOTS}/reject/abort`,
+      getWithCode: () => `${API_BASE_ROUTES.ORDERS_SALES_SLOTS}/reject/getWithCode`,
+    },
+  },
+  purchase: {
+    getAll: () => `${API_BASE_ROUTES.ORDERS_PURCHASE_SLOTS}/getAll`,
+    create: () => `${API_BASE_ROUTES.ORDERS_PURCHASE_SLOTS}/create`,
+    getOne: () => `${API_BASE_ROUTES.ORDERS_PURCHASE_SLOTS}/one`,
+    groups: {
+      createByWarehouse: () => `${API_BASE_ROUTES.ORDERS_PURCHASE_SLOTS}/create/group/byWarehouses`,
+    },
+    slots: {
+      getAll: () => `${API_BASE_ROUTES.ORDERS_PURCHASE_SLOTS}/getAll`,
+      update: () => `${API_BASE_ROUTES.ORDERS_PURCHASE_SLOTS}/update`,
+      create: () => `${API_BASE_ROUTES.ORDERS_PURCHASE_SLOTS}/create`,
+      remove: () => `${API_BASE_ROUTES.ORDERS_PURCHASE_SLOTS}/remove`,
+    },
+    reject: {
+      request: () => `${API_BASE_ROUTES.ORDERS_PURCHASE_SLOTS}/reject/request`,
+      confirm: () => `${API_BASE_ROUTES.ORDERS_PURCHASE_SLOTS}/reject/confirm`,
+      abort: () => `${API_BASE_ROUTES.ORDERS_PURCHASE_SLOTS}/reject/abort`,
+      getWithCode: () => `${API_BASE_ROUTES.ORDERS_PURCHASE_SLOTS}/reject/getWithCode`,
+    },
+  },
 };
 
 const refunds = {

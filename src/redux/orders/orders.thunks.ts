@@ -25,7 +25,7 @@ export enum OrdersThunkType {
   abortReject = 'orders/abortRejectThunk',
 }
 
-export const addOrdersGroup = createAppAsyncThunk(OrdersThunkType.addGroup, OrdersApi.groups.createGroupedByWarehouse);
+export const addOrdersGroup = createAppAsyncThunk(OrdersThunkType.addGroup, OrdersApi.groups.createByWarehouse);
 
 export const getOrdersListByQueryThunk = createAppAsyncThunk(OrdersThunkType.getListByQuery, OrdersApi.getAll);
 

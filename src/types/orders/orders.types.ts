@@ -1,4 +1,3 @@
-import { ApiResponse } from '../../redux/app-redux.types';
 import { AmountAndPercentage } from '../price-management/price-management.types';
 import { ICustomerBase } from '../customers.types';
 import { AppQueryParams } from '../../api';
@@ -22,7 +21,7 @@ import { IPayment } from '../payments.types';
 import { ICreateOrderInfoDto } from './createOrderInfo.dto';
 import { ICreateOrderInfoFormState } from './createOrderInfoFormState.type';
 import { PriceDiscountType } from 'types/price-management/discounts';
-import { IOrderSlotDto, IOrderTempSlot, OrderSlotEntity } from './order-slot.types';
+import { IOrderTempSlot, OrderSlotEntity, SaleOrderSlotDto } from './order-slot.types';
 
 export * from './createOrderInfo.dto';
 export * from './createOrderInfoFormState.type';
@@ -106,23 +105,15 @@ export interface ICreateOrdersGroupFormState {
   orders: OrderEntity[];
 }
 
-export interface IAllOrdersRes extends ApiResponse<OrderEntity[]> {}
-
-export interface IOrderRes extends ApiResponse<OrderEntity> {}
-
 export interface IOrderReqData {
   _id?: string;
   data: ICreateOrderInfoDto;
   params?: AppQueryParams;
 }
 
-export interface ICreateOrdersGroupDto {
-  slots?: IOrderSlotDto[];
+export interface SaleOrdersGroupDto {
+  slots?: SaleOrderSlotDto[];
   info?: ICreateOrderInfoDto;
-}
-
-export interface ICreateOrdersWithSlotsAndGroupByWarehousesReqData {
-  data: ICreateOrdersGroupDto;
 }
 
 export interface OrderSummary extends HasCurrencyCode {

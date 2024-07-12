@@ -272,8 +272,8 @@ const OrdersAllowedPaths = [
   // 'variations.createdAt',
 ] as const;
 
-export type OrdersSortParam = TableSortParam<Values<typeof OrdersAllowedPaths>>;
-export const ordersSortParams: OrdersSortParam[] = [
+export type SaleOrdersSortParam = TableSortParam<Values<typeof OrdersAllowedPaths>>;
+export const ordersSortParams: SaleOrdersSortParam[] = [
   { dataPath: 'reference.internal', label: t('Reference / Internal') },
   { dataPath: 'reference.external', label: t('Reference / External') },
 
@@ -308,8 +308,8 @@ export const ordersSortParams: OrdersSortParam[] = [
   { dataPath: 'deletedAt', label: t('Deleted at') },
 ];
 
-export type OrdersSearchParam = TableSearchParam<Values<typeof OrdersAllowedPaths>>;
-export const ordersSearchParams: OrdersSearchParam[] = [
+export type SaleOrdersSearchParam = TableSearchParam<Values<typeof OrdersAllowedPaths>>;
+export const ordersSearchParams: SaleOrdersSearchParam[] = [
   { dataPath: 'reference.internal', label: t('Reference / Internal') },
   { dataPath: 'reference.external', label: t('Reference / External') },
   { dataPath: 'barCode', label: t('Bar-code') },

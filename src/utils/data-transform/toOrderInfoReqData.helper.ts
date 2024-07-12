@@ -1,9 +1,9 @@
 import { ICreateOrderInfoFormState } from '../../types/orders/createOrderInfoFormState.type';
-import { ICreateOrderInfoDto, ICreateOrdersGroupDto } from '../../types/orders/orders.types';
+import { ICreateOrderInfoDto, SaleOrdersGroupDto } from '../../types/orders/orders.types';
 import { getIdRef } from './index';
 
-export function toOrderInfoReqData(input: ICreateOrderInfoFormState): ICreateOrdersGroupDto['info'] {
-  const output: ICreateOrdersGroupDto['info'] = {};
+export function toOrderInfoReqData(input: ICreateOrderInfoFormState): SaleOrdersGroupDto['info'] {
+  const output: SaleOrdersGroupDto['info'] = {};
 
   const objectsArr = Object.keys(input).map(key => {
     const value = input[key as keyof typeof input];

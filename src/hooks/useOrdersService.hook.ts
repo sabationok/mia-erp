@@ -36,7 +36,7 @@ import {
   ToRequestDataOptions,
 } from '../utils';
 import { EntityPath } from '../types/utils.types';
-import { IOrderSlotDto, IOrderTempSlot } from '../types/orders/order-slot.types';
+import { IOrderTempSlot, SaleOrderSlotDto } from '../types/orders/order-slot.types';
 
 type EmptyFn = (...args: any[]) => Promise<any>;
 
@@ -73,7 +73,7 @@ export interface OrdersService {
   toOrderSlotsReqData: (
     slots: IOrderTempSlot[],
     options?: toOrderSlotsRequestDataOptions
-  ) => IOrderSlotDto[] | undefined;
+  ) => SaleOrderSlotDto[] | undefined;
 }
 
 const useOrdersServiceHook = (): OrdersService => {

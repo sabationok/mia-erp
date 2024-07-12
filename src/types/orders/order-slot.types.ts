@@ -81,7 +81,7 @@ export interface OrderSlotEntity extends IOrderSlotBase, HasOwnerAsCompany, IOrd
   discounts?: PriceEntity['discounts'];
 }
 
-export interface IOrderSlotDto extends HasSku, HasLabel, HasQuantity, HasCurrencyCode, HasImgPreview {
+export interface SaleOrderSlotDto extends HasSku, HasLabel, HasQuantity, HasCurrencyCode, HasImgPreview {
   fromRef?: string;
 
   offer?: OnlyUUID;
@@ -92,3 +92,4 @@ export interface IOrderSlotDto extends HasSku, HasLabel, HasQuantity, HasCurrenc
 
   discounts?: (PriceDiscountRecord | OnlyUUID)[];
 }
+export interface UpdateSaleOrderSlotDto extends OnlyUUID, SaleOrderSlotDto {}

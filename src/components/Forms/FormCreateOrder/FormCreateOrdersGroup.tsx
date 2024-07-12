@@ -109,7 +109,7 @@ const FormCreateOrdersGroup: React.FC<FormCreateOrdersGroupProps> = ({ onClose }
       return;
     }
 
-    apiCall(OrdersApi.groups.createGroupedByWarehouse, {
+    apiCall(OrdersApi.groups.createByWarehouse, {
       data: {
         info: service.toOrderInfoReqData(orderInfoFormValues, {
           omitPathArr: [],

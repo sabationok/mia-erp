@@ -7,11 +7,11 @@ import AppGridPage from '../AppGridPage';
 import { useOrdersSelector } from '../../../redux/selectors.store';
 import { GetAllOffersQuery } from '../../../api';
 import {
-  OrdersSearchParam,
   ordersSearchParams,
-  OrdersSortParam,
   ordersSortParams,
   ordersTableColumns,
+  SaleOrdersSearchParam,
+  SaleOrdersSortParam,
 } from '../../../data';
 import { OrderEntity, OrderStatusEnum } from '../../../types/orders/orders.types';
 import useOrdersActionsCreatorHook from '../../../hooks/useOrdersActionsCreator.hook';
@@ -111,11 +111,14 @@ export const useOrderTableConfigs = () => {
   const state = useOrdersSelector();
   const actionsCreator = useOrdersActionsCreatorHook();
 
-  const router = useAppRouter<{ searchPath?: OrdersSearchParam['dataPath']; sortPath?: OrdersSortParam['dataPath'] }>();
+  const router = useAppRouter<{
+    searchPath?: SaleOrdersSearchParam['dataPath'];
+    sortPath?: SaleOrdersSortParam['dataPath'];
+  }>();
 
   // const filterSelectors = useProductsFilterSelectorsHook();
-  const [sortParams, setSortParams] = useState<TableSortFormState<OrdersSearchParam>>();
-  const [searchParams, setSearchParams] = useState<TableSearchFormState<OrdersSortParam>>();
+  const [sortParams, setSortParams] = useState<TableSortFormState<SaleOrdersSearchParam>>();
+  const [searchParams, setSearchParams] = useState<TableSearchFormState<SaleOrdersSortParam>>();
 
   const tableConfig = useMemo(
     (): ITableListProps<OrderEntity> => ({

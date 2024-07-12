@@ -41,11 +41,7 @@ export const appSettingsSlice = createSlice({
       .addCase(actionResetAppSettings, (state, _action) => {
         state.isDarkMode = initialState.isDarkMode;
         state.accentColor = initialState.accentColor;
-        state.appTheme = initialState.appTheme;
-
-        console.log('app reset', state);
+        // state.appTheme = initialState.appTheme;
       }),
   // .addMatcher(onUserLogout, sliceCleaner(initialState)),
 });
-
-export const appSettingsReducer = appSettingsSlice.reducer;

@@ -1,4 +1,4 @@
-import { ICreateOrdersGroupDto, IOrderTempSlot } from '../../types/orders/orders.types';
+import { IOrderTempSlot, SaleOrdersGroupDto } from '../../types/orders/orders.types';
 import _ from 'lodash';
 import { getIdRef } from './index';
 
@@ -9,7 +9,7 @@ export interface toOrderSlotsRequestDataOptions {
 export function toOrderSlotsReqData(
   slots: IOrderTempSlot[],
   options?: toOrderSlotsRequestDataOptions
-): ICreateOrdersGroupDto['slots'] {
+): SaleOrdersGroupDto['slots'] {
   const output = slots.map(slot => {
     return Object.assign(
       {},
