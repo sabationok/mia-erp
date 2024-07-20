@@ -61,12 +61,10 @@ const App: React.FC = () => {
     //   },
     //   {}
     // );
-
-    console.log('interceptorIdRef.current', interceptorIdRef.current);
+    const index = interceptorIdRef.current;
 
     return () => {
-      !isUndefined(interceptorIdRef.current) &&
-        ClientApi.clientRef.interceptors.response.eject(interceptorIdRef.current);
+      !isUndefined(index) && ClientApi.clientRef.interceptors.response.eject(index);
     };
   }, [hasAccess, logOutUser]);
 

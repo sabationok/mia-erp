@@ -2,15 +2,16 @@ import { OrderEntity } from '../../../types/orders/orders.types';
 import FlexBox from '../../atoms/FlexBox';
 import { ModalHeader } from '../../atoms';
 import React, { useMemo, useState } from 'react';
-import { useOrdersSelector } from '../../../redux/selectors.store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ButtonIcon from '../../atoms/ButtonIcon';
 import { t } from '../../../lang';
-import { useAppParams } from '../../../hooks';
+import { useAppParams, useAppRouter } from '../../../hooks';
 import { enumToFilterOptions } from '../../../utils';
 import TabSelector from '../../atoms/TabSelector';
 import OrderOverviewInfoTab from './tabs/OrderOverviewInfoTab';
+import { useCurrentOrder } from '../../../Providers/CurrentOrderProvider';
+import { OrderChatTab } from './tabs/OrderChatTab';
 
 export interface OrderOverviewXLProps {
   order?: OrderEntity;
@@ -25,11 +26,10 @@ export interface OrderOverviewXLProps {
   className?: string;
 }
 export enum OrderOverviewTabs {
-  info = 'Info',
-  chat = 'Chat',
-  statuses = 'Statuses',
-  comments = 'Comments',
-  tasks = 'tasks',
+  Info = 'Info',
+  Chat = 'Chat',
+  Statuses = 'Statuses',
+  Tasks = 'Tasks',
 }
 
 const tabs = enumToFilterOptions(OrderOverviewTabs);
@@ -38,17 +38,22 @@ const OrderOverviewXL: React.FC<OrderOverviewXLProps> = p => {
   const [currentTab, setCurrentTab] = useState<number>(0);
   // const orderS = useAppServiceProvider()[ServiceName.orders];
   const orderId = useAppParams()?.orderId;
-  const currentOrder = useOrdersSelector().currentOrder;
+  const Order = useCurrentOrder();
+
   const navigate = useNavigate();
+  const router = useAppRouter();
   const location = useLocation();
 
   const renderTab = useMemo(() => {
-    if (tabs[currentTab].value === OrderOverviewTabs.info) {
-      return <OrderOverviewInfoTab />;
+    if (tabs[currentTab].value === OrderOverviewTabs.Info) {
+      return <OrderOverviewInfoTab order={Order._origin} />;
+    }
+    if (tabs[currentTab].value === OrderOverviewTabs.Chat) {
+      return <OrderChatTab order={Order._origin} />;
     }
 
     return null;
-  }, [currentTab]);
+  }, [Order._origin, currentTab]);
 
   return (
     <Container flex={1} fillWidth padding={'0 8px'}>
@@ -56,7 +61,7 @@ const OrderOverviewXL: React.FC<OrderOverviewXLProps> = p => {
         title={t('Order overview')}
         onBackPress={() => {
           if (location?.pathname) {
-            const newPath = location?.pathname?.replace(`/${currentOrder?._id || orderId}`, '');
+            const newPath = location?.pathname?.replace(`/${Order._origin?._id || orderId}`, '');
 
             newPath && navigate(newPath);
           }
@@ -64,52 +69,63 @@ const OrderOverviewXL: React.FC<OrderOverviewXLProps> = p => {
       />
 
       <Content flex={1} fillWidth overflow={'auto'}>
-        <TabSelector options={tabs} optionProps={{ fitContentH: true }} onOptSelect={(_o, _v, i) => setCurrentTab(i)} />
+        <TabSelector
+          options={tabs}
+          optionProps={{ fitContentH: true }}
+          onOptSelect={(_o, _v, i) => typeof i === 'number' && setCurrentTab(i)}
+        />
 
-        {renderTab}
+        <FlexBox flex={1} overflow={'hidden'}>
+          {renderTab}
+        </FlexBox>
+
+        {![OrderOverviewTabs.Chat].includes(tabs[currentTab].value) && <OverviewFooter />}
       </Content>
+    </Container>
+  );
+};
+const OverviewFooter = (p: OrderOverviewXLProps) => {
+  return (
+    <Footer fxDirection={'row'} alignItems={'center'} justifyContent={'space-between'} padding={'8px 0'}>
+      <ButtonIcon
+        size={'36px'}
+        variant={'onlyIcon'}
+        iconSize={'85%'}
+        icon={'edit'}
+        disabled={!p?.onEdit}
+        onClick={p?.onEdit}
+      />
 
-      <Footer fxDirection={'row'} alignItems={'center'} justifyContent={'space-between'} padding={'8px 0'}>
+      <DeleteBtn
+        variant={'onlyIcon'}
+        size={'36px'}
+        iconSize={'85%'}
+        icon={'delete'}
+        disabled={!p?.onDelete}
+        onClick={p?.onDelete}
+      />
+
+      <FlexBox fxDirection={'row'} gap={6} margin={'0 0 0 auto'}>
         <ButtonIcon
           size={'36px'}
           variant={'onlyIcon'}
           iconSize={'85%'}
-          icon={'edit'}
-          disabled={!p?.onEdit}
-          onClick={p?.onEdit}
+          icon={'refresh'}
+          isLoading={p?.isRefresh}
+          disabled={!p?.onRefresh}
+          onClick={p?.onRefresh}
         />
 
-        <DeleteBtn
-          variant={'onlyIcon'}
+        <OpenBtn
           size={'36px'}
+          variant={'onlyIcon'}
           iconSize={'85%'}
-          icon={'delete'}
-          disabled={!p?.onDelete}
-          onClick={p?.onDelete}
+          icon={'SmallArrowLeft'}
+          disabled={!p?.onOpenRightSide}
+          onClick={p?.onOpenRightSide}
         />
-
-        <FlexBox fxDirection={'row'} gap={6} margin={'0 0 0 auto'}>
-          <ButtonIcon
-            size={'36px'}
-            variant={'onlyIcon'}
-            iconSize={'85%'}
-            icon={'refresh'}
-            isLoading={p?.isRefresh}
-            disabled={!p?.onRefresh}
-            onClick={p?.onRefresh}
-          />
-
-          <OpenBtn
-            size={'36px'}
-            variant={'onlyIcon'}
-            iconSize={'85%'}
-            icon={'SmallArrowLeft'}
-            disabled={!p?.onOpenRightSide}
-            onClick={p?.onOpenRightSide}
-          />
-        </FlexBox>
-      </Footer>
-    </Container>
+      </FlexBox>
+    </Footer>
   );
 };
 const Container = styled(FlexBox)`

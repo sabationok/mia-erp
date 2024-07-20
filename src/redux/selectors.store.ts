@@ -25,6 +25,7 @@ import { DiscountsState } from './priceManagement/discounts/discounts.slice';
 import { CartState } from './cart/cart.slice';
 import { TagsState } from './tags/tags.slice';
 import { LinksState } from './tracking/links/links.slice';
+import { ChatState } from './chat/chat.slice';
 
 export const useAuthSelector = () => useSelector<RootState, IAuthState>((state: RootState) => state.auth);
 export const useUsersSelector = () => useSelector<RootState, IUsersState>((state: RootState) => state.users);
@@ -83,6 +84,8 @@ export const useTagsSelector = (): TagsState =>
 
 export const useLinksSelector = (): LinksState =>
   useSelector<RootState, LinksState>((state: RootState) => state?.['tracking/links']);
+
+export const useChatSelector = (): ChatState => useSelector<RootState, ChatState>((state: RootState) => state.chat);
 
 export const useDirectorySelector = <DT extends ApiDirType = any>(
   dirType: DT

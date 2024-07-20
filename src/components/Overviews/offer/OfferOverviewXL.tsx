@@ -245,9 +245,28 @@ const offerOverviewCells: OverviewCellProps<OfferEntity, OfferOverviewTabsEnum>[
   // * FUTURES
 
   {
+    title: t('Has variations'),
+    getValue: product => (product?.futures?.hasVariations ? 'Yes' : 'No'),
+    gridArea: 'hasVariations',
+    tab: OfferOverviewTabsEnum.Futures,
+  },
+  {
+    title: t('Has inventories'),
+    getValue: product => (product?.futures?.hasInventories ? 'Yes' : 'No'),
+    gridArea: 'hasInventories',
+    tab: OfferOverviewTabsEnum.Futures,
+  },
+  {
     title: t('Negative sales'),
     getValue: product => (product?.futures?.negativeSale ? 'Yes' : 'No'),
     gridArea: 'reservation',
+    tab: OfferOverviewTabsEnum.Futures,
+  },
+
+  {
+    title: t('Has items'),
+    getValue: product => (product?.futures?.hasItems ? 'Yes' : 'No'),
+    gridArea: 'hasItems',
     tab: OfferOverviewTabsEnum.Futures,
   },
 

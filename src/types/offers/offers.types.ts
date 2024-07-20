@@ -54,14 +54,14 @@ export interface OfferOrderingInfo {
   time?: MaybeNull<AppDate>;
 }
 export type OfferFutures = {
-  isPromo?: MaybeNull<boolean>;
   negativeSale?: MaybeNull<boolean>;
+  hasVariations?: MaybeNull<boolean>;
+  hasInventories?: MaybeNull<boolean>;
+  hasItems?: MaybeNull<boolean>;
 } & HasStatus<string> &
-  Partial<
-    Record<
-      'reservation' | 'availability' | 'customOrder' | 'preOrder' | 'customProduction' | 'rent',
-      MaybeNull<OfferOrderingInfo>
-    >
+  PartialRecord<
+    'reservation' | 'availability' | 'customOrder' | 'preOrder' | 'customProduction' | 'rent',
+    MaybeNull<OfferOrderingInfo>
   >;
 
 export type PropertyValuesMap = Record<string, PropertyValueEntity>;

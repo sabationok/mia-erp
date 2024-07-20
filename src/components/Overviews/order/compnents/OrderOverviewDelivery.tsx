@@ -34,6 +34,7 @@ export const OrderOverviewDelivery: RenderOverviewAreaComponent<OrderEntity> = (
   return (
     <AreaStyledComp.Cell>
       <OverviewAreaHeader title={t('General info')} />
+
       {renderCells}
     </AreaStyledComp.Cell>
   );

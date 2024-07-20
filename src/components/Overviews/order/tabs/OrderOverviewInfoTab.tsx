@@ -14,8 +14,9 @@ import { PartialRecord } from '../../../../types/utils.types';
 import { OrderOverviewCustomerInfo } from '../compnents/OrderOverviewCustomerInfo';
 import { OrderOverviewInvoicing } from '../compnents/OrderOverviewInvoicing';
 import { OrderOverviewDelivery } from '../compnents/OrderOverviewDelivery';
+import { OrderOverviewTabProps } from './types';
 
-export interface OrderOverviewInfoTabProps {}
+export interface OrderOverviewInfoTabProps extends OrderOverviewTabProps {}
 
 enum OrderOverviewInfoTabsEnum {
   General = 'General',
@@ -52,11 +53,13 @@ const OrderOverviewInfoTab: React.FC<OrderOverviewInfoTabProps> = _p => {
         optionProps={{ fitContentH: true }}
         options={orderOverviewInfoTabs}
         onOptSelect={option => {
-          setCurrentTab(option?.value);
+          option?.value && setCurrentTab(option?.value);
         }}
       />
 
-      {renderCells}
+      <FlexBox overflow={'hidden'}>
+        <FlexBox overflow={'auto'}>{renderCells}</FlexBox>
+      </FlexBox>
     </Box>
   );
 };

@@ -34,6 +34,8 @@ export enum API_BASE_ROUTES {
   EXT_SERVICES = '/ext-services',
   INTEGRATIONS = '/integrations',
   TRACK_LINKS = 'tracking-links',
+  CHAT = '/chat',
+  CHAT_MESSAGES = '/chat/messages',
 }
 
 export enum Endpoints {
@@ -430,9 +432,19 @@ const tracking = {
     track: () => `${API_BASE_ROUTES.TRACK_LINKS}/track`,
   },
 };
-
+const chat = {
+  create: () => `${API_BASE_ROUTES.CHAT}/create`,
+  getOne: () => `${API_BASE_ROUTES.CHAT}/getOne`,
+  getAll: () => `${API_BASE_ROUTES.CHAT}/getAll`,
+  messages: {
+    send: () => `${API_BASE_ROUTES.CHAT_MESSAGES}/send`,
+    update: () => `${API_BASE_ROUTES.CHAT_MESSAGES}/update`,
+    getAll: () => `${API_BASE_ROUTES.CHAT_MESSAGES}/getAll`,
+  },
+};
 const APP_CONFIGS = {
   endpoints: {
+    chat,
     appSettings,
     permissions,
     companies,

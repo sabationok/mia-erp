@@ -1,4 +1,4 @@
-import { css, ExecutionContext, styled } from 'styled-components';
+import styled, { css, ExecutionContext } from 'styled-components';
 import { Property } from 'csstype';
 import { CSSProperties } from 'react';
 

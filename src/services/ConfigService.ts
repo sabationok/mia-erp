@@ -28,6 +28,13 @@ export default class ConfigService {
   public static isDevMode() {
     return this.IS_DEV_MODE;
   }
+
+  public static _WS_RAILWAY_BASE_URL_STAGE_DEV = this.isDevMode()
+    ? 'http://localhost:4500/'
+    : 'https://mia-erp-dev.up.railway.app/';
+  public static _WS_RAILWAY_BASE_URL_STAGE_PROD = this.isDevMode()
+    ? 'http://localhost:4500/'
+    : 'https://mia-erp.up.railway.app/';
   public static get(name: keyof typeof ENV_KEYS) {
     if (Object.keys(ENV_KEYS).includes(name)) {
       return process.env['REACT_APP_' + name];

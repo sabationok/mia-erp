@@ -26,6 +26,7 @@ import { cartSlice } from './cart/cart.slice';
 import { tagsSlice } from './tags/tags.slice';
 import { linksSlice } from './tracking/links/links.slice';
 import { counterpartiesState } from './counterparties/counterparties.slice';
+import { chatSlice } from './chat/chat.slice';
 
 const rootReducer = combineReducers({
   [authSlice.name]: persistReducer(persistorConfigs.auth, authSlice.reducer),
@@ -53,6 +54,7 @@ const rootReducer = combineReducers({
   [tagsSlice.name]: persistReducer(persistorConfigs.tags, tagsSlice.reducer),
   [linksSlice.name]: linksSlice.reducer,
   [counterpartiesState.name]: counterpartiesState.reducer,
+  [chatSlice.name]: chatSlice.reducer,
 });
 
 export type RootReducerType = typeof rootReducer;

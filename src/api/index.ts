@@ -37,6 +37,8 @@ export * from './customers.api';
 export * from './communication.api';
 export * from './counterparties.api';
 
+export * from './Chat.api';
+
 // * EXT SERVICES
 export * from './ext-services.api';
 export * from './integrations.api';

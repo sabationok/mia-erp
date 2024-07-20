@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestHeaders } from 'axios';
 import { ConfigService } from '../services';
 import { ApiHeaders } from './api.types';
+import APP_CONFIGS from '../redux/APP_CONFIGS';
 
 function createApiClient({
   baseURL,
@@ -27,6 +28,7 @@ export class ClientApi {
   private static BASE_URL_LOCALHOST = `http://localhost:${this.LOCALHOST_API_PORT}/api/`;
   private static BASE_URL_RAILWAY = `https://mia-erp-dev.up.railway.app/api/`;
   private static _onUnauthorized: (() => void) | undefined = undefined;
+  public static _endpoints = APP_CONFIGS.endpoints;
 
   private static readonly _clientRef = createApiClient({
     onUnauthorized: this._onUnauthorized,
