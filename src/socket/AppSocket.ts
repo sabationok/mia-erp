@@ -1,4 +1,5 @@
 import { io, Socket } from 'socket.io-client';
+import { PartialRecord } from '../types/utils.types';
 
 export interface WsEventsMap extends Record<string, (...args: any[]) => void> {}
 
@@ -12,6 +13,7 @@ export interface WsClientEventsMap extends Record<string, WsClientEventPayload> 
 
 export class AppSocket<ListenersMap extends WsEventsMap, ClientEventsMap extends WsClientEventsMap> {
   private readonly _socket: Socket;
+  private _headers: PartialRecord<string, string> = {};
 
   constructor(...args: Parameters<typeof io>) {
     this._socket = io(...args);
@@ -19,6 +21,15 @@ export class AppSocket<ListenersMap extends WsEventsMap, ClientEventsMap extends
 
   public get connection() {
     return this._socket;
+  }
+
+  setHeader(key: string, value: string): this {
+    this._headers[key] = value;
+    return this;
+  }
+  removeHeader(key: string): this {
+    delete this._headers[key];
+    return this;
   }
   // unsubscribe = (...args: Parameters<typeof this._socket.off>) => {
   //   const [name, listener] = args;
@@ -78,7 +89,24 @@ export class AppSocket<ListenersMap extends WsEventsMap, ClientEventsMap extends
         return this;
       };
     };
-
+  _buildSubscriber = <Event extends keyof ListenersMap>(name: Event) => {
+    return {
+      onSuccess: (listener: ListenersMap[Event]) => {
+        const _event = `${name as string}`.replaceAll('//', '/');
+        this._socket.on(_event, listener);
+        return () => {
+          this._socket.off(_event, listener);
+        };
+      },
+      onError: (listener: <E = Error>(error: E) => void) => {
+        const _event = `${name as string}`.replaceAll('//', '/');
+        this._socket.on(_event + '_error', listener);
+        return () => {
+          this._socket.off(_event + '_error', listener);
+        };
+      },
+    };
+  };
   buildEmitter =
     <Event extends keyof ClientEventsMap>(name: Event) =>
     (data: ClientEventsMap[Event]) => {

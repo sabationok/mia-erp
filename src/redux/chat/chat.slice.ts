@@ -74,6 +74,11 @@ export const chatSlice = createSlice({
         st.dataMap[idKey] = data;
       }
     },
+    addChatMessageAction: (st, { payload: { chatId, data } }: Action<{ data: MessageEntity; chatId: string }>) => {
+      const current = st.messages.listsMap[chatId];
+
+      st.messages.listsMap[chatId] = current ? current.concat([data]) : [data];
+    },
   },
   extraReducers: builder =>
     builder
@@ -88,30 +93,25 @@ export const chatSlice = createSlice({
       })
       .addCase(getChatMessagesThunk.fulfilled, (st, a) => {
         const chatId = a.payload.params?.chatId;
-
         if (!chatId) return st;
 
-        const current = st.messages.listsMap[chatId];
-
-        if (current && a.payload.update) {
-          current.concat(a.payload.data);
+        if (a.payload.update) {
+          const current = st.messages.listsMap[chatId];
+          current && current.concat(a.payload.data);
         } else {
           st.messages.listsMap[chatId] = a.payload.data;
         }
       })
-      .addCase(sendChatMessageThunk.fulfilled, (st, a) => {
-        const chatId = a.payload.data?.chat?._id;
+      .addCase(sendChatMessageThunk.fulfilled, (st, { payload: { data } }) => {
+        const chatId = data.chat?._id;
 
-        if (!chatId) return st;
+        if (chatId) {
+          const current = st.messages.listsMap[chatId];
 
-        const current = st.messages.listsMap[chatId];
-
-        if (current) {
-          current.concat([a.payload.data]);
-        } else {
-          st.messages.listsMap[chatId] = [a.payload.data];
+          st.messages.listsMap[chatId] = current ? current.concat([data]) : [data];
         }
       }),
 });
 
-export const { setChatConnectionStatusAction, addChatAction, wsConnectionStatusAction } = chatSlice.actions;
+export const { setChatConnectionStatusAction, addChatAction, addChatMessageAction, wsConnectionStatusAction } =
+  chatSlice.actions;

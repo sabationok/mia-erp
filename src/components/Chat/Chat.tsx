@@ -19,6 +19,10 @@ import styled from 'styled-components';
 import InputText from '../atoms/Inputs/InputText';
 import ButtonIcon from '../atoms/ButtonIcon';
 import { ChatEntity } from '../../types/chat/chat.types';
+import { ToastService } from '../../services';
+import { addChatMessageAction } from 'redux/chat/chat.slice';
+import { omit } from 'lodash';
+import { UUID } from '../../types/utils.types';
 
 interface ChatFormData {
   chatId: string;
@@ -42,45 +46,52 @@ export const Chat = ({ orderId, customerId, chatId }: { orderId?: string; custom
     return id ? chatState.dataMap[id] : undefined;
   });
 
-  useEffect(() => {
-    if (chat) return;
+  const [isTypingMap, setIsTypingMap] = useState<
+    Record<
+      UUID,
+      {
+        email?: string;
+        name?: string;
+      }
+    >
+  >({});
 
-    dispatch(getChatThunk({ data: { data: { params: { chatId, orderId } } } }));
-  }, [chat, chatId, dispatch, orderId]);
+  const setTyping = (data: typeof isTypingMap) => {
+    setIsTypingMap(prev => ({ ...prev, ...data }));
+  };
+  const unSetTyping = (key: string) => {
+    setIsTypingMap(prev => omit(prev, [key]));
+  };
 
   const isConnected = chatState.wsConnectionStatus;
 
-  const createChat = ({ orderId }: { orderId: string }) => {
+  const createChat = (params: { orderId: string }) => {
     dispatch(
       createChatThunk({
+        params,
         onLoading: loaders.onLoading('chat'),
         onSuccess: ({ data }) => {
           setChat(data);
-        },
-        data: {
-          data: { dto: { orderId } },
+          loadMessages({ chatId: data._id });
         },
       })
     );
   };
-
   const loadMessages = (params: { chatId: string }) => {
     dispatch(
       getChatMessagesThunk({
-        data: { data: { params } },
+        params,
         onLoading: loaders.onLoading('messages'),
       })
     );
   };
-
   const getChat = (params: { chatId?: string; orderId?: string }) => {
     dispatch(
       getChatThunk({
-        data: { data: { params } },
+        params: params,
         onLoading: loaders.onLoading('chat'),
         onSuccess: ({ data }) => {
-          // loadMessages({ chatId: data._id });
-          setChat(data);
+          loadMessages({ chatId: data._id });
         },
         onError: (err: AxiosError) => {
           if (err.response?.status === HttpStatusCode.NotFound) {
@@ -90,25 +101,17 @@ export const Chat = ({ orderId, customerId, chatId }: { orderId?: string; custom
       })
     );
   };
-
   useEffect(() => {
-    const unsubsribers = [
-      ChatWs.onTyping(data => {
-        console.log(data);
-        set_isSomeoneTyping(data.data.status);
-      }),
-    ];
-
-    return () => {
-      unsubsribers.forEach(clbck => clbck());
-    };
-  }, []);
-
-  useEffect(() => {
-    if (chat) return;
+    console.log('from props', { chatId, orderId });
 
     if (chatId) {
-      getChat({ chatId });
+      const chat = chatState.dataMap[chatId];
+      if (!chat) {
+        getChat({ chatId });
+      } else {
+        setChat(chat);
+        loadMessages({ chatId });
+      }
     } else if (orderId) {
       getChat({ orderId });
     }
@@ -117,7 +120,30 @@ export const Chat = ({ orderId, customerId, chatId }: { orderId?: string; custom
 
   return (
     <FlexBox overflow={'hidden'} flex={1}>
-      <ChatWsInitializer />
+      <ChatWsInitializer
+        // permissionId={profile?.permission?._id}
+        chatId={chatId}
+        onTyping={data => {
+          console.log('onTyping | data', data);
+          if (data.data.sender) {
+            if (data.data.status) {
+              setTyping({ [data.data.sender?._id]: { email: 'email' } });
+            } else {
+              unSetTyping(data.data.sender?._id);
+            }
+          }
+        }}
+        onJoin={data => {
+          ToastService.info(`${data.data?.email || data.data?.label} joined to chat`);
+        }}
+        onLeave={data => {
+          ToastService.info(`${data.data?.email || data.data?.label} leaved to chat`);
+        }}
+        onSend={data => {
+          const chatId = data.data.chat?._id;
+          chatId && dispatch(addChatMessageAction({ chatId, data: data.data }));
+        }}
+      />
 
       <MessagesList overflow={'auto'} flex={1}></MessagesList>
 

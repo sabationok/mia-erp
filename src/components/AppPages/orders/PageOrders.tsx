@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ITableListProps } from '../../TableList/tableTypes.types';
 import AppGridPage from '../AppGridPage';
 import { useOrdersSelector } from '../../../redux/selectors.store';
-import { GetAllOffersQuery } from '../../../api';
+import { GetAllSaleOrdersQuery } from '../../../api';
 import {
   ordersSearchParams,
   ordersSortParams,
@@ -16,7 +16,7 @@ import {
 import { OrderEntity, OrderStatusEnum } from '../../../types/orders/orders.types';
 import useOrdersActionsCreatorHook from '../../../hooks/useOrdersActionsCreator.hook';
 import { BaseAppPageProps } from '../index';
-import { enumToFilterOptions, setValueByPath } from '../../../utils';
+import { enumToFilterOptions } from '../../../utils';
 import TabSelector, { FilterOption } from '../../atoms/TabSelector';
 import FlexBox from '../../atoms/FlexBox';
 import { Text } from '../../atoms/Text';
@@ -26,7 +26,6 @@ import {
   TableSearchFormState,
   TableSortFormState,
 } from '../../TableList/TableOverHead/TableSearchForm/TableSearchForm';
-import { isString } from 'lodash';
 import { useLoaders } from '../../../Providers/Loaders/useLoaders.hook';
 import { useAppRouter } from '../../../hooks';
 
@@ -134,7 +133,10 @@ export const useOrderTableConfigs = () => {
 
       onSubmitSearch: data => {
         if (data.search) {
-          const params: GetAllOffersQuery = {};
+          const params: GetAllSaleOrdersQuery = {
+            search: data.search,
+            searchPath: data.param.dataPath,
+          };
           const path = data.param?.dataPath;
           router.push({
             query: {
@@ -143,9 +145,9 @@ export const useOrderTableConfigs = () => {
             },
           });
 
-          if (path && data.search) {
-            if (isString(path)) setValueByPath(path, data.search, params, { mutation: true });
-          }
+          // if (path && data.search) {
+          //   if (isString(path)) setValueByPath(path, data.search, params, { mutation: true });
+          // }
 
           setSearchParams(data);
 

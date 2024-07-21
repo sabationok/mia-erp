@@ -73,11 +73,13 @@ export const ordersSlice = createSlice({
     builder
       .addCase(getAllOrdersThunk.fulfilled, (s, a) => {
         if (Array.isArray(a.payload.data)) {
-          if (a.payload.refresh) {
+          if (a.payload.update) {
+            s.orders = [...s.orders, ...a.payload.data];
+          } else if (a.payload.prepend) {
+            s.orders = [...a.payload.data, ...s.orders];
+          } else {
             s.orders = a.payload.data;
-            return;
           }
-          s.orders = [...a.payload.data, ...s.orders];
         }
       })
       .addCase(AddSlotToGroupAction, (s, a) => {
@@ -108,7 +110,7 @@ export const ordersSlice = createSlice({
         if (!s.currentOrder) return;
 
         if (a.payload.update) {
-          s.currentOrder.slots?.concat(a.payload.data);
+          s.currentOrder.slots = s.currentOrder.slots?.concat(a.payload.data);
         } else {
           s.currentOrder.slots = a.payload.data;
         }
